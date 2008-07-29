@@ -206,14 +206,15 @@ namespace WeSay.ConfigTool
 					GetWritingSystemIdsWithSpellCheckingInstalled();
 
 			_writingSystemListBox.Items.Clear();
-			IList<WritingSystem> writingSystems = BasilProject.Project.WritingSystemsFromIds(CurrentField.WritingSystemIds);
+			IList<WritingSystem> writingSystems =
+					BasilProject.Project.WritingSystemsFromIds(CurrentField.WritingSystemIds);
 			foreach (WritingSystem ws in writingSystems)
 			{
 				bool hasSpellCheckerInstalled =
 						writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
 				int i =
-						_writingSystemListBox.Items.Add(
-								new WritingSystemListBoxAdaptor(ws, hasSpellCheckerInstalled));
+						_writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws,
+																						hasSpellCheckerInstalled));
 				_writingSystemListBox.SetItemChecked(i, true);
 			}
 			foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
@@ -223,8 +224,8 @@ namespace WeSay.ConfigTool
 					bool hasSpellCheckerInstalled =
 							writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
 					int i =
-							_writingSystemListBox.Items.Add(
-									new WritingSystemListBoxAdaptor(ws, hasSpellCheckerInstalled));
+							_writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws,
+																							hasSpellCheckerInstalled));
 					_writingSystemListBox.SetItemChecked(i, false);
 				}
 			}

@@ -18,7 +18,14 @@ namespace WeSay.LexicalTools
 										bool isPinned,
 										LexEntryRepository lexEntryRepository,
 										ViewTemplate viewTemplate)
-				: base(label, longLabel, description, remainingCountText, referenceCountText, isPinned, lexEntryRepository)
+				: base(
+						label,
+						longLabel,
+						description,
+						remainingCountText,
+						referenceCountText,
+						isPinned,
+						lexEntryRepository)
 		{
 			if (viewTemplate == null)
 			{
@@ -31,8 +38,7 @@ namespace WeSay.LexicalTools
 			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
 			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
 			{
-				_lexicalFormWritingSystem =
-						writingSystems.UnknownVernacularWritingSystem;
+				_lexicalFormWritingSystem = writingSystems.UnknownVernacularWritingSystem;
 			}
 			else
 			{
@@ -46,7 +52,15 @@ namespace WeSay.LexicalTools
 										bool isPinned,
 										LexEntryRepository lexEntryRepository,
 										ViewTemplate viewTemplate)
-				: this(label, longLabel, description, string.Empty, string.Empty, isPinned, lexEntryRepository, viewTemplate) { }
+				: this(
+						label,
+						longLabel,
+						description,
+						string.Empty,
+						string.Empty,
+						isPinned,
+						lexEntryRepository,
+						viewTemplate) {}
 
 		public override DashboardGroup Group
 		{

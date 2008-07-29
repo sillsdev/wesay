@@ -53,7 +53,8 @@ namespace WeSay.Project
 		{
 			get
 			{
-				IList<string> ids = GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds;
+				IList<string> ids =
+						GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds;
 				return BasilProject.Project.WritingSystemsFromIds(ids);
 			}
 		}
@@ -75,7 +76,9 @@ namespace WeSay.Project
 				Field field;
 				if (!TryGetField(fieldName, out field))
 				{
-					throw new ArgumentOutOfRangeException("fieldName", fieldName, "View template does not contain a defintion for the given fieldname");
+					throw new ArgumentOutOfRangeException("fieldName",
+														  fieldName,
+														  "View template does not contain a defintion for the given fieldname");
 				}
 				return field;
 			}
@@ -304,10 +307,9 @@ namespace WeSay.Project
 
 			ViewTemplate masterTemplate = new ViewTemplate();
 
-			Field lexicalFormField =
-					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-							  "LexEntry",
-							  defaultVernacularSet);
+			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+											   "LexEntry",
+											   defaultVernacularSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Word",
 							  "The label for the field showing the Lexeme Form of the entry.");
@@ -317,10 +319,9 @@ namespace WeSay.Project
 			lexicalFormField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(lexicalFormField);
 
-			Field citationFormField =
-					new Field(LexEntry.WellKnownProperties.Citation,
-							  "LexEntry",
-							  defaultVernacularSet);
+			Field citationFormField = new Field(LexEntry.WellKnownProperties.Citation,
+												"LexEntry",
+												defaultVernacularSet);
 			StringCatalog.Get("~Citation Form",
 							  "The label for the field holding the citation form, which is how the word will be displayed in the dictionary.  This is used in languages where the lexeme form may be different from what the Headword should be.");
 			citationFormField.DisplayName = "Citation Form";
@@ -330,10 +331,9 @@ namespace WeSay.Project
 			citationFormField.Enabled = false;
 			masterTemplate.Add(citationFormField);
 
-			Field definitionField =
-					new Field(LexSense.WellKnownProperties.Definition,
-							  "LexSense",
-							  defaultAnalysisSet);
+			Field definitionField = new Field(LexSense.WellKnownProperties.Definition,
+											  "LexSense",
+											  defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Definition",
 							  "The label for the field showing the definition of the word.");
@@ -348,8 +348,9 @@ namespace WeSay.Project
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Gloss",
 							  "The label for the field showing a single word translation, as used in interlinear text glossing.");
-			Field glossField =
-					new Field(LexSense.WellKnownProperties.Gloss, "LexSense", defaultAnalysisSet);
+			Field glossField = new Field(LexSense.WellKnownProperties.Gloss,
+										 "LexSense",
+										 defaultAnalysisSet);
 			glossField.DisplayName = "Gloss";
 			glossField.Description = "Normally a single word, used when interlinearizing texts.";
 			glossField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
@@ -368,10 +369,9 @@ namespace WeSay.Project
 			literalMeaningField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(literalMeaningField);
 
-			Field noteField =
-					new Field(WeSayDataObject.WellKnownProperties.Note,
-							  "WeSayDataObject",
-							  defaultAnalysisSet);
+			Field noteField = new Field(WeSayDataObject.WellKnownProperties.Note,
+										"WeSayDataObject",
+										defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Note", "The label for the field showing a note.");
 			noteField.DisplayName = "Note";
@@ -411,10 +411,9 @@ namespace WeSay.Project
 			pictureField.Enabled = true;
 			masterTemplate.Add(pictureField);
 
-			Field posField =
-					new Field(LexSense.WellKnownProperties.PartOfSpeech,
-							  "LexSense",
-							  defaultAnalysisSet);
+			Field posField = new Field(LexSense.WellKnownProperties.PartOfSpeech,
+									   "LexSense",
+									   defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~POS", "The label for the field showing Part Of Speech");
 			posField.DisplayName = "PartOfSpeech";
@@ -424,10 +423,9 @@ namespace WeSay.Project
 			posField.Enabled = true;
 			masterTemplate.Add(posField);
 
-			Field exampleField =
-					new Field(LexExampleSentence.WellKnownProperties.ExampleSentence,
-							  "LexExampleSentence",
-							  defaultVernacularSet);
+			Field exampleField = new Field(LexExampleSentence.WellKnownProperties.ExampleSentence,
+										   "LexExampleSentence",
+										   defaultVernacularSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Example Sentence",
 							  "The label for the field showing an example use of the word.");
@@ -437,10 +435,9 @@ namespace WeSay.Project
 			exampleField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(exampleField);
 
-			Field translationField =
-					new Field(LexExampleSentence.WellKnownProperties.Translation,
-							  "LexExampleSentence",
-							  defaultAnalysisSet);
+			Field translationField = new Field(LexExampleSentence.WellKnownProperties.Translation,
+											   "LexExampleSentence",
+											   defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Example Translation",
 							  "The label for the field showing the example sentence translated into other languages.");
@@ -466,12 +463,11 @@ namespace WeSay.Project
 			ddp4Field.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			masterTemplate.Add(ddp4Field);
 
-			Field baseFormField =
-					new Field(LexEntry.WellKnownProperties.BaseForm,
-							  "LexEntry",
-							  defaultVernacularSet,
-							  Field.MultiplicityType.ZeroOr1,
-							  "RelationToOneEntry");
+			Field baseFormField = new Field(LexEntry.WellKnownProperties.BaseForm,
+											"LexEntry",
+											defaultVernacularSet,
+											Field.MultiplicityType.ZeroOr1,
+											"RelationToOneEntry");
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Base Form",
 							  "The label for the field showing the entry which this entry is derived from, is a subentry of, etc.");
@@ -482,12 +478,11 @@ namespace WeSay.Project
 			baseFormField.Enabled = false;
 			masterTemplate.Add(baseFormField);
 
-			Field crossRefField =
-					new Field(LexEntry.WellKnownProperties.CrossReference,
-							  "LexEntry",
-							  defaultVernacularSet,
-							  Field.MultiplicityType.ZeroOrMore,
-							  "RelationToOneEntry");
+			Field crossRefField = new Field(LexEntry.WellKnownProperties.CrossReference,
+											"LexEntry",
+											defaultVernacularSet,
+											Field.MultiplicityType.ZeroOrMore,
+											"RelationToOneEntry");
 			StringCatalog.Get("~Cross Reference",
 							  @"The label for the field showing a 'confer' relation (\cf in MDF).");
 			crossRefField.DisplayName = "Cross Reference";
@@ -583,8 +578,7 @@ namespace WeSay.Project
 			}
 			if (listWritingSystem == null)
 			{
-				listWritingSystem =
-						writingSystems.UnknownVernacularWritingSystem;
+				listWritingSystem = writingSystems.UnknownVernacularWritingSystem;
 			}
 			return listWritingSystem;
 		}

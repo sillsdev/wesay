@@ -162,8 +162,8 @@ namespace WeSay.UI
 													StringCatalog.Get("~unknown",
 																	  "This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field."));
 				Option unspecifiedOption = new Option(string.Empty, unspecifiedMultiText);
-				_control.Items.Add(
-						new Option.OptionDisplayProxy(unspecifiedOption, _idOfPreferredWritingSystem));
+				_control.Items.Add(new Option.OptionDisplayProxy(unspecifiedOption,
+																 _idOfPreferredWritingSystem));
 			}
 			_list.Options.Sort(CompareItems);
 			foreach (Option o in _list.Options)

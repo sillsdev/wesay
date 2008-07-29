@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using LiftIO.Parsing;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
@@ -10,14 +9,16 @@ using WeSay.Foundation.Options;
 
 namespace WeSay.LexicalModel
 {
-
 	public class LexEntryRepository: IRepository<LexEntry>
 	{
 		private readonly IRepository<LexEntry> _decoratedRepository;
-		public LexEntryRepository(string path)
+		public LexEntryRepository(string path):this(path, null)
+		{}
+
+		public LexEntryRepository(string path, ProgressState progressState)
 		{
 			//todo: eventually use synchronicRepository with Db4o and Lift
-			_decoratedRepository = new LiftRepository(path);
+			_decoratedRepository = new LiftRepository(path, progressState);
 		}
 
 		public LexEntryRepository(IRepository<LexEntry> decoratedRepository)
@@ -32,26 +33,12 @@ namespace WeSay.LexicalModel
 
 		public DateTime LastModified
 		{
-			get
-			{
-				return _decoratedRepository.LastModified;
-			}
+			get { return _decoratedRepository.LastModified; }
 		}
 
 		public LexEntry CreateItem()
 		{
 			LexEntry item = _decoratedRepository.CreateItem();
-			return item;
-		}
-
-		// todo:remove
-		public LexEntry CreateItem(Extensible eInfo)
-		{
-			LexEntry item = _decoratedRepository.CreateItem();
-			item.Guid = eInfo.Guid;
-			item.Id = eInfo.Id;
-			item.ModificationTime = eInfo.ModificationTime;
-			item.CreationTime = eInfo.CreationTime;
 			return item;
 		}
 
@@ -84,7 +71,7 @@ namespace WeSay.LexicalModel
 			List<LexEntry> dirtyItems = new List<LexEntry>();
 			foreach (LexEntry item in items)
 			{
-				if(item.IsDirty)
+				if (item.IsDirty)
 				{
 					dirtyItems.Add(item);
 				}
@@ -113,12 +100,11 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("item");
 			}
-			if(item.IsDirty)
+			if (item.IsDirty)
 			{
 				_decoratedRepository.SaveItem(item);
 				item.Clean();
 			}
-
 		}
 
 		public bool CanQuery
@@ -128,10 +114,7 @@ namespace WeSay.LexicalModel
 
 		public bool CanPersist
 		{
-			get
-			{
-				return _decoratedRepository.CanPersist;
-			}
+			get { return _decoratedRepository.CanPersist; }
 		}
 
 		public void DeleteItem(LexEntry item)
@@ -161,18 +144,15 @@ namespace WeSay.LexicalModel
 			}
 			ResultSet<LexEntry> resultSet = GetAllEntriesSortedByHeadword(headwordWritingSystem);
 			RecordToken<LexEntry> first = resultSet.FindFirst(entry);
-			if(first == null)
+			if (first == null)
 			{
 				throw new ArgumentOutOfRangeException("entry", entry, "Entry not in repository");
 			}
-			if ((bool)first["HasHomograph"])
+			if ((bool) first["HasHomograph"])
 			{
 				return (int) first["HomographNumber"];
 			}
-			else
-			{
-				return 0;
-			}
+			return 0;
 		}
 
 
@@ -197,16 +177,16 @@ namespace WeSay.LexicalModel
 
 			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(query, "Form", "WritingSystemId", writingSystem);
 			itemsMatching.Sort(new SortDefinition("Form", writingSystem),
-				new SortDefinition("OrderForRoundTripping", Comparer<int>.Default),
-				new SortDefinition("CreationTime", Comparer<DateTime>.Default));
+							   new SortDefinition("OrderForRoundTripping", Comparer<int>.Default),
+							   new SortDefinition("CreationTime", Comparer<DateTime>.Default));
 
 			string previousHeadWord = null;
 			int homographNumber = 1;
 			RecordToken<LexEntry> previousToken = null;
 			foreach (RecordToken<LexEntry> token in itemsMatching)
 			{
-				string currentHeadWord = (string)token["Form"];
-				if(currentHeadWord == previousHeadWord)
+				string currentHeadWord = (string) token["Form"];
+				if (currentHeadWord == previousHeadWord)
 				{
 					homographNumber++;
 				}
@@ -217,7 +197,7 @@ namespace WeSay.LexicalModel
 				}
 				// only used to get our sort correct
 				token["HomographNumber"] = homographNumber;
-				switch(homographNumber)
+				switch (homographNumber)
 				{
 					case 1:
 						token["HasHomograph"] = false;
@@ -248,8 +228,9 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
-			Query query = GetAllLexEntriesQuery().In("LexicalForm")
-						.ForEach("Forms").Show("Form").Show("WritingSystemId");
+			Query query =
+					GetAllLexEntriesQuery().In("LexicalForm").ForEach("Forms").Show("Form").Show(
+							"WritingSystemId");
 
 			return GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(query, "Form", "WritingSystemId", writingSystem);
 		}
@@ -284,10 +265,10 @@ namespace WeSay.LexicalModel
 		}
 
 		private ResultSet<LexEntry> GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(
-			Query query,
-			string formField,
-			string writingSystemIdField,
-			WritingSystem writingSystem)
+				Query query,
+				string formField,
+				string writingSystemIdField,
+				WritingSystem writingSystem)
 		{
 			ResultSet<LexEntry> result = GetItemsMatchingQueryFilteredByWritingSystem(query, formField, writingSystemIdField, writingSystem);
 			result.Sort(new SortDefinition(formField, writingSystem));
@@ -311,14 +292,13 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("fieldName");
 			}
-			Query allSensePropertiesQuery = GetAllLexEntriesQuery().ForEach("Senses")
-						.ForEach("Properties").Show("Key").Show("Value","SemanticDomains");
+			Query allSensePropertiesQuery =
+					GetAllLexEntriesQuery().ForEach("Senses").ForEach("Properties").Show("Key").Show
+							("Value", "SemanticDomains");
 
 			ResultSet<LexEntry> allSenseProperties = GetItemsMatchingCore(allSensePropertiesQuery);
-			allSenseProperties.RemoveAll(delegate(RecordToken<LexEntry> token)
-				{
-					return (string)token["Key"] != fieldName;
-				});
+			allSenseProperties.RemoveAll(
+					delegate(RecordToken<LexEntry> token) { return (string) token["Key"] != fieldName; });
 
 			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
 			foreach (RecordToken<LexEntry> token in allSenseProperties)
@@ -351,7 +331,8 @@ namespace WeSay.LexicalModel
 			}
 			Query query = GetAllLexEntriesQuery();
 			query.In("LexicalForm").ForEach("Forms").Show("Form").Show("WritingSystemId");
-			query.ForEach("Senses").In("Gloss").ForEach("Forms").Show("Form", "Gloss/Form").Show("WritingSystemId", "Gloss/WritingSystemId");
+			query.ForEach("Senses").In("Gloss").ForEach("Forms").Show("Form", "Gloss/Form").Show(
+					"WritingSystemId", "Gloss/WritingSystemId");
 
 			ResultSet<LexEntry> resultSet = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(
 													query,
@@ -406,23 +387,19 @@ namespace WeSay.LexicalModel
 			}
 			Query query = GetAllLexEntriesQuery().Show("Guid");
 			ResultSet<LexEntry> items = GetItemsMatchingCore(query);
-			int index = items.FindFirstIndex(delegate(RecordToken<LexEntry> token)
-												{
-													return (Guid)token["Guid"] == guid;
-												});
+			int index =
+					items.FindFirstIndex(
+							delegate(RecordToken<LexEntry> token) { return (Guid) token["Guid"] == guid; });
 			if (index < 0)
 			{
 				return null;
 			}
 			if (index + 1 < items.Count)
 			{
-				int nextIndex = items.FindFirstIndex(index+1,
-									delegate(RecordToken<LexEntry> token)
-									{
-										return (Guid)token["Guid"] == guid;
-									});
+				int nextIndex = items.FindFirstIndex(index + 1,
+													 delegate(RecordToken<LexEntry> token) { return (Guid) token["Guid"] == guid; });
 
-				if(nextIndex >= 0)
+				if (nextIndex >= 0)
 				{
 					throw new ApplicationException("More than one entry exists with the guid " +
 												   guid);
@@ -433,9 +410,9 @@ namespace WeSay.LexicalModel
 		}
 
 		public ResultSet<LexEntry> GetEntriesWithSimilarLexicalForm(string lexicalForm,
-															WritingSystem writingSystem,
-															ApproximateMatcherOptions
-																	matcherOptions)
+																	WritingSystem writingSystem,
+																	ApproximateMatcherOptions
+																			matcherOptions)
 		{
 			if (lexicalForm == null)
 			{
@@ -447,15 +424,16 @@ namespace WeSay.LexicalModel
 			}
 			return new ResultSet<LexEntry>(this,
 										   ApproximateMatcher.FindClosestForms
-													<RecordToken<LexEntry>>(GetAllEntriesSortedByLexicalForm(writingSystem),
-																			GetFormForMatchingStrategy,
-																			lexicalForm,
-																			matcherOptions));
+												   <RecordToken<LexEntry>>(
+												   GetAllEntriesSortedByLexicalForm(writingSystem),
+												   GetFormForMatchingStrategy,
+												   lexicalForm,
+												   matcherOptions));
 		}
 
 		private static string GetFormForMatchingStrategy(object item)
 		{
-			return (string)((RecordToken<LexEntry>)item)["Form"];
+			return (string) ((RecordToken<LexEntry>) item)["Form"];
 		}
 
 		public ResultSet<LexEntry> GetEntriesWithMatchingLexicalForm(string lexicalForm,
@@ -470,23 +448,21 @@ namespace WeSay.LexicalModel
 				throw new ArgumentNullException("writingSystem");
 			}
 			ResultSet<LexEntry> resultSet = GetAllEntriesSortedByLexicalForm(writingSystem);
-			resultSet.RemoveAll(delegate(RecordToken<LexEntry> token)
-								{
-									return (string)token["Form"] != lexicalForm;
-								});
+			resultSet.RemoveAll(
+					delegate(RecordToken<LexEntry> token) { return (string) token["Form"] != lexicalForm; });
 			return resultSet;
 		}
 
 		private static Query GetAllLexEntriesQuery()
 		{
-			return new Query(typeof(LexEntry));
+			return new Query(typeof (LexEntry));
 		}
 
 		private ResultSet<LexEntry> FilterEntriesToOnlyThoseWithWritingSystemId(
-			ResultSet<LexEntry> allResults,
-			string formField,
-			string writingSystemIdField,
-			string filterOnWritingSystemId)
+				ResultSet<LexEntry> allResults,
+				string formField,
+				string writingSystemIdField,
+				string filterOnWritingSystemId)
 		{
 			if (allResults.Count == 0)
 			{
@@ -515,10 +491,9 @@ namespace WeSay.LexicalModel
 				{
 					if (!headWordRepositoryIdFound)
 					{
-						filteredResults.Add(
-								new RecordToken<LexEntry>(this,
-														  emptyResults,
-														  previousToken.Id));
+						filteredResults.Add(new RecordToken<LexEntry>(this,
+																	  emptyResults,
+																	  previousToken.Id));
 					}
 					headWordRepositoryIdFound = false;
 				}
@@ -526,13 +501,14 @@ namespace WeSay.LexicalModel
 				object id;
 				if (token.TryGetValue(writingSystemIdField, out id))
 				{
-					if((string) id == filterOnWritingSystemId)
+					if ((string) id == filterOnWritingSystemId)
 					{
 						filteredResults.Add(token);
 						headWordRepositoryIdFound = true;
 					}
 				}
-				else {
+				else
+				{
 					// we have an entry but without a form with the given id.
 					// Create an empty one
 					token[formField] = string.Empty;
@@ -544,16 +520,14 @@ namespace WeSay.LexicalModel
 			}
 			if (!headWordRepositoryIdFound)
 			{
-				filteredResults.Add(new RecordToken<LexEntry>(this,
-															  emptyResults,
-															  previousToken.Id));
+				filteredResults.Add(new RecordToken<LexEntry>(this, emptyResults, previousToken.Id));
 			}
 			return new ResultSet<LexEntry>(this, filteredResults);
 		}
 
-
-		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(
-				Field field, WritingSystem lexicalUnitWritingSystem)
+		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field,
+																				 WritingSystem
+																						 lexicalUnitWritingSystem)
 		{
 			if(lexicalUnitWritingSystem == null)
 			{
@@ -566,12 +540,11 @@ namespace WeSay.LexicalModel
 
 			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(query, "Form", "WritingSystemId", lexicalUnitWritingSystem);
 			//remove items that don't match our filteringPredicate
-			itemsMatching.RemoveAll(delegate(RecordToken<LexEntry> token)
-								{
-									return !(bool)token["Matches"];
-								});
+			itemsMatching.RemoveAll(
+					delegate(RecordToken<LexEntry> token) { return !(bool) token["Matches"]; });
 			return itemsMatching;
 		}
+
 		#region IDisposable Members
 
 #if DEBUG
@@ -585,7 +558,7 @@ namespace WeSay.LexicalModel
 		}
 #endif
 
-		private bool _disposed = false;
+		private bool _disposed;
 
 		public void Dispose()
 		{
@@ -618,26 +591,6 @@ namespace WeSay.LexicalModel
 
 		#endregion
 
-		[Obsolete]
-		//todo: make this private and part of synchronic repository
-		public IList<RepositoryId> GetItemsModifiedSince(DateTime last)
-		{
-			Query query = new Query(typeof(LexEntry)).Show("ModificationTime");
-			ResultSet<LexEntry> items = GetItemsMatchingCore(query);
-			// remove items that were modified before last
-			items.RemoveAll(delegate(RecordToken<LexEntry> token)
-								{
-									return (DateTime)token["ModificationTime"] < last;
-								});
-			return new List<RepositoryId>(items);
-		}
-
-		public void BackendDoLiftUpdateNow(bool p)
-		{
-			//Do Nothing
-			//throw new Exception("The method or operation is not implemented.");
-		}
-
 		public bool BackendConsumePendingLiftUpdates()
 		{
 			//Do Nothing
@@ -662,11 +615,6 @@ namespace WeSay.LexicalModel
 		{
 			//Do Nothing
 			//throw new Exception("The method or operation is not implemented.");
-		}
-
-		public void Startup(ProgressState state)
-		{
-			_decoratedRepository.Startup(state);
 		}
 	}
 }

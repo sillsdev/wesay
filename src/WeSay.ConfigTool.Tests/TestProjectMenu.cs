@@ -58,9 +58,8 @@ namespace WeSay.ConfigTool.Tests
 		[Ignore("couldn't get test to word")]
 		public void TestOpenProjectInWeSayClient()
 		{
-			string path =
-					Path.Combine(Path.GetTempPath(),
-								 Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
+			string path = Path.Combine(Path.GetTempPath(),
+									   Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
 			try
 			{
 				_window.CreateAndOpenProject(path);

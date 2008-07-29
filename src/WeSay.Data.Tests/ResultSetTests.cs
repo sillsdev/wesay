@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -84,7 +83,8 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void Constructor_HasNoDuplicate_OrderRetained()
 		{
-			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
+			{
+				List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
 			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(8)));
 			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(2)));
@@ -126,9 +126,7 @@ namespace WeSay.Data.Tests
 
 		}
 
-
 	}
-
 	[TestFixture ]
 	public class ResultSetWithQueryTests
 	{

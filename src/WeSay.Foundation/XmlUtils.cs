@@ -38,9 +38,8 @@ namespace WeSay.Foundation
 		/// </summary>
 		public static bool GetBooleanAttributeValue(string sValue)
 		{
-			return
-					(sValue != null &&
-					 (sValue.ToLower().Equals("true") || sValue.ToLower().Equals("yes")));
+			return (sValue != null &&
+					(sValue.ToLower().Equals("true") || sValue.ToLower().Equals("yes")));
 		}
 
 		/// <summary>
@@ -141,10 +140,11 @@ namespace WeSay.Foundation
 															bool defaultValue)
 		{
 			return
-					GetBooleanAttributeValue(
-							GetOptionalAttributeValue(node,
-													  attrName,
-													  defaultValue ? "true" : "false"));
+					GetBooleanAttributeValue(GetOptionalAttributeValue(node,
+																	   attrName,
+																	   defaultValue
+																			   ? "true"
+																			   : "false"));
 		}
 
 		/// <summary>

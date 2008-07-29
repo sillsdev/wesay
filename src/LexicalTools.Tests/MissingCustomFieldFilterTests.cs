@@ -13,8 +13,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Field field =
-					new Field("customField", "LexExampleSentence", new string[] {"vernacular"});
+			Field field = new Field("customField", "LexExampleSentence", new string[] {"vernacular"});
 			_missingCustomFieldFilter = new MissingFieldQuery(field);
 		}
 
@@ -185,12 +184,11 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Field field =
-					new Field("customField",
-							  "LexSense",
-							  new string[] {"vernacular"},
-							  Field.MultiplicityType.ZeroOr1,
-							  "Option");
+			Field field = new Field("customField",
+									"LexSense",
+									new string[] {"vernacular"},
+									Field.MultiplicityType.ZeroOr1,
+									"Option");
 			_missingCustomFieldFilter = new MissingFieldQuery(field);
 		}
 

@@ -39,7 +39,7 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryStateUnitializedTests : IRepositoryStateUnitializedTests<LexEntry>
+	public class LiftRepositoryStateUnitializedTests: IRepositoryStateUnitializedTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -83,29 +83,34 @@ namespace WeSay.LexicalModel.Tests
 		public void Constructor_FileDoesNotExist_EmptyLiftFileIsCreated()
 		{
 			string nonExistentFileToBeCreated = Path.GetTempPath() + Path.GetRandomFileName();
-			LiftRepository testRepoitory = new LiftRepository(nonExistentFileToBeCreated);
-			string fileContent = File.ReadAllText(nonExistentFileToBeCreated);
-			const string emptyLiftFileContent =
-				@"<?xml version=""1.0"" encoding=""utf-8""?>
+			using (new LiftRepository(nonExistentFileToBeCreated))
+			{
+				string fileContent = File.ReadAllText(nonExistentFileToBeCreated);
+				const string emptyLiftFileContent =
+						@"<?xml version=""1.0"" encoding=""utf-8""?>
 <lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
-			Assert.AreEqual(emptyLiftFileContent, fileContent);
+				Assert.AreEqual(emptyLiftFileContent, fileContent);
+			}
 		}
 
 		[Test]
 		public void Constructor_FileIsEmpty_MakeFileAnEmptyLiftFile()
 		{
 			string emptyFileToBeFilled = Path.GetTempFileName();
-			LiftRepository testRepoitory = new LiftRepository(emptyFileToBeFilled);
-			string fileContent = File.ReadAllText(emptyFileToBeFilled);
-			const string emptyLiftFileContent =
-				@"<?xml version=""1.0"" encoding=""utf-8""?>
+			using (new LiftRepository(emptyFileToBeFilled))
+			{
+				string fileContent = File.ReadAllText(emptyFileToBeFilled);
+				const string emptyLiftFileContent =
+						@"<?xml version=""1.0"" encoding=""utf-8""?>
 <lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
-			Assert.AreEqual(emptyLiftFileContent, fileContent);
+				Assert.AreEqual(emptyLiftFileContent, fileContent);
+			}
 		}
 	}
 
 	[TestFixture]
-	public class LiftRepositoryCreatedFromPersistedData : IRepositoryPopulateFromPersistedTests<LexEntry>
+	public class LiftRepositoryCreatedFromPersistedData:
+			IRepositoryPopulateFromPersistedTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -131,21 +136,14 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		public override void
+				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
 			Query query = new Query(typeof (LexEntry)).Show("LexicalForm");
 			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
-		}
-
-		[Test]
-		public void Constructor_FileIsWriteable()
-		{
-			FileStream fileStream = File.OpenWrite(_persistedFilePath);
-			Assert.IsTrue(fileStream.CanWrite);
-			fileStream.Close();
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
@@ -156,7 +154,8 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryCreateItemTransitionTests : IRepositoryCreateItemTransitionTests<LexEntry>
+	public class LiftRepositoryCreateItemTransitionTests:
+			IRepositoryCreateItemTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -176,7 +175,8 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		public override void
+				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
 			Item.LexicalForm["de"] = "Sonne";
@@ -194,7 +194,8 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryDeleteItemTransitionTests : IRepositoryDeleteItemTransitionTests<LexEntry>
+	public class LiftRepositoryDeleteItemTransitionTests:
+			IRepositoryDeleteItemTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -221,7 +222,7 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryDeleteIdTransitionTests : IRepositoryDeleteIdTransitionTests<LexEntry>
+	public class LiftRepositoryDeleteIdTransitionTests: IRepositoryDeleteIdTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -248,7 +249,8 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryDeleteAllItemsTransitionTests : IRepositoryDeleteAllItemsTransitionTests<LexEntry>
+	public class LiftRepositoryDeleteAllItemsTransitionTests:
+			IRepositoryDeleteAllItemsTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -270,6 +272,70 @@ namespace WeSay.LexicalModel.Tests
 		{
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+		}
+	}
+
+	[TestFixture]
+	public class LiftFileAlreadyLockedTest
+	{
+		private string _persistedFilePath;
+		private FileStream _fileStream;
+
+		[SetUp]
+		public void SetUp()
+		{
+			_persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			_fileStream = File.OpenWrite(_persistedFilePath);
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_fileStream.Close();
+			File.Delete(_persistedFilePath);
+		}
+
+		[Test]
+		[ExpectedException(typeof (IOException))]
+		public void LockedFile_Throws()
+		{
+			Assert.IsTrue(_fileStream.CanWrite);
+			LiftRepository liftRepository = new LiftRepository(_persistedFilePath);
+		}
+	}
+
+	[TestFixture]
+	public class LiftFileNotLockedTest
+	{
+		[Test]
+		public void UnlockedLiftFile_ConstructorDoesNotThrow()
+		{
+			string persistedFilePath = Path.GetRandomFileName();
+			persistedFilePath = Path.GetFullPath(persistedFilePath);
+			// Confirm that the file is writable.
+			FileStream fileStream = File.OpenWrite(persistedFilePath);
+			Assert.IsTrue(fileStream.CanWrite);
+			// Close it before creating the LiftRepository.
+			fileStream.Close();
+			// LiftRepository constructor shouldn't throw an IOException.
+			using (LiftRepository liftRepository = new LiftRepository(persistedFilePath)) {}
+			Assert.IsTrue(true); // Constructor didn't throw.
+			File.Delete(persistedFilePath);
+		}
+	}
+
+	[TestFixture]
+	public class LiftMigrationTests
+	{
+		[Test]
+		public void MigrateIfNeeded_LiftIsLockedByProject_LockedAgainAfterMigration()
+		{
+			Assert.Fail("NYI");
+			//CreateLiftFileAndRepositoryForTesting("0.10");
+			//LiftPreparer preparer = new LiftPreparer(_liftFilePath);
+			//Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
+			//Assert.IsTrue(_liftRepository.IsLiftFileLocked);
 		}
 	}
 }

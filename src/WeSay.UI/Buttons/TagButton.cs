@@ -32,70 +32,67 @@ namespace WeSay.UI.Buttons
 			switch (PointingDirection)
 			{
 				case PointingDirection.Left:
-					path.AddLines(
-							new Point[]
-									{
-											new Point(rectangle.Left + ArrowHeadHeight, rectangle.Top),
-											new Point(rectangle.Right, rectangle.Top),
-											new Point(rectangle.Right, rectangle.Bottom),
-											new Point(rectangle.Left + ArrowHeadHeight, rectangle.Bottom),
-											new Point(rectangle.Left, rectangle.Top + rectangle.Height / 2)
-									});
-					TextAndImageRectangle =
-							new Rectangle(rectangle.Left + ArrowHeadHeight,
-										  rectangle.Top,
-										  rectangle.Width - ArrowHeadHeight,
-										  rectangle.Height);
+					path.AddLines(new Point[]
+									  {
+											  new Point(rectangle.Left + ArrowHeadHeight, rectangle.Top),
+											  new Point(rectangle.Right, rectangle.Top),
+											  new Point(rectangle.Right, rectangle.Bottom),
+											  new Point(rectangle.Left + ArrowHeadHeight, rectangle.Bottom)
+											  ,
+											  new Point(rectangle.Left,
+														rectangle.Top + rectangle.Height / 2)
+									  });
+					TextAndImageRectangle = new Rectangle(rectangle.Left + ArrowHeadHeight,
+														  rectangle.Top,
+														  rectangle.Width - ArrowHeadHeight,
+														  rectangle.Height);
 
 					break;
 				case PointingDirection.Right:
-					path.AddLines(
-							new Point[]
-									{
-											new Point(rectangle.Right - ArrowHeadHeight, rectangle.Top),
-											new Point(rectangle.Left, rectangle.Top),
-											new Point(rectangle.Left, rectangle.Bottom),
-											new Point(rectangle.Right - ArrowHeadHeight, rectangle.Bottom),
-											new Point(rectangle.Right, rectangle.Top + rectangle.Height / 2)
-									});
-					TextAndImageRectangle =
-							new Rectangle(rectangle.Left,
-										  rectangle.Top,
-										  rectangle.Width - ArrowHeadHeight,
-										  rectangle.Height);
+					path.AddLines(new Point[]
+									  {
+											  new Point(rectangle.Right - ArrowHeadHeight, rectangle.Top),
+											  new Point(rectangle.Left, rectangle.Top),
+											  new Point(rectangle.Left, rectangle.Bottom),
+											  new Point(rectangle.Right - ArrowHeadHeight, rectangle.Bottom)
+											  ,
+											  new Point(rectangle.Right,
+														rectangle.Top + rectangle.Height / 2)
+									  });
+					TextAndImageRectangle = new Rectangle(rectangle.Left,
+														  rectangle.Top,
+														  rectangle.Width - ArrowHeadHeight,
+														  rectangle.Height);
 					break;
 				case PointingDirection.Top:
-					path.AddLines(
-							new Point[]
-									{
-											new Point(rectangle.Left, rectangle.Top + ArrowHeadHeight),
-											new Point(rectangle.Left, rectangle.Bottom),
-											new Point(rectangle.Right, rectangle.Bottom),
-											new Point(rectangle.Right, rectangle.Top + ArrowHeadHeight),
-											new Point(rectangle.Left + rectangle.Width / 2, rectangle.Top)
-									});
-					TextAndImageRectangle =
-							new Rectangle(rectangle.Left,
-										  rectangle.Top + ArrowHeadHeight,
-										  rectangle.Width,
-										  rectangle.Height - ArrowHeadHeight);
+					path.AddLines(new Point[]
+									  {
+											  new Point(rectangle.Left, rectangle.Top + ArrowHeadHeight),
+											  new Point(rectangle.Left, rectangle.Bottom),
+											  new Point(rectangle.Right, rectangle.Bottom),
+											  new Point(rectangle.Right, rectangle.Top + ArrowHeadHeight),
+											  new Point(rectangle.Left + rectangle.Width / 2, rectangle.Top)
+									  });
+					TextAndImageRectangle = new Rectangle(rectangle.Left,
+														  rectangle.Top + ArrowHeadHeight,
+														  rectangle.Width,
+														  rectangle.Height - ArrowHeadHeight);
 					break;
 				case PointingDirection.Bottom:
-					path.AddLines(
-							new Point[]
-									{
-											new Point(rectangle.Left, rectangle.Bottom - ArrowHeadHeight),
-											new Point(rectangle.Left, rectangle.Top),
-											new Point(rectangle.Right, rectangle.Top),
-											new Point(rectangle.Right, rectangle.Bottom - ArrowHeadHeight),
-											new Point(rectangle.Left + rectangle.Width / 2,
-													  rectangle.Bottom)
-									});
-					TextAndImageRectangle =
-							new Rectangle(rectangle.Left,
-										  rectangle.Top,
-										  rectangle.Width,
-										  rectangle.Height - ArrowHeadHeight);
+					path.AddLines(new Point[]
+									  {
+											  new Point(rectangle.Left, rectangle.Bottom - ArrowHeadHeight)
+											  , new Point(rectangle.Left, rectangle.Top),
+											  new Point(rectangle.Right, rectangle.Top),
+											  new Point(rectangle.Right, rectangle.Bottom - ArrowHeadHeight)
+											  ,
+											  new Point(rectangle.Left + rectangle.Width / 2,
+														rectangle.Bottom)
+									  });
+					TextAndImageRectangle = new Rectangle(rectangle.Left,
+														  rectangle.Top,
+														  rectangle.Width,
+														  rectangle.Height - ArrowHeadHeight);
 					break;
 			}
 

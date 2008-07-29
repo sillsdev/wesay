@@ -78,7 +78,8 @@ namespace CommonTools.Tests
 		}
 
 		[Test]
-		public void ComputeSmallestPossibleButtonSizes_OneList_MultipleSizes_SameListOrderUnspecified()
+		public void
+				ComputeSmallestPossibleButtonSizes_OneList_MultipleSizes_SameListOrderUnspecified()
 		{
 			List<IEnumerable<Size>> sizesListList = new List<IEnumerable<Size>>();
 			List<Size> sizes = new List<Size>();
@@ -137,7 +138,8 @@ namespace CommonTools.Tests
 		}
 
 		[Test]
-		public void ComputeSmallestPossibleButtonSizes_TwoLists_DifferentSizes_OneItemLargestDimensions()
+		public void
+				ComputeSmallestPossibleButtonSizes_TwoLists_DifferentSizes_OneItemLargestDimensions()
 		{
 			List<IEnumerable<Size>> sizesListList = new List<IEnumerable<Size>>();
 			List<Size> sizes = new List<Size>();
@@ -152,7 +154,9 @@ namespace CommonTools.Tests
 		}
 
 		[Test]
-		public void ComputeSmallestPossibleButtonSizes_MultipleLists_LotsOfSizes_CoalescedWidthsAndHeights()
+		public void
+				ComputeSmallestPossibleButtonSizes_MultipleLists_LotsOfSizes_CoalescedWidthsAndHeights
+				()
 		{
 			List<IEnumerable<Size>> sizesListList = new List<IEnumerable<Size>>();
 			List<Size> sizes = new List<Size>();
@@ -167,7 +171,7 @@ namespace CommonTools.Tests
 			sizes.Add(new Size(10, 96));
 			sizes.Add(new Size(15, 48));
 			sizes.Add(new Size(33, 24));
-			sizes.Add(new Size(60 ,12));
+			sizes.Add(new Size(60, 12));
 			sizesListList.Add(sizes);
 			sizes = Dash.ComputeSmallestPossibleButtonSizes(sizesListList);
 			Assert.AreEqual(3, sizes.Count);
@@ -180,14 +184,18 @@ namespace CommonTools.Tests
 		public void ComputeBestButtonSize_NullPossibleSizes_EmptySize()
 		{
 			Size spaceForButtons = new Size(500, 300);
-			Assert.AreEqual(Size.Empty, Dash.ComputeBestButtonSize(null, spaceForButtons, new List<int>()));
+			Assert.AreEqual(Size.Empty,
+							Dash.ComputeBestButtonSize(null, spaceForButtons, new List<int>()));
 		}
 
 		[Test]
 		public void ComputeBestButtonSize_NoPossibleSizes_EmptySize()
 		{
 			Size spaceForButtons = new Size(500, 300);
-			Assert.AreEqual(Size.Empty, Dash.ComputeBestButtonSize(new List<Size>(), spaceForButtons, new List<int>()));
+			Assert.AreEqual(Size.Empty,
+							Dash.ComputeBestButtonSize(new List<Size>(),
+													   spaceForButtons,
+													   new List<int>()));
 		}
 
 		[Test]
@@ -319,7 +327,9 @@ namespace CommonTools.Tests
 		}
 
 		[Test]
-		public void ComputeBestButtonSize_MultipleSizesContainingClippedScrolledNonscrolled_BestSizeByRatioAndNotClippedAndNotScrolled()
+		public void
+				ComputeBestButtonSize_MultipleSizesContainingClippedScrolledNonscrolled_BestSizeByRatioAndNotClippedAndNotScrolled
+				()
 		{
 			Size spaceForButtons = new Size(500, 300);
 			List<Size> sizes = new List<Size>();

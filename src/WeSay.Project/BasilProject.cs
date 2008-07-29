@@ -128,12 +128,12 @@ namespace WeSay.Project
 
 		public IList<WritingSystem> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
 		{
-				List<WritingSystem> l = new List<WritingSystem>();
-				foreach (string id in writingSystemIds)
-				{
-					l.Add(WritingSystems[id]);
-				}
-				return l;
+			List<WritingSystem> l = new List<WritingSystem>();
+			foreach (string id in writingSystemIds)
+			{
+				l.Add(WritingSystems[id]);
+			}
+			return l;
 		}
 
 		public string ProjectDirectoryPath
@@ -195,9 +195,8 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return
-						Path.Combine(ProjectDirectoryPath /*ProjectCommonDirectory*/,
-									 _stringCatalogSelector + ".po");
+				return Path.Combine(ProjectDirectoryPath /*ProjectCommonDirectory*/,
+									_stringCatalogSelector + ".po");
 			}
 		}
 

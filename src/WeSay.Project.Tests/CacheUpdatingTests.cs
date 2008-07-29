@@ -87,8 +87,7 @@ namespace WeSay.Project.Tests
 			MakeDir(_weSayDir, "Cache");
 			using (
 					IObjectContainer db =
-							Db4oFactory.OpenFile(WeSayWordsProject.Project.PathToRepository)
-					)
+							Db4oFactory.OpenFile(WeSayWordsProject.Project.PathToRepository))
 			{
 				db.Close();
 			}
@@ -104,8 +103,7 @@ namespace WeSay.Project.Tests
 
 			using (
 					IObjectContainer db =
-							Db4oFactory.OpenFile(WeSayWordsProject.Project.PathToRepository)
-					)
+							Db4oFactory.OpenFile(WeSayWordsProject.Project.PathToRepository))
 			{
 				CacheManager.UpdateSyncPointInCache(db, File.GetLastWriteTimeUtc(_liftPath));
 				db.Close();

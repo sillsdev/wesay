@@ -92,7 +92,7 @@ namespace WeSay.UI
 			_writingSystemsForThisField = new List<WritingSystem>();
 			foreach (KeyValuePair<string, WritingSystem> pair in allWritingSystems)
 			{
-				if(writingSystemIds.Contains(pair.Key))
+				if (writingSystemIds.Contains(pair.Key))
 				{
 					_writingSystemsForThisField.Add(pair.Value);
 				}
@@ -160,8 +160,7 @@ namespace WeSay.UI
 			foreach (WritingSystem writingSystem in WritingSystemsForThisField)
 			{
 				RowStyles.Add(new RowStyle(SizeType.AutoSize));
-				WeSayTextBox box = AddTextBox(writingSystem,
-											  multiText);
+				WeSayTextBox box = AddTextBox(writingSystem, multiText);
 
 				Label label = AddWritingSystemLabel(box);
 				label.Click += subControl_Click;
@@ -172,10 +171,9 @@ namespace WeSay.UI
 				if (_showAnnotationWidget) //false for ghosts
 				{
 					//TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
-					AnnotationWidget aw =
-							new AnnotationWidget(multiText,
-												 writingSystem.Id,
-												 box.Name + "-annotationWidget");
+					AnnotationWidget aw = new AnnotationWidget(multiText,
+															   writingSystem.Id,
+															   box.Name + "-annotationWidget");
 					Control annotationControl = aw.MakeControl(new Size()); //p.Size);
 					annotationControl.Click += subControl_Click;
 					annotationControl.Anchor = AnchorStyles.Right | AnchorStyles.Top;
@@ -236,9 +234,8 @@ namespace WeSay.UI
 					{
 						foreach (WritingSystem ws in _allWritingSystems.Values)
 						{
-							Size size =
-									TextRenderer.MeasureText(ws.Abbreviation,
-															 _writingSystemLabelFont);
+							Size size = TextRenderer.MeasureText(ws.Abbreviation,
+																 _writingSystemLabelFont);
 
 							if (size.Width > _widthForWritingSystemLabels)
 							{
@@ -278,8 +275,9 @@ namespace WeSay.UI
 					(int)
 					(box.Font.Size * box.Font.FontFamily.GetCellAscent(box.Font.Style) /
 					 label.Font.FontFamily.GetEmHeight(box.Font.Style));
-			int howMuchFartherDownToPlaceLabelThanText =
-					Math.Max(0, contentAscentInPixels - labelAscentInPixels);
+			int howMuchFartherDownToPlaceLabelThanText = Math.Max(0,
+																  contentAscentInPixels -
+																  labelAscentInPixels);
 
 			label.Margin = new Padding(0, box.Top + howMuchFartherDownToPlaceLabelThanText, 0, 0);
 			return label;

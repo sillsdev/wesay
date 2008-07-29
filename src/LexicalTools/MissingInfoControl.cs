@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
@@ -79,6 +80,8 @@ namespace WeSay.LexicalTools
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
 			_recordsListBox.Enter += _recordsListBox_Enter;
 			_recordsListBox.Leave += _recordsListBox_Leave;
+			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
+
 			_recordsListBox.WritingSystem = listWritingSystem;
 			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.BorderStyle = BorderStyle.None;
@@ -86,11 +89,46 @@ namespace WeSay.LexicalTools
 			_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
 			_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
 			_completedRecordsListBox.WritingSystem = listWritingSystem;
+			_completedRecordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
 
 			labelNextHotKey.BringToFront();
 			_btnNextWord.BringToFront();
 			_btnPreviousWord.BringToFront();
 			SetCurrentRecordFromRecordList();
+		}
+
+		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
+		{
+			RecordToken<LexEntry> recordToken;
+			if (sender == _recordsListBox)
+			{
+				recordToken = this._todoRecords[e.ItemIndex];
+			}
+			else
+			{
+				Debug.Assert(sender == _completedRecordsListBox);
+				recordToken = this._completedRecords[e.ItemIndex];
+			}
+			string displayString = (string) recordToken["Form"];
+			e.Item = new ListViewItem(displayString);
+			if (!string.IsNullOrEmpty(displayString))
+			{
+				return;
+			}
+
+			displayString =
+					recordToken.RealObject.LexicalForm.GetBestAlternative(
+							_recordsListBox.WritingSystem.Id, string.Empty);
+			e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
+
+			if (string.IsNullOrEmpty(displayString))
+			{
+				displayString = "(" +
+								StringCatalog.Get("~Empty",
+												  "This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.") +
+								")";
+			}
+			e.Item.Text = displayString;
 		}
 
 		protected override bool ProcessDialogKey(Keys keyData)

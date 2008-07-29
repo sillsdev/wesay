@@ -10,7 +10,8 @@ namespace WeSay.Data
 	public static class PreciseDateTime
 	{
 		private static DateTime _lastDateTime;
-		private static int _pseudoTicks = 0;
+		private static int _pseudoTicks;
+
 		public static DateTime UtcNow
 		{
 			get
@@ -21,7 +22,7 @@ namespace WeSay.Data
 				DateTime dt = DateTime.UtcNow;
 				if (dt.Ticks == _lastDateTime.Ticks)
 				{
-					_pseudoTicks+=1;
+					_pseudoTicks += 1;
 					dt = dt.AddTicks(_pseudoTicks);
 				}
 				else

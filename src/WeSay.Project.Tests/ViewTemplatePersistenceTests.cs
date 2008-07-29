@@ -91,12 +91,12 @@ namespace WeSay.Project.Tests
 		private static ViewTemplate MakeSampleInventory()
 		{
 			ViewTemplate f = new ViewTemplate();
-			f.Add(
-					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-							  "LexEntry",
-							  new string[] {"xx", "yy"}));
-			Field field =
-					new Field(LexSense.WellKnownProperties.Gloss, "LexSense", new string[] {"zz"});
+			f.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+							"LexEntry",
+							new string[] {"xx", "yy"}));
+			Field field = new Field(LexSense.WellKnownProperties.Gloss,
+									"LexSense",
+									new string[] {"zz"});
 			field.Enabled = false;
 			//field.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			f.Add(field);

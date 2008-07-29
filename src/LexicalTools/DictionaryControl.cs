@@ -51,13 +51,16 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 			InitializeDisplaySettings();
 
-			_writingSystemChooser.Image =
-					Resources.Expand.GetThumbnailImage(6, 6, ReturnFalse, IntPtr.Zero);
+			_writingSystemChooser.Image = Resources.Expand.GetThumbnailImage(6,
+																			 6,
+																			 ReturnFalse,
+																			 IntPtr.Zero);
 			_btnFind.Image = Resources.Find.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
-			_btnDeleteWord.Image =
-					Resources.DeleteWord.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
-			_btnNewWord.Image =
-					Resources.NewWord.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
+			_btnDeleteWord.Image = Resources.DeleteWord.GetThumbnailImage(18,
+																		  18,
+																		  ReturnFalse,
+																		  IntPtr.Zero);
+			_btnNewWord.Image = Resources.NewWord.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
 
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
 			Control_EntryDetailPanel.LexEntryRepository = _lexEntryRepository;
@@ -124,7 +127,8 @@ namespace WeSay.LexicalTools
 			{
 				if (field.WritingSystemIds.Count > 0)
 				{
-					IList<WritingSystem> writingSystems = BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
+					IList<WritingSystem> writingSystems =
+							BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
 					foreach (WritingSystem writingSystem in writingSystems)
 					{
 						if (!WritingSystemExistsInPicker(writingSystem))
@@ -156,7 +160,7 @@ namespace WeSay.LexicalTools
 		{
 			foreach (MenuItem item in _cmWritingSystems.MenuItems)
 			{
-				if (writingSystem.Id == ((WritingSystem)item.Tag).Id)
+				if (writingSystem.Id == ((WritingSystem) item.Tag).Id)
 				{
 					return true;
 				}
@@ -166,10 +170,9 @@ namespace WeSay.LexicalTools
 
 		private bool IsWritingSystemUsedInLexicalForm(string writingSystemId)
 		{
-			return
-					_viewTemplate.IsWritingSystemUsedInField(writingSystemId,
-															 Field.FieldNames.EntryLexicalForm.
-																	 ToString());
+			return _viewTemplate.IsWritingSystemUsedInField(writingSystemId,
+															Field.FieldNames.EntryLexicalForm.
+																	ToString());
 		}
 
 		public void SetListWritingSystem(WritingSystem writingSystem)
@@ -208,11 +211,10 @@ namespace WeSay.LexicalTools
 
 			_btnFind.Height = _findText.Height;
 			_writingSystemChooser.Height = _findText.Height;
-			_btnFind.Image =
-					Resources.Find.GetThumbnailImage(_btnFind.Width - 2,
-													 _btnFind.Width - 2,
-													 ReturnFalse,
-													 IntPtr.Zero);
+			_btnFind.Image = Resources.Find.GetThumbnailImage(_btnFind.Width - 2,
+															  _btnFind.Width - 2,
+															  ReturnFalse,
+															  IntPtr.Zero);
 
 			_btnFind.Left = _writingSystemChooser.Left - _btnFind.Width;
 			_findText.Width = _btnFind.Left - _findText.Left;
@@ -220,14 +222,20 @@ namespace WeSay.LexicalTools
 
 		private void SetRecordToBeEdited(LexEntry record)
 		{
-			if (Control_EntryDetailPanel.DataSource != null)
-			{
-				Control_EntryDetailPanel.DataSource.PropertyChanged -= OnEntryChanged;
-			}
+			SaveAndCleanUpPreviousEntry();
 			Control_EntryDetailPanel.DataSource = record;
 			if (record != null)
 			{
 				record.PropertyChanged += OnEntryChanged;
+			}
+		}
+
+		private void SaveAndCleanUpPreviousEntry() {
+			LexEntry previousEntry = Control_EntryDetailPanel.DataSource;
+			if (previousEntry != null)
+			{
+				previousEntry.PropertyChanged -= OnEntryChanged;
+				this._lexEntryRepository.SaveItem(previousEntry);
 			}
 		}
 
@@ -274,10 +282,13 @@ namespace WeSay.LexicalTools
 				return;
 			}
 
-			bool writingSystemUsedInLexicalForm = IsWritingSystemUsedInLexicalForm(this._listWritingSystem.Id);
-			if(writingSystemUsedInLexicalForm)
+			bool writingSystemUsedInLexicalForm =
+					IsWritingSystemUsedInLexicalForm(this._listWritingSystem.Id);
+			if (writingSystemUsedInLexicalForm)
 			{
-				displayString = recordToken.RealObject.LexicalForm.GetBestAlternative(_listWritingSystem.Id, string.Empty);
+				displayString =
+						recordToken.RealObject.LexicalForm.GetBestAlternative(
+								_listWritingSystem.Id, string.Empty);
 				e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
 			}
 
@@ -286,16 +297,13 @@ namespace WeSay.LexicalTools
 				displayString = "(";
 				if (writingSystemUsedInLexicalForm)
 				{
-					displayString +=
-							StringCatalog.Get("~Empty",
-											  "This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.");
+					displayString += StringCatalog.Get("~Empty",
+													   "This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.");
 				}
 				else
 				{
-					displayString +=
-							StringCatalog.Get("~No Gloss",
-											  "This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.");
-
+					displayString += StringCatalog.Get("~No Gloss",
+													   "This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.");
 				}
 				displayString += ")";
 			}
@@ -307,11 +315,10 @@ namespace WeSay.LexicalTools
 																			 IDisplayStringAdaptor
 																					 adaptor)
 		{
-			return
-					ApproximateMatcher.FindClosestForms(items,
-														text,
-														ApproximateMatcherOptions.
-																IncludePrefixedAndNextClosestForms);
+			return ApproximateMatcher.FindClosestForms(items,
+													   text,
+													   ApproximateMatcherOptions.
+															   IncludePrefixedAndNextClosestForms);
 		}
 
 		private void OnCmWritingSystemClicked(object sender, EventArgs e)
@@ -380,10 +387,8 @@ namespace WeSay.LexicalTools
 		{
 			Logger.WriteMinorEvent("SelectItemWithDisplayString");
 			_recordsListBox.SelectedIndex =
-					_records.FindFirstIndex(delegate(RecordToken<LexEntry> token)
-											{
-												return (string) token["Form"] == text;
-											});
+					_records.FindFirstIndex(
+							delegate(RecordToken<LexEntry> token) { return (string) token["Form"] == text; });
 		}
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -489,14 +494,14 @@ namespace WeSay.LexicalTools
 		private int GetEmptyWordIndex()
 		{
 			// empty forms will always sort to the top
-			for(int i = 0; i < _records.Count;++i)
+			for (int i = 0;i < _records.Count;++i)
 			{
-				if(!string.IsNullOrEmpty((string)_records[i]["Form"]))
+				if (!string.IsNullOrEmpty((string) _records[i]["Form"]))
 				{
 					break;
 				}
 
-				if(_records[i].RealObject.IsEmpty)
+				if (_records[i].RealObject.IsEmpty)
 				{
 					return i;
 				}

@@ -1,32 +1,28 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
-
 using WeSay.LexicalModel;
 
 namespace WeSay.App
 {
 	internal class RepositoryStartupUI
 	{
-		private LexEntryRepository _lexEntryRepository;
-
-		public RepositoryStartupUI(LexEntryRepository lexEntryRepository)
+		static public LexEntryRepository CreateLexEntryRepository(string path)
 		{
-			_lexEntryRepository = lexEntryRepository;
-		}
-
-		public void RepositoryStartup()
-		{
+			LexEntryRepository lexEntryRepository = null;
 			using (ProgressDialog dlg = new ProgressDialog())
 			{
 				dlg.Overview =
 						"Please wait while WeSay migrates your lift database to the required version.";
 				BackgroundWorker worker = new BackgroundWorker();
-				worker.DoWork += DoRepositoryStartup;
+				worker.DoWork += delegate (object sender, DoWorkEventArgs args)
+								 {
+									 ProgressState progressState = (ProgressState)args.Argument;
+									 lexEntryRepository = new LexEntryRepository(path, progressState);
+								 };
 				dlg.BackgroundWorker = worker;
 				dlg.CanCancel = false;
 
@@ -42,20 +38,11 @@ namespace WeSay.App
 							 ProgressState.StateValue.StoppedWithError)
 					{
 						ErrorReport.ReportNonFatalMessage(
-								"Failed." + dlg.ProgressStateResult.LogString,
-								null,
-								false);
+								"Failed." + dlg.ProgressStateResult.LogString, null, false);
 					}
 				}
+				return lexEntryRepository;
 			}
 		}
-
-		private void DoRepositoryStartup(object sender, DoWorkEventArgs args)
-		{
-			ProgressState progressState = (ProgressState)args.Argument;
-			_lexEntryRepository.Startup(progressState);
-		}
-
-
 	}
 }

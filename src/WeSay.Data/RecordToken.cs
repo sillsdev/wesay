@@ -12,8 +12,7 @@ namespace WeSay.Data
 		private readonly RepositoryId _id;
 		private readonly IRepository<T> _repository;
 
-		public RecordToken(IRepository<T> repository,
-						   RepositoryId id)
+		public RecordToken(IRepository<T> repository, RepositoryId id)
 		{
 			if (repository == null)
 			{
@@ -28,9 +27,8 @@ namespace WeSay.Data
 		}
 
 		public RecordToken(IRepository<T> repository,
-				   IDictionary<string, object> queryResults,
-				   RepositoryId id)
-			: this(repository, id)
+						   IDictionary<string, object> queryResults,
+						   RepositoryId id): this(repository, id)
 		{
 			if (queryResults == null)
 			{
@@ -54,7 +52,7 @@ namespace WeSay.Data
 		public bool TryGetValue(string fieldName, out object value)
 		{
 			value = null;
-			if(_queryResults == null)
+			if (_queryResults == null)
 			{
 				return false;
 			}
@@ -66,7 +64,7 @@ namespace WeSay.Data
 			get
 			{
 				object value;
-				if(TryGetValue(fieldName, out value))
+				if (TryGetValue(fieldName, out value))
 				{
 					return value;
 				}
@@ -74,7 +72,7 @@ namespace WeSay.Data
 			}
 			set
 			{
-				if(_queryResults == null)
+				if (_queryResults == null)
 				{
 					_queryResults = new SortedDictionary<string, object>();
 				}
@@ -98,9 +96,9 @@ namespace WeSay.Data
 			{
 				return false;
 			}
-			return Equals(_id, recordToken._id)
-				   && new DictionaryEqualityComparer<string, object>()
-					  .Equals(_queryResults, recordToken._queryResults);
+			return Equals(_id, recordToken._id) &&
+				   new DictionaryEqualityComparer<string, object>().Equals(_queryResults,
+																		   recordToken._queryResults);
 		}
 
 		public override bool Equals(object obj)

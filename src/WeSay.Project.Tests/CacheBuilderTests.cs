@@ -9,7 +9,8 @@ using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests
 {
-	[TestFixture, Ignore("This class is going away. TA 2008-07-16")]
+	[TestFixture]
+	[Ignore("This class is going away. TA 2008-07-16")]
 	public class CacheBuilderTests
 	{
 		private CacheBuilder _cacheBuilder;
@@ -53,8 +54,8 @@ namespace WeSay.Project.Tests
 			{
 				string dirToEmptyOfBackupDirs =
 						Directory.GetParent(WeSayWordsProject.Project.PathToLiftBackupDir).FullName;
-				string[] backUpDirs =
-						Directory.GetDirectories(dirToEmptyOfBackupDirs, "*incremental*");
+				string[] backUpDirs = Directory.GetDirectories(dirToEmptyOfBackupDirs,
+															   "*incremental*");
 				foreach (string dir in backUpDirs)
 				{
 					Directory.Delete(dir, true);
@@ -100,12 +101,12 @@ namespace WeSay.Project.Tests
 			Assert.AreEqual(ProgressState.StateValue.Finished, _progress.State, _log);
 		}
 
-		[Test] //, Ignore("Run this by hand if you have an E: volume (windows only)")]
+		[Test]
 		public void WorksWithTempDirectoryOnADifferentVolumne()
 		{
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
 			{
-				Console.WriteLine("Ignored on non-Windows");
+				Assert.Ignore("Ignored on non-Windows");
 			}
 			else
 			{
@@ -125,7 +126,7 @@ namespace WeSay.Project.Tests
 				}
 				if (driveName.Length == 0)
 				{
-					Console.WriteLine("Ignored when there is not an additional volume");
+					Assert.Ignore("Ignored when there is not an additional volume");
 				}
 				else
 				{

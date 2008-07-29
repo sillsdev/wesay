@@ -605,11 +605,10 @@ namespace Addin.LiftReports.GraphComponents
 					true);
 			UpdateStyles();
 
-			GraphArea =
-					new Rectangle(ClientRectangle.Left + graphMarginLeft,
-								  ClientRectangle.Top + graphMarginTop,
-								  ClientRectangle.Width - graphMarginRight - graphMarginLeft,
-								  ClientRectangle.Height - graphMarginBottom - graphMarginTop);
+			GraphArea = new Rectangle(ClientRectangle.Left + graphMarginLeft,
+									  ClientRectangle.Top + graphMarginTop,
+									  ClientRectangle.Width - graphMarginRight - graphMarginLeft,
+									  ClientRectangle.Height - graphMarginBottom - graphMarginTop);
 
 			Debug.Assert(GraphArea.Height == (GraphArea.Bottom - GraphArea.Top), "Problem Ctor");
 		}
@@ -749,19 +748,17 @@ namespace Addin.LiftReports.GraphComponents
 
 				if (barOrientation == Orientation.Vertical)
 				{
-					basicBar.ClientRectangle =
-							new Rectangle((int) currentBarOffset,
-										  GraphArea.Top,
-										  (int) barWidth,
-										  GraphArea.Height);
+					basicBar.ClientRectangle = new Rectangle((int) currentBarOffset,
+															 GraphArea.Top,
+															 (int) barWidth,
+															 GraphArea.Height);
 				}
 				else
 				{
-					basicBar.ClientRectangle =
-							new Rectangle(GraphArea.Left,
-										  (int) currentBarOffset,
-										  GraphArea.Width,
-										  (int) barWidth);
+					basicBar.ClientRectangle = new Rectangle(GraphArea.Left,
+															 (int) currentBarOffset,
+															 GraphArea.Width,
+															 (int) barWidth);
 				}
 
 				basicBar.BarColor = graphColor;
@@ -815,11 +812,10 @@ namespace Addin.LiftReports.GraphComponents
 
 				for (int i = GraduationsY;i >= 0;i --)
 				{
-					RectangleF axisValuesRect =
-							new RectangleF(ClientRectangle.Left,
-										   offset,
-										   GraphMarginLeft - Font.Height / 2,
-										   Font.Height);
+					RectangleF axisValuesRect = new RectangleF(ClientRectangle.Left,
+															   offset,
+															   GraphMarginLeft - Font.Height / 2,
+															   Font.Height);
 					float graduationValue = maximumValue - graduationDiff * valueOffset;
 					valueOffset ++;
 
@@ -833,10 +829,9 @@ namespace Addin.LiftReports.GraphComponents
 					string val;
 					if (ValueFormat.Length != 0)
 					{
-						val =
-								string.Format(CultureInfo.CurrentUICulture,
-											  ValueFormat,
-											  graduationValue);
+						val = string.Format(CultureInfo.CurrentUICulture,
+											ValueFormat,
+											graduationValue);
 					}
 					else
 					{
@@ -873,10 +868,9 @@ namespace Addin.LiftReports.GraphComponents
 					string val;
 					if (ValueFormat.Length != 0)
 					{
-						val =
-								string.Format(CultureInfo.CurrentUICulture,
-											  ValueFormat,
-											  graduationValue);
+						val = string.Format(CultureInfo.CurrentUICulture,
+											ValueFormat,
+											graduationValue);
 					}
 					else
 					{
@@ -885,11 +879,10 @@ namespace Addin.LiftReports.GraphComponents
 
 					SizeF numberSize = graphics.MeasureString(val, Font, (int) graduationPixelDiff);
 
-					RectangleF axisValuesRect =
-							new RectangleF(offset - numberSize.Width / 2,
-										   GraphArea.Bottom + 2,
-										   numberSize.Width,
-										   Font.Height);
+					RectangleF axisValuesRect = new RectangleF(offset - numberSize.Width / 2,
+															   GraphArea.Bottom + 2,
+															   numberSize.Width,
+															   Font.Height);
 
 					if (axisValuesRect.IntersectsWith(aboveRangeRect) ||
 						axisValuesRect.IntersectsWith(belowRangeRect))
@@ -925,8 +918,10 @@ namespace Addin.LiftReports.GraphComponents
 				for (int i = 0;i < BarCount;i ++)
 				{
 					string name = barCollection[i].Name;
-					RectangleF nameRect =
-							new RectangleF(offset, GraphArea.Bottom, barArea, Font.Height * 2F);
+					RectangleF nameRect = new RectangleF(offset,
+														 GraphArea.Bottom,
+														 barArea,
+														 Font.Height * 2F);
 					graphics.DrawString(name, Font, textBrush, nameRect, sf);
 					offset += barArea;
 				}
@@ -942,11 +937,10 @@ namespace Addin.LiftReports.GraphComponents
 				for (int i = 0;i < BarCount;i ++)
 				{
 					string name = barCollection[i].Name;
-					RectangleF nameRect =
-							new RectangleF(ClientRectangle.Left,
-										   offset,
-										   GraphMarginLeft - FontHeight / 2,
-										   Font.Height);
+					RectangleF nameRect = new RectangleF(ClientRectangle.Left,
+														 offset,
+														 GraphMarginLeft - FontHeight / 2,
+														 Font.Height);
 					graphics.DrawString(name, Font, textBrush, nameRect, sf);
 					offset -= barArea;
 				}
@@ -956,11 +950,10 @@ namespace Addin.LiftReports.GraphComponents
 
 		private void CalculateGraphArea()
 		{
-			GraphArea =
-					new Rectangle(ClientRectangle.Left + graphMarginLeft,
-								  ClientRectangle.Top + graphMarginTop,
-								  ClientRectangle.Width - graphMarginRight - graphMarginLeft,
-								  ClientRectangle.Height - graphMarginBottom - graphMarginTop);
+			GraphArea = new Rectangle(ClientRectangle.Left + graphMarginLeft,
+									  ClientRectangle.Top + graphMarginTop,
+									  ClientRectangle.Width - graphMarginRight - graphMarginLeft,
+									  ClientRectangle.Height - graphMarginBottom - graphMarginTop);
 		}
 
 		private void DrawRangeLinesAndValues(Graphics graphics)
@@ -1035,16 +1028,16 @@ namespace Addin.LiftReports.GraphComponents
 											 ((BelowRangeValue - minimumValue) /
 											  (maximumValue - minimumValue));
 
-					aboveRangeRect =
-							new RectangleF(ClientRectangle.Left,
-										   GraphArea.Bottom - aboveRangeHeight - Font.Height / 2,
-										   GraphMarginLeft - Font.Height / 2,
-										   Font.Height);
-					belowRangeRect =
-							new RectangleF(ClientRectangle.Left,
-										   GraphArea.Bottom - belowRangeHeight - Font.Height / 2,
-										   GraphMarginLeft - Font.Height / 2,
-										   Font.Height);
+					aboveRangeRect = new RectangleF(ClientRectangle.Left,
+													GraphArea.Bottom - aboveRangeHeight -
+													Font.Height / 2,
+													GraphMarginLeft - Font.Height / 2,
+													Font.Height);
+					belowRangeRect = new RectangleF(ClientRectangle.Left,
+													GraphArea.Bottom - belowRangeHeight -
+													Font.Height / 2,
+													GraphMarginLeft - Font.Height / 2,
+													Font.Height);
 
 					sf.Trimming = StringTrimming.Character;
 					sf.FormatFlags = StringFormatFlags.NoWrap;
@@ -1055,12 +1048,10 @@ namespace Addin.LiftReports.GraphComponents
 					string below;
 					if (ValueFormat.Length != 0)
 					{
-						above =
-								string.Format(CultureInfo.CurrentUICulture,
+						above = string.Format(CultureInfo.CurrentUICulture,
 											  ValueFormat,
 											  aboveRangeValue);
-						below =
-								string.Format(CultureInfo.CurrentUICulture,
+						below = string.Format(CultureInfo.CurrentUICulture,
 											  ValueFormat,
 											  belowRangeValue);
 					}
@@ -1085,12 +1076,10 @@ namespace Addin.LiftReports.GraphComponents
 					string below;
 					if (ValueFormat.Length != 0)
 					{
-						above =
-								string.Format(CultureInfo.CurrentUICulture,
+						above = string.Format(CultureInfo.CurrentUICulture,
 											  ValueFormat,
 											  aboveRangeValue);
-						below =
-								string.Format(CultureInfo.CurrentUICulture,
+						below = string.Format(CultureInfo.CurrentUICulture,
 											  ValueFormat,
 											  belowRangeValue);
 					}

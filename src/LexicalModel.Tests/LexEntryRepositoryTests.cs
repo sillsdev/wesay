@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Threading;
-using LiftIO.Parsing;
 using NUnit.Framework;
 using Palaso.Text;
 using WeSay.Data;
@@ -405,7 +403,9 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetEntriesWithMatchingLexicalForm_RepositoryContainsTwoEntriesWithDifferingLexicalForms_OnlyEntryWithmatchingLexicalFormIsFound()
+		public void
+				GetEntriesWithMatchingLexicalForm_RepositoryContainsTwoEntriesWithDifferingLexicalForms_OnlyEntryWithmatchingLexicalFormIsFound
+				()
 		{
 			LexEntry entryToFind = _lexEntryRepository.CreateItem();
 			entryToFind.LexicalForm["en"] = "find me";
@@ -560,7 +560,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetEntriesWithMatchingGlossSortedByLexicalForm_TwoEntriesWithDifferingGlosses_OnlyEntryWithmatchingGlossIsFound()
 		{
-			string glossToFind = "Gloss To Find.";
+			const string glossToFind = "Gloss To Find.";
 			AddEntryWithGloss(glossToFind);
 			AddEntryWithGloss("Gloss Not To Find.");
 			LanguageForm glossLanguageForm = new LanguageForm("en", glossToFind, new MultiText());
@@ -714,7 +714,8 @@ namespace WeSay.LexicalModel.Tests
 							_lexEntryRepository.GetHomographNumber(entry1, _headwordWritingSystem));
 		}
 
-		[Test, Ignore("Homograph order is not well defined CJP")]
+		[Test]
+		[Ignore("Homograph order is not well defined CJP")]
 		public void GetHomographNumber_FirstEntryWithFollowingHomograph_Returns1()
 		{
 			LexEntry entry1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
@@ -723,7 +724,8 @@ namespace WeSay.LexicalModel.Tests
 							_lexEntryRepository.GetHomographNumber(entry1, _headwordWritingSystem));
 		}
 
-		[Test, Ignore("Homograph order is not well defined CJP")]
+		[Test]
+		[Ignore("Homograph order is not well defined CJP")]
 		public void GetHomographNumber_SecondEntry_Returns2()
 		{
 			MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
@@ -739,18 +741,20 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreNotEqual("en", _headwordWritingSystem.Id);
 			LexEntry[] entries = new LexEntry[3];
 			entries[0] = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
-			entries[1]= MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
+			entries[1] = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			entries[2] = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			List<int> ids = new List<int>(entries.Length);
 			foreach (LexEntry entry in entries)
 			{
-				int homographNumber = _lexEntryRepository.GetHomographNumber(entry, _headwordWritingSystem);
+				int homographNumber = _lexEntryRepository.GetHomographNumber(entry,
+																			 _headwordWritingSystem);
 				Assert.IsFalse(ids.Contains(homographNumber));
 				ids.Add(homographNumber);
 			}
 		}
 
-		[Test, Ignore("Homograph order is not well defined CJP")]
+		[Test]
+		[Ignore("Homograph order is not well defined CJP")]
 		public void GetHomographNumber_ThirdEntry_Returns3()
 		{
 			LexEntry entryOther = MakeEntryWithLexemeForm("en", "blue");
@@ -762,12 +766,16 @@ namespace WeSay.LexicalModel.Tests
 			Console.WriteLine("ID1: {0}", _lexEntryRepository.GetId(entry1));
 			Console.WriteLine("ID2: {0}", _lexEntryRepository.GetId(entry2));
 			Console.WriteLine("ID3: {0}", _lexEntryRepository.GetId(entry3));
-			Assert.AreEqual(3, _lexEntryRepository.GetHomographNumber(entry3, _headwordWritingSystem));
-			Assert.AreEqual(2, _lexEntryRepository.GetHomographNumber(entry2, _headwordWritingSystem));
-			Assert.AreEqual(1, _lexEntryRepository.GetHomographNumber(entry1, _headwordWritingSystem));
+			Assert.AreEqual(3,
+							_lexEntryRepository.GetHomographNumber(entry3, _headwordWritingSystem));
+			Assert.AreEqual(2,
+							_lexEntryRepository.GetHomographNumber(entry2, _headwordWritingSystem));
+			Assert.AreEqual(1,
+							_lexEntryRepository.GetHomographNumber(entry1, _headwordWritingSystem));
 		}
 
-		[Test, Ignore("Homograph order is not well defined CJP")]
+		[Test]
+		[Ignore("Homograph order is not well defined CJP")]
 		public void GetHomographNumber_3SameLexicalForms_Returns123()
 		{
 			LexEntry entry1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
@@ -781,7 +789,8 @@ namespace WeSay.LexicalModel.Tests
 							_lexEntryRepository.GetHomographNumber(entry2, _headwordWritingSystem));
 		}
 
-		[Test, Ignore("Homograph order is not well defined CJP")]
+		[Test]
+		[Ignore("Homograph order is not well defined CJP")]
 		public void GetHomographNumber_3SameLexicalFormsAnd3OtherLexicalForms_Returns123()
 		{
 			LexEntry red1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "red");
@@ -795,18 +804,12 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry red3 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "red");
 			//Thread.Sleep(1100);
 			LexEntry blue3 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
-			Assert.AreEqual(1,
-							_lexEntryRepository.GetHomographNumber(blue1, _headwordWritingSystem));
-			Assert.AreEqual(3,
-							_lexEntryRepository.GetHomographNumber(blue3, _headwordWritingSystem));
-			Assert.AreEqual(2,
-							_lexEntryRepository.GetHomographNumber(blue2, _headwordWritingSystem));
-			Assert.AreEqual(1,
-							_lexEntryRepository.GetHomographNumber(red1, _headwordWritingSystem));
-			Assert.AreEqual(3,
-							_lexEntryRepository.GetHomographNumber(red3, _headwordWritingSystem));
-			Assert.AreEqual(2,
-							_lexEntryRepository.GetHomographNumber(red2, _headwordWritingSystem));
+			Assert.AreEqual(1, _lexEntryRepository.GetHomographNumber(blue1, _headwordWritingSystem));
+			Assert.AreEqual(3, _lexEntryRepository.GetHomographNumber(blue3, _headwordWritingSystem));
+			Assert.AreEqual(2, _lexEntryRepository.GetHomographNumber(blue2, _headwordWritingSystem));
+			Assert.AreEqual(1, _lexEntryRepository.GetHomographNumber(red1, _headwordWritingSystem));
+			Assert.AreEqual(3, _lexEntryRepository.GetHomographNumber(red3, _headwordWritingSystem));
+			Assert.AreEqual(2, _lexEntryRepository.GetHomographNumber(red2, _headwordWritingSystem));
 		}
 
 		[Test]
@@ -850,17 +853,18 @@ namespace WeSay.LexicalModel.Tests
 		}
 	}
 
-		[TestFixture]
-		public class LexEntryRepositoryStateUnitializedTests:IRepositoryStateUnitializedTests<LexEntry>
+	[TestFixture]
+	public class LexEntryRepositoryStateUnitializedTests: IRepositoryStateUnitializedTests<LexEntry>
+	{
+		private string _persistedFilePath;
+
+		[SetUp]
+		public void Setup()
 		{
-			private string _persistedFilePath;
-			[SetUp]
-			public void Setup()
-			{
-				this._persistedFilePath = Path.GetRandomFileName();
-				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
-			}
+			_persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+		}
 
 			[TearDown]
 			public void Teardown()
@@ -888,58 +892,61 @@ namespace WeSay.LexicalModel.Tests
 				}
 			}
 		}
+	}
 
-		[TestFixture]
-		public class LexEntryRepositoryCreatedFromPersistedData : IRepositoryPopulateFromPersistedTests<LexEntry>
+	[TestFixture]
+	public class LexEntryRepositoryCreatedFromPersistedData:
+			IRepositoryPopulateFromPersistedTests<LexEntry>
+	{
+		private string _persistedFilePath;
+
+		[SetUp]
+		public void Setup()
 		{
-			private string _persistedFilePath;
-			[SetUp]
-			public void Setup()
-			{
-				this._persistedFilePath = LiftFileInitializer.MakeFile();
-				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
-			}
+			_persistedFilePath = LiftFileInitializer.MakeFile();
+			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+		}
 
-			[TearDown]
-			public void Teardown()
-			{
-				RepositoryUnderTest.Dispose();
-				File.Delete(this._persistedFilePath);
-			}
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+			File.Delete(_persistedFilePath);
+		}
 
-			[Test]
-			public override void SaveItem_LastModifiedIsChangedToLaterTime()
-			{
-				SetState();
-				DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
-				MakeItemDirty(Item);
-				RepositoryUnderTest.SaveItem(Item);
-				Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
-			}
+		[Test]
+		public override void SaveItem_LastModifiedIsChangedToLaterTime()
+		{
+			SetState();
+			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
+			MakeItemDirty(Item);
+			RepositoryUnderTest.SaveItem(Item);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
+		}
 
-			[Test]
-			public override void SaveItems_LastModifiedIsChangedToLaterTime()
-			{
-				SetState();
-				List<LexEntry> itemsToSave = new List<LexEntry>();
-				itemsToSave.Add(Item);
-				DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
-				MakeItemDirty(Item);
-				RepositoryUnderTest.SaveItems(itemsToSave);
-				Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
-			}
+		[Test]
+		public override void SaveItems_LastModifiedIsChangedToLaterTime()
+		{
+			SetState();
+			List<LexEntry> itemsToSave = new List<LexEntry>();
+			itemsToSave.Add(Item);
+			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
+			MakeItemDirty(Item);
+			RepositoryUnderTest.SaveItems(itemsToSave);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
+		}
 
-			private static void MakeItemDirty(LexEntry Item)
-			{
-				Item.LexicalForm["de"] = "Sonne";
-			}
+		private static void MakeItemDirty(LexEntry Item)
+		{
+			Item.LexicalForm["de"] = "Sonne";
+		}
 
-			[Test]
-			public override void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
-			{
-				SetState();
-				Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
-			}
+		[Test]
+		public override void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
+		{
+			SetState();
+			Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
+		}
 
 		[Test]
 		public void Constructor_LexEntryIsDirtyIsFalse()
@@ -957,151 +964,157 @@ namespace WeSay.LexicalModel.Tests
 				Assert.AreEqual(1, resultsOfQuery.Count);
 				MultiText lexicalForm = (MultiText) resultsOfQuery[0]["LexicalForm"];
 				Assert.AreEqual("Sonne", lexicalForm.Forms[0].Form);
-			}
-
-			protected override void CreateNewRepositoryFromPersistedData()
-			{
-				RepositoryUnderTest.Dispose();
-				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
-			}
 		}
 
-		[TestFixture]
-		public class LexEntryRepositoryCreateItemTransitionTests : IRepositoryCreateItemTransitionTests<LexEntry>
+		protected override void CreateNewRepositoryFromPersistedData()
 		{
-			private string _persistedFilePath;
-			[SetUp]
-			public void Setup()
-			{
-				this._persistedFilePath = Path.GetRandomFileName();
-				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
-			}
-
-			[TearDown]
-			public void Teardown()
-			{
-				RepositoryUnderTest.Dispose();
-				File.Delete(this._persistedFilePath);
-			}
-
-
-
-			[Test]
-			public void SaveItem_LexEntryIsDirtyIsFalse()
-			{
-				SetState();
-				RepositoryUnderTest.SaveItem(Item);
-				Assert.IsFalse(Item.IsDirty);
-			}
-
-			[Test]
-			public void SaveItems_LexEntryIsDirtyIsFalse()
-			{
-				SetState();
-				List<LexEntry> itemsToBeSaved = new List<LexEntry>();
-				itemsToBeSaved.Add(Item);
-				RepositoryUnderTest.SaveItems(itemsToBeSaved);
-				Assert.IsFalse(Item.IsDirty);
-			}
-
-			[Test]
-			public void Constructor_LexEntryIsDirtyIsTrue()
-			{
-				SetState();
-				Assert.IsTrue(Item.IsDirty);
-			}
-
-			[Test]
-			public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
-			{
-				SetState();
-				Item.LexicalForm["de"] = "Sonne";
-				Query query = new Query(typeof(LexEntry)).Show("LexicalForm");
-				ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
-				Assert.AreEqual(1, resultsOfQuery.Count);
-				Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
-			}
-
-			protected override void CreateNewRepositoryFromPersistedData()
-			{
-				RepositoryUnderTest.Dispose();
-				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
-			}
+			RepositoryUnderTest.Dispose();
+			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
-
-		[TestFixture]
-		public class LexEntryRepositoryDeleteItemTransitionTests : IRepositoryDeleteItemTransitionTests<LexEntry>
-		{
-			private string _persistedFilePath;
-			[SetUp]
-			public void Setup()
-			{
-				this._persistedFilePath = Path.GetRandomFileName();
-				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
-			}
-
-			[TearDown]
-			public void Teardown()
-			{
-				RepositoryUnderTest.Dispose();
-				File.Delete(this._persistedFilePath);
-			}
-
-			[Test]
-			[ExpectedException(typeof(ArgumentOutOfRangeException))]
-			public override void SaveItem_ItemDoesNotExist_Throws()
-			{
-				SetState();
-				Item.Senses.Add(new LexSense());
-				RepositoryUnderTest.SaveItem(Item);
-			}
-
-			protected override void CreateNewRepositoryFromPersistedData()
-			{
-				RepositoryUnderTest.Dispose();
-				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
-			}
-		}
-
-		[TestFixture]
-		public class LexEntryRepositoryDeleteIdTransitionTests : IRepositoryDeleteIdTransitionTests<LexEntry>
-		{
-			private string _persistedFilePath;
-			[SetUp]
-			public void Setup()
-			{
-				this._persistedFilePath = Path.GetRandomFileName();
-				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
-			}
-
-			[TearDown]
-			public void Teardown()
-			{
-				RepositoryUnderTest.Dispose();
-				File.Delete(this._persistedFilePath);
-			}
-
-			[Test]
-			[ExpectedException(typeof(ArgumentOutOfRangeException))]
-			public override void SaveItem_ItemDoesNotExist_Throws()
-			{
-				SetState();
-				Item.Senses.Add(new LexSense());
-				RepositoryUnderTest.SaveItem(Item);
-			}
-
-			protected override void CreateNewRepositoryFromPersistedData()
-			{
-				RepositoryUnderTest.Dispose();
-				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
-			}
-		}
+	}
 
 	[TestFixture]
-	public class LexEntryRepositoryDeleteAllItemsTransitionTests : IRepositoryDeleteAllItemsTransitionTests<LexEntry>
+	public class LexEntryRepositoryCreateItemTransitionTests:
+			IRepositoryCreateItemTransitionTests<LexEntry>
+	{
+		private string _persistedFilePath;
+
+		[SetUp]
+		public void Setup()
+		{
+			_persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+		}
+
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+			File.Delete(_persistedFilePath);
+		}
+
+		[Test]
+		public void SaveItem_LexEntryIsDirtyIsFalse()
+		{
+			SetState();
+			RepositoryUnderTest.SaveItem(Item);
+			Assert.IsFalse(Item.IsDirty);
+		}
+
+		[Test]
+		public void SaveItems_LexEntryIsDirtyIsFalse()
+		{
+			SetState();
+			List<LexEntry> itemsToBeSaved = new List<LexEntry>();
+			itemsToBeSaved.Add(Item);
+			RepositoryUnderTest.SaveItems(itemsToBeSaved);
+			Assert.IsFalse(Item.IsDirty);
+		}
+
+		[Test]
+		public void Constructor_LexEntryIsDirtyIsTrue()
+		{
+			SetState();
+			Assert.IsTrue(Item.IsDirty);
+		}
+
+		[Test]
+		public override void
+				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		{
+			SetState();
+			Item.LexicalForm["de"] = "Sonne";
+			Query query = new Query(typeof (LexEntry)).Show("LexicalForm");
+			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
+			Assert.AreEqual(1, resultsOfQuery.Count);
+			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
+		}
+
+		protected override void CreateNewRepositoryFromPersistedData()
+		{
+			RepositoryUnderTest.Dispose();
+			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+		}
+	}
+
+	[TestFixture]
+	public class LexEntryRepositoryDeleteItemTransitionTests:
+			IRepositoryDeleteItemTransitionTests<LexEntry>
+	{
+		private string _persistedFilePath;
+
+		[SetUp]
+		public void Setup()
+		{
+			_persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+		}
+
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+			File.Delete(_persistedFilePath);
+		}
+
+		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		public override void SaveItem_ItemDoesNotExist_Throws()
+		{
+			SetState();
+			Item.Senses.Add(new LexSense());
+			RepositoryUnderTest.SaveItem(Item);
+		}
+
+		protected override void CreateNewRepositoryFromPersistedData()
+		{
+			RepositoryUnderTest.Dispose();
+			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+		}
+	}
+
+	[TestFixture]
+	public class LexEntryRepositoryDeleteIdTransitionTests:
+			IRepositoryDeleteIdTransitionTests<LexEntry>
+	{
+		private string _persistedFilePath;
+
+		[SetUp]
+		public void Setup()
+		{
+			_persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+		}
+
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+			File.Delete(_persistedFilePath);
+		}
+
+		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		public override void SaveItem_ItemDoesNotExist_Throws()
+		{
+			SetState();
+			Item.Senses.Add(new LexSense());
+			RepositoryUnderTest.SaveItem(Item);
+		}
+
+		protected override void CreateNewRepositoryFromPersistedData()
+		{
+			RepositoryUnderTest.Dispose();
+			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+		}
+	}
+
+	[TestFixture]
+	public class LexEntryRepositoryDeleteAllItemsTransitionTests:
+			IRepositoryDeleteAllItemsTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -1125,4 +1138,4 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 	}
-	}
+}

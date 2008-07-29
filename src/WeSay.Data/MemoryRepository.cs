@@ -4,10 +4,14 @@ using Palaso.Progress;
 
 namespace WeSay.Data
 {
-	internal class MemoryRepository<T>:IRepository<T> where T : class, new()
+	internal class MemoryRepository<T>: IRepository<T> where T : class, new()
 	{
-		protected readonly Dictionary<RepositoryId, T> idToObjectHashtable = new Dictionary<RepositoryId, T> ();
-		protected readonly Dictionary<T, RepositoryId> objectToIdHashtable = new Dictionary<T, RepositoryId>();
+		protected readonly Dictionary<RepositoryId, T> idToObjectHashtable =
+				new Dictionary<RepositoryId, T>();
+
+		protected readonly Dictionary<T, RepositoryId> objectToIdHashtable =
+				new Dictionary<T, RepositoryId>();
+
 		private DateTime lastModified = DateTime.MinValue;
 
 		public DateTime LastModified
@@ -20,12 +24,14 @@ namespace WeSay.Data
 			}
 		}
 
-		public virtual bool CanQuery { get { return true; } }
-
-		public virtual bool CanPersist { get { return false; } }
-
-		public virtual void Startup(ProgressState state)
+		public virtual bool CanQuery
 		{
+			get { return true; }
+		}
+
+		public virtual bool CanPersist
+		{
+			get { return false; }
 		}
 
 		public virtual T CreateItem()
@@ -39,7 +45,7 @@ namespace WeSay.Data
 
 		public virtual void DeleteItem(T item)
 		{
-			if( item == null)
+			if (item == null)
 			{
 				throw new ArgumentNullException("item");
 			}
@@ -79,13 +85,14 @@ namespace WeSay.Data
 
 		public virtual void SaveItem(T item)
 		{
-			if(item == null)
+			if (item == null)
 			{
 				throw new ArgumentNullException("item");
 			}
-			if(!objectToIdHashtable.ContainsKey(item))
+			if (!objectToIdHashtable.ContainsKey(item))
 			{
-				throw new ArgumentOutOfRangeException("item", "The item must exist in the repository before it can be saved.");
+				throw new ArgumentOutOfRangeException("item",
+													  "The item must exist in the repository before it can be saved.");
 			}
 			DateTime timeOfSave = PreciseDateTime.UtcNow;
 			LastModified = timeOfSave;
@@ -93,7 +100,7 @@ namespace WeSay.Data
 
 		public virtual void SaveItems(IEnumerable<T> items)
 		{
-			if(items == null)
+			if (items == null)
 			{
 				throw new ArgumentNullException("items");
 			}
@@ -114,7 +121,7 @@ namespace WeSay.Data
 					hasResults = true;
 					results.Add(new RecordToken<T>(this, result, GetId(item)));
 				}
-				if(!hasResults)
+				if (!hasResults)
 				{
 					results.Add(new RecordToken<T>(this, GetId(item)));
 				}
@@ -133,7 +140,7 @@ namespace WeSay.Data
 			{
 				throw new ArgumentOutOfRangeException("item");
 			}
-			return (RepositoryId)objectToIdHashtable[item];
+			return this.objectToIdHashtable[item];
 		}
 
 		public virtual T GetItem(RepositoryId id)
@@ -142,10 +149,11 @@ namespace WeSay.Data
 			{
 				throw new ArgumentOutOfRangeException("id");
 			}
-			return (T)idToObjectHashtable[id];
+			return this.idToObjectHashtable[id];
 		}
 
 		#region IDisposable Members
+
 #if DEBUG
 		~MemoryRepository()
 		{
@@ -156,7 +164,7 @@ namespace WeSay.Data
 		}
 #endif
 
-		private bool _disposed = false;
+		private bool _disposed;
 
 		public virtual void Dispose()
 		{
@@ -171,7 +179,6 @@ namespace WeSay.Data
 				if (disposing)
 				{
 					// dispose-only, i.e. non-finalizable logic
-
 				}
 
 				// shared (dispose and finalizable) cleanup logic
@@ -186,9 +193,10 @@ namespace WeSay.Data
 				throw new ObjectDisposedException("MemoryRepository");
 			}
 		}
+
 		#endregion
 
-		private class MemoryRepositoryId : RepositoryId
+		private class MemoryRepositoryId: RepositoryId
 		{
 			private static int nextId = 1;
 			private readonly int id;
@@ -199,12 +207,14 @@ namespace WeSay.Data
 				++nextId;
 			}
 
-			public static bool operator !=(MemoryRepositoryId memoryRepositoryId1, MemoryRepositoryId memoryRepositoryId2)
+			public static bool operator !=(
+					MemoryRepositoryId memoryRepositoryId1, MemoryRepositoryId memoryRepositoryId2)
 			{
 				return !Equals(memoryRepositoryId1, memoryRepositoryId2);
 			}
 
-			public static bool operator ==(MemoryRepositoryId memoryRepositoryId1, MemoryRepositoryId memoryRepositoryId2)
+			public static bool operator ==(
+					MemoryRepositoryId memoryRepositoryId1, MemoryRepositoryId memoryRepositoryId2)
 			{
 				return Equals(memoryRepositoryId1, memoryRepositoryId2);
 			}
@@ -212,7 +222,9 @@ namespace WeSay.Data
 			public bool Equals(MemoryRepositoryId memoryRepositoryId)
 			{
 				if (memoryRepositoryId == null)
+				{
 					return false;
+				}
 
 				return id == memoryRepositoryId.id;
 			}
@@ -220,7 +232,9 @@ namespace WeSay.Data
 			public override bool Equals(object obj)
 			{
 				if (ReferenceEquals(this, obj))
+				{
 					return true;
+				}
 				return Equals(obj as MemoryRepositoryId);
 			}
 

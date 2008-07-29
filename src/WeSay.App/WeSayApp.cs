@@ -22,9 +22,6 @@ namespace WeSay.App
 	{
 		//private static Mutex _oneInstancePerProjectMutex;
 		private WeSayWordsProject _project;
-#if !MONO
-		//private  ServiceHost _dictionaryHost;
-#endif
 		private DictionaryServiceProvider _dictionary;
 		private LexEntryRepository _lexEntryRepository;
 		private readonly CommandLineArguments _commandLineArguments = new CommandLineArguments();
@@ -104,31 +101,29 @@ namespace WeSay.App
 					return;
 				}
 
-				using (
-						_lexEntryRepository =
-						new LexEntryRepository(_project.PathToRepository))
+				using (_lexEntryRepository = RepositoryStartupUI.CreateLexEntryRepository(_project.PathToRepository))
 				{
-					//using (
-					//        _dictionary =
-					//        new DictionaryServiceProvider(_lexEntryRepository, this, _project))
-					//{
-						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
+					using (
+							_dictionary =
+							new DictionaryServiceProvider(_lexEntryRepository, this, _project))
+					{
+						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") <
+							0)
 						{
 							RecoverUnsavedDataIfNeeded();
 						}
 
-						//StartDictionaryServices();
-						//_dictionary.LastClientDeregistered +=
-						//        _serviceAppSingletonHelper.OnExitIfInServerMode;
+						StartDictionaryServices();
+						_dictionary.LastClientDeregistered +=
+								_serviceAppSingletonHelper.OnExitIfInServerMode;
 						_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
 
-						//_dictionary.LastClientDeregistered -=
-						//        _serviceAppSingletonHelper.OnExitIfInServerMode;
+						_dictionary.LastClientDeregistered -=
+								_serviceAppSingletonHelper.OnExitIfInServerMode;
 
 						//do a last backup before exiting
-						//_lexEntryRepository.BackendDoLiftUpdateNow(true);
 						Logger.WriteEvent("App Exiting Normally.");
-					//}
+					}
 				}
 			}
 			finally
@@ -180,8 +175,8 @@ namespace WeSay.App
 
 		private void StartDictionaryServices()
 		{
-			//Problem: if there is already a cache miss, this will be slow, and somebody will time out
-			StartCacheWatchingStuff();
+			////Problem: if there is already a cache miss, this will be slow, and somebody will time out
+			//StartCacheWatchingStuff();
 
 			Logger.WriteMinorEvent("Starting Dictionary Services at {0}",
 								   DictionaryAccessor.GetServiceName(_project.PathToLiftFile));
@@ -194,74 +189,72 @@ namespace WeSay.App
 		{
 			get
 			{
-				return
-						_serviceAppSingletonHelper.CurrentState ==
-						ServiceAppSingletonHelper.State.ServerMode;
+				return _serviceAppSingletonHelper.CurrentState ==
+					   ServiceAppSingletonHelper.State.ServerMode;
 			}
 		}
 
-		/// <summary>
-		/// Only show a dialog if the operation takes more than two seconds
-		/// </summary>
-		/// <param name="message"></param>
-		public void NotifyOfLongStartupThread(object message)
-		{
-			try
-			{
-				Thread.Sleep(2000);
+		///// <summary>
+		///// Only show a dialog if the operation takes more than two seconds
+		///// </summary>
+		///// <param name="message"></param>
+		//public void NotifyOfLongStartupThread(object message)
+		//{
+		//    try
+		//    {
+		//        Thread.Sleep(2000);
 
-				LongStartupNotification dlg = new LongStartupNotification();
-				dlg.Message = (string) message;
-				dlg.Show();
-				Application.DoEvents();
-				try
-				{
-					while (true)
-					{
-						Thread.Sleep(100);
-						Application.DoEvents(); //otherwise we get (Not Responding)
-					}
-				}
-				catch (ThreadInterruptedException)
-				{
-					dlg.Close();
-					dlg.Dispose();
-				}
-			}
-			catch (ThreadInterruptedException) {}
-		}
+		//        LongStartupNotification dlg = new LongStartupNotification();
+		//        dlg.Message = (string) message;
+		//        dlg.Show();
+		//        Application.DoEvents();
+		//        try
+		//        {
+		//            while (true)
+		//            {
+		//                Thread.Sleep(100);
+		//                Application.DoEvents(); //otherwise we get (Not Responding)
+		//            }
+		//        }
+		//        catch (ThreadInterruptedException)
+		//        {
+		//            dlg.Close();
+		//            dlg.Dispose();
+		//        }
+		//    }
+		//    catch (ThreadInterruptedException) {}
+		//}
 
-		/// <summary>
-		/// Without this, if we add entries with no UI up, there is not dictionary task up, and the cache
-		/// ignores new entries being added (and someday other stuff). Then when we do eventually pull
-		/// the ui up, they'll get a painful cache rebuild.
-		/// </summary>
-		private void StartCacheWatchingStuff()
-		{
-			Thread notify = new Thread(NotifyOfLongStartupThread);
+		///// <summary>
+		///// Without this, if we add entries with no UI up, there is not dictionary task up, and the cache
+		///// ignores new entries being added (and someday other stuff). Then when we do eventually pull
+		///// the ui up, they'll get a painful cache rebuild.
+		///// </summary>
+		//private void StartCacheWatchingStuff()
+		//{
+		//    Thread notify = new Thread(NotifyOfLongStartupThread);
 
-			notify.Start(
-					StringCatalog.Get("~Please wait while WeSay prepares your data",
-									  "This is shown in rare circumstances where WeSay finds it needs to prepare some indices so it can run faster.  The main point to get across is that the user should settle in for a long wait, not think something is broken or try to run WeSay again."));
+		//    notify.Start(StringCatalog.Get("~Please wait while WeSay prepares your data",
+		//                                   "This is shown in rare circumstances where WeSay finds it needs to prepare some indices so it can run faster.  The main point to get across is that the user should settle in for a long wait, not think something is broken or try to run WeSay again."));
 
-			try
-			{
-				DictionaryTask dictionaryTask =
-						new DictionaryTask(_lexEntryRepository, _project.DefaultViewTemplate);
-			}
-			finally
-			{
-				notify.Interrupt();
-			}
+		//    try
+		//    {
+		//        DictionaryTask dictionaryTask = new DictionaryTask(_lexEntryRepository,
+		//                                                           _project.DefaultViewTemplate);
+		//    }
+		//    finally
+		//    {
+		//        notify.Interrupt();
+		//    }
 
-			//            LexEntryRepository manager = _lexEntryRepository as LexEntryRepository;
-			//            if (manager != null)
-			//            {
-			//                HeadwordSortedListHelper helper = new HeadwordSortedListHelper(manager,
-			//                                                                     this._project.HeadWordWritingSystem);
-			//              manager.GetSortedList(helper);//installs it
-			//            }
-		}
+		//    //            LexEntryRepository manager = _lexEntryRepository as LexEntryRepository;
+		//    //            if (manager != null)
+		//    //            {
+		//    //                HeadwordSortedListHelper helper = new HeadwordSortedListHelper(manager,
+		//    //                                                                     this._project.HeadWordWritingSystem);
+		//    //              manager.GetSortedList(helper);//installs it
+		//    //            }
+		//}
 
 		public string CurrentUrl
 		{
@@ -303,17 +296,15 @@ namespace WeSay.App
 				//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 				//                    using (FileStream config = new FileStream(_project.PathTo_projectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 				using (
-						FileStream configFile =
-								new FileStream(_project.PathToConfigFile,
-											   FileMode.Open,
-											   FileAccess.Read,
-											   FileShare.ReadWrite))
+						FileStream configFile = new FileStream(_project.PathToConfigFile,
+															   FileMode.Open,
+															   FileAccess.Read,
+															   FileShare.ReadWrite))
 				{
-					builder =
-							new ConfigFileTaskBuilder(configFile,
-													  _project,
-													  _tabbedForm,
-													  _lexEntryRepository);
+					builder = new ConfigFileTaskBuilder(configFile,
+														_project,
+														_tabbedForm,
+														_lexEntryRepository);
 				}
 				_project.Tasks = builder.Tasks;
 				Application.DoEvents();
@@ -352,15 +343,15 @@ namespace WeSay.App
 		{
 			_serviceAppSingletonHelper.BringToFrontRequest += OnBringToFrontRequest;
 			_serviceAppSingletonHelper.UiReadyForEvents();
-			//!!! cjp _dictionary.UiSynchronizationContext = _tabbedForm.synchronizationContext;
+			_dictionary.UiSynchronizationContext = _tabbedForm.synchronizationContext;
 		}
 
-		private static LiftUpdateService SetupUpdateService(LexEntryRepository lexEntryRepository)
-		{
-			LiftUpdateService liftUpdateService;
-			liftUpdateService = new LiftUpdateService(lexEntryRepository);
-			return liftUpdateService;
-		}
+		//private static LiftUpdateService SetupUpdateService(LexEntryRepository lexEntryRepository)
+		//{
+		//    LiftUpdateService liftUpdateService;
+		//    liftUpdateService = new LiftUpdateService(lexEntryRepository);
+		//    return liftUpdateService;
+		//}
 
 		private static WeSayWordsProject InitializeProject(string liftPath)
 		{
@@ -390,7 +381,8 @@ namespace WeSay.App
 			}
 			catch
 			{
-				ErrorReport.ReportNonFatalMessage("WeSay was unable to migrate the WeSay configuration file for the new version of WeSay. This may cause WeSay to not function properly. Try opening the project in the WeSay Configuration Tool to fix this.");
+				ErrorReport.ReportNonFatalMessage(
+						"WeSay was unable to migrate the WeSay configuration file for the new version of WeSay. This may cause WeSay to not function properly. Try opening the project in the WeSay Configuration Tool to fix this.");
 			}
 
 			return project;
@@ -445,8 +437,9 @@ namespace WeSay.App
 			[DefaultArgument(ArgumentTypes.AtMostOnce,
 					// DefaultValue = @"..\..\SampleProjects\Thai\WeSay\thai5000.words",
 					HelpText =
-					"Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\").")]
-			public string liftPath = null;
+							"Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\")."
+					)]
+			public string liftPath;
 
 			//            [Argument(ArgumentTypes.AtMostOnce,
 			//                HelpText = "Language to show the user interface in.",
@@ -454,18 +447,18 @@ namespace WeSay.App
 			//                ShortName = "")]
 			//            public string ui = null;
 
-			[Argument(ArgumentTypes.AtMostOnce, HelpText =
-												"Start without a user interface (will have no effect if WeSay is already running with a UI."
-					, LongName = "server", DefaultValue=false, ShortName = "")]
-			public bool startInServerMode = false;
+			[Argument(ArgumentTypes.AtMostOnce,
+					HelpText =
+							"Start without a user interface (will have no effect if WeSay is already running with a UI."
+					, LongName = "server", DefaultValue = false, ShortName = "")]
+			public bool startInServerMode;
 		}
 
 		private static void ShowCommandLineError(string e)
 		{
 			Parser p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
-			e =
-					e.Replace("Duplicate 'liftPath' argument",
-							  "Please enclose project path in quotes if it contains spaces.");
+			e = e.Replace("Duplicate 'liftPath' argument",
+						  "Please enclose project path in quotes if it contains spaces.");
 			e += "\r\n\r\n" + p.GetUsageString(200);
 			MessageBox.Show(e, "WeSay Command Line Problem");
 		}

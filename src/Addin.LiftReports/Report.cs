@@ -59,8 +59,8 @@ namespace Addin.LiftReports
 			XmlDocument doc = new XmlDocument();
 			doc.Load(_pathToLIFT);
 
-			_countLabel.Text =
-					String.Format("This file contains {0} entries.", GetCount(doc, "//entry"));
+			_countLabel.Text = String.Format("This file contains {0} entries.",
+											 GetCount(doc, "//entry"));
 		}
 
 		private static int GetCount(XmlNode doc, string xpath)

@@ -27,9 +27,8 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return
-						StringCatalog.Get("~Backup To Device",
-										  "Long name for usb flash-drive backup action");
+				return StringCatalog.Get("~Backup To Device",
+										 "Long name for usb flash-drive backup action");
 			}
 		}
 
@@ -37,9 +36,8 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return
-						StringCatalog.Get("~Saves a backup on an external device, like a USB key.",
-										  "description of usb backup action");
+				return StringCatalog.Get("~Saves a backup on an external device, like a USB key.",
+										 "description of usb backup action");
 			}
 		}
 
@@ -68,9 +66,8 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return
-						StringCatalog.Get("~Backup",
-										  "Short buton label for usb flash-drive backup action");
+				return StringCatalog.Get("~Backup",
+										 "Short buton label for usb flash-drive backup action");
 			}
 		}
 

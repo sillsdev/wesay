@@ -9,7 +9,7 @@ namespace WeSay.CommonTools
 		private int _count = 327;
 		private int _referenceCount = 1000;
 
-		private static int _largestExpectedNumber = 0;
+		private static int _largestExpectedNumber;
 
 		public ItemsToDoIndicator()
 		{

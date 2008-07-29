@@ -132,7 +132,7 @@ namespace Addin.LiftReports.GraphComponents
 		/// This is used for displaying the coordinates of the point that
 		/// the mouse is hovering over. eg (234.54, 27)
 		/// </summary>
-		private Point mouseHoverCoordinates = new Point();
+		private Point mouseHoverCoordinates;
 
 		/// <summary>
 		/// Initial plot rate. This is required as the user can change the
@@ -537,11 +537,10 @@ namespace Addin.LiftReports.GraphComponents
 			PlotRate = 300;
 			initialPlotRate = PlotRate;
 
-			GraphArea =
-					new Rectangle(ClientRectangle.Left + graphMarginLeft,
-								  ClientRectangle.Top + graphMarginTop,
-								  ClientRectangle.Width - graphMarginRight - graphMarginLeft,
-								  ClientRectangle.Height - graphMarginBottom - graphMarginTop);
+			GraphArea = new Rectangle(ClientRectangle.Left + graphMarginLeft,
+									  ClientRectangle.Top + graphMarginTop,
+									  ClientRectangle.Width - graphMarginRight - graphMarginLeft,
+									  ClientRectangle.Height - graphMarginBottom - graphMarginTop);
 
 			Debug.Assert(GraphArea.Height == (GraphArea.Bottom - GraphArea.Top), "Problem Ctor");
 
@@ -597,12 +596,11 @@ namespace Addin.LiftReports.GraphComponents
 			//
 			this.buttonPrevChannel.BackColor = System.Drawing.SystemColors.Control;
 			this.buttonPrevChannel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonPrevChannel.Font =
-					new System.Drawing.Font("Microsoft Sans Serif",
-											8.25F,
-											System.Drawing.FontStyle.Bold,
-											System.Drawing.GraphicsUnit.Point,
-											((System.Byte) (0)));
+			this.buttonPrevChannel.Font = new System.Drawing.Font("Microsoft Sans Serif",
+																  8.25F,
+																  System.Drawing.FontStyle.Bold,
+																  System.Drawing.GraphicsUnit.Point,
+																  ((System.Byte) (0)));
 			this.buttonPrevChannel.Location = new System.Drawing.Point(24, 40);
 			this.buttonPrevChannel.Name = "buttonPrevChannel";
 			this.buttonPrevChannel.Size = new System.Drawing.Size(16, 18);
@@ -614,12 +612,11 @@ namespace Addin.LiftReports.GraphComponents
 			//
 			this.buttonNextChannel.BackColor = System.Drawing.SystemColors.Control;
 			this.buttonNextChannel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonNextChannel.Font =
-					new System.Drawing.Font("Microsoft Sans Serif",
-											8.25F,
-											System.Drawing.FontStyle.Bold,
-											System.Drawing.GraphicsUnit.Point,
-											((System.Byte) (0)));
+			this.buttonNextChannel.Font = new System.Drawing.Font("Microsoft Sans Serif",
+																  8.25F,
+																  System.Drawing.FontStyle.Bold,
+																  System.Drawing.GraphicsUnit.Point,
+																  ((System.Byte) (0)));
 			this.buttonNextChannel.Location = new System.Drawing.Point(40, 40);
 			this.buttonNextChannel.Name = "buttonNextChannel";
 			this.buttonNextChannel.Size = new System.Drawing.Size(16, 18);
@@ -631,12 +628,11 @@ namespace Addin.LiftReports.GraphComponents
 			//
 			this.buttonUpperYPlus.BackColor = System.Drawing.SystemColors.Control;
 			this.buttonUpperYPlus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonUpperYPlus.Font =
-					new System.Drawing.Font("Microsoft Sans Serif",
-											8.25F,
-											System.Drawing.FontStyle.Bold,
-											System.Drawing.GraphicsUnit.Point,
-											((System.Byte) (0)));
+			this.buttonUpperYPlus.Font = new System.Drawing.Font("Microsoft Sans Serif",
+																 8.25F,
+																 System.Drawing.FontStyle.Bold,
+																 System.Drawing.GraphicsUnit.Point,
+																 ((System.Byte) (0)));
 			this.buttonUpperYPlus.Location = new System.Drawing.Point(24, 64);
 			this.buttonUpperYPlus.Name = "buttonUpperYPlus";
 			this.buttonUpperYPlus.Size = new System.Drawing.Size(16, 18);
@@ -648,12 +644,11 @@ namespace Addin.LiftReports.GraphComponents
 			//
 			this.buttonUpperYMinus.BackColor = System.Drawing.SystemColors.Control;
 			this.buttonUpperYMinus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonUpperYMinus.Font =
-					new System.Drawing.Font("Microsoft Sans Serif",
-											8.25F,
-											System.Drawing.FontStyle.Bold,
-											System.Drawing.GraphicsUnit.Point,
-											((System.Byte) (0)));
+			this.buttonUpperYMinus.Font = new System.Drawing.Font("Microsoft Sans Serif",
+																  8.25F,
+																  System.Drawing.FontStyle.Bold,
+																  System.Drawing.GraphicsUnit.Point,
+																  ((System.Byte) (0)));
 			this.buttonUpperYMinus.Location = new System.Drawing.Point(40, 64);
 			this.buttonUpperYMinus.Name = "buttonUpperYMinus";
 			this.buttonUpperYMinus.Size = new System.Drawing.Size(16, 18);
@@ -873,11 +868,10 @@ namespace Addin.LiftReports.GraphComponents
 		/// </summary>
 		private void CalculateGraphArea()
 		{
-			GraphArea =
-					new Rectangle(ClientRectangle.Left + graphMarginLeft,
-								  ClientRectangle.Top + graphMarginTop,
-								  ClientRectangle.Width - graphMarginRight - graphMarginLeft,
-								  ClientRectangle.Height - graphMarginBottom - graphMarginTop);
+			GraphArea = new Rectangle(ClientRectangle.Left + graphMarginLeft,
+									  ClientRectangle.Top + graphMarginTop,
+									  ClientRectangle.Width - graphMarginRight - graphMarginLeft,
+									  ClientRectangle.Height - graphMarginBottom - graphMarginTop);
 		}
 
 		/// <summary>
@@ -1164,8 +1158,9 @@ namespace Addin.LiftReports.GraphComponents
 			Channel activeCh = Channels[activeChannelIndex];
 
 			// Get the value in plotter coordinates
-			PointF hoveringValue =
-					GetValueFromPixel(activeCh, mouseHoverCoordinates.X, mouseHoverCoordinates.Y);
+			PointF hoveringValue = GetValueFromPixel(activeCh,
+													 mouseHoverCoordinates.X,
+													 mouseHoverCoordinates.Y);
 
 			int actualX = leftDisplayLimit + (int) hoveringValue.X;
 
@@ -1259,11 +1254,10 @@ namespace Addin.LiftReports.GraphComponents
 
 			for (int i = GraduationsY;i >= 0;i --)
 			{
-				RectangleF axisValuesRect =
-						new RectangleF(ClientRectangle.Left,
-									   offset,
-									   GraphMarginLeft - Font.Height / 2,
-									   Font.Height);
+				RectangleF axisValuesRect = new RectangleF(ClientRectangle.Left,
+														   offset,
+														   GraphMarginLeft - Font.Height / 2,
+														   Font.Height);
 				float graduationValue = ActiveChannel.MaximumValue - graduationDiff * valueOffset;
 				valueOffset ++;
 
@@ -1315,11 +1309,10 @@ namespace Addin.LiftReports.GraphComponents
 
 				SizeF numberSize = graphics.MeasureString(val, Font, (int) graduationPixelDiff);
 
-				RectangleF axisValuesRect =
-						new RectangleF(offset - numberSize.Width / 2,
-									   GraphArea.Bottom + 4,
-									   numberSize.Width,
-									   Font.Height);
+				RectangleF axisValuesRect = new RectangleF(offset - numberSize.Width / 2,
+														   GraphArea.Bottom + 4,
+														   numberSize.Width,
+														   Font.Height);
 
 				graphics.DrawString(val, Font, textBrush, axisValuesRect, sf);
 
@@ -1393,26 +1386,26 @@ namespace Addin.LiftReports.GraphComponents
 			switch (timeDisplayStyle)
 			{
 				case TimeAxisStyle.Millisecond:
-					timeValue =
-							string.Format(CultureInfo.CurrentUICulture, "{0:G}", timeInMilisecond);
+					timeValue = string.Format(CultureInfo.CurrentUICulture,
+											  "{0:G}",
+											  timeInMilisecond);
 					break;
 				case TimeAxisStyle.MillisecondWithUnitDisplay:
-					timeValue =
-							string.Format(CultureInfo.CurrentUICulture, "{0:G}ms", timeInMilisecond);
+					timeValue = string.Format(CultureInfo.CurrentUICulture,
+											  "{0:G}ms",
+											  timeInMilisecond);
 					break;
 				case TimeAxisStyle.Second:
-					timeValue =
-							string.Format(CultureInfo.CurrentUICulture,
-										  "{0:D2}:{1:D3}",
-										  timeInMilisecond / 1000,
-										  timeInMilisecond % 1000);
+					timeValue = string.Format(CultureInfo.CurrentUICulture,
+											  "{0:D2}:{1:D3}",
+											  timeInMilisecond / 1000,
+											  timeInMilisecond % 1000);
 					break;
 				case TimeAxisStyle.SecondWithUnitDisplay:
-					timeValue =
-							string.Format(CultureInfo.CurrentUICulture,
-										  "{0:D2}:{1:D3}s",
-										  timeInMilisecond / 1000,
-										  timeInMilisecond % 1000);
+					timeValue = string.Format(CultureInfo.CurrentUICulture,
+											  "{0:D2}:{1:D3}s",
+											  timeInMilisecond / 1000,
+											  timeInMilisecond % 1000);
 					break;
 
 				case TimeAxisStyle.Smart:
@@ -1420,20 +1413,18 @@ namespace Addin.LiftReports.GraphComponents
 					{
 						if (timeInMilisecond < 10000) // 10000ms
 						{
-							timeValue =
-									string.Format(CultureInfo.CurrentUICulture,
-												  "{0:G}",
-												  timeInMilisecond);
+							timeValue = string.Format(CultureInfo.CurrentUICulture,
+													  "{0:G}",
+													  timeInMilisecond);
 						}
 						else if (timeInMilisecond >= 10000 && timeInMilisecond < 60000)
 						{
 							int ms = timeInMilisecond % 1000;
 							int sec = timeInMilisecond / 1000;
-							timeValue =
-									string.Format(CultureInfo.CurrentUICulture,
-												  "{0:D2}:{1:D3}",
-												  sec,
-												  ms);
+							timeValue = string.Format(CultureInfo.CurrentUICulture,
+													  "{0:D2}:{1:D3}",
+													  sec,
+													  ms);
 						}
 						else if (timeInMilisecond >= 60000 && timeInMilisecond < 3600000)
 						{
@@ -1444,12 +1435,11 @@ namespace Addin.LiftReports.GraphComponents
 							tempTime /= 60;
 							int min = tempTime;
 
-							timeValue =
-									string.Format(CultureInfo.CurrentUICulture,
-												  "{0}:{1:D2}:{2:D3}",
-												  min,
-												  sec,
-												  ms);
+							timeValue = string.Format(CultureInfo.CurrentUICulture,
+													  "{0}:{1:D2}:{2:D3}",
+													  min,
+													  sec,
+													  ms);
 						}
 						else if (timeInMilisecond >= 3600000)
 						{
@@ -1462,13 +1452,12 @@ namespace Addin.LiftReports.GraphComponents
 							tempTime /= 60;
 							int hr = tempTime;
 
-							timeValue =
-									string.Format(CultureInfo.CurrentUICulture,
-												  "{0}:{1:D2}:{2:D2}:{3:D3}",
-												  hr,
-												  min,
-												  sec,
-												  ms);
+							timeValue = string.Format(CultureInfo.CurrentUICulture,
+													  "{0}:{1:D2}:{2:D2}:{3:D3}",
+													  hr,
+													  min,
+													  sec,
+													  ms);
 						}
 					}
 					else
@@ -1486,11 +1475,10 @@ namespace Addin.LiftReports.GraphComponents
 							tempTime /= 60;
 							int min = tempTime;
 
-							timeValue =
-									string.Format(CultureInfo.CurrentUICulture,
-												  "{0}:{1:D2}",
-												  min,
-												  sec);
+							timeValue = string.Format(CultureInfo.CurrentUICulture,
+													  "{0}:{1:D2}",
+													  min,
+													  sec);
 						}
 						else if (timeInMilisecond >= 3600000)
 						{
@@ -1501,12 +1489,11 @@ namespace Addin.LiftReports.GraphComponents
 							tempTime /= 60;
 							int hr = tempTime;
 
-							timeValue =
-									string.Format(CultureInfo.CurrentUICulture,
-												  "{0}:{1:D2}:{2:D2}",
-												  hr,
-												  min,
-												  sec);
+							timeValue = string.Format(CultureInfo.CurrentUICulture,
+													  "{0}:{1:D2}:{2:D2}",
+													  hr,
+													  min,
+													  sec);
 						}
 					}
 					break;

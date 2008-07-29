@@ -39,5 +39,4 @@ namespace WeSay.Data
 			throw new NotImplementedException();
 		}
 	}
-
 }

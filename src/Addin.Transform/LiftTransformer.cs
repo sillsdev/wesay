@@ -48,15 +48,9 @@ namespace Addin.Transform
 			get { return DashboardGroup.Share; }
 		}
 
-		public abstract string LocalizedLabel
-		{
-			get;
-		}
+		public abstract string LocalizedLabel { get; }
 
-		public abstract string LocalizedLongLabel
-		{
-			get;
-		}
+		public abstract string LocalizedLongLabel { get; }
 
 		public ButtonStyle DashboardButtonStyle
 		{
@@ -102,12 +96,11 @@ namespace Addin.Transform
 											 string xsltName,
 											 string outputFileSuffix)
 		{
-			return
-					TransformLift(projectInfo,
-								  xsltName,
-								  outputFileSuffix,
-								  new XsltArgumentList(),
-								  false);
+			return TransformLift(projectInfo,
+								 xsltName,
+								 outputFileSuffix,
+								 new XsltArgumentList(),
+								 false);
 		}
 
 		protected string TransformLift(ProjectInfo projectInfo,
@@ -116,9 +109,8 @@ namespace Addin.Transform
 									   XsltArgumentList arguments,
 									   bool outputToXml)
 		{
-			_pathToOutput =
-					Path.Combine(projectInfo.PathToExportDirectory,
-								 projectInfo.Name + outputFileSuffix);
+			_pathToOutput = Path.Combine(projectInfo.PathToExportDirectory,
+										 projectInfo.Name + outputFileSuffix);
 			if (File.Exists(_pathToOutput))
 			{
 				File.Delete(_pathToOutput);
@@ -236,8 +228,8 @@ namespace Addin.Transform
 					writerSettings.Encoding = new UTF8Encoding(false);
 
 					using (
-							XmlWriter writer =
-									XmlWriter.Create(workerArguments.outputStream, writerSettings))
+							XmlWriter writer = XmlWriter.Create(workerArguments.outputStream,
+																writerSettings))
 					{
 						transform.Transform(workerArguments.inputDocument,
 											workerArguments.xsltArguments,

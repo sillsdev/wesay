@@ -57,8 +57,8 @@ namespace Addin.Transform
 			}
 			try
 			{
-				string pdfPath =
-						Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + ".pdf");
+				string pdfPath = Path.Combine(projectInfo.PathToExportDirectory,
+											  projectInfo.Name + ".pdf");
 
 				string layoutCssPath =
 						projectInfo.LocateFile(Path.Combine("Templates", "basicDictionary.css"));

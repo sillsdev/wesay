@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	public sealed class RecordTokenComparer<T>: IComparer<RecordToken<T>> where T:class, new()
+	public sealed class RecordTokenComparer<T>: IComparer<RecordToken<T>> where T : class, new()
 	{
 		private readonly IEnumerable<SortDefinition> _sortDefinitions;
 		public RecordTokenComparer(params SortDefinition[] sortDefinitions)
@@ -28,7 +28,7 @@ namespace WeSay.Data
 			{
 				result = definition.Comparer.Compare(GetFieldValue(x, definition),
 													 GetFieldValue(y, definition));
-				if(result != 0)
+				if (result != 0)
 				{
 					return result;
 				}
@@ -36,8 +36,8 @@ namespace WeSay.Data
 			return result;
 		}
 
-		private static object GetFieldValue(RecordToken<T> token,
-											SortDefinition definition) {
+		private static object GetFieldValue(RecordToken<T> token, SortDefinition definition)
+		{
 			object value;
 			if (token == null)
 			{

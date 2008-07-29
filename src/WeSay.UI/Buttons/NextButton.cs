@@ -9,8 +9,7 @@ namespace WeSay.UI.Buttons
 	{
 		protected override void OnClientSizeChanged(EventArgs e)
 		{
-			Image =
-					Resources.RightArrow.GetThumbnailImage(ClientSize.Width - 8,
+			Image = Resources.RightArrow.GetThumbnailImage(ClientSize.Width - 8,
 														   ClientSize.Height - 8,
 														   ReturnFalse,
 														   IntPtr.Zero);

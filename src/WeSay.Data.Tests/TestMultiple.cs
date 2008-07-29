@@ -14,35 +14,22 @@ namespace WeSay.Data.Tests
 
 		public List<string> Strings
 		{
-			get
-			{
-				return this._strings;
-			}
+			get { return this._strings; }
 		}
 
 		public List<KeyValuePair<string, string>> KeyValuePairs
 		{
-			get
-			{
-				return this._keyValuePairs;
-			}
+			get { return this._keyValuePairs; }
 		}
 
 		public readonly List<KeyValuePair<string, string>> _keyValuePairs;
 
 		public string String
 		{
-			set
-			{
-				this._string = value;
-			}
-			get
-			{
-				return this._string;
-			}
+			set { this._string = value; }
+			get { return this._string; }
 		}
 
 		public string _string;
 	}
-
 }

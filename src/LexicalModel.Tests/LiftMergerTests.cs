@@ -232,7 +232,7 @@ namespace WeSay.LexicalModel.Tests
 			secondNote.Add("ws-three", "tres");
 			_merger.MergeInNote(sense, null, secondNote);
 
-			MultiText mt = sense.GetProperty<MultiText>(LexSense.WellKnownProperties.Note);
+			MultiText mt = sense.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
 			Assert.AreEqual(3, mt.Forms.Length);
 			Assert.AreEqual("uno || UNO", mt["ws-one"]);
 		}
@@ -474,7 +474,8 @@ namespace WeSay.LexicalModel.Tests
 #endif
 		}
 
-		[Test, Ignore("This test is defective. found is always true CJP 2008-07-14")]
+		[Test]
+		[Ignore("This test is defective. found is always true CJP 2008-07-14")]
 		public void EntryWithIncomingUnspecifiedModTimeNotPruned()
 		{
 			Guid g = Guid.NewGuid();

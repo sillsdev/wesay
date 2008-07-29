@@ -1,37 +1,49 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using Palaso.Progress;
 
 namespace WeSay.Data
 {
-    public class SynchronicRepository<T> : IRepository<T> where T: class, new()
+	public class SynchronicRepository<T>: IRepository<T> where T : class, new()
     {
-        readonly IRepository<T> _primary;
-        readonly IRepository<T> _secondary;
+		private readonly IRepository<T> _primary;
+		private readonly IRepository<T> _secondary;
 
         public delegate void CopyStrategy(T destination, T source);
+
         private readonly CopyStrategy _copyStrategy;
 
         private readonly Dictionary<RepositoryId, RepositoryId> _primarySecondaryMap;
 
-        public SynchronicRepository(IRepository<T> primary, IRepository<T> secondary, CopyStrategy copyStrategy)
+		public SynchronicRepository(IRepository<T> primary,
+									IRepository<T> secondary,
+									CopyStrategy copyStrategy)
+			:this(primary, secondary, copyStrategy, null) {}
+
+		public SynchronicRepository(IRepository<T> primary,
+									IRepository<T> secondary,
+									CopyStrategy copyStrategy,
+									ProgressState progressState)
         {
             if (primary == null)
             {
+				Dispose();
                 throw new ArgumentNullException("primary");
             }
             if (secondary == null)
             {
+				Dispose();
                 throw new ArgumentNullException("secondary");
             }
             if (copyStrategy == null)
             {
+				Dispose();
                 throw new ArgumentNullException("copyStrategy");
             }
             if (ReferenceEquals(primary, secondary))
             {
+				Dispose();
                 throw new ArgumentException("primary and secondary must not be equal");
             }
             _primary = primary;
@@ -42,12 +54,14 @@ namespace WeSay.Data
         }
 
         public SynchronicRepository(IRepository<T> primary, IRepository<T> secondary)
-            : this(primary, secondary, DefaultCopyStrategy) {}
+				: this(primary, secondary, DefaultCopyStrategy) {}
 
         private static void DefaultCopyStrategy(T destination, T source)
         {
-            Type type = typeof(T);
-            FieldInfo [] fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			Type type = typeof (T);
+			FieldInfo[] fields =
+					type.GetFields(BindingFlags.Instance | BindingFlags.Public |
+								   BindingFlags.NonPublic);
             foreach (FieldInfo field in fields)
             {
                 field.SetValue(destination, field.GetValue(source));
@@ -61,7 +75,8 @@ namespace WeSay.Data
             IRepository<T> master = _secondary;
             IRepository<T> slave = _primary;
             if ((_primary.CanPersist && !_secondary.CanPersist) ||
-                (_primary.LastModified > _secondary.LastModified && _primary.CanPersist == _secondary.CanPersist))
+				(_primary.LastModified > _secondary.LastModified &&
+				 _primary.CanPersist == _secondary.CanPersist))
             {
                 master = _primary;
                 slave = _secondary;
@@ -88,7 +103,13 @@ namespace WeSay.Data
 
         public DateTime LastModified
         {
-			get { return new DateTime(Math.Max(_primary.LastModified.Ticks, _secondary.LastModified.Ticks), DateTimeKind.Utc); }
+			get
+			{
+				return
+						new DateTime(
+								Math.Max(_primary.LastModified.Ticks, _secondary.LastModified.Ticks),
+								DateTimeKind.Utc);
+			}
         }
 
         public bool CanQuery
@@ -100,10 +121,6 @@ namespace WeSay.Data
         {
             get { return _primary.CanPersist || _secondary.CanPersist; }
         }
-
-		public void Startup(ProgressState state)
-		{
-		}
 
 		public T CreateItem()
         {
@@ -201,10 +218,53 @@ namespace WeSay.Data
 
         #region IDisposable Members
 
+#if DEBUG
+		~SynchronicRepository()
+		{
+			if (!this._disposed)
+			{
+				throw new ApplicationException(
+						"Disposed not explicitly called on SynchronicRepository.");
+			}
+		}
+#endif
+
+		private bool _disposed;
+
         public void Dispose()
         {
-            _primary.Dispose();
-            _secondary.Dispose();
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!this._disposed)
+			{
+				if (disposing)
+				{
+					// dispose-only, i.e. non-finalizable logic
+					if (this._primary != null)
+					{
+						this._primary.Dispose();
+					}
+					if (this._secondary != null)
+					{
+						this._secondary.Dispose();
+					}
+				}
+
+				// shared (dispose and finalizable) cleanup logic
+				this._disposed = true;
+			}
+		}
+
+		protected void VerifyNotDisposed()
+		{
+			if (this._disposed)
+			{
+				throw new ObjectDisposedException("SynchronicRepository");
+			}
         }
 
         #endregion

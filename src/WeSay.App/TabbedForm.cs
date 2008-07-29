@@ -26,7 +26,7 @@ namespace WeSay.App
 			tabControl1.TabPages.Clear();
 			tabControl1.Selected += OnTabSelected;
 
-			synchronizationContext = WindowsFormsSynchronizationContext.Current;
+			synchronizationContext = SynchronizationContext.Current;
 			Debug.Assert(synchronizationContext != null);
 		}
 

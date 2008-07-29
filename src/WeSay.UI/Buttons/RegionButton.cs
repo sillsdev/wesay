@@ -71,8 +71,9 @@ namespace WeSay.UI.Buttons
 			g.SmoothingMode = SmoothingMode.AntiAlias;
 			FillBackground(g, ClientRectangle);
 
-			GraphicsPath buttonPath =
-					new GraphicsPath(Path.PathPoints, Path.PathTypes, Path.FillMode);
+			GraphicsPath buttonPath = new GraphicsPath(Path.PathPoints,
+													   Path.PathTypes,
+													   Path.FillMode);
 
 			// size so it will fit in clip region
 			float depth = 4;
@@ -120,11 +121,11 @@ namespace WeSay.UI.Buttons
 			}
 
 			using (
-					LinearGradientBrush brush =
-							new LinearGradientBrush(ClientRectangle,
-													startColor,
-													endColor,
-													LinearGradientMode.Vertical))
+					LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle,
+																		startColor,
+																		endColor,
+																		LinearGradientMode.Vertical)
+					)
 			{
 				Blend blend = new Blend();
 				blend.Positions = new float[] {0, .1f, .35f, .7f, .9f, 1};

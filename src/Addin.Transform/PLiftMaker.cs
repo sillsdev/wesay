@@ -27,15 +27,13 @@ namespace Addin.Transform
 		{
 			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 			ViewTemplate template = project.DefaultPrintingTemplate;
-			PLiftExporter exporter = new PLiftExporter(path,
-													   lexEntryRepository,
-													   template);
+			PLiftExporter exporter = new PLiftExporter(path, lexEntryRepository, template);
 			ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);
 			foreach (RecordToken<LexEntry> token in recordTokens)
 			{
 				int homographNumber = 0;
-				if((bool)token["HasHomograph"])
+				if ((bool) token["HasHomograph"])
 				{
 					homographNumber = (int) token["HomographNumber"];
 				}

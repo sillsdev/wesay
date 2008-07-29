@@ -255,16 +255,14 @@ namespace WeSay.UI
 					}
 					Point location = new Point(column * CellSize.Width, row * CellSize.Height);
 					location.Offset(BulletPadding.Left, BulletPadding.Top);
-					Rectangle rect =
-							new Rectangle(location.X,
-										  location.Y,
-										  BulletSize.Width,
-										  BulletSize.Height);
-					Brush brush =
-							new LinearGradientBrush(rect,
-													BulletColor,
-													BulletColorEnd,
-													LinearGradientMode.ForwardDiagonal);
+					Rectangle rect = new Rectangle(location.X,
+												   location.Y,
+												   BulletSize.Width,
+												   BulletSize.Height);
+					Brush brush = new LinearGradientBrush(rect,
+														  BulletColor,
+														  BulletColorEnd,
+														  LinearGradientMode.ForwardDiagonal);
 					e.Graphics.DrawEllipse(new Pen(brush), rect);
 					if ((HighlightCurrentOnly && currentItem == Value) ||
 						(!HighlightCurrentOnly && currentItem <= Value))

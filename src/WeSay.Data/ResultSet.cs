@@ -5,7 +5,8 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public sealed class ResultSet<T>: IEnumerable<RecordToken<T>>, IEnumerable<RepositoryId> where T:class,new()
+	public sealed class ResultSet<T>: IEnumerable<RecordToken<T>>, IEnumerable<RepositoryId>
+			where T : class, new()
 	{
 		private readonly List<RecordToken<T>> _results;
 		private readonly IRepository<T> _repository;
@@ -70,22 +71,20 @@ namespace WeSay.Data
 		}
 
 		#region FindFirst(Index) Of DisplayString
+
 		public RecordToken<T> FindFirst(Predicate<RecordToken<T>> match)
 		{
 			int index = FindFirstIndex(match);
 			return GetItemFromIndex(index);
 		}
 
-		public RecordToken<T> FindFirst(int startIndex,
-										Predicate<RecordToken<T>> match)
+		public RecordToken<T> FindFirst(int startIndex, Predicate<RecordToken<T>> match)
 		{
 			int index = FindFirstIndex(startIndex, match);
 			return GetItemFromIndex(index);
 		}
 
-		public RecordToken<T> FindFirst(int startIndex,
-										int count,
-										Predicate<RecordToken<T>> match)
+		public RecordToken<T> FindFirst(int startIndex, int count, Predicate<RecordToken<T>> match)
 		{
 			int index = FindFirstIndex(startIndex, count, match);
 			return GetItemFromIndex(index);
@@ -96,20 +95,18 @@ namespace WeSay.Data
 			return _results.FindIndex(match);
 		}
 
-		public int FindFirstIndex(int startIndex,
-								  int count,
-								  Predicate<RecordToken<T>> match)
+		public int FindFirstIndex(int startIndex, int count, Predicate<RecordToken<T>> match)
 		{
 			return _results.FindIndex(startIndex, count, match);
 		}
 
-		public int FindFirstIndex(int startIndex,
-								  Predicate<RecordToken<T>> match)
+		public int FindFirstIndex(int startIndex, Predicate<RecordToken<T>> match)
 		{
-			return _results.FindIndex(startIndex,match);
+			return _results.FindIndex(startIndex, match);
 		}
 
 		#endregion
+
 		#region FindFirst(Index) of RepositoryId
 
 		public RecordToken<T> FindFirst(RepositoryId id)
@@ -132,10 +129,9 @@ namespace WeSay.Data
 
 		public int FindFirstIndex(RepositoryId id, int startIndex, int count)
 		{
-			return
-					_results.FindIndex(startIndex,
-									   count,
-									   delegate(RecordToken<T> r) { return (r.Id == id); });
+			return _results.FindIndex(startIndex,
+									  count,
+									  delegate(RecordToken<T> r) { return (r.Id == id); });
 		}
 
 		public int FindFirstIndex(RepositoryId id)
@@ -145,9 +141,8 @@ namespace WeSay.Data
 
 		public int FindFirstIndex(RepositoryId id, int startIndex)
 		{
-			return
-					_results.FindIndex(startIndex,
-									   delegate(RecordToken<T> r) { return (r.Id == id); });
+			return _results.FindIndex(startIndex,
+									  delegate(RecordToken<T> r) { return (r.Id == id); });
 		}
 
 		#endregion
@@ -196,10 +191,9 @@ namespace WeSay.Data
 
 		public int FindFirstIndex(RecordToken<T> token, int startIndex, int count)
 		{
-			return
-					_results.FindIndex(startIndex,
-									   count,
-									   delegate(RecordToken<T> r) { return (r == token); });
+			return _results.FindIndex(startIndex,
+									  count,
+									  delegate(RecordToken<T> r) { return (r == token); });
 		}
 
 		public int FindFirstIndex(RecordToken<T> token)
@@ -209,9 +203,8 @@ namespace WeSay.Data
 
 		public int FindFirstIndex(RecordToken<T> token, int startIndex)
 		{
-			return
-					_results.FindIndex(startIndex,
-									   delegate(RecordToken<T> r) { return (r == token); });
+			return _results.FindIndex(startIndex,
+									  delegate(RecordToken<T> r) { return (r == token); });
 		}
 
 		#endregion
@@ -307,6 +300,7 @@ namespace WeSay.Data
 				RemoveTokens(removeable);
 			}
 		}
+	}
 
 		private void RemoveTokens(IEnumerable<RecordToken<T>> removeable)
 		{
@@ -320,6 +314,7 @@ namespace WeSay.Data
 	{
 		private readonly string _field;
 		private readonly IComparer _comparer;
+
 		public SortDefinition(string field, IComparer comparer)
 		{
 			this._field = field;

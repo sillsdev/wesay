@@ -28,7 +28,24 @@ namespace WeSay.LexicalTools
 
 		private int _currentDomainIndex;
 		private int _currentQuestionIndex;
-		private bool _alreadyReportedWSLookupFailure = false;
+		private bool _alreadyReportedWSLookupFailure;
+
+		public GatherBySemanticDomainTask(LexEntryRepository lexEntryRepository,
+										  string label,
+										  string description,
+										  string semanticDomainQuestionsFileName,
+										  ViewTemplate viewTemplate,
+										  string semanticDomainFieldName)
+				: this(
+						lexEntryRepository,
+						label,
+						label,
+						description,
+						string.Empty,
+						string.Empty,
+						semanticDomainQuestionsFileName,
+						viewTemplate,
+						semanticDomainFieldName) {}
 
 		public GatherBySemanticDomainTask(LexEntryRepository lexEntryRepository,
 										  string label,
@@ -39,7 +56,15 @@ namespace WeSay.LexicalTools
 										  string semanticDomainQuestionsFileName,
 										  ViewTemplate viewTemplate,
 										  string semanticDomainFieldName)
-				: base(label, longLabel, description, remainingCountText, referenceCountText, false, lexEntryRepository, viewTemplate)
+				: base(
+						label,
+						longLabel,
+						description,
+						remainingCountText,
+						referenceCountText,
+						false,
+						lexEntryRepository,
+						viewTemplate)
 		{
 			if (semanticDomainQuestionsFileName == null)
 			{
@@ -67,9 +92,8 @@ namespace WeSay.LexicalTools
 				}
 				else
 				{
-					string pathInProgramDir =
-							Path.Combine(WeSayWordsProject.ApplicationCommonDirectory,
-										 _semanticDomainQuestionsFileName);
+					string pathInProgramDir = Path.Combine(BasilProject.ApplicationCommonDirectory,
+														   _semanticDomainQuestionsFileName);
 					if (!File.Exists(pathInProgramDir))
 					{
 						throw new ApplicationException(
@@ -496,10 +520,9 @@ namespace WeSay.LexicalTools
 		{
 			string domainKey = DomainKeys[domainIndex];
 
-			beginIndex = recordTokens.FindFirstIndex(delegate(RecordToken<LexEntry> token)
-													 {
-														 return (string) token["SemanticDomain"] == domainKey;
-													 });
+			beginIndex =
+					recordTokens.FindFirstIndex(
+							delegate(RecordToken<LexEntry> token) { return (string) token["SemanticDomain"] == domainKey; });
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
@@ -507,7 +530,7 @@ namespace WeSay.LexicalTools
 			}
 			pastEndIndex = beginIndex + 1;
 			while (pastEndIndex < recordTokens.Count &&
-				   (string)recordTokens[pastEndIndex]["SemanticDomain"] == domainKey)
+				   (string) recordTokens[pastEndIndex]["SemanticDomain"] == domainKey)
 			{
 				++pastEndIndex;
 			}
@@ -656,7 +679,7 @@ namespace WeSay.LexicalTools
 			string lastDomain = null;
 			foreach (RecordToken<LexEntry> token in GetAllEntriesSortedBySemanticDomain())
 			{
-				string semanticDomain = (string)token["SemanticDomain"];
+				string semanticDomain = (string) token["SemanticDomain"];
 				if (semanticDomain != lastDomain)
 				{
 					lastDomain = semanticDomain;

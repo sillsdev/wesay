@@ -15,7 +15,7 @@ namespace WeSay.Project.Tests
 	/// </summary>
 	public class ProjectDirectorySetupForTesting: IDisposable
 	{
-		private bool _disposed = false;
+		private bool _disposed;
 		private readonly string _experimentDir;
 		private readonly string _projectName = "test";
 		private readonly string _pathToTasksBase;

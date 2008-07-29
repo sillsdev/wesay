@@ -33,9 +33,8 @@ namespace WeSay.ConfigTool
 			result.Sort(
 					delegate(CultureInfo ci1, CultureInfo ci2)
 					{
-						return
-								StringComparer.InvariantCulture.Compare(ci1.DisplayName,
-																		ci2.DisplayName);
+						return StringComparer.InvariantCulture.Compare(ci1.DisplayName,
+																	   ci2.DisplayName);
 					});
 
 			result.Remove(CultureInfo.InvariantCulture);
@@ -46,8 +45,7 @@ namespace WeSay.ConfigTool
 
 			foreach (Enum customSortRulesType in Enum.GetValues(typeof (CustomSortRulesType)))
 			{
-				FieldInfo fi =
-						customSortRulesType.GetType().GetField(customSortRulesType.ToString());
+				FieldInfo fi = customSortRulesType.GetType().GetField(customSortRulesType.ToString());
 
 				DescriptionAttribute[] descriptions =
 						(DescriptionAttribute[])
@@ -61,14 +59,13 @@ namespace WeSay.ConfigTool
 				{
 					description = descriptions[0].Description;
 				}
-				sortChoices.Add(
-						new KeyValuePair<string, string>(customSortRulesType.ToString(), description));
+				sortChoices.Add(new KeyValuePair<string, string>(customSortRulesType.ToString(),
+																 description));
 			}
 			foreach (CultureInfo cultureInfo in result)
 			{
-				sortChoices.Add(
-						new KeyValuePair<string, string>(cultureInfo.IetfLanguageTag,
-														 cultureInfo.DisplayName));
+				sortChoices.Add(new KeyValuePair<string, string>(cultureInfo.IetfLanguageTag,
+																 cultureInfo.DisplayName));
 			}
 
 			comboBoxCultures.DataSource = sortChoices;
@@ -142,8 +139,8 @@ namespace WeSay.ConfigTool
 
 		private void textBoxCustomRules_Validated(object sender, EventArgs e)
 		{
-			_writingSystem.CustomSortRules =
-					textBoxCustomRules.Text.Replace(Environment.NewLine, "\n");
+			_writingSystem.CustomSortRules = textBoxCustomRules.Text.Replace(Environment.NewLine,
+																			 "\n");
 
 			InvalidateCache();
 		}
@@ -231,15 +228,16 @@ W w
 X x
 Y y
 Z z";
-					textBoxCustomRules.Text =
-							textBoxCustomRules.Text.Replace("\r\n", Environment.NewLine);
-					textBoxCustomRules.Text =
-							textBoxCustomRules.Text.Replace("\n", Environment.NewLine);
+					textBoxCustomRules.Text = textBoxCustomRules.Text.Replace("\r\n",
+																			  Environment.NewLine);
+					textBoxCustomRules.Text = textBoxCustomRules.Text.Replace("\n",
+																			  Environment.NewLine);
 				}
 				else
 				{
-					textBoxCustomRules.Text =
-							_writingSystem.CustomSortRules.Replace("\n", Environment.NewLine);
+					textBoxCustomRules.Text = _writingSystem.CustomSortRules.Replace("\n",
+																					 Environment.
+																							 NewLine);
 				}
 
 				textBoxCustomRules.Visible = true;
@@ -277,11 +275,10 @@ Z z";
 			}
 			catch (ParserErrorException e)
 			{
-				errorMessage =
-						string.Format("{0} at line {1} column {2}",
-									  e.ParserError.ErrorText,
-									  e.ParserError.Line,
-									  e.ParserError.Column);
+				errorMessage = string.Format("{0} at line {1} column {2}",
+											 e.ParserError.ErrorText,
+											 e.ParserError.Line,
+											 e.ParserError.Column);
 				return false;
 			}
 			catch (ApplicationException e)
@@ -296,9 +293,8 @@ Z z";
 		private void buttonSortTest_Click(object sender, EventArgs e)
 		{
 			string text = textBoxSortTest.Text;
-			string[] stringsToSort =
-					text.Split(new string[] {Environment.NewLine},
-							   StringSplitOptions.RemoveEmptyEntries);
+			string[] stringsToSort = text.Split(new string[] {Environment.NewLine},
+												StringSplitOptions.RemoveEmptyEntries);
 			Array.Sort(stringsToSort, _writingSystem);
 			string s = string.Empty;
 			foreach (string s1 in stringsToSort)

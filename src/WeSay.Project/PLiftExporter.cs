@@ -7,16 +7,15 @@ using WeSay.LexicalModel;
 
 namespace WeSay.Project
 {
-	public class PLiftExporter:LiftExporter
+	public class PLiftExporter: LiftExporter
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly LexEntryRepository _lexEntryRepository;
 
 		public PLiftExporter(StringBuilder builder,
-							   bool produceFragmentOnly,
-							   LexEntryRepository lexEntryRepository,
-							   ViewTemplate viewTemplate)
-			: base(builder, produceFragmentOnly)
+							 bool produceFragmentOnly,
+							 LexEntryRepository lexEntryRepository,
+							 ViewTemplate viewTemplate): base(builder, produceFragmentOnly)
 		{
 			this._lexEntryRepository = lexEntryRepository;
 			this._viewTemplate = viewTemplate;
@@ -24,17 +23,14 @@ namespace WeSay.Project
 
 		public PLiftExporter(string path,
 							 LexEntryRepository lexEntryRepository,
-							 ViewTemplate viewTemplate)
-			: base(path)
+							 ViewTemplate viewTemplate): base(path)
 		{
 			this._lexEntryRepository = lexEntryRepository;
 			this._viewTemplate = viewTemplate;
 		}
 
-		private Options _options = Options.DereferenceRelations |
-								   Options.DereferenceOptions |
+		private Options _options = Options.DereferenceRelations | Options.DereferenceOptions |
 								   Options.DetermineHeadword;
-
 
 		[Flags]
 		public enum Options
@@ -50,22 +46,13 @@ namespace WeSay.Project
 		/// </summary>
 		public ViewTemplate Template
 		{
-			get
-			{
-				return _viewTemplate;
-			}
+			get { return _viewTemplate; }
 		}
 
 		public Options ExportOptions
 		{
-			get
-			{
-				return _options;
-			}
-			set
-			{
-				_options = value;
-			}
+			get { return _options; }
+			set { _options = value; }
 		}
 
 		public override void Add(LexEntry entry)
@@ -98,12 +85,13 @@ namespace WeSay.Project
 				{
 					Writer.WriteStartElement("field");
 					Writer.WriteAttributeString("type",
-												 fieldName == "POS" ? "grammatical-info" : fieldName);
+												fieldName == "POS" ? "grammatical-info" : fieldName);
 					Add(labelForms, false);
 					Writer.WriteEndElement();
 				}
 			}
 		}
+
 		/// <summary>
 		/// nb: this is used both for the headword of an article, but also for the target of a relation.
 		/// </summary>
@@ -134,19 +122,18 @@ namespace WeSay.Project
 			WriteMultiTextAsArtificialField(outputFieldName, headword);
 		}
 
-
 		/// <summary>
 		/// use this for multitexts that were somehow constructed during export, with no corresponding single property
 		/// </summary>
 		private void WriteMultiTextAsArtificialField(string outputFieldName, MultiTextBase text)
 		{
-			if (!MultiText.IsEmpty(text))
+			if (!MultiTextBase.IsEmpty(text))
 			{
 				Writer.WriteStartElement("field");
 
 				Writer.WriteAttributeString("type", outputFieldName);
 
-				if (!MultiText.IsEmpty(text))
+				if (!MultiTextBase.IsEmpty(text))
 				{
 					Add(text.Forms, true);
 				}
@@ -154,7 +141,6 @@ namespace WeSay.Project
 				Writer.WriteEndElement();
 			}
 		}
-
 
 		protected override void WriteRelationTarget(LexRelation relation)
 		{
@@ -168,7 +154,8 @@ namespace WeSay.Project
 			}
 		}
 
-		protected override void WritePosCore(OptionRef pos) {
+		protected override void WritePosCore(OptionRef pos)
+		{
 			if (0 != (_options & Options.DereferenceOptions))
 			{
 				WriteDisplayNameFieldForOption(pos, LexSense.WellKnownProperties.PartOfSpeech);
@@ -212,7 +199,8 @@ namespace WeSay.Project
 			return (f.Enabled);
 		}
 
-		protected override LanguageForm[] GetOrderedAndFilteredForms(MultiTextBase text, string propertyName)
+		protected override LanguageForm[] GetOrderedAndFilteredForms(MultiTextBase text,
+																	 string propertyName)
 		{
 			Field f = Template.GetField(propertyName);
 			if (f == null)
@@ -221,6 +209,5 @@ namespace WeSay.Project
 			}
 			return text.GetOrderedAndFilteredForms(f.WritingSystemIds);
 		}
-
 	}
 }

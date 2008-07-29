@@ -10,13 +10,13 @@ namespace WeSay.Data
 	public class Query
 	{
 		[Obsolete]
-		sealed public class PredicateQuery<T>: Query
+		public sealed class PredicateQuery<T>: Query
 		{
 			private readonly Predicate<T> _predicate;
 
-			public PredicateQuery(Predicate<T> predicate): base(typeof(T))
+			public PredicateQuery(Predicate<T> predicate): base(typeof (T))
 			{
-					_predicate = predicate;
+				_predicate = predicate;
 			}
 
 			protected override void GetResultsCore(List<Dictionary<string, object>> result, object o)
@@ -28,24 +28,29 @@ namespace WeSay.Data
 				GetNestedQueryResults(result, o);
 			}
 		}
-		sealed private class ForEachQuery : Query
+
+		private sealed class ForEachQuery: Query
 		{
 			private readonly MethodInfo _property;
+
 			public ForEachQuery(Query root, MethodInfo p, Type iEnumerableReturnType)
-				: base(root, iEnumerableReturnType)
+					: base(root, iEnumerableReturnType)
 			{
 				_property = p;
 			}
 
-			protected override void GetResultsCore(List<Dictionary<string, object>> results, object o)
+			protected override void GetResultsCore(List<Dictionary<string, object>> results,
+												   object o)
 			{
-				object value = this._property.Invoke(o,null);
+				object value = this._property.Invoke(o, null);
 				if (value != null)
 				{
-					List<Dictionary<string, object>> oneResultPerRow = new List<Dictionary<string, object>>();
-					foreach (Object item in (IEnumerable)value)
+					List<Dictionary<string, object>> oneResultPerRow =
+							new List<Dictionary<string, object>>();
+					foreach (Object item in (IEnumerable) value)
 					{
-						List<Dictionary<string, object>> subresults = new List<Dictionary<string, object>>();
+						List<Dictionary<string, object>> subresults =
+								new List<Dictionary<string, object>>();
 						base.GetResultsCore(subresults, item);
 						oneResultPerRow.AddRange(subresults);
 					}
@@ -54,15 +59,17 @@ namespace WeSay.Data
 			}
 		}
 
-		sealed private class InQuery:Query
+		private sealed class InQuery: Query
 		{
 			private readonly MethodInfo _property;
-			public InQuery(Query root, MethodInfo p):base(root, p.ReturnType)
+
+			public InQuery(Query root, MethodInfo p): base(root, p.ReturnType)
 			{
 				_property = p;
 			}
 
-			protected override void GetResultsCore(List<Dictionary<string, object>> results, object o)
+			protected override void GetResultsCore(List<Dictionary<string, object>> results,
+												   object o)
 			{
 				object value = this._property.Invoke(o, null);
 				if (value != null)
@@ -75,25 +82,23 @@ namespace WeSay.Data
 			{
 				Type returnType = this._property.ReturnType;
 				PropertyInfo property = returnType.GetProperty(name);
-				if(property == null)
+				if (property == null)
 				{
 					throw new ArgumentOutOfRangeException("name",
-									name,
-									String.Format("There is no property in class {0} with the given name",
-												  returnType.Name));
+														  name,
+														  String.Format(
+																  "There is no property in class {0} with the given name",
+																  returnType.Name));
 				}
 				return property.GetGetMethod();
 			}
 
-
 			protected override string TypeName
 			{
-				get
-				{
-					return this._property.Name;
-				}
+				get { return this._property.Name; }
 			}
 		}
+
 		private List<Query> _nestedQueries;
 		private List<KeyValuePair<string, MethodInfo>> _resultProperties;
 		private readonly Type _t;
@@ -105,7 +110,8 @@ namespace WeSay.Data
 			GetNestedQueryResults(result, o);
 		}
 
-		protected void GetNestedQueryResults(List<Dictionary<string, object>> result, object o) {
+		protected void GetNestedQueryResults(List<Dictionary<string, object>> result, object o)
+		{
 			if (this._nestedQueries != null)
 			{
 				foreach (Query query in this._nestedQueries)
@@ -126,7 +132,7 @@ namespace WeSay.Data
 					MethodInfo getProperty = pair.Value;
 					object result = getProperty.Invoke(o, null);
 					IEnumerable enumerableResult = result as IEnumerable;
-					if(enumerableResult == null || result is string)
+					if (enumerableResult == null || result is string)
 					{
 						Permuter.Permute(results, pair.Key, result);
 					}
@@ -140,11 +146,11 @@ namespace WeSay.Data
 
 		public IEnumerable<Dictionary<string, object>> GetResults(object o)
 		{
-			if(o == null)
+			if (o == null)
 			{
 				throw new ArgumentNullException();
 			}
-			if(_t == null)
+			if (_t == null)
 			{
 				throw new InvalidOperationException();
 			}
@@ -167,7 +173,8 @@ namespace WeSay.Data
 			}
 		}
 
-		private Query GetRoot() {
+		private Query GetRoot()
+		{
 			Query root = this;
 			if (this._root != null)
 			{
@@ -177,7 +184,8 @@ namespace WeSay.Data
 		}
 
 		private readonly Query _root;
-		internal Query(Query root, Type t):this(t)
+
+		internal Query(Query root, Type t): this(t)
 		{
 			if (root == null)
 			{
@@ -204,7 +212,7 @@ namespace WeSay.Data
 
 		public Query In(string fieldName)
 		{
-			InQuery q = new InQuery(this._root??this, GetMethodInfo(fieldName));
+			InQuery q = new InQuery(this._root ?? this, GetMethodInfo(fieldName));
 			NestedQueries.Add(q);
 			return q;
 		}
@@ -215,7 +223,9 @@ namespace WeSay.Data
 			Type iEnumerableReturnType = GetIEnumerableReturnType(mi);
 			if (iEnumerableReturnType == null)
 			{
-				throw new ArgumentOutOfRangeException("fieldName", fieldName, "Does not implement IEnumerable<T>");
+				throw new ArgumentOutOfRangeException("fieldName",
+													  fieldName,
+													  "Does not implement IEnumerable<T>");
 			}
 
 			ForEachQuery q = new ForEachQuery(this._root ?? this, mi, iEnumerableReturnType);
@@ -233,7 +243,9 @@ namespace WeSay.Data
 			}
 			if (root._labelRegistry.Contains(label))
 			{
-				throw new ArgumentOutOfRangeException("label", label, "Label has already been used in Query");
+				throw new ArgumentOutOfRangeException("label",
+													  label,
+													  "Label has already been used in Query");
 			}
 			root._labelRegistry.Add(label);
 		}
@@ -248,7 +260,9 @@ namespace WeSay.Data
 			MethodInfo mi = GetMethodInfo(fieldName);
 			if (GetIEnumerableReturnType(mi) != null)
 			{
-				throw new ArgumentOutOfRangeException("fieldName", fieldName, "Property implements IEnumerable<T>; use ShowEach instead");
+				throw new ArgumentOutOfRangeException("fieldName",
+													  fieldName,
+													  "Property implements IEnumerable<T>; use ShowEach instead");
 			}
 			RegisterLabel(label);
 
@@ -266,7 +280,9 @@ namespace WeSay.Data
 			MethodInfo mi = GetMethodInfo(fieldName);
 			if (GetIEnumerableReturnType(mi) == null)
 			{
-				throw new ArgumentOutOfRangeException("fieldName", fieldName, "Property does not implement IEnumerable<T>; use Show instead");
+				throw new ArgumentOutOfRangeException("fieldName",
+													  fieldName,
+													  "Property does not implement IEnumerable<T>; use Show instead");
 			}
 			RegisterLabel(label);
 
@@ -301,14 +317,18 @@ namespace WeSay.Data
 		protected virtual MethodInfo GetMethodInfo(string name)
 		{
 			PropertyInfo property = this._t.GetProperty(name);
-			if(property == null)
+			if (property == null)
 			{
-				throw new ArgumentOutOfRangeException("name", name, "There is no property with the given name");
+				throw new ArgumentOutOfRangeException("name",
+													  name,
+													  "There is no property with the given name");
 			}
 			MethodInfo mi = property.GetGetMethod();
-			if(mi == null)
+			if (mi == null)
 			{
-				throw new ArgumentOutOfRangeException("name", name, "The given property does not have a public getter.");
+				throw new ArgumentOutOfRangeException("name",
+													  name,
+													  "The given property does not have a public getter.");
 			}
 			return mi;
 		}
@@ -351,7 +371,7 @@ namespace WeSay.Data
 			// if our return type is string we want
 			// to act on the string not the IEnumerable<char>
 			Type returnType = mi.ReturnType;
-			if(returnType == typeof(string))
+			if (returnType == typeof (string))
 			{
 				return null;
 			}
@@ -362,7 +382,7 @@ namespace WeSay.Data
 				if (interfaceType.IsGenericType)
 				{
 					Type[] arguments = interfaceType.GetGenericArguments();
-					if (interfaceType == typeof(IEnumerable<>).MakeGenericType(arguments))
+					if (interfaceType == typeof (IEnumerable<>).MakeGenericType(arguments))
 					{
 						type = arguments[0];
 					}

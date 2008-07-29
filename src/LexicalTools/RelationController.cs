@@ -48,12 +48,11 @@ namespace WeSay.LexicalTools
 										   LexEntryRepository lexEntryRepository,
 										   EventHandler<CurrentItemEventArgs> focus)
 		{
-			RelationController controller =
-					new RelationController(relationParent,
-										   relationType,
-										   field,
-										   lexEntryRepository,
-										   focus);
+			RelationController controller = new RelationController(relationParent,
+																   relationType,
+																   field,
+																   lexEntryRepository,
+																   focus);
 			return controller.Control;
 		}
 
@@ -148,7 +147,8 @@ namespace WeSay.LexicalTools
 			_control = picker;
 		}
 
-		private WritingSystem GetWritingSystemFromField() {
+		private WritingSystem GetWritingSystemFromField()
+		{
 			string firstWsId = this._field.WritingSystemIds[0];
 			return BasilProject.Project.WritingSystems[firstWsId];
 		}
@@ -230,12 +230,11 @@ namespace WeSay.LexicalTools
 		private static IEnumerable FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms(
 				string text, IEnumerable items, IDisplayStringAdaptor adaptor)
 		{
-			return
-					ApproximateMatcher.FindClosestForms<object>(items,
-																adaptor.GetDisplayLabel,
-																text,
-																ApproximateMatcherOptions.
-																		IncludePrefixedAndNextClosestForms);
+			return ApproximateMatcher.FindClosestForms<object>(items,
+															   adaptor.GetDisplayLabel,
+															   text,
+															   ApproximateMatcherOptions.
+																	   IncludePrefixedAndNextClosestForms);
 		}
 
 		//private static IEnumerable FindClosestAndNextClosestAndPrefixedLexEntryForms(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
@@ -253,10 +252,9 @@ namespace WeSay.LexicalTools
 
 		private object FindRecordTokenFromForm(string form)
 		{
-			return _resultSet.FindFirst(delegate (RecordToken<LexEntry> token)
-											 {
-												 return (string)token["Form"] == form;
-											 });
+			return
+					_resultSet.FindFirst(
+							delegate(RecordToken<LexEntry> token) { return (string) token["Form"] == form; });
 		}
 
 		//        #region Nested type: WeSayDataObjectLabelAdaptor

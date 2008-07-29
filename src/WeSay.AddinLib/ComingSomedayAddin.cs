@@ -11,7 +11,7 @@ namespace WeSay.AddinLib
 		private readonly string _name;
 		private readonly string _longName;
 		private readonly string _shortDescription;
-		private readonly Image _buttonImage = null;
+		private readonly Image _buttonImage;
 
 		public ComingSomedayAddin(string name, string longName, string shortDescription)
 		{
@@ -20,7 +20,10 @@ namespace WeSay.AddinLib
 			_shortDescription = shortDescription;
 		}
 
-		public ComingSomedayAddin(string name, string longName, string shortDescription, Image buttonImage)
+		public ComingSomedayAddin(string name,
+								  string longName,
+								  string shortDescription,
+								  Image buttonImage)
 		{
 			_name = name;
 			_longName = longName;

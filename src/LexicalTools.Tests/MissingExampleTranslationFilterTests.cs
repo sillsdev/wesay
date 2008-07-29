@@ -11,10 +11,9 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Field field =
-					new Field(Field.FieldNames.ExampleTranslation.ToString(),
-							  "LexExampleSentence",
-							  new string[] {"analysis"});
+			Field field = new Field(Field.FieldNames.ExampleTranslation.ToString(),
+									"LexExampleSentence",
+									new string[] {"analysis"});
 			_missingExampleTranslationFilter = new MissingFieldQuery(field);
 		}
 

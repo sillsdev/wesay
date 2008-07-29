@@ -14,10 +14,11 @@ namespace WeSay.LexicalModel
 	///
 	/// NB: this doesn't yet merge (dec 2006). Just blindly adds.
 	/// </summary>
-	internal class LiftMerger: ILexiconMerger<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>,
-							 IDisposable
+	internal class LiftMerger:
+			ILexiconMerger<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>,
+			IDisposable
 	{
-		public class EntryCreatedEventArgs:EventArgs
+		public class EntryCreatedEventArgs: EventArgs
 		{
 			public readonly LexEntry Entry;
 
@@ -30,7 +31,7 @@ namespace WeSay.LexicalModel
 		public event EventHandler<EntryCreatedEventArgs> EntryCreatedEvent = delegate { };
 		private readonly IList<String> _expectedOptionTraits;
 		private readonly IList<string> _expectedOptionCollectionTraits;
-		private readonly LiftRepository _repository; // !!! Needs to be a weak ref CJP
+		private readonly LiftRepository _repository;
 
 		public LiftMerger(LiftRepository repository)
 		{
@@ -74,7 +75,7 @@ namespace WeSay.LexicalModel
 			entry.Guid = eInfo.Guid;
 			entry.CreationTime = eInfo.CreationTime;
 			entry.ModificationTime = eInfo.ModificationTime;
-			if(_repository.LastModified < entry.ModificationTime)
+			if (_repository.LastModified < entry.ModificationTime)
 			{
 				_repository.LastModified = entry.ModificationTime;
 			}

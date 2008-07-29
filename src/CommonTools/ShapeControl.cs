@@ -29,12 +29,12 @@ namespace WeSay.CommonTools
 	public class ShapeControl: Control
 	{
 		private GraphicsPath _outline;
-		private bool _istextset = false;
+		private bool _istextset;
 		private ShapeType _shape = ShapeType.Rectangle;
 		private DashStyle _borderstyle = DashStyle.Solid;
 		private Color _bordercolor = Color.FromArgb(255, 255, 0, 0);
 		private int _borderwidth = 3;
-		private bool _usegradient = false;
+		private bool _usegradient;
 		private Color _centercolor = Color.FromArgb(100, 255, 0, 0);
 		private Color _surroundcolor = Color.FromArgb(100, 0, 255, 255);
 
@@ -60,7 +60,7 @@ namespace WeSay.CommonTools
 		//Overide the BackColor Property to be associated with our custom editor
 		[Category("Shape")]
 		[Description("Back Color")]
-		[BrowsableAttribute(true)]
+		[Browsable(true)]
 		//        [EditorAttribute(typeof(ColorEditor), typeof(System.Drawing.Design.UITypeEditor))]
 			public override Color BackColor
 		{
@@ -87,7 +87,7 @@ namespace WeSay.CommonTools
 		//For Gradient Rendering, this is the color at the center of the shape
 		[Category("Shape")]
 		[Description("Color at center")]
-		[BrowsableAttribute(true)]
+		[Browsable(true)]
 		//        [EditorAttribute(typeof(ColorEditor), typeof(System.Drawing.Design.UITypeEditor))]
 			public Color CenterColor
 		{
@@ -102,7 +102,7 @@ namespace WeSay.CommonTools
 		//For Gradient Rendering, this is the color at the edges of the shape
 		[Category("Shape")]
 		[Description("Color at the edges of the Shape")]
-		[BrowsableAttribute(true)]
+		[Browsable(true)]
 		//        [EditorAttribute(typeof(ColorEditor), typeof(System.Drawing.Design.UITypeEditor))]
 			public Color SurroundColor
 		{
@@ -133,7 +133,7 @@ namespace WeSay.CommonTools
 
 		[Category("Shape")]
 		[Description("Border Color")]
-		[BrowsableAttribute(true)]
+		[Browsable(true)]
 		//        [EditorAttribute(typeof(ColorEditor), typeof(System.Drawing.Design.UITypeEditor))]
 			public Color BorderColor
 		{
@@ -159,7 +159,7 @@ namespace WeSay.CommonTools
 
 		[Category("Shape")]
 		[Description("Select Shape")]
-		[BrowsableAttribute(true)]
+		[Browsable(true)]
 		//        [EditorAttribute(typeof(ShapeTypeEditor), typeof(System.Drawing.Design.UITypeEditor))]
 			public ShapeType Shape
 		{
@@ -196,23 +196,23 @@ namespace WeSay.CommonTools
 					outline.AddPie(0, 0, width, height, 180, 270);
 					break;
 				case ShapeType.CustomPolygon:
-					outline.AddPolygon(
-							new Point[]
-									{
-											new Point(0, 0), new Point(width / 2, height / 4),
-											new Point(width, 0), new Point((width * 3) / 4, height / 2),
-											new Point(width, height),
-											new Point(width / 2, (height * 3) / 4), new Point(0, height),
-											new Point(width / 4, height / 2)
-									});
+					outline.AddPolygon(new Point[]
+										   {
+												   new Point(0, 0), new Point(width / 2, height / 4),
+												   new Point(width, 0),
+												   new Point((width * 3) / 4, height / 2),
+												   new Point(width, height),
+												   new Point(width / 2, (height * 3) / 4),
+												   new Point(0, height), new Point(width / 4, height / 2)
+										   });
 					break;
 				case ShapeType.Diamond:
-					outline.AddPolygon(
-							new Point[]
-									{
-											new Point(0, height / 2), new Point(width / 2, 0),
-											new Point(width, height / 2), new Point(width / 2, height)
-									});
+					outline.AddPolygon(new Point[]
+										   {
+												   new Point(0, height / 2), new Point(width / 2, 0),
+												   new Point(width, height / 2),
+												   new Point(width / 2, height)
+										   });
 					break;
 
 				case ShapeType.Rectangle:
@@ -224,39 +224,35 @@ namespace WeSay.CommonTools
 					break;
 
 				case ShapeType.TriangleUp:
-					outline.AddPolygon(
-							new Point[]
-									{
-											new Point(0, height), new Point(width, height),
-											new Point(width / 2, 0)
-									});
+					outline.AddPolygon(new Point[]
+										   {
+												   new Point(0, height), new Point(width, height),
+												   new Point(width / 2, 0)
+										   });
 					break;
 
 				case ShapeType.TriangleDown:
-					outline.AddPolygon(
-							new Point[]
-									{
-											new Point(0, 0), new Point(width, 0),
-											new Point(width / 2, height)
-									});
+					outline.AddPolygon(new Point[]
+										   {
+												   new Point(0, 0), new Point(width, 0),
+												   new Point(width / 2, height)
+										   });
 					break;
 
 				case ShapeType.TriangleLeft:
-					outline.AddPolygon(
-							new Point[]
-									{
-											new Point(width, 0), new Point(0, height / 2),
-											new Point(width, height)
-									});
+					outline.AddPolygon(new Point[]
+										   {
+												   new Point(width, 0), new Point(0, height / 2),
+												   new Point(width, height)
+										   });
 					break;
 
 				case ShapeType.TriangleRight:
-					outline.AddPolygon(
-							new Point[]
-									{
-											new Point(0, 0), new Point(width, height / 2),
-											new Point(0, height)
-									});
+					outline.AddPolygon(new Point[]
+										   {
+												   new Point(0, 0), new Point(width, height / 2),
+												   new Point(0, height)
+										   });
 					break;
 
 				case ShapeType.RoundedRectangle:

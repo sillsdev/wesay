@@ -166,10 +166,10 @@ namespace WeSay.App.Tests.Services
 					entriesXml,
 					delegate(IDictionaryService dictionaryService)
 					{
-						FindResult r =
-								dictionaryService.GetMatchingEntries("v",
-																	 "foo",
-																	 FindMethods.Exact.ToString());
+						FindResult r = dictionaryService.GetMatchingEntries("v",
+																			"foo",
+																			FindMethods.Exact.
+																					ToString());
 						Assert.AreEqual(1, r.ids.Length);
 					});
 		}
@@ -194,10 +194,10 @@ namespace WeSay.App.Tests.Services
 					{
 						Assert.IsTrue(dictionaryService.IsInServerMode());
 
-						FindResult r =
-								dictionaryService.GetMatchingEntries("v",
-																	 "foo",
-																	 FindMethods.Exact.ToString());
+						FindResult r = dictionaryService.GetMatchingEntries("v",
+																			"foo",
+																			FindMethods.Exact.
+																					ToString());
 						Assert.AreEqual(2, r.ids.Length);
 					});
 		}
@@ -208,14 +208,16 @@ namespace WeSay.App.Tests.Services
 		[Test]
 		public void GivesHtml()
 		{
-			string entriesXml =
+			const string entriesXml =
 					@"
 						<entry id='foo1'>
 								<lexical-unit><form lang='v'><text>foo</text></form></lexical-unit>
 							  <sense>
-								<gloss lang='en'>
-									<text>gloss for foo</text>
-								</gloss>
+								<definition>
+									<form lang='en'>
+										<text>a definition</text>
+									</form>
+								</definition>
 							 </sense>
 						</entry>";
 			RunTest(kStartInServerMode,
@@ -225,7 +227,7 @@ namespace WeSay.App.Tests.Services
 						string html = dictionaryService.GetHtmlForEntries(new string[] {"foo1"});
 
 						Assert.IsTrue(html.Contains("<html>"));
-						Assert.IsTrue(html.Contains("gloss for foo"));
+						Assert.IsTrue(html.Contains("a definition"));
 					});
 		}
 
@@ -248,19 +250,18 @@ namespace WeSay.App.Tests.Services
 					entriesXml,
 					delegate(IDictionaryService dictionaryService)
 					{
-						string id =
-								dictionaryService.AddEntry("v",
-														   "voom",
-														   "en",
-														   "def of voom",
-														   "v",
-														   "vlah voom!");
+						string id = dictionaryService.AddEntry("v",
+															   "voom",
+															   "en",
+															   "def of voom",
+															   "v",
+															   "vlah voom!");
 						Assert.IsNotNull(id);
 
-						FindResult r =
-								dictionaryService.GetMatchingEntries("v",
-																	 "voom",
-																	 FindMethods.Exact.ToString());
+						FindResult r = dictionaryService.GetMatchingEntries("v",
+																			"voom",
+																			FindMethods.Exact.
+																					ToString());
 						Assert.AreEqual(id, r.ids[0]);
 					});
 		}

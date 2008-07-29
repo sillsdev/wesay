@@ -26,15 +26,13 @@ namespace WeSay.LexicalModel
 			public static bool ContainsAnyCaseVersionOf(string fieldName)
 			{
 				List<string> list =
-						new List<string>(
-								new string[]
-										{
-												PartOfSpeech, Definition, SemanticDomainsDdp4, Picture,
-												Note, Gloss
-										});
-				return
-						list.Contains(fieldName) || list.Contains(fieldName.ToLower()) ||
-						list.Contains(fieldName.ToUpper());
+						new List<string>(new string[]
+											 {
+													 PartOfSpeech, Definition, SemanticDomainsDdp4, Picture
+													 , Note, Gloss
+											 });
+				return list.Contains(fieldName) || list.Contains(fieldName.ToLower()) ||
+					   list.Contains(fieldName.ToUpper());
 			}
 		} ;
 

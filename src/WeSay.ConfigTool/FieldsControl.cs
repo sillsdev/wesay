@@ -167,10 +167,9 @@ namespace WeSay.ConfigTool
 
 		private void OnAddField_Click(object sender, EventArgs e)
 		{
-			Field f =
-					new Field(MakeUniqueFieldName(),
-							  "LexEntry",
-							  WeSayWordsProject.Project.WritingSystems.Keys);
+			Field f = new Field(MakeUniqueFieldName(),
+								"LexEntry",
+								WeSayWordsProject.Project.WritingSystems.Keys);
 			ViewTemplate.Fields.Add(f);
 			LoadInventory();
 			_tabControl.SelectedTab = _setupTab;

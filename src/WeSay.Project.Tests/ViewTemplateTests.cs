@@ -142,10 +142,9 @@ namespace WeSay.Project.Tests
 						   "If translation is turned on by default, you must fix the test which sees if it is turned on by the user inventory");
 			int count = master.Count;
 			ViewTemplate simple = new ViewTemplate();
-			simple.Add(
-					new Field(Field.FieldNames.ExampleTranslation.ToString(),
-							  "LexExampleSentence",
-							  new String[] {"en"}));
+			simple.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(),
+								 "LexExampleSentence",
+								 new String[] {"en"}));
 			ViewTemplate.UpdateUserViewTemplate(master, simple);
 
 			Assert.AreEqual(count, master.Count);
@@ -178,10 +177,9 @@ namespace WeSay.Project.Tests
 		{
 			ViewTemplate master = MakeMasterInventory();
 			ViewTemplate simple = new ViewTemplate();
-			Field definitionField =
-					new Field(LexSense.WellKnownProperties.Definition,
-							  "LexSense",
-							  new String[] {"en"});
+			Field definitionField = new Field(LexSense.WellKnownProperties.Definition,
+											  "LexSense",
+											  new String[] {"en"});
 			definitionField.Enabled = false;
 			simple.Add(definitionField);
 			ViewTemplate.UpdateUserViewTemplate(master, simple);
@@ -193,16 +191,14 @@ namespace WeSay.Project.Tests
 		{
 			ViewTemplate master = MakeMasterInventory();
 			ViewTemplate simple = new ViewTemplate();
-			Field definitionField =
-					new Field(LexSense.WellKnownProperties.Definition,
-							  "LexSense",
-							  new String[] {"en", "a", "b"});
+			Field definitionField = new Field(LexSense.WellKnownProperties.Definition,
+											  "LexSense",
+											  new String[] {"en", "a", "b"});
 			definitionField.Enabled = false;
 			simple.Add(definitionField);
-			Field glossField =
-					new Field(LexSense.WellKnownProperties.Gloss,
-							  "LexSense",
-							  new String[] {"b", "c"});
+			Field glossField = new Field(LexSense.WellKnownProperties.Gloss,
+										 "LexSense",
+										 new String[] {"b", "c"});
 			simple.Add(glossField);
 			ViewTemplate.UpdateUserViewTemplate(master, simple);
 			Assert.AreEqual(4, definitionField.WritingSystemIds.Count);

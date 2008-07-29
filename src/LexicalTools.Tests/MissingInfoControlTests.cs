@@ -41,7 +41,6 @@ namespace WeSay.LexicalTools.Tests
 			return !(hasSense && hasExample);
 		}
 
-
 		[SetUp]
 		public void SetUp()
 		{
@@ -50,8 +49,8 @@ namespace WeSay.LexicalTools.Tests
 			_filePath = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			_writingSystem =
-					new WritingSystem("pretendVernacular", new Font(FontFamily.GenericSansSerif, 24));
+			_writingSystem = new WritingSystem("pretendVernacular",
+											   new Font(FontFamily.GenericSansSerif, 24));
 
 			CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
 			CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
@@ -65,29 +64,25 @@ namespace WeSay.LexicalTools.Tests
 			RtfRenderer.HeadWordWritingSystemId = vernacularWritingSystemIds[0];
 
 			_viewTemplate = new ViewTemplate();
-			_viewTemplate.Add(
-					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-							  "LexEntry",
-							  vernacularWritingSystemIds));
-			_viewTemplate.Add(
-					new Field(LexSense.WellKnownProperties.Definition,
-							  "LexSense",
-							  analysisWritingSystemIds));
+			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+										"LexEntry",
+										vernacularWritingSystemIds));
+			_viewTemplate.Add(new Field(LexSense.WellKnownProperties.Definition,
+										"LexSense",
+										analysisWritingSystemIds));
 
-			_viewTemplate.Add(
-					new Field(Field.FieldNames.ExampleSentence.ToString(),
-							  "LexExampleSentence",
-							  vernacularWritingSystemIds));
-			Field exampleTranslationField = new Field(Field.FieldNames.ExampleTranslation.ToString(),
-													  "LexExampleSentence",
-													  analysisWritingSystemIds);
+			_viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(),
+										"LexExampleSentence",
+										vernacularWritingSystemIds));
+			Field exampleTranslationField = new Field(
+					Field.FieldNames.ExampleTranslation.ToString(),
+					"LexExampleSentence",
+					analysisWritingSystemIds);
 			_viewTemplate.Add(exampleTranslationField);
 
 			_missingTranslationRecordList =
-		_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(
-				exampleTranslationField, _writingSystem);
-
-
+					_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(
+							exampleTranslationField, _writingSystem);
 		}
 
 		private void CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)

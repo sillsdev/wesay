@@ -40,7 +40,7 @@ namespace WeSay.UI
 		/// </summary>
 		public event LayoutNeededHandler LayoutNeededAfterMadeReal;
 
-		private bool _inMidstOfTrigger = false;
+		private bool _inMidstOfTrigger;
 
 		public GhostBinding(IList<T> targetList,
 							string propertyName,

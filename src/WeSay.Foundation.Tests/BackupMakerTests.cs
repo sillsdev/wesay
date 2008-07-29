@@ -19,7 +19,7 @@ namespace WeSay.Foundation.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 			_destinationZip = Path.Combine(Path.GetTempPath(), Path.GetTempFileName() + ".zip");
-			_sourceProjectPath = WeSayWordsProject.GetPretendProjectDirectory();
+			_sourceProjectPath = BasilProject.GetPretendProjectDirectory();
 			_backupMaker = new BackupMaker();
 			_filesToBackup = WeSayWordsProject.GetFilesBelongingToProject(_sourceProjectPath);
 		}
@@ -37,7 +37,7 @@ namespace WeSay.Foundation.Tests
 		[ExpectedException(typeof (ApplicationException))]
 		public void ThrowIfCannotCreateDestination()
 		{
-			BackupMaker.BackupToExternal(WeSayWordsProject.GetPretendProjectDirectory(),
+			BackupMaker.BackupToExternal(BasilProject.GetPretendProjectDirectory(),
 										 "Q:\\" + Path.GetRandomFileName(),
 										 _filesToBackup);
 		}
