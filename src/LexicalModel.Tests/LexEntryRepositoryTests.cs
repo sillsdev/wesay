@@ -609,8 +609,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm2");
 			WritingSystem lexicalFormWritingSystem = new WritingSystem("fr", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem);
-			//??? should this be returning an Empty Resultset or a Result Set with one Entry but an empty LexicalForm?
-			Assert.IsEmpty(matches[0].RealObject.LexicalForm.Forms);
+			Assert.IsEmpty(matches[0].RealObject.LexicalForm["fr"]);
 		}
 
 		private void AddEntryWithGloss(string gloss)
