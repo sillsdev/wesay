@@ -8,7 +8,7 @@ using WeSay.Foundation.Tests;
 
 namespace WeSay.Foundation.Tests
 {
-		public class TempLiftFile : TempFile
+	public class TempLiftFile : TempFile
 	{
 
 		public TempLiftFile(string xmlOfEntries)
