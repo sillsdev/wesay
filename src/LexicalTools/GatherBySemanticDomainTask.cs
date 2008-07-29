@@ -630,7 +630,7 @@ namespace WeSay.LexicalTools
 		private ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain()
 		{
 			return
-					LexEntryRepository.GetAllEntriesSortedBySemanticDomain(
+					LexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(
 							_semanticDomainField.FieldName);
 		}
 

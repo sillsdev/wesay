@@ -304,7 +304,7 @@ namespace WeSay.LexicalModel
 				writingSystem.Id);
 		}
 
-		public ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain(
+		public ResultSet<LexEntry> GetEntriesWithSemanticDomainSortedBySemanticDomain(
 			string fieldName)
 		{
 			if (fieldName == null)
@@ -555,6 +555,10 @@ namespace WeSay.LexicalModel
 		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(
 				Field field, WritingSystem lexicalUnitWritingSystem)
 		{
+			if(lexicalUnitWritingSystem == null)
+			{
+				throw new ArgumentNullException("lexicalUnitWritingSystem");
+			}
 			Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field).FilteringPredicate;
 			Query query = new Query.PredicateQuery<LexEntry>(filteringPredicate);
 			query.In("LexicalForm").ForEach("Forms").Show("Form").Show("WritingSystemId");
