@@ -9,6 +9,7 @@ using Palaso.Text;
 using WeSay.Data;
 using WeSay.Data.Tests;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.LexicalModel.Db4oSpecific;
 
 namespace WeSay.LexicalModel.Tests
@@ -272,16 +273,23 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedBySemanticDomain_EntriesWithDifferingSemanticDomains_EntriesAreSortedBySemanticDomain()
 		{
-			LexEntry lexentry = new LexEntry();
-			lexentry.Senses.Add(new LexSense());
-			//???How do I set the Semantic Domain for a given lexentry?!
-			Assert.Fail("test not implemented");
+			CreateLexEntryWithSemanticDomain("SemanticDomain2");
+			CreateLexEntryWithSemanticDomain("SemanticDomain1");
+			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetAllEntriesSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			Assert.AreEqual(2, sortedResults.Count);
+			Assert.AreEqual("SemanticDomain1", sortedResults[0]["SemanticDomain"]);
+			Assert.AreEqual("SemanticDomain2", sortedResults[1]["SemanticDomain"]);
 		}
 
-		[Test]
-		public void GetAllEntriesSortedBySemanticDomain_ReturnsAllEntries()
+		private void CreateLexEntryWithSemanticDomain(string semanticDomain)
 		{
-			Assert.Fail("test not implemented");
+			LexEntry lexEntryWithSemanticDomain = _lexEntryRepository.CreateItem();
+			lexEntryWithSemanticDomain.Senses.Add(new LexSense());
+			OptionRefCollection o =
+				lexEntryWithSemanticDomain.Senses[0].GetOrCreateProperty<OptionRefCollection>(
+					LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			o.Add(semanticDomain);
+			_lexEntryRepository.SaveItem(lexEntryWithSemanticDomain);
 		}
 
 		[Test]
@@ -402,6 +410,30 @@ namespace WeSay.LexicalModel.Tests
 			ResultSet<LexEntry> list =
 					_lexEntryRepository.GetEntriesWithMatchingLexicalForm("find me", writingSystem);
 			Assert.AreEqual(1, list.Count);
+		}
+
+		[Test]
+		public void GetEntriesWithMatchingLexicalForm_WritingSystemNull_Throws()
+		{
+			Assert.Fail("Test not implemented");
+		}
+
+		[Test]
+		public void GetEntriesWithMatchingLexicalForm_MultipleMatchingEntries_ReturnsMatchingEntries()
+		{
+			Assert.Fail("Test not implemented");
+		}
+
+		[Test]
+		public void GetEntriesWithMatchingLexicalForm_NoMatchingEntries_ReturnsEmpty()
+		{
+			Assert.Fail("Test not implemented");
+		}
+
+		[Test]
+		public void GetEntriesWithMatchingLexicalForm_NoMatchesInWritingSystem_ReturnsEmpty()
+		{
+			Assert.Fail("Test not implemented");
 		}
 
 		[Test]
@@ -548,7 +580,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm2");
 			WritingSystem lexicalFormWritingSystem = new WritingSystem("fr", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem);
-			//??? should this be returning an Empty Rsultset or a Result Set with one Entry but an empty LexicalForm?
+			//??? should this be returning an Empty Resultset or a Result Set with one Entry but an empty LexicalForm?
 			Assert.IsEmpty(matches[0].RealObject.LexicalForm.Forms);
 		}
 
@@ -559,6 +591,66 @@ namespace WeSay.LexicalModel.Tests
 			entry.Senses.Add(sense);
 			sense.Gloss["en"] = gloss;
 			_lexEntryRepository.SaveItem(entry);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_WritingSystemNull_Throws()
+		{
+			Assert.Fail("Test not implemented!");
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_MultipleMatchingEntries_ReturnsMatchingEntries()
+		{
+			Assert.Fail("Test not implemented!");
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_NoMatchingEntries_ReturnsEmpty()
+		{
+			Assert.Fail("Test not implemented!");
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_NoLexicalFormMatchesInWritingSystem_ReturnsEmpty()
+		{
+			Assert.Fail("Test not implemented!");
+		}
+
+		[Test]
+		public void GetEntriesWithMissingFieldSortedByLexicalUnit_FieldNull_Throws()
+		{
+			Assert.Fail("Test not implemented!");
+		}
+
+		[Test]
+		public void GetEntriesWithMissingFieldSortedByLexicalUnit_FieldNameDoesNotExist_ReturnsEmpty()
+		{
+			Assert.Fail("Test not implemented!");
+		}
+
+		[Test]
+		public void GetEntriesWithMissingFieldSortedByLexicalUnit_WritingSystemNull_Throws()
+		{
+			Assert.Fail("Test not implemented!");
+		}
+
+		[Test]
+		public void GetEntriesWithMissingFieldSortedByLexicalUnit_EntryInWritingSystemInFieldDoesNotExist_ReturnsEmpty()
+		{
+			Assert.Fail("Test not implemented!");
+		}
+
+		[Test]
+		public void GetEntriesWithMissingFieldSortedByLexicalUnit_MultipleEntriesWithMissingFieldExist_ReturnsEntriesSortedByLexicalForm()
+		{
+			Assert.Fail("Test not implemented!");
+		}
+
+		[Test]
+		public void GetEntriesWithMissingFieldSortedByLexicalUnit_LexicalFormDoesNotExistInWritingSystem_ReturnsEmptylexicalFormForThatEntry()
+		{
+			Assert.Fail("Test not implemented!");
 		}
 
 		[Test]
