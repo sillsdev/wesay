@@ -222,14 +222,20 @@ namespace WeSay.LexicalTools
 
 		private void SetRecordToBeEdited(LexEntry record)
 		{
-			if (Control_EntryDetailPanel.DataSource != null)
-			{
-				Control_EntryDetailPanel.DataSource.PropertyChanged -= OnEntryChanged;
-			}
+			SaveAndCleanUpPreviousEntry();
 			Control_EntryDetailPanel.DataSource = record;
 			if (record != null)
 			{
 				record.PropertyChanged += OnEntryChanged;
+			}
+		}
+
+		private void SaveAndCleanUpPreviousEntry() {
+			LexEntry previousEntry = Control_EntryDetailPanel.DataSource;
+			if (previousEntry != null)
+			{
+				previousEntry.PropertyChanged -= OnEntryChanged;
+				this._lexEntryRepository.SaveItem(previousEntry);
 			}
 		}
 
