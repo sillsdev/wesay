@@ -34,8 +34,6 @@ namespace WeSay.Data
 			get { return false; }
 		}
 
-		public virtual void Startup(ProgressState state) {}
-
 		public virtual T CreateItem()
 		{
 			T t = new T();

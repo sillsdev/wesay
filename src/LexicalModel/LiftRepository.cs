@@ -16,13 +16,16 @@ namespace WeSay.LexicalModel
 {
 	internal class LiftRepository: MemoryRepository<LexEntry>
 	{
+		private readonly ProgressState _progressState;
 		private readonly string _liftFilePath;
 		private FileStream _liftFileStreamForLocking;
 		private bool _loadingAllEntries;
 
-		public LiftRepository(string filePath)
+		public LiftRepository(string filePath, ProgressState progressState)
 		{
+			_progressState = progressState;
 			_liftFilePath = filePath;
+
 			FileInfo fileInfo = new FileInfo(_liftFilePath);
 			//check if file is writeable
 			using (FileStream fileStream = fileInfo.OpenWrite())
@@ -34,20 +37,21 @@ namespace WeSay.LexicalModel
 				LiftExporter exporter = new LiftExporter(filePath);
 				exporter.End();
 			}
+
+			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
+			if (preparer.IsMigrationNeeded())
+			{
+				preparer.MigrateLiftFile(progressState);
+			}
+			preparer.PopulateDefinitions(progressState);
+
 			LockLift();
 			LastModified = DateTime.MinValue;
 			LoadAllLexEntries();
 		}
 
-		public override void Startup(ProgressState state)
-		{
-			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
-			if (preparer.IsMigrationNeeded())
-			{
-				preparer.MigrateLiftFile(state);
-			}
-			preparer.PopulateDefinitions(state);
-		}
+		public LiftRepository(string filePath):this(filePath, null)
+		{}
 
 		public override LexEntry CreateItem()
 		{
@@ -112,6 +116,10 @@ namespace WeSay.LexicalModel
 		private void LoadAllLexEntries()
 		{
 			_loadingAllEntries = true;
+			const string status = "Loading entries";
+			Logger.WriteEvent(status);
+			_progressState.StatusLabel = status;
+
 			try
 			{
 				UnLockLift();
@@ -158,21 +166,45 @@ namespace WeSay.LexicalModel
 			base.Dispose();
 		}
 
-		//???? Eric added these and I'm not sure why. TA 2008-07-10
 		private void parser_ParsingWarning(object sender,
 										   LiftParser
 												   <WeSayDataObject, LexEntry, LexSense,
-												   LexExampleSentence>.ErrorArgs e) {}
+												   LexExampleSentence>.ErrorArgs e)
+		{
+			if(_progressState == null)
+			{
+				return;
+			}
+
+			_progressState.ExceptionThatWasEncountered = e.Exception;
+		}
 
 		private void parser_SetStepsCompleted(object sender,
 											  LiftParser
 													  <WeSayDataObject, LexEntry, LexSense,
-													  LexExampleSentence>.ProgressEventArgs e) {}
+													  LexExampleSentence>.ProgressEventArgs e)
+		{
+			if (this._progressState == null)
+			{
+				return;
+			}
+
+			this._progressState.NumberOfStepsCompleted = e.Progress;
+			e.Cancel = this._progressState.Cancel;
+		}
 
 		private void parser_SetTotalNumberSteps(object sender,
 												LiftParser
 														<WeSayDataObject, LexEntry, LexSense,
-														LexExampleSentence>.StepsArgs e) {}
+														LexExampleSentence>.StepsArgs e)
+		{
+			if (_progressState == null)
+			{
+				return;
+			}
+
+			_progressState.TotalNumberOfSteps = e.Steps;
+		}
 
 		//private DateTime _timeOfLastQueryForNewRecords;
 

@@ -19,6 +19,12 @@ namespace WeSay.Data
 		public SynchronicRepository(IRepository<T> primary,
 									IRepository<T> secondary,
 									CopyStrategy copyStrategy)
+			:this(primary, secondary, copyStrategy, null) {}
+
+		public SynchronicRepository(IRepository<T> primary,
+									IRepository<T> secondary,
+									CopyStrategy copyStrategy,
+									ProgressState progressState)
         {
             if (primary == null)
             {
@@ -115,8 +121,6 @@ namespace WeSay.Data
         {
             get { return _primary.CanPersist || _secondary.CanPersist; }
         }
-
-		public void Startup(ProgressState state) {}
 
 		public T CreateItem()
         {

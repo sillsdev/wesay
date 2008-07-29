@@ -12,11 +12,13 @@ namespace WeSay.LexicalModel
 	public class LexEntryRepository: IRepository<LexEntry>
 	{
 		private readonly IRepository<LexEntry> _decoratedRepository;
+		public LexEntryRepository(string path):this(path, null)
+		{}
 
-		public LexEntryRepository(string path)
+		public LexEntryRepository(string path, ProgressState progressState)
 		{
 			//todo: eventually use synchronicRepository with Db4o and Lift
-			_decoratedRepository = new LiftRepository(path);
+			_decoratedRepository = new LiftRepository(path, progressState);
 		}
 
 		public LexEntryRepository(IRepository<LexEntry> decoratedRepository)
@@ -588,11 +590,6 @@ namespace WeSay.LexicalModel
 		{
 			//Do Nothing
 			//throw new Exception("The method or operation is not implemented.");
-		}
-
-		public void Startup(ProgressState state)
-		{
-			_decoratedRepository.Startup(state);
 		}
 	}
 }
