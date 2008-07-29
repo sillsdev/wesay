@@ -413,27 +413,48 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithMatchingLexicalForm_WritingSystemNull_Throws()
 		{
-			Assert.Fail("Test not implemented");
+			WritingSystem lexicalFormWritingSystem = null;
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("de Word1", lexicalFormWritingSystem);
 		}
 
 		[Test]
 		public void GetEntriesWithMatchingLexicalForm_MultipleMatchingEntries_ReturnsMatchingEntries()
 		{
-			Assert.Fail("Test not implemented");
+			CreateLexEntryWithLexicalForm("de Word1");
+			CreateLexEntryWithLexicalForm("de Word1");
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("de Word1", lexicalFormWritingSystem);
+			Assert.AreEqual(2, matches.Count);
+		}
+
+		private void CreateLexEntryWithLexicalForm(string lexicalForm)
+		{
+			LexEntry lexEntryWithLexicalForm = _lexEntryRepository.CreateItem();
+			lexEntryWithLexicalForm.LexicalForm["de"] = lexicalForm;
+			_lexEntryRepository.SaveItem(lexEntryWithLexicalForm);
 		}
 
 		[Test]
 		public void GetEntriesWithMatchingLexicalForm_NoMatchingEntries_ReturnsEmpty()
 		{
-			Assert.Fail("Test not implemented");
+			CreateLexEntryWithLexicalForm("de Word1");
+			CreateLexEntryWithLexicalForm("de Word1");
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("de Word2", lexicalFormWritingSystem);
+			Assert.AreEqual(0, matches.Count);
 		}
 
 		[Test]
 		public void GetEntriesWithMatchingLexicalForm_NoMatchesInWritingSystem_ReturnsEmpty()
 		{
-			Assert.Fail("Test not implemented");
+			CreateLexEntryWithLexicalForm("de Word1");
+			CreateLexEntryWithLexicalForm("de Word1");
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("fr", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("de Word2", lexicalFormWritingSystem);
+			Assert.AreEqual(0, matches.Count);
 		}
 
 		[Test]
