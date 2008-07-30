@@ -1,4 +1,5 @@
 using System.IO;
+using System.Xml;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Data.Tests;
@@ -86,10 +87,11 @@ namespace WeSay.LexicalModel.Tests
 			using (new LiftRepository(nonExistentFileToBeCreated))
 			{
 				string fileContent = File.ReadAllText(nonExistentFileToBeCreated);
-				const string emptyLiftFileContent =
-						@"<?xml version=""1.0"" encoding=""utf-8""?>
-<lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
-				Assert.AreEqual(emptyLiftFileContent, fileContent);
+				XmlDocument dom = new XmlDocument();
+				dom.Load(nonExistentFileToBeCreated);
+				Assert.AreEqual(2, dom.ChildNodes.Count);
+				Assert.AreEqual("lift", dom.ChildNodes[1].Name);
+				Assert.AreEqual(0, dom.ChildNodes[1].ChildNodes.Count);
 			}
 		}
 
