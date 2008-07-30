@@ -107,7 +107,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByHeadword_CitationFormInWritingSystemDoesNotExistButLexicalFormDoes_SortsByLexicalFormForThatEntry()
 		{
-			CreateThreeDifferentLexEntries(delegate (LexEntry e) {return e.CitationForm;});
+			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.CitationForm; });
 			LexEntry lexEntryWithOutGermanCitationForm = _lexEntryRepository.CreateItem();
 			lexEntryWithOutGermanCitationForm.CitationForm.SetAlternative("fr", "fr Word4");
 			lexEntryWithOutGermanCitationForm.LexicalForm.SetAlternative("de", "de Word0");
@@ -229,14 +229,14 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithOutFrenchGloss.Senses[0].Definition.SetAlternative("de", "de Word1");
 			WritingSystem french = new WritingSystem("fr", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinition(french);
-			Assert.AreEqual(1 , listOfLexEntriesSortedByDefinition.Count);
+			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
 			Assert.AreEqual("", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
 		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossOfOneEntryAreIdentical_ReturnsOnlyOneRecordToken()
 		{
-			CreateThreeDifferentLexEntries(delegate (LexEntry e)
+			CreateThreeDifferentLexEntries(delegate(LexEntry e)
 														 {
 															 e.Senses.Add(new LexSense());
 															 return e.Senses[0].Definition;
@@ -390,7 +390,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.LexicalForm; });
 			LexEntry lexEntryWithFrenchLexicalForm = _lexEntryRepository.CreateItem();
-			lexEntryWithFrenchLexicalForm.LexicalForm.SetAlternative("fr","de Word2");
+			lexEntryWithFrenchLexicalForm.LexicalForm.SetAlternative("fr", "de Word2");
 			WritingSystem ws = new WritingSystem("de", SystemFonts.DefaultFont);
 
 			ResultSet<LexEntry> matches =
@@ -492,7 +492,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ApplicationException))]
+		[ExpectedException(typeof(ApplicationException))]
 		public void GetLexEntryWithMatchingGuid_MultipleGuidMatchesInRepo_Throws()
 		{
 			LexEntry lexEntryWithGuid = _lexEntryRepository.CreateItem();
@@ -680,7 +680,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			CreateLexentryWithLexicalFormButWithoutCitation("de Word2");
 			CreateLexentryWithLexicalFormButWithoutCitation("de Word1");
-			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[]{"de"});
+			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "de" });
 			WritingSystem lexicalFormWritingSystem = new WritingSystem("de", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, lexicalFormWritingSystem);
@@ -816,7 +816,7 @@ namespace WeSay.LexicalModel.Tests
 
 		[Test]
 		[Ignore("not implemented")]
-		public void GetHomographNumber_HonorsOrderAttribute() {}
+		public void GetHomographNumber_HonorsOrderAttribute() { }
 
 		private LexEntry MakeEntryWithLexemeForm(string writingSystemId, string lexicalUnit)
 		{
@@ -856,7 +856,7 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LexEntryRepositoryStateUnitializedTests: IRepositoryStateUnitializedTests<LexEntry>
+	public class LexEntryRepositoryStateUnitializedTests : IRepositoryStateUnitializedTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -868,36 +868,35 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
-			[TearDown]
-			public void Teardown()
-			{
-				RepositoryUnderTest.Dispose();
-				File.Delete(this._persistedFilePath);
-			}
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+			File.Delete(this._persistedFilePath);
+		}
 
-			[Test, Ignore("Locking needs to be implemented in LiftRepository!")]
-			[ExpectedException(typeof(IOException))]
-			public void Constructor_FileIsWriteableAfterRepositoryIsCreated_Throws()
+		[Test, Ignore("Locking needs to be implemented in LiftRepository!")]
+		[ExpectedException(typeof(IOException))]
+		public void Constructor_FileIsWriteableAfterRepositoryIsCreated_Throws()
+		{
+			using (File.OpenWrite(_persistedFilePath))
 			{
-				using (File.OpenWrite(_persistedFilePath))
-				{
-				}
 			}
+		}
 
-			[Test]
-			[ExpectedException(typeof(IOException))]
-			public void Constructor_FileIsNotWriteableWhenRepositoryIsCreated_Throws()
+		[Test]
+		[ExpectedException(typeof(IOException))]
+		public void Constructor_FileIsNotWriteableWhenRepositoryIsCreated_Throws()
+		{
+			using (File.OpenWrite(_persistedFilePath))
 			{
-				using (File.OpenWrite(_persistedFilePath))
-				{
-					LiftRepository repository = new LiftRepository(_persistedFilePath);
-				}
+				LiftRepository repository = new LiftRepository(_persistedFilePath);
 			}
 		}
 	}
 
 	[TestFixture]
-	public class LexEntryRepositoryCreatedFromPersistedData:
+	public class LexEntryRepositoryCreatedFromPersistedData :
 			IRepositoryPopulateFromPersistedTests<LexEntry>
 	{
 		private string _persistedFilePath;
@@ -957,15 +956,15 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsFalse(Item.IsDirty);
 		}
 
-			[Test]
-			public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
-			{
-				SetState();
-				Query query = new Query(typeof(LexEntry)).Show("LexicalForm");
-				ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
-				Assert.AreEqual(1, resultsOfQuery.Count);
-				MultiText lexicalForm = (MultiText) resultsOfQuery[0]["LexicalForm"];
-				Assert.AreEqual("Sonne", lexicalForm.Forms[0].Form);
+		[Test]
+		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		{
+			SetState();
+			Query query = new Query(typeof(LexEntry)).Show("LexicalForm");
+			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
+			Assert.AreEqual(1, resultsOfQuery.Count);
+			MultiText lexicalForm = (MultiText)resultsOfQuery[0]["LexicalForm"];
+			Assert.AreEqual("Sonne", lexicalForm.Forms[0].Form);
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
@@ -976,7 +975,7 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LexEntryRepositoryCreateItemTransitionTests:
+	public class LexEntryRepositoryCreateItemTransitionTests :
 			IRepositoryCreateItemTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
@@ -1027,7 +1026,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			SetState();
 			Item.LexicalForm["de"] = "Sonne";
-			Query query = new Query(typeof (LexEntry)).Show("LexicalForm");
+			Query query = new Query(typeof(LexEntry)).Show("LexicalForm");
 			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
@@ -1041,7 +1040,7 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LexEntryRepositoryDeleteItemTransitionTests:
+	public class LexEntryRepositoryDeleteItemTransitionTests :
 			IRepositoryDeleteItemTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
@@ -1062,7 +1061,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public override void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
@@ -1078,7 +1077,7 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LexEntryRepositoryDeleteIdTransitionTests:
+	public class LexEntryRepositoryDeleteIdTransitionTests :
 			IRepositoryDeleteIdTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
@@ -1099,7 +1098,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public override void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
@@ -1115,7 +1114,7 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LexEntryRepositoryDeleteAllItemsTransitionTests:
+	public class LexEntryRepositoryDeleteAllItemsTransitionTests :
 			IRepositoryDeleteAllItemsTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
@@ -1140,3 +1139,4 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 	}
+}
