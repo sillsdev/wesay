@@ -42,10 +42,8 @@ namespace WeSay.Data.Tests
         }
 
 		[Test]
-		public override void
-				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
 		{
-			SetState();
 			Item.StoredInt = 123;
 			Item.StoredString = "I was stored!";
 			Query query = new Query(typeof (TestItem)).Show("StoredInt").Show("StoredString");

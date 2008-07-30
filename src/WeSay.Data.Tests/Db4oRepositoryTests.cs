@@ -52,31 +52,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public override void SaveItem_LastModifiedIsChangedToLaterTime()
-		{
-			SetState();
-			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
-			RepositoryUnderTest.SaveItem(Item);
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
-		}
-
-		[Test]
-		public override void SaveItems_LastModifiedIsChangedToLaterTime()
-		{
-			SetState();
-			List<TestItem> itemsToSave = new List<TestItem>();
-			itemsToSave.Add(Item);
-			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
-			RepositoryUnderTest.SaveItems(itemsToSave);
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
-		}
-
-		[Test]
-		public override void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime() {}
-
-		[Test]
-		public override void
-				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()
 		{
 			SetState();
 			Query query = new Query(typeof (TestItem)).Show("StoredString");
@@ -93,8 +69,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class Db4oRepositoryCreateItemTransitionTests:
-			IRepositoryCreateItemTransitionTests<TestItem>
+	public class Db4oRepositoryCreateItemTransitionTests: IRepositoryCreateItemTransitionTests<TestItem>
 	{
 		private string _name;
 
@@ -118,10 +93,8 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public override void
-				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
 		{
-			SetState();
 			Item.StoredInt = 123;
 			Item.StoredString = "I was stored!";
 			Query query = new Query(typeof (TestItem)).Show("StoredInt").Show("StoredString");

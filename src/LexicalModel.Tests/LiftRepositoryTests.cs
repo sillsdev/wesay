@@ -129,16 +129,14 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public override void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
+		protected override void  LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
 		{
 			SetState();
 			Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
 		}
 
 		[Test]
-		public override void
-				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
-		{
+		protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()       {
 			SetState();
 			Query query = new Query(typeof (LexEntry)).Show("LexicalForm");
 			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
@@ -175,10 +173,8 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public override void
-				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
 		{
-			SetState();
 			Item.LexicalForm["de"] = "Sonne";
 			Query query = new Query(typeof (LexEntry)).Show("LexicalForm");
 			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);

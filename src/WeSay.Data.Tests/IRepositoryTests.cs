@@ -299,7 +299,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsAllItems()
+		public void GetItemsMatchingQuery_QueryWithOutShow_ReturnsAllItems()
 		{
 			Query queryWithoutShow = new Query(typeof (T));
 			SetState();
@@ -317,14 +317,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery
-				()
+		public void GetItemsMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
+			GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v();
+		}
+
+		protected virtual void GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
+		{
 			if (RepositoryUnderTest.CanQuery)
 			{
 				Assert.Fail(
-						@"This Test is highly dependant on the type of objects that are
+					@"This Test is highly dependant on the type of objects that are
 							being managed by the repository and as such should be overridden.");
 			}
 			else
@@ -542,14 +546,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery
-				()
+		public void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
+			GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v();
+		}
+
+		protected virtual void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()
+		{
 			if (RepositoryUnderTest.CanQuery)
 			{
 				Assert.Fail(
-						@"This Test is highly dependant on the type of objects that are
+					@"This Test is highly dependant on the type of objects that are
 							being managed by the repository and as such should be tested elsewhere.");
 			}
 			else
@@ -559,7 +567,13 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
+		public void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
+		{
+			SetState();
+			LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v();
+		}
+
+		protected virtual void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
 		{
 			if (!RepositoryUnderTest.CanPersist)
 			{
@@ -568,7 +582,7 @@ namespace WeSay.Data.Tests
 			else
 			{
 				Assert.Fail(
-						"This test is dependant on how you are persisting your data, please override this test.");
+					"This test is dependant on how you are persisting your data, please override this test.");
 			}
 		}
 
@@ -579,6 +593,7 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
+		//This test is virtual because LexEntryRepository needs a special implementation
 		[Test]
 		public virtual void SaveItem_LastModifiedIsChangedToLaterTime()
 		{
@@ -588,14 +603,16 @@ namespace WeSay.Data.Tests
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
 		}
 
+		//This test is virtual because LexEntryRepository needs a special implementation
 		[Test]
-		public void SaveItem_LastModifiedIsSetInUTC()
+		public virtual void SaveItem_LastModifiedIsSetInUTC()
 		{
 			SetState();
 			RepositoryUnderTest.SaveItem(Item);
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
+		//This test is virtual because LexEntryRepository needs a special implementation
 		[Test]
 		public virtual void SaveItems_LastModifiedIsChangedToLaterTime()
 		{
@@ -751,6 +768,7 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
+		//This test is virtual because LexEntryRepository needs to override it
 		[Test]
 		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public virtual void SaveItem_ItemDoesNotExist_Throws()
@@ -903,6 +921,7 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
+		//This test is virtual because LexEntryRepository needs to override it
 		[Test]
 		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public virtual void SaveItem_ItemDoesNotExist_Throws()
