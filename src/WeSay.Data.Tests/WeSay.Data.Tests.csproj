@@ -47,6 +47,7 @@
 	<Compile Include="Db4oQueryPerformance.cs" />
 	<Compile Include="Db4oRepositoryTests.cs" />
 	<Compile Include="Db4oSODAQueryTests.cs" />
+	<Compile Include="DictionaryEqualityComparerTests.cs" />
 	<Compile Include="IRepositoryTests.cs" />
 	<Compile Include="DictionaryContentAsserter.cs" />
 	<Compile Include="MemoryRepositoryTests.cs" />
