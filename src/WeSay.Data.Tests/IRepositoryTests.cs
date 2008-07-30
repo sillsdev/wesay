@@ -105,6 +105,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
+				Assert.Ignore("Test not relevant. This repository supports queries.");
 			}
 		}
 
