@@ -23,8 +23,12 @@ namespace WeSay.LexicalModel
 
 		public LiftRepository(string filePath, ProgressState progressState)
 		{
-			_progressState = progressState;
 			_liftFilePath = filePath;
+			if (progressState == null)
+			{
+				progressState = new ProgressState();
+			}
+			_progressState = progressState;
 
 			FileInfo fileInfo = new FileInfo(_liftFilePath);
 			//check if file is writeable
