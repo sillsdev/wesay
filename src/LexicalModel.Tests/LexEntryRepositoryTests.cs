@@ -326,7 +326,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetEntriesWithSimilarLexicalForm_MultipleEntriesWithDifferentMatchingDistanceAndAnyEntriesBeginningWithWhatWeAreMatchingToHaveZeroDistance_ReturnsAllEntriesBeginningWithTheFormToMatch()
+		public void GetEntriesWithSimilarLexicalForm_MultipleEntriesWithDifferentMatchingDistanceAndAnyEntriesBeginningWithWhatWeAreMatchingHaveZeroDistance_ReturnsAllEntriesBeginningWithTheFormToMatch()
 		{
 			//Matching distance as compared to Empty string
 			LexEntry lexEntryWithMatchingDistance1 = _lexEntryRepository.CreateItem();
@@ -591,8 +591,8 @@ namespace WeSay.LexicalModel.Tests
 			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm1");
 			WritingSystem lexicalFormWritingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem);
-			Assert.AreEqual("en LexicalForm1", matches[0].RealObject.LexicalForm.Forms[0].Form);
-			Assert.AreEqual("en LexicalForm2", matches[1].RealObject.LexicalForm.Forms[0].Form);
+			Assert.AreEqual("en LexicalForm1", matches[0]["Form"]);
+			Assert.AreEqual("en LexicalForm2", matches[1]["Form"]);
 		}
 
 		private void CreateEntryWithLexicalFormAndGloss(LanguageForm glossToMatch,

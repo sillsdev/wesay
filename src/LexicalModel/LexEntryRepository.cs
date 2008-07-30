@@ -158,9 +158,9 @@ namespace WeSay.LexicalModel
 
 		//todo: look at @order and the planned-for order-in-lift field on LexEntry
 		/// <summary>
-		/// Returns a result set of all entries sorted by citation form if one exists.
-		/// If an entry does not have a citation form the lexical form is used to sort that entry.
-		/// Use "Form" to access the headword in a record token.
+		/// Gets a ResultSet containing all entries sorted by citation if one exists and otherwise
+		/// by lexical form.
+		/// Use "Form" to access the headword in a RecordToken.
 		/// </summary>
 		/// <param name="writingSystem"></param>
 		/// <returns></returns>
@@ -218,7 +218,8 @@ namespace WeSay.LexicalModel
 		}
 
 		/// <summary>
-		///
+		/// Gets a ResultSet containing all entries sorted by lexical form
+		/// Use "Form" to access the lexical form in a RecordToken.
 		/// </summary>
 		/// <param name="writingSystem"></param>
 		/// <returns></returns>
@@ -236,12 +237,12 @@ namespace WeSay.LexicalModel
 		}
 
 		/// <summary>
-		/// Gets a ResultSet for all entries sorted by Definition and Gloss. It will return both the definition
-		/// and the gloss if both exist and they are different
-		/// use "Form" to access the Definition/Gloss in RecordToken
+		/// Gets a ResultSet containing all entries sorted by definition and gloss. It will return both the definition
+		/// and the gloss if both exist and are different.
+		/// Use "Form" to access the Definition/Gloss in RecordToken.
 		/// </summary>
 		/// <param name="writingSystem"></param>
-		/// <returns>"Gloss/Form" and "Definition/Form" merged</returns>
+		/// <returns>Definition and gloss in "Form" field of RecordToken</returns>
 		public ResultSet<LexEntry> GetAllEntriesSortedByDefinition(WritingSystem writingSystem)
 		{
 			if (writingSystem == null)
@@ -285,6 +286,13 @@ namespace WeSay.LexicalModel
 				writingSystem.Id);
 		}
 
+		/// <summary>
+		/// Gets a ResultSet containing entries that contain a semantic domain assigned to them
+		/// sorted by semantic domain.
+		/// Use "SemanticDomain" to access the semantic domain in a RecordToken.
+		/// </summary>
+		/// <param name="fieldName"></param>
+		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithSemanticDomainSortedBySemanticDomain(
 			string fieldName)
 		{
@@ -318,6 +326,14 @@ namespace WeSay.LexicalModel
 			return resultSet;
 		}
 
+	   /// <summary>
+	   /// Gets a ResultSet containing entries whose gloss match glossForm sorted by the lexical form
+	   /// in the given writingsystem.
+	   /// Use "Form" to access the lexical form and "Gloss/Form" to access the Gloss in a RecordToken.
+	   /// </summary>
+	   /// <param name="glossForm"></param>
+	   /// <param name="lexicalUnitWritingSystem"></param>
+	   /// <returns></returns>
 	   public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(
 				LanguageForm glossForm, WritingSystem lexicalUnitWritingSystem)
 		{
@@ -347,6 +363,10 @@ namespace WeSay.LexicalModel
 			return resultSet;
 		}
 
+		/// <summary>
+		/// Gets the LexEntry whose Id matches id.
+		/// </summary>
+		/// <returns></returns>
 		public LexEntry GetLexEntryWithMatchingId(string id)
 		{
 			if (id == null)
@@ -379,6 +399,10 @@ namespace WeSay.LexicalModel
 			return lexEntryWithId;
 		}
 
+		/// <summary>
+		/// Gets the LexEntry whose Guid matches guid.
+		/// </summary>
+		/// <returns></returns>
 		public LexEntry GetLexEntryWithMatchingGuid(Guid guid)
 		{
 			if(guid == Guid.Empty)
@@ -409,6 +433,12 @@ namespace WeSay.LexicalModel
 			return first.RealObject;
 		}
 
+		/// <summary>
+		/// Gets a ResultSet containing entries whose lexical form is similar to lexicalForm
+		/// sorted by the lexical form in the given writingsystem.
+		/// Use "Form" to access the lexical form in a RecordToken.
+		/// </summary>
+		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithSimilarLexicalForm(string lexicalForm,
 																	WritingSystem writingSystem,
 																	ApproximateMatcherOptions
@@ -436,6 +466,13 @@ namespace WeSay.LexicalModel
 			return (string) ((RecordToken<LexEntry>) item)["Form"];
 		}
 
+		/// <summary>
+		/// Gets a ResultSet containing entries whose lexical form match lexicalForm
+		/// Use "Form" to access the lexical form in a RecordToken.
+		/// </summary>
+		/// <param name="lexicalForm"></param>
+		/// <param name="writingSystem"></param>
+		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithMatchingLexicalForm(string lexicalForm,
 																	 WritingSystem writingSystem)
 		{
@@ -525,6 +562,14 @@ namespace WeSay.LexicalModel
 			return new ResultSet<LexEntry>(this, filteredResults);
 		}
 
+		/// <summary>
+		/// Gets a ResultSet containing entries that are missing the field matching field
+		/// sorted by the lexical form in the given writing system.
+		/// Use "Form" to access the lexical form in a RecordToken.
+		/// </summary>
+		/// <param name="field"></param>
+		/// <param name="lexicalUnitWritingSystem"></param>
+		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field,
 																				 WritingSystem
 																						 lexicalUnitWritingSystem)
