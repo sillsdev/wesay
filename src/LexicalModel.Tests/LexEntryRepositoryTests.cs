@@ -113,6 +113,7 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithOutGermanCitationForm.LexicalForm.SetAlternative("de", "de Word0");
 			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> listOfLexEntriesSortedByHeadWord = _lexEntryRepository.GetAllEntriesSortedByHeadword(german);
+			Assert.AreEqual(4, listOfLexEntriesSortedByHeadWord.Count);
 			Assert.AreEqual("de Word0", listOfLexEntriesSortedByHeadWord[0]["Form"]);
 			Assert.AreEqual("de Word1", listOfLexEntriesSortedByHeadWord[1]["Form"]);
 			Assert.AreEqual("de Word2", listOfLexEntriesSortedByHeadWord[2]["Form"]);
@@ -611,7 +612,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm2");
 			WritingSystem lexicalFormWritingSystem = new WritingSystem("fr", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem);
-			Assert.IsEmpty(matches[0].RealObject.LexicalForm["fr"]);
+			Assert.AreEqual("", matches[0]["Form"]);
 		}
 
 		private void AddEntryWithGloss(string gloss)

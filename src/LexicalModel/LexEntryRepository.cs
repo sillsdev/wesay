@@ -179,7 +179,10 @@ namespace WeSay.LexicalModel
 			itemsMatching.Sort(new SortDefinition("Form", writingSystem),
 							   new SortDefinition("OrderForRoundTripping", Comparer<int>.Default),
 							   new SortDefinition("CreationTime", Comparer<DateTime>.Default));
-
+			itemsMatching.Coalesce("Form", delegate(object o)
+											   {
+												   return (string)o == "";
+											   });
 			string previousHeadWord = null;
 			int homographNumber = 1;
 			RecordToken<LexEntry> previousToken = null;
@@ -538,8 +541,15 @@ namespace WeSay.LexicalModel
 				object id;
 				if (token.TryGetValue(writingSystemIdField, out id))
 				{
-					if ((string) id == filterOnWritingSystemId)
+					if ((string)id == filterOnWritingSystemId)
 					{
+						filteredResults.Add(token);
+						headWordRepositoryIdFound = true;
+					}
+					else //needs review by Eric TA 2008-07-30
+					{
+						token[formField] = string.Empty;
+						token[writingSystemIdField] = filterOnWritingSystemId;
 						filteredResults.Add(token);
 						headWordRepositoryIdFound = true;
 					}
