@@ -300,7 +300,6 @@ namespace WeSay.Data
 				RemoveTokens(removeable);
 			}
 		}
-	}
 
 		private void RemoveTokens(IEnumerable<RecordToken<T>> removeable)
 		{

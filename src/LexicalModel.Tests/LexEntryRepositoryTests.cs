@@ -8,7 +8,9 @@ using WeSay.Data;
 using WeSay.Data.Tests;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4oSpecific;
+using WeSay.LexicalModel.Tests;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -1138,4 +1140,3 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 	}
-}
