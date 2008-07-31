@@ -12,7 +12,7 @@ namespace WeSay.LexicalModel
 	public class LexEntryRepository: IRepository<LexEntry>
 	{
 		private readonly IRepository<LexEntry> _decoratedRepository;
-		public LexEntryRepository(string path):this(path, null)
+		public LexEntryRepository(string path):this(path, new ProgressState())
 		{}
 
 		public LexEntryRepository(string path, ProgressState progressState)
@@ -179,11 +179,7 @@ namespace WeSay.LexicalModel
 			itemsMatching.Sort(new SortDefinition("Form", writingSystem),
 							   new SortDefinition("OrderForRoundTripping", Comparer<int>.Default),
 							   new SortDefinition("CreationTime", Comparer<DateTime>.Default));
-			itemsMatching.Coalesce("Form", delegate(object o)
-											   {
-												   return (string)o == "";
-											   });
-			string previousHeadWord = null;
+			  string previousHeadWord = null;
 			int homographNumber = 1;
 			RecordToken<LexEntry> previousToken = null;
 			foreach (RecordToken<LexEntry> token in itemsMatching)
@@ -509,67 +505,40 @@ namespace WeSay.LexicalModel
 				return allResults;
 			}
 
-			allResults.SortByRepositoryId();
+			// Initial     -->  Use WS     --> Remove dups --> Coalesce
+			// 1 foo   en       1 foo   en     1 foo   en      1 foo   en
+			// 1 bar   de       1 ""    en     1 ""    en
+			// 1 blah  fr       1 ""    en
+			// 2 hello en       2 hello en     2 hello en      2 hello en
+			// 3 world de       3 ""    en     3 ""    en      3 ""    en
 
-			// remove all entries with writing system != headwordWritingSystem
-			//     make sure always have one entry though
-			// walk list of entries, removing duplicate entries which have same repository id
-			//     if there is no entry for a repository id that has
-			//     writingSystemId == filterOnWritingSystemId then
-			//     insert an empty form with writingSystemId set to filterOnWritingSystemId
-
-			Dictionary<string, object> emptyResults = new Dictionary<string, object>();
-			emptyResults.Add(formField, string.Empty);
-			emptyResults.Add(writingSystemIdField, filterOnWritingSystemId);
-
-			List<RecordToken<LexEntry>> filteredResults = new List<RecordToken<LexEntry>>();
-			bool headWordRepositoryIdFound = false;
-			RecordToken<LexEntry> previousToken = null;
-			foreach (RecordToken<LexEntry> token in allResults)
+			// Make each result have the writing system that we want
+			// this is in case there are other fields that need to be kept around
+			// even though there isn't a field with the given writing system's form
+			// dups will be removed
+			ResultSet<LexEntry> filteredResults = allResults;
+			foreach (RecordToken<LexEntry> token in filteredResults)
 			{
-				if (previousToken != null && token.Id != previousToken.Id)
-				{
-					if (!headWordRepositoryIdFound)
-					{
-						filteredResults.Add(new RecordToken<LexEntry>(this,
-																	  emptyResults,
-																	  previousToken.Id));
-					}
-					headWordRepositoryIdFound = false;
-				}
-
 				object id;
 				if (token.TryGetValue(writingSystemIdField, out id))
 				{
-					if ((string)id == filterOnWritingSystemId)
-					{
-						filteredResults.Add(token);
-						headWordRepositoryIdFound = true;
-					}
-					else //needs review by Eric TA 2008-07-30
+					if ((string) id != filterOnWritingSystemId)
 					{
 						token[formField] = string.Empty;
 						token[writingSystemIdField] = filterOnWritingSystemId;
-						filteredResults.Add(token);
-						headWordRepositoryIdFound = true;
 					}
 				}
-				else
-				{
-					// we have an entry but without a form with the given id.
-					// Create an empty one
-					token[formField] = string.Empty;
-					token[writingSystemIdField] = filterOnWritingSystemId;
-					filteredResults.Add(token);
-					headWordRepositoryIdFound = true;
-				}
-				previousToken = token;
 			}
-			if (!headWordRepositoryIdFound)
-			{
-				filteredResults.Add(new RecordToken<LexEntry>(this, emptyResults, previousToken.Id));
-			}
-			return new ResultSet<LexEntry>(this, filteredResults);
+			//this will remove duplicates
+			filteredResults = new ResultSet<LexEntry>(this, filteredResults);
+
+			filteredResults.Coalesce("Form", delegate(object o)
+											  {
+												  return (string)o == "";
+											  });
+
+			return filteredResults;
+
 		}
 
 		/// <summary>
