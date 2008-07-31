@@ -718,7 +718,6 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[Ignore("Homograph order is not well defined CJP")]
 		public void GetHomographNumber_FirstEntryWithFollowingHomograph_Returns1()
 		{
 			LexEntry entry1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
@@ -728,7 +727,6 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[Ignore("Homograph order is not well defined CJP")]
 		public void GetHomographNumber_SecondEntry_Returns2()
 		{
 			MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
@@ -757,7 +755,6 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[Ignore("Homograph order is not well defined CJP")]
 		public void GetHomographNumber_ThirdEntry_Returns3()
 		{
 			LexEntry entryOther = MakeEntryWithLexemeForm("en", "blue");
@@ -778,7 +775,6 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[Ignore("Homograph order is not well defined CJP")]
 		public void GetHomographNumber_3SameLexicalForms_Returns123()
 		{
 			LexEntry entry1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
@@ -793,7 +789,6 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[Ignore("Homograph order is not well defined CJP")]
 		public void GetHomographNumber_3SameLexicalFormsAnd3OtherLexicalForms_Returns123()
 		{
 			LexEntry red1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "red");
