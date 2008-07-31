@@ -30,7 +30,7 @@ namespace WeSay.Data.Tests
 			IRepositoryPopulateFromPersistedTests<TestItem>
 	{
 		private string _persistedFilePath;
-
+		private DateTime _timeAtWhichPersisted;
 		[SetUp]
 		public void Setup()
 		{
@@ -40,6 +40,7 @@ namespace WeSay.Data.Tests
 			item.StoredInt = 5;
 			item.StoredString = "Sonne";
 			RepositoryUnderTest.SaveItem(item);
+			_timeAtWhichPersisted = RepositoryUnderTest.LastModified;
 
 			CreateNewRepositoryFromPersistedData();
 		}
@@ -51,10 +52,13 @@ namespace WeSay.Data.Tests
 			File.Delete(this._persistedFilePath);
 		}
 
-		[Test]
+		protected override void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
+		{
+			Assert.AreEqual(_timeAtWhichPersisted, RepositoryUnderTest.LastModified);
+		}
+
 		protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()
 		{
-			SetState();
 			Query query = new Query(typeof (TestItem)).Show("StoredString");
 			ResultSet<TestItem> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);

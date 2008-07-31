@@ -569,6 +569,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
 		{
+			CreateNewRepositoryFromPersistedData();
 			SetState();
 			LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v();
 		}

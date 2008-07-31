@@ -130,16 +130,12 @@ namespace WeSay.LexicalModel.Tests
 			File.Delete(_persistedFilePath);
 		}
 
-		[Test]
 		protected override void  LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
 		{
-			SetState();
 			Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
 		}
 
-		[Test]
 		protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()       {
-			SetState();
 			Query query = new Query(typeof (LexEntry)).Show("LexicalForm");
 			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
@@ -174,7 +170,6 @@ namespace WeSay.LexicalModel.Tests
 			File.Delete(_persistedFilePath);
 		}
 
-		[Test]
 		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
 		{
 			Item.LexicalForm["de"] = "Sonne";
