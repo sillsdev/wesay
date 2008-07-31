@@ -67,14 +67,9 @@ namespace WeSay.LexicalModel
 			return _id;
 		}
 
-		/// <summary>
-		///
-		/// </summary>
-		/// <remarks>The signature here is MultiText rather than SenseGlossMultiText because we want
-		/// to hide this (hopefully temporary) performance implementation detail. </remarks>
 		public MultiText Gloss
 		{
-			get { return GetOrCreateProperty<SenseGlossMultiText>(WellKnownProperties.Gloss); }
+			get { return GetOrCreateProperty<MultiText>(WellKnownProperties.Gloss); }
 		}
 
 		public MultiText Definition
@@ -96,8 +91,8 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				SenseGlossMultiText gloss =
-						GetProperty<SenseGlossMultiText>(WellKnownProperties.Gloss);
+				MultiText gloss =
+						GetProperty<MultiText>(WellKnownProperties.Gloss);
 				bool noGloss = (gloss == null) || gloss.Empty;
 				// careful, just asking the later will actually create a gloss
 				return noGloss && ExampleSentences.Count == 0 && !HasPropertiesForPurposesOfDeletion;
@@ -144,21 +139,6 @@ namespace WeSay.LexicalModel
 				Logger.WriteMinorEvent("Empty example removed");
 				OnEmptyObjectsRemoved();
 			}
-		}
-	}
-
-	/// <summary>
-	/// See comment in MultiText.cs for an explanation of this class.
-	/// </summary>
-	public class SenseGlossMultiText: MultiText
-	{
-		public SenseGlossMultiText(WeSayDataObject parent): base(parent) {}
-
-		public SenseGlossMultiText() {}
-
-		public new LexSense Parent
-		{
-			get { return base.Parent as LexSense; }
 		}
 	}
 }
