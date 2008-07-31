@@ -185,6 +185,7 @@ namespace WeSay.LexicalModel
 			foreach (RecordToken<LexEntry> token in itemsMatching)
 			{
 				string currentHeadWord = (string) token["Form"];
+				Debug.Assert(currentHeadWord != null);
 				if (currentHeadWord == previousHeadWord)
 				{
 					homographNumber++;
@@ -520,13 +521,11 @@ namespace WeSay.LexicalModel
 			foreach (RecordToken<LexEntry> token in filteredResults)
 			{
 				object id;
-				if (token.TryGetValue(writingSystemIdField, out id))
+				if (!token.TryGetValue(writingSystemIdField, out id)
+					|| (string) id != filterOnWritingSystemId)
 				{
-					if ((string) id != filterOnWritingSystemId)
-					{
-						token[formField] = string.Empty;
-						token[writingSystemIdField] = filterOnWritingSystemId;
-					}
+					token[formField] = string.Empty;
+					token[writingSystemIdField] = filterOnWritingSystemId;
 				}
 			}
 			//this will remove duplicates
@@ -534,7 +533,7 @@ namespace WeSay.LexicalModel
 
 			filteredResults.Coalesce("Form", delegate(object o)
 											  {
-												  return (string)o == "";
+												  return string.IsNullOrEmpty((string)o);
 											  });
 
 			return filteredResults;
