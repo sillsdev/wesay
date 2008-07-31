@@ -23,11 +23,12 @@ namespace WeSay.LexicalModel
 
 		public LiftRepository(string filePath, ProgressState progressState)
 		{
-			_liftFilePath = filePath;
 			if (progressState == null)
 			{
-				progressState = new ProgressState();
+				throw new ArgumentNullException("progressState");
 			}
+
+			_liftFilePath = filePath;
 			_progressState = progressState;
 
 			FileInfo fileInfo = new FileInfo(_liftFilePath);
@@ -54,7 +55,7 @@ namespace WeSay.LexicalModel
 			LoadAllLexEntries();
 		}
 
-		public LiftRepository(string filePath):this(filePath, null)
+		public LiftRepository(string filePath):this(filePath, new ProgressState())
 		{}
 
 		public override LexEntry CreateItem()
@@ -175,11 +176,6 @@ namespace WeSay.LexicalModel
 												   <WeSayDataObject, LexEntry, LexSense,
 												   LexExampleSentence>.ErrorArgs e)
 		{
-			if(_progressState == null)
-			{
-				return;
-			}
-
 			_progressState.ExceptionThatWasEncountered = e.Exception;
 		}
 
@@ -188,13 +184,8 @@ namespace WeSay.LexicalModel
 													  <WeSayDataObject, LexEntry, LexSense,
 													  LexExampleSentence>.ProgressEventArgs e)
 		{
-			if (this._progressState == null)
-			{
-				return;
-			}
-
-			this._progressState.NumberOfStepsCompleted = e.Progress;
-			e.Cancel = this._progressState.Cancel;
+		   _progressState.NumberOfStepsCompleted = e.Progress;
+			e.Cancel = _progressState.Cancel;
 		}
 
 		private void parser_SetTotalNumberSteps(object sender,
@@ -202,11 +193,6 @@ namespace WeSay.LexicalModel
 														<WeSayDataObject, LexEntry, LexSense,
 														LexExampleSentence>.StepsArgs e)
 		{
-			if (_progressState == null)
-			{
-				return;
-			}
-
 			_progressState.TotalNumberOfSteps = e.Steps;
 		}
 
