@@ -156,7 +156,6 @@ namespace WeSay.LexicalModel
 		}
 
 
-		//todo: look at @order and the planned-for order-in-lift field on LexEntry
 		/// <summary>
 		/// Gets a ResultSet containing all entries sorted by citation if one exists and otherwise
 		/// by lexical form.
@@ -173,13 +172,15 @@ namespace WeSay.LexicalModel
 			Query query = GetAllLexEntriesQuery();
 			query.In("VirtualHeadWord").ForEach("Forms").Show("Form").Show("WritingSystemId");
 			query.Show("OrderForRoundTripping");
+			query.Show("OrderInFile");
 			query.Show("CreationTime");
 
 			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(query, "Form", "WritingSystemId", writingSystem);
 			itemsMatching.Sort(new SortDefinition("Form", writingSystem),
 							   new SortDefinition("OrderForRoundTripping", Comparer<int>.Default),
+							   new SortDefinition("OrderInFile", Comparer<int>.Default),
 							   new SortDefinition("CreationTime", Comparer<DateTime>.Default));
-			  string previousHeadWord = null;
+			string previousHeadWord = null;
 			int homographNumber = 1;
 			RecordToken<LexEntry> previousToken = null;
 			foreach (RecordToken<LexEntry> token in itemsMatching)

@@ -20,6 +20,7 @@ namespace WeSay.LexicalModel
 		private readonly string _liftFilePath;
 		private FileStream _liftFileStreamForLocking;
 		private bool _loadingAllEntries;
+		private int _nextFileOrder;
 
 		public LiftRepository(string filePath, ProgressState progressState)
 		{
@@ -61,11 +62,20 @@ namespace WeSay.LexicalModel
 		public override LexEntry CreateItem()
 		{
 			LexEntry item = base.CreateItem();
+			item.OrderInFile = NextFileOrder;
 			if (!_loadingAllEntries)
 			{
 				UpdateLiftFileWithNew(item);
 			}
 			return item;
+		}
+
+		private int NextFileOrder
+		{
+			get
+			{
+				return ++_nextFileOrder;
+			}
 		}
 
 		public override void DeleteItem(RepositoryId id)

@@ -29,6 +29,7 @@ namespace WeSay.LexicalModel
 		private string _id;
 
 		private int _orderForRoundTripping;
+		private int _orderInFile;
 
 		private BindingList<LexSense> _senses;
 		private DateTime _creationTime;
@@ -416,6 +417,19 @@ namespace WeSay.LexicalModel
 			set
 			{
 				_orderForRoundTripping = value;
+				NotifyPropertyChanged("order");
+			}
+		}
+
+		public int OrderInFile
+		{
+			get
+			{
+				return this._orderInFile;
+			}
+			set
+			{
+				this._orderInFile = value;
 				NotifyPropertyChanged("order");
 			}
 		}

@@ -792,15 +792,10 @@ namespace WeSay.LexicalModel.Tests
 		public void GetHomographNumber_3SameLexicalFormsAnd3OtherLexicalForms_Returns123()
 		{
 			LexEntry red1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "red");
-			//Thread.Sleep(1100);
 			LexEntry blue1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
-			//Thread.Sleep(1100);
 			LexEntry red2 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "red");
-			//Thread.Sleep(1100);
 			LexEntry blue2 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
-			//Thread.Sleep(1100);
 			LexEntry red3 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "red");
-			//Thread.Sleep(1100);
 			LexEntry blue3 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			Assert.AreEqual(1, _lexEntryRepository.GetHomographNumber(blue1, _headwordWritingSystem));
 			Assert.AreEqual(3, _lexEntryRepository.GetHomographNumber(blue3, _headwordWritingSystem));
