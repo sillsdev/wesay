@@ -592,7 +592,7 @@ namespace WeSay.LexicalTools.Tests
 						"the setup of this test should have some custom properties");
 
 			//cycle out this record
-			parentControl.DataSource = new LexEntry();
+			parentControl.DataSource =_lexEntryRepository.CreateItem();
 
 			Assert.AreEqual(0, entry.Properties.Count);
 #if GlossMeaning

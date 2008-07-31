@@ -235,7 +235,10 @@ namespace WeSay.LexicalTools
 			if (previousEntry != null)
 			{
 				previousEntry.PropertyChanged -= OnEntryChanged;
-				this._lexEntryRepository.SaveItem(previousEntry);
+				if (!previousEntry.IsBeingDeleted)
+				{
+					_lexEntryRepository.SaveItem(previousEntry);
+				}
 			}
 		}
 
