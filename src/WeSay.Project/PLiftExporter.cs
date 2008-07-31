@@ -144,13 +144,21 @@ namespace WeSay.Project
 
 		protected override void WriteRelationTarget(LexRelation relation)
 		{
-			if (0 != (ExportOptions & Options.DereferenceRelations))
+			if (0 == (ExportOptions & Options.DereferenceRelations))
 			{
-				LexEntry target = this._lexEntryRepository.GetLexEntryWithMatchingId(relation.Key);
-				if (target != null)
-				{
-					WriteHeadWordField(target, "headword-of-target");
-				}
+				return;
+			}
+
+			string key = relation.Key;
+			if(string.IsNullOrEmpty(key))
+			{
+				return;
+			}
+
+			LexEntry target = this._lexEntryRepository.GetLexEntryWithMatchingId(key);
+			if (target != null)
+			{
+				WriteHeadWordField(target, "headword-of-target");
 			}
 		}
 
