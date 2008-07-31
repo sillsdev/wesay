@@ -4,6 +4,7 @@ using System.Xml;
 using LiftIO;
 using LiftIO.Validation;
 using NUnit.Framework;
+using Palaso.Progress;
 using Palaso.Reporting;
 using WeSay.LexicalModel.Migration;
 
@@ -153,9 +154,10 @@ namespace WeSay.LexicalModel.Tests
 		{
 			XmlDocument doc = new XmlDocument();
 			CreateLiftFileForTesting(Validator.LiftVersion, entriesXml);
-			string outputPath = LiftPreparer.PopulateDefinitions(_liftFilePath);
-			Assert.IsTrue(File.Exists(outputPath));
-			doc.Load(outputPath);
+			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
+			preparer.PopulateDefinitions(new ProgressState());
+			Assert.IsTrue(File.Exists(_liftFilePath));
+			doc.Load(_liftFilePath);
 			return doc;
 		}
 	}

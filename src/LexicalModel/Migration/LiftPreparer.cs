@@ -49,16 +49,32 @@ namespace WeSay.LexicalModel.Migration
 			PopulateDefinitions((ProgressState) args.Argument);
 		}
 
-		internal void PopulateDefinitions(ProgressState state)
+		public void PopulateDefinitions(ProgressState state)
 		{
 			state.StatusLabel = "Updating Lift File...";
 			try
 			{
 				string pathToLift = _liftFilePath;
-				string outputPath = Utilities.ProcessLiftForLaterMerging(pathToLift);
+				string temp1 = Utilities.ProcessLiftForLaterMerging(pathToLift);
 				//    int liftProducerVersion = GetLiftProducerVersion(pathToLift);
 
-				outputPath = PopulateDefinitions(outputPath);
+				string outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+				XmlWriterSettings settings = new XmlWriterSettings();
+				settings.Indent = true;
+				settings.NewLineOnAttributes = true;
+
+				using (
+						Stream xsltStream =
+								Assembly.GetExecutingAssembly().GetManifestResourceStream(
+										"WeSay.LexicalModel.Migration.populateDefinitionFromGloss.xslt")
+						)
+				{
+					XslTransformWithProgress transformer = new XslTransformWithProgress(
+							temp1, outputPath, xsltStream, "//sense");
+					state.StatusLabel = "Populating Definitions from Glosses";
+					transformer.Transform(state);
+				}
+
 				MoveTempOverRealAndBackup(pathToLift, outputPath);
 			}
 			catch (Exception error)
@@ -67,27 +83,6 @@ namespace WeSay.LexicalModel.Migration
 				state.State = ProgressState.StateValue.StoppedWithError;
 				throw;
 				// this will put the exception in the e.Error arg of the RunWorkerCompletedEventArgs
-			}
-		}
-
-		internal static string PopulateDefinitions(string pathToLift)
-		{
-			string outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.Indent = true;
-			settings.NewLineOnAttributes = true;
-
-			using (
-					Stream xsltStream =
-							Assembly.GetExecutingAssembly().GetManifestResourceStream(
-									"WeSay.LexicalModel.Migration.populateDefinitionFromGloss.xslt")
-					)
-			{
-				TransformWithProgressDialog transformer = new TransformWithProgressDialog(
-						pathToLift, outputPath, xsltStream, "//sense");
-				transformer.TaskMessage = "Populating Definitions from Glosses";
-				transformer.Transform(true);
-				return outputPath;
 			}
 		}
 
