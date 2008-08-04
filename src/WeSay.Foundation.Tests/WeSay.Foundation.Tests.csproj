@@ -73,6 +73,8 @@
 	<Compile Include="ApproximateMatcherTests.cs" />
 	<Compile Include="BackupMakerTests.cs" />
 	<Compile Include="OptionList.Tests.cs" />
+	<Compile Include="OptionRefCollectionTests.cs" />
+	<Compile Include="OptionRefTests.cs" />
 	<Compile Include="SpellCheckerIdToDisplayStringConverterTests.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
