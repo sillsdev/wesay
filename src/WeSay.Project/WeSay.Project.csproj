@@ -85,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="BasilProject.cs" />
-	<Compile Include="CacheBuilder.cs" />
+	<Compile Include="CacheManager.cs" />
 	<Compile Include="ConfigFileTaskBuilder.cs" />
 	<Compile Include="FailedLoadTask.cs" />
 	<Compile Include="PLiftExporter.cs" />
