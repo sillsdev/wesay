@@ -36,7 +36,16 @@ namespace WeSay.Data
 
 		public override int GetHashCode(IDictionary<Key, Value> obj)
 		{
-			throw new NotImplementedException();
+			if(obj == null)
+			{
+				throw new ArgumentNullException("obj");
+			}
+			int hashcode = 0;
+			foreach (KeyValuePair<Key, Value> pair in obj)
+			{
+				hashcode = hashcode ^ pair.Key.GetHashCode() ^ pair.Value.GetHashCode();
+			}
+			return hashcode;
 		}
 	}
 }
