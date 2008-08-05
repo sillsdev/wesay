@@ -86,13 +86,12 @@ namespace WeSay.LexicalModel.Tests
 			string nonExistentFileToBeCreated = Path.GetTempPath() + Path.GetRandomFileName();
 			using (new LiftRepository(nonExistentFileToBeCreated))
 			{
-				string fileContent = File.ReadAllText(nonExistentFileToBeCreated);
-				XmlDocument dom = new XmlDocument();
-				dom.Load(nonExistentFileToBeCreated);
-				Assert.AreEqual(2, dom.ChildNodes.Count);
-				Assert.AreEqual("lift", dom.ChildNodes[1].Name);
-				Assert.AreEqual(0, dom.ChildNodes[1].ChildNodes.Count);
 			}
+			XmlDocument dom = new XmlDocument();
+			dom.Load(nonExistentFileToBeCreated);
+			Assert.AreEqual(2, dom.ChildNodes.Count);
+			Assert.AreEqual("lift", dom.ChildNodes[1].Name);
+			Assert.AreEqual(0, dom.ChildNodes[1].ChildNodes.Count);
 		}
 
 		[Test]
@@ -101,12 +100,52 @@ namespace WeSay.LexicalModel.Tests
 			string emptyFileToBeFilled = Path.GetTempFileName();
 			using (new LiftRepository(emptyFileToBeFilled))
 			{
-				string fileContent = File.ReadAllText(emptyFileToBeFilled);
-				const string emptyLiftFileContent =
-						@"<?xml version=""1.0"" encoding=""utf-8""?>
-<lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
-				Assert.AreEqual(emptyLiftFileContent, fileContent);
 			}
+			string fileContent = File.ReadAllText(emptyFileToBeFilled);
+			const string emptyLiftFileContent =
+					@"<?xml version=""1.0"" encoding=""utf-8""?>
+<lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
+			Assert.AreEqual(emptyLiftFileContent, fileContent);
+		}
+
+		[Test]
+		[ExpectedException(typeof(IOException))]
+		public void LiftIsLocked_ReturnsTrue()
+		{
+			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			FileStream streamForPermissionChecking = null;
+			try
+			{
+				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+			}
+			finally
+			{
+				//This is in case the exception is not thrown
+				if (streamForPermissionChecking != null)
+				{
+					streamForPermissionChecking.Close();
+					streamForPermissionChecking.Dispose();
+				}
+
+			}
+		}
+
+		[Test]
+		public void UnlockedLiftFile_ConstructorDoesNotThrow()
+		{
+			string persistedFilePath = Path.GetRandomFileName();
+			persistedFilePath = Path.GetFullPath(persistedFilePath);
+			// Confirm that the file is writable.
+			FileStream fileStream = File.OpenWrite(persistedFilePath);
+			Assert.IsTrue(fileStream.CanWrite);
+			// Close it before creating the LiftRepository.
+			fileStream.Close();
+			// LiftRepository constructor shouldn't throw an IOException.
+			using (LiftRepository liftRepository = new LiftRepository(persistedFilePath))
+			{
+			}
+			Assert.IsTrue(true); // Constructor didn't throw.
+			File.Delete(persistedFilePath);
 		}
 	}
 
@@ -147,6 +186,28 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
+
+		[Test]
+		[ExpectedException(typeof(IOException))]
+		public void LiftIsLocked_ReturnsTrue()
+		{
+			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			FileStream streamForPermissionChecking = null;
+			try
+			{
+				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+			}
+			finally
+			{
+				//This is in case the exception is not thrown
+				if (streamForPermissionChecking != null)
+				{
+					streamForPermissionChecking.Close();
+					streamForPermissionChecking.Dispose();
+				}
+
+			}
+		}
 	}
 
 	[TestFixture]
@@ -184,6 +245,29 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
+
+		[Test]
+		[ExpectedException(typeof(IOException))]
+		public void LiftIsLocked_ReturnsTrue()
+		{
+			SetState();
+			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			FileStream streamForPermissionChecking = null;
+			try
+			{
+				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+			}
+			finally
+			{
+				//This is in case the exception is not thrown
+				if (streamForPermissionChecking != null)
+				{
+					streamForPermissionChecking.Close();
+					streamForPermissionChecking.Dispose();
+				}
+
+			}
+		}
 	}
 
 	[TestFixture]
@@ -212,6 +296,29 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
+
+		[Test]
+		[ExpectedException(typeof(IOException))]
+		public void LiftIsLocked_ReturnsTrue()
+		{
+			SetState();
+			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			FileStream streamForPermissionChecking = null;
+			try
+			{
+				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+			}
+			finally
+			{
+				//This is in case the exception is not thrown
+				if (streamForPermissionChecking != null)
+				{
+					streamForPermissionChecking.Close();
+					streamForPermissionChecking.Dispose();
+				}
+
+			}
+		}
 	}
 
 	[TestFixture]
@@ -238,6 +345,29 @@ namespace WeSay.LexicalModel.Tests
 		{
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+		}
+
+		[Test]
+		[ExpectedException(typeof(IOException))]
+		public void LiftIsLocked_ReturnsTrue()
+		{
+			SetState();
+			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			FileStream streamForPermissionChecking = null;
+			try
+			{
+				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+			}
+			finally
+			{
+				//This is in case the exception is not thrown
+				if (streamForPermissionChecking != null)
+				{
+					streamForPermissionChecking.Close();
+					streamForPermissionChecking.Dispose();
+				}
+
+			}
 		}
 	}
 
@@ -266,6 +396,29 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
+
+		[Test]
+		[ExpectedException(typeof(IOException))]
+		public void LiftIsLocked_ReturnsTrue()
+		{
+			SetState();
+			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			FileStream streamForPermissionChecking = null;
+			try
+			{
+				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+			}
+			finally
+			{
+				//This is in case the exception is not thrown
+				if(streamForPermissionChecking != null)
+				{
+					streamForPermissionChecking.Close();
+					streamForPermissionChecking.Dispose();
+				}
+
+			}
+		}
 	}
 
 	[TestFixture]
@@ -290,45 +443,11 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (IOException))]
+		[ExpectedException(typeof(IOException))]
 		public void LockedFile_Throws()
 		{
 			Assert.IsTrue(_fileStream.CanWrite);
 			LiftRepository liftRepository = new LiftRepository(_persistedFilePath);
-		}
-	}
-
-	[TestFixture]
-	public class LiftFileNotLockedTest
-	{
-		[Test]
-		public void UnlockedLiftFile_ConstructorDoesNotThrow()
-		{
-			string persistedFilePath = Path.GetRandomFileName();
-			persistedFilePath = Path.GetFullPath(persistedFilePath);
-			// Confirm that the file is writable.
-			FileStream fileStream = File.OpenWrite(persistedFilePath);
-			Assert.IsTrue(fileStream.CanWrite);
-			// Close it before creating the LiftRepository.
-			fileStream.Close();
-			// LiftRepository constructor shouldn't throw an IOException.
-			using (LiftRepository liftRepository = new LiftRepository(persistedFilePath)) {}
-			Assert.IsTrue(true); // Constructor didn't throw.
-			File.Delete(persistedFilePath);
-		}
-	}
-
-	[TestFixture]
-	public class LiftMigrationTests
-	{
-		[Test]
-		public void MigrateIfNeeded_LiftIsLockedByProject_LockedAgainAfterMigration()
-		{
-			Assert.Fail("NYI");
-			//CreateLiftFileAndRepositoryForTesting("0.10");
-			//LiftPreparer preparer = new LiftPreparer(_liftFilePath);
-			//Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
-			//Assert.IsTrue(_liftRepository.IsLiftFileLocked);
 		}
 	}
 }
