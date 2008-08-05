@@ -139,43 +139,6 @@ namespace WeSay.Project
 		}
 
 		/// <summary>
-		/// configuration tools should call this when they modify something (e.g. writing systems) that
-		/// calls for rebuilding the caches.
-		/// </summary>
-		public void InvalidateCacheSilently()
-		{
-			DateTime liftLastWriteTimeUtc = File.GetLastWriteTimeUtc(Project.PathToLiftFile);
-			if (File.Exists(Project.PathToRepository))
-			{
-				try // don't crash if we can't update
-				{
-					using (Db4oDataSource ds = new Db4oDataSource(Project.PathToRepository))
-					{
-						//this should be different now so the cache should be updated
-						//but it shouldn't be off by enough to make it so we lose
-						//records if a crash occured and updates hadn't been written
-						//out yet and so are still pending in the db.
-						CacheManager.UpdateSyncPointInCache(ds.Data,
-															liftLastWriteTimeUtc.AddMilliseconds(10));
-					}
-				}
-				catch
-				{
-					try
-					{
-						File.Delete(Project.PathToRepository);
-					}
-					catch (Exception)
-					{
-						ErrorReport.ReportNonFatalMessage(
-								"Please exit WeSay and manually delete this cache file: {0}.",
-								Project.PathToRepository);
-					}
-				}
-			}
-		}
-
-		/// <summary>
 		/// exception handlers should call this when the database or other caches seem broken or out of sync
 		/// </summary>
 		/// <param name="error"></param>

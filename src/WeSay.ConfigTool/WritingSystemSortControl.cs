@@ -141,13 +141,6 @@ namespace WeSay.ConfigTool
 		{
 			_writingSystem.CustomSortRules = textBoxCustomRules.Text.Replace(Environment.NewLine,
 																			 "\n");
-
-			InvalidateCache();
-		}
-
-		private static void InvalidateCache()
-		{
-			WeSayWordsProject.Project.InvalidateCacheSilently();
 		}
 
 		private void comboBoxCultures_SelectedIndexChanged(object sender, EventArgs e)
@@ -155,11 +148,6 @@ namespace WeSay.ConfigTool
 			string oldValue = _writingSystem.SortUsing;
 			_writingSystem.SortUsing = (string) comboBoxCultures.SelectedValue;
 			UpdateCustomRules();
-
-			if (oldValue != _writingSystem.SortUsing)
-			{
-				InvalidateCache();
-			}
 		}
 
 		[Browsable(false)]
