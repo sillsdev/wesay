@@ -27,7 +27,7 @@ namespace WeSay.Data
 
 		private static List<RecordToken<T>> CreateResultsWithNoDuplicates(IEnumerable<IEnumerable<RecordToken<T>>> initialResults)
 		{
-			SortedDictionary<RecordToken<T>, object> alreadyUsedTokens = new SortedDictionary<RecordToken<T>, object>();
+			Dictionary<RecordToken<T>, object> alreadyUsedTokens = new Dictionary<RecordToken<T>, object>();
 			List<RecordToken<T>> results = new List<RecordToken<T>>();
 			foreach (IEnumerable<RecordToken<T>> resultSet in initialResults)
 			{

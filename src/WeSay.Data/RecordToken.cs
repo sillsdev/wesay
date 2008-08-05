@@ -112,8 +112,12 @@ namespace WeSay.Data
 
 		public override int GetHashCode()
 		{
-			int queryResultsHash = new DictionaryEqualityComparer<string, object>()
-											.GetHashCode(_queryResults);
+			int queryResultsHash = 0;
+			if (_queryResults != null)
+			{
+				queryResultsHash = new DictionaryEqualityComparer<string, object>()
+					.GetHashCode(_queryResults);
+			}
 			return queryResultsHash + 29 * _id.GetHashCode();
 		}
 
