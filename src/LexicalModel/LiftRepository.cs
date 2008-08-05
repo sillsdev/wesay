@@ -28,32 +28,41 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("progressState");
 			}
-
 			_liftFilePath = filePath;
 			_progressState = progressState;
+			CreateEmptyLiftFileIfNeeded(filePath);
+			LockLift();
+			MigrateLiftIfNeeded(progressState);
+			LastModified = DateTime.MinValue;
+			LoadAllLexEntries();
+		}
 
+		private void CreateEmptyLiftFileIfNeeded(string filePath)
+		{
 			FileInfo fileInfo = new FileInfo(_liftFilePath);
-			//check if file is writeable
-			using (FileStream fileStream = fileInfo.OpenWrite())
+			bool DoesEmptyLiftFileNeedtoBeCreated = !fileInfo.Exists || fileInfo.Length == 0;
+			if (DoesEmptyLiftFileNeedtoBeCreated)
 			{
-				fileStream.Close();
+				CreateEmptyLiftFile(filePath);
 			}
-			if (!fileInfo.Exists || fileInfo.Length == 0)
-			{
-				LiftExporter exporter = new LiftExporter(filePath);
-				exporter.End();
-			}
+		}
 
+		private void MigrateLiftIfNeeded(ProgressState progressState)
+		{
 			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
 			if (preparer.IsMigrationNeeded())
 			{
+				UnLockLift();
 				preparer.MigrateLiftFile(progressState);
+				LockLift();
 			}
 			preparer.PopulateDefinitions(progressState);
+		}
 
-			LockLift();
-			LastModified = DateTime.MinValue;
-			LoadAllLexEntries();
+		private void CreateEmptyLiftFile(string filePath)
+		{
+			LiftExporter exporter = new LiftExporter(filePath);
+			exporter.End();
 		}
 
 		public LiftRepository(string filePath):this(filePath, new ProgressState())
@@ -270,8 +279,6 @@ namespace WeSay.LexicalModel
 			//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
 			exporter.AddNewEntry(entry);
 			exporter.End();
-
-			RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
 		}
 
 		private void CreateFileContainingModified(LexEntry entryToUpdate)
@@ -280,8 +287,6 @@ namespace WeSay.LexicalModel
 			//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
 			exporter.Add(entryToUpdate);
 			exporter.End();
-
-			RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
 		}
 
 		private void CreateFileContainingModified(IEnumerable<LexEntry> entriesToUpdate)
@@ -300,8 +305,6 @@ namespace WeSay.LexicalModel
 			{
 				exporter.End();
 			}
-
-			RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
 		}
 
 		private void CreateFileContainingDeleted(LexEntry entryToDelete)
@@ -310,8 +313,6 @@ namespace WeSay.LexicalModel
 			//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
 			exporter.AddDeletedEntry(entryToDelete);
 			exporter.End();
-
-			RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
 		}
 
 		private void CreateFileContainingDeleted(IEnumerable<LexEntry> entriesToDelete)
@@ -330,8 +331,6 @@ namespace WeSay.LexicalModel
 			{
 				exporter.End();
 			}
-
-			RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
 		}
 
 		/// <summary>
@@ -407,30 +406,30 @@ namespace WeSay.LexicalModel
 		//}
 
 		//What is this method for??? TA 7-4-2008
-		private void RecordUpdateTime(DateTime time)
-		{
-			//// the resolution of the file modified time is a whole second on linux
-			//// so we need to set this to the ceiling of the time in seconds and then
-			//// wait until the actual time has passed this window
-			//int millisecondsLostInResolution = 1000 - time.Millisecond;
-			//time = time.AddMilliseconds(millisecondsLostInResolution);
-			//TimeSpan timeout = time - DateTime.UtcNow;
-			//if(timeout.Ticks > 0)
-			//{
-			//    Thread.Sleep(timeout);
-			//}
-			bool wasLocked = IsLiftFileLocked;
-			if (wasLocked)
-			{
-				UnLockLift();
-			}
-			//File.SetLastWriteTimeUtc(_liftFilePath, time);
-			//Debug.Assert(time == GetLastUpdateTime());
-			if (wasLocked)
-			{
-				LockLift();
-			}
-		}
+		//private void RecordUpdateTime(DateTime time)
+		//{
+		//    //// the resolution of the file modified time is a whole second on linux
+		//    //// so we need to set this to the ceiling of the time in seconds and then
+		//    //// wait until the actual time has passed this window
+		//    //int millisecondsLostInResolution = 1000 - time.Millisecond;
+		//    //time = time.AddMilliseconds(millisecondsLostInResolution);
+		//    //TimeSpan timeout = time - DateTime.UtcNow;
+		//    //if(timeout.Ticks > 0)
+		//    //{
+		//    //    Thread.Sleep(timeout);
+		//    //}
+		//    bool wasLocked = IsLiftFileLocked;
+		//    if (wasLocked)
+		//    {
+		//        UnLockLift();
+		//    }
+		//    //File.SetLastWriteTimeUtc(_liftFilePath, time);
+		//    //Debug.Assert(time == GetLastUpdateTime());
+		//    if (wasLocked)
+		//    {
+		//        LockLift();
+		//    }
+		//}
 
 		//I don't think this is needed anymore!!! TA 7-9-2008
 		//private static DateTime GetLastUpdateTime()
@@ -454,21 +453,28 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		private void UnLockLift()
 		{
-			Debug.Assert(_liftFileStreamForLocking != null);
-			_liftFileStreamForLocking.Close();
-			_liftFileStreamForLocking.Dispose();
-			_liftFileStreamForLocking = null;
+			//Debug.Assert(_liftFileStreamForLocking != null);
+			//_liftFileStreamForLocking.Close();
+			//_liftFileStreamForLocking.Dispose();
+			//_liftFileStreamForLocking = null;
 		}
 
 		public bool IsLiftFileLocked
 		{
-			get { return _liftFileStreamForLocking != null; }
+			get
+			{
+				return _liftFileStreamForLocking != null;
+			}
 		}
 
 		private void LockLift()
 		{
-			Debug.Assert(_liftFileStreamForLocking == null);
-			_liftFileStreamForLocking = File.OpenRead(_liftFilePath);
+			//using (FileStream fileStream = new FileStream(_liftFilePath, FileMode.Open, FileAccess.Write, FileShare.None))
+			//{
+			//    fileStream.Close();
+			//}
+			//Debug.Assert(_liftFileStreamForLocking == null);
+			//_liftFileStreamForLocking = File.OpenRead(_liftFilePath);
 		}
 	}
 }
