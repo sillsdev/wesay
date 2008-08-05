@@ -50,13 +50,13 @@ namespace WeSay.LexicalModel
 		private void MigrateLiftIfNeeded(ProgressState progressState)
 		{
 			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
+			UnLockLift();
 			if (preparer.IsMigrationNeeded())
 			{
-				UnLockLift();
 				preparer.MigrateLiftFile(progressState);
-				LockLift();
 			}
 			preparer.PopulateDefinitions(progressState);
+			LockLift();
 		}
 
 		private void CreateEmptyLiftFile(string filePath)
@@ -453,10 +453,10 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		private void UnLockLift()
 		{
-			//Debug.Assert(_liftFileStreamForLocking != null);
-			//_liftFileStreamForLocking.Close();
-			//_liftFileStreamForLocking.Dispose();
-			//_liftFileStreamForLocking = null;
+			Debug.Assert(_liftFileStreamForLocking != null);
+			_liftFileStreamForLocking.Close();
+			_liftFileStreamForLocking.Dispose();
+			_liftFileStreamForLocking = null;
 		}
 
 		public bool IsLiftFileLocked
@@ -469,12 +469,11 @@ namespace WeSay.LexicalModel
 
 		private void LockLift()
 		{
-			//using (FileStream fileStream = new FileStream(_liftFilePath, FileMode.Open, FileAccess.Write, FileShare.None))
-			//{
-			//    fileStream.Close();
-			//}
-			//Debug.Assert(_liftFileStreamForLocking == null);
-			//_liftFileStreamForLocking = File.OpenRead(_liftFilePath);
+			if(_liftFileStreamForLocking != null)
+			{
+				throw new IOException("WeSay was not able to acquire a lock on your Lift file!");
+			}
+			_liftFileStreamForLocking = new FileStream(_liftFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
 		}
 	}
 }
