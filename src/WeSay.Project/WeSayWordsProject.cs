@@ -149,7 +149,6 @@ namespace WeSay.Project
 					"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.\r\n\r\nIn the release build, the cache would now be invalidated and the user would not see the following crash dialog.");
 			throw error;
 #else
-			InvalidateCacheSilently();
 			//todo: make a way to pass on this error to us
 			Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
 				"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.");

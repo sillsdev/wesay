@@ -93,16 +93,6 @@
   <Target Name="CreateSample">
 	<Copy SourceFiles="@(SampleFiles)"
 		  DestinationFolder="$(BaseDirectory)\SampleProjects\%(RecursiveDir)" />
-
-	<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift"
-				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*">
-	  <Output TaskParameter="Include" ItemName="LiftFiles"/>
-	</CreateItem>
-
-	<!-- lift to wesay.words-->
-	<Exec Command='"$(BaseDirectory)\output\Release\SampleDataProcessor.exe" "%(LiftFiles.FullPath)"'
-		  WorkingDirectory="$(BaseDirectory)\output\Release"/>
-
   </Target>
 
 
@@ -143,20 +133,6 @@
 	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
 	</MakeWixForDirTree>
   </Target>
-
-
-  <Target Name="MakeWixForBiatah">
-	<MakeWixForDirTree
-				DirectoryReferenceId="biatahCacheDir"
-				ComponentGroupId="biatahCache"
-				RootDirectory="$(BaseDirectory)\SampleProjects\Biatah\Cache"
-				OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedBiatahCache.wxs"
-				MatchRegExPattern=".*"
-				GiveAllPermissions="true">
-	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
-	</MakeWixForDirTree>
-  </Target>
-
 
   <Target Name="MakeWixForTemplates">
 	<MakeWixForDirTree
@@ -201,7 +177,6 @@
   <Target Name="Installer">
 
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
-	<CallTarget targets="MakeWixForBiatah"/>
 	<CallTarget targets="MakeWixForTemplates"/>
 
 	<SvnVersion LocalPath="$(BaseDirectory)">

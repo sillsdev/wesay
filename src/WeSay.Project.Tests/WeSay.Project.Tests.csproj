@@ -84,8 +84,6 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="BasilProjectTests.cs" />
-	<Compile Include="CacheManagerTests.cs" />
-	<Compile Include="CacheUpdatingTests.cs" />
 	<Compile Include="LiftUpdateTests.cs" />
 	<Compile Include="MigrationTests.cs" />
 	<Compile Include="LiftExporterPLiftTests.cs" />
