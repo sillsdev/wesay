@@ -175,7 +175,7 @@ namespace WeSay.LexicalModel
 			query.Show("OrderInFile");
 			query.Show("CreationTime");
 
-			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(query, "Form", "WritingSystemId", writingSystem);
+			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystem(query, "Form", "WritingSystemId", writingSystem);
 			itemsMatching.Sort(new SortDefinition("Form", writingSystem),
 							   new SortDefinition("OrderForRoundTripping", Comparer<int>.Default),
 							   new SortDefinition("OrderInFile", Comparer<int>.Default),

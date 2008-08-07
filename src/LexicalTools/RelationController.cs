@@ -67,6 +67,8 @@ namespace WeSay.LexicalTools
 		private void OnCreateNewPairStringLexEntryId(object sender, CreateNewArgs e)
 		{
 			LexEntry newGuy = CreateNewLexEntry(e);
+			WritingSystem writingSystem = GetWritingSystemFromField();
+			_resultSet = _lexEntryRepository.GetAllEntriesSortedByLexicalForm(writingSystem);
 			e.NewlyCreatedItem = GetRecordTokenFromLexEntry(newGuy);
 		}
 
@@ -140,8 +142,7 @@ namespace WeSay.LexicalTools
 			picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
 			picker.Box.Items = recordTokenList;
-			picker.Box.SelectedItem =
-					GetRecordTokenFromLexEntry(relation.GetTarget(_lexEntryRepository));
+			picker.Box.SelectedItem = GetRecordTokenFromLexEntry(relation.GetTarget(_lexEntryRepository));
 
 			picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
 			_control = picker;
@@ -163,15 +164,12 @@ namespace WeSay.LexicalTools
 			{
 				return null;
 			}
-			WritingSystem writingSystem = GetWritingSystemFromField();
-			ResultSet<LexEntry> resultSet =
-					_lexEntryRepository.GetAllEntriesSortedByLexicalForm(writingSystem);
-			int index = resultSet.FindFirstIndex(e);
+			int index = _resultSet.FindFirstIndex(e);
 			if (index < 0)
 			{
 				return null;
 			}
-			return resultSet[index];
+			return _resultSet[index];
 		}
 
 		private RecordToken<LexEntry> GetRecordTokenFromTargetId(string s)
