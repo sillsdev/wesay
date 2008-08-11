@@ -56,7 +56,13 @@ namespace WeSay.Data
 			{
 				return false;
 			}
-			return _queryResults.TryGetValue(fieldName, out value);
+			if (!_queryResults.ContainsKey(fieldName))
+			{
+				return false;
+			}
+			value = _queryResults[fieldName];
+			return true;
+			//return _queryResults.TryGetValue(fieldName, out value);
 		}
 
 		public object this[string fieldName]
