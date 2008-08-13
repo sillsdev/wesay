@@ -8,7 +8,6 @@ namespace WeSay.Data
 	public class ResultSetCache<T> where T : class, new()
 	{
 		private SortedDictionary<RecordToken<T>, object> _sortedTokens = null;
-		private Dictionary<T, List<RecordToken<T>>> _itemToTokenMap = new Dictionary<T, List<RecordToken<T>>>();
 		private Query _cachedQuery = null;
 		private readonly IRepository<T> _repositoryQueried = null;
 
@@ -22,15 +21,6 @@ namespace WeSay.Data
 
 			foreach (RecordToken<T> token in resultSetToCache)
 			{
-				if(!_itemToTokenMap.ContainsKey(token.RealObject))
-				{
-					_itemToTokenMap.Add(token.RealObject, new List<RecordToken<T>>());
-					_itemToTokenMap[token.RealObject].Add(token);
-				}
-				else
-				{
-					_itemToTokenMap[token.RealObject].Add(token);
-				}
 				_sortedTokens.Add(token, null);
 			}
 		}
@@ -50,22 +40,47 @@ namespace WeSay.Data
 
 			RepositoryId itemId = _repositoryQueried.GetId(item);
 
+			RemoveOldTokensWithId(itemId);
+
+			ResultSet<T> itemsQueryResults = QueryNewItem(item);
+
+			foreach (RecordToken<T> token in itemsQueryResults)
+			{
+				_sortedTokens.Add(token, null);
+			}
+		}
+
+		private ResultSet<T> QueryNewItem(T item)
+		{
 			bool hasResults = false;
 			List<RecordToken<T>> results = new List<RecordToken<T>>();
-				foreach (Dictionary<string, object> result in _cachedQuery.GetResults(item))
-				{
-					hasResults = true;
-					results.Add(new RecordToken<T>(_repositoryQueried, result, itemId));
-				}
+			foreach (Dictionary<string, object> result in _cachedQuery.GetResults(item))
+			{
+				hasResults = true;
+				results.Add(new RecordToken<T>(_repositoryQueried, result, _repositoryQueried.GetId(item)));
+			}
 			//!!!I don't know how to test this case. Just copied it from every other place that produces Recordtokens TA 2008-08-13
-				if (!hasResults)
-				{
-					results.Add(new RecordToken<T>(_repositoryQueried, itemId));
-				}
+			if (!hasResults)
+			{
+				results.Add(new RecordToken<T>(_repositoryQueried, _repositoryQueried.GetId(item)));
+			}
+			return new ResultSet<T>(_repositoryQueried, results);
+		}
 
-			List<RecordToken<T>> oldRecordTokens = _itemToTokenMap[item];
-			_itemToTokenMap.Remove(item);
-			_itemToTokenMap.Add(item, results);
+		private void RemoveOldTokensWithId(RepositoryId itemId)
+		{
+			List<KeyValuePair<RecordToken<T>, object>> oldTokensToDelete = new List<KeyValuePair<RecordToken<T>, object>>();
+			foreach (KeyValuePair<RecordToken<T>, object> token in _sortedTokens)
+			{
+				if (token.Key.Id == itemId)
+				{
+					oldTokensToDelete.Add(token);
+				}
+			}
+			foreach (KeyValuePair<RecordToken<T>, object> pair in oldTokensToDelete)
+			{
+				_sortedTokens.Remove(pair.Key);
+			}
 		}
 	}
 }
