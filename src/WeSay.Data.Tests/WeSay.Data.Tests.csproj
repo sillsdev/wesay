@@ -60,6 +60,7 @@
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="QueryTests.cs" />
 	<Compile Include="RecordTokenTests.cs" />
+	<Compile Include="ResultSetCacheTests.cs" />
 	<Compile Include="ResultSetTests.cs" />
 	<Compile Include="SimpleIntTestClass.cs" />
 	<Compile Include="SynchronicRepositoryTests.cs" />

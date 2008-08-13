@@ -76,6 +76,7 @@
 	<Compile Include="RecordTokenComparer.cs" />
 	<Compile Include="RepositoryId.cs" />
 	<Compile Include="ResultSet.cs" />
+	<Compile Include="ResultSetCache.cs" />
 	<Compile Include="SynchronicRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
