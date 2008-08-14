@@ -74,7 +74,7 @@ namespace WeSay.Data
 			//!!!I don't know how to test this case. Just copied it from every other place that produces Recordtokens TA 2008-08-13
 			if (!hasResults)
 			{
-				results.Add(new RecordToken<T>(_repositoryQueried, _repositoryQueried.GetId(item)));
+			   results.Add(new RecordToken<T>(_repositoryQueried, _repositoryQueried.GetId(item)));
 			}
 			return new ResultSet<T>(_repositoryQueried, results);
 		}
@@ -93,6 +93,11 @@ namespace WeSay.Data
 			{
 				_sortedTokens.Remove(pair.Key);
 			}
+		}
+
+		public void DeleteItemFromCache(T item)
+		{
+			RemoveOldTokensWithId(_repositoryQueried.GetId(item));
 		}
 	}
 }
