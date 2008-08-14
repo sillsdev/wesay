@@ -33,6 +33,7 @@ namespace WeSay.Data
 					return result;
 				}
 			}
+			result = x.Id.CompareTo(y.Id);
 			return result;
 		}
 
