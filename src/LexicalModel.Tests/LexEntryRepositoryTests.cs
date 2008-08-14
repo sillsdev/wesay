@@ -1158,18 +1158,17 @@ namespace WeSay.LexicalModel.Tests
 			_repository.GetAllEntriesSortedByHeadword(new WritingSystem("de", SystemFonts.DefaultFont));
 
 			LexEntry entryAfterFirstQuery = _repository.CreateItem();
-			entryAfterFirstQuery.LexicalForm.SetAlternative("de", "word 1");
 
 			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de", SystemFonts.DefaultFont));
 			Assert.AreEqual(2, results.Count);
-			Assert.AreEqual("word 1", results[0]["Form"]);
-			Assert.AreEqual("word 2", results[1]["Form"]);
+			Assert.AreEqual("", results[0]["Form"]);
+			Assert.AreEqual("word 1", results[1]["Form"]);
 		}
 
 		private LexEntry CreateEntryBeforeFirstQuery(string writingSystem, string lexicalForm)
 		{
 			LexEntry entryBeforeFirstQuery = _repository.CreateItem();
-			entryBeforeFirstQuery.LexicalForm.SetAlternative("de", "word 2");
+			entryBeforeFirstQuery.LexicalForm.SetAlternative(writingSystem, lexicalForm);
 			_repository.SaveItem(entryBeforeFirstQuery);
 			return entryBeforeFirstQuery;
 		}
