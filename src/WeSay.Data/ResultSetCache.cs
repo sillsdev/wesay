@@ -40,7 +40,7 @@ namespace WeSay.Data
 		}
 
 		/// <summary>
-		/// Call this method every time a cached item changes. This method does not
+		/// Call this method every time a cached item changes. This method verifies that the item you are trying to update exists int he repository.
 		/// </summary>
 		/// <param name="item"></param>
 		public void UpdateItemInCache(T item)

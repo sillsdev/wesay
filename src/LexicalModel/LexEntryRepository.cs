@@ -195,7 +195,8 @@ namespace WeSay.LexicalModel
 					new ResultSetCache<LexEntry>(this, itemsMatching, query, sortOrder);
 			}
 			ResultSet<LexEntry> resultsFromCache = _getAllEntriesSortedByHeadWordCache.GetResultSet();
-			FilterEntriesToOnlyThoseWithWritingSystemId(resultsFromCache, "Form", "WritingSystemId", writingSystem.Id);
+			//!!!SUXresultsFromCache = FilterEntriesToOnlyThoseWithWritingSystemId(resultsFromCache, "Form", "WritingSystemId", writingSystem.Id);
+
 			string previousHeadWord = null;
 			int homographNumber = 1;
 			RecordToken<LexEntry> previousToken = null;
@@ -231,7 +232,7 @@ namespace WeSay.LexicalModel
 				previousToken = token;
 			}
 
-			return _getAllEntriesSortedByHeadWordCache.GetResultSet();
+			return resultsFromCache;
 		}
 
 		/// <summary>
