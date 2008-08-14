@@ -11,6 +11,14 @@ namespace WeSay.Data
 		private Query _cachedQuery = null;
 		private readonly IRepository<T> _repositoryQueried = null;
 
+		/// <summary>
+		/// ResultSetCaches do NOT support filtering. Recordtokens managed by a ResultSetCache must be unique
+		/// according to SortDefinitions compare.
+		/// </summary>
+		/// <param name="repositoryQueried"></param>
+		/// <param name="resultSetToCache"></param>
+		/// <param name="query"></param>
+		/// <param name="sortDefinitions"></param>
 		public ResultSetCache(IRepository<T> repositoryQueried, ResultSet<T> resultSetToCache, Query query, SortDefinition[] sortDefinitions)
 		{
 			_repositoryQueried = repositoryQueried;
@@ -31,6 +39,10 @@ namespace WeSay.Data
 			return cachedResults;
 		}
 
+		/// <summary>
+		/// Call this method every time a cached item changes. This method does not
+		/// </summary>
+		/// <param name="item"></param>
 		public void UpdateItemInCache(T item)
 		{
 			if(item == null)
