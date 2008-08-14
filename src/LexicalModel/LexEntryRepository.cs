@@ -11,6 +11,8 @@ namespace WeSay.LexicalModel
 {
 	public class LexEntryRepository: IRepository<LexEntry>
 	{
+		private ResultSetCache<LexEntry> _getAllEntriesSortedByHeadWordCache = null;
+
 		private readonly IRepository<LexEntry> _decoratedRepository;
 		public LexEntryRepository(string path):this(path, new ProgressState())
 		{}
@@ -39,6 +41,10 @@ namespace WeSay.LexicalModel
 		public LexEntry CreateItem()
 		{
 			LexEntry item = _decoratedRepository.CreateItem();
+			if (_getAllEntriesSortedByHeadWordCache != null)
+			{
+				_getAllEntriesSortedByHeadWordCache.UpdateItemInCache(item);
+			}
 			return item;
 		}
 
@@ -169,21 +175,32 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
-			Query query = GetAllLexEntriesQuery();
-			query.In("VirtualHeadWord").ForEach("Forms").Show("Form").Show("WritingSystemId");
-			query.Show("OrderForRoundTripping");
-			query.Show("OrderInFile");
-			query.Show("CreationTime");
 
-			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystem(query, "Form", "WritingSystemId", writingSystem);
-			itemsMatching.Sort(new SortDefinition("Form", writingSystem),
-							   new SortDefinition("OrderForRoundTripping", Comparer<int>.Default),
-							   new SortDefinition("OrderInFile", Comparer<int>.Default),
-							   new SortDefinition("CreationTime", Comparer<DateTime>.Default));
+			if (_getAllEntriesSortedByHeadWordCache == null)
+			{
+				Query query = GetAllLexEntriesQuery();
+				query.In("VirtualHeadWord").ForEach("Forms").Show("Form").Show("WritingSystemId");
+				query.Show("OrderForRoundTripping");
+				query.Show("OrderInFile");
+				query.Show("CreationTime");
+
+				ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystem(query, "Form",
+																								 "WritingSystemId",
+																								 writingSystem);
+				SortDefinition[] sortOrder = new SortDefinition[4];
+				sortOrder[0] = new SortDefinition("Form", writingSystem);
+				sortOrder[1] = new SortDefinition("OrderForRoundTripping", Comparer<int>.Default);
+				sortOrder[2] = new SortDefinition("OrderInFile", Comparer<int>.Default);
+				sortOrder[3] = new SortDefinition("CreationTime", Comparer<DateTime>.Default);
+
+				_getAllEntriesSortedByHeadWordCache =
+					new ResultSetCache<LexEntry>(this, itemsMatching, query, sortOrder);
+			}
 			string previousHeadWord = null;
 			int homographNumber = 1;
 			RecordToken<LexEntry> previousToken = null;
-			foreach (RecordToken<LexEntry> token in itemsMatching)
+			ResultSet<LexEntry> resultsFromCache = _getAllEntriesSortedByHeadWordCache.GetResultSet();
+			foreach (RecordToken<LexEntry> token in resultsFromCache)
 			{
 				string currentHeadWord = (string) token["Form"];
 				Debug.Assert(currentHeadWord != null);
@@ -196,7 +213,7 @@ namespace WeSay.LexicalModel
 					previousHeadWord = currentHeadWord;
 					homographNumber = 1;
 				}
-				// only used to get our sort correct
+				// only used to get our sort correct --This comment seems nonsensical --TA 2008-08-14!!!
 				token["HomographNumber"] = homographNumber;
 				switch (homographNumber)
 				{
@@ -215,7 +232,7 @@ namespace WeSay.LexicalModel
 				previousToken = token;
 			}
 
-			return itemsMatching;
+			return _getAllEntriesSortedByHeadWordCache.GetResultSet();
 		}
 
 		/// <summary>
