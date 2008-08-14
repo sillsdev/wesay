@@ -184,9 +184,7 @@ namespace WeSay.LexicalModel
 				query.Show("OrderInFile");
 				query.Show("CreationTime");
 
-				ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystem(query, "Form",
-																								 "WritingSystemId",
-																								 writingSystem);
+				ResultSet<LexEntry> itemsMatching = GetItemsMatchingCore(query);
 				SortDefinition[] sortOrder = new SortDefinition[4];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
 				sortOrder[1] = new SortDefinition("OrderForRoundTripping", Comparer<int>.Default);
@@ -196,10 +194,11 @@ namespace WeSay.LexicalModel
 				_getAllEntriesSortedByHeadWordCache =
 					new ResultSetCache<LexEntry>(this, itemsMatching, query, sortOrder);
 			}
+			ResultSet<LexEntry> resultsFromCache = _getAllEntriesSortedByHeadWordCache.GetResultSet();
+			FilterEntriesToOnlyThoseWithWritingSystemId(resultsFromCache, "Form", "WritingSystemId", writingSystem.Id);
 			string previousHeadWord = null;
 			int homographNumber = 1;
 			RecordToken<LexEntry> previousToken = null;
-			ResultSet<LexEntry> resultsFromCache = _getAllEntriesSortedByHeadWordCache.GetResultSet();
 			foreach (RecordToken<LexEntry> token in resultsFromCache)
 			{
 				string currentHeadWord = (string) token["Form"];
