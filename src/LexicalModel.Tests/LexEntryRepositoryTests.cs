@@ -1234,5 +1234,18 @@ namespace WeSay.LexicalModel.Tests
 			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de", SystemFonts.DefaultFont));
 			Assert.AreEqual(0, results.Count);
 		}
+
+		[Test]
+		public void GetAllEntriesSortedByHeadWord_DeleteAllItemsAfterFirstCall_EntryIsDeletedInResultSet()
+		{
+			LexEntry entrytoBeDeleted = CreateEntryBeforeFirstQuery("de", "word 0");
+
+			_repository.GetAllEntriesSortedByHeadword(new WritingSystem("de", SystemFonts.DefaultFont));
+
+			_repository.DeleteAllItems();
+
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de", SystemFonts.DefaultFont));
+			Assert.AreEqual(0, results.Count);
+		}
 	}
 }
