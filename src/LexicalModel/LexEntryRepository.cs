@@ -80,6 +80,10 @@ namespace WeSay.LexicalModel
 				if (item.IsDirty)
 				{
 					dirtyItems.Add(item);
+					if (_getAllEntriesSortedByHeadWordCache != null)
+					{
+						_getAllEntriesSortedByHeadWordCache.UpdateItemInCache(item);
+					}
 				}
 			}
 			_decoratedRepository.SaveItems(dirtyItems);
@@ -109,6 +113,10 @@ namespace WeSay.LexicalModel
 			if (item.IsDirty)
 			{
 				_decoratedRepository.SaveItem(item);
+				if (_getAllEntriesSortedByHeadWordCache != null)
+				{
+					_getAllEntriesSortedByHeadWordCache.UpdateItemInCache(item);
+				}
 				item.Clean();
 			}
 		}
@@ -125,17 +133,29 @@ namespace WeSay.LexicalModel
 
 		public void DeleteItem(LexEntry item)
 		{
+			if (_getAllEntriesSortedByHeadWordCache != null)
+			{
+				_getAllEntriesSortedByHeadWordCache.DeleteItemFromCache(item);
+			}
 			_decoratedRepository.DeleteItem(item);
 		}
 
 		public void DeleteItem(RepositoryId repositoryId)
 		{
+			if (_getAllEntriesSortedByHeadWordCache != null)
+			{
+				_getAllEntriesSortedByHeadWordCache.DeleteItemFromCache(repositoryId);
+			}
 			_decoratedRepository.DeleteItem(repositoryId);
 		}
 
 		public void DeleteAllItems()
 		{
 			_decoratedRepository.DeleteAllItems();
+			if (_getAllEntriesSortedByHeadWordCache != null)
+			{
+				_getAllEntriesSortedByHeadWordCache.DeleteAllItemsFromCache();
+			}
 		}
 
 		public int GetHomographNumber(LexEntry entry, WritingSystem headwordWritingSystem)
@@ -195,7 +215,7 @@ namespace WeSay.LexicalModel
 					new ResultSetCache<LexEntry>(this, itemsMatching, query, sortOrder);
 			}
 			ResultSet<LexEntry> resultsFromCache = _getAllEntriesSortedByHeadWordCache.GetResultSet();
-			//!!!SUXresultsFromCache = FilterEntriesToOnlyThoseWithWritingSystemId(resultsFromCache, "Form", "WritingSystemId", writingSystem.Id);
+			resultsFromCache = FilterEntriesToOnlyThoseWithWritingSystemId(resultsFromCache, "Form", "WritingSystemId", writingSystem.Id);
 
 			string previousHeadWord = null;
 			int homographNumber = 1;
