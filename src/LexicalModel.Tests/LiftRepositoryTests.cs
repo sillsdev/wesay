@@ -59,7 +59,7 @@ namespace WeSay.LexicalModel.Tests
 			File.Delete(_persistedFilePath);
 		}
 
-		[Test, Ignore("Locking needs to be implemented in LiftRepository!")]
+		[Test]
 		[ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsWriteableAfterRepositoryIsCreated_Throws()
 		{
