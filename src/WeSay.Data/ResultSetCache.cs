@@ -99,5 +99,22 @@ namespace WeSay.Data
 		{
 			RemoveOldTokensWithId(_repositoryQueried.GetId(item));
 		}
+
+		public void DeleteItemFromCache(RepositoryId id)
+		{
+			CheckIfItemIsInRepository(id);
+			RemoveOldTokensWithId(id);
+		}
+
+		public void DeleteAllItemsFromCache()
+		{
+			_sortedTokens.Clear();
+		}
+
+		private void CheckIfItemIsInRepository(RepositoryId id)
+		{
+			_repositoryQueried.GetItem(id);
+		}
+
 	}
 }

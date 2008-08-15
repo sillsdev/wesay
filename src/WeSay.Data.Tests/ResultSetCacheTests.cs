@@ -157,7 +157,60 @@ namespace WeSay.Data.Tests
 		{
 			_results = _repository.GetItemsMatching(_queryToCache);
 			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
-			resultSetCacheUnderTest.DeleteItemFromCache(null);
+			resultSetCacheUnderTest.DeleteItemFromCache((TestItem) null);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void DeleteItemFromCache_ItemNotInRepository_Throws()
+		{
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteItemFromCache(new TestItem());
+		}
+
+		[Test]
+		public void DeleteItemFromCacheById_Id_ItemIsNoLongerInResultSet()
+		{
+			TestItem itemToDelete = _repository.CreateItem();
+			itemToDelete.StoredString = "Item 1";
+			_repository.SaveItem(itemToDelete);
+
+			_results = _repository.GetItemsMatching(_queryToCache);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteItemFromCache(itemToDelete);
+
+			//Would be a better test but ResultSets don't support equality checks
+			//Assert.AreEqual(resultsBeforeUpdate, resultsAfterUpdate);
+
+			Assert.AreEqual(3, resultSetCacheUnderTest.GetResultSet().Count);
+			Assert.AreEqual("Item 0", resultSetCacheUnderTest.GetResultSet()[0]["StoredString"]);
+			Assert.AreEqual("Item 2", resultSetCacheUnderTest.GetResultSet()[1]["StoredString"]);
+			Assert.AreEqual("Item 3", resultSetCacheUnderTest.GetResultSet()[2]["StoredString"]);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void DeleteItemFromCacheById_Null_Throws()
+		{
+			_results = _repository.GetItemsMatching(_queryToCache);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteItemFromCache((TestItem)null);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void DeleteItemFromCacheById_ItemNotInRepository_Throws()
+		{
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteItemFromCache(RepositoryId.Empty);
+		}
+
+		[Test]
+		public void DeleteAllItemsFromCache_AllItemsAreDeleted()
+		{
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteAllItemsFromCache();
+			Assert.AreEqual(0, resultSetCacheUnderTest.GetResultSet().Count);
 		}
 	}
 
@@ -301,6 +354,90 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual("Item 5", resultSetCacheUnderTest.GetResultSet()[5]["StoredList"]);
 		}
 
+
+		[Test]
+		public void DeleteItemFromCache_Item_ItemIsNoLongerInResultSet()
+		{
+			TestItem itemToDelete = _repository.CreateItem();
+			itemToDelete.StoredList = PopulateListWith("Item 5", "Item 4");
+			_repository.SaveItem(itemToDelete);
+
+			_results = _repository.GetItemsMatching(_queryToCache);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteItemFromCache(itemToDelete);
+
+			//Would be a better test but ResultSets don't support equality checks
+			//Assert.AreEqual(resultsBeforeUpdate, resultsAfterUpdate);
+
+			Assert.AreEqual(4, resultSetCacheUnderTest.GetResultSet().Count);
+			Assert.AreEqual("Item 0", resultSetCacheUnderTest.GetResultSet()[0]["StoredList"]);
+			Assert.AreEqual("Item 1", resultSetCacheUnderTest.GetResultSet()[1]["StoredList"]);
+			Assert.AreEqual("Item 2", resultSetCacheUnderTest.GetResultSet()[2]["StoredList"]);
+			Assert.AreEqual("Item 3", resultSetCacheUnderTest.GetResultSet()[3]["StoredList"]);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void DeleteItemFromCache_Null_Throws()
+		{
+			_results = _repository.GetItemsMatching(_queryToCache);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteItemFromCache((TestItem)null);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void DeleteItemFromCache_ItemNotInRepository_Throws()
+		{
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteItemFromCache(new TestItem());
+		}
+
+		[Test]
+		public void DeleteItemFromCacheById_Item_ItemIsNoLongerInResultSet()
+		{
+			TestItem itemToDelete = _repository.CreateItem();
+			itemToDelete.StoredList = PopulateListWith("Item 5", "Item 4");
+			_repository.SaveItem(itemToDelete);
+
+			_results = _repository.GetItemsMatching(_queryToCache);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteItemFromCache(_repository.GetId(itemToDelete));
+
+			//Would be a better test but ResultSets don't support equality checks
+			//Assert.AreEqual(resultsBeforeUpdate, resultsAfterUpdate);
+
+			Assert.AreEqual(4, resultSetCacheUnderTest.GetResultSet().Count);
+			Assert.AreEqual("Item 0", resultSetCacheUnderTest.GetResultSet()[0]["StoredList"]);
+			Assert.AreEqual("Item 1", resultSetCacheUnderTest.GetResultSet()[1]["StoredList"]);
+			Assert.AreEqual("Item 2", resultSetCacheUnderTest.GetResultSet()[2]["StoredList"]);
+			Assert.AreEqual("Item 3", resultSetCacheUnderTest.GetResultSet()[3]["StoredList"]);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void DeleteItemFromCacheById_Null_Throws()
+		{
+			_results = _repository.GetItemsMatching(_queryToCache);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteItemFromCache((TestItem)null);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void DeleteItemFromCacheById_ItemNotInRepository_Throws()
+		{
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteItemFromCache(RepositoryId.Empty);
+		}
+
+		[Test]
+		public void DeleteAllItemsFromCache_AllItemsAreDeleted()
+		{
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			resultSetCacheUnderTest.DeleteAllItemsFromCache();
+			Assert.AreEqual(0, resultSetCacheUnderTest.GetResultSet().Count);
+		}
 	}
 
 }
