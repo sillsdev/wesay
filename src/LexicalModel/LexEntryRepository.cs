@@ -266,11 +266,21 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
-			Query query =
+			if (!(_sortedResultSetCaches.ContainsKey("sortedByLexicalForm")))
+			{
+				Query query =
 					GetAllLexEntriesQuery().In("LexicalForm").ForEach("Forms").Show("Form").Show(
-							"WritingSystemId");
+						"WritingSystemId");
+				ResultSet<LexEntry> itemsMatching = GetItemsMatchingCore(query);
+				SortDefinition[] sortOrder = new SortDefinition[1];
+				sortOrder[0] = new SortDefinition("Form", writingSystem);
 
-			return GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(query, "Form", "WritingSystemId", writingSystem);
+				_sortedResultSetCaches.Add("sortedByLexicalForm",
+										   new ResultSetCache<LexEntry>(this, itemsMatching, query, sortOrder));
+			}
+			ResultSet<LexEntry> resultsFromCache = _sortedResultSetCaches["sortedByLexicalForm"].GetResultSet();
+			resultsFromCache = FilterEntriesToOnlyThoseWithWritingSystemId(resultsFromCache, "Form", "WritingSystemId", writingSystem.Id);
+			return resultsFromCache;
 		}
 
 		/// <summary>
