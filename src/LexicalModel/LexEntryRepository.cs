@@ -11,7 +11,7 @@ namespace WeSay.LexicalModel
 {
 	public class LexEntryRepository: IRepository<LexEntry>
 	{
-		private ResultSetCache<LexEntry> _getAllEntriesSortedByHeadWordCache = null;
+		Dictionary<string, ResultSetCache<LexEntry>> _sortedResultSetCaches = new Dictionary<string, ResultSetCache<LexEntry>>();
 
 		private readonly IRepository<LexEntry> _decoratedRepository;
 		public LexEntryRepository(string path):this(path, new ProgressState())
@@ -41,9 +41,9 @@ namespace WeSay.LexicalModel
 		public LexEntry CreateItem()
 		{
 			LexEntry item = _decoratedRepository.CreateItem();
-			if (_getAllEntriesSortedByHeadWordCache != null)
+			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
 			{
-				_getAllEntriesSortedByHeadWordCache.UpdateItemInCache(item);
+				pair.Value.UpdateItemInCache(item);
 			}
 			return item;
 		}
@@ -80,9 +80,9 @@ namespace WeSay.LexicalModel
 				if (item.IsDirty)
 				{
 					dirtyItems.Add(item);
-					if (_getAllEntriesSortedByHeadWordCache != null)
+					foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
 					{
-						_getAllEntriesSortedByHeadWordCache.UpdateItemInCache(item);
+						pair.Value.UpdateItemInCache(item);
 					}
 				}
 			}
@@ -113,9 +113,9 @@ namespace WeSay.LexicalModel
 			if (item.IsDirty)
 			{
 				_decoratedRepository.SaveItem(item);
-				if (_getAllEntriesSortedByHeadWordCache != null)
+				foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
 				{
-					_getAllEntriesSortedByHeadWordCache.UpdateItemInCache(item);
+					pair.Value.UpdateItemInCache(item);
 				}
 				item.Clean();
 			}
@@ -133,18 +133,18 @@ namespace WeSay.LexicalModel
 
 		public void DeleteItem(LexEntry item)
 		{
-			if (_getAllEntriesSortedByHeadWordCache != null)
+			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
 			{
-				_getAllEntriesSortedByHeadWordCache.DeleteItemFromCache(item);
+				pair.Value.DeleteItemFromCache(item);
 			}
 			_decoratedRepository.DeleteItem(item);
 		}
 
 		public void DeleteItem(RepositoryId repositoryId)
 		{
-			if (_getAllEntriesSortedByHeadWordCache != null)
+			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
 			{
-				_getAllEntriesSortedByHeadWordCache.DeleteItemFromCache(repositoryId);
+				pair.Value.DeleteItemFromCache(repositoryId);
 			}
 			_decoratedRepository.DeleteItem(repositoryId);
 		}
@@ -152,9 +152,9 @@ namespace WeSay.LexicalModel
 		public void DeleteAllItems()
 		{
 			_decoratedRepository.DeleteAllItems();
-			if (_getAllEntriesSortedByHeadWordCache != null)
+			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
 			{
-				_getAllEntriesSortedByHeadWordCache.DeleteAllItemsFromCache();
+				pair.Value.DeleteAllItemsFromCache();
 			}
 		}
 
@@ -196,7 +196,7 @@ namespace WeSay.LexicalModel
 				throw new ArgumentNullException("writingSystem");
 			}
 
-			if (_getAllEntriesSortedByHeadWordCache == null)
+			if (!_sortedResultSetCaches.ContainsKey("sortedByHeadWord"))
 			{
 				Query query = GetAllLexEntriesQuery();
 				query.In("VirtualHeadWord").ForEach("Forms").Show("Form").Show("WritingSystemId");
@@ -211,10 +211,9 @@ namespace WeSay.LexicalModel
 				sortOrder[2] = new SortDefinition("OrderInFile", Comparer<int>.Default);
 				sortOrder[3] = new SortDefinition("CreationTime", Comparer<DateTime>.Default);
 
-				_getAllEntriesSortedByHeadWordCache =
-					new ResultSetCache<LexEntry>(this, itemsMatching, query, sortOrder);
+				_sortedResultSetCaches.Add("sortedByHeadWord", new ResultSetCache<LexEntry>(this, itemsMatching, query, sortOrder));
 			}
-			ResultSet<LexEntry> resultsFromCache = _getAllEntriesSortedByHeadWordCache.GetResultSet();
+			ResultSet<LexEntry> resultsFromCache = _sortedResultSetCaches["sortedByHeadWord"].GetResultSet();
 			resultsFromCache = FilterEntriesToOnlyThoseWithWritingSystemId(resultsFromCache, "Form", "WritingSystemId", writingSystem.Id);
 
 			string previousHeadWord = null;
