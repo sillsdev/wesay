@@ -866,7 +866,7 @@ namespace WeSay.LexicalModel.Tests
 			File.Delete(this._persistedFilePath);
 		}
 
-		[Test, Ignore("Locking needs to be implemented in LiftRepository!")]
+		[Test]
 		[ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsWriteableAfterRepositoryIsCreated_Throws()
 		{
@@ -1244,6 +1244,95 @@ namespace WeSay.LexicalModel.Tests
 			_repository.DeleteAllItems();
 
 			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de", SystemFonts.DefaultFont));
+			Assert.AreEqual(0, results.Count);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_CreateItemAfterFirstCall_EntryIsReturnedAndSortedInResultSet()
+		{
+			LexEntry entryBeforeFirstQuery = CreateEntryBeforeFirstQuery("de", "word 1");
+
+			_repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+
+			LexEntry entryAfterFirstQuery = _repository.CreateItem();
+
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+			Assert.AreEqual(2, results.Count);
+			Assert.AreEqual("", results[0]["Form"]);
+			Assert.AreEqual("word 1", results[1]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_ModifyAndSaveAfterFirstCall_EntryIsModifiedAndSortedInResultSet()
+		{
+			LexEntry entryBeforeFirstQuery = CreateEntryBeforeFirstQuery("de", "word 0");
+
+			_repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+
+			entryBeforeFirstQuery.LexicalForm.SetAlternative("de", "word 1");
+			_repository.SaveItem(entryBeforeFirstQuery);
+
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+			Assert.AreEqual(1, results.Count);
+			Assert.AreEqual("word 1", results[0]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_ModifyAndSaveMultipleAfterFirstCall_EntriesModifiedAndSortedInResultSet()
+		{
+			List<LexEntry> entriesToModify = new List<LexEntry>();
+			entriesToModify.Add(CreateEntryBeforeFirstQuery("de", "word 0"));
+			entriesToModify.Add(CreateEntryBeforeFirstQuery("de", "word 1"));
+
+			_repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+
+			entriesToModify[0].LexicalForm["de"] = "word 3";
+			entriesToModify[1].LexicalForm["de"] = "word 2";
+			_repository.SaveItems(entriesToModify);
+
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+			Assert.AreEqual(2, results.Count);
+			Assert.AreEqual("word 2", results[0]["Form"]);
+			Assert.AreEqual("word 3", results[1]["Form"]);
+
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_DeleteAfterFirstCall_EntryIsDeletedInResultSet()
+		{
+			LexEntry entrytoBeDeleted = CreateEntryBeforeFirstQuery("de", "word 0");
+
+			_repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+
+			_repository.DeleteItem(entrytoBeDeleted);
+
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+			Assert.AreEqual(0, results.Count);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_DeleteByIdAfterFirstCall_EntryIsDeletedInResultSet()
+		{
+			LexEntry entrytoBeDeleted = CreateEntryBeforeFirstQuery("de", "word 0");
+
+			_repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+
+			_repository.DeleteItem(_repository.GetId(entrytoBeDeleted));
+
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+			Assert.AreEqual(0, results.Count);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_DeleteAllItemsAfterFirstCall_EntryIsDeletedInResultSet()
+		{
+			LexEntry entrytoBeDeleted = CreateEntryBeforeFirstQuery("de", "word 0");
+
+			_repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+
+			_repository.DeleteAllItems();
+
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
 			Assert.AreEqual(0, results.Count);
 		}
 	}
