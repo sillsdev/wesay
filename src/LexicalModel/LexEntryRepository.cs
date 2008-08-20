@@ -38,14 +38,33 @@ namespace WeSay.LexicalModel
 			get { return _decoratedRepository.LastModified; }
 		}
 
+		public delegate void EventHandler(object sender, EventArgs e);
+
+		public event EventHandler QueryUpdate;
+
 		public LexEntry CreateItem()
 		{
 			LexEntry item = _decoratedRepository.CreateItem();
+			UpdateCaches(item);
+			item.PropertyChanged += UpdateCaches;
+			return item;
+		}
+
+		private void UpdateCaches(LexEntry item)
+		{
 			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
 			{
 				pair.Value.UpdateItemInCache(item);
 			}
-			return item;
+			if(QueryUpdate != null)
+			{
+				QueryUpdate(this, EventArgs.Empty);
+			}
+		}
+
+		private void UpdateCaches(object sender, EventArgs e)
+		{
+			UpdateCaches((LexEntry) sender);
 		}
 
 		public RepositoryId[] GetAllItems()
@@ -65,7 +84,9 @@ namespace WeSay.LexicalModel
 
 		public LexEntry GetItem(RepositoryId id)
 		{
-			return _decoratedRepository.GetItem(id);
+			LexEntry item = _decoratedRepository.GetItem(id);
+			item.PropertyChanged += UpdateCaches;
+			return item;
 		}
 
 		public void SaveItems(IEnumerable<LexEntry> items)
@@ -80,10 +101,7 @@ namespace WeSay.LexicalModel
 				if (item.IsDirty)
 				{
 					dirtyItems.Add(item);
-					foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
-					{
-						pair.Value.UpdateItemInCache(item);
-					}
+					UpdateCaches(item);
 				}
 			}
 			_decoratedRepository.SaveItems(dirtyItems);
@@ -113,10 +131,7 @@ namespace WeSay.LexicalModel
 			if (item.IsDirty)
 			{
 				_decoratedRepository.SaveItem(item);
-				foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
-				{
-					pair.Value.UpdateItemInCache(item);
-				}
+				UpdateCaches(item);
 				item.Clean();
 			}
 		}
@@ -133,19 +148,26 @@ namespace WeSay.LexicalModel
 
 		public void DeleteItem(LexEntry item)
 		{
+			DeleteFromCaches(item);
+			_decoratedRepository.DeleteItem(item);
+		}
+
+		private void DeleteFromCaches(LexEntry item)
+		{
 			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
 			{
 				pair.Value.DeleteItemFromCache(item);
 			}
-			_decoratedRepository.DeleteItem(item);
+			if (QueryUpdate != null)
+			{
+				QueryUpdate(this, EventArgs.Empty);
+			}
 		}
 
 		public void DeleteItem(RepositoryId repositoryId)
 		{
-			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
-			{
-				pair.Value.DeleteItemFromCache(repositoryId);
-			}
+			LexEntry item = _decoratedRepository.GetItem(repositoryId);
+			DeleteFromCaches(item);
 			_decoratedRepository.DeleteItem(repositoryId);
 		}
 
@@ -155,6 +177,10 @@ namespace WeSay.LexicalModel
 			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
 			{
 				pair.Value.DeleteAllItemsFromCache();
+			}
+			if (QueryUpdate != null)
+			{
+				QueryUpdate(this, EventArgs.Empty);
 			}
 		}
 

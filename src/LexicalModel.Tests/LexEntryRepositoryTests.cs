@@ -1248,6 +1248,37 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		public void GetAllEntriesSortedByHeadWord_LexEntryCreatedAndChanged_EntryIsChangedInResultSet()
+		{
+			LexEntry entrytoBeChanged = CreateEntryBeforeFirstQuery("de", "word 0");
+
+			_repository.GetAllEntriesSortedByHeadword(new WritingSystem("de", SystemFonts.DefaultFont));
+
+			entrytoBeChanged.LexicalForm.SetAlternative("de", "word 1");
+
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de", SystemFonts.DefaultFont));
+			Assert.AreEqual(1, results.Count);
+			Assert.AreEqual("word 1", results[0]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByHeadWord_LexEntryCheckedOutOfPersistedRepoAndChanged_EntryIsChangedInResultSet()
+		{
+			CreateRepositoryWithAnEntry("de", "word 0");
+
+			RepositoryId[] entries = _repository.GetAllItems();
+			LexEntry entryToBeChanged = _repository.GetItem(entries[0]);
+
+			_repository.GetAllEntriesSortedByHeadword(new WritingSystem("de", SystemFonts.DefaultFont));
+
+			entryToBeChanged.LexicalForm.SetAlternative("de", "word 1");
+
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de", SystemFonts.DefaultFont));
+			Assert.AreEqual(1, results.Count);
+			Assert.AreEqual("word 1", results[0]["Form"]);
+		}
+
+		[Test]
 		public void GetAllEntriesSortedByLexicalForm_CreateItemAfterFirstCall_EntryIsReturnedAndSortedInResultSet()
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryBeforeFirstQuery("de", "word 1");
@@ -1334,6 +1365,45 @@ namespace WeSay.LexicalModel.Tests
 
 			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
 			Assert.AreEqual(0, results.Count);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_LexEntryCreatedAndChanged_EntryIsChangedInResultSet()
+		{
+			LexEntry entrytoBeChanged = CreateEntryBeforeFirstQuery("de", "word 0");
+
+			_repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+
+			entrytoBeChanged.LexicalForm.SetAlternative("de", "word 1");
+
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+			Assert.AreEqual(1, results.Count);
+			Assert.AreEqual("word 1", results[0]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_LexEntryCheckedOutOfPersistedRepoAndChanged_EntryIsChangedInResultSet()
+		{
+			CreateRepositoryWithAnEntry("de", "word 0");
+
+			RepositoryId[] entries = _repository.GetAllItems();
+			LexEntry entryToBeChanged = _repository.GetItem(entries[0]);
+
+			_repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+
+			entryToBeChanged.LexicalForm.SetAlternative("de", "word 1");
+
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
+			Assert.AreEqual(1, results.Count);
+			Assert.AreEqual("word 1", results[0]["Form"]);
+		}
+
+		private void CreateRepositoryWithAnEntry(string writingSystem, string lexicalForm)
+		{
+			CreateEntryBeforeFirstQuery(writingSystem, lexicalForm);
+
+			_repository.Dispose();
+			_repository = new LexEntryRepository(_persistedFilePath);
 		}
 	}
 }

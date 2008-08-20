@@ -44,6 +44,7 @@ namespace WeSay.LexicalTools
 			}
 			_viewTemplate = viewTemplate;
 			_lexEntryRepository = recordManager;
+			_lexEntryRepository.QueryUpdate += OnEntryChanged;
 			_cmWritingSystems = new ContextMenu();
 
 			SetupPickerControlWritingSystems();
@@ -226,7 +227,7 @@ namespace WeSay.LexicalTools
 			Control_EntryDetailPanel.DataSource = record;
 			if (record != null)
 			{
-				record.PropertyChanged += OnEntryChanged;
+				//record.PropertyChanged += OnEntryChanged;
 			}
 		}
 
@@ -234,7 +235,7 @@ namespace WeSay.LexicalTools
 			LexEntry previousEntry = Control_EntryDetailPanel.DataSource;
 			if (previousEntry != null)
 			{
-				previousEntry.PropertyChanged -= OnEntryChanged;
+				//previousEntry.PropertyChanged -= OnEntryChanged;
 				if (!previousEntry.IsBeingDeleted)
 				{
 					_lexEntryRepository.SaveItem(previousEntry);
@@ -242,7 +243,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void OnEntryChanged(object sender, PropertyChangedEventArgs e)
+		private void OnEntryChanged(object sender, EventArgs e)//object sender, PropertyChangedEventArgs e)
 		{
 			Debug.Assert(CurrentIndex != -1);
 			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
