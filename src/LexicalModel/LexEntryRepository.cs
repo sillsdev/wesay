@@ -38,15 +38,10 @@ namespace WeSay.LexicalModel
 			get { return _decoratedRepository.LastModified; }
 		}
 
-		public delegate void EventHandler(object sender, EventArgs e);
-
-		public event EventHandler QueryUpdate;
-
 		public LexEntry CreateItem()
 		{
 			LexEntry item = _decoratedRepository.CreateItem();
 			UpdateCaches(item);
-			item.PropertyChanged += UpdateCaches;
 			return item;
 		}
 
@@ -55,10 +50,6 @@ namespace WeSay.LexicalModel
 			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
 			{
 				pair.Value.UpdateItemInCache(item);
-			}
-			if(QueryUpdate != null)
-			{
-				QueryUpdate(this, EventArgs.Empty);
 			}
 		}
 
@@ -85,7 +76,6 @@ namespace WeSay.LexicalModel
 		public LexEntry GetItem(RepositoryId id)
 		{
 			LexEntry item = _decoratedRepository.GetItem(id);
-			item.PropertyChanged += UpdateCaches;
 			return item;
 		}
 
@@ -113,7 +103,6 @@ namespace WeSay.LexicalModel
 
 		public ResultSet<LexEntry> GetItemsMatching(Query query)
 		{
-			//throw new NotSupportedException("Please use more specific methods. For now, we don't support using any general query for optimization reasons.");
 			return _decoratedRepository.GetItemsMatching(query);
 		}
 
@@ -158,10 +147,6 @@ namespace WeSay.LexicalModel
 			{
 				pair.Value.DeleteItemFromCache(item);
 			}
-			if (QueryUpdate != null)
-			{
-				QueryUpdate(this, EventArgs.Empty);
-			}
 		}
 
 		public void DeleteItem(RepositoryId repositoryId)
@@ -178,10 +163,17 @@ namespace WeSay.LexicalModel
 			{
 				pair.Value.DeleteAllItemsFromCache();
 			}
-			if (QueryUpdate != null)
+		}
+
+		public void NotifyThatLexEntryHasBeenUpdated(LexEntry updatedLexEntry)
+		{
+			if(updatedLexEntry == null)
 			{
-				QueryUpdate(this, EventArgs.Empty);
+				throw new ArgumentNullException("updatedLexEntry");
 			}
+			//This call checks that the Entry is in the repository
+			GetId(updatedLexEntry);
+			UpdateCaches(updatedLexEntry);
 		}
 
 		public int GetHomographNumber(LexEntry entry, WritingSystem headwordWritingSystem)
