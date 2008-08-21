@@ -99,8 +99,39 @@ namespace WeSay.Data
 			}
 		}
 
+		public delegate bool Functor(object o);
+		private sealed class FieldInfo
+		{
+			private readonly MethodInfo _methodInfo;
+			private readonly bool _isEnumerable;
+			private Functor _whereCondition;
+
+			public MethodInfo Method
+			{
+				get { return _methodInfo; }
+			}
+
+			public bool IsEnumerable
+			{
+				get { return _isEnumerable; }
+			}
+
+			public Functor WhereCondition
+			{
+				get { return _whereCondition; }
+				set { _whereCondition = value; }
+			}
+
+			public FieldInfo(MethodInfo methodInfo, bool isEnumerable)
+			{
+				_methodInfo = methodInfo;
+				_isEnumerable = isEnumerable;
+				_whereCondition = null;
+			}
+		}
+
 		private List<Query> _nestedQueries;
-		private List<KeyValuePair<string, MethodInfo>> _resultProperties;
+		private Dictionary<string, FieldInfo> _fieldProperties;
 		private readonly Type _t;
 		private List<string> _labelRegistry;
 
@@ -112,9 +143,9 @@ namespace WeSay.Data
 
 		protected void GetNestedQueryResults(List<Dictionary<string, object>> result, object o)
 		{
-			if (this._nestedQueries != null)
+			if (_nestedQueries != null)
 			{
-				foreach (Query query in this._nestedQueries)
+				foreach (Query query in _nestedQueries)
 				{
 					query.GetResultsCore(result, o);
 				}
@@ -125,20 +156,40 @@ namespace WeSay.Data
 		{
 			Debug.Assert(o != null);
 			// see if we have any results that we should return as a result
-			if (this._resultProperties != null)
+			if (_fieldProperties != null)
 			{
-				foreach (KeyValuePair<string, MethodInfo> pair in _resultProperties)
+				foreach (KeyValuePair<string, FieldInfo> pair in _fieldProperties)
 				{
-					MethodInfo getProperty = pair.Value;
-					object result = getProperty.Invoke(o, null);
-					IEnumerable enumerableResult = result as IEnumerable;
-					if (enumerableResult == null || result is string)
+					MethodInfo getProperty = pair.Value.Method;
+					object propertyValue = getProperty.Invoke(o, null);
+					Functor whereCondition = pair.Value.WhereCondition;
+					bool evaluateProperty = true;
+					if (whereCondition != null)
 					{
-						Permuter.Permute(results, pair.Key, result);
+						evaluateProperty = whereCondition.Invoke(propertyValue);
 					}
-					else
+					if (evaluateProperty)
 					{
-						Permuter.Permute(results, pair.Key, enumerableResult);
+						if (pair.Value.IsEnumerable)
+						{
+							IEnumerable enumerableResult = propertyValue as IEnumerable;
+							Permuter.Permute(results, pair.Key, enumerableResult);
+						}
+						else
+						{
+							Permuter.Permute(results, pair.Key, propertyValue);
+						}
+					}
+				}
+				if (results.Count == 0 && _atLeastOne)
+				{
+					foreach (KeyValuePair<string, FieldInfo> pair in _fieldProperties)
+					{
+						Permuter.Permute(results, pair.Key, "");
+					}
+					if (_fieldProperties.Count == 0)
+					{
+						Permuter.Permute(results, "", "");
 					}
 				}
 			}
@@ -184,6 +235,7 @@ namespace WeSay.Data
 		}
 
 		private readonly Query _root;
+		private bool _atLeastOne;
 
 		internal Query(Query root, Type t): this(t)
 		{
@@ -192,6 +244,7 @@ namespace WeSay.Data
 				throw new ArgumentNullException("root");
 			}
 			_root = root;
+			_atLeastOne = false;
 		}
 
 		public Query(Type t)
@@ -201,6 +254,7 @@ namespace WeSay.Data
 				throw new ArgumentNullException("t");
 			}
 			_root = null;
+			_atLeastOne = false;
 			_t = t;
 			_labelRegistry = null;
 		}
@@ -219,8 +273,8 @@ namespace WeSay.Data
 
 		public Query ForEach(string fieldName)
 		{
-			MethodInfo mi = GetMethodInfo(fieldName);
-			Type iEnumerableReturnType = GetIEnumerableReturnType(mi);
+			MethodInfo methodInfo = GetMethodInfo(fieldName);
+			Type iEnumerableReturnType = GetIEnumerableReturnType(methodInfo);
 			if (iEnumerableReturnType == null)
 			{
 				throw new ArgumentOutOfRangeException("fieldName",
@@ -228,7 +282,7 @@ namespace WeSay.Data
 													  "Does not implement IEnumerable<T>");
 			}
 
-			ForEachQuery q = new ForEachQuery(this._root ?? this, mi, iEnumerableReturnType);
+			ForEachQuery q = new ForEachQuery(_root ?? this, methodInfo, iEnumerableReturnType);
 
 			NestedQueries.Add(q);
 			return q;
@@ -257,8 +311,9 @@ namespace WeSay.Data
 
 		public Query Show(string fieldName, string label)
 		{
-			MethodInfo mi = GetMethodInfo(fieldName);
-			if (GetIEnumerableReturnType(mi) != null)
+			MethodInfo methodInfo = GetMethodInfo(fieldName);
+			bool isEnumerable = ReturnTypeIsEnumerable(methodInfo);
+			if (isEnumerable)
 			{
 				throw new ArgumentOutOfRangeException("fieldName",
 													  fieldName,
@@ -266,7 +321,7 @@ namespace WeSay.Data
 			}
 			RegisterLabel(label);
 
-			ResultProperties.Add(new KeyValuePair<string, MethodInfo>(label, mi));
+			FieldProperties.Add(label, new FieldInfo(methodInfo, isEnumerable));
 			return this;
 		}
 
@@ -277,8 +332,9 @@ namespace WeSay.Data
 
 		public Query ShowEach(string fieldName, string label)
 		{
-			MethodInfo mi = GetMethodInfo(fieldName);
-			if (GetIEnumerableReturnType(mi) == null)
+			MethodInfo methodInfo = GetMethodInfo(fieldName);
+			bool isEnumerable = ReturnTypeIsEnumerable(methodInfo);
+			if (isEnumerable)
 			{
 				throw new ArgumentOutOfRangeException("fieldName",
 													  fieldName,
@@ -286,19 +342,19 @@ namespace WeSay.Data
 			}
 			RegisterLabel(label);
 
-			ResultProperties.Add(new KeyValuePair<string, MethodInfo>(label, mi));
+			FieldProperties.Add(label, new FieldInfo(methodInfo, isEnumerable));
 			return this;
 		}
 
-		private List<KeyValuePair<string, MethodInfo>> ResultProperties
+		private Dictionary<string, FieldInfo> FieldProperties
 		{
 			get
 			{
-				if (_resultProperties == null)
+				if (_fieldProperties == null)
 				{
-					_resultProperties = new List<KeyValuePair<string, MethodInfo>>();
+					_fieldProperties = new Dictionary<string, FieldInfo>();
 				}
-				return _resultProperties;
+				return _fieldProperties;
 			}
 		}
 
@@ -351,11 +407,19 @@ namespace WeSay.Data
 					sb.Append(query.ToString());
 				}
 			}
-			if (_resultProperties != null)
+			if (_fieldProperties != null)
 			{
-				foreach (KeyValuePair<string, MethodInfo> property in _resultProperties)
+				foreach (KeyValuePair<string, FieldInfo> pair in _fieldProperties)
 				{
-					MethodInfo result = property.Value;
+					if (pair.Value.WhereCondition != null)
+					{
+						sb.Append(" Where <condition> ");
+					}
+					if (_atLeastOne)
+					{
+						sb.Append(" AtLeastOne ");
+					}
+					MethodInfo result = pair.Value.Method;
 					sb.Append(" Show ");
 					sb.Append(result.Name);
 				}
@@ -365,12 +429,17 @@ namespace WeSay.Data
 			return sb.ToString();
 		}
 
-		private static Type GetIEnumerableReturnType(MethodInfo mi)
+		private static bool ReturnTypeIsEnumerable(MethodInfo methodInfo)
 		{
-			Debug.Assert(mi != null);
+			return GetIEnumerableReturnType(methodInfo) != null;
+		}
+
+		private static Type GetIEnumerableReturnType(MethodInfo methodInfo)
+		{
+			Debug.Assert(methodInfo != null);
 			// if our return type is string we want
 			// to act on the string not the IEnumerable<char>
-			Type returnType = mi.ReturnType;
+			Type returnType = methodInfo.ReturnType;
 			if (returnType == typeof (string))
 			{
 				return null;
@@ -389,6 +458,18 @@ namespace WeSay.Data
 				}
 			}
 			return type;
+		}
+
+		public Query AtLeastOne()
+		{
+			_atLeastOne = true;
+			return this;
+		}
+
+		public Query Where(string label, Functor whereCondition)
+		{
+			_fieldProperties[label].WhereCondition = whereCondition;
+			return this;
 		}
 	}
 }

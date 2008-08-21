@@ -286,9 +286,18 @@ namespace WeSay.LexicalModel
 			}
 			if (!(_sortedResultSetCaches.ContainsKey("sortedByLexicalForm")))
 			{
-				Query query =
-					GetAllLexEntriesQuery().In("LexicalForm").ForEach("Forms").Show("Form").Show(
-						"WritingSystemId");
+//                Query query =
+//                    GetAllLexEntriesQuery().In("LexicalForm").ForEach("Forms").Show("Form").Show(
+//                        "WritingSystemId");
+				Query query = GetAllLexEntriesQuery();
+//                query.In("LexicalForm").ForEach("Forms").Show("Form").Show("WritingSystemId");
+				query.In("LexicalForm").ForEach("Forms").AtLeastOne().
+					Where("WritingSystemId", delegate(object id)
+					{
+						return (string)id == writingSystem.Id;
+					}
+					).Show("Form").Show("WritingSystemId");
+
 				ResultSet<LexEntry> itemsMatching = GetItemsMatchingCore(query);
 				SortDefinition[] sortOrder = new SortDefinition[1];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);

@@ -66,14 +66,14 @@ namespace WeSay.Data.Tests
 		private int _onActivateDepth;
 		private List<string> _storedList;
 
-		private List<ChildTestItem> _childTestItems;
+		private List<ChildTestItem> _childItemList;
 
-		public List<ChildTestItem> Children
+		public List<ChildTestItem> ChildItemList
 		{
-			get { return _childTestItems; }
+			get { return _childItemList; }
 			set
 			{
-				_childTestItems = value;
+				_childItemList = value;
 				OnPropertyChanged(new PropertyChangedEventArgs("Children"));
 			}
 		}
