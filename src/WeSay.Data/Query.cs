@@ -99,12 +99,11 @@ namespace WeSay.Data
 			}
 		}
 
-		public delegate bool Functor(object o);
-		private sealed class FieldInfo
+		public delegate bool Functor(IDictionary<string, object> data);
+		private sealed class FieldProperties
 		{
 			private readonly MethodInfo _methodInfo;
 			private readonly bool _isEnumerable;
-			private Functor _whereCondition;
 
 			public MethodInfo Method
 			{
@@ -116,22 +115,21 @@ namespace WeSay.Data
 				get { return _isEnumerable; }
 			}
 
-			public Functor WhereCondition
-			{
-				get { return _whereCondition; }
-				set { _whereCondition = value; }
-			}
-
-			public FieldInfo(MethodInfo methodInfo, bool isEnumerable)
+			public FieldProperties(MethodInfo methodInfo, bool isEnumerable)
 			{
 				_methodInfo = methodInfo;
 				_isEnumerable = isEnumerable;
-				_whereCondition = null;
 			}
+
 		}
 
 		private List<Query> _nestedQueries;
-		private Dictionary<string, FieldInfo> _fieldProperties;
+
+		private Dictionary<string, FieldProperties> _showFieldProperties;
+
+		Dictionary<string, FieldProperties> _whereFieldProperties;
+		private Functor _whereCondition;
+
 		private readonly Type _t;
 		private List<string> _labelRegistry;
 
@@ -156,20 +154,28 @@ namespace WeSay.Data
 		{
 			Debug.Assert(o != null);
 			// see if we have any results that we should return as a result
-			if (_fieldProperties != null)
+			bool haveAtLeastOneResult = false;
+			if (_showFieldProperties != null)
 			{
-				foreach (KeyValuePair<string, FieldInfo> pair in _fieldProperties)
+				bool evaluateResults = true;
+				if (_whereCondition != null)
 				{
-					MethodInfo getProperty = pair.Value.Method;
-					object propertyValue = getProperty.Invoke(o, null);
-					Functor whereCondition = pair.Value.WhereCondition;
-					bool evaluateProperty = true;
-					if (whereCondition != null)
+					Dictionary<string, object> data = new Dictionary<string, object>();
+					foreach (KeyValuePair<string, FieldProperties> pair in _whereFieldProperties)
 					{
-						evaluateProperty = whereCondition.Invoke(propertyValue);
+						MethodInfo getProperty = pair.Value.Method;
+						object propertyValue = getProperty.Invoke(o, null);
+						data.Add(pair.Key, propertyValue);
 					}
-					if (evaluateProperty)
+					evaluateResults = _whereCondition.Invoke(data);
+				}
+				if (evaluateResults)
+				{
+					foreach (KeyValuePair<string, FieldProperties> pair in _showFieldProperties)
 					{
+						haveAtLeastOneResult = true;
+						MethodInfo getProperty = pair.Value.Method;
+						object propertyValue = getProperty.Invoke(o, null);
 						if (pair.Value.IsEnumerable)
 						{
 							IEnumerable enumerableResult = propertyValue as IEnumerable;
@@ -181,16 +187,19 @@ namespace WeSay.Data
 						}
 					}
 				}
-				if (results.Count == 0 && _atLeastOne)
+			}
+			if (!haveAtLeastOneResult && _requireAtLeastOneResult)
+			{
+				if (_showFieldProperties.Count > 0)
 				{
-					foreach (KeyValuePair<string, FieldInfo> pair in _fieldProperties)
+					foreach (KeyValuePair<string, FieldProperties> pair in _showFieldProperties)
 					{
 						Permuter.Permute(results, pair.Key, "");
 					}
-					if (_fieldProperties.Count == 0)
-					{
-						Permuter.Permute(results, "", "");
-					}
+				}
+				else
+				{
+					Permuter.Permute(results, "", "");
 				}
 			}
 		}
@@ -235,7 +244,7 @@ namespace WeSay.Data
 		}
 
 		private readonly Query _root;
-		private bool _atLeastOne;
+		private bool _requireAtLeastOneResult;
 
 		internal Query(Query root, Type t): this(t)
 		{
@@ -244,7 +253,7 @@ namespace WeSay.Data
 				throw new ArgumentNullException("root");
 			}
 			_root = root;
-			_atLeastOne = false;
+			_requireAtLeastOneResult = false;
 		}
 
 		public Query(Type t)
@@ -254,7 +263,13 @@ namespace WeSay.Data
 				throw new ArgumentNullException("t");
 			}
 			_root = null;
-			_atLeastOne = false;
+
+			_showFieldProperties = null;
+
+			_whereFieldProperties = null;
+			_whereCondition = null;
+
+			_requireAtLeastOneResult = false;
 			_t = t;
 			_labelRegistry = null;
 		}
@@ -290,6 +305,7 @@ namespace WeSay.Data
 
 		private void RegisterLabel(string label)
 		{
+			// Register this label globally with the root query
 			Query root = GetRoot();
 			if (root._labelRegistry == null)
 			{
@@ -302,6 +318,32 @@ namespace WeSay.Data
 													  "Label has already been used in Query");
 			}
 			root._labelRegistry.Add(label);
+		}
+
+		public Query AtLeastOne()
+		{
+			_requireAtLeastOneResult = true;
+			return this;
+		}
+
+		public Query Where(string fieldName, Functor whereCondition)
+		{
+			return Where(new string[] {fieldName}, whereCondition);
+		}
+
+		public Query Where(string[] fieldNames, Functor whereCondition)
+		{
+			if (_whereCondition != null)
+			{
+				throw new Exception("You may only use a single where condition per local query.");
+			}
+			foreach (string fieldName in fieldNames)
+			{
+				MethodInfo methodInfo = GetMethodInfo(fieldName);
+				bool isEnumerable = ReturnTypeIsEnumerable(methodInfo);
+				WhereFieldProperties.Add(fieldName, new FieldProperties(methodInfo, isEnumerable));
+			}
+			return this;
 		}
 
 		public Query Show(string fieldName)
@@ -320,8 +362,7 @@ namespace WeSay.Data
 													  "Property implements IEnumerable<T>; use ShowEach instead");
 			}
 			RegisterLabel(label);
-
-			FieldProperties.Add(label, new FieldInfo(methodInfo, isEnumerable));
+			ShowFieldProperties.Add(label, new FieldProperties(methodInfo, isEnumerable));
 			return this;
 		}
 
@@ -342,19 +383,19 @@ namespace WeSay.Data
 			}
 			RegisterLabel(label);
 
-			FieldProperties.Add(label, new FieldInfo(methodInfo, isEnumerable));
+			ShowFieldProperties.Add(label, new FieldProperties(methodInfo, isEnumerable));
 			return this;
 		}
 
-		private Dictionary<string, FieldInfo> FieldProperties
+		private Dictionary<string, FieldProperties> ShowFieldProperties
 		{
 			get
 			{
-				if (_fieldProperties == null)
+				if (_showFieldProperties == null)
 				{
-					_fieldProperties = new Dictionary<string, FieldInfo>();
+					_showFieldProperties = new Dictionary<string, FieldProperties>();
 				}
-				return _fieldProperties;
+				return _showFieldProperties;
 			}
 		}
 
@@ -367,6 +408,18 @@ namespace WeSay.Data
 					this._nestedQueries = new List<Query>();
 				}
 				return _nestedQueries;
+			}
+		}
+
+		private Dictionary<string, FieldProperties> WhereFieldProperties
+		{
+			get
+			{
+				if (_whereFieldProperties == null)
+				{
+					_whereFieldProperties = new Dictionary<string, FieldProperties>();
+				}
+				return _whereFieldProperties;
 			}
 		}
 
@@ -407,15 +460,11 @@ namespace WeSay.Data
 					sb.Append(query.ToString());
 				}
 			}
-			if (_fieldProperties != null)
+			if (_showFieldProperties != null)
 			{
-				foreach (KeyValuePair<string, FieldInfo> pair in _fieldProperties)
+				foreach (KeyValuePair<string, FieldProperties> pair in _showFieldProperties)
 				{
-					if (pair.Value.WhereCondition != null)
-					{
-						sb.Append(" Where <condition> ");
-					}
-					if (_atLeastOne)
+					if (_requireAtLeastOneResult)
 					{
 						sb.Append(" AtLeastOne ");
 					}
@@ -423,6 +472,10 @@ namespace WeSay.Data
 					sb.Append(" Show ");
 					sb.Append(result.Name);
 				}
+			}
+			if (_whereCondition != null)
+			{
+				sb.Append(" Where <condition> ");
 			}
 
 			sb.Append("] ");
@@ -460,16 +513,5 @@ namespace WeSay.Data
 			return type;
 		}
 
-		public Query AtLeastOne()
-		{
-			_atLeastOne = true;
-			return this;
-		}
-
-		public Query Where(string label, Functor whereCondition)
-		{
-			_fieldProperties[label].WhereCondition = whereCondition;
-			return this;
-		}
 	}
 }

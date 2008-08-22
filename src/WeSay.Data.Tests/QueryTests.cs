@@ -22,12 +22,12 @@ namespace WeSay.Data.Tests
 
 		public string Key
 		{
-			get { return this.key; }
+			get { return key; }
 		}
 
 		public object Value
 		{
-			get { return this.value; }
+			get { return value; }
 		}
 
 		public KV(string key, object value)
@@ -247,7 +247,7 @@ namespace WeSay.Data.Tests
 		public void GetResultsOnQuery_WithNoShow_NoItems()
 		{
 			Query all = new Query(typeof (TestItem));
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
 		}
@@ -256,7 +256,7 @@ namespace WeSay.Data.Tests
 		public void GetResultsOnInQuery_WithNoShow_NoItems()
 		{
 			Query all = new Query(typeof (TestItem)).In("Child");
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
 		}
@@ -368,7 +368,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_ForEachButNoShow_NoItems()
 		{
 			Query all = new Query(typeof (TestItem)).ForEach("ChildItemList");
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
 		}
@@ -379,7 +379,7 @@ namespace WeSay.Data.Tests
 			Query allStoredIntsInChildren =
 					new Query(typeof (TestItem)).ForEach("ChildItemList").Show("StoredInt");
 			IEnumerable<Dictionary<string, object>> results =
-					allStoredIntsInChildren.GetResults(this.item);
+					allStoredIntsInChildren.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
 		}
@@ -406,7 +406,7 @@ namespace WeSay.Data.Tests
 		public void GetResultsOnInQuery_WithNoShow_NoItems()
 		{
 			Query all = new Query(typeof (TestItem)).In("Child");
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
 		}
@@ -415,7 +415,7 @@ namespace WeSay.Data.Tests
 		public void GetResultsOnInQuery_WithShow_OneIntItem()
 		{
 			Query all = new Query(typeof (TestItem)).In("Child").Show("StoredInt");
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {new Result(new KV("StoredInt", 24))};
@@ -427,7 +427,7 @@ namespace WeSay.Data.Tests
 		public void GetResultsOnInQuery_WithShowSelectingNullItem_OneNullItem()
 		{
 			Query all = new Query(typeof (TestItem)).In("Child").Show("StoredString");
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {
@@ -444,7 +444,7 @@ namespace WeSay.Data.Tests
 		public void GetResultsOnInQuery_With2NestedChildSecondIsNull_NoItems()
 		{
 			Query all = new Query(typeof (TestItem)).In("Child").In("Child").Show("StoredString");
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[] {};
 
@@ -464,10 +464,13 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnInQuery_WhereTrue_Item()
 		{
-			Query query = new Query(typeof(TestItem)).In("Child").Where("StoredInt", delegate(object o)
-																							{
-																								return (int)o == 24;
-																							}).AtLeastOne().Show("StoredInt");
+			Query query = new Query(typeof(TestItem)).In("Child").
+				Where("StoredInt",
+					delegate(IDictionary<string, object> data)
+					{
+						return (int)data["StoredInt"] == 24;
+					}).
+				AtLeastOne().Show("StoredInt");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
@@ -480,10 +483,14 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnInQuery_WhereFalse_NoItems()
 		{
-			Query query = new Query(typeof(TestItem)).In("Child").Where("StoredInt", delegate(object o)
-																							{
-																								return (int)o != 24; //will not match the item
-																							}).AtLeastOne().Show("StoredInt");
+			Query query = new Query(typeof(TestItem)).In("Child").
+				Where("StoredInt",
+					delegate(IDictionary<string, object> data)
+					{
+						int storedInt = (int) data["StoredInt"];
+						return storedInt != 24; //will not match the item
+					}).
+				AtLeastOne().Show("StoredInt");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
@@ -495,10 +502,14 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnInQuery_WhereFilterAllItemsAtLeastOne_HasOne()
 		{
-			Query query = new Query(typeof(TestItem)).In("Child").Where("StoredInt", delegate(object o)
-																							{
-																								return (int)o != 24; //will not match the item
-																							}).AtLeastOne().Show("StoredInt");
+			Query query = new Query(typeof(TestItem)).In("Child").
+				Where("StoredInt",
+					delegate(IDictionary<string, object> data)
+					{
+						int storedInt = (int) data["StoredInt"];
+						return storedInt != 24; //will not match the item
+					}).
+				AtLeastOne().Show("StoredInt");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
@@ -511,10 +522,14 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnQuery_WhereTrue_Item()
 		{
-			Query query = new Query(typeof(TestItem)).Where("StoredString", delegate(object str)
-																				{
-																					return (string)str == "top";
-																				}).Show("StoredString");
+			Query query = new Query(typeof(TestItem)).
+				Where("StoredString",
+				delegate(IDictionary<string, object> data)
+					{
+						string storedString = (string) data["StoredString"];
+						return storedString == "top";
+					}).
+				Show("StoredString");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
@@ -527,10 +542,13 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnQuery_WhereFalse_NoItems()
 		{
-			Query query = new Query(typeof(TestItem)).Where("StoredString", delegate(object str)
-																				{
-																					return (string)str == "cantMatchMe";
-																				}).Show("StoredString");
+			Query query = new Query(typeof(TestItem)).
+				Where("StoredString",
+					delegate(IDictionary<string, object> data)
+					{
+						return (string)data["StoredString"] == "cantMatchMe";
+					}).
+				Show("StoredString");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
@@ -542,10 +560,13 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnQuery_WhereFilterAllItemsAtLeastOne_HasOne()
 		{
-			Query query = new Query(typeof(TestItem)).Where("StoredString", delegate(object str)
-																							{
-																								return (string)str == "cantMatchMe";
-																							}).AtLeastOne().Show("StoredString");
+			Query query = new Query(typeof(TestItem)).
+				Where("StoredString",
+					delegate(IDictionary<string, object> data)
+					{
+						return (string)data["StoredString"] == "cantMatchMe";
+					}).
+				AtLeastOne().Show("StoredString");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
@@ -568,10 +589,13 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnForEachQuery_WhereTrue_Item()
 		{
-			Query query = new Query(typeof(TestItem)).ForEach("ChildItemList").Where("StoredInt", delegate(object o)
-																							{
-																								return (int)o < 2;
-																							}).AtLeastOne().Show("StoredInt");
+			Query query = new Query(typeof(TestItem)).ForEach("ChildItemList").
+				Where("StoredInt",
+					delegate(IDictionary<string, object> data)
+					{
+						return (int)data["StoredInt"] < 2; // This will return one item
+					}).
+				AtLeastOne().Show("StoredInt");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
@@ -584,10 +608,13 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnForEachQuery_WhereFalse_NoItems()
 		{
-			Query query = new Query(typeof(TestItem)).ForEach("ChildItemList").Where("StoredInt", delegate(object o)
-																							{
-																								return (int)o < 0; //will filter all items
-																							}).AtLeastOne().Show("StoredInt");
+			Query query = new Query(typeof(TestItem)).ForEach("ChildItemList").
+				Where("StoredInt",
+					delegate(IDictionary<string, object> data)
+					{
+						return (int)data["StoredInt"] < 0; // Will filter all items
+					}).
+				AtLeastOne().Show("StoredInt");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
@@ -599,10 +626,13 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnForEachQuery_WhereFilterAllItemsAtLeastOne_HasOne()
 		{
-			Query query = new Query(typeof(TestItem)).ForEach("ChildItemList").Where("StoredInt", delegate(object o)
-																							{
-																								return (int)o < 0; //will filter all items;
-																							}).AtLeastOne().Show("StoredInt");
+			Query query = new Query(typeof(TestItem)).ForEach("ChildItemList").
+				Where("StoredInt",
+					delegate(IDictionary<string, object> data)
+					{
+						return (int)data["StoredInt"] < 0; // Will filter all items;
+					}).
+				AtLeastOne().Show("StoredInt");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
@@ -645,7 +675,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_NoShow_NoItems()
 		{
 			Query all = new Query(typeof (TestItem));
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
 		}
@@ -654,7 +684,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_ForEachButNoShow_NoItems()
 		{
 			Query all = new Query(typeof (TestItem)).ForEach("ChildItemList");
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
 		}
@@ -666,7 +696,7 @@ namespace WeSay.Data.Tests
 					new Query(typeof (TestItem)).ForEach("ChildItemList").Show("StoredInt");
 
 			IEnumerable<Dictionary<string, object>> results =
-					allStoredIntsInChildren.GetResults(this.item);
+					allStoredIntsInChildren.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {
@@ -686,7 +716,7 @@ namespace WeSay.Data.Tests
 							"StoredString", "ChildStoredString");
 
 			IEnumerable<Dictionary<string, object>> results =
-					allStoredIntsInChildren.GetResults(this.item);
+					allStoredIntsInChildren.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {
@@ -724,7 +754,7 @@ namespace WeSay.Data.Tests
 			query.In("Child").Show("StoredString", "ChildStoredString");
 			query.ForEach("ChildItemList").Show("StoredString", "ChildrenStoredString");
 
-			IEnumerable<Dictionary<string, object>> results = query.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = query.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {
@@ -784,7 +814,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_NoShow_NoItems()
 		{
 			Query all = new Query(typeof (TestMultiple));
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
 		}
@@ -793,7 +823,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_InButNoShow_NoItems()
 		{
 			Query all = new Query(typeof (TestMultiple)).In("String");
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
 		}
@@ -802,7 +832,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_ForEachButNoShow_NoItems()
 		{
 			Query all = new Query(typeof (TestMultiple)).ForEach("Strings");
-			IEnumerable<Dictionary<string, object>> results = all.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
 		}
@@ -811,7 +841,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_ShowEachStrings_AllStrings()
 		{
 			Query allStrings = new Query(typeof (TestMultiple)).ShowEach("Strings");
-			IEnumerable<Dictionary<string, object>> results = allStrings.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = allStrings.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {
@@ -830,7 +860,7 @@ namespace WeSay.Data.Tests
 			Query allStrings =
 					new Query(typeof (TestMultiple)).ShowEach("Strings").ForEach("KeyValuePairs").
 							Show("Value");
-			IEnumerable<Dictionary<string, object>> results = allStrings.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = allStrings.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {
@@ -865,7 +895,7 @@ namespace WeSay.Data.Tests
 			Query allStrings =
 					new Query(typeof (TestMultiple)).ShowEach("Strings").ForEach("KeyValuePairs").
 							Show("Key").Show("Value");
-			IEnumerable<Dictionary<string, object>> results = allStrings.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = allStrings.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {
@@ -904,7 +934,7 @@ namespace WeSay.Data.Tests
 			Query allStrings =
 					new Query(typeof (TestMultiple)).ShowEach("Strings").Show("String").ForEach(
 							"KeyValuePairs").Show("Key").Show("Value");
-			IEnumerable<Dictionary<string, object>> results = allStrings.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = allStrings.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {
@@ -951,7 +981,7 @@ namespace WeSay.Data.Tests
 			Query allStrings =
 					new Query(typeof (TestMultiple)).Show("String").ShowEach("Strings").ForEach(
 							"KeyValuePairs").Show("Key").Show("Value");
-			IEnumerable<Dictionary<string, object>> results = allStrings.GetResults(this.item);
+			IEnumerable<Dictionary<string, object>> results = allStrings.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {
