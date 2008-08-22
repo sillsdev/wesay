@@ -251,6 +251,8 @@ namespace WeSay.LexicalModel
 				string currentHeadWord = (string) token["Form"];
 				if (string.IsNullOrEmpty(currentHeadWord))
 				{
+					token["HasHomograph"] = false;
+					token["HomographNumber"] = 0;
 					continue;
 				}
 				if (currentHeadWord == previousHeadWord)
