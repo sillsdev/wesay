@@ -286,17 +286,15 @@ namespace WeSay.LexicalModel
 			}
 			if (!(_sortedResultSetCaches.ContainsKey("sortedByLexicalForm")))
 			{
-//                Query query =
-//                    GetAllLexEntriesQuery().In("LexicalForm").ForEach("Forms").Show("Form").Show(
-//                        "WritingSystemId");
 				Query query = GetAllLexEntriesQuery();
-//                query.In("LexicalForm").ForEach("Forms").Show("Form").Show("WritingSystemId");
-				query.In("LexicalForm").ForEach("Forms").AtLeastOne().
-					Where("WritingSystemId", delegate(object id)
-					{
-						return (string)id == writingSystem.Id;
-					}
-					).Show("Form").Show("WritingSystemId");
+				query.In("LexicalForm").ForEach("Forms").
+					AtLeastOne().
+					Where("WritingSystemId",
+						delegate(IDictionary<string, object> data)
+						{
+							return (string)data["WritingSystemId"] == writingSystem.Id;
+						}).
+					Show("Form").Show("WritingSystemId");
 
 				ResultSet<LexEntry> itemsMatching = GetItemsMatchingCore(query);
 				SortDefinition[] sortOrder = new SortDefinition[1];
@@ -306,7 +304,6 @@ namespace WeSay.LexicalModel
 										   new ResultSetCache<LexEntry>(this, itemsMatching, query, sortOrder));
 			}
 			ResultSet<LexEntry> resultsFromCache = _sortedResultSetCaches["sortedByLexicalForm"].GetResultSet();
-			resultsFromCache = FilterEntriesToOnlyThoseWithWritingSystemId(resultsFromCache, "Form", "WritingSystemId", writingSystem.Id);
 			return resultsFromCache;
 		}
 

@@ -43,7 +43,11 @@ namespace WeSay.Data
 			int hashcode = 0;
 			foreach (KeyValuePair<Key, Value> pair in obj)
 			{
-				hashcode = hashcode ^ pair.Key.GetHashCode() ^ pair.Value.GetHashCode();
+				hashcode ^= pair.Key.GetHashCode();
+				if (pair.Value != null)
+				{
+					hashcode ^= pair.Value.GetHashCode();
+				}
 			}
 			return hashcode;
 		}

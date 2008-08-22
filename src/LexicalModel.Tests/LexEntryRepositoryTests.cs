@@ -156,13 +156,13 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByLexicalForm_LexicalFormInWritingSystemDoesNotExist_ReturnsEmptyForThatEntry()
+		public void GetAllEntriesSortedByLexicalForm_LexicalFormInWritingSystemDoesNotExist_ReturnsNullForThatEntry()
 		{
 			LexEntry lexEntryWithOutFrenchLexicalForm = _lexEntryRepository.CreateItem();
 			lexEntryWithOutFrenchLexicalForm.LexicalForm.SetAlternative("de", "de Word1");
 			WritingSystem french = new WritingSystem("fr", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> listOfLexEntriesSortedByLexicalForm = _lexEntryRepository.GetAllEntriesSortedByLexicalForm(french);
-			Assert.AreEqual("", listOfLexEntriesSortedByLexicalForm[0]["Form"]);
+			Assert.AreEqual(null, listOfLexEntriesSortedByLexicalForm[0]["Form"]);
 		}
 
 		[Test]
@@ -1258,7 +1258,7 @@ namespace WeSay.LexicalModel.Tests
 
 			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalForm(new WritingSystem("de", SystemFonts.DefaultFont));
 			Assert.AreEqual(2, results.Count);
-			Assert.AreEqual("", results[0]["Form"]);
+			Assert.AreEqual(null, results[0]["Form"]);
 			Assert.AreEqual("word 1", results[1]["Form"]);
 		}
 

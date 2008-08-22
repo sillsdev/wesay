@@ -273,7 +273,7 @@ namespace WeSay.Data.Tests
 				);
 			Assert.IsNotNull(results);
 			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual("", results[0]["StoredString"]);
+			Assert.AreEqual(null, results[0]["StoredString"]);
 		}
 
 		[Test]
@@ -288,67 +288,7 @@ namespace WeSay.Data.Tests
 				);
 			Assert.IsNotNull(results);
 			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual("", results[0][""]);
-		}
-
-		[Test]
-		public void GetResultsOnInQuery_AtLeastOneWithShow_OneItem()
-		{
-			// In the query below AtLeastOne and Show are siblings,
-			// both are children of 'all'.
-			Query all = new Query(typeof(TestItem)).In("Child").AtLeastOne().Show("StoredString");
-			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
-				(
-					all.GetResults(item)
-				);
-			Assert.IsNotNull(results);
-			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual("", results[0]["StoredString"]);
-		}
-
-		[Test]
-		public void GetResultsOnInQuery_AtLeastOneButNoShow_OneItem()
-		{
-			// In the query below AtLeastOne and Show are siblings,
-			// both are children of 'all'.
-			Query all = new Query(typeof(TestItem)).In("Child").AtLeastOne();
-			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
-				(
-					all.GetResults(item)
-				);
-			Assert.IsNotNull(results);
-			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual("", results[0][""]);
-		}
-
-		[Test]
-		public void GetResultsOnForEachQuery_AtLeastOneWithShow_OneItem()
-		{
-			// In the query below AtLeastOne and Show are siblings,
-			// both are children of 'all'.
-			Query all = new Query(typeof(TestItem)).ForEach("ChildItemList").AtLeastOne().Show("StoredString");
-			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
-				(
-					all.GetResults(item)
-				);
-			Assert.IsNotNull(results);
-			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual("", results[0]["StoredString"]);
-		}
-
-		[Test]
-		public void GetResultsOnForEachQuery_AtLeastOneButNoShow_OneItem()
-		{
-			// In the query below AtLeastOne and Show are siblings,
-			// both are children of 'all'.
-			Query all = new Query(typeof(TestItem)).ForEach("ChildItemList").AtLeastOne();
-			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
-				(
-					all.GetResults(item)
-				);
-			Assert.IsNotNull(results);
-			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual("", results[0][""]);
+			Assert.AreEqual(null, results[0][""]);
 		}
 
 		[Test]
@@ -477,7 +417,7 @@ namespace WeSay.Data.Tests
 				);
 			Assert.IsNotNull(results);
 			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual("24", results[0]["StoredInt"]);
+			Assert.AreEqual(24, results[0]["StoredInt"]);
 		}
 
 		[Test]
@@ -489,8 +429,7 @@ namespace WeSay.Data.Tests
 					{
 						int storedInt = (int) data["StoredInt"];
 						return storedInt != 24; //will not match the item
-					}).
-				AtLeastOne().Show("StoredInt");
+					}).Show("StoredInt");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
@@ -516,7 +455,7 @@ namespace WeSay.Data.Tests
 				);
 			Assert.IsNotNull(results);
 			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual("", results[0][""]);
+			Assert.AreEqual(null, results[0]["StoredInt"]);
 		}
 
 		[Test]
@@ -573,7 +512,7 @@ namespace WeSay.Data.Tests
 				);
 			Assert.IsNotNull(results);
 			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual("", results[0][""]);
+			Assert.AreEqual(null, results[0]["StoredString"]);
 		}
 
 		[Test]
@@ -595,14 +534,14 @@ namespace WeSay.Data.Tests
 					{
 						return (int)data["StoredInt"] < 2; // This will return one item
 					}).
-				AtLeastOne().Show("StoredInt");
+				Show("StoredInt");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
 				);
 			Assert.IsNotNull(results);
 			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual("1", results[0]["StoredInt"]);
+			Assert.AreEqual(1, results[0]["StoredInt"]);
 		}
 
 		[Test]
@@ -614,7 +553,7 @@ namespace WeSay.Data.Tests
 					{
 						return (int)data["StoredInt"] < 0; // Will filter all items
 					}).
-				AtLeastOne().Show("StoredInt");
+				Show("StoredInt");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					query.GetResults(item)
@@ -639,7 +578,7 @@ namespace WeSay.Data.Tests
 				);
 			Assert.IsNotNull(results);
 			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual("", results[0][""]);
+			Assert.AreEqual(null, results[0]["StoredInt"]);
 		}
 
 		[Test]

@@ -19,13 +19,13 @@ namespace WeSay.Data
 				_predicate = predicate;
 			}
 
-			protected override void GetResultsCore(List<Dictionary<string, object>> result, object o)
+			protected override void GetResultsCore(List<Dictionary<string, object>> results, object o)
 			{
 				bool matches = _predicate((T) o);
 				Dictionary<string, object> dict = new Dictionary<string, object>();
 				dict["Matches"] = matches;
-				result.Add(dict);
-				GetNestedQueryResults(result, o);
+				results.Add(dict);
+				GetNestedQueryResults(results, o);
 			}
 		}
 
@@ -42,7 +42,7 @@ namespace WeSay.Data
 			protected override void GetResultsCore(List<Dictionary<string, object>> results,
 												   object o)
 			{
-				object value = this._property.Invoke(o, null);
+				object value = _property.Invoke(o, null);
 				if (value != null)
 				{
 					List<Dictionary<string, object>> oneResultPerRow =
@@ -51,10 +51,18 @@ namespace WeSay.Data
 					{
 						List<Dictionary<string, object>> subresults =
 								new List<Dictionary<string, object>>();
-						base.GetResultsCore(subresults, item);
+						PermuteResultsAtThisLevel(subresults, item);
+						GetNestedQueryResults(subresults, item);
 						oneResultPerRow.AddRange(subresults);
 					}
-					Permuter.Permute(results, oneResultPerRow);
+					if (oneResultPerRow.Count == 0 && _requireAtLeastOneResult)
+					{
+						PermuteEmptyResult(results);
+					}
+					else
+					{
+						Permuter.Permute(results, oneResultPerRow);
+					}
 				}
 			}
 		}
@@ -133,10 +141,14 @@ namespace WeSay.Data
 		private readonly Type _t;
 		private List<string> _labelRegistry;
 
-		protected virtual void GetResultsCore(List<Dictionary<string, object>> result, object o)
+		protected virtual void GetResultsCore(List<Dictionary<string, object>> results, object o)
 		{
-			PermuteResultsAtThisLevel(result, o);
-			GetNestedQueryResults(result, o);
+			bool haveResult = PermuteResultsAtThisLevel(results, o);
+			if (!haveResult && _requireAtLeastOneResult)
+			{
+				PermuteEmptyResult(results);
+			}
+			GetNestedQueryResults(results, o);
 		}
 
 		protected void GetNestedQueryResults(List<Dictionary<string, object>> result, object o)
@@ -150,7 +162,7 @@ namespace WeSay.Data
 			}
 		}
 
-		private void PermuteResultsAtThisLevel(List<Dictionary<string, object>> results, object o)
+		private bool PermuteResultsAtThisLevel(List<Dictionary<string, object>> results, object o)
 		{
 			Debug.Assert(o != null);
 			// see if we have any results that we should return as a result
@@ -188,19 +200,21 @@ namespace WeSay.Data
 					}
 				}
 			}
-			if (!haveAtLeastOneResult && _requireAtLeastOneResult)
+			return haveAtLeastOneResult;
+		}
+
+		private void PermuteEmptyResult(List<Dictionary<string, object>> results)
+		{
+			if (_showFieldProperties != null && _showFieldProperties.Count > 0)
 			{
-				if (_showFieldProperties.Count > 0)
+				foreach (KeyValuePair<string, FieldProperties> pair in _showFieldProperties)
 				{
-					foreach (KeyValuePair<string, FieldProperties> pair in _showFieldProperties)
-					{
-						Permuter.Permute(results, pair.Key, "");
-					}
+					Permuter.Permute(results, pair.Key, (object)null);
 				}
-				else
-				{
-					Permuter.Permute(results, "", "");
-				}
+			}
+			else
+			{
+				Permuter.Permute(results, "", (object)null);
 			}
 		}
 
@@ -337,6 +351,7 @@ namespace WeSay.Data
 			{
 				throw new Exception("You may only use a single where condition per local query.");
 			}
+			_whereCondition = whereCondition;
 			foreach (string fieldName in fieldNames)
 			{
 				MethodInfo methodInfo = GetMethodInfo(fieldName);
@@ -375,7 +390,7 @@ namespace WeSay.Data
 		{
 			MethodInfo methodInfo = GetMethodInfo(fieldName);
 			bool isEnumerable = ReturnTypeIsEnumerable(methodInfo);
-			if (isEnumerable)
+			if (!isEnumerable)
 			{
 				throw new ArgumentOutOfRangeException("fieldName",
 													  fieldName,
@@ -510,7 +525,7 @@ namespace WeSay.Data
 					}
 				}
 			}
-			return type;
+				return type;
 		}
 
 	}
