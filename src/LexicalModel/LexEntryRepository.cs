@@ -217,7 +217,14 @@ namespace WeSay.LexicalModel
 			if (!_sortedResultSetCaches.ContainsKey("sortedByHeadWord"))
 			{
 				Query query = GetAllLexEntriesQuery();
-				query.In("VirtualHeadWord").ForEach("Forms").Show("Form").Show("WritingSystemId");
+				query.In("VirtualHeadWord").ForEach("Forms").
+					AtLeastOne().
+					Where("WritingSystemId",
+						delegate(IDictionary<string, object> data)
+						{
+							return (string)data["WritingSystemId"] == writingSystem.Id;
+						}).
+					Show("Form").Show("WritingSystemId");
 				query.Show("OrderForRoundTripping");
 				query.Show("OrderInFile");
 				query.Show("CreationTime");
@@ -232,15 +239,20 @@ namespace WeSay.LexicalModel
 				_sortedResultSetCaches.Add("sortedByHeadWord", new ResultSetCache<LexEntry>(this, itemsMatching, query, sortOrder));
 			}
 			ResultSet<LexEntry> resultsFromCache = _sortedResultSetCaches["sortedByHeadWord"].GetResultSet();
-			resultsFromCache = FilterEntriesToOnlyThoseWithWritingSystemId(resultsFromCache, "Form", "WritingSystemId", writingSystem.Id);
 
 			string previousHeadWord = null;
 			int homographNumber = 1;
 			RecordToken<LexEntry> previousToken = null;
 			foreach (RecordToken<LexEntry> token in resultsFromCache)
 			{
+				// A null Form indicates there is no HeadWord in this writing system.
+				// However, we need to ensure that we return all entries, so the AtLeastOne in the query
+				// above ensures that we keep it in the result set with a null Form and null WritingSystemId.
 				string currentHeadWord = (string) token["Form"];
-				Debug.Assert(currentHeadWord != null);
+				if (string.IsNullOrEmpty(currentHeadWord))
+				{
+					continue;
+				}
 				if (currentHeadWord == previousHeadWord)
 				{
 					homographNumber++;
@@ -320,6 +332,7 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
+			// TODO: The queries below can now be refactored to use Where and AtLeastOne !!! CJP 2008-08-21
 			Query defQuery = GetAllLexEntriesQuery().ForEach("Senses").In("Definition").ForEach("Forms").Show("Form").Show("WritingSystemId");
 			Query glossQuery = GetAllLexEntriesQuery().ForEach("Senses").In("Gloss").ForEach("Forms").Show("Form").Show("WritingSystemId");
 			//Remove any results that don't match the desired writingsystem (keeping at least one empty that does if nothing matches)
@@ -342,6 +355,7 @@ namespace WeSay.LexicalModel
 				string writingSystemIdField,
 				WritingSystem writingSystem)
 		{
+			// TODO: Methods using this should be refactored to use Where and / or AtLeastOne in their query !!! CJP 2008-08-21
 			ResultSet<LexEntry> result = GetItemsMatchingQueryFilteredByWritingSystem(query, formField, writingSystemIdField, writingSystem);
 			result.Sort(new SortDefinition(formField, writingSystem));
 			return result;
@@ -349,6 +363,7 @@ namespace WeSay.LexicalModel
 
 		private ResultSet<LexEntry> GetItemsMatchingQueryFilteredByWritingSystem(Query query, string formField, string writingSystemIdField, WritingSystem writingSystem)
 		{
+			// TODO: Methods using this should be refactored to use Where and / or AtLeastOne in their query !!! CJP 2008-08-21
 			ResultSet<LexEntry> allEntriesMatchingQuery = GetItemsMatchingCore(query);
 			return FilterEntriesToOnlyThoseWithWritingSystemId(
 				allEntriesMatchingQuery,

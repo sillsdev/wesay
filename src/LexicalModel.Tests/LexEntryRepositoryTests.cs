@@ -101,7 +101,7 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithOutFrenchHeadWord.LexicalForm.SetAlternative("de", "de Word1");
 			WritingSystem french = new WritingSystem("fr", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> listOfLexEntriesSortedByHeadWord = _lexEntryRepository.GetAllEntriesSortedByHeadword(french);
-			Assert.AreEqual("", listOfLexEntriesSortedByHeadWord[0]["Form"]);
+			Assert.AreEqual(null, listOfLexEntriesSortedByHeadWord[0]["Form"]);
 		}
 
 		[Test]
@@ -1161,7 +1161,7 @@ namespace WeSay.LexicalModel.Tests
 
 			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de", SystemFonts.DefaultFont));
 			Assert.AreEqual(2, results.Count);
-			Assert.AreEqual("", results[0]["Form"]);
+			Assert.AreEqual(null, results[0]["Form"]);
 			Assert.AreEqual("word 1", results[1]["Form"]);
 		}
 
