@@ -25,6 +25,7 @@ namespace WeSay.LexicalTools
 		private readonly LexEntryRepository _lexEntryRepository;
 		private ResultSet<LexEntry> _records;
 		private bool _keepRecordCurrent;
+		private readonly ResultSetToListOfStringsAdapter _findTextAdapter;
 
 		public DictionaryControl()
 		{
@@ -32,18 +33,18 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public DictionaryControl(LexEntryRepository recordManager, ViewTemplate viewTemplate)
+		public DictionaryControl(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
 		{
-			if (recordManager == null)
+			if (lexEntryRepository == null)
 			{
-				throw new ArgumentNullException("recordManager");
+				throw new ArgumentNullException("lexEntryRepository");
 			}
 			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
 			_viewTemplate = viewTemplate;
-			_lexEntryRepository = recordManager;
+			_lexEntryRepository = lexEntryRepository;
 			_cmWritingSystems = new ContextMenu();
 
 			SetupPickerControlWritingSystems();
@@ -64,6 +65,9 @@ namespace WeSay.LexicalTools
 
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
 			Control_EntryDetailPanel.LexEntryRepository = _lexEntryRepository;
+
+			_findTextAdapter = new ResultSetToListOfStringsAdapter("Form", _records);
+			_findText.Items = _findTextAdapter;
 
 			SetListWritingSystem(
 					_viewTemplate.GetDefaultWritingSystemForField(
@@ -195,7 +199,7 @@ namespace WeSay.LexicalTools
 
 			int originalHeight = _findText.Height;
 			_findText.ItemFilterer = FindClosestAndNextClosestAndPrefixedForms;
-			_findText.Items = _records;
+			_findText.Items = _findTextAdapter;
 			_findText.WritingSystem = _listWritingSystem;
 
 			_findWritingSystemId.Text = _listWritingSystem.Id;
@@ -266,10 +270,12 @@ namespace WeSay.LexicalTools
 			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 			{
 				_records = _lexEntryRepository.GetAllEntriesSortedByLexicalForm(_listWritingSystem);
+				_findTextAdapter.Items = _records;
 			}
 			else
 			{
 				_records = _lexEntryRepository.GetAllEntriesSortedByDefinition(_listWritingSystem);
+				_findTextAdapter.Items = _records;
 			}
 			_recordsListBox.BeginUpdate();
 			_recordsListBox.DataSource = (BindingList<RecordToken<LexEntry>>) _records;
@@ -278,7 +284,7 @@ namespace WeSay.LexicalTools
 
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
 		{
-			RecordToken<LexEntry> recordToken = this._records[e.ItemIndex];
+			RecordToken<LexEntry> recordToken = _records[e.ItemIndex];
 			string displayString = (string) recordToken["Form"];
 			e.Item = new ListViewItem(displayString);
 			if (!string.IsNullOrEmpty(displayString))
@@ -287,7 +293,7 @@ namespace WeSay.LexicalTools
 			}
 
 			bool writingSystemUsedInLexicalForm =
-					IsWritingSystemUsedInLexicalForm(this._listWritingSystem.Id);
+					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id);
 			if (writingSystemUsedInLexicalForm)
 			{
 				displayString =
@@ -321,8 +327,16 @@ namespace WeSay.LexicalTools
 		{
 			return ApproximateMatcher.FindClosestForms(items,
 													   text,
-													   ApproximateMatcherOptions.
-															   IncludePrefixedAndNextClosestForms);
+													   ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
+//            return ApproximateMatcher.FindClosestForms<object>(items,
+//                                                                              delegate(object o)
+//                                                                              {
+//                                                                                  RecordToken<LexEntry> token =
+//                                                                                      (RecordToken<LexEntry>) o;
+//                                                                                  return (string)(token["Form"]);
+//                                                                              },
+//                                                                              text,
+//                                                                              ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
 		}
 
 		private void OnCmWritingSystemClicked(object sender, EventArgs e)

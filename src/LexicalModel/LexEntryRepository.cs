@@ -106,11 +106,6 @@ namespace WeSay.LexicalModel
 			return _decoratedRepository.GetItemsMatching(query);
 		}
 
-		private ResultSet<LexEntry> GetItemsMatchingCore(Query query)
-		{
-			return _decoratedRepository.GetItemsMatching(query);
-		}
-
 		public void SaveItem(LexEntry item)
 		{
 			if (item == null)
@@ -229,7 +224,7 @@ namespace WeSay.LexicalModel
 				query.Show("OrderInFile");
 				query.Show("CreationTime");
 
-				ResultSet<LexEntry> itemsMatching = GetItemsMatchingCore(query);
+				ResultSet<LexEntry> itemsMatching = GetItemsMatching(query);
 				SortDefinition[] sortOrder = new SortDefinition[4];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
 				sortOrder[1] = new SortDefinition("OrderForRoundTripping", Comparer<int>.Default);
@@ -310,7 +305,7 @@ namespace WeSay.LexicalModel
 						}).
 					Show("Form").Show("WritingSystemId");
 
-				ResultSet<LexEntry> itemsMatching = GetItemsMatchingCore(query);
+				ResultSet<LexEntry> itemsMatching = GetItemsMatching(query);
 				SortDefinition[] sortOrder = new SortDefinition[1];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
 
@@ -366,7 +361,7 @@ namespace WeSay.LexicalModel
 		private ResultSet<LexEntry> GetItemsMatchingQueryFilteredByWritingSystem(Query query, string formField, string writingSystemIdField, WritingSystem writingSystem)
 		{
 			// TODO: Methods using this should be refactored to use Where and / or AtLeastOne in their query !!! CJP 2008-08-21
-			ResultSet<LexEntry> allEntriesMatchingQuery = GetItemsMatchingCore(query);
+			ResultSet<LexEntry> allEntriesMatchingQuery = GetItemsMatching(query);
 			return FilterEntriesToOnlyThoseWithWritingSystemId(
 				allEntriesMatchingQuery,
 				formField,
@@ -392,7 +387,7 @@ namespace WeSay.LexicalModel
 					GetAllLexEntriesQuery().ForEach("Senses").ForEach("Properties").Show("Key").Show
 							("Value", "SemanticDomains");
 
-			ResultSet<LexEntry> allSenseProperties = GetItemsMatchingCore(allSensePropertiesQuery);
+			ResultSet<LexEntry> allSenseProperties = GetItemsMatching(allSensePropertiesQuery);
 			allSenseProperties.RemoveAll(
 					delegate(RecordToken<LexEntry> token) { return (string) token["Key"] != fieldName; });
 
@@ -466,7 +461,7 @@ namespace WeSay.LexicalModel
 				throw new ArgumentOutOfRangeException("id", "The Id should not be empty.");
 			}
 			Query idOfEntries = GetAllLexEntriesQuery().Show("Id");
-			ResultSet<LexEntry> items = GetItemsMatchingCore(idOfEntries);
+			ResultSet<LexEntry> items = GetItemsMatching(idOfEntries);
 			int firstOccuranceOfId = items.FindFirstIndex(delegate(RecordToken<LexEntry> token)
 												{
 													return (string)token["Id"] == id;
@@ -498,7 +493,7 @@ namespace WeSay.LexicalModel
 				throw new ArgumentOutOfRangeException("guid", "Guids should not be empty!");
 			}
 			Query query = GetAllLexEntriesQuery().Show("Guid");
-			ResultSet<LexEntry> items = GetItemsMatchingCore(query);
+			ResultSet<LexEntry> items = GetItemsMatching(query);
 			int index =
 					items.FindFirstIndex(
 							delegate(RecordToken<LexEntry> token) { return (Guid) token["Guid"] == guid; });

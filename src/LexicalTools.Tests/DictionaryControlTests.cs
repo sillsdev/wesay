@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -753,6 +754,23 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("Secondary", label);
 			RichTextBoxTester r = new RichTextBoxTester("_lexicalEntryPreview", _window);
 			Assert.IsTrue(r.Text.Contains("secondarymeaning"));
+		}
+
+		[Test]
+		public void FindText_EnterTextOneCharacterAtATime_DoesNotThrow()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			//This is a beter test but gives a cryptic error message
+			//KeyboardController keyboardController = new KeyboardController(t);
+			//t.Properties.Focus();
+			//keyboardController.Press("Test");
+			//keyboardController.Press("e");
+			//keyboardController.Press("s");
+			//keyboardController.Press("t");
+			//keyboardController.Dispose();
+			t.Enter("Test");
+			t.FireEvent("TextChanged", new EventArgs());
+			Assert.AreEqual("Test", t.Text);
 		}
 
 		[Test]

@@ -91,6 +91,7 @@
 	<Compile Include="Phonetic.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="LiftMerger.cs" />
+	<Compile Include="ResultSetToListOfStringsAdapter.cs" />
 	<Compile Include="WeSayDataObjectLabelAdaptor.cs" />
   </ItemGroup>
   <ItemGroup>

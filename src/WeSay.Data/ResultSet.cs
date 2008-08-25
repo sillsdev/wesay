@@ -25,6 +25,7 @@ namespace WeSay.Data
 			_repository = repository;
 		}
 
+		[Obsolete]
 		private static List<RecordToken<T>> CreateResultsWithNoDuplicates(IEnumerable<IEnumerable<RecordToken<T>>> initialResults)
 		{
 			Dictionary<RecordToken<T>, object> alreadyUsedTokens = new Dictionary<RecordToken<T>, object>();
