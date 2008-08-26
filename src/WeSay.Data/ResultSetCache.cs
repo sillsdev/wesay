@@ -38,7 +38,10 @@ namespace WeSay.Data
 		{
 			foreach (RecordToken<T> token in resultSetToCache)
 			{
-				_sortedTokens.Add(token, null);
+				if (!_sortedTokens.ContainsKey(token))
+				{
+					_sortedTokens.Add(token, null);
+				}
 			}
 		}
 
@@ -81,7 +84,10 @@ namespace WeSay.Data
 
 			foreach (RecordToken<T> token in itemsQueryResults)
 			{
-				_sortedTokens.Add(token, null);
+				if(!_sortedTokens.ContainsKey(token))
+				{
+					_sortedTokens.Add(token, null);
+				}
 			}
 		}
 

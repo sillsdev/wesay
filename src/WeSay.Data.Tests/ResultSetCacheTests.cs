@@ -532,6 +532,33 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		public void MultipleQueries_QueriedFieldsAreIdentical_ReturnsOnlyOneRecordToken()
+		{
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+
+			Query secondQueryToCache = new Query(typeof(TestItem));
+			secondQueryToCache = secondQueryToCache.In("Child").Show("StoredString");
+			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
+
+			resultSetCacheUnderTest.Add(results, secondQueryToCache);
+
+			TestItem itemCreatedAfterCache = _repository.CreateItem();
+			itemCreatedAfterCache.StoredString = "Item 6";
+			itemCreatedAfterCache.Child.StoredString = "Item 6";
+			_repository.SaveItem(itemCreatedAfterCache);
+			resultSetCacheUnderTest.UpdateItemInCache(itemCreatedAfterCache);
+
+			Assert.AreEqual(7, resultSetCacheUnderTest.GetResultSet().Count);
+			Assert.AreEqual("Item 0", resultSetCacheUnderTest.GetResultSet()[0]["StoredString"]);
+			Assert.AreEqual("Item 1", resultSetCacheUnderTest.GetResultSet()[1]["StoredString"]);
+			Assert.AreEqual("Item 2", resultSetCacheUnderTest.GetResultSet()[2]["StoredString"]);
+			Assert.AreEqual("Item 3", resultSetCacheUnderTest.GetResultSet()[3]["StoredString"]);
+			Assert.AreEqual("Item 4", resultSetCacheUnderTest.GetResultSet()[4]["StoredString"]);
+			Assert.AreEqual("Item 5", resultSetCacheUnderTest.GetResultSet()[5]["StoredString"]);
+			Assert.AreEqual("Item 6", resultSetCacheUnderTest.GetResultSet()[6]["StoredString"]);
+		}
+
+		[Test]
 		public void UpdateItemInCache_ItemDoesNotExistInCacheButDoesInRepository_ItemIsAddedToResultSetAndSortedCorrectly()
 		{
 			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
