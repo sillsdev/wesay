@@ -19,7 +19,6 @@ namespace WeSay.LexicalModel
 
 		public LexEntryRepository(string path, ProgressState progressState)
 		{
-			//todo: eventually use synchronicRepository with Db4o and Lift
 			_decoratedRepository = new LiftRepository(path, progressState);
 		}
 

@@ -8,29 +8,52 @@ namespace WeSay.Data
 	public class ResultSetCache<T> where T : class, new()
 	{
 		private SortedDictionary<RecordToken<T>, object> _sortedTokens = null;
-		private Query _cachedQuery = null;
+		private List<Query> _cachedQueries = new List<Query>();
 		private readonly IRepository<T> _repositoryQueried = null;
 
-		/// <summary>
-		/// ResultSetCaches do NOT support filtering. Recordtokens managed by a ResultSetCache must be unique
-		/// according to SortDefinitions compare.
-		/// </summary>
-		/// <param name="repositoryQueried"></param>
-		/// <param name="resultSetToCache"></param>
-		/// <param name="query"></param>
-		/// <param name="sortDefinitions"></param>
-		public ResultSetCache(IRepository<T> repositoryQueried, ResultSet<T> resultSetToCache, Query query, SortDefinition[] sortDefinitions)
+		public ResultSetCache(IRepository<T> repositoryQueried, ResultSet<T> resultSetToCache, Query queryToCache, SortDefinition[] sortDefinitions)
 		{
+			if(repositoryQueried == null)
+			{
+				throw new ArgumentNullException("repositoryQueried");
+			}
 			_repositoryQueried = repositoryQueried;
-			_cachedQuery = query;
 
-			RecordTokenComparer<T> comparerForSorting = new RecordTokenComparer<T>(sortDefinitions);
-			_sortedTokens = new SortedDictionary<RecordToken<T>, object>(comparerForSorting);
+			if (sortDefinitions == null)
+			{
+				_sortedTokens = new SortedDictionary<RecordToken<T>, object>(); //sort by RepositoryId
+			}
+			else
+			{
+				RecordTokenComparer<T> comparerForSorting = new RecordTokenComparer<T>(sortDefinitions);
+				_sortedTokens = new SortedDictionary<RecordToken<T>, object>(comparerForSorting);
+			}
 
+			_cachedQueries.Add(queryToCache);
+
+			SortNewResultSetIntoCachedResultSet(resultSetToCache);
+		}
+
+		private void SortNewResultSetIntoCachedResultSet(ResultSet<T> resultSetToCache)
+		{
 			foreach (RecordToken<T> token in resultSetToCache)
 			{
 				_sortedTokens.Add(token, null);
 			}
+		}
+
+		public void Add(ResultSet<T> resultSetToCache, Query queryToCache)
+		{
+			if(resultSetToCache == null)
+			{
+				throw new ArgumentNullException("resultSetToCache");
+			}
+			if (queryToCache == null)
+			{
+				throw new ArgumentNullException("queryToCache");
+			}
+			_cachedQueries.Add(queryToCache);
+			SortNewResultSetIntoCachedResultSet(resultSetToCache);
 		}
 
 		public ResultSet<T> GetResultSet()
@@ -66,11 +89,15 @@ namespace WeSay.Data
 		{
 			bool hasResults = false;
 			List<RecordToken<T>> results = new List<RecordToken<T>>();
-			foreach (Dictionary<string, object> result in _cachedQuery.GetResults(item))
+			foreach (Query query in _cachedQueries)
 			{
-				hasResults = true;
-				results.Add(new RecordToken<T>(_repositoryQueried, result, _repositoryQueried.GetId(item)));
+				foreach (Dictionary<string, object> result in query.GetResults(item))
+				{
+					results.Add(new RecordToken<T>(_repositoryQueried, result, _repositoryQueried.GetId(item)));
+					hasResults = true;
+				}
 			}
+
 			//!!!I don't know how to test this case. Just copied it from every other place that produces Recordtokens TA 2008-08-13
 			if (!hasResults)
 			{

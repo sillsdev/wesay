@@ -7,9 +7,9 @@ namespace WeSay.Data.Tests
 {
 	public class ChildTestItem
 	{
-		private readonly int _storedInt;
-		private readonly string _storedString;
-		private readonly DateTime _storedDateTime;
+		private int _storedInt;
+		private string _storedString;
+		private DateTime _storedDateTime;
 		private ChildTestItem _testItem;
 		public ChildTestItem() {}
 
@@ -44,16 +44,19 @@ namespace WeSay.Data.Tests
 		public int StoredInt
 		{
 			get { return _storedInt; }
+			set { _storedInt = value; }
 		}
 
 		public string StoredString
 		{
 			get { return _storedString; }
+			set { _storedString = value; }
 		}
 
 		public DateTime StoredDateTime
 		{
 			get { return _storedDateTime; }
+			set { _storedDateTime = value; }
 		}
 	}
 
@@ -116,6 +119,7 @@ namespace WeSay.Data.Tests
 		public TestItem()
 		{
 			_storedDateTime = PreciseDateTime.UtcNow;
+			_childTestItem = new ChildTestItem();
 		}
 
 		public TestItem(string s, int i, DateTime d)
