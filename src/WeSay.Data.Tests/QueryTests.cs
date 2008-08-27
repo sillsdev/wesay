@@ -294,14 +294,14 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResults_Show_OneNullItem()
 		{
-			Query all = new Query(typeof(TestItem)).Show("Child");
+			Query all = new Query(typeof(TestItem)).Show("StoredString");
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>
 				(
 					all.GetResults(item)
 				);
 			Assert.IsNotNull(results);
 			Assert.AreEqual(1, results.Count);
-			Assert.AreEqual(null, results[0]["Child"]);
+			Assert.AreEqual(null, results[0]["StoredString"]);
 		}
 
 		[Test]
@@ -335,11 +335,15 @@ namespace WeSay.Data.Tests
 		{
 			item = new TestItem("top", 1, DateTime.UtcNow);
 			item.Child = new ChildTestItem(null, 24, DateTime.Now);
+			item.Child.Child = new ChildTestItem("hello", 16, DateTime.Now);
 
 			item.ChildItemList = new List<ChildTestItem>();
 			item.ChildItemList.Add(new ChildTestItem("1", 1, DateTime.Now));
 			item.ChildItemList.Add(new ChildTestItem("2", 2, DateTime.Now));
 			item.ChildItemList.Add(new ChildTestItem("3", 3, DateTime.Now));
+			item.ChildItemList[0].Child = new ChildTestItem("hello1", 1, DateTime.Now);
+			item.ChildItemList[1].Child = new ChildTestItem("hello2", 2, DateTime.Now);
+			item.ChildItemList[2].Child = new ChildTestItem("hello3", 3, DateTime.Now);
 		}
 
 		[Test]
@@ -381,9 +385,9 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetResultsOnInQuery_With2NestedChildSecondIsNull_NoItems()
+		public void GetResultsOnInQuery_With3NestedChildThirdIsNull_NoItems()
 		{
-			Query all = new Query(typeof (TestItem)).In("Child").In("Child").Show("StoredString");
+			Query all = new Query(typeof(TestItem)).In("Child").In("Child").In("Child").Show("StoredString");
 			IEnumerable<Dictionary<string, object>> results = all.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[] {};
@@ -591,7 +595,76 @@ namespace WeSay.Data.Tests
 			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
+		[Test]
+		public void GetResultsOnQuery_WhereReturnsFalseAtHigherQueryLevel_NoItems()
+		{
+			Query query = new Query(typeof(TestItem))
+				.Where("StoredString",
+					delegate(IDictionary<string, object> data)
+						{
+							return false;
+						})
+				.In("Child").Show("StoredString");
+			List<Dictionary<string, object>> results =
+				new List<Dictionary<string, object>>(query.GetResults(item));
+			Assert.IsNotNull(results);
+			Assert.AreEqual(0, results.Count);
+		}
 
+		[Test]
+		public void GetResultsOnInQuery_WhereReturnsFalseAtHigherQueryLevel_NoItems()
+		{
+			Query query = new Query(typeof(TestItem)).In("Child")
+				.Where("StoredString",
+					delegate(IDictionary<string, object> data)
+					{
+						return false;
+					})
+				.In("Child").Show("StoredString");
+			List<Dictionary<string, object>> results =
+				new List<Dictionary<string, object>>(query.GetResults(item));
+			Assert.IsNotNull(results);
+			Assert.AreEqual(0, results.Count);
+		}
+
+		[Test]
+		public void GetResultsOnForEachQuery_WhereReturnsFalseAtHigherQueryLevel_NoItems()
+		{
+			Query query = new Query(typeof(TestItem)).ForEach("ChildItemList")
+				.Where("StoredString",
+					delegate(IDictionary<string, object> data)
+					{
+						return false;
+					})
+				.In("Child").Show("StoredString");
+			List<Dictionary<string, object>> results =
+				new List<Dictionary<string, object>>(query.GetResults(item));
+			Assert.IsNotNull(results);
+			Assert.AreEqual(0, results.Count);
+		}
+
+		[Test]
+		public void GetResultsOnInQuery_WhereUsesMultipleFieldsToFilter_NoEntries()
+		{
+			Query query = new Query(typeof(TestItem))
+				.Where(new string[] { "StoredString", "StoredInt" },
+					delegate(IDictionary<string, object> data)
+					{
+						if((string)data["StoredString"] == "top")
+						{
+							if((int)data["StoredInt"] == 1)
+							{
+								return false;
+							}
+						}
+						return true;
+					})
+				.Show("StoredString");
+			List<Dictionary<string, object>> results =
+				new List<Dictionary<string, object>>(query.GetResults(item));
+			Assert.IsNotNull(results);
+			Assert.AreEqual(0, results.Count);
+		}
 	}
 
 	[TestFixture]
