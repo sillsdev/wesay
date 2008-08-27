@@ -328,20 +328,75 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
-			// TODO: The queries below can now be refactored to use Where and AtLeastOne !!! CJP 2008-08-21
-			Query defQuery = GetAllLexEntriesQuery().ForEach("Senses").In("Definition").ForEach("Forms").Show("Form").Show("WritingSystemId");
-			Query glossQuery = GetAllLexEntriesQuery().ForEach("Senses").In("Gloss").ForEach("Forms").Show("Form").Show("WritingSystemId");
-			//Remove any results that don't match the desired writingsystem (keeping at least one empty that does if nothing matches)
-			ResultSet<LexEntry> defResult = GetItemsMatchingQueryFilteredByWritingSystem(defQuery, "Form", "WritingSystemId", writingSystem);
-			ResultSet<LexEntry> glossResult = GetItemsMatchingQueryFilteredByWritingSystem(glossQuery, "Form", "WritingSystemId", writingSystem);
 
-			ResultSet<LexEntry> result = new ResultSet<LexEntry>(this, defResult, glossResult);
-			result.Coalesce("Form", delegate(object o)
-										{
-											return string.IsNullOrEmpty((string) o);
-										});
-			result.Sort(new SortDefinition("Form", writingSystem));
-			return result;
+			if (!_sortedResultSetCaches.ContainsKey("sortedByDefinition"))
+				{
+					Query defQuery = GetAllLexEntriesQuery().ForEach("Senses")
+						.Where(new string[] {"Definition", "Gloss"},
+							delegate(IDictionary<string, object> data)
+								{
+									MultiText definition = (MultiText) data["Definition"];
+									MultiText gloss = (MultiText) data["Gloss"];
+									bool DefinitionAndGlossAreIdentical = (definition[writingSystem.Id] == gloss[writingSystem.Id]);
+									bool DefinitionExistsAndGlossDoesNot = !(String.IsNullOrEmpty(definition[writingSystem.Id]))
+																		   && (String.IsNullOrEmpty(gloss[writingSystem.Id]));
+									if (DefinitionAndGlossAreIdentical || DefinitionExistsAndGlossDoesNot)
+									{
+										return true;
+									}
+									else
+									{
+										return false;
+									}
+								})
+						.In("Definition").ForEach("Forms").AtLeastOne().Show("Form").Show("WritingSystemId");
+
+					Query glossQuery = GetAllLexEntriesQuery().ForEach("Senses")
+						.Where(new string[] { "Definition", "Gloss" },
+							delegate(IDictionary<string, object> data)
+							{
+								MultiText definition = (MultiText)data["Definition"];
+								MultiText gloss = (MultiText)data["Gloss"];
+								bool DefinitionAndGlossAreDifferent = (definition[writingSystem.Id] != gloss[writingSystem.Id]);
+								bool GlossExistsAndDefinitionDoesNot = !(String.IsNullOrEmpty(gloss[writingSystem.Id]))
+																	   && (String.IsNullOrEmpty(definition[writingSystem.Id]));
+								if (DefinitionAndGlossAreDifferent && GlossExistsAndDefinitionDoesNot)
+								{
+									return true;
+								}
+								else
+								{
+									return false;
+								}
+							})
+						.In("Gloss").ForEach("Forms").AtLeastOne().Show("Form").Show("WritingSystemId");
+
+					ResultSet<LexEntry> defResults = GetItemsMatching(defQuery);
+
+					SortDefinition[] sortOrder = new SortDefinition[1];
+					sortOrder[0] = new SortDefinition("Form", writingSystem);
+					_sortedResultSetCaches.Add("sortedByDefinition", new ResultSetCache<LexEntry>(this, defResults, defQuery, sortOrder));
+
+					ResultSet<LexEntry> glossResults = GetItemsMatching(glossQuery);
+					_sortedResultSetCaches["sortedByDefinition"].Add(glossResults, glossQuery);
+				}
+			//// TODO: The queries below can now be refactored to use Where and AtLeastOne !!! CJP 2008-08-21
+			//Query defQuery = GetAllLexEntriesQuery().ForEach("Senses").In("Definition").ForEach("Forms").Show("Form").Show("WritingSystemId");
+			//Query glossQuery = GetAllLexEntriesQuery().ForEach("Senses").In("Gloss").ForEach("Forms").Show("Form").Show("WritingSystemId");
+			////Remove any results that don't match the desired writingsystem (keeping at least one empty that does if nothing matches)
+			//ResultSet<LexEntry> defResult = GetItemsMatchingQueryFilteredByWritingSystem(defQuery, "Form", "WritingSystemId", writingSystem);
+			//ResultSet<LexEntry> glossResult = GetItemsMatchingQueryFilteredByWritingSystem(glossQuery, "Form", "WritingSystemId", writingSystem);
+
+			//ResultSet<LexEntry> result = new ResultSet<LexEntry>(this, defResult, glossResult);
+			//result.Coalesce("Form", delegate(object o)
+			//                            {
+			//                                return string.IsNullOrEmpty((string) o);
+			//                            });
+			//result.Sort(new SortDefinition("Form", writingSystem));
+			//return result;
+
+			ResultSet<LexEntry> resultsFromCache = _sortedResultSetCaches["sortedByDefinition"].GetResultSet();
+			return resultsFromCache;
 
 		}
 
