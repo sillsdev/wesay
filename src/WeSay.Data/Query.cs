@@ -51,9 +51,12 @@ namespace WeSay.Data
 					{
 						List<Dictionary<string, object>> subresults =
 								new List<Dictionary<string, object>>();
-						PermuteResultsAtThisLevel(subresults, item);
-						GetNestedQueryResults(subresults, item);
-						oneResultPerRow.AddRange(subresults);
+						if (WhereFilterDoesNotApply(item))
+						{
+							PermuteResultsAtThisLevel(subresults, item);
+							GetNestedQueryResults(subresults, item);
+							oneResultPerRow.AddRange(subresults);
+						}
 					}
 					if (oneResultPerRow.Count == 0 && _requireAtLeastOneResult)
 					{
@@ -143,12 +146,33 @@ namespace WeSay.Data
 
 		protected virtual void GetResultsCore(List<Dictionary<string, object>> results, object o)
 		{
-			bool haveResult = PermuteResultsAtThisLevel(results, o);
+			bool haveResult = false;
+			if (WhereFilterDoesNotApply(o))
+			{
+				haveResult = PermuteResultsAtThisLevel(results, o);
+				GetNestedQueryResults(results, o);
+			}
 			if (!haveResult && _requireAtLeastOneResult)
 			{
 				PermuteEmptyResult(results);
 			}
-			GetNestedQueryResults(results, o);
+		}
+
+		private bool WhereFilterDoesNotApply(object o)
+		{
+			bool evaluateResults = true;
+			if (_whereCondition != null)
+			{
+				Dictionary<string, object> data = new Dictionary<string, object>();
+				foreach (KeyValuePair<string, FieldProperties> pair in _whereFieldProperties)
+				{
+					MethodInfo getProperty = pair.Value.Method;
+					object propertyValue = getProperty.Invoke(o, null);
+					data.Add(pair.Key, propertyValue);
+				}
+				evaluateResults = _whereCondition.Invoke(data);
+			}
+			return evaluateResults;
 		}
 
 		protected void GetNestedQueryResults(List<Dictionary<string, object>> result, object o)
@@ -169,20 +193,7 @@ namespace WeSay.Data
 			bool haveAtLeastOneResult = false;
 			if (_showFieldProperties != null)
 			{
-				bool evaluateResults = true;
-				if (_whereCondition != null)
-				{
-					Dictionary<string, object> data = new Dictionary<string, object>();
-					foreach (KeyValuePair<string, FieldProperties> pair in _whereFieldProperties)
-					{
-						MethodInfo getProperty = pair.Value.Method;
-						object propertyValue = getProperty.Invoke(o, null);
-						data.Add(pair.Key, propertyValue);
-					}
-					evaluateResults = _whereCondition.Invoke(data);
-				}
-				if (evaluateResults)
-				{
+
 					foreach (KeyValuePair<string, FieldProperties> pair in _showFieldProperties)
 					{
 						haveAtLeastOneResult = true;
@@ -198,7 +209,6 @@ namespace WeSay.Data
 							Permuter.Permute(results, pair.Key, propertyValue);
 						}
 					}
-				}
 			}
 			return haveAtLeastOneResult;
 		}
