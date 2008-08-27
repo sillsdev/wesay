@@ -212,10 +212,6 @@ namespace WeSay.Data
 					hasResults = true;
 					results.Add(new RecordToken<T>(this, result, GetId(t)));
 				}
-				if (!hasResults)
-				{
-					results.Add(new RecordToken<T>(this, GetId(t)));
-				}
 			}
 			return new ResultSet<T>(this, results);
 		}

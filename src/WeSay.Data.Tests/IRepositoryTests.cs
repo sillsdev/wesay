@@ -299,16 +299,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetItemsMatchingQuery_QueryWithOutShow_ReturnsAllItems()
+		public void GetItemsMatchingQuery_QueryWithOutShow_ReturnsNoItems()
 		{
 			Query queryWithoutShow = new Query(typeof (T));
 			SetState();
 			if (RepositoryUnderTest.CanQuery)
 			{
 				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
-				Assert.AreEqual(1, resultSet.Count);
-				Assert.AreEqual(Item, resultSet[0].RealObject);
-				Assert.AreEqual(Id, resultSet[0].Id);
+				Assert.AreEqual(0, resultSet.Count);
 			}
 			else
 			{
@@ -528,16 +526,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsAllItems()
+		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsNoItems()
 		{
 			Query queryWithoutShow = new Query(typeof (T));
 			SetState();
 			if (RepositoryUnderTest.CanQuery)
 			{
 				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
-				Assert.AreEqual(1, resultSet.Count);
-				Assert.AreEqual(Item, resultSet[0].RealObject);
-				Assert.AreEqual(Id, resultSet[0].Id);
+				Assert.AreEqual(0, resultSet.Count);
 			}
 			else
 			{
