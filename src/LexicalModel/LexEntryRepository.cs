@@ -337,10 +337,10 @@ namespace WeSay.LexicalModel
 								{
 									MultiText definition = (MultiText) data["Definition"];
 									MultiText gloss = (MultiText) data["Gloss"];
-									bool DefinitionAndGlossAreIdentical = (definition[writingSystem.Id] == gloss[writingSystem.Id]);
-									bool DefinitionExistsAndGlossDoesNot = !(String.IsNullOrEmpty(definition[writingSystem.Id]))
-																		   && (String.IsNullOrEmpty(gloss[writingSystem.Id]));
-									if (DefinitionAndGlossAreIdentical || DefinitionExistsAndGlossDoesNot)
+									bool DefinitionAndGlossAreBothNull = (String.IsNullOrEmpty(definition[writingSystem.Id]) &&
+										String.IsNullOrEmpty(gloss[writingSystem.Id]));
+									bool DefinitionExists = !String.IsNullOrEmpty(definition[writingSystem.Id]);
+									if (DefinitionExists || DefinitionAndGlossAreBothNull)
 									{
 										return true;
 									}
@@ -349,18 +349,25 @@ namespace WeSay.LexicalModel
 										return false;
 									}
 								})
-						.In("Definition").ForEach("Forms").AtLeastOne().Show("Form").Show("WritingSystemId");
+						.In("Definition").ForEach("Forms")
+						.Where("WritingSystemId",
+							delegate(IDictionary<string, object> data)
+								  {
+									  if ((string)data["WritingSystemId"] == writingSystem.Id)
+									  {
+										  return true;
+									  }
+									  return false;
+								  })
+						.AtLeastOne().Show("Form").Show("WritingSystemId");
 
 					Query glossQuery = GetAllLexEntriesQuery().ForEach("Senses")
-						.Where(new string[] { "Definition", "Gloss" },
+						.Where("Gloss",
 							delegate(IDictionary<string, object> data)
 							{
-								MultiText definition = (MultiText)data["Definition"];
 								MultiText gloss = (MultiText)data["Gloss"];
-								bool DefinitionAndGlossAreDifferent = (definition[writingSystem.Id] != gloss[writingSystem.Id]);
-								bool GlossExistsAndDefinitionDoesNot = !(String.IsNullOrEmpty(gloss[writingSystem.Id]))
-																	   && (String.IsNullOrEmpty(definition[writingSystem.Id]));
-								if (DefinitionAndGlossAreDifferent && GlossExistsAndDefinitionDoesNot)
+								bool GlossExists = !String.IsNullOrEmpty(gloss[writingSystem.Id]);
+								if (GlossExists)
 								{
 									return true;
 								}
@@ -369,7 +376,7 @@ namespace WeSay.LexicalModel
 									return false;
 								}
 							})
-						.In("Gloss").ForEach("Forms").AtLeastOne().Show("Form").Show("WritingSystemId");
+						.In("Gloss").ForEach("Forms").Show("Form").Show("WritingSystemId");
 
 					ResultSet<LexEntry> defResults = GetItemsMatching(defQuery);
 
