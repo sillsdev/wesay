@@ -209,7 +209,7 @@ namespace WeSay.Data
             _secondary.SaveItems(secondaryItems);
         }
 
-        public ResultSet<T> GetItemsMatching(Query query)
+		public ResultSet<T> GetItemsMatching(IQuery<T> query)
         {
             return _primary.GetItemsMatching(query);
         }

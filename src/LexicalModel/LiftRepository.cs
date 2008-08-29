@@ -14,7 +14,7 @@ using WeSay.LexicalModel.Migration;
 
 namespace WeSay.LexicalModel
 {
-	internal class LiftRepository: MemoryRepository<LexEntry>
+	public class LiftRepository: MemoryRepository<LexEntry>
 	{
 		private readonly ProgressState _progressState;
 		private readonly string _liftFilePath;

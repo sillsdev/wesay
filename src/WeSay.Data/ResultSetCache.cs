@@ -8,12 +8,12 @@ namespace WeSay.Data
 	public class ResultSetCache<T> where T : class, new()
 	{
 		private SortedDictionary<RecordToken<T>, object> _sortedTokens = null;
-		private List<Query> _cachedQueries = new List<Query>();
+		private List<IQuery<T>> _cachedQueries = new List<IQuery<T>>();
 		private readonly IRepository<T> _repositoryQueried = null;
 
-		public ResultSetCache(IRepository<T> repositoryQueried, ResultSet<T> resultSetToCache, Query queryToCache, SortDefinition[] sortDefinitions)
+		public ResultSetCache(IRepository<T> repositoryQueried, SortDefinition[] sortDefinitions)
 		{
-			if(repositoryQueried == null)
+			if (repositoryQueried == null)
 			{
 				throw new ArgumentNullException("repositoryQueried");
 			}
@@ -28,10 +28,12 @@ namespace WeSay.Data
 				RecordTokenComparer<T> comparerForSorting = new RecordTokenComparer<T>(sortDefinitions);
 				_sortedTokens = new SortedDictionary<RecordToken<T>, object>(comparerForSorting);
 			}
+		}
 
-			_cachedQueries.Add(queryToCache);
-
-			SortNewResultSetIntoCachedResultSet(resultSetToCache);
+		public ResultSetCache(IRepository<T> repositoryQueried,  SortDefinition[] sortDefinitions, ResultSet<T> resultSetToCache, IQuery<T> queryToCache)
+			: this(repositoryQueried, sortDefinitions)
+		{
+			Add(resultSetToCache, queryToCache);
 		}
 
 		private void SortNewResultSetIntoCachedResultSet(ResultSet<T> resultSetToCache)
@@ -45,7 +47,7 @@ namespace WeSay.Data
 			}
 		}
 
-		public void Add(ResultSet<T> resultSetToCache, Query queryToCache)
+		public void Add(ResultSet<T> resultSetToCache, IQuery<T> queryToCache)
 		{
 			if(resultSetToCache == null)
 			{
@@ -95,7 +97,7 @@ namespace WeSay.Data
 		{
 			bool hasResults = false;
 			List<RecordToken<T>> results = new List<RecordToken<T>>();
-			foreach (Query query in _cachedQueries)
+			foreach (IQuery<T> query in _cachedQueries)
 			{
 				foreach (Dictionary<string, object> result in query.GetResults(item))
 				{

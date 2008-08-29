@@ -8,7 +8,7 @@ namespace WeSay.Data.Tests
 	public class IRepositoryStateUnitializedTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
-		private readonly Query query = new Query(typeof (T));
+		private readonly QueryAdapter<T> _query = new QueryAdapter<T>();
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -101,7 +101,7 @@ namespace WeSay.Data.Tests
 		{
 			if (!RepositoryUnderTest.CanQuery)
 			{
-				RepositoryUnderTest.GetItemsMatching(query);
+				RepositoryUnderTest.GetItemsMatching(_query);
 			}
 			else
 			{
@@ -114,7 +114,7 @@ namespace WeSay.Data.Tests
 		{
 			if (RepositoryUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(_query).Count);
 			}
 			else
 			{
@@ -301,7 +301,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetItemsMatchingQuery_QueryWithOutShow_ReturnsNoItems()
 		{
-			Query queryWithoutShow = new Query(typeof (T));
+			QueryAdapter<T> queryWithoutShow = new QueryAdapter<T>();
 			SetState();
 			if (RepositoryUnderTest.CanQuery)
 			{
@@ -528,7 +528,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsNoItems()
 		{
-			Query queryWithoutShow = new Query(typeof (T));
+			QueryAdapter<T> queryWithoutShow = new QueryAdapter<T>();
 			SetState();
 			if (RepositoryUnderTest.CanQuery)
 			{
@@ -638,7 +638,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly Query query = new Query(typeof (T));
+		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -791,7 +791,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly Query query = new Query(typeof (T));
+		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -944,7 +944,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly Query query = new Query(typeof (T));
+		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
 		public IRepository<T> RepositoryUnderTest
 		{

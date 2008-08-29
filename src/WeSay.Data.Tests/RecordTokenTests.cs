@@ -281,7 +281,7 @@ namespace WeSay.Data.Tests
 				throw new NotImplementedException();
 			}
 
-			public ResultSet<TestItem> GetItemsMatching(Query query)
+			public ResultSet<TestItem> GetItemsMatching(IQuery<TestItem> query)
 			{
 				throw new NotImplementedException();
 			}

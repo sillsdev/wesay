@@ -4,7 +4,7 @@ using Palaso.Progress;
 
 namespace WeSay.Data
 {
-	internal class MemoryRepository<T>: IRepository<T> where T : class, new()
+	public class MemoryRepository<T>: IRepository<T> where T : class, new()
 	{
 		protected readonly Dictionary<RepositoryId, T> idToObjectHashtable =
 				new Dictionary<RepositoryId, T>();
@@ -110,15 +110,26 @@ namespace WeSay.Data
 			}
 		}
 
-		public virtual ResultSet<T> GetItemsMatching(Query query)
+		//public virtual ResultSet<T> GetItemsMatching(Query query)
+		//{
+		//    List<RecordToken<T>> results = new List<RecordToken<T>>();
+		//    foreach (T item in objectToIdHashtable.Keys)
+		//    {
+		//        foreach (Dictionary<string, object> result in query.GetResults(item))
+		//        {
+		//            results.Add(new RecordToken<T>(this, result, GetId(item)));
+		//        }
+		//    }
+		//    return new ResultSet<T>(this, results);
+		//}
+
+		public virtual ResultSet<T> GetItemsMatching(IQuery<T> query)
 		{
 			List<RecordToken<T>> results = new List<RecordToken<T>>();
 			foreach (T item in objectToIdHashtable.Keys)
 			{
-				bool hasResults = false;
 				foreach (Dictionary<string, object> result in query.GetResults(item))
 				{
-					hasResults = true;
 					results.Add(new RecordToken<T>(this, result, GetId(item)));
 				}
 			}

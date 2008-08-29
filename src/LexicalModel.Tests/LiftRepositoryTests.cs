@@ -175,7 +175,8 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()       {
-			Query query = new Query(typeof (LexEntry)).Show("LexicalForm");
+			QueryAdapter<LexEntry> query = new QueryAdapter<LexEntry>();
+			query.Show("LexicalForm");
 			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
@@ -234,7 +235,8 @@ namespace WeSay.LexicalModel.Tests
 		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
 		{
 			Item.LexicalForm["de"] = "Sonne";
-			Query query = new Query(typeof (LexEntry)).Show("LexicalForm");
+			QueryAdapter<LexEntry> query = new QueryAdapter<LexEntry>();
+			query.Show("LexicalForm");
 			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());

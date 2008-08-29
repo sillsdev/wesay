@@ -64,6 +64,7 @@
 	<Compile Include="Db4oRepository.cs" />
 	<Compile Include="DatabaseModified.cs" />
 	<Compile Include="Db4oRepositoryId.cs" />
+	<Compile Include="DelegateQuery.cs" />
 	<Compile Include="DictionaryEqualityComparer.cs" />
 	<Compile Include="IRepository.cs" />
 	<Compile Include="Db4oDataSource.cs" />
@@ -72,6 +73,7 @@
 	<Compile Include="PreciseDateTime.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Query.cs" />
+	<Compile Include="QueryAdapter.cs" />
 	<Compile Include="RecordToken.cs" />
 	<Compile Include="RecordTokenComparer.cs" />
 	<Compile Include="RepositoryId.cs" />

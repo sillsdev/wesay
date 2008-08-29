@@ -6,10 +6,17 @@ namespace WeSay.Data.Tests
 {
 	internal class DictionaryContentAsserter<K, V>: IAsserter
 	{
-		private readonly Dictionary<K, V>[] _expectedResult;
-		private readonly Dictionary<K, V>[] _actualResult;
+		private readonly IDictionary<K, V>[] _expectedResult;
+		private readonly IDictionary<K, V>[] _actualResult;
 
-		public DictionaryContentAsserter(Dictionary<K, V>[] expectedResult,
+		public DictionaryContentAsserter(IDictionary<K, V>[] expectedResult,
+										 IEnumerable<IDictionary<K, V>> actualResult)
+		{
+			_expectedResult = expectedResult;
+			_actualResult = ToArray(actualResult);
+		}
+
+		public DictionaryContentAsserter(IDictionary<K, V>[] expectedResult,
 										 IEnumerable<Dictionary<K, V>> actualResult)
 		{
 			_expectedResult = expectedResult;
@@ -23,13 +30,20 @@ namespace WeSay.Data.Tests
 			_actualResult = ToArray(actualResult);
 		}
 
+		public DictionaryContentAsserter(IEnumerable<IDictionary<K, V>> expectedResult,
+										 IEnumerable<IDictionary<K, V>> actualResult)
+		{
+			_expectedResult = ToArray(expectedResult);
+			_actualResult = ToArray(actualResult);
+		}
+
 		private static T[] ToArray<T>(IEnumerable<T> result)
 		{
 			return new List<T>(result).ToArray();
 		}
 
-		public DictionaryContentAsserter(Dictionary<K, V>[] expectedResult,
-										 Dictionary<K, V>[] actualResult)
+		public DictionaryContentAsserter(IDictionary<K, V>[] expectedResult,
+										 IDictionary<K, V>[] actualResult)
 		{
 			_expectedResult = expectedResult;
 			_actualResult = actualResult;
@@ -61,11 +75,11 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-		private static string Write(IEnumerable<Dictionary<K, V>> dicts)
+		private static string Write(IEnumerable<IDictionary<K, V>> dicts)
 		{
 			StringBuilder sb = new StringBuilder();
 
-			foreach (Dictionary<K, V> dict in dicts)
+			foreach (IDictionary<K, V> dict in dicts)
 			{
 				foreach (KeyValuePair<K, V> pair in dict)
 				{

@@ -11,15 +11,15 @@ namespace WeSay.Data.Tests
 		private MemoryRepository<TestItem> _repository;
 		private SortDefinition[] _sortDefinitions;
 		private ResultSet<TestItem> _results;
-		private Query _queryToCache;
+		private QueryAdapter<TestItem> _queryToCache;
 
 		[SetUp]
 		public void Setup()
 		{
 			_repository = new MemoryRepository<TestItem>();
 			PopulateRepositoryWithItemsForQuerying(_repository);
-			_queryToCache = new Query(typeof(TestItem));
-			_queryToCache = _queryToCache.Show("StoredString");
+			_queryToCache = new QueryAdapter<TestItem>();
+			_queryToCache.Show("StoredString");
 			_results = _repository.GetItemsMatching(_queryToCache);
 			_sortDefinitions = new SortDefinition[1];
 			_sortDefinitions[0] = new SortDefinition("StoredString", Comparer<string>.Default);
@@ -48,7 +48,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void Constructor_IsPassedUnsortedResultSet_GetResultSetReturnsSorted()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			Assert.AreEqual(3, resultSetCacheUnderTest.GetResultSet().Count);
 			Assert.AreEqual("Item 0", resultSetCacheUnderTest.GetResultSet()[0]["StoredString"]);
 			Assert.AreEqual("Item 2", resultSetCacheUnderTest.GetResultSet()[1]["StoredString"]);
@@ -59,13 +59,13 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Constructor_RepositoryNull_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(null, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(null, _sortDefinitions, _results, _queryToCache);
 		}
 
 		[Test]
 		public void Constructor_SortDefinitionNull_SortedByRepositoryId()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, null);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, null, _results, _queryToCache);
 			ResultSet<TestItem> resultSet = resultSetCacheUnderTest.GetResultSet();
 			Assert.AreEqual(3, resultSet.Count);
 			for (int recordTokenNum = 0; recordTokenNum < (resultSet.Count - 1); recordTokenNum++)
@@ -78,7 +78,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void UpdateItemInCache_Null_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.UpdateItemInCache(null);
 		}
 
@@ -86,7 +86,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void UpdateItemInCache_ItemDoesNotExistInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			TestItem itemNotInRepository = new TestItem();
 			resultSetCacheUnderTest.UpdateItemInCache(itemNotInRepository);
 		}
@@ -94,7 +94,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void UpdateItemInCache_ItemDoesNotExistInCacheButDoesInRepository_ItemIsAddedToResultSetAndSortedCorrectly()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			TestItem itemCreatedAfterCache = _repository.CreateItem();
 			itemCreatedAfterCache.StoredString = "Item 1";
@@ -116,7 +116,7 @@ namespace WeSay.Data.Tests
 			_repository.SaveItem(itemToModify);
 
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			itemToModify.StoredString = "Item 1";
 			_repository.SaveItem(itemToModify);
@@ -137,7 +137,7 @@ namespace WeSay.Data.Tests
 			_repository.SaveItem(unmodifiedItem);
 
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.UpdateItemInCache(unmodifiedItem);
 
 			//Would be a better test but ResultSets don't support equality checks
@@ -158,7 +158,7 @@ namespace WeSay.Data.Tests
 			_repository.SaveItem(itemToDelete);
 
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(itemToDelete);
 
 			//Would be a better test but ResultSets don't support equality checks
@@ -175,7 +175,7 @@ namespace WeSay.Data.Tests
 		public void DeleteItemFromCache_Null_Throws()
 		{
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache((TestItem) null);
 		}
 
@@ -183,7 +183,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCache_ItemNotInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(new TestItem());
 		}
 
@@ -195,7 +195,7 @@ namespace WeSay.Data.Tests
 			_repository.SaveItem(itemToDelete);
 
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(itemToDelete);
 
 			//Would be a better test but ResultSets don't support equality checks
@@ -212,7 +212,7 @@ namespace WeSay.Data.Tests
 		public void DeleteItemFromCacheById_Null_Throws()
 		{
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache((TestItem)null);
 		}
 
@@ -220,14 +220,14 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCacheById_ItemNotInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(RepositoryId.Empty);
 		}
 
 		[Test]
 		public void DeleteAllItemsFromCache_AllItemsAreDeleted()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteAllItemsFromCache();
 			Assert.AreEqual(0, resultSetCacheUnderTest.GetResultSet().Count);
 		}
@@ -239,15 +239,15 @@ namespace WeSay.Data.Tests
 		private MemoryRepository<TestItem> _repository;
 		private SortDefinition[] _sortDefinitions;
 		private ResultSet<TestItem> _results;
-		private Query _queryToCache = null;
+		private QueryAdapter<TestItem> _queryToCache = null;
 
 		[SetUp]
 		public void Setup()
 		{
 			_repository = new MemoryRepository<TestItem>();
 			PopulateRepositoryWithItemsForQuerying(_repository);
-			_queryToCache = new Query(typeof(TestItem));
-			_queryToCache = _queryToCache.ShowEach("StoredList");
+			_queryToCache = new QueryAdapter<TestItem>();
+			_queryToCache.ShowEach("StoredList");
 			_results = _repository.GetItemsMatching(_queryToCache);
 			_sortDefinitions = new SortDefinition[1];
 			_sortDefinitions[0] = new SortDefinition("StoredList", Comparer<string>.Default);
@@ -282,7 +282,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void Constructor_IsPassedUnsortedResultSet_GetResultSetReturnsSorted()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			Assert.AreEqual(4, resultSetCacheUnderTest.GetResultSet().Count);
 			Assert.AreEqual("Item 0", resultSetCacheUnderTest.GetResultSet()[0]["StoredList"]);
 			Assert.AreEqual("Item 1", resultSetCacheUnderTest.GetResultSet()[1]["StoredList"]);
@@ -294,7 +294,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void UpdateItemInCache_Null_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.UpdateItemInCache(null);
 		}
 
@@ -302,7 +302,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void UpdateItemInCache_ItemDoesNotExistInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			TestItem itemNotInRepository = new TestItem();
 			resultSetCacheUnderTest.UpdateItemInCache(itemNotInRepository);
 		}
@@ -310,7 +310,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void UpdateItemInCache_ItemDoesNotExistInCacheButDoesInRepository_ItemIsAddedToResultSetAndSortedCorrectly()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			TestItem itemCreatedAfterCache = _repository.CreateItem();
 			itemCreatedAfterCache.StoredList = PopulateListWith("Item 5", "Item 4");
@@ -334,7 +334,7 @@ namespace WeSay.Data.Tests
 			_repository.SaveItem(itemToModify);
 
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			itemToModify.StoredList = PopulateListWith("Item 5", "Item 4");
 			_repository.SaveItem(itemToModify);
@@ -357,7 +357,7 @@ namespace WeSay.Data.Tests
 			_repository.SaveItem(unmodifiedItem);
 
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			resultSetCacheUnderTest.UpdateItemInCache(unmodifiedItem);
 
@@ -382,7 +382,7 @@ namespace WeSay.Data.Tests
 			_repository.SaveItem(itemToDelete);
 
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(itemToDelete);
 
 			//Would be a better test but ResultSets don't support equality checks
@@ -400,7 +400,7 @@ namespace WeSay.Data.Tests
 		public void DeleteItemFromCache_Null_Throws()
 		{
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache((TestItem)null);
 		}
 
@@ -408,7 +408,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCache_ItemNotInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(new TestItem());
 		}
 
@@ -420,7 +420,7 @@ namespace WeSay.Data.Tests
 			_repository.SaveItem(itemToDelete);
 
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(_repository.GetId(itemToDelete));
 
 			//Would be a better test but ResultSets don't support equality checks
@@ -438,7 +438,7 @@ namespace WeSay.Data.Tests
 		public void DeleteItemFromCacheById_Null_Throws()
 		{
 			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache((TestItem)null);
 		}
 
@@ -446,14 +446,14 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCacheById_ItemNotInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(RepositoryId.Empty);
 		}
 
 		[Test]
 		public void DeleteAllItemsFromCache_AllItemsAreDeleted()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteAllItemsFromCache();
 			Assert.AreEqual(0, resultSetCacheUnderTest.GetResultSet().Count);
 		}
@@ -465,7 +465,7 @@ namespace WeSay.Data.Tests
 		private MemoryRepository<TestItem> _repository;
 		private SortDefinition[] _sortDefinitions;
 		private ResultSet<TestItem> _results;
-		private Query _queryToCache;
+		private QueryAdapter<TestItem> _queryToCache;
 
 		[SetUp]
 		public void SetUp()
@@ -473,8 +473,8 @@ namespace WeSay.Data.Tests
 			_repository = new MemoryRepository<TestItem>();
 			PopulateRepositoryWithItemsForQuerying(_repository);
 
-			_queryToCache = new Query(typeof(TestItem));
-			_queryToCache = _queryToCache.Show("StoredString");
+			_queryToCache = new QueryAdapter<TestItem>();
+			_queryToCache.Show("StoredString");
 
 			_results = _repository.GetItemsMatching(_queryToCache);
 
@@ -509,10 +509,11 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Add_ResultsSetNull_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
-			Query secondQueryToCache = new Query(typeof(TestItem));
-			secondQueryToCache = secondQueryToCache.In("Child").Show("StoredString");
+			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			secondQueryToCache = secondQueryToCache;
+			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(null, secondQueryToCache);
@@ -522,10 +523,11 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Add_QueryNull_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
-			Query secondQueryToCache = new Query(typeof(TestItem));
-			secondQueryToCache = secondQueryToCache.In("Child").Show("StoredString");
+			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			secondQueryToCache = secondQueryToCache;
+			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, null);
@@ -534,10 +536,11 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void MultipleQueries_QueriedFieldsAreIdentical_ReturnsOnlyOneRecordToken()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
-			Query secondQueryToCache = new Query(typeof(TestItem));
-			secondQueryToCache = secondQueryToCache.In("Child").Show("StoredString");
+			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			secondQueryToCache = secondQueryToCache;
+			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
@@ -561,10 +564,11 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void UpdateItemInCache_ItemDoesNotExistInCacheButDoesInRepository_ItemIsAddedToResultSetAndSortedCorrectly()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
-			Query secondQueryToCache = new Query(typeof(TestItem));
-			secondQueryToCache = secondQueryToCache.In("Child").Show("StoredString");
+			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			secondQueryToCache = secondQueryToCache;
+			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
@@ -592,10 +596,11 @@ namespace WeSay.Data.Tests
 			itemToModify.StoredString = "Item 6";
 			_repository.SaveItem(itemToModify);
 
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
-			Query secondQueryToCache = new Query(typeof(TestItem));
-			secondQueryToCache = secondQueryToCache.In("Child").Show("StoredString");
+			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			secondQueryToCache = secondQueryToCache;
+			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
@@ -623,10 +628,11 @@ namespace WeSay.Data.Tests
 			_repository.SaveItem(unmodifiedItem);
 
 			//_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
-			Query secondQueryToCache = new Query(typeof(TestItem));
-			secondQueryToCache = secondQueryToCache.In("Child").Show("StoredString");
+			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			secondQueryToCache = secondQueryToCache;
+			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
@@ -655,10 +661,11 @@ namespace WeSay.Data.Tests
 			_repository.SaveItem(itemToDelete);
 
 			//_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
-			Query secondQueryToCache = new Query(typeof(TestItem));
-			secondQueryToCache = secondQueryToCache.In("Child").Show("StoredString");
+			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			secondQueryToCache = secondQueryToCache;
+			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
@@ -685,10 +692,11 @@ namespace WeSay.Data.Tests
 			_repository.SaveItem(itemToDelete);
 
 			//_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
-			Query secondQueryToCache = new Query(typeof(TestItem));
-			secondQueryToCache = secondQueryToCache.In("Child").Show("StoredString");
+			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			secondQueryToCache = secondQueryToCache;
+			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
@@ -710,10 +718,11 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void DeleteAllItemsFromCache_AllItemsAreDeleted()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _results, _queryToCache, _sortDefinitions);
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
-			Query secondQueryToCache = new Query(typeof(TestItem));
-			secondQueryToCache = secondQueryToCache.In("Child").Show("StoredString");
+			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			secondQueryToCache = secondQueryToCache;
+			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);

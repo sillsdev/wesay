@@ -7,7 +7,7 @@ using System.Text;
 
 namespace WeSay.Data
 {
-	public class Query
+	public class Query : IQuery<object>
 	{
 		[Obsolete]
 		public sealed class PredicateQuery<T>: Query
@@ -228,7 +228,7 @@ namespace WeSay.Data
 			}
 		}
 
-		public IEnumerable<Dictionary<string, object>> GetResults(object o)
+		public IEnumerable<IDictionary<string, object>> GetResults(object o)
 		{
 			if (o == null)
 			{
