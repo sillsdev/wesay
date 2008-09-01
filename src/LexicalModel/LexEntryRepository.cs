@@ -11,7 +11,7 @@ namespace WeSay.LexicalModel
 {
 	public class LexEntryRepository: IRepository<LexEntry>
 	{
-		Dictionary<string, ResultSetCache<LexEntry>> _sortedResultSetCaches = new Dictionary<string, ResultSetCache<LexEntry>>();
+		ResultSetCacheManager<LexEntry> _caches = new ResultSetCacheManager<LexEntry>();
 
 		private readonly LiftRepository _decoratedRepository;
 		public LexEntryRepository(string path):this(path, new ProgressState())
@@ -40,21 +40,8 @@ namespace WeSay.LexicalModel
 		public LexEntry CreateItem()
 		{
 			LexEntry item = _decoratedRepository.CreateItem();
-			UpdateCaches(item);
+			_caches.AddItemToCaches(item);
 			return item;
-		}
-
-		private void UpdateCaches(LexEntry item)
-		{
-			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
-			{
-				pair.Value.UpdateItemInCache(item);
-			}
-		}
-
-		private void UpdateCaches(object sender, EventArgs e)
-		{
-			UpdateCaches((LexEntry) sender);
 		}
 
 		public RepositoryId[] GetAllItems()
@@ -90,7 +77,7 @@ namespace WeSay.LexicalModel
 				if (item.IsDirty)
 				{
 					dirtyItems.Add(item);
-					UpdateCaches(item);
+					_caches.UpdateItemInCaches(item);
 				}
 			}
 			_decoratedRepository.SaveItems(dirtyItems);
@@ -114,7 +101,7 @@ namespace WeSay.LexicalModel
 			if (item.IsDirty)
 			{
 				_decoratedRepository.SaveItem(item);
-				UpdateCaches(item);
+				_caches.UpdateItemInCaches(item);
 				item.Clean();
 			}
 		}
@@ -131,32 +118,20 @@ namespace WeSay.LexicalModel
 
 		public void DeleteItem(LexEntry item)
 		{
-			DeleteFromCaches(item);
+			_caches.DeleteItemFromCaches(item);
 			_decoratedRepository.DeleteItem(item);
-		}
-
-		private void DeleteFromCaches(LexEntry item)
-		{
-			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
-			{
-				pair.Value.DeleteItemFromCache(item);
-			}
 		}
 
 		public void DeleteItem(RepositoryId repositoryId)
 		{
-			LexEntry item = _decoratedRepository.GetItem(repositoryId);
-			DeleteFromCaches(item);
+			_caches.DeleteItemFromCaches(repositoryId);
 			_decoratedRepository.DeleteItem(repositoryId);
 		}
 
 		public void DeleteAllItems()
 		{
 			_decoratedRepository.DeleteAllItems();
-			foreach (KeyValuePair<string, ResultSetCache<LexEntry>> pair in _sortedResultSetCaches)
-			{
-				pair.Value.DeleteAllItemsFromCache();
-			}
+			_caches.DeleteAllItemsFromCaches();
 		}
 
 		public void NotifyThatLexEntryHasBeenUpdated(LexEntry updatedLexEntry)
@@ -167,7 +142,7 @@ namespace WeSay.LexicalModel
 			}
 			//This call checks that the Entry is in the repository
 			GetId(updatedLexEntry);
-			UpdateCaches(updatedLexEntry);
+			_caches.UpdateItemInCaches(updatedLexEntry);
 		}
 
 		public int GetHomographNumber(LexEntry entry, WritingSystem headwordWritingSystem)
@@ -209,7 +184,7 @@ namespace WeSay.LexicalModel
 			}
 
 			string cacheName = String.Format("sortedByHeadWord_{0}", writingSystem.Id);
-			if (!_sortedResultSetCaches.ContainsKey(cacheName))
+			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> headWordQuery = new DelegateQuery<LexEntry>(
 					delegate(LexEntry entryToQuery)
@@ -231,9 +206,9 @@ namespace WeSay.LexicalModel
 				sortOrder[2] = new SortDefinition("OrderInFile", Comparer<int>.Default);
 				sortOrder[3] = new SortDefinition("CreationTime", Comparer<DateTime>.Default);
 
-				_sortedResultSetCaches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, headWordQuery));
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, headWordQuery));
 			}
-			ResultSet<LexEntry> resultsFromCache = _sortedResultSetCaches[cacheName].GetResultSet();
+			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
 
 			string previousHeadWord = null;
 			int homographNumber = 1;
@@ -295,7 +270,7 @@ namespace WeSay.LexicalModel
 				throw new ArgumentNullException("writingSystem");
 			}
 			string cacheName = String.Format("sortedByLexicalFormOrAlternative_{0}", writingSystem.Id);
-			if (!_sortedResultSetCaches.ContainsKey(cacheName))
+			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> lexicalFormWithAlternativeQuery = new DelegateQuery<LexEntry>(
 					delegate(LexEntry entryToQuery)
@@ -318,9 +293,9 @@ namespace WeSay.LexicalModel
 				SortDefinition[] sortOrder = new SortDefinition[1];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
 
-				_sortedResultSetCaches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormWithAlternativeQuery));
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormWithAlternativeQuery));
 			}
-			ResultSet<LexEntry> resultsFromCache = _sortedResultSetCaches[cacheName].GetResultSet();
+			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
 
 			return resultsFromCache;
 		}
@@ -338,7 +313,7 @@ namespace WeSay.LexicalModel
 				throw new ArgumentNullException("writingSystem");
 			}
 			string cacheName = String.Format("sortedByLexicalForm_{0}", writingSystem.Id);
-			if (!_sortedResultSetCaches.ContainsKey(cacheName))
+			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> lexicalFormQuery = new DelegateQuery<LexEntry>(
 					delegate(LexEntry entryToQuery)
@@ -356,9 +331,9 @@ namespace WeSay.LexicalModel
 				SortDefinition[] sortOrder = new SortDefinition[1];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
 
-				_sortedResultSetCaches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormQuery));
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormQuery));
 			}
-			ResultSet<LexEntry> resultsFromCache = _sortedResultSetCaches[cacheName].GetResultSet();
+			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
 
 			return resultsFromCache;
 		}
@@ -378,7 +353,7 @@ namespace WeSay.LexicalModel
 			}
 
 			string cacheName = String.Format("SortByDefinition_{0}", writingSystem.Id);
-			if (!_sortedResultSetCaches.ContainsKey(cacheName))
+			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> definitionQuery = new DelegateQuery<LexEntry>(
 					delegate(LexEntry entryToQuery)
@@ -428,9 +403,9 @@ namespace WeSay.LexicalModel
 				SortDefinition[] sortOrder = new SortDefinition[2];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
 				sortOrder[1] = new SortDefinition("SenseNumber", Comparer<int>.Default);
-				_sortedResultSetCaches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, definitionQuery));
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, definitionQuery));
 			}
-			ResultSet<LexEntry> resultsFromCache = _sortedResultSetCaches[cacheName].GetResultSet();
+			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
 			return resultsFromCache;
 
 		}
@@ -736,7 +711,7 @@ namespace WeSay.LexicalModel
 				throw new ArgumentNullException("field");
 			}
 			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}", field, lexicalUnitWritingSystem.Id);
-			if (!_sortedResultSetCaches.ContainsKey(cacheName))
+			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> lexicalFormQuery = new DelegateQuery<LexEntry>(
 					delegate(LexEntry entryToQuery)
@@ -754,9 +729,9 @@ namespace WeSay.LexicalModel
 				SortDefinition[] sortOrder = new SortDefinition[1];
 				sortOrder[0] = new SortDefinition("Form", lexicalUnitWritingSystem);
 
-				_sortedResultSetCaches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormQuery));
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormQuery));
 			}
-			ResultSet<LexEntry> resultsFromCache = _sortedResultSetCaches[cacheName].GetResultSet();
+			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
 
 			return resultsFromCache;
 		}

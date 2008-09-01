@@ -129,7 +129,8 @@ namespace WeSay.Data
 
 		public void DeleteItemFromCache(T item)
 		{
-			RemoveOldTokensWithId(_repositoryQueried.GetId(item));
+			RepositoryId id = _repositoryQueried.GetId(item);
+			DeleteItemFromCache(id);
 		}
 
 		public void DeleteItemFromCache(RepositoryId id)
