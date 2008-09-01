@@ -380,64 +380,55 @@ namespace WeSay.LexicalModel
 			string cacheName = String.Format("SortByDefinition_{0}", writingSystem.Id);
 			if (!_sortedResultSetCaches.ContainsKey(cacheName))
 			{
-				QueryAdapter<LexEntry> defQuery = GetAllLexEntriesQuery();
-				defQuery.ForEach("Senses")
-					.Where(new string[] {"Definition", "Gloss"},
-						delegate(IDictionary<string, object> data)
-							{
-								MultiText definition = (MultiText) data["Definition"];
-								MultiText gloss = (MultiText) data["Gloss"];
-								bool DefinitionAndGlossAreBothNull = (String.IsNullOrEmpty(definition[writingSystem.Id]) &&
-									String.IsNullOrEmpty(gloss[writingSystem.Id]));
-								bool DefinitionExists = !String.IsNullOrEmpty(definition[writingSystem.Id]);
-								if (DefinitionExists || DefinitionAndGlossAreBothNull)
-								{
-									return true;
-								}
-								else
-								{
-									return false;
-								}
-							})
-					.In("Definition").ForEach("Forms")
-					.Where("WritingSystemId",
-						delegate(IDictionary<string, object> data)
-							  {
-								  if ((string)data["WritingSystemId"] == writingSystem.Id)
-								  {
-									  return true;
-								  }
-								  return false;
-							  })
-					.AtLeastOne().Show("Form").Show("WritingSystemId");
+				DelegateQuery<LexEntry> definitionQuery = new DelegateQuery<LexEntry>(
+					delegate(LexEntry entryToQuery)
+					{
+						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
 
-				QueryAdapter<LexEntry> glossQuery = GetAllLexEntriesQuery();
-				glossQuery.ForEach("Senses")
-					.Where("Gloss",
-						delegate(IDictionary<string, object> data)
+						for (int i = 0; i < entryToQuery.Senses.Count; i++)
 						{
-							MultiText gloss = (MultiText)data["Gloss"];
-							bool GlossExists = !String.IsNullOrEmpty(gloss[writingSystem.Id]);
-							if (GlossExists)
-							{
-								return true;
-							}
-							else
-							{
-								return false;
-							}
-						})
-					.In("Gloss").ForEach("Forms").Show("Form").Show("WritingSystemId");
+							string definition = entryToQuery.Senses[i].Definition[writingSystem.Id];
+							string gloss = entryToQuery.Senses[i].Gloss[writingSystem.Id];
 
-				ResultSet<LexEntry> defResults = GetItemsMatching(defQuery);
+							if(String.IsNullOrEmpty(definition) && String.IsNullOrEmpty(gloss))
+							{
+								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+								tokenFieldsAndValues.Add("Form", null);
+								tokenFieldsAndValues.Add("SenseNumber", i);
+								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+								continue;
+							}
+							if(definition == gloss)
+							{
+								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+								tokenFieldsAndValues.Add("Form", definition);
+								tokenFieldsAndValues.Add("SenseNumber", i);
+								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+								continue;
+							}
+							if(!String.IsNullOrEmpty(definition))
+							{
+								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+								tokenFieldsAndValues.Add("Form", definition);
+								tokenFieldsAndValues.Add("SenseNumber", i);
+								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+							}
+							if (!String.IsNullOrEmpty(gloss))
+							{
+								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+								tokenFieldsAndValues.Add("Form", gloss);
+								tokenFieldsAndValues.Add("SenseNumber", i);
+								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+							}
+						}
+						return fieldsandValuesForRecordTokens;
+					});
+				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(definitionQuery);
 
-				SortDefinition[] sortOrder = new SortDefinition[1];
+				SortDefinition[] sortOrder = new SortDefinition[2];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
-				_sortedResultSetCaches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder));
-				_sortedResultSetCaches[cacheName].Add(defResults, defQuery);
-
-				ResultSet<LexEntry> glossResults = GetItemsMatching(glossQuery);
-				_sortedResultSetCaches[cacheName].Add(glossResults, glossQuery);
+				sortOrder[1] = new SortDefinition("SenseNumber", Comparer<int>.Default);
+				_sortedResultSetCaches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, definitionQuery));
 			}
 			ResultSet<LexEntry> resultsFromCache = _sortedResultSetCaches[cacheName].GetResultSet();
 			return resultsFromCache;

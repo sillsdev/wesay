@@ -40,10 +40,7 @@ namespace WeSay.Data
 		{
 			foreach (RecordToken<T> token in resultSetToCache)
 			{
-				if (!_sortedTokens.ContainsKey(token))
-				{
 					_sortedTokens.Add(token, null);
-				}
 			}
 		}
 

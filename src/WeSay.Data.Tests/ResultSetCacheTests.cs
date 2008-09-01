@@ -512,7 +512,7 @@ namespace WeSay.Data.Tests
 			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
-			secondQueryToCache = secondQueryToCache;
+
 			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
@@ -526,7 +526,7 @@ namespace WeSay.Data.Tests
 			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
-			secondQueryToCache = secondQueryToCache;
+
 			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
@@ -539,7 +539,7 @@ namespace WeSay.Data.Tests
 			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
-			secondQueryToCache = secondQueryToCache;
+
 			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
@@ -567,7 +567,7 @@ namespace WeSay.Data.Tests
 			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
-			secondQueryToCache = secondQueryToCache;
+
 			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
@@ -599,7 +599,7 @@ namespace WeSay.Data.Tests
 			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
-			secondQueryToCache = secondQueryToCache;
+
 			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
@@ -631,7 +631,7 @@ namespace WeSay.Data.Tests
 			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
-			secondQueryToCache = secondQueryToCache;
+
 			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
@@ -664,7 +664,7 @@ namespace WeSay.Data.Tests
 			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
-			secondQueryToCache = secondQueryToCache;
+
 			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
@@ -695,7 +695,7 @@ namespace WeSay.Data.Tests
 			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
-			secondQueryToCache = secondQueryToCache;
+
 			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
@@ -721,7 +721,6 @@ namespace WeSay.Data.Tests
 			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
 
 			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
-			secondQueryToCache = secondQueryToCache;
 			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
 
@@ -729,6 +728,24 @@ namespace WeSay.Data.Tests
 
 			resultSetCacheUnderTest.DeleteAllItemsFromCache();
 			Assert.AreEqual(0, resultSetCacheUnderTest.GetResultSet().Count);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentException))]
+		public void ResultSetContainsIdenticalRecordTokens_Throws()
+		{
+			TestItem itemFromWhichToCreateIdenticalRecordTokens = _repository.CreateItem();
+
+			itemFromWhichToCreateIdenticalRecordTokens.StoredString = "Get me twice!";
+
+			QueryAdapter<TestItem> query1 = new QueryAdapter<TestItem>();
+			query1.Show("StoredString");
+			QueryAdapter<TestItem> query2 = new QueryAdapter<TestItem>();
+			query2.Show("StoredString");
+
+			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions);
+			resultSetCacheUnderTest.Add(_repository.GetItemsMatching(query1), query1);
+			resultSetCacheUnderTest.Add(_repository.GetItemsMatching(query2), query2);
 		}
 	}
 
