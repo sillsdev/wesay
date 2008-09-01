@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using WeSay.Data;
@@ -32,7 +33,17 @@ namespace WeSay.LexicalModel
 		{
 			foreach (RecordToken<LexEntry> token in Items)
 			{
-				yield return token[FieldLabel].ToString();
+				string stringToDisplay = null;
+				if(token[FieldLabel] == null)
+				{
+					stringToDisplay = "";
+				}
+				else
+				{
+					stringToDisplay = token[FieldLabel].ToString();
+				}
+
+				yield return stringToDisplay;
 			}
 		}
 
