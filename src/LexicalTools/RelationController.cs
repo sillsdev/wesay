@@ -68,7 +68,7 @@ namespace WeSay.LexicalTools
 		{
 			LexEntry newGuy = CreateNewLexEntry(e);
 			WritingSystem writingSystem = GetWritingSystemFromField();
-			_resultSet = _lexEntryRepository.GetAllEntriesSortedByLexicalFormWithAlternatives(writingSystem);
+			_resultSet = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystem);
 			e.NewlyCreatedItem = GetRecordTokenFromLexEntry(newGuy);
 		}
 
@@ -129,7 +129,7 @@ namespace WeSay.LexicalTools
 
 			WritingSystem writingSystem = GetWritingSystemFromField();
 			ResultSet<LexEntry> recordTokenList =
-					_lexEntryRepository.GetAllEntriesSortedByLexicalFormWithAlternatives(writingSystem);
+					_lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystem);
 			_resultSet = recordTokenList;
 
 			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker =

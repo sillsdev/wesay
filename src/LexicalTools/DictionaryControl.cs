@@ -269,12 +269,12 @@ namespace WeSay.LexicalTools
 		{
 			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 			{
-				_records = _lexEntryRepository.GetAllEntriesSortedByLexicalFormWithAlternatives(_listWritingSystem);
+				_records = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(_listWritingSystem);
 				_findTextAdapter.Items = _records;
 			}
 			else
 			{
-				_records = _lexEntryRepository.GetAllEntriesSortedByDefinition(_listWritingSystem);
+				_records = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(_listWritingSystem);
 				_findTextAdapter.Items = _records;
 			}
 			_recordsListBox.BeginUpdate();
