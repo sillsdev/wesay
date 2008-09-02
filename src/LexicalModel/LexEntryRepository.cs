@@ -408,41 +408,45 @@ namespace WeSay.LexicalModel
 					{
 						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
 
-						for (int i = 0; i < entryToQuery.Senses.Count; i++)
+						int senseNumber = 0;
+						foreach (LexSense sense in entryToQuery.Senses)
 						{
-							string definition = entryToQuery.Senses[i].Definition[writingSystem.Id];
-							string gloss = entryToQuery.Senses[i].Gloss[writingSystem.Id];
+							string definition = sense.Definition[writingSystem.Id];
+							string gloss = sense.Gloss[writingSystem.Id];
 
 							if(String.IsNullOrEmpty(definition) && String.IsNullOrEmpty(gloss))
 							{
 								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 								tokenFieldsAndValues.Add("Form", null);
-								tokenFieldsAndValues.Add("SenseNumber", i);
+								tokenFieldsAndValues.Add("Sense", senseNumber);
 								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+								senseNumber++;
 								continue;
 							}
 							if(definition == gloss)
 							{
 								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 								tokenFieldsAndValues.Add("Form", definition);
-								tokenFieldsAndValues.Add("SenseNumber", i);
+								tokenFieldsAndValues.Add("Sense", senseNumber);
 								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+								senseNumber++;
 								continue;
 							}
 							if(!String.IsNullOrEmpty(definition))
 							{
 								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 								tokenFieldsAndValues.Add("Form", definition);
-								tokenFieldsAndValues.Add("SenseNumber", i);
+								tokenFieldsAndValues.Add("Sense", senseNumber);
 								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
 							}
 							if (!String.IsNullOrEmpty(gloss))
 							{
 								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 								tokenFieldsAndValues.Add("Form", gloss);
-								tokenFieldsAndValues.Add("SenseNumber", i);
+								tokenFieldsAndValues.Add("Sense", senseNumber);
 								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
 							}
+							senseNumber++;
 						}
 						return fieldsandValuesForRecordTokens;
 					});
@@ -450,7 +454,7 @@ namespace WeSay.LexicalModel
 
 				SortDefinition[] sortOrder = new SortDefinition[2];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
-				sortOrder[1] = new SortDefinition("SenseNumber", Comparer<int>.Default);
+				sortOrder[1] = new SortDefinition("Sense", Comparer<int>.Default);
 				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, definitionQuery));
 			}
 			return _caches[cacheName].GetResultSet();
@@ -527,11 +531,11 @@ namespace WeSay.LexicalModel
 					delegate(LexEntry entry)
 					{
 						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
+						int senseNumber = 0;
 						foreach (LexSense sense in entry.Senses)
 						{
 							foreach (LanguageForm form in sense.Gloss.Forms)
 							{
-
 								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 								string lexicalForm = entry.LexicalForm[lexicalUnitWritingSystem.Id];
 								if (String.IsNullOrEmpty(lexicalForm))
@@ -553,15 +557,20 @@ namespace WeSay.LexicalModel
 									glossWritingSystem = null;
 								}
 								tokenFieldsAndValues.Add("GlossWritingSystem", glossWritingSystem);
+								tokenFieldsAndValues.Add("Sense", senseNumber);
 								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
 							}
+							senseNumber++;
 						}
 						return fieldsandValuesForRecordTokens;
 					}
 					);
 				ResultSet<LexEntry> itemsMatchingQuery = GetItemsMatching(MatchingGlossQuery);
-				SortDefinition[] sortDefinition = new SortDefinition[1];
+				SortDefinition[] sortDefinition = new SortDefinition[4];
 				sortDefinition[0] = new SortDefinition("Form", lexicalUnitWritingSystem);
+				sortDefinition[1] = new SortDefinition("Gloss", StringComparer.InvariantCulture);
+				sortDefinition[2] = new SortDefinition("GlossWritingSystem", StringComparer.InvariantCulture);
+				sortDefinition[3] = new SortDefinition("SenseNumber", Comparer<int>.Default);
 				ResultSetCache<LexEntry> cache =
 					new ResultSetCache<LexEntry>(this, sortDefinition, itemsMatchingQuery, MatchingGlossQuery);
 				_caches.Add(cachename, cache);
@@ -760,9 +769,15 @@ namespace WeSay.LexicalModel
 						Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field).FilteringPredicate;
 						if(filteringPredicate(entryToQuery))
 						{
-						   tokenFieldsAndValues.Add("Form", entryToQuery.LexicalForm[lexicalUnitWritingSystem.Id]);
+							string lexicalForm = null;
+							if (!String.IsNullOrEmpty(entryToQuery.LexicalForm[lexicalUnitWritingSystem.Id]))
+							{
+								lexicalForm = entryToQuery.LexicalForm[lexicalUnitWritingSystem.Id];
+							}
+							tokenFieldsAndValues.Add("Form", lexicalForm);
+							return new IDictionary<string, object>[] { tokenFieldsAndValues };
 						}
-						return new IDictionary<string, object>[] {tokenFieldsAndValues};
+						return new IDictionary<string, object>[0];
 					});
 				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(lexicalFormQuery);
 
