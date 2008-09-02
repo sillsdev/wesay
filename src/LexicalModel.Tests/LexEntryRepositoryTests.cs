@@ -736,8 +736,8 @@ namespace WeSay.LexicalModel.Tests
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, lexicalFormWritingSystem);
 			Assert.AreEqual(2, sortedResults.Count);
-			Assert.AreEqual("", sortedResults[0]["Form"]);
-			Assert.AreEqual("", sortedResults[1]["Form"]);
+			Assert.AreEqual(null, sortedResults[0]["Form"]);
+			Assert.AreEqual(null, sortedResults[1]["Form"]);
 		}
 
 		private void CreateLexentryWithCitation(string citationWritingSystem, string lexicalForm)
@@ -769,15 +769,27 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetEntriesWithMissingFieldSortedByLexicalUnit_LexicalFormDoesNotExistInWritingSystem_ReturnsEmptylexicalFormForThatEntry()
+		public void GetEntriesWithMissingFieldSortedByLexicalUnit_LexicalFormDoesNotExistInWritingSystem_ReturnsNullForThatEntry()
 		{
-			CreateLexentryWithLexicalFormButWithoutCitation("de Word1");
+			LexEntry lexEntryWithMissingCitation = _lexEntryRepository.CreateItem();
+			_lexEntryRepository.SaveItem(lexEntryWithMissingCitation);
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "de" });
 			WritingSystem lexicalFormWritingSystem = new WritingSystem("fr", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, lexicalFormWritingSystem);
 			Assert.AreEqual(1, sortedResults.Count);
-			Assert.AreEqual("", sortedResults[0]["Form"]);
+			Assert.AreEqual(null, sortedResults[0]["Form"]);
+		}
+
+		[Test]
+		public void GetEntriesWithMissingFieldSortedByLexicalUnit_FieldExists_DoesNotReturnResultForThatLexEntry()
+		{
+			CreateLexentryWithLexicalFormButWithoutCitation("de Word1");
+			Field fieldToFill = new Field(LexEntry.WellKnownProperties.LexicalUnit, "LexEntry", new string[] { "de" });
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> sortedResults =
+				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, lexicalFormWritingSystem);
+			Assert.AreEqual(0, sortedResults.Count);
 		}
 
 		[Test]
@@ -1462,7 +1474,7 @@ namespace WeSay.LexicalModel.Tests
 
 			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, new WritingSystem("de", SystemFonts.DefaultFont));
 			Assert.AreEqual(2, results.Count);
-			Assert.AreEqual("", results[0]["Form"]);
+			Assert.AreEqual(null, results[0]["Form"]);
 			Assert.AreEqual("word 1", results[1]["Form"]);
 		}
 
@@ -1565,12 +1577,12 @@ namespace WeSay.LexicalModel.Tests
 
 			 _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de", SystemFonts.DefaultFont));
 
-			LexEntry entryAfterFirstQuery = _repository.CreateItem();
+			 LexEntry entryAfterFirstQuery = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 2");
 
 			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de", SystemFonts.DefaultFont));
 			Assert.AreEqual(2, results.Count);
-			Assert.AreEqual(null, results[0]["Form"]);
-			Assert.AreEqual("word 1", results[1]["Form"]);
+			Assert.AreEqual("word 1", results[0]["Form"]);
+			Assert.AreEqual("word 2", results[1]["Form"]);
 		}
 
 		[Test]
