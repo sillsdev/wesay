@@ -557,7 +557,7 @@ namespace WeSay.LexicalModel
 									glossWritingSystem = null;
 								}
 								tokenFieldsAndValues.Add("GlossWritingSystem", glossWritingSystem);
-								tokenFieldsAndValues.Add("Sense", senseNumber);
+								tokenFieldsAndValues.Add("SenseNumber", senseNumber);
 								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
 							}
 							senseNumber++;

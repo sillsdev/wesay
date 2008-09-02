@@ -686,6 +686,25 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(null, matches[0]["Form"]);
 		}
 
+		[Test]
+		public void GetEntriesWithMatchingGlossSortedByLexicalForm_EntryHasIdenticalSenses_ReturnsBoth()
+		{
+			LanguageForm identicalGloss = new LanguageForm("de", "de Gloss", new MultiText());
+
+			LexEntry entryWithGlossAndLexicalForm = _lexEntryRepository.CreateItem();
+			entryWithGlossAndLexicalForm.LexicalForm.SetAlternative("en", "en Word1");
+			entryWithGlossAndLexicalForm.Senses.Add(new LexSense());
+			entryWithGlossAndLexicalForm.Senses[0].Gloss.SetAlternative(identicalGloss.WritingSystemId, identicalGloss.Form);
+			entryWithGlossAndLexicalForm.Senses.Add(new LexSense());
+			entryWithGlossAndLexicalForm.Senses[1].Gloss.SetAlternative(identicalGloss.WritingSystemId, identicalGloss.Form);
+
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(identicalGloss, lexicalFormWritingSystem);
+			Assert.AreEqual(2, matches.Count);
+			Assert.AreEqual("en Word1", matches[0]["Form"]);
+			Assert.AreEqual("en Word1", matches[1]["Form"]);
+		}
+
 		private void AddEntryWithGloss(string gloss)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
