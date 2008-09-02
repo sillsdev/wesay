@@ -207,10 +207,10 @@ namespace WeSay.LexicalTools
 						viewTemplate,
 						fieldsToShowEditable + " " + fieldsToShowReadOnly)
 		{
-			MarkReadOnlyFIelds(fieldsToShowReadOnly);
+			MarkReadOnlyFields(fieldsToShowReadOnly);
 		}
 
-		private void MarkReadOnlyFIelds(string fieldsToShowReadOnly)
+		private void MarkReadOnlyFields(string fieldsToShowReadOnly)
 		{
 			string[] readOnlyFields = SplitUpFieldNames(fieldsToShowReadOnly);
 
