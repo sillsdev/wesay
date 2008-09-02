@@ -21,7 +21,11 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("results");
 			}
-			_results = CreateResultsWithNoDuplicates(results);
+			_results = new List<RecordToken<T>>();
+			foreach (IEnumerable<RecordToken<T>> result in results)
+			{
+				_results.AddRange(result);
+			}
 			_repository = repository;
 		}
 
