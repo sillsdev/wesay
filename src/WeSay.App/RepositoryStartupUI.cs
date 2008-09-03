@@ -15,8 +15,7 @@ namespace WeSay.App
 			LexEntryRepository lexEntryRepository = null;
 			using (ProgressDialog dlg = new ProgressDialog())
 			{
-				dlg.Overview =
-						"Please wait while WeSay migrates your lift database to the required version.";
+				dlg.Overview = "Please wait while WeSay loads your data.";
 				BackgroundWorker worker = new BackgroundWorker();
 				worker.DoWork += delegate (object sender, DoWorkEventArgs args)
 								 {

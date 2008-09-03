@@ -156,16 +156,6 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByLexicalForm_LexicalFormInWritingSystemDoesNotExist_ReturnsFormWithStarFromDifferentWritingSystem()
-		{
-			LexEntry lexEntryWithOutFrenchHeadWord = _lexEntryRepository.CreateItem();
-			lexEntryWithOutFrenchHeadWord.LexicalForm.SetAlternative("de", "de Word1");
-			WritingSystem french = new WritingSystem("fr", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByLexicalForm = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(french);
-			Assert.AreEqual("de Word1*", listOfLexEntriesSortedByLexicalForm[0]["Form"]);
-		}
-
-		[Test]
 		public void GetAllEntriesSortedByLexicalForm_LexicalFormDoesNotExistInAnyWritingSystem_ReturnsNullForThatEntry()
 		{
 			LexEntry lexEntryWithOutFrenchHeadWord = _lexEntryRepository.CreateItem();
