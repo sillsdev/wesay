@@ -260,6 +260,7 @@ namespace WeSay.LexicalTools
 					}
 				}
 				entry.Senses.Add(sense);
+				LexEntryRepository.NotifyThatLexEntryHasBeenUpdated(entry);
 			}
 		}
 
@@ -283,7 +284,7 @@ namespace WeSay.LexicalTools
 			// _suspendNotificationOfNavigation = true;
 
 			CurrentIndexIntoWordlist++;
-			while (CanNavigateNext && GetMatchingRecords().Count > 0)
+			while (CanNavigateNext && GetRecordsWithMatchingGloss().Count > 0)
 			{
 				++CurrentIndexIntoWordlist;
 			}
@@ -305,7 +306,15 @@ namespace WeSay.LexicalTools
 			CurrentIndexIntoWordlist = 0;
 		}
 
-		public ResultSet<LexEntry> GetMatchingRecords()
+		public ResultSet<LexEntry> NotifyOfAddedWord()
+		{
+			return
+					LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
+							CurrentWordAsMultiText.Find(_writingSystemIdForWordListWords),
+							_lexicalUnitWritingSystem);
+		}
+
+		public ResultSet<LexEntry> GetRecordsWithMatchingGloss()
 		{
 			return
 					LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(

@@ -116,9 +116,9 @@ namespace WeSay.LexicalTools
 		private void PopulateWordsMatchingCurrentItem()
 		{
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
-			foreach (RecordToken<LexEntry> recordToken in _task.GetMatchingRecords())
+			foreach (RecordToken<LexEntry> recordToken in _task.GetRecordsWithMatchingGloss())
 			{
-				_listViewOfWordsMatchingCurrentItem.Items.Add(recordToken);
+				_listViewOfWordsMatchingCurrentItem.Items.Add(new RecordTokenToStringAdapter<LexEntry>("Form", recordToken));
 			}
 		}
 
@@ -204,7 +204,7 @@ namespace WeSay.LexicalTools
 				string word = _listViewOfWordsMatchingCurrentItem.SelectedItem.ToString();
 
 				RecordToken<LexEntry> recordToken =
-						(RecordToken<LexEntry>) _listViewOfWordsMatchingCurrentItem.SelectedItem;
+					((RecordTokenToStringAdapter<LexEntry>) (_listViewOfWordsMatchingCurrentItem.SelectedItem)).AdaptedRecordToken;
 				Point start =
 						_listViewOfWordsMatchingCurrentItem.GetItemRectangle(selectedListIndex).
 								Location;

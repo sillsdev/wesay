@@ -241,7 +241,27 @@ namespace WeSay.LexicalTools.Tests
 			//this is an attempt to get a failure that I was able to get at one time in the
 			//app itself, but which I haven't got to fail under tests.  I believe I've
 			//fixed the bug, but alas this never really demonstrated it.
-			Assert.AreEqual(1, Task.GetMatchingRecords().Count);
+			Assert.AreEqual(1, Task.GetRecordsWithMatchingGloss().Count);
+		}
+
+		[Test]
+		public void AddWord_LexEntryAlreadyExists_WordAppearsInCompletedBox()
+		{
+			LexEntry e = _lexEntryRepository.CreateItem();
+			e.LexicalForm[VernWs.Id] = "uno";
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
+			MultiText word = new MultiText();
+			word[VernWs.Id] = "uno";
+			Assert.AreEqual(0, e.Senses.Count);
+			_lexEntryRepository.SaveItem(e);
+
+			Task.NavigateFirstToShow();
+			Task.WordCollected(word);
+			Task.NavigateNext();
+			Task.WordCollected(word);
+
+			ResultSet<LexEntry> matchingLexicalForms = Task.GetRecordsWithMatchingGloss();
+			Assert.AreEqual(1, matchingLexicalForms.Count);
 		}
 
 		[Test]
