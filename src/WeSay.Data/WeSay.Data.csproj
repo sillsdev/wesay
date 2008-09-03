@@ -76,6 +76,7 @@
 	<Compile Include="QueryAdapter.cs" />
 	<Compile Include="RecordToken.cs" />
 	<Compile Include="RecordTokenComparer.cs" />
+	<Compile Include="RecordTokenToStringAdapter.cs" />
 	<Compile Include="RepositoryId.cs" />
 	<Compile Include="ResultSet.cs" />
 	<Compile Include="ResultSetCache.cs" />
