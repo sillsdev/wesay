@@ -277,13 +277,9 @@ namespace WeSay.LexicalModel
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 						string headWord = entryToQuery.LexicalForm[writingSystem.Id];
-						if (String.IsNullOrEmpty(headWord))
+						if (headWord == "")
 						{
-							headWord = entryToQuery.VirtualHeadWord.GetBestAlternative(writingSystem.Id, "*");
-							if (headWord == "*")
-							{
 								headWord = null;
-							}
 						}
 						tokenFieldsAndValues.Add("Form", headWord);
 						return new IDictionary<string, object>[] { tokenFieldsAndValues };

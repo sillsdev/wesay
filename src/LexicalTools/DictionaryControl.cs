@@ -294,13 +294,13 @@ namespace WeSay.LexicalTools
 
 			bool writingSystemUsedInLexicalForm =
 					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id);
-			//if (writingSystemUsedInLexicalForm)
-			//{
-			//    displayString =
-			//            recordToken.RealObject.LexicalForm.GetBestAlternative(
-			//                    _listWritingSystem.Id, string.Empty);
-			//    e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
-			//}
+			if (writingSystemUsedInLexicalForm)
+			{
+				displayString =
+						recordToken.RealObject.LexicalForm.GetBestAlternative(
+								_listWritingSystem.Id, string.Empty);
+				e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
+			}
 
 			if (string.IsNullOrEmpty(displayString))
 			{
