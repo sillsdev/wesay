@@ -56,6 +56,12 @@ namespace WeSay.UI
 				ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 				ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 			}
+			MouseClick += OnMouseClick;
+		}
+
+		private void OnMouseClick(object sender, MouseEventArgs e)
+		{
+			this.Select();
 		}
 
 		/// <summary>
@@ -180,6 +186,7 @@ namespace WeSay.UI
 			editWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
 			editWidget.KeyDown += OnEditWidget_KeyDown;
+			editWidget.MouseWheel += OnEditWidget_MouseWheel;
 
 			Debug.Assert(GetControlFromPosition(_indexOfWidget, insertAtRow) == null);
 
@@ -206,6 +213,11 @@ namespace WeSay.UI
 			Controls.Add(editWidget, _indexOfWidget, insertAtRow);
 
 			return editWidget;
+		}
+
+		private void OnEditWidget_MouseWheel(object sender, MouseEventArgs e)
+		{
+			OnMouseWheel(e);
 		}
 
 		private void OnEditWidget_KeyDown(object sender, KeyEventArgs e)

@@ -164,6 +164,7 @@ namespace WeSay.UI
 
 				Label label = AddWritingSystemLabel(box);
 				label.Click += subControl_Click;
+				label.MouseWheel += subControl_MouseWheel;
 
 				Controls.Add(label, 0, RowCount);
 				Controls.Add(box, 1, RowCount);
@@ -299,8 +300,14 @@ namespace WeSay.UI
 
 			box.TextChanged += OnTextOfSomeBoxChanged;
 			box.KeyDown += OnKeyDownInSomeBox;
+			box.MouseWheel += subControl_MouseWheel;
 
 			return box;
+		}
+
+		private void subControl_MouseWheel(object sender, MouseEventArgs e)
+		{
+			OnMouseWheel(e);
 		}
 
 		private void OnKeyDownInSomeBox(object sender, KeyEventArgs e)
