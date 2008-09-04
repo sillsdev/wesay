@@ -659,7 +659,10 @@ namespace WeSay.LexicalTools
 
 		public override void Deactivate()
 		{
-			_gatherControl.Cleanup();
+			if(_gatherControl != null)
+			{
+				_gatherControl.Cleanup();
+			}
 			// get the counts cached before we deactivate
 			GetRemainingCount();
 			GetReferenceCount();
