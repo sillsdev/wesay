@@ -172,7 +172,7 @@ namespace WeSay.LexicalTools
 			this._buttonPanel.Controls.Add(this.labelNextHotKey);
 			this._buttonPanel.Controls.Add(this._btnNextWord);
 			this._buttonPanel.Controls.Add(this._btnPreviousWord);
-			this._buttonPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._buttonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this._buttonPanel.Location = new System.Drawing.Point(0, 355);
 			this._buttonPanel.Name = "_buttonPanel";
 			this._buttonPanel.Size = new System.Drawing.Size(511, 52);
@@ -216,10 +216,12 @@ namespace WeSay.LexicalTools
 			//
 			// _entryViewControl
 			//
+			this._entryViewControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this._entryViewControl.AutoScroll = true;
 			this._entryViewControl.BackColor = System.Drawing.SystemColors.ActiveCaption;
 			this._entryViewControl.DataSource = null;
-			this._entryViewControl.Dock = System.Windows.Forms.DockStyle.Top;
 			this._entryViewControl.Location = new System.Drawing.Point(0, 0);
 			this._entryViewControl.Name = "_entryViewControl";
 			this._entryViewControl.ShowNormallyHiddenFields = false;
