@@ -96,7 +96,7 @@ namespace WeSay.LexicalTools
 			this.splitContainer1.Panel2.Controls.Add(this._entryViewControl);
 			this.splitContainer1.Panel2.Controls.Add(this._congratulationsControl);
 			this.splitContainer1.Size = new System.Drawing.Size(641, 407);
-			this.splitContainer1.SplitterDistance = 125;
+			this.splitContainer1.SplitterDistance = 126;
 			this.splitContainer1.TabIndex = 9;
 			this.splitContainer1.TabStop = false;
 			//
@@ -116,8 +116,8 @@ namespace WeSay.LexicalTools
 			//
 			this.splitContainer2.Panel2.Controls.Add(this._completedRecordsLabel);
 			this.splitContainer2.Panel2.Controls.Add(this._completedRecordsListBox);
-			this.splitContainer2.Size = new System.Drawing.Size(125, 407);
-			this.splitContainer2.SplitterDistance = 184;
+			this.splitContainer2.Size = new System.Drawing.Size(126, 407);
+			this.splitContainer2.SplitterDistance = 178;
 			this.splitContainer2.TabIndex = 10;
 			this.splitContainer2.TabStop = false;
 			//
@@ -139,7 +139,7 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.Location = new System.Drawing.Point(0, 21);
 			this._recordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
 			this._recordsListBox.Name = "_recordsListBox";
-			this._recordsListBox.Size = new System.Drawing.Size(125, 160);
+			this._recordsListBox.Size = new System.Drawing.Size(129, 155);
 			this._recordsListBox.TabIndex = 2;
 			this._recordsListBox.View = System.Windows.Forms.View.SmallIcon;
 			//
@@ -163,7 +163,7 @@ namespace WeSay.LexicalTools
 			this._completedRecordsListBox.Location = new System.Drawing.Point(0, 21);
 			this._completedRecordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
 			this._completedRecordsListBox.Name = "_completedRecordsListBox";
-			this._completedRecordsListBox.Size = new System.Drawing.Size(125, 186);
+			this._completedRecordsListBox.Size = new System.Drawing.Size(129, 181);
 			this._completedRecordsListBox.TabIndex = 3;
 			this._completedRecordsListBox.View = System.Windows.Forms.View.SmallIcon;
 			//
@@ -172,10 +172,10 @@ namespace WeSay.LexicalTools
 			this._buttonPanel.Controls.Add(this.labelNextHotKey);
 			this._buttonPanel.Controls.Add(this._btnNextWord);
 			this._buttonPanel.Controls.Add(this._btnPreviousWord);
-			this._buttonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this._buttonPanel.Location = new System.Drawing.Point(0, 357);
+			this._buttonPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._buttonPanel.Location = new System.Drawing.Point(0, 355);
 			this._buttonPanel.Name = "_buttonPanel";
-			this._buttonPanel.Size = new System.Drawing.Size(512, 50);
+			this._buttonPanel.Size = new System.Drawing.Size(511, 52);
 			this._buttonPanel.TabIndex = 1;
 			//
 			// labelNextHotKey
@@ -219,11 +219,11 @@ namespace WeSay.LexicalTools
 			this._entryViewControl.AutoScroll = true;
 			this._entryViewControl.BackColor = System.Drawing.SystemColors.ActiveCaption;
 			this._entryViewControl.DataSource = null;
-			this._entryViewControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._entryViewControl.Dock = System.Windows.Forms.DockStyle.Top;
 			this._entryViewControl.Location = new System.Drawing.Point(0, 0);
 			this._entryViewControl.Name = "_entryViewControl";
 			this._entryViewControl.ShowNormallyHiddenFields = false;
-			this._entryViewControl.Size = new System.Drawing.Size(512, 407);
+			this._entryViewControl.Size = new System.Drawing.Size(511, 355);
 			this._entryViewControl.TabIndex = 0;
 			//
 			// _congratulationsControl
@@ -231,7 +231,7 @@ namespace WeSay.LexicalTools
 			this._congratulationsControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._congratulationsControl.Location = new System.Drawing.Point(0, 0);
 			this._congratulationsControl.Name = "_congratulationsControl";
-			this._congratulationsControl.Size = new System.Drawing.Size(512, 407);
+			this._congratulationsControl.Size = new System.Drawing.Size(511, 407);
 			this._congratulationsControl.TabIndex = 9;
 			//
 			// MissingInfoControl
