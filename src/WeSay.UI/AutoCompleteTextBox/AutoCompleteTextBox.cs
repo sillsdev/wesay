@@ -169,6 +169,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private object _selectedItem;
 		private readonly ToolTip _toolTip;
 		private object _previousToolTipTarget;
+		private bool _windowJustGotFocus = true;
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -525,6 +526,31 @@ namespace WeSay.UI.AutoCompleteTextBox
 			if (!(Focused || _listBox.Focused))
 			{
 				HideList();
+			}
+
+		}
+
+		protected override void OnGotFocus(EventArgs e)
+		{
+			base.OnGotFocus(e);
+
+			_windowJustGotFocus = true;
+
+			if (Text.Length > 0)
+			{
+				SelectionStart = 0;
+				SelectionLength = Text.Length;
+			}
+		}
+
+		protected override void OnClick(EventArgs e)
+		{
+			base.OnClick(e);
+			if (_windowJustGotFocus)
+			{
+				_windowJustGotFocus = false;
+				SelectionStart = 0;
+				SelectionLength = Text.Length;
 			}
 		}
 
