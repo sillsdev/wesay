@@ -271,7 +271,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 			// Create the list box that will hold matching items
 			_listBox = new ListBox();
-			_listBox.MaximumSize = new Size(400, 100);
+			_listBox.MaximumSize = new Size(800, 100);
 			_listBox.Cursor = Cursors.Hand;
 			_listBox.BorderStyle = BorderStyle.FixedSingle;
 			//_listBox.SelectedIndexChanged += List_SelectedIndexChanged;
