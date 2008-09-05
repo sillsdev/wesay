@@ -717,18 +717,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			return newList;
 		}
 
-		private void List_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (Mode != EntryMode.List)
-			{
-				SelectCurrentItemAndHideList();
-			}
-			else
-			{
-				SelectCurrentItem();
-			}
-		}
-
 		public event EventHandler AutoCompleteChoiceSelected = delegate { };
 
 		private void List_Click(object sender, EventArgs e)
