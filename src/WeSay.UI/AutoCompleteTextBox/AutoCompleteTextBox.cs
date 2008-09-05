@@ -274,7 +274,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			_listBox.MaximumSize = new Size(400, 100);
 			_listBox.Cursor = Cursors.Hand;
 			_listBox.BorderStyle = BorderStyle.FixedSingle;
-			_listBox.SelectedIndexChanged += List_SelectedIndexChanged;
+			//_listBox.SelectedIndexChanged += List_SelectedIndexChanged;
 			_listBox.Click += List_Click;
 			_listBox.MouseMove += List_MouseMove;
 			_listBox.ItemHeight = _listBox.Font.Height;
@@ -299,7 +299,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			string tip = _itemDisplayAdaptor.GetToolTip(SelectedItem);
 			_toolTip.SetToolTip(this, tip);
 			_toolTip.ToolTipTitle = _itemDisplayAdaptor.GetToolTipTitle(SelectedItem);
-			;
 		}
 
 		private void List_MouseMove(object sender, MouseEventArgs e)
@@ -472,7 +471,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		protected override void OnTextChanged(EventArgs e)
 		{
 			base.OnTextChanged(e);
-
+			_listBox.SelectedIndex = -1;
 			DisplayListIfTextTriggers();
 		}
 
@@ -536,8 +535,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 				return;
 			}
 
-			Text = _listBox.SelectedItem.ToString();
-			SelectedItem = ((ItemWrapper) _listBox.SelectedItem).Item;
+			SelectedItem = ((ItemWrapper)_listBox.SelectedItem).Item;
+			Text = SelectedItem.ToString();
 			if (Text.Length > 0)
 			{
 				SelectionStart = Text.Length;
@@ -618,6 +617,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		protected virtual void UpdateList()
 		{
+			int selectedIndex = _listBox.SelectedIndex;
 			_listBox.BeginUpdate();
 			_listBox.Items.Clear();
 
@@ -645,6 +645,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 			}
 			_listBox.EndUpdate();
+			_listBox.SelectedIndex = selectedIndex;
 
 			if (_listBox.Items.Count == 0)
 			{
