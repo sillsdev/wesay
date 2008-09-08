@@ -562,7 +562,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 
 			SelectedItem = ((ItemWrapper)_listBox.SelectedItem).Item;
-			Text = SelectedItem.ToString();
+			Text = ItemDisplayStringAdaptor.GetDisplayLabel(SelectedItem);// SelectedItem.ToString();
 			if (Text.Length > 0)
 			{
 				SelectionStart = Text.Length;
