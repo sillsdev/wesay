@@ -190,7 +190,6 @@ namespace WeSay.UI
 				{
 					((IBindingList) value).ListChanged += OnListChanged;
 				}
-				Refresh();
 			}
 		}
 

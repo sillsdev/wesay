@@ -132,20 +132,20 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByLexicalForm_RepositoryIsEmpty_ReturnsEmptyList()
+		public void GetAllEntriesSortedByLexicalFormOrAlternative_RepositoryIsEmpty_ReturnsEmptyList()
 		{
 			Assert.AreEqual(0, _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem()).Count);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void GetAllEntriesSortedByLexicalForm_Null_Throws()
+		public void GetAllEntriesSortedByLexicalFormOrAlternative_Null_Throws()
 		{
 			_lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(null);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByLexicalForm_LexicalFormExistsInWritingSystemForAllEntries_ReturnsListSortedByLexicalForm()
+		public void GetAllEntriesSortedByLexicalFormOrAlternative_LexicalFormExistsInWritingSystemForAllEntries_ReturnsListSortedByLexicalForm()
 		{
 			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.LexicalForm; });
 			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
@@ -156,13 +156,46 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByLexicalForm_LexicalFormDoesNotExistInAnyWritingSystem_ReturnsNullForThatEntry()
+		public void GetAllEntriesSortedByLexicalFormOrAlternative_LexicalFormDoesNotExistInAnyWritingSystem_ReturnsNullForThatEntry()
 		{
 			LexEntry lexEntryWithOutFrenchHeadWord = _lexEntryRepository.CreateItem();
 			_lexEntryRepository.SaveItem(lexEntryWithOutFrenchHeadWord);
 			WritingSystem french = new WritingSystem("fr", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> listOfLexEntriesSortedByLexicalForm = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(french);
 			Assert.AreEqual(null, listOfLexEntriesSortedByLexicalForm[0]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalFormOrAlternative_LexicalFormDoesNotExistInPrimaryWritingSystemButDoesInAnother_ReturnsAlternativeThatEntry()
+		{
+			LexEntry lexEntryWithOutFrenchHeadWord = _lexEntryRepository.CreateItem();
+			lexEntryWithOutFrenchHeadWord.LexicalForm.SetAlternative("de", "de word1");
+			_lexEntryRepository.SaveItem(lexEntryWithOutFrenchHeadWord);
+			WritingSystem french = new WritingSystem("fr", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByLexicalForm = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(french);
+			Assert.AreEqual("de word1", listOfLexEntriesSortedByLexicalForm[0]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalFormOrAlternative_LexicalFormExistsInWritingSystem_ReturnsWritingSystem()
+		{
+			LexEntry lexEntryWithOutFrenchHeadWord = _lexEntryRepository.CreateItem();
+			lexEntryWithOutFrenchHeadWord.LexicalForm.SetAlternative("fr", "fr word1");
+			_lexEntryRepository.SaveItem(lexEntryWithOutFrenchHeadWord);
+			WritingSystem french = new WritingSystem("fr", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByLexicalForm = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(french);
+			Assert.AreEqual("fr", listOfLexEntriesSortedByLexicalForm[0]["WritingSystem"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalFormOrAlternative_LexicalFormDoesNotExistInPrimaryWritingSystemButDoesInAnother_ReturnsWritingSystem()
+		{
+			LexEntry lexEntryWithOutFrenchHeadWord = _lexEntryRepository.CreateItem();
+			lexEntryWithOutFrenchHeadWord.LexicalForm.SetAlternative("de", "de word1");
+			_lexEntryRepository.SaveItem(lexEntryWithOutFrenchHeadWord);
+			WritingSystem french = new WritingSystem("fr", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByLexicalForm = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(french);
+			Assert.AreEqual("de", listOfLexEntriesSortedByLexicalForm[0]["WritingSystem"]);
 		}
 
 		[Test]

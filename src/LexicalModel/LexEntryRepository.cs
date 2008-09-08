@@ -276,12 +276,25 @@ namespace WeSay.LexicalModel
 					delegate(LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-						string headWord = entryToQuery.LexicalForm[writingSystem.Id];
-						if (headWord == "")
+						string lexicalform = entryToQuery.LexicalForm[writingSystem.Id];
+						string writingSystemOfForm = writingSystem.Id;
+						if (lexicalform == "")
 						{
-								headWord = null;
+							lexicalform = entryToQuery.LexicalForm.GetBestAlternative(writingSystem.Id);
+							foreach (LanguageForm form in entryToQuery.LexicalForm.Forms)
+							{
+								if(form.Form == lexicalform)
+								{
+									writingSystemOfForm = form.WritingSystemId;
+								}
+							}
+							if (lexicalform == "")
+							{
+								lexicalform = null;
+							}
 						}
-						tokenFieldsAndValues.Add("Form", headWord);
+						tokenFieldsAndValues.Add("Form", lexicalform);
+						tokenFieldsAndValues.Add("WritingSystem", writingSystemOfForm);
 						return new IDictionary<string, object>[] { tokenFieldsAndValues };
 					});
 				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(lexicalFormWithAlternativeQuery);
