@@ -210,6 +210,7 @@ namespace WeSay.LexicalTools
 			//                            break;
 			//                    }
 			picker.Box.WritingSystem = GetWritingSystemFromField();
+			picker.Box.PopupWidth = 200;
 
 			//review:
 			picker.Box.MinimumSize = new Size(40, 10);

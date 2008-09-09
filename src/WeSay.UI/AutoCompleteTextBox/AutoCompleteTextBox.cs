@@ -96,7 +96,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			set { triggers = value; }
 		}
 
-		private bool _autoSizePopup = true;
+		private bool _autoSizePopup = false;
 
 		[Browsable(true)]
 		[Description(
