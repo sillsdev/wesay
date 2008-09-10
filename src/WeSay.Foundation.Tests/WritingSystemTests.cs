@@ -4,8 +4,6 @@ using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
-using WeSay.Foundation.Tests;
-using WeSay.Language;
 
 namespace WeSay.Foundation.Tests
 {
@@ -18,14 +16,14 @@ namespace WeSay.Foundation.Tests
 		[SetUp]
 		public void Setup()
 		{
-			this._path = Path.GetTempFileName();
-			this._collection = new WritingSystemCollection();
+			_path = Path.GetTempFileName();
+			_collection = new WritingSystemCollection();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			File.Delete(this._path);
+			File.Delete(_path);
 		}
 
 		public static void WriteSampleWritingSystemFile(string path)
@@ -63,9 +61,9 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void RightFont()
 		{
-			WriteSampleWritingSystemFile(this._path);
-			this._collection.Load(this._path);
-			WritingSystem ws = this._collection["PretendAnalysis"];
+			WriteSampleWritingSystemFile(_path);
+			_collection.Load(_path);
+			WritingSystem ws = _collection["PretendAnalysis"];
 			Assert.AreEqual("PretendAnalysis", ws.Id);
 			// since Linux may not have CourierNew, we
 			// need to test against the font mapping
@@ -82,13 +80,11 @@ namespace WeSay.Foundation.Tests
 			Font font = new Font("Arial", 99);
 			WritingSystem ws = new WritingSystem("one", font);
 			string s = NetReflector.Write(ws);
-			string expected = "<WritingSystem><Abbreviation>one</Abbreviation><FontName>"
-							  + font.Name
-							  + "</FontName><FontSize>"
-							  + font.Size
-							  + "</FontSize><Id>one</Id><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>"
-							  + "<SpellCheckingId>one</SpellCheckingId></WritingSystem>";
-			Assert.AreEqual(expected,s);
+			string expected = "<WritingSystem><Abbreviation>one</Abbreviation><FontName>" +
+							  font.Name + "</FontName><FontSize>" + font.Size +
+							  "</FontSize><Id>one</Id><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>" +
+							  "<SpellCheckingId>one</SpellCheckingId></WritingSystem>";
+			Assert.AreEqual(expected, s);
 		}
 
 		[Test]
@@ -97,10 +93,10 @@ namespace WeSay.Foundation.Tests
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
-			WritingSystem ws = (WritingSystem)
-							   r.Read(
-									   "<WritingSystem><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id><SortUsing>one</SortUsing></WritingSystem>")
-					;
+			WritingSystem ws =
+					(WritingSystem)
+					r.Read(
+							"<WritingSystem><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id><SortUsing>one</SortUsing></WritingSystem>");
 			// since Linux may not have Tahoma, we
 			// need to test against the font mapping
 			Font font = new Font("Tahoma", 99);
@@ -120,7 +116,8 @@ namespace WeSay.Foundation.Tests
 
 			//            Assert.AreEqual(1, doc.SelectNodes("WritingSystemCollection/AnalysisWritingSystemDefaultId").Count);
 			//            Assert.AreEqual(1, doc.SelectNodes("WritingSystemCollection/VernacularWritingSystemDefaultId").Count);
-			Assert.AreEqual(2, doc.SelectNodes("WritingSystemCollection/members/WritingSystem").Count);
+			Assert.AreEqual(2,
+							doc.SelectNodes("WritingSystemCollection/members/WritingSystem").Count);
 		}
 
 		private static string MakeXmlFromCollection()
@@ -172,10 +169,10 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void DeserializeCollectionViaLoad()
 		{
-			MakeSampleCollection().Write(XmlWriter.Create(this._path));
+			MakeSampleCollection().Write(XmlWriter.Create(_path));
 
 			WritingSystemCollection c = new WritingSystemCollection();
-			c.Load(this._path);
+			c.Load(_path);
 			Assert.IsNotNull(c);
 			Assert.AreEqual(2, c.Values.Count);
 		}
@@ -183,7 +180,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void Compare_fr_sortsLikeFrench()
 		{
-			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = "fr";
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
@@ -193,7 +191,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void Compare_en_sortsLikeEnglish()
 		{
-			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = "en-US";
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
@@ -203,7 +202,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void SortUsing_customWithNoRules_sortsLikeInvariant()
 		{
-			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			// hard to test because half of the system locales use the invariant table: http://blogs.msdn.com/michkap/archive/2004/12/29/344136.aspx
 		}
@@ -211,7 +211,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void SortUsing_null_Id()
 		{
-			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = null;
 			Assert.AreEqual(writingSystem.Id, writingSystem.SortUsing);
 		}
@@ -219,7 +220,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void SortUsing_HasCustomSortRulesSortUsingNotCustom_ClearsCustomSortRules()
 		{
-			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = "custom";
 			string rules = "&n < ng <<< Ng <<< NG";
 			writingSystem.CustomSortRules = rules;
@@ -232,7 +234,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void CustomSortRules_SortUsingNotCustom_NotSet()
 		{
-			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = "two";
 			string rules = "&n < ng <<< Ng <<< NG";
 			writingSystem.CustomSortRules = rules;
@@ -242,7 +245,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void CustomSortRules_SortUsingCustomSortRules_Set()
 		{
-			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
 
 			string rules = "&n < ng <<< Ng <<< NG";
@@ -275,8 +279,10 @@ namespace WeSay.Foundation.Tests
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
-			WritingSystem ws = (WritingSystem)
-							   r.Read("<WritingSystem><CustomSortRules>test</CustomSortRules><SortUsing>CustomSimple</SortUsing><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
+			WritingSystem ws =
+					(WritingSystem)
+					r.Read(
+							"<WritingSystem><CustomSortRules>test</CustomSortRules><SortUsing>CustomSimple</SortUsing><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.AreEqual("test", ws.CustomSortRules);
 			Assert.AreEqual(CustomSortRulesType.CustomSimple.ToString(), ws.SortUsing);
@@ -288,8 +294,10 @@ namespace WeSay.Foundation.Tests
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
-			WritingSystem ws = (WritingSystem)
-							   r.Read("<WritingSystem><SortUsing>CustomSimple</SortUsing><CustomSortRules>test</CustomSortRules><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
+			WritingSystem ws =
+					(WritingSystem)
+					r.Read(
+							"<WritingSystem><SortUsing>CustomSimple</SortUsing><CustomSortRules>test</CustomSortRules><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.AreEqual("test", ws.CustomSortRules);
 			Assert.AreEqual(CustomSortRulesType.CustomSimple.ToString(), ws.SortUsing);
@@ -301,8 +309,10 @@ namespace WeSay.Foundation.Tests
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
-			WritingSystem ws = (WritingSystem)
-							   r.Read("<WritingSystem><CustomSortRules>test</CustomSortRules><SortUsing>one</SortUsing><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
+			WritingSystem ws =
+					(WritingSystem)
+					r.Read(
+							"<WritingSystem><CustomSortRules>test</CustomSortRules><SortUsing>one</SortUsing><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.IsNull(ws.CustomSortRules);
 			Assert.AreEqual("one", ws.SortUsing);
@@ -314,8 +324,10 @@ namespace WeSay.Foundation.Tests
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
-			WritingSystem ws = (WritingSystem)
-							   r.Read("<WritingSystem><SortUsing>one</SortUsing><CustomSortRules>test</CustomSortRules><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
+			WritingSystem ws =
+					(WritingSystem)
+					r.Read(
+							"<WritingSystem><SortUsing>one</SortUsing><CustomSortRules>test</CustomSortRules><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.IsNull(ws.CustomSortRules);
 			Assert.AreEqual("one", ws.SortUsing);
@@ -332,7 +344,6 @@ namespace WeSay.Foundation.Tests
 			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
 		}
 
-
 		[Test]
 		public void GetHashCode_SameIdSortUsingNoCustomRules_Same()
 		{
@@ -344,7 +355,6 @@ namespace WeSay.Foundation.Tests
 			writingSystem2.SortUsing = "th";
 
 			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
-
 		}
 
 		[Test]

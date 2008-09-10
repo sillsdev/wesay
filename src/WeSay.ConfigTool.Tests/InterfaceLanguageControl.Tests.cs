@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
-using NUnit.Framework;
-using WeSay.Project;
 using NUnit.Extensions.Forms;
+using NUnit.Framework;
+using Palaso.Reporting;
+using WeSay.Foundation.Tests;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -17,16 +15,14 @@ namespace WeSay.ConfigTool.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+			ErrorReport.IsOkToInteractWithUser = false;
 
- //           _window.OpenProject(BasilProject.GetPretendProjectDirectory());
-
-
+			//           _window.OpenProject(BasilProject.GetPretendProjectDirectory());
 		}
 
 		private void GoToUILanguageTab()
 		{
-			ToolStrip toolstrip = (ToolStrip)_window.Controls.Find("_areasToolStrip", true)[0];
+			ToolStrip toolstrip = (ToolStrip) _window.Controls.Find("_areasToolStrip", true)[0];
 			foreach (ToolStripButton button in toolstrip.Items)
 			{
 				if (button.Text.Contains("Language"))
@@ -39,9 +35,7 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[TearDown]
-		public void TearDown()
-		{
-		}
+		public void TearDown() {}
 
 		[Test]
 		public void NewProject_LanguageChooser_ShowsEnglish()
@@ -55,7 +49,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(path);
+				TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -79,7 +73,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(path);
+				TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -89,7 +83,7 @@ namespace WeSay.ConfigTool.Tests
 			string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 			try
 			{
-				NUnit.Extensions.Forms.ComboBoxTester t = CreateNewAndGetLanguageCombo(path);
+				ComboBoxTester t = CreateNewAndGetLanguageCombo(path);
 				//select the last one
 				t.Properties.SelectedItem = t.Properties.Items[t.Properties.Items.Count - 1];
 				string previouslySelected = t.Properties.SelectedItem.ToString();
@@ -107,7 +101,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(path);
+				TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -117,10 +111,9 @@ namespace WeSay.ConfigTool.Tests
 			string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 			try
 			{
-				NUnit.Extensions.Forms.ComboBoxTester t = CreateNewAndGetLanguageCombo(path);
+				ComboBoxTester t = CreateNewAndGetLanguageCombo(path);
 				//select the last one
 				t.Properties.SelectedItem = t.Properties.Items[t.Properties.Items.Count - 1];
-				string previouslySelected = t.Properties.SelectedItem.ToString();
 				CloseApp();
 
 				//now reopen, close before going to ui language tab
@@ -137,25 +130,25 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(path);
+				TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
-		private object FindDefaultEnglishItem(ComboBox combo)
+		private static object FindDefaultEnglishItem(ComboBox combo)
 		{
 			foreach (object o in combo.Items)
 			{
-				if(o.ToString() == "English (Default)")
+				if (o.ToString() == "English (Default)")
 				{
 					return o;
 				}
 			}
-				return null;
+			return null;
 		}
 
 		private void CloseApp()
 		{
-			if(_window !=null)
+			if (_window != null)
 			{
 				_window.Close();
 				_window.Dispose();
@@ -163,10 +156,9 @@ namespace WeSay.ConfigTool.Tests
 			}
 		}
 
-
 		private ComboBoxTester CreateNewAndGetLanguageCombo(string path)
 		{
-			_window = new ConfigurationWindow(new string[] { });
+			_window = new ConfigurationWindow(new string[] {});
 			_window.Show();
 			_window.CreateAndOpenProject(path);
 			GoToUILanguageTab();
@@ -182,12 +174,11 @@ namespace WeSay.ConfigTool.Tests
 
 		private void OpenExisting(string path)
 		{
-			_window = new ConfigurationWindow(new string[] { });
+			_window = new ConfigurationWindow(new string[] {});
 			_window.Show();
-			_window = new ConfigurationWindow(new string[] { });
+			_window = new ConfigurationWindow(new string[] {});
 			_window.Show();
 			_window.OpenProject(path);
 		}
-
 	}
 }

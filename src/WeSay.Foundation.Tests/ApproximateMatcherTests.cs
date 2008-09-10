@@ -41,7 +41,12 @@ namespace WeSay.Foundation.Tests
 			AddEntry("distane");
 			AddEntry("destance");
 			AddEntry("distence");
-			IList closest = (IList) ApproximateMatcher.FindClosestForms(_forms, "dist", ApproximateMatcherOptions.IncludePrefixedForms);
+			IList closest =
+					(IList)
+					ApproximateMatcher.FindClosestForms(_forms,
+														"dist",
+														ApproximateMatcherOptions.
+																IncludePrefixedForms);
 			Assert.AreEqual(4, closest.Count);
 			Assert.Contains("distance", closest);
 			Assert.Contains("distances", closest);
@@ -57,7 +62,12 @@ namespace WeSay.Foundation.Tests
 			AddEntry("godo"); //1
 			AddEntry("good"); //0
 			AddEntry("good-bye"); //0
-			IList closest = (IList)ApproximateMatcher.FindClosestForms(_forms, "good", ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
+			IList closest =
+					(IList)
+					ApproximateMatcher.FindClosestForms(_forms,
+														"good",
+														ApproximateMatcherOptions.
+																IncludePrefixedAndNextClosestForms);
 			Assert.AreEqual(4, closest.Count);
 			Assert.Contains("goad", closest);
 			Assert.Contains("godo", closest);
@@ -78,7 +88,12 @@ namespace WeSay.Foundation.Tests
 			AddEntry("dest"); //1
 			AddEntry("dits"); //1
 			AddEntry("noise"); //3
-			IList closest = (IList)ApproximateMatcher.FindClosestForms(_forms, "dist", ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms );
+			IList closest =
+					(IList)
+					ApproximateMatcher.FindClosestForms(_forms,
+														"dist",
+														ApproximateMatcherOptions.
+																IncludePrefixedAndNextClosestForms);
 			Assert.AreEqual(3, closest.Count);
 			Assert.Contains("past", closest);
 			Assert.Contains("dest", closest);
@@ -113,8 +128,7 @@ namespace WeSay.Foundation.Tests
 			AddEntry("2134567809");
 			AddEntry("1235467980");
 
-
-			IList closest = (IList)ApproximateMatcher.FindClosestForms(_forms,"1234567890");
+			IList closest = (IList) ApproximateMatcher.FindClosestForms(_forms, "1234567890");
 			Assert.AreEqual(12, closest.Count);
 			Assert.Contains("a1234567890", closest);
 			Assert.Contains("1a234567890", closest);
@@ -159,8 +173,12 @@ namespace WeSay.Foundation.Tests
 			AddEntry("2134567809");
 			AddEntry("1235467980");
 
-
-			IList closest = (IList) ApproximateMatcher.FindClosestForms(_forms, "1234567890", ApproximateMatcherOptions.IncludeNextClosestForms);
+			IList closest =
+					(IList)
+					ApproximateMatcher.FindClosestForms(_forms,
+														"1234567890",
+														ApproximateMatcherOptions.
+																IncludeNextClosestForms);
 			Assert.AreEqual(13, closest.Count);
 			Assert.Contains("1234567890", closest);
 			Assert.Contains("a1234567890", closest);
@@ -185,7 +203,12 @@ namespace WeSay.Foundation.Tests
 
 			AddEntry("aaa1234567890a"); // noise
 
-			IList closest = (IList) ApproximateMatcher.FindClosestForms(_forms, "1234567890", ApproximateMatcherOptions.IncludeNextClosestForms);
+			IList closest =
+					(IList)
+					ApproximateMatcher.FindClosestForms(_forms,
+														"1234567890",
+														ApproximateMatcherOptions.
+																IncludeNextClosestForms);
 			Assert.AreEqual(2, closest.Count);
 			Assert.Contains("a1234567890", closest);
 			Assert.Contains("aaa1234567890", closest);
@@ -197,7 +220,6 @@ namespace WeSay.Foundation.Tests
 			int editDistance = ApproximateMatcher.EditDistance("abo", "abo", 0, false);
 			Assert.AreEqual(0, editDistance);
 		}
-
 
 		[Test]
 		public void EditDistance_SingleInsertionAtStart_1()
@@ -410,7 +432,9 @@ namespace WeSay.Foundation.Tests
 		}
 
 		[Test]
-		public void EditDistance_SingleDeletionAtStartAndSingleInsertionAtEnd_1Max_EditDistanceLargerThanMax()
+		public void
+				EditDistance_SingleDeletionAtStartAndSingleInsertionAtEnd_1Max_EditDistanceLargerThanMax
+				()
 		{
 			int editDistance = ApproximateMatcher.EditDistance("abo", "boh", 1, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
@@ -424,7 +448,9 @@ namespace WeSay.Foundation.Tests
 		}
 
 		[Test]
-		public void EditDistance_SingleDeletionAtStartAndDoubleInsertionAtEnd_2Max_EditDistanceLargerThanMax()
+		public void
+				EditDistance_SingleDeletionAtStartAndDoubleInsertionAtEnd_2Max_EditDistanceLargerThanMax
+				()
 		{
 			int editDistance = ApproximateMatcher.EditDistance("abo", "boha", 2, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
@@ -438,7 +464,9 @@ namespace WeSay.Foundation.Tests
 		}
 
 		[Test]
-		public void EditDistance_SingleDeletionAtStartAndSingleTranspositionAtEnd_1Max_EditDistanceLargerThanMax()
+		public void
+				EditDistance_SingleDeletionAtStartAndSingleTranspositionAtEnd_1Max_EditDistanceLargerThanMax
+				()
 		{
 			int editDistance = ApproximateMatcher.EditDistance("aboh", "bho", 1, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
@@ -452,7 +480,9 @@ namespace WeSay.Foundation.Tests
 		}
 
 		[Test]
-		public void EditDistance_SingleDeletionAtStartAndSingleSubstitutionAtEnd_1Max_EditDistanceLargerThanMax()
+		public void
+				EditDistance_SingleDeletionAtStartAndSingleSubstitutionAtEnd_1Max_EditDistanceLargerThanMax
+				()
 		{
 			int editDistance = ApproximateMatcher.EditDistance("abo", "bi", 1, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
@@ -499,37 +529,55 @@ namespace WeSay.Foundation.Tests
 		}
 
 		[Test]
-		public void EditDistance_SingleDeletionAtBeginningWithSixInsertionsAtEndAndSuffixTreatedAsZeroDistance_7()
+		public void
+				EditDistance_SingleDeletionAtBeginningWithSixInsertionsAtEndAndSuffixTreatedAsZeroDistance_7
+				()
 		{
 			// no suffix to ignore on the second word
-			Assert.AreEqual(7, ApproximateMatcher.EditDistance("acaseinfact", "case", int.MaxValue, true));
+			Assert.AreEqual(7,
+							ApproximateMatcher.EditDistance("acaseinfact",
+															"case",
+															int.MaxValue,
+															true));
 		}
 
 		[Test]
-		public void EditDistance_SingleInsertionSingleSubstitutionAtBeginningSingleSubstitutionAtEndWithSuffixTreatedAsZeroDistance_3()
+		public void
+				EditDistance_SingleInsertionSingleSubstitutionAtBeginningSingleSubstitutionAtEndWithSuffixTreatedAsZeroDistance_3
+				()
 		{
 			// has suffix to ignore on the second word
 			Assert.AreEqual(3, ApproximateMatcher.EditDistance("dist", "noise", 4, true));
 		}
 
 		[Test]
-		public void EditDistance_SingleDeletionSingleSubstitutionAtBeginningSingleSubstitutionAtEndWithSuffixTreatedAsZeroDistance_3()
+		public void
+				EditDistance_SingleDeletionSingleSubstitutionAtBeginningSingleSubstitutionAtEndWithSuffixTreatedAsZeroDistance_3
+				()
 		{
 			// no suffix to ignore on the second word
 			Assert.AreEqual(3, ApproximateMatcher.EditDistance("noise", "dist", 4, true));
 		}
 
 		[Test]
-		public void EditDistance_SingleInsertionSingleSubstitutionAtBeginningSingleSubstitutionAtEndWithSuffixTreatedAsZeroDistance_2Cutoff_EditDistanceLargerThanMax()
+		public void
+				EditDistance_SingleInsertionSingleSubstitutionAtBeginningSingleSubstitutionAtEndWithSuffixTreatedAsZeroDistance_2Cutoff_EditDistanceLargerThanMax
+				()
 		{
-			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, ApproximateMatcher.EditDistance("noise", "dist", 2, true));
-			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, ApproximateMatcher.EditDistance("dist", "noise", 2, true));
+			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax,
+							ApproximateMatcher.EditDistance("noise", "dist", 2, true));
+			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax,
+							ApproximateMatcher.EditDistance("dist", "noise", 2, true));
 		}
 
 		[Test]
 		public void EditDistance_MajorDifference()
 		{
-			Assert.AreEqual(2, ApproximateMatcher.EditDistance("ab", "\"look busy do nothing\"", int.MaxValue, true));
+			Assert.AreEqual(2,
+							ApproximateMatcher.EditDistance("ab",
+															"\"look busy do nothing\"",
+															int.MaxValue,
+															true));
 		}
 
 		/// <summary>
@@ -548,7 +596,6 @@ namespace WeSay.Foundation.Tests
 			//Assert.AreEqual(1, closest.Count);
 			//Assert.Contains("test1", closest);
 		}
-
 
 		//[Test]
 		//public void Time()
@@ -575,6 +622,5 @@ namespace WeSay.Foundation.Tests
 		//    stopwatch.Stop();
 		//    Console.WriteLine("Time to find " + stopwatch.Elapsed.ToString());
 		//}
-
 	}
 }

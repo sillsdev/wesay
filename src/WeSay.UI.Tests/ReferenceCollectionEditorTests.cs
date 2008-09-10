@@ -5,31 +5,27 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using WeSay.Language;
-using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI.Tests
 {
 	[TestFixture]
-	public class ReferenceCollectionEditorTests :  IReceivePropertyChangeNotifications
+	public class ReferenceCollectionEditorTests: IReceivePropertyChangeNotifications
 	{
-		private WritingSystem _ws = new WritingSystem("test", new Font("Arial", 30));
+		private readonly WritingSystem _ws = new WritingSystem("test", new Font("Arial", 30));
 		private ReferenceCollectionEditor<Option, string, OptionRef> _control;
 		private Form _window;
 		private OptionsList _sourceChoices;
 		private OptionRefCollection _chosenItems;
-		private string _lastPropertyChanged;
 		private Control _somethingElseToFocusOn;
-
 
 		[SetUp]
 		public void Setup()
 		{
 			_sourceChoices = new OptionsList();
-			AddSourceChoice( "one", "1");
-			AddSourceChoice( "two", "2");
-			AddSourceChoice( "three", "3");
+			AddSourceChoice("one", "1");
+			AddSourceChoice("two", "2");
+			AddSourceChoice("three", "3");
 			AddSourceChoice("four", "4");
 			AddSourceChoice("five", "5");
 
@@ -39,15 +35,14 @@ namespace WeSay.UI.Tests
 			writingSystems.Add(_ws);
 
 			_control = new ReferenceCollectionEditor<Option, string, OptionRef>(
-				_chosenItems.Members,
-				_sourceChoices.Options,
-				writingSystems,
-				CommonEnumerations.VisibilitySetting.Visible,
-				new OptionDisplayAdaptor(_sourceChoices, _ws.Id));
+					_chosenItems.Members,
+					_sourceChoices.Options,
+					writingSystems,
+					CommonEnumerations.VisibilitySetting.Visible,
+					new OptionDisplayAdaptor(_sourceChoices, _ws.Id));
 
 			_control.Name = "refcontrol";
 			_control.AlternateEmptinessHelper = _chosenItems;
-
 		}
 
 		[TearDown]
@@ -73,16 +68,15 @@ namespace WeSay.UI.Tests
 			Assert.AreEqual(1, Boxes.Count);
 		}
 
-
 		[Test]
 		public void DisplaysCorrectLabel()
 		{
 			_chosenItems.Add("3");
 			ActuallyShowOnScreen();
-			Assert.AreEqual("three", GetTextBox(0).Text);
+			Assert.AreEqual("three", GetTextBox().Text);
 		}
 
-		private Control GetTextBox(int index)
+		private Control GetTextBox()
 		{
 			return Boxes[0].Controls["_textBox"];
 		}
@@ -96,15 +90,17 @@ namespace WeSay.UI.Tests
 			Assert.AreEqual(3, Boxes.Count);
 		}
 
-		IList<AutoCompleteWithCreationBox<Option, string>> Boxes
+		private IList<AutoCompleteWithCreationBox<Option, string>> Boxes
 		{
 			get
 			{
-				IList<AutoCompleteWithCreationBox<Option, string>> boxes = new List<AutoCompleteWithCreationBox<Option, string>>();
+				IList<AutoCompleteWithCreationBox<Option, string>> boxes =
+						new List<AutoCompleteWithCreationBox<Option, string>>();
 				foreach (Control child in _control.Controls)
 				{
-					AutoCompleteWithCreationBox<Option, string> b = child as AutoCompleteWithCreationBox<Option, string>;
-					if(b!=null)
+					AutoCompleteWithCreationBox<Option, string> b =
+							child as AutoCompleteWithCreationBox<Option, string>;
+					if (b != null)
 					{
 						boxes.Add(b);
 					}
@@ -112,6 +108,7 @@ namespace WeSay.UI.Tests
 				return boxes;
 			}
 		}
+
 		[Test]
 		public void ShowWithChoiceThatIsNotInList()
 		{
@@ -122,29 +119,28 @@ namespace WeSay.UI.Tests
 			Assert.IsTrue(Boxes[0].HasProblems);
 		}
 
-
 		[Test]
 		public void DoesNotShowAddNewButtonWithClosedList()
 		{
-			 _chosenItems.Add("29");
+			_chosenItems.Add("29");
 			ActuallyShowOnScreen();
-			GetTextBox(0).Focus();
-			Assert.IsTrue(GetTextBox(0).Focused);
+			GetTextBox().Focus();
+			Assert.IsTrue(GetTextBox().Focused);
 			Assert.IsFalse(Boxes[0].AddNewButton.Visible);
-		 }
+		}
 
 		[Test]
 		public void DoesShowAddNewButtonWithClosedOpen()
 		{
 			_chosenItems.Add("29");
-			_control.CreateNewTargetItem += new EventHandler<CreateNewArgs>(OnCreateNewTargetItem);
+			_control.CreateNewTargetItem += OnCreateNewTargetItem;
 			ActuallyShowOnScreen();
-			GetTextBox(0).Focus();
-			Assert.IsTrue(GetTextBox(0).Focused);
+			GetTextBox().Focus();
+			Assert.IsTrue(GetTextBox().Focused);
 			Assert.IsTrue(Boxes[0].AddNewButton.Visible);
 		}
 
-		void OnCreateNewTargetItem(object sender, CreateNewArgs e)
+		private static void OnCreateNewTargetItem(object sender, CreateNewArgs e)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -153,9 +149,9 @@ namespace WeSay.UI.Tests
 		public void AddItem()
 		{
 			ActuallyShowOnScreen();
-			 Assert.AreEqual(1, Boxes.Count);
-		   Assert.AreEqual("", GetTextBox(0).Text);
-			GetTextBox(0).Text = "two";
+			Assert.AreEqual(1, Boxes.Count);
+			Assert.AreEqual("", GetTextBox().Text);
+			GetTextBox().Text = "two";
 			_somethingElseToFocusOn.Focus();
 			Assert.AreEqual(1, _chosenItems.Count);
 			Assert.AreEqual("2", _chosenItems.KeyAtIndex(0));
@@ -170,11 +166,12 @@ namespace WeSay.UI.Tests
 			_chosenItems.Add("3");
 			ActuallyShowOnScreen();
 			Assert.AreEqual(4, Boxes.Count);
-			SimulateTypingOver(1,"");
+			SimulateTypingOver(1, "");
 			_somethingElseToFocusOn.Focus();
 			Assert.AreEqual(2, _chosenItems.Count);
 			Assert.AreEqual(3, Boxes.Count);
 		}
+
 		[Test]
 		public void RemoveOnlyItem()
 		{
@@ -187,6 +184,7 @@ namespace WeSay.UI.Tests
 			Assert.AreEqual(1, Boxes.Count);
 			Assert.AreEqual(0, _chosenItems.Count);
 		}
+
 		[Test]
 		public void RemoveLastItem()
 		{
@@ -196,10 +194,10 @@ namespace WeSay.UI.Tests
 			ActuallyShowOnScreen();
 			Assert.AreEqual(4, Boxes.Count);
 			Assert.AreEqual(3, _chosenItems.Count);
-			SimulateTypingOver(2,"");
+			SimulateTypingOver(2, "");
 			_somethingElseToFocusOn.Focus();
-			 Assert.AreEqual(2, _chosenItems.Count);
-		   Assert.AreEqual(3, Boxes.Count);
+			Assert.AreEqual(2, _chosenItems.Count);
+			Assert.AreEqual(3, Boxes.Count);
 		}
 
 		private void SimulateTypingOver(int boxNumber, string s)
@@ -220,19 +218,17 @@ namespace WeSay.UI.Tests
 			ActuallyShowOnScreen();
 			Assert.AreEqual(4, Boxes.Count);
 			SimulateTypingOver(1, "hello");
-			 Boxes[1].Box.Paste("hello");
+			Boxes[1].Box.Paste("hello");
 			Assert.AreEqual(4, Boxes.Count);
 		}
-
-
 
 		[Test]
 		public void RemoveOnlyItemThenAdd()
 		{
 			RemoveOnlyItem();
 			Assert.AreEqual(1, Boxes.Count);
-		   Assert.AreEqual("", GetTextBox(0).Text);
-			GetTextBox(0).Text = "two";
+			Assert.AreEqual("", GetTextBox().Text);
+			GetTextBox().Text = "two";
 			_somethingElseToFocusOn.Focus();
 			Assert.AreEqual(1, _chosenItems.Count);
 			Assert.AreEqual("2", _chosenItems.KeyAtIndex(0));
@@ -243,12 +239,12 @@ namespace WeSay.UI.Tests
 		public void AddThenRemove()
 		{
 			AddItem();
-			Assert.AreEqual("two", GetTextBox(0).Text);
+			Assert.AreEqual("two", GetTextBox().Text);
 			Assert.AreEqual(2, Boxes.Count);
-			GetTextBox(0).Focus();
-			GetTextBox(0).Text = "";
+			GetTextBox().Focus();
+			GetTextBox().Text = "";
 			_somethingElseToFocusOn.Focus();
-			Assert.AreEqual("", GetTextBox(0).Text);
+			Assert.AreEqual("", GetTextBox().Text);
 			Assert.AreEqual(0, _chosenItems.Count);
 			Assert.AreEqual(1, Boxes.Count);
 		}
@@ -260,7 +256,7 @@ namespace WeSay.UI.Tests
 			ActuallyShowOnScreen();
 			Assert.AreEqual(2, Boxes.Count);
 			Assert.AreEqual("3", _chosenItems.KeyAtIndex(0));
-			GetTextBox(0).Text = "two";
+			GetTextBox().Text = "two";
 			Assert.AreEqual(1, _chosenItems.Count);
 			Assert.AreEqual("2", _chosenItems.KeyAtIndex(0));
 			Assert.AreEqual(2, Boxes.Count);
@@ -269,7 +265,7 @@ namespace WeSay.UI.Tests
 		[Test] //during development the cursor would jump to the beginning, iff case was changed
 		public void TypingAMatchLeavesCursorInSamePlace()
 		{
-			 ActuallyShowOnScreen();
+			ActuallyShowOnScreen();
 			SimulateTypingOver(0, "two");
 			Assert.AreEqual(3, Boxes[0].Box.SelectionStart);
 			SimulateTypingOver(0, "Three");
@@ -299,7 +295,6 @@ namespace WeSay.UI.Tests
 			Assert.Greater(_control.Height, initialHeight);
 		}
 
-
 		//------------------------------------------------------------
 		private void AddSourceChoice(string label, string key)
 		{
@@ -308,47 +303,25 @@ namespace WeSay.UI.Tests
 			_sourceChoices.Options.Add(new Option(key, name));
 		}
 
-
 		private void ActuallyShowOnScreen()
 		{
 			if (_window == null)
 			{
 				_window = new Form();
-				_window.Size  = new Size(100, 300);
+				_window.Size = new Size(100, 300);
 				_somethingElseToFocusOn = new Button();
 				_window.Controls.Add(_somethingElseToFocusOn);
 
-			  //  _control.Dock = DockStyle.Fill;
+				//  _control.Dock = DockStyle.Fill;
 				_window.Controls.Add(_control);
 
 				_window.Show();
 			}
 		}
 
-//        /// <summary>
-//        /// FormToObectFinderDelegate
-//        /// </summary>
-//        /// <param name="form"></param>
-//        /// <returns></returns>
-//        public object GetOptionFromForm(string form)
-//        {
-//            OptionDisplayAdaptor da = new OptionDisplayAdaptor(_sourceChoices, _ws.Id);
-//            foreach (object item in _sourceChoices.Options)
-//            {
-//                if (da.GetDisplayLabel(item) == form)
-//                {
-//                    return item;
-//                }
-//            }
-//            return null;
-//        }
-
 		#region IReceivePropertyChangeNotifications Members
 
-		public void NotifyPropertyChanged(string property)
-		{
-			_lastPropertyChanged = property;
-		}
+		public void NotifyPropertyChanged(string property) {}
 
 		#endregion
 	}

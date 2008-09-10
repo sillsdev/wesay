@@ -1,19 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
-using WeSay.Foundation.Dashboard;
 
 namespace WeSay.Project
 {
-	public class FailedLoadTask :ITask
+	public class FailedLoadTask: ITask
 	{
-		private string _label;
-		private string _longLabel;
-		private string _description;
+		private readonly string _label;
+		private readonly string _longLabel;
+		private readonly string _description;
 
 		public FailedLoadTask(string label, string longLabel, string description)
 		{
@@ -22,13 +19,9 @@ namespace WeSay.Project
 			_description = description;
 		}
 
-		public void Activate()
-		{
-		}
+		public void Activate() {}
 
-		public void Deactivate()
-		{
-		}
+		public void Deactivate() {}
 
 		#region ITask Members
 
@@ -59,21 +52,18 @@ namespace WeSay.Project
 			get { return false; }
 		}
 
-		public void RegisterWithCache(ViewTemplate viewTemplate)
-		{
-
-		}
-
 		public Control Control
 		{
-			get {
+			get
+			{
 				TextBox t = new TextBox();
 				t.Multiline = true;
 				t.Dock = DockStyle.Fill;
 				t.Text =
-					String.Format(
-						"Could not load the task '{0}'. Possibly, the setup in the admin program can be used to fix this.  The error was: [{1}]",
-						_label, _description);
+						String.Format(
+								"Could not load the task '{0}'. Possibly, the setup in the admin program can be used to fix this.  The error was: [{1}]",
+								_label,
+								_description);
 				return t;
 			}
 		}
@@ -83,7 +73,7 @@ namespace WeSay.Project
 			get { return false; }
 		}
 
-		const int CountNotApplicable = -1;
+		private const int CountNotApplicable = -1;
 
 		public int GetRemainingCount()
 		{
@@ -92,10 +82,7 @@ namespace WeSay.Project
 
 		public int ExactCount
 		{
-			get
-			{
-				return CountNotApplicable;
-			}
+			get { return CountNotApplicable; }
 		}
 
 		/// <summary>
@@ -123,10 +110,9 @@ namespace WeSay.Project
 
 		#region IThingOnDashboard Members
 
-
-		public WeSay.Foundation.Dashboard.DashboardGroup Group
+		public DashboardGroup Group
 		{
-			get { return WeSay.Foundation.Dashboard.DashboardGroup.Describe; }
+			get { return DashboardGroup.Describe; }
 		}
 
 		public string LocalizedLabel

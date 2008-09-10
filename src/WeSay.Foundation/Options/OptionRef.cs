@@ -9,7 +9,13 @@ namespace WeSay.Foundation.Options
 	/// This class just wraps the key, which is a string, with various methods to make it fit in
 	/// with the system.
 	/// </summary>
-	public class OptionRef: Annotatable, IParentable, IValueHolder<string>, IReportEmptiness, IReferenceContainer
+	public class OptionRef: Annotatable,
+							IParentable,
+							IValueHolder<string>,
+							IReportEmptiness,
+							IReferenceContainer,
+							IComparable
+
 	{
 		private string _humanReadableKey;
 
@@ -19,16 +25,15 @@ namespace WeSay.Foundation.Options
 		/// </summary>
 		private IReceivePropertyChangeNotifications _parent;
 
-		private bool _suspendNotification=false;
+		private bool _suspendNotification;
 
-		public OptionRef() : this(string.Empty)
-		{
+		public OptionRef(): this(string.Empty) {}
 
-		}
 		public OptionRef(string key) //WeSay.Foundation.WeSayDataObject parent)
 		{
 			_humanReadableKey = key;
 		}
+
 		public bool IsEmpty
 		{
 			get { return string.IsNullOrEmpty(Value); }
@@ -52,15 +57,16 @@ namespace WeSay.Foundation.Options
 
 		public string Key
 		{
-			get{ return Value;}
-			set{ Value = value;}
+			get { return Value; }
+			set { Value = value; }
 		}
+
 		public string Value
 		{
 			get { return _humanReadableKey; }
 			set
 			{
-				if(value !=null)
+				if (value != null)
 				{
 					_humanReadableKey = value.Trim();
 				}
@@ -74,25 +80,13 @@ namespace WeSay.Foundation.Options
 		}
 
 		// IReferenceContainer
-		public object Target
+		public string TargetId
 		{
-			get
-			{
-				// return Lexicon.FindFirstLexEntryMatchingId(_targetId);
-				// OptionsList pretend = null;
-				//return pretend.GetOptionFromKey(_humanReadableKey);
-				throw new NotImplementedException();
-
-			}
+			get { return _humanReadableKey; }
 			set
 			{
-				if(value == null && String.IsNullOrEmpty(_humanReadableKey))
-				{
-					return;
-				}
-
-				Option o = value as Option;
-				if (o.Key == _humanReadableKey)
+				if (value == _humanReadableKey ||
+					(value == null && _humanReadableKey == string.Empty))
 				{
 					return;
 				}
@@ -103,18 +97,29 @@ namespace WeSay.Foundation.Options
 				}
 				else
 				{
-					_humanReadableKey = o.Key;
+					_humanReadableKey = value;
 				}
 				NotifyPropertyChanged();
 			}
 		}
 
+		public void SetTarget(Option o)
+		{
+			if (o == null)
+			{
+				TargetId = string.Empty;
+			}
+			else
+			{
+				TargetId = o.Key;
+			}
+		}
 
 		#endregion
 
 		private void NotifyPropertyChanged()
 		{
-			if(_suspendNotification)
+			if (_suspendNotification)
 			{
 				return;
 			}
@@ -150,18 +155,31 @@ namespace WeSay.Foundation.Options
 			get { return IsEmpty; }
 		}
 
-
 		public void RemoveEmptyStuff()
 		{
-			if(Value == string.Empty)
+			if (Value == string.Empty)
 			{
 				_suspendNotification = true;
 				Value = null; // better for matching 'missing' for purposes of missing info task
 				_suspendNotification = false;
 			}
-
 		}
 
 		#endregion
+
+		public int CompareTo(object obj)
+		{
+			if(obj == null)
+			{
+				return 1;
+			}
+			if(!(obj is OptionRef))
+			{
+				throw new ArgumentException("Can not compare to anythiong but OptionRefs.");
+			}
+			OptionRef other = (OptionRef) obj;
+			int order = Key.CompareTo(other.Key);
+			return order;
+		}
 	}
 }

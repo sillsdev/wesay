@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using Palaso.WritingSystems.Collation;
 using Spart;
-using WeSay.Data;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public partial class WritingSystemSortControl : UserControl
+	public partial class WritingSystemSortControl: UserControl
 	{
 		private WritingSystem _writingSystem;
-		private Color validBackgroundColor;
-		private Color invalidBackgroundColor;
+		private readonly Color validBackgroundColor;
+		private readonly Color invalidBackgroundColor;
 
 		public WritingSystemSortControl()
 		{
@@ -28,23 +27,31 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			List<CultureInfo> result = new List<CultureInfo>(CultureInfo.GetCultures(CultureTypes.AllCultures));
+			List<CultureInfo> result =
+					new List<CultureInfo>(CultureInfo.GetCultures(CultureTypes.AllCultures));
 
 			result.Sort(
-					delegate(CultureInfo ci1, CultureInfo ci2) { return StringComparer.InvariantCulture.Compare(ci1.DisplayName, ci2.DisplayName); });
+					delegate(CultureInfo ci1, CultureInfo ci2)
+					{
+						return StringComparer.InvariantCulture.Compare(ci1.DisplayName,
+																	   ci2.DisplayName);
+					});
 
 			result.Remove(CultureInfo.InvariantCulture);
 
-			List<KeyValuePair<string,string>> sortChoices = new List<KeyValuePair<string, string>>();
+			List<KeyValuePair<string, string>> sortChoices =
+					new List<KeyValuePair<string, string>>();
 			sortChoices.Add(new KeyValuePair<string, string>(null, "(select a sort method)"));
 
-			foreach (Enum customSortRulesType in Enum.GetValues(typeof(CustomSortRulesType)))
+			foreach (Enum customSortRulesType in Enum.GetValues(typeof (CustomSortRulesType)))
 			{
 				FieldInfo fi = customSortRulesType.GetType().GetField(customSortRulesType.ToString());
 
-				DescriptionAttribute[] descriptions = (DescriptionAttribute[]) fi.GetCustomAttributes(typeof (DescriptionAttribute), false);
+				DescriptionAttribute[] descriptions =
+						(DescriptionAttribute[])
+						fi.GetCustomAttributes(typeof (DescriptionAttribute), false);
 				string description;
-				if(descriptions.Length == 0)
+				if (descriptions.Length == 0)
 				{
 					description = customSortRulesType.ToString();
 				}
@@ -52,11 +59,13 @@ namespace WeSay.ConfigTool
 				{
 					description = descriptions[0].Description;
 				}
-				sortChoices.Add(new KeyValuePair<string, string>(customSortRulesType.ToString(), description));
+				sortChoices.Add(new KeyValuePair<string, string>(customSortRulesType.ToString(),
+																 description));
 			}
 			foreach (CultureInfo cultureInfo in result)
 			{
-				sortChoices.Add(new KeyValuePair<string, string>(cultureInfo.IetfLanguageTag, cultureInfo.DisplayName));
+				sortChoices.Add(new KeyValuePair<string, string>(cultureInfo.IetfLanguageTag,
+																 cultureInfo.DisplayName));
 			}
 
 			comboBoxCultures.DataSource = sortChoices;
@@ -64,30 +73,29 @@ namespace WeSay.ConfigTool
 			comboBoxCultures.ValueMember = "Key";
 
 			comboBoxCultures.SelectedValue = string.Empty;
-			comboBoxCultures.SelectedIndexChanged += new EventHandler(comboBoxCultures_SelectedIndexChanged);
+			comboBoxCultures.SelectedIndexChanged += comboBoxCultures_SelectedIndexChanged;
 
-			textBoxCustomRules.Validating += new CancelEventHandler(textBoxCustomRules_Validating);
-			textBoxCustomRules.Validated += new EventHandler(textBoxCustomRules_Validated);
+			textBoxCustomRules.Validating += textBoxCustomRules_Validating;
+			textBoxCustomRules.Validated += textBoxCustomRules_Validated;
 
 			validBackgroundColor = textBoxCustomRules.BackColor;
 			invalidBackgroundColor = Color.Tomato;
 
 			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
-
 		}
 
 		private void OnEditorSaveNow(object sender, EventArgs e)
 		{
 			// has never been initialized
-			if(_writingSystem == null)
+			if (_writingSystem == null)
 			{
 				return;
 			}
 
-			this.ValidateChildren(); // this will make it save
+			ValidateChildren(); // this will make it save
 		}
 
-		void textBoxCustomRules_Validating(object sender, CancelEventArgs cancelEventArgs)
+		private void textBoxCustomRules_Validating(object sender, CancelEventArgs cancelEventArgs)
 		{
 			ValidateCustomRules();
 		}
@@ -103,51 +111,43 @@ namespace WeSay.ConfigTool
 			try
 			{
 				customSortRulesType =
-					(CustomSortRulesType) Enum.Parse(typeof (CustomSortRulesType), this._writingSystem.SortUsing);
+						(CustomSortRulesType)
+						Enum.Parse(typeof (CustomSortRulesType), _writingSystem.SortUsing);
 			}
-			catch(ArgumentException )
+			catch (ArgumentException)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("WeSay could not understand this type of sorting ('{0}'). It will be reset.", this._writingSystem.SortUsing );
+				ErrorReport.ReportNonFatalMessage(
+						"WeSay could not understand this type of sorting ('{0}'). It will be reset.",
+						_writingSystem.SortUsing);
 				customSortRulesType = default(CustomSortRulesType);
 			}
 
 			string errorMessage;
-			if(AreCustomRulesValid(this.textBoxCustomRules.Text, customSortRulesType, out errorMessage))
+			if (AreCustomRulesValid(textBoxCustomRules.Text, customSortRulesType, out errorMessage))
 			{
-				this.textBoxCustomRules.BackColor = this.validBackgroundColor;
-				this.toolTip1.Active = false;
+				textBoxCustomRules.BackColor = validBackgroundColor;
+				toolTip1.Active = false;
 			}
 			else
 			{
-				this.textBoxCustomRules.BackColor = this.invalidBackgroundColor;
-				this.toolTip1.SetToolTip(textBoxCustomRules, errorMessage);
-				this.toolTip1.Active = true;
-				this.toolTip1.ShowAlways = true;
+				textBoxCustomRules.BackColor = invalidBackgroundColor;
+				toolTip1.SetToolTip(textBoxCustomRules, errorMessage);
+				toolTip1.Active = true;
+				toolTip1.ShowAlways = true;
 			}
 		}
 
 		private void textBoxCustomRules_Validated(object sender, EventArgs e)
 		{
-			_writingSystem.CustomSortRules = textBoxCustomRules.Text.Replace(Environment.NewLine, "\n");
-
-			InvalidateCache();
-		}
-
-		private static void InvalidateCache()
-		{
-			WeSayWordsProject.Project.InvalidateCacheSilently();
+			_writingSystem.CustomSortRules = textBoxCustomRules.Text.Replace(Environment.NewLine,
+																			 "\n");
 		}
 
 		private void comboBoxCultures_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			string oldValue =_writingSystem.SortUsing;
+			string oldValue = _writingSystem.SortUsing;
 			_writingSystem.SortUsing = (string) comboBoxCultures.SelectedValue;
 			UpdateCustomRules();
-
-			if (oldValue != _writingSystem.SortUsing)
-			{
-				InvalidateCache();
-			}
 		}
 
 		[Browsable(false)]
@@ -158,7 +158,7 @@ namespace WeSay.ConfigTool
 			set
 			{
 				_writingSystem = value;
-				if(_writingSystem!=null)
+				if (_writingSystem != null)
 				{
 					textBoxSortTest.Font = _writingSystem.Font;
 					textBoxCustomRules.Font = _writingSystem.Font;
@@ -170,7 +170,8 @@ namespace WeSay.ConfigTool
 		public override void Refresh()
 		{
 			//handle WS-707 : ws loses custom simple contents if unmodified
-			if(_writingSystem.UsesCustomSortRules && string.IsNullOrEmpty(_writingSystem.CustomSortRules))
+			if (_writingSystem.UsesCustomSortRules &&
+				string.IsNullOrEmpty(_writingSystem.CustomSortRules))
 			{
 				_writingSystem.SortUsing = _writingSystem.Id;
 			}
@@ -185,11 +186,11 @@ namespace WeSay.ConfigTool
 		{
 			if (_writingSystem.UsesCustomSortRules)
 			{
-				if (_writingSystem.SortUsing == CustomSortRulesType.CustomSimple.ToString()  &&
+				if (_writingSystem.SortUsing == CustomSortRulesType.CustomSimple.ToString() &&
 					textBoxCustomRules.Text.Trim() == string.Empty)
 				{
 					textBoxCustomRules.Text =
-						@"A a
+							@"A a
 B b
 C c
 D d
@@ -215,12 +216,16 @@ W w
 X x
 Y y
 Z z";
-					textBoxCustomRules.Text = textBoxCustomRules.Text.Replace("\r\n", Environment.NewLine);
-					textBoxCustomRules.Text = textBoxCustomRules.Text.Replace("\n", Environment.NewLine);
+					textBoxCustomRules.Text = textBoxCustomRules.Text.Replace("\r\n",
+																			  Environment.NewLine);
+					textBoxCustomRules.Text = textBoxCustomRules.Text.Replace("\n",
+																			  Environment.NewLine);
 				}
 				else
 				{
-					textBoxCustomRules.Text = _writingSystem.CustomSortRules.Replace("\n", Environment.NewLine);
+					textBoxCustomRules.Text = _writingSystem.CustomSortRules.Replace("\n",
+																					 Environment.
+																							 NewLine);
 				}
 
 				textBoxCustomRules.Visible = true;
@@ -233,7 +238,9 @@ Z z";
 			}
 		}
 
-		static private bool AreCustomRulesValid(string customRules, CustomSortRulesType type, out string errorMessage)
+		private static bool AreCustomRulesValid(string customRules,
+												CustomSortRulesType type,
+												out string errorMessage)
 		{
 			try
 			{
@@ -249,14 +256,17 @@ Z z";
 						throw new NotSupportedException("Unexpected CustomSortRulesType");
 				}
 			}
-			catch(DllNotFoundException e)
+			catch (DllNotFoundException e)
 			{
 				errorMessage = e.Message;
 				return false;
 			}
 			catch (ParserErrorException e)
 			{
-				errorMessage = string.Format("{0} at line {1} column {2}", e.ParserError.ErrorText, e.ParserError.Line, e.ParserError.Column);
+				errorMessage = string.Format("{0} at line {1} column {2}",
+											 e.ParserError.ErrorText,
+											 e.ParserError.Line,
+											 e.ParserError.Column);
 				return false;
 			}
 			catch (ApplicationException e)
@@ -270,15 +280,16 @@ Z z";
 
 		private void buttonSortTest_Click(object sender, EventArgs e)
 		{
-			string text = this.textBoxSortTest.Text;
-			string[] stringsToSort = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+			string text = textBoxSortTest.Text;
+			string[] stringsToSort = text.Split(new string[] {Environment.NewLine},
+												StringSplitOptions.RemoveEmptyEntries);
 			Array.Sort(stringsToSort, _writingSystem);
 			string s = string.Empty;
 			foreach (string s1 in stringsToSort)
 			{
 				s += s1 + Environment.NewLine;
 			}
-			this.textBoxSortTest.Text = s.Trim();
+			textBoxSortTest.Text = s.Trim();
 		}
 
 		private void WritingSystemSort_Load(object sender, EventArgs e)

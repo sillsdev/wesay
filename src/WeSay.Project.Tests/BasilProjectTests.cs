@@ -2,8 +2,6 @@ using System.IO;
 using NUnit.Framework;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation.Tests;
-using WeSay.Project;
-using WeSay.Project.Tests;
 
 namespace WeSay.Project.Tests
 {
@@ -15,16 +13,17 @@ namespace WeSay.Project.Tests
 		[SetUp]
 		public void Setup()
 		{
-			DirectoryInfo dirProject = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+			DirectoryInfo dirProject =
+					Directory.CreateDirectory(Path.Combine(Path.GetTempPath(),
+														   Path.GetRandomFileName()));
 			_projectDirectory = dirProject.FullName;
-
 		}
 
 		private void InitializeSampleProject()
 		{
 			WriteSampleStringCatalogFile();
 			WriteSampleWritingSystemFile();
-	}
+		}
 
 		private string GetCommonDirectory()
 		{
@@ -48,7 +47,8 @@ namespace WeSay.Project.Tests
 		{
 			Directory.CreateDirectory(_projectDirectory);
 			Directory.CreateDirectory(GetCommonDirectory());
-			string pathToWritingSystemPrefs = Path.Combine(GetCommonDirectory(), "WritingSystemPrefs.xml");
+			string pathToWritingSystemPrefs = Path.Combine(GetCommonDirectory(),
+														   "WritingSystemPrefs.xml");
 			WritingSystemTests.WriteSampleWritingSystemFile(pathToWritingSystemPrefs);
 		}
 
@@ -59,24 +59,22 @@ namespace WeSay.Project.Tests
 			{
 				BasilProject.Project.Dispose();
 			}
-			WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
+			TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
 		}
 
-//  not relevant anymore
-//        [Test]
-//        public void NoSetupDefaultWritingSystems()
-//        {
-//            InitializeSampleProject();
-//
-//            BasilProject project = new BasilProject();
-//            project.LoadFromProjectDirectoryPath(_projectDirectory);
-//            WritingSystem ws = BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault;
-//            Assert.IsNotNull(ws);
-//            ws = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault;
-//            Assert.IsNotNull(ws);
-//        }
-
-
+		//  not relevant anymore
+		//        [Test]
+		//        public void NoSetupDefaultWritingSystems()
+		//        {
+		//            InitializeSampleProject();
+		//
+		//            BasilProject project = new BasilProject();
+		//            project.LoadFromProjectDirectoryPath(_projectDirectory);
+		//            WritingSystem ws = BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault;
+		//            Assert.IsNotNull(ws);
+		//            ws = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault;
+		//            Assert.IsNotNull(ws);
+		//        }
 
 		[Test]
 		public void LocalizedStringsDuringTests()

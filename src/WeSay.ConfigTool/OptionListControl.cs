@@ -1,28 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.ConfigTool
 {
-	public partial class OptionListControl : ConfigurationControlBase
+	public partial class OptionListControl: ConfigurationControlBase
 	{
 		private OptionsList _currentList;
 		private Option _currentOption;
 		private Field _currentField;
-		private List<Option> _newlyCreatedOptions = new List<Option>();
+		private readonly List<Option> _newlyCreatedOptions = new List<Option>();
 		private bool _currentListWasModified;
 
-		public OptionListControl():base("set up choices for option fields")
+		public OptionListControl(): base("set up choices for option fields")
 		{
 			InitializeComponent();
-			this.VisibleChanged += new EventHandler(OptionListControl_VisibleChanged);
+			VisibleChanged += OptionListControl_VisibleChanged;
 
 			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
 			_currentListWasModified = false;
@@ -40,7 +42,10 @@ namespace WeSay.ConfigTool
 				SaveEditsToCurrentItem();
 				//notice that we always save to the project directory, even if we started with the
 				//one in the program files directory.
-				string path  = Path.Combine(WeSay.Project.WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, _currentField.OptionsListFile);
+				string path =
+						Path.Combine(
+								WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
+								_currentField.OptionsListFile);
 
 				try
 				{
@@ -48,16 +53,17 @@ namespace WeSay.ConfigTool
 				}
 				catch (Exception error)
 				{
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-						"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
-						path, error.Message);
+					ErrorReport.ReportNonFatalMessage(
+							"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
+							path,
+							error.Message);
 				}
 			}
 		}
 
-		void OptionListControl_VisibleChanged(object sender, EventArgs e)
+		private void OptionListControl_VisibleChanged(object sender, EventArgs e)
 		{
-			if (this.Visible && _listBox.Items.Count > 0)
+			if (Visible && _listBox.Items.Count > 0)
 			{
 				LoadFieldChooser();
 
@@ -67,11 +73,10 @@ namespace WeSay.ConfigTool
 				{
 					if (_listBox.SelectedIndex == 0)
 					{
-						_listBox.SelectedIndex = _listBox.Items.Count-1;
+						_listBox.SelectedIndex = _listBox.Items.Count - 1;
 					}
 				}
 				AdjustLocations();
-
 			}
 		}
 
@@ -80,8 +85,8 @@ namespace WeSay.ConfigTool
 			_fieldChooser.Items.Clear();
 			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
 			{
-				if (field.DataTypeName == Field.BuiltInDataType.Option.ToString()
-					|| field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
+				if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
+					field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
 				{
 					_fieldChooser.Items.Add(field);
 				}
@@ -92,29 +97,27 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-
 		private void OnLoad(object sender, EventArgs e)
 		{
-		   Field field = GetPOSOrFieldWithOptionsList();
-		   if (null == field)
+			Field field = GetPOSOrFieldWithOptionsList();
+			if (null == field)
 			{
-			   // _listDescriptionLabel.Text = "This project does not have any fields which use option lists.";
+				// _listDescriptionLabel.Text = "This project does not have any fields which use option lists.";
 				splitContainer1.Visible = false;
 				UpdateDisplay();
 				return;
-
 			}
 			LoadFieldChooser();
 			LoadList(field);
 		}
 
-		private void LoadList( Field field)
+		private void LoadList(Field field)
 		{
 			try
 			{
 				SaveCurrentList();
 				_currentField = field;
-				_currentList = WeSay.Project.WeSayWordsProject.Project.GetOptionsList(_currentField, true);
+				_currentList = WeSayWordsProject.Project.GetOptionsList(_currentField, true);
 
 				_listBox.Items.Clear();
 				_currentListWasModified = false;
@@ -126,12 +129,12 @@ namespace WeSay.ConfigTool
 				{
 					_listBox.SelectedIndex = 0;
 				}
-				_fieldChooser.SelectedItem =field;
-			   UpdateDisplay();
+				_fieldChooser.SelectedItem = field;
+				UpdateDisplay();
 			}
 			catch (ConfigurationException e)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 		}
 
@@ -148,7 +151,7 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private Field GetPOSOrFieldWithOptionsList()
+		private static Field GetPOSOrFieldWithOptionsList()
 		{
 			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
 			{
@@ -170,47 +173,52 @@ namespace WeSay.ConfigTool
 
 		private void OnSelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (_listBox.SelectedIndex > -1 && ((Option.OptionDisplayProxy) _listBox.SelectedItem).UnderlyingOption != _currentOption)
+			if (_listBox.SelectedIndex > -1 &&
+				((Option.OptionDisplayProxy) _listBox.SelectedItem).UnderlyingOption !=
+				_currentOption)
 			{
 				SaveEditsToCurrentItem();
 				Option.OptionDisplayProxy proxy = (Option.OptionDisplayProxy) _listBox.SelectedItem;
-				this.splitContainer1.Panel2.Controls.Remove(this._nameMultiTextControl);
+				splitContainer1.Panel2.Controls.Remove(_nameMultiTextControl);
 
 				_currentOption = proxy.UnderlyingOption;
-				MultiTextControl m = new MultiTextControl(_currentField.WritingSystems,
-								 _currentOption.Name,
-								 _currentField.FieldName,
-								 false,
-								 BasilProject.Project.WritingSystems,
-								 CommonEnumerations.VisibilitySetting.Visible,
-								 _currentField.IsSpellCheckingEnabled);
-				m.SizeChanged += new EventHandler(OnNameControlSizeChanged);
+				MultiTextControl m = new MultiTextControl(_currentField.WritingSystemIds,
+														  _currentOption.Name,
+														  _currentField.FieldName,
+														  false,
+														  BasilProject.Project.WritingSystems,
+														  CommonEnumerations.VisibilitySetting.
+																  Visible,
+														  _currentField.IsSpellCheckingEnabled);
+				m.SizeChanged += OnNameControlSizeChanged;
 				m.Bounds = _nameMultiTextControl.Bounds;
 				m.Top = _nameLabel.Top;
-				m.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+				m.BorderStyle = BorderStyle.FixedSingle;
 				m.Anchor = _nameMultiTextControl.Anchor;
 
 				_nameMultiTextControl = m;
-				this.splitContainer1.Panel2.Controls.Add(m);
+				splitContainer1.Panel2.Controls.Add(m);
 
-				_keyText.TextChanged -= this.OnKeyTextChanged;
+				_keyText.TextChanged -= OnKeyTextChanged;
 				_keyText.Text = proxy.UnderlyingOption.Key;
-				_keyText.TextChanged += this.OnKeyTextChanged;
+				_keyText.TextChanged += OnKeyTextChanged;
 
 				foreach (WeSayTextBox box in m.TextBoxes)
 				{
-					TextBinding binding = new TextBinding(_currentOption.Name, box.WritingSystem.Id, box);
+					TextBinding binding = new TextBinding(_currentOption.Name,
+														  box.WritingSystem.Id,
+														  box);
 					//hooking on to this is more reliable, sequence-wise, than directly wiring to m.TextChanged
-					binding.DataTarget.PropertyChanged += new PropertyChangedEventHandler(DataTarget_PropertyChanged);
+					binding.DataTarget.PropertyChanged += DataTarget_PropertyChanged;
 				}
 				_keyText.Left = _nameMultiTextControl.Left;
 				UpdateDisplay();
 			}
 		}
 
-		void OnNameControlSizeChanged(object sender, EventArgs e)
+		private void OnNameControlSizeChanged(object sender, EventArgs e)
 		{
-			 AdjustLocations();
+			AdjustLocations();
 		}
 
 		private void AdjustLocations()
@@ -230,9 +238,10 @@ namespace WeSay.ConfigTool
 			_currentOption.Key = _keyText.Text;
 		}
 
-		void DataTarget_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		private void DataTarget_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			_keyText.Text = _currentOption.Key; //will automatically change as we type, if the key isn't set yet
+			_keyText.Text = _currentOption.Key;
+			//will automatically change as we type, if the key isn't set yet
 
 			//this weirdness is because I couldn't get the list item to update
 			// with any of the normal, documented means (e.g. _listBox.Text)
@@ -246,7 +255,7 @@ namespace WeSay.ConfigTool
 			_newlyCreatedOptions.Add(newOption);
 			_currentList.Options.Add(newOption);
 
-			int index =_listBox.Items.Add(newOption.GetDisplayProxy(PreferredWritingSystem));
+			int index = _listBox.Items.Add(newOption.GetDisplayProxy(PreferredWritingSystem));
 			_listBox.SelectedIndex = index;
 			UpdateDisplay();
 			_nameMultiTextControl.TextBoxes[0].Focus();
@@ -258,7 +267,7 @@ namespace WeSay.ConfigTool
 			_currentList.Options.Remove(_currentOption);
 			_listBox.Items.Remove(_listBox.SelectedItem);
 
-			if(_listBox.Items.Count>0)
+			if (_listBox.Items.Count > 0)
 			{
 				_listBox.SelectedIndex = 0;
 			}
@@ -271,15 +280,14 @@ namespace WeSay.ConfigTool
 			_currentListWasModified = true;
 		}
 
-
 		private void UpdateDisplay()
 		{
 			_btnDelete.Enabled = _listBox.SelectedItem != null;
 			_keyText.Enabled = _newlyCreatedOptions.Contains(_currentOption);
-			_keyText.BackColor = System.Drawing.SystemColors.Window;
+			_keyText.BackColor = SystemColors.Window;
 			_nameMultiTextControl.Visible = _listBox.SelectedItem != null;
 			_keyText.Visible = _nameMultiTextControl.Visible;
-			_btnAdd.Enabled =  (null != _currentField) ;
+			_btnAdd.Enabled = (null != _currentField);
 		}
 
 		private void OnKeyTextChanged(object sender, EventArgs e)
@@ -295,6 +303,5 @@ namespace WeSay.ConfigTool
 				LoadList(f);
 			}
 		}
-
 	}
 }

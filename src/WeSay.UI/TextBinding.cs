@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using WeSay.Foundation;
 
 namespace WeSay.UI
@@ -10,44 +11,44 @@ namespace WeSay.UI
 	/// </summary>
 	public class TextBinding
 	{
-		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate
-																			 {
-																			 };
-		private string _writingSystemId;
+		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate { };
+		private readonly string _writingSystemId;
 		private INotifyPropertyChanged _dataTarget;
 		private WeSayTextBox _textBoxTarget;
 		private bool _inMidstOfChange;
 
-		public TextBinding(INotifyPropertyChanged dataTarget, string writingSystemId, WeSayTextBox widgetTarget)
+		public TextBinding(INotifyPropertyChanged dataTarget,
+						   string writingSystemId,
+						   WeSayTextBox widgetTarget)
 		{
-			System.Diagnostics.Debug.Assert(dataTarget != null);
+			Debug.Assert(dataTarget != null);
 			_dataTarget = dataTarget;
-			_dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
+			_dataTarget.PropertyChanged += OnDataPropertyChanged;
 			_writingSystemId = writingSystemId;
 			_textBoxTarget = widgetTarget;
-			_textBoxTarget.TextChanged += new EventHandler(OnTextBoxChanged);
-			_textBoxTarget.HandleDestroyed += new EventHandler(_textBoxTarget_HandleDestroyed);
-			_textBoxTarget.Disposed += new EventHandler(_textBoxTarget_Disposed);
-			_textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
+			_textBoxTarget.TextChanged += OnTextBoxChanged;
+			_textBoxTarget.HandleDestroyed += _textBoxTarget_HandleDestroyed;
+			_textBoxTarget.Disposed += _textBoxTarget_Disposed;
+			_textBoxTarget.Enter += OnTextBoxEntered;
 		}
 
-		void _textBoxTarget_Disposed(object sender, EventArgs e)
+		private void _textBoxTarget_Disposed(object sender, EventArgs e)
 		{
 			TearDown();
 		}
 
-		void _textBoxTarget_HandleDestroyed(object sender, EventArgs e)
+		private void _textBoxTarget_HandleDestroyed(object sender, EventArgs e)
 		{
 			TearDown();
 		}
 
-		void OnTextBoxEntered(object sender, EventArgs e)
+		private void OnTextBoxEntered(object sender, EventArgs e)
 		{
-			ChangeOfWhichItemIsInFocus(sender, new CurrentItemEventArgs(DataTarget, _writingSystemId));
+			ChangeOfWhichItemIsInFocus(sender,
+									   new CurrentItemEventArgs(DataTarget, _writingSystemId));
 		}
 
-
-		void OnTextBoxChanged(object sender, EventArgs e)
+		private void OnTextBoxChanged(object sender, EventArgs e)
 		{
 			SetTargetValue(_textBoxTarget.Text);
 		}
@@ -65,11 +66,11 @@ namespace WeSay.UI
 				return; //teardown was called twice
 			}
 
-			_dataTarget.PropertyChanged -= new PropertyChangedEventHandler(OnDataPropertyChanged);
+			_dataTarget.PropertyChanged -= OnDataPropertyChanged;
 			_dataTarget = null;
-			_textBoxTarget.TextChanged -= new EventHandler(OnTextBoxChanged);
-			_textBoxTarget.HandleDestroyed -= new EventHandler(_textBoxTarget_HandleDestroyed);
-			_textBoxTarget.Disposed -= new EventHandler(_textBoxTarget_Disposed);
+			_textBoxTarget.TextChanged -= OnTextBoxChanged;
+			_textBoxTarget.HandleDestroyed -= _textBoxTarget_HandleDestroyed;
+			_textBoxTarget.Disposed -= _textBoxTarget_Disposed;
 			_textBoxTarget = null;
 		}
 
@@ -82,9 +83,11 @@ namespace WeSay.UI
 			// be: the teardown happens as a result of code which is also listening to the notifypropertychanged event
 			// but which happens before this. Even though the event handler has been removed, it will
 			// still fire this event.
-			if (_dataTarget == null || _inMidstOfChange ||
-				e.PropertyName != _writingSystemId) //FIX THIS
+			if (_dataTarget == null || _inMidstOfChange || e.PropertyName != _writingSystemId)
+					//FIX THIS
+			{
 				return;
+			}
 
 			try
 			{
@@ -99,18 +102,22 @@ namespace WeSay.UI
 
 		protected string GetTargetValue()
 		{
-			System.Diagnostics.Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
+			Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
 			MultiText text = _dataTarget as MultiText;
 			if (text == null)
+			{
 				throw new ArgumentException("Binding can't handle that type of target.");
+			}
 			return text[_writingSystemId];
 		}
 
 		protected virtual void SetTargetValue(string s)
 		{
-			System.Diagnostics.Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
+			Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
 			if (_inMidstOfChange)
+			{
 				return;
+			}
 
 			try
 			{
@@ -118,18 +125,19 @@ namespace WeSay.UI
 
 				if (_dataTarget is MultiText)
 				{
-					MultiText text = (MultiText)_dataTarget;
+					MultiText text = (MultiText) _dataTarget;
 					text[_writingSystemId] = s;
 				}
-				//else if (_dataTarget as IBindingList != null)
-				//{
-				//    IBindingList list = _dataTarget as IBindingList;
-				//    //in addition to add a menu item, this will fire events on the object that owns the list
-				//    list.AddNew();
-				//}
+						//else if (_dataTarget as IBindingList != null)
+						//{
+						//    IBindingList list = _dataTarget as IBindingList;
+						//    //in addition to add a menu item, this will fire events on the object that owns the list
+						//    list.AddNew();
+						//}
 				else
+				{
 					throw new ArgumentException("Binding doesn't understand that type of target.");
-
+				}
 			}
 			finally
 			{
@@ -139,22 +147,19 @@ namespace WeSay.UI
 
 		public INotifyPropertyChanged DataTarget
 		{
-			get
-			{
-				return _dataTarget;
-			}
+			get { return _dataTarget; }
 		}
 
 		//protected string WritingSystemId
 		//{
 		//    get { return _writingSystemId; }
 		//}
-//        public WeSayTextBox TextBoxTarget
-//        {
-//            get
-//            {
-//                return _textBoxTarget;
-//            }
-//        }
+		//        public WeSayTextBox TextBoxTarget
+		//        {
+		//            get
+		//            {
+		//                return _textBoxTarget;
+		//            }
+		//        }
 	}
 }

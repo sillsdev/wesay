@@ -75,18 +75,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.App.Tests", "WeSay.Ap
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformSpecific", "PlatformSpecific\PlatformSpecific.csproj", "{55E6BAB0-9B46-4C89-8773-4432417C1ADF}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoSpecific", "MonoSpecific\MonoSpecific.csproj", "{C7C9A512-40CE-4D8C-A8DE-48F41572E007}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.UI", "WeSay.UI\WeSay.UI.csproj", "{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
@@ -278,24 +266,6 @@ Global
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55E6BAB0-9B46-4C89-8773-4432417C1ADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55E6BAB0-9B46-4C89-8773-4432417C1ADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55E6BAB0-9B46-4C89-8773-4432417C1ADF}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
-		{55E6BAB0-9B46-4C89-8773-4432417C1ADF}.Mono Debug|Any CPU.ActiveCfg = Mono Debug|Any CPU
-		{55E6BAB0-9B46-4C89-8773-4432417C1ADF}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
-		{55E6BAB0-9B46-4C89-8773-4432417C1ADF}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
-		{55E6BAB0-9B46-4C89-8773-4432417C1ADF}.Mono Release|Any CPU.Build.0 = Mono Release|Any CPU
-		{55E6BAB0-9B46-4C89-8773-4432417C1ADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55E6BAB0-9B46-4C89-8773-4432417C1ADF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7C9A512-40CE-4D8C-A8DE-48F41572E007}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7C9A512-40CE-4D8C-A8DE-48F41572E007}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7C9A512-40CE-4D8C-A8DE-48F41572E007}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7C9A512-40CE-4D8C-A8DE-48F41572E007}.Mono Debug|Any CPU.ActiveCfg = Mono Debug|Any CPU
-		{C7C9A512-40CE-4D8C-A8DE-48F41572E007}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
-		{C7C9A512-40CE-4D8C-A8DE-48F41572E007}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
-		{C7C9A512-40CE-4D8C-A8DE-48F41572E007}.Mono Release|Any CPU.Build.0 = Mono Release|Any CPU
-		{C7C9A512-40CE-4D8C-A8DE-48F41572E007}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7C9A512-40CE-4D8C-A8DE-48F41572E007}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.minimal|Any CPU.ActiveCfg = Debug|Any CPU

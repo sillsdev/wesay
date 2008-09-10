@@ -11,91 +11,63 @@ using WeSay.Foundation;
 namespace Addin.LiftReports
 {
 	[Extension]
-	public class ReportMaker : IWeSayAddin
+	public class ReportMaker: IWeSayAddin
 	{
 		protected bool _launchAfterTransform = true;
 		private string _pathToOutput;
 
-
 		public Image ButtonImage
 		{
-			get
-			{
-				return Resources.image;
-			}
+			get { return Resources.image; }
 		}
 
 		public bool Available
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public string LocalizedName
 		{
-			get
-			{
-				return StringCatalog.Get("~View Report");
-			}
+			get { return StringCatalog.Get("~View Report"); }
 		}
 
 		public string Description
 		{
-			get
-			{
-				return StringCatalog.Get("~Shows some information about the lexicon.");
-			}
+			get { return StringCatalog.Get("~Shows some information about the lexicon."); }
 		}
 
 		//for unit tests
 		public string PathToOutput
 		{
-			get
-			{
-				return _pathToOutput;
-			}
+			get { return _pathToOutput; }
 		}
 
 		//for unit tests
 		public bool LaunchAfterTransform
 		{
-			set
-			{
-				_launchAfterTransform = value;
-			}
+			set { _launchAfterTransform = value; }
 		}
 
 		#region IWeSayAddin Members
 
 		public object SettingsToPersist
 		{
-			get
-			{
-				return null;
-			}
-			set
-			{
-
-			}
+			get { return null; }
+			set { throw new NotImplementedException(); }
 		}
 
 		public string ID
 		{
-			get
-			{
-				return "ReportMaker";
-			}
+			get { return "ReportMaker"; }
 		}
 
 		#endregion
 
 		#region IThingOnDashboard Members
 
-		public WeSay.Foundation.Dashboard.DashboardGroup Group
+		public DashboardGroup Group
 		{
-			get { return WeSay.Foundation.Dashboard.DashboardGroup.Share; }
+			get { return DashboardGroup.Share; }
 		}
 
 		public string LocalizedLabel
@@ -108,9 +80,9 @@ namespace Addin.LiftReports
 			get { return LocalizedName; }
 		}
 
-		public WeSay.Foundation.Dashboard.ButtonStyle DashboardButtonStyle
+		public ButtonStyle DashboardButtonStyle
 		{
-			get { return WeSay.Foundation.Dashboard.ButtonStyle.IconVariableWidth; }
+			get { return ButtonStyle.IconVariableWidth; }
 		}
 
 		public Image DashboardButtonImage

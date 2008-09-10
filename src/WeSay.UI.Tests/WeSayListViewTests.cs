@@ -1,15 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using NUnit.Framework;
 using NUnit.Extensions.Forms;
+using NUnit.Framework;
 
 namespace WeSay.UI.Tests
 {
 	[TestFixture]
-	public class WeSayListViewTests : NUnitFormTest
+	public class WeSayListViewTests: NUnitFormTest
 	{
 		private Form _window;
 		private WeSayListView _listView;
@@ -42,13 +40,17 @@ namespace WeSay.UI.Tests
 		public void ClickOnWhiteSpaceToRightOfEntry_ThenKeyboardNavigate_CorrectEntrySelected()
 		{
 			ListViewTester l = new ListViewTester("_listView", _window);
-			MouseController mc = new MouseController(l);
-			KeyboardController kc = new KeyboardController(l);
-			l.Select(0);
-			Rectangle r = l.Properties.GetItemRect(1);
-			mc.Click(r.Right + 1, r.Top + 1);
-			kc.Press("{DOWN}");
-			kc.Release("{DOWN}");
+			using (MouseController mc = new MouseController(l))
+			{
+				using (KeyboardController kc = new KeyboardController(l))
+				{
+					l.Select(0);
+					Rectangle r = l.Properties.GetItemRect(1);
+					mc.Click(r.Right + 1, r.Top + 1);
+					kc.Press("{DOWN}");
+					kc.Release("{DOWN}");
+				}
+			}
 			Assert.AreEqual(2, l.Properties.SelectedIndices[0]);
 		}
 
@@ -56,11 +58,13 @@ namespace WeSay.UI.Tests
 		public void DoubleClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_EntryStaysSelected()
 		{
 			ListViewTester l = new ListViewTester("_listView", _window);
-			MouseController mc = new MouseController(l);
-			Rectangle r = l.Properties.GetItemRect(0);
-			mc.Click(r.Right + 1, r.Top + 1);
-			// move enough to not confuse click with double-click
-			mc.DoubleClick(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
+			using (MouseController mc = new MouseController(l))
+			{
+				Rectangle r = l.Properties.GetItemRect(0);
+				mc.Click(r.Right + 1, r.Top + 1);
+				// move enough to not confuse click with double-click
+				mc.DoubleClick(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
+			}
 			Assert.AreEqual(1, l.Properties.SelectedIndices.Count);
 			Assert.AreEqual(0, l.Properties.SelectedIndices[0]);
 		}

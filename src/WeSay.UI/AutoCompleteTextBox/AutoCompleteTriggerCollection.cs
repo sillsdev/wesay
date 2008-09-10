@@ -2,8 +2,8 @@
 
 using System;
 using System.Collections;
-using System.Windows.Forms;
 using System.ComponentModel.Design;
+using System.Windows.Forms;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
@@ -11,14 +11,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 	/// Summary description for AutoCompleteTriggerCollection.
 	/// </summary>
 	[Serializable]
-	public class AutoCompleteTriggerCollection : CollectionBase
+	public class AutoCompleteTriggerCollection: CollectionBase
 	{
-
-		public class AutoCompleteTriggerCollectionEditor : CollectionEditor
+		public class AutoCompleteTriggerCollectionEditor: CollectionEditor
 		{
-			public AutoCompleteTriggerCollectionEditor(Type type) : base(type)
-			{
-			}
+			public AutoCompleteTriggerCollectionEditor(Type type): base(type) {}
 
 			protected override bool CanSelectMultipleInstances()
 			{
@@ -27,21 +24,18 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 			protected override Type[] CreateNewItemTypes()
 			{
-				return new Type[] {typeof(ShortCutTrigger), typeof(TextLengthTrigger)};
+				return new Type[] {typeof (ShortCutTrigger), typeof (TextLengthTrigger)};
 			}
 
 			protected override Type CreateCollectionItemType()
 			{
-				return typeof(ShortCutTrigger);
+				return typeof (ShortCutTrigger);
 			}
 		}
 
 		public AutoCompleteTrigger this[int index]
 		{
-			get
-			{
-				return InnerList[index] as AutoCompleteTrigger;
-			}
+			get { return InnerList[index] as AutoCompleteTrigger; }
 		}
 
 		public void Add(AutoCompleteTrigger item)
@@ -79,8 +73,5 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 			return TriggerState.None;
 		}
-
-
-
 	}
 }

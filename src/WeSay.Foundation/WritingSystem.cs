@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -13,7 +14,7 @@ using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.WritingSystems.Collation;
 using Spart;
 
-namespace WeSay.Language
+namespace WeSay.Foundation
 {
 	public enum CustomSortRulesType
 	{
@@ -30,7 +31,7 @@ namespace WeSay.Language
 	}
 
 	[ReflectorType("WritingSystem")]
-	public class WritingSystem: IComparer<string>
+	public class WritingSystem: IComparer<string>, IComparer
 	{
 		public static string IdForUnknownAnalysis = "en";
 		public static string IdForUnknownVernacular = "v";
@@ -41,7 +42,7 @@ namespace WeSay.Language
 		private Font _font;
 		private string _id;
 		private string _keyboardName;
-		private bool _rightToLeft = false;
+		private bool _rightToLeft;
 		private SortComparer _sortComparer;
 		private SortKeyGenerator _sortKeyGenerator;
 		private string _sortUsing;
@@ -96,7 +97,6 @@ namespace WeSay.Language
 			}
 			set { _abbreviation = value; }
 		}
-
 
 		//        //we'll be getting rid of this property
 		//        [Browsable(true), System.ComponentModel.DisplayName("Vernacular")]
@@ -204,7 +204,7 @@ namespace WeSay.Language
 		}
 
 		[Browsable(false)]
-		[ReflectorProperty("FontName", Required=true)]
+		[ReflectorProperty("FontName", Required = true)]
 		public string FontName
 		{
 			get
@@ -246,7 +246,7 @@ namespace WeSay.Language
 			set { _rightToLeft = value; }
 		}
 
-		[TypeConverter(typeof(SpellCheckerIdToDisplayStringConverter))]
+		[TypeConverter(typeof (SpellCheckerIdToDisplayStringConverter))]
 		[ReflectorProperty("SpellCheckingId", Required = false)]
 		public string SpellCheckingId
 		{
@@ -281,6 +281,11 @@ namespace WeSay.Language
 		public int Compare(string x, string y)
 		{
 			return _sortComparer(x, y);
+		}
+
+		public int Compare(object x, object y)
+		{
+			return Compare((string) x, (string) y);
 		}
 
 		#endregion
@@ -375,6 +380,7 @@ namespace WeSay.Language
 			}
 		}
 
+		[DebuggerNonUserCode]
 		private static CultureInfo GetCultureInfoFromWritingSystemId(string sortUsing)
 		{
 			CultureInfo ci;
@@ -393,6 +399,7 @@ namespace WeSay.Language
 			return ci;
 		}
 
+		[DebuggerNonUserCode]
 		private static CultureInfo TryGetCultureInfoByIetfLanguageTag(string ietfLanguageTag)
 		{
 			CultureInfo ci = null;
@@ -426,13 +433,13 @@ namespace WeSay.Language
 			return hashCode;
 		}
 
-		static int HashCombine(int seed, int hash)
+		private static int HashCombine(int seed, int hash)
 		{
 			// following line lifted from boost/functional/hash.hpp which is
 			//  Copyright Daniel James 2005-2007.
 			//  Use, modification, and distribution are subject to the Boost Software License, Version 1.0.
 			//  see license at http://www.boost.org/LICENSE_1_0.txt
-			return (int)(seed ^ (hash + 0x9e3779b9 + (seed << 6) + (seed >> 2)));
+			return (int) (seed ^ (hash + 0x9e3779b9 + (seed << 6) + (seed >> 2)));
 		}
 
 		#region Nested type: KeyboardListHelper
@@ -497,15 +504,13 @@ namespace WeSay.Language
 				List<String> keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
 
-				foreach (KeyboardController.KeyboardDescriptor keyboard in KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All))
+				foreach (KeyboardController.KeyboardDescriptor keyboard in
+						KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All))
 				{
 					keyboards.Add(keyboard.Name);
 				}
 				return new StandardValuesCollection(keyboards);
 			}
-
-
-
 		}
 
 		#endregion
@@ -524,11 +529,12 @@ namespace WeSay.Language
 
 		#region Nested type: SpellCheckerIdToDisplayStringConverter
 
-		public class SpellCheckerIdToDisplayStringConverter : StringConverter
+		public class SpellCheckerIdToDisplayStringConverter: StringConverter
 		{
 			public delegate IList<string> GetInstalledSpellCheckingIdsDelegate();
 
-			private GetInstalledSpellCheckingIdsDelegate _getInstalledSpellCheckingIdsStrategy = DefaultGetInstalledSpellCheckingIdsStrategy;
+			private GetInstalledSpellCheckingIdsDelegate _getInstalledSpellCheckingIdsStrategy =
+					DefaultGetInstalledSpellCheckingIdsStrategy;
 
 			public GetInstalledSpellCheckingIdsDelegate GetInstalledSpellCheckingIdsStrategy
 			{
@@ -537,7 +543,8 @@ namespace WeSay.Language
 				{
 					if (value == null)
 					{
-						_getInstalledSpellCheckingIdsStrategy = DefaultGetInstalledSpellCheckingIdsStrategy;
+						_getInstalledSpellCheckingIdsStrategy =
+								DefaultGetInstalledSpellCheckingIdsStrategy;
 					}
 					else
 					{
@@ -562,11 +569,11 @@ namespace WeSay.Language
 					throw new ArgumentNullException("destinationType");
 				}
 
-				if (destinationType != typeof(string))
+				if (destinationType != typeof (string))
 				{
 					throw GetConvertToException(value, destinationType);
 				}
-				if ((String)value == String.Empty)
+				if ((String) value == String.Empty)
 				{
 					return "none";
 				}
@@ -583,7 +590,6 @@ namespace WeSay.Language
 					{
 						try
 						{
-
 							string id = valueAsString.Replace('_', '-');
 							CultureInfo cultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag(id);
 							display = valueAsString + " (" + cultureInfo.NativeName + ")";
@@ -603,7 +609,7 @@ namespace WeSay.Language
 											   CultureInfo culture,
 											   object value)
 			{
-				if ((String)value == "none")
+				if ((String) value == "none")
 				{
 					return String.Empty;
 				}
@@ -612,8 +618,10 @@ namespace WeSay.Language
 					// display name is "en_US (English (United States))"
 					// we just want the first part so need to strip off any initial whitespace and get the first
 					// whitespace delimited token: en_US
-					string displayNameWhitespaceStrippedFromBeginning = value.ToString().TrimStart(null);
-					string[] whitespaceDelimitedTokens = displayNameWhitespaceStrippedFromBeginning.Split(null);
+					string displayNameWhitespaceStrippedFromBeginning =
+							value.ToString().TrimStart(null);
+					string[] whitespaceDelimitedTokens =
+							displayNameWhitespaceStrippedFromBeginning.Split(null);
 					string id = whitespaceDelimitedTokens[0];
 					return id;
 				}
@@ -654,7 +662,7 @@ namespace WeSay.Language
 				return new StandardValuesCollection(spellCheckerIds);
 			}
 
-			static private IList<string> DefaultGetInstalledSpellCheckingIdsStrategy()
+			private static IList<string> DefaultGetInstalledSpellCheckingIdsStrategy()
 			{
 				List<string> installedSpellCheckingIds = new List<string>();
 				using (Broker broker = new Broker())
@@ -670,6 +678,5 @@ namespace WeSay.Language
 		}
 
 		#endregion
-
 	}
 }

@@ -4,40 +4,36 @@ using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation;
-using WeSay.Foundation.Dashboard;
 using WeSay.Project;
 
 namespace WeSay.App.Tests
 {
-	public class MockTask : ITask
+	public class MockTask: ITask
 	{
-		private bool _isPinned;
-		private string _description;
-		private string _label;
-		private Control _control;
+		private readonly bool _isPinned;
+		private readonly string _description;
+		private readonly string _label;
+		private readonly Control _control;
 
 		private bool _isActive;
 		public string _urlThatItWasToldToGoTo;
 
 		public MockTask(string label, string description, bool isPinned)
 		{
-			this._label = label;
-			this._description = description;
-			this._isPinned = isPinned;
-			this._control = new Control();
+			_label = label;
+			_description = description;
+			_isPinned = isPinned;
+			_control = new Control();
 		}
 
 		public Control Control
 		{
-			get
-			{
-				return _control;
-			}
+			get { return _control; }
 		}
 
 		public bool IsActive
 		{
-			get { return this._isActive; }
+			get { return _isActive; }
 		}
 
 		public void Activate()
@@ -61,7 +57,7 @@ namespace WeSay.App.Tests
 
 		public string Label
 		{
-			get { return this._label; }
+			get { return _label; }
 		}
 
 		public int GetReferenceCount()
@@ -71,12 +67,12 @@ namespace WeSay.App.Tests
 
 		public string Description
 		{
-			get { return this._description; }
+			get { return _description; }
 		}
 
 		public bool IsPinned
 		{
-			get { return this._isPinned; }
+			get { return _isPinned; }
 		}
 
 		public int GetRemainingCount()
@@ -101,11 +97,9 @@ namespace WeSay.App.Tests
 
 		public int ExactCount
 		{
-			get
-			{
-				return GetRemainingCount();
-			}
+			get { return GetRemainingCount(); }
 		}
+
 		public bool MustBeActivatedDuringPreCache
 		{
 			get { return true; }
@@ -144,24 +138,19 @@ namespace WeSay.App.Tests
 		}
 
 		#endregion
-
-		public virtual void RegisterWithCache(ViewTemplate viewTemplate)
-		{
-
-		}
 	}
 
 	[TestFixture]
 	public class TabbedFormTests
 	{
-		WeSayWordsProject _project;
+		private WeSayWordsProject _project;
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
 		{
 			_project = new WeSayWordsProject();
 			_project.StringCatalogSelector = "en";
-			_project.LoadFromProjectDirectoryPath(WeSayWordsProject.GetPretendProjectDirectory());
+			_project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory());
 
 			_project.Tasks = new List<ITask>();
 		}
@@ -171,8 +160,12 @@ namespace WeSay.App.Tests
 		{
 			_project.Tasks.Add(new MockTask("Dashboard", "The control center.", true));
 			_project.Tasks.Add(new MockTask("Words", "The whole lexicon.", true));
-			_project.Tasks.Add(new MockTask("Add Meanings", "Add meanings to entries that are lacking them.", false));
-			_project.Tasks.Add(new MockTask("Semantic Domains", "Add new words using semantic domains.", false));
+			_project.Tasks.Add(new MockTask("Add Meanings",
+											"Add meanings to entries that are lacking them.",
+											false));
+			_project.Tasks.Add(new MockTask("Semantic Domains",
+											"Add new words using semantic domains.",
+											false));
 		}
 
 		[TearDown]
@@ -187,9 +180,8 @@ namespace WeSay.App.Tests
 			_project.Dispose();
 		}
 
-
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void InitializeTasks_NullTaskList_Throws()
 		{
 			TabbedForm tabbedForm = new TabbedForm();
@@ -202,7 +194,6 @@ namespace WeSay.App.Tests
 			TabbedForm tabbedForm = new TabbedForm();
 			Assert.IsNull(tabbedForm.CurrentWorkTask);
 		}
-
 
 		[Test]
 		public void GetCurrentWorkTask_NoTasks_IsNull()
@@ -234,8 +225,8 @@ namespace WeSay.App.Tests
 
 			TabbedForm tabbedForm = new TabbedForm();
 			tabbedForm.InitializeTasks(_project.Tasks);
-			Assert.IsTrue(((MockTask)_project.Tasks[0]).IsActive);
-			Assert.IsFalse(((MockTask)_project.Tasks[1]).IsActive);
+			Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive);
+			Assert.IsFalse(((MockTask) _project.Tasks[1]).IsActive);
 		}
 
 		[Test]
@@ -255,7 +246,6 @@ namespace WeSay.App.Tests
 			tabbedForm.LastCurrentWorkTaskLabel = string.Empty;
 		}
 
-
 		[Test]
 		public void GetCurrentWorkTask_RemembersLastCurrentWorkTask()
 		{
@@ -274,14 +264,14 @@ namespace WeSay.App.Tests
 			TabbedForm tabbedForm = new TabbedForm();
 			tabbedForm.InitializeTasks(_project.Tasks);
 
-			Assert.IsTrue(((MockTask)_project.Tasks[0]).IsActive);
-			Assert.IsFalse(((MockTask)_project.Tasks[1]).IsActive);
-			Assert.IsFalse(((MockTask)_project.Tasks[2]).IsActive);
-			Assert.IsFalse(((MockTask)_project.Tasks[3]).IsActive);
+			Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive);
+			Assert.IsFalse(((MockTask) _project.Tasks[1]).IsActive);
+			Assert.IsFalse(((MockTask) _project.Tasks[2]).IsActive);
+			Assert.IsFalse(((MockTask) _project.Tasks[3]).IsActive);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void SetActiveTask_Null_Throws()
 		{
 			TabbedForm tabbedForm = new TabbedForm();
@@ -305,23 +295,25 @@ namespace WeSay.App.Tests
 		{
 			TabbedForm tabbedForm = new TabbedForm();
 			tabbedForm.InitializeTasks(_project.Tasks);
-			Assert.IsTrue(((MockTask)_project.Tasks[0]).IsActive);
+			Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive);
 
 			tabbedForm.ActiveTask = _project.Tasks[1];
-			Assert.IsFalse(((MockTask)_project.Tasks[0]).IsActive);
-			Assert.IsTrue(((MockTask)_project.Tasks[1]).IsActive);
+			Assert.IsFalse(((MockTask) _project.Tasks[0]).IsActive);
+			Assert.IsTrue(((MockTask) _project.Tasks[1]).IsActive);
 		}
 
 		[Test]
-		public void SetActiveTask_ToWorkTask_AnotherTaskActivated_DeactivateOtherAndActivateNew_ChangeLabel()
+		public void
+				SetActiveTask_ToWorkTask_AnotherTaskActivated_DeactivateOtherAndActivateNew_ChangeLabel
+				()
 		{
 			TabbedForm tabbedForm = new TabbedForm();
 			tabbedForm.InitializeTasks(_project.Tasks);
-			Assert.IsTrue(((MockTask)_project.Tasks[0]).IsActive);
+			Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive);
 
 			tabbedForm.ActiveTask = _project.Tasks[3];
-			Assert.IsFalse(((MockTask)_project.Tasks[0]).IsActive);
-			Assert.IsTrue(((MockTask)_project.Tasks[3]).IsActive);
+			Assert.IsFalse(((MockTask) _project.Tasks[0]).IsActive);
+			Assert.IsTrue(((MockTask) _project.Tasks[3]).IsActive);
 			Assert.AreEqual(_project.Tasks[3].Label, tabbedForm.TabLabels[2]);
 		}
 
@@ -333,11 +325,10 @@ namespace WeSay.App.Tests
 
 			tabbedForm.ActiveTask = _project.Tasks[2];
 			tabbedForm.ActiveTask = _project.Tasks[3];
-			Assert.IsTrue(((MockTask)_project.Tasks[3]).IsActive);
-			Assert.IsFalse(((MockTask)_project.Tasks[2]).IsActive);
+			Assert.IsTrue(((MockTask) _project.Tasks[3]).IsActive);
+			Assert.IsFalse(((MockTask) _project.Tasks[2]).IsActive);
 
 			Assert.AreEqual(_project.Tasks[3].Label, tabbedForm.TabLabels[2]);
 		}
-
 	}
 }

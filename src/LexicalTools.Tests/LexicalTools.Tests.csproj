@@ -72,12 +72,10 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="GatherBySemanticDomainTaskTests.cs" />
-	<Compile Include="HelperForTestsRequiringDb4o.cs" />
 	<Compile Include="MissingEntryRelationFieldFilterTests.cs" />
 	<Compile Include="MissingLexicalFormFilterTests.cs" />
 	<Compile Include="MissingExampleTranslationFilterTests.cs" />
 	<Compile Include="MissingCustomFieldFilterTests.cs" />
-	<Compile Include="MissingItemFilterTests.cs" />
 	<Compile Include="DictionaryControlTests.cs" />
 	<Compile Include="DictionaryTaskTests.cs" />
 	<Compile Include="GatherWordListTaskTests.cs" />

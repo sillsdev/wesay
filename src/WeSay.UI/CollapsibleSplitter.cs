@@ -9,16 +9,19 @@
 
 */
 
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
+using System.Windows.Forms.Design;
 
 namespace WeSay.UI
 {
-	using System;
-	using System.ComponentModel;
-	using System.Drawing;
-	using System.Windows.Forms;
 
 	#region Enums
+
 	/// <summary>
 	/// Enumeration to sepcify the visual style to be applied to the CollapsibleSplitter control
 	/// </summary>
@@ -32,17 +35,21 @@ namespace WeSay.UI
 		None
 	}
 
-	public enum GripperLocations { Center = 0, LeftOrTop, RightOrBottom };
-
+	public enum GripperLocations
+	{
+		Center = 0,
+		LeftOrTop,
+		RightOrBottom
+	} ;
 
 	#endregion
 
 	/// <summary>
 	/// A custom collapsible splitter that can resize, hide and show associated form controls
 	/// </summary>
-	[ToolboxBitmap(typeof(CollapsibleSplitter))]
-	[DesignerAttribute(typeof(CollapsibleSplitterDesigner))]
-	public class CollapsibleSplitter : Splitter
+	[ToolboxBitmap(typeof (CollapsibleSplitter))]
+	[Designer(typeof (CollapsibleSplitterDesigner))]
+	public class CollapsibleSplitter: Splitter
 	{
 		#region Private Properties
 
@@ -51,50 +58,52 @@ namespace WeSay.UI
 		private GripperStyles _gripperStyle;
 		private GripperLocations _gripperLocation;
 
-	private Border3DStyle border3DStyle;
-	private BorderStyle borderStyle;
+		private Border3DStyle border3DStyle;
+		private BorderStyle borderStyle;
 
 		private Color _backgroundColorEnd;
 
-	private int? lastGoodSplitPosition;
-	private int hiddenControlWidth;
-	private int hiddenControlHeight;
+		private int? lastGoodSplitPosition;
+		private int hiddenControlWidth;
+		private int hiddenControlHeight;
 
-	private int gripLength;
-	private int minSize;
-		private int _marginBetweenGripperAndSide = 5;
+		private int gripLength;
+		private int minSize;
+		private const int _marginBetweenGripperAndSide = 5;
 
 		#endregion
-	public CollapsibleSplitter()
-	{
-	  base.MinSize = 0;
-	  lastGoodSplitPosition = null;
-	  border3DStyle = Border3DStyle.Flat;
-	  base.BorderStyle = BorderStyle.None;
-	  BorderStyle = BorderStyle.Fixed3D;
-	  gripLength = 90;
-	  minSize = 25;
-	}
+
+		public CollapsibleSplitter()
+		{
+			base.MinSize = 0;
+			lastGoodSplitPosition = null;
+			border3DStyle = Border3DStyle.Flat;
+			base.BorderStyle = BorderStyle.None;
+			BorderStyle = BorderStyle.Fixed3D;
+			gripLength = 90;
+			minSize = 25;
+		}
 
 		#region Public Properties
-	//
-	// Summary:
-	//     Gets or sets the minimum distance that must remain between the splitter control
-	//     and the container edge that the control is docked to.
-	//
-	// Returns:
-	//     The minimum distance, in pixels, between the System.Windows.Forms.Splitter
-	//     control and the container edge that the control is docked to. The default
-	//     is 25.
-	[Bindable(true)]
-	[Category("Collapsing Options")]
-	[Localizable(true)]
-	[DefaultValue(25)]
-	public new int MinSize
-	{
-	  get{ return this.minSize;}
-	  set{this.minSize = value;}
-	}
+
+		//
+		// Summary:
+		//     Gets or sets the minimum distance that must remain between the splitter control
+		//     and the container edge that the control is docked to.
+		//
+		// Returns:
+		//     The minimum distance, in pixels, between the System.Windows.Forms.Splitter
+		//     control and the container edge that the control is docked to. The default
+		//     is 25.
+		[Bindable(true)]
+		[Category("Collapsing Options")]
+		[Localizable(true)]
+		[DefaultValue(25)]
+		public new int MinSize
+		{
+			get { return minSize; }
+			set { minSize = value; }
+		}
 
 		/// <summary>
 		/// The initial state of the Splitter. Set to True if the control to hide is not visible by default
@@ -102,15 +111,21 @@ namespace WeSay.UI
 		[Bindable(true)]
 		[Category("Collapsing Options")]
 		[DefaultValue("False")]
-		[Description("The initial state of the Splitter. Set to True if the control to hide is not visible by default")]
+		[Description(
+				"The initial state of the Splitter. Set to True if the control to hide is not visible by default"
+				)]
 		public bool IsCollapsed
 		{
 			get
 			{
-				if(this.controlToHide!= null)
-					return !this.controlToHide.Visible;
+				if (controlToHide != null)
+				{
+					return !controlToHide.Visible;
+				}
 				else
+				{
 					return true;
+				}
 			}
 		}
 
@@ -118,33 +133,34 @@ namespace WeSay.UI
 		/// The System.Windows.Forms.Control that the splitter will collapse
 		/// </summary>
 		[Bindable(true)]
-	  [Category("Collapsing Options")]
+		[Category("Collapsing Options")]
 		[DefaultValue("")]
 		[Description("The System.Windows.Forms.Control that the splitter will collapse")]
 		public Control ControlToHide
 		{
-			get{ return this.controlToHide; }
-			set{
-		this.controlToHide = value;
-		this.hiddenControlHeight = controlToHide.Height;
-		this.hiddenControlWidth = controlToHide.Width;
-	  }
+			get { return controlToHide; }
+			set
+			{
+				controlToHide = value;
+				hiddenControlHeight = controlToHide.Height;
+				hiddenControlWidth = controlToHide.Width;
+			}
 		}
 
 		/// <summary>
 		/// The visual style that will be painted on the control
 		/// </summary>
 		[Bindable(true)]
-	  [Category("Collapsing Options")]
-	  [DefaultValue("GripperStyles.XP")]
+		[Category("Collapsing Options")]
+		[DefaultValue("GripperStyles.XP")]
 		[Description("The visual style of the gripper")]
 		public GripperStyles GripperStyle
 		{
-			get{ return this._gripperStyle; }
+			get { return _gripperStyle; }
 			set
 			{
-				this._gripperStyle = value;
-				this.Invalidate();
+				_gripperStyle = value;
+				Invalidate();
 			}
 		}
 
@@ -156,394 +172,503 @@ namespace WeSay.UI
 		[Description("Where the gripper shows up")]
 		public GripperLocations GripperLocation
 		{
-			get {
-				return this._gripperLocation; }
+			get { return _gripperLocation; }
 			set
 			{
-				this._gripperLocation = value;
-				this.Invalidate();
+				_gripperLocation = value;
+				Invalidate();
 			}
 		}
 
-	/// <summary>
-	/// An optional border style to paint on the control. Set to Flat for no border
-	/// </summary>
-	[Bindable(true)]
-	[Category("Collapsing Options")]
-	[DefaultValue("System.Windows.Forms.Border3DStyle.Flat")]
-	[Description("An optional border style to paint on the control. Set to Flat for no border")]
-	public Border3DStyle BorderStyle3D
-	{
-	  get
-	  {
-		return this.border3DStyle;
-	  }
-	  set
-	  {
-		this.border3DStyle = value;
-		this.Invalidate();
-	  }
-	}
+		/// <summary>
+		/// An optional border style to paint on the control. Set to Flat for no border
+		/// </summary>
+		[Bindable(true)]
+		[Category("Collapsing Options")]
+		[DefaultValue("System.Windows.Forms.Border3DStyle.Flat")]
+		[Description("An optional border style to paint on the control. Set to Flat for no border")]
+		public Border3DStyle BorderStyle3D
+		{
+			get { return border3DStyle; }
+			set
+			{
+				border3DStyle = value;
+				Invalidate();
+			}
+		}
 
-	/// <summary>
-	/// An optional height or width of the grabber that is painted on the control.
-	/// </summary>
-	[Bindable(true)]
-	[Category("Collapsing Options")]
-	[DefaultValue("90")]
-	[Description("An optional height or width of the grip that is painted on the control.")]
-	public int GripLength
-	  {
-		get { return this.gripLength; }
-		set { this.gripLength = value; }
-	  }
+		/// <summary>
+		/// An optional height or width of the grabber that is painted on the control.
+		/// </summary>
+		[Bindable(true)]
+		[Category("Collapsing Options")]
+		[DefaultValue("90")]
+		[Description("An optional height or width of the grip that is painted on the control.")]
+		public int GripLength
+		{
+			get { return gripLength; }
+			set { gripLength = value; }
+		}
 
-	  #endregion
+		#endregion
 
 		#region Public Methods
 
-
-	  public void ToggleState()
+		public void ToggleState()
 		{
-			this.ToggleSplitter();
+			ToggleSplitter();
 		}
 
 		#endregion
 
 		#region Overrides
-	protected override void OnSplitterMoved(SplitterEventArgs sevent)
-	{
-	  base.OnSplitterMoved(sevent);
-	  if(this.SplitPosition < this.MinSize)
-	  {
-		this.ToggleSplitter();
-	  }
-		else
-	  {
-		lastGoodSplitPosition = this.SplitPosition;
-	  }
-	}
 
-	protected override void OnSplitterMoving(SplitterEventArgs sevent)
-	{
-	  if (lastGoodSplitPosition == null)
-	  {
-		lastGoodSplitPosition = this.SplitPosition;
-	  }
-	  base.OnSplitterMoving(sevent);
-	}
+		protected override void OnSplitterMoved(SplitterEventArgs sevent)
+		{
+			base.OnSplitterMoved(sevent);
+			if (SplitPosition < MinSize)
+			{
+				ToggleSplitter();
+			}
+			else
+			{
+				lastGoodSplitPosition = SplitPosition;
+			}
+		}
+
+		protected override void OnSplitterMoving(SplitterEventArgs sevent)
+		{
+			if (lastGoodSplitPosition == null)
+			{
+				lastGoodSplitPosition = SplitPosition;
+			}
+			base.OnSplitterMoving(sevent);
+		}
 
 		protected override void OnEnabledChanged(EventArgs e)
 		{
 			base.OnEnabledChanged(e);
-			this.Invalidate();
+			Invalidate();
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
-			if (this.controlToHide != null)
-	  {
-		if (this.controlToHide.Visible)
+			if (controlToHide != null)
+			{
+				if (controlToHide.Visible)
+				{
+					base.OnMouseDown(e);
+				}
+				else
+				{
+					base.OnMouseDown(e);
+					base.OnMouseUp(e);
+				}
+			}
+		}
+
+		protected override void OnResize(EventArgs e)
 		{
-		  base.OnMouseDown(e);
+			Invalidate();
+			base.OnResize(e);
 		}
-		else
+
+		protected override void OnMouseMove(MouseEventArgs e)
 		{
-		  base.OnMouseDown(e);
-		  base.OnMouseUp(e);
+			Cursor = Cursors.Default;
+
+			if (controlToHide != null)
+			{
+				if (!controlToHide.Visible)
+				{
+					Cursor = Cursors.Hand;
+				}
+				else
+				{
+					if (IsSplitterVertical())
+					{
+						Cursor = Cursors.VSplit;
+					}
+					else
+					{
+						Cursor = Cursors.HSplit;
+					}
+				}
+			}
+			base.OnMouseMove(e);
 		}
-	  }
-		}
 
-	protected override void OnResize(EventArgs e)
-	{
-	  this.Invalidate();
-	  base.OnResize(e);
-	}
-
-	protected override void OnMouseMove(MouseEventArgs e)
-	{
-			this.Cursor = Cursors.Default;
-
-	  if (controlToHide != null)
-	  {
-		if (!this.controlToHide.Visible)
+		private bool IsSplitterVertical()
 		{
-		  this.Cursor = Cursors.Hand;
+			return Dock == DockStyle.Left || Dock == DockStyle.Right;
 		}
-		else
+
+		protected override void OnMouseClick(MouseEventArgs e)
 		{
-		  if (IsSplitterVertical())
-		  {
-			this.Cursor = Cursors.VSplit;
-		  }
-		  else
-		  {
-			this.Cursor = Cursors.HSplit;
-		  }
+			if (controlToHide != null)
+			{
+				if (!controlToHide.Visible)
+				{
+					ToggleSplitter();
+					base.OnMouseClick(e);
+				}
+			}
 		}
-	  }
-	  base.OnMouseMove(e);
-	}
 
-	  private bool IsSplitterVertical()
-	  {
-		return this.Dock == DockStyle.Left || this.Dock == DockStyle.Right;
-	  }
-
-	protected override void OnMouseClick(MouseEventArgs e)
-	{
-	  if (controlToHide != null)
-	  {
-		if (!controlToHide.Visible)
+		protected override void OnMouseDoubleClick(MouseEventArgs e)
 		{
-		  ToggleSplitter();
-		  base.OnMouseClick(e);
+			if (controlToHide != null && controlToHide.Visible)
+			{
+				ToggleSplitter();
+			}
+			base.OnMouseDoubleClick(e);
 		}
-	  }
-	}
-
-	  protected override void OnMouseDoubleClick(MouseEventArgs e)
-	{
-	  if (controlToHide != null && controlToHide.Visible)
-	  {
-		ToggleSplitter();
-	  }
-	  base.OnMouseDoubleClick(e);
-	}
 
 		private void ToggleSplitter()
 		{
-	  if (controlToHide.Visible)
-	  {
-		this.hiddenControlHeight = controlToHide.Height;
-		controlToHide.Height = 0;
-		this.hiddenControlWidth = controlToHide.Width;
-		controlToHide.Width = 0;
-		controlToHide.Visible = false;
-	  }
-	  else
-	  {
-		controlToHide.Visible = true;
-		controlToHide.Height = this.hiddenControlHeight;
-		controlToHide.Width = this.hiddenControlWidth;
-		this.SplitPosition = Math.Max(minSize,
-									 (lastGoodSplitPosition ?? -1));
-	  }
+			if (controlToHide.Visible)
+			{
+				hiddenControlHeight = controlToHide.Height;
+				controlToHide.Height = 0;
+				hiddenControlWidth = controlToHide.Width;
+				controlToHide.Width = 0;
+				controlToHide.Visible = false;
+			}
+			else
+			{
+				controlToHide.Visible = true;
+				controlToHide.Height = hiddenControlHeight;
+				controlToHide.Width = hiddenControlWidth;
+				SplitPosition = Math.Max(minSize, (lastGoodSplitPosition ?? -1));
+			}
 		}
 
 		#endregion
 
-#region Implementation
+		#region Implementation
 
-	#region Paint the control
+		#region Paint the control
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-
-		  // create a Graphics object
+			// create a Graphics object
 			Graphics g = e.Graphics;
 
-	  if(IsSplitterVertical())
-		  {
-		// force the width to 8px so that everything always draws correctly
-		Width = Math.Max(Width, 8);
-	  }
-		  else
-		  {
-		// force the height to 8px
-		Height = Math.Max(Height,8);
-		  }
-	  //create our offscreen bitmap
-	  Bitmap b = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
-	  Graphics bg = Graphics.FromImage(b);
+			if (IsSplitterVertical())
+			{
+				// force the width to 8px so that everything always draws correctly
+				Width = Math.Max(Width, 8);
+			}
+			else
+			{
+				// force the height to 8px
+				Height = Math.Max(Height, 8);
+			}
+			//create our offscreen bitmap
+			Bitmap b = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
+			Graphics bg = Graphics.FromImage(b);
 
-	  // find the rectangle for the splitter and paint it
-			Rectangle r = this.ClientRectangle;
+			// find the rectangle for the splitter and paint it
+			Rectangle r = ClientRectangle;
 
 			#region Vertical Splitter
+
 			// Check the docking style and create the control rectangle accordingly
 			if (IsSplitterVertical())
 			{
-
-			// draw the dots for our control image using a loop
-				int x = r.X + ((r.Width - 2)/2);
+				// draw the dots for our control image using a loop
+				int x = r.X + ((r.Width - 2) / 2);
 				int y = DetermineYCoordForGripperOnVerticalBar(r);
 
 				switch (_gripperStyle)
 				{
 					case GripperStyles.Mozilla:
+					{
+						int dotCount = gripLength / 3;
+						for (int i = 0;i < dotCount;i++)
 						{
-							int dotCount = gripLength/3;
-							for (int i = 0; i < dotCount; i++)
-							{
-								// light dot
-								bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y + (i*3), x + 1, y + 1 + (i*3));
-								// dark dot
-								bg.DrawLine(new Pen(SystemColors.ControlDarkDark), x + 1, y + 1 + (i*3), x + 2,
-											y + 2 + (i*3));
-								// overdraw the background color as we actually drew 2px diagonal lines, not just dots
-								bg.DrawLine(new Pen(this.BackColor), x + 2, y + 1 + (i*3), x + 2, y + 2 + (i*3));
-							}
+							// light dot
+							bg.DrawLine(new Pen(SystemColors.ControlLightLight),
+										x,
+										y + (i * 3),
+										x + 1,
+										y + 1 + (i * 3));
+							// dark dot
+							bg.DrawLine(new Pen(SystemColors.ControlDarkDark),
+										x + 1,
+										y + 1 + (i * 3),
+										x + 2,
+										y + 2 + (i * 3));
+							// overdraw the background color as we actually drew 2px diagonal lines, not just dots
+							bg.DrawLine(new Pen(BackColor),
+										x + 2,
+										y + 1 + (i * 3),
+										x + 2,
+										y + 2 + (i * 3));
 						}
+					}
 						break;
 
 					case GripperStyles.DoubleDots:
+					{
+						int dotCount = gripLength / 3;
+						for (int i = 0;i < dotCount;i++)
 						{
-							int dotCount = gripLength/3;
-							for (int i = 0; i < dotCount; i++)
-							{
-								// light dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x, y + 1 + (i*3), 1, 1);
-								// dark dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlDark), x - 1, y + (i*3), 1, 1);
-								i++;
-								// light dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 2, y + 1 + (i*3), 1, 1);
-								// dark dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlDark), x + 1, y + (i*3), 1, 1);
-							}
+							// light dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+											 x,
+											 y + 1 + (i * 3),
+											 1,
+											 1);
+							// dark dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlDark),
+											 x - 1,
+											 y + (i * 3),
+											 1,
+											 1);
+							i++;
+							// light dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+											 x + 2,
+											 y + 1 + (i * 3),
+											 1,
+											 1);
+							// dark dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlDark),
+											 x + 1,
+											 y + (i * 3),
+											 1,
+											 1);
 						}
+					}
 						break;
 
 					case GripperStyles.Win9x:
 
 						bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + 2, y);
 						bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + gripLength);
-						bg.DrawLine(new Pen(SystemColors.ControlDark), x + 2, y, x + 2, y + gripLength);
-						bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + gripLength, x + 2, y + gripLength);
+						bg.DrawLine(new Pen(SystemColors.ControlDark),
+									x + 2,
+									y,
+									x + 2,
+									y + gripLength);
+						bg.DrawLine(new Pen(SystemColors.ControlDark),
+									x,
+									y + gripLength,
+									x + 2,
+									y + gripLength);
 						break;
 
 					case GripperStyles.XP:
-						{
-							int dotCount = gripLength/5;
+					{
+						int dotCount = gripLength / 5;
 
-							for (int i = 0; i < dotCount; i++)
-							{
-								// light dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlLight), x, y + (i*5), 2, 2);
-								// light light dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1, y + 1 + (i*5), 1, 1);
-								// dark dark dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark), x, y + (i*5), 1, 1);
-								// dark fill
-								bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i*5), x, y + (i*5) + 1);
-								bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i*5), x + 1, y + (i*5));
-							}
+						for (int i = 0;i < dotCount;i++)
+						{
+							// light dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlLight),
+											 x,
+											 y + (i * 5),
+											 2,
+											 2);
+							// light light dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+											 x + 1,
+											 y + 1 + (i * 5),
+											 1,
+											 1);
+							// dark dark dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark),
+											 x,
+											 y + (i * 5),
+											 1,
+											 1);
+							// dark fill
+							bg.DrawLine(new Pen(SystemColors.ControlDark),
+										x,
+										y + (i * 5),
+										x,
+										y + (i * 5) + 1);
+							bg.DrawLine(new Pen(SystemColors.ControlDark),
+										x,
+										y + (i * 5),
+										x + 1,
+										y + (i * 5));
 						}
+					}
 						break;
 
 					case GripperStyles.Lines:
+					{
+						int lineCount = gripLength / 2;
+						for (int i = 0;i < lineCount;i++)
 						{
-							int lineCount = gripLength/2;
-							for (int i = 0; i < lineCount; i++)
-							{
-								bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i*2), x + 2, y + (i*2));
-							}
+							bg.DrawLine(new Pen(SystemColors.ControlDark),
+										x,
+										y + (i * 2),
+										x + 2,
+										y + (i * 2));
 						}
+					}
 						break;
 
-					case GripperStyles.None:
-						{
-						}
+					case GripperStyles.None: {}
 						break;
 				}
 			}
 
-				#endregion
+					#endregion
 
-			// Horizontal Splitter support added in v1.2
-			#region Horizontal Splitter
+					// Horizontal Splitter support added in v1.2
+					#region Horizontal Splitter
 
 			else
 			{
-				int y=r.Y + ((r.Height - 2)/2);
+				int y = r.Y + ((r.Height - 2) / 2);
 				// draw the dots for our control image using a loop
 				int x = DetermineXCoordForGripperOnHorizontalBar(r);
 
 				switch (_gripperStyle)
 				{
 					case GripperStyles.Mozilla:
+					{
+						int dotCount = gripLength / 3;
+						for (int i = 0;i < dotCount;i++)
 						{
-							int dotCount = gripLength / 3;
-							for (int i = 0; i < dotCount; i++)
-							{
-								// light dot
-								bg.DrawLine(new Pen(SystemColors.ControlLightLight), x + (i * 3), y, x + 1 + (i * 3), y + 1);
-								// dark dot
-								bg.DrawLine(new Pen(SystemColors.ControlDarkDark), x + 1 + (i * 3), y + 1, x + 2 + (i * 3), y + 2);
-								// overdraw the background color as we actually drew 2px diagonal lines, not just dots
-								bg.DrawLine(new Pen(this.BackColor), x + 1 + (i * 3), y + 2, x + 2 + (i * 3), y + 2);
-							}
+							// light dot
+							bg.DrawLine(new Pen(SystemColors.ControlLightLight),
+										x + (i * 3),
+										y,
+										x + 1 + (i * 3),
+										y + 1);
+							// dark dot
+							bg.DrawLine(new Pen(SystemColors.ControlDarkDark),
+										x + 1 + (i * 3),
+										y + 1,
+										x + 2 + (i * 3),
+										y + 2);
+							// overdraw the background color as we actually drew 2px diagonal lines, not just dots
+							bg.DrawLine(new Pen(BackColor),
+										x + 1 + (i * 3),
+										y + 2,
+										x + 2 + (i * 3),
+										y + 2);
 						}
+					}
 						break;
 
 					case GripperStyles.DoubleDots:
+					{
+						int dotCount = gripLength / 3;
+						for (int i = 0;i < dotCount;i++)
 						{
-							int dotCount = gripLength / 3;
-							for (int i = 0; i < dotCount; i++)
-							{
-								// light dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i * 3), y, 1, 1);
-								// dark dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlDark), x + (i * 3), y - 1, 1, 1);
-								i++;
-								// light dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i * 3), y + 2, 1, 1);
-								// dark dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlDark), x + (i * 3), y + 1, 1, 1);
-							}
+							// light dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+											 x + 1 + (i * 3),
+											 y,
+											 1,
+											 1);
+							// dark dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlDark),
+											 x + (i * 3),
+											 y - 1,
+											 1,
+											 1);
+							i++;
+							// light dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+											 x + 1 + (i * 3),
+											 y + 2,
+											 1,
+											 1);
+							// dark dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlDark),
+											 x + (i * 3),
+											 y + 1,
+											 1,
+											 1);
 						}
+					}
 						break;
 
 					case GripperStyles.Win9x:
 
 						bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + 2);
 						bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + gripLength, y);
-						bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + 2, x + gripLength, y + 2);
-						bg.DrawLine(new Pen(SystemColors.ControlDark), x + gripLength, y, x + gripLength, y + 2);
+						bg.DrawLine(new Pen(SystemColors.ControlDark),
+									x,
+									y + 2,
+									x + gripLength,
+									y + 2);
+						bg.DrawLine(new Pen(SystemColors.ControlDark),
+									x + gripLength,
+									y,
+									x + gripLength,
+									y + 2);
 						break;
 
 					case GripperStyles.XP:
+					{
+						int dotCount = gripLength / 5;
+						for (int i = 0;i < dotCount;i++)
 						{
-							int dotCount = gripLength / 5;
-							for (int i = 0; i < dotCount; i++)
-							{
-								// light dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlLight), x + (i * 5), y, 2, 2);
-								// light light dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i * 5), y + 1, 1, 1);
-								// dark dark dot
-								bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark), x + (i * 5), y, 1, 1);
-								// dark fill
-								bg.DrawLine(new Pen(SystemColors.ControlDark), x + (i * 5), y, x + (i * 5) + 1, y);
-								bg.DrawLine(new Pen(SystemColors.ControlDark), x + (i * 5), y, x + (i * 5), y + 1);
-							}
+							// light dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlLight),
+											 x + (i * 5),
+											 y,
+											 2,
+											 2);
+							// light light dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+											 x + 1 + (i * 5),
+											 y + 1,
+											 1,
+											 1);
+							// dark dark dot
+							bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark),
+											 x + (i * 5),
+											 y,
+											 1,
+											 1);
+							// dark fill
+							bg.DrawLine(new Pen(SystemColors.ControlDark),
+										x + (i * 5),
+										y,
+										x + (i * 5) + 1,
+										y);
+							bg.DrawLine(new Pen(SystemColors.ControlDark),
+										x + (i * 5),
+										y,
+										x + (i * 5),
+										y + 1);
 						}
+					}
 						break;
 
 					case GripperStyles.Lines:
+					{
+						int lineCount = gripLength / 2;
+						for (int i = 0;i < lineCount;i++)
 						{
-							int lineCount = gripLength / 2;
-							for (int i = 0; i < lineCount; i++)
-							{
-								bg.DrawLine(new Pen(SystemColors.ControlDark), x + (i * 2), y, x + (i * 2), y + 2);
-							}
+							bg.DrawLine(new Pen(SystemColors.ControlDark),
+										x + (i * 2),
+										y,
+										x + (i * 2),
+										y + 2);
 						}
+					}
 						break;
 
-					case GripperStyles.None:
-						{
-						}
+					case GripperStyles.None: {}
 						break;
 				}
 			}
 
-				#endregion
+			#endregion
 
-	  g.DrawImage(b, 0, 0);
-	  bg.Dispose();
-	  b.Dispose();
+			g.DrawImage(b, 0, 0);
+			bg.Dispose();
+			b.Dispose();
 
 			// dispose the Graphics object
 			g.Dispose();
@@ -551,21 +676,21 @@ namespace WeSay.UI
 
 		private int DetermineYCoordForGripperOnVerticalBar(Rectangle r)
 		{
-			int y ;
+			int y;
 			switch (_gripperLocation)
 			{
 				default:
 				case GripperLocations.Center:
-					y = r.Y + ((r.Height - gripLength)/2);
+					y = r.Y + ((r.Height - gripLength) / 2);
 					break;
 				case GripperLocations.LeftOrTop:
-					y  = r.Y + _marginBetweenGripperAndSide;
+					y = r.Y + _marginBetweenGripperAndSide;
 					break;
 				case GripperLocations.RightOrBottom:
-					y  = r.Y + r.Height  - (_marginBetweenGripperAndSide + gripLength);
+					y = r.Y + r.Height - (_marginBetweenGripperAndSide + gripLength);
 					break;
 			}
-			return y ;
+			return y;
 		}
 
 		private int DetermineXCoordForGripperOnHorizontalBar(Rectangle r)
@@ -575,78 +700,91 @@ namespace WeSay.UI
 			{
 				default:
 				case GripperLocations.Center:
-					x = r.X + ((r.Width - gripLength)/2);
+					x = r.X + ((r.Width - gripLength) / 2);
 					break;
 				case GripperLocations.LeftOrTop:
 					x = r.X + _marginBetweenGripperAndSide;
 					break;
 				case GripperLocations.RightOrBottom:
-					x = r.X + r.Width -(_marginBetweenGripperAndSide+ gripLength);
+					x = r.X + r.Width - (_marginBetweenGripperAndSide + gripLength);
 					break;
 			}
 			return x;
 		}
 
 		protected override void OnPaintBackground(PaintEventArgs e)
-	{
-		// draw the background color for our control image
-		LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle,
-									  BackColor,
-									  (BackColorEnd == Color.Empty)?BackColor:BackColorEnd,
-									  (IsSplitterVertical())?LinearGradientMode.Horizontal:LinearGradientMode.Vertical);
+		{
+			// draw the background color for our control image
+			LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle,
+																BackColor,
+																(BackColorEnd == Color.Empty)
+																		? BackColor
+																		: BackColorEnd,
+																(IsSplitterVertical())
+																		? LinearGradientMode.
+																				  Horizontal
+																		: LinearGradientMode.
+																				  Vertical);
 
-		e.Graphics.FillRectangle(brush, ClientRectangle);
-		Border3DStyle style = this.border3DStyle;
-		switch (BorderStyle)
-		{
-			case BorderStyle.FixedSingle:
-				style = Border3DStyle.Flat;
-				break;
-			case BorderStyle.None:
-				return;
+			e.Graphics.FillRectangle(brush, ClientRectangle);
+			Border3DStyle style = border3DStyle;
+			switch (BorderStyle)
+			{
+				case BorderStyle.FixedSingle:
+					style = Border3DStyle.Flat;
+					break;
+				case BorderStyle.None:
+					return;
+			}
+			if (IsSplitterVertical())
+			{
+				ControlPaint.DrawBorder3D(e.Graphics,
+										  ClientRectangle,
+										  style,
+										  Border3DSide.Left | Border3DSide.Right);
+			}
+			else
+			{
+				ControlPaint.DrawBorder3D(e.Graphics,
+										  ClientRectangle,
+										  style,
+										  Border3DSide.Top | Border3DSide.Bottom);
+			}
+			return;
 		}
-		if (IsSplitterVertical())
-		{
-			ControlPaint.DrawBorder3D(e.Graphics, ClientRectangle, style, Border3DSide.Left|Border3DSide.Right);
-		}
-		else
-		{
-			ControlPaint.DrawBorder3D(e.Graphics, ClientRectangle, style, Border3DSide.Top | Border3DSide.Bottom);
-		}
-		return;
-	}
 
-	public override DockStyle Dock
-	{
-	  get
-	  {
-		return base.Dock;
-	  }
-	  set
-	  {
-		switch (value)
+		public override DockStyle Dock
 		{
-		  case DockStyle.Fill:
-			throw new ArgumentOutOfRangeException("Fill DockStyle not allowed on Collapsible Splitter control.");
-		  case DockStyle.None:
-			throw new ArgumentOutOfRangeException("None DockStyle not allowed on Collapsible Splitter control.");
-		  default:
-			base.Dock = value;
-			break;
+			get { return base.Dock; }
+			set
+			{
+				switch (value)
+				{
+					case DockStyle.Fill:
+						throw new ArgumentOutOfRangeException("value",
+															  value,
+															  "Fill DockStyle not allowed on Collapsible Splitter control.");
+					case DockStyle.None:
+						throw new ArgumentOutOfRangeException("value",
+															  value,
+															  "None DockStyle not allowed on Collapsible Splitter control.");
+					default:
+						base.Dock = value;
+						break;
+				}
+			}
 		}
-	  }
-	}
 
 		public new BorderStyle BorderStyle
 		{
-			get { return this.borderStyle; }
-			set { this.borderStyle = value; }
+			get { return borderStyle; }
+			set { borderStyle = value; }
 		}
 
 		public Color BackColorEnd
 		{
-			get { return this._backgroundColorEnd; }
-			set { this._backgroundColorEnd = value; }
+			get { return _backgroundColorEnd; }
+			set { _backgroundColorEnd = value; }
 		}
 
 		#endregion
@@ -658,9 +796,9 @@ namespace WeSay.UI
 	/// A simple designer class for the CollapsibleSplitter control to remove
 	/// unwanted properties at design time.
 	/// </summary>
-	public class CollapsibleSplitterDesigner : System.Windows.Forms.Design.ControlDesigner
+	public class CollapsibleSplitterDesigner: ControlDesigner
 	{
-		protected override void PreFilterProperties(System.Collections.IDictionary properties)
+		protected override void PreFilterProperties(IDictionary properties)
 		{
 			properties.Remove("IsCollapsed");
 			properties.Remove("BorderStyle");

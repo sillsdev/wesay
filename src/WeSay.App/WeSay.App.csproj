@@ -92,7 +92,7 @@
 	<Compile Include="LongStartupNotification.Designer.cs">
 	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
 	</Compile>
-	<Compile Include="Migration\LiftPreparer.cs" />
+	<Compile Include="RepositoryStartupUI.cs" />
 	<Compile Include="Services\DictionaryServiceProvider.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
@@ -101,7 +101,7 @@
 	</Compile>
 	<Compile Include="registrySettingsProvider.cs" />
 	<Compile Include="Services\HtmlArticleMaker.cs" />
-	<Compile Include="Settings.cs" />
+	<Compile Include="Properties\Settings.cs" />
 	<Compile Include="TabbedForm.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -164,7 +164,6 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="Migration\populateDefinitionFromGloss.xslt" />
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="..\Addin.Transform\plift2html.xsl">

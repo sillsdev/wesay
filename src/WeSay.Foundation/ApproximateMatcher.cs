@@ -15,8 +15,7 @@ namespace WeSay.Foundation
 		None = 0,
 		IncludePrefixedForms = 1,
 		IncludeNextClosestForms = 2,
-		IncludePrefixedAndNextClosestForms =
-			IncludePrefixedForms | IncludeNextClosestForms
+		IncludePrefixedAndNextClosestForms = IncludePrefixedForms | IncludeNextClosestForms
 	}
 
 	public class ApproximateMatcher
@@ -37,55 +36,38 @@ namespace WeSay.Foundation
 		public static IList<string> FindClosestForms(IEnumerable forms,
 													 string notNormalizedFormToMatch)
 		{
-			return
-				FindClosestForms(forms,
-								 notNormalizedFormToMatch,
-								 ApproximateMatcherOptions.None);
+			return FindClosestForms(forms, notNormalizedFormToMatch, ApproximateMatcherOptions.None);
 		}
 
 		public static IList<T> FindClosestForms<T>(IEnumerable itemsToSearch,
-												   GetStringDelegate<T>
-													   itemFormExtractor,
+												   GetStringDelegate<T> itemFormExtractor,
 												   string notNormalizedFormToMatch)
 		{
-			return
-				FindClosestForms(itemsToSearch,
-								 itemFormExtractor,
-								 notNormalizedFormToMatch,
-								 ApproximateMatcherOptions.None);
+			return FindClosestForms(itemsToSearch,
+									itemFormExtractor,
+									notNormalizedFormToMatch,
+									ApproximateMatcherOptions.None);
 		}
 
 		public static IList<string> FindClosestForms(IEnumerable forms,
 													 string notNormalizedFormToMatch,
-													 ApproximateMatcherOptions
-														 options)
+													 ApproximateMatcherOptions options)
 		{
-			return
-				FindClosestForms<string>(forms,
-										 Self,
-										 notNormalizedFormToMatch,
-										 options);
+			return FindClosestForms<string>(forms, Self, notNormalizedFormToMatch, options);
 		}
 
 		// would like to have IEnumerable<T> but IBindingList isn't strong typed
 		public static IList<T> FindClosestForms<T>(IEnumerable itemsToSearch,
-												   GetStringDelegate<T>
-													   itemFormExtractor,
+												   GetStringDelegate<T> itemFormExtractor,
 												   string notNormalizedFormToMatch,
-												   ApproximateMatcherOptions
-													   options)
+												   ApproximateMatcherOptions options)
 		{
 			string formToMatch = notNormalizedFormToMatch.Normalize(NormalizationForm.FormD);
-			bool includeNextClosest = (options &
-									   ApproximateMatcherOptions.
-										   IncludeNextClosestForms) ==
-									  ApproximateMatcherOptions.
-										  IncludeNextClosestForms;
+			bool includeNextClosest = (options & ApproximateMatcherOptions.IncludeNextClosestForms) ==
+									  ApproximateMatcherOptions.IncludeNextClosestForms;
 			bool includeApproximatePrefixedForms = (options &
-													ApproximateMatcherOptions.
-														IncludePrefixedForms) ==
-												   ApproximateMatcherOptions.
-													   IncludePrefixedForms;
+													ApproximateMatcherOptions.IncludePrefixedForms) ==
+												   ApproximateMatcherOptions.IncludePrefixedForms;
 
 			List<T> bestMatches = new List<T>();
 			List<T> secondBestMatches = new List<T>();
@@ -96,45 +78,44 @@ namespace WeSay.Foundation
 			foreach (T item in itemsToSearch)
 			{
 				string originalForm = itemFormExtractor(item);
-				string form = originalForm.Normalize(NormalizationForm.FormD);
-				if (!string.IsNullOrEmpty(form))
+				if (!string.IsNullOrEmpty(originalForm))
 				{
-					int editDistance;
-					editDistance =
-						EditDistance(formToMatch,
-									 form,
-									 secondBestEditDistance,
-									 includeApproximatePrefixedForms);
-					if (editDistance < bestEditDistance)
+					string form = originalForm.Normalize(NormalizationForm.FormD);
+					if (!string.IsNullOrEmpty(form))
 					{
-						if (includeNextClosest &&
-							bestEditDistance != int.MaxValue)
+						int editDistance;
+						editDistance = EditDistance(formToMatch,
+													form,
+													secondBestEditDistance,
+													includeApproximatePrefixedForms);
+						if (editDistance < bestEditDistance)
 						{
-							// best becomes second best
-							secondBestMatches.Clear();
-							secondBestMatches.AddRange(bestMatches);
-							secondBestEditDistance = bestEditDistance;
+							if (includeNextClosest && bestEditDistance != int.MaxValue)
+							{
+								// best becomes second best
+								secondBestMatches.Clear();
+								secondBestMatches.AddRange(bestMatches);
+								secondBestEditDistance = bestEditDistance;
+							}
+							bestMatches.Clear();
+							bestEditDistance = editDistance;
 						}
-						bestMatches.Clear();
-						bestEditDistance = editDistance;
+						else if (includeNextClosest && editDistance > bestEditDistance &&
+								 editDistance < secondBestEditDistance)
+						{
+							secondBestEditDistance = editDistance;
+							secondBestMatches.Clear();
+						}
+						if (editDistance == bestEditDistance)
+						{
+							bestMatches.Add(item);
+						}
+						else if (includeNextClosest && editDistance == secondBestEditDistance)
+						{
+							secondBestMatches.Add(item);
+						}
+						Debug.Assert(bestEditDistance != secondBestEditDistance);
 					}
-					else if (includeNextClosest &&
-							 editDistance > bestEditDistance &&
-							 editDistance < secondBestEditDistance)
-					{
-						secondBestEditDistance = editDistance;
-						secondBestMatches.Clear();
-					}
-					if (editDistance == bestEditDistance)
-					{
-						bestMatches.Add(item);
-					}
-					else if (includeNextClosest &&
-							 editDistance == secondBestEditDistance)
-					{
-						secondBestMatches.Add(item);
-					}
-					Debug.Assert(bestEditDistance != secondBestEditDistance);
 				}
 			}
 			if (includeNextClosest)
@@ -166,7 +147,7 @@ namespace WeSay.Foundation
 			const int substitutionCost = 1;
 			const int transpositionCost = 1;
 			if (maxEditDistance == int.MaxValue)
-				// int.MaxValue has special meaning to us
+					// int.MaxValue has special meaning to us
 			{
 				--maxEditDistance;
 			}
@@ -189,7 +170,7 @@ namespace WeSay.Foundation
 			}
 
 			if (!treatSuffixAsZeroDistance)
-				// this is not a reflexive operation so swap isn't allowed
+					// this is not a reflexive operation so swap isn't allowed
 			{
 				// list2 is the one that we are actually using storage space for so we want it to be the smaller of the two
 				if (list1.Length < list2.Length)
@@ -221,9 +202,7 @@ namespace WeSay.Foundation
 			// just store the previous row, current row, and next row, each of which has a length min(x,y)+1,
 			// so just O(min(x,y)) space.
 			int prevRow = 0, curRow = 1, nextRow = 2;
-			int[][] rows =
-				new int[][]
-					{new int[n2 + 1], new int[n2 + 1], new int[n2 + 1]};
+			int[][] rows = new int[][] {new int[n2 + 1], new int[n2 + 1], new int[n2 + 1]};
 
 			// For each virtual row (since we only have physical storage for two)
 			for (int list1index = 0;list1index <= n1;++list1index)
@@ -233,19 +212,16 @@ namespace WeSay.Foundation
 					rows[nextRow][i] = EditDistanceLargerThanMax;
 				}
 
-				int maxIndex =
-					Math.Min(lastColumnThatNeedsToBeEvaluatedCurr + 1, n2);
+				int maxIndex = Math.Min(lastColumnThatNeedsToBeEvaluatedCurr + 1, n2);
 				// if we are on the last row and we don't need to evaluate to the end of
 				// the column to determine if our edit distance is larger than the max
 				// then the edit distance is larger than the max
-				if (!treatSuffixAsZeroDistance && list1index == n1 &&
-					maxIndex < n2)
+				if (!treatSuffixAsZeroDistance && list1index == n1 && maxIndex < n2)
 				{
 					return EditDistanceLargerThanMax;
 				}
 				lastColumnThatNeedsToBeEvaluatedNext = int.MaxValue;
-				firstColumnThatNeedsToBeEvaluatedNext =
-					lastColumnThatNeedsToBeEvaluatedCurr + 1;
+				firstColumnThatNeedsToBeEvaluatedNext = lastColumnThatNeedsToBeEvaluatedCurr + 1;
 
 				int minDistance = int.MaxValue;
 
@@ -261,26 +237,20 @@ namespace WeSay.Foundation
 					int distance = EditDistanceLargerThanMax;
 					if (list1index == 0 || list2index == 0)
 					{
-						distance = list1index * insertionCost +
-								   list2index * deletionCost;
+						distance = list1index * insertionCost + list2index * deletionCost;
 					}
 					else
 					{
 						// Delete Distance
 						if (list2index > firstColumnThatNeedsToBeEvaluatedCurr)
 						{
-							distance = rows[nextRow][list2index - 1] +
-									   deletionCost;
+							distance = rows[nextRow][list2index - 1] + deletionCost;
 						}
 
 						// Insert Distance
-						if (list2index <=
-							lastColumnThatNeedsToBeEvaluatedPrev + 1)
+						if (list2index <= lastColumnThatNeedsToBeEvaluatedPrev + 1)
 						{
-							distance =
-								Math.Min(distance,
-										 rows[curRow][list2index] +
-										 insertionCost);
+							distance = Math.Min(distance, rows[curRow][list2index] + insertionCost);
 						}
 
 						// Replace Distance
@@ -288,9 +258,7 @@ namespace WeSay.Foundation
 						{
 							int replaceDistance = rows[curRow][list2index - 1];
 
-							if (
-								!list1[list1index - 1].Equals(
-									 list2[list2index - 1]))
+							if (!list1[list1index - 1].Equals(list2[list2index - 1]))
 							{
 								replaceDistance += substitutionCost;
 							}
@@ -301,10 +269,8 @@ namespace WeSay.Foundation
 							list1[list1index - 1].Equals(list2[list2index - 2]) &&
 							list1[list1index - 2].Equals(list2[list2index - 1]))
 						{
-							distance =
-								Math.Min(distance,
-										 rows[prevRow][list2index - 2] +
-										 transpositionCost);
+							distance = Math.Min(distance,
+												rows[prevRow][list2index - 2] + transpositionCost);
 						}
 					}
 
@@ -322,8 +288,7 @@ namespace WeSay.Foundation
 						}
 						lastColumnThatNeedsToBeEvaluatedNext = list2index;
 					}
-					else if ((list1index == n1) &&
-							 list2index > lastColumnThatNeedsToBeEvaluatedCurr)
+					else if ((list1index == n1) && list2index > lastColumnThatNeedsToBeEvaluatedCurr)
 					{
 						break;
 					}
@@ -349,15 +314,11 @@ namespace WeSay.Foundation
 						break;
 				}
 
-				lastColumnThatNeedsToBeEvaluatedPrev =
-					lastColumnThatNeedsToBeEvaluatedCurr;
-				lastColumnThatNeedsToBeEvaluatedCurr =
-					lastColumnThatNeedsToBeEvaluatedNext;
+				lastColumnThatNeedsToBeEvaluatedPrev = lastColumnThatNeedsToBeEvaluatedCurr;
+				lastColumnThatNeedsToBeEvaluatedCurr = lastColumnThatNeedsToBeEvaluatedNext;
 
-				firstColumnThatNeedsToBeEvaluatedPrev =
-					firstColumnThatNeedsToBeEvaluatedCurr;
-				firstColumnThatNeedsToBeEvaluatedCurr =
-					firstColumnThatNeedsToBeEvaluatedNext;
+				firstColumnThatNeedsToBeEvaluatedPrev = firstColumnThatNeedsToBeEvaluatedCurr;
+				firstColumnThatNeedsToBeEvaluatedCurr = firstColumnThatNeedsToBeEvaluatedNext;
 
 				if (treatSuffixAsZeroDistance && list1index == n1)
 				{

@@ -52,36 +52,35 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Db4objects.Db4o.Tools.dll</HintPath>
 	</Reference>
+	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Palaso.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="AbstractRecordList.cs" />
-	<Compile Include="AbstractRecordListManager.cs" />
-	<Compile Include="CacheHelper.cs" />
-	<Compile Include="ComparisonHelper.cs" />
+	<Compile Include="Db4oRepository.cs" />
 	<Compile Include="DatabaseModified.cs" />
-	<Compile Include="Db4oRecordListManager.cs" />
-	<Compile Include="InMemoryBindingList.cs" />
-	<Compile Include="ISortHelper.cs" />
-	<Compile Include="Db4oRecordList.cs" />
-	<Compile Include="IFilter.cs" />
+	<Compile Include="Db4oRepositoryId.cs" />
+	<Compile Include="DelegateQuery.cs" />
+	<Compile Include="DictionaryEqualityComparer.cs" />
+	<Compile Include="IRepository.cs" />
 	<Compile Include="Db4oDataSource.cs" />
-	<Compile Include="Db4oList.cs" />
-	<Compile Include="IFilterable.cs" />
-	<Compile Include="InMemoryRecordList.cs" />
-	<Compile Include="InMemoryRecordListManager.cs" />
-	<Compile Include="IRecordList.cs" />
-	<Compile Include="IRecordListManager.cs" />
+	<Compile Include="MemoryRepository.cs" />
+	<Compile Include="Permuter.cs" />
+	<Compile Include="PreciseDateTime.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="SortedDb4oRecordList.cs" />
-  </ItemGroup>
-  <ItemGroup>
-	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
-	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
-	  <Name>PlatformSpecific</Name>
-	</ProjectReference>
+	<Compile Include="Query.cs" />
+	<Compile Include="QueryAdapter.cs" />
+	<Compile Include="RecordToken.cs" />
+	<Compile Include="RecordTokenComparer.cs" />
+	<Compile Include="RepositoryId.cs" />
+	<Compile Include="ResultSet.cs" />
+	<Compile Include="ResultSetCache.cs" />
+	<Compile Include="ResultSetCacheManager.cs" />
+	<Compile Include="SynchronicRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

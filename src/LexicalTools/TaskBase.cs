@@ -5,18 +5,18 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Data;
-using WeSay.Foundation.Dashboard;
+using WeSay.Foundation;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public abstract class TaskBase : ITask
+	public abstract class TaskBase: ITask
 	{
 		public const int CountNotRelevant = -1;
 		public const int CountNotComputed = -2;
 
-		private readonly IRecordListManager _recordListManager;
+		private readonly LexEntryRepository _lexEntryRepository;
 		private readonly string _label;
 		private readonly string _longLabel;
 		private readonly string _description;
@@ -28,8 +28,13 @@ namespace WeSay.LexicalTools
 		private int _remainingCount;
 		private int _referenceCount;
 
-		public TaskBase(string label, string longLabel, string description, string remainingCountText,
-			string referenceCountText, bool isPinned, IRecordListManager recordListManager)
+		public TaskBase(string label,
+						string longLabel,
+						string description,
+						string remainingCountText,
+						string referenceCountText,
+						bool isPinned,
+						LexEntryRepository lexEntryRepository)
 		{
 			if (label == null)
 			{
@@ -51,11 +56,11 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("referenceCountText");
 			}
-			if (recordListManager == null)
+			if (lexEntryRepository == null)
 			{
-				throw new ArgumentNullException("recordListManager");
+				throw new ArgumentNullException("lexEntryRepository");
 			}
-			_recordListManager = recordListManager;
+			_lexEntryRepository = lexEntryRepository;
 			// convert any amount of whitespace to one space
 			Regex rgx = new Regex("\\s+");
 			_label = rgx.Replace(label.Trim(), " ");
@@ -71,26 +76,36 @@ namespace WeSay.LexicalTools
 			ReadCacheFile();
 		}
 
-		public TaskBase(string label, string longLabel, string description, bool isPinned,
-						IRecordListManager recordListManager)
-			: this(label, longLabel, description, string.Empty, string.Empty, isPinned, recordListManager) {}
+		public TaskBase(string label,
+						string longLabel,
+						string description,
+						bool isPinned,
+						LexEntryRepository lexEntryRepository)
+				: this(
+						label,
+						longLabel,
+						description,
+						string.Empty,
+						string.Empty,
+						isPinned,
+						lexEntryRepository) {}
 
 		public virtual string Description
 		{
 			get { return StringCatalog.Get(_description); }
 		}
 
-		private bool _isActive = false;
+		private bool _isActive;
 
 		public virtual void Activate()
 		{
 			if (IsActive)
 			{
-				throw new InvalidOperationException("Activate should not be called when object is active.");
+				throw new InvalidOperationException(
+						"Activate should not be called when object is active.");
 			}
 			IsActive = true;
 		}
-
 
 		public bool MustBeActivatedDuringPreCache
 		{
@@ -157,16 +172,12 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public virtual void RegisterWithCache(ViewTemplate viewTemplate)
-		{
-
-		}
-
 		public virtual void Deactivate()
 		{
 			if (!IsActive)
 			{
-				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
+				throw new InvalidOperationException(
+						"Deactivate should only be called once after Activate.");
 			}
 			IsActive = false;
 		}
@@ -264,7 +275,8 @@ namespace WeSay.LexicalTools
 			int remainingCount = GetRemainingCount();
 			if (result == string.Empty)
 			{
-				result = StringCatalog.Get("~Remaining:", "Generic desciption of how many items in a task are left to do.");
+				result = StringCatalog.Get("~Remaining:",
+										   "Generic desciption of how many items in a task are left to do.");
 			}
 			if (remainingCount >= 0)
 			{
@@ -283,7 +295,8 @@ namespace WeSay.LexicalTools
 			int referenceCount = GetReferenceCount();
 			if (result == string.Empty)
 			{
-				result = StringCatalog.Get("~Total:", "Generic description of how many total items there are in a task.");
+				result = StringCatalog.Get("~Total:",
+										   "Generic description of how many total items there are in a task.");
 			}
 			if (referenceCount >= 0)
 			{
@@ -298,12 +311,13 @@ namespace WeSay.LexicalTools
 
 		public bool AreCountsRelevant()
 		{
-			return GetReferenceCount() != CountNotRelevant && GetRemainingCount() != CountNotRelevant;
+			return GetReferenceCount() != CountNotRelevant &&
+				   GetRemainingCount() != CountNotRelevant;
 		}
 
-		protected IRecordListManager RecordListManager
+		protected LexEntryRepository LexEntryRepository
 		{
-			get { return _recordListManager; }
+			get { return _lexEntryRepository; }
 		}
 
 		public bool IsActive
@@ -318,7 +332,6 @@ namespace WeSay.LexicalTools
 		{
 			get { return DashboardGroup.Describe; }
 		}
-
 
 		public string LocalizedLabel
 		{
@@ -337,7 +350,7 @@ namespace WeSay.LexicalTools
 
 		public virtual Image DashboardButtonImage
 		{
-			get { return null;}
+			get { return null; }
 		}
 
 		#endregion

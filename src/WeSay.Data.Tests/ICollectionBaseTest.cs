@@ -2,8 +2,7 @@ using System;
 using System.Collections;
 using NUnit.Framework;
 
-
-namespace WeSay.Data.Tests.ICollectionTests
+namespace WeSay.Data.Tests
 {
 	public class ICollectionBaseTest<T>
 	{
@@ -13,14 +12,14 @@ namespace WeSay.Data.Tests.ICollectionTests
 		[Test]
 		public void Count()
 		{
-			Assert.AreEqual(_itemCount, this._collection.Count);
+			Assert.AreEqual(_itemCount, _collection.Count);
 		}
 
 		[Test]
 		public void SyncRoot()
 		{
-			Assert.IsNotNull(this._collection.SyncRoot);
-			lock (this._collection.SyncRoot)
+			Assert.IsNotNull(_collection.SyncRoot);
+			lock (_collection.SyncRoot)
 			{
 				//some operation on the collection which is now thread safe
 			}
@@ -29,53 +28,51 @@ namespace WeSay.Data.Tests.ICollectionTests
 		[Test]
 		public void CopyTo()
 		{
-			T[] array = new T[this._itemCount];
-			this._collection.CopyTo(array, 0);
+			T[] array = new T[_itemCount];
+			_collection.CopyTo(array, 0);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void CopyToNullArray()
 		{
-			this._collection.CopyTo(null, 0);
+			_collection.CopyTo(null, 0);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void CopyToIndexLessThanZero()
 		{
-			T[] array = new T[this._itemCount];
-			this._collection.CopyTo(array, -1);
+			T[] array = new T[_itemCount];
+			_collection.CopyTo(array, -1);
 		}
 
-
 		[Test]
-		[ExpectedException(typeof(ArgumentException))]
+		[ExpectedException(typeof (ArgumentException))]
 		public void CopyToArrayIsMultidimensional()
 		{
-			T[,] array = new T[this._itemCount+1, this._itemCount+1];
-			this._collection.CopyTo(array, 0);
+			T[,] array = new T[_itemCount + 1,_itemCount + 1];
+			_collection.CopyTo(array, 0);
 		}
 
-
 		[Test]
-		[ExpectedException(typeof(ArgumentException))]
+		[ExpectedException(typeof (ArgumentException))]
 		public void CopyToIndexEqualLengthOfArray()
 		{
-			T[] array = new T[this._itemCount+1];
-			this._collection.CopyTo(array, this._itemCount+1);
-			if (this._itemCount == 0)
+			T[] array = new T[_itemCount + 1];
+			_collection.CopyTo(array, _itemCount + 1);
+			if (_itemCount == 0)
 			{
 				throw new ArgumentException();
 			}
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentException))]
+		[ExpectedException(typeof (ArgumentException))]
 		public void CopyToIndexGreaterThanLengthOfArray()
 		{
-			T[] array = new T[this._itemCount];
-			this._collection.CopyTo(array, this._itemCount + 1);
+			T[] array = new T[_itemCount];
+			_collection.CopyTo(array, _itemCount + 1);
 		}
 
 		/// <summary>
@@ -84,42 +81,38 @@ namespace WeSay.Data.Tests.ICollectionTests
 		/// end of the destination array.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof(ArgumentException))]
+		[ExpectedException(typeof (ArgumentException))]
 		public void CopyToOutOfSpace()
 		{
-			T[] array = new T[this._itemCount];
-			this._collection.CopyTo(array, 1);
+			T[] array = new T[_itemCount];
+			_collection.CopyTo(array, 1);
 		}
 
-		class MyClass
+		private class MyClass
 		{
-			int t = 0;
+			private readonly int t;
+
 			public int T
 			{
-				get
-				{
-					return t;
-				}
+				get { return t; }
 			}
 		}
 
 		[Test]
-		[ExpectedException(typeof(InvalidCastException))]
+		[ExpectedException(typeof (InvalidCastException))]
 		public void CopyToInvalidCast()
 		{
-			MyClass[] array = new MyClass[this._itemCount+1 ];
-			this._collection.CopyTo(array, 0);
-			if (this._itemCount == 0)
+			MyClass[] array = new MyClass[_itemCount + 1];
+			_collection.CopyTo(array, 0);
+			if (_itemCount == 0)
 			{
 				throw new InvalidCastException();
 			}
 		}
-
-
 	}
 
 	[TestFixture]
-	public class ICollectionIntTest : ICollectionBaseTest<int>
+	public class ICollectionIntTest: ICollectionBaseTest<int>
 	{
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
@@ -132,13 +125,13 @@ namespace WeSay.Data.Tests.ICollectionTests
 			list.Add(7);
 			list.Add(9);
 
-			this._collection = list;
-			this._itemCount = 5;
+			_collection = list;
+			_itemCount = 5;
 		}
 	}
 
 	[TestFixture]
-	public class ICollectionStringTest : ICollectionBaseTest<string>
+	public class ICollectionStringTest: ICollectionBaseTest<string>
 	{
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
@@ -150,20 +143,19 @@ namespace WeSay.Data.Tests.ICollectionTests
 			list.Add("7");
 			list.Add("9");
 
-			this._collection = list;
-			this._itemCount = 5;
-
+			_collection = list;
+			_itemCount = 5;
 		}
 	}
 
 	[TestFixture]
-	public class ICollectionNoDataTest : ICollectionBaseTest<string>
+	public class ICollectionNoDataTest: ICollectionBaseTest<string>
 	{
 		[SetUp]
 		public void SetUp()
 		{
-			this._collection = new ArrayList();
-			this._itemCount = 0;
+			_collection = new ArrayList();
+			_itemCount = 0;
 		}
 	}
 }

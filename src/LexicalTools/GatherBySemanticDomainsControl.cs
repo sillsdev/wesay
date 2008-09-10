@@ -1,15 +1,14 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.UI;
-using WeSay.UI.Animation;
 
 namespace WeSay.LexicalTools
 {
-	public partial class GatherBySemanticDomainsControl : UserControl
+	public partial class GatherBySemanticDomainsControl: UserControl
 	{
-		private GatherBySemanticDomainTask _presentationModel;
+		private readonly GatherBySemanticDomainTask _presentationModel;
 		private bool _animationIsMovingFromList;
 
 		public GatherBySemanticDomainsControl()
@@ -51,23 +50,21 @@ namespace WeSay.LexicalTools
 				_listViewWords.Height += height;
 
 				_description.Visible = false;
-
 			}
-			_vernacularBox.WritingSystemsForThisField = new WritingSystem[] { _presentationModel.WordWritingSystem };
+			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
+															{_presentationModel.WordWritingSystem};
 			_listViewWords.WritingSystem = _presentationModel.WordWritingSystem;
 			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.WordWritingSystem.Font.GetHeight());
 
 			//    _animatedText.Font = _presentationModel.WordWritingSystem.Font;
 
 			_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
-			_movingLabel.Finished += new EventHandler(_animator_Finished);
-
+			_movingLabel.Finished += _animator_Finished;
 		}
-
 
 		private void InitializeDisplaySettings()
 		{
-			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			BackColor = DisplaySettings.Default.BackgroundColor;
 		}
 
 		private void RefreshCurrentDomainAndQuestion()
@@ -87,19 +84,19 @@ namespace WeSay.LexicalTools
 
 		private void RefreshCurrentWords()
 		{
-			this._listViewWords.Items.Clear();
+			_listViewWords.Items.Clear();
 			string longestWord = string.Empty;
-			foreach (string word in this._presentationModel.CurrentWords)
+			foreach (string word in _presentationModel.CurrentWords)
 			{
 				if (longestWord.Length < word.Length)
 				{
 					longestWord = word;
 				}
-				this._listViewWords.Items.Add(word);
+				_listViewWords.Items.Add(word);
 			}
 
-			Size bounds = TextRenderer.MeasureText(longestWord, this._listViewWords.Font);
-			this._listViewWords.ColumnWidth = bounds.Width + 10;
+			Size bounds = TextRenderer.MeasureText(longestWord, _listViewWords.Font);
+			_listViewWords.ColumnWidth = bounds.Width + 10;
 		}
 
 		private void _btnNext_Click(object sender, EventArgs e)
@@ -129,15 +126,21 @@ namespace WeSay.LexicalTools
 			{
 				case Keys.Return:
 					if (_btnAddWord.Enabled)
+					{
 						_btnAddWord_Click(this, null);
+					}
 					break;
 				case Keys.PageUp:
 					if (_btnPrevious.Enabled)
+					{
 						_btnPrevious_Click(this, null);
+					}
 					break;
 				case Keys.PageDown:
 					if (_btnNext.Enabled)
+					{
 						_btnNext_Click(this, null);
+					}
 					break;
 
 				default:
@@ -157,7 +160,7 @@ namespace WeSay.LexicalTools
 			_questionIndicator.BulletColorEnd = ControlPaint.Dark(BackColor);
 		}
 
-		void _listViewWords_KeyPress(object sender, KeyPressEventArgs e)
+		private void _listViewWords_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			e.Handled = true;
 			switch (e.KeyChar)
@@ -171,25 +174,26 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		void _listViewWords_Click(object sender, EventArgs e)
+		private void _listViewWords_Click(object sender, EventArgs e)
 		{
 			if (_listViewWords.SelectedItem != null)
 			{
-				string word = (string)_listViewWords.SelectedItem;
+				string word = (string) _listViewWords.SelectedItem;
 				// NB: don't do this before storing what they clicked on.
 
 				string wordCurrentlyInTheEditBox = WordToAdd;
 				if (!String.IsNullOrEmpty(wordCurrentlyInTheEditBox))
 				{
-					_presentationModel.AddWord(wordCurrentlyInTheEditBox);//don't throw away what they were typing
+					_presentationModel.AddWord(wordCurrentlyInTheEditBox);
+					//don't throw away what they were typing
 				}
 
 				_presentationModel.DetachFromMatchingEntries(word);
 
-				Point destination = this._vernacularBox.Location;
-				destination.Offset(this._vernacularBox.TextBoxes[0].Location);
-				Point start = this._listViewWords.GetItemRectangle(_listViewWords.SelectedIndex).Location;
-				start.Offset(this._listViewWords.Location);
+				Point destination = _vernacularBox.Location;
+				destination.Offset(_vernacularBox.TextBoxes[0].Location);
+				Point start = _listViewWords.GetItemRectangle(_listViewWords.SelectedIndex).Location;
+				start.Offset(_listViewWords.Location);
 
 				RefreshCurrentWords();
 				_animationIsMovingFromList = false;
@@ -197,9 +201,7 @@ namespace WeSay.LexicalTools
 				_movingLabel.Go(word, start, destination);
 			}
 			_vernacularBox.FocusOnFirstWsAlternative();
-
 		}
-
 
 		private void _btnAddWord_Click(object sender, EventArgs e)
 		{
@@ -217,28 +219,24 @@ namespace WeSay.LexicalTools
 
 			int index = _listViewWords.FindStringExact(word);
 
-			Point start = this._vernacularBox.Location;
-			start.Offset(this._vernacularBox.TextBoxes[0].Location);
-			Point destination = this._listViewWords.GetItemRectangle(index).Location;
-			destination.Offset(this._listViewWords.Location);
+			Point start = _vernacularBox.Location;
+			start.Offset(_vernacularBox.TextBoxes[0].Location);
+			Point destination = _listViewWords.GetItemRectangle(index).Location;
+			destination.Offset(_listViewWords.Location);
 
-			this._movingLabel.Text = word;
+			_movingLabel.Text = word;
 			_animationIsMovingFromList = true;
 
 			_movingLabel.Go(word, start, destination);
 			_vernacularBox.FocusOnFirstWsAlternative();
-
 		}
 
 		private string WordToAdd
 		{
-			get
-			{
-				return this._vernacularBox.TextBoxes[0].Text.Trim();
-			}
+			get { return _vernacularBox.TextBoxes[0].Text.Trim(); }
 		}
 
-		void _animator_Finished(object sender, EventArgs e)
+		private void _animator_Finished(object sender, EventArgs e)
 		{
 			if (!_animationIsMovingFromList)
 			{
@@ -248,15 +246,14 @@ namespace WeSay.LexicalTools
 			_listViewWords.ItemToNotDrawYet = null;
 		}
 
-
-		void _domainName_DrawItem(object sender, DrawItemEventArgs e)
+		private void _domainName_DrawItem(object sender, DrawItemEventArgs e)
 		{
 			if ((e.State & DrawItemState.ComboBoxEdit) == DrawItemState.ComboBoxEdit)
 			{
 				if (e.Index >= 0)
 				{
 					TextRenderer.DrawText(e.Graphics,
-										  this._presentationModel.DomainNames[e.Index],
+										  _presentationModel.DomainNames[e.Index],
 										  e.Font,
 										  e.Bounds,
 										  e.ForeColor,
@@ -275,7 +272,8 @@ namespace WeSay.LexicalTools
 									  TextFormatFlags.Left);
 			}
 		}
-		void _domainName_MeasureItem(object sender, MeasureItemEventArgs e)
+
+		private void _domainName_MeasureItem(object sender, MeasureItemEventArgs e)
 		{
 			Size size = TextRenderer.MeasureText(DomainNameAndCount(e.Index), _domainName.Font);
 			e.ItemHeight = size.Height;
@@ -289,7 +287,7 @@ namespace WeSay.LexicalTools
 				return string.Empty;
 			}
 
-			int count = this._presentationModel.WordsInDomain(index);
+			int count = _presentationModel.WordsInDomain(index);
 			string s;
 			if (count > 0)
 			{
@@ -299,15 +297,14 @@ namespace WeSay.LexicalTools
 			{
 				s = "    ";
 			}
-			return s + this._presentationModel.DomainNames[index];
+			return s + _presentationModel.DomainNames[index];
 		}
 
-		void _domainName_SelectedIndexChanged(object sender, EventArgs e)
+		private void _domainName_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			_presentationModel.CurrentDomainIndex = _domainName.SelectedIndex;
 			RefreshCurrentDomainAndQuestion();
 			_vernacularBox.FocusOnFirstWsAlternative();
-
 		}
 	}
 }

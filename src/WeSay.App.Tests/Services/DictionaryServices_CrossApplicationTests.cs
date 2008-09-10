@@ -1,13 +1,13 @@
-using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using NUnit.Framework;
+using Palaso.Reporting;
 using Palaso.Services;
 using Palaso.Services.Dictionary;
 using WeSay.Project.Tests;
 
-namespace WeSay.App.Tests
+namespace WeSay.App.Tests.Services
 {
 	/// <summary>
 	/// Some of what we might want to test, like the whole launching with no UI, later bringing up
@@ -17,13 +17,13 @@ namespace WeSay.App.Tests
 	[TestFixture]
 	public class DictionaryServices_CrossApplicationTests
 	{
-		private const bool kStartInServerMode=true;
+		private const bool kStartInServerMode = true;
 		private const bool kStartInUIMode = false;
 
 		[SetUp]
 		public void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+			ErrorReport.IsOkToInteractWithUser = false;
 		}
 
 		[TearDown]
@@ -32,13 +32,15 @@ namespace WeSay.App.Tests
 			EnsureNoWeSaysRunning();
 		}
 
-		private void EnsureNoWeSaysRunning()
+		private static void EnsureNoWeSaysRunning()
 		{
-			for (int i = 0; i < 50; i++)
+			for (int i = 0;i < 50;i++)
 			{
 				Process[] p = Process.GetProcessesByName("WeSay.App");
-				if(p.Length == 0)
+				if (p.Length == 0)
+				{
 					break;
+				}
 				Thread.Sleep(100);
 			}
 			Process[] doomed = Process.GetProcessesByName("WeSay.App");
@@ -55,18 +57,15 @@ namespace WeSay.App.Tests
 					process.Kill();
 				}
 			}
-//failing on the build server                Assert.AreEqual(0, doomed.Length, "Teardown shouldn't have to kill any WeSay instances.");
+			//failing on the build server                Assert.AreEqual(0, doomed.Length, "Teardown shouldn't have to kill any WeSay instances.");
 		}
 
 		[Test]
 		public void CommandLineArgRequestsServerMode()
 		{
-
-			WeSayApp app = new WeSayApp(new string[] { "-server" });
+			WeSayApp app = new WeSayApp(new string[] {"-server"});
 			Assert.IsTrue(app.ServerModeStartRequested);
 		}
-
-
 
 		/// <summary>
 		/// WS-632 regression
@@ -74,33 +73,49 @@ namespace WeSay.App.Tests
 		[Test]
 		public void LiftFileIsUpdatedWhenServiceQuits()
 		{
-			using (ProjectDirectorySetupForTesting projectDirectorySetup = new ProjectDirectorySetupForTesting(string.Empty))
+			using (
+					ProjectDirectorySetupForTesting projectDirectorySetup =
+							new ProjectDirectorySetupForTesting(string.Empty))
 			{
-				Process p = LaunchDictionaryServiceApp(kStartInServerMode, projectDirectorySetup);
+				LaunchDictionaryServiceApp(kStartInServerMode, projectDirectorySetup);
 
-				IDictionaryService dictionaryService = GetDictionaryService(projectDirectorySetup.PathToLiftFile, Process.GetCurrentProcess().Id);
-				dictionaryService.AddEntry("v", "dontLooseThisWord", string.Empty, string.Empty, string.Empty, string.Empty);
+				IDictionaryService dictionaryService =
+						GetDictionaryService(projectDirectorySetup.PathToLiftFile,
+											 Process.GetCurrentProcess().Id);
+				dictionaryService.AddEntry("v",
+										   "dontLooseThisWord",
+										   string.Empty,
+										   string.Empty,
+										   string.Empty,
+										   string.Empty);
 				dictionaryService.DeregisterClient(Process.GetCurrentProcess().Id);
 				Thread.Sleep(1000);
 				AssertServiceIsClosed(projectDirectorySetup.PathToLiftFile);
 
-				Assert.IsTrue(File.ReadAllText(projectDirectorySetup.PathToLiftFile).Contains("dontLooseThisWord"));
+				Assert.IsTrue(
+						File.ReadAllText(projectDirectorySetup.PathToLiftFile).Contains(
+								"dontLooseThisWord"));
 			}
 		}
 
 		[Test]
 		public void ServiceExitsWhenLastClientDeregisters()
 		{
-			using (ProjectDirectorySetupForTesting projectDirectorySetup = new ProjectDirectorySetupForTesting(string.Empty))
+			using (
+					ProjectDirectorySetupForTesting projectDirectorySetup =
+							new ProjectDirectorySetupForTesting(string.Empty))
 			{
-				Process p = LaunchDictionaryServiceApp(kStartInServerMode, projectDirectorySetup);
+				LaunchDictionaryServiceApp(kStartInServerMode, projectDirectorySetup);
 				int firstClientId = Process.GetCurrentProcess().Id;
 
-				IDictionaryService dictionaryService = GetDictionaryService(projectDirectorySetup.PathToLiftFile, firstClientId);
+				IDictionaryService dictionaryService =
+						GetDictionaryService(projectDirectorySetup.PathToLiftFile, firstClientId);
 				Assert.IsNotNull(dictionaryService, "Could not get dictionary service, first time.");
-				int secondClientId = firstClientId + 1;//bad thing to do in a non-test setting
-				IDictionaryService dictionaryService2 = GetDictionaryService(projectDirectorySetup.PathToLiftFile, secondClientId);
-				Assert.IsNotNull(dictionaryService2, "Could not get dictionary service, second time.");
+				int secondClientId = firstClientId + 1; //bad thing to do in a non-test setting
+				IDictionaryService dictionaryService2 =
+						GetDictionaryService(projectDirectorySetup.PathToLiftFile, secondClientId);
+				Assert.IsNotNull(dictionaryService2,
+								 "Could not get dictionary service, second time.");
 				AssertServerIsRunning(projectDirectorySetup.PathToLiftFile);
 				dictionaryService.DeregisterClient(firstClientId);
 				AssertServerIsRunning(projectDirectorySetup.PathToLiftFile);
@@ -110,20 +125,26 @@ namespace WeSay.App.Tests
 				AssertServiceIsClosed(projectDirectorySetup.PathToLiftFile);
 			}
 		}
-		private void AssertServerIsRunning(string liftPath)
-		{
-		   //didn't work Assert.AreEqual(System.ServiceModel.CommunicationState.Opened, ((System.ServiceModel.Channels.IChannel)service).State);
 
-			Assert.IsNotNull(IpcSystem.GetExistingService<IDictionaryService>(DictionaryAccessor.GetServiceName(liftPath)));
-		}
-		private void AssertServiceIsClosed(string liftPath)
+		private static void AssertServerIsRunning(string liftPath)
 		{
-		   //give it a chance to close
-			for (int i = 0; i < 50; i++)
+			//didn't work Assert.AreEqual(System.ServiceModel.CommunicationState.Opened, ((System.ServiceModel.Channels.IChannel)service).State);
+
+			Assert.IsNotNull(
+					IpcSystem.GetExistingService<IDictionaryService>(
+							DictionaryAccessor.GetServiceName(liftPath)));
+		}
+
+		private static void AssertServiceIsClosed(string liftPath)
+		{
+			//give it a chance to close
+			for (int i = 0;i < 50;i++)
 			{
 				Thread.Sleep(100);
 
-				if (null == IpcSystem.GetExistingService<IDictionaryService>(DictionaryAccessor.GetServiceName(liftPath)))
+				if (null ==
+					IpcSystem.GetExistingService<IDictionaryService>(
+							DictionaryAccessor.GetServiceName(liftPath)))
 				{
 					return;
 				}
@@ -136,21 +157,28 @@ namespace WeSay.App.Tests
 		[Test]
 		public void FindsInUIMode()
 		{
-			string entriesXml = @"
+			string entriesXml =
+					@"
 						<entry id='foo1'>
 								<lexical-unit><form lang='v'><text>foo</text></form></lexical-unit>
 						</entry>";
-			RunTest(kStartInUIMode, entriesXml, delegate(IDictionaryService dictionaryService)
-										   {
-											   FindResult r = dictionaryService.GetMatchingEntries("v", "foo", FindMethods.Exact.ToString());
-											   Assert.AreEqual(1, r.ids.Length);
-										   });
+			RunTest(kStartInUIMode,
+					entriesXml,
+					delegate(IDictionaryService dictionaryService)
+					{
+						FindResult r = dictionaryService.GetMatchingEntries("v",
+																			"foo",
+																			FindMethods.Exact.
+																					ToString());
+						Assert.AreEqual(1, r.ids.Length);
+					});
 		}
 
 		[Test]
 		public void FindsInServerMode()
 		{
-			string entriesXml = @"
+			string entriesXml =
+					@"
 						<entry id='foo1'>
 								<lexical-unit><form lang='v'><text>foo</text></form></lexical-unit>
 						</entry>
@@ -160,16 +188,19 @@ namespace WeSay.App.Tests
 						<entry id='foo2'>
 								<lexical-unit><form lang='v'><text>foo</text></form></lexical-unit>
 						</entry>";
-			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
-										   {
-											  Assert.IsTrue(dictionaryService.IsInServerMode());
+			RunTest(kStartInServerMode,
+					entriesXml,
+					delegate(IDictionaryService dictionaryService)
+					{
+						Assert.IsTrue(dictionaryService.IsInServerMode());
 
-											  FindResult r = dictionaryService.GetMatchingEntries("v", "foo", FindMethods.Exact.ToString());
-											   Assert.AreEqual(2, r.ids.Length);
-										   });
+						FindResult r = dictionaryService.GetMatchingEntries("v",
+																			"foo",
+																			FindMethods.Exact.
+																					ToString());
+						Assert.AreEqual(2, r.ids.Length);
+					});
 		}
-
-
 
 		/// <summary>
 		/// this doesn't look at the details of the html; that job belongs in a different test
@@ -177,24 +208,28 @@ namespace WeSay.App.Tests
 		[Test]
 		public void GivesHtml()
 		{
-			string entriesXml = @"
+			const string entriesXml =
+					@"
 						<entry id='foo1'>
 								<lexical-unit><form lang='v'><text>foo</text></form></lexical-unit>
 							  <sense>
-								<gloss lang='en'>
-									<text>gloss for foo</text>
-								</gloss>
+								<definition>
+									<form lang='en'>
+										<text>a definition</text>
+									</form>
+								</definition>
 							 </sense>
 						</entry>";
-			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
-										   {
-											   string html = dictionaryService.GetHtmlForEntries(new string[] { "foo1" });
+			RunTest(kStartInServerMode,
+					entriesXml,
+					delegate(IDictionaryService dictionaryService)
+					{
+						string html = dictionaryService.GetHtmlForEntries(new string[] {"foo1"});
 
-											   Assert.IsTrue(html.Contains("<html>"));
-											   Assert.IsTrue(html.Contains("gloss for foo"));
-										   });
+						Assert.IsTrue(html.Contains("<html>"));
+						Assert.IsTrue(html.Contains("a definition"));
+					});
 		}
-
 
 		[Test]
 		public void CreateNewEntryInUIMode()
@@ -207,70 +242,93 @@ namespace WeSay.App.Tests
 		{
 			CreateNewEntry(kStartInServerMode);
 		}
-		private void CreateNewEntry(bool mode)
+
+		private static void CreateNewEntry(bool mode)
 		{
 			string entriesXml = @"<entry id='foo1'/>";
-			RunTest(mode, entriesXml, delegate(IDictionaryService dictionaryService)
-										  {
-											  string id = dictionaryService.AddEntry("v", "voom", "en", "def of voom", "v", "vlah voom!");
-											  Assert.IsNotNull(id);
+			RunTest(mode,
+					entriesXml,
+					delegate(IDictionaryService dictionaryService)
+					{
+						string id = dictionaryService.AddEntry("v",
+															   "voom",
+															   "en",
+															   "def of voom",
+															   "v",
+															   "vlah voom!");
+						Assert.IsNotNull(id);
 
-											  FindResult r = dictionaryService.GetMatchingEntries("v", "voom", FindMethods.Exact.ToString());
-											  Assert.AreEqual(id, r.ids[0]);
-										  });
+						FindResult r = dictionaryService.GetMatchingEntries("v",
+																			"voom",
+																			FindMethods.Exact.
+																					ToString());
+						Assert.AreEqual(id, r.ids[0]);
+					});
 		}
 
-//        [Test]
-//        public void JumpToEntryInServerModeMakesAppComeToFrontOfZOrder()
-//        {
-//            string entriesXml = @"<entry id='foo1'/>";
-//            RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
-//                                           {
-//                                               dictionaryService.JumpToEntry("foo1");
-//
-// DONT KNOW HOW TO TEST THE ZORDER                                              Assert.IsFalse(dictionaryService.IsInServerMode());
-//                                           });
-//        }
+		//        [Test]
+		//        public void JumpToEntryInServerModeMakesAppComeToFrontOfZOrder()
+		//        {
+		//            string entriesXml = @"<entry id='foo1'/>";
+		//            RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
+		//                                           {
+		//                                               dictionaryService.JumpToEntry("foo1");
+		//
+		// DONT KNOW HOW TO TEST THE ZORDER                                              Assert.IsFalse(dictionaryService.IsInServerMode());
+		//                                           });
+		//        }
 
 		[Test]
 		public void JumpToEntryMakesAppSwitchToUIMode()
 		{
 			string entriesXml = @"<entry id='foo1'/>";
-			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
-										   {
-											   Assert.IsTrue(dictionaryService.IsInServerMode());
-											   dictionaryService.JumpToEntry("foo1");
+			RunTest(kStartInServerMode,
+					entriesXml,
+					delegate(IDictionaryService dictionaryService)
+					{
+						Assert.IsTrue(dictionaryService.IsInServerMode());
+						dictionaryService.JumpToEntry("foo1");
 
-											   Assert.IsFalse(dictionaryService.IsInServerMode());
-										   });
+						Assert.IsFalse(dictionaryService.IsInServerMode());
+					});
 		}
 
 		[Test]
 		public void JumpToEntryMakesDictionaryTaskShowEnty()
 		{
-			string entriesXml = @"<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>
+			string entriesXml =
+					@"<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>
 								<entry id='foo2'><lexical-unit><form lang='v'><text>fooTwo</text></form></lexical-unit></entry>
 								<entry id='foo3'><lexical-unit><form lang='v'><text>fooThree</text></form></lexical-unit></entry>";
-			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
-										   {
-											   Assert.IsTrue(dictionaryService.IsInServerMode());
-											   dictionaryService.JumpToEntry("foo2");
-											  Assert.AreEqual("foo2", dictionaryService.GetCurrentUrl());
-											   dictionaryService.JumpToEntry("foo3");
-											  Assert.AreEqual("foo3", dictionaryService.GetCurrentUrl());
-										   });
+			RunTest(kStartInServerMode,
+					entriesXml,
+					delegate(IDictionaryService dictionaryService)
+					{
+						Assert.IsTrue(dictionaryService.IsInServerMode());
+						dictionaryService.JumpToEntry("foo2");
+						Assert.AreEqual("foo2", dictionaryService.GetCurrentUrl());
+						dictionaryService.JumpToEntry("foo3");
+						Assert.AreEqual("foo3", dictionaryService.GetCurrentUrl());
+					});
 		}
 
-		private void RunTest(bool startInServerMode, string entriesXml, ServiceTestingMethod serviceTestingMethod)
+		private static void RunTest(bool startInServerMode,
+									string entriesXml,
+									ServiceTestingMethod serviceTestingMethod)
 		{
-			using (ProjectDirectorySetupForTesting projectDirectorySetup = new ProjectDirectorySetupForTesting(entriesXml))
+			using (
+					ProjectDirectorySetupForTesting projectDirectorySetup =
+							new ProjectDirectorySetupForTesting(entriesXml))
 			{
 				Process p = LaunchDictionaryServiceApp(startInServerMode, projectDirectorySetup);
 				//enhance: is ther a way to know when the process is quiescent?
 				Thread.Sleep(2000);
 
-				IDictionaryService dictionaryService = GetDictionaryService(projectDirectorySetup.PathToLiftFile, Process.GetCurrentProcess().Id);
-				Assert.IsNotNull(dictionaryService, "Could not get ahold of a dictionary service from a launch of WeSay.  This can fail as a result of a timeout, if wesay was just too slow coming up.");
+				IDictionaryService dictionaryService =
+						GetDictionaryService(projectDirectorySetup.PathToLiftFile,
+											 Process.GetCurrentProcess().Id);
+				Assert.IsNotNull(dictionaryService,
+								 "Could not get ahold of a dictionary service from a launch of WeSay.  This can fail as a result of a timeout, if wesay was just too slow coming up.");
 				try
 				{
 					serviceTestingMethod(dictionaryService);
@@ -278,7 +336,7 @@ namespace WeSay.App.Tests
 				finally
 				{
 					Thread.Sleep(100);
-					if(dictionaryService.IsInServerMode())
+					if (dictionaryService.IsInServerMode())
 					{
 						dictionaryService.DeregisterClient(Process.GetCurrentProcess().Id);
 					}
@@ -295,21 +353,20 @@ namespace WeSay.App.Tests
 					}
 				}
 			}
-
 		}
 
-
-		private Process LaunchDictionaryServiceApp(bool launchInServerMode, ProjectDirectorySetupForTesting projectDirectorySetup)
+		private static Process LaunchDictionaryServiceApp(bool launchInServerMode,
+														  ProjectDirectorySetupForTesting
+																  projectDirectorySetup)
 		{
-
 			// System.Diagnostics.Process.Start("SampleDictionaryServicesApplication.exe", "-server");
 			string arguments = '"' + projectDirectorySetup.PathToLiftFile + '"';
-			if(launchInServerMode)
+			if (launchInServerMode)
 			{
 				arguments += " -server";
 			}
-			System.Diagnostics.ProcessStartInfo psi = new ProcessStartInfo(@"wesay.app.exe",arguments);
-			Process p = System.Diagnostics.Process.Start(psi);
+			ProcessStartInfo psi = new ProcessStartInfo(@"wesay.app.exe", arguments);
+			Process p = Process.Start(psi);
 
 			//this only works because we only launch it once... wouldn't be adequate logic if we
 			//might just be joining an existing process
@@ -324,10 +381,11 @@ namespace WeSay.App.Tests
 			return p;
 		}
 
-		private static IDictionaryService GetDictionaryService(string liftPath, int clientIdForRegistering)
+		private static IDictionaryService GetDictionaryService(string liftPath,
+															   int clientIdForRegistering)
 		{
-			IDictionaryService dictionaryService=null;
-			for (int i = 0; i < 20; i++)
+			IDictionaryService dictionaryService = null;
+			for (int i = 0;i < 20;i++)
 			{
 				Thread.Sleep(500);
 				string serviceName = DictionaryAccessor.GetServiceName(liftPath);
@@ -341,6 +399,5 @@ namespace WeSay.App.Tests
 			}
 			return dictionaryService;
 		}
-
 	}
 }

@@ -20,10 +20,12 @@ namespace WeSay.LexicalTools
 			if (disposing && !IsDisposed)
 			{
 				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
+
+				SaveAndCleanUpPreviousEntry();
+
 				//_recordsListBox.Enter -= _recordsListBox_Enter;
 				//_recordsListBox.Leave -= _recordsListBox_Leave;
 				//_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
-
 
 				_findText.KeyDown -= _findText_KeyDown;
 			}

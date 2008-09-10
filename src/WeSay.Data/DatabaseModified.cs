@@ -1,10 +1,16 @@
 using System;
+using System.Diagnostics;
 
 namespace WeSay.Data
 {
-	public class DatabaseModified
+	internal sealed class DatabaseModified
 	{
 		private DateTime _lastModified;
+
+		public DatabaseModified()
+		{
+			_lastModified = DateTime.MinValue;
+		}
 
 		public DateTime LastModified
 		{
@@ -15,12 +21,12 @@ namespace WeSay.Data
 				{
 					LastModified = new DateTime(_lastModified.Ticks, DateTimeKind.Utc);
 				}
-				return this._lastModified;
+				return _lastModified;
 			}
 			set
 			{
-				System.Diagnostics.Debug.Assert(value.Kind == DateTimeKind.Utc);
-				this._lastModified = value;
+				Debug.Assert(value.Kind == DateTimeKind.Utc);
+				_lastModified = value;
 			}
 		}
 	}

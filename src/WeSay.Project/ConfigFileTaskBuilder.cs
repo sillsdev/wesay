@@ -1,43 +1,45 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Xml.XPath;
 using PicoContainer;
 using PicoContainer.Defaults;
-using WeSay.Project;
-using System.IO;
-using System.Collections.Generic;
-using WeSay.Data;
-using System.Xml.XPath;
+using WeSay.LexicalModel;
 
-namespace WeSay.App
+namespace WeSay.Project
 {
-	public class ConfigFileTaskBuilder : ITaskBuilder, IDisposable
+	public class ConfigFileTaskBuilder: ITaskBuilder, IDisposable
 	{
 		private bool _disposed;
 		private IMutablePicoContainer _picoContext;
-		List<ITask> _tasks;
+		private List<ITask> _tasks;
 
-		public ConfigFileTaskBuilder(Stream config, WeSayWordsProject project, ICurrentWorkTask currentWorkTask, IRecordListManager recordListManager)
+		public ConfigFileTaskBuilder(Stream config,
+									 WeSayWordsProject project,
+									 ICurrentWorkTask currentWorkTask,
+									 LexEntryRepository lexEntryRepository)
 		{
 			_picoContext = new DefaultPicoContainer();
 
 			_picoContext.RegisterComponentInstance("Project", project);
 			_picoContext.RegisterComponentInstance("Current Task Provider", currentWorkTask);
 
-			_picoContext.RegisterComponentInstance("All Entries", recordListManager);
+			_picoContext.RegisterComponentInstance("All Entries", lexEntryRepository);
 			XPathDocument doc = new XPathDocument(config);
 			InitializeComponents(doc);
 			InitializeTaskList(doc);
 		}
 
-		private void InitializeComponents(XPathDocument doc)
+		private void InitializeComponents(IXPathNavigable doc)
 		{
 			XPathNavigator navigator = doc.CreateNavigator();
 			navigator = navigator.SelectSingleNode("//components");
 			if (navigator != null)
 			{
 				bool hasviewTemplate = false;
-				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty, string.Empty);
+				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty,
+																		   string.Empty);
 				foreach (XPathNavigator component in componentList)
 				{
 					Debug.Assert(component.Name == "viewTemplate");
@@ -46,20 +48,19 @@ namespace WeSay.App
 					template.LoadFromString(component.OuterXml);
 					_picoContext.RegisterComponentInstance(template.Id, template);
 				}
-				Debug.Assert(hasviewTemplate, "Currently, there must be at least 1 viewTemplate in the WeSayConfig file");
+				Debug.Assert(hasviewTemplate,
+							 "Currently, there must be at least 1 viewTemplate in the WeSayConfig file");
 			}
 		}
 
-		private void InitializeTaskList(XPathDocument doc)
+		private void InitializeTaskList(IXPathNavigable doc)
 		{
 			_tasks = new List<ITask>();
 			XPathNavigator navigator = doc.CreateNavigator();
 			XPathNodeIterator taskList = navigator.Select("configuration/tasks/task");
 			foreach (XPathNavigator task in taskList)
 			{
-
 				//typical errors here:
-
 
 				//PicoInitializationException("Either do the specified parameters not match any of....
 				//may mean you have an extra (unused), missing, or out-of-order parameter element in the xml.
@@ -74,7 +75,8 @@ namespace WeSay.App
 				// E.g., the template says:     <id>Default View BLAH</id>
 				//  but the EntryDetailTask is lookinig for: <viewTemplate ref="Default View Template" />
 
-				string isVisible = task.GetAttribute("visible", string.Empty);//otherwise, it's an older config format, just show all tasks
+				string isVisible = task.GetAttribute("visible", string.Empty);
+				//otherwise, it's an older config format, just show all tasks
 
 				if (!String.IsNullOrEmpty(isVisible))
 				{
@@ -93,14 +95,17 @@ namespace WeSay.App
 				catch (Exception e)
 				{
 					string message;
-					if(e.Message.StartsWith("Either do the specified parameters not match any of"))
+					if (e.Message.StartsWith("Either do the specified parameters not match any of"))
 					{
-						message = "The parameters given in " + id + " (" + task.InnerXml + ") do not match those required by " + task.GetAttribute("class", string.Empty);
+						message = "The parameters given in " + id + " (" + task.InnerXml +
+								  ") do not match those required by " +
+								  task.GetAttribute("class", string.Empty);
 					}
 					else
 					{
 						message = e.Message;
-						while(e.InnerException!=null) //the user will see this, so lets dive down to the actual cause
+						while (e.InnerException != null)
+								//the user will see this, so lets dive down to the actual cause
 						{
 							e = e.InnerException;
 							message = e.Message;
@@ -117,7 +122,8 @@ namespace WeSay.App
 			string id = component.GetAttribute("id", string.Empty);
 			if (_picoContext.GetComponentInstance(id) != null)
 			{
-				throw new ApplicationException("The id '" + id + "' already exists (" + component.OuterXml +")");
+				throw new ApplicationException("The id '" + id + "' already exists (" +
+											   component.OuterXml + ")");
 			}
 			if (id.Length == 0)
 			{
@@ -172,29 +178,35 @@ namespace WeSay.App
 					}
 				}
 				_picoContext.RegisterComponentImplementation(id,
-													GetType(component.GetAttribute("class", string.Empty),
-															component.GetAttribute("assembly", string.Empty)),
-													parameters.ToArray());
+															 GetType(
+																	 component.GetAttribute(
+																			 "class", string.Empty),
+																	 component.GetAttribute(
+																			 "assembly",
+																			 string.Empty)),
+															 parameters.ToArray());
 			}
 			else
 			{
 				_picoContext.RegisterComponentImplementation(id,
-													GetType(component.GetAttribute("class", string.Empty),
-															component.GetAttribute("assembly", string.Empty)));
+															 GetType(
+																	 component.GetAttribute(
+																			 "class", string.Empty),
+																	 component.GetAttribute(
+																			 "assembly",
+																			 string.Empty)));
 			}
 			return id;
 		}
 
-		public static Type GetType(string className, string assembly){
+		public static Type GetType(string className, string assembly)
+		{
 			return Type.GetType(className + "," + assembly, true);
 		}
 
 		public IList<ITask> Tasks
 		{
-			get
-			{
-				return _tasks;
-			}
+			get { return _tasks; }
 		}
 
 		//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
@@ -210,7 +222,7 @@ namespace WeSay.App
 
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!this._disposed)
+			if (!_disposed)
 			{
 				if (disposing)
 				{
@@ -218,14 +230,26 @@ namespace WeSay.App
 					_picoContext.UnregisterComponent("Project");
 					//without this, pico disposes of the db, which we don't really own
 					_picoContext.UnregisterComponent("All Entries");
-
-					_picoContext.Dispose();
+					try
+					{
+						_picoContext.Dispose();
+					}
+					catch (Exception e)
+					{
+						if (e.Message.StartsWith("Either do the specified parameters not match any of"))
+						{
+							// mismatched parameters, don't worry
+						}
+						else
+						{
+							throw; //rethrow
+						}
+					}
 					_picoContext = null;
 					GC.SuppressFinalize(this);
 				}
 			}
 			_disposed = true;
-
 		}
 	}
 }

@@ -1,16 +1,14 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Mono.Addins;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
 namespace Addin.Backup
 {
-
-   //not ready yet [Extension]
-	public class Synchronize : IWeSayAddin, IWeSayAddinHasSettings
+	//not ready yet [Extension]
+	public class Synchronize: IWeSayAddin, IWeSayAddinHasSettings
 	{
 		private SynchronizeSettings _settings;
 
@@ -23,25 +21,20 @@ namespace Addin.Backup
 
 		public Image ButtonImage
 		{
-			get
-			{
-				return Resources.backupToDeviceImage;
-			}
+			get { return Resources.backupToDeviceImage; }
 		}
 
 		public bool Available
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
 
 		public string LocalizedName
 		{
 			get
 			{
-				return StringCatalog.Get("~Synchronize","Label for synchronize action. Here, 'synchronizing' means putting your changes in the repository, and getting changes that others have put in the repository.");
+				return StringCatalog.Get("~Synchronize",
+										 "Label for synchronize action. Here, 'synchronizing' means putting your changes in the repository, and getting changes that others have put in the repository.");
 			}
 		}
 
@@ -49,22 +42,17 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return StringCatalog.Get("~Updates the repository with our work, and gets the work of others.","description of syncrhonize action");
+				return
+						StringCatalog.Get(
+								"~Updates the repository with our work, and gets the work of others.",
+								"description of syncrhonize action");
 			}
 		}
 
-
-
 		public string ID
 		{
-			get
-			{
-				return "Synchronize";
-			}
-			set
-			{
-				throw new NotImplementedException();
-			}
+			get { return "Synchronize"; }
+			set { throw new NotImplementedException(); }
 		}
 
 		#region IWeSayAddinHasSettings Members
@@ -87,40 +75,42 @@ namespace Addin.Backup
 			SynchronizeDialog d = new SynchronizeDialog(projectInfo, _settings);
 			d.ShowDialog(parentForm);
 		}
+
 		#endregion
 
 		#region IThingOnDashboard Members
 
-		public WeSay.Foundation.Dashboard.DashboardGroup Group
+		public DashboardGroup Group
 		{
-			get { return WeSay.Foundation.Dashboard.DashboardGroup.Share; }
+			get { return DashboardGroup.Share; }
 		}
 
 		public string LocalizedLabel
 		{
-			get { return this.LocalizedName; }
+			get { return LocalizedName; }
 		}
 
 		public string LocalizedLongLabel
 		{
 			get
 			{
-				return StringCatalog.Get("~Synchronize With Repository", "Long label for synchronize action.");
+				return StringCatalog.Get("~Synchronize With Repository",
+										 "Long label for synchronize action.");
 			}
 		}
 
-		public WeSay.Foundation.Dashboard.ButtonStyle DashboardButtonStyle
+		public ButtonStyle DashboardButtonStyle
 		{
-			get { return WeSay.Foundation.Dashboard.ButtonStyle.IconVariableWidth; }
+			get { return ButtonStyle.IconVariableWidth; }
 		}
 
 		public Image DashboardButtonImage
 		{
 			get { return Resources.greenSynchronize; }
 		}
+
 		#endregion
 	}
-
 
 	[Serializable]
 	public class SynchronizeSettings
@@ -128,17 +118,10 @@ namespace Addin.Backup
 		private string _pathToExecutable = @"$wesayApplicationDirectory\mercurial.bat";
 		private string _arguments = @"$projectPath";
 
-
 		public string PathToExecutable
 		{
-			get
-			{
-				return _pathToExecutable;
-			}
-			set
-			{
-				_pathToExecutable = value;
-			}
+			get { return _pathToExecutable; }
+			set { _pathToExecutable = value; }
 		}
 
 		public string Arguments
@@ -149,7 +132,8 @@ namespace Addin.Backup
 
 		public string GetRuntimeProcessPath(ProjectInfo info)
 		{
-			return _pathToExecutable.Replace("$wesayApplicationDirectory", info.PathToApplicationRootDirectory);
+			return _pathToExecutable.Replace("$wesayApplicationDirectory",
+											 info.PathToApplicationRootDirectory);
 		}
 
 		public string GetRuntimeArguments(ProjectInfo info)

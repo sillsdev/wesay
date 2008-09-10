@@ -2,19 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class GatherBySemanticDomainsTaskTests : TaskBaseTests
+	public class GatherBySemanticDomainsTaskTests: TaskBaseTests
 	{
-		Db4oRecordListManager _recordListManager;
+		private LexEntryRepository _lexEntryRepository;
 		private string _semanticDomainFilePath;
 		private string _dbFilePath;
 		private ViewTemplate _viewTemplate;
@@ -33,29 +31,38 @@ namespace WeSay.LexicalTools.Tests
 			_semanticDomainFilePath = Path.GetTempFileName();
 			CreateSemanticDomainFile();
 
-			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _dbFilePath);// InMemoryRecordListManager();
-			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
-			Lexicon.Init(_recordListManager);
-			this._viewTemplate =MakeViewTemplate("en");
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
-												"label",
-												"long label",
-												"description",
-												"remaining count text",
-												"reference count text",
-												_semanticDomainFilePath,
-												this._viewTemplate,
-												LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			_lexEntryRepository = new LexEntryRepository(_dbFilePath);
+			_viewTemplate = MakeViewTemplate("en");
+			_task = new GatherBySemanticDomainTask(_lexEntryRepository,
+												   "label",
+												   "long label",
+												   "description",
+												   "remaining count text",
+												   "reference count text",
+												   _semanticDomainFilePath,
+												   _viewTemplate,
+												   LexSense.WellKnownProperties.SemanticDomainsDdp4);
 		}
 
-		private ViewTemplate MakeViewTemplate(string nameAndQuestionWritingSystem)
+		private static LexSense AddNewSenseToEntry(LexEntry e)
 		{
-			Field semanticDomainField = new Field(LexSense.WellKnownProperties.SemanticDomainsDdp4, "LexSense", new string[] { nameAndQuestionWritingSystem });
+			LexSense s = new LexSense();
+			e.Senses.Add(s);
+			return s;
+		}
+
+		private static ViewTemplate MakeViewTemplate(string nameAndQuestionWritingSystem)
+		{
+			Field semanticDomainField = new Field(LexSense.WellKnownProperties.SemanticDomainsDdp4,
+												  "LexSense",
+												  new string[] {nameAndQuestionWritingSystem});
 			semanticDomainField.OptionsListFile = "Ddp4.xml";
 			semanticDomainField.DataTypeName = "OptionRefCollection";
 
 			ViewTemplate v = new ViewTemplate();
-			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new string[] { "br" });
+			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+											   "LexEntry",
+											   new string[] {"br"});
 			lexicalFormField.DataTypeName = "MultiText";
 
 			v.Add(lexicalFormField);
@@ -63,15 +70,14 @@ namespace WeSay.LexicalTools.Tests
 			return v;
 		}
 
-
 		[TearDown]
 		public void TearDown()
 		{
 			if (_task.IsActive)
 			{
-				_task.Deactivate();//needed for disposal of controls
+				_task.Deactivate(); //needed for disposal of controls
 			}
-			_recordListManager.Dispose();
+			_lexEntryRepository.Dispose();
 			File.Delete(_dbFilePath);
 			File.Delete(_semanticDomainFilePath);
 		}
@@ -84,180 +90,193 @@ namespace WeSay.LexicalTools.Tests
 				{
 					_task.Activate();
 				}
-				return ((GatherBySemanticDomainTask)_task);
+				return ((GatherBySemanticDomainTask) _task);
 			}
 		}
 
-		private LexEntry AddEntryToRecordList(IRecordList<LexEntry> recordList, string lexicalForm, string gloss)
+		private LexEntry AddEntryToRecordList(string lexicalForm, string gloss)
 		{
-			LexEntry e = (LexEntry)recordList.AddNew();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", lexicalForm);
 			AddSenseToEntry(e, gloss);
+			_lexEntryRepository.SaveItem(e);
 			return e;
 		}
 
-		private LexSense AddSenseToEntry(LexEntry e, string gloss)
+		private void AddSenseToEntry(LexEntry e, string gloss)
 		{
-			LexSense s = (LexSense)e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
 			s.Gloss.SetAlternative("en", gloss);
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			OptionRefCollection o =
+					s.GetOrCreateProperty<OptionRefCollection>(
+							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
-			return s;
+			_lexEntryRepository.SaveItem(e);
 		}
+
 		[Test]
 		public void ConstructWithTemplate()
 		{
-			Assert.IsNotNull(new GatherBySemanticDomainTask(_recordListManager,
-												"label",
-												"long label",
-												"description",
-												"remaining count text",
-												"reference count text",
-												_semanticDomainFilePath,
-												this._viewTemplate,
-												LexSense.WellKnownProperties.SemanticDomainsDdp4));
+			Assert.IsNotNull(new GatherBySemanticDomainTask(_lexEntryRepository,
+															"label",
+															"long label",
+															"description",
+															"remaining count text",
+															"reference count text",
+															_semanticDomainFilePath,
+															_viewTemplate,
+															LexSense.WellKnownProperties.
+																	SemanticDomainsDdp4));
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithTemplate_NullRecordListManager_Throws()
 		{
 			new GatherBySemanticDomainTask(null,
-												"label",
-												"long label",
-												"description",
-												"remaining count text",
-												"reference count text",
-												_semanticDomainFilePath,
-												this._viewTemplate,
-												LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void ConstructWithTemplate_NullLabel_Throws()
-		{
-			new GatherBySemanticDomainTask(_recordListManager,
-												null,
-												"long label",
-												"description",
-												"remaining count text",
-												"reference count text",
-												_semanticDomainFilePath,
-												this._viewTemplate,
-												LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void ConstructWithTemplate_NullLongLabel_Throws()
-		{
-			new GatherBySemanticDomainTask(_recordListManager,
-												"label",
-												null,
-												"description",
-												"remaining count text",
-												"reference count text",
-												_semanticDomainFilePath,
-												this._viewTemplate,
-												LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void ConstructWithTemplate_NullDescription_Throws()
-		{
-			new GatherBySemanticDomainTask(_recordListManager,
-												"label",
-												"long label",
-												null,
-												"remaining couont text",
-												"reference count text",
-												_semanticDomainFilePath,
-												this._viewTemplate,
-												LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void ConstructWithTemplate_NullRemainingCountText_Throws()
-		{
-			new GatherBySemanticDomainTask(_recordListManager,
-												"label",
-												"long label",
-												"description",
-												null,
-												"reference count text",
-												_semanticDomainFilePath,
-												this._viewTemplate,
-												LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void ConstructWithTemplate_NullReferenceCountText_Throws()
-		{
-			new GatherBySemanticDomainTask(_recordListManager,
-												"label",
-												"long label",
-												"description",
-												"remaining couont text",
-												null,
-												_semanticDomainFilePath,
-												this._viewTemplate,
-												LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void ConstructWithTemplate_NullSemanticDomainFilePath_Throws()
-		{
-			new GatherBySemanticDomainTask(_recordListManager,
-												"label",
-												"long label",
-												"description",
-												"remaining count text",
-												"reference count text",
-												null,
-												this._viewTemplate,
-												LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-		[Test]
-		[ExpectedException(typeof(ApplicationException))]
-		public void ConstructWithTemplate_NonExistantSemanticDomainFilePath_Throws()
-		{
-			new GatherBySemanticDomainTask(_recordListManager,
-												"label",
-												"long label",
-												"description",
-												"remaining count text",
-												"reference count text",
-												Path.GetRandomFileName(),
-												this._viewTemplate,
-												LexSense.WellKnownProperties.SemanticDomainsDdp4);
+										   "label",
+										   "long label",
+										   "description",
+										   "remaining count text",
+										   "reference count text",
+										   _semanticDomainFilePath,
+										   _viewTemplate,
+										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
+		public void ConstructWithTemplate_NullLabel_Throws()
+		{
+			new GatherBySemanticDomainTask(_lexEntryRepository,
+										   null,
+										   "long label",
+										   "description",
+										   "remaining count text",
+										   "reference count text",
+										   _semanticDomainFilePath,
+										   this._viewTemplate,
+										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
+		}
+
+		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
+		public void ConstructWithTemplate_NullLongLabel_Throws()
+		{
+			new GatherBySemanticDomainTask(_lexEntryRepository,
+										   "label",
+										   null,
+										   "description",
+										   "remaining count text",
+										   "reference count text",
+										   _semanticDomainFilePath,
+										   _viewTemplate,
+										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
+		}
+
+		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
+		public void ConstructWithTemplate_NullDescription_Throws()
+		{
+			new GatherBySemanticDomainTask(_lexEntryRepository,
+										   "label",
+										   "long label",
+										   null,
+										   "remaining couont text",
+										   "reference count text",
+										   _semanticDomainFilePath,
+										   this._viewTemplate,
+										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
+		}
+
+		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
+		public void ConstructWithTemplate_NullRemainingCountText_Throws()
+		{
+			new GatherBySemanticDomainTask(_lexEntryRepository,
+										   "label",
+										   "long label",
+										   "description",
+										   null,
+										   "reference count text",
+										   _semanticDomainFilePath,
+										   this._viewTemplate,
+										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
+		}
+
+		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
+		public void ConstructWithTemplate_NullReferenceCountText_Throws()
+		{
+			new GatherBySemanticDomainTask(_lexEntryRepository,
+										   "label",
+										   "long label",
+										   "description",
+										   "remaining couont text",
+										   null,
+										   _semanticDomainFilePath,
+										   _viewTemplate,
+										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
+		}
+
+		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
+		public void ConstructWithTemplate_NullSemanticDomainFilePath_Throws()
+		{
+			new GatherBySemanticDomainTask(_lexEntryRepository,
+										   "label",
+										   "long label",
+										   "description",
+										   "remaining count text",
+										   "reference count text",
+										   null,
+										   _viewTemplate,
+										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
+		}
+
+		[Test]
+		[ExpectedException(typeof (ApplicationException))]
+		public void ConstructWithTemplate_NonExistantSemanticDomainFilePath_Throws()
+		{
+			new GatherBySemanticDomainTask(_lexEntryRepository,
+										   "label",
+										   "long label",
+										   "description",
+										   "remaining count text",
+										   "reference count text",
+										   Path.GetRandomFileName(),
+										   _viewTemplate,
+										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
+		}
+
+		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithTemplate_NullTemplate_Throws()
 		{
-			new GatherBySemanticDomainTask(_recordListManager,
-												"label",
-												"long label",
-												"description",
-												"remaining count text",
-												"reference count text",
-												_semanticDomainFilePath,
-												null,
-												LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			new GatherBySemanticDomainTask(_lexEntryRepository,
+										   "label",
+										   "long label",
+										   "description",
+										   "remaining count text",
+										   "reference count text",
+										   _semanticDomainFilePath,
+										   null,
+										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
 		}
+
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithTemplate_NullFieldName_Throws()
 		{
-			new GatherBySemanticDomainTask(_recordListManager,
-												"label",
-												"long label",
-												"description",
-												"remaining count text",
-												"reference count text",
-												_semanticDomainFilePath,
-												this._viewTemplate,
-												null);
+			new GatherBySemanticDomainTask(_lexEntryRepository,
+										   "label",
+										   "long label",
+										   "description",
+										   "remaining count text",
+										   "reference count text",
+										   _semanticDomainFilePath,
+										   _viewTemplate,
+										   null);
 		}
 
 		[Test]
@@ -272,8 +291,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("en", Task.SemanticDomainWritingSystemId);
 		}
 
-
-#region Current
+		#region Current
 
 		[Test]
 		public void CurrentDomainIndex_Initial_0()
@@ -298,14 +316,14 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void CurrentDomainIndex_SetNegative_Throws()
 		{
 			Task.CurrentDomainIndex = -1;
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void CurrentDomainIndex_SetGreaterThanCountOfDomains_Throws()
 		{
 			Task.CurrentDomainIndex = Task.DomainKeys.Count;
@@ -324,14 +342,14 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void CurrentQuestionIndex_SetNegative_Throws()
 		{
 			Task.CurrentQuestionIndex = -1;
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void CurrentQuestionIndex_SetGreaterThanCountOfQuestions_Throws()
 		{
 			Task.CurrentQuestionIndex = Task.Questions.Count;
@@ -377,6 +395,7 @@ namespace WeSay.LexicalTools.Tests
 		#endregion
 
 		#region WordList
+
 		[Test]
 		public void CurrentWords()
 		{
@@ -400,13 +419,15 @@ namespace WeSay.LexicalTools.Tests
 		public void CurrentWords_HasWords_ContainsWord()
 		{
 			Task.CurrentDomainIndex = 1;
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e = (LexEntry)recordList.AddNew();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense)e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
 			s.Gloss.SetAlternative("en", "fish");
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			OptionRefCollection o =
+					s.GetOrCreateProperty<OptionRefCollection>(
+							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
+			_lexEntryRepository.SaveItem(e);
 
 			Task.CurrentDomainIndex = 0;
 			List<string> words = Task.CurrentWords;
@@ -433,19 +454,18 @@ namespace WeSay.LexicalTools.Tests
 		public void CurrentWords_WordExistsWithTwoGlossesHavingSemanticDomain_ShowsUpOnce()
 		{
 			Task.CurrentDomainIndex = 1;
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			AddEntryToRecordList(recordList, "peixe", "fish");
-			LexEntry e = AddEntryToRecordList(recordList, "raposa", "fox");
+			AddEntryToRecordList("peixe", "fish");
+			LexEntry e = AddEntryToRecordList("raposa", "fox");
 			AddSenseToEntry(e, "special");
-			AddEntryToRecordList(recordList, "cachorro", "dog");
+			AddEntryToRecordList("cachorro", "dog");
 			Task.CurrentDomainIndex = 0;
 			Assert.AreEqual(3, Task.CurrentWords.Count);
 		}
 
-
 		#endregion
+
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void AddWord_null_Throws()
 		{
 			Task.AddWord(null);
@@ -454,10 +474,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWord_EmptyWord_NotAddedToDatabase()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			int originalCount = recordList.Count;
+			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord(string.Empty);
-			Assert.AreEqual(originalCount, recordList.Count);
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -470,12 +489,10 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWord_NewWord_AddedToDatabase()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			int originalCount = recordList.Count;
+			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("vernacular");
-			Assert.AreEqual(originalCount+1, recordList.Count);
+			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
-
 
 		[Test]
 		public void RemainingCount_Initially_RemainingCountEqualsReferenceCount()
@@ -517,28 +534,26 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWord_NewWord_AddedToCurrentWords()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			int originalCount = recordList.Count;
+			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("vernacular");
 			Assert.Contains("vernacular", Task.CurrentWords);
-			Assert.AreEqual(originalCount + 1, recordList.Count);
+			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
 		public void AddWord_WordExistsWithGlossAndSemanticDomain_NotAdded()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			AddEntryToRecordList(recordList, "peixe", "fish");
-			AddEntryToRecordList(recordList, "raposa", "fox");
-			AddEntryToRecordList(recordList, "cachorro", "dog");
+			AddEntryToRecordList("peixe", "fish");
+			AddEntryToRecordList("raposa", "fox");
+			AddEntryToRecordList("cachorro", "dog");
 
-			int originalCount = recordList.Count;
+			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("raposa");
-			Assert.AreEqual(originalCount, recordList.Count);
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void RemoveWord_null_Throws()
 		{
 			Task.DetachFromMatchingEntries(null);
@@ -547,41 +562,42 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RemoveWord_HasOnlyLexemeForm_DeletesWord()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e = (LexEntry)recordList.AddNew();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			LexSense s = new LexSense();
+			e.Senses.Add(s);
+			OptionRefCollection o =
+					s.GetOrCreateProperty<OptionRefCollection>(
+							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
-			int originalCount = recordList.Count;
+			_lexEntryRepository.SaveItem(e);
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount - 1, recordList.Count);
+			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
 		public void RemoveWord_WordExistsWithGlossAndSemanticDomain_Disassociated()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			AddEntryToRecordList(recordList, "peixe", "fish");
-			AddEntryToRecordList(recordList, "raposa", "fox");
-			AddEntryToRecordList(recordList, "cachorro", "dog");
+			AddEntryToRecordList("peixe", "fish");
+			AddEntryToRecordList("raposa", "fox");
+			AddEntryToRecordList("cachorro", "dog");
 
 			Task.DetachFromMatchingEntries("raposa");
 			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
-			Assert.AreEqual(3, recordList.Count);
+			Assert.AreEqual(3, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
 		public void RemoveWord_WordExistsWithTwoGlossesHavingSemanticDomain_DisassociatesBothSenses()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			AddEntryToRecordList(recordList, "peixe", "fish");
-			LexEntry e = AddEntryToRecordList(recordList, "raposa", "fox");
+			AddEntryToRecordList("peixe", "fish");
+			LexEntry e = AddEntryToRecordList("raposa", "fox");
 			AddSenseToEntry(e, "special");
-			AddEntryToRecordList(recordList, "cachorro", "dog");
+			AddEntryToRecordList("cachorro", "dog");
 
 			Task.DetachFromMatchingEntries("raposa");
 			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
@@ -591,161 +607,185 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RemoveWord_HasAnotherSense_DisassociatesWordFromDomain()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e = (LexEntry)recordList.AddNew();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense)e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
 			s.Gloss.SetAlternative("en", "fish");
-			s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			s = new LexSense();
+			e.Senses.Add(s);
+			OptionRefCollection o =
+					s.GetOrCreateProperty<OptionRefCollection>(
+							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
-			int originalCount = recordList.Count;
+			_lexEntryRepository.SaveItem(e);
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, recordList.Count);
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
 		public void RemoveWord_HasAnotherSense_RemovesEmptySense()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e = (LexEntry)recordList.AddNew();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense)e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
 			s.Gloss.SetAlternative("en", "fish");
-			s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			s = AddNewSenseToEntry(e);
+
+			OptionRefCollection o =
+					s.GetOrCreateProperty<OptionRefCollection>(
+							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
-			int originalCount = recordList.Count;
+			_lexEntryRepository.SaveItem(e);
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, recordList.Count);
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 			Assert.AreEqual(1, e.Senses.Count);
 		}
 
 		[Test]
 		public void RemoveWord_HasTwoLexicalForms_DisassociatesWordFromDomain()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e = (LexEntry)recordList.AddNew();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
 			e.LexicalForm.SetAlternative("v", "peshi");
-			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			LexSense s = AddNewSenseToEntry(e);
+
+			OptionRefCollection o =
+					s.GetOrCreateProperty<OptionRefCollection>(
+							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
-			int originalCount = recordList.Count;
+			_lexEntryRepository.SaveItem(e);
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, recordList.Count);
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
 		public void RemoveWord_HasCustomFieldInEntry_DisassociatesWordFromDomain()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e = (LexEntry)recordList.AddNew();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
 			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
 			mt["en"] = "hello";
 
-			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			LexSense s = AddNewSenseToEntry(e);
+
+			OptionRefCollection o =
+					s.GetOrCreateProperty<OptionRefCollection>(
+							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
-			int originalCount = recordList.Count;
+			_lexEntryRepository.SaveItem(e);
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, recordList.Count);
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
 		public void RemoveWord_HasCustomFieldInSense_DisassociatesWordFromDomain()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e = (LexEntry)recordList.AddNew();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			LexSense s = AddNewSenseToEntry(e);
+
+			OptionRefCollection o =
+					s.GetOrCreateProperty<OptionRefCollection>(
+							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 
 			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
 			mt["en"] = "hello";
+			_lexEntryRepository.SaveItem(e);
 
-			int originalCount = recordList.Count;
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, recordList.Count);
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
 		public void RemoveWord_DoesNotHaveSemanticDomainFieldInSense_DoNothing()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e = (LexEntry)recordList.AddNew();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense)e.Senses.AddNew();
+			AddNewSenseToEntry(e);
+
 			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
 			mt["en"] = "hello";
+			_lexEntryRepository.SaveItem(e);
 
-			int originalCount = recordList.Count;
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, recordList.Count);
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
 		public void RemoveWord_HasCustomFieldInExample_DisassociatesWordFromDomain()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e = (LexEntry)recordList.AddNew();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			LexSense s = AddNewSenseToEntry(e);
+
+			OptionRefCollection o =
+					s.GetOrCreateProperty<OptionRefCollection>(
+							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 
-			LexExampleSentence example = (LexExampleSentence) s.ExampleSentences.AddNew();
+			LexExampleSentence example = new LexExampleSentence();
+			s.ExampleSentences.Add(example);
 			OptionRef optionRef = example.GetOrCreateProperty<OptionRef>("custom");
 			optionRef.Value = "hello";
+			_lexEntryRepository.SaveItem(e);
 
-			int originalCount = recordList.Count;
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, recordList.Count);
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
 		public void RemoveWord_WordNotInDatabase_DoNothing()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e = (LexEntry)recordList.AddNew();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("v", "peshi");
-			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			LexSense s = AddNewSenseToEntry(e);
+
+			OptionRefCollection o =
+					s.GetOrCreateProperty<OptionRefCollection>(
+							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
-			int originalCount = recordList.Count;
+			_lexEntryRepository.SaveItem(e);
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peshi");
 
-			Assert.AreEqual(originalCount, recordList.Count);
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
-
 		#region Navigation
+
 		#region GotoLastDomainWithAnswers
+
 		[Test]
 		public void GotoLastDomainWithAnswers_NoDomainsHaveAnswers_GoesToFirstDomain()
 		{
@@ -771,7 +811,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void GotoLastDomainWithAnswers_AllDomainsHaveAnswers()
 		{
-			for (int i = 0; i < Task.DomainKeys.Count; i++)
+			for (int i = 0;i < Task.DomainKeys.Count;i++)
 			{
 				Task.CurrentDomainIndex = i;
 				Task.AddWord(i.ToString());
@@ -782,7 +822,9 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		#endregion
+
 		#region GotoNextDomainQuestion
+
 		[Test]
 		public void GotoNextDomainQuestion_HasNextQuestion_GoesToNextQuestion()
 		{
@@ -795,7 +837,7 @@ namespace WeSay.LexicalTools.Tests
 		public void GotoNextDomainQuestion_HasNoMoreQuestions_GoesToNextDomainFirstQuestion()
 		{
 			Task.CurrentDomainIndex = 0;
-			Task.CurrentQuestionIndex = Task.Questions.Count-1;
+			Task.CurrentQuestionIndex = Task.Questions.Count - 1;
 			Task.GotoNextDomainQuestion();
 			Assert.AreEqual(1, Task.CurrentDomainIndex);
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
@@ -858,6 +900,7 @@ namespace WeSay.LexicalTools.Tests
 		#endregion
 
 		#region GotoPreviousDomainQuestion
+
 		[Test]
 		public void GotoPreviousDomainQuestion_HasPriorQuestion_GoesToPriorQuestion()
 		{
@@ -909,14 +952,14 @@ namespace WeSay.LexicalTools.Tests
 		#endregion
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void WordsInDomain_NegativeIndex_Throws()
 		{
 			Task.WordsInDomain(-1);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void WordsInDomain_IndexBeyondDomainCount_Throws()
 		{
 			Task.WordsInDomain(Task.DomainKeys.Count);
@@ -931,10 +974,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void WordsInDomain_ThreeWords_Three()
 		{
-			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
-			AddEntryToRecordList(recordList, "peixe", "fish");
-			AddEntryToRecordList(recordList, "raposa", "fox");
-			AddEntryToRecordList(recordList, "cachorro", "dog");
+			AddEntryToRecordList("peixe", "fish");
+			AddEntryToRecordList("raposa", "fox");
+			AddEntryToRecordList("cachorro", "dog");
 
 			Assert.AreEqual(3, Task.WordsInDomain(0));
 		}
@@ -955,12 +997,19 @@ namespace WeSay.LexicalTools.Tests
 
 			Task.CurrentDomainIndex = 7;
 			Assert.AreEqual("(1) What words refer to causing air to move?", Task.Questions[0]);
-			Assert.AreEqual("(2) What words refer to letting air blow through something?", Task.Questions[1]);
-			Assert.AreEqual("(3) What words refer to putting air into something (such as a tire or balloon)?", Task.Questions[2]);
-			Assert.AreEqual("(4) What words refer to keeping air out of something?", Task.Questions[3]);
-			Assert.AreEqual("(5) What words refer to how much air is in something?", Task.Questions[4]);
-			Assert.AreEqual("(6) What words refer to using the wind to winnow grain?", Task.Questions[5]);
-			Assert.AreEqual("(7) What tools and machines are used to create or use the wind?", Task.Questions[6]);
+			Assert.AreEqual("(2) What words refer to letting air blow through something?",
+							Task.Questions[1]);
+			Assert.AreEqual(
+					"(3) What words refer to putting air into something (such as a tire or balloon)?",
+					Task.Questions[2]);
+			Assert.AreEqual("(4) What words refer to keeping air out of something?",
+							Task.Questions[3]);
+			Assert.AreEqual("(5) What words refer to how much air is in something?",
+							Task.Questions[4]);
+			Assert.AreEqual("(6) What words refer to using the wind to winnow grain?",
+							Task.Questions[5]);
+			Assert.AreEqual("(7) What tools and machines are used to create or use the wind?",
+							Task.Questions[6]);
 		}
 
 		[Test]
@@ -972,15 +1021,18 @@ namespace WeSay.LexicalTools.Tests
 				streamWriter.Write("");
 			}
 
-			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(_recordListManager,
-										"label",
-										"long label",
-										"description",
-										"remaining count text",
-										"reference count text",
-										emptySemanticDomainFilePath,
-										this._viewTemplate,
-										LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(_lexEntryRepository,
+																			 "label",
+																			 "long label",
+																			 "description",
+																			 "remaining count text",
+																			 "reference count text",
+																			 emptySemanticDomainFilePath,
+																			 _viewTemplate,
+																			 LexSense.
+																					 WellKnownProperties
+																					 .
+																					 SemanticDomainsDdp4);
 			task.Activate();
 			Assert.AreEqual(1, task.DomainKeys.Count);
 			Assert.AreEqual(string.Empty, task.CurrentDomainKey);
@@ -996,7 +1048,8 @@ namespace WeSay.LexicalTools.Tests
 			string frenchSemanticDomainFilePath = Path.GetTempFileName();
 			using (StreamWriter streamWriter = File.CreateText(frenchSemanticDomainFilePath))
 			{
-				streamWriter.Write(@"<?xml version='1.0' encoding='utf-8'?>
+				streamWriter.Write(
+						@"<?xml version='1.0' encoding='utf-8'?>
 <semantic-domain-questions semantic-domain-type='DDP4' lang='fr'>
 <semantic-domain guid='I63403699-07C1-43F3-A47C-069D6E4316E5' id='1 Universe, creation'>
 <question>Quels sont les mots qui font référence à tout ce qu'on peut voir?</question>
@@ -1011,15 +1064,18 @@ namespace WeSay.LexicalTools.Tests
 			}
 
 			ViewTemplate template = MakeViewTemplate("fr");
-			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(_recordListManager,
-										"label",
-										"long label",
-										"description",
-										"remaining count text",
-										"reference count text",
-										frenchSemanticDomainFilePath,
-										template,
-										LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(_lexEntryRepository,
+																			 "label",
+																			 "long label",
+																			 "description",
+																			 "remaining count text",
+																			 "reference count text",
+																			 frenchSemanticDomainFilePath,
+																			 template,
+																			 LexSense.
+																					 WellKnownProperties
+																					 .
+																					 SemanticDomainsDdp4);
 			task.Activate();
 			Assert.AreEqual("L'univers physique", task.DomainNames[0]);
 			Assert.AreEqual("Ciel", task.DomainNames[1]);
@@ -1028,10 +1084,9 @@ namespace WeSay.LexicalTools.Tests
 			File.Delete(frenchSemanticDomainFilePath);
 		}
 
-
 		private void CreateSemanticDomainFile()
 		{
-			using (StreamWriter streamWriter = File.CreateText(this._semanticDomainFilePath))
+			using (StreamWriter streamWriter = File.CreateText(_semanticDomainFilePath))
 			{
 				streamWriter.Write(
 						@"<?xml version='1.0' encoding='utf-8'?>
@@ -1114,5 +1169,4 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 	}
-
 }

@@ -1,29 +1,24 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.Project;
-using WeSay.Project.Tests;
 
 namespace WeSay.Project.Tests
 {
 	[TestFixture]
 	public class viewTemplatePeristenceTests
 	{
-
 		private string _path;
-		private ViewTemplate _collection;
 
 		[SetUp]
 		public void Setup()
 		{
 			_path = Path.GetTempFileName();
-			_collection = new ViewTemplate();
-
 		}
-
 
 		[TearDown]
 		public void TearDown()
@@ -33,20 +28,17 @@ namespace WeSay.Project.Tests
 
 		public static void WriteSampleviewTemplateFile(string path)
 		{
-			using(StreamWriter writer = File.CreateText(path))
+			using (StreamWriter writer = File.CreateText(path))
 			{
 				writer.Write(TestResources.viewTemplate);
 				writer.Close();
 			}
 		}
 
-
-
-
 		[Test]
 		public void SerializedFieldHasExpectedXml()
 		{
-			Field f = new Field("one", "LexEntry", new string[] { "xx", "yy" });
+			Field f = new Field("one", "LexEntry", new string[] {"xx", "yy"});
 			string s = NetReflector.Write(f);
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(s);
@@ -61,21 +53,18 @@ namespace WeSay.Project.Tests
 			Assert.AreEqual("yy", doc.SelectNodes("field/writingSystems/id")[1].InnerText);
 		}
 
-
-//        [Test]
-//        public void DeserializeOne()
-//        {
-//            NetReflectorTypeTable t = new NetReflectorTypeTable();
-//            t.Add(typeof(viewTemplate));
-//            NetReflectorReader r = new NetReflectorReader(t);
-//            viewTemplate ws = r.Read(TestResources.viewTemplate) as viewTemplate;
-//            Assert.IsNotNull(ws);
-//            Assert.AreEqual("Tahoma", ws.FontName);
-//            Assert.AreEqual("one", ws.Id);
-//            Assert.AreEqual(99, ws.FontSize);
-//        }
-
-
+		//        [Test]
+		//        public void DeserializeOne()
+		//        {
+		//            NetReflectorTypeTable t = new NetReflectorTypeTable();
+		//            t.Add(typeof(viewTemplate));
+		//            NetReflectorReader r = new NetReflectorReader(t);
+		//            viewTemplate ws = r.Read(TestResources.viewTemplate) as viewTemplate;
+		//            Assert.IsNotNull(ws);
+		//            Assert.AreEqual("Tahoma", ws.FontName);
+		//            Assert.AreEqual("one", ws.Id);
+		//            Assert.AreEqual(99, ws.FontSize);
+		//        }
 
 		[Test]
 		public void SerializedInvHasRightNumberOfFields()
@@ -92,7 +81,7 @@ namespace WeSay.Project.Tests
 		{
 			ViewTemplate f = MakeSampleInventory();
 
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			StringBuilder builder = new StringBuilder();
 			XmlWriter writer = XmlWriter.Create(builder);
 			f.Write(writer);
 			writer.Close();
@@ -102,30 +91,33 @@ namespace WeSay.Project.Tests
 		private static ViewTemplate MakeSampleInventory()
 		{
 			ViewTemplate f = new ViewTemplate();
-			f.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new string[] { "xx", "yy" }));
-			Field field = new Field(LexSense.WellKnownProperties.Gloss, "LexSense", new string[] { "zz" });
-			field.Enabled = false; //field.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+			f.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+							"LexEntry",
+							new string[] {"xx", "yy"}));
+			Field field = new Field(LexSense.WellKnownProperties.Gloss,
+									"LexSense",
+									new string[] {"zz"});
+			field.Enabled = false;
+			//field.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			f.Add(field);
 			return f;
 		}
-
-
 
 		[Test]
 		public void DeserializeInventoryFromXmlString()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof(Field));
-			t.Add(typeof(ViewTemplate));
+			t.Add(typeof (Field));
+			t.Add(typeof (ViewTemplate));
 
 			ViewTemplate f = new ViewTemplate();
 			f.LoadFromString(TestResources.viewTemplate);
 			CheckInventoryMatchesDefinitionInResource(f);
 		}
 
-		private static void CheckInventoryMatchesDefinitionInResource(ViewTemplate f)
+		private static void CheckInventoryMatchesDefinitionInResource(IList<Field> f)
 		{
-			Assert.AreEqual(2,f.Count);
+			Assert.AreEqual(2, f.Count);
 			Assert.AreEqual(Field.FieldNames.EntryLexicalForm.ToString(), f[0].FieldName);
 			Assert.AreEqual(CommonEnumerations.VisibilitySetting.Visible, f[0].Visibility);
 			Assert.IsTrue(f[0].Enabled);
@@ -148,7 +140,6 @@ namespace WeSay.Project.Tests
 			f.Load(_path);
 			Assert.IsNotNull(f);
 			CheckInventoryMatchesDefinitionInResource(f);
-
 		}
 	}
 }

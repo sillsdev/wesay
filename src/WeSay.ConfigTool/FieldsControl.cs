@@ -1,31 +1,33 @@
 using System;
 using System.Windows.Forms;
 using WeSay.ConfigTool.Properties;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public partial class FieldsControl : ConfigurationControlBase
+	public partial class FieldsControl: ConfigurationControlBase
 	{
-		public FieldsControl()
-			: base("set up the fields for the dictionary")
+		public FieldsControl(): base("set up the fields for the dictionary")
 		{
 			InitializeComponent();
 			_btnAddField.Image = Resources.genericLittleNewButton;
 			_btnDeleteField.Image = Resources.GenericLittleDeletionButton;
-			_fieldSetupControl.DescriptionOfFieldChanged += _fieldSetupControl_DescriptionOfFieldChanged;
+			_fieldSetupControl.DescriptionOfFieldChanged +=
+					_fieldSetupControl_DescriptionOfFieldChanged;
 		}
 
-		void _fieldSetupControl_DescriptionOfFieldChanged(object sender, EventArgs e)
+		private void _fieldSetupControl_DescriptionOfFieldChanged(object sender, EventArgs e)
 		{
 			_fieldsListBox.SelectedItems[0].ToolTipText = CurrentField.Description;
 		}
 
-
 		private void FieldsControl_Load(object sender, EventArgs e)
 		{
 			if (DesignMode)
+			{
 				return;
+			}
 
 			LoadInventory();
 			//nb: may important to do this after loading the inventory
@@ -37,7 +39,9 @@ namespace WeSay.ConfigTool
 		private void OnNameOfFieldChanged(object sender, EventArgs e)
 		{
 			if (_fieldsListBox.SelectedItems.Count == 0)
+			{
 				return;
+			}
 
 			Field f = (Field) _fieldsListBox.SelectedItems[0].Tag;
 			_fieldsListBox.SelectedItems[0].Text = f.DisplayName;
@@ -50,7 +54,6 @@ namespace WeSay.ConfigTool
 			LoadInventory(); // show it in its new location
 			MakeFieldTheSelectedOne(f);
 		}
-
 
 		/// <summary>
 		/// Construct the list of fields to show.
@@ -77,7 +80,9 @@ namespace WeSay.ConfigTool
 			}
 
 			if (_fieldsListBox.Items.Count > 0)
+			{
 				_fieldsListBox.Items[0].Selected = true;
+			}
 		}
 
 		private static ViewTemplate ViewTemplate
@@ -112,33 +117,33 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-//        class FieldListBoxWrapper
-//        {
-//            public Field _field;
-//            private static StringDictionary _labels;
-//
-//            public FieldListBoxWrapper(Field f)
-//            {
-//                _field = f;
-//                if (_labels == null)
-//                {
-//                    _labels = new StringDictionary();
-//                    PopulateLabelDictionary();
-//                }
-//            }
-//
-//            private static void PopulateLabelDictionary()
-//            {
-//                _labels.Add("LexEntry", "Entry");
-//                _labels.Add("LexSense", "Sense");
-//                _labels.Add("LexExampleSentence", "Example");
-//            }
-//
-//            public override string ToString()
-//            {
-//                return string.Format("{0} ({1})", _field.DisplayName, _labels[_field.ClassName]);
-//            }
-//        }
+		//        class FieldListBoxWrapper
+		//        {
+		//            public Field _field;
+		//            private static StringDictionary _labels;
+		//
+		//            public FieldListBoxWrapper(Field f)
+		//            {
+		//                _field = f;
+		//                if (_labels == null)
+		//                {
+		//                    _labels = new StringDictionary();
+		//                    PopulateLabelDictionary();
+		//                }
+		//            }
+		//
+		//            private static void PopulateLabelDictionary()
+		//            {
+		//                _labels.Add("LexEntry", "Entry");
+		//                _labels.Add("LexSense", "Sense");
+		//                _labels.Add("LexExampleSentence", "Example");
+		//            }
+		//
+		//            public override string ToString()
+		//            {
+		//                return string.Format("{0} ({1})", _field.DisplayName, _labels[_field.ClassName]);
+		//            }
+		//        }
 
 		private Field CurrentField
 		{
@@ -146,7 +151,8 @@ namespace WeSay.ConfigTool
 			{
 				if (_fieldsListBox.SelectedItems.Count == 0 && _fieldsListBox.Items.Count > 0)
 				{
-					_fieldsListBox.Items[0].Selected = true; //did not select in time for the return statement
+					_fieldsListBox.Items[0].Selected = true;
+					//did not select in time for the return statement
 					return _fieldsListBox.Items[0].Tag as Field;
 					//_fieldsListBox.SelectedIndices.Add(0);
 				}
@@ -154,14 +160,16 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-//        private void groupBox2_SizeChanged(object sender, EventArgs e)
-//        {
-//            _descriptionBox.MaximumSize  = new Size(groupBox1.Width - 30,groupBox1.Height -30);
-//        }
+		//        private void groupBox2_SizeChanged(object sender, EventArgs e)
+		//        {
+		//            _descriptionBox.MaximumSize  = new Size(groupBox1.Width - 30,groupBox1.Height -30);
+		//        }
 
 		private void OnAddField_Click(object sender, EventArgs e)
 		{
-			Field f = new Field(MakeUniqueFieldName(), "LexEntry", WeSayWordsProject.Project.WritingSystems.Keys);
+			Field f = new Field(MakeUniqueFieldName(),
+								"LexEntry",
+								WeSayWordsProject.Project.WritingSystems.Keys);
 			ViewTemplate.Fields.Add(f);
 			LoadInventory();
 			_tabControl.SelectedTab = _setupTab;
@@ -171,7 +179,7 @@ namespace WeSay.ConfigTool
 		private static string MakeUniqueFieldName()
 		{
 			string baseName = Field.NewFieldNamePrefix;
-			for (int count = 0; count < 1000; count++)
+			for (int count = 0;count < 1000;count++)
 			{
 				string check = baseName;
 				if (count > 0)
@@ -194,8 +202,8 @@ namespace WeSay.ConfigTool
 
 		private void MakeFieldTheSelectedOne(Field f)
 		{
-//            _fieldsListBox.SelectedIndices.Clear();
-//            _fieldsListBox.SelectedIndices.Add(GetItemOfField(f).Index);
+			//            _fieldsListBox.SelectedIndices.Clear();
+			//            _fieldsListBox.SelectedIndices.Add(GetItemOfField(f).Index);
 			GetItemOfField(f).Selected = true;
 		}
 
@@ -208,15 +216,20 @@ namespace WeSay.ConfigTool
 					return item;
 				}
 			}
-			throw new ApplicationException(string.Format("Could not find the field {0} in th list view", f.DisplayName));
+			throw new ApplicationException(
+					string.Format("Could not find the field {0} in th list view", f.DisplayName));
 		}
 
 		private void OnDeleteField_Click(object sender, EventArgs e)
 		{
 			if (CurrentField == null)
+			{
 				return;
+			}
 			if (!CurrentField.UserCanDeleteOrModify)
+			{
 				return;
+			}
 
 			int index = _fieldsListBox.SelectedIndices[0];
 			ViewTemplate.Fields.Remove(CurrentField);
@@ -304,13 +317,15 @@ namespace WeSay.ConfigTool
 			}
 		}*/
 
-	private void OnSelectedFieldChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+		private void OnSelectedFieldChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
 			btnMoveUp.Enabled = false;
 			btnMoveDown.Enabled = false;
 
 			if (!e.IsSelected)
+			{
 				return;
+			}
 			if (CurrentField == null)
 			{
 				return;
@@ -322,8 +337,10 @@ namespace WeSay.ConfigTool
 			//    _fieldPropertyGrid.SelectedObject = CurrentField;
 			_fieldSetupControl.CurrentField = CurrentField;
 
-			btnMoveUp.Enabled = CurrentField.UserCanRelocate && !ViewTemplate.IsFieldFirstInClass(CurrentField);
-			btnMoveDown.Enabled = CurrentField.UserCanRelocate && !ViewTemplate.IsFieldLastInClass(CurrentField);
+			btnMoveUp.Enabled = CurrentField.UserCanRelocate &&
+								!ViewTemplate.IsFieldFirstInClass(CurrentField);
+			btnMoveDown.Enabled = CurrentField.UserCanRelocate &&
+								  !ViewTemplate.IsFieldLastInClass(CurrentField);
 		}
 
 		private void btnMoveUp_Click(object sender, EventArgs e)

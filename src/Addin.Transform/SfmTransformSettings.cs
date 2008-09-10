@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using Palaso.Reporting;
 using WeSay.AddinLib;
-using WeSay.Language;
 
 namespace Addin.Transform
 {
@@ -26,11 +26,11 @@ namespace Addin.Transform
 
 		public void FillEmptySettingsWithGuesses(ProjectInfo projectInfo)
 		{
-			if (String.IsNullOrEmpty(this.VernacularLanguageWritingSystemId))
+			if (String.IsNullOrEmpty(VernacularLanguageWritingSystemId))
 			{
 				if (projectInfo.WritingSystems.ContainsKey("v"))
 				{
-					this.VernacularLanguageWritingSystemId = "v";
+					VernacularLanguageWritingSystemId = "v";
 				}
 				else //guess
 				{
@@ -38,55 +38,51 @@ namespace Addin.Transform
 					{
 						if (!"en fr chn th tpi".Contains(id))
 						{
-							this.VernacularLanguageWritingSystemId = id;
+							VernacularLanguageWritingSystemId = id;
 							break;
 						}
 					}
 				}
 			}
 
-			if (String.IsNullOrEmpty(this.NationalLanguageWritingSystemId))
+			if (String.IsNullOrEmpty(NationalLanguageWritingSystemId))
 			{
 				if (projectInfo.WritingSystems.ContainsKey("tpi")) //melanesian pidgin
 				{
-					this.NationalLanguageWritingSystemId = "tpi";
+					NationalLanguageWritingSystemId = "tpi";
 				}
 				if (projectInfo.WritingSystems.ContainsKey("TPI")) //melanesian pidgin
 				{
-					this.NationalLanguageWritingSystemId = "TPI";
+					NationalLanguageWritingSystemId = "TPI";
 				}
 				if (projectInfo.WritingSystems.ContainsKey("th")) //thai
 				{
-					this.NationalLanguageWritingSystemId = "th";
+					NationalLanguageWritingSystemId = "th";
 				}
 				if (projectInfo.WritingSystems.ContainsKey("fr")) //french
 				{
-					this.NationalLanguageWritingSystemId = "fr";
+					NationalLanguageWritingSystemId = "fr";
 				}
 			}
 		}
 
 		[Browsable(true)]
-		[Description(@"The raw output gives tags like \lx_bth, but you likely want to see simple tags like \lx. Enter from<space>to pairs, one per line. E.g. lx_bth lx")]
+		[Description(
+				@"The raw output gives tags like \lx_bth, but you likely want to see simple tags like \lx. Enter from<space>to pairs, one per line. E.g. lx_bth lx"
+				)]
 		public string SfmTagConversions
 		{
-			get
-			{
-				return _sfmTagConversions;
-			}
-			set
-			{
-				_sfmTagConversions = value;
-			}
+			get { return _sfmTagConversions; }
+			set { _sfmTagConversions = value; }
 		}
 
 		public class ChangePair
 		{
-			private string _from;
+			private readonly string _from;
 			public string to;
 			public Regex regex;
 
-/*            public ChangePair( string sfrom, string sto)
+			/*            public ChangePair( string sfrom, string sto)
 			{
 //                _from = @"(\W)*" + sfrom+ @"(\W)";
  //                to = "$1" + sto + " "; //put the spaces back in
@@ -96,7 +92,7 @@ namespace Addin.Transform
 			}
  * */
 
-			private ChangePair( string sfrom, string sto)
+			private ChangePair(string sfrom, string sto)
 			{
 				_from = sfrom;
 				to = sto;
@@ -105,7 +101,8 @@ namespace Addin.Transform
 				regex = new Regex(_from, RegexOptions.Compiled);
 			}
 
-			static public ChangePair CreateFullMarkerReplacement(string fromMarkerNoSlash, string toMarkerNoSlash)
+			public static ChangePair CreateFullMarkerReplacement(string fromMarkerNoSlash,
+																 string toMarkerNoSlash)
 			{
 				string from = @"\\" + fromMarkerNoSlash + @"\s+";
 				string to = @"\" + toMarkerNoSlash + " ";
@@ -125,45 +122,75 @@ namespace Addin.Transform
 		}
 
 		[XmlIgnore]
-		public IEnumerable<SfmTransformSettings.ChangePair> ChangePairs
+		public IEnumerable<ChangePair> ChangePairs
 		{
 			get
 			{
 				List<ChangePair> pairs = new List<ChangePair>();
-				pairs.Add(ChangePair.CreateFullMarkerReplacement( "BaseForm", "base"));
+				pairs.Add(ChangePair.CreateFullMarkerReplacement("BaseForm", "base"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("SemanticDomainDdp4", "sd"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("citation", "lc"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("definition", "d"));
 
 				if (!String.IsNullOrEmpty(_vernacularLanguageWritingSystemId))
 				{
-					pairs.Add(ChangePair.CreateFullMarkerReplacement("lx_" + _vernacularLanguageWritingSystemId, "lx"));
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "lc_" + _vernacularLanguageWritingSystemId, "lc"));
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "x_" + _vernacularLanguageWritingSystemId,   "xv"));
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "d_" + _vernacularLanguageWritingSystemId,   "dv"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"lx_" + _vernacularLanguageWritingSystemId, "lx"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"lc_" + _vernacularLanguageWritingSystemId, "lc"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"x_" + _vernacularLanguageWritingSystemId, "xv"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"d_" + _vernacularLanguageWritingSystemId, "dv"));
 				}
 
 				if (!String.IsNullOrEmpty(_englishLanguageWritingSystemId))
 				{
-					pairs.Add(ChangePair.CreateFullMarkerReplacement("g_" + _englishLanguageWritingSystemId, "ge"));
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "d_" + _englishLanguageWritingSystemId, "de"));
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "x_" + _englishLanguageWritingSystemId, "xe"));
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "nt_" + _englishLanguageWritingSystemId, "nt"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"g_" + _englishLanguageWritingSystemId, "ge"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"d_" + _englishLanguageWritingSystemId, "de"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"x_" + _englishLanguageWritingSystemId, "xe"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"nt_" + _englishLanguageWritingSystemId, "nt"));
 				}
 
 				if (!String.IsNullOrEmpty(_nationalLanguageWritingSystemId))
 				{
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "g_" + _nationalLanguageWritingSystemId, "gn"));
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "d_" + _nationalLanguageWritingSystemId, "dn"));
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "x_" + _nationalLanguageWritingSystemId, "xn"));
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "nt_" + _nationalLanguageWritingSystemId, "ntn"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"g_" + _nationalLanguageWritingSystemId, "gn"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"d_" + _nationalLanguageWritingSystemId, "dn"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"x_" + _nationalLanguageWritingSystemId, "xn"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"nt_" + _nationalLanguageWritingSystemId, "ntn"));
 				}
 
 				if (!String.IsNullOrEmpty(_regionalLanguageWritingSystemId))
 				{
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "g_" + _regionalLanguageWritingSystemId, "gr"));
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "d_" + _regionalLanguageWritingSystemId, "dr"));
-					pairs.Add(ChangePair.CreateFullMarkerReplacement( "x_" + _regionalLanguageWritingSystemId, "xr"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"g_" + _regionalLanguageWritingSystemId, "gr"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"d_" + _regionalLanguageWritingSystemId, "dr"));
+					pairs.Add(
+							ChangePair.CreateFullMarkerReplacement(
+									"x_" + _regionalLanguageWritingSystemId, "xr"));
 				}
 
 				if (_sfmTagConversions == null)
@@ -177,24 +204,27 @@ namespace Addin.Transform
 						string line = reader.ReadLine();
 						if (line != null)
 						{
-							string[] parts = line.Split(new char[] { ' ' });
+							string[] parts = line.Split(new char[] {' '});
 							if (parts.Length != 2)
 							{
 								//hmmmm
 							}
 							else
 							{
-//                                string from=@"(\W)*" + parts[0] + @"(\W)"; //only match if bounded by white space
-//                                string to = "$1" + parts[1] + "$2";
+								//                                string from=@"(\W)*" + parts[0] + @"(\W)"; //only match if bounded by white space
+								//                                string to = "$1" + parts[1] + "$2";
 								try
 								{
-									ChangePair p = ChangePair.CreateReplacementFromTweak(parts[0], parts[1]);
+									ChangePair p = ChangePair.CreateReplacementFromTweak(parts[0],
+																						 parts[1]);
 
 									pairs.Add(p);
 								}
-								catch(ArgumentException err)
+								catch (ArgumentException err)
 								{
-									Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Sorry, there is a problem in one of the tweaks for SFM export.  They must each be valid 'regular expressions'.  The error was: {0}", err.Message);
+									ErrorReport.ReportNonFatalMessage(
+											"Sorry, there is a problem in one of the tweaks for SFM export.  They must each be valid 'regular expressions'.  The error was: {0}",
+											err.Message);
 								}
 							}
 						}
@@ -209,52 +239,28 @@ namespace Addin.Transform
 			}
 		}
 
-		public string  EnglishLanguageWritingSystemId
+		public string EnglishLanguageWritingSystemId
 		{
-			get
-			{
-				return _englishLanguageWritingSystemId;
-			}
-			set
-			{
-				_englishLanguageWritingSystemId = value;
-			}
+			get { return _englishLanguageWritingSystemId; }
+			set { _englishLanguageWritingSystemId = value; }
 		}
 
 		public string NationalLanguageWritingSystemId
 		{
-			get
-			{
-				return _nationalLanguageWritingSystemId;
-			}
-			set
-			{
-				_nationalLanguageWritingSystemId = value;
-			}
+			get { return _nationalLanguageWritingSystemId; }
+			set { _nationalLanguageWritingSystemId = value; }
 		}
 
 		public string RegionalLanguageWritingSystemId
 		{
-			get
-			{
-				return _regionalLanguageWritingSystemId;
-			}
-			set
-			{
-				_regionalLanguageWritingSystemId = value;
-			}
+			get { return _regionalLanguageWritingSystemId; }
+			set { _regionalLanguageWritingSystemId = value; }
 		}
 
 		public string VernacularLanguageWritingSystemId
 		{
-			get
-			{
-				return _vernacularLanguageWritingSystemId;
-			}
-			set
-			{
-				_vernacularLanguageWritingSystemId = value;
-			}
+			get { return _vernacularLanguageWritingSystemId; }
+			set { _vernacularLanguageWritingSystemId = value; }
 		}
 	}
 }

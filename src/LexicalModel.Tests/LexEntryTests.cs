@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+using System;
+using System.ComponentModel;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
@@ -11,64 +12,71 @@ namespace WeSay.LexicalModel.Tests
 		private LexEntry _entry;
 		private LexSense _sense;
 		private LexExampleSentence _examples;
-		bool _removed;
+		private bool _removed;
 
 		[SetUp]
 		public void Setup()
 		{
-			this._entry = new LexEntry();
-			this._sense = (LexSense) this._entry.Senses.AddNew();
+			_entry = new LexEntry();
+			_sense = new LexSense();
+			_entry.Senses.Add(_sense);
 #if GlossMeaning
 			this._sense.Gloss["th"] = "sense";
 #else
-			this._sense.Definition["th"] = "sense";
+			_sense.Definition["th"] = "sense";
 #endif
-			MultiText customFieldInSense = this._sense.GetOrCreateProperty<MultiText>("customFieldInSense");
+			MultiText customFieldInSense =
+					_sense.GetOrCreateProperty<MultiText>("customFieldInSense");
 			customFieldInSense["th"] = "custom";
-			this._examples = (LexExampleSentence)this._sense.ExampleSentences.AddNew();
-			this._examples.Sentence["th"] = "example";
-			this._examples.Translation["en"] = "translation";
-			MultiText customFieldInExample = this._examples.GetOrCreateProperty<MultiText>("customFieldInExample");
+			_examples = new LexExampleSentence();
+			_sense.ExampleSentences.Add(_examples);
+			_examples.Sentence["th"] = "example";
+			_examples.Translation["en"] = "translation";
+			MultiText customFieldInExample =
+					_examples.GetOrCreateProperty<MultiText>("customFieldInExample");
 			customFieldInExample["th"] = "custom";
-			this._entry.EmptyObjectsRemoved += new System.EventHandler(_entry_EmptyObjectsRemoved);
-			this._entry.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_entry_PropertyChanged);
-			this._removed = false;
-
-			Db4o_Specific.Db4oLexModelHelper.InitializeForNonDbTests();
+			_entry.EmptyObjectsRemoved += _entry_EmptyObjectsRemoved;
+			_entry.PropertyChanged += _entry_PropertyChanged;
+			_removed = false;
 		}
 
-		void _entry_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		private void _entry_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			_entry.CleanUpEmptyObjects();
 		}
 
-		void _entry_EmptyObjectsRemoved(object sender, System.EventArgs e)
+		private void _entry_EmptyObjectsRemoved(object sender, EventArgs e)
 		{
 			_removed = true;
 		}
 
 		private void ClearExampleSentence()
 		{
-			this._examples.Sentence["th"] = string.Empty;
+			_examples.Sentence["th"] = string.Empty;
 		}
+
 		private void ClearExampleTranslation()
 		{
-			this._examples.Translation["en"] = string.Empty;
+			_examples.Translation["en"] = string.Empty;
 		}
+
 		private void ClearExampleCustom()
 		{
-			MultiText customFieldInExample = this._examples.GetOrCreateProperty<MultiText>("customFieldInExample");
+			MultiText customFieldInExample =
+					_examples.GetOrCreateProperty<MultiText>("customFieldInExample");
 			customFieldInExample["th"] = string.Empty;
 			_entry.CleanUpAfterEditting();
 		}
+
 		private void ClearSenseMeaning()
 		{
 #if GlossMeaning
 			this._sense.Gloss["th"] = string.Empty;
 #else
-			this._sense.Definition["th"] = string.Empty;
+			_sense.Definition["th"] = string.Empty;
 #endif
 		}
+
 		private void ClearSenseExample()
 		{
 			ClearExampleSentence();
@@ -76,9 +84,11 @@ namespace WeSay.LexicalModel.Tests
 			ClearExampleCustom();
 			_removed = false;
 		}
+
 		private void ClearSenseCustom()
 		{
-			MultiText customFieldInSense = this._sense.GetOrCreateProperty<MultiText>("customFieldInSense");
+			MultiText customFieldInSense =
+					_sense.GetOrCreateProperty<MultiText>("customFieldInSense");
 			customFieldInSense["th"] = string.Empty;
 			_entry.CleanUpAfterEditting();
 		}
@@ -86,17 +96,16 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void Example_Empty_False()
 		{
-			Assert.IsFalse(this._examples.IsEmpty);
+			Assert.IsFalse(_examples.IsEmpty);
 		}
-
 
 		[Test]
 		public void ExampleWithOnlySentence_Empty_False()
 		{
 			ClearExampleTranslation();
 			ClearExampleCustom();
-			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._examples.IsEmpty);
+			Assert.IsFalse(_removed);
+			Assert.IsFalse(_examples.IsEmpty);
 		}
 
 		[Test]
@@ -104,16 +113,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			ClearExampleSentence();
 			ClearExampleCustom();
-			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._examples.IsEmpty);
+			Assert.IsFalse(_removed);
+			Assert.IsFalse(_examples.IsEmpty);
 		}
+
 		[Test]
 		public void ExampleWithOnlyCustomField_Empty_False()
 		{
 			ClearExampleSentence();
 			ClearExampleTranslation();
-			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._examples.IsEmpty);
+			Assert.IsFalse(_removed);
+			Assert.IsFalse(_examples.IsEmpty);
 		}
 
 		[Test]
@@ -122,8 +132,8 @@ namespace WeSay.LexicalModel.Tests
 			ClearExampleSentence();
 			ClearExampleTranslation();
 			ClearExampleCustom();
-			Assert.IsTrue(this._removed);
-			Assert.IsTrue(this._examples.IsEmpty);
+			Assert.IsTrue(_removed);
+			Assert.IsTrue(_examples.IsEmpty);
 		}
 
 		[Test]
@@ -132,18 +142,17 @@ namespace WeSay.LexicalModel.Tests
 			ClearExampleSentence();
 			ClearExampleTranslation();
 			ClearExampleCustom();
-			Assert.IsTrue(this._removed);
+			Assert.IsTrue(_removed);
 			Assert.AreEqual(0, _sense.ExampleSentences.Count);
 		}
-
 
 		[Test]
 		public void SenseWithOnlyMeaning_Empty_False()
 		{
 			ClearSenseExample();
 			ClearSenseCustom();
-			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._sense.IsEmpty);
+			Assert.IsFalse(_removed);
+			Assert.IsFalse(_sense.IsEmpty);
 		}
 
 		[Test]
@@ -151,8 +160,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			ClearSenseMeaning();
 			ClearSenseCustom();
-			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._sense.IsEmpty);
+			Assert.IsFalse(_removed);
+			Assert.IsFalse(_sense.IsEmpty);
 		}
 
 		[Test]
@@ -160,8 +169,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			ClearSenseMeaning();
 			ClearSenseExample();
-			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._sense.IsEmpty);
+			Assert.IsFalse(_removed);
+			Assert.IsFalse(_sense.IsEmpty);
 		}
 
 		[Test]
@@ -170,36 +179,38 @@ namespace WeSay.LexicalModel.Tests
 			ClearSenseMeaning();
 			ClearSenseExample();
 			ClearSenseCustom();
-			Assert.IsTrue(this._removed);
-			Assert.IsTrue(this._sense.IsEmpty);
+			Assert.IsTrue(_removed);
+			Assert.IsTrue(_sense.IsEmpty);
 		}
 
 		[Test]
 		public void SenseWithOnlyPOS_ReadyForDeletion()
 		{
-			Assert.IsFalse(this._sense.IsEmptyForPurposesOfDeletion);
+			Assert.IsFalse(_sense.IsEmptyForPurposesOfDeletion);
 			ClearSenseMeaning();
 			ClearSenseExample();
 			ClearSenseCustom();
-			Assert.IsTrue(this._sense.IsEmpty);
-			OptionRef pos = _sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			Assert.IsTrue(_sense.IsEmpty);
+			OptionRef pos =
+					_sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 			pos.Value = "noun";
-			Assert.IsFalse(this._sense.IsEmpty);
-			Assert.IsTrue(this._sense.IsEmptyForPurposesOfDeletion);
+			Assert.IsFalse(_sense.IsEmpty);
+			Assert.IsTrue(_sense.IsEmptyForPurposesOfDeletion);
 		}
 
- //Not fixed yet       [Test]
+		//Not fixed yet       [Test]
 		public void SenseWithAPicture_ReadyForDeletion()
 		{
-			Assert.IsFalse(this._sense.IsEmptyForPurposesOfDeletion);
+			Assert.IsFalse(_sense.IsEmptyForPurposesOfDeletion);
 			ClearSenseMeaning();
 			ClearSenseExample();
 			ClearSenseCustom();
-			Assert.IsTrue(this._sense.IsEmpty);
-			PictureRef pict = _sense.GetOrCreateProperty<PictureRef>(LexSense.WellKnownProperties.Picture);
+			Assert.IsTrue(_sense.IsEmpty);
+			PictureRef pict =
+					_sense.GetOrCreateProperty<PictureRef>(LexSense.WellKnownProperties.Picture);
 			pict.Value = "dummy.png";
-			Assert.IsFalse(this._sense.IsEmpty);
-			Assert.IsTrue(this._sense.IsEmptyForPurposesOfDeletion);
+			Assert.IsFalse(_sense.IsEmpty);
+			Assert.IsTrue(_sense.IsEmptyForPurposesOfDeletion);
 		}
 
 		[Test]
@@ -208,7 +219,7 @@ namespace WeSay.LexicalModel.Tests
 			ClearSenseMeaning();
 			ClearSenseExample();
 			ClearSenseCustom();
-			Assert.IsTrue(this._removed);
+			Assert.IsTrue(_removed);
 			Assert.AreEqual(0, _entry.Senses.Count);
 		}
 
@@ -273,21 +284,48 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm.SetAlternative("a", "apple");
-			MultiText citation = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			MultiText citation =
+					entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
 			citation.SetAlternative("b", "barter");
 			citation.SetAlternative("a", "applishus");
 			Assert.AreEqual("applishus", entry.GetHeadWordForm("a"));
 			Assert.AreEqual("barter", entry.GetHeadWordForm("b"));
 			Assert.AreEqual(string.Empty, entry.GetHeadWordForm("donthave"));
 		}
+
 		[Test]
 		public void GetHeadword_CitationFormLacksAlternative_GetsFormFromLexemeForm()
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm.SetAlternative("a", "apple");
-			MultiText citation = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			MultiText citation =
+					entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
 			citation.SetAlternative("b", "bater");
 			Assert.AreEqual("apple", entry.GetHeadWordForm("a"));
+		}
+
+		[Test]
+		public void LexEntryConstructor_IsDirtyReturnsTrue()
+		{
+			LexEntry entry = new LexEntry();
+			Assert.IsTrue(entry.IsDirty);
+		}
+
+		[Test]
+		public void Clean_IsDirtyReturnsFalse()
+		{
+			LexEntry entry = new LexEntry();
+			entry.Clean();
+			Assert.IsFalse(entry.IsDirty);
+		}
+
+		[Test]
+		public void LexEntryChanges_IsDirtyReturnsTrue()
+		{
+			LexEntry entry = new LexEntry();
+			entry.Clean();
+			entry.Senses.Add(new LexSense());
+			Assert.IsTrue(entry.IsDirty);
 		}
 	}
 }

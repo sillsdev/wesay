@@ -4,15 +4,16 @@ using System.Drawing;
 using System.IO;
 using System.Management;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
 namespace Addin.Backup
 {
-	public partial class BackupDialog : Form
+	public partial class BackupDialog: Form
 	{
-		private ProjectInfo _projectInfo;
+		private readonly ProjectInfo _projectInfo;
 
 		public BackupDialog(ProjectInfo projectInfo)
 		{
@@ -24,30 +25,32 @@ namespace Addin.Backup
 			_cancelButton.Font = StringCatalog.ModifyFontForLocalization(_cancelButton.Font);
 		}
 
-
 		private void DoBackup(DriveInfo info)
 		{
 			_checkForUsbKeyTimer.Enabled = false;
 			_noteLabel.Visible = false;
 			_topLabel.Text = "~Backing Up...";
-			this.Refresh();
+			Refresh();
 			try
 			{
-				string dest= Path.Combine(info.RootDirectory.FullName, _projectInfo.Name + "_wesay.zip");
-				WeSay.Foundation.BackupMaker.BackupToExternal(_projectInfo.PathToTopLevelDirectory, dest, _projectInfo.FilesBelongingToProject);
+				string dest = Path.Combine(info.RootDirectory.FullName,
+										   _projectInfo.Name + "_wesay.zip");
+				BackupMaker.BackupToExternal(_projectInfo.PathToTopLevelDirectory,
+											 dest,
+											 _projectInfo.FilesBelongingToProject);
 				_topLabel.Text = "~Backup Complete";
 				_noteLabel.Visible = true;
 				_noteLabel.Text = String.Format("~Files backed up to {0}", dest);
 			}
 			catch (Exception e)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("WeSay could to perform the backup.  Reason: {0}",
-															  e.Message);
-				 _topLabel.Text = "~Files were not backed up.";
-				 _topLabel.ForeColor = Color.Red;
-		   }
+				ErrorReport.ReportNonFatalMessage(
+						"WeSay could to perform the backup.  Reason: {0}", e.Message);
+				_topLabel.Text = "~Files were not backed up.";
+				_topLabel.ForeColor = Color.Red;
+			}
 
-			this._cancelButton.Text = "&OK";
+			_cancelButton.Text = "&OK";
 		}
 
 		private void _cancelButton_Click(object sender, EventArgs e)
@@ -57,51 +60,59 @@ namespace Addin.Backup
 
 		public List<DriveInfo> GetLogicalUsbDisks()
 		{
-			List<DriveInfo> driveInfos=new List<DriveInfo>();
-			using (ManagementObjectSearcher driveSearcher = new ManagementObjectSearcher(
-					"SELECT Caption, DeviceID FROM Win32_DiskDrive WHERE InterfaceType='USB'"))
+			List<DriveInfo> driveInfos = new List<DriveInfo>();
+			using (
+					ManagementObjectSearcher driveSearcher =
+							new ManagementObjectSearcher(
+									"SELECT Caption, DeviceID FROM Win32_DiskDrive WHERE InterfaceType='USB'")
+					)
+			{
+				// walk all USB WMI physical disks
+				foreach (ManagementObject drive in driveSearcher.Get())
+				{
+					// browse all USB WMI physical disks
+
+					using (
+							ManagementObjectSearcher searcher =
+									new ManagementObjectSearcher(
+											"ASSOCIATORS OF {Win32_DiskDrive.DeviceID='" +
+											drive["DeviceID"] +
+											"'} WHERE AssocClass = Win32_DiskDriveToDiskPartition"))
 					{
 						// walk all USB WMI physical disks
-						foreach (ManagementObject drive in driveSearcher.Get())
+						foreach (ManagementObject partition in searcher.Get())
 						{
-							// browse all USB WMI physical disks
-
-							using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(
-								"ASSOCIATORS OF {Win32_DiskDrive.DeviceID='"
-								+ drive["DeviceID"]
-								+ "'} WHERE AssocClass = Win32_DiskDriveToDiskPartition"))
+							using (
+									ManagementObjectSearcher partitionSearcher =
+											new ManagementObjectSearcher(
+													"ASSOCIATORS OF {Win32_DiskPartition.DeviceID='" +
+													partition["DeviceID"] +
+													"'} WHERE AssocClass = Win32_LogicalDiskToPartition")
+									)
 							{
-								// walk all USB WMI physical disks
-								foreach (ManagementObject partition in searcher.Get())
+								foreach (ManagementObject disk in partitionSearcher.Get())
 								{
-									using (ManagementObjectSearcher partitionSearcher = new ManagementObjectSearcher(
-										"ASSOCIATORS OF {Win32_DiskPartition.DeviceID='"
-										+ partition["DeviceID"]
-										+ "'} WHERE AssocClass = Win32_LogicalDiskToPartition"))
+									foreach (DriveInfo driveInfo in DriveInfo.GetDrives())
 									{
-										foreach (ManagementObject disk in partitionSearcher.Get())
+										string s = driveInfo.Name.Replace("\\", "");
+										if (s == disk["NAME"].ToString())
 										{
-											foreach (DriveInfo driveInfo in System.IO.DriveInfo.GetDrives())
-											{
-												string s = driveInfo.Name.Replace("\\", "");
-												if (s == disk["NAME"].ToString())
-												{
-													driveInfos.Add(driveInfo);
-												}
-											}
+											driveInfos.Add(driveInfo);
 										}
 									}
 								}
 							}
 						}
 					}
-				return driveInfos;
+				}
+			}
+			return driveInfos;
 		}
 
 		private void Dialog_Load(object sender, EventArgs e)
 		{
 			_checkForUsbKeyTimer.Enabled = true;
-		 //   LookForTargetVolume();
+			//   LookForTargetVolume();
 		}
 
 		private void OnCheckForUsbKeyTimer_Tick(object sender, EventArgs e)
@@ -120,14 +131,14 @@ namespace Addin.Backup
 				}
 				else
 				{
-					this._topLabel.Text = "~Please insert the USB Key to backup to.";
+					_topLabel.Text = "~Please insert the USB Key to backup to.";
 				}
 			}
-			catch(Exception error)
+			catch (Exception error)
 			{
 				_checkForUsbKeyTimer.Enabled = false;
-				Palaso.Reporting.ErrorNotificationDialog.ReportException(error,this,false);
-				this._topLabel.Text = "Unable to look for the device due to an error.";
+				ErrorNotificationDialog.ReportException(error, this, false);
+				_topLabel.Text = "Unable to look for the device due to an error.";
 			}
 		}
 	}

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using WeSay.Foundation;
-using WeSay.LexicalModel;
 
 namespace WeSay.LexicalModel
 {
@@ -20,20 +19,16 @@ namespace WeSay.LexicalModel
 		{
 			if (item is LexEntry)
 			{
-				return
-					((LexEntry) item).LexicalForm.GetBestAlternativeString(
-						_writingSystemIds);
+				return ((LexEntry) item).LexicalForm.GetBestAlternativeString(_writingSystemIds);
 			}
 			if (item is LexSense)
 			{
 				LexSense sense = (LexSense) item;
-				return
-					GetDisplayLabel(sense.Parent) + "." +
-					sense.Gloss.GetBestAlternativeString(_writingSystemIds);
+				return GetDisplayLabel(sense.Parent) + "." +
+					   sense.Gloss.GetBestAlternativeString(_writingSystemIds);
 			}
 			return "Program error";
 		}
-
 
 		public string GetToolTip(object item)
 		{
@@ -43,7 +38,7 @@ namespace WeSay.LexicalModel
 			}
 			if (item is LexSense)
 			{
-				LexSense sense = (LexSense) item;
+				//LexSense sense = (LexSense) item;
 				return "What to show for senses?";
 			}
 			return "Program error";

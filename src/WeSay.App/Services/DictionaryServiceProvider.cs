@@ -3,37 +3,37 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using Palaso.Reporting;
 using Palaso.Services.Dictionary;
-using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.App.Services;
+using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
-namespace WeSay.App
+namespace WeSay.App.Services
 {
-
-	public class DictionaryServiceProvider : MarshalByRefObject, Palaso.Services.Dictionary.IDictionaryServiceBase, IDisposable
+	public class DictionaryServiceProvider: MarshalByRefObject, IDictionaryServiceBase, IDisposable
 	{
 		private readonly WeSayWordsProject _project;
-		List<int> _registeredClientProcessIds;
-		private WeSayApp _app;
-		private int _maxNumberOfEntriesToReturn = 20;
+		private readonly List<int> _registeredClientProcessIds;
+		private readonly WeSayApp _app;
+		private const int _maxNumberOfEntriesToReturn = 20;
 		public event EventHandler LastClientDeregistered;
-		private WeSay.App.Services.HtmlArticleMaker _articleMaker;
+		private readonly HtmlArticleMaker _articleMaker;
 		private SynchronizationContext _uiSynchronizationContext;
+		private readonly LexEntryRepository _lexEntryRepository;
 
-		public DictionaryServiceProvider(WeSayApp app, WeSayWordsProject project)
+		public DictionaryServiceProvider(LexEntryRepository lexEntryRepository,
+										 WeSayApp app,
+										 WeSayWordsProject project)
 		{
 			_app = app;
 			_project = project;
 			_registeredClientProcessIds = new List<int>();
-
+			_lexEntryRepository = lexEntryRepository;
 			_articleMaker = new HtmlArticleMaker(_project.LocateFile("WritingSystemPrefs.xml"),
-										_project.LocateFile("PartsOfSpeech.xml"));
+												 _project.LocateFile("PartsOfSpeech.xml"));
 		}
 
 		public SynchronizationContext UiSynchronizationContext
@@ -44,8 +44,6 @@ namespace WeSay.App
 
 		#region IDictionaryService Members
 
-
-
 		public FindResult GetMatchingEntries(string writingSystemId, string form, string findMethod)
 		{
 			FindMethods method;
@@ -53,45 +51,49 @@ namespace WeSay.App
 			{
 				method = (FindMethods) Enum.Parse(typeof (FindMethods), findMethod);
 			}
-			catch(ArgumentException e)
+			catch (ArgumentException e)
 			{
-				throw new ArgumentException("'" + findMethod + "' is not a recognized find method.", e);
+				throw new ArgumentException(
+						"'" + findMethod + "' is not a recognized find method.", e);
 			}
 
 			//in case something goes wrong
 			FindResult r = new FindResult();
 			try
 			{
-
-				Palaso.Reporting.Logger.WriteMinorEvent("GetIdsOfMatchingEntries({0},{1},{2})", writingSystemId, form,
-														method.ToString());
+				Logger.WriteMinorEvent("GetIdsOfMatchingEntries({0},{1},{2})",
+									   writingSystemId,
+									   form,
+									   method.ToString());
 				if (!_project.WritingSystems.ContainsKey(writingSystemId))
 				{
 					return r;
 				}
 				WritingSystem ws = _project.WritingSystems[writingSystemId];
 
-				IList<LexEntry> matches;
+				ResultSet<LexEntry> matches;
 				switch (method)
 				{
 					case FindMethods.Exact:
-						matches = Lexicon.GetEntriesHavingLexicalForm(form, ws);
+						matches = _lexEntryRepository.GetEntriesWithMatchingLexicalForm(form, ws);
 						break;
 
 					default:
 					case FindMethods.DefaultApproximate:
-						matches = Lexicon.GetEntriesWithSimilarLexicalForms(form, ws,
-																			ApproximateMatcherOptions.
-																				IncludePrefixedAndNextClosestForms,
-																				_maxNumberOfEntriesToReturn);
+						matches = _lexEntryRepository.GetEntriesWithSimilarLexicalForm(form,
+																					   ws,
+																					   ApproximateMatcherOptions
+																							   .
+																							   IncludePrefixedAndNextClosestForms);
 						break;
 				}
 				r.ids = new string[matches.Count];
 				r.forms = new string[matches.Count];
 				int i = 0;
-				foreach (LexEntry entry in matches)
+				foreach (RecordToken<LexEntry> token in matches)
 				{
-					if(i == _maxNumberOfEntriesToReturn)
+					LexEntry entry = token.RealObject;
+					if (i == _maxNumberOfEntriesToReturn)
 					{
 						break;
 					}
@@ -102,7 +104,7 @@ namespace WeSay.App
 			}
 			catch (Exception e)
 			{
-				Palaso.Reporting.Logger.WriteEvent("Error from dictionary services, RegisterClient: " + e.Message);
+				Logger.WriteEvent("Error from dictionary services, RegisterClient: " + e.Message);
 				Debug.Fail(e.Message);
 			}
 			return r;
@@ -113,7 +115,8 @@ namespace WeSay.App
 			if (UiSynchronizationContext != null)
 			{
 				string result = string.Empty;
-				UiSynchronizationContext.Send(delegate { result = GetHtmlForEntriesCore(entryIds); }, null);
+				UiSynchronizationContext.Send(
+						delegate { result = GetHtmlForEntriesCore(entryIds); }, null);
 				return result;
 			}
 			else
@@ -122,20 +125,20 @@ namespace WeSay.App
 			}
 		}
 
-		private string GetHtmlForEntriesCore(string[] entryIds)
+		private string GetHtmlForEntriesCore(IEnumerable<string> entryIds)
 		{
 			try
 			{
-				Palaso.Reporting.Logger.WriteMinorEvent("GetHtmlForEntries()");
+				Logger.WriteMinorEvent("GetHtmlForEntries()");
 				StringBuilder builder = new StringBuilder();
-				LiftExporter exporter = new LiftExporter(builder, true);
-				IHomographCalculator homographCalculator = new HomographCalculator(Lexicon.RecordListManager, _project.DefaultPrintingTemplate.HeadwordWritingSytem);
-				Db4oLexEntryFinder finder = new Db4oLexEntryFinder(Lexicon.RecordListManager.DataSource);
-				exporter.SetUpForPresentationLiftExport(_project.DefaultPrintingTemplate, homographCalculator, finder);
+				PLiftExporter exporter = new PLiftExporter(builder,
+														   true,
+														   _lexEntryRepository,
+														   _project.DefaultPrintingTemplate);
 
 				foreach (string entryId in entryIds)
 				{
-					LexEntry entry = Lexicon.FindFirstLexEntryMatchingId(entryId);
+					LexEntry entry = _lexEntryRepository.GetLexEntryWithMatchingId(entryId);
 					if (entry == null)
 					{
 						builder.AppendFormat("Error: entry '{0}' not found.", entryId);
@@ -150,68 +153,74 @@ namespace WeSay.App
 			}
 			catch (Exception e)
 			{
-				Palaso.Reporting.Logger.WriteEvent("Error from dictionary services, GetHtmlForEntries: " + e.Message);
+				Logger.WriteEvent("Error from dictionary services, GetHtmlForEntries: " + e.Message);
 				Debug.Fail(e.Message);
 			}
-			return StringCatalog.Get("~Program Error", "This is what we call it when something goes wrong but it's the computer's fault, not the user's.");
+			return StringCatalog.Get("~Program Error",
+									 "This is what we call it when something goes wrong but it's the computer's fault, not the user's.");
 		}
 
 		public void RegisterClient(int clientProcessId)
 		{
 			RunInSafeContext(delegate
-			 {
-				 try
-				 {
-					 Palaso.Reporting.Logger.WriteMinorEvent(
-						 "dictionary services registering client {0}", clientProcessId);
-					 Debug.Assert(!_registeredClientProcessIds.Contains(clientProcessId),
-								  "Warning: clientProcessId already registered once.");
-					 if (!_registeredClientProcessIds.Contains(clientProcessId))
-					 {
-						 Palaso.Reporting.Logger.WriteMinorEvent("Registering Service Client {0}",
-																 clientProcessId);
-						 _registeredClientProcessIds.Add(clientProcessId);
-					 }
-				 }
-				 catch (Exception e)
-				 {
-					 Palaso.Reporting.Logger.WriteEvent(
-						 "Error from dictionary services, RegisterClient: " + e.Message);
-					 Debug.Fail(e.Message);
-				 }
-			 });
+							 {
+								 try
+								 {
+									 Logger.WriteMinorEvent(
+											 "dictionary services registering client {0}",
+											 clientProcessId);
+									 Debug.Assert(
+											 !_registeredClientProcessIds.Contains(clientProcessId),
+											 "Warning: clientProcessId already registered once.");
+									 if (!_registeredClientProcessIds.Contains(clientProcessId))
+									 {
+										 Logger.WriteMinorEvent("Registering Service Client {0}",
+																clientProcessId);
+										 _registeredClientProcessIds.Add(clientProcessId);
+									 }
+								 }
+								 catch (Exception e)
+								 {
+									 Logger.WriteEvent(
+											 "Error from dictionary services, RegisterClient: " +
+											 e.Message);
+									 Debug.Fail(e.Message);
+								 }
+							 });
 		}
 
 		public void DeregisterClient(int clientProcessId)
 		{
 			RunInSafeContext(delegate
-			 {
-				 try
-				 {
-					 Palaso.Reporting.Logger.WriteMinorEvent(
-						 "dictionary services deregistering client {0}", clientProcessId);
-					 Debug.Assert(_registeredClientProcessIds.Contains(clientProcessId),
-								  "Warning: clientProcessId was not in list of clients.");
-					 if (_registeredClientProcessIds.Contains(clientProcessId))
-					 {
-						 Palaso.Reporting.Logger.WriteMinorEvent(
-							 "Deregistering Service Client {0}", clientProcessId);
-						 _registeredClientProcessIds.Remove(clientProcessId);
-					 }
-					 if (_registeredClientProcessIds.Count == 0 &&
-						 LastClientDeregistered != null)
-					 {
-						 LastClientDeregistered.Invoke(this, null);
-					 }
-				 }
-				 catch (Exception e)
-				 {
-					 Palaso.Reporting.Logger.WriteEvent(
-						 "Error from dictionary services, DeregisterClient: " +
-						 e.Message);
-					 Debug.Fail(e.Message);
-				 }
-			 });
+							 {
+								 try
+								 {
+									 Logger.WriteMinorEvent(
+											 "dictionary services deregistering client {0}",
+											 clientProcessId);
+									 Debug.Assert(
+											 _registeredClientProcessIds.Contains(clientProcessId),
+											 "Warning: clientProcessId was not in list of clients.");
+									 if (_registeredClientProcessIds.Contains(clientProcessId))
+									 {
+										 Logger.WriteMinorEvent("Deregistering Service Client {0}",
+																clientProcessId);
+										 _registeredClientProcessIds.Remove(clientProcessId);
+									 }
+									 if (_registeredClientProcessIds.Count == 0 &&
+										 LastClientDeregistered != null)
+									 {
+										 LastClientDeregistered.Invoke(this, null);
+									 }
+								 }
+								 catch (Exception e)
+								 {
+									 Logger.WriteEvent(
+											 "Error from dictionary services, DeregisterClient: " +
+											 e.Message);
+									 Debug.Fail(e.Message);
+								 }
+							 });
 		}
 
 		public void JumpToEntry(string entryId)
@@ -223,62 +232,89 @@ namespace WeSay.App
 		/// Add a new entry to the lexicon
 		/// </summary>
 		/// <returns>the id that was assigned to the new entry</returns>
-		public string AddEntry(string lexemeFormWritingSystemId, string lexemeForm, string definitionWritingSystemId,
-							   string definition, string exampleWritingSystemId, string example)
+		public string AddEntry(string lexemeFormWritingSystemId,
+							   string lexemeForm,
+							   string definitionWritingSystemId,
+							   string definition,
+							   string exampleWritingSystemId,
+							   string example)
 		{
 			if (UiSynchronizationContext != null)
 			{
-				string result=string.Empty;
+				string result = string.Empty;
 				UiSynchronizationContext.Send(
-					delegate
+						delegate
 						{
-							result = AddEntryCore(lexemeFormWritingSystemId, lexemeForm, definitionWritingSystemId,
-												definition, exampleWritingSystemId, example);
-						},null);
+							result = AddEntryCore(lexemeFormWritingSystemId,
+												  lexemeForm,
+												  definitionWritingSystemId,
+												  definition,
+												  exampleWritingSystemId,
+												  example);
+						},
+						null);
 				return result;
 			}
 			else
 			{
-				return AddEntryCore(lexemeFormWritingSystemId, lexemeForm, definitionWritingSystemId,
-							 definition, exampleWritingSystemId, example);
+				return AddEntryCore(lexemeFormWritingSystemId,
+									lexemeForm,
+									definitionWritingSystemId,
+									definition,
+									exampleWritingSystemId,
+									example);
 			}
 		}
 
-		public string AddEntryCore(string lexemeFormWritingSystemId, string lexemeForm, string definitionWritingSystemId,
-							   string definition, string exampleWritingSystemId, string example)
+		public string AddEntryCore(string lexemeFormWritingSystemId,
+								   string lexemeForm,
+								   string definitionWritingSystemId,
+								   string definition,
+								   string exampleWritingSystemId,
+								   string example)
 		{
-			if (string.IsNullOrEmpty(lexemeForm ))
+			if (string.IsNullOrEmpty(lexemeForm))
 			{
-				Palaso.Reporting.Logger.WriteEvent("Dictionary Services AddEntry() called with Empty lexemeform");
+				Logger.WriteEvent("Dictionary Services AddEntry() called with Empty lexemeform");
 				return null;
 			}
-			if( !CheckWritingSystemAndContentsPair(lexemeFormWritingSystemId, lexemeForm))
+			if (!CheckWritingSystemAndContentsPair(lexemeFormWritingSystemId, lexemeForm))
+			{
 				return null;
-			 if( !CheckWritingSystemAndContentsPair(definitionWritingSystemId, definition))
+			}
+			if (!CheckWritingSystemAndContentsPair(definitionWritingSystemId, definition))
+			{
 				return null;
-		   if( !CheckWritingSystemAndContentsPair(exampleWritingSystemId, example))
+			}
+			if (!CheckWritingSystemAndContentsPair(exampleWritingSystemId, example))
+			{
 				return null;
+			}
 
-			Palaso.Reporting.Logger.WriteEvent("dictionary services.AddEntry()");
+			Logger.WriteEvent("dictionary services.AddEntry()");
 
-			LexEntry e = Lexicon.AddNewEntry();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative(lexemeFormWritingSystemId, lexemeForm);
 
 			LexSense sense = null;
 			if (!string.IsNullOrEmpty(definition))
 			{
-				sense = (LexSense) e.Senses.AddNew();
+				sense = new LexSense();
+				e.Senses.Add(sense);
 				sense.Definition.SetAlternative(definitionWritingSystemId, definition);
 			}
 			if (!string.IsNullOrEmpty(example))
 			{
 				if (sense == null)
 				{
-					sense = (LexSense) e.Senses.AddNew();
+					sense = new LexSense();
+					e.Senses.Add(sense);
 				}
-				LexExampleSentence ex= (LexExampleSentence) sense.ExampleSentences.AddNew();
+				LexExampleSentence ex = new LexExampleSentence();
+				sense.ExampleSentences.Add(ex);
 				ex.Sentence.SetAlternative(exampleWritingSystemId, example);
 			}
+			_lexEntryRepository.SaveItem(e);
 			return e.Id;
 		}
 
@@ -288,7 +324,8 @@ namespace WeSay.App
 			{
 				if (!_project.WritingSystems.ContainsKey(writingSystemId))
 				{
-					Palaso.Reporting.Logger.WriteEvent("Dictionary Services given unknown writing system id: '{0}'", writingSystemId);
+					Logger.WriteEvent("Dictionary Services given unknown writing system id: '{0}'",
+									  writingSystemId);
 					return false;
 				}
 			}
@@ -299,12 +336,12 @@ namespace WeSay.App
 		{
 			return _app.CurrentUrl;
 		}
+
 		private void RunInSafeContext(SendOrPostCallback core)
 		{
 			if (UiSynchronizationContext != null)
 			{
-				UiSynchronizationContext.Send(
-					core, null);
+				UiSynchronizationContext.Send(core, null);
 			}
 			else
 			{
@@ -315,18 +352,22 @@ namespace WeSay.App
 		public void ShowUIWithUrl(string url)
 		{
 			RunInSafeContext(delegate
+							 {
+								 try
 								 {
-									 try
-									 {
-										 Palaso.Reporting.Logger.WriteMinorEvent("dictionary services ShowUIWithUrl({0})", url);
-										 _app.GoToUrl(url);
-									 }
-									 catch (Exception e)
-									 {
-										 Palaso.Reporting.Logger.WriteEvent("Error from dictionary services, ShowUIWithUrl{0}: {1}", url, e.Message);
-										 //url navigation errors are handled/reported at the point of failure
-									 }
-								 });
+									 Logger.WriteMinorEvent(
+											 "dictionary services ShowUIWithUrl({0})", url);
+									 _app.GoToUrl(url);
+								 }
+								 catch (Exception e)
+								 {
+									 Logger.WriteEvent(
+											 "Error from dictionary services, ShowUIWithUrl{0}: {1}",
+											 url,
+											 e.Message);
+									 //url navigation errors are handled/reported at the point of failure
+								 }
+							 });
 		}
 
 		public bool IsInServerMode()
@@ -334,7 +375,7 @@ namespace WeSay.App
 			return _app.IsInServerMode;
 		}
 
-	   /*worked fine, but trimmed from the service until need is demonstrated
+		/*worked fine, but trimmed from the service until need is demonstrated
 		* public string[] GetFormsFromIds(string writingSytemId, string[] ids)
 		{
 			if (string.IsNullOrEmpty(writingSytemId))
@@ -359,15 +400,11 @@ namespace WeSay.App
 			return forms.ToArray();
 		}*/
 
-
 		#endregion
 
 		#region IDisposable Members
 
-		public void Dispose()
-		{
-
-		}
+		public void Dispose() {}
 
 		#endregion
 

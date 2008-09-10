@@ -1,22 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
 namespace WeSay.Foundation.Tests
 {
-	class TestClass : WeSayDataObject
+	internal class TestClass: WeSayDataObject
 	{
-		public TestClass(WeSayDataObject parent) : base(parent)
-		{
-		}
+		public TestClass(WeSayDataObject parent): base(parent) {}
 
 		public override bool IsEmpty
 		{
 			get { throw new NotImplementedException(); }
 		}
-
-
 	}
 
 	[TestFixture]

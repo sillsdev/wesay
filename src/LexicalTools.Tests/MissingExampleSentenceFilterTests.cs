@@ -1,131 +1,147 @@
-using System.Collections.Generic;
 using NUnit.Framework;
 using WeSay.LexicalModel;
-using WeSay.LexicalTools;
-using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
 	public class MissingExampleSentenceFilterTests
 	{
-		private MissingItemFilter _missingExampleSentenceFilter;
+		private MissingFieldQuery _missingExampleSentenceFilter;
 		//private string kNameOfSkipTrait = "flag_skip_LexExampleSentence";
 
 		[SetUp]
-	public void Setup()
+		public void Setup()
 		{
-			Field field = new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", new string[] { "vernacular" });
-			this._missingExampleSentenceFilter = new MissingItemFilter(field);
+			Field field = new Field(Field.FieldNames.ExampleSentence.ToString(),
+									"LexExampleSentence",
+									new string[] {"vernacular"});
+			_missingExampleSentenceFilter = new MissingFieldQuery(field);
+		}
+
+		private static LexEntry CreateEmptyEntryWithOneExampleSentence()
+		{
+			LexEntry entry = new LexEntry();
+
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
+			LexExampleSentence example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
+			return entry;
 		}
 
 		[Test]
 		public void SenseExampleSentenceHasVernacularWritingSystem()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyEntryWithOneExampleSentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			example.Sentence["vernacular"] = "filler";
 
-			Assert.AreEqual(false, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+			Assert.AreEqual(false, _missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void NoSenses()
 		{
 			LexEntry entry = new LexEntry();
-			Assert.AreEqual(false, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+			Assert.AreEqual(false, _missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void NoExamples()
 		{
 			LexEntry entry = new LexEntry();
-			entry.Senses.AddNew();
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+			entry.Senses.Add(new LexSense());
+			Assert.AreEqual(true, _missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
-//        [Test]
-//        public void NoExamplesButHasSkipFlag()
-//        {
-//            LexEntry entry = new LexEntry();
-//            LexSense sense = (LexSense) entry.Senses.AddNew();
-//            sense.Properties.Add(new KeyValuePair<string, object>(kNameOfSkipTrait, true));
-//
-//            Assert.AreEqual(false, this._missingExampleSentenceFilter.FilteringPredicate(entry));
-//        }
+		//        [Test]
+		//        public void NoExamplesButHasSkipFlag()
+		//        {
+		//            LexEntry entry = new LexEntry();
+		//            LexSense sense = (LexSense) entry.Senses.AddNew();
+		//            sense.Properties.Add(new KeyValuePair<string, object>(kNameOfSkipTrait, true));
+		//
+		//            Assert.AreEqual(false, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+		//        }
 
 		[Test]
 		public void SenseExampleSentenceNoWritingSystems()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense)entry.Senses.AddNew();
-			sense.ExampleSentences.AddNew();
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+			LexEntry entry = CreateEmptyEntryWithOneExampleSentence();
+
+			Assert.AreEqual(true, _missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void SenseExampleSentenceWritingSystemNoVernacular()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense)entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyEntryWithOneExampleSentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			example.Sentence["analysis"] = "filler";
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+			Assert.AreEqual(true, _missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void OneSenseExampleSentenceWithOneWithoutWritingSystems()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense)entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyEntryWithOneExampleSentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			example.Sentence["vernacular"] = "filler";
 
-			sense = (LexSense)entry.Senses.AddNew();
-			sense.ExampleSentences.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
+			example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
 
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+			Assert.AreEqual(true, _missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void OneSenseExampleSentenceWritingSystemWithOneWithoutAnalysis()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense)entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyEntryWithOneExampleSentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			example.Sentence["vernacular"] = "filler";
 
-			sense = (LexSense)entry.Senses.AddNew();
-			example = (LexExampleSentence)sense.ExampleSentences.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
+			example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
 			example.Sentence["analysis"] = "filler";
 
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+			Assert.AreEqual(true, _missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void SenseOneExampleSentenceWithOneWithoutWritingSystems()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense)entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyEntryWithOneExampleSentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			example.Sentence["vernacular"] = "filler";
-			sense.ExampleSentences.AddNew();
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+
+			example = new LexExampleSentence();
+			entry.Senses[0].ExampleSentences.Add(example);
+			Assert.AreEqual(true, _missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void SenseOneExampleSentenceWritingSystemWithOneWithoutVernacular()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense)entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyEntryWithOneExampleSentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			example.Sentence["vernacular"] = "filler";
 
-			example = (LexExampleSentence)sense.ExampleSentences.AddNew();
+			example = new LexExampleSentence();
+			entry.Senses[0].ExampleSentences.Add(example);
 			example.Sentence["analysis"] = "filler";
 
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+			Assert.AreEqual(true, _missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 	}
 }

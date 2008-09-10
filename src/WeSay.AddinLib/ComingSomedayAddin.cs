@@ -1,18 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+using WeSay.Foundation;
 
 namespace WeSay.AddinLib
 {
 	//nb: not really an addin that is discoverable.
-	public class ComingSomedayAddin :IWeSayAddin
+	public class ComingSomedayAddin: IWeSayAddin
 	{
-		private string _name;
-		private string _longName;
-		private string _shortDescription;
-		private readonly Image _buttonImage=null;
+		private readonly string _name;
+		private readonly string _longName;
+		private readonly string _shortDescription;
+		private readonly Image _buttonImage;
 
 		public ComingSomedayAddin(string name, string longName, string shortDescription)
 		{
@@ -21,7 +20,10 @@ namespace WeSay.AddinLib
 			_shortDescription = shortDescription;
 		}
 
-		public ComingSomedayAddin(string name, string longName, string shortDescription, Image buttonImage)
+		public ComingSomedayAddin(string name,
+								  string longName,
+								  string shortDescription,
+								  Image buttonImage)
 		{
 			_name = name;
 			_longName = longName;
@@ -31,76 +33,50 @@ namespace WeSay.AddinLib
 
 		public Image ButtonImage
 		{
-			get
-			{
-				return _buttonImage;
-			}
+			get { return _buttonImage; }
 		}
 
 		public bool Available
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
-
-
 
 		public string LocalizedName
 		{
-			get
-			{
-				return _name;
-			}
+			get { return _name; }
 		}
 
 		public string Description
 		{
-			get
-			{
-				return /*"Coming Someday: "+*/_shortDescription;
-			}
+			get { return /*"Coming Someday: "+*/ _shortDescription; }
 		}
 
 		#region IWeSayAddin Members
 
 		public object SettingsToPersist
 		{
-			get
-			{
-				return null;
-			}
-			set
-			{
-
-			}
+			get { return null; }
+			set { throw new NotImplementedException(); }
 		}
 
 		public string ID
 		{
-			get
-			{
-				return _name;
-			}
-			set
-			{
-				throw new NotImplementedException();
-			}
+			get { return _name; }
+			set { throw new NotImplementedException(); }
 		}
 
 		#endregion
 
 		#region IThingOnDashboard Members
 
-		public WeSay.Foundation.Dashboard.DashboardGroup Group
+		public DashboardGroup Group
 		{
-			get { return WeSay.Foundation.Dashboard.DashboardGroup.Share; }
+			get { return DashboardGroup.Share; }
 		}
 
 		public string LocalizedLabel
 		{
-			get { return this.LocalizedName; }
+			get { return LocalizedName; }
 		}
 
 		public string LocalizedLongLabel
@@ -108,9 +84,9 @@ namespace WeSay.AddinLib
 			get { return _longName; }
 		}
 
-		public WeSay.Foundation.Dashboard.ButtonStyle DashboardButtonStyle
+		public ButtonStyle DashboardButtonStyle
 		{
-			get { return WeSay.Foundation.Dashboard.ButtonStyle.IconVariableWidth; }
+			get { return ButtonStyle.IconVariableWidth; }
 		}
 
 		public Image DashboardButtonImage
@@ -120,8 +96,6 @@ namespace WeSay.AddinLib
 
 		#endregion
 
-		public void Launch(Form parentForm, ProjectInfo projectInfo)
-		{
-		}
+		public void Launch(Form parentForm, ProjectInfo projectInfo) {}
 	}
 }

@@ -1,35 +1,29 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
+using Db4objects.Db4o;
 
 namespace WeSay.Data.Tests
 {
 	public class ChildTestItem
 	{
-		int _storedInt;
-		string _storedString;
-		DateTime _storedDateTime;
-		ChildTestItem _testItem;
-		public ChildTestItem()
-		{
-		}
+		private int _storedInt;
+		private string _storedString;
+		private DateTime _storedDateTime;
+		private ChildTestItem _testItem;
+		public ChildTestItem() {}
+
 		public ChildTestItem(string s, int i, DateTime d)
 		{
 			_storedInt = i;
 			_storedString = s;
 			_storedDateTime = d;
 		}
+
 		public ChildTestItem Child
 		{
-			get
-			{
-				return _testItem;
-			}
-			set
-			{
-				_testItem = value;
-			}
+			get { return _testItem; }
+			set { _testItem = value; }
 		}
 
 		public int Depth
@@ -37,7 +31,7 @@ namespace WeSay.Data.Tests
 			get
 			{
 				int depth = 1;
-				ChildTestItem item = this.Child;
+				ChildTestItem item = Child;
 				while (item != null)
 				{
 					++depth;
@@ -47,45 +41,54 @@ namespace WeSay.Data.Tests
 			}
 		}
 
+		public int StoredInt
+		{
+			get { return _storedInt; }
+			set { _storedInt = value; }
+		}
+
+		public string StoredString
+		{
+			get { return _storedString; }
+			set { _storedString = value; }
+		}
+
+		public DateTime StoredDateTime
+		{
+			get { return _storedDateTime; }
+			set { _storedDateTime = value; }
+		}
 	}
-	public class TestItem : INotifyPropertyChanged
+
+	public class TestItem: INotifyPropertyChanged
 	{
-		int _storedInt;
-		string _storedString;
-		DateTime _storedDateTime;
-		ChildTestItem _childTestItem;
-		int _onActivateDepth;
+		private int _storedInt;
+		private string _storedString;
+		private DateTime _storedDateTime;
+		private ChildTestItem _childTestItem;
+		private int _onActivateDepth;
 		private List<string> _storedList;
 
-		List<ChildTestItem> _childTestItems;
+		private List<ChildTestItem> _childItemList;
 
-		public List<ChildTestItem> Children
+		public List<ChildTestItem> ChildItemList
 		{
-			get
-			{
-				return _childTestItems;
-			}
+			get { return _childItemList; }
 			set
 			{
-				_childTestItems = value;
+				_childItemList = value;
 				OnPropertyChanged(new PropertyChangedEventArgs("Children"));
 			}
 		}
 
 		public int OnActivateDepth
 		{
-			get
-			{
-				return _onActivateDepth;
-			}
-		 }
+			get { return _onActivateDepth; }
+		}
 
 		public ChildTestItem Child
 		{
-			get
-			{
-				return _childTestItem;
-			}
+			get { return _childTestItem; }
 			set
 			{
 				_childTestItem = value;
@@ -93,18 +96,17 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-		public void ObjectOnActivate(Db4objects.Db4o.IObjectContainer container)
+		public void ObjectOnActivate(IObjectContainer container)
 		{
 			_onActivateDepth = Depth;
 		}
-
 
 		public int Depth
 		{
 			get
 			{
 				int depth = 1;
-				ChildTestItem item = this.Child;
+				ChildTestItem item = Child;
 				while (item != null)
 				{
 					++depth;
@@ -114,10 +116,10 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-
-
 		public TestItem()
 		{
+			_storedDateTime = PreciseDateTime.UtcNow;
+			_childTestItem = new ChildTestItem();
 		}
 
 		public TestItem(string s, int i, DateTime d)
@@ -129,7 +131,7 @@ namespace WeSay.Data.Tests
 
 		public override string ToString()
 		{
-			return StoredInt.ToString() + ". " + StoredString + " " + StoredDateTime.ToString();
+			return StoredInt + ". " + StoredString + " " + StoredDateTime;
 		}
 
 		public override bool Equals(object obj)
@@ -154,27 +156,18 @@ namespace WeSay.Data.Tests
 				return false;
 			}
 
-			return (_storedInt == item._storedInt) &&
-				(_storedString == item._storedString) &&
-				(_storedDateTime == item._storedDateTime);
-		}
-
-		public override int GetHashCode()
-		{
-			return _storedInt ^ _storedString.GetHashCode() ^ _storedDateTime.GetHashCode();
+			return (_storedInt == item._storedInt) && (_storedString == item._storedString) &&
+				   (_storedDateTime == item._storedDateTime);
 		}
 
 		public int StoredInt
 		{
-			get
-			{
-				return this._storedInt;
-			}
+			get { return _storedInt; }
 			set
 			{
-				if (this._storedInt != value)
+				if (_storedInt != value)
 				{
-					this._storedInt = value;
+					_storedInt = value;
 					OnPropertyChanged(new PropertyChangedEventArgs("StoredInt"));
 				}
 			}
@@ -182,15 +175,12 @@ namespace WeSay.Data.Tests
 
 		public string StoredString
 		{
-			get
-			{
-				return this._storedString;
-			}
+			get { return _storedString; }
 			set
 			{
-				if (this._storedString != value)
+				if (_storedString != value)
 				{
-					this._storedString = value;
+					_storedString = value;
 					OnPropertyChanged(new PropertyChangedEventArgs("StoredString"));
 				}
 			}
@@ -198,15 +188,12 @@ namespace WeSay.Data.Tests
 
 		public DateTime StoredDateTime
 		{
-			get
-			{
-				return this._storedDateTime;
-			}
+			get { return _storedDateTime; }
 			set
 			{
-				if (this._storedDateTime != value)
+				if (_storedDateTime != value)
 				{
-					this._storedDateTime = value;
+					_storedDateTime = value;
 					OnPropertyChanged(new PropertyChangedEventArgs("StoredDateTime"));
 				}
 			}
@@ -214,25 +201,26 @@ namespace WeSay.Data.Tests
 
 		public List<string> StoredList
 		{
-			get { return this._storedList; }
-			set { this._storedList = value;
-					OnPropertyChanged(new PropertyChangedEventArgs("StoredList"));
-				}
+			get { return _storedList; }
+			set
+			{
+				_storedList = value;
+				OnPropertyChanged(new PropertyChangedEventArgs("StoredList"));
+			}
 		}
 
 		#region INotifyPropertyChanged Members
 
 		public event PropertyChangedEventHandler PropertyChanged;
+
 		protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
 		{
-			if (this.PropertyChanged != null)
+			if (PropertyChanged != null)
 			{
-				this.PropertyChanged(this, e);
+				PropertyChanged(this, e);
 			}
-
 		}
 
 		#endregion
 	}
-
 }

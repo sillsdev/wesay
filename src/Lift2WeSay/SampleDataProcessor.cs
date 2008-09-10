@@ -5,12 +5,12 @@ using System.Threading;
 using Palaso.Progress;
 using WeSay.Project;
 
-namespace WeSay.SampleDataProcessor
+namespace SampleDataProcessor
 {
-	class SampleDataProcessor
+	internal class SampleDataProcessor
 	{
 		[STAThread]
-		static int Main(string[] args)
+		private static int Main(string[] args)
 		{
 			if (args.Length != 1)
 			{
@@ -24,17 +24,17 @@ namespace WeSay.SampleDataProcessor
 				return 1;
 			}
 
-			Console.WriteLine("SampleDataProcessor is processing "+ sourcePath);
-
+			Console.WriteLine("SampleDataProcessor is processing " + sourcePath);
 
 			ConsoleProgress progress = new ConsoleProgress();
-			progress.Log += new EventHandler<ProgressState.LogEvent>(progress_Log);
+			progress.Log += progress_Log;
 
 			new WeSayWordsProject();
 			WeSayWordsProject.Project.LoadFromLiftLexiconPath(sourcePath);
-			CacheBuilder builder = new CacheBuilder(sourcePath);
+			//todo this should be re-implemented if needed with SynchronicRepository
+			//CacheBuilder builder = new CacheBuilder(sourcePath);
 			BackgroundWorker cacheBuildingWork = new BackgroundWorker();
-			cacheBuildingWork.DoWork += new DoWorkEventHandler(builder.OnDoWork);
+			//cacheBuildingWork.DoWork += builder.OnDoWork;
 			cacheBuildingWork.RunWorkerAsync(progress);
 			while (true)
 			{
@@ -59,10 +59,10 @@ namespace WeSay.SampleDataProcessor
 			}
 		}
 
-		static void progress_Log(object sender, ProgressState.LogEvent e)
-	  {
-		Console.Error.WriteLine(e.message);
-	  }
+		private static void progress_Log(object sender, ProgressState.LogEvent e)
+		{
+			Console.Error.WriteLine(e.message);
+		}
 
 		private static void PrintUsage()
 		{

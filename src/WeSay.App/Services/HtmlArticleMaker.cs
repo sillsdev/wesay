@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -13,8 +11,9 @@ namespace WeSay.App.Services
 	/// </summary>
 	public class HtmlArticleMaker
 	{
-		XslCompiledTransform _transformer;
-		private XsltArgumentList _tranformArguments;
+		private readonly XslCompiledTransform _transformer;
+		private readonly XsltArgumentList _tranformArguments;
+
 		public HtmlArticleMaker(string pathToWritingSystemPrefs, string pathToPartsOfSpeech)
 		{
 			_transformer = new XslCompiledTransform();
@@ -31,14 +30,19 @@ namespace WeSay.App.Services
 			}
 
 			_tranformArguments = new XsltArgumentList();
-			_tranformArguments.AddParam("writing-system-info-file", string.Empty, pathToWritingSystemPrefs);
-			_tranformArguments.AddParam("grammatical-info-optionslist-file", string.Empty, pathToPartsOfSpeech);
-
+			_tranformArguments.AddParam("writing-system-info-file",
+										string.Empty,
+										pathToWritingSystemPrefs);
+			_tranformArguments.AddParam("grammatical-info-optionslist-file",
+										string.Empty,
+										pathToPartsOfSpeech);
 		}
 
 		private static Stream GetXsltStream()
 		{
-			return Assembly.GetExecutingAssembly().GetManifestResourceStream("WeSay.App.plift2html.xsl");
+			return
+					Assembly.GetExecutingAssembly().GetManifestResourceStream(
+							"WeSay.App.plift2html.xsl");
 		}
 
 		public string GetHtmlFragment(string entryXml)

@@ -7,35 +7,37 @@ using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
-using WeSay.Data;
-using WeSay.Foundation.Dashboard;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.CommonTools
 {
-	public partial class Dash : UserControl, ITask, IFinishCacheSetup
+	public partial class Dash: UserControl, ITask, IFinishCacheSetup
 	{
-		private const double GoldRatio = 4.0; // arbitrary ratio we think looks the best for button sizes
+		private const double GoldRatio = 4.0;
+		// arbitrary ratio we think looks the best for button sizes
+
 		private DictionaryStatusControl _title;
-		private readonly IRecordListManager _recordListManager;
+		private readonly LexEntryRepository _lexEntryRepository;
 		private IList<IThingOnDashboard> _thingsToMakeButtonsFor;
 		private List<ButtonGroup> _buttonGroups;
-		private bool _isActive = false;
+		private bool _isActive;
 		private readonly ICurrentWorkTask _currentWorkTaskProvider;
 		private int _oldFlowWidth;
 		private List<Size> _smallestPossibleButtonSizes;
 		private Size _bestButtonSize;
-		private bool _addedAllButtons = false;
-		private const TextFormatFlags ToolTipFormatFlags = TextFormatFlags.WordBreak |
-														   TextFormatFlags.NoFullWidthCharacterBreak |
-														   TextFormatFlags.LeftAndRightPadding;
+		private bool _addedAllButtons;
 
-		public Dash(IRecordListManager RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
+		private const TextFormatFlags ToolTipFormatFlags =
+				TextFormatFlags.WordBreak | TextFormatFlags.NoFullWidthCharacterBreak |
+				TextFormatFlags.LeftAndRightPadding;
+
+		public Dash(LexEntryRepository RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
 		{
 			_oldFlowWidth = 0;
-			_recordListManager = RecordListManager;
+			_lexEntryRepository = RecordListManager;
 			_currentWorkTaskProvider = currentWorkTaskProvider;
 			InitializeContextMenu();
 			Initialize();
@@ -60,8 +62,9 @@ namespace WeSay.CommonTools
 		{
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo =
-				new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"),
-									 string.Format("\"{0}\"", WeSayWordsProject.Project.PathToConfigFile));
+					new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"),
+										 string.Format("\"{0}\"",
+													   WeSayWordsProject.Project.PathToConfigFile));
 			try
 			{
 				Process.Start(startInfo);
@@ -77,7 +80,7 @@ namespace WeSay.CommonTools
 
 		private void AddItemsToFlow()
 		{
-			_title = new DictionaryStatusControl(_recordListManager.GetListOfType<LexEntry>());
+			_title = new DictionaryStatusControl(_lexEntryRepository.CountAllItems());
 			_title.Font = new Font("Arial", 14);
 			_title.BackColor = Color.Transparent;
 			_title.ShowLogo = true;
@@ -104,7 +107,9 @@ namespace WeSay.CommonTools
 			foreach (IThingOnDashboard item in ThingsToMakeButtonsFor)
 			{
 				if (item == this)
+				{
 					continue;
+				}
 				if (item.Group == buttonGroup.Group)
 				{
 					buttonFlow.Controls.Add(MakeButton(item, buttonGroup));
@@ -144,7 +149,7 @@ namespace WeSay.CommonTools
 			return button;
 		}
 
-		void ButtonSizeChanged(object sender, EventArgs e)
+		private void ButtonSizeChanged(object sender, EventArgs e)
 		{
 			// Buttons were being slightly resized when you went to another tab and came back during the
 			// call to add the Dash control to the tab page.  The change appears to be from something in
@@ -173,7 +178,8 @@ namespace WeSay.CommonTools
 
 					try
 					{
-						ProjectInfo projectInfo = WeSayWordsProject.Project.GetProjectInfoForAddin();
+						ProjectInfo projectInfo =
+								WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository);
 						addin.Launch(ParentForm, projectInfo);
 					}
 					catch (Exception error)
@@ -185,7 +191,6 @@ namespace WeSay.CommonTools
 				}
 			}
 		}
-
 
 		public DashboardButton MakeButton(IThingOnDashboard item)
 		{
@@ -214,7 +219,8 @@ namespace WeSay.CommonTools
 				{
 					continue;
 				}
-				buttonGroup.MaximumSize = new Size(_flow.Width - buttonGroup.Margin.Left - buttonGroup.Margin.Right, 0);
+				buttonGroup.MaximumSize =
+						new Size(_flow.Width - buttonGroup.Margin.Left - buttonGroup.Margin.Right, 0);
 			}
 			_flow.Height = _flow.GetPreferredSize(new Size(_flow.Width, 0)).Height;
 			_flow.ResumeLayout();
@@ -282,17 +288,18 @@ namespace WeSay.CommonTools
 			{
 				if (_smallestPossibleButtonSizes == null && _addedAllButtons)
 				{
-					_smallestPossibleButtonSizes = ComputeSmallestPossibleButtonSizes(GetAllPossibleButtonSizes());
+					_smallestPossibleButtonSizes =
+							ComputeSmallestPossibleButtonSizes(GetAllPossibleButtonSizes());
 				}
 				return _smallestPossibleButtonSizes;
 			}
 		}
 
 		internal static List<Size> ComputeSmallestPossibleButtonSizes(
-			IEnumerable<IEnumerable<Size>> possibleSizesOfButtons)
+				IEnumerable<IEnumerable<Size>> possibleSizesOfButtons)
 		{
 			List<Size> result = new List<Size>();
-			Debug.Assert(possibleSizesOfButtons != null);   // per contract
+			Debug.Assert(possibleSizesOfButtons != null); // per contract
 			foreach (IEnumerable<Size> possibleSizesFor1Button in possibleSizesOfButtons)
 			{
 				result = MergeButtonSizes(result, possibleSizesFor1Button);
@@ -301,7 +308,8 @@ namespace WeSay.CommonTools
 			return result;
 		}
 
-		private static List<Size> MergeButtonSizes(IEnumerable<Size> sizeList1, IEnumerable<Size> sizeList2)
+		private static List<Size> MergeButtonSizes(IEnumerable<Size> sizeList1,
+												   IEnumerable<Size> sizeList2)
 		{
 			List<Size> result;
 			if (sizeList1 == null && sizeList2 == null)
@@ -326,19 +334,24 @@ namespace WeSay.CommonTools
 			return result;
 		}
 
+		private delegate bool EqualityComparison<T>(T x, T y);
+
 		private static void RemoveDuplicateHeights(List<Size> result)
 		{
-			RemoveDuplicates(result, CompareSizesByHeightThenWidth,
+			RemoveDuplicates(result,
+							 CompareSizesByHeightThenWidth,
 							 delegate(Size x, Size y) { return x.Height.Equals(y.Height); });
 		}
 
 		private static void RemoveDuplicateWidths(List<Size> result)
 		{
-			RemoveDuplicates(result, CompareSizesByWidthThenHeight,
+			RemoveDuplicates(result,
+							 CompareSizesByWidthThenHeight,
 							 delegate(Size x, Size y) { return x.Width.Equals(y.Width); });
 		}
 
-		private static void RemoveDuplicates(List<Size> result, Comparison<Size> sortComparer,
+		private static void RemoveDuplicates(List<Size> result,
+											 Comparison<Size> sortComparer,
 											 EqualityComparison<Size> equalComparer)
 		{
 			Size prevSize = new Size(int.MaxValue, int.MaxValue);
@@ -358,12 +371,13 @@ namespace WeSay.CommonTools
 			}
 		}
 
-		private static List<Size> CombineButtonSizes(IEnumerable<Size> sizeList1, IEnumerable<Size> sizeList2)
+		private static List<Size> CombineButtonSizes(IEnumerable<Size> sizeList1,
+													 IEnumerable<Size> sizeList2)
 		{
 			Debug.Assert(sizeList1 != null);
 			Debug.Assert(sizeList2 != null);
 			Debug.Assert(sizeList1.GetEnumerator().MoveNext());
-				// per contract: both lists must contain at least one value
+			// per contract: both lists must contain at least one value
 			Debug.Assert(sizeList2.GetEnumerator().MoveNext());
 			List<Size> result = new List<Size>();
 
@@ -372,8 +386,8 @@ namespace WeSay.CommonTools
 			{
 				foreach (Size size2 in sizeList2)
 				{
-					result.Add(
-						new Size(Math.Max(size1.Width, size2.Width), Math.Max(size1.Height, size2.Height)));
+					result.Add(new Size(Math.Max(size1.Width, size2.Width),
+										Math.Max(size1.Height, size2.Height)));
 				}
 			}
 			Debug.Assert(result.Count != 0); // per contract
@@ -386,7 +400,8 @@ namespace WeSay.CommonTools
 			{
 				return new List<int>();
 			}
-			Dictionary<DashboardGroup, int> buttonsPerGroup = new Dictionary<DashboardGroup, int>(_buttonGroups.Count);
+			Dictionary<DashboardGroup, int> buttonsPerGroup =
+					new Dictionary<DashboardGroup, int>(_buttonGroups.Count);
 			foreach (ButtonGroup group in _buttonGroups)
 			{
 				buttonsPerGroup.Add(group.Group, 0);
@@ -394,7 +409,9 @@ namespace WeSay.CommonTools
 			foreach (IThingOnDashboard item in ThingsToMakeButtonsFor)
 			{
 				if (item == this)
+				{
 					continue;
+				}
 				if (buttonsPerGroup.ContainsKey(item.Group))
 				{
 					++buttonsPerGroup[item.Group];
@@ -404,40 +421,47 @@ namespace WeSay.CommonTools
 			foreach (KeyValuePair<DashboardGroup, int> pair in buttonsPerGroup)
 			{
 				if (pair.Value > 0)
+				{
 					buttonsPerGroupList.Add(pair.Value);
+				}
 			}
 			return buttonsPerGroupList;
 		}
 
 		private Size GetBestButtonSize()
 		{
-			return
-				ComputeBestButtonSize(SmallestPossibleButtonSizes, GetAvailableSpaceForButtons(), GetButtonsPerGroup());
+			return ComputeBestButtonSize(SmallestPossibleButtonSizes,
+										 GetAvailableSpaceForButtons(),
+										 GetButtonsPerGroup());
 		}
 
-		internal static Size ComputeBestButtonSize(List<Size> smallestPossibleSizes, Size availableSpaceForButtons, IEnumerable<int> buttonsPerGroup)
+		internal static Size ComputeBestButtonSize(List<Size> smallestPossibleSizes,
+												   Size availableSpaceForButtons,
+												   IEnumerable<int> buttonsPerGroup)
 		{
 			if (smallestPossibleSizes == null || smallestPossibleSizes.Count == 0)
 			{
 				return Size.Empty;
 			}
 
-			List<Size> result = RemoveClippedButtonSizes(smallestPossibleSizes, availableSpaceForButtons.Width);
+			List<Size> result = RemoveClippedButtonSizes(smallestPossibleSizes,
+														 availableSpaceForButtons.Width);
 			result = RemoveScrolledButtonSizes(result, availableSpaceForButtons, buttonsPerGroup);
 			return GetBestSizeBasedOnRatio(result, GoldRatio);
 		}
 
-		private static Size GetBestSizeBasedOnRatio(IEnumerable<Size> possibleSizes, double targetRatio)
+		private static Size GetBestSizeBasedOnRatio(IEnumerable<Size> possibleSizes,
+													double targetRatio)
 		{
 			Debug.Assert(possibleSizes != null); // per contract
 			Debug.Assert(possibleSizes.GetEnumerator().MoveNext());
-				// contract: possibleSizes must contain at least one size
+			// contract: possibleSizes must contain at least one size
 
 			Size bestSize = Size.Empty;
 			double bestRatio = double.PositiveInfinity;
 			foreach (Size size in possibleSizes)
 			{
-				double ratio = (double) size.Width/size.Height;
+				double ratio = (double) size.Width / size.Height;
 				if (Math.Abs(ratio - targetRatio) <= Math.Abs(bestRatio - targetRatio))
 				{
 					bestRatio = ratio;
@@ -448,17 +472,21 @@ namespace WeSay.CommonTools
 			return bestSize;
 		}
 
-		private static List<Size> RemoveScrolledButtonSizes(IEnumerable<Size> possibleSizes, Size availableSpaceForButtons, IEnumerable<int> buttonsPerGroup)
+		private static List<Size> RemoveScrolledButtonSizes(IEnumerable<Size> possibleSizes,
+															Size availableSpaceForButtons,
+															IEnumerable<int> buttonsPerGroup)
 		{
 			Debug.Assert(possibleSizes != null); // per contract
 			Debug.Assert(possibleSizes.GetEnumerator().MoveNext());
-				// contract: possibleSizes must contain at least one size
+			// contract: possibleSizes must contain at least one size
 
 			List<Size> result = new List<Size>();
 			int smallestHeight = int.MaxValue;
 			foreach (Size size in possibleSizes)
 			{
-				int heightNeeded = CalculateHeightNeededForButtons(size, availableSpaceForButtons.Width, buttonsPerGroup);
+				int heightNeeded = CalculateHeightNeededForButtons(size,
+																   availableSpaceForButtons.Width,
+																   buttonsPerGroup);
 				// consider all heights that don't cause scroll as the same
 				heightNeeded = Math.Max(heightNeeded, availableSpaceForButtons.Height);
 				if (heightNeeded < smallestHeight)
@@ -477,22 +505,28 @@ namespace WeSay.CommonTools
 			return result;
 		}
 
-		private static int CalculateHeightNeededForButtons(Size size, int availableWidthForButtons, IEnumerable<int> buttonsPerGroup)
+		private static int CalculateHeightNeededForButtons(Size size,
+														   int availableWidthForButtons,
+														   IEnumerable<int> buttonsPerGroup)
 		{
 			const int widthBetweenButtons = 6; // default margin padding on controls
 			const int heightBetweenRows = 6;
-			int maxButtonsInRow = (int) Math.Floor((double) availableWidthForButtons/(size.Width + widthBetweenButtons));
+			int maxButtonsInRow =
+					(int)
+					Math.Floor((double) availableWidthForButtons /
+							   (size.Width + widthBetweenButtons));
 			maxButtonsInRow = Math.Max(maxButtonsInRow, 1); // always at least one button in a row
 			int heightNeeded = 0;
 			foreach (int buttonsInGroup in buttonsPerGroup)
 			{
-				int rowsNeeded = (int) Math.Ceiling((double) buttonsInGroup/maxButtonsInRow);
-				heightNeeded += rowsNeeded*(size.Height + heightBetweenRows);
+				int rowsNeeded = (int) Math.Ceiling((double) buttonsInGroup / maxButtonsInRow);
+				heightNeeded += rowsNeeded * (size.Height + heightBetweenRows);
 			}
 			return heightNeeded;
 		}
 
-		private static List<Size> RemoveClippedButtonSizes(IEnumerable<Size> possibleSizes, int availableWidthForButtons)
+		private static List<Size> RemoveClippedButtonSizes(IEnumerable<Size> possibleSizes,
+														   int availableWidthForButtons)
 		{
 			Debug.Assert(possibleSizes != null); // per contract
 			List<Size> sortedSizes = new List<Size>(possibleSizes);
@@ -520,7 +554,8 @@ namespace WeSay.CommonTools
 					}
 				}
 			}
-			Debug.Assert(workingSizes.Count > 0); // contract: returned list must have at least one member
+			Debug.Assert(workingSizes.Count > 0);
+			// contract: returned list must have at least one member
 			return workingSizes;
 		}
 
@@ -530,7 +565,8 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private Size GetAvailableSpaceForButtons()
 		{
-			Size sizeForButtons = new Size(_flow.ClientRectangle.Width, ClientRectangle.Height - _flow.Location.Y);
+			Size sizeForButtons = new Size(_flow.ClientRectangle.Width,
+										   ClientRectangle.Height - _flow.Location.Y);
 
 			foreach (Control control in _flow.Controls)
 			{
@@ -538,7 +574,8 @@ namespace WeSay.CommonTools
 				FlowLayoutPanel flow = control as FlowLayoutPanel;
 				if (flow != null)
 				{
-					sizeForButtons.Width = _flow.ClientRectangle.Width - flow.Margin.Left - flow.Margin.Right;
+					sizeForButtons.Width = _flow.ClientRectangle.Width - flow.Margin.Left -
+										   flow.Margin.Right;
 				}
 				else
 				{
@@ -584,7 +621,8 @@ namespace WeSay.CommonTools
 		{
 			if (IsActive)
 			{
-				throw new InvalidOperationException("Activate should not be called when object is active.");
+				throw new InvalidOperationException(
+						"Activate should not be called when object is active.");
 			}
 
 			SuspendLayout();
@@ -601,7 +639,6 @@ namespace WeSay.CommonTools
 				}
 			}
 
-
 			AddItemsToFlow();
 			ResumeLayout(true);
 			_isActive = true;
@@ -616,11 +653,14 @@ namespace WeSay.CommonTools
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Gather,
 											  Color.FromArgb(155, 187, 89),
 											  Color.FromArgb(195, 214, 155)));
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Describe, Color.FromArgb(85, 142, 213),
+			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Describe,
+											  Color.FromArgb(85, 142, 213),
 											  Color.FromArgb(185, 205, 229)));
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Refine, Color.FromArgb(250, 192, 144),
+			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Refine,
+											  Color.FromArgb(250, 192, 144),
 											  Color.FromArgb(252, 213, 181)));
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Share, Color.FromArgb(119, 147, 60),
+			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Share,
+											  Color.FromArgb(119, 147, 60),
 											  Color.White));
 		}
 
@@ -628,16 +668,15 @@ namespace WeSay.CommonTools
 		{
 			if (!IsActive)
 			{
-				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
+				throw new InvalidOperationException(
+						"Deactivate should only be called once after Activate.");
 			}
 			_toolTip.RemoveAll();
 			_flow.Controls.Clear();
 			_isActive = false;
 		}
 
-		public void GoToUrl(string url)
-		{
-		}
+		public void GoToUrl(string url) {}
 
 		public bool IsActive
 		{
@@ -648,9 +687,8 @@ namespace WeSay.CommonTools
 		{
 			get
 			{
-				return
-					StringCatalog.Get("~Home",
-									  "The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.");
+				return StringCatalog.Get("~Home",
+										 "The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.");
 			}
 		}
 
@@ -662,10 +700,6 @@ namespace WeSay.CommonTools
 		public bool MustBeActivatedDuringPreCache
 		{
 			get { return false; }
-		}
-
-		public void RegisterWithCache(ViewTemplate viewTemplate)
-		{
 		}
 
 		public Control Control
@@ -747,15 +781,19 @@ namespace WeSay.CommonTools
 				ResizeButtons();
 			}
 			if (_bestButtonSize == oldBestSize && _flow.Width == _oldFlowWidth)
+			{
 				return;
+			}
 			_oldFlowWidth = _flow.Width;
 			bool neededScroll = _flow.Bounds.Bottom >= ClientRectangle.Height;
 			ResizeFlows();
 			// If we need a scrollbar now, and we didn't before, do another layout
 			// to add the scrollbar.  This prevents some problems when resizing
-			if ((!neededScroll && _flow.Bounds.Bottom >= ClientRectangle.Height)
-				|| (neededScroll && _flow.Bounds.Bottom < ClientRectangle.Height))
+			if ((!neededScroll && _flow.Bounds.Bottom >= ClientRectangle.Height) ||
+				(neededScroll && _flow.Bounds.Bottom < ClientRectangle.Height))
+			{
 				base.OnLayout(e);
+			}
 		}
 
 		protected override void OnPaintBackground(PaintEventArgs e)
@@ -791,13 +829,32 @@ namespace WeSay.CommonTools
 			string title = button.ThingToShowOnDashboard.LocalizedLongLabel;
 			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
 			Font boldFont = new Font(localizedFont, FontStyle.Bold);
-			int titleHeight = TextRenderer.MeasureText(e.Graphics, title, boldFont, new Size(e.Bounds.Width - 6, int.MaxValue),
-													   ToolTipFormatFlags).Height;
-			Rectangle titleBounds = new Rectangle(e.Bounds.Left + 3, e.Bounds.Top + 3, e.Bounds.Width - 6, e.Bounds.Top + 2 + titleHeight);
-			Rectangle descriptionBounds = new Rectangle(e.Bounds.Left + 18, e.Bounds.Top + 3 + titleHeight,
-														 e.Bounds.Width - 21, e.Bounds.Height - 8 - titleHeight);
-			TextRenderer.DrawText(e.Graphics, title, boldFont, titleBounds, Color.Black, ToolTipFormatFlags);
-			TextRenderer.DrawText(e.Graphics, GetToolTipDescription(button.ThingToShowOnDashboard), localizedFont, descriptionBounds, Color.Black, ToolTipFormatFlags);
+			int titleHeight =
+					TextRenderer.MeasureText(e.Graphics,
+											 title,
+											 boldFont,
+											 new Size(e.Bounds.Width - 6, int.MaxValue),
+											 ToolTipFormatFlags).Height;
+			Rectangle titleBounds = new Rectangle(e.Bounds.Left + 3,
+												  e.Bounds.Top + 3,
+												  e.Bounds.Width - 6,
+												  e.Bounds.Top + 2 + titleHeight);
+			Rectangle descriptionBounds = new Rectangle(e.Bounds.Left + 18,
+														e.Bounds.Top + 3 + titleHeight,
+														e.Bounds.Width - 21,
+														e.Bounds.Height - 8 - titleHeight);
+			TextRenderer.DrawText(e.Graphics,
+								  title,
+								  boldFont,
+								  titleBounds,
+								  Color.Black,
+								  ToolTipFormatFlags);
+			TextRenderer.DrawText(e.Graphics,
+								  GetToolTipDescription(button.ThingToShowOnDashboard),
+								  localizedFont,
+								  descriptionBounds,
+								  Color.Black,
+								  ToolTipFormatFlags);
 			localizedFont.Dispose();
 			boldFont.Dispose();
 		}
@@ -813,10 +870,20 @@ namespace WeSay.CommonTools
 			Graphics g = Graphics.FromHwnd(e.AssociatedWindow.Handle);
 			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
 			Font boldFont = new Font(localizedFont, FontStyle.Bold);
-			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g, GetToolTipDescription(button.ThingToShowOnDashboard), localizedFont, ToolTipFormatFlags);
+			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g,
+																			GetToolTipDescription(
+																					button.
+																							ThingToShowOnDashboard),
+																			localizedFont,
+																			ToolTipFormatFlags);
 			Size bestSize = GetBestSizeBasedOnRatio(possibleSizes, GoldRatio);
 			bestSize.Width += 15;
-			bestSize.Height += TextRenderer.MeasureText(g, title, boldFont, new Size(bestSize.Width, int.MaxValue), ToolTipFormatFlags).Height;
+			bestSize.Height +=
+					TextRenderer.MeasureText(g,
+											 title,
+											 boldFont,
+											 new Size(bestSize.Width, int.MaxValue),
+											 ToolTipFormatFlags).Height;
 			e.ToolTipSize = new Size(bestSize.Width + 6, bestSize.Height + 8);
 			g.Dispose();
 			localizedFont.Dispose();
@@ -829,12 +896,12 @@ namespace WeSay.CommonTools
 			ITask task = dashboardItem as ITask;
 			if (task != null && task.GetReferenceCount() >= 0 && task.GetRemainingCount() >= 0)
 			{
-				toolTipString += "\n\n" + task.GetRemainingCountText() + "\n" + task.GetReferenceCountText();
+				toolTipString += "\n\n" + task.GetRemainingCountText() + "\n" +
+								 task.GetReferenceCountText();
 			}
 			return toolTipString;
 		}
 	}
-
 
 	internal class ButtonGroup
 	{

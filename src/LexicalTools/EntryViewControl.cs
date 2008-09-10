@@ -3,19 +3,18 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
-	public partial class EntryViewControl : UserControl
+	public partial class EntryViewControl: UserControl
 	{
 		private ViewTemplate _viewTemplate;
 		private LexEntry _record;
 		private Timer _cleanupTimer;
-		private bool _isDisposed = false;
+		private bool _isDisposed;
 		private DetailList _detailListControl;
 
 		public EntryViewControl()
@@ -84,7 +83,8 @@ namespace WeSay.LexicalTools
 				{
 					if (_record != null && !_record.IsBeingDeleted)
 					{
-						Logger.WriteMinorEvent("Datasource set. Calling _record.CleanUpAfterEditting()");
+						Logger.WriteMinorEvent(
+								"Datasource set. Calling _record.CleanUpAfterEditting()");
 						_record.PropertyChanged -= OnRecordPropertyChanged;
 						_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
 						_record.CleanUpAfterEditting();
@@ -93,8 +93,8 @@ namespace WeSay.LexicalTools
 					_currentItemInFocus = null;
 					if (_record != null)
 					{
-						_record.PropertyChanged += new PropertyChangedEventHandler(OnRecordPropertyChanged);
-						_record.EmptyObjectsRemoved += new EventHandler(OnEmptyObjectsRemoved);
+						_record.PropertyChanged += OnRecordPropertyChanged;
+						_record.EmptyObjectsRemoved += OnEmptyObjectsRemoved;
 					}
 					Logger.WriteMinorEvent("Datasource set calling RefreshLexicalEntryPreview()");
 					RefreshLexicalEntryPreview();
@@ -110,9 +110,9 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
-		public IRecordListManager RecordListManager
+		public LexEntryRepository LexEntryRepository
 		{
-			set { _recordListManager = value; }
+			set { _lexEntryRepository = value; }
 		}
 
 		public bool ShowNormallyHiddenFields
@@ -147,12 +147,14 @@ namespace WeSay.LexicalTools
 			Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 RefreshEntryDetial");
 			RefreshEntryDetail();
 			Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4  Application.DoEvents()");
-			Application.DoEvents(); //TODO: We need to remove this.  It's a dangerous thing in a historically buggy spot
+			Application.DoEvents();
+			//TODO: We need to remove this.  It's a dangerous thing in a historically buggy spot
 			Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 MoveInsertionPoint");
 			if (row != null)
 			{
 				row = Math.Min((int) row, _detailListControl.Count - 1);
-				Debug.Assert(row > -1, "You've reproduced bug ws-511!"); // bug WS-511, which we haven't yet been able to reproduce
+				Debug.Assert(row > -1, "You've reproduced bug ws-511!");
+				// bug WS-511, which we haven't yet been able to reproduce
 				row = Math.Max((int) row, 0); //would get around bug WS-511
 				_detailListControl.MoveInsertionPoint((int) row);
 			}
@@ -180,7 +182,7 @@ namespace WeSay.LexicalTools
 					if (_cleanupTimer == null)
 					{
 						_cleanupTimer = new Timer();
-						_cleanupTimer.Tick += new EventHandler(OnCleanupTimer_Tick);
+						_cleanupTimer.Tick += OnCleanupTimer_Tick;
 						_cleanupTimer.Interval = 500;
 					}
 					_cleanupTimer.Tag = entry;
@@ -201,7 +203,7 @@ namespace WeSay.LexicalTools
 
 		protected void VerifyNotDisposed()
 		{
-			if (this._isDisposed)
+			if (_isDisposed)
 			{
 #if DEBUG
 				throw new ObjectDisposedException(GetType().FullName);
@@ -218,7 +220,10 @@ namespace WeSay.LexicalTools
 			try
 			{
 #endif
-				_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus);
+			VerifyHasLexEntryRepository();
+			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record,
+														 _currentItemInFocus,
+														 _lexEntryRepository);
 #if !DEBUG
 			}
 			catch (Exception)
@@ -226,6 +231,14 @@ namespace WeSay.LexicalTools
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("There was an error refreshing the entry preview. If you were quiting the program, this is a know issue (WS-554) that we are trying to track down.  If you can make this happen again, please contact the developers.");
 			}
 #endif
+		}
+
+		private void VerifyHasLexEntryRepository()
+		{
+			if (_lexEntryRepository == null)
+			{
+				throw new InvalidOperationException("LexEntryRepository has not been initialized");
+			}
 		}
 
 		private void RefreshEntryDetail()
@@ -255,7 +268,10 @@ namespace WeSay.LexicalTools
 
 				if (_record != null)
 				{
-					LexEntryLayouter layout = new LexEntryLayouter(detailList, ViewTemplate, _recordListManager);
+					VerifyHasLexEntryRepository();
+					LexEntryLayouter layout = new LexEntryLayouter(detailList,
+																   ViewTemplate,
+																   _lexEntryRepository);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
@@ -263,7 +279,7 @@ namespace WeSay.LexicalTools
 				_panelEntry.Controls.Add(detailList);
 				detailList.ResumeLayout(true);
 				detailList.Visible = true;
-				_panelEntry.Controls.SetChildIndex(detailList,0);
+				_panelEntry.Controls.SetChildIndex(detailList, 0);
 
 				if (oldDetailList != null)
 				{
@@ -274,11 +290,10 @@ namespace WeSay.LexicalTools
 				detailList.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
 				detailList.KeyDown += _detailListControl_KeyDown;
 				_panelEntry.ResumeLayout(false);
-
 			}
 			catch (ConfigurationException e)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 		}
 
@@ -290,8 +305,8 @@ namespace WeSay.LexicalTools
 		}
 
 		private CurrentItemEventArgs _currentItemInFocus;
-		private IRecordListManager _recordListManager;
-		private bool _showNormallyHiddenFields=false;
+		private LexEntryRepository _lexEntryRepository;
+		private bool _showNormallyHiddenFields;
 
 		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
 		{
@@ -301,11 +316,11 @@ namespace WeSay.LexicalTools
 
 		~EntryViewControl()
 		{
-			if (!this._isDisposed)
+			if (!_isDisposed)
 			{
-				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".");
+				throw new InvalidOperationException("Disposed not explicitly called on " +
+													GetType().FullName + ".");
 			}
-
 		}
 
 		// hack to get around the fact that SplitContainer takes over the

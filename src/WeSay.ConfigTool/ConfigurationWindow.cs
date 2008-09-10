@@ -8,7 +8,7 @@ using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public partial class ConfigurationWindow : Form
+	public partial class ConfigurationWindow: Form
 	{
 		private WelcomeControl _welcomePage;
 		private SettingsControl _projectSettingsControl;
@@ -20,9 +20,9 @@ namespace WeSay.ConfigTool
 
 			Project = null;
 
-//            if (this.DesignMode)
-//                return;
-//
+			//            if (this.DesignMode)
+			//                return;
+			//
 			InstallWelcomePage();
 			UpdateEnabledStates();
 
@@ -53,7 +53,7 @@ namespace WeSay.ConfigTool
 
 		private void UpdateEnabledStates()
 		{
-			if (this.toolStrip2.InvokeRequired)
+			if (toolStrip2.InvokeRequired)
 			{
 				UpdateStuffCallback d = UpdateEnabledStates;
 				Invoke(d, new object[] {});
@@ -112,7 +112,8 @@ namespace WeSay.ConfigTool
 			if (!File.Exists(configFilePath))
 			{
 				ErrorReport.ReportNonFatalMessage(
-					"WeSay could not find the file at {0} anymore.  Maybe it was moved or renamed?", configFilePath);
+						"WeSay could not find the file at {0} anymore.  Maybe it was moved or renamed?",
+						configFilePath);
 				return;
 			}
 
@@ -153,7 +154,8 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception e)
 			{
-				ErrorReport.ReportNonFatalMessage("WeSay was not able to create a project there. \r\n" + e.Message);
+				ErrorReport.ReportNonFatalMessage(
+						"WeSay was not able to create a project there. \r\n" + e.Message);
 				return;
 			}
 
@@ -170,8 +172,8 @@ namespace WeSay.ConfigTool
 			//System.Configuration.ConfigurationManager.AppSettings["LastConfigFilePath"] = path;
 
 			//strip off any trailing '\'
-			if (path[path.Length - 1] == Path.DirectorySeparatorChar
-				|| path[path.Length - 1] == Path.AltDirectorySeparatorChar)
+			if (path[path.Length - 1] == Path.DirectorySeparatorChar ||
+				path[path.Length - 1] == Path.AltDirectorySeparatorChar)
 			{
 				path = path.Substring(0, path.Length - 1);
 			}
@@ -192,22 +194,24 @@ namespace WeSay.ConfigTool
 						return;
 					}
 				}
-//                else if (path.Contains(".WeSayConfig"))
-//                {
-//                    this.Project.LoadFromConfigFilePath(path);
-//                }
+						//                else if (path.Contains(".WeSayConfig"))
+						//                {
+						//                    this.Project.LoadFromConfigFilePath(path);
+						//                }
 				else if (Directory.Exists(path))
 				{
 					Project.LoadFromProjectDirectoryPath(path);
 				}
 				else
 				{
-					throw new ApplicationException(path + " is not named as a .lift file or .WeSayConfig file.");
+					throw new ApplicationException(path +
+												   " is not named as a .lift file or .WeSayConfig file.");
 				}
 			}
 			catch (Exception e)
 			{
-				ErrorReport.ReportNonFatalMessage("WeSay was not able to open that project. \r\n" + e.Message);
+				ErrorReport.ReportNonFatalMessage("WeSay was not able to open that project. \r\n" +
+												  e.Message);
 				return;
 			}
 
@@ -217,7 +221,6 @@ namespace WeSay.ConfigTool
 			{
 				Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
 			}
-
 		}
 
 		private void SetupProjectControls()
@@ -308,9 +311,9 @@ namespace WeSay.ConfigTool
 		{
 			_project.Save(); //want the client to see the latest
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
-			ProcessStartInfo startInfo =
-					new ProcessStartInfo(Path.Combine(dir, "WeSay.App.exe"),
-										 string.Format("\"{0}\"", _project.PathToLiftFile));
+			ProcessStartInfo startInfo = new ProcessStartInfo(Path.Combine(dir, "WeSay.App.exe"),
+															  string.Format("\"{0}\"",
+																			_project.PathToLiftFile));
 			Process.Start(startInfo);
 		}
 
@@ -318,7 +321,5 @@ namespace WeSay.ConfigTool
 		{
 			Close();
 		}
-
-
 	}
 }

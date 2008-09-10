@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.XPath;
-using NUnit.Framework;
 using NUnit.Extensions.Forms;
+using NUnit.Framework;
 using Palaso.Reporting;
+using WeSay.Foundation.Tests;
 using WeSay.Project;
-using WeSay.ConfigTool;
 
-namespace WeSay.ConfigTool.Tests.Tests
+namespace WeSay.ConfigTool.Tests
 {
 	[TestFixture]
-	public class AdminWindowTests : NUnitFormTest
+	public class AdminWindowTests: NUnitFormTest
 	{
 		private ConfigurationWindow _window;
 		private string _projectFolder;
@@ -20,33 +20,30 @@ namespace WeSay.ConfigTool.Tests.Tests
 
 		public override void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+			ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
-			_window = new ConfigurationWindow(new string[] { });
+			_window = new ConfigurationWindow(new string[] {});
 			_window.Show();
 			_mainWindowTester = new FormTester(_window.Name, _window);
 
-			this._projectFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-
+			_projectFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 		}
 
 		public override void TearDown()
 		{
 			base.TearDown();
-			if (WeSayWordsProject.IsInitialized)
+			if (BasilProject.IsInitialized)
 			{
 				WeSayWordsProject.Project.Dispose();
 			}
 
-			WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
+			TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
 		}
-
-
 
 		[Test]
 		public void ProjectFilesTouched()
 		{
-			_window.OpenProject( BasilProject.GetPretendProjectDirectory());
+			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
 			string p = BasilProject.Project.PathToWritingSystemPrefs;
 			DateTime before = File.GetLastWriteTime(p);
 			_mainWindowTester.Close();
@@ -55,49 +52,57 @@ namespace WeSay.ConfigTool.Tests.Tests
 		}
 
 		//stupid nunitforms will freak 'cause window was closed
-		[Test]//, ExpectedException(typeof(FormsTestAssertionException))]
+		[Test] //, ExpectedException(typeof(FormsTestAssertionException))]
 		public void AfterCreateProjectAndQuitFilesExist()
 		{
 			List<string> paths = new List<string>();
-			_window.CreateAndOpenProject(this._projectFolder);
+			_window.CreateAndOpenProject(_projectFolder);
 			paths.Add(BasilProject.Project.PathToWritingSystemPrefs);
 			paths.Add(WeSayWordsProject.Project.PathToConfigFile);
-			//paths.Add(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
+			//paths.Add(WeSayWordsProject.Project.PathToRepository);
 			_mainWindowTester.Close();
 			foreach (string p in paths)
 			{
 				if (!File.Exists(p))
 				{
-					Assert.Fail("Did not create "+p);
+					Assert.Fail("Did not create " + p);
 				}
 			}
 		}
 
-		[Test,Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
+		[Test]
+		[Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
 		public void WalkTabsAfterOpeningPretendProject()
 		{
-			  _window.OpenProject(BasilProject.GetPretendProjectDirectory());
-		  //create or overwrite the tasks with our stored resource
-//            File.Delete(WeSayWordsProject.Project.PathToProjectTaskInventory);
-//            StreamWriter writer = File.CreateText(WeSayWordsProject.Project.PathToProjectTaskInventory);
-//            writer.Write(TestResources.tasks);
-//            writer.Close();
-			  File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "PRETEND.WeSayConfig"), WeSayWordsProject.Project.PathToConfigFile, true);
+			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
+			//create or overwrite the tasks with our stored resource
+			//            File.Delete(WeSayWordsProject.Project.PathToProjectTaskInventory);
+			//            StreamWriter writer = File.CreateText(WeSayWordsProject.Project.PathToProjectTaskInventory);
+			//            writer.Write(TestResources.tasks);
+			//            writer.Close();
+			File.Copy(
+					Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory,
+								 "PRETEND.WeSayConfig"),
+					WeSayWordsProject.Project.PathToConfigFile,
+					true);
 			WalkTopLevelTabs();
 		}
 
-		[Test, ExpectedException(typeof(ErrorReport.NonFatalMessageSentToUserException))]
+		[Test]
+		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void TryingToOpenNonExistantProjectDoesntCrash()
 		{
 			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig", null);
 		}
 
-		[Test, Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
+		[Test]
+		[Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
 		public void WalkTabsAfterCreateNewProject()
 		{
 			_window.CreateAndOpenProject(_projectFolder);
 			WalkTopLevelTabs();
 		}
+
 		[Test]
 		public void CreateNewProjectThenOpen()
 		{
@@ -124,7 +129,7 @@ namespace WeSay.ConfigTool.Tests.Tests
 		public void NewProjectHasValidStructure()
 		{
 			_window.CreateAndOpenProject(_projectFolder);
-			string path = WeSay.Project.WeSayWordsProject.Project.PathToConfigFile;
+			string path = WeSayWordsProject.Project.PathToConfigFile;
 			XPathDocument doc = new XPathDocument(path);
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version='2']"));
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration/tasks"));
@@ -136,7 +141,7 @@ namespace WeSay.ConfigTool.Tests.Tests
 			_window.CreateAndOpenProject(_projectFolder);
 
 			ClickToolStripButton("_tasksButton");
-//            GotoProjectTab("_tasksPage");
+			//            GotoProjectTab("_tasksPage");
 		}
 
 		[Test]
@@ -146,35 +151,35 @@ namespace WeSay.ConfigTool.Tests.Tests
 
 			ClickToolStripButton("_writingSystemButton");
 			//GotoProjectTab("_writingSystemPage");
-			ListBoxTester c = new ListBoxTester("_wsListBox",_window);
+			ListBoxTester c = new ListBoxTester("_wsListBox", _window);
 			Assert.Greater(c.Properties.Items.Count, 2);
 		}
 
-//        private static void GotoProjectTab(string projectTabName)
-//        {
-//            TabControlTester t = new TabControlTester("_projectTabControl");
-//
-//            foreach (TabPage page in t.Properties.TabPages)
-//            {
-//                if (page.Name == projectTabName)
-//                {
-//                    t.Properties.SelectedTab = page;
-//                    break;
-//                }
-//            }
-////            t.Properties.SelectedTab = t.Properties.TabPages[projectTabName];
-//
-//            Assert.IsNotNull(t.Properties.SelectedTab, "Couldn't find "+projectTabName);
-//        }
+		//        private static void GotoProjectTab(string projectTabName)
+		//        {
+		//            TabControlTester t = new TabControlTester("_projectTabControl");
+		//
+		//            foreach (TabPage page in t.Properties.TabPages)
+		//            {
+		//                if (page.Name == projectTabName)
+		//                {
+		//                    t.Properties.SelectedTab = page;
+		//                    break;
+		//                }
+		//            }
+		////            t.Properties.SelectedTab = t.Properties.TabPages[projectTabName];
+		//
+		//            Assert.IsNotNull(t.Properties.SelectedTab, "Couldn't find "+projectTabName);
+		//        }
 
 		private void WalkTopLevelTabs()
 		{
-//            for(int i = 0; i<10000;i++)
-//            {
-//                Application.DoEvents();
-//            }
-			NUnit.Extensions.Forms.ControlFinder f = new ControlFinder("_areasToolStrip");
-			ToolStrip toolstrip = (ToolStrip)f.Find();
+			//            for(int i = 0; i<10000;i++)
+			//            {
+			//                Application.DoEvents();
+			//            }
+			ControlFinder f = new ControlFinder("_areasToolStrip");
+			ToolStrip toolstrip = (ToolStrip) f.Find();
 			foreach (ToolStripButton button in toolstrip.Items)
 			{
 				string name = button.Name;
@@ -184,7 +189,7 @@ namespace WeSay.ConfigTool.Tests.Tests
 
 		private void ClickToolStripButton(string name)
 		{
-			NUnit.Extensions.Forms.ToolStripButtonTester tester = new ToolStripButtonTester(name, _window);
+			ToolStripButtonTester tester = new ToolStripButtonTester(name, _window);
 			tester.Click();
 		}
 
@@ -199,8 +204,6 @@ namespace WeSay.ConfigTool.Tests.Tests
 		public void ExistingProjectGetsNewTasks()
 		{
 			_window.CreateAndOpenProject(_projectFolder);
-
 		}
-
 	}
 }

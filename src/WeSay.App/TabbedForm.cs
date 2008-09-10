@@ -2,37 +2,37 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Threading;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
-using WeSay.Project;
 using System.Windows.Forms;
+using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
+using WeSay.App.Properties;
+using WeSay.Project;
 using Timer=System.Windows.Forms.Timer;
 
 namespace WeSay.App
 {
-	public partial class TabbedForm : Form, ICurrentWorkTask
+	public partial class TabbedForm: Form, ICurrentWorkTask
 	{
 		private ITask _activeTask;
 		private TabPage _currentWorkTab;
 		private string _currentUrl;
 		public SynchronizationContext synchronizationContext;
-//        private ProgressDialogHandler _progressHandler;
+		//        private ProgressDialogHandler _progressHandler;
 
 		public TabbedForm()
 		{
 			InitializeComponent();
-			this.tabControl1.TabPages.Clear();
-			this.tabControl1.Selected += OnTabSelected;
+			tabControl1.TabPages.Clear();
+			tabControl1.Selected += OnTabSelected;
 
-			synchronizationContext =  WindowsFormsSynchronizationContext.Current;
+			synchronizationContext = SynchronizationContext.Current;
 			Debug.Assert(synchronizationContext != null);
 		}
 
 		public void InitializeTasks(IList<ITask> taskList)
 		{
-			if(taskList == null)
+			if (taskList == null)
 			{
 				throw new ArgumentNullException("taskList");
 			}
@@ -50,12 +50,14 @@ namespace WeSay.App
 				InitializeCurrentWorkTaskToFirstNonPinnedTask(taskList);
 			}
 
-			if(taskList.Count > 0){
+			if (taskList.Count > 0)
+			{
 				ActiveTask = taskList[0];
 			}
 		}
 
-		private void InitializeCurrentWorkTaskToFirstNonPinnedTask(IList<ITask> taskList) {
+		private void InitializeCurrentWorkTaskToFirstNonPinnedTask(IEnumerable<ITask> taskList)
+		{
 			// use first non-pinned task.
 			foreach (ITask task in taskList)
 			{
@@ -67,7 +69,8 @@ namespace WeSay.App
 			}
 		}
 
-		private void InitializeCurrentWorkTaskFromLastSession(IList<ITask> taskList) {
+		private void InitializeCurrentWorkTaskFromLastSession(IEnumerable<ITask> taskList)
+		{
 			foreach (ITask task in taskList)
 			{
 				if (LastCurrentWorkTaskLabel == task.Label)
@@ -86,16 +89,13 @@ namespace WeSay.App
 
 			//this is trying to get around screwing up spacing when the ui font
 			//is a huge one
-			page.Font = new Font(FontFamily.GenericSansSerif,9);
+			page.Font = new Font(FontFamily.GenericSansSerif, 9);
 
-
-
-			this.tabControl1.TabPages.Add(page);
+			tabControl1.TabPages.Add(page);
 		}
 
-
-
 		private delegate void TakesStringArg(string arg);
+
 		public void GoToUrl(string url)
 		{
 			if (InvokeRequired)
@@ -106,50 +106,49 @@ namespace WeSay.App
 			//todo: find the task in the url, pick the right task,
 			//handle the case where we don't have that task, etc.
 
-
-			foreach (TabPage page in this.tabControl1.TabPages)
+			foreach (TabPage page in tabControl1.TabPages)
 			{
 				//todo: temporary hack
-				if (((ITask)page.Tag).Label.Contains("Dictionary"))
+				if (((ITask) page.Tag).Label.Contains("Dictionary"))
 				{
 					//this approach is for user clicking, chokes without an event loop: ActiveTask = (ITask) page.Tag;
-					this.tabControl1.SelectedTab = page;
+					tabControl1.SelectedTab = page;
 					ActivateTab(page, false);
 					ActiveTask.GoToUrl(url);
 					CurrentUrl = url;
 					return;
 				}
 			}
-			Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Sorry, that URL requires a task which is not currently enabled for this user. ({0})",url);
+			ErrorReport.ReportNonFatalMessage(
+					"Sorry, that URL requires a task which is not currently enabled for this user. ({0})",
+					url);
 			throw new NavigationException("Couldn't locate ");
 		}
 
 		public void MakeFrontMostWindow()
 		{
-			if(this.WindowState == FormWindowState.Minimized)
+			if (WindowState == FormWindowState.Minimized)
 			{
-				this.WindowState = FormWindowState.Normal;
+				WindowState = FormWindowState.Normal;
 			}
 
 			BringToFront();
 			Activate(); // may only flash the icon on the taskbar
 		}
+
 		public ITask ActiveTask
 		{
-			get
-			{
-				return _activeTask;
-			}
+			get { return _activeTask; }
 			set
 			{
-				if(value == null)
+				if (value == null)
 				{
 					throw new ArgumentNullException();
 				}
 				TabPage tabPageToActivate = null;
 				if (value.IsPinned)
 				{
-					foreach (TabPage page in this.tabControl1.TabPages)
+					foreach (TabPage page in tabControl1.TabPages)
 					{
 						if (page.Tag == value)
 						{
@@ -161,32 +160,32 @@ namespace WeSay.App
 				else
 				{
 					SetCurrentWorkTask(value);
-					tabPageToActivate = this._currentWorkTab;
+					tabPageToActivate = _currentWorkTab;
 				}
 
 				if (tabPageToActivate != null)
 				{
-					if (this.tabControl1.SelectedTab != tabPageToActivate)
+					if (tabControl1.SelectedTab != tabPageToActivate)
 					{
-						this.tabControl1.SelectedTab = tabPageToActivate;
+						tabControl1.SelectedTab = tabPageToActivate;
 					}
 					else
 					{
-						ActivateTab(tabPageToActivate,true);
+						ActivateTab(tabPageToActivate, true);
 					}
 				}
-
 			}
 		}
 
-		private void SetCurrentWorkTask(ITask value) {
-			if (this._currentWorkTab == null)
+		private void SetCurrentWorkTask(ITask value)
+		{
+			if (_currentWorkTab == null)
 			{
-				this._currentWorkTab = new TabPage();
-				this.tabControl1.TabPages.Add(this._currentWorkTab);
+				_currentWorkTab = new TabPage();
+				tabControl1.TabPages.Add(_currentWorkTab);
 			}
-			this._currentWorkTab.Tag = value;
-			this._currentWorkTab.Text = value.Label;
+			_currentWorkTab.Tag = value;
+			_currentWorkTab.Text = value.Label;
 			LastCurrentWorkTaskLabel = value.Label;
 		}
 
@@ -194,24 +193,18 @@ namespace WeSay.App
 		{
 			get
 			{
-				if (this._currentWorkTab == null)
+				if (_currentWorkTab == null)
 				{
 					return null;
 				}
-				return (ITask)this._currentWorkTab.Tag;
+				return (ITask) _currentWorkTab.Tag;
 			}
 		}
 
 		public string LastCurrentWorkTaskLabel
 		{
-			get
-			{
-				return WeSay.App.Properties.Settings.Default.CurrentWorkTask;
-			}
-			set
-			{
-				WeSay.App.Properties.Settings.Default.CurrentWorkTask = value;
-			}
+			get { return Settings.Default.CurrentWorkTask; }
+			set { Settings.Default.CurrentWorkTask = value; }
 		}
 
 		public IList<string> TabLabels
@@ -219,7 +212,7 @@ namespace WeSay.App
 			get
 			{
 				IList<string> labels = new List<string>();
-				foreach (TabPage page in this.tabControl1.TabPages)
+				foreach (TabPage page in tabControl1.TabPages)
 				{
 					labels.Add(page.Text);
 				}
@@ -235,17 +228,19 @@ namespace WeSay.App
 
 		private void OnTabSelected(object sender, TabControlEventArgs e)
 		{
-			if(e.Action == TabControlAction.Selected)
+			if (e.Action == TabControlAction.Selected)
 			{
 				ActivateTab(e.TabPage, true);
 			}
 		}
 
-		private void ActivateTab(TabPage page, bool okTouseTimer)
+		private void ActivateTab(Control page, bool okTouseTimer)
 		{
-			ITask task = (ITask)page.Tag;
+			ITask task = (ITask) page.Tag;
 			if (ActiveTask == task)
+			{
 				return; //debounce
+			}
 
 			if (ActiveTask != null)
 			{
@@ -267,24 +262,26 @@ namespace WeSay.App
 			}
 		}
 
-		private void ActivateAfterScreenDraw(TabPage page, ITask task)
+		private void ActivateAfterScreenDraw(Control page, ITask task)
 		{
-			page.Text += " " +StringCatalog.Get("~Loading...", "Appended to the name of a task, in its tab, while the user is waiting for the task to come up.");
+			page.Text += " " +
+						 StringCatalog.Get("~Loading...",
+										   "Appended to the name of a task, in its tab, while the user is waiting for the task to come up.");
 			Timer t = new Timer();
-			t.Tick+=new EventHandler(delegate
-									 {
-											   t.Stop();
-											   ActivateTask(page, task);
-											   page.Text = task.Label;
-											   t.Dispose();
-									 });
+			t.Tick += delegate
+					  {
+						  t.Stop();
+						  ActivateTask(page, task);
+						  page.Text = task.Label;
+						  t.Dispose();
+					  };
 			t.Interval = 1;
 			t.Start();
 		}
 
-		private void ActivateTask(TabPage page, ITask task)
+		private void ActivateTask(Control page, ITask task)
 		{
-			Palaso.Reporting.Logger.WriteEvent("Activating " + page.Text);//enhance: get in English always
+			Logger.WriteEvent("Activating " + page.Text); //enhance: get in English always
 			if (ActiveTask == task)
 			{
 				return;
@@ -293,10 +290,10 @@ namespace WeSay.App
 			{
 				task.Activate();
 			}
-			catch (Palaso.Reporting.ConfigurationException e) //let others go through the normal bug reporting system
+			catch (ConfigurationException e) //let others go through the normal bug reporting system
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
-				Palaso.Reporting.Logger.WriteEvent("Failed Activating");
+				ErrorReport.ReportNonFatalMessage(e.Message);
+				Logger.WriteEvent("Failed Activating");
 				return;
 			}
 
@@ -308,24 +305,24 @@ namespace WeSay.App
 			task.Control.Invalidate(true);
 			page.Cursor = Cursors.Default;
 			_activeTask = task;
-			Palaso.Reporting.Logger.WriteEvent("Done Activating");
+			Logger.WriteEvent("Done Activating");
 		}
 
-		public event System.EventHandler  IntializationComplete;
+		public event EventHandler IntializationComplete;
 
 		public void ContinueLaunchingAfterInitialDisplay()
 		{
 			Timer t = new Timer();
-			t.Tick += new EventHandler(delegate
-									   {
-										   t.Stop();
-										   InitializeTasks(WeSayWordsProject.Project.Tasks);
-										   if (IntializationComplete != null)
-										   {
-											   IntializationComplete.Invoke(this, null);
-										   }
-										   t.Dispose();
-									   });
+			t.Tick += delegate
+					  {
+						  t.Stop();
+						  InitializeTasks(WeSayWordsProject.Project.Tasks);
+						  if (IntializationComplete != null)
+						  {
+							  IntializationComplete.Invoke(this, null);
+						  }
+						  t.Dispose();
+					  };
 			t.Interval = 1;
 			t.Start();
 		}

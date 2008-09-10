@@ -1,4 +1,5 @@
 #region copyright info
+
 //
 // Written by Anup. V (anupshubha@yahoo.com)
 // Copyright (c) 2006.
@@ -15,38 +16,41 @@
 // Please use and enjoy. Please let me know of any bugs/mods/improvements
 // that you have found/implemented and I will fix/incorporate them into
 // this file.
+
 #endregion copyright info
 
 using System;
-using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Data;
-using System.Windows.Forms;
-using System.Diagnostics;
 using System.Globalization;
+using System.Windows.Forms;
 
-namespace GraphComponents
+namespace Addin.LiftReports.GraphComponents
 {
 	/// <summary>
 	/// Summary description for StackedBarGraph.
 	/// </summary>
-	public class StackedBarGraph : Graph
+	public class StackedBarGraph: Graph
 	{
 		#region variables
+
 		/// <summary>
 		/// The left side margin width of the graph
 		/// </summary>
-		private int graphMarginLeft   = 50;
+		private int graphMarginLeft = 50;
+
 		/// <summary>
 		/// The upper margin width of the graph
 		/// </summary>
-		private int graphMarginTop    = 20;
+		private int graphMarginTop = 20;
+
 		/// <summary>
 		/// The right side margin width of the graph
 		/// </summary>
-		private int graphMarginRight  = 20;
+		private int graphMarginRight = 20;
+
 		/// <summary>
 		/// The lower margin width of the graph
 		/// </summary>
@@ -66,10 +70,12 @@ namespace GraphComponents
 		/// Color of the bar
 		/// </summary>
 		private Color barColor = Color.Lime;
+
 		/// <summary>
 		/// The color to display if the value is above normal
 		/// </summary>
 		private Color aboveRangeColor = Color.Salmon;
+
 		/// <summary>
 		/// The color to display if the value is below normal
 		/// </summary>
@@ -84,7 +90,7 @@ namespace GraphComponents
 		/// Color of the graph's border that includes only the area
 		/// that is filled up and not the entire rectangle
 		/// </summary>
-		private Color graphBorderColor = Color.Black;
+		private readonly Color graphBorderColor = Color.Black;
 
 		/// <summary>
 		/// The alignment of the value text
@@ -94,20 +100,20 @@ namespace GraphComponents
 		/// <summary>
 		/// The collection that contains all the individual bars
 		/// </summary>
-		private BarCollection barCollection;
+		private readonly BarCollection barCollection;
 
 		/// <summary>
 		/// Used to draw the gridline
 		/// </summary>
-		private Gridline gridline;
+		private readonly Gridline gridline;
+
 		/// <summary>
 		/// Used to draw the x and y axis line
 		/// </summary>
-		private AxisLine axisLineXandY;
+		private readonly AxisLine axisLineXandY;
 
 		private RectangleF aboveRangeRect;
 		private RectangleF belowRangeRect;
-
 
 		/// <summary>
 		/// A ratio that defines the ratio between the width of each bar
@@ -118,7 +124,7 @@ namespace GraphComponents
 		/// <summary>
 		/// The basic bar object that does the actual rendering.
 		/// </summary>
-		private BasicBar basicBar;
+		private readonly BasicBar basicBar;
 
 		/// <summary>
 		/// A value beyond which the readings are above normal.
@@ -127,6 +133,7 @@ namespace GraphComponents
 		/// Eg. body temp. above 40 degree C
 		/// </summary>
 		private float aboveRangeValue = 70;
+
 		/// <summary>
 		/// A value beyond which the readings are below normal.
 		/// The graph can be displayed in a different color if it
@@ -138,6 +145,7 @@ namespace GraphComponents
 		/// Flag indicating whether lines for above and below normal limits are to be displayed
 		/// </summary>
 		private bool showRangeLines = true;
+
 		/// <summary>
 		/// Flag indicating whether the values of above and below ranges are to be displayed
 		/// </summary>
@@ -148,415 +156,425 @@ namespace GraphComponents
 		#region properties
 
 		#region ShowRangeLines
+
 		/// <summary>
 		/// Flag indicating whether lines for above and below normal limits are to be displayed
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Flag indicating whether lines for above and below normal limits are to be displayed")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description(
+				"Flag indicating whether lines for above and below normal limits are to be displayed"
+				)]
 		public bool ShowRangeLines
 		{
 			get { return showRangeLines; }
 			set
 			{
 				showRangeLines = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion ShowRangeLines
 
 		#region ShowRangeValues
+
 		/// <summary>
 		/// Flag indicating whether the values of above and below ranges are to be displayed
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Flag indicating whether the values of above and below ranges are to be displayed")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description(
+				"Flag indicating whether the values of above and below ranges are to be displayed")]
 		public bool ShowRangeValues
 		{
 			get { return showRangeValues; }
 			set
 			{
 				showRangeValues = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion ShowRangeValues
 
 		#region AboveRangeValue
+
 		/// <summary>
 		/// A value beyond which the readings are above normal.
 		/// The bar can be displayed in a different color if it
 		/// goes above this range
 		/// Eg. body temp. above 40 degree C
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("A value beyond which the readings are above normal. The bar can be displayed in a different color if it goes above this range.")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description(
+				"A value beyond which the readings are above normal. The bar can be displayed in a different color if it goes above this range."
+				)]
 		public float AboveRangeValue
 		{
 			get { return aboveRangeValue; }
 			set
 			{
 				aboveRangeValue = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
 
 		#endregion AboveRangeValue
 
 		#region BelowRangeValue
+
 		/// <summary>
 		/// A value beyond which the readings are below normal.
 		/// The bar can be displayed in a different color if it
 		/// goes below this range
 		/// Eg. body temp. below 35 degree C
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("A value beyond which the readings are below normal. The bar can be displayed in a different color if it goes below this range")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description(
+				"A value beyond which the readings are below normal. The bar can be displayed in a different color if it goes below this range"
+				)]
 		public float BelowRangeValue
 		{
 			get { return belowRangeValue; }
 			set
 			{
 				belowRangeValue = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
 
 		#endregion BelowRangeValue
 
 		#region Bars
-		[
-		Browsable(false)
-		]
+
+		[Browsable(false)]
 		public BarCollection Bars
 		{
 			get { return barCollection; }
 		}
+
 		#endregion Bars
 
 		#region GraphMargin
+
 		/// <summary>
 		/// The left side margin width of the graph
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("The left side margin width of the graph")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("The left side margin width of the graph")]
 		public int GraphMarginLeft
 		{
 			get { return graphMarginLeft; }
 			set
 			{
 				if (value < 0)
-					throw new ArgumentException ("Invalid property value. Margin cannot be negative.");
+				{
+					throw new ArgumentException("Invalid property value. Margin cannot be negative.");
+				}
 
 				graphMarginLeft = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
 
 		/// <summary>
 		/// The upper margin width of the graph
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("The upper margin width of the graph")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("The upper margin width of the graph")]
 		public int GraphMarginTop
 		{
 			get { return graphMarginTop; }
 			set
 			{
 				if (value < 0)
-					throw new ArgumentException ("Invalid property value. Margin cannot be negative.");
+				{
+					throw new ArgumentException("Invalid property value. Margin cannot be negative.");
+				}
 
 				graphMarginTop = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
 
 		/// <summary>
 		/// The right side margin width of the graph
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("The right side margin width of the graph")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("The right side margin width of the graph")]
 		public int GraphMarginRight
 		{
 			get { return graphMarginRight; }
 			set
 			{
 				if (value < 0)
-					throw new ArgumentException ("Invalid property value. Margin cannot be negative.");
+				{
+					throw new ArgumentException("Invalid property value. Margin cannot be negative.");
+				}
 
 				graphMarginRight = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
 
 		/// <summary>
 		/// The lower margin width of the graph
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("The lower margin width of the graph")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("The lower margin width of the graph")]
 		public int GraphMarginBottom
 		{
 			get { return graphMarginBottom; }
 			set
 			{
 				if (value < 0)
-					throw new ArgumentException ("Invalid property value. Margin cannot be negative.");
+				{
+					throw new ArgumentException("Invalid property value. Margin cannot be negative.");
+				}
 
 				graphMarginBottom = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
 
 		#endregion GraphMargin
 
 		#region AboveRangeColor
+
 		/// <summary>
 		/// The color to display if the value is above normal
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("The color to display if the value is above normal")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("The color to display if the value is above normal")]
 		public Color AboveRangeColor
 		{
 			get { return aboveRangeColor; }
 			set
 			{
 				aboveRangeColor = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion AboveRangeColor
 
 		#region BelowRangeColor
+
 		/// <summary>
 		/// The color to display if the value is below normal
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("The color to display if the value is below normal")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("The color to display if the value is below normal")]
 		public Color BelowRangeColor
 		{
 			get { return belowRangeColor; }
 			set
 			{
 				belowRangeColor = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion BelowRangeColor
 
 		#region MaximumValue
+
 		/// <summary>
 		/// Maximum value of the bar
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Maximum value of the bar")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("Maximum value of the bar")]
 		public float MaximumValue
 		{
 			get { return maximumValue; }
 			set
 			{
 				maximumValue = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion MaximumValue
 
 		#region MinimumValue
+
 		/// <summary>
 		/// Minimum value of the bar
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Minimum value of the bar")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("Minimum value of the bar")]
 		public float MinimumValue
 		{
 			get { return minimumValue; }
 			set
 			{
 				minimumValue = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion MinimumValue
 
 		#region BarColor
+
 		/// <summary>
 		/// Color of the bar
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Color of the bar")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("Color of the bar")]
 		public Color BarColor
 		{
 			get { return barColor; }
 			set
 			{
 				barColor = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion BarColor
 
 		#region BarWidthToSpacingRatio
+
 		/// <summary>
 		/// A ratio that defines the ratio between the width
 		/// of each bar to the spacing from its adjacent bar
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		NotifyParentProperty(true),
-		Category("Appearance"),
-		Description("A ratio that defines the ratio between the width of each bar to the spacing from its adjacent bar")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[NotifyParentProperty(true)]
+		[Category("Appearance")]
+		[Description(
+				"A ratio that defines the ratio between the width of each bar to the spacing from its adjacent bar"
+				)]
 		public float BarWidthToSpacingRatio
 		{
-			get { return barWidthToSpacingRatio;  }
+			get { return barWidthToSpacingRatio; }
 			set
 			{
 				if (value <= 0)
-					throw new ArgumentException ("Invalid property value. Ratio has to be greater than 0.");
+				{
+					throw new ArgumentException(
+							"Invalid property value. Ratio has to be greater than 0.");
+				}
 
 				barWidthToSpacingRatio = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion BarWidthToSpacingRatio
 
 		#region BarCount
+
 		/// <summary>
 		/// Number of bars to display on the stacked bar graph
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Number of bars to display on the stacked bar graph")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("Number of bars to display on the stacked bar graph")]
 		public int BarCount
 		{
-			get { return barCollection.Count; }
-//			set
-//			{
-//				if (value < 0)
-//					throw new ArgumentException ("Invalid property value. Bar count cannot be negative.");
-//
-//				if (BarCount < value)
-//				{
-//					// we need to add a few bars here...
-//					int numOfNewBars = value - BarCount;
-//					for (int i = 0; i < numOfNewBars; i ++)
-//						Bars.Add (new Bar (i.ToString (CultureInfo.CurrentUICulture), 50));
-//				}
-//				else if (BarCount > value)
-//				{
-//					// we need to remove a few bars from the back side..
-//					int numOfBarsToRemove = value - BarCount;
-//
-//					for (int i = 0; i < numOfBarsToRemove; i ++)
-//						Bars.RemoveAt (BarCount - 1 - i);
-//				}
-//
-//				//BarCount = value;
-////				Bars.Clear ();
-////				for (int i = 0; i < barCount; i ++)
-////					Bars.Add (new Bar (i.ToString (CultureInfo.CurrentUICulture), 50));
-//
-//				RefreshDisplay ();
-//			}
+			get { return barCollection.Count; } //			set
+			//			{
+			//				if (value < 0)
+			//					throw new ArgumentException ("Invalid property value. Bar count cannot be negative.");
+			//
+			//				if (BarCount < value)
+			//				{
+			//					// we need to add a few bars here...
+			//					int numOfNewBars = value - BarCount;
+			//					for (int i = 0; i < numOfNewBars; i ++)
+			//						Bars.Add (new Bar (i.ToString (CultureInfo.CurrentUICulture), 50));
+			//				}
+			//				else if (BarCount > value)
+			//				{
+			//					// we need to remove a few bars from the back side..
+			//					int numOfBarsToRemove = value - BarCount;
+			//
+			//					for (int i = 0; i < numOfBarsToRemove; i ++)
+			//						Bars.RemoveAt (BarCount - 1 - i);
+			//				}
+			//
+			//				//BarCount = value;
+			////				Bars.Clear ();
+			////				for (int i = 0; i < barCount; i ++)
+			////					Bars.Add (new Bar (i.ToString (CultureInfo.CurrentUICulture), 50));
+			//
+			//				RefreshDisplay ();
+			//			}
 		}
+
 		#endregion BarCount
 
 		#region BarOrientation
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Bar orientation, whether horizontal or vertical")
-		]
+
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("Bar orientation, whether horizontal or vertical")]
 		public Orientation BarOrientation
 		{
 			get { return barOrientation; }
 			set
 			{
 				barOrientation = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
 
 		#endregion BarOrientation
 
 		#region TextAlignment
+
 		/// <summary>
 		/// The alignment of the value's text
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("The alignment of the value's text")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("The alignment of the value's text")]
 		public TextAlignment ValueAlignment
 		{
 			get { return valueAlignment; }
 			set
 			{
 				valueAlignment = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
 
 		#endregion TextAlignment
+
 		#endregion properties
 
 		#region methods
+
 		/// <summary>
 		/// Creates a stacked bar graph user control with default properties
 		/// </summary>
@@ -566,48 +584,46 @@ namespace GraphComponents
 			InitializeComponent();
 
 			// TODO: Add any initialization after the InitComponent call
-			basicBar = new BasicBar ();
-			basicBar.ShowRangeLines  = false;
+			basicBar = new BasicBar();
+			basicBar.ShowRangeLines = false;
 			basicBar.ShowRangeValues = false;
-			basicBar.BarGraduation   = Graduation.None;
+			basicBar.BarGraduation = Graduation.None;
 
-			gridline      = new Gridline (this);
-			axisLineXandY = new AxisLine (this);
+			gridline = new Gridline(this);
+			axisLineXandY = new AxisLine(this);
 
-			barCollection = new BarCollection ();
+			barCollection = new BarCollection();
 
-			for (int i = 0; i < BarCount; i ++)
+			for (int i = 0;i < BarCount;i ++)
 			{
-				Bars.Add (new Bar (i.ToString (CultureInfo.CurrentUICulture), 50));
+				Bars.Add(new Bar(i.ToString(CultureInfo.CurrentUICulture), 50));
 			}
 
-			this.SetStyle (ControlStyles.DoubleBuffer |
-						   ControlStyles.UserPaint    |
-						   ControlStyles.AllPaintingInWmPaint,
-						   true);
-			this.UpdateStyles ();
+			SetStyle(
+					ControlStyles.DoubleBuffer | ControlStyles.UserPaint |
+					ControlStyles.AllPaintingInWmPaint,
+					true);
+			UpdateStyles();
 
-			GraphArea = new Rectangle (ClientRectangle.Left   + graphMarginLeft,
-									   ClientRectangle.Top    + graphMarginTop,
-									   ClientRectangle.Width  - graphMarginRight  - graphMarginLeft,
-									   ClientRectangle.Height - graphMarginBottom - graphMarginTop);
+			GraphArea = new Rectangle(ClientRectangle.Left + graphMarginLeft,
+									  ClientRectangle.Top + graphMarginTop,
+									  ClientRectangle.Width - graphMarginRight - graphMarginLeft,
+									  ClientRectangle.Height - graphMarginBottom - graphMarginTop);
 
-			Debug.Assert (GraphArea.Height == (GraphArea.Bottom - GraphArea.Top), "Problem Ctor");
-
+			Debug.Assert(GraphArea.Height == (GraphArea.Bottom - GraphArea.Top), "Problem Ctor");
 		}
 
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		protected override void Dispose( bool disposing )
+		protected override void Dispose(bool disposing)
 		{
-			if( disposing )
-			{
-			}
-			base.Dispose( disposing );
+			if (disposing) {}
+			base.Dispose(disposing);
 		}
 
 		#region Component Designer generated code
+
 		/// <summary>
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
@@ -619,21 +635,22 @@ namespace GraphComponents
 			//
 			this.Name = "StackedBarGraph";
 			this.Size = new System.Drawing.Size(344, 256);
-
 		}
+
 		#endregion
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			if (! Visible)
+			{
 				return;
+			}
 
 			Graphics graphics = e.Graphics;
 
-			Draw (graphics);
+			Draw(graphics);
 
-			base.OnPaint (e);
-
+			base.OnPaint(e);
 		}
 
 		#region IGraphElement Members
@@ -643,21 +660,26 @@ namespace GraphComponents
 			// TODO:  Add StackedBarGraph.Draw implementation
 			graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-			CalculateGraphArea ();
+			CalculateGraphArea();
 
 			if (GraphArea.Width == 0 || GraphArea.Height == 0)
+			{
 				return;
+			}
 
 			if (MinimumValue >= MaximumValue)
+			{
 				return;
+			}
 
-			graphics.SetClip (GraphArea);
+			graphics.SetClip(GraphArea);
 
-			gridline.Draw (graphics);
+			gridline.Draw(graphics);
 
-			DrawRangeLinesAndValues (graphics);
+			DrawRangeLinesAndValues(graphics);
 
 			#region comments describing bar spacing
+
 			// For a vertical bar orientation...
 			// We need to leave some gap at the left edge of the Y axis, otherwise,
 			// the bar graph will look ugly
@@ -669,23 +691,25 @@ namespace GraphComponents
 			// so, barSpacing is calculated as follows
 			// 6*barSpacing + 1.5*5*barSpacing = 100
 			// 13.5*barSpacing = 100
-			#endregion comments describing bar spacing
-			float x = ( (float) BarCount * barWidthToSpacingRatio ) + (BarCount + 1);
 
-			float barSpacing = 0F;
+			#endregion comments describing bar spacing
+
+			float x = (BarCount * barWidthToSpacingRatio) + (BarCount + 1);
+
+			float barSpacing;
 			if (barOrientation == Orientation.Vertical)
 			{
-				barSpacing = (float) GraphArea.Width / x;
+				barSpacing = GraphArea.Width / x;
 			}
 			else
 			{
-				barSpacing = (float) GraphArea.Height / x;
+				barSpacing = GraphArea.Height / x;
 			}
 
 			float barWidth = barSpacing * barWidthToSpacingRatio;
-			float barArea  = barWidth + barSpacing;
+			float barArea = barWidth + barSpacing;
 
-			float currentBarOffset = 0;
+			float currentBarOffset;
 
 			if (barOrientation == Orientation.Vertical)
 			{
@@ -699,43 +723,55 @@ namespace GraphComponents
 			basicBar.MaximumValue = minimumValue;
 			basicBar.MaximumValue = maximumValue;
 
-			for (int i = 0; i < BarCount; i ++)
+			for (int i = 0;i < BarCount;i ++)
 			{
 				float barValue = barCollection[i].BarValue;
 
 				#region bar color
+
 				Color graphColor = barColor;
 
 				if (barValue > aboveRangeValue)
+				{
 					graphColor = aboveRangeColor;
+				}
 				else if (barValue < belowRangeValue)
+				{
 					graphColor = belowRangeColor;
+				}
 
-				graphColor = Color.FromArgb (Transparency, graphColor);
+				graphColor = Color.FromArgb(Transparency, graphColor);
+
 				#endregion bar color
 
 				#region draw bar
 
 				if (barOrientation == Orientation.Vertical)
 				{
-					basicBar.ClientRectangle = new Rectangle ((int) currentBarOffset, GraphArea.Top, (int) barWidth, GraphArea.Height);
+					basicBar.ClientRectangle = new Rectangle((int) currentBarOffset,
+															 GraphArea.Top,
+															 (int) barWidth,
+															 GraphArea.Height);
 				}
 				else
 				{
-					basicBar.ClientRectangle = new Rectangle (GraphArea.Left, (int) currentBarOffset, GraphArea.Width, (int) barWidth);
+					basicBar.ClientRectangle = new Rectangle(GraphArea.Left,
+															 (int) currentBarOffset,
+															 GraphArea.Width,
+															 (int) barWidth);
 				}
 
-				basicBar.BarColor			  = graphColor;
-				basicBar.BarValue			  = barValue;
-				basicBar.BarOrientation		  = barOrientation;
-				basicBar.ForeColor			  = this.ForeColor;
-				basicBar.ValueFormat		  = ValueFormat;
-				basicBar.ValueAlignment		  = valueAlignment;
-				basicBar.TextFont			  = this.Font;
-				basicBar.BorderColor          = graphBorderColor;
+				basicBar.BarColor = graphColor;
+				basicBar.BarValue = barValue;
+				basicBar.BarOrientation = barOrientation;
+				basicBar.ForeColor = ForeColor;
+				basicBar.ValueFormat = ValueFormat;
+				basicBar.ValueAlignment = valueAlignment;
+				basicBar.TextFont = Font;
+				basicBar.BorderColor = graphBorderColor;
 				basicBar.OutOfRangeArrowColor = BarColor;
 
-				basicBar.Draw (graphics);
+				basicBar.Draw(graphics);
 
 				if (barOrientation == Orientation.Vertical)
 				{
@@ -749,24 +785,24 @@ namespace GraphComponents
 				#endregion draw bar
 			}
 
-			axisLineXandY.Draw (graphics);
-			DrawBarNames (graphics, barArea, barSpacing);
-			DrawBarAxisValues (graphics);
+			axisLineXandY.Draw(graphics);
+			DrawBarNames(graphics, barArea, barSpacing);
+			DrawBarAxisValues(graphics);
 		}
 
-		private void DrawBarAxisValues (Graphics graphics)
+		private void DrawBarAxisValues(Graphics graphics)
 		{
-			graphics.SetClip (ClientRectangle);
+			graphics.SetClip(ClientRectangle);
 
 			if (barOrientation == Orientation.Vertical)
 			{
-				StringFormat sf  = new StringFormat ();
-				sf.Trimming      = StringTrimming.Character;
-				sf.FormatFlags   = StringFormatFlags.NoWrap;
-				sf.Alignment     = StringAlignment.Far;
+				StringFormat sf = new StringFormat();
+				sf.Trimming = StringTrimming.Character;
+				sf.FormatFlags = StringFormatFlags.NoWrap;
+				sf.Alignment = StringAlignment.Far;
 				sf.LineAlignment = StringAlignment.Center;
 
-				Brush textBrush = new SolidBrush (YAxisColor);
+				Brush textBrush = new SolidBrush(YAxisColor);
 
 				float offset = GraphArea.Top - Font.Height / 2;
 				float graduationPixelDiff = GraphArea.Height / GraduationsY;
@@ -774,26 +810,35 @@ namespace GraphComponents
 
 				float graduationDiff = (maximumValue - minimumValue) / GraduationsY;
 
-				for (int i = GraduationsY; i >= 0; i --)
+				for (int i = GraduationsY;i >= 0;i --)
 				{
-					RectangleF axisValuesRect = new RectangleF (ClientRectangle.Left, offset, GraphMarginLeft - Font.Height / 2, Font.Height);
+					RectangleF axisValuesRect = new RectangleF(ClientRectangle.Left,
+															   offset,
+															   GraphMarginLeft - Font.Height / 2,
+															   Font.Height);
 					float graduationValue = maximumValue - graduationDiff * valueOffset;
 					valueOffset ++;
 
-					if (axisValuesRect.IntersectsWith (aboveRangeRect) ||
-						axisValuesRect.IntersectsWith (belowRangeRect) )
+					if (axisValuesRect.IntersectsWith(aboveRangeRect) ||
+						axisValuesRect.IntersectsWith(belowRangeRect))
 					{
 						offset += graduationPixelDiff;
 						continue;
 					}
 
-					string val = "";
+					string val;
 					if (ValueFormat.Length != 0)
-						val = string.Format (CultureInfo.CurrentUICulture, ValueFormat, graduationValue);
+					{
+						val = string.Format(CultureInfo.CurrentUICulture,
+											ValueFormat,
+											graduationValue);
+					}
 					else
-						val = graduationValue.ToString (CultureInfo.CurrentUICulture);
+					{
+						val = graduationValue.ToString(CultureInfo.CurrentUICulture);
+					}
 
-					graphics.DrawString (val, Font, textBrush, axisValuesRect, sf);
+					graphics.DrawString(val, Font, textBrush, axisValuesRect, sf);
 					offset += graduationPixelDiff;
 				}
 			}
@@ -803,203 +848,270 @@ namespace GraphComponents
 				{
 					return;
 				}
-				StringFormat sf  = new StringFormat ();
-				sf.Trimming      = StringTrimming.Character;
-				sf.FormatFlags   = StringFormatFlags.NoWrap;
-				sf.Alignment     = StringAlignment.Center;
+				StringFormat sf = new StringFormat();
+				sf.Trimming = StringTrimming.Character;
+				sf.FormatFlags = StringFormatFlags.NoWrap;
+				sf.Alignment = StringAlignment.Center;
 				sf.LineAlignment = StringAlignment.Center;
 
-				Brush textBrush = new SolidBrush (XAxisColor);
+				Brush textBrush = new SolidBrush(XAxisColor);
 
 				float offset = GraphArea.Left;
 				float graduationPixelDiff = GraphArea.Width / GraduationsX;
 
 				float graduationDiff = (maximumValue - minimumValue) / GraduationsX;
 
-				for (int i = 0; i <= GraduationsX; i ++)
+				for (int i = 0;i <= GraduationsX;i ++)
 				{
 					float graduationValue = minimumValue + graduationDiff * i;
 
-					string val = "";
+					string val;
 					if (ValueFormat.Length != 0)
-						val = string.Format (CultureInfo.CurrentUICulture, ValueFormat, graduationValue);
+					{
+						val = string.Format(CultureInfo.CurrentUICulture,
+											ValueFormat,
+											graduationValue);
+					}
 					else
-						val = graduationValue.ToString (CultureInfo.CurrentUICulture);
+					{
+						val = graduationValue.ToString(CultureInfo.CurrentUICulture);
+					}
 
-					SizeF numberSize = graphics.MeasureString (val, Font, (int) graduationPixelDiff);
+					SizeF numberSize = graphics.MeasureString(val, Font, (int) graduationPixelDiff);
 
-					RectangleF axisValuesRect = new RectangleF (offset - numberSize.Width / 2, GraphArea.Bottom + 2, numberSize.Width, Font.Height);
+					RectangleF axisValuesRect = new RectangleF(offset - numberSize.Width / 2,
+															   GraphArea.Bottom + 2,
+															   numberSize.Width,
+															   Font.Height);
 
-					if (axisValuesRect.IntersectsWith (aboveRangeRect) ||
-						axisValuesRect.IntersectsWith (belowRangeRect) )
+					if (axisValuesRect.IntersectsWith(aboveRangeRect) ||
+						axisValuesRect.IntersectsWith(belowRangeRect))
 					{
 						offset += graduationPixelDiff;
 						continue;
 					}
 
-					graphics.DrawString (val, Font, textBrush, axisValuesRect, sf);
+					graphics.DrawString(val, Font, textBrush, axisValuesRect, sf);
 
 					offset += graduationPixelDiff;
 				}
-
 			}
 		}
 
-		private void DrawBarNames (Graphics graphics, float barArea, float barSpacing)
+		private void DrawBarNames(Graphics graphics, float barArea, float barSpacing)
 		{
-			graphics.SetClip (ClientRectangle);
+			graphics.SetClip(ClientRectangle);
 
-			StringFormat sf  = new StringFormat ();
-			sf.Trimming      = StringTrimming.Character;
-			sf.FormatFlags   = StringFormatFlags.NoWrap;
+			StringFormat sf = new StringFormat();
+			sf.Trimming = StringTrimming.Character;
+			sf.FormatFlags = StringFormatFlags.NoWrap;
 			sf.LineAlignment = StringAlignment.Center;
 
-			float offset = 0;
+			float offset;
 
 			if (barOrientation == Orientation.Vertical)
 			{
-				Brush textBrush = new SolidBrush (XAxisColor);
-				sf.Alignment     = StringAlignment.Center;
+				Brush textBrush = new SolidBrush(XAxisColor);
+				sf.Alignment = StringAlignment.Center;
 				offset = GraphArea.Left + barSpacing / 2;
 
-				for (int i = 0; i < BarCount; i ++)
+				for (int i = 0;i < BarCount;i ++)
 				{
 					string name = barCollection[i].Name;
-					RectangleF nameRect = new RectangleF (offset, GraphArea.Bottom, barArea, Font.Height * 2F);
-					graphics.DrawString (name, Font, textBrush, nameRect, sf);
+					RectangleF nameRect = new RectangleF(offset,
+														 GraphArea.Bottom,
+														 barArea,
+														 Font.Height * 2F);
+					graphics.DrawString(name, Font, textBrush, nameRect, sf);
 					offset += barArea;
 				}
-				textBrush.Dispose ();
+				textBrush.Dispose();
 			}
 			else
 			{
-				Brush textBrush = new SolidBrush (YAxisColor);
-				sf.Alignment    = StringAlignment.Far;
-				float barWidth  = barArea - barSpacing;
+				Brush textBrush = new SolidBrush(YAxisColor);
+				sf.Alignment = StringAlignment.Far;
+				float barWidth = barArea - barSpacing;
 				offset = GraphArea.Bottom - barSpacing - (barWidth / 2) - (FontHeight / 2);
 
-				for (int i = 0; i < BarCount; i ++)
+				for (int i = 0;i < BarCount;i ++)
 				{
 					string name = barCollection[i].Name;
-					RectangleF nameRect = new RectangleF (ClientRectangle.Left, offset, GraphMarginLeft - FontHeight / 2, Font.Height);
-					graphics.DrawString (name, Font, textBrush, nameRect, sf);
+					RectangleF nameRect = new RectangleF(ClientRectangle.Left,
+														 offset,
+														 GraphMarginLeft - FontHeight / 2,
+														 Font.Height);
+					graphics.DrawString(name, Font, textBrush, nameRect, sf);
 					offset -= barArea;
 				}
-				textBrush.Dispose ();
+				textBrush.Dispose();
 			}
-
-
 		}
 
-		private void CalculateGraphArea ()
+		private void CalculateGraphArea()
 		{
-			GraphArea = new Rectangle (
-				ClientRectangle.Left   + graphMarginLeft,
-				ClientRectangle.Top    + graphMarginTop,
-				ClientRectangle.Width  - graphMarginRight - graphMarginLeft,
-				ClientRectangle.Height - graphMarginBottom - graphMarginTop);
+			GraphArea = new Rectangle(ClientRectangle.Left + graphMarginLeft,
+									  ClientRectangle.Top + graphMarginTop,
+									  ClientRectangle.Width - graphMarginRight - graphMarginLeft,
+									  ClientRectangle.Height - graphMarginBottom - graphMarginTop);
 		}
 
-		private void DrawRangeLinesAndValues (Graphics graphics)
+		private void DrawRangeLinesAndValues(Graphics graphics)
 		{
-			graphics.SetClip (ClientRectangle);
+			graphics.SetClip(ClientRectangle);
 
 			#region draw range lines
+
 			if (ShowRangeLines)
 			{
 				if (barOrientation == Orientation.Vertical)
 				{
-					float aboveRangeHeight = (float) GraphArea.Height * ( (AboveRangeValue - minimumValue) / (maximumValue - minimumValue) );
-					float belowRangeHeight = (float) GraphArea.Height * ( (BelowRangeValue - minimumValue) / (maximumValue - minimumValue) );
+					float aboveRangeHeight = GraphArea.Height *
+											 ((AboveRangeValue - minimumValue) /
+											  (maximumValue - minimumValue));
+					float belowRangeHeight = GraphArea.Height *
+											 ((BelowRangeValue - minimumValue) /
+											  (maximumValue - minimumValue));
 
-					Pen pen = new Pen (Color.Black);
+					Pen pen = new Pen(Color.Black);
 					pen.DashStyle = DashStyle.Dash;
-					graphics.DrawLine (pen, GraphArea.Left, GraphArea.Bottom - aboveRangeHeight, GraphArea.Right, GraphArea.Bottom - aboveRangeHeight);
-					graphics.DrawLine (pen, GraphArea.Left, GraphArea.Bottom - belowRangeHeight, GraphArea.Right, GraphArea.Bottom - belowRangeHeight);
+					graphics.DrawLine(pen,
+									  GraphArea.Left,
+									  GraphArea.Bottom - aboveRangeHeight,
+									  GraphArea.Right,
+									  GraphArea.Bottom - aboveRangeHeight);
+					graphics.DrawLine(pen,
+									  GraphArea.Left,
+									  GraphArea.Bottom - belowRangeHeight,
+									  GraphArea.Right,
+									  GraphArea.Bottom - belowRangeHeight);
 				}
 				else
 				{
-					float aboveRangeWidth = (float) GraphArea.Width * ( (AboveRangeValue - minimumValue) / (maximumValue - minimumValue) );
-					float belowRangeWidth = (float) GraphArea.Width * ( (BelowRangeValue - minimumValue) / (maximumValue - minimumValue) );
+					float aboveRangeWidth = GraphArea.Width *
+											((AboveRangeValue - minimumValue) /
+											 (maximumValue - minimumValue));
+					float belowRangeWidth = GraphArea.Width *
+											((BelowRangeValue - minimumValue) /
+											 (maximumValue - minimumValue));
 
-					Pen pen = new Pen (Color.Black);
+					Pen pen = new Pen(Color.Black);
 					pen.DashStyle = DashStyle.Dash;
-					graphics.DrawLine (pen, GraphArea.Left + aboveRangeWidth, GraphArea.Top, GraphArea.Left + aboveRangeWidth, GraphArea.Bottom);
-					graphics.DrawLine (pen, GraphArea.Left + belowRangeWidth, GraphArea.Top, GraphArea.Left + belowRangeWidth, GraphArea.Bottom);
+					graphics.DrawLine(pen,
+									  GraphArea.Left + aboveRangeWidth,
+									  GraphArea.Top,
+									  GraphArea.Left + aboveRangeWidth,
+									  GraphArea.Bottom);
+					graphics.DrawLine(pen,
+									  GraphArea.Left + belowRangeWidth,
+									  GraphArea.Top,
+									  GraphArea.Left + belowRangeWidth,
+									  GraphArea.Bottom);
 				}
 			}
+
 			#endregion draw range lines
 
 			#region draw range values
+
 			if (ShowRangeValues)
 			{
-				StringFormat sf  = new StringFormat ();
-				Brush textBrush = new SolidBrush (this.ForeColor);
+				StringFormat sf = new StringFormat();
+				Brush textBrush = new SolidBrush(ForeColor);
 
 				if (barOrientation == Orientation.Vertical)
 				{
-					float aboveRangeHeight = (float) GraphArea.Height * ( (AboveRangeValue - minimumValue) / (maximumValue - minimumValue));
-					float belowRangeHeight = (float) GraphArea.Height * ( (BelowRangeValue - minimumValue) / (maximumValue - minimumValue));
+					float aboveRangeHeight = GraphArea.Height *
+											 ((AboveRangeValue - minimumValue) /
+											  (maximumValue - minimumValue));
+					float belowRangeHeight = GraphArea.Height *
+											 ((BelowRangeValue - minimumValue) /
+											  (maximumValue - minimumValue));
 
-					aboveRangeRect = new RectangleF (ClientRectangle.Left, GraphArea.Bottom - aboveRangeHeight - Font.Height / 2, GraphMarginLeft - Font.Height / 2, Font.Height);
-					belowRangeRect = new RectangleF (ClientRectangle.Left, GraphArea.Bottom - belowRangeHeight - Font.Height / 2, GraphMarginLeft - Font.Height / 2, Font.Height);
+					aboveRangeRect = new RectangleF(ClientRectangle.Left,
+													GraphArea.Bottom - aboveRangeHeight -
+													Font.Height / 2,
+													GraphMarginLeft - Font.Height / 2,
+													Font.Height);
+					belowRangeRect = new RectangleF(ClientRectangle.Left,
+													GraphArea.Bottom - belowRangeHeight -
+													Font.Height / 2,
+													GraphMarginLeft - Font.Height / 2,
+													Font.Height);
 
-					sf.Trimming      = StringTrimming.Character;
-					sf.FormatFlags   = StringFormatFlags.NoWrap;
-					sf.Alignment     = StringAlignment.Far;
+					sf.Trimming = StringTrimming.Character;
+					sf.FormatFlags = StringFormatFlags.NoWrap;
+					sf.Alignment = StringAlignment.Far;
 					sf.LineAlignment = StringAlignment.Center;
 
-					string above = "";
-					string below = "";
+					string above;
+					string below;
 					if (ValueFormat.Length != 0)
 					{
-						above = string.Format (CultureInfo.CurrentUICulture, ValueFormat, aboveRangeValue);
-						below = string.Format (CultureInfo.CurrentUICulture, ValueFormat, belowRangeValue);
+						above = string.Format(CultureInfo.CurrentUICulture,
+											  ValueFormat,
+											  aboveRangeValue);
+						below = string.Format(CultureInfo.CurrentUICulture,
+											  ValueFormat,
+											  belowRangeValue);
 					}
 					else
 					{
-						above = aboveRangeValue.ToString (CultureInfo.CurrentUICulture);
-						below = belowRangeValue.ToString (CultureInfo.CurrentUICulture);
+						above = aboveRangeValue.ToString(CultureInfo.CurrentUICulture);
+						below = belowRangeValue.ToString(CultureInfo.CurrentUICulture);
 					}
-					graphics.DrawString (above, Font, textBrush, aboveRangeRect, sf);
-					graphics.DrawString (below, Font, textBrush, belowRangeRect, sf);
-
+					graphics.DrawString(above, Font, textBrush, aboveRangeRect, sf);
+					graphics.DrawString(below, Font, textBrush, belowRangeRect, sf);
 				}
 				else
 				{
-					float aboveRangeWidth = (float) GraphArea.Width * ( (AboveRangeValue - minimumValue) / (maximumValue - minimumValue));
-					float belowRangeWidth = (float) GraphArea.Width * ( (BelowRangeValue - minimumValue) / (maximumValue - minimumValue));
+					float aboveRangeWidth = GraphArea.Width *
+											((AboveRangeValue - minimumValue) /
+											 (maximumValue - minimumValue));
+					float belowRangeWidth = GraphArea.Width *
+											((BelowRangeValue - minimumValue) /
+											 (maximumValue - minimumValue));
 
-					string above = "";
-					string below = "";
+					string above;
+					string below;
 					if (ValueFormat.Length != 0)
 					{
-						above = string.Format (CultureInfo.CurrentUICulture, ValueFormat, aboveRangeValue);
-						below = string.Format (CultureInfo.CurrentUICulture, ValueFormat, belowRangeValue);
+						above = string.Format(CultureInfo.CurrentUICulture,
+											  ValueFormat,
+											  aboveRangeValue);
+						below = string.Format(CultureInfo.CurrentUICulture,
+											  ValueFormat,
+											  belowRangeValue);
 					}
 					else
 					{
-						above = aboveRangeValue.ToString (CultureInfo.CurrentUICulture);
-						below = belowRangeValue.ToString (CultureInfo.CurrentUICulture);
+						above = aboveRangeValue.ToString(CultureInfo.CurrentUICulture);
+						below = belowRangeValue.ToString(CultureInfo.CurrentUICulture);
 					}
 
-					SizeF aboveSize = graphics.MeasureString (above, Font);
-					SizeF belowSize = graphics.MeasureString (below, Font);
+					SizeF aboveSize = graphics.MeasureString(above, Font);
+					SizeF belowSize = graphics.MeasureString(below, Font);
 
-					aboveRangeRect = new RectangleF (GraphArea.Left + aboveRangeWidth - aboveSize.Width / 2, GraphArea.Bottom + 2, aboveSize.Width, Font.Height);
-					belowRangeRect = new RectangleF (GraphArea.Left + belowRangeWidth - belowSize.Width / 2, GraphArea.Bottom + 2, belowSize.Width, Font.Height);
+					aboveRangeRect =
+							new RectangleF(GraphArea.Left + aboveRangeWidth - aboveSize.Width / 2,
+										   GraphArea.Bottom + 2,
+										   aboveSize.Width,
+										   Font.Height);
+					belowRangeRect =
+							new RectangleF(GraphArea.Left + belowRangeWidth - belowSize.Width / 2,
+										   GraphArea.Bottom + 2,
+										   belowSize.Width,
+										   Font.Height);
 
 					sf.Alignment = StringAlignment.Far;
 					sf.LineAlignment = StringAlignment.Center;
 
-					graphics.DrawString (above, Font, textBrush, aboveRangeRect, sf);
-					graphics.DrawString (below, Font, textBrush, belowRangeRect, sf);
-
+					graphics.DrawString(above, Font, textBrush, aboveRangeRect, sf);
+					graphics.DrawString(below, Font, textBrush, belowRangeRect, sf);
 				}
-
 			}
-			#endregion draw range values
 
+			#endregion draw range values
 		}
 
 		/// <summary>
@@ -1007,12 +1119,13 @@ namespace GraphComponents
 		/// set all the values so that the changes are reflected on the
 		/// graph
 		/// </summary>
-		public void UpdateDisplay ()
+		public void UpdateDisplay()
 		{
-			RefreshDisplay ();
+			RefreshDisplay();
 		}
 
 		#endregion
+
 		#endregion methods
 	}
 }

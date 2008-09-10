@@ -1,10 +1,10 @@
 using System;
-using NUnit.Framework;
 using System.ComponentModel;
+using NUnit.Framework;
 
-namespace WeSay.Data.Tests.IBindingListTests
+namespace WeSay.Data.Tests
 {
-	public class IBindingListBaseTest<T, K> where T: new()
+	public class IBindingListBaseTest<T, K> where T : new()
 	{
 		protected IBindingList _bindingList;
 		protected PropertyDescriptor _property;
@@ -15,8 +15,8 @@ namespace WeSay.Data.Tests.IBindingListTests
 
 		protected void ResetListChanged()
 		{
-			this._listChanged = false;
-			this._listChangedEventArgs = null;
+			_listChanged = false;
+			_listChangedEventArgs = null;
 		}
 
 		public void _bindingList_ListChanged(object sender, ListChangedEventArgs e)
@@ -28,7 +28,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 		[SetUp]
 		public virtual void SetUp()
 		{
-			this._bindingList.ListChanged += new ListChangedEventHandler(_bindingList_ListChanged);
+			_bindingList.ListChanged += _bindingList_ListChanged;
 			_listChanged = false;
 			_listChangedEventArgs = null;
 		}
@@ -39,7 +39,6 @@ namespace WeSay.Data.Tests.IBindingListTests
 			_bindingList.AddIndex(_property); // can do nothing.
 		}
 
-
 		[Test]
 		public void AddNew()
 		{
@@ -49,7 +48,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				int count = _bindingList.Count;
 				object o = _bindingList.AddNew();
 				Assert.IsNotNull(o);
-				Assert.IsInstanceOfType(typeof(T), o);
+				Assert.IsInstanceOfType(typeof (T), o);
 				Assert.AreEqual(count + 1, _bindingList.Count);
 				Assert.AreEqual(o, _bindingList[count]);
 				if (_bindingList.SupportsChangeNotification)
@@ -64,12 +63,10 @@ namespace WeSay.Data.Tests.IBindingListTests
 			{
 				try
 				{
-					object o = _bindingList.AddNew();
+					_bindingList.AddNew();
 					Assert.Fail();
 				}
-				catch (NotSupportedException)
-				{
-				}
+				catch (NotSupportedException) {}
 				catch
 				{
 					Assert.Fail("When AddNew is not supported, should throw not supported exception");
@@ -77,13 +74,9 @@ namespace WeSay.Data.Tests.IBindingListTests
 			}
 		}
 
-		protected virtual void VerifySortAscending()
-		{
-		}
+		protected virtual void VerifySortAscending() {}
 
-		protected virtual void VerifySortDescending()
-		{
-		}
+		protected virtual void VerifySortDescending() {}
 
 		protected virtual void VerifySort(ListSortDirection direction)
 		{
@@ -116,9 +109,8 @@ namespace WeSay.Data.Tests.IBindingListTests
 			{
 				if (_property == null)
 				{
-					PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(T));
-					this._property = pdc[0];
-
+					PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof (T));
+					_property = pdc[0];
 				}
 				Assert.IsFalse(_listChanged);
 				VerifyUnsorted();
@@ -145,12 +137,11 @@ namespace WeSay.Data.Tests.IBindingListTests
 					_bindingList.ApplySort(_property, direction);
 					Assert.Fail();
 				}
-				catch (NotSupportedException)
-				{
-				}
+				catch (NotSupportedException) {}
 				catch
 				{
-					Assert.Fail("When Sorting is not supported, should throw not supported exception");
+					Assert.Fail(
+							"When Sorting is not supported, should throw not supported exception");
 				}
 			}
 		}
@@ -175,15 +166,14 @@ namespace WeSay.Data.Tests.IBindingListTests
 			{
 				try
 				{
-					int row = _bindingList.Find(_property, _key);
+					_bindingList.Find(_property, _key);
 					Assert.Fail();
 				}
-				catch (NotSupportedException)
-				{
-				}
+				catch (NotSupportedException) {}
 				catch
 				{
-					Assert.Fail("When Finding is not supported, should throw not supported exception");
+					Assert.Fail(
+							"When Finding is not supported, should throw not supported exception");
 				}
 			}
 		}
@@ -213,8 +203,8 @@ namespace WeSay.Data.Tests.IBindingListTests
 				}
 				if (_property == null)
 				{
-					PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(T));
-					this._property = pdc[0];
+					PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof (T));
+					_property = pdc[0];
 				}
 				_bindingList.ApplySort(_property, ListSortDirection.Descending);
 				ResetListChanged();
@@ -236,12 +226,11 @@ namespace WeSay.Data.Tests.IBindingListTests
 					_bindingList.RemoveSort();
 					Assert.Fail();
 				}
-				catch (NotSupportedException)
-				{
-				}
+				catch (NotSupportedException) {}
 				catch
 				{
-					Assert.Fail("When Sorting is not supported, should throw not supported exception");
+					Assert.Fail(
+							"When Sorting is not supported, should throw not supported exception");
 				}
 			}
 		}
@@ -259,6 +248,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				Assert.AreEqual(-1, _listChangedEventArgs.OldIndex);
 			}
 		}
+
 		[Test]
 		public virtual void ListChangedOnChange()
 		{
@@ -267,7 +257,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 			{
 				if (_bindingList.Count == 0)
 				{
-					_bindingList.Add(this._newItem);
+					_bindingList.Add(_newItem);
 					_listChanged = false;
 					_listChangedEventArgs = null;
 				}
@@ -278,6 +268,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				Assert.AreEqual(-1, _listChangedEventArgs.OldIndex);
 			}
 		}
+
 		[Test]
 		public void ListChangedOnRemoveAt()
 		{
@@ -286,7 +277,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 			{
 				if (_bindingList.Count == 0)
 				{
-					_bindingList.Add(this._newItem);
+					_bindingList.Add(_newItem);
 					_listChanged = false;
 					_listChangedEventArgs = null;
 				}
@@ -297,6 +288,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				Assert.AreEqual(0, _listChangedEventArgs.NewIndex);
 			}
 		}
+
 		[Test]
 		public void ListChangedOnRemove()
 		{
@@ -305,7 +297,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 			{
 				if (_bindingList.Count == 0)
 				{
-					_bindingList.Add(this._newItem);
+					_bindingList.Add(_newItem);
 					_listChanged = false;
 					_listChangedEventArgs = null;
 				}
@@ -325,7 +317,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 			{
 				if (_bindingList.Count == 0)
 				{
-					_bindingList.Add(this._newItem);
+					_bindingList.Add(_newItem);
 					_listChanged = false;
 					_listChangedEventArgs = null;
 				}
@@ -334,55 +326,43 @@ namespace WeSay.Data.Tests.IBindingListTests
 				Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.Reset);
 			}
 		}
-
 	}
 
 	public class SimpleClass
 	{
-		string _s;
-		int _i;
+		private string _s;
+		private int _i;
 
-		public SimpleClass()
-		{
-		}
+		public SimpleClass() {}
+
 		public SimpleClass(string s, int i)
 		{
-			this._s = s;
-			this._i = i;
+			_s = s;
+			_i = i;
 		}
 
 		public string String
 		{
-			get {
-				return _s;
-			}
-			set {
-				_s = value;
-			}
+			get { return _s; }
+			set { _s = value; }
 		}
 
 		public int Int
 		{
-			get {
-				return _i;
-			}
-			set {
-				_i = value;
-			}
+			get { return _i; }
+			set { _i = value; }
 		}
-
 	}
 
-
 	[TestFixture]
-	public class IBindingListStringTest : IBindingListBaseTest<SimpleClass,string>
+	public class IBindingListStringTest: IBindingListBaseTest<SimpleClass, string>
 	{
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
 		{
 			BindingList<SimpleClass> bindingList = new BindingList<SimpleClass>();
 
-			bindingList.AddingNew += new AddingNewEventHandler(bindingList_AddingNew);
+			bindingList.AddingNew += bindingList_AddingNew;
 
 			bindingList.AllowEdit = true;
 			bindingList.AllowNew = true;
@@ -394,45 +374,44 @@ namespace WeSay.Data.Tests.IBindingListTests
 			bindingList.Add(new SimpleClass("4", 4));
 			bindingList.Add(new SimpleClass("5", 5));
 
-			this._bindingList = bindingList;
-			this._newItem = new SimpleClass("6", 6);
-			this._key = "1";
-			this._property = null;
+			_bindingList = bindingList;
+			_newItem = new SimpleClass("6", 6);
+			_key = "1";
+			_property = null;
 		}
 
-		void bindingList_AddingNew(object sender, AddingNewEventArgs e)
+		private static void bindingList_AddingNew(object sender, AddingNewEventArgs e)
 		{
 			e.NewObject = new SimpleClass();
 		}
 	}
 
 	[TestFixture]
-	public class IBindingListNoDataTest : IBindingListBaseTest<SimpleClass, string>
+	public class IBindingListNoDataTest: IBindingListBaseTest<SimpleClass, string>
 	{
 		[SetUp]
 		public override void SetUp()
 		{
 			BindingList<SimpleClass> bindingList = new BindingList<SimpleClass>();
 
-			bindingList.AddingNew += new AddingNewEventHandler(bindingList_AddingNew);
+			bindingList.AddingNew += bindingList_AddingNew;
 
 			bindingList.AllowEdit = true;
 			bindingList.AllowNew = true;
 			bindingList.AllowRemove = true;
 			bindingList.RaiseListChangedEvents = true;
 
-			this._bindingList = bindingList;
-			this._newItem = new SimpleClass("6", 6);
-			this._key = "1";
-			this._property = null;
+			_bindingList = bindingList;
+			_newItem = new SimpleClass("6", 6);
+			_key = "1";
+			_property = null;
 
 			base.SetUp();
 		}
 
-		void bindingList_AddingNew(object sender, AddingNewEventArgs e)
+		private static void bindingList_AddingNew(object sender, AddingNewEventArgs e)
 		{
 			e.NewObject = new SimpleClass();
 		}
 	}
-
 }

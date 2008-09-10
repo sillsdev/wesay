@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Language;
-using System.Collections.Generic;
-using Palaso.Reporting;
+using WeSay.Foundation;
 
 namespace WeSay.UI
 {
@@ -27,114 +26,73 @@ namespace WeSay.UI
 
 		[DefaultValue(false)]
 		[Browsable(true)]
-		new public bool AutoArrange
+		public new bool AutoArrange
 		{
-			get
-			{
-				return base.AutoArrange;
-			}
-			set
-			{
-				base.AutoArrange = value;
-			}
+			get { return base.AutoArrange; }
+			set { base.AutoArrange = value; }
 		}
 
 		[DefaultValue(false)]
 		[Browsable(true)]
-		new public bool MultiSelect
+		public new bool MultiSelect
 		{
-			get
-			{
-				return base.MultiSelect;
-			}
-			set
-			{
-				base.MultiSelect = value;
-			}
+			get { return base.MultiSelect; }
+			set { base.MultiSelect = value; }
 		}
 
 		[DefaultValue(false)]
 		[Browsable(true)]
-		new public bool HideSelection
+		public new bool HideSelection
 		{
-			get
-			{
-				return base.HideSelection;
-			}
-			set
-			{
-				base.HideSelection = value;
-			}
+			get { return base.HideSelection; }
+			set { base.HideSelection = value; }
 		}
 
 		[DefaultValue(false)]
 		[Browsable(true)]
-		new public bool LabelWrap
+		public new bool LabelWrap
 		{
-			get
-			{
-				return base.LabelWrap;
-			}
-			set
-			{
-				base.LabelWrap = value;
-			}
+			get { return base.LabelWrap; }
+			set { base.LabelWrap = value; }
 		}
 
 		[DefaultValue(true)]
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		new public bool VirtualMode
+		public new bool VirtualMode
 		{
-			get
-			{
-				return base.VirtualMode;
-			}
-			private set
-			{
-				base.VirtualMode = value;
-			}
+			get { return base.VirtualMode; }
+			private set { base.VirtualMode = value; }
 		}
 
 		[DefaultValue(true)]
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		new public bool OwnerDraw
+		public new bool OwnerDraw
 		{
-			get
-			{
-				return base.OwnerDraw;
-			}
-			private set
-			{
-				base.OwnerDraw = value;
-			}
+			get { return base.OwnerDraw; }
+			private set { base.OwnerDraw = value; }
 		}
 
 		[DefaultValue(true)]
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		new public bool UseCompatibleStateImageBehavior
+		public new bool UseCompatibleStateImageBehavior
 		{
-			get
-			{
-				return base.UseCompatibleStateImageBehavior;
-			}
-			private set
-			{
-				base.UseCompatibleStateImageBehavior = value;
-			}
+			get { return base.UseCompatibleStateImageBehavior; }
+			private set { base.UseCompatibleStateImageBehavior = value; }
 		}
 
 		protected override void OnCacheVirtualItems(CacheVirtualItemsEventArgs e)
 		{
 			_itemsCache.Clear();
 			base.OnCacheVirtualItems(e);
-			for (int i = e.StartIndex; i <= e.EndIndex; ++i)
+			for (int i = e.StartIndex;i <= e.EndIndex;++i)
 			{
 				_itemsCache[i] = GetVirtualItem(i);
 			}
 		}
+
 		protected override void OnRetrieveVirtualItem(RetrieveVirtualItemEventArgs e)
 		{
 			ListViewItem result;
@@ -147,12 +105,13 @@ namespace WeSay.UI
 		}
 
 		// ask for a real virtual item using RetrieveVirtualItem event
-		private ListViewItem GetVirtualItem(int index) {
+		private ListViewItem GetVirtualItem(int index)
+		{
 			RetrieveVirtualItemEventArgs e = new RetrieveVirtualItemEventArgs(index);
 			base.OnRetrieveVirtualItem(e);
 			if (e.Item == null)
 			{
-				e.Item = new ListViewItem(this._dataSource[e.ItemIndex].ToString());
+				e.Item = new ListViewItem(_dataSource[e.ItemIndex].ToString());
 			}
 
 			if (e.ItemIndex == SelectedIndex)
@@ -282,9 +241,9 @@ namespace WeSay.UI
 
 		protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
 		{
-			if (System.Environment.OSVersion.Version.Major >= 6)
+			if (Environment.OSVersion.Version.Major >= 6)
 			{
-				this.Invalidate();//needed to prevent artifacts of previous selections hanging around
+				Invalidate(); //needed to prevent artifacts of previous selections hanging around
 			}
 
 			base.OnItemSelectionChanged(e);
@@ -293,6 +252,7 @@ namespace WeSay.UI
 		}
 
 		#region extend hot click area to simulate list box behavior
+
 		// see comment on OnMouseUp
 		private bool _clickSelecting;
 		private Point _currentMouseLocation;
@@ -322,6 +282,7 @@ namespace WeSay.UI
 			_currentMouseLocation = e.Location;
 			base.OnMouseDown(e);
 		}
+
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
 			_clickSelecting = false;
@@ -353,7 +314,6 @@ namespace WeSay.UI
 			{
 				tooltip.Show(e.Item.ToolTipText, this, _currentMouseLocation, int.MaxValue);
 			}
-
 
 			base.OnItemMouseHover(e);
 		}
@@ -396,6 +356,7 @@ namespace WeSay.UI
 			_currentMouseLocation = e.Location;
 			base.OnMouseUp(e);
 		}
+
 		#endregion
 
 		protected override void OnDrawItem(DrawListViewItemEventArgs e)
@@ -410,8 +371,10 @@ namespace WeSay.UI
 			{
 				// All this is to make the selection across the whole list box
 				// and not just the extent of the text itself
-				Rectangle bounds =
-						new Rectangle(e.Bounds.X, e.Bounds.Y, header.Width, e.Bounds.Height);
+				Rectangle bounds = new Rectangle(e.Bounds.X,
+												 e.Bounds.Y,
+												 header.Width,
+												 e.Bounds.Height);
 
 				Brush backgroundBrush;
 				bool backgroundBrushNeedsDisposal = false;
@@ -451,23 +414,22 @@ namespace WeSay.UI
 		}
 
 		private bool _simulateListBoxBehavior;
+
 		[Browsable(true)]
 		[DefaultValue(true)]
-		public bool SimulateListBox {
-			get
-			{
-				return _simulateListBoxBehavior && Columns.Contains(this.header) && View == System.Windows.Forms.View.SmallIcon;
-			}
+		public bool SimulateListBox
+		{
+			get { return _simulateListBoxBehavior && Columns.Contains(header) && View == View.SmallIcon; }
 			set
 			{
 				_simulateListBoxBehavior = value;
-				if(value)
+				if (value)
 				{
-					if(!Columns.Contains(header))
+					if (!Columns.Contains(header))
 					{
 						Columns.Insert(0, header);
 					}
-					View = System.Windows.Forms.View.SmallIcon;
+					View = View.SmallIcon;
 				}
 			}
 		}
@@ -498,9 +460,10 @@ namespace WeSay.UI
 			}
 			set
 			{
-				if(DataSource == null)
+				if (DataSource == null)
 				{
-					throw new InvalidOperationException("DataSource must be initialized before SelectedIndex can be set.");
+					throw new InvalidOperationException(
+							"DataSource must be initialized before SelectedIndex can be set.");
 				}
 				if (value < -1 || value >= DataSource.Count)
 				{
@@ -553,19 +516,23 @@ namespace WeSay.UI
 		{
 			e.DrawBackground();
 			e.DrawBorder();
-			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left | TextFormatFlags.VerticalCenter;
+			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
+									TextFormatFlags.VerticalCenter;
 			if (_writingSystem != null && WritingSystem.RightToLeft)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
-			TextRenderer.DrawText(e.Graphics, e.ToolTipText, _writingSystem.Font, e.Bounds, tooltip.ForeColor, flags);
+			TextRenderer.DrawText(e.Graphics,
+								  e.ToolTipText,
+								  _writingSystem.Font,
+								  e.Bounds,
+								  tooltip.ForeColor,
+								  flags);
 		}
 
 		private void ToolTipPopup(object sender, PopupEventArgs e)
 		{
-				e.ToolTipSize =
-					   Size.Add(MeasureItemText(this.tooltip.GetToolTip(this)),
-												 new Size(0,5));
+			e.ToolTipSize = Size.Add(MeasureItemText(tooltip.GetToolTip(this)), new Size(0, 5));
 		}
 
 		private Size MeasureItemText(string text)
@@ -580,7 +547,7 @@ namespace WeSay.UI
 			{
 				return TextRenderer.MeasureText(g,
 												text,
-												this._writingSystem.Font,
+												_writingSystem.Font,
 												new Size(maxWidth, int.MaxValue),
 												flags);
 			}

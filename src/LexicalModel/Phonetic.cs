@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using WeSay.Foundation;
-
 namespace WeSay.LexicalModel
-{/*
+{
+	/*
 	public class Phonetic : WeSay.Foundation.WeSayDataObject
 	{
 		private MultiText _contents;

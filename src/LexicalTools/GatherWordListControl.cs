@@ -2,65 +2,55 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.Project;
 using WeSay.UI;
-
 
 namespace WeSay.LexicalTools
 {
-	public partial class GatherWordListControl : UserControl
+	public partial class GatherWordListControl: UserControl
 	{
 		private readonly GatherWordListTask _task;
 
 		//private System.Windows.Forms.Label _animatedText= new Label();
 		private bool _animationIsMovingFromList;
+
 		public GatherWordListControl()
 		{
 			Debug.Assert(DesignMode);
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(GatherWordListTask task,
-									 ViewTemplate viewTemplate)
+		public GatherWordListControl(GatherWordListTask task, WritingSystem lexicalUnitWritingSystem)
 		{
 			_task = task;
 
 			InitializeComponent();
 			InitializeDisplaySettings();
-			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			_vernacularBox.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
-			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
-			{
-				_vernacularBox.WritingSystemsForThisField = new WritingSystem[] { BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem };
-			}
-			else
-			{
-				_vernacularBox.WritingSystemsForThisField = new WritingSystem[] { lexicalFormField.WritingSystems[0] };
-			}
-			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
-			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
-			_vernacularBox.MinimumSize = this._boxForeignWord.Size;
+			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
+															{lexicalUnitWritingSystem};
+			_vernacularBox.TextChanged += _vernacularBox_TextChanged;
+			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
+			_vernacularBox.MinimumSize = _boxForeignWord.Size;
 
 			_listViewOfWordsMatchingCurrentItem.WritingSystem = _task.WordWritingSystem;
-		  //  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.WordWritingSystem.Font.GetHeight());
+			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.WordWritingSystem.Font.GetHeight());
 
 			UpdateStuff();
 
 			_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
-			_movingLabel.Finished += new EventHandler(OnAnimator_Finished);
+			_movingLabel.Finished += OnAnimator_Finished;
 		}
 
 		private void InitializeDisplaySettings()
 		{
-			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			BackColor = DisplaySettings.Default.BackgroundColor;
 		}
-
 
 		private void OnAnimator_Finished(object sender, EventArgs e)
 		{
@@ -72,14 +62,14 @@ namespace WeSay.LexicalTools
 			_vernacularBox.TextBoxes[0].SelectionStart = 1000; //go to end
 		}
 
-		void UpdateSourceWord()
+		private void UpdateSourceWord()
 		{
 			UpdateStuff();
 			_vernacularBox.ClearAllText();
 			_vernacularBox.TextBoxes[0].Focus();
 		}
 
-		void _vernacularBox_TextChanged(object sender, EventArgs e)
+		private void _vernacularBox_TextChanged(object sender, EventArgs e)
 		{
 			UpdateEnabledStates();
 		}
@@ -103,17 +93,18 @@ namespace WeSay.LexicalTools
 			else
 			{
 				_congratulationsControl.Hide();
-				Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
-				_boxForeignWord.Text = _task.CurrentWord;
+				Debug.Assert(_vernacularBox.TextBoxes.Count == 1,
+							 "other code here (for now), assumes exactly one ws/text box");
+				_boxForeignWord.Text = _task.CurrentWordFromWordlist;
 				PopulateWordsMatchingCurrentItem();
 			}
 			UpdateEnabledStates();
-
-	   }
+		}
 
 		private void UpdateEnabledStates()
 		{
-			_btnAddWord.Enabled = !_task.IsTaskComplete && _vernacularBox.TextBoxes[0].Text.Trim() != "";
+			_btnAddWord.Enabled = !_task.IsTaskComplete &&
+								  _vernacularBox.TextBoxes[0].Text.Trim() != "";
 			_btnNextWord.Enabled = _task.CanNavigateNext;
 			_btnPreviousWord.Enabled = _task.CanNavigatePrevious;
 		}
@@ -125,26 +116,25 @@ namespace WeSay.LexicalTools
 		private void PopulateWordsMatchingCurrentItem()
 		{
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
-			foreach (LexEntry entry in this._task.CurrentEntriesSorted)
+			foreach (RecordToken<LexEntry> recordToken in _task.GetMatchingRecords())
 			{
-				_listViewOfWordsMatchingCurrentItem.Items.Add(new EntryDisplayProxy(entry, _task.WordWritingSystem.Id));
+				_listViewOfWordsMatchingCurrentItem.Items.Add(recordToken);
 			}
 		}
 
 		private void _btnNextWord_Click(object sender, EventArgs e)
 		{
-			AddCurrentWord();//don't throw away what they were typing
+			AddCurrentWord(); //don't throw away what they were typing
 			_task.NavigateNext();
 			UpdateSourceWord();
 		}
+
 		private void _btnPreviousWord_Click(object sender, EventArgs e)
 		{
-			AddCurrentWord();//don't throw away what they were typing
+			AddCurrentWord(); //don't throw away what they were typing
 			_task.NavigatePrevious();
 			UpdateSourceWord();
 		}
-
-
 
 		private void _btnAddWord_Click(object sender, EventArgs e)
 		{
@@ -153,9 +143,10 @@ namespace WeSay.LexicalTools
 
 		private void AddCurrentWord()
 		{
-			Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
+			Debug.Assert(_vernacularBox.TextBoxes.Count == 1,
+						 "other code here (for now), assumes exactly one ws/text box");
 			string s = _vernacularBox.TextBoxes[0].Text.Trim();
-			if(s == "")
+			if (s == "")
 			{
 				return;
 			}
@@ -165,7 +156,6 @@ namespace WeSay.LexicalTools
 			_vernacularBox.TextBoxes[0].Text = "";
 			UpdateStuff();
 			_vernacularBox.TextBoxes[0].Focus();
-
 		}
 
 		private void _boxVernacularWord_KeyDown(object sender, KeyEventArgs e)
@@ -175,16 +165,22 @@ namespace WeSay.LexicalTools
 			switch (e.KeyCode)
 			{
 				case Keys.Return:
-					if(_btnAddWord.Enabled)
+					if (_btnAddWord.Enabled)
+					{
 						_btnAddWord_Click(this, null);
+					}
 					break;
 				case Keys.PageUp:
-					if(_btnPreviousWord.Enabled)
+					if (_btnPreviousWord.Enabled)
+					{
 						_btnPreviousWord_Click(this, null);
+					}
 					break;
 				case Keys.PageDown:
-					if(_btnNextWord.Enabled)
-					_btnNextWord_Click(this, null);
+					if (_btnNextWord.Enabled)
+					{
+						_btnNextWord_Click(this, null);
+					}
 					break;
 
 				default:
@@ -206,53 +202,28 @@ namespace WeSay.LexicalTools
 			{
 				int selectedListIndex = _listViewOfWordsMatchingCurrentItem.SelectedIndices[0];
 				string word = _listViewOfWordsMatchingCurrentItem.SelectedItem.ToString();
-				LexEntry entry = ((EntryDisplayProxy)_listViewOfWordsMatchingCurrentItem.SelectedItem).Entry;
-				Debug.Assert(entry!=null);
-				if(entry==null)
-				{
-					return;
-				}
-				Point start = _listViewOfWordsMatchingCurrentItem.GetItemRectangle(selectedListIndex).Location;
+
+				RecordToken<LexEntry> recordToken =
+						(RecordToken<LexEntry>) _listViewOfWordsMatchingCurrentItem.SelectedItem;
+				Point start =
+						_listViewOfWordsMatchingCurrentItem.GetItemRectangle(selectedListIndex).
+								Location;
 				start.Offset(_listViewOfWordsMatchingCurrentItem.Location);
 				Point destination = _vernacularBox.Location;
 				destination.Offset(_vernacularBox.TextBoxes[0].Location);
 
-								 // NB: don't do this before storing what they clicked on.
-			   AddCurrentWord();//don't throw away what they were typing
+				// NB: don't do this before storing what they clicked on.
+				AddCurrentWord(); //don't throw away what they were typing
 
-				_task.TryToRemoveAssociationWithListWordFromEntry(entry);
+				_task.TryToRemoveAssociationWithListWordFromEntry(recordToken);
 
-			   // _movingLabel.Go(word,_listViewOfWordsMatchingCurrentItem.GetItemRect(selectedListIndex).Location, _vernacularBox.Location)
+				// _movingLabel.Go(word,_listViewOfWordsMatchingCurrentItem.GetItemRect(selectedListIndex).Location, _vernacularBox.Location)
 
-				 UpdateStuff();
+				UpdateStuff();
 				// _vernacularBox.TextBoxes[0].Text = word;
 
 				_animationIsMovingFromList = true;
-				_movingLabel.Go(word,
-								start,
-								destination);
-			}
-		}
-
-
-		public class EntryDisplayProxy
-		{
-			private readonly string _writingSystemId;
-			private LexEntry _entry;
-			public EntryDisplayProxy(LexEntry entry, string writingSystemId)
-			{
-				_writingSystemId = writingSystemId;
-				_entry = entry;
-			}
-
-			public LexEntry Entry
-			{
-				get { return _entry; }
-			}
-
-			public override string ToString()
-			{
-				return _entry.LexicalForm.GetBestAlternative(_writingSystemId, "*");
+				_movingLabel.Go(word, start, destination);
 			}
 		}
 	}
