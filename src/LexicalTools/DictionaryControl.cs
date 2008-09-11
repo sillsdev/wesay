@@ -277,9 +277,7 @@ namespace WeSay.LexicalTools
 				_records = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(_listWritingSystem);
 				_findTextAdapter.Items = _records;
 			}
-			_recordsListBox.BeginUpdate();
 			_recordsListBox.DataSource = (BindingList<RecordToken<LexEntry>>) _records;
-			_recordsListBox.EndUpdate();
 		}
 
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
@@ -297,14 +295,6 @@ namespace WeSay.LexicalTools
 
 			bool writingSystemUsedInLexicalForm =
 					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id);
-			//if (writingSystemUsedInLexicalForm)
-			//{
-			//    displayString =
-			//            recordToken.RealObject.LexicalForm.GetBestAlternative(
-			//                    _listWritingSystem.Id, string.Empty);
-			//    e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
-			//}
-
 			if (string.IsNullOrEmpty(displayString))
 			{
 				displayString = "(";
@@ -331,15 +321,6 @@ namespace WeSay.LexicalTools
 			return ApproximateMatcher.FindClosestForms(items,
 													   text,
 													   ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
-//            return ApproximateMatcher.FindClosestForms<object>(items,
-//                                                                              delegate(object o)
-//                                                                              {
-//                                                                                  RecordToken<LexEntry> token =
-//                                                                                      (RecordToken<LexEntry>) o;
-//                                                                                  return (string)(token["Form"]);
-//                                                                              },
-//                                                                              text,
-//                                                                              ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
 		}
 
 		private void OnCmWritingSystemClicked(object sender, EventArgs e)

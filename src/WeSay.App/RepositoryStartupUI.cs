@@ -16,7 +16,6 @@ namespace WeSay.App
 			using (ProgressDialog dlg = new ProgressDialog())
 			{
 				dlg.Overview = "Please wait while WeSay loads your data.";
-						"Please wait while WeSay migrates your lift database to the required version.";
 				BackgroundWorker worker = new BackgroundWorker();
 				worker.DoWork += delegate (object sender, DoWorkEventArgs args)
 								 {

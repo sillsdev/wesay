@@ -63,6 +63,7 @@ namespace WeSay.UI
 		{
 			this.Select();
 		}
+
 		/// <summary>
 		/// Forces scroll bar to only have vertical scroll bar and not horizontal scroll bar by
 		/// allowing enough space for the scroll bar to be added in (even though it then

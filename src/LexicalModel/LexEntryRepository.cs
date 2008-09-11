@@ -545,7 +545,6 @@ namespace WeSay.LexicalModel
 						{
 							foreach (LanguageForm form in sense.Gloss.Forms)
 							{
-
 								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 								string lexicalForm = entry.LexicalForm[lexicalUnitWritingSystem.Id];
 								if (String.IsNullOrEmpty(lexicalForm))
