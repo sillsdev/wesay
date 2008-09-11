@@ -215,10 +215,33 @@ namespace WeSay.LexicalModel
 			_progressState.TotalNumberOfSteps = e.Steps;
 		}
 
+		//private DateTime _timeOfLastQueryForNewRecords;
+
 		private string LiftDirectory
 		{
 			get { return Path.GetDirectoryName(_liftFilePath); }
 		}
+
+		//Don't think this is needed anymore TA 7-4-2008
+		///// <summary>
+		///// Give a chance to do incremental update if warranted
+		///// </summary>
+		///// <remarks>
+		///// If the caller doesn't know when actual comitts happen, that's ok.
+		///// Just call at reasonable intervals.
+		///// </remarks>
+		///// <param name="sender"></param>
+		///// <param name="e"></param>
+		//public void OnDataCommitted(object sender, EventArgs e)
+		//{
+		//    _commitCount++;
+		//    if (_commitCount < _checkFrequency)
+		//    {
+		//        return;
+		//    }
+		//    _commitCount = 0;
+		//    DoLiftUpdateNow(false);
+		//}
 
 		private void UpdateLiftFileWithModified(IEnumerable<LexEntry> entriesToUpdate)
 		{
@@ -235,6 +258,12 @@ namespace WeSay.LexicalModel
 		private void UpdateLiftFileWithNew(LexEntry entryToUpdate)
 		{
 			CreateFileContainingNew(entryToUpdate);
+			MergeIncrementFiles();
+		}
+
+		private void UpdateLiftFileWithDeleted(IEnumerable<LexEntry> entriesToDelete)
+		{
+			CreateFileContainingDeleted(entriesToDelete);
 			MergeIncrementFiles();
 		}
 
@@ -366,6 +395,56 @@ namespace WeSay.LexicalModel
 				time = time.AddTicks(1);
 			}
 		}
+
+		//I don't think this is needed anymore TA 7-9-2008
+		///// <summary>
+		///// wierd name!
+		///// </summary>
+		//public static void LiftIsFreshNow()
+		//{
+		//    RecordUpdateTime(DateTime.UtcNow);
+		//}
+
+		//What is this method for??? TA 7-4-2008
+		//private void RecordUpdateTime(DateTime time)
+		//{
+		//    //// the resolution of the file modified time is a whole second on linux
+		//    //// so we need to set this to the ceiling of the time in seconds and then
+		//    //// wait until the actual time has passed this window
+		//    //int millisecondsLostInResolution = 1000 - time.Millisecond;
+		//    //time = time.AddMilliseconds(millisecondsLostInResolution);
+		//    //TimeSpan timeout = time - DateTime.UtcNow;
+		//    //if(timeout.Ticks > 0)
+		//    //{
+		//    //    Thread.Sleep(timeout);
+		//    //}
+		//    bool wasLocked = IsLiftFileLocked;
+		//    if (wasLocked)
+		//    {
+		//        UnLockLift();
+		//    }
+		//    //File.SetLastWriteTimeUtc(_liftFilePath, time);
+		//    //Debug.Assert(time == GetLastUpdateTime());
+		//    if (wasLocked)
+		//    {
+		//        LockLift();
+		//    }
+		//}
+
+		//I don't think this is needed anymore!!! TA 7-9-2008
+		//private static DateTime GetLastUpdateTime()
+		//{
+		//    Debug.Assert(Directory.Exists(LiftDirectory));
+		//    return File.GetLastWriteTimeUtc(_liftFilePath);
+		//}
+
+		//I don't think this is needed anymore TA 7-9-2008
+		//public IList<RepositoryId> GetRecordsNeedingUpdateInLift()
+		//{
+		//    DateTime last = GetLastUpdateTime();
+		//    _timeOfLastQueryForNewRecords = DateTime.UtcNow;
+		//    return _lexEntryRepository.GetItemsModifiedSince(last);
+		//}
 
 		/// <remark>
 		/// The protection provided by this simple approach is obviously limited;

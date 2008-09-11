@@ -92,13 +92,21 @@ namespace WeSay.Data
 
 		private ResultSet<T> QueryNewItem(T item)
 		{
+			bool hasResults = false;
 			List<RecordToken<T>> results = new List<RecordToken<T>>();
 			foreach (IQuery<T> query in _cachedQueries)
 			{
 				foreach (Dictionary<string, object> result in query.GetResults(item))
 				{
 					results.Add(new RecordToken<T>(_repositoryQueried, result, _repositoryQueried.GetId(item)));
+					hasResults = true;
 				}
+			}
+
+			//!!!I don't know how to test this case. Just copied it from every other place that produces Recordtokens TA 2008-08-13
+			if (!hasResults)
+			{
+			   results.Add(new RecordToken<T>(_repositoryQueried, _repositoryQueried.GetId(item)));
 			}
 			return new ResultSet<T>(_repositoryQueried, results);
 		}

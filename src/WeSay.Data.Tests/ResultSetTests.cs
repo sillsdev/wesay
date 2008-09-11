@@ -39,6 +39,48 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		public void Constructor_DuplicateInResults_DuplicateIsRemoved()
+		{
+			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
+
+			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(8)));
+
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
+			Assert.AreEqual(1, resultSet.Count);
+		}
+
+		[Test]
+		public void Constructor_DuplicateInSeparateResults_DuplicateIsRemoved()
+		{
+			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
+
+			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(8)));
+
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results, results);
+			Assert.AreEqual(1, resultSet.Count);
+		}
+
+		[Test]
+		public void Constructor_DuplicateResultsOutOfOrder_DuplicateIsRemoved()
+		{
+			int originalCount = _resultSet.Count;
+			TestRepositoryId id = (TestRepositoryId) _resultSet[2].Id;
+			// add a duplicate
+			_results.Add(new RecordToken<TestItem>(_repository, id));
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, _results);
+			Assert.AreEqual(originalCount, resultSet.Count);
+
+			// make sure that the one that was removed was the correct one
+			// by removing all instances of it (which should only remove one)
+			resultSet.RemoveAll(delegate(RecordToken<TestItem> token)
+									 {
+										 return token.Id == id;
+									 });
+			Assert.AreEqual(originalCount - 1, resultSet.Count);
+		}
+
+		[Test]
 		public void Constructor_HasNoDuplicate_OrderRetained()
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
@@ -55,6 +97,23 @@ namespace WeSay.Data.Tests
 				Assert.AreEqual(results[i], token);
 				++i;
 			}
+		}
+
+		[Test]
+		public void Constructor_HasDuplicates_SortOrderRetained()
+		{
+			TestRepositoryId id = (TestRepositoryId)_resultSet[2].Id;
+			List<RecordToken<TestItem>> expectedResults = new List<RecordToken<TestItem>>(_results);
+			// add a duplicate
+			_results.Add(new RecordToken<TestItem>(_repository, id));
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, _results);
+			int i = 0;
+			foreach (RecordToken<TestItem> token in resultSet)
+			{
+				Assert.AreEqual(expectedResults[i], token);
+				++i;
+			}
+
 		}
 
 		[Test]

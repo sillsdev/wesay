@@ -306,7 +306,6 @@ namespace WeSay.LexicalTools
 			RefreshCurrentDomainAndQuestion();
 			_vernacularBox.FocusOnFirstWsAlternative();
 		}
-
 		public void Cleanup()
 		{
 			_btnAddWord_Click(this, null);

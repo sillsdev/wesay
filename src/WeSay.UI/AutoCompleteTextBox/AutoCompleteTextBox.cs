@@ -300,6 +300,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			string tip = _itemDisplayAdaptor.GetToolTip(SelectedItem);
 			_toolTip.SetToolTip(this, tip);
 			_toolTip.ToolTipTitle = _itemDisplayAdaptor.GetToolTipTitle(SelectedItem);
+			;
 		}
 
 		private void List_MouseMove(object sender, MouseEventArgs e)
