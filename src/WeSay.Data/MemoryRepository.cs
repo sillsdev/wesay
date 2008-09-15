@@ -161,44 +161,10 @@ namespace WeSay.Data
 
 		#region IDisposable Members
 
-#if DEBUG
-		~MemoryRepository()
-		{
-			if (!this._disposed)
-			{
-				throw new ApplicationException("Disposed not explicitly called on MemoryRepository.");
-			}
-		}
-#endif
 
-		private bool _disposed;
 
 		public virtual void Dispose()
 		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!this._disposed)
-			{
-				if (disposing)
-				{
-					// dispose-only, i.e. non-finalizable logic
-				}
-
-				// shared (dispose and finalizable) cleanup logic
-				this._disposed = true;
-			}
-		}
-
-		protected void VerifyNotDisposed()
-		{
-			if (this._disposed)
-			{
-				throw new ObjectDisposedException("MemoryRepository");
-			}
 		}
 
 		#endregion
