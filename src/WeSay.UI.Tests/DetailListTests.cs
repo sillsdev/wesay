@@ -56,7 +56,7 @@ namespace WeSay.UI.Tests
 			_window.Close();
 		}
 
-#if (!DEBUG)
+#if (DEBUG)
 		[Test]
 		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_RowLessThan0_throws()
