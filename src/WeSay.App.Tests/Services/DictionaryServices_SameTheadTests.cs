@@ -43,12 +43,17 @@ namespace WeSay.App.Tests.Services
 																			   ._project);
 		}
 
+		[TearDown]
+		public void TearDown()
+		{
+			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
+		}
+
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
-			_lexEntryRepository.Dispose();
 			_projectSetupSharedByAllTests.Dispose();
-			File.Delete(_filePath);
 		}
 
 		private void MakeTestLexEntry(string writingSystemId, string lexicalForm)
