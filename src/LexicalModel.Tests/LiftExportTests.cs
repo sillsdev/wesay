@@ -23,8 +23,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 			_filePath = Path.GetTempFileName();
-			LiftRepository repository = new LiftRepository(_filePath);
-			_lexEntryRepository = new LexEntryRepository(repository);
+			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_fieldToOptionListName = new Dictionary<string, string>();
 			_stringBuilder = new StringBuilder();
 			PrepWriterForFragment();
