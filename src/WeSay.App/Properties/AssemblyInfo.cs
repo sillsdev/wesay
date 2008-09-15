@@ -12,7 +12,7 @@ using System.Security.Permissions;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("WeSay")]
-[assembly: AssemblyProduct("WeSay Preview 3")]
+[assembly: AssemblyProduct("WeSay Preview 4")]
 [assembly: AssemblyCopyright("Copyright © WeSay 2006")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
