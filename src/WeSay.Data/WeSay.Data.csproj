@@ -82,6 +82,7 @@
 	<Compile Include="ResultSetCache.cs" />
 	<Compile Include="ResultSetCacheManager.cs" />
 	<Compile Include="SynchronicRepository.cs" />
+	<Compile Include="Properties\InternalsVisible.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

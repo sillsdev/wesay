@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Palaso.Progress;
 
 namespace WeSay.Data
 {
@@ -17,7 +16,7 @@ namespace WeSay.Data
 		public DateTime LastModified
 		{
 			get { return lastModified; }
-			internal set
+			set
 			{
 				value = value.ToUniversalTime();
 				lastModified = value;

@@ -6,7 +6,7 @@ using Palaso.Progress;
 
 namespace WeSay.Data
 {
-	internal class Db4oRepository<T>: IRepository<T> where T : class, new()
+	public class Db4oRepository<T>: IRepository<T> where T : class, new()
 	{
 		private readonly Db4oDataSource _database;
 		private const int ActivationDepth = 99;

@@ -11,7 +11,7 @@ namespace WeSay.Data
 		private readonly List<RecordToken<T>> _results;
 		private readonly IRepository<T> _repository;
 
-		internal ResultSet(IRepository<T> repository, params IEnumerable<RecordToken<T>>[] results)
+		public ResultSet(IRepository<T> repository, params IEnumerable<RecordToken<T>>[] results)
 		{
 			if (repository == null)
 			{

@@ -182,7 +182,7 @@ namespace WeSay.Foundation.Options
 			}
 #if !DEBUG
 			}
-			catch (Exception e)
+			catch (Exception /*e*/)
 			{
 				//not worth crashing over some regex problem
 			}
