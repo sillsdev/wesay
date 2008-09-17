@@ -101,11 +101,10 @@ namespace WeSay.LexicalModel.Tests
 			using (new LiftRepository(emptyFileToBeFilled))
 			{
 			}
-			string fileContent = File.ReadAllText(emptyFileToBeFilled);
-			const string emptyLiftFileContent =
-					@"<?xml version=""1.0"" encoding=""utf-8""?>
-<lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
-			Assert.AreEqual(emptyLiftFileContent, fileContent);
+			XmlDocument doc = new XmlDocument();
+			doc.Load(emptyFileToBeFilled);
+			XmlNode root = doc.DocumentElement;
+			Assert.AreEqual("lift", root.Name);
 		}
 
 		[Test]
