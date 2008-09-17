@@ -1,6 +1,7 @@
 using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
+using TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
@@ -15,6 +16,7 @@ namespace WeSay.LexicalTools.Tests
 		private LexEntry _target;
 		private LexEntry _source;
 		private LexEntryRepository _lexEntryRepository;
+		private TemporaryFolder _tempFolder;
 		private string _filePath;
 		private LexRelationType _synonymsRelationType;
 		private LexRelationType _synonymRelationType;
@@ -26,7 +28,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 
-			_filePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 			_target = CreateEntry("one", "single item");
@@ -59,7 +62,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Teardown()
 		{
 			_lexEntryRepository.Dispose();
-			File.Delete(_filePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]

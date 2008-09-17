@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using NUnit.Framework;
+using TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -10,6 +11,7 @@ namespace WeSay.LexicalTools.Tests
 	public class MissingInfoTaskTests: TaskBaseTests
 	{
 		private LexEntryRepository _lexEntryRepository;
+		private TemporaryFolder _tempFolder;
 		private string _filePath;
 
 		private string _fieldsToShow;
@@ -27,7 +29,8 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_filePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 			WeSayWordsProject.InitializeForTests();
@@ -72,7 +75,7 @@ namespace WeSay.LexicalTools.Tests
 		public void TearDown()
 		{
 			_lexEntryRepository.Dispose();
-			File.Delete(_filePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]

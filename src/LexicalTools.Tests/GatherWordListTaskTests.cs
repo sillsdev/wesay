@@ -1,6 +1,7 @@
 using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
+using TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
@@ -11,6 +12,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class GatherWordListTaskTests: TaskBaseTests
 	{
+		private TemporaryFolder _tempFolder;
 		private LexEntryRepository _lexEntryRepository;
 		private string _wordListFilePath;
 		private string _filePath;
@@ -22,8 +24,9 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_wordListFilePath = Path.GetTempFileName();
-			_filePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_wordListFilePath = _tempFolder.GetTemporaryFile();
+			_filePath = _tempFolder.GetTemporaryFile();
 			//Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
@@ -54,8 +57,7 @@ namespace WeSay.LexicalTools.Tests
 		public void TearDown()
 		{
 			_lexEntryRepository.Dispose();
-			File.Delete(_wordListFilePath);
-			File.Delete(_filePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]

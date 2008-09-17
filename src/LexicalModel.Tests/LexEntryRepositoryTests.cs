@@ -8,6 +8,7 @@ using WeSay.Data;
 using WeSay.Data.Tests;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4oSpecific;
 using WeSay.LexicalModel.Tests;
@@ -17,15 +18,16 @@ namespace WeSay.LexicalModel.Tests
 	[TestFixture]
 	public class LexEntryRepositoryTests
 	{
-		private string _filePath;
+		private TemporaryFolder _temporaryFolder;
 		private LexEntryRepository _lexEntryRepository;
 		private WritingSystem _headwordWritingSystem;
 
 		[SetUp]
 		public void Setup()
 		{
-			_filePath = Path.GetTempFileName();
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_temporaryFolder = new TemporaryFolder();
+			string filePath = _temporaryFolder.GetTemporaryFile();
+			_lexEntryRepository = new LexEntryRepository(filePath);
 			_headwordWritingSystem = new WritingSystem();
 			_headwordWritingSystem.Id = "primary";
 		}
@@ -34,7 +36,7 @@ namespace WeSay.LexicalModel.Tests
 		public void TearDown()
 		{
 			_lexEntryRepository.Dispose();
-			File.Delete(_filePath);
+			_temporaryFolder.Delete();
 		}
 
 		private void MakeTestLexEntry(string writingSystemId, string lexicalForm)
@@ -887,10 +889,6 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry entry1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			LexEntry entry2 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			LexEntry entry3 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
-			Console.WriteLine("ID0: {0}", _lexEntryRepository.GetId(entryOther));
-			Console.WriteLine("ID1: {0}", _lexEntryRepository.GetId(entry1));
-			Console.WriteLine("ID2: {0}", _lexEntryRepository.GetId(entry2));
-			Console.WriteLine("ID3: {0}", _lexEntryRepository.GetId(entry3));
 			Assert.AreEqual(3,
 							_lexEntryRepository.GetHomographNumber(entry3, _headwordWritingSystem));
 			Assert.AreEqual(2,
@@ -975,12 +973,13 @@ namespace WeSay.LexicalModel.Tests
 	public class LexEntryRepositoryStateUnitializedTests : IRepositoryStateUnitializedTests<LexEntry>
 	{
 		private string _persistedFilePath;
+		private TemporaryFolder _tempFolder;
 
 		[SetUp]
 		public void Setup()
 		{
-			_persistedFilePath = Path.GetRandomFileName();
-			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			_tempFolder = new TemporaryFolder();
+			_persistedFilePath = _tempFolder.GetTemporaryFile();
 			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
@@ -988,7 +987,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
-			File.Delete(this._persistedFilePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]
@@ -1015,12 +1014,14 @@ namespace WeSay.LexicalModel.Tests
 	public class LexEntryRepositoryCreatedFromPersistedData :
 			IRepositoryPopulateFromPersistedTests<LexEntry>
 	{
+		private TemporaryFolder _tempFolder;
 		private string _persistedFilePath;
 
 		[SetUp]
 		public void Setup()
 		{
-			_persistedFilePath = LiftFileInitializer.MakeFile();
+			_tempFolder = new TemporaryFolder();
+			_persistedFilePath = LiftFileInitializer.MakeFile(_tempFolder.GetTemporaryFile());
 			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
@@ -1028,7 +1029,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
-			File.Delete(_persistedFilePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]
@@ -1095,13 +1096,14 @@ namespace WeSay.LexicalModel.Tests
 	public class LexEntryRepositoryCreateItemTransitionTests :
 			IRepositoryCreateItemTransitionTests<LexEntry>
 	{
+		private TemporaryFolder _tempFolder;
 		private string _persistedFilePath;
 
 		[SetUp]
 		public void Setup()
 		{
-			_persistedFilePath = Path.GetRandomFileName();
-			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			_tempFolder = new TemporaryFolder();
+			_persistedFilePath = _tempFolder.GetTemporaryFile();
 			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
@@ -1109,7 +1111,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
-			File.Delete(_persistedFilePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]
@@ -1160,12 +1162,14 @@ namespace WeSay.LexicalModel.Tests
 			IRepositoryDeleteItemTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
+		private TemporaryFolder _tempFolder;
+
 
 		[SetUp]
 		public void Setup()
 		{
-			_persistedFilePath = Path.GetRandomFileName();
-			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			_tempFolder = new TemporaryFolder();
+			_persistedFilePath = _tempFolder.GetTemporaryFile();
 			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
@@ -1173,7 +1177,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
-			File.Delete(_persistedFilePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]
@@ -1197,12 +1201,13 @@ namespace WeSay.LexicalModel.Tests
 			IRepositoryDeleteIdTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
+		private TemporaryFolder _tempFolder;
 
 		[SetUp]
 		public void Setup()
 		{
-			_persistedFilePath = Path.GetRandomFileName();
-			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			_tempFolder = new TemporaryFolder();
+			_persistedFilePath = _tempFolder.GetTemporaryFile();
 			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
@@ -1210,7 +1215,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
-			File.Delete(_persistedFilePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]
@@ -1234,12 +1239,13 @@ namespace WeSay.LexicalModel.Tests
 			IRepositoryDeleteAllItemsTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
+		private TemporaryFolder _tempFolder;
 
 		[SetUp]
 		public void Setup()
 		{
-			_persistedFilePath = Path.GetRandomFileName();
-			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			_tempFolder = new TemporaryFolder();
+			_persistedFilePath = _tempFolder.GetTemporaryFile();
 			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
@@ -1247,6 +1253,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
+			_tempFolder.Delete();
 		}
 
 		protected override void RepopulateRepositoryFromPersistedData()
@@ -1259,16 +1266,16 @@ namespace WeSay.LexicalModel.Tests
 	[TestFixture]
 	public class LexEntryRepositoryCachingTests
 	{
-		private string _persistedFilePath;
+		private TemporaryFolder _tempfolder;
 		private LexEntryRepository _repository;
 		private ResultSet<LexEntry> firstResults;
 
 		[SetUp]
 		public void Setup()
 		{
-			_persistedFilePath = Path.GetRandomFileName();
-			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-			_repository = new LexEntryRepository(_persistedFilePath);
+			_tempfolder = new TemporaryFolder();
+			string persistedFilePath = _tempfolder.GetTemporaryFile();
+			_repository = new LexEntryRepository(persistedFilePath);
 		}
 
 		[TearDown]

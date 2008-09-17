@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using NUnit.Framework;
+using TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
@@ -13,6 +14,7 @@ namespace WeSay.LexicalTools.Tests
 	public class MissingInfoControlTests
 	{
 		private LexEntryRepository _lexEntryRepository;
+		private TemporaryFolder _tempFolder;
 		private string _filePath;
 		private ResultSet<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
@@ -46,7 +48,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 
-			_filePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 			_writingSystem = new WritingSystem("pretendVernacular",
@@ -110,7 +113,7 @@ namespace WeSay.LexicalTools.Tests
 		public void TearDown()
 		{
 			_lexEntryRepository.Dispose();
-			File.Delete(_filePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]

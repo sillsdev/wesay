@@ -1,6 +1,7 @@
 using System.IO;
 using NUnit.Framework;
 using Palaso.Services.Dictionary;
+using TestUtilities;
 using WeSay.App.Services;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests.Db4oSpecific;
@@ -18,6 +19,7 @@ namespace WeSay.App.Tests.Services
 	public class DictionaryService_SameTheadTests
 	{
 		private LexEntryRepository _lexEntryRepository;
+		private TemporaryFolder _tempFolder;
 		private string _filePath;
 
 		private Db4oProjectSetupForTesting _projectSetupSharedByAllTests;
@@ -29,13 +31,14 @@ namespace WeSay.App.Tests.Services
 		[TestFixtureSetUp]
 		public void SetupFixture()
 		{
+			_tempFolder = new TemporaryFolder();
 			_projectSetupSharedByAllTests = new Db4oProjectSetupForTesting(string.Empty);
 		}
 
 		[SetUp]
 		public void Setup()
 		{
-			_filePath = Path.GetTempFileName();
+			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_dictionaryServiceProvider = new DictionaryServiceProvider(_lexEntryRepository,
 																	   null,
@@ -54,6 +57,7 @@ namespace WeSay.App.Tests.Services
 		public void FixtureTearDown()
 		{
 			_projectSetupSharedByAllTests.Dispose();
+			_tempFolder.Delete();
 		}
 
 		private void MakeTestLexEntry(string writingSystemId, string lexicalForm)

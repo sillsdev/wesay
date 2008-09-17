@@ -96,6 +96,10 @@
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\TestUtilities\TestUtilities.csproj">
+	  <Project>{5521A594-6886-4F2E-99FC-9B02A7D862BE}</Project>
+	  <Name>TestUtilities</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Data.Tests\WeSay.Data.Tests.csproj">
 	  <Project>{8491FEEE-C311-4B64-BB30-A1F1C1802F45}</Project>
 	  <Name>WeSay.Data.Tests</Name>

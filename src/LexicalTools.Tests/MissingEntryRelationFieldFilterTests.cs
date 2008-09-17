@@ -1,5 +1,6 @@
 using System.IO;
 using NUnit.Framework;
+using TestUtilities;
 using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools.Tests
@@ -8,6 +9,7 @@ namespace WeSay.LexicalTools.Tests
 	public class MissingEntryRelationFieldFilterTests
 	{
 		private LexEntryRepository _lexEntryRepository;
+		private TemporaryFolder _tempFolder;
 		private string _filePath;
 
 		#region Setup/Teardown
@@ -15,7 +17,8 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_filePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 			_target = _lexEntryRepository.CreateItem();

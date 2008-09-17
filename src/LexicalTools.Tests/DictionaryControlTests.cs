@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
+using TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
@@ -17,6 +18,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class DictionaryControlTests: NUnitFormTest
 	{
+		private TemporaryFolder _tempFolder;
 		private DictionaryTask _task;
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
@@ -35,12 +37,13 @@ namespace WeSay.LexicalTools.Tests
 		public override void Setup()
 		{
 			base.Setup();
+			_tempFolder = new TemporaryFolder();
 			_vernacularWritingSystem =
 					new WritingSystem(BasilProject.Project.WritingSystems.TestWritingSystemVernId,
 									  SystemFonts.DefaultFont);
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
 
-			_filePath = Path.GetTempFileName();
+			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 			string[] analysisWritingSystemIds = new string[]
@@ -197,7 +200,7 @@ namespace WeSay.LexicalTools.Tests
 			_task.Deactivate();
 			_lexEntryRepository.Dispose();
 			_lexEntryRepository = null;
-			File.Delete(_filePath);
+			_tempFolder.Delete();
 			base.TearDown();
 		}
 

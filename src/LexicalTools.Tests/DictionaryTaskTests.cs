@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using NUnit.Framework;
+using TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -12,11 +13,13 @@ namespace WeSay.LexicalTools.Tests
 		private LexEntryRepository _lexEntryRepository;
 		private ViewTemplate _viewTemplate;
 		private string _filePath;
+		private TemporaryFolder _tempFolder;
 
 		[SetUp]
 		public void Setup()
 		{
-			_filePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_filePath = _tempFolder.GetTemporaryFile();
 
 			WeSayWordsProject.InitializeForTests();
 			string[] vernacularWritingSystemIds = new string[]

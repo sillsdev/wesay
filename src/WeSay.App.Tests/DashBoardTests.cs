@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
+using TestUtilities;
 using WeSay.CommonTools;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
@@ -13,12 +14,14 @@ namespace WeSay.App.Tests
 	public class DashBoardTests
 	{
 		private LexEntryRepository _lexEntryRepository;
+		private TemporaryFolder _tempFolder;
 		private string _filePath;
 
 		[SetUp]
 		public void Setup()
 		{
-			_filePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 			Form window = new Form();
@@ -39,7 +42,7 @@ namespace WeSay.App.Tests
 		public void Teardown()
 		{
 			_lexEntryRepository.Dispose();
-			File.Delete(_filePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]

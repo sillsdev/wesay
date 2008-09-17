@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
+using TestUtilities;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
@@ -13,8 +14,9 @@ namespace WeSay.LexicalTools.Tests
 	public class GatherBySemanticDomainsTaskTests: TaskBaseTests
 	{
 		private LexEntryRepository _lexEntryRepository;
+		private TemporaryFolder _tempFolder;
 		private string _semanticDomainFilePath;
-		private string _dbFilePath;
+		private string _filePath;
 		private ViewTemplate _viewTemplate;
 
 		[TestFixtureSetUp]
@@ -27,11 +29,12 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			WeSayWordsProject.Project.RemoveCache();
-			_dbFilePath = Path.GetTempFileName();
-			_semanticDomainFilePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_filePath = _tempFolder.GetTemporaryFile();
+			_semanticDomainFilePath = _tempFolder.GetTemporaryFile();
 			CreateSemanticDomainFile();
 
-			_lexEntryRepository = new LexEntryRepository(_dbFilePath);
+			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_viewTemplate = MakeViewTemplate("en");
 			_task = new GatherBySemanticDomainTask(_lexEntryRepository,
 												   "label",
@@ -78,8 +81,7 @@ namespace WeSay.LexicalTools.Tests
 				_task.Deactivate(); //needed for disposal of controls
 			}
 			_lexEntryRepository.Dispose();
-			File.Delete(_dbFilePath);
-			File.Delete(_semanticDomainFilePath);
+			_tempFolder.Delete();
 		}
 
 		private GatherBySemanticDomainTask Task

@@ -2,6 +2,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
+using TestUtilities;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -12,6 +13,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class EntryViewControlTests
 	{
+		private TemporaryFolder _tempFolder;
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
 
@@ -28,7 +30,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 
-			_filePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 #if GlossMeaning
@@ -76,7 +79,7 @@ namespace WeSay.LexicalTools.Tests
 		public void TearDown()
 		{
 			_lexEntryRepository.Dispose();
-			File.Delete(_filePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]

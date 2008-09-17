@@ -5,6 +5,7 @@ using System.Xml;
 using LiftIO.Parsing;
 using NUnit.Framework;
 using WeSay.Project;
+using TestUtilities;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -16,14 +17,15 @@ namespace WeSay.LexicalModel.Tests
 		private LiftMerger _merger;
 		private LiftRepository _repository;
 		private string _tempFile;
+		private TemporaryFolder _tempFolder;
 
 		[SetUp]
 		public void Setup()
 		{
 			WeSayWordsProject.InitializeForTests();
 			_stringBuilder = new StringBuilder();
-
-			_tempFile = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_tempFile = _tempFolder.GetTemporaryFile();
 			_exporter = new LiftExporter(_stringBuilder, false);
 			_repository = new LiftRepository(_tempFile);
 			_merger = new LiftMerger(_repository);
@@ -34,7 +36,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			_merger.Dispose();
 			_repository.Dispose();
-			File.Delete(_tempFile);
+			_tempFolder.Delete();
 		}
 
 		private LexEntry MakeSimpleEntry()
