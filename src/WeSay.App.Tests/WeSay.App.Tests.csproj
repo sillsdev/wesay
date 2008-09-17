@@ -109,6 +109,10 @@
 	  <Project>{87AF0B02-2983-486D-857F-D1859535C234}</Project>
 	  <Name>LexicalTools</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\TestUtilities\TestUtilities.csproj">
+	  <Project>{5521A594-6886-4F2E-99FC-9B02A7D862BE}</Project>
+	  <Name>TestUtilities</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.App\WeSay.App.csproj">
 	  <Project>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</Project>
 	  <Name>WeSay.App</Name>
