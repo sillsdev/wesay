@@ -24,6 +24,8 @@ namespace WeSay.LexicalModel
 
 		public LiftRepository(string filePath, ProgressState progressState)
 		{
+			//set to true so that an exception in the constructor does not cause the destructor to throw
+			_disposed = true;
 			if (progressState == null)
 			{
 				throw new ArgumentNullException("progressState");
@@ -35,6 +37,8 @@ namespace WeSay.LexicalModel
 			MigrateLiftIfNeeded(progressState);
 			LastModified = DateTime.MinValue;
 			LoadAllLexEntries();
+			//Now that the constructor has not thrown we can set this back to false
+			_disposed = false;
 		}
 
 		private void CreateEmptyLiftFileIfNeeded(string filePath)
@@ -183,6 +187,16 @@ namespace WeSay.LexicalModel
 				_loadingAllEntries = false;
 			}
 		}
+
+#if DEBUG
+		~LiftRepository()
+		{
+			if (!_disposed)
+			{
+				throw new ApplicationException("Disposed not explicitly called on LiftRepository.");
+			}
+		}
+#endif
 
 		public override void Dispose()
 		{
