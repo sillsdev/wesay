@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Palaso.Progress;
 
 namespace WeSay.Data
 {
@@ -160,10 +161,44 @@ namespace WeSay.Data
 
 		#region IDisposable Members
 
+#if DEBUG
+		~MemoryRepository()
+		{
+			if (!_disposed)
+			{
+				throw new ApplicationException("Disposed not explicitly called on MemoryRepository.");
+			}
+		}
+#endif
 
+		protected bool _disposed;
 
 		public virtual void Dispose()
 		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!_disposed)
+			{
+				if (disposing)
+				{
+					// dispose-only, i.e. non-finalizable logic
+				}
+
+				// shared (dispose and finalizable) cleanup logic
+				_disposed = true;
+			}
+		}
+
+		protected void VerifyNotDisposed()
+		{
+			if (!_disposed)
+			{
+				throw new ObjectDisposedException("MemoryRepository");
+			}
 		}
 
 		#endregion
