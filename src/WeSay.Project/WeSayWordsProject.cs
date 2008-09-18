@@ -421,10 +421,16 @@ namespace WeSay.Project
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='2']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig2To3.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
 			//TODO: Uncomment when we want to migrate to new dashboard and strings
-			//if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='2']") != null)
+			//if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='3']") != null)
 			//{
-			//    MigrateUsingXSLT(configurationDoc, "MigrateConfig2To3.xsl", targetPath);
+			//    MigrateUsingXSLT(configurationDoc, "MigrateConfig3To4.xsl", targetPath);
 			//    configurationDoc = new XPathDocument(targetPath);
 			//    didMigrate = true;
 			//}
