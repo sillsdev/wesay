@@ -11,7 +11,7 @@ namespace WeSay.Data.Tests
 		private string _name;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			this._name = Path.GetTempFileName();
 			RepositoryUnderTest = new Db4oRepository<TestItem>(_name);
@@ -32,7 +32,7 @@ namespace WeSay.Data.Tests
 		private string _persistedFilePath;
 		private DateTime _timeAtWhichPersisted;
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			this._persistedFilePath = Path.GetTempFileName();
 			RepositoryUnderTest = new Db4oRepository<TestItem>(this._persistedFilePath);
@@ -79,7 +79,7 @@ namespace WeSay.Data.Tests
 		private string _name;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			this._name = Path.GetTempFileName();
 			CreateRepository();
@@ -124,7 +124,7 @@ namespace WeSay.Data.Tests
 		private string _name;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			this._name = Path.GetTempFileName();
 			CreateRepository();
@@ -155,7 +155,7 @@ namespace WeSay.Data.Tests
 		private string _name;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			this._name = Path.GetTempFileName();
 			CreateRepository();
@@ -187,7 +187,7 @@ namespace WeSay.Data.Tests
 		private string _name;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			this._name = Path.GetTempFileName();
 			CreateRepository();

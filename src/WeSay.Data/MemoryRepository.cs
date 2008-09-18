@@ -60,6 +60,10 @@ namespace WeSay.Data
 
 		public virtual void DeleteItem(RepositoryId id)
 		{
+			if (id == null)
+			{
+				throw new ArgumentNullException("id");
+			}
 			if (!idToObjectHashtable.ContainsKey(id))
 			{
 				throw new ArgumentOutOfRangeException("id");
@@ -143,6 +147,10 @@ namespace WeSay.Data
 
 		public virtual RepositoryId GetId(T item)
 		{
+			if (item == null)
+			{
+				throw new ArgumentNullException("item");
+			}
 			if (!objectToIdHashtable.ContainsKey(item))
 			{
 				throw new ArgumentOutOfRangeException("item");
@@ -152,6 +160,10 @@ namespace WeSay.Data
 
 		public virtual T GetItem(RepositoryId id)
 		{
+			if (id == null)
+			{
+				throw new ArgumentNullException("id");
+			}
 			if (!idToObjectHashtable.ContainsKey(id))
 			{
 				throw new ArgumentOutOfRangeException("id");

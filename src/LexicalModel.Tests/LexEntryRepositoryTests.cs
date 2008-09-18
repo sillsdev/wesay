@@ -976,7 +976,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -1018,7 +1018,7 @@ namespace WeSay.LexicalModel.Tests
 		private string _persistedFilePath;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = LiftFileInitializer.MakeFile(_tempFolder.GetTemporaryFile());
@@ -1100,7 +1100,7 @@ namespace WeSay.LexicalModel.Tests
 		private string _persistedFilePath;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -1166,7 +1166,7 @@ namespace WeSay.LexicalModel.Tests
 
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -1204,7 +1204,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -1242,7 +1242,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();

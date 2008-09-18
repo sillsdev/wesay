@@ -12,6 +12,9 @@ namespace WeSay.Data.Tests
 		protected T _newItem;
 		protected bool _isSorted;
 
+		[SetUp]
+		public virtual void SetUp() {}
+
 		[Test]
 		public void GetItem()
 		{
@@ -516,7 +519,7 @@ namespace WeSay.Data.Tests
 	public class IListTest: IListVariableSizeReadWriteBaseTest<int>
 	{
 		[SetUp]
-		public void SetUp()
+		public override void SetUp()
 		{
 			List<int> list = new List<int>();
 
@@ -536,7 +539,7 @@ namespace WeSay.Data.Tests
 	public class IListStringTest: IListVariableSizeReadWriteBaseTest<string>
 	{
 		[SetUp]
-		public void SetUp()
+		public override void SetUp()
 		{
 			List<string> list = new List<string>();
 
@@ -556,7 +559,7 @@ namespace WeSay.Data.Tests
 	public class IListNoDataTest: IListVariableSizeReadWriteBaseTest<string>
 	{
 		[SetUp]
-		public void SetUp()
+		public override void SetUp()
 		{
 			_list = new List<string>();
 			_firstItem = null;
@@ -568,7 +571,7 @@ namespace WeSay.Data.Tests
 	public class IListFixedSizeReadOnlyTest: IListFixedSizeReadOnlyBaseTest<string>
 	{
 		[SetUp]
-		public void SetUp()
+		public override void SetUp()
 		{
 			ArrayList list = new ArrayList();
 
@@ -588,7 +591,7 @@ namespace WeSay.Data.Tests
 	public class IListFixedSizeReadWriteTest: IListFixedSizeReadWriteBaseTest<string>
 	{
 		[SetUp]
-		public void SetUp()
+		public override void SetUp()
 		{
 			ArrayList list = new ArrayList();
 
