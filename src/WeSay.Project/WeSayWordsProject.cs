@@ -109,7 +109,7 @@ namespace WeSay.Project
 
 		public static string PathToPretendWritingSystemPrefs
 		{
-			get { return Path.Combine(GetPretendProjectDirectory(), "writingSystemPrefs.xml"); }
+			get { return Path.Combine(GetPretendProjectDirectory(), "WritingSystemPrefs.xml"); }
 		}
 
 		public void SetupProjectDirForTests(string pathToLift)
