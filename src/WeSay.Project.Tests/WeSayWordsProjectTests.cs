@@ -56,6 +56,16 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		[Ignore]
+		public void DefaultConfigFileHasNewestVersionNumber_()
+		{
+			WeSayWordsProject p = new WeSayWordsProject();
+			XPathDocument defaultConfig = new XPathDocument(p.PathToDefaultConfig);
+			bool migrated = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(defaultConfig, _outputPath);
+			Assert.IsFalse(migrated, "The default config file should never need migrating");
+		}
+
+		[Test]
 		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void WeSayDirNotInValidBasilDir()
 		{

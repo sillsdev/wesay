@@ -131,7 +131,7 @@ namespace WeSay.ConfigTool.Tests
 			_window.CreateAndOpenProject(_projectFolder);
 			string path = WeSayWordsProject.Project.PathToConfigFile;
 			XPathDocument doc = new XPathDocument(path);
-			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version='2']"));
+			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version]"));
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration/tasks"));
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration/components"));
 		}

@@ -912,8 +912,8 @@ namespace WeSay.Project
 			XmlWriter writer = XmlWriter.Create(Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
-			//TODO: Update to version 3 when we migrate to new dashboard
-			writer.WriteAttributeString("version", "2");
+			//TODO: Update to version 4 when we migrate to new dashboard
+			writer.WriteAttributeString("version", "3");
 
 			if (EditorsSaveNow != null)
 			{
