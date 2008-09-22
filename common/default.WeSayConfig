@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<configuration version="2">
+<configuration version="3">
   <tasks>
 	<task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" visible="true">
 	  <entries ref="All Entries" />
