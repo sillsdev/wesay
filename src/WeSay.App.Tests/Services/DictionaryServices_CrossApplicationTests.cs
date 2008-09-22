@@ -365,7 +365,7 @@ namespace WeSay.App.Tests.Services
 			{
 				arguments += " -server";
 			}
-			ProcessStartInfo psi = new ProcessStartInfo(@"wesay.app.exe", arguments);
+			ProcessStartInfo psi = new ProcessStartInfo(@"WeSay.App.exe", arguments);
 			Process p = Process.Start(psi);
 
 			//this only works because we only launch it once... wouldn't be adequate logic if we
