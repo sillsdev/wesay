@@ -11,7 +11,7 @@ namespace WeSay.Project.Tests
 	public class viewTemplateTests: IEnumerableBaseTest<Field>
 	{
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_enumerable = new ViewTemplate();
 			_itemCount = 0;
