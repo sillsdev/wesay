@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using LiftIO;
 using Palaso.Text;
 using LiftIO.Parsing;
 
@@ -158,13 +159,17 @@ namespace WeSay.Foundation
 
 		public static MultiText Create(LiftMultiText liftMultiText)
 		{
+			if(liftMultiText == null)
+			{
+				throw new ArgumentNullException("liftMultiText");
+			}
 			MultiText m = new MultiText();
 			Dictionary<string, string> forms = new Dictionary<string, string>();
 			foreach (KeyValuePair<string, LiftString> pair in liftMultiText)
 			{
 				if (pair.Value != null)
 				{
-					forms.Add(pair.Key, pair.Value.Text);
+					forms.Add(pair.Key, ConvertLiftStringToSimpleStringWithMarkers(pair.Value));
 				}
 			}
 			CopyForms(forms, m);
@@ -245,14 +250,37 @@ namespace WeSay.Foundation
 			}
 		}
 
+		public static string StripMarkers(string textToStrip)
+		{
+			if(string.IsNullOrEmpty(textToStrip))
+			{
+				throw new ArgumentNullException("textToStrip");
+			}
+			string strippedString = "";
+			try
+			{
+				XmlDocument textAsXml = new XmlDocument();
+				textAsXml.LoadXml("<text>" + textToStrip + "</text>");
+				XmlNode textNode = textAsXml.SelectSingleNode("text");
+
+				if (textNode != null)
+				{
+					foreach (XmlNode node in textNode.ChildNodes)
+					{
+						strippedString += node.InnerText;
+					}
+				}
+			}
+			catch
+			{
+				return textToStrip;
+			}
+			return strippedString;
+		}
+
 		public string GetFormWithoutSpans(string languageId)
 		{
 			return _liftMultitext[languageId].Text;
-		}
-
-		public string GetFormWithSpans(string languageId)
-		{
-			return ConvertLiftStringToSimpleStringWithMarkers(_liftMultitext[languageId]);
 		}
 	}
 }
