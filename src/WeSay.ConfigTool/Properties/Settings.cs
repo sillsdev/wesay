@@ -37,7 +37,16 @@ namespace WeSay.ConfigTool.Properties
 
 		public override void Upgrade()
 		{
-			string lastConfigFilePath = (string) GetPreviousVersion("LastConfigFilePath");
+			string lastConfigFilePath = null;
+			try
+			{
+				lastConfigFilePath = (string) GetPreviousVersion("LastConfigFilePath");
+			}
+			catch
+			{
+				// mono does not support GetPreviousVersion as of 23-Sep-2008
+				// it doesn't matter if this fails
+			}
 
 			base.Upgrade(); // bring forward our MruConfigFilePaths and any other properties
 			if (MruConfigFilePaths == null)
