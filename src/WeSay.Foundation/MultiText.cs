@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Palaso.Text;
+using LiftIO.Parsing;
 
 //using Exortech.NetReflector;
 //using Exortech.NetReflector.Util;
@@ -18,6 +20,8 @@ namespace WeSay.Foundation
 	public class MultiText: MultiTextBase, IParentable, IReportEmptiness, IXmlSerializable
 	{
 		private WeSayDataObject _parent;
+		//Adapter pattern: LiftMultitext has some features we would like to use
+		private static LiftMultiText _liftMultitext;
 
 		public MultiText(WeSayDataObject parent)
 		{
@@ -150,6 +154,105 @@ namespace WeSay.Foundation
 			MultiText m = new MultiText();
 			CopyForms(forms, m);
 			return m;
+		}
+
+		public static MultiText Create(LiftMultiText liftMultiText)
+		{
+			MultiText m = new MultiText();
+			Dictionary<string, string> forms = new Dictionary<string, string>();
+			foreach (KeyValuePair<string, LiftString> pair in liftMultiText)
+			{
+				if (pair.Value != null)
+				{
+					forms.Add(pair.Key, pair.Value.Text);
+				}
+			}
+			CopyForms(forms, m);
+			return m;
+		}
+
+		public static string ConvertLiftStringToSimpleStringWithMarkers(LiftString liftString)
+		{
+			string stringWithSpans = liftString.Text;
+			SortedDictionary<KeyValuePair<int, string>, object> spanSorter=
+				new SortedDictionary<KeyValuePair<int, string>, object>(new SpanPositionComparer());
+
+			//Sort the Span markers by position
+			foreach (LiftSpan span in liftString.Spans)
+			{
+				string openMarker = buildOpenMarker(span);
+				spanSorter.Add(new KeyValuePair<int, string>(span.Index, openMarker), null);
+
+				string closeMarker = "</span>";
+				spanSorter.Add(new KeyValuePair<int, string>(span.Index + span.Length, closeMarker), null);
+			}
+
+			//Add the Span Markers one at a time from back to front
+			foreach (KeyValuePair<KeyValuePair<int, string>, object> positionAndSpan in spanSorter)
+			{
+				stringWithSpans = stringWithSpans.Insert(positionAndSpan.Key.Key, positionAndSpan.Key.Value);
+			}
+			return stringWithSpans;
+		}
+
+		private static string buildOpenMarker(LiftSpan span)
+		{
+			string openMarker = string.Format(
+					"<span");
+			if (!String.IsNullOrEmpty(span.Lang))
+			{
+				openMarker += " lang=\"" + span.Lang +"\"";
+			}
+			if (!String.IsNullOrEmpty(span.LinkURL))
+			{
+				openMarker += " href=\"" + span.LinkURL +"\"";
+			}
+			if (!String.IsNullOrEmpty(span.Class))
+			{
+				openMarker += " class=\"" + span.Class +"\"";
+			}
+			openMarker += ">";
+			return openMarker;
+		}
+
+		private class SpanPositionComparer:IComparer<KeyValuePair<int, string>>
+		{
+			public int Compare(KeyValuePair<int, string> positionAndMarkerX, KeyValuePair<int, string> positionAndMarkerY)
+			{
+				if(positionAndMarkerX.Key < positionAndMarkerY.Key)
+				{
+					return 1;
+				}
+				if (positionAndMarkerX.Key > positionAndMarkerY.Key)
+				{
+					return -1;
+				}
+				else
+				{
+					if(positionAndMarkerX.Value == "</span>")
+					{
+						return 1;
+					}
+					if(positionAndMarkerY.Value == "</span>")
+					{
+						return -1;
+					}
+					else
+					{
+						return 1;
+					}
+				}
+			}
+		}
+
+		public string GetFormWithoutSpans(string languageId)
+		{
+			return _liftMultitext[languageId].Text;
+		}
+
+		public string GetFormWithSpans(string languageId)
+		{
+			return ConvertLiftStringToSimpleStringWithMarkers(_liftMultitext[languageId]);
 		}
 	}
 }
