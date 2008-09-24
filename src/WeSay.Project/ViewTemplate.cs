@@ -488,9 +488,9 @@ namespace WeSay.Project
 							  defaultVernacularSet,
 							  Field.MultiplicityType.ZeroOrMore,
 							  "RelationToOneEntry");
-			StringCatalog.Get("~Cross Reference",
+			crossRefField.DisplayName = StringCatalog.Get("~Cross Reference",
 							  @"The label for the field showing a 'confer' relation (\cf in MDF).");
-			crossRefField.DisplayName = "Cross Reference";
+
 			crossRefField.Description =
 					"Provides a field for identifying the form from which an entry is derived.  You may use this in place of the MDF subentry.  In a future version WeSay may support directly listing derived forms from the base form.";
 			crossRefField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
