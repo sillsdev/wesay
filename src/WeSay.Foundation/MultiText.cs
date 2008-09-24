@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -256,24 +257,24 @@ namespace WeSay.Foundation
 			{
 				throw new ArgumentNullException("textToStrip");
 			}
+
+			string wrappedTextToStrip = "<text>" + textToStrip + "</text>";
+			XmlReaderSettings fragmentReaderSettings = new XmlReaderSettings();
+			fragmentReaderSettings.ConformanceLevel = ConformanceLevel.Fragment;
+			XmlReader testerForWellFormedness = XmlReader.Create(new StringReader(wrappedTextToStrip));
+
 			string strippedString = "";
 			try
 			{
-				XmlDocument textAsXml = new XmlDocument();
-				textAsXml.LoadXml("<text>" + textToStrip + "</text>");
-				XmlNode textNode = textAsXml.SelectSingleNode("text");
-
-				if (textNode != null)
+				while(testerForWellFormedness.Read())
 				{
-					foreach (XmlNode node in textNode.ChildNodes)
-					{
-						strippedString += node.InnerText;
-					}
+					strippedString += testerForWellFormedness.ReadString();
 				}
 			}
 			catch
 			{
-				return textToStrip;
+				//If the text is not well formed XML just return it as text
+				strippedString = textToStrip;
 			}
 			return strippedString;
 		}
