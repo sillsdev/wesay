@@ -1073,5 +1073,23 @@ namespace WeSay.LexicalModel.Tests
 				File.Delete(filePath);
 			}
 		}
+
+		[Test]
+		public void Add_MultiTextWithWellFormedXML_IsExportedAsXML()
+		{
+			MultiText multiText = new MultiText();
+			multiText.SetAlternative("de", "This <span href=\"reference\">is well formed</span> XML!");
+			_exporter.Add(null, multiText);
+			CheckAnswer("<form lang=\"de\"><text>This <span href=\"reference\">is well formed</span> XML!</text></form>");
+		}
+
+		[Test]
+		public void Add_MultiTextWithMalFormedXML_IsExportedText()
+		{
+			MultiText multiText = new MultiText();
+			multiText.SetAlternative("de", "This <span href=\"reference\">is not well formed<span> XML!");
+			_exporter.Add(null, multiText);
+			CheckAnswer("<form lang=\"de\"><text>This &lt;span href=\"reference\"&gt;is not well formed&lt;span&gt; XML!</text></form>");
+		}
 	}
 }
