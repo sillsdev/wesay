@@ -1,23 +1,15 @@
-msgid "
-msgstr "
-"Project-Id-Version: WeSay
-"
-"Report-Msgid-Bugs-To: hattonjohn@gmail.com
-"
-"POT-Creation-Date: 2008-09-24T04:36:39
-"
-"PO-Revision-Date: 2008-09-24T04:36:39
-"
-"Last-Translator:
-"
-"Language-Team:
-"
-"MIME-Version: 1.0
-"
-"Content-Type: text/plain; charset=UTF-8
-"
-"Content-Transfer-Encoding: 8bit
-"
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WeSay\n"
+"Report-Msgid-Bugs-To: hattonjohn@gmail.com\n"
+"POT-Creation-Date: 2008-09-25T03:27:08\n"
+"PO-Revision-Date: 2008-09-25T03:27:08\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 
 #; C:\wesayGit\mainline\bld\..\src\CommonTools\Dash.cs
@@ -52,7 +44,7 @@ msgid "Add Examples"
 msgstr ""
 
 
-msgid "Add example sentences to entries where they are missing."
+msgid "Add example sentences to senses where they are missing."
 msgstr ""
 
 
@@ -262,11 +254,11 @@ msgid "No Gloss"
 msgstr ""
 
 #; C:\wesayGit\mainline\bld\..\src\LexicalTools\DictionaryControl.cs
-msgid "Hide Uncommon Fields"
+msgid "Hide &Uncommon Fields"
 msgstr ""
 
 #; C:\wesayGit\mainline\bld\..\src\LexicalTools\DictionaryControl.cs
-msgid "Show Uncommon Fields"
+msgid "Show &Uncommon Fields"
 msgstr ""
 
 #; C:\wesayGit\mainline\bld\..\src\LexicalTools\DictionaryTask.cs
