@@ -36,7 +36,7 @@
 	  <entries ref="All Entries" />
 	  <field>ExampleSentence</field>
 	  <label>Add Examples</label>
-	  <description>Add example sentences to entries where they are missing.</description>
+	  <description>Add example sentences to senses where they are missing.</description>
 	  <viewTemplate ref="Default View Template" />
 	  <showfields>ExampleSentence</showfields>
 	  <readOnly>definition</readOnly>
