@@ -1,53 +1,334 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Xml;
 
 namespace TestUtilities
 {
-	public class TemporaryFolder
+	/* public class TemporaryFolder
+	 {
+		 private readonly string _folderPath;
+
+		 public TemporaryFolder(): this(Directory.GetCurrentDirectory(), "TestTemporaryFolder")
+		 {}
+
+		 public TemporaryFolder(string path): this(path, "TestTemporaryFolder")
+		 {}
+
+		 public TemporaryFolder(string path, string folderName)
+		 {
+			 _folderPath = Path.Combine(path, folderName);
+			 if(Directory.Exists(_folderPath))
+			 {
+				 Directory.Delete(_folderPath, true);
+			 }
+			 Directory.CreateDirectory(_folderPath);
+		 }
+
+		 public string FolderPath
+		 {
+			 get { return _folderPath; }
+		 }
+
+		 public string GetTemporaryFile()
+		 {
+			 string randomFileName = Path.GetRandomFileName();
+			 return GetTemporaryFile(randomFileName);
+		 }
+
+		 public string GetTemporaryFile(string fileName)
+		 {
+			 string randomFileName = fileName;
+			 string pathToTempFile = Path.Combine(_folderPath, randomFileName);
+			 FileStream newFile = File.Create(pathToTempFile);
+			 newFile.Close();
+			 return pathToTempFile;
+		 }
+
+		 public void Delete()
+		 {
+			 Directory.Delete(_folderPath, true);
+		 }
+	 }*/
+
+	public class TempLiftFile : TempFile
 	{
-		private readonly string _folderPath;
-
-		public TemporaryFolder(): this(Directory.GetCurrentDirectory(), "TestTemporaryFolder")
-		{}
-
-		public TemporaryFolder(string path): this(path, "TestTemporaryFolder")
-		{}
-
-		public TemporaryFolder(string path, string folderName)
+		public TempLiftFile(string xmlOfEntries)
+			: this(xmlOfEntries, /*LiftIO.Validation.Validator.LiftVersion*/ "0.12")
 		{
-			_folderPath = Path.Combine(path, folderName);
-			if(Directory.Exists(_folderPath))
+		}
+		public TempLiftFile(string xmlOfEntries, string claimedLiftVersion)
+			: this(null, xmlOfEntries, claimedLiftVersion)
+		{
+		}
+
+		public TempLiftFile(TemporaryFolder parentFolder, string xmlOfEntries, string claimedLiftVersion)
+			: base(false)
+		{
+			if (parentFolder != null)
 			{
-				Directory.Delete(_folderPath, true);
+				_path = parentFolder.GetPathForNewTempFile(false) + ".lift";
 			}
-			Directory.CreateDirectory(_folderPath);
+			else
+			{
+				_path = System.IO.Path.GetRandomFileName() + ".lift";
+			}
+
+			string liftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>", claimedLiftVersion, xmlOfEntries);
+			File.WriteAllText(_path, liftContents);
+		}
+
+		public TempLiftFile(string fileName, TemporaryFolder parentFolder, string xmlOfEntries, string claimedLiftVersion)
+			: base(false)
+		{
+			_path = parentFolder.Combine(fileName);
+
+			string liftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>", claimedLiftVersion, xmlOfEntries);
+			File.WriteAllText(_path, liftContents);
+		}
+		private TempLiftFile()
+		{
+		}
+		public static TempLiftFile TrackExisting(string path)
+		{
+			Debug.Assert(File.Exists(path));
+			TempLiftFile t = new TempLiftFile();
+			t._path = path;
+			return t;
+		}
+
+	}
+
+
+	public class TempFile : IDisposable
+	{
+		protected string _path;
+
+		public TempFile()
+		{
+			_path = System.IO.Path.GetTempFileName();
+		}
+
+		internal TempFile(bool dontMakeMeAFile)
+		{
+		}
+
+		public TempFile(TemporaryFolder parentFolder)
+		{
+			if (parentFolder != null)
+			{
+				_path = parentFolder.GetPathForNewTempFile(true);
+			}
+			else
+			{
+				_path = System.IO.Path.GetTempFileName();
+			}
+
+		}
+
+
+		public TempFile(string contents)
+			: this()
+		{
+			File.WriteAllText(_path, contents);
+		}
+
+		public TempFile(string[] contentLines)
+			: this()
+		{
+			File.WriteAllLines(_path, contentLines);
+		}
+
+		public string Path
+		{
+			get { return _path; }
+		}
+		public void Dispose()
+		{
+			File.Delete(_path);
+		}
+
+
+		//        public static TempFile TrackExisting(string path)
+		//        {
+		//            return new TempFile(path, false);
+		//        }
+		public static TempFile CopyOf(string pathToExistingFile)
+		{
+			TempFile t = new TempFile();
+			File.Copy(pathToExistingFile, t.Path, true);
+			return t;
+		}
+
+		private TempFile(string existingPath, bool dummy)
+		{
+			_path = existingPath;
+		}
+
+		public static TempFile TrackExisting(string path)
+		{
+			return new TempFile(path, false);
+		}
+
+		public static TempFile CreateAndGetPathButDontMakeTheFile()
+		{
+			TempFile t = new TempFile();
+			File.Delete(t.Path);
+			return t;
+		}
+
+		public static TempFile CreateXmlFileWithContents(string fileName, TemporaryFolder folder, string xmlBody)
+		{
+			string path = folder.Combine(fileName);
+			using (XmlWriter x = XmlWriter.Create(path))
+			{
+				x.WriteStartDocument();
+				x.WriteRaw(xmlBody);
+			}
+			return new TempFile(path, true);
+		}
+	}
+
+	public class TemporaryFolder : IDisposable
+	{
+		private string _path;
+
+
+		static public TemporaryFolder TrackExisting(string path)
+		{
+			Debug.Assert(Directory.Exists(path));
+			TemporaryFolder f = new TemporaryFolder();
+			f._path = path;
+			return f;
+		}
+
+		[Obsolete("Go ahead and give it a name related to the test.  Makes it easier to track down problems.")]
+		public TemporaryFolder()
+			: this("unnamedTestFolder")
+		{
+		}
+
+
+		public TemporaryFolder(string name)
+		{
+			_path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), name);
+			if (Directory.Exists(_path))
+			{
+				TestUtilities.DeleteFolderThatMayBeInUse(_path);
+			}
+			Directory.CreateDirectory(_path);
+		}
+
+		public TemporaryFolder(TemporaryFolder parent, string name)
+		{
+			_path = parent.Combine(name);
+			if (Directory.Exists(_path))
+			{
+				TestUtilities.DeleteFolderThatMayBeInUse(_path);
+			}
+			Directory.CreateDirectory(_path);
 		}
 
 		public string FolderPath
 		{
-			get { return _folderPath; }
+			get { return _path; }
 		}
 
-		public string GetTemporaryFile()
+
+		public void Dispose()
 		{
-			string randomFileName = Path.GetRandomFileName();
-			return GetTemporaryFile(randomFileName);
+			TestUtilities.DeleteFolderThatMayBeInUse(_path);
 		}
 
-		public string GetTemporaryFile(string fileName)
-		{
-			string randomFileName = fileName;
-			string pathToTempFile = Path.Combine(_folderPath, randomFileName);
-			FileStream newFile = File.Create(pathToTempFile);
-			newFile.Close();
-			return pathToTempFile;
-		}
-
+		[Obsolete("It's better to wrap the use of this in a using() so that it is automatically cleaned up, even if a test fails.")]
 		public void Delete()
 		{
-			Directory.Delete(_folderPath, true);
+			TestUtilities.DeleteFolderThatMayBeInUse(_path);
+		}
+
+		public string GetPathForNewTempFile(bool doCreateTheFile)
+		{
+			string s = System.IO.Path.GetRandomFileName();
+			s = System.IO.Path.Combine(_path, s);
+			if (doCreateTheFile)
+			{
+				File.Create(s).Close();
+			}
+			return s;
+		}
+
+		public TempFile GetNewTempFile(bool doCreateTheFile)
+		{
+			string s = System.IO.Path.GetRandomFileName();
+			s = System.IO.Path.Combine(_path, s);
+			if (doCreateTheFile)
+			{
+				File.Create(s).Close();
+			}
+			return TempFile.TrackExisting(s);
+		}
+
+		[Obsolete("It's better to use the explict GetNewTempFile, which makes you say if you want the file to be created or not, and give you back a whole TempFile class, which is itself IDisposable.")]
+		public string GetTemporaryFile()
+		{
+			return GetTemporaryFile(System.IO.Path.GetRandomFileName());
+		}
+
+		[Obsolete("It's better to use the explict GetNewTempFile, which makes you say if you want the file to be created or not, and give you back a whole TempFile class, which is itself IDisposable.")]
+		public string GetTemporaryFile(string name)
+		{
+			string s = System.IO.Path.Combine(_path, name);
+			File.Create(s).Close();
+			return s;
+		}
+
+
+		public string Combine(string innerFileName)
+		{
+			return System.IO.Path.Combine(_path, innerFileName);
+		}
+	}
+
+	public class TestUtilities
+	{
+		public static void DeleteFolderThatMayBeInUse(string folder)
+		{
+			if (Directory.Exists(folder))
+			{
+				for (int i = 0; i < 50; i++)//wait up to five seconds
+				{
+					try
+					{
+						Directory.Delete(folder, true);
+						return;
+					}
+					catch (Exception)
+					{
+					}
+					Thread.Sleep(100);
+				}
+				//maybe we can at least clear it out a bit
+				try
+				{
+					Debug.WriteLine("TestUtilities.DeleteFolderThatMayBeInUse(): gave up trying to delete the whole folder. Some files may be abandoned in your temp folder.");
+
+					string[] files = Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories);
+					foreach (string s in files)
+					{
+						File.Delete(s);
+					}
+					//sleep and try again
+					Thread.Sleep(1000);
+					Directory.Delete(folder, true);
+				}
+				catch (Exception)
+				{
+				}
+
+			}
 		}
 	}
 }
