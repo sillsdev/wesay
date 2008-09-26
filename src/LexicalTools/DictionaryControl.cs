@@ -550,11 +550,11 @@ namespace WeSay.LexicalTools
 			_btnDeleteWord.Enabled = (CurrentRecord != null);
 			if (_entryViewControl.ShowNormallyHiddenFields)
 			{
-				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Hide Uncommon Fields");
+				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Hide &Uncommon Fields");
 			}
 			else
 			{
-				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Show Uncommon Fields");
+				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Show &Uncommon Fields");
 			}
 		}
 	}
