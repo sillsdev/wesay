@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
@@ -253,6 +254,15 @@ namespace WeSay.LexicalTools
 			{
 				VerifyTaskActivated();
 				return Questions[CurrentQuestionIndex];
+			}
+		}
+
+		public string Reminder
+		{
+			get
+			{
+				return StringCatalog.Get("~Do not just translate these words; instead think of words in your own language.",
+											 "This is shown in the Gather By Semantic Domains task after each semantic domain question. The questions contain example words to help clarify what the domain is about, and this was added to remind the user that he/she is gathering based on the domain, not these examples.");
 			}
 		}
 
@@ -566,7 +576,7 @@ namespace WeSay.LexicalTools
 					questionReader.ReadToFollowing("question");
 					while (questionReader.IsStartElement("question"))
 					{
-						questions.Add(questionReader.ReadElementString("question"));
+						questions.Add(questionReader.ReadElementString("question").Trim());
 					}
 					_domainKeys.Add(domainKey);
 					if (questions.Count == 0)
