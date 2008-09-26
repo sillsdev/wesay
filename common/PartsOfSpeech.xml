@@ -8,7 +8,8 @@
 				<form ws='fr'>verbe</form>
 				<form ws='es'>verbo</form>
 				<form ws='th'>คำกริยา</form>
-			</name>
+		<form ws='id'>kata kerja</form>
+	  </name>
 		</option>
 		<option>
 			<key>noun</key>
@@ -17,7 +18,8 @@
 				<form ws='fr'>nom</form>
 				<form ws='es'>nombre</form>
 				<form ws='th'>นาม</form>
-			</name>
+		<form ws='id'>kata benda</form>
+	  </name>
 		</option>
 		<!--<option>
 			<key>blah blah blah</key>
@@ -34,6 +36,7 @@
 				<form ws='en'>adverb</form>
 				<form ws='fr'>adverbe</form>
 				<form ws='es'>adverbio</form>
+				<form ws='id'>kata keterangan</form>
 			</name>
 		</option>
 		<option>
@@ -42,6 +45,7 @@
 				<form ws='en'>adjective</form>
 				<form ws='fr'>adjectif</form>
 				<form ws='es'>adjectivo</form>
+				<form ws='id'>kata sifat</form>
 			</name>
 		</option>
 		<option>
@@ -50,7 +54,8 @@
 				<form ws='en'>preposition</form>
 				<form ws='fr'>préposition</form>
 				<form ws='es'>preposición</form>
-			</name>
+		<form ws='id'>preposisi</form>
+	  </name>
 		</option>
 		<option>
 			<key>pronoun</key>
@@ -58,7 +63,8 @@
 				<form ws='en'>pronoun</form>
 				<form ws='fr'>pronom</form>
 				<form ws='es'>pronombre</form>
-			</name>
+		<form ws='id'>kata ganti</form>
+	  </name>
 		</option>
 	</options>
 </optionsList>
