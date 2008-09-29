@@ -215,8 +215,8 @@
 
 	<Message Text="Uploading Version: $(Version)"/>
 
-	<Exec Command='pscp.exe -batch -pw $(password) "$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi" $(user)@wesay.org:/var/www/downloads'
-		   WorkingDirectory="c:\program files\PuTTY\" />
+	<Exec Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller.$(Version).msi" bob@wesay.org:/var/www/downloads'
+		   WorkingDirectory="$(BaseDirectory)" />
   </Target>
 
   <Target Name="Mail">
