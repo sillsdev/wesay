@@ -8,10 +8,7 @@ using WeSay.Data;
 using WeSay.Data.Tests;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using TestUtilities;
-using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4oSpecific;
-using WeSay.LexicalModel.Tests;
+using WeSay.Foundation.Tests.TestHelpers;
 
 namespace WeSay.LexicalModel.Tests
 {

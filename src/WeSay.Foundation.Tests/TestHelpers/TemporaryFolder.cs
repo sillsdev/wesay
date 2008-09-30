@@ -6,54 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 
-namespace TestUtilities
+namespace WeSay.Foundation.Tests.TestHelpers
 {
-	/* public class TemporaryFolder
-	 {
-		 private readonly string _folderPath;
-
-		 public TemporaryFolder(): this(Directory.GetCurrentDirectory(), "TestTemporaryFolder")
-		 {}
-
-		 public TemporaryFolder(string path): this(path, "TestTemporaryFolder")
-		 {}
-
-		 public TemporaryFolder(string path, string folderName)
-		 {
-			 _folderPath = Path.Combine(path, folderName);
-			 if(Directory.Exists(_folderPath))
-			 {
-				 Directory.Delete(_folderPath, true);
-			 }
-			 Directory.CreateDirectory(_folderPath);
-		 }
-
-		 public string FolderPath
-		 {
-			 get { return _folderPath; }
-		 }
-
-		 public string GetTemporaryFile()
-		 {
-			 string randomFileName = Path.GetRandomFileName();
-			 return GetTemporaryFile(randomFileName);
-		 }
-
-		 public string GetTemporaryFile(string fileName)
-		 {
-			 string randomFileName = fileName;
-			 string pathToTempFile = Path.Combine(_folderPath, randomFileName);
-			 FileStream newFile = File.Create(pathToTempFile);
-			 newFile.Close();
-			 return pathToTempFile;
-		 }
-
-		 public void Delete()
-		 {
-			 Directory.Delete(_folderPath, true);
-		 }
-	 }*/
-
 	public class TempLiftFile : TempFile
 	{
 		public TempLiftFile(string xmlOfEntries)
@@ -289,46 +243,6 @@ namespace TestUtilities
 		public string Combine(string innerFileName)
 		{
 			return System.IO.Path.Combine(_path, innerFileName);
-		}
-	}
-
-	public class TestUtilities
-	{
-		public static void DeleteFolderThatMayBeInUse(string folder)
-		{
-			if (Directory.Exists(folder))
-			{
-				for (int i = 0; i < 50; i++)//wait up to five seconds
-				{
-					try
-					{
-						Directory.Delete(folder, true);
-						return;
-					}
-					catch (Exception)
-					{
-					}
-					Thread.Sleep(100);
-				}
-				//maybe we can at least clear it out a bit
-				try
-				{
-					Debug.WriteLine("TestUtilities.DeleteFolderThatMayBeInUse(): gave up trying to delete the whole folder. Some files may be abandoned in your temp folder.");
-
-					string[] files = Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories);
-					foreach (string s in files)
-					{
-						File.Delete(s);
-					}
-					//sleep and try again
-					Thread.Sleep(1000);
-					Directory.Delete(folder, true);
-				}
-				catch (Exception)
-				{
-				}
-
-			}
 		}
 	}
 }

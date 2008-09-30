@@ -1,9 +1,9 @@
 using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
-using TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

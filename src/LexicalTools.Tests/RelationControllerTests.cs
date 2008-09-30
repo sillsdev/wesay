@@ -1,9 +1,9 @@
 using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
-using TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI.AutoCompleteTextBox;

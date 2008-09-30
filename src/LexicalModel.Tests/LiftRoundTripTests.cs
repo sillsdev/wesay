@@ -4,8 +4,8 @@ using System.Text;
 using System.Xml;
 using LiftIO.Parsing;
 using NUnit.Framework;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.Project;
-using TestUtilities;
 
 namespace WeSay.LexicalModel.Tests
 {

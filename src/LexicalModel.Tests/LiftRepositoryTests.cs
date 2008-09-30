@@ -1,9 +1,9 @@
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
-using TestUtilities;
 using WeSay.Data;
 using WeSay.Data.Tests;
+using WeSay.Foundation.Tests.TestHelpers;
 
 namespace WeSay.LexicalModel.Tests
 {
