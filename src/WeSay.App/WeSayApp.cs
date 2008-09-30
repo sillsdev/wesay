@@ -137,6 +137,7 @@ namespace WeSay.App
 					_serviceAppSingletonHelper.Dispose();
 				}
 			}
+			_project.BackupMaker.BackupNow(_project.ProjectDirectoryPath);
 			Logger.ShutDown();
 			Settings.Default.Save();
 		}

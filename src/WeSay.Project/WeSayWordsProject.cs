@@ -955,7 +955,10 @@ namespace WeSay.Project
 			writer.Close();
 
 			base.Save();
-			// nb: this saves the writing system stuff, so if it is called before EditorsSaveNow, we won't get the latest stuff from editors working on them.
+
+			_backupMaker.BackupNow(ProjectDirectoryPath);
+
+
 		}
 
 		public Field GetFieldFromDefaultViewTemplate(string fieldName)

@@ -427,6 +427,7 @@
 	<None Include="Resources\NewProject.png" />
   </ItemGroup>
   <ItemGroup>
+	<None Include="ClassDiagram1.cd" />
 	<None Include="Resources\ConfigOptionLists.png" />
   </ItemGroup>
   <ItemGroup>
