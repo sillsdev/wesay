@@ -74,6 +74,13 @@ namespace WeSay.ConfigTool.Properties {
 			}
 		}
 
+		internal static System.Drawing.Bitmap chorus {
+			get {
+				object obj = ResourceManager.GetObject("chorus", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
 		internal static System.Drawing.Bitmap ConfigActions {
 			get {
 				object obj = ResourceManager.GetObject("ConfigActions", resourceCulture);

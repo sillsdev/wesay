@@ -32,54 +32,89 @@ namespace WeSay.ConfigTool
 		{
 			this.components = new System.ComponentModel.Container();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.pictureBox2 = new System.Windows.Forms.PictureBox();
-			this.label2 = new System.Windows.Forms.Label();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.historyPanel1 = new Chorus.UI.HistoryPanel();
+			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.syncPanel1 = new Chorus.UI.SyncPanel();
+			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.tabPage2.SuspendLayout();
+			this.tabPage1.SuspendLayout();
+			this.tabControl1.SuspendLayout();
 			this.SuspendLayout();
 			//
-			// pictureBox2
+			// tabPage2
 			//
-			this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
-			this.pictureBox2.Image = Resources.construction;
-			this.pictureBox2.Location = new System.Drawing.Point(10, 12);
-			this.pictureBox2.Name = "pictureBox2";
-			this.pictureBox2.Size = new System.Drawing.Size(22, 25);
-			this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.pictureBox2.TabIndex = 14;
-			this.pictureBox2.TabStop = false;
+			this.tabPage2.Controls.Add(this.historyPanel1);
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(606, 359);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "History";
+			this.tabPage2.UseVisualStyleBackColor = true;
 			//
-			// label2
+			// historyPanel1
 			//
-			this.label2.AutoSize = true;
-			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.Location = new System.Drawing.Point(37, 12);
-			this.label2.MaximumSize = new System.Drawing.Size(350, 0);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(321, 64);
-			this.label2.TabIndex = 15;
-			this.label2.Text = "Eventually we expect to have integrated, automatic backup.\r\nIn the meantime, what" +
-				" we have is \"one-click backup\", using the \"Backup To Device\" Action.";
+			this.historyPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.historyPanel1.Location = new System.Drawing.Point(3, 3);
+			this.historyPanel1.Name = "historyPanel1";
+			this.historyPanel1.Size = new System.Drawing.Size(600, 353);
+			this.historyPanel1.TabIndex = 0;
+			//
+			// tabPage1
+			//
+			this.tabPage1.Controls.Add(this.syncPanel1);
+			this.tabPage1.Location = new System.Drawing.Point(4, 22);
+			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage1.Size = new System.Drawing.Size(606, 359);
+			this.tabPage1.TabIndex = 0;
+			this.tabPage1.Text = "Sync";
+			this.tabPage1.UseVisualStyleBackColor = true;
+			//
+			// syncPanel1
+			//
+			this.syncPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.syncPanel1.Location = new System.Drawing.Point(3, 3);
+			this.syncPanel1.Name = "syncPanel1";
+			this.syncPanel1.Size = new System.Drawing.Size(600, 353);
+			this.syncPanel1.TabIndex = 0;
+			this.syncPanel1.Load += new System.EventHandler(this.syncPanel1_Load);
+			//
+			// tabControl1
+			//
+			this.tabControl1.Controls.Add(this.tabPage1);
+			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tabControl1.Location = new System.Drawing.Point(0, 0);
+			this.tabControl1.Name = "tabControl1";
+			this.tabControl1.SelectedIndex = 0;
+			this.tabControl1.Size = new System.Drawing.Size(614, 385);
+			this.tabControl1.TabIndex = 0;
 			//
 			// BackupPlanControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
-			this.Controls.Add(this.pictureBox2);
-			this.Controls.Add(this.label2);
+			this.Controls.Add(this.tabControl1);
 			this.Name = "BackupPlanControl";
-			this.Size = new System.Drawing.Size(444, 235);
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+			this.Size = new System.Drawing.Size(614, 385);
+			this.tabPage2.ResumeLayout(false);
+			this.tabPage1.ResumeLayout(false);
+			this.tabControl1.ResumeLayout(false);
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
 		#endregion
 
 		private System.Windows.Forms.ToolTip toolTip1;
-		private System.Windows.Forms.PictureBox pictureBox2;
-		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.TabPage tabPage1;
+		private System.Windows.Forms.TabControl tabControl1;
+		private Chorus.UI.HistoryPanel historyPanel1;
+		private Chorus.UI.SyncPanel syncPanel1;
 
 	}
 }
