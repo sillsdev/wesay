@@ -32,7 +32,10 @@ namespace WeSay.ConfigTool
 			_backupButton.Tag = new BackupPlanControl();
 			_areaControls.Add((ConfigurationControlBase) _backupButton.Tag);
 
-			_optionsListButton.Tag = new OptionListControl();
+			_chorusButton.Tag = new ChorusControl();
+			_areaControls.Add((ConfigurationControlBase)_chorusButton.Tag);
+
+		   _optionsListButton.Tag = new OptionListControl();
 			_areaControls.Add((ConfigurationControlBase) _optionsListButton.Tag);
 
 			SetStyle(ControlStyles.ResizeRedraw, true); //makes OnPaint work
@@ -112,5 +115,7 @@ namespace WeSay.ConfigTool
 			int y = 3 + _areaHeader.Height;
 			e.Graphics.DrawLine(Pens.LightGray, 0, y, _areaPanel.Width, y);
 		}
+
+
 	}
 }

@@ -33,11 +33,12 @@ namespace WeSay.ConfigTool
 		{
 			this._areasToolStrip = new System.Windows.Forms.ToolStrip();
 			this._tasksButton = new System.Windows.Forms.ToolStripButton();
-			this._fieldsButton = new System.Windows.Forms.ToolStripButton();
 			this._writingSystemButton = new System.Windows.Forms.ToolStripButton();
+			this._fieldsButton = new System.Windows.Forms.ToolStripButton();
 			this._actionsButton = new System.Windows.Forms.ToolStripButton();
 			this._interfaceLanguageButton = new System.Windows.Forms.ToolStripButton();
 			this._backupButton = new System.Windows.Forms.ToolStripButton();
+			this._chorusButton = new System.Windows.Forms.ToolStripButton();
 			this._optionsListButton = new System.Windows.Forms.ToolStripButton();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this._areaPanel = new System.Windows.Forms.Panel();
@@ -59,6 +60,7 @@ namespace WeSay.ConfigTool
 			this._actionsButton,
 			this._interfaceLanguageButton,
 			this._backupButton,
+			this._chorusButton,
 			this._optionsListButton});
 			this._areasToolStrip.Location = new System.Drawing.Point(0, 20);
 			this._areasToolStrip.Name = "_areasToolStrip";
@@ -75,7 +77,7 @@ namespace WeSay.ConfigTool
 			this._tasksButton.CheckState = System.Windows.Forms.CheckState.Checked;
 			this._tasksButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._tasksButton.ForeColor = System.Drawing.Color.DimGray;
-			this._tasksButton.Image = Resources.ConfigTasks;
+			this._tasksButton.Image = global::WeSay.ConfigTool.Properties.Resources.ConfigTasks;
 			this._tasksButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._tasksButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._tasksButton.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -85,25 +87,11 @@ namespace WeSay.ConfigTool
 			this._tasksButton.Text = "Tasks";
 			this._tasksButton.Click += new System.EventHandler(this.OnAreaButton_Click);
 			//
-			// _fieldsButton
-			//
-			this._fieldsButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._fieldsButton.ForeColor = System.Drawing.Color.DimGray;
-			this._fieldsButton.Image = Resources.ConfigFields;
-			this._fieldsButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this._fieldsButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-			this._fieldsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this._fieldsButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
-			this._fieldsButton.Name = "_fieldsButton";
-			this._fieldsButton.Size = new System.Drawing.Size(171, 25);
-			this._fieldsButton.Text = "Fields";
-			this._fieldsButton.Click += new System.EventHandler(this.OnAreaButton_Click);
-			//
 			// _writingSystemButton
 			//
 			this._writingSystemButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._writingSystemButton.ForeColor = System.Drawing.Color.DimGray;
-			this._writingSystemButton.Image = Resources.ConfigWritingSystems;
+			this._writingSystemButton.Image = global::WeSay.ConfigTool.Properties.Resources.ConfigWritingSystems;
 			this._writingSystemButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._writingSystemButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._writingSystemButton.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -113,11 +101,25 @@ namespace WeSay.ConfigTool
 			this._writingSystemButton.Text = "Writing Systems";
 			this._writingSystemButton.Click += new System.EventHandler(this.OnAreaButton_Click);
 			//
+			// _fieldsButton
+			//
+			this._fieldsButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._fieldsButton.ForeColor = System.Drawing.Color.DimGray;
+			this._fieldsButton.Image = global::WeSay.ConfigTool.Properties.Resources.ConfigFields;
+			this._fieldsButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this._fieldsButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this._fieldsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this._fieldsButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
+			this._fieldsButton.Name = "_fieldsButton";
+			this._fieldsButton.Size = new System.Drawing.Size(171, 25);
+			this._fieldsButton.Text = "Fields";
+			this._fieldsButton.Click += new System.EventHandler(this.OnAreaButton_Click);
+			//
 			// _actionsButton
 			//
 			this._actionsButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._actionsButton.ForeColor = System.Drawing.Color.DimGray;
-			this._actionsButton.Image = Resources.ConfigActions;
+			this._actionsButton.Image = global::WeSay.ConfigTool.Properties.Resources.ConfigActions;
 			this._actionsButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._actionsButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._actionsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -131,13 +133,13 @@ namespace WeSay.ConfigTool
 			//
 			this._interfaceLanguageButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._interfaceLanguageButton.ForeColor = System.Drawing.Color.DimGray;
-			this._interfaceLanguageButton.Image = Resources.ConfigInterfaceLanguage;
+			this._interfaceLanguageButton.Image = global::WeSay.ConfigTool.Properties.Resources.ConfigInterfaceLanguage;
 			this._interfaceLanguageButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._interfaceLanguageButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._interfaceLanguageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._interfaceLanguageButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
 			this._interfaceLanguageButton.Name = "_interfaceLanguageButton";
-			this._interfaceLanguageButton.Size = new System.Drawing.Size(171, 33);
+			this._interfaceLanguageButton.Size = new System.Drawing.Size(171, 32);
 			this._interfaceLanguageButton.Text = "Interface Language";
 			this._interfaceLanguageButton.Click += new System.EventHandler(this.OnAreaButton_Click);
 			//
@@ -146,27 +148,42 @@ namespace WeSay.ConfigTool
 			this._backupButton.BackColor = System.Drawing.SystemColors.ControlLight;
 			this._backupButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._backupButton.ForeColor = System.Drawing.Color.DimGray;
-			this._backupButton.Image = Resources.chorus;
+			this._backupButton.Image = global::WeSay.ConfigTool.Properties.Resources.ConfigBackup;
 			this._backupButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._backupButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._backupButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._backupButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
 			this._backupButton.Name = "_backupButton";
 			this._backupButton.Size = new System.Drawing.Size(171, 36);
-			this._backupButton.Text = "Collaboration";
+			this._backupButton.Text = "Backup";
 			this._backupButton.Click += new System.EventHandler(this.OnAreaButton_Click);
+			//
+			// _chorusButton
+			//
+			this._chorusButton.BackColor = System.Drawing.SystemColors.ControlLight;
+			this._chorusButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._chorusButton.ForeColor = System.Drawing.Color.DimGray;
+			this._chorusButton.Image = global::WeSay.ConfigTool.Properties.Resources.chorus;
+			this._chorusButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this._chorusButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this._chorusButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this._chorusButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
+			this._chorusButton.Name = "_chorusButton";
+			this._chorusButton.Size = new System.Drawing.Size(171, 33);
+			this._chorusButton.Text = "Collaboration";
+			this._chorusButton.Click += new System.EventHandler(this.OnAreaButton_Click);
 			//
 			// _optionsListButton
 			//
 			this._optionsListButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold);
 			this._optionsListButton.ForeColor = System.Drawing.Color.DimGray;
-			this._optionsListButton.Image = Resources.ConfigOptionLists;
+			this._optionsListButton.Image = global::WeSay.ConfigTool.Properties.Resources.ConfigOptionLists;
 			this._optionsListButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._optionsListButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._optionsListButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._optionsListButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
 			this._optionsListButton.Name = "_optionsListButton";
-			this._optionsListButton.Size = new System.Drawing.Size(171, 36);
+			this._optionsListButton.Size = new System.Drawing.Size(116, 36);
 			this._optionsListButton.Text = "Option Lists";
 			this._optionsListButton.Click += new System.EventHandler(this.OnAreaButton_Click);
 			//
@@ -237,10 +254,11 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.ToolStripButton _actionsButton;
 		private System.Windows.Forms.ToolStripButton _interfaceLanguageButton;
 		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.ToolStripButton _backupButton;
+		private System.Windows.Forms.ToolStripButton _chorusButton;
 		private System.Windows.Forms.ToolStripButton _writingSystemButton;
 		private ToolStripButton _optionsListButton;
 		private Panel _areaPanel;
 		private RichTextBox _areaHeader;
+		private ToolStripButton _backupButton;
 	}
 }
