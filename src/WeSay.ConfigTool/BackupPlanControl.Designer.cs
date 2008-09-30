@@ -33,9 +33,9 @@ namespace WeSay.ConfigTool
 			this.components = new System.ComponentModel.Container();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.historyPanel1 = new Chorus.UI.HistoryPanel();
+			this._historyPanel = new Chorus.UI.HistoryPanel();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.syncPanel1 = new Chorus.UI.SyncPanel();
+			this._syncPanel = new Chorus.UI.SyncPanel();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage2.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -44,7 +44,7 @@ namespace WeSay.ConfigTool
 			//
 			// tabPage2
 			//
-			this.tabPage2.Controls.Add(this.historyPanel1);
+			this.tabPage2.Controls.Add(this._historyPanel);
 			this.tabPage2.Location = new System.Drawing.Point(4, 22);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -53,17 +53,17 @@ namespace WeSay.ConfigTool
 			this.tabPage2.Text = "History";
 			this.tabPage2.UseVisualStyleBackColor = true;
 			//
-			// historyPanel1
+			// _historyPanel
 			//
-			this.historyPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.historyPanel1.Location = new System.Drawing.Point(3, 3);
-			this.historyPanel1.Name = "historyPanel1";
-			this.historyPanel1.Size = new System.Drawing.Size(600, 353);
-			this.historyPanel1.TabIndex = 0;
+			this._historyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._historyPanel.Location = new System.Drawing.Point(3, 3);
+			this._historyPanel.Name = "_historyPanel";
+			this._historyPanel.Size = new System.Drawing.Size(600, 353);
+			this._historyPanel.TabIndex = 0;
 			//
 			// tabPage1
 			//
-			this.tabPage1.Controls.Add(this.syncPanel1);
+			this.tabPage1.Controls.Add(this._syncPanel);
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -72,14 +72,14 @@ namespace WeSay.ConfigTool
 			this.tabPage1.Text = "Sync";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			//
-			// syncPanel1
+			// _syncPanel
 			//
-			this.syncPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.syncPanel1.Location = new System.Drawing.Point(3, 3);
-			this.syncPanel1.Name = "syncPanel1";
-			this.syncPanel1.Size = new System.Drawing.Size(600, 353);
-			this.syncPanel1.TabIndex = 0;
-			this.syncPanel1.Load += new System.EventHandler(this.syncPanel1_Load);
+			this._syncPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._syncPanel.Location = new System.Drawing.Point(3, 3);
+			this._syncPanel.Name = "_syncPanel";
+			this._syncPanel.Size = new System.Drawing.Size(600, 353);
+			this._syncPanel.TabIndex = 0;
+			this._syncPanel.Load += new System.EventHandler(this.syncPanel1_Load);
 			//
 			// tabControl1
 			//
@@ -113,8 +113,8 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.TabControl tabControl1;
-		private Chorus.UI.HistoryPanel historyPanel1;
-		private Chorus.UI.SyncPanel syncPanel1;
+		private Chorus.UI.HistoryPanel _historyPanel;
+		private Chorus.UI.SyncPanel _syncPanel;
 
 	}
 }
