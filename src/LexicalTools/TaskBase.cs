@@ -220,7 +220,7 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		public int GetRemainingCount()
 		{
-			int count = ComputeCount(false);
+			int count = ComputeCount(true);
 			if (count != CountNotComputed)
 			{
 				_remainingCount = count;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -477,10 +478,34 @@ namespace WeSay.LexicalModel
 					doMarkTheFirst = false;
 					Writer.WriteAttributeString("first", "true"); //useful for headword
 				}
-				Writer.WriteStartElement("text");
-				Writer.WriteString(form.Form);
-				Writer.WriteEndElement();
+				string wrappedTextToExport = "<text>" + form.Form + "</text>";
+				XmlReaderSettings fragmentReaderSettings = new XmlReaderSettings();
+				fragmentReaderSettings.ConformanceLevel = ConformanceLevel.Fragment;
+				XmlReader testerForWellFormedness = XmlReader.Create(new StringReader(wrappedTextToExport));
 
+				bool isTextWellFormedXml = true;
+				try
+				{
+					while (testerForWellFormedness.Read())
+					{
+						//Just checking for well formed XML
+					}
+				}
+				catch
+				{
+					isTextWellFormedXml = false;
+				}
+
+				if(isTextWellFormedXml)
+				{
+					Writer.WriteRaw(wrappedTextToExport);
+				}
+				else
+				{
+					Writer.WriteStartElement("text");
+					Writer.WriteString(form.Form);
+					Writer.WriteEndElement();
+				}
 				WriteFlags(form);
 				Writer.WriteEndElement();
 			}

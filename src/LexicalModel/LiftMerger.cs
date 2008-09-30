@@ -337,7 +337,7 @@ namespace WeSay.LexicalModel
 														 string noticeToPrependIfNotEmpty)
 		{
 			MultiText mt = dataObject.GetOrCreateProperty<MultiText>(propertyName);
-			mt.MergeInWithAppend(MultiText.Create(contents.AsSimpleStrings),
+			mt.MergeInWithAppend(MultiText.Create(contents),
 								 string.IsNullOrEmpty(noticeToPrependIfNotEmpty)
 										 ? "; "
 										 : noticeToPrependIfNotEmpty);
