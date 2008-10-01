@@ -9,6 +9,7 @@ namespace WeSay.ConfigTool
 {
 	public partial class BackupPlanControl: ConfigurationControlBase
 	{
+		public BackupPlanControl()
 			: base("prepare for the worst")
 		{
 			InitializeComponent();

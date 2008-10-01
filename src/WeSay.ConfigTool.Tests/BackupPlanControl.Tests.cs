@@ -2,7 +2,7 @@ using System.IO;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
-using WeSay.Foundation.Tests;
+using TestUtilities;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -41,7 +41,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void SetValues_Reopen_HasSameValues()
 		{
-			using (TempFolder tempFolder = new TempFolder("backupPlanControlTests"))
+			using (TemporaryFolder tempFolder = new TemporaryFolder("backupPlanControlTests"))
 			{
 				try
 				{

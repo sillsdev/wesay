@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Xml;
 
 namespace TestUtilities
@@ -217,7 +216,7 @@ namespace TestUtilities
 			_path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), name);
 			if (Directory.Exists(_path))
 			{
-				TestUtilities.DeleteFolderThatMayBeInUse(_path);
+				FileUtilities.DeleteFolderThatMayBeInUse(_path);
 			}
 			Directory.CreateDirectory(_path);
 		}
@@ -227,7 +226,7 @@ namespace TestUtilities
 			_path = parent.Combine(name);
 			if (Directory.Exists(_path))
 			{
-				TestUtilities.DeleteFolderThatMayBeInUse(_path);
+				FileUtilities.DeleteFolderThatMayBeInUse(_path);
 			}
 			Directory.CreateDirectory(_path);
 		}
@@ -240,13 +239,13 @@ namespace TestUtilities
 
 		public void Dispose()
 		{
-			TestUtilities.DeleteFolderThatMayBeInUse(_path);
+			FileUtilities.DeleteFolderThatMayBeInUse(_path);
 		}
 
 		[Obsolete("It's better to wrap the use of this in a using() so that it is automatically cleaned up, even if a test fails.")]
 		public void Delete()
 		{
-			TestUtilities.DeleteFolderThatMayBeInUse(_path);
+			FileUtilities.DeleteFolderThatMayBeInUse(_path);
 		}
 
 		public string GetPathForNewTempFile(bool doCreateTheFile)
@@ -289,46 +288,6 @@ namespace TestUtilities
 		public string Combine(string innerFileName)
 		{
 			return System.IO.Path.Combine(_path, innerFileName);
-		}
-	}
-
-	public class TestUtilities
-	{
-		public static void DeleteFolderThatMayBeInUse(string folder)
-		{
-			if (Directory.Exists(folder))
-			{
-				for (int i = 0; i < 50; i++)//wait up to five seconds
-				{
-					try
-					{
-						Directory.Delete(folder, true);
-						return;
-					}
-					catch (Exception)
-					{
-					}
-					Thread.Sleep(100);
-				}
-				//maybe we can at least clear it out a bit
-				try
-				{
-					Debug.WriteLine("TestUtilities.DeleteFolderThatMayBeInUse(): gave up trying to delete the whole folder. Some files may be abandoned in your temp folder.");
-
-					string[] files = Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories);
-					foreach (string s in files)
-					{
-						File.Delete(s);
-					}
-					//sleep and try again
-					Thread.Sleep(1000);
-					Directory.Delete(folder, true);
-				}
-				catch (Exception)
-				{
-				}
-
-			}
 		}
 	}
 }

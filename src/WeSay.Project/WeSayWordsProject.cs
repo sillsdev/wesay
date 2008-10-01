@@ -491,7 +491,10 @@ namespace WeSay.Project
 					{
 						File.Delete(s);
 					}
-					File.Move(targetPath, s);
+					if (File.Exists(targetPath)) //review: JDH added this because of a failing test, and from my reading, the target shouldn't need to pre-exist
+					{
+						File.Move(targetPath, s);
+					}
 					File.Move(tempPath, targetPath);
 					File.Delete(s);
 				}

@@ -97,7 +97,7 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void Project_HackedEditorsSaveNow(object owriter, EventArgs e)
+		private void Project_EditorsSaveNow(object owriter, EventArgs e)
 		{
 			XmlWriter writer = (XmlWriter) owriter;
 

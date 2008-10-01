@@ -6,7 +6,7 @@ using System.Xml.XPath;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
-using WeSay.Foundation.Tests;
+using TestUtilities;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
@@ -37,7 +37,7 @@ namespace WeSay.ConfigTool.Tests
 				WeSayWordsProject.Project.Dispose();
 			}
 
-			TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
+			TestUtilities.FileUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
 		}
 
 		[Test]
