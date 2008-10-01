@@ -183,6 +183,7 @@ namespace WeSay.Data
 		}
 #endif
 
+		[CLSCompliantAttribute(false)]
 		protected bool _disposed;
 
 		public virtual void Dispose()

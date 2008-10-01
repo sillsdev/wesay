@@ -1059,7 +1059,6 @@ namespace WeSay.LexicalModel.Tests
 			Item.LexicalForm["de"] = "Sonne";
 		}
 
-		[Test]
 		protected override void  LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
 		{
 			SetState();
@@ -1073,7 +1072,6 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsFalse(Item.IsDirty);
 		}
 
-		[Test]
 		protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()
 		{
 			SetState();
@@ -1139,7 +1137,6 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsTrue(Item.IsDirty);
 		}
 
-		[Test]
 		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
 		{
 			Item.LexicalForm["de"] = "Sonne";
