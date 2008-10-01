@@ -19,16 +19,18 @@ namespace WeSay.Project.Tests
 		private readonly string _experimentDir;
 		private readonly string _projectName = "test";
 		private readonly string _pathToTasksBase;
+		private string _projectDirectoryName;
 
 		public ProjectDirectorySetupForTesting(string xmlOfEntries)
 				: this(xmlOfEntries, Validator.LiftVersion) {}
 
 		public ProjectDirectorySetupForTesting(string xmlOfEntries, string liftVersion)
 		{
-			_experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
+			_projectDirectoryName = Path.GetRandomFileName();
+			_experimentDir = MakeDir(Path.GetTempPath(), ProjectDirectoryName);
 			using (WeSayWordsProject p = new WeSayWordsProject())
 			{
-				p.PathToLiftFile = Path.Combine(_experimentDir, _projectName + ".lift");
+				p.PathToLiftFile = Path.Combine(_experimentDir, ProjectName + ".lift");
 				p.CreateEmptyProjectFiles(_experimentDir);
 				Assert.IsTrue(File.Exists(p.PathToConfigFile));
 				_pathToTasksBase = Path.Combine(p.ProjectDirectoryPath, "temptasks.xml");
@@ -124,6 +126,16 @@ namespace WeSay.Project.Tests
 		public bool IsDisposed
 		{
 			get { return _disposed; }
+		}
+
+		public string ProjectName
+		{
+			get { return _projectName; }
+		}
+
+		public string ProjectDirectoryName
+		{
+			get { return _projectDirectoryName; }
 		}
 
 		public void Dispose()

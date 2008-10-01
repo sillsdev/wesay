@@ -47,7 +47,10 @@ namespace WeSay.Project
 			{
 				ProjectFolderConfiguration projectFolder = new ProjectFolderConfiguration(pathToProjectDirectory);
 				projectFolder.ExcludePatterns.Add("**/cache");
-				//projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
+				projectFolder.ExcludePatterns.Add("*.old");
+				projectFolder.ExcludePatterns.Add("*.tmp");
+				projectFolder.IncludePatterns.Add("*.*");
+			   // projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 
 				Chorus.sync.SyncOptions options = new SyncOptions();
 				options.DoMergeWithOthers = false;
