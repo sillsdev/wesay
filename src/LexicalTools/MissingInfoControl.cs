@@ -533,10 +533,23 @@ namespace WeSay.LexicalTools
 		// right pane should get the highest tab order.
 		// this means the RTF view looks bad. Still haven't figured out how to make
 		// cursor go to right position.
+		private bool monoOnEnterFix;
 		protected override void OnEnter(EventArgs e)
 		{
-			base.OnEnter(e);
-			_entryViewControl.Select();
+			if (monoOnEnterFix)
+			{
+				return;
+			}
+			try
+			{
+				monoOnEnterFix = true;
+				base.OnEnter(e);
+				_entryViewControl.Select();
+			}
+			finally
+			{
+				monoOnEnterFix = false;
+			}
 		}
 	}
 }
