@@ -4,6 +4,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using Chorus.sync;
 using Chorus.Utilities;
+using Palaso.UI.WindowsForms.i8n;
+using WeSay.LexicalModel;
 
 namespace WeSay.Project
 {
@@ -18,6 +20,19 @@ namespace WeSay.Project
 	  [XmlElement("pathToParentOfRepositories")]
 		public string PathToParentOfRepositories;
 
+		private DateTime _timeOfLastBackupAttempt;
+		private LexEntryRepository _lexEntryRepository;
+
+		public DateTime TimeOfLastBackupAttempt
+		{
+			get { return _timeOfLastBackupAttempt; }
+		}
+
+		public LexEntryRepository Repository
+		{
+			set { _lexEntryRepository = value; }
+		}
+
 		public static ChorusBackupMaker LoadFromReader(XmlReader reader)
 		{
 			XmlSerializer serializer = new XmlSerializer(typeof(ChorusBackupMaker));
@@ -30,8 +45,15 @@ namespace WeSay.Project
 			serializer.Serialize(writer, this);
 		}
 
-		public void BackupNow(string pathToProjectDirectory)
+		public void BackupNow(string pathToProjectDirectory, string localizationLanguageId)
 		{
+			_timeOfLastBackupAttempt = DateTime.Now;
+
+			//nb: we're not really using the message yet, at least, not showing it to the user
+			if(!string.IsNullOrEmpty(RepositoryManager.GetEnvironmentReadinessMessage(localizationLanguageId)))
+			{
+				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
+			}
 			if (string.IsNullOrEmpty(PathToParentOfRepositories))
 			{
 				Palaso.Reporting.Logger.WriteMinorEvent("Backup location not specified, skipping backup.");
@@ -41,6 +63,12 @@ namespace WeSay.Project
 			{
 				Palaso.Reporting.Logger.WriteEvent("Backup location not found, skipping backup.");
 				return;
+			}
+
+			LiftRepository.RightToAccessLiftExternally rightToAccessLiftExternally = null;
+			if (_lexEntryRepository != null)
+			{
+				rightToAccessLiftExternally = _lexEntryRepository.GetRightToAccessLiftExternally();
 			}
 
 			try
@@ -62,6 +90,7 @@ namespace WeSay.Project
 
 				RepositoryManager manager = RepositoryManager.FromRootOrChildFolder(projectFolder);
 
+
 				if (!RepositoryManager.CheckEnvironmentAndShowMessageIfAppropriate("en"))//todo localization
 				{
 					Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
@@ -77,6 +106,13 @@ namespace WeSay.Project
 			{
 				Palaso.Reporting.Logger.WriteEvent("Error during Backup: {0}", error.Message);
 				//TODO we need some passive way indicating the health of the backup system
+			}
+			finally
+			{
+				if(rightToAccessLiftExternally !=null)
+				{
+					rightToAccessLiftExternally.Dispose();
+				}
 			}
 		}
 	}

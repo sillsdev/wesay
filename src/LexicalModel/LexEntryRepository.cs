@@ -11,6 +11,23 @@ namespace WeSay.LexicalModel
 {
 	public class LexEntryRepository: IRepository<LexEntry>
 	{
+		public class EntryEventArgs : EventArgs
+		{
+			public readonly string label;
+
+			public EntryEventArgs(LexEntry entry)
+			{
+				label = entry.LexicalForm.GetFirstAlternative();
+			}
+			public EntryEventArgs(RepositoryId repositoryId)
+			{
+				label = "?";//enhance: how do we get a decent label?
+			}
+		}
+		public event EventHandler<EntryEventArgs> AfterEntryModified;
+		public event EventHandler<EntryEventArgs> AfterEntryDeleted;
+		//public event EventHandler<EntryEventArgs> AfterEntryAdded;  I (JH) don't know how to tell the difference between new and modified
+
 		ResultSetCacheManager<LexEntry> _caches = new ResultSetCacheManager<LexEntry>();
 
 		private readonly LiftRepository _decoratedRepository;
@@ -20,6 +37,11 @@ namespace WeSay.LexicalModel
 		public LexEntryRepository(string path, ProgressState progressState)
 		{
 			_decoratedRepository = new LiftRepository(path, progressState);
+		}
+
+		public LiftRepository.RightToAccessLiftExternally GetRightToAccessLiftExternally()
+		{
+			return _decoratedRepository.GetRightToAccessLiftExternally();
 		}
 
 		public LexEntryRepository(LiftRepository decoratedRepository)
@@ -103,6 +125,12 @@ namespace WeSay.LexicalModel
 				_decoratedRepository.SaveItem(item);
 				_caches.UpdateItemInCaches(item);
 				item.Clean();
+
+				//review: I (JH) don't know how to tell the difference between new and modified
+				if (AfterEntryModified != null)
+				{
+					AfterEntryModified(this, new EntryEventArgs(item));
+				}
 			}
 		}
 
@@ -118,14 +146,28 @@ namespace WeSay.LexicalModel
 
 		public void DeleteItem(LexEntry item)
 		{
+			EntryEventArgs args = new EntryEventArgs(item);
+
 			_caches.DeleteItemFromCaches(item);
 			_decoratedRepository.DeleteItem(item);
+
+			if(AfterEntryDeleted !=null)
+			{
+				AfterEntryDeleted(this, args);
+			}
 		}
 
 		public void DeleteItem(RepositoryId repositoryId)
 		{
+			EntryEventArgs args = new EntryEventArgs(repositoryId);
+
 			_caches.DeleteItemFromCaches(repositoryId);
 			_decoratedRepository.DeleteItem(repositoryId);
+
+			if(AfterEntryDeleted !=null)
+			{
+				AfterEntryDeleted(this, args);
+			}
 		}
 
 		public void DeleteAllItems()

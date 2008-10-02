@@ -103,12 +103,10 @@ namespace WeSay.App
 
 				using (_lexEntryRepository = RepositoryStartupUI.CreateLexEntryRepository(_project.PathToRepository))
 				{
-					using (
-							_dictionary =
+					using (_dictionary =
 							new DictionaryServiceProvider(_lexEntryRepository, this, _project))
 					{
-						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") <
-							0)
+						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") <0)
 						{
 							RecoverUnsavedDataIfNeeded();
 						}
@@ -116,6 +114,9 @@ namespace WeSay.App
 						StartDictionaryServices();
 						_dictionary.LastClientDeregistered +=
 								_serviceAppSingletonHelper.OnExitIfInServerMode;
+
+						WireUpChorusEvents();
+
 						_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
 
 						_dictionary.LastClientDeregistered -=
@@ -137,9 +138,24 @@ namespace WeSay.App
 					_serviceAppSingletonHelper.Dispose();
 				}
 			}
-			_project.BackupMaker.BackupNow(_project.ProjectDirectoryPath);
+			_project.BackupNow();
 			Logger.ShutDown();
 			Settings.Default.Save();
+		}
+
+		private void WireUpChorusEvents()
+		{
+			//this is something of a hack... it seems weird to me that the app has the repository, but the project doesn't.
+			//maybe only the project should posses it.
+			_project.BackupMaker.Repository = _lexEntryRepository;//needed so it can unlock the lift file as needed
+
+			_lexEntryRepository.AfterEntryModified += OnModifyLift;
+			_lexEntryRepository.AfterEntryDeleted += OnModifyLift;
+		}
+
+		private void OnModifyLift(object sender, LexEntryRepository.EntryEventArgs e)
+		{
+			_project.ConsiderSynchingOrBackingUp("checkpoint");
 		}
 
 		//!!! Move this into LexEntryRepository and maybe lower.

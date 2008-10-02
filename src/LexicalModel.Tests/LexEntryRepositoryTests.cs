@@ -1269,6 +1269,9 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempfolder;
 		private LexEntryRepository _repository;
 		private ResultSet<LexEntry> firstResults;
+		private bool _afterEntryDeletedCalled;
+		private bool _afterEntrySavedCalled;
+		private bool _afterEntryModifiedCalled;
 
 		[SetUp]
 		public void Setup()
@@ -1276,6 +1279,8 @@ namespace WeSay.LexicalModel.Tests
 			_tempfolder = new TemporaryFolder();
 			string persistedFilePath = _tempfolder.GetTemporaryFile();
 			_repository = new LexEntryRepository(persistedFilePath);
+
+			_afterEntryDeletedCalled = _afterEntrySavedCalled = _afterEntryModifiedCalled = false;
 		}
 
 		[TearDown]
@@ -1705,6 +1710,95 @@ namespace WeSay.LexicalModel.Tests
 
 			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de", SystemFonts.DefaultFont));
 			Assert.AreEqual(0, results.Count);
+		}
+
+
+	}
+
+	[TestFixture]
+	public class LexEntryRepositoryEventTests
+	{
+		private bool _gotEventCall;
+
+		[SetUp]
+		public void Setup()
+		{
+			_gotEventCall = false;
+		}
+
+
+		[Test]
+		public void NewEntry_ByEntry_TriggersModifiedEntryAdded()
+		{
+			using (TemporaryFolder f = new TemporaryFolder("eventTests"))
+			{
+				using (LexEntryRepository r = new LexEntryRepository(f.GetPathForNewTempFile(true)))
+				{
+					r.AfterEntryModified += OnEvent;
+					LexEntry entry = r.CreateItem();
+					r.SaveItem(entry);
+					Assert.IsTrue(_gotEventCall);
+				}
+			}
+		}
+
+		[Test]
+		public void ModifiedEntry_ByEntry_TriggersModifiedEntryAdded()
+		{
+			using (TemporaryFolder f = new TemporaryFolder("eventTests"))
+			{
+				using (LexEntryRepository r = new LexEntryRepository(f.GetPathForNewTempFile(true)))
+				{
+					LexEntry entry = r.CreateItem();
+					r.SaveItem(entry);
+					 r.AfterEntryModified += OnEvent;
+					entry.Senses.Add(new LexSense());
+					r.SaveItem(entry);
+					Assert.IsTrue(_gotEventCall);
+				}
+			}
+		}
+
+		[Test]
+		public void DeleteEntry_ById_TriggersAfterEntryDeleted()
+		{
+			using (TemporaryFolder f = new TemporaryFolder("eventTests"))
+			{
+				using (LexEntryRepository r = new LexEntryRepository(f.GetPathForNewTempFile(true)))
+				{
+					r.AfterEntryDeleted +=OnEvent;
+
+					LexEntry entry = r.CreateItem();
+					r.SaveItem(entry);
+
+					r.DeleteItem(r.GetId(entry));
+					Assert.IsTrue(_gotEventCall);
+				}
+			}
+		}
+
+		[Test]
+		public void DeleteEntry_ByEntry_TriggersAfterEntryDeleted()
+		{
+			using (TemporaryFolder f = new TemporaryFolder("eventTests"))
+			{
+				using (LexEntryRepository r = new LexEntryRepository(f.GetPathForNewTempFile(true)))
+				{
+					r.AfterEntryDeleted += OnEvent;
+
+					LexEntry entry = r.CreateItem();
+					r.SaveItem(entry);
+
+					r.DeleteItem(entry);
+					Assert.IsTrue(_gotEventCall);
+				}
+			}
+		}
+
+
+		void OnEvent(object sender, LexEntryRepository.EntryEventArgs e)
+		{
+			_gotEventCall = true;
 		}
 	}
 }

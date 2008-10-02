@@ -959,7 +959,7 @@ namespace WeSay.Project
 
 			base.Save();
 
-			_backupMaker.BackupNow(ProjectDirectoryPath);
+			BackupNow();
 
 
 		}
@@ -1250,6 +1250,27 @@ namespace WeSay.Project
 				}
 			}
 			return false;
+		}
+
+		public void BackupNow()
+		{
+			BackupMaker.BackupNow(ProjectDirectoryPath, StringCatalogSelector);
+		}
+
+		/// <summary>
+		/// Call this when something changed, so we might want to backup or sync
+		/// </summary>
+		/// <param name="description"></param>
+		public void ConsiderSynchingOrBackingUp(string description)
+		{
+			//nb: we have multiple lengths we could go to eventually, perhaps with different rules:
+			//      commit locally, commit to local backup, commit peers on LAN, commit across internet
+			TimeSpan diff = DateTime.Now - BackupMaker.TimeOfLastBackupAttempt;
+		   // if(diff.TotalSeconds  > 30)
+			if(diff.TotalMinutes > 5)
+			{
+				BackupNow();
+			}
 		}
 	}
 }

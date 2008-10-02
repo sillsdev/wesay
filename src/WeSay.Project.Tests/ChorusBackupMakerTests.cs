@@ -51,7 +51,7 @@ namespace WeSay.Project.Tests
 
 			public void BackupNow()
 			{
-				BackupMaker.BackupNow(SourceProjectDir);
+				BackupMaker.BackupNow(SourceProjectDir, "en");
 			}
 
 			public void AssertDirExistsInWorkingDirectory(string s)

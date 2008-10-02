@@ -14,7 +14,7 @@ using WeSay.LexicalModel.Migration;
 
 namespace WeSay.LexicalModel
 {
-	public class LiftRepository: MemoryRepository<LexEntry>
+	public class LiftRepository : MemoryRepository<LexEntry>
 	{
 		private readonly ProgressState _progressState;
 		private readonly string _liftFilePath;
@@ -69,8 +69,9 @@ namespace WeSay.LexicalModel
 			exporter.End();
 		}
 
-		public LiftRepository(string filePath):this(filePath, new ProgressState())
-		{}
+		public LiftRepository(string filePath)
+			: this(filePath, new ProgressState())
+		{ }
 
 		public override LexEntry CreateItem()
 		{
@@ -217,7 +218,7 @@ namespace WeSay.LexicalModel
 													  <WeSayDataObject, LexEntry, LexSense,
 													  LexExampleSentence>.ProgressEventArgs e)
 		{
-		   _progressState.NumberOfStepsCompleted = e.Progress;
+			_progressState.NumberOfStepsCompleted = e.Progress;
 			e.Cancel = _progressState.Cancel;
 		}
 
@@ -318,6 +319,13 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+
+
+		public RightToAccessLiftExternally GetRightToAccessLiftExternally()
+		{
+			return new RightToAccessLiftExternally(this);
+		}
+
 		/// <summary>
 		///
 		/// </summary>
@@ -404,11 +412,76 @@ namespace WeSay.LexicalModel
 
 		private void LockLift()
 		{
-			if(_liftFileStreamForLocking != null)
+			if (_liftFileStreamForLocking != null)
 			{
-				throw new IOException("WeSay was not able to acquire a lock on your Lift file!");
+				throw new IOException("WeSay was not able to acquire a lock on the Lift file. Is it open in another program?");
 			}
 			_liftFileStreamForLocking = new FileStream(_liftFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
 		}
+
+		/// <summary>
+		/// this is pretty simplistic, at the moment
+		/// </summary>
+		public class RightToAccessLiftExternally : IDisposable
+		{
+			private readonly LiftRepository _repository;
+
+			public RightToAccessLiftExternally(LiftRepository r)
+			{
+				_repository = r;
+				if (_repository.IsLiftFileLocked)
+				{
+					_repository.UnLockLift();
+				}
+				else
+				{
+					_repository = null;
+				}
+			}
+
+#if DEBUG
+			~RightToAccessLiftExternally()
+			{
+				if (!_disposed)
+				{
+					throw new ApplicationException(
+							"Disposed not explicitly called on RightToAccessLiftExternally.");
+				}
+			}
+#endif
+
+			private bool _disposed;
+
+			public void Dispose()
+			{
+				Dispose(true);
+				GC.SuppressFinalize(this);
+			}
+
+			protected virtual void Dispose(bool disposing)
+			{
+				if (!_disposed)
+				{
+					if (disposing)
+					{
+						if (_repository != null) // will be null if the repo wasn't locked, as happens when shutting down wesay and backing up last thing
+						{
+							_repository.LockLift();
+						}
+					}
+				}
+				_disposed = true;
+			}
+		}
+
+		protected void VerifyNotDisposed()
+		{
+			if (_disposed)
+			{
+				throw new ObjectDisposedException("LexEntryRepository");
+			}
+		}
+
 	}
+
 }
