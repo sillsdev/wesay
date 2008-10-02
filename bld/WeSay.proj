@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="tasks/Microsoft.Sdc.Common.tasks" />
 
   <PropertyGroup>
 	<BaseDirectory>$(MSBuildProjectDirectory)\..</BaseDirectory>
@@ -250,6 +251,7 @@
   </Target>
 
   <Target Name="Clean">
+	<CleanFolder Path="$(BaseDirectory)\output" Force="true" />
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Clean"
 			 Properties="Configuration=Debug" />
