@@ -410,13 +410,14 @@ namespace WeSay.App
 		private static void OsCheck()
 		{
 #if DEBUG
+			string runtime = (Type.GetType("Mono.Runtime") == null) ? "Microsoft .Net" : "Mono";
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
 			{
-				Console.WriteLine("running on Unix");
+				Console.WriteLine("running on Unix with " + runtime);
 			}
 			else
 			{
-				Console.WriteLine("running on Windows");
+				Console.WriteLine("running on Windows with " + runtime);
 			}
 #endif
 		}
