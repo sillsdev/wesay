@@ -32,11 +32,14 @@ namespace WeSay.LexicalModel
 
 		private readonly LiftRepository _decoratedRepository;
 		public LexEntryRepository(string path):this(path, new ProgressState())
-		{}
+		{
+			_disposed = false;
+		}
 
 		public LexEntryRepository(string path, ProgressState progressState)
 		{
 			_decoratedRepository = new LiftRepository(path, progressState);
+			_disposed = false;
 		}
 
 		public LiftRepository.RightToAccessLiftExternally GetRightToAccessLiftExternally()
@@ -52,6 +55,7 @@ namespace WeSay.LexicalModel
 			}
 
 			_decoratedRepository = decoratedRepository;
+			_disposed = false;
 		}
 
 		public DateTime LastModified
@@ -855,7 +859,7 @@ namespace WeSay.LexicalModel
 		}
 #endif
 
-		private bool _disposed;
+		private bool _disposed=true;
 
 		public void Dispose()
 		{

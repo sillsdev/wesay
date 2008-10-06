@@ -18,10 +18,22 @@ namespace WeSay.App
 				dlg.Overview = "Please wait while WeSay loads your data.";
 				BackgroundWorker worker = new BackgroundWorker();
 				worker.DoWork += delegate (object sender, DoWorkEventArgs args)
-								 {
-									 ProgressState progressState = (ProgressState)args.Argument;
-									 lexEntryRepository = new LexEntryRepository(path, progressState);
-								 };
+									 {
+										 ProgressState progressState = (ProgressState) args.Argument;
+										 try
+										 {
+
+											 lexEntryRepository = new LexEntryRepository(path, progressState);
+											 args.Result = lexEntryRepository;
+
+										 }
+										 catch(Exception error)
+										 {
+											 args.Cancel = true;//review
+											 args.Result = error;
+											 progressState.ExceptionThatWasEncountered = error;
+										 }
+									 };
 				dlg.BackgroundWorker = worker;
 				dlg.CanCancel = false;
 
@@ -31,13 +43,12 @@ namespace WeSay.App
 					Exception err = dlg.ProgressStateResult.ExceptionThatWasEncountered;
 					if (err != null)
 					{
-						ErrorNotificationDialog.ReportException(err, null, false);
+						throw err;
 					}
 					else if (dlg.ProgressStateResult.State ==
 							 ProgressState.StateValue.StoppedWithError)
 					{
-						ErrorReport.ReportNonFatalMessage(
-								"Failed." + dlg.ProgressStateResult.LogString, null, false);
+						throw new ApplicationException("Failure while creating repository.");
 					}
 				}
 				return lexEntryRepository;
