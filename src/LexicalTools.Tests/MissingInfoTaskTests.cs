@@ -355,5 +355,33 @@ namespace WeSay.LexicalTools.Tests
 													   "PrefixDummy Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
 		}
+
+		/// <summary>
+		/// regression test for ws-960
+		/// </summary>
+		[Test]
+		public void Deactivate_NoCurrentEntry_DoesntCrash()
+		{
+			using (TempFile repoFile = new TempFile())
+			{
+				using (LexEntryRepository repo = new LexEntryRepository(repoFile.Path))
+				{
+					//notice, no entries
+					MissingInfoTask task = new MissingInfoTask(repo,
+							   this._missingFieldName,
+								_label,
+								_longLabel,
+								_description,
+								_remainingCountText,
+								_referenceCountText,
+								_viewTemplate,
+								_fieldsToShow);
+
+					Assert.AreEqual(0, task.ExactCount);
+					task.Activate();
+					task.Deactivate();
+				}
+			}
+		}
 	}
 }
