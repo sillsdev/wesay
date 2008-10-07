@@ -364,8 +364,8 @@ namespace WeSay.LexicalModel
 				}
 				catch (Exception e)
 				{
-					throw new ApplicationException(
-							"Could not finish updating LIFT dictionary file.", e);
+					ErrorReport.ReportNonFatalMessage(
+							"Could not finish updating LIFT dictionary file. Will try again later."+Environment.NewLine+" ("+e.Message+")");
 				}
 				finally
 				{
