@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Security.AccessControl;
 using System.Xml;
 using System.Xml.XPath;
 using NUnit.Framework;
@@ -26,6 +27,38 @@ namespace WeSay.Project.Tests
 		{
 		}
 
+
+		[Test]
+		public void UpdateFileStructure_LiftByItself_DoesNothing()
+		{
+			using (TemporaryFolder f = new TemporaryFolder("OpeningLiftFile_MissingConfigFile_GivesMessage"))
+			{
+				using(TempLiftFile lift = new TempLiftFile(f, "", "0.12"))
+				{
+					using(WeSayWordsProject p = new WeSayWordsProject())
+					{
+						Assert.AreEqual(lift.Path,p.UpdateFileStructure(lift.Path));
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// related to ws-944: Crash opening lift file from FLEx which was sitting in My Documents without a configuration file
+		/// </summary>
+		[Test, Ignore("Cannot easily run on vista or linux")]
+		public void UpdateFileStructure_LiftByItselfAtRoot_DoesNothing()
+		{
+			string path = @"C:\unittest.lift"; //this is at the root ON PURPOSE
+			File.CreateText(path).Close();
+			using (TempFile.TrackExisting(path))
+			{
+					using (WeSayWordsProject p = new WeSayWordsProject())
+					{
+						Assert.AreEqual(path, p.UpdateFileStructure(path));
+					}
+				}
+		}
 
 		[Test]
 		public void DefaultConfigFile_DoesntNeedMigrating()

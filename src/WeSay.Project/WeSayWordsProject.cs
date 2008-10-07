@@ -254,8 +254,15 @@ namespace WeSay.Project
 
 		private static bool HasOldStructure(string liftPath, out string projectDirectory)
 		{
+			projectDirectory = null;
 			Debug.Assert(File.Exists(liftPath));
-			projectDirectory = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
+			string parentName = Directory.GetParent(liftPath).FullName;
+			DirectoryInfo parent = Directory.GetParent(parentName);
+			if(parent==null)//like if the file was at c:\foo.lift
+			{
+				return false;
+			}
+			projectDirectory = parent.FullName;
 			string commonDir = Path.Combine(projectDirectory, "common");
 			string dirHoldingLift = Path.GetFileName(Path.GetDirectoryName(liftPath));
 			return dirHoldingLift == "wesay" && Directory.Exists(commonDir);
