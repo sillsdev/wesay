@@ -1,7 +1,7 @@
 <project name="WeSay.ConfigTool" default="build" basedir=".">
   <target name="build">
-	<csc target="library"
-		output="${project.output.dir}/WeSay.ConfigTool.dll"
+	<csc target="winexe"
+		output="${project.output.dir}/WeSay.ConfigTool.exe"
 		doc="${project.output.dir}/doc/WeSay.ConfigTool.xml"
 		debug="${build.debug}"
 		define="${build.defines}">
@@ -26,7 +26,7 @@
 		<include name="WeSay.AddinLib.dll" />
 		<include name="LexicalModel.dll" />
 		<include name="Enchant.Net.dll" />
-		<include name="Mono.Addins.dll" />
+		<include name="Mono.Addins.exe" />
 	  </references>
 	</csc>
   </target>

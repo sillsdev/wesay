@@ -22,7 +22,7 @@
 		<include name="WeSay.Foundation.dll" />
 		<include name="WeSay.AddinLib.dll" />
 		<include name="WeSay.UI.dll" />
-		<include name="Mono.Addins.dll" />
+		<include name="Mono.Addins.exe" />
 	  </references>
 	</csc>
   </target>

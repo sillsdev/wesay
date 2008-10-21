@@ -11,6 +11,7 @@
 	  </nowarn>
 	  <sources basedir=".">
 		<include name="**/*.cs" />
+		<exclude name="LiftRepositoryTests.cs" />
 	  </sources>
 	  <references basedir="${project.output.dir}">
 		<include name="nunit.framework.dll" />

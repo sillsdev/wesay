@@ -27,7 +27,7 @@
 		<include name="PalasoReporting.dll" />
 		<include name="Palaso.Services.dll" />
 		<include name="WeSay.Project.Tests.dll" />
-		<include name="WeSay.App.dll" />
+		<include name="WeSay.App.exe" />
 	  </references>
 	</csc>
   </target>

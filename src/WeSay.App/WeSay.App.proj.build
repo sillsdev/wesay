@@ -1,7 +1,7 @@
 <project name="WeSay.App" default="build" basedir=".">
   <target name="build">
-	<csc target="library"
-		output="${project.output.dir}/WeSay.App.dll"
+	<csc target="winexe"
+		output="${project.output.dir}/WeSay.App.exe"
 		doc="${project.output.dir}/doc/WeSay.App.xml"
 		debug="${build.debug}"
 		define="${build.defines}">

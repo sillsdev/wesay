@@ -150,7 +150,7 @@
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
 		<property name="expected.output" value="${project.output.dir}/WeSay.UI.Tests.dll"/>
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.App.dll"/>
+		<property name="expected.output" value="${project.output.dir}/WeSay.App.exe"/>
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
 		<property name="expected.output" value="${project.output.dir}/WeSay.App.Tests.dll"/>
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
@@ -164,7 +164,7 @@
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
 		<property name="expected.output" value="${project.output.dir}/SampleDataProcessor.dll"/>
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.ConfigTool.dll"/>
+		<property name="expected.output" value="${project.output.dir}/WeSay.ConfigTool.exe"/>
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
 		<property name="expected.output" value="${project.output.dir}/WeSay.ConfigTool.Tests.dll"/>
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
