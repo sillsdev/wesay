@@ -1,0 +1,21 @@
+syntax: glob
+
+output
+Thumbs.db
+.bzr
+obj
+bin
+SampleProjects/PRETEND
+*.suo
+*.resharper
+*.user
+SampleProjects/src/Biatah/Cache
+*.lift
+_ReSharper.*
+config
+*.xml
+*.resources
+*.pidb
+*.userprefs
+*.nunit
+*.usertasks
