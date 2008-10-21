@@ -1,0 +1,37 @@
+<project name="LexicalTools" default="build" basedir=".">
+  <target name="build">
+	<csc target="library"
+		output="${project.output.dir}/LexicalTools.dll"
+		doc="${project.output.dir}/doc/LexicalTools.xml"
+		debug="${build.debug}"
+		define="${build.defines}">
+	  <nowarn>
+		<warning number="618,672"/>
+		<warning number="1699" if="${runtime.version=='2.0'}"/>
+	  </nowarn>
+	  <sources basedir=".">
+		<include name="**/*.cs" />
+		<exclude name="LexEntrySorter.cs" />
+	  </sources>
+	  <references basedir="${project.output.dir}">
+		<include name="LexicalModel.dll" />
+		<include name="WeSay.Project.dll" />
+		<include name="WeSay.Data.dll" />
+		<include name="WeSay.Foundation.dll" />
+		<include name="WeSay.UI.dll" />
+		<include name="Palaso.dll" />
+		<include name="PalasoReporting.dll" />
+		<include name="PalasoUIWindowsForms.dll" />
+		<include name="System.Windows.Forms.dll" />
+		<include name="System.Drawing.dll" />
+	  </references>
+	</csc>
+  </target>
+
+  <target name="package">
+	<copy todir="${package.src.dir}/icu.net">
+	  <fileset refid="source-files" />
+	</copy>
+  </target>
+
+</project>

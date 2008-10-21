@@ -1,0 +1,29 @@
+<project name="WeSay.Data" default="build" basedir=".">
+  <target name="build">
+	<csc target="library"
+		output="${project.output.dir}/WeSay.Data.dll"
+		doc="${project.output.dir}/doc/WeSay.Data.xml"
+		debug="${build.debug}"
+		define="${build.defines}">
+	  <nowarn>
+		<warning number="618,672"/>
+		<warning number="1699" if="${runtime.version=='2.0'}"/>
+	  </nowarn>
+	  <sources basedir=".">
+		<include name="**/*.cs" />
+	  </sources>
+	  <references basedir="${project.output.dir}">
+		<include name="Db4objects.Db4o.dll" />
+		<include name="System.Data.dll" />
+		<include name="Palaso.dll" />
+	  </references>
+	</csc>
+  </target>
+
+  <target name="package">
+	<copy todir="${package.src.dir}/icu.net">
+	  <fileset refid="source-files" />
+	</copy>
+  </target>
+
+</project>
