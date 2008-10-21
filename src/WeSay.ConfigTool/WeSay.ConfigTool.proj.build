@@ -1,5 +1,13 @@
 <project name="WeSay.ConfigTool" default="build" basedir=".">
   <target name="build">
+
+	<copy file="Properties/Resources.resx" tofile="Properties/Resources.mono.resx" overwrite="true">
+	<filterchain>
+		<replacestring from="\" to="/" />
+	</filterchain>
+	</copy>
+
+	<resgen input="Properties/Resources.mono.resx" output="Properties/Resources.resources" usesourcepath="true" />
 	<csc target="winexe"
 		output="${project.output.dir}/WeSay.ConfigTool.exe"
 		doc="${project.output.dir}/doc/WeSay.ConfigTool.xml"
@@ -28,6 +36,9 @@
 		<include name="Enchant.Net.dll" />
 		<include name="Mono.Addins.exe" />
 	  </references>
+	  <resources dynamicprefix="true" basedir="..">
+		  <include name="**/*.resources" />
+	  </resources>
 	</csc>
   </target>
 
