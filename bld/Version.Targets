@@ -48,6 +48,7 @@
 <Target Name="Version">
 	<CallTarget targets="DetermineVersion"/>
 	<Message Text="After DetermineVersion: $(Revision)"/>
+	<Message Text="Passed in version: $(build.vcs.number.1)"/>
 </Target>
 
   <!-- From http://www.gotdotnet.com/codegallery/codegallery.aspx?id=93d23e13-c653-4815-9e79-16107919f93e -->
