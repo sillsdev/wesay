@@ -5,13 +5,13 @@
 
   <PropertyGroup>
 	<BaseDirectory>$(MSBuildProjectDirectory)\..</BaseDirectory>
+	<TeamCityVersion>$(BUILD_NUMBER)</TeamCityVersion>
   </PropertyGroup>
 
   <PropertyGroup>
 	<SourceFolder>$(BaseDirectory)\src</SourceFolder>
 	<CSharpFiles>$(BaseDirectory)\src</CSharpFiles>
   </PropertyGroup>
-
 
   <ItemGroup>
 	<CSharpFiles Include="$(BaseDirectory)\**\*.cs"/>

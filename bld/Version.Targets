@@ -12,43 +12,18 @@
 
 	<Major>0</Major>
 	<Minor>4</Minor>
-	<Revision></Revision><!-- filled in by subversion version number below-->
+	<Revision></Revision><!-- filled in by vcs version number below-->
 	<Bug>0</Bug>
 
 	<Version>0</Version><!-- changed by DetermineVersion version number below-->
   </PropertyGroup>
 
-
-
-
-
-
-
-<Target Name="DetermineVersion">
-	<!--
-	You must install the subversion package (not tortoise or another fancy gui version)
-	http://subversion.tigris.org/project_packages.html
-	-->
-	<Message Text="b4 DetermineVersion: $(Version)"/>
-
-	<!-- $(Revision) is now passed in from TeamCity which is more portable across version control systems -->
-	<!--
-	<SvnVersion LocalPath="$(MSBuildProjectDirectory)">
-		<Output TaskParameter="Revision" PropertyName="Revision" />
-		<Output TaskParameter="Revision" PropertyName="AssemblyRevision"/>
-		<Output TaskParameter="Revision" PropertyName="AssemblyFileRevision"/>
-	</SvnVersion>
-	-->
-
-	<!-- todo: I wanted to now set the Version property, but it seems imposible to affect the property in the outer scope.  There is a bug report here:  http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=110713 -->
-</Target>
-
-
-
+<UsingTask AssemblyFile="$(BaseDirectory)\bld\Palaso.BuildTasks.dll" TaskName="Split" />
 <Target Name="Version">
-	<CallTarget targets="DetermineVersion"/>
-	<Message Text="After DetermineVersion: $(Revision)"/>
-	<Message Text="Passed in version: $(build.vcs.number.1)"/>
+	<Split Input="$(TeamCityVersion)" Delimiter=":" OutputSubString="0">
+	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
+	</Split>
+	<Message Text="Version: $(Revision)" />
 </Target>
 
   <!-- From http://www.gotdotnet.com/codegallery/codegallery.aspx?id=93d23e13-c653-4815-9e79-16107919f93e -->
