@@ -201,6 +201,28 @@
 		</nunit2>
 	</target>
 
+	<target name="install" depends="set-build-config, set-runtime-config, set-output-dir">
+		<property name="INSTALL_DIR" value="/" />
+		<property name="USR_SHARE" value="${path::combine(INSTALL_DIR, 'usr/share/wesay')}"/>
+		<copy todir="${USR_SHARE}">
+			<fileset basedir="${project.output.dir}">
+				<include name="*" />
+			 </fileset>
+		</copy>
+		<copy todir="${path::combine(USR_SHARE, 'common')}">
+			<fileset basedir="${path::combine(project.base.dir, 'common')}">
+				<include name="*" />
+			 </fileset>
+		</copy>
+		<copy todir="${path::combine(USR_SHARE, 'templates')}">
+			<fileset basedir="${path::combine(project.base.dir, 'templates')}">
+				<include name="*" />
+			 </fileset>
+		</copy>
+		<copy file="wesay.mono.runner" tofile="/usr/bin/wesay" />
+		<copy file="wesay.configtool.mono.runner" tofile="/usr/bin/wesay-config" />
+	</target>
+
 	<target name="installerpre" depends="version">
 		<fail />
 		<foreach item="File" property="filename">

@@ -1,13 +1,40 @@
 <project name="WeSay.ConfigTool" default="build" basedir=".">
   <target name="build">
 
-	<copy file="Properties/Resources.resx" tofile="Properties/Resources.mono.resx" overwrite="true">
-	<filterchain>
-		<replacestring from="\" to="/" />
-	</filterchain>
+	<move todir="nant.resx.bak">
+		<fileset basedir=".">
+			<include name="**/*.resx" />
+		</fileset>
+	</move>
+
+	<copy todir="." >
+		<fileset basedir="nant.resx.bak">
+			<include name="**/*.resx" />
+		</fileset>
+		<filterchain>
+			<replacestring from="\" to="/" />
+		</filterchain>
 	</copy>
 
-	<resgen input="Properties/Resources.mono.resx" output="Properties/Resources.resources" usesourcepath="true" />
+	<foreach item="File" property="filename">
+		<in>
+			<items>
+				<include name="**/*.resx" />
+				<exclude name="nant.resx.bak/**/*.resx" />
+			</items>
+		</in>
+		<do>
+			<delete file="${filename}" if="${file::get-length(filename)==0}"/>
+		</do>
+	</foreach>
+
+	<resgen usesourcepath="true">
+		<resources>
+			<include name="**/*.resx" />
+			<exclude name="nant.resx.bak/**/*.resx" />
+		</resources>
+	</resgen>
+
 	<csc target="winexe"
 		output="${project.output.dir}/WeSay.ConfigTool.exe"
 		doc="${project.output.dir}/doc/WeSay.ConfigTool.xml"
@@ -40,6 +67,21 @@
 		  <include name="**/*.resources" />
 	  </resources>
 	</csc>
+
+	<move todir="." overwrite="true">
+		<fileset basedir="nant.resx.bak">
+			<include name="**/*.resx" />
+		</fileset>
+	</move>
+
+	<delete>
+		<fileset>
+			<include name="**/*.resources" />
+			<include name="nant.resx.bak/**" />
+			<include name="nant.resx.bak" />
+		</fileset>
+	</delete>
+
   </target>
 
   <target name="package">
