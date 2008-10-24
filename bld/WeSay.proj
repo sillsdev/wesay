@@ -176,15 +176,12 @@
   </Target>
 
   <Target Name="Installer">
-
+	<CallTarget targets="Version" />
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<CallTarget targets="MakeWixForTemplates"/>
 
-	<SvnVersion LocalPath="$(BaseDirectory)">
-	  <Output TaskParameter="Revision" PropertyName="Revision" />
-	</SvnVersion>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)"><!--the preceding zero here is so we get a valid version even when just running this target in isolation, when Revision is empty -->
-	  <Output PropertyName="Version" TaskParameter="Value"/>
+		<Output PropertyName="Version" TaskParameter="Value"/>
 	</CreateProperty>
 
 	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
