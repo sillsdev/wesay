@@ -148,15 +148,15 @@
   </Target>
 
   <Target Name="InstallerNoGenerationTest">
-
-		<CallTarget targets="MakeWixForTemplates"/>
-
-	<SvnVersion LocalPath="$(BaseDirectory)">
-	  <Output TaskParameter="Revision" PropertyName="Revision" />
-	</SvnVersion>
-	<CreateProperty Value="$(Major).$(Minor).$(Revision)"><!--the preceding zero here is so we get a valid version even when just running this target in isolation, when Revision is empty -->
+	<Split Input="$(TeamCityVersion)" Delimiter=":" OutputSubString="0">
+	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
+	</Split>
+	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
 	  <Output PropertyName="Version" TaskParameter="Value"/>
 	</CreateProperty>
+	<Message Text="Version: $(Version)" />
+
+	<CallTarget targets="MakeWixForTemplates"/>
 
 	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
@@ -176,13 +176,16 @@
   </Target>
 
   <Target Name="Installer">
-	<CallTarget targets="Version" />
+	<Split Input="$(TeamCityVersion)" Delimiter=":" OutputSubString="0">
+	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
+	</Split>
+	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
+	  <Output PropertyName="Version" TaskParameter="Value"/>
+	</CreateProperty>
+	<Message Text="Version: $(Version)" />
+
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<CallTarget targets="MakeWixForTemplates"/>
-
-	<CreateProperty Value="$(Major).$(Minor).$(Revision)"><!--the preceding zero here is so we get a valid version even when just running this target in isolation, when Revision is empty -->
-		<Output PropertyName="Version" TaskParameter="Value"/>
-	</CreateProperty>
 
 	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
@@ -203,28 +206,26 @@
 
 
   <Target Name="Upload">
-	<SvnVersion LocalPath="$(BaseDirectory)">
-	  <Output TaskParameter="Revision" PropertyName="Revision" />
-	</SvnVersion>
-
+	<Split Input="$(TeamCityVersion)" Delimiter=":" OutputSubString="0">
+	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
+	</Split>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
 	  <Output PropertyName="Version" TaskParameter="Value"/>
 	</CreateProperty>
-
-	<Message Text="Uploading Version: $(Version)"/>
+	<Message Text="Version: $(Version)" />
 
 	<Exec Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller.$(Version).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller.$(Version).msi'
 		   WorkingDirectory="$(BaseDirectory)" />
   </Target>
 
   <Target Name="Mail">
-	<SvnVersion LocalPath="$(BaseDirectory)">
-	  <Output TaskParameter="Revision" PropertyName="Revision" />
-	</SvnVersion>
-
+	<Split Input="$(TeamCityVersion)" Delimiter=":" OutputSubString="0">
+	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
+	</Split>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
 	  <Output PropertyName="Version" TaskParameter="Value"/>
 	</CreateProperty>
+	<Message Text="Version: $(Version)" />
 
 	<!-- Mail email to list-->
 	<Mail Body="WeSay version $(Version) has been deployed. Check it out."
@@ -237,8 +238,7 @@
   </Target>
 
   <Target Name="Build">
-	<CallTarget Targets="RevertSource;
-						UpdateCsProjs;
+	<CallTarget Targets="UpdateCsProjs;
 						 Compile;
 						 Test;
 						 CreateSample;

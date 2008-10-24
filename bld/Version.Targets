@@ -23,7 +23,11 @@
 	<Split Input="$(TeamCityVersion)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
 	</Split>
-	<Message Text="Version: $(Revision)" />
+	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
+	  <Output PropertyName="Version" TaskParameter="Value"/>
+	</CreateProperty>
+	<Message Text="Revision: $(Revision)" />
+	<Message Text="Version: $(Version)" />
 </Target>
 
   <!-- From http://www.gotdotnet.com/codegallery/codegallery.aspx?id=93d23e13-c653-4815-9e79-16107919f93e -->
