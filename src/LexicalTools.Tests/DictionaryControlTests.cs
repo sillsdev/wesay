@@ -1042,6 +1042,19 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(btn.Text.Contains("Show"));
 		}
 
+		//Regression test WS-950. Also effects WS-962.
+		//This does not so much test that an entry is id'd correctly, but simply tests that the
+		//error causing method call  is not reintroduced.
+		[Test]
+		public void AddingNewWord_WordIsNotPrematurelyIdd()
+		{
+			StartWithEmpty();
+			ClickAddWord();
+			RepositoryId[] repositoryId = _lexEntryRepository.GetAllItems();
+			LexEntry entry = _lexEntryRepository.GetItem(repositoryId[0]);
+			Assert.AreEqual(null, entry.Id);
+		}
+
 		[Test]
 		public void DeletingWord_ClearsShowHiddenState()
 		{

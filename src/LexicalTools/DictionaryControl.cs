@@ -471,7 +471,6 @@ namespace WeSay.LexicalTools
 				{
 					entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
 				}
-				_lexEntryRepository.SaveItem(entry);
 				LoadRecords();
 				selectIndex = this._records.FindFirstIndex(entry);
 			}
