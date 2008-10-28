@@ -1,5 +1,65 @@
 <project name="Palaso Build" default="build">
 
+<!-- ***************************************************************** -->
+<!-- ********* 			Set a few properties			   *********** -->
+<!-- ***************************************************************** -->
+	<!-- Project build dir is the dir where the build script is located -->
+	<property name="project.bld.dir"  value="${project::get-base-directory()}"/>
+
+	<!-- Project base dir is the build dir's parent -->
+	<property name="project.base.dir" value="${path::get-directory-name(project.bld.dir)}"/>
+
+	<!-- Project source dir is a child of the base dir -->
+	<property name="project.src.dir" value="${path::combine(project.base.dir,'src')}" />
+
+	<!-- Project lib dir is a child of the base dir -->
+	<property name="project.lib.base.dir" value="${path::combine(project.base.dir,'lib')}"/>
+
+	<!-- OS Platform in Use -->
+	<property name="os.platform" value="other"/>
+	<if test="${platform::is-win32()}">
+		<property name="os.platform" value="win32"/>
+	</if>
+	<if test="${platform::is-unix()}">
+		<property name="os.platform" value="linux"/>
+	</if>
+
+	<!-- Default build configuration -->
+	<property name="build.config" value="Debug"/>
+	<property name="build.defines" value=""/>
+
+	<!-- List of buildfiles for the individual projects. Order is relevant!-->
+	<fileset id="project.buildfiles.src" basedir="${project.src.dir}">
+		<include name="WeSay.Data/WeSay.Data.proj.build" />
+		<include name="WeSay.Foundation/WeSay.Foundation.proj.build" />
+		<include name="LexicalModel\LexicalModel.proj.build" />
+		<include name="WeSay.AddinLib\WeSay.AddinLib.proj.build" />
+		<include name="WeSay.Project\WeSay.Project.proj.build" />
+		<include name="WeSay.Data.Tests\WeSay.Data.Tests.proj.build" />
+		<include name="WeSay.Foundation.Tests\WeSay.Foundation.Tests.proj.build" />
+		<include name="WeSay.Project.Tests\WeSay.Project.Tests.proj.build" />
+		<include name="TestUtilities\TestUtilities.proj.build" />
+		<include name="LexicalModel.Tests\LexicalModel.Tests.proj.build" />
+		<include name="WeSay.UI\WeSay.UI.proj.build" />
+		<include name="CommonTools\CommonTools.proj.build" />
+		<include name="LexicalTools\LexicalTools.proj.build" />
+		<include name="LexicalTools.Tests\LexicalTools.Tests.proj.build" />
+		<include name="WeSay.App\WeSay.App.proj.build" />
+		<include name="WeSay.App.Tests\WeSay.App.Tests.proj.build" />
+		<include name="Lift2WeSay\SampleDataProcessor.proj.build" />
+		<include name="WeSay.ConfigTool\WeSay.ConfigTool.proj.build" />
+		<include name="WeSay.ConfigTool.Tests\WeSay.ConfigTool.Tests.proj.build" />
+		<include name="Addin.LiftReports\Addin.LiftReports.proj.build" />
+		<include name="Addin.Backup\Addin.Backup.proj.build" />
+		<include name="Addin.Transform\Addin.Transform.proj.build" />
+		<include name="WeSay.AddinLib.Tests\WeSay.AddinLib.Tests.proj.build" />
+		<include name="Addin.Transform.Tests\Addin.Transform.Tests.proj.build" />
+		<include name="Addin.LiftReports.Tests\Addin.LiftReports.Tests.proj.build" />
+		<include name="CommonTools.Tests\CommonTools.Tests.proj.build" />
+		<include name="TestUtilities.Tests\TestUtilities.Tests.proj.build" />
+		<include name="WeSay.UI.Tests\WeSay.UI.Tests.proj.build" />
+	</fileset>
+
 	<target name="clean" description="Delete all previously compiled binaries.">
 		<delete>
 			<fileset>
@@ -11,6 +71,10 @@
 				<exclude name="../lib/**" />
 			</fileset>
 		</delete>
+
+		<nant target="clean">
+			<buildfiles refid="project.buildfiles.src" />
+		</nant>
 	</target>
 
 	<target name="revision">
@@ -85,38 +149,6 @@
 	<target name="rebuild" depends="clean, build" />
 
 	<target name="build.solution" depends="clean, make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
-
-		<fileset id="project.buildfiles.src" basedir="${project.src.dir}">
-			<include name="WeSay.Data/WeSay.Data.proj.build" />
-			<include name="WeSay.Foundation/WeSay.Foundation.proj.build" />
-			<include name="LexicalModel\LexicalModel.proj.build" />
-			<include name="WeSay.AddinLib\WeSay.AddinLib.proj.build" />
-			<include name="WeSay.Project\WeSay.Project.proj.build" />
-			<include name="WeSay.Data.Tests\WeSay.Data.Tests.proj.build" />
-			<include name="WeSay.Foundation.Tests\WeSay.Foundation.Tests.proj.build" />
-			<include name="WeSay.Project.Tests\WeSay.Project.Tests.proj.build" />
-			<include name="TestUtilities\TestUtilities.proj.build" />
-			<include name="LexicalModel.Tests\LexicalModel.Tests.proj.build" />
-			<include name="WeSay.UI\WeSay.UI.proj.build" />
-			<include name="CommonTools\CommonTools.proj.build" />
-			<include name="LexicalTools\LexicalTools.proj.build" />
-			<include name="LexicalTools.Tests\LexicalTools.Tests.proj.build" />
-			<include name="WeSay.App\WeSay.App.proj.build" />
-			<include name="WeSay.App.Tests\WeSay.App.Tests.proj.build" />
-			<include name="Lift2WeSay\SampleDataProcessor.proj.build" />
-			<include name="WeSay.ConfigTool\WeSay.ConfigTool.proj.build" />
-			<include name="WeSay.ConfigTool.Tests\WeSay.ConfigTool.Tests.proj.build" />
-			<include name="Addin.LiftReports\Addin.LiftReports.proj.build" />
-			<include name="Addin.Backup\Addin.Backup.proj.build" />
-			<include name="Addin.Transform\Addin.Transform.proj.build" />
-			<include name="WeSay.AddinLib.Tests\WeSay.AddinLib.Tests.proj.build" />
-			<include name="Addin.Transform.Tests\Addin.Transform.Tests.proj.build" />
-			<include name="Addin.LiftReports.Tests\Addin.LiftReports.Tests.proj.build" />
-			<include name="CommonTools.Tests\CommonTools.Tests.proj.build" />
-			<include name="TestUtilities.Tests\TestUtilities.Tests.proj.build" />
-			<include name="WeSay.UI.Tests\WeSay.UI.Tests.proj.build" />
-		</fileset>
-
 		<nant target="build">
 			<properties>
 				<property name="build.defines" value="${build.defines}" />
@@ -130,60 +162,6 @@
 
 		<property name="expected.output" value="${project.output.dir}/WeSay.Data.dll"/>
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.Data.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.Foundation.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.Foundation.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.AddinLib.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.AddinLib.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.Project.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.Project.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/LexicalModel.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/LexicalModel.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.UI.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.UI.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.App.exe"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.App.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/LexicalTools.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/LexicalTools.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/CommonTools.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/CommonTools.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/SampleDataProcessor.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.ConfigTool.exe"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/WeSay.ConfigTool.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/Addin.LiftReports.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/Addin.LiftReports.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/Addin.Backup.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/Addin.Transform.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/Addin.Transform.Tests.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/TestUtilities.dll"/>
-		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
-		<property name="expected.output" value="${project.output.dir}/TestUtilities.Tests.dll"/>
-		<echo message="Build verified!" />
 	</target>
 
 	<target name="test" depends="build">
@@ -283,36 +261,8 @@
 
 
 <!-- ***************************************************************** -->
-<!-- ********* Set a few properties						   *********** -->
-<!-- ***************************************************************** -->
-	<!-- Project build dir is the dir where the build script is located -->
-	<property name="project.bld.dir"  value="${project::get-base-directory()}"/>
-
-	<!-- Project base dir is the build dir's parent -->
-	<property name="project.base.dir" value="${path::get-directory-name(project.bld.dir)}"/>
-
-	<!-- Project source dir is a child of the base dir -->
-	<property name="project.src.dir" value="${path::combine(project.base.dir,'src')}" />
-
-	<!-- Project lib dir is a child of the base dir -->
-	<property name="project.lib.base.dir" value="${path::combine(project.base.dir,'lib')}"/>
-
-	<!-- OS Platform in Use -->
-  <property name="os.platform" value="other"/>
-  <if test="${platform::is-win32()}">
-	<property name="os.platform" value="win32"/>
-  </if>
-  <if test="${platform::is-unix()}">
-	<property name="os.platform" value="linux"/>
-  </if>
-
-<!-- ***************************************************************** -->
 <!-- ********* Targets for setting the build configuration *********** -->
 <!-- ***************************************************************** -->
-
-	<!-- Default build configuration -->
-	<property name="build.config" value="Debug"/>
-	<property name="build.defines" value=""/>
 
   <target name="set-build-config">
 	<call target="set-${build.config}-build-config"/>

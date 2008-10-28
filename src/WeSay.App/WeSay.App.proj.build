@@ -1,14 +1,8 @@
 <project name="WeSay.App" default="build" basedir=".">
-  <target name="build">
+  <target name="build" depends="clean">
 
-	<move todir="nant.resx.bak">
+	<copy todir="nant.resx.bak" >
 		<fileset basedir=".">
-			<include name="**/*.resx" />
-		</fileset>
-	</move>
-
-	<copy todir="." >
-		<fileset basedir="nant.resx.bak">
 			<include name="**/*.resx" />
 		</fileset>
 		<filterchain>
@@ -16,28 +10,29 @@
 		</filterchain>
 	</copy>
 
-	<property name="resxFilesExist" value="false" />
+	<!--bit of a hack. Necassary so that the linux resource files can reference the artwork directory.-->
+	<copy todir="..">
+		<fileset basedir="../..">
+			<include name="artwork/**/*" />
+		</fileset>
+	</copy>
 
 	<foreach item="File" property="filename">
 		<in>
 			<items>
-				<include name="**/*.resx" />
-				<exclude name="nant.resx.bak/**/*.resx" />
+				<include name="nant.resx.bak/**/*.resx" />
 			</items>
 		</in>
 		<do>
-			<property name="resxFilesExist" value="true" />
-			<echo message="${resxFilesExist}" />
-			<delete file="${filename}" if="${file::get-length(filename)==0}"/>
+			<resgen input="${filename}" usesourcepath="true" unless="${file::get-length(filename)==0}" />
 		</do>
 	</foreach>
 
-	<resgen usesourcepath="true" if="${resxFilesExist}">
-		<resources>
-			<include name="**/*.resx" />
-			<exclude name="nant.resx.bak/**/*.resx" />
-		</resources>
-	</resgen>
+	<copy todir="." >
+		<fileset basedir="nant.resx.bak">
+			<include name="**/*.resources" />
+		</fileset>
+	</copy>
 
 	<copy file="../Addin.Transform/plift2html.xsl" tofile="plift2html.xsl" />
 
@@ -47,7 +42,7 @@
 		debug="${build.debug}"
 		define="${build.defines}">
 	  <nowarn>
-		<warning number="618,672"/>
+		<warning number="618,672,1591"/>
 		<warning number="1699" if="${runtime.version=='2.0'}"/>
 	  </nowarn>
 	  <sources basedir=".">
@@ -77,14 +72,11 @@
 	  </resources>
 	</csc>
 
+	<delete dir="../artwork" />
 	<delete file="plift2html.xsl" />
+  </target>
 
-	<move todir="." overwrite="true">
-		<fileset basedir="nant.resx.bak">
-			<include name="**/*.resx" />
-		</fileset>
-	</move>
-
+  <target name="clean">
 	<delete>
 		<fileset>
 			<include name="**/*.resources" />
@@ -93,6 +85,8 @@
 		</fileset>
 	</delete>
 
+	<delete dir="../artwork" if="${directory::exists('../artwork')}"/>
+	<delete file="plift2html.xsl" if="${file::exists('plift2html.xsl')}"/>
   </target>
 
   <target name="package">

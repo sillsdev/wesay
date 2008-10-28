@@ -1,14 +1,8 @@
 <project name="Addin.Transform" default="build" basedir=".">
-  <target name="build">
+  <target name="build" depends="clean">
 
-	<move todir="nant.resx.bak">
+	<copy todir="nant.resx.bak" >
 		<fileset basedir=".">
-			<include name="**/*.resx" />
-		</fileset>
-	</move>
-
-	<copy todir="." >
-		<fileset basedir="nant.resx.bak">
 			<include name="**/*.resx" />
 		</fileset>
 		<filterchain>
@@ -16,29 +10,30 @@
 		</filterchain>
 	</copy>
 
-	<property name="resxFilesExist" value="false" />
+	<copy todir="nant.resx.bak" >
+		<fileset basedir=".">
+			<include name="**/*.png" />
+		</fileset>
+	</copy>
 
 	<foreach item="File" property="filename">
 		<in>
 			<items>
-				<include name="**/*.resx" />
-				<exclude name="nant.resx.bak/**/*.resx" />
+				<include name="nant.resx.bak/**/*.resx" />
 			</items>
 		</in>
 		<do>
-			<property name="resxFilesExist" value="true" />
-			<echo message="${resxFilesExist}" />
-			<delete file="${filename}" if="${file::get-length(filename)==0}"/>
+			<resgen input="${filename}" usesourcepath="true" unless="${file::get-length(filename)==0}" />
 		</do>
 	</foreach>
 
-	<resgen usesourcepath="true" if="${resxFilesExist}">
-		<resources>
-			<include name="**/*.resx" />
-			<exclude name="nant.resx.bak/**/*.resx" />
-		</resources>
-	</resgen>
+	<copy todir="." >
+		<fileset basedir="nant.resx.bak">
+			<include name="**/*.resources" />
+		</fileset>
+	</copy>
 
+	<!-- bit of a hack as the csc task can only take one <resources> child element and plift2html requires a different namespace than the other resources-->
 	<copy file="plift2html.xsl" tofile="../WeSay/Addin.Transform/plift2html.xsl" />
 
 	<csc target="library"
@@ -47,7 +42,7 @@
 		debug="${build.debug}"
 		define="${build.defines}">
 	  <nowarn>
-		<warning number="618,672"/>
+		<warning number="618,672,1591"/>
 		<warning number="1699" if="${runtime.version=='2.0'}"/>
 	  </nowarn>
 	  <sources basedir=".">
@@ -74,13 +69,9 @@
 	</csc>
 
 	<delete file="../WeSay/Addin.Transform/plift2html.xsl" />
+  </target>
 
-	<move todir="." overwrite="true">
-		<fileset basedir="nant.resx.bak">
-			<include name="**/*.resx" />
-		</fileset>
-	</move>
-
+  <target name="clean">
 	<delete>
 		<fileset>
 			<include name="**/*.resources" />
@@ -89,6 +80,7 @@
 		</fileset>
 	</delete>
 
+	<delete file="../WeSay/Addin.Transform/plift2html.xsl" if="${file::exists('../WeSay/Addin.Transform/plift2html.xsl')}"/>
   </target>
 
   <target name="package">
