@@ -6,6 +6,11 @@
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
 
   <PropertyGroup>
+	<BaseDirectory>$(MSBuildProjectDirectory)\..\..</BaseDirectory>
+	<TeamCityVersion>$(BUILD_NUMBER)</TeamCityVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
 	<ApplicationName>WeSay</ApplicationName>
 	<Company>WeSay</Company>
 	<Copyright>Copyright © WeSay 2006-2008</Copyright>
@@ -18,10 +23,14 @@
 	<Version>0</Version><!-- changed by DetermineVersion version number below-->
   </PropertyGroup>
 
-<UsingTask AssemblyFile="$(BaseDirectory)\bld\Palaso.BuildTasks.dll" TaskName="Split" />
+  <UsingTask AssemblyFile="$(BaseDirectory)\bld\Palaso.BuildTasks.dll" TaskName="Split" />
 <Target Name="Version">
 	<Split Input="$(TeamCityVersion)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
+	  <Output TaskParameter="ReturnValue" PropertyName="AssemblyRevision"/>
+	  <Output TaskParameter="ReturnValue" PropertyName="AssemblyBuildNumber"/>
+	  <Output TaskParameter="ReturnValue" PropertyName="AssemblyFileRevision"/>
+	  <Output TaskParameter="ReturnValue" PropertyName="AssemblyFileBuildNumber"/>
 	</Split>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
 	  <Output PropertyName="Version" TaskParameter="Value"/>
