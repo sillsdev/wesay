@@ -290,7 +290,7 @@ namespace WeSay.LexicalTools
 
 		public override void Deactivate()
 		{
-			if (_missingInfoControl != null)
+			if (_missingInfoControl != null && _missingInfoControl.CurrentEntry!=null)
 			{
 				LexEntryRepository.SaveItem(_missingInfoControl.CurrentEntry);
 			}
