@@ -59,21 +59,25 @@
 	<!-- without path to Tool-->
 	<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Debug\%(DebugTestAssemblies.Filename).xml"
 		   Assemblies="%(DebugTestAssemblies.FullPath)"
+		   ExcludeCategory="DictionaryServices"
 		   WorkingDirectory="$(BaseDirectory)\output\Debug" Condition="$(NUnitPath)==''">
 	</NUnit>
 	<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Release\%(ReleaseTestAssemblies.Filename).xml"
 		   Assemblies="%(ReleaseTestAssemblies.FullPath)"
+		   ExcludeCategory="DictionaryServices"
 		   WorkingDirectory="$(BaseDirectory)\output\Release" Condition="$(NUnitPath)==''">
 	</NUnit>
 
 	<!-- with explicit path to Tool-->
 	<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Debug\%(DebugTestAssemblies.Filename).xml"
 		   Assemblies="%(DebugTestAssemblies.FullPath)"
+		   ExcludeCategory="DictionaryServices"
 		   WorkingDirectory="$(BaseDirectory)\output\Debug"
 		   ToolPath="$(NUnitPath)" Condition="$(NUnitPath)!=''">
 	</NUnit>
 	<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Release\%(ReleaseTestAssemblies.Filename).xml"
 		   Assemblies="%(ReleaseTestAssemblies.FullPath)"
+		   ExcludeCategory="DictionaryServices"
 		   WorkingDirectory="$(BaseDirectory)\output\Release"
 		   ToolPath="$(NUnitPath)" Condition="$(NUnitPath)!= ''">
 	</NUnit>
