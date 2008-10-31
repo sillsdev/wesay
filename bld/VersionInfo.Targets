@@ -20,7 +20,7 @@
 
   <UsingTask AssemblyFile="$(BaseDirectory)\bld\Palaso.BuildTasks.dll" TaskName="Split" />
 <Target Name="Version">
-	<Split Input="$(TeamCityVersion)" Delimiter=":" OutputSubString="0">
+	<Split Input="$(BUILD_NUMBER)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
 	  <Output TaskParameter="ReturnValue" PropertyName="AssemblyRevision"/>
 	  <Output TaskParameter="ReturnValue" PropertyName="AssemblyBuildNumber"/>

@@ -4,7 +4,6 @@
 
   <PropertyGroup>
 	<BaseDirectory>$(MSBuildProjectDirectory)\..\..</BaseDirectory>
-	<TeamCityVersion>$(BUILD_NUMBER)</TeamCityVersion>
   </PropertyGroup>
 
   <Import Project="$(BaseDirectory)\bld\VersionInfo.Targets"/>
