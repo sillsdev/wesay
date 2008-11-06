@@ -151,19 +151,55 @@
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
 	</target>
 
-	<target name="test" depends="build">
-		<nunit2>
-			<formatter type="Plain" usefile="true" />
+	 <target name="test" depends="build">
+<!-- Run tests the first time without stopping the build under on failing tests because we want to be able to see ALL failing tests in the log.
+		The downside to this is that TeamCity will show a passing build even with failing tests-->
+
+		<echo message="*********************************************************************"/>
+		<echo message="******                  Begin Test run!	                    ********"/>
+		<echo message="*********************************************************************"/>
+
+	<foreach item="File" property="filename">
+		<in>
+			<items>
+				<include name="${project.output.dir}/*.Tests.dll" />
+			</items>
+		</in>
+		<do>
+			<nunit2 failonerror="false" verbose="true">
+			<formatter type="Plain"/>
 			<test>
-		  <assemblies>
-			<include name="${project.output.dir}/*.Tests.dll" />
-		  </assemblies>
-		  <categories>
-			<exclude name="MouseSensitive"/>
-			<exclude name="Windows IME"/>
-			<exclude name="Keyman6"/>
-			<exclude name="Keyman7"/>
-		  </categories>
+			<assemblies>
+				<include name="${filename}" />
+			</assemblies>
+			<categories>
+				<exclude name="MouseSensitive"/>
+				<exclude name="Windows IME"/>
+				<exclude name="Keyman6"/>
+				<exclude name="Keyman7"/>
+			</categories>
+			</test>
+		</nunit2>
+		</do>
+		</foreach>
+
+		<echo message="*********************************************************************"/>
+		<echo message="******                  End Test run!                        ********"/>
+		<echo message="*********************************************************************"/>
+
+<!-- Run the tests a second time, failing as soon as possible. We do this so that TeamCity indicates a failed build on failing tests-->
+		<nunit2 haltonfailure="true" failonerror="true">
+			<formatter type="Plain" usefile="false" />
+			<test>
+			<assemblies>
+				<include name="${project.output.dir}/*.Tests.dll" />
+			</assemblies>
+			<categories>
+				<exclude name="MouseSensitive"/>
+				<exclude name="Windows IME"/>
+				<exclude name="Keyman6"/>
+				<exclude name="Keyman7"/>
+			</categories>
 			</test>
 		</nunit2>
 	</target>
