@@ -13,12 +13,12 @@
 		</delete>
 	</target>
 
-	<target name="revision">
+	<target name="revision_svn">
 		<property name="svn.info.log" value="svninfo.txt"/>
 		<exec
 			program="svn.exe"
 			basedir="C:\Program Files\Subversion\bin"
-			commandline="info http://code.wesay.org/WeSay/trunk"
+			commandline="info http://code.wesay.org/Palaso/trunk/Palaso"
 			output="${svn.info.log}"
 		/>
 		<loadfile property="svn.head.revision" file="${svn.info.log}" />
@@ -28,7 +28,14 @@
 		<delete file="${svn.info.log}" />
 	</target>
 
-	<target name="version" depends="revision">
+	<target name="revision_teamcityhg">
+		<property name="teamcity" value="${environment::get-variable('BUILD_NUMBER')}" />
+		<regex pattern="^(?'revision'[^:]*)" input="${teamcity}" />
+		<property name="revision" value="${string::trim(revision)}" />
+		<echo message="Revision: ${revision}" />
+	</target>
+
+	<target name="version" depends="revision_teamcityhg">
 		<loadfile property="version" file="version.txt">
 			<filterchain>
 				<expandproperties />
@@ -42,7 +49,7 @@
 		<foreach item="File" property="filename">
 			<in>
 				<items>
-					<include name="../**/AssemblyInfo.cs" />
+					<include name="../src/**/AssemblyInfo.cs" />
 				</items>
 			</in>
 			<do>
@@ -110,6 +117,12 @@
 		</nunit2>
 	</target>
 
+	<target name="installer">
+		<exec program="msbuild.exe">
+			<arg line="WeSay.proj /t:Installer" />
+		</exec>
+	</target>
+
 	<!--
 	<target name="publish" depends="installer">
 		<exec program="ftp.exe">
@@ -117,5 +130,11 @@
 		</exec>
 	</target>
 	-->
+
+	<target name="publish">
+		<exec program="c:\program files\cwRsync\bin\rsync.exe">
+			<arg line='-vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller.$(Version).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller.$(Version).msi' />
+		</exec>
+	</target>
 
 </project>
