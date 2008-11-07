@@ -26,9 +26,11 @@ namespace WeSay.UI
 		public MultiTextControl(): this(null)
 		{
 			//design mode only
-			InitializeComponent();
-			AutoSize = false;
-			Size = new Size(100, 20);
+			if (DesignMode)
+			{
+				AutoSize = false;
+				Size = new Size(100, 20);
+			}
 		}
 
 		public MultiTextControl(WritingSystemCollection allWritingSystems)
