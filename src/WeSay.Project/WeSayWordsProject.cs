@@ -965,9 +965,7 @@ namespace WeSay.Project
 			writer.Close();
 
 			base.Save();
-
 			BackupNow();
-
 
 		}
 
@@ -1102,20 +1100,30 @@ namespace WeSay.Project
 			}
 		}
 
-		public void MakeWritingSystemIdChange(WritingSystem ws, string oldId)
+		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)
 		{
 			//Todo: WS-227 Before changing a ws id in a lift file, ensure that it isn't already in use
 
-			WritingSystems.IdOfWritingSystemChanged(ws, oldId);
-			DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
 
 			if (File.Exists(PathToLiftFile))
 			{
-				//todo: expand the regular expression here to account for all reasonable patterns
-				GrepFile(PathToLiftFile,
-						 string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(oldId)),
-						 string.Format("lang=\"{0}\"", ws.Id));
+				try
+				{
+
+
+					//todo: expand the regular expression here to account for all reasonable patterns
+					GrepFile(PathToLiftFile,
+							 string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(oldId)),
+							 string.Format("lang=\"{0}\"", ws.Id));
+				}
+				catch (Exception error)
+				{
+					ErrorReport.ReportNonFatalMessage("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
+					return false;
+				}
 			}
+			WritingSystems.IdOfWritingSystemChanged(ws, oldId);
+			DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
 
 			if (WritingSystemChanged != null)
 			{
@@ -1125,6 +1133,7 @@ namespace WeSay.Project
 				WritingSystemChanged.Invoke(this, p);
 			}
 
+
 			//this worked but it just gets overwritten when Setup closes
 			/*if (File.Exists(PathToConfigFile))
 			{
@@ -1133,6 +1142,7 @@ namespace WeSay.Project
 						 string.Format("wordListWritingSystemId>{0}<", ws.Id));
 			}
 			*/
+			return true;
 		}
 
 		/// <summary>
@@ -1261,7 +1271,14 @@ namespace WeSay.Project
 
 		public void BackupNow()
 		{
-			BackupMaker.BackupNow(ProjectDirectoryPath, StringCatalogSelector);
+			try
+			{
+				BackupMaker.BackupNow(ProjectDirectoryPath, StringCatalogSelector);
+			}
+			catch (Exception error)
+			{
+				ErrorReport.ReportNonFatalMessage(string.Format("WeSay was not able to do a backup.\r\nReason: {0}", error.Message));
+			}
 		}
 
 		/// <summary>

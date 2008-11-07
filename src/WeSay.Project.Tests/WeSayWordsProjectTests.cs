@@ -3,9 +3,11 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Xml;
 using System.Xml.XPath;
+using LiftIO;
 using NUnit.Framework;
 using Palaso.Reporting;
 using TestUtilities;
+using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 
@@ -43,6 +45,43 @@ namespace WeSay.Project.Tests
 			}
 		}
 
+
+		[Test]
+		public void MakeWritingSystemIdChange_FileLocked_NotifiesUser()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				using (File.OpenWrite(p.PathToLiftFile))
+				{
+					WritingSystem ws = project.WritingSystems["v"];
+					ws.Id = "newIdForV";
+					Palaso.Reporting.ErrorReport.JustRecordNonFatalMessagesForTesting = true;
+					Assert.IsNull(ErrorReport.PreviousNonFatalMessage);
+					Assert.IsFalse(project.MakeWritingSystemIdChange(ws, "v"));
+					Assert.IsNotNull(ErrorReport.PreviousNonFatalMessage);
+			  }
+			}
+		}
+
+		[Test]
+		public void MakeWritingSystemIdChange_WritingSystemFoundInLift_Changed()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				XmlDocument doc = new XmlDocument();
+				doc.Load(p.PathToLiftFile);
+				Assert.IsNotNull(doc.SelectNodes("//form[lang='v']"));
+				WritingSystem ws = project.WritingSystems["v"];
+				ws.Id = "newIdForV";
+				Assert.IsTrue(project.MakeWritingSystemIdChange(ws, "v"));
+				doc.Load(p.PathToLiftFile);
+				Assert.IsNotNull(doc.SelectNodes("//form[lang='newIdForV']"));
+				Assert.AreEqual("newIdForV", ws.Id);
+
+			}
+		}
 		/// <summary>
 		/// related to ws-944: Crash opening lift file from FLEx which was sitting in My Documents without a configuration file
 		/// </summary>
