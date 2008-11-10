@@ -21,3 +21,4 @@ config
 *.usertasks
 *~
 *.orig
+nant.resx.bak

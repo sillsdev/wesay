@@ -45,8 +45,8 @@
 		<include name="WeSay.Project.dll" />
 		<include name="WeSay.Data.dll" />
 		<include name="WeSay.Foundation.dll" />
+		<include name="WeSay.Foundation.Tests.dll" />
 		<include name="WeSay.UI.dll" />
-		<include name="TestUtilities.dll" />
 		<include name="nunit.framework.dll" />
 		<include name="NUnitForms.dll" />
 		<include name="System.Drawing.dll" />

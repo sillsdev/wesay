@@ -47,8 +47,8 @@
 		<include name="System.Drawing.dll" />
 		<include name="System.Windows.Forms.dll" />
 		<include name="WeSay.Foundation.dll" />
+		<include name="WeSay.Foundation.Tests.dll" />
 		<include name="WeSay.Project.dll" />
-		<include name="TestUtilities.dll" />
 		<include name="CommonTools.dll" />
 		<include name="Palaso.dll" />
 		<include name="PalasoReporting.dll" />

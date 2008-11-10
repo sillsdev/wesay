@@ -38,7 +38,6 @@
 		<include name="WeSay.Data.Tests\WeSay.Data.Tests.proj.build" />
 		<include name="WeSay.Foundation.Tests\WeSay.Foundation.Tests.proj.build" />
 		<include name="WeSay.Project.Tests\WeSay.Project.Tests.proj.build" />
-		<include name="TestUtilities\TestUtilities.proj.build" />
 		<include name="LexicalModel.Tests\LexicalModel.Tests.proj.build" />
 		<include name="WeSay.UI\WeSay.UI.proj.build" />
 		<include name="CommonTools\CommonTools.proj.build" />
@@ -56,7 +55,6 @@
 		<include name="Addin.Transform.Tests\Addin.Transform.Tests.proj.build" />
 		<include name="Addin.LiftReports.Tests\Addin.LiftReports.Tests.proj.build" />
 		<include name="CommonTools.Tests\CommonTools.Tests.proj.build" />
-		<include name="TestUtilities.Tests\TestUtilities.Tests.proj.build" />
 		<include name="WeSay.UI.Tests\WeSay.UI.Tests.proj.build" />
 	</fileset>
 

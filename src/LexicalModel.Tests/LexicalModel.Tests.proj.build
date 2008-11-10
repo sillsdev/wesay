@@ -52,7 +52,6 @@
 		<include name="WeSay.Project.Tests.dll" />
 		<include name="LexicalModel.dll" />
 		<include name="LiftIO.dll" />
-		<include name="TestUtilities.dll" />
 	  </references>
 	  <resources dynamicprefix="true" basedir="..">
 		  <include name="**/*.resources" />
