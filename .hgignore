@@ -1,4 +1,6 @@
 syntax: glob
+templates\.guidsForInstaller.xml
+common\.guidsForInstaller.xml
 
 output
 Thumbs.db
@@ -10,10 +12,8 @@ SampleProjects/PRETEND
 *.resharper
 *.user
 SampleProjects/src/Biatah/Cache
-*.lift
 _ReSharper.*
 config
-*.xml
 *.resources
 *.pidb
 *.userprefs

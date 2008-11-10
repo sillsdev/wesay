@@ -2,49 +2,58 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
 		<DirectoryRef Id="common">
-			<Component Id="wesay_da.po" Guid="6F118941-7B1E-4C47-8ADA-01D8AAFD82CE">
+			<Component Id="wesay_da.po" Guid="415E230E-C58E-47A3-BCE1-A6A38E7778B3">
 				<File Id="wesay_da.po" Name="wesay-da.po" KeyPath="yes" Source="..\..\common\wesay-da.po" />
 			</Component>
-			<Component Id="wesay_es.po" Guid="A81EC96F-5F0B-4495-9D76-90DF742EB77C">
+			<Component Id="wesay_es.po" Guid="0B6CFD31-E533-48D0-8254-73CA97023BAC">
 				<File Id="wesay_es.po" Name="wesay-es.po" Source="..\..\common\wesay-es.po" />
 			</Component>
-			<Component Id="wesay_fr.po" Guid="3167C09C-3FA7-4B25-951E-134F5B5C0C25">
+			<Component Id="wesay_fr.po" Guid="7E17FACD-263F-4390-957F-23B6C90534EE">
 				<File Id="wesay_fr.po" Name="wesay-fr.po" Source="..\..\common\wesay-fr.po" />
 			</Component>
-			<Component Id="wesay_he.po" Guid="65C03CD6-2B76-4AFC-BD8E-15F2BCE4B653">
+			<Component Id="wesay_he.po" Guid="B0B0352F-DF2E-4E8D-B987-148A46E11DB0">
 				<File Id="wesay_he.po" Name="wesay-he.po" Source="..\..\common\wesay-he.po" />
 			</Component>
-			<Component Id="wesay_id.po" Guid="134F2C22-319F-474A-8DAD-059207130B6B">
+			<Component Id="wesay_id.po" Guid="EE2C8E11-0270-4C6F-8FE9-B8B3C3B9CFE9">
 				<File Id="wesay_id.po" Name="wesay-id.po" Source="..\..\common\wesay-id.po" />
 			</Component>
-			<Component Id="wesay_is.po" Guid="A99C79FE-F574-4EDA-827D-4332587CFBE0">
+			<Component Id="wesay_is.po" Guid="C0DD53D6-C293-4676-939C-611C995942EE">
 				<File Id="wesay_is.po" Name="wesay-is.po" Source="..\..\common\wesay-is.po" />
 			</Component>
-			<Component Id="wesay_my.po" Guid="EB58521A-363D-41F0-942C-AF30E4A18C3F">
+			<Component Id="wesay_my.po" Guid="4264B969-A46C-4AFE-A7B9-01CEA6D147D9">
 				<File Id="wesay_my.po" Name="wesay-my.po" Source="..\..\common\wesay-my.po" />
 			</Component>
-			<Component Id="wesay_nl.po" Guid="A3F179D9-978F-4902-9E5B-C9AA4DE3E026">
+			<Component Id="wesay_nl.po" Guid="2C3EEC3E-494F-493B-BFD0-98E20F9BF3A6">
 				<File Id="wesay_nl.po" Name="wesay-nl.po" Source="..\..\common\wesay-nl.po" />
 			</Component>
-			<Component Id="wesay_oc.po" Guid="1A4A8EBD-1EFE-4100-B1D6-6B8A683ACE0A">
+			<Component Id="wesay_oc.po" Guid="86DA8509-83F0-40A9-A240-A70A454E6251">
 				<File Id="wesay_oc.po" Name="wesay-oc.po" Source="..\..\common\wesay-oc.po" />
 			</Component>
-			<Component Id="wesay_pl.po" Guid="BE4021AD-A658-4E8D-8DE8-0D7D2872002C">
+			<Component Id="wesay_pl.po" Guid="14C4BE1B-26FE-47D4-AFA2-B0CAC94479F4">
 				<File Id="wesay_pl.po" Name="wesay-pl.po" Source="..\..\common\wesay-pl.po" />
 			</Component>
-			<Component Id="wesay_pt.po" Guid="469D47E5-6BB7-472B-857F-F266CA140D19">
+			<Component Id="wesay_pt.po" Guid="F17B70D4-3A07-42AB-8598-2C6E612858DF">
 				<File Id="wesay_pt.po" Name="wesay-pt.po" Source="..\..\common\wesay-pt.po" />
 			</Component>
-			<Component Id="wesay_ru.po" Guid="3D6650A6-0367-4914-9114-9E1F68F7774D">
+			<Component Id="wesay_ru.po" Guid="AB46C9C8-A26B-407D-9F23-3750E4168199">
 				<File Id="wesay_ru.po" Name="wesay-ru.po" Source="..\..\common\wesay-ru.po" />
 			</Component>
-			<Component Id="wesay_th.po" Guid="B713C0CB-9448-4E3D-A89B-C2E9F36B1187">
+			<Component Id="wesay_rw.po" Guid="15B2DF06-4BA9-4C45-B296-CC8ADF7EA11E">
+				<File Id="wesay_rw.po" Name="wesay-rw.po" Source="..\..\common\wesay-rw.po" />
+			</Component>
+			<Component Id="wesay_sv.po" Guid="13247054-3EFA-40E4-9AA8-5D45EF0BE468">
+				<File Id="wesay_sv.po" Name="wesay-sv.po" Source="..\..\common\wesay-sv.po" />
+			</Component>
+			<Component Id="wesay_th.po" Guid="91DA9815-B90B-4242-B4EF-A453F265F1FC">
 				<File Id="wesay_th.po" Name="wesay-th.po" Source="..\..\common\wesay-th.po" />
 			</Component>
-			<Component Id="wesay_tpi.po" Guid="8E283EEE-0ABC-4374-A115-1182F97E12C6">
+			<Component Id="wesay_tpi.po" Guid="2846C900-1D4B-4DDB-AAB8-7EDD76B84C43">
 				<File Id="wesay_tpi.po" Name="wesay-tpi.po" Source="..\..\common\wesay-tpi.po" />
 			</Component>
-			<Component Id="wesay_zh_CN.po" Guid="4CBB84A2-ECE1-4705-8915-FF0BF29CAEB2">
+			<Component Id="wesay_vi.po" Guid="FA4DD39D-5334-4D2D-888C-6FDB8FEA3095">
+				<File Id="wesay_vi.po" Name="wesay-vi.po" Source="..\..\common\wesay-vi.po" />
+			</Component>
+			<Component Id="wesay_zh_CN.po" Guid="29425105-4697-41F1-898E-34F3637BFD46">
 				<File Id="wesay_zh_CN.po" Name="wesay-zh_CN.po" Source="..\..\common\wesay-zh_CN.po" />
 			</Component>
 		</DirectoryRef>
@@ -61,8 +70,11 @@
 			<ComponentRef Id="wesay_pl.po" />
 			<ComponentRef Id="wesay_pt.po" />
 			<ComponentRef Id="wesay_ru.po" />
+			<ComponentRef Id="wesay_rw.po" />
+			<ComponentRef Id="wesay_sv.po" />
 			<ComponentRef Id="wesay_th.po" />
 			<ComponentRef Id="wesay_tpi.po" />
+			<ComponentRef Id="wesay_vi.po" />
 			<ComponentRef Id="wesay_zh_CN.po" />
 		</ComponentGroup>
 	</Fragment>
