@@ -3,7 +3,7 @@ using NUnit.Framework;
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	[Ignore("Completely commented out")]
+	[Ignore("TestFixture needs reviewing!")]
 	public class TestEntryView
 	{
 		[SetUp]

@@ -138,7 +138,7 @@ namespace WeSay.Project.Tests
 			{
 				if (disposing)
 				{
-					TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
+					Foundation.Tests.TestHelpers.TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
 				}
 
 				// shared (dispose and finalizable) cleanup logic

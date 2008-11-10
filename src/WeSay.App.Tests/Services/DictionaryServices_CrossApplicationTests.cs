@@ -15,6 +15,7 @@ namespace WeSay.App.Tests.Services
 	/// over in that library. See Palaso.Tests.Services.
 	/// </summary>
 	[TestFixture]
+	[Category("DictionaryServices")]
 	public class DictionaryServices_CrossApplicationTests
 	{
 		private const bool kStartInServerMode = true;

@@ -20,4 +20,4 @@ config
 *.nunit
 *.usertasks
 *~
-AssemblyInfo.cs
+*.orig

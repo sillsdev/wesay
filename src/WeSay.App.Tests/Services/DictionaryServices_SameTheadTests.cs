@@ -1,8 +1,8 @@
 using System.IO;
 using NUnit.Framework;
 using Palaso.Services.Dictionary;
-using TestUtilities;
 using WeSay.App.Services;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests.Db4oSpecific;
 

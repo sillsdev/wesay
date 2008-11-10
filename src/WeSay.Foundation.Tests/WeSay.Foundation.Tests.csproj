@@ -80,12 +80,14 @@
 	<Compile Include="OptionRefCollectionTests.cs" />
 	<Compile Include="OptionRefTests.cs" />
 	<Compile Include="SpellCheckerIdToDisplayStringConverterTests.cs" />
+	<Compile Include="TestHelpers\TemporaryFolder.cs" />
+	<Compile Include="TestHelpers\TemporaryFolderTests.cs" />
+	<Compile Include="TestHelpers\TestUtilities.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>TestResources.resx</DependentUpon>
 	</Compile>
-	<Compile Include="TestUtilities.cs" />
 	<Compile Include="WeSayDataObjectTests.cs" />
 	<Compile Include="WritingSystemTests.cs" />
 	<Compile Include="MultiTextTests.cs" />
