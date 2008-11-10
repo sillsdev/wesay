@@ -39,22 +39,20 @@ namespace WeSay.ConfigTool
 				recentProjectLabel.LinkBehavior = LinkBehavior.HoverUnderline;
 				if (!haveProcessedTopMostProject)
 				{
-					recentProjectLabel.Font =
-							new Font("Microsoft Sans Serif",
-									 12F,
-									 FontStyle.Bold,
-									 GraphicsUnit.Point,
-									 0);
+					recentProjectLabel.Font = new Font("Microsoft Sans Serif",
+													   12F,
+													   FontStyle.Bold,
+													   GraphicsUnit.Point,
+													   0);
 					haveProcessedTopMostProject = true;
 				}
 				else
 				{
-					recentProjectLabel.Font =
-							new Font("Microsoft Sans Serif",
-									 12F,
-									 FontStyle.Regular,
-									 GraphicsUnit.Point,
-									 0);
+					recentProjectLabel.Font = new Font("Microsoft Sans Serif",
+													   12F,
+													   FontStyle.Regular,
+													   GraphicsUnit.Point,
+													   0);
 				}
 				recentProjectLabel.Tag = path;
 				recentProjectLabel.LinkClicked += openRecentProject_LinkClicked;

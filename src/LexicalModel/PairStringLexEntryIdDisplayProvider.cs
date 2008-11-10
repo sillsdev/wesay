@@ -8,7 +8,7 @@ namespace WeSay.LexicalModel
 		public string GetDisplayLabel(object item)
 		{
 			RecordToken<LexEntry> kv = (RecordToken<LexEntry>) item;
-			return (string)kv["Form"];
+			return (string) kv["Form"];
 		}
 
 		public string GetToolTip(object item)

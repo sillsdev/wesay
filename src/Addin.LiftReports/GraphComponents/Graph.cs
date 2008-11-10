@@ -35,7 +35,7 @@ namespace Addin.LiftReports.GraphComponents
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private readonly Container components = null;
+		private readonly Container components;
 
 		/// <summary>
 		/// Area of the rectangle that is bounded by the 2 axes. This is the

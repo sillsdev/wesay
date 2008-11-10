@@ -40,11 +40,4 @@ using System.Security.Permissions;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: CLSCompliant(true)]
-[assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution=true)]
-[assembly: InternalsVisibleTo("LexicalModel")]
-
-[assembly: InternalsVisibleTo("WeSay.Data.Tests")]
-[assembly: InternalsVisibleTo("WeSay.Project.Tests")]
-[assembly: InternalsVisibleTo("LexicalModel.Tests")]
-[assembly: InternalsVisibleTo("LexicalTools.Tests")]
-[assembly: InternalsVisibleTo("WeSay.App.Tests")]
+[assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]

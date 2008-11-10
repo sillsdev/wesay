@@ -20,7 +20,7 @@ namespace WeSay.ConfigTool
 		{
 			LoadPoFilesIntoCombo(
 					WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject);
-			LoadPoFilesIntoCombo(WeSayWordsProject.ApplicationCommonDirectory);
+			LoadPoFilesIntoCombo(BasilProject.ApplicationCommonDirectory);
 
 			UpdateFontDisplay();
 			_languageCombo.SelectedIndexChanged += _languageCombo_SelectedIndexChanged;
@@ -170,10 +170,9 @@ namespace WeSay.ConfigTool
 
 		private void UpdateFontDisplay()
 		{
-			_fontInfoDisplay.Text =
-					string.Format("{0}, {1} points",
-								  StringCatalog.LabelFont.Name,
-								  (int) StringCatalog.LabelFont.SizeInPoints);
+			_fontInfoDisplay.Text = string.Format("{0}, {1} points",
+												  StringCatalog.LabelFont.Name,
+												  (int) StringCatalog.LabelFont.SizeInPoints);
 		}
 	}
 }

@@ -127,6 +127,10 @@ namespace WeSay.LexicalModel
 
 		public LexEntry GetTarget(LexEntryRepository repository)
 		{
+			if(TargetId == "")
+			{
+				return null;
+			}
 			return repository.GetLexEntryWithMatchingId(TargetId);
 		}
 

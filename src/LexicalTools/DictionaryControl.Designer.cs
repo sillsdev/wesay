@@ -21,15 +21,11 @@ namespace WeSay.LexicalTools
 			{
 				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
 
-				if (Control_EntryDetailPanel.DataSource != null)
-				{
-					Control_EntryDetailPanel.DataSource.PropertyChanged -= OnEntryChanged;
-				}
+				SaveAndCleanUpPreviousEntry();
 
 				//_recordsListBox.Enter -= _recordsListBox_Enter;
 				//_recordsListBox.Leave -= _recordsListBox_Leave;
 				//_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
-
 
 				_findText.KeyDown -= _findText_KeyDown;
 			}
@@ -112,10 +108,11 @@ namespace WeSay.LexicalTools
 			this._findText.PopupOffset = new System.Drawing.Point(0, 0);
 			this._findText.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
 			this._findText.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			this._findText.PopupWidth = 120;
+			this._findText.PopupWidth = 200;
 			this._findText.SelectedItem = null;
 			this._findText.Size = new System.Drawing.Size(80, 22);
 			this._findText.TabIndex = 1;
+			this._findText.WordWrap = false;
 			this._findText.AutoCompleteChoiceSelected += new System.EventHandler(this._findText_AutoCompleteChoiceSelected);
 			//
 			// _writingSystemChooser

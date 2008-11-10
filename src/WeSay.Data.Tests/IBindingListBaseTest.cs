@@ -25,6 +25,9 @@ namespace WeSay.Data.Tests
 			_listChangedEventArgs = e;
 		}
 
+		[TestFixtureSetUp]
+		public virtual void TestFixtureSetUp() {}
+
 		[SetUp]
 		public virtual void SetUp()
 		{
@@ -358,7 +361,7 @@ namespace WeSay.Data.Tests
 	public class IBindingListStringTest: IBindingListBaseTest<SimpleClass, string>
 	{
 		[TestFixtureSetUp]
-		public void TestFixtureSetUp()
+		public override void TestFixtureSetUp()
 		{
 			BindingList<SimpleClass> bindingList = new BindingList<SimpleClass>();
 

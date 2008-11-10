@@ -21,8 +21,8 @@ namespace WeSay.Project.Tests
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
 			DirectoryInfo dirProject =
-					Directory.CreateDirectory(
-							Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+					Directory.CreateDirectory(Path.Combine(Path.GetTempPath(),
+														   Path.GetRandomFileName()));
 			_projectDirectory = dirProject.FullName;
 			_pathToInputConfig = Path.GetTempFileName();
 			_outputPath = Path.GetTempFileName();
@@ -53,6 +53,16 @@ namespace WeSay.Project.Tests
 			{
 				Directory.Delete(path, true);
 			}
+		}
+
+		[Test]
+		[Ignore]
+		public void DefaultConfigFileHasNewestVersionNumber_()
+		{
+			WeSayWordsProject p = new WeSayWordsProject();
+			XPathDocument defaultConfig = new XPathDocument(p.PathToDefaultConfig);
+			bool migrated = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(defaultConfig, _outputPath);
+			Assert.IsFalse(migrated, "The default config file should never need migrating");
 		}
 
 		[Test]
@@ -145,9 +155,10 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void MigrateAndSaveProduceSameVersion()
 		{
-			File.WriteAllText(_pathToInputConfig, "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
+			File.WriteAllText(_pathToInputConfig,
+							  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
-			WeSay.Project.WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			XmlDocument docFile = new XmlDocument();
 			docFile.Load(_outputPath);
 			XmlNode node = docFile.SelectSingleNode("configuration");

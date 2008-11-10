@@ -85,9 +85,9 @@ namespace WeSay.ConfigTool
 					//so this can be done generically.
 					//Or better, if we have access to the task object itself, they could implement an
 					//IChangeWritingSystems interface.
-					t.Node.InnerXml =
-							regex.Replace(t.Node.InnerXml,
-										  string.Format("wordListWritingSystemId>{0}<", pair.to));
+					t.Node.InnerXml = regex.Replace(t.Node.InnerXml,
+													string.Format("wordListWritingSystemId>{0}<",
+																  pair.to));
 				}
 			}
 		}

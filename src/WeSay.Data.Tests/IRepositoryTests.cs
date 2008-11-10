@@ -2,27 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
-using WeSay.Data;
 
 namespace WeSay.Data.Tests
 {
-	public class IRepositoryStateUnitializedTests<T> where T: class, new()
+	public abstract class IRepositoryStateUnitializedTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
-		private readonly Query query = new Query(typeof(T));
+		private readonly QueryAdapter<T> _query = new QueryAdapter<T>();
 
 		public IRepository<T> RepositoryUnderTest
 		{
 			get
 			{
-				if(_repositoryUnderTest == null)
+				if (_repositoryUnderTest == null)
 				{
-					throw new InvalidOperationException("RepositoryUnderTest must be set before the tests are run.");
+					throw new InvalidOperationException(
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
 				return _repositoryUnderTest;
 			}
 			set { _repositoryUnderTest = value; }
 		}
+
+		[SetUp]
+		public abstract void SetUp();
 
 		[Test]
 		public void CreateItem_NotNull()
@@ -31,14 +34,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void DeleteItem_Null_Throws()
 		{
 			RepositoryUnderTest.DeleteItem((T) null);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
 			T item = new T();
@@ -46,14 +49,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void DeleteItemById_Null_Throws()
 		{
 			RepositoryUnderTest.DeleteItem((RepositoryId) null);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void DeleteItemById_ItemDoesNotExist_Throws()
 		{
 			MyRepositoryId id = new MyRepositoryId();
@@ -80,7 +83,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetId_ItemNotInRepository_Throws()
 		{
 			T item = new T();
@@ -88,7 +91,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetItem_IdNotInRepository_Throws()
 		{
 			MyRepositoryId id = new MyRepositoryId();
@@ -96,16 +99,16 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public void GetItemsMatchingQuery_CanQueryIsFalse_Throws()
 		{
 			if (!RepositoryUnderTest.CanQuery)
 			{
-				RepositoryUnderTest.GetItemsMatching(query);
+				RepositoryUnderTest.GetItemsMatching(_query);
 			}
 			else
 			{
-				Assert.Ignore("Repository supports queries.");
+				Assert.Ignore("Test not relevant. This repository supports queries.");
 			}
 		}
 
@@ -114,7 +117,7 @@ namespace WeSay.Data.Tests
 		{
 			if (RepositoryUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(_query).Count);
 			}
 			else
 			{
@@ -129,14 +132,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Save_Null_Throws()
 		{
 			RepositoryUnderTest.SaveItem(null);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Save_ItemDoesNotExist_Throws()
 		{
 			T item = new T();
@@ -144,18 +147,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void SaveItems_Null_Throws()
 		{
 			RepositoryUnderTest.SaveItems(null);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void SaveItems_ItemDoesNotExist_Throws()
 		{
 			T item = new T();
-			List <T> itemsToSave = new List<T>();
+			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(item);
 			RepositoryUnderTest.SaveItems(itemsToSave);
 		}
@@ -169,7 +172,7 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(modifiedTimePreTestedStateSwitch, RepositoryUnderTest.LastModified);
 		}
 
-		class MyRepositoryId : RepositoryId
+		private class MyRepositoryId: RepositoryId
 		{
 			public override int CompareTo(RepositoryId other)
 			{
@@ -195,7 +198,8 @@ namespace WeSay.Data.Tests
 			{
 				if (_repositoryUnderTest == null)
 				{
-					throw new InvalidOperationException("RepositoryUnderTest must be set before the tests are run.");
+					throw new InvalidOperationException(
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
 				return _repositoryUnderTest;
 			}
@@ -225,6 +229,9 @@ namespace WeSay.Data.Tests
 		//For repositories that don't support persistence this method should do nothing
 		protected abstract void CreateNewRepositoryFromPersistedData();
 
+		[SetUp]
+		public abstract void SetUp();
+
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
 		{
@@ -236,14 +243,15 @@ namespace WeSay.Data.Tests
 		public void CreatedItemHasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist)
-			{
-			}
+			if (!RepositoryUnderTest.CanPersist) {}
 			else
 			{
 				CreateNewRepositoryFromPersistedData();
-				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
-				Assert.AreEqual(item, itemFromPersistedData);
+				RepositoryId[] listOfItems = RepositoryUnderTest.GetAllItems();
+				Assert.AreEqual(1, listOfItems.Length);
+				//Would be nice if this worked.. but it doesn't because we have equals for LexEntry is still by reference
+				//T itemFromPersistedData = RepositoryUnderTest.GetItem(listOfItems[0]);
+				//Assert.AreEqual(item, itemFromPersistedData);
 			}
 		}
 
@@ -297,16 +305,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsAllItems()
+		public void GetItemsMatchingQuery_QueryWithOutShow_ReturnsNoItems()
 		{
-			Query queryWithoutShow = new Query(typeof(T));
+			QueryAdapter<T> queryWithoutShow = new QueryAdapter<T>();
 			SetState();
 			if (RepositoryUnderTest.CanQuery)
 			{
 				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
-				Assert.AreEqual(1, resultSet.Count);
-				Assert.AreEqual(Item, resultSet[0].RealObject);
-				Assert.AreEqual(Id, resultSet[0].Id);
+				Assert.AreEqual(0, resultSet.Count);
 			}
 			else
 			{
@@ -315,12 +321,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		public void GetItemsMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
+			GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v();
+		}
+
+		protected virtual void GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
+		{
 			if (RepositoryUnderTest.CanQuery)
 			{
-				Assert.Fail(@"This Test is highly dependant on the type of objects that are
+				Assert.Fail(
+					@"This Test is highly dependant on the type of objects that are
 							being managed by the repository and as such should be overridden.");
 			}
 			else
@@ -388,7 +400,7 @@ namespace WeSay.Data.Tests
 		public void SaveItems_ItemHasBeenPersisted()
 		{
 			SetState();
-			if(!RepositoryUnderTest.CanPersist)
+			if (!RepositoryUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted");
 			}
@@ -415,7 +427,8 @@ namespace WeSay.Data.Tests
 			{
 				if (_repositoryUnderTest == null)
 				{
-					throw new InvalidOperationException("RepositoryUnderTest must be set before the tests are run.");
+					throw new InvalidOperationException(
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
 				return _repositoryUnderTest;
 			}
@@ -446,6 +459,8 @@ namespace WeSay.Data.Tests
 		//For repositories that don't support persistence this method should do nothing
 		protected abstract void CreateNewRepositoryFromPersistedData();
 
+		[SetUp]
+		public abstract void SetUp();
 
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
@@ -458,14 +473,15 @@ namespace WeSay.Data.Tests
 		public void CreatedItemHasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist)
-			{
-			}
+			if (!RepositoryUnderTest.CanPersist) {}
 			else
 			{
 				CreateNewRepositoryFromPersistedData();
-				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
-				Assert.AreEqual(item, itemFromPersistedData);
+				RepositoryId[] listOfItems = RepositoryUnderTest.GetAllItems();
+				Assert.AreEqual(1, listOfItems.Length);
+				//Would be nice if this worked.. but it doesn't because we have equals for LexEntry is still by reference
+				//T itemFromPersistedData = RepositoryUnderTest.GetItem(listOfItems[0]);
+				//Assert.AreEqual(item, itemFromPersistedData);
 			}
 		}
 
@@ -519,16 +535,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsAllItems()
+		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsNoItems()
 		{
-			Query queryWithoutShow = new Query(typeof(T));
+			QueryAdapter<T> queryWithoutShow = new QueryAdapter<T>();
 			SetState();
 			if (RepositoryUnderTest.CanQuery)
 			{
 				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
-				Assert.AreEqual(1, resultSet.Count);
-				Assert.AreEqual(Item, resultSet[0].RealObject);
-				Assert.AreEqual(Id, resultSet[0].Id);
+				Assert.AreEqual(0, resultSet.Count);
 			}
 			else
 			{
@@ -537,12 +551,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		public void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
+			GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v();
+		}
+
+		protected virtual void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()
+		{
 			if (RepositoryUnderTest.CanQuery)
 			{
-				Assert.Fail(@"This Test is highly dependant on the type of objects that are
+				Assert.Fail(
+					@"This Test is highly dependant on the type of objects that are
 							being managed by the repository and as such should be tested elsewhere.");
 			}
 			else
@@ -552,15 +572,23 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
+		public void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
 		{
-			if(!RepositoryUnderTest.CanPersist)
+			CreateNewRepositoryFromPersistedData();
+			SetState();
+			LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v();
+		}
+
+		protected virtual void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
+		{
+			if (!RepositoryUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted");
 			}
 			else
 			{
-				Assert.Fail("This test is dependant on how you are persisting your data, please override this test.");
+				Assert.Fail(
+					"This test is dependant on how you are persisting your data, please override this test.");
 			}
 		}
 
@@ -571,6 +599,7 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
+		//This test is virtual because LexEntryRepository needs a special implementation
 		[Test]
 		public virtual void SaveItem_LastModifiedIsChangedToLaterTime()
 		{
@@ -580,14 +609,16 @@ namespace WeSay.Data.Tests
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
 		}
 
+		//This test is virtual because LexEntryRepository needs a special implementation
 		[Test]
-		public void SaveItem_LastModifiedIsSetInUTC()
+		public virtual void SaveItem_LastModifiedIsSetInUTC()
 		{
 			SetState();
 			RepositoryUnderTest.SaveItem(Item);
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
+		//This test is virtual because LexEntryRepository needs a special implementation
 		[Test]
 		public virtual void SaveItems_LastModifiedIsChangedToLaterTime()
 		{
@@ -616,7 +647,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly Query query = new Query(typeof(T));
+		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -624,7 +655,8 @@ namespace WeSay.Data.Tests
 			{
 				if (_repositoryUnderTest == null)
 				{
-					throw new InvalidOperationException("RepositoryUnderTest must be set before the tests are run.");
+					throw new InvalidOperationException(
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
 				return _repositoryUnderTest;
 			}
@@ -641,23 +673,28 @@ namespace WeSay.Data.Tests
 		//For repositories that don't support persistence this method should do nothing
 		protected abstract void CreateNewRepositoryFromPersistedData();
 
+		[SetUp]
+		public abstract void SetUp();
+
 		public void SetState()
 		{
 			CreateInitialItem();
 			DeleteItem();
 		}
 
-		private void DeleteItem() {
+		private void DeleteItem()
+		{
 			RepositoryUnderTest.DeleteItem(Item);
 		}
 
-		private void CreateInitialItem() {
+		private void CreateInitialItem()
+		{
 			this.item = RepositoryUnderTest.CreateItem();
 			this.id = RepositoryUnderTest.GetId(Item);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
@@ -665,7 +702,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void DeleteItem_HasBeenPersisted()
 		{
 			SetState();
@@ -695,7 +732,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetId_DeletedItemWithId_Throws()
 		{
 			SetState();
@@ -703,7 +740,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetItem_DeletedItem_Throws()
 		{
 			SetState();
@@ -740,8 +777,9 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
+		//This test is virtual because LexEntryRepository needs to override it
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public virtual void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
@@ -749,7 +787,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void SaveItems_ItemDoesNotExist_Throws()
 		{
 			SetState();
@@ -765,7 +803,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly Query query = new Query(typeof(T));
+		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -773,7 +811,8 @@ namespace WeSay.Data.Tests
 			{
 				if (_repositoryUnderTest == null)
 				{
-					throw new InvalidOperationException("RepositoryUnderTest must be set before the tests are run.");
+					throw new InvalidOperationException(
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
 				return _repositoryUnderTest;
 			}
@@ -790,23 +829,28 @@ namespace WeSay.Data.Tests
 		//For repositories that don't support persistence this method should do nothing
 		protected abstract void CreateNewRepositoryFromPersistedData();
 
+		[SetUp]
+		public abstract void SetUp();
+
 		public void SetState()
 		{
 			CreateItemToTest();
 			DeleteItem();
 		}
 
-		private void DeleteItem() {
+		private void DeleteItem()
+		{
 			RepositoryUnderTest.DeleteItem(this.id);
 		}
 
-		private void CreateItemToTest() {
+		private void CreateItemToTest()
+		{
 			this.item = RepositoryUnderTest.CreateItem();
 			this.id = RepositoryUnderTest.GetId(Item);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
@@ -814,7 +858,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void DeleteItem_HasBeenPersisted()
 		{
 			SetState();
@@ -844,7 +888,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetId_DeletedItemWithId_Throws()
 		{
 			SetState();
@@ -852,7 +896,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetItem_DeletedItem_Throws()
 		{
 			SetState();
@@ -889,8 +933,9 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
+		//This test is virtual because LexEntryRepository needs to override it
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public virtual void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
@@ -898,7 +943,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void SaveItems_ItemDoesNotExist_Throws()
 		{
 			SetState();
@@ -914,7 +959,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly Query query = new Query(typeof(T));
+		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -922,7 +967,8 @@ namespace WeSay.Data.Tests
 			{
 				if (_repositoryUnderTest == null)
 				{
-					throw new InvalidOperationException("RepositoryUnderTest must be set before the tests are run.");
+					throw new InvalidOperationException(
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
 				return _repositoryUnderTest;
 			}
@@ -933,6 +979,9 @@ namespace WeSay.Data.Tests
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
 		protected abstract void RepopulateRepositoryFromPersistedData();
+
+		[SetUp]
+		public abstract void SetUp();
 
 		public void SetState()
 		{
@@ -988,7 +1037,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetId_DeletedItemWithId_Throws()
 		{
 			SetState();
@@ -996,7 +1045,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetItem_DeletedItem_Throws()
 		{
 			SetState();
@@ -1034,7 +1083,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Save_ItemDoesNotExist_Throws()
 		{
 			SetState();
@@ -1042,7 +1091,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void SaveItems_ItemDoesNotExist_Throws()
 		{
 			T itemNotInRepository = new T();

@@ -52,11 +52,10 @@ namespace WeSay.AddinLib
 			if (addin.ButtonImage != null)
 			{
 				//review: will these be disposed when the button is disposed?
-				_launchButton.Image =
-						addin.ButtonImage.GetThumbnailImage(_launchButton.Width - 10,
-															_launchButton.Height - 10,
-															ReturnFalse,
-															IntPtr.Zero);
+				_launchButton.Image = addin.ButtonImage.GetThumbnailImage(_launchButton.Width - 10,
+																		  _launchButton.Height - 10,
+																		  ReturnFalse,
+																		  IntPtr.Zero);
 			}
 			LoadSettings();
 

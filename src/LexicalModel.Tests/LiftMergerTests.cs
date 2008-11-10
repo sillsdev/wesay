@@ -232,7 +232,7 @@ namespace WeSay.LexicalModel.Tests
 			secondNote.Add("ws-three", "tres");
 			_merger.MergeInNote(sense, null, secondNote);
 
-			MultiText mt = sense.GetProperty<MultiText>(LexSense.WellKnownProperties.Note);
+			MultiText mt = sense.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
 			Assert.AreEqual(3, mt.Forms.Length);
 			Assert.AreEqual("uno || UNO", mt["ws-one"]);
 		}
@@ -435,25 +435,25 @@ namespace WeSay.LexicalModel.Tests
 			Guid g = Guid.NewGuid();
 			Extensible extensibleInfo = CreateFullextensibleInfo(g);
 
-			LexEntry e = new LexEntry(null, g);
-			e.Senses.AddNew();
-			e.Senses.AddNew();
+			LexEntry e = _repository.CreateItem();
+			LexSense sense1 = new LexSense();
+			LexSense sense2 = new LexSense();
+			e.Senses.Add(sense1);
+			e.Senses.Add(sense2);
 			e.CreationTime = extensibleInfo.CreationTime;
 			e.ModificationTime = new DateTime(e.CreationTime.Ticks + 100, DateTimeKind.Utc);
-			_entries.Add(e);
 
-			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo);
+			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			_merger.FinishEntry(found);
 			Assert.AreSame(found, e);
 			Assert.AreEqual(2, found.Senses.Count);
 
 			//this is a temp side track
-			Assert.AreEqual(1, _entries.Count);
+			Assert.AreEqual(1, _repository.CountAllItems());
 			Extensible xInfo = CreateFullextensibleInfo(Guid.NewGuid());
-			LexEntry x = _merger.GetOrMakeEntry(xInfo);
+			LexEntry x = _merger.GetOrMakeEntry(xInfo, 1);
 			_merger.FinishEntry(x);
-			RefreshEntriesList();
-			Assert.AreEqual(2, _entries.Count);
+			Assert.AreEqual(2, _repository.CountAllItems());
 #endif
 		}
 
@@ -464,17 +464,17 @@ namespace WeSay.LexicalModel.Tests
 			Guid g = Guid.NewGuid();
 			Extensible extensibleInfo = CreateFullextensibleInfo( g);
 
-			LexEntry e = new LexEntry(null, g);
+			LexEntry e = _repository.CreateItem();
 			e.CreationTime = extensibleInfo.CreationTime;
 			e.ModificationTime = extensibleInfo.ModificationTime;
-			_entries.Add(e);
 
-			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo);
+			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.IsNull(found);
 #endif
 		}
 
-		[Test, Ignore("This test is defective. found is always true CJP 2008-07-14")]
+		[Test]
+		[Ignore("This test is defective. found is always true CJP 2008-07-14")]
 		public void EntryWithIncomingUnspecifiedModTimeNotPruned()
 		{
 			Guid g = Guid.NewGuid();

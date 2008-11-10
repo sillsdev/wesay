@@ -3,6 +3,7 @@ using NUnit.Framework;
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
+	[Ignore("TestFixture needs reviewing!")]
 	public class TestEntryView
 	{
 		[SetUp]

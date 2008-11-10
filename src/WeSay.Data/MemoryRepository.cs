@@ -4,28 +4,34 @@ using Palaso.Progress;
 
 namespace WeSay.Data
 {
-	internal class MemoryRepository<T>:IRepository<T> where T : class, new()
+	public class MemoryRepository<T>: IRepository<T> where T : class, new()
 	{
-		protected readonly Dictionary<RepositoryId, T> idToObjectHashtable = new Dictionary<RepositoryId, T> ();
-		protected readonly Dictionary<T, RepositoryId> objectToIdHashtable = new Dictionary<T, RepositoryId>();
+		protected readonly Dictionary<RepositoryId, T> idToObjectHashtable =
+				new Dictionary<RepositoryId, T>();
+
+		protected readonly Dictionary<T, RepositoryId> objectToIdHashtable =
+				new Dictionary<T, RepositoryId>();
+
 		private DateTime lastModified = DateTime.MinValue;
 
 		public DateTime LastModified
 		{
 			get { return lastModified; }
-			internal set
+			set
 			{
 				value = value.ToUniversalTime();
 				lastModified = value;
 			}
 		}
 
-		public virtual bool CanQuery { get { return true; } }
-
-		public virtual bool CanPersist { get { return false; } }
-
-		public virtual void Startup(ProgressState state)
+		public virtual bool CanQuery
 		{
+			get { return true; }
+		}
+
+		public virtual bool CanPersist
+		{
+			get { return false; }
 		}
 
 		public virtual T CreateItem()
@@ -39,7 +45,7 @@ namespace WeSay.Data
 
 		public virtual void DeleteItem(T item)
 		{
-			if( item == null)
+			if (item == null)
 			{
 				throw new ArgumentNullException("item");
 			}
@@ -54,6 +60,10 @@ namespace WeSay.Data
 
 		public virtual void DeleteItem(RepositoryId id)
 		{
+			if (id == null)
+			{
+				throw new ArgumentNullException("id");
+			}
 			if (!idToObjectHashtable.ContainsKey(id))
 			{
 				throw new ArgumentOutOfRangeException("id");
@@ -79,13 +89,14 @@ namespace WeSay.Data
 
 		public virtual void SaveItem(T item)
 		{
-			if(item == null)
+			if (item == null)
 			{
 				throw new ArgumentNullException("item");
 			}
-			if(!objectToIdHashtable.ContainsKey(item))
+			if (!objectToIdHashtable.ContainsKey(item))
 			{
-				throw new ArgumentOutOfRangeException("item", "The item must exist in the repository before it can be saved.");
+				throw new ArgumentOutOfRangeException("item",
+													  "The item must exist in the repository before it can be saved.");
 			}
 			DateTime timeOfSave = PreciseDateTime.UtcNow;
 			LastModified = timeOfSave;
@@ -93,7 +104,7 @@ namespace WeSay.Data
 
 		public virtual void SaveItems(IEnumerable<T> items)
 		{
-			if(items == null)
+			if (items == null)
 			{
 				throw new ArgumentNullException("items");
 			}
@@ -103,20 +114,27 @@ namespace WeSay.Data
 			}
 		}
 
-		public virtual ResultSet<T> GetItemsMatching(Query query)
+		//public virtual ResultSet<T> GetItemsMatching(Query query)
+		//{
+		//    List<RecordToken<T>> results = new List<RecordToken<T>>();
+		//    foreach (T item in objectToIdHashtable.Keys)
+		//    {
+		//        foreach (Dictionary<string, object> result in query.GetResults(item))
+		//        {
+		//            results.Add(new RecordToken<T>(this, result, GetId(item)));
+		//        }
+		//    }
+		//    return new ResultSet<T>(this, results);
+		//}
+
+		public virtual ResultSet<T> GetItemsMatching(IQuery<T> query)
 		{
 			List<RecordToken<T>> results = new List<RecordToken<T>>();
 			foreach (T item in objectToIdHashtable.Keys)
 			{
-				bool hasResults = false;
 				foreach (Dictionary<string, object> result in query.GetResults(item))
 				{
-					hasResults = true;
 					results.Add(new RecordToken<T>(this, result, GetId(item)));
-				}
-				if(!hasResults)
-				{
-					results.Add(new RecordToken<T>(this, GetId(item)));
 				}
 			}
 			return new ResultSet<T>(this, results);
@@ -129,34 +147,44 @@ namespace WeSay.Data
 
 		public virtual RepositoryId GetId(T item)
 		{
+			if (item == null)
+			{
+				throw new ArgumentNullException("item");
+			}
 			if (!objectToIdHashtable.ContainsKey(item))
 			{
 				throw new ArgumentOutOfRangeException("item");
 			}
-			return (RepositoryId)objectToIdHashtable[item];
+			return this.objectToIdHashtable[item];
 		}
 
 		public virtual T GetItem(RepositoryId id)
 		{
+			if (id == null)
+			{
+				throw new ArgumentNullException("id");
+			}
 			if (!idToObjectHashtable.ContainsKey(id))
 			{
 				throw new ArgumentOutOfRangeException("id");
 			}
-			return (T)idToObjectHashtable[id];
+			return this.idToObjectHashtable[id];
 		}
 
 		#region IDisposable Members
+
 #if DEBUG
 		~MemoryRepository()
 		{
-			if (!this._disposed)
+			if (!_disposed)
 			{
 				throw new ApplicationException("Disposed not explicitly called on MemoryRepository.");
 			}
 		}
 #endif
 
-		private bool _disposed = false;
+		[CLSCompliantAttribute(false)]
+		protected bool _disposed;
 
 		public virtual void Dispose()
 		{
@@ -166,29 +194,29 @@ namespace WeSay.Data
 
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!this._disposed)
+			if (!_disposed)
 			{
 				if (disposing)
 				{
 					// dispose-only, i.e. non-finalizable logic
-
 				}
 
 				// shared (dispose and finalizable) cleanup logic
-				this._disposed = true;
+				_disposed = true;
 			}
 		}
 
 		protected void VerifyNotDisposed()
 		{
-			if (this._disposed)
+			if (!_disposed)
 			{
 				throw new ObjectDisposedException("MemoryRepository");
 			}
 		}
+
 		#endregion
 
-		private class MemoryRepositoryId : RepositoryId
+		private class MemoryRepositoryId: RepositoryId
 		{
 			private static int nextId = 1;
 			private readonly int id;
@@ -199,12 +227,14 @@ namespace WeSay.Data
 				++nextId;
 			}
 
-			public static bool operator !=(MemoryRepositoryId memoryRepositoryId1, MemoryRepositoryId memoryRepositoryId2)
+			public static bool operator !=(
+					MemoryRepositoryId memoryRepositoryId1, MemoryRepositoryId memoryRepositoryId2)
 			{
 				return !Equals(memoryRepositoryId1, memoryRepositoryId2);
 			}
 
-			public static bool operator ==(MemoryRepositoryId memoryRepositoryId1, MemoryRepositoryId memoryRepositoryId2)
+			public static bool operator ==(
+					MemoryRepositoryId memoryRepositoryId1, MemoryRepositoryId memoryRepositoryId2)
 			{
 				return Equals(memoryRepositoryId1, memoryRepositoryId2);
 			}
@@ -212,7 +242,9 @@ namespace WeSay.Data
 			public bool Equals(MemoryRepositoryId memoryRepositoryId)
 			{
 				if (memoryRepositoryId == null)
+				{
 					return false;
+				}
 
 				return id == memoryRepositoryId.id;
 			}
@@ -220,7 +252,9 @@ namespace WeSay.Data
 			public override bool Equals(object obj)
 			{
 				if (ReferenceEquals(this, obj))
+				{
 					return true;
+				}
 				return Equals(obj as MemoryRepositoryId);
 			}
 

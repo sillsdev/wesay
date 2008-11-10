@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
 
-using Palaso.Progress;
-
 namespace WeSay.Data
 {
-	public interface IRepository<T>:IDisposable where T: class, new()
+	public interface IQuery<T> where T: class, new()
+	{
+		IEnumerable<IDictionary<string, object>> GetResults(T item);
+	}
+
+	public interface IRepository<T>: IDisposable where T : class, new()
 	{
 		DateTime LastModified { get; }
 		bool CanQuery { get; }
 		bool CanPersist { get; }
 
-		void Startup(ProgressState state);
 		T CreateItem();
 		int CountAllItems();
 		RepositoryId GetId(T item);
@@ -22,6 +24,8 @@ namespace WeSay.Data
 		RepositoryId[] GetAllItems();
 		void SaveItem(T item);
 		void SaveItems(IEnumerable<T> items);
-		ResultSet<T> GetItemsMatching(Query query);
+
+		ResultSet<T> GetItemsMatching(IQuery<T> query);
+
 	}
 }

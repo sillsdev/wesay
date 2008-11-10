@@ -4,11 +4,9 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
-
 using LiftIO;
 using LiftIO.Migration;
 using LiftIO.Validation;
-
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
@@ -17,7 +15,7 @@ namespace WeSay.LexicalModel.Migration
 {
 	internal class LiftPreparer
 	{
-		private string _liftFilePath;
+		private readonly string _liftFilePath;
 
 		public LiftPreparer(string liftFilePath)
 		{
@@ -51,16 +49,32 @@ namespace WeSay.LexicalModel.Migration
 			PopulateDefinitions((ProgressState) args.Argument);
 		}
 
-		internal void PopulateDefinitions(ProgressState state)
+		public void PopulateDefinitions(ProgressState state)
 		{
 			state.StatusLabel = "Updating Lift File...";
 			try
 			{
 				string pathToLift = _liftFilePath;
-				string outputPath = Utilities.ProcessLiftForLaterMerging(pathToLift);
+				string temp1 = Utilities.ProcessLiftForLaterMerging(pathToLift);
 				//    int liftProducerVersion = GetLiftProducerVersion(pathToLift);
 
-				outputPath = PopulateDefinitions(outputPath);
+				string outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+				XmlWriterSettings settings = new XmlWriterSettings();
+				settings.Indent = true;
+				settings.NewLineOnAttributes = true;
+
+				using (
+						Stream xsltStream =
+								Assembly.GetExecutingAssembly().GetManifestResourceStream(
+										"WeSay.LexicalModel.Migration.populateDefinitionFromGloss.xslt")
+						)
+				{
+					XslTransformWithProgress transformer = new XslTransformWithProgress(
+							temp1, outputPath, xsltStream, "//sense");
+					state.StatusLabel = "Populating Definitions from Glosses";
+					transformer.Transform(state);
+				}
+
 				MoveTempOverRealAndBackup(pathToLift, outputPath);
 			}
 			catch (Exception error)
@@ -69,29 +83,6 @@ namespace WeSay.LexicalModel.Migration
 				state.State = ProgressState.StateValue.StoppedWithError;
 				throw;
 				// this will put the exception in the e.Error arg of the RunWorkerCompletedEventArgs
-			}
-		}
-
-		internal static string PopulateDefinitions(string pathToLift)
-		{
-			string outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.Indent = true;
-			settings.NewLineOnAttributes = true;
-
-			using (
-					Stream xsltStream =
-							Assembly.GetExecutingAssembly().GetManifestResourceStream(
-									"WeSay.LexicalModel.Migration.populateDefinitionFromGloss.xslt"))
-			{
-				TransformWithProgressDialog transformer =
-						new TransformWithProgressDialog(pathToLift,
-														outputPath,
-														xsltStream,
-														"//sense");
-				transformer.TaskMessage = "Populating Definitions from Glosses";
-				transformer.Transform(true);
-				return outputPath;
 			}
 		}
 
@@ -174,9 +165,7 @@ namespace WeSay.LexicalModel.Migration
 								 ProgressState.StateValue.StoppedWithError)
 						{
 							ErrorReport.ReportNonFatalMessage(
-									"Failed." + dlg.ProgressStateResult.LogString,
-									null,
-									false);
+									"Failed." + dlg.ProgressStateResult.LogString, null, false);
 						}
 						return false;
 					}
@@ -195,14 +184,16 @@ namespace WeSay.LexicalModel.Migration
 			try
 			{
 				string oldVersion = Validator.GetLiftVersion(_liftFilePath);
-				string status = String.Format("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
+				string status = String.Format("Migrating from {0} to {1}",
+											  oldVersion,
+											  Validator.LiftVersion);
 				Logger.WriteEvent(status);
 				state.StatusLabel = status;
 				string migratedFile = Migrator.MigrateToLatestVersion(_liftFilePath);
 				string nameForOldFile = _liftFilePath.Replace(".lift", "." + oldVersion + ".lift");
 
 				if (File.Exists(nameForOldFile))
-				// like, if we tried to convert it before and for some reason want to do it again
+						// like, if we tried to convert it before and for some reason want to do it again
 				{
 					File.Delete(nameForOldFile);
 				}

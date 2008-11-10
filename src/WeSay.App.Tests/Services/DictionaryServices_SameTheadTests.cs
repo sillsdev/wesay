@@ -2,6 +2,7 @@ using System.IO;
 using NUnit.Framework;
 using Palaso.Services.Dictionary;
 using WeSay.App.Services;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests.Db4oSpecific;
 
@@ -18,6 +19,7 @@ namespace WeSay.App.Tests.Services
 	public class DictionaryService_SameTheadTests
 	{
 		private LexEntryRepository _lexEntryRepository;
+		private TemporaryFolder _tempFolder;
 		private string _filePath;
 
 		private Db4oProjectSetupForTesting _projectSetupSharedByAllTests;
@@ -29,26 +31,33 @@ namespace WeSay.App.Tests.Services
 		[TestFixtureSetUp]
 		public void SetupFixture()
 		{
+			_tempFolder = new TemporaryFolder();
 			_projectSetupSharedByAllTests = new Db4oProjectSetupForTesting(string.Empty);
 		}
 
 		[SetUp]
 		public void Setup()
 		{
-			_filePath = Path.GetTempFileName();
+			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
-			_dictionaryServiceProvider =
-					new DictionaryServiceProvider(_lexEntryRepository,
-												  null,
-												  _projectSetupSharedByAllTests._project);
+			_dictionaryServiceProvider = new DictionaryServiceProvider(_lexEntryRepository,
+																	   null,
+																	   _projectSetupSharedByAllTests
+																			   ._project);
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
 		}
 
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
-			_lexEntryRepository.Dispose();
 			_projectSetupSharedByAllTests.Dispose();
-			File.Delete(_filePath);
+			_tempFolder.Delete();
 		}
 
 		private void MakeTestLexEntry(string writingSystemId, string lexicalForm)
@@ -63,10 +72,9 @@ namespace WeSay.App.Tests.Services
 		{
 			MakeTestLexEntry("v", "foo1");
 
-			FindResult r =
-					_dictionaryServiceProvider.GetMatchingEntries("v",
-																  "foo",
-																  FindMethods.Exact.ToString());
+			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v",
+																		 "foo",
+																		 FindMethods.Exact.ToString());
 			Assert.AreEqual(0, r.ids.Length);
 		}
 
@@ -106,11 +114,11 @@ namespace WeSay.App.Tests.Services
 			MakeTestLexEntry("v2", "foo2");
 			MakeTestLexEntry("v", "foo3");
 
-			FindResult r =
-					_dictionaryServiceProvider.GetMatchingEntries("v",
-																  "foo",
-																  FindMethods.DefaultApproximate.
-																		  ToString());
+			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v",
+																		 "foo",
+																		 FindMethods.
+																				 DefaultApproximate.
+																				 ToString());
 			Assert.AreEqual(2, r.ids.Length);
 		}
 
@@ -118,14 +126,17 @@ namespace WeSay.App.Tests.Services
 		public void CreateNewEntryWithExampleButNoDef()
 		{
 			MakeTestLexEntry("v", "foo1");
-			string id =
-					_dictionaryServiceProvider.AddEntry("v", "voom", null, null, "v", "vlah voom!");
+			string id = _dictionaryServiceProvider.AddEntry("v",
+															"voom",
+															null,
+															null,
+															"v",
+															"vlah voom!");
 			Assert.IsNotNull(id);
 
-			FindResult r =
-					_dictionaryServiceProvider.GetMatchingEntries("v",
-																  "voom",
-																  FindMethods.Exact.ToString());
+			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v",
+																		 "voom",
+																		 FindMethods.Exact.ToString());
 			Assert.AreEqual(id, r.ids[0]);
 			string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] {id});
 			Assert.IsTrue(html.Contains("vlah voom!"));
@@ -134,19 +145,17 @@ namespace WeSay.App.Tests.Services
 		[Test]
 		public void CreateNewEntryWithAllFieldsDoesCreateIt()
 		{
-			string id =
-					_dictionaryServiceProvider.AddEntry("v",
-														"voom",
-														"en",
-														"def of voom",
-														"v",
-														"vlah voom!");
+			string id = _dictionaryServiceProvider.AddEntry("v",
+															"voom",
+															"en",
+															"def of voom",
+															"v",
+															"vlah voom!");
 			Assert.IsNotNull(id);
 
-			FindResult r =
-					_dictionaryServiceProvider.GetMatchingEntries("v",
-																  "voom",
-																  FindMethods.Exact.ToString());
+			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v",
+																		 "voom",
+																		 FindMethods.Exact.ToString());
 			Assert.AreEqual(id, r.ids[0]);
 			string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] {id});
 			Assert.IsTrue(html.Contains("vlah voom!"));
@@ -173,10 +182,9 @@ namespace WeSay.App.Tests.Services
 			string id = _dictionaryServiceProvider.AddEntry("v", "voom", null, null, null, null);
 			Assert.IsNotNull(id);
 
-			FindResult r =
-					_dictionaryServiceProvider.GetMatchingEntries("v",
-																  "voom",
-																  FindMethods.Exact.ToString());
+			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v",
+																		 "voom",
+																		 FindMethods.Exact.ToString());
 			Assert.AreEqual(id, r.ids[0]);
 		}
 	}

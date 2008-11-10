@@ -38,8 +38,8 @@ namespace WeSay.Project
 			if (navigator != null)
 			{
 				bool hasviewTemplate = false;
-				XPathNodeIterator componentList =
-						navigator.SelectChildren(string.Empty, string.Empty);
+				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty,
+																		   string.Empty);
 				foreach (XPathNavigator component in componentList)
 				{
 					Debug.Assert(component.Name == "viewTemplate");
@@ -230,8 +230,21 @@ namespace WeSay.Project
 					_picoContext.UnregisterComponent("Project");
 					//without this, pico disposes of the db, which we don't really own
 					_picoContext.UnregisterComponent("All Entries");
-
-					_picoContext.Dispose();
+					try
+					{
+						_picoContext.Dispose();
+					}
+					catch (Exception e)
+					{
+						if (e.Message.StartsWith("Either do the specified parameters not match any of"))
+						{
+							// mismatched parameters, don't worry
+						}
+						else
+						{
+							throw; //rethrow
+						}
+					}
 					_picoContext = null;
 					GC.SuppressFinalize(this);
 				}

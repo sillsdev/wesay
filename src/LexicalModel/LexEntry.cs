@@ -28,7 +28,8 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		private string _id;
 
-		private int _orderForRoundTripping = 0;
+		private int _orderForRoundTripping;
+		private int _orderInFile;
 
 		private BindingList<LexSense> _senses;
 		private DateTime _creationTime;
@@ -37,7 +38,7 @@ namespace WeSay.LexicalModel
 		private bool _isDirty;
 
 		[NonSerialized]
-		private bool _modifiedTimeIsLocked = false;
+		private bool _modifiedTimeIsLocked;
 
 		//!!What!! Is this done this way so that we don't end up storing
 		//  the data in the object database?
@@ -51,8 +52,8 @@ namespace WeSay.LexicalModel
 			public static bool Contains(string fieldName)
 			{
 				List<string> list =
-						new List<string>(
-								new string[] {LexicalUnit, Citation, BaseForm, CrossReference});
+						new List<string>(new string[]
+											 {LexicalUnit, Citation, BaseForm, CrossReference});
 				return list.Contains(fieldName);
 			}
 		} ;
@@ -66,10 +67,7 @@ namespace WeSay.LexicalModel
 			Init(id, guid, now, now);
 		}
 
-		private void Init(string id,
-						  Guid guid,
-						  DateTime creationTime,
-						  DateTime modifiedTime)
+		private void Init(string id, Guid guid, DateTime creationTime, DateTime modifiedTime)
 		{
 			ModificationTime = modifiedTime;
 			ModifiedTimeIsLocked = true;
@@ -169,10 +167,7 @@ namespace WeSay.LexicalModel
 		/// to hide this (hopefully temporary) performance implementation detail. </remarks>
 		public MultiText LexicalForm
 		{
-			get
-			{
-				return _lexicalForm;
-			}
+			get { return _lexicalForm; }
 		}
 
 		public DateTime CreationTime
@@ -183,8 +178,13 @@ namespace WeSay.LexicalModel
 				Debug.Assert(value.Kind == DateTimeKind.Utc);
 				//_creationTime = value;
 				//converting time to LiftFormatResolution
-				_creationTime = new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute,
-													 value.Second, value.Kind);
+				_creationTime = new DateTime(value.Year,
+											 value.Month,
+											 value.Day,
+											 value.Hour,
+											 value.Minute,
+											 value.Second,
+											 value.Kind);
 			}
 		}
 
@@ -208,8 +208,13 @@ namespace WeSay.LexicalModel
 					Debug.Assert(value.Kind == DateTimeKind.Utc);
 					//_modificationTime = value;
 					//converting time to LiftFormatResolution
-					_modificationTime = new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute,
-													 value.Second, value.Kind);
+					_modificationTime = new DateTime(value.Year,
+													 value.Month,
+													 value.Day,
+													 value.Hour,
+													 value.Minute,
+													 value.Second,
+													 value.Kind);
 				}
 			}
 		}
@@ -255,13 +260,12 @@ namespace WeSay.LexicalModel
 				if (value != null)
 				{
 					id = value.Trim().Normalize(NormalizationForm.FormD);
-					if(id.Length == 0)
+					if (id.Length == 0)
 					{
 						id = null;
 					}
 				}
 				_id = id;
-
 			}
 		}
 
@@ -416,6 +420,20 @@ namespace WeSay.LexicalModel
 				NotifyPropertyChanged("order");
 			}
 		}
+
+		public int OrderInFile
+		{
+			get
+			{
+				return this._orderInFile;
+			}
+			set
+			{
+				this._orderInFile = value;
+				NotifyPropertyChanged("order");
+			}
+		}
+
 		public MultiText VirtualHeadWord
 		{
 			get
@@ -469,7 +487,6 @@ namespace WeSay.LexicalModel
 			relations.Relations.Add(new LexRelation(relationName, targetId, this));
 		}
 	}
-
 
 	public interface IFindEntries
 	{

@@ -34,16 +34,12 @@ namespace WeSay.UI.Tests
 			List<WritingSystem> writingSystems = new List<WritingSystem>();
 			writingSystems.Add(_ws);
 
-			_control =
-					new ReferenceCollectionEditor<Option, string, OptionRef>(_chosenItems.Members,
-																			 _sourceChoices.Options,
-																			 writingSystems,
-																			 CommonEnumerations.
-																					 VisibilitySetting
-																					 .Visible,
-																			 new OptionDisplayAdaptor
-																					 (_sourceChoices,
-																					  _ws.Id));
+			_control = new ReferenceCollectionEditor<Option, string, OptionRef>(
+					_chosenItems.Members,
+					_sourceChoices.Options,
+					writingSystems,
+					CommonEnumerations.VisibilitySetting.Visible,
+					new OptionDisplayAdaptor(_sourceChoices, _ws.Id));
 
 			_control.Name = "refcontrol";
 			_control.AlternateEmptinessHelper = _chosenItems;

@@ -32,9 +32,8 @@ namespace WeSay.App.Services
 			_project = project;
 			_registeredClientProcessIds = new List<int>();
 			_lexEntryRepository = lexEntryRepository;
-			_articleMaker =
-					new HtmlArticleMaker(_project.LocateFile("WritingSystemPrefs.xml"),
-										 _project.LocateFile("PartsOfSpeech.xml"));
+			_articleMaker = new HtmlArticleMaker(_project.LocateFile("WritingSystemPrefs.xml"),
+												 _project.LocateFile("PartsOfSpeech.xml"));
 		}
 
 		public SynchronizationContext UiSynchronizationContext
@@ -81,12 +80,11 @@ namespace WeSay.App.Services
 
 					default:
 					case FindMethods.DefaultApproximate:
-						matches =
-								_lexEntryRepository.GetEntriesWithSimilarLexicalForm(form,
-																					 ws,
-																					 ApproximateMatcherOptions
-																							 .
-																							 IncludePrefixedAndNextClosestForms);
+						matches = _lexEntryRepository.GetEntriesWithSimilarLexicalForm(form,
+																					   ws,
+																					   ApproximateMatcherOptions
+																							   .
+																							   IncludePrefixedAndNextClosestForms);
 						break;
 				}
 				r.ids = new string[matches.Count];
@@ -134,9 +132,9 @@ namespace WeSay.App.Services
 				Logger.WriteMinorEvent("GetHtmlForEntries()");
 				StringBuilder builder = new StringBuilder();
 				PLiftExporter exporter = new PLiftExporter(builder,
-														true,
-														_lexEntryRepository,
-														_project.DefaultPrintingTemplate);
+														   true,
+														   _lexEntryRepository,
+														   _project.DefaultPrintingTemplate);
 
 				foreach (string entryId in entryIds)
 				{
@@ -158,9 +156,8 @@ namespace WeSay.App.Services
 				Logger.WriteEvent("Error from dictionary services, GetHtmlForEntries: " + e.Message);
 				Debug.Fail(e.Message);
 			}
-			return
-					StringCatalog.Get("~Program Error",
-									  "This is what we call it when something goes wrong but it's the computer's fault, not the user's.");
+			return StringCatalog.Get("~Program Error",
+									 "This is what we call it when something goes wrong but it's the computer's fault, not the user's.");
 		}
 
 		public void RegisterClient(int clientProcessId)
@@ -248,26 +245,24 @@ namespace WeSay.App.Services
 				UiSynchronizationContext.Send(
 						delegate
 						{
-							result =
-									AddEntryCore(lexemeFormWritingSystemId,
-												 lexemeForm,
-												 definitionWritingSystemId,
-												 definition,
-												 exampleWritingSystemId,
-												 example);
+							result = AddEntryCore(lexemeFormWritingSystemId,
+												  lexemeForm,
+												  definitionWritingSystemId,
+												  definition,
+												  exampleWritingSystemId,
+												  example);
 						},
 						null);
 				return result;
 			}
 			else
 			{
-				return
-						AddEntryCore(lexemeFormWritingSystemId,
-									 lexemeForm,
-									 definitionWritingSystemId,
-									 definition,
-									 exampleWritingSystemId,
-									 example);
+				return AddEntryCore(lexemeFormWritingSystemId,
+									lexemeForm,
+									definitionWritingSystemId,
+									definition,
+									exampleWritingSystemId,
+									example);
 			}
 		}
 
@@ -304,7 +299,7 @@ namespace WeSay.App.Services
 			LexSense sense = null;
 			if (!string.IsNullOrEmpty(definition))
 			{
-				sense = new LexSense() ;
+				sense = new LexSense();
 				e.Senses.Add(sense);
 				sense.Definition.SetAlternative(definitionWritingSystemId, definition);
 			}

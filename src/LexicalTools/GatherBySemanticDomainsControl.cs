@@ -39,24 +39,28 @@ namespace WeSay.LexicalTools
 				_listViewWords.Anchor |= AnchorStyles.Top;
 				_question.Anchor |= AnchorStyles.Top;
 				_question.Anchor &= ~AnchorStyles.Bottom;
+				_reminder.Anchor = _question.Anchor;
 				_questionIndicator.Anchor |= AnchorStyles.Top;
 				_questionIndicator.Anchor &= ~AnchorStyles.Bottom;
 
 				int height = _question.Top - _description.Top;
 				_question.Top -= height;
 				_question.Height -= 5;
+				_reminder.Top = _question.Bottom + 5;
 				_questionIndicator.Top -= height;
 				_listViewWords.Top -= height;
 				_listViewWords.Height += height;
 
 				_description.Visible = false;
 			}
-			_vernacularBox.WritingSystemsForThisField =
-					new WritingSystem[] {_presentationModel.WordWritingSystem};
+			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
+															{_presentationModel.WordWritingSystem};
 			_listViewWords.WritingSystem = _presentationModel.WordWritingSystem;
 			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.WordWritingSystem.Font.GetHeight());
 
 			//    _animatedText.Font = _presentationModel.WordWritingSystem.Font;
+
+			_reminder.Text = _presentationModel.Reminder;
 
 			_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 			_movingLabel.Finished += _animator_Finished;
@@ -156,6 +160,7 @@ namespace WeSay.LexicalTools
 			_domainName.BackColor = BackColor;
 			_description.BackColor = BackColor;
 			_question.BackColor = BackColor;
+			_reminder.BackColor = BackColor;
 			_questionIndicator.BulletColor = ControlPaint.Light(BackColor);
 			_questionIndicator.BulletColorEnd = ControlPaint.Dark(BackColor);
 		}
@@ -305,6 +310,11 @@ namespace WeSay.LexicalTools
 			_presentationModel.CurrentDomainIndex = _domainName.SelectedIndex;
 			RefreshCurrentDomainAndQuestion();
 			_vernacularBox.FocusOnFirstWsAlternative();
+		}
+
+		public void Cleanup()
+		{
+			_btnAddWord_Click(this, null);
 		}
 	}
 }

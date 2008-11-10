@@ -715,13 +715,16 @@ namespace WeSay.UI
 		protected override void OnPaintBackground(PaintEventArgs e)
 		{
 			// draw the background color for our control image
-			LinearGradientBrush brush =
-					new LinearGradientBrush(ClientRectangle,
-											BackColor,
-											(BackColorEnd == Color.Empty) ? BackColor : BackColorEnd,
-											(IsSplitterVertical())
-													? LinearGradientMode.Horizontal
-													: LinearGradientMode.Vertical);
+			LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle,
+																BackColor,
+																(BackColorEnd == Color.Empty)
+																		? BackColor
+																		: BackColorEnd,
+																(IsSplitterVertical())
+																		? LinearGradientMode.
+																				  Horizontal
+																		: LinearGradientMode.
+																				  Vertical);
 
 			e.Graphics.FillRectangle(brush, ClientRectangle);
 			Border3DStyle style = border3DStyle;

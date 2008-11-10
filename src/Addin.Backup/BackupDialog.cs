@@ -33,8 +33,8 @@ namespace Addin.Backup
 			Refresh();
 			try
 			{
-				string dest =
-						Path.Combine(info.RootDirectory.FullName, _projectInfo.Name + "_wesay.zip");
+				string dest = Path.Combine(info.RootDirectory.FullName,
+										   _projectInfo.Name + "_wesay.zip");
 				BackupMaker.BackupToExternal(_projectInfo.PathToTopLevelDirectory,
 											 dest,
 											 _projectInfo.FilesBelongingToProject);

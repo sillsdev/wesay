@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
-using Palaso.Reporting;
 
 namespace WeSay.UI
 {
@@ -191,7 +190,6 @@ namespace WeSay.UI
 				{
 					((IBindingList) value).ListChanged += OnListChanged;
 				}
-				Refresh();
 			}
 		}
 
@@ -242,7 +240,7 @@ namespace WeSay.UI
 
 		protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
 		{
-			if (Environment.OSVersion.Version.Major >= 6)
+			if (Environment.OSVersion.Version.Major >= 6 || Environment.OSVersion.Platform == PlatformID.Unix)
 			{
 				Invalidate(); //needed to prevent artifacts of previous selections hanging around
 			}
@@ -286,6 +284,12 @@ namespace WeSay.UI
 
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
+			// As of 03-oct-2008 Mono calls OnMouseMove in between OnMouseDown
+			// and OnMouseUp even if the mouse did not move.
+			if (Type.GetType("Mono.Runtime") != null && _currentMouseLocation == e.Location)
+			{
+				return;
+			}
 			_clickSelecting = false;
 			_currentMouseLocation = e.Location;
 			if (GetItemAt(e.X, e.Y) == null)
@@ -372,8 +376,10 @@ namespace WeSay.UI
 			{
 				// All this is to make the selection across the whole list box
 				// and not just the extent of the text itself
-				Rectangle bounds =
-						new Rectangle(e.Bounds.X, e.Bounds.Y, header.Width, e.Bounds.Height);
+				Rectangle bounds = new Rectangle(e.Bounds.X,
+												 e.Bounds.Y,
+												 header.Width,
+												 e.Bounds.Height);
 
 				Brush backgroundBrush;
 				bool backgroundBrushNeedsDisposal = false;
@@ -544,12 +550,11 @@ namespace WeSay.UI
 			int maxWidth = Screen.GetWorkingArea(this).Width;
 			using (Graphics g = Graphics.FromHwnd(Handle))
 			{
-				return
-						TextRenderer.MeasureText(g,
-												 text,
-												 _writingSystem.Font,
-												 new Size(maxWidth, int.MaxValue),
-												 flags);
+				return TextRenderer.MeasureText(g,
+												text,
+												_writingSystem.Font,
+												new Size(maxWidth, int.MaxValue),
+												flags);
 			}
 		}
 	}

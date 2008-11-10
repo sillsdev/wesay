@@ -19,7 +19,14 @@ namespace WeSay.LexicalTools
 		private static readonly string kTaskLongLabel = "~Dictionary Browse && Edit";
 
 		public DictionaryTask(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
-			: base(kTaskLabel, string.Empty, string.Empty, string.Empty, string.Empty, true, lexEntryRepository)
+				: base(
+						kTaskLabel,
+						string.Empty,
+						string.Empty,
+						string.Empty,
+						string.Empty,
+						true,
+						lexEntryRepository)
 		{
 #if JustForCodeScanner
 			StringCatalog.Get(kTaskLabel,
@@ -40,7 +47,6 @@ namespace WeSay.LexicalTools
 			{
 				base.Activate();
 				_dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate);
-				_dictionaryControl.SelectedIndexChanged += OnRecordSelectionChanged;
 			}
 			catch (ConfigurationException)
 			{
@@ -49,22 +55,9 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void OnRecordSelectionChanged(object sender, EventArgs e)
-		{
-			if (_dictionaryControl.CurrentRecord != null)
-			{
-				LexEntryRepository.SaveItem(_dictionaryControl.CurrentRecord);
-			}
-		}
-
 		public override void Deactivate()
 		{
 			base.Deactivate();
-			if (_dictionaryControl.CurrentRecord != null)
-			{
-				LexEntryRepository.SaveItem(_dictionaryControl.CurrentRecord);
-			}
-			_dictionaryControl.SelectedIndexChanged -= OnRecordSelectionChanged;
 			_dictionaryControl.Dispose();
 			_dictionaryControl = null;
 		}

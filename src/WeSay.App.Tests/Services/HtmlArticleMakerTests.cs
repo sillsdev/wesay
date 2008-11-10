@@ -36,9 +36,9 @@ namespace WeSay.App.Tests.Services
 		{
 			string contents =
 					@"<entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry>";
-			HtmlArticleMaker maker =
-					new HtmlArticleMaker(_projectDirectory.PathToWritingSystemFile,
-										 _projectDirectory.PathToFactoryDefaultsPartsOfSpeech);
+			HtmlArticleMaker maker = new HtmlArticleMaker(
+					_projectDirectory.PathToWritingSystemFile,
+					_projectDirectory.PathToFactoryDefaultsPartsOfSpeech);
 			string s = maker.GetHtmlFragment(contents);
 			Assert.IsTrue(s.Contains("<html>"));
 			Assert.IsTrue(s.Contains("hello"));

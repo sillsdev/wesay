@@ -14,10 +14,11 @@ namespace WeSay.LexicalModel
 	///
 	/// NB: this doesn't yet merge (dec 2006). Just blindly adds.
 	/// </summary>
-	internal class LiftMerger: ILexiconMerger<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>,
-							 IDisposable
+	internal class LiftMerger:
+			ILexiconMerger<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>,
+			IDisposable
 	{
-		public class EntryCreatedEventArgs:EventArgs
+		public class EntryCreatedEventArgs: EventArgs
 		{
 			public readonly LexEntry Entry;
 
@@ -74,7 +75,7 @@ namespace WeSay.LexicalModel
 			entry.Guid = eInfo.Guid;
 			entry.CreationTime = eInfo.CreationTime;
 			entry.ModificationTime = eInfo.ModificationTime;
-			if(_repository.LastModified < entry.ModificationTime)
+			if (_repository.LastModified < entry.ModificationTime)
 			{
 				_repository.LastModified = entry.ModificationTime;
 			}
@@ -336,7 +337,7 @@ namespace WeSay.LexicalModel
 														 string noticeToPrependIfNotEmpty)
 		{
 			MultiText mt = dataObject.GetOrCreateProperty<MultiText>(propertyName);
-			mt.MergeInWithAppend(MultiText.Create(contents.AsSimpleStrings),
+			mt.MergeInWithAppend(MultiText.Create(contents),
 								 string.IsNullOrEmpty(noticeToPrependIfNotEmpty)
 										 ? "; "
 										 : noticeToPrependIfNotEmpty);

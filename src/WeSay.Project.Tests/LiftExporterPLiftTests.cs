@@ -34,29 +34,26 @@ namespace WeSay.Project.Tests
 			_outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 
 			_writingSystemIds = new List<string>(new string[] {"red", "green", "blue"});
-			_headwordWritingSystem =
-					new WritingSystem(_writingSystemIds[0],
-									  new Font(FontFamily.GenericSansSerif, 10));
+			_headwordWritingSystem = new WritingSystem(_writingSystemIds[0],
+													   new Font(FontFamily.GenericSansSerif, 10));
 
 			_viewTemplate = new ViewTemplate();
 
-			_viewTemplate.Add(
-					new Field(LexEntry.WellKnownProperties.Citation,
-							  "LexEntry",
-							  new string[] {"blue", "red"}));
-			_viewTemplate.Add(
-					new Field(LexEntry.WellKnownProperties.LexicalUnit,
-							  "LexEntry",
-							  new string[] {"red", "green", "blue"}));
-			_viewTemplate.Add(
-					new Field(LexEntry.WellKnownProperties.BaseForm, "LexEntry", _writingSystemIds));
+			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.Citation,
+										"LexEntry",
+										new string[] {"blue", "red"}));
+			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit,
+										"LexEntry",
+										new string[] {"red", "green", "blue"}));
+			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.BaseForm,
+										"LexEntry",
+										_writingSystemIds));
 
-			Field visibleCustom =
-					new Field("VisibleCustom",
-							  "LexEntry",
-							  _writingSystemIds,
-							  Field.MultiplicityType.ZeroOr1,
-							  "MultiText");
+			Field visibleCustom = new Field("VisibleCustom",
+											"LexEntry",
+											_writingSystemIds,
+											Field.MultiplicityType.ZeroOr1,
+											"MultiText");
 			visibleCustom.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			visibleCustom.DisplayName = "VisibleCustom";
 			_viewTemplate.Add(visibleCustom);
@@ -87,17 +84,17 @@ namespace WeSay.Project.Tests
 
 		private void Make(ViewTemplate template, string path)
 		{
-			PLiftExporter exporter = new PLiftExporter(path,
-													   _lexEntryRepository,
-													   template);
+			PLiftExporter exporter = new PLiftExporter(path, _lexEntryRepository, template);
 
-			ResultSet<LexEntry> allEntriesSortedByHeadword = this._lexEntryRepository.GetAllEntriesSortedByHeadword(this._headwordWritingSystem);
+			ResultSet<LexEntry> allEntriesSortedByHeadword =
+					this._lexEntryRepository.GetAllEntriesSortedByHeadword(
+							this._headwordWritingSystem);
 			foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
 			{
 				int homographNumber = 0;
-				if ((bool)token["HasHomograph"])
+				if ((bool) token["HasHomograph"])
 				{
-					homographNumber = (int)token["HomographNumber"];
+					homographNumber = (int) token["HomographNumber"];
 				}
 				exporter.Add(token.RealObject, homographNumber);
 			}
@@ -125,12 +122,11 @@ namespace WeSay.Project.Tests
 			e1.GetOrCreateProperty<MultiText>("color").SetAlternative(_writingSystemIds[0], "red");
 			_lexEntryRepository.SaveItem(e1);
 
-			Field color =
-					new Field("color",
-							  "LexEntry",
-							  _writingSystemIds,
-							  Field.MultiplicityType.ZeroOr1,
-							  "MultiText");
+			Field color = new Field("color",
+									"LexEntry",
+									_writingSystemIds,
+									Field.MultiplicityType.ZeroOr1,
+									"MultiText");
 			color.DisplayName = "color";
 			_viewTemplate.Add(color);
 
@@ -387,7 +383,7 @@ namespace WeSay.Project.Tests
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 			settings.ConformanceLevel = ConformanceLevel.Fragment;
-			XmlWriter writer = XmlTextWriter.Create(Console.Out, settings);
+			XmlWriter writer = XmlWriter.Create(Console.Out, settings);
 			node.WriteContentTo(writer);
 			writer.Flush();
 		}

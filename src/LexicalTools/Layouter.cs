@@ -38,9 +38,9 @@ namespace WeSay.LexicalTools
 		/// otherwise, the first character typed into a ghost text field is not considered by
 		/// Keyman, since switching focus to a new, "real" box clears Keymans history of your typing.
 		/// See WS-23 for more info.
-		private MultiTextControl _previouslyGhostedControlToReuse = null;
+		private MultiTextControl _previouslyGhostedControlToReuse;
 
-		private bool _showNormallyHiddenFields = false;
+		private bool _showNormallyHiddenFields;
 
 		protected DetailList DetailList
 		{
@@ -100,16 +100,15 @@ namespace WeSay.LexicalTools
 			MultiTextControl m;
 			if (_previouslyGhostedControlToReuse == null)
 			{
-				m =
-						new MultiTextControl(field.WritingSystemIds,
-											 multiTextToBindTo,
-											 field.FieldName,
-											 field.Visibility !=
-											 CommonEnumerations.VisibilitySetting.ReadOnly,
-											 //show annotation
-											 BasilProject.Project.WritingSystems,
-											 field.Visibility,
-											 field.IsSpellCheckingEnabled);
+				m = new MultiTextControl(field.WritingSystemIds,
+										 multiTextToBindTo,
+										 field.FieldName,
+										 field.Visibility !=
+										 CommonEnumerations.VisibilitySetting.ReadOnly,
+										 //show annotation
+										 BasilProject.Project.WritingSystems,
+										 field.Visibility,
+										 field.IsSpellCheckingEnabled);
 			}
 			else
 			{
@@ -161,22 +160,23 @@ namespace WeSay.LexicalTools
 			if (field != null && field.Enabled &&
 				field.Visibility == CommonEnumerations.VisibilitySetting.Visible)
 			{
-				MultiTextControl m =
-						new MultiTextControl(field.WritingSystemIds,
-											 new MultiText(),
-											 fieldName + "_ghost",
-											 false,
-											 BasilProject.Project.WritingSystems,
-											 field.Visibility,
-											 field.IsSpellCheckingEnabled);
+				MultiTextControl m = new MultiTextControl(field.WritingSystemIds,
+														  new MultiText(),
+														  fieldName + "_ghost",
+														  false,
+														  BasilProject.Project.WritingSystems,
+														  field.Visibility,
+														  field.IsSpellCheckingEnabled);
 
-				Control refWidget =
-						DetailList.AddWidgetRow(label, isHeading, m, insertAtRow + rowCount, true);
+				Control refWidget = DetailList.AddWidgetRow(label,
+															isHeading,
+															m,
+															insertAtRow + rowCount,
+															true);
 
 				foreach (WeSayTextBox box in m.TextBoxes)
 				{
-					GhostBinding<T> g =
-							MakeGhostBinding(list, propertyName, box.WritingSystem, box);
+					GhostBinding<T> g = MakeGhostBinding(list, propertyName, box.WritingSystem, box);
 					g.ReferenceControl = refWidget;
 				}
 				return 1;
@@ -190,10 +190,13 @@ namespace WeSay.LexicalTools
 		protected GhostBinding<T> MakeGhostBinding<T>(IList<T> list,
 													  string ghostPropertyName,
 													  WritingSystem writingSystem,
-													  WeSayTextBox entry) where T : WeSayDataObject, new()
+													  WeSayTextBox entry)
+				where T : WeSayDataObject, new()
 		{
-			GhostBinding<T> binding =
-					new GhostBinding<T>(list, ghostPropertyName, writingSystem, entry);
+			GhostBinding<T> binding = new GhostBinding<T>(list,
+														  ghostPropertyName,
+														  writingSystem,
+														  entry);
 			binding.LayoutNeededAfterMadeReal += OnGhostBindingLayoutNeeded;
 			binding.CurrentItemChanged += _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			return binding;
@@ -205,10 +208,14 @@ namespace WeSay.LexicalTools
 															 MultiTextControl
 																	 previouslyGhostedControlToReuse,
 															 bool doGoToNextField,
-															 EventArgs args) where T : WeSayDataObject, new()
+															 EventArgs args)
+				where T : WeSayDataObject, new()
 		{
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
-			AddWidgetsAfterGhostTrigger(list[index], list.Count, sender.ReferenceControl, doGoToNextField);
+			AddWidgetsAfterGhostTrigger(list[index],
+										list.Count,
+										sender.ReferenceControl,
+										doGoToNextField);
 		}
 
 		protected void AddWidgetsAfterGhostTrigger(WeSayDataObject wsdo,
@@ -265,11 +272,10 @@ namespace WeSay.LexicalTools
 					continue; //already put this in next to "Meaning"
 				}
 #endif
-				rowCount =
-						AddOneCustomField(target,
-										  customField,
-										  insertAtRow + rowCount /*changed feb 2008*/,
-										  rowCount);
+				rowCount = AddOneCustomField(target,
+											 customField,
+											 insertAtRow + rowCount /*changed feb 2008*/,
+											 rowCount);
 			}
 
 			//grab any basetype class (to just one level). E.g., 'Note'
@@ -281,11 +287,10 @@ namespace WeSay.LexicalTools
 				{
 					continue; //note actually isn't allowed at the moment
 				}
-				rowCount =
-						AddOneCustomField(target,
-										  customField,
-										  insertAtRow + rowCount /*changed feb 2008*/,
-										  rowCount);
+				rowCount = AddOneCustomField(target,
+											 customField,
+											 insertAtRow + rowCount /*changed feb 2008*/,
+											 rowCount);
 			}
 			return rowCount;
 		}
@@ -344,8 +349,11 @@ namespace WeSay.LexicalTools
 				label = string.Empty;
 			}
 
-			Control c =
-					DetailList.AddWidgetRow(StringCatalog.Get(label), false, box, insertAtRow, false);
+			Control c = DetailList.AddWidgetRow(StringCatalog.Get(label),
+												false,
+												box,
+												insertAtRow,
+												false);
 
 			DetailList.GetRow(c);
 			++rowCount;
@@ -397,12 +405,11 @@ namespace WeSay.LexicalTools
 		//        }
 		private Control MakeRelationWidget(WeSayDataObject target, LexRelationType type, Field field)
 		{
-			return
-					RelationController.CreateWidget(target,
-													type,
-													field,
-													_lexEntryRepository,
-													_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+			return RelationController.CreateWidget(target,
+												   type,
+												   field,
+												   _lexEntryRepository,
+												   _detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 		}
 
 		//        void OnSelectedItemChanged(object sender, EventArgs e)
@@ -426,11 +433,10 @@ namespace WeSay.LexicalTools
 			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
 
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field, false);
-			SingleOptionControl control =
-					new SingleOptionControl(optionRefTarget,
-											list,
-											field.WritingSystemIds[0],
-											field.FieldName);
+			SingleOptionControl control = new SingleOptionControl(optionRefTarget,
+																  list,
+																  field.WritingSystemIds[0],
+																  field.FieldName);
 			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
 			binding.CurrentItemChanged += _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			return control;
@@ -443,11 +449,12 @@ namespace WeSay.LexicalTools
 					target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			//            OptionCollectionControl control =
 			//                   new OptionCollectionControl(refsOfChoices, availableOptions, field.WritingSystemIds[0]);
-			IList<WritingSystem> writingSystems = BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
+			IList<WritingSystem> writingSystems =
+					BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
 			ReferenceCollectionEditor<Option, string, OptionRef> control =
 					new ReferenceCollectionEditor<Option, string, OptionRef>(refsOfChoices.Members,
 																			 availableOptions.
-																			 Options,
+																					 Options,
 																			 writingSystems,
 																			 field.Visibility,
 																			 new OptionDisplayAdaptor
@@ -463,8 +470,9 @@ namespace WeSay.LexicalTools
 		{
 			FlagState boxState = target.GetOrCreateProperty<FlagState>(field.FieldName);
 
-			CheckBoxControl control =
-					new CheckBoxControl(boxState.Value, field.DisplayName, field.FieldName);
+			CheckBoxControl control = new CheckBoxControl(boxState.Value,
+														  field.DisplayName,
+														  field.FieldName);
 			SimpleBinding<bool> binding = new SimpleBinding<bool>(boxState, control);
 			binding.CurrentItemChanged += _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			return control;
@@ -474,8 +482,8 @@ namespace WeSay.LexicalTools
 		{
 			PictureRef pictureRef = target.GetOrCreateProperty<PictureRef>(field.FieldName);
 
-			PictureControl control =
-					new PictureControl(field.FieldName, WeSayWordsProject.Project.PathToPictures);
+			PictureControl control = new PictureControl(field.FieldName,
+														WeSayWordsProject.Project.PathToPictures);
 			if (!String.IsNullOrEmpty(pictureRef.Value))
 			{
 				control.Value = pictureRef.Value;

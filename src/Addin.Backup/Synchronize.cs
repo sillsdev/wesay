@@ -33,9 +33,8 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return
-						StringCatalog.Get("~Synchronize",
-										  "Label for synchronize action. Here, 'synchronizing' means putting your changes in the repository, and getting changes that others have put in the repository.");
+				return StringCatalog.Get("~Synchronize",
+										 "Label for synchronize action. Here, 'synchronizing' means putting your changes in the repository, and getting changes that others have put in the repository.");
 			}
 		}
 
@@ -95,7 +94,8 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return StringCatalog.Get("~Synchronize With Repository", "Long label for synchronize action.");
+				return StringCatalog.Get("~Synchronize With Repository",
+										 "Long label for synchronize action.");
 			}
 		}
 
@@ -132,9 +132,8 @@ namespace Addin.Backup
 
 		public string GetRuntimeProcessPath(ProjectInfo info)
 		{
-			return
-					_pathToExecutable.Replace("$wesayApplicationDirectory",
-											  info.PathToApplicationRootDirectory);
+			return _pathToExecutable.Replace("$wesayApplicationDirectory",
+											 info.PathToApplicationRootDirectory);
 		}
 
 		public string GetRuntimeArguments(ProjectInfo info)

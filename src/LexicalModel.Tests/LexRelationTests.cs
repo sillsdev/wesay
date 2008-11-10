@@ -30,10 +30,11 @@ namespace WeSay.LexicalModel.Tests
 		public void Construct_TargetIdNull_TargetIdIsEmptyString()
 		{
 			LexSense sense = new LexSense();
-			LexRelationType synonymRelationType =
-					new LexRelationType("synonym",
-										LexRelationType.Multiplicities.Many,
-										LexRelationType.TargetTypes.Sense);
+			LexRelationType synonymRelationType = new LexRelationType("synonym",
+																	  LexRelationType.Multiplicities
+																			  .Many,
+																	  LexRelationType.TargetTypes.
+																			  Sense);
 
 			LexRelation relation = new LexRelation(synonymRelationType.ID, null, sense);
 			Assert.AreEqual(null, relation.GetTarget(_lexEntryRepository));
@@ -44,10 +45,11 @@ namespace WeSay.LexicalModel.Tests
 		public void TargetId_SetNull_GetStringEmpty()
 		{
 			LexSense sense = new LexSense();
-			LexRelationType synonymRelationType =
-					new LexRelationType("synonym",
-										LexRelationType.Multiplicities.Many,
-										LexRelationType.TargetTypes.Sense);
+			LexRelationType synonymRelationType = new LexRelationType("synonym",
+																	  LexRelationType.Multiplicities
+																			  .Many,
+																	  LexRelationType.TargetTypes.
+																			  Sense);
 
 			LexRelation relation = new LexRelation(synonymRelationType.ID, "something", sense);
 			relation.Key = null;

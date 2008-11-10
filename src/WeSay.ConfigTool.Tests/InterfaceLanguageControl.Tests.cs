@@ -4,6 +4,7 @@ using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Foundation.Tests;
+using WeSay.Foundation.Tests.TestHelpers;
 
 namespace WeSay.ConfigTool.Tests
 {

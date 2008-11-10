@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,11 +9,6 @@
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace>WeSay.Foundation.Tests</RootNamespace>
 	<AssemblyName>WeSay.Foundation.Tests</AssemblyName>
-	<FileUpgradeFlags>
-	</FileUpgradeFlags>
-	<OldToolsVersion>2.0</OldToolsVersion>
-	<UpgradeBackupLocation>
-	</UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -53,6 +48,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
 	</Reference>
+	<Reference Include="LiftIO, Version=0.1.0.120, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
+	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
@@ -78,13 +77,17 @@
 	<Compile Include="ApproximateMatcherTests.cs" />
 	<Compile Include="BackupMakerTests.cs" />
 	<Compile Include="OptionList.Tests.cs" />
+	<Compile Include="OptionRefCollectionTests.cs" />
+	<Compile Include="OptionRefTests.cs" />
 	<Compile Include="SpellCheckerIdToDisplayStringConverterTests.cs" />
+	<Compile Include="TestHelpers\TemporaryFolder.cs" />
+	<Compile Include="TestHelpers\TemporaryFolderTests.cs" />
+	<Compile Include="TestHelpers\TestUtilities.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>TestResources.resx</DependentUpon>
 	</Compile>
-	<Compile Include="TestUtilities.cs" />
 	<Compile Include="WeSayDataObjectTests.cs" />
 	<Compile Include="WritingSystemTests.cs" />
 	<Compile Include="MultiTextTests.cs" />

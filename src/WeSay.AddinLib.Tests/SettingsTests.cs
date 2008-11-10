@@ -3,6 +3,7 @@ using NUnit.Framework;
 namespace WeSay.AddinLib.Tests
 {
 	[TestFixture]
+	[Ignore("TestFixture needs review!")]
 	public class SettingsTests
 	{
 		[SetUp]

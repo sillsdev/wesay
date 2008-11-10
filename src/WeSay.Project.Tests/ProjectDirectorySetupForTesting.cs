@@ -15,7 +15,7 @@ namespace WeSay.Project.Tests
 	/// </summary>
 	public class ProjectDirectorySetupForTesting: IDisposable
 	{
-		private bool _disposed = false;
+		private bool _disposed;
 		private readonly string _experimentDir;
 		private readonly string _projectName = "test";
 		private readonly string _pathToTasksBase;
@@ -138,7 +138,7 @@ namespace WeSay.Project.Tests
 			{
 				if (disposing)
 				{
-					TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
+					Foundation.Tests.TestHelpers.TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
 				}
 
 				// shared (dispose and finalizable) cleanup logic

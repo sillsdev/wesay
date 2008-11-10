@@ -17,7 +17,7 @@ namespace WeSay.UI
 
 		private bool _multiParagraph;
 		private readonly string _nameForLogging;
-		private bool _haveAlreadyLoggedTextChanged = false;
+		private bool _haveAlreadyLoggedTextChanged;
 		private bool _isSpellCheckingEnabled;
 
 		/// <summary>
@@ -190,13 +190,13 @@ namespace WeSay.UI
 				{
 					flags |= TextFormatFlags.RightToLeft;
 				}
-				Size sz =
-						TextRenderer.MeasureText(g,
-												 Text + "\n",
-												 // need extra new line to handle case where ends in new line (since last newline is ignored)
-												 Font,
-												 new Size(width, int.MaxValue),
-												 flags);
+				Size sz = TextRenderer.MeasureText(g,
+												   Text == String.Empty ? " " : Text + "\n",
+												   // replace empty string with space, because mono returns zero height for empty string (windows returns one line height)
+												   // need extra new line to handle case where ends in new line (since last newline is ignored)
+												   Font,
+												   new Size(width, int.MaxValue),
+												   flags);
 				return sz.Height + 2; // add enough space for spell checking squiggle underneath
 			}
 		}

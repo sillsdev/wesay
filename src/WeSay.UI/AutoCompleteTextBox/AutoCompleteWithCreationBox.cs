@@ -234,12 +234,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 										TextFormatFlags.NoClipping |
 										TextFormatFlags.LeftAndRightPadding;
 
-				Size sz =
-						TextRenderer.MeasureText(g,
-												 _textBox.Text,
-												 _textBox.Font,
-												 new Size(int.MaxValue, _textBox.Height),
-												 flags);
+				Size sz = TextRenderer.MeasureText(g,
+												   _textBox.Text,
+												   _textBox.Font,
+												   new Size(int.MaxValue, _textBox.Height),
+												   flags);
 
 				_textBox.Width = Math.Max(_textBox.MinimumSize.Width, sz.Width);
 			}

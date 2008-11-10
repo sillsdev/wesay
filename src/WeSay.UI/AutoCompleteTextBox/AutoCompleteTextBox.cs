@@ -22,7 +22,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private FormToObectFinderDelegate _formToObectFinderDelegate;
 
 		public event EventHandler SelectedItemChanged;
-		private bool _inMidstOfSettingSelectedItem = false;
+		private bool _inMidstOfSettingSelectedItem;
 
 		#region EntryMode
 
@@ -96,7 +96,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			set { triggers = value; }
 		}
 
-		private bool _autoSizePopup = true;
+		private bool _autoSizePopup = false;
 
 		[Browsable(true)]
 		[Description(
@@ -168,7 +168,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private ItemFilterDelegate _itemFilterDelegate;
 		private object _selectedItem;
 		private readonly ToolTip _toolTip;
-		private object _previousToolTipTarget = null;
+		private object _previousToolTipTarget;
+		private bool _windowJustGotFocus = true;
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -271,10 +272,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 			// Create the list box that will hold matching items
 			_listBox = new ListBox();
-			_listBox.MaximumSize = new Size(400, 100);
+			_listBox.MaximumSize = new Size(800, 100);
 			_listBox.Cursor = Cursors.Hand;
 			_listBox.BorderStyle = BorderStyle.FixedSingle;
-			_listBox.SelectedIndexChanged += List_SelectedIndexChanged;
+			//_listBox.SelectedIndexChanged += List_SelectedIndexChanged;
 			_listBox.Click += List_Click;
 			_listBox.MouseMove += List_MouseMove;
 			_listBox.ItemHeight = _listBox.Font.Height;
@@ -299,7 +300,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			string tip = _itemDisplayAdaptor.GetToolTip(SelectedItem);
 			_toolTip.SetToolTip(this, tip);
 			_toolTip.ToolTipTitle = _itemDisplayAdaptor.GetToolTipTitle(SelectedItem);
-			;
 		}
 
 		private void List_MouseMove(object sender, MouseEventArgs e)
@@ -472,7 +472,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		protected override void OnTextChanged(EventArgs e)
 		{
 			base.OnTextChanged(e);
-
+			_listBox.SelectedIndex = -1;
 			DisplayListIfTextTriggers();
 		}
 
@@ -527,6 +527,31 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				HideList();
 			}
+
+		}
+
+		protected override void OnGotFocus(EventArgs e)
+		{
+			base.OnGotFocus(e);
+
+			_windowJustGotFocus = true;
+
+			if (Text.Length > 0)
+			{
+				SelectionStart = 0;
+				SelectionLength = Text.Length;
+			}
+		}
+
+		protected override void OnClick(EventArgs e)
+		{
+			base.OnClick(e);
+			if (_windowJustGotFocus)
+			{
+				_windowJustGotFocus = false;
+				SelectionStart = 0;
+				SelectionLength = Text.Length;
+			}
 		}
 
 		protected virtual void SelectCurrentItem()
@@ -536,8 +561,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 				return;
 			}
 
-			Text = _listBox.SelectedItem.ToString();
-			SelectedItem = ((ItemWrapper) _listBox.SelectedItem).Item;
+			SelectedItem = ((ItemWrapper)_listBox.SelectedItem).Item;
+			Text = ItemDisplayStringAdaptor.GetDisplayLabel(SelectedItem);// SelectedItem.ToString();
 			if (Text.Length > 0)
 			{
 				SelectionStart = Text.Length;
@@ -561,9 +586,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 				Form form = FindForm();
 				Point parentPointOnScreen = Parent.PointToClient(form.Location);
 				Point formPointOnScreen = form.PointToClient(form.Location);
-				Point offset =
-						new Point(formPointOnScreen.X - parentPointOnScreen.X,
-								  formPointOnScreen.Y - parentPointOnScreen.Y);
+				Point offset = new Point(formPointOnScreen.X - parentPointOnScreen.X,
+										 formPointOnScreen.Y - parentPointOnScreen.Y);
 				Point p = Location;
 				p.X += offset.X;
 				p.Y += offset.Y;
@@ -619,6 +643,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		protected virtual void UpdateList()
 		{
+			int selectedIndex = _listBox.SelectedIndex;
 			_listBox.BeginUpdate();
 			_listBox.Items.Clear();
 
@@ -646,6 +671,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 			}
 			_listBox.EndUpdate();
+			_listBox.SelectedIndex = selectedIndex;
 
 			if (_listBox.Items.Count == 0)
 			{
@@ -692,12 +718,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
-			return
-					TextRenderer.MeasureText(dc,
-											 s,
-											 _listBox.Font,
-											 new Size(int.MaxValue, _listBox.ItemHeight),
-											 flags);
+			return TextRenderer.MeasureText(dc,
+											s,
+											_listBox.Font,
+											new Size(int.MaxValue, _listBox.ItemHeight),
+											flags);
 		}
 
 		private static IEnumerable FilterList(string text,
@@ -716,18 +741,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 			}
 			return newList;
-		}
-
-		private void List_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (Mode != EntryMode.List)
-			{
-				SelectCurrentItemAndHideList();
-			}
-			else
-			{
-				SelectCurrentItem();
-			}
 		}
 
 		public event EventHandler AutoCompleteChoiceSelected = delegate { };

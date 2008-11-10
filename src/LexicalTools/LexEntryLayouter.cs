@@ -45,8 +45,9 @@ namespace WeSay.LexicalTools
 			}
 			rowCount += AddCustomFields(entry, insertAtRow + rowCount);
 
-			LexSenseLayouter layouter =
-					new LexSenseLayouter(DetailList, ActiveViewTemplate, RecordListManager);
+			LexSenseLayouter layouter = new LexSenseLayouter(DetailList,
+															 ActiveViewTemplate,
+															 RecordListManager);
 			layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 			//add a ghost

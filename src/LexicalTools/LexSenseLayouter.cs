@@ -21,7 +21,7 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
 		{
-			LexSense sense = (LexSense)wsdo;
+			LexSense sense = (LexSense) wsdo;
 			int rowCount = 0;
 			DetailList.SuspendLayout();
 			try
@@ -43,8 +43,11 @@ namespace WeSay.LexicalTools
 					{
 						label += " " + (entry.Senses.IndexOf(sense) + 1);
 					}
-					Control meaningRowControl =
-							DetailList.AddWidgetRow(label, true, meaningControl, insertAtRow, false);
+					Control meaningRowControl = DetailList.AddWidgetRow(label,
+																		true,
+																		meaningControl,
+																		insertAtRow,
+																		false);
 					++rowCount;
 					insertAtRow = DetailList.GetRow(meaningRowControl);
 				}
@@ -71,19 +74,18 @@ namespace WeSay.LexicalTools
 						new LexExampleSentenceLayouter(DetailList, ActiveViewTemplate);
 				exampleLayouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 
-				rowCount =
-						AddChildrenWidgets(exampleLayouter,
-										   sense.ExampleSentences,
-										   insertAtRow,
-										   rowCount);
+				rowCount = AddChildrenWidgets(exampleLayouter,
+											  sense.ExampleSentences,
+											  insertAtRow,
+											  rowCount);
 
 				//add a ghost for another example if we don't have one or we're in the "show all" mode
 				//removed because of its effect on the Add Examples task, where
 				//we'd like to be able to add more than one
 				//if (ShowNormallyHiddenFields || sense.ExampleSentences.Count == 0)
 				{
-					rowCount +=
-							exampleLayouter.AddGhost(sense.ExampleSentences, insertAtRow + rowCount);
+					rowCount += exampleLayouter.AddGhost(sense.ExampleSentences,
+														 insertAtRow + rowCount);
 				}
 			}
 			catch (ConfigurationException e)
@@ -101,21 +103,19 @@ namespace WeSay.LexicalTools
 #if GlossMeaning
 			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), label, "Gloss", isHeading);
 #else
-			return
-					MakeGhostWidget(list,
-								  insertAtRow,
-								  LexSense.WellKnownProperties.Definition,
-								  label,
-								  "Definition",
-								  isHeading);
+			return MakeGhostWidget(list,
+								   insertAtRow,
+								   LexSense.WellKnownProperties.Definition,
+								   label,
+								   "Definition",
+								   isHeading);
 #endif
 		}
 
 		private static string GetLabelForMeaning(int itemCount)
 		{
-			string label =
-					StringCatalog.Get("~Meaning",
-									  "This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.");
+			string label = StringCatalog.Get("~Meaning",
+											 "This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.");
 			if (itemCount > 0)
 			{
 				label += " " + (itemCount + 1);

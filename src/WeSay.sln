@@ -1,171 +1,67 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalModel", "LexicalModel\LexicalModel.csproj", "{5F61C809-B6C0-4567-9603-B2198E1AD038}"
 	ProjectSection(ProjectDependencies) = postProject
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD} = {600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}
-	EndProjectSection
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalModel.Tests", "LexicalModel.Tests\LexicalModel.Tests.csproj", "{123D695C-0D5D-46E5-893F-39EC4E0B01B8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD} = {600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}
 	EndProjectSection
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Foundation.Tests", "WeSay.Foundation.Tests\WeSay.Foundation.Tests.csproj", "{6366719E-DA80-4680-9E06-D9BC6F340DE3}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.UI.Tests", "WeSay.UI.Tests\WeSay.UI.Tests.csproj", "{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.App", "WeSay.App\WeSay.App.csproj", "{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalTools", "LexicalTools\LexicalTools.csproj", "{87AF0B02-2983-486D-857F-D1859535C234}"
 	ProjectSection(ProjectDependencies) = postProject
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD} = {600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}
 	EndProjectSection
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTools", "CommonTools\CommonTools.csproj", "{64726381-FEA8-47D5-A884-18AED42E93B6}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Data", "WeSay.Data\WeSay.Data.csproj", "{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Data.Tests", "WeSay.Data.Tests\WeSay.Data.Tests.csproj", "{8491FEEE-C311-4B64-BB30-A1F1C1802F45}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalTools.Tests", "LexicalTools.Tests\LexicalTools.Tests.csproj", "{9936180C-90A7-467C-B761-EC184EFE1F9F}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.App.Tests", "WeSay.App.Tests\WeSay.App.Tests.csproj", "{7DA57D98-255B-46DE-BF94-D163695A0568}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.UI", "WeSay.UI\WeSay.UI.csproj", "{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Project", "WeSay.Project\WeSay.Project.csproj", "{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Project.Tests", "WeSay.Project.Tests\WeSay.Project.Tests.csproj", "{F644C902-A952-4797-9E2D-19D6051DD032}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Foundation", "WeSay.Foundation\WeSay.Foundation.csproj", "{F12EB680-0990-4900-B77E-0FBF2E28A815}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleDataProcessor", "Lift2WeSay\SampleDataProcessor.csproj", "{4408C857-0371-42BF-A635-E23C8A99A803}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.ConfigTool", "WeSay.ConfigTool\WeSay.ConfigTool.csproj", "{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.ConfigTool.Tests", "WeSay.ConfigTool.Tests\WeSay.ConfigTool.Tests.csproj", "{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.AddinLib", "WeSay.AddinLib\WeSay.AddinLib.csproj", "{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addin.LiftReports", "Addin.LiftReports\Addin.LiftReports.csproj", "{3CB2F52D-739C-442F-9C63-F38694690AC6}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addin.Backup", "Addin.Backup\Addin.Backup.csproj", "{42FB4CC3-F2D1-4509-87DD-6BBD430CD4AB}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addin.Transform", "Addin.Transform\Addin.Transform.csproj", "{9D196637-2D50-4604-A310-378083CEA809}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.AddinLib.Tests", "WeSay.AddinLib.Tests\WeSay.AddinLib.Tests.csproj", "{74DF4C01-660C-4CF4-9343-9330337BCBEA}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addin.Transform.Tests", "Addin.Transform.Tests\Addin.Transform.Tests.csproj", "{19310CA3-6653-45E0-9EC8-F824629E2AD8}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addin.LiftReports.Tests", "Addin.LiftReports.Tests\Addin.LiftReports.Tests.csproj", "{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTools.Tests", "CommonTools.Tests\CommonTools.Tests.csproj", "{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}"
 	ProjectSection(ProjectDependencies) = postProject
 		{64726381-FEA8-47D5-A884-18AED42E93B6} = {64726381-FEA8-47D5-A884-18AED42E93B6}
-	EndProjectSection
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
 Global
@@ -195,6 +91,7 @@ Global
 		{123D695C-0D5D-46E5-893F-39EC4E0B01B8}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
 		{123D695C-0D5D-46E5-893F-39EC4E0B01B8}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{123D695C-0D5D-46E5-893F-39EC4E0B01B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{123D695C-0D5D-46E5-893F-39EC4E0B01B8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
@@ -202,6 +99,7 @@ Global
 		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
 		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
@@ -209,6 +107,7 @@ Global
 		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
 		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
@@ -252,6 +151,7 @@ Global
 		{8491FEEE-C311-4B64-BB30-A1F1C1802F45}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
 		{8491FEEE-C311-4B64-BB30-A1F1C1802F45}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{8491FEEE-C311-4B64-BB30-A1F1C1802F45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8491FEEE-C311-4B64-BB30-A1F1C1802F45}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9936180C-90A7-467C-B761-EC184EFE1F9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9936180C-90A7-467C-B761-EC184EFE1F9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9936180C-90A7-467C-B761-EC184EFE1F9F}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
@@ -259,6 +159,7 @@ Global
 		{9936180C-90A7-467C-B761-EC184EFE1F9F}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
 		{9936180C-90A7-467C-B761-EC184EFE1F9F}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{9936180C-90A7-467C-B761-EC184EFE1F9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9936180C-90A7-467C-B761-EC184EFE1F9F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
@@ -266,6 +167,7 @@ Global
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DA57D98-255B-46DE-BF94-D163695A0568}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
@@ -291,6 +193,7 @@ Global
 		{F644C902-A952-4797-9E2D-19D6051DD032}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
 		{F644C902-A952-4797-9E2D-19D6051DD032}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{F644C902-A952-4797-9E2D-19D6051DD032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F644C902-A952-4797-9E2D-19D6051DD032}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F12EB680-0990-4900-B77E-0FBF2E28A815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F12EB680-0990-4900-B77E-0FBF2E28A815}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F12EB680-0990-4900-B77E-0FBF2E28A815}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
@@ -327,6 +230,7 @@ Global
 		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
 		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
@@ -371,6 +275,7 @@ Global
 		{74DF4C01-660C-4CF4-9343-9330337BCBEA}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
 		{74DF4C01-660C-4CF4-9343-9330337BCBEA}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{74DF4C01-660C-4CF4-9343-9330337BCBEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74DF4C01-660C-4CF4-9343-9330337BCBEA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{19310CA3-6653-45E0-9EC8-F824629E2AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{19310CA3-6653-45E0-9EC8-F824629E2AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19310CA3-6653-45E0-9EC8-F824629E2AD8}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
@@ -378,6 +283,7 @@ Global
 		{19310CA3-6653-45E0-9EC8-F824629E2AD8}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
 		{19310CA3-6653-45E0-9EC8-F824629E2AD8}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{19310CA3-6653-45E0-9EC8-F824629E2AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19310CA3-6653-45E0-9EC8-F824629E2AD8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}.minimal|Any CPU.ActiveCfg = Debug|Any CPU

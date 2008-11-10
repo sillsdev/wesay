@@ -109,22 +109,24 @@ namespace WeSay.LexicalTools
 				Debug.Assert(sender == _completedRecordsListBox);
 				recordToken = this._completedRecords[e.ItemIndex];
 			}
-			string displayString = (string)recordToken["Form"];
+			string displayString = (string) recordToken["Form"];
 			e.Item = new ListViewItem(displayString);
 			if (!string.IsNullOrEmpty(displayString))
 			{
 				return;
 			}
 
-			displayString = recordToken.RealObject.LexicalForm.GetBestAlternative(_recordsListBox.WritingSystem.Id, string.Empty);
-				e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
+			displayString =
+					recordToken.RealObject.LexicalForm.GetBestAlternative(
+							_recordsListBox.WritingSystem.Id, string.Empty);
+			e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
 
 			if (string.IsNullOrEmpty(displayString))
 			{
 				displayString = "(" +
-							StringCatalog.Get("~Empty",
-											  "This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.")
-								+ ")";
+								StringCatalog.Get("~Empty",
+												  "This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.") +
+								")";
 			}
 			e.Item.Text = displayString;
 		}
@@ -531,10 +533,23 @@ namespace WeSay.LexicalTools
 		// right pane should get the highest tab order.
 		// this means the RTF view looks bad. Still haven't figured out how to make
 		// cursor go to right position.
+		private bool monoOnEnterFix;
 		protected override void OnEnter(EventArgs e)
 		{
-			base.OnEnter(e);
-			_entryViewControl.Select();
+			if (monoOnEnterFix)
+			{
+				return;
+			}
+			try
+			{
+				monoOnEnterFix = true;
+				base.OnEnter(e);
+				_entryViewControl.Select();
+			}
+			finally
+			{
+				monoOnEnterFix = false;
+			}
 		}
 	}
 }

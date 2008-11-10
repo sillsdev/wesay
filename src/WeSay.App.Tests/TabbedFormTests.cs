@@ -150,7 +150,7 @@ namespace WeSay.App.Tests
 		{
 			_project = new WeSayWordsProject();
 			_project.StringCatalogSelector = "en";
-			_project.LoadFromProjectDirectoryPath(WeSayWordsProject.GetPretendProjectDirectory());
+			_project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory());
 
 			_project.Tasks = new List<ITask>();
 		}
@@ -160,12 +160,12 @@ namespace WeSay.App.Tests
 		{
 			_project.Tasks.Add(new MockTask("Dashboard", "The control center.", true));
 			_project.Tasks.Add(new MockTask("Words", "The whole lexicon.", true));
-			_project.Tasks.Add(
-					new MockTask("Add Meanings",
-								 "Add meanings to entries that are lacking them.",
-								 false));
-			_project.Tasks.Add(
-					new MockTask("Semantic Domains", "Add new words using semantic domains.", false));
+			_project.Tasks.Add(new MockTask("Add Meanings",
+											"Add meanings to entries that are lacking them.",
+											false));
+			_project.Tasks.Add(new MockTask("Semantic Domains",
+											"Add new words using semantic domains.",
+											false));
 		}
 
 		[TearDown]

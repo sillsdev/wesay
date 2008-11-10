@@ -49,6 +49,7 @@ namespace WeSay.LexicalTools
 			this._btnPrevious = new WeSay.UI.Buttons.PreviousButton();
 			this._btnNext = new WeSay.UI.Buttons.NextButton();
 			this._btnAddWord = new WeSay.UI.Buttons.AddButton();
+			this._reminder = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			//
 			// _domainName
@@ -140,7 +141,7 @@ namespace WeSay.LexicalTools
 			this._instructionLabel.ForeColor = System.Drawing.Color.DarkGray;
 			this._instructionLabel.Location = new System.Drawing.Point(11, 7);
 			this._instructionLabel.Name = "_instructionLabel";
-			this._instructionLabel.Size = new System.Drawing.Size(413, 20);
+			this._instructionLabel.Size = new System.Drawing.Size(423, 20);
 			this._instructionLabel.TabIndex = 15;
 			this._instructionLabel.Text = "Try thinking of words you use to talk about these things.";
 			//
@@ -153,7 +154,7 @@ namespace WeSay.LexicalTools
 			this._question.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.75F, System.Drawing.FontStyle.Bold);
 			this._question.Location = new System.Drawing.Point(15, 189);
 			this._question.Name = "_question";
-			this._question.Size = new System.Drawing.Size(622, 78);
+			this._question.Size = new System.Drawing.Size(622, 50);
 			this._question.TabIndex = 23;
 			//
 			// _description
@@ -191,6 +192,12 @@ namespace WeSay.LexicalTools
 			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._vernacularBox.BackColor = System.Drawing.Color.White;
 			this._vernacularBox.ColumnCount = 3;
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -237,10 +244,24 @@ namespace WeSay.LexicalTools
 			this._btnAddWord.TabIndex = 10;
 			this._btnAddWord.Click += new System.EventHandler(this._btnAddWord_Click);
 			//
+			// _reminder
+			//
+			this._reminder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._reminder.AutoEllipsis = true;
+			this._reminder.BackColor = System.Drawing.Color.LightYellow;
+			this._reminder.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._reminder.ForeColor = System.Drawing.Color.DarkGray;
+			this._reminder.Location = new System.Drawing.Point(15, 242);
+			this._reminder.Name = "_reminder";
+			this._reminder.Size = new System.Drawing.Size(622, 28);
+			this._reminder.TabIndex = 26;
+			//
 			// GatherBySemanticDomainsControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.Controls.Add(this._reminder);
 			this.Controls.Add(this._questionIndicator);
 			this.Controls.Add(this._description);
 			this.Controls.Add(this._question);
@@ -281,6 +302,7 @@ namespace WeSay.LexicalTools
 		private System.Windows.Forms.Label _description;
 		private WeSay.UI.CirclesProgressIndicator _questionIndicator;
 		private MovingLabel _movingLabel;
+		private System.Windows.Forms.Label _reminder;
 
 	}
 }

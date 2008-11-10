@@ -5,12 +5,13 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public sealed class ResultSet<T>: IEnumerable<RecordToken<T>>, IEnumerable<RepositoryId> where T:class,new()
+	public sealed class ResultSet<T>: IEnumerable<RecordToken<T>>, IEnumerable<RepositoryId>
+			where T : class, new()
 	{
 		private readonly List<RecordToken<T>> _results;
 		private readonly IRepository<T> _repository;
 
-		public ResultSet(IRepository<T> repository, List<RecordToken<T>> results)
+		public ResultSet(IRepository<T> repository, params IEnumerable<RecordToken<T>>[] results)
 		{
 			if (repository == null)
 			{
@@ -20,12 +21,34 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("results");
 			}
-			_results = results;
+			_results = new List<RecordToken<T>>();
+			foreach (IEnumerable<RecordToken<T>> result in results)
+			{
+				_results.AddRange(result);
+			}
 			_repository = repository;
 		}
 
-		public ResultSet(IRepository<T> repository, IEnumerable<RecordToken<T>> results)
-				: this(repository, new List<RecordToken<T>>(results)) {}
+		[Obsolete]
+		private static List<RecordToken<T>> CreateResultsWithNoDuplicates(IEnumerable<IEnumerable<RecordToken<T>>> initialResults)
+		{
+			Dictionary<RecordToken<T>, object> alreadyUsedTokens = new Dictionary<RecordToken<T>, object>();
+			List<RecordToken<T>> results = new List<RecordToken<T>>();
+			foreach (IEnumerable<RecordToken<T>> resultSet in initialResults)
+			{
+				foreach (RecordToken<T> token in resultSet)
+				{
+					if (alreadyUsedTokens.ContainsKey(token))
+					{
+						continue;
+					}
+
+					alreadyUsedTokens.Add(token, null);
+					results.Add(token);
+				}
+			}
+			return results;
+		}
 
 		public RecordToken<T> this[int index]
 		{
@@ -36,6 +59,7 @@ namespace WeSay.Data
 		{
 			_results.RemoveAll(match);
 		}
+
 
 		public int Count
 		{
@@ -52,22 +76,20 @@ namespace WeSay.Data
 		}
 
 		#region FindFirst(Index) Of DisplayString
+
 		public RecordToken<T> FindFirst(Predicate<RecordToken<T>> match)
 		{
 			int index = FindFirstIndex(match);
 			return GetItemFromIndex(index);
 		}
 
-		public RecordToken<T> FindFirst(int startIndex,
-										Predicate<RecordToken<T>> match)
+		public RecordToken<T> FindFirst(int startIndex, Predicate<RecordToken<T>> match)
 		{
 			int index = FindFirstIndex(startIndex, match);
 			return GetItemFromIndex(index);
 		}
 
-		public RecordToken<T> FindFirst(int startIndex,
-										int count,
-										Predicate<RecordToken<T>> match)
+		public RecordToken<T> FindFirst(int startIndex, int count, Predicate<RecordToken<T>> match)
 		{
 			int index = FindFirstIndex(startIndex, count, match);
 			return GetItemFromIndex(index);
@@ -78,20 +100,18 @@ namespace WeSay.Data
 			return _results.FindIndex(match);
 		}
 
-		public int FindFirstIndex(int startIndex,
-								  int count,
-								  Predicate<RecordToken<T>> match)
+		public int FindFirstIndex(int startIndex, int count, Predicate<RecordToken<T>> match)
 		{
 			return _results.FindIndex(startIndex, count, match);
 		}
 
-		public int FindFirstIndex(int startIndex,
-								  Predicate<RecordToken<T>> match)
+		public int FindFirstIndex(int startIndex, Predicate<RecordToken<T>> match)
 		{
-			return _results.FindIndex(startIndex,match);
+			return _results.FindIndex(startIndex, match);
 		}
 
 		#endregion
+
 		#region FindFirst(Index) of RepositoryId
 
 		public RecordToken<T> FindFirst(RepositoryId id)
@@ -114,10 +134,9 @@ namespace WeSay.Data
 
 		public int FindFirstIndex(RepositoryId id, int startIndex, int count)
 		{
-			return
-					_results.FindIndex(startIndex,
-									   count,
-									   delegate(RecordToken<T> r) { return (r.Id == id); });
+			return _results.FindIndex(startIndex,
+									  count,
+									  delegate(RecordToken<T> r) { return (r.Id == id); });
 		}
 
 		public int FindFirstIndex(RepositoryId id)
@@ -127,9 +146,8 @@ namespace WeSay.Data
 
 		public int FindFirstIndex(RepositoryId id, int startIndex)
 		{
-			return
-					_results.FindIndex(startIndex,
-									   delegate(RecordToken<T> r) { return (r.Id == id); });
+			return _results.FindIndex(startIndex,
+									  delegate(RecordToken<T> r) { return (r.Id == id); });
 		}
 
 		#endregion
@@ -178,10 +196,9 @@ namespace WeSay.Data
 
 		public int FindFirstIndex(RecordToken<T> token, int startIndex, int count)
 		{
-			return
-					_results.FindIndex(startIndex,
-									   count,
-									   delegate(RecordToken<T> r) { return (r == token); });
+			return _results.FindIndex(startIndex,
+									  count,
+									  delegate(RecordToken<T> r) { return (r == token); });
 		}
 
 		public int FindFirstIndex(RecordToken<T> token)
@@ -191,9 +208,8 @@ namespace WeSay.Data
 
 		public int FindFirstIndex(RecordToken<T> token, int startIndex)
 		{
-			return
-					_results.FindIndex(startIndex,
-									   delegate(RecordToken<T> r) { return (r == token); });
+			return _results.FindIndex(startIndex,
+									  delegate(RecordToken<T> r) { return (r == token); });
 		}
 
 		#endregion
@@ -240,14 +256,69 @@ namespace WeSay.Data
 
 		public void SortByRepositoryId()
 		{
-			Sort(new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default));
+			SortByRepositoryId(_results);
 		}
 
+		private static void SortByRepositoryId(List<RecordToken<T>> list)
+		{
+			list.Sort(new RecordTokenComparer<T>(new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default)));
+		}
+
+		/// <summary>
+		/// Removes any entries for which the predicate canBeRemoved is true
+		///   and another record token with the same repository Id exists
+		/// </summary>
+		/// <param name="fieldName"></param>
+		/// <param name="canBeRemoved"></param>
+		public void Coalesce(string fieldName, Predicate<object> canBeRemoved)
+		{
+			List<RecordToken<T>> results = new List<RecordToken<T>>(_results);
+			SortByRepositoryId(results);
+
+			bool hasValidEntry = false;
+			List<RecordToken<T>> removeable = new List<RecordToken<T>>();
+			RecordToken<T> previousToken = null;
+			foreach (RecordToken<T> token in results)
+			{
+				if ((previousToken != null) && (token.Id != previousToken.Id))
+				{
+					if(hasValidEntry)
+					{
+						RemoveTokens(removeable);
+					}
+					removeable.Clear();
+					hasValidEntry = false;
+				}
+
+				if (canBeRemoved(token[fieldName]))
+				{
+					removeable.Add(token);
+				}
+				else
+				{
+					hasValidEntry = true;
+				}
+				previousToken = token;
+			}
+			if (hasValidEntry)
+			{
+				RemoveTokens(removeable);
+			}
+		}
+
+		private void RemoveTokens(IEnumerable<RecordToken<T>> removeable)
+		{
+			foreach (RecordToken<T> recordToken in removeable)
+			{
+				_results.Remove(recordToken);
+			}
+		}
 	}
 	public class SortDefinition
 	{
 		private readonly string _field;
 		private readonly IComparer _comparer;
+
 		public SortDefinition(string field, IComparer comparer)
 		{
 			this._field = field;

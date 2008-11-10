@@ -109,7 +109,7 @@ namespace WeSay.Project
 
 		public static string PathToPretendWritingSystemPrefs
 		{
-			get { return Path.Combine(GetPretendProjectDirectory(), "writingSystemPrefs.xml"); }
+			get { return Path.Combine(GetPretendProjectDirectory(), "WritingSystemPrefs.xml"); }
 		}
 
 		public void SetupProjectDirForTests(string pathToLift)
@@ -139,43 +139,6 @@ namespace WeSay.Project
 		}
 
 		/// <summary>
-		/// configuration tools should call this when they modify something (e.g. writing systems) that
-		/// calls for rebuilding the caches.
-		/// </summary>
-		public void InvalidateCacheSilently()
-		{
-			DateTime liftLastWriteTimeUtc = File.GetLastWriteTimeUtc(Project.PathToLiftFile);
-			if (File.Exists(Project.PathToRepository))
-			{
-				try // don't crash if we can't update
-				{
-					using (Db4oDataSource ds = new Db4oDataSource(Project.PathToRepository))
-					{
-						//this should be different now so the cache should be updated
-						//but it shouldn't be off by enough to make it so we lose
-						//records if a crash occured and updates hadn't been written
-						//out yet and so are still pending in the db.
-						CacheManager.UpdateSyncPointInCache(ds.Data,
-															liftLastWriteTimeUtc.AddMilliseconds(10));
-					}
-				}
-				catch
-				{
-					try
-					{
-						File.Delete(Project.PathToRepository);
-					}
-					catch (Exception)
-					{
-						ErrorReport.ReportNonFatalMessage(
-								"Please exit WeSay and manually delete this cache file: {0}.",
-								Project.PathToRepository);
-					}
-				}
-			}
-		}
-
-		/// <summary>
 		/// exception handlers should call this when the database or other caches seem broken or out of sync
 		/// </summary>
 		/// <param name="error"></param>
@@ -186,7 +149,6 @@ namespace WeSay.Project
 					"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.\r\n\r\nIn the release build, the cache would now be invalidated and the user would not see the following crash dialog.");
 			throw error;
 #else
-			InvalidateCacheSilently();
 			//todo: make a way to pass on this error to us
 			Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
 				"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.");
@@ -434,10 +396,12 @@ namespace WeSay.Project
 
 		public bool MigrateConfigurationXmlIfNeeded()
 		{
-			return MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile), PathToConfigFile);
+			return MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile),
+												   PathToConfigFile);
 		}
 
-		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc, string targetPath)
+		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc,
+														   string targetPath)
 		{
 			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
@@ -457,10 +421,16 @@ namespace WeSay.Project
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='2']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig2To3.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
 			//TODO: Uncomment when we want to migrate to new dashboard and strings
-			//if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='2']") != null)
+			//if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='3']") != null)
 			//{
-			//    MigrateUsingXSLT(configurationDoc, "MigrateConfig2To3.xsl", targetPath);
+			//    MigrateUsingXSLT(configurationDoc, "MigrateConfig3To4.xsl", targetPath);
 			//    configurationDoc = new XPathDocument(targetPath);
 			//    didMigrate = true;
 			//}
@@ -580,17 +550,16 @@ namespace WeSay.Project
 
 		public ProjectInfo GetProjectInfoForAddin(LexEntryRepository lexEntryRepository)
 		{
-			return
-					new ProjectInfo(Name,
-									ApplicationRootDirectory,
-									ProjectDirectoryPath,
-									PathToLiftFile,
-									PathToExportDirectory,
-									GetFilesBelongingToProject(ProjectDirectoryPath),
-									AddinSet.Singleton.LocateFile,
-									WritingSystems,
-									lexEntryRepository,
-									this);
+			return new ProjectInfo(Name,
+								   ApplicationRootDirectory,
+								   ProjectDirectoryPath,
+								   PathToLiftFile,
+								   PathToExportDirectory,
+								   GetFilesBelongingToProject(ProjectDirectoryPath),
+								   AddinSet.Singleton.LocateFile,
+								   WritingSystems,
+								   lexEntryRepository,
+								   this);
 		}
 
 		private XPathDocument GetConfigurationDoc()
@@ -650,9 +619,8 @@ namespace WeSay.Project
 			get
 			{
 				string name = Path.GetFileNameWithoutExtension(PathToLiftFile);
-				return
-						Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
-									 name + ".WeSayConfig");
+				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+									name + ".WeSayConfig");
 			}
 		}
 
@@ -713,9 +681,8 @@ namespace WeSay.Project
 			{
 				if (String.IsNullOrEmpty(_pathToLiftFile))
 				{
-					_pathToLiftFile =
-							Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
-										 Path.GetFileName(ProjectDirectoryPath) + ".lift");
+					_pathToLiftFile = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+												   Path.GetFileName(ProjectDirectoryPath) + ".lift");
 				}
 				return _pathToLiftFile;
 			}
@@ -773,9 +740,8 @@ namespace WeSay.Project
 
 		public string GetPathToDb4oLexicalModelDBFromPathToLift(string pathToLift)
 		{
-			return
-					Path.Combine(GetPathToCacheFromPathToLift(pathToLift),
-								 Path.GetFileNameWithoutExtension(pathToLift) + ".words");
+			return Path.Combine(GetPathToCacheFromPathToLift(pathToLift),
+								Path.GetFileNameWithoutExtension(pathToLift) + ".words");
 		}
 
 		/// <summary>
@@ -910,10 +876,9 @@ namespace WeSay.Project
 				if (_relationTypes == null)
 				{
 					_relationTypes = new List<LexRelationType>();
-					_relationTypes.Add(
-							new LexRelationType("RelationToOneEntry",
-												LexRelationType.Multiplicities.One,
-												LexRelationType.TargetTypes.Entry));
+					_relationTypes.Add(new LexRelationType("RelationToOneEntry",
+														   LexRelationType.Multiplicities.One,
+														   LexRelationType.TargetTypes.Entry));
 				}
 				return _relationTypes;
 			}
@@ -947,8 +912,8 @@ namespace WeSay.Project
 			XmlWriter writer = XmlWriter.Create(Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
-			//TODO: Update to version 3 when we migrate to new dashboard
-			writer.WriteAttributeString("version", "2");
+			//TODO: Update to version 4 when we migrate to new dashboard
+			writer.WriteAttributeString("version", "3");
 
 			if (EditorsSaveNow != null)
 			{
@@ -1000,16 +965,16 @@ namespace WeSay.Project
 				return list;
 			}
 
-			string pathInProject =
-					Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, field.OptionsListFile);
+			string pathInProject = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+												field.OptionsListFile);
 			if (File.Exists(pathInProject))
 			{
 				LoadOptionsList(pathInProject);
 			}
 			else
 			{
-				string pathInProgramDir =
-						Path.Combine(ApplicationCommonDirectory, field.OptionsListFile);
+				string pathInProgramDir = Path.Combine(ApplicationCommonDirectory,
+													   field.OptionsListFile);
 				if (!File.Exists(pathInProgramDir))
 				{
 					if (createIfFileMissing)
@@ -1225,8 +1190,9 @@ namespace WeSay.Project
 		public static string[] GetFilesBelongingToProject(string pathToProjectRoot)
 		{
 			List<String> files = new List<string>();
-			string[] allFiles =
-					Directory.GetFiles(pathToProjectRoot, "*", SearchOption.AllDirectories);
+			string[] allFiles = Directory.GetFiles(pathToProjectRoot,
+												   "*",
+												   SearchOption.AllDirectories);
 			string[] antipatterns = {"Cache", "cache", ".bak", ".old", ".liftold"};
 
 			foreach (string file in allFiles)

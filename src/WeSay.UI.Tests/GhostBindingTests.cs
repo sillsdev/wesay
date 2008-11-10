@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using NUnit.Framework;
-using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Project;
 
@@ -90,16 +89,15 @@ namespace WeSay.UI.Tests
 		{
 			BasilProject.InitializeForTests();
 
-			WritingSystem writingSystem =
-					new WritingSystem(_writingSystemId, new Font(FontFamily.GenericSansSerif, 24));
+			WritingSystem writingSystem = new WritingSystem(_writingSystemId,
+															new Font(FontFamily.GenericSansSerif, 24));
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);
 			_papaNameWidget.Text = "John";
 			_ghostFirstNameWidget = new WeSayTextBox(writingSystem, null);
-			_binding =
-					new GhostBinding<Child>(_papa.Children,
-											"First",
-											writingSystem,
-											_ghostFirstNameWidget);
+			_binding = new GhostBinding<Child>(_papa.Children,
+											   "First",
+											   writingSystem,
+											   _ghostFirstNameWidget);
 			_didNotify = false;
 			//Window w = new Window("test");
 			//VBox box = new VBox();

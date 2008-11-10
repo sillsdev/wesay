@@ -1,9 +1,9 @@
 using System;
 using System.Drawing;
-using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -13,6 +13,7 @@ namespace WeSay.LexicalTools.Tests
 	public class MissingInfoControlTests
 	{
 		private LexEntryRepository _lexEntryRepository;
+		private TemporaryFolder _tempFolder;
 		private string _filePath;
 		private ResultSet<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
@@ -41,17 +42,17 @@ namespace WeSay.LexicalTools.Tests
 			return !(hasSense && hasExample);
 		}
 
-
 		[SetUp]
 		public void SetUp()
 		{
 			WeSayWordsProject.InitializeForTests();
 
-			_filePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			_writingSystem =
-					new WritingSystem("pretendVernacular", new Font(FontFamily.GenericSansSerif, 24));
+			_writingSystem = new WritingSystem("pretendVernacular",
+											   new Font(FontFamily.GenericSansSerif, 24));
 
 			CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
 			CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
@@ -65,29 +66,25 @@ namespace WeSay.LexicalTools.Tests
 			RtfRenderer.HeadWordWritingSystemId = vernacularWritingSystemIds[0];
 
 			_viewTemplate = new ViewTemplate();
-			_viewTemplate.Add(
-					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-							  "LexEntry",
-							  vernacularWritingSystemIds));
-			_viewTemplate.Add(
-					new Field(LexSense.WellKnownProperties.Definition,
-							  "LexSense",
-							  analysisWritingSystemIds));
+			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+										"LexEntry",
+										vernacularWritingSystemIds));
+			_viewTemplate.Add(new Field(LexSense.WellKnownProperties.Definition,
+										"LexSense",
+										analysisWritingSystemIds));
 
-			_viewTemplate.Add(
-					new Field(Field.FieldNames.ExampleSentence.ToString(),
-							  "LexExampleSentence",
-							  vernacularWritingSystemIds));
-			Field exampleTranslationField = new Field(Field.FieldNames.ExampleTranslation.ToString(),
-													  "LexExampleSentence",
-													  analysisWritingSystemIds);
+			_viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(),
+										"LexExampleSentence",
+										vernacularWritingSystemIds));
+			Field exampleTranslationField = new Field(
+					Field.FieldNames.ExampleTranslation.ToString(),
+					"LexExampleSentence",
+					analysisWritingSystemIds);
 			_viewTemplate.Add(exampleTranslationField);
 
 			_missingTranslationRecordList =
-		_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(
-				exampleTranslationField, _writingSystem);
-
-
+					_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(
+							exampleTranslationField, _writingSystem);
 		}
 
 		private void CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)
@@ -115,7 +112,7 @@ namespace WeSay.LexicalTools.Tests
 		public void TearDown()
 		{
 			_lexEntryRepository.Dispose();
-			File.Delete(_filePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]

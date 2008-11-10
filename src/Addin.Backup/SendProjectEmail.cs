@@ -25,13 +25,12 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return
-						string.Format(StringCatalog.Get("~Email My Work to {0}"),
-									  _settings.RecipientName);
+				return string.Format(StringCatalog.Get("~Email My Work to {0}"),
+									 _settings.RecipientName);
 			}
 		}
 
-		public  string Description
+		public string Description
 		{
 			get
 			{

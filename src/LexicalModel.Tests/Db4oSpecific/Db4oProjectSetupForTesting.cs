@@ -17,7 +17,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 	/// </summary>
 	public class Db4oProjectSetupForTesting: IDisposable
 	{
-		private bool _disposed = false;
+		private bool _disposed;
 		private readonly ProjectDirectorySetupForTesting _projectDirectory;
 		public WeSayWordsProject _project;
 		public LexEntryRepository _lexEntryRepository;
@@ -28,8 +28,8 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 
 			_project = new WeSayWordsProject();
 			_project.LoadFromLiftLexiconPath(_projectDirectory.PathToLiftFile);
-			CacheBuilder cacheBuilder = new CacheBuilder(_projectDirectory.PathToLiftFile);
-			cacheBuilder.DoWork(new NullProgressState());
+			//CacheBuilder cacheBuilder = new CacheBuilder(_projectDirectory.PathToLiftFile);
+			//cacheBuilder.DoWork(new NullProgressState());
 
 			_lexEntryRepository = new LexEntryRepository(_project.PathToRepository);
 			// InMemoryRecordListManager();

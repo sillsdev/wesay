@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -7,6 +8,7 @@ using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -16,6 +18,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class DictionaryControlTests: NUnitFormTest
 	{
+		private TemporaryFolder _tempFolder;
 		private DictionaryTask _task;
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
@@ -34,28 +37,30 @@ namespace WeSay.LexicalTools.Tests
 		public override void Setup()
 		{
 			base.Setup();
+			_tempFolder = new TemporaryFolder();
 			_vernacularWritingSystem =
 					new WritingSystem(BasilProject.Project.WritingSystems.TestWritingSystemVernId,
 									  SystemFonts.DefaultFont);
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
 
-			_filePath = Path.GetTempFileName();
+			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			string[] analysisWritingSystemIds =
-					new string[] {BasilProject.Project.WritingSystems.TestWritingSystemAnalId};
+			string[] analysisWritingSystemIds = new string[]
+													{
+															BasilProject.Project.WritingSystems.
+																	TestWritingSystemAnalId
+													};
 			string[] vernacularWritingSystemIds = new string[] {_vernacularWritingSystem.Id};
 			ViewTemplate viewTemplate = new ViewTemplate();
-			viewTemplate.Add(
-					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-							  "LexEntry",
-							  vernacularWritingSystemIds));
-			viewTemplate.Add(
-					new Field("MyEntryCustom",
-							  "LexEntry",
-							  analysisWritingSystemIds,
-							  Field.MultiplicityType.ZeroOr1,
-							  "MultiText"));
+			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+									   "LexEntry",
+									   vernacularWritingSystemIds));
+			viewTemplate.Add(new Field("MyEntryCustom",
+									   "LexEntry",
+									   analysisWritingSystemIds,
+									   Field.MultiplicityType.ZeroOr1,
+									   "MultiText"));
 
 			Field readOnlySemanticDomain =
 					new Field(LexSense.WellKnownProperties.SemanticDomainsDdp4,
@@ -64,12 +69,11 @@ namespace WeSay.LexicalTools.Tests
 			readOnlySemanticDomain.Visibility = CommonEnumerations.VisibilitySetting.ReadOnly;
 			viewTemplate.Add(readOnlySemanticDomain);
 
-			Field shy1 =
-					new Field("MyShyEntryCustom",
-							  "LexEntry",
-							  analysisWritingSystemIds,
-							  Field.MultiplicityType.ZeroOr1,
-							  "MultiText");
+			Field shy1 = new Field("MyShyEntryCustom",
+								   "LexEntry",
+								   analysisWritingSystemIds,
+								   Field.MultiplicityType.ZeroOr1,
+								   "MultiText");
 			shy1.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			shy1.DisplayName = "MyShyEntryCustom";
 			viewTemplate.Add(shy1);
@@ -77,62 +81,54 @@ namespace WeSay.LexicalTools.Tests
 #if GlossMeaning
 			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", analysisWritingSystemIds));
 #else
-			_definitionField =
-					new Field(LexSense.WellKnownProperties.Definition,
-							  "LexSense",
-							  analysisWritingSystemIds);
+			_definitionField = new Field(LexSense.WellKnownProperties.Definition,
+										 "LexSense",
+										 analysisWritingSystemIds);
 			viewTemplate.Add(_definitionField);
 #endif
-			viewTemplate.Add(
-					new Field("MySenseCustom",
-							  "LexSense",
-							  analysisWritingSystemIds,
-							  Field.MultiplicityType.ZeroOr1,
-							  "MultiText"));
-			viewTemplate.Add(
-					new Field(Field.FieldNames.ExampleSentence.ToString(),
-							  "LexExampleSentence",
-							  vernacularWritingSystemIds));
-			viewTemplate.Add(
-					new Field(Field.FieldNames.ExampleTranslation.ToString(),
-							  "LexExampleSentence",
-							  analysisWritingSystemIds));
+			viewTemplate.Add(new Field("MySenseCustom",
+									   "LexSense",
+									   analysisWritingSystemIds,
+									   Field.MultiplicityType.ZeroOr1,
+									   "MultiText"));
+			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(),
+									   "LexExampleSentence",
+									   vernacularWritingSystemIds));
+			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(),
+									   "LexExampleSentence",
+									   analysisWritingSystemIds));
 
 			AddEntry("Initial", analysisWritingSystemIds[0], "meaning", true);
 			AddEntry("Secondary", analysisWritingSystemIds[0], "secondarymeaning", false);
 			AddEntry("Tertiary", analysisWritingSystemIds[0], "meaning", true);
 
-			Field customField =
-					new Field("SemanticDomains",
-							  "LexSense",
-							  analysisWritingSystemIds,
-							  Field.MultiplicityType.ZeroOr1,
-							  "OptionCollection");
+			Field customField = new Field("SemanticDomains",
+										  "LexSense",
+										  analysisWritingSystemIds,
+										  Field.MultiplicityType.ZeroOr1,
+										  "OptionCollection");
 			customField.DisplayName = "Sem Dom";
 			customField.OptionsListFile = "SemanticDomains.xml";
 			viewTemplate.Add(customField);
 
-			Field customPOSField =
-					new Field(LexSense.WellKnownProperties.PartOfSpeech,
-							  "LexSense",
-							  analysisWritingSystemIds,
-							  Field.MultiplicityType.ZeroOr1,
-							  "Option");
+			Field customPOSField = new Field(LexSense.WellKnownProperties.PartOfSpeech,
+											 "LexSense",
+											 analysisWritingSystemIds,
+											 Field.MultiplicityType.ZeroOr1,
+											 "Option");
 			customPOSField.DisplayName = "POS";
 			customPOSField.OptionsListFile = "PartsOfSpeech.xml";
 			viewTemplate.Add(customPOSField);
 
-			Field customNotesField =
-					new Field(LexSense.WellKnownProperties.Note,
-							  "LexSense",
-							  analysisWritingSystemIds);
+			Field customNotesField = new Field(WeSayDataObject.WellKnownProperties.Note,
+											   "LexSense",
+											   analysisWritingSystemIds);
 			customNotesField.DisplayName = "s-note";
 			viewTemplate.Add(customNotesField);
 
-			Field exampleNotesField =
-					new Field(LexSense.WellKnownProperties.Note,
-							  "LexExampleSentence",
-							  analysisWritingSystemIds);
+			Field exampleNotesField = new Field(WeSayDataObject.WellKnownProperties.Note,
+												"LexExampleSentence",
+												analysisWritingSystemIds);
 			exampleNotesField.DisplayName = "ex-note";
 			viewTemplate.Add(exampleNotesField);
 
@@ -161,9 +157,9 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		private void AddEntry(string lexemeForm,
-								  string meaningWritingSystemId,
-								  string meaning,
-								  bool includeExample)
+							  string meaningWritingSystemId,
+							  string meaning,
+							  bool includeExample)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm.SetAlternative(_vernacularWritingSystem.Id, lexemeForm);
@@ -204,7 +200,7 @@ namespace WeSay.LexicalTools.Tests
 			_task.Deactivate();
 			_lexEntryRepository.Dispose();
 			_lexEntryRepository = null;
-			File.Delete(_filePath);
+			_tempFolder.Delete();
 			base.TearDown();
 		}
 
@@ -212,8 +208,8 @@ namespace WeSay.LexicalTools.Tests
 		public void Construct_EmptyViewTemplate_NoCrash()
 		{
 			using (
-					DictionaryControl e =
-							new DictionaryControl(_lexEntryRepository, new ViewTemplate()))
+					DictionaryControl e = new DictionaryControl(_lexEntryRepository,
+																new ViewTemplate()))
 			{
 				Assert.IsNotNull(e);
 			}
@@ -276,8 +272,11 @@ namespace WeSay.LexicalTools.Tests
 			GoToLexicalEntryUseFind("Initial"); //go away
 			GoToLexicalEntryUseFind(form); //come back
 
-			KeyValuePair<string, object> item2 =
-					new KeyValuePair<string, object>("test", new LexRelation("b", "bbb", entry));
+			KeyValuePair<string, object> item2 = new KeyValuePair<string, object>("test",
+																				  new LexRelation(
+																						  "b",
+																						  "bbb",
+																						  entry));
 			entry.Properties.Add(item2);
 
 			GetEditControl("*EntryLexicalForm").FocusOnFirstWsAlternative();
@@ -457,7 +456,7 @@ namespace WeSay.LexicalTools.Tests
 			RepositoryId[] repositoryId = _lexEntryRepository.GetAllItems();
 			LexEntry entry = _lexEntryRepository.GetItem(repositoryId[0]);
 			entry.Senses.Add(new LexSense(entry));
-			((LexSense)entry.Senses[0]).Definition.Add("blah");
+			(entry.Senses[0]).Definition.Add("blah");
 			ClickAddWord();
 			Assert.AreEqual(2, _lexEntryRepository.CountAllItems());
 		}
@@ -499,7 +498,8 @@ namespace WeSay.LexicalTools.Tests
 			EnsureHasOneEntryProperty();
 		}
 
-		private void EnsureHasOneEntryProperty() {
+		private void EnsureHasOneEntryProperty()
+		{
 			LexEntry entry = GetCurrentEntry();
 			entry.CleanUpAfterEditting();
 			Assert.AreEqual(1, entry.Properties.Count);
@@ -596,7 +596,7 @@ namespace WeSay.LexicalTools.Tests
 						"the setup of this test should have some custom properties");
 
 			//cycle out this record
-			parentControl.DataSource = new LexEntry();
+			parentControl.DataSource =_lexEntryRepository.CreateItem();
 
 			Assert.AreEqual(0, entry.Properties.Count);
 #if GlossMeaning
@@ -691,8 +691,8 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetLexicalFormControlName()
 		{
-			return  Field.FieldNames.EntryLexicalForm + "_" +
-					BasilProject.Project.WritingSystems.TestWritingSystemVernId;
+			return Field.FieldNames.EntryLexicalForm + "_" +
+				   BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 		}
 
 		private void TypeInLexicalForm(string value)
@@ -706,9 +706,8 @@ namespace WeSay.LexicalTools.Tests
 #if GlossMeaning
 			return Field.FieldNames.SenseGloss + "_" + BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 #else
-			return
-					LexSense.WellKnownProperties.Definition + "_" +
-					BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
+			return LexSense.WellKnownProperties.Definition + "_" +
+				   BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 #endif
 		}
 
@@ -722,7 +721,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			get
 			{
-				return  ((DictionaryControl) _detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.
+				return
+						((DictionaryControl) _detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.
 								GetBestAlternative(_vernacularWritingSystem.Id);
 			}
 		}
@@ -760,6 +760,23 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void FindText_EnterTextOneCharacterAtATime_DoesNotThrow()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			//This is a beter test but gives a cryptic error message
+			//KeyboardController keyboardController = new KeyboardController(t);
+			//t.Properties.Focus();
+			//keyboardController.Press("Test");
+			//keyboardController.Press("e");
+			//keyboardController.Press("s");
+			//keyboardController.Press("t");
+			//keyboardController.Dispose();
+			t.Enter("Test");
+			t.FireEvent("TextChanged", new EventArgs());
+			Assert.AreEqual("Test", t.Text);
+		}
+
+		[Test]
 		public void FindText_Enter_Finds()
 		{
 			TextBoxTester t = new TextBoxTester("_findText", _window);
@@ -785,11 +802,12 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ListViewTester l = new ListViewTester("_recordsListBox", this._window);
 
-			string label = GetSelectedLabel((WeSayListView)l.Properties);
+			string label = GetSelectedLabel((WeSayListView) l.Properties);
 			Assert.AreEqual(word, label);
 		}
 
-		private static void PressCtrlN(ControlTester t) {
+		private static void PressCtrlN(ControlTester t)
+		{
 			using (KeyboardController kc = new KeyboardController(t))
 			{
 				kc.Press("^n"); // Ctrl+N
@@ -803,7 +821,10 @@ namespace WeSay.LexicalTools.Tests
 			t.Enter("Secondary");
 			PressCtrlN(t);
 			VerifySelectedWordIs("Secondary");
-			Assert.AreEqual(2, _lexEntryRepository.GetEntriesWithMatchingLexicalForm("Secondary",_vernacularWritingSystem).Count);
+			Assert.AreEqual(2,
+							_lexEntryRepository.GetEntriesWithMatchingLexicalForm("Secondary",
+																				  _vernacularWritingSystem)
+									.Count);
 		}
 
 		[Test]
@@ -1019,6 +1040,19 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(btn.Text.Contains("Hide"));
 			ClickAddWord();
 			Assert.IsTrue(btn.Text.Contains("Show"));
+		}
+
+		//Regression test WS-950. Also effects WS-962.
+		//This does not so much test that an entry is id'd correctly, but simply tests that the
+		//error causing method call  is not reintroduced.
+		[Test]
+		public void AddingNewWord_WordIsNotPrematurelyIdd()
+		{
+			StartWithEmpty();
+			ClickAddWord();
+			RepositoryId[] repositoryId = _lexEntryRepository.GetAllItems();
+			LexEntry entry = _lexEntryRepository.GetItem(repositoryId[0]);
+			Assert.AreEqual(null, entry.Id);
 		}
 
 		[Test]

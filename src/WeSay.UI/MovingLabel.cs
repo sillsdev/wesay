@@ -21,11 +21,10 @@ namespace WeSay.UI
 		private void InitializeAnimator()
 		{
 			_animator = new Animator();
-			CubicBezierCurve c =
-					new CubicBezierCurve(new PointF(0, 0),
-										 new PointF(0.5f, 0f),
-										 new PointF(.5f, 1f),
-										 new PointF(1, 1));
+			CubicBezierCurve c = new CubicBezierCurve(new PointF(0, 0),
+													  new PointF(0.5f, 0f),
+													  new PointF(.5f, 1f),
+													  new PointF(1, 1));
 			_animator.PointFromDistanceFunction = c.GetPointOnCurve;
 
 			_animator.Duration = 200; // 750;
@@ -37,9 +36,8 @@ namespace WeSay.UI
 
 		private void OnAnimator_Animate(object sender, Animator.AnimatorEventArgs e)
 		{
-			Location =
-					new Point(Animator.GetValue(e.Point.X, _from.X, _to.X),
-							  Animator.GetValue(e.Point.Y, _from.Y, _to.Y));
+			Location = new Point(Animator.GetValue(e.Point.X, _from.X, _to.X),
+								 Animator.GetValue(e.Point.Y, _from.Y, _to.Y));
 		}
 
 		private void OnAnimator_Finished(object sender, EventArgs e)

@@ -7,6 +7,7 @@ using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Foundation.Tests;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
@@ -32,7 +33,7 @@ namespace WeSay.ConfigTool.Tests
 		public override void TearDown()
 		{
 			base.TearDown();
-			if (WeSayWordsProject.IsInitialized)
+			if (BasilProject.IsInitialized)
 			{
 				WeSayWordsProject.Project.Dispose();
 			}
@@ -131,7 +132,7 @@ namespace WeSay.ConfigTool.Tests
 			_window.CreateAndOpenProject(_projectFolder);
 			string path = WeSayWordsProject.Project.PathToConfigFile;
 			XPathDocument doc = new XPathDocument(path);
-			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version='2']"));
+			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version]"));
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration/tasks"));
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration/components"));
 		}
@@ -199,11 +200,11 @@ namespace WeSay.ConfigTool.Tests
 			_mainWindowTester.Close();
 			WeSayWordsProject.InitializeForTests(); // for Teardown
 		}
+
 		[Test]
 		public void ExistingProjectGetsNewTasks()
 		{
 			_window.CreateAndOpenProject(_projectFolder);
-
 		}
 	}
 }

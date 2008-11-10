@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,17 +9,12 @@
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace>WeSay.Data</RootNamespace>
 	<AssemblyName>WeSay.Data</AssemblyName>
-	<FileUpgradeFlags>
-	</FileUpgradeFlags>
-	<OldToolsVersion>2.0</OldToolsVersion>
-	<UpgradeBackupLocation>
-	</UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\debug\</OutputPath>
+	<OutputPath>..\..\output\Debug\</OutputPath>
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
@@ -69,6 +64,7 @@
 	<Compile Include="Db4oRepository.cs" />
 	<Compile Include="DatabaseModified.cs" />
 	<Compile Include="Db4oRepositoryId.cs" />
+	<Compile Include="DelegateQuery.cs" />
 	<Compile Include="DictionaryEqualityComparer.cs" />
 	<Compile Include="IRepository.cs" />
 	<Compile Include="Db4oDataSource.cs" />
@@ -77,11 +73,16 @@
 	<Compile Include="PreciseDateTime.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Query.cs" />
+	<Compile Include="QueryAdapter.cs" />
 	<Compile Include="RecordToken.cs" />
 	<Compile Include="RecordTokenComparer.cs" />
+	<Compile Include="RecordTokenToStringAdapter.cs" />
 	<Compile Include="RepositoryId.cs" />
 	<Compile Include="ResultSet.cs" />
+	<Compile Include="ResultSetCache.cs" />
+	<Compile Include="ResultSetCacheManager.cs" />
 	<Compile Include="SynchronicRepository.cs" />
+	<Compile Include="Properties\InternalsVisible.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

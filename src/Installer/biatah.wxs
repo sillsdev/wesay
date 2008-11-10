@@ -13,7 +13,7 @@
 		<!-- this Registry entry is required because we have shortcuts that aren't 'advertised',
 					  which we have because 'advertised shortcuts can't have targets. Don't as ME.
 					  See: http://www.nabble.com/ICE38-and-ICE43-on-Shortcuts-t1409061.html -->
-		<Registry Root="HKCU" Key="SOFTWARE\Components\BiatahSamples" KeyPath="yes" />
+		<Registry Root="HKCU" Key="SOFTWARE\Components\BiatahSamples" KeyPath="yes"/>
 
 	  </Component>
 
@@ -28,9 +28,6 @@
 			 <Permission GenericAll="yes" User="Everyone" />
 		  </File>
 		</Component>
-		<Directory Id="biatahCacheDir" Name="Cache">
-		  <!--  directory will be filled in by auto generated wxs file, which will reference this -->
-		</Directory>
 		<Directory Id="biatahPicturesDir" Name="pictures">
 		  <Component Id="biatahPictures" Guid="{FFC212BA-EBF6-41BD-A015-94BF95D3B2AA}">
 			<File Id="waterBasket1.png" Name="waterBasket1.png" KeyPath="yes" Source="..\..\sampleprojects\biatah\pictures\waterBasket1.png">
@@ -47,7 +44,6 @@
 	  <ComponentRef Id ="biatahMain"/>
 	 <!-- <ComponentRef Id ="biatahCache"/> -->
 	  <ComponentRef Id ="biatahPictures"/>
-	  <ComponentGroupRef Id ="biatahCache"/>
 	</ComponentGroup>
 
 

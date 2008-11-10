@@ -140,16 +140,15 @@ namespace WeSay.Foundation.Options
 #endif
 			//enhance: make that text safe for regex. for now, we just swallow the exception
 			string pattern = @"(^|[^\w])(" + text + @")[^\w]";
-			Regex MatchWholeWordNoCase =
-					new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+			Regex MatchWholeWordNoCase = new Regex(pattern,
+												   RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 			foreach (Option option in _allOptions.Options)
 			{
 				//todo: make this prefferd script(s) savvy
-				if (
-						option.Name.GetFirstAlternative().StartsWith(text,
-																	 StringComparison.
-																			 CurrentCultureIgnoreCase))
+				if (option.Name.GetFirstAlternative().StartsWith(text,
+																 StringComparison.
+																		 CurrentCultureIgnoreCase))
 				{
 					show.Add(option);
 				}
@@ -157,10 +156,9 @@ namespace WeSay.Foundation.Options
 			foreach (Option option in _allOptions.Options)
 			{
 				//todo: make this prefferd script(s) savvy
-				if (
-						option.Abbreviation.GetFirstAlternative().StartsWith(text,
-																			 StringComparison.
-																					 CurrentCultureIgnoreCase))
+				if (option.Abbreviation.GetFirstAlternative().StartsWith(text,
+																		 StringComparison.
+																				 CurrentCultureIgnoreCase))
 				{
 					if (!show.Contains(option))
 					{
@@ -184,7 +182,7 @@ namespace WeSay.Foundation.Options
 			}
 #if !DEBUG
 			}
-			catch (Exception e)
+			catch (Exception /*e*/)
 			{
 				//not worth crashing over some regex problem
 			}

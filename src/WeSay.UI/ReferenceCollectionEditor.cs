@@ -19,7 +19,7 @@ namespace WeSay.UI
 		private IReportEmptiness _alternateEmptinessHelper;
 
 		private int _popupWidth = -1;
-		private bool _ignoreListChanged = false;
+		private bool _ignoreListChanged;
 
 		public event EventHandler<CreateNewArgs> CreateNewTargetItem;
 

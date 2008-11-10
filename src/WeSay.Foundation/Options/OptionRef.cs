@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using Palaso.Annotations;
 
@@ -12,7 +13,9 @@ namespace WeSay.Foundation.Options
 							IParentable,
 							IValueHolder<string>,
 							IReportEmptiness,
-							IReferenceContainer
+							IReferenceContainer,
+							IComparable
+
 	{
 		private string _humanReadableKey;
 
@@ -22,7 +25,7 @@ namespace WeSay.Foundation.Options
 		/// </summary>
 		private IReceivePropertyChangeNotifications _parent;
 
-		private bool _suspendNotification = false;
+		private bool _suspendNotification;
 
 		public OptionRef(): this(string.Empty) {}
 
@@ -163,5 +166,20 @@ namespace WeSay.Foundation.Options
 		}
 
 		#endregion
+
+		public int CompareTo(object obj)
+		{
+			if(obj == null)
+			{
+				return 1;
+			}
+			if(!(obj is OptionRef))
+			{
+				throw new ArgumentException("Can not compare to anythiong but OptionRefs.");
+			}
+			OptionRef other = (OptionRef) obj;
+			int order = Key.CompareTo(other.Key);
+			return order;
+		}
 	}
 }

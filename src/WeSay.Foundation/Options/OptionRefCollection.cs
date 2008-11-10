@@ -10,7 +10,8 @@ namespace WeSay.Foundation.Options
 	public class OptionRefCollection: IParentable,
 									  INotifyPropertyChanged,
 									  // ICollection<string>,
-									  IReportEmptiness
+									  IReportEmptiness,
+									  IComparable
 	{
 		// private readonly List<string> _keys;
 		private readonly BindingList<OptionRef> _members;
@@ -312,5 +313,32 @@ namespace WeSay.Foundation.Options
 		}
 
 		#endregion
+
+		public int CompareTo(object obj)
+		{
+			if (obj == null)
+			{
+				return 1;
+			}
+			if (!(obj is OptionRefCollection))
+			{
+				throw new ArgumentException("Can not compare to anythiong but OptionRefs.");
+			}
+			OptionRefCollection other = (OptionRefCollection) obj;
+			int order = _members.Count.CompareTo(other.Members.Count);
+			if(order != 0)
+			{
+				return order;
+			}
+			for (int i = 0; i < _members.Count; i++)
+			{
+				order = _members[i].CompareTo(other.Members[i]);
+				if(order != 0)
+				{
+					return order;
+				}
+			}
+			return 0;
+		}
 	}
 }

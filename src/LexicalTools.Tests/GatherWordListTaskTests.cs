@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -11,6 +12,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class GatherWordListTaskTests: TaskBaseTests
 	{
+		private TemporaryFolder _tempFolder;
 		private LexEntryRepository _lexEntryRepository;
 		private string _wordListFilePath;
 		private string _filePath;
@@ -22,8 +24,9 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_wordListFilePath = Path.GetTempFileName();
-			_filePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_wordListFilePath = _tempFolder.GetTemporaryFile();
+			_filePath = _tempFolder.GetTemporaryFile();
 			//Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
@@ -33,16 +36,17 @@ namespace WeSay.LexicalTools.Tests
 
 			File.WriteAllLines(_wordListFilePath, _words);
 			_viewTemplate = new ViewTemplate();
-			_viewTemplate.Add(
-					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-							  "LexEntry",
-							  new string[]
-									  {BasilProject.Project.WritingSystems.TestWritingSystemVernId}));
+			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+										"LexEntry",
+										new string[]
+											{
+													BasilProject.Project.WritingSystems.
+															TestWritingSystemVernId
+											}));
 
-			_task =
-					new GatherWordListTask(_lexEntryRepository,
+			_task = new GatherWordListTask(_lexEntryRepository,
 										   "label",
-												"long label",
+										   "long label",
 										   "description",
 										   _wordListFilePath,
 										   _glossingLanguageWSId,
@@ -53,21 +57,19 @@ namespace WeSay.LexicalTools.Tests
 		public void TearDown()
 		{
 			_lexEntryRepository.Dispose();
-			File.Delete(_wordListFilePath);
-			File.Delete(_filePath);
+			_tempFolder.Delete();
 		}
 
 		[Test]
 		public void EmptyTemplate()
 		{
-			GatherWordListTask g =
-					new GatherWordListTask(_lexEntryRepository,
-										   "label",
+			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
+														  "label",
 														  "long label",
-										   "description",
-										   _wordListFilePath,
-										   WritingSystem.IdForUnknownAnalysis,
-										   new ViewTemplate());
+														  "description",
+														  _wordListFilePath,
+														  WritingSystem.IdForUnknownAnalysis,
+														  new ViewTemplate());
 
 			Assert.IsNotNull(g);
 		}
@@ -76,14 +78,13 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void MissingWordListFileGivesMessage()
 		{
-			GatherWordListTask g =
-					new GatherWordListTask(_lexEntryRepository,
-										   "label",
+			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
+														  "label",
 														  "long label",
-										   "description",
-										   "NotThere.txt",
-										   WritingSystem.IdForUnknownAnalysis,
-										   new ViewTemplate());
+														  "description",
+														  "NotThere.txt",
+														  WritingSystem.IdForUnknownAnalysis,
+														  new ViewTemplate());
 			g.Activate(); //should give a box to user, an exception in this text environment
 		}
 
@@ -91,14 +92,13 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void WritingSystemNotInCurrentListGivesMessage()
 		{
-			GatherWordListTask g =
-					new GatherWordListTask(_lexEntryRepository,
-										   "label",
+			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
+														  "label",
 														  "long label",
-										   "description",
-										   _wordListFilePath,
-										   "z7z",
-										   new ViewTemplate());
+														  "description",
+														  _wordListFilePath,
+														  "z7z",
+														  new ViewTemplate());
 			g.Activate(); //should give a box to user, an exception in this text environment
 		}
 
@@ -243,7 +243,27 @@ namespace WeSay.LexicalTools.Tests
 			//this is an attempt to get a failure that I was able to get at one time in the
 			//app itself, but which I haven't got to fail under tests.  I believe I've
 			//fixed the bug, but alas this never really demonstrated it.
-			Assert.AreEqual(1, Task.GetMatchingRecords().Count);
+			Assert.AreEqual(1, Task.GetRecordsWithMatchingGloss().Count);
+		}
+
+		[Test]
+		public void AddWord_LexEntryAlreadyExists_WordAppearsInCompletedBox()
+		{
+			LexEntry e = _lexEntryRepository.CreateItem();
+			e.LexicalForm[VernWs.Id] = "uno";
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
+			MultiText word = new MultiText();
+			word[VernWs.Id] = "uno";
+			Assert.AreEqual(0, e.Senses.Count);
+			_lexEntryRepository.SaveItem(e);
+
+			Task.NavigateFirstToShow();
+			Task.WordCollected(word);
+			Task.NavigateNext();
+			Task.WordCollected(word);
+
+			ResultSet<LexEntry> matchingLexicalForms = Task.GetRecordsWithMatchingGloss();
+			Assert.AreEqual(1, matchingLexicalForms.Count);
 		}
 
 		[Test]

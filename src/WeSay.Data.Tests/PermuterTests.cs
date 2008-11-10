@@ -7,7 +7,7 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class PermuterTests
 	{
-		class KI
+		private class KI
 		{
 			private readonly string key;
 			private readonly int value;
@@ -29,7 +29,7 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-		static Dictionary<string, int> CreateResult(params KI[] kis)
+		private static Dictionary<string, int> CreateResult(params KI[] kis)
 		{
 			Dictionary<string, int> result = new Dictionary<string, int>();
 
@@ -83,7 +83,8 @@ namespace WeSay.Data.Tests
 			return result;
 		}
 
-		private static List<Dictionary<string, int>> GetOneRowWithTwoItemsOneRowWithSingleItemResult()
+		private static List<Dictionary<string, int>> GetOneRowWithTwoItemsOneRowWithSingleItemResult
+				()
 		{
 			List<Dictionary<string, int>> result = new List<Dictionary<string, int>>();
 			result.Add(CreateResult(new KI("int", 2), new KI("int2", 3)));
@@ -91,29 +92,20 @@ namespace WeSay.Data.Tests
 			return result;
 		}
 
-		private static void AssertResult(
-			Dictionary<string, int>[] expectedResult,
-			IEnumerable<Dictionary<string, int>> actualResult)
+		private static void AssertResult(IDictionary<string, int>[] expectedResult,
+										 IEnumerable<Dictionary<string, int>> actualResult)
 		{
-			Assert.DoAssert(
-				new DictionaryContentAsserter<string, int>(
-						expectedResult,
-						actualResult));
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(expectedResult, actualResult));
 		}
 
-		private static void AssertResult(
-			IEnumerable<Dictionary<string, int>> expectedResult,
-			IEnumerable<Dictionary<string, int>> actualResult)
+		private static void AssertResult(IEnumerable<IDictionary<string, int>> expectedResult,
+										 IEnumerable<IDictionary<string, int>> actualResult)
 		{
-			Assert.DoAssert(
-				new DictionaryContentAsserter<string, int>(
-						expectedResult,
-						actualResult));
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(expectedResult, actualResult));
 		}
-
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultSingleItem_Throws()
 		{
 			Permuter.Permute(null, "", 9);
@@ -123,18 +115,18 @@ namespace WeSay.Data.Tests
 		public void Permute_NullSingleItem_Succeeds()
 		{
 			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
-			Permuter.Permute(result, "", (object)null);
+			Permuter.Permute(result, "", (object) null);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultListOfItems_Throws()
 		{
-			Permuter.Permute(null, "", new int[] { 9 });
+			Permuter.Permute(null, "", new int[] {9});
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullListOfItems_Throws()
 		{
 			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
@@ -142,19 +134,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultListOfListOfItems_Throws()
 		{
-			Permuter.Permute(null, "", new int[][] { new int[] { 9 } });
+			Permuter.Permute(null, "", new int[][] {new int[] {9}});
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultListResults_Throws()
 		{
 			Permuter.Permute(null, GetSingleItemResult());
 		}
-
 
 		[Test]
 		public void Permute_Empty_WithSingleItem_SingleItem()
@@ -162,10 +153,8 @@ namespace WeSay.Data.Tests
 			List<Dictionary<string, int>> result = GetEmptyResult();
 			Permuter.Permute(result, "int", 9);
 
-			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-							{
-									CreateResult(new KI("int", 9))
-							};
+			IDictionary<string, int>[] expectedResult = new IDictionary<string, int>[]
+														   {CreateResult(new KI("int", 9))};
 
 			Assert.DoAssert(new DictionaryContentAsserter<string, int>(expectedResult, result));
 		}
@@ -176,10 +165,11 @@ namespace WeSay.Data.Tests
 			List<Dictionary<string, int>> result = GetSingleItemResult();
 			Permuter.Permute(result, "value", 9);
 
-			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("value", 9))
-				};
+			IDictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("value", 9))
+														   };
 			Assert.DoAssert(new DictionaryContentAsserter<string, int>(expectedResult, result));
 		}
 
@@ -189,10 +179,12 @@ namespace WeSay.Data.Tests
 			List<Dictionary<string, int>> result = GetSingleRowWithTwoItemsResult();
 			Permuter.Permute(result, "int3", 9);
 
-			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int2", 4), new KI("int3", 9))
-				};
+			IDictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 4),
+																				new KI("int3", 9))
+														   };
 			Assert.DoAssert(new DictionaryContentAsserter<string, int>(expectedResult, result));
 		}
 
@@ -203,36 +195,37 @@ namespace WeSay.Data.Tests
 
 			Permuter.Permute(result, "int2", 9);
 
-			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int2", 9)),
-						CreateResult(new KI("int", 4), new KI("int2", 9))
-				};
+			IDictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 9)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int2", 9))
+														   };
 
 			AssertResult(expectedResult, result);
 		}
-
 
 		[Test]
 		public void Permute_Empty_WithEmptyList_Empty()
 		{
 			List<Dictionary<string, int>> result = GetEmptyResult();
-			Permuter.Permute(result, "int", new int[] { });
+			Permuter.Permute(result, "int", new int[] {});
 
-			AssertResult(GetEmptyResult(), result);
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(GetEmptyResult(), result));
 		}
 
 		[Test]
 		public void Permute_Empty_WithTwoItems_TwoRowsOfSingleItem()
 		{
 			List<Dictionary<string, int>> result = GetEmptyResult();
-			Permuter.Permute(result, "int", new int[] { 9, 12 });
+			Permuter.Permute(result, "int", new int[] {9, 12});
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 9)),
-						CreateResult(new KI("int", 12))
-				};
+														   {
+																   CreateResult(new KI("int", 9)),
+																   CreateResult(new KI("int", 12))
+														   };
 			AssertResult(expectedResult, result);
 		}
 
@@ -240,13 +233,15 @@ namespace WeSay.Data.Tests
 		public void Permute_SingleItem_WithTwoItems_TwoRowsWithSingleItemAndEachOfItems()
 		{
 			List<Dictionary<string, int>> result = GetSingleItemResult();
-			Permuter.Permute(result, "int2", new int[] { 9, 12 });
+			Permuter.Permute(result, "int2", new int[] {9, 12});
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int2", 9)),
-						CreateResult(new KI("int", 2), new KI("int2", 12))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 9)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 12))
+														   };
 			AssertResult(expectedResult, result);
 		}
 
@@ -254,23 +249,26 @@ namespace WeSay.Data.Tests
 		public void Permute_SingleItem_WithEmptyList_NoChange()
 		{
 			List<Dictionary<string, int>> result = GetSingleItemResult();
-			Permuter.Permute(result, "int2", new int[] { });
+			Permuter.Permute(result, "int2", new int[] {});
 
-			AssertResult(GetSingleItemResult(), result);
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(GetSingleItemResult(), result));
 		}
-
 
 		[Test]
 		public void Permute_SingleRowWithTwoItems_WithTwoItems_TwoRowsWithTheTwoItemsAndEachOfItems()
 		{
 			List<Dictionary<string, int>> result = GetSingleRowWithTwoItemsResult();
-			Permuter.Permute(result, "int3", new int[] { 9, 12 });
+			Permuter.Permute(result, "int3", new int[] {9, 12});
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int2", 4), new KI("int3", 9)),
-						CreateResult(new KI("int", 2), new KI("int2", 4), new KI("int3", 12))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 4),
+																				new KI("int3", 9)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 4),
+																				new KI("int3", 12))
+														   };
 
 			AssertResult(expectedResult, result);
 		}
@@ -279,24 +277,28 @@ namespace WeSay.Data.Tests
 		public void Permute_SingleRowWithTwoItems_WithEmptyList_NoChange()
 		{
 			List<Dictionary<string, int>> result = GetSingleRowWithTwoItemsResult();
-			Permuter.Permute(result, "int3", new int[] { });
+			Permuter.Permute(result, "int3", new int[] {});
 
-			AssertResult(GetSingleRowWithTwoItemsResult(), result);
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(GetSingleRowWithTwoItemsResult(), result));
 		}
 
 		[Test]
 		public void Permute_TwoRowsWithSingleItem_WithTwoItems_4RowsWithTwoItems()
 		{
 			List<Dictionary<string, int>> result = GetTwoRowsWithSingleItemEachResult();
-			Permuter.Permute(result, "int2", new int[] { 9, 12 });
+			Permuter.Permute(result, "int2", new int[] {9, 12});
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int2", 9)),
-						CreateResult(new KI("int", 2), new KI("int2", 12)),
-						CreateResult(new KI("int", 4), new KI("int2", 9)),
-						CreateResult(new KI("int", 4), new KI("int2", 12))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 9)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 12)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int2", 9)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int2", 12))
+														   };
 			AssertResult(expectedResult, result);
 		}
 
@@ -304,28 +306,35 @@ namespace WeSay.Data.Tests
 		public void Permute_TwoRowsWithSingleItem_WithEmptyList_NoChange()
 		{
 			List<Dictionary<string, int>> result = GetTwoRowsWithSingleItemEachResult();
-			Permuter.Permute(result, "int2", new int[] { });
+			Permuter.Permute(result, "int2", new int[] {});
 
-			AssertResult(GetTwoRowsWithSingleItemEachResult(), result);
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(GetTwoRowsWithSingleItemEachResult(), result));
 		}
 
 		[Test]
-		public void Permute_OneRowWithTwoItemsOneRowWithSingleItem_WithTwoItems_4RowsWithTwoWithThreeItemsAndTwoWithTwoItems()
+		public void
+				Permute_OneRowWithTwoItemsOneRowWithSingleItem_WithTwoItems_4RowsWithTwoWithThreeItemsAndTwoWithTwoItems
+				()
 		{
 			List<Dictionary<string, int>> result = GetOneRowWithTwoItemsOneRowWithSingleItemResult();
 
-			Permuter.Permute(result, "int3", new int[] { 9, 12 });
+			Permuter.Permute(result, "int3", new int[] {9, 12});
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int2", 3), new KI("int3", 9)),
-						CreateResult(new KI("int", 2), new KI("int2", 3), new KI("int3", 12)),
-						CreateResult(new KI("int", 4), new KI("int3", 9)),
-						CreateResult(new KI("int", 4), new KI("int3", 12))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 3),
+																				new KI("int3", 9)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 3),
+																				new KI("int3", 12)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int3", 9)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int3", 12))
+														   };
 			AssertResult(expectedResult, result);
 		}
-
 
 		[Test]
 		public void Permute_Empty_WithEmptyListOfList_Empty()
@@ -333,9 +342,8 @@ namespace WeSay.Data.Tests
 			List<Dictionary<string, int>> result = GetEmptyResult();
 			Permuter.Permute(result, GetEmptyResult());
 
-			AssertResult(GetEmptyResult(), result);
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(GetEmptyResult(), result));
 		}
-
 
 		[Test]
 		public void Permute_Empty_WithTwoRowsOfSingleItems_TwoRowsOfSingleItem()
@@ -343,7 +351,7 @@ namespace WeSay.Data.Tests
 			List<Dictionary<string, int>> result = GetEmptyResult();
 			Permuter.Permute(result, GetTwoRowsWithSingleItemEachResult());
 
-			AssertResult(GetTwoRowsWithSingleItemEachResult(), result);
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(GetTwoRowsWithSingleItemEachResult(), result));
 		}
 
 		[Test]
@@ -352,7 +360,7 @@ namespace WeSay.Data.Tests
 			List<Dictionary<string, int>> result = GetEmptyResult();
 			Permuter.Permute(result, GetTwoRowsWithDoubleItemsResult());
 
-			AssertResult(GetTwoRowsWithDoubleItemsResult(), result);
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(GetTwoRowsWithDoubleItemsResult(), result));
 		}
 
 		[Test]
@@ -362,25 +370,33 @@ namespace WeSay.Data.Tests
 			Permuter.Permute(result, GetTwoRowsWithSingleItemEachAtInt5Result());
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int5", 9)),
-						CreateResult(new KI("int", 2), new KI("int5", 12))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int5", 9)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int5", 12))
+														   };
 			AssertResult(expectedResult, result);
 		}
 
 		[Test]
-		public void Permute_SingleItem_WithTwoRowsOfDoubleItems_TwoRowsWithSingleItemAndEachOfDoubleItems()
+		public void
+				Permute_SingleItem_WithTwoRowsOfDoubleItems_TwoRowsWithSingleItemAndEachOfDoubleItems
+				()
 		{
 			List<Dictionary<string, int>> result = GetSingleItemResult();
 
 			Permuter.Permute(result, GetTwoRowsWithDoubleItemsResult());
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int4", 9), new KI("int5", 10)),
-						CreateResult(new KI("int", 2), new KI("int4", 12), new KI("int5", 13))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int4", 9),
+																				new KI("int5", 10)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int4", 12),
+																				new KI("int5", 13))
+														   };
 			AssertResult(expectedResult, result);
 		}
 
@@ -391,37 +407,52 @@ namespace WeSay.Data.Tests
 
 			Permuter.Permute(result, GetEmptyResult());
 
-			AssertResult(GetSingleItemResult(), result);
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(GetSingleItemResult(), result));
 		}
 
-
 		[Test]
-		public void Permute_SingleRowWithTwoItems_WithTwoRowsOfSingleItems_TwoRowsWithTheTwoItemsAndEachOfItems()
+		public void
+				Permute_SingleRowWithTwoItems_WithTwoRowsOfSingleItems_TwoRowsWithTheTwoItemsAndEachOfItems
+				()
 		{
 			List<Dictionary<string, int>> result = GetSingleRowWithTwoItemsResult();
 			Permuter.Permute(result, GetTwoRowsWithSingleItemEachAtInt5Result());
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int2", 4), new KI("int5", 9)),
-						CreateResult(new KI("int", 2), new KI("int2", 4), new KI("int5", 12))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 4),
+																				new KI("int5", 9)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 4),
+																				new KI("int5", 12))
+														   };
 			AssertResult(expectedResult, result);
 		}
 
 		[Test]
-		public void Permute_SingleRowWithTwoItems_WithTwoRowsOfDoubleItems_TwoRowsWithTheTwoItemsAndEachOfDoubleItems()
+		public void
+				Permute_SingleRowWithTwoItems_WithTwoRowsOfDoubleItems_TwoRowsWithTheTwoItemsAndEachOfDoubleItems
+				()
 		{
 			List<Dictionary<string, int>> result = GetTwoRowsWithSingleItemEachResult();
 			Permuter.Permute(result, GetTwoRowsWithDoubleItemsResult());
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int4", 9), new KI("int5", 10)),
-						CreateResult(new KI("int", 2), new KI("int4", 12), new KI("int5", 13)),
-						CreateResult(new KI("int", 4), new KI("int4", 9), new KI("int5", 10)),
-						CreateResult(new KI("int", 4), new KI("int4", 12), new KI("int5", 13))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int4", 9),
+																				new KI("int5", 10)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int4", 12),
+																				new KI("int5", 13)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int4", 9),
+																				new KI("int5", 10)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int4", 12),
+																				new KI("int5", 13))
+														   };
 			AssertResult(expectedResult, result);
 		}
 
@@ -431,7 +462,7 @@ namespace WeSay.Data.Tests
 			List<Dictionary<string, int>> result = GetSingleRowWithTwoItemsResult();
 			Permuter.Permute(result, GetEmptyResult());
 
-			AssertResult(GetSingleRowWithTwoItemsResult(), result);
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(GetSingleRowWithTwoItemsResult(), result));
 		}
 
 		[Test]
@@ -441,12 +472,16 @@ namespace WeSay.Data.Tests
 			Permuter.Permute(result, GetTwoRowsWithSingleItemEachAtInt5Result());
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int5", 9)),
-						CreateResult(new KI("int", 2), new KI("int5", 12)),
-						CreateResult(new KI("int", 4), new KI("int5", 9)),
-						CreateResult(new KI("int", 4), new KI("int5", 12))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int5", 9)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int5", 12)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int5", 9)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int5", 12))
+														   };
 			AssertResult(expectedResult, result);
 		}
 
@@ -457,12 +492,20 @@ namespace WeSay.Data.Tests
 			Permuter.Permute(result, GetTwoRowsWithDoubleItemsResult());
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int4", 9), new KI("int5", 10)),
-						CreateResult(new KI("int", 2), new KI("int4", 12), new KI("int5", 13)),
-						CreateResult(new KI("int", 4), new KI("int4", 9), new KI("int5", 10)),
-						CreateResult(new KI("int", 4), new KI("int4", 12), new KI("int5", 13))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int4", 9),
+																				new KI("int5", 10)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int4", 12),
+																				new KI("int5", 13)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int4", 9),
+																				new KI("int5", 10)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int4", 12),
+																				new KI("int5", 13))
+														   };
 			AssertResult(expectedResult, result);
 		}
 
@@ -472,43 +515,60 @@ namespace WeSay.Data.Tests
 			List<Dictionary<string, int>> result = GetTwoRowsWithSingleItemEachResult();
 			Permuter.Permute(result, GetEmptyResult());
 
-			AssertResult(GetTwoRowsWithSingleItemEachResult(), result);
+			Assert.DoAssert(new DictionaryContentAsserter<string, int>(GetTwoRowsWithSingleItemEachResult(), result));
 		}
 
 		[Test]
-		public void Permute_OneRowWithTwoItemsOneRowWithSingleItem_WithTwoRowsOfSingleItems_4RowsWithTwoWithThreeItemsAndTwoWithTwoItems()
+		public void
+				Permute_OneRowWithTwoItemsOneRowWithSingleItem_WithTwoRowsOfSingleItems_4RowsWithTwoWithThreeItemsAndTwoWithTwoItems
+				()
 		{
 			List<Dictionary<string, int>> result = GetOneRowWithTwoItemsOneRowWithSingleItemResult();
 
 			Permuter.Permute(result, GetTwoRowsWithSingleItemEachAtInt5Result());
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int2", 3), new KI("int5", 9)),
-						CreateResult(new KI("int", 2), new KI("int2", 3), new KI("int5", 12)),
-						CreateResult(new KI("int", 4), new KI("int5", 9)),
-						CreateResult(new KI("int", 4), new KI("int5", 12))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 3),
+																				new KI("int5", 9)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 3),
+																				new KI("int5", 12)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int5", 9)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int5", 12))
+														   };
 			AssertResult(expectedResult, result);
 		}
 
-
 		[Test]
-		public void Permute_OneRowWithTwoItemsOneRowWithSingleItem_WithTwoRowsOfDoubleItems_4RowsWithTwoWithFourItemsAndTwoWithThreeItems()
+		public void
+				Permute_OneRowWithTwoItemsOneRowWithSingleItem_WithTwoRowsOfDoubleItems_4RowsWithTwoWithFourItemsAndTwoWithThreeItems
+				()
 		{
 			List<Dictionary<string, int>> result = GetOneRowWithTwoItemsOneRowWithSingleItemResult();
 			Permuter.Permute(result, GetTwoRowsWithDoubleItemsResult());
 
 			Dictionary<string, int>[] expectedResult = new Dictionary<string, int>[]
-				{
-						CreateResult(new KI("int", 2), new KI("int2", 3), new KI("int4", 9), new KI("int5", 10)),
-						CreateResult(new KI("int", 2), new KI("int2", 3), new KI("int4", 12), new KI("int5", 13)),
-						CreateResult(new KI("int", 4), new KI("int4", 9), new KI("int5", 10)),
-						CreateResult(new KI("int", 4), new KI("int4", 12), new KI("int5", 13))
-				};
+														   {
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 3),
+																				new KI("int4", 9),
+																				new KI("int5", 10)),
+																   CreateResult(new KI("int", 2),
+																				new KI("int2", 3),
+																				new KI("int4", 12),
+																				new KI("int5", 13)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int4", 9),
+																				new KI("int5", 10)),
+																   CreateResult(new KI("int", 4),
+																				new KI("int4", 12),
+																				new KI("int5", 13))
+														   };
 			AssertResult(expectedResult, result);
 		}
-
 	}
-
 }

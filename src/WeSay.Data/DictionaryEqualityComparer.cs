@@ -3,24 +3,53 @@ using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	//todo: write tests and hashcode
-	internal class DictionaryEqualityComparer<Key, Value> : EqualityComparer<Dictionary<Key, Value>>
+	//todo: write hashcode
+	internal class DictionaryEqualityComparer<Key, Value> : EqualityComparer<IDictionary<Key, Value>>
 	{
-		public override bool Equals(Dictionary<Key, Value> x, Dictionary<Key, Value> y)
+		public override bool Equals(IDictionary<Key, Value> x, IDictionary<Key, Value> y)
 		{
-			if (x.Count != y.Count)
+			if (x == null && y == null)
+			{
+				return true;
+			}
+
+			if (x == null || y == null)
+			{
 				return false;
+			}
+
+			if (x.Count != y.Count)
+			{
+				return false;
+			}
 			foreach (Key key in x.Keys)
 			{
-				if (!Equals(x[key], y[key]))
+				Value v;
+				if(!y.TryGetValue(key, out v)
+				   || !Equals(x[key], v))
+				{
 					return false;
+				}
 			}
 			return true;
 		}
 
-		public override int GetHashCode(Dictionary<Key, Value> obj)
+		public override int GetHashCode(IDictionary<Key, Value> obj)
 		{
-			throw new NotImplementedException();
+			if(obj == null)
+			{
+				throw new ArgumentNullException("obj");
+			}
+			int hashcode = 0;
+			foreach (KeyValuePair<Key, Value> pair in obj)
+			{
+				hashcode ^= pair.Key.GetHashCode();
+				if (pair.Value != null)
+				{
+					hashcode ^= pair.Value.GetHashCode();
+				}
+			}
+			return hashcode;
 		}
 	}
 }

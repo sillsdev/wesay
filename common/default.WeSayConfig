@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<configuration version="2">
+<configuration version="3">
   <tasks>
 	<task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" visible="true">
 	  <entries ref="All Entries" />
@@ -36,7 +36,7 @@
 	  <entries ref="All Entries" />
 	  <field>ExampleSentence</field>
 	  <label>Add Examples</label>
-	  <description>Add example sentences to senses where they are missing.</description>
+	  <description>Add example sentences to entries where they are missing.</description>
 	  <viewTemplate ref="Default View Template" />
 	  <showfields>ExampleSentence</showfields>
 	  <readOnly>definition</readOnly>

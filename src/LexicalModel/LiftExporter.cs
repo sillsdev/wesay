@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -23,15 +24,13 @@ namespace WeSay.LexicalModel
 			_allIdsExportedSoFar = new Dictionary<string, int>();
 		}
 
-		public LiftExporter(string path)
-				: this()
+		public LiftExporter(string path): this()
 		{
 			_writer = XmlWriter.Create(path, PrepareSettings(false));
 			Start();
 		}
 
-		public LiftExporter(
-				StringBuilder builder, bool produceFragmentOnly): this()
+		public LiftExporter(StringBuilder builder, bool produceFragmentOnly): this()
 		{
 			_writer = XmlWriter.Create(builder, PrepareSettings(produceFragmentOnly));
 			if (!produceFragmentOnly)
@@ -88,10 +87,12 @@ namespace WeSay.LexicalModel
 			Writer.Flush();
 			Writer.Close();
 		}
+
 		public virtual void Add(LexEntry entry)
 		{
 			Add(entry, 0);
 		}
+
 		public void Add(LexEntry entry, int order)
 		{
 			List<string> propertiesAlreadyOutput = new List<string>();
@@ -121,7 +122,7 @@ namespace WeSay.LexicalModel
 										  LexEntry.WellKnownProperties.Citation,
 										  propertiesAlreadyOutput);
 			WriteWellKnownCustomMultiText(entry,
-										  LexEntry.WellKnownProperties.Note,
+										  WeSayDataObject.WellKnownProperties.Note,
 										  propertiesAlreadyOutput);
 			WriteCustomProperties(entry, propertiesAlreadyOutput);
 			foreach (LexSense sense in entry.Senses)
@@ -203,7 +204,7 @@ namespace WeSay.LexicalModel
 										  LexSense.WellKnownProperties.Definition,
 										  propertiesAlreadyOutput);
 			WriteWellKnownCustomMultiText(sense,
-										  LexSense.WellKnownProperties.Note,
+										  WeSayDataObject.WellKnownProperties.Note,
 										  propertiesAlreadyOutput);
 			//   WriteWellKnownUnimplementedProperty(sense, LexSense.WellKnownProperties.Note, propertiesAlreadyOutput);
 			WriteCustomProperties(sense, propertiesAlreadyOutput);
@@ -222,11 +223,6 @@ namespace WeSay.LexicalModel
 			if (pos != null && !pos.IsEmpty)
 			{
 				WritePosCore(pos);
-			}
-			else
-			{
-				//review
-				// I think this is right (Eric)
 			}
 		}
 
@@ -394,7 +390,7 @@ namespace WeSay.LexicalModel
 
 		private void WriteCustomMultiTextField(string tag, MultiText text)
 		{
-			if (!MultiText.IsEmpty(text))
+			if (!MultiTextBase.IsEmpty(text))
 			{
 				Writer.WriteStartElement("field");
 
@@ -425,9 +421,8 @@ namespace WeSay.LexicalModel
 			List<string> propertiesAlreadyOutput = new List<string>();
 			Writer.WriteStartElement("example");
 
-			OptionRef source;
-
-			source = example.GetProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
+			OptionRef source =
+					example.GetProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
 
 			if (source != null && source.Value.Length > 0)
 			{
@@ -442,7 +437,7 @@ namespace WeSay.LexicalModel
 									example.Sentence);
 			//  WriteMultiWithWrapperIfNonEmpty(LexExampleSentence.WellKnownProperties.Translation, "translation", example.Translation);
 
-			if (!MultiText.IsEmpty(example.Translation))
+			if (!MultiTextBase.IsEmpty(example.Translation))
 			{
 				Writer.WriteStartElement("translation");
 
@@ -459,7 +454,7 @@ namespace WeSay.LexicalModel
 			if (ShouldOutputProperty(LexExampleSentence.WellKnownProperties.ExampleSentence))
 			{
 				WriteWellKnownCustomMultiText(example,
-											  LexExampleSentence.WellKnownProperties.Note,
+											  WeSayDataObject.WellKnownProperties.Note,
 											  propertiesAlreadyOutput);
 			}
 
@@ -483,10 +478,34 @@ namespace WeSay.LexicalModel
 					doMarkTheFirst = false;
 					Writer.WriteAttributeString("first", "true"); //useful for headword
 				}
-				Writer.WriteStartElement("text");
-				Writer.WriteString(form.Form);
-				Writer.WriteEndElement();
+				string wrappedTextToExport = "<text>" + form.Form + "</text>";
+				XmlReaderSettings fragmentReaderSettings = new XmlReaderSettings();
+				fragmentReaderSettings.ConformanceLevel = ConformanceLevel.Fragment;
+				XmlReader testerForWellFormedness = XmlReader.Create(new StringReader(wrappedTextToExport));
 
+				bool isTextWellFormedXml = true;
+				try
+				{
+					while (testerForWellFormedness.Read())
+					{
+						//Just checking for well formed XML
+					}
+				}
+				catch
+				{
+					isTextWellFormedXml = false;
+				}
+
+				if(isTextWellFormedXml)
+				{
+					Writer.WriteRaw(wrappedTextToExport);
+				}
+				else
+				{
+					Writer.WriteStartElement("text");
+					Writer.WriteString(form.Form);
+					Writer.WriteEndElement();
+				}
 				WriteFlags(form);
 				Writer.WriteEndElement();
 			}
@@ -505,7 +524,7 @@ namespace WeSay.LexicalModel
 
 		private void WriteMultiTextNoWrapper(string propertyName, MultiText text)
 		{
-			if (!MultiText.IsEmpty(text))
+			if (!MultiTextBase.IsEmpty(text))
 			{
 				Add(propertyName, text);
 			}
@@ -516,7 +535,7 @@ namespace WeSay.LexicalModel
 													  MultiTextBase text,
 													  char delimeter)
 		{
-			if (!MultiText.IsEmpty(text))
+			if (!MultiTextBase.IsEmpty(text))
 			{
 				foreach (LanguageForm alternative in GetOrderedAndFilteredForms(text, propertyName))
 				{
@@ -542,7 +561,7 @@ namespace WeSay.LexicalModel
 													 string wrapperName,
 													 MultiText text)
 		{
-			if (!MultiText.IsEmpty(text))
+			if (!MultiTextBase.IsEmpty(text))
 			{
 				Writer.WriteStartElement(wrapperName);
 				Add(propertyName, text);
@@ -550,6 +569,17 @@ namespace WeSay.LexicalModel
 				return true;
 			}
 			return false;
+		}
+
+		public void AddNewEntry(LexEntry entry)
+		{
+			Writer.WriteStartElement("entry");
+			Writer.WriteAttributeString("dateCreated",
+										entry.CreationTime.ToString(LiftDateTimeFormat));
+			Writer.WriteAttributeString("dateModified",
+										entry.ModificationTime.ToString(LiftDateTimeFormat));
+			Writer.WriteAttributeString("guid", entry.Guid.ToString());
+			Writer.WriteEndElement();
 		}
 
 		public void AddDeletedEntry(LexEntry entry)

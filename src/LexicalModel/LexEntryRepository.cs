@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using LiftIO.Parsing;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
@@ -10,17 +9,20 @@ using WeSay.Foundation.Options;
 
 namespace WeSay.LexicalModel
 {
-
 	public class LexEntryRepository: IRepository<LexEntry>
 	{
-		private readonly IRepository<LexEntry> _decoratedRepository;
-		public LexEntryRepository(string path)
+		ResultSetCacheManager<LexEntry> _caches = new ResultSetCacheManager<LexEntry>();
+
+		private readonly LiftRepository _decoratedRepository;
+		public LexEntryRepository(string path):this(path, new ProgressState())
+		{}
+
+		public LexEntryRepository(string path, ProgressState progressState)
 		{
-			//todo: eventually use synchronicRepository with Db4o and Lift
-			_decoratedRepository = new LiftRepository(path);
+			_decoratedRepository = new LiftRepository(path, progressState);
 		}
 
-		public LexEntryRepository(IRepository<LexEntry> decoratedRepository)
+		public LexEntryRepository(LiftRepository decoratedRepository)
 		{
 			if (decoratedRepository == null)
 			{
@@ -32,15 +34,13 @@ namespace WeSay.LexicalModel
 
 		public DateTime LastModified
 		{
-			get
-			{
-				return _decoratedRepository.LastModified;
-			}
+			get { return _decoratedRepository.LastModified; }
 		}
 
 		public LexEntry CreateItem()
 		{
 			LexEntry item = _decoratedRepository.CreateItem();
+			_caches.AddItemToCaches(item);
 			return item;
 		}
 
@@ -61,7 +61,8 @@ namespace WeSay.LexicalModel
 
 		public LexEntry GetItem(RepositoryId id)
 		{
-			return _decoratedRepository.GetItem(id);
+			LexEntry item = _decoratedRepository.GetItem(id);
+			return item;
 		}
 
 		public void SaveItems(IEnumerable<LexEntry> items)
@@ -73,9 +74,10 @@ namespace WeSay.LexicalModel
 			List<LexEntry> dirtyItems = new List<LexEntry>();
 			foreach (LexEntry item in items)
 			{
-				if(item.IsDirty)
+				if (item.IsDirty)
 				{
 					dirtyItems.Add(item);
+					_caches.UpdateItemInCaches(item);
 				}
 			}
 			_decoratedRepository.SaveItems(dirtyItems);
@@ -85,13 +87,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public ResultSet<LexEntry> GetItemsMatching(Query query)
-		{
-			//throw new NotSupportedException("Please use more specific methods. For now, we don't support using any general query for optimization reasons.");
-			return _decoratedRepository.GetItemsMatching(query);
-		}
-
-		private ResultSet<LexEntry> GetItemsMatchingCore(Query query)
+		public ResultSet<LexEntry> GetItemsMatching(IQuery<LexEntry> query)
 		{
 			return _decoratedRepository.GetItemsMatching(query);
 		}
@@ -102,12 +98,12 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("item");
 			}
-			if(item.IsDirty)
+			if (item.IsDirty)
 			{
 				_decoratedRepository.SaveItem(item);
+				_caches.UpdateItemInCaches(item);
 				item.Clean();
 			}
-
 		}
 
 		public bool CanQuery
@@ -117,25 +113,36 @@ namespace WeSay.LexicalModel
 
 		public bool CanPersist
 		{
-			get
-			{
-				return _decoratedRepository.CanPersist;
-			}
+			get { return _decoratedRepository.CanPersist; }
 		}
 
 		public void DeleteItem(LexEntry item)
 		{
+			_caches.DeleteItemFromCaches(item);
 			_decoratedRepository.DeleteItem(item);
 		}
 
 		public void DeleteItem(RepositoryId repositoryId)
 		{
+			_caches.DeleteItemFromCaches(repositoryId);
 			_decoratedRepository.DeleteItem(repositoryId);
 		}
 
 		public void DeleteAllItems()
 		{
 			_decoratedRepository.DeleteAllItems();
+			_caches.DeleteAllItemsFromCaches();
+		}
+
+		public void NotifyThatLexEntryHasBeenUpdated(LexEntry updatedLexEntry)
+		{
+			if(updatedLexEntry == null)
+			{
+				throw new ArgumentNullException("updatedLexEntry");
+			}
+			//This call checks that the Entry is in the repository
+			GetId(updatedLexEntry);
+			_caches.UpdateItemInCaches(updatedLexEntry);
 		}
 
 		public int GetHomographNumber(LexEntry entry, WritingSystem headwordWritingSystem)
@@ -150,44 +157,75 @@ namespace WeSay.LexicalModel
 			}
 			ResultSet<LexEntry> resultSet = GetAllEntriesSortedByHeadword(headwordWritingSystem);
 			RecordToken<LexEntry> first = resultSet.FindFirst(entry);
-			if(first == null)
+			if (first == null)
 			{
 				throw new ArgumentOutOfRangeException("entry", entry, "Entry not in repository");
 			}
-			if ((bool)first["HasHomograph"])
+			if ((bool) first["HasHomograph"])
 			{
 				return (int) first["HomographNumber"];
 			}
-			else
-			{
-				return 0;
-			}
+			return 0;
 		}
 
-		//todo: look at @order and the planned-for order-in-lift field on LexEntry
+
+		/// <summary>
+		/// Gets a ResultSet containing all entries sorted by citation if one exists and otherwise
+		/// by lexical form.
+		/// Use "Form" to access the headword in a RecordToken.
+		/// </summary>
+		/// <param name="writingSystem"></param>
+		/// <returns></returns>
 		public ResultSet<LexEntry> GetAllEntriesSortedByHeadword(WritingSystem writingSystem)
 		{
 			if (writingSystem == null)
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
-			Query query = GetAllLexEntriesQuery();
-			query.In("VirtualHeadWord").ForEach("Forms").Show("Form").Show("WritingSystemId");
-			query.Show("OrderForRoundTripping");
-			query.Show("CreationTime");
 
-			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(query, "Form", "WritingSystemId", writingSystem);
-			itemsMatching.Sort(new SortDefinition("Form", writingSystem),
-				new SortDefinition("OrderForRoundTripping", Comparer<int>.Default),
-				new SortDefinition("CreationTime", Comparer<DateTime>.Default));
+			string cacheName = String.Format("sortedByHeadWord_{0}", writingSystem.Id);
+			if (_caches[cacheName] == null)
+			{
+				DelegateQuery<LexEntry> headWordQuery = new DelegateQuery<LexEntry>(
+					delegate(LexEntry entryToQuery)
+						 {
+							 IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+							 string headWord = entryToQuery.VirtualHeadWord[writingSystem.Id];
+							 if (String.IsNullOrEmpty(headWord))
+							 {
+									 headWord = null;
+							 }
+							 tokenFieldsAndValues.Add("Form",headWord);
+							 return new IDictionary<string, object>[] { tokenFieldsAndValues };
+						 });
+
+				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(headWordQuery);
+				SortDefinition[] sortOrder = new SortDefinition[4];
+				sortOrder[0] = new SortDefinition("Form", writingSystem);
+				sortOrder[1] = new SortDefinition("OrderForRoundTripping", Comparer<int>.Default);
+				sortOrder[2] = new SortDefinition("OrderInFile", Comparer<int>.Default);
+				sortOrder[3] = new SortDefinition("CreationTime", Comparer<DateTime>.Default);
+
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, headWordQuery));
+			}
+			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
 
 			string previousHeadWord = null;
 			int homographNumber = 1;
 			RecordToken<LexEntry> previousToken = null;
-			foreach (RecordToken<LexEntry> token in itemsMatching)
+			foreach (RecordToken<LexEntry> token in resultsFromCache)
 			{
-				string currentHeadWord = (string)token["Form"];
-				if(currentHeadWord == previousHeadWord)
+				// A null Form indicates there is no HeadWord in this writing system.
+				// However, we need to ensure that we return all entries, so the AtLeastOne in the query
+				// above ensures that we keep it in the result set with a null Form and null WritingSystemId.
+				string currentHeadWord = (string) token["Form"];
+				if (string.IsNullOrEmpty(currentHeadWord))
+				{
+					token["HasHomograph"] = false;
+					token["HomographNumber"] = 0;
+					continue;
+				}
+				if (currentHeadWord == previousHeadWord)
 				{
 					homographNumber++;
 				}
@@ -196,9 +234,9 @@ namespace WeSay.LexicalModel
 					previousHeadWord = currentHeadWord;
 					homographNumber = 1;
 				}
-				// only used to get our sort correct
+				// only used to get our sort correct --This comment seems nonsensical --TA 2008-08-14!!!
 				token["HomographNumber"] = homographNumber;
-				switch(homographNumber)
+				switch (homographNumber)
 				{
 					case 1:
 						token["HasHomograph"] = false;
@@ -215,104 +253,350 @@ namespace WeSay.LexicalModel
 				previousToken = token;
 			}
 
-			return itemsMatching;
+			return resultsFromCache;
 		}
 
-
-		public ResultSet<LexEntry> GetAllEntriesSortedByLexicalForm(WritingSystem writingSystem)
+		/// <summary>
+		/// Gets a ResultSet containing all entries sorted by lexical form for a given writing system.
+		/// If a lexical form for a given writingsystem does not exist we substitute one from another writingsystem.
+		/// Use "Form" to access the lexical form in a RecordToken.
+		/// </summary>
+		/// <param name="writingSystem"></param>
+		/// <returns></returns>
+		public ResultSet<LexEntry> GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem writingSystem)
 		{
 			if (writingSystem == null)
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
-			Query query = GetAllLexEntriesQuery().In("LexicalForm")
-						.ForEach("Forms").Show("Form").Show("WritingSystemId");
+			string cacheName = String.Format("sortedByLexicalFormOrAlternative_{0}", writingSystem.Id);
+			if (_caches[cacheName] == null)
+			{
+				DelegateQuery<LexEntry> lexicalFormWithAlternativeQuery = new DelegateQuery<LexEntry>(
+					delegate(LexEntry entryToQuery)
+					{
+						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+						string lexicalform = entryToQuery.LexicalForm[writingSystem.Id];
+						string writingSystemOfForm = writingSystem.Id;
+						if (lexicalform == "")
+						{
+							lexicalform = entryToQuery.LexicalForm.GetBestAlternative(writingSystem.Id);
+							foreach (LanguageForm form in entryToQuery.LexicalForm.Forms)
+							{
+								if(form.Form == lexicalform)
+								{
+									writingSystemOfForm = form.WritingSystemId;
+								}
+							}
+							if (lexicalform == "")
+							{
+								lexicalform = null;
+							}
+						}
+						tokenFieldsAndValues.Add("Form", lexicalform);
+						tokenFieldsAndValues.Add("WritingSystem", writingSystemOfForm);
+						return new IDictionary<string, object>[] { tokenFieldsAndValues };
+					});
+				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(lexicalFormWithAlternativeQuery);
 
-			return GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(query, "Form", "WritingSystemId", writingSystem);
+				SortDefinition[] sortOrder = new SortDefinition[1];
+				sortOrder[0] = new SortDefinition("Form", writingSystem);
+
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormWithAlternativeQuery));
+			}
+			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
+
+			return resultsFromCache;
 		}
 
-		public ResultSet<LexEntry> GetAllEntriesSortedByGloss(WritingSystem writingSystem)
+		/// <summary>
+		/// Gets a ResultSet containing all entries sorted by lexical form for a given writing system.
+		/// Use "Form" to access the lexical form in a RecordToken.
+		/// </summary>
+		/// <param name="writingSystem"></param>
+		/// <returns></returns>
+		private ResultSet<LexEntry> GetAllEntriesSortedByLexicalForm(WritingSystem writingSystem)
 		{
 			if (writingSystem == null)
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
-			Query query = GetAllLexEntriesQuery().ForEach("Senses");
-			query.In("Definition").ForEach("Forms").Show("Form", "Definition/Form").Show("WritingSystemId", "Definition/WritingSystemId");
-			query.In("Gloss").ForEach("Forms").Show("Form", "Gloss/Form").Show("WritingSystemId","Gloss/WritingSystemId");
+			string cacheName = String.Format("sortedByLexicalForm_{0}", writingSystem.Id);
+			if (_caches[cacheName] == null)
+			{
+				DelegateQuery<LexEntry> lexicalFormQuery = new DelegateQuery<LexEntry>(
+					delegate(LexEntry entryToQuery)
+					{
+						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+						string headWord = entryToQuery.LexicalForm[writingSystem.Id];
+						if (String.IsNullOrEmpty(headWord)){
+								headWord = null;
+						}
+						tokenFieldsAndValues.Add("Form", headWord);
+						return new IDictionary<string, object>[] { tokenFieldsAndValues };
+					});
+				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(lexicalFormQuery);
 
-			return GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(query, "Definition/Form", "Definition/WritingSystemId", writingSystem);
+				SortDefinition[] sortOrder = new SortDefinition[1];
+				sortOrder[0] = new SortDefinition("Form", writingSystem);
+
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormQuery));
+			}
+			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
+
+			return resultsFromCache;
 		}
 
-		private ResultSet<LexEntry> GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(
-			Query query,
-			string formField,
-			string writingSystemIdField,
-			WritingSystem writingSystem)
+		private ResultSet<LexEntry> GetAllEntriesSortedByGuid()
 		{
-			ResultSet<LexEntry> allEntriesMatchingQuery = GetItemsMatchingCore(query);
-			ResultSet<LexEntry> result = FilterEntriesToOnlyThoseWithWritingSystemId(
-											allEntriesMatchingQuery,
-											formField,
-											writingSystemIdField,
-											writingSystem.Id);
+			string cacheName = String.Format("sortedByGuid");
+			if (_caches[cacheName] == null)
+			{
+				DelegateQuery<LexEntry> guidQuery = new DelegateQuery<LexEntry>(
+					delegate(LexEntry entryToQuery)
+					{
+						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+						tokenFieldsAndValues.Add("Guid", entryToQuery.Guid);
+						return new IDictionary<string, object>[] { tokenFieldsAndValues };
+					});
+				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(guidQuery);
 
-			result.Sort(new SortDefinition(formField, writingSystem));
-			return result;
+				SortDefinition[] sortOrder = new SortDefinition[1];
+				sortOrder[0] = new SortDefinition("Guid", Comparer<Guid>.Default);
+
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, guidQuery));
+			}
+			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
+
+			return resultsFromCache;
 		}
 
-		public ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain(
+		private ResultSet<LexEntry> GetAllEntriesSortedById()
+		{
+			string cacheName = String.Format("sortedById");
+			if (_caches[cacheName] == null)
+			{
+				DelegateQuery<LexEntry> IdQuery = new DelegateQuery<LexEntry>(
+					delegate(LexEntry entryToQuery)
+					{
+						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+						tokenFieldsAndValues.Add("Id", entryToQuery.Id);
+						return new IDictionary<string, object>[] { tokenFieldsAndValues };
+					});
+				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(IdQuery);
+
+				SortDefinition[] sortOrder = new SortDefinition[1];
+				sortOrder[0] = new SortDefinition("Id", Comparer<string>.Default);
+
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, IdQuery));
+			}
+			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
+
+			return resultsFromCache;
+		}
+
+		/// <summary>
+		/// Gets a ResultSet containing all entries sorted by definition and gloss. It will return both the definition
+		/// and the gloss if both exist and are different.
+		/// Use "Form" to access the Definition/Gloss in RecordToken.
+		/// </summary>
+		/// <param name="writingSystem"></param>
+		/// <returns>Definition and gloss in "Form" field of RecordToken</returns>
+		public ResultSet<LexEntry> GetAllEntriesSortedByDefinitionOrGloss(WritingSystem writingSystem)
+		{
+			if (writingSystem == null)
+			{
+				throw new ArgumentNullException("writingSystem");
+			}
+
+			string cacheName = String.Format("SortByDefinition_{0}", writingSystem.Id);
+			if (_caches[cacheName] == null)
+			{
+				DelegateQuery<LexEntry> definitionQuery = new DelegateQuery<LexEntry>(
+					delegate(LexEntry entryToQuery)
+					{
+						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
+
+						int senseNumber = 0;
+						foreach (LexSense sense in entryToQuery.Senses)
+						{
+							string definition = sense.Definition[writingSystem.Id];
+							string gloss = sense.Gloss[writingSystem.Id];
+
+							if(String.IsNullOrEmpty(definition) && String.IsNullOrEmpty(gloss))
+							{
+								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+								tokenFieldsAndValues.Add("Form", null);
+								tokenFieldsAndValues.Add("Sense", senseNumber);
+								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+								senseNumber++;
+								continue;
+							}
+							if(definition == gloss)
+							{
+								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+								tokenFieldsAndValues.Add("Form", definition);
+								tokenFieldsAndValues.Add("Sense", senseNumber);
+								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+								senseNumber++;
+								continue;
+							}
+							if(!String.IsNullOrEmpty(definition))
+							{
+								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+								tokenFieldsAndValues.Add("Form", definition);
+								tokenFieldsAndValues.Add("Sense", senseNumber);
+								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+							}
+							if (!String.IsNullOrEmpty(gloss))
+							{
+								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+								tokenFieldsAndValues.Add("Form", gloss);
+								tokenFieldsAndValues.Add("Sense", senseNumber);
+								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+							}
+							senseNumber++;
+						}
+						return fieldsandValuesForRecordTokens;
+					});
+				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(definitionQuery);
+
+				SortDefinition[] sortOrder = new SortDefinition[2];
+				sortOrder[0] = new SortDefinition("Form", writingSystem);
+				sortOrder[1] = new SortDefinition("Sense", Comparer<int>.Default);
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, definitionQuery));
+			}
+			return _caches[cacheName].GetResultSet();
+		}
+
+		/// <summary>
+		/// Gets a ResultSet containing entries that contain a semantic domain assigned to them
+		/// sorted by semantic domain.
+		/// Use "SemanticDomain" to access the semantic domain in a RecordToken.
+		/// </summary>
+		/// <param name="fieldName"></param>
+		/// <returns></returns>
+		public ResultSet<LexEntry> GetEntriesWithSemanticDomainSortedBySemanticDomain(
 			string fieldName)
 		{
 			if (fieldName == null)
 			{
 				throw new ArgumentNullException("fieldName");
 			}
-			Query allSensePropertiesQuery = GetAllLexEntriesQuery().ForEach("Senses")
-						.ForEach("Properties").Show("Key").Show("Value","SemanticDomains");
 
-			ResultSet<LexEntry> allSenseProperties = GetItemsMatchingCore(allSensePropertiesQuery);
-			allSenseProperties.RemoveAll(delegate(RecordToken<LexEntry> token)
-				{
-					return (string)token["Key"] != fieldName;
-				});
+			string cachename = String.Format("Semanticdomains_{0}", fieldName);
 
-			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
-			foreach (RecordToken<LexEntry> token in allSenseProperties)
+			if (_caches[cachename] == null)
 			{
-				OptionRefCollection semanticDomains = (OptionRefCollection) token["SemanticDomains"];
-				foreach (string semanticDomain in semanticDomains.Keys)
-				{
-					RecordToken<LexEntry> newToken = new RecordToken<LexEntry>(this, token.Id);
-					newToken["SemanticDomain"] = semanticDomain;
-					result.Add(newToken);
-				}
+				DelegateQuery<LexEntry> semanticDomainsQuery = new DelegateQuery<LexEntry>(
+					delegate(LexEntry entry)
+					{
+						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
+						foreach (LexSense sense in entry.Senses)
+						{
+							foreach (KeyValuePair<string, object> pair in sense.Properties)
+							{
+								if (pair.Key == fieldName)
+								{
+									OptionRefCollection semanticDomains = (OptionRefCollection) pair.Value;
+									foreach (string semanticDomain in semanticDomains.Keys)
+									{
+										IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+										string domain = semanticDomain;
+										if (String.IsNullOrEmpty(semanticDomain))
+										{
+											domain = null;
+										}
+										tokenFieldsAndValues.Add("SemanticDomain", domain);
+										fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+									}
+								}
+							}
+						}
+						return fieldsandValuesForRecordTokens;
+					}
+					);
+				ResultSet<LexEntry> itemsMatchingQuery = GetItemsMatching(semanticDomainsQuery);
+				SortDefinition[] sortDefinition = new SortDefinition[1];
+				sortDefinition[0] = new SortDefinition("SemanticDomain", StringComparer.InvariantCulture);
+				ResultSetCache<LexEntry> cache =
+					new ResultSetCache<LexEntry>(this, sortDefinition, itemsMatchingQuery, semanticDomainsQuery);
+				_caches.Add(cachename, cache);
 			}
-			ResultSet<LexEntry> resultSet = new ResultSet<LexEntry>(this, result);
-			resultSet.Sort(new SortDefinition("SemanticDomain", StringComparer.InvariantCulture),
-						   new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default));
-
-			return RemoveDuplicateResults(resultSet);
+			return _caches[cachename].GetResultSet();
 		}
 
-		private ResultSet<LexEntry> RemoveDuplicateResults(
-			ResultSet<LexEntry> resultSet)
+
+		private ResultSet<LexEntry> GetAllEntriesWithGlossesSortedByLexicalForm(WritingSystem lexicalUnitWritingSystem)
 		{
-			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
-			RecordToken<LexEntry> previousToken = null;
-			foreach (RecordToken<LexEntry> token in resultSet)
+			if (lexicalUnitWritingSystem == null)
 			{
-				if(token != previousToken)
-				{
-					result.Add(token);
-				}
-				previousToken = token;
+				throw new ArgumentNullException("lexicalUnitWritingSystem");
 			}
-			return new ResultSet<LexEntry>(this, result);
+			string cachename = String.Format("GlossesSortedByLexicalForm_{0}", lexicalUnitWritingSystem);
+			if (_caches[cachename] == null)
+			{
+				DelegateQuery<LexEntry> MatchingGlossQuery = new DelegateQuery<LexEntry>(
+					delegate(LexEntry entry)
+					{
+						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
+						int senseNumber = 0;
+						foreach (LexSense sense in entry.Senses)
+						{
+							foreach (LanguageForm form in sense.Gloss.Forms)
+							{
+								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+								string lexicalForm = entry.LexicalForm[lexicalUnitWritingSystem.Id];
+								if (String.IsNullOrEmpty(lexicalForm))
+								{
+									lexicalForm = null;
+								}
+								tokenFieldsAndValues.Add("Form", lexicalForm);
+
+								string gloss = form.Form;
+								if (String.IsNullOrEmpty(gloss))
+								{
+									gloss = null;
+								}
+								tokenFieldsAndValues.Add("Gloss", gloss);
+
+								string glossWritingSystem = form.WritingSystemId;
+								if (String.IsNullOrEmpty(glossWritingSystem))
+								{
+									glossWritingSystem = null;
+								}
+								tokenFieldsAndValues.Add("GlossWritingSystem", glossWritingSystem);
+								tokenFieldsAndValues.Add("SenseNumber", senseNumber);
+								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+							}
+							senseNumber++;
+						}
+						return fieldsandValuesForRecordTokens;
+					}
+					);
+				ResultSet<LexEntry> itemsMatchingQuery = GetItemsMatching(MatchingGlossQuery);
+				SortDefinition[] sortDefinition = new SortDefinition[4];
+				sortDefinition[0] = new SortDefinition("Form", lexicalUnitWritingSystem);
+				sortDefinition[1] = new SortDefinition("Gloss", StringComparer.InvariantCulture);
+				sortDefinition[2] = new SortDefinition("GlossWritingSystem", StringComparer.InvariantCulture);
+				sortDefinition[3] = new SortDefinition("SenseNumber", Comparer<int>.Default);
+				ResultSetCache<LexEntry> cache =
+					new ResultSetCache<LexEntry>(this, sortDefinition, itemsMatchingQuery, MatchingGlossQuery);
+				_caches.Add(cachename, cache);
+			}
+			return _caches[cachename].GetResultSet();
 		}
 
+		/// <summary>
+		/// Gets a ResultSet containing entries whose gloss match glossForm sorted by the lexical form
+		/// in the given writingsystem.
+		/// Use "Form" to access the lexical form and "Gloss/Form" to access the Gloss in a RecordToken.
+		/// </summary>
+		/// <param name="glossForm"></param>
+		/// <param name="lexicalUnitWritingSystem"></param>
+		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(
-				LanguageForm glossForm, WritingSystem lexicalUnitWritingSystem)
+				 LanguageForm glossForm, WritingSystem lexicalUnitWritingSystem)
 		{
 			if (glossForm == null)
 			{
@@ -322,76 +606,94 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("lexicalUnitWritingSystem");
 			}
-			Query query = GetAllLexEntriesQuery();
-			query.In("LexicalForm").ForEach("Forms").Show("Form").Show("WritingSystemId");
-			query.ForEach("Senses").In("Gloss").ForEach("Forms").Show("Form", "Gloss/Form").Show("WritingSystemId", "Gloss/WritingSystemId");
+			ResultSet<LexEntry> allGlossesResultSet = GetAllEntriesWithGlossesSortedByLexicalForm(lexicalUnitWritingSystem);
+			List<RecordToken<LexEntry>> filteredResultSet = new List<RecordToken<LexEntry>>();
+			foreach (RecordToken<LexEntry> recordToken in allGlossesResultSet)
+			{
+				if (((string) recordToken["Gloss"] == glossForm.Form)
+					&& ((string) recordToken["GlossWritingSystem"] == glossForm.WritingSystemId))
+				{
+					filteredResultSet.Add(recordToken);
+				}
+			}
 
-			ResultSet<LexEntry> resultSet = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(
-													query,
-													"Form",
-													"WritingSystemId",
-													lexicalUnitWritingSystem);
-			resultSet.RemoveAll(delegate(RecordToken<LexEntry> token)
-								{
-									return (string)token["Gloss/WritingSystemId"] != glossForm.WritingSystemId
-										|| (string)token["Gloss/Form"] != glossForm.Form;
-								});
-			return resultSet;
+			return new ResultSet<LexEntry>(this, filteredResultSet);
 		}
 
+		/// <summary>
+		/// Gets the LexEntry whose Id matches id.
+		/// </summary>
+		/// <returns></returns>
 		public LexEntry GetLexEntryWithMatchingId(string id)
 		{
 			if (id == null)
 			{
 				throw new ArgumentNullException("id");
 			}
-			Query idOfEntries = GetAllLexEntriesQuery().Show("Id");
-			ResultSet<LexEntry> items = GetItemsMatchingCore(idOfEntries);
-			RecordToken<LexEntry> first = items.FindFirst(delegate(RecordToken<LexEntry> token)
-												{
-													return (string)token["Id"] == id;
-												});
-			if (first == null)
+			if (id == string.Empty)
 			{
-				return null;
+				throw new ArgumentOutOfRangeException("id", "The Id should not be empty.");
 			}
-			return first.RealObject;
-		}
-
-		public LexEntry GetLexEntryWithMatchingGuid(Guid guid)
-		{
-			Query query = GetAllLexEntriesQuery().Show("Guid");
-			ResultSet<LexEntry> items = GetItemsMatchingCore(query);
-			int index = items.FindFirstIndex(delegate(RecordToken<LexEntry> token)
-												{
-													return (Guid)token["Guid"] == guid;
-												});
-			if (index < 0)
+			ResultSet<LexEntry> allGlossesResultSet = GetAllEntriesSortedById();
+			List<RecordToken<LexEntry>> filteredResultSet = new List<RecordToken<LexEntry>>();
+			foreach (RecordToken<LexEntry> recordToken in allGlossesResultSet)
 			{
-				return null;
-			}
-			if (index + 1 < items.Count)
-			{
-				int nextIndex = items.FindFirstIndex(index+1,
-									delegate(RecordToken<LexEntry> token)
-									{
-										return (Guid)token["Guid"] == guid;
-									});
-
-				if(nextIndex >= 0)
+				if (((string)recordToken["Id"] == id))
 				{
-					throw new ApplicationException("More than one entry exists with the guid " +
-												   guid);
+					filteredResultSet.Add(recordToken);
 				}
 			}
-			RecordToken<LexEntry> first = items[index];
-			return first.RealObject;
+			if (filteredResultSet.Count > 1)
+			{
+				throw new ApplicationException("More than one entry exists with the guid " + id);
+			}
+			if (filteredResultSet.Count == 0)
+			{
+				return null;
+			}
+			return filteredResultSet[0].RealObject;
 		}
 
+		/// <summary>
+		/// Gets the LexEntry whose Guid matches guid.
+		/// </summary>
+		/// <returns></returns>
+		public LexEntry GetLexEntryWithMatchingGuid(Guid guid)
+		{
+			if(guid == Guid.Empty)
+			{
+				throw new ArgumentOutOfRangeException("guid", "Guids should not be empty!");
+			}
+			ResultSet<LexEntry> allGlossesResultSet = GetAllEntriesSortedByGuid();
+			List<RecordToken<LexEntry>> filteredResultSet = new List<RecordToken<LexEntry>>();
+			foreach (RecordToken<LexEntry> recordToken in allGlossesResultSet)
+			{
+				if (((Guid) recordToken["Guid"] == guid))
+				{
+					filteredResultSet.Add(recordToken);
+				}
+			}
+			if(filteredResultSet.Count > 1)
+			{
+				throw new ApplicationException("More than one entry exists with the guid " + guid);
+			}
+			if(filteredResultSet.Count == 0)
+			{
+				return null;
+			}
+			return filteredResultSet[0].RealObject;
+		}
+
+		/// <summary>
+		/// Gets a ResultSet containing entries whose lexical form is similar to lexicalForm
+		/// sorted by the lexical form in the given writingsystem.
+		/// Use "Form" to access the lexical form in a RecordToken.
+		/// </summary>
+		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithSimilarLexicalForm(string lexicalForm,
-															WritingSystem writingSystem,
-															ApproximateMatcherOptions
-																	matcherOptions)
+																	WritingSystem writingSystem,
+																	ApproximateMatcherOptions
+																			matcherOptions)
 		{
 			if (lexicalForm == null)
 			{
@@ -403,17 +705,25 @@ namespace WeSay.LexicalModel
 			}
 			return new ResultSet<LexEntry>(this,
 										   ApproximateMatcher.FindClosestForms
-													<RecordToken<LexEntry>>(GetAllEntriesSortedByLexicalForm(writingSystem),
-																			GetFormForMatchingStrategy,
-																			lexicalForm,
-																			matcherOptions));
+												   <RecordToken<LexEntry>>(
+												   GetAllEntriesSortedByLexicalForm(writingSystem),
+												   GetFormForMatchingStrategy,
+												   lexicalForm,
+												   matcherOptions));
 		}
 
 		private static string GetFormForMatchingStrategy(object item)
 		{
-			return (string)((RecordToken<LexEntry>)item)["Form"];
+			return (string) ((RecordToken<LexEntry>) item)["Form"];
 		}
 
+		/// <summary>
+		/// Gets a ResultSet containing entries whose lexical form match lexicalForm
+		/// Use "Form" to access the lexical form in a RecordToken.
+		/// </summary>
+		/// <param name="lexicalForm"></param>
+		/// <param name="writingSystem"></param>
+		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithMatchingLexicalForm(string lexicalForm,
 																	 WritingSystem writingSystem)
 		{
@@ -425,105 +735,71 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
-			ResultSet<LexEntry> resultSet = GetAllEntriesSortedByLexicalForm(writingSystem);
-			resultSet.RemoveAll(delegate(RecordToken<LexEntry> token)
-								{
-									return (string)token["Form"] != lexicalForm;
-								});
-			return resultSet;
-		}
-
-		private static Query GetAllLexEntriesQuery()
-		{
-			return new Query(typeof(LexEntry));
-		}
-
-		private ResultSet<LexEntry> FilterEntriesToOnlyThoseWithWritingSystemId(
-			ResultSet<LexEntry> allResults,
-			string formField,
-			string writingSystemIdField,
-			string filterOnWritingSystemId)
-		{
-			if (allResults.Count == 0)
+			ResultSet<LexEntry> allGlossesResultSet = GetAllEntriesSortedByLexicalForm(writingSystem);
+			List<RecordToken<LexEntry>> filteredResultSet = new List<RecordToken<LexEntry>>();
+			foreach (RecordToken<LexEntry> recordToken in allGlossesResultSet)
 			{
-				return allResults;
-			}
-
-			allResults.SortByRepositoryId();
-
-			// remove all entries with writing system != headwordWritingSystem
-			//     make sure always have one entry though
-			// walk list of entries, removing duplicate entries which have same repository id
-			//     if there is no entry for a repository id that has
-			//     writingSystemId == filterOnWritingSystemId then
-			//     insert an empty form with writingSystemId set to filterOnWritingSystemId
-
-			Dictionary<string, object> emptyResults = new Dictionary<string, object>();
-			emptyResults.Add(formField, string.Empty);
-			emptyResults.Add(writingSystemIdField, filterOnWritingSystemId);
-
-			List<RecordToken<LexEntry>> filteredResults = new List<RecordToken<LexEntry>>();
-			bool headWordRepositoryIdFound = false;
-			RecordToken<LexEntry> previousToken = null;
-			foreach (RecordToken<LexEntry> token in allResults)
-			{
-				if (previousToken != null && token.Id != previousToken.Id)
+				if (((string)recordToken["Form"] == lexicalForm))
 				{
-					if (!headWordRepositoryIdFound)
-					{
-						filteredResults.Add(
-								new RecordToken<LexEntry>(this,
-														  emptyResults,
-														  previousToken.Id));
-					}
-					headWordRepositoryIdFound = false;
+					filteredResultSet.Add(recordToken);
 				}
+			}
 
-				object id;
-				if (token.TryGetValue(writingSystemIdField, out id))
-				{
-					if((string) id == filterOnWritingSystemId)
-					{
-						filteredResults.Add(token);
-						headWordRepositoryIdFound = true;
-					}
-				}
-				else {
-					// we have an entry but without a form with the given id.
-					// Create an empty one
-					token[formField] = string.Empty;
-					token[writingSystemIdField] = filterOnWritingSystemId;
-					filteredResults.Add(token);
-					headWordRepositoryIdFound = true;
-				}
-				previousToken = token;
-			}
-			if (!headWordRepositoryIdFound)
-			{
-				filteredResults.Add(new RecordToken<LexEntry>(this,
-															  emptyResults,
-															  previousToken.Id));
-			}
-			return new ResultSet<LexEntry>(this, filteredResults);
+			return new ResultSet<LexEntry>(this, filteredResultSet);
 		}
 
-
-		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(
-				Field field, WritingSystem lexicalUnitWritingSystem)
+		/// <summary>
+		/// Gets a ResultSet containing entries that are missing the field matching field
+		/// sorted by the lexical form in the given writing system.
+		/// Use "Form" to access the lexical form in a RecordToken.
+		/// </summary>
+		/// <param name="field"></param>
+		/// <param name="lexicalUnitWritingSystem"></param>
+		/// <returns></returns>
+		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field,
+																				 WritingSystem
+																						 lexicalUnitWritingSystem)
 		{
-			Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field).FilteringPredicate;
-			Query query = new Query.PredicateQuery<LexEntry>(filteringPredicate);
-			query.In("LexicalForm").ForEach("Forms").Show("Form").Show("WritingSystemId");
+			if(lexicalUnitWritingSystem == null)
+			{
+				throw new ArgumentNullException("lexicalUnitWritingSystem");
+			}
+			if (field == null)
+			{
+				throw new ArgumentNullException("field");
+			}
+			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}", field, lexicalUnitWritingSystem.Id);
+			if (_caches[cacheName] == null)
+			{
+				DelegateQuery<LexEntry> lexicalFormQuery = new DelegateQuery<LexEntry>(
+					delegate(LexEntry entryToQuery)
+					{
+						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+						Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field).FilteringPredicate;
+						if(filteringPredicate(entryToQuery))
+						{
+							string lexicalForm = null;
+							if (!String.IsNullOrEmpty(entryToQuery.LexicalForm[lexicalUnitWritingSystem.Id]))
+							{
+								lexicalForm = entryToQuery.LexicalForm[lexicalUnitWritingSystem.Id];
+							}
+							tokenFieldsAndValues.Add("Form", lexicalForm);
+							return new IDictionary<string, object>[] { tokenFieldsAndValues };
+						}
+						return new IDictionary<string, object>[0];
+					});
+				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(lexicalFormQuery);
 
+				SortDefinition[] sortOrder = new SortDefinition[1];
+				sortOrder[0] = new SortDefinition("Form", lexicalUnitWritingSystem);
 
-			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(query, "Form", "WritingSystemId", lexicalUnitWritingSystem);
-			//remove items that don't match our filteringPredicate
-			itemsMatching.RemoveAll(delegate(RecordToken<LexEntry> token)
-								{
-									return !(bool)token["Matches"];
-								});
-			return itemsMatching;
+				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormQuery));
+			}
+			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
+
+			return resultsFromCache;
 		}
+
 		#region IDisposable Members
 
 #if DEBUG
@@ -537,7 +813,7 @@ namespace WeSay.LexicalModel
 		}
 #endif
 
-		private bool _disposed = false;
+		private bool _disposed;
 
 		public void Dispose()
 		{
@@ -594,22 +870,6 @@ namespace WeSay.LexicalModel
 		{
 			//Do Nothing
 			//throw new Exception("The method or operation is not implemented.");
-		}
-
-		public void Startup(ProgressState state)
-		{
-			_decoratedRepository.Startup(state);
-		}
-
-		public void Shutdown()
-		{
-			//Do Nothing
-			//throw new Exception("The method or operation is not implemented.");
-		}
-
-		public void PersistNow()
-		{
-			throw new Exception("The method or operation is not implemented.");
 		}
 	}
 }

@@ -48,12 +48,11 @@ namespace WeSay.LexicalTools
 										   LexEntryRepository lexEntryRepository,
 										   EventHandler<CurrentItemEventArgs> focus)
 		{
-			RelationController controller =
-					new RelationController(relationParent,
-										   relationType,
-										   field,
-										   lexEntryRepository,
-										   focus);
+			RelationController controller = new RelationController(relationParent,
+																   relationType,
+																   field,
+																   lexEntryRepository,
+																   focus);
 			return controller.Control;
 		}
 
@@ -68,6 +67,9 @@ namespace WeSay.LexicalTools
 		private void OnCreateNewPairStringLexEntryId(object sender, CreateNewArgs e)
 		{
 			LexEntry newGuy = CreateNewLexEntry(e);
+			WritingSystem writingSystem = GetWritingSystemFromField();
+			_lexEntryRepository.NotifyThatLexEntryHasBeenUpdated(newGuy);
+			_resultSet = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystem);
 			e.NewlyCreatedItem = GetRecordTokenFromLexEntry(newGuy);
 		}
 
@@ -128,7 +130,7 @@ namespace WeSay.LexicalTools
 
 			WritingSystem writingSystem = GetWritingSystemFromField();
 			ResultSet<LexEntry> recordTokenList =
-					_lexEntryRepository.GetAllEntriesSortedByLexicalForm(writingSystem);
+					_lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystem);
 			_resultSet = recordTokenList;
 
 			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker =
@@ -141,14 +143,14 @@ namespace WeSay.LexicalTools
 			picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
 			picker.Box.Items = recordTokenList;
-			picker.Box.SelectedItem =
-					GetRecordTokenFromLexEntry(relation.GetTarget(_lexEntryRepository));
+			picker.Box.SelectedItem = GetRecordTokenFromLexEntry(relation.GetTarget(_lexEntryRepository));
 
 			picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
 			_control = picker;
 		}
 
-		private WritingSystem GetWritingSystemFromField() {
+		private WritingSystem GetWritingSystemFromField()
+		{
 			string firstWsId = this._field.WritingSystemIds[0];
 			return BasilProject.Project.WritingSystems[firstWsId];
 		}
@@ -163,15 +165,12 @@ namespace WeSay.LexicalTools
 			{
 				return null;
 			}
-			WritingSystem writingSystem = GetWritingSystemFromField();
-			ResultSet<LexEntry> resultSet =
-					_lexEntryRepository.GetAllEntriesSortedByLexicalForm(writingSystem);
-			int index = resultSet.FindFirstIndex(e);
+			int index = _resultSet.FindFirstIndex(e);
 			if (index < 0)
 			{
 				return null;
 			}
-			return resultSet[index];
+			return _resultSet[index];
 		}
 
 		private RecordToken<LexEntry> GetRecordTokenFromTargetId(string s)
@@ -211,6 +210,7 @@ namespace WeSay.LexicalTools
 			//                            break;
 			//                    }
 			picker.Box.WritingSystem = GetWritingSystemFromField();
+			picker.Box.PopupWidth = 200;
 
 			//review:
 			picker.Box.MinimumSize = new Size(40, 10);
@@ -230,12 +230,11 @@ namespace WeSay.LexicalTools
 		private static IEnumerable FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms(
 				string text, IEnumerable items, IDisplayStringAdaptor adaptor)
 		{
-			return
-					ApproximateMatcher.FindClosestForms<object>(items,
-																adaptor.GetDisplayLabel,
-																text,
-																ApproximateMatcherOptions.
-																		IncludePrefixedAndNextClosestForms);
+			return ApproximateMatcher.FindClosestForms<object>(items,
+															   adaptor.GetDisplayLabel,
+															   text,
+															   ApproximateMatcherOptions.
+																	   IncludePrefixedAndNextClosestForms);
 		}
 
 		//private static IEnumerable FindClosestAndNextClosestAndPrefixedLexEntryForms(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
@@ -253,10 +252,9 @@ namespace WeSay.LexicalTools
 
 		private object FindRecordTokenFromForm(string form)
 		{
-			return _resultSet.FindFirst(delegate (RecordToken<LexEntry> token)
-											 {
-												 return (string)token["Form"] == form;
-											 });
+			return
+					_resultSet.FindFirst(
+							delegate(RecordToken<LexEntry> token) { return (string) token["Form"] == form; });
 		}
 
 		//        #region Nested type: WeSayDataObjectLabelAdaptor

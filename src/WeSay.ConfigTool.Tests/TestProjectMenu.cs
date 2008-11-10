@@ -3,6 +3,7 @@ using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Foundation.Tests;
+using WeSay.Foundation.Tests.TestHelpers;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -58,9 +59,8 @@ namespace WeSay.ConfigTool.Tests
 		[Ignore("couldn't get test to word")]
 		public void TestOpenProjectInWeSayClient()
 		{
-			string path =
-					Path.Combine(Path.GetTempPath(),
-								 Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
+			string path = Path.Combine(Path.GetTempPath(),
+									   Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
 			try
 			{
 				_window.CreateAndOpenProject(path);

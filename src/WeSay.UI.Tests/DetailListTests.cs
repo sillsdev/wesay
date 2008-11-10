@@ -56,6 +56,7 @@ namespace WeSay.UI.Tests
 			_window.Close();
 		}
 
+#if (DEBUG)
 		[Test]
 		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_RowLessThan0_throws()
@@ -78,6 +79,7 @@ namespace WeSay.UI.Tests
 			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
 			_control.MoveInsertionPoint(2);
 		}
+#endif
 
 		private WeSayTextBox MakeWiredUpTextBox()
 		{

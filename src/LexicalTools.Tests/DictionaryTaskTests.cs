@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using NUnit.Framework;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -12,26 +13,29 @@ namespace WeSay.LexicalTools.Tests
 		private LexEntryRepository _lexEntryRepository;
 		private ViewTemplate _viewTemplate;
 		private string _filePath;
+		private TemporaryFolder _tempFolder;
 
 		[SetUp]
 		public void Setup()
 		{
-			_filePath = Path.GetTempFileName();
+			_tempFolder = new TemporaryFolder();
+			_filePath = _tempFolder.GetTemporaryFile();
 
 			WeSayWordsProject.InitializeForTests();
-			string[] vernacularWritingSystemIds =
-					new string[] {BasilProject.Project.WritingSystems.TestWritingSystemVernId};
+			string[] vernacularWritingSystemIds = new string[]
+													  {
+															  BasilProject.Project.WritingSystems.
+																	  TestWritingSystemVernId
+													  };
 			_viewTemplate = new ViewTemplate();
-			_viewTemplate.Add(
-					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-							  "LexEntry",
-							  vernacularWritingSystemIds));
-			_viewTemplate.Add(
-					new Field("Note",
-							  "LexEntry",
-							  new string[] {"en"},
-							  Field.MultiplicityType.ZeroOr1,
-							  "MultiText"));
+			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+										"LexEntry",
+										vernacularWritingSystemIds));
+			_viewTemplate.Add(new Field("Note",
+										"LexEntry",
+										new string[] {"en"},
+										Field.MultiplicityType.ZeroOr1,
+										"MultiText"));
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_task = new DictionaryTask(_lexEntryRepository, _viewTemplate);
 		}

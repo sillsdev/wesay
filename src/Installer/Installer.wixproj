@@ -59,7 +59,6 @@
   </PropertyGroup>
   <ItemGroup>
 	<Compile Include="biatah.wxs" />
-	<Compile Include="GeneratedBiatahCache.wxs" />
 	<Compile Include="GeneratedPOFiles.wxs" />
 	<Compile Include="GeneratedTemplateFiles.wxs" />
 	<Compile Include="SampleData.wxs" />

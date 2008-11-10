@@ -14,7 +14,7 @@ namespace WeSay.AddinLib
 	{
 		private static AddinSet _singleton;
 		private readonly FileLocater _locateFile;
-		private Dictionary<string, string> _addinSettings = null;
+		private Dictionary<string, string> _addinSettings;
 		private readonly List<string> _addinsToShowInWeSay = new List<string>();
 
 		public delegate XPathNodeIterator AddinSettingsGetter();
