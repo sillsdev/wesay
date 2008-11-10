@@ -118,9 +118,14 @@
 	</target>
 
 	<target name="installer">
+		<!--
 		<exec program="msbuild.exe">
 			<arg line="WeSay.proj /t:Installer" />
 		</exec>
+		-->
+		<loadtasks assembly="nanttasks\NAnt.Contrib.Tasks.dll" />
+		<msbuild project="WeSay.proj" target="Installer">
+		</msbuild>
 	</target>
 
 	<!--
