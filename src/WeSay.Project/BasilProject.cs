@@ -220,13 +220,12 @@ namespace WeSay.Project
 			string path;
 
 			path = DirectoryOfExecutingAssembly;
+			char sep = Path.DirectorySeparatorChar;
+			int i = path.ToLower().LastIndexOf(sep + "output" + sep);
 
-			if (path.ToLower().IndexOf("output") > -1)
+			if (i > -1)
 			{
-				//go up to output
-				path = Directory.GetParent(path).FullName;
-				//go up to directory containing output
-				path = Directory.GetParent(path).FullName;
+				path = path.Substring(0, i + 1);
 			}
 			return path;
 		}
