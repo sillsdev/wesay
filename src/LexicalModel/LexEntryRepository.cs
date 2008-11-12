@@ -150,6 +150,9 @@ namespace WeSay.LexicalModel
 
 		public void DeleteItem(LexEntry item)
 		{
+			if (item == null)
+				throw new ArgumentNullException("item");
+
 			EntryEventArgs args = new EntryEventArgs(item);
 
 			_caches.DeleteItemFromCaches(item);
