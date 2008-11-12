@@ -46,7 +46,7 @@ namespace Addin.Transform.Tests
 								new LexEntryRepository(p.PathToRepository))
 				{
 					PLiftMaker maker = new PLiftMaker();
-					string path = maker.MakePLiftTempFile(lexEntryRepository, p);
+					string path = maker.MakePLiftTempFile(lexEntryRepository, p.DefaultPrintingTemplate);
 					Console.WriteLine(path);
 				}
 			}

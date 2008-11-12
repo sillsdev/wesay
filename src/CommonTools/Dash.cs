@@ -179,7 +179,7 @@ namespace WeSay.CommonTools
 					try
 					{
 						ProjectInfo projectInfo =
-								WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository);
+								WeSayWordsProject.Project.GetProjectInfoForAddin();
 						addin.Launch(ParentForm, projectInfo);
 					}
 					catch (Exception error)

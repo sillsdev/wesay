@@ -16,10 +16,10 @@ namespace WeSay.CommonTools
         private bool _wasLoaded;
         private readonly LexEntryRepository _lexEntryRepository;
 
-        public ActionsControl(LexEntryRepository lexEntryRepository)
+		public ActionsControl(LexEntryRepository unused)//todo
         {
             InitializeComponent();
-            _lexEntryRepository = lexEntryRepository;
+
         }
 
         #region ITask
@@ -80,8 +80,7 @@ namespace WeSay.CommonTools
             try
             {
                 ((IWeSayAddin) sender).Launch(null,
-                                              WeSayWordsProject.Project.GetProjectInfoForAddin(
-                                                      _lexEntryRepository));
+											  WeSayWordsProject.Project.GetProjectInfoForAddin());
             }
             catch (Exception error)
             {

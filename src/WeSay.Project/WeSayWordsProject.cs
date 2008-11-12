@@ -2,6 +2,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -11,9 +12,13 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using Autofac;
+using Autofac.Builder;
+using Autofac.Component;
 using LiftIO;
 using LiftIO.Validation;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -22,7 +27,7 @@ using WeSay.LexicalModel;
 
 namespace WeSay.Project
 {
-	public class WeSayWordsProject: BasilProject
+	public class WeSayWordsProject : BasilProject
 	{
 		private IList<ITask> _tasks;
 		private ViewTemplate _defaultViewTemplate;
@@ -36,6 +41,7 @@ namespace WeSay.Project
 		private readonly AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
 		private ChorusBackupMaker _backupMaker;
+		private Autofac.IContainer _container;
 
 		public event EventHandler EditorsSaveNow;
 
@@ -52,6 +58,7 @@ namespace WeSay.Project
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
 			BackupMaker = new ChorusBackupMaker();
+
 		}
 
 		public IList<ITask> Tasks
@@ -298,10 +305,52 @@ namespace WeSay.Project
 				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
+
 			InitializeViewTemplatesFromProjectFiles();
+
+			//review: is this the right place for this?
+			PopulateDIContainer();
 
 			LoadBackupPlan();
 		}
+
+		[Serializable]
+	//    [ComVisible(true)]
+		public delegate object ServiceCreatorCallback(
+		   IServiceContainer container,
+		   Type serviceType
+		);
+
+		private void PopulateDIContainer()
+		{
+			var builder = new ContainerBuilder();
+
+			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
+
+			builder.Register<LexEntryRepository>(
+				c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
+						progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
+
+			builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
+			builder.Register<ViewTemplate>(DefaultViewTemplate);
+
+			// can't currently get at the instance
+			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
+
+			_container = builder.Build();
+		}
+
+		public LexEntryRepository GetLexEntryRepository()
+		{
+			return _container.Resolve<LexEntryRepository>();
+
+		}
+
+//        //provide an IServiceProvider facade around our DI Container
+//        public object GetService(Type serviceType)
+//        {
+//            return _container.Resolve(serviceType);
+//        }
 
 		private void LoadBackupPlan()
 		{
@@ -579,7 +628,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public ProjectInfo GetProjectInfoForAddin(LexEntryRepository lexEntryRepository)
+		public ProjectInfo GetProjectInfoForAddin()
 		{
 			return new ProjectInfo(Name,
 								   ApplicationRootDirectory,
@@ -589,7 +638,7 @@ namespace WeSay.Project
 								   GetFilesBelongingToProject(ProjectDirectoryPath),
 								   AddinSet.Singleton.LocateFile,
 								   WritingSystems,
-								   lexEntryRepository,
+								   new WeSay.Foundation.ServiceLocatorAdapter(_container),
 								   this);
 		}
 
@@ -674,6 +723,10 @@ namespace WeSay.Project
 			if (LiftIsLocked)
 			{
 				ReleaseLockOnLift();
+			}
+			if(_container !=null)
+			{
+				_container.Dispose();//this will dispose of objects in the container (at least those with the normal "lifetype" setting)
 			}
 		}
 
@@ -937,6 +990,11 @@ namespace WeSay.Project
 		{
 			get { return _backupMaker; }
 			set { _backupMaker = value; }
+		}
+
+		public IContainer Container
+		{
+			get { return _container; }
 		}
 
 		public override void Save()
@@ -1296,5 +1354,7 @@ namespace WeSay.Project
 				BackupNow();
 			}
 		}
+
+
 	}
 }

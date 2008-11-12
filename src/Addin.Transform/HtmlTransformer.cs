@@ -77,17 +77,15 @@ namespace Addin.Transform
 			//So if we're in that situation, we temporarily try to make one and then release it,
 			//so it isn't locked when the user says "open wesay"
 
-			using (
-					LexEntryRepository lexEntryRepository =
-							((LexEntryRepository) projectInfo.LexEntryRepository))
+			LexEntryRepository lexEntryRepository = projectInfo.ServiceProvider.GetService(typeof(LexEntryRepository)) as LexEntryRepository;
+		  //  using(lexEntryRepository.GetRightToAccessLiftExternally())
 			{
 				string pliftPath;
 				using (LameProgressDialog dlg = new LameProgressDialog("Exporting to PLift..."))
 				{
 					dlg.Show();
 					PLiftMaker maker = new PLiftMaker();
-					pliftPath = maker.MakePLiftTempFile(lexEntryRepository,
-														(WeSayWordsProject) projectInfo.Project);
+					pliftPath = maker.MakePLiftTempFile(lexEntryRepository, projectInfo.ServiceProvider.GetService(typeof(ViewTemplate)) as ViewTemplate);
 				}
 
 				projectInfo.PathToLIFT = pliftPath;

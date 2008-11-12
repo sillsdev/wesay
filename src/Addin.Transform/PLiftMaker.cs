@@ -22,11 +22,9 @@ namespace Addin.Transform
 		//    return path;
 		//}
 
-		public string MakePLiftTempFile(LexEntryRepository lexEntryRepository,
-										WeSayWordsProject project)
+		public string MakePLiftTempFile(LexEntryRepository lexEntryRepository, ViewTemplate template)
 		{
 			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-			ViewTemplate template = project.DefaultPrintingTemplate;
 			PLiftExporter exporter = new PLiftExporter(path, lexEntryRepository, template);
 			ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);

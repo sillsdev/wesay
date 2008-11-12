@@ -45,7 +45,9 @@ namespace WeSay.Project.Tests
 			}
 		}
 
-
+		/// <summary>
+		/// check  (WS-1004) Exception: Access to the path is denied
+		/// </summary>
 		[Test]
 		public void MakeWritingSystemIdChange_FileLocked_NotifiesUser()
 		{
@@ -115,6 +117,8 @@ namespace WeSay.Project.Tests
 		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void WeSayDirNotInValidBasilDir()
 		{
+			Palaso.Reporting.ErrorReport.JustRecordNonFatalMessagesForTesting = false;
+
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
 			string weSayDir = experimentDir; // MakeDir(experimentDir, "WeSay");
 			string wordsPath = Path.Combine(weSayDir, "AAA.words");
