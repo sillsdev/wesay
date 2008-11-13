@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{87AF0B02-2983-486D-857F-D1859535C234}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -72,6 +72,12 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="ConfirmDelete.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="ConfirmDelete.Designer.cs">
+	  <DependentUpon>ConfirmDelete.cs</DependentUpon>
+	</Compile>
 	<Compile Include="CongratulationsControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -152,6 +158,9 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="ConfirmDelete.resx">
+	  <DependentUpon>ConfirmDelete.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="CongratulationsControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>CongratulationsControl.cs</DependentUpon>

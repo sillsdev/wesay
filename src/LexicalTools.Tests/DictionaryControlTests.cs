@@ -255,12 +255,18 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(before - 1, _lexEntryRepository.CountAllItems());
 		}
 
+		private void ConfirmDeleteWhenDialogShows()
+		{
+			ExpectModal("ConfirmDelete", delegate { var x  = new ButtonTester("deleteBtn"); x.Click(); });
+		}
+
 		/// <summary>
 		/// regression test for WS-536, WS-545
 		/// </summary>
 		[Test]
 		public void DeleteWordWhenEvenHasCleanup_Regression()
 		{
+			ConfirmDeleteWhenDialogShows();
 			ClickAddWord();
 			int before = _lexEntryRepository.CountAllItems();
 
@@ -735,6 +741,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private void ClickDeleteWord()
 		{
+			ConfirmDeleteWhenDialogShows();
 			ButtonTester l = new ButtonTester("_btnDeleteWord", _window);
 			l.Click();
 		}
@@ -1052,6 +1059,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(btn.Text.Contains("Show"));
 			btn.Click();
 			Assert.IsTrue(btn.Text.Contains("Hide"));
+			ConfirmDeleteWhenDialogShows();
 			ButtonTester delbtn = new ButtonTester("_btnDeleteWord", _window);
 			delbtn.Click();
 			Assert.IsTrue(btn.Text.Contains("Show"));
