@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -184,13 +185,8 @@ namespace WeSay.LexicalTools
 				}
 				else
 				{
-					MessageBox.Show(
-							String.Format(
-									"There are no writing systems enabled for the Field '{0}'",
-									field.FieldName),
-							"Error",
-							MessageBoxButtons.OK,
-							MessageBoxIcon.Exclamation); //review
+					throw new ConfigurationException("There are no writing systems enabled for the Field '{0}'",
+												 field.FieldName);
 				}
 			}
 			return listWritingSystem;
