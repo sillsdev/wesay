@@ -5,7 +5,7 @@ using System.Threading;
 using System.Xml;
 using Chorus.sync;
 using NUnit.Framework;
-using TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.Project;
 
 namespace WeSay.Project.Tests

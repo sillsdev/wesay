@@ -2,7 +2,7 @@ using System.IO;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
-using TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
 
 namespace WeSay.ConfigTool.Tests
 {

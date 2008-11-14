@@ -6,9 +6,9 @@ using System.Xml.XPath;
 using LiftIO;
 using NUnit.Framework;
 using Palaso.Reporting;
-using TestUtilities;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests
