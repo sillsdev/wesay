@@ -1,14 +1,19 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace>WeSay.ConfigTool.Tests</RootNamespace>
 	<AssemblyName>WeSay.ConfigTool.Tests</AssemblyName>
+	<FileUpgradeFlags>
+	</FileUpgradeFlags>
+	<UpgradeBackupLocation>
+	</UpgradeBackupLocation>
+	<OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -72,6 +77,7 @@
   <ItemGroup>
 	<Compile Include="AdminWindowTests.cs" />
 	<Compile Include="CauseProblemWithAutoCompleteTestsWithCreationTests.cs" />
+	<Compile Include="BackupPlanControl.Tests.cs" />
 	<Compile Include="MruProjectsTest.cs" />
 	<Compile Include="FieldDetailControlTests.cs" />
 	<Compile Include="InterfaceLanguageControl.Tests.cs" />
@@ -90,6 +96,10 @@
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\TestUtilities\TestUtilities.csproj">
+	  <Project>{5521A594-6886-4F2E-99FC-9B02A7D862BE}</Project>
+	  <Name>TestUtilities</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>

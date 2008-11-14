@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:export-ydpi="90.000000"
+   inkscape:export-xdpi="90.000000"
+   inkscape:export-filename="/home/jimmac/Desktop/wi-fi.png"
+   width="48px"
+   height="48px"
+   id="svg11300"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   sodipodi:docbase="C:\wesayGit\mainline\artwork"
+   sodipodi:docname="SDCard.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+	 id="defs3">
+	<linearGradient
+	   inkscape:collect="always"
+	   id="linearGradient6210">
+	  <stop
+		 style="stop-color:white;stop-opacity:1;"
+		 offset="0"
+		 id="stop6212" />
+	  <stop
+		 style="stop-color:white;stop-opacity:0;"
+		 offset="1"
+		 id="stop6214" />
+	</linearGradient>
+	<linearGradient
+	   id="linearGradient6196">
+	  <stop
+		 style="stop-color:#edd400;stop-opacity:1;"
+		 offset="0"
+		 id="stop6198" />
+	  <stop
+		 id="stop6204"
+		 offset="0.5"
+		 style="stop-color:#c3af07;stop-opacity:1;" />
+	  <stop
+		 style="stop-color:#ffeb3e;stop-opacity:1;"
+		 offset="1"
+		 id="stop6200" />
+	</linearGradient>
+	<linearGradient
+	   inkscape:collect="always"
+	   id="linearGradient6151">
+	  <stop
+		 style="stop-color:#2e3436;stop-opacity:1;"
+		 offset="0"
+		 id="stop6153" />
+	  <stop
+		 style="stop-color:#2e3436;stop-opacity:0;"
+		 offset="1"
+		 id="stop6155" />
+	</linearGradient>
+	<linearGradient
+	   inkscape:collect="always"
+	   id="linearGradient6125">
+	  <stop
+		 style="stop-color:black;stop-opacity:1;"
+		 offset="0"
+		 id="stop6127" />
+	  <stop
+		 style="stop-color:black;stop-opacity:0;"
+		 offset="1"
+		 id="stop6129" />
+	</linearGradient>
+	<linearGradient
+	   id="linearGradient6115">
+	  <stop
+		 style="stop-color:#555753;stop-opacity:1;"
+		 offset="0"
+		 id="stop6117" />
+	  <stop
+		 style="stop-color:#3e3f3c;stop-opacity:1;"
+		 offset="1"
+		 id="stop6119" />
+	</linearGradient>
+	<linearGradient
+	   id="linearGradient6099">
+	  <stop
+		 style="stop-color:#eeeeec;stop-opacity:1;"
+		 offset="0"
+		 id="stop6101" />
+	  <stop
+		 id="stop6107"
+		 offset="0.8918919"
+		 style="stop-color:#dededa;stop-opacity:1;" />
+	  <stop
+		 style="stop-color:#838375;stop-opacity:1;"
+		 offset="1"
+		 id="stop6103" />
+	</linearGradient>
+	<radialGradient
+	   inkscape:collect="always"
+	   xlink:href="#linearGradient6125"
+	   id="radialGradient6131"
+	   cx="24.218407"
+	   cy="45.25996"
+	   fx="24.218407"
+	   fy="45.25996"
+	   r="21.38998"
+	   gradientTransform="matrix(1,0,0,0.128099,9.432564e-16,39.4622)"
+	   gradientUnits="userSpaceOnUse" />
+	<radialGradient
+	   inkscape:collect="always"
+	   xlink:href="#linearGradient6151"
+	   id="radialGradient6157"
+	   cx="33.45499"
+	   cy="28.603338"
+	   fx="33.45499"
+	   fy="28.603338"
+	   r="3.8890872"
+	   gradientUnits="userSpaceOnUse"
+	   gradientTransform="matrix(3.657239,1.232816e-15,-1.232816e-15,3.657239,-88.89792,-76.00592)" />
+	<radialGradient
+	   inkscape:collect="always"
+	   xlink:href="#linearGradient6151"
+	   id="radialGradient6161"
+	   gradientUnits="userSpaceOnUse"
+	   gradientTransform="matrix(8.342154,-3.746956e-16,3.746956e-16,8.342154,-227.6289,-207.0663)"
+	   cx="29.61227"
+	   cy="27.974968"
+	   fx="29.61227"
+	   fy="27.974968"
+	   r="3.8890872" />
+	<linearGradient
+	   inkscape:collect="always"
+	   xlink:href="#linearGradient6210"
+	   id="linearGradient6216"
+	   x1="16.845879"
+	   y1="8.6784801"
+	   x2="30.507824"
+	   y2="78.505272"
+	   gradientUnits="userSpaceOnUse" />
+	<filter
+	   inkscape:collect="always"
+	   id="filter5339"
+	   x="-0.068965518"
+	   width="1.137931"
+	   y="-0.62068962"
+	   height="2.2413792">
+	  <feGaussianBlur
+		 inkscape:collect="always"
+		 stdDeviation="1.1886709"
+		 id="feGaussianBlur5341" />
+	</filter>
+  </defs>
+  <sodipodi:namedview
+	 stroke="#ef2929"
+	 fill="#eeeeec"
+	 id="base"
+	 pagecolor="#ffffff"
+	 bordercolor="#666666"
+	 borderopacity="0.25490196"
+	 inkscape:pageopacity="0.0"
+	 inkscape:pageshadow="2"
+	 inkscape:zoom="1"
+	 inkscape:cx="77.939042"
+	 inkscape:cy="25.054641"
+	 inkscape:current-layer="layer1"
+	 showgrid="false"
+	 inkscape:grid-bbox="true"
+	 inkscape:document-units="px"
+	 inkscape:showpageshadow="false"
+	 inkscape:window-width="765"
+	 inkscape:window-height="631"
+	 inkscape:window-x="635"
+	 inkscape:window-y="178">
+	<inkscape:grid
+	   type="xygrid"
+	   id="grid4690" />
+  </sodipodi:namedview>
+  <metadata
+	 id="metadata4">
+	<rdf:RDF>
+	  <cc:Work
+		 rdf:about="">
+		<dc:format>image/svg+xml</dc:format>
+		<dc:type
+		   rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+		<dc:creator>
+		  <cc:Agent>
+			<dc:title>Jakub Steiner</dc:title>
+		  </cc:Agent>
+		</dc:creator>
+		<dc:source>http://jimmac.musichall.cz</dc:source>
+		<cc:license
+		   rdf:resource="http://creativecommons.org/licenses/by-sa/2.0/" />
+		<dc:title>Generic Flash Media</dc:title>
+		<dc:subject>
+		  <rdf:Bag>
+			<rdf:li>flash</rdf:li>
+			<rdf:li>memory</rdf:li>
+			<rdf:li>removable</rdf:li>
+			<rdf:li>photo</rdf:li>
+		  </rdf:Bag>
+		</dc:subject>
+		<dc:rights>
+		  <cc:Agent>
+			<dc:title>Novell, Inc., Jakub Steiner</dc:title>
+		  </cc:Agent>
+		</dc:rights>
+	  </cc:Work>
+	  <cc:License
+		 rdf:about="http://creativecommons.org/licenses/by-sa/2.0/">
+		<cc:permits
+		   rdf:resource="http://web.resource.org/cc/Reproduction" />
+		<cc:permits
+		   rdf:resource="http://web.resource.org/cc/Distribution" />
+		<cc:requires
+		   rdf:resource="http://web.resource.org/cc/Notice" />
+		<cc:requires
+		   rdf:resource="http://web.resource.org/cc/Attribution" />
+		<cc:permits
+		   rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+		<cc:requires
+		   rdf:resource="http://web.resource.org/cc/ShareAlike" />
+	  </cc:License>
+	</rdf:RDF>
+  </metadata>
+  <g
+	 id="layer1"
+	 inkscape:label="Layer 1"
+	 inkscape:groupmode="layer">
+	<path
+	   style="opacity:1;color:black;fill:#888a85;fill-opacity:1;fill-rule:evenodd;stroke:#2e3436;stroke-width:0.99999976;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.8;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+	   d="M 4.4531228,3.1587345 L 5.4999978,43.618858 C 5.569704,44.669066 6.4987349,45.72121 7.8834214,45.616246 L 39.735278,45.616246 C 40.628844,45.573136 40.466177,44.751919 40.453109,43.280203 L 40.364721,8.1179818 C 40.364721,7.4014448 40.575415,7.0084666 40.050406,6.4926364 C 40.050406,6.4926364 35.310913,1.5153046 35.310913,1.5153046 C 35.023651,1.2439201 35.069685,1.2450976 34.27419,1.2450976 L 31.435356,1.2626532 L 5.6884164,1.4218743 C 4.7509164,1.4832816 4.3906228,2.4218472 4.4531228,3.1587345 z "
+	   id="path4291"
+	   sodipodi:nodetypes="cccccccscccc"
+	   inkscape:export-filename="C:\wesayGit\mainline\src\WeSay.ConfigTool\Resources\configBackup.png"
+	   inkscape:export-xdpi="63.824837"
+	   inkscape:export-ydpi="63.824837" />
+	<path
+	   sodipodi:type="inkscape:offset"
+	   inkscape:radius="-1.000373"
+	   inkscape:original="M 31.4375 1.25 L 5.6875 1.40625 C 4.7499999 1.4676573 4.375 2.4193627 4.4375 3.15625 L 5.5 43.625 C 5.5697064 44.675208 6.4903135 45.729964 7.875 45.625 L 39.75 45.625 C 40.643565 45.581891 40.450568 44.752966 40.4375 43.28125 L 40.375 8.125 C 40.375002 7.4084629 40.587509 7.0158302 40.0625 6.5 C 40.062499 6.5000002 35.3125 1.5 35.3125 1.5 C 35.025238 1.2286155 35.076745 1.25 34.28125 1.25 L 31.4375 1.25 z "
+	   xlink:href="#path4291"
+	   style="opacity:0.17977528;color:black;fill:#4e9a06;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient6216);stroke-width:0.99999976;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.8;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+	   id="path6206"
+	   inkscape:href="#path4291"
+	   d="M 6.8125,2.5 C 6.6714126,2.5092414 6.665484,2.505736 6.59375,2.625 C 6.522016,2.744264 6.486054,2.9918242 6.5,3.15625 C 6.501465,3.1874828 6.501465,3.2187672 6.5,3.25 L 6.5,43.5625 C 6.5340897,44.076101 6.9647984,44.689259 7.8125,44.625 C 7.8333282,44.624349 7.8541718,44.624349 7.875,44.625 L 39.6875,44.625 C 40.042231,44.607886 40.509542,44.418409 40.5,43.34375 L 40.5,6.4375 C 40.499999,5.9303711 40.465181,5.8331404 40.0625,5.4375 C 40.051855,5.4273147 40.041435,5.4168955 40.03125,5.40625 C 40.03125,5.40625 37.37257,2.6558683 37.3125,2.59375 C 37.252809,2.537358 37.283219,2.5655737 37.28125,2.5625 C 37.279281,2.5594263 37.249931,2.5312266 37.25,2.53125 C 37.250138,2.5312967 37.104314,2.5 36.75,2.5 L 6.8125,2.5 z "
+	   inkscape:export-filename="C:\wesayGit\mainline\src\WeSay.ConfigTool\Resources\configBackup.png"
+	   inkscape:export-xdpi="63.824837"
+	   inkscape:export-ydpi="63.824837" />
+	<path
+	   style="fill:#888a85;fill-rule:evenodd;stroke:#888a85;stroke-width:0.66607702px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+	   d="M 36.486667,13.995157 L 33.192911,13.949279 L 35.251412,8.724774 L 37.066636,13.97798 L 36.486667,13.995157 z "
+	   id="path11257"
+	   inkscape:export-filename="C:\wesayGit\mainline\src\WeSay.ConfigTool\Resources\configBackup.png"
+	   inkscape:export-xdpi="63.824837"
+	   inkscape:export-ydpi="63.824837"
+	   sodipodi:nodetypes="ccccc" />
+	<flowRoot
+	   xml:space="preserve"
+	   id="flowRoot11259"
+	   style="stroke:#eeeeec;fill:#eeeeec"
+	   inkscape:export-filename="C:\wesayGit\mainline\src\WeSay.ConfigTool\Resources\configBackup.png"
+	   inkscape:export-xdpi="63.824837"
+	   inkscape:export-ydpi="63.824837"><flowRegion
+		 id="flowRegion11261"><rect
+		   id="rect11263"
+		   width="21.920311"
+		   height="18.031223"
+		   x="12.727922"
+		   y="6.2806997"
+		   style="stroke:#eeeeec;fill:#eeeeec" /></flowRegion><flowPara
+		 id="flowPara11265">SD</flowPara></flowRoot>    <rect
+	   style="fill:#fce94f;fill-opacity:0;stroke:#fce94f;stroke-opacity:0.99215686"
+	   id="rect11271"
+	   width="1"
+	   height="6.875"
+	   x="4.875"
+	   y="16.5"
+	   inkscape:export-filename="C:\wesayGit\mainline\src\WeSay.ConfigTool\Resources\configBackup.png"
+	   inkscape:export-xdpi="63.824837"
+	   inkscape:export-ydpi="63.824837" />
+	<rect
+	   style="fill:#babdb6;fill-opacity:0;stroke:#babdb6;stroke-opacity:0.99215686"
+	   id="rect11273"
+	   width="27.930717"
+	   height="16.086679"
+	   x="9.5459414"
+	   y="25.726137"
+	   rx="1.9"
+	   inkscape:export-filename="C:\wesayGit\mainline\src\WeSay.ConfigTool\Resources\configBackup.png"
+	   inkscape:export-xdpi="63.824837"
+	   inkscape:export-ydpi="63.824837" />
+  </g>
+</svg>

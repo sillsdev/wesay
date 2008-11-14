@@ -37,7 +37,7 @@ namespace WeSay.ConfigTool
 		public override void PreLoad()
 		{
 			base.PreLoad();
-			WeSayWordsProject.Project.EditorsSaveNow += Project_HackedEditorsSaveNow;
+			WeSayWordsProject.Project.EditorsSaveNow += Project_EditorsSaveNow;
 		}
 
 		private void LoadPoFilesIntoCombo(string directory)
@@ -97,7 +97,7 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void Project_HackedEditorsSaveNow(object owriter, EventArgs e)
+		private void Project_EditorsSaveNow(object owriter, EventArgs e)
 		{
 			XmlWriter writer = (XmlWriter) owriter;
 

@@ -9,6 +9,36 @@ using WeSay.LexicalModel;
 
 namespace WeSay.Project
 {
+	/*
+	 * Ah, this beast.  This class reads the xml config file and creates task objects from it.
+	 *
+	 * The system here is currently a weird use of a dependency injection container, "PicoContainer".
+	 * It's odd because the xml elements that define the task must be listed in the same order
+	 * as the arguments of a constructor, rather than using the element names to match them up.
+	 *
+	 * Tasks can have simple arguments, like "label", but also complex ones that require building up
+	 * another object first, such as a filter.
+	 *
+	 * It's obvious this needs attention (it was one of the first things written for WeSay).  Some ideas (jh nov 2008):
+	 *
+	 *       <entries ref="All Entries" />  This is the *only* set there is, and will ever be.  So access to the
+	 *       LexEntryRepository shouldn't be specified in the config; it should just be pushed into the container
+	 *       automatically, and left out of the xml.
+	 *
+	 *      It's bad to have these order dependent.  We should match the element name with a constructor parameter (danger: better never rename those parameters)
+	 *
+	 *       <viewTemplate ref="Default View Template" />  There is currently only one of these... could just remove it, or say that if you don't specify one, you get the default, again out of the container
+	 *
+	 *        <label UseInConstructor="false">Actions</label>  This is kinda weird... elements marked with this attr are for the configuration app only.
+	 *        The config program has one way of dealing with these, and wesayapp has another (making tasks).  But we don't want, for example,
+	 *        to load up a whole LexEntryRepository in the Config tool, just because we want to show the descriptions of the tasks.
+	 *
+	 *        We need to decide if, rather than having these two different ways of dealing with it, if we can't just have one.  Even
+	 *        somehow go all the way to a TaskRepository?
+	 *
+	 *      We really need to do more with this, allowing people to customize tasks, even in simple ways (e.g., do you want a field to
+	 *      enter a gloss in the Gather by semantic domain task?)
+	 */
 	public class ConfigFileTaskBuilder: ITaskBuilder, IDisposable
 	{
 		private bool _disposed;

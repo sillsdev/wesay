@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel.Design;
 using WeSay.Foundation;
 
 namespace WeSay.AddinLib
@@ -13,8 +15,8 @@ namespace WeSay.AddinLib
 
 		private readonly FileLocater _locateFile;
 		private readonly WritingSystemCollection _writingSystems;
-		private readonly object _lexEntryRepository;
 		private readonly object _project;
+		public IServiceProvider ServiceProvider;
 
 		public ProjectInfo(string name,
 						   string pathToApplicationRootDirectory,
@@ -24,16 +26,16 @@ namespace WeSay.AddinLib
 						   string[] filesBelongingToProject,
 						   FileLocater locateFile,
 						   WritingSystemCollection writingSystems,
-						   object lexEntryRepository,
+						   IServiceProvider serviceProvider,
 						   // these signatures were to reduce the dependencies on addins that didn't need this stuff
 						   object project)
 				// these signatures were to reduce the dependencies on addins that didn't need this stuff
 
 		{
+			ServiceProvider = serviceProvider;
 			_pathToTopLevelDirectory = pathToTopLevelDirectory;
 			_locateFile = locateFile;
 			_writingSystems = writingSystems;
-			_lexEntryRepository = lexEntryRepository;
 			_project = project;
 			_filesBelongingToProject = filesBelongingToProject;
 			_name = name;
@@ -85,11 +87,6 @@ namespace WeSay.AddinLib
 		public string PathToApplicationRootDirectory
 		{
 			get { return _pathToApplicationRootDirectory; }
-		}
-
-		public object LexEntryRepository
-		{
-			get { return _lexEntryRepository; }
 		}
 
 		public object Project

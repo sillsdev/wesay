@@ -46,7 +46,7 @@ namespace Addin.LiftReports.Tests
 <lift  version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>",
 							Validator.LiftVersion);
 			File.WriteAllText(WeSayWordsProject.Project.PathToLiftFile, contents);
-			_addin.Launch(null, WeSayWordsProject.Project.GetProjectInfoForAddin(null));
+			_addin.Launch(null, WeSayWordsProject.Project.GetProjectInfoForAddin());
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
 			string result = File.ReadAllText(_addin.PathToOutput);
 			Assert.Greater(result.Trim().Length, 0);

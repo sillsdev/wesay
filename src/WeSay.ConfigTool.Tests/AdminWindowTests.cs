@@ -38,7 +38,7 @@ namespace WeSay.ConfigTool.Tests
 				WeSayWordsProject.Project.Dispose();
 			}
 
-			TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
+			TestUtilities.FileUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
 		}
 
 		[Test]

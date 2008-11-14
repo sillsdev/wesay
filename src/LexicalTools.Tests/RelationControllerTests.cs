@@ -1,6 +1,7 @@
 using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
+using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Tests.TestHelpers;
@@ -19,8 +20,8 @@ namespace WeSay.LexicalTools.Tests
 		private TemporaryFolder _tempFolder;
 		private string _filePath;
 		private LexRelationType _synonymsRelationType;
-		private LexRelationType _synonymRelationType;
-		private Field _synonymRelationField;
+		private LexRelationType _singleSynonymRelationType;
+		private Field _singleSynonymRelationField;
 		private Field _synonymsRelationField;
 
 		[SetUp]
@@ -48,12 +49,12 @@ namespace WeSay.LexicalTools.Tests
 														LexRelationType.Multiplicities.Many,
 														LexRelationType.TargetTypes.Sense);
 
-			_synonymRelationField = new Field("synonym",
+			_singleSynonymRelationField = new Field("synonym",
 											  "LexEntry",
 											  new string[] {"vernacular"},
 											  Field.MultiplicityType.ZeroOr1,
 											  "RelationToOneEntry");
-			_synonymRelationType = new LexRelationType("synonym",
+			_singleSynonymRelationType = new LexRelationType("synonym",
 													   LexRelationType.Multiplicities.One,
 													   LexRelationType.TargetTypes.Sense);
 		}
@@ -63,6 +64,17 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_lexEntryRepository.Dispose();
 			_tempFolder.Delete();
+		}
+
+		[Test, ExpectedException(typeof(ConfigurationException))]
+		public void NoWritingSystemsEnabledOnField_ThrowsConfigurationException()
+		{
+				_singleSynonymRelationField.WritingSystemIds.Clear();
+				RelationController.CreateWidget(_source,
+												_singleSynonymRelationType,
+												_singleSynonymRelationField,
+												_lexEntryRepository,
+												delegate { });
 		}
 
 		[Test]
@@ -79,8 +91,8 @@ namespace WeSay.LexicalTools.Tests
 		public void CreateWidget_Single_Empty()
 		{
 			RelationController.CreateWidget(_source,
-											_synonymRelationType,
-											_synonymRelationField,
+											_singleSynonymRelationType,
+											_singleSynonymRelationField,
 											_lexEntryRepository,
 											delegate { });
 		}
@@ -88,11 +100,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CreateWidget_Single_ExistingEmpty()
 		{
-			AddRelation(_source, _synonymRelationField.FieldName, string.Empty);
+			AddRelation(_source, _singleSynonymRelationField.FieldName, string.Empty);
 
 			RelationController.CreateWidget(_source,
-											_synonymRelationType,
-											_synonymRelationField,
+											_singleSynonymRelationType,
+											_singleSynonymRelationField,
 											_lexEntryRepository,
 											delegate { });
 		}
@@ -100,11 +112,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CreateWidget_Single_ExistingRelationToNonExistantRecord_ControlDisplaysId()
 		{
-			AddRelation(_source, _synonymRelationField.FieldName, "NonExistantId");
+			AddRelation(_source, _singleSynonymRelationField.FieldName, "NonExistantId");
 
 			Control c = RelationController.CreateWidget(_source,
-														_synonymRelationType,
-														_synonymRelationField,
+														_singleSynonymRelationType,
+														_singleSynonymRelationField,
 														_lexEntryRepository,
 														delegate { });
 			Assert.AreEqual("NonExistantId", c.Text);
@@ -113,11 +125,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CreateWidget_Single_ExistingRelationToExistantRecord_ControlDisplaysLexicalUnit()
 		{
-			AddRelation(_source, _synonymRelationField.FieldName, _target.Id);
+			AddRelation(_source, _singleSynonymRelationField.FieldName, _target.Id);
 
 			Control c = RelationController.CreateWidget(_source,
-														_synonymRelationType,
-														_synonymRelationField,
+														_singleSynonymRelationType,
+														_singleSynonymRelationField,
 														_lexEntryRepository,
 														delegate { });
 
@@ -127,11 +139,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ChangeBoundRelation_Single_ToEmpty()
 		{
-			LexRelation relation = AddRelation(_source, _synonymRelationField.FieldName, _target.Id);
+			LexRelation relation = AddRelation(_source, _singleSynonymRelationField.FieldName, _target.Id);
 
 			Control c = RelationController.CreateWidget(_source,
-														_synonymRelationType,
-														_synonymRelationField,
+														_singleSynonymRelationType,
+														_singleSynonymRelationField,
 														_lexEntryRepository,
 														delegate { });
 			c.Text = string.Empty;
@@ -142,11 +154,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ChangeBoundRelation_Single_ToNonExistant_NoRelation()
 		{
-			LexRelation relation = AddRelation(_source, _synonymRelationField.FieldName, _target.Id);
+			LexRelation relation = AddRelation(_source, _singleSynonymRelationField.FieldName, _target.Id);
 
 			Control c = RelationController.CreateWidget(_source,
-														_synonymRelationType,
-														_synonymRelationField,
+														_singleSynonymRelationType,
+														_singleSynonymRelationField,
 														_lexEntryRepository,
 														delegate { });
 			c.Text = "NonExistantId";
@@ -157,11 +169,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ChangeBoundRelation_Single_Existing()
 		{
-			LexRelation relation = AddRelation(_source, _synonymRelationField.FieldName, "something");
+			LexRelation relation = AddRelation(_source, _singleSynonymRelationField.FieldName, "something");
 
 			Control c = RelationController.CreateWidget(_source,
-														_synonymRelationType,
-														_synonymRelationField,
+														_singleSynonymRelationType,
+														_singleSynonymRelationField,
 														_lexEntryRepository,
 														delegate { });
 			c.Text = _target.LexicalForm["vernacular"];
@@ -172,11 +184,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ChangeBoundRelation_Single_ToNonExistantCreate_CreatesRelation()
 		{
-			LexRelation relation = AddRelation(_source, _synonymRelationField.FieldName, _target.Id);
+			LexRelation relation = AddRelation(_source, _singleSynonymRelationField.FieldName, _target.Id);
 
 			Control c = RelationController.CreateWidget(_source,
-														_synonymRelationType,
-														_synonymRelationField,
+														_singleSynonymRelationType,
+														_singleSynonymRelationField,
 														_lexEntryRepository,
 														delegate { });
 			c.Text = "new";
@@ -193,11 +205,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void TriggerFindApproximate_Single()
 		{
-			AddRelation(_source, _synonymRelationField.FieldName, _target.Id);
+			AddRelation(_source, _singleSynonymRelationField.FieldName, _target.Id);
 
 			Control c = RelationController.CreateWidget(_source,
-														_synonymRelationType,
-														_synonymRelationField,
+														_singleSynonymRelationType,
+														_singleSynonymRelationField,
 														_lexEntryRepository,
 														delegate { });
 			Form form = new Form();

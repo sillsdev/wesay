@@ -1,8 +1,8 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</ProjectGuid>
 	<OutputType>WinExe</OutputType>
@@ -10,6 +10,26 @@
 	<RootNamespace>WeSay.ConfigTool</RootNamespace>
 	<AssemblyName>WeSay Configuration Tool</AssemblyName>
 	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
+	<FileUpgradeFlags>
+	</FileUpgradeFlags>
+	<UpgradeBackupLocation>
+	</UpgradeBackupLocation>
+	<OldToolsVersion>2.0</OldToolsVersion>
+	<PublishUrl>publish\</PublishUrl>
+	<Install>true</Install>
+	<InstallFrom>Disk</InstallFrom>
+	<UpdateEnabled>false</UpdateEnabled>
+	<UpdateMode>Foreground</UpdateMode>
+	<UpdateInterval>7</UpdateInterval>
+	<UpdateIntervalUnits>Days</UpdateIntervalUnits>
+	<UpdatePeriodically>false</UpdatePeriodically>
+	<UpdateRequired>false</UpdateRequired>
+	<MapFileExtensions>true</MapFileExtensions>
+	<ApplicationRevision>0</ApplicationRevision>
+	<ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+	<IsWebBootstrapper>false</IsWebBootstrapper>
+	<UseApplicationTrust>false</UseApplicationTrust>
+	<BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -45,6 +65,10 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Chorus.exe</HintPath>
+	</Reference>
 	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
@@ -87,6 +111,11 @@
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
+	<Reference Include="WrapShellCall, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <ExecutableExtension>.exe</ExecutableExtension>
+	  <HintPath>..\..\lib\WrapShellCall.exe</HintPath>
+	</Reference>
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="AboutBox.cs">
@@ -100,6 +129,12 @@
 	</Compile>
 	<Compile Include="ActionsControl.Designer.cs">
 	  <DependentUpon>ActionsControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="ChorusControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ChorusControl.Designer.cs">
+	  <DependentUpon>ChorusControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="MruProjects.cs" />
 	<Compile Include="ConfigurationWindow.cs">
@@ -169,6 +204,10 @@
 	</EmbeddedResource>
 	<EmbeddedResource Include="BackupPlanControl.resx">
 	  <DependentUpon>BackupPlanControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="ChorusControl.resx">
+	  <DependentUpon>ChorusControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="FieldsControl.resx">
@@ -389,6 +428,23 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\ConfigOptionLists.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+	  <Visible>False</Visible>
+	  <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+	  <Install>true</Install>
+	</BootstrapperPackage>
+	<BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+	  <Visible>False</Visible>
+	  <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+	  <Install>false</Install>
+	</BootstrapperPackage>
+	<BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+	  <Visible>False</Visible>
+	  <ProductName>.NET Framework 3.5</ProductName>
+	  <Install>false</Install>
+	</BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
 	<Folder Include="Properties\DataSources\" />

@@ -1,14 +1,19 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{F644C902-A952-4797-9E2D-19D6051DD032}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace>WeSay.Project.Tests</RootNamespace>
 	<AssemblyName>WeSay.Project.Tests</AssemblyName>
+	<FileUpgradeFlags>
+	</FileUpgradeFlags>
+	<UpgradeBackupLocation>
+	</UpgradeBackupLocation>
+	<OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -44,6 +49,11 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <ExecutableExtension>.exe</ExecutableExtension>
+	  <HintPath>..\..\lib\Chorus.exe</HintPath>
+	</Reference>
 	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
@@ -84,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="BasilProjectTests.cs" />
+	<Compile Include="ChorusBackupMakerTests.cs" />
 	<Compile Include="LiftUpdateTests.cs" />
 	<Compile Include="MigrationTests.cs" />
 	<Compile Include="LiftExporterPLiftTests.cs" />
@@ -103,6 +114,10 @@
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\TestUtilities\TestUtilities.csproj">
+	  <Project>{5521A594-6886-4F2E-99FC-9B02A7D862BE}</Project>
+	  <Name>TestUtilities</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>

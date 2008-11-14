@@ -81,7 +81,7 @@ namespace WeSay.LexicalTools.Tests
 				_task.Deactivate(); //needed for disposal of controls
 			}
 			_lexEntryRepository.Dispose();
-			_tempFolder.Delete();
+			_tempFolder.Dispose();
 		}
 
 		private GatherBySemanticDomainTask Task

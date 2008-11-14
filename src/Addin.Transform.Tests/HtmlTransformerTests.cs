@@ -55,7 +55,7 @@ namespace Addin.Transform.Tests
 							Validator.LiftVersion);
 			File.WriteAllText(_liftFilePath, contents);
 			_addin.Launch(null,
-						  WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository));
+						  WeSayWordsProject.Project.GetProjectInfoForAddin());
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
 			string result = File.ReadAllText(_addin.PathToOutput);
 			Assert.Greater(result.Trim().Length, 0);
@@ -64,7 +64,7 @@ namespace Addin.Transform.Tests
 		[Test]
 		public void CanGetXsltFromResource()
 		{
-			ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin(null);
+			ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin();
 			string path = info.LocateFile("plift2html.xsl");
 			if (!string.IsNullOrEmpty(path))
 			{

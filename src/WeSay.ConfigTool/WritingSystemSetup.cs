@@ -137,7 +137,10 @@ namespace WeSay.ConfigTool
 			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
 			{
 				string oldId = args.OldValue.ToString();
-				WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId);
+				if(!WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId))
+				{
+					ws.Id = oldId; //couldn't make the change
+				}
 				//                Reporting.ErrorReporter.ReportNonFatalMessage(
 				//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
 				//                    ws.Id, oldId);

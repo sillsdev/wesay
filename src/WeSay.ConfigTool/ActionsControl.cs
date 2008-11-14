@@ -69,7 +69,7 @@ namespace WeSay.ConfigTool
 			ActionItemControl control = new ActionItemControl(addin,
 															  true,
 															  WeSayWordsProject.Project.
-																	  GetProjectInfoForAddin(null));
+																	  GetProjectInfoForAddin());
 			// GetProjectInfo());
 			control.DoShowInWeSay = AddinSet.Singleton.DoShowInWeSay(addin.ID);
 			control.TabIndex = _addinsList.RowCount;
@@ -85,13 +85,19 @@ namespace WeSay.ConfigTool
 
 			try
 			{
-				using (
-						LexEntryRepository lexEntryRepository =
-								new LexEntryRepository(WeSayWordsProject.Project.PathToRepository))
-				{
-					addin.Launch(ParentForm,
-								 WeSayWordsProject.Project.GetProjectInfoForAddin(lexEntryRepository));
-				}
+				addin.Launch(ParentForm,
+
+					//working on fixing ws-1026, found that creating this repository just locked the
+					//file, and no existing actions appear to need it anyhow
+			 WeSayWordsProject.Project.GetProjectInfoForAddin());
+
+//                using (
+//                        LexEntryRepository lexEntryRepository =
+//                                new LexEntryRepository(WeSayWordsProject.Project.PathToRepository))
+//                {
+//                    addin.Launch(ParentForm,
+//                                 WeSayWordsProject.Project.GetProjectInfoForAddin(lexEntryRepository));
+//                }
 			}
 			catch (Exception error)
 			{

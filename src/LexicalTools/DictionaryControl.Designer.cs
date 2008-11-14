@@ -186,14 +186,14 @@ namespace WeSay.LexicalTools
 			//
 			// _btnDeleteWord
 			//
-			this._btnDeleteWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this._btnDeleteWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this._btnDeleteWord.AutoSize = true;
 			this._btnDeleteWord.FlatAppearance.BorderSize = 0;
 			this._btnDeleteWord.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
 			this._btnDeleteWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnDeleteWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 			this._btnDeleteWord.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-			this._btnDeleteWord.Location = new System.Drawing.Point(148, 1);
+			this._btnDeleteWord.Location = new System.Drawing.Point(200, 1);
 			this._btnDeleteWord.Margin = new System.Windows.Forms.Padding(0);
 			this._btnDeleteWord.Name = "_btnDeleteWord";
 			this._btnDeleteWord.Size = new System.Drawing.Size(138, 25);

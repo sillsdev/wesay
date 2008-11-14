@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
 	<OutputPath>..\..\output\Mono Release\</OutputPath>
 	<DefineConstants>TRACE;MONO</DefineConstants>
@@ -10,7 +10,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</ProjectGuid>
 	<OutputType>WinExe</OutputType>
@@ -18,6 +18,14 @@
 	<RootNamespace>WeSay.App</RootNamespace>
 	<AssemblyName>WeSay.App</AssemblyName>
 	<ApplicationIcon>..\..\artwork\WeSay.ico</ApplicationIcon>
+	<FileUpgradeFlags>
+	</FileUpgradeFlags>
+	<UpgradeBackupLocation>
+	</UpgradeBackupLocation>
+	<OldToolsVersion>2.0</OldToolsVersion>
+	<TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+	<TargetFrameworkSubset>
+	</TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -45,6 +53,10 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="Autofac, Version=1.3.2.449, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Autofac.dll</HintPath>
+	</Reference>
 	<Reference Include="CookComputing.XmlRpcV2, Version=2.2.0.4, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\CookComputing.XmlRpcV2.dll</HintPath>
@@ -56,6 +68,10 @@
 	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
+	</Reference>
+	<Reference Include="LinqBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2b14eb747628076, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\LinqBridge.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
@@ -92,7 +108,7 @@
 	<Compile Include="LongStartupNotification.Designer.cs">
 	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
 	</Compile>
-	<Compile Include="RepositoryStartupUI.cs" />
+	<Compile Include="LexEntryRepositoryLoaderService.cs" />
 	<Compile Include="Services\DictionaryServiceProvider.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>

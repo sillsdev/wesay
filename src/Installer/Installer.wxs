@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
 <!-- will be used later on in this file.                                                                 -->
-<?define Property_ProductVersion = "0.4.1234" ?> <!--this is replaced at build time by the msbuild 'package' target -->
+<?define Property_ProductVersion = "0.4.-1" ?> <!--this is replaced at build time by the msbuild 'package' target -->
 <?define Property_ProductCode = "*" ?> <!-- auto-generate a new guid each time -->
 <?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?> <!--Don't even think of EVER changing this -->
 
@@ -138,17 +138,22 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="CommonTools.pdb" Guid="{3B8D43F0-7A64-4AC7-82A9-2A334E53F5AC}">
 					<File Id="CommonTools.pdb" Name="CommonTools.pdb" KeyPath="yes" Source="..\..\output\release\CommonTools.pdb" />
 				  </Component>
-				  <Component Id="Db4objects.Db4o.dll" Guid="{A519B18E-56D3-45FA-A2C9-BA7A524259B2}">
+ <!--                   <Component Id="Db4objects.Db4o.dll" Guid="{A519B18E-56D3-45FA-A2C9-BA7A524259B2}">
 					<File Id="Db4objects.Db4o.dll" Name="Db4objects.Db4o.dll" KeyPath="yes" Source="..\..\output\release\Db4objects.Db4o.dll" />
 				  </Component>
-				  <Component Id="Db4objects.Db4o.Tools.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173B92}">
+				<Component Id="Db4objects.Db4o.Tools.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173B92}">
 					<File Id="Db4objects.Db4o.Tools.dll" Name="Db4objects.Db4o.Tools.dll" KeyPath="yes" Source="..\..\output\release\Db4objects.Db4o.Tools.dll" />
 				  </Component>
-
+	  -->
 				  <Component Id="Enchant.Net.dll" Guid="{95F22469-1C72-4f90-99D8-D5FDFBA0DDF9}">
 					<File Id="Enchant.Net.dll" Name="Enchant.Net.dll" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll" />
 				  </Component>
-
+				  <Component Id="autofac.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
+					<File Id="autofac.dll" Name="autofac.dll" KeyPath="yes" Source="..\..\output\release\autofac.dll" />
+				  </Component>
+				  <Component Id="linqbridge.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
+					<File Id="linqbridge.dll" Name="linqbridge.dll" KeyPath="yes" Source="..\..\output\release\linqbridge.dll" />
+				  </Component>
 
 				  <Component Id="CookComputing.XmlRpcV2.dll" Guid="{C23D78B7-A7F2-4dc2-9B7F-8A004167FF12}">
 					<File Id="CookComputing.XmlRpcV2.dll" Name="CookComputing.XmlRpcV2.dll" KeyPath="yes" Source="..\..\output\release\CookComputing.XmlRpcV2.dll" />
@@ -202,6 +207,15 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="PicoContainer.pdb" Guid="{4C7A63B8-B4EC-485A-8709-B4F5807181C2}">
 					<File Id="PicoContainer.pdb" Name="PicoContainer.pdb" KeyPath="yes" Source="..\..\output\release\PicoContainer.pdb" />
 				  </Component>
+
+				  <Component Id="Chorus.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CCCC">
+					<File Id="Chorus.exe" Name="Chorus.exe" KeyPath="yes" Source="..\..\output\release\Chorus.exe" />
+				  </Component>
+
+				  <Component Id="wrapShellCall.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CDDD">
+					<File Id="wrapShellCall.exe" Name="wrapShellCall.exe" KeyPath="yes" Source="..\..\output\release\wrapShellCall.exe" />
+				  </Component>
+
 				  <Component Id="Palaso.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
 					<File Id="Palaso.dll" Name="Palaso.dll" KeyPath="yes" Source="..\..\output\release\Palaso.dll" />
 				  </Component>
@@ -319,14 +333,18 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Castle.DynamicProxy.dll" />
 			  <ComponentRef Id="CommonTools.dll" />
 			  <ComponentRef Id="CommonTools.pdb" />
-			  <ComponentRef Id="Db4objects.Db4o.dll" />
+   <!--           <ComponentRef Id="Db4objects.Db4o.dll" />
 			  <ComponentRef Id="Db4objects.Db4o.Tools.dll" />
+	   -->
 			  <ComponentRef Id="Enchant.Net.dll"/>
+
+			  <ComponentRef Id="autofac.dll"/>
+			  <ComponentRef Id="linqbridge.dll"/>
+
 			  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
 			  <ComponentRef Id="CookComputing.XmlRpcV2.dll" />
 			  <ComponentRef Id="KeymanLink.dll" />
-			  <!--<ComponentRef Id="KeymanLink.pdb" />-->
-			  <!--<ComponentRef Id="KeymanLink.xml" />-->
+
 			  <ComponentRef Id="LexicalModel.dll" />
 			  <ComponentRef Id="LexicalModel.pdb" />
 			  <ComponentRef Id="LexicalTools.dll" />
@@ -338,6 +356,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <!--<ComponentRef Id="NetReflector.pdb" />-->
 			  <ComponentRef Id="PicoContainer.dll" />
 			  <ComponentRef Id="PicoContainer.pdb" />
+			  <ComponentRef Id="Chorus.exe"/>
+			  <ComponentRef Id="wrapShellCall.exe"/>
 			  <ComponentRef Id="Palaso.dll"/>
 			  <ComponentRef Id="PalasoReporting.dll" />
 			  <ComponentRef Id="Palaso.Services.dll" />

@@ -23,7 +23,6 @@ namespace WeSay.App
 		//private static Mutex _oneInstancePerProjectMutex;
 		private WeSayWordsProject _project;
 		private DictionaryServiceProvider _dictionary;
-		private LexEntryRepository _lexEntryRepository;
 		private readonly CommandLineArguments _commandLineArguments = new CommandLineArguments();
 		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
 		private TabbedForm _tabbedForm;
@@ -95,37 +94,39 @@ namespace WeSay.App
 			try
 			{
 				DisplaySettings.Default.SkinName = Settings.Default.SkinName;
-				_project = InitializeProject(_commandLineArguments.liftPath);
-				if (_project == null)
+				using (_project = InitializeProject(_commandLineArguments.liftPath))
 				{
-					return;
-				}
-
-				using (_lexEntryRepository = RepositoryStartupUI.CreateLexEntryRepository(_project.PathToRepository))
-				{
-					using (
-							_dictionary =
-							new DictionaryServiceProvider(_lexEntryRepository, this, _project))
+					if (_project == null)
 					{
-						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") <
-							0)
+						return;
+					}
+
+
+					using (_dictionary =
+						   new DictionaryServiceProvider(GetLexEntryRepository(), this, _project))
+					{
+						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
 						{
 							RecoverUnsavedDataIfNeeded();
 						}
 
 						StartDictionaryServices();
 						_dictionary.LastClientDeregistered +=
-								_serviceAppSingletonHelper.OnExitIfInServerMode;
+							_serviceAppSingletonHelper.OnExitIfInServerMode;
+
+						WireUpChorusEvents();
+
 						_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
 
 						_dictionary.LastClientDeregistered -=
-								_serviceAppSingletonHelper.OnExitIfInServerMode;
+							_serviceAppSingletonHelper.OnExitIfInServerMode;
 
 						//do a last backup before exiting
 						Logger.WriteEvent("App Exiting Normally.");
 					}
 				}
-			}
+			 _project.BackupNow();
+		   }
 			finally
 			{
 				if (_serviceLifeTimeHelper != null)
@@ -141,6 +142,26 @@ namespace WeSay.App
 			Settings.Default.Save();
 		}
 
+		private LexEntryRepository GetLexEntryRepository()
+		{
+			return _project.GetLexEntryRepository();
+		}
+
+		private void WireUpChorusEvents()
+		{
+			//this is something of a hack... it seems weird to me that the app has the repository, but the project doesn't.
+			//maybe only the project should posses it.
+			_project.BackupMaker.Repository = GetLexEntryRepository();//needed so it can unlock the lift file as needed
+
+			GetLexEntryRepository().AfterEntryModified += OnModifyLift;
+			GetLexEntryRepository().AfterEntryDeleted += OnModifyLift;
+		}
+
+		private void OnModifyLift(object sender, LexEntryRepository.EntryEventArgs e)
+		{
+			_project.ConsiderSynchingOrBackingUp("checkpoint");
+		}
+
 		//!!! Move this into LexEntryRepository and maybe lower.
 		private void RecoverUnsavedDataIfNeeded()
 		{
@@ -151,7 +172,7 @@ namespace WeSay.App
 
 			try
 			{
-				_lexEntryRepository.BackendRecoverUnsavedChangesOutOfCacheIfNeeded();
+				GetLexEntryRepository().BackendRecoverUnsavedChangesOutOfCacheIfNeeded();
 			}
 			catch (IOException e)
 			{
@@ -239,7 +260,7 @@ namespace WeSay.App
 
 		//    try
 		//    {
-		//        DictionaryTask dictionaryTask = new DictionaryTask(_lexEntryRepository,
+		//        DictionaryTask dictionaryTask = new DictionaryTask(GetLexEntryRepository(),
 		//                                                           _project.DefaultViewTemplate);
 		//    }
 		//    finally
@@ -247,7 +268,7 @@ namespace WeSay.App
 		//        notify.Interrupt();
 		//    }
 
-		//    //            LexEntryRepository manager = _lexEntryRepository as LexEntryRepository;
+		//    //            LexEntryRepository manager = GetLexEntryRepository() as LexEntryRepository;
 		//    //            if (manager != null)
 		//    //            {
 		//    //                HeadwordSortedListHelper helper = new HeadwordSortedListHelper(manager,
@@ -304,7 +325,7 @@ namespace WeSay.App
 					builder = new ConfigFileTaskBuilder(configFile,
 														_project,
 														_tabbedForm,
-														_lexEntryRepository);
+														GetLexEntryRepository());
 				}
 				_project.Tasks = builder.Tasks;
 				Application.DoEvents();

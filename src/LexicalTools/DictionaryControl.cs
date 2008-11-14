@@ -53,15 +53,15 @@ namespace WeSay.LexicalTools
 			InitializeDisplaySettings();
 
 			_writingSystemChooser.Image = Resources.Expand.GetThumbnailImage(6,
-																			   6,
-																			   ReturnFalse,
-																			   IntPtr.Zero);
+																			 6,
+																			 ReturnFalse,
+																			 IntPtr.Zero);
 			_btnFind.Image = Resources.Find.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
-			_btnDeleteWord.Image = Resources.DeleteWord.GetThumbnailImage(18,
-																		  18,
-																		  ReturnFalse,
-																		  IntPtr.Zero);
-
+			_btnDeleteWord.Image = Resources.DeleteWord;//..GetThumbnailImage(18,
+//                                                                          18,
+//                                                                          ReturnFalse,
+//                                                                          IntPtr.Zero);
+			_btnNewWord.Image = Resources.NewWord.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
 
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
 			Control_EntryDetailPanel.LexEntryRepository = _lexEntryRepository;
@@ -515,6 +515,15 @@ namespace WeSay.LexicalTools
 		private void OnDeleteWord_Click(object sender, EventArgs e)
 		{
 			Logger.WriteEvent("DeleteWord_Clicked");
+
+			var dlg = new ConfirmDelete();
+
+			dlg.ShowDialog(this);
+			if(dlg.DialogResult != DialogResult.OK)
+			{
+				Logger.WriteEvent("DeleteWord_Cancelled");
+				return;
+			}
 
 			Debug.Assert(CurrentIndex >= 0);
 			if (CurrentIndex == -1)

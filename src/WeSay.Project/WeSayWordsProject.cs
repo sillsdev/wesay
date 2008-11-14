@@ -2,6 +2,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -11,9 +12,13 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using Autofac;
+using Autofac.Builder;
+using Autofac.Component;
 using LiftIO;
 using LiftIO.Validation;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -22,7 +27,7 @@ using WeSay.LexicalModel;
 
 namespace WeSay.Project
 {
-	public class WeSayWordsProject: BasilProject
+	public class WeSayWordsProject : BasilProject
 	{
 		private IList<ITask> _tasks;
 		private ViewTemplate _defaultViewTemplate;
@@ -35,6 +40,8 @@ namespace WeSay.Project
 
 		private readonly AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
+		private ChorusBackupMaker _backupMaker;
+		private Autofac.IContainer _container;
 
 		public event EventHandler EditorsSaveNow;
 
@@ -50,6 +57,8 @@ namespace WeSay.Project
 		{
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
+			BackupMaker = new ChorusBackupMaker();
+
 		}
 
 		public IList<ITask> Tasks
@@ -252,8 +261,15 @@ namespace WeSay.Project
 
 		private static bool HasOldStructure(string liftPath, out string projectDirectory)
 		{
+			projectDirectory = null;
 			Debug.Assert(File.Exists(liftPath));
-			projectDirectory = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
+			string parentName = Directory.GetParent(liftPath).FullName;
+			DirectoryInfo parent = Directory.GetParent(parentName);
+			if(parent==null)//like if the file was at c:\foo.lift
+			{
+				return false;
+			}
+			projectDirectory = parent.FullName;
 			string commonDir = Path.Combine(projectDirectory, "common");
 			string dirHoldingLift = Path.GetFileName(Path.GetDirectoryName(liftPath));
 			return dirHoldingLift == "wesay" && Directory.Exists(commonDir);
@@ -289,7 +305,68 @@ namespace WeSay.Project
 				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
+
 			InitializeViewTemplatesFromProjectFiles();
+
+			//review: is this the right place for this?
+			PopulateDIContainer();
+
+			LoadBackupPlan();
+		}
+
+		[Serializable]
+	//    [ComVisible(true)]
+		public delegate object ServiceCreatorCallback(
+		   IServiceContainer container,
+		   Type serviceType
+		);
+
+		private void PopulateDIContainer()
+		{
+			var builder = new ContainerBuilder();
+
+			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
+
+			builder.Register<LexEntryRepository>(
+				c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
+						progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
+
+			builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
+			builder.Register<ViewTemplate>(DefaultViewTemplate);
+
+			// can't currently get at the instance
+			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
+
+			_container = builder.Build();
+		}
+
+		public LexEntryRepository GetLexEntryRepository()
+		{
+			return _container.Resolve<LexEntryRepository>();
+
+		}
+
+//        //provide an IServiceProvider facade around our DI Container
+//        public object GetService(Type serviceType)
+//        {
+//            return _container.Resolve(serviceType);
+//        }
+
+		private void LoadBackupPlan()
+		{
+			//what a mess. I hate .net new fangled xml stuff...
+			XPathDocument projectDoc = GetConfigurationDoc();
+			XPathNavigator backupPlanNav = projectDoc.CreateNavigator();
+			backupPlanNav = backupPlanNav.SelectSingleNode("configuration/" + ChorusBackupMaker.ElementName);
+			if (backupPlanNav == null)
+			{
+				//make sure we have a fresh copy with any defaults
+				BackupMaker = new ChorusBackupMaker();
+				return;
+			}
+
+			XmlReader r = XmlReader.Create(new StringReader(backupPlanNav.OuterXml));
+			BackupMaker = ChorusBackupMaker.LoadFromReader(r);
 		}
 
 		private static void MoveFilesFromOldDirLayout(string projectDir)
@@ -470,7 +547,10 @@ namespace WeSay.Project
 					{
 						File.Delete(s);
 					}
-					File.Move(targetPath, s);
+					if (File.Exists(targetPath)) //review: JDH added this because of a failing test, and from my reading, the target shouldn't need to pre-exist
+					{
+						File.Move(targetPath, s);
+					}
 					File.Move(tempPath, targetPath);
 					File.Delete(s);
 				}
@@ -548,7 +628,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public ProjectInfo GetProjectInfoForAddin(LexEntryRepository lexEntryRepository)
+		public ProjectInfo GetProjectInfoForAddin()
 		{
 			return new ProjectInfo(Name,
 								   ApplicationRootDirectory,
@@ -558,7 +638,7 @@ namespace WeSay.Project
 								   GetFilesBelongingToProject(ProjectDirectoryPath),
 								   AddinSet.Singleton.LocateFile,
 								   WritingSystems,
-								   lexEntryRepository,
+								   new WeSay.Foundation.ServiceLocatorAdapter(_container),
 								   this);
 		}
 
@@ -643,6 +723,10 @@ namespace WeSay.Project
 			if (LiftIsLocked)
 			{
 				ReleaseLockOnLift();
+			}
+			if(_container !=null)
+			{
+				_container.Dispose();//this will dispose of objects in the container (at least those with the normal "lifetype" setting)
 			}
 		}
 
@@ -902,6 +986,17 @@ namespace WeSay.Project
 			get { return DefaultViewTemplate; }
 		}
 
+		public ChorusBackupMaker BackupMaker
+		{
+			get { return _backupMaker; }
+			set { _backupMaker = value; }
+		}
+
+		public IContainer Container
+		{
+			get { return _container; }
+		}
+
 		public override void Save()
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
@@ -920,13 +1015,16 @@ namespace WeSay.Project
 				EditorsSaveNow.Invoke(writer, null);
 			}
 
+			BackupMaker.Save(writer);
+
 			_addins.Save(writer);
 
 			writer.WriteEndDocument();
 			writer.Close();
 
 			base.Save();
-			// nb: this saves the writing system stuff, so if it is called before EditorsSaveNow, we won't get the latest stuff from editors working on them.
+			BackupNow();
+
 		}
 
 		public Field GetFieldFromDefaultViewTemplate(string fieldName)
@@ -1029,68 +1127,86 @@ namespace WeSay.Project
 			//file.Substring(0, file.IndexOf(".xml"));
 		}
 
-		public void MakeFieldNameChange(Field field, string oldName)
+
+
+		private delegate void DelegateThatTouchesLiftFile(string pathToLiftFile);
+
+		private bool DoSomethingToLiftFile(DelegateThatTouchesLiftFile doSomething)
+		{
+			if(!File.Exists(PathToLiftFile))
+				return false;
+			try
+			{
+				doSomething(PathToLiftFile);
+				return true;
+			}
+			catch (Exception error)
+			{
+				ErrorReport.ReportNonFatalMessage("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
+				return false;
+			}
+
+		}
+
+		public bool MakeFieldNameChange(Field field, string oldName)
 		{
 			Debug.Assert(!String.IsNullOrEmpty(oldName));
 			if (string.IsNullOrEmpty(oldName))
 			{
-				return;
+				return false;
 			}
 			oldName = Regex.Escape(oldName);
 
 			//NB: we're just using regex, here, not xpaths which in this case
 			//would be nice (e.g., "name" is a pretty generic thing to be changing)
-			if (File.Exists(PathToLiftFile))
-			{
-				//traits
-				if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
-					field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
-				{
-					GrepFile(PathToLiftFile,
-							 string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
-							 string.Format("name=\"{0}\"", field.FieldName));
-				}
-				else
-				{
-					//<field>s
-					GrepFile(PathToLiftFile,
-							 string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
-							 string.Format("type=\"{0}\"", field.FieldName));
-				}
-			}
+			return DoSomethingToLiftFile((p) =>
+											 {
+												 //traits
+												 if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
+													 field.DataTypeName ==
+													 Field.BuiltInDataType.OptionCollection.ToString())
+												 {
+													 GrepFile(p,
+															  string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
+															  string.Format("name=\"{0}\"", field.FieldName));
+												 }
+												 else
+												 {
+													 //<field>s
+													 GrepFile(p,
+															  string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
+															  string.Format("type=\"{0}\"", field.FieldName));
+												 }
+											 });
+			return true;
 		}
 
-		public void MakeWritingSystemIdChange(WritingSystem ws, string oldId)
+		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)
 		{
-			//Todo: WS-227 Before changing a ws id in a lift file, ensure that it isn't already in use
+			if (DoSomethingToLiftFile((p) =>
+											 {
 
-			WritingSystems.IdOfWritingSystemChanged(ws, oldId);
-			DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
-
-			if (File.Exists(PathToLiftFile))
+												 //todo: expand the regular expression here to account for all reasonable patterns
+												 GrepFile(PathToLiftFile,
+														  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
+																		Regex.Escape(oldId)),
+														  string.Format("lang=\"{0}\"", ws.Id));
+											 }))
 			{
-				//todo: expand the regular expression here to account for all reasonable patterns
-				GrepFile(PathToLiftFile,
-						 string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(oldId)),
-						 string.Format("lang=\"{0}\"", ws.Id));
+				WritingSystems.IdOfWritingSystemChanged(ws, oldId);
+				DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
+
+				if (WritingSystemChanged != null)
+				{
+					StringPair p = new StringPair();
+					p.from = oldId;
+					p.to = ws.Id;
+					WritingSystemChanged.Invoke(this, p);
+				}
+				return true;
 			}
 
-			if (WritingSystemChanged != null)
-			{
-				StringPair p = new StringPair();
-				p.from = oldId;
-				p.to = ws.Id;
-				WritingSystemChanged.Invoke(this, p);
-			}
-
-			//this worked but it just gets overwritten when Setup closes
-			/*if (File.Exists(PathToConfigFile))
-			{
-				GrepFile(PathToConfigFile,
-						 string.Format("wordListWritingSystemId>\\s*{0}\\s*<", oldId),
-						 string.Format("wordListWritingSystemId>{0}<", ws.Id));
-			}
-			*/
+			return false;
 		}
 
 		/// <summary>
@@ -1216,5 +1332,35 @@ namespace WeSay.Project
 			}
 			return false;
 		}
+
+		public void BackupNow()
+		{
+			try
+			{
+				BackupMaker.BackupNow(ProjectDirectoryPath, StringCatalogSelector);
+			}
+			catch (Exception error)
+			{
+				ErrorReport.ReportNonFatalMessage(string.Format("WeSay was not able to do a backup.\r\nReason: {0}", error.Message));
+			}
+		}
+
+		/// <summary>
+		/// Call this when something changed, so we might want to backup or sync
+		/// </summary>
+		/// <param name="description"></param>
+		public void ConsiderSynchingOrBackingUp(string description)
+		{
+			//nb: we have multiple lengths we could go to eventually, perhaps with different rules:
+			//      commit locally, commit to local backup, commit peers on LAN, commit across internet
+			TimeSpan diff = DateTime.Now - BackupMaker.TimeOfLastBackupAttempt;
+		   // if(diff.TotalSeconds  > 30)
+			if(diff.TotalMinutes > 5)
+			{
+				BackupNow();
+			}
+		}
+
+
 	}
 }

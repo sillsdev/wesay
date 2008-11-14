@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalModel", "LexicalModel\LexicalModel.csproj", "{5F61C809-B6C0-4567-9603-B2198E1AD038}"
 	ProjectSection(ProjectDependencies) = postProject
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD} = {600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}

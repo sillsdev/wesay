@@ -10,6 +10,7 @@ using Mono.Addins;
 using Palaso.Progress;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
+using WeSay.LexicalModel;
 
 namespace Addin.Transform
 {
@@ -125,16 +126,20 @@ namespace Addin.Transform
 		{
 			_settings.FillEmptySettingsWithGuesses(projectInfo);
 			SetupPostTransformMethod(OnDoGrepWork, _settings, 10 /*has some cushion*/);
-			string output = TransformLiftToText(projectInfo, "lift2sfm.xsl", "-sfm.txt");
-			if (string.IsNullOrEmpty(output))
+			LexEntryRepository repo = projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
+			using (repo.GetRightToAccessLiftExternally())
 			{
-				return; // get this when the user cancels
-			}
-			//GrepFile(output, _settings);
+				string output = TransformLiftToText(projectInfo, "lift2sfm.xsl", "-sfm.txt");
+				if (string.IsNullOrEmpty(output))
+				{
+					return; // get this when the user cancels
+				}
+				//GrepFile(output, _settings);
 
-			if (_launchAfterTransform)
-			{
-				Process.Start(output);
+				if (_launchAfterTransform)
+				{
+					Process.Start(output);
+				}
 			}
 		}
 

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--This file is generated and then updated by an MSBuild task.  It preserves the automatically-generated guids assigned files that will be installed on user machines. So it should be held in source control.-->
+<InstallerMetadata>
+  <File Id="wesay_da.po" Guid="b80e2601-8c27-46cc-8d98-486b042440a6" />
+  <File Id="wesay_es.po" Guid="f716e231-34c2-434a-b4d4-568c9af6b697" />
+  <File Id="wesay_fr.po" Guid="5308921d-f150-484e-a232-51fc73053974" />
+  <File Id="wesay_he.po" Guid="7ba5c927-2633-4da5-aa38-b7cd4a1922c7" />
+  <File Id="wesay_id.po" Guid="77fc6efa-c8a4-4ee6-aef9-e7697b7bdef4" />
+  <File Id="wesay_is.po" Guid="962c5bb9-336e-42fd-a683-657e4bdeee98" />
+  <File Id="wesay_my.po" Guid="87816eaf-1582-4909-8184-4d693a9cf9ff" />
+  <File Id="wesay_nl.po" Guid="a009e607-b0b3-49a5-9adb-394ec6c30f49" />
+  <File Id="wesay_oc.po" Guid="162964bc-e0d2-48c7-844b-447c186c382c" />
+  <File Id="wesay_pl.po" Guid="7edb3a60-8958-4db9-ab3e-8d4293795a15" />
+  <File Id="wesay_pt.po" Guid="959cbdaa-e7d7-4eae-906a-4194c6703aeb" />
+  <File Id="wesay_ru.po" Guid="ca2b17e6-369e-4f60-9d5c-b95bd3c29ddf" />
+  <File Id="wesay_rw.po" Guid="f7d6c63f-f748-4c10-9ed8-7ec897e63e94" />
+  <File Id="wesay_sv.po" Guid="1f743a7e-08e1-4da4-809a-0332551382e3" />
+  <File Id="wesay_th.po" Guid="8ca6b5c5-2561-478e-9399-d93b2365e50a" />
+  <File Id="wesay_tpi.po" Guid="5805c282-facc-445e-aea8-d130414a6ec6" />
+  <File Id="wesay_vi.po" Guid="69af6bd2-ac54-4169-91e9-d7974b573bc7" />
+  <File Id="wesay_zh_CN.po" Guid="56c77817-3404-4b26-add7-0ff40ed4a3b5" />
+</InstallerMetadata>

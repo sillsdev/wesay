@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -75,13 +76,8 @@ namespace WeSay.LexicalTools
 				}
 				else
 				{
-					MessageBox.Show(
-							String.Format(
-									"There are no writing systems enabled for the Field '{0}'",
-									field.FieldName),
-							"Error",
-							MessageBoxButtons.OK,
-							MessageBoxIcon.Exclamation); //review
+					throw new ConfigurationException("There are no writing systems enabled for the Field '{0}'",
+													 field.FieldName);
 				}
 			}
 		}
@@ -243,6 +239,7 @@ namespace WeSay.LexicalTools
 							//make sure specified fields are shown (greg's ws-356)
 					{
 						Field enabledField = new Field(field);
+						enabledField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 						enabledField.Enabled = true;
 						viewTemplate.Add(enabledField);
 					}
