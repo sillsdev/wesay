@@ -58,11 +58,11 @@ namespace WeSay.Project.Tests
 				{
 					WritingSystem ws = project.WritingSystems["v"];
 					ws.Id = "newIdForV";
-					Palaso.Reporting.ErrorReport.JustRecordNonFatalMessagesForTesting = true;
-					Assert.IsNull(ErrorReport.PreviousNonFatalMessage);
-					Assert.IsFalse(project.MakeWritingSystemIdChange(ws, "v"));
-					Assert.IsNotNull(ErrorReport.PreviousNonFatalMessage);
-			  }
+					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+					{
+						Assert.IsFalse(project.MakeWritingSystemIdChange(ws, "v"));
+					}
+				}
 			}
 		}
 
@@ -117,8 +117,6 @@ namespace WeSay.Project.Tests
 		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void WeSayDirNotInValidBasilDir()
 		{
-			Palaso.Reporting.ErrorReport.JustRecordNonFatalMessagesForTesting = false;
-
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
 			string weSayDir = experimentDir; // MakeDir(experimentDir, "WeSay");
 			string wordsPath = Path.Combine(weSayDir, "AAA.words");
@@ -247,6 +245,30 @@ namespace WeSay.Project.Tests
 				p.Save();
 				f.FieldName = newName;
 				p.MakeFieldNameChange(f, oldName);
+			}
+		}
+
+
+		/// <summary>
+		/// check  (WS-1030) When WeSay is open and you try to change a field, get green box, should get friendly message.
+		/// </summary>
+		[Test]
+		public void MakeFieldNameChange_FileLocked_NotifiesUser()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				using (File.OpenWrite(p.PathToLiftFile))
+				{
+					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+					{
+						Field f = new Field("old", "LexEntry", new string[] {"en"});
+						project.ViewTemplates[0].Add(f);
+						project.Save();
+						f.FieldName = "new";
+						Assert.IsFalse(project.MakeFieldNameChange(f, "old"));
+					}
+				}
 			}
 		}
 	}

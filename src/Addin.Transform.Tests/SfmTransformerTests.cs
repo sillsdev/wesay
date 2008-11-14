@@ -226,13 +226,14 @@ namespace Addin.Transform.Tests
 		[Test]
 		public void BogusExpressionDoesntCrash()
 		{
-			ErrorReport.JustRecordNonFatalMessagesForTesting = true;
-			Assert.IsNull(ErrorReport.PreviousNonFatalMessage);
-			LaunchWithConversionString("{foo " //missing "to"
-									   + Environment.NewLine + "{foo $3" //bogus group refference
-									   + Environment.NewLine + "[ foo");
-			// this is the one that is failing
-			Assert.IsNotNull(ErrorReport.PreviousNonFatalMessage);
+			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+			{
+
+				LaunchWithConversionString("{foo " //missing "to"
+										   + Environment.NewLine + "{foo $3" //bogus group refference
+										   + Environment.NewLine + "[ foo");
+				// this is the one that is failing
+			}
 		}
 
 		[Test]

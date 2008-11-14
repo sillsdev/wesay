@@ -216,7 +216,12 @@ namespace WeSay.ConfigTool
 			}
 			if (_field.FieldName != oldValue)
 			{
-				WeSayWordsProject.Project.MakeFieldNameChange(_field, oldValue);
+				if(!WeSayWordsProject.Project.MakeFieldNameChange(_field, oldValue))
+				{
+					//we couldn't do it, so back out
+					_field.FieldName = oldValue;
+					_fieldName.Text = _field.FieldName;
+				}
 			}
 		}
 

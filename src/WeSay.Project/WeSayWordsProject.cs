@@ -1127,80 +1127,86 @@ namespace WeSay.Project
 			//file.Substring(0, file.IndexOf(".xml"));
 		}
 
-		public void MakeFieldNameChange(Field field, string oldName)
+
+
+		private delegate void DelegateThatTouchesLiftFile(string pathToLiftFile);
+
+		private bool DoSomethingToLiftFile(DelegateThatTouchesLiftFile doSomething)
+		{
+			if(!File.Exists(PathToLiftFile))
+				return false;
+			try
+			{
+				doSomething(PathToLiftFile);
+				return true;
+			}
+			catch (Exception error)
+			{
+				ErrorReport.ReportNonFatalMessage("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
+				return false;
+			}
+
+		}
+
+		public bool MakeFieldNameChange(Field field, string oldName)
 		{
 			Debug.Assert(!String.IsNullOrEmpty(oldName));
 			if (string.IsNullOrEmpty(oldName))
 			{
-				return;
+				return false;
 			}
 			oldName = Regex.Escape(oldName);
 
 			//NB: we're just using regex, here, not xpaths which in this case
 			//would be nice (e.g., "name" is a pretty generic thing to be changing)
-			if (File.Exists(PathToLiftFile))
-			{
-				//traits
-				if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
-					field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
-				{
-					GrepFile(PathToLiftFile,
-							 string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
-							 string.Format("name=\"{0}\"", field.FieldName));
-				}
-				else
-				{
-					//<field>s
-					GrepFile(PathToLiftFile,
-							 string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
-							 string.Format("type=\"{0}\"", field.FieldName));
-				}
-			}
+			return DoSomethingToLiftFile((p) =>
+											 {
+												 //traits
+												 if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
+													 field.DataTypeName ==
+													 Field.BuiltInDataType.OptionCollection.ToString())
+												 {
+													 GrepFile(p,
+															  string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
+															  string.Format("name=\"{0}\"", field.FieldName));
+												 }
+												 else
+												 {
+													 //<field>s
+													 GrepFile(p,
+															  string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
+															  string.Format("type=\"{0}\"", field.FieldName));
+												 }
+											 });
+			return true;
 		}
 
 		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)
 		{
-			//Todo: WS-227 Before changing a ws id in a lift file, ensure that it isn't already in use
+			if (DoSomethingToLiftFile((p) =>
+											 {
 
-
-			if (File.Exists(PathToLiftFile))
+												 //todo: expand the regular expression here to account for all reasonable patterns
+												 GrepFile(PathToLiftFile,
+														  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
+																		Regex.Escape(oldId)),
+														  string.Format("lang=\"{0}\"", ws.Id));
+											 }))
 			{
-				try
+				WritingSystems.IdOfWritingSystemChanged(ws, oldId);
+				DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
+
+				if (WritingSystemChanged != null)
 				{
-
-
-					//todo: expand the regular expression here to account for all reasonable patterns
-					GrepFile(PathToLiftFile,
-							 string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(oldId)),
-							 string.Format("lang=\"{0}\"", ws.Id));
+					StringPair p = new StringPair();
+					p.from = oldId;
+					p.to = ws.Id;
+					WritingSystemChanged.Invoke(this, p);
 				}
-				catch (Exception error)
-				{
-					ErrorReport.ReportNonFatalMessage("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
-					return false;
-				}
-			}
-			WritingSystems.IdOfWritingSystemChanged(ws, oldId);
-			DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
-
-			if (WritingSystemChanged != null)
-			{
-				StringPair p = new StringPair();
-				p.from = oldId;
-				p.to = ws.Id;
-				WritingSystemChanged.Invoke(this, p);
+				return true;
 			}
 
-
-			//this worked but it just gets overwritten when Setup closes
-			/*if (File.Exists(PathToConfigFile))
-			{
-				GrepFile(PathToConfigFile,
-						 string.Format("wordListWritingSystemId>\\s*{0}\\s*<", oldId),
-						 string.Format("wordListWritingSystemId>{0}<", ws.Id));
-			}
-			*/
-			return true;
+			return false;
 		}
 
 		/// <summary>
