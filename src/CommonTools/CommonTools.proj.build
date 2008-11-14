@@ -53,6 +53,7 @@
 		<include name="LexicalModel.dll" />
 		<include name="WeSay.Project.dll" />
 		<include name="WeSay.AddinLib.dll" />
+		<include name="WeSay.Data.dll" />
 		<include name="WeSay.Foundation.dll" />
 		<include name="WeSay.UI.dll" />
 		<include name="PalasoUIWindowsForms.dll" />

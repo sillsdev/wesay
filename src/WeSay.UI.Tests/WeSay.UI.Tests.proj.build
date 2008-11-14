@@ -40,13 +40,14 @@
 		<include name="**/*.cs" />
 	  </sources>
 	  <references basedir="${project.output.dir}">
-		<include name="System.Drawing.dll" />
-		<include name="System.Windows.Forms.dll" />
 		<include name="nunit.framework.dll" />
 		<include name="NUnitForms.dll" />
+		<include name="Palaso.dll" />
 		<include name="WeSay.Project.dll" />
 		<include name="WeSay.Foundation.dll" />
 		<include name="WeSay.UI.dll" />
+		<include name="System.Drawing.dll" />
+		<include name="System.Windows.Forms.dll" />
 	  </references>
 	  <resources dynamicprefix="true" basedir="..">
 		  <include name="**/*.resources" />
@@ -62,12 +63,6 @@
 			<include name="nant.resx.bak" />
 		</fileset>
 	</delete>
-  </target>
-
-  <target name="package">
-	<copy todir="${package.src.dir}/icu.net">
-	  <fileset refid="source-files" />
-	</copy>
   </target>
 
 </project>

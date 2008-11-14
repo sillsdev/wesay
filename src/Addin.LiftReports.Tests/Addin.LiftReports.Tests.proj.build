@@ -40,10 +40,13 @@
 		<include name="**/*.cs" />
 	  </sources>
 	  <references basedir="${project.output.dir}">
-		<include name="LiftIO.dll" />
 		<include name="nunit.framework.dll" />
 		<include name="Addin.LiftReports.dll" />
+		<include name="LiftIO.dll" />
+		<include name="LexicalModel.dll" />
 		<include name="WeSay.AddinLib.dll" />
+		<include name="WeSay.Data.dll" />
+		<include name="WeSay.Foundation.dll" />
 		<include name="WeSay.Project.dll" />
 	  </references>
 	</csc>

@@ -39,22 +39,24 @@
 	  <sources basedir=".">
 		<include name="**/*.cs" />
 	  </sources>
-	  <references basedir="${project.output.dir}">
-		<include name="nunit.framework.dll" />
+	<references basedir="${project.output.dir}">
+		<include name="CommonTools.dll" />
+		<include name="CookComputing.XmlRpcV2.dll" />
 		<include name="Db4objects.Db4o.dll" />
 		<include name="LexicalModel.dll" />
 		<include name="LexicalModel.Tests.dll" />
-		<include name="System.Drawing.dll" />
-		<include name="System.Windows.Forms.dll" />
-		<include name="WeSay.Foundation.dll" />
-		<include name="WeSay.Foundation.Tests.dll" />
-		<include name="WeSay.Project.dll" />
-		<include name="CommonTools.dll" />
+		<include name="nunit.framework.dll" />
 		<include name="Palaso.dll" />
 		<include name="PalasoReporting.dll" />
 		<include name="Palaso.Services.dll" />
-		<include name="WeSay.Project.Tests.dll" />
+		<include name="System.Drawing.dll" />
+		<include name="System.Windows.Forms.dll" />
 		<include name="WeSay.App.exe" />
+		<include name="WeSay.Data.dll" />
+		<include name="WeSay.Foundation.dll" />
+		<include name="WeSay.Foundation.Tests.dll" />
+		<include name="WeSay.Project.dll" />
+		<include name="WeSay.Project.Tests.dll" />
 	  </references>
 	  <resources dynamicprefix="true" basedir="..">
 		  <include name="**/*.resources" />

@@ -42,6 +42,8 @@
 	  <references basedir="${project.output.dir}">
 		<include name="nunit.framework.dll" />
 		<include name="WeSay.AddinLib.dll" />
+		<include name="WeSay.Data.dll" />
+		<include name="WeSay.Foundation.dll" />
 		<include name="Palaso.dll" />
 		<include name="PalasoReporting.dll" />
 		<include name="LiftIO.dll" />

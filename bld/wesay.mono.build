@@ -19,9 +19,13 @@
 	<property name="os.platform" value="other"/>
 	<if test="${platform::is-win32()}">
 		<property name="os.platform" value="win32"/>
+		<!-- Default runtime configuration -->
+		<property name="runtime.config" value="net-2.0"/>
 	</if>
 	<if test="${platform::is-unix()}">
 		<property name="os.platform" value="linux"/>
+		<!-- Default runtime configuration -->
+		<property name="runtime.config" value="mono-2.0"/>
 	</if>
 
 	<!-- Default build configuration -->
@@ -127,13 +131,15 @@
 		</foreach>
 	</target>
 
-	<target name="build" description="Build all targets.">
+	<target name="build" description="Build all targets." depends="clean">
 		<call target="build.solution"/>
 	</target>
 
-	<target name="rebuild" depends="clean, build" />
+	<target name="rebuild">
+		<call target="build.solution"/>
+	</target>
 
-	<target name="build.solution" depends="clean, make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
+	<target name="build.solution" depends="make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
 		<nant target="build">
 			<properties>
 				<property name="build.defines" value="${build.defines}" />
@@ -313,10 +319,6 @@
 <!-- ***    Targets for setting the runtime configuration          *** -->
 <!-- ***************************************************************** -->
 
-
-	<!-- Default runtime configuration -->
-	<property name="runtime.config" value="mono-2.0"/>
-
   <target name="set-runtime-config">
 	<call target="set-${runtime.config}-runtime-config"/>
   </target>
@@ -353,7 +355,6 @@
 	<property name="msi.runtime.suffix" value="-net-1.0"/>
 	<property name="supported.test.platforms"
 	  value="net-1.0,net-1.1,net-2.0,mono-1.0,mono-2.0"/>
-	<call target="set-test-platforms"/>
   </target>
 
   <target name="set-net-1.1-runtime-config">
@@ -375,7 +376,6 @@
 	<property name="msi.runtime.suffix" value="-net-1.1"/>
 	<property name="supported.test.platforms"
 	  value="net-1.0,net-1.1,net-2.0,mono-1.0,mono-2.0"/>
-	<call target="set-test-platforms"/>
   </target>
 
   <target name="set-net-2.0-runtime-config">
@@ -395,7 +395,6 @@
 	<property name="zip.runtime.suffix" value="-net-2.0"/>
 	<property name="msi.runtime.suffix" value="-net-2.0"/>
 	<property name="supported.test.platforms" value="net-2.0,mono-2.0"/>
-	<call target="set-test-platforms"/>
   </target>
 
   <target name="set-mono-1.0-runtime-config">
@@ -416,7 +415,6 @@
 	<property name="msi.runtime.suffix" value="-mono-1.0"/>
 	<property name="supported.test.platforms"
 	  value="mono-1.0,mono-2.0,net-1.0,net-1.1,net-2.0"/>
-	<call target="set-test-platforms"/>
   </target>
 
   <target name="set-mono-2.0-runtime-config">
@@ -472,6 +470,17 @@
 </target>
 
 <target name="copy-mono-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
+	<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
+	<echo message="${project.lib.dir}" />
+	<copy todir="${project.output.dir}">
+		<fileset basedir="${project.lib.dir}">
+			<include name="*.*" />
+		</fileset>
+	</copy>
+</target>
+
+<target name="copy-net-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
+	<!-- review: This needs work, it's copying from the wrong folder. We should restructure the lib folder to support multiple platforms better and keep the win / mono libs separate CJP -->
 	<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
 	<echo message="${project.lib.dir}" />
 	<copy todir="${project.output.dir}">
