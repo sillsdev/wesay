@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
@@ -48,6 +49,10 @@ namespace WeSay.LexicalTools
 										   LexEntryRepository lexEntryRepository,
 										   EventHandler<CurrentItemEventArgs> focus)
 		{
+			if (field.WritingSystemIds.Count == 0)
+			{
+				throw new ConfigurationException("The field {0} has no writing systems enabled.", field.FieldName);
+			}
 			RelationController controller = new RelationController(relationParent,
 																   relationType,
 																   field,
