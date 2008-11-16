@@ -5,7 +5,7 @@ using System.Threading;
 using System.Xml;
 using Chorus.sync;
 using NUnit.Framework;
-using TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.Project;
 
 namespace WeSay.Project.Tests
@@ -82,6 +82,8 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void BackupNow_FirstTime_CreatesValidRepositoryAndWorkingTree()
 		{
+			Assert.IsTrue(false, "John, please fix me.");
+			// Test causes a crash in WrapShellCall.exe - is there an updated version?
 			using (BackupScenario scenario = new BackupScenario("BackupNow_NewFolder_CreatesNewRepository"))
 			{
 				scenario.BackupNow();
@@ -98,6 +100,8 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void BackupNow_ExistingRepository_AddsNewFileToBackupDir()
 		{
+			Assert.IsTrue(false, "John, please fix me.");
+			// Test causes a crash in WrapShellCall.exe - is there an updated version?
 			using (BackupScenario scenario = new BackupScenario("BackupNow_ExistingRepository_AddsNewFileToBackupDir"))
 			{
 				scenario.BackupNow();
@@ -111,6 +115,8 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void BackupNow_RemoveFile_RemovedFromBackupDir()
 		{
+			Assert.IsTrue(false, "John, please fix me.");
+			// Test causes a crash in WrapShellCall.exe - is there an updated version?
 			using (BackupScenario scenario = new BackupScenario("BackupNow_RemoveFile_RemovedFromBackupDir"))
 			{
 				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.foo")).Close();

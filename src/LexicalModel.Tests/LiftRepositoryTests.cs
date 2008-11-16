@@ -1,9 +1,9 @@
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
-using TestUtilities;
 using WeSay.Data;
 using WeSay.Data.Tests;
+using WeSay.Foundation.Tests.TestHelpers;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -46,7 +46,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -160,7 +160,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -225,7 +225,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -287,7 +287,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -338,7 +338,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -390,7 +390,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();

@@ -470,8 +470,10 @@ namespace WeSay.LexicalTools
 					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 				{
 					entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
+					_lexEntryRepository.SaveItem(entry);
 				}
-				_lexEntryRepository.SaveItem(entry);
+				//review: Revert (remove) below for WS-950
+				// _lexEntryRepository.SaveItem(entry);
 				LoadRecords();
 				selectIndex = this._records.FindFirstIndex(entry);
 			}
@@ -534,6 +536,9 @@ namespace WeSay.LexicalTools
 				// but we assume it has the focus when we do our selection change event
 				_btnDeleteWord.Focus();
 			}
+			//review: This save isn't necessary, but the possibility of deleting unsave records currently doesn't work.
+			_lexEntryRepository.SaveItem(CurrentRecord);
+
 			CurrentRecord.IsBeingDeleted = true;
 			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
 			_lexEntryRepository.DeleteItem(recordToken.Id);

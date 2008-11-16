@@ -191,7 +191,8 @@ namespace WeSay.UI
 					flags |= TextFormatFlags.RightToLeft;
 				}
 				Size sz = TextRenderer.MeasureText(g,
-												   Text + "\n",
+												   Text == String.Empty ? " " : Text + "\n",
+												   // replace empty string with space, because mono returns zero height for empty string (windows returns one line height)
 												   // need extra new line to handle case where ends in new line (since last newline is ignored)
 												   Font,
 												   new Size(width, int.MaxValue),

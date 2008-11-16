@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
-	public class IRepositoryStateUnitializedTests<T> where T : class, new()
+	public abstract class IRepositoryStateUnitializedTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 		private readonly QueryAdapter<T> _query = new QueryAdapter<T>();
@@ -23,6 +23,9 @@ namespace WeSay.Data.Tests
 			}
 			set { _repositoryUnderTest = value; }
 		}
+
+		[SetUp]
+		public abstract void SetUp();
 
 		[Test]
 		public void CreateItem_NotNull()
@@ -225,6 +228,9 @@ namespace WeSay.Data.Tests
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
 		protected abstract void CreateNewRepositoryFromPersistedData();
+
+		[SetUp]
+		public abstract void SetUp();
 
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
@@ -453,6 +459,9 @@ namespace WeSay.Data.Tests
 		//For repositories that don't support persistence this method should do nothing
 		protected abstract void CreateNewRepositoryFromPersistedData();
 
+		[SetUp]
+		public abstract void SetUp();
+
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
 		{
@@ -664,6 +673,9 @@ namespace WeSay.Data.Tests
 		//For repositories that don't support persistence this method should do nothing
 		protected abstract void CreateNewRepositoryFromPersistedData();
 
+		[SetUp]
+		public abstract void SetUp();
+
 		public void SetState()
 		{
 			CreateInitialItem();
@@ -817,6 +829,9 @@ namespace WeSay.Data.Tests
 		//For repositories that don't support persistence this method should do nothing
 		protected abstract void CreateNewRepositoryFromPersistedData();
 
+		[SetUp]
+		public abstract void SetUp();
+
 		public void SetState()
 		{
 			CreateItemToTest();
@@ -964,6 +979,9 @@ namespace WeSay.Data.Tests
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
 		protected abstract void RepopulateRepositoryFromPersistedData();
+
+		[SetUp]
+		public abstract void SetUp();
 
 		public void SetState()
 		{

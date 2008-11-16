@@ -8,10 +8,7 @@ using WeSay.Data;
 using WeSay.Data.Tests;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using TestUtilities;
-using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4oSpecific;
-using WeSay.LexicalModel.Tests;
+using WeSay.Foundation.Tests.TestHelpers;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -976,7 +973,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -1018,7 +1015,7 @@ namespace WeSay.LexicalModel.Tests
 		private string _persistedFilePath;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = LiftFileInitializer.MakeFile(_tempFolder.GetTemporaryFile());
@@ -1059,7 +1056,6 @@ namespace WeSay.LexicalModel.Tests
 			Item.LexicalForm["de"] = "Sonne";
 		}
 
-		[Test]
 		protected override void  LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
 		{
 			SetState();
@@ -1073,7 +1069,6 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsFalse(Item.IsDirty);
 		}
 
-		[Test]
 		protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()
 		{
 			SetState();
@@ -1100,7 +1095,7 @@ namespace WeSay.LexicalModel.Tests
 		private string _persistedFilePath;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -1139,7 +1134,6 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsTrue(Item.IsDirty);
 		}
 
-		[Test]
 		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
 		{
 			Item.LexicalForm["de"] = "Sonne";
@@ -1166,7 +1160,7 @@ namespace WeSay.LexicalModel.Tests
 
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -1204,7 +1198,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
@@ -1242,7 +1236,7 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();

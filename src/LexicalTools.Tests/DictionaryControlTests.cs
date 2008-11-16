@@ -6,9 +6,9 @@ using System.Threading;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
-using TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -1047,6 +1047,19 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(btn.Text.Contains("Hide"));
 			ClickAddWord();
 			Assert.IsTrue(btn.Text.Contains("Show"));
+		}
+
+		//Regression test WS-950. Also effects WS-962.
+		//This does not so much test that an entry is id'd correctly, but simply tests that the
+		//error causing method call  is not reintroduced.
+		[Test]
+		public void AddingNewWord_WordIsNotPrematurelyIdd()
+		{
+			StartWithEmpty();
+			ClickAddWord();
+			RepositoryId[] repositoryId = _lexEntryRepository.GetAllItems();
+			LexEntry entry = _lexEntryRepository.GetItem(repositoryId[0]);
+			Assert.AreEqual(null, entry.Id);
 		}
 
 		[Test]

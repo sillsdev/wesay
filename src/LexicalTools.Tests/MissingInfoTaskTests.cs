@@ -1,7 +1,6 @@
 using System;
-using System.IO;
 using NUnit.Framework;
-using TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

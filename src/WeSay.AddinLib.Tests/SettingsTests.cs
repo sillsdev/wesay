@@ -3,7 +3,7 @@ using NUnit.Framework;
 namespace WeSay.AddinLib.Tests
 {
 	[TestFixture]
-	[Ignore("Completely commented out")]
+	[Ignore("TestFixture needs review!")]
 	public class SettingsTests
 	{
 		[SetUp]
