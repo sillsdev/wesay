@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
+using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using LiftIO;
@@ -270,6 +271,45 @@ namespace WeSay.Project.Tests
 					}
 				}
 			}
+		}
+
+		[Ignore("just for manual use"), Test]
+		public void MakeTestLiftFile()
+		{
+			string pathToFolder=@"C:\wesay\lifttest";
+			string projectName= "lifttest";
+
+			if (!Directory.Exists(pathToFolder))
+				Directory.CreateDirectory(pathToFolder);
+
+			StringBuilder builder = new StringBuilder();
+			int numberOfTestLexEntries =50000;
+			for (int i = 0; i < numberOfTestLexEntries; i++)
+			{
+				builder.AppendFormat(@"
+				<entry id='{0}'>
+					<lexical-unit>
+					  <form lang='v'>
+						<text>{0}</text>
+					  </form>
+					</lexical-unit>
+					<sense>
+						<grammatical-info value='n'/>
+						<gloss lang='en'><text>blah blah {0} blah blah</text></gloss>
+						<example lang='v'><text>and example of lah blah {0} blah blah</text></example>
+					</sense>
+				</entry>", i);
+			}
+
+			string liftContents =
+					  string.Format(
+							  "<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>",
+							  .12,
+							  builder.ToString());
+
+			File.WriteAllText(Path.Combine(pathToFolder, projectName + ".lift"), liftContents);
+
+
 		}
 	}
 }
