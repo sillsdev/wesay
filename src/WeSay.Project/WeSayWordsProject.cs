@@ -168,7 +168,6 @@ namespace WeSay.Project
 		{
 			try
 			{
-				PathToLiftFile = liftPath;
 
 				if (!File.Exists(liftPath))
 				{
@@ -202,7 +201,15 @@ namespace WeSay.Project
 					return false;
 				}
 
-				if (!File.Exists(PathToConfigFile))
+				if (!liftPath.Contains(Path.DirectorySeparatorChar.ToString()))
+				{
+					Logger.WriteEvent("Converting filename only liftPath {0} to full path {1}", liftPath, Path.GetFullPath(liftPath));
+					liftPath = Path.GetFullPath(liftPath);
+				}
+
+				PathToLiftFile = liftPath;
+
+				if (!File.Exists(liftPath))
 				{
 					ErrorReport.ReportNonFatalMessage(
 							String.Format(

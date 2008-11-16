@@ -311,5 +311,32 @@ namespace WeSay.Project.Tests
 
 
 		}
+
+		/// <summary>
+		/// check issue related to (WS-1035)
+		/// </summary>
+		[Test]
+		public void PathProvidedAsSimpleFileName_GetsConverted()
+		{
+			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				string oldWorkingDir= System.Environment.CurrentDirectory;
+				try
+				{
+					using (WeSayWordsProject project = new WeSayWordsProject())
+					{
+						System.Environment.CurrentDirectory = dir.PathToDirectory;
+						project.LoadFromLiftLexiconPath(Path.GetFileName(dir.PathToLiftFile));
+
+						Assert.AreEqual(dir.PathToLiftFile, project.PathToLiftFile);
+					}
+				}
+				finally
+				{
+					System.Environment.CurrentDirectory = oldWorkingDir;
+				}
+
+			}
+		}
 	}
 }
