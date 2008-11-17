@@ -11,9 +11,9 @@ using WeSay.Project;
 namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
-	public class LiftMergerTests: ILiftMergerTestSuite
+	public class LexEntryFromLiftBuilderTests: ILiftMergerTestSuite
 	{
-		private LiftMerger _merger;
+		private LexEntryFromLiftBuilder _builder;
 		private LiftRepository _repository;
 		private string _tempFile;
 
@@ -24,13 +24,13 @@ namespace WeSay.LexicalModel.Tests
 
 			_tempFile = Path.GetTempFileName();
 			_repository = new LiftRepository(_tempFile);
-			_merger = new LiftMerger(_repository);
+			_builder = new LexEntryFromLiftBuilder(_repository);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_merger.Dispose();
+			_builder.Dispose();
 			_repository.Dispose();
 			File.Delete(_tempFile);
 		}
@@ -40,9 +40,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo.Id = "foo";
-			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Id, e.Id);
-			_merger.FinishEntry(e);
+			_builder.FinishEntry(e);
 			Assert.AreEqual(1, _repository.CountAllItems());
 		}
 
@@ -51,9 +51,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo.Guid = Guid.NewGuid();
-			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Guid, e.Guid);
-			_merger.FinishEntry(e);
+			_builder.FinishEntry(e);
 			Assert.AreEqual(1, _repository.CountAllItems());
 		}
 
@@ -64,11 +64,61 @@ namespace WeSay.LexicalModel.Tests
 			extensibleInfo.CreationTime = DateTime.Parse("2/2/1969  12:15:12").ToUniversalTime();
 			extensibleInfo.ModificationTime =
 					DateTime.Parse("10/11/1968  12:15:12").ToUniversalTime();
-			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.CreationTime, e.CreationTime);
 			Assert.AreEqual(extensibleInfo.ModificationTime, e.ModificationTime);
-			_merger.FinishEntry(e);
+			_builder.FinishEntry(e);
 			Assert.AreEqual(1, _repository.CountAllItems());
+		}
+
+		[Test]
+		public void NewEntry_NoDefYesGloss_GlossCopiedToDefintion()
+		{
+			Extensible extensibleInfo = new Extensible();
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
+			LexSense s = _builder.GetOrMakeSense(e, new Extensible(), string.Empty);
+			_builder.MergeInGloss(s, new LiftMultiText("x","x meaning"));
+			_builder.FinishEntry(e);
+			Assert.AreEqual("x meaning",e.Senses[0].Gloss.GetExactAlternative("x"));
+			Assert.AreEqual("x meaning",e.Senses[0].Definition.GetExactAlternative("x"));
+		}
+
+		[Test]
+		public void NewEntry_HasDefGlossHasAnotherWSAlternative_CopiedToDefintion()
+		{
+			Extensible extensibleInfo = new Extensible();
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
+			LexSense s = _builder.GetOrMakeSense(e, new Extensible(), string.Empty);
+			_builder.MergeInDefinition(s, new LiftMultiText("x", "x def"));
+			_builder.MergeInGloss(s, new LiftMultiText("x", "x meaning"));
+			_builder.MergeInGloss(s, new LiftMultiText("y", "y meaning"));
+			_builder.FinishEntry(e);
+			Assert.AreEqual("x meaning", e.Senses[0].Gloss.GetExactAlternative("x"));
+			Assert.AreEqual("x def", e.Senses[0].Definition.GetExactAlternative("x"));
+			Assert.AreEqual("y meaning", e.Senses[0].Definition.GetExactAlternative("y"));
+		}
+
+		[Test]
+		public void NewEntry_YesDefYesGloss_BothUnchanged()
+		{
+			Extensible extensibleInfo = new Extensible();
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
+			LexSense s = _builder.GetOrMakeSense(e, new Extensible(), string.Empty);
+			_builder.MergeInGloss(s, new LiftMultiText("x", "x gloss"));
+			_builder.MergeInDefinition(s, new LiftMultiText("x", "x def"));
+			_builder.FinishEntry(e);
+			Assert.AreEqual("x gloss", e.Senses[0].Gloss.GetExactAlternative("x"));
+			Assert.AreEqual("x def", e.Senses[0].Definition.GetExactAlternative("x"));
+		}
+		[Test]
+		public void NewEntry_NoGlossNoDef_GetNeitherInTheSense()
+		{
+			Extensible extensibleInfo = new Extensible();
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
+			LexSense s = _builder.GetOrMakeSense(e, new Extensible(), string.Empty);
+			_builder.FinishEntry(e);
+			Assert.AreEqual(0,e.Senses[0].Gloss.Count);
+			Assert.AreEqual(0, e.Senses[0].Definition.Count);
 		}
 
 		[Test]
@@ -76,7 +126,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo.Id = "hello";
-			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
 			//no attempt is made to use that id
 			Assert.IsNotNull(e.Guid);
 			Assert.AreNotSame(Guid.Empty, e.Guid);
@@ -88,7 +138,7 @@ namespace WeSay.LexicalModel.Tests
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo = AddDates(extensibleInfo);
 
-			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.CreationTime, e.CreationTime);
 			Assert.AreEqual(extensibleInfo.ModificationTime, e.ModificationTime);
 		}
@@ -106,14 +156,14 @@ namespace WeSay.LexicalModel.Tests
 		private LexEntry MakeSimpleEntry()
 		{
 			Extensible extensibleInfo = new Extensible();
-			return _merger.GetOrMakeEntry(extensibleInfo, 0);
+			return _builder.GetOrMakeEntry(extensibleInfo, 0);
 		}
 
 		[Test]
 		public void EntryGetsEmptyLexemeForm()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_merger.MergeInLexemeForm(e, new LiftMultiText());
+			_builder.MergeInLexemeForm(e, new LiftMultiText());
 			Assert.AreEqual(0, e.LexicalForm.Count);
 		}
 
@@ -121,7 +171,7 @@ namespace WeSay.LexicalModel.Tests
 		public void EntryGetsNote()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_merger.MergeInNote(e, null, MakeBasicLiftMultiText());
+			_builder.MergeInNote(e, null, MakeBasicLiftMultiText());
 			AssertPropertyHasExpectedMultiText(e, WeSayDataObject.WellKnownProperties.Note);
 			MultiText m = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
 			Assert.IsTrue(m.ContainsAlternative("ws-one"));
@@ -134,7 +184,7 @@ namespace WeSay.LexicalModel.Tests
 		public void TypeOfNoteEmbedded()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_merger.MergeInNote(e, "red", MakeBasicLiftMultiText());
+			_builder.MergeInNote(e, "red", MakeBasicLiftMultiText());
 			MultiText mt = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
 			Assert.AreEqual("(red) uno", mt["ws-one"]);
 			Assert.AreEqual("(red) dos", mt["ws-two"]);
@@ -144,7 +194,7 @@ namespace WeSay.LexicalModel.Tests
 		public void SenseGetsGrammi()
 		{
 			LexSense sense = new LexSense();
-			_merger.MergeInGrammaticalInfo(sense, "red", null);
+			_builder.MergeInGrammaticalInfo(sense, "red", null);
 			OptionRef optionRef =
 					sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 			Assert.IsNotNull(optionRef);
@@ -155,7 +205,7 @@ namespace WeSay.LexicalModel.Tests
 		public void GrammiGetsFlagTrait()
 		{
 			LexSense sense = new LexSense();
-			_merger.MergeInGrammaticalInfo(sense,
+			_builder.MergeInGrammaticalInfo(sense,
 										   "red",
 										   new List<Trait>(new Trait[] {new Trait("flag", "1")}));
 			OptionRef optionRef =
@@ -168,9 +218,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexSense sense = new LexSense();
 			Extensible x = new Extensible();
-			LexExampleSentence ex = _merger.GetOrMakeExample(sense, x);
+			LexExampleSentence ex = _builder.GetOrMakeExample(sense, x);
 			Assert.IsNotNull(ex);
-			_merger.MergeInExampleForm(ex, MakeBasicLiftMultiText());
+			_builder.MergeInExampleForm(ex, MakeBasicLiftMultiText());
 			Assert.AreEqual(2, ex.Sentence.Forms.Length);
 			Assert.AreEqual("dos", ex.Sentence["ws-two"]);
 		}
@@ -179,7 +229,7 @@ namespace WeSay.LexicalModel.Tests
 		public void SenseGetsRelation()
 		{
 			LexSense sense = new LexSense();
-			_merger.MergeInRelation(sense, "synonym", "foo", null);
+			_builder.MergeInRelation(sense, "synonym", "foo", null);
 			LexRelationCollection synonyms = sense.GetProperty<LexRelationCollection>("synonym");
 			LexRelation relation = synonyms.Relations[0];
 			Assert.AreEqual("synonym", relation.FieldId);
@@ -190,7 +240,7 @@ namespace WeSay.LexicalModel.Tests
 		public void ExampleSourcePreserved()
 		{
 			LexExampleSentence ex = new LexExampleSentence();
-			_merger.MergeInSource(ex, "fred");
+			_builder.MergeInSource(ex, "fred");
 
 			Assert.AreEqual("fred",
 							ex.GetProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source)
@@ -201,7 +251,7 @@ namespace WeSay.LexicalModel.Tests
 		public void SenseGetsDef()
 		{
 			LexSense sense = new LexSense();
-			_merger.MergeInDefinition(sense, MakeBasicLiftMultiText());
+			_builder.MergeInDefinition(sense, MakeBasicLiftMultiText());
 			AssertPropertyHasExpectedMultiText(sense, LexSense.WellKnownProperties.Definition);
 		}
 
@@ -209,7 +259,7 @@ namespace WeSay.LexicalModel.Tests
 		public void SenseGetsNote()
 		{
 			LexSense sense = new LexSense();
-			_merger.MergeInNote(sense, null, MakeBasicLiftMultiText());
+			_builder.MergeInNote(sense, null, MakeBasicLiftMultiText());
 			AssertPropertyHasExpectedMultiText(sense, WeSayDataObject.WellKnownProperties.Note);
 		}
 
@@ -218,7 +268,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo.Id = "foo";
-			LexSense s = _merger.GetOrMakeSense(new LexEntry(), extensibleInfo, string.Empty);
+			LexSense s = _builder.GetOrMakeSense(new LexEntry(), extensibleInfo, string.Empty);
 			Assert.AreEqual(extensibleInfo.Id, s.Id);
 		}
 
@@ -226,11 +276,11 @@ namespace WeSay.LexicalModel.Tests
 		public void MultipleNotesCombined()
 		{
 			LexSense sense = new LexSense();
-			_merger.MergeInNote(sense, null, MakeBasicLiftMultiText());
+			_builder.MergeInNote(sense, null, MakeBasicLiftMultiText());
 			LiftMultiText secondNote = new LiftMultiText();
 			secondNote.Add("ws-one", "UNO");
 			secondNote.Add("ws-three", "tres");
-			_merger.MergeInNote(sense, null, secondNote);
+			_builder.MergeInNote(sense, null, secondNote);
 
 			MultiText mt = sense.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
 			Assert.AreEqual(3, mt.Forms.Length);
@@ -250,7 +300,7 @@ namespace WeSay.LexicalModel.Tests
 		//            LexSense sense = new LexSense();
 		//            LiftMultiText text = MakeBasicLiftMultiText();
 		//            text.Traits.Add(new Trait("ws-one", "flag", "1"));
-		//            _merger.MergeInGloss(sense, text);
+		//            _builder.MergeInGloss(sense, text);
 		//
 		//            Assert.IsTrue(sense.Gloss.GetAnnotationOfAlternativeIsStarred("ws-one"));
 		//        }
@@ -261,13 +311,13 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = new LexSense();
 			LiftMultiText text = MakeBasicLiftMultiText();
 			AddAnnotationToLiftMultiText(text, "ws-one", "flag", "1");
-			_merger.MergeInGloss(sense, text);
+			_builder.MergeInGloss(sense, text);
 			Assert.IsTrue(sense.Gloss.GetAnnotationOfAlternativeIsStarred("ws-one"));
 			Assert.IsFalse(sense.Gloss.GetAnnotationOfAlternativeIsStarred("ws-two"));
 
 			text = MakeBasicLiftMultiText();
 			AddAnnotationToLiftMultiText(text, "ws-one", "flag", "0");
-			_merger.MergeInGloss(sense, text);
+			_builder.MergeInGloss(sense, text);
 			Assert.IsFalse(sense.Gloss.GetAnnotationOfAlternativeIsStarred("ws-one"));
 		}
 
@@ -277,7 +327,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry entry = MakeSimpleEntry();
 			LiftMultiText text = MakeBasicLiftMultiText();
 			AddAnnotationToLiftMultiText(text, "ws-one", "flag", "1");
-			_merger.MergeInLexemeForm(entry, text);
+			_builder.MergeInLexemeForm(entry, text);
 			Assert.IsTrue(entry.LexicalForm.GetAnnotationOfAlternativeIsStarred("ws-one"));
 			Assert.IsFalse(entry.LexicalForm.GetAnnotationOfAlternativeIsStarred("ws-two"));
 		}
@@ -296,11 +346,11 @@ namespace WeSay.LexicalModel.Tests
 		public void MultipleGlossesCombined()
 		{
 			LexSense sense = new LexSense();
-			_merger.MergeInGloss(sense, MakeBasicLiftMultiText());
+			_builder.MergeInGloss(sense, MakeBasicLiftMultiText());
 			LiftMultiText secondGloss = new LiftMultiText();
 			secondGloss.Add("ws-one", "UNO");
 			secondGloss.Add("ws-three", "tres");
-			_merger.MergeInGloss(sense, secondGloss);
+			_builder.MergeInGloss(sense, secondGloss);
 
 			//MultiText mt = sense.GetProperty<MultiText>(LexSense.WellKnownProperties.Note);
 			Assert.AreEqual(3, sense.Gloss.Forms.Length);
@@ -338,7 +388,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = MakeSimpleEntry();
 			LiftMultiText forms = new LiftMultiText();
 			forms.Add("x99", "hello");
-			_merger.MergeInLexemeForm(e, forms);
+			_builder.MergeInLexemeForm(e, forms);
 			Assert.AreEqual("hello", e.LexicalForm["x99"]);
 		}
 
@@ -349,7 +399,7 @@ namespace WeSay.LexicalModel.Tests
 			LiftMultiText forms = new LiftMultiText();
 			forms.Add("x", "hello");
 			forms.Add("y", "bye");
-			_merger.MergeInLexemeForm(e, forms);
+			_builder.MergeInLexemeForm(e, forms);
 			Assert.AreEqual(2, e.LexicalForm.Count);
 		}
 
@@ -360,7 +410,7 @@ namespace WeSay.LexicalModel.Tests
 			LiftMultiText forms = new LiftMultiText();
 			forms.Add("x", "hello");
 			forms.Add("y", "bye");
-			_merger.MergeInCitationForm(entry, forms);
+			_builder.MergeInCitationForm(entry, forms);
 
 			MultiText citation = entry.GetProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
 			Assert.AreEqual(2, citation.Forms.Length);
@@ -373,12 +423,12 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			LexEntry e = MakeSimpleEntry();
-			LexSense s = _merger.GetOrMakeSense(e, extensibleInfo, string.Empty);
+			LexSense s = _builder.GetOrMakeSense(e, extensibleInfo, string.Empty);
 
-			LexExampleSentence ex = _merger.GetOrMakeExample(s, new Extensible());
+			LexExampleSentence ex = _builder.GetOrMakeExample(s, new Extensible());
 			ex.Sentence["foo"] = "this is a sentence";
 			ex.Translation["aa"] = "aaaa";
-			_merger.FinishEntry(e);
+			_builder.FinishEntry(e);
 			CheckCompleteEntry(e);
 
 			RepositoryId[] entries = _repository.GetAllItems();
@@ -394,7 +444,7 @@ namespace WeSay.LexicalModel.Tests
 			LexExampleSentence ex = new LexExampleSentence();
 			LiftMultiText translation = new LiftMultiText();
 			translation.Add("aa", "aaaa");
-			_merger.MergeInTranslationForm(ex, "free", translation, "bogus raw xml");
+			_builder.MergeInTranslationForm(ex, "free", translation, "bogus raw xml");
 			Assert.AreEqual("aaaa", ex.Translation["aa"]);
 			Assert.AreEqual("free", ex.TranslationType);
 		}
@@ -405,7 +455,7 @@ namespace WeSay.LexicalModel.Tests
 			LexExampleSentence ex = new LexExampleSentence();
 			LiftMultiText translation = new LiftMultiText();
 			translation.Add("aa", "aaaa");
-			_merger.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
+			_builder.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
 			Assert.AreEqual("aaaa", ex.Translation["aa"]);
 			Assert.IsTrue(string.IsNullOrEmpty(ex.TranslationType));
 		}
@@ -490,7 +540,7 @@ namespace WeSay.LexicalModel.Tests
 			eInfo.ModificationTime = Extensible.ParseDateTimeCorrectly("2005-01-01");
 			Assert.AreEqual(DateTimeKind.Utc, eInfo.ModificationTime.Kind);
 
-			LexEntry found = _merger.GetOrMakeEntry(eInfo, 0);
+			LexEntry found = _builder.GetOrMakeEntry(eInfo, 0);
 			Assert.IsNotNull(found);
 		}
 
@@ -529,9 +579,9 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void ExpectedAtomicTraitOnEntry()
 		{
-			_merger.ExpectedOptionTraits.Add("flub");
+			_builder.ExpectedOptionTraits.Add("flub");
 			LexEntry e = MakeSimpleEntry();
-			_merger.MergeInTrait(e, new Trait("flub", "dub"));
+			_builder.MergeInTrait(e, new Trait("flub", "dub"));
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			OptionRef option = e.GetProperty<OptionRef>("flub");
@@ -542,7 +592,7 @@ namespace WeSay.LexicalModel.Tests
 		public void UnexpectedAtomicTraitRetained()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_merger.MergeInTrait(e, new Trait("flub", "dub"));
+			_builder.MergeInTrait(e, new Trait("flub", "dub"));
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			OptionRefCollection option = e.GetProperty<OptionRefCollection>("flub");
@@ -552,10 +602,10 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void ExpectedCollectionTrait()
 		{
-			_merger.ExpectedOptionCollectionTraits.Add("flub");
+			_builder.ExpectedOptionCollectionTraits.Add("flub");
 			LexEntry e = MakeSimpleEntry();
-			_merger.MergeInTrait(e, new Trait("flub", "dub"));
-			_merger.MergeInTrait(e, new Trait("flub", "stub"));
+			_builder.MergeInTrait(e, new Trait("flub", "dub"));
+			_builder.MergeInTrait(e, new Trait("flub", "stub"));
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			OptionRefCollection options = e.GetProperty<OptionRefCollection>("flub");
@@ -568,8 +618,8 @@ namespace WeSay.LexicalModel.Tests
 		public void UnexpectedAtomicCollectionRetained()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_merger.MergeInTrait(e, new Trait("flub", "dub"));
-			_merger.MergeInTrait(e, new Trait("flub", "stub"));
+			_builder.MergeInTrait(e, new Trait("flub", "dub"));
+			_builder.MergeInTrait(e, new Trait("flub", "stub"));
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			OptionRefCollection option = e.GetProperty<OptionRefCollection>("flub");
@@ -583,7 +633,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = MakeSimpleEntry();
 			LiftMultiText t = new LiftMultiText();
 			t["z"] = new LiftString("dub");
-			_merger.MergeInField(e, "flub", default(DateTime), default(DateTime), t, null);
+			_builder.MergeInField(e, "flub", default(DateTime), default(DateTime), t, null);
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			MultiText mt = e.GetProperty<MultiText>("flub");
@@ -596,7 +646,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = MakeSimpleEntry();
 			LiftMultiText t = new LiftMultiText();
 			t["z"] = new LiftString("dub");
-			_merger.MergeInField(e, "flub", default(DateTime), default(DateTime), t, null);
+			_builder.MergeInField(e, "flub", default(DateTime), default(DateTime), t, null);
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			MultiText mt = e.GetProperty<MultiText>("flub");
@@ -607,7 +657,7 @@ namespace WeSay.LexicalModel.Tests
 		public void EntryGetsFlag()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_merger.MergeInTrait(e, new Trait("flag_skip_BaseForm", null));
+			_builder.MergeInTrait(e, new Trait("flag_skip_BaseForm", null));
 			Assert.IsTrue(e.GetHasFlag("flag_skip_BaseForm"));
 		}
 
@@ -616,9 +666,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			LexEntry e = MakeSimpleEntry();
-			LexSense s = _merger.GetOrMakeSense(e, extensibleInfo, string.Empty);
+			LexSense s = _builder.GetOrMakeSense(e, extensibleInfo, string.Empty);
 
-			_merger.MergeInPicture(s, "testPicture.png", null);
+			_builder.MergeInPicture(s, "testPicture.png", null);
 			PictureRef pict = s.GetProperty<PictureRef>("Picture");
 			Assert.AreEqual("testPicture.png", pict.Value);
 			Assert.IsNull(pict.Caption);
@@ -629,11 +679,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			LexEntry e = MakeSimpleEntry();
-			LexSense s = _merger.GetOrMakeSense(e, extensibleInfo, string.Empty);
+			LexSense s = _builder.GetOrMakeSense(e, extensibleInfo, string.Empty);
 
 			LiftMultiText caption = new LiftMultiText();
 			caption["aa"] = new LiftString("acaption");
-			_merger.MergeInPicture(s, "testPicture.png", caption);
+			_builder.MergeInPicture(s, "testPicture.png", caption);
 			PictureRef pict = s.GetProperty<PictureRef>("Picture");
 			Assert.AreEqual("testPicture.png", pict.Value);
 			Assert.AreEqual("acaption", pict.Caption["aa"]);
@@ -643,7 +693,7 @@ namespace WeSay.LexicalModel.Tests
 		public void GetOrMakeEntry_ReturnedLexEntryIsDirty()
 		{
 			Extensible extensibleInfo = new Extensible();
-			LexEntry entry = _merger.GetOrMakeEntry(extensibleInfo, 0);
+			LexEntry entry = _builder.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.IsTrue(entry.IsDirty);
 		}
 	}

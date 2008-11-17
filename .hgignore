@@ -1,4 +1,9 @@
 syntax: glob
+bld\BuildHistory/*.rtf
+*.cache
+bld\BuildHistory/*.log
+*.pdb
+LiftIO.Tests.pdb
 templates\.guidsForInstaller.xml
 common\.guidsForInstaller.xml
 
