@@ -14,7 +14,7 @@ namespace WeSay.LexicalModel.Tests
 	{
 		private LiftExporter _exporter;
 		private StringBuilder _stringBuilder;
-		private LiftMerger _merger;
+		private LexEntryFromLiftBuilder _builder;
 		private LiftRepository _repository;
 		private string _tempFile;
 		private TemporaryFolder _tempFolder;
@@ -28,13 +28,13 @@ namespace WeSay.LexicalModel.Tests
 			_tempFile = _tempFolder.GetTemporaryFile();
 			_exporter = new LiftExporter(_stringBuilder, false);
 			_repository = new LiftRepository(_tempFile);
-			_merger = new LiftMerger(_repository);
+			_builder = new LexEntryFromLiftBuilder(_repository);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_merger.Dispose();
+			_builder.Dispose();
 			_repository.Dispose();
 			_tempFolder.Delete();
 		}
@@ -42,7 +42,7 @@ namespace WeSay.LexicalModel.Tests
 		private LexEntry MakeSimpleEntry()
 		{
 			Extensible extensibleInfo = new Extensible();
-			return _merger.GetOrMakeEntry(extensibleInfo, 0);
+			return _builder.GetOrMakeEntry(extensibleInfo, 0);
 		}
 
 		private static LiftMultiText MakeBasicLiftMultiText()
@@ -102,8 +102,8 @@ namespace WeSay.LexicalModel.Tests
 
 			LexSense sense = new LexSense();
 			e.Senses.Add(sense);
-			_merger.GetOrMakeSubsense(sense, new Extensible(), xml);
-			_merger.FinishEntry(e);
+			_builder.GetOrMakeSubsense(sense, new Extensible(), xml);
+			_builder.FinishEntry(e);
 			_exporter.Add(e);
 			_exporter.End();
 			AssertXPathNotNull("//entry/sense/subsense[@id='opon_1b' and @order='2']/gloss");
@@ -115,13 +115,13 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry e = MakeSimpleEntry();
 
-			_merger.MergeInField(e,
+			_builder.MergeInField(e,
 								 "color",
 								 default(DateTime),
 								 default(DateTime),
 								 MakeBasicLiftMultiText(),
 								 null);
-			_merger.FinishEntry(e);
+			_builder.FinishEntry(e);
 
 			_exporter.Add(e);
 			_exporter.End();
@@ -133,12 +133,12 @@ namespace WeSay.LexicalModel.Tests
 		public void Entry_Order()
 		{
 			Extensible extensibleInfo = new Extensible();
-			LexEntry entry4 = this._merger.GetOrMakeEntry(extensibleInfo, 4);
-			this._merger.FinishEntry(entry4);
-			LexEntry entry1 = this._merger.GetOrMakeEntry(extensibleInfo, 1);
-			this._merger.FinishEntry(entry1);
-			LexEntry entry2 = this._merger.GetOrMakeEntry(extensibleInfo, 2);
-			this._merger.FinishEntry(entry2);
+			LexEntry entry4 = this._builder.GetOrMakeEntry(extensibleInfo, 4);
+			this._builder.FinishEntry(entry4);
+			LexEntry entry1 = this._builder.GetOrMakeEntry(extensibleInfo, 1);
+			this._builder.FinishEntry(entry1);
+			LexEntry entry2 = this._builder.GetOrMakeEntry(extensibleInfo, 2);
+			this._builder.FinishEntry(entry2);
 			_exporter.Add(entry4, 3);
 			_exporter.Add(entry1, 1);
 			_exporter.Add(entry2, 2);
@@ -159,8 +159,8 @@ namespace WeSay.LexicalModel.Tests
 			sense.ExampleSentences.Add(ex);
 			LiftMultiText translation = new LiftMultiText();
 			translation.Add("aa", "aaaa");
-			_merger.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
-			_merger.FinishEntry(e);
+			_builder.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
+			_builder.FinishEntry(e);
 			_exporter.Add(e);
 			_exporter.End();
 			AssertXPathNotNull("//entry/sense/example/translation[not(@type)]/form[@lang='aa']");
@@ -176,14 +176,14 @@ namespace WeSay.LexicalModel.Tests
 			sense.ExampleSentences.Add(ex);
 			LiftMultiText translation = new LiftMultiText();
 			translation.Add("aa", "unmarked translation");
-			_merger.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
+			_builder.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
 			LiftMultiText t2 = new LiftMultiText();
 			t2.Add("aa", "type2translation");
-			_merger.MergeInTranslationForm(ex,
+			_builder.MergeInTranslationForm(ex,
 										   "type2",
 										   t2,
 										   "<translation type='type2'><bogus/></translation>");
-			_merger.FinishEntry(e);
+			_builder.FinishEntry(e);
 
 			_exporter.Add(e);
 			_exporter.End();
@@ -203,14 +203,14 @@ namespace WeSay.LexicalModel.Tests
 
 			LiftMultiText translation = new LiftMultiText();
 			translation.Add("aa", "unmarked translation");
-			_merger.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
+			_builder.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
 			LiftMultiText t2 = new LiftMultiText();
 			t2.Add("aa", "freestuff");
-			_merger.MergeInTranslationForm(ex,
+			_builder.MergeInTranslationForm(ex,
 										   "free",
 										   t2,
 										   "<translation type='free'><bogus/></translation>");
-			_merger.FinishEntry(e);
+			_builder.FinishEntry(e);
 
 			_exporter.Add(e);
 			_exporter.End();
@@ -230,17 +230,17 @@ namespace WeSay.LexicalModel.Tests
 
 			LiftMultiText t2 = new LiftMultiText();
 			t2.Add("aa", "freestuff");
-			_merger.MergeInTranslationForm(ex,
+			_builder.MergeInTranslationForm(ex,
 										   "free",
 										   t2,
 										   "<translation type='free'><bogus/></translation>");
 			LiftMultiText translation = new LiftMultiText();
 			translation.Add("aa", "unmarked translation");
-			_merger.MergeInTranslationForm(ex,
+			_builder.MergeInTranslationForm(ex,
 										   "",
 										   translation,
 										   "<translation><bogusUnmarked/></translation>");
-			_merger.FinishEntry(e);
+			_builder.FinishEntry(e);
 
 			_exporter.Add(e);
 			_exporter.End();
@@ -265,9 +265,9 @@ namespace WeSay.LexicalModel.Tests
 					<form lang='und-fonipa'><text>glob</text></form>
 				  </variant>";
 
-			_merger.MergeInVariant(e, MakeBasicLiftMultiText(), xml1);
-			_merger.MergeInVariant(e, MakeBasicLiftMultiText(), xml2);
-			_merger.FinishEntry(e);
+			_builder.MergeInVariant(e, MakeBasicLiftMultiText(), xml1);
+			_builder.MergeInVariant(e, MakeBasicLiftMultiText(), xml2);
+			_builder.FinishEntry(e);
 			_exporter.Add(e);
 			_exporter.End();
 			AssertXPathNotNull("//entry/variant/trait[@name='dialects' and @ value='Ratburi']");
@@ -286,8 +286,8 @@ namespace WeSay.LexicalModel.Tests
 					</gloss>
 				  </etymology>";
 
-			_merger.MergeInEtymology(e, null, null, null, xml);
-			_merger.FinishEntry(e);
+			_builder.MergeInEtymology(e, null, null, null, xml);
+			_builder.FinishEntry(e);
 
 			_exporter.Add(e);
 			_exporter.End();
@@ -318,8 +318,8 @@ namespace WeSay.LexicalModel.Tests
 
 			LexSense sense = new LexSense();
 			e.Senses.Add(sense);
-			_merger.MergeInReversal(sense, null, null, null, xml);
-			_merger.FinishEntry(e);
+			_builder.MergeInReversal(sense, null, null, null, xml);
+			_builder.FinishEntry(e);
 
 			_exporter.Add(e);
 			_exporter.End();
@@ -352,8 +352,8 @@ namespace WeSay.LexicalModel.Tests
 									</form>
 								  </field>
 								</pronunciation>";
-			_merger.MergeInPronunciation(e, MakeBasicLiftMultiText(), xml);
-			_merger.FinishEntry(e);
+			_builder.MergeInPronunciation(e, MakeBasicLiftMultiText(), xml);
+			_builder.FinishEntry(e);
 
 			_exporter.Add(e);
 			_exporter.End();

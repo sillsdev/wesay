@@ -72,6 +72,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(startModTime, finishModTime);
 		}
 
+#if notUsedSinceNov2008
 		[Test]
 		public void PopulateDefinitions_EmptyLift()
 		{
@@ -160,5 +161,6 @@ namespace WeSay.LexicalModel.Tests
 			doc.Load(_liftFilePath);
 			return doc;
 		}
+#endif
 	}
 }

@@ -283,7 +283,7 @@ namespace WeSay.Project.Tests
 				Directory.CreateDirectory(pathToFolder);
 
 			StringBuilder builder = new StringBuilder();
-			int numberOfTestLexEntries =50000;
+			int numberOfTestLexEntries =50;
 			for (int i = 0; i < numberOfTestLexEntries; i++)
 			{
 				builder.AppendFormat(@"
@@ -295,7 +295,7 @@ namespace WeSay.Project.Tests
 					</lexical-unit>
 					<sense>
 						<grammatical-info value='n'/>
-						<gloss lang='en'><text>blah blah {0} blah blah</text></gloss>
+						<definition><form lang='en'><text>blah blah {0} blah blah</text></form></definition>
 						<example lang='v'><text>and example of lah blah {0} blah blah</text></example>
 					</sense>
 				</entry>", i);

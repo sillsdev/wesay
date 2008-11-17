@@ -12,9 +12,11 @@ namespace WeSay.LexicalModel
 	/// This class is called by the LiftParser, as it encounters each element of a lift file.
 	/// There is at least one other ILexiconMerger, used in FLEX.
 	///
-	/// NB: this doesn't yet merge (dec 2006). Just blindly adds.
+	/// NB: In WeSay, we don't really use this to "merge in" elements, since we start from
+	/// scratch each time we read a file. But in FLEx it is currently used that way, hence
+	/// we haven't renamed the interface (ILexiconMerger).
 	/// </summary>
-	internal class LiftMerger:
+	internal class LexEntryFromLiftBuilder:
 			ILexiconMerger<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>,
 			IDisposable
 	{
@@ -33,7 +35,7 @@ namespace WeSay.LexicalModel
 		private readonly IList<string> _expectedOptionCollectionTraits;
 		private readonly LiftRepository _repository;
 
-		public LiftMerger(LiftRepository repository)
+		public LexEntryFromLiftBuilder(LiftRepository repository)
 		{
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
@@ -457,10 +459,32 @@ namespace WeSay.LexicalModel
 
 		public void FinishEntry(LexEntry entry)
 		{
+			CopyOverGlossesIfDefinitionsMissing(entry);
 			//_repository.FinishCreateEntry(entry);
 			entry.GetOrCreateId(false);
 			entry.ModifiedTimeIsLocked = false;
 			entry.Clean();
+		}
+
+		/// <summary>
+		/// We do this because in linguist tools, there is a distinction that we don't want to
+		/// normally make in WeSay.  There, "gloss" is the first pass at a definition, but its
+		/// really just for interlinearlization.  That isn't a distinction we want our user
+		/// to bother with.
+		/// </summary>
+		/// <param name="entry"></param>
+		private void CopyOverGlossesIfDefinitionsMissing(LexEntry entry)
+		{
+			foreach (LexSense sense in entry.Senses)
+			{
+				foreach(LanguageForm form in sense.Gloss.Forms)
+				{
+					if(!sense.Definition.ContainsAlternative(form.WritingSystemId))
+					{
+						sense.Definition.SetAlternative(form.WritingSystemId,form.Form);
+					}
+				}
+			}
 		}
 
 		#endregion

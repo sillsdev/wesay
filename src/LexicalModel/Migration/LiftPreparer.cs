@@ -22,6 +22,7 @@ namespace WeSay.LexicalModel.Migration
 			_liftFilePath = liftFilePath;
 		}
 
+#if notUsedSinceNov2008
 		private bool PopulateDefinitionsWithUI()
 		{
 			using (ProgressDialog dlg = new ProgressDialog())
@@ -90,7 +91,7 @@ namespace WeSay.LexicalModel.Migration
 		//        {
 		//            string s = FindFirstInstanceOfPatternInFile(pathToLift, "producer=\"()\"");
 		//        }
-
+#endif
 		//private static string FindFirstInstanceOfPatternInFile(string inputPath, string pattern)
 		//{
 		//    Regex regex = new Regex(pattern);
