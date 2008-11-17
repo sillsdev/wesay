@@ -208,11 +208,11 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="PicoContainer.pdb" Name="PicoContainer.pdb" KeyPath="yes" Source="..\..\output\release\PicoContainer.pdb" />
 				  </Component>
 
-				  <Component Id="Chorus.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CCCC">
+				  <Component Id="Chorus.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CCCC}">
 					<File Id="Chorus.exe" Name="Chorus.exe" KeyPath="yes" Source="..\..\output\release\Chorus.exe" />
 				  </Component>
 
-				  <Component Id="wrapShellCall.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CDDD">
+				  <Component Id="wrapShellCall.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CDDD}">
 					<File Id="wrapShellCall.exe" Name="wrapShellCall.exe" KeyPath="yes" Source="..\..\output\release\wrapShellCall.exe" />
 				  </Component>
 
