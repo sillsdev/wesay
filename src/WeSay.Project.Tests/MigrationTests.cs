@@ -38,7 +38,7 @@ namespace WeSay.Project.Tests
 			Assert.IsTrue(didMigrate);
 			XmlDocument outputDoc = new XmlDocument();
 			outputDoc.Load(_outputPath);
-			Assert.IsNotNull(outputDoc.SelectSingleNode("configuration[@version='3']"));
+			Assert.IsNotNull(outputDoc.SelectSingleNode("configuration[@version='4']"));
 		}
 
 		[Test]
@@ -49,7 +49,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='3']", _outputPath);
+			AssertXPathNotNull("configuration[@version='4']", _outputPath);
 		}
 
 		[Test]
@@ -60,11 +60,10 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='3']", _outputPath);
+			AssertXPathNotNull("configuration[@version='4']", _outputPath);
 		}
 
 		[Test]
-		[Ignore("Unignore when new dashboard is added.")]
 		public void DoesMigrateV3File()
 		{
 			File.WriteAllText(_pathToInputConfig,
@@ -72,22 +71,10 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='3']", _outputPath);
-		}
-
-		//TODO: When updating to new dashboard, remove this test and don't ignore "DoesMigrateV3File" and "DoesNotTouchV4File"
-		[Test]
-		public void DoesNotTouchV3File()
-		{
-			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><configuration version='3'></configuration>");
-			XPathDocument doc = new XPathDocument(_pathToInputConfig);
-			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
-			Assert.IsFalse(didMigrate);
+			AssertXPathNotNull("configuration[@version='4']", _outputPath);
 		}
 
 		[Test]
-		[Ignore("Unignore when new dashboard is added.")]
 		public void DoesNotTouchV4File()
 		{
 			File.WriteAllText(_pathToInputConfig,

@@ -511,13 +511,12 @@ namespace WeSay.Project
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
-			//TODO: Uncomment when we want to migrate to new dashboard and strings
-			//if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='3']") != null)
-			//{
-			//    MigrateUsingXSLT(configurationDoc, "MigrateConfig3To4.xsl", targetPath);
-			//    configurationDoc = new XPathDocument(targetPath);
-			//    didMigrate = true;
-			//}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='3']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig3To4.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
 			return didMigrate;
 		}
 
@@ -1014,8 +1013,7 @@ namespace WeSay.Project
 			XmlWriter writer = XmlWriter.Create(Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
-			//TODO: Update to version 4 when we migrate to new dashboard
-			writer.WriteAttributeString("version", "3");
+			writer.WriteAttributeString("version", "4");
 
 			if (EditorsSaveNow != null)
 			{

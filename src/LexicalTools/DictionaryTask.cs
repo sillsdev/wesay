@@ -14,14 +14,13 @@ namespace WeSay.LexicalTools
 	{
 		private DictionaryControl _dictionaryControl;
 		private readonly ViewTemplate _viewTemplate;
-		//TODO: Use short label when migrating to new dashboard
 		private static readonly string kTaskLabel = "~Dictionary";
 		private static readonly string kTaskLongLabel = "~Dictionary Browse && Edit";
 
 		public DictionaryTask(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
 				: base(
 						kTaskLabel,
-						string.Empty,
+						kTaskLongLabel,
 						string.Empty,
 						string.Empty,
 						string.Empty,
