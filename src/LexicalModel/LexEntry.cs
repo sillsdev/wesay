@@ -136,6 +136,12 @@ namespace WeSay.LexicalModel
 			_isDirty = false;
 		}
 
+		public override void NotifyPropertyChanged(string propertyName)
+		{
+			if(!_isBeingDeleted)
+				base.NotifyPropertyChanged(propertyName);
+		}
+
 		public string GetOrCreateId(bool doCreateEvenIfNoLexemeForm)
 		{
 			if (String.IsNullOrEmpty(_id))

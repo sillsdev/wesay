@@ -95,7 +95,7 @@ namespace WeSay.LexicalModel
 		public override void DeleteItem(RepositoryId id)
 		{
 			LexEntry itemToDelete = GetItem(id);
-			UpdateLiftFileWithDeleted(itemToDelete);
+			//review: this was here but it was repeated in the other DeleteItem() call: UpdateLiftFileWithDeleted(itemToDelete);
 			base.DeleteItem(id);
 		}
 

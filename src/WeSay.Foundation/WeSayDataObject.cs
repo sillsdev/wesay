@@ -265,7 +265,7 @@ namespace WeSay.Foundation
 			return false; //don't throw it away if you don't know what it is
 		}
 
-		public void NotifyPropertyChanged(string propertyName)
+		public virtual void NotifyPropertyChanged(string propertyName)
 		{
 			if (PropertyChanged != null)
 			{

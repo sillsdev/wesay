@@ -537,7 +537,7 @@ namespace WeSay.LexicalTools
 				_btnDeleteWord.Focus();
 			}
 			//review: This save isn't necessary, but the possibility of deleting unsave records currently doesn't work.
-			_lexEntryRepository.SaveItem(CurrentRecord);
+			//_lexEntryRepository.SaveItem(CurrentRecord);
 
 			CurrentRecord.IsBeingDeleted = true;
 			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
