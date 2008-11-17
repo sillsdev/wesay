@@ -11,7 +11,7 @@ using WeSay.Project;
 namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
-	public class LiftMergerTests: ILiftMergerTestSuite
+	public class LexEntryFromLiftBuilderTests: ILiftMergerTestSuite
 	{
 		private LexEntryFromLiftBuilder _builder;
 		private LiftRepository _repository;

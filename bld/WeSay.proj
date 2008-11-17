@@ -165,7 +165,7 @@
 	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
 	<FileUpdate Files="$(BaseDirectory)\src\Installer\Installer.wxs" Regex="Property_ProductVersion = \&quot;.*\&quot;"
-			  ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />
+				ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />
 
 
 	<Message Text="Making Installer Version: $(Version)"/>
@@ -176,10 +176,18 @@
 	<Delete Files="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi" TreatErrorsAsWarnings="false" />
 
 	<Move SourceFiles="$(BaseDirectory)\output\installer\WeSayInstaller.msi"
-		  DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi"/>
+			DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi"/>
   </Target>
 
-  <Target Name="Installer">
+  <!-- for use on a dev machine to test installer script -->
+  <Target Name="InstallerWithBogusBuildNumber">
+	<CreateProperty Value="1234:abcd">
+	  <Output PropertyName="BUILD_NUMBER" TaskParameter="Value"/>
+	</CreateProperty>
+	<CallTarget Targets="Install"/>
+  </Target>
+
+	<Target Name="Installer">
 	<Split Input="$(BUILD_NUMBER)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
 	</Split>
@@ -194,7 +202,7 @@
 	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
 	<FileUpdate Files="$(BaseDirectory)\src\Installer\Installer.wxs" Regex="Property_ProductVersion = \&quot;.*\&quot;"
-			  ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />
+				ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />
 
 
 	<Message Text="Making Installer Version: $(Version)"/>
@@ -205,7 +213,7 @@
 	<Delete Files="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi" TreatErrorsAsWarnings="false" />
 
 	<Move SourceFiles="$(BaseDirectory)\output\installer\WeSayInstaller.msi"
-		  DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi"/>
+			DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi"/>
   </Target>
 
 
