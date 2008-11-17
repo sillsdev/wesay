@@ -94,7 +94,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void NullDataSource_ShowsEmpty()
 		{
-			using (EntryViewControl entryViewControl = CreateForm(null))
+			using (EntryViewControl entryViewControl = CreateForm(null, false))
 			{
 				Assert.AreEqual(string.Empty, entryViewControl.ControlFormattedView.Text);
 			}
@@ -115,7 +115,7 @@ namespace WeSay.LexicalTools.Tests
 			o = sense.GetOrCreateProperty<OptionRef>("POS");
 			o.Value = "noun";
 			//nb: this is the key, which for noun happens to be the English display name tested for below
-			using (EntryViewControl entryViewControl = CreateForm(apple))
+			using (EntryViewControl entryViewControl = CreateForm(apple, false))
 			{
 				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains("noun"));
 				Assert.IsFalse(entryViewControl.ControlFormattedView.Text.Contains("nombre"));
@@ -124,7 +124,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private void TestEntryShows(LexEntry entry)
 		{
-			using (EntryViewControl entryViewControl = CreateForm(entry))
+			using (EntryViewControl entryViewControl = CreateForm(entry, false))
 			{
 				Assert.IsTrue(
 						entryViewControl.ControlFormattedView.Text.Contains(GetLexicalForm(entry)));
@@ -190,7 +190,9 @@ namespace WeSay.LexicalTools.Tests
 				Assert.AreEqual("Meaning 1", labelControl.Text);
 				MultiTextControl editControl =
 						(MultiTextControl) entryDetailControl.GetEditControlFromRow(0);
+				editControl.TextBoxes[0].Focus();
 				editControl.TextBoxes[0].Text = "test";
+				entryDetailControl.GetEditControlFromRow(1).Focus();
 				Assert.IsTrue(editControl.TextBoxes[0].Text.Contains(GetMeaning(entry)));
 			}
 		}
@@ -222,11 +224,14 @@ namespace WeSay.LexicalTools.Tests
 		public void EditField_RemoveContents_RemovesSense()
 		{
 			LexEntry meaningOnly = CreateTestEntry("word", "meaning", "");
-			using (EntryViewControl entryViewControl = CreateForm(meaningOnly))
+			using (EntryViewControl entryViewControl = CreateForm(meaningOnly, true))
 			{
 				MultiTextControl editControl = GetEditControl(entryViewControl.ControlEntryDetail,
 															  "Meaning 1");
+				editControl.TextBoxes[0].Focus();
 				editControl.TextBoxes[0].Text = "";
+				entryViewControl.ControlEntryDetail.GetEditControlFromRow(0).Focus();
+				Application.DoEvents();
 				Thread.Sleep(1000);
 				Application.DoEvents();
 
@@ -349,13 +354,19 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 
-		private EntryViewControl CreateForm(LexEntry entry)
+		private EntryViewControl CreateForm(LexEntry entry, bool requiresVisibleForm)
 		{
 			EntryViewControl entryViewControl = new EntryViewControl();
 			entryViewControl.LexEntryRepository = _lexEntryRepository;
 			entryViewControl.ViewTemplate = _viewTemplate;
 			entryViewControl.DataSource = entry;
 
+			if(requiresVisibleForm)
+			{
+				Form window = new Form();
+				window.Controls.Add(entryViewControl);
+				window.Show();
+			}
 			return entryViewControl;
 		}
 
@@ -370,6 +381,12 @@ namespace WeSay.LexicalTools.Tests
 			entryViewControl.LexEntryRepository = _lexEntryRepository;
 			entryViewControl.ViewTemplate = viewTemplate;
 			entryViewControl.DataSource = entry;
+
+
+			Form window = new Form();
+			window.Controls.Add(entryViewControl);
+			window.Show();
+
 			return entryViewControl;
 		}
 

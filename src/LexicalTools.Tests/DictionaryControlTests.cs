@@ -27,6 +27,8 @@ namespace WeSay.LexicalTools.Tests
 		private Form _window;
 		private TabPage _detailTaskPage;
 		private Field _definitionField;
+		private Guid _firstEntryGuid;
+		private Guid _secondEntryGuid;
 
 		[TestFixtureSetUp]
 		public void SetupFixture()
@@ -56,6 +58,11 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
 									   "LexEntry",
 									   vernacularWritingSystemIds));
+			viewTemplate.Add(new Field("focusOnMe",
+									   "LexEntry",
+									   analysisWritingSystemIds,
+									   Field.MultiplicityType.ZeroOr1,
+									   "MultiText"));
 			viewTemplate.Add(new Field("MyEntryCustom",
 									   "LexEntry",
 									   analysisWritingSystemIds,
@@ -98,8 +105,8 @@ namespace WeSay.LexicalTools.Tests
 									   "LexExampleSentence",
 									   analysisWritingSystemIds));
 
-			AddEntry("Initial", analysisWritingSystemIds[0], "meaning", true);
-			AddEntry("Secondary", analysisWritingSystemIds[0], "secondarymeaning", false);
+			_firstEntryGuid = AddEntry("Initial", analysisWritingSystemIds[0], "meaning", true);
+			_secondEntryGuid = AddEntry("Secondary", analysisWritingSystemIds[0], "secondarymeaning", false);
 			AddEntry("Tertiary", analysisWritingSystemIds[0], "meaning", true);
 
 			Field customField = new Field("SemanticDomains",
@@ -143,7 +150,7 @@ namespace WeSay.LexicalTools.Tests
 			_tabControl.TabPages.Add(new TabPage("Dummy"));
 			_window = new Form();
 			_window.Controls.Add(_tabControl);
-			_window.Width = 500;
+			_window.Width = 700;
 			_window.Height = 500;
 			_window.Show();
 		}
@@ -156,7 +163,7 @@ namespace WeSay.LexicalTools.Tests
 			get { return true; }
 		}
 
-		private void AddEntry(string lexemeForm,
+		private Guid AddEntry(string lexemeForm,
 							  string meaningWritingSystemId,
 							  string meaning,
 							  bool includeExample)
@@ -180,7 +187,7 @@ namespace WeSay.LexicalTools.Tests
 				ex.Sentence.SetAlternative("x", "hello");
 			}
 			_lexEntryRepository.SaveItem(entry);
-			return;
+			return entry.Guid;
 		}
 
 		//        [Test]
@@ -430,16 +437,24 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void NewWord_DictionaryContainsWordEmpty_ContainsBlankAndEmpty()
 		{
+			//review: I (jh) find this test confusing.  if "empty" is a special word, can
+			//someone add a comment explaining it?  Else, why not just use, like, "hello"?
+
+			Application.DoEvents();
 			StartWithEmpty();
 			ClickAddWord();
-			TypeInLexicalForm("(Empty)");
+			Application.DoEvents();
+			var form = "hello";// "(Empty)";
+			TypeInLexicalForm(form);
+			Application.DoEvents();
 			ClickAddWord();
+			Application.DoEvents();
 			Assert.AreEqual(2, _lexEntryRepository.CountAllItems());
 			LexicalFormMustMatch(string.Empty);
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 			// select other entry
 			l.Select((l.Properties.SelectedIndices[0] + 1) % 2);
-			LexicalFormMustMatch("(Empty)");
+			LexicalFormMustMatch(form);
 		}
 
 		[Test]
@@ -527,11 +542,18 @@ namespace WeSay.LexicalTools.Tests
 			WeSayTextBox box = note.TextBoxes[0];
 			box.Focus();
 			box.Text = "a note";
+
+			Application.DoEvents();
 			LexEntry entry = GetCurrentEntry();
 			CycleTheCurrentEntryOutAndBackIn(entry);
-
+			Application.DoEvents();
 			note = GetEditControl(fieldLabel);
 			Assert.AreEqual("a note", note.TextBoxes[0].Text);
+		}
+
+		private void ShiftFocus()
+		{
+			GetEditControl("*focusOnMe").TextBoxes[0].Focus();
 		}
 
 		private void CustomOptionRefPreservedCore(string fieldLabel)
@@ -571,12 +593,21 @@ namespace WeSay.LexicalTools.Tests
 
 		private void CycleTheCurrentEntryOutAndBackIn(LexEntry entry)
 		{
-			//cycle out this record
-			EntryViewControl parentControl =
-					((DictionaryControl) _task.Control).Control_EntryDetailPanel;
-			parentControl.DataSource = new LexEntry();
-			//bring this record back in
-			parentControl.DataSource = entry;
+			ShiftFocus();//this should not be needed, and *is not needed* in the real, running app, or if you step through. I tried for over an hour to get the test code to accurately replicate the run-time situation, but I give up!
+
+			Application.DoEvents();
+			((DictionaryControl) _task.Control).GoToEntry(_firstEntryGuid);
+
+		   ((DictionaryControl) _task.Control).GoToEntry(_secondEntryGuid);
+			Application.DoEvents();
+
+			 Thread.Sleep(1000);
+		   Application.DoEvents();
+			((DictionaryControl) _task.Control).GoToEntry(entry.Id);
+			Application.DoEvents();
+			Thread.Sleep(1000);
+			Application.DoEvents();
+			return;
 		}
 
 		private LexEntry GetCurrentEntry()
@@ -705,6 +736,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			t.Properties.Text = value;
+			//change the focus
+			ShiftFocus();
 		}
 
 		private static string GetMeaningControlName()
@@ -875,6 +908,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			PutCursorInMeaningFieldOfSecondEntry();
 			TypeInMeaning(string.Empty);
+			ShiftFocus();
 			Thread.Sleep(1000);
 			Application.DoEvents();
 			Assert.IsTrue(GetEditControl("Meaning").Name.Contains("ghost"),

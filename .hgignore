@@ -1,4 +1,5 @@
 syntax: glob
+bld\WeSay.proj.rtf
 bld\BuildHistory/*.rtf
 *.cache
 bld\BuildHistory/*.log

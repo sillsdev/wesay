@@ -248,7 +248,10 @@ namespace WeSay.LexicalTools
 
 		private void OnEntryChanged(object sender, PropertyChangedEventArgs e)
 		{
-			_lexEntryRepository.NotifyThatLexEntryHasBeenUpdated((LexEntry) sender);
+
+
+			_lexEntryRepository.NotifyThatLexEntryHasBeenUpdated((LexEntry)sender);
+
 			Debug.Assert(CurrentIndex != -1);
 			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
 			_keepRecordCurrent = true;
@@ -373,6 +376,17 @@ namespace WeSay.LexicalTools
 			Logger.WriteMinorEvent("FindButton_Click");
 
 			SelectItemWithDisplayString(_findText.Text);
+		}
+
+
+		public void GoToEntry(Guid entryGuid)
+		{
+			LexEntry entry = _lexEntryRepository.GetLexEntryWithMatchingGuid(entryGuid);
+			if (entry == null)
+			{
+				throw new NavigationException("Could not find the entry with guid " + entryGuid);
+			}
+			_recordsListBox.SelectedIndex = _records.FindFirstIndex(entry);
 		}
 
 		public void GoToEntry(string entryId)
