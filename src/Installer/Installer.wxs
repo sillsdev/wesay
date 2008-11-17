@@ -151,7 +151,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="autofac.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
 					<File Id="autofac.dll" Name="autofac.dll" KeyPath="yes" Source="..\..\output\release\autofac.dll" />
 				  </Component>
-				  <Component Id="linqbridge.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
+				  <Component Id="linqbridge.dll" Guid="{D5FE0CB8-19D7-4457-8D6C-43E56E9A6FA0}">
 					<File Id="linqbridge.dll" Name="linqbridge.dll" KeyPath="yes" Source="..\..\output\release\linqbridge.dll" />
 				  </Component>
 
