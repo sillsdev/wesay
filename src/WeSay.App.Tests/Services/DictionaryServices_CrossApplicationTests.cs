@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -246,7 +247,7 @@ namespace WeSay.App.Tests.Services
 
 		private static void CreateNewEntry(bool mode)
 		{
-			string entriesXml = @"<entry id='foo1'/>";
+			string entriesXml = string.Format("<entry id='foo1' guid='{0}'/>", Guid.NewGuid().ToString());
 			RunTest(mode,
 					entriesXml,
 					delegate(IDictionaryService dictionaryService)
