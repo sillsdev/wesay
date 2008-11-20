@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools
 								  string label,
 								  string description,
 								  string wordListFileName,
-								  string writingSystemIdForWordListLanguage,
+								  string wordListWritingSystemId,
 								  ViewTemplate viewTemplate)
 				: this(
 						lexEntryRepository,
@@ -34,7 +34,7 @@ namespace WeSay.LexicalTools
 						label,
 						description,
 						wordListFileName,
-						writingSystemIdForWordListLanguage,
+						wordListWritingSystemId,
 						viewTemplate) {}
 
 		public GatherWordListTask(LexEntryRepository lexEntryRepository,

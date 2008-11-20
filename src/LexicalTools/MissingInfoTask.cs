@@ -35,7 +35,7 @@ namespace WeSay.LexicalTools
 						viewTemplate) {}
 
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
-							   string missingInfoField,
+							   string field,
 							   string label,
 							   string longLabel,
 							   string description,
@@ -51,33 +51,33 @@ namespace WeSay.LexicalTools
 						false,
 						lexEntryRepository)
 		{
-			if (missingInfoField == null)
+			if (field == null)
 			{
-				throw new ArgumentNullException("missingInfoField");
+				throw new ArgumentNullException("field");
 			}
 			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
 
-			_missingInfoField = viewTemplate[missingInfoField];
+			_missingInfoField = viewTemplate[field];
 			_viewTemplate = viewTemplate;
 			_writingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
-			Field field =
+			Field fieldDefn =
 					WeSayWordsProject.Project.DefaultViewTemplate.GetField(
 							Field.FieldNames.EntryLexicalForm.ToString());
-			if (field != null)
+			if (fieldDefn != null)
 			{
-				if (field.WritingSystemIds.Count > 0)
+				if (fieldDefn.WritingSystemIds.Count > 0)
 				{
-					_writingSystem = BasilProject.Project.WritingSystems[field.WritingSystemIds[0]];
+					_writingSystem = BasilProject.Project.WritingSystems[fieldDefn.WritingSystemIds[0]];
 				}
 				else
 				{
 					throw new ConfigurationException("There are no writing systems enabled for the Field '{0}'",
-													 field.FieldName);
+													 fieldDefn.FieldName);
 				}
 			}
 		}
@@ -168,8 +168,8 @@ namespace WeSay.LexicalTools
 							   string label,
 							   string description,
 							   ViewTemplate viewTemplate,
-							   string fieldsToShowEditable,
-							   string fieldsToShowReadOnly)
+							   string showFields,
+							   string readOnly)
 				: this(
 						lexEntryRepository,
 						missingInfoField,
@@ -179,31 +179,43 @@ namespace WeSay.LexicalTools
 						string.Empty,
 						string.Empty,
 						viewTemplate,
-						fieldsToShowEditable,
-						fieldsToShowReadOnly) {}
-
+						showFields,
+						readOnly) {}
+		/// <summary>
+		/// This is the ctor being used on a Nov-2008 era config
+		/// </summary>
+		/// <param name="lexEntryRepository"></param>
+		/// <param name="field"></param>
+		/// <param name="label"></param>
+		/// <param name="longLabel"></param>
+		/// <param name="description"></param>
+		/// <param name="remainingCountText"></param>
+		/// <param name="referenceCountText"></param>
+		/// <param name="viewTemplate"></param>
+		/// <param name="showfields"></param>
+		/// <param name="readOnly"></param>
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
-							   string missingInfoField,
+							   string field,
 							   string label,
 							   string longLabel,
 							   string description,
 							   string remainingCountText,
 							   string referenceCountText,
 							   ViewTemplate viewTemplate,
-							   string fieldsToShowEditable,
-							   string fieldsToShowReadOnly)
+							   string showfields,
+							   string readOnly)
 				: this(
 						lexEntryRepository,
-						missingInfoField,
+						field,
 						label,
 						longLabel,
 						description,
 						remainingCountText,
 						referenceCountText,
 						viewTemplate,
-						fieldsToShowEditable + " " + fieldsToShowReadOnly)
+						showfields + " " + readOnly)
 		{
-			MarkReadOnlyFields(fieldsToShowReadOnly);
+			MarkReadOnlyFields(readOnly);
 		}
 
 		private void MarkReadOnlyFields(string fieldsToShowReadOnly)

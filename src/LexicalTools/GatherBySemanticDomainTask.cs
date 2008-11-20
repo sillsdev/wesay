@@ -54,7 +54,7 @@ namespace WeSay.LexicalTools
 										  string description,
 										  string remainingCountText,
 										  string referenceCountText,
-										  string semanticDomainQuestionsFileName,
+										  string semanticDomainsQuestionFileName,
 										  ViewTemplate viewTemplate,
 										  string semanticDomainFieldName)
 				: base(
@@ -67,9 +67,9 @@ namespace WeSay.LexicalTools
 						lexEntryRepository,
 						viewTemplate)
 		{
-			if (semanticDomainQuestionsFileName == null)
+			if (semanticDomainsQuestionFileName == null)
 			{
-				throw new ArgumentNullException("semanticDomainQuestionsFileName");
+				throw new ArgumentNullException("semanticDomainsQuestionFileName");
 			}
 			if (viewTemplate == null)
 			{
@@ -80,7 +80,7 @@ namespace WeSay.LexicalTools
 			_currentQuestionIndex = 0;
 			_words = null;
 			_semanticDomainQuestionsFileName =
-					DetermineActualQuestionsFileName(semanticDomainQuestionsFileName);
+					DetermineActualQuestionsFileName(semanticDomainsQuestionFileName);
 			if (!File.Exists(_semanticDomainQuestionsFileName))
 			{
 				string pathInProject =

@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.XPath;
-using PicoContainer;
-using PicoContainer.Defaults;
+using Autofac;
+using Autofac.Builder;
+//using PicoContainer;
+//using PicoContainer.Defaults;
+using Autofac.Registrars.Delegate;
+using Palaso.Reporting;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project
@@ -41,27 +45,44 @@ namespace WeSay.Project
 	 */
 	public class ConfigFileTaskBuilder: ITaskBuilder, IDisposable
 	{
+		private readonly WeSayWordsProject _project;
 		private bool _disposed;
-		private IMutablePicoContainer _picoContext;
 		private List<ITask> _tasks;
+		private readonly ContainerBuilder _autofacBuilder;
+		private IContainer _container;
 
-		public ConfigFileTaskBuilder(Stream config,
-									 WeSayWordsProject project,
+		public ConfigFileTaskBuilder(Stream xmlConfiguration,
+									  WeSayWordsProject project,
 									 ICurrentWorkTask currentWorkTask,
 									 LexEntryRepository lexEntryRepository)
 		{
-			_picoContext = new DefaultPicoContainer();
+			_project = project;
 
-			_picoContext.RegisterComponentInstance("Project", project);
-			_picoContext.RegisterComponentInstance("Current Task Provider", currentWorkTask);
+			_autofacBuilder = new Autofac.Builder.ContainerBuilder();
+			_autofacBuilder.Register(project).ExternallyOwned();
+			_autofacBuilder.Register(currentWorkTask);
 
-			_picoContext.RegisterComponentInstance("All Entries", lexEntryRepository);
-			XPathDocument doc = new XPathDocument(config);
-			InitializeComponents(doc);
-			InitializeTaskList(doc);
+			_autofacBuilder.Register(lexEntryRepository).ExternallyOwned();
+
+			//todo: how to do this in a more automated way? Should we explorer a set of known dlls, looking for ITasks?
+			//  that would be a good step towards unifying Actions and Tasks, as I (jh) think we should think about
+			_autofacBuilder.Register(GetType("WeSay.CommonTools.Dash", "CommonTools"));
+			_autofacBuilder.Register(GetType("WeSay.LexicalTools.DictionaryTask", "LexicalTools"));
+			_autofacBuilder.Register(GetType("WeSay.LexicalTools.GatherWordListTask", "LexicalTools")).FactoryScoped();
+			_autofacBuilder.Register(GetType("WeSay.LexicalTools.GatherBySemanticDomainTask", "LexicalTools")).FactoryScoped();
+			_autofacBuilder.Register(GetType("WeSay.LexicalTools.MissingInfoTask", "LexicalTools")).FactoryScoped();
+
+			XPathDocument doc = new XPathDocument(xmlConfiguration);
+			InitializeViewTemplate(doc);
+			_container = _autofacBuilder.Build();
+			BuildTasks(doc);
 		}
 
-		private void InitializeComponents(IXPathNavigable doc)
+		/// <summary>
+		/// Process the top level components (only ViewTemplates, as of Nov 2008)
+		/// </summary>
+		/// <param name="doc"></param>
+		private void InitializeViewTemplate(IXPathNavigable doc)
 		{
 			XPathNavigator navigator = doc.CreateNavigator();
 			navigator = navigator.SelectSingleNode("//components");
@@ -76,36 +97,26 @@ namespace WeSay.Project
 					hasviewTemplate = true;
 					ViewTemplate template = new ViewTemplate();
 					template.LoadFromString(component.OuterXml);
-					_picoContext.RegisterComponentInstance(template.Id, template);
+
+					//_container.RegisterComponentInstance(template.Id, template);
+					_autofacBuilder.Register(template).Named(template.Id);
 				}
 				Debug.Assert(hasviewTemplate,
 							 "Currently, there must be at least 1 viewTemplate in the WeSayConfig file");
 			}
 		}
 
-		private void InitializeTaskList(IXPathNavigable doc)
+		private void BuildTasks(IXPathNavigable doc)
 		{
+			UserSettingsRepository userSettingsRepository = _project.Container.Resolve<UserSettingsRepository>();
+			//            _autofacBuilder.Register(userSettingsRepository); //todo: when we achieve using the same container as the project, we can remove this
+
 			_tasks = new List<ITask>();
 			XPathNavigator navigator = doc.CreateNavigator();
-			XPathNodeIterator taskList = navigator.Select("configuration/tasks/task");
-			foreach (XPathNavigator task in taskList)
+			XPathNodeIterator taskListNodeIterator = navigator.Select("configuration/tasks/task");
+			foreach (XPathNavigator taskNode in taskListNodeIterator)
 			{
-				//typical errors here:
-
-				//PicoInitializationException("Either do the specified parameters not match any of....
-				//may mean you have an extra (unused), missing, or out-of-order parameter element in the xml.
-
-				//UnsatisfiableDependenciesException:
-				// (NB: the "unsatisfiableDependencyTypes" had two types but there was only one problem)
-				// Looking in the stack to this point, we see the id of the thing being created.
-				//Use that id to figure out which class was being named, and considering the "unsatisfiableDependencyTypes"
-				// from near the throw, see if some id
-				// used in the config xml for the id'd type doesn't match the target (an unsatisfiableDependencyType),
-				// defined elsewhere in the xml.
-				// E.g., the template says:     <id>Default View BLAH</id>
-				//  but the EntryDetailTask is lookinig for: <viewTemplate ref="Default View Template" />
-
-				string isVisible = task.GetAttribute("visible", string.Empty);
+				string isVisible = taskNode.GetAttribute("visible", string.Empty);
 				//otherwise, it's an older config format, just show all tasks
 
 				if (!String.IsNullOrEmpty(isVisible))
@@ -115,118 +126,110 @@ namespace WeSay.Project
 						continue; // don't show it
 					}
 				}
-				ITask iTask;
-				string id = string.Empty;
-				try
-				{
-					id = RegisterComponent(task);
-					iTask = (ITask) _picoContext.GetComponentInstance(id);
-				}
-				catch (Exception e)
-				{
-					string message;
-					if (e.Message.StartsWith("Either do the specified parameters not match any of"))
-					{
-						message = "The parameters given in " + id + " (" + task.InnerXml +
-								  ") do not match those required by " +
-								  task.GetAttribute("class", string.Empty);
-					}
-					else
-					{
-						message = e.Message;
-						while (e.InnerException != null)
-								//the user will see this, so lets dive down to the actual cause
-						{
-							e = e.InnerException;
-							message = e.Message;
-						}
-					}
-					iTask = new FailedLoadTask(id, id, message);
-				}
+				ITask iTask = CreateComponent(taskNode) as ITask;
 				_tasks.Add(iTask);
 			}
 		}
 
-		private string RegisterComponent(XPathNavigator component)
+		private object CreateComponent(XPathNavigator taskNode)
 		{
-			string id = component.GetAttribute("id", string.Empty);
-			if (_picoContext.GetComponentInstance(id) != null)
+			object component;//usually a task, but also filter
+			string id = string.Empty;
+			try
 			{
-				throw new ApplicationException("The id '" + id + "' already exists (" +
-											   component.OuterXml + ")");
+				id = taskNode.GetAttribute("id", string.Empty);
+				if (id.Length == 0)
+				{
+					id = Guid.NewGuid().ToString(); //review: is this right (came from pico implementation)
+				}
+
+				List<Parameter> parameters = GetParameters(taskNode);
+
+				Type type = GetType(
+					taskNode.GetAttribute("class", string.Empty),
+					taskNode.GetAttribute("assembly",
+										  string.Empty));
+				component = _container.Resolve(type, parameters.ToArray());
 			}
-			if (id.Length == 0)
+			catch (Exception e)
 			{
-				id = Guid.NewGuid().ToString();
+				string message = e.Message;
+				while (e.InnerException != null) //the user will see this, so lets dive down to the actual cause
+				{
+					e = e.InnerException;
+					message = e.Message;
+				}
+				component = new FailedLoadTask(id, id, message);
 			}
+			return component;
+		}
+
+		private List<Parameter> GetParameters(XPathNavigator component)
+		{
+			List<Parameter> parameters = new List<Parameter>();
 
 			if (component.HasChildren)
 			{
-				List<IParameter> parameters = new List<IParameter>();
 				XPathNodeIterator children = component.SelectChildren(string.Empty, string.Empty);
 				foreach (XPathNavigator child in children)
 				{
-					if (child.GetAttribute("UseInConstructor", string.Empty) != "false")
+					if (child.GetAttribute("UseInConstructor", string.Empty) == "false")
+						continue;
+
+					string componentRef = child.GetAttribute("ref", string.Empty);
+					if (componentRef.Length > 0)
 					{
-						IParameter parameter;
-						string componentRef = child.GetAttribute("ref", string.Empty);
-						if (componentRef.Length > 0)
+						// don't bother treating these as named things... we should probably just remove those elements all together.
+						if (new List<String>(new string[] { "All Entries", "Current Task Provider" })
+							.Contains(componentRef))
 						{
-							parameter = new ComponentParameter(componentRef);
+							continue;
 						}
-						else
-						{
-							switch (child.GetAttribute("class", string.Empty))
-							{
-								case "":
-									parameter = new ConstantParameter(child.Value);
-									break;
-								case "string":
-									parameter = new ConstantParameter(child.Value);
-									break;
-								case "bool":
-									parameter = new ConstantParameter(child.ValueAsBoolean);
-									break;
-								case "DateTime":
-									parameter = new ConstantParameter(child.ValueAsDateTime);
-									break;
-								case "double":
-									parameter = new ConstantParameter(child.ValueAsDouble);
-									break;
-								case "int":
-									parameter = new ConstantParameter(child.ValueAsInt);
-									break;
-								case "long":
-									parameter = new ConstantParameter(child.ValueAsLong);
-									break;
-								default:
-									parameter = new ComponentParameter(RegisterComponent(child));
-									break;
-							}
-						}
-						parameters.Add(parameter);
+
+						//this hooks up a task requesting the "Default View Template" to the view template that says that its id
+						object referedToComponent = _container.Resolve(componentRef);
+						parameters.Add(new Autofac.TypedParameter(referedToComponent.GetType(), referedToComponent));
+					}
+					else
+					{
+						parameters.Add(GetSimpleParameter(child));
 					}
 				}
-				_picoContext.RegisterComponentImplementation(id,
-															 GetType(
-																	 component.GetAttribute(
-																			 "class", string.Empty),
-																	 component.GetAttribute(
-																			 "assembly",
-																			 string.Empty)),
-															 parameters.ToArray());
 			}
-			else
+			return parameters;
+		}
+
+		private Parameter GetSimpleParameter(XPathNavigator child)
+		{
+
+			switch (child.GetAttribute("class", string.Empty))
 			{
-				_picoContext.RegisterComponentImplementation(id,
-															 GetType(
-																	 component.GetAttribute(
-																			 "class", string.Empty),
-																	 component.GetAttribute(
-																			 "assembly",
-																			 string.Empty)));
+				case "":
+					return new NamedParameter(child.Name, child.Value);
+					break;
+				case "string":
+					return new NamedParameter(child.Name, child.Value);
+					break;
+				case "bool":
+					return new NamedParameter(child.Name, child.ValueAsBoolean);
+					break;
+				case "DateTime":
+					return new NamedParameter(child.Name, child.ValueAsDateTime);
+					break;
+				case "double":
+					return new NamedParameter(child.Name, child.ValueAsDouble);
+					break;
+				case "int":
+					return new NamedParameter(child.Name, child.ValueAsInt);
+					break;
+				case "long":
+					return new NamedParameter(child.Name, child.ValueAsLong);
+					break;
+				default:
+					object component1 = CreateComponent(child);
+					return new TypedParameter(component1.GetType(), component1);
+					break;
 			}
-			return id;
 		}
 
 		public static Type GetType(string className, string assembly)
@@ -244,6 +247,9 @@ namespace WeSay.Project
 		//it needs to create some disposable object other than a IList<>.
 		//The reason we need to be able to dispose of it is because we need some way to
 		//dispose of things that it might create, such as a data source.
+		//UPDATE: what we need to do is get the container not belonging to this class, but to
+		//the project (which already has one).  Then it is the autofac container's job to handle
+		//the lifetimes.  I haven't worked out how to do this yet, though.
 
 		public void Dispose()
 		{
@@ -257,12 +263,12 @@ namespace WeSay.Project
 				if (disposing)
 				{
 					//without this, pico disposes of the project, which we don't really own
-					_picoContext.UnregisterComponent("Project");
+				  //  _container.UnregisterComponent("Project");
 					//without this, pico disposes of the db, which we don't really own
-					_picoContext.UnregisterComponent("All Entries");
+				   // _container.UnregisterComponent("All Entries");
 					try
 					{
-						_picoContext.Dispose();
+						_container.Dispose();
 					}
 					catch (Exception e)
 					{
@@ -275,7 +281,7 @@ namespace WeSay.Project
 							throw; //rethrow
 						}
 					}
-					_picoContext = null;
+					_container = null;
 					GC.SuppressFinalize(this);
 				}
 			}

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
@@ -8,12 +9,26 @@ using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
 using WeSay.Project;
 
+
+/* todo
+ *
+ * handle:
+ *     <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>POS</field>
+	  </filter>
+ *
+ * Deal with parameters that are just strings... do we adjust the paramters to match the
+ * config file names?  Stoop to positionalParameters again? What would be nice is attributes on the parameters that we match.
+*/
+
 namespace WeSay.LexicalTools
 {
 	public class DictionaryTask: TaskBase
 	{
 		private DictionaryControl _dictionaryControl;
 		private readonly ViewTemplate _viewTemplate;
+		private UserSettingsForTask _userSettings;
 		private static readonly string kTaskLabel = "~Dictionary";
 		private static readonly string kTaskLongLabel = "~Dictionary Browse && Edit";
 
@@ -38,6 +53,16 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException("viewTemplate");
 			}
 			_viewTemplate = viewTemplate;
+		  //  _userSettings = userSettings;
+		}
+
+		//this wants to be in the constructor, but it's waiting until we get rid of this bizarre picocontainer usage that makes it impossible to add arbitrary stuff without modifying everyone's config file
+		public UserSettingsForTask UserSettings
+		{
+			set
+			{
+				_userSettings = value;
+			}
 		}
 
 		public override void Activate()
@@ -46,6 +71,10 @@ namespace WeSay.LexicalTools
 			{
 				base.Activate();
 				_dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate);
+//   Debug.Assert(_userSettings.Get("one", "0") == "1");
+
+				if(_userSettings !=null && _userSettings.Get("lastUrl", null)!=null)
+					_dictionaryControl.GoToEntry(_userSettings.Get("lastUrl", null));
 			}
 			catch (ConfigurationException)
 			{

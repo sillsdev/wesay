@@ -57,10 +57,7 @@ namespace WeSay.LexicalTools
 																			 ReturnFalse,
 																			 IntPtr.Zero);
 			_btnFind.Image = Resources.Find.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
-			_btnDeleteWord.Image = Resources.DeleteWord;//..GetThumbnailImage(18,
-//                                                                          18,
-//                                                                          ReturnFalse,
-//                                                                          IntPtr.Zero);
+			_btnDeleteWord.Image = Resources.DeleteWord;
 			_btnNewWord.Image = Resources.NewWord.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
 
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;

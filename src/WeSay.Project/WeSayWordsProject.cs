@@ -332,6 +332,8 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
+			builder.Register<UserSettingsRepository>(new UserSettingsRepository());
+
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 
 			builder.Register<LexEntryRepository>(
