@@ -5,76 +5,50 @@ using System.IO;
 using System.Xml.XPath;
 using Autofac;
 using Autofac.Builder;
-//using PicoContainer;
-//using PicoContainer.Defaults;
-using Autofac.Registrars.Delegate;
 using Palaso.Reporting;
-using WeSay.LexicalModel;
 
 namespace WeSay.Project
 {
-	/*
-	 * Ah, this beast.  This class reads the xml config file and creates task objects from it.
-	 *
-	 * The system here is currently a weird use of a dependency injection container, "PicoContainer".
-	 * It's odd because the xml elements that define the task must be listed in the same order
-	 * as the arguments of a constructor, rather than using the element names to match them up.
-	 *
-	 * Tasks can have simple arguments, like "label", but also complex ones that require building up
-	 * another object first, such as a filter.
-	 *
-	 * It's obvious this needs attention (it was one of the first things written for WeSay).  Some ideas (jh nov 2008):
-	 *
-	 *       <entries ref="All Entries" />  This is the *only* set there is, and will ever be.  So access to the
-	 *       LexEntryRepository shouldn't be specified in the config; it should just be pushed into the container
-	 *       automatically, and left out of the xml.
-	 *
-	 *      It's bad to have these order dependent.  We should match the element name with a constructor parameter (danger: better never rename those parameters)
-	 *
-	 *       <viewTemplate ref="Default View Template" />  There is currently only one of these... could just remove it, or say that if you don't specify one, you get the default, again out of the container
-	 *
-	 *        <label UseInConstructor="false">Actions</label>  This is kinda weird... elements marked with this attr are for the configuration app only.
-	 *        The config program has one way of dealing with these, and wesayapp has another (making tasks).  But we don't want, for example,
-	 *        to load up a whole LexEntryRepository in the Config tool, just because we want to show the descriptions of the tasks.
-	 *
-	 *        We need to decide if, rather than having these two different ways of dealing with it, if we can't just have one.  Even
-	 *        somehow go all the way to a TaskRepository?
-	 *
-	 *      We really need to do more with this, allowing people to customize tasks, even in simple ways (e.g., do you want a field to
-	 *      enter a gloss in the Gather by semantic domain task?)
-	 */
-	public class ConfigFileTaskBuilder: ITaskBuilder, IDisposable
+	/// <summary>
+	/// Reads an xml config stream and creates tasks from it.
+	/// </summary>
+	public class ConfigFileTaskBuilder: ITaskBuilder
 	{
-		private readonly WeSayWordsProject _project;
-		private bool _disposed;
 		private List<ITask> _tasks;
 		private readonly ContainerBuilder _autofacBuilder;
 		private IContainer _container;
+		private readonly Dictionary<string, Type> _taskNameToTaskType = new Dictionary<string, Type>();
+		private readonly Dictionary<string, Type> _taskNameToConfigType = new Dictionary<string, Type>();
 
 		public ConfigFileTaskBuilder(Stream xmlConfiguration,
-									  WeSayWordsProject project,
-									 ICurrentWorkTask currentWorkTask,
-									 LexEntryRepository lexEntryRepository)
+									  IContainer parentContainer)
 		{
-			_project = project;
-
 			_autofacBuilder = new Autofac.Builder.ContainerBuilder();
-			_autofacBuilder.Register(project).ExternallyOwned();
-			_autofacBuilder.Register(currentWorkTask);
-
-			_autofacBuilder.Register(lexEntryRepository).ExternallyOwned();
 
 			//todo: how to do this in a more automated way? Should we explorer a set of known dlls, looking for ITasks?
 			//  that would be a good step towards unifying Actions and Tasks, as I (jh) think we should think about
-			_autofacBuilder.Register(GetType("WeSay.CommonTools.Dash", "CommonTools"));
-			_autofacBuilder.Register(GetType("WeSay.LexicalTools.DictionaryTask", "LexicalTools"));
-			_autofacBuilder.Register(GetType("WeSay.LexicalTools.GatherWordListTask", "LexicalTools")).FactoryScoped();
-			_autofacBuilder.Register(GetType("WeSay.LexicalTools.GatherBySemanticDomainTask", "LexicalTools")).FactoryScoped();
-			_autofacBuilder.Register(GetType("WeSay.LexicalTools.MissingInfoTask", "LexicalTools")).FactoryScoped();
+
+			RegisterTask("Dashboard", "WeSay.CommonTools.Dash", null, "CommonTools");
+			RegisterTask("Dictionary", "WeSay.LexicalTools.DictionaryTask", null, "LexicalTools");
+			RegisterTask("GatherWordsBySemanticDomains", "WeSay.LexicalTools.GatherBySemanticDomainTask",
+				"WeSay.LexicalTools.GatherBySemanticDomainConfigXml","LexicalTools");
+
+			RegisterTask("AddMissingInfo", "WeSay.LexicalTools.MissingInfoTask",
+				null, "LexicalTools");
+
+			RegisterTask("GatherWordList", "WeSay.LexicalTools.GatherWordListTask",
+				 null, "LexicalTools");
 
 			XPathDocument doc = new XPathDocument(xmlConfiguration);
 			InitializeViewTemplate(doc);
-			_container = _autofacBuilder.Build();
+
+
+			//this is weird syntax but what it means is,
+			// Make a new container that is a child of the project's container
+			_container = parentContainer.CreateInnerContainer();
+			_autofacBuilder.Build( _container);
+
+
 			BuildTasks(doc);
 		}
 
@@ -99,7 +73,7 @@ namespace WeSay.Project
 					template.LoadFromString(component.OuterXml);
 
 					//_container.RegisterComponentInstance(template.Id, template);
-					_autofacBuilder.Register(template).Named(template.Id);
+					_autofacBuilder.Register(template);//.Named(template.Id);
 				}
 				Debug.Assert(hasviewTemplate,
 							 "Currently, there must be at least 1 viewTemplate in the WeSayConfig file");
@@ -108,48 +82,47 @@ namespace WeSay.Project
 
 		private void BuildTasks(IXPathNavigable doc)
 		{
-			UserSettingsRepository userSettingsRepository = _project.Container.Resolve<UserSettingsRepository>();
-			//            _autofacBuilder.Register(userSettingsRepository); //todo: when we achieve using the same container as the project, we can remove this
-
 			_tasks = new List<ITask>();
 			XPathNavigator navigator = doc.CreateNavigator();
 			XPathNodeIterator taskListNodeIterator = navigator.Select("configuration/tasks/task");
 			foreach (XPathNavigator taskNode in taskListNodeIterator)
 			{
 				string isVisible = taskNode.GetAttribute("visible", string.Empty);
-				//otherwise, it's an older config format, just show all tasks
-
-				if (!String.IsNullOrEmpty(isVisible))
+				if (!String.IsNullOrEmpty(isVisible) && isVisible == "false")
 				{
-					if (isVisible == "false")
-					{
 						continue; // don't show it
-					}
 				}
-				ITask iTask = CreateComponent(taskNode) as ITask;
-				_tasks.Add(iTask);
+				_tasks.Add(CreateTask(taskNode) as ITask);
 			}
 		}
 
-		private object CreateComponent(XPathNavigator taskNode)
+		private ITask CreateTask(XPathNavigator taskNode)
 		{
-			object component;//usually a task, but also filter
-			string id = string.Empty;
+			string taskName = "unknown";
 			try
 			{
-				id = taskNode.GetAttribute("id", string.Empty);
-				if (id.Length == 0)
+				taskName = taskNode.GetAttribute("taskName", string.Empty);
+
+				if (_taskNameToConfigType.ContainsKey(taskName)) //has a config class
 				{
-					id = Guid.NewGuid().ToString(); //review: is this right (came from pico implementation)
+					//make the task configuration class, using the xml we're looking at
+					object config = _container.Resolve(taskName + "Config",
+													   new Parameter[]
+														   {new TypedParameter(typeof (XPathNavigator), taskNode)});
+					 //make the task itself, handing it this configuration object.
+					//its other constructor arguments come "automatically" out of the container
+					return _container.Resolve<ITask>(taskName, new Parameter[] { new NamedParameter("config", config) });
+			   }
+				else if(taskNode.HasChildren)//doesn't yet have a config class, but does have parameters
+				{
+					List<Parameter> parameters = GetParameters(taskNode);
+					return _container.Resolve<ITask>(taskName, parameters.ToArray());
+				}
+				else
+				{
+					return _container.Resolve<ITask>(taskName);//no config for this task
 				}
 
-				List<Parameter> parameters = GetParameters(taskNode);
-
-				Type type = GetType(
-					taskNode.GetAttribute("class", string.Empty),
-					taskNode.GetAttribute("assembly",
-										  string.Empty));
-				component = _container.Resolve(type, parameters.ToArray());
 			}
 			catch (Exception e)
 			{
@@ -159,9 +132,24 @@ namespace WeSay.Project
 					e = e.InnerException;
 					message = e.Message;
 				}
-				component = new FailedLoadTask(id, id, message);
+				return new FailedLoadTask(taskName, "", message);
 			}
-			return component;
+		}
+
+		private void RegisterTask(string name, string classPath, string configClassPath, string assembly)
+		{
+			// _taskNameToClassPath.Add(name, classPath);
+			Type type = GetType(classPath, assembly);
+			_taskNameToTaskType.Add(name, type);
+			_autofacBuilder.Register(type).Named(name).FactoryScoped();
+
+			//register the class that holds the configuration for this task
+			if (!string.IsNullOrEmpty(configClassPath))
+			{
+				type = GetType(configClassPath, assembly);
+				 _taskNameToConfigType.Add(name, type);
+				_autofacBuilder.Register(type).Named(name + "Config").FactoryScoped();
+			}
 		}
 
 		private List<Parameter> GetParameters(XPathNavigator component)
@@ -175,25 +163,7 @@ namespace WeSay.Project
 				{
 					if (child.GetAttribute("UseInConstructor", string.Empty) == "false")
 						continue;
-
-					string componentRef = child.GetAttribute("ref", string.Empty);
-					if (componentRef.Length > 0)
-					{
-						// don't bother treating these as named things... we should probably just remove those elements all together.
-						if (new List<String>(new string[] { "All Entries", "Current Task Provider" })
-							.Contains(componentRef))
-						{
-							continue;
-						}
-
-						//this hooks up a task requesting the "Default View Template" to the view template that says that its id
-						object referedToComponent = _container.Resolve(componentRef);
-						parameters.Add(new Autofac.TypedParameter(referedToComponent.GetType(), referedToComponent));
-					}
-					else
-					{
 						parameters.Add(GetSimpleParameter(child));
-					}
 				}
 			}
 			return parameters;
@@ -226,8 +196,7 @@ namespace WeSay.Project
 					return new NamedParameter(child.Name, child.ValueAsLong);
 					break;
 				default:
-					object component1 = CreateComponent(child);
-					return new TypedParameter(component1.GetType(), component1);
+					throw new ConfigurationException("Didn't understand this type of paramter in the config file: '{0}'", child.GetAttribute("class", string.Empty));
 					break;
 			}
 		}
@@ -240,52 +209,6 @@ namespace WeSay.Project
 		public IList<ITask> Tasks
 		{
 			get { return _tasks; }
-		}
-
-		//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
-		//either I want to change it to something like TaskList rather than ITaskBuilder, or
-		//it needs to create some disposable object other than a IList<>.
-		//The reason we need to be able to dispose of it is because we need some way to
-		//dispose of things that it might create, such as a data source.
-		//UPDATE: what we need to do is get the container not belonging to this class, but to
-		//the project (which already has one).  Then it is the autofac container's job to handle
-		//the lifetimes.  I haven't worked out how to do this yet, though.
-
-		public void Dispose()
-		{
-			Dispose(true);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!_disposed)
-			{
-				if (disposing)
-				{
-					//without this, pico disposes of the project, which we don't really own
-				  //  _container.UnregisterComponent("Project");
-					//without this, pico disposes of the db, which we don't really own
-				   // _container.UnregisterComponent("All Entries");
-					try
-					{
-						_container.Dispose();
-					}
-					catch (Exception e)
-					{
-						if (e.Message.StartsWith("Either do the specified parameters not match any of"))
-						{
-							// mismatched parameters, don't worry
-						}
-						else
-						{
-							throw; //rethrow
-						}
-					}
-					_container = null;
-					GC.SuppressFinalize(this);
-				}
-			}
-			_disposed = true;
 		}
 	}
 }

@@ -114,7 +114,7 @@ namespace WeSay.ConfigTool
 					_taskList.Items.Add(task, showCheckMark);
 				}
 
-				//now go looking for newly introduced tasks in the default config that
+#if broken               //now go looking for newly introduced tasks in the default config that
 				//we can add to the list
 				XmlDocument defaultConfigDoc = new XmlDocument();
 				defaultConfigDoc.Load(WeSayWordsProject.Project.PathToDefaultConfig);
@@ -130,6 +130,7 @@ namespace WeSay.ConfigTool
 						_taskList.Items.Add(task, false);
 					}
 				}
+#endif
 				WeSayWordsProject.Project.WritingSystemChanged += OnProject_WritingSystemChanged;
 			}
 			catch (Exception error)

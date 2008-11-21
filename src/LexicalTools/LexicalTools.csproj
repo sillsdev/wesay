@@ -84,14 +84,15 @@
 	<Compile Include="CongratulationsControl.Designer.cs">
 	  <DependentUpon>CongratulationsControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="GatherBySemanticDomainTask.cs" />
+	<Compile Include="GatherBySemanticDomains\GatherBySemanticDomainConfig.cs" />
+	<Compile Include="GatherBySemanticDomains\GatherBySemanticDomainTask.cs" />
 	<Compile Include="DictionaryControl.Designer.cs">
 	  <DependentUpon>DictionaryControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="GatherBySemanticDomainsControl.cs">
+	<Compile Include="GatherBySemanticDomains\GatherBySemanticDomainsControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="GatherBySemanticDomainsControl.Designer.cs">
+	<Compile Include="GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs">
 	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="GatherWordListControl.cs">
@@ -169,7 +170,7 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DictionaryControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="GatherBySemanticDomainsControl.resx">
+	<EmbeddedResource Include="GatherBySemanticDomains\GatherBySemanticDomainsControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>
 	</EmbeddedResource>

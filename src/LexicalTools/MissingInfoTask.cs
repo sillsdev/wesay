@@ -19,20 +19,25 @@ namespace WeSay.LexicalTools
 		private readonly bool _isBaseFormFillingTask;
 		private readonly WritingSystem _writingSystem;
 
-		public MissingInfoTask(LexEntryRepository lexEntryRepository,
-							   string missingInfoField,
-							   string label,
-							   string description,
-							   ViewTemplate viewTemplate)
+		 public MissingInfoTask(LexEntryRepository lexEntryRepository,
+								ViewTemplate viewTemplate,
+			 string label,
+			 string longLabel,
+			 string description,
+							   string field,
+							   string showfields,
+							   string readOnly)
 				: this(
 						lexEntryRepository,
-						missingInfoField,
+						field,
 						label,
-						label,
+						longLabel,
 						description,
-						string.Empty,
-						string.Empty,
-						viewTemplate) {}
+						 "Entries without this:", //TODO
+						 "Total Entries:",
+						 viewTemplate,
+						 showfields,
+						 readOnly) {}
 
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
 							   string field,
@@ -184,16 +189,6 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// This is the ctor being used on a Nov-2008 era config
 		/// </summary>
-		/// <param name="lexEntryRepository"></param>
-		/// <param name="field"></param>
-		/// <param name="label"></param>
-		/// <param name="longLabel"></param>
-		/// <param name="description"></param>
-		/// <param name="remainingCountText"></param>
-		/// <param name="referenceCountText"></param>
-		/// <param name="viewTemplate"></param>
-		/// <param name="showfields"></param>
-		/// <param name="readOnly"></param>
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
 							   string field,
 							   string label,

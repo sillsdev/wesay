@@ -519,6 +519,12 @@ namespace WeSay.Project
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='4']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig4To5.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
 			return didMigrate;
 		}
 

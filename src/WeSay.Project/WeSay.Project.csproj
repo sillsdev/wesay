@@ -98,6 +98,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="BaseTaskConfig.cs" />
 	<Compile Include="ChorusBackupMaker.cs" />
 	<Compile Include="BasilProject.cs" />
 	<Compile Include="ConfigFileTaskBuilder.cs" />
@@ -142,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="MigrateConfig3To4.xsl" />
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="MigrateConfig4To5.xsl" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

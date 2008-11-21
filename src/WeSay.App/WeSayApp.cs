@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Autofac;
 using CommandLine;
 using Palaso.Reporting;
 using Palaso.Services;
@@ -322,10 +323,15 @@ namespace WeSay.App
 															   FileAccess.Read,
 															   FileShare.ReadWrite))
 				{
-					builder = new ConfigFileTaskBuilder(configFile,
-														_project,
-														_tabbedForm,
-														GetLexEntryRepository());
+					//this is weird syntax but what it means is,
+					// Make a new container that is a child of the project's container,
+					// and add the tabbed form into it so that the dashboard can get it
+					IContainer container = _project.Container.CreateInnerContainer();
+					var containerBuilder = new Autofac.Builder.ContainerBuilder();
+					containerBuilder.Register((ICurrentWorkTask)_tabbedForm);
+					containerBuilder.Build(container);
+
+					builder = new ConfigFileTaskBuilder(configFile,container);
 				}
 				_project.Tasks = builder.Tasks;
 				Application.DoEvents();
@@ -345,18 +351,6 @@ namespace WeSay.App
 			catch (IOException e)
 			{
 				ErrorReport.ReportNonFatalMessage(e.Message);
-			}
-			finally
-			{
-				//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
-				//either I want to change it to something like TaskList rather than ITaskBuilder, or
-				//it needs to create some disposable object other than a IList<>.
-				//The reason we need to be able to dispose of it is because we need some way to
-				//dispose of things that it might create, such as a data source.
-				if (builder is IDisposable)
-				{
-					((IDisposable) builder).Dispose();
-				}
 			}
 		}
 
