@@ -130,15 +130,6 @@ namespace WeSay.LexicalTools.Tests
 
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void ConstructWithTemplate_NullSemanticDomainFilePath_Throws()
-		{
-			new GatherBySemanticDomainTask((string) null,
-										   _lexEntryRepository,
-										   _viewTemplate);
-		}
-
-		[Test]
 		[ExpectedException(typeof (ApplicationException))]
 		public void ConstructWithTemplate_NonExistantSemanticDomainFilePath_Throws()
 		{

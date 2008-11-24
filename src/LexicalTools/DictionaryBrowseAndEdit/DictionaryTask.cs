@@ -22,38 +22,24 @@ using WeSay.Project;
  * config file names?  Stoop to positionalParameters again? What would be nice is attributes on the parameters that we match.
 */
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
 	public class DictionaryTask: TaskBase
 	{
 		private DictionaryControl _dictionaryControl;
 		private readonly ViewTemplate _viewTemplate;
 		private UserSettingsForTask _userSettings;
-		private static readonly string kTaskLabel = "~Dictionary";
-		private static readonly string kTaskLongLabel = "~Dictionary Browse && Edit";
 
-		public DictionaryTask(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
-				: base(
-						kTaskLabel,
-						kTaskLongLabel,
-						string.Empty,
-						string.Empty,
-						string.Empty,
-						true,
-						lexEntryRepository)
+		public DictionaryTask(DictionaryBrowseAndEditConfiguration config,
+								LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
+			: base(config, lexEntryRepository)
 		{
-#if JustForCodeScanner
-			StringCatalog.Get(kTaskLabel,
-							  "The label for the task that lets you see all entries, search for entries, and edit various fields.  We don't like the English name very much, so feel free to call this something very different in the language you are translating to.");
-			StringCatalog.Get(kTaskLongLabel,
-							  "The long label for the task that lets you see all entries, search for entries, and edit various fields.  We don't like the English name very much, so feel free to call this something very different in the language you are translating to.");
-#endif
 			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
 			_viewTemplate = viewTemplate;
-		  //  _userSettings = userSettings;
+			//  _userSettings = userSettings;
 		}
 
 		//this wants to be in the constructor, but it's waiting until we get rid of this bizarre picocontainer usage that makes it impossible to add arbitrary stuff without modifying everyone's config file
@@ -114,11 +100,11 @@ namespace WeSay.LexicalTools
 			get
 			{
 				return
-						String.Format(
-								StringCatalog.Get("~See all {0} {1} words.",
-												  "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."),
-								ComputeCount(true),
-								BasilProject.Project.Name);
+					String.Format(
+						StringCatalog.Get("~See all {0} {1} words.",
+										  "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."),
+						ComputeCount(true),
+						BasilProject.Project.Name);
 			}
 		}
 

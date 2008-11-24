@@ -1,67 +1,75 @@
-﻿using System.Xml.XPath;
+﻿using System;
+using System.Xml;
+using System.Xml.XPath;
+using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public interface IGatherBySemanticDomainsConfig
+	public interface IGatherBySemanticDomainsConfig : ITaskConfiguration
 	{
 		string semanticDomainsQuestionFileName
 		{
 			get;
 		}
 	}
-	public class GatherBySemanticDomainConfig
+
+	public class GatherBySemanticDomainConfig : TaskConfigurationBase, IGatherBySemanticDomainsConfig
 	{
-		public static IGatherBySemanticDomainsConfig Create(string ddpFileName)
+		public GatherBySemanticDomainConfig(string xml)
 		{
-			return new GatherBySemanticDomainsConfigMembers(ddpFileName);
+			_xmlDoc = new XmlDocument();
+			_xmlDoc.LoadXml(xml);
 		}
 
-		public static IGatherBySemanticDomainsConfig Create(XPathNavigator xmlParameterElements)
+		public static GatherBySemanticDomainConfig CreateForTests(string semanticDomainsQuestionFileName)
 		{
-			return new GatherBySemanticDomainConfigXml(xmlParameterElements);
-		}
-
-
-
-		/// <summary>
-		/// for use by unit tests
-		/// </summary>
-		private class GatherBySemanticDomainsConfigMembers : IGatherBySemanticDomainsConfig
-		{
-			private readonly string _fileName;
-
-			public GatherBySemanticDomainsConfigMembers(string fileName)
-			{
-				_fileName = fileName;
-			}
-
-			public string semanticDomainsQuestionFileName
-			{
-				get { return _fileName; }
-			}
-		}
-	}
-	public class GatherBySemanticDomainConfigXml : IGatherBySemanticDomainsConfig
-	{
-		private readonly XPathNavigator _nodeNavigator;
-
-		public GatherBySemanticDomainConfigXml(XPathNavigator nodeNavigator)
-		{
-			_nodeNavigator = nodeNavigator;
+			string x =
+				String.Format(
+					@"   <task taskName='AddMissingInfo' visible='true'>
+	  <semanticDomainsQuestionFileName>{0}</semanticDomainsQuestionFileName>
+	</task>",
+					semanticDomainsQuestionFileName);
+			return new GatherBySemanticDomainConfig(x);
 		}
 
 		public string semanticDomainsQuestionFileName
 		{
 			get
 			{
-				var name=  _nodeNavigator.SelectSingleNode("semanticDomainsQuestionFileName");
-				if (name == null || string.IsNullOrEmpty(name.Value))
-				{
-
-					return "Ddp4Questions-en.xml";
-				}
-				return name.Value;
+				return GetStringFromConfigNode("semanticDomainsQuestionFileName", "Ddp4Questions-en.xml");
 			}
 		}
+
+		public string Label
+		{
+			get { return "Semantic Domains"; }
+		}
+
+		public string LongLabel
+		{
+			get { return "Gather Words By Semantic Domain"; }
+		}
+
+		public string Description
+		{
+			get { return "Collect new words organized by semantic domains and questions about those domains."; }
+		}
+
+		public string RemainingCountText
+		{
+			get { return "Domains without words"; }
+		}
+
+		public string ReferenceCountText
+		{
+			get { return "Total domains:"; }
+		}
+
+		public bool IsPinned
+		{
+			get { return false; }
+		}
+
+
 	}
 }

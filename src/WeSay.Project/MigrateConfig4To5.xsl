@@ -53,7 +53,7 @@
 	  <xsl:attribute name="visible">
 		<xsl:value-of select="current()/@visible"/>
 	  </xsl:attribute>
-	  <xsl:apply-templates select='label|longLabel|description|field|showfields|readOnly' mode ="identity"></xsl:apply-templates>
+	  <xsl:apply-templates select='label|description|field|showfields|readOnly' mode ="identity"></xsl:apply-templates>
 	</task>
   </xsl:template>
 
@@ -62,7 +62,7 @@
 	  <xsl:attribute name="visible">
 		<xsl:value-of select="current()/@visible"/>
 	  </xsl:attribute>
-	  <xsl:apply-templates select='label|longLabel|description|wordListFileName|wordListWritingSystemId' mode ="identity"></xsl:apply-templates>
+	  <xsl:apply-templates select='wordListFileName' mode ="identity"></xsl:apply-templates>
 	</task>
   </xsl:template>
 

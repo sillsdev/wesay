@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Autofac;
 using Palaso.Reporting;
 using WeSay.ConfigTool.Properties;
 using WeSay.Project;
@@ -164,7 +165,7 @@ namespace WeSay.ConfigTool
 				Project.Dispose();
 			}
 			Project = p;
-			SetupProjectControls();
+			SetupProjectControls(p.Container);
 		}
 
 		public void OpenProject(string path)
@@ -215,7 +216,13 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			SetupProjectControls();
+			IContainer container = _project.Container.CreateInnerContainer();
+			var containerBuilder = new Autofac.Builder.ContainerBuilder();
+			containerBuilder.Register(typeof(Tasks.TaskListView));
+			containerBuilder.Register(typeof(Tasks.TaskListPresentationModel));
+			containerBuilder.Build(container);
+
+			SetupProjectControls(container);
 
 			if (Project != null)
 			{
@@ -223,11 +230,11 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void SetupProjectControls()
+		private void SetupProjectControls(IContext context)
 		{
 			UpdateWindowCaption();
 			RemoveExistingControls();
-			InstallProjectsControls();
+			InstallProjectsControls(context);
 		}
 
 		private void UpdateWindowCaption()
@@ -252,9 +259,9 @@ namespace WeSay.ConfigTool
 			_welcomePage.ChooseProjectClicked += OnChooseProject;
 		}
 
-		private void InstallProjectsControls()
+		private void InstallProjectsControls(IContext context)
 		{
-			_projectSettingsControl = new SettingsControl();
+			_projectSettingsControl = new SettingsControl(context);
 			Controls.Add(_projectSettingsControl);
 			_projectSettingsControl.Dock = DockStyle.Fill;
 			_projectSettingsControl.BringToFront();

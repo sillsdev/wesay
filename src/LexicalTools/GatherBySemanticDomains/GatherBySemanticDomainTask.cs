@@ -35,12 +35,7 @@ namespace WeSay.LexicalTools
 										  LexEntryRepository lexEntryRepository,
 										  ViewTemplate viewTemplate)
 			: base(
-				"Semantic Domains",//todo  remove all these
-				"Gather Words By Semantic Domain",
-				"Collect new words organized by semantic domains and questions about those domains.",
-				"Domains without words",
-				"Total domains:",
-				false,
+			   config,
 				lexEntryRepository,
 				viewTemplate)
 		{
@@ -100,7 +95,7 @@ namespace WeSay.LexicalTools
 		/// <param name="lexEntryRepository"></param>
 		/// <param name="viewTemplate"></param>
 		public GatherBySemanticDomainTask(string semanticDomainsQuestionFileName, LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
-			: this( GatherBySemanticDomainConfig.Create(semanticDomainsQuestionFileName),
+			: this(GatherBySemanticDomainConfig.CreateForTests(semanticDomainsQuestionFileName),
 					lexEntryRepository,
 					viewTemplate)
 		{

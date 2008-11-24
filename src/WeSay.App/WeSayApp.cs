@@ -14,6 +14,7 @@ using WeSay.App.Properties;
 using WeSay.App.Services;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
+using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -304,7 +305,6 @@ namespace WeSay.App
 
 		private void StartUserInterface()
 		{
-			ITaskBuilder builder = null;
 			try
 			{
 				_tabbedForm = new TabbedForm();
@@ -315,25 +315,19 @@ namespace WeSay.App
 						": " + _project.Name + "        " + ErrorReport.UserFriendlyVersionString;
 				Application.DoEvents();
 
-				//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
-				//                    using (FileStream config = new FileStream(_project.PathTo_projectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-				using (
-						FileStream configFile = new FileStream(_project.PathToConfigFile,
-															   FileMode.Open,
-															   FileAccess.Read,
-															   FileShare.ReadWrite))
-				{
+
 					//this is weird syntax but what it means is,
 					// Make a new container that is a child of the project's container,
 					// and add the tabbed form into it so that the dashboard can get it
 					IContainer container = _project.Container.CreateInnerContainer();
 					var containerBuilder = new Autofac.Builder.ContainerBuilder();
 					containerBuilder.Register((ICurrentWorkTask)_tabbedForm);
+					containerBuilder.Register(new GatherWordListConfig.WordListCatalog());
 					containerBuilder.Build(container);
 
-					builder = new ConfigFileTaskBuilder(configFile,container);
-				}
-				_project.Tasks = builder.Tasks;
+					ConfigFileReader configReader = container.Resolve<ConfigFileReader>();
+					_project.Tasks = ConfigFileTaskBuilder.CreateTasks(container,configReader.GetTasksConfigurations());
+
 				Application.DoEvents();
 				_tabbedForm.IntializationComplete += OnTabbedForm_IntializationComplete;
 				_tabbedForm.ContinueLaunchingAfterInitialDisplay();

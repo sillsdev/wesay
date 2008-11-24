@@ -313,7 +313,7 @@ namespace WeSay.Project
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
-			InitializeViewTemplatesFromProjectFiles();
+			//container change InitializeViewTemplatesFromProjectFiles();
 
 			//review: is this the right place for this?
 			PopulateDIContainer();
@@ -341,8 +341,23 @@ namespace WeSay.Project
 						progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
 
 			builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
-			builder.Register<ViewTemplate>(DefaultViewTemplate);
 
+
+			builder.Register<ConfigFileReader>(c => c.Resolve<ConfigFileReader>(new Parameter[]{new TypedParameter(typeof(string), File.ReadAllText(PathToConfigFile))}));
+
+//            ConfigFileReader configReader = new ConfigFileReader(File.ReadAllText(PathToConfigFile), what);
+//            builder.Register<ConfigFileReader>(configReader);
+
+			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(File.ReadAllText(PathToConfigFile)))
+			{
+				//todo: this isn't going to work if we start using multiple tempates.
+				//will have to go to a naming system.
+				builder.Register(viewTemplate);
+			}
+
+		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
+
+		  //  builder.Register(DefaultViewTemplate);
 			// can't currently get at the instance
 			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
 
@@ -577,47 +592,47 @@ namespace WeSay.Project
 		//
 		//        }
 
-		private void InitializeViewTemplatesFromProjectFiles()
-		{
-			if (_viewTemplates == null)
-			{
-				List<ViewTemplate> viewTemplates = new List<ViewTemplate>();
-				ViewTemplate factoryTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
-
-				try
-				{
-					XPathDocument projectDoc = GetConfigurationDoc();
-					if (projectDoc != null)
-					{
-						XPathNodeIterator nodes =
-								projectDoc.CreateNavigator().Select(
-										"configuration/components/viewTemplate");
-						foreach (XPathNavigator node in nodes)
-						{
-							ViewTemplate userTemplate = new ViewTemplate();
-							userTemplate.LoadFromString(node.OuterXml);
-							ViewTemplate.UpdateUserViewTemplate(factoryTemplate, userTemplate);
-							if (userTemplate.Id == "Default View Template")
-							{
-								_defaultViewTemplate = userTemplate;
-							}
-							viewTemplates.Add(userTemplate);
-						}
-					}
-				}
-				catch (Exception error)
-				{
-					ErrorReport.ReportNonFatalMessage(
-							"There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
-							error.Message);
-				}
-				if (_defaultViewTemplate == null)
-				{
-					_defaultViewTemplate = factoryTemplate;
-				}
-				_viewTemplates = viewTemplates;
-			}
-		}
+//        private void InitializeViewTemplatesFromProjectFiles()
+//        {
+//            if (_viewTemplates == null)
+//            {
+//                List<ViewTemplate> viewTemplates = new List<ViewTemplate>();
+//                ViewTemplate factoryTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
+//
+//                try
+//                {
+//                    XPathDocument projectDoc = GetConfigurationDoc();
+//                    if (projectDoc != null)
+//                    {
+//                        XPathNodeIterator nodes =
+//                                projectDoc.CreateNavigator().Select(
+//                                        "configuration/components/viewTemplate");
+//                        foreach (XPathNavigator node in nodes)
+//                        {
+//                            ViewTemplate userTemplate = new ViewTemplate();
+//                            userTemplate.LoadFromString(node.OuterXml);
+//                            ViewTemplate.UpdateUserViewTemplate(factoryTemplate, userTemplate);
+//                            if (userTemplate.Id == "Default View Template")
+//                            {
+//                                _defaultViewTemplate = userTemplate;
+//                            }
+//                            viewTemplates.Add(userTemplate);
+//                        }
+//                    }
+//                }
+//                catch (Exception error)
+//                {
+//                    ErrorReport.ReportNonFatalMessage(
+//                            "There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
+//                            error.Message);
+//                }
+//                if (_defaultViewTemplate == null)
+//                {
+//                    _defaultViewTemplate = factoryTemplate;
+//                }
+//                _viewTemplates = viewTemplates;
+//            }
+//        }
 
 		public XPathNodeIterator GetAddinNodes()
 		{
@@ -898,7 +913,9 @@ namespace WeSay.Project
 			{
 				if (_defaultViewTemplate == null)
 				{
-					InitializeViewTemplatesFromProjectFiles();
+					//container change
+//                    InitializeViewTemplatesFromProjectFiles();
+					_defaultViewTemplate = _container.Resolve<ViewTemplate>();//enhance won't work when there's multiple
 				}
 				return _defaultViewTemplate;
 			}
@@ -909,8 +926,11 @@ namespace WeSay.Project
 			get
 			{
 				if (_viewTemplates == null)
-				{
-					InitializeViewTemplatesFromProjectFiles();
+				{// //container change
+  //enhance to handle multiple templates
+					_viewTemplates = new List<ViewTemplate>();
+					_viewTemplates.Add(_container.Resolve<ViewTemplate>());
+//                    InitializeViewTemplatesFromProjectFiles();
 				}
 				return _viewTemplates;
 			}

@@ -10,6 +10,7 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -139,7 +140,7 @@ namespace WeSay.LexicalTools.Tests
 			exampleNotesField.DisplayName = "ex-note";
 			viewTemplate.Add(exampleNotesField);
 
-			_task = new DictionaryTask(_lexEntryRepository, viewTemplate);//, new UserSettingsForTask());
+			_task = new DictionaryTask(new DictionaryBrowseAndEditConfiguration(), _lexEntryRepository, viewTemplate);//, new UserSettingsForTask());
 			_detailTaskPage = new TabPage();
 			ActivateTask();
 
