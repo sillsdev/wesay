@@ -322,11 +322,10 @@ namespace WeSay.App
 					IContainer container = _project.Container.CreateInnerContainer();
 					var containerBuilder = new Autofac.Builder.ContainerBuilder();
 					containerBuilder.Register((ICurrentWorkTask)_tabbedForm);
-					containerBuilder.Register(new GatherWordListConfig.WordListCatalog());
 					containerBuilder.Build(container);
 
 					ConfigFileReader configReader = container.Resolve<ConfigFileReader>();
-					_project.Tasks = ConfigFileTaskBuilder.CreateTasks(container,configReader.GetTasksConfigurations());
+					_project.Tasks = ConfigFileTaskBuilder.CreateTasks(container,configReader.GetTasksConfigurations(container));
 
 				Application.DoEvents();
 				_tabbedForm.IntializationComplete += OnTabbedForm_IntializationComplete;

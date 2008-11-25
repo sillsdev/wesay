@@ -248,7 +248,7 @@ namespace WeSay.Project
 				LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 				return true;
 			}
-			catch (Exception e)
+			catch (ConfigurationException e)
 			{
 				ErrorReport.ReportNonFatalMessage(e.Message);
 				return false;
@@ -333,6 +333,7 @@ namespace WeSay.Project
 			var builder = new ContainerBuilder();
 
 			builder.Register<UserSettingsRepository>(new UserSettingsRepository());
+			builder.Register(new WordListCatalog());
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 
@@ -340,13 +341,13 @@ namespace WeSay.Project
 				c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
 						progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
 
-			builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
+			//builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
 
+			var catalog = new TaskTypeCatalog();
+			catalog.RegisterAllTypes(builder);
+			builder.Register<TaskTypeCatalog>(catalog);
 
-			builder.Register<ConfigFileReader>(c => c.Resolve<ConfigFileReader>(new Parameter[]{new TypedParameter(typeof(string), File.ReadAllText(PathToConfigFile))}));
-
-//            ConfigFileReader configReader = new ConfigFileReader(File.ReadAllText(PathToConfigFile), what);
-//            builder.Register<ConfigFileReader>(configReader);
+			builder.Register<ConfigFileReader>(c => new ConfigFileReader(File.ReadAllText(PathToConfigFile), catalog));
 
 			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(File.ReadAllText(PathToConfigFile)))
 			{
@@ -1041,7 +1042,7 @@ namespace WeSay.Project
 			XmlWriter writer = XmlWriter.Create(Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
-			writer.WriteAttributeString("version", "4");
+			writer.WriteAttributeString("version", "5");
 
 			if (EditorsSaveNow != null)
 			{

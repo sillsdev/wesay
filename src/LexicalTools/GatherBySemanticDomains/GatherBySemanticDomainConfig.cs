@@ -40,6 +40,12 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+
+		public override string ToString()
+		{
+			return LongLabel;
+		}
+
 		public string Label
 		{
 			get { return "Semantic Domains"; }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Autofac;
 using Palaso.Reporting;
 using WeSay.Project;
 
@@ -14,15 +15,17 @@ namespace WeSay.ConfigTool.Tasks
 	public class TaskListPresentationModel
 	{
 		private readonly ConfigFileReader _configFileReader;
+		private readonly IContext _context;
 		public IEnumerable<ITaskConfiguration> Tasks { get; private set;}
 		public TaskListView View{ get; private set;}
 
-		public TaskListPresentationModel(TaskListView view, ConfigFileReader configFileReader)
+		public TaskListPresentationModel(TaskListView view, ConfigFileReader configFileReader, IContext context)
 		{
 			View = view;
 			View.Model = this;
 
 			_configFileReader = configFileReader;
+			_context = context;
 		}
 
 		public void Init()
@@ -31,11 +34,11 @@ namespace WeSay.ConfigTool.Tasks
 			WeSayWordsProject.Project.EditorsSaveNow += Project_HackedEditorsSaveNow;
 		}
 
-		public void LoadInventory()
+		private void LoadInventory()
 		{
 			try
 			{
-				Tasks = _configFileReader.GetTasksConfigurations();
+				Tasks = _configFileReader.GetTasksConfigurations(_context);
 
 			 //TODO: clean this up
 				WeSayWordsProject.Project.WritingSystemChanged += OnProject_WritingSystemChanged;

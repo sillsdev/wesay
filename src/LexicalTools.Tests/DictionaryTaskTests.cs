@@ -38,7 +38,7 @@ namespace WeSay.LexicalTools.Tests
 										Field.MultiplicityType.ZeroOr1,
 										"MultiText"));
 			_lexEntryRepository = new LexEntryRepository(_filePath);
-			_task = new DictionaryTask(new DictionaryBrowseAndEditConfiguration(),  _lexEntryRepository, _viewTemplate);//, new UserSettingsForTask());
+			_task = new DictionaryTask( DictionaryBrowseAndEditConfiguration.CreateForTests(),  _lexEntryRepository, _viewTemplate);//, new UserSettingsForTask());
 		}
 
 		[TearDown]
@@ -59,7 +59,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CreateAndActivate_UserSettingsIsEmpty_Ok()
 		{
-			var task = new DictionaryTask(new DictionaryBrowseAndEditConfiguration(), _lexEntryRepository, _viewTemplate);//, new UserSettingsForTask());
+			var task = new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, _viewTemplate);//, new UserSettingsForTask());
 			task.Activate();
 			task.Deactivate();
 		}
@@ -68,14 +68,14 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullRecordListManager_Throws()
 		{
-			new DictionaryTask(new DictionaryBrowseAndEditConfiguration(), null, _viewTemplate);//, new UserSettingsForTask());
+			new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), null, _viewTemplate);//, new UserSettingsForTask());
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
-			new DictionaryTask(new DictionaryBrowseAndEditConfiguration(), _lexEntryRepository, null);//, new UserSettingsForTask());
+			new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, null);//, new UserSettingsForTask());
 		}
 	}
 }

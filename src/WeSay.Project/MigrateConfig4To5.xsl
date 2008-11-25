@@ -62,7 +62,7 @@
 	  <xsl:attribute name="visible">
 		<xsl:value-of select="current()/@visible"/>
 	  </xsl:attribute>
-	  <xsl:apply-templates select='wordListFileName' mode ="identity"></xsl:apply-templates>
+	  <xsl:apply-templates select='wordListWritingSystemId|wordListFileName' mode ="identity"></xsl:apply-templates>
 	</task>
   </xsl:template>
 

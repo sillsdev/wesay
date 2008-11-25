@@ -140,7 +140,7 @@ namespace WeSay.LexicalTools.Tests
 			exampleNotesField.DisplayName = "ex-note";
 			viewTemplate.Add(exampleNotesField);
 
-			_task = new DictionaryTask(new DictionaryBrowseAndEditConfiguration(), _lexEntryRepository, viewTemplate);//, new UserSettingsForTask());
+			_task = new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, viewTemplate);//, new UserSettingsForTask());
 			_detailTaskPage = new TabPage();
 			ActivateTask();
 

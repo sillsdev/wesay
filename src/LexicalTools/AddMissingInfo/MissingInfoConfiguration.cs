@@ -17,6 +17,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_xmlDoc.LoadXml(xml);
 		}
 
+
+		public override string ToString()
+		{
+			return LongLabel;
+		}
+
 		public string Label
 		{
 			get { return GetStringFromConfigNode("label"); }

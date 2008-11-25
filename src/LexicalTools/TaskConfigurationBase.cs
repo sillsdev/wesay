@@ -7,9 +7,10 @@ namespace WeSay.LexicalTools
 	{
 		protected XmlDocument _xmlDoc;
 
+
 		public string TaskName
 		{
-			get { return WeSay.Foundation.XmlUtils.GetManditoryAttributeValue(_xmlDoc, "taskName"); }
+			get { return WeSay.Foundation.XmlUtils.GetManditoryAttributeValue(_xmlDoc.FirstChild, "taskName"); }
 		}
 
 		public virtual bool IsOptional
@@ -21,7 +22,7 @@ namespace WeSay.LexicalTools
 		{
 			set { //todo
 			}
-			get { return WeSay.Foundation.XmlUtils.GetOptionalBooleanAttributeValue(_xmlDoc, "visible", false); }
+			get { return WeSay.Foundation.XmlUtils.GetOptionalBooleanAttributeValue(_xmlDoc.FirstChild, "visible", false); }
 		}
 
 		protected string GetStringFromConfigNode(string elementName)
