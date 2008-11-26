@@ -577,8 +577,7 @@ p.MsoCaption, li.MsoCaption, div.MsoCaption
 	color:#4F81BD;
 	font-weight:bold;}
 p.MsoTitle, li.MsoTitle, div.MsoTitle
-	{mso-style-noshow:yes;
-	mso-style-priority:10;
+	{mso-style-priority:10;
 	mso-style-unhide:no;
 	mso-style-qformat:yes;
 	mso-style-link:"Title Char";
@@ -1074,6 +1073,9 @@ p.msopapdefault, li.msopapdefault, div.msopapdefault
 	mso-fareast-font-family:"Times New Roman";
 	mso-fareast-theme-font:minor-fareast;
 	mso-bidi-font-family:"Times New Roman";}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
 span.GramE
 	{mso-style-name:"";
 	mso-gram-e:yes;}
@@ -1115,7 +1117,7 @@ div.Section1
 <meta name=CREATED content="20070222;10372498">
 <meta name=CHANGED content="20070222;10384600">
 <!--[if gte mso 9]><xml>
- <o:shapedefaults v:ext="edit" spidmax="11266"/>
+ <o:shapedefaults v:ext="edit" spidmax="12290"/>
 </xml><![endif]--><!--[if gte mso 9]><xml>
  <o:shapelayout v:ext="edit">
   <o:idmap v:ext="edit" data="1"/>
@@ -1126,151 +1128,186 @@ div.Section1
 
 <div class=Section1>
 
+<p class=MsoTitle>Welcome to WeSay <span style='color:#76923C'>Preview (0.5.x)<o:p></o:p></span></p>
+
 <div style='mso-element:para-border-div;border:none;border-bottom:solid windowtext 1.0pt;
 mso-border-bottom-alt:solid windowtext .5pt;padding:0in 0in 1.0pt 0in'>
 
 <p class=MsoTitle style='border:none;mso-border-bottom-alt:solid windowtext .5pt;
-padding:0in;mso-padding-alt:0in 0in 1.0pt 0in'>Welcome to WeSay <span
-style='color:#76923C;mso-themecolor:accent3;mso-themeshade:191'>Preview (0.4.x)<o:p></o:p></span></p>
-
-<p class=MsoTitle style='border:none;mso-border-bottom-alt:solid windowtext .5pt;
-padding:0in;mso-padding-alt:0in 0in 1.0pt 0in'><span style='color:#C0504D;
-mso-themecolor:accent2'>Stable<o:p></o:p></span></p>
+padding:0in;mso-padding-alt:0in 0in 1.0pt 0in'><span style='color:#C0504D'>Development
+release<o:p></o:p></span></p>
 
 </div>
 
-<h1>About this version</h1>
+<p style='margin-bottom:0in;margin-bottom:.0001pt'><span style='font-size:12.0pt;
+line-height:115%;font-family:"Tahoma","sans-serif"'>You have installed a test
+version of WeSay.&nbsp; This is a team effort, and <span style='color:#9BBB59'>we
+really appreciate</span> your willingness to give WeSay a spin and send us
+feedback.&nbsp; <o:p></o:p></span></p>
+
+<h1><span style='mso-fareast-font-family:"Times New Roman"'>About this version<o:p></o:p></span></h1>
 
 <p style='margin-bottom:0in;margin-bottom:.0001pt'><span style='font-size:12.0pt;
 line-height:115%;font-family:"Tahoma","sans-serif"'>WeSay comes in two flavors:
-“stable” and “development”.<span style='mso-spacerun:yes'>  </span>If you have
-just downloaded this from wesay.org, you have our most bug-free release.<span
-style='mso-spacerun:yes'>  </span>It is intended for situations where you are
-deploying WeSay to people who can’t afford to run into problems.<span
-style='mso-spacerun:yes'>  </span>If a significant bug is found in a 0.4
-release is found, we will fix it and publish a new 0.4 release.<span
-style='mso-spacerun:yes'>  </span><o:p></o:p></span></p>
+“stable” and “development”.&nbsp; If you are deploying WeSay to people who
+can’t afford to run into problems, give them the latest 0.4 release.&nbsp; We
+only fix bugs on 0.4. If you are evaluating WeSay’s capabilities or can afford
+to live closer to the edge, thanks for using 0.5.&nbsp; That is where we are
+currently adding new abilities in response to your requests.&nbsp; Eventually,
+we will retire 0.4, 0.5 will become the “stable” release, and we’ll start
+adding new features in 0.6.</span><span style='font-size:12.0pt;line-height:
+115%;font-family:"Tahoma","sans-serif";mso-fareast-font-family:Calibri;
+mso-fareast-theme-font:minor-latin'><o:p></o:p></span></p>
 
-<p style='margin-bottom:0in;margin-bottom:.0001pt'><span style='font-size:12.0pt;
-line-height:115%;font-family:"Tahoma","sans-serif"'>If you are evaluating
-WeSay’s capabilities or can afford to live closer to the edge, please consider
-using version 0.5 instead.<span style='mso-spacerun:yes'>  </span>That is where
-we are currently adding new abilities in response to your requests. Eventually,
-we will retire 0.4, 0.5 will become the “stable” release and we’ll start adding
-new features in 0.6.<o:p></o:p></span></p>
+<h1>What’s New?</h1>
 
-<h1><span style='mso-fareast-font-family:"Times New Roman"'>What Now?<o:p></o:p></span></h1>
+<p class=MsoNormal>An important new thing we’re adding in 0.5 is automated incremental
+backup.<span style='mso-spacerun:yes'>  </span>The way this works is that you
+put some kind of memory stick into the laptop (like the memory your digital
+camera uses), then tell WeSay where to find it.<span style='mso-spacerun:yes'> 
+</span>You just leave that memory chip in, permanently.<span
+style='mso-spacerun:yes'>  </span>WeSay will silently keep changes there, in a
+way that you can always “roll-back” if things go very wrong.<span
+style='mso-spacerun:yes'>  </span>This is the first feature that uses the
+Chorus collaboration component SIL is building.<span style='mso-spacerun:yes'> 
+</span>To enable this and forthcoming <a href="projects.palaso.org/chorus">Chorus</a>
+features, you need to install a package called “Mercurial”. On Windows,
+download and install “<span class=SpellE><a
+href="http://tortoisehg.sourceforge.net/">TortoiseHG</a></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><a href="http://tortoisehg.sourceforge.net/"><span style='color:windowtext;
+text-decoration:none;text-underline:none'>”.</span><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif";mso-fareast-font-family:"Times New Roman";
+color:windowtext;text-decoration:none;text-underline:none'> <o:p></o:p></span></a></p>
+
+<p class=MsoNormal><a href="http://tortoisehg.sourceforge.net/"><span
+style='color:windowtext;text-decoration:none;text-underline:none'><span
+style='mso-field-code:" HYPERLINK \0022http\:\/\/tortoisehg\.sourceforge\.net\/\0022 "'>We’ve
+got WeSay running on <span class=SpellE>Ubuntu</span> Linux, so if you would like
+to help us test that version too, let us know.</span></span></a></p>
+
+<h1><span style='mso-fareast-font-family:"Times New Roman"'><a
+href="http://tortoisehg.sourceforge.net/"><span style='color:#365F91;
+text-decoration:none;text-underline:none'><span style='mso-field-code:" HYPERLINK \0022http\:\/\/tortoisehg\.sourceforge\.net\/\0022 "'>What
+Now?</span><o:p></o:p></span></a></span></h1>
 
 <p style='margin-left:.75in;text-indent:-.25in'><span style='font-size:16.0pt;
-line-height:115%;font-family:Symbol'>·</span><span style='font-size:7.0pt;
-line-height:115%;font-family:"Times New Roman","serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><span style='font-size:16.0pt;line-height:115%;font-family:"Tahoma","sans-serif"'>Get
-your head around WeSay… </span><span style='font-size:12.0pt;line-height:115%;
-font-family:"Tahoma","sans-serif"'>it’s really different.&nbsp; It’s aimed at
-empowering a very different user than you are, and approaches the task of
-dictionary making in a new, super-task-oriented way.&nbsp; Using the provided
-samples, play around with both WeSay and the WeSay Configuration Tool.&nbsp; To
-do this, go to your Windows Start menu and find “WeSay”.&nbsp; Choose one of
-the icons there which open the sample project.</span></p>
+line-height:115%;font-family:Symbol'><a
+href="http://tortoisehg.sourceforge.net/"><span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-field-code:" HYPERLINK \0022http\:\/\/tortoisehg\.sourceforge\.net\/\0022 "'>·<span
+style='font-size:7.0pt;line-height:115%;font-family:"Times New Roman","serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style='font-family:"Tahoma","sans-serif"'>Get your head around
+WeSay… </span><span style='font-size:12.0pt;line-height:115%;font-family:"Tahoma","sans-serif"'>it’s
+really different.&nbsp; It’s aimed at empowering a very different user than you
+are, and approaches the task of dictionary making in a new, super-task-oriented
+way.&nbsp; Using the provided samples, play around with both WeSay and the
+WeSay Configuration Tool.&nbsp; To do this, go to your Windows Start menu and
+find “WeSay”.&nbsp; Choose one of the icons there which open the sample
+project.</span></span></span></a></span></p>
 
-<h1><span class=GramE><span style='mso-fareast-font-family:"Times New Roman"'>Ready
-to go deeper?</span></span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h1>
+<h1><span style='mso-fareast-font-family:"Times New Roman"'><a
+href="http://tortoisehg.sourceforge.net/"><span style='color:#365F91;
+text-decoration:none;text-underline:none'><span style='mso-field-code:" HYPERLINK \0022http\:\/\/tortoisehg\.sourceforge\.net\/\0022 "'><span
+class=GramE>Ready to go deeper?</span></span><o:p></o:p></span></a></span></h1>
 
 <p style='margin-top:5.0pt;margin-right:0in;margin-bottom:0in;margin-left:.75in;
 margin-bottom:.0001pt;text-indent:-.25in'><span style='font-size:16.0pt;
-line-height:115%;font-family:Symbol'>·</span><span style='font-size:7.0pt;
-line-height:115%;font-family:"Times New Roman","serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><span style='font-size:16.0pt;line-height:115%;font-family:"Tahoma","sans-serif"'>Join
-the discussion at: <a href="http://groups.google.com/group/wesay">http://groups.google.com/group/wesay</a>
-</span></p>
+line-height:115%;font-family:Symbol'><a
+href="http://tortoisehg.sourceforge.net/"><span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-field-code:" HYPERLINK \0022http\:\/\/tortoisehg\.sourceforge\.net\/\0022 "'>·<span
+style='font-size:7.0pt;line-height:115%;font-family:"Times New Roman","serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style='font-family:"Tahoma","sans-serif"'>Join the discussion at: <span
+style='mso-field-code:" HYPERLINK \0022http\:\/\/groups\.google\.com\/group\/wesay\0022 "'><u><span
+style='color:blue'>http://groups.google.com/group/wesay</span></u></span> </span></span></span></a></span></p>
 
 <p class=MsoNormal><span style='font-size:12.0pt;line-height:115%;font-family:
-"Tahoma","sans-serif"'><a href="http://groups.google.com/group/wesay"><span
-style='color:windowtext;text-decoration:none;text-underline:none'>You can
-either use this group from your browser, through your email client, or a mix of
-both.&nbsp; Until we have real documentation, this is the place to go when
-something is unclear.&nbsp; As you ask questions, we’ll answer them there.<span
-style='mso-spacerun:yes'>  </span>A Google Group is a mailing list, but one
-that you can choose to come to your email box or wait for you to browse on the
-web, your choice. You can read old questions and answers.</span></a><span
-class=MsoHyperlink><span style='color:windowtext;text-decoration:none;
-text-underline:none'><o:p></o:p></span></span></span></p>
+"Tahoma","sans-serif"'><a href="http://tortoisehg.sourceforge.net/"><span
+style='color:windowtext;text-decoration:none;text-underline:none'><span
+style='mso-field-code:" HYPERLINK \0022http\:\/\/groups\.google\.com\/group\/wesay\0022 "'>You
+can either use this group from your browser, through your email client, or a
+mix of both.&nbsp; Until we have real documentation, this is the place to go
+when something is unclear.&nbsp; As you ask questions, we’ll answer them
+there.<span style='mso-spacerun:yes'>  </span>A Google Group is a mailing list,
+but one that you can choose to come to your email box or wait for you to browse
+on the web, your choice. You can read old questions and answers.</span><o:p></o:p></span></a></span></p>
 
 <p style='margin-top:5.0pt;margin-right:0in;margin-bottom:0in;margin-left:.75in;
 margin-bottom:.0001pt'><span style='font-size:12.0pt;line-height:115%;
 font-family:"Tahoma","sans-serif"'><a
 href="http://groups.google.com/group/wesay"><span style='color:windowtext;
-text-decoration:none;text-underline:none'>Tell us that you tried it and what
-you did.<span style='mso-spacerun:yes'>  </span>Don’t want to go near a mailing
-list? Go straight to our issue tracking system described below.</span></a></span></p>
+text-decoration:none;text-underline:none'><span style='mso-field-code:" HYPERLINK \0022http\:\/\/groups\.google\.com\/group\/wesay\0022 "'>Tell
+us that you tried it and what you did.<span style='mso-spacerun:yes'> 
+</span>Don’t want to go near a mailing list? Go straight to our issue tracking
+system described below.</span></span></a></span></p>
 
 <p style='margin-top:5.0pt;margin-right:0in;margin-bottom:0in;margin-left:.75in;
 margin-bottom:.0001pt;text-indent:-.25in'><span style='font-size:16.0pt;
 line-height:115%;font-family:Symbol'><a
 href="http://groups.google.com/group/wesay"><span style='color:windowtext;
-text-decoration:none;text-underline:none'>·</span><span style='font-size:7.0pt;
-line-height:115%;font-family:"Times New Roman","serif";color:windowtext;
-text-decoration:none;text-underline:none'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+text-decoration:none;text-underline:none'><span style='mso-field-code:" HYPERLINK \0022http\:\/\/groups\.google\.com\/group\/wesay\0022 "'>·<span
+style='font-size:7.0pt;line-height:115%;font-family:"Times New Roman","serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style='font-family:"Tahoma","sans-serif"'>Report a bug or request
+a feature <span style='mso-field-code:" HYPERLINK \0022http\:\/\/www\.wesay\.org\/issues\/secure\/CreateIssue\!default\.jspa\0022 "'><u><span
+style='color:blue'>here</span></u></span>. </span></span></span><span
 style='font-family:"Tahoma","sans-serif";color:windowtext;text-decoration:none;
-text-underline:none'>Report a bug or request a <span class=GramE>feature </span><span
-style='mso-field-code:" HYPERLINK \0022http\:\/\/www\.wesay\.org\/issues\/secure\/CreateIssue\!default\.jspa\0022 "'><u><span
-style='color:blue'>here</span></u></span>. </span></a></span><span
-class=MsoHyperlink><span style='font-size:16.0pt;line-height:115%;font-family:
-"Tahoma","sans-serif";color:windowtext;text-decoration:none;text-underline:
-none'><o:p></o:p></span></span></p>
+text-underline:none'><o:p></o:p></span></a></span></p>
 
 <p class=MsoNormal style='margin-left:.25in;text-indent:.5in'><a
-href="http://www.wesay.org/issues/secure/CreateIssue!default.jspa"><span
-style='color:windowtext;text-decoration:none;text-underline:none'>No,
+href="http://groups.google.com/group/wesay"><span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-field-code:" HYPERLINK \0022http\:\/\/www\.wesay\.org\/issues\/secure\/CreateIssue\!default\.jspa\0022 "'>No,
 really.<span style='mso-spacerun:yes'>  </span>It’s human nature to assume
 someone else had the same crash… but if it was easy to run into, we would have
 found it, and we would have fixed it.<span style='mso-spacerun:yes'>   
 </span>If using the web isn’t convenient, you can also report bugs or request
 features by emailing our JIRA tracking system directly at <span
 style='mso-field-code:" HYPERLINK \0022mailto\:issues\@wesay\.org\0022 "'><u><span
-style='color:blue'>issues@wesay.org</span></u></span>.</span></a></p>
+style='color:blue'>issues@wesay.org</span></u></span>.</span></span></a></p>
+
+<p style='margin-top:5.0pt;margin-right:0in;margin-bottom:0in;margin-left:.75in;
+margin-bottom:.0001pt;text-indent:-.25in'><span style='font-size:16.0pt;
+line-height:115%;font-family:Symbol'><a
+href="http://www.wesay.org/issues/secure/CreateIssue!default.jspa"><span
+style='color:windowtext;text-decoration:none;text-underline:none'><span
+style='mso-field-code:" HYPERLINK \0022mailto\:issues\@wesay\.org\0022 "'>·<span
+style='font-size:7.0pt;line-height:115%;font-family:"Times New Roman","serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style='font-family:"Tahoma","sans-serif"'>Follow our <span
+style='mso-field-code:" HYPERLINK \0022http\:\/\/blogs\.wesay\.org\/\0022 "'><u><span
+style='color:blue'>blog</span></u></span> here.</span></span></span></a></span></p>
 
 <p style='margin-top:5.0pt;margin-right:0in;margin-bottom:0in;margin-left:.75in;
 margin-bottom:.0001pt;text-indent:-.25in'><span style='font-size:16.0pt;
 line-height:115%;font-family:Symbol'><a href="mailto:issues@wesay.org"><span
-style='color:windowtext;text-decoration:none;text-underline:none'>·</span><span
-style='font-size:7.0pt;line-height:115%;font-family:"Times New Roman","serif";
-color:windowtext;text-decoration:none;text-underline:none'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><span style='font-family:"Tahoma","sans-serif";color:windowtext;
-text-decoration:none;text-underline:none'>Follow our <span style='mso-field-code:
-" HYPERLINK \0022http\:\/\/blogs\.wesay\.org\/\0022 "'><u><span
-style='color:blue'>blog</span></u></span> here.</span></a></span></p>
-
-<p style='margin-top:5.0pt;margin-right:0in;margin-bottom:0in;margin-left:.75in;
-margin-bottom:.0001pt;text-indent:-.25in'><span style='font-size:16.0pt;
-line-height:115%;font-family:Symbol'><a href="http://blogs.wesay.org/"><span
-style='color:windowtext;text-decoration:none;text-underline:none'>·</span><span
-style='font-size:7.0pt;line-height:115%;font-family:"Times New Roman","serif";
-color:windowtext;text-decoration:none;text-underline:none'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><span style='font-family:"Tahoma","sans-serif";color:windowtext;
-text-decoration:none;text-underline:none'>Have existing data you want to load
-in?&nbsp; </span></a></span></p>
+style='color:windowtext;text-decoration:none;text-underline:none'><span
+style='mso-field-code:" HYPERLINK \0022http\:\/\/blogs\.wesay\.org\/\0022 "'>·<span
+style='font-size:7.0pt;line-height:115%;font-family:"Times New Roman","serif"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style='font-family:"Tahoma","sans-serif"'>Have existing data you
+want to load in?&nbsp; </span></span></span></a></span></p>
 
 <p class=MsoNormal style='margin-left:.75in'><a href="http://blogs.wesay.org/"><span
-style='color:windowtext;text-decoration:none;text-underline:none'>You’d need to
-get your data into the <span style='mso-field-code:" HYPERLINK \0022http\:\/\/code\.google\.com\/p\/lift-standard\/\0022 "'><u><span
+style='color:windowtext;text-decoration:none;text-underline:none'><span
+style='mso-field-code:" HYPERLINK \0022http\:\/\/blogs\.wesay\.org\/\0022 "'>You’d
+need to get your data into the <span style='mso-field-code:" HYPERLINK \0022http\:\/\/code\.google\.com\/p\/lift-standard\/\0022 "'><u><span
 style='color:blue'>LIFT</span></u></span> XML format, and we’d be happy to help
-you do that. </span></a></p>
+you do that. </span></span></a></p>
 
-<p class=MsoNormal style='margin-left:.75in'><a
-href="http://code.google.com/p/lift-standard/"><span style='color:windowtext;
-text-decoration:none;text-underline:none'>Note: everyone’s SFM dictionary is
-unique, and generally inconsistent. That’s why it’s impossible to have a simple
-“import Toolbox dictionary ability”. To solve this, <span class=GramE>we’ve<span
-style='mso-spacerun:yes'>  </span>built</span> a new tool called <span
+<p class=MsoNormal style='margin-left:.75in'><a href="http://blogs.wesay.org/"><span
+style='color:windowtext;text-decoration:none;text-underline:none'><span
+style='mso-field-code:" HYPERLINK \0022http\:\/\/code\.google\.com\/p\/lift-standard\/\0022 "'>Note:
+everyone’s SFM dictionary is unique, and generally inconsistent. That’s why
+it’s impossible to have a simple “import Toolbox dictionary ability”. To solve
+this, we’ve<span style='mso-spacerun:yes'>  </span>built a new tool called <span
 style='mso-field-code:" HYPERLINK \0022http\:\/\/palaso\.org\/\0022 "'><u><span
 style='color:blue'>SOLID</span></u></span> which will enable you to cleanup,
 verify, and convert you own personal Standard Format Dictionary to other
 formats, such as LIFT.<span style='mso-spacerun:yes'>  </span>As of November
 2007, this is still a work in progress, but it has been used to convert two
-dictionaries.</span></a></p>
+dictionaries.</span></span></a></p>
 
-<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+<p style='margin-bottom:0in;margin-bottom:.0001pt'><span style='font-size:16.0pt;
+line-height:115%;font-family:"Tahoma","sans-serif"'><a
+href="http://code.google.com/p/lift-standard/"><span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-field-code:" HYPERLINK \0022http\:\/\/palaso\.org\/\0022 "'>&nbsp;</span></span></a></span></p>
 
 </div>
 
