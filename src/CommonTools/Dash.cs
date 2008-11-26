@@ -88,6 +88,7 @@ namespace WeSay.CommonTools
 
 		private void AddItemsToFlow()
 		{
+			_addedAllButtons = false;
 			_title = new DictionaryStatusControl(_lexEntryRepository.CountAllItems());
 			_title.Font = new Font("Arial", 14);
 			_title.BackColor = Color.Transparent;
