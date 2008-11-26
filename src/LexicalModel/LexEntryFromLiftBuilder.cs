@@ -487,6 +487,11 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		public void MergeInMedia(WeSayDataObject pronunciation, string href, LiftMultiText caption)
+		{
+			// review: Currently ignore media. See WS-1128
+		}
+
 		#endregion
 	}
 }
