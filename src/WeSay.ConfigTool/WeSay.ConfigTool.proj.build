@@ -69,6 +69,7 @@
 		<include name="LexicalModel.dll" />
 		<include name="Enchant.Net.dll" />
 		<include name="Mono.Addins.exe" />
+		<include name="Chorus.exe" />
 	  </references>
 	  <resources dynamicprefix="true" basedir="..">
 		  <include name="**/*.resources" />

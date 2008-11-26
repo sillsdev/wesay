@@ -64,6 +64,7 @@
 		<include name="PalasoUIWindowsForms.dll" />
 		<include name="System.Windows.Forms.dll" />
 		<include name="System.Drawing.dll" />
+		<include name="System.Data.dll" />
 	  </references>
 	  <resources dynamicprefix="true" prefix="WeSay" basedir="..">
 		  <include name="**/*.resources" />
