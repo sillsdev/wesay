@@ -437,9 +437,14 @@ namespace WeSay.LexicalTools
 
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
 		{
+			//Catching ctrl-n here is a problem from the localisation perspective
+			//What if the language does not lend itself to "n" as a representation of the word "new"
+			//We could solve this by using an accelerator
 			if (keyData == (Keys.Control | Keys.N))
 			{
-				AddNewWord();
+				bool FocusWasOnFindTextBox = _findText.Focused;
+				_btnNewWord.Focus(); //this is necassary to cause TextBinding to update it's multitext
+				AddNewWord(FocusWasOnFindTextBox);
 				return true;
 			}
 
@@ -462,10 +467,10 @@ namespace WeSay.LexicalTools
 
 		private void OnNewWord_Click(object sender, EventArgs e)
 		{
-			AddNewWord();
+			AddNewWord(false);
 		}
 
-		private void AddNewWord()
+		private void AddNewWord(bool FocusWasOnFindTextBox)
 		{
 			Logger.WriteEvent("NewWord_Click");
 
@@ -477,7 +482,7 @@ namespace WeSay.LexicalTools
 				LexEntry entry = this._lexEntryRepository.CreateItem();
 				//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 				//_recordListBoxActive = true; // allow onRecordSelectionChanged
-				if (_findText.Focused && !string.IsNullOrEmpty(_findText.Text) &&
+				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(_findText.Text) &&
 					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 				{
 					entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
