@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.XPath;
 using WeSay.Project;
@@ -16,10 +17,10 @@ namespace WeSay.LexicalTools
 	public class GatherBySemanticDomainConfig : TaskConfigurationBase, IGatherBySemanticDomainsConfig
 	{
 		public GatherBySemanticDomainConfig(string xml)
+			: base(xml)
 		{
-			_xmlDoc = new XmlDocument();
-			_xmlDoc.LoadXml(xml);
 		}
+
 
 		public static GatherBySemanticDomainConfig CreateForTests(string semanticDomainsQuestionFileName)
 		{
@@ -77,5 +78,12 @@ namespace WeSay.LexicalTools
 		}
 
 
+		protected override IEnumerable<KeyValuePair<string, string>> ValuesToSave
+		{
+			get
+			{
+				yield return new KeyValuePair<string, string>("semanticDomainsQuestionFileName", semanticDomainsQuestionFileName);
+			}
+		}
 	}
 }

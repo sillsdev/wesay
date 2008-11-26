@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 using WeSay.Project;
 
 namespace WeSay.CommonTools
@@ -50,6 +51,14 @@ namespace WeSay.CommonTools
 		public virtual bool IsOptional
 		{
 			get { return false; }
+		}
+
+		public void Write(XmlWriter writer)
+		{
+			writer.WriteStartElement("task");
+			writer.WriteAttributeString("taskName", TaskName);
+			writer.WriteAttributeString("visible", IsVisible ? "true" : "false");
+			writer.WriteEndElement();
 		}
 
 		public bool IsVisible

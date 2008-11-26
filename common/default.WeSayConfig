@@ -7,8 +7,8 @@
 	<task taskName="AddMissingInfo" visible="false"><field>ExampleSentence</field><label>Example Sentences</label><longLabel>Add Example Sentences</longLabel><description>Add example sentences to senses where they are missing.</description><showfields>ExampleSentence</showfields><readOnly>definition</readOnly></task>
 	<task taskName="AddMissingInfo" visible="false"><field>BaseForm</field><label>Base Forms</label><longLabel>Add Base Forms</longLabel><description>Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries.</description><showfields>BaseForm</showfields></task>
 
-	<task taskName="GatherWordList" visible="false"><label>Duerksen Word List</label><longLabel>Gather Words Using Duerksen's List</longLabel><description>Collect new words by translating from words in another language. This is a list of 1700 words from John Duerksen.</description><wordListFileName>DuerksenWords.txt</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
-	<task taskName="GatherWordList" visible="false"><label>PNG Word List</label><longLabel>Gather Words Using PNG List</longLabel><description>Collect new words by translating from words in another language. This is a list of around 900 words and phrases from PNG.</description><wordListFileName>PNGWords.txt</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
+	<task taskName="GatherWordList" visible="false"><wordListFileName>DuerksenWords.txt</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
+	<task taskName="GatherWordList" visible="false"><wordListFileName>PNGWords.txt</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
 	<task taskName="GatherWordsBySemanticDomains" visible="true"><semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName></task>
   </tasks>
   <addins>

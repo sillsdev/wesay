@@ -75,10 +75,21 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		public void DoesNotTouchV4File()
+		public void DoesMigrateV4File()
 		{
 			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><configuration version='4'></configuration>");
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='4'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
+			XPathDocument doc = new XPathDocument(_pathToInputConfig);
+			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			Assert.IsTrue(didMigrate);
+			AssertXPathNotNull("configuration[@version='5']", _outputPath);
+		}
+
+		[Test]
+		public void DoesNotTouchCurrentFile()
+		{
+			File.WriteAllText(_pathToInputConfig,
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='5'></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsFalse(didMigrate);

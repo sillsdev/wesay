@@ -14,8 +14,8 @@ namespace WeSay.Project
 		public WordListCatalog()
 		{
 			//SILCAWL
-			Add("DuerksenWords.txt", new WordListDescription("en", "SILCA Word List", "Gather words using the SIL Comparative African Wordlist", "Collect new words by translating from words in another language. This is a list of 1700 words."));
-			Add("PNGWords.txt", new WordListDescription("en", "PNG Word List", "Gather words using the PNG Word List", "Collect new words by translating from words in another language. This is a list of 900 words and phrases."));
+			Add("DuerksenWords.txt", new WordListDescription("en", "SILCA Word List", "Gather words using the SIL Comparative African Wordlist", "Collect new words by translating from the SIL Comparative African Wordlist. This is a list of 1700 words."));
+			Add("PNGWords.txt", new WordListDescription("en", "PNG Word List", "Gather words using the PNG Word List", "Collect new words by translating from words from this PNG wordlist. This is a list of 900 words and phrases."));
 		}
 	}
 

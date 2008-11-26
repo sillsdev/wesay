@@ -140,7 +140,6 @@ namespace WeSay.ConfigTool
 			}
 
 			CreateNewProject(directoryPath);
-			_project.Save();
 			OpenProject(directoryPath);
 		}
 
@@ -150,8 +149,8 @@ namespace WeSay.ConfigTool
 
 			try
 			{
-				p = new WeSayWordsProject();
-				p.CreateEmptyProjectFiles(directoryPath);
+				//p = new WeSayWordsProject();
+				WeSayWordsProject.CreateEmptyProjectFiles(directoryPath);
 			}
 			catch (Exception e)
 			{
@@ -160,12 +159,15 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			if (Project != null)
-			{
-				Project.Dispose();
-			}
-			Project = p;
-			SetupProjectControls(p.Container);
+//            if (Project != null)
+//            {
+//                Project.Dispose();
+//            }
+//            Project = p;
+			//SetupProjectControls(p.Container);
+
+			//p.Save();
+
 		}
 
 		public void OpenProject(string path)

@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Xml;
-using System.Xml.XPath;
-using Palaso.Reporting;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.AddMissingInfo
@@ -12,16 +7,30 @@ namespace WeSay.LexicalTools.AddMissingInfo
 	public class MissingInfoConfiguration : TaskConfigurationBase, ITaskConfiguration
 	{
 		public MissingInfoConfiguration(string  xml)
+			: base(xml)
 		{
-			_xmlDoc = new XmlDocument();
-			_xmlDoc.LoadXml(xml);
 		}
+
 
 
 		public override string ToString()
 		{
 			return LongLabel;
 		}
+
+		protected override IEnumerable<KeyValuePair<string, string>> ValuesToSave
+		{
+			get
+			{
+				yield return new KeyValuePair<string, string>("label", Label);
+				yield return new KeyValuePair<string, string>("longLabel", LongLabel);
+				yield return new KeyValuePair<string, string>("description", Description);
+				yield return new KeyValuePair<string, string>("field", MissingInfoField);
+				yield return new KeyValuePair<string, string>("showFields", FieldsToShow);
+				yield return new KeyValuePair<string, string>("readOnly", FieldsToShowReadOnly);
+			}
+		}
+
 
 		public string Label
 		{
@@ -55,12 +64,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		public string FieldsToShowReadOnly
 		{
-			get { return GetStringFromConfigNode("readOnly"); ; }
+			get { return GetStringFromConfigNode("readOnly", string.Empty); ; }
 		}
 
 		public string FieldsToShow //<showfields>
 		{
-			get { return GetStringFromConfigNode("showfields"); ; }
+			get { return GetStringFromConfigNode("showFields"); ; }
 		}
 
 		public string MissingInfoField //<field>
@@ -74,7 +83,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					  <field>{0}</field>
 					  <label>{1}</label>
 					  <description>{2}</description>
-					  <showfields>{3}</showfields>
+					  <showFields>{3}</showFields>
 					  <readOnly>{4}</readOnly>
 					</task>
 				", missingInfoField,label,description, fieldsToShow,fieldsToShow);

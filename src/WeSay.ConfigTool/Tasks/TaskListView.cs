@@ -49,10 +49,6 @@ namespace WeSay.ConfigTool.Tasks
 			}
 		}
 
-
-
-
-
 		private void _taskList_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			ITaskConfiguration i = _taskList.SelectedItem as ITaskConfiguration;
@@ -74,7 +70,7 @@ namespace WeSay.ConfigTool.Tasks
 			{
 				e.NewValue = CheckState.Checked;
 			}
-			i.IsVisible = false;
+			i.IsVisible = e.NewValue == CheckState.Checked;
 		}
 
 		private void textBox1_TextChanged(object sender, EventArgs e) {}

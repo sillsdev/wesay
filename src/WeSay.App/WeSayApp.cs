@@ -315,17 +315,10 @@ namespace WeSay.App
 						": " + _project.Name + "        " + ErrorReport.UserFriendlyVersionString;
 				Application.DoEvents();
 
+			   //couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
+				_project.AddToContainer(b => b.Register<ICurrentWorkTask>(_tabbedForm));
 
-					//this is weird syntax but what it means is,
-					// Make a new container that is a child of the project's container,
-					// and add the tabbed form into it so that the dashboard can get it
-					IContainer container = _project.Container.CreateInnerContainer();
-					var containerBuilder = new Autofac.Builder.ContainerBuilder();
-					containerBuilder.Register((ICurrentWorkTask)_tabbedForm);
-					containerBuilder.Build(container);
-
-					ConfigFileReader configReader = container.Resolve<ConfigFileReader>();
-					_project.Tasks = ConfigFileTaskBuilder.CreateTasks(container,configReader.GetTasksConfigurations(container));
+				_project.LoadTasksFromConfigFile();
 
 				Application.DoEvents();
 				_tabbedForm.IntializationComplete += OnTabbedForm_IntializationComplete;
@@ -346,6 +339,8 @@ namespace WeSay.App
 				ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 		}
+
+
 
 		private void OnTabbedForm_IntializationComplete(object sender, EventArgs e)
 		{

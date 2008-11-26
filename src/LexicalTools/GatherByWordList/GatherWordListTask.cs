@@ -29,11 +29,11 @@ namespace WeSay.LexicalTools
 
 				: base(config, lexEntryRepository, viewTemplate)
 		{
-			if (config.wordListFileName == null)
+			if (config.WordListFileName == null)
 			{
 				throw new ArgumentNullException("wordListFileName");
 			}
-			if (config.wordListWritingSystemId == null)
+			if (config.WordListWritingSystemId == null)
 			{
 				throw new ArgumentNullException("wordListWritingSystemId");
 			}
@@ -55,9 +55,9 @@ namespace WeSay.LexicalTools
 				_lexicalUnitWritingSystem = firstWS;
 			}
 
-			_wordListFileName = config.wordListFileName;
+			_wordListFileName = config.WordListFileName;
 			_words = null;
-			_writingSystemIdForWordListWords = config.wordListWritingSystemId;
+			_writingSystemIdForWordListWords = config.WordListWritingSystemId;
 		}
 
 		private void LoadWordList()

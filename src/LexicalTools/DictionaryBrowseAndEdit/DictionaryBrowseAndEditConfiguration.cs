@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
@@ -8,10 +9,18 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 	public class DictionaryBrowseAndEditConfiguration : TaskConfigurationBase, ITaskConfiguration
 	{
 		public DictionaryBrowseAndEditConfiguration(string xml)
+			:base(xml)
 		{
-			_xmlDoc = new XmlDocument();
-			_xmlDoc.LoadXml(xml);
 		}
+
+		protected override IEnumerable<KeyValuePair<string, string>> ValuesToSave
+		{
+			get
+			{
+				yield break;
+			}
+		}
+
 		public string Label
 		{
 			get

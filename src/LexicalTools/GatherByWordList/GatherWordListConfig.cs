@@ -8,11 +8,11 @@ namespace WeSay.LexicalTools.GatherByWordList
 {
 	public interface IGatherWordListConfig : ITaskConfiguration
 	{
-		string wordListFileName
+		string WordListFileName
 		{
 			get;
 		}
-		string wordListWritingSystemId
+		string WordListWritingSystemId
 		{
 			get;
 		}
@@ -21,24 +21,31 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 	public class GatherWordListConfig : TaskConfigurationBase, IGatherWordListConfig, ITaskConfiguration , ICareThatWritingSystemIdChanged
 	{
-		private readonly WordListCatalog _catalog;
+		private readonly IDictionary<string, WordListDescription> _catalog;
 
 		public GatherWordListConfig(string xml, WordListCatalog catalog)
+			:base(xml)
 		{
 			_catalog = catalog;
-			_xmlDoc = new XmlDocument();
-			_xmlDoc.LoadXml(xml);
 		}
 
+		protected override IEnumerable<KeyValuePair<string, string>> ValuesToSave
+		{
+			get
+			{
+				yield return new KeyValuePair<string, string>("wordListFileName", WordListFileName);
+				yield return new KeyValuePair<string, string>("wordListWritingSystemId", WordListWritingSystemId);
+			}
+		}
 
-		public string wordListFileName
+		public string WordListFileName
 		{
 			get
 			{
 				return GetStringFromConfigNode("wordListFileName");
 			}
 		}
-		public string wordListWritingSystemId
+		public string WordListWritingSystemId
 		{
 			get
 			{
@@ -54,7 +61,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		private WordListDescription WordList
 		{
-			get { return _catalog[wordListFileName]; }
+			get { return _catalog[WordListFileName]; }
 		}
 
 		public string Label
@@ -91,18 +98,20 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		public bool IsOptional
 		{
-			get { throw new System.NotImplementedException(); }
+			get { return true; }
 		}
 
 		public static IGatherWordListConfig CreateForTests(string wordListFileName, string wordListWritingSystemId)
 		{
-			string x = String.Format(@"   <task taskName='AddMissingInfo' visible='true'>
+			string xml = String.Format(@"   <task taskName='AddMissingInfo' visible='true'>
 					  <wordListFileName>{0}</wordListFileName>
 					  <wordListWritingSystemId>{1}</wordListWritingSystemId>
 					</task>
 				", wordListFileName, wordListWritingSystemId);
 
-			return new GatherWordListConfig(x, new WordListCatalog());
+			var catalog = new WordListCatalog();
+			catalog.Add(wordListFileName, new WordListDescription(wordListWritingSystemId, "test", "test long", "pretend description"));
+			return new GatherWordListConfig(xml, catalog);
 
 		}
 

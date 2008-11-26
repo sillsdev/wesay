@@ -1,13 +1,21 @@
+using System.Collections.Generic;
 using System.Xml;
 using Palaso.Reporting;
 
 namespace WeSay.LexicalTools
 {
-	public class TaskConfigurationBase
+	public abstract class TaskConfigurationBase
 	{
 		protected XmlDocument _xmlDoc;
+		public bool IsVisible { get; set;}
 
+		public TaskConfigurationBase(string xml)
+		{
+			_xmlDoc = new XmlDocument();
+			_xmlDoc.LoadXml(xml);
 
+			IsVisible =  WeSay.Foundation.XmlUtils.GetOptionalBooleanAttributeValue(_xmlDoc.FirstChild, "visible", false);
+		}
 		public string TaskName
 		{
 			get { return WeSay.Foundation.XmlUtils.GetManditoryAttributeValue(_xmlDoc.FirstChild, "taskName"); }
@@ -18,12 +26,7 @@ namespace WeSay.LexicalTools
 			get{ return true;}
 		}
 
-		public bool IsVisible
-		{
-			set { //todo
-			}
-			get { return WeSay.Foundation.XmlUtils.GetOptionalBooleanAttributeValue(_xmlDoc.FirstChild, "visible", false); }
-		}
+
 
 		protected string GetStringFromConfigNode(string elementName)
 		{
@@ -45,6 +48,22 @@ namespace WeSay.LexicalTools
 				return defaultValue;
 			}
 			return name.InnerText;
+		}
+
+		protected  abstract IEnumerable<KeyValuePair<string, string>> ValuesToSave
+		{ get;
+		}
+
+		public void Write(XmlWriter writer)
+		{
+			writer.WriteStartElement("task");
+			writer.WriteAttributeString("taskName", TaskName);
+			writer.WriteAttributeString("visible", IsVisible ? "true" : "false");
+			foreach (var pair in ValuesToSave)
+			{
+				writer.WriteElementString(pair.Key, pair.Value);
+			}
+			writer.WriteEndElement();
 		}
 	}
 }

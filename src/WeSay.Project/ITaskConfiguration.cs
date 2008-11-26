@@ -1,4 +1,6 @@
 ﻿
+using System.Xml;
+
 namespace WeSay.Project
 {
 
@@ -13,11 +15,11 @@ namespace WeSay.Project
 		bool IsPinned { get; }
 		bool IsVisible { get; set; }
 		bool IsOptional { get; }
+		void Write(XmlWriter writer);
 	}
 
 	public interface ICareThatWritingSystemIdChanged
 	{
 		void WritingSystemIdChanged(string from, string to);
-
 	}
 }

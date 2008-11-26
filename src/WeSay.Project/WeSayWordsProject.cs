@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
@@ -109,6 +110,8 @@ namespace WeSay.Project
 			wsc.Write(XmlWriter.Create(PathToPretendWritingSystemPrefs));
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
+
+
 		}
 
 		public static string PathToPretendLiftFile
@@ -332,8 +335,8 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
-			builder.Register<UserSettingsRepository>(new UserSettingsRepository());
-			builder.Register(new WordListCatalog());
+			//builder.Register<UserSettingsRepository>(new UserSettingsRepository());
+			builder.Register(new WordListCatalog()).SingletonScoped();
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 
@@ -345,15 +348,18 @@ namespace WeSay.Project
 
 			var catalog = new TaskTypeCatalog();
 			catalog.RegisterAllTypes(builder);
-			builder.Register<TaskTypeCatalog>(catalog);
 
-			builder.Register<ConfigFileReader>(c => new ConfigFileReader(File.ReadAllText(PathToConfigFile), catalog));
+			builder.Register<TaskTypeCatalog>(catalog).SingletonScoped();
+
+			builder.Register<ConfigFileReader>(c => new ConfigFileReader(File.ReadAllText(PathToConfigFile), catalog)).SingletonScoped();
+
+			builder.Register<TaskCollection>().SingletonScoped();
 
 			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(File.ReadAllText(PathToConfigFile)))
 			{
 				//todo: this isn't going to work if we start using multiple tempates.
 				//will have to go to a naming system.
-				builder.Register(viewTemplate);
+				builder.Register(viewTemplate).SingletonScoped();
 			}
 
 		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
@@ -692,35 +698,71 @@ namespace WeSay.Project
 			return projectDoc;
 		}
 
-		public string PathToDefaultConfig
+		public static string PathToDefaultConfig
 		{
 			get { return Path.Combine(ApplicationCommonDirectory, "default.WeSayConfig"); }
 		}
 
-		public override void CreateEmptyProjectFiles(string projectDirectoryPath)
+
+		public static void CreateEmptyProjectFiles(string projectDirectoryPath)
 		{
 			//enhance: some of this would be a lot cleaner if we just copied the silly
 			//  default.WeSayConfig over and used that.
 
-			ProjectDirectoryPath = projectDirectoryPath;
-			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectoryInProject);
+   //         ProjectDirectoryPath = projectDirectoryPath;
+			Directory.CreateDirectory(projectDirectoryPath);
 
-			base.CreateEmptyProjectFiles(projectDirectoryPath);
+			//review:  I can't really populate it... there's no config files! And yet,
+			// the Save code naturally is looking in there
+		  //  _container = new Autofac.Builder.ContainerBuilder().Build();
+
+		 //   base.CreateEmptyProjectFiles(projectDirectoryPath);
+
+			//InitStringCatalog();
+			//InitWritingSystems();
+
+			string pathToWritingSystemPrefs = GetPathToWritingSystemPrefs(projectDirectoryPath);
+			File.Copy(GetPathToWritingSystemPrefs(ApplicationCommonDirectory), pathToWritingSystemPrefs);
+
+			string name = Path.GetFileName(projectDirectoryPath);
+
+			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath,name);
+			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
 
 			//hack
-			File.Copy(PathToDefaultConfig, PathToConfigFile, true);
-			MigrateConfigurationXmlIfNeeded();
+			WritingSystemCollection writingSystemCollection = new WritingSystemCollection();
+			writingSystemCollection.Load(pathToWritingSystemPrefs);
 
-			_defaultViewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
+			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
+			StringBuilder builder = new StringBuilder();
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.OmitXmlDeclaration = true;
+			using (var writer = XmlWriter.Create(builder, settings))
+			{
+				template.Write(writer);
+			}
+
+			XmlDocument doc = new XmlDocument();
+			doc.Load(pathToConfigFile);
+			var e = doc.SelectSingleNode("configuration").AppendChild(doc.CreateElement("components"));
+			e.InnerXml = builder.ToString();
+			doc.Save(pathToConfigFile);
+
+			MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile),pathToConfigFile) ;
+
+/*            _defaultViewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
 			_viewTemplates = new List<ViewTemplate>();
 			_viewTemplates.Add(_defaultViewTemplate);
 
 			XPathDocument doc = new XPathDocument(PathToDefaultConfig);
 			_addins.Load(GetAddinNodes(doc));
+*/
 
-			if (!File.Exists(PathToLiftFile))
+			var pathToLiftFile = Path.Combine(projectDirectoryPath, name + ".lift");
+
+			if (!File.Exists(pathToLiftFile))
 			{
-				Utilities.CreateEmptyLiftFile(PathToLiftFile, LiftExporter.ProducerString, false);
+				Utilities.CreateEmptyLiftFile(pathToLiftFile, LiftExporter.ProducerString, false);
 			}
 		}
 
@@ -729,9 +771,15 @@ namespace WeSay.Project
 			get
 			{
 				string name = Path.GetFileNameWithoutExtension(PathToLiftFile);
-				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
-									name + ".WeSayConfig");
+				string directoryInProject = PathToWeSaySpecificFilesDirectoryInProject;
+				return GetPathToConfigFile(directoryInProject, name);
 			}
+		}
+
+		private static string GetPathToConfigFile(string directoryInProject, string name)
+		{
+			return Path.Combine(directoryInProject,
+								name + ".WeSayConfig");
 		}
 
 		/// <summary>
@@ -927,11 +975,19 @@ namespace WeSay.Project
 			get
 			{
 				if (_viewTemplates == null)
-				{// //container change
-  //enhance to handle multiple templates
+				{
+					// //container change
+					//enhance to handle multiple templates
 					_viewTemplates = new List<ViewTemplate>();
-					_viewTemplates.Add(_container.Resolve<ViewTemplate>());
-//                    InitializeViewTemplatesFromProjectFiles();
+					//if (_container != null)
+					{
+						ViewTemplate template;
+						if (_container.TryResolve<ViewTemplate>(out template))
+						{
+							_viewTemplates.Add(template);
+						}
+					}
+					//                    InitializeViewTemplatesFromProjectFiles();
 				}
 				return _viewTemplates;
 			}
@@ -1043,6 +1099,18 @@ namespace WeSay.Project
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
 			writer.WriteAttributeString("version", "5");
+
+			writer.WriteStartElement("components");
+			foreach (ViewTemplate template in ViewTemplates)
+			{
+				template.Write(writer);
+			}
+			writer.WriteEndElement();
+
+			TaskCollection tasks;
+			if(_container.TryResolve<TaskCollection>(out tasks))
+				tasks.Write(writer);
+
 
 			if (EditorsSaveNow != null)
 			{
@@ -1396,5 +1464,23 @@ namespace WeSay.Project
 		}
 
 
+		/// <summary>
+		/// this is a transition sort of thing during refactoring... the problem is the
+		/// many tests that we need to change if/when we change the nature of the Tasks property
+		/// </summary>
+		public void LoadTasksFromConfigFile()
+		{
+			ConfigFileReader configReader = _container.Resolve<ConfigFileReader>();
+			Tasks = ConfigFileTaskBuilder.CreateTasks(_container, configReader.GetTasksConfigurations(_container));
+		}
+
+		public delegate void ContainerAdder(Autofac.Builder.ContainerBuilder b);
+
+		public void AddToContainer(ContainerAdder adder)
+		{
+			var containerBuilder = new Autofac.Builder.ContainerBuilder();
+			adder.Invoke(containerBuilder);
+			containerBuilder.Build(_container);
+		}
 	}
 }

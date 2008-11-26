@@ -53,8 +53,16 @@
 	  <xsl:attribute name="visible">
 		<xsl:value-of select="current()/@visible"/>
 	  </xsl:attribute>
-	  <xsl:apply-templates select='label|description|field|showfields|readOnly' mode ="identity"></xsl:apply-templates>
+	  <xsl:apply-templates select='label|description|field|readOnly' mode ="identity"></xsl:apply-templates>
+	  <xsl:apply-templates select='showfields' mode ="Migrate4To5"></xsl:apply-templates>
 	</task>
+  </xsl:template>
+
+  <!-- fix capitalization problem -->
+  <xsl:template match="showfields" mode="Migrate4To5">
+	<showFields>
+		 <xsl:value-of select="current()"/>
+	   </showFields>
   </xsl:template>
 
   <xsl:template match="task[@class='WeSay.LexicalTools.GatherWordListTask']" mode="Migrate4To5">

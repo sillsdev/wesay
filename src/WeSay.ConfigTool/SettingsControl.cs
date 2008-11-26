@@ -17,7 +17,6 @@ namespace WeSay.ConfigTool
 			InitializeComponent();
 
 			Tasks.TaskListPresentationModel m = context.Resolve<Tasks.TaskListPresentationModel>();
-			m.Init();
 			_tasksButton.Tag = m.View;
 			_areaControls.Add((ConfigurationControlBase) _tasksButton.Tag);
 
