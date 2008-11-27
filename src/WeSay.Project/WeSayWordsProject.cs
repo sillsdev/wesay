@@ -351,11 +351,17 @@ namespace WeSay.Project
 
 			builder.Register<TaskTypeCatalog>(catalog).SingletonScoped();
 
-			builder.Register<ConfigFileReader>(c => new ConfigFileReader(File.ReadAllText(PathToConfigFile), catalog)).SingletonScoped();
+			//this is a bit weird, did it to get around a strange problem where it was left open,
+			//never found out by whom.  But note, it does affect behavior.  It means that
+			//the first time the reader is asked for, it will be reading the value as it was
+			//back when we did this assignment.
+			string configFileText = File.ReadAllText(PathToConfigFile);
+
+			builder.Register<ConfigFileReader>(c => new ConfigFileReader(configFileText, catalog)).SingletonScoped();
 
 			builder.Register<TaskCollection>().SingletonScoped();
 
-			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(File.ReadAllText(PathToConfigFile)))
+			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(configFileText))
 			{
 				//todo: this isn't going to work if we start using multiple tempates.
 				//will have to go to a naming system.
@@ -706,30 +712,41 @@ namespace WeSay.Project
 
 		public static void CreateEmptyProjectFiles(string projectDirectoryPath)
 		{
-			//enhance: some of this would be a lot cleaner if we just copied the silly
-			//  default.WeSayConfig over and used that.
+			string name = Path.GetFileName(projectDirectoryPath);
+			CreateEmptyProjectFiles(projectDirectoryPath, name);
+		}
+		public static void CreateEmptyProjectFiles(string projectDirectoryPath, string projectName)
+		{
 
-   //         ProjectDirectoryPath = projectDirectoryPath;
 			Directory.CreateDirectory(projectDirectoryPath);
-
-			//review:  I can't really populate it... there's no config files! And yet,
-			// the Save code naturally is looking in there
-		  //  _container = new Autofac.Builder.ContainerBuilder().Build();
-
-		 //   base.CreateEmptyProjectFiles(projectDirectoryPath);
-
-			//InitStringCatalog();
-			//InitWritingSystems();
-
 			string pathToWritingSystemPrefs = GetPathToWritingSystemPrefs(projectDirectoryPath);
 			File.Copy(GetPathToWritingSystemPrefs(ApplicationCommonDirectory), pathToWritingSystemPrefs);
 
-			string name = Path.GetFileName(projectDirectoryPath);
 
-			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath,name);
+			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath, projectName);
 			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
 
 			//hack
+			StickDefaultViewTemplateInNewConfigFile(pathToWritingSystemPrefs, pathToConfigFile);
+
+			MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile),pathToConfigFile) ;
+
+			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
+			if (!File.Exists(pathToLiftFile))
+			{
+				Utilities.CreateEmptyLiftFile(pathToLiftFile, LiftExporter.ProducerString, false);
+			}
+		}
+
+		/// <summary>
+		/// this is something of a hack, because we currently create the default viewtemplate from
+		/// code, but everything else from template xml files.  So this opens up the default config
+		/// and sticks a nice new code-computed default view template into it.
+		/// </summary>
+		/// <param name="pathToWritingSystemPrefs"></param>
+		/// <param name="pathToConfigFile"></param>
+		private static void StickDefaultViewTemplateInNewConfigFile(string pathToWritingSystemPrefs, string pathToConfigFile)
+		{
 			WritingSystemCollection writingSystemCollection = new WritingSystemCollection();
 			writingSystemCollection.Load(pathToWritingSystemPrefs);
 
@@ -747,23 +764,6 @@ namespace WeSay.Project
 			var e = doc.SelectSingleNode("configuration").AppendChild(doc.CreateElement("components"));
 			e.InnerXml = builder.ToString();
 			doc.Save(pathToConfigFile);
-
-			MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile),pathToConfigFile) ;
-
-/*            _defaultViewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
-			_viewTemplates = new List<ViewTemplate>();
-			_viewTemplates.Add(_defaultViewTemplate);
-
-			XPathDocument doc = new XPathDocument(PathToDefaultConfig);
-			_addins.Load(GetAddinNodes(doc));
-*/
-
-			var pathToLiftFile = Path.Combine(projectDirectoryPath, name + ".lift");
-
-			if (!File.Exists(pathToLiftFile))
-			{
-				Utilities.CreateEmptyLiftFile(pathToLiftFile, LiftExporter.ProducerString, false);
-			}
 		}
 
 		public string PathToConfigFile
@@ -1262,38 +1262,35 @@ namespace WeSay.Project
 			//NB: we're just using regex, here, not xpaths which in this case
 			//would be nice (e.g., "name" is a pretty generic thing to be changing)
 			return DoSomethingToLiftFile((p) =>
-											 {
-												 //traits
-												 if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
-													 field.DataTypeName ==
-													 Field.BuiltInDataType.OptionCollection.ToString())
-												 {
-													 GrepFile(p,
-															  string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
-															  string.Format("name=\"{0}\"", field.FieldName));
-												 }
-												 else
-												 {
-													 //<field>s
-													 GrepFile(p,
-															  string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
-															  string.Format("type=\"{0}\"", field.FieldName));
-												 }
-											 });
+				 {
+					 //traits
+					 if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
+						 field.DataTypeName ==
+						 Field.BuiltInDataType.OptionCollection.ToString())
+					 {
+						 GrepFile(p,
+								  string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
+								  string.Format("name=\"{0}\"", field.FieldName));
+					 }
+					 else
+					 {
+						 //<field>s
+						 GrepFile(p,
+								  string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
+								  string.Format("type=\"{0}\"", field.FieldName));
+					 }
+				 });
 			return true;
 		}
 
 		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)
 		{
 			if (DoSomethingToLiftFile((p) =>
-											 {
-
-												 //todo: expand the regular expression here to account for all reasonable patterns
-												 GrepFile(PathToLiftFile,
-														  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
-																		Regex.Escape(oldId)),
-														  string.Format("lang=\"{0}\"", ws.Id));
-											 }))
+					 //todo: expand the regular expression here to account for all reasonable patterns
+					 GrepFile(PathToLiftFile,
+							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
+											Regex.Escape(oldId)),
+							  string.Format("lang=\"{0}\"", ws.Id))))
 			{
 				WritingSystems.IdOfWritingSystemChanged(ws, oldId);
 				DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);

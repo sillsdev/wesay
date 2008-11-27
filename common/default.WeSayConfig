@@ -2,10 +2,10 @@
   <tasks>
 	<task taskName="Dashboard" visible="true" />
 	<task taskName="Dictionary" visible="true" />
-	<task taskName="AddMissingInfo" visible="false"><field>definition</field><label>Meanings</label><longLabel>Add Meanings</longLabel><description>Add meanings to entries where they are missing.</description><showfields>definition</showfields><readOnly>SemanticDomainDdp4</readOnly></task>
-	<task taskName="AddMissingInfo" visible="false"><field>POS</field><label>Parts of Speech</label><longLabel>Add Parts of Speech</longLabel><description>Add a Part Of Speech to senses where they are missing.</description><showfields>POS</showfields><readOnly>definition, ExampleSentence</readOnly></task>
-	<task taskName="AddMissingInfo" visible="false"><field>ExampleSentence</field><label>Example Sentences</label><longLabel>Add Example Sentences</longLabel><description>Add example sentences to senses where they are missing.</description><showfields>ExampleSentence</showfields><readOnly>definition</readOnly></task>
-	<task taskName="AddMissingInfo" visible="false"><field>BaseForm</field><label>Base Forms</label><longLabel>Add Base Forms</longLabel><description>Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries.</description><showfields>BaseForm</showfields></task>
+	<task taskName="AddMissingInfo" visible="false"><field>definition</field><label>Meanings</label><longLabel>Add Meanings</longLabel><description>Add meanings to entries where they are missing.</description><showFields>definition</showFields><readOnly>SemanticDomainDdp4</readOnly></task>
+	<task taskName="AddMissingInfo" visible="false"><field>POS</field><label>Parts of Speech</label><longLabel>Add Parts of Speech</longLabel><description>Add a Part Of Speech to senses where they are missing.</description><showFields>POS</showFields><readOnly>definition, ExampleSentence</readOnly></task>
+	<task taskName="AddMissingInfo" visible="false"><field>ExampleSentence</field><label>Example Sentences</label><longLabel>Add Example Sentences</longLabel><description>Add example sentences to senses where they are missing.</description><showFields>ExampleSentence</showFields><readOnly>definition</readOnly></task>
+	<task taskName="AddMissingInfo" visible="false"><field>BaseForm</field><label>Base Forms</label><longLabel>Add Base Forms</longLabel><description>Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries.</description><showFields>BaseForm</showFields></task>
 
 	<task taskName="GatherWordList" visible="false"><wordListFileName>DuerksenWords.txt</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
 	<task taskName="GatherWordList" visible="false"><wordListFileName>PNGWords.txt</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>

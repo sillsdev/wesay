@@ -67,7 +67,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			get { return GetStringFromConfigNode("readOnly", string.Empty); ; }
 		}
 
-		public string FieldsToShow //<showfields>
+		public string FieldsToShow //<showFields>
 		{
 			get { return GetStringFromConfigNode("showFields"); ; }
 		}

@@ -38,7 +38,7 @@ namespace WeSay.Project.Tests
 			Assert.IsTrue(didMigrate);
 			XmlDocument outputDoc = new XmlDocument();
 			outputDoc.Load(_outputPath);
-			Assert.IsNotNull(outputDoc.SelectSingleNode("configuration[@version='4']"));
+			Assert.IsNotNull(outputDoc.SelectSingleNode("configuration[@version='5']"));
 		}
 
 		[Test]
@@ -49,7 +49,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='4']", _outputPath);
+			AssertXPathNotNull("configuration[@version='5']", _outputPath);
 		}
 
 		[Test]
@@ -60,7 +60,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='4']", _outputPath);
+			AssertXPathNotNull("configuration[@version='5']", _outputPath);
 		}
 
 		[Test]
@@ -71,7 +71,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='4']", _outputPath);
+			AssertXPathNotNull("configuration[@version='5']", _outputPath);
 		}
 
 		[Test]
