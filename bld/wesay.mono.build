@@ -73,10 +73,6 @@
 				<exclude name="../lib/**" />
 			</fileset>
 		</delete>
-
-		<nant target="clean">
-			<buildfiles refid="project.buildfiles.src" />
-		</nant>
 	</target>
 
 	<target name="revision">
@@ -132,14 +128,14 @@
 	</target>
 
 	<target name="build" description="Build all targets." depends="clean">
-		<call target="build.solution"/>
+		<call target="build-only"/>
 	</target>
 
 	<target name="rebuild">
-		<call target="build.solution"/>
+		<call target="build-only"/>
 	</target>
 
-	<target name="build.solution" depends="make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
+	<target name="build-only" depends="make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
 		<nant target="build">
 			<properties>
 				<property name="build.defines" value="${build.defines}" />
@@ -155,7 +151,11 @@
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
 	</target>
 
-	 <target name="test" depends="build">
+	<target name="test" description="Build all targets." depends="build-only">
+		<call target="test-only"/>
+	</target>
+
+	 <target name="test-only">
 <!-- Run tests the first time without stopping the build under on failing tests because we want to be able to see ALL failing tests in the log.
 		The downside to this is that TeamCity will show a passing build even with failing tests-->
 
@@ -228,62 +228,6 @@
 		</copy>
 		<copy file="wesay.mono.runner" tofile="/usr/bin/wesay" />
 		<copy file="wesay.configtool.mono.runner" tofile="/usr/bin/wesay-config" />
-	</target>
-
-	<target name="installerpre" depends="version">
-		<fail />
-		<foreach item="File" property="filename">
-			<in>
-				<items>
-					<include name="../release/*.iss" />
-				</items>
-			</in>
-			<do>
-				<property name="backupname" value="${string::replace(filename, 'iss', 'iss.bak')}" />
-				<copy file="${filename}" tofile="${backupname}" overwrite="true" />
-				<copy file="${backupname}" tofile="${filename}" overwrite="true">
-					<filterchain>
-						<expandproperties />
-					</filterchain>
-				</copy>
-			</do>
-		</foreach>
-	</target>
-
-	<target name="installerpost">
-		<fail />
-		<foreach item="File" property="filename">
-			<in>
-				<items>
-					<include name="../release/*.iss" />
-				</items>
-			</in>
-			<do>
-				<property name="backupname" value="${string::replace(filename, 'iss', 'iss.bak')}" />
-				<copy file="${backupname}" tofile="${filename}" overwrite="true" />
-				<delete file="${backupname}" />
-			</do>
-		</foreach>
-	</target>
-
-	<target name="installer.win">
-		<exec program="C:\Program Files\Inno Setup 5\ISCC.exe" append="true">
-			<arg file="../release/solid.iss" />
-		</exec>
-	</target>
-
-	<target name="installer" depends="test">
-		<fail />
-		<call target="installerpre" />
-		<call target="installer.win" />
-		<call target="installerpost" />
-	</target>
-
-	<target name="publish" depends="installer">
-		<fail />
-		<exec program="ftp.exe">
-			<arg line="-n -s:ftp.txt" />
-		</exec>
 	</target>
 
 

@@ -1,10 +1,10 @@
 #!/usr/bin/make -f
 
-NANT=MONO_SHARED_DIR=/tmp nant -buildfile:build/wesay.build
+NANT=MONO_SHARED_DIR=/tmp nant -buildfile:bld/wesay.mono.build
 build: build-stamp
 build-stamp:
 	dh_testdir
-	$(NANT) build.solution
+	$(NANT) build-only
 	touch build-stamp
 
 clean:
