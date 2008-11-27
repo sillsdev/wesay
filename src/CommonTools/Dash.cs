@@ -25,10 +25,14 @@ namespace WeSay.CommonTools
 		private List<ButtonGroup> _buttonGroups;
 		private bool _isActive;
 		private readonly ICurrentWorkTask _currentWorkTaskProvider;
-		private int _oldFlowWidth;
+		private int _oldPanelWidth;
 		private List<Size> _smallestPossibleButtonSizes;
 		private Size _bestButtonSize;
 		private bool _addedAllButtons;
+		private List<List<DashboardButton>> _buttonRows;
+		private readonly Padding _buttonRowMargin;
+		private readonly Padding _buttonMargin;
+		private int _buttonsPerRow;
 
 		private const TextFormatFlags ToolTipFormatFlags =
 				TextFormatFlags.WordBreak | TextFormatFlags.NoFullWidthCharacterBreak |
@@ -36,7 +40,11 @@ namespace WeSay.CommonTools
 
 		public Dash(LexEntryRepository RecordListManager, ICurrentWorkTask currentWorkTaskProvider)//, UserSettingsForTask userSettings)
 		{
-			_oldFlowWidth = 0;
+			_buttonRows = new List<List<DashboardButton>>();
+			_oldPanelWidth = 0;
+			_buttonsPerRow = 0;
+			_buttonRowMargin = new Padding(30, 0, 0, 15);
+			_buttonMargin = new Padding(3);
 			_lexEntryRepository = RecordListManager;
 			_currentWorkTaskProvider = currentWorkTaskProvider;
 			InitializeContextMenu();
@@ -84,9 +92,10 @@ namespace WeSay.CommonTools
 			_title.Font = new Font("Arial", 14);
 			_title.BackColor = Color.Transparent;
 			_title.ShowLogo = true;
-			_title.Width = _flow.Width - _title.Margin.Left - _title.Margin.Right;
+			_title.Width = _panel.Width - _title.Margin.Left - _title.Margin.Right;
 			_title.TabStop = false;
-			_flow.Controls.Add(_title);
+			_buttonRows.Clear();
+			_panel.Controls.Add(_title);
 
 			foreach (ButtonGroup group in _buttonGroups)
 			{
@@ -97,12 +106,8 @@ namespace WeSay.CommonTools
 
 		private void AddButtonGroupToFlow(ButtonGroup buttonGroup)
 		{
-			FlowLayoutPanel buttonFlow = new FlowLayoutPanel();
-			buttonFlow.AutoSize = true;
-			buttonFlow.FlowDirection = FlowDirection.LeftToRight;
-			buttonFlow.Margin = new Padding(30, 0, 0, 15);
-			buttonFlow.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-			buttonFlow.WrapContents = true;
+			var buttonRow = new List<DashboardButton>();
+			_buttonRows.Add(buttonRow);
 			bool foundAtLeastOne = false;
 			foreach (IThingOnDashboard item in ThingsToMakeButtonsFor)
 			{
@@ -112,7 +117,7 @@ namespace WeSay.CommonTools
 				}
 				if (item.Group == buttonGroup.Group)
 				{
-					buttonFlow.Controls.Add(MakeButton(item, buttonGroup));
+					buttonRow.Add(MakeButton(item, buttonGroup));
 					foundAtLeastOne = true;
 				}
 			}
@@ -122,12 +127,13 @@ namespace WeSay.CommonTools
 				header.AutoSize = true;
 				header.Text = StringCatalog.Get(buttonGroup.Group.ToString());
 				header.Font = new Font("Arial", 12);
-				_flow.Controls.Add(header);
-				_flow.Controls.Add(buttonFlow);
+				_panel.Controls.Add(header);
+				buttonRow.ForEach(b => _panel.Controls.Add(b));
+				_buttonRows.Add(buttonRow);
 			}
 		}
 
-		private Control MakeButton(IThingOnDashboard item, ButtonGroup group)
+		private DashboardButton MakeButton(IThingOnDashboard item, ButtonGroup group)
 		{
 			DashboardButton button = MakeButton(item);
 			button.BackColor = Color.Transparent;
@@ -136,8 +142,6 @@ namespace WeSay.CommonTools
 			button.BorderColor = group.BorderColor;
 			button.DoneColor = group.DoneColor;
 
-			button.Dock = DockStyle.None;
-			button.Anchor = AnchorStyles.None;
 			button.Size = _bestButtonSize;
 			button.SizeChanged += ButtonSizeChanged;
 			button.Text = item.LocalizedLabel;
@@ -209,53 +213,54 @@ namespace WeSay.CommonTools
 			}
 		}
 
-		private void ResizeFlows()
-		{
-			_flow.SuspendLayout();
-			foreach (Control control in _flow.Controls)
-			{
-				FlowLayoutPanel buttonGroup = control as FlowLayoutPanel;
-				if (buttonGroup == null)
-				{
-					continue;
-				}
-				buttonGroup.MaximumSize =
-						new Size(_flow.Width - buttonGroup.Margin.Left - buttonGroup.Margin.Right, 0);
-			}
-			_flow.Height = _flow.GetPreferredSize(new Size(_flow.Width, 0)).Height;
-			_flow.ResumeLayout();
-		}
-
 		private void ResizeButtons()
 		{
-			_flow.SuspendLayout();
-			foreach (Control buttonGroup in _flow.Controls)
+			_panel.SuspendLayout();
+			int nextY = 0;
+			int nextX = 0;
+			bool inButtonRow = false;
+			foreach (Control control in _panel.Controls)
 			{
-				foreach (Control control in buttonGroup.Controls)
+				if (control is DashboardButton)
 				{
-					DashboardButton button = control as DashboardButton;
-					if (button == null)
+					if (!inButtonRow)  // new group of buttons
 					{
-						continue;
+						inButtonRow = true;
+						nextY += _buttonRowMargin.Top + _buttonMargin.Top;
+						nextX = _buttonRowMargin.Left;
 					}
-					button.Size = _bestButtonSize;
+					if (nextX > _buttonRowMargin.Left && nextX + _buttonMargin.Horizontal +
+						_bestButtonSize.Width > _panel.ClientSize.Width)  // new row within group
+					{
+						nextY += _buttonMargin.Vertical + _bestButtonSize.Height;
+						nextX = _buttonRowMargin.Left;
+					}
+					nextX += _buttonMargin.Left;
+					control.Bounds = new Rectangle(new Point(nextX, nextY), _bestButtonSize);
+					nextX += _buttonMargin.Right + _bestButtonSize.Width;
+				}
+				else
+				{
+					if (inButtonRow)
+					{
+						inButtonRow = false;
+						nextY += _bestButtonSize.Height + _buttonMargin.Bottom + _buttonRowMargin.Bottom;
+					}
+					nextY += control.Margin.Top;
+					control.Location = new Point(control.Margin.Left, nextY);
+					nextY += control.Margin.Bottom + control.Height;
 				}
 			}
-			_flow.ResumeLayout();
+			_panel.ResumeLayout();
 		}
 
 		private IEnumerable<IEnumerable<Size>> GetAllPossibleButtonSizes()
 		{
-			List<IEnumerable<Size>> sizes = new List<IEnumerable<Size>>();
-			foreach (Control buttonGroup in _flow.Controls)
+			var sizes = new List<IEnumerable<Size>>();
+			foreach (var buttonRow in _buttonRows)
 			{
-				foreach (Control buttonControl in buttonGroup.Controls)
+				foreach (DashboardButton button in buttonRow)
 				{
-					DashboardButton button = buttonControl as DashboardButton;
-					if (button == null)
-					{
-						continue;
-					}
 					sizes.Add(button.GetPossibleButtonSizes());
 				}
 			}
@@ -428,11 +433,14 @@ namespace WeSay.CommonTools
 			return buttonsPerGroupList;
 		}
 
-		private Size GetBestButtonSize()
+		private void SetBestButtonSize()
 		{
-			return ComputeBestButtonSize(SmallestPossibleButtonSizes,
-										 GetAvailableSpaceForButtons(),
-										 GetButtonsPerGroup());
+			Size availableSpaceForButtons = GetAvailableSpaceForButtons();
+			_bestButtonSize = ComputeBestButtonSize(SmallestPossibleButtonSizes,
+													availableSpaceForButtons,
+													GetButtonsPerGroup());
+			_buttonsPerRow = Math.Max(1,
+				availableSpaceForButtons.Width/(_bestButtonSize.Width + _buttonMargin.Horizontal));
 		}
 
 		internal static Size ComputeBestButtonSize(List<Size> smallestPossibleSizes,
@@ -565,24 +573,21 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private Size GetAvailableSpaceForButtons()
 		{
-			Size sizeForButtons = new Size(_flow.ClientRectangle.Width,
-										   ClientRectangle.Height - _flow.Location.Y);
+			Size sizeForButtons = new Size(_panel.ClientRectangle.Width,
+										   ClientRectangle.Height - _panel.Location.Y);
 
-			foreach (Control control in _flow.Controls)
+			foreach (Control control in _panel.Controls)
 			{
-				sizeForButtons.Height -= control.Margin.Top + control.Margin.Bottom;
-				FlowLayoutPanel flow = control as FlowLayoutPanel;
-				if (flow != null)
+				if (control is DashboardButton)
 				{
-					sizeForButtons.Width = _flow.ClientRectangle.Width - flow.Margin.Left -
-										   flow.Margin.Right;
+					continue;
 				}
-				else
-				{
-					sizeForButtons.Height -= control.Height;
-				}
+				sizeForButtons.Height -= control.Margin.Vertical + control.Height;
+				sizeForButtons.Height -= control.Height;
 			}
-			// If we're already scrolling, the width of the scrollbar is already figured in to _flow.ClientRectangle.Width
+			sizeForButtons.Height -= _buttonRows.Count*_buttonRowMargin.Vertical;
+			sizeForButtons.Width -= _buttonRowMargin.Horizontal;
+			// If we're already scrolling, the width of the scrollbar is already figured in to _panel.ClientRectangle.Width
 			// Otherwise, pretend like we will need a scrollbar to may sizing work better when we do
 			sizeForButtons.Width -= (VScroll ? 0 : SystemInformation.VerticalScrollBarWidth);
 			return sizeForButtons;
@@ -672,7 +677,7 @@ namespace WeSay.CommonTools
 						"Deactivate should only be called once after Activate.");
 			}
 			_toolTip.RemoveAll();
-			_flow.Controls.Clear();
+			_panel.Controls.Clear();
 			_isActive = false;
 		}
 
@@ -764,33 +769,50 @@ namespace WeSay.CommonTools
 
 		#endregion
 
+		private void FixPanelSize()
+		{
+			// fixing mono bugginess
+			SuspendLayout();
+			_panel.Anchor = AnchorStyles.None;
+			_panel.Bounds = new Rectangle(20, 11, ClientRectangle.Width - 20, ClientRectangle.Height - 11);
+			_panel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			ResumeLayout(false);
+		}
+
 		protected override void OnLayout(LayoutEventArgs e)
 		{
+#if MONO
+			FixPanelSize();
+#endif
 			base.OnLayout(e);
 			Invalidate(false); // force redraw of background
-			Size oldBestSize = _bestButtonSize;
-			_bestButtonSize = GetBestButtonSize();
-			if (_title != null && _flow.Width != _oldFlowWidth)
+			bool needReposition = false;
+			if (_title != null && _panel.Width != _oldPanelWidth)
 			{
 				// for some reason, anchoring the title on the left and right didn't work,
 				// so I have to set the size manually
-				_title.Width = _flow.Width - _title.Margin.Left - _title.Margin.Right;
+				int oldTitleHeight = _title.Height;
+				_title.Width = _panel.Width - _title.Margin.Left - _title.Margin.Right;
+				needReposition |= _title.Height != oldTitleHeight;
 			}
-			if (_bestButtonSize != oldBestSize)
+			Size oldBestSize = _bestButtonSize;
+			int oldButtonsPerRow = _buttonsPerRow;
+			SetBestButtonSize();
+			if (needReposition || _bestButtonSize != oldBestSize || _buttonsPerRow != oldButtonsPerRow)
 			{
 				ResizeButtons();
 			}
-			if (_bestButtonSize == oldBestSize && _flow.Width == _oldFlowWidth)
+			if (_bestButtonSize == oldBestSize && _panel.Width == _oldPanelWidth)
 			{
 				return;
 			}
-			_oldFlowWidth = _flow.Width;
-			bool neededScroll = _flow.Bounds.Bottom >= ClientRectangle.Height;
-			ResizeFlows();
+			_oldPanelWidth = _panel.Width;
+			bool neededScroll = _panel.Bounds.Bottom >= ClientRectangle.Height;
+			_panel.Height = _panel.GetPreferredSize(new Size(_panel.Width, 0)).Height;
 			// If we need a scrollbar now, and we didn't before, do another layout
 			// to add the scrollbar.  This prevents some problems when resizing
-			if ((!neededScroll && _flow.Bounds.Bottom >= ClientRectangle.Height) ||
-				(neededScroll && _flow.Bounds.Bottom < ClientRectangle.Height))
+			if ((!neededScroll && _panel.Bounds.Bottom >= ClientRectangle.Height) ||
+				(neededScroll && _panel.Bounds.Bottom < ClientRectangle.Height))
 			{
 				base.OnLayout(e);
 			}

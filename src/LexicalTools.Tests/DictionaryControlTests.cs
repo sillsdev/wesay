@@ -470,6 +470,18 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(2, _lexEntryRepository.CountAllItems());
 		}
 
+		//Addresses WS-1107
+		[Test]
+		public void NewWord_ControlNAfterEnteringLexicalForm_CreatesNewWord()
+		{
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
+			PressCtrlN(t);
+			t = new TextBoxTester(GetLexicalFormControlName(), _window);
+			EnterWordAndPressCtrlN(t, "NewWord1");
+
+			VerifySelectedWordIs("(Empty)");
+		}
+
 		[Test]
 		public void NewWord_NonEmptyEntryWithNoLexicalForm_EntryStillAdded()
 		{
@@ -833,8 +845,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FindText_EnterWordNotInDictionaryThenPressCtrlN_AddsWordInFindText()
 		{
 			TextBoxTester t = new TextBoxTester("_findText", _window);
-			t.Enter("NewWord");
-			PressCtrlN(t);
+			EnterWordAndPressCtrlN(t, "NewWord");
 
 			VerifySelectedWordIs("NewWord");
 		}
@@ -845,6 +856,15 @@ namespace WeSay.LexicalTools.Tests
 
 			string label = GetSelectedLabel((WeSayListView) l.Properties);
 			Assert.AreEqual(word, label);
+		}
+
+		private static void EnterWordAndPressCtrlN(ControlTester t, string word)
+		{
+			using (KeyboardController kc = new KeyboardController(t))
+			{
+				kc.Press(word);
+				kc.Press("^n"); // Ctrl+N
+			}
 		}
 
 		private static void PressCtrlN(ControlTester t)
@@ -866,6 +886,16 @@ namespace WeSay.LexicalTools.Tests
 							_lexEntryRepository.GetEntriesWithMatchingLexicalForm("Secondary",
 																				  _vernacularWritingSystem)
 									.Count);
+		}
+
+		[Test]
+		public void FindText_EnterWordInFindBoxThenPressCtrlN_FindTextAppearsAsLexicalFormInNewEntry()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			EnterWordAndPressCtrlN(t, "Show Me In LexicalForm Field");
+
+			t = new TextBoxTester(GetLexicalFormControlName(), _window);
+			Assert.AreEqual("Show Me In LexicalForm Field", t.Text);
 		}
 
 		[Test]

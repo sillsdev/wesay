@@ -26,6 +26,9 @@ namespace WeSay.Project.Tests
 			File.Delete(_outputPath);
 		}
 
+		private readonly string _queryToCheckConfigVersion = String.Format("configuration[@version='{0}']",
+											 WeSayWordsProject.CurrentWeSayConfigFileVersion);
+
 		[Test]
 		public void DoesMigrateV0File()
 		{
@@ -38,7 +41,7 @@ namespace WeSay.Project.Tests
 			Assert.IsTrue(didMigrate);
 			XmlDocument outputDoc = new XmlDocument();
 			outputDoc.Load(_outputPath);
-			Assert.IsNotNull(outputDoc.SelectSingleNode("configuration[@version='5']"));
+			Assert.IsNotNull(outputDoc.SelectSingleNode(_queryToCheckConfigVersion));
 		}
 
 		[Test]
@@ -49,7 +52,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='5']", _outputPath);
+			AssertXPathNotNull(_queryToCheckConfigVersion, _outputPath);
 		}
 
 		[Test]
@@ -60,7 +63,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='5']", _outputPath);
+			AssertXPathNotNull(_queryToCheckConfigVersion, _outputPath);
 		}
 
 		[Test]
@@ -71,7 +74,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='5']", _outputPath);
+			AssertXPathNotNull(_queryToCheckConfigVersion, _outputPath);
 		}
 
 		[Test]
@@ -82,7 +85,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='5']", _outputPath);
+			AssertXPathNotNull(_queryToCheckConfigVersion, _outputPath);
 		}
 
 		[Test]
