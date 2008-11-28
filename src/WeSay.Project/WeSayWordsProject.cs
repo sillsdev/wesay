@@ -377,7 +377,7 @@ namespace WeSay.Project
 
 			builder.Register<TaskCollection>().SingletonScoped();
 
-			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(configFileText))
+			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems))
 			{
 				//todo: this isn't going to work if we start using multiple tempates.
 				//will have to go to a naming system.

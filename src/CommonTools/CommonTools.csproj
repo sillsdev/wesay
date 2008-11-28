@@ -118,7 +118,7 @@
 	<Compile Include="ItemsToDoIndicator.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="ItemsToDoIndicator.designer.cs">
+	<Compile Include="ItemsToDoIndicator.Designer.cs">
 	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
 	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />

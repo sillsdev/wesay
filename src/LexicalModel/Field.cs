@@ -45,6 +45,7 @@ namespace WeSay.LexicalModel
 				CommonEnumerations.VisibilitySetting.Visible;
 
 		private string _optionsListFile;
+		private bool _isMultiParagraph;
 
 		/// <summary>
 		/// These are just for getting the strings right, using ToString(). In order
@@ -505,6 +506,13 @@ namespace WeSay.LexicalModel
 		{
 			get { return _isSpellCheckingEnabled; }
 			set { _isSpellCheckingEnabled = value; }
+		}
+
+		[ReflectorProperty("multiParagraph", Required = false)]
+		public bool IsMultiParagraph
+		{
+			get { return _isMultiParagraph; }
+			set { _isMultiParagraph = value;}
 		}
 
 		[Browsable(false)]

@@ -22,6 +22,7 @@ namespace WeSay.UI
 		private static WritingSystemCollection _allWritingSystems;
 		private static Font _writingSystemLabelFont;
 		private readonly bool _isSpellCheckingEnabled;
+		private readonly bool _isMultiParagraph;
 
 		public MultiTextControl(): this(null)
 		{
@@ -83,12 +84,10 @@ namespace WeSay.UI
 		}
 
 		public MultiTextControl(IList<string> writingSystemIds,
-								MultiText multiTextToCopyFormsFrom,
-								string nameForTesting,
-								bool showAnnotationWidget,
-								WritingSystemCollection allWritingSystems,
-								CommonEnumerations.VisibilitySetting visibility,
-								bool isSpellCheckingEnabled): this(allWritingSystems)
+			MultiText multiTextToCopyFormsFrom, string nameForTesting,
+			bool showAnnotationWidget, WritingSystemCollection allWritingSystems,
+			CommonEnumerations.VisibilitySetting visibility, bool isSpellCheckingEnabled,
+			bool isMultiParagraph): this(allWritingSystems)
 		{
 			Name = nameForTesting + "-mtc";
 			_writingSystemsForThisField = new List<WritingSystem>();
@@ -102,6 +101,7 @@ namespace WeSay.UI
 			_showAnnotationWidget = showAnnotationWidget;
 			_visibility = visibility;
 			_isSpellCheckingEnabled = isSpellCheckingEnabled;
+			_isMultiParagraph = isMultiParagraph;
 			BuildBoxes(multiTextToCopyFormsFrom);
 		}
 
@@ -292,13 +292,21 @@ namespace WeSay.UI
 			box.ReadOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
 			box.Multiline = true;
 			box.WordWrap = true;
+			box.MultiParagraph = _isMultiParagraph;
 			box.IsSpellCheckingEnabled = _isSpellCheckingEnabled;
 			//box.Enabled = !box.ReadOnly;
 
 			_textBoxes.Add(box);
+
+			string text = multiText[writingSystem.Id];
+			if(_isMultiParagraph) //review... stuff was coming in with just \n, and the text box then didn't show the paragarph marks
+			{
+				text = text.Replace("\r\n", "\n");
+				text = text.Replace("\n", "\r\n");
+			}
 			box.Name = Name.Replace("-mtc", "") + "_" + writingSystem.Id;
 			//for automated tests to find this particular guy
-			box.Text = multiText[writingSystem.Id];
+			box.Text = text;
 
 			box.TextChanged += OnTextOfSomeBoxChanged;
 			box.KeyDown += OnKeyDownInSomeBox;
