@@ -75,11 +75,18 @@
 		</delete>
 	</target>
 
-	<target name="revision">
-		<property name="revision" value="${environment::get-variable(BUILD_VERSION)}"/>
+	<target name="revision_teamcityhg">
+		<property name="teamcity" value="${environment::get-variable('BUILD_NUMBER')}" />
+		<regex pattern="^(?'revision'[^:]*)" input="${teamcity}" />
+		<property name="revision" value="${string::trim(revision)}" />
+		<echo message="Revision: ${revision}" />
 	</target>
 
-	<target name="version" depends="revision">
+	<target name="revision">
+		<property name="revision" value="${environment::get-variable(BUILD_NUMBER)}"/>
+	</target>
+
+	<target name="version" depends="revision_teamcityhg">
 		<loadfile property="version" file="version.txt">
 			<filterchain>
 				<expandproperties />
@@ -135,7 +142,7 @@
 		<call target="build-only"/>
 	</target>
 
-	<target name="build-only" depends="make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
+	<target name="build-only" depends="assemblyinfo make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
 		<nant target="build">
 			<properties>
 				<property name="build.defines" value="${build.defines}" />
