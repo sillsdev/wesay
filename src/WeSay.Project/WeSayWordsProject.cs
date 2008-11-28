@@ -1108,10 +1108,11 @@ namespace WeSay.Project
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
 
+			var pendingConfigFile = new TempFileForSafeWriting(Project.PathToConfigFile);
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 
-			XmlWriter writer = XmlWriter.Create(Project.PathToConfigFile, settings);
+			XmlWriter writer = XmlWriter.Create(pendingConfigFile.TempFilePath, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
 			writer.WriteAttributeString("version", CurrentWeSayConfigFileVersion.ToString());
@@ -1140,7 +1141,10 @@ namespace WeSay.Project
 			writer.WriteEndDocument();
 			writer.Close();
 
+			pendingConfigFile.WriteWasSuccessful();
+
 			base.Save();
+
 			BackupNow();
 
 		}
