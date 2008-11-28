@@ -54,7 +54,7 @@
 		<include name="Autofac.dll" />
 		<include name="Chorus.exe" />
 	  </references>
-	  <resources dynamicprefix="true" prefix="WeSay" basedir="..">
+	  <resources dynamicprefix="true" basedir="..">
 		  <include name="**/*.resources" />
 		  <include name="**/*.xsl" />
 	  </resources>
