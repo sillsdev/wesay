@@ -470,7 +470,7 @@ namespace WeSay.LexicalTools
 			AddNewWord(false);
 		}
 
-		private void AddNewWord(bool FocusWasOnFindTextBox)
+		internal void AddNewWord(bool FocusWasOnFindTextBox)
 		{
 			Logger.WriteEvent("NewWord_Click");
 

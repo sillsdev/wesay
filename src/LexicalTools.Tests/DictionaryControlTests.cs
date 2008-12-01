@@ -29,6 +29,7 @@ namespace WeSay.LexicalTools.Tests
 		private Field _definitionField;
 		private Guid _firstEntryGuid;
 		private Guid _secondEntryGuid;
+		private string[] _analysisWritingSystemIds;
 
 		[TestFixtureSetUp]
 		public void SetupFixture()
@@ -48,7 +49,7 @@ namespace WeSay.LexicalTools.Tests
 			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			string[] analysisWritingSystemIds = new string[]
+			_analysisWritingSystemIds = new string[]
 													{
 															BasilProject.Project.WritingSystems.
 																	TestWritingSystemAnalId
@@ -60,25 +61,25 @@ namespace WeSay.LexicalTools.Tests
 									   vernacularWritingSystemIds));
 			viewTemplate.Add(new Field("focusOnMe",
 									   "LexEntry",
-									   analysisWritingSystemIds,
+									   _analysisWritingSystemIds,
 									   Field.MultiplicityType.ZeroOr1,
 									   "MultiText"));
 			viewTemplate.Add(new Field("MyEntryCustom",
 									   "LexEntry",
-									   analysisWritingSystemIds,
+									   _analysisWritingSystemIds,
 									   Field.MultiplicityType.ZeroOr1,
 									   "MultiText"));
 
 			Field readOnlySemanticDomain =
 					new Field(LexSense.WellKnownProperties.SemanticDomainsDdp4,
 							  "LexSense",
-							  analysisWritingSystemIds);
+							  _analysisWritingSystemIds);
 			readOnlySemanticDomain.Visibility = CommonEnumerations.VisibilitySetting.ReadOnly;
 			viewTemplate.Add(readOnlySemanticDomain);
 
 			Field shy1 = new Field("MyShyEntryCustom",
 								   "LexEntry",
-								   analysisWritingSystemIds,
+								   _analysisWritingSystemIds,
 								   Field.MultiplicityType.ZeroOr1,
 								   "MultiText");
 			shy1.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
@@ -90,12 +91,12 @@ namespace WeSay.LexicalTools.Tests
 #else
 			_definitionField = new Field(LexSense.WellKnownProperties.Definition,
 										 "LexSense",
-										 analysisWritingSystemIds);
+										 _analysisWritingSystemIds);
 			viewTemplate.Add(_definitionField);
 #endif
 			viewTemplate.Add(new Field("MySenseCustom",
 									   "LexSense",
-									   analysisWritingSystemIds,
+									   _analysisWritingSystemIds,
 									   Field.MultiplicityType.ZeroOr1,
 									   "MultiText"));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(),
@@ -103,15 +104,11 @@ namespace WeSay.LexicalTools.Tests
 									   vernacularWritingSystemIds));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(),
 									   "LexExampleSentence",
-									   analysisWritingSystemIds));
-
-			_firstEntryGuid = AddEntry("Initial", analysisWritingSystemIds[0], "meaning", true);
-			_secondEntryGuid = AddEntry("Secondary", analysisWritingSystemIds[0], "secondarymeaning", false);
-			AddEntry("Tertiary", analysisWritingSystemIds[0], "meaning", true);
+									   _analysisWritingSystemIds));
 
 			Field customField = new Field("SemanticDomains",
 										  "LexSense",
-										  analysisWritingSystemIds,
+										  _analysisWritingSystemIds,
 										  Field.MultiplicityType.ZeroOr1,
 										  "OptionCollection");
 			customField.DisplayName = "Sem Dom";
@@ -120,7 +117,7 @@ namespace WeSay.LexicalTools.Tests
 
 			Field customPOSField = new Field(LexSense.WellKnownProperties.PartOfSpeech,
 											 "LexSense",
-											 analysisWritingSystemIds,
+											 _analysisWritingSystemIds,
 											 Field.MultiplicityType.ZeroOr1,
 											 "Option");
 			customPOSField.DisplayName = "POS";
@@ -129,13 +126,13 @@ namespace WeSay.LexicalTools.Tests
 
 			Field customNotesField = new Field(WeSayDataObject.WellKnownProperties.Note,
 											   "LexSense",
-											   analysisWritingSystemIds);
+											   _analysisWritingSystemIds);
 			customNotesField.DisplayName = "s-note";
 			viewTemplate.Add(customNotesField);
 
 			Field exampleNotesField = new Field(WeSayDataObject.WellKnownProperties.Note,
 												"LexExampleSentence",
-												analysisWritingSystemIds);
+												_analysisWritingSystemIds);
 			exampleNotesField.DisplayName = "ex-note";
 			viewTemplate.Add(exampleNotesField);
 
@@ -153,6 +150,15 @@ namespace WeSay.LexicalTools.Tests
 			_window.Width = 700;
 			_window.Height = 500;
 			_window.Show();
+		}
+
+		public void AddInitialEntries()
+		{
+			_task.Deactivate();
+			_firstEntryGuid = AddEntry("Initial", _analysisWritingSystemIds[0], "meaning", true);
+			_secondEntryGuid = AddEntry("Secondary", _analysisWritingSystemIds[0], "secondarymeaning", false);
+			AddEntry("Tertiary", _analysisWritingSystemIds[0], "meaning", true);
+			ActivateTask();
 		}
 
 		/// <summary>
@@ -225,6 +231,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingAddWordFocusesFirstField()
 		{
+			AddInitialEntries();
 			ClickAddWord();
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.IsTrue(t.Properties.Focused);
@@ -233,6 +240,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingAddWordIncreasesRecordsByOne()
 		{
+			AddInitialEntries();
 			int before = _lexEntryRepository.CountAllItems();
 			ClickAddWord();
 			Assert.AreEqual(1 + before, _lexEntryRepository.CountAllItems());
@@ -241,6 +249,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingAddWordShowsEmptyRecord()
 		{
+			AddInitialEntries();
 			LexicalFormMustMatch("Initial");
 			ClickAddWord();
 			LexicalFormMustMatch("");
@@ -249,6 +258,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingAddWordSelectsNewWordInList()
 		{
+			AddInitialEntries();
 			Assert.AreEqual("Initial", LexemeFormOfSelectedEntry);
 			ClickAddWord();
 			Assert.AreEqual("", LexemeFormOfSelectedEntry);
@@ -257,6 +267,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingDeleteWordDecreasesRecordsByOne()
 		{
+			AddInitialEntries();
 			int before = _lexEntryRepository.CountAllItems();
 			ClickDeleteWord();
 			Assert.AreEqual(before - 1, _lexEntryRepository.CountAllItems());
@@ -273,6 +284,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void DeleteWordWhenEvenHasCleanup_Regression()
 		{
+			AddInitialEntries();
 			ConfirmDeleteWhenDialogShows();
 			ClickAddWord();
 			int before = _lexEntryRepository.CountAllItems();
@@ -334,6 +346,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingDeleteWordFocusesFirstField()
 		{
+			AddInitialEntries();
 			ClickDeleteWord();
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.IsTrue(t.Properties.Focused);
@@ -342,6 +355,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingDeleteWordRefreshesDetailView()
 		{
+			AddInitialEntries();
 			ClickDeleteWord();
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.AreEqual(t.Text, LexemeFormOfSelectedEntry);
@@ -350,6 +364,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void DeletingFirstWordSelectsNextWordInList()
 		{
+			AddInitialEntries();
 			Assert.AreEqual("Initial", LexemeFormOfSelectedEntry);
 			ClickDeleteWord();
 			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
@@ -358,6 +373,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void DeletingLastWordSelectsPreviousWordInList()
 		{
+			AddInitialEntries();
 			ListViewTester t = new ListViewTester("_recordsListBox", _window);
 			((WeSayListView) t.Properties).SelectedIndex = 2;
 			Assert.AreEqual("Tertiary", LexemeFormOfSelectedEntry);
@@ -368,6 +384,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWordsThenDeleteDoesNotCrash()
 		{
+			AddInitialEntries();
 			ClickAddWord();
 			ClickDeleteWord();
 		}
@@ -375,6 +392,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void DeletingAllWordsThenAddingDoesNotCrash()
 		{
+			AddInitialEntries();
 			DeleteAllEntries();
 			ClickAddWord();
 		}
@@ -388,15 +406,12 @@ namespace WeSay.LexicalTools.Tests
 
 		private void StartWithEmpty()
 		{
-			DeleteAllEntries();
-			_task.Deactivate();
-			ActivateTask();
 		}
 
 		[Test]
 		public void EmptyDictionary_AddWords_NewWordSelectedInListBox()
 		{
-			DeleteAllEntries();
+			StartWithEmpty();
 			ClickAddWord();
 			ListViewTester t = new ListViewTester("_recordsListBox", _window);
 			Assert.AreEqual(0, ((WeSayListView) t.Properties).SelectedIndex);
@@ -407,7 +422,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EmptyDictionary_AddWords_FieldsExist()
 		{
-			DeleteAllEntries();
+			StartWithEmpty();
 			ClickAddWord();
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.IsTrue(t.Properties.Visible);
@@ -427,7 +442,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EmptyDictionary_AddWords_CanTypeInFirstField()
 		{
-			DeleteAllEntries();
+			StartWithEmpty();
 			ClickAddWord();
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			t.Enter("test");
@@ -437,14 +452,16 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void NewWord_DictionaryContainsWordEmpty_ContainsBlankAndEmpty()
 		{
-			//review: I (jh) find this test confusing.  if "empty" is a special word, can
-			//someone add a comment explaining it?  Else, why not just use, like, "hello"?
+			// The string "(Empty)" used to be retured as the lexical form for an empty entry.
+			// A result of this was that by preventing the Add New Word button from creating
+			// multiple empty entries, if you acutally had a word "(Empty)", a new word
+			// would not be created.  This test ensures that this bad behavior does not happen.
 
 			Application.DoEvents();
 			StartWithEmpty();
 			ClickAddWord();
 			Application.DoEvents();
-			var form = "hello";// "(Empty)";
+			var form = "(Empty)";
 			TypeInLexicalForm(form);
 			Application.DoEvents();
 			ClickAddWord();
@@ -473,10 +490,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void NewWord_ControlNAfterEnteringLexicalForm_CreatesNewWord()
 		{
+			AddInitialEntries();
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
-			PressCtrlN(t);
+			PressCtrlN(t, false);
 			t = new TextBoxTester(GetLexicalFormControlName(), _window);
-			EnterWordAndPressCtrlN(t, "NewWord1");
+			EnterWordAndPressCtrlN(t, "NewWord1", false);
 
 			VerifySelectedWordIs("(Empty)");
 		}
@@ -518,6 +536,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void IfNoWordsDeleteButtonDisabled()
 		{
+			AddInitialEntries();
 			ButtonTester l = new ButtonTester("_btnDeleteWord", _window);
 			Assert.IsTrue(l.Properties.Enabled);
 			DeleteAllEntries();
@@ -527,6 +546,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CustomTextFieldPreservedNoOtherEditing()
 		{
+			AddInitialEntries();
 			CustomTextFieldPreservedCore("*MyEntryCustom");
 			EnsureHasOneEntryProperty();
 		}
@@ -541,6 +561,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CustomTextFieldPreserved()
 		{
+			AddInitialEntries();
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			t.Enter("test");
 
@@ -584,6 +605,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CustomOptionRefOnSensePreserved()
 		{
+			AddInitialEntries();
 			CustomOptionRefPreservedCore("POS");
 			EnsureHasTwoSenseProperties();
 		}
@@ -591,6 +613,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CustomTextFieldOnSensePreserved()
 		{
+			AddInitialEntries();
 			CustomTextFieldPreservedCore("s-note");
 			EnsureHasTwoSenseProperties();
 		}
@@ -632,6 +655,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EmptyProperitesRemovedAfterEditting()
 		{
+			AddInitialEntries();
 			EntryViewControl parentControl =
 					((DictionaryControl) _task.Control).Control_EntryDetailPanel;
 			LexEntry entry = parentControl.DataSource;
@@ -660,6 +684,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingTheStarButton_AfterTyping_SetsAnnotation()
 		{
+			AddInitialEntries();
 			TypeInLexicalForm("one");
 			ClickStarOfLexemeForm();
 			ResultSet<LexEntry> list =
@@ -673,6 +698,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingTheStarButton_WithEmptySenseBelow_RegressionTest()
 		{
+			AddInitialEntries();
 			//      this._records[0].Senses.AddNew();
 			//         this._records[0].NotifyPropertyChanged("senses");
 			// Application.DoEvents();
@@ -701,6 +727,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SwitchingToAnotherTaskDoesNotLooseBindings()
 		{
+			AddInitialEntries();
 			LexicalFormMustMatch("Initial");
 			TypeInLexicalForm("one");
 			_task.Deactivate();
@@ -800,6 +827,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FindText_EnterTextThenPressFindButton_Finds()
 		{
+			AddInitialEntries();
 			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter("Secondary");
 			ClickFindButton();
@@ -814,6 +842,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FindText_EnterTextOneCharacterAtATime_DoesNotThrow()
 		{
+			AddInitialEntries();
 			TextBoxTester t = new TextBoxTester("_findText", _window);
 			//This is a beter test but gives a cryptic error message
 			//KeyboardController keyboardController = new KeyboardController(t);
@@ -831,6 +860,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FindText_Enter_Finds()
 		{
+			AddInitialEntries();
 			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter("Secondary");
 			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
@@ -843,8 +873,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FindText_EnterWordNotInDictionaryThenPressCtrlN_AddsWordInFindText()
 		{
+			AddInitialEntries();
 			TextBoxTester t = new TextBoxTester("_findText", _window);
-			EnterWordAndPressCtrlN(t, "NewWord");
+			EnterWordAndPressCtrlN(t, "NewWord", true);
 
 			VerifySelectedWordIs("NewWord");
 		}
@@ -857,29 +888,26 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(word, label);
 		}
 
-		private static void EnterWordAndPressCtrlN(ControlTester t, string word)
+		private void EnterWordAndPressCtrlN(TextBoxTester t, string word, bool focusOnFindBox)
 		{
-			using (KeyboardController kc = new KeyboardController(t))
-			{
-				kc.Press(word);
-				kc.Press("^n"); // Ctrl+N
-			}
+			t.Enter(word);
+			Application.DoEvents();
+			PressCtrlN(t, focusOnFindBox);
 		}
 
-		private static void PressCtrlN(ControlTester t)
+		private void PressCtrlN(ControlTester t, bool focusOnFindBox)
 		{
-			using (KeyboardController kc = new KeyboardController(t))
-			{
-				kc.Press("^n"); // Ctrl+N
-			}
+			((DictionaryControl)_task.Control).AddNewWord(focusOnFindBox);
 		}
 
 		[Test]
 		public void FindText_EnterWordInDictionaryThenPressCtrlN_AddsWordInFindTextSoTwoEntries()
 		{
+			AddInitialEntries();
 			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter("Secondary");
-			PressCtrlN(t);
+			Application.DoEvents();
+			PressCtrlN(t, true);
 			VerifySelectedWordIs("Secondary");
 			Assert.AreEqual(2,
 							_lexEntryRepository.GetEntriesWithMatchingLexicalForm("Secondary",
@@ -890,8 +918,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FindText_EnterWordInFindBoxThenPressCtrlN_FindTextAppearsAsLexicalFormInNewEntry()
 		{
+			AddInitialEntries();
 			TextBoxTester t = new TextBoxTester("_findText", _window);
-			EnterWordAndPressCtrlN(t, "Show Me In LexicalForm Field");
+			EnterWordAndPressCtrlN(t, "Show Me In LexicalForm Field", true);
 
 			t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.AreEqual("Show Me In LexicalForm Field", t.Text);
@@ -900,6 +929,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void NewWord_FindTextNotInDictionary_CreatesNewEmptyWord()
 		{
+			AddInitialEntries();
 			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter("NewWord");
 
@@ -916,8 +946,10 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void NewWord_FindTextInDictionary_CreatesNewEmptyWord()
 		{
+			AddInitialEntries();
 			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter("Secondary");
+			Application.DoEvents();
 			ClickAddWord();
 			VerifyNewEmptyWordCreated();
 		}
@@ -925,6 +957,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void BaselineForRemovingSenseTests()
 		{
+			AddInitialEntries();
 			PutCursorInMeaningFieldOfSecondEntry();
 
 			TypeInMeaning("samo");
@@ -936,6 +969,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EditField_RemoveSenseContents_RemovesSense()
 		{
+			AddInitialEntries();
 			PutCursorInMeaningFieldOfSecondEntry();
 			TypeInMeaning(string.Empty);
 			ShiftFocus();
@@ -956,6 +990,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test] //regression test
 		public void PastingBlankOverAMeaningOfEmptySenseDoesntCrash()
 		{
+			AddInitialEntries();
 			PutCursorInMeaningFieldOfSecondEntry();
 			TextBoxTester tb = new TextBoxTester(GetMeaningControlName(), _window);
 			Clipboard.SetText(" ");
@@ -965,6 +1000,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test] //regression test
 		public void PastingTextOverAMeaningOfEmptySenseDoesntJustChangesMeaning()
 		{
+			AddInitialEntries();
 			PutCursorInMeaningFieldOfSecondEntry();
 			TextBoxTester tb = new TextBoxTester(GetMeaningControlName(), _window);
 			Clipboard.SetText("samo");
@@ -996,6 +1032,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void GhostField_Trigger_RegressionTest()
 		{
+			AddInitialEntries();
 			ClickAddWord();
 
 			DetailList detailList = GetDetailList();
@@ -1039,6 +1076,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void NewWord_GhostMeaningLabelWithNoNumber()
 		{
+			AddInitialEntries();
 			ClickAddWord();
 			Assert.AreEqual("Meaning", GetLabelOfMeaningRow(0));
 		}
@@ -1046,6 +1084,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AfterAddingMeaning_RealMeaningLabelHasNumber()
 		{
+			AddInitialEntries();
 			ClickAddWord();
 			FillInTheGhostMeaning();
 			Assert.AreEqual("Meaning 1", GetLabelOfMeaningRow(0));
@@ -1057,6 +1096,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AfterAddingMeaning_GhostMeaningLabelHasNumber()
 		{
+			AddInitialEntries();
 			ClickAddWord();
 			FillInTheGhostMeaning();
 			Assert.AreEqual("Meaning 2", GetLabelOfMeaningRow(1));
@@ -1065,6 +1105,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingShowAllOnce_ShowsCustomShyGuyOnEntry()
 		{
+			AddInitialEntries();
 			ClickAddWord();
 			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
 			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
@@ -1075,6 +1116,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingShowAllTwice_HidesCustomShyGuy()
 		{
+			AddInitialEntries();
 			ClickAddWord();
 			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
 			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
@@ -1087,6 +1129,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddingNewWord_HidesCustomShyGuy()
 		{
+			AddInitialEntries();
 			ClickAddWord();
 			TypeInLexicalForm("foo");
 			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
@@ -1103,6 +1146,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddingNewWord_ClearsShowHiddenState()
 		{
+			AddInitialEntries();
 			ClickAddWord();
 			TypeInLexicalForm("foo");
 			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
@@ -1129,6 +1173,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void DeletingWord_ClearsShowHiddenState()
 		{
+			AddInitialEntries();
 			ClickAddWord();
 			TypeInLexicalForm("foo");
 			ClickAddWord();
@@ -1145,7 +1190,8 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void GotoEntry_EntryInList_GoesToIt()
 		{
-			DictionaryControl control = (DictionaryControl) _task.Control;
+			AddInitialEntries();
+			DictionaryControl control = (DictionaryControl)_task.Control;
 			string idOfInitial = control.CurrentRecord.Id;
 			GoToLexicalEntryUseFind("Secondary"); //go away from that one
 			control.GoToEntry(idOfInitial);
@@ -1156,13 +1202,15 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (NavigationException))]
 		public void GotoEntry_EntryNotInList_Throws()
 		{
-			DictionaryControl control = (DictionaryControl) _task.Control;
+			AddInitialEntries();
+			DictionaryControl control = (DictionaryControl)_task.Control;
 			control.GoToEntry("bogus");
 		}
 
 		[Test]
 		public void ClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_DeleteButtonStaysEnabled()
 		{
+			AddInitialEntries();
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 			ButtonTester b = new ButtonTester("_btnDeleteWord", _window);
 			using (MouseController mc = new MouseController(l))
