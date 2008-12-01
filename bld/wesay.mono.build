@@ -82,6 +82,7 @@
 				<include name="../**/obj/**" />
 				<include name="../output/**" />
 				<include name="../release/output/*" />
+				<include name="../src/**/nant.resx.bak/**" />
 				<exclude name="../.hg/**" />
 				<exclude name="../lib/**" />
 			</fileset>
@@ -231,10 +232,15 @@
 	<target name="dist" depends="assemblyinfo make-output-dir, set-build-config, set-runtime-config">
 		<tar destfile="${project.output.dir}/wesay-src-${version}.tar.gz" compression="GZip">
 			<fileset basedir="${project.base.dir}">
+				<include name="src/**/*.build" />
 				<include name="src/**/*.cs" />
 				<include name="src/**/*.resx" />
-				<include name="src/**/*.build" />
+				<include name="src/**/Resources/*" />
+				<include name="src/**/*.png" />
+				<include name="src/**/*.xsl" />
+				<include name="src/**/*.htm" />
 				<include name="lib/mono/**" />
+				<include name="artwork/**" />
 				<include name="bld/*" />
 				<include name="common/**" />
 				<include name="SampleProjects/**" />
