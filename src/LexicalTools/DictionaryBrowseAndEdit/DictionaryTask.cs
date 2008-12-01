@@ -28,10 +28,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 	{
 		private DictionaryControl _dictionaryControl;
 		private readonly ViewTemplate _viewTemplate;
-		private UserSettingsForTask _userSettings;
+		private TaskMemory _taskMemory;
 
 		public DictionaryTask(DictionaryBrowseAndEditConfiguration config,
-								LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
+								LexEntryRepository lexEntryRepository,
+								ViewTemplate viewTemplate,
+								TaskMemoryRepository taskMemoryRepository)
 			: base(config, lexEntryRepository)
 		{
 			if (viewTemplate == null)
@@ -39,16 +41,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				throw new ArgumentNullException("viewTemplate");
 			}
 			_viewTemplate = viewTemplate;
-			//  _userSettings = userSettings;
-		}
-
-		//this wants to be in the constructor, but it's waiting until we get rid of this bizarre picocontainer usage that makes it impossible to add arbitrary stuff without modifying everyone's config file
-		public UserSettingsForTask UserSettings
-		{
-			set
-			{
-				_userSettings = value;
-			}
+			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 		}
 
 		public override void Activate()
@@ -57,15 +50,26 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			{
 				base.Activate();
 				_dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate);
+
+				_dictionaryControl.SelectedIndexChanged += new EventHandler(_dictionaryControl_SelectedIndexChanged);
 //   Debug.Assert(_userSettings.Get("one", "0") == "1");
 
-				if(_userSettings !=null && _userSettings.Get("lastUrl", null)!=null)
-					_dictionaryControl.GoToEntry(_userSettings.Get("lastUrl", null));
+				if (_taskMemory != null && _taskMemory.Get("lastUrl", null) != null)
+					_dictionaryControl.GoToEntry(_taskMemory.Get("lastUrl", null));
 			}
 			catch (ConfigurationException)
 			{
 				IsActive = false;
 				throw;
+			}
+		}
+
+		void _dictionaryControl_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			LexEntry entry = _dictionaryControl.CurrentRecord;
+			if(entry !=null)
+			{
+				_taskMemory.Set("lastUrl", GetUrlFromEntry(_dictionaryControl.CurrentRecord));
 			}
 		}
 
@@ -84,6 +88,16 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private static string GetEntryFromUrl(string url)
 		{
 			return url;
+		}
+
+		private static string GetUrlFromEntry(LexEntry entry)
+		{
+			var id = entry.GetOrCreateId(false);
+			if(string.IsNullOrEmpty(id))//review... should we then use a guid?
+			{
+				return null;
+			}
+			return id;
 		}
 
 		/// <summary>

@@ -1428,7 +1428,7 @@ namespace WeSay.Project
 			string[] allFiles = Directory.GetFiles(pathToProjectRoot,
 												   "*",
 												   SearchOption.AllDirectories);
-			string[] antipatterns = {"Cache", "cache", ".bak", ".old", ".liftold"};
+			string[] antipatterns = { "Cache", "cache", ".bak", ".old", ".liftold", TaskMemoryRepository.FileExtensionWithDot};
 
 			foreach (string file in allFiles)
 			{
