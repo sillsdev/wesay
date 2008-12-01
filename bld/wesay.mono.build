@@ -245,7 +245,20 @@
 		</tar>
 	</target>
 
-	<target name="package" depends="dist">
+	<target name="package_clean">
+		<echo message="Deleting exising files from publish folder. Note: this folder is above the project.base.dir" />
+		<delete>
+			<fileset>
+				<include name="${project.base.dir}/../wesay_*" />
+			</fileset>
+		</delete>
+		<echo message="Reverting package changelog debian-src/changelog" />
+		<exec program="hg" workingdir="${project.base.dir}">
+			<arg line="revert debian-src/changelog" />
+		</exec>
+	</target>
+
+	<target name="package" depends="dist package_clean">
 		<exec program="build" basedir="${project.base.dir}/debian-src" workingdir="${project.base.dir}">
 		</exec>
 	</target>
