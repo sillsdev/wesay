@@ -237,6 +237,13 @@ namespace WeSay.Project
 			MoveToFirstInClass(def);
 			MoveToFirstInClass(GetField(Field.FieldNames.EntryLexicalForm.ToString()));
 			MoveToFirstInClass(GetField(Field.FieldNames.ExampleSentence.ToString()));
+
+			//In Nov 2008 (v 0.5) we made the note field multi-paragraph
+			Field note = GetField(LexSense.WellKnownProperties.Note);
+			if (!note.IsMultiParagraph)
+			{
+				note.IsMultiParagraph = true;
+			}
 		}
 
 		/// <summary>
@@ -380,6 +387,8 @@ namespace WeSay.Project
 			noteField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			noteField.Enabled = true;
 			noteField.IsSpellCheckingEnabled = true;
+			noteField.IsMultiParagraph = true;
+
 			masterTemplate.Add(noteField);
 
 			//            Field entryNoteField = new Field(LexEntry.WellKnownProperties.Note, "LexEntry", defaultAnalysisSet);

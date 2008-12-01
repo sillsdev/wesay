@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Autofac;
 
 namespace WeSay.ConfigTool
 {
@@ -9,12 +10,14 @@ namespace WeSay.ConfigTool
 	{
 		private readonly List<ConfigurationControlBase> _areaControls;
 
-		public SettingsControl()
+		public SettingsControl(IContext context)
 		{
 			_areaControls = new List<ConfigurationControlBase>();
 
 			InitializeComponent();
-			_tasksButton.Tag = new TaskListControl();
+
+			Tasks.TaskListPresentationModel m = context.Resolve<Tasks.TaskListPresentationModel>();
+			_tasksButton.Tag = m.View;
 			_areaControls.Add((ConfigurationControlBase) _tasksButton.Tag);
 
 			_writingSystemButton.Tag = new WritingSystemSetup();

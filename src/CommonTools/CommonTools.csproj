@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{64726381-FEA8-47D5-A884-18AED42E93B6}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -96,6 +96,7 @@
 	<Compile Include="DashboardButtonWithIcon.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
+	<Compile Include="DashboardConfiguration.cs" />
 	<Compile Include="DashboardControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -117,7 +118,7 @@
 	<Compile Include="ItemsToDoIndicator.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="ItemsToDoIndicator.designer.cs">
+	<Compile Include="ItemsToDoIndicator.Designer.cs">
 	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
 	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />

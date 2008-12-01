@@ -210,7 +210,7 @@ namespace WeSay.UI
 		[Browsable(false)]
 		public override string Text
 		{
-			set { base.Text = value; }
+			set { base.Text = value;  }
 			get { return base.Text; }
 		}
 

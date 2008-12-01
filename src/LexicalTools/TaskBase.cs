@@ -28,31 +28,26 @@ namespace WeSay.LexicalTools
 		private int _remainingCount;
 		private int _referenceCount;
 
-		public TaskBase(string label,
-						string longLabel,
-						string description,
-						string remainingCountText,
-						string referenceCountText,
-						bool isPinned,
+		public TaskBase(ITaskConfiguration config,
 						LexEntryRepository lexEntryRepository)
 		{
-			if (label == null)
+			if (config.Label == null)
 			{
 				throw new ArgumentNullException("label");
 			}
-			if (longLabel == null)
+			if (config.LongLabel == null)
 			{
 				throw new ArgumentNullException("longLabel");
 			}
-			if (description == null)
+			if (config.Description == null)
 			{
 				throw new ArgumentNullException("description");
 			}
-			if (remainingCountText == null)
+			if (config.RemainingCountText == null)
 			{
 				throw new ArgumentNullException("remainingCountText");
 			}
-			if (referenceCountText == null)
+			if (config.ReferenceCountText == null)
 			{
 				throw new ArgumentNullException("referenceCountText");
 			}
@@ -63,12 +58,12 @@ namespace WeSay.LexicalTools
 			_lexEntryRepository = lexEntryRepository;
 			// convert any amount of whitespace to one space
 			Regex rgx = new Regex("\\s+");
-			_label = rgx.Replace(label.Trim(), " ");
-			_longLabel = rgx.Replace(longLabel.Trim(), " ");
-			_description = rgx.Replace(description.Trim(), " ");
-			_remainingCountText = rgx.Replace(remainingCountText.Trim(), " ");
-			_referenceCountText = rgx.Replace(referenceCountText.Trim(), " ");
-			_isPinned = isPinned;
+			_label = rgx.Replace (config.Label.Trim(), " ");
+			_longLabel = rgx.Replace (config.LongLabel.Trim(), " ");
+			_description = rgx.Replace (config.Description.Trim(), " ");
+			_remainingCountText = rgx.Replace (config.RemainingCountText.Trim(), " ");
+			_referenceCountText = rgx.Replace (config.ReferenceCountText.Trim(), " ");
+			_isPinned = config.IsPinned;
 
 			_cachePath = WeSayWordsProject.Project.PathToCache;
 			_cacheFilePath = Path.Combine(_cachePath, MakeSafeName(Label + ".cache"));
@@ -76,19 +71,7 @@ namespace WeSay.LexicalTools
 			ReadCacheFile();
 		}
 
-		public TaskBase(string label,
-						string longLabel,
-						string description,
-						bool isPinned,
-						LexEntryRepository lexEntryRepository)
-				: this(
-						label,
-						longLabel,
-						description,
-						string.Empty,
-						string.Empty,
-						isPinned,
-						lexEntryRepository) {}
+
 
 		public virtual string Description
 		{
