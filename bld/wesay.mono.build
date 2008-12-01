@@ -1,4 +1,4 @@
-<project name="Palaso Build" default="build">
+<project name="WeSay Build" default="build">
 
 <!-- ***************************************************************** -->
 <!-- ********* 			Set a few properties			   *********** -->
@@ -60,6 +60,19 @@
 		<include name="Addin.LiftReports.Tests\Addin.LiftReports.Tests.proj.build" />
 		<include name="CommonTools.Tests\CommonTools.Tests.proj.build" />
 		<include name="WeSay.UI.Tests\WeSay.UI.Tests.proj.build" />
+	</fileset>
+
+	<!-- List of src files for distribution-->
+	<fileset id="project.srcfiles" basedir="${project.base.dir}">
+		<include name="src/**/*.cs" />
+		<include name="src/**/*.resx" />
+		<include name="src/**/*.build" />
+		<include name="lib/mono/**" />
+		<include name="bld/*" />
+		<include name="common/**" />
+		<include name="SampleProjects/**" />
+		<include name="templates/**" />
+		<exclude name=".hg/**" />
 	</fileset>
 
 	<target name="clean" description="Delete all previously compiled binaries.">
@@ -142,7 +155,7 @@
 		<call target="build-only"/>
 	</target>
 
-	<target name="build-only" depends="assemblyinfo make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
+	<target name="build-only" depends="make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
 		<nant target="build">
 			<properties>
 				<property name="build.defines" value="${build.defines}" />
@@ -213,6 +226,28 @@
 			</categories>
 			</test>
 		</nunit2>
+	</target>
+
+	<target name="dist" depends="assemblyinfo make-output-dir, set-build-config, set-runtime-config">
+		<tar destfile="${project.output.dir}/wesay-src-${version}.tar.gz" compression="GZip">
+			<fileset basedir="${project.base.dir}">
+				<include name="src/**/*.cs" />
+				<include name="src/**/*.resx" />
+				<include name="src/**/*.build" />
+				<include name="lib/mono/**" />
+				<include name="bld/*" />
+				<include name="common/**" />
+				<include name="SampleProjects/**" />
+				<include name="templates/**" />
+				<exclude name=".hg/**" />
+				<exclude name="src/**/nant.resx.bak/" />
+			</fileset>
+		</tar>
+	</target>
+
+	<target name="package" depends="dist">
+		<exec program="build" basedir="${project.base.dir}/debian-src" workingdir="${project.base.dir}">
+		</exec>
 	</target>
 
 	<target name="install" depends="set-build-config, set-runtime-config, set-output-dir">
