@@ -25,6 +25,12 @@ namespace WeSay.Data
 					_pseudoTicks += 1;
 					dt = dt.AddTicks(_pseudoTicks);
 				}
+				else if (dt.Ticks == _lastDateTime.Ticks + _pseudoTicks)
+				{
+					_lastDateTime = dt;
+					_pseudoTicks = 1;
+					dt = dt.AddTicks(_pseudoTicks);
+				}
 				else
 				{
 					_lastDateTime = dt;
