@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
@@ -47,14 +48,14 @@ namespace WeSay.ConfigTool.Tests
 				{
 					CreateNewAndGotoBackupControl(tempFolder.FolderPath);
 
-					TextBoxTester t = new TextBoxTester("_pathText");
+					TextBoxTester t = new TextBoxTester("_pathText", _window);
 					t.Properties.Text = @"q:\";
 					CloseApp();
 
 					//now reopen
 					OpenExisting(tempFolder.FolderPath);
 					GoToBackupTab();
-					t = new TextBoxTester("_pathText");
+					t = new TextBoxTester("_pathText", _window);
 
 					Assert.AreEqual(@"q:\", t.Properties.Text);
 				}
