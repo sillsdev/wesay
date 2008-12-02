@@ -80,6 +80,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		[Category("Known Mono Issue")]
 		public void BackupNow_FirstTime_CreatesValidRepositoryAndWorkingTree()
 		{
 			using (BackupScenario scenario = new BackupScenario("BackupNow_NewFolder_CreatesNewRepository"))
