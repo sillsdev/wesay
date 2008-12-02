@@ -131,7 +131,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_ReturnsMinimumPossibleTime()
 		{
-			Assert.AreEqual(RepositoryUnderTest.LastModified, DateTime.MinValue);
+			Assert.AreEqual(new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc), RepositoryUnderTest.LastModified);
 		}
 
 		[Test]

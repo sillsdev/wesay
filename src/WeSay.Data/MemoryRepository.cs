@@ -12,7 +12,7 @@ namespace WeSay.Data
 		protected readonly Dictionary<T, RepositoryId> objectToIdHashtable =
 				new Dictionary<T, RepositoryId>();
 
-		private DateTime lastModified = DateTime.MinValue;
+		private DateTime lastModified = new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc);
 
 		public DateTime LastModified
 		{
