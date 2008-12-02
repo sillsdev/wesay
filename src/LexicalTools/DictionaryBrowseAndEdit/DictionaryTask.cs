@@ -30,6 +30,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private readonly ViewTemplate _viewTemplate;
 		private TaskMemory _taskMemory;
 
+		public const string LastUrlKey = "lastUrl";
+
 		public DictionaryTask(DictionaryBrowseAndEditConfiguration config,
 								LexEntryRepository lexEntryRepository,
 								ViewTemplate viewTemplate,
@@ -54,8 +56,21 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				_dictionaryControl.SelectedIndexChanged += new EventHandler(_dictionaryControl_SelectedIndexChanged);
 //   Debug.Assert(_userSettings.Get("one", "0") == "1");
 
-				if (_taskMemory != null && _taskMemory.Get("lastUrl", null) != null)
-					_dictionaryControl.GoToEntry(_taskMemory.Get("lastUrl", null));
+				if (_taskMemory != null && _taskMemory.Get(LastUrlKey, null) != null)
+				{
+					try
+					{
+						  _dictionaryControl.GoToEntry(_taskMemory.Get(LastUrlKey, null));
+					}
+					catch (Exception error)
+					{
+						//there's no scenario where it is worth crashing or even notifying
+						Logger.WriteEvent("Error: " + error.Message);
+#if DEBUG
+						ErrorReport.ReportNonFatalMessage("Only seeing this because youre in debug mode:\r\n"+error.Message);
+#endif
+					}
+				}
 			}
 			catch (ConfigurationException)
 			{
@@ -69,7 +84,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			LexEntry entry = _dictionaryControl.CurrentRecord;
 			if(entry !=null)
 			{
-				_taskMemory.Set("lastUrl", GetUrlFromEntry(_dictionaryControl.CurrentRecord));
+				_taskMemory.Set(LastUrlKey, GetUrlFromEntry(_dictionaryControl.CurrentRecord));
 			}
 		}
 

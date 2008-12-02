@@ -57,10 +57,26 @@ namespace WeSay.LexicalTools.Tests
 
 
 		[Test]
-		public void CreateAndActivate_UserSettingsIsEmpty_Ok()
+		public void CreateAndActivate_TaskMemoryIsEmpty_Ok()
 		{
-			var task = new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, _viewTemplate, new TaskMemoryRepository());//, new UserSettingsForTask());
+			var task = new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, _viewTemplate, new TaskMemoryRepository());
 			task.Activate();
+			task.Deactivate();
+		}
+
+		[Test]
+		public void CreateAndActivate_LastUrlDoesntExistAnymore_DoesNotCrash()
+		{
+			DictionaryBrowseAndEditConfiguration config = DictionaryBrowseAndEditConfiguration.CreateForTests();
+
+			var repository = new TaskMemoryRepository();
+			repository.FindOrCreateSettingsByTaskId(config.TaskName).Set(DictionaryTask.LastUrlKey, "longGone");
+
+			var task = new DictionaryTask(config, _lexEntryRepository, _viewTemplate, repository);
+			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+			{
+				task.Activate();
+			}
 			task.Deactivate();
 		}
 

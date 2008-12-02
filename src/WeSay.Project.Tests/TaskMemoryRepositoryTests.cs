@@ -20,6 +20,39 @@ namespace WeSay.Project.Tests
 			}
 		}
 
+		[Test]
+		public void PersistThenGet_TwoTasksWithSameKey_GivesCorrectValue()
+		{
+			using (var dir = new TemporaryFolder("TaskMemoryRepositoryTests"))
+			{
+				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.FolderPath))
+				{
+					repo.FindOrCreateSettingsByTaskId("one").Set("common", "forOne");
+					repo.FindOrCreateSettingsByTaskId("two").Set("common", "forTwo");
+					Assert.AreEqual("forOne", repo.FindOrCreateSettingsByTaskId("one").Get("common", "blah"));
+					Assert.AreEqual("forTwo", repo.FindOrCreateSettingsByTaskId("two").Get("common", "blah"));
+				}
+				//now reopen and verify
+				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.FolderPath))
+				{
+					Assert.AreEqual("forOne", repo.FindOrCreateSettingsByTaskId("one").Get("common", "blah"));
+					Assert.AreEqual("forTwo", repo.FindOrCreateSettingsByTaskId("two").Get("common", "blah"));
+				}
+			}
+		}
+
+		[Test]
+		public void FindOrCreateSettingsByTaskId_FileCorrupt_CreatesNew()
+		{
+			using (var dir = new TemporaryFolder("TaskMemoryRepositoryTests"))
+			{
+				File.WriteAllText(dir.Combine("foo" + TaskMemoryRepository.FileExtensionWithDot), "I am corrupt");
+				using (var seeIfWeCanLoad = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.FolderPath))
+				{
+				}
+			}
+		}
+
 
 		[Test]
 		public void FindOrCreateSettingsByTaskId_NotFound_CreatesNew()
@@ -81,5 +114,9 @@ namespace WeSay.Project.Tests
 			memory.Set("color", "blue");
 			Assert.AreEqual("blue", memory.Get("color", "red"));
 		}
+
+
+
+
 	}
 }

@@ -34,16 +34,26 @@ namespace WeSay.Project
 		public static TaskMemoryRepository CreateOrLoadTaskMemoryRepository(string projectName, string settingsDirectory)
 		{
 			var path = System.IO.Path.Combine(settingsDirectory, projectName+FileExtensionWithDot);
-			TaskMemoryRepository repo;
+			TaskMemoryRepository repo=null;
 			if(File.Exists(path))
 			{
-				var x = new XmlSerializer(typeof(TaskMemoryRepository));
-				using (FileStream stream = File.OpenRead(path))
+				try
 				{
-					repo = x.Deserialize(stream) as TaskMemoryRepository;
+
+					var x = new XmlSerializer(typeof (TaskMemoryRepository));
+					using (FileStream stream = File.OpenRead(path))
+					{
+						repo = x.Deserialize(stream) as TaskMemoryRepository;
+					}
+				}
+				catch(Exception error)
+				{
+					Palaso.Reporting.Logger.WriteEvent("Error trying to read task memory: "+error.Message);
+					//now just make a new one, this is the kind of data we can through away
 				}
 			}
-			else
+
+			if(repo==null)
 			{
 				repo = new TaskMemoryRepository();
 			}
