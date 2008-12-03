@@ -1198,6 +1198,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		[Category("NUnit Windows Forms")]
 		public void ClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_DeleteButtonStaysEnabled()
 		{
 			AddInitialEntries();
