@@ -27,6 +27,9 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public abstract void SetUp();
 
+		[TearDown]
+		public abstract void TearDown();
+
 		[Test]
 		public void CreateItem_NotNull()
 		{
@@ -128,7 +131,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_ReturnsMinimumPossibleTime()
 		{
-			Assert.AreEqual(RepositoryUnderTest.LastModified, DateTime.MinValue);
+			Assert.AreEqual(new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc), RepositoryUnderTest.LastModified);
 		}
 
 		[Test]
@@ -231,6 +234,9 @@ namespace WeSay.Data.Tests
 
 		[SetUp]
 		public abstract void SetUp();
+
+		[TearDown]
+		public abstract void TearDown();
 
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
@@ -462,6 +468,9 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public abstract void SetUp();
 
+		[TearDown]
+		public abstract void TearDown();
+
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
 		{
@@ -676,6 +685,9 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public abstract void SetUp();
 
+		[TearDown]
+		public abstract void TearDown();
+
 		public void SetState()
 		{
 			CreateInitialItem();
@@ -832,6 +844,9 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public abstract void SetUp();
 
+		[TearDown]
+		public abstract void TearDown();
+
 		public void SetState()
 		{
 			CreateItemToTest();
@@ -982,6 +997,9 @@ namespace WeSay.Data.Tests
 
 		[SetUp]
 		public abstract void SetUp();
+
+		[TearDown]
+		public abstract void TearDown();
 
 		public void SetState()
 		{

@@ -35,7 +35,7 @@ namespace WeSay.LexicalModel
 			CreateEmptyLiftFileIfNeeded(filePath);
 			LockLift();
 			MigrateLiftIfNeeded(progressState);
-			LastModified = DateTime.MinValue;
+			LastModified = new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc);
 			LoadAllLexEntries();
 			//Now that the constructor has not thrown we can set this back to false
 			_disposed = false;
