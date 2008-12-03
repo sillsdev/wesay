@@ -18,7 +18,7 @@ install-stamp:
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-	$(NANT) -D:INSTALL_DIR=debian/tmp
+	$(NANT) install -D:INSTALL_DIR=debian/tmp
 	dh_installdirs
 	dh_install --autodest
 	dh_installdocs
