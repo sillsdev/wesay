@@ -540,7 +540,11 @@ namespace WeSay.LexicalTools
 				Logger.WriteEvent("DeleteWord_Cancelled");
 				return;
 			}
+			DeleteWord();
+		}
 
+		internal void DeleteWord()
+		{
 			Debug.Assert(CurrentIndex >= 0);
 			if (CurrentIndex == -1)
 			{
