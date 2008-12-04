@@ -75,9 +75,13 @@ namespace WeSay.Project
 		public void Dispose()
 		{
 			var x = new XmlSerializer(typeof(TaskMemoryRepository));
-			using (FileStream stream = File.OpenWrite(Path))
+			if(File.Exists(Path))
 			{
-				 x.Serialize(stream, this);
+				File.Delete(Path);
+			}
+			using (StreamWriter writer = File.CreateText(Path))
+			{
+				 x.Serialize(writer, this);
 			}
 		}
 
