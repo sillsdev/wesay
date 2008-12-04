@@ -20,7 +20,7 @@ install-stamp:
 	dh_clean -k
 	$(NANT) install -D:INSTALL_DIR=../debian/tmp
 	dh_installdirs
-	dh_install --autodest
+	dh_install
 	dh_installdocs
 	dh_installchangelogs
 	dh_compress
