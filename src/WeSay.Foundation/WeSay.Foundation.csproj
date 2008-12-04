@@ -116,7 +116,11 @@
 	<Compile Include="ApproximateMatcher.cs" />
 	<Compile Include="BackupMaker.cs" />
 	<Compile Include="CommonEnumerations.cs" />
+	<Compile Include="DelegateDefinations.cs" />
+	<Compile Include="DisposableAction.cs" />
 	<Compile Include="FlagState.cs" />
+	<Compile Include="GenericEventArgs.cs" />
+	<Compile Include="Guard.cs" />
 	<Compile Include="IDisplayStringAdaptor.cs" />
 	<Compile Include="IBindableControl.cs" />
 	<Compile Include="IThingOnDashboard.cs" />

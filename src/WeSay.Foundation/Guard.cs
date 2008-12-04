@@ -1,7 +1,9 @@
-namespace Rhino.Commons
-{
-	using System;
+using System;
 
+//two of these methods originally from RhinoCommons
+
+namespace WeSay.Foundation
+{
 	/// <summary>
 	/// Helper class for guard statements, which allow prettier
 	/// code for guard clauses
@@ -25,6 +27,12 @@ namespace Rhino.Commons
 			if(assertion == false)
 				return;
 			throw new InvalidOperationException(message);
+		}
+
+		public static void AgainstNull(object value, string valueName)
+		{
+			if (value == null)
+				throw new ArgumentNullException(valueName);
 		}
 
 		/// <summary>

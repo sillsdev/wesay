@@ -13,6 +13,7 @@ namespace WeSay.Project
 	public class ViewTemplate: List<Field>
 	{
 		private string _id = "Default View Template";
+		private bool _doWantGhosts=true;
 
 		/// <summary>
 		/// For serialization only
@@ -649,5 +650,29 @@ namespace WeSay.Project
 				Fields.Insert(newIndexAmongAllFields, field);
 			}
 		}
+
+		public GhostingRule GetGhostingRuleForField(string fieldName)
+		{
+			return new GhostingRule(DoWantGhosts);
+		}
+
+		public bool DoWantGhosts
+		{
+			get { return _doWantGhosts; }
+
+			set { _doWantGhosts = value; }
+		}
+	}
+
+	/// <summary>
+	/// this may get more complicated someday
+	/// </summary>
+	public class GhostingRule
+	{
+		public GhostingRule(bool show)
+		{
+			ShowGhost = show;
+		}
+		public bool ShowGhost{ get; set;}
 	}
 }

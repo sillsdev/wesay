@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using WeSay.Foundation.Options;
 using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddMissingInfo;
@@ -290,5 +291,17 @@ namespace WeSay.LexicalTools.Tests
 				}
 			}
 		}
+
+//  in progress      [Test]
+//        public void OneSenseFromGatherBySemDom_ShowsOnlyOneMeaning()
+//        {
+//            LexEntry entry = CreateEmptyEntryWithOneSense();
+//            LexSense sense = entry.Senses[0];
+//            var sds = sense.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+//            var list = WeSay.Project.WeSayWordsProject.Project.GetOptionsList(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+//            sds.Add(list.Options[0].Key);
+//
+//
+//        }
 	}
 }

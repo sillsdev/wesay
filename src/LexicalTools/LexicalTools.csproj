@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="AddMissingInfo\MissingInfoConfiguration.cs" />
+	<Compile Include="AddMissingInfo\MissingInfoViewMaker.cs" />
 	<Compile Include="TaskConfigurationBase.cs" />
 	<Compile Include="DictionaryBrowseAndEdit\ConfirmDelete.cs">
 	  <SubType>Form</SubType>

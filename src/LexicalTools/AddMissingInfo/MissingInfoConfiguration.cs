@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using WeSay.Foundation;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.AddMissingInfo
@@ -11,11 +13,26 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 		}
 
-
-
 		public override string ToString()
 		{
 			return LongLabel;
+		}
+
+		public DashboardGroup Group
+		{
+			get
+			{
+				if (IsBaseFormFillingTask)
+				{
+					return DashboardGroup.Refine;
+				}
+				return DashboardGroup.Describe;
+			}
+		}
+
+		private bool IsBaseFormFillingTask
+		{
+			get { return FieldsToShow.Contains(LexEntry.WellKnownProperties.BaseForm); }
 		}
 
 		protected override IEnumerable<KeyValuePair<string, string>> ValuesToSave
@@ -89,6 +106,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				", missingInfoField,label,description, fieldsToShow,fieldsToShow);
 
 			 return new MissingInfoConfiguration(x);
+		}
+
+
+		public ViewTemplate CreateViewTemplate(ViewTemplate template)
+		{
+			return MissingInfoViewMaker.CreateViewTemplate(this, template);
 		}
 	}
 }

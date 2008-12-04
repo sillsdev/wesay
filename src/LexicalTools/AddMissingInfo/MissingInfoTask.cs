@@ -16,41 +16,25 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		private readonly Field _missingInfoField;
 		private readonly ViewTemplate _viewTemplate;
 		private bool _dataHasBeenRetrieved;
-		private readonly bool _isBaseFormFillingTask;
+		//private readonly bool _isBaseFormFillingTask;
 		private readonly WritingSystem _writingSystem;
+		private MissingInfoConfiguration _config;
 
 		public MissingInfoTask(MissingInfoConfiguration config,
 							   LexEntryRepository lexEntryRepository,
-							   ViewTemplate viewTemplate)
+							   ViewTemplate defaultViewTemplate)
 			: base( config, lexEntryRepository)
 		{
-			if (config.MissingInfoField == null)
-			{
-				throw new ArgumentNullException("MissingInfoField");
-			}
-			if (viewTemplate == null)
-			{
-				throw new ArgumentNullException("viewTemplate");
-			}
+			_config = config;
 
-			_missingInfoField = viewTemplate[config.MissingInfoField];
+			Guard.AgainstNull(config.MissingInfoField, "MissingInfoField");
+			Guard.AgainstNull(defaultViewTemplate, "viewTemplate");
 
-			_viewTemplate = CreateViewTemplateFromListOfFields(viewTemplate, config.FieldsToShow);
-			MarkReadOnlyFields(config.FieldsToShowReadOnly);
+			_missingInfoField = defaultViewTemplate[config.MissingInfoField];
 
-			//hack until we overhaul how Tasks are setup:
-			_isBaseFormFillingTask = config.FieldsToShow.Contains(LexEntry.WellKnownProperties.BaseForm);
-			if (_isBaseFormFillingTask)
-			{
-				Field flagField = new Field();
-				flagField.DisplayName = StringCatalog.Get("~This word has no Base Form",
-														  "The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.");
-				flagField.DataTypeName = "Flag";
-				flagField.ClassName = "LexEntry";
-				flagField.FieldName = "flag_skip_" + config.MissingInfoField;
-				flagField.Enabled = true;
-				_viewTemplate.Add(flagField);
-			}
+			_viewTemplate = config.CreateViewTemplate(defaultViewTemplate);
+//            _viewTemplate = CreateViewTemplateFromListOfFields(defaultViewTemplate, config.FieldsToShow);
+
 			_writingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
@@ -76,76 +60,13 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			get
 			{
-				if (_isBaseFormFillingTask)
-				{
-					return DashboardGroup.Refine;
-				}
-				return base.Group;
+				return _config.Group;
 			}
 		}
 
 
 
-		private void MarkReadOnlyFields(string fieldsToShowReadOnly)
-		{
-			string[] readOnlyFields = SplitUpFieldNames(fieldsToShowReadOnly);
 
-			for (int i = 0;i < _viewTemplate.Count;i++)
-			{
-				Field field = _viewTemplate[i];
-				foreach (string s in readOnlyFields)
-				{
-					if (s == field.FieldName)
-					{
-						Field readOnlyVersion = new Field(field);
-						readOnlyVersion.Visibility = CommonEnumerations.VisibilitySetting.ReadOnly;
-						_viewTemplate.Remove(field);
-						_viewTemplate.Insert(i, readOnlyVersion);
-					}
-				}
-			}
-		}
-
-		private static ViewTemplate CreateViewTemplateFromListOfFields(IEnumerable<Field> fieldList,
-																	   string fieldsToShow)
-		{
-			string[] fields = SplitUpFieldNames(fieldsToShow);
-			ViewTemplate viewTemplate = new ViewTemplate();
-			foreach (Field field in fieldList)
-			{
-				if (Array.IndexOf(fields, field.FieldName) >= 0)
-				{
-					if (field.Enabled == false)
-						//make sure specified fields are shown (greg's ws-356)
-					{
-						Field enabledField = new Field(field);
-						enabledField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
-						enabledField.Enabled = true;
-						viewTemplate.Add(enabledField);
-					}
-					else
-					{
-						if (field.Visibility != CommonEnumerations.VisibilitySetting.Visible)
-							//make sure specified fields are visible (not in 'rare mode)
-						{
-							Field visibleField = new Field(field);
-							visibleField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
-							viewTemplate.Add(visibleField);
-						}
-						else
-						{
-							viewTemplate.Add(field);
-						}
-					}
-				}
-			}
-			return viewTemplate;
-		}
-
-		private static string[] SplitUpFieldNames(string fieldsToShow)
-		{
-			return fieldsToShow.Split(new char[] {' ', ','}, StringSplitOptions.RemoveEmptyEntries);
-		}
 
 		public override void Activate()
 		{
