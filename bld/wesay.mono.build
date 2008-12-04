@@ -276,6 +276,9 @@
 		<copy todir="${USR_SHARE}">
 			<fileset basedir="${project.output.dir}">
 				<include name="*" />
+				<exclude name="*Tests.dll" />
+				<exclude name="*Test.dll" />
+				<exclude name="*.mdb" />
 			 </fileset>
 		</copy>
 		<copy todir="${path::combine(USR_SHARE, 'common')}">
