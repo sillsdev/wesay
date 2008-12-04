@@ -116,7 +116,7 @@
 	<Compile Include="ApproximateMatcher.cs" />
 	<Compile Include="BackupMaker.cs" />
 	<Compile Include="CommonEnumerations.cs" />
-	<Compile Include="DelegateDefinations.cs" />
+	<Compile Include="DelegateDefinitions.cs" />
 	<Compile Include="DisposableAction.cs" />
 	<Compile Include="FlagState.cs" />
 	<Compile Include="GenericEventArgs.cs" />
