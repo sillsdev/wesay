@@ -57,15 +57,15 @@ namespace WeSay.LexicalTools
 										  string semanticDomainsQuestionFileName,
 										  ViewTemplate viewTemplate,
 										  string semanticDomainFieldName)
-				: base(
-						label,
-						longLabel,
-						description,
-						remainingCountText,
-						referenceCountText,
-						false,
-						lexEntryRepository,
-						viewTemplate)
+			: base(
+					label,
+					longLabel,
+					description,
+					remainingCountText,
+					referenceCountText,
+					false,
+					lexEntryRepository,
+					viewTemplate)
 		{
 			if (semanticDomainsQuestionFileName == null)
 			{
@@ -80,13 +80,13 @@ namespace WeSay.LexicalTools
 			_currentQuestionIndex = 0;
 			_words = null;
 			_semanticDomainQuestionsFileName =
-					DetermineActualQuestionsFileName(semanticDomainsQuestionFileName);
+				DetermineActualQuestionsFileName(semanticDomainsQuestionFileName);
 			if (!File.Exists(_semanticDomainQuestionsFileName))
 			{
 				string pathInProject =
-						Path.Combine(
-								WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
-								_semanticDomainQuestionsFileName);
+					Path.Combine(
+						WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
+						_semanticDomainQuestionsFileName);
 				if (File.Exists(pathInProject))
 				{
 					_semanticDomainQuestionsFileName = pathInProject;
@@ -98,17 +98,31 @@ namespace WeSay.LexicalTools
 					if (!File.Exists(pathInProgramDir))
 					{
 						throw new ApplicationException(
-								string.Format(
-										"Could not find the semanticDomainQuestions file {0}. Expected to find it at: {1} or {2}. The name of the file is influenced by the first enabled writing system for the Semantic Domain Field.",
-										_semanticDomainQuestionsFileName,
-										pathInProject,
-										pathInProgramDir));
+							string.Format(
+								"Could not find the semanticDomainQuestions file {0}. Expected to find it at: {1} or {2}. The name of the file is influenced by the first enabled writing system for the Semantic Domain Field.",
+								_semanticDomainQuestionsFileName,
+								pathInProject,
+								pathInProgramDir));
 					}
 					_semanticDomainQuestionsFileName = pathInProgramDir;
 				}
 			}
 
 			_semanticDomainField = viewTemplate.GetField(semanticDomainFieldName);
+
+
+			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
+		}
+
+		private void EnsureQuestionsFileExists()
+		{
+			if (!File.Exists(_semanticDomainQuestionsFileName))
+			{
+				throw new ApplicationException(
+					string.Format(
+						"Could not find the semanticDomainQuestions file {0}.",
+						_semanticDomainQuestionsFileName));
+			}
 		}
 
 		private string DetermineActualQuestionsFileName(string nameFromTaskConfiguration)
@@ -626,6 +640,8 @@ namespace WeSay.LexicalTools
 
 		public override void Activate()
 		{
+			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
+
 			base.Activate();
 			if (DomainKeys == null)
 			{
