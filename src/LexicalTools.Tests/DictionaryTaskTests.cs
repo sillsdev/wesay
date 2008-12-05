@@ -73,7 +73,11 @@ namespace WeSay.LexicalTools.Tests
 			repository.FindOrCreateSettingsByTaskId(config.TaskName).Set(DictionaryTask.LastUrlKey, "longGone");
 
 			var task = new DictionaryTask(config, _lexEntryRepository, _viewTemplate, repository);
+#if DEBUG
+	  //the code doesn't show the errror box in release builds, but
+			//the builder publishing configuration does run tests in release builds
 			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+#endif
 			{
 				task.Activate();
 			}
