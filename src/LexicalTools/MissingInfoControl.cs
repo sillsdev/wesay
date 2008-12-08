@@ -79,11 +79,12 @@ namespace WeSay.LexicalTools
 
 			_recordsListBox.BorderStyle = BorderStyle.None;
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
+			_recordsListBox.MouseDown += _recordsListBox_MouseDown;
 			_recordsListBox.Enter += _recordsListBox_Enter;
 			_recordsListBox.Leave += _recordsListBox_Leave;
 			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
-
 			_recordsListBox.WritingSystem = listWritingSystem;
+
 			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.BorderStyle = BorderStyle.None;
 			_completedRecordsListBox.SelectedIndexChanged += OnCompletedRecordSelectionChanged;
@@ -96,6 +97,11 @@ namespace WeSay.LexicalTools
 			_btnNextWord.BringToFront();
 			_btnPreviousWord.BringToFront();
 			SetCurrentRecordFromRecordList();
+		}
+
+		private void _recordsListBox_MouseDown(object sender, MouseEventArgs e)
+		{
+			_recordsListBox_Enter(sender, e);
 		}
 
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
@@ -452,6 +458,7 @@ namespace WeSay.LexicalTools
 			{
 				if (_completedRecords.Contains(_currentRecord))
 				{
+
 					_completedRecords.Remove(_currentRecord);
 				}
 				if (!_todoRecords.Contains(_currentRecord))
@@ -483,12 +490,14 @@ namespace WeSay.LexicalTools
 
 		private void ClearSelectionForCompletedRecordsListBox()
 		{
+			_completedRecordsListBox.SelectedIndex = -1;
 			_completedRecordsListBox.HideSelection = true;
 			_recordsListBox.HideSelection = false;
 		}
 
 		private void ClearSelectionForRecordsListBox()
 		{
+			_recordsListBox.SelectedIndex = -1;
 			_recordsListBox.HideSelection = true;
 			_completedRecordsListBox.HideSelection = false;
 		}
