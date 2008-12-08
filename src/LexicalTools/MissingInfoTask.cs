@@ -103,26 +103,26 @@ namespace WeSay.LexicalTools
 		/// Creates a generic Lexical Field editing task
 		/// </summary>
 		/// <param name="lexEntryRepository">The lexEntryRepository that will provide the data</param>
-		/// <param name="missingInfoField">The field declaration of what is missing</param>
+		/// <param name="field">The field declaration of what is missing</param>
 		/// <param name="label">The task label</param>
 		/// <param name="longLabel">Slightly longer task label (for ToolTips)</param>
 		/// <param name="description">The task description</param>
 		/// <param name="remainingCountText">Text describing the remaining count</param>
 		/// <param name="referenceCountText">Text describing the reference count</param>
 		/// <param name="viewTemplate">The base viewTemplate</param>
-		/// <param name="fieldsToShow">The fields to show from the base Field Inventory</param>
+		/// <param name="showfields">The fields to show from the base Field Inventory</param>
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
-							   string missingInfoField,
+							   string field,
 							   string label,
 							   string longLabel,
 							   string description,
 							   string remainingCountText,
 							   string referenceCountText,
 							   ViewTemplate viewTemplate,
-							   string fieldsToShow)
+							   string showfields)
 				: this(
 						lexEntryRepository,
-						missingInfoField,
+						field,
 						label,
 						longLabel,
 						description,
@@ -130,14 +130,14 @@ namespace WeSay.LexicalTools
 						referenceCountText,
 						viewTemplate)
 		{
-			if (fieldsToShow == null)
+			if (showfields == null)
 			{
-				throw new ArgumentNullException("fieldsToShow");
+				throw new ArgumentNullException("showfields");
 			}
-			_viewTemplate = CreateViewTemplateFromListOfFields(viewTemplate, fieldsToShow);
+			_viewTemplate = CreateViewTemplateFromListOfFields(viewTemplate, showfields);
 
 			//hack until we overhaul how Tasks are setup:
-			_isBaseFormFillingTask = fieldsToShow.Contains(LexEntry.WellKnownProperties.BaseForm);
+			_isBaseFormFillingTask = showfields.Contains(LexEntry.WellKnownProperties.BaseForm);
 			if (_isBaseFormFillingTask)
 			{
 				Field flagField = new Field();
@@ -145,7 +145,7 @@ namespace WeSay.LexicalTools
 														  "The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.");
 				flagField.DataTypeName = "Flag";
 				flagField.ClassName = "LexEntry";
-				flagField.FieldName = "flag_skip_" + missingInfoField;
+				flagField.FieldName = "flag_skip_" + field;
 				flagField.Enabled = true;
 				_viewTemplate.Add(flagField);
 			}

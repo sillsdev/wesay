@@ -1,4 +1,4 @@
-<project name="Palaso Build" default="build">
+<project name="WeSay Build" default="build">
 
 <!-- ***************************************************************** -->
 <!-- ********* 			Set a few properties			   *********** -->
@@ -62,6 +62,19 @@
 		<include name="WeSay.UI.Tests\WeSay.UI.Tests.proj.build" />
 	</fileset>
 
+	<!-- List of src files for distribution-->
+	<fileset id="project.srcfiles" basedir="${project.base.dir}">
+		<include name="src/**/*.cs" />
+		<include name="src/**/*.resx" />
+		<include name="src/**/*.build" />
+		<include name="lib/mono/**" />
+		<include name="bld/*" />
+		<include name="common/**" />
+		<include name="SampleProjects/**" />
+		<include name="templates/**" />
+		<exclude name=".hg/**" />
+	</fileset>
+
 	<target name="clean" description="Delete all previously compiled binaries.">
 		<delete>
 			<fileset>
@@ -69,21 +82,25 @@
 				<include name="../**/obj/**" />
 				<include name="../output/**" />
 				<include name="../release/output/*" />
+				<include name="../src/**/nant.resx.bak/**" />
 				<exclude name="../.hg/**" />
 				<exclude name="../lib/**" />
 			</fileset>
 		</delete>
+	</target>
 
-		<nant target="clean">
-			<buildfiles refid="project.buildfiles.src" />
-		</nant>
+	<target name="revision_teamcityhg">
+		<property name="teamcity" value="${environment::get-variable('BUILD_NUMBER')}" />
+		<regex pattern="^(?'revision'[^:]*)" input="${teamcity}" />
+		<property name="revision" value="${string::trim(revision)}" />
+		<echo message="Revision: ${revision}" />
 	</target>
 
 	<target name="revision">
-		<property name="revision" value="${environment::get-variable(BUILD_VERSION)}"/>
+		<property name="revision" value="${environment::get-variable(BUILD_NUMBER)}"/>
 	</target>
 
-	<target name="version" depends="revision">
+	<target name="version" depends="revision_teamcityhg">
 		<loadfile property="version" file="version.txt">
 			<filterchain>
 				<expandproperties />
@@ -132,14 +149,14 @@
 	</target>
 
 	<target name="build" description="Build all targets." depends="clean">
-		<call target="build.solution"/>
+		<call target="build-only"/>
 	</target>
 
 	<target name="rebuild">
-		<call target="build.solution"/>
+		<call target="build-only"/>
 	</target>
 
-	<target name="build.solution" depends="make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
+	<target name="build-only" depends="make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
 		<nant target="build">
 			<properties>
 				<property name="build.defines" value="${build.defines}" />
@@ -155,7 +172,11 @@
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
 	</target>
 
-	 <target name="test" depends="build">
+	<target name="test" description="Build all targets." depends="build-only">
+		<call target="test-only"/>
+	</target>
+
+	 <target name="test-only">
 <!-- Run tests the first time without stopping the build under on failing tests because we want to be able to see ALL failing tests in the log.
 		The downside to this is that TeamCity will show a passing build even with failing tests-->
 
@@ -208,12 +229,56 @@
 		</nunit2>
 	</target>
 
+	<target name="dist" depends="assemblyinfo make-output-dir, set-build-config, set-runtime-config">
+		<tar destfile="${project.output.dir}/wesay-src-${version}.tar.gz" compression="GZip">
+			<fileset basedir="${project.base.dir}">
+				<include name="src/**/*.build" />
+				<include name="src/**/*.cs" />
+				<include name="src/**/*.resx" />
+				<include name="src/**/Resources/*" />
+				<include name="src/**/*.png" />
+				<include name="src/**/*.xsl" />
+				<include name="src/**/*.htm" />
+				<include name="lib/mono/**" />
+				<include name="artwork/**" />
+				<include name="bld/*" />
+				<include name="common/**" />
+				<include name="SampleProjects/**" />
+				<include name="templates/**" />
+				<exclude name=".hg/**" />
+				<exclude name="src/**/nant.resx.bak/" />
+			</fileset>
+		</tar>
+	</target>
+
+	<target name="package_clean">
+		<echo message="Deleting exising files from publish folder. Note: this folder is above the project.base.dir" />
+		<delete>
+			<fileset>
+				<include name="${project.base.dir}/../wesay_*" />
+			</fileset>
+		</delete>
+		<echo message="Reverting package changelog debian-src/changelog" />
+		<exec program="hg" workingdir="${project.base.dir}">
+			<arg line="revert debian-src/changelog" />
+		</exec>
+	</target>
+
+	<target name="package" depends="dist package_clean">
+		<exec program="build" basedir="${project.base.dir}/debian-src" workingdir="${project.base.dir}">
+		</exec>
+	</target>
+
 	<target name="install" depends="set-build-config, set-runtime-config, set-output-dir">
-		<property name="INSTALL_DIR" value="/" />
+		<property name="INSTALL_DIR" value="/" overwrite="false" />
 		<property name="USR_SHARE" value="${path::combine(INSTALL_DIR, 'usr/share/wesay')}"/>
+		<property name="USR_BIN" value="${path::combine(INSTALL_DIR, 'usr/bin')}"/>
 		<copy todir="${USR_SHARE}">
 			<fileset basedir="${project.output.dir}">
 				<include name="*" />
+				<exclude name="*Tests.dll" />
+				<exclude name="*Test.dll" />
+				<exclude name="*.mdb" />
 			 </fileset>
 		</copy>
 		<copy todir="${path::combine(USR_SHARE, 'common')}">
@@ -226,64 +291,8 @@
 				<include name="*" />
 			 </fileset>
 		</copy>
-		<copy file="wesay.mono.runner" tofile="/usr/bin/wesay" />
-		<copy file="wesay.configtool.mono.runner" tofile="/usr/bin/wesay-config" />
-	</target>
-
-	<target name="installerpre" depends="version">
-		<fail />
-		<foreach item="File" property="filename">
-			<in>
-				<items>
-					<include name="../release/*.iss" />
-				</items>
-			</in>
-			<do>
-				<property name="backupname" value="${string::replace(filename, 'iss', 'iss.bak')}" />
-				<copy file="${filename}" tofile="${backupname}" overwrite="true" />
-				<copy file="${backupname}" tofile="${filename}" overwrite="true">
-					<filterchain>
-						<expandproperties />
-					</filterchain>
-				</copy>
-			</do>
-		</foreach>
-	</target>
-
-	<target name="installerpost">
-		<fail />
-		<foreach item="File" property="filename">
-			<in>
-				<items>
-					<include name="../release/*.iss" />
-				</items>
-			</in>
-			<do>
-				<property name="backupname" value="${string::replace(filename, 'iss', 'iss.bak')}" />
-				<copy file="${backupname}" tofile="${filename}" overwrite="true" />
-				<delete file="${backupname}" />
-			</do>
-		</foreach>
-	</target>
-
-	<target name="installer.win">
-		<exec program="C:\Program Files\Inno Setup 5\ISCC.exe" append="true">
-			<arg file="../release/solid.iss" />
-		</exec>
-	</target>
-
-	<target name="installer" depends="test">
-		<fail />
-		<call target="installerpre" />
-		<call target="installer.win" />
-		<call target="installerpost" />
-	</target>
-
-	<target name="publish" depends="installer">
-		<fail />
-		<exec program="ftp.exe">
-			<arg line="-n -s:ftp.txt" />
-		</exec>
+		<copy file="wesay.mono.runner" tofile="${USR_BIN}/wesay" />
+		<copy file="wesay.configtool.mono.runner" tofile="${USR_BIN}/wesay-config" />
 	</target>
 
 

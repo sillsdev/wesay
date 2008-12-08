@@ -1,0 +1,4 @@
+#!/bin/sh
+hg pull
+hg update default
+nant $@

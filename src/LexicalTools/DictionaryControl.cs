@@ -470,7 +470,7 @@ namespace WeSay.LexicalTools
 			AddNewWord(false);
 		}
 
-		private void AddNewWord(bool FocusWasOnFindTextBox)
+		internal void AddNewWord(bool FocusWasOnFindTextBox)
 		{
 			Logger.WriteEvent("NewWord_Click");
 
@@ -540,7 +540,11 @@ namespace WeSay.LexicalTools
 				Logger.WriteEvent("DeleteWord_Cancelled");
 				return;
 			}
+			DeleteWord();
+		}
 
+		internal void DeleteWord()
+		{
 			Debug.Assert(CurrentIndex >= 0);
 			if (CurrentIndex == -1)
 			{

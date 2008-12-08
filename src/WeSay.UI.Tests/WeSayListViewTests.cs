@@ -37,6 +37,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
+		[Category("NUnit Windows Forms")]
 		public void ClickOnWhiteSpaceToRightOfEntry_ThenKeyboardNavigate_CorrectEntrySelected()
 		{
 			ListViewTester l = new ListViewTester("_listView", _window);
@@ -55,6 +56,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
+		[Category("NUnit Windows Forms")]
 		public void DoubleClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_EntryStaysSelected()
 		{
 			ListViewTester l = new ListViewTester("_listView", _window);

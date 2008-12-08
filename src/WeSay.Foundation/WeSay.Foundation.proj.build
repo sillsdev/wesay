@@ -49,6 +49,7 @@
 		<include name="LiftIO.dll" />
 		<include name="NetReflector.dll" />
 		<include name="ICSharpCode.SharpZipLib.dll" />
+		<include name="Autofac.dll" />
 	  </references>
 	  <resources dynamicprefix="true" basedir="..">
 		  <include name="**/*.resources" />

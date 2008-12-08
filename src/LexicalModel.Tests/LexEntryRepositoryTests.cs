@@ -981,7 +981,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();
@@ -1023,7 +1023,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();
@@ -1103,7 +1103,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();
@@ -1168,7 +1168,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();
@@ -1206,7 +1206,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();
@@ -1244,7 +1244,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();

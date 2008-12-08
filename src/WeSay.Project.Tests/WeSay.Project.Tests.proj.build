@@ -61,6 +61,7 @@
 		<include name="PalasoUIWindowsForms.dll" />
 		<include name="PalasoReporting.dll" />
 		<include name="NetReflector.dll" />
+		<include name="Chorus.exe" />
 	  </references>
 	  <resources dynamicprefix="true" basedir="..">
 		  <include name="**/*.resources" />

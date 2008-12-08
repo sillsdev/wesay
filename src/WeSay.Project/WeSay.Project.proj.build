@@ -51,9 +51,10 @@
 		<include name="LexicalModel.dll" />
 		<include name="LiftIO.dll" />
 		<include name="NetReflector.dll" />
-		<include name="PicoContainer.dll" />
+		<include name="Autofac.dll" />
+		<include name="Chorus.exe" />
 	  </references>
-	  <resources dynamicprefix="true" prefix="WeSay" basedir="..">
+	  <resources dynamicprefix="true" basedir="..">
 		  <include name="**/*.resources" />
 		  <include name="**/*.xsl" />
 	  </resources>
