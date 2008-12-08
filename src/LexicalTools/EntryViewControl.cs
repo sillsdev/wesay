@@ -190,6 +190,7 @@ namespace WeSay.LexicalTools
 					_cleanupTimer.Start();
 					break;
 			}
+			_lexEntryRepository.NotifyThatLexEntryHasBeenUpdated((LexEntry)sender);
 		  // can't afford to do this every keystroke, with large files
 
 		}
