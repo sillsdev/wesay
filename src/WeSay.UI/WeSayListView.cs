@@ -476,6 +476,7 @@ namespace WeSay.UI
 				}
 				if (value == -1)
 				{
+					_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
 					SelectedIndices.Clear();
 					_selectedItem = null;
 				}

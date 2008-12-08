@@ -79,14 +79,16 @@ namespace WeSay.LexicalTools
 
 			_recordsListBox.BorderStyle = BorderStyle.None;
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
+			_recordsListBox.MouseDown += _recordsListBox_MouseDown;
 			_recordsListBox.Enter += _recordsListBox_Enter;
 			_recordsListBox.Leave += _recordsListBox_Leave;
 			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
-
 			_recordsListBox.WritingSystem = listWritingSystem;
+
 			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.BorderStyle = BorderStyle.None;
 			_completedRecordsListBox.SelectedIndexChanged += OnCompletedRecordSelectionChanged;
+			_completedRecordsListBox.MouseDown += _completedRecordsListBox_MouseDown;
 			_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
 			_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
 			_completedRecordsListBox.WritingSystem = listWritingSystem;
@@ -96,6 +98,16 @@ namespace WeSay.LexicalTools
 			_btnNextWord.BringToFront();
 			_btnPreviousWord.BringToFront();
 			SetCurrentRecordFromRecordList();
+		}
+
+		private void _completedRecordsListBox_MouseDown(object sender, MouseEventArgs e)
+		{
+			_completedRecordsListBox_Enter(sender, e);
+		}
+
+		private void _recordsListBox_MouseDown(object sender, MouseEventArgs e)
+		{
+			_recordsListBox_Enter(sender, e);
 		}
 
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
@@ -483,12 +495,14 @@ namespace WeSay.LexicalTools
 
 		private void ClearSelectionForCompletedRecordsListBox()
 		{
+			_completedRecordsListBox.SelectedIndex = -1;
 			_completedRecordsListBox.HideSelection = true;
 			_recordsListBox.HideSelection = false;
 		}
 
 		private void ClearSelectionForRecordsListBox()
 		{
+			_recordsListBox.SelectedIndex = -1;
 			_recordsListBox.HideSelection = true;
 			_completedRecordsListBox.HideSelection = false;
 		}
