@@ -88,6 +88,7 @@ namespace WeSay.LexicalTools
 			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.BorderStyle = BorderStyle.None;
 			_completedRecordsListBox.SelectedIndexChanged += OnCompletedRecordSelectionChanged;
+			_completedRecordsListBox.MouseDown += _completedRecordsListBox_MouseDown;
 			_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
 			_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
 			_completedRecordsListBox.WritingSystem = listWritingSystem;
@@ -97,6 +98,11 @@ namespace WeSay.LexicalTools
 			_btnNextWord.BringToFront();
 			_btnPreviousWord.BringToFront();
 			SetCurrentRecordFromRecordList();
+		}
+
+		private void _completedRecordsListBox_MouseDown(object sender, MouseEventArgs e)
+		{
+			_completedRecordsListBox_Enter(sender, e);
 		}
 
 		private void _recordsListBox_MouseDown(object sender, MouseEventArgs e)
