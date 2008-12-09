@@ -226,7 +226,24 @@ namespace WeSay.LexicalModel
 			{
 				return !IsSkipped(weSayData, Field.FieldName);
 			}
+			if(Field.FieldName == "POS")
+			{
+				if(IsPosUnknown(weSayData))
+				{
+					return true;
+				}
+			}
 			return IsMissingDataInWritingSystem(field);
+		}
+
+		private bool IsPosUnknown(WeSayDataObject sense)
+		{
+			foreach(KeyValuePair<string, object> property in sense.Properties)
+			if (property.Key == "POS" && (((OptionRef) property.Value).Key == "unknown"))
+			{
+				return true;
+			}
+			return false;
 		}
 
 		private bool IsMissingWritingSystem(MultiTextBase field)
