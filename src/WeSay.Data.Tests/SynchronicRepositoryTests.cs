@@ -17,7 +17,7 @@ namespace WeSay.Data.Tests
         }
 
         [TearDown]
-        public void Teardown()
+		public override void TearDown()
         {
             RepositoryUnderTest.Dispose();
         }
@@ -36,7 +36,7 @@ namespace WeSay.Data.Tests
         }
 
         [TearDown]
-        public void Teardown()
+		public override void TearDown()
         {
             RepositoryUnderTest.Dispose();
         }
@@ -73,7 +73,7 @@ namespace WeSay.Data.Tests
         }
 
         [TearDown]
-        public void Teardown()
+		public override void TearDown()
         {
             RepositoryUnderTest.Dispose();
         }
@@ -97,7 +97,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 		}
@@ -121,7 +121,7 @@ namespace WeSay.Data.Tests
         }
 
         [TearDown]
-        public void Teardown()
+		public override void TearDown()
         {
             RepositoryUnderTest.Dispose();
         }

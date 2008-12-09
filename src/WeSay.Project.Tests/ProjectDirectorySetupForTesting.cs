@@ -103,7 +103,7 @@ namespace WeSay.Project.Tests
 					return path;
 				}
 
-				path = Path.Combine(BasilProject.DirectoryOfExecutingAssembly, fileName);
+				path = Path.Combine(BasilProject.DirectoryOfTheApplicationExecutable, fileName);
 				if (File.Exists(path))
 				{
 					return path;

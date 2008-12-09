@@ -464,6 +464,7 @@ namespace WeSay.LexicalTools
 			{
 				if (_completedRecords.Contains(_currentRecord))
 				{
+
 					_completedRecords.Remove(_currentRecord);
 				}
 				if (!_todoRecords.Contains(_currentRecord))

@@ -85,6 +85,8 @@ namespace WeSay.LexicalTools
 			}
 
 			_semanticDomainField = viewTemplate.GetField("SemanticDomainDdp4");
+
+			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
 		}
 
 
@@ -100,6 +102,17 @@ namespace WeSay.LexicalTools
 					viewTemplate)
 		{
 
+		}
+
+		private void EnsureQuestionsFileExists()
+		{
+			if (!File.Exists(_semanticDomainQuestionsFileName))
+			{
+				throw new ApplicationException(
+					string.Format(
+						"Could not find the semanticDomainQuestions file {0}.",
+						_semanticDomainQuestionsFileName));
+			}
 		}
 
 		private string DetermineActualQuestionsFileName(string nameFromTaskConfiguration)
@@ -617,6 +630,8 @@ namespace WeSay.LexicalTools
 
 		public override void Activate()
 		{
+			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
+
 			base.Activate();
 			if (DomainKeys == null)
 			{

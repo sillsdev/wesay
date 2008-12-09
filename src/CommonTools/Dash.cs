@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
@@ -641,6 +642,10 @@ namespace WeSay.CommonTools
 				}
 				foreach (IWeSayAddin action in AddinSet.GetAddinsForUser())
 				{
+					if (action is IWeSayAddinHasSettings)
+					{
+						LoadAddinSettings(action as IWeSayAddinHasSettings);
+					}
 					ThingsToMakeButtonsFor.Add(action);
 				}
 			}
@@ -648,6 +653,28 @@ namespace WeSay.CommonTools
 			AddItemsToFlow();
 			ResumeLayout(true);
 			_isActive = true;
+		}
+
+		//todo: this doesn't belong here... trying to rapidly fix a bug in a stable release...
+		//(no settings were being loaded at all from dashboard!!!)
+		private void LoadAddinSettings(IWeSayAddinHasSettings addin)
+		{
+			object existingSettings = addin.Settings;
+			if (existingSettings == null)
+			{
+				return; // this class doesn't do settings
+			}
+
+			//this is not necessarily the right place for this deserialization to be happening
+			string settings = AddinSet.Singleton.GetSettingsXmlForAddin(((IWeSayAddin)addin).ID);
+			if (!String.IsNullOrEmpty(settings))
+			{
+				XmlSerializer x = new XmlSerializer(existingSettings.GetType());
+				using (StringReader r = new StringReader(settings))
+				{
+					addin.Settings = x.Deserialize(r);
+				}
+			}
 		}
 
 		private void Initialize()

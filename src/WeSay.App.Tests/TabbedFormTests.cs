@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation;
@@ -290,16 +291,27 @@ namespace WeSay.App.Tests
 			Assert.AreSame(initialWorkTask, tabbedForm.CurrentWorkTask);
 		}
 
+		private void EnsureCreated(Form form)
+		{
+			form.SuspendLayout();
+			form.ShowInTaskbar = false;
+			form.ShowIcon = false;
+			form.Show();
+			form.Hide();
+			form.ResumeLayout(false);
+		}
+
 		[Test]
 		public void SetActiveTask_ToPinnedTask_AnotherTaskActivated_DeactivateOtherAndActivateNew()
 		{
 			TabbedForm tabbedForm = new TabbedForm();
+			EnsureCreated(tabbedForm);
 			tabbedForm.InitializeTasks(_project.Tasks);
-			Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive);
+			Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive, "1");
 
 			tabbedForm.ActiveTask = _project.Tasks[1];
-			Assert.IsFalse(((MockTask) _project.Tasks[0]).IsActive);
-			Assert.IsTrue(((MockTask) _project.Tasks[1]).IsActive);
+			Assert.IsFalse(((MockTask) _project.Tasks[0]).IsActive, "2");
+			Assert.IsTrue(((MockTask) _project.Tasks[1]).IsActive, "3");
 		}
 
 		[Test]
@@ -308,13 +320,14 @@ namespace WeSay.App.Tests
 				()
 		{
 			TabbedForm tabbedForm = new TabbedForm();
+			EnsureCreated(tabbedForm);
 			tabbedForm.InitializeTasks(_project.Tasks);
-			Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive);
+			Assert.IsTrue(((MockTask)_project.Tasks[0]).IsActive, "1");
 
 			tabbedForm.ActiveTask = _project.Tasks[3];
-			Assert.IsFalse(((MockTask) _project.Tasks[0]).IsActive);
-			Assert.IsTrue(((MockTask) _project.Tasks[3]).IsActive);
-			Assert.AreEqual(_project.Tasks[3].Label, tabbedForm.TabLabels[2]);
+			Assert.IsFalse(((MockTask) _project.Tasks[0]).IsActive, "2");
+			Assert.IsTrue(((MockTask) _project.Tasks[3]).IsActive, "3");
+			Assert.AreEqual(_project.Tasks[3].Label, tabbedForm.TabLabels[2], "4");
 		}
 
 		[Test]

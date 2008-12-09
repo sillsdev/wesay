@@ -947,7 +947,7 @@ namespace WeSay.Project
 				return path;
 			}
 
-			path = Path.Combine(DirectoryOfExecutingAssembly, fileName);
+			path = Path.Combine(DirectoryOfTheApplicationExecutable, fileName);
 			if (File.Exists(path))
 			{
 				return path;

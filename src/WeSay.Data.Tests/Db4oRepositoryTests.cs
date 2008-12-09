@@ -18,7 +18,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			File.Delete(_name);
@@ -46,7 +46,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			File.Delete(this._persistedFilePath);
@@ -91,7 +91,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			File.Delete(_name);
@@ -136,7 +136,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			File.Delete(_name);
@@ -167,7 +167,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			File.Delete(_name);
@@ -199,7 +199,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[TearDown]
-		public void Teardown()
+		public override void TearDown()
 		{
 			RepositoryUnderTest.Dispose();
 			File.Delete(_name);

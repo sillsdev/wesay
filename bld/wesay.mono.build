@@ -270,11 +270,15 @@
 	</target>
 
 	<target name="install" depends="set-build-config, set-runtime-config, set-output-dir">
-		<property name="INSTALL_DIR" value="/" />
+		<property name="INSTALL_DIR" value="/" overwrite="false" />
 		<property name="USR_SHARE" value="${path::combine(INSTALL_DIR, 'usr/share/wesay')}"/>
+		<property name="USR_BIN" value="${path::combine(INSTALL_DIR, 'usr/bin')}"/>
 		<copy todir="${USR_SHARE}">
 			<fileset basedir="${project.output.dir}">
 				<include name="*" />
+				<exclude name="*Tests.dll" />
+				<exclude name="*Test.dll" />
+				<exclude name="*.mdb" />
 			 </fileset>
 		</copy>
 		<copy todir="${path::combine(USR_SHARE, 'common')}">
@@ -287,8 +291,8 @@
 				<include name="*" />
 			 </fileset>
 		</copy>
-		<copy file="wesay.mono.runner" tofile="/usr/bin/wesay" />
-		<copy file="wesay.configtool.mono.runner" tofile="/usr/bin/wesay-config" />
+		<copy file="wesay.mono.runner" tofile="${USR_BIN}/wesay" />
+		<copy file="wesay.configtool.mono.runner" tofile="${USR_BIN}/wesay-config" />
 	</target>
 
 

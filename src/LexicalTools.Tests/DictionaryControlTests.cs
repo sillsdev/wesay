@@ -270,13 +270,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddInitialEntries();
 			int before = _lexEntryRepository.CountAllItems();
-			ClickDeleteWord();
+			DeleteWord();
 			Assert.AreEqual(before - 1, _lexEntryRepository.CountAllItems());
-		}
-
-		private void ConfirmDeleteWhenDialogShows()
-		{
-			ExpectModal("ConfirmDelete", delegate { var x  = new ButtonTester("deleteBtn"); x.Click(); });
 		}
 
 		/// <summary>
@@ -286,7 +281,6 @@ namespace WeSay.LexicalTools.Tests
 		public void DeleteWordWhenEvenHasCleanup_Regression()
 		{
 			AddInitialEntries();
-			ConfirmDeleteWhenDialogShows();
 			ClickAddWord();
 			int before = _lexEntryRepository.CountAllItems();
 
@@ -306,7 +300,7 @@ namespace WeSay.LexicalTools.Tests
 			entry.Properties.Add(item2);
 
 			GetEditControl("*EntryLexicalForm").FocusOnFirstWsAlternative();
-			ClickDeleteWord();
+			DeleteWord();
 			Assert.AreEqual(before - 1, _lexEntryRepository.CountAllItems());
 			// GoToLexicalEntryUseFind(form); should fail to find it
 
@@ -348,7 +342,7 @@ namespace WeSay.LexicalTools.Tests
 		public void ClickingDeleteWordFocusesFirstField()
 		{
 			AddInitialEntries();
-			ClickDeleteWord();
+			DeleteWord();
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.IsTrue(t.Properties.Focused);
 		}
@@ -357,7 +351,7 @@ namespace WeSay.LexicalTools.Tests
 		public void ClickingDeleteWordRefreshesDetailView()
 		{
 			AddInitialEntries();
-			ClickDeleteWord();
+			DeleteWord();
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.AreEqual(t.Text, LexemeFormOfSelectedEntry);
 		}
@@ -367,7 +361,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddInitialEntries();
 			Assert.AreEqual("Initial", LexemeFormOfSelectedEntry);
-			ClickDeleteWord();
+			DeleteWord();
 			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
 		}
 
@@ -378,7 +372,7 @@ namespace WeSay.LexicalTools.Tests
 			ListViewTester t = new ListViewTester("_recordsListBox", _window);
 			((WeSayListView) t.Properties).SelectedIndex = 2;
 			Assert.AreEqual("Tertiary", LexemeFormOfSelectedEntry);
-			ClickDeleteWord();
+			DeleteWord();
 			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
 		}
 
@@ -387,7 +381,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddInitialEntries();
 			ClickAddWord();
-			ClickDeleteWord();
+			DeleteWord();
 		}
 
 		[Test]
@@ -400,9 +394,9 @@ namespace WeSay.LexicalTools.Tests
 
 		private void DeleteAllEntries()
 		{
-			ClickDeleteWord();
-			ClickDeleteWord();
-			ClickDeleteWord();
+			DeleteWord();
+			DeleteWord();
+			DeleteWord();
 		}
 
 		private void StartWithEmpty()
@@ -812,11 +806,9 @@ namespace WeSay.LexicalTools.Tests
 			l.Click();
 		}
 
-		private void ClickDeleteWord()
+		private void DeleteWord()
 		{
-			ConfirmDeleteWhenDialogShows();
-			ButtonTester l = new ButtonTester("_btnDeleteWord", _window);
-			l.Click();
+			((DictionaryControl)_task.Control).DeleteWord();
 		}
 
 		private void ClickFindButton()
@@ -1182,9 +1174,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(btn.Text.Contains("Show"));
 			btn.Click();
 			Assert.IsTrue(btn.Text.Contains("Hide"));
-			ConfirmDeleteWhenDialogShows();
-			ButtonTester delbtn = new ButtonTester("_btnDeleteWord", _window);
-			delbtn.Click();
+			DeleteWord();
 			Assert.IsTrue(btn.Text.Contains("Show"));
 		}
 
@@ -1209,6 +1199,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		[Category("NUnit Windows Forms")]
 		public void ClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_DeleteButtonStaysEnabled()
 		{
 			AddInitialEntries();
