@@ -1,7 +1,10 @@
 <project name="CommonTools.Tests" default="build" basedir=".">
-	<target name="build" depends="clean">
+	<target name="build">
+		<property name="build.namespace" value="CommonTools.Tests" />
+		<property name="build.namespace.dir" value="${path::combine(project.resource.dir, build.namespace)}" />
 
-		<copy todir="nant.resx.bak" >
+		<!-- review: usesourcepath will not work as the path of the source has been changed making it invalid -->
+		<copy todir="${build.namespace.dir}" >
 			<fileset basedir=".">
 				<include name="**/*.resx" />
 			</fileset>
@@ -10,22 +13,11 @@
 			</filterchain>
 		</copy>
 
-		<foreach item="File" property="filename">
-			<in>
-				<items>
-					<include name="nant.resx.bak/**/*.resx" />
-				</items>
-			</in>
-			<do>
-				<resgen input="${filename}" usesourcepath="true" unless="${file::get-length(filename)==0}" />
-			</do>
-		</foreach>
-
-		<copy todir="." >
-			<fileset basedir="nant.resx.bak">
-				<include name="**/*.resources" />
-			</fileset>
-		</copy>
+		<resgen todir="${build.namespace.dir}">
+			<resources>
+				<include name="${build.namespace.dir}/**/*.resx" />
+			</resources>
+		</resgen>
 
 		<csc target="library"
 			output="${project.output.dir}/CommonTools.Tests.dll"
@@ -47,20 +39,13 @@
 				<include name="WeSay.Foundation.dll" />
 				<include name="WeSay.Project.dll" />
 			</references>
-			<resources dynamicprefix="true" basedir="..">
-				<include name="**/*.resources" />
+			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
+				<include name="${build.namespace.dir}/**/*.resources" />
 			</resources>
 		</csc>
 	</target>
 
 	<target name="clean">
-		<delete>
-			<fileset>
-				<include name="**/*.resources" />
-				<include name="nant.resx.bak/**" />
-				<include name="nant.resx.bak" />
-			</fileset>
-		</delete>
 	</target>
 
 </project>
