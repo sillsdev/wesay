@@ -109,11 +109,6 @@
 	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
 	</Compile>
 	<Compile Include="LexEntryRepositoryLoaderService.cs" />
-	<Compile Include="Resource.Designer.cs">
-	  <AutoGen>True</AutoGen>
-	  <DesignTime>True</DesignTime>
-	  <DependentUpon>Resource.resx</DependentUpon>
-	</Compile>
 	<Compile Include="Services\DictionaryServiceProvider.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
@@ -190,10 +185,6 @@
 	<EmbeddedResource Include="..\Addin.Transform\plift2html.xsl">
 	  <Link>plift2html.xsl</Link>
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Resource.resx">
-	  <Generator>ResXFileCodeGenerator</Generator>
-	  <LastGenOutput>Resource.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
