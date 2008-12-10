@@ -13,19 +13,18 @@
 			</filterchain>
 		</copy>
 
-		<resgen todir="${build.namespace.dir}">
+		<!-- review: Necassary so that resx files can reference the artwork directory. Would prefer that resx was in same folder as build file -->
+		<copy todir="${project.output.dir}">
+			<fileset basedir="${project.base.dir}">
+				<include name="artwork/**/*" />
+			</fileset>
+		</copy>
+
+		<resgen todir="${build.namespace.dir}" usesourcepath="true">
 			<resources>
 				<include name="${build.namespace.dir}/**/*.resx" />
 			</resources>
 		</resgen>
-
-		<!--bit of a hack. Necassary so that the linux resource files can reference the artwork directory.
-		<copy todir="..">
-			<fileset basedir="../..">
-				<include name="artwork/**/*" />
-			</fileset>
-		</copy>
-		-->
 
 		<csc target="library"
 			output="${project.output.dir}/WeSay.UI.dll"

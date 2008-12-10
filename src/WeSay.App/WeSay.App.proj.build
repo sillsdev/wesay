@@ -13,7 +13,7 @@
 			</filterchain>
 		</copy>
 
-		<resgen todir="${build.namespace.dir}">
+		<resgen todir="${build.namespace.dir}" usesourcepath="true">
 			<resources>
 				<include name="${build.namespace.dir}/**/*.resx" />
 			</resources>

@@ -13,7 +13,17 @@
 			</filterchain>
 		</copy>
 
-		<resgen todir="${build.namespace.dir}">
+		<!-- review: copy not reqd if resx in build folder -->
+		<copy todir="${build.namespace.dir}" >
+			<fileset basedir=".">
+				<include name="Resources/*" />
+				<include name="*.png" />
+				<include name="*.htm" />
+			</fileset>
+		</copy>
+
+		<!-- review: usesourcepath not reqd if resx in build folder -->
+		<resgen todir="${build.namespace.dir}" usesourcepath="true">
 			<resources>
 				<include name="${build.namespace.dir}/**/*.resx" />
 			</resources>
