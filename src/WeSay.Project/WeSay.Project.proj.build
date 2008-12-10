@@ -4,7 +4,6 @@
 		<property name="build.namespace.dir" value="${path::combine(project.resource.dir, build.namespace)}" />
 
 		<!-- review: usesourcepath will not work as the path of the source has been changed making it invalid -->
-		<!-- No resouces
 		<copy todir="${build.namespace.dir}" >
 			<fileset basedir=".">
 				<include name="**/*.resx" />
@@ -14,6 +13,13 @@
 			</filterchain>
 		</copy>
 
+		<copy todir="${build.namespace.dir}" >
+			<fileset basedir=".">
+				<include name="**/*.xsl" />
+			</fileset>
+		</copy>
+
+		<!-- No resouces
 		<resgen todir="${build.namespace.dir}">
 			<resources>
 				<include name="${build.namespace.dir}/**/*.resx" />
