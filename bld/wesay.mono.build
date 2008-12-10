@@ -445,23 +445,23 @@
 	<property name="supported.test.platforms" value="mono-2.0,net-2.0"/>
   </target>
 
-<!-- ***************************************************************** -->
-<!-- ***    Targets for setting the output directory               *** -->
-<!-- ***************************************************************** -->
-  <target name="set-output-dir" depends="set-build-config,set-runtime-config">
-	<property name="base.output.dir"
-	  value="${path::combine(project.base.dir,'output')}"/>
-	<property name="os.platform.dir"
-	  value="${path::combine(base.output.dir,os.platform)}"/>
-	<property name="runtime.platform.dir"
-	  value="${path::combine(os.platform.dir,runtime.platform)}"/>
-	<property name="runtime.version.dir"
-	  value="${path::combine(runtime.platform.dir,runtime.version)}"/>
-	<property name="project.output.dir"
-	  value="${path::combine(runtime.version.dir,build.config)}"/>
-	<property name="project.documentation.dir"
-	  value="${path::combine(project.output.dir,'doc')}"/>
-  </target>
+	<!-- ***************************************************************** -->
+	<!-- ***    Targets for setting the output directory               *** -->
+	<!-- ***************************************************************** -->
+	<target name="set-output-dir" depends="set-build-config,set-runtime-config">
+		<property name="base.output.dir"
+		  value="${path::combine(project.base.dir,'output')}"/>
+		<property name="os.platform.dir"
+		  value="${path::combine(base.output.dir,os.platform)}"/>
+		<property name="runtime.platform.dir"
+		  value="${path::combine(os.platform.dir,runtime.platform)}"/>
+		<property name="runtime.version.dir"
+		  value="${path::combine(runtime.platform.dir,runtime.version)}"/>
+		<property name="project.output.dir"
+		  value="${path::combine(runtime.version.dir,build.config)}"/>
+		<property name="project.documentation.dir"
+		  value="${path::combine(project.output.dir,'doc')}"/>
+	</target>
 
   <target name="make-output-dir" depends="set-output-dir">
 	<mkdir dir="${project.output.dir}"
