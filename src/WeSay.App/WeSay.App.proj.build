@@ -15,7 +15,12 @@
 
 		<resgen todir="${build.namespace.dir}" usesourcepath="true">
 			<resources>
-				<include name="${build.namespace.dir}/**/*.resx" />
+				<include name="${build.namespace.dir}/*.resx" />
+			</resources>
+		</resgen>
+		<resgen todir="${build.namespace.dir}/Properties" usesourcepath="true">
+			<resources>
+				<include name="${build.namespace.dir}/Properties/*.resx" />
 			</resources>
 		</resgen>
 
