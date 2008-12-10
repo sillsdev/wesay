@@ -13,6 +13,12 @@
 			</filterchain>
 		</copy>
 
+		<copy todir="${build.namespace.dir}" >
+			<fileset basedir=".">
+				<include name="**/*.xsl" />
+			</fileset>
+		</copy>
+
 		<resgen todir="${build.namespace.dir}" usesourcepath="true">
 			<resources>
 				<include name="${build.namespace.dir}/*.resx" />
