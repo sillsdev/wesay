@@ -432,7 +432,7 @@ namespace WeSay.UI
 			get
 			{
 				return _simulateListBoxBehavior && Columns.Contains(header) &&
-					(View == View.List || View == View.SmallIcon);
+					(View == View.SmallIcon);
 			}
 			set
 			{
@@ -443,7 +443,7 @@ namespace WeSay.UI
 					{
 						Columns.Insert(0, header);
 					}
-					View = View.List;
+					View = View.SmallIcon;
 				}
 			}
 		}

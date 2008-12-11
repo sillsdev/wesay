@@ -50,7 +50,7 @@ namespace WeSay.UI
 			// Set the DrawMode property to draw fixed sized items.
 			this.OwnerDraw = true;
 
-			this.View = System.Windows.Forms.View.List;
+			this.View = System.Windows.Forms.View.SmallIcon;
 
 			this.Columns.Add(header);
 		}
