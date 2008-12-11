@@ -1,8 +1,8 @@
 <project name="WeSay Build" default="build">
 
-<!-- ***************************************************************** -->
-<!-- ********* 			Set a few properties			   *********** -->
-<!-- ***************************************************************** -->
+	<!-- ***************************************************************** -->
+	<!-- ********* 			Set a few properties			   *********** -->
+	<!-- ***************************************************************** -->
 	<!-- Project build dir is the dir where the build script is located -->
 	<property name="project.bld.dir"  value="${project::get-base-directory()}"/>
 
@@ -82,7 +82,6 @@
 				<include name="../**/obj/**" />
 				<include name="../output/**" />
 				<include name="../release/output/*" />
-				<include name="../src/**/nant.resx.bak/**" />
 				<exclude name="../.hg/**" />
 				<exclude name="../lib/**" />
 			</fileset>
@@ -438,74 +437,73 @@
 	<property name="build.win32" value="false"/>
 	<property name="build.gui" value="true"/>
 	<property name="build.x86" value="true"/>
-	<property name="nant.settings.currentframework"
-	  value="mono-2.0"/>
+	<property name="nant.settings.currentframework" value="mono-2.0"/>
 	<property name="zip.runtime.suffix" value="-mono-2.0"/>
 	<property name="msi.runtime.suffix" value="-mono-2.0"/>
 	<property name="supported.test.platforms" value="mono-2.0,net-2.0"/>
   </target>
 
-<!-- ***************************************************************** -->
-<!-- ***    Targets for setting the output directory               *** -->
-<!-- ***************************************************************** -->
-  <target name="set-output-dir" depends="set-build-config,set-runtime-config">
-	<property name="base.output.dir"
-	  value="${path::combine(project.base.dir,'output')}"/>
-	<property name="os.platform.dir"
-	  value="${path::combine(base.output.dir,os.platform)}"/>
-	<property name="runtime.platform.dir"
-	  value="${path::combine(os.platform.dir,runtime.platform)}"/>
-	<property name="runtime.version.dir"
-	  value="${path::combine(runtime.platform.dir,runtime.version)}"/>
-	<property name="project.output.dir"
-	  value="${path::combine(runtime.version.dir,build.config)}"/>
-	<property name="project.documentation.dir"
-	  value="${path::combine(project.output.dir,'doc')}"/>
-  </target>
+	<!-- ***************************************************************** -->
+	<!-- ***    Targets for setting the output directory               *** -->
+	<!-- ***************************************************************** -->
+	<target name="set-output-dir" depends="set-build-config,set-runtime-config">
+		<property name="base.output.dir"
+			value="${path::combine(project.base.dir,'output')}"/>
+		<property name="os.platform.dir"
+			value="${path::combine(base.output.dir,os.platform)}"/>
+		<property name="runtime.platform.dir"
+			value="${path::combine(os.platform.dir,runtime.platform)}"/>
+		<property name="runtime.version.dir"
+			value="${path::combine(runtime.platform.dir,runtime.version)}"/>
+		<property name="project.output.dir"
+			value="${path::combine(runtime.version.dir,build.config)}"/>
+		<property name="project.documentation.dir"
+			value="${path::combine(project.output.dir,'doc')}"/>
+		<property name="project.resource.dir"
+			value="${path::combine(project.output.dir,'resources')}"/>
+	</target>
 
-  <target name="make-output-dir" depends="set-output-dir">
-	<mkdir dir="${project.output.dir}"
-	  unless="${directory::exists(project.output.dir)}"/>
-	<mkdir dir="${project.documentation.dir}"
-	  unless="${directory::exists(project.documentation.dir)}"/>
-  </target>
+	<target name="make-output-dir" depends="set-output-dir">
+		<mkdir dir="${project.output.dir}" unless="${directory::exists(project.output.dir)}"/>
+		<mkdir dir="${project.documentation.dir}" unless="${directory::exists(project.documentation.dir)}"/>
+	</target>
 
-<!-- ***************************************************************** -->
-<!-- ***    Targets for copying lib files to output directory      *** -->
-<!-- ***************************************************************** -->
+	<!-- ***************************************************************** -->
+	<!-- ***    Targets for copying lib files to output directory      *** -->
+	<!-- ***************************************************************** -->
 
-<target name="copy-lib-files" depends="make-output-dir, set-runtime-config">
-	<call target="copy-${runtime.platform}-lib-files"/>
-</target>
+	<target name="copy-lib-files" depends="make-output-dir, set-runtime-config">
+		<call target="copy-${runtime.platform}-lib-files"/>
+	</target>
 
-<target name="copy-mono-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-	<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
-	<echo message="${project.lib.dir}" />
-	<copy todir="${project.output.dir}">
-		<fileset basedir="${project.lib.dir}">
-			<include name="*.*" />
-		</fileset>
-	</copy>
-</target>
+	<target name="copy-mono-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
+		<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
+		<echo message="${project.lib.dir}" />
+		<copy todir="${project.output.dir}">
+			<fileset basedir="${project.lib.dir}">
+				<include name="*.*" />
+			</fileset>
+		</copy>
+	</target>
 
-<target name="copy-net-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-	<!-- review: This needs work, it's copying from the wrong folder. We should restructure the lib folder to support multiple platforms better and keep the win / mono libs separate CJP -->
-	<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
-	<echo message="${project.lib.dir}" />
-	<copy todir="${project.output.dir}">
-		<fileset basedir="${project.lib.dir}">
-			<include name="*.*" />
-		</fileset>
-	</copy>
-</target>
+	<target name="copy-net-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
+		<!-- review: This needs work, it's copying from the wrong folder. We should restructure the lib folder to support multiple platforms better and keep the win / mono libs separate CJP -->
+		<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
+		<echo message="${project.lib.dir}" />
+		<copy todir="${project.output.dir}">
+			<fileset basedir="${project.lib.dir}">
+				<include name="*.*" />
+			</fileset>
+		</copy>
+	</target>
 
-<target name="copy-windows-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-	<property name="project.lib.dir" value="$project.lib.base.dir"/>
-	<copy todir="${project.output.dir}">
-		<fileset basedir="${project.lib.dir}">
-			<include name="*.*" />
-		</fileset>
-	</copy>
-</target>
+	<target name="copy-windows-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
+		<property name="project.lib.dir" value="$project.lib.base.dir"/>
+		<copy todir="${project.output.dir}">
+			<fileset basedir="${project.lib.dir}">
+				<include name="*.*" />
+			</fileset>
+		</copy>
+	</target>
 
 </project>
