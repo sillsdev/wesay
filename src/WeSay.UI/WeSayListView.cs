@@ -269,11 +269,25 @@ namespace WeSay.UI
 			base.WndProc(ref m);
 		}
 
+		private ListViewItem GetItemAtLine(int y)
+		{
+			ListViewItem result = null;
+			for (int x = 0; x < ClientSize.Width; x++)
+			{
+				result = GetItemAt(x, y);
+				if (result != null)
+				{
+					break;
+				}
+			}
+			return result;
+		}
+
 		private void SelectFromClickLocation()
 		{
 			if (SimulateListBox && _clickSelecting)
 			{
-				ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
+				ListViewItem item = GetItemAtLine(_currentMouseLocation.Y);
 				if (item != null)
 				{
 					SelectedIndex = item.Index;
@@ -381,9 +395,9 @@ namespace WeSay.UI
 			{
 				// All this is to make the selection across the whole list box
 				// and not just the extent of the text itself
-				Rectangle bounds = new Rectangle(e.Bounds.X,
+				Rectangle bounds = new Rectangle(0,
 												 e.Bounds.Y,
-												 ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth,
+												 ClientRectangle.Width,
 												 e.Bounds.Height);
 
 				Brush backgroundBrush;
@@ -432,7 +446,7 @@ namespace WeSay.UI
 			get
 			{
 				return _simulateListBoxBehavior && Columns.Contains(header) &&
-					(View == View.SmallIcon);
+					(View == View.Details);
 			}
 			set
 			{
@@ -443,27 +457,45 @@ namespace WeSay.UI
 					{
 						Columns.Insert(0, header);
 					}
-					View = View.SmallIcon;
+					View = View.Details;
 				}
 			}
 		}
 
-		protected override void OnResize(EventArgs e)
+		private bool _resizing = false;
+		protected override void OnClientSizeChanged(EventArgs e)
 		{
-			AdjustColumnWidth();
-			base.OnResize(e);
+			if (SimulateListBox && !_resizing)
+			{
+				AdjustColumnWidth();
+			}
+			base.OnClientSizeChanged(e);
 		}
 
 		private void AdjustColumnWidth()
 		{
-			int newWidth = ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
-			SuspendLayout();
-			if (Columns.Count > 0)
+			if (_resizing)
 			{
-				Columns[0].Width = newWidth;
+				return;
 			}
-			header.Width = newWidth;
-			ResumeLayout();
+			_resizing = true;
+			try
+			{
+				SuspendLayout();
+				header.Width = ClientRectangle.Width;
+				// this bit is becausae when the ListView is made smaller,
+				// a horizontal scrollbar can appear even though it is not needed
+				// tweaking the width like this makes it disappear.
+				// todo: find a way to make it not show up in the first place
+				Width++;
+				Width--;
+				Invalidate();
+				ResumeLayout();
+			}
+			finally
+			{
+				_resizing = false;
+			}
 		}
 
 		private int _SelectedIndexForUseBeforeSelectedIndicesAreInitialized;
@@ -519,6 +551,7 @@ namespace WeSay.UI
 
 					_selectedItem = SelectedItem;
 					EnsureVisible(value);
+					Invalidate();
 				}
 			}
 		}

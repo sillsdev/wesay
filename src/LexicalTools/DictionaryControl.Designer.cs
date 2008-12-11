@@ -152,7 +152,7 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.Name = "_recordsListBox";
 			this._recordsListBox.Size = new System.Drawing.Size(136, 236);
 			this._recordsListBox.TabIndex = 4;
-			this._recordsListBox.View = System.Windows.Forms.View.SmallIcon;
+			this._recordsListBox.View = System.Windows.Forms.View.Details;
 			//
 			// panelTools
 			//
