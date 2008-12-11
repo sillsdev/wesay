@@ -116,7 +116,15 @@ namespace WeSay.UI
 
 		private void OnChildLostFocus(object sender, EventArgs e)
 		{
-			if (!ContainsFocus)
+			// due to the way the popup listbox works, if it has focus,
+			// ContainsFocus will not report it, so we check separately.
+			bool listBoxFocused = false;
+			var box = (WeSayAutoCompleteTextBox) sender;
+			if (box != null)
+			{
+				listBoxFocused = box.ListBoxFocused;
+			}
+			if (!(listBoxFocused || ContainsFocus))
 					//doing cleanup while the user is in the area will lead to much grief
 			{
 				IReportEmptiness x = _alternateEmptinessHelper;
@@ -197,6 +205,7 @@ namespace WeSay.UI
 				KEY_CONTAINER newGuy = (KEY_CONTAINER) _chosenItems.AddNew();
 				_choiceSystemAdaptor.UpdateKeyContainerFromKeyValue(kv, newGuy);
 				_ignoreListChanged = false;
+				picker.Box.Tag = newGuy;
 
 				//the binding itself doesn't need to be "owned" by us... it controls its own lifetime
 				new SimpleBinding<ValueT>(newGuy, picker);
