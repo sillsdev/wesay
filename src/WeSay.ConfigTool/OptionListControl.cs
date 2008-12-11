@@ -251,6 +251,7 @@ namespace WeSay.ConfigTool
 
 		private void _btnAdd_Click(object sender, EventArgs e)
 		{
+			_listBox.Focus();   //This is a hack to get the TextBinding to update by losing focus :-(
 			Option newOption = new Option();
 			_newlyCreatedOptions.Add(newOption);
 			_currentList.Options.Add(newOption);
@@ -264,6 +265,7 @@ namespace WeSay.ConfigTool
 
 		private void _btnDelete_Click(object sender, EventArgs e)
 		{
+			_listBox.Focus();   //This is a hack to get the TextBinding to update by losing focus :-(
 			_currentList.Options.Remove(_currentOption);
 			_listBox.Items.Remove(_listBox.SelectedItem);
 
