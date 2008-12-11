@@ -13,9 +13,17 @@
 			</filterchain>
 		</copy>
 
+		<!--
 		<copy todir="${build.namespace.dir}" >
 			<fileset basedir=".">
 				<include name="**/*.xsl" />
+			</fileset>
+		</copy>
+		-->
+
+		<copy todir="${build.namespace.dir}" >
+			<fileset basedir=".">
+				<include name="${project.base.dir}/src/Addin.Transform/plift2html.xsl" />
 			</fileset>
 		</copy>
 
