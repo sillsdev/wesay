@@ -527,7 +527,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				HideList();
 			}
-
 		}
 
 		protected override void OnGotFocus(EventArgs e)
@@ -650,6 +649,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			//hatton experimental:
 			if (string.IsNullOrEmpty(Text))
 			{
+				_listBox.EndUpdate();
 				return;
 			}
 			//end hatton experimental
