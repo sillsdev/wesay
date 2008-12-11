@@ -758,5 +758,13 @@ namespace WeSay.UI.AutoCompleteTextBox
 				HideList();
 			}
 		}
+
+		public bool ListBoxFocused
+		{
+			get
+			{
+				return _listBox.Focused;
+			}
+		}
 	}
 }
