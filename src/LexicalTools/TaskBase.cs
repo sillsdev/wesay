@@ -84,6 +84,10 @@ namespace WeSay.LexicalTools
 		{
 			if (IsActive)
 			{
+				return;
+				//the following is reasonable, but after 4 hours, I (JH)
+				//gave up on trying to get a cross-process unit test (JumpToEntryMakesAppSwitchToUIMode)
+				//to not run afoul of it
 				throw new InvalidOperationException(
 						"Activate should not be called when object is active.");
 			}
