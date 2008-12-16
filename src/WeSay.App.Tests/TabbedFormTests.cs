@@ -185,14 +185,14 @@ namespace WeSay.App.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void InitializeTasks_NullTaskList_Throws()
 		{
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.InitializeTasks(null);
 		}
 
 		[Test]
 		public void GetCurrentWorkTask_TasksNotInitialized_IsNull()
 		{
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			Assert.IsNull(tabbedForm.CurrentWorkTask);
 		}
 
@@ -200,7 +200,7 @@ namespace WeSay.App.Tests
 		public void GetCurrentWorkTask_NoTasks_IsNull()
 		{
 			_project.Tasks.Clear();
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.InitializeTasks(_project.Tasks);
 			Assert.IsNull(tabbedForm.CurrentWorkTask);
 		}
@@ -212,7 +212,7 @@ namespace WeSay.App.Tests
 			_project.Tasks.Add(new MockTask("Dashboard", "The control center.", true));
 			_project.Tasks.Add(new MockTask("Words", "The whole lexicon.", true));
 
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.InitializeTasks(_project.Tasks);
 			Assert.IsNull(tabbedForm.CurrentWorkTask);
 		}
@@ -224,7 +224,7 @@ namespace WeSay.App.Tests
 			_project.Tasks.Add(new MockTask("Dashboard", "The control center.", true));
 			_project.Tasks.Add(new MockTask("Words", "The whole lexicon.", true));
 
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.InitializeTasks(_project.Tasks);
 			Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive);
 			Assert.IsFalse(((MockTask) _project.Tasks[1]).IsActive);
@@ -234,7 +234,7 @@ namespace WeSay.App.Tests
 		public void GetCurrentWorkTask_RegularSetOfTasks_IsFirstNonPinned()
 		{
 			ClearCurrentWorkTask();
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.InitializeTasks(_project.Tasks);
 
 			Assert.IsNotNull(tabbedForm.CurrentWorkTask);
@@ -243,18 +243,18 @@ namespace WeSay.App.Tests
 
 		private static void ClearCurrentWorkTask()
 		{
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.LastCurrentWorkTaskLabel = string.Empty;
 		}
 
 		[Test]
 		public void GetCurrentWorkTask_RemembersLastCurrentWorkTask()
 		{
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.InitializeTasks(_project.Tasks);
 			tabbedForm.ActiveTask = _project.Tasks[3];
 
-			tabbedForm = new TabbedForm();
+			tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.InitializeTasks(_project.Tasks);
 			Assert.AreEqual("Semantic Domains", tabbedForm.CurrentWorkTask.Label);
 		}
@@ -262,7 +262,7 @@ namespace WeSay.App.Tests
 		[Test]
 		public void ActiveTask_RegularSetOfTasks_IsFirstTask()
 		{
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.InitializeTasks(_project.Tasks);
 
 			Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive);
@@ -275,7 +275,7 @@ namespace WeSay.App.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void SetActiveTask_Null_Throws()
 		{
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.InitializeTasks(_project.Tasks);
 
 			tabbedForm.ActiveTask = null;
@@ -284,7 +284,7 @@ namespace WeSay.App.Tests
 		[Test]
 		public void SetActiveTask_TaskIsPinned_CurrentWorkTaskNoChange()
 		{
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.InitializeTasks(_project.Tasks);
 			ITask initialWorkTask = tabbedForm.CurrentWorkTask;
 			tabbedForm.ActiveTask = _project.Tasks[0];
@@ -304,7 +304,7 @@ namespace WeSay.App.Tests
 		[Test]
 		public void SetActiveTask_ToPinnedTask_AnotherTaskActivated_DeactivateOtherAndActivateNew()
 		{
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			EnsureCreated(tabbedForm);
 			tabbedForm.InitializeTasks(_project.Tasks);
 			Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive, "1");
@@ -319,7 +319,7 @@ namespace WeSay.App.Tests
 				SetActiveTask_ToWorkTask_AnotherTaskActivated_DeactivateOtherAndActivateNew_ChangeLabel
 				()
 		{
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			EnsureCreated(tabbedForm);
 			tabbedForm.InitializeTasks(_project.Tasks);
 			Assert.IsTrue(((MockTask)_project.Tasks[0]).IsActive, "1");
@@ -333,7 +333,7 @@ namespace WeSay.App.Tests
 		[Test]
 		public void SetActiveTask_ToWorkTask_AnotherWorkTaskActivated_DeactivateOtherAndActivateNew()
 		{
-			TabbedForm tabbedForm = new TabbedForm();
+			TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController());
 			tabbedForm.InitializeTasks(_project.Tasks);
 
 			tabbedForm.ActiveTask = _project.Tasks[2];

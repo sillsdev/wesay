@@ -121,6 +121,7 @@
 	<Compile Include="FlagState.cs" />
 	<Compile Include="GenericEventArgs.cs" />
 	<Compile Include="Guard.cs" />
+	<Compile Include="ICountGiver.cs" />
 	<Compile Include="IDisplayStringAdaptor.cs" />
 	<Compile Include="IBindableControl.cs" />
 	<Compile Include="IThingOnDashboard.cs" />

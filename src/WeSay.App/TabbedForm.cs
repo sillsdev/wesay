@@ -20,7 +20,7 @@ namespace WeSay.App
 		public SynchronizationContext synchronizationContext;
 		//        private ProgressDialogHandler _progressHandler;
 
-		public TabbedForm()
+		public TabbedForm(StatusBarController statusBarController)
 		{
 			InitializeComponent();
 			tabControl1.TabPages.Clear();
@@ -28,7 +28,15 @@ namespace WeSay.App
 
 			synchronizationContext = SynchronizationContext.Current;
 			Debug.Assert(synchronizationContext != null);
+
+			statusBarController.StatusStrip = _statusStrip;
 		}
+
+		public StatusStrip StatusStrip
+		{
+			get { return _statusStrip; }
+		}
+
 
 		public void InitializeTasks(IList<ITask> taskList)
 		{

@@ -351,7 +351,6 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
-			//builder.Register<UserSettingsRepository>(new UserSettingsRepository());
 			builder.Register(new WordListCatalog()).SingletonScoped();
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
@@ -359,6 +358,10 @@ namespace WeSay.Project
 			builder.Register<LexEntryRepository>(
 				c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
 						progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
+
+			//builder.Register<IRepository<LexEntry>>(c => c.Resolve<LexEntryRepository>());
+
+			builder.Register<ICountGiver>(c => c.Resolve<LexEntryRepository>());
 
 			//builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
 
