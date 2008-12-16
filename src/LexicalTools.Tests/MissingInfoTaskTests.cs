@@ -1,7 +1,10 @@
 using System;
 using NUnit.Framework;
+using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
@@ -59,7 +62,7 @@ namespace WeSay.LexicalTools.Tests
 			_viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(),
 										"LexExampleSentence",
 										new string[] {"th"}));
-			_task = new MissingInfoTask(_lexEntryRepository,
+			_task = CreateMissingInfoTask(_lexEntryRepository,
 										_missingFieldName,
 										_label,
 										_longLabel,
@@ -68,6 +71,12 @@ namespace WeSay.LexicalTools.Tests
 										_referenceCountText,
 										_viewTemplate,
 										_fieldsToShow);
+		}
+
+		private MissingInfoTask CreateMissingInfoTask(LexEntryRepository repository, string missingInfoField, string label, string longLabel, string description, string remainingCountText, string referenceCountText, ViewTemplate template, string fieldsToShow)
+		{
+			MissingInfoConfiguration config = MissingInfoConfiguration.CreateForTests( missingInfoField,  label,  longLabel,  description,  remainingCountText,  referenceCountText,  fieldsToShow);
+			return new MissingInfoTask(config, repository, template, new TaskMemoryRepository());
 		}
 
 		[TearDown]
@@ -83,107 +92,8 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsNotNull(_task);
 		}
 
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void Create_RecordsIsNull_ThrowsArgumentNullException()
-		{
-			new MissingInfoTask(null,
-								this._missingFieldName,
-								_label,
-								_longLabel,
-								_description,
-								_remainingCountText,
-								_referenceCountText,
-								_viewTemplate,
-								_fieldsToShow);
-		}
 
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void Create_FilterIsNull_ThrowsArgumentNullException()
-		{
-			new MissingInfoTask(_lexEntryRepository,
-								null,
-								_label,
-								_longLabel,
-								_description,
-								_remainingCountText,
-								_referenceCountText,
-								_viewTemplate,
-								_fieldsToShow);
-		}
 
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void Create_LabelIsNull_ThrowsArgumentNullException()
-		{
-			new MissingInfoTask(_lexEntryRepository,
-								this._missingFieldName,
-								_label,
-								null,
-								_description,
-								_remainingCountText,
-								_referenceCountText,
-								_viewTemplate,
-								_fieldsToShow);
-		}
-
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void Create_DescriptionIsNull_ThrowsArgumentNullException()
-		{
-			new MissingInfoTask(_lexEntryRepository,
-								this._missingFieldName,
-								_label,
-								_longLabel,
-								null,
-								_remainingCountText,
-								_referenceCountText,
-								_viewTemplate,
-								_fieldsToShow);
-		}
-
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void Create_ReferenceCountTextIsNull_ThrowsArgumentNullException()
-		{
-			new MissingInfoTask(_lexEntryRepository,
-								this._missingFieldName,
-								_label,
-								_longLabel,
-								_description,
-								_remainingCountText,
-								null,
-								_viewTemplate,
-								_fieldsToShow);
-		}
-
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void Create_FieldFilterIsNull_ThrowsArgumentNullException()
-		{
-			new MissingInfoTask(_lexEntryRepository,
-								this._missingFieldName,
-								_label,
-								_longLabel,
-								_description,
-								_remainingCountText,
-								_referenceCountText,
-								_viewTemplate,
-								null);
-		}
-
-		[Test]
-		public void Label_InitializedFromCreate()
-		{
-			Assert.AreEqual(_label, _task.Label);
-		}
-
-		[Test]
-		public void Description_InitializedFromCreate()
-		{
-			Assert.AreEqual(_description, _task.Description);
-		}
 
 		[Test]
 		public void Activate_Refreshes()
@@ -226,7 +136,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field("SingleField", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("Field", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository,
+			MissingInfoTask task = CreateMissingInfoTask(_lexEntryRepository,
 													   "Single",
 													   _label,
 													   _longLabel,
@@ -249,7 +159,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field("Second", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("FirstSecond", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository,
+			MissingInfoTask task = CreateMissingInfoTask(_lexEntryRepository,
 													   "Second",
 													   _label,
 													   _longLabel,
@@ -275,7 +185,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field("SecondThird", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("FirstSecondThird", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository,
+			MissingInfoTask task = CreateMissingInfoTask(_lexEntryRepository,
 													   "Third",
 													   _label,
 													   _longLabel,
@@ -299,7 +209,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field("Dummy", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("PrefixDummy", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository,
+			MissingInfoTask task = CreateMissingInfoTask(_lexEntryRepository,
 													   "Dummy",
 													   _label,
 													   _longLabel,
@@ -320,7 +230,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field("Dummy", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("PrefixDummy", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository,
+			MissingInfoTask task = CreateMissingInfoTask(_lexEntryRepository,
 													   "Dummy",
 													   _label,
 													   _longLabel,
@@ -343,7 +253,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(field);
 			viewTemplate.Add(new Field("PrefixDummy", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository,
+			MissingInfoTask task = CreateMissingInfoTask(_lexEntryRepository,
 													   "Dummy",
 													   _label,
 													   _longLabel,
@@ -366,7 +276,7 @@ namespace WeSay.LexicalTools.Tests
 				using (LexEntryRepository repo = new LexEntryRepository(repoFile.Path))
 				{
 					//notice, no entries
-					MissingInfoTask task = new MissingInfoTask(repo,
+					MissingInfoTask task = CreateMissingInfoTask(repo,
 							   this._missingFieldName,
 								_label,
 								_longLabel,
@@ -382,5 +292,17 @@ namespace WeSay.LexicalTools.Tests
 				}
 			}
 		}
+
+//  in progress      [Test]
+//        public void OneSenseFromGatherBySemDom_ShowsOnlyOneMeaning()
+//        {
+//            LexEntry entry = CreateEmptyEntryWithOneSense();
+//            LexSense sense = entry.Senses[0];
+//            var sds = sense.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+//            var list = WeSay.Project.WeSayWordsProject.Project.GetOptionsList(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+//            sds.Add(list.Options[0].Key);
+//
+//
+//        }
 	}
 }

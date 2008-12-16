@@ -45,13 +45,20 @@ namespace WeSay.LexicalTools
 			}
 			rowCount += AddCustomFields(entry, insertAtRow + rowCount);
 
+			var rowCountBeforeSenses = rowCount;
 			LexSenseLayouter layouter = new LexSenseLayouter(DetailList,
-															 ActiveViewTemplate,
-															 RecordListManager);
+															  ActiveViewTemplate,
+															  RecordListManager);
 			layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
-			//add a ghost
-			rowCount += layouter.AddGhost(entry.Senses, true);
+
+			//see: WS-1120 Add option to limit "add meanings" task to the ones that have a semantic domain
+			//also: WS-639 (jonathan_coombs@sil.org) In Add meanings, don't show extra meaning slots just because a sense was created for the semantic domain
+			var ghostingRule = ActiveViewTemplate.GetGhostingRuleForField(LexEntry.WellKnownProperties.Sense);
+			if (rowCountBeforeSenses == rowCount || ghostingRule.ShowGhost)
+			{
+				rowCount += layouter.AddGhost(entry.Senses, true);
+			}
 
 			DetailList.ResumeLayout();
 			return rowCount;

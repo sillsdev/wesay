@@ -164,7 +164,7 @@ namespace WeSay.AddinLib
 
 			if (_inAdminMode && !DoShowInWeSay)
 			{
-				_toggleShowInWeSay.Text = "Not In WeSay";
+				_toggleShowInWeSay.Text = "Make visible in WeSay";
 				_toolTip.SetToolTip(_toggleShowInWeSay,
 									"Click to make this action available within WeSay.");
 				//                e.Graphics.DrawLine(Pens.Red, new Point(0,0), new Point(_toggleShowInWeSay.Width,_toggleShowInWeSay.Height));
@@ -172,7 +172,7 @@ namespace WeSay.AddinLib
 			}
 			else
 			{
-				_toggleShowInWeSay.Text = "Visible In WeSay";
+				_toggleShowInWeSay.Text = "Make invisible in WeSay";
 				_toolTip.SetToolTip(_toggleShowInWeSay,
 									"Click to make this action unavailable within WeSay.");
 			}

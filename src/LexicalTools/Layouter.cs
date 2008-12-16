@@ -108,7 +108,8 @@ namespace WeSay.LexicalTools
 										 //show annotation
 										 BasilProject.Project.WritingSystems,
 										 field.Visibility,
-										 field.IsSpellCheckingEnabled);
+										 field.IsSpellCheckingEnabled,
+										 field.IsMultiParagraph);
 			}
 			else
 			{
@@ -166,7 +167,7 @@ namespace WeSay.LexicalTools
 														  false,
 														  BasilProject.Project.WritingSystems,
 														  field.Visibility,
-														  field.IsSpellCheckingEnabled);
+														  field.IsSpellCheckingEnabled, false);
 
 				Control refWidget = DetailList.AddWidgetRow(label,
 															isHeading,
