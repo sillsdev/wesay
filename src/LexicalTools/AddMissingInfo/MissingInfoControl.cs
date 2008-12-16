@@ -25,29 +25,14 @@ namespace WeSay.LexicalTools
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
 
-		public MissingInfoControl(ResultSet<LexEntry> records,
-								  ViewTemplate viewTemplate,
-								  Predicate<LexEntry> isNotComplete,
-								  LexEntryRepository lexEntryRepository)
+		public MissingInfoControl(ResultSet<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete, LexEntryRepository lexEntryRepository, ITaskMemory memory)
 		{
 			if (!DesignMode)
 			{
-				if (records == null)
-				{
-					throw new ArgumentNullException("records");
-				}
-				if (viewTemplate == null)
-				{
-					throw new ArgumentNullException("viewTemplate");
-				}
-				if (isNotComplete == null)
-				{
-					throw new ArgumentNullException("isNotComplete");
-				}
-				if (lexEntryRepository == null)
-				{
-					throw new ArgumentNullException("lexEntryRepository");
-				}
+				Guard.AgainstNull(records, "records");
+				Guard.AgainstNull(viewTemplate, "viewTemplate");
+				Guard.AgainstNull(isNotComplete, "isNotComplete");
+				Guard.AgainstNull(lexEntryRepository, "lexEntryRepository");
 			}
 
 			InitializeComponent();
@@ -59,6 +44,10 @@ namespace WeSay.LexicalTools
 			{
 				return;
 			}
+
+			memory.TrackSplitContainer(splitContainer1, "betweenListsAndContents");
+			memory.TrackSplitContainer(splitContainer2, "betweenToDoAndDoneLists");
+			_entryViewControl.SetMemory(memory.CreateNewSection("entryView"));
 
 			_completedRecords = new BindingList<RecordToken<LexEntry>>();
 			_todoRecords = (BindingList<RecordToken<LexEntry>>) records;

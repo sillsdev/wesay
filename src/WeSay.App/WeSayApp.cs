@@ -12,6 +12,7 @@ using Palaso.Services.ForServers;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.App.Services;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
 using WeSay.LexicalTools.GatherByWordList;

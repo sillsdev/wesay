@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
@@ -75,7 +76,7 @@ namespace WeSay.LexicalTools.Tests
 		private MissingInfoTask CreateMissingInfoTask(LexEntryRepository repository, string missingInfoField, string label, string longLabel, string description, string remainingCountText, string referenceCountText, ViewTemplate template, string fieldsToShow)
 		{
 			MissingInfoConfiguration config = MissingInfoConfiguration.CreateForTests( missingInfoField,  label,  longLabel,  description,  remainingCountText,  referenceCountText,  fieldsToShow);
-			return new MissingInfoTask(config, repository, template);
+			return new MissingInfoTask(config, repository, template, new TaskMemoryRepository());
 		}
 
 		[TearDown]

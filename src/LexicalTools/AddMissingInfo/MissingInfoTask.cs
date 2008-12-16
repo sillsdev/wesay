@@ -19,13 +19,16 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		//private readonly bool _isBaseFormFillingTask;
 		private readonly WritingSystem _writingSystem;
 		private MissingInfoConfiguration _config;
+		private TaskMemory _taskMemory;
 
 		public MissingInfoTask(MissingInfoConfiguration config,
 							   LexEntryRepository lexEntryRepository,
-							   ViewTemplate defaultViewTemplate)
+							   ViewTemplate defaultViewTemplate,
+								TaskMemoryRepository taskMemoryRepository)
 			: base( config, lexEntryRepository)
 		{
 			_config = config;
+			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 
 			Guard.AgainstNull(config.MissingInfoField, "MissingInfoField");
 			Guard.AgainstNull(defaultViewTemplate, "viewTemplate");
@@ -33,7 +36,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_missingInfoField = defaultViewTemplate[config.MissingInfoField];
 
 			_viewTemplate = config.CreateViewTemplate(defaultViewTemplate);
-//            _viewTemplate = CreateViewTemplateFromListOfFields(defaultViewTemplate, config.FieldsToShow);
 
 			_writingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
@@ -77,7 +79,8 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_missingInfoControl = new MissingInfoControl(GetFilteredData(),
 														 ViewTemplate,
 														 filteringPredicate,
-														 LexEntryRepository);
+														 LexEntryRepository,
+														 _taskMemory.CreateNewSection("view"));
 			_missingInfoControl.SelectedIndexChanged += OnRecordSelectionChanged;
 		}
 

@@ -108,7 +108,6 @@
 	<Compile Include="PLiftExporter.cs" />
 	<Compile Include="TaskCollection.cs" />
 	<Compile Include="TaskTypeCatalog.cs" />
-	<Compile Include="TaskMemoryRepository.cs" />
 	<Compile Include="ViewTemplate.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />
 	<Compile Include="IProject.cs" />

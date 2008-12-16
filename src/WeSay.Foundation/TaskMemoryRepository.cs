@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 
-namespace WeSay.Project
+namespace WeSay.Foundation
 {
 	/// <summary>
 	/// Why not use Settings?  Chiefly, because these settins are not
@@ -81,15 +82,24 @@ namespace WeSay.Project
 			}
 			using (StreamWriter writer = File.CreateText(Path))
 			{
-				 x.Serialize(writer, this);
+				x.Serialize(writer, this);
 			}
 		}
 
+	}
 
+	public interface ITaskMemory
+	{
+		ITaskMemory CreateNewSection(string sectionName);
+		void Set(string key, string value);
+		void Set(string key, int value);
+		string Get(string key, string defaultValue);
+		int Get(string key, int defaultValue);
+		void TrackSplitContainer(SplitContainer container, string key);
 	}
 
 	[Serializable]
-	public class TaskMemory
+	public class TaskMemory : ITaskMemory
 	{
 		private SerializableDictionary<string, string> _pairs = new SerializableDictionary<string, string>();
 
@@ -99,7 +109,7 @@ namespace WeSay.Project
 			set { _pairs = value; }
 		}
 
-		public void Set(string key, string value)
+		public  void Set(string key, string value)
 		{
 			if(Pairs.ContainsKey(key))
 			{
@@ -110,12 +120,86 @@ namespace WeSay.Project
 				Pairs.Add(key, value);
 			}
 		}
-		public string Get(string key, string defaultValue)
+
+		public void Set(string key, int value)
+		{
+			Set(key, value.ToString());
+		}
+
+		public  string Get(string key, string defaultValue)
 		{
 			string v;
 			if( Pairs.TryGetValue(key, out v))
 				return v;
 			return defaultValue;
+		}
+
+		public int Get(string key, int defaultValue)
+		{
+			var s = Get(key, defaultValue.ToString());
+			int i;
+			return int.TryParse(s, out i) ? i : defaultValue;
+		}
+
+		public void TrackSplitContainer(SplitContainer container, string key)
+		{
+			container.SplitterDistance = Get(key, container.SplitterDistance);
+			container.SplitterMoved += (splitContainer, e) => Set(key, ((SplitContainer)splitContainer).SplitterDistance );
+		}
+
+		public ITaskMemory CreateNewSection(string sectionName)
+		{
+			return new TaskMemorySection(this, sectionName);
+		}
+	}
+
+	/// <summary>
+	/// a *very* poor-man's hierachical settings container
+	/// </summary>
+	class TaskMemorySection : ITaskMemory
+	{
+		private readonly ITaskMemory _memory;
+		private readonly string _sectionName;
+
+		public TaskMemorySection(ITaskMemory parentMemory, string sectionName)
+		{
+			_memory = parentMemory;
+			_sectionName = sectionName;
+		}
+
+		public ITaskMemory CreateNewSection(string sectionName)
+		{
+			return new TaskMemorySection(this, sectionName);
+		}
+
+		public  void Set(string key, string value)
+		{
+			_memory.Set(RealKey(key), value);
+		}
+
+		public void Set(string key, int value)
+		{
+			_memory.Set(RealKey(key), value);
+		}
+
+		public  string Get(string key, string defaultValue)
+		{
+			return _memory.Get(RealKey(key), defaultValue);
+		}
+
+		private string RealKey(string key)
+		{
+			return _sectionName+"."+key;
+		}
+
+		public int Get(string key, int defaultValue)
+		{
+			return _memory.Get(RealKey(key), defaultValue);
+		}
+
+		public void TrackSplitContainer(SplitContainer container, string key)
+		{
+			_memory.TrackSplitContainer(container, key);
 		}
 	}
 

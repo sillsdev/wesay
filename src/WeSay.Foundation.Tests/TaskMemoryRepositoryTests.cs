@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using NUnit.Framework;
+using WeSay.Foundation;
 using WeSay.Foundation.Tests.TestHelpers;
 
-namespace WeSay.Project.Tests
+namespace WeSay.Foundation.Tests
 {
 	[TestFixture]
 	public class TaskMemoryRepositoryTests
@@ -116,7 +117,13 @@ namespace WeSay.Project.Tests
 		}
 
 
-
+		[Test]
+		public void GetInt_NotReallyAnInteger_GivesDefaultValue()
+		{
+			var memory = new TaskMemory();
+			memory.Set("number", "blue");
+			Assert.AreEqual(3, memory.Get("number", 3));
+		}
 
 	}
 }

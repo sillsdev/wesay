@@ -223,7 +223,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (
 					DictionaryControl e = new DictionaryControl(_lexEntryRepository,
-																new ViewTemplate()))
+																new ViewTemplate(), new TaskMemory()))
 			{
 				Assert.IsNotNull(e);
 			}
