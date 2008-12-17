@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -143,8 +144,28 @@ namespace WeSay.Foundation
 
 		public void TrackSplitContainer(SplitContainer container, string key)
 		{
+			Debug.WriteLine(key + " was " + Get(key, -1));
+
 			container.SplitterDistance = Get(key, container.SplitterDistance);
-			container.SplitterMoved += (splitContainer, e) => Set(key, ((SplitContainer)splitContainer).SplitterDistance );
+			container.Tag = true;
+			container.SplitterMoved += (splitContainer, e) =>
+										   {
+
+											   //skip the very first call, which is bogus (comes during a PerformLayout() from the tabbedForm)
+											   if ((bool)container.Tag)
+											   {
+//                                                   Debug.WriteLine("Skipping... " + key + "<--" +
+//                                                                   ((SplitContainer)splitContainer).SplitterDistance);
+												   container.Tag = false;
+												   return;
+											   }
+
+//                                               Debug.WriteLine(key + "<--" +
+//                                                               ((SplitContainer)splitContainer).SplitterDistance);
+//
+											   Set(key,
+												   ((SplitContainer) splitContainer).SplitterDistance);
+										   };
 		}
 
 		public ITaskMemory CreateNewSection(string sectionName)
