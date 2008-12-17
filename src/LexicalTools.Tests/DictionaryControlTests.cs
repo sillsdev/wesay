@@ -1207,10 +1207,9 @@ namespace WeSay.LexicalTools.Tests
 			using (MouseController mc = new MouseController(l))
 			{
 				Rectangle r = l.Properties.GetItemRect(0);
-				mc.Click(l.Properties.ClientRectangle.Right - 2, r.Top + 2);
+				mc.Click(r.Right + 1, r.Top + 1);
 				// move enough to not count as a double-click
-				mc.Click(l.Properties.ClientRectangle.Right +
-					SystemInformation.DoubleClickSize.Width - 3, r.Top + 2);
+				mc.Click(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
 			}
 			Assert.IsTrue(b.Properties.Enabled);
 		}

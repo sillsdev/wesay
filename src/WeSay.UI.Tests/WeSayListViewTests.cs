@@ -47,7 +47,7 @@ namespace WeSay.UI.Tests
 				{
 					l.Select(0);
 					Rectangle r = l.Properties.GetItemRect(1);
-					mc.Click(_listView.ClientRectangle.Right - 2, r.Top + 2);
+					mc.Click(r.Right + 1, r.Top + 1);
 					kc.Press("{DOWN}");
 					kc.Release("{DOWN}");
 				}
@@ -63,10 +63,9 @@ namespace WeSay.UI.Tests
 			using (MouseController mc = new MouseController(l))
 			{
 				Rectangle r = l.Properties.GetItemRect(0);
-				mc.Click(_listView.ClientRectangle.Right - 2, r.Top + 2);
+				mc.Click(r.Right + 1, r.Top + 1);
 				// move enough to not confuse click with double-click
-				mc.DoubleClick(_listView.ClientRectangle.Right -
-					SystemInformation.DoubleClickSize.Width - 3, r.Top + 2);
+				mc.DoubleClick(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
 			}
 			Assert.AreEqual(1, l.Properties.SelectedIndices.Count);
 			Assert.AreEqual(0, l.Properties.SelectedIndices[0]);
