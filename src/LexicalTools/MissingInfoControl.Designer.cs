@@ -141,7 +141,7 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.Name = "_recordsListBox";
 			this._recordsListBox.Size = new System.Drawing.Size(129, 155);
 			this._recordsListBox.TabIndex = 2;
-			this._recordsListBox.View = System.Windows.Forms.View.Details;
+			this._recordsListBox.View = System.Windows.Forms.View.SmallIcon;
 			//
 			// _completedRecordsLabel
 			//
@@ -165,7 +165,7 @@ namespace WeSay.LexicalTools
 			this._completedRecordsListBox.Name = "_completedRecordsListBox";
 			this._completedRecordsListBox.Size = new System.Drawing.Size(129, 181);
 			this._completedRecordsListBox.TabIndex = 3;
-			this._completedRecordsListBox.View = System.Windows.Forms.View.Details;
+			this._completedRecordsListBox.View = System.Windows.Forms.View.SmallIcon;
 			//
 			// _buttonPanel
 			//
