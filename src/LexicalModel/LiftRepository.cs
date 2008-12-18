@@ -24,6 +24,8 @@ namespace WeSay.LexicalModel
 
 		public LiftRepository(string filePath, ProgressState progressState)
 		{
+			MaintainLockOnLift = false;
+
 			//set to true so that an exception in the constructor does not cause the destructor to throw
 			_disposed = true;
 			if (progressState == null)
@@ -33,7 +35,8 @@ namespace WeSay.LexicalModel
 			_liftFilePath = filePath;
 			_progressState = progressState;
 			CreateEmptyLiftFileIfNeeded(filePath);
-			LockLift();
+			if (MaintainLockOnLift)
+				LockLift();
 			MigrateLiftIfNeeded(progressState);
 			LastModified = new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc);
 			LoadAllLexEntries();
@@ -54,13 +57,14 @@ namespace WeSay.LexicalModel
 		private void MigrateLiftIfNeeded(ProgressState progressState)
 		{
 			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
-			UnLockLift();
-			if (preparer.IsMigrationNeeded())
+			using(new RightToAccessLiftExternally(this))
 			{
-				preparer.MigrateLiftFile(progressState);
+				if (preparer.IsMigrationNeeded())
+				{
+					preparer.MigrateLiftFile(progressState);
+				}
+				//now done in code as each entry is parsed in: preparer.PopulateDefinitions(progressState);
 			}
-			//now done in code as each entry is parsed in: preparer.PopulateDefinitions(progressState);
-			LockLift();
 		}
 
 		private void CreateEmptyLiftFile(string filePath)
@@ -151,40 +155,41 @@ namespace WeSay.LexicalModel
 
 			try
 			{
-				UnLockLift();
-				using (LexEntryFromLiftBuilder builder = new LexEntryFromLiftBuilder(this))
+				using (new RightToAccessLiftExternally(this))
 				{
-					LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
+					using (LexEntryFromLiftBuilder builder = new LexEntryFromLiftBuilder(this))
+					{
+						LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
 							new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(
-									builder);
+								builder);
 
-					parser.SetTotalNumberSteps += parser_SetTotalNumberSteps;
-					parser.SetStepsCompleted += parser_SetStepsCompleted;
+						parser.SetTotalNumberSteps += parser_SetTotalNumberSteps;
+						parser.SetStepsCompleted += parser_SetStepsCompleted;
 
-					parser.ParsingWarning += parser_ParsingWarning;
+						parser.ParsingWarning += parser_ParsingWarning;
 
-					try
-					{
-						parser.ReadLiftFile(_liftFilePath);
-					}
-					catch (LiftFormatException)
-					{
-						throw;
-					}
-					catch (Exception)
-					{
-						//our parser failed.  Hopefully, because of bad lift. Validate it now  to
-						//see if that's the problem.
-						Validator.CheckLiftWithPossibleThrow(_liftFilePath);
+						try
+						{
+							parser.ReadLiftFile(_liftFilePath);
+						}
+						catch (LiftFormatException)
+						{
+							throw;
+						}
+						catch (Exception)
+						{
+							//our parser failed.  Hopefully, because of bad lift. Validate it now  to
+							//see if that's the problem.
+							Validator.CheckLiftWithPossibleThrow(_liftFilePath);
 
-						//if it got past that, ok, send along the error the parser encountered.
-						throw;
+							//if it got past that, ok, send along the error the parser encountered.
+							throw;
+						}
 					}
 				}
 			}
 			finally
 			{
-				LockLift();
 				_loadingAllEntries = false;
 			}
 		}
@@ -201,7 +206,8 @@ namespace WeSay.LexicalModel
 
 		public override void Dispose()
 		{
-			UnLockLift();
+			if(MaintainLockOnLift)
+				UnLockLift();
 			base.Dispose();
 		}
 
@@ -340,8 +346,10 @@ namespace WeSay.LexicalModel
 				try
 				{
 					SynchronicMerger merger = new SynchronicMerger();
-					UnLockLift();
-					merger.MergeUpdatesIntoFile(_liftFilePath);
+					using (new RightToAccessLiftExternally(this))
+					{
+						merger.MergeUpdatesIntoFile(_liftFilePath);
+					}
 				}
 				catch (BadUpdateFileException error)
 				{
@@ -366,10 +374,6 @@ namespace WeSay.LexicalModel
 				{
 					ErrorReport.ReportNonFatalMessage(
 							"Could not finish updating LIFT dictionary file. Will try again later."+Environment.NewLine+" ("+e.Message+")");
-				}
-				finally
-				{
-					LockLift();
 				}
 			}
 		}
@@ -412,11 +416,23 @@ namespace WeSay.LexicalModel
 
 		private void LockLift()
 		{
+			if(!MaintainLockOnLift)
+				return;
+
 			if (_liftFileStreamForLocking != null)
 			{
 				throw new IOException("WeSay was not able to acquire a lock on the Lift file. Is it open in another program?");
 			}
 			_liftFileStreamForLocking = new FileStream(_liftFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
+		}
+
+		/// <summary>
+		/// THis is probably going away, as we move to giving up on the lock
+		/// (it blocks version control)
+		/// </summary>
+		private bool MaintainLockOnLift
+		{
+			get; set;
 		}
 
 		/// <summary>
@@ -428,7 +444,9 @@ namespace WeSay.LexicalModel
 
 			public RightToAccessLiftExternally(LiftRepository r)
 			{
-				_repository = r;
+				if (!r.MaintainLockOnLift)
+					return;//nothing to do
+
 				if (_repository.IsLiftFileLocked)
 				{
 					_repository.UnLockLift();
@@ -466,7 +484,8 @@ namespace WeSay.LexicalModel
 					{
 						if (_repository != null) // will be null if the repo wasn't locked, as happens when shutting down wesay and backing up last thing
 						{
-							_repository.LockLift();
+							if (_repository.MaintainLockOnLift)
+								_repository.LockLift();
 						}
 					}
 				}
