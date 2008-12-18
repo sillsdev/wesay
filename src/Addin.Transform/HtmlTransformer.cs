@@ -35,7 +35,7 @@ namespace Addin.Transform
 			{
 				return
 						StringCatalog.Get(
-								"~Creates a simple Html version of the dictionary, ready for printing.");
+								"~Creates a simple Html version of the dictionary.  Not a very good way to go.");
 			}
 		}
 

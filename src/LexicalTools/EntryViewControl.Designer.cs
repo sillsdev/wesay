@@ -91,7 +91,7 @@ namespace WeSay.LexicalTools
 			this._splitter.Name = "_splitter";
 			this._splitter.TabIndex = 1;
 			this._splitter.TabStop = false;
-			this._splitter.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.OnPreviewPaneSplitterMoved);
+
 			//
 			// EntryViewControl
 			//

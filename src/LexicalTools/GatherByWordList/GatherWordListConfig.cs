@@ -119,7 +119,10 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		public void WritingSystemIdChanged(string from, string to)
 		{
-			  //TODO, when we become writeable
+			  //TODO, (maybe?) when we become writeable
+			// if(WordListWritingSystemId==from)
+			//      WordListWritingSystemId=to;
+			// mark dirty if necessary
 		}
 	}
 }

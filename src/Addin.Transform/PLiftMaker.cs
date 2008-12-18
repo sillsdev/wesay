@@ -24,7 +24,7 @@ namespace Addin.Transform
 
 		public string MakePLiftTempFile(LexEntryRepository lexEntryRepository, ViewTemplate template)
 		{
-			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName().Replace(".tmp", ".lift"));
 			PLiftExporter exporter = new PLiftExporter(path, lexEntryRepository, template);
 			ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);

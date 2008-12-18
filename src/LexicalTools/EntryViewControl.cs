@@ -346,12 +346,5 @@ namespace WeSay.LexicalTools
 			RefreshLexicalEntryPreview();
 		}
 
-		private void OnPreviewPaneSplitterMoved(object sender, SplitterEventArgs e)
-		{
-			if(_memory !=null)
-			{
-				_memory.Set("previewPaneHeight", e.SplitY.ToString());
-			}
-		}
 	}
 }

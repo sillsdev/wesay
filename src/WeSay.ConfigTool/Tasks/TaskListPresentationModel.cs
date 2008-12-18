@@ -25,9 +25,11 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void OnProject_WritingSystemChanged(object sender, WeSayWordsProject.StringPair pair)
 		{
-			foreach (ICareThatWritingSystemIdChanged task in Tasks)
+			foreach (object task in Tasks)
 			{
-				task.WritingSystemIdChanged(pair.from, pair.to);
+				if (null == task as ICareThatWritingSystemIdChanged)
+					continue;
+				((ICareThatWritingSystemIdChanged)task).WritingSystemIdChanged(pair.from, pair.to);
 			}
 		}
 	}

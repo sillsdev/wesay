@@ -60,7 +60,8 @@ namespace WeSay.LexicalModel.Tests
 			_tempFolder.Delete();
 		}
 
-		[Test]
+		/* NOMORELOCKING
+		 [Test]
 		[ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsWriteableAfterRepositoryIsCreated_Throws()
 		{
@@ -68,6 +69,7 @@ namespace WeSay.LexicalModel.Tests
 			{
 			}
 		}
+		*/
 
 		[Test]
 		[ExpectedException(typeof(IOException))]
@@ -108,113 +110,116 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual("lift", root.Name);
 		}
 
-		[Test]
-		[ExpectedException(typeof(IOException))]
-		public void LiftIsLocked_ReturnsTrue()
-		{
-			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
-			FileStream streamForPermissionChecking = null;
-			try
-			{
-				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
-			}
-			finally
-			{
-				//This is in case the exception is not thrown
-				if (streamForPermissionChecking != null)
-				{
-					streamForPermissionChecking.Close();
-					streamForPermissionChecking.Dispose();
-				}
+		/* NOMORELOCKING
+		  [Test]
+		   [ExpectedException(typeof(IOException))]
+		   public void LiftIsLocked_ReturnsTrue()
+		   {
+			   Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			   FileStream streamForPermissionChecking = null;
+			   try
+			   {
+				   streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+			   }
+			   finally
+			   {
+				   //This is in case the exception is not thrown
+				   if (streamForPermissionChecking != null)
+				   {
+					   streamForPermissionChecking.Close();
+					   streamForPermissionChecking.Dispose();
+				   }
 
-			}
-		}
+			   }
+		   }
+		*/
+		   [Test]
+		   public void UnlockedLiftFile_ConstructorDoesNotThrow()
+		   {
+			   string persistedFilePath = _tempFolder.GetTemporaryFile();
+			   persistedFilePath = Path.GetFullPath(persistedFilePath);
 
-		[Test]
-		public void UnlockedLiftFile_ConstructorDoesNotThrow()
-		{
-			string persistedFilePath = _tempFolder.GetTemporaryFile();
-			persistedFilePath = Path.GetFullPath(persistedFilePath);
+			   // Confirm that the file is writable.
+			   FileStream fileStream = File.OpenWrite(persistedFilePath);
+			   Assert.IsTrue(fileStream.CanWrite);
 
-			// Confirm that the file is writable.
-			FileStream fileStream = File.OpenWrite(persistedFilePath);
-			Assert.IsTrue(fileStream.CanWrite);
+			   // Close it before creating the LiftRepository.
+			   fileStream.Close();
 
-			// Close it before creating the LiftRepository.
-			fileStream.Close();
+			   // LiftRepository constructor shouldn't throw an IOException.
+			   using (LiftRepository liftRepository = new LiftRepository(persistedFilePath))
+			   {
+			   }
+			   Assert.IsTrue(true); // Constructor didn't throw.
+			   File.Delete(persistedFilePath);
+		   }
+	   }
 
-			// LiftRepository constructor shouldn't throw an IOException.
-			using (LiftRepository liftRepository = new LiftRepository(persistedFilePath))
-			{
-			}
-			Assert.IsTrue(true); // Constructor didn't throw.
-			File.Delete(persistedFilePath);
-		}
-	}
+	   [TestFixture]
+	   public class LiftRepositoryCreatedFromPersistedData:
+			   IRepositoryPopulateFromPersistedTests<LexEntry>
+	   {
+		   private string _persistedFilePath;
+		   private TemporaryFolder _tempFolder;
 
-	[TestFixture]
-	public class LiftRepositoryCreatedFromPersistedData:
-			IRepositoryPopulateFromPersistedTests<LexEntry>
-	{
-		private string _persistedFilePath;
-		private TemporaryFolder _tempFolder;
+		   [SetUp]
+		   public override void SetUp()
+		   {
+			   _tempFolder = new TemporaryFolder();
+			   _persistedFilePath = _tempFolder.GetTemporaryFile();
+			   LiftFileInitializer.MakeFile(_persistedFilePath);
+			   RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+		   }
 
-		[SetUp]
-		public override void SetUp()
-		{
-			_tempFolder = new TemporaryFolder();
-			_persistedFilePath = _tempFolder.GetTemporaryFile();
-			LiftFileInitializer.MakeFile(_persistedFilePath);
-			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
-		}
+		   [TearDown]
+		   public override void TearDown()
+		   {
+			   RepositoryUnderTest.Dispose();
+			   _tempFolder.Delete();
+		   }
 
-		[TearDown]
-		public override void TearDown()
-		{
-			RepositoryUnderTest.Dispose();
-			_tempFolder.Delete();
-		}
+		   protected override void  LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
+		   {
+			   Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
+		   }
 
-		protected override void  LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
-		{
-			Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
-		}
+		   protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()       {
+			   QueryAdapter<LexEntry> query = new QueryAdapter<LexEntry>();
+			   query.Show("LexicalForm");
+			   ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
+			   Assert.AreEqual(1, resultsOfQuery.Count);
+			   Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
+		   }
 
-		protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()       {
-			QueryAdapter<LexEntry> query = new QueryAdapter<LexEntry>();
-			query.Show("LexicalForm");
-			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
-			Assert.AreEqual(1, resultsOfQuery.Count);
-			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
-		}
+		   protected override void CreateNewRepositoryFromPersistedData()
+		   {
+			   RepositoryUnderTest.Dispose();
+			   RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+		   }
 
-		protected override void CreateNewRepositoryFromPersistedData()
-		{
-			RepositoryUnderTest.Dispose();
-			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
-		}
+	/* NOMORELOCKING
+	 [Test]
+		   [ExpectedException(typeof(IOException))]
+		   public void LiftIsLocked_ReturnsTrue()
+		   {
+			   Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			   FileStream streamForPermissionChecking = null;
+			   try
+			   {
+				   streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+			   }
+			   finally
+			   {
+				   //This is in case the exception is not thrown
+				   if (streamForPermissionChecking != null)
+				   {
+					   streamForPermissionChecking.Close();
+					   streamForPermissionChecking.Dispose();
+				   }
 
-		[Test]
-		[ExpectedException(typeof(IOException))]
-		public void LiftIsLocked_ReturnsTrue()
-		{
-			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
-			FileStream streamForPermissionChecking = null;
-			try
-			{
-				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
-			}
-			finally
-			{
-				//This is in case the exception is not thrown
-				if (streamForPermissionChecking != null)
-				{
-					streamForPermissionChecking.Close();
-					streamForPermissionChecking.Dispose();
-				}
-
-			}
-		}
+			   }
+		   }
+	 */
 	}
 
 	[TestFixture]
@@ -255,28 +260,30 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
 
-		[Test]
-		[ExpectedException(typeof(IOException))]
-		public void LiftIsLocked_ReturnsTrue()
-		{
-			SetState();
-			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
-			FileStream streamForPermissionChecking = null;
-			try
-			{
-				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
-			}
-			finally
-			{
-				//This is in case the exception is not thrown
-				if (streamForPermissionChecking != null)
-				{
-					streamForPermissionChecking.Close();
-					streamForPermissionChecking.Dispose();
-				}
+		/* NOMORELOCKING
+		 [Test]
+		 [ExpectedException(typeof(IOException))]
+		 public void LiftIsLocked_ReturnsTrue()
+		 {
+			 SetState();
+			 Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			 FileStream streamForPermissionChecking = null;
+			 try
+			 {
+				 streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+			 }
+			 finally
+			 {
+				 //This is in case the exception is not thrown
+				 if (streamForPermissionChecking != null)
+				 {
+					 streamForPermissionChecking.Close();
+					 streamForPermissionChecking.Dispose();
+				 }
 
-			}
-		}
+			 }
+		 }
+		 */
 	}
 
 	[TestFixture]
@@ -307,131 +314,137 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
 
-		[Test]
-		[ExpectedException(typeof(IOException))]
-		public void LiftIsLocked_ReturnsTrue()
-		{
-			SetState();
-			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
-			FileStream streamForPermissionChecking = null;
-			try
-			{
-				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
-			}
-			finally
-			{
-				//This is in case the exception is not thrown
-				if (streamForPermissionChecking != null)
+		/* NOMORELOCKING
+		 [Test]
+			  [ExpectedException(typeof(IOException))]
+			  public void LiftIsLocked_ReturnsTrue()
+			  {
+				  SetState();
+				  Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+				  FileStream streamForPermissionChecking = null;
+				  try
+				  {
+					  streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+				  }
+				  finally
+				  {
+					  //This is in case the exception is not thrown
+					  if (streamForPermissionChecking != null)
+					  {
+						  streamForPermissionChecking.Close();
+						  streamForPermissionChecking.Dispose();
+					  }
+
+				  }
+			  }
+		 */
+		  }
+
+		  [TestFixture]
+		  public class LiftRepositoryDeleteIdTransitionTests: IRepositoryDeleteIdTransitionTests<LexEntry>
+		  {
+			  private string _persistedFilePath;
+			  private TemporaryFolder _tempFolder;
+
+			  [SetUp]
+			  public override void SetUp()
+			  {
+				  _tempFolder = new TemporaryFolder();
+				  _persistedFilePath = _tempFolder.GetTemporaryFile();
+				  RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+			  }
+
+			  [TearDown]
+			  public override void TearDown()
+			  {
+				  RepositoryUnderTest.Dispose();
+				  _tempFolder.Delete();
+			  }
+
+			  protected override void CreateNewRepositoryFromPersistedData()
+			  {
+				  RepositoryUnderTest.Dispose();
+				  RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+			  }
+
+			  /* NOMORELOCKING
+			   [Test]
+				[ExpectedException(typeof(IOException))]
+				public void LiftIsLocked_ReturnsTrue()
 				{
-					streamForPermissionChecking.Close();
-					streamForPermissionChecking.Dispose();
+					SetState();
+					Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+					FileStream streamForPermissionChecking = null;
+					try
+					{
+						streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+					}
+					finally
+					{
+						//This is in case the exception is not thrown
+						if (streamForPermissionChecking != null)
+						{
+							streamForPermissionChecking.Close();
+							streamForPermissionChecking.Dispose();
+						}
+
+					}
+				}
+			   */
+			}
+
+			[TestFixture]
+			public class LiftRepositoryDeleteAllItemsTransitionTests:
+					IRepositoryDeleteAllItemsTransitionTests<LexEntry>
+			{
+				private string _persistedFilePath;
+				private TemporaryFolder _tempFolder;
+
+				[SetUp]
+				public override void SetUp()
+				{
+					_tempFolder = new TemporaryFolder();
+					_persistedFilePath = _tempFolder.GetTemporaryFile();
+					RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 				}
 
-			}
-		}
-	}
-
-	[TestFixture]
-	public class LiftRepositoryDeleteIdTransitionTests: IRepositoryDeleteIdTransitionTests<LexEntry>
-	{
-		private string _persistedFilePath;
-		private TemporaryFolder _tempFolder;
-
-		[SetUp]
-		public override void SetUp()
-		{
-			_tempFolder = new TemporaryFolder();
-			_persistedFilePath = _tempFolder.GetTemporaryFile();
-			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
-		}
-
-		[TearDown]
-		public override void TearDown()
-		{
-			RepositoryUnderTest.Dispose();
-			_tempFolder.Delete();
-		}
-
-		protected override void CreateNewRepositoryFromPersistedData()
-		{
-			RepositoryUnderTest.Dispose();
-			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
-		}
-
-		[Test]
-		[ExpectedException(typeof(IOException))]
-		public void LiftIsLocked_ReturnsTrue()
-		{
-			SetState();
-			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
-			FileStream streamForPermissionChecking = null;
-			try
-			{
-				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
-			}
-			finally
-			{
-				//This is in case the exception is not thrown
-				if (streamForPermissionChecking != null)
+				[TearDown]
+				public override void TearDown()
 				{
-					streamForPermissionChecking.Close();
-					streamForPermissionChecking.Dispose();
+					RepositoryUnderTest.Dispose();
+					_tempFolder.Delete();
 				}
 
-			}
-		}
-	}
-
-	[TestFixture]
-	public class LiftRepositoryDeleteAllItemsTransitionTests:
-			IRepositoryDeleteAllItemsTransitionTests<LexEntry>
-	{
-		private string _persistedFilePath;
-		private TemporaryFolder _tempFolder;
-
-		[SetUp]
-		public override void SetUp()
-		{
-			_tempFolder = new TemporaryFolder();
-			_persistedFilePath = _tempFolder.GetTemporaryFile();
-			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
-		}
-
-		[TearDown]
-		public override void TearDown()
-		{
-			RepositoryUnderTest.Dispose();
-			_tempFolder.Delete();
-		}
-
-		protected override void RepopulateRepositoryFromPersistedData()
-		{
-			RepositoryUnderTest.Dispose();
-			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
-		}
-
-		[Test]
-		[ExpectedException(typeof(IOException))]
-		public void LiftIsLocked_ReturnsTrue()
-		{
-			SetState();
-			Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
-			FileStream streamForPermissionChecking = null;
-			try
-			{
-				streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
-			}
-			finally
-			{
-				//This is in case the exception is not thrown
-				if(streamForPermissionChecking != null)
+				protected override void RepopulateRepositoryFromPersistedData()
 				{
-					streamForPermissionChecking.Close();
-					streamForPermissionChecking.Dispose();
+					RepositoryUnderTest.Dispose();
+					RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 				}
 
-			}
-		}
+				/* NOMORELOCKING
+				 [Test]
+				[ExpectedException(typeof(IOException))]
+				public void LiftIsLocked_ReturnsTrue()
+				{
+					SetState();
+					Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+					FileStream streamForPermissionChecking = null;
+					try
+					{
+						streamForPermissionChecking = new FileStream(_persistedFilePath, FileMode.Open, FileAccess.Write);
+					}
+					finally
+					{
+						//This is in case the exception is not thrown
+						if(streamForPermissionChecking != null)
+						{
+							streamForPermissionChecking.Close();
+							streamForPermissionChecking.Dispose();
+						}
+
+					}
+				}
+				 */
 	}
 
 	[TestFixture]
