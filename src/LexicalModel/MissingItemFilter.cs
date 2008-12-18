@@ -65,7 +65,7 @@ namespace WeSay.LexicalModel
 				case "OptionCollection":
 					return ((OptionRefCollection) content).IsEmpty;
 				case "MultiText":
-					return IsMissingWritingSystem((MultiText) content);
+					return IsMissingAnyWritingSystemThatIsPartOfField((MultiText) content);
 				case "RelationToOneEntry":
 					LexRelationCollection collection = (LexRelationCollection) content;
 					if (IsSkipped(collection.Parent, Field.FieldName))
@@ -76,7 +76,7 @@ namespace WeSay.LexicalModel
 					{
 						foreach (LexRelation r in collection.Relations)
 						{
-							if (r.TargetId != null)
+							if (!string.IsNullOrEmpty(r.TargetId))
 							{
 								return false; // has one non-empty relation
 							}
@@ -162,11 +162,11 @@ namespace WeSay.LexicalModel
 			{
 				if (Field.FieldName == Field.FieldNames.ExampleSentence.ToString())
 				{
-					return IsMissingWritingSystem(example.Sentence);
+					return IsMissingAnyWritingSystemThatIsPartOfField(example.Sentence);
 				}
 				else if (Field.FieldName == Field.FieldNames.ExampleTranslation.ToString())
 				{
-					return IsMissingWritingSystem(example.Translation);
+					return IsMissingAnyWritingSystemThatIsPartOfField(example.Translation);
 				}
 				else
 				{
@@ -206,7 +206,7 @@ namespace WeSay.LexicalModel
 			{
 				if (Field.FieldName == Field.FieldNames.EntryLexicalForm.ToString())
 				{
-					if (IsMissingWritingSystem(entry.LexicalForm))
+					if (IsMissingAnyWritingSystemThatIsPartOfField(entry.LexicalForm))
 					{
 						return true;
 					}
@@ -246,7 +246,7 @@ namespace WeSay.LexicalModel
 			return false;
 		}
 
-		private bool IsMissingWritingSystem(MultiTextBase field)
+		private bool IsMissingAnyWritingSystemThatIsPartOfField(MultiTextBase field)
 		{
 			foreach (string wsId in Field.WritingSystemIds)
 			{
