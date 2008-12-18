@@ -987,7 +987,8 @@ namespace WeSay.LexicalModel.Tests
 			_tempFolder.Delete();
 		}
 
-		[Test]
+ /* NOMORELOCKING
+   [Test]
 		[ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsWriteableAfterRepositoryIsCreated_Throws()
 		{
@@ -995,7 +996,7 @@ namespace WeSay.LexicalModel.Tests
 			{
 			}
 		}
-
+*/
 		[Test]
 		[ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsNotWriteableWhenRepositoryIsCreated_Throws()
