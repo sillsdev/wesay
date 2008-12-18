@@ -66,6 +66,9 @@ namespace WeSay.AddinLib
 
 			_setupButton.Visible = inAdminMode && _addin is IWeSayAddinHasSettings &&
 								   ((IWeSayAddinHasSettings) _addin).Settings != null;
+
+
+			_moreInfoButton.Visible = inAdminMode && _addin is IWeSayAddinHasMoreInfo;
 		}
 
 		public void Draw(Graphics graphics, Rectangle bounds)
@@ -201,6 +204,11 @@ namespace WeSay.AddinLib
 			DoShowInWeSay = !DoShowInWeSay;
 			UpdateVisualThings();
 			//_toggleShowInWeSay.Invalidate();
+		}
+
+		private void OnMoreInfo(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			((IWeSayAddinHasMoreInfo)_addin).ShowMoreInfoDialog(ParentForm);
 		}
 	}
 

@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{9D196637-2D50-4604-A310-378083CEA809}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -76,6 +76,13 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="LexiquePro\AboutLexiquePro.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="LexiquePro\AboutLexiquePro.Designer.cs">
+	  <DependentUpon>AboutLexiquePro.cs</DependentUpon>
+	</Compile>
+	<Compile Include="LexiquePro\LexiqueProSender.cs" />
 	<Compile Include="PdfMaker.cs" />
 	<Compile Include="HtmlInWord.cs" />
 	<Compile Include="HtmlTransformer.cs" />
@@ -147,6 +154,9 @@
 	<None Include="Resources\wordExport.png" />
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="LexiquePro\AboutLexiquePro.resx">
+	  <DependentUpon>AboutLexiquePro.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="plift2html.xsl">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>
@@ -156,6 +166,12 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\pdfdictionary.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\lexiquePro.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\greenLexiquePro.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
