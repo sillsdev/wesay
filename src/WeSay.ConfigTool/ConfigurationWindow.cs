@@ -292,6 +292,10 @@ namespace WeSay.ConfigTool
 			{
 				_projectSettingsControl.Dispose();
 			}
+			   if (_project != null)
+				{
+					_project.Dispose();
+				}
 		}
 
 		private void AdminWindow_FormClosing(object sender, FormClosingEventArgs e)
