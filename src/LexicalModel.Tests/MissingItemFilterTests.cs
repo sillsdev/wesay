@@ -108,5 +108,37 @@ namespace WeSay.LexicalModel.Tests
 			MissingFieldQuery f = new MissingFieldQuery(field);
 			Assert.IsFalse(f.FilteringPredicate(entryWithUnknownPos));
 		}
+
+
+		[Test]
+		public void FilteringPredicate_RelationTargetIsEmtpyString_True()
+		{
+			CheckRelationFilter("uncle", string.Empty, true);
+		}
+
+		[Test]
+		public void FilteringPredicate_RelationTargetIsNull_True()
+		{
+			CheckRelationFilter("uncle", null, true);
+		}
+
+		[Test]
+		public void FilteringPredicate_RelationTargetIsFilled_False()
+		{
+			CheckRelationFilter("uncle","ken", false);
+		}
+
+		private static void CheckRelationFilter(string relationname,string targetId, bool shouldMatch)
+		{
+			LexEntry entry = new LexEntry();
+			entry.AddRelationTarget(relationname, targetId);
+			Field field = new Field(relationname, "LexEntry",
+									new string[] { "vernacular" },
+									Field.MultiplicityType.ZeroOr1,
+									"RelationToOneEntry");
+			MissingFieldQuery f = new MissingFieldQuery(field);
+			Assert.AreEqual(shouldMatch, f.FilteringPredicate(entry));
+		}
+
 	}
 }

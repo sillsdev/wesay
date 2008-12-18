@@ -335,7 +335,7 @@ namespace WeSay.Project
 					configurationDoc.CreateNavigator().SelectSingleNode("configuration").GetAttribute("version", "");
 				if(int.Parse(versionNumberAsString) > CurrentWeSayConfigFileVersion)
 				{
-					throw new ApplicationException("The config file is to new for this version of wesay. Please download a newer version of wesay from www.wesay.org");
+					throw new ApplicationException("The config file is too new for this version of wesay. Please download a newer version of wesay from www.wesay.org");
 				}
 			}
 		}

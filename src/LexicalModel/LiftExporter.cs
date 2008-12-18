@@ -54,6 +54,7 @@ namespace WeSay.LexicalModel
 			// this will give you a bom, which messes up princexml :settings.Encoding = Encoding.UTF8;
 			Encoding utf8NoBom = new UTF8Encoding(false);
 			settings.Encoding = utf8NoBom;
+			settings.NewLineOnAttributes = false;
 			settings.CloseOutput = true;
 			return settings;
 		}
@@ -363,6 +364,9 @@ namespace WeSay.LexicalModel
 
 			foreach (LexRelation relation in collection.Relations)
 			{
+				if(string.IsNullOrEmpty(relation.Key))
+					continue;
+
 				Writer.WriteStartElement("relation");
 				Writer.WriteAttributeString("type", relation.FieldId);
 				Writer.WriteAttributeString("ref", relation.Key);
@@ -371,6 +375,9 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		/// <summary>
+		/// allows subclass to output a dereferenced target name, e.g., for plift
+		/// </summary>
 		protected virtual void WriteRelationTarget(LexRelation relation) {}
 
 		private void WriteOptionRefCollection(string traitName, OptionRefCollection collection)

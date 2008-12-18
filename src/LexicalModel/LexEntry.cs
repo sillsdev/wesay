@@ -490,7 +490,7 @@ namespace WeSay.LexicalModel
 		public void AddRelationTarget(string relationName, string targetId)
 		{
 			LexRelationCollection relations =
-					GetOrCreateProperty<LexRelationCollection>(WellKnownProperties.BaseForm);
+					GetOrCreateProperty<LexRelationCollection>(relationName);
 			relations.Relations.Add(new LexRelation(relationName, targetId, this));
 		}
 	}
