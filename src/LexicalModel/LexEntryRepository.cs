@@ -469,42 +469,36 @@ namespace WeSay.LexicalModel
 						int senseNumber = 0;
 						foreach (LexSense sense in entryToQuery.Senses)
 						{
-							string definition = sense.Definition[writingSystem.Id];
-							string gloss = sense.Gloss[writingSystem.Id];
+							string rawDefinition = sense.Definition[writingSystem.Id];
+							List<string> definitions = GetTrimmedElementsSeperatedBySemiColon(rawDefinition);
 
-							if(String.IsNullOrEmpty(definition) && String.IsNullOrEmpty(gloss))
+							string rawGloss = sense.Gloss[writingSystem.Id];
+							List<string> glosses = GetTrimmedElementsSeperatedBySemiColon(rawGloss);
+
+							List<string> definitionAndGlosses = new List<string>();
+							definitionAndGlosses = MergeListsWhileExcludingDoublesAndEmptyStrings(definitions, glosses);
+
+
+							if(definitionAndGlosses.Count == 0)
 							{
 								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 								tokenFieldsAndValues.Add("Form", null);
 								tokenFieldsAndValues.Add("Sense", senseNumber);
 								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
-								senseNumber++;
-								continue;
 							}
-							if(definition == gloss)
+							else
 							{
-								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-								tokenFieldsAndValues.Add("Form", definition);
-								tokenFieldsAndValues.Add("Sense", senseNumber);
-								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
-								senseNumber++;
-								continue;
+								foreach (string definition in definitionAndGlosses)
+								{
+									IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+									tokenFieldsAndValues.Add("Form", definition);
+									tokenFieldsAndValues.Add("Sense", senseNumber);
+									fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
+								}
 							}
-							if(!String.IsNullOrEmpty(definition))
-							{
-								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-								tokenFieldsAndValues.Add("Form", definition);
-								tokenFieldsAndValues.Add("Sense", senseNumber);
-								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
-							}
-							if (!String.IsNullOrEmpty(gloss))
-							{
-								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-								tokenFieldsAndValues.Add("Form", gloss);
-								tokenFieldsAndValues.Add("Sense", senseNumber);
-								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
-							}
+
 							senseNumber++;
+							continue;
 						}
 						return fieldsandValuesForRecordTokens;
 					});
@@ -516,6 +510,42 @@ namespace WeSay.LexicalModel
 				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, definitionQuery));
 			}
 			return _caches[cacheName].GetResultSet();
+		}
+
+		private List<string> MergeListsWhileExcludingDoublesAndEmptyStrings(IEnumerable<string> list1, IEnumerable<string> list2)
+		{
+			List<string> mergedList = new List<string>();
+			foreach (string definitionElement in list1)
+			{
+				if((!mergedList.Contains(definitionElement)) && (definitionElement != ""))
+				{
+					mergedList.Add(definitionElement);
+				}
+			}
+			foreach (string glossElement in list2)
+			{
+				if (!mergedList.Contains(glossElement) && (glossElement != ""))
+				{
+					mergedList.Add(glossElement);
+				}
+			}
+			return mergedList;
+		}
+
+		private List<string> GetTrimmedElementsSeperatedBySemiColon(string text)
+		{
+			List<string> textElements = new List<string>();
+			foreach (string textElement in text.Split(new char[] { ';' }))
+			{
+				string textElementTrimmed = textElement.Trim();
+				textElements.Add(textElementTrimmed);
+			}
+			return textElements;
+		}
+
+		private bool IsNullOrEmptyOrSemiColon(string text)
+		{
+			return (String.IsNullOrEmpty(text) || text == ";");
 		}
 
 		/// <summary>
