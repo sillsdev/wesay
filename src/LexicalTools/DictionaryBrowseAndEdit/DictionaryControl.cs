@@ -33,7 +33,7 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public DictionaryControl(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
+		public DictionaryControl(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate, ITaskMemory memory)
 		{
 			if (lexEntryRepository == null)
 			{
@@ -73,6 +73,9 @@ namespace WeSay.LexicalTools
 			_findText.KeyDown += _findText_KeyDown;
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
 
+			_splitter.SetMemory(memory);
+			_entryViewControl.SetMemory(memory.CreateNewSection("entryView"));
+
 			UpdateDisplay();
 		}
 
@@ -106,6 +109,8 @@ namespace WeSay.LexicalTools
 		{
 			get { return _recordsListBox.SelectedIndex; }
 		}
+
+
 
 		public event EventHandler SelectedIndexChanged = delegate { };
 

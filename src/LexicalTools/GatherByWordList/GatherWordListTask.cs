@@ -8,6 +8,7 @@ using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
@@ -22,37 +23,19 @@ namespace WeSay.LexicalTools
 		private readonly WritingSystem _lexicalUnitWritingSystem;
 		// private bool _suspendNotificationOfNavigation=false;
 
-		public GatherWordListTask(LexEntryRepository lexEntryRepository,
-								  string label,
-								  string description,
-								  string wordListFileName,
-								  string wordListWritingSystemId,
+		public GatherWordListTask(IGatherWordListConfig config,
+									LexEntryRepository lexEntryRepository,
 								  ViewTemplate viewTemplate)
-				: this(
-						lexEntryRepository,
-						label,
-						label,
-						description,
-						wordListFileName,
-						wordListWritingSystemId,
-						viewTemplate) {}
 
-		public GatherWordListTask(LexEntryRepository lexEntryRepository,
-								  string label,
-								  string longLabel,
-								  string description,
-								  string wordListFileName,
-								  string writingSystemIdForWordListLanguage,
-								  ViewTemplate viewTemplate)
-				: base(label, longLabel, description, false, lexEntryRepository, viewTemplate)
+				: base(config, lexEntryRepository, viewTemplate)
 		{
-			if (wordListFileName == null)
+			if (config.WordListFileName == null)
 			{
 				throw new ArgumentNullException("wordListFileName");
 			}
-			if (writingSystemIdForWordListLanguage == null)
+			if (config.WordListWritingSystemId == null)
 			{
-				throw new ArgumentNullException("writingSystemIdForWordListLanguage");
+				throw new ArgumentNullException("wordListWritingSystemId");
 			}
 			if (viewTemplate == null)
 			{
@@ -72,9 +55,9 @@ namespace WeSay.LexicalTools
 				_lexicalUnitWritingSystem = firstWS;
 			}
 
-			_wordListFileName = wordListFileName;
+			_wordListFileName = config.WordListFileName;
 			_words = null;
-			_writingSystemIdForWordListWords = writingSystemIdForWordListLanguage;
+			_writingSystemIdForWordListWords = config.WordListWritingSystemId;
 		}
 
 		private void LoadWordList()

@@ -118,6 +118,7 @@
 	<Compile Include="registrySettingsProvider.cs" />
 	<Compile Include="Services\HtmlArticleMaker.cs" />
 	<Compile Include="Properties\Settings.cs" />
+	<Compile Include="StatusBarController.cs" />
 	<Compile Include="TabbedForm.cs">
 	  <SubType>Form</SubType>
 	</Compile>

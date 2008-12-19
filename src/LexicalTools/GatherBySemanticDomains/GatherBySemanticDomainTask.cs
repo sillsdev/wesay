@@ -31,45 +31,21 @@ namespace WeSay.LexicalTools
 		private int _currentQuestionIndex;
 		private bool _alreadyReportedWSLookupFailure;
 
-		public GatherBySemanticDomainTask(LexEntryRepository lexEntryRepository,
-										  string label,
-										  string description,
-										  string semanticDomainQuestionsFileName,
-										  ViewTemplate viewTemplate,
-										  string semanticDomainFieldName)
-				: this(
-						lexEntryRepository,
-						label,
-						label,
-						description,
-						string.Empty,
-						string.Empty,
-						semanticDomainQuestionsFileName,
-						viewTemplate,
-						semanticDomainFieldName) {}
-
-		public GatherBySemanticDomainTask(LexEntryRepository lexEntryRepository,
-										  string label,
-										  string longLabel,
-										  string description,
-										  string remainingCountText,
-										  string referenceCountText,
-										  string semanticDomainsQuestionFileName,
-										  ViewTemplate viewTemplate,
-										  string semanticDomainFieldName)
+		public GatherBySemanticDomainTask(IGatherBySemanticDomainsConfig config,
+										  LexEntryRepository lexEntryRepository,
+										  ViewTemplate viewTemplate)
 			: base(
-					label,
-					longLabel,
-					description,
-					remainingCountText,
-					referenceCountText,
-					false,
-					lexEntryRepository,
-					viewTemplate)
+			   config,
+				lexEntryRepository,
+				viewTemplate)
 		{
-			if (semanticDomainsQuestionFileName == null)
+			if (config == null)
 			{
-				throw new ArgumentNullException("semanticDomainsQuestionFileName");
+				throw new ArgumentNullException("config");
+			}
+			if (string.IsNullOrEmpty(config.semanticDomainsQuestionFileName))
+			{
+				throw new ArgumentNullException("config.semanticDomainsQuestionFileName");
 			}
 			if (viewTemplate == null)
 			{
@@ -80,7 +56,7 @@ namespace WeSay.LexicalTools
 			_currentQuestionIndex = 0;
 			_words = null;
 			_semanticDomainQuestionsFileName =
-				DetermineActualQuestionsFileName(semanticDomainsQuestionFileName);
+				DetermineActualQuestionsFileName(config.semanticDomainsQuestionFileName);
 			if (!File.Exists(_semanticDomainQuestionsFileName))
 			{
 				string pathInProject =
@@ -108,10 +84,24 @@ namespace WeSay.LexicalTools
 				}
 			}
 
-			_semanticDomainField = viewTemplate.GetField(semanticDomainFieldName);
-
+			_semanticDomainField = viewTemplate.GetField("SemanticDomainDdp4");
 
 			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
+		}
+
+
+		/// <summary>
+		/// for old unit tests
+		/// </summary>
+		/// <param name="semanticDomainsQuestionFileName"></param>
+		/// <param name="lexEntryRepository"></param>
+		/// <param name="viewTemplate"></param>
+		public GatherBySemanticDomainTask(string semanticDomainsQuestionFileName, LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
+			: this(GatherBySemanticDomainConfig.CreateForTests(semanticDomainsQuestionFileName),
+					lexEntryRepository,
+					viewTemplate)
+		{
+
 		}
 
 		private void EnsureQuestionsFileExists()
@@ -215,8 +205,8 @@ namespace WeSay.LexicalTools
 		private Option GetOptionFromKey(string key)
 		{
 			return
-					_semanticDomainOptionsList.Options.Find(
-							delegate(Option o) { return o.Key == key; });
+				_semanticDomainOptionsList.Options.Find(
+					delegate(Option o) { return o.Key == key; });
 		}
 
 		public string CurrentDomainDescription
@@ -276,7 +266,7 @@ namespace WeSay.LexicalTools
 			get
 			{
 				return StringCatalog.Get("~Do not just translate these words; instead think of words in your own language.",
-											 "This is shown in the Gather By Semantic Domains task after each semantic domain question. The questions contain example words to help clarify what the domain is about, and this was added to remind the user that he/she is gathering based on the domain, not these examples.");
+										 "This is shown in the Gather By Semantic Domains task after each semantic domain question. The questions contain example words to help clarify what the domain is about, and this was added to remind the user that he/she is gathering based on the domain, not these examples.");
 			}
 		}
 
@@ -453,8 +443,8 @@ namespace WeSay.LexicalTools
 			if (lexicalForm != string.Empty)
 			{
 				ResultSet<LexEntry> recordTokens =
-						LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
-																			 WordWritingSystem);
+					LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
+																		 WordWritingSystem);
 				if (recordTokens.Count == 0)
 				{
 					LexEntry entry = LexEntryRepository.CreateItem();
@@ -488,8 +478,8 @@ namespace WeSay.LexicalTools
 				// this task was coded to have a list of word-forms, not actual entries.
 				//so we have to go searching for possible matches at this point.
 				ResultSet<LexEntry> matchingEntries =
-						LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
-																			 WordWritingSystem);
+					LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
+																		 WordWritingSystem);
 				foreach (RecordToken<LexEntry> recordToken in matchingEntries)
 				{
 					DisassociateCurrentSemanticDomainFromEntry(recordToken); // might remove senses
@@ -508,7 +498,7 @@ namespace WeSay.LexicalTools
 			{
 				LexSense sense = entry.Senses[i];
 				OptionRefCollection semanticDomains =
-						sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
+					sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 				if (semanticDomains != null)
 				{
 					semanticDomains.Remove(CurrentDomainKey);
@@ -529,7 +519,7 @@ namespace WeSay.LexicalTools
 		{
 			LexSense sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
 			OptionRefCollection semanticDomains =
-					sense.GetOrCreateProperty<OptionRefCollection>(_semanticDomainField.FieldName);
+				sense.GetOrCreateProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 			if (!semanticDomains.Contains(CurrentDomainKey))
 			{
 				semanticDomains.Add(CurrentDomainKey);
@@ -545,8 +535,8 @@ namespace WeSay.LexicalTools
 			string domainKey = DomainKeys[domainIndex];
 
 			beginIndex =
-					recordTokens.FindFirstIndex(
-							delegate(RecordToken<LexEntry> token) { return (string) token["SemanticDomain"] == domainKey; });
+				recordTokens.FindFirstIndex(
+					delegate(RecordToken<LexEntry> token) { return (string) token["SemanticDomain"] == domainKey; });
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
@@ -576,7 +566,7 @@ namespace WeSay.LexicalTools
 
 				// should verify that this writing system is in optionslist
 				_semanticDomainWritingSystem =
-						BasilProject.Project.WritingSystems[WritingSystemIdForNamesAndQuestions];
+					BasilProject.Project.WritingSystems[WritingSystemIdForNamesAndQuestions];
 				string semanticDomainType = reader.GetAttribute("semantic-domain-type");
 				// should verify that domain type matches type of optionList in semantic domain field
 
@@ -622,8 +612,8 @@ namespace WeSay.LexicalTools
 				try
 				{
 					ws =
-							ViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainsDdp4).
-									WritingSystemIds[0];
+						ViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainsDdp4).
+							WritingSystemIds[0];
 				}
 				catch (Exception)
 				{
@@ -631,7 +621,7 @@ namespace WeSay.LexicalTools
 					{
 						_alreadyReportedWSLookupFailure = true;
 						ErrorReport.ReportNonFatalMessage(
-								"WeSay was unable to get a writing system to use from the configuration Semantic Domain Field. English will be used.");
+							"WeSay was unable to get a writing system to use from the configuration Semantic Domain Field. English will be used.");
 					}
 				}
 				return ws;
@@ -665,7 +655,7 @@ namespace WeSay.LexicalTools
 			if (_semanticDomainOptionsList == null)
 			{
 				_semanticDomainOptionsList =
-						WeSayWordsProject.Project.GetOptionsList(_semanticDomainField, false);
+					WeSayWordsProject.Project.GetOptionsList(_semanticDomainField, false);
 			}
 
 			UpdateCurrentWords();
@@ -679,8 +669,8 @@ namespace WeSay.LexicalTools
 		private ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain()
 		{
 			return
-					LexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(
-							_semanticDomainField.FieldName);
+				LexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(
+					_semanticDomainField.FieldName);
 		}
 
 		public override void Deactivate()

@@ -188,8 +188,8 @@ namespace WeSay.ConfigTool
 														  false,
 														  BasilProject.Project.WritingSystems,
 														  CommonEnumerations.VisibilitySetting.
-																  Visible,
-														  _currentField.IsSpellCheckingEnabled);
+															  Visible,
+														  _currentField.IsSpellCheckingEnabled, false);
 				m.SizeChanged += OnNameControlSizeChanged;
 				m.Bounds = _nameMultiTextControl.Bounds;
 				m.Top = _nameLabel.Top;

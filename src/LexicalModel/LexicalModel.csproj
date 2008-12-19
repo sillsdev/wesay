@@ -97,7 +97,6 @@
 	<Compile Include="Phonetic.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="ResultSetToListOfStringsAdapter.cs" />
-	<Compile Include="WeSayDataObjectLabelAdaptor.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">

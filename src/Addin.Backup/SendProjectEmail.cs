@@ -26,7 +26,7 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return string.Format(StringCatalog.Get("~Email My Work to {0}"),
+				return string.Format(StringCatalog.Get("~Email this dictionary to {0}"),
 									 _settings.RecipientName);
 			}
 		}
@@ -38,7 +38,7 @@ namespace Addin.Backup
 				return
 						string.Format(
 								StringCatalog.Get(
-										"~Send a zipped email containing all your WeSay work."));
+										"~Email this dictionary as a compressed attachment"));
 			}
 		}
 
