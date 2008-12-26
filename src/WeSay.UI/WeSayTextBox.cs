@@ -11,7 +11,7 @@ using WeSay.Foundation;
 
 namespace WeSay.UI
 {
-	public partial class WeSayTextBox: TextBox
+	public partial class WeSayTextBox: TextBox, ITextOrAudioBox
 	{
 		private WritingSystem _writingSystem;
 

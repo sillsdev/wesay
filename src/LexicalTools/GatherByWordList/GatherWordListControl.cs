@@ -58,8 +58,10 @@ namespace WeSay.LexicalTools
 			{
 				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
 			}
-			_vernacularBox.TextBoxes[0].Focus();
-			_vernacularBox.TextBoxes[0].SelectionStart = 1000; //go to end
+			var box = _vernacularBox.TextBoxes[0];
+			box.Focus();
+			if(box is WeSayTextBox)
+					((WeSayTextBox) box).SelectionStart = 1000; //go to end
 		}
 
 		private void UpdateSourceWord()

@@ -29,6 +29,8 @@ namespace WeSay.LexicalTools
 
 		internal int AddWidgets(LexEntry entry, int insertAtRow)
 		{
+			 SetUpLayoutInfoServiceProvider(entry);
+
 			DetailList.SuspendLayout();
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
@@ -62,6 +64,13 @@ namespace WeSay.LexicalTools
 
 			DetailList.ResumeLayout();
 			return rowCount;
+		}
+
+		private void SetUpLayoutInfoServiceProvider(LexEntry entry)
+		{
+			Field lexicalUnitField = ActiveViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			string entryName = entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds);
+			_serviceProvider = new LayoutInfoProvider(entryName);
 		}
 	}
 }

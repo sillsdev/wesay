@@ -1,12 +1,14 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows.Forms;
 using WeSay.Foundation;
 
 namespace WeSay.UI
 {
 	/// <summary>
-	/// This simple binding class connects a text box with a MultiText.
+	/// This simple binding class connects a text box with a MultiText or AudioField (which just
+	/// looks from here like something with  a text (which happens to be an audio file name).
 	/// Changes in either one are reflected in the other.
 	/// </summary>
 	public class TextBinding
@@ -14,19 +16,20 @@ namespace WeSay.UI
 		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate { };
 		private readonly string _writingSystemId;
 		private INotifyPropertyChanged _dataTarget;
-		private WeSayTextBox _textBoxTarget;
+		private Control _textBoxTarget;
 		private bool _inMidstOfChange;
 		private string _pendingValueChange=null;
 
 		public TextBinding(INotifyPropertyChanged dataTarget,
 						   string writingSystemId,
-						   WeSayTextBox widgetTarget)
+						   Control widgetTarget)
 		{
 			Debug.Assert(dataTarget != null);
 			_dataTarget = dataTarget;
 			_dataTarget.PropertyChanged += OnDataPropertyChanged;
 			_writingSystemId = writingSystemId;
 			_textBoxTarget = widgetTarget;
+
 			_textBoxTarget.TextChanged += OnTextBoxChanged;
 			_textBoxTarget.HandleDestroyed += _textBoxTarget_HandleDestroyed;
 			_textBoxTarget.Disposed += _textBoxTarget_Disposed;

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
@@ -9,6 +10,7 @@ using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
+using System.Linq;
 
 namespace WeSay.LexicalTools
 {
@@ -32,6 +34,8 @@ namespace WeSay.LexicalTools
 		private readonly LexEntryRepository _lexEntryRepository;
 
 		private readonly ViewTemplate _viewTemplate;
+
+		protected LayoutInfoProvider _serviceProvider;
 
 		/// This field is for temporarily storing a ghost field about to become "real".
 		/// This is critical, though messy, because
@@ -83,6 +87,7 @@ namespace WeSay.LexicalTools
 			_detailList = builder;
 			_viewTemplate = viewTemplate;
 			_lexEntryRepository = lexEntryRepository;
+
 		}
 
 		/// <summary>
@@ -109,7 +114,8 @@ namespace WeSay.LexicalTools
 										 BasilProject.Project.WritingSystems,
 										 field.Visibility,
 										 field.IsSpellCheckingEnabled,
-										 field.IsMultiParagraph);
+										 field.IsMultiParagraph,
+										 _serviceProvider);
 			}
 			else
 			{
@@ -124,11 +130,12 @@ namespace WeSay.LexicalTools
 		private void BindMultiTextControlToField(MultiTextControl control,
 												 INotifyPropertyChanged multiTextToBindTo)
 		{
-			foreach (WeSayTextBox box in control.TextBoxes)
+			foreach (Control c in control.TextBoxes)
 			{
-				TextBinding binding = new TextBinding(multiTextToBindTo, box.WritingSystem.Id, box);
-				binding.ChangeOfWhichItemIsInFocus +=
+					TextBinding binding = new TextBinding(multiTextToBindTo, ((ITextOrAudioBox) c).WritingSystem.Id, c);
+					binding.ChangeOfWhichItemIsInFocus +=
 						_detailList.OnBinding_ChangeOfWhichItemIsInFocus;
+
 			}
 		}
 
@@ -167,7 +174,7 @@ namespace WeSay.LexicalTools
 														  false,
 														  BasilProject.Project.WritingSystems,
 														  field.Visibility,
-														  field.IsSpellCheckingEnabled, false);
+														  field.IsSpellCheckingEnabled, false, null);
 
 				Control refWidget = DetailList.AddWidgetRow(label,
 															isHeading,
@@ -175,10 +182,14 @@ namespace WeSay.LexicalTools
 															insertAtRow + rowCount,
 															true);
 
-				foreach (WeSayTextBox box in m.TextBoxes)
+				foreach (ITextOrAudioBox box in m.TextBoxes)
 				{
-					GhostBinding<T> g = MakeGhostBinding(list, propertyName, box.WritingSystem, box);
-					g.ReferenceControl = refWidget;
+					WeSayTextBox tb = box as WeSayTextBox;
+					if (tb != null)
+					{
+						GhostBinding<T> g = MakeGhostBinding(list, propertyName, box.WritingSystem, tb);
+						g.ReferenceControl = refWidget;
+					}
 				}
 				return 1;
 			}

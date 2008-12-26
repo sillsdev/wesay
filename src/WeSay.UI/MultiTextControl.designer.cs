@@ -19,11 +19,6 @@ namespace WeSay.UI
 			//Debug.WriteLine("Disposing " + Name + "   Disposing=" + disposing);
 			if (disposing && (components != null))
 			{
-				//foreach (WeSayTextBox box in _textBoxes)
-				//{
-				//    box.SizeChanged -= box_SizeChanged;
-				//}
-
 				components.Dispose();
 			}
 			base.Dispose(disposing);

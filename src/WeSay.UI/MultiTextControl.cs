@@ -4,16 +4,19 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using Palaso.Text;
 using WeSay.Foundation;
+using WeSay.UI.audio;
 
 namespace WeSay.UI
 {
 	public partial class MultiTextControl: TableLayoutPanel
 	{
 		private IList<WritingSystem> _writingSystemsForThisField;
-		private readonly List<WeSayTextBox> _textBoxes;
+		private readonly List<Control> _inputBoxes;
 		private bool _showAnnotationWidget;
+		private IServiceProvider _serviceProvider;
 
 		private readonly CommonEnumerations.VisibilitySetting _visibility =
 				CommonEnumerations.VisibilitySetting.Visible;
@@ -24,7 +27,7 @@ namespace WeSay.UI
 		private readonly bool _isSpellCheckingEnabled;
 		private readonly bool _isMultiParagraph;
 
-		public MultiTextControl(): this(null)
+		public MultiTextControl(): this(null, null)
 		{
 			//design mode only
 			if (DesignMode)
@@ -34,13 +37,14 @@ namespace WeSay.UI
 			}
 		}
 
-		public MultiTextControl(WritingSystemCollection allWritingSystems)
+		public MultiTextControl(WritingSystemCollection allWritingSystems, IServiceProvider serviceProvider)
 		{
 			SuspendLayout();
 			_allWritingSystems = allWritingSystems;
+			_serviceProvider = serviceProvider;
 			components = new Container();
 			InitializeComponent();
-			_textBoxes = new List<WeSayTextBox>();
+			_inputBoxes = new List<Control>();
 			//this.BackColor = System.Drawing.Color.Crimson;
 			_writingSystemLabelFont = new Font(FontFamily.GenericSansSerif, 9);
 
@@ -60,34 +64,12 @@ namespace WeSay.UI
 			ResumeLayout(false);
 		}
 
-		public void FocusOnFirstWsAlternative()
-		{
-			if (TextBoxes.Count > 0)
-			{
-				TextBoxes[0].Focus();
-			}
-		}
-
-		///<remarks>This can't be done during construction... we have to wait until
-		///we actually have a parent to do this.</remarks>
-		private void OnParentChanged(object sender, EventArgs e)
-		{
-			if (Parent != null && _visibility == CommonEnumerations.VisibilitySetting.ReadOnly)
-			{
-				BackColor = Parent.BackColor;
-				foreach (WeSayTextBox box in _textBoxes)
-				{
-					box.BackColor = Parent.BackColor;
-					box.TabStop = false;
-				}
-			}
-		}
 
 		public MultiTextControl(IList<string> writingSystemIds,
 			MultiText multiTextToCopyFormsFrom, string nameForTesting,
 			bool showAnnotationWidget, WritingSystemCollection allWritingSystems,
 			CommonEnumerations.VisibilitySetting visibility, bool isSpellCheckingEnabled,
-			bool isMultiParagraph): this(allWritingSystems)
+			bool isMultiParagraph, IServiceProvider serviceProvider): this(allWritingSystems, serviceProvider)
 		{
 			Name = nameForTesting + "-mtc";
 			_writingSystemsForThisField = new List<WritingSystem>();
@@ -105,6 +87,29 @@ namespace WeSay.UI
 			BuildBoxes(multiTextToCopyFormsFrom);
 		}
 
+		public void FocusOnFirstWsAlternative()
+			{
+				if (TextBoxes.Count > 0)
+				{
+					TextBoxes[0].Focus();
+				}
+			}
+
+			///<remarks>This can't be done during construction... we have to wait until
+			///we actually have a parent to do this.</remarks>
+			private void OnParentChanged(object sender, EventArgs e)
+			{
+				if (Parent != null && _visibility == CommonEnumerations.VisibilitySetting.ReadOnly)
+				{
+					BackColor = Parent.BackColor;
+					foreach (Control box in _inputBoxes)
+					{
+						box.BackColor = Parent.BackColor;
+						box.TabStop = false;
+					}
+				}
+			}
+
 		protected override void OnResize(EventArgs eventargs)
 		{
 			base.OnResize(eventargs);
@@ -119,16 +124,16 @@ namespace WeSay.UI
 				return;
 			}
 			int width = widths[1];
-			foreach (WeSayTextBox box in _textBoxes)
+			foreach (Control box in _inputBoxes)
 			{
 				box.Width = width;
 			}
 		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public List<WeSayTextBox> TextBoxes
+		public List<Control> TextBoxes
 		{
-			get { return _textBoxes; }
+			get { return _inputBoxes; }
 		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -139,7 +144,7 @@ namespace WeSay.UI
 				//we don't have a binding that would keep an internal multitext up to date.
 				//This seems cleaner and sufficient, at the moment.
 				MultiText mt = new MultiText();
-				foreach (WeSayTextBox box in TextBoxes)
+				foreach (ITextOrAudioBox box in TextBoxes)
 				{
 					mt.SetAlternative(box.WritingSystem.Id, box.Text);
 				}
@@ -153,7 +158,7 @@ namespace WeSay.UI
 
 			if (Controls.Count > 0)
 			{
-				_textBoxes.Clear();
+				_inputBoxes.Clear();
 				Controls.Clear();
 				RowCount = 0;
 				RowStyles.Clear();
@@ -162,9 +167,13 @@ namespace WeSay.UI
 			foreach (WritingSystem writingSystem in WritingSystemsForThisField)
 			{
 				RowStyles.Add(new RowStyle(SizeType.AutoSize));
-				WeSayTextBox box = AddTextBox(writingSystem, multiText);
 
-				Label label = AddWritingSystemLabel(box);
+
+				var box = AddTextBox(writingSystem, multiText);
+				if(box==null)
+					continue;
+
+				Label label = AddWritingSystemLabel(box, ((ITextOrAudioBox) box).WritingSystem.Abbreviation);
 				label.Click += subControl_Click;
 				label.MouseWheel += subControl_MouseWheel;
 
@@ -251,10 +260,10 @@ namespace WeSay.UI
 			}
 		}
 
-		private static Label AddWritingSystemLabel(WeSayTextBox box)
+		private static Label AddWritingSystemLabel(Control box, string abbreviation)
 		{
 			Label label = new Label();
-			label.Text = box.WritingSystem.Abbreviation;
+			label.Text = abbreviation;
 			label.ForeColor = DisplaySettings.Default.WritingSystemLabelColor;
 			label.Anchor = AnchorStyles.Left | AnchorStyles.Top;
 			label.Font = _writingSystemLabelFont;
@@ -286,17 +295,32 @@ namespace WeSay.UI
 			return label;
 		}
 
-		private WeSayTextBox AddTextBox(WritingSystem writingSystem, MultiTextBase multiText)
+		private Control AddTextBox(WritingSystem writingSystem, MultiTextBase multiText)
 		{
-			WeSayTextBox box = new WeSayTextBox(writingSystem, Name);
-			box.ReadOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
-			box.Multiline = true;
-			box.WordWrap = true;
-			box.MultiParagraph = _isMultiParagraph;
-			box.IsSpellCheckingEnabled = _isSpellCheckingEnabled;
-			//box.Enabled = !box.ReadOnly;
+							Control control;
+							if (writingSystem.IsAudio)
+							{
+								if (_serviceProvider == null)
+								{
+									//no, better to just omit it.  throw new ConfigurationException("WeSay cannot handle yet audio in this task.");
+									return null;
+								}
+								var ap =_serviceProvider.GetService(typeof (AudioPathProvider)) as AudioPathProvider;
+								control = new WeSayAudioFieldBox(writingSystem, ap);
+							}
+							else
+							{
+								var box = new WeSayTextBox(writingSystem, Name);
+								control = box;
+								box.ReadOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
+								box.Multiline = true;
+								box.WordWrap = true;
+								box.MultiParagraph = _isMultiParagraph;
+								box.IsSpellCheckingEnabled = _isSpellCheckingEnabled;
+								//box.Enabled = !box.ReadOnly;
+							}
 
-			_textBoxes.Add(box);
+			_inputBoxes.Add(control);
 
 			string text = multiText[writingSystem.Id];
 			if(_isMultiParagraph) //review... stuff was coming in with just \n, and the text box then didn't show the paragarph marks
@@ -304,15 +328,15 @@ namespace WeSay.UI
 				text = text.Replace("\r\n", "\n");
 				text = text.Replace("\n", "\r\n");
 			}
-			box.Name = Name.Replace("-mtc", "") + "_" + writingSystem.Id;
+			control.Name = Name.Replace("-mtc", "") + "_" + writingSystem.Id;
 			//for automated tests to find this particular guy
-			box.Text = text;
+			control.Text = text;
 
-			box.TextChanged += OnTextOfSomeBoxChanged;
-			box.KeyDown += OnKeyDownInSomeBox;
-			box.MouseWheel += subControl_MouseWheel;
+			control.TextChanged += OnTextOfSomeBoxChanged;
+			control.KeyDown += OnKeyDownInSomeBox;
+			control.MouseWheel += subControl_MouseWheel;
 
-			return box;
+			return control;
 		}
 
 		private void subControl_MouseWheel(object sender, MouseEventArgs e)
@@ -356,10 +380,17 @@ namespace WeSay.UI
 
 		public void ClearAllText()
 		{
-			foreach (WeSayTextBox box in _textBoxes)
+			foreach (ITextOrAudioBox box in _inputBoxes)
 			{
 				box.Text = "";
 			}
 		}
+	}
+
+	public interface ITextOrAudioBox
+	{
+		string Name { get; }
+		WritingSystem WritingSystem { get; }
+		string Text { get; set; }
 	}
 }

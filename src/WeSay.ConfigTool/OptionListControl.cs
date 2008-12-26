@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using WeSay.Foundation;
@@ -189,7 +190,7 @@ namespace WeSay.ConfigTool
 														  BasilProject.Project.WritingSystems,
 														  CommonEnumerations.VisibilitySetting.
 															  Visible,
-														  _currentField.IsSpellCheckingEnabled, false);
+														  _currentField.IsSpellCheckingEnabled, false, null);
 				m.SizeChanged += OnNameControlSizeChanged;
 				m.Bounds = _nameMultiTextControl.Bounds;
 				m.Top = _nameLabel.Top;
@@ -203,7 +204,8 @@ namespace WeSay.ConfigTool
 				_keyText.Text = proxy.UnderlyingOption.Key;
 				_keyText.TextChanged += OnKeyTextChanged;
 
-				foreach (WeSayTextBox box in m.TextBoxes)
+				var justTextBoxes = from z in m.TextBoxes where z is WeSayTextBox select z;
+				foreach (WeSayTextBox box in justTextBoxes)
 				{
 					TextBinding binding = new TextBinding(_currentOption.Name,
 														  box.WritingSystem.Id,

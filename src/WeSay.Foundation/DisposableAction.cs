@@ -26,6 +26,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using WeSay.Foundation;
+
 namespace Rhino.Commons
 {
 	using System;

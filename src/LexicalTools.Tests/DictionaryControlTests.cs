@@ -567,7 +567,7 @@ namespace WeSay.LexicalTools.Tests
 		private void CustomTextFieldPreservedCore(string fieldLabel)
 		{
 			MultiTextControl note = GetEditControl(fieldLabel);
-			WeSayTextBox box = note.TextBoxes[0];
+			WeSayTextBox box = (WeSayTextBox) note.TextBoxes[0];
 			box.Focus();
 			box.Text = "a note";
 

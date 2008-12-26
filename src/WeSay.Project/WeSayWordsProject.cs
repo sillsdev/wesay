@@ -907,6 +907,10 @@ namespace WeSay.Project
 		{
 			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "pictures"); }
 		}
+		public string PathToAudio
+		{
+			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "audio"); }
+		}
 
 		private static string GetPathToCacheFromPathToLift(string pathToLift)
 		{
@@ -1106,6 +1110,8 @@ namespace WeSay.Project
 		{
 			get { return _container; }
 		}
+
+
 
 		public override void Save()
 		{
