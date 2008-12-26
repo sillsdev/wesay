@@ -13,6 +13,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 using WeSay.UI;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.Tests
 {

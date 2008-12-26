@@ -1,6 +1,7 @@
 using System;
 using WeSay.UI;
 using WeSay.UI.Buttons;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools
 {
@@ -45,7 +46,7 @@ namespace WeSay.LexicalTools
 			this._question = new System.Windows.Forms.Label();
 			this._description = new System.Windows.Forms.Label();
 			this._questionIndicator = new WeSay.UI.CirclesProgressIndicator();
-			this._vernacularBox = new WeSay.UI.MultiTextControl();
+			this._vernacularBox = new MultiTextControl();
 			this._btnPrevious = new WeSay.UI.Buttons.PreviousButton();
 			this._btnNext = new WeSay.UI.Buttons.NextButton();
 			this._btnAddWord = new WeSay.UI.Buttons.AddButton();
@@ -288,7 +289,7 @@ namespace WeSay.LexicalTools
 		#endregion
 
 
-		private WeSay.UI.MultiTextControl _vernacularBox;
+		private MultiTextControl _vernacularBox;
 		private System.Windows.Forms.ComboBox _domainName;
 		private System.Windows.Forms.Label label3;
 		private WeSayListBox _listViewWords;

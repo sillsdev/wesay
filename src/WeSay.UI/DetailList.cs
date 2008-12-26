@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI
 {

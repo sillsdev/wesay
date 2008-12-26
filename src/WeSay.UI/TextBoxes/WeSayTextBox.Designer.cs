@@ -1,4 +1,4 @@
-namespace WeSay.UI
+namespace WeSay.UI.TextBoxes
 {
 	partial class WeSayTextBox
 	{
@@ -13,7 +13,7 @@ namespace WeSay.UI
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
-		   // Debug.WriteLine(" TextBox " + Name + "-textBox   Disposing=" + disposing);
+			// Debug.WriteLine(" TextBox " + Name + "-textBox   Disposing=" + disposing);
 			if (disposing && (components != null))
 			{
 				components.Dispose();

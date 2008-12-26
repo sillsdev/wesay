@@ -6,6 +6,7 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.UI;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools
 {

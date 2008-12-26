@@ -4,6 +4,7 @@ using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
+using WeSay.UI.audio;
 
 namespace WeSay.LexicalTools
 {
@@ -69,8 +70,12 @@ namespace WeSay.LexicalTools
 		private void SetUpLayoutInfoServiceProvider(LexEntry entry)
 		{
 			Field lexicalUnitField = ActiveViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			string entryName = entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds);
-			_serviceProvider = new LayoutInfoProvider(entryName);
+			if(lexicalUnitField == null)
+				return;//some unit tests lack this field
+
+			var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
+						() => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
+			_serviceProvider = new LayoutInfoProvider(ap);
 		}
 	}
 }

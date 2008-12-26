@@ -11,9 +11,9 @@ namespace WeSay.LexicalTools
 	{
 		private AudioPathProvider _audioPathProvider;
 
-		public LayoutInfoProvider(string entryName)
+		public LayoutInfoProvider(AudioPathProvider audioPathProvider)
 		{
-			_audioPathProvider = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio, entryName);
+			_audioPathProvider = audioPathProvider;
 		}
 
 		public object GetService(Type serviceType)

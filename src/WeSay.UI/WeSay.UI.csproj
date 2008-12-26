@@ -128,6 +128,7 @@
 	<Compile Include="audio\WeSayAudioFieldBox.Designer.cs">
 	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
 	</Compile>
+	<Compile Include="TextBoxes\IControlThatKnowsWritingSystem.cs" />
 	<Compile Include="WeSayListView.cs">
 	  <SubType>Component</SubType>
 	</Compile>
@@ -173,7 +174,7 @@
 	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
 	<Compile Include="SimpleBinding.cs" />
-	<Compile Include="TextBinding.cs" />
+	<Compile Include="TextBoxes\TextBinding.cs" />
 	<Compile Include="CurrentItemEventArgs.cs" />
 	<Compile Include="DetailList.cs">
 	  <SubType>Component</SubType>
@@ -191,10 +192,10 @@
 	<Compile Include="SingleOptionControl.Designer.cs">
 	  <DependentUpon>SingleOptionControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="MultiTextControl.cs">
+	<Compile Include="TextBoxes\MultiTextControl.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Include="MultiTextControl.designer.cs">
+	<Compile Include="TextBoxes\MultiTextControl.designer.cs">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="WeSayListBox.cs">
@@ -203,10 +204,10 @@
 	<Compile Include="WeSayListBox.Designer.cs">
 	  <DependentUpon>WeSayListBox.cs</DependentUpon>
 	</Compile>
-	<Compile Include="WeSayTextBox.cs">
+	<Compile Include="TextBoxes\WeSayTextBox.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Include="WeSayTextBox.Designer.cs">
+	<Compile Include="TextBoxes\WeSayTextBox.Designer.cs">
 	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
 	</Compile>
   </ItemGroup>
@@ -237,7 +238,7 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DetailList.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="MultiTextControl.resx">
+	<EmbeddedResource Include="TextBoxes\MultiTextControl.resx">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
@@ -253,7 +254,7 @@
 	<EmbeddedResource Include="audio\WeSayAudioFieldBox.resx">
 	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="WeSayTextBox.resx">
+	<EmbeddedResource Include="TextBoxes\WeSayTextBox.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
 	</EmbeddedResource>

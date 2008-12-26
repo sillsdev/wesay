@@ -11,6 +11,7 @@ using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 using System.Linq;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools
 {
@@ -132,7 +133,7 @@ namespace WeSay.LexicalTools
 		{
 			foreach (Control c in control.TextBoxes)
 			{
-					TextBinding binding = new TextBinding(multiTextToBindTo, ((ITextOrAudioBox) c).WritingSystem.Id, c);
+					TextBinding binding = new TextBinding(multiTextToBindTo, ((IControlThatKnowsWritingSystem) c).WritingSystem.Id, c);
 					binding.ChangeOfWhichItemIsInFocus +=
 						_detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 
@@ -182,7 +183,7 @@ namespace WeSay.LexicalTools
 															insertAtRow + rowCount,
 															true);
 
-				foreach (ITextOrAudioBox box in m.TextBoxes)
+				foreach (IControlThatKnowsWritingSystem box in m.TextBoxes)
 				{
 					WeSayTextBox tb = box as WeSayTextBox;
 					if (tb != null)

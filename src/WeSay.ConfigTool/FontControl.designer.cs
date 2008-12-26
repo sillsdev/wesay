@@ -1,3 +1,5 @@
+using WeSay.UI.TextBoxes;
+
 namespace WeSay.ConfigTool
 {
 	partial class FontControl
@@ -32,7 +34,7 @@ namespace WeSay.ConfigTool
 			this._fontInfoDisplay = new System.Windows.Forms.TextBox();
 			this.button1 = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
-			this._sampleTextBox = new WeSay.UI.WeSayTextBox();
+			this._sampleTextBox = new WeSayTextBox();
 			this.SuspendLayout();
 			//
 			// _fontDialog
@@ -106,6 +108,6 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.TextBox _fontInfoDisplay;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Label label1;
-		private WeSay.UI.WeSayTextBox _sampleTextBox;
+		private WeSayTextBox _sampleTextBox;
 	}
 }

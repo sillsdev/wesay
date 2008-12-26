@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using WeSay.Foundation;
 
-namespace WeSay.UI
+namespace WeSay.UI.TextBoxes
 {
 	/// <summary>
 	/// This simple binding class connects a text box with a MultiText or AudioField (which just
@@ -105,7 +105,7 @@ namespace WeSay.UI
 			// but which happens before this. Even though the event handler has been removed, it will
 			// still fire this event.
 			if (_dataTarget == null || _inMidstOfChange || e.PropertyName != _writingSystemId)
-					//FIX THIS
+				//FIX THIS
 			{
 				return;
 			}
@@ -149,14 +149,14 @@ namespace WeSay.UI
 				if (_dataTarget is MultiText)
 				{
 					MultiText text = (MultiText) _dataTarget;
-				   text[_writingSystemId] = s;
+					text[_writingSystemId] = s;
 				}
-						//else if (_dataTarget as IBindingList != null)
-						//{
-						//    IBindingList list = _dataTarget as IBindingList;
-						//    //in addition to add a menu item, this will fire events on the object that owns the list
-						//    list.AddNew();
-						//}
+					//else if (_dataTarget as IBindingList != null)
+					//{
+					//    IBindingList list = _dataTarget as IBindingList;
+					//    //in addition to add a menu item, this will fire events on the object that owns the list
+					//    list.AddNew();
+					//}
 				else
 				{
 					throw new ArgumentException("Binding doesn't understand that type of target.");

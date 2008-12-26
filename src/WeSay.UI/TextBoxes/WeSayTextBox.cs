@@ -9,9 +9,9 @@ using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.UI.WindowsForms.Spelling;
 using WeSay.Foundation;
 
-namespace WeSay.UI
+namespace WeSay.UI.TextBoxes
 {
-	public partial class WeSayTextBox: TextBox, ITextOrAudioBox
+	public partial class WeSayTextBox: TextBox, IControlThatKnowsWritingSystem
 	{
 		private WritingSystem _writingSystem;
 
@@ -107,7 +107,7 @@ namespace WeSay.UI
 		{
 			//only first change per focus session will be logged
 			if (!_haveAlreadyLoggedTextChanged && Focused
-					/*try not to report when code is changing us*/)
+				/*try not to report when code is changing us*/)
 			{
 				_haveAlreadyLoggedTextChanged = true;
 				Logger.WriteMinorEvent("First_TextChange (could be paste via mouse) {0}:{1}",
@@ -223,7 +223,7 @@ namespace WeSay.UI
 				if (_writingSystem == null)
 				{
 					throw new InvalidOperationException(
-							"WritingSystem must be initialized prior to use.");
+						"WritingSystem must be initialized prior to use.");
 				}
 				return _writingSystem;
 			}
@@ -363,7 +363,7 @@ namespace WeSay.UI
 			if (_writingSystem == null)
 			{
 				throw new InvalidOperationException(
-						"WritingSystem must be initialized prior to use.");
+					"WritingSystem must be initialized prior to use.");
 			}
 
 			if (_writingSystem.KeyboardName == null || _writingSystem.KeyboardName == string.Empty)
@@ -387,7 +387,7 @@ namespace WeSay.UI
 			if (_writingSystem == null)
 			{
 				throw new InvalidOperationException(
-						"WritingSystem must be initialized prior to use.");
+					"WritingSystem must be initialized prior to use.");
 			}
 
 			KeyboardController.DeactivateKeyboard();

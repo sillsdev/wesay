@@ -6,12 +6,12 @@ namespace WeSay.UI.audio
 	public class AudioPathProvider
 	{
 		private readonly string _pathToAudioFiles;
-		private readonly string _entryName;
+		private readonly WeSay.Foundation.Func<string> _entryNameFunction;
 
-		public AudioPathProvider(string pathToAudioFiles, string entryName)
+		public AudioPathProvider(string pathToAudioFiles, WeSay.Foundation.Func<string> entryNameFunction)
 		{
 			_pathToAudioFiles = pathToAudioFiles;
-			_entryName = entryName;
+			_entryNameFunction = entryNameFunction;
 			if(!Directory.Exists(pathToAudioFiles))
 			{
 				Directory.CreateDirectory(pathToAudioFiles);
@@ -20,14 +20,15 @@ namespace WeSay.UI.audio
 
 		public string GetNewPath()
 		{
-			string name = string.IsNullOrEmpty(_entryName)? "xunknown" : _entryName;
+			string entryName = _entryNameFunction.Invoke();
+			string name = string.IsNullOrEmpty(entryName) ? "xunknown" : entryName;
 			return Path.Combine(_pathToAudioFiles, MakeSafeName(name + "-" + GetSomewhatRandomString())+".wav");
 		}
 
 		private string GetSomewhatRandomString()
 		{
 		   // return Guid.NewGuid().ToString();
-			return DateTime.UtcNow.Ticks.ToString();
+			return (DateTime.UtcNow.Ticks/10000).ToString();//enhance... still kinda long!
 		}
 
 		private static string MakeSafeName(string fileName)
