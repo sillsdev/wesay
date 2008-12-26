@@ -82,7 +82,7 @@ namespace WeSay.Foundation.Tests
 			string s = NetReflector.Write(ws);
 			string expected = "<WritingSystem><Abbreviation>one</Abbreviation><FontName>" +
 							  font.Name + "</FontName><FontSize>" + font.Size +
-							  "</FontSize><Id>one</Id><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>" +
+							  "</FontSize><Id>one</Id><IsAudio>False</IsAudio><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>" +
 							  "<SpellCheckingId>one</SpellCheckingId></WritingSystem>";
 			Assert.AreEqual(expected, s);
 		}

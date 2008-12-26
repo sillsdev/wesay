@@ -36,7 +36,7 @@ namespace WeSay.LexicalTools
 
 		private readonly ViewTemplate _viewTemplate;
 
-		protected LayoutInfoProvider _serviceProvider;
+		protected IServiceProvider _serviceProvider;
 
 		/// This field is for temporarily storing a ghost field about to become "real".
 		/// This is critical, though messy, because
@@ -74,7 +74,8 @@ namespace WeSay.LexicalTools
 
 		protected Layouter(DetailList builder,
 						   ViewTemplate viewTemplate,
-						   LexEntryRepository lexEntryRepository)
+						   LexEntryRepository lexEntryRepository,
+							IServiceProvider serviceProvider)
 		{
 			if (builder == null)
 			{
@@ -88,6 +89,7 @@ namespace WeSay.LexicalTools
 			_detailList = builder;
 			_viewTemplate = viewTemplate;
 			_lexEntryRepository = lexEntryRepository;
+			_serviceProvider = serviceProvider;
 
 		}
 

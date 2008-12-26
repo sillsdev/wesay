@@ -39,5 +39,33 @@ namespace WeSay.UI.audio
 			}
 			return fileName;
 		}
+
+		/// <summary>
+		/// Given a relative path (i.e., the filename), turn that into a real, full path
+		/// for playing & recording
+		/// </summary>
+		/// <param name="partial"></param>
+		/// <returns></returns>
+		public string GetCompletePathFromPartial(string partial)
+		{
+			return Path.Combine(_pathToAudioFiles, partial);
+		}
+
+		/// <summary>
+		/// We only want to store the relative path (i.e. the filename)
+		/// </summary>
+		/// <param name="fullPath"></param>
+		/// <returns></returns>
+		public string GetPartialPathFromFull(string fullPath)
+		{
+			string pathToAudioFiles = _pathToAudioFiles;
+			//make sure there is a trailing slash
+			if(!pathToAudioFiles.EndsWith(Path.DirectorySeparatorChar+string.Empty))
+			{
+				pathToAudioFiles += Path.DirectorySeparatorChar;
+			}
+			//leave only the relative part (i.e., just the filename)
+			return fullPath.Replace(pathToAudioFiles, "");
+		}
 	}
 }

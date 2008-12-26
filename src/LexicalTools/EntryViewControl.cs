@@ -295,7 +295,8 @@ namespace WeSay.LexicalTools
 					VerifyHasLexEntryRepository();
 					LexEntryLayouter layout = new LexEntryLayouter(detailList,
 																   ViewTemplate,
-																   _lexEntryRepository);
+																   _lexEntryRepository,
+																   _record);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}

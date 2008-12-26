@@ -21,7 +21,7 @@ namespace WeSay.UI.audio
 			// may be changed in a moment when the actual field is read
 			shortSoundFieldControl1.Path = _audioPathProvider.GetNewPath();
 
-			shortSoundFieldControl1.SoundRecorded += (sender, e) => _fileName.Text = shortSoundFieldControl1.Path;
+			shortSoundFieldControl1.SoundRecorded += (sender, e) => _fileName.Text = _audioPathProvider.GetPartialPathFromFull(shortSoundFieldControl1.Path);
 			shortSoundFieldControl1.SoundDeleted += (sender, e) => _fileName.Text = string.Empty;
 			shortSoundFieldControl1.BeforeStartingToRecord += new EventHandler(shortSoundFieldControl1_BeforeStartingToRecord);
 		}
@@ -45,7 +45,7 @@ namespace WeSay.UI.audio
 			{
 				_fileName.Text = value;
 				if (!string.IsNullOrEmpty(value))
-					shortSoundFieldControl1.Path = value;
+					shortSoundFieldControl1.Path = _audioPathProvider.GetCompletePathFromPartial(value);
 			}
 		}
 

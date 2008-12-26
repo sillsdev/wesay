@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
@@ -13,14 +14,20 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexEntryLayouter: Layouter
 	{
+		public LexEntry Entry { get; set; }
+
 		public LexEntryLayouter(DetailList builder,
 								ViewTemplate viewTemplate,
-								LexEntryRepository lexEntryRepository)
-				: base(builder, viewTemplate, lexEntryRepository) {}
-
-		public int AddWidgets(LexEntry entry)
+								LexEntryRepository lexEntryRepository,
+								LexEntry entry)
+				: base(builder, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(viewTemplate, entry))
 		{
-			return AddWidgets(entry, -1);
+			Entry = entry;
+		}
+
+		public int AddWidgets()
+		{
+			return AddWidgets(Entry, -1);
 		}
 
 		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
@@ -30,8 +37,6 @@ namespace WeSay.LexicalTools
 
 		internal int AddWidgets(LexEntry entry, int insertAtRow)
 		{
-			 SetUpLayoutInfoServiceProvider(entry);
-
 			DetailList.SuspendLayout();
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
@@ -51,7 +56,8 @@ namespace WeSay.LexicalTools
 			var rowCountBeforeSenses = rowCount;
 			LexSenseLayouter layouter = new LexSenseLayouter(DetailList,
 															  ActiveViewTemplate,
-															  RecordListManager);
+															  RecordListManager,
+															  _serviceProvider);
 			layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 
@@ -67,15 +73,15 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		private void SetUpLayoutInfoServiceProvider(LexEntry entry)
+		private static IServiceProvider CreateLayoutInfoServiceProvider(ViewTemplate viewTemplate, LexEntry entry)
 		{
-			Field lexicalUnitField = ActiveViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			Field lexicalUnitField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if(lexicalUnitField == null)
-				return;//some unit tests lack this field
+				return null;//some unit tests lack this field
 
 			var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
 						() => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
-			_serviceProvider = new LayoutInfoProvider(ap);
+			return new LayoutInfoProvider(ap);
 		}
 	}
 }

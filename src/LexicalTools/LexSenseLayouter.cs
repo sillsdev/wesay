@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Palaso.Reporting;
@@ -14,10 +15,11 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexSenseLayouter: Layouter
 	{
-		public LexSenseLayouter(DetailList builder,
-								ViewTemplate viewTemplate,
-								LexEntryRepository lexEntryRepository)
-				: base(builder, viewTemplate, lexEntryRepository) {}
+		public LexSenseLayouter(DetailList builder, ViewTemplate viewTemplate, LexEntryRepository lexEntryRepository,
+			IServiceProvider serviceProvider)
+				: base(builder, viewTemplate, lexEntryRepository, serviceProvider)
+		{
+		}
 
 		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
 		{
@@ -71,7 +73,7 @@ namespace WeSay.LexicalTools
 				rowCount += AddCustomFields(sense, insertAtRow + rowCount);
 
 				LexExampleSentenceLayouter exampleLayouter =
-						new LexExampleSentenceLayouter(DetailList, ActiveViewTemplate);
+						new LexExampleSentenceLayouter(DetailList, ActiveViewTemplate, _serviceProvider);
 				exampleLayouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 
 				rowCount = AddChildrenWidgets(exampleLayouter,
