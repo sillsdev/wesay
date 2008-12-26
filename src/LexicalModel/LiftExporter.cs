@@ -250,8 +250,9 @@ namespace WeSay.LexicalModel
 		}
 
 		/// <summary>
-		/// this is used both when we're just exporting to lift, and dont' want to filter or order, and
-		/// when we are writing presentation-ready lift, when we do want to filter and order
+		/// this base implementationg is for when we're just exporting to lift, and dont' want to filter or order.
+		/// It is overridden in a child class for writing presentation-ready lift, when
+		/// we do want to filter and order
 		/// </summary>
 		/// <param name="text"></param>
 		/// <param name="propertyName"></param>

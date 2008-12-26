@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Palaso.Text;
 using WeSay.Foundation;
@@ -11,6 +12,7 @@ namespace WeSay.Project
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly LexEntryRepository _lexEntryRepository;
+		private readonly IList<string> _headwordWritingSystemIds;
 
 		public PLiftExporter(StringBuilder builder,
 							 bool produceFragmentOnly,
@@ -19,6 +21,7 @@ namespace WeSay.Project
 		{
 			this._lexEntryRepository = lexEntryRepository;
 			this._viewTemplate = viewTemplate;
+			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
 		}
 
 		public PLiftExporter(string path,
@@ -27,10 +30,12 @@ namespace WeSay.Project
 		{
 			this._lexEntryRepository = lexEntryRepository;
 			this._viewTemplate = viewTemplate;
+			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
 		}
 
 		private Options _options = Options.DereferenceRelations | Options.DereferenceOptions |
 								   Options.DetermineHeadword;
+
 
 		[Flags]
 		public enum Options
@@ -97,30 +102,16 @@ namespace WeSay.Project
 		/// </summary>
 		private void WriteHeadWordField(LexEntry entry, string outputFieldName)
 		{
-			if (Template == null)
-			{
-				throw new InvalidOperationException("Expected a non-null Template");
-			}
-			MultiText headword = new MultiText();
-			Field fieldControllingHeadwordOutput =
-					Template.GetField(LexEntry.WellKnownProperties.Citation);
-			if (fieldControllingHeadwordOutput == null || !fieldControllingHeadwordOutput.Enabled)
-			{
-				fieldControllingHeadwordOutput =
-						Template.GetField(LexEntry.WellKnownProperties.LexicalUnit);
-				if (fieldControllingHeadwordOutput == null)
-				{
-					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
-				}
-			}
 			//                headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
 
-			foreach (string writingSystemId in fieldControllingHeadwordOutput.WritingSystemIds)
+			MultiText headword = new MultiText();
+			foreach (string writingSystemId in _headwordWritingSystemIds)
 			{
 				headword.SetAlternative(writingSystemId, entry.GetHeadWordForm(writingSystemId));
 			}
 			WriteMultiTextAsArtificialField(outputFieldName, headword);
 		}
+
 
 		/// <summary>
 		/// use this for multitexts that were somehow constructed during export, with no corresponding single property
@@ -215,7 +206,7 @@ namespace WeSay.Project
 			{
 				return text.Forms;
 			}
-			return text.GetOrderedAndFilteredForms(f.WritingSystemIds);
+			return text.GetOrderedAndFilteredForms(f.GetTextOnlyWritingSystemIds(_viewTemplate.WritingSystems));
 		}
 	}
 }

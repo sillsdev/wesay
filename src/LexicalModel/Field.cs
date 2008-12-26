@@ -6,6 +6,7 @@ using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
 using WeSay.Foundation;
+using System.Linq;
 
 namespace WeSay.LexicalModel
 {
@@ -384,6 +385,14 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		/// <summary>
+		/// omit audio writing systems
+		/// </summary>
+		public IEnumerable<string> GetTextOnlyWritingSystemIds(WritingSystemCollection systems)
+		{
+			return systems.TrimToActualTextWritingSystemIds(_writingSystemIds);
+		}
+
 		[Browsable(false)]
 		public string Description
 		{
@@ -583,6 +592,8 @@ namespace WeSay.LexicalModel
 		}
 
 		#endregion
+
+
 	}
 
 	internal class ParentClassConverter: WeSayStringConverter

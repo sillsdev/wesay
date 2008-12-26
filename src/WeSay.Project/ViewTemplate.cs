@@ -662,6 +662,28 @@ namespace WeSay.Project
 
 			set { _doWantGhosts = value; }
 		}
+
+		public IList<string> GetHeadwordWritingSystemIds()
+		{
+			Field fieldControllingHeadwordOutput =
+				GetField(LexEntry.WellKnownProperties.Citation);
+			if (fieldControllingHeadwordOutput == null || !fieldControllingHeadwordOutput.Enabled)
+			{
+				fieldControllingHeadwordOutput =
+					GetField(LexEntry.WellKnownProperties.LexicalUnit);
+				if (fieldControllingHeadwordOutput == null)
+				{
+					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
+				}
+			}
+
+			return WritingSystems.TrimToActualTextWritingSystemIds(fieldControllingHeadwordOutput.WritingSystemIds);
+		}
+
+		public WritingSystemCollection WritingSystems
+		{
+			get { return BasilProject.Project.WritingSystems; }
+		}
 	}
 
 	/// <summary>

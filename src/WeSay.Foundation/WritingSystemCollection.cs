@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Xml;
 using Exortech.NetReflector;
 
@@ -191,5 +192,10 @@ namespace WeSay.Foundation
 		//    }
 		//    return this[id];
 		//}
+		public IList<string> TrimToActualTextWritingSystemIds(IList<string> ids)
+		{
+			var x = ids.Where((id) => !this[id].IsAudio);
+			return new List<string>(x);
+		}
 	}
 }
