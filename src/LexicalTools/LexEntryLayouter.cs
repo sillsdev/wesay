@@ -75,9 +75,11 @@ namespace WeSay.LexicalTools
 
 		private static IServiceProvider CreateLayoutInfoServiceProvider(ViewTemplate viewTemplate, LexEntry entry)
 		{
+			if (viewTemplate == null)
+				return null;//some unrelated unit tests don't give us this parameter
 			Field lexicalUnitField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if(lexicalUnitField == null)
-				return null;//some unit tests lack this field
+				return null;//some unrelated unit tests lack this field
 
 			var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
 						() => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));

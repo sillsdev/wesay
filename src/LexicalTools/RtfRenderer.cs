@@ -35,7 +35,7 @@ namespace WeSay.LexicalTools
 			int senseNumber = 1;
 			foreach (LexSense sense in entry.Senses)
 			{
-				//rtf.Append(SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id));
+				//rtf.Append(SwitchToWritingSystem(WritingSystems.AnalysisWritingSystemDefault.Id));
 #if GlossMeaning
 				if (entry.Senses.Count > 1 || (currentItem != null && currentItem.PropertyName == "Gloss"))
 #else
@@ -140,7 +140,7 @@ namespace WeSay.LexicalTools
 		{
 			StringBuilder rtf = new StringBuilder(@"{\fonttbl");
 			int i = 0;
-			foreach (KeyValuePair<string, WritingSystem> ws in BasilProject.Project.WritingSystems)
+			foreach (KeyValuePair<string, WritingSystem> ws in WritingSystems)
 			{
 				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + ws.Value.Font.FontFamily.Name +
 						   ";");
@@ -150,10 +150,15 @@ namespace WeSay.LexicalTools
 			return rtf.ToString();
 		}
 
+		private static WritingSystemCollection WritingSystems
+		{
+			get { return BasilProject.Project.WritingSystems; }
+		}
+
 		private static int GetFontNumber(WritingSystem writingSystem)
 		{
 			int i = 0;
-			foreach (KeyValuePair<string, WritingSystem> ws in BasilProject.Project.WritingSystems)
+			foreach (KeyValuePair<string, WritingSystem> ws in WritingSystems)
 			{
 				if (ws.Value == writingSystem)
 				{
@@ -184,7 +189,7 @@ namespace WeSay.LexicalTools
 
 				if (field == null) // show them all
 				{
-					foreach (LanguageForm l in text)
+					foreach (LanguageForm l in text.GetActualTextForms(WritingSystems))
 					{
 						RenderForm(text, currentItem, rtfBuilder, l, sizeBoost);
 					}
@@ -230,7 +235,7 @@ namespace WeSay.LexicalTools
 			string rtf = string.Empty;
 			if (currentItem != null && property == currentItem.PropertyName)
 			{
-				//REVIEW: is a ws switch needed for a blank? rtf += SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id);
+				//REVIEW: is a ws switch needed for a blank? rtf += SwitchToWritingSystem(WritingSystems.AnalysisWritingSystemDefault.Id);
 				if (number != null)
 				{
 					rtf += number.ToString();
@@ -248,7 +253,7 @@ namespace WeSay.LexicalTools
 		private static string SwitchToWritingSystem(string writingSystemId, int sizeBoost)
 		{
 			WritingSystem writingSystem;
-			if (!BasilProject.Project.WritingSystems.TryGetValue(writingSystemId, out writingSystem))
+			if (!WritingSystems.TryGetValue(writingSystemId, out writingSystem))
 			{
 				return "";
 				//that ws isn't actually part of our configuration, so can't get a special font for it
