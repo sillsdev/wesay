@@ -51,10 +51,11 @@ namespace WeSay.Project.Tests
 			{
 				LexEntry e1 = session.Repo.CreateItem();
 				e1.LexicalForm["red"] = "r";
-				e1.LexicalForm["voice"] = "v";
+				e1.LexicalForm["voice"] = "pretendFileName";
 
 				session.DoExport();
-				session.AssertXPathNotNull("lift/entry/pronunciation/media[@href='v']");
+				var path = string.Format("..{0}audio{0}pretendFileName", Path.DirectorySeparatorChar);
+				session.AssertXPathNotNull("lift/entry/pronunciation/media[@href='"+path+"']");
 			}
 		}
 
@@ -78,11 +79,11 @@ namespace WeSay.Project.Tests
 				var example = new LexExampleSentence(sense);
 				sense.ExampleSentences.Add(example);
 				example.Sentence["green"] = "a sentence";
-				example.Sentence["voice"] = "pretendToBeAPath";
+				example.Sentence["voice"] = "pretendFileName";
 
 				session.DoExport();
 				session.AssertXPathNotNull("lift/entry/sense/example/form[@lang='green']");
-				var path = string.Format("..{0}audio{0}pretendToBeAPath", Path.DirectorySeparatorChar);
+				var path = string.Format("..{0}audio{0}pretendFileName", Path.DirectorySeparatorChar);
 				session.AssertXPathNotNull("lift/entry/sense/example/trait[@name='audio' and @value='"+path+"']");
 			}
 		}
