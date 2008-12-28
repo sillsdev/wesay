@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using System.Xml.Xsl;
 using Mono.Addins;
@@ -80,12 +81,12 @@ namespace Addin.Transform
 			LexEntryRepository lexEntryRepository = projectInfo.ServiceProvider.GetService(typeof(LexEntryRepository)) as LexEntryRepository;
 		  //  using(lexEntryRepository.GetRightToAccessLiftExternally())
 			{
-				string pliftPath;
+				var pliftPath = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + ".plift");
 				using (LameProgressDialog dlg = new LameProgressDialog("Exporting to PLift..."))
 				{
 					dlg.Show();
 					PLiftMaker maker = new PLiftMaker();
-					pliftPath = maker.MakePLiftTempFile(lexEntryRepository, projectInfo.ServiceProvider.GetService(typeof(ViewTemplate)) as ViewTemplate);
+					maker.MakePLiftTempFile(pliftPath, lexEntryRepository, projectInfo.ServiceProvider.GetService(typeof(ViewTemplate)) as ViewTemplate);
 				}
 
 				projectInfo.PathToLIFT = pliftPath;

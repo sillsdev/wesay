@@ -126,11 +126,21 @@ namespace WeSay.LexicalModel
 										  WeSayDataObject.WellKnownProperties.Note,
 										  propertiesAlreadyOutput);
 			WriteCustomProperties(entry, propertiesAlreadyOutput);
+			InsertPronunciationIfNeeded(entry, propertiesAlreadyOutput);
+
 			foreach (LexSense sense in entry.Senses)
 			{
 				Add(sense);
 			}
 			Writer.WriteEndElement();
+		}
+
+		/// <summary>
+		/// in the plift subclass, we add a pronounciation if we have an audio writing system alternative on the lexical unit
+		/// </summary>
+		 protected virtual void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
+		{
+
 		}
 
 		protected virtual void WriteHeadword(LexEntry entry) {}
@@ -473,6 +483,11 @@ namespace WeSay.LexicalModel
 		public void Add(string propertyName, MultiText text)
 		{
 			Add(GetOrderedAndFilteredForms(text, propertyName), false);
+			WriteFormsThatNeedToBeTheirOwnFields(text, propertyName);
+		}
+
+		protected virtual void WriteFormsThatNeedToBeTheirOwnFields(MultiText text, string name)
+		{
 		}
 
 		protected void Add(IEnumerable<LanguageForm> forms, bool doMarkTheFirst)

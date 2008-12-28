@@ -144,6 +144,12 @@ namespace WeSay.Foundation
 			return new List<LanguageForm>(x);
 		}
 
+		public IList<LanguageForm> GetAudioForms(WritingSystemCollection writingSytems)
+		{
+			var x = Forms.Where((f) => writingSytems[f.WritingSystemId].IsAudio);
+			return new List<LanguageForm>(x);
+		}
+
 		public void RemoveEmptyStuff()
 		{
 			List<LanguageForm> condemened = new List<LanguageForm>();

@@ -6,6 +6,7 @@ using Exortech.NetReflector;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
+using System.Linq;
 
 namespace WeSay.Project
 {
@@ -679,6 +680,9 @@ namespace WeSay.Project
 
 			return WritingSystems.TrimToActualTextWritingSystemIds(fieldControllingHeadwordOutput.WritingSystemIds);
 		}
+
+
+
 
 		public WritingSystemCollection WritingSystems
 		{

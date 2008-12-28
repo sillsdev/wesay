@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -21,6 +22,18 @@ namespace WeSay.Foundation
 			{
 				reader.Close();
 			}
+		}
+
+		/// <summary>
+		/// for tests that really don't care about an actual font
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public WritingSystem AddSimple(string id)
+		{
+			var writingSystem = new WritingSystem(id, new Font(FontFamily.GenericSansSerif, 10));
+			Add(id, writingSystem);
+			return writingSystem;
 		}
 
 		public new WritingSystem this[string key]
@@ -196,6 +209,17 @@ namespace WeSay.Foundation
 		{
 			var x = ids.Where((id) => !this[id].IsAudio);
 			return new List<string>(x);
+		}
+
+		public IList<string> TrimToAudioWritingSystemIds(IList<string> ids)
+		{
+			var x = ids.Where((id) => this[id].IsAudio);
+			return new List<string>(x);
+		}
+
+		public IEnumerable<WritingSystem> GetActualTextWritingSystems()
+		{
+			return this.Values.Where((ws) => !ws.IsAudio);
 		}
 	}
 }

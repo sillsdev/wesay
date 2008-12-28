@@ -6,6 +6,7 @@ using System.Xml;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests
@@ -16,216 +17,548 @@ namespace WeSay.Project.Tests
 	[TestFixture]
 	public class LiftExporterPLiftTests
 	{
-		private string _outputPath;
-		private ViewTemplate _viewTemplate;
-		private List<string> _writingSystemIds;
-		private WritingSystem _headwordWritingSystem;
-		private LexEntryRepository _lexEntryRepository;
-		private string _FilePath;
+		//        private string _outputPath;
+		//        private ViewTemplate session.Template;
+		//        private List<string> session. WritingSystemIds;
+		//        private WritingSystem session.HeadwordWritingSystem;
+		//        private LexEntryRepository _lexEntryRepository;
+		//        private string _FilePath;
 
-		[SetUp]
-		public void Setup()
-		{
-			BasilProject.InitializeForTests();
 
-			_FilePath = Path.GetTempFileName();
-			_lexEntryRepository = new LexEntryRepository(_FilePath);
-
-			_outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-
-			_writingSystemIds = new List<string>(new string[] {"red", "green", "blue"});
-			_headwordWritingSystem = new WritingSystem(_writingSystemIds[0],
-													   new Font(FontFamily.GenericSansSerif, 10));
-
-			_viewTemplate = new ViewTemplate();
-
-			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.Citation,
-										"LexEntry",
-										new string[] {"blue", "red"}));
-			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit,
-										"LexEntry",
-										new string[] {"red", "green", "blue"}));
-			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.BaseForm,
-										"LexEntry",
-										_writingSystemIds));
-
-			_viewTemplate.Add(new Field("brother",
-							"LexEntry",
-							_writingSystemIds));
-
-			Field visibleCustom = new Field("VisibleCustom",
-											"LexEntry",
-											_writingSystemIds,
-											Field.MultiplicityType.ZeroOr1,
-											"MultiText");
-			visibleCustom.Visibility = CommonEnumerations.VisibilitySetting.Visible;
-			visibleCustom.DisplayName = "VisibleCustom";
-			_viewTemplate.Add(visibleCustom);
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			_lexEntryRepository.Dispose();
-			File.Delete(_FilePath);
-			if (File.Exists(_outputPath))
-			{
-				File.Delete(_outputPath);
-			}
-		}
 
 		[Test]
 		public void NonHomographicEntryHasNoHomographNumber()
 		{
-			LexEntry e1 = MakeTestLexEntryInHeadwordWritingSystem("two");
-			LexEntry e2 = MakeTestLexEntryInHeadwordWritingSystem("flower");
-			LexEntry e3 = MakeTestLexEntryInHeadwordWritingSystem("one");
-			Make(_viewTemplate, _outputPath);
-			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "' and not(@order)]");
-			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e2.Id + "' and not(@order)]");
-			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e3.Id + "' and not(@order)]");
+			using (var session = new ExportSession())
+			{
+				LexEntry e1 = session.MakeTestLexEntryInHeadwordWritingSystem("two");
+				LexEntry e2 = session.MakeTestLexEntryInHeadwordWritingSystem("flower");
+				LexEntry e3 = session.MakeTestLexEntryInHeadwordWritingSystem("one");
+				session.DoExport();
+				session.AssertXPathNotNull("lift/entry[@id='" + e1.Id + "' and not(@order)]");
+				session.AssertXPathNotNull("lift/entry[@id='" + e2.Id + "' and not(@order)]");
+				session.AssertXPathNotNull("lift/entry[@id='" + e3.Id + "' and not(@order)]");
+			}
 		}
 
-		private void Make(ViewTemplate template, string path)
+		/// <summary>
+		/// until we have a proper way to output audio, one thing we can safely do is creat a phonetic
+		/// </summary>
+		[Test]
+		public void Export_LexicalUnitHasVoice_PhoneticMediaFieldIsOutput()
 		{
-			PLiftExporter exporter = new PLiftExporter(path, _lexEntryRepository, template);
+			using (var session = new ExportSession())
+			{
+				LexEntry e1 = session.Repo.CreateItem();
+				e1.LexicalForm["red"] = "r";
+				e1.LexicalForm["voice"] = "v";
+
+				session.DoExport();
+				session.AssertXPathNotNull("lift/entry/pronunciation/media[@href='v']");
+			}
+		}
+
+
+		/// <summary>
+		/// until we have a proper way to output audio, another thing we can safely do is put them in a special field
+		/// </summary>
+		[Test]
+		public void Export_ExampleSentenceHasVoice_TraitWithAudioPathIsOutput()
+		{
+			using (var session = new ExportSession())
+			{
+				session.Template.Add(new Field(Field.FieldNames.ExampleSentence.ToString(),
+							 "LexExampleSentence",
+							 session.WritingSystemIds));
+
+				LexEntry e1 = session.Repo.CreateItem();
+				e1.LexicalForm["red"] = "r";
+				var sense = new LexSense(e1);
+				e1.Senses.Add(sense);
+				var example = new LexExampleSentence(sense);
+				sense.ExampleSentences.Add(example);
+				example.Sentence["green"] = "a sentence";
+				example.Sentence["voice"] = "pretendToBeAPath";
+
+				session.DoExport();
+				session.AssertXPathNotNull("lift/entry/sense/example/form[@lang='green']");
+				var path = string.Format("..{0}audio{0}pretendToBeAPath", Path.DirectorySeparatorChar);
+				session.AssertXPathNotNull("lift/entry/sense/example/trait[@name='audio' and @value='"+path+"']");
+			}
+		}
+
+		[Test]
+		public void Export_LexicalUnitHasVoice_VoiceNotListed()
+		{
+			using (var session = new ExportSession())
+			{
+				LexEntry e1 = session.Repo.CreateItem();
+				e1.LexicalForm["red"] = "r";
+				e1.LexicalForm["voice"] = "v";
+				e1.LexicalForm["blue"] = "b";
+
+				session.DoExport();
+				session.AssertXPathNotNull("lift/entry/lexical-unit/form[@lang='blue']");//sanity check
+				session.AssertNoMatchForXPath("lift/entry/lexical-unit/form[@lang='voice']");
+			}
+		}
+
+		[Test]
+		public void Export_CitationHasVoice_CitationOmitsVoice()
+		{
+			using (var session = new ExportSession())
+			{
+				LexEntry e1 = session.Repo.CreateItem();
+				e1.CitationForm["red"] = "r";
+				e1.CitationForm["voice"] = "v";
+				e1.CitationForm["blue"] = "b";
+
+				session.DoExport();
+				session.PrintResult();
+				session.AssertXPathNotNull("lift/entry/citation/form[@lang='blue']");//sanity check
+				session.AssertNoMatchForXPath("lift/entry/citation/form[@lang='voice']");
+			}
+		}
+
+		[Test]
+		public void Export_CitationHasVoice_HeadwordOmitsVoice()
+		{
+			using (var session = new ExportSession())
+			{
+				LexEntry e1 = session.Repo.CreateItem();
+				e1.CitationForm["red"] = "r";
+				e1.CitationForm["voice"] = "g";
+				e1.CitationForm["blue"] = "b";
+
+				session.DoExport();
+				session.PrintResult();
+				session.AssertXPathNotNull("lift/entry/field[@type='headword']/form[@lang='blue']");//sanity check
+				session.AssertNoMatchForXPath("lift/entry/field[@type='headword']/form[@lang='voice']");
+			}
+		}
+
+		[Test]
+		public void HomographicEntriesHaveHomographNumber()
+		{
+			using (var session = new ExportSession())
+			{
+				LexEntry e1 = session.MakeTestLexEntryInHeadwordWritingSystem("sunset");
+				LexEntry e2 = session.MakeTestLexEntryInHeadwordWritingSystem("flower");
+				LexEntry e3 = session.MakeTestLexEntryInHeadwordWritingSystem("sunset");
+
+				session.DoExport();
+				session.AssertXPathNotNull("lift/entry[@id='" + e1.Id + "' and @order='1']");
+				session.AssertXPathNotNull("lift/entry[@id='" + e2.Id + "' and not(@order)]");
+				session.AssertXPathNotNull("lift/entry[@id='" + e3.Id + "' and @order='2']");
+			}
+		}
+
+		[Test]
+		public void HiddenFields_AreNotOutput()
+		{
+			using (var session = new ExportSession())
+			{
+				LexEntry e1 = session.Repo.CreateItem();
+				e1.LexicalForm["test"] = "sunset";
+				e1.GetOrCreateProperty<MultiText>("color").SetAlternative(session.WritingSystemIds[0], "red");
+				session.Repo.SaveItem(e1);
+
+				Field color = new Field("color",
+										"LexEntry",
+										session.WritingSystemIds,
+										Field.MultiplicityType.ZeroOr1,
+										"MultiText");
+				color.DisplayName = "color";
+				session.Template.Add(color);
+
+				session.DoExport();
+				session.AssertXPathNotNull("lift/entry[@id='" + e1.Id + "']/field[@type='" + "color" + "']");
+
+				//now make it invisible and it should disappear
+				session.Template.GetField("color").Enabled = false;
+
+				session.DoExport();
+				session.AssertNoMatchForXPath("lift/entry[@id='" + e1.Id + "']/field");
+			}
+		}
+
+		[Test]
+		public void LexemeForm_DisabledWritingSystems_AreNotOutput()
+		{
+			using (var session = new ExportSession())
+			{
+				LexEntry entry = session.Repo.CreateItem();
+				entry.LexicalForm.SetAlternative(session.WritingSystemIds[1], "one");
+				session.Repo.SaveItem(entry);
+
+				session.DoExport();
+				session.AssertXPathNotNull("lift/entry/lexical-unit/form[text='one']");
+				session.AssertNoMatchForXPath("lift/entry/lexical-unit/form[text='red']");
+			}
+		}
+
+		[Test]
+		public void WritingSystems_AreOutputInPrescribedOrder()
+		{
+			using (var session = new ExportSession())
+			{
+				LexEntry entry = session.Repo.CreateItem();
+				entry.LexicalForm.SetAlternative(session.WritingSystemIds[1], "greenForm");
+				entry.LexicalForm.SetAlternative(session.WritingSystemIds[2], "blueForm");
+				entry.LexicalForm.SetAlternative(session.WritingSystemIds[0], "redForm");
+				session.Repo.SaveItem(entry);
+
+				session.DoExport();
+				XmlNodeList forms = session.GetNodes("lift/entry/lexical-unit/form");
+
+				Assert.AreEqual(session.WritingSystemIds[0], forms[0].Attributes["lang"].InnerText);
+				Assert.AreEqual(session.WritingSystemIds[1], forms[1].Attributes["lang"].InnerText);
+				Assert.AreEqual(session.WritingSystemIds[2], forms[2].Attributes["lang"].InnerText);
+			}
+		}
+
+		[Test]
+		public void HeadWordField_CitationFieldEnabled_UsesCitationFormSettings()
+		{
+			using (var session = new ExportSession())
+			{
+				session.Template.GetField(LexEntry.WellKnownProperties.Citation).Enabled = true;
+
+				session.MakeEntry();
+				session.DoExport();
+				Assert.AreEqual(2,
+								session.Template.GetField(LexEntry.WellKnownProperties.Citation).
+									WritingSystemIds.Count);
+				session.AssertXPathNotNullWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+										   session.Template.GetField(LexEntry.WellKnownProperties.Citation)
+											   .WritingSystemIds[0],
+										   "blueCitation");
+				//should fall through to lexeme form on red
+				session.AssertXPathNotNullWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+										   session.Template.GetField(LexEntry.WellKnownProperties.Citation)
+											   .WritingSystemIds[1],
+										   "redLexemeForm");
+
+				session.AssertNoMatchForXPath("lift/entry/field[@type='headword']/form[@lang='green']");
+			}
+		}
+
+		[Test]
+		public void HeadWordField_CitationFieldDisabled_UsesLexemeFormSettings()
+		{
+			using (var session = new ExportSession())
+			{
+				session.Template.GetField(LexEntry.WellKnownProperties.Citation).Enabled = false;
+
+				session.MakeEntry();
+				session.DoExport();
+				session.AssertXPathNotNullWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+										   session.HeadwordWritingSystem.Id,
+										   "redLexemeForm");
+
+				//nb: it's not clear what the "correct" behavior is, if the citation
+				//form is disabled for this user but a citation form does exist for this ws.
+
+				session.AssertXPathNotNullWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+											session.WritingSystemIds[1],
+										   "greenCitation");
+				session.AssertXPathNotNullWithArgs(
+										   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+										   session.WritingSystemIds[2],
+										   "blueCitation");
+			}
+		}
+
+
+
+		//        private void MakeEntry()
+		//        {
+		//            LexEntry entry = _lexEntryRepository.CreateItem();
+		//            entry.LexicalForm.SetAlternative("red", "redLexemeForm");
+		//            entry.LexicalForm.SetAlternative("green", "greenLexemeForm");
+		//            entry.LexicalForm.SetAlternative("blue", "blueLexemeForm");
+		//            //leave this blank entry.CitationForm.SetAlternative("red", "redCitation");
+		//            entry.CitationForm.SetAlternative("green", "greenCitation");
+		//            entry.CitationForm.SetAlternative("blue", "blueCitation");
+		//            _lexEntryRepository.SaveItem(entry);
+		//        }
+
+		[Test]
+		public void RelationEntry_Empty_NothingExported()
+		{
+			using (var session = new ExportSession())
+			{
+				LexEntry entry = session.Repo.CreateItem();
+				entry.LexicalForm.SetAlternative(session.HeadwordWritingSystem.Id, "Gary");
+				entry.AddRelationTarget("brother", string.Empty);
+				session.Repo.SaveItem(entry);
+
+				session.DoExport();
+				session.CheckRelationNotOutput("brother");
+			}
+		}
+
+		[Test]
+		public void RelationEntry_NotFound_NothingExported()
+		{
+			using (var session = new ExportSession())
+			{
+				LexEntry entry = session.Repo.CreateItem();
+				entry.LexicalForm.SetAlternative(session.HeadwordWritingSystem.Id, "Gary");
+				entry.AddRelationTarget("brother", "notGonnaFindIt");
+				session.Repo.SaveItem(entry);
+
+				session.DoExport();
+				session.CheckRelationNotOutput("brother");
+			}
+		}
+
+		[Test]
+		public void RelationEntry_Found_HeadWordExported()
+		{
+			using (var session = new ExportSession())
+			{
+				LexEntry targetEntry = session.Repo.CreateItem();
+
+				targetEntry.LexicalForm.SetAlternative(session.HeadwordWritingSystem.Id, "RickLexeme");
+				targetEntry.CitationForm.SetAlternative(session.HeadwordWritingSystem.Id, "Rick");
+				session.Repo.SaveItem(targetEntry);
+
+				LexEntry entry = session.Repo.CreateItem();
+				entry.LexicalForm.SetAlternative(session.HeadwordWritingSystem.Id, "Gary");
+				session.Repo.SaveItem(entry);
+
+				entry.AddRelationTarget("brother", targetEntry.Id);
+
+				session.DoExport();
+				session.CheckRelationOutput(targetEntry, "brother");
+			}
+		}
+
+
+
+
+		//        private static void AssertXPathNotNullWithArgs(string filePath,
+		//                                                       string xpathWithArgs,
+		//                                                       params object[] args)
+		//        {
+		//            AssertXPathNotNull(filePath, string.Format(xpathWithArgs, args));
+		//        }
+
+		//        private static void AssertNoMatchForXPathWithArgs(string filePath,
+		//                                                          string xpathWithArgs,
+		//                                                          params object[] args)
+		//        {
+		//            session.AssertNoMatchForXPath(filePath, string.Format(xpathWithArgs, args));
+		//        }
+
+		//        private static void AssertXPathNotNull(string filePath, string xpath)
+		//        {
+		//            XmlDocument doc = new XmlDocument();
+		//            try
+		//            {
+		//                doc.Load(filePath);
+		//            }
+		//            catch (Exception err)
+		//            {
+		//                Console.WriteLine(err.Message);
+		//                Console.WriteLine(File.ReadAllText(filePath));
+		//            }
+		//            XmlNode node = doc.SelectSingleNode(xpath);
+		//            if (node == null)
+		//            {
+		//                Console.WriteLine("Could not match " + xpath);
+		//                PrintNodeToConsole(doc);
+		//            }
+		//            Assert.IsNotNull(node);
+		//        }
+		//
+		//        public static void AssertNoMatchForXPath(string filePath, string xpath)
+		//        {
+		//            XmlDocument doc = new XmlDocument();
+		//            try
+		//            {
+		//                doc.Load(filePath);
+		//            }
+		//            catch (Exception err)
+		//            {
+		//                Console.WriteLine(err.Message);
+		//                Console.WriteLine(File.ReadAllText(filePath));
+		//            }
+		//            XmlNode node = doc.SelectSingleNode(xpath);
+		//            if (node != null)
+		//            {
+		//                Console.WriteLine("Unexpected match for " + xpath);
+		//                PrintNodeToConsole(node);
+		//            }
+		//            Assert.IsNull(node);
+		//        }
+
+
+	}
+
+	class ExportSession : IDisposable
+	{
+		private LexEntryRepository _lexEntryRepository;
+		private TempFile _outputFile;
+		private ProjectDirectorySetupForTesting _projectDir;
+		public List<string> WritingSystemIds { get; set; }
+
+		public ExportSession()
+		{
+			_projectDir = new ProjectDirectorySetupForTesting("");
+			var project = _projectDir.CreateLoadedProject();
+			_outputFile = new TempFile();
+			Repo = new LexEntryRepository(_projectDir.PathToLiftFile);
+			WritingSystemIds = new List<string>(new string[] { "red", "green", "blue", "voice" });
+			HeadwordWritingSystem =project.WritingSystems.AddSimple("red");
+			project.WritingSystems.AddSimple("green");
+			project.WritingSystems.AddSimple("blue");
+			project.WritingSystems.AddSimple("voice").IsAudio = true;
+
+			Template = new ViewTemplate();
+
+			Template.Add(new Field(LexEntry.WellKnownProperties.Citation,
+							"LexEntry",
+							new string[] { "blue", "red" }));
+			Template.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit,
+										"LexEntry",
+										new string[] { "red", "green", "blue", "voice" }));
+			Template.Add(new Field(LexEntry.WellKnownProperties.BaseForm,
+										"LexEntry",
+										WritingSystemIds));
+
+			Template.Add(new Field("brother",
+							"LexEntry",
+							WritingSystemIds));
+
+
+
+			Field visibleCustom = new Field("VisibleCustom",
+											"LexEntry",
+											WritingSystemIds,
+											Field.MultiplicityType.ZeroOr1,
+											"MultiText");
+			visibleCustom.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+			visibleCustom.DisplayName = "VisibleCustom";
+			Template.Add(visibleCustom);
+
+		}
+
+		public LexEntryRepository Repo
+		{
+			get { return _lexEntryRepository; }
+			set { _lexEntryRepository = value; }
+		}
+
+		public WritingSystem HeadwordWritingSystem { get; set; }
+
+		public ViewTemplate Template { get; set; }
+
+		public LexEntry MakeTestLexEntryInHeadwordWritingSystem(string lexicalForm)
+		{
+			LexEntry entry = Repo.CreateItem();
+			entry.LexicalForm[HeadwordWritingSystem.Id] = lexicalForm;
+			Repo.SaveItem(entry);
+			return entry;
+		}
+
+		public void Dispose()
+		{
+			Repo.Dispose();
+			_outputFile.Dispose();
+			_projectDir.Dispose();
+		}
+
+		public void AssertXPathNotNull(string xpath)
+		{
+			XmlDocument doc = new XmlDocument();
+			try
+			{
+				doc.Load(_outputFile.Path);
+			}
+			catch (Exception err)
+			{
+				Console.WriteLine(err.Message);
+				Console.WriteLine(File.ReadAllText(_outputFile.Path));
+			}
+			XmlNode node = doc.SelectSingleNode(xpath);
+			if (node == null)
+			{
+				Console.WriteLine("Could not match " + xpath);
+				PrintNodeToConsole(doc);
+			}
+			Assert.IsNotNull(node);
+		}
+
+		public void AssertNoMatchForXPath(string xpath)
+		{
+			XmlDocument doc = new XmlDocument();
+			try
+			{
+				doc.Load(_outputFile.Path);
+			}
+			catch (Exception err)
+			{
+				Console.WriteLine(err.Message);
+				Console.WriteLine(File.ReadAllText(_outputFile.Path));
+			}
+			XmlNode node = doc.SelectSingleNode(xpath);
+			if (node != null)
+			{
+				Console.WriteLine("Unexpected match for " + xpath);
+				PrintNodeToConsole(node);
+			}
+			Assert.IsNull(node);
+		}
+
+		public void AssertXPathNotNullWithArgs(string xpathWithArgs,
+											   params object[] args)
+		{
+			AssertXPathNotNull(string.Format(xpathWithArgs, args));
+		}
+
+		public void AssertNoMatchForXPathWithArgs(string xpathWithArgs,
+												  params object[] args)
+		{
+			AssertNoMatchForXPath(string.Format(xpathWithArgs, args));
+		}
+
+		public void DoExport()
+		{
+			PLiftExporter exporter = new PLiftExporter(_outputFile.Path, Repo, Template);
 
 			ResultSet<LexEntry> allEntriesSortedByHeadword =
-					this._lexEntryRepository.GetAllEntriesSortedByHeadword(
-							this._headwordWritingSystem);
+					this.Repo.GetAllEntriesSortedByHeadword(
+							this.HeadwordWritingSystem);
 			foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
 			{
 				int homographNumber = 0;
-				if ((bool) token["HasHomograph"])
+				if ((bool)token["HasHomograph"])
 				{
-					homographNumber = (int) token["HomographNumber"];
+					homographNumber = (int)token["HomographNumber"];
 				}
 				exporter.Add(token.RealObject, homographNumber);
 			}
 			exporter.End();
 		}
 
-		[Test]
-		public void HomographicEntriesHaveHomographNumber()
+		public void CheckRelationOutput(LexEntry targetEntry, string relationName)
 		{
-			LexEntry e1 = MakeTestLexEntryInHeadwordWritingSystem("sunset");
-			LexEntry e2 = MakeTestLexEntryInHeadwordWritingSystem("flower");
-			LexEntry e3 = MakeTestLexEntryInHeadwordWritingSystem("sunset");
-
-			Make(_viewTemplate, _outputPath);
-			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "' and @order='1']");
-			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e2.Id + "' and not(@order)]");
-			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e3.Id + "' and @order='2']");
+			AssertXPathNotNullWithArgs("lift/entry/relation/field[@type='headword-of-target']/form[@lang='{1}']/text[text() = '{2}']",
+									   relationName,
+									   HeadwordWritingSystem.Id,
+									   targetEntry.GetHeadWordForm(HeadwordWritingSystem.Id));
 		}
 
-		[Test]
-		public void HiddenFields_AreNotOutput()
+		public void CheckRelationNotOutput(string relationName)
 		{
-			LexEntry e1 = _lexEntryRepository.CreateItem();
-			e1.LexicalForm["test"] = "sunset";
-			e1.GetOrCreateProperty<MultiText>("color").SetAlternative(_writingSystemIds[0], "red");
-			_lexEntryRepository.SaveItem(e1);
-
-			Field color = new Field("color",
-									"LexEntry",
-									_writingSystemIds,
-									Field.MultiplicityType.ZeroOr1,
-									"MultiText");
-			color.DisplayName = "color";
-			_viewTemplate.Add(color);
-
-			Make(_viewTemplate, _outputPath);
-			AssertXPathNotNull(_outputPath,
-							   "lift/entry[@id='" + e1.Id + "']/field[@type='" + "color" + "']");
-
-			//now make it invisible and it should disappear
-			_viewTemplate.GetField("color").Enabled = false;
-
-			Make(_viewTemplate, _outputPath);
-			AssertNoMatchForXPath(_outputPath, "lift/entry[@id='" + e1.Id + "']/field");
+			AssertNoMatchForXPathWithArgs("lift/entry/field[@type='{0}-relation-headword']",
+										  relationName,
+										  HeadwordWritingSystem.Id);
 		}
 
-		[Test]
-		public void LexemeForm_DisabledWritingSystems_AreNotOutput()
-		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm.SetAlternative(_writingSystemIds[1], "one");
-			_lexEntryRepository.SaveItem(entry);
-
-			Make(_viewTemplate, _outputPath);
-			AssertXPathNotNull(_outputPath, "lift/entry/lexical-unit/form[text='one']");
-			AssertNoMatchForXPath(_outputPath, "lift/entry/lexical-unit/form[text='red']");
-		}
-
-		[Test]
-		public void WritingSystems_AreOutputInPrescribedOrder()
-		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm.SetAlternative(_writingSystemIds[1], "one");
-			entry.LexicalForm.SetAlternative(_writingSystemIds[2], "two");
-			entry.LexicalForm.SetAlternative(_writingSystemIds[0], "zero");
-			_lexEntryRepository.SaveItem(entry);
-
-			Make(_viewTemplate, _outputPath);
-			XmlNodeList forms = GetNodes("lift/entry/lexical-unit/form", _outputPath);
-
-			Assert.AreEqual(_writingSystemIds[0], forms[0].Attributes["lang"].InnerText);
-			Assert.AreEqual(_writingSystemIds[1], forms[1].Attributes["lang"].InnerText);
-			Assert.AreEqual(_writingSystemIds[2], forms[2].Attributes["lang"].InnerText);
-		}
-
-		[Test]
-		public void HeadWordField_CitationFieldEnabled_UsesCitationFormSettings()
-		{
-			_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).Enabled = true;
-
-			MakeEntry();
-			Make(_viewTemplate, _outputPath);
-			Assert.AreEqual(2,
-							_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).
-									WritingSystemIds.Count);
-			AssertXPathNotNullWithArgs(_outputPath,
-									   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-									   _viewTemplate.GetField(LexEntry.WellKnownProperties.Citation)
-											   .WritingSystemIds[0],
-									   "blueCitation");
-			//should fall through to lexeme form on red
-			AssertXPathNotNullWithArgs(_outputPath,
-									   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-									   _viewTemplate.GetField(LexEntry.WellKnownProperties.Citation)
-											   .WritingSystemIds[1],
-									   "redLexemeForm");
-
-			AssertNoMatchForXPath(_outputPath,
-								  "lift/entry/field[@type='headword']/form[@lang='green']");
-		}
-
-		[Test]
-		public void HeadWordField_CitationFieldDisabled_UsesLexemeFormSettings()
-		{
-			_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).Enabled = false;
-
-			MakeEntry();
-			Make(_viewTemplate, _outputPath);
-			AssertXPathNotNullWithArgs(_outputPath,
-									   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-									   _headwordWritingSystem.Id,
-									   "redLexemeForm");
-
-			//nb: it's not clear what the "correct" behavior is, if the citation for is disabled for this user
-			//but a citation form does exist for this ws.
-
-			AssertXPathNotNullWithArgs(_outputPath,
-									   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-									   _writingSystemIds[1],
-									   "greenCitation");
-			AssertXPathNotNullWithArgs(_outputPath,
-									   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-									   _writingSystemIds[2],
-									   "blueCitation");
-		}
-
-		private void MakeEntry()
+		public void MakeEntry()
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm.SetAlternative("red", "redLexemeForm");
@@ -237,85 +570,17 @@ namespace WeSay.Project.Tests
 			_lexEntryRepository.SaveItem(entry);
 		}
 
-		[Test]
-		public void RelationEntry_Empty_NothingExported()
-		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "Gary");
-			entry.AddRelationTarget("brother", string.Empty);
-			_lexEntryRepository.SaveItem(entry);
-
-			Make(_viewTemplate, _outputPath);
-			CheckRelationNotOutput("brother");
-		}
-
-		[Test]
-		public void RelationEntry_NotFound_NothingExported()
-		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "Gary");
-			entry.AddRelationTarget("brother", "notGonnaFindIt");
-			_lexEntryRepository.SaveItem(entry);
-
-			Make(_viewTemplate, _outputPath);
-			CheckRelationNotOutput("brother");
-		}
-
-		[Test]
-		public void RelationEntry_Found_HeadWordExported()
-		{
-			LexEntry targetEntry = _lexEntryRepository.CreateItem();
-
-			targetEntry.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "RickLexeme");
-			targetEntry.CitationForm.SetAlternative(_headwordWritingSystem.Id, "Rick");
-			_lexEntryRepository.SaveItem(targetEntry);
-
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "Gary");
-			_lexEntryRepository.SaveItem(entry);
-
-			entry.AddRelationTarget("brother", targetEntry.Id);
-
-			Make(_viewTemplate, _outputPath);
-			CheckRelationOutput(targetEntry, "brother");
-		}
-
-		private void CheckRelationOutput(LexEntry targetEntry, string relationName)
-		{
-			AssertXPathNotNullWithArgs(_outputPath,
-									   "lift/entry/relation/field[@type='headword-of-target']/form[@lang='{1}']/text[text() = '{2}']",
-									   relationName,
-									   _headwordWritingSystem.Id,
-									   targetEntry.GetHeadWordForm(_headwordWritingSystem.Id));
-		}
-
-		private void CheckRelationNotOutput(string relationName)
-		{
-			AssertNoMatchForXPathWithArgs(_outputPath,
-										  "lift/entry/field[@type='{0}-relation-headword']",
-										  relationName,
-										  _headwordWritingSystem.Id);
-		}
-
-		private LexEntry MakeTestLexEntryInHeadwordWritingSystem(string lexicalForm)
-		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm[_headwordWritingSystem.Id] = lexicalForm;
-			_lexEntryRepository.SaveItem(entry);
-			return entry;
-		}
-
-		private static XmlNodeList GetNodes(string xpath, string filePath)
+		public XmlNodeList GetNodes(string xpath)
 		{
 			XmlDocument doc = new XmlDocument();
 			try
 			{
-				doc.Load(filePath);
+				doc.Load(_outputFile.Path);
 			}
 			catch (Exception err)
 			{
 				Console.WriteLine(err.Message);
-				Console.WriteLine(File.ReadAllText(filePath));
+				Console.WriteLine(File.ReadAllText(_outputFile.Path));
 			}
 			XmlNodeList nodes = doc.SelectNodes(xpath);
 			if (nodes == null || nodes.Count == 0)
@@ -326,63 +591,14 @@ namespace WeSay.Project.Tests
 			return nodes;
 		}
 
-		private static void AssertXPathNotNullWithArgs(string filePath,
-													   string xpathWithArgs,
-													   params object[] args)
+		public void PrintResult()
 		{
-			AssertXPathNotNull(filePath, string.Format(xpathWithArgs, args));
+		  XmlDocument doc = new XmlDocument();
+				doc.Load(_outputFile.Path);
+			PrintNodeToConsole(doc);
 		}
 
-		private static void AssertNoMatchForXPathWithArgs(string filePath,
-														  string xpathWithArgs,
-														  params object[] args)
-		{
-			AssertNoMatchForXPath(filePath, string.Format(xpathWithArgs, args));
-		}
-
-		private static void AssertXPathNotNull(string filePath, string xpath)
-		{
-			XmlDocument doc = new XmlDocument();
-			try
-			{
-				doc.Load(filePath);
-			}
-			catch (Exception err)
-			{
-				Console.WriteLine(err.Message);
-				Console.WriteLine(File.ReadAllText(filePath));
-			}
-			XmlNode node = doc.SelectSingleNode(xpath);
-			if (node == null)
-			{
-				Console.WriteLine("Could not match " + xpath);
-				PrintNodeToConsole(doc);
-			}
-			Assert.IsNotNull(node);
-		}
-
-		public static void AssertNoMatchForXPath(string filePath, string xpath)
-		{
-			XmlDocument doc = new XmlDocument();
-			try
-			{
-				doc.Load(filePath);
-			}
-			catch (Exception err)
-			{
-				Console.WriteLine(err.Message);
-				Console.WriteLine(File.ReadAllText(filePath));
-			}
-			XmlNode node = doc.SelectSingleNode(xpath);
-			if (node != null)
-			{
-				Console.WriteLine("Unexpected match for " + xpath);
-				PrintNodeToConsole(node);
-			}
-			Assert.IsNull(node);
-		}
-
-		private static void PrintNodeToConsole(XmlNode node)
+		public  void PrintNodeToConsole(XmlNode node)
 		{
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
@@ -390,6 +606,7 @@ namespace WeSay.Project.Tests
 			XmlWriter writer = XmlWriter.Create(Console.Out, settings);
 			node.WriteContentTo(writer);
 			writer.Flush();
+			Console.WriteLine();
 		}
 	}
 }

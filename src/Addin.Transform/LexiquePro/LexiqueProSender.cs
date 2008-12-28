@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Mono.Addins;
@@ -109,12 +110,13 @@ namespace Addin.Transform.LexiquePro
 			LexEntryRepository lexEntryRepository =
 				projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
 			{
-				string pliftPath;
+				//In Oct 2008, LP didn't understand "plift" yet.
+				var pliftPath = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + "-plift.lift");
 				using (LameProgressDialog dlg = new LameProgressDialog("Exporting to PLift..."))
 				{
 					dlg.Show();
 					PLiftMaker maker = new PLiftMaker();
-					pliftPath = maker.MakePLiftTempFile(lexEntryRepository,
+					maker.MakePLiftTempFile(pliftPath, lexEntryRepository,
 														projectInfo.ServiceProvider.GetService(typeof (ViewTemplate)) as
 														ViewTemplate);
 				}
