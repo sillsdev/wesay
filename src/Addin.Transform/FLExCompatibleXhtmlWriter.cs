@@ -54,19 +54,10 @@ namespace Addin.Transform
 						continue;
 					AddLetterSectionIfNeeded(headwordFieldNode);
 					StartDiv("entry");
-
-					XPathNodeIterator nodes = entryNav.Select("*[not(sense)]");
-					while (nodes.MoveNext())
-					{
-						switch (nodes.Current.Name)
-						{
-							case "field":
-								DoField(nodes.Current);
-								break;
-						}
-					}
+					OutputHomographNumberIfNeeded(entryNav);
+					OutputNonSenseFieldsOfEnry(entryNav);
 					DoSenses(entryNav.Select("sense"));
-					_writer.WriteEndElement();
+					EndDiv();//entry
 				}
 
 				if (_currentLetter != default(char))
@@ -76,6 +67,29 @@ namespace Addin.Transform
 				}
 				_writer.WriteEndElement();//body
 				_writer.WriteEndElement(); //html
+			}
+		}
+
+		private void OutputNonSenseFieldsOfEnry(XPathNavigator entryNav)
+		{
+			XPathNodeIterator nodes = entryNav.Select("*[not(sense)]");
+			while (nodes.MoveNext())
+			{
+				switch (nodes.Current.Name)
+				{
+					case "field":
+						DoField(nodes.Current);
+						break;
+				}
+			}
+		}
+
+		private void OutputHomographNumberIfNeeded(XPathNavigator entryNav)
+		{
+			var homographNumber = entryNav.GetAttribute("order", string.Empty);
+			if(!string.IsNullOrEmpty(homographNumber))
+			{
+				WriteSpan("xhomographnumber", "en"/*todo*/, homographNumber);
 			}
 		}
 
@@ -140,6 +154,9 @@ namespace Addin.Transform
 				{
 					switch(nodes.Current.Name)
 					{
+						case "illustration":
+							DoIllustration(nodes.Current);
+							break;
 						case "definition":
 							DoDefinition(nodes.Current);
 							break;
@@ -165,6 +182,23 @@ namespace Addin.Transform
 			}
 			EndSpan();
 
+		}
+
+		private void DoIllustration(XPathNavigator pictureNode)
+		{
+			var href = pictureNode.GetAttribute("href", string.Empty);
+			var caption = pictureNode.GetAttribute("label", string.Empty);
+			StartSpan("pictureRight");
+			_writer.WriteStartElement("image");
+			_writer.WriteAttributeString("src", string.Format("..{0}pictures{0}{1}", Path.DirectorySeparatorChar,href));
+			_writer.WriteEndElement();
+
+			EndSpan();
+
+			if(!string.IsNullOrEmpty(caption))
+			{
+				WriteSpan("pictureCaption", "en"/*todo*/, caption);
+			}
 		}
 
 		private void DoExample(XPathNavigator example)

@@ -7,6 +7,7 @@ using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.AddinLib;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -52,7 +53,6 @@ namespace Addin.Transform.Tests
 		[Test]
 		public void Entry_ProperDivCreated()
 		{
-			_entry.LexicalForm.SetAlternative("v", "voop");
 			AssertBodyHas("div/div/div[@class='entry']");
 		}
 
@@ -85,6 +85,18 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
+		public void SensePicture()
+		{
+			AddSenseWithPicture();
+
+			var pathToPicture= "div/div/div[@class='entry']/span[@class='senses']/span[@class='sense']/span[@class='pictureRight']";
+			AssertBodyHas(pathToPicture);
+			AssertBodyHas(pathToPicture + "/image[@src='..{0}pictures{0}pretend.png']", Path.DirectorySeparatorChar);
+			//todo caption?
+		}
+
+
+		[Test]
 		public void Example()
 		{
 			AddSenseWithTwoExamples();
@@ -97,6 +109,17 @@ namespace Addin.Transform.Tests
 			var pathToTranslations = pathToExamples+"/span[@class='translations']";
 			AssertBodyHas(pathToTranslations);
 			AssertBodyHas(pathToTranslations+"/span[@class='translation' and @lang='en']");
+		}
+
+
+		private void AddSenseWithPicture()
+		{
+		   var sense = new LexSense(_entry);
+			_entry.Senses.Add(sense);
+			var pict = sense.GetOrCreateProperty<PictureRef>(LexSense.WellKnownProperties.Picture);
+			pict.Caption = new MultiText();
+			pict.Caption.SetAlternative("en", "test caption");
+			pict.Value = "pretend.png";
 		}
 
 		private void AddSenseWithTwoExamples()
@@ -150,6 +173,41 @@ namespace Addin.Transform.Tests
 			AssertXPathNotNull(contents, "html/body/div[@class='letHead']/div[@class='letter' and text()='P p']");
 		}
 
+
+		[Test]
+		public void TwoHomographicEntries_HaveHomographs()
+		{
+			List<LexEntry> entries = new List<LexEntry>();
+			entries.Add(_entry);
+
+			var secondOne = _repo.CreateItem();
+			entries.Add(secondOne);
+			secondOne.LexicalForm.SetAlternative("v", _entry.GetHeadWordForm("v"));
+
+			var contents = GetXhtmlContents(entries);
+
+			AssertXPathNotNull(contents, "//span[@class='xhomographnumber' and text()='1']");
+			AssertXPathNotNull(contents, "//span[@class='xhomographnumber' and text()='2']");
+
+		  }
+
+		[Test]
+		public void TwoNonHomographicEntries_NoHomographs()
+		{
+			List<LexEntry> entries = new List<LexEntry>();
+			entries.Add(_entry);
+
+			var secondOne = _repo.CreateItem();
+			entries.Add(secondOne);
+			secondOne.LexicalForm.SetAlternative("v", _entry.GetHeadWordForm("v"));
+
+			var contents = GetXhtmlContents(entries);
+
+			AssertXPathIsNull(contents, "//span[@class='xhomographnumber']");
+
+		}
+
+
 		private string GetXhtmlContents(IList<LexEntry> entries)
 		{
 			if(entries!=null)
@@ -188,25 +246,16 @@ namespace Addin.Transform.Tests
 			return builder.ToString();
 		}
 
-		private  void AssertBodyHas(string xpath)
+		private  void AssertBodyHas(string xpath, params object[] args)
 		{
 			IList<LexEntry> entries = new List<LexEntry>(new LexEntry[] {_entry});
-			AssertXPathNotNull(GetXhtmlContents(entries), "html/body/" + xpath);
+			AssertXPathNotNull(GetXhtmlContents(entries), "html/body/" + string.Format(xpath,args));
 		}
 
 
 		private static void AssertXPathNotNull(string xml, string xpath)
 		{
-			XmlDocument doc = new XmlDocument();
-			try
-			{
-				doc.LoadXml(xml);
-			}
-			catch (Exception err)
-			{
-				Console.WriteLine(err.Message);
-				Console.WriteLine(xml);
-			}
+			XmlDocument doc = GetDoc(xml);
 			XmlNode node = doc.SelectSingleNode(xpath);
 			if (node == null)
 			{
@@ -220,6 +269,39 @@ namespace Addin.Transform.Tests
 				writer.Flush();
 			}
 			Assert.IsNotNull(node);
+		}
+
+		private static void AssertXPathIsNull(string xml, string xpath)
+		{
+			XmlDocument doc = GetDoc(xml);
+			XmlNode node = doc.SelectSingleNode(xpath);
+			if (node != null)
+			{
+				Console.WriteLine("Was not supposed to match " + xpath);
+				Console.WriteLine();
+				XmlWriterSettings settings = new XmlWriterSettings();
+				settings.Indent = true;
+				settings.ConformanceLevel = ConformanceLevel.Fragment;
+				XmlWriter writer = XmlWriter.Create(Console.Out, settings);
+				doc.WriteContentTo(writer);
+				writer.Flush();
+			}
+			Assert.IsNull(node);
+		}
+
+		private static XmlDocument GetDoc(string xml)
+		{
+			XmlDocument doc = new XmlDocument();
+			try
+			{
+				doc.LoadXml(xml);
+			}
+			catch (Exception err)
+			{
+				Console.WriteLine(err.Message);
+				Console.WriteLine(xml);
+			}
+			return doc;
 		}
 	}
 }
