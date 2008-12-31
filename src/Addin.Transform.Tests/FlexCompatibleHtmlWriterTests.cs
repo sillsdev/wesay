@@ -36,7 +36,10 @@ namespace Addin.Transform.Tests
 
 			_project.DefaultPrintingTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.Add("fr");
 			_project.DefaultPrintingTemplate.GetField(LexExampleSentence.WellKnownProperties.Translation).WritingSystemIds.Add("fr");
+
+			_project.DefaultPrintingTemplate.GetField(LexEntry.WellKnownProperties.CrossReference).Enabled = true;
 		}
+
 		[TearDown]
 		public void TearDown()
 		{
@@ -85,13 +88,24 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
+		public void SensesGetSenseNumbersWhenMoreThanOne()
+		{
+			AddSenseWithDefinition();
+			AddSenseWithDefinition();
+
+			var path = "div/div/div[@class='entry']/span[@class='senses']/span[@class='sense']/span[@class='xsensenumber' and text()='{0}']";
+			AssertBodyHas(path,1);
+			AssertBodyHas(path, 2);
+		}
+
+		[Test]
 		public void SensePicture()
 		{
 			AddSenseWithPicture();
 
 			var pathToPicture= "div/div/div[@class='entry']/span[@class='senses']/span[@class='sense']/span[@class='pictureRight']";
 			AssertBodyHas(pathToPicture);
-			AssertBodyHas(pathToPicture + "/image[@src='..{0}pictures{0}pretend.png']", Path.DirectorySeparatorChar);
+			AssertBodyHas(pathToPicture + "/img[@src='..{0}pictures{0}pretend.png']", Path.DirectorySeparatorChar);
 			//todo caption?
 		}
 
@@ -156,7 +170,7 @@ namespace Addin.Transform.Tests
 
 			var pineapple = _repo.CreateItem();
 			entries.Add(pineapple);
-			pineapple.LexicalForm.SetAlternative("v", "pineapple");
+			pineapple.LexicalForm.SetAlternative("v", "-pineapple");//should skip hyphen
 
 			var pear = _repo.CreateItem();
 			entries.Add(pear);
@@ -173,6 +187,26 @@ namespace Addin.Transform.Tests
 			AssertXPathNotNull(contents, "html/body/div[@class='letHead']/div[@class='letter' and text()='P p']");
 		}
 
+		[Test]
+		public void TwoEntryCrossRefferences()
+		{
+			var targetOne = _repo.CreateItem();
+			targetOne.LexicalForm.SetAlternative("v", "targetOne");
+			var targetTwo = _repo.CreateItem();
+			targetTwo.LexicalForm.SetAlternative("v", "targetTwo");
+
+			var crossRefs =_entry.GetOrCreateProperty<LexRelationCollection>(LexEntry.WellKnownProperties.CrossReference);
+			crossRefs.Relations.Add(new LexRelation(LexEntry.WellKnownProperties.CrossReference, targetOne.Id, _entry));
+			crossRefs.Relations.Add(new LexRelation(LexEntry.WellKnownProperties.CrossReference, targetTwo.Id, _entry));
+
+					   ;
+		   // var dummy =GetXhtmlContents(new List<LexEntry>(new LexEntry[] {_entry}));
+
+			//AssertBodyHas("*//span[@class='crossrefs']/span[@class='crossref-type' and text()='cf']");
+			AssertBodyHas("*//span[@class='crossrefs']/span[@class='crossref-targets' and count(span[@class='xitem']) = 2]");
+			AssertBodyHas("*//span[@class='xitem']/span[@class='crossref' and text()='targetOne']");
+			AssertBodyHas("*//span[@class='xitem']/span[@class='crossref' and text()='targetTwo']");
+		}
 
 		[Test]
 		public void TwoHomographicEntries_HaveHomographs()
@@ -199,7 +233,7 @@ namespace Addin.Transform.Tests
 
 			var secondOne = _repo.CreateItem();
 			entries.Add(secondOne);
-			secondOne.LexicalForm.SetAlternative("v", _entry.GetHeadWordForm("v"));
+			secondOne.LexicalForm.SetAlternative("v", "banana");
 
 			var contents = GetXhtmlContents(entries);
 
@@ -235,7 +269,7 @@ namespace Addin.Transform.Tests
 
 			  //  try
 				{
-					x.Write(pliftbuilder.ToString(), w);
+					x.Write(new StringReader(pliftbuilder.ToString()), w);
 				}
 //                catch(Exception e)
 //                {

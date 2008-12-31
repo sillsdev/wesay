@@ -60,8 +60,9 @@ namespace Addin.Transform
 				string pdfPath = Path.Combine(projectInfo.PathToExportDirectory,
 											  projectInfo.Name + ".pdf");
 
+
 				string layoutCssPath =
-						projectInfo.LocateFile(Path.Combine("Templates", "basicDictionary.css"));
+						projectInfo.LocateFile(Path.Combine("Templates", "defaultDictionary.css"));
 				PrinceXmlWrapper.CreatePdf(htmlPath, new string[] {layoutCssPath}, pdfPath);
 				Process.Start(pdfPath);
 			}

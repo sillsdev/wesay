@@ -84,7 +84,8 @@ namespace WeSay.Project
 				}
 
 				LanguageForm[] labelForms =
-						posOption.Name.GetOrderedAndFilteredForms(
+//                        posOption.Name.GetOrderedAndFilteredForms(
+					   posOption.Abbreviation.GetOrderedAndFilteredForms(
 								_viewTemplate.GetField(fieldName).WritingSystemIds);
 
 				if (labelForms != null && labelForms.Length > 0)

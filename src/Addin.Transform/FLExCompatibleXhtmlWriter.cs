@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Web.UI;
@@ -8,6 +9,7 @@ using System.Xml.XPath;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
+using System.Linq;
 
 namespace Addin.Transform
 {
@@ -34,17 +36,19 @@ namespace Addin.Transform
 		//            }
 		//      }
 
-		public void Write(string pliftSource, TextWriter textWriter)
+		public void Write(TextReader pliftReader, TextWriter textWriter)
 		{
 			using (_writer = XmlWriter.Create(textWriter))
 			{
+			  //  _writer.WriteProcessingInstruction("xml-stylesheet", @"type='text/css' href='dictionary.css");
 				_writer.WriteStartElement("html");
 				_writer.WriteStartElement("head");
+				_writer.WriteRaw("<LINK rel='stylesheet' href='factoryDictionary.css' type='text/css' />");
 				_writer.WriteEndElement();
 				_writer.WriteStartElement("body");
 				WriteClassAttr("dicBody");
 
-				var doc = new XPathDocument(new StringReader(pliftSource));
+				var doc = new XPathDocument(pliftReader);
 				var navigator = doc.CreateNavigator();
 				var entryIterator = navigator.Select("//entry");
 				foreach (XPathNavigator entryNav in entryIterator)
@@ -73,15 +77,48 @@ namespace Addin.Transform
 		private void OutputNonSenseFieldsOfEnry(XPathNavigator entryNav)
 		{
 			XPathNodeIterator nodes = entryNav.Select("*[not(sense)]");
+			List<string> encouteredRelationTypes = new List<string>();
 			while (nodes.MoveNext())
 			{
 				switch (nodes.Current.Name)
 				{
+					case "relation":
+						//we need to group up all relations of a type
+						string rtype = nodes.Current.GetAttribute("type", string.Empty);
+						if (encouteredRelationTypes.Contains(rtype))
+							continue;
+						encouteredRelationTypes.Add(rtype);
+						DoRelationsOfType(entryNav, rtype);
+						break;
 					case "field":
 						DoField(nodes.Current);
 						break;
 				}
 			}
+		}
+
+		private void DoRelationsOfType(XPathNavigator entryNav, string rtype)
+		{
+			StartSpan("crossrefs");
+			StartSpan("crossref-targets");
+			XPathNodeIterator relationsOfOneType = entryNav.Select("relation[@type='"+rtype+"']");
+			while(relationsOfOneType.MoveNext())
+			{
+				DoRelation(relationsOfOneType.Current);
+			}
+			EndSpan();
+			EndSpan();
+		}
+
+		private void DoRelation(XPathNavigator relation)
+		{
+			XPathNavigator target=  relation.SelectSingleNode("field[@type='headword-of-target']");
+////span[@class='crossrefs']/span[@class='crossref-targets' and count(span[@class='xitem']) == 2]");
+			string rtype = relation.GetAttribute("type",string.Empty);
+			StartSpan("xitem");
+			WriteSpan("crossref", GetLang(target), target.Value);
+			EndSpan();
+
 		}
 
 		private void OutputHomographNumberIfNeeded(XPathNavigator entryNav)
@@ -144,12 +181,17 @@ namespace Addin.Transform
   */
 
 			StartSpan("senses");
-
+			var hasMultipleSenses = senses.Count > 1;
 			while (senses.MoveNext())
 			{
 				StartSpan("sense");
+				if (hasMultipleSenses)
+				{
+					WriteSpan("xsensenumber", "en", senses.CurrentPosition.ToString());
+				}
+
 				var nodes = senses.Current.Select("*");
-				bool foundExample = false;
+				bool handledExamples = false;
 				while(nodes.MoveNext())
 				{
 					switch(nodes.Current.Name)
@@ -164,19 +206,14 @@ namespace Addin.Transform
 							DoField(nodes.Current);
 							break;
 						case "example":
-							if(!foundExample)
+							if (!handledExamples)
 							{
-								foundExample = true;
-								StartSpan("examples");
+								handledExamples = true;
+								DoExamples(senses.Current);
 							}
-							DoExample(nodes.Current);
 							break;
 					}
 
-				}
-				if (foundExample)
-				{
-					EndSpan();//examples
 				}
 				EndSpan();
 			}
@@ -189,7 +226,7 @@ namespace Addin.Transform
 			var href = pictureNode.GetAttribute("href", string.Empty);
 			var caption = pictureNode.GetAttribute("label", string.Empty);
 			StartSpan("pictureRight");
-			_writer.WriteStartElement("image");
+			_writer.WriteStartElement("img");
 			_writer.WriteAttributeString("src", string.Format("..{0}pictures{0}{1}", Path.DirectorySeparatorChar,href));
 			_writer.WriteEndElement();
 
@@ -199,6 +236,19 @@ namespace Addin.Transform
 			{
 				WriteSpan("pictureCaption", "en"/*todo*/, caption);
 			}
+		}
+
+		private void DoExamples(XPathNavigator senseNav)
+		{
+			StartSpan("examples");
+			XPathNodeIterator example = senseNav.Select("example");
+			Debug.Assert(example.Count>0);
+
+			while (example.MoveNext())
+			{
+				DoExample(example.Current);
+			}
+			EndSpan();
 		}
 
 		private void DoExample(XPathNavigator example)
@@ -269,7 +319,15 @@ namespace Addin.Transform
 
 		private void AddLetterSectionIfNeeded(XPathNavigator headwordFieldNode)
 		{
-			char letter = Char.ToUpper(headwordFieldNode.Value[0]);
+			string s = headwordFieldNode.Value;
+			if(string.IsNullOrEmpty(s))
+				return;
+
+			char letter = s.ToCharArray().First(Char.IsLetterOrDigit);
+			if(letter == default(char))
+				return;
+
+			 letter = Char.ToUpper(letter);
 
 			if(letter != _currentLetter)
 			{
