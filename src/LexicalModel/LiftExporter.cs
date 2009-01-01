@@ -207,13 +207,14 @@ namespace WeSay.LexicalModel
 				propertiesAlreadyOutput.Add(LexSense.WellKnownProperties.Gloss);
 			}
 
+
+			WriteWellKnownCustomMultiText(sense,
+										  LexSense.WellKnownProperties.Definition,
+										  propertiesAlreadyOutput);
 			foreach (LexExampleSentence example in sense.ExampleSentences)
 			{
 				Add(example);
 			}
-			WriteWellKnownCustomMultiText(sense,
-										  LexSense.WellKnownProperties.Definition,
-										  propertiesAlreadyOutput);
 			WriteWellKnownCustomMultiText(sense,
 										  WeSayDataObject.WellKnownProperties.Note,
 										  propertiesAlreadyOutput);

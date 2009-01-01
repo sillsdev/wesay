@@ -58,7 +58,6 @@ namespace Addin.Transform
 						continue;
 					AddLetterSectionIfNeeded(headwordFieldNode);
 					StartDiv("entry");
-					OutputHomographNumberIfNeeded(entryNav);
 					OutputNonSenseFieldsOfEnry(entryNav);
 					DoSenses(entryNav.Select("sense"));
 					EndDiv();//entry
@@ -100,6 +99,7 @@ namespace Addin.Transform
 		private void DoRelationsOfType(XPathNavigator entryNav, string rtype)
 		{
 			StartSpan("crossrefs");
+			WriteSpan("crossref-type", "en", rtype.Replace("confer", "cf"));//hack. Other names are left as-is.
 			StartSpan("crossref-targets");
 			XPathNodeIterator relationsOfOneType = entryNav.Select("relation[@type='"+rtype+"']");
 			while(relationsOfOneType.MoveNext())
@@ -123,7 +123,7 @@ namespace Addin.Transform
 
 		private void OutputHomographNumberIfNeeded(XPathNavigator entryNav)
 		{
-			var homographNumber = entryNav.GetAttribute("order", string.Empty);
+			var homographNumber = entryNav.SelectSingleNode("parent::entry").GetAttribute("order", string.Empty);
 			if(!string.IsNullOrEmpty(homographNumber))
 			{
 				WriteSpan("xhomographnumber", "en"/*todo*/, homographNumber);
@@ -364,23 +364,24 @@ namespace Addin.Transform
 			_writer.WriteAttributeString("class", className);
 		}
 
-		private void DoField(XPathNavigator current)
+		private void DoField(XPathNavigator entryNav)
 		{
 			/**/
 
-			var type = current.GetAttribute("type", string.Empty);
+			var type = entryNav.GetAttribute("type", string.Empty);
 			switch (type)
 			{
 				case "headword":
-					DoHeadWord(current);
+					DoHeadWord(entryNav);
+
 					break;
 				case "grammatical-info":
-					DoGrammaticalInfo(current);
+					DoGrammaticalInfo(entryNav);
 					break;
 			}
 		}
 
-		private void DoHeadWord(XPathNavigator current)
+		private void DoHeadWord(XPathNavigator entryNav)
 		{
 			/*  <field type="headword">
 				  <form lang="v" first="true"><text>cosmos</text></form>
@@ -391,7 +392,9 @@ namespace Addin.Transform
 			 *  <span class="headword" lang="seh">a</span>
 			 */
 
-			WriteSpan("headword", GetAttribute(current, "lang"), current.Value);
+			StartSpan("headword", GetAttribute(entryNav, "lang"), entryNav.Value);
+			OutputHomographNumberIfNeeded(entryNav);
+			EndSpan();
 		}
 
 		private void StartSpan(string className)
@@ -400,12 +403,16 @@ namespace Addin.Transform
 			_writer.WriteAttributeString("class", className);
 		}
 
-		private void WriteSpan(string className, string lang, string text)
+		private void StartSpan(string className, string lang, string text)
 		{
 			_writer.WriteStartElement("span");
-			_writer.WriteAttributeString("class",className);
+			_writer.WriteAttributeString("class", className);
 			_writer.WriteAttributeString("lang", lang);
 			_writer.WriteValue(text);
+		}
+		private void WriteSpan(string className, string lang, string text)
+		{
+			StartSpan(className,lang,text);
 			_writer.WriteEndElement();
 		}
 		private void StartSpan(string className, string lang)

@@ -62,23 +62,22 @@ font-size: 2cm;
 }
 .entry {
 	font-family: "Times New Roman", serif;	/* default Serif font */
-	color: rgb(0,0,0);	/* inherited */
-	background-color: rgb(255,255,255);	/* inherited */
-	border-style: solid;
+/*    border-style: solid;
 	border-top-width: 0pt;
 	border-bottom-width: 0pt;
 	border-left-width: 0pt;
 	border-right-width: 0pt;
-	text-indent: -36pt;
+/*    text-indent: -36pt;
 	margin-left: 36pt;
+
 	padding-left: 9pt;
 	padding-bottom: 2pt;
-	padding-top: 1pt;
+	padding-top: 1pt;*/
 }
 .xhomographnumber {
 	font-weight: bold;
 	font-size: 55%;
-	vertical-align: sub;
+	vertical-align: super;
 }
 .sense {
 	font-weight: normal;
@@ -87,11 +86,10 @@ font-size: 2cm;
 	/*content: counter(sense);*/
 	display: inline;
 	font-weight: bold;
-	border: solid 1 pt;
 	font-family: Sans-Serif;
-	font-size: 60%;
-	line-height: .5em;
-	padding: .05em .2em 0 .2em;
+	font-size: 100%;
+	/*line-height: .5em;
+	padding: .05em .2em 0 .2em;*/
 	margin-right: .4em;
 }
 .xlanguagetag {
@@ -114,7 +112,9 @@ font-size: 2cm;
 	font-size:108%;
 	string-set: guideword content();
 }
+
 .headword:after { content: "  " }
+
 .headword>.xitem + .xitem:before { content: " " }
 .senses {
 	/* cascaded environment FieldWorks style = 'Dictionary-Normal' */
@@ -249,6 +249,10 @@ font-size: 2cm;
 	color: rgb(0,0,0);	/* cascaded environment */
 	background-color: rgb(255,255,255);	/* cascaded environment */
 }
+.crossref-type{
+font-style: italic;
+}
+.crossref-type:after{content: " "}
 .crossrefs:after { content: ". " }
 .crossrefs>.xitem + .xitem:before { content: "; " }
 .crossref-targets {
@@ -308,16 +312,10 @@ font-size: 2cm;
 .headword-minor>.xitem + .xitem:before { content: " " }
 
 
-/* grabbed (and renamed) these from eric's macMillan css */
-
 
 .pictureRight
 {
 	float:right;
-	width: 50%;
-	padding-left:.5em;
-	font-weight: bold;
-	font-size: 80%;
-	font-family: Sans-Serif;
-	text-align: center;
+			   margin: 0 0 0 10px;
+	width: 3cm;
 }
