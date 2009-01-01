@@ -113,6 +113,10 @@ font-size: 2cm;
 	string-set: guideword content();
 }
 
+.headword-secondary {
+}
+.headword-secondary:after { content: "  " }
+
 .headword:after { content: "  " }
 
 .headword>.xitem + .xitem:before { content: " " }
@@ -318,4 +322,13 @@ font-style: italic;
 	float:right;
 			   margin: 0 0 0 10px;
 	width: 3cm;
+	text-align: center;
+}
+.pictureCaption {
+}
+.pictureLabel {
+	/* lang = 'pt' */
+	font-size: 80%;
+	font-family: Sans-Serif;
+
 }

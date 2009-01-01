@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -7,6 +8,7 @@ using Mono.Addins;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
+using WeSay.Foundation;
 
 namespace Addin.Transform
 {
@@ -25,12 +27,17 @@ namespace Addin.Transform
 
 		public override string Description
 		{
-			get { return "EXPERIMENTAL: " + "Create a publication and open it in a PDF reader."; }
+			get { return "Create a simple PDF, ready to print."; }
 		}
 
 		public override Image ButtonImage
 		{
 			get { return Resources.pdfDictionary; }
+		}
+
+		public override Image DashboardButtonImage
+		{
+			get { return Resources.greenPdf; }
 		}
 
 		public override bool Available
@@ -60,15 +67,51 @@ namespace Addin.Transform
 				string pdfPath = Path.Combine(projectInfo.PathToExportDirectory,
 											  projectInfo.Name + ".pdf");
 
+				var stylesheetPaths = new List<string>();
 
-				string layoutCssPath =
-						projectInfo.LocateFile(Path.Combine("Templates", "defaultDictionary.css"));
-				PrinceXmlWrapper.CreatePdf(htmlPath, new string[] {layoutCssPath}, pdfPath);
+				var autoLayout = Path.Combine(projectInfo.PathToExportDirectory, "autoLayout.css");
+				var factoryLayout = projectInfo.LocateFile(Path.Combine("Templates", "defaultDictionary.css"));
+				File.Copy(factoryLayout, autoLayout, true);
+
+				var autoFonts = Path.Combine(projectInfo.PathToExportDirectory, "autoFonts.css");
+				CreateAutoFontsStyleSheet(autoFonts, projectInfo.WritingSystems);
+
+				var customLayout = Path.Combine(projectInfo.PathToExportDirectory, "customDictionary.css");
+				if (!File.Exists(customLayout))
+				{
+					File.WriteAllText(customLayout, "/* To tweak a layout setting, copy the template you want to change from the autoDictionary.css into this file, and make your changes */");
+				}
+
+				var customFonts = Path.Combine(projectInfo.PathToExportDirectory, "customFonts.css");
+				if (!File.Exists(customFonts))
+				{
+					File.WriteAllText(customFonts, "/* Edit this file to change the fonts.*/"+ Environment.NewLine+ File.ReadAllText(autoFonts));
+				}
+			   stylesheetPaths.Add(customFonts);
+				stylesheetPaths.Add(customLayout);
+				 stylesheetPaths.Add(autoFonts);
+				stylesheetPaths.Add(autoLayout);
+
+				PrinceXmlWrapper.CreatePdf(htmlPath, stylesheetPaths, pdfPath);
 				Process.Start(pdfPath);
 			}
 			catch (Exception e)
 			{
 				ErrorReport.ReportNonFatalMessage(e.Message);
+			}
+		}
+
+		private void CreateAutoFontsStyleSheet(string path, WritingSystemCollection writingSystemCollection)
+		{
+			using (var f = File.CreateText(path))
+			{
+				foreach (var pair in writingSystemCollection)
+				{
+					f.WriteLine(":lang("+pair.Key+") {");
+					f.WriteLine("font-family: "+pair.Value.FontName+";");
+					f.WriteLine("}");
+					f.WriteLine();
+				}
 			}
 		}
 	}

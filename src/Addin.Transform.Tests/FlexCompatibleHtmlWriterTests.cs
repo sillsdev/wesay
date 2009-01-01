@@ -109,6 +109,16 @@ namespace Addin.Transform.Tests
 			//todo caption?
 		}
 
+		[Test]
+		public void PictureGetsAutoCaption()
+		{
+			AddSenseWithPicture();
+
+			var pathToPicture = "div/div/div[@class='entry']/span[@class='senses']/span[@class='sense']/span[@class='pictureRight']";
+			AssertBodyHas(pathToPicture);
+			AssertBodyHas(pathToPicture +
+						  "/div[@class='pictureCaption']/span[@class='pictureLabel' and text()='apple']");
+		}
 
 		[Test]
 		public void Example()

@@ -74,6 +74,13 @@ namespace Addin.Transform {
 			}
 		}
 
+		internal static System.Drawing.Bitmap greenPdf {
+			get {
+				object obj = ResourceManager.GetObject("greenPdf", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
 		internal static System.Drawing.Bitmap greenPrinter {
 			get {
 				object obj = ResourceManager.GetObject("greenPrinter", resourceCulture);

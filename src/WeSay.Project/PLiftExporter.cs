@@ -172,6 +172,10 @@ namespace WeSay.Project
 				WriteHeadWordField(target, "headword-of-target");
 			}
 		}
+		protected override string GetOutputRelationName(LexRelation relation)
+		{
+			return relation.FieldId.Replace("confer", "cf");//hack. Other names are left as-is.
+		}
 
 		protected override void WritePosCore(OptionRef pos)
 		{

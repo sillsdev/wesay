@@ -2,13 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
-using System.Web.UI;
 using System.Xml;
 using System.Xml.XPath;
-using WeSay.Foundation;
-using WeSay.LexicalModel;
-using WeSay.Project;
 using System.Linq;
 
 namespace Addin.Transform
@@ -22,20 +17,6 @@ namespace Addin.Transform
 		{
 		}
 
-		//        public void Write(TextWriter textWriter)
-		//        {
-		//            using (var writer = XmlWriter.Create(textWriter))
-		//            {
-		//                foreach (var entry in _repo.GetAllEntriesSortedByHeadword(_template.HeadwordWritingSystems[0]))
-		//                {
-		//                    writer.WriteStartElement("div");
-		//                    writer.WriteAttributeString("class", "entry");
-		//
-		//                    writer.WriteEndElement();
-		//                }
-		//            }
-		//      }
-
 		public void Write(TextReader pliftReader, TextWriter textWriter)
 		{
 			using (_writer = XmlWriter.Create(textWriter))
@@ -43,7 +24,10 @@ namespace Addin.Transform
 			  //  _writer.WriteProcessingInstruction("xml-stylesheet", @"type='text/css' href='dictionary.css");
 				_writer.WriteStartElement("html");
 				_writer.WriteStartElement("head");
-				_writer.WriteRaw("<LINK rel='stylesheet' href='factoryDictionary.css' type='text/css' />");
+				_writer.WriteRaw("<LINK rel='stylesheet' href='autoDictionary.css' type='text/css' />");
+				_writer.WriteRaw("<LINK rel='stylesheet' href='autoFonts.css' type='text/css' />");
+				_writer.WriteRaw("<LINK rel='stylesheet' href='customDictionary.css' type='text/css' />");
+				_writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
 				_writer.WriteEndElement();
 				_writer.WriteStartElement("body");
 				WriteClassAttr("dicBody");
@@ -56,10 +40,10 @@ namespace Addin.Transform
 					XPathNavigator headwordFieldNode = entryNav.SelectSingleNode("field[@type='headword']");
 					if(headwordFieldNode==null || string.IsNullOrEmpty(headwordFieldNode.Value))
 						continue;
-					AddLetterSectionIfNeeded(headwordFieldNode);
+					AddLetterSectionIfNeeded(headwordFieldNode.Value);
 					StartDiv("entry");
 					OutputNonSenseFieldsOfEnry(entryNav);
-					DoSenses(entryNav.Select("sense"));
+					DoSenses(entryNav.Select("sense"), headwordFieldNode);
 					EndDiv();//entry
 				}
 
@@ -99,7 +83,7 @@ namespace Addin.Transform
 		private void DoRelationsOfType(XPathNavigator entryNav, string rtype)
 		{
 			StartSpan("crossrefs");
-			WriteSpan("crossref-type", "en", rtype.Replace("confer", "cf"));//hack. Other names are left as-is.
+			WriteSpan("crossref-type", "en", rtype);
 			StartSpan("crossref-targets");
 			XPathNodeIterator relationsOfOneType = entryNav.Select("relation[@type='"+rtype+"']");
 			while(relationsOfOneType.MoveNext())
@@ -121,16 +105,16 @@ namespace Addin.Transform
 
 		}
 
-		private void OutputHomographNumberIfNeeded(XPathNavigator entryNav)
+		private void OutputHomographNumberIfNeeded(XPathNavigator headwordFieldNav)
 		{
-			var homographNumber = entryNav.SelectSingleNode("parent::entry").GetAttribute("order", string.Empty);
+			var homographNumber = headwordFieldNav.SelectSingleNode("parent::entry").GetAttribute("order", string.Empty);
 			if(!string.IsNullOrEmpty(homographNumber))
 			{
 				WriteSpan("xhomographnumber", "en"/*todo*/, homographNumber);
 			}
 		}
 
-		private void DoSenses(XPathNodeIterator senses)
+		private void DoSenses(XPathNodeIterator senses, XPathNavigator headwordFieldNode)
 		{
 			/*   <sense id="ASSOC_c33c51d4-f405-4d34-99c3-5eb36881a0d1">
 	  <field type="grammatical-info">
@@ -197,7 +181,7 @@ namespace Addin.Transform
 					switch(nodes.Current.Name)
 					{
 						case "illustration":
-							DoIllustration(nodes.Current);
+							DoIllustration(nodes.Current, headwordFieldNode);
 							break;
 						case "definition":
 							DoDefinition(nodes.Current);
@@ -221,15 +205,23 @@ namespace Addin.Transform
 
 		}
 
-		private void DoIllustration(XPathNavigator pictureNode)
+		private void DoIllustration(XPathNavigator pictureNode, XPathNavigator headwordFieldNode)
 		{
 			var href = pictureNode.GetAttribute("href", string.Empty);
 			var caption = pictureNode.GetAttribute("label", string.Empty);
 			StartSpan("pictureRight");
+
+
 			_writer.WriteStartElement("img");
 			_writer.WriteAttributeString("src", string.Format("..{0}pictures{0}{1}", Path.DirectorySeparatorChar,href));
 			_writer.WriteEndElement();
 
+			if (headwordFieldNode != null && !string.IsNullOrEmpty(headwordFieldNode.Value))
+			{
+				StartDiv("pictureCaption");
+				WriteSpan("pictureLabel", GetLang(headwordFieldNode), headwordFieldNode.Value);
+				EndDiv();
+			}
 			EndSpan();
 
 			if(!string.IsNullOrEmpty(caption))
@@ -317,13 +309,12 @@ namespace Addin.Transform
 			return form.GetAttribute("lang", string.Empty);
 		}
 
-		private void AddLetterSectionIfNeeded(XPathNavigator headwordFieldNode)
+		private void AddLetterSectionIfNeeded(string headword)
 		{
-			string s = headwordFieldNode.Value;
-			if(string.IsNullOrEmpty(s))
+			if(string.IsNullOrEmpty(headword))
 				return;
 
-			char letter = s.ToCharArray().First(Char.IsLetterOrDigit);
+			char letter = headword.ToCharArray().First(Char.IsLetterOrDigit);
 			if(letter == default(char))
 				return;
 
@@ -381,7 +372,7 @@ namespace Addin.Transform
 			}
 		}
 
-		private void DoHeadWord(XPathNavigator entryNav)
+		private void DoHeadWord(XPathNavigator headwordFieldNav)
 		{
 			/*  <field type="headword">
 				  <form lang="v" first="true"><text>cosmos</text></form>
@@ -392,9 +383,21 @@ namespace Addin.Transform
 			 *  <span class="headword" lang="seh">a</span>
 			 */
 
-			StartSpan("headword", GetAttribute(entryNav, "lang"), entryNav.Value);
-			OutputHomographNumberIfNeeded(entryNav);
+			XPathNodeIterator forms = headwordFieldNav.SelectChildren("form", string.Empty);
+
+			if(!forms.MoveNext())
+				return;
+
+			StartSpan("headword", GetLang(forms.Current), forms.Current.Value);
+			OutputHomographNumberIfNeeded(headwordFieldNav);
 			EndSpan();
+
+			while(forms.MoveNext())
+			{
+				//NB: had to make up this style name, wasn't in FLEx yet.
+				WriteSpan("headword-secondary", GetLang(forms.Current), forms.Current.Value);
+				//notice, we're not bothering with homograph #s on these
+			}
 		}
 
 		private void StartSpan(string className)
@@ -413,6 +416,11 @@ namespace Addin.Transform
 		private void WriteSpan(string className, string lang, string text)
 		{
 			StartSpan(className,lang,text);
+			_writer.WriteEndElement();
+		}
+		private void WriteSpn(string className, string lang, string text)
+		{
+			StartSpan(className, lang, text);
 			_writer.WriteEndElement();
 		}
 		private void StartSpan(string className, string lang)

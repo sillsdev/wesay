@@ -380,11 +380,16 @@ namespace WeSay.LexicalModel
 					continue;
 
 				Writer.WriteStartElement("relation");
-				Writer.WriteAttributeString("type", relation.FieldId);
+				Writer.WriteAttributeString("type", GetOutputRelationName(relation));
 				Writer.WriteAttributeString("ref", relation.Key);
 				WriteRelationTarget(relation);
 				Writer.WriteEndElement();
 			}
+		}
+
+		protected virtual string GetOutputRelationName(LexRelation relation)
+		{
+			return relation.FieldId;
 		}
 
 		/// <summary>
