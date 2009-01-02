@@ -15,7 +15,7 @@ namespace WeSay.Project.Tests
 	/// Tests of the LiftExporter, focussed on its support for the PLIFT scenario
 	/// </summary>
 	[TestFixture]
-	public class LiftExporterPLiftTests
+	public class PLiftExporterTests
 	{
 		//        private string _outputPath;
 		//        private ViewTemplate session.Template;

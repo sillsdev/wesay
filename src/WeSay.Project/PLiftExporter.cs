@@ -174,7 +174,9 @@ namespace WeSay.Project
 		}
 		protected override string GetOutputRelationName(LexRelation relation)
 		{
-			return relation.FieldId.Replace("confer", "cf");//hack. Other names are left as-is.
+			var s= relation.FieldId.Replace("confer", "cf");//hack. Other names are left as-is.
+			s = s.Replace("BaseForm", "see");//hack... not sure what we want here
+			return s;
 		}
 
 		protected override void WritePosCore(OptionRef pos)

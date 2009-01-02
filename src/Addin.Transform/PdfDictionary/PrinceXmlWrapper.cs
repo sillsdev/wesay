@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Addin.Transform
+namespace Addin.Transform.PdfDictionary
 {
 	internal class PrinceXmlWrapper
 	{

@@ -74,11 +74,17 @@ font-size: 2cm;
 	padding-bottom: 2pt;
 	padding-top: 1pt;*/
 }
+
 .xhomographnumber {
 	font-weight: bold;
 	font-size: 55%;
 	vertical-align: super;
 }
+
+.subentry {
+		padding-left: 45pt;
+}
+
 .sense {
 	font-weight: normal;
 }

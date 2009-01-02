@@ -6,7 +6,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Linq;
 
-namespace Addin.Transform
+namespace Addin.Transform.PdfDictionary
 {
 	public class FLExCompatibleXhtmlWriter
 	{
@@ -21,7 +21,7 @@ namespace Addin.Transform
 		{
 			using (_writer = XmlWriter.Create(textWriter))
 			{
-			  //  _writer.WriteProcessingInstruction("xml-stylesheet", @"type='text/css' href='dictionary.css");
+				//  _writer.WriteProcessingInstruction("xml-stylesheet", @"type='text/css' href='dictionary.css");
 				_writer.WriteStartElement("html");
 				_writer.WriteStartElement("head");
 				_writer.WriteRaw("<LINK rel='stylesheet' href='autoDictionary.css' type='text/css' />");
@@ -318,7 +318,7 @@ namespace Addin.Transform
 			if(letter == default(char))
 				return;
 
-			 letter = Char.ToUpper(letter);
+			letter = Char.ToUpper(letter);
 
 			if(letter != _currentLetter)
 			{

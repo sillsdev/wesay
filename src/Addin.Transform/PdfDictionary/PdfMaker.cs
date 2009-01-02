@@ -10,10 +10,10 @@ using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
-namespace Addin.Transform
+namespace Addin.Transform.PdfDictionary
 {
 	[Extension]
-	public class PdfMaker: HtmlTransformer
+	public class PdfMaker : HtmlTransformer, IWeSayAddinHasMoreInfo
 	{
 		public override string LocalizedName
 		{
@@ -37,7 +37,7 @@ namespace Addin.Transform
 
 		public override Image DashboardButtonImage
 		{
-			get { return Resources.greenPdf; }
+			get { return Resources.greenPdfDictionary; }
 		}
 
 		public override bool Available
@@ -87,9 +87,9 @@ namespace Addin.Transform
 				{
 					File.WriteAllText(customFonts, "/* Edit this file to change the fonts.*/"+ Environment.NewLine+ File.ReadAllText(autoFonts));
 				}
-			   stylesheetPaths.Add(customFonts);
+				stylesheetPaths.Add(customFonts);
 				stylesheetPaths.Add(customLayout);
-				 stylesheetPaths.Add(autoFonts);
+				stylesheetPaths.Add(autoFonts);
 				stylesheetPaths.Add(autoLayout);
 
 				PrinceXmlWrapper.CreatePdf(htmlPath, stylesheetPaths, pdfPath);
@@ -113,6 +113,12 @@ namespace Addin.Transform
 					f.WriteLine();
 				}
 			}
+		}
+
+		public void ShowMoreInfoDialog(Form parentForm)
+		{
+			var dlg = new AboutMakePdfDictionary();
+			dlg.ShowDialog();
 		}
 	}
 }

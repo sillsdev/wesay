@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Xsl;
+using Addin.Transform.PdfDictionary;
 using Mono.Addins;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
@@ -12,7 +13,7 @@ using WeSay.Project;
 
 namespace Addin.Transform
 {
-	[Extension]
+  //don't show this anymore  [Extension]
 	public class HtmlTransformer : LiftTransformer//todo remove this dependency
 	{
 		public override string LocalizedName

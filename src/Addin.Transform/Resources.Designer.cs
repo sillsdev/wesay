@@ -74,9 +74,9 @@ namespace Addin.Transform {
 			}
 		}
 
-		internal static System.Drawing.Bitmap greenPdf {
+		internal static System.Drawing.Bitmap greenPdfDictionary {
 			get {
-				object obj = ResourceManager.GetObject("greenPdf", resourceCulture);
+				object obj = ResourceManager.GetObject("greenPdfDictionary", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
