@@ -254,12 +254,12 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="WeSay.UI.pdb" Guid="{3A0709F0-361F-49F9-B50E-877BDA266A22}">
 					<File Id="WeSay.UI.pdb" Name="WeSay.UI.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.UI.pdb" />
 				  </Component>
-
 				  <Component Id="Addin.Transform.dll" Guid="{6E1139F5-2998-44bc-A393-018D4DFC00B7}">
 					<File Id="Addin.Transform.dll" Name="Addin.Transform.dll" KeyPath="yes" Source="..\..\output\release\Addin.Transform.dll" />
 				  </Component>
-
-
+				  <Component Id="Prince.dll" Guid="{C1B6F33A-D7D0-4039-B1FA-BEC6597C5B3D}">
+					<File Id="Prince.dll" Name="Prince.dll" KeyPath="yes" Source="..\..\output\release\Prince.dll" />
+				  </Component>
 				  <Component Id="Addin.Backup.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7901122}">
 					<File Id="Addin.Backup.dll" Name="Addin.Backup.dll" KeyPath="yes" Source="..\..\output\release\Addin.Backup.dll" />
 				  </Component>
