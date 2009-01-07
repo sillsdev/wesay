@@ -45,9 +45,12 @@ namespace Addin.Transform.Tests
 						LexEntryRepository lexEntryRepository =
 								new LexEntryRepository(p.PathToRepository))
 				{
-					PLiftMaker maker = new PLiftMaker();
-					string path = maker.MakePLiftTempFile(lexEntryRepository, p.DefaultPrintingTemplate);
-					Console.WriteLine(path);
+					using (var f = new WeSay.Foundation.Tests.TestHelpers.TempFile())
+					{
+						PLiftMaker maker = new PLiftMaker();
+						maker.MakePLiftTempFile(f.Path, lexEntryRepository, p.DefaultPrintingTemplate);
+						Console.WriteLine(f.Path);
+					}
 				}
 			}
 		}

@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -57,6 +57,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
+	<Reference Include="Palaso.Media, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Palaso.Media.dll</HintPath>
+	</Reference>
 	<Reference Include="PalasoReporting, Version=1.0.2774.21115, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
@@ -76,6 +80,7 @@
 	<Compile Include="Animator.cs" />
 	<Compile Include="AnnotationWidget.cs">
 	</Compile>
+	<Compile Include="audio\AudioPathProvider.cs" />
 	<Compile Include="AutoCompleteTextBox\AutoCompleteTextBox.cs">
 	  <SubType>Component</SubType>
 	</Compile>
@@ -117,6 +122,13 @@
 	<Compile Include="CollapsibleSplitter.cs">
 	  <SubType>Component</SubType>
 	</Compile>
+	<Compile Include="audio\WeSayAudioFieldBox.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="audio\WeSayAudioFieldBox.Designer.cs">
+	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
+	</Compile>
+	<Compile Include="TextBoxes\IControlThatKnowsWritingSystem.cs" />
 	<Compile Include="WeSayListView.cs">
 	  <SubType>Component</SubType>
 	</Compile>
@@ -162,7 +174,7 @@
 	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
 	<Compile Include="SimpleBinding.cs" />
-	<Compile Include="TextBinding.cs" />
+	<Compile Include="TextBoxes\TextBinding.cs" />
 	<Compile Include="CurrentItemEventArgs.cs" />
 	<Compile Include="DetailList.cs">
 	  <SubType>Component</SubType>
@@ -180,10 +192,10 @@
 	<Compile Include="SingleOptionControl.Designer.cs">
 	  <DependentUpon>SingleOptionControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="MultiTextControl.cs">
+	<Compile Include="TextBoxes\MultiTextControl.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Include="MultiTextControl.designer.cs">
+	<Compile Include="TextBoxes\MultiTextControl.designer.cs">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="WeSayListBox.cs">
@@ -192,10 +204,10 @@
 	<Compile Include="WeSayListBox.Designer.cs">
 	  <DependentUpon>WeSayListBox.cs</DependentUpon>
 	</Compile>
-	<Compile Include="WeSayTextBox.cs">
+	<Compile Include="TextBoxes\WeSayTextBox.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Include="WeSayTextBox.Designer.cs">
+	<Compile Include="TextBoxes\WeSayTextBox.Designer.cs">
 	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
 	</Compile>
   </ItemGroup>
@@ -226,7 +238,7 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DetailList.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="MultiTextControl.resx">
+	<EmbeddedResource Include="TextBoxes\MultiTextControl.resx">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
@@ -239,7 +251,10 @@
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
-	<EmbeddedResource Include="WeSayTextBox.resx">
+	<EmbeddedResource Include="audio\WeSayAudioFieldBox.resx">
+	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="TextBoxes\WeSayTextBox.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
 	</EmbeddedResource>

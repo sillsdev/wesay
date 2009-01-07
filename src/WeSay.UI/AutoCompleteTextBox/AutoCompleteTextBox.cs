@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
@@ -447,7 +448,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				case Keys.Up:
 				{
+					TriggersEnabled = false;
 					Mode = EntryMode.List;
+					TriggersEnabled = true;
 					if (_listBox.Visible == false)
 					{
 						ShowList();
@@ -460,7 +463,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 				case Keys.Down:
 				{
+					TriggersEnabled = false;
 					Mode = EntryMode.List;
+					TriggersEnabled = true;
 					if (_listBox.Visible == false)
 					{
 						ShowList();
@@ -654,15 +659,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			int selectedIndex = _listBox.SelectedIndex;
 			_listBox.BeginUpdate();
 			_listBox.Items.Clear();
-
-			//hatton experimental:
-			if (string.IsNullOrEmpty(Text))
-			{
-				_listBox.EndUpdate();
-				return;
-			}
-			//end hatton experimental
-
 			_listBox.Font = Font;
 			_listBox.ItemHeight = _listBox.Font.Height;
 

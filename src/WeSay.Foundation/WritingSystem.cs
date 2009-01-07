@@ -39,6 +39,8 @@ namespace WeSay.Foundation
 		private string _customSortRules;
 		private string _spellCheckingId;
 
+		private bool _isAudio;
+
 		private Font _font;
 		private string _id;
 		private string _keyboardName;
@@ -262,6 +264,13 @@ namespace WeSay.Foundation
 				}
 			}
 			set { _spellCheckingId = value; }
+		}
+
+		[ReflectorProperty("IsAudio", Required = false)]
+		public bool IsAudio
+		{
+			get { return _isAudio; }
+			set { _isAudio = value; }
 		}
 
 		#region IComparer<string> Members

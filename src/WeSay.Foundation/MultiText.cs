@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -7,6 +8,7 @@ using System.Xml.Serialization;
 using LiftIO;
 using Palaso.Text;
 using LiftIO.Parsing;
+using System.Linq;
 
 //using Exortech.NetReflector;
 //using Exortech.NetReflector.Util;
@@ -131,6 +133,21 @@ namespace WeSay.Foundation
 		public bool ShouldBeRemovedFromParentDueToEmptiness
 		{
 			get { return Empty; }
+		}
+
+		/// <summary>
+		/// skip those forms which are in audio writing systems
+		/// </summary>
+		public IList<LanguageForm> GetActualTextForms(WritingSystemCollection writingSytems)
+		{
+			var x= Forms.Where((f) => !writingSytems[f.WritingSystemId].IsAudio);
+			return new List<LanguageForm>(x);
+		}
+
+		public IList<LanguageForm> GetAudioForms(WritingSystemCollection writingSytems)
+		{
+			var x = Forms.Where((f) => writingSytems[f.WritingSystemId].IsAudio);
+			return new List<LanguageForm>(x);
 		}
 
 		public void RemoveEmptyStuff()

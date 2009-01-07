@@ -285,6 +285,7 @@ namespace WeSay.LexicalModel
 
 		public WeSayDataObject MergeInEtymology(LexEntry entry,
 												string source,
+												string type,
 												LiftMultiText form,
 												LiftMultiText gloss,
 												string rawXml)

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.Reporting;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -134,6 +135,11 @@ namespace WeSay.LexicalTools
 				_showNormallyHiddenFields = value;
 				//no... this will lead to extra refreshing. RefreshEntryDetail();
 			}
+		}
+
+		public void SetMemory(ITaskMemory memory)
+		{
+			_splitter.SetMemory(memory.CreateNewSection("previewSplitter"));
 		}
 
 		public void ToggleShowNormallyHiddenFields()
@@ -289,7 +295,8 @@ namespace WeSay.LexicalTools
 					VerifyHasLexEntryRepository();
 					LexEntryLayouter layout = new LexEntryLayouter(detailList,
 																   ViewTemplate,
-																   _lexEntryRepository);
+																   _lexEntryRepository,
+																   _record);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
@@ -325,6 +332,7 @@ namespace WeSay.LexicalTools
 		private CurrentItemEventArgs _currentItemInFocus;
 		private LexEntryRepository _lexEntryRepository;
 		private bool _showNormallyHiddenFields;
+		private TaskMemory _memory;
 
 		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
 		{
@@ -351,5 +359,6 @@ namespace WeSay.LexicalTools
 			base.OnEnter(e);
 			RefreshLexicalEntryPreview();
 		}
+
 	}
 }

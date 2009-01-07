@@ -66,6 +66,9 @@ namespace WeSay.AddinLib
 
 			_setupButton.Visible = inAdminMode && _addin is IWeSayAddinHasSettings &&
 								   ((IWeSayAddinHasSettings) _addin).Settings != null;
+
+
+			_moreInfoButton.Visible = inAdminMode && _addin is IWeSayAddinHasMoreInfo;
 		}
 
 		public void Draw(Graphics graphics, Rectangle bounds)
@@ -164,7 +167,7 @@ namespace WeSay.AddinLib
 
 			if (_inAdminMode && !DoShowInWeSay)
 			{
-				_toggleShowInWeSay.Text = "Not In WeSay";
+				_toggleShowInWeSay.Text = "Make visible in WeSay";
 				_toolTip.SetToolTip(_toggleShowInWeSay,
 									"Click to make this action available within WeSay.");
 				//                e.Graphics.DrawLine(Pens.Red, new Point(0,0), new Point(_toggleShowInWeSay.Width,_toggleShowInWeSay.Height));
@@ -172,7 +175,7 @@ namespace WeSay.AddinLib
 			}
 			else
 			{
-				_toggleShowInWeSay.Text = "Visible In WeSay";
+				_toggleShowInWeSay.Text = "Make invisible in WeSay";
 				_toolTip.SetToolTip(_toggleShowInWeSay,
 									"Click to make this action unavailable within WeSay.");
 			}
@@ -201,6 +204,11 @@ namespace WeSay.AddinLib
 			DoShowInWeSay = !DoShowInWeSay;
 			UpdateVisualThings();
 			//_toggleShowInWeSay.Invalidate();
+		}
+
+		private void OnMoreInfo(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			((IWeSayAddinHasMoreInfo)_addin).ShowMoreInfoDialog(ParentForm);
 		}
 	}
 

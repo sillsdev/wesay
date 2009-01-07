@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Palaso.Reporting;
@@ -14,8 +15,11 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexExampleSentenceLayouter: Layouter
 	{
-		public LexExampleSentenceLayouter(DetailList builder, ViewTemplate viewTemplate)
-				: base(builder, viewTemplate, null) {}
+		public LexExampleSentenceLayouter(DetailList builder, ViewTemplate viewTemplate,
+			IServiceProvider serviceProvider)
+				: base(builder, viewTemplate, null, serviceProvider)
+		{
+		}
 
 		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
 		{

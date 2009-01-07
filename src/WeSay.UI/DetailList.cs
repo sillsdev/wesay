@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI
 {
@@ -242,20 +243,21 @@ namespace WeSay.UI
 			//            Control c = GetEditControlFromReferenceControl(p);
 			Control c = GetControlFromPosition(1, row);
 
-			WeSayTextBox tb;
+			Control tb;
 
 			if (c is MultiTextControl)
 			{
 				MultiTextControl multText = (MultiTextControl) c;
 				tb = multText.TextBoxes[0];
 				tb.Focus();
-				tb.Select(1000, 0); //go to end
+				if(tb is WeSayTextBox)
+					((WeSayTextBox) tb).Select(1000, 0); //go to end
 			}
 			else if (c is WeSayTextBox)
 			{
-				tb = (WeSayTextBox) c;
-				tb.Focus();
-				tb.Select(1000, 0); //go to end
+				c.Focus();
+				if(c is WeSayTextBox)
+					((WeSayTextBox) c).Select(1000, 0); //go to end
 			}
 			else
 			{

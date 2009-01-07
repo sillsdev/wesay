@@ -2,6 +2,7 @@ using System.Drawing;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.Project;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
 {

@@ -48,12 +48,13 @@ namespace WeSay.LexicalModel
 			public static string LexicalUnit = "EntryLexicalForm";
 			public static string BaseForm = "BaseForm";
 			public static string CrossReference = "confer";
+			public static string Sense = "sense";
 
 			public static bool Contains(string fieldName)
 			{
 				List<string> list =
 						new List<string>(new string[]
-											 {LexicalUnit, Citation, BaseForm, CrossReference});
+											 {LexicalUnit, Citation, BaseForm, CrossReference, Sense});
 				return list.Contains(fieldName);
 			}
 		} ;

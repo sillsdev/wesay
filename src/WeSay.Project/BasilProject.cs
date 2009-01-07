@@ -79,14 +79,14 @@ namespace WeSay.Project
 			}
 		}
 
-		public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
-		{
-			_projectDirectoryPath = projectDirectoryPath;
-			//  Directory.CreateDirectory(ProjectCommonDirectory);
-			InitStringCatalog();
-			InitWritingSystems();
-			Save();
-		}
+//        public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
+  //      {
+//            _projectDirectoryPath = projectDirectoryPath;
+//            //  Directory.CreateDirectory(ProjectCommonDirectory);
+//            InitStringCatalog();
+//            InitWritingSystems();
+//            Save();
+	//    }
 
 		public virtual void Save()
 		{
@@ -162,7 +162,7 @@ namespace WeSay.Project
 		//            }
 		//        }
 
-		private static string GetPathToWritingSystemPrefs(string parentDir)
+		protected static string GetPathToWritingSystemPrefs(string parentDir)
 		{
 			return Path.Combine(parentDir, "WritingSystemPrefs.xml");
 		}
@@ -272,7 +272,7 @@ namespace WeSay.Project
 			}
 		}
 
-		private void InitWritingSystems()
+		protected void InitWritingSystems()
 		{
 			if (File.Exists(PathToWritingSystemPrefs))
 			{
@@ -311,7 +311,7 @@ namespace WeSay.Project
 			set { _uiFontSize = value; }
 		}
 
-		private void InitStringCatalog()
+		protected void InitStringCatalog()
 		{
 			try
 			{

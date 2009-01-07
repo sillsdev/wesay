@@ -6,6 +6,7 @@ using Exortech.NetReflector;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
+using System.Linq;
 
 namespace WeSay.Project
 {
@@ -13,6 +14,7 @@ namespace WeSay.Project
 	public class ViewTemplate: List<Field>
 	{
 		private string _id = "Default View Template";
+		private bool _doWantGhosts=true;
 
 		/// <summary>
 		/// For serialization only
@@ -237,6 +239,13 @@ namespace WeSay.Project
 			MoveToFirstInClass(def);
 			MoveToFirstInClass(GetField(Field.FieldNames.EntryLexicalForm.ToString()));
 			MoveToFirstInClass(GetField(Field.FieldNames.ExampleSentence.ToString()));
+
+			//In Nov 2008 (v 0.5) we made the note field multi-paragraph
+			Field note = GetField(LexSense.WellKnownProperties.Note);
+			if (!note.IsMultiParagraph)
+			{
+				note.IsMultiParagraph = true;
+			}
 		}
 
 		/// <summary>
@@ -380,6 +389,8 @@ namespace WeSay.Project
 			noteField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			noteField.Enabled = true;
 			noteField.IsSpellCheckingEnabled = true;
+			noteField.IsMultiParagraph = true;
+
 			masterTemplate.Add(noteField);
 
 			//            Field entryNoteField = new Field(LexEntry.WellKnownProperties.Note, "LexEntry", defaultAnalysisSet);
@@ -640,5 +651,54 @@ namespace WeSay.Project
 				Fields.Insert(newIndexAmongAllFields, field);
 			}
 		}
+
+		public GhostingRule GetGhostingRuleForField(string fieldName)
+		{
+			return new GhostingRule(DoWantGhosts);
+		}
+
+		public bool DoWantGhosts
+		{
+			get { return _doWantGhosts; }
+
+			set { _doWantGhosts = value; }
+		}
+
+		public IList<string> GetHeadwordWritingSystemIds()
+		{
+			Field fieldControllingHeadwordOutput =
+				GetField(LexEntry.WellKnownProperties.Citation);
+			if (fieldControllingHeadwordOutput == null || !fieldControllingHeadwordOutput.Enabled)
+			{
+				fieldControllingHeadwordOutput =
+					GetField(LexEntry.WellKnownProperties.LexicalUnit);
+				if (fieldControllingHeadwordOutput == null)
+				{
+					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
+				}
+			}
+
+			return WritingSystems.TrimToActualTextWritingSystemIds(fieldControllingHeadwordOutput.WritingSystemIds);
+		}
+
+
+
+
+		public WritingSystemCollection WritingSystems
+		{
+			get { return BasilProject.Project.WritingSystems; }
+		}
+	}
+
+	/// <summary>
+	/// this may get more complicated someday
+	/// </summary>
+	public class GhostingRule
+	{
+		public GhostingRule(bool show)
+		{
+			ShowGhost = show;
+		}
+		public bool ShowGhost{ get; set;}
 	}
 }
