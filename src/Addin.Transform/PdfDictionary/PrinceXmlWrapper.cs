@@ -38,7 +38,8 @@ namespace Addin.Transform.PdfDictionary
 			{
 				p = new Prince(); //maybe it would look in %path%?
 			}
-			p.SetHTML(true);
+		   // no: this makes princexml think we're putting out ascii:  p.SetHTML(true);
+			p.SetLog(Path.GetTempFileName());
 			foreach (string styleSheetPath in styleSheetPaths)
 			{
 				p.AddStyleSheet(styleSheetPath);

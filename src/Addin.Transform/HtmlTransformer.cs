@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml.Xsl;
 using Addin.Transform.PdfDictionary;
@@ -99,7 +100,7 @@ namespace Addin.Transform
 			}
 
 			var pathToOutput = Path.Combine(projectInfo.PathToExportDirectory,
-											projectInfo.Name + ".htm");
+											projectInfo.Name + ".xhtml");
 			if (File.Exists(pathToOutput))
 			{
 				File.Delete(pathToOutput);
@@ -108,7 +109,7 @@ namespace Addin.Transform
 			var htmWriter = new FLExCompatibleXhtmlWriter();
 			using (var reader = new StreamReader(pliftPath))
 			{
-				using (var file = File.CreateText(pathToOutput))
+				using (var file = new StreamWriter(pathToOutput, false, new UTF8Encoding(false)))
 				{
 					htmWriter.Write(reader, file);
 				}

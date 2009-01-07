@@ -76,16 +76,16 @@ namespace Addin.Transform.PdfDictionary
 				var autoFonts = Path.Combine(projectInfo.PathToExportDirectory, "autoFonts.css");
 				CreateAutoFontsStyleSheet(autoFonts, projectInfo.WritingSystems);
 
-				var customLayout = Path.Combine(projectInfo.PathToExportDirectory, "customDictionary.css");
+				var customLayout = Path.Combine(projectInfo.PathToExportDirectory, "customLayout.css");
 				if (!File.Exists(customLayout))
 				{
-					File.WriteAllText(customLayout, "/* To tweak a layout setting, copy the template you want to change from the autoDictionary.css into this file, and make your changes */");
+					File.WriteAllText(customLayout, "/* To tweak a layout setting, copy the template you want to change from the autoLayout.css into this file, and make your changes */");
 				}
 
 				var customFonts = Path.Combine(projectInfo.PathToExportDirectory, "customFonts.css");
 				if (!File.Exists(customFonts))
 				{
-					File.WriteAllText(customFonts, "/* Edit this file to change the fonts.*/"+ Environment.NewLine+ File.ReadAllText(autoFonts));
+					File.WriteAllText(customFonts, "/* To tweak a font setting, copy the template you want to change from the autoFonts.css into this file, and make your changes.*/" );
 				}
 				stylesheetPaths.Add(customFonts);
 				stylesheetPaths.Add(customLayout);
@@ -108,7 +108,7 @@ namespace Addin.Transform.PdfDictionary
 				foreach (var pair in writingSystemCollection)
 				{
 					f.WriteLine(":lang("+pair.Key+") {");
-					f.WriteLine("font-family: "+pair.Value.FontName+";");
+					f.WriteLine("font-family: '"+pair.Value.FontName+"';");
 					f.WriteLine("}");
 					f.WriteLine();
 				}

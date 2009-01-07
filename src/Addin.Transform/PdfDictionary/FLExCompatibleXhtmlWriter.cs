@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using System.Linq;
@@ -19,14 +20,18 @@ namespace Addin.Transform.PdfDictionary
 
 		public void Write(TextReader pliftReader, TextWriter textWriter)
 		{
-			using (_writer = XmlWriter.Create(textWriter))
+			XmlWriterSettings writerSettings = new XmlWriterSettings();
+			writerSettings.Encoding = new UTF8Encoding(false);//set false to stop sticking on the BOM, which trips up princeXML
+			writerSettings.Indent = true;
+
+			using (_writer = XmlWriter.Create(textWriter, writerSettings))
 			{
 				//  _writer.WriteProcessingInstruction("xml-stylesheet", @"type='text/css' href='dictionary.css");
 				_writer.WriteStartElement("html");
 				_writer.WriteStartElement("head");
-				_writer.WriteRaw("<LINK rel='stylesheet' href='autoDictionary.css' type='text/css' />");
+				_writer.WriteRaw("<LINK rel='stylesheet' href='autoLayout.css' type='text/css' />");
 				_writer.WriteRaw("<LINK rel='stylesheet' href='autoFonts.css' type='text/css' />");
-				_writer.WriteRaw("<LINK rel='stylesheet' href='customDictionary.css' type='text/css' />");
+				_writer.WriteRaw("<LINK rel='stylesheet' href='customLayout.css' type='text/css' />");
 				_writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
 				_writer.WriteEndElement();
 				_writer.WriteStartElement("body");
