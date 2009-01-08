@@ -231,7 +231,7 @@ namespace WeSay.LexicalModel.Tests
 			LiftMultiText t2 = new LiftMultiText();
 			t2.Add("aa", "freestuff");
 			_builder.MergeInTranslationForm(ex,
-										   "free",
+										   "Free translation",
 										   t2,
 										   "<translation type='free'><bogus/></translation>");
 			LiftMultiText translation = new LiftMultiText();
@@ -246,7 +246,7 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.End();
 			AssertXPathNotNull("//entry/sense/example/translation[not(@type)]/bogusUnmarked");
 			AssertXPathNotNull(
-					"//entry/sense/example/translation[@type='free']/form/text[text()='freestuff']");
+					"//entry/sense/example/translation[@type='Free translation']/form/text[text()='freestuff']");
 		}
 
 		[Test]

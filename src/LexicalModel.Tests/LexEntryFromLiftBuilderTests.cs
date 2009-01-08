@@ -468,9 +468,9 @@ namespace WeSay.LexicalModel.Tests
 			LexExampleSentence ex = new LexExampleSentence();
 			LiftMultiText translation = new LiftMultiText();
 			translation.Add("aa", "aaaa");
-			_builder.MergeInTranslationForm(ex, "free", translation, "bogus raw xml");
+			_builder.MergeInTranslationForm(ex, "Free translation", translation, "bogus raw xml");
 			Assert.AreEqual("aaaa", ex.Translation["aa"]);
-			Assert.AreEqual("free", ex.TranslationType);
+			Assert.AreEqual("Free translation", ex.TranslationType);
 		}
 
 		[Test]
