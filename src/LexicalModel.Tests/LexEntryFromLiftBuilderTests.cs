@@ -167,28 +167,57 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(0, e.LexicalForm.Count);
 		}
 
+
+
 		[Test]
-		public void EntryGetsNote()
+		public void MergeInNote_NoteHasNoType_Added()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_builder.MergeInNote(e, null, MakeBasicLiftMultiText());
-			AssertPropertyHasExpectedMultiText(e, WeSayDataObject.WellKnownProperties.Note);
-			MultiText m = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
-			Assert.IsTrue(m.ContainsAlternative("ws-one"));
-			Assert.IsTrue(m.ContainsAlternative("ws-two"));
-			Assert.AreEqual("uno", m["ws-one"]);
-			Assert.AreEqual("dos", m["ws-two"]);
+			_builder.MergeInNote(e, string.Empty, MakeBasicLiftMultiText(), string.Empty);
+			MultiText mt = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			Assert.AreEqual("uno", mt["ws-one"]);
+			Assert.AreEqual("dos", mt["ws-two"]);
+		}
+		[Test]
+		public void MergeInNote_NoteHasTypeOfGeneral_Added()
+		{
+			LexEntry e = MakeSimpleEntry();
+			_builder.MergeInNote(e, "general", MakeBasicLiftMultiText(), string.Empty);
+			MultiText mt = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			Assert.AreEqual("uno", mt["ws-one"]);
+			Assert.AreEqual("dos", mt["ws-two"]);
 		}
 
 		[Test]
-		public void TypeOfNoteEmbedded()
+		public void MergeInNote_NoteHasTypeOtherThanGeneral_AllGoesToRoundTripResidue()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_builder.MergeInNote(e, "red", MakeBasicLiftMultiText());
+			_builder.MergeInNote(e, "red", MakeBasicLiftMultiText(), "<pretendXmlOfNote/>");
 			MultiText mt = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
-			Assert.AreEqual("(red) uno", mt["ws-one"]);
-			Assert.AreEqual("(red) dos", mt["ws-two"]);
+			Assert.IsNull(mt);
+			var residue =e.GetProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(WeSayDataObject.WellKnownProperties.Note));
+			Assert.AreEqual(1,residue.Values.Count);
+			Assert.AreEqual("<pretendXmlOfNote/>", residue.Values[0]);
 		}
+
+		[Test]
+		public void MergeInNote_NoType_AfterFirstTheyGoesToRoundTripResidue()
+		{
+			LexEntry e = MakeSimpleEntry();
+			_builder.MergeInNote(e, string.Empty, MakeBasicLiftMultiText("first"), "pretend xml one");
+			_builder.MergeInNote(e, string.Empty, MakeBasicLiftMultiText("second"), "<pretend xml two/>");
+			_builder.MergeInNote(e, string.Empty, MakeBasicLiftMultiText("third"), "<pretend xml three/>");
+
+			MultiText mt = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			Assert.AreEqual("first", mt["ws-one"]);
+
+			var residue = e.GetProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(WeSayDataObject.WellKnownProperties.Note));
+			Assert.AreEqual(2, residue.Values.Count);
+			Assert.AreEqual("<pretend xml two/>", residue.Values[0]);
+			Assert.AreEqual("<pretend xml three/>", residue.Values[1]);
+
+		}
+
 
 		[Test]
 		public void SenseGetsGrammi()
@@ -259,7 +288,7 @@ namespace WeSay.LexicalModel.Tests
 		public void SenseGetsNote()
 		{
 			LexSense sense = new LexSense();
-			_builder.MergeInNote(sense, null, MakeBasicLiftMultiText());
+			_builder.MergeInNote(sense, null, MakeBasicLiftMultiText(), string.Empty);
 			AssertPropertyHasExpectedMultiText(sense, WeSayDataObject.WellKnownProperties.Note);
 		}
 
@@ -272,20 +301,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(extensibleInfo.Id, s.Id);
 		}
 
-		[Test]
-		public void MultipleNotesCombined()
-		{
-			LexSense sense = new LexSense();
-			_builder.MergeInNote(sense, null, MakeBasicLiftMultiText());
-			LiftMultiText secondNote = new LiftMultiText();
-			secondNote.Add("ws-one", "UNO");
-			secondNote.Add("ws-three", "tres");
-			_builder.MergeInNote(sense, null, secondNote);
 
-			MultiText mt = sense.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
-			Assert.AreEqual(3, mt.Forms.Length);
-			Assert.AreEqual("uno || UNO", mt["ws-one"]);
-		}
 
 		//        [Test]
 		//        public void MergingIntoEmptyMultiTextWithFlags()
@@ -364,6 +380,14 @@ namespace WeSay.LexicalModel.Tests
 			MultiText mt = dataObject.GetProperty<MultiText>(name);
 			Assert.AreEqual(2, mt.Forms.Length);
 			Assert.AreEqual("dos", mt["ws-two"]);
+		}
+
+		private static LiftMultiText MakeBasicLiftMultiText(string text)
+		{
+			LiftMultiText forms = new LiftMultiText();
+			forms.Add("ws-one", text);
+			forms.Add("ws-two", text+"-in-two");
+			return forms;
 		}
 
 		private static LiftMultiText MakeBasicLiftMultiText()

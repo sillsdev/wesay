@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using LiftIO.Parsing;
 using Palaso.Text;
 using WeSay.Data;
@@ -196,7 +197,7 @@ namespace WeSay.LexicalModel
 												  !string.IsNullOrEmpty(
 														   example.Translation.GetFirstAlternative());
 			bool typeIsCompatibleWithWeSayPrimaryTranslation = string.IsNullOrEmpty(type) ||
-															   type == "free";
+															   type.ToLower() == "free translation"; //this is the default style in FLEx
 			if (!alreadyHaveAPrimaryTranslation && typeIsCompatibleWithWeSayPrimaryTranslation)
 			{
 				MergeIn(example.Translation, forms);
@@ -204,7 +205,7 @@ namespace WeSay.LexicalModel
 			}
 			else
 			{
-				example.GetOrCreateProperty<EmbeddedXmlCollection>("translation").Values.Add(rawXml);
+				example.GetOrCreateProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(LexExampleSentence.WellKnownProperties.Translation)).Values.Add(rawXml);
 			}
 		}
 
@@ -239,31 +240,32 @@ namespace WeSay.LexicalModel
 		/// <summary>
 		/// Handle LIFT's "note" entity
 		/// </summary>
-		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents)
+		/// <remarks>The difficult thing here is we don't handle anything but a default note.
+		/// Any other kind, we put in the xml residue for round-tripping.</remarks>
+		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents, string rawXml)
 		{
-			List<String> writingSystemAlternatives = new List<string>(contents.Count);
-			foreach (KeyValuePair<string, string> pair in contents.AsSimpleStrings)
-			{
-				writingSystemAlternatives.Add(pair.Key);
-			}
+			var noteProperty = extensible.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			bool alreadyHaveAOne= !MultiText.IsEmpty(noteProperty);
 
-			if (!string.IsNullOrEmpty(type))
+			bool weCanHandleThisType = string.IsNullOrEmpty(type) ||type == "general";
+
+			if (!alreadyHaveAOne && weCanHandleThisType)
 			{
-				List<String> keys = new List<string>(contents.Count);
+				List<String> writingSystemAlternatives = new List<string>(contents.Count);
 				foreach (KeyValuePair<string, string> pair in contents.AsSimpleStrings)
 				{
-					keys.Add(pair.Key);
+					writingSystemAlternatives.Add(pair.Key);
 				}
-				foreach (string s in keys)
-				{
-					contents.Prepend(s, "(" + type + ") ");
-				}
+				noteProperty = extensible.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+				MergeIn(noteProperty, contents);
 			}
-
-			AddOrAppendMultiTextProperty(extensible,
-										 contents,
-										 WeSayDataObject.WellKnownProperties.Note,
-										 " || ");
+			else //residue
+			{
+				var residue = extensible.GetOrCreateProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(WeSayDataObject.WellKnownProperties.Note));
+				residue.Values.Add(rawXml);
+//                var r = extensible.GetProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(WeSayDataObject.WellKnownProperties.Note));
+//                Debug.Assert(r != null);
+			}
 		}
 
 		public WeSayDataObject GetOrMakeParentReversal(WeSayDataObject parent,
