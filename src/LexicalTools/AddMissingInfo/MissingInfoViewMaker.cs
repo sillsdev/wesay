@@ -25,7 +25,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			if (isBaseFormFillingTask)
 			{
 				Field flagField = new Field();
-				flagField.DisplayName = StringCatalog.Get("~This word has no Base Form",
+				flagField.DisplayName = StringCatalog.Get("~&This word has no Base Form",
 														  "The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.");
 				flagField.DataTypeName = "Flag";
 				flagField.ClassName = "LexEntry";
