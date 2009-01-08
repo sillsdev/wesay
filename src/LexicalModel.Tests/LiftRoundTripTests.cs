@@ -286,7 +286,7 @@ namespace WeSay.LexicalModel.Tests
 					</gloss>
 				  </etymology>";
 
-			_builder.MergeInEtymology(e, null, null, null, xml);
+			_builder.MergeInEtymology(e, null, string.Empty, null, null, xml);
 			_builder.FinishEntry(e);
 
 			_exporter.Add(e);

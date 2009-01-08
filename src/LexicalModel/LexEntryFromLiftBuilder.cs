@@ -236,11 +236,20 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		//hack for changed liftio api (which we actually fixed in 0.5)
+		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents)
+		{
+			MergeInNote(extensible,type,contents,string.Empty);
+		}
+
+
 		/// <summary>
 		/// Handle LIFT's "note" entity
 		/// </summary>
-		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents)
+		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents, string rawXml)
 		{
+//note, WeSay 0.4 doesn't implement the not round-tripping (0.5 does)
+
 			List<String> writingSystemAlternatives = new List<string>(contents.Count);
 			foreach (KeyValuePair<string, string> pair in contents.AsSimpleStrings)
 			{
@@ -285,6 +294,7 @@ namespace WeSay.LexicalModel
 
 		public WeSayDataObject MergeInEtymology(LexEntry entry,
 												string source,
+												string type,
 												LiftMultiText form,
 												LiftMultiText gloss,
 												string rawXml)
