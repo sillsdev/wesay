@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Reflection;
@@ -295,6 +296,11 @@ Z z";
 		private void WritingSystemSort_Load(object sender, EventArgs e)
 		{
 			Refresh();
+		}
+
+		private void helpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Process.Start("http://wesay.org/wiki/How_to_sort_using_a_custom_sort_sequence");
 		}
 	}
 }
