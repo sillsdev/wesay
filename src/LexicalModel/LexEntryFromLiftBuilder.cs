@@ -377,9 +377,12 @@ namespace WeSay.LexicalModel
 
 			extensible.Properties.Add(new KeyValuePair<string, object>(typeAttribute, t));
 
-			foreach (var trait in traits)
+			if (traits != null)
 			{
-				t.EmbeddedXmlElements.Add(string.Format(@"<trait name='{0}' value='{1}'/>", trait.Name, trait.Value));
+				foreach (var trait in traits)
+				{
+					t.EmbeddedXmlElements.Add(string.Format(@"<trait name='{0}' value='{1}'/>", trait.Name, trait.Value));
+				}
 			}
 		}
 
