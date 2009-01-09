@@ -229,7 +229,7 @@ namespace WeSay.LexicalTools.Tests
 			entry.Senses.Add(sense);
 			sense.Gloss[
 					WeSayWordsProject.Project.DefaultViewTemplate.GetField(
-							LexSense.WellKnownProperties.Gloss).WritingSystemIds[0]] = meaning;
+							LexSense.WellKnownProperties.Definition).WritingSystemIds[0]] = meaning;
 			_lexEntryRepository.SaveItem(entry);
 			return entry;
 		}

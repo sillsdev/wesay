@@ -360,6 +360,10 @@ namespace WeSay.App.Tests.Services
 						else
 						{
 							p.CloseMainWindow();
+							//give the app up to 10 seconds to quit before we go deleting the
+							//project directory
+							for (int i = 0; i < 100 && !p.HasExited; i++ )
+								Thread.Sleep(100);
 						}
 					}
 				}

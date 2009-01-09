@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using WeSay.Foundation;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI
 {
@@ -22,6 +23,7 @@ namespace WeSay.UI
 
 		private readonly WritingSystem _writingSystem;
 		private readonly string _propertyName;
+		private readonly WeSayDataObject _parent;
 		private IList<T> _listTarget;
 		private WeSayTextBox _textBoxTarget;
 		private Control _referenceControl;
@@ -42,11 +44,13 @@ namespace WeSay.UI
 
 		private bool _inMidstOfTrigger;
 
-		public GhostBinding(IList<T> targetList,
+		public GhostBinding(WeSayDataObject parent,
+							IList<T> targetList,
 							string propertyName,
 							WritingSystem writingSystem,
 							WeSayTextBox textBoxTarget)
 		{
+			_parent = parent;
 			_listTarget = targetList;
 			//           _listTarget.ListChanged +=new ListChangedEventHandler(_listTarget_ListChanged);
 			_propertyName = propertyName;
@@ -104,7 +108,7 @@ namespace WeSay.UI
 
 		private void OnTextBoxEntered(object sender, EventArgs e)
 		{
-			CurrentItemChanged(sender, new CurrentItemEventArgs(_propertyName, _writingSystem.Id));
+			CurrentItemChanged(sender, new CurrentItemEventArgs(_parent, _propertyName, _writingSystem.Id));
 		}
 
 		// /// <summary>

@@ -22,10 +22,9 @@ namespace Addin.Transform
 		//    return path;
 		//}
 
-		public string MakePLiftTempFile(LexEntryRepository lexEntryRepository, ViewTemplate template)
+		public void  MakePLiftTempFile(string outputPath, LexEntryRepository lexEntryRepository, ViewTemplate template)
 		{
-			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-			PLiftExporter exporter = new PLiftExporter(path, lexEntryRepository, template);
+			PLiftExporter exporter = new PLiftExporter(outputPath, lexEntryRepository, template);
 			ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);
 			foreach (RecordToken<LexEntry> token in recordTokens)
@@ -39,7 +38,6 @@ namespace Addin.Transform
 			}
 
 			exporter.End();
-			return path;
 		}
 
 		//

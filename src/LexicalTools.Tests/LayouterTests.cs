@@ -5,6 +5,7 @@ using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -23,7 +24,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullBuilder_Throws()
 		{
-			new LexEntryLayouter(null, new ViewTemplate(), null);
+			new LexEntryLayouter(null, new ViewTemplate(), null, new LexEntry());
 		}
 
 		[Test]
@@ -32,23 +33,36 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (DetailList detailList = new DetailList())
 			{
-				new LexEntryLayouter(detailList, null, null);
+				new LexEntryLayouter(detailList, null, null, new LexEntry());
 			}
 		}
 
 		[Test]
 		public void RightNumberOfRows()
 		{
-			using (MakeDetailList(false))
+			using (MakeDetailList(false, MakeViewTemplate()))
 			{
 				Assert.AreEqual(14, _rowCount);
+			}
+		}
+
+		//see: WS-1120 Add option to limit "add meanings" task to the ones that have a semantic domain
+		//also: WS-639 (jonathan_coombs@sil.org) In Add meanings, don't show extra meaning slots just because a sense was created for the semantic domain
+		[Test]
+		public void DoWantGhosts_False_RightNumberOfRows()
+		{
+			var template = MakeViewTemplate();
+			template.DoWantGhosts = false;
+			using (MakeDetailList(false, template))
+			{
+				Assert.AreEqual(13, _rowCount);
 			}
 		}
 
 		[Test]
 		public void RightNumberOfRowsWithShowAll()
 		{
-			using (MakeDetailList(true))
+			using (MakeDetailList(true, MakeViewTemplate()))
 			{
 				Assert.AreEqual(16, _rowCount); //12 + 2 *(1 ghost example + 1 rare multitext)
 			}
@@ -57,7 +71,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RowsInRightPlace()
 		{
-			using (DetailList dl = MakeDetailList(false))
+			using (DetailList dl = MakeDetailList(false, MakeViewTemplate()))
 			{
 				Label l = dl.GetLabelControlFromRow(0);
 				Assert.AreEqual("Word", l.Text);
@@ -67,7 +81,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void WordShownInVernacular()
 		{
-			using (DetailList dl = MakeDetailList(false))
+			using (DetailList dl = MakeDetailList(false, MakeViewTemplate()))
 			{
 				MultiTextControl box = (MultiTextControl) dl.GetEditControlFromRow(0);
 				Assert.AreEqual("WordInVernacular", box.TextBoxes[0].Text);
@@ -81,8 +95,8 @@ namespace WeSay.LexicalTools.Tests
 
 			using (DetailList dl = new DetailList())
 			{
-				LexEntryLayouter layout = new LexEntryLayouter(dl, new ViewTemplate(), null);
-				_rowCount = layout.AddWidgets(entry);
+				LexEntryLayouter layout = new LexEntryLayouter(dl, new ViewTemplate(), null, entry);
+				_rowCount = layout.AddWidgets();
 				Assert.AreEqual(0, _rowCount);
 			}
 		}
@@ -99,7 +113,21 @@ namespace WeSay.LexicalTools.Tests
 			return entry;
 		}
 
-		private DetailList MakeDetailList(bool showNormallyHiddenFields)
+		private DetailList MakeDetailList(bool showNormallyHiddenFields, ViewTemplate template)
+		{
+			//TODO need tests for other data types when made optional
+			//TODO need tests for showing non-empty optional tests in non-show-all mode
+
+			LexEntry entry = GetNewEntry();
+
+			DetailList dl = new DetailList();
+			LexEntryLayouter layout = new LexEntryLayouter(dl, template, null, entry);
+			layout.ShowNormallyHiddenFields = showNormallyHiddenFields;
+			_rowCount = layout.AddWidgets();
+			return dl;
+		}
+
+		private ViewTemplate MakeViewTemplate()
 		{
 			string[] analysisWritingSystemIds = new string[]
 													{
@@ -133,17 +161,7 @@ namespace WeSay.LexicalTools.Tests
 			Field rare = new Field("rare", "LexSense", analysisWritingSystemIds);
 			rare.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			viewTemplate.Add(rare);
-
-			//TODO need tests for other data types when made optional
-			//TODO need tests for showing non-empty optional tests in non-show-all mode
-
-			LexEntry entry = GetNewEntry();
-
-			DetailList dl = new DetailList();
-			LexEntryLayouter layout = new LexEntryLayouter(dl, viewTemplate, null);
-			layout.ShowNormallyHiddenFields = showNormallyHiddenFields;
-			_rowCount = layout.AddWidgets(entry);
-			return dl;
+			return viewTemplate;
 		}
 
 		private static void AddSense(LexEntry entry)

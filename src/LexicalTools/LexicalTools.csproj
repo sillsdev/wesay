@@ -53,6 +53,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Enchant.Net.dll</HintPath>
 	</Reference>
+	<Reference Include="LinqBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2b14eb747628076, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\LinqBridge.dll</HintPath>
+	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.dll</HintPath>
@@ -72,10 +76,14 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="ConfirmDelete.cs">
+	<Compile Include="AddMissingInfo\MissingInfoConfiguration.cs" />
+	<Compile Include="AddMissingInfo\MissingInfoViewMaker.cs" />
+	<Compile Include="LayoutInfoProvider.cs" />
+	<Compile Include="TaskConfigurationBase.cs" />
+	<Compile Include="DictionaryBrowseAndEdit\ConfirmDelete.cs">
 	  <SubType>Form</SubType>
 	</Compile>
-	<Compile Include="ConfirmDelete.Designer.cs">
+	<Compile Include="DictionaryBrowseAndEdit\ConfirmDelete.Designer.cs">
 	  <DependentUpon>ConfirmDelete.cs</DependentUpon>
 	</Compile>
 	<Compile Include="CongratulationsControl.cs">
@@ -84,34 +92,37 @@
 	<Compile Include="CongratulationsControl.Designer.cs">
 	  <DependentUpon>CongratulationsControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="GatherBySemanticDomainTask.cs" />
-	<Compile Include="DictionaryControl.Designer.cs">
+	<Compile Include="DictionaryBrowseAndEdit\DictionaryBrowseAndEditConfiguration.cs" />
+	<Compile Include="GatherBySemanticDomains\GatherBySemanticDomainConfig.cs" />
+	<Compile Include="GatherBySemanticDomains\GatherBySemanticDomainTask.cs" />
+	<Compile Include="DictionaryBrowseAndEdit\DictionaryControl.Designer.cs">
 	  <DependentUpon>DictionaryControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="GatherBySemanticDomainsControl.cs">
+	<Compile Include="GatherBySemanticDomains\GatherBySemanticDomainsControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="GatherBySemanticDomainsControl.Designer.cs">
+	<Compile Include="GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs">
 	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="GatherWordListControl.cs">
+	<Compile Include="GatherByWordList\GatherWordListConfig.cs" />
+	<Compile Include="GatherByWordList\GatherWordListControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="GatherWordListControl.Designer.cs">
+	<Compile Include="GatherByWordList\GatherWordListControl.Designer.cs">
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="GatherWordListTask.cs" />
-	<Compile Include="MissingInfoControl.cs">
+	<Compile Include="GatherByWordList\GatherWordListTask.cs" />
+	<Compile Include="AddMissingInfo\MissingInfoControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="MissingInfoControl.Designer.cs">
+	<Compile Include="AddMissingInfo\MissingInfoControl.Designer.cs">
 	  <DependentUpon>MissingInfoControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="MissingInfoTask.cs">
+	<Compile Include="AddMissingInfo\MissingInfoTask.cs">
 	</Compile>
-	<Compile Include="DictionaryTask.cs">
+	<Compile Include="DictionaryBrowseAndEdit\DictionaryTask.cs">
 	</Compile>
-	<Compile Include="DictionaryControl.cs">
+	<Compile Include="DictionaryBrowseAndEdit\DictionaryControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
 	<Compile Include="Layouter.cs" />
@@ -158,26 +169,26 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfirmDelete.resx">
+	<EmbeddedResource Include="DictionaryBrowseAndEdit\ConfirmDelete.resx">
 	  <DependentUpon>ConfirmDelete.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="CongratulationsControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>CongratulationsControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="DictionaryControl.resx">
+	<EmbeddedResource Include="DictionaryBrowseAndEdit\DictionaryControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DictionaryControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="GatherBySemanticDomainsControl.resx">
+	<EmbeddedResource Include="GatherBySemanticDomains\GatherBySemanticDomainsControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="GatherWordListControl.resx">
+	<EmbeddedResource Include="GatherByWordList\GatherWordListControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="MissingInfoControl.resx">
+	<EmbeddedResource Include="AddMissingInfo\MissingInfoControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>MissingInfoControl.cs</DependentUpon>
 	</EmbeddedResource>
