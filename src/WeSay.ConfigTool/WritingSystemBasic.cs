@@ -12,6 +12,7 @@ namespace WeSay.ConfigTool
 		private WritingSystemCollection _writingSystemCollection;
 
 		public event EventHandler WritingSystemIdChanged;
+		public event EventHandler IsAudioChanged;
 
 		//        public class PropertyChangingEventArgs : PropertyChangedEventArgs
 		//        {
@@ -72,6 +73,13 @@ namespace WeSay.ConfigTool
 
 		private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
+			if (e.ChangedItem.PropertyDescriptor.Name == "IsAudio")
+			{
+				if(IsAudioChanged !=null)
+					IsAudioChanged.Invoke(this, null);
+				return;
+			}
+
 			if (e.ChangedItem.PropertyDescriptor.Name != "Id")
 			{
 				return;

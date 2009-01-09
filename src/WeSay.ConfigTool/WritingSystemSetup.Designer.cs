@@ -151,7 +151,8 @@ namespace WeSay.ConfigTool
 			this._basicControl.Size = new System.Drawing.Size(541, 403);
 			this._basicControl.TabIndex = 0;
 			this._basicControl.WritingSystemCollection = null;
-			this._basicControl.WritingSystemIdChanged += new System.EventHandler(this._basicControl_DisplayPropertiesChanged);
+			this._basicControl.WritingSystemIdChanged += new System.EventHandler(this.OnWritingSystemIdChanged);
+			this._basicControl.IsAudioChanged += new System.EventHandler(this.OnIsAudioChanged);
 			//
 			// _fontsPage
 			//

@@ -107,7 +107,7 @@ namespace WeSay.Project.Tests
 		public void DefaultConfigFile_DoesntNeedMigrating()
 		{
 			WeSayWordsProject p = new WeSayWordsProject();
-			XPathDocument defaultConfig = new XPathDocument(p.PathToDefaultConfig);
+			XPathDocument defaultConfig = new XPathDocument(WeSayWordsProject.PathToDefaultConfig);
 			using (TempFile f = new TempFile())
 			{
 				bool migrated = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(defaultConfig, f.Path);
@@ -184,12 +184,16 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void GetOptionsListFromFieldName()
 		{
-			WeSayWordsProject p = new WeSayWordsProject();
 
-			OptionsList list = p.GetOptionsList("POS");
-			Assert.IsNotNull(list);
-			Assert.IsNotNull(list.Options);
-			Assert.Greater(list.Options.Count, 2);
+			using (var x = new ProjectDirectorySetupForTesting(""))
+			{
+				WeSayWordsProject p = x.CreateLoadedProject();
+
+				OptionsList list = p.GetOptionsList("POS");
+				Assert.IsNotNull(list);
+				Assert.IsNotNull(list.Options);
+				Assert.Greater(list.Options.Count, 2);
+			}
 		}
 
 		[Test]
@@ -244,6 +248,11 @@ namespace WeSay.Project.Tests
 				newName = Field.MakeFieldNameSafe(newName);
 				Field f = new Field(oldName, "LexEntry", new string[] {"en"});
 				p.ViewTemplates[0].Add(f);
+
+
+				using (File.OpenWrite(dir.PathToConfigFile))
+				{
+				}
 				p.Save();
 				f.FieldName = newName;
 				p.MakeFieldNameChange(f, oldName);

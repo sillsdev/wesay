@@ -126,11 +126,21 @@ namespace WeSay.LexicalModel
 										  WeSayDataObject.WellKnownProperties.Note,
 										  propertiesAlreadyOutput);
 			WriteCustomProperties(entry, propertiesAlreadyOutput);
+			InsertPronunciationIfNeeded(entry, propertiesAlreadyOutput);
+
 			foreach (LexSense sense in entry.Senses)
 			{
 				Add(sense);
 			}
 			Writer.WriteEndElement();
+		}
+
+		/// <summary>
+		/// in the plift subclass, we add a pronounciation if we have an audio writing system alternative on the lexical unit
+		/// </summary>
+		 protected virtual void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
+		{
+
 		}
 
 		protected virtual void WriteHeadword(LexEntry entry) {}
@@ -197,13 +207,14 @@ namespace WeSay.LexicalModel
 				propertiesAlreadyOutput.Add(LexSense.WellKnownProperties.Gloss);
 			}
 
+
+			WriteWellKnownCustomMultiText(sense,
+										  LexSense.WellKnownProperties.Definition,
+										  propertiesAlreadyOutput);
 			foreach (LexExampleSentence example in sense.ExampleSentences)
 			{
 				Add(example);
 			}
-			WriteWellKnownCustomMultiText(sense,
-										  LexSense.WellKnownProperties.Definition,
-										  propertiesAlreadyOutput);
 			WriteWellKnownCustomMultiText(sense,
 										  WeSayDataObject.WellKnownProperties.Note,
 										  propertiesAlreadyOutput);
@@ -250,8 +261,9 @@ namespace WeSay.LexicalModel
 		}
 
 		/// <summary>
-		/// this is used both when we're just exporting to lift, and dont' want to filter or order, and
-		/// when we are writing presentation-ready lift, when we do want to filter and order
+		/// this base implementationg is for when we're just exporting to lift, and dont' want to filter or order.
+		/// It is overridden in a child class for writing presentation-ready lift, when
+		/// we do want to filter and order
 		/// </summary>
 		/// <param name="text"></param>
 		/// <param name="propertyName"></param>
@@ -368,11 +380,16 @@ namespace WeSay.LexicalModel
 					continue;
 
 				Writer.WriteStartElement("relation");
-				Writer.WriteAttributeString("type", relation.FieldId);
+				Writer.WriteAttributeString("type", GetOutputRelationName(relation));
 				Writer.WriteAttributeString("ref", relation.Key);
 				WriteRelationTarget(relation);
 				Writer.WriteEndElement();
 			}
+		}
+
+		protected virtual string GetOutputRelationName(LexRelation relation)
+		{
+			return relation.FieldId;
 		}
 
 		/// <summary>
@@ -472,6 +489,19 @@ namespace WeSay.LexicalModel
 		public void Add(string propertyName, MultiText text)
 		{
 			Add(GetOrderedAndFilteredForms(text, propertyName), false);
+			WriteFormsThatNeedToBeTheirOwnFields(text, propertyName);
+			WriteEmbeddedXmlCollection(text);
+		}
+		private void WriteEmbeddedXmlCollection(MultiText text)
+		{
+			foreach (string rawXml in text.EmbeddedXmlElements)
+			{
+				Writer.WriteRaw(rawXml);
+			}
+		}
+
+		protected virtual void WriteFormsThatNeedToBeTheirOwnFields(MultiText text, string name)
+		{
 		}
 
 		protected void Add(IEnumerable<LanguageForm> forms, bool doMarkTheFirst)

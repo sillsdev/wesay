@@ -49,7 +49,7 @@ namespace WeSay.Project.Tests
 			Directory.CreateDirectory(GetCommonDirectory());
 			string pathToWritingSystemPrefs = Path.Combine(GetCommonDirectory(),
 														   "WritingSystemPrefs.xml");
-			WritingSystemTests.WriteSampleWritingSystemFile(pathToWritingSystemPrefs);
+			WritingCollectionSystemTests.CreateSampleWritingSystemFile(pathToWritingSystemPrefs);
 		}
 
 		[TearDown]
@@ -98,23 +98,6 @@ namespace WeSay.Project.Tests
 			Assert.AreEqual("red", StringCatalog.Get("red"));
 		}
 
-		[Test]
-		public void MakeProjectFiles()
-		{
-			string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-			try
-			{
-				Directory.CreateDirectory(path);
-				BasilProject project = new BasilProject();
-				project.CreateEmptyProjectFiles(path);
-				Assert.IsTrue(Directory.Exists(path));
-				Assert.IsTrue(Directory.Exists(BasilProject.ApplicationCommonDirectory));
-				Assert.IsTrue(File.Exists(project.PathToWritingSystemPrefs));
-			}
-			finally
-			{
-				Directory.Delete(path, true);
-			}
-		}
+
 	}
 }

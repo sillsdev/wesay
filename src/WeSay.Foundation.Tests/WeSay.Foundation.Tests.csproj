@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{6366719E-DA80-4680-9E06-D9BC6F340DE3}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -81,10 +81,12 @@
   <ItemGroup>
 	<Compile Include="ApproximateMatcherTests.cs" />
 	<Compile Include="BackupMakerTests.cs" />
+	<Compile Include="WritingSystemCollectionTests.cs" />
 	<Compile Include="OptionList.Tests.cs" />
 	<Compile Include="OptionRefCollectionTests.cs" />
 	<Compile Include="OptionRefTests.cs" />
 	<Compile Include="SpellCheckerIdToDisplayStringConverterTests.cs" />
+	<Compile Include="TaskMemoryRepositoryTests.cs" />
 	<Compile Include="TestHelpers\TemporaryFolder.cs" />
 	<Compile Include="TestHelpers\TemporaryFolderTests.cs" />
 	<Compile Include="TestHelpers\TestUtilities.cs" />

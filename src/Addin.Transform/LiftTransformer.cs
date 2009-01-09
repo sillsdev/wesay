@@ -20,7 +20,7 @@ namespace Addin.Transform
 	public abstract class LiftTransformer: IWeSayAddin
 	{
 		protected bool _launchAfterTransform = true;
-		private string _pathToOutput;
+		protected string _pathToOutput;
 		private static ProgressState _staticProgressStateForWorker;
 
 		public delegate void FileManipulationMethod(object sender, DoWorkEventArgs e);

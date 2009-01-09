@@ -9,7 +9,7 @@ using WeSay.Foundation.Options;
 
 namespace WeSay.LexicalModel
 {
-	public class LexEntryRepository: IRepository<LexEntry>
+	public class LexEntryRepository: IRepository<LexEntry>, ICountGiver
 	{
 		public class EntryEventArgs : EventArgs
 		{
@@ -949,6 +949,11 @@ namespace WeSay.LexicalModel
 		{
 			//Do Nothing
 			//throw new Exception("The method or operation is not implemented.");
+		}
+
+		public int Count
+		{
+			get { return CountAllItems(); }
 		}
 	}
 }

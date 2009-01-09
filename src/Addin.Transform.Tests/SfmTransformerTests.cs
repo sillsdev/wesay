@@ -50,6 +50,7 @@ namespace Addin.Transform.Tests
 			LaunchWithConversionString("");
 		}
 
+/* NOMORELOCKING
 		[Test]
 		[ExpectedException(typeof (IOException))]
 		public void ThrowsMeaningfulExceptionIfOutputFileIsLocked()
@@ -65,7 +66,7 @@ namespace Addin.Transform.Tests
 				File.SetAttributes(_addin.PathToOutput, default(FileAttributes));
 			}
 		}
-
+*/
 		[Test]
 		public void ConvertsGlossMarker()
 		{

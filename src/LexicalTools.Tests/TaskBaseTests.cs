@@ -41,20 +41,21 @@ namespace WeSay.LexicalTools.Tests
 			_task.Deactivate();
 		}
 
-		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
-		public void Activate_CalledTwice_Throws()
-		{
-			_task.Activate();
-			try
-			{
-				_task.Activate();
-			}
-			finally
-			{
-				_task.Deactivate();
-			}
-		}
+// not anymore (see not on task base where it used to throw
+//        [Test]
+//        [ExpectedException(typeof (InvalidOperationException))]
+//        public void Activate_CalledTwice_Throws()
+//        {
+//            _task.Activate();
+//            try
+//            {
+//                _task.Activate();
+//            }
+//            finally
+//            {
+//                _task.Deactivate();
+//            }
+//        }
 
 		[Test]
 		public void IsActive_BeforeActivate_False()

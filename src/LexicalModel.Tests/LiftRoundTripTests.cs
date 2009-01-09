@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
 using LiftIO.Parsing;
 using NUnit.Framework;
+using WeSay.Foundation;
 using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.Project;
+using System.Linq;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -129,6 +132,51 @@ namespace WeSay.LexicalModel.Tests
 			AssertXPathNotNull("//entry/field[@type='color']/form[@lang='ws-two']");
 		}
 
+		[Test, Ignore("apparently not possible in LIFT?")]
+		public void LexicalUnit_HasTrait_TraitRoundTripped()
+		{
+
+		}
+
+
+		[Test, Ignore("Need to wait for LiftIO API on this")]
+		public void Note_HasTrait_TraitRoundTripped()
+		{
+#if notyet
+			TestTraitRoundTripped("//entry/note",
+								  (e, traits) =>
+									  {
+										  WeSayDataObject note = _builder.MergeInNote(e, "color",
+																		  new LiftMultiText("v", "hello world"), traits);
+										 traits.ForEach(t =>_builder.MergeInTrait(note, t));
+									  });
+#endif
+		}
+
+		[Test]
+		public void Field_HasTrait_TraitRoundTripped()
+		{
+			TestTraitRoundTripped("//entry/field",
+				(e, traits)=> _builder.MergeInField(e, "color", default(DateTime), default(DateTime), new LiftMultiText("v", "hello world"), traits));
+
+		}
+
+		 public delegate void Proc<A0, A1>(A0 a0, A1 a1);
+
+		private void TestTraitRoundTripped(string xpathToOwningElement, Proc<WeSayDataObject, List<Trait>> p)
+		{
+			LexEntry e = MakeSimpleEntry();
+			List<Trait> traits = new List<Trait>();
+			traits.Add(new Trait("one", "1"));
+			traits.Add(new Trait("two", "2"));
+			p.Invoke(e, traits);
+			_builder.FinishEntry(e);
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull(xpathToOwningElement + "[trait[@name='one' and @value='1'] and trait[@name='two' and @value='2']]");
+		}
+
+
 		[Test]
 		public void Entry_Order()
 		{
@@ -231,7 +279,7 @@ namespace WeSay.LexicalModel.Tests
 			LiftMultiText t2 = new LiftMultiText();
 			t2.Add("aa", "freestuff");
 			_builder.MergeInTranslationForm(ex,
-										   "free",
+										   "Free translation",
 										   t2,
 										   "<translation type='free'><bogus/></translation>");
 			LiftMultiText translation = new LiftMultiText();
@@ -246,7 +294,7 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.End();
 			AssertXPathNotNull("//entry/sense/example/translation[not(@type)]/bogusUnmarked");
 			AssertXPathNotNull(
-					"//entry/sense/example/translation[@type='free']/form/text[text()='freestuff']");
+					"//entry/sense/example/translation[@type='Free translation']/form/text[text()='freestuff']");
 		}
 
 		[Test]
@@ -286,7 +334,7 @@ namespace WeSay.LexicalModel.Tests
 					</gloss>
 				  </etymology>";
 
-			_builder.MergeInEtymology(e, null, string.Empty, null, null, xml);
+			_builder.MergeInEtymology(e, null, "proto", null, null, xml);
 			_builder.FinishEntry(e);
 
 			_exporter.Add(e);

@@ -72,6 +72,7 @@ namespace WeSay.ConfigTool
 				_enableSpelling.Checked = _field.IsSpellCheckingEnabled;
 				_normallyHidden.Checked = _field.Visibility ==
 										  CommonEnumerations.VisibilitySetting.NormallyHidden;
+				_multiParagraph.Checked = _field.IsMultiParagraph;
 
 				FillClassNameCombo();
 				FillDataTypeCombo();
@@ -243,6 +244,8 @@ namespace WeSay.ConfigTool
 			}
 		}
 
+
+
 		private void _enableSpelling_CheckedChanged(object sender, EventArgs e)
 		{
 			_field.IsSpellCheckingEnabled = _enableSpelling.Checked;
@@ -373,6 +376,19 @@ namespace WeSay.ConfigTool
 						oldDataTypeName);
 			}
 			return !conflictFound;
+		}
+
+
+		private void _multiParagraph_CheckedChanged(object sender, EventArgs e)
+		{
+			if (_multiParagraph.Checked)
+			{
+				_field.IsMultiParagraph = true;
+			}
+			else
+			{
+				_field.IsMultiParagraph = false;
+			}
 		}
 	}
 }
