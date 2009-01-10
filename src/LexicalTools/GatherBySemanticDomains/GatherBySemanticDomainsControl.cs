@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
@@ -65,8 +66,10 @@ namespace WeSay.LexicalTools
 			_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 			_movingLabel.Finished += _animator_Finished;
 
-			//we'd like to have monospace, but I don't know for which languages these fonts will work
-			if(presentationModel.SemanticDomainWritingSystemId == "en")
+			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
+			//this is going to override the normal font choice they've made
+			List<string> majorRomanWritingSystems = new List<string>(new string[] {"en", "id", "fr"});
+			if(majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemId))
 			{
 				#if MONO
 				_domainName.Font = new Font("monospace", _domainName.Font.Size, FontStyle.Bold);
