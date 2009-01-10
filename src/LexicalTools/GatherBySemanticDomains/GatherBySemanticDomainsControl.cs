@@ -64,6 +64,17 @@ namespace WeSay.LexicalTools
 
 			_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 			_movingLabel.Finished += _animator_Finished;
+
+			//we'd like to have monospace, but I don't know for which languages these fonts will work
+			if(presentationModel.SemanticDomainWritingSystemId == "en")
+			{
+				#if MONO
+				_domainName.Font = new Font("monospace", _domainName.Font.Size, FontStyle.Bold);
+#else
+				_domainName.Font = new Font("Lucida Console", _domainName.Font.Size, FontStyle.Bold);
+#endif
+
+			}
 		}
 
 		private void InitializeDisplaySettings()

@@ -199,7 +199,20 @@ namespace WeSay.LexicalTools
 			{
 				return key;
 			}
-			return option.Name.GetExactAlternative(SemanticDomainWritingSystemId);
+			string prefix = "";
+			string number = option.Abbreviation.GetExactAlternative(SemanticDomainWritingSystemId);
+			var indentLevel = 0;
+			if (!string.IsNullOrEmpty(number))
+			{
+				foreach (char c in number.ToCharArray())
+				{
+					if (c == '.')
+						indentLevel++;
+				}
+				prefix = "      ".Substring(0, indentLevel) + number + " ";
+			}
+			return prefix //this puts the number back in
+				+ option.Name.GetExactAlternative(SemanticDomainWritingSystemId);
 		}
 
 		private Option GetOptionFromKey(string key)
@@ -400,6 +413,8 @@ namespace WeSay.LexicalTools
 			get
 			{
 				VerifyTaskActivated();
+				if (_semanticDomainWritingSystem == null)
+					return string.Empty;//happens during some unrelated tests
 				return _semanticDomainWritingSystem.Id;
 			}
 		}
