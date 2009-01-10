@@ -16,6 +16,8 @@ namespace WeSay.LexicalTools
 {
 	public class GatherBySemanticDomainTask: WordGatheringTaskBase
 	{
+		private const string DomainIndexTaskMemoryKey = "DomainIndex";
+		private const string QuestionIndexTaskMemoryKey= "QuestionIndex";
 		private readonly string _semanticDomainQuestionsFileName;
 		private GatherBySemanticDomainsControl _gatherControl;
 		private Dictionary<string, List<string>> _domainQuestions;
@@ -30,10 +32,12 @@ namespace WeSay.LexicalTools
 		private int _currentDomainIndex;
 		private int _currentQuestionIndex;
 		private bool _alreadyReportedWSLookupFailure;
+		private TaskMemory _taskMemory;
 
 		public GatherBySemanticDomainTask(IGatherBySemanticDomainsConfig config,
 										  LexEntryRepository lexEntryRepository,
-										  ViewTemplate viewTemplate)
+										  ViewTemplate viewTemplate,
+										TaskMemoryRepository taskMemoryRepository)
 			: base(
 			   config,
 				lexEntryRepository,
@@ -51,6 +55,8 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
+			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
+
 
 			_currentDomainIndex = -1;
 			_currentQuestionIndex = 0;
@@ -99,7 +105,7 @@ namespace WeSay.LexicalTools
 		public GatherBySemanticDomainTask(string semanticDomainsQuestionFileName, LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
 			: this(GatherBySemanticDomainConfig.CreateForTests(semanticDomainsQuestionFileName),
 					lexEntryRepository,
-					viewTemplate)
+					viewTemplate, null)
 		{
 
 		}
@@ -257,6 +263,7 @@ namespace WeSay.LexicalTools
 					_currentQuestionIndex = 0;
 					_words = null;
 				}
+				RecordLocationInTaskMemory();
 			}
 		}
 
@@ -382,7 +389,7 @@ namespace WeSay.LexicalTools
 			{
 				if (_currentDomainIndex < DomainKeys.Count - 1)
 				{
-					_currentDomainIndex++;
+					CurrentDomainIndex = _currentDomainIndex+1;
 					_currentQuestionIndex = 0;
 				}
 			}
@@ -390,8 +397,10 @@ namespace WeSay.LexicalTools
 			{
 				_currentQuestionIndex++;
 			}
-			UpdateCurrentWords();
+		  RecordLocationInTaskMemory();
+		   UpdateCurrentWords();
 		}
+
 
 		public bool HasPreviousDomainQuestion
 		{
@@ -672,6 +681,7 @@ namespace WeSay.LexicalTools
 				_semanticDomainOptionsList =
 					WeSayWordsProject.Project.GetOptionsList(_semanticDomainField, false);
 			}
+			ReadTaskMemory();
 
 			UpdateCurrentWords();
 			if (CurrentDomainIndex == -1)
@@ -679,6 +689,37 @@ namespace WeSay.LexicalTools
 				GotoLastDomainWithAnswers();
 			}
 			_gatherControl = new GatherBySemanticDomainsControl(this);
+		}
+
+
+		private void RecordLocationInTaskMemory()
+		{
+			_taskMemory.Set(DomainIndexTaskMemoryKey, _currentDomainIndex);
+			_taskMemory.Set(QuestionIndexTaskMemoryKey, _currentQuestionIndex);
+		}
+
+		private void ReadTaskMemory()
+		{
+			if (_taskMemory == null)
+				return;
+
+			var domainIndexString = _taskMemory.Get(DomainIndexTaskMemoryKey, null);
+			var questionIndexString = _taskMemory.Get(QuestionIndexTaskMemoryKey, null);
+			int x;
+			if (int.TryParse(domainIndexString, out x))
+			{
+				if (x >= 0 && x < DomainKeys.Count)
+				{
+					_currentDomainIndex = x;
+					if (int.TryParse(questionIndexString, out x))
+					{
+						if (x >= 0 && x < Questions.Count)
+						{
+							_currentQuestionIndex = x;
+						}
+					}
+				}
+			}
 		}
 
 		private ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain()
