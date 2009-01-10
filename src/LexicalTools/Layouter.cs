@@ -463,22 +463,30 @@ namespace WeSay.LexicalTools
 		{
 			OptionsList availableOptions = WeSayWordsProject.Project.GetOptionsList(field, false);
 			OptionRefCollection refsOfChoices =
-					target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
+				target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			//            OptionCollectionControl control =
 			//                   new OptionCollectionControl(refsOfChoices, availableOptions, field.WritingSystemIds[0]);
 			IList<WritingSystem> writingSystems =
-					BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
-			ReferenceCollectionEditor<Option, string, OptionRef> control =
+				BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
+			IChoiceSystemAdaptor<Option, string, OptionRef> displayAdaptor;
+
+			if (field.FieldName== LexSense.WellKnownProperties.SemanticDomainsDdp4)
+			{
+				displayAdaptor = new SemDomOptionDisplayAdaptor(availableOptions, field.WritingSystemIds[0]);
+			}
+			else
+			{
+				displayAdaptor = new OptionDisplayAdaptor(availableOptions, field.WritingSystemIds[0]);
+			}
+
+
+		ReferenceCollectionEditor<Option, string, OptionRef> control =
 					new ReferenceCollectionEditor<Option, string, OptionRef>(refsOfChoices.Members,
 																			 availableOptions.
 																					 Options,
 																			 writingSystems,
 																			 field.Visibility,
-																			 new OptionDisplayAdaptor
-																					 (availableOptions,
-																					  field.
-																							  WritingSystemIds
-																							  [0]));
+																			 displayAdaptor);
 			control.AlternateEmptinessHelper = refsOfChoices;
 			return control;
 		}
