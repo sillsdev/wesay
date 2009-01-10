@@ -36,9 +36,11 @@ namespace WeSay.LexicalTools.Tests
 
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_viewTemplate = MakeViewTemplate("en");
-			_task = new GatherBySemanticDomainTask(_semanticDomainFilePath,
+			var config = GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath);
+			_task = new GatherBySemanticDomainTask(config,
 												   _lexEntryRepository,
-												   _viewTemplate);
+												   _viewTemplate,
+												   new TaskMemoryRepository());
 		}
 
 		private static LexSense AddNewSenseToEntry(LexEntry e)
@@ -111,11 +113,72 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void TaskMemory_ValueOK_ReturnsToSameSpot()
+		{
+			var memory = new TaskMemoryRepository();
+		   var task = new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
+															_lexEntryRepository,
+															_viewTemplate,
+															memory);
+
+			task.Activate();
+			task.CurrentDomainIndex = 5;
+			task.CurrentQuestionIndex = 2;
+			task.Deactivate();
+
+		   var task2 = new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
+															_lexEntryRepository,
+															_viewTemplate,
+															memory);
+			task2.Activate();
+			Assert.AreEqual(5,task2.CurrentDomainIndex);
+			Assert.AreEqual(2, task2.CurrentQuestionIndex);
+		}
+
+		[Test]
+		public void TaskMemory_DomainValueOutOfRange_RevertsToDefault()
+		{
+
+			var config = GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath);
+			var memory = new TaskMemoryRepository();
+			memory.FindOrCreateSettingsByTaskId(config.TaskName).Set(GatherBySemanticDomainTask.DomainIndexTaskMemoryKey, "200000");
+
+			var task = new GatherBySemanticDomainTask(config,
+															 _lexEntryRepository,
+															 _viewTemplate,
+															 memory);
+
+			task.Activate();
+			Assert.AreEqual(0, task.CurrentDomainIndex);
+			Assert.AreEqual(0, task.CurrentQuestionIndex);
+		}
+
+		[Test]
+		public void TaskMemory_QuestionValueOutOfRange_RevertsToDefault()
+		{
+
+			var config = GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath);
+			var memory = new TaskMemoryRepository();
+			memory.FindOrCreateSettingsByTaskId(config.TaskName).Set(GatherBySemanticDomainTask.DomainIndexTaskMemoryKey, "1");
+			memory.FindOrCreateSettingsByTaskId(config.TaskName).Set(GatherBySemanticDomainTask.QuestionIndexTaskMemoryKey, "200000");
+
+			var task = new GatherBySemanticDomainTask(config,
+															 _lexEntryRepository,
+															 _viewTemplate,
+															 memory);
+
+			task.Activate();
+			Assert.AreEqual(1, task.CurrentDomainIndex);
+			Assert.AreEqual(0, task.CurrentQuestionIndex);
+		}
+
+		[Test]
 		public void ConstructWithTemplate()
 		{
-			Assert.IsNotNull(new GatherBySemanticDomainTask(_semanticDomainFilePath,
+			Assert.IsNotNull(new GatherBySemanticDomainTask( GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
 															_lexEntryRepository,
-															_viewTemplate));
+															_viewTemplate,
+															new TaskMemoryRepository()));
 		}
 
 		[Test]
@@ -133,9 +196,10 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (ApplicationException))]
 		public void ConstructWithTemplate_NonExistantSemanticDomainFilePath_Throws()
 		{
-			new GatherBySemanticDomainTask(Path.GetRandomFileName(),
-										   _lexEntryRepository,
-										   _viewTemplate);
+			new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(Path.GetRandomFileName()),
+															_lexEntryRepository,
+															_viewTemplate,
+															new TaskMemoryRepository());
 		}
 
 		[Test]
@@ -890,9 +954,10 @@ namespace WeSay.LexicalTools.Tests
 				streamWriter.Write("");
 			}
 
-			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(emptySemanticDomainFilePath,
+			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(  GatherBySemanticDomainConfig.CreateForTests(emptySemanticDomainFilePath),
 																			 _lexEntryRepository,
-																			 _viewTemplate);
+																			 _viewTemplate,
+																			 new TaskMemoryRepository());
 			task.Activate();
 			Assert.AreEqual(1, task.DomainKeys.Count);
 			Assert.AreEqual(string.Empty, task.CurrentDomainKey);
@@ -924,9 +989,10 @@ namespace WeSay.LexicalTools.Tests
 			}
 
 			ViewTemplate template = MakeViewTemplate("fr");
-			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(frenchSemanticDomainFilePath,
+			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask( GatherBySemanticDomainConfig.CreateForTests(frenchSemanticDomainFilePath),
 																			 _lexEntryRepository,
-																			 template);
+																			 template,
+																			 new TaskMemoryRepository());
 			task.Activate();
 			Assert.AreEqual("L'univers physique", task.DomainNames[0]);
 			Assert.AreEqual("Ciel", task.DomainNames[1]);

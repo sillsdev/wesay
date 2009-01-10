@@ -16,8 +16,8 @@ namespace WeSay.LexicalTools
 {
 	public class GatherBySemanticDomainTask: WordGatheringTaskBase
 	{
-		private const string DomainIndexTaskMemoryKey = "DomainIndex";
-		private const string QuestionIndexTaskMemoryKey= "QuestionIndex";
+		internal const string DomainIndexTaskMemoryKey = "DomainIndex";
+		internal const string QuestionIndexTaskMemoryKey= "QuestionIndex";
 		private readonly string _semanticDomainQuestionsFileName;
 		private GatherBySemanticDomainsControl _gatherControl;
 		private Dictionary<string, List<string>> _domainQuestions;
@@ -305,6 +305,7 @@ namespace WeSay.LexicalTools
 					throw new ArgumentOutOfRangeException();
 				}
 				_currentQuestionIndex = value;
+				RecordLocationInTaskMemory();
 			}
 		}
 
