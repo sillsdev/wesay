@@ -382,17 +382,24 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+
+
 		public void GotoNextDomainQuestion()
 		{
 			VerifyTaskActivated();
 
 			if (_currentQuestionIndex == Questions.Count - 1)
 			{
+#if OLD
+				This code took you literally to the next one
+
 				if (_currentDomainIndex < DomainKeys.Count - 1)
 				{
 					CurrentDomainIndex = _currentDomainIndex+1;
 					_currentQuestionIndex = 0;
 				}
+#endif
+				GotoNextDomainLackingAnswers();
 			}
 			else
 			{
@@ -653,6 +660,15 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public bool CanGoToNext
+		{
+			get
+			{
+				return true;
+				// this would stop us at the end, but we now loop around: HasNextDomainQuestion
+			}
+		}
+
 		public override void Activate()
 		{
 			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
@@ -686,7 +702,7 @@ namespace WeSay.LexicalTools
 
 			UpdateCurrentWords();
 			if (CurrentDomainIndex == -1)
-			{
+			{//this is probably never (or rarely?) encountered now that we have task memory
 				GotoLastDomainWithAnswers();
 			}
 			_gatherControl = new GatherBySemanticDomainsControl(this);
@@ -796,6 +812,42 @@ namespace WeSay.LexicalTools
 			}
 			// there were no empty domains. Stay at the last domain (as a side effect of having positioned
 			// ourself in the above loop
+		}
+
+		public void GotoNextDomainLackingAnswers()
+		{
+			VerifyTaskActivated();
+			var entries = GetAllEntriesSortedBySemanticDomain();
+			for (int i = _currentDomainIndex+1; i < DomainKeys.Count; i++)
+			{
+				if (GetHasWords(i, entries))
+				{
+					CurrentDomainIndex = i;
+					return;
+				}
+			}
+			//wrap around from the beginning.  the <= here ensures that we land on the current one, if it is empty
+			for (int i = 0; i <= _currentDomainIndex; i++)
+			{
+				if (GetHasWords(i, entries))
+				{
+					CurrentDomainIndex = i;
+					return;
+				}
+			}
+			//all domains filled, including the current one
+			CurrentDomainIndex = DomainKeys.Count - 1;
+		}
+
+		private bool GetHasWords(int domainIndex, ResultSet<LexEntry> entries)
+		{
+				int beginIndex;
+				int pastEndIndex;
+				GetWordsIndexes(entries,
+								domainIndex,
+								out beginIndex,
+								out pastEndIndex);
+			return (pastEndIndex == beginIndex);
 		}
 	}
 }

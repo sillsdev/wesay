@@ -717,6 +717,61 @@ namespace WeSay.LexicalTools.Tests
 
 		#region Navigation
 
+		/// <summary>
+		/// not clear what the best behavior here would be, this just documents
+		/// what I did
+		/// </summary>
+		[Test]
+		public void GotoNextDomainLackingAnswers_AllDomainsFull_GoesToLast()
+		{
+			FillAllDomainsWithWords();
+			Task.CurrentDomainIndex = 0;
+			Task.GotoNextDomainLackingAnswers();
+			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Assert.AreEqual(Task.DomainKeys.Count-1, Task.CurrentDomainIndex);
+		}
+
+		[Test]
+		public void GotoNextDomainLackingAnswers_AllDomainsExceptCurrentOneAreFull_StaysPut()
+		{
+			FillAllDomainsWithWords();
+			Task.CurrentDomainIndex = 3;
+			Task.DetachFromMatchingEntries("3");
+			Task.GotoNextDomainLackingAnswers();
+			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Assert.AreEqual(3, Task.CurrentDomainIndex);
+		}
+		[Test]
+		public void GotoNextDomainLackingAnswers_HasToWrapToFindEmpty_Wraps()
+		{
+			Task.CurrentDomainIndex = 0;
+			Task.AddWord("first");
+			Task.CurrentDomainIndex = 1;
+			Task.AddWord("second");
+			Task.CurrentDomainIndex = 3;
+			Task.AddWord("fourth");
+			Task.CurrentDomainIndex = Task.DomainKeys.Count - 1;
+			Task.AddWord("last");
+			Task.GotoNextDomainLackingAnswers();
+			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Assert.AreEqual(2, Task.CurrentDomainIndex);
+		}
+
+		[Test]
+		public void GotoNextDomainLackingAnswers_SomeDomainsFull_SkipsToEmptyOne()
+		{
+			Task.CurrentDomainIndex = 0;
+			Task.AddWord("first");
+			Task.CurrentDomainIndex = 1;
+			Task.AddWord("second");
+			Task.CurrentDomainIndex = 3;
+			Task.AddWord("fourth");
+			Task.CurrentDomainIndex = 0;
+			Task.GotoNextDomainLackingAnswers();
+			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Assert.AreEqual(2, Task.CurrentDomainIndex);
+		}
+
 		#region GotoLastDomainWithAnswers
 
 		[Test]
@@ -744,14 +799,19 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void GotoLastDomainWithAnswers_AllDomainsHaveAnswers()
 		{
+			FillAllDomainsWithWords();
+			Task.GotoLastDomainWithAnswers();
+			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Assert.AreEqual(Task.DomainKeys.Count - 1, Task.CurrentDomainIndex);
+		}
+
+		private void FillAllDomainsWithWords()
+		{
 			for (int i = 0;i < Task.DomainKeys.Count;i++)
 			{
 				Task.CurrentDomainIndex = i;
 				Task.AddWord(i.ToString());
 			}
-			Task.GotoLastDomainWithAnswers();
-			Assert.AreEqual(0, Task.CurrentQuestionIndex);
-			Assert.AreEqual(Task.DomainKeys.Count - 1, Task.CurrentDomainIndex);
 		}
 
 		#endregion
@@ -776,7 +836,8 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
 		}
 
-		[Test]
+ /* I JH think we don't want this behavior anymore
+  * [Test]
 		public void GotoNextDomainQuestion_HasNoMoreDomainsNoMoreQuestions_DoesNothing()
 		{
 			Task.CurrentDomainIndex = Task.DomainKeys.Count - 1;
@@ -785,7 +846,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(Task.DomainKeys.Count - 1, Task.CurrentDomainIndex);
 			Assert.AreEqual(Task.Questions.Count - 1, Task.CurrentQuestionIndex);
 		}
-
+*/
 		[Test]
 		public void HasNextDomainQuestion_HasMoreDomains_True()
 		{

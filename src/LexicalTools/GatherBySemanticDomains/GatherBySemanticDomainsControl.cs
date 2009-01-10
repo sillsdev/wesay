@@ -91,7 +91,7 @@ namespace WeSay.LexicalTools
 			_domainName.SelectedIndex = _presentationModel.CurrentDomainIndex;
 			_description.Text = _presentationModel.CurrentDomainDescription;
 			_question.Text = _presentationModel.CurrentQuestion;
-			_btnNext.Enabled = _presentationModel.HasNextDomainQuestion;
+			_btnNext.Enabled = _presentationModel.CanGoToNext;
 			_btnPrevious.Enabled = _presentationModel.HasPreviousDomainQuestion;
 			_questionIndicator.Minimum = 1;
 			_questionIndicator.Maximum = _presentationModel.Questions.Count;
