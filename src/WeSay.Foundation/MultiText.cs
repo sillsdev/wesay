@@ -302,5 +302,10 @@ namespace WeSay.Foundation
 		{
 			return _liftMultitext[languageId].Text;
 		}
+
+		public bool ContainsEqualForm(string form, string writingSystemId)
+		{
+			return null != this.Forms.FirstOrDefault(f=> f.WritingSystemId ==writingSystemId && f.Form == form);
+		}
 	}
 }

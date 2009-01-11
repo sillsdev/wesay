@@ -66,6 +66,8 @@ namespace WeSay.LexicalTools.Tests
 
 			v.Add(lexicalFormField);
 			v.Add(semanticDomainField);
+
+			v.Add(new Field(LexSense.WellKnownProperties.Definition,"LexSense", new string[]{"en"}));
 			return v;
 		}
 
@@ -92,23 +94,27 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 
-		private LexEntry AddEntryToRecordList(string lexicalForm, string gloss)
+		private LexEntry AddEntryToRecordList(string lexicalForm, string gloss, string optionalDomainToAdd)
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", lexicalForm);
-			AddSenseToEntry(e, gloss);
+			AddSenseToEntry(e, gloss, optionalDomainToAdd);
 			_lexEntryRepository.SaveItem(e);
 			return e;
 		}
 
-		private void AddSenseToEntry(LexEntry e, string gloss)
+		private void AddSenseToEntry(LexEntry e, string gloss, string domainToAdd)
 		{
 			LexSense s = AddNewSenseToEntry(e);
-			s.Gloss.SetAlternative("en", gloss);
-			OptionRefCollection o =
+			s.Definition.SetAlternative("en", gloss);
+			if (!string.IsNullOrEmpty(domainToAdd))
+			{
+				OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
-							LexSense.WellKnownProperties.SemanticDomainsDdp4);
-			o.Add(Task.DomainKeys[0]);
+						LexSense.WellKnownProperties.SemanticDomainsDdp4);
+
+				o.Add(domainToAdd);
+			}
 			_lexEntryRepository.SaveItem(e);
 		}
 
@@ -355,7 +361,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
 			LexSense s = AddNewSenseToEntry(e);
-			s.Gloss.SetAlternative("en", "fish");
+			s.Definition.SetAlternative("en", "fish");
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
@@ -384,13 +390,13 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void CurrentWords_WordExistsWithTwoGlossesHavingSemanticDomain_ShowsUpOnce()
+		public void CurrentWords_WordExistsWithTwoDefsHavingSemanticDomain_ShowsUpOnce()
 		{
 			Task.CurrentDomainIndex = 1;
-			AddEntryToRecordList("peixe", "fish");
-			LexEntry e = AddEntryToRecordList("raposa", "fox");
-			AddSenseToEntry(e, "special");
-			AddEntryToRecordList("cachorro", "dog");
+			AddEntryToRecordList("peixe", "fish", Task.DomainKeys[0]);
+			LexEntry e = AddEntryToRecordList("raposa", "fox", Task.DomainKeys[0]);
+			AddSenseToEntry(e, "special", Task.DomainKeys[0]);
+			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 			Task.CurrentDomainIndex = 0;
 			Assert.AreEqual(3, Task.CurrentWords.Count);
 		}
@@ -474,11 +480,11 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void AddWord_WordExistsWithGlossAndSemanticDomain_NotAdded()
+		public void AddWord_WordExistsWithDefAndSemanticDomain_NotAdded()
 		{
-			AddEntryToRecordList("peixe", "fish");
-			AddEntryToRecordList("raposa", "fox");
-			AddEntryToRecordList("cachorro", "dog");
+			AddEntryToRecordList("peixe", "fish", Task.DomainKeys[0]);
+			AddEntryToRecordList("raposa", "fox", Task.DomainKeys[0]);
+			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
 			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("raposa");
@@ -513,11 +519,11 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void RemoveWord_WordExistsWithGlossAndSemanticDomain_Disassociated()
+		public void RemoveWord_WordExistsWithDefAndSemanticDomain_Disassociated()
 		{
-			AddEntryToRecordList("peixe", "fish");
-			AddEntryToRecordList("raposa", "fox");
-			AddEntryToRecordList("cachorro", "dog");
+			AddEntryToRecordList("peixe", "fish", Task.DomainKeys[0]);
+			AddEntryToRecordList("raposa", "fox", Task.DomainKeys[0]);
+			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
 			Task.DetachFromMatchingEntries("raposa");
 			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
@@ -525,12 +531,12 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void RemoveWord_WordExistsWithTwoGlossesHavingSemanticDomain_DisassociatesBothSenses()
+		public void RemoveWord_WordExistsWithTwoDefsHavingSemanticDomain_DisassociatesBothSenses()
 		{
-			AddEntryToRecordList("peixe", "fish");
-			LexEntry e = AddEntryToRecordList("raposa", "fox");
-			AddSenseToEntry(e, "special");
-			AddEntryToRecordList("cachorro", "dog");
+			AddEntryToRecordList("peixe", "fish", Task.DomainKeys[0]);
+			LexEntry e = AddEntryToRecordList("raposa", "fox", Task.DomainKeys[0]);
+			AddSenseToEntry(e, "special", Task.DomainKeys[0]);
+			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
 			Task.DetachFromMatchingEntries("raposa");
 			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
@@ -543,7 +549,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
 			LexSense s = AddNewSenseToEntry(e);
-			s.Gloss.SetAlternative("en", "fish");
+			s.Definition.SetAlternative("en", "fish");
 			s = new LexSense();
 			e.Senses.Add(s);
 			OptionRefCollection o =
@@ -565,7 +571,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
 			LexSense s = AddNewSenseToEntry(e);
-			s.Gloss.SetAlternative("en", "fish");
+			s.Definition.SetAlternative("en", "fish");
 			s = AddNewSenseToEntry(e);
 
 			OptionRefCollection o =
@@ -847,6 +853,60 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(Task.Questions.Count - 1, Task.CurrentQuestionIndex);
 		}
 */
+
+
+		[Test]
+		public void AddWordWithDef_ExistingWordWithSameDomainButDiffDef_NewSense()
+		{
+			Task.AddWord("one", "1");
+			var entries =Task.AddWord("one", "2");
+			Assert.AreEqual(1, entries.Count);
+			Assert.AreEqual(2, entries[0].Senses.Count, "Should create new senses");
+		}
+
+		[Test]
+		public void AddWordWithDef_ExistingWordDefAlreadyExists_SemDomAdded()
+		{
+			var entries1 =Task.AddWord("one", "1");
+			Task.CurrentDomainIndex++;
+			var entries2 = Task.AddWord("one", "1");
+			Assert.AreEqual(entries1[0], entries2[0], "Should not create new word");
+			Assert.AreEqual(1, entries1[0].Senses.Count, "Should not create new senses");
+			AssertNumberOfDomainsInSense(2, entries1[0].Senses[0]);
+		}
+
+		[Test, Ignore("not yet")]
+		public void AddWordWithDef_MatchesTwoWordsNeitherHasMatchingDef_SenseAddedToFirstOnly()
+		{
+			var e1  = AddEntryToRecordList("one", "1", null);
+			var e2  = AddEntryToRecordList("one", "2", null);
+			AssertNumberOfDomainsInSense(0, e2.Senses[0]);
+			var entries = Task.AddWord("one", "3");
+			Assert.AreEqual(e1, entries[0], "Should choose first match");
+			Assert.AreEqual(1, e2.Senses.Count, "Should not touch second match");
+			Assert.AreEqual(2, entries[0].Senses.Count, "Should add sense");
+			Assert.AreEqual(1, entries.Count, "Should only touch one entry");
+			AssertNumberOfDomainsInSense(0, e2.Senses[0]);
+		}
+
+		private void AssertNumberOfDomainsInSense(int expectedDomains, LexSense sense)
+		{
+			Assert.AreEqual(expectedDomains, sense.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4).Count);
+		}
+
+
+		[Test]
+		public void AddWordWithDef_ExistingWordHasDifferentDef_NewSenseCreated()
+		{
+		   var entries1 =Task.AddWord("one", "1");
+			Task.CurrentDomainIndex++;
+			var entries2 = Task.AddWord("one", "2");
+			Assert.AreEqual(entries1[0], entries2[0], "Should not create new word");
+			Assert.AreEqual(2, entries1[0].Senses.Count, "Should  create new sense");
+			AssertNumberOfDomainsInSense(1, entries1[0].Senses[1]);
+			AssertNumberOfDomainsInSense(1, entries1[0].Senses[0]);
+		}
+
 		[Test]
 		public void HasNextDomainQuestion_HasMoreDomains_True()
 		{
@@ -968,9 +1028,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void WordsInDomain_ThreeWords_Three()
 		{
-			AddEntryToRecordList("peixe", "fish");
-			AddEntryToRecordList("raposa", "fox");
-			AddEntryToRecordList("cachorro", "dog");
+			AddEntryToRecordList("peixe", "fish", Task.DomainKeys[0]);
+			AddEntryToRecordList("raposa", "fox", Task.DomainKeys[0]);
+			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
 			Assert.AreEqual(3, Task.WordsInDomain(0));
 		}

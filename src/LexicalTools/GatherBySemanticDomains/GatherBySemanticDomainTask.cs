@@ -5,12 +5,14 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using Palaso.Reporting;
+using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.Project;
+using System.Linq;
 
 namespace WeSay.LexicalTools
 {
@@ -33,6 +35,7 @@ namespace WeSay.LexicalTools
 		private int _currentQuestionIndex;
 		private bool _alreadyReportedWSLookupFailure;
 		private TaskMemory _taskMemory;
+		private string _definitionWritingSystem;
 
 		public GatherBySemanticDomainTask(IGatherBySemanticDomainsConfig config,
 										  LexEntryRepository lexEntryRepository,
@@ -91,6 +94,8 @@ namespace WeSay.LexicalTools
 			}
 
 			_semanticDomainField = viewTemplate.GetField("SemanticDomainDdp4");
+			_definitionWritingSystem =
+				viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
 
 			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
 		}
@@ -464,7 +469,16 @@ namespace WeSay.LexicalTools
 			UpdateCurrentWords();
 		}
 
-		public void AddWord(string lexicalForm)
+		/// <summary>
+		/// Add the word, gloss, and current semantic domain, somehow, to the lexicon
+		/// </summary>
+		/// <returns>the affected words, to help unit tests check what was done</returns>
+		public IList<LexEntry> AddWord(string lexicalForm)
+		{
+			return AddWord(lexicalForm, string.Empty);
+		}
+
+		public IList<LexEntry> AddWord(string lexicalForm, string gloss)
 		{
 			VerifyTaskActivated();
 
@@ -472,29 +486,51 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException();
 			}
+			var modifiedEntries = new List<LexEntry>();
 			if (lexicalForm != string.Empty)
 			{
 				ResultSet<LexEntry> recordTokens =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
 																		 WordWritingSystem);
-				if (recordTokens.Count == 0)
+				if (recordTokens.Count == 0)//no entries with a matching form
 				{
 					LexEntry entry = LexEntryRepository.CreateItem();
 					entry.LexicalForm.SetAlternative(WordWritingSystemId, lexicalForm);
-					AddCurrentSemanticDomainToEntry(entry);
+					AddCurrentSemanticDomainToEntry(entry,gloss);
 					LexEntryRepository.SaveItem(entry);
-					GetAllEntriesSortedBySemanticDomain();
+					GetAllEntriesSortedBySemanticDomain();//review: (jh asks) is there some side effect here? Why is it called?
+					modifiedEntries.Add(entry);
 				}
-				else
+				else// one or more matching entries
 				{
-					foreach (RecordToken<LexEntry> recordToken in recordTokens)
+					var entriesMatchingWord = new List<LexEntry>(from RecordToken<LexEntry> x in recordTokens select x.RealObject);
+					foreach (var entry in entriesMatchingWord)
 					{
-						AddCurrentSemanticDomainToEntry(recordToken.RealObject);
+						if(HasMatchingGloss(entry, gloss))
+						{
+							modifiedEntries.Add(entry);
+							AddCurrentSemanticDomainToEntry(entry, gloss);
+							break;
+						}
+					}
+					if (modifiedEntries.Count == 0) //didn't find any matching glosses
+					{
+						//NB: what to do IS NOT CLEAR. This just adds to the first entry,
+						// but it's just rolling the dice!  What to do???
+						var first = entriesMatchingWord.First();
+						modifiedEntries.Add(first);
+						AddCurrentSemanticDomainToEntry(first, gloss);
 					}
 				}
 			}
 
 			UpdateCurrentWords();
+			return modifiedEntries;
+		}
+
+		private bool HasMatchingGloss(LexEntry entry, string gloss)
+		{
+			return null != entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(gloss, _definitionWritingSystem));
 		}
 
 		public void DetachFromMatchingEntries(string lexicalForm)
@@ -547,9 +583,16 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void AddCurrentSemanticDomainToEntry(LexEntry entry)
+		private void AddCurrentSemanticDomainToEntry(LexEntry entry, string gloss)
 		{
-			LexSense sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
+			//is there a sense with a matching gloss?
+			var sense  = entry.Senses.FirstOrDefault(
+				s => s.Definition.ContainsEqualForm(gloss, _definitionWritingSystem));
+			if(sense==null)
+			{
+				sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
+				sense.Definition.SetAlternative(_definitionWritingSystem, gloss);
+			}
 			OptionRefCollection semanticDomains =
 				sense.GetOrCreateProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 			if (!semanticDomains.Contains(CurrentDomainKey))

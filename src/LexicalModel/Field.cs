@@ -73,7 +73,7 @@ namespace WeSay.LexicalModel
 						) {}
 
 		public Field(string fieldName,
-					 string className,
+					 string parentClassName,
 					 IEnumerable<string> writingSystemIds,
 					 MultiplicityType multiplicity,
 					 string dataTypeName)
@@ -82,7 +82,7 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException();
 			}
-			ClassName = className;
+			ClassName = parentClassName;
 			Enabled = true; //without this lots of tests would need updating
 			Initialize(fieldName, dataTypeName, multiplicity, writingSystemIds);
 		}
