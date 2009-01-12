@@ -211,6 +211,7 @@ namespace WeSay.LexicalTools
 				string word = (string) _listViewWords.SelectedItem;
 				// NB: don't do this before storing what they clicked on.
 
+
 				string wordCurrentlyInTheEditBox = WordToAdd;
 				if (!String.IsNullOrEmpty(wordCurrentlyInTheEditBox))
 				{
@@ -218,8 +219,10 @@ namespace WeSay.LexicalTools
 					//don't throw away what they were typing
 				}
 
+
 				_presentationModel.DetachFromMatchingEntries(word);
 
+				_meaningBox.ClearAllText();
 				Point destination = _vernacularBox.Location;
 				destination.Offset(_vernacularBox.TextBoxes[0].Location);
 				Point start = _listViewWords.GetItemRectangle(_listViewWords.SelectedIndex).Location;

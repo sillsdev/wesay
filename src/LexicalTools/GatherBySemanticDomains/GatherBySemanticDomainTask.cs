@@ -487,7 +487,7 @@ namespace WeSay.LexicalTools
 		{
 			VerifyTaskActivated();
 
-			if (lexicalForm == null)
+			if (string.IsNullOrEmpty(lexicalForm))
 			{
 				throw new ArgumentNullException();
 			}
