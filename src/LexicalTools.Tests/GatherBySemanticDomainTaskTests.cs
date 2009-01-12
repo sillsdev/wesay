@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Foundation;
@@ -18,6 +19,7 @@ namespace WeSay.LexicalTools.Tests
 		private string _semanticDomainFilePath;
 		private string _filePath;
 		private ViewTemplate _viewTemplate;
+		private static string _vernacularWritingSystemId = "br";
 
 		[TestFixtureSetUp]
 		public void FixtureSetup()
@@ -61,13 +63,18 @@ namespace WeSay.LexicalTools.Tests
 			ViewTemplate v = new ViewTemplate();
 			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(),
 											   "LexEntry",
-											   new string[] {"br"});
+											   new string[] {_vernacularWritingSystemId});
 			lexicalFormField.DataTypeName = "MultiText";
 
 			v.Add(lexicalFormField);
 			v.Add(semanticDomainField);
 
 			v.Add(new Field(LexSense.WellKnownProperties.Definition,"LexSense", new string[]{"en"}));
+
+			if(!v.WritingSystems.ContainsKey("en"))
+			{
+				v.WritingSystems.Add("en", new WritingSystem("en", new Font("arial", 12)));
+			}
 			return v;
 		}
 
@@ -97,7 +104,7 @@ namespace WeSay.LexicalTools.Tests
 		private LexEntry AddEntryToRecordList(string lexicalForm, string gloss, string optionalDomainToAdd)
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			e.LexicalForm.SetAlternative("br", lexicalForm);
+			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, lexicalForm);
 			AddSenseToEntry(e, gloss, optionalDomainToAdd);
 			_lexEntryRepository.SaveItem(e);
 			return e;
@@ -221,7 +228,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void WordWritingSystem()
 		{
-			Assert.AreEqual("br", Task.WordWritingSystemId);
+			Assert.AreEqual(_vernacularWritingSystemId, Task.WordWritingSystemId);
 		}
 
 		[Test]
@@ -359,7 +366,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.CurrentDomainIndex = 1;
 			LexEntry e = _lexEntryRepository.CreateItem();
-			e.LexicalForm.SetAlternative("br", "peixe");
+			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
 			LexSense s = AddNewSenseToEntry(e);
 			s.Definition.SetAlternative("en", "fish");
 			OptionRefCollection o =
@@ -429,7 +436,7 @@ namespace WeSay.LexicalTools.Tests
 		public void AddWord_NewWord_AddedToDatabase()
 		{
 			int originalCount = _lexEntryRepository.CountAllItems();
-			Task.AddWord("vernacular");
+			Task.AddWord("vernacular", String.Empty);
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
 
@@ -456,7 +463,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			int originalCount = Task.GetRemainingCount();
 			Task.CurrentDomainIndex = 3;
-			Task.AddWord("vernacular");
+			Task.AddWord("vernacular", String.Empty);
 			Assert.AreEqual(originalCount - 1, Task.GetRemainingCount());
 		}
 
@@ -474,7 +481,7 @@ namespace WeSay.LexicalTools.Tests
 		public void AddWord_NewWord_AddedToCurrentWords()
 		{
 			int originalCount = _lexEntryRepository.CountAllItems();
-			Task.AddWord("vernacular");
+			Task.AddWord("vernacular", String.Empty);
 			Assert.Contains("vernacular", Task.CurrentWords);
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
@@ -502,7 +509,7 @@ namespace WeSay.LexicalTools.Tests
 		public void RemoveWord_HasOnlyLexemeForm_DeletesWord()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			e.LexicalForm.SetAlternative("br", "peixe");
+			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
 			LexSense s = new LexSense();
 			e.Senses.Add(s);
 			OptionRefCollection o =
@@ -547,7 +554,7 @@ namespace WeSay.LexicalTools.Tests
 		public void RemoveWord_HasAnotherSense_DisassociatesWordFromDomain()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			e.LexicalForm.SetAlternative("br", "peixe");
+			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
 			LexSense s = AddNewSenseToEntry(e);
 			s.Definition.SetAlternative("en", "fish");
 			s = new LexSense();
@@ -569,7 +576,7 @@ namespace WeSay.LexicalTools.Tests
 		public void RemoveWord_HasAnotherSense_RemovesEmptySense()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			e.LexicalForm.SetAlternative("br", "peixe");
+			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
 			LexSense s = AddNewSenseToEntry(e);
 			s.Definition.SetAlternative("en", "fish");
 			s = AddNewSenseToEntry(e);
@@ -592,7 +599,7 @@ namespace WeSay.LexicalTools.Tests
 		public void RemoveWord_HasTwoLexicalForms_DisassociatesWordFromDomain()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			e.LexicalForm.SetAlternative("br", "peixe");
+			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
 			e.LexicalForm.SetAlternative("v", "peshi");
 			LexSense s = AddNewSenseToEntry(e);
 
@@ -613,7 +620,7 @@ namespace WeSay.LexicalTools.Tests
 		public void RemoveWord_HasCustomFieldInEntry_DisassociatesWordFromDomain()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			e.LexicalForm.SetAlternative("br", "peixe");
+			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
 			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
 			mt["en"] = "hello";
 
@@ -636,7 +643,7 @@ namespace WeSay.LexicalTools.Tests
 		public void RemoveWord_HasCustomFieldInSense_DisassociatesWordFromDomain()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			e.LexicalForm.SetAlternative("br", "peixe");
+			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
 			LexSense s = AddNewSenseToEntry(e);
 
 			OptionRefCollection o =
@@ -660,7 +667,7 @@ namespace WeSay.LexicalTools.Tests
 		public void RemoveWord_DoesNotHaveSemanticDomainFieldInSense_DoNothing()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			e.LexicalForm.SetAlternative("br", "peixe");
+			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
 			AddNewSenseToEntry(e);
 
 			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
@@ -679,7 +686,7 @@ namespace WeSay.LexicalTools.Tests
 		public void RemoveWord_HasCustomFieldInExample_DisassociatesWordFromDomain()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			e.LexicalForm.SetAlternative("br", "peixe");
+			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
 			LexSense s = AddNewSenseToEntry(e);
 
 			OptionRefCollection o =
@@ -864,6 +871,18 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(2, entries[0].Senses.Count, "Should create new senses");
 		}
 
+
+		[Test]
+		public void AddWordEmptyDef_ExistingWordDefAlreadyExists_SemDomAdded()
+		{
+			var entries1 = Task.AddWord("one", "1");
+			Task.CurrentDomainIndex++;
+			var entries2 = Task.AddWord("one", string.Empty);
+			Assert.AreEqual(entries1[0], entries2[0], "Should not create new word");
+			Assert.AreEqual(1, entries1[0].Senses.Count, "Should not create new senses");
+			AssertNumberOfDomainsInSense(2, entries1[0].Senses[0]);
+		}
+
 		[Test]
 		public void AddWordWithDef_ExistingWordDefAlreadyExists_SemDomAdded()
 		{
@@ -875,7 +894,7 @@ namespace WeSay.LexicalTools.Tests
 			AssertNumberOfDomainsInSense(2, entries1[0].Senses[0]);
 		}
 
-		[Test, Ignore("not yet")]
+		[Test]
 		public void AddWordWithDef_MatchesTwoWordsNeitherHasMatchingDef_SenseAddedToFirstOnly()
 		{
 			var e1  = AddEntryToRecordList("one", "1", null);
@@ -905,6 +924,43 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(2, entries1[0].Senses.Count, "Should  create new sense");
 			AssertNumberOfDomainsInSense(1, entries1[0].Senses[1]);
 			AssertNumberOfDomainsInSense(1, entries1[0].Senses[0]);
+		}
+
+
+		/// <summary>
+		/// these fixing scenarios are REALLY HARD.  Hard to read people's minds.
+		/// </summary>
+		[Test, Ignore("We don't know how to pull this off yet")]
+		public void FixWordSpelling_HadDefInThisSession_SpellingFixed()
+		{
+			var originalWordCount =_lexEntryRepository.CountAllItems();
+			var entries1 = Task.AddWord("onee", "1");
+			Task.DetachFromMatchingEntries("one");//this is what the control currently does when you click on a word in the list so you can edit it
+			var entries2 = Task.AddWord("one", "1");
+
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems()-originalWordCount, "Should only create one new word");
+			Assert.AreEqual(1, entries2[0].Senses.Count, "Should have just one sense");
+			AssertNumberOfDomainsInSense(1, entries1[0].Senses[0]);
+			Assert.AreEqual("1", entries2[0].LexicalForm[_vernacularWritingSystemId], "Should have just one sense");
+			Assert.AreEqual("1", entries2[0].Senses[0].Definition["en"], "Should have just one sense");
+		}
+
+		/// <summary>
+		/// these fixing scenarios are REALLY HARD.  Hard to read people's minds.
+		/// </summary>
+		[Test, Ignore("We don't know how to pull this off yet")]
+		public void FixDefinition_HadDefInThisSession_SpellingFixed()
+		{
+			var originalWordCount = _lexEntryRepository.CountAllItems();
+			var entries1 = Task.AddWord("one", "01");
+			Task.DetachFromMatchingEntries("one");//this is what the control currently does when you click on a word in the list so you can edit it
+			var entries2 = Task.AddWord("one", "1");
+
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems() - originalWordCount, "Should only create one new word");
+			Assert.AreEqual(1, entries2[0].Senses.Count, "Should have just one sense");
+			AssertNumberOfDomainsInSense(1, entries1[0].Senses[0]);
+			Assert.AreEqual("1", entries2[0].LexicalForm[_vernacularWritingSystemId], "Should have just one sense");
+			Assert.AreEqual("1", entries2[0].Senses[0].Definition["en"], "Should have just one sense");
 		}
 
 		[Test]

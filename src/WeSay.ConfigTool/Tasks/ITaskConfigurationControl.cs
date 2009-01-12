@@ -13,6 +13,10 @@ namespace WeSay.ConfigTool.Tasks
 			{
 				return new MissingInfoTaskConfigControl(config);
 			}
+			if (config.TaskName == "GatherWordsBySemanticDomains")
+			{
+				return new GatherBySemDomTaskConfigControl(config);
+			}
 			return new DefaultTaskConfigurationControl(config);
 		}
 	}

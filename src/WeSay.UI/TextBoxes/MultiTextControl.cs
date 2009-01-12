@@ -33,12 +33,24 @@ namespace WeSay.UI.TextBoxes
 			if (DesignMode)
 			{
 				AutoSize = false;
-				Size = new Size(100, 20);
+				// NONE OF THE FOLLOWING ACTUALLY WORKS... WISH IT DID
+				Size = new Size(this.Width, 20);
+				CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;//help it be seen
+				BackColor = Color.Maroon;
 			}
 		}
 
 		public MultiTextControl(WritingSystemCollection allWritingSystems, IServiceProvider serviceProvider)
 		{
+			if (DesignMode)
+			{
+				AutoSize = false;
+				// NONE OF THE FOLLOWING ACTUALLY WORKS... WISH IT DID
+				Size = new Size(this.Width, 20);
+				CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;//help it be seen
+				BackColor = Color.Maroon;
+			}
+
 			SuspendLayout();
 			_allWritingSystems = allWritingSystems;
 			_serviceProvider = serviceProvider;
@@ -112,7 +124,12 @@ namespace WeSay.UI.TextBoxes
 
 		protected override void OnResize(EventArgs eventargs)
 		{
+
 			base.OnResize(eventargs);
+			if (DesignMode)
+			{
+				return;
+			}
 			SizeBoxes();
 		}
 

@@ -239,6 +239,9 @@
 	  <SubType>Designer</SubType>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
+	<EmbeddedResource Include="Tasks\GatherBySemDomTaskConfigControl.resx">
+	  <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="Tasks\DefaultTaskConfigurationControl.resx">
 	  <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
 	</EmbeddedResource>
@@ -289,6 +292,12 @@
 	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
 	</Compile>
 	<Compile Include="Properties\Settings.cs" />
+	<Compile Include="Tasks\GatherBySemDomTaskConfigControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Tasks\GatherBySemDomTaskConfigControl.Designer.cs">
+	  <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Tasks\DefaultTaskConfigurationControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

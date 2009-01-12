@@ -54,8 +54,19 @@ namespace WeSay.LexicalTools
 
 				_description.Visible = false;
 			}
+
+			//they have a border in the design view because otherwise they're hard to find
+			_vernacularBox.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.None;
+			_vernacularBox.BackColor = Color.White;
+			_meaningBox.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.None;
+			_meaningBox.BackColor = Color.White;
+
 			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
 															{_presentationModel.WordWritingSystem};
+			_meaningBox.WritingSystemsForThisField = new WritingSystem[] { _presentationModel.DefinitionWritingSystem};
+			_meaningBox.Visible = _presentationModel.ShowDefinitionField;
+			_meaningLabel.Visible = _meaningBox.Visible;
+
 			_listViewWords.WritingSystem = _presentationModel.WordWritingSystem;
 			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.WordWritingSystem.Font.GetHeight());
 
@@ -185,7 +196,7 @@ namespace WeSay.LexicalTools
 			switch (e.KeyChar)
 			{
 				case '\r':
-					_listViewWords_Click(this, null);
+					OnListViewWords_Click(this, null);
 					break;
 				default:
 					e.Handled = false;
@@ -193,7 +204,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void _listViewWords_Click(object sender, EventArgs e)
+		private void OnListViewWords_Click(object sender, EventArgs e)
 		{
 			if (_listViewWords.SelectedItem != null)
 			{
@@ -203,7 +214,7 @@ namespace WeSay.LexicalTools
 				string wordCurrentlyInTheEditBox = WordToAdd;
 				if (!String.IsNullOrEmpty(wordCurrentlyInTheEditBox))
 				{
-					_presentationModel.AddWord(wordCurrentlyInTheEditBox);
+					_presentationModel.AddWord(wordCurrentlyInTheEditBox, MeaningToAdd);
 					//don't throw away what they were typing
 				}
 
@@ -218,6 +229,7 @@ namespace WeSay.LexicalTools
 				_animationIsMovingFromList = false;
 
 				_movingLabel.Go(word, start, destination);
+
 			}
 			_vernacularBox.FocusOnFirstWsAlternative();
 		}
@@ -230,8 +242,9 @@ namespace WeSay.LexicalTools
 				_vernacularBox.FocusOnFirstWsAlternative();
 				return;
 			}
-			_presentationModel.AddWord(word);
+			_presentationModel.AddWord(word, MeaningToAdd);
 			_vernacularBox.ClearAllText();
+			_meaningBox.ClearAllText();
 
 			_listViewWords.ItemToNotDrawYet = word;
 			RefreshCurrentWords();
@@ -253,6 +266,11 @@ namespace WeSay.LexicalTools
 		private string WordToAdd
 		{
 			get { return _vernacularBox.TextBoxes[0].Text.Trim(); }
+		}
+
+		private string MeaningToAdd
+		{
+			get { return _meaningBox.TextBoxes[0].Text.Trim(); }
 		}
 
 		private void _animator_Finished(object sender, EventArgs e)
@@ -329,6 +347,11 @@ namespace WeSay.LexicalTools
 		public void Cleanup()
 		{
 			_btnAddWord_Click(this, null);
+		}
+
+		private void GatherBySemanticDomainsControl_Load(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

@@ -35,9 +35,10 @@ namespace WeSay.LexicalTools
 		private int _currentQuestionIndex;
 		private bool _alreadyReportedWSLookupFailure;
 		private TaskMemory _taskMemory;
-		private string _definitionWritingSystem;
+		private GatherBySemanticDomainConfig _config;
+		public WritingSystem DefinitionWritingSystem { get; set; }
 
-		public GatherBySemanticDomainTask(IGatherBySemanticDomainsConfig config,
+		public GatherBySemanticDomainTask(GatherBySemanticDomainConfig config,
 										  LexEntryRepository lexEntryRepository,
 										  ViewTemplate viewTemplate,
 										TaskMemoryRepository taskMemoryRepository)
@@ -46,6 +47,7 @@ namespace WeSay.LexicalTools
 				lexEntryRepository,
 				viewTemplate)
 		{
+			_config = config;
 			if (config == null)
 			{
 				throw new ArgumentNullException("config");
@@ -94,8 +96,11 @@ namespace WeSay.LexicalTools
 			}
 
 			_semanticDomainField = viewTemplate.GetField("SemanticDomainDdp4");
-			_definitionWritingSystem =
-				viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
+			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
+			WritingSystem definitionWS;
+			viewTemplate.WritingSystems.TryGetValue(definitionWsId, out definitionWS);
+			Guard.AgainstNull(definitionWS, "Defintion Writing System");
+			DefinitionWritingSystem = definitionWS;
 
 			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
 		}
@@ -530,7 +535,7 @@ namespace WeSay.LexicalTools
 
 		private bool HasMatchingGloss(LexEntry entry, string gloss)
 		{
-			return null != entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(gloss, _definitionWritingSystem));
+			return null != entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id));
 		}
 
 		public void DetachFromMatchingEntries(string lexicalForm)
@@ -585,13 +590,22 @@ namespace WeSay.LexicalTools
 
 		private void AddCurrentSemanticDomainToEntry(LexEntry entry, string gloss)
 		{
-			//is there a sense with a matching gloss?
-			var sense  = entry.Senses.FirstOrDefault(
-				s => s.Definition.ContainsEqualForm(gloss, _definitionWritingSystem));
+			LexSense sense = null;
+			//is the gloss empty? THen just ggrab the first sense
+			if (string.IsNullOrEmpty(gloss))
+			{
+				sense = entry.Senses.FirstOrDefault();
+			}
+			else
+			{
+				//is there a sense with a matching gloss?
+				sense = entry.Senses.FirstOrDefault(
+					s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id));
+			}
 			if(sense==null)
 			{
 				sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
-				sense.Definition.SetAlternative(_definitionWritingSystem, gloss);
+				sense.Definition.SetAlternative(DefinitionWritingSystem.Id, gloss);
 			}
 			OptionRefCollection semanticDomains =
 				sense.GetOrCreateProperty<OptionRefCollection>(_semanticDomainField.FieldName);
@@ -710,6 +724,11 @@ namespace WeSay.LexicalTools
 				return true;
 				// this would stop us at the end, but we now loop around: HasNextDomainQuestion
 			}
+		}
+
+		public bool ShowDefinitionField
+		{
+			get { return _config.ShowMeaningField; }
 		}
 
 		public override void Activate()
@@ -892,5 +911,7 @@ namespace WeSay.LexicalTools
 								out pastEndIndex);
 			return (pastEndIndex == beginIndex);
 		}
+
+
 	}
 }
