@@ -489,7 +489,7 @@ namespace WeSay.LexicalTools
 
 			if (string.IsNullOrEmpty(lexicalForm))
 			{
-				throw new ArgumentNullException();
+				return null;
 			}
 			var modifiedEntries = new List<LexEntry>();
 			if (lexicalForm != string.Empty)
