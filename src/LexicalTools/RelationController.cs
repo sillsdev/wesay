@@ -180,7 +180,7 @@ namespace WeSay.LexicalTools
 
 		private RecordToken<LexEntry> GetRecordTokenFromTargetId(string s)
 		{
-			if (s == null)
+			if (string.IsNullOrEmpty(s))
 			{
 				return null;
 			}

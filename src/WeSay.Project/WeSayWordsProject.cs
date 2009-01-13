@@ -387,6 +387,10 @@ namespace WeSay.Project
 				builder.Register(viewTemplate).SingletonScoped();
 			}
 
+
+			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
+
 		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
 
 		  //  builder.Register(DefaultViewTemplate);
@@ -1198,7 +1202,7 @@ namespace WeSay.Project
 												field.OptionsListFile);
 			if (File.Exists(pathInProject))
 			{
-				LoadOptionsList(pathInProject);
+				LoadOptionsList(field.FieldName, pathInProject);
 			}
 			else
 			{
@@ -1221,16 +1225,27 @@ namespace WeSay.Project
 								pathInProgramDir);
 					}
 				}
-				LoadOptionsList(pathInProgramDir);
+				LoadOptionsList(field.FieldName, pathInProgramDir);
 			}
 
 			return _optionLists[field.OptionsListFile];
 		}
 
-		private void LoadOptionsList(string pathToOptionsList)
+		private void LoadOptionsList(string fieldName,string pathToOptionsList)
 		{
 			string name = Path.GetFileName(pathToOptionsList);
-			OptionsList list = OptionsList.LoadFromFile(pathToOptionsList);
+			IOptionListReader reader;
+			object r;
+			//first, try for a reader named after the field
+			if(_container.TryResolve(fieldName, out r))
+			{
+				reader = r as IOptionListReader;
+			}
+			else
+			{
+				reader = _container.Resolve<IOptionListReader>();
+			}
+			OptionsList list = reader.LoadFromFile(pathToOptionsList);
 			_optionLists.Add(name, list);
 		}
 

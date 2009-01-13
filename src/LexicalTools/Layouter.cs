@@ -472,7 +472,7 @@ namespace WeSay.LexicalTools
 
 			if (field.FieldName== LexSense.WellKnownProperties.SemanticDomainsDdp4)
 			{
-				displayAdaptor = new SemDomOptionDisplayAdaptor(availableOptions, field.WritingSystemIds[0]);
+				displayAdaptor = new DdpOptionDisplayAdaptor(availableOptions, field.WritingSystemIds[0]);
 			}
 			else
 			{

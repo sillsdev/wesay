@@ -45,23 +45,7 @@ namespace WeSay.Foundation.Options
             set { _options = value; }
         }
 
-        public static OptionsList LoadFromFile(string path)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof (OptionsList));
-            using (XmlReader reader = XmlReader.Create(path))
-            {
-                OptionsList list = (OptionsList) serializer.Deserialize(reader);
-                reader.Close();
 
-#if DEBUG
-                foreach (Option option in list.Options)
-                {
-                    Debug.Assert(option.Name.Forms != null);
-                }
-#endif
-                return list;
-            }
-        }
 
         public void SaveToFile(string path)
         {

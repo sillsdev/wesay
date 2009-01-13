@@ -6,41 +6,6 @@ using System.Linq;
 
 namespace WeSay.Foundation.Options
 {
-	public class SemDomOptionDisplayAdaptor : OptionDisplayAdaptor
-	{
-		public SemDomOptionDisplayAdaptor(OptionsList allOptions, string preferredWritingSystemId)
-			: base(allOptions, preferredWritingSystemId)
-		{
-		}
-		 public override string  GetDisplayLabel(object item)
-		{
-			Option option = item as Option; // _allOptions.GetOptionFromKey((string)item);
-			 //prefix with the domain number
-			 return option.Abbreviation+" "+base.GetDisplayLabel(item);
-		}
-
-
-		/* This doesn't work.
-		 * We would like to just type in "1.1" and have it select that domain.
-		 * However, until the auto text box differentiates between what we have typed
-		 * and what we might like to complete it as, this doesn't work.
-		 *
-		 * You type "1" and it enters "1 Universe"... if you were about to type "1.1",
-		 * you're out of luck!
-		 *
-		 * public override Option GetValueFromForm(string form)
-		 {
-			 Option x = base.GetValueFromForm(form);
-			 if(x==null)
-			 {
-				 var y = _allOptions.Options.FirstOrDefault(o => o.Abbreviation.GetBestAlternative(_preferredWritingSystemId) == form);
-				 if (y!=null)
-					 return y;
-			 }
-			 return x;
-		 }*/
-	}
-
 	public class OptionDisplayAdaptor: IChoiceSystemAdaptor<Option, string, OptionRef>
 	{
 		protected readonly OptionsList _allOptions;
@@ -192,9 +157,7 @@ namespace WeSay.Foundation.Options
 			foreach (Option option in _allOptions.Options)
 			{
 				//todo: make this prefferd script(s) savvy
-				if (option.Abbreviation.GetFirstAlternative().StartsWith(text,
-																		 StringComparison.
-																				 CurrentCultureIgnoreCase))
+				if (option.Abbreviation.GetFirstAlternative().StartsWith(text,StringComparison.CurrentCultureIgnoreCase))
 				{
 					if (!show.Contains(option))
 					{
@@ -202,6 +165,19 @@ namespace WeSay.Foundation.Options
 					}
 				}
 			}
+
+			//this grabs up the DDP examples
+			foreach (Option option in _allOptions.Options)
+			{
+				if (option.GetSearchKeys(_preferredWritingSystemId).Contains(text.ToLower()))
+				{
+					if (!show.Contains(option))
+					{
+						show.Add(option);
+					}
+				}
+			}
+
 			//  if(show.Count == 0)
 			{
 				foreach (Option option in _allOptions.Options)

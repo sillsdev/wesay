@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Exortech.NetReflector;
 
@@ -18,6 +19,7 @@ namespace WeSay.Foundation.Options
 		{
 			_humanReadableKey = humanReadableKey;
 			_name = name;
+			//SearchKeys = new List<string>();
 		}
 
 		#region IChoice Members
@@ -103,6 +105,10 @@ namespace WeSay.Foundation.Options
 			set { _description = value; }
 		}
 
+		[XmlElement("searchKeys")]
+		public MultiText SearchKeys { get; set; }
+
+
 		private string GetDefaultKey()
 		{
 			string name = Name.GetFirstAlternative();
@@ -171,5 +177,10 @@ namespace WeSay.Foundation.Options
 		}
 
 		#endregion
+
+		public IList<string> GetSearchKeys(string writingSystemId)
+		{
+			return SearchKeys.GetExactAlternative(writingSystemId).SplitTrimmed(',');
+		}
 	}
 }

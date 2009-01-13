@@ -131,6 +131,9 @@
 	<Compile Include="LameProgressDialog.Designer.cs">
 	  <DependentUpon>LameProgressDialog.cs</DependentUpon>
 	</Compile>
+	<Compile Include="Options\DdpListReader.cs" />
+	<Compile Include="Options\DdpOptionDisplayAdaptor.cs" />
+	<Compile Include="Options\GenericOptionListReader.cs" />
 	<Compile Include="ProgressNotificationProvider.cs" />
 	<Compile Include="MultiText.cs" />
 	<Compile Include="Options\Option.cs" />

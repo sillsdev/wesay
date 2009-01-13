@@ -84,7 +84,7 @@ namespace WeSay.Foundation
 		/// required by IXmlSerializable.
 		/// This is wierd and sad, but this is tuned to the format we want in OptionLists.
 		///</summary>
-		public void ReadXml(XmlReader reader)
+		public virtual void ReadXml(XmlReader reader)
 		{
 			//enhance: this is a maximally inefficient way to read it, but ok if we're just using it for option lists
 			XmlDocument d = new XmlDocument();
