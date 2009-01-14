@@ -474,6 +474,17 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		public void MergeInTranslationForm_UnheardOfType_StillBecomesTranslation()
+		{
+			LexExampleSentence ex = new LexExampleSentence();
+			LiftMultiText translation = new LiftMultiText();
+			translation.Add("aa", "aaaa");
+			_builder.MergeInTranslationForm(ex, "madeUpType", translation, "bogus raw xml");
+			Assert.AreEqual("aaaa", ex.Translation["aa"]);
+			Assert.AreEqual("madeUpType",ex.TranslationType);
+		}
+
+		[Test]
 		public void MergeInTranslationForm_NoType_GetContents()
 		{
 			LexExampleSentence ex = new LexExampleSentence();

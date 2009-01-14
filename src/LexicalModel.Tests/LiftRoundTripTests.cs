@@ -241,7 +241,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void ExampleTranslations_UnmarkedThenFree()
+		public void ExampleTranslations_UnmarkedFollowedByFree()
 		{
 			LexEntry e = MakeSimpleEntry();
 			LexSense sense = new LexSense();
@@ -268,7 +268,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void ExampleTranslations_FreeThenUnmarked()
+		public void ExampleTranslations_FreeFollowedByUnmarked()
 		{
 			LexEntry e = MakeSimpleEntry();
 			LexSense sense = new LexSense();

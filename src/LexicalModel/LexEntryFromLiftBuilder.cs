@@ -196,9 +196,12 @@ namespace WeSay.LexicalModel
 			bool alreadyHaveAPrimaryTranslation = example.Translation != null &&
 												  !string.IsNullOrEmpty(
 														   example.Translation.GetFirstAlternative());
-			bool typeIsCompatibleWithWeSayPrimaryTranslation = string.IsNullOrEmpty(type) ||
+		/*    bool typeIsCompatibleWithWeSayPrimaryTranslation = string.IsNullOrEmpty(type) ||
 															   type.ToLower() == "free translation"; //this is the default style in FLEx
-			if (!alreadyHaveAPrimaryTranslation && typeIsCompatibleWithWeSayPrimaryTranslation)
+		 * */
+
+			//WeSay's model only allows for one translation just grab the first translation
+			if (!alreadyHaveAPrimaryTranslation /*&& typeIsCompatibleWithWeSayPrimaryTranslation*/)
 			{
 				MergeIn(example.Translation, forms);
 				example.TranslationType = type;
