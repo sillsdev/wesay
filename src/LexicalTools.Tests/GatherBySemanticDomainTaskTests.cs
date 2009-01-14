@@ -417,20 +417,6 @@ namespace WeSay.LexicalTools.Tests
 			Task.AddWord(null);
 		}
 
-		[Test]
-		public void AddWord_EmptyWord_NotAddedToDatabase()
-		{
-			int originalCount = _lexEntryRepository.CountAllItems();
-			Task.AddWord(string.Empty);
-			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
-		}
-
-		[Test]
-		public void AddWord_EmptyWord_NotInCurrentWords()
-		{
-			Task.AddWord(string.Empty);
-			Assert.IsEmpty(Task.CurrentWords);
-		}
 
 		[Test]
 		public void AddWord_NewWord_AddedToDatabase()
