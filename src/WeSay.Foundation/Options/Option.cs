@@ -180,7 +180,14 @@ namespace WeSay.Foundation.Options
 
 		public IList<string> GetSearchKeys(string writingSystemId)
 		{
-			return SearchKeys.GetExactAlternative(writingSystemId).SplitTrimmed(',');
+			var keys = SearchKeys;
+			if(keys==null)
+				return new List<string>();
+			var alt = SearchKeys.GetExactAlternative(writingSystemId);
+			if(alt==null)
+				return new List<string>();
+
+			return alt.SplitTrimmed(',');
 		}
 	}
 }
