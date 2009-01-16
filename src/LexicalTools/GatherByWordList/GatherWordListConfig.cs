@@ -21,7 +21,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 	public class GatherWordListConfig : TaskConfigurationBase, IGatherWordListConfig, ITaskConfiguration , ICareThatWritingSystemIdChanged
 	{
-		private readonly IDictionary<string, WordListDescription> _catalog;
+		private readonly WordListCatalog _catalog;
 
 		public GatherWordListConfig(string xml, WordListCatalog catalog)
 			:base(xml)
@@ -61,7 +61,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		private WordListDescription WordList
 		{
-			get { return _catalog[WordListFileName]; }
+			get { return _catalog.GetOrAddWordList(WordListFileName); }
 		}
 
 		public string Label
@@ -101,7 +101,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			get { return true; }
 		}
 
-		public static IGatherWordListConfig CreateForTests(string wordListFileName, string wordListWritingSystemId)
+		public static IGatherWordListConfig CreateForTests(string wordListFileName, string wordListWritingSystemId, WordListCatalog catalog)
 		{
 			string xml = String.Format(@"   <task taskName='AddMissingInfo' visible='true'>
 					  <wordListFileName>{0}</wordListFileName>
@@ -109,10 +109,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 					</task>
 				", wordListFileName, wordListWritingSystemId);
 
-			var catalog = new WordListCatalog();
-			catalog.Add(wordListFileName, new WordListDescription(wordListWritingSystemId, "test", "test long", "pretend description"));
 			return new GatherWordListConfig(xml, catalog);
-
 		}
 
 
