@@ -28,7 +28,7 @@ using WeSay.LexicalModel;
 
 namespace WeSay.Project
 {
-	public class WeSayWordsProject : BasilProject
+	public class WeSayWordsProject : BasilProject, IFileLocator
 	{
 		private IList<ITask> _tasks;
 		private ViewTemplate _defaultViewTemplate;
@@ -933,45 +933,33 @@ namespace WeSay.Project
 								Path.GetFileNameWithoutExtension(pathToLift) + ".words");
 		}
 
+
+		/// <summary>
+		/// at the momement, project is a file locator for old code, but we want to move
+		/// towards removing that responsibility, perhaps by adding a locator to the container
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <returns></returns>
+		public string LocateFile(string fileName)
+		{
+			return GetFileLocator().LocateFile(fileName);
+		}
+		public string LocateFile(string fileName, string descriptionForErrorMessage)
+		{
+			return GetFileLocator().LocateFile(fileName, descriptionForErrorMessage);
+		}
 		/// <summary>
 		/// Find the file, starting with the project dirs and moving to the app dirs.
 		/// This allows a user to override an installed file by making thier own.
 		/// </summary>
 		/// <returns></returns>
-		public string LocateFile(string fileName)
+		private FileLocator GetFileLocator()
 		{
-			string path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, fileName);
-			if (File.Exists(path))
-			{
-				return path;
-			}
-
-			//            path = Path.Combine(ProjectCommonDirectory, fileName);
-			//            if (File.Exists(path))
-			//            {
-			//                return path;
-			//            }
-
-			path = Path.Combine(ApplicationCommonDirectory, fileName);
-			if (File.Exists(path))
-			{
-				return path;
-			}
-
-			path = Path.Combine(DirectoryOfTheApplicationExecutable, fileName);
-			if (File.Exists(path))
-			{
-				return path;
-			}
-
-			path = Path.Combine(GetTopAppDirectory(), fileName);
-			if (File.Exists(path))
-			{
-				return path;
-			}
-
-			return null;
+			return new FileLocator(new string[] { PathToWeSaySpecificFilesDirectoryInProject,
+												  ApplicationCommonDirectory, DirectoryOfTheApplicationExecutable, GetTopAppDirectory()});
 		}
+
+
 
 		public string PathToWeSaySpecificFilesDirectoryInProject
 		{

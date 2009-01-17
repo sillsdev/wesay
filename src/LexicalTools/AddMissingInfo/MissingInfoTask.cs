@@ -25,7 +25,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 							   LexEntryRepository lexEntryRepository,
 							   ViewTemplate defaultViewTemplate,
 								TaskMemoryRepository taskMemoryRepository)
-			: base( config, lexEntryRepository)
+			: base( config, lexEntryRepository, taskMemoryRepository)
 		{
 			_config = config;
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);

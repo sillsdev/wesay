@@ -36,7 +36,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 								LexEntryRepository lexEntryRepository,
 								ViewTemplate viewTemplate,
 								TaskMemoryRepository taskMemoryRepository)
-			: base(config, lexEntryRepository)
+			: base(config, lexEntryRepository, taskMemoryRepository)
 		{
 			if (viewTemplate == null)
 			{

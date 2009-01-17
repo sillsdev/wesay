@@ -45,7 +45,7 @@ namespace WeSay.LexicalTools
 			: base(
 			   config,
 				lexEntryRepository,
-				viewTemplate)
+				viewTemplate, taskMemoryRepository)
 		{
 			_config = config;
 			if (config == null)

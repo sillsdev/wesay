@@ -76,6 +76,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="AddPicturesTasksTests.cs" />
 	<Compile Include="GatherBySemanticDomainTaskTests.cs" />
 	<Compile Include="MissingEntryRelationFieldFilterTests.cs" />
 	<Compile Include="MissingLexicalFormFilterTests.cs" />

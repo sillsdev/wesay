@@ -12,9 +12,10 @@ namespace WeSay.LexicalTools
 
 		protected WordGatheringTaskBase(ITaskConfiguration config,
 										LexEntryRepository lexEntryRepository,
-										ViewTemplate viewTemplate)
+										ViewTemplate viewTemplate,
+										TaskMemoryRepository taskMemoryRepository)
 				: base( config,
-						lexEntryRepository)
+						lexEntryRepository, taskMemoryRepository)
 		{
 			if (viewTemplate == null)
 			{

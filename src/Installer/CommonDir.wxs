@@ -40,6 +40,10 @@
 		  <File Id="Ddp4Questions_id.xml" Name="Ddp4Questions-id.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-id.xml" />
 		</Component>
 
+		<Component Id="ArtOfReadingIndexV3_en.txt" Guid="{34302393-949D-42e8-BEE8-8C52B03F571A}">
+		  <File Id="ArtOfReadingIndexV3_en.txt" Name="ArtOfReadingIndexV3_en.txt" KeyPath="yes" Source="..\..\common\ArtOfReadingIndexV3_en.txt" />
+		</Component>
+
 	  </Directory>
 	</DirectoryRef>
 
@@ -52,6 +56,7 @@
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="default.WeSayConfig" />
 	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
+	  <ComponentRef Id="ArtOfReadingIndexV3_en.txt"/>
 	</ComponentGroup>
 
 	<ComponentGroup Id="ddpStuff">

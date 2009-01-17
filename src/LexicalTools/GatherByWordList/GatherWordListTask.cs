@@ -25,9 +25,10 @@ namespace WeSay.LexicalTools
 
 		public GatherWordListTask(IGatherWordListConfig config,
 									LexEntryRepository lexEntryRepository,
-								  ViewTemplate viewTemplate)
+								  ViewTemplate viewTemplate,
+			 TaskMemoryRepository taskMemoryRepository)
 
-				: base(config, lexEntryRepository, viewTemplate)
+				: base(config, lexEntryRepository, viewTemplate, taskMemoryRepository)
 		{
 			if (config.WordListFileName == null)
 			{

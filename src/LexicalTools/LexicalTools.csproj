@@ -78,6 +78,14 @@
   <ItemGroup>
 	<Compile Include="AddMissingInfo\MissingInfoConfiguration.cs" />
 	<Compile Include="AddMissingInfo\MissingInfoViewMaker.cs" />
+	<Compile Include="AddPictures\AddPicturesConfig.cs" />
+	<Compile Include="AddPictures\AddPicturesControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="AddPictures\AddPicturesControl.Designer.cs">
+	  <DependentUpon>AddPicturesControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="AddPictures\AddPicturesTask.cs" />
 	<Compile Include="LayoutInfoProvider.cs" />
 	<Compile Include="TaskConfigurationBase.cs" />
 	<Compile Include="DictionaryBrowseAndEdit\ConfirmDelete.cs">

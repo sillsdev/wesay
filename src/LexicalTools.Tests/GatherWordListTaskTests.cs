@@ -51,7 +51,7 @@ namespace WeSay.LexicalTools.Tests
 			_catalog.Add(_wordListFilePath, new WordListDescription("en","label","longLabel", "description"));
 			_task = new GatherWordListTask( GatherWordListConfig.CreateForTests( _wordListFilePath,_glossingLanguageWSId, _catalog),
 											_lexEntryRepository,
-										   _viewTemplate);
+										   _viewTemplate, new TaskMemoryRepository());
 		}
 
 		[TearDown]
@@ -68,7 +68,7 @@ namespace WeSay.LexicalTools.Tests
 					GatherWordListConfig.CreateForTests(_wordListFilePath,
 							WritingSystem.IdForUnknownAnalysis, _catalog),
 					_lexEntryRepository,
-					new ViewTemplate());
+					new ViewTemplate(), new TaskMemoryRepository());
 
 			Assert.IsNotNull(g);
 		}
@@ -81,7 +81,7 @@ namespace WeSay.LexicalTools.Tests
 				   GatherWordListConfig.CreateForTests("NotThere.txt",
 						   WritingSystem.IdForUnknownAnalysis, new WordListCatalog()),
 				   _lexEntryRepository,
-				   new ViewTemplate());
+				   new ViewTemplate(), new TaskMemoryRepository());
 
 			 g.Activate(); //should give a box to user, an exception in this text environment
 		}
@@ -95,7 +95,7 @@ namespace WeSay.LexicalTools.Tests
 				GatherWordListConfig.CreateForTests(_wordListFilePath,
 					"z7z", new WordListCatalog()),
 				_lexEntryRepository,
-				_viewTemplate);
+				_viewTemplate, new TaskMemoryRepository());
 
 			g.Activate(); //should give a box to user, an exception in this text environment
 		}
