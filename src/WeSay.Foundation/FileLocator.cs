@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Palaso.Reporting;
+using Palaso.Extensions;
 using System.Linq;
 
 namespace WeSay.Foundation

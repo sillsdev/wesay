@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.ImageGallery;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -17,7 +18,7 @@ namespace WeSay.LexicalTools.AddPictures
 		private readonly AddPicturesConfig _config;
 		private readonly IFileLocator _fileLocator;
 		private Control _view;
-		private Dictionary<string, List<string>> _index;
+		private ArtOfReadingImageCollection _imageCollection;
 
 		public AddPicturesTask( AddPicturesConfig config,
 									LexEntryRepository lexEntryRepository,
@@ -27,65 +28,26 @@ namespace WeSay.LexicalTools.AddPictures
 		{
 			_config = config;
 			_fileLocator = fileLocator;
-			_index = new Dictionary<string, List<string>>();
 		}
 
 		public override void Activate()
 		{
-			LoadIndex();
 			base.Activate();
-		}
-
-
-
-
-		private void LoadIndex()
-		{
-			string path = _fileLocator.LocateFile(_config.IndexFileName, "picture index");
+			_imageCollection = new ArtOfReadingImageCollection();
+			var path = _fileLocator.LocateFile("artofreadingindexv3_en.txt");
 			if(string.IsNullOrEmpty(path) || !File.Exists(path))
 			{
-				throw new ConfigurationException("Could not load picture index file.");
+				throw new ConfigurationException("Could not locate image index.");
 			}
+			_imageCollection.LoadIndex(path);
 
-		   using(var f =File.OpenText(path))
-		   {
-			   while(!f.EndOfStream)
-			   {
-				   var line = f.ReadLine();
-				   var parts=line.Split(new char[] {'\t'});
-				   Debug.Assert(parts.Length == 2);
-				   if (parts.Length != 2)
-					   continue;
-				   var fileName = parts[0];
-				   var keyString = parts[1].Trim(new char[] {' ', '"'});//some have quotes, some don't
-				   var keys = keyString.SplitTrimmed(',');
-				   foreach (var key in keys)
-				   {
-					  _index.GetOrCreate(key).Add(fileName);
-				   }
-			   }
-		   }
+			//TODO
+			_imageCollection.RootImagePath = @"c:\art of reading\images";
+
 		}
 
-		public IList<string> GetMatchingPictures(string keywords)
-		{
-			return GetMatchingPictures(keywords.SplitTrimmed(' '));
-		}
 
-		private IList<string> GetMatchingPictures(IEnumerable<string> keywords)
-		{
-			List<string> pictures = new List<string>();
-			foreach (var key in keywords)
-			{
-				List<string> picturesForThisKey = new List<string>();
 
-				if(_index.TryGetValue(key, out picturesForThisKey))
-				{
-					pictures.AddRange(picturesForThisKey);
-				}
-			}
-			return  new List<string>(pictures.Distinct());
-		}
 
 		public override Control Control
 		{
@@ -96,6 +58,14 @@ namespace WeSay.LexicalTools.AddPictures
 					_view = new AddPicturesControl(this);
 				}
 				return _view;
+			}
+		}
+
+		public IImageCollection ImageCollection
+		{
+			get
+			{
+				return _imageCollection;
 			}
 		}
 

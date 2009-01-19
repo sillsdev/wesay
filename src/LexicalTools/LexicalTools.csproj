@@ -177,6 +177,9 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="AddPictures\AddPicturesControl.resx">
+	  <DependentUpon>AddPicturesControl.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="DictionaryBrowseAndEdit\ConfirmDelete.resx">
 	  <DependentUpon>ConfirmDelete.cs</DependentUpon>
 	</EmbeddedResource>

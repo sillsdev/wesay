@@ -145,7 +145,6 @@
 	<Compile Include="PictureRef.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="ServiceProvider.cs" />
-	<Compile Include="ExtensionMethods.cs" />
 	<Compile Include="TaskMemoryRepository.cs" />
 	<Compile Include="TempFileForSafeWriting.cs" />
 	<Compile Include="WeSayDataObject.cs" />

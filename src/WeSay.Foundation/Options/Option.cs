@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Exortech.NetReflector;
+using Palaso.Extensions;
 
 namespace WeSay.Foundation.Options
 {
