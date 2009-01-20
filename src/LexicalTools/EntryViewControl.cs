@@ -296,6 +296,7 @@ namespace WeSay.LexicalTools
 					LexEntryLayouter layout = new LexEntryLayouter(detailList,
 																   ViewTemplate,
 																   _lexEntryRepository,
+																   WeSayWordsProject.Project.ServiceLocator,//clean-up have to send this down the chain
 																   _record);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);

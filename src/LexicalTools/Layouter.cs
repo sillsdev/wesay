@@ -326,7 +326,7 @@ namespace WeSay.LexicalTools
 			switch (customField.DataTypeName)
 			{
 				case "Picture":
-					box = MakePictureWidget(target, customField);
+					box = MakePictureWidget(target, customField, _detailList);
 					break;
 				case "Flag":
 					box = MakeCheckBoxWidget(target, customField);
@@ -503,19 +503,10 @@ namespace WeSay.LexicalTools
 			return control;
 		}
 
-		private Control MakePictureWidget(WeSayDataObject target, Field field)
+		protected virtual Control MakePictureWidget(WeSayDataObject target, Field field, DetailList detailList)
 		{
-			PictureRef pictureRef = target.GetOrCreateProperty<PictureRef>(field.FieldName);
-
-			PictureControl control = new PictureControl(field.FieldName,
-														WeSayWordsProject.Project.PathToPictures);
-			if (!String.IsNullOrEmpty(pictureRef.Value))
-			{
-				control.Value = pictureRef.Value;
-			}
-			SimpleBinding<string> binding = new SimpleBinding<string>(pictureRef, control);
-			binding.CurrentItemChanged += _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
-			return control;
+			return null;//only LexSenseLayouter actually has this
 		}
 	}
+
 }

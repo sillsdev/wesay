@@ -133,6 +133,10 @@
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
+	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
+	  <Name>WeSay.UI</Name>
+	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="MigrateConfig0To1.xsl">

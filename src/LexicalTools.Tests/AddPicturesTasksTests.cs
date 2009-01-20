@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using Palaso.IO;
 using WeSay.Foundation;
 using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;

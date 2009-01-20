@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using Palaso.IO;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.ImageGallery;
 using WeSay.Foundation;

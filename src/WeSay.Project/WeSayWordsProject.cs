@@ -18,6 +18,8 @@ using Autofac.Builder;
 using Autofac.Component;
 using LiftIO;
 using LiftIO.Validation;
+using Microsoft.Practices.ServiceLocation;
+using Palaso.IO;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
@@ -25,6 +27,7 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
+using WeSay.UI;
 
 namespace WeSay.Project
 {
@@ -391,6 +394,9 @@ namespace WeSay.Project
 			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
 
+
+			builder.Register<PictureControl>(c=> new PictureControl(PathToPictures, GetFileLocator())).FactoryScoped();
+
 		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
 
 		  //  builder.Register(DefaultViewTemplate);
@@ -703,8 +709,12 @@ namespace WeSay.Project
 								   GetFilesBelongingToProject(ProjectDirectoryPath),
 								   AddinSet.Singleton.LocateFile,
 								   WritingSystems,
-								   new WeSay.Foundation.ServiceLocatorAdapter(_container),
+								   ServiceLocator,
 								   this);
+		}
+		public IServiceLocator ServiceLocator
+		{
+			get { return new WeSay.Foundation.ServiceLocatorAdapter(_container); }
 		}
 
 		private XPathDocument GetConfigurationDoc()

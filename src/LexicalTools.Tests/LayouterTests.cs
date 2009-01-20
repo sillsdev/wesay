@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
@@ -19,12 +20,15 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 		}
-
+		private IServiceLocator Context
+		{
+			get { return null;}
+		}
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullBuilder_Throws()
 		{
-			new LexEntryLayouter(null, new ViewTemplate(), null, new LexEntry());
+			new LexEntryLayouter(null, new ViewTemplate(), null, Context, new LexEntry());
 		}
 
 		[Test]
@@ -33,7 +37,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (DetailList detailList = new DetailList())
 			{
-				new LexEntryLayouter(detailList, null, null, new LexEntry());
+				new LexEntryLayouter(detailList, null, null, Context, new LexEntry());
 			}
 		}
 
@@ -95,7 +99,7 @@ namespace WeSay.LexicalTools.Tests
 
 			using (DetailList dl = new DetailList())
 			{
-				LexEntryLayouter layout = new LexEntryLayouter(dl, new ViewTemplate(), null, entry);
+				LexEntryLayouter layout = new LexEntryLayouter(dl, new ViewTemplate(), null, Context, entry);
 				_rowCount = layout.AddWidgets();
 				Assert.AreEqual(0, _rowCount);
 			}
@@ -121,7 +125,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = GetNewEntry();
 
 			DetailList dl = new DetailList();
-			LexEntryLayouter layout = new LexEntryLayouter(dl, template, null, entry);
+			LexEntryLayouter layout = new LexEntryLayouter(dl, template, null, Context, entry);
 			layout.ShowNormallyHiddenFields = showNormallyHiddenFields;
 			_rowCount = layout.AddWidgets();
 			return dl;

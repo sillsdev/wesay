@@ -1,5 +1,7 @@
 using System;
 using System.Windows.Forms;
+using Autofac;
+using Microsoft.Practices.ServiceLocation;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
@@ -19,8 +21,9 @@ namespace WeSay.LexicalTools
 		public LexEntryLayouter(DetailList builder,
 								ViewTemplate viewTemplate,
 								LexEntryRepository lexEntryRepository,
+								IServiceLocator serviceLocator,
 								LexEntry entry)
-				: base(builder, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(viewTemplate, entry))
+			: base(builder, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, viewTemplate, entry))
 		{
 			Entry = entry;
 		}
@@ -73,17 +76,32 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		private static IServiceProvider CreateLayoutInfoServiceProvider(ViewTemplate viewTemplate, LexEntry entry)
+		private static IServiceProvider CreateLayoutInfoServiceProvider(IServiceLocator serviceLocator, ViewTemplate viewTemplate, LexEntry entry)
 		{
+//            if (viewTemplate == null)
+//                return null;//some unrelated unit tests don't give us this parameter
+//            Field lexicalUnitField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+//            if(lexicalUnitField == null)
+//                return null;//some unrelated unit tests lack this field
+//
+//            var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
+//                        () => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
+//            return new LayoutInfoProvider(ap);
+
 			if (viewTemplate == null)
 				return null;//some unrelated unit tests don't give us this parameter
 			Field lexicalUnitField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if(lexicalUnitField == null)
+			if (lexicalUnitField == null)
 				return null;//some unrelated unit tests lack this field
 
 			var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
 						() => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
-			return new LayoutInfoProvider(ap);
+		   // return new LayoutInfoProvider(ap);
+			//              (b => b.Register(TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(_project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject )));
+
+		   return serviceLocator.CreateNewUsing(c=>c.Register(ap));
 		}
 	}
+
+
 }

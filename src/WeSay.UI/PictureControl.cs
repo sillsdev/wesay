@@ -2,31 +2,35 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Palaso.IO;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.ImageGallery;
 using WeSay.Foundation;
+using WeSay.LexicalTools.AddPictures;
 
 namespace WeSay.UI
 {
 	public partial class PictureControl: UserControl, IBindableControl<string>
 	{
-		private readonly string _nameForLogging;
 		public event EventHandler ValueChanged;
 		public event EventHandler GoingAway;
 
 		private string _fileName;
 		private readonly string _storageFolderPath;
+		private readonly IFileLocator _fileLocator;
 		private readonly Color _shyLinkColor = Color.LightGray;
 
-		public PictureControl(string nameForLogging, string storageFolderPath)
+		public PictureControl(string storageFolderPath, IFileLocator fileLocator)
 		{
 			InitializeComponent();
-			_nameForLogging = nameForLogging;
 			_storageFolderPath = storageFolderPath;
+			_fileLocator = fileLocator;
 			if (!Directory.Exists(storageFolderPath))
 			{
 				Directory.CreateDirectory(storageFolderPath);
 			}
 		}
+		public ISearchTermProvider SearchTermProvider { get; set; }
 
 		/// <summary>
 		/// The name of the file which must be in the StorageFolder
@@ -44,6 +48,7 @@ namespace WeSay.UI
 
 			if (string.IsNullOrEmpty(_fileName))
 			{
+				_searchGalleryLink.Visible = true;
 				_chooseImageLink.Visible = true;
 				_pictureBox.Visible = false;
 				_problemLabel.Visible = false;
@@ -56,12 +61,14 @@ namespace WeSay.UI
 				string s = String.Format("~Cannot find {0}", GetPathToImage());
 				toolTip1.SetToolTip(this, s);
 				toolTip1.SetToolTip(_problemLabel, s);
+				_searchGalleryLink.Visible = true;
 				_chooseImageLink.Visible = true;
 				Height = _problemLabel.Bottom + 5;
 			}
 			else
 			{
 				_pictureBox.Visible = true;
+				_searchGalleryLink.Visible = false;
 				_chooseImageLink.Visible = false;
 				//_chooseImageLink.Visible = false;
 				_problemLabel.Visible = false;
@@ -79,6 +86,7 @@ namespace WeSay.UI
 
 			_removeImageLink.Visible = _pictureBox.Visible;
 
+			_searchGalleryLink.LinkColor = _shyLinkColor;
 			_chooseImageLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
 		}
@@ -100,15 +108,7 @@ namespace WeSay.UI
 						Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 				if (dialog.ShowDialog() == DialogResult.OK)
 				{
-					_fileName = Path.GetFileName(dialog.FileName);
-					if (File.Exists(GetPathToImage()))
-					{
-						File.Delete(GetPathToImage());
-					}
-					File.Copy(dialog.FileName, GetPathToImage());
-					UpdateDisplay();
-
-					NotifyChanged();
+					PictureChosen(dialog.FileName);
 				}
 			}
 			catch (Exception error)
@@ -118,9 +118,22 @@ namespace WeSay.UI
 			}
 		}
 
+		private void PictureChosen(string path)
+		{
+			_fileName = Path.GetFileName(path);
+			if (File.Exists(GetPathToImage()))
+			{
+				File.Delete(GetPathToImage());
+			}
+			File.Copy(path, GetPathToImage());
+			UpdateDisplay();
+
+			NotifyChanged();
+		}
+
 		private void NotifyChanged()
 		{
-			Logger.WriteMinorEvent("Picture Control Changed ({0})", _nameForLogging);
+			Logger.WriteMinorEvent("Picture Control Changed");
 			if (ValueChanged != null)
 			{
 				ValueChanged.Invoke(this, null);
@@ -182,11 +195,13 @@ namespace WeSay.UI
 		private void _chooseImageLink_MouseEnter(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = Color.Blue;
+			_searchGalleryLink.LinkColor = GalleryIsAvailable ? Color.Blue : _shyLinkColor;
 		}
 
 		private void _chooseImageLink_MouseLeave(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = _shyLinkColor;
+			_searchGalleryLink.LinkColor = _shyLinkColor;
 		}
 
 		private void _removeImageLink_MouseLeave(object sender, EventArgs e)
@@ -197,13 +212,50 @@ namespace WeSay.UI
 		private void ImageDisplayWidget_MouseHover(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = Color.Blue;
+			_searchGalleryLink.LinkColor = GalleryIsAvailable ? Color.Blue : _shyLinkColor;
 			_removeImageLink.LinkColor = Color.Blue;
 		}
 
 		private void ImageDisplayWidget_MouseLeave(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = _shyLinkColor;
+			_searchGalleryLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
 		}
+		private static string TryToGetRootImagePath()
+		{
+			return @"c:\art of reading\images";//TODO: how to find cds?
+		}
+		private bool GalleryIsAvailable
+		{
+			get
+			{
+				return Directory.Exists(TryToGetRootImagePath());
+			}
+		}
+		private void OnSearchGalleryLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			if(!GalleryIsAvailable)
+			{
+				MessageBox.Show("Could not find the art of reading images");
+				return;
+			}
+			var images = new ArtOfReadingImageCollection();
+			images.LoadIndex(_fileLocator.LocateFile("artofreadingindexv3_en.txt"));
+			images.RootImagePath = TryToGetRootImagePath();
+			var searchString = SearchTermProvider == null ? string.Empty:SearchTermProvider.SearchString;
+			var chooser = new PictureChooser(images, searchString);
+
+			if(DialogResult.OK == chooser.ShowDialog())
+			{
+				PictureChosen(chooser.ChosenPath);
+			}
+
+		}
+	}
+
+	public interface ISearchTermProvider
+	{
+		string SearchString { get; }
 	}
 }

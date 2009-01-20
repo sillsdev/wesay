@@ -130,5 +130,35 @@ namespace WeSay.LexicalTools
 		{
 			DetailList.GetLabelControlFromRow(rowOfGhost).Text = GetLabelForMeaning(itemCount);
 		}
+
+		protected override Control MakePictureWidget(WeSayDataObject target, Field field, DetailList detailList)
+		{
+			PictureRef pictureRef = target.GetOrCreateProperty<PictureRef>(field.FieldName);
+
+			PictureControl control = _serviceProvider.GetService(typeof(PictureControl)) as PictureControl;
+			control.SearchTermProvider = new SenseSearchTermProvider(target as LexSense);
+			if (!String.IsNullOrEmpty(pictureRef.Value))
+			{
+				control.Value = pictureRef.Value;
+			}
+			SimpleBinding<string> binding = new SimpleBinding<string>(pictureRef, control);
+			binding.CurrentItemChanged += detailList.OnBinding_ChangeOfWhichItemIsInFocus;
+			return control;
+		}
+	}
+
+	public class SenseSearchTermProvider : ISearchTermProvider
+	{
+		private readonly LexSense _sense;
+
+		public SenseSearchTermProvider(LexSense sense)
+		{
+			_sense = sense;
+		}
+
+		public string SearchString
+		{
+			get { return _sense.Definition.GetFirstAlternative(); }//review
+		}
 	}
 }
