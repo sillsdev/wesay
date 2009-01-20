@@ -244,7 +244,12 @@ namespace WeSay.UI
 			images.LoadIndex(_fileLocator.LocateFile("artofreadingindexv3_en.txt"));
 			images.RootImagePath = TryToGetRootImagePath();
 			var searchString = SearchTermProvider == null ? string.Empty:SearchTermProvider.SearchString;
+			searchString = images.StripNonMatchingKeywords(searchString);
 			var chooser = new PictureChooser(images, searchString);
+			chooser.ShowInTaskbar = false;
+			chooser.ShowIcon = false;
+			chooser.MinimizeBox = false;
+			chooser.MaximizeBox = false;
 
 			if(DialogResult.OK == chooser.ShowDialog())
 			{
