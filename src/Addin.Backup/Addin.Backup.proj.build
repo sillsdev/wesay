@@ -36,6 +36,7 @@
 				<include name="System.Management.dll" />
 				<include name="System.Windows.Forms.dll" />
 				<include name="Palaso.dll" />
+				<include name="Palaso.Backup.dll" />
 				<include name="PalasoReporting.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="LexicalModel.dll" />

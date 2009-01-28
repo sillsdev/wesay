@@ -8,6 +8,7 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
+using Palaso.Backup;
 
 namespace Addin.Backup
 {
@@ -25,7 +26,7 @@ namespace Addin.Backup
 			_cancelButton.Font = StringCatalog.ModifyFontForLocalization(_cancelButton.Font);
 		}
 
-		private void DoBackup(DriveInfo info)
+		private void DoBackup(UsbDriveInfo info)
 		{
 			_checkForUsbKeyTimer.Enabled = false;
 			_noteLabel.Visible = false;
@@ -58,55 +59,9 @@ namespace Addin.Backup
 			_checkForUsbKeyTimer.Enabled = false;
 		}
 
-		public List<DriveInfo> GetLogicalUsbDisks()
+		public List<UsbDriveInfo> GetLogicalUsbDisks()
 		{
-			List<DriveInfo> driveInfos = new List<DriveInfo>();
-			using (
-					ManagementObjectSearcher driveSearcher =
-							new ManagementObjectSearcher(
-									"SELECT Caption, DeviceID FROM Win32_DiskDrive WHERE InterfaceType='USB'")
-					)
-			{
-				// walk all USB WMI physical disks
-				foreach (ManagementObject drive in driveSearcher.Get())
-				{
-					// browse all USB WMI physical disks
-
-					using (
-							ManagementObjectSearcher searcher =
-									new ManagementObjectSearcher(
-											"ASSOCIATORS OF {Win32_DiskDrive.DeviceID='" +
-											drive["DeviceID"] +
-											"'} WHERE AssocClass = Win32_DiskDriveToDiskPartition"))
-					{
-						// walk all USB WMI physical disks
-						foreach (ManagementObject partition in searcher.Get())
-						{
-							using (
-									ManagementObjectSearcher partitionSearcher =
-											new ManagementObjectSearcher(
-													"ASSOCIATORS OF {Win32_DiskPartition.DeviceID='" +
-													partition["DeviceID"] +
-													"'} WHERE AssocClass = Win32_LogicalDiskToPartition")
-									)
-							{
-								foreach (ManagementObject disk in partitionSearcher.Get())
-								{
-									foreach (DriveInfo driveInfo in DriveInfo.GetDrives())
-									{
-										string s = driveInfo.Name.Replace("\\", "");
-										if (s == disk["NAME"].ToString())
-										{
-											driveInfos.Add(driveInfo);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			return driveInfos;
+			return UsbDriveInfo.GetDrives();
 		}
 
 		private void Dialog_Load(object sender, EventArgs e)
@@ -124,7 +79,7 @@ namespace Addin.Backup
 		{
 			try
 			{
-				List<DriveInfo> list = GetLogicalUsbDisks();
+				List<UsbDriveInfo> list = GetLogicalUsbDisks();
 				if (list.Count > 0)
 				{
 					DoBackup(list[0]);
