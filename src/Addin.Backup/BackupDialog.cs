@@ -67,7 +67,6 @@ namespace Addin.Backup
 		private void Dialog_Load(object sender, EventArgs e)
 		{
 			_checkForUsbKeyTimer.Enabled = true;
-			//   LookForTargetVolume();
 		}
 
 		private void OnCheckForUsbKeyTimer_Tick(object sender, EventArgs e)
@@ -80,7 +79,7 @@ namespace Addin.Backup
 			try
 			{
 				List<UsbDriveInfo> list = GetLogicalUsbDisks();
-				if (list.Count > 0)
+				if ((list.Count > 0) && (list[0].IsReady))
 				{
 					DoBackup(list[0]);
 				}
