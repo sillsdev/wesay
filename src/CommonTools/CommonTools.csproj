@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{64726381-FEA8-47D5-A884-18AED42E93B6}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -69,12 +69,6 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="ActionsControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="ActionsControl.Designer.cs">
-	  <DependentUpon>ActionsControl.cs</DependentUpon>
-	</Compile>
 	<Compile Include="Dashboard Button.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -95,12 +89,6 @@
 	</Compile>
 	<Compile Include="DashboardButtonWithIcon.cs">
 	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="DashboardControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="DashboardControl.Designer.cs">
-	  <DependentUpon>DashboardControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="DictionaryStatusControl.cs">
 	  <SubType>UserControl</SubType>
@@ -163,10 +151,6 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ActionsControl.resx">
-	  <DependentUpon>ActionsControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
 	<EmbeddedResource Include="Dashboard Button.resx">
 	  <DependentUpon>Dashboard Button.cs</DependentUpon>
 	  <SubType>Designer</SubType>
@@ -182,10 +166,6 @@
 	<EmbeddedResource Include="DashboardButtonWithIcon.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DashboardButtonWithIcon.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="DashboardControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>DashboardControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="DictionaryStatusControl.resx">
 	  <SubType>Designer</SubType>
