@@ -78,10 +78,10 @@ namespace Addin.Backup
 		{
 			try
 			{
-				List<UsbDriveInfo> list = GetLogicalUsbDisks();
-				if ((list.Count > 0) && (list[0].IsReady))
+				List<UsbDriveInfo> usbDrives = GetLogicalUsbDisks();
+				if ((usbDrives.Count > 0) && (usbDrives[0].IsReady))
 				{
-					DoBackup(list[0]);
+					DoBackup(usbDrives[0]);
 				}
 				else
 				{
