@@ -416,7 +416,7 @@ namespace WeSay.Project
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Picture", "The label for the field showing a picture.");
 			pictureField.DisplayName = "Picture";
-			pictureField.Description = "An image corresponding to the sense.";
+			pictureField.Description = "An image corresponding to the sense.  This field will automatically search SIL's image library, 'The Art of Reading', if it is in the CD drive or copied to c:\\art of reading.";
 			pictureField.DataTypeName = "Picture";
 			pictureField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			pictureField.Enabled = true;

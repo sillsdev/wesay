@@ -48,7 +48,7 @@ namespace WeSay.UI
 
 			if (string.IsNullOrEmpty(_fileName))
 			{
-				_searchGalleryLink.Visible = true;
+				_searchGalleryLink.Visible = GalleryIsAvailable;
 				_chooseImageLink.Visible = true;
 				_pictureBox.Visible = false;
 				_problemLabel.Visible = false;
@@ -61,7 +61,7 @@ namespace WeSay.UI
 				string s = String.Format("~Cannot find {0}", GetPathToImage());
 				toolTip1.SetToolTip(this, s);
 				toolTip1.SetToolTip(_problemLabel, s);
-				_searchGalleryLink.Visible = true;
+				_searchGalleryLink.Visible = GalleryIsAvailable;
 				_chooseImageLink.Visible = true;
 				Height = _problemLabel.Bottom + 5;
 			}
@@ -74,7 +74,11 @@ namespace WeSay.UI
 				_problemLabel.Visible = false;
 				try
 				{
-					_pictureBox.Load(GetPathToImage());
+					//inset it a bit, with white border
+					_pictureBox.BackColor = Color.White;
+					_pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+					_pictureBox.Image = ImageUtilities.GetThumbNail(GetPathToImage(), _pictureBox.Width-4, _pictureBox.Height-4, Color.White);
+				   // _pictureBox.Load(GetPathToImage());
 					Height = _pictureBox.Bottom + 5;
 				}
 				catch (Exception error)
@@ -120,15 +124,23 @@ namespace WeSay.UI
 
 		private void PictureChosen(string path)
 		{
-			_fileName = Path.GetFileName(path);
-			if (File.Exists(GetPathToImage()))
+			try
 			{
-				File.Delete(GetPathToImage());
-			}
-			File.Copy(path, GetPathToImage());
-			UpdateDisplay();
+				_fileName = Path.GetFileName(path);
 
-			NotifyChanged();
+				if (File.Exists(GetPathToImage()))
+				{
+					File.Delete(GetPathToImage());
+				}
+				File.Copy(path, GetPathToImage());
+				UpdateDisplay();
+
+				NotifyChanged();
+			}
+			catch(Exception error)
+			{
+				ErrorReport.ReportNonFatalMessage("WeSay was not able to copy the picture file.\r\n{0}",error.Message);
+			}
 		}
 
 		private void NotifyChanged()
@@ -224,7 +236,17 @@ namespace WeSay.UI
 		}
 		private static string TryToGetRootImagePath()
 		{
-			return @"c:\art of reading\images";//TODO: how to find cds?
+			//look for the cd/dvd
+			var path = Palaso.UI.WindowsForms.ImageGallery.ArtOfReadingImageCollection.TryToGetCollectionPath();
+			if(!string.IsNullOrEmpty(path))
+				return path;
+
+			//look for it in a hard-coded location
+			string HardDiskPath = @"c:\art of reading\images";
+			if (Environment.OSVersion.Platform == PlatformID.Unix)
+				HardDiskPath = @"home\art of reading\images"; //TODO: what should this be?
+
+			return HardDiskPath;
 		}
 		private bool GalleryIsAvailable
 		{
@@ -237,7 +259,7 @@ namespace WeSay.UI
 		{
 			if(!GalleryIsAvailable)
 			{
-				MessageBox.Show("Could not find the art of reading images");
+				MessageBox.Show("Could not find the Art Of Reading image collection.");
 				return;
 			}
 			var images = new ArtOfReadingImageCollection();

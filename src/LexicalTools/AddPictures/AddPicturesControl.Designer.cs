@@ -1,4 +1,6 @@
-﻿namespace WeSay.LexicalTools.AddPictures
+﻿using Palaso.UI.WindowsForms.ImageGallery;
+
+namespace WeSay.LexicalTools.AddPictures
 {
 	partial class AddPicturesControl
 	{
@@ -29,7 +31,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this._thumbnailViewer = new WeSay.LexicalTools.AddPictures.ThumbnailViewer();
+			this._thumbnailViewer = new ThumbnailViewer();
 			this._searchWords = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this._searchButton = new System.Windows.Forms.Button();

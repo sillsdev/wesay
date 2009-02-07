@@ -30,7 +30,7 @@ namespace WeSay.LexicalTools.AddPictures
 			var collection = _presentationModel.ImageCollection;
 			if (!string.IsNullOrEmpty(_searchWords.Text))
 			{
-				IList<object> results = collection.GetMatchingPictures(_searchWords.Text);
+				IEnumerable<object> results = collection.GetMatchingPictures(_searchWords.Text);
 
 				_thumbnailViewer.LoadItems(collection.GetPathsFromResults(results, true));
 			}

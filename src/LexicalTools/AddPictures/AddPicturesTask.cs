@@ -42,8 +42,7 @@ namespace WeSay.LexicalTools.AddPictures
 			}
 			_imageCollection.LoadIndex(path);
 
-			//TODO
-			_imageCollection.RootImagePath = @"c:\art of reading\images";
+
 
 		}
 
