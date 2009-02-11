@@ -49,13 +49,6 @@ namespace Addin.Backup
 
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			if (Type.GetType("Mono.Runtime") != null)
-			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-					StringCatalog.Get("~USB Backup is currently not suppoted with Mono.",
-					"Error message for usb backup on mono/linux"));
-				return;
-			}
 			BackupDialog d = new BackupDialog(projectInfo);
 			d.ShowDialog(parentForm);
 		}

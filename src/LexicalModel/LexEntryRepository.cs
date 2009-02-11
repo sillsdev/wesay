@@ -498,7 +498,6 @@ namespace WeSay.LexicalModel
 							}
 
 							senseNumber++;
-							continue;
 						}
 						return fieldsandValuesForRecordTokens;
 					});
@@ -571,6 +570,7 @@ namespace WeSay.LexicalModel
 					delegate(LexEntry entry)
 					{
 						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
+						int senseNumber = 0;
 						foreach (LexSense sense in entry.Senses)
 						{
 							foreach (KeyValuePair<string, object> pair in sense.Properties)
@@ -587,17 +587,20 @@ namespace WeSay.LexicalModel
 											domain = null;
 										}
 										tokenFieldsAndValues.Add("SemanticDomain", domain);
+										tokenFieldsAndValues.Add("Sense", senseNumber);
 										fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
 									}
 								}
 							}
+							senseNumber++;
 						}
 						return fieldsandValuesForRecordTokens;
 					}
 					);
 				ResultSet<LexEntry> itemsMatchingQuery = GetItemsMatching(semanticDomainsQuery);
-				SortDefinition[] sortDefinition = new SortDefinition[1];
+				SortDefinition[] sortDefinition = new SortDefinition[2];
 				sortDefinition[0] = new SortDefinition("SemanticDomain", StringComparer.InvariantCulture);
+				sortDefinition[1] = new SortDefinition("Sense", Comparer<int>.Default);
 				ResultSetCache<LexEntry> cache =
 					new ResultSetCache<LexEntry>(this, sortDefinition, itemsMatchingQuery, semanticDomainsQuery);
 				_caches.Add(cachename, cache);
