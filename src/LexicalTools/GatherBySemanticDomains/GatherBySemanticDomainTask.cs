@@ -503,7 +503,6 @@ namespace WeSay.LexicalTools
 					entry.LexicalForm.SetAlternative(WordWritingSystemId, lexicalForm);
 					AddCurrentSemanticDomainToEntry(entry,gloss);
 					LexEntryRepository.SaveItem(entry);
-					GetAllEntriesSortedBySemanticDomain();//review: (jh asks) is there some side effect here? Why is it called?
 					modifiedEntries.Add(entry);
 				}
 				else// one or more matching entries
