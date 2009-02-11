@@ -461,7 +461,6 @@ namespace WeSay.LexicalTools
 					entry.LexicalForm.SetAlternative(WordWritingSystemId, lexicalForm);
 					AddCurrentSemanticDomainToEntry(entry);
 					LexEntryRepository.SaveItem(entry);
-					GetAllEntriesSortedBySemanticDomain();
 				}
 				else
 				{

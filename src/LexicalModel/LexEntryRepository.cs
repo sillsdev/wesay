@@ -570,7 +570,6 @@ namespace WeSay.LexicalModel
 					delegate(LexEntry entry)
 					{
 						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
-						int senseNumber = 0;
 						foreach (LexSense sense in entry.Senses)
 						{
 							foreach (KeyValuePair<string, object> pair in sense.Properties)
@@ -586,13 +585,15 @@ namespace WeSay.LexicalModel
 										{
 											domain = null;
 										}
+										if (CheckIfTokenHasAlreadyBeenReturnedForThisSemanticDomain(fieldsandValuesForRecordTokens, domain))
+										{
+											continue; //This is to avoid duplicates
+										}
 										tokenFieldsAndValues.Add("SemanticDomain", domain);
-										tokenFieldsAndValues.Add("Sense", senseNumber);
 										fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
 									}
 								}
 							}
-							senseNumber++;
 						}
 						return fieldsandValuesForRecordTokens;
 					}
@@ -606,6 +607,18 @@ namespace WeSay.LexicalModel
 				_caches.Add(cachename, cache);
 			}
 			return _caches[cachename].GetResultSet();
+		}
+
+		private bool CheckIfTokenHasAlreadyBeenReturnedForThisSemanticDomain(List<IDictionary<string, object>> fieldsandValuesForRecordTokens, string domain)
+		{
+			foreach (var tokenInfo in fieldsandValuesForRecordTokens)
+			{
+				if((string)tokenInfo["SemanticDomain"] == domain)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 

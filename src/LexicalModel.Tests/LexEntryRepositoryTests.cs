@@ -575,14 +575,13 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetEntriesWithSemanticDomainSortedBySemanticDomain_OneEntryWithTwoSensesThatHaveIdenticalSemanticDomains_EntriesAreSortedBySenseNumber()
+		public void GetEntriesWithSemanticDomainSortedBySemanticDomain_OneEntryWithTwoSensesThatHaveIdenticalSemanticDomains_OnlyOneTokenIsReturned()
 		{
 			LexEntry entryWithTwoIdenticalSenses = CreateLexEntryWithSemanticDomain("SemanticDomain1");
 			AddSenseWithSemanticDomainToLexEntry(entryWithTwoIdenticalSenses, "SemanticDomain1");
 			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainsDdp4);
-			Assert.AreEqual(2, sortedResults.Count);
-			Assert.AreEqual(0, sortedResults[0]["Sense"]);
-			Assert.AreEqual(1, sortedResults[1]["Sense"]);
+			Assert.AreEqual(1, sortedResults.Count);
+			Assert.AreEqual("SemanticDomain1", sortedResults[0]["SemanticDomain"]);
 		}
 
 		[Test]
