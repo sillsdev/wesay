@@ -50,8 +50,6 @@ namespace WeSay.CommonTools
 			//
 			// _panel
 			//
-			this._panel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
 			this._panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._panel.BackColor = System.Drawing.Color.Transparent;
 			this._panel.Location = new System.Drawing.Point(20, 11);

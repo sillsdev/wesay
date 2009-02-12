@@ -215,6 +215,13 @@ namespace WeSay.CommonTools
 			}
 		}
 
+		//This is used in place of AnchorStyle.Right because anchoring is buggy before a control is shown
+		protected override void OnResize(EventArgs e)
+		{
+			_panel.Width = ClientRectangle.Width - _panel.Left;
+			base.OnResize(e);
+		}
+
 		private void ResizeButtons()
 		{
 			_panel.SuspendLayout();
