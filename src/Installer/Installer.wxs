@@ -221,6 +221,10 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="Palaso.Media.dll" Name="Palaso.Media.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Media.dll" />
 				  </Component>
 
+				  <Component Id="Palaso.Backup.dll" Guid="{C4BE5420-B5F0-4494-B91E-930209E2D7AB}">
+					<File Id="Palaso.Backpu.dll" Name="Palaso.Backup.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Backup.dll" />
+				  </Component>
+
 				  <Component Id="PalasoReporting.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E800}">
 					<File Id="PalasoReporting.dll" Name="PalasoReporting.dll" KeyPath="yes" Source="..\..\output\release\PalasoReporting.dll" />
 				  </Component>
@@ -353,6 +357,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="PalasoReporting.dll" />
 			  <ComponentRef Id="Palaso.Services.dll" />
 			  <ComponentRef Id="Palaso.Media.dll" />
+			  <ComponentRef Id="Palaso.Backup.dll" />
 			  <ComponentRef Id="PalasoUIWindowsForms.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
 			  <ComponentRef Id="WeSay.App.exe.config" />
