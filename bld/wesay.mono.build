@@ -270,8 +270,10 @@
 
 	<target name="install" depends="set-build-config, set-runtime-config, set-output-dir">
 		<property name="INSTALL_DIR" value="/" overwrite="false" />
-		<property name="USR_SHARE" value="${path::combine(INSTALL_DIR, 'usr/share/wesay')}"/>
 		<property name="USR_BIN" value="${path::combine(INSTALL_DIR, 'usr/bin')}"/>
+		<property name="USR_SHARE" value="${path::combine(INSTALL_DIR, 'usr/share/wesay')}"/>
+		<property name="USR_ICONS" value="${path::combine(INSTALL_DIR, 'usr/share/icons')}"/>
+		<property name="USR_MENU" value="${path::combine(INSTALL_DIR, 'usr/share/applications')}"/>
 		<copy todir="${USR_SHARE}">
 			<fileset basedir="${project.output.dir}">
 				<include name="*" />
@@ -290,6 +292,12 @@
 				<include name="*" />
 			 </fileset>
 		</copy>
+		<copy todir="${USR_ICONS}">
+			<fileset basedir="${path::combine(project.base.dir, 'src/Installer_Linux/icons')}">
+				<include name="**" />
+			 </fileset>
+		</copy>
+		<copy file="${path::combine(project.base.dir, 'src/Installer_Linux/sil-wesay.desktop')}" tofile="${path::combine(USR_MENU, 'sil-wesay.desktop')}" />
 		<copy file="wesay.mono.runner" tofile="${USR_BIN}/wesay" />
 		<copy file="wesay.configtool.mono.runner" tofile="${USR_BIN}/wesay-config" />
 	</target>
