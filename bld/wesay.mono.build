@@ -300,6 +300,7 @@
 			 </fileset>
 		</copy>
 		<copy file="${path::combine(project.base.dir, 'src/Installer_Linux/sil-wesay.desktop')}" tofile="${path::combine(USR_MENU, 'sil-wesay.desktop')}" />
+		<copy file="${path::combine(project.base.dir, 'src/Installer_Linux/sil-wesay-config.desktop')}" tofile="${path::combine(USR_MENU, 'sil-wesay-config.desktop')}" />
 		<copy file="wesay.mono.runner" tofile="${USR_BIN}/wesay" />
 		<copy file="wesay.configtool.mono.runner" tofile="${USR_BIN}/wesay-config" />
 	</target>
