@@ -67,6 +67,7 @@
 		<include name="src/**/*.cs" />
 		<include name="src/**/*.resx" />
 		<include name="src/**/*.build" />
+		<include name="src/Installer_Linux/**" />
 		<include name="lib/mono/**" />
 		<include name="bld/*" />
 		<include name="common/**" />
@@ -238,6 +239,7 @@
 				<include name="src/**/*.png" />
 				<include name="src/**/*.xsl" />
 				<include name="src/**/*.htm" />
+				<include name="src/Installer_Linux/**" />
 				<include name="lib/mono/**" />
 				<include name="artwork/**" />
 				<include name="bld/*" />
