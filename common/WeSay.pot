@@ -1,38 +1,28 @@
-msgid "
-msgstr "
-"Project-Id-Version: WeSay
-"
-"Report-Msgid-Bugs-To: hattonjohn@gmail.com
-"
-"POT-Creation-Date: 2008-11-13T06:26:28
-"
-"PO-Revision-Date: 2008-11-13T06:26:28
-"
-"Last-Translator:
-"
-"Language-Team:
-"
-"MIME-Version: 1.0
-"
-"Content-Type: text/plain; charset=UTF-8
-"
-"Content-Transfer-Encoding: 8bit
-"
+msgid ""
+msgstr ""
+"Project-Id-Version: WeSay"
+"Report-Msgid-Bugs-To: hattonjohn@gmail.com"
+"POT-Creation-Date: 2009-03-02T07:19:39"
+"PO-Revision-Date: 2009-03-02T07:19:39"
+"Last-Translator: "
+"Language-Team: "
+"MIME-Version: 1.0"
+"Content-Type: text/plain; charset=UTF-8"
+"Content-Transfer-Encoding: 8bit"
 
 
 #; C:\wesay\bld\..\src\CommonTools\Dash.cs
-#. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
-#; C:\wesay\bld\..\src\CommonTools\DashboardControl.cs
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
 msgstr ""
 
 
-msgid "Dictionary Browse & Edit"
+#; C:\wesay\bld\..\src\LexicalTools\DictionaryTask.cs
+msgid "Dictionary"
 msgstr ""
 
 
-msgid "Add Meanings"
+msgid "Meanings"
 msgstr ""
 
 
@@ -40,7 +30,7 @@ msgid "Add meanings to entries where they are missing."
 msgstr ""
 
 
-msgid "Add Parts of Speech"
+msgid "Parts of Speech"
 msgstr ""
 
 
@@ -48,15 +38,15 @@ msgid "Add a Part Of Speech to senses where they are missing."
 msgstr ""
 
 
-msgid "Add Examples"
+msgid "Example Sentences"
 msgstr ""
 
 
-msgid "Add example sentences to entries where they are missing."
+msgid "Add example sentences to senses where they are missing."
 msgstr ""
 
 
-msgid "Add Base Forms"
+msgid "Base Forms"
 msgstr ""
 
 
@@ -64,7 +54,7 @@ msgid "Identify the \"base form\" word that this word is built from. In the prin
 msgstr ""
 
 
-msgid "Collect Word List (D)"
+msgid "Duerksen Word List"
 msgstr ""
 
 
@@ -72,7 +62,7 @@ msgid "Collect new words by translating from words in another language. This is 
 msgstr ""
 
 
-msgid "Collect Word List (PNG)"
+msgid "PNG Word List"
 msgstr ""
 
 
@@ -80,16 +70,11 @@ msgid "Collect new words by translating from words in another language. This is 
 msgstr ""
 
 
-msgid "Collect Words By Semantic Domain"
+msgid "Semantic Domains"
 msgstr ""
 
 
 msgid "Collect new words organized by semantic domains and questions about those domains."
-msgstr ""
-
-
-#; C:\wesay\bld\..\src\CommonTools\ActionsControl.cs
-msgid "Actions"
 msgstr ""
 
 #; C:\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
@@ -220,18 +205,8 @@ msgstr ""
 msgid "Saves the lexicon in a form of standard format."
 msgstr ""
 
-#; C:\wesay\bld\..\src\CommonTools\ActionsControl.cs
-#. The description of the Actions task.
-msgid "Backup, print, etc."
-msgstr ""
-
 #; C:\wesay\bld\..\src\CommonTools\Dash.cs
-#; C:\wesay\bld\..\src\CommonTools\DashboardControl.cs
 msgid "Switch tasks and see current status of tasks"
-msgstr ""
-
-#; C:\wesay\bld\..\src\CommonTools\DashboardControl.cs
-msgid "Tasks"
 msgstr ""
 
 #; C:\wesay\bld\..\src\CommonTools\DictionaryStatusControl.Designer.cs
@@ -267,10 +242,6 @@ msgstr ""
 
 #; C:\wesay\bld\..\src\LexicalTools\DictionaryControl.cs
 msgid "Show &Uncommon Fields"
-msgstr ""
-
-#; C:\wesay\bld\..\src\LexicalTools\DictionaryTask.cs
-msgid "Dictionary"
 msgstr ""
 
 #; C:\wesay\bld\..\src\LexicalTools\DictionaryTask.cs
