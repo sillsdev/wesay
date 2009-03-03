@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WeSay"
 "Report-Msgid-Bugs-To: hattonjohn@gmail.com"
-"POT-Creation-Date: 2009-03-02T07:19:39"
-"PO-Revision-Date: 2009-03-02T07:19:39"
+"POT-Creation-Date: 2009-03-03T05:52:39"
+"PO-Revision-Date: 2009-03-03T05:52:39"
 "Last-Translator: "
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -11,13 +11,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit"
 
 
-#; C:\wesay\bld\..\src\CommonTools\Dash.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\CommonTools\Dash.cs
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
 msgstr ""
 
 
-#; C:\wesay\bld\..\src\LexicalTools\DictionaryTask.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\DictionaryTask.cs
 msgid "Dictionary"
 msgstr ""
 
@@ -77,315 +77,315 @@ msgstr ""
 msgid "Collect new words organized by semantic domains and questions about those domains."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Looking for USB Keys..."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Backing Up..."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Backup Complete"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Files backed up to {0}"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Files were not backed up."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Please insert the USB Key to backup to."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\BackupDialog.Designer.cs
-#; C:\wesay\bld\..\src\Addin.Backup\SynchronizeDialog.Designer.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\BackupDialog.Designer.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\SynchronizeDialog.Designer.cs
 msgid "&Cancel"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\BackupToDevice.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\BackupToDevice.cs
 #. Long name for usb flash-drive backup action
 msgid "Backup To Device"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\BackupToDevice.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\BackupToDevice.cs
 #. description of usb backup action
 msgid "Saves a backup on an external device, like a USB key."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\BackupToDevice.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\BackupToDevice.cs
 #. Short buton label for usb flash-drive backup action
 msgid "Backup"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\SendProjectEmail.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email My Work to {0}"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\SendProjectEmail.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Send a zipped email containing all your WeSay work."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\SendProjectEmail.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\Synchronize.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\Synchronize.cs
 #. Label for synchronize action. Here, 'synchronizing' means putting your changes in the repository, and getting changes that others have put in the repository.
 msgid "Synchronize"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\Synchronize.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\Synchronize.cs
 #. description of syncrhonize action
 msgid "Updates the repository with our work, and gets the work of others."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\Synchronize.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\Synchronize.cs
 #. Long label for synchronize action.
-#; C:\wesay\bld\..\src\Addin.Backup\SynchronizeDialog.Designer.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\SynchronizeDialog.Designer.cs
 msgid "Synchronize With Repository"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\SynchronizeDialog.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\SynchronizeDialog.cs
 msgid "Synchronizing..."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\SynchronizeDialog.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\SynchronizeDialog.cs
 msgid "WeSay Had Problems Synchronizing"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\SynchronizeDialog.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\SynchronizeDialog.cs
 msgid "Finished"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Backup\SynchronizeDialog.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Backup\SynchronizeDialog.cs
 msgid "OK"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.LiftReports\ReportMaker.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.LiftReports\ReportMaker.cs
 msgid "View Report"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.LiftReports\ReportMaker.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.LiftReports\ReportMaker.cs
 msgid "Shows some information about the lexicon."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.LiftReports\ReportMaker.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.LiftReports\ReportMaker.cs
 msgid "Report"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Transform\HtmlInWord.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Transform\HtmlInWord.cs
 msgid "Export to Word"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Transform\HtmlInWord.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Transform\HtmlInWord.cs
 msgid "Creates a very basic dictionary publication in Microsoft Word."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Transform\HtmlTransformer.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Export to HTML"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Transform\HtmlTransformer.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Creates a simple Html version of the dictionary, ready for printing."
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Transform\PdfMaker.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Transform\PdfMaker.cs
 msgid "Make Pdf Dictionary"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Transform\SfmTransformer.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Transform\SfmTransformer.cs
 msgid "Export To SFM"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Addin.Transform\SfmTransformer.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Addin.Transform\SfmTransformer.cs
 msgid "Saves the lexicon in a form of standard format."
 msgstr ""
 
-#; C:\wesay\bld\..\src\CommonTools\Dash.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\CommonTools\Dash.cs
 msgid "Switch tasks and see current status of tasks"
 msgstr ""
 
-#; C:\wesay\bld\..\src\CommonTools\DictionaryStatusControl.Designer.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\CommonTools\DictionaryStatusControl.Designer.cs
 msgid "{1} dictionary has {0} words"
 msgstr ""
 
-#; C:\wesay\bld\..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.cs
-#; C:\wesay\bld\..\src\WeSay.UI\PictureControl.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.UI\PictureControl.cs
 msgid "Cannot find {0}"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalModel\KeyToEntryIdInitializer.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalModel\KeyToEntryIdInitializer.cs
 #. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
-#; C:\wesay\bld\..\src\LexicalTools\DictionaryControl.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\DictionaryControl.cs
 #. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
-#; C:\wesay\bld\..\src\LexicalTools\MissingInfoControl.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\MissingInfoControl.cs
 #. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
 msgid "Empty"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalModel\LexEntry.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalModel\LexEntry.cs
 msgid "No Senses"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\DictionaryControl.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\DictionaryControl.cs
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\DictionaryControl.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\DictionaryControl.cs
 msgid "Hide &Uncommon Fields"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\DictionaryControl.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\DictionaryControl.cs
 msgid "Show &Uncommon Fields"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\DictionaryTask.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\DictionaryTask.cs
 msgid "Dictionary Browse && Edit"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\DictionaryTask.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\DictionaryTask.cs
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\GatherBySemanticDomainTask.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\GatherBySemanticDomainTask.cs
 #. This is shown in the Gather By Semantic Domains task after each semantic domain question. The questions contain example words to help clarify what the domain is about, and this was added to remind the user that he/she is gathering based on the domain, not these examples.
 msgid "Do not just translate these words; instead think of words in your own language."
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word.
-#; C:\wesay\bld\..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word.
 msgid "Example"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field for putting in a translation of an example sentence.
 msgid "Translation"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\LexSenseLayouter.cs
-#; C:\wesay\bld\..\src\LexicalTools\LexSenseLayouter.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\LexSenseLayouter.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\LexSenseLayouter.cs
 #. This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.
 msgid "Meaning"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\LexSenseLayouter.cs
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\LexSenseLayouter.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a single word translation, as used in interlinear text glossing.
 msgid "Gloss"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\MissingInfoControl.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\MissingInfoControl.cs
 msgid "Congratulations. You have completed this task."
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\MissingInfoControl.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\MissingInfoControl.cs
 msgid "There is no work left to be done on this task."
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\MissingInfoTask.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\MissingInfoTask.cs
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "This word has no Base Form"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\TaskBase.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\TaskBase.cs
 #. Generic desciption of how many items in a task are left to do.
 msgid "Remaining:"
 msgstr ""
 
-#; C:\wesay\bld\..\src\LexicalTools\TaskBase.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\LexicalTools\TaskBase.cs
 #. Generic description of how many total items there are in a task.
 msgid "Total:"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.App\Services\DictionaryServiceProvider.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.App\Services\DictionaryServiceProvider.cs
 #. This is what we call it when something goes wrong but it's the computer's fault, not the user's.
 msgid "Program Error"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.App\TabbedForm.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.App\TabbedForm.cs
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
 msgid "Loading..."
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.App\WeSayApp.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.App\WeSayApp.cs
 msgid "Please wait while WeSay prepares your data"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.App\WeSayApp.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.App\WeSayApp.cs
 #. It's up to you whether to bother translating this or not.
 msgid "WeSay"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the Lexeme Form of the entry.
 msgid "Word"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field holding the citation form, which is how the word will be displayed in the dictionary.  This is used in languages where the lexeme form may be different from what the Headword should be.
 msgid "Citation Form"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the definition of the word.
 msgid "Definition"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the literal meaning of idiom or proverb.
 msgid "Literal Meaning"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a note.
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a note.
 msgid "Note"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a picture.
 msgid "Picture"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Part Of Speech
 msgid "POS"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing an example use of the word.
 msgid "Example Sentence"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the example sentence translated into other languages.
 msgid "Example Translation"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Semantic Domains
 msgid "Sem Dom"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.Project\ViewTemplate.cs
 msgid "Cross Reference"
 msgstr ""
 
-#; C:\wesay\bld\..\src\WeSay.UI\SingleOptionControl.cs
+#; C:\src\sil\WeSay_stable\bld\..\src\WeSay.UI\SingleOptionControl.cs
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
 msgstr ""
