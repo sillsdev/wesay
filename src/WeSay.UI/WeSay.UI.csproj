@@ -144,12 +144,6 @@
 	<Compile Include="PictureControl.Designer.cs">
 	  <DependentUpon>PictureControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="LocalizationHelper.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="LocalizationHelper.Designer.cs">
-	  <DependentUpon>LocalizationHelper.cs</DependentUpon>
-	</Compile>
 	<Compile Include="ReferenceCollectionEditor.cs">
 	  <SubType>Component</SubType>
 	</Compile>
