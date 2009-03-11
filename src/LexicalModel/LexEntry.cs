@@ -493,6 +493,20 @@ namespace WeSay.LexicalModel
 					GetOrCreateProperty<LexRelationCollection>(relationName);
 			relations.Relations.Add(new LexRelation(relationName, targetId, this));
 		}
+
+		public string GetSimpleFormForLogging()
+		{
+			string formForLogging ;
+			try
+			{
+				formForLogging = LexicalForm.GetFirstAlternative();
+			}
+			catch (Exception)
+			{
+				formForLogging="(unknown)";
+			}
+			return formForLogging;
+		}
 	}
 
 	public interface IFindEntries

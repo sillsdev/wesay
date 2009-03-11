@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.UI.audio;
 
@@ -9,11 +10,14 @@ namespace WeSay.UI.audio
 	public partial class WeSayAudioFieldBox : UserControl, IControlThatKnowsWritingSystem
 	{
 		private AudioPathProvider _audioPathProvider;
+		private readonly ILogger _logger;
 		public WritingSystem WritingSystem { get; set; }
 
-		public WeSayAudioFieldBox(WritingSystem writingSystem, AudioPathProvider audioPathProvider)
+		public WeSayAudioFieldBox(WritingSystem writingSystem, AudioPathProvider audioPathProvider,
+			Palaso.Reporting.ILogger logger)
 		{
 			_audioPathProvider = audioPathProvider;
+			_logger = logger;
 			WritingSystem = writingSystem;
 			InitializeComponent();
 
@@ -21,8 +25,21 @@ namespace WeSay.UI.audio
 			// may be changed in a moment when the actual field is read
 			shortSoundFieldControl1.Path = _audioPathProvider.GetNewPath();
 
-			shortSoundFieldControl1.SoundRecorded += (sender, e) => _fileName.Text = _audioPathProvider.GetPartialPathFromFull(shortSoundFieldControl1.Path);
-			shortSoundFieldControl1.SoundDeleted += (sender, e) => _fileName.Text = string.Empty;
+			shortSoundFieldControl1.SoundRecorded += (sender, e) =>
+														 {
+															 _fileName.Text =
+																 _audioPathProvider.GetPartialPathFromFull(
+																	 shortSoundFieldControl1.Path);
+															 _logger.WriteConciseHistoricalEvent("Recorded Sound");
+														 }
+
+
+	;
+			shortSoundFieldControl1.SoundDeleted += (sender, e) =>
+				{
+					_fileName.Text = string.Empty;
+					_logger.WriteConciseHistoricalEvent("Deleted Sound");
+				};
 			shortSoundFieldControl1.BeforeStartingToRecord += new EventHandler(shortSoundFieldControl1_BeforeStartingToRecord);
 		}
 

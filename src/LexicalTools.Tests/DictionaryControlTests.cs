@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
+using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Tests.TestHelpers;
@@ -138,7 +139,7 @@ namespace WeSay.LexicalTools.Tests
 			exampleNotesField.DisplayName = "ex-note";
 			viewTemplate.Add(exampleNotesField);
 
-			_task = new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, viewTemplate, new TaskMemoryRepository());//, new UserSettingsForTask());
+			_task = new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, viewTemplate, new TaskMemoryRepository(), new StringLogger());//, new UserSettingsForTask());
 			_detailTaskPage = new TabPage();
 			ActivateTask();
 
@@ -224,7 +225,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (
 					DictionaryControl e = new DictionaryControl(_lexEntryRepository,
-																new ViewTemplate(), new TaskMemory()))
+																new ViewTemplate(), new TaskMemory(), new CheckinDescriptionBuilder()))
 			{
 				Assert.IsNotNull(e);
 			}

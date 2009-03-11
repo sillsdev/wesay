@@ -28,6 +28,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 	{
 		private DictionaryControl _dictionaryControl;
 		private readonly ViewTemplate _viewTemplate;
+		private readonly ILogger _logger;
 		private TaskMemory _taskMemory;
 
 		public const string LastUrlKey = "lastUrl";
@@ -35,7 +36,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		public DictionaryTask(DictionaryBrowseAndEditConfiguration config,
 								LexEntryRepository lexEntryRepository,
 								ViewTemplate viewTemplate,
-								TaskMemoryRepository taskMemoryRepository)
+								TaskMemoryRepository taskMemoryRepository,
+								ILogger logger)
 			: base(config, lexEntryRepository, taskMemoryRepository)
 		{
 			if (viewTemplate == null)
@@ -43,6 +45,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				throw new ArgumentNullException("viewTemplate");
 			}
 			_viewTemplate = viewTemplate;
+			_logger = logger;
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 		}
 
@@ -51,7 +54,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			try
 			{
 				base.Activate();
-				_dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate, _taskMemory.CreateNewSection("view"));
+				_dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate, _taskMemory.CreateNewSection("view"), _logger);
 
 				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnSelectedEntryOfDictionaryControlChanged);
 //   Debug.Assert(_userSettings.Get("one", "0") == "1");

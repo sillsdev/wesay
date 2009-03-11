@@ -15,15 +15,12 @@ using System.Xml.XPath;
 using System.Xml.Xsl;
 using Autofac;
 using Autofac.Builder;
-using Autofac.Component;
 using LiftIO;
 using LiftIO.Validation;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.IO;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
-using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
@@ -63,7 +60,7 @@ namespace WeSay.Project
 		{
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
-			BackupMaker = new ChorusBackupMaker();
+//            BackupMaker = new ChorusBackupMaker();
 
 		}
 
@@ -403,6 +400,20 @@ namespace WeSay.Project
 			// can't currently get at the instance
 			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
 
+			builder.Register<CheckinDescriptionBuilder>().SingletonScoped();
+			builder.Register<ChorusBackupMaker>().SingletonScoped();
+
+			//it is sad that we initially used a static for logger, and that hasn't been completely undone yet.
+			builder.Register<ILogger>(c =>
+										  {
+											  var m = new MultiLogger();
+											  m.Add(Logger.Singleton);
+											  m.Add(c.Resolve<CheckinDescriptionBuilder>());
+											  return m;
+										  });
+
+
+
 			_container = builder.Build();
 		}
 
@@ -427,12 +438,12 @@ namespace WeSay.Project
 			if (backupPlanNav == null)
 			{
 				//make sure we have a fresh copy with any defaults
-				BackupMaker = new ChorusBackupMaker();
+				BackupMaker = _container.Resolve<ChorusBackupMaker>();
 				return;
 			}
 
 			XmlReader r = XmlReader.Create(new StringReader(backupPlanNav.OuterXml));
-			BackupMaker = ChorusBackupMaker.LoadFromReader(r);
+			BackupMaker = ChorusBackupMaker.LoadFromReader(r, _container.Resolve<CheckinDescriptionBuilder>());
 		}
 
 		private static void MoveFilesFromOldDirLayout(string projectDir)

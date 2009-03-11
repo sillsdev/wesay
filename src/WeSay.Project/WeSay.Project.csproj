@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="BaseTaskConfig.cs" />
+	<Compile Include="CheckinDescriptionBuilder.cs" />
 	<Compile Include="ChorusBackupMaker.cs" />
 	<Compile Include="BasilProject.cs" />
 	<Compile Include="ConfigFileReader.cs" />

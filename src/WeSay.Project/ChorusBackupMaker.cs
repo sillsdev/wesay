@@ -15,9 +15,23 @@ namespace WeSay.Project
 	[XmlRoot("backupPlan")]
 	public class ChorusBackupMaker
 	{
-	  public const string ElementName = "backupPlan";
+		internal CheckinDescriptionBuilder CheckinDescriptionBuilder { get; set; }
+		public const string ElementName = "backupPlan";
 
-	  [XmlElement("pathToParentOfRepositories")]
+	  public ChorusBackupMaker(CheckinDescriptionBuilder checkinDescriptionBuilder)
+	  {
+		  CheckinDescriptionBuilder = checkinDescriptionBuilder;
+	  }
+
+
+		/// <summary>
+		/// for deserializer
+		/// </summary>
+	  internal ChorusBackupMaker()
+	  {
+	  }
+
+		[XmlElement("pathToParentOfRepositories")]
 		public string PathToParentOfRepositories;
 
 		private DateTime _timeOfLastBackupAttempt;
@@ -33,10 +47,12 @@ namespace WeSay.Project
 			set { _lexEntryRepository = value; }
 		}
 
-		public static ChorusBackupMaker LoadFromReader(XmlReader reader)
+		public static ChorusBackupMaker LoadFromReader(XmlReader reader, CheckinDescriptionBuilder checkinDescriptionBuilder)
 		{
 			XmlSerializer serializer = new XmlSerializer(typeof(ChorusBackupMaker));
-			return (ChorusBackupMaker)serializer.Deserialize(reader);
+			var x = (ChorusBackupMaker)serializer.Deserialize(reader);
+			x.CheckinDescriptionBuilder = checkinDescriptionBuilder;
+			return x;
 		}
 
 		public void Save(XmlWriter writer)
@@ -75,9 +91,16 @@ namespace WeSay.Project
 			{
 				ProjectFolderConfiguration projectFolder = new ProjectFolderConfiguration(pathToProjectDirectory);
 				projectFolder.ExcludePatterns.Add("**/cache");
+				projectFolder.ExcludePatterns.Add("**/Cache");
 				projectFolder.ExcludePatterns.Add("*.old");
 				projectFolder.ExcludePatterns.Add("*.tmp");
+				projectFolder.ExcludePatterns.Add("*.bak");
+				projectFolder.IncludePatterns.Add("audio/*.*");
+				projectFolder.IncludePatterns.Add("pictures/*.*");
+				projectFolder.IncludePatterns.Add("export/*.css"); //stylesheets
+				projectFolder.IncludePatterns.Add("export/*.lpconfig");//lexique pro
 				projectFolder.IncludePatterns.Add("*.*");
+				projectFolder.IncludePatterns.Add(".hgIgnore");
 			   // projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 
 				Chorus.sync.SyncOptions options = new SyncOptions();
@@ -87,6 +110,7 @@ namespace WeSay.Project
 				options.RepositorySourcesToTry.Clear();
 				RepositorySource backupSource = RepositorySource.Create(PathToParentOfRepositories, "backup", false);
 				options.RepositorySourcesToTry.Add(backupSource);
+				options.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
 
 				RepositoryManager manager = RepositoryManager.FromRootOrChildFolder(projectFolder);
 
@@ -101,6 +125,8 @@ namespace WeSay.Project
 				//TODO: figure out how/what/when to show progress. THis is basically just throwing it away
 				IProgress progress = new Chorus.Utilities.StringBuilderProgress();
 				manager.SyncNow(options, progress);
+
+				CheckinDescriptionBuilder.Clear();
 			}
 			catch (Exception error)
 			{
@@ -116,4 +142,6 @@ namespace WeSay.Project
 			}
 		}
 	}
+
+	//todo: move to chorus
 }

@@ -22,7 +22,7 @@ namespace WeSay.Project.Tests
 			{
 				_projDir = new ProjectDirectorySetupForTesting("");
 
-				_backupMaker = new ChorusBackupMaker();
+				_backupMaker = new ChorusBackupMaker(new CheckinDescriptionBuilder());
 				_backupDir = new TemporaryFolder(testName);
 
 				_backupMaker.PathToParentOfRepositories = _backupDir.FolderPath;
@@ -127,7 +127,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void CanSerializeAndDeserializeSettings()
 		{
-			ChorusBackupMaker b = new ChorusBackupMaker();
+			ChorusBackupMaker b = new ChorusBackupMaker(new CheckinDescriptionBuilder());
 			b.PathToParentOfRepositories = @"z:\";
 			StringBuilder builder = new StringBuilder();
 			using (XmlWriter writer = XmlWriter.Create(builder))
@@ -135,7 +135,7 @@ namespace WeSay.Project.Tests
 				b.Save(writer);
 				using (XmlReader reader = XmlReader.Create(new StringReader(builder.ToString())))
 				{
-					ChorusBackupMaker loadedGuy = ChorusBackupMaker.LoadFromReader(reader);
+					ChorusBackupMaker loadedGuy = ChorusBackupMaker.LoadFromReader(reader, new CheckinDescriptionBuilder());
 					Assert.AreEqual(@"z:\", loadedGuy.PathToParentOfRepositories);
 				}
 

@@ -323,7 +323,7 @@ namespace WeSay.UI.TextBoxes
 					return null;
 				}
 				var ap =_serviceProvider.GetService(typeof (AudioPathProvider)) as AudioPathProvider;
-				control = new WeSayAudioFieldBox(writingSystem, ap);
+				control = new WeSayAudioFieldBox(writingSystem, ap, _serviceProvider.GetService(typeof(Palaso.Reporting.ILogger)) as ILogger);
 			}
 			else
 			{

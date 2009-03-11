@@ -127,8 +127,8 @@ namespace WeSay.App
 						//do a last backup before exiting
 						Logger.WriteEvent("App Exiting Normally.");
 					}
-				}
-			 _project.BackupNow();
+					_project.BackupNow();
+			   }
 		   }
 			finally
 			{

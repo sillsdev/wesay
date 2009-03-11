@@ -20,6 +20,7 @@ namespace WeSay.LexicalTools
 	public partial class DictionaryControl: UserControl
 	{
 		private readonly ViewTemplate _viewTemplate;
+		private readonly ILogger _logger;
 		private readonly ContextMenu _cmWritingSystems;
 		private WritingSystem _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
@@ -33,7 +34,8 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public DictionaryControl(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate, ITaskMemory memory)
+		public DictionaryControl(LexEntryRepository lexEntryRepository,
+			ViewTemplate viewTemplate, ITaskMemory memory, ILogger logger)
 		{
 			if (lexEntryRepository == null)
 			{
@@ -44,6 +46,7 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException("viewTemplate");
 			}
 			_viewTemplate = viewTemplate;
+			_logger = logger;
 			_lexEntryRepository = lexEntryRepository;
 			_cmWritingSystems = new ContextMenu();
 
@@ -477,7 +480,7 @@ namespace WeSay.LexicalTools
 
 		internal void AddNewWord(bool FocusWasOnFindTextBox)
 		{
-			Logger.WriteEvent("NewWord_Click");
+			Logger.WriteMinorEvent("NewWord_Click");
 
 			// only create a new word when there is not an empty word already
 			int emptyWordIndex = GetEmptyWordIndex();
@@ -513,6 +516,9 @@ namespace WeSay.LexicalTools
 			_recordsListBox.SelectedIndex = selectIndex;
 			OnRecordSelectionChanged(_recordsListBox, new EventArgs());
 			_entryViewControl.Focus();
+
+			_logger.WriteConciseHistoricalEvent("Added Word");
+
 		}
 
 		private int GetEmptyWordIndex()
@@ -564,6 +570,7 @@ namespace WeSay.LexicalTools
 			//review: This save isn't necessary, but the possibility of deleting unsave records currently doesn't work.
 			//_lexEntryRepository.SaveItem(CurrentRecord);
 
+			_logger.WriteConciseHistoricalEvent("Deleted '{0}'",CurrentRecord.GetSimpleFormForLogging());
 			CurrentRecord.IsBeingDeleted = true;
 			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
 			_lexEntryRepository.DeleteItem(recordToken.Id);
@@ -577,6 +584,8 @@ namespace WeSay.LexicalTools
 			OnRecordSelectionChanged(this, null);
 			_entryViewControl.Focus();
 		}
+
+
 
 		private void OnShowAllFields_Click(object sender, EventArgs e)
 		{

@@ -36,18 +36,21 @@ namespace WeSay.LexicalTools
 		private bool _alreadyReportedWSLookupFailure;
 		private TaskMemory _taskMemory;
 		private GatherBySemanticDomainConfig _config;
+		private readonly ILogger _logger;
 		public WritingSystem DefinitionWritingSystem { get; set; }
 
 		public GatherBySemanticDomainTask(GatherBySemanticDomainConfig config,
 										  LexEntryRepository lexEntryRepository,
 										  ViewTemplate viewTemplate,
-										TaskMemoryRepository taskMemoryRepository)
+										TaskMemoryRepository taskMemoryRepository,
+										ILogger logger)
 			: base(
 			   config,
 				lexEntryRepository,
 				viewTemplate, taskMemoryRepository)
 		{
 			_config = config;
+			_logger = logger;
 			if (config == null)
 			{
 				throw new ArgumentNullException("config");
@@ -115,7 +118,7 @@ namespace WeSay.LexicalTools
 		public GatherBySemanticDomainTask(string semanticDomainsQuestionFileName, LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
 			: this(GatherBySemanticDomainConfig.CreateForTests(semanticDomainsQuestionFileName),
 					lexEntryRepository,
-					viewTemplate, null)
+					viewTemplate, null, new StringLogger())
 		{
 
 		}
@@ -505,6 +508,8 @@ namespace WeSay.LexicalTools
 					LexEntryRepository.SaveItem(entry);
 					GetAllEntriesSortedBySemanticDomain();//review: (jh asks) is there some side effect here? Why is it called?
 					modifiedEntries.Add(entry);
+
+					_logger.WriteConciseHistoricalEvent("SD-Added '{0}' with Domain to '{1}'", entry.GetSimpleFormForLogging(), CurrentDomainName);
 				}
 				else// one or more matching entries
 				{
@@ -515,6 +520,7 @@ namespace WeSay.LexicalTools
 						{
 							modifiedEntries.Add(entry);
 							AddCurrentSemanticDomainToEntry(entry, gloss);
+							_logger.WriteConciseHistoricalEvent("SD-Added Domain to '{0}'", entry.GetSimpleFormForLogging());
 							break;
 						}
 					}
@@ -525,6 +531,7 @@ namespace WeSay.LexicalTools
 						var first = entriesMatchingWord.First();
 						modifiedEntries.Add(first);
 						AddCurrentSemanticDomainToEntry(first, gloss);
+						_logger.WriteConciseHistoricalEvent("SD-Added Domain {0} to '{1}' REVIEW", CurrentDomainName, first.GetSimpleFormForLogging());
 					}
 				}
 			}
