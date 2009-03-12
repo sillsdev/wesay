@@ -109,19 +109,19 @@ namespace WeSay.LexicalTools
 		}
 
 
-		/// <summary>
-		/// for old unit tests
-		/// </summary>
-		/// <param name="semanticDomainsQuestionFileName"></param>
-		/// <param name="lexEntryRepository"></param>
-		/// <param name="viewTemplate"></param>
-		public GatherBySemanticDomainTask(string semanticDomainsQuestionFileName, LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
-			: this(GatherBySemanticDomainConfig.CreateForTests(semanticDomainsQuestionFileName),
-					lexEntryRepository,
-					viewTemplate, null, new StringLogger())
-		{
-
-		}
+//        /// <summary>
+//        /// for old unit tests
+//        /// </summary>
+//        /// <param name="semanticDomainsQuestionFileName"></param>
+//        /// <param name="lexEntryRepository"></param>
+//        /// <param name="viewTemplate"></param>
+//        public GatherBySemanticDomainTask(string semanticDomainsQuestionFileName, LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
+//            : this(GatherBySemanticDomainConfig.CreateForTests(semanticDomainsQuestionFileName),
+//                    lexEntryRepository,
+//                    viewTemplate, null, new StringLogger())
+//        {
+//
+//        }
 
 		private void EnsureQuestionsFileExists()
 		{

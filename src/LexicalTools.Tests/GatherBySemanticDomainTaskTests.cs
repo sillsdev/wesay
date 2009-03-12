@@ -201,15 +201,6 @@ namespace WeSay.LexicalTools.Tests
 															new StringLogger()));
 		}
 
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void ConstructWithTemplate_NullRecordListManager_Throws()
-		{
-			new GatherBySemanticDomainTask( _semanticDomainFilePath,
-										   null,
-										   _viewTemplate);
-		}
-
 
 
 		[Test]
@@ -227,9 +218,9 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithTemplate_NullTemplate_Throws()
 		{
-			new GatherBySemanticDomainTask(_semanticDomainFilePath,
+			new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
 										   _lexEntryRepository,
-										   null);
+										   null, new TaskMemoryRepository(), new StringLogger());
 		}
 
 

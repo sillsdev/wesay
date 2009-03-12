@@ -14,16 +14,16 @@ namespace WeSay.LexicalTools.Tests
 	public class LayouterTests
 	{
 		private int _rowCount;
+		private IServiceLocator Context{ get; set;}
 
 		[SetUp]
 		public void Setup()
 		{
 			WeSayWordsProject.InitializeForTests();
+			var b = new Autofac.Builder.ContainerBuilder();
+			Context =   new WeSay.Foundation.ServiceLocatorAdapter(b.Build());
 		}
-		private IServiceLocator Context
-		{
-			get { return null;}
-		}
+
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullBuilder_Throws()
