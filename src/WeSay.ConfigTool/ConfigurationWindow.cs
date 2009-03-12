@@ -138,7 +138,7 @@ namespace WeSay.ConfigTool
 
 		public void CreateAndOpenProject(string directoryPath)
 		{
-			//the "wesay" part my not exist yet
+			//the "wesay" part may not exist yet
 			if (!Directory.GetParent(directoryPath).Exists)
 			{
 				Directory.GetParent(directoryPath).Create();
@@ -146,15 +146,17 @@ namespace WeSay.ConfigTool
 
 			CreateNewProject(directoryPath);
 			OpenProject(directoryPath);
+			 if(_project != null)
+			 {
+				 var logger = _project.Container.Resolve<ILogger>();
+				 logger.WriteConciseHistoricalEvent("Created New Project");
+			 }
 		}
 
 		private void CreateNewProject(string directoryPath)
 		{
-			WeSayWordsProject p;
-
 			try
 			{
-				//p = new WeSayWordsProject();
 				WeSayWordsProject.CreateEmptyProjectFiles(directoryPath);
 			}
 			catch (Exception e)
@@ -163,16 +165,6 @@ namespace WeSay.ConfigTool
 						"WeSay was not able to create a project there. \r\n" + e.Message);
 				return;
 			}
-
-//            if (Project != null)
-//            {
-//                Project.Dispose();
-//            }
-//            Project = p;
-			//SetupProjectControls(p.Container);
-
-			//p.Save();
-
 		}
 
 		public void OpenProject(string path)
@@ -232,6 +224,15 @@ namespace WeSay.ConfigTool
 			//  i abandoned this
 			//containerBuilder.Register<Control>().FactoryScoped();
 		   // containerBuilder.RegisterGeneratedFactory<ConfigTaskControlFactory>(new TypedService(typeof (Control)));
+
+			containerBuilder.Register<FieldsControl>();
+			containerBuilder.Register<WritingSystemSetup>();
+			containerBuilder.Register<FieldsControl>();
+			containerBuilder.Register<InterfaceLanguageControl>();
+			containerBuilder.Register<ActionsControl>();
+			containerBuilder.Register<BackupPlanControl>();
+			containerBuilder.Register<ChorusControl>();
+			containerBuilder.Register<OptionListControl>();
 
 			containerBuilder.Build(container);
 
@@ -305,10 +306,12 @@ namespace WeSay.ConfigTool
 			{
 				_projectSettingsControl.Dispose();
 			}
-			   if (_project != null)
-				{
-					_project.Dispose();
-				}
+			Logger.WriteEvent("App Exiting Normally.");
+
+		   if (_project != null)
+			{
+				_project.Dispose();
+			}
 		}
 
 		private void AdminWindow_FormClosing(object sender, FormClosingEventArgs e)

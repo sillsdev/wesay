@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 
 namespace WeSay.ConfigTool
@@ -28,6 +29,8 @@ namespace WeSay.ConfigTool
 			}
 		}
 
+		public ILogger Logger { get; set; }
+
 		private void _btnFont_Click(object sender, EventArgs e)
 		{
 			_fontDialog.Font = _writingSystem.Font;
@@ -43,11 +46,13 @@ namespace WeSay.ConfigTool
 			catch (Exception error)
 			{
 				ErrorReport.ReportNonFatalMessage(
-						"The Microsoft Font Dialog had a problem. We have seen this happen when you add a font to the system.  Try quitting this application and running it again." +
+						"The Microsoft Font Dialog had a problem. We have seen this happen when you add a font to the system while WeSay Config Tool is running.  Try quitting this application and running it again." +
 						Environment.NewLine + "The exception was: " + error.Message);
 				return;
 			}
 			_writingSystem.Font = _fontDialog.Font;
+			Logger.WriteConciseHistoricalEvent(StringCatalog.Get("Changed Font of '{0}' to '{1}'", "Checkin description in WeSay Config Tool used when you change the Font of a writing system."), _writingSystem.Id, _fontDialog.Font.Name);
+
 			UpdateFontDisplay();
 		}
 

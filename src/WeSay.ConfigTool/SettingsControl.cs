@@ -20,25 +20,25 @@ namespace WeSay.ConfigTool
 			_tasksButton.Tag = m.View;
 			_areaControls.Add((ConfigurationControlBase) _tasksButton.Tag);
 
-			_writingSystemButton.Tag = new WritingSystemSetup();
+			_writingSystemButton.Tag = context.Resolve<WritingSystemSetup>();
 			_areaControls.Add((ConfigurationControlBase) _writingSystemButton.Tag);
 
-			_fieldsButton.Tag = new FieldsControl();
+			_fieldsButton.Tag = context.Resolve<FieldsControl>();
 			_areaControls.Add((ConfigurationControlBase) _fieldsButton.Tag);
 
-			_interfaceLanguageButton.Tag = new InterfaceLanguageControl();
+			_interfaceLanguageButton.Tag = context.Resolve<InterfaceLanguageControl>();
 			_areaControls.Add((ConfigurationControlBase) _interfaceLanguageButton.Tag);
 
-			_actionsButton.Tag = new ActionsControl();
+			_actionsButton.Tag = context.Resolve <ActionsControl>();
 			_areaControls.Add((ConfigurationControlBase) _actionsButton.Tag);
 
-			_backupButton.Tag = new BackupPlanControl();
+			_backupButton.Tag = context.Resolve<BackupPlanControl>();
 			_areaControls.Add((ConfigurationControlBase) _backupButton.Tag);
 
-			_chorusButton.Tag = new ChorusControl();
+			_chorusButton.Tag = context.Resolve<ChorusControl>();
 			_areaControls.Add((ConfigurationControlBase)_chorusButton.Tag);
 
-		   _optionsListButton.Tag = new OptionListControl();
+			_optionsListButton.Tag = context.Resolve<OptionListControl>();
 			_areaControls.Add((ConfigurationControlBase) _optionsListButton.Tag);
 
 			SetStyle(ControlStyles.ResizeRedraw, true); //makes OnPaint work

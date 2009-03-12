@@ -199,7 +199,7 @@ namespace WeSay.ConfigTool
 		{
 			_field.DisplayName = _displayName.Text.Trim();
 
-			if (DisplayNameOfFieldChanged != null)
+			if (DisplayNameOfFieldChanged != null && !_loading)
 			{
 				DisplayNameOfFieldChanged.Invoke(this, null);
 			}
@@ -228,8 +228,12 @@ namespace WeSay.ConfigTool
 
 		private void _description_TextChanged(object sender, EventArgs e)
 		{
-			_field.Description = _description.Text.Trim();
-			DescriptionOfFieldChanged.Invoke(this, e);
+			if (!_loading)
+			{
+
+				_field.Description = _description.Text.Trim();
+				DescriptionOfFieldChanged.Invoke(this, e);
+			}
 		}
 
 		private void _normallyHidden_CheckedChanged(object sender, EventArgs e)
@@ -289,7 +293,7 @@ namespace WeSay.ConfigTool
 			}
 			_field.ClassName = proxy.UnderlyingValue.ToString();
 			UpdateDisplay();
-			if (ClassOfFieldChanged != null)
+			if (ClassOfFieldChanged != null && !_loading)
 			{
 				ClassOfFieldChanged.Invoke(this, null);
 			}

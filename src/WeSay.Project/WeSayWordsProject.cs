@@ -403,7 +403,11 @@ namespace WeSay.Project
 			builder.Register<CheckinDescriptionBuilder>().SingletonScoped();
 			builder.Register<ChorusBackupMaker>().SingletonScoped();
 
+
 			//it is sad that we initially used a static for logger, and that hasn't been completely undone yet.
+			//but by registering it here, we at least make it possible for components to get access to it this
+			//"proper" way.
+			builder.Register<Logger>(c => Logger.Singleton);
 			builder.Register<ILogger>(c =>
 										  {
 											  var m = new MultiLogger();

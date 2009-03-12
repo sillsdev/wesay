@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 
 namespace WeSay.ConfigTool
@@ -56,6 +57,8 @@ namespace WeSay.ConfigTool
 			set { _writingSystemCollection = value; }
 		}
 
+		public ILogger Logger { get; set; }
+
 		private static bool TriedToChangeKnownLanguageId(string oldId,
 														 string officialId,
 														 string language)
@@ -73,6 +76,9 @@ namespace WeSay.ConfigTool
 
 		private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
+			Logger.WriteConciseHistoricalEvent(StringCatalog.Get("Modified {0} of Writing System {1}", "Checkin Description in WeSay Config Tool used when you edit a writing system."),
+				e.ChangedItem.PropertyDescriptor.Name, _writingSystem.Id);
+
 			if (e.ChangedItem.PropertyDescriptor.Name == "IsAudio")
 			{
 				if(IsAudioChanged !=null)

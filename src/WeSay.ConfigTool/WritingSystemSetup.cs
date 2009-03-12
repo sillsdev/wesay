@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.Project;
 
@@ -9,10 +10,14 @@ namespace WeSay.ConfigTool
 {
 	public partial class WritingSystemSetup: ConfigurationControlBase
 	{
-		public WritingSystemSetup(): base("set up fonts, keyboards, and sorting")
+		public WritingSystemSetup(ILogger logger)
+			: base("set up fonts, keyboards, and sorting", logger)
 		{
 			InitializeComponent();
 			Resize += WritingSystemSetup_Resize;
+			_basicControl.Logger = logger;
+			_fontControl.Logger = logger;
+			_sortControl.Logger = logger;
 		}
 
 		private void WritingSystemSetup_Resize(object sender, EventArgs e)
@@ -97,9 +102,12 @@ namespace WeSay.ConfigTool
 			if (SelectedWritingSystem != null &&
 				BasilProject.Project.WritingSystems.ContainsKey(SelectedWritingSystem.Id))
 			{
+				var doomedId = SelectedWritingSystem.Id;
 				BasilProject.Project.WritingSystems.Remove(SelectedWritingSystem.Id);
 				LoadWritingSystemListBox();
 				UpdateSelection();
+				_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Removed writing system '{0}'", "Checkin Description in WeSay Config Tool used when you remove a writing system."), doomedId);
+
 			}
 		}
 
@@ -111,7 +119,17 @@ namespace WeSay.ConfigTool
 			{
 				if (!BasilProject.Project.WritingSystems.ContainsKey(s))
 				{
-					w = new WritingSystem(s, new Font("Doulos SIL", 12));
+					Font font;
+					try
+					{
+						font = new Font("Doulos SIL", 12);
+					}
+					catch(Exception )
+					{
+					   font = new Font(System.Drawing.SystemFonts.DefaultFont.SystemFontName, 12);
+					}
+
+					w = new WritingSystem(s, font);
 					break;
 				}
 			}
@@ -126,6 +144,9 @@ namespace WeSay.ConfigTool
 				_wsListBox.Items.Add(item);
 				_wsListBox.SelectedItem = item;
 			}
+
+			_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Added writing system", "Checkin Description in WeSay Config Tool used when you add a writing system."));
+
 		}
 
 		/// <summary>

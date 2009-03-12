@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using Palaso.WritingSystems.Collation;
 using Spart;
 using WeSay.Foundation;
@@ -19,6 +20,7 @@ namespace WeSay.ConfigTool
 		private WritingSystem _writingSystem;
 		private readonly Color validBackgroundColor;
 		private readonly Color invalidBackgroundColor;
+		private bool _loading = false;
 
 		public WritingSystemSortControl()
 		{
@@ -142,6 +144,12 @@ namespace WeSay.ConfigTool
 		{
 			_writingSystem.CustomSortRules = textBoxCustomRules.Text.Replace(Environment.NewLine,
 																			 "\n");
+
+			if(!_loading)
+			{
+				Logger.WriteConciseHistoricalEvent(StringCatalog.Get("Changed Sort Rules of '{0}'"), _writingSystem.Id);
+			}
+
 		}
 
 		private void comboBoxCultures_SelectedIndexChanged(object sender, EventArgs e)
@@ -149,6 +157,11 @@ namespace WeSay.ConfigTool
 			string oldValue = _writingSystem.SortUsing;
 			_writingSystem.SortUsing = (string) comboBoxCultures.SelectedValue;
 			UpdateCustomRules();
+
+			if (!_loading)
+			{
+				Logger.WriteConciseHistoricalEvent(StringCatalog.Get("Changed Sort Rules of '{0}'"), _writingSystem.Id);
+			}
 		}
 
 		[Browsable(false)]
@@ -168,8 +181,11 @@ namespace WeSay.ConfigTool
 			}
 		}
 
+		public ILogger Logger { get; set; }
+
 		public override void Refresh()
 		{
+			_loading = true;
 			//handle WS-707 : ws loses custom simple contents if unmodified
 			if (_writingSystem.UsesCustomSortRules &&
 				string.IsNullOrEmpty(_writingSystem.CustomSortRules))
@@ -181,6 +197,7 @@ namespace WeSay.ConfigTool
 
 			UpdateCustomRules();
 			base.Refresh();
+			_loading = false;
 		}
 
 		private void UpdateCustomRules()

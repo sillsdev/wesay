@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
@@ -22,7 +23,8 @@ namespace WeSay.ConfigTool
 		private readonly List<Option> _newlyCreatedOptions = new List<Option>();
 		private bool _currentListWasModified;
 
-		public OptionListControl(): base("set up choices for option fields")
+		public OptionListControl(ILogger logger)
+			: base("set up choices for option fields", logger)
 		{
 			InitializeComponent();
 			VisibleChanged += OptionListControl_VisibleChanged;
@@ -51,6 +53,7 @@ namespace WeSay.ConfigTool
 				try
 				{
 					_currentList.SaveToFile(path);
+					_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Edited list for {0} field", "Checkin Description in WeSay Config Tool used when you edit an option list."), _currentField.Key);
 				}
 				catch (Exception error)
 				{

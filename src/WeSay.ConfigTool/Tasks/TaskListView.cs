@@ -1,5 +1,7 @@
 using System;
 using System.Windows.Forms;
+using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tasks
@@ -9,7 +11,8 @@ namespace WeSay.ConfigTool.Tasks
 		private Autofac.IContext _context;
 		public TaskListPresentationModel Model { get; set; }
 
-		public TaskListView(): base("set up tasks for the user")
+		public TaskListView(ILogger logger)
+			: base("set up tasks for the user", logger)
 		{
 
 			InitializeComponent();
@@ -90,6 +93,14 @@ namespace WeSay.ConfigTool.Tasks
 				e.NewValue = CheckState.Checked;
 			}
 			i.IsVisible = e.NewValue == CheckState.Checked;
+			if (e.NewValue == CheckState.Checked)
+			{
+				_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Enabled {0}", "Checkin Description in WeSay Config Tool used when you enable a task."), _taskList.SelectedItem.ToString());
+			}
+			else
+			{
+				_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Disabled {0}", "Checkin Description in WeSay Config Tool used when you disable a task."), _taskList.SelectedItem.ToString());
+			}
 		}
 
 		private void textBox1_TextChanged(object sender, EventArgs e) {}

@@ -11,7 +11,8 @@ namespace WeSay.ConfigTool
 {
 	public partial class InterfaceLanguageControl: ConfigurationControlBase
 	{
-		public InterfaceLanguageControl(): base("settings for the user interface")
+		public InterfaceLanguageControl(ILogger logger)
+			: base("settings for the user interface", logger)
 		{
 			InitializeComponent();
 		}
@@ -30,7 +31,16 @@ namespace WeSay.ConfigTool
 		{
 			if (_languageCombo.SelectedItem != null)
 			{
-				UILanguage = ((PoProxy) _languageCombo.SelectedItem).fileNameWithoutExtension;
+				var lang = ((PoProxy) _languageCombo.SelectedItem).fileNameWithoutExtension;
+				if (UILanguage != lang)
+				{
+					UILanguage = lang;
+					if(lang==string.Empty)
+					{
+						lang = "default";
+					}
+					_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Changed UI Language to {0}", "Checkin Description in WeSay Config Tool used when you change the User Interface language."),lang);
+				}
 			}
 		}
 

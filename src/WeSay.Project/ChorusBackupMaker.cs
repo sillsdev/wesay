@@ -70,16 +70,6 @@ namespace WeSay.Project
 			{
 				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
 			}
-			if (string.IsNullOrEmpty(PathToParentOfRepositories))
-			{
-				Palaso.Reporting.Logger.WriteMinorEvent("Backup location not specified, skipping backup.");
-				return;
-			}
-			if (!Directory.Exists(PathToParentOfRepositories))
-			{
-				Palaso.Reporting.Logger.WriteEvent("Backup location not found, skipping backup.");
-				return;
-			}
 
 			LiftRepository.RightToAccessLiftExternally rightToAccessLiftExternally = null;
 			if (_lexEntryRepository != null)
@@ -108,8 +98,19 @@ namespace WeSay.Project
 				options.DoPullFromOthers = false;
 				options.DoPushToLocalSources = true;
 				options.RepositorySourcesToTry.Clear();
-				RepositorySource backupSource = RepositorySource.Create(PathToParentOfRepositories, "backup", false);
-				options.RepositorySourcesToTry.Add(backupSource);
+				if (!string.IsNullOrEmpty(PathToParentOfRepositories))
+				{
+					if (!Directory.Exists(PathToParentOfRepositories))
+					{
+						Palaso.Reporting.NonFatalErrorDialog.Show(string.Format("Could not Access the backup path, {0}", PathToParentOfRepositories));
+					}
+					else
+					{
+						RepositorySource backupSource = RepositorySource.Create(PathToParentOfRepositories, "backup",
+																				false);
+						options.RepositorySourcesToTry.Add(backupSource);
+					}
+				}
 				options.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
 
 				RepositoryManager manager = RepositoryManager.FromRootOrChildFolder(projectFolder);
