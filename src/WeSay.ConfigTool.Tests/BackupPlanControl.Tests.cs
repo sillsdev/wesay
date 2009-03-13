@@ -42,31 +42,31 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void SetValues_Reopen_HasSameValues()
 		{
-			using (TemporaryFolder tempFolder = new TemporaryFolder("backupPlanControlTests"))
-			{
-				try
-				{
-					CreateNewAndGotoBackupControl(tempFolder.FolderPath);
-
-					TextBoxTester t = new TextBoxTester("_pathText", _window);
 					using (TemporaryFolder backupHere = new TemporaryFolder("backupLocationForWeSayBackupPlanTests"))
 					{
-						t.Properties.Text = backupHere.FolderPath;
-						CloseApp();
+						using (TemporaryFolder tempFolder = new TemporaryFolder("backupPlanControlTests"))
+						{
+							try
+							{
+								CreateNewAndGotoBackupControl(tempFolder.FolderPath);
 
-						//now reopen
-						OpenExisting(tempFolder.FolderPath);
-						GoToBackupTab();
-						t = new TextBoxTester("_pathText", _window);
+								TextBoxTester t = new TextBoxTester("_pathText", _window);
+								t.Properties.Text = backupHere.FolderPath;
+								CloseApp();
 
-						Assert.AreEqual(backupHere.FolderPath, t.Properties.Text);
+								//now reopen
+								OpenExisting(tempFolder.FolderPath);
+								GoToBackupTab();
+								t = new TextBoxTester("_pathText", _window);
+
+								Assert.AreEqual(backupHere.FolderPath, t.Properties.Text);
+							}
+							finally
+							{
+								CloseApp();
+							}
+						}
 					}
-				}
-				finally
-				{
-					CloseApp();
-				}
-			}
 		}
 
 
