@@ -38,6 +38,7 @@ namespace WeSay.LexicalTools.AddPictures
 			var path = _fileLocator.LocateFile("artofreadingindexv3_en.txt");
 			if(string.IsNullOrEmpty(path) || !File.Exists(path))
 			{
+				//NonFatalErrorDialog.Show(string.Format("Could not locate image index at {0}'",path));
 				throw new ConfigurationException("Could not locate image index.");
 			}
 			_imageCollection.LoadIndex(path);

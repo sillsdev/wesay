@@ -16,8 +16,6 @@ namespace WeSay.LexicalTools.Tests
 		[Test, ExpectedException(typeof(Palaso.Reporting.ConfigurationException))]
 		public void Activate_IndexNotFound_GivesUserMessage()
 		{
-		   using(new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
-			{
 				using (var repoFile = new WeSay.Foundation.Tests.TestHelpers.TempLiftFile(""))
 				{
 					using(var repo = new LexEntryRepository(repoFile.Path))
@@ -29,7 +27,6 @@ namespace WeSay.LexicalTools.Tests
 						task.Activate();
 					}
 				}
-			}
 		}
 
 		private AddPicturesConfig MakeConfig(string indexName)
