@@ -19,6 +19,7 @@ namespace WeSay.ConfigTool
 		private WelcomeControl _welcomePage;
 		private SettingsControl _projectSettingsControl;
 		private WeSayWordsProject _project;
+		private bool _disableBackupAndChorusStuffForTests= false;
 
 		public ConfigurationWindow(string[] args)
 		{
@@ -181,6 +182,10 @@ namespace WeSay.ConfigTool
 			try
 			{
 				Project = new WeSayWordsProject();
+				if(_disableBackupAndChorusStuffForTests)
+				{
+					_project.BackupMaker = null;
+				}
 
 				//just open the accompanying lift file.
 				path = path.Replace(".WeSayConfig", ".lift");
@@ -349,6 +354,11 @@ namespace WeSay.ConfigTool
 		private void OnExit_Click(object sender, EventArgs e)
 		{
 			Close();
+		}
+
+		public void DisableBackupAndChorusStuffForTests()
+		{
+			_disableBackupAndChorusStuffForTests = true;
 		}
 	}
 }

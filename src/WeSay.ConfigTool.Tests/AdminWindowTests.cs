@@ -24,6 +24,7 @@ namespace WeSay.ConfigTool.Tests
 			ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
 			_window = new ConfigurationWindow(new string[] {});
+			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 			_mainWindowTester = new FormTester(_window.Name, _window);
 

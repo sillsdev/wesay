@@ -49,15 +49,18 @@ namespace WeSay.ConfigTool.Tests
 					CreateNewAndGotoBackupControl(tempFolder.FolderPath);
 
 					TextBoxTester t = new TextBoxTester("_pathText", _window);
-					t.Properties.Text = @"q:\";
-					CloseApp();
+					using (TemporaryFolder backupHere = new TemporaryFolder("backupLocationForWeSayBackupPlanTests"))
+					{
+						t.Properties.Text = backupHere.FolderPath;
+						CloseApp();
 
-					//now reopen
-					OpenExisting(tempFolder.FolderPath);
-					GoToBackupTab();
-					t = new TextBoxTester("_pathText", _window);
+						//now reopen
+						OpenExisting(tempFolder.FolderPath);
+						GoToBackupTab();
+						t = new TextBoxTester("_pathText", _window);
 
-					Assert.AreEqual(@"q:\", t.Properties.Text);
+						Assert.AreEqual(backupHere.FolderPath, t.Properties.Text);
+					}
 				}
 				finally
 				{

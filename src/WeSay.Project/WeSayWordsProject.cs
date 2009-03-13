@@ -112,7 +112,7 @@ namespace WeSay.Project
 			wsc.Write(XmlWriter.Create(PathToPretendWritingSystemPrefs));
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
-
+			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
 
 		}
 
@@ -411,6 +411,7 @@ namespace WeSay.Project
 			builder.Register<ILogger>(c =>
 										  {
 											  var m = new MultiLogger();
+											  Logger.Init();//it's ok if this was already done
 											  m.Add(Logger.Singleton);
 											  m.Add(c.Resolve<CheckinDescriptionBuilder>());
 											  return m;
@@ -1493,7 +1494,8 @@ namespace WeSay.Project
 		{
 			try
 			{
-				BackupMaker.BackupNow(ProjectDirectoryPath, StringCatalogSelector);
+				if(BackupMaker!=null)//it will for many tests, which don't need to be slowed down by all this
+					BackupMaker.BackupNow(ProjectDirectoryPath, StringCatalogSelector);
 			}
 			catch (Exception error)
 			{
