@@ -6,6 +6,7 @@ using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using System.Linq;
 
 namespace WeSay.LexicalModel
 {
@@ -473,7 +474,7 @@ namespace WeSay.LexicalModel
 
 		public void FinishEntry(LexEntry entry)
 		{
-			CopyOverGlossesIfDefinitionsMissing(entry);
+			PostProcessSenses(entry);
 			//_repository.FinishCreateEntry(entry);
 			entry.GetOrCreateId(false);
 			entry.ModifiedTimeIsLocked = false;
@@ -487,16 +488,38 @@ namespace WeSay.LexicalModel
 		/// to bother with.
 		/// </summary>
 		/// <param name="entry"></param>
-		private void CopyOverGlossesIfDefinitionsMissing(LexEntry entry)
+		private void PostProcessSenses(LexEntry entry)
 		{
 			foreach (LexSense sense in entry.Senses)
 			{
-				foreach(LanguageForm form in sense.Gloss.Forms)
+				CopyOverGlossesIfDefinitionsMissing(sense);
+				FixUpOldLiteralMeaningMistake(entry, sense);
+			}
+		}
+
+		/// <summary>
+		/// we initially, mistakenly put literal meaning on sense. This moves
+		/// it and switches to newer naming style.
+		/// </summary>
+		internal void FixUpOldLiteralMeaningMistake(LexEntry entry, LexSense sense)
+		{
+			KeyValuePair<string, object> prop = sense.Properties.Find(p => p.Key == "LiteralMeaning");
+			if (prop.Key != null)
+			{
+				sense.Properties.Remove(prop);
+				//change the label and move it up to lex entry
+				var newGuy = new KeyValuePair<string, object>("literal-meaning",  prop.Value);
+				entry.Properties.Add(newGuy);
+			}
+		}
+
+		private void CopyOverGlossesIfDefinitionsMissing(LexSense sense)
+		{
+			foreach(LanguageForm form in sense.Gloss.Forms)
+			{
+				if(!sense.Definition.ContainsAlternative(form.WritingSystemId))
 				{
-					if(!sense.Definition.ContainsAlternative(form.WritingSystemId))
-					{
-						sense.Definition.SetAlternative(form.WritingSystemId,form.Form);
-					}
+					sense.Definition.SetAlternative(form.WritingSystemId,form.Form);
 				}
 			}
 		}

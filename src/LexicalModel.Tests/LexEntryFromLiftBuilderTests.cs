@@ -84,6 +84,20 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		public void NewEntry_OldLiteralMeaning_GetsMoved()
+		{
+			Extensible extensibleInfo = new Extensible();
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
+			LexSense s = _builder.GetOrMakeSense(e, new Extensible(), string.Empty);
+			LiftMultiText t = new LiftMultiText("en", "test");
+			_builder.MergeInField(s, "LiteralMeaning", default(DateTime), default(DateTime), t, null);
+			_builder.FinishEntry(e);
+			Assert.IsNull(e.Senses[0].GetProperty<MultiText>("LiteralMeaning"));
+			Assert.IsNotNull(e.GetProperty<MultiText>("literal-meaning"));
+			Assert.AreEqual("test", e.GetProperty<MultiText>("literal-meaning").GetExactAlternative("en"));
+		}
+
+		[Test]
 		public void NewEntry_HasDefGlossHasAnotherWSAlternative_CopiedToDefintion()
 		{
 			Extensible extensibleInfo = new Extensible();
