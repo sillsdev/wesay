@@ -19,8 +19,18 @@ namespace WeSay.App
 			_timer = new System.Windows.Forms.Timer();
 			_timer.Interval = 1000;
 			var format = StringCatalog.Get("~Dictionary has {0} words", "Shown at the bottom of the screen.");
-			_timer.Tick += new EventHandler((o, e) => _wordCountLabel.Text =
-				String.Format(format, _countGiver.Count));
+			_timer.Tick += new EventHandler((o, e) =>
+												{
+													try
+													{
+														_wordCountLabel.Text = String.Format(format, _countGiver.Count);
+													}
+													catch (Exception)
+													{
+														_wordCountLabel.Text = "error";
+													}
+
+												});
 			_timer.Start();
 		}
 
