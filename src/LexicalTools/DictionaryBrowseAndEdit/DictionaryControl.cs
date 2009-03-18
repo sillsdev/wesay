@@ -155,7 +155,7 @@ namespace WeSay.LexicalTools
 		private void AddWritingSystemToPicker(WritingSystem writingSystem, Field field)
 		{
 			MenuItem item =
-					new MenuItem(writingSystem.Id + "\t" + StringCatalog.Get(field.DisplayName),
+					new MenuItem(writingSystem.Abbreviation + "\t" + StringCatalog.Get(field.DisplayName),
 								 OnCmWritingSystemClicked);
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
@@ -204,7 +204,7 @@ namespace WeSay.LexicalTools
 			_findText.Items = _findTextAdapter;
 			_findText.WritingSystem = _listWritingSystem;
 
-			_findWritingSystemId.Text = _listWritingSystem.Id;
+			_findWritingSystemId.Text = _listWritingSystem.Abbreviation;
 			int width = _findWritingSystemId.Width;
 			_findWritingSystemId.AutoSize = false;
 			_findWritingSystemId.Size = new Size(Math.Min(width, 25), _findText.Height);
