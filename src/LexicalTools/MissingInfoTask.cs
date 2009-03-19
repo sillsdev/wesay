@@ -289,24 +289,30 @@ namespace WeSay.LexicalTools
 														 ViewTemplate,
 														 filteringPredicate,
 														 LexEntryRepository);
-			_missingInfoControl.SelectedIndexChanged += OnRecordSelectionChanged;
+			_missingInfoControl.TimeToSaveRecord += OnSaveRecord;
 		}
 
-		private void OnRecordSelectionChanged(object sender, EventArgs e)
+		private void OnSaveRecord(object sender, EventArgs e)
 		{
-			LexEntryRepository.SaveItem(_missingInfoControl.CurrentEntry);
+			SaveRecord();
+		}
+
+		private void SaveRecord()
+		{
+				   if (_missingInfoControl != null && _missingInfoControl.CurrentEntry != null)
+				{
+					LexEntryRepository.SaveItem(_missingInfoControl.CurrentEntry);
+				}
+
 		}
 
 		public override void Deactivate()
 		{
-			if (_missingInfoControl != null && _missingInfoControl.CurrentEntry!=null)
-			{
-				LexEntryRepository.SaveItem(_missingInfoControl.CurrentEntry);
-			}
+			SaveRecord();
 			base.Deactivate();
 			if (_missingInfoControl != null)
 			{
-				_missingInfoControl.SelectedIndexChanged -= OnRecordSelectionChanged;
+				_missingInfoControl.TimeToSaveRecord -= OnSaveRecord;
 				_missingInfoControl.Dispose();
 			}
 			_missingInfoControl = null;
