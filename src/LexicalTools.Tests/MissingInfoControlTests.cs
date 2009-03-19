@@ -1,5 +1,7 @@
 using System;
 using System.Drawing;
+using System.Threading;
+using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -420,6 +422,36 @@ namespace WeSay.LexicalTools.Tests
 #endif
 			}
 		}
+
+
+		/// <summary>
+		/// regression for ws-1259 "meanings added but not saved"
+		/// </summary>
+		[Test]
+		public void MakeChange_TaskToldToSaveCorrectRecord()
+		{
+			using (
+					MissingInfoControl missingInfoControl =
+							new MissingInfoControl(_missingTranslationRecordList,
+												   _viewTemplate,
+												   IsMissingTranslation,
+												   _lexEntryRepository, new TaskMemory()))
+			{
+				missingInfoControl.SetCurrentRecordToNext();
+
+				LexEntry toldToSave=null;
+				missingInfoControl.TimeToSaveRecord += ((sender, e) => toldToSave = missingInfoControl.CurrentEntry);
+				LexEntry guyThatNeedsToBeSaved=missingInfoControl.CurrentEntry;
+
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
+								  "a bogus translation of example");
+
+				Assert.AreEqual(guyThatNeedsToBeSaved, toldToSave);
+			}
+		}
+
+
+
 
 		[Test]
 		public void ChangeSoMeetsFilter_AfterChangedSoNoLongerMeetsFilter_StaysHighlighted()

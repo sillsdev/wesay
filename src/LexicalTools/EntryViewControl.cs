@@ -216,10 +216,12 @@ namespace WeSay.LexicalTools
 
 		private void OnCleanupTimer_Tick(object sender, EventArgs e)
 		{
-			VerifyNotDisposed();
+			_cleanupTimer.Stop();
+			if (_isDisposed) ////saw this once get disposed while it was running
+				return;
+
 			Logger.WriteMinorEvent("OnCleanupTimer_Tick");
 			LexEntry entry = (LexEntry) _cleanupTimer.Tag;
-			_cleanupTimer.Stop();
 			entry.CleanUpEmptyObjects();
 
 			RefreshLexicalEntryPreview();
@@ -239,7 +241,9 @@ namespace WeSay.LexicalTools
 
 		private void RefreshLexicalEntryPreview()
 		{
-			VerifyNotDisposed();
+			if (_isDisposed || _lexicalEntryPreview.IsDisposed) ////saw this once get disposed while it was running
+				return;
+
 #if !DEBUG
 			try
 			{
