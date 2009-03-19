@@ -421,6 +421,37 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 
+
+		/// <summary>
+		/// regression for ws-1259 "meanings added but not saved"
+		/// </summary>
+		[Test]
+		public void Changed_GotoNext_ChangeIsSaved()
+		{
+			using (
+					MissingInfoControl missingInfoControl =
+							new MissingInfoControl(_missingTranslationRecordList,
+												   _viewTemplate,
+												   IsMissingTranslation,
+												   _lexEntryRepository, new TaskMemory()))
+			{
+				missingInfoControl.SetCurrentRecordToNext();
+				RecordToken<LexEntry> currentRecord = missingInfoControl.CurrentRecord;
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
+									  "a bogus translation of example");
+				LexEntry guyThatNeedsToBeSaved=missingInfoControl.CurrentEntry;
+				missingInfoControl.SetCurrentRecordToNext();
+				LexEntry toSave=null;
+				missingInfoControl.SelectedIndexChanged += new EventHandler((sender, e) => { toSave = missingInfoControl.CurrentEntry; });
+					Assert.AreEqual(guyThatNeedsToBeSaved,toSave);
+			}
+		}
+
+		void missingInfoControl_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			 int record = 1;
+		}
+
 		[Test]
 		public void ChangeSoMeetsFilter_AfterChangedSoNoLongerMeetsFilter_StaysHighlighted()
 		{
