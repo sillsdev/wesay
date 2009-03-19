@@ -237,8 +237,6 @@ namespace WeSay.LexicalTools
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			SaveNow();
-
 			if (!_recordsListBoxActive)
 			{
 				// We don't care about the case where a record moves from the
@@ -468,6 +466,7 @@ namespace WeSay.LexicalTools
 
 		private void OnCurrentRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
+			SaveNow();
 			Debug.Assert(sender == CurrentEntry);
 			if (_isNotComplete(CurrentEntry))
 			{

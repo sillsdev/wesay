@@ -1,5 +1,7 @@
 using System;
 using System.Drawing;
+using System.Threading;
+using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -426,31 +428,30 @@ namespace WeSay.LexicalTools.Tests
 		/// regression for ws-1259 "meanings added but not saved"
 		/// </summary>
 		[Test]
-		public void Changed_GotoNext_ChangeIsSaved()
+		public void MakeChange_TaskToldToSaveCorrectRecord()
 		{
 			using (
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
-												   _lexEntryRepository, new TaskMemory()))
+												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
-				RecordToken<LexEntry> currentRecord = missingInfoControl.CurrentRecord;
-				AddTranslationToEntry(missingInfoControl.CurrentEntry,
-									  "a bogus translation of example");
+
+				LexEntry toldToSave=null;
+				missingInfoControl.TimeToSaveRecord += ((sender, e) => toldToSave = missingInfoControl.CurrentEntry);
 				LexEntry guyThatNeedsToBeSaved=missingInfoControl.CurrentEntry;
-				missingInfoControl.SetCurrentRecordToNext();
-				LexEntry toSave=null;
-				missingInfoControl.SelectedIndexChanged += new EventHandler((sender, e) => { toSave = missingInfoControl.CurrentEntry; });
-					Assert.AreEqual(guyThatNeedsToBeSaved,toSave);
+
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
+								  "a bogus translation of example");
+
+				Assert.AreEqual(guyThatNeedsToBeSaved, toldToSave);
 			}
 		}
 
-		void missingInfoControl_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			 int record = 1;
-		}
+
+
 
 		[Test]
 		public void ChangeSoMeetsFilter_AfterChangedSoNoLongerMeetsFilter_StaysHighlighted()
