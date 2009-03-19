@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools
 
 		private readonly ViewTemplate _viewTemplate;
 		private readonly Predicate<LexEntry> _isNotComplete;
-		public event EventHandler TimeToSaveRecord;
+		public event EventHandler SelectedIndexChanged;
 
 		public MissingInfoControl(ResultSet<LexEntry> records,
 								  ViewTemplate viewTemplate,
@@ -237,8 +237,6 @@ namespace WeSay.LexicalTools
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			SaveNow();
-
 			if (!_recordsListBoxActive)
 			{
 				// We don't care about the case where a record moves from the
@@ -258,17 +256,10 @@ namespace WeSay.LexicalTools
 			}
 
 			SetCurrentRecordFromRecordList();
-
-		}
-
-		private void SaveNow()
-		{
-
-					if (TimeToSaveRecord != null)
-					{
-						TimeToSaveRecord.Invoke(this, null);
-					}
-
+			if (SelectedIndexChanged != null)
+			{
+				SelectedIndexChanged.Invoke(this, null);
+			}
 		}
 
 		public void SetCurrentRecordToNext()
@@ -383,9 +374,9 @@ namespace WeSay.LexicalTools
 				CurrentRecord = _completedRecords[CompletedRecordListCurrentIndex];
 			}
 
-			if (TimeToSaveRecord != null)
+			if (SelectedIndexChanged != null)
 			{
-				TimeToSaveRecord.Invoke(this, null);
+				SelectedIndexChanged.Invoke(this, null);
 			}
 		}
 
@@ -554,8 +545,6 @@ namespace WeSay.LexicalTools
 		// this means the RTF view looks bad. Still haven't figured out how to make
 		// cursor go to right position.
 		private bool monoOnEnterFix;
-
-
 		protected override void OnEnter(EventArgs e)
 		{
 			if (monoOnEnterFix)

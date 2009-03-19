@@ -273,38 +273,12 @@ namespace WeSay.LexicalModel
 			exporter.End();
 		}
 
-		private bool _reentryBugCatcherIn_CreateFileContainingModified = false;
-
 		private void CreateFileContainingModified(LexEntry entryToUpdate)
 		{
-			if (_reentryBugCatcherIn_CreateFileContainingModified)
-				throw new ApplicationException("CreateFileContainingModified called again before completing.");
-
-			_reentryBugCatcherIn_CreateFileContainingModified = true;
-#if DEBUG
-			Logger.WriteMinorEvent("Start CreateFileContainingModified()");
-#endif
-			try
-			{
-				LiftExporter exporter = new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
-
+			LiftExporter exporter = new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
 			//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
 			exporter.Add(entryToUpdate);
 			exporter.End();
-		}
-			catch(Exception e)
-			{
-				Logger.WriteEvent(e.Message);
-				throw e;
-			}
-			finally
-			{
-				_reentryBugCatcherIn_CreateFileContainingModified = false;
-			}
-
-#if DEBUG
-			Logger.WriteMinorEvent("End CreateFileContainingModified()");
-#endif
 		}
 
 		private void CreateFileContainingModified(IEnumerable<LexEntry> entriesToUpdate)
@@ -368,9 +342,6 @@ namespace WeSay.LexicalModel
 
 			if (SynchronicMerger.GetPendingUpdateFiles(_liftFilePath).Length > 0)
 			{
-#if DEBUG
-			Logger.WriteMinorEvent("++before pending updates: {0}",SynchronicMerger.GetPendingUpdateFiles(_liftFilePath).Length);
-#endif
 				Logger.WriteEvent("Running Synchronic Merger");
 				try
 				{
@@ -404,9 +375,6 @@ namespace WeSay.LexicalModel
 					ErrorReport.ReportNonFatalMessage(
 							"Could not finish updating LIFT dictionary file. Will try again later."+Environment.NewLine+" ("+e.Message+")");
 				}
-#if DEBUG
-				Logger.WriteMinorEvent("--after pending updates: {0}", SynchronicMerger.GetPendingUpdateFiles(_liftFilePath).Length);
-#endif
 			}
 		}
 
