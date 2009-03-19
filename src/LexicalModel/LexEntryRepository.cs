@@ -30,6 +30,10 @@ namespace WeSay.LexicalModel
 
 		ResultSetCacheManager<LexEntry> _caches = new ResultSetCacheManager<LexEntry>();
 
+		//hack to prevent sending nested Save calls, which was causing a bug when
+		//the exporter caused an item to get a new id, which led eventually to the list thinking it was modified, etc...
+		private bool _currentlySaving = false;
+
 		private readonly LiftRepository _decoratedRepository;
 		public LexEntryRepository(string path):this(path, new ProgressState())
 		{
@@ -120,21 +124,34 @@ namespace WeSay.LexicalModel
 
 		public void SaveItem(LexEntry item)
 		{
-			if (item == null)
+			if (_currentlySaving) //sometimes the process of saving leads modification which leads to a new save
 			{
-				throw new ArgumentNullException("item");
+				return;
 			}
-			if (item.IsDirty)
+			_currentlySaving = true;
+			try
 			{
-				_decoratedRepository.SaveItem(item);
-				_caches.UpdateItemInCaches(item);
-				item.Clean();
 
-				//review: I (JH) don't know how to tell the difference between new and modified
-				if (AfterEntryModified != null)
+				if (item == null)
 				{
-					AfterEntryModified(this, new EntryEventArgs(item));
+					throw new ArgumentNullException("item");
 				}
+				if (item.IsDirty)
+				{
+					_decoratedRepository.SaveItem(item);
+					_caches.UpdateItemInCaches(item);
+					item.Clean();
+
+					//review: I (JH) don't know how to tell the difference between new and modified
+					if (AfterEntryModified != null)
+					{
+						AfterEntryModified(this, new EntryEventArgs(item));
+					}
+				}
+			}
+			finally
+			{
+				_currentlySaving = false;
 			}
 		}
 
