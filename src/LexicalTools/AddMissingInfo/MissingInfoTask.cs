@@ -43,15 +43,17 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private WritingSystem GetLexicalUnitWritingSystem()
 		{
-			var ws = _viewTemplate.WritingSystems.UnknownVernacularWritingSystem;
+			//NB: don't replace these ugly static uses with the _viewTemplate we were given... that won't have what we're looking for here
+
+			var ws = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
-			Field fieldDefn = _viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			Field fieldDefn = WeSayWordsProject.Project.DefaultViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (fieldDefn != null)
 			{
 				if (fieldDefn.WritingSystemIds.Count > 0)
 				{
-					ws = _viewTemplate.WritingSystems[fieldDefn.WritingSystemIds[0]];
+					ws = BasilProject.Project.WritingSystems[fieldDefn.WritingSystemIds[0]];
 				}
 				else
 				{
