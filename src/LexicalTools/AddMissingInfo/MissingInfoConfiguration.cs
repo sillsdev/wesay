@@ -10,11 +10,13 @@ namespace WeSay.LexicalTools.AddMissingInfo
 	public class MissingInfoConfiguration : TaskConfigurationBase, ITaskConfiguration
 	{
 		private List<string> _fieldsToShow;
+		private List<string> _writingSystemsToMatch;
 
-		public MissingInfoConfiguration(string  xml)
-			: base(xml)
+		public MissingInfoConfiguration(string configurationXml)//, ViewTemplate viewTemplate)
+			: base(configurationXml)
 		{
 			_fieldsToShow = GetStringFromConfigNode("showFields").SplitTrimmed(',');
+			_writingSystemsToMatch = GetStringFromConfigNode("writingSystemsToMatch", string.Empty).SplitTrimmed(',');
 		}
 
 		public override string ToString()
@@ -49,6 +51,17 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				yield return new KeyValuePair<string, string>("field", MissingInfoField);
 				yield return new KeyValuePair<string, string>("showFields", FieldsToShowCommaSeparated);
 				yield return new KeyValuePair<string, string>("readOnly", FieldsToShowReadOnly);
+				yield return new KeyValuePair<string, string>("writingSystemsToMatch", WritingSystemsToMatchCommaSeparated);
+			}
+		}
+
+		private string WritingSystemsToMatchCommaSeparated
+		{
+			get
+			{
+				string s = string.Empty;
+				_writingSystemsToMatch.ForEach(f => s += ", " + f);
+				return s.TrimStart(new char[] { ' ', ',' });
 			}
 		}
 
@@ -117,7 +130,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			get { return GetStringFromConfigNode("field"); }
 		}
 
-		public static MissingInfoConfiguration CreateForTests(string missingInfoField, string label, string longLabel, string description, string remainingCountText, string referenceCountText,  string fieldsToShow)
+		public string[] WritingSystemsToMatchArray
+		{
+			get { return _writingSystemsToMatch.ToArray(); }
+		}
+
+		public static MissingInfoConfiguration CreateForTests(string missingInfoField,
+			string label, string longLabel, string description, string remainingCountText,
+			string referenceCountText, string fieldsToShow, string writingSystemsToMatch)
 		{
 			string x = String.Format(@"   <task taskName='AddMissingInfo' visible='true'>
 					  <field>{0}</field>
@@ -125,8 +145,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					  <description>{2}</description>
 					  <showFields>{3}</showFields>
 					  <readOnly>{4}</readOnly>
+					  <writingSystemsToMatch>{5}</writingSystemsToMatch>
 					</task>
-				", missingInfoField,label,description, fieldsToShow,fieldsToShow);
+				", missingInfoField,label,description, fieldsToShow,fieldsToShow, writingSystemsToMatch);
 
 			 return new MissingInfoConfiguration(x);
 		}

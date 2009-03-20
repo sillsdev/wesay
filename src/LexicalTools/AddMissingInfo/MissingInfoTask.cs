@@ -12,14 +12,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 {
 	public class MissingInfoTask: TaskBase
 	{
-		private MissingInfoControl _missingInfoControl;
 		private readonly Field _missingInfoField;
 		private readonly ViewTemplate _viewTemplate;
+		private readonly MissingInfoConfiguration _config;
+		private readonly TaskMemory _taskMemory;
+		private MissingInfoControl _missingInfoControl;
 		private bool _dataHasBeenRetrieved;
-		//private readonly bool _isBaseFormFillingTask;
-		private readonly WritingSystem _writingSystem;
-		private MissingInfoConfiguration _config;
-		private TaskMemory _taskMemory;
 
 		public MissingInfoTask(MissingInfoConfiguration config,
 							   LexEntryRepository lexEntryRepository,
@@ -36,8 +34,11 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_missingInfoField = defaultViewTemplate[config.MissingInfoField];
 
 			_viewTemplate = config.CreateViewTemplate(defaultViewTemplate);
+		 }
 
-			_writingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+		private WritingSystem GetLexicalUnitWritingSystem()
+		{
+			var ws = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
 			Field fieldDefn =
@@ -47,7 +48,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				if (fieldDefn.WritingSystemIds.Count > 0)
 				{
-					_writingSystem = BasilProject.Project.WritingSystems[fieldDefn.WritingSystemIds[0]];
+					ws = BasilProject.Project.WritingSystems[fieldDefn.WritingSystemIds[0]];
 				}
 				else
 				{
@@ -55,6 +56,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 													 fieldDefn.FieldName);
 				}
 			}
+			return ws;
 		}
 
 
@@ -75,7 +77,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			base.Activate();
 
 			Predicate<LexEntry> filteringPredicate =
-				new MissingFieldQuery(_missingInfoField).FilteringPredicate;
+				new MissingFieldQuery(_missingInfoField, _config.WritingSystemsToMatchArray).FilteringPredicate;
 			_missingInfoControl = new MissingInfoControl(GetFilteredData(),
 														 ViewTemplate,
 														 filteringPredicate,
@@ -139,7 +141,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			ResultSet<LexEntry> data =
 				LexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(
-					_missingInfoField, _writingSystem);
+					_missingInfoField, null,    GetLexicalUnitWritingSystem());
 			_dataHasBeenRetrieved = true;
 			return data;
 		}

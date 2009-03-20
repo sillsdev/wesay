@@ -865,21 +865,12 @@ namespace WeSay.LexicalModel
 		/// sorted by the lexical form in the given writing system.
 		/// Use "Form" to access the lexical form in a RecordToken.
 		/// </summary>
-		/// <param name="field"></param>
-		/// <param name="lexicalUnitWritingSystem"></param>
 		/// <returns></returns>
-		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field,
-																				 WritingSystem
-																						 lexicalUnitWritingSystem)
+		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field, string[] searchWritingSystemIds, WritingSystem lexicalUnitWritingSystem)
 		{
-			if(lexicalUnitWritingSystem == null)
-			{
-				throw new ArgumentNullException("lexicalUnitWritingSystem");
-			}
-			if (field == null)
-			{
-				throw new ArgumentNullException("field");
-			}
+			Guard.AgainstNull(lexicalUnitWritingSystem, "lexicalUnitWritingSystem");
+			Guard.AgainstNull(field, "field");
+
 			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}", field, lexicalUnitWritingSystem.Id);
 			if (_caches[cacheName] == null)
 			{
@@ -887,7 +878,7 @@ namespace WeSay.LexicalModel
 					delegate(LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-						Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field).FilteringPredicate;
+						Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field, searchWritingSystemIds).FilteringPredicate;
 						if(filteringPredicate(entryToQuery))
 						{
 							string lexicalForm = null;
