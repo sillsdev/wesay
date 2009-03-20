@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
@@ -25,6 +26,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 								TaskMemoryRepository taskMemoryRepository)
 			: base( config, lexEntryRepository)
 		{
+			Debug.Assert(config.WritingSystemsToMatchArray == null ||
+						 config.WritingSystemsToMatchArray.Length == 0 ||
+						 !string.IsNullOrEmpty(config.WritingSystemsToMatchArray[0]));
+
 			_config = config;
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 
