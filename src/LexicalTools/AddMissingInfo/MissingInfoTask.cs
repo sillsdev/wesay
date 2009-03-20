@@ -26,6 +26,8 @@ namespace WeSay.LexicalTools.AddMissingInfo
 								TaskMemoryRepository taskMemoryRepository)
 			: base( config, lexEntryRepository)
 		{
+			Guard.AgainstNull(config.MissingInfoField, "MissingInfoField");
+			Guard.AgainstNull(defaultViewTemplate, "viewTemplate");
 			Debug.Assert(config.WritingSystemsToMatchArray == null ||
 						 config.WritingSystemsToMatchArray.Length == 0 ||
 						 !string.IsNullOrEmpty(config.WritingSystemsToMatchArray[0]));
@@ -33,8 +35,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_config = config;
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 
-			Guard.AgainstNull(config.MissingInfoField, "MissingInfoField");
-			Guard.AgainstNull(defaultViewTemplate, "viewTemplate");
 
 			_missingInfoField = defaultViewTemplate[config.MissingInfoField];
 
@@ -43,17 +43,15 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private WritingSystem GetLexicalUnitWritingSystem()
 		{
-			var ws = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+			var ws = _viewTemplate.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
-			Field fieldDefn =
-				WeSayWordsProject.Project.DefaultViewTemplate.GetField(
-					Field.FieldNames.EntryLexicalForm.ToString());
+			Field fieldDefn = _viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (fieldDefn != null)
 			{
 				if (fieldDefn.WritingSystemIds.Count > 0)
 				{
-					ws = BasilProject.Project.WritingSystems[fieldDefn.WritingSystemIds[0]];
+					ws = _viewTemplate.WritingSystems[fieldDefn.WritingSystemIds[0]];
 				}
 				else
 				{
@@ -72,10 +70,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				return _config.Group;
 			}
 		}
-
-
-
-
 
 		public override void Activate()
 		{
