@@ -141,7 +141,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			ResultSet<LexEntry> data =
 				LexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(
-					_missingInfoField, null,    GetLexicalUnitWritingSystem());
+					_missingInfoField, _config.WritingSystemsToMatchArray,    GetLexicalUnitWritingSystem());
 			_dataHasBeenRetrieved = true;
 			return data;
 		}
