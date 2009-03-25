@@ -29,10 +29,11 @@ namespace Addin.Transform.PdfDictionary
 				//  _writer.WriteProcessingInstruction("xml-stylesheet", @"type='text/css' href='dictionary.css");
 				_writer.WriteStartElement("html");
 				_writer.WriteStartElement("head");
-				_writer.WriteRaw("<LINK rel='stylesheet' href='autoLayout.css' type='text/css' />");
-				_writer.WriteRaw("<LINK rel='stylesheet' href='autoFonts.css' type='text/css' />");
-				_writer.WriteRaw("<LINK rel='stylesheet' href='customLayout.css' type='text/css' />");
-				_writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
+//  just removed because I'm having trouble nailing down precedence, and we add these explicitly to prince
+//                _writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
+//                _writer.WriteRaw("<LINK rel='stylesheet' href='autoLayout.css' type='text/css' />");
+//                _writer.WriteRaw("<LINK rel='stylesheet' href='autoFonts.css' type='text/css' />");
+//                _writer.WriteRaw("<LINK rel='stylesheet' href='customLayout.css' type='text/css' />");
 				_writer.WriteEndElement();
 				_writer.WriteStartElement("body");
 				WriteClassAttr("dicBody");
@@ -299,7 +300,8 @@ namespace Addin.Transform.PdfDictionary
 			</span>
 			 */
 
-			StartSpan("definition_L2", "en");//todo: (en) we don't yet get this weird lang followed by more lang specs.
+		  //  StartSpan("definition_L2", "en");//todo: (en) we don't yet understand this weird lang followed by more lang specs.
+			StartSpan("definition_L2");//todo: (en) we don't yet understand this weird lang followed by more lang specs.
 
 			foreach (XPathNavigator form in defNode.SelectChildren("form",string.Empty))
 			{
