@@ -33,7 +33,6 @@ namespace WeSay.LexicalTools
 			var name = _xmlDoc.SelectSingleNode("task/"+elementName);
 			if (name == null || string.IsNullOrEmpty(name.InnerText))
 			{
-
 				throw new ConfigurationException("Missing the element '{0}'", elementName);
 			}
 			return name.InnerText;

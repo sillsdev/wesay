@@ -144,29 +144,28 @@ namespace WeSay.Foundation
 
 		public void TrackSplitContainer(SplitContainer container, string key)
 		{
-			Debug.WriteLine(key + " was " + Get(key, -1));
+			/*this is harder than it looks!  We have to keep normal resizes (like when it's displayed in
+			 * a maximized window) from inflating the splitter position, or it just grows and grows!
+			 *
+			 * So my strategy here is
+			 * 1) to only record the position when the splitter had focus and is now losing
+			 * it (i.e., not when it's resizing because the parent window is growing).
+			 * 2) to only set it after the resize is over.
+			 */
 
-			container.SplitterDistance = Get(key, container.SplitterDistance);
-			container.Tag = true;
-			container.SplitterMoved += (splitContainer, e) =>
-										   {
+			container.LostFocus += (splitContainer, e) => Set(key,
+															  ((SplitContainer) splitContainer).SplitterDistance);
 
-											   //skip the very first call, which is bogus (comes during a PerformLayout() from the tabbedForm)
-											   if ((bool)container.Tag)
-											   {
-//                                                   Debug.WriteLine("Skipping... " + key + "<--" +
-//                                                                   ((SplitContainer)splitContainer).SplitterDistance);
-												   container.Tag = false;
-												   return;
-											   }
+			container.Resize += (splitContainer, e) =>
+					container.SplitterDistance = Get(key, container.SplitterDistance);
 
-//                                               Debug.WriteLine(key + "<--" +
-//                                                               ((SplitContainer)splitContainer).SplitterDistance);
-//
-											   Set(key,
-												   ((SplitContainer) splitContainer).SplitterDistance);
-										   };
 		}
+
+
+
+
+
+
 
 		public ITaskMemory CreateNewSection(string sectionName)
 		{

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using System.Linq;
 
 namespace WeSay.LexicalModel
 {
@@ -865,29 +867,22 @@ namespace WeSay.LexicalModel
 		/// sorted by the lexical form in the given writing system.
 		/// Use "Form" to access the lexical form in a RecordToken.
 		/// </summary>
-		/// <param name="field"></param>
-		/// <param name="lexicalUnitWritingSystem"></param>
 		/// <returns></returns>
-		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field,
-																				 WritingSystem
-																						 lexicalUnitWritingSystem)
+		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field, string[] searchWritingSystemIds, WritingSystem lexicalUnitWritingSystem)
 		{
-			if(lexicalUnitWritingSystem == null)
-			{
-				throw new ArgumentNullException("lexicalUnitWritingSystem");
-			}
-			if (field == null)
-			{
-				throw new ArgumentNullException("field");
-			}
-			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}", field, lexicalUnitWritingSystem.Id);
+			Guard.AgainstNull(lexicalUnitWritingSystem, "lexicalUnitWritingSystem");
+			Guard.AgainstNull(field, "field");
+
+
+			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}_{2}", field, lexicalUnitWritingSystem.Id, GetCacheWritingSystemTag(searchWritingSystemIds));
+			//cacheName = MakeSafeForFileName(cacheName);
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> lexicalFormQuery = new DelegateQuery<LexEntry>(
 					delegate(LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-						Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field).FilteringPredicate;
+						Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field, searchWritingSystemIds).FilteringPredicate;
 						if(filteringPredicate(entryToQuery))
 						{
 							string lexicalForm = null;
@@ -911,6 +906,34 @@ namespace WeSay.LexicalModel
 
 			return resultsFromCache;
 		}
+
+		/// <summary>
+		/// Given a list of writingSystems, combine them in a way that can be used to uniquely identify a cache of results
+		/// </summary>
+		/// <param name="ids"></param>
+		/// <returns></returns>
+		private string GetCacheWritingSystemTag(string[] ids)
+		{
+			if(ids == null || ids.Length ==0)
+			{
+			   return "all";
+			}
+			else
+			{
+				string wsTag="";
+				ids.ForEach(id => wsTag += id);
+				return wsTag;
+			}
+		}
+//
+//        private string MakeSafeForFileName(string fileName)
+//        {
+//            foreach (char invalChar in Path.GetInvalidFileNameChars())
+//            {
+//                fileName = fileName.Replace(invalChar.ToString(), "");
+//            }
+//            return fileName;
+//        }
 
 		#region IDisposable Members
 

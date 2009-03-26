@@ -14,7 +14,12 @@ namespace WeSay.Foundation
 
 			foreach (var part in x)
 			{
-				r.Add(part.Trim());
+				var p = part.Trim();
+				if(p != string.Empty)
+				{
+					r.Add(p);
+				}
+
 			}
 			return r;
 		}

@@ -86,7 +86,7 @@ namespace WeSay.LexicalTools.Tests
 
 			_missingTranslationRecordList =
 					_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(
-							exampleTranslationField, _writingSystem);
+							exampleTranslationField, null, _writingSystem);
 		}
 
 		private void CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)
