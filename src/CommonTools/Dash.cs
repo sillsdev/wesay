@@ -711,8 +711,10 @@ namespace WeSay.CommonTools
 				throw new InvalidOperationException(
 						"Deactivate should only be called once after Activate.");
 			}
+			SuspendLayout(); //NB: In WS-1234, the user found this to be really slow (!,??), hence the suspend
 			_toolTip.RemoveAll();
 			_panel.Controls.Clear();
+			ResumeLayout();
 			_isActive = false;
 		}
 
