@@ -80,13 +80,7 @@ namespace WeSay.LexicalTools
 
 			_reminder.Text = _presentationModel.Reminder;
 
-			try
-			{
-				_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
-			}
-			catch(ArgumentOutOfRangeException e)            {
-				Palaso.Reporting.ErrorNotificationDialog.ReportException(new ApplicationException("Apparent issue WS-1202 reproduction\r\n",e), null, false);
-			}
+		   _movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 
 			_movingLabel.Finished += _animator_Finished;
 

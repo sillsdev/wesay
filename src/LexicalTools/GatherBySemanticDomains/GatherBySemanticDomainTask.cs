@@ -60,6 +60,7 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
+
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 
 
