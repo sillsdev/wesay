@@ -63,7 +63,13 @@ namespace WeSay.LexicalTools
 
 			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
 															{_presentationModel.WordWritingSystem};
-			_meaningBox.WritingSystemsForThisField = new WritingSystem[] { _presentationModel.DefinitionWritingSystem};
+
+			if( _vernacularBox.WritingSystemsForThisField.Count ==0 ||  _vernacularBox.TextBoxes.Count == 0)
+			{
+				Palaso.Reporting.ErrorNotificationDialog.ReportException(new ApplicationException("Apparent issue WS-1202 reproduction. We would like to have a copy of your .wesayconfig file."), null, false);
+			}
+
+			_meaningBox.WritingSystemsForThisField = new WritingSystem[] {_presentationModel.DefinitionWritingSystem};
 			_meaningBox.Visible = _presentationModel.ShowDefinitionField;
 			_meaningLabel.Visible = _meaningBox.Visible;
 
@@ -74,7 +80,14 @@ namespace WeSay.LexicalTools
 
 			_reminder.Text = _presentationModel.Reminder;
 
-			_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
+			try
+			{
+				_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
+			}
+			catch(ArgumentOutOfRangeException e)            {
+				Palaso.Reporting.ErrorNotificationDialog.ReportException(new ApplicationException("Apparent issue WS-1202 reproduction\r\n",e), null, false);
+			}
+
 			_movingLabel.Finished += _animator_Finished;
 
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
