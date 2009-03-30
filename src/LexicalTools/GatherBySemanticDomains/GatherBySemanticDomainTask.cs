@@ -217,7 +217,7 @@ namespace WeSay.LexicalTools
 				return key;
 			}
 			string prefix = "";
-			string number = option.Abbreviation.GetExactAlternative(SemanticDomainWritingSystemId);
+			string number = option.Abbreviation.GetBestAlternativeString(new string[]{SemanticDomainWritingSystemId, "en"});
 			var indentLevel = 0;
 			if (!string.IsNullOrEmpty(number))
 			{
@@ -229,7 +229,7 @@ namespace WeSay.LexicalTools
 				prefix = "      ".Substring(0, indentLevel) + number + " ";
 			}
 			return prefix //this puts the number back in
-				+ option.Name.GetExactAlternative(SemanticDomainWritingSystemId);
+				+ option.Name.GetBestAlternativeString(new string[] { SemanticDomainWritingSystemId, "en" });
 		}
 
 		private Option GetOptionFromKey(string key)
