@@ -174,10 +174,10 @@ namespace WeSay.LexicalTools
 			this._showAllFieldsToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._showAllFieldsToggleButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 			this._showAllFieldsToggleButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-			this._showAllFieldsToggleButton.Location = new System.Drawing.Point(363, 1);
+			this._showAllFieldsToggleButton.Location = new System.Drawing.Point(329, 1);
 			this._showAllFieldsToggleButton.Margin = new System.Windows.Forms.Padding(0);
 			this._showAllFieldsToggleButton.Name = "_showAllFieldsToggleButton";
-			this._showAllFieldsToggleButton.Size = new System.Drawing.Size(120, 25);
+			this._showAllFieldsToggleButton.Size = new System.Drawing.Size(154, 25);
 			this._showAllFieldsToggleButton.TabIndex = 2;
 			this._showAllFieldsToggleButton.Text = "&Show All Fields";
 			this._showAllFieldsToggleButton.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -193,10 +193,10 @@ namespace WeSay.LexicalTools
 			this._btnDeleteWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnDeleteWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 			this._btnDeleteWord.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-			this._btnDeleteWord.Location = new System.Drawing.Point(200, 1);
+			this._btnDeleteWord.Location = new System.Drawing.Point(188, 1);
 			this._btnDeleteWord.Margin = new System.Windows.Forms.Padding(0);
 			this._btnDeleteWord.Name = "_btnDeleteWord";
-			this._btnDeleteWord.Size = new System.Drawing.Size(138, 25);
+			this._btnDeleteWord.Size = new System.Drawing.Size(150, 25);
 			this._btnDeleteWord.TabIndex = 1;
 			this._btnDeleteWord.Text = "~&Delete This Word";
 			this._btnDeleteWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
