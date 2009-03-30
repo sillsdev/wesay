@@ -57,6 +57,8 @@ namespace Addin.Transform.PdfDictionary
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
+			if(!PrinceXmlWrapper.IsPrinceInstalled)
+				throw new ConfigurationException("WeSay could not find PrinceXml.  Make sure you've installed it (get it from princexml.com).");
 			string htmlPath = CreateFileToOpen(projectInfo, true, false);
 			if (string.IsNullOrEmpty(htmlPath))
 			{
