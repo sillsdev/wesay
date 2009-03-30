@@ -456,7 +456,7 @@
   </semantic-domain>
   <semantic-domain guid="I349937E3-A2FD-41F8-B7C4-BD6FA106ADD4" id="1.1.3.7 Flood">
 	<question>
-	  What words refer to a time when there is too much rain? (heavy rains, experience torrential rains, el NiÃ±o)
+	  What words refer to a time when there is too much rain? (heavy rains, experience torrential rains, el Niño)
 	</question>
 	<question>
 	  What words refer to when the ground is covered by water? (flood (n), flood (v), flooding, inundate, deluge)
@@ -473,7 +473,7 @@
   </semantic-domain>
   <semantic-domain guid="IE6B21531-B7D0-4E37-B01B-3CA49A285168" id="1.1.3.8 Drought">
 	<question>
-	  What words refer to a time when there is little or no rain? (drought, extended drought, lack of rain, have no rain, go without rain, la NiÃ±a)
+	  What words refer to a time when there is little or no rain? (drought, extended drought, lack of rain, have no rain, go without rain, la Niña)
 	</question>
 	<question>
 	  What words describe the ground when there is no rain? (dry, parched, cracked, dusty)
@@ -4634,7 +4634,7 @@
 	  What words refer to the state of being engaged to be married? (engaged, engagement, betrothed, betrothal, espoused, promised,)
 	</question>
 	<question>
-	  What words refer to the people who are engaged to be married? (fiancÃ©, fiancÃ©e, engaged couple, bride-to-be, husband-to-be,)
+	  What words refer to the people who are engaged to be married? (fiancé, fiancée, engaged couple, bride-to-be, husband-to-be,)
 	</question>
 	<question>
 	  What words refer to a person who helps with the negotiations? (matchmaker, go-between)
@@ -5142,7 +5142,7 @@
 	  What words refer to someone who cares for a child? (nurse, nursemaid, guardian, nanny, babysitter, sitter, child minder,)
 	</question>
 	<question>
-	  What words refer to a place where children are cared for? (nursery, crÃ¨che, childcare facility,)
+	  What words refer to a place where children are cared for? (nursery, crèche, childcare facility,)
 	</question>
   </semantic-domain>
   <semantic-domain guid="IF74F28D1-8742-4C9F-95DC-D08336E91249" id="2.6.4.3 Youth">
@@ -5314,7 +5314,7 @@
 	  What words describe something to do with men? (male, masculine,)
 	</question>
 	<question>
-	  What words refer to whether or not a man is married? (bachelor, castrated, celibate, divorcÃ©, eunuch, widower,)
+	  What words refer to whether or not a man is married? (bachelor, castrated, celibate, divorcé, eunuch, widower,)
 	</question>
 	<question>
 	  What do you call a man when you talk to him? (sir, Mr., mate, buddy, mister, sire, lord,)
@@ -5340,7 +5340,7 @@
 	  What words describe something to do with women? (female, feminine, women's)
 	</question>
 	<question>
-	  What words refer to whether or not a woman is married? (wife, virgin, old maid, maiden, divorcÃ©e, lesbian,)
+	  What words refer to whether or not a woman is married? (wife, virgin, old maid, maiden, divorcée, lesbian,)
 	</question>
 	<question>
 	  What do you call a woman when you talk to her? (madam, ma'am, Miss, Mrs., Ms., lady, Lady,)
@@ -7460,7 +7460,7 @@
 	  What words refer to the feeling of indifference? (indifference, neutrality, apathy, unconcern, lack of concern,)
 	</question>
 	<question>
-	  What words describe someone who feels indifferent? (indifferent, neutral, apathetic, unconcerned, unmoved, blasÃ©, careless, lackadaisical, half-hearted, casual, offhand, nonchalant, gaily)
+	  What words describe someone who feels indifferent? (indifferent, neutral, apathetic, unconcerned, unmoved, blasé, careless, lackadaisical, half-hearted, casual, offhand, nonchalant, gaily)
 	</question>
 	<question>
 	  What words refer to feeling very indifferent? (not give a damn, couldn't care less, be past caring, for all I care,)
@@ -8255,7 +8255,7 @@
 	  What words refer to when a person wants to speak but hesitates? (hesitate, pause, false start)
 	</question>
 	<question>
-	  What words describe something that has been said so often that people think it is stupid? (trite, over-used, stale, banal, be wearing thin, threadbare, clichÃ©d, corny, hackneyed, shopworn, stereotyped, commonplace)
+	  What words describe something that has been said so often that people think it is stupid? (trite, over-used, stale, banal, be wearing thin, threadbare, clichéd, corny, hackneyed, shopworn, stereotyped, commonplace)
 	</question>
   </semantic-domain>
   <semantic-domain guid="IE45B8BAC-9623-4f84-A113-9DEC13A8DB64" id="3.5.1.2 Talk about a subject">
@@ -8928,7 +8928,7 @@
 	  What words refer to a section of writing? (paragraph, text, section, chapter, point, construction, document, passage, portion,)
 	</question>
 	<question>
-	  What words refer to a group of words that express a particular meaning? (adage, aphorism, byword, clichÃ©, dictum, epigram, expression, idiom, motto, phrase, proverb, saying, slogan, watchword,)
+	  What words refer to a group of words that express a particular meaning? (adage, aphorism, byword, cliché, dictum, epigram, expression, idiom, motto, phrase, proverb, saying, slogan, watchword,)
 	</question>
 	<question>
 	  What words refer to two words that are often used together? (collocate, collocate (v),)
@@ -8975,7 +8975,7 @@
 	  What words refer to a saying used by someone to express their beliefs? (motto, slogan, catchphrase,)
 	</question>
 	<question>
-	  What words refer to a saying that is used so often that people think it is stupid? (clichÃ©, platitude,)
+	  What words refer to a saying that is used so often that people think it is stupid? (cliché, platitude,)
 	</question>
 	<question>
 	  What words describe a saying? (proverbial, axiomatic, pithy, succinct, terse,)
@@ -9053,7 +9053,7 @@
 	  What words are used in an obscene way? (damn, damn it, God damn, Hell, shit, screw, fuck, bastard, son of a bitch, bitch,)
 	</question>
 	<question>
-	  What words describe speech or actions that are obscene? (obscene, coarse, crude, dirty, filthy, improper, indecent, lewd, naughty, profane, risquÃ©, rude, saucy, suggestive, vulgar,)
+	  What words describe speech or actions that are obscene? (obscene, coarse, crude, dirty, filthy, improper, indecent, lewd, naughty, profane, risqué, rude, saucy, suggestive, vulgar,)
 	</question>
 	<question>
 	  What words describe someone who uses obscenities a lot? (foul-mouthed,)
@@ -11197,7 +11197,7 @@
   </semantic-domain>
   <semantic-domain guid="IB553E989-2B2A-4B1E-A987-AE75F3862501" id="4.3.3.2 Not care">
 	<question>
-	  What words describe someone who is uncaring? (uncaring, unconcerned, unfeeling, apathetic, indifferent, unmoved, blasÃ©,)
+	  What words describe someone who is uncaring? (uncaring, unconcerned, unfeeling, apathetic, indifferent, unmoved, blasé,)
 	</question>
 	<question>
 	  What words refer to being uncaring? (don't care, not give a damn, couldn't care less, be past caring, shrug off,)
@@ -14204,13 +14204,13 @@
   </semantic-domain>
   <semantic-domain guid="IFC0AFB69-A4D4-439A-91CD-ED0CE67677B5" id="5.2.1.1 Cooking methods">
 	<question>
-	  What words refer to various ways of cooking food? (cook, bake, baste, boil, boil over, braise, brew, broil, brown (v), fry, deep fat fry, grill, marinate, pan-fry, parboil, pickle, poach, roast, sautÃ©, season, sift, simmer, steam, stew, stir fry,)
+	  What words refer to various ways of cooking food? (cook, bake, baste, boil, boil over, braise, brew, broil, brown (v), fry, deep fat fry, grill, marinate, pan-fry, parboil, pickle, poach, roast, sauté, season, sift, simmer, steam, stew, stir fry,)
 	</question>
 	<question>
 	  What ways can you cook an egg? (boil, fry, scramble, poach, bake)
 	</question>
 	<question>
-	  What words describe something that has been cooked? (cooked, boiled, braised, broiled, fried, grilled, marinated, parboiled, pickled, poached, sautÃ©ed, stewed,)
+	  What words describe something that has been cooked? (cooked, boiled, braised, broiled, fried, grilled, marinated, parboiled, pickled, poached, sautéed, stewed,)
 	</question>
 	<question>
 	  What words describe something that is being cooked? (sizzle,)
@@ -17416,7 +17416,7 @@
   </semantic-domain>
   <semantic-domain guid="I0B7BFD0A-249C-45B6-9427-2C17AE00BF37" id="6.6.4.1 Cordage">
 	<question>
-	  What words refer to working with cords and ropes? (cordage, knot, lashing, macramÃ©,)
+	  What words refer to working with cords and ropes? (cordage, knot, lashing, macramé,)
 	</question>
 	<question>
 	  What words refer to something becoming unraveled? (unravel, come unraveled, be all unraveled, ravel)
@@ -24880,7 +24880,7 @@
 	  What words describe something that is old fashioned and no longer used? (antiquated, dated, fusty, early type/form of, obsolete, primitive,)
 	</question>
 	<question>
-	  What words describe an old fashioned idea or way of doing something? (old, customary, inveterate, passÃ©, traditional, tried and true, well-trodden,)
+	  What words describe an old fashioned idea or way of doing something? (old, customary, inveterate, passé, traditional, tried and true, well-trodden,)
 	</question>
 	<question>
 	  What words describe something that is so old fashioned that people think it is stupid? (medieval, out of the ark, dinosaur, anachronism, archaic,)
