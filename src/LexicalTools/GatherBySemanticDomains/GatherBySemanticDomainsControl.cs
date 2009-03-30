@@ -28,11 +28,7 @@ namespace WeSay.LexicalTools
 
 			InitializeDisplaySettings();
 			RefreshCurrentWords();
-			_domainName.Items.Clear();
-			foreach (string domainName in _presentationModel.DomainNames)
-			{
-				_domainName.Items.Add(domainName);
-			}
+			LoadDomainListCombo();
 			RefreshCurrentDomainAndQuestion();
 			bool showDescription = false;
 			if (!showDescription)
@@ -92,9 +88,18 @@ namespace WeSay.LexicalTools
 				#if MONO
 				_domainName.Font = new Font("monospace", _domainName.Font.Size, FontStyle.Bold);
 #else
-				_domainName.Font = new Font("Lucida Console", _domainName.Font.Size, FontStyle.Bold);
+				_domainListComboBox.Font = new Font("Lucida Console", _domainListComboBox.Font.Size, FontStyle.Bold);
 #endif
 
+			}
+		}
+
+		private void LoadDomainListCombo()
+		{
+			_domainListComboBox.Items.Clear();
+			foreach (string domainName in _presentationModel.DomainNames)
+			{
+				_domainListComboBox.Items.Add(domainName);
 			}
 		}
 
@@ -106,7 +111,7 @@ namespace WeSay.LexicalTools
 		private void RefreshCurrentDomainAndQuestion()
 		{
 			//_domainName.Text = _presentationModel.CurrentDomainName;
-			_domainName.SelectedIndex = _presentationModel.CurrentDomainIndex;
+			_domainListComboBox.SelectedIndex = _presentationModel.CurrentDomainIndex;
 			_description.Text = _presentationModel.CurrentDomainDescription;
 			_question.Text = _presentationModel.CurrentQuestion;
 			_btnNext.Enabled = _presentationModel.CanGoToNext;
@@ -189,7 +194,7 @@ namespace WeSay.LexicalTools
 		private void GatherWordListControl_BackColorChanged(object sender, EventArgs e)
 		{
 			//_listViewWords.BackColor = BackColor;
-			_domainName.BackColor = BackColor;
+			_domainListComboBox.BackColor = BackColor;
 			_description.BackColor = BackColor;
 			_question.BackColor = BackColor;
 			_reminder.BackColor = BackColor;
@@ -322,7 +327,7 @@ namespace WeSay.LexicalTools
 
 		private void _domainName_MeasureItem(object sender, MeasureItemEventArgs e)
 		{
-			Size size = TextRenderer.MeasureText(DomainNameAndCount(e.Index), _domainName.Font);
+			Size size = TextRenderer.MeasureText(DomainNameAndCount(e.Index), _domainListComboBox.Font);
 			e.ItemHeight = size.Height;
 			e.ItemWidth = size.Width;
 		}
@@ -349,7 +354,7 @@ namespace WeSay.LexicalTools
 
 		private void _domainName_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			_presentationModel.CurrentDomainIndex = _domainName.SelectedIndex;
+			_presentationModel.CurrentDomainIndex = _domainListComboBox.SelectedIndex;
 			RefreshCurrentDomainAndQuestion();
 			_vernacularBox.FocusOnFirstWsAlternative();
 		}

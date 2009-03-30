@@ -1157,8 +1157,8 @@ namespace WeSay.LexicalTools.Tests
 																			 template,
 																			 new TaskMemoryRepository());
 			task.Activate();
-			Assert.AreEqual("L'univers physique", task.DomainNames[0]);
-			Assert.AreEqual("Ciel", task.DomainNames[1]);
+			Assert.AreEqual("1 L'univers physique", task.DomainNames[0]);
+			Assert.AreEqual(" 1.1 Ciel", task.DomainNames[1]);
 			Assert.AreEqual("fr", task.SemanticDomainWritingSystemId);
 
 			File.Delete(frenchSemanticDomainFilePath);
