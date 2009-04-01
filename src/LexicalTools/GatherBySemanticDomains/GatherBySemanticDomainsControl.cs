@@ -85,8 +85,8 @@ namespace WeSay.LexicalTools
 			List<string> majorRomanWritingSystems = new List<string>(new string[] {"en", "id", "fr"});
 			if(majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemId))
 			{
-				#if MONO
-				_domainName.Font = new Font("monospace", _domainName.Font.Size, FontStyle.Bold);
+#if MONO
+				_domainListComboBox.Font = new Font("monospace", _domainListComboBox.Font.Size, FontStyle.Bold);
 #else
 				_domainListComboBox.Font = new Font("Lucida Console", _domainListComboBox.Font.Size, FontStyle.Bold);
 #endif
