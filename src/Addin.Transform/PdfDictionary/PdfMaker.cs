@@ -105,7 +105,7 @@ namespace Addin.Transform.PdfDictionary
 			}
 			catch (Exception e)
 			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
 		}
 

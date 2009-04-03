@@ -222,7 +222,7 @@ namespace Addin.Transform
 								}
 								catch (ArgumentException err)
 								{
-									ErrorReport.ReportNonFatalMessage(
+									ErrorReport.NotifyUserOfProblem(
 											"Sorry, there is a problem in one of the tweaks for SFM export.  They must each be valid 'regular expressions'.  The error was: {0}",
 											err.Message);
 								}

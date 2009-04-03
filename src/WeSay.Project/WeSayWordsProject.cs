@@ -159,12 +159,12 @@ namespace WeSay.Project
 		public void HandleProbableCacheProblem(Exception error)
 		{
 #if DEBUG
-			ErrorReport.ReportNonFatalMessage(
+			ErrorReport.NotifyUserOfProblem(
 					"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.\r\n\r\nIn the release build, the cache would now be invalidated and the user would not see the following crash dialog.");
 			throw error;
 #else
 			//todo: make a way to pass on this error to us
-			Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+			Palaso.Reporting.ErrorReport.NotifyUserOfProblem(
 				"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.");
 #endif
 		}
@@ -176,7 +176,7 @@ namespace WeSay.Project
 
 				if (!File.Exists(liftPath))
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nTry opening the LIFT file by double clicking on it.",
 									liftPath));
@@ -191,7 +191,7 @@ namespace WeSay.Project
 				}
 				catch (UnauthorizedAccessException)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for writing, because the system won't allow it. Check that 'ReadOnly' is cleared, otherwise investigate your user permissions to write to this file.",
 									liftPath));
@@ -199,7 +199,7 @@ namespace WeSay.Project
 				}
 				catch (IOException)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for writing, probably because it is locked by some other process on your computer. Maybe you need to quit WeSay? If you can't figure out what has it locked, restart your computer.",
 									liftPath));
@@ -216,7 +216,7 @@ namespace WeSay.Project
 
 				if (!File.Exists(liftPath))
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay tried to find the WeSay configuration file at '{0}', but could not find it.\r\n\r\nTry using the configuration Tool to create one.",
 									PathToConfigFile));
@@ -231,7 +231,7 @@ namespace WeSay.Project
 				}
 				catch (UnauthorizedAccessException)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
 									PathToConfigFile));
@@ -239,7 +239,7 @@ namespace WeSay.Project
 				}
 				catch (IOException e)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
 									PathToConfigFile,
@@ -255,7 +255,7 @@ namespace WeSay.Project
 			}
 			catch (ConfigurationException e)
 			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.NotifyUserOfProblem(e.Message);
 				return false;
 			}
 		}
@@ -488,7 +488,7 @@ namespace WeSay.Project
 				ApplicationException e =
 						new ApplicationException(
 								"Error while trying to migrate to new file structure. ", err);
-				ErrorNotificationDialog.ReportException(e);
+				ErrorReport.ReportFatalException(e);
 			}
 		}
 
@@ -527,7 +527,7 @@ namespace WeSay.Project
 				ApplicationException e =
 						new ApplicationException(
 								"Error while trying to move export files to new structure. ", err);
-				ErrorNotificationDialog.ReportException(e);
+				ErrorReport.ReportFatalException(e);
 			}
 		}
 
@@ -658,7 +658,7 @@ namespace WeSay.Project
 //                }
 //                catch (Exception error)
 //                {
-//                    ErrorReport.ReportNonFatalMessage(
+//                    ErrorReport.NotifyUserOfProblem(
 //                            "There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
 //                            error.Message);
 //                }
@@ -687,7 +687,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"There was a problem reading the addins-settings xml. {0}", error.Message);
 				return null;
 			}
@@ -719,7 +719,7 @@ namespace WeSay.Project
 				}
 				catch (Exception e)
 				{
-					ErrorReport.ReportNonFatalMessage("There was a problem reading the task xml. " +
+					ErrorReport.NotifyUserOfProblem("There was a problem reading the task xml. " +
 													  e.Message);
 					projectDoc = null;
 				}
@@ -1288,7 +1288,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.ReportNonFatalMessage("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
+				ErrorReport.NotifyUserOfProblem("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
 				return false;
 			}
 
@@ -1364,7 +1364,7 @@ namespace WeSay.Project
 				string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
 				if (!String.IsNullOrEmpty(errors))
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							"The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
 							pathToLift,
 							errors);
@@ -1373,7 +1373,7 @@ namespace WeSay.Project
 			}
 			catch (Exception e)
 			{
-				ErrorNotificationDialog.ReportException(e);
+				ErrorReport.ReportNonFatalException(e);
 				return true;
 			}
 			return false;
@@ -1418,7 +1418,7 @@ namespace WeSay.Project
 				catch (IOException)
 				{
 					//nb: we don't want to provide an option to cancel.  Better to crash than cancel.
-					ErrorReport.ReportNonFatalMessage(Application.ProductName +
+					ErrorReport.NotifyUserOfProblem(Application.ProductName +
 													  " was unable to get at the dictionary file to update it.  Please ensure that WeSay isn't running with it open, then click the 'OK' button below. If you cannot figure out what program has the LIFT file open, the best choice is to kill WeSay Configuration Tool using the Task Manager (ctrl+alt+del), so that the configuration does not fall out of sync with the LIFT file.");
 				}
 			}
@@ -1484,7 +1484,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.ReportNonFatalMessage(string.Format("WeSay was not able to do a backup.\r\nReason: {0}", error.Message));
+				ErrorReport.NotifyUserOfProblem(string.Format("WeSay was not able to do a backup.\r\nReason: {0}", error.Message));
 			}
 		}
 

@@ -370,7 +370,7 @@ namespace WeSay.ConfigTool
 
 			if (conflictFound)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"Sorry, WeSay cannot change the type of this field to '{0}', because there is existing data in the LIFT file of the old type, '{1}'",
 						newDataTypeName,
 						oldDataTypeName);

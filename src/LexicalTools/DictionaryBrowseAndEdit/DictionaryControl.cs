@@ -145,7 +145,7 @@ namespace WeSay.LexicalTools
 				}
 				else
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							"There are no writing systems enabled for the Field '{0}'",
 							field.FieldName);
 				}

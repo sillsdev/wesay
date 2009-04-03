@@ -127,7 +127,7 @@ namespace WeSay.App
 					return;
 				}
 			}
-			ErrorReport.ReportNonFatalMessage(
+			ErrorReport.NotifyUserOfProblem(
 					"Sorry, that URL requires a task which is not currently enabled for this user. ({0})",
 					url);
 			throw new NavigationException("Couldn't locate ");
@@ -300,7 +300,7 @@ namespace WeSay.App
 			}
 			catch (ConfigurationException e) //let others go through the normal bug reporting system
 			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.NotifyUserOfProblem(e.Message);
 				Logger.WriteEvent("Failed Activating");
 				return;
 			}

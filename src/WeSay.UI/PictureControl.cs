@@ -113,7 +113,7 @@ namespace WeSay.UI
 			}
 			catch (Exception error)
 			{
-				ErrorReport.ReportNonFatalMessage("Something went wrong getting the picture. " +
+				ErrorReport.NotifyUserOfProblem("Something went wrong getting the picture. " +
 												  error.Message);
 			}
 		}
@@ -166,7 +166,7 @@ namespace WeSay.UI
 			//            }
 			//            catch(Exception error)
 			//            {
-			//                Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
+			//                Palaso.Reporting.ErrorReport.NotifyUserOfProblem(error.Message);
 			//            }
 
 			_fileName = string.Empty;

@@ -158,8 +158,8 @@ namespace Addin.Transform
 				if (dlg.ProgressStateResult != null &&
 					dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
 				{
-					ErrorNotificationDialog.ReportException(
-							dlg.ProgressStateResult.ExceptionThatWasEncountered, null, false);
+					ErrorReport.ReportNonFatalException(
+							dlg.ProgressStateResult.ExceptionThatWasEncountered);
 					return false;
 				}
 				return !dlg.ProgressState.Cancel;

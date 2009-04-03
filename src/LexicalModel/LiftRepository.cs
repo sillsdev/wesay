@@ -385,23 +385,23 @@ namespace WeSay.LexicalModel
 					string contents = File.ReadAllText(error.PathToNewFile);
 					if (contents.Trim().Length == 0)
 					{
-						ErrorReport.ReportNonFatalMessage(
+						ErrorReport.NotifyUserOfProblem(
 								"It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
 						File.Delete(error.PathToNewFile);
 					}
 					else
 					{
 						File.Move(error.PathToNewFile, error.PathToNewFile + ".bad");
-						ErrorReport.ReportNonFatalMessage(
+						ErrorReport.NotifyUserOfProblem(
 								"WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.",
 								error.PathToNewFile + ".bad");
-						ErrorNotificationDialog.ReportException(error, null, false);
+						ErrorReport.ReportNonFatalException(error);
 					}
 					//return false; //!!! remove CJP
 				}
 				catch (Exception e)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							"Could not finish updating LIFT dictionary file. Will try again later."+Environment.NewLine+" ("+e.Message+")");
 				}
 #if DEBUG

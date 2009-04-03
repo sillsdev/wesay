@@ -709,7 +709,7 @@ namespace WeSay.LexicalTools
 					if (!_alreadyReportedWSLookupFailure)
 					{
 						_alreadyReportedWSLookupFailure = true;
-						ErrorReport.ReportNonFatalMessage(
+						ErrorReport.NotifyUserOfProblem(
 							"WeSay was unable to get a writing system to use from the configuration Semantic Domain Field. English will be used.");
 					}
 				}

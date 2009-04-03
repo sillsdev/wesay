@@ -107,17 +107,17 @@ namespace WeSay.LexicalModel
 		//            string contents = File.ReadAllText(error.PathToNewFile);
 		//            if (contents.Trim().Length == 0)
 		//            {
-		//                ErrorReport.ReportNonFatalMessage(
+		//                ErrorReport.NotifyUserOfProblem(
 		//                        "It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
 		//                File.Delete(error.PathToNewFile);
 		//            }
 		//            else
 		//            {
 		//                File.Move(error.PathToNewFile, error.PathToNewFile + ".bad");
-		//                ErrorReport.ReportNonFatalMessage(
+		//                ErrorReport.NotifyUserOfProblem(
 		//                        "WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.",
 		//                        error.PathToNewFile + ".bad");
-		//                ErrorNotificationDialog.ReportException(error, null, false);
+		//                ErrorReport.ReportException(error, null, false);
 		//            }
 		//            return false;
 		//        }
@@ -218,23 +218,23 @@ namespace WeSay.LexicalModel
 
 		//        try
 		//        {
-		//            ErrorReport.ReportNonFatalMessage(
+		//            ErrorReport.NotifyUserOfProblem(
 		//                    "It appears that WeSay did not exit normally last time.  WeSay will now attempt to recover the {0} records which were not saved.",
 		//                    records.Count);
 		//            DoLiftUpdateNow(false);
 		//            //                    _didFindDataInCacheNeedingRecovery = true;
-		//            ErrorReport.ReportNonFatalMessage("Your work was successfully recovered.");
+		//            ErrorReport.NotifyUserOfProblem("Your work was successfully recovered.");
 		//        }
 		//        catch (Exception)
 		//        {
-		//            ErrorReport.ReportNonFatalMessage(
+		//            ErrorReport.NotifyUserOfProblem(
 		//                    "Sorry, WeSay was unable to recover some of your work.");
 		//            WeSayWordsProject.Project.InvalidateCacheSilently();
 		//        }
 		//    }
 		//    catch (Exception)
 		//    {
-		//        ErrorReport.ReportNonFatalMessage(
+		//        ErrorReport.NotifyUserOfProblem(
 		//                "WeSay had a problem reading the cache.  It will now be rebuilt");
 		//        WeSayWordsProject.Project.InvalidateCacheSilently();
 		//    }

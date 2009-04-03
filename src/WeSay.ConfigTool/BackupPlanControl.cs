@@ -52,7 +52,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Something went wrong choosing the folder. " +
+				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Something went wrong choosing the folder. " +
 																   error.Message);
 			}
 		}

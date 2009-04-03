@@ -98,7 +98,7 @@ namespace WeSay.UI.TextBoxes
 			}
 			catch (Exception)
 			{
-				ErrorReport.ReportNonFatalMessage("Could not get a connection to Toolbox.");
+				ErrorReport.NotifyUserOfProblem("Could not get a connection to Toolbox.");
 				throw;
 			}
 		}

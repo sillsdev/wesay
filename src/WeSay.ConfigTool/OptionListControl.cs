@@ -54,7 +54,7 @@ namespace WeSay.ConfigTool
 				}
 				catch (Exception error)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
 							path,
 							error.Message);
@@ -135,7 +135,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (ConfigurationException e)
 			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
 		}
 

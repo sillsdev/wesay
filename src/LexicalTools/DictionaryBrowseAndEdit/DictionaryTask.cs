@@ -67,7 +67,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 						//there's no scenario where it is worth crashing or even notifying
 						Logger.WriteEvent("Error: " + error.Message);
 #if DEBUG
-						ErrorReport.ReportNonFatalMessage("Only seeing this because youre in debug mode:\r\n"+error.Message);
+						ErrorReport.NotifyUserOfProblem("Only seeing this because youre in debug mode:\r\n"+error.Message);
 #endif
 					}
 				}

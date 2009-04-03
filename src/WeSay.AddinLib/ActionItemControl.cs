@@ -152,7 +152,7 @@ namespace WeSay.AddinLib
 			}
 			catch (Exception error)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"Sorry, WeSay had a problem storing those settings. {0}", error.Message);
 			}
 

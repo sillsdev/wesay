@@ -80,7 +80,7 @@ namespace WeSay.CommonTools
 			}
 			catch
 			{
-				ErrorReport.ReportNonFatalMessage("Could not start " + startInfo.FileName);
+				ErrorReport.NotifyUserOfProblem("Could not start " + startInfo.FileName);
 				return;
 			}
 
@@ -190,7 +190,7 @@ namespace WeSay.CommonTools
 					}
 					catch (Exception error)
 					{
-						ErrorReport.ReportNonFatalMessage(error.Message);
+						ErrorReport.NotifyUserOfProblem(error.Message);
 					}
 
 					Cursor.Current = Cursors.Default;

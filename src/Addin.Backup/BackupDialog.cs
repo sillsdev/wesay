@@ -45,7 +45,7 @@ namespace Addin.Backup
 			}
 			catch (Exception e)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"WeSay could to perform the backup.  Reason: {0}", e.Message);
 				_topLabel.Text = "~Files were not backed up.";
 				_topLabel.ForeColor = Color.Red;
@@ -91,7 +91,7 @@ namespace Addin.Backup
 			catch (Exception error)
 			{
 				_checkForUsbKeyTimer.Enabled = false;
-				ErrorNotificationDialog.ReportException(error, this, false);
+				ErrorReport.ReportNonFatalException(error);
 				_topLabel.Text = "Unable to look for the device due to an error.";
 			}
 		}

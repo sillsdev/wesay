@@ -117,7 +117,7 @@ namespace WeSay.ConfigTool
 			string configFilePath = (string) sender;
 			if (!File.Exists(configFilePath))
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"WeSay could not find the file at {0} anymore.  Maybe it was moved or renamed?",
 						configFilePath);
 				return;
@@ -159,7 +159,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception e)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"WeSay was not able to create a project there. \r\n" + e.Message);
 				return;
 			}
@@ -218,7 +218,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception e)
 			{
-				ErrorReport.ReportNonFatalMessage("WeSay was not able to open that project. \r\n" +
+				ErrorReport.NotifyUserOfProblem("WeSay was not able to open that project. \r\n" +
 												  e.Message);
 				return;
 			}
@@ -324,7 +324,7 @@ namespace WeSay.ConfigTool
 			catch (Exception error)
 			{
 				//would make it impossible to quit. e.Cancel = true;
-				ErrorReport.ReportNonFatalMessage(error.Message);
+				ErrorReport.NotifyUserOfProblem(error.Message);
 			}
 		}
 

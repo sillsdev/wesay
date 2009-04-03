@@ -117,7 +117,7 @@ namespace WeSay.ConfigTool
 			}
 			if (w == null)
 			{
-				ErrorReport.ReportNonFatalMessage("Could not produce a unique ID.");
+				ErrorReport.NotifyUserOfProblem("Could not produce a unique ID.");
 			}
 			else
 			{
@@ -144,7 +144,7 @@ namespace WeSay.ConfigTool
 				{
 					ws.Id = oldId; //couldn't make the change
 				}
-				//                Reporting.ErrorReporter.ReportNonFatalMessage(
+				//                Reporting.ErrorReporter.NotifyUserOfProblem(
 				//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
 				//                    ws.Id, oldId);
 			}
