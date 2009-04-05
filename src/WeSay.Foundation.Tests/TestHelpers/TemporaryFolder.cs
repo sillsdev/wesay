@@ -11,7 +11,7 @@ namespace WeSay.Foundation.Tests.TestHelpers
 	public class TempLiftFile : TempFile
 	{
 		public TempLiftFile(string xmlOfEntries)
-			: this(xmlOfEntries, /*LiftIO.Validation.Validator.LiftVersion*/ "0.12")
+			: this(xmlOfEntries, /*LiftIO.Validation.Validator.LiftVersion*/ "0.13")
 		{
 		}
 		public TempLiftFile(string xmlOfEntries, string claimedLiftVersion)

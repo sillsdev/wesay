@@ -566,7 +566,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			CreateLexEntryWithSemanticDomain("SemanticDomain2");
 			CreateLexEntryWithSemanticDomain("SemanticDomain1");
-			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			Assert.AreEqual(2, sortedResults.Count);
 			Assert.AreEqual("SemanticDomain1", sortedResults[0]["SemanticDomain"]);
 			Assert.AreEqual("SemanticDomain2", sortedResults[1]["SemanticDomain"]);
@@ -577,7 +577,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryWithTwoIdenticalSenses = CreateLexEntryWithSemanticDomain("SemanticDomain1");
 			AddSenseWithSemanticDomainToLexEntry(entryWithTwoIdenticalSenses, "SemanticDomain1");
-			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			Assert.AreEqual(1, sortedResults.Count);
 			Assert.AreEqual("SemanticDomain1", sortedResults[0]["SemanticDomain"]);
 		}
@@ -586,7 +586,7 @@ namespace WeSay.LexicalModel.Tests
 		public void GetEntriesWithSemanticDomainSortedBySemanticDomain_EntryWithoutSemanticDomain_ReturnEmpty()
 		{
 			LexEntry lexEntryWithoutSemanticDomain = _lexEntryRepository.CreateItem();
-			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			Assert.AreEqual(0, sortedResults.Count);
 		}
 
@@ -596,7 +596,7 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithSemanticDomain.Senses.Add(new LexSense());
 			OptionRefCollection o =
 				lexEntryWithSemanticDomain.Senses[0].GetOrCreateProperty<OptionRefCollection>(
-					LexSense.WellKnownProperties.SemanticDomainsDdp4);
+					LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(semanticDomain);
 			_lexEntryRepository.SaveItem(lexEntryWithSemanticDomain);
 			return lexEntryWithSemanticDomain;
@@ -607,7 +607,7 @@ namespace WeSay.LexicalModel.Tests
 			entry.Senses.Add(new LexSense());
 			OptionRefCollection o =
 				entry.Senses[1].GetOrCreateProperty<OptionRefCollection>(
-					LexSense.WellKnownProperties.SemanticDomainsDdp4);
+					LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(semanticDomain);
 			_lexEntryRepository.SaveItem(entry);
 		}

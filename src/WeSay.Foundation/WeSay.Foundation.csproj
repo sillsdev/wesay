@@ -118,6 +118,7 @@
 	<Compile Include="CommonEnumerations.cs" />
 	<Compile Include="DelegateDefinitions.cs" />
 	<Compile Include="DisposableAction.cs" />
+	<Compile Include="FileUtils.cs" />
 	<Compile Include="FlagState.cs" />
 	<Compile Include="GenericEventArgs.cs" />
 	<Compile Include="Guard.cs" />

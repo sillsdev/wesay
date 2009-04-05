@@ -7,7 +7,6 @@ namespace WeSay.LexicalTools.Tests
 	public class MissingExampleSentenceFilterTests
 	{
 		private MissingFieldQuery _missingExampleSentenceFilter;
-		//private string kNameOfSkipTrait = "flag_skip_LexExampleSentence";
 
 		[SetUp]
 		public void Setup()

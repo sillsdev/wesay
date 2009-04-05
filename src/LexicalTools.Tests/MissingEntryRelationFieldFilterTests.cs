@@ -77,7 +77,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void LexEntryRelationCollectionMissingButSkipFlagged()
 		{
-			_source.SetFlag("flag_skip_synonyms");
+			_source.SetFlag("flag-skip-synonyms");
 			Assert.IsFalse(_missingRelationFieldFilter.FilteringPredicate(_source));
 		}
 	}

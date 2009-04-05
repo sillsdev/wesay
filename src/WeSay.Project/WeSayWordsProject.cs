@@ -25,6 +25,7 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
+using WeSay.Project.ConfigMigration;
 
 namespace WeSay.Project
 {
@@ -44,7 +45,7 @@ namespace WeSay.Project
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
 
-		public const int CurrentWeSayConfigFileVersion = 5; // This variable must be updated with every new vrsion of the WeSay config file
+		public const int CurrentWeSayConfigFileVersion = 6; // This variable must be updated with every new vrsion of the WeSay config file
 
 		public event EventHandler EditorsSaveNow;
 
@@ -315,7 +316,8 @@ namespace WeSay.Project
 					UiFontSizeInPoints = f;
 				}
 				CheckIfConfigFileVersionIsToNew(configDoc);
-				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
+				var m = new ConfigurationMigrator();
+				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
@@ -388,7 +390,7 @@ namespace WeSay.Project
 			}
 
 
-			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
 
 		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
@@ -533,94 +535,12 @@ namespace WeSay.Project
 
 		public bool MigrateConfigurationXmlIfNeeded()
 		{
-			return MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile),
+			var m = new ConfigurationMigrator();
+			return m.MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile),
 												   PathToConfigFile);
 		}
 
-		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc,
-														   string targetPath)
-		{
-			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
-			bool didMigrate = false;
-
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") == null)
-			{
-				MigrateUsingXSLT(configurationDoc, "MigrateConfig0To1.xsl", targetPath);
-				configurationDoc = new XPathDocument(targetPath);
-				didMigrate = true;
-			}
-			if (
-					configurationDoc.CreateNavigator().SelectSingleNode(
-							"configuration[@version='1']") != null)
-			{
-				MigrateUsingXSLT(configurationDoc, "MigrateConfig1To2.xsl", targetPath);
-				configurationDoc = new XPathDocument(targetPath);
-				didMigrate = true;
-			}
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='2']") != null)
-			{
-				MigrateUsingXSLT(configurationDoc, "MigrateConfig2To3.xsl", targetPath);
-				configurationDoc = new XPathDocument(targetPath);
-				didMigrate = true;
-			}
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='3']") != null)
-			{
-				MigrateUsingXSLT(configurationDoc, "MigrateConfig3To4.xsl", targetPath);
-				configurationDoc = new XPathDocument(targetPath);
-				didMigrate = true;
-			}
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='4']") != null)
-			{
-				MigrateUsingXSLT(configurationDoc, "MigrateConfig4To5.xsl", targetPath);
-				configurationDoc = new XPathDocument(targetPath);
-				didMigrate = true;
-			}
-			return didMigrate;
-		}
-
-		private static void MigrateUsingXSLT(IXPathNavigable configurationDoc,
-											 string xsltName,
-											 string targetPath)
-		{
-			Logger.WriteEvent("Migrating Configuration File {0}", xsltName);
-			using (
-					Stream stream =
-							Assembly.GetExecutingAssembly().GetManifestResourceStream(
-									typeof (WeSayWordsProject), xsltName))
-			{
-				XslCompiledTransform transform = new XslCompiledTransform();
-				using (XmlReader reader = XmlReader.Create(stream))
-				{
-					transform.Load(reader);
-					string tempPath = Path.GetTempFileName();
-					XmlWriterSettings settings = new XmlWriterSettings();
-					settings.Indent = true;
-					using (XmlWriter writer = XmlWriter.Create(tempPath, settings))
-					{
-						transform.Transform(configurationDoc, writer);
-						TempFileCollection tempfiles = transform.TemporaryFiles;
-						if (tempfiles != null)
-								// tempfiles will be null when debugging is not enabled
-						{
-							tempfiles.Delete();
-						}
-						writer.Close();
-					}
-					string s = targetPath + ".tmp";
-					if (File.Exists(s))
-					{
-						File.Delete(s);
-					}
-					if (File.Exists(targetPath)) //review: JDH added this because of a failing test, and from my reading, the target shouldn't need to pre-exist
-					{
-						File.Move(targetPath, s);
-					}
-					File.Move(tempPath, targetPath);
-					File.Delete(s);
-				}
-			}
-		}
 
 		//        public void LoadFromConfigFilePath(string path)
 		//        {
@@ -752,7 +672,8 @@ namespace WeSay.Project
 			//hack
 			StickDefaultViewTemplateInNewConfigFile(pathToWritingSystemPrefs, pathToConfigFile);
 
-			MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile),pathToConfigFile) ;
+			var m = new ConfigurationMigrator();
+			m.MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile), pathToConfigFile);
 
 			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
 			if (!File.Exists(pathToLiftFile))
@@ -1312,14 +1233,14 @@ namespace WeSay.Project
 						 field.DataTypeName ==
 						 Field.BuiltInDataType.OptionCollection.ToString())
 					 {
-						 GrepFile(p,
+						 FileUtils.GrepFile(p,
 								  string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
 								  string.Format("name=\"{0}\"", field.FieldName));
 					 }
 					 else
 					 {
 						 //<field>s
-						 GrepFile(p,
+						 FileUtils.GrepFile(p,
 								  string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
 								  string.Format("type=\"{0}\"", field.FieldName));
 					 }
@@ -1331,7 +1252,7 @@ namespace WeSay.Project
 		{
 			if (DoSomethingToLiftFile((p) =>
 					 //todo: expand the regular expression here to account for all reasonable patterns
-					 GrepFile(PathToLiftFile,
+					 FileUtils.GrepFile(PathToLiftFile,
 							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
 											Regex.Escape(oldId)),
 							  string.Format("lang=\"{0}\"", ws.Id))))
@@ -1377,52 +1298,6 @@ namespace WeSay.Project
 				return true;
 			}
 			return false;
-		}
-
-		private static void GrepFile(string inputPath, string pattern, string replaceWith)
-		{
-			Regex regex = new Regex(pattern, RegexOptions.Compiled);
-			string tempPath = inputPath + ".tmp";
-
-			using (StreamReader reader = File.OpenText(inputPath))
-			{
-				using (StreamWriter writer = new StreamWriter(tempPath))
-				{
-					while (!reader.EndOfStream)
-					{
-						writer.WriteLine(regex.Replace(reader.ReadLine(), replaceWith));
-					}
-					writer.Close();
-				}
-				reader.Close();
-			}
-			//string backupPath = GetUniqueFileName(inputPath);
-			string backupPath = inputPath + ".bak";
-
-			ReplaceFileWithUserInteractionIfNeeded(tempPath, inputPath, backupPath);
-		}
-
-		private static void ReplaceFileWithUserInteractionIfNeeded(string tempPath,
-																   string inputPath,
-																   string backupPath)
-		{
-			bool succeeded = false;
-			do
-			{
-				try
-				{
-					File.Replace(tempPath, inputPath, backupPath);
-					succeeded = true;
-				}
-
-				catch (IOException)
-				{
-					//nb: we don't want to provide an option to cancel.  Better to crash than cancel.
-					ErrorReport.NotifyUserOfProblem(Application.ProductName +
-													  " was unable to get at the dictionary file to update it.  Please ensure that WeSay isn't running with it open, then click the 'OK' button below. If you cannot figure out what program has the LIFT file open, the best choice is to kill WeSay Configuration Tool using the Task Manager (ctrl+alt+del), so that the configuration does not fall out of sync with the LIFT file.");
-				}
-			}
-			while (!succeeded);
 		}
 
 		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)

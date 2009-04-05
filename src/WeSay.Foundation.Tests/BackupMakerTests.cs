@@ -123,7 +123,7 @@ namespace WeSay.Foundation.Tests
 			string backUpFileName = Path.Combine(folderForBackup.FolderPath, "Backup Test.zip");
 
 			//Create and lock a lift file
-			TempLiftFile fileToBackUp = new TempLiftFile("TempLiftFile.lift", folderForBackup,"", "0.12");
+			TempLiftFile fileToBackUp = new TempLiftFile("TempLiftFile.lift", folderForBackup,"", "0.13");
 
 			//This is our lock
 			FileStream liftFileStreamForLocking = new FileStream(fileToBackUp.Path, FileMode.Open, FileAccess.Read, FileShare.None);

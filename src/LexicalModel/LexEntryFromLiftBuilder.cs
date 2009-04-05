@@ -407,7 +407,7 @@ namespace WeSay.LexicalModel
 				OptionRef o = extensible.GetOrCreateProperty<OptionRef>(trait.Name);
 				o.Value = trait.Value;
 			}
-			else if (trait.Name.StartsWith("flag_"))
+			else if (trait.Name.StartsWith("flag-"))
 			{
 				extensible.SetFlag(trait.Name);
 			}

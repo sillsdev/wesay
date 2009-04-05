@@ -73,7 +73,7 @@ namespace WeSay.LexicalTools.Tests
 									   "MultiText"));
 
 			Field readOnlySemanticDomain =
-					new Field(LexSense.WellKnownProperties.SemanticDomainsDdp4,
+					new Field(LexSense.WellKnownProperties.SemanticDomainDdp4,
 							  "LexSense",
 							  _analysisWritingSystemIds);
 			readOnlySemanticDomain.Visibility = CommonEnumerations.VisibilitySetting.ReadOnly;

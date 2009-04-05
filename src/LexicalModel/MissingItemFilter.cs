@@ -158,7 +158,7 @@ namespace WeSay.LexicalModel
 
 		private static bool IsSkipped(WeSayDataObject parent, string fieldName)
 		{
-			return parent.GetHasFlag("flag_skip_" + fieldName);
+			return parent.GetHasFlag("flag-skip-" + fieldName);
 		}
 
 		private bool IsMissingLexExampleSentenceField(LexExampleSentence example)

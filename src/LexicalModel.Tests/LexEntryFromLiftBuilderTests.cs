@@ -93,8 +93,8 @@ namespace WeSay.LexicalModel.Tests
 			_builder.MergeInField(s, "LiteralMeaning", default(DateTime), default(DateTime), t, null);
 			_builder.FinishEntry(e);
 			Assert.IsNull(e.Senses[0].GetProperty<MultiText>("LiteralMeaning"));
-			Assert.IsNotNull(e.GetProperty<MultiText>("literal-meaning"));
-			Assert.AreEqual("test", e.GetProperty<MultiText>("literal-meaning").GetExactAlternative("en"));
+			Assert.IsNotNull(e.GetProperty<MultiText>(LexEntry.WellKnownProperties.LiteralMeaning));
+			Assert.AreEqual("test", e.GetProperty<MultiText>(LexEntry.WellKnownProperties.LiteralMeaning).GetExactAlternative("en"));
 		}
 
 		[Test]
@@ -706,8 +706,8 @@ namespace WeSay.LexicalModel.Tests
 		public void EntryGetsFlag()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_builder.MergeInTrait(e, new Trait("flag_skip_BaseForm", null));
-			Assert.IsTrue(e.GetHasFlag("flag_skip_BaseForm"));
+			_builder.MergeInTrait(e, new Trait(LexEntry.WellKnownProperties.FlagSkipBaseform, null));
+			Assert.IsTrue(e.GetHasFlag(LexEntry.WellKnownProperties.FlagSkipBaseform));
 		}
 
 		[Test]

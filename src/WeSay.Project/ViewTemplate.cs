@@ -253,7 +253,7 @@ namespace WeSay.Project
 			Field oldLitMeaning = GetField("LiteralMeaning");
 			if (oldLitMeaning != null)
 			{
-				Field newLitMeaning = GetField("literal-meaning");
+				Field newLitMeaning = GetField(LexEntry.WellKnownProperties.LiteralMeaning);
 				newLitMeaning.Enabled = oldLitMeaning.Enabled;
 				RemoveByFieldName(this, "LiteralMeaning");
 			}
@@ -472,7 +472,7 @@ namespace WeSay.Project
 			translationField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(translationField);
 
-			Field ddp4Field = new Field("SemanticDomainDdp4", "LexSense", defaultAnalysisSet);
+			Field ddp4Field = new Field(LexSense.WellKnownProperties.SemanticDomainDdp4, "LexSense", defaultAnalysisSet);
 
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Sem Dom", "The label for the field showing Semantic Domains");

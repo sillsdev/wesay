@@ -37,7 +37,7 @@ namespace WeSay.Project.Tests
 		{
 			using (TemporaryFolder f = new TemporaryFolder("OpeningLiftFile_MissingConfigFile_GivesMessage"))
 			{
-				using(TempLiftFile lift = new TempLiftFile(f, "", "0.12"))
+				using(TempLiftFile lift = new TempLiftFile(f, "", "0.13"))
 				{
 					using(WeSayWordsProject p = new WeSayWordsProject())
 					{
@@ -110,7 +110,7 @@ namespace WeSay.Project.Tests
 			XPathDocument defaultConfig = new XPathDocument(WeSayWordsProject.PathToDefaultConfig);
 			using (TempFile f = new TempFile())
 			{
-				bool migrated = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(defaultConfig, f.Path);
+				bool migrated = p.MigrateConfigurationXmlIfNeeded();
 				Assert.IsFalse(migrated, "The default config file should never need migrating");
 			}
 		}
@@ -220,7 +220,7 @@ namespace WeSay.Project.Tests
 								  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
 				XPathDocument doc = new XPathDocument(configPath);
 				string outputPath = Path.Combine(projectDir.PathToDirectory, Path.GetTempFileName());
-				WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, outputPath);
+				new ConfigMigration.ConfigurationMigrator().MigrateConfigurationXmlIfNeeded(doc, outputPath);
 				XmlDocument docFile = new XmlDocument();
 				docFile.Load(outputPath);
 				XmlNode node = docFile.SelectSingleNode("configuration");

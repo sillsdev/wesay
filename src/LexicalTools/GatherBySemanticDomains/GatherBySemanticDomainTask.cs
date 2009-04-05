@@ -96,7 +96,7 @@ namespace WeSay.LexicalTools
 				}
 			}
 
-			_semanticDomainField = viewTemplate.GetField("SemanticDomainDdp4");
+			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
 			WritingSystem definitionWS;
 			viewTemplate.WritingSystems.TryGetValue(definitionWsId, out definitionWS);
@@ -701,7 +701,7 @@ namespace WeSay.LexicalTools
 				try
 				{
 					ws =
-						ViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainsDdp4).
+						ViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4).
 							WritingSystemIds[0];
 				}
 				catch (Exception)

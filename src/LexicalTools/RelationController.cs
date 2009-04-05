@@ -86,7 +86,7 @@ namespace WeSay.LexicalTools
 			//This satisfies Rene's request of WS-419
 			if (_field.FieldName == "BaseForm")
 			{
-				newGuy.SetFlag("flag_skip_BaseForm");
+				newGuy.SetFlag(LexEntry.WellKnownProperties.FlagSkipBaseform);
 			}
 			return newGuy;
 		}
