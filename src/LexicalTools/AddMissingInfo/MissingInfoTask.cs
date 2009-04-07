@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
@@ -12,14 +13,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 {
 	public class MissingInfoTask: TaskBase
 	{
-		private MissingInfoControl _missingInfoControl;
 		private readonly Field _missingInfoField;
 		private readonly ViewTemplate _viewTemplate;
+		private readonly MissingInfoConfiguration _config;
+		private readonly TaskMemory _taskMemory;
+		private MissingInfoControl _missingInfoControl;
 		private bool _dataHasBeenRetrieved;
-		//private readonly bool _isBaseFormFillingTask;
-		private readonly WritingSystem _writingSystem;
-		private MissingInfoConfiguration _config;
-		private TaskMemory _taskMemory;
 
 		public MissingInfoTask(MissingInfoConfiguration config,
 							   LexEntryRepository lexEntryRepository,
@@ -27,27 +26,34 @@ namespace WeSay.LexicalTools.AddMissingInfo
 								TaskMemoryRepository taskMemoryRepository)
 			: base( config, lexEntryRepository, taskMemoryRepository)
 		{
+			Guard.AgainstNull(config.MissingInfoField, "MissingInfoField");
+			Guard.AgainstNull(defaultViewTemplate, "viewTemplate");
+			Debug.Assert(config.WritingSystemsToMatchArray == null ||
+						 config.WritingSystemsToMatchArray.Length == 0 ||
+						 !string.IsNullOrEmpty(config.WritingSystemsToMatchArray[0]));
+
 			_config = config;
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 
-			Guard.AgainstNull(config.MissingInfoField, "MissingInfoField");
-			Guard.AgainstNull(defaultViewTemplate, "viewTemplate");
 
 			_missingInfoField = defaultViewTemplate[config.MissingInfoField];
 
 			_viewTemplate = config.CreateViewTemplate(defaultViewTemplate);
+		 }
 
-			_writingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+		private WritingSystem GetLexicalUnitWritingSystem()
+		{
+			//NB: don't replace these ugly static uses with the _viewTemplate we were given... that won't have what we're looking for here
+
+			var ws = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
-			Field fieldDefn =
-				WeSayWordsProject.Project.DefaultViewTemplate.GetField(
-					Field.FieldNames.EntryLexicalForm.ToString());
+			Field fieldDefn = WeSayWordsProject.Project.DefaultViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (fieldDefn != null)
 			{
 				if (fieldDefn.WritingSystemIds.Count > 0)
 				{
-					_writingSystem = BasilProject.Project.WritingSystems[fieldDefn.WritingSystemIds[0]];
+					ws = BasilProject.Project.WritingSystems[fieldDefn.WritingSystemIds[0]];
 				}
 				else
 				{
@@ -55,6 +61,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 													 fieldDefn.FieldName);
 				}
 			}
+			return ws;
 		}
 
 
@@ -66,39 +73,41 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 		}
 
-
-
-
-
 		public override void Activate()
 		{
 			base.Activate();
 
 			Predicate<LexEntry> filteringPredicate =
-				new MissingFieldQuery(_missingInfoField).FilteringPredicate;
+				new MissingFieldQuery(_missingInfoField, _config.WritingSystemsToMatchArray).FilteringPredicate;
 			_missingInfoControl = new MissingInfoControl(GetFilteredData(),
 														 ViewTemplate,
 														 filteringPredicate,
 														 LexEntryRepository,
 														 _taskMemory.CreateNewSection("view"));
-			_missingInfoControl.SelectedIndexChanged += OnRecordSelectionChanged;
+			_missingInfoControl.TimeToSaveRecord += OnSaveRecord;
 		}
 
-		private void OnRecordSelectionChanged(object sender, EventArgs e)
+		private void OnSaveRecord(object sender, EventArgs e)
 		{
-			LexEntryRepository.SaveItem(_missingInfoControl.CurrentEntry);
+			SaveRecord();
+		}
+
+		private void SaveRecord()
+		{
+				   if (_missingInfoControl != null && _missingInfoControl.CurrentEntry != null)
+				{
+					LexEntryRepository.SaveItem(_missingInfoControl.CurrentEntry);
+				}
+
 		}
 
 		public override void Deactivate()
 		{
-			if (_missingInfoControl != null && _missingInfoControl.CurrentEntry!=null)
-			{
-				LexEntryRepository.SaveItem(_missingInfoControl.CurrentEntry);
-			}
+			SaveRecord();
 			base.Deactivate();
 			if (_missingInfoControl != null)
 			{
-				_missingInfoControl.SelectedIndexChanged -= OnRecordSelectionChanged;
+				_missingInfoControl.TimeToSaveRecord -= OnSaveRecord;
 				_missingInfoControl.Dispose();
 			}
 			_missingInfoControl = null;
@@ -133,7 +142,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			ResultSet<LexEntry> data =
 				LexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(
-					_missingInfoField, _writingSystem);
+					_missingInfoField, _config.WritingSystemsToMatchArray,    GetLexicalUnitWritingSystem());
 			_dataHasBeenRetrieved = true;
 			return data;
 		}

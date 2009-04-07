@@ -170,7 +170,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"There was some problem with choosing that font.  If you just installed it, you might try restarting the program or even your computer.");
 				return;
 			}

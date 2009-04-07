@@ -78,10 +78,9 @@ namespace Addin.Backup
 			msg.AddAttachment(dest);
 			msg.AddRecipientTo(_settings.Email);
 			subject =
-					String.Format(
-							StringCatalog.Get("{0} WeSay Project Data",
-											  "The subject line of the email send by the 'Send Email' Action. The {0} will be replaced by the name of the project, as in 'Greek WeSay Project Data'"),
-							projectInfo.Name);
+				StringCatalog.GetFormatted("{0} WeSay Project Data",
+										   "The subject line of the email send by the 'Send Email' Action. The {0} will be replaced by the name of the project, as in 'Greek WeSay Project Data'",
+										   projectInfo.Name);
 			string body = StringCatalog.Get("The latest WeSay project data is attached.");
 
 			//I tried hard to get this to run in a thread so it wouldn't block wesay,

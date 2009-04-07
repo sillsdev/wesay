@@ -70,9 +70,9 @@ font-size: 2cm;
 /*    text-indent: -36pt;
 	margin-left: 36pt;
 
-	padding-left: 9pt;
-	padding-bottom: 2pt;
-	padding-top: 1pt;*/
+	padding-left: 9pt;*/
+	padding-bottom: 3pt;
+	padding-top: 1pt;
 }
 
 .xhomographnumber {
@@ -86,7 +86,7 @@ font-size: 2cm;
 }
 
 .sense {
-	font-weight: normal;
+	/*font-weight: normal;*/
 }
 .xsensenumber {
 	/*content: counter(sense);*/
@@ -105,15 +105,16 @@ font-size: 2cm;
 .xitem {
 	/* placeholder for adding list separators */
 }
-.xitem[lang='en'] {
-	font-family: "Times New Roman", serif;	/* default Serif font */
-	color: rgb(0,0,0);	/* cascaded environment */
-	background-color: rgb(255,255,255);	/* cascaded environment */
+
+/*.xitem[lang='en'] {
+	font-family: "Times New Roman", serif;
+	color: rgb(0,0,0);
+	background-color: rgb(255,255,255);
 }
+*/
 
 .headword {
 	display: inline;
-	font-family:sans-serif;
 	font-weight:bold;
 	font-size:108%;
 	string-set: guideword content();
@@ -129,7 +130,7 @@ font-size: 2cm;
 .senses {
 	/* cascaded environment FieldWorks style = 'Dictionary-Normal' */
 	font-family: "Times New Roman", serif;	/* default Serif font */
-	color: rgb(0,0,0);	/* cascaded environment */
+
 	background-color: rgb(255,255,255);	/* cascaded environment */
 }
 .senses>.sense + .sense:before { content: "  " }
@@ -142,21 +143,20 @@ font-size: 2cm;
 .grammatical-info:after { content: " " }
 .partofspeech {
 	/* lang = 'pt' */
+	font-style: italic;
 }
 .partofspeech:after { content: " " }
 .definition_L2 {
 	/* lang = 'en' */
 	/* cascaded environment FieldWorks style = 'Dictionary-Normal' */
-	font-family: "Times New Roman", serif;	/* default Serif font */
-	color: rgb(0,0,0);	/* cascaded environment */
+
 	background-color: rgb(255,255,255);	/* cascaded environment */
 }
 .definition_L2:after { content: " " }
 .definition_L2>.xitem + .xitem:before { content: " " }
 .examples {
 	/* cascaded environment FieldWorks style = 'Dictionary-Normal' */
-	font-family: "Times New Roman", serif;	/* default Serif font */
-	color: rgb(0,0,0);	/* cascaded environment */
+
 	background-color: rgb(255,255,255);	/* cascaded environment */
 }
 .examples:after { content: " " }
@@ -164,17 +164,14 @@ font-size: 2cm;
 .example {
 	/* lang = 'seh' */
 	/* explicit FieldWorks style = 'Dictionary-Vernacular' */
-	font-family: "Times New Roman", serif;	/* default Serif font */
-	font-style: italic;
-	color: rgb(0,0,0);	/* cascaded environment */
+
 	background-color: rgb(255,255,255);	/* cascaded environment */
 }
 .example:after { content: " " }
 .example>.xitem + .xitem:before { content: " " }
 .translations {
 	/* cascaded environment FieldWorks style = 'Dictionary-Normal' */
-	font-family: "Times New Roman", serif;	/* default Serif font */
-	color: rgb(0,0,0);	/* cascaded environment */
+
 	background-color: rgb(255,255,255);	/* cascaded environment */
 }
 .translation_L2 {
@@ -197,7 +194,7 @@ font-size: 2cm;
 .etymology {
 	/* cascaded environment FieldWorks style = 'Dictionary-Normal' */
 	font-family: "Times New Roman", serif;	/* default Serif font */
-	color: rgb(0,0,0);	/* cascaded environment */
+
 	background-color: rgb(255,255,255);	/* cascaded environment */
 }
 .etymology:after { content: " " }

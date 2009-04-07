@@ -15,7 +15,7 @@ namespace WeSay.LexicalTools.Tests
 			Field field = new Field(LexSense.WellKnownProperties.Definition,
 									"LexSense",
 									new string[] {"analysis"});
-			_missingMeaningFilter = new MissingFieldQuery(field);
+			_missingMeaningFilter = new MissingFieldQuery(field, null);
 		}
 
 		private static LexEntry CreateEmptyEntryWithOneSense()

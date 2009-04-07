@@ -57,6 +57,8 @@ namespace Addin.Transform.PdfDictionary
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
+			if(!PrinceXmlWrapper.IsPrinceInstalled)
+				throw new ConfigurationException("WeSay could not find PrinceXml.  Make sure you've installed it (get it from princexml.com).");
 			string htmlPath = CreateFileToOpen(projectInfo, true, false);
 			if (string.IsNullOrEmpty(htmlPath))
 			{
@@ -87,17 +89,23 @@ namespace Addin.Transform.PdfDictionary
 				{
 					File.WriteAllText(customFonts, "/* To tweak a font setting, copy the template you want to change from the autoFonts.css into this file, and make your changes.*/" );
 				}
-				stylesheetPaths.Add(customFonts);
-				stylesheetPaths.Add(customLayout);
+
+				//NB: experiments with princexml 6.0 showed that the last guy wins.
+				///beware... it's actually not totally clear what precendence we even want between layout and font! There's an interplay
+				/// between what is specified in the base css... if, for example, they specify a font family,
+				/// well then we want to override that with custom fonts.  But if they just want, say, to bold
+				/// something, that would be fine to override
 				stylesheetPaths.Add(autoFonts);
 				stylesheetPaths.Add(autoLayout);
+				stylesheetPaths.Add(customFonts);
+				stylesheetPaths.Add(customLayout);
 
 				PrinceXmlWrapper.CreatePdf(htmlPath, stylesheetPaths, pdfPath);
 				Process.Start(pdfPath);
 			}
 			catch (Exception e)
 			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
 		}
 

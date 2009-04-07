@@ -1,7 +1,9 @@
 using System;
+using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
+using System.Linq;
 
 namespace WeSay.LexicalTools
 {
@@ -32,8 +34,18 @@ namespace WeSay.LexicalTools
 			}
 			else
 			{
-				_lexicalFormWritingSystem = writingSystems[lexicalFormField.WritingSystemIds[0]];
+				_lexicalFormWritingSystem = GetFirstTestWritingSystemOfField(lexicalFormField);
 			}
+		}
+
+		protected WritingSystem GetFirstTestWritingSystemOfField(Field field)
+		{
+			var ids = field.GetTextOnlyWritingSystemIds(BasilProject.Project.WritingSystems);
+			if(ids.Count()==0)
+			{
+				throw new ConfigurationException(string.Format("The field {0} must have at least one non-audio writing system.", field.DisplayName));
+			}
+			return BasilProject.Project.WritingSystems[ids.First()];
 		}
 
 		public override DashboardGroup Group

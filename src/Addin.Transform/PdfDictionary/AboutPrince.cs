@@ -23,7 +23,7 @@ namespace Addin.Transform.PdfDictionary
 			}
 			catch(Exception error)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Your operating system could not follow the link.\r\n\r\n{0}", error.Message);
+				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Your operating system could not follow the link.\r\n\r\n{0}", error.Message);
 			}
 		}
 	}

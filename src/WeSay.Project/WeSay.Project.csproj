@@ -104,6 +104,8 @@
 	<Compile Include="BasilProject.cs" />
 	<Compile Include="ConfigFileReader.cs" />
 	<Compile Include="ConfigFileTaskBuilder.cs" />
+	<Compile Include="ConfigMigration\MigrateConfig5To6.cs" />
+	<Compile Include="ConfigMigration\ConfigurationMigrator.cs" />
 	<Compile Include="FailedLoadTask.cs" />
 	<Compile Include="ITaskConfiguration.cs" />
 	<Compile Include="PLiftExporter.cs" />
@@ -140,20 +142,23 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="MigrateConfig0To1.xsl">
+	<EmbeddedResource Include="ConfigMigration\MigrateConfig0To1.xsl">
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="MigrateConfig1To2.xsl" />
+	<EmbeddedResource Include="ConfigMigration\MigrateConfig1To2.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="MigrateConfig2To3.xsl" />
+	<EmbeddedResource Include="ConfigMigration\MigrateConfig2To3.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="MigrateConfig3To4.xsl" />
+	<EmbeddedResource Include="ConfigMigration\MigrateConfig3To4.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="MigrateConfig4To5.xsl" />
+	<EmbeddedResource Include="ConfigMigration\MigrateConfig5To6.xsl" />
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="ConfigMigration\MigrateConfig4To5.xsl" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

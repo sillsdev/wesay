@@ -8,6 +8,7 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
+using Palaso.Backup;
 
 namespace Addin.Backup
 {
@@ -25,7 +26,7 @@ namespace Addin.Backup
 			_cancelButton.Font = StringCatalog.ModifyFontForLocalization(_cancelButton.Font);
 		}
 
-		private void DoBackup(DriveInfo info)
+		private void DoBackup(UsbDriveInfo info)
 		{
 			_checkForUsbKeyTimer.Enabled = false;
 			_noteLabel.Visible = false;
@@ -44,7 +45,7 @@ namespace Addin.Backup
 			}
 			catch (Exception e)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"WeSay could to perform the backup.  Reason: {0}", e.Message);
 				_topLabel.Text = "~Files were not backed up.";
 				_topLabel.ForeColor = Color.Red;
@@ -58,61 +59,14 @@ namespace Addin.Backup
 			_checkForUsbKeyTimer.Enabled = false;
 		}
 
-		public List<DriveInfo> GetLogicalUsbDisks()
+		public List<UsbDriveInfo> GetLogicalUsbDisks()
 		{
-			List<DriveInfo> driveInfos = new List<DriveInfo>();
-			using (
-					ManagementObjectSearcher driveSearcher =
-							new ManagementObjectSearcher(
-									"SELECT Caption, DeviceID FROM Win32_DiskDrive WHERE InterfaceType='USB'")
-					)
-			{
-				// walk all USB WMI physical disks
-				foreach (ManagementObject drive in driveSearcher.Get())
-				{
-					// browse all USB WMI physical disks
-
-					using (
-							ManagementObjectSearcher searcher =
-									new ManagementObjectSearcher(
-											"ASSOCIATORS OF {Win32_DiskDrive.DeviceID='" +
-											drive["DeviceID"] +
-											"'} WHERE AssocClass = Win32_DiskDriveToDiskPartition"))
-					{
-						// walk all USB WMI physical disks
-						foreach (ManagementObject partition in searcher.Get())
-						{
-							using (
-									ManagementObjectSearcher partitionSearcher =
-											new ManagementObjectSearcher(
-													"ASSOCIATORS OF {Win32_DiskPartition.DeviceID='" +
-													partition["DeviceID"] +
-													"'} WHERE AssocClass = Win32_LogicalDiskToPartition")
-									)
-							{
-								foreach (ManagementObject disk in partitionSearcher.Get())
-								{
-									foreach (DriveInfo driveInfo in DriveInfo.GetDrives())
-									{
-										string s = driveInfo.Name.Replace("\\", "");
-										if (s == disk["NAME"].ToString())
-										{
-											driveInfos.Add(driveInfo);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			return driveInfos;
+			return UsbDriveInfo.GetDrives();
 		}
 
 		private void Dialog_Load(object sender, EventArgs e)
 		{
 			_checkForUsbKeyTimer.Enabled = true;
-			//   LookForTargetVolume();
 		}
 
 		private void OnCheckForUsbKeyTimer_Tick(object sender, EventArgs e)
@@ -124,10 +78,10 @@ namespace Addin.Backup
 		{
 			try
 			{
-				List<DriveInfo> list = GetLogicalUsbDisks();
-				if (list.Count > 0)
+				List<UsbDriveInfo> usbDrives = GetLogicalUsbDisks();
+				if ((usbDrives.Count > 0) && (usbDrives[0].IsReady))
 				{
-					DoBackup(list[0]);
+					DoBackup(usbDrives[0]);
 				}
 				else
 				{
@@ -137,7 +91,7 @@ namespace Addin.Backup
 			catch (Exception error)
 			{
 				_checkForUsbKeyTimer.Enabled = false;
-				ErrorNotificationDialog.ReportException(error, this, false);
+				ErrorReport.ReportNonFatalException(error);
 				_topLabel.Text = "Unable to look for the device due to an error.";
 			}
 		}

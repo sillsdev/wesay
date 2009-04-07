@@ -56,7 +56,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static ViewTemplate MakeViewTemplate(string nameAndQuestionWritingSystem)
 		{
-			Field semanticDomainField = new Field(LexSense.WellKnownProperties.SemanticDomainsDdp4,
+			Field semanticDomainField = new Field(LexSense.WellKnownProperties.SemanticDomainDdp4,
 												  "LexSense",
 												  new string[] {nameAndQuestionWritingSystem});
 			semanticDomainField.OptionsListFile = "Ddp4.xml";
@@ -120,7 +120,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
-						LexSense.WellKnownProperties.SemanticDomainsDdp4);
+						LexSense.WellKnownProperties.SemanticDomainDdp4);
 
 				o.Add(domainToAdd);
 			}
@@ -370,7 +370,7 @@ namespace WeSay.LexicalTools.Tests
 			s.Definition.SetAlternative("en", "fish");
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
-							LexSense.WellKnownProperties.SemanticDomainsDdp4);
+							LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
 
@@ -499,7 +499,7 @@ namespace WeSay.LexicalTools.Tests
 			e.Senses.Add(s);
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
-							LexSense.WellKnownProperties.SemanticDomainsDdp4);
+							LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
 			int originalCount = _lexEntryRepository.CountAllItems();
@@ -546,7 +546,7 @@ namespace WeSay.LexicalTools.Tests
 			e.Senses.Add(s);
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
-							LexSense.WellKnownProperties.SemanticDomainsDdp4);
+							LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
 			int originalCount = _lexEntryRepository.CountAllItems();
@@ -568,7 +568,7 @@ namespace WeSay.LexicalTools.Tests
 
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
-							LexSense.WellKnownProperties.SemanticDomainsDdp4);
+							LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
 			int originalCount = _lexEntryRepository.CountAllItems();
@@ -590,7 +590,7 @@ namespace WeSay.LexicalTools.Tests
 
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
-							LexSense.WellKnownProperties.SemanticDomainsDdp4);
+							LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
 			int originalCount = _lexEntryRepository.CountAllItems();
@@ -613,7 +613,7 @@ namespace WeSay.LexicalTools.Tests
 
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
-							LexSense.WellKnownProperties.SemanticDomainsDdp4);
+							LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
 			int originalCount = _lexEntryRepository.CountAllItems();
@@ -633,7 +633,7 @@ namespace WeSay.LexicalTools.Tests
 
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
-							LexSense.WellKnownProperties.SemanticDomainsDdp4);
+							LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(Task.DomainKeys[0]);
 
 			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
@@ -676,7 +676,7 @@ namespace WeSay.LexicalTools.Tests
 
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
-							LexSense.WellKnownProperties.SemanticDomainsDdp4);
+							LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(Task.DomainKeys[0]);
 
 			LexExampleSentence example = new LexExampleSentence();
@@ -702,7 +702,7 @@ namespace WeSay.LexicalTools.Tests
 
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
-							LexSense.WellKnownProperties.SemanticDomainsDdp4);
+							LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
 			int originalCount = _lexEntryRepository.CountAllItems();
@@ -895,7 +895,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private void AssertNumberOfDomainsInSense(int expectedDomains, LexSense sense)
 		{
-			Assert.AreEqual(expectedDomains, sense.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4).Count);
+			Assert.AreEqual(expectedDomains, sense.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Count);
 		}
 
 
@@ -1158,8 +1158,8 @@ namespace WeSay.LexicalTools.Tests
 																			 new TaskMemoryRepository(),
 																			 new StringLogger());
 			task.Activate();
-			Assert.AreEqual("L'univers physique", task.DomainNames[0]);
-			Assert.AreEqual("Ciel", task.DomainNames[1]);
+			Assert.AreEqual("1 L'univers physique", task.DomainNames[0]);
+			Assert.AreEqual(" 1.1 Ciel", task.DomainNames[1]);
 			Assert.AreEqual("fr", task.SemanticDomainWritingSystemId);
 
 			File.Delete(frenchSemanticDomainFilePath);

@@ -470,7 +470,7 @@ namespace WeSay.LexicalTools
 				BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
 			IChoiceSystemAdaptor<Option, string, OptionRef> displayAdaptor;
 
-			if (field.FieldName== LexSense.WellKnownProperties.SemanticDomainsDdp4)
+			if (field.FieldName== LexSense.WellKnownProperties.SemanticDomainDdp4)
 			{
 				displayAdaptor = new DdpOptionDisplayAdaptor(availableOptions, field.WritingSystemIds[0]);
 			}

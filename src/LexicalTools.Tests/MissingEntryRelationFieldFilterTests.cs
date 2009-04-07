@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools.Tests
 											new string[] {"vernacular"},
 											Field.MultiplicityType.ZeroOr1,
 											"RelationToOneEntry");
-			_missingRelationFieldFilter = new MissingFieldQuery(relationField);
+			_missingRelationFieldFilter = new MissingFieldQuery(relationField, null);
 		}
 
 		[TearDown]
@@ -77,7 +77,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void LexEntryRelationCollectionMissingButSkipFlagged()
 		{
-			_source.SetFlag("flag_skip_synonyms");
+			_source.SetFlag("flag-skip-synonyms");
 			Assert.IsFalse(_missingRelationFieldFilter.FilteringPredicate(_source));
 		}
 	}

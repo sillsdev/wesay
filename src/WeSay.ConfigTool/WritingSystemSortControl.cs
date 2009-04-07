@@ -119,7 +119,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (ArgumentException)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"WeSay could not understand this type of sorting ('{0}'). It will be reset.",
 						_writingSystem.SortUsing);
 				customSortRulesType = default(CustomSortRulesType);

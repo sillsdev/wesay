@@ -24,6 +24,7 @@ using WeSay.AddinLib;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
+using WeSay.Project.ConfigMigration;
 using WeSay.UI;
 
 namespace WeSay.Project
@@ -44,7 +45,7 @@ namespace WeSay.Project
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
 
-		public const int CurrentWeSayConfigFileVersion = 5; // This variable must be updated with every new vrsion of the WeSay config file
+		public const int CurrentWeSayConfigFileVersion = 6; // This variable must be updated with every new vrsion of the WeSay config file
 
 		public event EventHandler EditorsSaveNow;
 
@@ -159,12 +160,12 @@ namespace WeSay.Project
 		public void HandleProbableCacheProblem(Exception error)
 		{
 #if DEBUG
-			ErrorReport.ReportNonFatalMessage(
+			ErrorReport.NotifyUserOfProblem(
 					"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.\r\n\r\nIn the release build, the cache would now be invalidated and the user would not see the following crash dialog.");
 			throw error;
 #else
 			//todo: make a way to pass on this error to us
-			Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+			Palaso.Reporting.ErrorReport.NotifyUserOfProblem(
 				"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.");
 #endif
 		}
@@ -176,7 +177,7 @@ namespace WeSay.Project
 
 				if (!File.Exists(liftPath))
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nTry opening the LIFT file by double clicking on it.",
 									liftPath));
@@ -191,7 +192,7 @@ namespace WeSay.Project
 				}
 				catch (UnauthorizedAccessException)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for writing, because the system won't allow it. Check that 'ReadOnly' is cleared, otherwise investigate your user permissions to write to this file.",
 									liftPath));
@@ -199,7 +200,7 @@ namespace WeSay.Project
 				}
 				catch (IOException)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for writing, probably because it is locked by some other process on your computer. Maybe you need to quit WeSay? If you can't figure out what has it locked, restart your computer.",
 									liftPath));
@@ -216,7 +217,7 @@ namespace WeSay.Project
 
 				if (!File.Exists(liftPath))
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay tried to find the WeSay configuration file at '{0}', but could not find it.\r\n\r\nTry using the configuration Tool to create one.",
 									PathToConfigFile));
@@ -231,7 +232,7 @@ namespace WeSay.Project
 				}
 				catch (UnauthorizedAccessException)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
 									PathToConfigFile));
@@ -239,7 +240,7 @@ namespace WeSay.Project
 				}
 				catch (IOException e)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
 									PathToConfigFile,
@@ -255,7 +256,7 @@ namespace WeSay.Project
 			}
 			catch (ConfigurationException e)
 			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.NotifyUserOfProblem(e.Message);
 				return false;
 			}
 		}
@@ -315,7 +316,8 @@ namespace WeSay.Project
 					UiFontSizeInPoints = f;
 				}
 				CheckIfConfigFileVersionIsToNew(configDoc);
-				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
+				var m = new ConfigurationMigrator();
+				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
@@ -388,7 +390,7 @@ namespace WeSay.Project
 			}
 
 
-			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
 
 
@@ -510,7 +512,7 @@ namespace WeSay.Project
 				ApplicationException e =
 						new ApplicationException(
 								"Error while trying to migrate to new file structure. ", err);
-				ErrorNotificationDialog.ReportException(e);
+				ErrorReport.ReportFatalException(e);
 			}
 		}
 
@@ -549,100 +551,18 @@ namespace WeSay.Project
 				ApplicationException e =
 						new ApplicationException(
 								"Error while trying to move export files to new structure. ", err);
-				ErrorNotificationDialog.ReportException(e);
+				ErrorReport.ReportFatalException(e);
 			}
 		}
 
 		public bool MigrateConfigurationXmlIfNeeded()
 		{
-			return MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile),
+			var m = new ConfigurationMigrator();
+			return m.MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile),
 												   PathToConfigFile);
 		}
 
-		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc,
-														   string targetPath)
-		{
-			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
-			bool didMigrate = false;
-
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") == null)
-			{
-				MigrateUsingXSLT(configurationDoc, "MigrateConfig0To1.xsl", targetPath);
-				configurationDoc = new XPathDocument(targetPath);
-				didMigrate = true;
-			}
-			if (
-					configurationDoc.CreateNavigator().SelectSingleNode(
-							"configuration[@version='1']") != null)
-			{
-				MigrateUsingXSLT(configurationDoc, "MigrateConfig1To2.xsl", targetPath);
-				configurationDoc = new XPathDocument(targetPath);
-				didMigrate = true;
-			}
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='2']") != null)
-			{
-				MigrateUsingXSLT(configurationDoc, "MigrateConfig2To3.xsl", targetPath);
-				configurationDoc = new XPathDocument(targetPath);
-				didMigrate = true;
-			}
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='3']") != null)
-			{
-				MigrateUsingXSLT(configurationDoc, "MigrateConfig3To4.xsl", targetPath);
-				configurationDoc = new XPathDocument(targetPath);
-				didMigrate = true;
-			}
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='4']") != null)
-			{
-				MigrateUsingXSLT(configurationDoc, "MigrateConfig4To5.xsl", targetPath);
-				configurationDoc = new XPathDocument(targetPath);
-				didMigrate = true;
-			}
-			return didMigrate;
-		}
-
-		private static void MigrateUsingXSLT(IXPathNavigable configurationDoc,
-											 string xsltName,
-											 string targetPath)
-		{
-			Logger.WriteEvent("Migrating Configuration File {0}", xsltName);
-			using (
-					Stream stream =
-							Assembly.GetExecutingAssembly().GetManifestResourceStream(
-									typeof (WeSayWordsProject), xsltName))
-			{
-				XslCompiledTransform transform = new XslCompiledTransform();
-				using (XmlReader reader = XmlReader.Create(stream))
-				{
-					transform.Load(reader);
-					string tempPath = Path.GetTempFileName();
-					XmlWriterSettings settings = new XmlWriterSettings();
-					settings.Indent = true;
-					using (XmlWriter writer = XmlWriter.Create(tempPath, settings))
-					{
-						transform.Transform(configurationDoc, writer);
-						TempFileCollection tempfiles = transform.TemporaryFiles;
-						if (tempfiles != null)
-								// tempfiles will be null when debugging is not enabled
-						{
-							tempfiles.Delete();
-						}
-						writer.Close();
-					}
-					string s = targetPath + ".tmp";
-					if (File.Exists(s))
-					{
-						File.Delete(s);
-					}
-					if (File.Exists(targetPath)) //review: JDH added this because of a failing test, and from my reading, the target shouldn't need to pre-exist
-					{
-						File.Move(targetPath, s);
-					}
-					File.Move(tempPath, targetPath);
-					File.Delete(s);
-				}
-			}
-		}
 
 		//        public void LoadFromConfigFilePath(string path)
 		//        {
@@ -680,7 +600,7 @@ namespace WeSay.Project
 //                }
 //                catch (Exception error)
 //                {
-//                    ErrorReport.ReportNonFatalMessage(
+//                    ErrorReport.NotifyUserOfProblem(
 //                            "There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
 //                            error.Message);
 //                }
@@ -709,7 +629,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"There was a problem reading the addins-settings xml. {0}", error.Message);
 				return null;
 			}
@@ -745,7 +665,7 @@ namespace WeSay.Project
 				}
 				catch (Exception e)
 				{
-					ErrorReport.ReportNonFatalMessage("There was a problem reading the task xml. " +
+					ErrorReport.NotifyUserOfProblem("There was a problem reading the task xml. " +
 													  e.Message);
 					projectDoc = null;
 				}
@@ -778,7 +698,8 @@ namespace WeSay.Project
 			//hack
 			StickDefaultViewTemplateInNewConfigFile(pathToWritingSystemPrefs, pathToConfigFile);
 
-			MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile),pathToConfigFile) ;
+			var m = new ConfigurationMigrator();
+			m.MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile), pathToConfigFile);
 
 			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
 			if (!File.Exists(pathToLiftFile))
@@ -1302,7 +1223,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.ReportNonFatalMessage("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
+				ErrorReport.NotifyUserOfProblem("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
 				return false;
 			}
 
@@ -1326,14 +1247,14 @@ namespace WeSay.Project
 						 field.DataTypeName ==
 						 Field.BuiltInDataType.OptionCollection.ToString())
 					 {
-						 GrepFile(p,
+						 FileUtils.GrepFile(p,
 								  string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
 								  string.Format("name=\"{0}\"", field.FieldName));
 					 }
 					 else
 					 {
 						 //<field>s
-						 GrepFile(p,
+						 FileUtils.GrepFile(p,
 								  string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
 								  string.Format("type=\"{0}\"", field.FieldName));
 					 }
@@ -1345,7 +1266,7 @@ namespace WeSay.Project
 		{
 			if (DoSomethingToLiftFile((p) =>
 					 //todo: expand the regular expression here to account for all reasonable patterns
-					 GrepFile(PathToLiftFile,
+					 FileUtils.GrepFile(PathToLiftFile,
 							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
 											Regex.Escape(oldId)),
 							  string.Format("lang=\"{0}\"", ws.Id))))
@@ -1378,7 +1299,7 @@ namespace WeSay.Project
 				string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
 				if (!String.IsNullOrEmpty(errors))
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							"The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
 							pathToLift,
 							errors);
@@ -1387,56 +1308,10 @@ namespace WeSay.Project
 			}
 			catch (Exception e)
 			{
-				ErrorNotificationDialog.ReportException(e);
+				ErrorReport.ReportNonFatalException(e);
 				return true;
 			}
 			return false;
-		}
-
-		private static void GrepFile(string inputPath, string pattern, string replaceWith)
-		{
-			Regex regex = new Regex(pattern, RegexOptions.Compiled);
-			string tempPath = inputPath + ".tmp";
-
-			using (StreamReader reader = File.OpenText(inputPath))
-			{
-				using (StreamWriter writer = new StreamWriter(tempPath))
-				{
-					while (!reader.EndOfStream)
-					{
-						writer.WriteLine(regex.Replace(reader.ReadLine(), replaceWith));
-					}
-					writer.Close();
-				}
-				reader.Close();
-			}
-			//string backupPath = GetUniqueFileName(inputPath);
-			string backupPath = inputPath + ".bak";
-
-			ReplaceFileWithUserInteractionIfNeeded(tempPath, inputPath, backupPath);
-		}
-
-		private static void ReplaceFileWithUserInteractionIfNeeded(string tempPath,
-																   string inputPath,
-																   string backupPath)
-		{
-			bool succeeded = false;
-			do
-			{
-				try
-				{
-					File.Replace(tempPath, inputPath, backupPath);
-					succeeded = true;
-				}
-
-				catch (IOException)
-				{
-					//nb: we don't want to provide an option to cancel.  Better to crash than cancel.
-					ErrorReport.ReportNonFatalMessage(Application.ProductName +
-													  " was unable to get at the dictionary file to update it.  Please ensure that WeSay isn't running with it open, then click the 'OK' button below. If you cannot figure out what program has the LIFT file open, the best choice is to kill WeSay Configuration Tool using the Task Manager (ctrl+alt+del), so that the configuration does not fall out of sync with the LIFT file.");
-				}
-			}
-			while (!succeeded);
 		}
 
 		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)
@@ -1499,7 +1374,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.ReportNonFatalMessage(string.Format("WeSay was not able to do a backup.\r\nReason: {0}", error.Message));
+				ErrorReport.NotifyUserOfProblem(string.Format("WeSay was not able to do a backup.\r\nReason: {0}", error.Message));
 			}
 		}
 

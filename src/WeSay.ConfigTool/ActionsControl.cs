@@ -102,7 +102,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception error)
 			{
-				ErrorReport.ReportNonFatalMessage(error.Message);
+				ErrorReport.NotifyUserOfProblem(error.Message);
 			}
 		}
 

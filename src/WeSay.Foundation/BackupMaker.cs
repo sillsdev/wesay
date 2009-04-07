@@ -27,6 +27,8 @@ namespace WeSay.Foundation
 				throw new ApplicationException("Directory of the destination doesn't exist.");
 			}
 
+			int numFilesToBeWritten = paths.Length;
+
 			Logger.WriteEvent("Start Backup to {0}", destinationZipPath);
 
 			//the tricky part here is to get all the paths to be relative, starting with the
@@ -42,6 +44,13 @@ namespace WeSay.Foundation
 				zipFile.Add(s.Replace(pathPriorToRootOfProject + Path.DirectorySeparatorChar, ""));
 			}
 			zipFile.CommitUpdate();
+			//A particular case where this exception will be thrown is when we try to zip a file
+			//that we cannot get readaccess to. This is the case for locking in WeSay 0.4 and was
+			//the cause for WS-1205
+			if(zipFile.Count != numFilesToBeWritten)
+			{
+				throw new ZipException("The number of files written to the archive is not equal to the number of files that were to be backed up! This may be because one of the files is being used by another program.");
+			}
 			zipFile.Close();
 
 			Logger.WriteEvent("Backup Done");

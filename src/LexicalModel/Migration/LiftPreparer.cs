@@ -35,7 +35,7 @@ namespace WeSay.LexicalModel.Migration
 				dlg.ShowDialog();
 				if (dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 							String.Format(
 									"WeSay encountered an error while preprocessing the file '{0}'.  Error was: {1}",
 									_liftFilePath,
@@ -160,13 +160,13 @@ namespace WeSay.LexicalModel.Migration
 						Exception err = dlg.ProgressStateResult.ExceptionThatWasEncountered;
 						if (err != null)
 						{
-							ErrorNotificationDialog.ReportException(err, null, false);
+							ErrorReport.ReportFatalException(err);
 						}
 						else if (dlg.ProgressStateResult.State ==
 								 ProgressState.StateValue.StoppedWithError)
 						{
-							ErrorReport.ReportNonFatalMessage(
-									"Failed." + dlg.ProgressStateResult.LogString, null, false);
+							ErrorReport.ReportNonFatalMessageWithStackTrace(
+									"Failed. " + dlg.ProgressStateResult.LogString);
 						}
 						return false;
 					}
@@ -248,19 +248,19 @@ namespace WeSay.LexicalModel.Migration
 		//            {
 		//                if (err is LiftFormatException)
 		//                {
-		//                    ErrorReport.ReportNonFatalMessage(
+		//                    ErrorReport.NotifyUserOfProblem(
 		//                            "WeSay had problems with the content of the dictionary file.\r\n\r\n" +
 		//                            err.Message);
 		//                }
 		//                else
 		//                {
-		//                    ErrorNotificationDialog.ReportException(err, null, false);
+		//                    ErrorReport.ReportException(err, null, false);
 		//                }
 		//            }
 		//            else if (dlg.ProgressStateResult.State ==
 		//                     ProgressState.StateValue.StoppedWithError)
 		//            {
-		//                ErrorReport.ReportNonFatalMessage(
+		//                ErrorReport.NotifyUserOfProblem(
 		//                        "Could not build caches. " + dlg.ProgressStateResult.LogString,
 		//                        null,
 		//                        false);

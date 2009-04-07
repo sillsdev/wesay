@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.Project;
 
 namespace WeSay.Foundation.Tests
@@ -111,6 +113,22 @@ namespace WeSay.Foundation.Tests
 		{
 			BackupMaker.BackupToExternal(_sourceProjectPath, _destinationZip, _filesToBackup);
 			AssertHasReasonableContents();
+		}
+
+		[Test]
+		[ExpectedException(typeof(ZipException))]
+		public void BackupToExternal_FileToBackUpIsLocked_Throws()
+		{
+			TemporaryFolder folderForBackup = new TemporaryFolder("Backup Test");
+			string backUpFileName = Path.Combine(folderForBackup.FolderPath, "Backup Test.zip");
+
+			//Create and lock a lift file
+			TempLiftFile fileToBackUp = new TempLiftFile("TempLiftFile.lift", folderForBackup,"", "0.13");
+
+			//This is our lock
+			FileStream liftFileStreamForLocking = new FileStream(fileToBackUp.Path, FileMode.Open, FileAccess.Read, FileShare.None);
+
+			BackupMaker.BackupToExternal(Path.GetDirectoryName(fileToBackUp.Path), backUpFileName, new string[]{fileToBackUp.Path});
 		}
 
 		[Test]

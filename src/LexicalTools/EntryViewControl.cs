@@ -216,10 +216,12 @@ namespace WeSay.LexicalTools
 
 		private void OnCleanupTimer_Tick(object sender, EventArgs e)
 		{
-			VerifyNotDisposed();
+			_cleanupTimer.Stop();
+			if (_isDisposed) ////saw this once get disposed while it was running
+				return;
+
 			Logger.WriteMinorEvent("OnCleanupTimer_Tick");
 			LexEntry entry = (LexEntry) _cleanupTimer.Tag;
-			_cleanupTimer.Stop();
 			entry.CleanUpEmptyObjects();
 
 			RefreshLexicalEntryPreview();
@@ -232,14 +234,16 @@ namespace WeSay.LexicalTools
 #if DEBUG
 				throw new ObjectDisposedException(GetType().FullName);
 #else
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("WeSay ran into a problem in the EntryViewControl (it was called after it was disposed.) If you can make this happen again, please contact the developers.");
+				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("WeSay ran into a problem in the EntryViewControl (it was called after it was disposed.) If you can make this happen again, please contact the developers.");
 #endif
 			}
 		}
 
 		private void RefreshLexicalEntryPreview()
 		{
-			VerifyNotDisposed();
+			if (_isDisposed || _lexicalEntryPreview.IsDisposed) ////saw this once get disposed while it was running
+				return;
+
 #if !DEBUG
 			try
 			{
@@ -252,7 +256,7 @@ namespace WeSay.LexicalTools
 			}
 			catch (Exception)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("There was an error refreshing the entry preview. If you were quiting the program, this is a know issue (WS-554) that we are trying to track down.  If you can make this happen again, please contact the developers.");
+				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("There was an error refreshing the entry preview. If you were quiting the program, this is a know issue (WS-554) that we are trying to track down.  If you can make this happen again, please contact the developers.");
 			}
 #endif
 		}
@@ -319,7 +323,7 @@ namespace WeSay.LexicalTools
 			}
 			catch (ConfigurationException e)
 			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
 		}
 

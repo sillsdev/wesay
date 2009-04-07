@@ -14,7 +14,7 @@ namespace WeSay.LexicalModel.Tests
 			File.WriteAllText(liftFileName,
 							  @"<?xml version='1.0' encoding='utf-8'?>
 				<lift
-					version='0.12'
+					version='0.13'
 					producer='WeSay 1.0.0.0'>
 					<entry
 						id='Sonne_c753f6cc-e07c-4bb1-9e3c-013d09629111'

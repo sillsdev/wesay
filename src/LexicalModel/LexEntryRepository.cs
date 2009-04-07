@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using System.Linq;
 
 namespace WeSay.LexicalModel
 {
@@ -29,6 +31,10 @@ namespace WeSay.LexicalModel
 		//public event EventHandler<EntryEventArgs> AfterEntryAdded;  I (JH) don't know how to tell the difference between new and modified
 
 		ResultSetCacheManager<LexEntry> _caches = new ResultSetCacheManager<LexEntry>();
+
+		//hack to prevent sending nested Save calls, which was causing a bug when
+		//the exporter caused an item to get a new id, which led eventually to the list thinking it was modified, etc...
+		private bool _currentlySaving = false;
 
 		private readonly LiftRepository _decoratedRepository;
 		public LexEntryRepository(string path):this(path, new ProgressState())
@@ -120,21 +126,34 @@ namespace WeSay.LexicalModel
 
 		public void SaveItem(LexEntry item)
 		{
-			if (item == null)
+			if (_currentlySaving) //sometimes the process of saving leads modification which leads to a new save
 			{
-				throw new ArgumentNullException("item");
+				return;
 			}
-			if (item.IsDirty)
+			_currentlySaving = true;
+			try
 			{
-				_decoratedRepository.SaveItem(item);
-				_caches.UpdateItemInCaches(item);
-				item.Clean();
 
-				//review: I (JH) don't know how to tell the difference between new and modified
-				if (AfterEntryModified != null)
+				if (item == null)
 				{
-					AfterEntryModified(this, new EntryEventArgs(item));
+					throw new ArgumentNullException("item");
 				}
+				if (item.IsDirty)
+				{
+					_decoratedRepository.SaveItem(item);
+					_caches.UpdateItemInCaches(item);
+					item.Clean();
+
+					//review: I (JH) don't know how to tell the difference between new and modified
+					if (AfterEntryModified != null)
+					{
+						AfterEntryModified(this, new EntryEventArgs(item));
+					}
+				}
+			}
+			finally
+			{
+				_currentlySaving = false;
 			}
 		}
 
@@ -498,7 +517,6 @@ namespace WeSay.LexicalModel
 							}
 
 							senseNumber++;
-							continue;
 						}
 						return fieldsandValuesForRecordTokens;
 					});
@@ -586,6 +604,10 @@ namespace WeSay.LexicalModel
 										{
 											domain = null;
 										}
+										if (CheckIfTokenHasAlreadyBeenReturnedForThisSemanticDomain(fieldsandValuesForRecordTokens, domain))
+										{
+											continue; //This is to avoid duplicates
+										}
 										tokenFieldsAndValues.Add("SemanticDomain", domain);
 										fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
 									}
@@ -596,13 +618,26 @@ namespace WeSay.LexicalModel
 					}
 					);
 				ResultSet<LexEntry> itemsMatchingQuery = GetItemsMatching(semanticDomainsQuery);
-				SortDefinition[] sortDefinition = new SortDefinition[1];
+				SortDefinition[] sortDefinition = new SortDefinition[2];
 				sortDefinition[0] = new SortDefinition("SemanticDomain", StringComparer.InvariantCulture);
+				sortDefinition[1] = new SortDefinition("Sense", Comparer<int>.Default);
 				ResultSetCache<LexEntry> cache =
 					new ResultSetCache<LexEntry>(this, sortDefinition, itemsMatchingQuery, semanticDomainsQuery);
 				_caches.Add(cachename, cache);
 			}
 			return _caches[cachename].GetResultSet();
+		}
+
+		private bool CheckIfTokenHasAlreadyBeenReturnedForThisSemanticDomain(List<IDictionary<string, object>> fieldsandValuesForRecordTokens, string domain)
+		{
+			foreach (var tokenInfo in fieldsandValuesForRecordTokens)
+			{
+				if((string)tokenInfo["SemanticDomain"] == domain)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 
@@ -832,29 +867,22 @@ namespace WeSay.LexicalModel
 		/// sorted by the lexical form in the given writing system.
 		/// Use "Form" to access the lexical form in a RecordToken.
 		/// </summary>
-		/// <param name="field"></param>
-		/// <param name="lexicalUnitWritingSystem"></param>
 		/// <returns></returns>
-		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field,
-																				 WritingSystem
-																						 lexicalUnitWritingSystem)
+		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field, string[] searchWritingSystemIds, WritingSystem lexicalUnitWritingSystem)
 		{
-			if(lexicalUnitWritingSystem == null)
-			{
-				throw new ArgumentNullException("lexicalUnitWritingSystem");
-			}
-			if (field == null)
-			{
-				throw new ArgumentNullException("field");
-			}
-			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}", field, lexicalUnitWritingSystem.Id);
+			Guard.AgainstNull(lexicalUnitWritingSystem, "lexicalUnitWritingSystem");
+			Guard.AgainstNull(field, "field");
+
+
+			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}_{2}", field, lexicalUnitWritingSystem.Id, GetCacheWritingSystemTag(searchWritingSystemIds));
+			//cacheName = MakeSafeForFileName(cacheName);
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> lexicalFormQuery = new DelegateQuery<LexEntry>(
 					delegate(LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-						Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field).FilteringPredicate;
+						Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field, searchWritingSystemIds).FilteringPredicate;
 						if(filteringPredicate(entryToQuery))
 						{
 							string lexicalForm = null;
@@ -878,6 +906,34 @@ namespace WeSay.LexicalModel
 
 			return resultsFromCache;
 		}
+
+		/// <summary>
+		/// Given a list of writingSystems, combine them in a way that can be used to uniquely identify a cache of results
+		/// </summary>
+		/// <param name="ids"></param>
+		/// <returns></returns>
+		private string GetCacheWritingSystemTag(string[] ids)
+		{
+			if(ids == null || ids.Length ==0)
+			{
+			   return "all";
+			}
+			else
+			{
+				string wsTag="";
+				ids.ForEach(id => wsTag += id);
+				return wsTag;
+			}
+		}
+//
+//        private string MakeSafeForFileName(string fileName)
+//        {
+//            foreach (char invalChar in Path.GetInvalidFileNameChars())
+//            {
+//                fileName = fileName.Replace(invalChar.ToString(), "");
+//            }
+//            return fileName;
+//        }
 
 		#region IDisposable Members
 

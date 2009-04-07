@@ -65,7 +65,7 @@ namespace WeSay.ConfigTool
 		{
 			if (oldId == officialId)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"Sorry, it's important to keep to international standard code for {0}, which is '{1}'.",
 						language,
 						officialId);
@@ -92,6 +92,13 @@ namespace WeSay.ConfigTool
 			}
 
 			string id = e.ChangedItem.Value as string;
+
+			if (id != null && id.Contains(" "))
+			{
+				ErrorReport.NotifyUserOfProblem("Sorry, the writingsystem Id should conform to ISO 639-3 and may not contain spaces");
+				_writingSystem.Id = e.OldValue.ToString();
+			}
+
 			if (TriedToChangeKnownLanguageId(e.OldValue.ToString(), "en", "English") ||
 				TriedToChangeKnownLanguageId(e.OldValue.ToString(), "fr", "French") ||
 				TriedToChangeKnownLanguageId(e.OldValue.ToString(), "id", "Indonesian") ||
@@ -103,19 +110,19 @@ namespace WeSay.ConfigTool
 			}
 			else if (e.OldValue.ToString() == "fr")
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"Sorry, it's important to keep to international standard code for French, which is 'fr'.");
 				_writingSystem.Id = e.OldValue.ToString();
 			}
 			else if (e.OldValue.ToString() == "id")
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"Sorry, it's important to keep to international standard code for Indonesian, which is 'id'.");
 				_writingSystem.Id = e.OldValue.ToString();
 			}
 			else if (_writingSystemCollection.ContainsKey(id))
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"Sorry, there is already a Writing System with that ID.");
 				_writingSystem.Id = e.OldValue.ToString();
 			}

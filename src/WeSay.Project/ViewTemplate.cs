@@ -246,6 +246,18 @@ namespace WeSay.Project
 			{
 				note.IsMultiParagraph = true;
 			}
+
+			//In March 2009 we moved Sense.LiteralMeaning --> Entry.literal-meaning
+			//the default template has the new one, so we just have to remove the old
+			//the parser (builder) does the actual data moving/renaming for existing data
+			Field oldLitMeaning = GetField("LiteralMeaning");
+			if (oldLitMeaning != null)
+			{
+				Field newLitMeaning = GetField(LexEntry.WellKnownProperties.LiteralMeaning);
+				newLitMeaning.Enabled = oldLitMeaning.Enabled;
+				RemoveByFieldName(this, "LiteralMeaning");
+			}
+
 		}
 
 		/// <summary>
@@ -367,11 +379,11 @@ namespace WeSay.Project
 			glossField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(glossField);
 
-			Field literalMeaningField = new Field("LiteralMeaning", "LexSense", defaultAnalysisSet);
+			Field literalMeaningField = new Field("literal-meaning", "LexEntry", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Literal Meaning",
 							  "The label for the field showing the literal meaning of idiom or proverb.");
-			literalMeaningField.DisplayName = "Lit Meaning";
+			literalMeaningField.DisplayName = "Literal Meaning";
 			literalMeaningField.Description = "Literal meaning of an idiom.";
 			literalMeaningField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			literalMeaningField.Enabled = false;
@@ -460,7 +472,7 @@ namespace WeSay.Project
 			translationField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(translationField);
 
-			Field ddp4Field = new Field("SemanticDomainDdp4", "LexSense", defaultAnalysisSet);
+			Field ddp4Field = new Field(LexSense.WellKnownProperties.SemanticDomainDdp4, "LexSense", defaultAnalysisSet);
 
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Sem Dom", "The label for the field showing Semantic Domains");

@@ -76,7 +76,7 @@ namespace Addin.Transform.LexiquePro
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Sorry, could not open dictionary in Lexique Pro.\r\n" + error.Message);
+				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, could not open dictionary in Lexique Pro.\r\n" + error.Message);
 			}
 		}
 
@@ -98,7 +98,7 @@ namespace Addin.Transform.LexiquePro
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("WeSay encountered a problem while looking for Lexique Pro.\r\n" + error.Message);
+				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("WeSay encountered a problem while looking for Lexique Pro.\r\n" + error.Message);
 			}
 			return null;
 		}

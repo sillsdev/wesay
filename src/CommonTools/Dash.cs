@@ -80,7 +80,7 @@ namespace WeSay.CommonTools
 			}
 			catch
 			{
-				ErrorReport.ReportNonFatalMessage("Could not start " + startInfo.FileName);
+				ErrorReport.NotifyUserOfProblem("Could not start " + startInfo.FileName);
 				return;
 			}
 
@@ -190,7 +190,7 @@ namespace WeSay.CommonTools
 					}
 					catch (Exception error)
 					{
-						ErrorReport.ReportNonFatalMessage(error.Message);
+						ErrorReport.NotifyUserOfProblem(error.Message);
 					}
 
 					Cursor.Current = Cursors.Default;
@@ -213,6 +213,13 @@ namespace WeSay.CommonTools
 				default:
 					return new DashboardButton(item);
 			}
+		}
+
+		//This is used in place of AnchorStyle.Right because anchoring is buggy before a control is shown
+		protected override void OnResize(EventArgs e)
+		{
+			_panel.Width = ClientRectangle.Width - _panel.Left;
+			base.OnResize(e);
 		}
 
 		private void ResizeButtons()
@@ -704,8 +711,10 @@ namespace WeSay.CommonTools
 				throw new InvalidOperationException(
 						"Deactivate should only be called once after Activate.");
 			}
+			SuspendLayout(); //NB: In WS-1234, the user found this to be really slow (!,??), hence the suspend
 			_toolTip.RemoveAll();
 			_panel.Controls.Clear();
+			ResumeLayout();
 			_isActive = false;
 		}
 

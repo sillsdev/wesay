@@ -28,7 +28,7 @@ namespace WeSay.LexicalTools
 			}
 
 			StringBuilder rtf = new StringBuilder();
-			rtf.Append(@"{\rtf1\ansi\uc0\fs28 ");
+			rtf.Append(@"{\rtf1\ansi\uc1\fs28 ");
 			rtf.Append(MakeFontTable());
 			RenderHeadword(entry, rtf, lexEntryRepository);
 
@@ -299,8 +299,8 @@ namespace WeSay.LexicalTools
 			{
 				if (c > 128)
 				{
-					outString.Append(@"\u");
-					outString.Append(Convert.ToUInt16(c).ToString());
+					outString.Append(String.Format(@"\u{0:D}?", Convert.ToUInt16(c)));
+					//outString.Append(Convert.ToUInt16(c).ToString());
 				}
 				else
 				{

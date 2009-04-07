@@ -70,7 +70,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 						//there's no scenario where it is worth crashing or even notifying
 						Logger.WriteEvent("Error: " + error.Message);
 #if DEBUG
-						ErrorReport.ReportNonFatalMessage("Only seeing this because youre in debug mode:\r\n"+error.Message);
+						ErrorReport.NotifyUserOfProblem("Only seeing this because youre in debug mode:\r\n"+error.Message);
 #endif
 					}
 				}
@@ -132,11 +132,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			get
 			{
 				return
-					String.Format(
-						StringCatalog.Get("~See all {0} {1} words.",
-										  "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."),
-						ComputeCount(true),
-						BasilProject.Project.Name);
+
+						StringCatalog.GetFormatted("~See all {0} {1} words.",
+										  "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.",
+							ComputeCount(true),
+							BasilProject.Project.Name);
 			}
 		}
 

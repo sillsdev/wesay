@@ -14,7 +14,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			Field field = new Field("customField", "LexExampleSentence", new string[] {"vernacular"});
-			_missingCustomFieldFilter = new MissingFieldQuery(field);
+			_missingCustomFieldFilter = new MissingFieldQuery(field, null);
 		}
 
 		private static LexEntry CreateEmptyLexEntryWithOneEmptySentence()
@@ -145,7 +145,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			Field field = new Field("customField", "LexEntry", new string[] {"vernacular"});
-			_missingCustomFieldFilter = new MissingFieldQuery(field);
+			_missingCustomFieldFilter = new MissingFieldQuery(field, null);
 		}
 
 		[Test]
@@ -189,7 +189,7 @@ namespace WeSay.LexicalTools.Tests
 									new string[] {"vernacular"},
 									Field.MultiplicityType.ZeroOr1,
 									"Option");
-			_missingCustomFieldFilter = new MissingFieldQuery(field);
+			_missingCustomFieldFilter = new MissingFieldQuery(field, null);
 		}
 
 		[Test]

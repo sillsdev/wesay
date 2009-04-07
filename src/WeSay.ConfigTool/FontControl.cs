@@ -45,7 +45,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception error)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"The Microsoft Font Dialog had a problem. We have seen this happen when you add a font to the system while WeSay Config Tool is running.  Try quitting this application and running it again." +
 						Environment.NewLine + "The exception was: " + error.Message);
 				return;

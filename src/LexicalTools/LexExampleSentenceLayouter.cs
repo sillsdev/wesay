@@ -63,7 +63,7 @@ namespace WeSay.LexicalTools
 			}
 			catch (ConfigurationException e)
 			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
 
 			DetailList.ResumeLayout();

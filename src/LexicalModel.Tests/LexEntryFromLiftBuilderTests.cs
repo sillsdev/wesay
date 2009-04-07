@@ -84,6 +84,20 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		public void NewEntry_OldLiteralMeaning_GetsMoved()
+		{
+			Extensible extensibleInfo = new Extensible();
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
+			LexSense s = _builder.GetOrMakeSense(e, new Extensible(), string.Empty);
+			LiftMultiText t = new LiftMultiText("en", "test");
+			_builder.MergeInField(s, "LiteralMeaning", default(DateTime), default(DateTime), t, null);
+			_builder.FinishEntry(e);
+			Assert.IsNull(e.Senses[0].GetProperty<MultiText>("LiteralMeaning"));
+			Assert.IsNotNull(e.GetProperty<MultiText>(LexEntry.WellKnownProperties.LiteralMeaning));
+			Assert.AreEqual("test", e.GetProperty<MultiText>(LexEntry.WellKnownProperties.LiteralMeaning).GetExactAlternative("en"));
+		}
+
+		[Test]
 		public void NewEntry_HasDefGlossHasAnotherWSAlternative_CopiedToDefintion()
 		{
 			Extensible extensibleInfo = new Extensible();
@@ -692,8 +706,8 @@ namespace WeSay.LexicalModel.Tests
 		public void EntryGetsFlag()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_builder.MergeInTrait(e, new Trait("flag_skip_BaseForm", null));
-			Assert.IsTrue(e.GetHasFlag("flag_skip_BaseForm"));
+			_builder.MergeInTrait(e, new Trait(LexEntry.WellKnownProperties.FlagSkipBaseform, null));
+			Assert.IsTrue(e.GetHasFlag(LexEntry.WellKnownProperties.FlagSkipBaseform));
 		}
 
 		[Test]

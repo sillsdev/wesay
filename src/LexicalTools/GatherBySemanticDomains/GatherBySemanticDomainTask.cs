@@ -63,6 +63,7 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
+
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 
 
@@ -98,7 +99,7 @@ namespace WeSay.LexicalTools
 				}
 			}
 
-			_semanticDomainField = viewTemplate.GetField("SemanticDomainDdp4");
+			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
 			WritingSystem definitionWS;
 			viewTemplate.WritingSystems.TryGetValue(definitionWsId, out definitionWS);
@@ -219,7 +220,7 @@ namespace WeSay.LexicalTools
 				return key;
 			}
 			string prefix = "";
-			string number = option.Abbreviation.GetExactAlternative(SemanticDomainWritingSystemId);
+			string number = option.Abbreviation.GetBestAlternativeString(new string[]{SemanticDomainWritingSystemId, "en"});
 			var indentLevel = 0;
 			if (!string.IsNullOrEmpty(number))
 			{
@@ -231,7 +232,7 @@ namespace WeSay.LexicalTools
 				prefix = "      ".Substring(0, indentLevel) + number + " ";
 			}
 			return prefix //this puts the number back in
-				+ option.Name.GetExactAlternative(SemanticDomainWritingSystemId);
+				+ option.Name.GetBestAlternativeString(new string[] { SemanticDomainWritingSystemId, "en" });
 		}
 
 		private Option GetOptionFromKey(string key)
@@ -506,7 +507,6 @@ namespace WeSay.LexicalTools
 					entry.LexicalForm.SetAlternative(WordWritingSystemId, lexicalForm);
 					AddCurrentSemanticDomainToEntry(entry,gloss);
 					LexEntryRepository.SaveItem(entry);
-					GetAllEntriesSortedBySemanticDomain();//review: (jh asks) is there some side effect here? Why is it called?
 					modifiedEntries.Add(entry);
 
 					_logger.WriteConciseHistoricalEvent("SD-Added '{0}' with Domain to '{1}'", entry.GetSimpleFormForLogging(), CurrentDomainName);
@@ -708,7 +708,7 @@ namespace WeSay.LexicalTools
 				try
 				{
 					ws =
-						ViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainsDdp4).
+						ViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4).
 							WritingSystemIds[0];
 				}
 				catch (Exception)
@@ -716,7 +716,7 @@ namespace WeSay.LexicalTools
 					if (!_alreadyReportedWSLookupFailure)
 					{
 						_alreadyReportedWSLookupFailure = true;
-						ErrorReport.ReportNonFatalMessage(
+						ErrorReport.NotifyUserOfProblem(
 							"WeSay was unable to get a writing system to use from the configuration Semantic Domain Field. English will be used.");
 					}
 				}

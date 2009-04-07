@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GatherBySemanticDomainsControl));
 			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("blah");
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("stuff");
-			this._domainName = new System.Windows.Forms.ComboBox();
+			this._domainListComboBox = new System.Windows.Forms.ComboBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this._instructionLabel = new System.Windows.Forms.Label();
@@ -62,20 +62,20 @@ namespace WeSay.LexicalTools
 			//
 			// _domainName
 			//
-			this._domainName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			this._domainListComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._domainName.BackColor = System.Drawing.SystemColors.Control;
-			this._domainName.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this._domainName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._domainName.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this._domainName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._domainName.Location = new System.Drawing.Point(13, 47);
-			this._domainName.Name = "_domainName";
-			this._domainName.Size = new System.Drawing.Size(434, 27);
-			this._domainName.TabIndex = 20;
-			this._domainName.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this._domainName_DrawItem);
-			this._domainName.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this._domainName_MeasureItem);
-			this._domainName.SelectedIndexChanged += new System.EventHandler(this._domainName_SelectedIndexChanged);
+			this._domainListComboBox.BackColor = System.Drawing.SystemColors.Control;
+			this._domainListComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			this._domainListComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this._domainListComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._domainListComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._domainListComboBox.Location = new System.Drawing.Point(13, 47);
+			this._domainListComboBox.Name = "_domainListComboBox";
+			this._domainListComboBox.Size = new System.Drawing.Size(434, 27);
+			this._domainListComboBox.TabIndex = 20;
+			this._domainListComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this._domainName_DrawItem);
+			this._domainListComboBox.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this._domainName_MeasureItem);
+			this._domainListComboBox.SelectedIndexChanged += new System.EventHandler(this._domainName_SelectedIndexChanged);
 			//
 			// label3
 			//
@@ -475,7 +475,7 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._question);
 			this.Controls.Add(this.multiTextControl3);
 			this.Controls.Add(this._meaningBox);
-			this.Controls.Add(this._domainName);
+			this.Controls.Add(this._domainListComboBox);
 			this.Controls.Add(this._meaningLabel);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this._listViewWords);
@@ -500,7 +500,7 @@ namespace WeSay.LexicalTools
 
 
 		private MultiTextControl _vernacularBox;
-		private System.Windows.Forms.ComboBox _domainName;
+		private System.Windows.Forms.ComboBox _domainListComboBox;
 		private System.Windows.Forms.Label label3;
 		private WeSayListBox _listViewWords;
 		private System.Windows.Forms.Label label4;

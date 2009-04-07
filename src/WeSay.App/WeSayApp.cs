@@ -179,7 +179,7 @@ namespace WeSay.App
 			}
 			catch (IOException e)
 			{
-				ErrorNotificationDialog.ReportException(e, null, false);
+				ErrorReport.ReportNonFatalException(e);
 				Thread.CurrentThread.Abort();
 			}
 		}
@@ -343,7 +343,7 @@ namespace WeSay.App
 			}
 			catch (IOException e)
 			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
 		}
 
@@ -369,7 +369,7 @@ namespace WeSay.App
 			liftPath = DetermineActualLiftPath(liftPath);
 			if (liftPath == null)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project.");
 				return null;
 			}
@@ -391,7 +391,7 @@ namespace WeSay.App
 			}
 			catch
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"WeSay was unable to migrate the WeSay configuration file for the new version of WeSay. This may cause WeSay to not function properly. Try opening the project in the WeSay Configuration Tool to fix this.");
 			}
 

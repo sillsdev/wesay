@@ -277,7 +277,7 @@ namespace Addin.Transform.Tests
 					<relation type='BaseForm' ref='two'/>
 				   <sense>
 						<gloss lang='en'><text>hello</text></gloss>
-						<trait name='SemanticDomainDdp4' value='1.1' />
+						<trait name='semantic-domain-ddp4' value='1.1' />
 					 </sense>
 
 				</entry>
