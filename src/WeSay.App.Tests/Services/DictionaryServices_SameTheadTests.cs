@@ -4,7 +4,8 @@ using Palaso.Services.Dictionary;
 using WeSay.App.Services;
 using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Tests.Db4oSpecific;
+using WeSay.Project;
+using WeSay.Project.Tests;
 
 namespace WeSay.App.Tests.Services
 {
@@ -19,46 +20,29 @@ namespace WeSay.App.Tests.Services
 	public class DictionaryService_SameTheadTests
 	{
 		private LexEntryRepository _lexEntryRepository;
-		private TemporaryFolder _tempFolder;
-		private string _filePath;
-
-		private Db4oProjectSetupForTesting _projectSetupSharedByAllTests;
 		private DictionaryServiceProvider _dictionaryServiceProvider;
-
-		/// <summary>
-		/// Db4oProjectSetupForTesting is extremely time consuming to setup, so we reuse it.
-		/// </summary>
-		[TestFixtureSetUp]
-		public void SetupFixture()
-		{
-			_tempFolder = new TemporaryFolder();
-			_projectSetupSharedByAllTests = new Db4oProjectSetupForTesting(string.Empty);
-		}
+		private ProjectDirectorySetupForTesting _projectDirectorySetup;
+		private WeSayWordsProject _project;
 
 		[SetUp]
 		public void Setup()
 		{
-			_filePath = _tempFolder.GetTemporaryFile();
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_projectDirectorySetup = new ProjectDirectorySetupForTesting(string.Empty);
+
+			_project = _projectDirectorySetup.CreateLoadedProject();
+			_lexEntryRepository = _project.Container.Resolve<LexEntryRepository>();
 			_dictionaryServiceProvider = new DictionaryServiceProvider(_lexEntryRepository,
 																	   null,
-																	   _projectSetupSharedByAllTests
-																			   ._project);
+																	   _project);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_lexEntryRepository.Dispose();
-			File.Delete(_filePath);
+			_project.Dispose();
+			_projectDirectorySetup.Dispose();
 		}
 
-		[TestFixtureTearDown]
-		public void FixtureTearDown()
-		{
-			_projectSetupSharedByAllTests.Dispose();
-			_tempFolder.Delete();
-		}
 
 		private void MakeTestLexEntry(string writingSystemId, string lexicalForm)
 		{

@@ -30,6 +30,7 @@ namespace WeSay.LexicalModel
 		public event EventHandler<EntryEventArgs> AfterEntryDeleted;
 		//public event EventHandler<EntryEventArgs> AfterEntryAdded;  I (JH) don't know how to tell the difference between new and modified
 
+
 		ResultSetCacheManager<LexEntry> _caches = new ResultSetCacheManager<LexEntry>();
 
 		//hack to prevent sending nested Save calls, which was causing a bug when
@@ -944,6 +945,9 @@ namespace WeSay.LexicalModel
 			{
 				throw new ApplicationException(
 						"Disposed not explicitly called on LexEntryRepository.");
+
+			  //  throw new ApplicationException("Disposed not explicitly called on LexEntryRepository.\r\n" + _constructionStackTrace.ToString());
+
 			}
 		}
 #endif

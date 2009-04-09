@@ -37,14 +37,16 @@ namespace WeSay.Foundation
 		public MultiText() {}
 
 		/// <summary>
-		/// We have this pesky "backreference" solely to enable fast
-		/// searching in our current version of db4o (5.5), which
-		/// can find strings fast, but can't be queried for the owner
+		/// We added this pesky "backreference" solely to enable fast
+		/// searching in db4o (5.5), which could
+		///  find strings fast, but can't be queried for the owner
 		/// quickly, if there is an intervening collection.  Since
 		/// each string in WeSay is part of a collection of writing
 		/// system alternatives, that means we can't quickly get
 		/// an answer, for example, to the question Get all
 		/// the Entries that contain a senses which have the reversal "cat".
+		///
+		/// NOW (2009) it is a TODO to look at removing this.
 		///
 		/// Using this field, we can do a query asking for all
 		/// the LanguageForms matching "cat".

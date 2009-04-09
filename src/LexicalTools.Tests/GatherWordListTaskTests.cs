@@ -30,7 +30,6 @@ namespace WeSay.LexicalTools.Tests
 			_tempFolder = new TemporaryFolder();
 			_wordListFilePath = _tempFolder.GetTemporaryFile();
 			_filePath = _tempFolder.GetTemporaryFile();
-			//Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
 			_lexEntryRepository = new LexEntryRepository(_filePath); // InMemoryRecordListManager();

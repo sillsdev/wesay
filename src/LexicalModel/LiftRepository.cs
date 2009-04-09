@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -24,6 +25,7 @@ namespace WeSay.LexicalModel
 
 		public LiftRepository(string filePath, ProgressState progressState)
 		{
+
 			MaintainLockOnLift = false;
 
 			//set to true so that an exception in the constructor does not cause the destructor to throw
@@ -200,6 +202,8 @@ namespace WeSay.LexicalModel
 			if (!_disposed)
 			{
 				throw new ApplicationException("Disposed not explicitly called on LiftRepository.");
+
+				//throw new ApplicationException("Disposed not explicitly called on LiftRepository.\r\n" + _constructionStackTrace.ToString());
 			}
 		}
 #endif

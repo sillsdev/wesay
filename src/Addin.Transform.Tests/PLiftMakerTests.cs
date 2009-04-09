@@ -1,9 +1,6 @@
-using System;
 using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
-using WeSay.LexicalModel;
-using WeSay.Project;
 
 namespace Addin.Transform.Tests
 {
@@ -19,38 +16,22 @@ namespace Addin.Transform.Tests
 			ErrorReport.IsOkToInteractWithUser = false;
 		}
 
-		//        [Test]
-		//        public void EntryMakeItToXHtml()
-		//        {
-		//            string xmlForEntries = @"<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>";
-		//
-		//            using (Db4oProjectSetupForTesting projectSetup = new Db4oProjectSetupForTesting(xmlForEntries))
-		//            {
-		//                PLiftMaker maker = new PLiftMaker();
-		//                string outputPath = Path.Combine(projectSetup._project.PathToExportDirectory, projectSetup._project.Name + ".xhtml");
-		//                maker.MakeXHtmlFile(outputPath, projectSetup._lexEntryRepository, projectSetup._project);
-		//                Assert.IsTrue(File.ReadAllText(outputPath).Contains("<span class=\"v\">fooOne"));
-		//            }
-		//        }
-
 		[Test]
-		[Ignore("not a real test")]
-		public void MakePLiftForBiatah2()
+		public void EntryMakeItToPLift()
 		{
-			using (WeSayWordsProject p = new WeSayWordsProject())
+			var xmlOfEntries = @" <entry id='foo1'>
+										<lexical-unit><form lang='v'><text>hello</text></form></lexical-unit>
+								 </entry>";
+			using (var p = new WeSay.Project.Tests.ProjectDirectorySetupForTesting(xmlOfEntries))
 			{
-				p.LoadFromProjectDirectoryPath(@"E:\Users\John\Documents\WeSay\biatah");
-
-				using (
-						LexEntryRepository lexEntryRepository =
-								new LexEntryRepository(p.PathToRepository))
+				PLiftMaker maker = new PLiftMaker();
+				using (var project = p.CreateLoadedProject())
 				{
-					using (var f = new WeSay.Foundation.Tests.TestHelpers.TempFile())
-					{
-						PLiftMaker maker = new PLiftMaker();
-						maker.MakePLiftTempFile(f.Path, lexEntryRepository, p.DefaultPrintingTemplate);
-						Console.WriteLine(f.Path);
-					}
+					var repository = project.GetLexEntryRepository();
+					string outputPath = Path.Combine(project.PathToExportDirectory, project.Name + ".xhtml");
+					maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate);
+					WeSay.Foundation.Tests.TestHelpers.AssertXmlFile.AtLeastOneMatch(outputPath,
+																					 "//field[@type='headword']/form[@lang='v']/text[text()='hello']");
 				}
 			}
 		}

@@ -1,14 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Threading;
+using System.Xml;
+using NUnit.Framework;
 
 namespace WeSay.Foundation.Tests.TestHelpers
 {
 	public class TestUtilities
 	{
+
 		public static void DeleteFolderThatMayBeInUse(string folder)
 		{
 			if (Directory.Exists(folder))

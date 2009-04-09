@@ -49,10 +49,6 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
-	</Reference>
 	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
@@ -94,13 +90,11 @@
 	<Compile Include="LexEntryRepositoryEventTests.cs" />
 	<Compile Include="LexEntryRepositoryStateUnitializedTests.cs" />
 	<Compile Include="LexEntryRepository_GetMissingItemTests.cs" />
-	<Compile Include="Db4oSpecific\Db4oProjectSetupForTesting.cs" />
 	<Compile Include="FieldTests.cs" />
 	<Compile Include="LexEntryTests.cs" />
 	<Compile Include="LexEntryRepositoryTests.cs" />
 	<Compile Include="LexRelationTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
-	<Compile Include="Db4oSpecific\PersistenceTests.cs" />
 	<Compile Include="LiftExportTests.cs" />
 	<Compile Include="LexEntryFromLiftBuilderTests.cs" />
 	<Compile Include="LiftPreparer.Tests.cs" />

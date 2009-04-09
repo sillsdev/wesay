@@ -40,39 +40,6 @@ namespace Addin.Transform
 			exporter.End();
 		}
 
-		//
-		//        public void MakeXHtmlFile(string outputPath, LexEntryRepository lexEntryRepository, WeSayWordsProject project)
-		//        {
-		//            IHomographCalculator homographCalculator = new HomographCalculator(lexEntryRepository, project.DefaultPrintingTemplate.HeadwordWritingSystem);
-		//
-		//            IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(project.DefaultPrintingTemplate.HeadwordWritingSystem);
-		//            Db4oLexEntryFinder finder = new Db4oLexEntryFinder(lexEntryRepository.DataSource);
-		//
-		//            string pliftPath = MakePLiftTempFile(entries, project.DefaultPrintingTemplate, homographCalculator, finder);
-		//            try
-		//            {
-		//                using (Stream xsltStream = GetXsltStream("plift2html.xsl"))
-		//                {
-		//                    TransformWithProgressDialog dlg = new TransformWithProgressDialog(pliftPath,
-		//                                                                                      outputPath,
-		//                                                                                      xsltStream,
-		//                                                                                      "lift/entry");
-		//                    dlg.TaskMessage =
-		//                        StringCatalog.Get("Preparing dictionary for printing...",
-		//                                          "This is shown when WeSay is creating the pdf document for printing.");
-		//                    dlg.AddArgument("writing-system-info-file", project.PathToWritingSystemPrefs);
-		//                    dlg.Transform();
-		//                }
-		//            }
-		//            finally
-		//            {
-		//                if(File.Exists(pliftPath))
-		//                {
-		//                    File.Delete(pliftPath);
-		//                }
-		//            }
-		//        }
-
 		public static Stream GetXsltStream(string xsltName)
 		{
 			Stream stream =

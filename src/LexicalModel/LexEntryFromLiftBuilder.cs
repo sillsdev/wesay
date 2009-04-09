@@ -47,23 +47,7 @@ namespace WeSay.LexicalModel
 		public LexEntry GetOrMakeEntry(Extensible eInfo, int order)
 		{
 			LexEntry entry = null;
-#if merging
-	 This really slows us down to a crawl if the incoming lift has guids, yet
-	 we aren't really merging, so its a waste of time.
 
-			If or when we do need to handle merging, this can probably be sped up by getting
-			the entire list of guids all in one go and then checking
-
-			if (eInfo.Guid != Guid.Empty)
-			{
-				entry = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, eInfo.Guid);
-
-				if (CanSafelyPruneMerge(eInfo, entry))
-				{
-					return null; // no merging needed
-				}
-			}
-#endif
 			if (eInfo.CreationTime == default(DateTime))
 			{
 				eInfo.CreationTime = PreciseDateTime.UtcNow;

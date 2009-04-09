@@ -10,8 +10,6 @@ namespace WeSay.Project.Tests
 {
 	/// <summary>
 	/// Creates a valid WeSay project directory in temp dir, and removes it when disposed.
-	///
-	/// Also see: Db4oProjectSetupForTesting, which encapsulates this
 	/// </summary>
 	public class ProjectDirectorySetupForTesting: IDisposable
 	{

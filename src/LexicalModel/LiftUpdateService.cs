@@ -35,8 +35,6 @@ namespace WeSay.LexicalModel
 		{
 			_lexEntryRepository = lexEntryRepository;
 			// todo LexEntryRepository owns a LiftUpdateService and manages it directly. e.g. on SaveItem
-			//_lexEntryRepository.Db4oDataSource.DataCommitted += new EventHandler(liftUpdateService.OnDataCommitted);
-			//_lexEntryRepository.Db4oDataSource.DataDeleted += new EventHandler<DeletedItemEventArgs>(liftUpdateService.OnDataDeleted);
 		}
 
 		private static string LiftDirectory

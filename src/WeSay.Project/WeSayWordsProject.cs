@@ -871,13 +871,6 @@ namespace WeSay.Project
 		public string PathToRepository
 		{
 			get { return PathToLiftFile; }
-			//get { return GetPathToDb4oLexicalModelDBFromPathToLift(PathToLiftFile); }
-		}
-
-		public string GetPathToDb4oLexicalModelDBFromPathToLift(string pathToLift)
-		{
-			return Path.Combine(GetPathToCacheFromPathToLift(pathToLift),
-								Path.GetFileNameWithoutExtension(pathToLift) + ".words");
 		}
 
 

@@ -107,16 +107,6 @@ namespace WeSay.LexicalModel
 
 		protected override void WireUpEvents()
 		{
-			//workaround db4o 6 bug
-			if (_creationTime.Kind != DateTimeKind.Utc)
-			{
-				CreationTime = new DateTime(_creationTime.Ticks, DateTimeKind.Utc);
-			}
-			if (ModificationTime.Kind != DateTimeKind.Utc)
-			{
-				ModificationTime = new DateTime(ModificationTime.Ticks, DateTimeKind.Utc);
-			}
-
 			Debug.Assert(CreationTime.Kind == DateTimeKind.Utc);
 			Debug.Assert(ModificationTime.Kind == DateTimeKind.Utc);
 			base.WireUpEvents();

@@ -82,6 +82,7 @@ namespace Addin.Transform
 										  bool includeXmlDirective,
 										  bool linkToUserCss)
 		{
+			//TODO: update this comment in light of the passing of db4o
 			//the problem we're addressing here is that when this is launched from the wesay configuration
 			//that won't (and doesn't want to) have locked up the db4o db by making a record list manager,
 			//which it normally has no need for.
