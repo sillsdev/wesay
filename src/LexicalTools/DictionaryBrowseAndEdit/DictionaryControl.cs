@@ -543,13 +543,14 @@ namespace WeSay.LexicalTools
 		{
 			Logger.WriteEvent("DeleteWord_Clicked");
 
-			var dlg = new ConfirmDelete();
-
-			dlg.ShowDialog(this);
-			if(dlg.DialogResult != DialogResult.OK)
+			using (var dlg = new ConfirmDelete())
 			{
-				Logger.WriteEvent("DeleteWord_Cancelled");
-				return;
+				dlg.ShowDialog(this);
+				if (dlg.DialogResult != DialogResult.OK)
+				{
+					Logger.WriteEvent("DeleteWord_Cancelled");
+					return;
+				}
 			}
 			DeleteWord();
 		}
