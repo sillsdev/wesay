@@ -5,10 +5,11 @@ using System.Text;
 using System.Xml;
 using LiftIO.Parsing;
 using NUnit.Framework;
+using Palaso.Test;
 using WeSay.Foundation;
-using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.Project;
 using System.Linq;
+using TemporaryFolder=WeSay.Foundation.Tests.TestHelpers.TemporaryFolder;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -56,21 +57,24 @@ namespace WeSay.LexicalModel.Tests
 			return forms;
 		}
 
-		private void AssertXPathNotNull(string xpath)
+		private void AssertHasAtLeastOneMatch(string xpath)
 		{
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(_stringBuilder.ToString());
-			XmlNode node = doc.SelectSingleNode(xpath);
-			if (node == null)
-			{
-				XmlWriterSettings settings = new XmlWriterSettings();
-				settings.Indent = true;
-				settings.ConformanceLevel = ConformanceLevel.Fragment;
-				XmlWriter writer = XmlWriter.Create(Console.Out, settings);
-				doc.WriteContentTo(writer);
-				writer.Flush();
-			}
-			Assert.IsNotNull(node, "Not matched: " + xpath);
+			AssertThatXmlIn.String(_stringBuilder.ToString()).
+				HasAtLeastOneMatchForXpath(xpath);
+
+//            XmlDocument doc = new XmlDocument();
+//            doc.LoadXml(_stringBuilder.ToString());
+//            XmlNode node = doc.SelectSingleNode(xpath);
+//            if (node == null)
+//            {
+//                XmlWriterSettings settings = new XmlWriterSettings();
+//                settings.Indent = true;
+//                settings.ConformanceLevel = ConformanceLevel.Fragment;
+//                XmlWriter writer = XmlWriter.Create(Console.Out, settings);
+//                doc.WriteContentTo(writer);
+//                writer.Flush();
+//            }
+//            Assert.IsNotNull(node, "Not matched: " + xpath);
 		}
 
 		[Test]
@@ -109,8 +113,8 @@ namespace WeSay.LexicalModel.Tests
 			_builder.FinishEntry(e);
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull("//entry/sense/subsense[@id='opon_1b' and @order='2']/gloss");
-			AssertXPathNotNull("//entry/sense/subsense/grammatical-info");
+			AssertHasAtLeastOneMatch("//entry/sense/subsense[@id='opon_1b' and @order='2']/gloss");
+			AssertHasAtLeastOneMatch("//entry/sense/subsense/grammatical-info");
 		}
 
 		[Test]
@@ -128,8 +132,8 @@ namespace WeSay.LexicalModel.Tests
 
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull("//entry/field[@type='color']/form[@lang='ws-one']");
-			AssertXPathNotNull("//entry/field[@type='color']/form[@lang='ws-two']");
+			AssertHasAtLeastOneMatch("//entry/field[@type='color']/form[@lang='ws-one']");
+			AssertHasAtLeastOneMatch("//entry/field[@type='color']/form[@lang='ws-two']");
 		}
 
 		[Test, Ignore("apparently not possible in LIFT?")]
@@ -173,7 +177,7 @@ namespace WeSay.LexicalModel.Tests
 			_builder.FinishEntry(e);
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull(xpathToOwningElement + "[trait[@name='one' and @value='1'] and trait[@name='two' and @value='2']]");
+			AssertHasAtLeastOneMatch(xpathToOwningElement + "[trait[@name='one' and @value='1'] and trait[@name='two' and @value='2']]");
 		}
 
 
@@ -192,9 +196,9 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.Add(entry2, 2);
 
 			_exporter.End();
-			AssertXPathNotNull("//entry[@order='1']");
-			AssertXPathNotNull("//entry[@order='2']");
-			AssertXPathNotNull("//entry[@order='3']");
+			AssertHasAtLeastOneMatch("//entry[@order='1']");
+			AssertHasAtLeastOneMatch("//entry[@order='2']");
+			AssertHasAtLeastOneMatch("//entry[@order='3']");
 		}
 
 		[Test]
@@ -211,7 +215,7 @@ namespace WeSay.LexicalModel.Tests
 			_builder.FinishEntry(e);
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull("//entry/sense/example/translation[not(@type)]/form[@lang='aa']");
+			AssertHasAtLeastOneMatch("//entry/sense/example/translation[not(@type)]/form[@lang='aa']");
 		}
 
 		[Test]
@@ -235,9 +239,9 @@ namespace WeSay.LexicalModel.Tests
 
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull(
+			AssertHasAtLeastOneMatch(
 					"//entry/sense/example/translation[not(@type)]/form[@lang='aa']/text[text()='unmarked translation']");
-			AssertXPathNotNull("//entry/sense/example/translation[@type='type2']/bogus");
+			AssertHasAtLeastOneMatch("//entry/sense/example/translation[@type='type2']/bogus");
 		}
 
 		[Test]
@@ -262,9 +266,9 @@ namespace WeSay.LexicalModel.Tests
 
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull(
+			AssertHasAtLeastOneMatch(
 					"//entry/sense/example/translation[not(@type)]/form[@lang='aa']/text[text()='unmarked translation']");
-			AssertXPathNotNull("//entry/sense/example/translation[@type='free']/bogus");
+			AssertHasAtLeastOneMatch("//entry/sense/example/translation[@type='free']/bogus");
 		}
 
 		[Test]
@@ -292,8 +296,8 @@ namespace WeSay.LexicalModel.Tests
 
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull("//entry/sense/example/translation[not(@type)]/bogusUnmarked");
-			AssertXPathNotNull(
+			AssertHasAtLeastOneMatch("//entry/sense/example/translation[not(@type)]/bogusUnmarked");
+			AssertHasAtLeastOneMatch(
 					"//entry/sense/example/translation[@type='Free translation']/form/text[text()='freestuff']");
 		}
 
@@ -318,8 +322,8 @@ namespace WeSay.LexicalModel.Tests
 			_builder.FinishEntry(e);
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull("//entry/variant/trait[@name='dialects' and @ value='Ratburi']");
-			AssertXPathNotNull("//entry/variant[@ref='2']/form/text[text()='glob']");
+			AssertHasAtLeastOneMatch("//entry/variant/trait[@name='dialects' and @ value='Ratburi']");
+			AssertHasAtLeastOneMatch("//entry/variant[@ref='2']/form/text[text()='glob']");
 		}
 
 		[Test]
@@ -339,8 +343,8 @@ namespace WeSay.LexicalModel.Tests
 
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull("//entry/etymology[@type='proto']/form/text");
-			AssertXPathNotNull("//entry/etymology[@type='proto']/gloss/form/text");
+			AssertHasAtLeastOneMatch("//entry/etymology[@type='proto']/form/text");
+			AssertHasAtLeastOneMatch("//entry/etymology[@type='proto']/gloss/form/text");
 		}
 
 		[Test]
@@ -371,8 +375,8 @@ namespace WeSay.LexicalModel.Tests
 
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull("//entry/sense/reversal/main/form/text[text()='vegetable']");
-			AssertXPathNotNull("//entry/sense/reversal/form/text[text()='mushroom']");
+			AssertHasAtLeastOneMatch("//entry/sense/reversal/main/form/text[text()='vegetable']");
+			AssertHasAtLeastOneMatch("//entry/sense/reversal/form/text[text()='mushroom']");
 		}
 
 		[Test]
@@ -405,11 +409,11 @@ namespace WeSay.LexicalModel.Tests
 
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull("//entry/pronunciation/form[@lang='v']/text[text()='pronounceme']");
-			AssertXPathNotNull("//entry/pronunciation/media[@href='blah.mp3']");
-			AssertXPathNotNull(
+			AssertHasAtLeastOneMatch("//entry/pronunciation/form[@lang='v']/text[text()='pronounceme']");
+			AssertHasAtLeastOneMatch("//entry/pronunciation/media[@href='blah.mp3']");
+			AssertHasAtLeastOneMatch(
 					"//entry/pronunciation/field[@type='cvPattern']/form/text[text()='acvpattern']");
-			AssertXPathNotNull("//entry/pronunciation/field[@type='tone']/form/text");
+			AssertHasAtLeastOneMatch("//entry/pronunciation/field[@type='tone']/form/text");
 		}
 	}
 }

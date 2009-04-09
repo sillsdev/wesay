@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
+using Palaso.Test;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
+using TempFile=WeSay.Foundation.Tests.TestHelpers.TempFile;
 
 namespace WeSay.Project.Tests
 {
@@ -34,9 +35,9 @@ namespace WeSay.Project.Tests
 				LexEntry e2 = session.MakeTestLexEntryInHeadwordWritingSystem("flower");
 				LexEntry e3 = session.MakeTestLexEntryInHeadwordWritingSystem("one");
 				session.DoExport();
-				session.AssertXPathNotNull("lift/entry[@id='" + e1.Id + "' and not(@order)]");
-				session.AssertXPathNotNull("lift/entry[@id='" + e2.Id + "' and not(@order)]");
-				session.AssertXPathNotNull("lift/entry[@id='" + e3.Id + "' and not(@order)]");
+				session.AssertHasAtLeastOneMatch("lift/entry[@id='" + e1.Id + "' and not(@order)]");
+				session.AssertHasAtLeastOneMatch("lift/entry[@id='" + e2.Id + "' and not(@order)]");
+				session.AssertHasAtLeastOneMatch("lift/entry[@id='" + e3.Id + "' and not(@order)]");
 			}
 		}
 
@@ -54,7 +55,7 @@ namespace WeSay.Project.Tests
 
 				session.DoExport();
 				var path = string.Format("..{0}audio{0}pretendFileName", Path.DirectorySeparatorChar);
-				session.AssertXPathNotNull("lift/entry/pronunciation/media[@href='"+path+"']");
+				session.AssertHasAtLeastOneMatch("lift/entry/pronunciation/media[@href='"+path+"']");
 			}
 		}
 
@@ -81,9 +82,9 @@ namespace WeSay.Project.Tests
 				example.Sentence["voice"] = "pretendFileName";
 
 				session.DoExport();
-				session.AssertXPathNotNull("lift/entry/sense/example/form[@lang='green']");
+				session.AssertHasAtLeastOneMatch("lift/entry/sense/example/form[@lang='green']");
 				var path = string.Format("..{0}audio{0}pretendFileName", Path.DirectorySeparatorChar);
-				session.AssertXPathNotNull("lift/entry/sense/example/trait[@name='audio' and @value='"+path+"']");
+				session.AssertHasAtLeastOneMatch("lift/entry/sense/example/trait[@name='audio' and @value='"+path+"']");
 			}
 		}
 
@@ -98,7 +99,7 @@ namespace WeSay.Project.Tests
 				e1.LexicalForm["blue"] = "b";
 
 				session.DoExport();
-				session.AssertXPathNotNull("lift/entry/lexical-unit/form[@lang='blue']");//sanity check
+				session.AssertHasAtLeastOneMatch("lift/entry/lexical-unit/form[@lang='blue']");//sanity check
 				session.AssertNoMatchForXPath("lift/entry/lexical-unit/form[@lang='voice']");
 			}
 		}
@@ -115,7 +116,7 @@ namespace WeSay.Project.Tests
 
 				session.DoExport();
 				session.PrintResult();
-				session.AssertXPathNotNull("lift/entry/citation/form[@lang='blue']");//sanity check
+				session.AssertHasAtLeastOneMatch("lift/entry/citation/form[@lang='blue']");//sanity check
 				session.AssertNoMatchForXPath("lift/entry/citation/form[@lang='voice']");
 			}
 		}
@@ -132,7 +133,7 @@ namespace WeSay.Project.Tests
 
 				session.DoExport();
 				session.PrintResult();
-				session.AssertXPathNotNull("lift/entry/field[@type='headword']/form[@lang='blue']");//sanity check
+				session.AssertHasAtLeastOneMatch("lift/entry/field[@type='headword']/form[@lang='blue']");//sanity check
 				session.AssertNoMatchForXPath("lift/entry/field[@type='headword']/form[@lang='voice']");
 			}
 		}
@@ -147,9 +148,9 @@ namespace WeSay.Project.Tests
 				LexEntry e3 = session.MakeTestLexEntryInHeadwordWritingSystem("sunset");
 
 				session.DoExport();
-				session.AssertXPathNotNull("lift/entry[@id='" + e1.Id + "' and @order='1']");
-				session.AssertXPathNotNull("lift/entry[@id='" + e2.Id + "' and not(@order)]");
-				session.AssertXPathNotNull("lift/entry[@id='" + e3.Id + "' and @order='2']");
+				session.AssertHasAtLeastOneMatch("lift/entry[@id='" + e1.Id + "' and @order='1']");
+				session.AssertHasAtLeastOneMatch("lift/entry[@id='" + e2.Id + "' and not(@order)]");
+				session.AssertHasAtLeastOneMatch("lift/entry[@id='" + e3.Id + "' and @order='2']");
 			}
 		}
 
@@ -172,7 +173,7 @@ namespace WeSay.Project.Tests
 				session.Template.Add(color);
 
 				session.DoExport();
-				session.AssertXPathNotNull("lift/entry[@id='" + e1.Id + "']/field[@type='" + "color" + "']");
+				session.AssertHasAtLeastOneMatch("lift/entry[@id='" + e1.Id + "']/field[@type='" + "color" + "']");
 
 				//now make it invisible and it should disappear
 				session.Template.GetField("color").Enabled = false;
@@ -192,7 +193,7 @@ namespace WeSay.Project.Tests
 				session.Repo.SaveItem(entry);
 
 				session.DoExport();
-				session.AssertXPathNotNull("lift/entry/lexical-unit/form[text='one']");
+				session.AssertHasAtLeastOneMatch("lift/entry/lexical-unit/form[text='one']");
 				session.AssertNoMatchForXPath("lift/entry/lexical-unit/form[text='red']");
 			}
 		}
@@ -229,12 +230,12 @@ namespace WeSay.Project.Tests
 				Assert.AreEqual(2,
 								session.Template.GetField(LexEntry.WellKnownProperties.Citation).
 									WritingSystemIds.Count);
-				session.AssertXPathNotNullWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+				session.AssertHasAtLeastOneMatchWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
 										   session.Template.GetField(LexEntry.WellKnownProperties.Citation)
 											   .WritingSystemIds[0],
 										   "blueCitation");
 				//should fall through to lexeme form on red
-				session.AssertXPathNotNullWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+				session.AssertHasAtLeastOneMatchWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
 										   session.Template.GetField(LexEntry.WellKnownProperties.Citation)
 											   .WritingSystemIds[1],
 										   "redLexemeForm");
@@ -252,17 +253,17 @@ namespace WeSay.Project.Tests
 
 				session.MakeEntry();
 				session.DoExport();
-				session.AssertXPathNotNullWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+				session.AssertHasAtLeastOneMatchWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
 										   session.HeadwordWritingSystem.Id,
 										   "redLexemeForm");
 
 				//nb: it's not clear what the "correct" behavior is, if the citation
 				//form is disabled for this user but a citation form does exist for this ws.
 
-				session.AssertXPathNotNullWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+				session.AssertHasAtLeastOneMatchWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
 											session.WritingSystemIds[1],
 										   "greenCitation");
-				session.AssertXPathNotNullWithArgs(
+				session.AssertHasAtLeastOneMatchWithArgs(
 										   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
 										   session.WritingSystemIds[2],
 										   "blueCitation");
@@ -338,11 +339,11 @@ namespace WeSay.Project.Tests
 
 
 
-		//        private static void AssertXPathNotNullWithArgs(string filePath,
+		//        private static void AssertHasAtLeastOneMatchWithArgs(string filePath,
 		//                                                       string xpathWithArgs,
 		//                                                       params object[] args)
 		//        {
-		//            AssertXPathNotNull(filePath, string.Format(xpathWithArgs, args));
+		//            AssertHasAtLeastOneMatch(filePath, string.Format(xpathWithArgs, args));
 		//        }
 
 		//        private static void AssertNoMatchForXPathWithArgs(string filePath,
@@ -352,7 +353,7 @@ namespace WeSay.Project.Tests
 		//            session.AssertNoMatchForXPath(filePath, string.Format(xpathWithArgs, args));
 		//        }
 
-		//        private static void AssertXPathNotNull(string filePath, string xpath)
+		//        private static void AssertHasAtLeastOneMatch(string filePath, string xpath)
 		//        {
 		//            XmlDocument doc = new XmlDocument();
 		//            try
@@ -470,25 +471,29 @@ namespace WeSay.Project.Tests
 			_projectDir.Dispose();
 		}
 
-		public void AssertXPathNotNull(string xpath)
+		public void AssertHasAtLeastOneMatch(string xpath)
 		{
-			XmlDocument doc = new XmlDocument();
-			try
-			{
-				doc.Load(_outputFile.Path);
-			}
-			catch (Exception err)
-			{
-				Console.WriteLine(err.Message);
-				Console.WriteLine(File.ReadAllText(_outputFile.Path));
-			}
-			XmlNode node = doc.SelectSingleNode(xpath);
-			if (node == null)
-			{
-				Console.WriteLine("Could not match " + xpath);
-				PrintNodeToConsole(doc);
-			}
-			Assert.IsNotNull(node);
+			AssertThatXmlIn.File(_outputFile.Path).
+			   HasAtLeastOneMatchForXpath(xpath);
+
+//
+//            XmlDocument doc = new XmlDocument();
+//            try
+//            {
+//                doc.Load(_outputFile.Path);
+//            }
+//            catch (Exception err)
+//            {
+//                Console.WriteLine(err.Message);
+//                Console.WriteLine(File.ReadAllText(_outputFile.Path));
+//            }
+//            XmlNode node = doc.SelectSingleNode(xpath);
+//            if (node == null)
+//            {
+//                Console.WriteLine("Could not match " + xpath);
+//                PrintNodeToConsole(doc);
+//            }
+//            Assert.IsNotNull(node);
 		}
 
 		public void AssertNoMatchForXPath(string xpath)
@@ -512,10 +517,10 @@ namespace WeSay.Project.Tests
 			Assert.IsNull(node);
 		}
 
-		public void AssertXPathNotNullWithArgs(string xpathWithArgs,
+		public void AssertHasAtLeastOneMatchWithArgs(string xpathWithArgs,
 											   params object[] args)
 		{
-			AssertXPathNotNull(string.Format(xpathWithArgs, args));
+			AssertHasAtLeastOneMatch(string.Format(xpathWithArgs, args));
 		}
 
 		public void AssertNoMatchForXPathWithArgs(string xpathWithArgs,
@@ -545,7 +550,7 @@ namespace WeSay.Project.Tests
 
 		public void CheckRelationOutput(LexEntry targetEntry, string relationName)
 		{
-			AssertXPathNotNullWithArgs("lift/entry/relation/field[@type='headword-of-target']/form[@lang='{1}']/text[text() = '{2}']",
+			AssertHasAtLeastOneMatchWithArgs("lift/entry/relation/field[@type='headword-of-target']/form[@lang='{1}']/text[text() = '{2}']",
 									   relationName,
 									   HeadwordWritingSystem.Id,
 									   targetEntry.GetHeadWordForm(HeadwordWritingSystem.Id));

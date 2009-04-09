@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using Addin.Transform.PdfDictionary;
 using NUnit.Framework;
+using Palaso.Test;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
@@ -49,7 +50,7 @@ namespace Addin.Transform.Tests
 		[Test]
 		public void EmptyLexicon_OK()
 		{
-		   AssertXPathNotNull(GetXhtmlContents(null), "html/body");
+		   AssertHasAtLeastOneMatch(GetXhtmlContents(null), "html/body");
 		}
 
 		[Test]
@@ -188,12 +189,12 @@ namespace Addin.Transform.Tests
 			var contents = GetXhtmlContents(entries);
 
 			//should only be two sections, not three
-			AssertXPathNotNull(contents, "html/body[count(div[@class='letHead'])=2]");
+			AssertHasAtLeastOneMatch(contents, "html/body[count(div[@class='letHead'])=2]");
 
-			AssertXPathNotNull(contents, "html/body/div[@class='letHead']/div[@class='letter' and text()='A a']");
-			AssertXPathNotNull(contents, "html/body/div[@class='letHead']/div[@class='letData']");
+			AssertHasAtLeastOneMatch(contents, "html/body/div[@class='letHead']/div[@class='letter' and text()='A a']");
+			AssertHasAtLeastOneMatch(contents, "html/body/div[@class='letHead']/div[@class='letData']");
 
-			AssertXPathNotNull(contents, "html/body/div[@class='letHead']/div[@class='letter' and text()='P p']");
+			AssertHasAtLeastOneMatch(contents, "html/body/div[@class='letHead']/div[@class='letter' and text()='P p']");
 		}
 
 		[Test]
@@ -229,8 +230,8 @@ namespace Addin.Transform.Tests
 
 			var contents = GetXhtmlContents(entries);
 
-			AssertXPathNotNull(contents, "//span[@class='xhomographnumber' and text()='1']");
-			AssertXPathNotNull(contents, "//span[@class='xhomographnumber' and text()='2']");
+			AssertHasAtLeastOneMatch(contents, "//span[@class='xhomographnumber' and text()='1']");
+			AssertHasAtLeastOneMatch(contents, "//span[@class='xhomographnumber' and text()='2']");
 
 		  }
 
@@ -246,7 +247,7 @@ namespace Addin.Transform.Tests
 
 			var contents = GetXhtmlContents(entries);
 
-			AssertXPathIsNull(contents, "//span[@class='xhomographnumber']");
+			HasNoMatch(contents, "//span[@class='xhomographnumber']");
 
 		}
 
@@ -292,59 +293,66 @@ namespace Addin.Transform.Tests
 		private  void AssertBodyHas(string xpath, params object[] args)
 		{
 			IList<LexEntry> entries = new List<LexEntry>(new LexEntry[] {_entry});
-			AssertXPathNotNull(GetXhtmlContents(entries), "html/body/" + string.Format(xpath,args));
+			AssertHasAtLeastOneMatch(GetXhtmlContents(entries), "html/body/" + string.Format(xpath,args));
 		}
 
 
-		private static void AssertXPathNotNull(string xml, string xpath)
+		private static void AssertHasAtLeastOneMatch(string xml, string xpath)
 		{
-			XmlDocument doc = GetDoc(xml);
-			XmlNode node = doc.SelectSingleNode(xpath);
-			if (node == null)
-			{
-				Console.WriteLine("Could not match "+xpath);
-				Console.WriteLine();
-				XmlWriterSettings settings = new XmlWriterSettings();
-				settings.Indent = true;
-				settings.ConformanceLevel = ConformanceLevel.Fragment;
-				XmlWriter writer = XmlWriter.Create(Console.Out, settings);
-				doc.WriteContentTo(writer);
-				writer.Flush();
-			}
-			Assert.IsNotNull(node);
+			AssertThatXmlIn.String(xml).
+			   HasAtLeastOneMatchForXpath(xpath);
+
+//
+//            XmlDocument doc = GetDoc(xml);
+//            XmlNode node = doc.SelectSingleNode(xpath);
+//            if (node == null)
+//            {
+//                Console.WriteLine("Could not match "+xpath);
+//                Console.WriteLine();
+//                XmlWriterSettings settings = new XmlWriterSettings();
+//                settings.Indent = true;
+//                settings.ConformanceLevel = ConformanceLevel.Fragment;
+//                XmlWriter writer = XmlWriter.Create(Console.Out, settings);
+//                doc.WriteContentTo(writer);
+//                writer.Flush();
+//            }
+//            Assert.IsNotNull(node);
 		}
 
-		private static void AssertXPathIsNull(string xml, string xpath)
+		private static void HasNoMatch(string xml, string xpath)
 		{
-			XmlDocument doc = GetDoc(xml);
-			XmlNode node = doc.SelectSingleNode(xpath);
-			if (node != null)
-			{
-				Console.WriteLine("Was not supposed to match " + xpath);
-				Console.WriteLine();
-				XmlWriterSettings settings = new XmlWriterSettings();
-				settings.Indent = true;
-				settings.ConformanceLevel = ConformanceLevel.Fragment;
-				XmlWriter writer = XmlWriter.Create(Console.Out, settings);
-				doc.WriteContentTo(writer);
-				writer.Flush();
-			}
-			Assert.IsNull(node);
+			AssertThatXmlIn.String(xml).HasNoMatchForXpath(xpath);
+//
+//
+//            XmlDocument doc = GetDoc(xml);
+//            XmlNode node = doc.SelectSingleNode(xpath);
+//            if (node != null)
+//            {
+//                Console.WriteLine("Was not supposed to match " + xpath);
+//                Console.WriteLine();
+//                XmlWriterSettings settings = new XmlWriterSettings();
+//                settings.Indent = true;
+//                settings.ConformanceLevel = ConformanceLevel.Fragment;
+//                XmlWriter writer = XmlWriter.Create(Console.Out, settings);
+//                doc.WriteContentTo(writer);
+//                writer.Flush();
+//            }
+//            Assert.IsNull(node);
 		}
 
-		private static XmlDocument GetDoc(string xml)
-		{
-			XmlDocument doc = new XmlDocument();
-			try
-			{
-				doc.LoadXml(xml);
-			}
-			catch (Exception err)
-			{
-				Console.WriteLine(err.Message);
-				Console.WriteLine(xml);
-			}
-			return doc;
-		}
+//        private static XmlDocument GetDoc(string xml)
+//        {
+//            XmlDocument doc = new XmlDocument();
+//            try
+//            {
+//                doc.LoadXml(xml);
+//            }
+//            catch (Exception err)
+//            {
+//                Console.WriteLine(err.Message);
+//                Console.WriteLine(xml);
+//            }
+//            return doc;
+//        }
 	}
 }

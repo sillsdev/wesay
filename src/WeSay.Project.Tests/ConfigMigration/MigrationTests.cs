@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.XPath;
 using NUnit.Framework;
+using Palaso.Test;
 using WeSay.Project.ConfigMigration;
 
 namespace WeSay.Project.Tests
@@ -55,7 +56,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull(_queryToCheckConfigVersion, _outputPath);
+			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
 
 		[Test]
@@ -66,7 +67,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull(_queryToCheckConfigVersion, _outputPath);
+			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
 
 		[Test]
@@ -77,7 +78,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull(_queryToCheckConfigVersion, _outputPath);
+			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
 
 		[Test]
@@ -88,7 +89,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull(_queryToCheckConfigVersion, _outputPath);
+			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
 
 		[Test]
@@ -105,7 +106,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull(_queryToCheckConfigVersion, _outputPath);
+			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
 
  /* since literal meaning is unlikely to even be in use at this stage, we just deal with it in code
@@ -126,7 +127,7 @@ namespace WeSay.Project.Tests
 									</configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			_migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
-			AssertXPathNotNull("//field[className/@text()='LexSense' && fieldName/@text()='literal-meaning']", _outputPath);
+			AssertHasAtLeastOneMatch("//field[className/@text()='LexSense' && fieldName/@text()='literal-meaning']", _outputPath);
 		}
 		*/
 
@@ -146,7 +147,7 @@ namespace WeSay.Project.Tests
 									</configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			_migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
-			AssertXPathNotNull("//field/fieldName[text()='semantic-domain-ddp4']", _outputPath);
+			AssertHasAtLeastOneMatch("//field/fieldName[text()='semantic-domain-ddp4']", _outputPath);
 		}
 
 		[Test]
@@ -165,9 +166,9 @@ namespace WeSay.Project.Tests
 										</tasks></components></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			_migrator.MigrateConfigurationXmlIfNeeded(doc,_outputPath);
-			AssertXPathNotNull("//task/field[text()='semantic-domain-ddp4']", _outputPath);
-			AssertXPathNotNull("//task/showFields[text()='semantic-domain-ddp4']", _outputPath);
-			AssertXPathNotNull("//task/readOnly[text()='semantic-domain-ddp4']", _outputPath);
+			AssertHasAtLeastOneMatch("//task/field[text()='semantic-domain-ddp4']", _outputPath);
+			AssertHasAtLeastOneMatch("//task/showFields[text()='semantic-domain-ddp4']", _outputPath);
+			AssertHasAtLeastOneMatch("//task/readOnly[text()='semantic-domain-ddp4']", _outputPath);
 		}
 
 		[Test]
@@ -180,29 +181,32 @@ namespace WeSay.Project.Tests
 			Assert.IsFalse(didMigrate);
 		}
 
-		private static void AssertXPathNotNull(string xpath, string filePath)
+		private static void AssertHasAtLeastOneMatch(string xpath, string filePath)
 		{
-			XmlDocument doc = new XmlDocument();
-			try
-			{
-				doc.Load(filePath);
-			}
-			catch (Exception err)
-			{
-				Console.WriteLine(err.Message);
-				Console.WriteLine(File.ReadAllText(filePath));
-			}
-			XmlNode node = doc.SelectSingleNode(xpath);
-			if (node == null)
-			{
-				XmlWriterSettings settings = new XmlWriterSettings();
-				settings.Indent = true;
-				settings.ConformanceLevel = ConformanceLevel.Fragment;
-				XmlWriter writer = XmlWriter.Create(Console.Out, settings);
-				doc.WriteContentTo(writer);
-				writer.Flush();
-			}
-			Assert.IsNotNull(node);
+			AssertThatXmlIn.File(filePath).
+				HasAtLeastOneMatchForXpath(xpath);
+//
+//            XmlDocument doc = new XmlDocument();
+//            try
+//            {
+//                doc.Load(filePath);
+//            }
+//            catch (Exception err)
+//            {
+//                Console.WriteLine(err.Message);
+//                Console.WriteLine(File.ReadAllText(filePath));
+//            }
+//            XmlNode node = doc.SelectSingleNode(xpath);
+//            if (node == null)
+//            {
+//                XmlWriterSettings settings = new XmlWriterSettings();
+//                settings.Indent = true;
+//                settings.ConformanceLevel = ConformanceLevel.Fragment;
+//                XmlWriter writer = XmlWriter.Create(Console.Out, settings);
+//                doc.WriteContentTo(writer);
+//                writer.Flush();
+//            }
+//            Assert.IsNotNull(node);
 		}
 	}
 }

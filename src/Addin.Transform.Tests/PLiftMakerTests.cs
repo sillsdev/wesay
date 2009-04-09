@@ -1,6 +1,7 @@
 using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
+using Palaso.Test;
 
 namespace Addin.Transform.Tests
 {
@@ -30,8 +31,8 @@ namespace Addin.Transform.Tests
 					var repository = project.GetLexEntryRepository();
 					string outputPath = Path.Combine(project.PathToExportDirectory, project.Name + ".xhtml");
 					maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate);
-					WeSay.Foundation.Tests.TestHelpers.AssertXmlFile.AtLeastOneMatch(outputPath,
-																					 "//field[@type='headword']/form[@lang='v']/text[text()='hello']");
+					AssertThatXmlIn.File(outputPath).
+						HasAtLeastOneMatchForXpath("//field[@type='headword']/form[@lang='v']/text[text()='hello']");
 				}
 			}
 		}
