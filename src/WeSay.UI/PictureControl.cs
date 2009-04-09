@@ -267,17 +267,33 @@ namespace WeSay.UI
 			images.RootImagePath = TryToGetRootImagePath();
 			var searchString = SearchTermProvider == null ? string.Empty:SearchTermProvider.SearchString;
 			searchString = images.StripNonMatchingKeywords(searchString);
-			var chooser = new PictureChooser(images, searchString);
-			chooser.ShowInTaskbar = false;
-			chooser.ShowIcon = false;
-			chooser.MinimizeBox = false;
-			chooser.MaximizeBox = false;
-
-			if(DialogResult.OK == chooser.ShowDialog())
+			using (var chooser = new PictureChooser(images, searchString))
 			{
-				PictureChosen(chooser.ChosenPath);
-			}
+				chooser.ShowInTaskbar = false;
+				chooser.ShowIcon = false;
+				chooser.MinimizeBox = false;
+				chooser.MaximizeBox = false;
 
+				if (DialogResult.OK == chooser.ShowDialog())
+				{
+					PictureChosen(chooser.ChosenPath);
+				}
+			}
+		}
+
+		/// <summary>
+		/// See WS-1214 (hatton) pressing 'n' or 'u' or 'd' with focus on picture control is like alt+n, alt+u, etc.
+		/// </summary>
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+		{
+		  if (Keys.None != (keyData & Keys.Modifiers) ||
+				 Keys.Tab == (keyData & Keys.Tab) ||
+				 Keys.Up == (keyData & Keys.Up) ||
+				 Keys.Down == (keyData & Keys.Down) )
+			{
+				return base.ProcessCmdKey(ref msg, keyData);
+			}
+			return true;
 		}
 	}
 
