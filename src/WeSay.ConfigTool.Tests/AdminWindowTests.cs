@@ -33,6 +33,7 @@ namespace WeSay.ConfigTool.Tests
 
 		public override void TearDown()
 		{
+			_mainWindowTester.Close();
 			base.TearDown();
 			if (BasilProject.IsInitialized)
 			{
@@ -103,6 +104,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			_window.CreateAndOpenProject(_projectFolder);
 			WalkTopLevelTabs();
+
 		}
 
 		[Test]

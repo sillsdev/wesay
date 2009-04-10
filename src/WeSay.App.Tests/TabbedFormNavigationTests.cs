@@ -41,6 +41,7 @@ namespace WeSay.App.Tests
 		[TearDown]
 		public void TearDown()
 		{
+			_tabbedForm.Dispose();
 			_projectDirectory.Dispose();
 		}
 
