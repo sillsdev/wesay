@@ -73,7 +73,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
+		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void Activate_MissingWordListFile_GivesMessage()
 		{
 			GatherWordListTask g = new GatherWordListTask(
@@ -87,7 +87,7 @@ namespace WeSay.LexicalTools.Tests
 
 
 		[Test]
-		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
+		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void Activate_WritingSystemNotInCurrentList_GivesMessage()
 		{
 			GatherWordListTask g = new GatherWordListTask(

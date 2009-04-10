@@ -61,13 +61,13 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
-	<Reference Include="PalasoReporting, Version=1.0.2826.25008, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
-	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
+	</Reference>
+	<Reference Include="Palso.TestUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Palso.TestUtilities.dll</HintPath>
 	</Reference>
 	<Reference Include="Prince, Version=1.0.2830.36745, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>

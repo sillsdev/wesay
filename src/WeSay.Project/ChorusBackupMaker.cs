@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Chorus.sync;
 using Chorus.Utilities;
+using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.LexicalModel;
 
@@ -111,7 +112,7 @@ namespace WeSay.Project
 				{
 					if (!Directory.Exists(PathToParentOfRepositories))
 					{
-						Palaso.Reporting.NonFatalErrorDialog.Show(string.Format("Could not Access the backup path, {0}", PathToParentOfRepositories));
+						ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "Could not Access the backup path, {0}", PathToParentOfRepositories);
 					}
 					else
 					{

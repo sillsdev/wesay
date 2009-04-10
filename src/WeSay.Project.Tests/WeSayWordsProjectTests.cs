@@ -12,6 +12,7 @@ using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
+using WeSay.Project.ConfigMigration;
 
 namespace WeSay.Project.Tests
 {
@@ -116,7 +117,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
+		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void WeSayDirNotInValidBasilDir()
 		{
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
@@ -220,7 +221,7 @@ namespace WeSay.Project.Tests
 								  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
 				XPathDocument doc = new XPathDocument(configPath);
 				string outputPath = Path.Combine(projectDir.PathToDirectory, Path.GetTempFileName());
-				new ConfigMigration.ConfigurationMigrator().MigrateConfigurationXmlIfNeeded(doc, outputPath);
+				new ConfigurationMigrator().MigrateConfigurationXmlIfNeeded(doc, outputPath);
 				XmlDocument docFile = new XmlDocument();
 				docFile.Load(outputPath);
 				XmlNode node = docFile.SelectSingleNode("configuration");

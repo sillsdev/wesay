@@ -3,10 +3,10 @@ using System.IO;
 using System.Xml;
 using System.Xml.XPath;
 using NUnit.Framework;
-using Palaso.Test;
+using Palaso.TestUtilities;
 using WeSay.Project.ConfigMigration;
 
-namespace WeSay.Project.Tests
+namespace WeSay.Project.Tests.ConfigMigration
 {
 	[TestFixture]
 	public class MigrationTests
@@ -29,7 +29,7 @@ namespace WeSay.Project.Tests
 		}
 
 		private readonly string _queryToCheckConfigVersion = String.Format("configuration[@version='{0}']",
-											 WeSayWordsProject.CurrentWeSayConfigFileVersion);
+																		   WeSayWordsProject.CurrentWeSayConfigFileVersion);
 
 		private ConfigurationMigrator _migrator = new ConfigurationMigrator();
 
@@ -96,7 +96,7 @@ namespace WeSay.Project.Tests
 		public void DoesMigrateV5File()
 		{
 			File.WriteAllText(_pathToInputConfig,
-			  @"<?xml version='1.0' encoding='utf-8'?>
+							  @"<?xml version='1.0' encoding='utf-8'?>
 			  <configuration version='5'>
 					<components>
 						<viewTemplate></viewTemplate>
@@ -109,7 +109,7 @@ namespace WeSay.Project.Tests
 			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
 
- /* since literal meaning is unlikely to even be in use at this stage, we just deal with it in code
+		/* since literal meaning is unlikely to even be in use at this stage, we just deal with it in code
   [Test]
 		public void V5File_ViewTemplateHasOldLiteralMeaningField_ConvertedToHyphenatedFormOnEntry()
 		{

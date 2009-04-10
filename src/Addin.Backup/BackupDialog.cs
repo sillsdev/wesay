@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Management;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
+using Palaso.UsbDrive;
 using WeSay.AddinLib;
 using WeSay.Foundation;
-using Palaso.Backup;
 
 namespace Addin.Backup
 {

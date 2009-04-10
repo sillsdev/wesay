@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml;
 using LiftIO.Validation;
 using NUnit.Framework;
-using Palaso.Test;
+using Palaso.TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;

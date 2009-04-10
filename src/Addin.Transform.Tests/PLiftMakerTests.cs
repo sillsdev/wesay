@@ -1,7 +1,7 @@
 using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
-using Palaso.Test;
+using Palaso.TestUtilities;
 
 namespace Addin.Transform.Tests
 {

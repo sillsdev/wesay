@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml;
 using LiftIO.Parsing;
 using NUnit.Framework;
-using Palaso.Test;
+using Palaso.TestUtilities;
 using WeSay.Foundation;
 using WeSay.Project;
 using System.Linq;

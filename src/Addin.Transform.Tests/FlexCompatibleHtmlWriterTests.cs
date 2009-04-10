@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml;
 using Addin.Transform.PdfDictionary;
 using NUnit.Framework;
-using Palaso.Test;
+using Palaso.TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;

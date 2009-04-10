@@ -81,10 +81,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.Services.dll</HintPath>
 	</Reference>
-	<Reference Include="PalasoReporting, Version=1.0.2883.21866, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
-	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
