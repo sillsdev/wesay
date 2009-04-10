@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.AccessControl;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using LiftIO;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Foundation;
@@ -107,12 +105,17 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void DefaultConfigFile_DoesntNeedMigrating()
 		{
-			WeSayWordsProject p = new WeSayWordsProject();
-			XPathDocument defaultConfig = new XPathDocument(WeSayWordsProject.PathToDefaultConfig);
-			using (TempFile f = new TempFile())
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting(""))
 			{
-				bool migrated = p.MigrateConfigurationXmlIfNeeded();
-				Assert.IsFalse(migrated, "The default config file should never need migrating");
+				XPathDocument defaultConfig = new XPathDocument(WeSayWordsProject.PathToDefaultConfig);
+				using (TempFile f = new TempFile())
+				{
+					using (var proj = p.CreateLoadedProject())
+					{
+						bool migrated = proj.MigrateConfigurationXmlIfNeeded();
+						Assert.IsFalse(migrated, "The default config file should never need migrating");
+					}
+				}
 			}
 		}
 
@@ -120,11 +123,13 @@ namespace WeSay.Project.Tests
 		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void WeSayDirNotInValidBasilDir()
 		{
-			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
-			string weSayDir = experimentDir; // MakeDir(experimentDir, "WeSay");
-			string wordsPath = Path.Combine(weSayDir, "AAA.words");
-			File.Create(wordsPath).Close();
-			TryLoading(wordsPath, experimentDir);
+			using (var dir = new Palaso.TestUtilities.TemporaryFolder("WeSayDirNotInValidBasilDir"))
+			{
+				string weSayDir = dir.FolderPath; // MakeDir(experimentDir, "WeSay");
+				string wordsPath = Path.Combine(weSayDir, "AAA.words");
+				File.Create(wordsPath).Close();
+				TryLoading(wordsPath, dir.FolderPath);
+			}
 		}
 
 		[Test]
@@ -132,11 +137,13 @@ namespace WeSay.Project.Tests
 		{
 			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting(""))
 			{
-			   // WeSayWordsProject p = CreateAndLoad();
 				Field f = new Field();
 				f.OptionsListFile = "PartsOfSpeech.xml";
-				OptionsList list = p.CreateLoadedProject().GetOptionsList(f, false);
-				Assert.IsTrue(list.Options.Count > 2);
+				using (var proj = p.CreateLoadedProject())
+				{
+					OptionsList list = proj.GetOptionsList(f, false);
+					Assert.IsTrue(list.Options.Count > 2);
+				}
 			}
 		}
 
@@ -147,9 +154,11 @@ namespace WeSay.Project.Tests
 			{
 				Field f = new Field();
 				f.OptionsListFile = "PartsOfSpeech.xml";
-				WeSayWordsProject project = p.CreateLoadedProject();
-				Dictionary<string, string> dict = project.GetFieldToOptionListNameDictionary();
-				Assert.AreEqual("PartsOfSpeech", dict[LexSense.WellKnownProperties.PartOfSpeech]);
+				using (WeSayWordsProject project = p.CreateLoadedProject())
+				{
+					Dictionary<string, string> dict = project.GetFieldToOptionListNameDictionary();
+					Assert.AreEqual("PartsOfSpeech", dict[LexSense.WellKnownProperties.PartOfSpeech]);
+				}
 			}
 		}
 //
