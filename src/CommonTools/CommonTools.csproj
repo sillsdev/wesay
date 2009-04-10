@@ -69,60 +69,11 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Dashboard Button.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Dashboard Button.Designer.cs">
-	  <DependentUpon>Dashboard Button.cs</DependentUpon>
-	</Compile>
-	<Compile Include="CurrentTaskIndicatorControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="CurrentTaskIndicatorControl.Designer.cs">
-	  <DependentUpon>CurrentTaskIndicatorControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Dash.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Dash.Designer.cs">
-	  <DependentUpon>Dash.cs</DependentUpon>
-	</Compile>
-	<Compile Include="DashboardButtonWithIcon.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="DashboardConfiguration.cs" />
-	<Compile Include="DictionaryStatusControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="DictionaryStatusControl.Designer.cs">
-	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="GroupHeader.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="GroupHeader.Designer.cs">
-	  <DependentUpon>GroupHeader.cs</DependentUpon>
-	</Compile>
-	<Compile Include="ItemsToDoIndicator.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="ItemsToDoIndicator.Designer.cs">
-	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
-	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>Resources.resx</DependentUpon>
-	</Compile>
-	<Compile Include="ShapeControl.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="TaskIndicator.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="TaskIndicator.Designer.cs">
-	  <DependentUpon>TaskIndicator.cs</DependentUpon>
 	</Compile>
   </ItemGroup>
   <ItemGroup>
@@ -152,42 +103,10 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="Dashboard Button.resx">
-	  <DependentUpon>Dashboard Button.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="CurrentTaskIndicatorControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>CurrentTaskIndicatorControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Dash.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>Dash.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="DashboardButtonWithIcon.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>DashboardButtonWithIcon.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="DictionaryStatusControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="GroupHeader.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>GroupHeader.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="ItemsToDoIndicator.resx">
-	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	</EmbeddedResource>
-	<EmbeddedResource Include="TaskIndicator.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>TaskIndicator.cs</DependentUpon>
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace WeSay.CommonTools
+namespace WeSay.LexicalTools.Dashboard
 {
 	partial class TaskIndicator
 	{
@@ -34,7 +34,7 @@ namespace WeSay.CommonTools
 			this._layout = new System.Windows.Forms.TableLayoutPanel();
 			this._btnName = new System.Windows.Forms.Button();
 			this._textShortDescription = new System.Windows.Forms.Label();
-			this._intray = new WeSay.CommonTools.ItemsToDoIndicator();
+			this._intray = new WeSay.LexicalTools.Dashboard.ItemsToDoIndicator();
 			this._layout.SuspendLayout();
 			this.SuspendLayout();
 			//

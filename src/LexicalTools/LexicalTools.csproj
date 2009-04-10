@@ -61,6 +61,11 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LinqBridge.dll</HintPath>
 	</Reference>
+	<Reference Include="Mono.Addins, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <ExecutableExtension>.exe</ExecutableExtension>
+	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
+	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.dll</HintPath>
@@ -86,6 +91,49 @@
 	  <DependentUpon>AddPicturesControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="AddPictures\AddPicturesTask.cs" />
+	<Compile Include="Dashboard\Dash.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Dashboard\Dash.Designer.cs">
+	  <DependentUpon>Dash.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Dashboard\Dashboard Button.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Dashboard\Dashboard Button.designer.cs">
+	  <DependentUpon>Dashboard Button.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Dashboard\DashboardButtonWithIcon.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Dashboard\DashboardConfiguration.cs" />
+	<Compile Include="Dashboard\DictionaryStatusControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Dashboard\DictionaryStatusControl.designer.cs">
+	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Dashboard\GroupHeader.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Dashboard\GroupHeader.designer.cs">
+	  <DependentUpon>GroupHeader.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Dashboard\ItemsToDoIndicator.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Dashboard\ItemsToDoIndicator.designer.cs">
+	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Dashboard\ShapeControl.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="Dashboard\TaskIndicator.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Dashboard\TaskIndicator.designer.cs">
+	  <DependentUpon>TaskIndicator.cs</DependentUpon>
+	</Compile>
 	<Compile Include="LayoutInfoProvider.cs" />
 	<Compile Include="TaskConfigurationBase.cs" />
 	<Compile Include="DictionaryBrowseAndEdit\ConfirmDelete.cs">
@@ -159,6 +207,10 @@
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
+	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
+	  <Name>WeSay.AddinLib</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
 	  <Name>WeSay.Data</Name>
@@ -179,6 +231,27 @@
   <ItemGroup>
 	<EmbeddedResource Include="AddPictures\AddPicturesControl.resx">
 	  <DependentUpon>AddPicturesControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Dashboard\Dash.resx">
+	  <DependentUpon>Dash.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Dashboard\Dashboard Button.resx">
+	  <DependentUpon>Dashboard Button.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Dashboard\DashboardButtonWithIcon.resx">
+	  <DependentUpon>DashboardButtonWithIcon.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Dashboard\DictionaryStatusControl.resx">
+	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Dashboard\GroupHeader.resx">
+	  <DependentUpon>GroupHeader.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Dashboard\ItemsToDoIndicator.resx">
+	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Dashboard\TaskIndicator.resx">
+	  <DependentUpon>TaskIndicator.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="DictionaryBrowseAndEdit\ConfirmDelete.resx">
 	  <DependentUpon>ConfirmDelete.cs</DependentUpon>
@@ -215,6 +288,10 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\blueDictionary.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\WeSay64x64.png" />
+	<None Include="Resources\blueWeSay.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

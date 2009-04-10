@@ -1,15 +1,12 @@
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
-using WeSay.CommonTools;
 using WeSay.Foundation;
 using WeSay.Foundation.Tests.TestHelpers;
-using WeSay.LexicalModel;
-using WeSay.Project;
+using WeSay.LexicalTools.Dashboard;
 
-namespace WeSay.App.Tests
+namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
 	public class DashBoardTests
@@ -83,7 +80,7 @@ namespace WeSay.App.Tests
 													 "Dictionary Browse && Edit description",
 													 ButtonStyle.IconFixedWidth,
 													 null
-									/*CommonTools.Properties.Resources.blueDictionary*/));
+								/*CommonTools.Properties.Resources.blueDictionary*/));
 			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Refine,
 													 "Identify Base Forms",
 													 "Identify Base Forms Long Label",
@@ -131,13 +128,13 @@ namespace WeSay.App.Tests
 									string localizedLabel,
 									string localizedLongLabel,
 									string description)
-				: this(
-						group,
-						localizedLabel,
-						localizedLongLabel,
-						description,
-						ButtonStyle.VariableAmount,
-						null) {}
+			: this(
+				group,
+				localizedLabel,
+				localizedLongLabel,
+				description,
+				ButtonStyle.VariableAmount,
+				null) {}
 
 		//todo: this belongs on the button, which knows better what it has planned
 		public int WidthToDisplayFullSizeLabel
@@ -145,10 +142,10 @@ namespace WeSay.App.Tests
 			get
 			{
 				return
-						TextRenderer.MeasureText(LocalizedLabel,
-												 Font,
-												 new Size(int.MaxValue, int.MaxValue),
-												 TextFormatFlags.LeftAndRightPadding).Width;
+					TextRenderer.MeasureText(LocalizedLabel,
+											 Font,
+											 new Size(int.MaxValue, int.MaxValue),
+											 TextFormatFlags.LeftAndRightPadding).Width;
 			}
 		}
 

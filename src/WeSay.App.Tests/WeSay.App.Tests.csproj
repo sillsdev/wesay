@@ -88,7 +88,6 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="DashBoardTests.cs" />
 	<Compile Include="Services\DictionaryServices_CrossApplicationTests.cs" />
 	<Compile Include="Services\DictionaryServices_SameTheadTests.cs" />
 	<Compile Include="FullUIAppTests.cs" />
@@ -98,10 +97,6 @@
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\CommonTools\CommonTools.csproj">
-	  <Project>{64726381-FEA8-47D5-A884-18AED42E93B6}</Project>
-	  <Name>CommonTools</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\LexicalModel.Tests\LexicalModel.Tests.csproj">
 	  <Project>{123D695C-0D5D-46E5-893F-39EC4E0B01B8}</Project>
 	  <Name>LexicalModel.Tests</Name>

@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace WeSay.CommonTools
+namespace WeSay.LexicalTools.Dashboard
 {
 	public enum ShapeType
 	{

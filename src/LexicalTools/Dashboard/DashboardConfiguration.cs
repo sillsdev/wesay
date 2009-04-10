@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using WeSay.Project;
 
-namespace WeSay.CommonTools
+namespace WeSay.LexicalTools.Dashboard
 {
 	public class DashboardConfiguration: ITaskConfiguration
 	{

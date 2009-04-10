@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace WeSay.CommonTools
+namespace WeSay.LexicalTools.Dashboard
 {
 	partial class DashboardButton
 	{

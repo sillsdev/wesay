@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using NUnit.Framework;
-using WeSay.CommonTools;
+using WeSay.LexicalTools.Dashboard;
 
-namespace CommonTools.Tests
+namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
 	public class DashTests
@@ -79,7 +79,7 @@ namespace CommonTools.Tests
 
 		[Test]
 		public void
-				ComputeSmallestPossibleButtonSizes_OneList_MultipleSizes_SameListOrderUnspecified()
+			ComputeSmallestPossibleButtonSizes_OneList_MultipleSizes_SameListOrderUnspecified()
 		{
 			List<IEnumerable<Size>> sizesListList = new List<IEnumerable<Size>>();
 			List<Size> sizes = new List<Size>();
@@ -139,7 +139,7 @@ namespace CommonTools.Tests
 
 		[Test]
 		public void
-				ComputeSmallestPossibleButtonSizes_TwoLists_DifferentSizes_OneItemLargestDimensions()
+			ComputeSmallestPossibleButtonSizes_TwoLists_DifferentSizes_OneItemLargestDimensions()
 		{
 			List<IEnumerable<Size>> sizesListList = new List<IEnumerable<Size>>();
 			List<Size> sizes = new List<Size>();
@@ -155,8 +155,8 @@ namespace CommonTools.Tests
 
 		[Test]
 		public void
-				ComputeSmallestPossibleButtonSizes_MultipleLists_LotsOfSizes_CoalescedWidthsAndHeights
-				()
+			ComputeSmallestPossibleButtonSizes_MultipleLists_LotsOfSizes_CoalescedWidthsAndHeights
+			()
 		{
 			List<IEnumerable<Size>> sizesListList = new List<IEnumerable<Size>>();
 			List<Size> sizes = new List<Size>();
@@ -328,8 +328,8 @@ namespace CommonTools.Tests
 
 		[Test]
 		public void
-				ComputeBestButtonSize_MultipleSizesContainingClippedScrolledNonscrolled_BestSizeByRatioAndNotClippedAndNotScrolled
-				()
+			ComputeBestButtonSize_MultipleSizesContainingClippedScrolledNonscrolled_BestSizeByRatioAndNotClippedAndNotScrolled
+			()
 		{
 			Size spaceForButtons = new Size(500, 300);
 			List<Size> sizes = new List<Size>();

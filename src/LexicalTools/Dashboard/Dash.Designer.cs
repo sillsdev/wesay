@@ -1,4 +1,4 @@
-namespace WeSay.CommonTools
+﻿namespace WeSay.LexicalTools.Dashboard
 {
 	partial class Dash
 	{
@@ -45,7 +45,7 @@ namespace WeSay.CommonTools
 			DeveloperNote.Size = new System.Drawing.Size(547, 15);
 			DeveloperNote.TabIndex = 1;
 			DeveloperNote.Text = "NOTE: This control should be the same size as the initial tab page size so the in" +
-				"itial layout is correct.";
+								 "itial layout is correct.";
 			DeveloperNote.Visible = false;
 			//
 			// _panel

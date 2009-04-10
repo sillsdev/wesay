@@ -227,7 +227,7 @@ namespace WeSay.Project.Tests
 			{
 				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
 				File.WriteAllText(configPath,
-								  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
+								  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
 				XPathDocument doc = new XPathDocument(configPath);
 				string outputPath = Path.Combine(projectDir.PathToDirectory, Path.GetTempFileName());
 				new ConfigurationMigrator().MigrateConfigurationXmlIfNeeded(doc, outputPath);
@@ -279,7 +279,7 @@ namespace WeSay.Project.Tests
 				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
 				const int version = WeSayWordsProject.CurrentWeSayConfigFileVersion + 1;
 				File.WriteAllText(configPath,
-								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
+								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
 				XPathDocument doc = new XPathDocument(configPath);
 				WeSayWordsProject.CheckIfConfigFileVersionIsToNew(doc);
 			}
@@ -294,7 +294,7 @@ namespace WeSay.Project.Tests
 				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
 				const int version = WeSayWordsProject.CurrentWeSayConfigFileVersion;
 				File.WriteAllText(configPath,
-								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
+								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
 				XPathDocument doc = new XPathDocument(configPath);
 				WeSayWordsProject.CheckIfConfigFileVersionIsToNew(doc);
 			}

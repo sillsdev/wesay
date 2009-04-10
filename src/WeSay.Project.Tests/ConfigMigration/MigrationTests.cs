@@ -37,7 +37,7 @@ namespace WeSay.Project.Tests.ConfigMigration
 		public void DoesMigrateV0File()
 		{
 			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
+							  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
@@ -52,7 +52,7 @@ namespace WeSay.Project.Tests.ConfigMigration
 		public void DoesMigrateV1File()
 		{
 			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><configuration version='1'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='1'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
@@ -63,7 +63,7 @@ namespace WeSay.Project.Tests.ConfigMigration
 		public void DoesMigrateV2File()
 		{
 			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><configuration version='2'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='2'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
@@ -74,7 +74,7 @@ namespace WeSay.Project.Tests.ConfigMigration
 		public void DoesMigrateV3File()
 		{
 			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><configuration version='3'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='3'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
@@ -85,7 +85,7 @@ namespace WeSay.Project.Tests.ConfigMigration
 		public void DoesMigrateV4File()
 		{
 			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><configuration version='4'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='4'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
@@ -101,7 +101,7 @@ namespace WeSay.Project.Tests.ConfigMigration
 					<components>
 						<viewTemplate></viewTemplate>
 					</components>
-					<tasks><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks>
+					<tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks>
 			  </configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);

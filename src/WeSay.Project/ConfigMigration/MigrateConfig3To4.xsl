@@ -34,7 +34,7 @@
   <!-- ============= change to new dashboard class ============== -->
 
   <xsl:template match="task[@id='Dashboard']" mode="Migrate3To4">
-	<task id="Dashboard" class="WeSay.CommonTools.Dash" assembly="CommonTools">
+	<task id="Dashboard" class="WeSay.LexicalTools.Dashboard.Dash" assembly="CommonTools">
 	  <xsl:apply-templates select="@visible|node()"  mode="Migrate3To4"/>
 	</task>
   </xsl:template>

@@ -67,6 +67,13 @@ namespace WeSay.LexicalTools.Properties {
 			}
 		}
 
+		internal static System.Drawing.Bitmap blueWeSay {
+			get {
+				object obj = ResourceManager.GetObject("blueWeSay", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
 		internal static System.Drawing.Bitmap DeleteWord {
 			get {
 				object obj = ResourceManager.GetObject("DeleteWord", resourceCulture);
@@ -91,6 +98,13 @@ namespace WeSay.LexicalTools.Properties {
 		internal static System.Drawing.Bitmap NewWord {
 			get {
 				object obj = ResourceManager.GetObject("NewWord", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap WeSay64x64 {
+			get {
+				object obj = ResourceManager.GetObject("WeSay64x64", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}

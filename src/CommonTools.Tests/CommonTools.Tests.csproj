@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -48,10 +48,6 @@
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\CommonTools\CommonTools.csproj">
-	  <Project>{64726381-FEA8-47D5-A884-18AED42E93B6}</Project>
-	  <Name>CommonTools</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>

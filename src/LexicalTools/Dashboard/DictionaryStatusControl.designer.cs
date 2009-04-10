@@ -1,4 +1,4 @@
-namespace WeSay.CommonTools
+namespace WeSay.LexicalTools.Dashboard
 {
 	partial class DictionaryStatusControl
 	{
@@ -50,7 +50,7 @@ namespace WeSay.CommonTools
 			//
 			// _logoImage
 			//
-			this._logoImage.Image = global::WeSay.CommonTools.Properties.Resources.blueWeSay;
+			this._logoImage.Image = global::WeSay.LexicalTools.Properties.Resources.blueWeSay;
 			this._logoImage.Location = new System.Drawing.Point(3, 3);
 			this._logoImage.Name = "_logoImage";
 			this._logoImage.Size = new System.Drawing.Size(58, 50);

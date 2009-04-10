@@ -73,6 +73,8 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="AddPicturesTasksTests.cs" />
+	<Compile Include="DashBoardTests.cs" />
+	<Compile Include="DashTests.cs" />
 	<Compile Include="GatherBySemanticDomainTaskTests.cs" />
 	<Compile Include="MissingEntryRelationFieldFilterTests.cs" />
 	<Compile Include="MissingLexicalFormFilterTests.cs" />

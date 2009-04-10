@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace WeSay.CommonTools
+namespace WeSay.LexicalTools.Dashboard
 {
 	public partial class ItemsToDoIndicator: UserControl
 	{

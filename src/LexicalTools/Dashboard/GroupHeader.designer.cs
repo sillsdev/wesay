@@ -1,4 +1,4 @@
-namespace WeSay.CommonTools
+namespace WeSay.LexicalTools.Dashboard
 {
 	partial class GroupHeader
 	{

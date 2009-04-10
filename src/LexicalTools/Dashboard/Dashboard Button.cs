@@ -7,7 +7,7 @@ using WeSay.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 
-namespace WeSay.CommonTools
+namespace WeSay.LexicalTools.Dashboard
 {
 	public partial class DashboardButton: UserControl, IButtonControl
 	{

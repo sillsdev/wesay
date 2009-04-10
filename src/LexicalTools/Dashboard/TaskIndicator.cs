@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
 
-namespace WeSay.CommonTools
+namespace WeSay.LexicalTools.Dashboard
 {
 	public partial class TaskIndicator: UserControl
 	{

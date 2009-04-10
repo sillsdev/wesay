@@ -21,8 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalTools", "LexicalTool
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD} = {600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTools", "CommonTools\CommonTools.csproj", "{64726381-FEA8-47D5-A884-18AED42E93B6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Data", "WeSay.Data\WeSay.Data.csproj", "{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Data.Tests", "WeSay.Data.Tests\WeSay.Data.Tests.csproj", "{8491FEEE-C311-4B64-BB30-A1F1C1802F45}"
@@ -58,11 +56,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addin.Transform.Tests", "Addin.Transform.Tests\Addin.Transform.Tests.csproj", "{19310CA3-6653-45E0-9EC8-F824629E2AD8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addin.LiftReports.Tests", "Addin.LiftReports.Tests\Addin.LiftReports.Tests.csproj", "{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTools.Tests", "CommonTools.Tests\CommonTools.Tests.csproj", "{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}"
-	ProjectSection(ProjectDependencies) = postProject
-		{64726381-FEA8-47D5-A884-18AED42E93B6} = {64726381-FEA8-47D5-A884-18AED42E93B6}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -126,15 +119,6 @@ Global
 		{87AF0B02-2983-486D-857F-D1859535C234}.Mono Release|Any CPU.Build.0 = Mono Release|Any CPU
 		{87AF0B02-2983-486D-857F-D1859535C234}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87AF0B02-2983-486D-857F-D1859535C234}.Release|Any CPU.Build.0 = Release|Any CPU
-		{64726381-FEA8-47D5-A884-18AED42E93B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64726381-FEA8-47D5-A884-18AED42E93B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64726381-FEA8-47D5-A884-18AED42E93B6}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
-		{64726381-FEA8-47D5-A884-18AED42E93B6}.Mono Debug|Any CPU.ActiveCfg = Mono Debug|Any CPU
-		{64726381-FEA8-47D5-A884-18AED42E93B6}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
-		{64726381-FEA8-47D5-A884-18AED42E93B6}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
-		{64726381-FEA8-47D5-A884-18AED42E93B6}.Mono Release|Any CPU.Build.0 = Mono Release|Any CPU
-		{64726381-FEA8-47D5-A884-18AED42E93B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64726381-FEA8-47D5-A884-18AED42E93B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
@@ -293,16 +277,6 @@ Global
 		{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}.Mono Release|Any CPU.Build.0 = Mono Release|Any CPU
 		{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}.minimal|Any CPU.ActiveCfg = Release|Any CPU
-		{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}.minimal|Any CPU.Build.0 = Release|Any CPU
-		{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}.Mono Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}.Mono Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}.Mono Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}.Mono Release|Any CPU.Build.0 = Release|Any CPU
-		{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

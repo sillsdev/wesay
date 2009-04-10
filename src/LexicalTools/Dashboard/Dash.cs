@@ -13,7 +13,7 @@ using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 
-namespace WeSay.CommonTools
+namespace WeSay.LexicalTools.Dashboard
 {
 	public partial class Dash: UserControl, ITask, IFinishCacheSetup
 	{
@@ -36,8 +36,8 @@ namespace WeSay.CommonTools
 		private int _buttonsPerRow;
 
 		private const TextFormatFlags ToolTipFormatFlags =
-				TextFormatFlags.WordBreak | TextFormatFlags.NoFullWidthCharacterBreak |
-				TextFormatFlags.LeftAndRightPadding;
+			TextFormatFlags.WordBreak | TextFormatFlags.NoFullWidthCharacterBreak |
+			TextFormatFlags.LeftAndRightPadding;
 
 		public Dash(LexEntryRepository RecordListManager, ICurrentWorkTask currentWorkTaskProvider)//, UserSettingsForTask userSettings)
 		{
@@ -71,9 +71,9 @@ namespace WeSay.CommonTools
 		{
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo =
-					new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"),
-										 string.Format("\"{0}\"",
-													   WeSayWordsProject.Project.PathToConfigFile));
+				new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"),
+									 string.Format("\"{0}\"",
+												   WeSayWordsProject.Project.PathToConfigFile));
 			try
 			{
 				Process.Start(startInfo);
@@ -185,7 +185,7 @@ namespace WeSay.CommonTools
 					try
 					{
 						ProjectInfo projectInfo =
-								WeSayWordsProject.Project.GetProjectInfoForAddin();
+							WeSayWordsProject.Project.GetProjectInfoForAddin();
 						addin.Launch(ParentForm, projectInfo);
 					}
 					catch (Exception error)
@@ -239,7 +239,7 @@ namespace WeSay.CommonTools
 						nextX = _buttonRowMargin.Left;
 					}
 					if (nextX > _buttonRowMargin.Left && nextX + _buttonMargin.Horizontal +
-						_bestButtonSize.Width > _panel.ClientSize.Width)  // new row within group
+														 _bestButtonSize.Width > _panel.ClientSize.Width)  // new row within group
 					{
 						nextY += _buttonMargin.Vertical + _bestButtonSize.Height;
 						nextX = _buttonRowMargin.Left;
@@ -303,14 +303,14 @@ namespace WeSay.CommonTools
 				if (_smallestPossibleButtonSizes == null && _addedAllButtons)
 				{
 					_smallestPossibleButtonSizes =
-							ComputeSmallestPossibleButtonSizes(GetAllPossibleButtonSizes());
+						ComputeSmallestPossibleButtonSizes(GetAllPossibleButtonSizes());
 				}
 				return _smallestPossibleButtonSizes;
 			}
 		}
 
 		internal static List<Size> ComputeSmallestPossibleButtonSizes(
-				IEnumerable<IEnumerable<Size>> possibleSizesOfButtons)
+			IEnumerable<IEnumerable<Size>> possibleSizesOfButtons)
 		{
 			List<Size> result = new List<Size>();
 			Debug.Assert(possibleSizesOfButtons != null); // per contract
@@ -415,7 +415,7 @@ namespace WeSay.CommonTools
 				return new List<int>();
 			}
 			Dictionary<DashboardGroup, int> buttonsPerGroup =
-					new Dictionary<DashboardGroup, int>(_buttonGroups.Count);
+				new Dictionary<DashboardGroup, int>(_buttonGroups.Count);
 			foreach (ButtonGroup group in _buttonGroups)
 			{
 				buttonsPerGroup.Add(group.Group, 0);
@@ -449,7 +449,7 @@ namespace WeSay.CommonTools
 													availableSpaceForButtons,
 													GetButtonsPerGroup());
 			_buttonsPerRow = Math.Max(1,
-				availableSpaceForButtons.Width/(_bestButtonSize.Width + _buttonMargin.Horizontal));
+									  availableSpaceForButtons.Width/(_bestButtonSize.Width + _buttonMargin.Horizontal));
 		}
 
 		internal static Size ComputeBestButtonSize(List<Size> smallestPossibleSizes,
@@ -529,9 +529,9 @@ namespace WeSay.CommonTools
 			const int widthBetweenButtons = 6; // default margin padding on controls
 			const int heightBetweenRows = 6;
 			int maxButtonsInRow =
-					(int)
-					Math.Floor((double) availableWidthForButtons /
-							   (size.Width + widthBetweenButtons));
+				(int)
+				Math.Floor((double) availableWidthForButtons /
+						   (size.Width + widthBetweenButtons));
 			maxButtonsInRow = Math.Max(maxButtonsInRow, 1); // always at least one button in a row
 			int heightNeeded = 0;
 			foreach (int buttonsInGroup in buttonsPerGroup)
@@ -636,7 +636,7 @@ namespace WeSay.CommonTools
 			if (IsActive)
 			{
 				throw new InvalidOperationException(
-						"Activate should not be called when object is active.");
+					"Activate should not be called when object is active.");
 			}
 
 			SuspendLayout();
@@ -709,7 +709,7 @@ namespace WeSay.CommonTools
 			if (!IsActive)
 			{
 				throw new InvalidOperationException(
-						"Deactivate should only be called once after Activate.");
+					"Deactivate should only be called once after Activate.");
 			}
 			SuspendLayout(); //NB: In WS-1234, the user found this to be really slow (!,??), hence the suspend
 			_toolTip.RemoveAll();
@@ -889,11 +889,11 @@ namespace WeSay.CommonTools
 			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
 			Font boldFont = new Font(localizedFont, FontStyle.Bold);
 			int titleHeight =
-					TextRenderer.MeasureText(e.Graphics,
-											 title,
-											 boldFont,
-											 new Size(e.Bounds.Width - 6, int.MaxValue),
-											 ToolTipFormatFlags).Height;
+				TextRenderer.MeasureText(e.Graphics,
+										 title,
+										 boldFont,
+										 new Size(e.Bounds.Width - 6, int.MaxValue),
+										 ToolTipFormatFlags).Height;
 			Rectangle titleBounds = new Rectangle(e.Bounds.Left + 3,
 												  e.Bounds.Top + 3,
 												  e.Bounds.Width - 6,
@@ -931,18 +931,18 @@ namespace WeSay.CommonTools
 			Font boldFont = new Font(localizedFont, FontStyle.Bold);
 			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g,
 																			GetToolTipDescription(
-																					button.
-																							ThingToShowOnDashboard),
+																				button.
+																					ThingToShowOnDashboard),
 																			localizedFont,
 																			ToolTipFormatFlags);
 			Size bestSize = GetBestSizeBasedOnRatio(possibleSizes, GoldRatio);
 			bestSize.Width += 15;
 			bestSize.Height +=
-					TextRenderer.MeasureText(g,
-											 title,
-											 boldFont,
-											 new Size(bestSize.Width, int.MaxValue),
-											 ToolTipFormatFlags).Height;
+				TextRenderer.MeasureText(g,
+										 title,
+										 boldFont,
+										 new Size(bestSize.Width, int.MaxValue),
+										 ToolTipFormatFlags).Height;
 			e.ToolTipSize = new Size(bestSize.Width + 6, bestSize.Height + 8);
 			g.Dispose();
 			localizedFont.Dispose();
