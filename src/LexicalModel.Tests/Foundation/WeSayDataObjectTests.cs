@@ -1,7 +1,8 @@
 using System;
 using NUnit.Framework;
+using WeSay.Foundation;
 
-namespace WeSay.Foundation.Tests
+namespace WeSay.LexicalModel.Tests.Foundation
 {
 	internal class TestClass: WeSayDataObject
 	{

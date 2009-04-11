@@ -8,8 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WeSay.Foundation.Tests {
-	using System;
+namespace Addin.Backup.Tests.Properties
+{
 
 
 	/// <summary>
@@ -22,24 +22,29 @@ namespace WeSay.Foundation.Tests {
 	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-	internal class TestResources {
+	internal class Resources
+	{
 
 		private static global::System.Resources.ResourceManager resourceMan;
 
 		private static global::System.Globalization.CultureInfo resourceCulture;
 
 		[global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		internal TestResources() {
+		internal Resources()
+		{
 		}
 
 		/// <summary>
 		///   Returns the cached ResourceManager instance used by this class.
 		/// </summary>
 		[global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-		internal static global::System.Resources.ResourceManager ResourceManager {
-			get {
-				if (object.ReferenceEquals(resourceMan, null)) {
-					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WeSay.Foundation.Tests.TestResources", typeof(TestResources).Assembly);
+		internal static global::System.Resources.ResourceManager ResourceManager
+		{
+			get
+			{
+				if ((resourceMan == null))
+				{
+					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Addin.Backup.Tests.Properties.Resources", typeof(Resources).Assembly);
 					resourceMan = temp;
 				}
 				return resourceMan;
@@ -51,35 +56,15 @@ namespace WeSay.Foundation.Tests {
 		///   resource lookups using this strongly typed resource class.
 		/// </summary>
 		[global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-		internal static global::System.Globalization.CultureInfo Culture {
-			get {
+		internal static global::System.Globalization.CultureInfo Culture
+		{
+			get
+			{
 				return resourceCulture;
 			}
-			set {
+			set
+			{
 				resourceCulture = value;
-			}
-		}
-
-		/// <summary>
-		///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-		///&lt;WritingSystemCollection&gt;
-		///  &lt;members&gt;
-		///    &lt;WritingSystem&gt;
-		///      &lt;FontName&gt;Courier New&lt;/FontName&gt;
-		///      &lt;FontSize&gt;10&lt;/FontSize&gt;
-		///      &lt;Id&gt;PretendAnalysis&lt;/Id&gt;
-		///    &lt;/WritingSystem&gt;
-		///    &lt;WritingSystem&gt;
-		///      &lt;FontName&gt;Courier New&lt;/FontName&gt;
-		///      &lt;FontSize&gt;20&lt;/FontSize&gt;
-		///      &lt;Id&gt;PretendVernacular&lt;/Id&gt;
-		///    &lt;/WritingSystem&gt;
-		///  &lt;/members&gt;
-		///&lt;/WritingSystemCollection&gt;.
-		/// </summary>
-		internal static string WritingSystemPrefs {
-			get {
-				return ResourceManager.GetString("WritingSystemPrefs", resourceCulture);
 			}
 		}
 	}

@@ -9,7 +9,6 @@ using Palaso.TestUtilities;
 using WeSay.Foundation;
 using WeSay.Project;
 using System.Linq;
-using TemporaryFolder=WeSay.Foundation.Tests.TestHelpers.TemporaryFolder;
 
 namespace WeSay.LexicalModel.Tests
 {

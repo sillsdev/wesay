@@ -2,8 +2,8 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
+using Palaso.Misc;
 using Palaso.Reporting;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -137,7 +137,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public void SetMemory(ITaskMemory memory)
+		public void SetMemory(IUserInterfaceMemory memory)
 		{
 			_splitter.SetMemory(memory.CreateNewSection("previewSplitter"));
 		}

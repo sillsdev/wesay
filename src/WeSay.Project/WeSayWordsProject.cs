@@ -20,6 +20,7 @@ using LiftIO.Validation;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.IO;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.Progress;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
@@ -1334,7 +1335,7 @@ namespace WeSay.Project
 			string[] allFiles = Directory.GetFiles(pathToProjectRoot,
 												   "*",
 												   SearchOption.AllDirectories);
-			string[] antipatterns = { "Cache", "cache", ".bak", ".old", ".liftold", TaskMemoryRepository.FileExtensionWithDot};
+			string[] antipatterns = { "Cache", "cache", ".bak", ".old", ".liftold", ".wesayUserMemory" };
 
 			foreach (string file in allFiles)
 			{

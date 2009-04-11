@@ -4,8 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Palaso.Misc;
 
-namespace WeSay.Foundation
+namespace WeSay.LexicalTools
 {
 	/// <summary>
 	/// Why not use Settings?  Chiefly, because these settins are not
@@ -16,7 +17,7 @@ namespace WeSay.Foundation
 	[Serializable]
 	public class TaskMemoryRepository : IDisposable
 	{
-		public const string FileExtensionWithDot = ".wesayUserMemory";
+		public const string FileExtensionWithDot = ".wesayUserMemory";//NB do a search and replace on this if changed
 		private SerializableDictionary<string, TaskMemory> _memories;
 
 		[System.Xml.Serialization.XmlIgnore]
@@ -89,18 +90,10 @@ namespace WeSay.Foundation
 
 	}
 
-	public interface ITaskMemory
-	{
-		ITaskMemory CreateNewSection(string sectionName);
-		void Set(string key, string value);
-		void Set(string key, int value);
-		string Get(string key, string defaultValue);
-		int Get(string key, int defaultValue);
-		void TrackSplitContainer(SplitContainer container, string key);
-	}
+
 
 	[Serializable]
-	public class TaskMemory : ITaskMemory
+	public class TaskMemory : IUserInterfaceMemory
 	{
 		private SerializableDictionary<string, string> _pairs = new SerializableDictionary<string, string>();
 
@@ -157,7 +150,7 @@ namespace WeSay.Foundation
 															  ((SplitContainer) splitContainer).SplitterDistance);
 
 			container.Resize += (splitContainer, e) =>
-					container.SplitterDistance = Get(key, container.SplitterDistance);
+								container.SplitterDistance = Get(key, container.SplitterDistance);
 
 		}
 
@@ -167,7 +160,7 @@ namespace WeSay.Foundation
 
 
 
-		public ITaskMemory CreateNewSection(string sectionName)
+		public IUserInterfaceMemory CreateNewSection(string sectionName)
 		{
 			return new TaskMemorySection(this, sectionName);
 		}
@@ -176,18 +169,18 @@ namespace WeSay.Foundation
 	/// <summary>
 	/// a *very* poor-man's hierachical settings container
 	/// </summary>
-	class TaskMemorySection : ITaskMemory
+	class TaskMemorySection : IUserInterfaceMemory
 	{
-		private readonly ITaskMemory _memory;
+		private readonly IUserInterfaceMemory _memory;
 		private readonly string _sectionName;
 
-		public TaskMemorySection(ITaskMemory parentMemory, string sectionName)
+		public TaskMemorySection(IUserInterfaceMemory parentMemory, string sectionName)
 		{
 			_memory = parentMemory;
 			_sectionName = sectionName;
 		}
 
-		public ITaskMemory CreateNewSection(string sectionName)
+		public IUserInterfaceMemory CreateNewSection(string sectionName)
 		{
 			return new TaskMemorySection(this, sectionName);
 		}

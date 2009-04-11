@@ -1,7 +1,7 @@
 using System.IO;
 using NUnit.Framework;
+using Palaso.TestUtilities;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation.Tests;
 
 namespace WeSay.Project.Tests
 {
@@ -49,7 +49,30 @@ namespace WeSay.Project.Tests
 			Directory.CreateDirectory(GetCommonDirectory());
 			string pathToWritingSystemPrefs = Path.Combine(GetCommonDirectory(),
 														   "WritingSystemPrefs.xml");
-			WritingCollectionSystemTests.CreateSampleWritingSystemFile(pathToWritingSystemPrefs);
+			CreateSampleWritingSystemFile(pathToWritingSystemPrefs);
+		}
+
+		private void CreateSampleWritingSystemFile(string path)
+		{
+			using (StreamWriter writer = File.CreateText(path))
+			{
+				writer.Write(@"<?xml version='1.0' encoding='utf-8'?>
+					<WritingSystemCollection>
+					  <members>
+						<WritingSystem>
+						  <FontName>Courier New</FontName>
+						  <FontSize>10</FontSize>
+						  <Id>PretendAnalysis</Id>
+						</WritingSystem>
+						<WritingSystem>
+						  <FontName>Courier New</FontName>
+						  <FontSize>20</FontSize>
+						  <Id>PretendVernacular</Id>
+						</WritingSystem>
+					  </members>
+					</WritingSystemCollection>");
+				writer.Close();
+			}
 		}
 
 		[TearDown]
@@ -59,7 +82,7 @@ namespace WeSay.Project.Tests
 			{
 				BasilProject.Project.Dispose();
 			}
-			Foundation.Tests.TestHelpers.TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
+			TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
 		}
 
 		//  not relevant anymore

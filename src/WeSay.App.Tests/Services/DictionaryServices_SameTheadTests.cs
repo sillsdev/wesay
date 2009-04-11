@@ -2,7 +2,6 @@ using System.IO;
 using NUnit.Framework;
 using Palaso.Services.Dictionary;
 using WeSay.App.Services;
-using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.Project.Tests;

@@ -5,8 +5,10 @@ using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
+using WeSay.Foundation;
+using WeSay.Foundation.Tests;
 
-namespace WeSay.Foundation.Tests
+namespace WeSay.LexicalModel.Tests.Foundation
 {
 	[TestFixture]
 	public class WritingCollectionSystemTests
@@ -27,11 +29,25 @@ namespace WeSay.Foundation.Tests
 			File.Delete(_path);
 		}
 
-		public static void CreateSampleWritingSystemFile(string path)
+		private void CreateSampleWritingSystemFile(string path)
 		{
 			using (StreamWriter writer = File.CreateText(path))
 			{
-				writer.Write(TestResources.WritingSystemPrefs);
+				writer.Write(@"<?xml version='1.0' encoding='utf-8'?>
+					<WritingSystemCollection>
+					  <members>
+						<WritingSystem>
+						  <FontName>Courier New</FontName>
+						  <FontSize>10</FontSize>
+						  <Id>PretendAnalysis</Id>
+						</WritingSystem>
+						<WritingSystem>
+						  <FontName>Courier New</FontName>
+						  <FontSize>20</FontSize>
+						  <Id>PretendVernacular</Id>
+						</WritingSystem>
+					  </members>
+					</WritingSystemCollection>");
 				writer.Close();
 			}
 		}

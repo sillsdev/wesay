@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using NUnit.Framework;
-using WeSay.Foundation;
-using WeSay.Foundation.Tests.TestHelpers;
+using Palaso.TestUtilities;
 
-namespace WeSay.Foundation.Tests
+
+namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
 	public class TaskMemoryRepositoryTests

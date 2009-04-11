@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Misc;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
@@ -35,7 +36,7 @@ namespace WeSay.LexicalTools
 		}
 
 		public DictionaryControl(LexEntryRepository lexEntryRepository,
-			ViewTemplate viewTemplate, ITaskMemory memory, ILogger logger)
+			ViewTemplate viewTemplate, IUserInterfaceMemory memory, ILogger logger)
 		{
 			if (lexEntryRepository == null)
 			{

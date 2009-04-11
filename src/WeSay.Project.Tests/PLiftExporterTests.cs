@@ -7,7 +7,6 @@ using Palaso.TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using TempFile=WeSay.Foundation.Tests.TestHelpers.TempFile;
 
 namespace WeSay.Project.Tests
 {

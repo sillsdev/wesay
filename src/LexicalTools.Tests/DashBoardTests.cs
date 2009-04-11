@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
+using Palaso.TestUtilities;
 using WeSay.Foundation;
-using WeSay.Foundation.Tests.TestHelpers;
+using Palaso.TestUtilities;
 using WeSay.LexicalTools.Dashboard;
 
 namespace WeSay.LexicalModel.Tests

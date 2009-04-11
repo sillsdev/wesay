@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Foundation.Tests.TestHelpers;
+using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;

@@ -7,7 +7,7 @@ using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Foundation.Tests;
-using WeSay.Foundation.Tests.TestHelpers;
+using Palaso.TestUtilities;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests

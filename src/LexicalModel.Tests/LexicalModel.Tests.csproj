@@ -73,6 +73,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.TestUtilities.dll</HintPath>
 	</Reference>
+	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
@@ -81,6 +85,20 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="Binding.cs" />
+	<Compile Include="Foundation\ApproximateMatcherTests.cs" />
+	<Compile Include="Foundation\MultiTextTests.cs" />
+	<Compile Include="Foundation\Options\OptionList.Tests.cs" />
+	<Compile Include="Foundation\Options\OptionRefCollectionTests.cs" />
+	<Compile Include="Foundation\Options\OptionRefTests.cs" />
+	<Compile Include="Foundation\SpellCheckerIdToDisplayStringConverterTests.cs" />
+	<Compile Include="Foundation\TestResources.Designer.cs">
+	  <DependentUpon>TestResources.resx</DependentUpon>
+	  <AutoGen>True</AutoGen>
+	  <DesignTime>True</DesignTime>
+	</Compile>
+	<Compile Include="Foundation\WeSayDataObjectTests.cs" />
+	<Compile Include="Foundation\WritingSystemCollectionTests.cs" />
+	<Compile Include="Foundation\WritingSystemTests.cs" />
 	<Compile Include="LexEntryRepositoryCachingTests.cs" />
 	<Compile Include="LexEntryRepositoryCreatedFromPersistedData.cs" />
 	<Compile Include="LexEntryRepositoryCreateItemTransitionTests.cs" />
@@ -116,14 +134,6 @@
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
 	  <Name>WeSay.Data</Name>
 	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Foundation.Tests\WeSay.Foundation.Tests.csproj">
-	  <Project>{6366719E-DA80-4680-9E06-D9BC6F340DE3}</Project>
-	  <Name>WeSay.Foundation.Tests</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
-	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
-	  <Name>WeSay.Foundation</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Project.Tests\WeSay.Project.Tests.csproj">
 	  <Project>{F644C902-A952-4797-9E2D-19D6051DD032}</Project>
 	  <Name>WeSay.Project.Tests</Name>
@@ -132,6 +142,13 @@
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
 	  <Name>WeSay.Project</Name>
 	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="Foundation\TestResources.resx">
+	  <Generator>ResXFileCodeGenerator</Generator>
+	  <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

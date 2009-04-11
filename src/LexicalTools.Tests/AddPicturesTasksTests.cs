@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using Palaso.IO;
-using WeSay.Foundation;
-using WeSay.Foundation.Tests.TestHelpers;
+using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddPictures;
 
@@ -16,7 +15,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test, ExpectedException(typeof(Palaso.Reporting.ConfigurationException))]
 		public void Activate_IndexNotFound_GivesUserMessage()
 		{
-				using (var repoFile = new WeSay.Foundation.Tests.TestHelpers.TempLiftFile(""))
+				using (var repoFile = new TempLiftFile(""))
 				{
 					using(var repo = new LexEntryRepository(repoFile.Path))
 					{
@@ -53,7 +52,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_repoFile = new WeSay.Foundation.Tests.TestHelpers.TempLiftFile("");
+			_repoFile = new TempLiftFile("");
 			_repo = new LexEntryRepository(_repoFile.Path);
 			AddPicturesConfig config = new AddPicturesConfig(string.Format("<task taskName='AddMissingInfo' visible='true'><indexFileName>{0}</indexFileName></task>", "ArtOfReadingIndexV3_en.txt"));
 			_task = new AddPicturesTask(config, _repo,

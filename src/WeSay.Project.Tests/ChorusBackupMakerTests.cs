@@ -1,12 +1,10 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Xml;
 using Chorus.sync;
 using NUnit.Framework;
-using WeSay.Foundation.Tests.TestHelpers;
-using WeSay.Project;
+using Palaso.TestUtilities;
 
 namespace WeSay.Project.Tests
 {

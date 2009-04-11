@@ -3,7 +3,7 @@ using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation.Options;
-using WeSay.Foundation.Tests.TestHelpers;
+using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;

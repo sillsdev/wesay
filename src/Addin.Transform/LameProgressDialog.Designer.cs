@@ -1,4 +1,4 @@
-namespace WeSay.Foundation
+namespace Addin.Transform
 {
 	partial class LameProgressDialog
 	{

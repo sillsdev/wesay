@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using LiftIO.Validation;
-using NUnit.Framework;
-using WeSay.Foundation.Tests;
 
 namespace WeSay.Project.Tests
 {
@@ -155,7 +151,7 @@ namespace WeSay.Project.Tests
 			{
 				if (disposing)
 				{
-					Foundation.Tests.TestHelpers.TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
+					Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
 				}
 
 				// shared (dispose and finalizable) cleanup logic

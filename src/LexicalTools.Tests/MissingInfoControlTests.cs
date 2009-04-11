@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Foundation.Tests.TestHelpers;
+using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

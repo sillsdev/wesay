@@ -3,7 +3,7 @@ using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using Palaso.Reporting;
 
-namespace WeSay.Foundation
+namespace Addin.Backup
 {
 	public class BackupMaker
 	{

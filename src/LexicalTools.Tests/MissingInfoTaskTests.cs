@@ -1,8 +1,7 @@
 using System;
 using NUnit.Framework;
-using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using WeSay.Foundation.Tests.TestHelpers;
+using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;

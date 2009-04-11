@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace WeSay.Foundation
+namespace Addin.Transform
 {
 	public partial class LameProgressDialog: Form
 	{

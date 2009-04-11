@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalModel.Tests", "Lexic
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD} = {600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Foundation.Tests", "WeSay.Foundation.Tests\WeSay.Foundation.Tests.csproj", "{6366719E-DA80-4680-9E06-D9BC6F340DE3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.UI.Tests", "WeSay.UI.Tests\WeSay.UI.Tests.csproj", "{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.App", "WeSay.App\WeSay.App.csproj", "{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}"
@@ -57,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addin.Transform.Tests", "Ad
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addin.LiftReports.Tests", "Addin.LiftReports.Tests\Addin.LiftReports.Tests.csproj", "{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addin.Backup.Tests", "Addin.Backup.Tests\Addin.Backup.Tests.csproj", "{EF37C48F-EABC-478B-B7C1-2BDB33968A21}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,14 +85,6 @@ Global
 		{123D695C-0D5D-46E5-893F-39EC4E0B01B8}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
 		{123D695C-0D5D-46E5-893F-39EC4E0B01B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{123D695C-0D5D-46E5-893F-39EC4E0B01B8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
-		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Mono Debug|Any CPU.ActiveCfg = Mono Debug|Any CPU
-		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Mono Debug|Any CPU.Build.0 = Mono Debug|Any CPU
-		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Mono Release|Any CPU.ActiveCfg = Mono Release|Any CPU
-		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6366719E-DA80-4680-9E06-D9BC6F340DE3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.minimal|Any CPU.ActiveCfg = Debug|Any CPU
@@ -277,6 +269,16 @@ Global
 		{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}.Mono Release|Any CPU.Build.0 = Mono Release|Any CPU
 		{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF2FDE4A-A7F5-4B20-B1E6-0ADB400DEF69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF37C48F-EABC-478B-B7C1-2BDB33968A21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF37C48F-EABC-478B-B7C1-2BDB33968A21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF37C48F-EABC-478B-B7C1-2BDB33968A21}.minimal|Any CPU.ActiveCfg = Release|Any CPU
+		{EF37C48F-EABC-478B-B7C1-2BDB33968A21}.minimal|Any CPU.Build.0 = Release|Any CPU
+		{EF37C48F-EABC-478B-B7C1-2BDB33968A21}.Mono Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF37C48F-EABC-478B-B7C1-2BDB33968A21}.Mono Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF37C48F-EABC-478B-B7C1-2BDB33968A21}.Mono Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF37C48F-EABC-478B-B7C1-2BDB33968A21}.Mono Release|Any CPU.Build.0 = Release|Any CPU
+		{EF37C48F-EABC-478B-B7C1-2BDB33968A21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF37C48F-EABC-478B-B7C1-2BDB33968A21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -49,6 +49,10 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+	</Reference>
 	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
@@ -69,6 +73,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="BackupMaker.cs" />
 	<Compile Include="BackupToDevice.cs" />
 	<Compile Include="BackupDialog.cs">
 	  <SubType>Form</SubType>

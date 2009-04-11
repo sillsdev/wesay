@@ -49,6 +49,10 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Enchant.Net.dll</HintPath>
+	</Reference>
 	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
@@ -71,11 +75,31 @@
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
+	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="Field.cs" />
+	<Compile Include="Foundation\ApproximateMatcher.cs" />
+	<Compile Include="Foundation\CommonEnumerations.cs" />
+	<Compile Include="Foundation\FlagState.cs" />
+	<Compile Include="Foundation\IBindableControl.cs" />
+	<Compile Include="Foundation\ICountGiver.cs" />
+	<Compile Include="Foundation\IDisplayStringAdaptor.cs" />
+	<Compile Include="Foundation\MultiText.cs" />
+	<Compile Include="Foundation\Options\DdpListReader.cs" />
+	<Compile Include="Foundation\Options\DdpOptionDisplayAdaptor.cs" />
+	<Compile Include="Foundation\Options\GenericOptionListReader.cs" />
+	<Compile Include="Foundation\Options\Option.cs" />
+	<Compile Include="Foundation\Options\OptionDisplayAdaptor.cs" />
+	<Compile Include="Foundation\Options\OptionRef.cs" />
+	<Compile Include="Foundation\Options\OptionRefCollection.cs" />
+	<Compile Include="Foundation\Options\OptionsList.cs" />
+	<Compile Include="Foundation\PictureRef.cs" />
+	<Compile Include="Foundation\WeSayDataObject.cs" />
+	<Compile Include="Foundation\WritingSystem.cs" />
+	<Compile Include="Foundation\WritingSystemCollection.cs" />
 	<Compile Include="IFieldQuery.cs" />
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexEntryFromLiftBuilder.cs" />
@@ -97,10 +121,6 @@
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
 	  <Name>WeSay.Data</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
-	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
-	  <Name>WeSay.Foundation</Name>
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>

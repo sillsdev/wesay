@@ -16,6 +16,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using Palaso.Misc;
 using WeSay.Foundation;
 
 namespace WeSay.UI
@@ -70,7 +71,7 @@ namespace WeSay.UI
 
 		private int gripLength;
 		private int minSize;
-		private ITaskMemory _memory;
+		private IUserInterfaceMemory _memory;
 		private const int _marginBetweenGripperAndSide = 5;
 
 		#endregion
@@ -793,7 +794,7 @@ namespace WeSay.UI
 			set { _backgroundColorEnd = value; }
 		}
 
-		public void SetMemory(ITaskMemory memory)
+		public void SetMemory(IUserInterfaceMemory memory)
 		{
 			_memory = memory;
 			if (_memory != null)

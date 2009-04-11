@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Palaso.Misc;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;

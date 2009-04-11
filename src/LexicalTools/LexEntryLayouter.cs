@@ -78,7 +78,7 @@ namespace WeSay.LexicalTools
 
 		private static IServiceProvider CreateLayoutInfoServiceProvider(IServiceLocator serviceLocator, ViewTemplate viewTemplate, LexEntry entry)
 		{
-			Guard.AgainstNull(serviceLocator, "serviceLocator");
+			Palaso.Misc.Guard.AgainstNull(serviceLocator, "serviceLocator");
 
 //            if (viewTemplate == null)
 //                return null;//some unrelated unit tests don't give us this parameter

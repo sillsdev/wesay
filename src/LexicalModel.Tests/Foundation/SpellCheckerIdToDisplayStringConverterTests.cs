@@ -2,14 +2,15 @@ using System;
 using System.Globalization;
 using NUnit.Framework;
 using Palaso.UI.WindowsForms.i8n;
+using WeSay.Foundation;
 
-namespace WeSay.Foundation.Tests
+namespace WeSay.LexicalModel.Tests.Foundation
 {
 	[TestFixture]
 	public class SpellCheckerIdToDisplayStringConverterTests
 	{
 		private WritingSystem.SpellCheckerIdToDisplayStringConverter
-				_spellCheckerIdToDisplayStringConverter;
+			_spellCheckerIdToDisplayStringConverter;
 
 		private string _idKnownToWindows;
 		private string _idNotKnownToWindows;
@@ -20,9 +21,9 @@ namespace WeSay.Foundation.Tests
 			_idKnownToWindows = "en_US";
 			_idNotKnownToWindows = "xY_Xy";
 			_spellCheckerIdToDisplayStringConverter =
-					new WritingSystem.SpellCheckerIdToDisplayStringConverter();
+				new WritingSystem.SpellCheckerIdToDisplayStringConverter();
 			_spellCheckerIdToDisplayStringConverter.GetInstalledSpellCheckingIdsStrategy =
-					delegate { return new string[] {_idKnownToWindows, _idNotKnownToWindows}; };
+				delegate { return new string[] {_idKnownToWindows, _idNotKnownToWindows}; };
 		}
 
 		[Test]
@@ -51,7 +52,7 @@ namespace WeSay.Foundation.Tests
 		public void ConvertTo_LanguageSupportingCultureInfo_ReturnsLanguageWithCultureInfo()
 		{
 			CultureInfo cultureInfo =
-					CultureInfo.GetCultureInfoByIetfLanguageTag(_idKnownToWindows.Replace('_', '-'));
+				CultureInfo.GetCultureInfoByIetfLanguageTag(_idKnownToWindows.Replace('_', '-'));
 			string cultureInfoTail = " (" + cultureInfo.NativeName + ")";
 			Assert.AreEqual(_idKnownToWindows + cultureInfoTail,
 							_spellCheckerIdToDisplayStringConverter.ConvertTo(_idKnownToWindows,
@@ -68,8 +69,8 @@ namespace WeSay.Foundation.Tests
 
 		[Test]
 		public void
-				ConvertTo_LanguageWithoutSpellCheckerInstalled_ReturnsLanguageWithNotInstalledMessage
-				()
+			ConvertTo_LanguageWithoutSpellCheckerInstalled_ReturnsLanguageWithNotInstalledMessage
+			()
 		{
 			string spellCheckingNotInstalledTail = " (" + StringCatalog.Get("Not installed") + ")";
 			Assert.AreEqual("fr_CA" + spellCheckingNotInstalledTail,
@@ -89,7 +90,7 @@ namespace WeSay.Foundation.Tests
 		{
 			Assert.AreEqual("en_US",
 							_spellCheckerIdToDisplayStringConverter.ConvertFrom(
-									" en_US (English (United States))"));
+								" en_US (English (United States))"));
 		}
 	}
 }

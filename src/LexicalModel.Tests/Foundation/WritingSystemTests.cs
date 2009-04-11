@@ -1,8 +1,9 @@
 using System.Drawing;
 using Exortech.NetReflector;
 using NUnit.Framework;
+using WeSay.Foundation;
 
-namespace WeSay.Foundation.Tests
+namespace WeSay.LexicalModel.Tests.Foundation
 {
 	[TestFixture]
 	public class WritingSystemTests
@@ -44,9 +45,9 @@ namespace WeSay.Foundation.Tests
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
 			WritingSystem ws =
-					(WritingSystem)
-					r.Read(
-							"<WritingSystem><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id><SortUsing>one</SortUsing></WritingSystem>");
+				(WritingSystem)
+				r.Read(
+					"<WritingSystem><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id><SortUsing>one</SortUsing></WritingSystem>");
 			// since Linux may not have Tahoma, we
 			// need to test against the font mapping
 			Font font = new Font("Tahoma", 99);
@@ -161,9 +162,9 @@ namespace WeSay.Foundation.Tests
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
 			WritingSystem ws =
-					(WritingSystem)
-					r.Read(
-							"<WritingSystem><CustomSortRules>test</CustomSortRules><SortUsing>CustomSimple</SortUsing><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
+				(WritingSystem)
+				r.Read(
+					"<WritingSystem><CustomSortRules>test</CustomSortRules><SortUsing>CustomSimple</SortUsing><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.AreEqual("test", ws.CustomSortRules);
 			Assert.AreEqual(CustomSortRulesType.CustomSimple.ToString(), ws.SortUsing);
@@ -176,9 +177,9 @@ namespace WeSay.Foundation.Tests
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
 			WritingSystem ws =
-					(WritingSystem)
-					r.Read(
-							"<WritingSystem><SortUsing>CustomSimple</SortUsing><CustomSortRules>test</CustomSortRules><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
+				(WritingSystem)
+				r.Read(
+					"<WritingSystem><SortUsing>CustomSimple</SortUsing><CustomSortRules>test</CustomSortRules><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.AreEqual("test", ws.CustomSortRules);
 			Assert.AreEqual(CustomSortRulesType.CustomSimple.ToString(), ws.SortUsing);
@@ -191,9 +192,9 @@ namespace WeSay.Foundation.Tests
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
 			WritingSystem ws =
-					(WritingSystem)
-					r.Read(
-							"<WritingSystem><CustomSortRules>test</CustomSortRules><SortUsing>one</SortUsing><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
+				(WritingSystem)
+				r.Read(
+					"<WritingSystem><CustomSortRules>test</CustomSortRules><SortUsing>one</SortUsing><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.IsNull(ws.CustomSortRules);
 			Assert.AreEqual("one", ws.SortUsing);
@@ -206,9 +207,9 @@ namespace WeSay.Foundation.Tests
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
 			WritingSystem ws =
-					(WritingSystem)
-					r.Read(
-							"<WritingSystem><SortUsing>one</SortUsing><CustomSortRules>test</CustomSortRules><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
+				(WritingSystem)
+				r.Read(
+					"<WritingSystem><SortUsing>one</SortUsing><CustomSortRules>test</CustomSortRules><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.IsNull(ws.CustomSortRules);
 			Assert.AreEqual("one", ws.SortUsing);

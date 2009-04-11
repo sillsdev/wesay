@@ -8,7 +8,6 @@ using Addin.Transform.PdfDictionary;
 using Mono.Addins;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

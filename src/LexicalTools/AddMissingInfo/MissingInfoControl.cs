@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Misc;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
@@ -25,7 +26,7 @@ namespace WeSay.LexicalTools
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler TimeToSaveRecord;
 
-		public MissingInfoControl(ResultSet<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete, LexEntryRepository lexEntryRepository, ITaskMemory memory)
+		public MissingInfoControl(ResultSet<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete, LexEntryRepository lexEntryRepository, IUserInterfaceMemory memory)
 		{
 			if (!DesignMode)
 			{

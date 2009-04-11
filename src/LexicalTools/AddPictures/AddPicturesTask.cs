@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using Palaso.IO;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.ImageGallery;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using System.Linq;

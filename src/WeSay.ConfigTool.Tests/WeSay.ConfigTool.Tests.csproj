@@ -69,6 +69,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
+	<Reference Include="Palaso.TestUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Palaso.TestUtilities.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Windows.Forms" />
@@ -100,10 +104,6 @@
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
 	  <Name>WeSay.Data</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Foundation.Tests\WeSay.Foundation.Tests.csproj">
-	  <Project>{6366719E-DA80-4680-9E06-D9BC6F340DE3}</Project>
-	  <Name>WeSay.Foundation.Tests</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>

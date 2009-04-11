@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
-using WeSay.Foundation.Tests.TestHelpers;
+using Palaso.TestUtilities;
 using WeSay.Project;
 
-namespace WeSay.Foundation.Tests
+namespace Addin.Backup.Tests
 {
 	[TestFixture]
 	public class BackupMakerTests

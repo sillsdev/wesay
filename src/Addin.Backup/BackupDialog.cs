@@ -7,7 +7,6 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using Palaso.UsbDrive;
 using WeSay.AddinLib;
-using WeSay.Foundation;
 
 namespace Addin.Backup
 {

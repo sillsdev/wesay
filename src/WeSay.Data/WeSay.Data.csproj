@@ -49,14 +49,6 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
-	</Reference>
-	<Reference Include="Db4objects.Db4o.Tools, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Db4objects.Db4o.Tools.dll</HintPath>
-	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.dll</HintPath>

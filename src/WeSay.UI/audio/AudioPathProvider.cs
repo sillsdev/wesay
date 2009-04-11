@@ -1,14 +1,15 @@
 using System;
 using System.IO;
+using Palaso;
 
 namespace WeSay.UI.audio
 {
 	public class AudioPathProvider
 	{
 		private readonly string _pathToAudioFiles;
-		private readonly WeSay.Foundation.Func<string> _entryNameFunction;
+		private readonly Func<string> _entryNameFunction;
 
-		public AudioPathProvider(string pathToAudioFiles, WeSay.Foundation.Func<string> entryNameFunction)
+		public AudioPathProvider(string pathToAudioFiles, Func<string> entryNameFunction)
 		{
 			_pathToAudioFiles = pathToAudioFiles;
 			_entryNameFunction = entryNameFunction;

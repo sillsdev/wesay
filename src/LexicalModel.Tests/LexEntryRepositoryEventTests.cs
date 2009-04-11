@@ -1,5 +1,6 @@
 using NUnit.Framework;
-using WeSay.Foundation.Tests.TestHelpers;
+using Palaso.TestUtilities;
+
 
 namespace WeSay.LexicalModel.Tests
 {
