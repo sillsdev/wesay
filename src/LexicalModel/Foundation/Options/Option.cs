@@ -59,7 +59,7 @@ namespace WeSay.Foundation.Options
 						//this allows the ui to continue to auto-create the key during a ui session.
 				else if (value != GetDefaultKey())
 				{
-					_humanReadableKey = value;
+					_humanReadableKey = value.Trim();
 				}
 			}
 		}

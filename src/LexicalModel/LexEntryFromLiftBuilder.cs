@@ -389,7 +389,7 @@ namespace WeSay.LexicalModel
 			if (ExpectedOptionTraits.Contains(trait.Name))
 			{
 				OptionRef o = extensible.GetOrCreateProperty<OptionRef>(trait.Name);
-				o.Value = trait.Value;
+				o.Value = trait.Value.Trim();
 			}
 			else if (trait.Name.StartsWith("flag-"))
 			{
@@ -400,7 +400,7 @@ namespace WeSay.LexicalModel
 			{
 				OptionRefCollection c =
 						extensible.GetOrCreateProperty<OptionRefCollection>(trait.Name);
-				c.Add(trait.Value);
+				c.Add(trait.Value.Trim());
 			}
 			//else
 			//{

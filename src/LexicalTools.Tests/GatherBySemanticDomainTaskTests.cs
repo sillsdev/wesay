@@ -1078,6 +1078,7 @@ namespace WeSay.LexicalTools.Tests
 
 		#endregion
 
+
 		[Test]
 		public void ParseSemanticDomainFile()
 		{
