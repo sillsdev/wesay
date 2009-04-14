@@ -582,7 +582,7 @@ namespace WeSay.LexicalTools
 				reader.ReadToDescendant("semantic-domain");
 				while (reader.IsStartElement("semantic-domain"))
 				{
-					string domainKey = reader.GetAttribute("id");
+					string domainKey = reader.GetAttribute("id").Trim();
 					List<string> questions = new List<string>();
 					XmlReader questionReader = reader.ReadSubtree();
 					questionReader.MoveToContent();
