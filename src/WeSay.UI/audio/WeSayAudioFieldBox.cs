@@ -23,24 +23,24 @@ namespace WeSay.UI.audio
 
 
 			// may be changed in a moment when the actual field is read
-			shortSoundFieldControl1.Path = _audioPathProvider.GetNewPath();
+			_shortSoundFieldControl1.Path = _audioPathProvider.GetNewPath();
 
-			shortSoundFieldControl1.SoundRecorded += (sender, e) =>
+			_shortSoundFieldControl1.SoundRecorded += (sender, e) =>
 														 {
 															 _fileName.Text =
 																 _audioPathProvider.GetPartialPathFromFull(
-																	 shortSoundFieldControl1.Path);
+																	 _shortSoundFieldControl1.Path);
 															 _logger.WriteConciseHistoricalEvent("Recorded Sound");
 														 }
 
 
 	;
-			shortSoundFieldControl1.SoundDeleted += (sender, e) =>
+			_shortSoundFieldControl1.SoundDeleted += (sender, e) =>
 				{
 					_fileName.Text = string.Empty;
 					_logger.WriteConciseHistoricalEvent("Deleted Sound");
 				};
-			shortSoundFieldControl1.BeforeStartingToRecord += new EventHandler(shortSoundFieldControl1_BeforeStartingToRecord);
+			_shortSoundFieldControl1.BeforeStartingToRecord += new EventHandler(shortSoundFieldControl1_BeforeStartingToRecord);
 		}
 
 		void shortSoundFieldControl1_BeforeStartingToRecord(object sender, EventArgs e)
@@ -48,8 +48,17 @@ namespace WeSay.UI.audio
 			// if this is a new entry, we might not have had an entry form to use for the sound
 			// path name, when we were contructed.
 			// So if there isn't already a sound recorded, see if one is available yet.
-			if(!File.Exists(shortSoundFieldControl1.Path))
-				shortSoundFieldControl1.Path = _audioPathProvider.GetNewPath();
+			if(!File.Exists(_shortSoundFieldControl1.Path))
+				_shortSoundFieldControl1.Path = _audioPathProvider.GetNewPath();
+		}
+
+		public bool PlayOnly
+		{
+			get { return _shortSoundFieldControl1.PlayOnly; }
+			set
+			{
+				_shortSoundFieldControl1.PlayOnly = value;
+			}
 		}
 
 		public override string Text
@@ -62,7 +71,7 @@ namespace WeSay.UI.audio
 			{
 				_fileName.Text = value;
 				if (!string.IsNullOrEmpty(value))
-					shortSoundFieldControl1.Path = _audioPathProvider.GetCompletePathFromPartial(value);
+					_shortSoundFieldControl1.Path = _audioPathProvider.GetCompletePathFromPartial(value);
 			}
 		}
 

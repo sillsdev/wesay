@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this._fileName = new System.Windows.Forms.TextBox();
-			this.shortSoundFieldControl1 = new Palaso.Media.ShortSoundFieldControl();
+			this._shortSoundFieldControl1 = new Palaso.Media.ShortSoundFieldControl();
 			this.SuspendLayout();
 			//
 			// _fileName
@@ -45,20 +45,20 @@
 			//
 			// shortSoundFieldControl1
 			//
-			this.shortSoundFieldControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			this._shortSoundFieldControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 																						| System.Windows.Forms.AnchorStyles.Right)));
-			this.shortSoundFieldControl1.Location = new System.Drawing.Point(0, 2);
-			this.shortSoundFieldControl1.Name = "shortSoundFieldControl1";
-			this.shortSoundFieldControl1.Path = null;
-			this.shortSoundFieldControl1.Size = new System.Drawing.Size(234, 19);
-			this.shortSoundFieldControl1.TabIndex = 2;
+			this._shortSoundFieldControl1.Location = new System.Drawing.Point(0, 2);
+			this._shortSoundFieldControl1.Name = "_shortSoundFieldControl1";
+			this._shortSoundFieldControl1.Path = null;
+			this._shortSoundFieldControl1.Size = new System.Drawing.Size(234, 19);
+			this._shortSoundFieldControl1.TabIndex = 2;
 			//
 			// WeSayAudioFieldBox
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.White;
-			this.Controls.Add(this.shortSoundFieldControl1);
+			this.Controls.Add(this._shortSoundFieldControl1);
 			this.Controls.Add(this._fileName);
 			this.Name = "WeSayAudioFieldBox";
 			this.Size = new System.Drawing.Size(255, 23);
@@ -70,7 +70,7 @@
 		#endregion
 
 		private System.Windows.Forms.TextBox _fileName;
-		private Palaso.Media.ShortSoundFieldControl shortSoundFieldControl1;
+		private Palaso.Media.ShortSoundFieldControl _shortSoundFieldControl1;
 
 	}
 }
