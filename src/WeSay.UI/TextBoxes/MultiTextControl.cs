@@ -85,11 +85,18 @@ namespace WeSay.UI.TextBoxes
 		{
 			Name = nameForTesting + "-mtc";
 			_writingSystemsForThisField = new List<WritingSystem>();
-			foreach (KeyValuePair<string, WritingSystem> pair in allWritingSystems)
+//            foreach (KeyValuePair<string, WritingSystem> pair in allWritingSystems)
+//            {
+//                if (writingSystemIds.Contains(pair.Key))
+//                {
+//                    _writingSystemsForThisField.Add(pair.Value);
+//                }
+//            }
+			foreach (var id in writingSystemIds)
 			{
-				if (writingSystemIds.Contains(pair.Key))
+				if (allWritingSystems.ContainsKey(id)) //why wouldn't it?
 				{
-					_writingSystemsForThisField.Add(pair.Value);
+					_writingSystemsForThisField.Add(allWritingSystems[id]);
 				}
 			}
 			_showAnnotationWidget = showAnnotationWidget;
