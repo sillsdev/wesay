@@ -232,6 +232,9 @@ namespace WeSay.LexicalTools
 
 		private void SetRecordToBeEdited(LexEntry record)
 		{
+			if (record == Control_EntryDetailPanel.DataSource)
+				return;
+
 			SaveAndCleanUpPreviousEntry();
 			Control_EntryDetailPanel.DataSource = record;
 			if (record != null)
@@ -415,6 +418,13 @@ namespace WeSay.LexicalTools
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
+			//nb: SelectedIndexChanged,  which calls this, is fired twice
+			//once for the deselection, again with the selection
+			if (CurrentIndex == -1)
+			{
+				return;
+			}
+
 			if (_keepRecordCurrent)
 			{
 				return;
