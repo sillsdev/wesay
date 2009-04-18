@@ -154,32 +154,21 @@ namespace WeSay.AddinLib
 				Logger.WriteMinorEvent("Loading Addins");
 				if (!AddinManager.IsInitialized)
 				{
-					//                AddinManager.Initialize(Application.UserAppDataPath);
-					//                AddinManager.Registry.Rebuild(null);
-					//                AddinManager.Shutdown();
 					AddinManager.Initialize(Application.UserAppDataPath);
-					AddinManager.Registry.Update(null);
-					//these (at least AddinLoaded) does get called after initialize, when you
-					//do a search for objects (e.g. GetExtensionObjects())
 
-					//TODO: I added these back on 13 oct because I was seeing no addins!
-					AddinManager.Registry.Rebuild(null);
-					AddinManager.Shutdown();
-					AddinManager.Initialize(Application.UserAppDataPath);
-				}
-
-				foreach (IWeSayAddin addin in AddinManager.GetExtensionObjects(typeof (IWeSayAddin))
-						)
-				{
-					if (Singleton.DoShowInWeSay(addin.ID))
+					LoadAddins(alreadyFound, addins);
+					if (alreadyFound.Count < _singleton._addinsToShowInWeSay.Count)
 					{
-						//this alreadyFound business is a hack to prevent duplication in some
-						// situation I haven't tracked down yet.
-						if (!alreadyFound.Contains(addin.ID))
-						{
-							alreadyFound.Add(addin.ID);
-							addins.Add(addin);
-						}
+						//something was amis, so try harder (and much slower)
+
+						AddinManager.Registry.Update(null);
+						//these (at least AddinLoaded) does get called after initialize, when you
+						//do a search for objects (e.g. GetExtensionObjects())
+
+						//TODO: I added these back on 13 oct because I was seeing no addins!
+
+
+						LoadAddins(alreadyFound, addins);
 					}
 				}
 			}
@@ -190,6 +179,21 @@ namespace WeSay.AddinLib
 						error.Message);
 			}
 			return addins;
+		}
+
+		private static void LoadAddins(List<string> alreadyFound, List<IWeSayAddin> addins)
+		{
+			foreach (IWeSayAddin addin in AddinManager.GetExtensionObjects(typeof (IWeSayAddin)))
+			{
+				if (Singleton.DoShowInWeSay(addin.ID))
+				{
+					if (!alreadyFound.Contains(addin.ID))
+					{
+						alreadyFound.Add(addin.ID);
+						addins.Add(addin);
+					}
+				}
+			}
 		}
 	}
 }
