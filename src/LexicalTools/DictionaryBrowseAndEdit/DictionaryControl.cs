@@ -200,7 +200,12 @@ namespace WeSay.LexicalTools
 			LoadRecords();
 			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
 
-			SetRecordToBeEdited(CurrentRecord);
+			//WHy was this here (I'm (JH) scared to remove it)?
+			// it is costing us an extra second, as we set the record
+			// to the first one, then later set it to the one we actually want.
+			//  SetRecordToBeEdited(CurrentRecord);
+
+
 			_recordsListBox.WritingSystem = _listWritingSystem;
 
 			int originalHeight = _findText.Height;
