@@ -1380,9 +1380,20 @@ namespace WeSay.Project
 		{
 			//nb: we have multiple lengths we could go to eventually, perhaps with different rules:
 			//      commit locally, commit to local backup, commit peers on LAN, commit across internet
+
+			//TODO: follow PT and OurWord to a once a day system, which
+			//will take saving the last backkup time somewhere else
+			//(or querying the repo)
+
+			//this is a temporary hack... we don't want to backup on startup,
+			//it slows the startup time too much
+			if(BackupMaker.TimeOfLastBackupAttempt == default(DateTime))
+			{
+				BackupMaker.ResetTimeOfLastBackup();
+			}
+
 			TimeSpan diff = DateTime.Now - BackupMaker.TimeOfLastBackupAttempt;
-		   // if(diff.TotalSeconds  > 30)
-			if(diff.TotalMinutes > 5)
+			if(diff.TotalMinutes > 20)
 			{
 				BackupNow();
 			}

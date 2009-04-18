@@ -152,6 +152,11 @@ namespace WeSay.Project
 				}
 			}
 		}
+
+		public void ResetTimeOfLastBackup()
+		{
+			_timeOfLastBackupAttempt = DateTime.Now;
+		}
 	}
 
 	//todo: move to chorus
