@@ -7,45 +7,48 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-25 03:27+0000\n"
-"PO-Revision-Date: 2009-03-07 12:06+0100\n"
-"Last-Translator: David Rowe <David_Rowe@sil.org>\n"
+"POT-Creation-Date: 2009-03-03 06:45+0000\n"
+"PO-Revision-Date: 2009-04-17 22:27+0000\n"
+"Last-Translator: David Rowe <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-02-20 12:52+0000\n"
+"X-Launchpad-Export-Date: 2009-04-18 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 msgid "Meanings"
 msgstr "Sens"
 
 msgid "Add meanings (senses) to entries where they are missing."
-msgstr "Ajouter des sens aux entrées qui en manquent"
+msgstr ""
 
 msgid "Parts of Speech"
-msgstr "Parties du Discours"
+msgstr ""
 
 msgid "Add parts of speech to senses where they are missing."
-msgstr "Ajouter des parties du discours aux sens qui en manquent."
+msgstr ""
 
 msgid "Example Sentences"
-msgstr "Phrases Illustratives"
+msgstr "Phrases illustratives"
 
 msgid "Add example sentences to senses where they are missing."
-msgstr "Ajouter des phrases illustratives aux sens qui les manquent."
+msgstr "Ajouter des phrases illustratives aux sens qui en manquent."
 
 msgid "Base Forms"
-msgstr "Formes de Base"
+msgstr ""
 
-msgid "Identify the \"base form\" word that this word is built from. In the printed dictionary, the derived or variant words can optionally be shown as subentries of their base forms."
-msgstr "Identifier le \"forme de base\" sur lequel ce mot est construit.  Dans le dictionnaire imprimé, les mots dérivés ou variants peuvent parfois être presentés comme sous-entrées de leurs formes de base."
+msgid ""
+"Identify the \"base form\" word that this word is built from. In the printed "
+"dictionary, the derived or variant words can optionally be shown as "
+"subentries of their base forms."
+msgstr ""
 
 msgid "Looking for USB Keys..."
 msgstr "En train de détecter des clefs USB..."
 
 msgid "Backing Up..."
-msgstr "En train de Sauvegarder..."
+msgstr "En train de sauvegarder..."
 
 msgid "Backup Complete"
 msgstr "Fin de la sauvegarde"
@@ -60,7 +63,7 @@ msgid "Please insert the USB Key to backup to."
 msgstr "Veuillez insérer la clé USB pour la sauvegarde."
 
 msgid "&Cancel"
-msgstr "&Annuler"
+msgstr "Annuler"
 
 #. Long name for usb flash-drive backup action
 msgid "Backup To Device"
@@ -75,11 +78,10 @@ msgid "Backup"
 msgstr "Sauvegarder"
 
 msgid "Email this dictionary to {0}"
-msgstr "Envoyer ce dictionnaire à {0}"
+msgstr ""
 
-# ; C:\wesay\bld\..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email this dictionary as a compressed attachment"
-msgstr "Envoyer ce dictionnaire par courriel en tant que pièce jointe comprimé"
+msgstr ""
 
 msgid "Email"
 msgstr "Courriel"
@@ -90,7 +92,9 @@ msgstr "Synchroniser"
 
 #. description of syncrhonize action
 msgid "Updates the repository with our work, and gets the work of others."
-msgstr "Mettre à jour le dépôt avec notre travail, puis charger le travaux des autres."
+msgstr ""
+"Mettre à jour le dépôt avec notre travail, puis charger le travail des "
+"autres."
 
 #. Long label for synchronize action.
 msgid "Synchronize With Repository"
@@ -109,7 +113,7 @@ msgid "OK"
 msgstr "OK"
 
 msgid "View Report"
-msgstr "Afficher le Rapport"
+msgstr "Afficher le rapport"
 
 msgid "Shows some information about the lexicon."
 msgstr "Affiche quelques informations sur le lexique"
@@ -121,24 +125,28 @@ msgid "Export to Word"
 msgstr "Exporter vers Word"
 
 msgid "Creates a very basic dictionary publication in Microsoft Word."
-msgstr "Crée une publication très simple d'un dictionnaire dans Microsoft Word."
+msgstr ""
+"Crée une publication très simple d'un dictionnaire dans Microsoft Word."
 
 msgid "Export to HTML"
 msgstr "Exporter en HTML"
 
-msgid "Creates a simple Html version of the dictionary.  Not a very good way to go."
-msgstr "Créer une version html simple du dictionnaire. Pas la meilleure option."
+msgid ""
+"Creates a simple Html version of the dictionary.  Not a very good way to go."
+msgstr ""
 
-# ; C:\wesay\bld\..\src\Addin.Transform\LexiquePro\LexiqueProSender.cs
 msgid "Open in Lexique Pro"
-msgstr "Ouvrir en Lexique Pro"
+msgstr "Ouvrir dans Lexique Pro"
 
-# ; C:\wesay\bld\..\src\Addin.Transform\LexiquePro\LexiqueProSender.cs
-msgid "Open dictionary in Lexique Pro for printing or web-page creation. Requires version LP ver 3.0 or higher."
-msgstr "Ouvrir le dictionnaire en Lexique Pro pour imprimer ou créer les page Web. Version 3.0 (au moins) de LP est exigée."
+msgid ""
+"Open dictionary in Lexique Pro for printing or web-page creation. Requires "
+"version LP ver 3.0 or higher."
+msgstr ""
+"Ouvrir le dictionnaire dans Lexique Pro pour imprimer ou créer une page web. "
+"Nécessite LP en version 3.0 ou supérieure."
 
 msgid "Make Pdf Dictionary"
-msgstr "Créer un Dictionnaire en format PDF"
+msgstr "Créer un dictionnaire en format PDF"
 
 msgid "Export To SFM"
 msgstr "Exporter en SFM"
@@ -154,7 +162,7 @@ msgid "Switch tasks and see current status of tasks"
 msgstr "Changer de tâche et voir l'état actuel des tâches"
 
 msgid "{1} dictionary has {0} words"
-msgstr "Dictionnaire {1} contient {0} mots"
+msgstr "Le dictionnaire {1} contient {0} mots"
 
 msgid "Cannot find {0}"
 msgstr "Impossible de trouver {0}"
@@ -176,26 +184,35 @@ msgstr "Il n'y reste aucun travail pour cette tâche."
 
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "&This word has no Base Form"
-msgstr "Ce mot n'a pas de Forme de Base"
+msgstr ""
 
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
-msgstr "Aucune Glosse"
+msgstr "Aucune glose"
 
 msgid "Hide &Uncommon Fields"
-msgstr "Cacher les Champs Rares"
+msgstr "Cacher les champs rares"
 
 msgid "Show &Uncommon Fields"
-msgstr "Afficher les Champs Rares"
+msgstr "Afficher les champs rares"
+
+msgid "&Delete This Word"
+msgstr "&Supprimer ce mot"
+
+msgid "&New Word"
+msgstr "&Nouveau mot"
 
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
 msgstr "Afficher tous les {0} mots du dictionnaire (1)."
 
-# ; C:\wesay\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainTask.cs
 #. This is shown in the Gather By Semantic Domains task after each semantic domain question. The questions contain example words to help clarify what the domain is about, and this was added to remind the user that he/she is gathering based on the domain, not these examples.
-msgid "Do not just translate these words; instead think of words in your own language."
-msgstr "Ne traduisez pas ces mots. Pensez plutôt des mots dans votre propre langue."
+msgid ""
+"Do not just translate these words; instead think of words in your own "
+"language."
+msgstr ""
+"Ne vous contentez pas de simplement traduire ces mots, mais pensez à des "
+"mots dans votre propre langue."
 
 #. This is the field containing an example sentence of a sense of a word.
 #. This is the field containing an example sentence of a sense of a word.
@@ -208,7 +225,7 @@ msgstr "Traduction"
 
 #. This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.
 msgid "Meaning"
-msgstr "Sens"
+msgstr "Signification"
 
 #. The label for the field showing a single word translation, as used in interlinear text glossing.
 msgid "Gloss"
@@ -225,6 +242,10 @@ msgstr "Total :"
 #. This is what we call it when something goes wrong but it's the computer's fault, not the user's.
 msgid "Program Error"
 msgstr "Erreur de logiciel"
+
+#. Shown at the bottom of the screen.
+msgid "Dictionary has {0} words"
+msgstr "Le dictionnaire contient {0} mots"
 
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
 msgid "Loading..."
@@ -251,7 +272,7 @@ msgstr "Définition"
 
 #. The label for the field showing the literal meaning of idiom or proverb.
 msgid "Literal Meaning"
-msgstr "Sens Littéral"
+msgstr "Sens littéral"
 
 #. The label for the field showing a note.
 #. The label for the field showing a note.
@@ -280,7 +301,7 @@ msgstr "Domaine"
 
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
-msgstr "Forme de Base"
+msgstr "Forme de base"
 
 msgid "Cross Reference"
 msgstr "Renvoi"
