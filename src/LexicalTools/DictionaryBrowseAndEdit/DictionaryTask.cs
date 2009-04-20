@@ -74,6 +74,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 #endif
 					}
 				}
+				else
+				{
+					_dictionaryControl.GotoFirstEntry();
+				}
 			}
 			catch (ConfigurationException)
 			{

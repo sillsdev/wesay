@@ -403,6 +403,13 @@ namespace WeSay.LexicalTools
 			_recordsListBox.SelectedIndex = _records.FindFirstIndex(entry);
 		}
 
+		public void GotoFirstEntry()
+		{
+			if(_recordsListBox.Items.Count>0)
+				_recordsListBox.SelectedIndex = 0;
+
+		}
+
 		public void GoToEntry(string entryId)
 		{
 			LexEntry entry = _lexEntryRepository.GetLexEntryWithMatchingId(entryId);
@@ -423,12 +430,6 @@ namespace WeSay.LexicalTools
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			//nb: SelectedIndexChanged,  which calls this, is fired twice
-			//once for the deselection, again with the selection
-			if (CurrentIndex == -1)
-			{
-				return;
-			}
 
 			if (_keepRecordCurrent)
 			{
@@ -454,6 +455,14 @@ namespace WeSay.LexicalTools
 			}
 
 			SetRecordToBeEdited(CurrentRecord);
+
+
+			//nb: SelectedIndexChanged,  which calls this, is fired twice
+			//once for the deselection, again with the selection
+			if (CurrentIndex == -1)
+			{
+				return;
+			}
 
 			SelectedIndexChanged.Invoke(this, null);
 			UpdateDisplay();
@@ -622,5 +631,7 @@ namespace WeSay.LexicalTools
 				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Show &Uncommon Fields");
 			}
 		}
+
+
 	}
 }
