@@ -360,5 +360,26 @@ namespace WeSay.ConfigTool
 		{
 			_disableBackupAndChorusStuffForTests = true;
 		}
+
+
+
+		private void OnSaveACopyForFLEx5Pt4(object sender, EventArgs e)
+		{
+			using (var dlg = new SaveFileDialog())
+			{
+				dlg.FileName = _project.Name + "-flex5pt4.lift";
+				dlg.Title = "Save Copy of Lexicon For FLEx 5.4";
+				dlg.OverwritePrompt = true;
+				dlg.AutoUpgradeEnabled = true;
+				dlg.RestoreDirectory = true;
+				dlg.DefaultExt = ".lift";
+				dlg.Filter = "LIFT Lexicon File (*.lift)|*.lift";
+
+				if (System.Windows.Forms.DialogResult.OK != dlg.ShowDialog())
+					return;
+
+				LiftIO.Migration.Migrator.ReverseMigrateFrom13ToFLEx12(_project.PathToLiftFile, dlg.FileName);
+			}
+		}
 	}
 }
