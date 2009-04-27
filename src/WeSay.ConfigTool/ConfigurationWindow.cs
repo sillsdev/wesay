@@ -8,6 +8,8 @@ using Autofac.Builder;
 using Autofac.Component;
 using Autofac.Registrars;
 using Palaso.Reporting;
+using WeSay.ConfigTool.NewProjectCreation;
+using WeSay.ConfigTool.NewProjectDialogs;
 using WeSay.ConfigTool.Properties;
 using WeSay.ConfigTool.Tasks;
 using WeSay.Project;
@@ -134,7 +136,25 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
-			CreateAndOpenProject(dlg.SelectedPath);
+			CreateAndOpenProject(dlg.PathToNewProjectDirectory);
+		}
+
+		private void OnCreateProjectFromFLEx(object sender, EventArgs e)
+		{
+			NewProjectFromFLExDialog dlg = new NewProjectFromFLExDialog();
+			if (DialogResult.OK != dlg.ShowDialog())
+			{
+				return;
+			}
+			if (ProjectFromFLExCreator.Create(dlg.PathToNewProjectDirectory, dlg.PathToLift))
+			{
+				OpenProject(dlg.PathToNewProjectDirectory);
+			}
+			if (_project != null)
+			{
+				var logger = _project.Container.Resolve<ILogger>();
+				logger.WriteConciseHistoricalEvent("Created New Project From FLEx Export");
+			}
 		}
 
 		public void CreateAndOpenProject(string directoryPath)
@@ -276,9 +296,12 @@ namespace WeSay.ConfigTool
 			_welcomePage.BringToFront();
 			_welcomePage.Dock = DockStyle.Fill;
 			_welcomePage.NewProjectClicked += OnCreateProject;
+			_welcomePage.NewProjectFromFlexClicked += OnCreateProjectFromFLEx;
 			_welcomePage.OpenPreviousProjectClicked += OnOpenProject;
 			_welcomePage.ChooseProjectClicked += OnChooseProject;
 		}
+
+
 
 		private void InstallProjectsControls(IContext context)
 		{

@@ -132,6 +132,12 @@
 	<Compile Include="ChorusControl.Designer.cs">
 	  <DependentUpon>ChorusControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="NewProjectCreation\NewProjectFromFLEx.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="NewProjectCreation\NewProjectFromFLEx.Designer.cs">
+	  <DependentUpon>NewProjectFromFLEx.cs</DependentUpon>
+	</Compile>
 	<Compile Include="MruProjects.cs" />
 	<Compile Include="ConfigurationWindow.cs">
 	  <SubType>Form</SubType>
@@ -166,12 +172,13 @@
 	<Compile Include="FontControl.designer.cs">
 	  <DependentUpon>FontControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="NewProject.cs">
+	<Compile Include="NewProjectCreation\NewProject.cs">
 	  <SubType>Form</SubType>
 	</Compile>
-	<Compile Include="NewProject.Designer.cs">
+	<Compile Include="NewProjectCreation\NewProject.Designer.cs">
 	  <DependentUpon>NewProject.cs</DependentUpon>
 	</Compile>
+	<Compile Include="NewProjectCreation\ProjectFromFLExCreator.cs" />
 	<Compile Include="OptionListControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -206,6 +213,10 @@
 	  <DependentUpon>ChorusControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
+	<EmbeddedResource Include="NewProjectCreation\NewProjectFromFLEx.resx">
+	  <DependentUpon>NewProjectFromFLEx.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
 	<EmbeddedResource Include="FieldsControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>FieldsControl.cs</DependentUpon>
@@ -218,7 +229,7 @@
 	  <DependentUpon>FontControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
-	<EmbeddedResource Include="NewProject.resx">
+	<EmbeddedResource Include="NewProjectCreation\NewProject.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>NewProject.cs</DependentUpon>
 	</EmbeddedResource>
@@ -474,6 +485,9 @@
 	  <ProductName>.NET Framework 3.5</ProductName>
 	  <Install>false</Install>
 	</BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\Warning.bmp" />
   </ItemGroup>
   <ItemGroup>
 	<Folder Include="Properties\DataSources\" />

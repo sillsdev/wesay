@@ -31,7 +31,7 @@ namespace WeSay.Foundation
 		/// <returns></returns>
 		public WritingSystem AddSimple(string id)
 		{
-			var writingSystem = new WritingSystem(id, new Font(FontFamily.GenericSansSerif, 10));
+			var writingSystem = new WritingSystem(id, new Font(FontFamily.GenericSansSerif, 12));
 			Add(id, writingSystem);
 			return writingSystem;
 		}

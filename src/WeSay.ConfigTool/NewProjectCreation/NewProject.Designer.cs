@@ -1,11 +1,11 @@
-namespace WeSay.ConfigTool
+namespace WeSay.ConfigTool.NewProjectCreation
 {
 	partial class NewProject
 	{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private readonly System.ComponentModel.IContainer components = null;
+		protected readonly System.ComponentModel.IContainer components = null;
 
 		/// <summary>
 		/// Clean up any resources being used.
@@ -108,10 +108,10 @@ namespace WeSay.ConfigTool
 
 		#endregion
 
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Button btnOK;
-		private System.Windows.Forms.Button btnCancel;
-		private System.Windows.Forms.TextBox _textProjectName;
-		private System.Windows.Forms.Label _pathLabel;
+		protected System.Windows.Forms.Label label1;
+		protected System.Windows.Forms.Button btnOK;
+		protected System.Windows.Forms.Button btnCancel;
+		protected System.Windows.Forms.TextBox _textProjectName;
+		protected System.Windows.Forms.Label _pathLabel;
 	}
 }

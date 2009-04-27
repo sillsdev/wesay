@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
-namespace WeSay.ConfigTool
+namespace WeSay.ConfigTool.NewProjectCreation
 {
 	public partial class NewProject: Form
 	{
@@ -14,12 +14,17 @@ namespace WeSay.ConfigTool
 			_pathLabel.Text = "";
 		}
 
-		private void _textProjectName_TextChanged(object sender, EventArgs e)
+		protected virtual bool EnableOK
 		{
-			btnOK.Enabled = NameLooksOk;
+			get { return NameLooksOk; }
+		}
+
+		protected void _textProjectName_TextChanged(object sender, EventArgs e)
+		{
+			btnOK.Enabled = EnableOK;
 			if (btnOK.Enabled)
 			{
-				string[] dirs = SelectedPath.Split(Path.DirectorySeparatorChar);
+				string[] dirs = PathToNewProjectDirectory.Split(Path.DirectorySeparatorChar);
 				if (dirs.Length > 1)
 				{
 					string root = Path.Combine(dirs[dirs.Length - 3], dirs[dirs.Length - 2]);
@@ -64,7 +69,7 @@ namespace WeSay.ConfigTool
 					return false;
 				}
 
-				if (Directory.Exists(SelectedPath) || File.Exists(SelectedPath))
+				if (Directory.Exists(PathToNewProjectDirectory) || File.Exists(PathToNewProjectDirectory))
 				{
 					return false;
 				}
@@ -77,22 +82,22 @@ namespace WeSay.ConfigTool
 			get
 			{
 				return Path.Combine(
-						Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WeSay");
+					Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WeSay");
 			}
 		}
 
-		public string SelectedPath
+		public string PathToNewProjectDirectory
 		{
 			get { return Path.Combine(DestinationDirectory, _textProjectName.Text); }
 		}
 
-		private void btnOK_Click(object sender, EventArgs e)
+		protected void btnOK_Click(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.OK;
 			Close();
 		}
 
-		private void btnCancel_Click(object sender, EventArgs e)
+		protected void btnCancel_Click(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Cancel;
 			Close();
