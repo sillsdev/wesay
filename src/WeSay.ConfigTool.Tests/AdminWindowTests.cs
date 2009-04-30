@@ -21,6 +21,7 @@ namespace WeSay.ConfigTool.Tests
 
 		public override void Setup()
 		{
+			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
 			_window = new ConfigurationWindow(new string[] {});

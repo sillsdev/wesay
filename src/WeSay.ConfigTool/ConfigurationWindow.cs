@@ -205,9 +205,12 @@ namespace WeSay.ConfigTool
 				 logger.WriteConciseHistoricalEvent("Created New Project");
 
 
-				 using(var dlg = new NewProjectInformationDialog(directoryPath))
+				 if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
 				 {
-					 dlg.ShowDialog();
+					 using (var dlg = new NewProjectInformationDialog(directoryPath))
+					 {
+						 dlg.ShowDialog();
+					 }
 				 }
 
 			 }
