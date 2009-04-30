@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>9.0.21022</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{87AF0B02-2983-486D-857F-D1859535C234}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -232,30 +232,39 @@
   <ItemGroup>
 	<EmbeddedResource Include="AddPictures\AddPicturesControl.resx">
 	  <DependentUpon>AddPicturesControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Dashboard\Dash.resx">
 	  <DependentUpon>Dash.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Dashboard\Dashboard Button.resx">
 	  <DependentUpon>Dashboard Button.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Dashboard\DashboardButtonWithIcon.resx">
 	  <DependentUpon>DashboardButtonWithIcon.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Dashboard\DictionaryStatusControl.resx">
 	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Dashboard\GroupHeader.resx">
 	  <DependentUpon>GroupHeader.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Dashboard\ItemsToDoIndicator.resx">
 	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Dashboard\TaskIndicator.resx">
 	  <DependentUpon>TaskIndicator.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="DictionaryBrowseAndEdit\ConfirmDelete.resx">
 	  <DependentUpon>ConfirmDelete.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="CongratulationsControl.resx">
 	  <SubType>Designer</SubType>

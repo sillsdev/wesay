@@ -4,14 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Component;
-using Autofac.Registrars;
+
 using Palaso.Reporting;
 using WeSay.ConfigTool.NewProjectCreation;
 using WeSay.ConfigTool.NewProjectDialogs;
 using WeSay.ConfigTool.Properties;
-using WeSay.ConfigTool.Tasks;
+
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -26,7 +24,7 @@ namespace WeSay.ConfigTool
 		public ConfigurationWindow(string[] args)
 		{
 			InitializeComponent();
-
+			openProjectInWeSayToolStripMenuItem.LocationChanged += new EventHandler(openProjectInWeSayToolStripMenuItem_LocationChanged);
 			Project = null;
 
 			//            if (this.DesignMode)
@@ -44,6 +42,11 @@ namespace WeSay.ConfigTool
 			{
 				UpdateWindowCaption();
 			}
+		}
+
+		void openProjectInWeSayToolStripMenuItem_LocationChanged(object sender, EventArgs e)
+		{
+
 		}
 
 		private WeSayWordsProject Project
@@ -137,6 +140,23 @@ namespace WeSay.ConfigTool
 				return;
 			}
 			CreateAndOpenProject(dlg.PathToNewProjectDirectory);
+
+			PointOutOpenWeSayButton();
+		}
+
+		private void PointOutOpenWeSayButton()
+		{
+//            try
+//            {
+//                var effects = new BigMansStuff.LocusEffects.LocusEffectsProvider();
+//                {
+//                    effects.Initialize();
+//                    effects.ShowLocusEffect(this, RectangleToScreen(this.openProjectInWeSayToolStripMenuItem.Bounds), LocusEffectsProvider.DefaultLocusEffectArrow);
+//                }
+//            }
+//            catch (Exception e)
+//            {
+//            }
 		}
 
 		private void OnCreateProjectFromFLEx(object sender, EventArgs e)
@@ -171,6 +191,13 @@ namespace WeSay.ConfigTool
 			 {
 				 var logger = _project.Container.Resolve<ILogger>();
 				 logger.WriteConciseHistoricalEvent("Created New Project");
+
+
+				 using(var dlg = new NewProjectInformationDialog(directoryPath))
+				 {
+					 dlg.ShowDialog();
+				 }
+
 			 }
 		}
 

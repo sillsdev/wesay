@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>9.0.21022</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{9D196637-2D50-4604-A310-378083CEA809}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -178,12 +178,14 @@
 	</EmbeddedResource>
 	<EmbeddedResource Include="LexiquePro\AboutLexiquePro.resx">
 	  <DependentUpon>AboutLexiquePro.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="plift2html.xsl">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>
 	<EmbeddedResource Include="PdfDictionary\AboutPrince.resx">
 	  <DependentUpon>AboutPrince.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
