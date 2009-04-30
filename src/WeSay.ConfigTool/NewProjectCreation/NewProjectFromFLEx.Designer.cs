@@ -77,7 +77,7 @@ namespace WeSay.ConfigTool.NewProjectDialogs
 			this._browseForLiftPathButton.Location = new System.Drawing.Point(353, 49);
 			this._browseForLiftPathButton.Name = "_browseForLiftPathButton";
 			this._browseForLiftPathButton.Size = new System.Drawing.Size(27, 23);
-			this._browseForLiftPathButton.TabIndex = 8;
+			this._browseForLiftPathButton.TabIndex = 0;
 			this._browseForLiftPathButton.Text = "...";
 			this._browseForLiftPathButton.UseVisualStyleBackColor = true;
 			this._browseForLiftPathButton.Click += new System.EventHandler(this._browseForLiftPathButton_Click);
@@ -94,6 +94,7 @@ namespace WeSay.ConfigTool.NewProjectDialogs
 			//
 			// _liftPathTextBox
 			//
+			this._liftPathTextBox.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this._liftPathTextBox.Location = new System.Drawing.Point(27, 49);
 			this._liftPathTextBox.Name = "_liftPathTextBox";
 			this._liftPathTextBox.Size = new System.Drawing.Size(318, 20);

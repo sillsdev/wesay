@@ -98,6 +98,7 @@
 			this.MinimizeBox = false;
 			this.Name = "NewProjectInformationDialog";
 			this.ShowInTaskbar = false;
+			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.Text = "New Project Information";
 			this.ResumeLayout(false);
 			this.PerformLayout();

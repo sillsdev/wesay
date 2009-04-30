@@ -72,7 +72,10 @@ namespace WeSay.ConfigTool
 			}
 			else
 			{
-				openProjectInWeSayToolStripMenuItem.Enabled = (_project != null);
+				toolStrip2.Visible = (_project != null);
+
+//                _saveACopyForFLEx54ToolStripMenuItem.Enabled = (_project != null);
+//                openProjectInWeSayToolStripMenuItem.Enabled = (_project != null);
 			}
 		}
 
@@ -168,13 +171,22 @@ namespace WeSay.ConfigTool
 			}
 			if (ProjectFromFLExCreator.Create(dlg.PathToNewProjectDirectory, dlg.PathToLift))
 			{
-				OpenProject(dlg.PathToNewProjectDirectory);
+				if (OpenProject(dlg.PathToNewProjectDirectory))
+				{
+					using (var info = new NewProjectInformationDialog(dlg.PathToNewProjectDirectory))
+					{
+						info.ShowDialog();
+					}
+				}
 			}
 			if (_project != null)
 			{
 				var logger = _project.Container.Resolve<ILogger>();
 				logger.WriteConciseHistoricalEvent("Created New Project From FLEx Export");
+
 			}
+
+
 		}
 
 		public void CreateAndOpenProject(string directoryPath)
@@ -215,7 +227,7 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		public void OpenProject(string path)
+		public bool OpenProject(string path)
 		{
 			//System.Configuration.ConfigurationManager.AppSettings["LastConfigFilePath"] = path;
 
@@ -243,7 +255,7 @@ namespace WeSay.ConfigTool
 					if (!Project.LoadFromLiftLexiconPath(path))
 					{
 						Project = null;
-						return;
+						return false;
 					}
 				}
 						//                else if (path.Contains(".WeSayConfig"))
@@ -264,7 +276,7 @@ namespace WeSay.ConfigTool
 			{
 				ErrorReport.NotifyUserOfProblem("WeSay was not able to open that project. \r\n" +
 												  e.Message);
-				return;
+				return false;
 			}
 
 			IContainer container = _project.Container.CreateInnerContainer();
@@ -294,6 +306,7 @@ namespace WeSay.ConfigTool
 			{
 				Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
 			}
+			return true;
 		}
 
 
