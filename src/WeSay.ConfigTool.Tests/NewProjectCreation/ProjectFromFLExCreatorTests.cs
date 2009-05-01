@@ -53,10 +53,8 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 						<form lang='fromLU'><text></text></form>
 					</lexical-unit>
 				<sense	id='***_a86d6759-f9ea-4710-a818-2b4be9b81c98'>
-				  <gloss>
-					<form lang='fromGloss'>
+				  <gloss lang='fromGloss'>
 					  <text>meaning</text>
-					</form>
 				  </gloss>
 				  <definition>
 					<form lang='fromDef'>

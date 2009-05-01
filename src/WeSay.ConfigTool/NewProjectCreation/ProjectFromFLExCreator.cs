@@ -105,8 +105,12 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			writingSystems.Remove(WritingSystem.IdForUnknownVernacular);
 
 			AddWritingSystemsForField(doc, viewTemplate, "//lexical-unit/form/@lang", LexEntry.WellKnownProperties.LexicalUnit);
-			AddWritingSystemsForField(doc, viewTemplate, "//sense/gloss/form/@lang", LexSense.WellKnownProperties.Gloss);
+			AddWritingSystemsForField(doc, viewTemplate, "//sense/gloss/@lang", LexSense.WellKnownProperties.Gloss);
+
 			AddWritingSystemsForField(doc, viewTemplate, "//sense/definition/form/@lang", LexSense.WellKnownProperties.Definition);
+
+			AddAllGlossWritingSystemsToDefinition(viewTemplate);
+
 			AddWritingSystemsForField(doc, viewTemplate, "//example/form/@lang", LexExampleSentence.WellKnownProperties.ExampleSentence);
 			AddWritingSystemsForField(doc, viewTemplate, "//translation/form/@lang", LexExampleSentence.WellKnownProperties.Translation);
 
@@ -126,14 +130,36 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			}
 		}
 
+		/// <summary>
+		/// This is done because even if they don't use definitions, their glosses are going to be moved over the definition field.
+		/// </summary>
+		/// <param name="viewTemplate"></param>
+		private static void AddAllGlossWritingSystemsToDefinition(ViewTemplate viewTemplate)
+		{
+			var defField = viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds;
+			foreach (var id in viewTemplate.GetField(LexSense.WellKnownProperties.Gloss).WritingSystemIds)
+			{
+				if(!defField.Contains(id))
+				{
+					defField.Add(id);
+				}
+			}
+		}
+
 		private static void AddWritingSystemsForField(XmlDocument doc, ViewTemplate viewTemplate, string xpath, string fieldName)
 		{
 			var f = viewTemplate.GetField(fieldName);
-		   //first take out all the existing ones
-			f.WritingSystemIds.Clear();
 
 			//now add in what we find
-			foreach (XmlNode node in doc.SelectNodes(xpath))
+			XmlNodeList nodes = doc.SelectNodes(xpath);
+			if(nodes!=null && nodes.Count > 0)
+			{
+				//ok, so there is at least one match. Take out all of the default writing system from this
+				//field before adding in the ones that were being used in FLEx.
+				f.WritingSystemIds.Clear();
+			}
+
+			foreach (XmlNode node in nodes)
 			{
 				if (!f.WritingSystemIds.Contains(node.Value))
 				{
