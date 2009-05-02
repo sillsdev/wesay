@@ -6,6 +6,7 @@ using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using System.Linq;
+using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using WeSay.Foundation.Options;
+using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.Foundation.Tests
 {

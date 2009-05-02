@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Palaso.Reporting;
 using Palaso.Text;
 using WeSay.Foundation.Options;
+using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.Foundation
 {

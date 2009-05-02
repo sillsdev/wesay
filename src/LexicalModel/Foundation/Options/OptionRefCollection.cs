@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using WeSay.Foundation;
+using WeSay.Foundation.Options;
 
-namespace WeSay.Foundation.Options
+namespace WeSay.LexicalModel.Foundation.Options
 {
 	/// <summary>
 	/// Used to refer to this option from a field

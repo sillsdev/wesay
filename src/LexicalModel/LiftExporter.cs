@@ -10,6 +10,7 @@ using Palaso.Annotations;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel
 {

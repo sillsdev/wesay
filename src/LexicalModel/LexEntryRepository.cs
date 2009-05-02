@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Autofac;
 using Palaso.Misc;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Foundation.Options;
 using System.Linq;
+using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel
 {
@@ -39,31 +40,22 @@ namespace WeSay.LexicalModel
 		private bool _currentlySaving = false;
 
 		private readonly LiftRepository _decoratedRepository;
-		public LexEntryRepository(string path):this(path, new ProgressState())
+		public LexEntryRepository(string path):this(new LiftRepository(path, null, new ProgressState()))
 		{
 			_disposed = false;
-		}
-
-		public LexEntryRepository(string path, ProgressState progressState)
-		{
-			_decoratedRepository = new LiftRepository(path, progressState);
-			_disposed = false;
-		}
-
-		public LiftRepository.RightToAccessLiftExternally GetRightToAccessLiftExternally()
-		{
-			return _decoratedRepository.GetRightToAccessLiftExternally();
 		}
 
 		public LexEntryRepository(LiftRepository decoratedRepository)
 		{
-			if (decoratedRepository == null)
-			{
-				throw new ArgumentNullException("decoratedRepository");
-			}
-
+			Guard.AgainstNull(decoratedRepository, "decoratedRepository");
 			_decoratedRepository = decoratedRepository;
 			_disposed = false;
+		}
+
+
+		public LiftRepository.RightToAccessLiftExternally GetRightToAccessLiftExternally()
+		{
+			return _decoratedRepository.GetRightToAccessLiftExternally();
 		}
 
 		public DateTime LastModified

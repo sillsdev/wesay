@@ -358,9 +358,14 @@ namespace WeSay.Project
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 
-			builder.Register<LexEntryRepository>(
-				c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
-						progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
+			builder.Register<LiftRepository>( c => c.Resolve<IProgressNotificationProvider>().Go<LiftRepository>("Loading Dictionary",
+						progressState => new LiftRepository(_pathToLiftFile, GetSemanticDomainsList(), progressState)));
+
+			builder.Register<LexEntryRepository>();
+//            builder.Register<LexEntryRepository>(
+//                 c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
+//                         progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
+
 
 			//builder.Register<IRepository<LexEntry>>(c => c.Resolve<LexEntryRepository>());
 
@@ -423,6 +428,11 @@ namespace WeSay.Project
 
 
 			_container = builder.Build();
+		}
+
+		private OptionsList GetSemanticDomainsList()
+		{
+			return GetOptionsList(LexSense.WellKnownProperties.SemanticDomainDdp4);
 		}
 
 		public LexEntryRepository GetLexEntryRepository()

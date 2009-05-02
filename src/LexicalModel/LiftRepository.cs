@@ -11,6 +11,7 @@ using Palaso.Progress;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.LexicalModel.Migration;
 
 namespace WeSay.LexicalModel
@@ -22,10 +23,11 @@ namespace WeSay.LexicalModel
 		private FileStream _liftFileStreamForLocking;
 		private bool _loadingAllEntries;
 		private int _nextFileOrder;
+		private OptionsList _semanticDomainsList;
 
-		public LiftRepository(string filePath, ProgressState progressState)
+		public LiftRepository(string filePath, OptionsList semanticDomainsList, ProgressState progressState)
 		{
-
+			_semanticDomainsList = semanticDomainsList;
 			MaintainLockOnLift = false;
 
 			//set to true so that an exception in the constructor does not cause the destructor to throw
@@ -76,7 +78,7 @@ namespace WeSay.LexicalModel
 		}
 
 		public LiftRepository(string filePath)
-			: this(filePath, new ProgressState())
+			: this(filePath, null, new ProgressState())
 		{ }
 
 		public override LexEntry CreateItem()
@@ -159,7 +161,7 @@ namespace WeSay.LexicalModel
 			{
 				using (new RightToAccessLiftExternally(this))
 				{
-					using (LexEntryFromLiftBuilder builder = new LexEntryFromLiftBuilder(this))
+					using (LexEntryFromLiftBuilder builder = new LexEntryFromLiftBuilder(this, _semanticDomainsList))
 					{
 						LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
 							new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(

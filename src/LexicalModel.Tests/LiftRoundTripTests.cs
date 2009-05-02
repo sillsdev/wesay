@@ -31,7 +31,7 @@ namespace WeSay.LexicalModel.Tests
 			_tempFile = _tempFolder.GetTemporaryFile();
 			_exporter = new LiftExporter(_stringBuilder, false);
 			_repository = new LiftRepository(_tempFile);
-			_builder = new LexEntryFromLiftBuilder(_repository);
+			_builder = new LexEntryFromLiftBuilder(_repository, null);
 		}
 
 		[TearDown]

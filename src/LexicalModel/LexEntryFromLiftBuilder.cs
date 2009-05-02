@@ -7,6 +7,7 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using System.Linq;
+using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel
 {
@@ -36,12 +37,14 @@ namespace WeSay.LexicalModel
 		private readonly IList<String> _expectedOptionTraits;
 		private readonly IList<string> _expectedOptionCollectionTraits;
 		private readonly LiftRepository _repository;
+		private readonly OptionsList _semanticDomainsList;
 
-		public LexEntryFromLiftBuilder(LiftRepository repository)
+		public LexEntryFromLiftBuilder(LiftRepository repository, OptionsList semanticDomainsList)
 		{
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
 			_repository = repository;
+			_semanticDomainsList = semanticDomainsList;
 		}
 
 		public LexEntry GetOrMakeEntry(Extensible eInfo, int order)
@@ -398,9 +401,22 @@ namespace WeSay.LexicalModel
 					// if it is unknown assume it is a collection.
 			else //if (ExpectedOptionCollectionTraits.Contains(trait.Name))
 			{
-				OptionRefCollection c =
+				var key = trait.Value.Trim();
+				OptionRefCollection refs =
 						extensible.GetOrCreateProperty<OptionRefCollection>(trait.Name);
-				c.Add(trait.Value.Trim());
+				if(trait.Name == LexSense.WellKnownProperties.SemanticDomainDdp4)
+				{
+					if(_semanticDomainsList.GetOptionFromKey(key) == null)
+					{
+						var match =_semanticDomainsList.Options.FirstOrDefault(option => option.Key.StartsWith(key));
+						if(match !=null)
+						{
+							refs.Add(match.Key);
+							return;
+						}
+					}
+				}
+				refs.Add(key);
 			}
 			//else
 			//{

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using LiftIO;
 using LiftIO.Parsing;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests
@@ -24,7 +26,9 @@ namespace WeSay.LexicalModel.Tests
 
 			_tempFile = Path.GetTempFileName();
 			_repository = new LiftRepository(_tempFile);
-			_builder = new LexEntryFromLiftBuilder(_repository);
+			OptionsList pretendSemanticDomainList = new OptionsList();
+			pretendSemanticDomainList.Options.Add(new Option("4.2.7 Play, fun", new MultiText()));
+			_builder = new LexEntryFromLiftBuilder(_repository, pretendSemanticDomainList);
 		}
 
 		[TearDown]
@@ -33,6 +37,43 @@ namespace WeSay.LexicalModel.Tests
 			_builder.Dispose();
 			_repository.Dispose();
 			File.Delete(_tempFile);
+		}
+
+
+		/// <summary>
+		/// Test the form we get from FLEx 5.4 (it was changed in FLEx 6.0)
+		/// </summary>
+		[Test]
+		public void NewEntry_HasSemanticDomainWithTextualLabel_CorrectlyAddsSemanticDomain()
+		{
+			Extensible extensibleInfo = new Extensible();
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
+			LexSense s = _builder.GetOrMakeSense(e, new Extensible(), string.Empty);
+
+			var t = new Trait("semantic-domain-ddp4", //the name has migrated up to this already
+								"4.2.7");
+			_builder.MergeInTrait(s, t);
+			_builder.FinishEntry(e);
+			var property = e.Senses[0].GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4);
+			Assert.AreEqual("4.2.7 Play, fun", property.KeyAtIndex(0));
+		}
+
+		/// <summary>
+		/// Flex allows you to add domains. So make sure that doesn't break us.
+		/// </summary>
+		[Test]
+		public void NewEntry_HasSemanticDomainWeDontKnowAbout_AddedAnyways()
+		{
+			Extensible extensibleInfo = new Extensible();
+			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
+			LexSense s = _builder.GetOrMakeSense(e, new Extensible(), string.Empty);
+
+			var t = new Trait("semantic-domain-ddp4",
+								"9.9.9.9.9.9 Computer Gadgets" );
+			_builder.MergeInTrait(s, t);
+			_builder.FinishEntry(e);
+			var property = e.Senses[0].GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4);
+			Assert.AreEqual("9.9.9.9.9.9 Computer Gadgets", property.KeyAtIndex(0));
 		}
 
 		[Test]

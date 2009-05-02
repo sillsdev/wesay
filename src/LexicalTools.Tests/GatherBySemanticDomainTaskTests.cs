@@ -8,6 +8,7 @@ using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests

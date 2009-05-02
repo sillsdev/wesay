@@ -10,6 +10,7 @@ using Palaso.TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests

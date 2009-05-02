@@ -8,6 +8,7 @@ using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
 using System.Linq;
