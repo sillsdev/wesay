@@ -34,16 +34,16 @@ namespace WeSay.ConfigTool
 			_addinsList.RowStyles.Clear();
 			if (!AddinManager.IsInitialized)
 			{
-				AddinManager.Initialize(Application.UserAppDataPath);
-				AddinManager.Registry.Rebuild(null);
-				AddinManager.Shutdown();
-				AddinManager.Initialize(Application.UserAppDataPath);
-				//these (at least AddinLoaded) does get called after initialize, when you
-				//do a search for objects (e.g. GetExtensionObjects())
-				AddinManager.AddinLoaded += AddinManager_AddinLoaded;
-				AddinManager.AddinLoadError += AddinManager_AddinLoadError;
-				AddinManager.AddinUnloaded += AddinManager_AddinUnloaded;
-				AddinManager.ExtensionChanged += AddinManager_ExtensionChanged;
+				try
+				{
+					TryToInitializeMonoAddins();
+				}
+				catch
+				{
+					Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, something went wrong collecting up the available addins.  Please go to this folder:\r\n"+ Application.UserAppDataPath +"\r\nand delete any folders which begin with \"addin-db\", then quit this program and try again.");
+					return;
+				}
+
 			}
 
 			foreach (IWeSayAddin addin in
@@ -63,6 +63,20 @@ namespace WeSay.ConfigTool
 			//                    new ComingSomedayAddin("Send project to developers",
 			//                                           "Sends your project to WeSay for help/debugging."));
 			_addinsList.ResumeLayout();
+		}
+
+		private void TryToInitializeMonoAddins()
+		{
+			AddinManager.Initialize(Application.UserAppDataPath);
+			AddinManager.Registry.Rebuild(null);
+			AddinManager.Shutdown();
+			AddinManager.Initialize(Application.UserAppDataPath);
+			//these (at least AddinLoaded) does get called after initialize, when you
+			//do a search for objects (e.g. GetExtensionObjects())
+			AddinManager.AddinLoaded += AddinManager_AddinLoaded;
+			AddinManager.AddinLoadError += AddinManager_AddinLoadError;
+			AddinManager.AddinUnloaded += AddinManager_AddinUnloaded;
+			AddinManager.ExtensionChanged += AddinManager_ExtensionChanged;
 		}
 
 		private void AddAddin(IWeSayAddin addin)

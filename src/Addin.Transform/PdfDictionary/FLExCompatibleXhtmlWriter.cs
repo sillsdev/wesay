@@ -321,7 +321,7 @@ namespace Addin.Transform.PdfDictionary
 			if(string.IsNullOrEmpty(headword))
 				return;
 
-			char letter = headword.ToCharArray().First(Char.IsLetterOrDigit);
+			char letter = headword.ToCharArray().FirstOrDefault(Char.IsLetterOrDigit);
 			if(letter == default(char))
 				return;
 
