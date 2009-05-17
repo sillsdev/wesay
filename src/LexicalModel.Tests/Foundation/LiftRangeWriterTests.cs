@@ -104,6 +104,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test, Ignore("not yet")]
+		public void Save_OptionHasXMlDangerousContents_IsProperlyEscaped()
+		{
+		}
+
+		[Test, Ignore("not yet")]
 		public void Save_OptionListHasFLExHierarchyAttrs_HierachyAttrsSaved()
 		{
 		}
