@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -120,6 +121,20 @@ namespace WeSay.Foundation
 				writer.WriteString(form.Form);
 				writer.WriteEndElement();
 			}
+		}
+
+		public string GetXmlAsElementFormText(string elementName)
+		{
+			var b = new StringBuilder();
+			b.Append("<" + elementName + ">");
+			foreach (LanguageForm form in Forms)
+			{
+				b.AppendFormat("<form lang='{0}'><text>", form.WritingSystemId);
+				b.Append(form.Form);
+				b.Append("</text></form>");
+			}
+			b.Append("</" + elementName + ">");
+			return b.ToString();
 		}
 
 		#region IReportEmptiness Members

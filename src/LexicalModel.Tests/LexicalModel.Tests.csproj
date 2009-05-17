@@ -86,6 +86,7 @@
   <ItemGroup>
 	<Compile Include="Binding.cs" />
 	<Compile Include="Foundation\ApproximateMatcherTests.cs" />
+	<Compile Include="Foundation\LiftRangeWriterTests.cs" />
 	<Compile Include="Foundation\LiftRangeReaderTests.cs" />
 	<Compile Include="Foundation\MultiTextTests.cs" />
 	<Compile Include="Foundation\Options\OptionList.Tests.cs" />

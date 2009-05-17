@@ -35,6 +35,9 @@ namespace WeSay.LexicalModel.Foundation.Options
 				option.Name = ReadMultiText(optionNode.SelectSingleNode("label"));
 				option.Abbreviation = ReadMultiText(optionNode.SelectSingleNode("abbrev"));
 				option.Description = ReadMultiText(optionNode.SelectSingleNode("description"));
+
+				//TODO: add other, custom attributes (FLEx uses guid and parentguid)
+
 				range.Options.Add(option);
 			}
 

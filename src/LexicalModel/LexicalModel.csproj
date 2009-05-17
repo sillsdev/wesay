@@ -92,6 +92,7 @@
 	<Compile Include="Foundation\ICountGiver.cs" />
 	<Compile Include="Foundation\IDisplayStringAdaptor.cs" />
 	<Compile Include="Foundation\MultiText.cs" />
+	<Compile Include="Foundation\Options\LiftRangeWriter.cs" />
 	<Compile Include="Foundation\Options\LiftRangeReader.cs" />
 	<Compile Include="Foundation\Options\DdpListReader.cs" />
 	<Compile Include="Foundation\Options\DdpOptionDisplayAdaptor.cs" />
