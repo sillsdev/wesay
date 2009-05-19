@@ -38,12 +38,12 @@
 		<include name="WeSay.Foundation/WeSay.Foundation.proj.build" />
 		<include name="LexicalModel\LexicalModel.proj.build" />
 		<include name="WeSay.AddinLib\WeSay.AddinLib.proj.build" />
+		<include name="WeSay.UI\WeSay.UI.proj.build" />
 		<include name="WeSay.Project\WeSay.Project.proj.build" />
 		<include name="WeSay.Data.Tests\WeSay.Data.Tests.proj.build" />
 		<include name="WeSay.Foundation.Tests\WeSay.Foundation.Tests.proj.build" />
 		<include name="WeSay.Project.Tests\WeSay.Project.Tests.proj.build" />
 		<include name="LexicalModel.Tests\LexicalModel.Tests.proj.build" />
-		<include name="WeSay.UI\WeSay.UI.proj.build" />
 		<include name="CommonTools\CommonTools.proj.build" />
 		<include name="LexicalTools\LexicalTools.proj.build" />
 		<include name="LexicalTools.Tests\LexicalTools.Tests.proj.build" />
@@ -147,7 +147,7 @@
 		</foreach>
 	</target>
 
-	<target name="build" description="Build all targets." depends="clean">
+	<target name="build" description="Build all targets." depends="assemblyinfo">
 		<call target="build-only"/>
 	</target>
 
@@ -159,9 +159,8 @@
 		<nant target="build">
 			<properties>
 				<property name="build.defines" value="${build.defines}" />
+					<property name="build.debug" value="${build.debug}" />
 				<property name="build.debug" value="${build.debug}" />
-				<property name="build.debug" value="${build.debug}" />
-				<property name="project.lib.dir" value="${project.lib.dir}" />
 				<property name="project.output.dir" value="${project.output.dir}" />
 			</properties>
 			<buildfiles refid="project.buildfiles.src" />
@@ -477,33 +476,23 @@
 	</target>
 
 	<target name="copy-mono-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-		<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
-		<echo message="${project.lib.dir}" />
-		<copy todir="${project.output.dir}">
-			<fileset basedir="${project.lib.dir}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
-	</target>
-
-	<target name="copy-net-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-		<!-- review: This needs work, it's copying from the wrong folder. We should restructure the lib folder to support multiple platforms better and keep the win / mono libs separate CJP -->
-		<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
-		<echo message="${project.lib.dir}" />
-		<copy todir="${project.output.dir}">
-			<fileset basedir="${project.lib.dir}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
+			<echo message="${project.lib.base.dir} platform ${runtime.platform}" />
+		<copy todir="${project.output.dir}" flatten="true">
+					<fileset basedir="${project.lib.base.dir}">
+							<include name="mono/*" />
+							<include name="common/*" />
+					</fileset>
+			</copy>
 	</target>
 
 	<target name="copy-windows-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-		<property name="project.lib.dir" value="$project.lib.base.dir"/>
-		<copy todir="${project.output.dir}">
-			<fileset basedir="${project.lib.dir}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
+			<echo message="${project.lib.base.dir} platform ${runtime.platform}" />
+			<copy todir="${project.output.dir}" flatten="true">
+					<fileset basedir="${project.lib.base.dir}">
+							<include name="net2.0/*" />
+							<include name="common/*" />
+					</fileset>
+			</copy>
 	</target>
 
 </project>

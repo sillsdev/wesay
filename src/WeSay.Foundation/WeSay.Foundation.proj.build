@@ -4,6 +4,7 @@
 		<property name="build.namespace.dir" value="${path::combine(project.resource.dir, build.namespace)}" />
 
 		<!-- review: usesourcepath will not work as the path of the source has been changed making it invalid -->
+		<!--
 		<copy todir="${build.namespace.dir}" >
 			<fileset basedir=".">
 				<include name="**/*.resx" />
@@ -18,6 +19,7 @@
 				<include name="${build.namespace.dir}/**/*.resx" />
 			</resources>
 		</resgen>
+		-->
 
 		<csc target="library"
 			output="${project.output.dir}/WeSay.Foundation.dll"
@@ -43,9 +45,11 @@
 				<include name="ICSharpCode.SharpZipLib.dll" />
 				<include name="Autofac.dll" />
 			</references>
+			<!--
 			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
 				<include name="${build.namespace.dir}/**/*.resources" />
 			</resources>
+			-->
 		</csc>
 	</target>
 

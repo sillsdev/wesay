@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Autofac;
+using Palaso.Linq;
 using Palaso.Misc;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
-using System.Linq;
 using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel
