@@ -43,10 +43,11 @@
 				<include name="WeSay.UI.dll" />
 				<include name="nunit.framework.dll" />
 				<include name="NUnitForms.dll" />
+				<include name="Autofac.dll" />
 				<include name="System.Drawing.dll" />
 				<include name="System.Windows.Forms.dll" />
 				<include name="Palaso.dll" />
-				<include name="PalasoReporting.dll" />
+				<include name="Palaso.TestUtilities.dll" />
 			</references>
 			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
 				<include name="${build.namespace.dir}/**/*.resources" />

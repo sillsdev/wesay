@@ -21,6 +21,7 @@
 		</copy>
 
 		<!-- review: usesourcepath not reqd if resx in same folder as build file and does not refer to artwork directly -->
+		<!-- review: could replace these two with a foreach in resx (and similarly whever it occurs in the projects -->
 		<resgen todir="${build.namespace.dir}" usesourcepath="true">
 			<resources>
 				<include name="${build.namespace.dir}/*.resx" />
@@ -47,9 +48,11 @@
 				<exclude name="TaskList.Designer.cs" /> <!-- review: This should be removed if not required -->
 			</sources>
 			<references basedir="${project.output.dir}">
+				<include name="Autofac.dll" />
+				<include name="LiftIO.dll" />
 				<include name="Palaso.dll" />
-				<include name="PalasoReporting.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
+				<include name="System.Data.dll" />
 				<include name="System.Drawing.dll" />
 				<include name="System.Windows.Forms.dll" />
 				<include name="WeSay.Project.dll" />
@@ -58,6 +61,7 @@
 				<include name="WeSay.Data.dll" />
 				<include name="WeSay.AddinLib.dll" />
 				<include name="LexicalModel.dll" />
+				<include name="LexicalTools.dll" />
 				<include name="Enchant.Net.dll" />
 				<include name="Mono.Addins.exe" />
 				<include name="Chorus.exe" />

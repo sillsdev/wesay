@@ -45,6 +45,7 @@
 			</sources>
 			<references basedir="${project.output.dir}">
 				<include name="Palaso.dll" />
+				<include name="Palaso.Media.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="System.Windows.Forms.dll" />
 				<include name="System.Drawing.dll" />

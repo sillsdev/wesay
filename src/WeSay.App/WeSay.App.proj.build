@@ -54,14 +54,13 @@
 				<exclude name="SampleTaskBuilder.cs" /> <!-- review: remove from project -->
 			</sources>
 			<references basedir="${project.output.dir}">
+				<include name="Autofac.dll" />
 				<include name="CookComputing.XmlRpcV2.dll" />
 				<include name="LexicalModel.dll" />
 				<include name="LexicalTools.dll" />
 				<include name="Palaso.dll" />
-				<include name="PalasoReporting.dll" />
 				<include name="Palaso.Services.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
-				<include name="PicoContainer.dll" />
 				<include name="WeSay.Data.dll" />
 				<include name="WeSay.Foundation.dll" />
 				<include name="WeSay.Project.dll" />

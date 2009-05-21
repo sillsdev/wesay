@@ -19,6 +19,9 @@ using LiftIO;
 using LiftIO.Validation;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.IO;
+#if MONO
+using Palaso.Linq;
+#endif
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using WeSay.AddinLib;
