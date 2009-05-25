@@ -49,15 +49,15 @@
 		<include name="LexicalTools.Tests\LexicalTools.Tests.proj.build" />
 		<include name="WeSay.App\WeSay.App.proj.build" />
 		<include name="WeSay.App.Tests\WeSay.App.Tests.proj.build" />
-		<include name="Lift2WeSay\SampleDataProcessor.proj.build" />
+		<!-- <include name="Lift2WeSay\SampleDataProcessor.proj.build" /> -->
 		<include name="WeSay.ConfigTool\WeSay.ConfigTool.proj.build" />
 		<include name="WeSay.ConfigTool.Tests\WeSay.ConfigTool.Tests.proj.build" />
-		<include name="Addin.LiftReports\Addin.LiftReports.proj.build" />
+		<!-- <include name="Addin.LiftReports\Addin.LiftReports.proj.build" /> -->
+		<!-- <include name="Addin.LiftReports.Tests\Addin.LiftReports.Tests.proj.build" /> -->
 		<include name="Addin.Backup\Addin.Backup.proj.build" />
 		<include name="Addin.Transform\Addin.Transform.proj.build" />
 		<include name="WeSay.AddinLib.Tests\WeSay.AddinLib.Tests.proj.build" />
 		<include name="Addin.Transform.Tests\Addin.Transform.Tests.proj.build" />
-		<include name="Addin.LiftReports.Tests\Addin.LiftReports.Tests.proj.build" />
 		<include name="CommonTools.Tests\CommonTools.Tests.proj.build" />
 		<include name="WeSay.UI.Tests\WeSay.UI.Tests.proj.build" />
 	</fileset>
@@ -174,7 +174,7 @@
 		<call target="test-only"/>
 	</target>
 
-	 <target name="test-only">
+	 <target name="test-only" depends="set-output-dir, set-build-config, set-runtime-config">
 <!-- Run tests the first time without stopping the build under on failing tests because we want to be able to see ALL failing tests in the log.
 		The downside to this is that TeamCity will show a passing build even with failing tests-->
 
