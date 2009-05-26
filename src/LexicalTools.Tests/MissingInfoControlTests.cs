@@ -2,12 +2,14 @@ using System;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using NUnit.Framework;
+using Palaso.TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
-using Palaso.TestUtilities;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
+
+using NUnit.Framework;
 
 namespace WeSay.LexicalTools.Tests
 {

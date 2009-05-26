@@ -8,7 +8,7 @@ using WeSay.LexicalModel;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.GatherByWordList
 {
 	public partial class GatherWordListControl: UserControl
 	{

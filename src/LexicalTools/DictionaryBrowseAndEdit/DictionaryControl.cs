@@ -16,7 +16,7 @@ using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
 	public partial class DictionaryControl: UserControl
 	{

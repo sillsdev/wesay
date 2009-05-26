@@ -16,7 +16,7 @@ using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using System.Linq;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
 	public class GatherBySemanticDomainTask: WordGatheringTaskBase
 	{

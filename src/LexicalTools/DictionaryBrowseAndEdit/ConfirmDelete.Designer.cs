@@ -1,4 +1,4 @@
-﻿namespace WeSay.LexicalTools
+﻿namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
 	partial class ConfirmDelete
 	{

@@ -16,18 +16,26 @@ namespace WeSay.Project
 		public void RegisterAllTypes(Autofac.Builder.ContainerBuilder builder)
 		{
 
-			RegisterTask(builder, "Dashboard", "WeSay.LexicalTools.Dashboard.Dash", "WeSay.LexicalTools.Dashboard.DashboardConfiguration", "LexicalTools");
-			RegisterTask(builder, "Dictionary", "WeSay.LexicalTools.DictionaryBrowseAndEdit.DictionaryTask",
+			RegisterTask(builder, "Dashboard",
+						 "WeSay.LexicalTools.Dashboard.Dash",
+						 "WeSay.LexicalTools.Dashboard.DashboardConfiguration",
+						 "LexicalTools");
+			RegisterTask(builder, "Dictionary",
+						 "WeSay.LexicalTools.DictionaryBrowseAndEdit.DictionaryTask",
 						 "WeSay.LexicalTools.DictionaryBrowseAndEdit.DictionaryBrowseAndEditConfiguration",
 						 "LexicalTools");
-			RegisterTask(builder, "GatherWordsBySemanticDomains", "WeSay.LexicalTools.GatherBySemanticDomainTask",
-						 "WeSay.LexicalTools.GatherBySemanticDomainConfig", "LexicalTools");
-
-			RegisterTask(builder, "AddMissingInfo", "WeSay.LexicalTools.AddMissingInfo.MissingInfoTask",
-						 "WeSay.LexicalTools.AddMissingInfo.MissingInfoConfiguration", "LexicalTools");
-
-			RegisterTask(builder, "GatherWordList", "WeSay.LexicalTools.GatherWordListTask",
-						 "WeSay.LexicalTools.GatherByWordList.GatherWordListConfig", "LexicalTools");
+			RegisterTask(builder, "GatherWordsBySemanticDomains",
+						 "WeSay.LexicalTools.GatherBySemanticDomains.GatherBySemanticDomainTask",
+						 "WeSay.LexicalTools.GatherBySemanticDomains.GatherBySemanticDomainConfig",
+						 "LexicalTools");
+			RegisterTask(builder, "AddMissingInfo",
+						 "WeSay.LexicalTools.AddMissingInfo.MissingInfoTask",
+						 "WeSay.LexicalTools.AddMissingInfo.MissingInfoConfiguration",
+						 "LexicalTools");
+			RegisterTask(builder, "GatherWordList",
+						 "WeSay.LexicalTools.GatherByWordList.GatherWordListTask",
+						 "WeSay.LexicalTools.GatherByWordList.GatherWordListConfig",
+						 "LexicalTools");
 
 		}
 

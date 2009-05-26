@@ -11,7 +11,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.GatherByWordList
 {
 	public class GatherWordListTask: WordGatheringTaskBase
 	{

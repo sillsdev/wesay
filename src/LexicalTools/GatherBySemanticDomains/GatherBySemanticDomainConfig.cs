@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using WeSay.Project;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
 
 

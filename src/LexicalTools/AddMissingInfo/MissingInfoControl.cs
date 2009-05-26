@@ -12,7 +12,7 @@ using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.AddMissingInfo
 {
 	public partial class MissingInfoControl: UserControl
 	{
