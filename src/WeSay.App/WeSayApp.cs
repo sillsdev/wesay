@@ -53,7 +53,7 @@ namespace WeSay.App
 			}
 			OsCheck();
 			Logger.Init();
-			SetupErrorHandling();
+			// FIXME: SetupErrorHandling();
 			//problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
 
 			//bring in settings from any previous version

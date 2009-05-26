@@ -25,6 +25,11 @@
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
+	<OutputType>Library</OutputType>
+	<AssemblyName>WeSay.UI.Tests</AssemblyName>
+	<RootNamespace>WeSay.UI.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -33,6 +38,12 @@
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
+	<OutputType>Library</OutputType>
+	<AssemblyName>WeSay.UI.Tests</AssemblyName>
+	<DebugSymbols>true</DebugSymbols>
+	<RootNamespace>WeSay.UI.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -41,6 +52,13 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<OutputType>Library</OutputType>
+	<AssemblyName>WeSay.UI.Tests</AssemblyName>
+	<RootNamespace>WeSay.UI.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<Optimize>true</Optimize>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
 	<OutputPath>..\..\output\Mono Release\</OutputPath>
@@ -49,9 +67,16 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<OutputType>Library</OutputType>
+	<AssemblyName>WeSay.UI.Tests</AssemblyName>
+	<DebugSymbols>true</DebugSymbols>
+	<RootNamespace>WeSay.UI.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
 	</Reference>

@@ -23,6 +23,11 @@
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
+	<OutputType>Library</OutputType>
+	<AssemblyName>LexicalTools</AssemblyName>
+	<RootNamespace>WeSay.LexicalTools</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -31,6 +36,12 @@
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
+	<OutputType>Library</OutputType>
+	<AssemblyName>LexicalTools</AssemblyName>
+	<DebugSymbols>true</DebugSymbols>
+	<RootNamespace>WeSay.LexicalTools</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -39,6 +50,13 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<OutputType>Library</OutputType>
+	<AssemblyName>LexicalTools</AssemblyName>
+	<RootNamespace>WeSay.LexicalTools</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<Optimize>true</Optimize>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
 	<OutputPath>..\..\output\Mono Release\</OutputPath>
@@ -47,6 +65,13 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<OutputType>Library</OutputType>
+	<AssemblyName>LexicalTools</AssemblyName>
+	<DebugSymbols>true</DebugSymbols>
+	<RootNamespace>WeSay.LexicalTools</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
 	<Reference Include="Autofac, Version=1.3.2.449, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -61,7 +86,7 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LinqBridge.dll</HintPath>
 	</Reference>
-	<Reference Include="Mono.Addins, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
 	  <SpecificVersion>False</SpecificVersion>
 	  <ExecutableExtension>.exe</ExecutableExtension>
 	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
@@ -274,10 +299,6 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DictionaryControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="GatherBySemanticDomains\GatherBySemanticDomainsControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>
-	</EmbeddedResource>
 	<EmbeddedResource Include="GatherByWordList\GatherWordListControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
@@ -294,6 +315,9 @@
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
+	<EmbeddedResource Include="DictionaryBrowseAndEdit\GatherBySemanticDomainsControl.resx">
+	  <DependentUpon>..\GatherBySemanticDomains\GatherBySemanticDomainsControl.cs</DependentUpon>
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

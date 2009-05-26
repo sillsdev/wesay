@@ -2,14 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using NUnit.Framework;
 using Palaso.Reporting;
+using Palaso.TestUtilities;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation.Options;
+using WeSay.LexicalTools.GatherBySemanticDomains;
 using WeSay.Project;
+
+using NUnit.Framework;
 
 namespace WeSay.LexicalTools.Tests
 {

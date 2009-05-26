@@ -1,5 +1,5 @@
 ﻿using System;
-using WeSay.LexicalTools;
+using WeSay.LexicalTools.GatherBySemanticDomains;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tasks
