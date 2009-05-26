@@ -238,6 +238,7 @@
 				<include name="src/**/*.xsl" />
 				<include name="src/**/*.htm" />
 				<include name="lib/mono/**" />
+				<include name="lib/common/**" />
 				<include name="artwork/**" />
 				<include name="bld/*" />
 				<include name="common/**" />
