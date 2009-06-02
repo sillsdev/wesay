@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using Autofac;
-using Palaso.Linq;
 using Palaso.Misc;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
+#if MONO
+using Palaso.Linq;
+#else
 using Enumerable=System.Linq.Enumerable;
+#endif
 
 namespace WeSay.LexicalModel
 {
