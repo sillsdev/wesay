@@ -27,7 +27,7 @@
 	<AssemblyName>LexicalModel</AssemblyName>
 	<RootNamespace>WeSay.LexicalModel</RootNamespace>
 	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -41,7 +41,7 @@
 	<DebugSymbols>true</DebugSymbols>
 	<RootNamespace>WeSay.LexicalModel</RootNamespace>
 	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -55,7 +55,7 @@
 	<RootNamespace>WeSay.LexicalModel</RootNamespace>
 	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
@@ -70,7 +70,7 @@
 	<DebugSymbols>true</DebugSymbols>
 	<RootNamespace>WeSay.LexicalModel</RootNamespace>
 	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
