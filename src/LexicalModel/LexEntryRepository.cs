@@ -11,6 +11,7 @@ using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
+using Enumerable=System.Linq.Enumerable;
 
 namespace WeSay.LexicalModel
 {
@@ -916,7 +917,7 @@ namespace WeSay.LexicalModel
 			else
 			{
 				string wsTag="";
-				ids.ForEach(id => wsTag += id);
+				Enumerable.ForEach(ids, id => wsTag += id);
 				return wsTag;
 			}
 		}

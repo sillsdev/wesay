@@ -76,24 +76,24 @@
   <ItemGroup>
 	<Reference Include="Commons, Version=0.4.2.8580, Culture=neutral, PublicKeyToken=44382d1b57473eda">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Commons.dll</HintPath>
+	  <HintPath>..\..\lib\common\Commons.dll</HintPath>
 	</Reference>
 	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
+	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
 	</Reference>
 	<Reference Include="NVelocity, Version=0.4.2.8580, Culture=neutral, PublicKeyToken=44382d1b57473eda">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\NVelocity.dll</HintPath>
+	  <HintPath>..\..\lib\common\NVelocity.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />

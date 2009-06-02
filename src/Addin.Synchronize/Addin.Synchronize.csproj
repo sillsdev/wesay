@@ -30,7 +30,7 @@
   <ItemGroup>
 	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
+	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />

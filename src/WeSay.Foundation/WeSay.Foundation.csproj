@@ -85,15 +85,15 @@
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-	<Content Include="..\..\lib\icudt40.dll">
+	<Content Include="..\..\lib\net2.0\icudt40.dll">
 	  <Link>icudt40.dll</Link>
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
-	<Content Include="..\..\lib\icuin40.dll">
+	<Content Include="..\..\lib\net2.0\icuin40.dll">
 	  <Link>icuin40.dll</Link>
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
-	<Content Include="..\..\lib\icuuc40.dll">
+	<Content Include="..\..\lib\net2.0\icuuc40.dll">
 	  <Link>icuuc40.dll</Link>
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
