@@ -34,12 +34,11 @@
 	  </sources>
 	  <references basedir="${project.output.dir}">
 		<include name="Palaso.dll" />
-		<include name="PalasoReporting.dll" />
+		<include name="Palaso.TestUtilities.dll" />
 		<include name="WeSay.Project.dll" />
 		<include name="WeSay.ConfigTool.exe" />
 		<include name="LexicalModel.dll" />
 		<include name="WeSay.Foundation.dll" />
-		<include name="WeSay.Foundation.Tests.dll" />
 		<include name="System.Windows.Forms.dll" />
 		<include name="nunit.framework.dll" />
 		<include name="NUnitForms.dll" />

@@ -1,5 +1,8 @@
+using System;
+
 namespace WeSay.Foundation.Options
 {
+	[CLSCompliant (false)]
 	public class DdpOptionDisplayAdaptor : OptionDisplayAdaptor
 	{
 		public DdpOptionDisplayAdaptor(OptionsList allOptions, string preferredWritingSystemId)

@@ -23,6 +23,11 @@
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
+	<OutputType>Library</OutputType>
+	<AssemblyName>WeSay.App.Tests</AssemblyName>
+	<RootNamespace>WeSay.App.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -31,6 +36,12 @@
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
+	<OutputType>Library</OutputType>
+	<AssemblyName>WeSay.App.Tests</AssemblyName>
+	<DebugSymbols>true</DebugSymbols>
+	<RootNamespace>WeSay.App.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -39,6 +50,13 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<OutputType>Library</OutputType>
+	<AssemblyName>WeSay.App.Tests</AssemblyName>
+	<RootNamespace>WeSay.App.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<Optimize>true</Optimize>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
 	<OutputPath>..\..\output\Mono Release\</OutputPath>
@@ -47,39 +65,42 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<OutputType>Library</OutputType>
+	<AssemblyName>WeSay.App.Tests</AssemblyName>
+	<DebugSymbols>true</DebugSymbols>
+	<RootNamespace>WeSay.App.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
 	<Reference Include="Autofac, Version=1.3.2.449, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Autofac.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Autofac.dll</HintPath>
 	</Reference>
 	<Reference Include="CookComputing.XmlRpcV2, Version=2.2.0.4, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\CookComputing.XmlRpcV2.dll</HintPath>
-	</Reference>
-	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
+	  <HintPath>..\..\lib\common\CookComputing.XmlRpcV2.dll</HintPath>
 	</Reference>
 	<Reference Include="LiftIO, Version=0.1.0.32, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
 	</Reference>
-	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
+	  <HintPath>..\..\lib\common\nunit.framework.dll</HintPath>
 	</Reference>
 	<Reference Include="NUnitForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\NUnitForms.dll</HintPath>
+	  <HintPath>..\..\lib\common\NUnitForms.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Palaso.Services.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Palaso.Services.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />

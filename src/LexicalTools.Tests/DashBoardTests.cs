@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using NUnit.Framework;
 using Palaso.TestUtilities;
 using WeSay.Foundation;
-using Palaso.TestUtilities;
 using WeSay.LexicalTools.Dashboard;
+
+using NUnit.Framework;
 
 namespace WeSay.LexicalModel.Tests
 {

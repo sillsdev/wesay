@@ -11,8 +11,11 @@ using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.Project;
-using WeSay.Project.Tests;
+using WeSay.Project.Tests; // review: really?
 using System.Linq;
+#if MONO
+using Palaso.Linq;
+#endif
 
 namespace Addin.Transform.Tests
 {

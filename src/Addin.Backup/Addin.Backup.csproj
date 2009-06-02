@@ -23,6 +23,11 @@
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
+	<OutputType>Library</OutputType>
+	<AssemblyName>Addin.Backup</AssemblyName>
+	<RootNamespace>Addin.Backup</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -31,6 +36,12 @@
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
+	<OutputType>Library</OutputType>
+	<AssemblyName>Addin.Backup</AssemblyName>
+	<DebugSymbols>true</DebugSymbols>
+	<RootNamespace>Addin.Backup</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -39,6 +50,13 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<OutputType>Library</OutputType>
+	<AssemblyName>Addin.Backup</AssemblyName>
+	<RootNamespace>Addin.Backup</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<Optimize>true</Optimize>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
 	<OutputPath>..\..\output\Mono Release\</OutputPath>
@@ -47,23 +65,30 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<OutputType>Library</OutputType>
+	<AssemblyName>Addin.Backup</AssemblyName>
+	<DebugSymbols>true</DebugSymbols>
+	<RootNamespace>Addin.Backup</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
 	<Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+	  <HintPath>..\..\lib\common\ICSharpCode.SharpZipLib.dll</HintPath>
 	</Reference>
 	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
+	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />

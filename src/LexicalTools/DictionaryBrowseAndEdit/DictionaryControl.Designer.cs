@@ -2,7 +2,7 @@ using System.Windows.Forms;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
 	partial class DictionaryControl
 	{

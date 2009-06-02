@@ -38,14 +38,15 @@
 				<exclude name="SemanticDomainQuery.cs" /> <!-- review: remove from project -->
 			</sources>
 			<references basedir="${project.output.dir}">
-				<include name="Db4objects.Db4o.dll" />
+				<include name="Autofac.dll" />
+				<include name="Enchant.Net.dll" />
 				<include name="LiftIO.dll" />
 				<include name="NetReflector.dll" />
 				<include name="Palaso.dll" />
-				<include name="PalasoReporting.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="WeSay.Data.dll" />
 				<include name="WeSay.Foundation.dll" />
+				<include name="System.Drawing.dll" />
 				<include name="System.Windows.Forms.dll" />
 			</references>
 			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">

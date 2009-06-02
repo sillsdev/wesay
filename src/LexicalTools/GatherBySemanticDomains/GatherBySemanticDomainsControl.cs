@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using WeSay.Foundation;
 using WeSay.UI;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
 	public partial class GatherBySemanticDomainsControl: UserControl
 	{

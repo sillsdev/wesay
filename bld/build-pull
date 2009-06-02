@@ -1,4 +1,5 @@
-#!/bin/sh
+hg purge
 hg pull
-hg update default
-nant $@
+hg update -C $1
+shift
+$@
