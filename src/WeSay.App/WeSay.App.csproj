@@ -6,6 +6,14 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<OutputType>WinExe</OutputType>
+	<AssemblyName>WeSay.App</AssemblyName>
+	<DebugSymbols>true</DebugSymbols>
+	<RootNamespace>WeSay.App</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<WarningLevel>4</WarningLevel>
+	<ApplicationIcon>..\..\artwork\WeSay.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -35,6 +43,12 @@
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
+	<OutputType>WinExe</OutputType>
+	<AssemblyName>WeSay.App</AssemblyName>
+	<RootNamespace>WeSay.App</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<ApplicationIcon>..\..\artwork\WeSay.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -43,6 +57,13 @@
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
+	<OutputType>WinExe</OutputType>
+	<AssemblyName>WeSay.App</AssemblyName>
+	<DebugSymbols>true</DebugSymbols>
+	<RootNamespace>WeSay.App</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<ApplicationIcon>..\..\artwork\WeSay.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -51,6 +72,14 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<OutputType>WinExe</OutputType>
+	<AssemblyName>WeSay.App</AssemblyName>
+	<RootNamespace>WeSay.App</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<Optimize>true</Optimize>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<WarningLevel>4</WarningLevel>
+	<ApplicationIcon>..\..\artwork\WeSay.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
 	<Reference Include="Autofac, Version=1.3.2.449, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -81,12 +110,12 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
-	<Reference Include="PicoContainer, Version=1.0.2412.18537, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="PicoContainer, Version=1.0.2412.18537, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\PicoContainer\PicoContainer.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
-	<Reference Include="System.configuration" />
+	<Reference Include="System.Configuration" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />

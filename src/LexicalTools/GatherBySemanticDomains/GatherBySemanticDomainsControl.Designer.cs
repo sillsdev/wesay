@@ -3,7 +3,7 @@ using WeSay.UI;
 using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
 	partial class GatherBySemanticDomainsControl
 	{

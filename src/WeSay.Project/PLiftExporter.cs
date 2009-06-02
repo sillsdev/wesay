@@ -6,6 +6,9 @@ using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using System.Linq;
+#if MONO
+using Palaso.Linq;
+#endif
 
 namespace WeSay.Project
 {

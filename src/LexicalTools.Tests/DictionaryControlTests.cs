@@ -4,8 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms;
-using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -15,6 +13,9 @@ using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
+
+using NUnit.Framework;
+using NUnit.Extensions.Forms;
 
 namespace WeSay.LexicalTools.Tests
 {

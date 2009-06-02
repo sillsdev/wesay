@@ -20,17 +20,29 @@
 			</fileset>
 		</copy>
 
-		<resgen todir="${build.namespace.dir}" usesourcepath="true">
-			<resources>
-				<include name="${build.namespace.dir}/*.resx" />
-			</resources>
-		</resgen>
+		<foreach item="Folder" property="build.namespace.dir.current">
+			<in>
+				<items>
+					<include name="${build.namespace.dir}/**" />
+					<exclude name="${build.namespace.dir}/Resources" />
+				</items>
+			</in>
+			<do>
+				<echo message="Resource compiling ${build.namespace.dir.current}" />
+				<resgen todir="${build.namespace.dir.current}" usesourcepath="true">
+					<resources>
+						<include name="${build.namespace.dir.current}/*.resx" />
+					</resources>
+				</resgen>
+			</do>
+		</foreach>
+<!--
 		<resgen todir="${build.namespace.dir}/Properties" usesourcepath="true">
 			<resources>
 				<include name="${build.namespace.dir}/Properties/*.resx" />
 			</resources>
 		</resgen>
-
+-->
 		<csc target="library"
 			output="${project.output.dir}/LexicalTools.dll"
 			doc="${project.output.dir}/doc/LexicalTools.xml"
@@ -46,13 +58,14 @@
 			</sources>
 			<references basedir="${project.output.dir}">
 				<include name="LexicalModel.dll" />
+				<include name="WeSay.AddinLib.dll" />
 				<include name="WeSay.Project.dll" />
 				<include name="WeSay.Data.dll" />
 				<include name="WeSay.Foundation.dll" />
 				<include name="WeSay.UI.dll" />
 				<include name="Palaso.dll" />
-				<include name="PalasoReporting.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
+				<include name="Autofac.dll" />
 				<include name="System.Windows.Forms.dll" />
 				<include name="System.Drawing.dll" />
 				<include name="System.Data.dll" />

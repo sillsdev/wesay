@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
-using WeSay.Foundation.Tests;
+//using WeSay.Foundation.Tests;
 using Palaso.TestUtilities;
 
 namespace WeSay.ConfigTool.Tests

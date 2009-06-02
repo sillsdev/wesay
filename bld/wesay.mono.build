@@ -38,26 +38,26 @@
 		<include name="WeSay.Foundation/WeSay.Foundation.proj.build" />
 		<include name="LexicalModel\LexicalModel.proj.build" />
 		<include name="WeSay.AddinLib\WeSay.AddinLib.proj.build" />
+		<include name="WeSay.UI\WeSay.UI.proj.build" />
 		<include name="WeSay.Project\WeSay.Project.proj.build" />
 		<include name="WeSay.Data.Tests\WeSay.Data.Tests.proj.build" />
 		<include name="WeSay.Foundation.Tests\WeSay.Foundation.Tests.proj.build" />
 		<include name="WeSay.Project.Tests\WeSay.Project.Tests.proj.build" />
 		<include name="LexicalModel.Tests\LexicalModel.Tests.proj.build" />
-		<include name="WeSay.UI\WeSay.UI.proj.build" />
 		<include name="CommonTools\CommonTools.proj.build" />
 		<include name="LexicalTools\LexicalTools.proj.build" />
 		<include name="LexicalTools.Tests\LexicalTools.Tests.proj.build" />
 		<include name="WeSay.App\WeSay.App.proj.build" />
 		<include name="WeSay.App.Tests\WeSay.App.Tests.proj.build" />
-		<include name="Lift2WeSay\SampleDataProcessor.proj.build" />
+		<!-- <include name="Lift2WeSay\SampleDataProcessor.proj.build" /> -->
 		<include name="WeSay.ConfigTool\WeSay.ConfigTool.proj.build" />
 		<include name="WeSay.ConfigTool.Tests\WeSay.ConfigTool.Tests.proj.build" />
-		<include name="Addin.LiftReports\Addin.LiftReports.proj.build" />
+		<!-- <include name="Addin.LiftReports\Addin.LiftReports.proj.build" /> -->
+		<!-- <include name="Addin.LiftReports.Tests\Addin.LiftReports.Tests.proj.build" /> -->
 		<include name="Addin.Backup\Addin.Backup.proj.build" />
 		<include name="Addin.Transform\Addin.Transform.proj.build" />
 		<include name="WeSay.AddinLib.Tests\WeSay.AddinLib.Tests.proj.build" />
 		<include name="Addin.Transform.Tests\Addin.Transform.Tests.proj.build" />
-		<include name="Addin.LiftReports.Tests\Addin.LiftReports.Tests.proj.build" />
 		<include name="CommonTools.Tests\CommonTools.Tests.proj.build" />
 		<include name="WeSay.UI.Tests\WeSay.UI.Tests.proj.build" />
 	</fileset>
@@ -147,7 +147,7 @@
 		</foreach>
 	</target>
 
-	<target name="build" description="Build all targets." depends="clean">
+	<target name="build" description="Build all targets." depends="assemblyinfo">
 		<call target="build-only"/>
 	</target>
 
@@ -159,9 +159,8 @@
 		<nant target="build">
 			<properties>
 				<property name="build.defines" value="${build.defines}" />
+					<property name="build.debug" value="${build.debug}" />
 				<property name="build.debug" value="${build.debug}" />
-				<property name="build.debug" value="${build.debug}" />
-				<property name="project.lib.dir" value="${project.lib.dir}" />
 				<property name="project.output.dir" value="${project.output.dir}" />
 			</properties>
 			<buildfiles refid="project.buildfiles.src" />
@@ -175,7 +174,7 @@
 		<call target="test-only"/>
 	</target>
 
-	 <target name="test-only">
+	 <target name="test-only" depends="set-output-dir, set-build-config, set-runtime-config">
 <!-- Run tests the first time without stopping the build under on failing tests because we want to be able to see ALL failing tests in the log.
 		The downside to this is that TeamCity will show a passing build even with failing tests-->
 
@@ -239,6 +238,7 @@
 				<include name="src/**/*.xsl" />
 				<include name="src/**/*.htm" />
 				<include name="lib/mono/**" />
+				<include name="lib/common/**" />
 				<include name="artwork/**" />
 				<include name="bld/*" />
 				<include name="common/**" />
@@ -477,33 +477,23 @@
 	</target>
 
 	<target name="copy-mono-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-		<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
-		<echo message="${project.lib.dir}" />
-		<copy todir="${project.output.dir}">
-			<fileset basedir="${project.lib.dir}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
-	</target>
-
-	<target name="copy-net-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-		<!-- review: This needs work, it's copying from the wrong folder. We should restructure the lib folder to support multiple platforms better and keep the win / mono libs separate CJP -->
-		<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
-		<echo message="${project.lib.dir}" />
-		<copy todir="${project.output.dir}">
-			<fileset basedir="${project.lib.dir}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
+			<echo message="${project.lib.base.dir} platform ${runtime.platform}" />
+		<copy todir="${project.output.dir}" flatten="true">
+					<fileset basedir="${project.lib.base.dir}">
+							<include name="mono/*" />
+							<include name="common/*" />
+					</fileset>
+			</copy>
 	</target>
 
 	<target name="copy-windows-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-		<property name="project.lib.dir" value="$project.lib.base.dir"/>
-		<copy todir="${project.output.dir}">
-			<fileset basedir="${project.lib.dir}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
+			<echo message="${project.lib.base.dir} platform ${runtime.platform}" />
+			<copy todir="${project.output.dir}" flatten="true">
+					<fileset basedir="${project.lib.base.dir}">
+							<include name="net2.0/*" />
+							<include name="common/*" />
+					</fileset>
+			</copy>
 	</target>
 
 </project>

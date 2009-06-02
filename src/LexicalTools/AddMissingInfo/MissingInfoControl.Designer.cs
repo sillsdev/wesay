@@ -2,7 +2,7 @@ using System.Windows.Forms;
 using WeSay.UI;
 using WeSay.UI.Buttons;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.AddMissingInfo
 {
 	partial class MissingInfoControl
 	{

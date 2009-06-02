@@ -13,30 +13,29 @@
 			</filterchain>
 		</copy>
 
-		<!--
-		<copy todir="${build.namespace.dir}" >
-			<fileset basedir=".">
-				<include name="**/*.xsl" />
-			</fileset>
-		</copy>
-		-->
-
+		<!-- Review: What is this doing here!!! -->
 		<copy todir="${build.namespace.dir}" >
 			<fileset basedir=".">
 				<include name="${project.base.dir}/src/Addin.Transform/plift2html.xsl" />
 			</fileset>
 		</copy>
 
-		<resgen todir="${build.namespace.dir}" usesourcepath="true">
-			<resources>
-				<include name="${build.namespace.dir}/*.resx" />
-			</resources>
-		</resgen>
-		<resgen todir="${build.namespace.dir}/Properties" usesourcepath="true">
-			<resources>
-				<include name="${build.namespace.dir}/Properties/*.resx" />
-			</resources>
-		</resgen>
+				<foreach item="Folder" property="build.namespace.dir.current">
+						<in>
+								<items>
+										<include name="${build.namespace.dir}/**" />
+										<exclude name="${build.namespace.dir}/Resources" />
+								</items>
+						</in>
+						<do>
+								<echo message="Resource compiling ${build.namespace.dir.current}" />
+								<resgen todir="${build.namespace.dir.current}" usesourcepath="true">
+										<resources>
+												<include name="${build.namespace.dir.current}/*.resx" />
+										</resources>
+								</resgen>
+						</do>
+				</foreach>
 
 		<csc target="winexe"
 			output="${project.output.dir}/WeSay.App.exe"
@@ -54,14 +53,13 @@
 				<exclude name="SampleTaskBuilder.cs" /> <!-- review: remove from project -->
 			</sources>
 			<references basedir="${project.output.dir}">
+				<include name="Autofac.dll" />
 				<include name="CookComputing.XmlRpcV2.dll" />
 				<include name="LexicalModel.dll" />
 				<include name="LexicalTools.dll" />
 				<include name="Palaso.dll" />
-				<include name="PalasoReporting.dll" />
 				<include name="Palaso.Services.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
-				<include name="PicoContainer.dll" />
 				<include name="WeSay.Data.dll" />
 				<include name="WeSay.Foundation.dll" />
 				<include name="WeSay.Project.dll" />

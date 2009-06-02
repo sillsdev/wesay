@@ -39,10 +39,10 @@
 			</sources>
 			<references basedir="${project.output.dir}">
 				<include name="Palaso.dll" />
+				<include name="System.Data.dll" />
 				<include name="System.Drawing.dll" />
 				<include name="Mono.Addins.exe" />
 				<include name="System.Windows.Forms.dll" />
-				<include name="PalasoReporting.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="WeSay.AddinLib.dll" />
 				<include name="WeSay.Foundation.dll" />
