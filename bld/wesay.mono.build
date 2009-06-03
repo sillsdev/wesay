@@ -264,7 +264,7 @@
 	</target>
 
 	<target name="package" depends="dist package_clean">
-		<exec program="build" basedir="${project.base.dir}/debian-src" workingdir="${project.base.dir}">
+		<exec program="sh" commandline="debian-src/build" basedir="${project.base.dir}/debian-src" workingdir="${project.base.dir}">
 		</exec>
 	</target>
 
