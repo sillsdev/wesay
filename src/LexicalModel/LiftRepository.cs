@@ -175,11 +175,15 @@ namespace WeSay.LexicalModel
 						try
 						{
 							parser.ReadLiftFile(_liftFilePath);
+							if (_progressState.ExceptionThatWasEncountered != null)
+							{
+								throw _progressState.ExceptionThatWasEncountered;
+							}
 						}
-						catch (LiftFormatException)
-						{
-							throw;
-						}
+//                        catch (LiftFormatException)
+//                        {
+//                            throw;
+//                        }
 						catch (Exception)
 						{
 							//our parser failed.  Hopefully, because of bad lift. Validate it now  to

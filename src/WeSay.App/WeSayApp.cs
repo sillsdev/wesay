@@ -35,6 +35,8 @@ namespace WeSay.App
 		{
 			WeSayApp app = new WeSayApp(args);
 			app.Run();
+			Logger.WriteEvent("testing");
+			throw new ApplicationException("test");
 		}
 
 		public WeSayApp(string[] args)

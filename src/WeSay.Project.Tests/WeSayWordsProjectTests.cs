@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using LiftIO;
 using NUnit.Framework;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
@@ -387,6 +388,44 @@ namespace WeSay.Project.Tests
 					System.Environment.CurrentDirectory = oldWorkingDir;
 				}
 
+			}
+		}
+
+		/// <summary>
+		/// regression from WS-1395
+		/// </summary>
+		[Test]
+		public void GetLexEntryRepository_LiftIsBad_NotfiesUser()
+		{
+			//here the lang attribute is missing (as it was from a user's lexique pro output)
+
+			using (var projectDir =
+				new WeSay.Project.Tests.ProjectDirectorySetupForTesting(
+					@"
+				<entry id='x'>
+					<lexical-unit>
+					  <form>
+						<text>test</text>
+					  </form>
+					</lexical-unit>
+				</entry>"))
+			{
+
+				var project = projectDir.CreateLoadedProject();
+				var gotException = false;
+				//we actually get a dialog box *and* and exception (the later, rather than, say, null, because AutoFac doesn't let use return null)
+				using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+				{
+					try
+					{
+						project.GetLexEntryRepository();
+					}
+					catch(LiftFormatException)
+					{
+						 gotException = true;
+					}
+				}
+				Assert.IsTrue(gotException);
 			}
 		}
 	}
