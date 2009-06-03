@@ -1,5 +1,6 @@
-hg purge
+hg purge --all
+hg revert --all -X lib
 hg pull
-hg update -C $1
+hg update $1
 shift
 $@
