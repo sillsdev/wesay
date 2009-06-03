@@ -33,6 +33,6 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 
-[assembly: AssemblyVersion("0.5.1945")]
-[assembly: AssemblyFileVersion("0.5.1945")]
+[assembly: AssemblyVersion("0.5.1969")]
+[assembly: AssemblyFileVersion("0.5.1969")]
 [assembly: InternalsVisibleTo("WeSay.ConfigTool.Tests")]
