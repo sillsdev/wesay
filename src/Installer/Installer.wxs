@@ -27,10 +27,12 @@ users to install just the shortcut for your app, then demand-install the
 rest of the app the first time the icon is run.  If this is not behavior you
 are trying to support, you're better off using non-advertised shortcuts. "-->
 
-		  <PropertyRef Id="NETFRAMEWORK20"/>
-		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 2.0. A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites">
-			  Installed OR NETFRAMEWORK20
-			</Condition>
+		  <PropertyRef Id="NETFRAMEWORK20_SP_LEVEL"/>
+
+		  <!-- see http://blogs.msdn.com/astebner/archive/2008/11/11/9061169.aspx for description of the following-->
+		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 2.0 SP1, or any later version (e.g. 3.5). A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites">
+			Installed OR NETFRAMEWORK20_SP_LEVEL
+		  </Condition>
 
 			<!--because of bug, this needs to be 1 -->
 			<Property Id ="ALLUSERS">1</Property>
