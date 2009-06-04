@@ -42,7 +42,7 @@ namespace WeSay.UI
 			//
 			this._pictureBox.Location = new System.Drawing.Point(0, 0);
 			this._pictureBox.Name = "_pictureBox";
-			this._pictureBox.Size = new System.Drawing.Size(97, 82);
+			this._pictureBox.Size = new System.Drawing.Size(174, 143);
 			this._pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this._pictureBox.TabIndex = 0;
 			this._pictureBox.TabStop = false;
@@ -50,7 +50,7 @@ namespace WeSay.UI
 			// _chooseImageLink
 			//
 			this._chooseImageLink.AutoSize = true;
-			this._chooseImageLink.Location = new System.Drawing.Point(258, 0);
+			this._chooseImageLink.Location = new System.Drawing.Point(287, 0);
 			this._chooseImageLink.Name = "_chooseImageLink";
 			this._chooseImageLink.Size = new System.Drawing.Size(103, 13);
 			this._chooseImageLink.TabIndex = 1;
@@ -73,7 +73,7 @@ namespace WeSay.UI
 			// _removeImageLink
 			//
 			this._removeImageLink.AutoSize = true;
-			this._removeImageLink.Location = new System.Drawing.Point(114, 0);
+			this._removeImageLink.Location = new System.Drawing.Point(180, 28);
 			this._removeImageLink.Name = "_removeImageLink";
 			this._removeImageLink.Size = new System.Drawing.Size(88, 13);
 			this._removeImageLink.TabIndex = 1;
@@ -86,7 +86,7 @@ namespace WeSay.UI
 			// _searchGalleryLink
 			//
 			this._searchGalleryLink.AutoSize = true;
-			this._searchGalleryLink.Location = new System.Drawing.Point(103, 0);
+			this._searchGalleryLink.Location = new System.Drawing.Point(180, 0);
 			this._searchGalleryLink.Name = "_searchGalleryLink";
 			this._searchGalleryLink.Size = new System.Drawing.Size(85, 13);
 			this._searchGalleryLink.TabIndex = 1;
@@ -106,7 +106,7 @@ namespace WeSay.UI
 			this.Controls.Add(this._chooseImageLink);
 			this.Controls.Add(this._pictureBox);
 			this.Name = "PictureControl";
-			this.Size = new System.Drawing.Size(355, 94);
+			this.Size = new System.Drawing.Size(393, 153);
 			this.Load += new System.EventHandler(this.ImageDisplayWidget_Load);
 			this.MouseLeave += new System.EventHandler(this.ImageDisplayWidget_MouseLeave);
 			this.MouseHover += new System.EventHandler(this.ImageDisplayWidget_MouseHover);

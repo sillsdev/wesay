@@ -423,7 +423,7 @@ namespace WeSay.Project
 			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
 
 
-			builder.Register<PictureControl>(c=> new PictureControl(PathToPictures, GetFileLocator())).FactoryScoped();
+			builder.Register<PictureControl>(c=> new PictureControl(Path.GetDirectoryName(PathToLiftFile), PathToPictures, GetFileLocator())).FactoryScoped();
 
 		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
 

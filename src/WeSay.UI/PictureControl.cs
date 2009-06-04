@@ -15,14 +15,16 @@ namespace WeSay.UI
 		public event EventHandler ValueChanged;
 		public event EventHandler GoingAway;
 
-		private string _fileName;
+		private string _relativePathToImage;
+		private readonly string _pathToReferingFile;
 		private readonly string _storageFolderPath;
 		private readonly IFileLocator _fileLocator;
 		private readonly Color _shyLinkColor = Color.LightGray;
 
-		public PictureControl(string storageFolderPath, IFileLocator fileLocator)
+		public PictureControl(string pathToReferingFile, string storageFolderPath, IFileLocator fileLocator)
 		{
 			InitializeComponent();
+			_pathToReferingFile = pathToReferingFile;
 			_storageFolderPath = storageFolderPath;
 			_fileLocator = fileLocator;
 			if (!Directory.Exists(storageFolderPath))
@@ -32,13 +34,10 @@ namespace WeSay.UI
 		}
 		public ISearchTermProvider SearchTermProvider { get; set; }
 
-		/// <summary>
-		/// The name of the file which must be in the StorageFolder
-		/// </summary>
-		public string FileName
+		public string RelativePathToImage
 		{
-			get { return _fileName; }
-			set { _fileName = value; }
+			get { return _relativePathToImage; }
+			set { _relativePathToImage = value; }
 		}
 
 		private void UpdateDisplay()
@@ -46,7 +45,7 @@ namespace WeSay.UI
 			toolTip1.SetToolTip(this, "");
 			toolTip1.SetToolTip(_problemLabel, "");
 
-			if (string.IsNullOrEmpty(_fileName))
+			if (string.IsNullOrEmpty(_relativePathToImage))
 			{
 				_searchGalleryLink.Visible = GalleryIsAvailable;
 				_chooseImageLink.Visible = true;
@@ -57,7 +56,7 @@ namespace WeSay.UI
 			else if (!File.Exists(GetPathToImage()))
 			{
 				_pictureBox.Visible = false;
-				_problemLabel.Text = _fileName;
+				_problemLabel.Text = _relativePathToImage;
 				string s = String.Format("~Cannot find {0}", GetPathToImage());
 				toolTip1.SetToolTip(this, s);
 				toolTip1.SetToolTip(_problemLabel, s);
@@ -122,17 +121,19 @@ namespace WeSay.UI
 			}
 		}
 
-		private void PictureChosen(string path)
+		private void PictureChosen(string fromPath)
 		{
 			try
 			{
-				_fileName = Path.GetFileName(path);
-
 				if (File.Exists(GetPathToImage()))
 				{
 					File.Delete(GetPathToImage());
 				}
-				File.Copy(path, GetPathToImage());
+				var fullDestPath = Path.Combine(_storageFolderPath, Path.GetFileName(fromPath));
+				_relativePathToImage = fullDestPath.Replace(_pathToReferingFile, "");
+				_relativePathToImage = _relativePathToImage.Trim(Path.DirectorySeparatorChar);
+
+				File.Copy(fromPath, GetPathToImage());
 				UpdateDisplay();
 
 				NotifyChanged();
@@ -164,13 +165,28 @@ namespace WeSay.UI
 
 		public string Value
 		{
-			get { return _fileName; }
-			set { _fileName = value; }
+			get { return _relativePathToImage; }
+			set { _relativePathToImage = value; }
 		}
 
 		private string GetPathToImage()
 		{
-			return Path.Combine(_storageFolderPath, _fileName);
+			if (string.IsNullOrEmpty(RelativePathToImage))
+				return string.Empty;
+
+			var p = Path.Combine(_pathToReferingFile, _relativePathToImage);
+			if (!File.Exists(p))
+			{
+				//the old style was to just give the file name
+				var alternatePath = Path.Combine(_storageFolderPath, _relativePathToImage);
+				if (File.Exists(alternatePath))
+					return alternatePath;
+				else if (!_relativePathToImage.Contains(Path.DirectorySeparatorChar.ToString()))
+				{
+					return alternatePath; // show where we expected it to be
+				}
+			}
+			return p; // show where we expected it to be
 		}
 
 		private void _removeImageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -182,7 +198,7 @@ namespace WeSay.UI
 			//                if (File.Exists(this.GetPathToImage()))
 			//                {
 			//                    string old = this.GetPathToImage();
-			//                    _fileName = "Unused_" + _fileName;
+			//                    _relativePathToImage = "Unused_" + _relativePathToImage;
 			//                    if(!File.Exists(GetPathToImage()))
 			//                    {
 			//                        File.Move(old, GetPathToImage());
@@ -194,7 +210,7 @@ namespace WeSay.UI
 			//                Palaso.Reporting.ErrorReport.NotifyUserOfProblem(error.Message);
 			//            }
 
-			_fileName = string.Empty;
+			_relativePathToImage = string.Empty;
 			NotifyChanged();
 			UpdateDisplay();
 		}
@@ -234,7 +250,7 @@ namespace WeSay.UI
 			_searchGalleryLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
 		}
-		private static string TryToGetRootImagePath()
+		private static string TryToGetRootImageCatalogPath()
 		{
 			//look for the cd/dvd
 			var path = Palaso.UI.WindowsForms.ImageGallery.ArtOfReadingImageCollection.TryToGetCollectionPath();
@@ -244,7 +260,17 @@ namespace WeSay.UI
 			//look for it in a hard-coded location
 			string HardDiskPath = @"c:\art of reading\images";
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
-				HardDiskPath = @"home\art of reading\images"; //TODO: what should this be?
+			{
+				HardDiskPath = @"/usr/share/wesay/ArtOfReading/images";
+				if (!Directory.Exists(HardDiskPath))
+				{
+					HardDiskPath = @"/usr/share/ArtOfReading/images";
+				}
+				if (!Directory.Exists(HardDiskPath))
+				{
+					HardDiskPath = @"/var/share/ArtOfReading/images";
+				}
+			}
 
 			return HardDiskPath;
 		}
@@ -252,7 +278,7 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return Directory.Exists(TryToGetRootImagePath());
+				return Directory.Exists(TryToGetRootImageCatalogPath());
 			}
 		}
 		private void OnSearchGalleryLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -264,7 +290,7 @@ namespace WeSay.UI
 			}
 			var images = new ArtOfReadingImageCollection();
 			images.LoadIndex(_fileLocator.LocateFile("artofreadingindexv3_en.txt"));
-			images.RootImagePath = TryToGetRootImagePath();
+			images.RootImagePath = TryToGetRootImageCatalogPath();
 			var searchString = SearchTermProvider == null ? string.Empty:SearchTermProvider.SearchString;
 			searchString = images.StripNonMatchingKeywords(searchString);
 			using (var chooser = new PictureChooser(images, searchString))
