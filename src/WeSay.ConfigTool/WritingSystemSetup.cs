@@ -113,6 +113,12 @@ namespace WeSay.ConfigTool
 
 		private void _btnAddWritingSystem_Click(object sender, EventArgs e)
 		{
+			if(IsDefaultVernacularStillUnidentified)
+			{
+				MessageBox.Show(
+					"Before creating new writing systems, please change the ID of the 'v' writing system to match the Ethnologue/ISO 693 code of this language.");
+				return;
+			}
 			WritingSystem w = null;
 			string[] keys = {"xx", "x1", "x2", "x3"};
 			foreach (string s in keys)
@@ -147,6 +153,19 @@ namespace WeSay.ConfigTool
 
 			_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Added writing system", "Checkin Description in WeSay Config Tool used when you add a writing system."));
 
+		}
+
+		private bool IsDefaultVernacularStillUnidentified
+		{
+			get
+			{
+				foreach (WritingSystem w in BasilProject.Project.WritingSystems.Values)
+				{
+					if(w.Id == WritingSystem.IdForUnknownVernacular)
+						return true;
+				}
+				return false;
+			}
 		}
 
 		/// <summary>

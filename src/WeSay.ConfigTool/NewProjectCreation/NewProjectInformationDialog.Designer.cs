@@ -93,7 +93,7 @@
 			this.label1.Size = new System.Drawing.Size(378, 63);
 			this.label1.TabIndex = 4;
 			this.label1.Text = "One important adjustment is to edit the \'v\' writing system, changing its ID to ma" +
-				"tch the Ethnologue/ISO code for this language.";
+				"tch the Ethnologue/ISO 693 code for this language.";
 			//
 			// NewProjectInformationDialog
 			//
