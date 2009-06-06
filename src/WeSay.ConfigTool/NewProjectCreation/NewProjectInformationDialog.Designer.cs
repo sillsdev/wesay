@@ -33,13 +33,14 @@
 			this._whereLabel = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+			this.label1 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			//
 			// btnOK
 			//
 			this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnOK.Location = new System.Drawing.Point(272, 183);
+			this.btnOK.Location = new System.Drawing.Point(296, 270);
 			this.btnOK.Name = "btnOK";
 			this.btnOK.Size = new System.Drawing.Size(91, 29);
 			this.btnOK.TabIndex = 3;
@@ -82,14 +83,27 @@
 			this.linkLabel1.Text = "(click here if you want it somewhere else)";
 			this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
 			//
+			// label1
+			//
+			this.label1.AutoSize = true;
+			this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(13, 175);
+			this.label1.MaximumSize = new System.Drawing.Size(380, 0);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(378, 63);
+			this.label1.TabIndex = 4;
+			this.label1.Text = "One important adjustment is to edit the \'v\' writing system, changing its ID to ma" +
+				"tch the Ethnologue/ISO code for this language.";
+			//
 			// NewProjectInformationDialog
 			//
 			this.AcceptButton = this.btnOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.btnOK;
-			this.ClientSize = new System.Drawing.Size(391, 224);
+			this.ClientSize = new System.Drawing.Size(415, 311);
 			this.Controls.Add(this.linkLabel1);
+			this.Controls.Add(this.label1);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this._whereLabel);
 			this.Controls.Add(this.btnOK);
@@ -111,5 +125,6 @@
 		private System.Windows.Forms.Label _whereLabel;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.LinkLabel linkLabel1;
+		private System.Windows.Forms.Label label1;
 	}
 }
