@@ -38,8 +38,8 @@ namespace WeSay.ConfigTool
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.secondCellPanel = new System.Windows.Forms.Panel();
-			this.firstCellPanel = new System.Windows.Forms.Panel();
 			this.createProjectFromFLEx = new System.Windows.Forms.LinkLabel();
+			this.firstCellPanel = new System.Windows.Forms.Panel();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.secondCellPanel.SuspendLayout();
@@ -53,7 +53,7 @@ namespace WeSay.ConfigTool
 			this.blueBar.Dock = System.Windows.Forms.DockStyle.Top;
 			this.blueBar.Location = new System.Drawing.Point(0, 0);
 			this.blueBar.Name = "blueBar";
-			this.blueBar.Size = new System.Drawing.Size(530, 45);
+			this.blueBar.Size = new System.Drawing.Size(587, 45);
 			this.blueBar.TabIndex = 3;
 			//
 			// textBox1
@@ -65,7 +65,7 @@ namespace WeSay.ConfigTool
 			this.textBox1.Multiline = true;
 			this.textBox1.Name = "textBox1";
 			this.textBox1.ReadOnly = true;
-			this.textBox1.Size = new System.Drawing.Size(411, 20);
+			this.textBox1.Size = new System.Drawing.Size(455, 20);
 			this.textBox1.TabIndex = 4;
 			this.textBox1.TabStop = false;
 			this.textBox1.Text = "Use this tool to create and configure WeSay Projects.";
@@ -133,7 +133,7 @@ namespace WeSay.ConfigTool
 			this.tableLayoutPanel1.RowCount = 2;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 71F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(350, 103);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(407, 103);
 			this.tableLayoutPanel1.TabIndex = 9;
 			//
 			// secondCellPanel
@@ -145,17 +145,6 @@ namespace WeSay.ConfigTool
 			this.secondCellPanel.Name = "secondCellPanel";
 			this.secondCellPanel.Size = new System.Drawing.Size(344, 65);
 			this.secondCellPanel.TabIndex = 7;
-			//
-			// firstCellPanel
-			//
-			this.firstCellPanel.AutoSize = true;
-			this.firstCellPanel.Controls.Add(this.flowLayoutPanel2);
-			this.firstCellPanel.Controls.Add(this.recentProjectsLabel);
-			this.firstCellPanel.Dock = System.Windows.Forms.DockStyle.Top;
-			this.firstCellPanel.Location = new System.Drawing.Point(3, 3);
-			this.firstCellPanel.Name = "firstCellPanel";
-			this.firstCellPanel.Size = new System.Drawing.Size(344, 26);
-			this.firstCellPanel.TabIndex = 8;
 			//
 			// createProjectFromFLEx
 			//
@@ -170,6 +159,17 @@ namespace WeSay.ConfigTool
 			this.createProjectFromFLEx.TabStop = true;
 			this.createProjectFromFLEx.Text = "Create Project From FLEx LIFT Export";
 			this.createProjectFromFLEx.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnCreateProjectFromFLEx_LinkClicked);
+			//
+			// firstCellPanel
+			//
+			this.firstCellPanel.AutoSize = true;
+			this.firstCellPanel.Controls.Add(this.flowLayoutPanel2);
+			this.firstCellPanel.Controls.Add(this.recentProjectsLabel);
+			this.firstCellPanel.Dock = System.Windows.Forms.DockStyle.Top;
+			this.firstCellPanel.Location = new System.Drawing.Point(3, 3);
+			this.firstCellPanel.Name = "firstCellPanel";
+			this.firstCellPanel.Size = new System.Drawing.Size(401, 26);
+			this.firstCellPanel.TabIndex = 8;
 			//
 			// pictureBox1
 			//
@@ -193,7 +193,7 @@ namespace WeSay.ConfigTool
 			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this.blueBar);
 			this.Name = "WelcomeControl";
-			this.Size = new System.Drawing.Size(530, 338);
+			this.Size = new System.Drawing.Size(587, 338);
 			this.Load += new System.EventHandler(this.WelcomeControl_Load);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
