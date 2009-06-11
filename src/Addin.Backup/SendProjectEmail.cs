@@ -63,25 +63,26 @@ namespace Addin.Backup
 
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			string dest = Path.Combine(Path.GetTempPath(), projectInfo.Name + "_wesay.zip");
+			string wesayZipFilePath = Path.Combine(Path.GetTempPath(), projectInfo.Name + "_wesay.zip");
 			LexEntryRepository repo =
 				projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
 			using (repo.GetRightToAccessLiftExternally())
 			{
 				BackupMaker.BackupToExternal(projectInfo.PathToTopLevelDirectory,
-											 dest,
+											 wesayZipFilePath,
 											 projectInfo.FilesBelongingToProject);
 			}
 
 
-		MAPI msg = new MAPI();
-			msg.AddAttachment(dest);
-			msg.AddRecipientTo(_settings.Email);
-			subject =
-				StringCatalog.GetFormatted("{0} WeSay Project Data",
-										   "The subject line of the email send by the 'Send Email' Action. The {0} will be replaced by the name of the project, as in 'Greek WeSay Project Data'",
-										   projectInfo.Name);
-			string body = StringCatalog.Get("The latest WeSay project data is attached.");
+			var emailProvider = Palaso.Email.EmailProviderFactory.PreferredEmailProvider();
+			var msg = emailProvider.CreateMessage();
+			msg.AttachmentFilePath.Add(wesayZipFilePath);
+			msg.To.Add(_settings.Email);
+			msg.Subject = StringCatalog.GetFormatted(
+				"{0} WeSay Project Data",
+				"The subject line of the email send by the 'Send Email' Action. The {0} will be replaced by the name of the project, as in 'Greek WeSay Project Data'",
+				projectInfo.Name);
+			msg.Body = StringCatalog.Get("The latest WeSay project data is attached.");
 
 			//I tried hard to get this to run in a thread so it wouldn't block wesay,
 			//but when called in a thread we always just get the generic '2' back.
@@ -95,7 +96,7 @@ namespace Addin.Backup
 			///emailWorker.SendMail();
 			///
 
-			msg.SendMailPopup(subject, body);
+			msg.Send(emailProvider); // review (CP): This is different from the mapi popup used previously
 		}
 
 		/// <summary>
