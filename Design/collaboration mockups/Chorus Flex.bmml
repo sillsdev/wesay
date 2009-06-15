@@ -1,0 +1,91 @@
+<mockup version="1.0" skin="sketch" measuredW="416" measuredH="410">
+  <controls>
+	<control controlID="0" controlTypeID="com.balsamiq.mockups::ComboBox" x="137" y="62" w="215" h="-1" measuredW="113" measuredH="25" zOrder="1" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>Guhu%20Samane</text>
+		<bold>false</bold>
+	  </controlProperties>
+	</control>
+	<control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="39" y="61" w="-1" h="-1" measuredW="85" measuredH="25" zOrder="2" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>FLEx%20Project</text>
+		<bold>false</bold>
+	  </controlProperties>
+	</control>
+	<control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="146" y="320" w="206" h="-1" measuredW="144" measuredH="40" zOrder="3" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>Send/Recieve</text>
+		<icon>WirelessIcon%7Cmedium</icon>
+		<bold>false</bold>
+	  </controlProperties>
+	</control>
+	<control controlID="4" controlTypeID="com.balsamiq.mockups::CheckBox" x="39" y="204" w="-1" h="-1" measuredW="207" measuredH="18" zOrder="4" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>SIL%20Language%20Forge%20%28internet%29</text>
+		<state>selected</state>
+		<bold>false</bold>
+	  </controlProperties>
+	</control>
+	<control controlID="5" controlTypeID="com.balsamiq.mockups::CheckBox" x="39" y="251" w="224" h="26" measuredW="79" measuredH="18" zOrder="5" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>USB%20Key</text>
+		<bold>false</bold>
+	  </controlProperties>
+	</control>
+	<control controlID="7" controlTypeID="com.balsamiq.mockups::TitleWindow" x="2" y="0" w="404" h="400" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>Chorus%20for%20Flex</text>
+		<close>true</close>
+		<topheight>31</topheight>
+		<dragger>false</dragger>
+		<bottomheight>0</bottomheight>
+	  </controlProperties>
+	</control>
+	<control controlID="12" controlTypeID="com.balsamiq.mockups::Label" x="60" y="220" w="-1" h="-1" measuredW="231" measuredH="25" zOrder="6" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>Last%20Synchronization%20was%2013%20days%20ago</text>
+		<color>6710886</color>
+		<bold>false</bold>
+	  </controlProperties>
+	</control>
+	<control controlID="13" controlTypeID="com.balsamiq.mockups::Label" x="60" y="271" w="-1" h="-1" measuredW="226" measuredH="25" zOrder="7" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>Last%20Synchronization%20was%203%20days%20ago</text>
+		<color>6710886</color>
+		<bold>false</bold>
+	  </controlProperties>
+	</control>
+	<control controlID="16" controlTypeID="com.balsamiq.mockups::Link" x="39" y="113" w="-1" h="-1" measuredW="71" measuredH="25" zOrder="8" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>configure...</text>
+		<bold>false</bold>
+	  </controlProperties>
+	</control>
+	<control controlID="17" controlTypeID="com.balsamiq.mockups::Link" x="161" y="113" w="-1" h="-1" measuredW="88" measuredH="25" zOrder="9" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>view%20history...</text>
+		<bold>false</bold>
+		<href>chorus%20history%20phase%201.bmml</href>
+	  </controlProperties>
+	</control>
+	<control controlID="18" controlTypeID="com.balsamiq.mockups::CheckBox" x="39" y="153" w="-1" h="-1" measuredW="122" measuredH="18" zOrder="10" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>Local%20Colleagues</text>
+		<state>selected</state>
+		<bold>false</bold>
+	  </controlProperties>
+	</control>
+	<control controlID="19" controlTypeID="com.balsamiq.mockups::Label" x="60" y="167" w="-1" h="-1" measuredW="231" measuredH="25" zOrder="11" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>Last%20Synchronization%20was%202%20hours%20ago</text>
+		<color>6710886</color>
+		<bold>false</bold>
+	  </controlProperties>
+	</control>
+	<control controlID="20" controlTypeID="com.balsamiq.mockups::Link" x="291" y="113" w="-1" h="-1" measuredW="57" measuredH="25" zOrder="12" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>about...</text>
+	  </controlProperties>
+	</control>
+  </controls>
+</mockup>
