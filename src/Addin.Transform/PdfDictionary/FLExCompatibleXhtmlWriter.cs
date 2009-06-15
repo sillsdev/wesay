@@ -321,7 +321,20 @@ namespace Addin.Transform.PdfDictionary
 			if(string.IsNullOrEmpty(headword))
 				return;
 
-			char letter = headword.ToCharArray().FirstOrDefault(Char.IsLetterOrDigit);
+			char letter=default(char);
+			foreach (var c in headword.ToCharArray())
+			{
+				if (char.IsLetterOrDigit(c))
+				{
+					letter = c;
+					break;
+				}
+				if (System.Globalization.UnicodeCategory.PrivateUse == char.GetUnicodeCategory(c))//see WS-1412
+				{
+					letter = c; //safe to assume it's a letter... someday the writing system could tell us
+					break;
+				}
+			}
 			if(letter == default(char))
 				return;
 
@@ -337,7 +350,14 @@ namespace Addin.Transform.PdfDictionary
 				_currentLetter = letter;
 				StartDiv("letHead");
 				StartDiv("letter");
-				_writer.WriteValue(letter + " " + char.ToLower(letter));
+				if(char.ToLower(letter)==char.ToUpper(letter))
+				{
+					_writer.WriteValue(letter.ToString());
+				}
+				else
+				{
+					_writer.WriteValue(letter + " " + char.ToLower(letter));
+				}
 				EndDiv();
 				StartDiv("letData");
 			}
