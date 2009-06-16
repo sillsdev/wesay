@@ -130,6 +130,7 @@
 	<Compile Include="FailedLoadTask.cs" />
 	<Compile Include="ITaskConfiguration.cs" />
 	<Compile Include="PLiftExporter.cs" />
+	<Compile Include="PublicationFontStyleProvider.cs" />
 	<Compile Include="ServiceProvider.cs" />
 	<Compile Include="TaskCollection.cs" />
 	<Compile Include="TaskTypeCatalog.cs" />

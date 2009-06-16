@@ -162,10 +162,6 @@ font-size: 2cm;
 .examples:after { content: " " }
 .examples>.xitem + .xitem:before { content: "  " }
 .example {
-	/* lang = 'seh' */
-	/* explicit FieldWorks style = 'Dictionary-Vernacular' */
-
-	background-color: rgb(255,255,255);	/* cascaded environment */
 }
 .example:after { content: " " }
 .example>.xitem + .xitem:before { content: " " }

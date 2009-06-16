@@ -9,6 +9,7 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
+using WeSay.Project;
 
 namespace Addin.Transform.PdfDictionary
 {
@@ -76,7 +77,7 @@ namespace Addin.Transform.PdfDictionary
 				File.Copy(factoryLayout, autoLayout, true);
 
 				var autoFonts = Path.Combine(projectInfo.PathToExportDirectory, "autoFonts.css");
-				CreateAutoFontsStyleSheet(autoFonts, projectInfo.WritingSystems);
+				CreateAutoFontsStyleSheet(autoFonts, (PublicationFontStyleProvider)projectInfo.ServiceProvider.GetService(typeof(PublicationFontStyleProvider)), projectInfo.WritingSystems);
 
 				var customLayout = Path.Combine(projectInfo.PathToExportDirectory, "customLayout.css");
 				if (!File.Exists(customLayout))
@@ -109,14 +110,15 @@ namespace Addin.Transform.PdfDictionary
 			}
 		}
 
-		private void CreateAutoFontsStyleSheet(string path, WritingSystemCollection writingSystemCollection)
+		private void CreateAutoFontsStyleSheet(string path, PublicationFontStyleProvider styleProvider, WritingSystemCollection writingSystemCollection)
 		{
+
 			using (var f = File.CreateText(path))
 			{
 				foreach (var pair in writingSystemCollection)
 				{
 					f.WriteLine(":lang("+pair.Key+") {");
-					f.WriteLine("font-family: '"+pair.Value.FontName+"';");
+					f.WriteLine(styleProvider.GetAutoFontsCascadingStyleSheetLinesForWritingSystem(pair.Value));
 					f.WriteLine("}");
 					f.WriteLine();
 				}

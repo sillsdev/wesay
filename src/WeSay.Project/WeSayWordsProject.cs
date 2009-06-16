@@ -394,7 +394,7 @@ namespace WeSay.Project
 
 			builder.Register<ICountGiver>(c => c.Resolve<LexEntryRepository>());
 
-			//builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
+
 
 			var catalog = new TaskTypeCatalog();
 			catalog.RegisterAllTypes(builder);
@@ -418,6 +418,8 @@ namespace WeSay.Project
 				builder.Register(viewTemplate).SingletonScoped();
 			}
 
+			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named("PrintingTemplate");
+			builder.Register<PublicationFontStyleProvider>(c=> new PublicationFontStyleProvider(c.Resolve<ViewTemplate>("PrintingTemplate")));
 
 			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
