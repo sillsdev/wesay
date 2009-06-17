@@ -133,7 +133,7 @@ namespace WeSay.UI
 				_relativePathToImage = fullDestPath.Replace(_pathToReferingFile, "");
 				_relativePathToImage = _relativePathToImage.Trim(Path.DirectorySeparatorChar);
 
-				File.Copy(fromPath, GetPathToImage());
+				File.Copy(fromPath, GetPathToImage(),true);
 				UpdateDisplay();
 
 				NotifyChanged();
