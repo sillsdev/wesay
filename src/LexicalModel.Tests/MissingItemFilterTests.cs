@@ -12,14 +12,14 @@ namespace WeSay.LexicalModel.Tests
 		public void ConstructWithField()
 		{
 			Field field = new Field("customField", "LexExampleSentence", new string[] {"vernacular"});
-			Assert.IsNotNull(new MissingFieldQuery(field, null));
+			Assert.IsNotNull(new MissingFieldQuery(field, null, null));
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithField_NullField_Throws()
 		{
-			new MissingFieldQuery(null, null);
+			new MissingFieldQuery(null, null, null);
 		}
 
 		[Test]
@@ -28,11 +28,11 @@ namespace WeSay.LexicalModel.Tests
 			MissingFieldQuery filter1 =
 					new MissingFieldQuery(new Field("customField",
 													"LexExampleSentence",
-													new string[] {"vernacular"}), null);
+													new string[] { "vernacular" }), null, null);
 			MissingFieldQuery filter2 =
 					new MissingFieldQuery(new Field("customField",
 													"LexExampleSentence",
-													new string[] {"vernacular"}), null);
+													new string[] { "vernacular" }), null, null);
 			Assert.IsTrue(filter1.Key == filter2.Key);
 		}
 
@@ -42,11 +42,11 @@ namespace WeSay.LexicalModel.Tests
 			MissingFieldQuery filter1 =
 					new MissingFieldQuery(new Field("customField",
 													"LexExampleSentence",
-													new string[] {"vernacular"}), null);
+													new string[] { "vernacular" }), null, null);
 			MissingFieldQuery filter2 =
 					new MissingFieldQuery(new Field("customField",
 													"LexExampleSentence",
-													new string[] {"analysis"}), null);
+													new string[] {"analysis"}), null, null);
 			Assert.IsFalse(filter1.Key == filter2.Key);
 		}
 
@@ -56,11 +56,11 @@ namespace WeSay.LexicalModel.Tests
 			MissingFieldQuery filter1 =
 					new MissingFieldQuery(new Field("customField",
 													"LexExampleSentence",
-													new string[] {"vernacular", "analysis"}), null);
+													new string[] {"vernacular", "analysis"}), null, null);
 			MissingFieldQuery filter2 =
 					new MissingFieldQuery(new Field("customField",
 													"LexExampleSentence",
-													new string[] {"analysis", "vernacular"}), null);
+													new string[] {"analysis", "vernacular"}), null, null);
 			Assert.IsTrue(filter1.Key == filter2.Key);
 		}
 
@@ -68,7 +68,7 @@ namespace WeSay.LexicalModel.Tests
 		public void FilteringPredicate_Null_False()
 		{
 			Field field = new Field("customField", "LexExampleSentence", new string[] {"vernacular"});
-			MissingFieldQuery f = new MissingFieldQuery(field, null);
+			MissingFieldQuery f = new MissingFieldQuery(field, null, null);
 			Assert.IsFalse(f.FilteringPredicate(null));
 		}
 
@@ -79,7 +79,7 @@ namespace WeSay.LexicalModel.Tests
 			entryWithUnknownPos.LexicalForm.SetAlternative("de", "LexicalForm");
 			entryWithUnknownPos.Senses.Add(new LexSense());
 			Field field = new Field("POS", "LexSense", new string[] { "en" }, Field.MultiplicityType.ZeroOr1, "Option");
-			MissingFieldQuery f = new MissingFieldQuery(field, null);
+			MissingFieldQuery f = new MissingFieldQuery(field, null, null);
 			Assert.IsTrue(f.FilteringPredicate(entryWithUnknownPos));
 		}
 
@@ -92,7 +92,7 @@ namespace WeSay.LexicalModel.Tests
 			entryWithUnknownPos.Senses[0].Properties.Add(new KeyValuePair<string, object>("POS", new OptionRef()));
 			((OptionRef) entryWithUnknownPos.Senses[0].Properties[0].Value).Key = "unknown";
 			Field field = new Field("POS", "LexSense", new string[] { "en" }, Field.MultiplicityType.ZeroOr1, "Option");
-			MissingFieldQuery f = new MissingFieldQuery(field, null);
+			MissingFieldQuery f = new MissingFieldQuery(field, null, null);
 			Assert.IsTrue(f.FilteringPredicate(entryWithUnknownPos));
 		}
 
@@ -105,7 +105,7 @@ namespace WeSay.LexicalModel.Tests
 			entryWithUnknownPos.Senses[0].Properties.Add(new KeyValuePair<string, object>("POS", new OptionRef()));
 			((OptionRef)entryWithUnknownPos.Senses[0].Properties[0].Value).Key = "notUnknown";
 			Field field = new Field("POS", "LexSense", new string[] { "en" }, Field.MultiplicityType.ZeroOr1, "Option");
-			MissingFieldQuery f = new MissingFieldQuery(field, null);
+			MissingFieldQuery f = new MissingFieldQuery(field, null, null);
 			Assert.IsFalse(f.FilteringPredicate(entryWithUnknownPos));
 		}
 
@@ -136,7 +136,7 @@ namespace WeSay.LexicalModel.Tests
 									new string[] { "vernacular" },
 									Field.MultiplicityType.ZeroOr1,
 									"RelationToOneEntry");
-			MissingFieldQuery f = new MissingFieldQuery(field, null);
+			MissingFieldQuery f = new MissingFieldQuery(field, null, null);
 			Assert.AreEqual(shouldMatch, f.FilteringPredicate(entry));
 		}
 

@@ -29,9 +29,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			Guard.AgainstNull(config.MissingInfoField, "MissingInfoField");
 			Guard.AgainstNull(defaultViewTemplate, "viewTemplate");
-			Debug.Assert(config.WritingSystemsToMatchArray == null ||
-						 config.WritingSystemsToMatchArray.Length == 0 ||
-						 !string.IsNullOrEmpty(config.WritingSystemsToMatchArray[0]));
+			Debug.Assert(config.WritingSystemsWeWantToFillInArray == null ||
+						 config.WritingSystemsWeWantToFillInArray.Length == 0 ||
+						 !string.IsNullOrEmpty(config.WritingSystemsWeWantToFillInArray[0]));
 
 			_config = config;
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
@@ -78,11 +78,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			base.Activate();
 
-			Predicate<LexEntry> filteringPredicate =
-				new MissingFieldQuery(_missingInfoField, _config.WritingSystemsToMatchArray).FilteringPredicate;
 			_missingInfoControl = new MissingInfoControl(GetFilteredData(),
 														 ViewTemplate,
-														 filteringPredicate,
+														 GetQuery().FilteringPredicate,
 														 LexEntryRepository,
 														 _taskMemory.CreateNewSection("view"));
 			_missingInfoControl.TimeToSaveRecord += OnSaveRecord;
@@ -143,9 +141,16 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			ResultSet<LexEntry> data =
 				LexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(
-					_missingInfoField, _config.WritingSystemsToMatchArray,    GetLexicalUnitWritingSystem());
+					GetQuery(), _missingInfoField, GetLexicalUnitWritingSystem());
 			_dataHasBeenRetrieved = true;
 			return data;
+		}
+
+		private MissingFieldQuery GetQuery()
+		{
+			return new MissingFieldQuery(_missingInfoField, _config.WritingSystemsWeWantToFillInArray,
+										   _config.WritingSystemsWhichAreRequiredArray);
+
 		}
 
 		public ViewTemplate ViewTemplate

@@ -13,20 +13,31 @@ namespace WeSay.LexicalModel
 	public class MissingFieldQuery: IFieldQuery<LexEntry>
 	{
 		private readonly Field _field;
-		private readonly string[] _writingSystemsOfInterest;
+		private readonly string[] _writingSystemsWhichAreRequired;
+		private readonly string[] _writingSystemsWhichWeWantToFillIn;
 
-		public MissingFieldQuery(Field field, string[] writingSystemsOfInterest)
+		public MissingFieldQuery(Field field, string[] writingSystemsWhichWeWantToFillIn, string[] writingSystemsWhichAreRequired)
 		{
 			Guard.AgainstNull(field, "field");
 			_field = field;
 
-			if (writingSystemsOfInterest == null || writingSystemsOfInterest.Length == 0)
+			if (writingSystemsWhichWeWantToFillIn == null || writingSystemsWhichWeWantToFillIn.Length == 0)
 			{
-				_writingSystemsOfInterest = field.WritingSystemIds.ToArray();
+				//if none specified, include all of them
+				_writingSystemsWhichWeWantToFillIn = field.WritingSystemIds.ToArray();
 			}
 			else
 			{
-				_writingSystemsOfInterest = writingSystemsOfInterest;
+				_writingSystemsWhichWeWantToFillIn = writingSystemsWhichWeWantToFillIn;
+			}
+
+			if (writingSystemsWhichAreRequired == null)
+			{
+				_writingSystemsWhichAreRequired = new string[0];
+			}
+			else
+			{
+				_writingSystemsWhichAreRequired = writingSystemsWhichAreRequired;
 			}
 		}
 
@@ -66,6 +77,35 @@ namespace WeSay.LexicalModel
 			get { return _field; }
 		}
 
+		public string UniqueCacheId
+		{
+			get
+			{
+				return GetCacheWritingSystemTag(_writingSystemsWhichWeWantToFillIn) + "/" +
+					   GetCacheWritingSystemTag(_writingSystemsWhichAreRequired);
+
+			}
+		}
+
+		/// <summary>
+		/// Given a list of writingSystems, combine them in a way that can be used to uniquely identify a cache of results
+		/// </summary>
+		/// <param name="ids"></param>
+		/// <returns></returns>
+		private static string GetCacheWritingSystemTag(string[] ids)
+		{
+			if (ids == null || ids.Length == 0)
+			{
+				return "--";
+			}
+			else
+			{
+				string wsTag = "";
+				Enumerable.ForEach(ids, id => wsTag += id);
+				return wsTag;
+			}
+		}
+
 		private bool IsMissingData(object content)
 		{
 			switch (Field.DataTypeName)
@@ -75,7 +115,7 @@ namespace WeSay.LexicalModel
 				case "OptionCollection":
 					return ((OptionRefCollection) content).IsEmpty;
 				case "MultiText":
-					return IsMissingAnyWritingSystemOfInterest((MultiText) content);
+					return HasAllRequiredButMissingAtLeastOneWeWantToFillIn((MultiText) content);
 
 				case "RelationToOneEntry":
 					LexRelationCollection collection = (LexRelationCollection) content;
@@ -118,7 +158,8 @@ namespace WeSay.LexicalModel
 					{
 						if (Field.ClassName == "LexSense")
 						{
-							if (IsMissingLexSenseField(sense))
+							if (IsMissingLexSenseField(sense) &&
+								_writingSystemsWhichAreRequired.Length == 0)
 							{
 								return true;
 							}
@@ -136,7 +177,8 @@ namespace WeSay.LexicalModel
 								}
 							}
 							if (sense.ExampleSentences.Count == 0 &&
-								(Field.FieldName == Field.FieldNames.ExampleSentence.ToString()))
+								(Field.FieldName == Field.FieldNames.ExampleSentence.ToString()) &&
+								_writingSystemsWhichAreRequired.Length==0)
 							{
 								//ghost field
 								return true;
@@ -144,7 +186,8 @@ namespace WeSay.LexicalModel
 						}
 					}
 					if (entry.Senses.Count == 0 &&
-						(Field.FieldName == LexSense.WellKnownProperties.Definition))
+						(Field.FieldName == LexSense.WellKnownProperties.Definition) &&
+								_writingSystemsWhichAreRequired.Length == 0)
 					{
 						//ghost field
 						return true;
@@ -173,11 +216,11 @@ namespace WeSay.LexicalModel
 			{
 				if (Field.FieldName == Field.FieldNames.ExampleSentence.ToString())
 				{
-					return IsMissingAnyWritingSystemOfInterest(example.Sentence);
+					return HasAllRequiredButMissingAtLeastOneWeWantToFillIn(example.Sentence);
 				}
 				else if (Field.FieldName == Field.FieldNames.ExampleTranslation.ToString())
 				{
-					return IsMissingAnyWritingSystemOfInterest(example.Translation);
+					return HasAllRequiredButMissingAtLeastOneWeWantToFillIn(example.Translation);
 				}
 				else
 				{
@@ -217,7 +260,7 @@ namespace WeSay.LexicalModel
 			{
 				if (Field.FieldName == Field.FieldNames.EntryLexicalForm.ToString())
 				{
-					if (IsMissingAnyWritingSystemOfInterest(entry.LexicalForm))
+					if (HasAllRequiredButMissingAtLeastOneWeWantToFillIn(entry.LexicalForm))
 					{
 						return true;
 					}
@@ -258,9 +301,17 @@ namespace WeSay.LexicalModel
 		}
 
 
-		private bool IsMissingAnyWritingSystemOfInterest(MultiTextBase text)
+		private bool HasAllRequiredButMissingAtLeastOneWeWantToFillIn(MultiTextBase text)
 		{
-			foreach (var wsId in _writingSystemsOfInterest )
+			foreach (var wsId in _writingSystemsWhichAreRequired)
+			{
+				if (!text.ContainsAlternative(wsId))
+				{
+					return false;
+				}
+			}
+
+			foreach (var wsId in _writingSystemsWhichWeWantToFillIn)
 			{
 				if (!text.ContainsAlternative(wsId))
 				{

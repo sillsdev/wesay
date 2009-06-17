@@ -362,27 +362,27 @@ namespace WeSay.Project
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 
 			builder.Register<LiftRepository>( c =>
-												  {
-													  try
-													  {
-														  return c.Resolve<IProgressNotificationProvider>().Go
-															  <LiftRepository>(
-															  "Loading Dictionary",
-															  progressState =>
-															  new LiftRepository(_pathToLiftFile,
-																				 GetSemanticDomainsList(),
-																				 progressState));
-													  }
-													  catch (LiftFormatException error)
-													  {
-														  Palaso.Reporting.ErrorReport.NotifyUserOfProblem(error.Message);
-														  throw error;
-													  }
-													  catch(Exception error)
-													  {
-														  throw error;
-													  }
-												  });
+			  {
+				  try
+				  {
+					  return c.Resolve<IProgressNotificationProvider>().Go
+						  <LiftRepository>(
+						  "Loading Dictionary",
+						  progressState =>
+						  new LiftRepository(_pathToLiftFile,
+											 GetSemanticDomainsList(),
+											 progressState));
+				  }
+				  catch (LiftFormatException error)
+				  {
+					  Palaso.Reporting.ErrorReport.NotifyUserOfProblem(error.Message);
+					  throw error;
+				  }
+				  catch(Exception error)
+				  {
+					  throw error;
+				  }
+			  });
 
 			builder.Register<LexEntryRepository>();
 //            builder.Register<LexEntryRepository>(

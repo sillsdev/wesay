@@ -11,13 +11,15 @@ namespace WeSay.LexicalTools.AddMissingInfo
 	public class MissingInfoConfiguration : TaskConfigurationBase, ITaskConfiguration
 	{
 		private List<string> _fieldsToShow;
-		private List<string> _writingSystemsToMatch;
+		private List<string> _writingSystemsWeWantToFillIn;
+		private List<string> _writingSystemsWhichAreRequired;
 
 		public MissingInfoConfiguration(string configurationXml)//, ViewTemplate viewTemplate)
 			: base(configurationXml)
 		{
 			_fieldsToShow = GetStringFromConfigNode("showFields").SplitTrimmed(',');
-			_writingSystemsToMatch = GetStringFromConfigNode("writingSystemsToMatch", string.Empty).SplitTrimmed(',');
+			_writingSystemsWeWantToFillIn = GetStringFromConfigNode("writingSystemsToMatch", string.Empty).SplitTrimmed(',');
+			_writingSystemsWhichAreRequired = GetStringFromConfigNode("writingSystemsWhichAreRequired", string.Empty).SplitTrimmed(',');
 		}
 
 		public override string ToString()
@@ -52,16 +54,27 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				yield return new KeyValuePair<string, string>("field", MissingInfoField);
 				yield return new KeyValuePair<string, string>("showFields", FieldsToShowCommaSeparated);
 				yield return new KeyValuePair<string, string>("readOnly", FieldsToShowReadOnly);
-				yield return new KeyValuePair<string, string>("writingSystemsToMatch", WritingSystemsToMatchCommaSeparated);
+				yield return new KeyValuePair<string, string>("writingSystemsToMatch", WritingSystemsWeWantToFillInCommaSeparated);
+				yield return new KeyValuePair<string, string>("writingSystemsWhichAreRequired", WritingSystemsWhichAreRequiredCommaSeparated);
 			}
 		}
 
-		private string WritingSystemsToMatchCommaSeparated
+		protected string WritingSystemsWhichAreRequiredCommaSeparated
 		{
 			get
 			{
 				string s = string.Empty;
-				_writingSystemsToMatch.ForEach(f => s += ", " + f);
+				_writingSystemsWhichAreRequired.ForEach(f => s += ", " + f);
+				return s.TrimStart(new char[] { ' ', ',' });
+			}
+		}
+
+		private string WritingSystemsWeWantToFillInCommaSeparated
+		{
+			get
+			{
+				string s = string.Empty;
+				_writingSystemsWeWantToFillIn.ForEach(f => s += ", " + f);
 				return s.TrimStart(new char[] { ' ', ',' });
 			}
 		}
@@ -131,11 +144,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			get { return GetStringFromConfigNode("field"); }
 		}
 
-		public string[] WritingSystemsToMatchArray
+		public string[] WritingSystemsWeWantToFillInArray
 		{
-			get { return _writingSystemsToMatch.ToArray(); }
+			get { return _writingSystemsWeWantToFillIn.ToArray(); }
 		}
-
+	   public string[] WritingSystemsWhichAreRequiredArray
+		{
+			get { return _writingSystemsWhichAreRequired.ToArray(); }
+		}
 		public static MissingInfoConfiguration CreateForTests(string missingInfoField,
 			string label, string longLabel, string description, string remainingCountText,
 			string referenceCountText, string fieldsToShow, string writingSystemsToMatch)
@@ -147,6 +163,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					  <showFields>{3}</showFields>
 					  <readOnly>{4}</readOnly>
 					  <writingSystemsToMatch>{5}</writingSystemsToMatch>
+					  <writingSystemsWhichAreRequired></writingSystemsWhichAreRequired>
 					</task>
 				", missingInfoField,label,description, fieldsToShow,fieldsToShow, writingSystemsToMatch);
 

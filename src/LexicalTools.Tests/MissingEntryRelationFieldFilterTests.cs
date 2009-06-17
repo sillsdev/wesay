@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools.Tests
 											new string[] {"vernacular"},
 											Field.MultiplicityType.ZeroOr1,
 											"RelationToOneEntry");
-			_missingRelationFieldFilter = new MissingFieldQuery(relationField, null);
+			_missingRelationFieldFilter = new MissingFieldQuery(relationField, null, null);
 		}
 
 		[TearDown]

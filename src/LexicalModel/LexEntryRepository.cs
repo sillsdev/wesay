@@ -866,11 +866,17 @@ namespace WeSay.LexicalModel
 		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field, string[] searchWritingSystemIds, WritingSystem lexicalUnitWritingSystem)
 		{
+			 var query = new MissingFieldQuery(field, searchWritingSystemIds, null);
+			return GetEntriesWithMissingFieldSortedByLexicalUnit(query, field, lexicalUnitWritingSystem);
+	  }
+
+		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(MissingFieldQuery query, Field field, WritingSystem lexicalUnitWritingSystem)
+		{
 			Guard.AgainstNull(lexicalUnitWritingSystem, "lexicalUnitWritingSystem");
 			Guard.AgainstNull(field, "field");
+			Guard.AgainstNull(query, "query");
 
-
-			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}_{2}", field, lexicalUnitWritingSystem.Id, GetCacheWritingSystemTag(searchWritingSystemIds));
+			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}_{2}", field, lexicalUnitWritingSystem.Id, query.UniqueCacheId);
 			//cacheName = MakeSafeForFileName(cacheName);
 			if (_caches[cacheName] == null)
 			{
@@ -878,8 +884,7 @@ namespace WeSay.LexicalModel
 					delegate(LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-						Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field, searchWritingSystemIds).FilteringPredicate;
-						if(filteringPredicate(entryToQuery))
+						if(query.FilteringPredicate(entryToQuery))
 						{
 							string lexicalForm = null;
 							if (!String.IsNullOrEmpty(entryToQuery.LexicalForm[lexicalUnitWritingSystem.Id]))
@@ -903,24 +908,7 @@ namespace WeSay.LexicalModel
 			return resultsFromCache;
 		}
 
-		/// <summary>
-		/// Given a list of writingSystems, combine them in a way that can be used to uniquely identify a cache of results
-		/// </summary>
-		/// <param name="ids"></param>
-		/// <returns></returns>
-		private string GetCacheWritingSystemTag(string[] ids)
-		{
-			if(ids == null || ids.Length ==0)
-			{
-			   return "all";
-			}
-			else
-			{
-				string wsTag="";
-				Enumerable.ForEach(ids, id => wsTag += id);
-				return wsTag;
-			}
-		}
+
 //
 //        private string MakeSafeForFileName(string fileName)
 //        {
