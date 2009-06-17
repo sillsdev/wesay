@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Palaso.Misc;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using System.Linq;
 using WeSay.LexicalModel.Foundation.Options;
+
+using Enumerable=Palaso.Linq.Enumerable;
 
 namespace WeSay.LexicalModel
 {
