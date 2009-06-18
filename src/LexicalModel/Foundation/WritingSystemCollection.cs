@@ -221,5 +221,10 @@ namespace WeSay.Foundation
 		{
 			return this.Values.Where((ws) => !ws.IsAudio);
 		}
+
+		public IEnumerable<WritingSystem> GetAllWritingSystems()
+		{
+			return this.Values;
+		}
 	}
 }

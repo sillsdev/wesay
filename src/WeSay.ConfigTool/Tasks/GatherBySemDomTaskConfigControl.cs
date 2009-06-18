@@ -6,14 +6,8 @@ namespace WeSay.ConfigTool.Tasks
 {
 	public partial class GatherBySemDomTaskConfigControl : DefaultTaskConfigurationControl
 	{
-
-		private GatherBySemDomTaskConfigControl()
-		{
-			InitializeComponent();
-		}
-
 		public GatherBySemDomTaskConfigControl(ITaskConfiguration config)
-			:base(config)
+			:base(config, true)
 		{
 			InitializeComponent();
 			_showMeaningField.Checked =  Configuration.ShowMeaningField;

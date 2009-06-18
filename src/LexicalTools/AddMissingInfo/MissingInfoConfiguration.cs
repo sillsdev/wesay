@@ -51,7 +51,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				yield return new KeyValuePair<string, string>("label", Label);
 				yield return new KeyValuePair<string, string>("longLabel", LongLabel);
 				yield return new KeyValuePair<string, string>("description", Description);
-				yield return new KeyValuePair<string, string>("field", MissingInfoField);
+				yield return new KeyValuePair<string, string>("field", MissingInfoFieldName);
 				yield return new KeyValuePair<string, string>("showFields", FieldsToShowCommaSeparated);
 				yield return new KeyValuePair<string, string>("readOnly", FieldsToShowReadOnly);
 				yield return new KeyValuePair<string, string>("writingSystemsToMatch", WritingSystemsWeWantToFillInCommaSeparated);
@@ -139,7 +139,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 		}
 
-		public string MissingInfoField //<field>
+		public string MissingInfoFieldName //<field>
 		{
 			get { return GetStringFromConfigNode("field"); }
 		}
@@ -152,6 +152,15 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			get { return _writingSystemsWhichAreRequired.ToArray(); }
 		}
+	   public IList<string> WritingSystemsWhichAreRequired
+	   {
+		   get { return _writingSystemsWhichAreRequired; }
+	   }
+	   public IList<string> WritingSystemsWeWantToFillIn
+	   {
+		   get { return _writingSystemsWeWantToFillIn; }
+	   }
+
 		public static MissingInfoConfiguration CreateForTests(string missingInfoField,
 			string label, string longLabel, string description, string remainingCountText,
 			string referenceCountText, string fieldsToShow, string writingSystemsToMatch)

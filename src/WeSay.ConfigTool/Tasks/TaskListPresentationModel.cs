@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Autofac;
+using WeSay.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tasks

@@ -1,21 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using WeSay.Foundation;
+using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
+using System.Linq;
 
 namespace WeSay.ConfigTool.Tasks
 {
 	public partial class MissingInfoTaskConfigControl : DefaultTaskConfigurationControl
 	{
+		private readonly ViewTemplate _viewTemplate;
+		private List<WritingSystem> _relevantWritingSystems;
 
-		private MissingInfoTaskConfigControl()
+		public MissingInfoTaskConfigControl(MissingInfoConfiguration config, ViewTemplate viewTemplate)
+			:base(config, true)
 		{
+			_viewTemplate = viewTemplate;
 			InitializeComponent();
-		}
 
-		public MissingInfoTaskConfigControl(ITaskConfiguration config)
-			:base(config)
-		{
-			InitializeComponent();
 			_showExampleField.Visible = Configuration.IncludesField(LexicalModel.LexExampleSentence.WellKnownProperties.ExampleSentence);
 			_showExampleField.Checked = Configuration.IncludesField(LexicalModel.LexExampleSentence.WellKnownProperties.Translation);
 		}
@@ -31,5 +34,35 @@ namespace WeSay.ConfigTool.Tasks
 		{
 			Configuration.SetInclusionOfField(LexicalModel.LexExampleSentence.WellKnownProperties.Translation, _showExampleField.Checked);
 		}
+
+		private void MissingInfoTaskConfigControl_Load(object sender, EventArgs e)
+		{
+			var field = _viewTemplate.GetField(Configuration.MissingInfoFieldName);
+			_matchWhenEmpty.Visible = field.DataTypeName == Field.BuiltInDataType.MultiText.ToString();
+			_matchWhenEmptyLabel.Visible = _matchWhenEmpty.Visible;
+			_requiredToBeFilledIn.Visible = _matchWhenEmpty.Visible;
+			_requiredToBeFilledInLabel.Visible = _requiredToBeFilledIn.Visible;
+
+			_setupLabel.Visible = _matchWhenEmpty.Visible;
+
+			if (_matchWhenEmpty.Visible)
+			{
+				_relevantWritingSystems = new List<WritingSystem>();
+				var relevantWritingSystems = from x in _viewTemplate.WritingSystems
+											 where field.WritingSystemIds.Contains(x.Key)
+											 select x.Value;
+				_relevantWritingSystems.AddRange(relevantWritingSystems);
+
+
+				_matchWhenEmpty.Init(_relevantWritingSystems,
+									 Configuration.WritingSystemsWeWantToFillIn,
+									 "any");
+				// _matchWhenEmpty.Changed += new EventHandler(_matchWhenEmpty_Changed);
+				_requiredToBeFilledIn.Init(_relevantWritingSystems,
+										   Configuration.WritingSystemsWhichAreRequired,
+										   "none");
+			}
+		}
+
 	}
 }

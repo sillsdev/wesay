@@ -1,18 +1,14 @@
 using System;
-using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
-using System.Xml.Xsl;
 using Autofac;
 using Autofac.Builder;
 using LiftIO;
@@ -419,6 +415,8 @@ namespace WeSay.Project
 			}
 
 			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named("PrintingTemplate");
+			builder.Register<WritingSystemCollection>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
+
 			builder.Register<PublicationFontStyleProvider>(c=> new PublicationFontStyleProvider(c.Resolve<ViewTemplate>("PrintingTemplate")));
 
 			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainDdp4);

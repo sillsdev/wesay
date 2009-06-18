@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 								TaskMemoryRepository taskMemoryRepository)
 			: base( config, lexEntryRepository, taskMemoryRepository)
 		{
-			Guard.AgainstNull(config.MissingInfoField, "MissingInfoField");
+			Guard.AgainstNull(config.MissingInfoFieldName, "MissingInfoFieldName");
 			Guard.AgainstNull(defaultViewTemplate, "viewTemplate");
 			Debug.Assert(config.WritingSystemsWeWantToFillInArray == null ||
 						 config.WritingSystemsWeWantToFillInArray.Length == 0 ||
@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 
 
-			_missingInfoField = defaultViewTemplate[config.MissingInfoField];
+			_missingInfoField = defaultViewTemplate[config.MissingInfoFieldName];
 
 			_viewTemplate = config.CreateViewTemplate(defaultViewTemplate);
 		 }

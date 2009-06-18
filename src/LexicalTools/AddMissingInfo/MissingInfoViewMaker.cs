@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 														  "The user will click this to say that this word has no baseform.  E.g. Kindness has Kind as a baseform, but Kind has no other word as a baseform.");
 				flagField.DataTypeName = "Flag";
 				flagField.ClassName = "LexEntry";
-				flagField.FieldName = "flag-skip-" + config.MissingInfoField;
+				flagField.FieldName = "flag-skip-" + config.MissingInfoFieldName;
 				flagField.Enabled = true;
 				template.Add(flagField);
 			}

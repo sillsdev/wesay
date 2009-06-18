@@ -18,11 +18,12 @@ namespace WeSay.ConfigTool.Tasks
 			InitializeComponent();
 		}
 
-		public DefaultTaskConfigurationControl(ITaskConfiguration config)
+		public DefaultTaskConfigurationControl(ITaskConfiguration config, bool haveSetupControls)
 		{
 			_config = config;
 			InitializeComponent();
 			_description.Text = config.Description;
+			_setupLabel.Visible = haveSetupControls;
 		}
 	}
 }

@@ -9,7 +9,7 @@ using Palaso.Reporting;
 using WeSay.ConfigTool.NewProjectCreation;
 using WeSay.ConfigTool.NewProjectDialogs;
 using WeSay.ConfigTool.Properties;
-
+using WeSay.ConfigTool.Tasks;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -287,6 +287,8 @@ namespace WeSay.ConfigTool
 			containerBuilder.Register(typeof(Tasks.TaskListView));
 			containerBuilder.Register(typeof(Tasks.TaskListPresentationModel));
 
+			containerBuilder.Register<MissingInfoTaskConfigControl>().FactoryScoped();
+
 			//      autofac's generated factory stuff wasn't working with our version of autofac, so
 			//  i abandoned this
 			//containerBuilder.Register<Control>().FactoryScoped();
@@ -300,6 +302,8 @@ namespace WeSay.ConfigTool
 			containerBuilder.Register<BackupPlanControl>();
 			containerBuilder.Register<ChorusControl>();
 			containerBuilder.Register<OptionListControl>();
+
+			containerBuilder.Register<IContext>(c => c); // make the context itself available for pushing into contructors
 
 			containerBuilder.Build(container);
 

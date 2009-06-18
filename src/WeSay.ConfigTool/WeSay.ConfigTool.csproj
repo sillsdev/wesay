@@ -296,6 +296,10 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>TaskListView.cs</DependentUpon>
 	</EmbeddedResource>
+	<EmbeddedResource Include="Tasks\WritingSystemFilterControl.resx">
+	  <DependentUpon>WritingSystemFilterControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
 	<EmbeddedResource Include="WelcomeControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WelcomeControl.cs</DependentUpon>
@@ -348,7 +352,7 @@
 	<Compile Include="Tasks\DefaultTaskConfigurationControl.Designer.cs">
 	  <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="Tasks\ITaskConfigurationControl.cs" />
+	<Compile Include="Tasks\ConfigTaskControlFactory.cs" />
 	<Compile Include="Tasks\MissingInfoTaskConfigControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -362,6 +366,12 @@
 	  <DependentUpon>TaskListView.cs</DependentUpon>
 	</Compile>
 	<Compile Include="Tasks\TaskListPresentationModel.cs" />
+	<Compile Include="Tasks\WritingSystemFilterControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Tasks\WritingSystemFilterControl.Designer.cs">
+	  <DependentUpon>WritingSystemFilterControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="WelcomeControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

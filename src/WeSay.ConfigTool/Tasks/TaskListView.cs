@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using Autofac;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
@@ -8,12 +9,14 @@ namespace WeSay.ConfigTool.Tasks
 {
 	public partial class TaskListView: ConfigurationControlBase
 	{
-		private Autofac.IContext _context;
+		private IContext _diContainer;
 		public TaskListPresentationModel Model { get; set; }
 
-		public TaskListView(ILogger logger)
+		public TaskListView(ILogger logger, IContext diContainer)
 			: base("set up tasks for the user", logger)
 		{
+			_diContainer = diContainer;
+
 
 			InitializeComponent();
 			splitContainer1.Resize += splitContainer1_Resize;
@@ -77,7 +80,9 @@ namespace WeSay.ConfigTool.Tasks
 //            {
 //                splitContainer1.Panel2.Controls.Add(c);
 //            }
-			splitContainer1.Panel2.Controls.Add(ConfigTaskControlFactory.Create(configuration));
+			var control = ConfigTaskControlFactory.Create(_diContainer, configuration);
+			control.Dock = DockStyle.Fill;
+			splitContainer1.Panel2.Controls.Add(control);
 
 		}
 

@@ -34,7 +34,7 @@
 			// _showMeaningField
 			//
 			this._showMeaningField.AutoSize = true;
-			this._showMeaningField.Location = new System.Drawing.Point(17, 239);
+			this._showMeaningField.Location = new System.Drawing.Point(17, 178);
 			this._showMeaningField.Name = "_showMeaningField";
 			this._showMeaningField.Size = new System.Drawing.Size(308, 17);
 			this._showMeaningField.TabIndex = 23;
@@ -49,6 +49,7 @@
 			this.Controls.Add(this._showMeaningField);
 			this.Name = "GatherBySemDomTaskConfigControl";
 			this.Size = new System.Drawing.Size(488, 289);
+			this.Controls.SetChildIndex(this._setupLabel, 0);
 			this.Controls.SetChildIndex(this._showMeaningField, 0);
 			this.ResumeLayout(false);
 			this.PerformLayout();
