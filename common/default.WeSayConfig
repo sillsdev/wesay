@@ -8,7 +8,6 @@
 	<task taskName="AddMissingInfo" visible="false"><field>BaseForm</field><label>Base Forms</label><longLabel>Add Base Forms</longLabel><description>Identify the "base form" word that this word is built from. In the printed dictionary, the derived or variant words can optionally be shown as subentries of their base forms.</description><showFields>BaseForm</showFields></task>
 
 	<task taskName="GatherWordList" visible="false"><wordListFileName>DuerksenWords.txt</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
-	<task taskName="GatherWordList" visible="false"><wordListFileName>PNGWords.txt</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
 	<task taskName="GatherWordsBySemanticDomains" visible="true"><semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName></task>
   </tasks>
   <addins>
