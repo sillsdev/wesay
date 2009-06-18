@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>9.0.21022</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{5F61C809-B6C0-4567-9603-B2198E1AD038}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -144,7 +144,7 @@
 	<Compile Include="LiftRepository.cs" />
 	<Compile Include="LiftUpdateService.cs" />
 	<Compile Include="Migration\LiftPreparer.cs" />
-	<Compile Include="MissingItemFilter.cs" />
+	<Compile Include="MissingFieldQuery.cs" />
 	<Compile Include="PairStringLexEntryIdDisplayProvider.cs" />
 	<Compile Include="Phonetic.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />

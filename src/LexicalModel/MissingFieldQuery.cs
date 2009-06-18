@@ -12,6 +12,10 @@ using Enumerable=Palaso.Linq.Enumerable;
 
 namespace WeSay.LexicalModel
 {
+	/// <summary>
+	/// A query to identify entries which have some field which needs work, based on the emptiness
+	/// of specified writing system alternatives, and the non-emptiness of other ones.
+	/// </summary>
 	public class MissingFieldQuery: IFieldQuery<LexEntry>
 	{
 		private readonly Field _field;
