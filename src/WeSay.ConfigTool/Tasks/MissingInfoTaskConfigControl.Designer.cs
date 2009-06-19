@@ -54,7 +54,7 @@
 			this._matchWhenEmptyLabel.Name = "_matchWhenEmptyLabel";
 			this._matchWhenEmptyLabel.Size = new System.Drawing.Size(193, 26);
 			this._matchWhenEmptyLabel.TabIndex = 28;
-			this._matchWhenEmptyLabel.Text = "Select items where any of the following writing systems is empty:";
+			this._matchWhenEmptyLabel.Text = "Select items where any of the following writing systems are empty:";
 			//
 			// _requiredToBeFilledIn
 			//
@@ -86,7 +86,7 @@
 			this._requiredToBeFilledInLabel.Name = "_requiredToBeFilledInLabel";
 			this._requiredToBeFilledInLabel.Size = new System.Drawing.Size(193, 26);
 			this._requiredToBeFilledInLabel.TabIndex = 28;
-			this._requiredToBeFilledInLabel.Text = "And where at least one of the following writing systems are already filled in:\r\n";
+			this._requiredToBeFilledInLabel.Text = "And where at least one of the following writing systems is already filled in:\r\n";
 			//
 			// MissingInfoTaskConfigControl
 			//
