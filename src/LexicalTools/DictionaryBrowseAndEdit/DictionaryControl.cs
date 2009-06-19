@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Misc;
 using Palaso.Reporting;
+using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;

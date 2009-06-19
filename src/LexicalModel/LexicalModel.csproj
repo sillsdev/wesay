@@ -114,7 +114,6 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="Field.cs" />
-	<Compile Include="Foundation\ApproximateMatcher.cs" />
 	<Compile Include="Foundation\CommonEnumerations.cs" />
 	<Compile Include="Foundation\FlagState.cs" />
 	<Compile Include="Foundation\IBindableControl.cs" />
