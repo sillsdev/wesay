@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using WeSay.Foundation;
 using System.Linq;
+using WeSay.Foundation;
+
+using Enumerable=Palaso.Linq.Enumerable;
 
 namespace WeSay.ConfigTool.Tasks
 {
@@ -38,7 +40,7 @@ namespace WeSay.ConfigTool.Tasks
 		{
 			SetMenuLabel();
 			_selectedItemIds.Clear();
-			SelectedItemIds.ForEach(id =>_selectedItemIds.Add(id));
+			Enumerable.ForEach(SelectedItemIds, id =>_selectedItemIds.Add(id));
 		}
 
 		public IEnumerable<string> SelectedItemIds
