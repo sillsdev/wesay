@@ -21,17 +21,22 @@
 		</copy>
 
 		<!-- review: usesourcepath not reqd if resx in same folder as build file and does not refer to artwork directly -->
-		<!-- review: could replace these two with a foreach in resx (and similarly whever it occurs in the projects -->
-		<resgen todir="${build.namespace.dir}" usesourcepath="true">
-			<resources>
-				<include name="${build.namespace.dir}/*.resx" />
-			</resources>
-		</resgen>
-		<resgen todir="${build.namespace.dir}/Properties" usesourcepath="true">
-			<resources>
-				<include name="${build.namespace.dir}/Properties/*.resx" />
-			</resources>
-		</resgen>
+				<foreach item="Folder" property="build.namespace.dir.current">
+						<in>
+								<items>
+										<include name="${build.namespace.dir}/**" />
+										<exclude name="${build.namespace.dir}/Resources" />
+								</items>
+						</in>
+						<do>
+								<echo message="Resource compiling ${build.namespace.dir.current}" />
+								<resgen todir="${build.namespace.dir.current}" usesourcepath="true">
+										<resources>
+												<include name="${build.namespace.dir.current}/*.resx" />
+										</resources>
+								</resgen>
+						</do>
+				</foreach>
 
 		<csc target="winexe"
 			output="${project.output.dir}/WeSay.ConfigTool.exe"
