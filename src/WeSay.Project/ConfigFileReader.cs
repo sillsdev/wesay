@@ -109,9 +109,11 @@ namespace WeSay.Project
 			if (navigator != null)
 			{
 				bool hasviewTemplate = false;
-				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty,
-																		   string.Empty);
 
+				// String.Empty fails on mono 2.4. See http://projects.palaso.org/issues/show/276
+				XPathNodeIterator componentList = navigator.SelectChildren(
+					"viewTemplate", string.Empty
+				);
 				ViewTemplate factoryTemplate = ViewTemplate.MakeMasterTemplate(writingSystems);
 
 				foreach (XPathNavigator component in componentList)
