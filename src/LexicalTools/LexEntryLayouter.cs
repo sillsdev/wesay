@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
@@ -23,7 +24,7 @@ namespace WeSay.LexicalTools
 								LexEntryRepository lexEntryRepository,
 								IServiceLocator serviceLocator,
 								LexEntry entry)
-			: base(builder, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, viewTemplate, entry))
+			: base(builder, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, entry))
 		{
 			Entry = entry;
 		}
@@ -76,33 +77,20 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		private static IServiceProvider CreateLayoutInfoServiceProvider(IServiceLocator serviceLocator, ViewTemplate viewTemplate, LexEntry entry)
+		/// <summary>
+		/// Here we (somewhat awkwardly) create an inner container which is set up with knowledge of the current entry
+		/// </summary>
+		private static IServiceProvider CreateLayoutInfoServiceProvider(IServiceLocator serviceLocator, LexEntry entry)
 		{
 			Palaso.Misc.Guard.AgainstNull(serviceLocator, "serviceLocator");
+			Palaso.Misc.Guard.AgainstNull(entry, "entry");
 
-//            if (viewTemplate == null)
-//                return null;//some unrelated unit tests don't give us this parameter
-//            Field lexicalUnitField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-//            if(lexicalUnitField == null)
-//                return null;//some unrelated unit tests lack this field
-//
-//            var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
-//                        () => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
-//            return new LayoutInfoProvider(ap);
-
-			if (viewTemplate == null)
-				return null;//some unrelated unit tests don't give us this parameter
-			Field lexicalUnitField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (lexicalUnitField == null)
-				return null;//some unrelated unit tests lack this field
-
+			var namingHelper = (MediaNamingHelper) serviceLocator.GetService(typeof (MediaNamingHelper));
 			var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
-						() => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
-		   // return new LayoutInfoProvider(ap);
-			//              (b => b.Register(TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(_project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject )));
+						() => entry.LexicalForm.GetBestAlternativeString(namingHelper.LexicalUnitWritingSystemIds));
 
 		   return serviceLocator.CreateNewUsing(c=>c.Register(ap));
-		}
+	   }
 	}
 
 
