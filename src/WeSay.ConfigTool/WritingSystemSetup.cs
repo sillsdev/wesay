@@ -10,14 +10,19 @@ namespace WeSay.ConfigTool
 {
 	public partial class WritingSystemSetup: ConfigurationControlBase
 	{
+
+		bool _onIDChangedSentry;
+
 		public WritingSystemSetup(ILogger logger)
 			: base("set up fonts, keyboards, and sorting", logger)
 		{
 			InitializeComponent();
 			Resize += WritingSystemSetup_Resize;
+			_onIDChangedSentry = false;
 			_basicControl.Logger = logger;
 			_fontControl.Logger = logger;
 			_sortControl.Logger = logger;
+			_wsListBox.Sorted = true;
 		}
 
 		private void WritingSystemSetup_Resize(object sender, EventArgs e)
@@ -41,12 +46,13 @@ namespace WeSay.ConfigTool
 
 		private void LoadWritingSystemListBox()
 		{
+			_wsListBox.BeginUpdate();
 			_wsListBox.Items.Clear();
 			foreach (WritingSystem w in BasilProject.Project.WritingSystems.Values)
 			{
 				_wsListBox.Items.Add(new WsDisplayProxy(w));
 			}
-			_wsListBox.Sorted = true;
+			_wsListBox.EndUpdate();
 			if (_wsListBox.Items.Count > 0)
 			{
 				_wsListBox.SelectedIndex = 0;
@@ -63,22 +69,25 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		private void UpdateSelection()
 		{
-			_tabControl.Visible = SelectedWritingSystem != null;
-			if (SelectedWritingSystem == null)
+			WritingSystem selectedWritingSystem = SelectedWritingSystem;
+			_tabControl.Visible = selectedWritingSystem != null;
+			_btnRemove.Enabled = selectedWritingSystem != null;
+			if (selectedWritingSystem == null)
 			{
-				Refresh();
+				Console.WriteLine("WritingSystemSetup.UpdateSelection selected is null");
+				Invalidate();
+				//Refresh();
 				return;
 			}
 
-			_btnRemove.Enabled = true;
 			//                (SelectedWritingSystem != BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault)
 			//              && (SelectedWritingSystem != BasilProject.Project.WritingSystems.VernacularWritingSystemDefault);
-			_basicControl.WritingSystem = SelectedWritingSystem;
-			_sortControl.WritingSystem = SelectedWritingSystem;
-			_fontControl.WritingSystem = SelectedWritingSystem;
+			_basicControl.WritingSystem = selectedWritingSystem;
+			_sortControl.WritingSystem = selectedWritingSystem;
+			_fontControl.WritingSystem = selectedWritingSystem;
 
-			_sortingPage.Enabled = !SelectedWritingSystem.IsAudio;
-			_fontsPage.Enabled = !SelectedWritingSystem.IsAudio;
+			_sortingPage.Enabled = !selectedWritingSystem.IsAudio;
+			_fontsPage.Enabled = !selectedWritingSystem.IsAudio;
 		}
 
 		private WritingSystem SelectedWritingSystem
@@ -175,13 +184,19 @@ namespace WeSay.ConfigTool
 		/// <param name="e"></param>
 		private void OnWritingSystemIdChanged(object sender, EventArgs e)
 		{
+			_wsListBox.Invalidate();
+			return;
+#if false
+			_onIDChangedSentry = true;
 			WritingSystem ws = sender as WritingSystem;
 			PropertyValueChangedEventArgs args = e as PropertyValueChangedEventArgs;
 			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
 			{
 				string oldId = args.OldValue.ToString();
+				Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged changing to {0}", ws.Id);
 				if(!WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId))
 				{
+					Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged oh no");
 					ws.Id = oldId; //couldn't make the change
 				}
 				//                Reporting.ErrorReporter.NotifyUserOfProblem(
@@ -191,11 +206,11 @@ namespace WeSay.ConfigTool
 
 			//_wsListBox.Refresh(); didn't work
 			//this.Refresh();   didn't work
-			for (int i = 0;i < _wsListBox.Items.Count;i++)
-			{
-				_wsListBox.Items[i] = _wsListBox.Items[i];
-			}
-			UpdateSelection();
+			//for (int i = 0;i < _wsListBox.Items.Count;i++)
+			//{
+			//    _wsListBox.Items[i] = _wsListBox.Items[i];
+			//}
+			UpdateSelection(); // review CP Why? This is already current, only the list needs to change.
 			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
 			{
 				LoadWritingSystemListBox();
@@ -208,6 +223,11 @@ namespace WeSay.ConfigTool
 					}
 				}
 			}
+			Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged refresh list and clear sentry");
+			_wsListBox.Refresh();
+			//_wsListBox.Invalidate();
+			_onIDChangedSentry = false;
+#endif
 		}
 
 		private void OnIsAudioChanged(object sender, EventArgs e)
