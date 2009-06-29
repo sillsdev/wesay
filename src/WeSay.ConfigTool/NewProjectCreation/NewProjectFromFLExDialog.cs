@@ -2,9 +2,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using WeSay.ConfigTool.NewProjectCreation;
 
-namespace WeSay.ConfigTool.NewProjectDialogs
+namespace WeSay.ConfigTool.NewProjectCreation
 {
 	public partial class NewProjectFromFLExDialog: NewProject
 	{

@@ -1,4 +1,4 @@
-namespace WeSay.ConfigTool.NewProjectDialogs
+namespace WeSay.ConfigTool.NewProjectCreation
 {
 	partial class NewProjectFromFLExDialog
 	{
@@ -68,7 +68,7 @@ namespace WeSay.ConfigTool.NewProjectDialogs
 			this._launchWebPage.TabIndex = 7;
 			this._launchWebPage.TabStop = true;
 			this._launchWebPage.Text = "Don\'t do this if you already have a corresponding WeSay project.  To learn how to" +
-				" add changes from FLEx to an existing WeSay project, read this web page.";
+									   " add changes from FLEx to an existing WeSay project, read this web page.";
 			this._launchWebPage.UseCompatibleTextRendering = true;
 			this._launchWebPage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this._launchWebPage_LinkClicked);
 			//

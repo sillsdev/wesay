@@ -7,7 +7,6 @@ using Autofac;
 
 using Palaso.Reporting;
 using WeSay.ConfigTool.NewProjectCreation;
-using WeSay.ConfigTool.NewProjectDialogs;
 using WeSay.ConfigTool.Properties;
 using WeSay.ConfigTool.Tasks;
 using WeSay.Project;
