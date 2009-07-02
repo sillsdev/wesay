@@ -44,7 +44,7 @@ namespace WeSay.ConfigTool
 				_writingSystem = value;
 				_writingSystemProperties.SelectedObject = _writingSystem;
 				// _fontProperties.SelectedObjects = new object[] { _writingSystem, helper };
-				Refresh();
+				Invalidate();
 			}
 		}
 
