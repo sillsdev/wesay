@@ -11,18 +11,14 @@ namespace WeSay.ConfigTool
 	public partial class WritingSystemSetup: ConfigurationControlBase
 	{
 
-		bool _onIDChangedSentry;
-
 		public WritingSystemSetup(ILogger logger)
 			: base("set up fonts, keyboards, and sorting", logger)
 		{
 			InitializeComponent();
 			Resize += WritingSystemSetup_Resize;
-			_onIDChangedSentry = false;
 			_basicControl.Logger = logger;
 			_fontControl.Logger = logger;
 			_sortControl.Logger = logger;
-			_wsListBox.Sorted = true;
 		}
 
 		private void WritingSystemSetup_Resize(object sender, EventArgs e)
@@ -48,10 +44,12 @@ namespace WeSay.ConfigTool
 		{
 			_wsListBox.BeginUpdate();
 			_wsListBox.Items.Clear();
+			_wsListBox.Sorted = false; // Required for Mono which keeps on sorting during the Add which slows things down.
 			foreach (WritingSystem w in BasilProject.Project.WritingSystems.Values)
 			{
 				_wsListBox.Items.Add(new WsDisplayProxy(w));
 			}
+			_wsListBox.Sorted = true;
 			_wsListBox.EndUpdate();
 			if (_wsListBox.Items.Count > 0)
 			{
@@ -184,50 +182,13 @@ namespace WeSay.ConfigTool
 		/// <param name="e"></param>
 		private void OnWritingSystemIdChanged(object sender, EventArgs e)
 		{
+			WsDisplayProxy p = _wsListBox.SelectedItem as WsDisplayProxy;
+			_wsListBox.BeginUpdate();
+			_wsListBox.Sorted = false;
+			_wsListBox.Sorted = true;
+			_wsListBox.SelectedItem = p;
+			_wsListBox.EndUpdate();
 			_wsListBox.Invalidate();
-			return;
-#if false
-			_onIDChangedSentry = true;
-			WritingSystem ws = sender as WritingSystem;
-			PropertyValueChangedEventArgs args = e as PropertyValueChangedEventArgs;
-			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
-			{
-				string oldId = args.OldValue.ToString();
-				Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged changing to {0}", ws.Id);
-				if(!WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId))
-				{
-					Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged oh no");
-					ws.Id = oldId; //couldn't make the change
-				}
-				//                Reporting.ErrorReporter.NotifyUserOfProblem(
-				//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
-				//                    ws.Id, oldId);
-			}
-
-			//_wsListBox.Refresh(); didn't work
-			//this.Refresh();   didn't work
-			//for (int i = 0;i < _wsListBox.Items.Count;i++)
-			//{
-			//    _wsListBox.Items[i] = _wsListBox.Items[i];
-			//}
-			UpdateSelection(); // review CP Why? This is already current, only the list needs to change.
-			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
-			{
-				LoadWritingSystemListBox();
-				foreach (WsDisplayProxy o in _wsListBox.Items)
-				{
-					if (o.WritingSystem == ws)
-					{
-						_wsListBox.SelectedItem = o;
-						break;
-					}
-				}
-			}
-			Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged refresh list and clear sentry");
-			_wsListBox.Refresh();
-			//_wsListBox.Invalidate();
-			_onIDChangedSentry = false;
-#endif
 		}
 
 		private void OnIsAudioChanged(object sender, EventArgs e)
@@ -239,7 +200,7 @@ namespace WeSay.ConfigTool
 	/// <summary>
 	/// An item to stick in the listview which represents a ws
 	/// </summary>
-	public class WsDisplayProxy
+	public class WsDisplayProxy : Object
 	{
 		private WritingSystem _writingSystem;
 
