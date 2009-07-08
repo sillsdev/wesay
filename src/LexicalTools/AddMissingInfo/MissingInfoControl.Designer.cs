@@ -216,17 +216,26 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//
 			// _entryViewControl
 			//
-			this._entryViewControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._entryViewControl.AutoScroll = true;
-			this._entryViewControl.BackColor = System.Drawing.SystemColors.ActiveCaption;
+//            this._entryViewControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+//                        | System.Windows.Forms.AnchorStyles.Left)
+//                        | System.Windows.Forms.AnchorStyles.Right)));
+//            this._entryViewControl.AutoScroll = true;
+//            this._entryViewControl.BackColor = System.Drawing.SystemColors.ActiveCaption;
+//            this._entryViewControl.DataSource = null;
+//            this._entryViewControl.Location = new System.Drawing.Point(0, 0);
+//            this._entryViewControl.Name = "_entryViewControl";
+//            this._entryViewControl.ShowNormallyHiddenFields = false;
+			this._entryViewControl.Size = new System.Drawing.Size(511, 355);
+//            this._entryViewControl.TabIndex = 0;
 			this._entryViewControl.DataSource = null;
+			this._entryViewControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._entryViewControl.Location = new System.Drawing.Point(0, 0);
+			this._entryViewControl.Margin = new System.Windows.Forms.Padding(0);
 			this._entryViewControl.Name = "_entryViewControl";
 			this._entryViewControl.ShowNormallyHiddenFields = false;
-			this._entryViewControl.Size = new System.Drawing.Size(511, 355);
+		  //  this._entryViewControl.Size = new System.Drawing.Size(345, 264);
 			this._entryViewControl.TabIndex = 0;
+
 			//
 			// _congratulationsControl
 			//

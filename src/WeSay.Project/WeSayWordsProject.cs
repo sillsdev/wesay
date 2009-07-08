@@ -26,6 +26,7 @@ using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.Project.ConfigMigration;
 using WeSay.UI;
+using WeSay.UI.audio;
 
 namespace WeSay.Project
 {
@@ -448,7 +449,14 @@ namespace WeSay.Project
 											  return m;
 										  });
 
+			//            var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
+//                        () => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
 
+//            var x = _defaultViewTemplate.GetField(
+//            builder.Register<AudioPathProvider>(c=>new AudioPathProvider(PathToAudio, )));
+
+			builder.Register(c=>
+				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).ContainerScoped();
 
 			_container = builder.Build();
 		}
@@ -1450,6 +1458,20 @@ namespace WeSay.Project
 			var containerBuilder = new Autofac.Builder.ContainerBuilder();
 			adder.Invoke(containerBuilder);
 			containerBuilder.Build(_container);
+		}
+	}
+
+	public class MediaNamingHelper
+	{
+		public MediaNamingHelper(IEnumerable<string> lexicalUnitWritingSystemIds)
+		{
+			LexicalUnitWritingSystemIds = lexicalUnitWritingSystemIds;
+		}
+
+		public IEnumerable<string> LexicalUnitWritingSystemIds
+		{
+			get;
+			set;
 		}
 	}
 }
