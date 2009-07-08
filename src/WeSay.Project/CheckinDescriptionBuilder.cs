@@ -34,7 +34,7 @@ namespace WeSay.Project
 
 		public string GetDescription()
 		{
-			string appName = Application.ProductName;
+#if ON_The_Shelf          string appName = Application.ProductName;
 
 			var builder = new StringBuilder();
 
@@ -59,6 +59,8 @@ namespace WeSay.Project
 				return StringCatalog.Get(appName+": no logged activity");
 			}
 			return appName+": " + x;
+#endif
+			return "[appName] auto";
 		}
 
 		public void Clear()
