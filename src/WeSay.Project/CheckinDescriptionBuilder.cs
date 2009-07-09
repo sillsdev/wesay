@@ -61,7 +61,7 @@ namespace WeSay.Project
 			}
 			return appName+": " + x;
 #endif
-			return "[appName] auto";
+			return string.Format("[{0}:{1}] auto", Application.ProductName, Application.ProductVersion);
 		}
 
 		public void Clear()
