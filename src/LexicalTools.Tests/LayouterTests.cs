@@ -21,6 +21,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 			var b = new Autofac.Builder.ContainerBuilder();
+			b.Register(c => new MediaNamingHelper(new string[] {"en"}));
+
 			Context =   new WeSay.Foundation.ServiceLocatorAdapter(b.Build());
 		}
 
