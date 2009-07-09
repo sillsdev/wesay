@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Palaso.Progress;
 
-namespace WeSay.Data
+namespace Palaso.Data
 {
-	public class MemoryRepository<T>: IRepository<T> where T : class, new()
+	public class MemoryDataMapper<T>: IDataMapper<T> where T : class, new()
 	{
 		protected readonly Dictionary<RepositoryId, T> idToObjectHashtable =
 				new Dictionary<RepositoryId, T>();
@@ -15,14 +14,15 @@ namespace WeSay.Data
 
 		private DateTime lastModified = new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc);
 #if DEBUG
-	   // protected StackTrace _constructionStackTrace;
+		protected StackTrace _constructionStackTrace;
 #endif
 
-		public MemoryRepository()
+		public MemoryDataMapper()
 		{
 #if DEBUG
-			//_constructionStackTrace = new StackTrace();
+			_constructionStackTrace = new StackTrace();
 #endif
+			_disposed = false;
 		}
 		public DateTime LastModified
 		{
@@ -184,11 +184,11 @@ namespace WeSay.Data
 		#region IDisposable Members
 
 #if DEBUG
-		~MemoryRepository()
+		~MemoryDataMapper()
 		{
 			if (!_disposed)
 			{
-				throw new ApplicationException("Disposed not explicitly called on MemoryRepository.");
+				throw new ApplicationException("Disposed not explicitly called on MemoryDataMapper." + "\n" + _constructionStackTrace.ToString());
 			}
 		}
 #endif

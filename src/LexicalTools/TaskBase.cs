@@ -24,8 +24,6 @@ namespace WeSay.LexicalTools
 		private readonly string _remainingCountText;
 		private readonly string _referenceCountText;
 		private readonly bool _isPinned;
-		private readonly string _cachePath;
-		private readonly string _cacheFilePath;
 		private int _remainingCount;
 		private int _referenceCount;
 

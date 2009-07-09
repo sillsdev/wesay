@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Palaso.Data;
 
 namespace WeSay.Data.Tests
 {

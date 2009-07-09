@@ -1,6 +1,6 @@
 using System;
 
-namespace WeSay.Data
+namespace Palaso.Data
 {
 	/// <summary>
 	/// Pseudo precise in that the ticks value returned does not actually

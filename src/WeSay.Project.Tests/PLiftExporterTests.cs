@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
+using Palaso.Data;
 using Palaso.TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -11,7 +12,7 @@ using WeSay.LexicalModel;
 namespace WeSay.Project.Tests
 {
 	/// <summary>
-	/// Tests of the LiftExporter, focussed on its support for the PLIFT scenario
+	/// Tests of the WeSayLiftWriter, focussed on its support for the PLIFT scenario
 	/// </summary>
 	[TestFixture]
 	public class PLiftExporterTests
@@ -468,6 +469,7 @@ namespace WeSay.Project.Tests
 			Repo.Dispose();
 			_outputFile.Dispose();
 			_projectDir.Dispose();
+			_lexEntryRepository.Dispose();
 		}
 
 		public void AssertHasAtLeastOneMatch(string xpath)
@@ -530,21 +532,22 @@ namespace WeSay.Project.Tests
 
 		public void DoExport()
 		{
-			PLiftExporter exporter = new PLiftExporter(_outputFile.Path, Repo, Template);
-
-			ResultSet<LexEntry> allEntriesSortedByHeadword =
-					this.Repo.GetAllEntriesSortedByHeadword(
-							this.HeadwordWritingSystem);
-			foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
+			using (PLiftExporter exporter = new PLiftExporter(_outputFile.Path, Repo, Template))
 			{
-				int homographNumber = 0;
-				if ((bool)token["HasHomograph"])
+				ResultSet<LexEntry> allEntriesSortedByHeadword =
+					this.Repo.GetAllEntriesSortedByHeadword(
+						this.HeadwordWritingSystem);
+				foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
 				{
-					homographNumber = (int)token["HomographNumber"];
+					int homographNumber = 0;
+					if ((bool) token["HasHomograph"])
+					{
+						homographNumber = (int) token["HomographNumber"];
+					}
+					exporter.Add(token.RealObject, homographNumber);
 				}
-				exporter.Add(token.RealObject, homographNumber);
+				exporter.End();
 			}
-			exporter.End();
 		}
 
 		public void CheckRelationOutput(LexEntry targetEntry, string relationName)

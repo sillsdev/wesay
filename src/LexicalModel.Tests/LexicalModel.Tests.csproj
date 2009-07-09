@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="Binding.cs" />
+	<Compile Include="ConstructorThrowTests.cs" />
 	<Compile Include="Foundation\MultiTextTests.cs" />
 	<Compile Include="Foundation\Options\OptionList.Tests.cs" />
 	<Compile Include="Foundation\Options\OptionRefCollectionTests.cs" />

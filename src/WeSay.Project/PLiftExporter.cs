@@ -12,7 +12,7 @@ using Palaso.Linq;
 
 namespace WeSay.Project
 {
-	public class PLiftExporter: LiftExporter
+	public class PLiftExporter: WeSayLiftWriter
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly LexEntryRepository _lexEntryRepository;

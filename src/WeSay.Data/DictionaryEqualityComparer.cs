@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WeSay.Data
+namespace Palaso.Data
 {
 	//todo: write hashcode
 	internal class DictionaryEqualityComparer<Key, Value> : EqualityComparer<IDictionary<Key, Value>>

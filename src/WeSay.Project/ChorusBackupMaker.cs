@@ -81,12 +81,6 @@ namespace WeSay.Project
 				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
 			}
 
-			LiftRepository.RightToAccessLiftExternally rightToAccessLiftExternally = null;
-			if (_lexEntryRepository != null)
-			{
-				rightToAccessLiftExternally = _lexEntryRepository.GetRightToAccessLiftExternally();
-			}
-
 			try
 			{
 				ProjectFolderConfiguration projectFolder = new ProjectFolderConfiguration(pathToProjectDirectory);
@@ -143,13 +137,6 @@ namespace WeSay.Project
 			{
 				Palaso.Reporting.Logger.WriteEvent("Error during Backup: {0}", error.Message);
 				//TODO we need some passive way indicating the health of the backup system
-			}
-			finally
-			{
-				if(rightToAccessLiftExternally !=null)
-				{
-					rightToAccessLiftExternally.Dispose();
-				}
 			}
 		}
 

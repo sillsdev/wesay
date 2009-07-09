@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using Palaso.Data;
+
 using NUnit.Framework;
 
-namespace WeSay.Data.Tests
+namespace Palaso.Data.Tests
 {
 	[TestFixture]
 	public class DictionaryEqualityComparerTests

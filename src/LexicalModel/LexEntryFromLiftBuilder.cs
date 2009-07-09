@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using LiftIO.Parsing;
-using Palaso.Text;
-using WeSay.Data;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
 using System.Linq;
-using WeSay.LexicalModel.Foundation.Options;
+using LiftIO.Parsing;
+using Palaso.Data;
+using Palaso.Text;
+
+using WeSay.Foundation; // review cp WeSayDataObject
+using WeSay.Foundation.Options; // review cp May move to palaso
+using WeSay.LexicalModel.Foundation.Options; // review cp may move to palaso
 
 namespace WeSay.LexicalModel
 {
@@ -36,14 +37,14 @@ namespace WeSay.LexicalModel
 		public event EventHandler<EntryCreatedEventArgs> EntryCreatedEvent = delegate { };
 		private readonly IList<String> _expectedOptionTraits;
 		private readonly IList<string> _expectedOptionCollectionTraits;
-		private readonly LiftRepository _repository;
+		private readonly MemoryDataMapper<LexEntry> _dataMapper;
 		private readonly OptionsList _semanticDomainsList;
 
-		public LexEntryFromLiftBuilder(LiftRepository repository, OptionsList semanticDomainsList)
+		public LexEntryFromLiftBuilder(MemoryDataMapper<LexEntry> dataMapper, OptionsList semanticDomainsList)
 		{
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
-			_repository = repository;
+			_dataMapper = dataMapper;
 			_semanticDomainsList = semanticDomainsList;
 		}
 
@@ -61,14 +62,14 @@ namespace WeSay.LexicalModel
 				eInfo.ModificationTime = PreciseDateTime.UtcNow;
 			}
 
-			entry = _repository.CreateItem();
+			entry = _dataMapper.CreateItem();
 			entry.Id = eInfo.Id;
 			entry.Guid = eInfo.Guid;
 			entry.CreationTime = eInfo.CreationTime;
 			entry.ModificationTime = eInfo.ModificationTime;
-			if (_repository.LastModified < entry.ModificationTime)
+			if (_dataMapper.LastModified < entry.ModificationTime)
 			{
-				_repository.LastModified = entry.ModificationTime;
+				_dataMapper.LastModified = entry.ModificationTime;
 			}
 
 			entry.ModifiedTimeIsLocked = true; //while we build it up
@@ -475,7 +476,7 @@ namespace WeSay.LexicalModel
 		public void FinishEntry(LexEntry entry)
 		{
 			PostProcessSenses(entry);
-			//_repository.FinishCreateEntry(entry);
+			//_dataMapper.FinishCreateEntry(entry);
 			entry.GetOrCreateId(false);
 			entry.ModifiedTimeIsLocked = false;
 			entry.Clean();

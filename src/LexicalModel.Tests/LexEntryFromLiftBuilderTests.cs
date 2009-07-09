@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using LiftIO;
 using LiftIO.Parsing;
-using NUnit.Framework;
-using WeSay.Data;
+using Palaso.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
+
+using NUnit.Framework;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -16,7 +16,7 @@ namespace WeSay.LexicalModel.Tests
 	public class LexEntryFromLiftBuilderTests: ILiftMergerTestSuite
 	{
 		private LexEntryFromLiftBuilder _builder;
-		private LiftRepository _repository;
+		private MemoryDataMapper<LexEntry> _dataMapper;
 		private string _tempFile;
 
 		[SetUp]
@@ -25,17 +25,17 @@ namespace WeSay.LexicalModel.Tests
 			WeSayWordsProject.InitializeForTests();
 
 			_tempFile = Path.GetTempFileName();
-			_repository = new LiftRepository(_tempFile);
+			_dataMapper = new MemoryDataMapper<LexEntry>();
 			OptionsList pretendSemanticDomainList = new OptionsList();
 			pretendSemanticDomainList.Options.Add(new Option("4.2.7 Play, fun", new MultiText()));
-			_builder = new LexEntryFromLiftBuilder(_repository, pretendSemanticDomainList);
+			_builder = new LexEntryFromLiftBuilder(_dataMapper, pretendSemanticDomainList);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			_builder.Dispose();
-			_repository.Dispose();
+			_dataMapper.Dispose();
 			File.Delete(_tempFile);
 		}
 
@@ -84,7 +84,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Id, e.Id);
 			_builder.FinishEntry(e);
-			Assert.AreEqual(1, _repository.CountAllItems());
+			Assert.AreEqual(1, _dataMapper.CountAllItems());
 		}
 
 		[Test]
@@ -95,7 +95,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = _builder.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Guid, e.Guid);
 			_builder.FinishEntry(e);
-			Assert.AreEqual(1, _repository.CountAllItems());
+			Assert.AreEqual(1, _dataMapper.CountAllItems());
 		}
 
 		[Test]
@@ -109,7 +109,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(extensibleInfo.CreationTime, e.CreationTime);
 			Assert.AreEqual(extensibleInfo.ModificationTime, e.ModificationTime);
 			_builder.FinishEntry(e);
-			Assert.AreEqual(1, _repository.CountAllItems());
+			Assert.AreEqual(1, _dataMapper.CountAllItems());
 		}
 
 		[Test]
@@ -510,11 +510,11 @@ namespace WeSay.LexicalModel.Tests
 			_builder.FinishEntry(e);
 			CheckCompleteEntry(e);
 
-			RepositoryId[] entries = _repository.GetAllItems();
+			RepositoryId[] entries = _dataMapper.GetAllItems();
 			Assert.AreEqual(1, entries.Length);
 
 			//now check it again, from the list
-			CheckCompleteEntry(_repository.GetItem(entries[0]));
+			CheckCompleteEntry(_dataMapper.GetItem(entries[0]));
 		}
 
 		[Test]
@@ -619,12 +619,12 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Guid g = Guid.NewGuid();
 			Extensible eInfo = CreateFullextensibleInfo(g);
-			LexEntry item = _repository.CreateItem();
+			LexEntry item = _dataMapper.CreateItem();
 			item.Guid = eInfo.Guid;
 			item.Id = eInfo.Id;
 			item.ModificationTime = eInfo.ModificationTime;
 			item.CreationTime = eInfo.CreationTime;
-			_repository.SaveItem(item);
+			_dataMapper.SaveItem(item);
 
 			//strip out the time
 			eInfo.ModificationTime = Extensible.ParseDateTimeCorrectly("2005-01-01");

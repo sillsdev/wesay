@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using WeSay.Data;
+using Palaso.Data;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -12,7 +12,7 @@ namespace Addin.Transform
 		//private string MakePLiftTempFile(IEnumerable<LexEntry> entries, ViewTemplate template, IFindEntries finder)
 		//{
 		//    string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-		//    LiftExporter exporter = new LiftExporter(path);
+		//    WeSayLiftWriter exporter = new WeSayLiftWriter(path);
 		//    exporter.SetUpForPresentationLiftExport(template, finder);
 		//    foreach (LexEntry entry in entries)
 		//    {
