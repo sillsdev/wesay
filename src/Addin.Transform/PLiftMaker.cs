@@ -24,20 +24,22 @@ namespace Addin.Transform
 
 		public void  MakePLiftTempFile(string outputPath, LexEntryRepository lexEntryRepository, ViewTemplate template)
 		{
-			PLiftExporter exporter = new PLiftExporter(outputPath, lexEntryRepository, template);
-			ResultSet<LexEntry> recordTokens =
-					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);
-			foreach (RecordToken<LexEntry> token in recordTokens)
+			using (PLiftExporter exporter = new PLiftExporter(outputPath, lexEntryRepository, template))
 			{
-				int homographNumber = 0;
-				if ((bool) token["HasHomograph"])
+				ResultSet<LexEntry> recordTokens =
+					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);
+				foreach (RecordToken<LexEntry> token in recordTokens)
 				{
-					homographNumber = (int) token["HomographNumber"];
+					int homographNumber = 0;
+					if ((bool) token["HasHomograph"])
+					{
+						homographNumber = (int) token["HomographNumber"];
+					}
+					exporter.Add(token.RealObject, homographNumber);
 				}
-				exporter.Add(token.RealObject, homographNumber);
-			}
 
-			exporter.End();
+				exporter.End();
+			}
 		}
 
 		public static Stream GetXsltStream(string xsltName)

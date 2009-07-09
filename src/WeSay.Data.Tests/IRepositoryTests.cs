@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using NUnit.Framework;
 using Palaso.Data;
+
+using NUnit.Framework;
 
 namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryAdapter
 {
