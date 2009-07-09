@@ -34,7 +34,8 @@ namespace WeSay.Project
 
 		public string GetDescription()
 		{
-#if ON_The_Shelf          string appName = Application.ProductName;
+#if ON_The_Shelf
+			string appName = Application.ProductName;
 
 			var builder = new StringBuilder();
 
