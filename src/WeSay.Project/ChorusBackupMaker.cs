@@ -93,6 +93,7 @@ namespace WeSay.Project
 				projectFolder.ExcludePatterns.Add("**/cache");
 				projectFolder.ExcludePatterns.Add("**/Cache");
 				projectFolder.ExcludePatterns.Add("*.old");
+				projectFolder.ExcludePatterns.Add("*.wesayUserMemory");
 				projectFolder.ExcludePatterns.Add("*.tmp");
 				projectFolder.ExcludePatterns.Add("*.bak");
 				projectFolder.IncludePatterns.Add("audio/*.*");
