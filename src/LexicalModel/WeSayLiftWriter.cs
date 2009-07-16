@@ -22,6 +22,7 @@ namespace WeSay.LexicalModel
 		private readonly Dictionary<string, int> _allIdsExportedSoFar;
 
 		#if DEBUG
+		[CLSCompliant(false)]
 		protected StackTrace _constructionStack;
 		#endif
 
@@ -36,8 +37,10 @@ namespace WeSay.LexicalModel
 
 		public WeSayLiftWriter(string path): this()
 		{
+			_disposed = true; // Just in case we throw in the constructor
 			_writer = XmlWriter.Create(path, PrepareSettings(false));
 			Start();
+			_disposed = false;
 		}
 
 		public WeSayLiftWriter(StringBuilder builder, bool produceFragmentOnly): this()
