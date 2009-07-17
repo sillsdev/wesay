@@ -20,7 +20,7 @@ namespace Palaso.Lift
 		private FileStream _liftFileStreamForLocking;
 		private int _nextFileOrder;
 
-		private ILiftReaderWriterProvider<T> _ioProvider;
+		private readonly ILiftReaderWriterProvider<T> _ioProvider;
 		private MemoryDataMapper<T> _backend;
 
 		public LiftDataMapper(string liftFilePath, ProgressState progressState, ILiftReaderWriterProvider<T> ioProvider)
@@ -54,7 +54,7 @@ namespace Palaso.Lift
 
 		private void CreateEmptyLiftFileIfNeeded(string filePath)
 		{
-			FileInfo fileInfo = new FileInfo(_liftFilePath);
+			var fileInfo = new FileInfo(_liftFilePath);
 			bool DoesEmptyLiftFileNeedtoBeCreated = !fileInfo.Exists || fileInfo.Length == 0;
 			if (DoesEmptyLiftFileNeedtoBeCreated)
 			{

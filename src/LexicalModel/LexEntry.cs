@@ -501,9 +501,4 @@ namespace WeSay.LexicalModel
 		}
 	}
 
-
-	public interface IFindEntries
-	{
-		LexEntry FindFirstEntryMatchingId(string id);
-	}
 }

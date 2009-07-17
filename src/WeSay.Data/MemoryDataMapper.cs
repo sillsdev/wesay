@@ -14,6 +14,7 @@ namespace Palaso.Data
 
 		private DateTime lastModified = new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc);
 #if DEBUG
+		[CLSCompliant(false)]
 		protected StackTrace _constructionStackTrace;
 #endif
 

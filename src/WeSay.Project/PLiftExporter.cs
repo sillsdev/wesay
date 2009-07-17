@@ -71,7 +71,7 @@ namespace WeSay.Project
 			Add(entry, h);
 		}
 
-		private void WriteDisplayNameFieldForOption(OptionRef optionRef, string fieldName)
+		private void WriteDisplayNameFieldForOption(IValueHolder<string> optionRef, string fieldName)
 		{
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(fieldName);
 			if (list != null)
