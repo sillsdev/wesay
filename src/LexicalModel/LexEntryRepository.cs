@@ -57,7 +57,7 @@ namespace WeSay.LexicalModel
 			_disposed = false;
 		}
 
-		public LexEntryRepository(WeSayLiftDataMapper decoratedDataMapper)
+		public LexEntryRepository(IDataMapper<LexEntry> decoratedDataMapper)
 		{
 			Guard.AgainstNull(decoratedDataMapper, "decoratedRepository");
 			_decoratedDataMapper = decoratedDataMapper;

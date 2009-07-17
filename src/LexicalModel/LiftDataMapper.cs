@@ -35,9 +35,19 @@ namespace Palaso.Lift
 			_liftFilePath = liftFilePath;
 			_progressState = progressState;
 			_ioProvider = ioProvider;
-			CreateEmptyLiftFileIfNeeded(liftFilePath);
-			MigrateLiftIfNeeded(progressState);
-			LoadAllLexEntries();
+
+			try
+			{
+				CreateEmptyLiftFileIfNeeded(liftFilePath);
+				MigrateLiftIfNeeded(progressState);
+				LoadAllLexEntries();
+			}
+			catch (Exception)
+			{
+				// Dispose anything that we've created already.
+				_backend.Dispose();
+				throw;
+			}
 			//Now that the constructor has not thrown we can set this back to false
 			_disposed = false;
 		}
