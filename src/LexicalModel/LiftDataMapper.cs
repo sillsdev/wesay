@@ -6,6 +6,7 @@ using LiftIO;
 using LiftIO.Merging;
 using Palaso.Data;
 using Palaso.Lift.Migration;
+using Palaso.Misc;
 using Palaso.Progress;
 using Palaso.Reporting;
 
@@ -27,10 +28,8 @@ namespace Palaso.Lift
 		{
 			//set to true so that an exception in the constructor does not cause the destructor to throw
 			_disposed = true;
-			if (progressState == null)
-			{
-				throw new ArgumentNullException("progressState");
-			}
+			Guard.AgainstNull(progressState, "progressState");
+
 			_backend = new MemoryDataMapper<T>();
 			_liftFilePath = liftFilePath;
 			_progressState = progressState;
@@ -128,10 +127,8 @@ namespace Palaso.Lift
 
 		public void DeleteItem(T item)
 		{
-			if (item == null)
-			{
-				throw new ArgumentNullException("item");
-			}
+			Guard.AgainstNull(item, "item");
+
 			_backend.GetId(item); // Will throw if item isn't in the backend data mapper.
 			UpdateLiftFileWithDeleted(item);
 			_backend.DeleteItem(item);

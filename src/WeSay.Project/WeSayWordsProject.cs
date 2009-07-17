@@ -37,7 +37,6 @@ namespace WeSay.Project
 		private readonly Dictionary<string, OptionsList> _optionLists;
 		private string _pathToLiftFile;
 		private string _cacheLocationOverride;
-		private FileStream _liftFileStreamForLocking;
 		private LiftUpdateService _liftUpdateService;
 
 		private readonly AddinSet _addins;
@@ -825,7 +824,7 @@ namespace WeSay.Project
 
 		public bool LiftIsLocked
 		{
-			get { return _liftFileStreamForLocking != null; }
+			get { return false; }
 		}
 
 		private void LockLift()
@@ -1020,6 +1019,7 @@ namespace WeSay.Project
 			set { _cacheLocationOverride = value; }
 		}
 
+		// todo: this can be removed?  cp
 		public LiftUpdateService LiftUpdateService
 		{
 			get { return _liftUpdateService; }

@@ -57,7 +57,9 @@ namespace WeSay.LexicalModel
 			_disposed = false;
 		}
 
-		public LexEntryRepository(IDataMapper<LexEntry> decoratedDataMapper)
+		// review: may want to change WeSayLiftDataMapper to IDataMapper<LexEntry> but I (cp) am leaving
+		// this for the moment as would also need to change the container builder.Register in WeSayWordsProject
+		public LexEntryRepository(WeSayLiftDataMapper decoratedDataMapper)
 		{
 			Guard.AgainstNull(decoratedDataMapper, "decoratedRepository");
 			_decoratedDataMapper = decoratedDataMapper;
