@@ -8,12 +8,10 @@ using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
-using Palaso.Text;
-
 #if MONO
 using Palaso.Linq;
 #else
-using Enumerable=System.Linq.Enumerable;
+
 #endif
 
 namespace WeSay.LexicalModel
@@ -38,16 +36,24 @@ namespace WeSay.LexicalModel
 		//public event EventHandler<EntryEventArgs> AfterEntryAdded;  I (JH) don't know how to tell the difference between new and modified
 
 
-		ResultSetCacheManager<LexEntry> _caches = new ResultSetCacheManager<LexEntry>();
+		readonly ResultSetCacheManager<LexEntry> _caches = new ResultSetCacheManager<LexEntry>();
 
 		//hack to prevent sending nested Save calls, which was causing a bug when
 		//the exporter caused an item to get a new id, which led eventually to the list thinking it was modified, etc...
-		private bool _currentlySaving = false;
+		private bool _currentlySaving;
 
 		private readonly IDataMapper<LexEntry> _decoratedDataMapper;
+
+		#if DEBUG
+		private readonly StackTrace _constructionStackTrace;
+		#endif
+
 		public LexEntryRepository(string path)
 			: this(new WeSayLiftDataMapper(path, null, new ProgressState()))
 		{
+			#if DEBUG
+			_constructionStackTrace = new StackTrace();
+			#endif
 			_disposed = false;
 		}
 
@@ -927,10 +933,8 @@ namespace WeSay.LexicalModel
 			if (!_disposed)
 			{
 				throw new ApplicationException(
-						"Disposed not explicitly called on LexEntryRepository.");
-
-			  //  throw new ApplicationException("Disposed not explicitly called on LexEntryRepository.\r\n" + _constructionStackTrace.ToString());
-
+					"Disposed not explicitly called on LexEntryRepository." + "\n" + _constructionStackTrace
+				);
 			}
 		}
 #endif
