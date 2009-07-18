@@ -90,17 +90,27 @@ namespace WeSay.Project
 			try
 			{
 				ProjectFolderConfiguration projectFolder = new ProjectFolderConfiguration(pathToProjectDirectory);
+
+				//exclude has precedence, but these are redundant as long as we're using the policy
+				//that we explicitly include all the files we understand.  At least someday, when these
+				//effect what happens in a more persisten way (e.g. be stored in the hgrc), these would protect
+				//us a bit from other apps that might try to do a *.* include
+
 				projectFolder.ExcludePatterns.Add("**/cache");
 				projectFolder.ExcludePatterns.Add("**/Cache");
 				projectFolder.ExcludePatterns.Add("*.old");
 				projectFolder.ExcludePatterns.Add("*.wesayUserMemory");
 				projectFolder.ExcludePatterns.Add("*.tmp");
 				projectFolder.ExcludePatterns.Add("*.bak");
+
 				projectFolder.IncludePatterns.Add("audio/*.*");
 				projectFolder.IncludePatterns.Add("pictures/*.*");
-				projectFolder.IncludePatterns.Add("export/*.css"); //stylesheets
+				projectFolder.IncludePatterns.Add("**.css"); //stylesheets
 				projectFolder.IncludePatterns.Add("export/*.lpconfig");//lexique pro
-				projectFolder.IncludePatterns.Add("*.*");
+				projectFolder.IncludePatterns.Add("**.lift");
+				projectFolder.IncludePatterns.Add("**.WesayConfig");
+				projectFolder.IncludePatterns.Add("**/WritingSystemPrefs.xml");
+				projectFolder.IncludePatterns.Add("**/PartsOfSpeech.xml");
 				projectFolder.IncludePatterns.Add(".hgIgnore");
 			   // projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 
@@ -117,7 +127,7 @@ namespace WeSay.Project
 					}
 					else
 					{
-						RepositorySource backupSource = RepositorySource.Create(PathToParentOfRepositories, "backup",
+						var backupSource = RepositoryPath.Create(PathToParentOfRepositories, "backup",
 																				false);
 						options.RepositorySourcesToTry.Add(backupSource);
 					}
