@@ -332,7 +332,7 @@ namespace WeSay.UI.TextBoxes
 				var ap =_serviceProvider.GetService(typeof (AudioPathProvider)) as AudioPathProvider;
 				control = new WeSayAudioFieldBox(writingSystem, ap, _serviceProvider.GetService(typeof(Palaso.Reporting.ILogger)) as ILogger);
 				((WeSayAudioFieldBox)control).PlayOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
-				control.BackColor = Color.DodgerBlue;
+				//control.BackColor = Color.DodgerBlue;
 			}
 			else
 			{

@@ -108,9 +108,9 @@ namespace WeSay.Project
 				projectFolder.IncludePatterns.Add("**.css"); //stylesheets
 				projectFolder.IncludePatterns.Add("export/*.lpconfig");//lexique pro
 				projectFolder.IncludePatterns.Add("**.lift");
-				projectFolder.IncludePatterns.Add("**.WesayConfig");
-				projectFolder.IncludePatterns.Add("**/WritingSystemPrefs.xml");
-				projectFolder.IncludePatterns.Add("**/PartsOfSpeech.xml");
+				projectFolder.IncludePatterns.Add("**.WeSayConfig");
+				projectFolder.IncludePatterns.Add("**WritingSystemPrefs.xml");
+				projectFolder.IncludePatterns.Add("**PartsOfSpeech.xml");
 				projectFolder.IncludePatterns.Add(".hgIgnore");
 			   // projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 
