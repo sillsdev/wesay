@@ -96,12 +96,17 @@ namespace WeSay.Project
 				projectFolder.ExcludePatterns.Add("*.wesayUserMemory");
 				projectFolder.ExcludePatterns.Add("*.tmp");
 				projectFolder.ExcludePatterns.Add("*.bak");
+
 				projectFolder.IncludePatterns.Add("audio/*.*");
 				projectFolder.IncludePatterns.Add("pictures/*.*");
-				projectFolder.IncludePatterns.Add("export/*.css"); //stylesheets
+				projectFolder.IncludePatterns.Add("**.css"); //stylesheets
 				projectFolder.IncludePatterns.Add("export/*.lpconfig");//lexique pro
-				projectFolder.IncludePatterns.Add("*.*");
+				projectFolder.IncludePatterns.Add("**.lift");
+				projectFolder.IncludePatterns.Add("**.WeSayConfig");
+				projectFolder.IncludePatterns.Add("**WritingSystemPrefs.xml");
+				projectFolder.IncludePatterns.Add("**PartsOfSpeech.xml");
 				projectFolder.IncludePatterns.Add(".hgIgnore");
+
 			   // projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 
 				Chorus.sync.SyncOptions options = new SyncOptions();
