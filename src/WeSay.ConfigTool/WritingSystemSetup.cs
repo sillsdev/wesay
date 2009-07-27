@@ -182,9 +182,26 @@ namespace WeSay.ConfigTool
 		/// <param name="e"></param>
 		private void OnWritingSystemIdChanged(object sender, EventArgs e)
 		{
-			WsDisplayProxy p = _wsListBox.SelectedItem as WsDisplayProxy;
+			var ws = sender as WritingSystem;
+			var args = e as PropertyValueChangedEventArgs;
+			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
+			{
+				string oldId = args.OldValue.ToString();
+				Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged changing to {0}", ws.Id);
+				if(!WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId))
+				{
+					Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged oh no");
+					ws.Id = oldId; //couldn't make the change
+				}
+				//                Reporting.ErrorReporter.NotifyUserOfProblem(
+				//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
+				//                    ws.Id, oldId);
+			}
+
+			// Update the list box
+			var p = _wsListBox.SelectedItem as WsDisplayProxy;
 			_wsListBox.BeginUpdate();
-			_wsListBox.Sorted = false;
+			_wsListBox.Sorted = false; // Force a re-sort, there doesn't seem to be a method available to do this.
 			_wsListBox.Sorted = true;
 			_wsListBox.SelectedItem = p;
 			_wsListBox.EndUpdate();
