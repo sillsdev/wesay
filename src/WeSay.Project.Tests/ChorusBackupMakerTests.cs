@@ -101,10 +101,10 @@ namespace WeSay.Project.Tests
 			using (BackupScenario scenario = new BackupScenario("BackupNow_ExistingRepository_AddsNewFileToBackupDir"))
 			{
 				scenario.BackupNow();
-				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.foo")).Close();
+				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
 				scenario.BackupNow();
-				scenario.AssertFileExistsInWorkingDirectory("blah.foo");
-				scenario.AssertFileExistsInRepo("blah.foo");
+				scenario.AssertFileExistsInWorkingDirectory("blah.lift");
+				scenario.AssertFileExistsInRepo("blah.lift");
 			}
 		}
 
@@ -114,11 +114,11 @@ namespace WeSay.Project.Tests
 			// Test causes a crash in WrapShellCall.exe - is there an updated version?
 			using (BackupScenario scenario = new BackupScenario("BackupNow_RemoveFile_RemovedFromBackupDir"))
 			{
-				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.foo")).Close();
+				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
 				scenario.BackupNow();
-				File.Delete(Path.Combine(scenario.SourceProjectDir, "blah.foo"));
+				File.Delete(Path.Combine(scenario.SourceProjectDir, "blah.lift"));
 				scenario.BackupNow();
-				scenario.AssertFileDoesNotExistInWorkingDirectory("blah.foo");
+				scenario.AssertFileDoesNotExistInWorkingDirectory("blah.lift");
 			}
 		}
 
