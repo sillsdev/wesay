@@ -48,12 +48,16 @@ namespace WeSay.LexicalModel
 		private readonly StackTrace _constructionStackTrace;
 		#endif
 
+		// review: this constructor is only used for tests, and causes grief with
+		// the dispose pattern.  Remove and refactor tests to use the other constructor
+		// in a using style. cp
 		public LexEntryRepository(string path)
-			: this(new WeSayLiftDataMapper(path, null, new ProgressState()))
 		{
+			_disposed = true;
 			#if DEBUG
 			_constructionStackTrace = new StackTrace();
 			#endif
+			_decoratedDataMapper = new WeSayLiftDataMapper(path, null, new ProgressState());
 			_disposed = false;
 		}
 
@@ -61,7 +65,10 @@ namespace WeSay.LexicalModel
 		// this for the moment as would also need to change the container builder.Register in WeSayWordsProject
 		public LexEntryRepository(WeSayLiftDataMapper decoratedDataMapper)
 		{
-			Guard.AgainstNull(decoratedDataMapper, "decoratedRepository");
+			Guard.AgainstNull(decoratedDataMapper, "decoratedDataMapper");
+			#if DEBUG
+			_constructionStackTrace = new StackTrace();
+			#endif
 			_decoratedDataMapper = decoratedDataMapper;
 			_disposed = false;
 		}

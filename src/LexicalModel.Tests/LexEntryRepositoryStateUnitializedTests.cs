@@ -19,6 +19,7 @@ namespace WeSay.LexicalModel.Tests
 			}
 		}
 */
+
 		[Test]
 		[ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsNotWriteableWhenRepositoryIsCreated_Throws()
@@ -27,7 +28,7 @@ namespace WeSay.LexicalModel.Tests
 			{
 				using (File.OpenWrite(t.Path))
 				{
-					// Note: Will throw causing Disposable pattern to fail.
+					// Note: Will throw => Dispose will not be called.
 					using (var dm = new LexEntryRepository(t.Path))
 					{
 					}
