@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Palaso.Data;
 
-namespace WeSay.Data.Tests
+namespace Palaso.Data.Tests
 {
 	public class ChildTestItem
 	{

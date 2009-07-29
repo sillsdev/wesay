@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Palaso.Data;
 
-namespace WeSay.Data.Tests // review cp move to palaso
+namespace Palaso.Data.Tests
 {
 	[TestFixture]
 	public class MemoryRepositoryStateUnitializedTests: IRepositoryStateUnitializedTests<TestItem>
@@ -35,6 +35,7 @@ namespace WeSay.Data.Tests // review cp move to palaso
 			DataMapperUnderTest.Dispose();
 		}
 
+		/* todo move to query tests
 		[Test]
 		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
 		{
@@ -47,7 +48,7 @@ namespace WeSay.Data.Tests // review cp move to palaso
 			Assert.AreEqual(123, resultsOfQuery[0]["StoredInt"]);
 			Assert.AreEqual("I was stored!", resultsOfQuery[0]["StoredString"]);
 		}
-
+		*/
 		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			//Do nothing.

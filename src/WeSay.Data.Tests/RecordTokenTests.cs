@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Palaso.Data;
 using Palaso.Progress;
 
-namespace WeSay.Data.Tests
+namespace Palaso.Data.Tests
 {
 	[TestFixture]
 	public class RecordTokenTests

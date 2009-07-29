@@ -274,11 +274,11 @@ namespace WeSay.LexicalModel
 									 headWord = null;
 							 }
 							 tokenFieldsAndValues.Add("Form",headWord);
-							 return new IDictionary<string, object>[] { tokenFieldsAndValues };
+							 return new[] { tokenFieldsAndValues };
 						 });
 
 				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(headWordQuery);
-				SortDefinition[] sortOrder = new SortDefinition[4];
+				var sortOrder = new SortDefinition[4];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
 				sortOrder[1] = new SortDefinition("OrderForRoundTripping", Comparer<int>.Default);
 				sortOrder[2] = new SortDefinition("OrderInFile", Comparer<int>.Default);

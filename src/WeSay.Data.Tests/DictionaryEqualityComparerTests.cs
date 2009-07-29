@@ -94,58 +94,43 @@ namespace Palaso.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetHashCode_Null_Throws()
 		{
-			DictionaryEqualityComparer<string, string> comparer = new DictionaryEqualityComparer<string, string>();
+			var comparer = new DictionaryEqualityComparer<string, string>();
 			comparer.GetHashCode(null);
 		}
 
 		[Test]
 		public void GetHashCode_TwoDictionariesAreEqual_ReturnSameHashCodes()
 		{
-			Dictionary<string, string> reference = new Dictionary<string, string>();
-			reference.Add("key1", "value1");
-			reference.Add("key2", "value2");
-			Dictionary<string, string> other = new Dictionary<string, string>();
-			other.Add("key1", "value1");
-			other.Add("key2", "value2");
-			DictionaryEqualityComparer<string, string> comparer = new DictionaryEqualityComparer<string, string>();
+			var reference = new Dictionary<string, string> {{"key1", "value1"}, {"key2", "value2"}};
+			var other = new Dictionary<string, string> {{"key1", "value1"}, {"key2", "value2"}};
+			var comparer = new DictionaryEqualityComparer<string, string>();
 			Assert.AreEqual(comparer.GetHashCode(reference), comparer.GetHashCode(other));
 		}
 
 		[Test]
 		public void GetHashCode_TwoDictionariesHaveDifferentLength_ReturnDifferentHashCodes()
 		{
-			Dictionary<string, string> reference = new Dictionary<string, string>();
-			reference.Add("key1", "value1");
-			reference.Add("key2", "value2");
-			Dictionary<string, string> other = new Dictionary<string, string>();
-			other.Add("key1", "value1");
-			DictionaryEqualityComparer<string, string> comparer = new DictionaryEqualityComparer<string, string>();
+			var reference = new Dictionary<string, string> {{"key1", "value1"}, {"key2", "value2"}};
+			var other = new Dictionary<string, string> {{"key1", "value1"}};
+			var comparer = new DictionaryEqualityComparer<string, string>();
 			Assert.AreNotEqual(comparer.GetHashCode(reference), comparer.GetHashCode(other));
 		}
 
 		[Test]
 		public void GetHashCode_TwoDictionariesHaveDifferentKey_ReturnDifferentHashCodes()
 		{
-			Dictionary<string, string> reference = new Dictionary<string, string>();
-			reference.Add("key1", "value1");
-			reference.Add("key2", "value2");
-			Dictionary<string, string> other = new Dictionary<string, string>();
-			other.Add("key1", "value1");
-			other.Add("key3", "value2");
-			DictionaryEqualityComparer<string, string> comparer = new DictionaryEqualityComparer<string, string>();
+			var reference = new Dictionary<string, string> {{"key1", "value1"}, {"key2", "value2"}};
+			var other = new Dictionary<string, string> {{"key1", "value1"}, {"key3", "value2"}};
+			var comparer = new DictionaryEqualityComparer<string, string>();
 			Assert.AreNotEqual(comparer.GetHashCode(reference), comparer.GetHashCode(other));
 		}
 
 		[Test]
 		public void GetHashCode_TwoDictionariesHaveDifferentValue_ReturnDifferentHashCodes()
 		{
-			Dictionary<string, string> reference = new Dictionary<string, string>();
-			reference.Add("key1", "value1");
-			reference.Add("key2", "value2");
-			Dictionary<string, string> other = new Dictionary<string, string>();
-			other.Add("key1", "value1");
-			other.Add("key2", "value3");
-			DictionaryEqualityComparer<string, string> comparer = new DictionaryEqualityComparer<string, string>();
+			var reference = new Dictionary<string, string> {{"key1", "value1"}, {"key2", "value2"}};
+			var other = new Dictionary<string, string> {{"key1", "value1"}, {"key2", "value3"}};
+			var comparer = new DictionaryEqualityComparer<string, string>();
 			Assert.AreNotEqual(comparer.GetHashCode(reference), comparer.GetHashCode(other));
 		}
 	}

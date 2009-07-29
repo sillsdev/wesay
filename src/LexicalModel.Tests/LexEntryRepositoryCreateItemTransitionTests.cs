@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using Palaso.Data;
-using WeSay.Data;
-using WeSay.Data.Tests;
+using Palaso.Data.Tests;
 using Palaso.TestUtilities;
 
 namespace WeSay.LexicalModel.Tests
@@ -52,16 +50,6 @@ namespace WeSay.LexicalModel.Tests
 		{
 			SetState();
 			Assert.IsTrue(Item.IsDirty);
-		}
-
-		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
-		{
-			Item.LexicalForm["de"] = "Sonne";
-			QueryAdapter<LexEntry> query = new QueryAdapter<LexEntry>();
-			query.Show("LexicalForm");
-			ResultSet<LexEntry> resultsOfQuery = DataMapperUnderTest.GetItemsMatching(query);
-			Assert.AreEqual(1, resultsOfQuery.Count);
-			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()

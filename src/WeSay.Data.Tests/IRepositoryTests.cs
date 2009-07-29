@@ -5,12 +5,20 @@ using Palaso.Data;
 
 using NUnit.Framework;
 
-namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryAdapter
+namespace Palaso.Data.Tests
 {
+	internal class TestQuery<T> : IQuery<T> where T : class, new()
+	{
+		public IEnumerable<IDictionary<string, object>> GetResults(T item)
+		{
+			var result = new Dictionary<string, object> { { "key1", null } };
+			return new[] { result };
+		}
+	}
+
 	public abstract class IRepositoryStateUnitializedTests<T> where T : class, new()
 	{
 		private IDataMapper<T> dataMapperUnderTest;
-		private readonly QueryAdapter<T> _query = new QueryAdapter<T>();
 
 		public IDataMapper<T> DataMapperUnderTest
 		{
@@ -109,7 +117,7 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 		{
 			if (!DataMapperUnderTest.CanQuery)
 			{
-				DataMapperUnderTest.GetItemsMatching(_query);
+				DataMapperUnderTest.GetItemsMatching(null);
 			}
 			else
 			{
@@ -118,11 +126,11 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsEmpty()
+		public void GetItemMatchingQuery_CanQueryIsTrue_ReturnsOne()
 		{
 			if (DataMapperUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(_query).Count);
+				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
 			}
 			else
 			{
@@ -313,43 +321,6 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 		}
 
 		[Test]
-		public void GetItemsMatchingQuery_QueryWithOutShow_ReturnsNoItems()
-		{
-			QueryAdapter<T> queryWithoutShow = new QueryAdapter<T>();
-			SetState();
-			if (DataMapperUnderTest.CanQuery)
-			{
-				ResultSet<T> resultSet = DataMapperUnderTest.GetItemsMatching(queryWithoutShow);
-				Assert.AreEqual(0, resultSet.Count);
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
-		}
-
-		[Test]
-		public void GetItemsMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
-		{
-			SetState();
-			GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v();
-		}
-
-		protected virtual void GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
-		{
-			if (DataMapperUnderTest.CanQuery)
-			{
-				Assert.Fail(
-					@"This Test is highly dependant on the type of objects that are
-							being managed by the repository and as such should be overridden.");
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
-		}
-
-		[Test]
 		public void SaveItem_LastModifiedIsChangedToLaterTime()
 		{
 			SetState();
@@ -414,8 +385,7 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 			}
 			else
 			{
-				List<T> itemsToBeSaved = new List<T>();
-				itemsToBeSaved.Add(Item);
+				List<T> itemsToBeSaved = new List<T> { Item };
 				DataMapperUnderTest.SaveItems(itemsToBeSaved);
 				CreateNewRepositoryFromPersistedData();
 				Assert.AreEqual(1, DataMapperUnderTest.CountAllItems());
@@ -546,43 +516,6 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsNoItems()
-		{
-			QueryAdapter<T> queryWithoutShow = new QueryAdapter<T>();
-			SetState();
-			if (DataMapperUnderTest.CanQuery)
-			{
-				ResultSet<T> resultSet = DataMapperUnderTest.GetItemsMatching(queryWithoutShow);
-				Assert.AreEqual(0, resultSet.Count);
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
-		}
-
-		[Test]
-		public void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
-		{
-			SetState();
-			GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v();
-		}
-
-		protected virtual void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()
-		{
-			if (DataMapperUnderTest.CanQuery)
-			{
-				Assert.Fail(
-					@"This Test is highly dependant on the type of objects that are
-							being managed by the repository and as such should be tested elsewhere.");
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
-		}
-
-		[Test]
 		public void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
 		{
 			CreateNewRepositoryFromPersistedData();
@@ -658,7 +591,6 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 		private IDataMapper<T> dataMapperUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
 		public IDataMapper<T> DataMapperUnderTest
 		{
@@ -703,8 +635,8 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 
 		private void CreateInitialItem()
 		{
-			this.item = DataMapperUnderTest.CreateItem();
-			this.id = DataMapperUnderTest.GetId(Item);
+			item = DataMapperUnderTest.CreateItem();
+			id = DataMapperUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -762,12 +694,12 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsEmpty()
+		public void GetItemMatchingQuery_CanQuery_ReturnsZero()
 		{
 			SetState();
 			if (DataMapperUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(query).Count);
+				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
 			}
 			else
 			{
@@ -817,7 +749,6 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 		private IDataMapper<T> dataMapperUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
 		public IDataMapper<T> DataMapperUnderTest
 		{
@@ -921,12 +852,12 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsEmpty()
+		public void GetItemMatchingQuery_CanQuery_ReturnsZero()
 		{
 			SetState();
 			if (DataMapperUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(query).Count);
+				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
 			}
 			else
 			{
@@ -976,7 +907,6 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 		private IDataMapper<T> dataMapperUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
 		public IDataMapper<T> DataMapperUnderTest
 		{
@@ -1073,12 +1003,12 @@ namespace WeSay.Data.Tests // review cp Move to Palaso when we get rid of QueryA
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsEmpty()
+		public void GetItemMatchingQuery_CanQuery_ReturnsZero()
 		{
 			SetState();
 			if (DataMapperUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(query).Count);
+				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
 			}
 			else
 			{

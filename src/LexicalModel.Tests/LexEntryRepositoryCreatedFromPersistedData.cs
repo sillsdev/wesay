@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Palaso.Data;
-using WeSay.Data;
-using WeSay.Data.Tests;
-using WeSay.Foundation;
+using Palaso.Data.Tests;
 using Palaso.TestUtilities;
 
 namespace WeSay.LexicalModel.Tests
@@ -19,7 +16,7 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			_tempFolder = new TemporaryFolder();
+			_tempFolder = new TemporaryFolder("LexEntryRepositoryCreatedFromPersistedData");
 			_persistedFilePath = LiftFileInitializer.MakeFile(_tempFolder.GetTemporaryFile());
 			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
@@ -69,17 +66,6 @@ namespace WeSay.LexicalModel.Tests
 		{
 			SetState();
 			Assert.IsFalse(Item.IsDirty);
-		}
-
-		protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()
-		{
-			SetState();
-			QueryAdapter<LexEntry> query = new QueryAdapter<LexEntry>();
-			query.Show("LexicalForm");
-			ResultSet<LexEntry> resultsOfQuery = DataMapperUnderTest.GetItemsMatching(query);
-			Assert.AreEqual(1, resultsOfQuery.Count);
-			MultiText lexicalForm = (MultiText)resultsOfQuery[0]["LexicalForm"];
-			Assert.AreEqual("Sonne", lexicalForm.Forms[0].Form);
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()

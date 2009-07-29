@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using WeSay.Data.Tests;
+using Palaso.Data.Tests;
 using Palaso.TestUtilities;
 
 namespace WeSay.LexicalModel.Tests
@@ -9,15 +9,15 @@ namespace WeSay.LexicalModel.Tests
 	public class LexEntryRepositoryDeleteIdTransitionTests :
 		IRepositoryDeleteIdTransitionTests<LexEntry>
 	{
-		private string _persistedFilePath;
+		private TempFile _persistedFilePath;
 		private TemporaryFolder _tempFolder;
 
 		[SetUp]
 		public override void SetUp()
 		{
-			_tempFolder = new TemporaryFolder();
-			_persistedFilePath = _tempFolder.GetTemporaryFile();
-			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
+			_tempFolder = new TemporaryFolder("LexEntryRepositoryDeleteIdTransitionTests");
+			_persistedFilePath = _tempFolder.GetNewTempFile(false);
+			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath.Path);
 		}
 
 		[TearDown]
@@ -39,7 +39,7 @@ namespace WeSay.LexicalModel.Tests
 		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			DataMapperUnderTest.Dispose();
-			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
+			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath.Path);
 		}
 	}
 }

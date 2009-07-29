@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Palaso.Data.Tests;
 using Palaso.TestUtilities;
 using WeSay.Data.Tests;
 
@@ -14,7 +15,7 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			_tempFolder = new TemporaryFolder();
+			_tempFolder = new TemporaryFolder("LexEntryRepositoryDeleteAllItemsTransitionTests");
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
 			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}

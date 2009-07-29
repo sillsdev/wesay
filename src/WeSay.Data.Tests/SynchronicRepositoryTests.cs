@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Palaso.Data;
+using Palaso.Data.Tests;
 
 namespace WeSay.Data.Tests
 {
     [TestFixture]
-	public class SynchronicRepositoryStateUnitializedTests:
-			IRepositoryStateUnitializedTests<TestItem>
+	public class SynchronicRepositoryStateUnitializedTests :
+		IRepositoryStateUnitializedTests<TestItem>
     {
         [SetUp]
 		public override void SetUp()
@@ -42,8 +43,9 @@ namespace WeSay.Data.Tests
 			DataMapperUnderTest.Dispose();
         }
 
+		/* todo cp move to query tests
 		[Test]
-		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
+		protected override void GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
 		{
 			Item.StoredInt = 123;
 			Item.StoredString = "I was stored!";
@@ -54,7 +56,7 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(123, resultsOfQuery[0]["StoredInt"]);
 			Assert.AreEqual("I was stored!", resultsOfQuery[0]["StoredString"]);
 		}
-
+		*/
 		protected override void CreateNewRepositoryFromPersistedData()
         {
             //Do nothing.

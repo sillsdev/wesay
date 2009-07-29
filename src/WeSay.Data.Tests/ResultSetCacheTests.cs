@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Palaso.Data;
+using Palaso.Data.Tests;
 using WeSay.Data;
 using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
+	// todo refactor this to using(var session = new TestSession) {} style
+	// todo reimplement tests when QueryObject is chnaged
 	[TestFixture]
 	public class ResultSetCacheTestsWithSingleRecordTokensFromQuery
 	{

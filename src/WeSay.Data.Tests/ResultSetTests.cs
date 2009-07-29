@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Palaso.Data;
 
-namespace WeSay.Data.Tests // review cp move to Palaso
+namespace Palaso.Data.Tests // review cp move to Palaso
 {
 	[TestFixture]
 	public class ResultSetTests
