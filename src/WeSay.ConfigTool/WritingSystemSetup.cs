@@ -20,6 +20,12 @@ namespace WeSay.ConfigTool
 			_basicControl.Logger = logger;
 			_fontControl.Logger = logger;
 			_sortControl.Logger = logger;
+			_sortingPage.Enter += OnSortingPageEntered;
+		}
+
+		private void OnSortingPageEntered(object sender, EventArgs e)
+		{
+			_sortControl.UpdateFontInChildControlsIfNecassary();
 		}
 
 		private void WritingSystemSetup_Resize(object sender, EventArgs e)
