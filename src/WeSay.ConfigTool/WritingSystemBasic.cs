@@ -9,6 +9,9 @@ namespace WeSay.ConfigTool
 {
 	public partial class WritingSystemBasic: UserControl
 	{
+		private string _oldWritingSystemIdForMono = "";	//This is part of a workaround for Mono on 4-Aug-2009 TA
+														//Mono does not returns e.Old=e.Current for PropertyChanges
+
 		private WritingSystem _writingSystem;
 		private WritingSystemCollection _writingSystemCollection;
 
@@ -42,9 +45,10 @@ namespace WeSay.ConfigTool
 			set
 			{
 				_writingSystem = value;
+				_oldWritingSystemIdForMono = _writingSystem.Id;	//initialization
 				_writingSystemProperties.SelectedObject = _writingSystem;
 				// _fontProperties.SelectedObjects = new object[] { _writingSystem, helper };
-		Invalidate();
+				Invalidate();
 			}
 		}
 
@@ -90,6 +94,13 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
+
+			//Mono Bug workaround
+			PropertyValueChangedEventArgs eForMono = new PropertyValueChangedEventArgs(e.ChangedItem, _oldWritingSystemIdForMono);
+			_oldWritingSystemIdForMono = _writingSystem.Id;
+			e = eForMono;
+
+			Console.WriteLine("Old Id was {0}, new ID is: {1}", e.OldValue, _writingSystem.Id);
 
 			string id = e.ChangedItem.Value as string;
 
