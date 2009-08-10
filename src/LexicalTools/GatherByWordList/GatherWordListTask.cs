@@ -95,7 +95,12 @@ namespace WeSay.LexicalTools.GatherByWordList
 					{
 						break;
 					}
-					_words.Add(s);
+					s = s.Trim();
+
+					if (!string.IsNullOrEmpty(s))//skip blank lines
+					{
+						_words.Add(s);
+					}
 				}
 				while (true);
 			}
@@ -301,10 +306,10 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		public ResultSet<LexEntry> GetRecordsWithMatchingGloss()
 		{
-			return
-					LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
-							CurrentWordAsMultiText.Find(_writingSystemIdForWordListWords),
-							_lexicalUnitWritingSystem);
+				return
+						LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
+								CurrentWordAsMultiText.Find(_writingSystemIdForWordListWords),
+								_lexicalUnitWritingSystem);
 		}
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)

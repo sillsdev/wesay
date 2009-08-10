@@ -723,7 +723,8 @@ namespace WeSay.LexicalModel
 		public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(
 				 LanguageForm glossForm, WritingSystem lexicalUnitWritingSystem)
 		{
-			if (glossForm == null)
+
+			if (null==glossForm || string.IsNullOrEmpty(glossForm.Form))
 			{
 				throw new ArgumentNullException("glossForm");
 			}

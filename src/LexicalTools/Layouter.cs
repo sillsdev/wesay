@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
@@ -449,12 +450,20 @@ namespace WeSay.LexicalTools
 		protected Control MakeOptionWidget(WeSayDataObject target, Field field)
 		{
 			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
-
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field, false);
+			WritingSystem preferredWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(field.FieldName);
+			if (preferredWritingSystem == _viewTemplate.WritingSystems.UnknownVernacularWritingSystem)
+			{
+				//this is a better choice
+				preferredWritingSystem = _viewTemplate.WritingSystems.UnknownAnalysisWritingSystem;
+
+				Palaso.Reporting.ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
+																 "The option box {0} had the topmost writing system set to {1}, but that writing system was not found.", field.DisplayName, field.WritingSystemIds[0]);
+			}
 			SingleOptionControl control = new SingleOptionControl(optionRefTarget,
 																  list,
-																  field.WritingSystemIds[0],
-																  field.FieldName);
+																  field.FieldName,
+																  preferredWritingSystem);
 			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
 			binding.CurrentItemChanged += _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			return control;
