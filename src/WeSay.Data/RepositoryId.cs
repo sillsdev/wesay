@@ -1,6 +1,6 @@
 using System;
 
-namespace WeSay.Data
+namespace Palaso.Data
 {
 	public abstract class RepositoryId: IComparable<RepositoryId>, IEquatable<RepositoryId>
 	{

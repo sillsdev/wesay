@@ -1,23 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Palaso.Data;
 using Palaso.Misc;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
-using Palaso.Text;
-
 #if MONO
 using Palaso.Linq;
 #else
-using Enumerable=System.Linq.Enumerable;
+
 #endif
 
 namespace WeSay.LexicalModel
 {
-	public class LexEntryRepository: IRepository<LexEntry>, ICountGiver
+	public class LexEntryRepository : IDataMapper<LexEntry>, ICountGiver
 	{
 		public class EntryEventArgs : EventArgs
 		{
@@ -37,61 +36,74 @@ namespace WeSay.LexicalModel
 		//public event EventHandler<EntryEventArgs> AfterEntryAdded;  I (JH) don't know how to tell the difference between new and modified
 
 
-		ResultSetCacheManager<LexEntry> _caches = new ResultSetCacheManager<LexEntry>();
+		readonly ResultSetCacheManager<LexEntry> _caches = new ResultSetCacheManager<LexEntry>();
 
 		//hack to prevent sending nested Save calls, which was causing a bug when
 		//the exporter caused an item to get a new id, which led eventually to the list thinking it was modified, etc...
-		private bool _currentlySaving = false;
+		private bool _currentlySaving;
 
-		private readonly LiftRepository _decoratedRepository;
-		public LexEntryRepository(string path):this(new LiftRepository(path, null, new ProgressState()))
+		private readonly IDataMapper<LexEntry> _decoratedDataMapper;
+
+		#if DEBUG
+		private readonly StackTrace _constructionStackTrace;
+		#endif
+
+		// review: this constructor is only used for tests, and causes grief with
+		// the dispose pattern.  Remove and refactor tests to use the other constructor
+		// in a using style. cp
+		public LexEntryRepository(string path)
 		{
+			_disposed = true;
+			#if DEBUG
+			_constructionStackTrace = new StackTrace();
+			#endif
+			_decoratedDataMapper = new WeSayLiftDataMapper(path, null, new ProgressState());
 			_disposed = false;
 		}
 
-		public LexEntryRepository(LiftRepository decoratedRepository)
+		// review: may want to change WeSayLiftDataMapper to IDataMapper<LexEntry> but I (cp) am leaving
+		// this for the moment as would also need to change the container builder.Register in WeSayWordsProject
+		public LexEntryRepository(WeSayLiftDataMapper decoratedDataMapper)
 		{
-			Guard.AgainstNull(decoratedRepository, "decoratedRepository");
-			_decoratedRepository = decoratedRepository;
+			Guard.AgainstNull(decoratedDataMapper, "decoratedDataMapper");
+			#if DEBUG
+			_constructionStackTrace = new StackTrace();
+			#endif
+			_decoratedDataMapper = decoratedDataMapper;
 			_disposed = false;
 		}
 
-
-		public LiftRepository.RightToAccessLiftExternally GetRightToAccessLiftExternally()
-		{
-			return _decoratedRepository.GetRightToAccessLiftExternally();
-		}
 
 		public DateTime LastModified
 		{
-			get { return _decoratedRepository.LastModified; }
+			get { return _decoratedDataMapper.LastModified; }
 		}
 
 		public LexEntry CreateItem()
 		{
-			LexEntry item = _decoratedRepository.CreateItem();
+			LexEntry item = _decoratedDataMapper.CreateItem();
 			_caches.AddItemToCaches(item);
 			return item;
 		}
 
 		public RepositoryId[] GetAllItems()
 		{
-			return _decoratedRepository.GetAllItems();
+			return _decoratedDataMapper.GetAllItems();
 		}
 
 		public int CountAllItems()
 		{
-			return _decoratedRepository.CountAllItems();
+			return _decoratedDataMapper.CountAllItems();
 		}
 
 		public RepositoryId GetId(LexEntry item)
 		{
-			return _decoratedRepository.GetId(item);
+			return _decoratedDataMapper.GetId(item);
 		}
 
 		public LexEntry GetItem(RepositoryId id)
 		{
-			LexEntry item = _decoratedRepository.GetItem(id);
+			LexEntry item = _decoratedDataMapper.GetItem(id);
 			return item;
 		}
 
@@ -110,7 +122,7 @@ namespace WeSay.LexicalModel
 					_caches.UpdateItemInCaches(item);
 				}
 			}
-			_decoratedRepository.SaveItems(dirtyItems);
+			_decoratedDataMapper.SaveItems(dirtyItems);
 			foreach (LexEntry item in dirtyItems)
 			{
 				item.Clean();
@@ -119,7 +131,7 @@ namespace WeSay.LexicalModel
 
 		public ResultSet<LexEntry> GetItemsMatching(IQuery<LexEntry> query)
 		{
-			return _decoratedRepository.GetItemsMatching(query);
+			return _decoratedDataMapper.GetItemsMatching(query);
 		}
 
 		public void SaveItem(LexEntry item)
@@ -138,7 +150,7 @@ namespace WeSay.LexicalModel
 				}
 				if (item.IsDirty)
 				{
-					_decoratedRepository.SaveItem(item);
+					_decoratedDataMapper.SaveItem(item);
 					_caches.UpdateItemInCaches(item);
 					item.Clean();
 
@@ -157,12 +169,12 @@ namespace WeSay.LexicalModel
 
 		public bool CanQuery
 		{
-			get { return _decoratedRepository.CanQuery; }
+			get { return _decoratedDataMapper.CanQuery; }
 		}
 
 		public bool CanPersist
 		{
-			get { return _decoratedRepository.CanPersist; }
+			get { return _decoratedDataMapper.CanPersist; }
 		}
 
 		public void DeleteItem(LexEntry item)
@@ -173,7 +185,7 @@ namespace WeSay.LexicalModel
 			EntryEventArgs args = new EntryEventArgs(item);
 
 			_caches.DeleteItemFromCaches(item);
-			_decoratedRepository.DeleteItem(item);
+			_decoratedDataMapper.DeleteItem(item);
 
 			if(AfterEntryDeleted !=null)
 			{
@@ -186,7 +198,7 @@ namespace WeSay.LexicalModel
 			EntryEventArgs args = new EntryEventArgs(repositoryId);
 
 			_caches.DeleteItemFromCaches(repositoryId);
-			_decoratedRepository.DeleteItem(repositoryId);
+			_decoratedDataMapper.DeleteItem(repositoryId);
 
 			if(AfterEntryDeleted !=null)
 			{
@@ -196,7 +208,7 @@ namespace WeSay.LexicalModel
 
 		public void DeleteAllItems()
 		{
-			_decoratedRepository.DeleteAllItems();
+			_decoratedDataMapper.DeleteAllItems();
 			_caches.DeleteAllItemsFromCaches();
 		}
 
@@ -262,17 +274,18 @@ namespace WeSay.LexicalModel
 									 headWord = null;
 							 }
 							 tokenFieldsAndValues.Add("Form",headWord);
-							 return new IDictionary<string, object>[] { tokenFieldsAndValues };
+							 return new[] { tokenFieldsAndValues };
 						 });
 
-				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(headWordQuery);
-				SortDefinition[] sortOrder = new SortDefinition[4];
+				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(headWordQuery);
+				var sortOrder = new SortDefinition[4];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
 				sortOrder[1] = new SortDefinition("OrderForRoundTripping", Comparer<int>.Default);
 				sortOrder[2] = new SortDefinition("OrderInFile", Comparer<int>.Default);
 				sortOrder[3] = new SortDefinition("CreationTime", Comparer<DateTime>.Default);
 
 				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, headWordQuery));
+				// _caches.Add(headWordQuery, /* itemsMatching */ results); // review cp Refactor caches to this signature.
 			}
 			ResultSet<LexEntry> resultsFromCache = _caches[cacheName].GetResultSet();
 
@@ -363,7 +376,7 @@ namespace WeSay.LexicalModel
 						tokenFieldsAndValues.Add("WritingSystem", writingSystemOfForm);
 						return new IDictionary<string, object>[] { tokenFieldsAndValues };
 					});
-				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(lexicalFormWithAlternativeQuery);
+				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(lexicalFormWithAlternativeQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[1];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
@@ -401,7 +414,7 @@ namespace WeSay.LexicalModel
 						tokenFieldsAndValues.Add("Form", headWord);
 						return new IDictionary<string, object>[] { tokenFieldsAndValues };
 					});
-				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(lexicalFormQuery);
+				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(lexicalFormQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[1];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
@@ -425,7 +438,7 @@ namespace WeSay.LexicalModel
 						tokenFieldsAndValues.Add("Guid", entryToQuery.Guid);
 						return new IDictionary<string, object>[] { tokenFieldsAndValues };
 					});
-				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(guidQuery);
+				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(guidQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[1];
 				sortOrder[0] = new SortDefinition("Guid", Comparer<Guid>.Default);
@@ -449,7 +462,7 @@ namespace WeSay.LexicalModel
 						tokenFieldsAndValues.Add("Id", entryToQuery.Id);
 						return new IDictionary<string, object>[] { tokenFieldsAndValues };
 					});
-				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(IdQuery);
+				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(IdQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[1];
 				sortOrder[0] = new SortDefinition("Id", Comparer<string>.Default);
@@ -518,7 +531,7 @@ namespace WeSay.LexicalModel
 						}
 						return fieldsandValuesForRecordTokens;
 					});
-				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(definitionQuery);
+				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(definitionQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[2];
 				sortOrder[0] = new SortDefinition("Form", writingSystem);
@@ -898,7 +911,7 @@ namespace WeSay.LexicalModel
 						}
 						return new IDictionary<string, object>[0];
 					});
-				ResultSet<LexEntry> itemsMatching = _decoratedRepository.GetItemsMatching(lexicalFormQuery);
+				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(lexicalFormQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[1];
 				sortOrder[0] = new SortDefinition("Form", lexicalUnitWritingSystem);
@@ -929,15 +942,13 @@ namespace WeSay.LexicalModel
 			if (!_disposed)
 			{
 				throw new ApplicationException(
-						"Disposed not explicitly called on LexEntryRepository.");
-
-			  //  throw new ApplicationException("Disposed not explicitly called on LexEntryRepository.\r\n" + _constructionStackTrace.ToString());
-
+					"Disposed not explicitly called on LexEntryRepository." + "\n" + _constructionStackTrace
+				);
 			}
 		}
 #endif
 
-		private bool _disposed=true;
+		private bool _disposed = true;
 
 		public void Dispose()
 		{
@@ -952,7 +963,7 @@ namespace WeSay.LexicalModel
 				if (disposing)
 				{
 					// dispose-only, i.e. non-finalizable logic
-					_decoratedRepository.Dispose();
+					_decoratedDataMapper.Dispose();
 				}
 
 				// shared (dispose and finalizable) cleanup logic

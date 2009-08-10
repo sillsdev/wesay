@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using NUnit.Framework;
+using Palaso.Data;
 using WeSay.Data;
 using WeSay.Foundation;
 using Palaso.TestUtilities;

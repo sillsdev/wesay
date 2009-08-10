@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using WeSay.Data.Tests;
+using Palaso.Data.Tests;
 using Palaso.TestUtilities;
 
 namespace WeSay.LexicalModel.Tests
@@ -9,22 +9,22 @@ namespace WeSay.LexicalModel.Tests
 	public class LexEntryRepositoryDeleteItemTransitionTests :
 		IRepositoryDeleteItemTransitionTests<LexEntry>
 	{
-		private string _persistedFilePath;
+		private TempFile _persistedFilePath;
 		private TemporaryFolder _tempFolder;
 
 
 		[SetUp]
 		public override void SetUp()
 		{
-			_tempFolder = new TemporaryFolder();
-			_persistedFilePath = _tempFolder.GetTemporaryFile();
-			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			_tempFolder = new TemporaryFolder("LexEntryRepositoryDeleteItemTransitionTests");
+			_persistedFilePath = _tempFolder.GetNewTempFile(false);
+			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath.Path);
 		}
 
 		[TearDown]
 		public override void TearDown()
 		{
-			RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
 			_tempFolder.Delete();
 		}
 
@@ -34,13 +34,13 @@ namespace WeSay.LexicalModel.Tests
 		{
 			SetState();
 			Item.Senses.Add(new LexSense());    //make Lexentry dirty
-			RepositoryUnderTest.SaveItem(Item);
+			DataMapperUnderTest.SaveItem(Item);
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
 		{
-			RepositoryUnderTest.Dispose();
-			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			DataMapperUnderTest.Dispose();
+			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath.Path);
 		}
 	}
 }

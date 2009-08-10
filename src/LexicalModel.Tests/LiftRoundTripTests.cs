@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using LiftIO.Parsing;
 using NUnit.Framework;
+using Palaso.Data;
 using Palaso.TestUtilities;
 using WeSay.Foundation;
 using WeSay.Project;
@@ -15,10 +16,10 @@ namespace WeSay.LexicalModel.Tests
 	[TestFixture]
 	public class LiftRoundTripTests
 	{
-		private LiftExporter _exporter;
+		private WeSayLiftWriter _liftWriter;
 		private StringBuilder _stringBuilder;
 		private LexEntryFromLiftBuilder _builder;
-		private LiftRepository _repository;
+		private MemoryDataMapper<LexEntry> _dataMapper;
 		private string _tempFile;
 		private TemporaryFolder _tempFolder;
 
@@ -29,17 +30,19 @@ namespace WeSay.LexicalModel.Tests
 			_stringBuilder = new StringBuilder();
 			_tempFolder = new TemporaryFolder();
 			_tempFile = _tempFolder.GetTemporaryFile();
-			_exporter = new LiftExporter(_stringBuilder, false);
-			_repository = new LiftRepository(_tempFile);
-			_builder = new LexEntryFromLiftBuilder(_repository, null);
+			_liftWriter = new WeSayLiftWriter(_stringBuilder, false);
+			_dataMapper = new MemoryDataMapper<LexEntry>();
+			_builder = new LexEntryFromLiftBuilder(_dataMapper, null);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			_builder.Dispose();
-			_repository.Dispose();
+			_dataMapper.Dispose();
+			_liftWriter.Dispose();
 			_tempFolder.Delete();
+
 		}
 
 		private LexEntry MakeSimpleEntry()
@@ -110,8 +113,8 @@ namespace WeSay.LexicalModel.Tests
 			e.Senses.Add(sense);
 			_builder.GetOrMakeSubsense(sense, new Extensible(), xml);
 			_builder.FinishEntry(e);
-			_exporter.Add(e);
-			_exporter.End();
+			_liftWriter.Add(e);
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch("//entry/sense/subsense[@id='opon_1b' and @order='2']/gloss");
 			AssertHasAtLeastOneMatch("//entry/sense/subsense/grammatical-info");
 		}
@@ -129,8 +132,8 @@ namespace WeSay.LexicalModel.Tests
 								 null);
 			_builder.FinishEntry(e);
 
-			_exporter.Add(e);
-			_exporter.End();
+			_liftWriter.Add(e);
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch("//entry/field[@type='color']/form[@lang='ws-one']");
 			AssertHasAtLeastOneMatch("//entry/field[@type='color']/form[@lang='ws-two']");
 		}
@@ -174,8 +177,8 @@ namespace WeSay.LexicalModel.Tests
 			traits.Add(new Trait("two", "2"));
 			p.Invoke(e, traits);
 			_builder.FinishEntry(e);
-			_exporter.Add(e);
-			_exporter.End();
+			_liftWriter.Add(e);
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch(xpathToOwningElement + "[trait[@name='one' and @value='1'] and trait[@name='two' and @value='2']]");
 		}
 
@@ -190,11 +193,11 @@ namespace WeSay.LexicalModel.Tests
 			this._builder.FinishEntry(entry1);
 			LexEntry entry2 = this._builder.GetOrMakeEntry(extensibleInfo, 2);
 			this._builder.FinishEntry(entry2);
-			_exporter.Add(entry4, 3);
-			_exporter.Add(entry1, 1);
-			_exporter.Add(entry2, 2);
+			_liftWriter.Add(entry4, 3);
+			_liftWriter.Add(entry1, 1);
+			_liftWriter.Add(entry2, 2);
 
-			_exporter.End();
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch("//entry[@order='1']");
 			AssertHasAtLeastOneMatch("//entry[@order='2']");
 			AssertHasAtLeastOneMatch("//entry[@order='3']");
@@ -212,8 +215,8 @@ namespace WeSay.LexicalModel.Tests
 			translation.Add("aa", "aaaa");
 			_builder.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
 			_builder.FinishEntry(e);
-			_exporter.Add(e);
-			_exporter.End();
+			_liftWriter.Add(e);
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch("//entry/sense/example/translation[not(@type)]/form[@lang='aa']");
 		}
 
@@ -236,8 +239,8 @@ namespace WeSay.LexicalModel.Tests
 										   "<translation type='type2'><bogus/></translation>");
 			_builder.FinishEntry(e);
 
-			_exporter.Add(e);
-			_exporter.End();
+			_liftWriter.Add(e);
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch(
 					"//entry/sense/example/translation[not(@type)]/form[@lang='aa']/text[text()='unmarked translation']");
 			AssertHasAtLeastOneMatch("//entry/sense/example/translation[@type='type2']/bogus");
@@ -263,8 +266,8 @@ namespace WeSay.LexicalModel.Tests
 										   "<translation type='free'><bogus/></translation>");
 			_builder.FinishEntry(e);
 
-			_exporter.Add(e);
-			_exporter.End();
+			_liftWriter.Add(e);
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch(
 					"//entry/sense/example/translation[not(@type)]/form[@lang='aa']/text[text()='unmarked translation']");
 			AssertHasAtLeastOneMatch("//entry/sense/example/translation[@type='free']/bogus");
@@ -293,8 +296,8 @@ namespace WeSay.LexicalModel.Tests
 										   "<translation><bogusUnmarked/></translation>");
 			_builder.FinishEntry(e);
 
-			_exporter.Add(e);
-			_exporter.End();
+			_liftWriter.Add(e);
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch("//entry/sense/example/translation[not(@type)]/bogusUnmarked");
 			AssertHasAtLeastOneMatch(
 					"//entry/sense/example/translation[@type='Free translation']/form/text[text()='freestuff']");
@@ -319,8 +322,8 @@ namespace WeSay.LexicalModel.Tests
 			_builder.MergeInVariant(e, MakeBasicLiftMultiText(), xml1);
 			_builder.MergeInVariant(e, MakeBasicLiftMultiText(), xml2);
 			_builder.FinishEntry(e);
-			_exporter.Add(e);
-			_exporter.End();
+			_liftWriter.Add(e);
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch("//entry/variant/trait[@name='dialects' and @ value='Ratburi']");
 			AssertHasAtLeastOneMatch("//entry/variant[@ref='2']/form/text[text()='glob']");
 		}
@@ -340,8 +343,8 @@ namespace WeSay.LexicalModel.Tests
 			_builder.MergeInEtymology(e, null, "proto", null, null, xml);
 			_builder.FinishEntry(e);
 
-			_exporter.Add(e);
-			_exporter.End();
+			_liftWriter.Add(e);
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch("//entry/etymology[@type='proto']/form/text");
 			AssertHasAtLeastOneMatch("//entry/etymology[@type='proto']/gloss/form/text");
 		}
@@ -372,8 +375,8 @@ namespace WeSay.LexicalModel.Tests
 			_builder.MergeInReversal(sense, null, null, null, xml);
 			_builder.FinishEntry(e);
 
-			_exporter.Add(e);
-			_exporter.End();
+			_liftWriter.Add(e);
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch("//entry/sense/reversal/main/form/text[text()='vegetable']");
 			AssertHasAtLeastOneMatch("//entry/sense/reversal/form/text[text()='mushroom']");
 		}
@@ -406,8 +409,8 @@ namespace WeSay.LexicalModel.Tests
 			_builder.MergeInPronunciation(e, MakeBasicLiftMultiText(), xml);
 			_builder.FinishEntry(e);
 
-			_exporter.Add(e);
-			_exporter.End();
+			_liftWriter.Add(e);
+			_liftWriter.End();
 			AssertHasAtLeastOneMatch("//entry/pronunciation/form[@lang='v']/text[text()='pronounceme']");
 			AssertHasAtLeastOneMatch("//entry/pronunciation/media[@href='blah.mp3']");
 			AssertHasAtLeastOneMatch(

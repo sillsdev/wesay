@@ -12,7 +12,7 @@ using Palaso.Linq;
 
 namespace WeSay.Project
 {
-	public class PLiftExporter: LiftExporter
+	public class PLiftExporter: WeSayLiftWriter
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly LexEntryRepository _lexEntryRepository;
@@ -71,7 +71,7 @@ namespace WeSay.Project
 			Add(entry, h);
 		}
 
-		private void WriteDisplayNameFieldForOption(OptionRef optionRef, string fieldName)
+		private void WriteDisplayNameFieldForOption(IValueHolder<string> optionRef, string fieldName)
 		{
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(fieldName);
 			if (list != null)

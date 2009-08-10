@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Palaso.Data.Tests;
 using Palaso.TestUtilities;
 using WeSay.Data.Tests;
 
@@ -14,22 +15,22 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			_tempFolder = new TemporaryFolder();
+			_tempFolder = new TemporaryFolder("LexEntryRepositoryDeleteAllItemsTransitionTests");
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
-			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
 		[TearDown]
 		public override void TearDown()
 		{
-			RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
 			_tempFolder.Delete();
 		}
 
 		protected override void RepopulateRepositoryFromPersistedData()
 		{
-			RepositoryUnderTest.Dispose();
-			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			DataMapperUnderTest.Dispose();
+			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 	}
 }

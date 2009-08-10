@@ -1,8 +1,7 @@
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
-using WeSay.Data;
-using WeSay.Data.Tests;
+using Palaso.Data.Tests;
 using Palaso.TestUtilities;
 
 namespace WeSay.LexicalModel.Tests
@@ -50,13 +49,13 @@ namespace WeSay.LexicalModel.Tests
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
-			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+			DataMapperUnderTest = new WeSayLiftDataMapper(_persistedFilePath);
 		}
 
 		[TearDown]
 		public override void TearDown()
 		{
-			RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
 			_tempFolder.Delete();
 		}
 
@@ -77,7 +76,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			using (File.OpenWrite(_persistedFilePath))
 			{
-				using(LiftRepository repository = new LiftRepository(_persistedFilePath))
+				using(WeSayLiftDataMapper dataMapper = new WeSayLiftDataMapper(_persistedFilePath))
 				{
 				}
 			}
@@ -87,7 +86,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Constructor_FileDoesNotExist_EmptyLiftFileIsCreated()
 		{
 			string nonExistentFileToBeCreated = Path.GetTempPath() + Path.GetRandomFileName();
-			using (new LiftRepository(nonExistentFileToBeCreated))
+			using (new WeSayLiftDataMapper(nonExistentFileToBeCreated))
 			{
 			}
 			XmlDocument dom = new XmlDocument();
@@ -101,7 +100,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Constructor_FileIsEmpty_MakeFileAnEmptyLiftFile()
 		{
 			string emptyFileToBeFilled = Path.GetTempFileName();
-			using (new LiftRepository(emptyFileToBeFilled))
+			using (new WeSayLiftDataMapper(emptyFileToBeFilled))
 			{
 			}
 			XmlDocument doc = new XmlDocument();
@@ -115,7 +114,7 @@ namespace WeSay.LexicalModel.Tests
 		   [ExpectedException(typeof(IOException))]
 		   public void LiftIsLocked_ReturnsTrue()
 		   {
-			   Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			   Assert.IsTrue(((WeSayLiftDataMapper) DataMapperUnderTest).IsLiftFileLocked);
 			   FileStream streamForPermissionChecking = null;
 			   try
 			   {
@@ -143,11 +142,11 @@ namespace WeSay.LexicalModel.Tests
 			   FileStream fileStream = File.OpenWrite(persistedFilePath);
 			   Assert.IsTrue(fileStream.CanWrite);
 
-			   // Close it before creating the LiftRepository.
+			   // Close it before creating the WeSayLiftDataMapper.
 			   fileStream.Close();
 
-			   // LiftRepository constructor shouldn't throw an IOException.
-			   using (LiftRepository liftRepository = new LiftRepository(persistedFilePath))
+			   // WeSayLiftDataMapper constructor shouldn't throw an IOException.
+			   using (WeSayLiftDataMapper liftDataMapper = new WeSayLiftDataMapper(persistedFilePath))
 			   {
 			   }
 			   Assert.IsTrue(true); // Constructor didn't throw.
@@ -168,33 +167,25 @@ namespace WeSay.LexicalModel.Tests
 			   _tempFolder = new TemporaryFolder();
 			   _persistedFilePath = _tempFolder.GetTemporaryFile();
 			   LiftFileInitializer.MakeFile(_persistedFilePath);
-			   RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+			   DataMapperUnderTest = new WeSayLiftDataMapper(_persistedFilePath);
 		   }
 
 		   [TearDown]
 		   public override void TearDown()
 		   {
-			   RepositoryUnderTest.Dispose();
+			   DataMapperUnderTest.Dispose();
 			   _tempFolder.Delete();
 		   }
 
 		   protected override void  LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
 		   {
-			   Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
-		   }
-
-		   protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()       {
-			   QueryAdapter<LexEntry> query = new QueryAdapter<LexEntry>();
-			   query.Show("LexicalForm");
-			   ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
-			   Assert.AreEqual(1, resultsOfQuery.Count);
-			   Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
+			   Assert.AreEqual(Item.ModificationTime, DataMapperUnderTest.LastModified);
 		   }
 
 		   protected override void CreateNewRepositoryFromPersistedData()
 		   {
-			   RepositoryUnderTest.Dispose();
-			   RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+			   DataMapperUnderTest.Dispose();
+			   DataMapperUnderTest = new WeSayLiftDataMapper(_persistedFilePath);
 		   }
 
 	/* NOMORELOCKING
@@ -202,7 +193,7 @@ namespace WeSay.LexicalModel.Tests
 		   [ExpectedException(typeof(IOException))]
 		   public void LiftIsLocked_ReturnsTrue()
 		   {
-			   Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			   Assert.IsTrue(((WeSayLiftDataMapper) DataMapperUnderTest).IsLiftFileLocked);
 			   FileStream streamForPermissionChecking = null;
 			   try
 			   {
@@ -234,30 +225,20 @@ namespace WeSay.LexicalModel.Tests
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
-			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+			DataMapperUnderTest = new WeSayLiftDataMapper(_persistedFilePath);
 		}
 
 		[TearDown]
 		public override void TearDown()
 		{
-			RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
 			_tempFolder.Delete();
-		}
-
-		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
-		{
-			Item.LexicalForm["de"] = "Sonne";
-			QueryAdapter<LexEntry> query = new QueryAdapter<LexEntry>();
-			query.Show("LexicalForm");
-			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
-			Assert.AreEqual(1, resultsOfQuery.Count);
-			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
 		{
-			RepositoryUnderTest.Dispose();
-			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+			DataMapperUnderTest.Dispose();
+			DataMapperUnderTest = new WeSayLiftDataMapper(_persistedFilePath);
 		}
 
 		/* NOMORELOCKING
@@ -266,7 +247,7 @@ namespace WeSay.LexicalModel.Tests
 		 public void LiftIsLocked_ReturnsTrue()
 		 {
 			 SetState();
-			 Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+			 Assert.IsTrue(((WeSayLiftDataMapper) DataMapperUnderTest).IsLiftFileLocked);
 			 FileStream streamForPermissionChecking = null;
 			 try
 			 {
@@ -298,20 +279,20 @@ namespace WeSay.LexicalModel.Tests
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
-			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+			DataMapperUnderTest = new WeSayLiftDataMapper(_persistedFilePath);
 		}
 
 		[TearDown]
 		public override void TearDown()
 		{
-			RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
 			_tempFolder.Delete();
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
 		{
-			RepositoryUnderTest.Dispose();
-			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+			DataMapperUnderTest.Dispose();
+			DataMapperUnderTest = new WeSayLiftDataMapper(_persistedFilePath);
 		}
 
 		/* NOMORELOCKING
@@ -320,7 +301,7 @@ namespace WeSay.LexicalModel.Tests
 			  public void LiftIsLocked_ReturnsTrue()
 			  {
 				  SetState();
-				  Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+				  Assert.IsTrue(((WeSayLiftDataMapper) DataMapperUnderTest).IsLiftFileLocked);
 				  FileStream streamForPermissionChecking = null;
 				  try
 				  {
@@ -351,20 +332,20 @@ namespace WeSay.LexicalModel.Tests
 			  {
 				  _tempFolder = new TemporaryFolder();
 				  _persistedFilePath = _tempFolder.GetTemporaryFile();
-				  RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+				  DataMapperUnderTest = new WeSayLiftDataMapper(_persistedFilePath);
 			  }
 
 			  [TearDown]
 			  public override void TearDown()
 			  {
-				  RepositoryUnderTest.Dispose();
+				  DataMapperUnderTest.Dispose();
 				  _tempFolder.Delete();
 			  }
 
 			  protected override void CreateNewRepositoryFromPersistedData()
 			  {
-				  RepositoryUnderTest.Dispose();
-				  RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+				  DataMapperUnderTest.Dispose();
+				  DataMapperUnderTest = new WeSayLiftDataMapper(_persistedFilePath);
 			  }
 
 			  /* NOMORELOCKING
@@ -373,7 +354,7 @@ namespace WeSay.LexicalModel.Tests
 				public void LiftIsLocked_ReturnsTrue()
 				{
 					SetState();
-					Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+					Assert.IsTrue(((WeSayLiftDataMapper) DataMapperUnderTest).IsLiftFileLocked);
 					FileStream streamForPermissionChecking = null;
 					try
 					{
@@ -405,20 +386,20 @@ namespace WeSay.LexicalModel.Tests
 				{
 					_tempFolder = new TemporaryFolder();
 					_persistedFilePath = _tempFolder.GetTemporaryFile();
-					RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+					DataMapperUnderTest = new WeSayLiftDataMapper(_persistedFilePath);
 				}
 
 				[TearDown]
 				public override void TearDown()
 				{
-					RepositoryUnderTest.Dispose();
+					DataMapperUnderTest.Dispose();
 					_tempFolder.Delete();
 				}
 
 				protected override void RepopulateRepositoryFromPersistedData()
 				{
-					RepositoryUnderTest.Dispose();
-					RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+					DataMapperUnderTest.Dispose();
+					DataMapperUnderTest = new WeSayLiftDataMapper(_persistedFilePath);
 				}
 
 				/* NOMORELOCKING
@@ -427,7 +408,7 @@ namespace WeSay.LexicalModel.Tests
 				public void LiftIsLocked_ReturnsTrue()
 				{
 					SetState();
-					Assert.IsTrue(((LiftRepository) RepositoryUnderTest).IsLiftFileLocked);
+					Assert.IsTrue(((WeSayLiftDataMapper) DataMapperUnderTest).IsLiftFileLocked);
 					FileStream streamForPermissionChecking = null;
 					try
 					{
@@ -473,7 +454,7 @@ namespace WeSay.LexicalModel.Tests
 		public void LockedFile_Throws()
 		{
 			Assert.IsTrue(_fileStream.CanWrite);
-			LiftRepository liftRepository = new LiftRepository(_persistedFilePath);
+			WeSayLiftDataMapper liftDataMapper = new WeSayLiftDataMapper(_persistedFilePath);
 		}
 	}
 }

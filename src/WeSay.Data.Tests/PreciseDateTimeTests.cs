@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using Palaso.Data;
 
 namespace WeSay.Data.Tests
 {

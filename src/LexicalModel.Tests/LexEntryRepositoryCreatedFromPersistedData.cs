@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using WeSay.Data;
-using WeSay.Data.Tests;
-using WeSay.Foundation;
+using Palaso.Data.Tests;
 using Palaso.TestUtilities;
 
 namespace WeSay.LexicalModel.Tests
@@ -18,15 +16,15 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			_tempFolder = new TemporaryFolder();
+			_tempFolder = new TemporaryFolder("LexEntryRepositoryCreatedFromPersistedData");
 			_persistedFilePath = LiftFileInitializer.MakeFile(_tempFolder.GetTemporaryFile());
-			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
 		[TearDown]
 		public override void TearDown()
 		{
-			RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
 			_tempFolder.Delete();
 		}
 
@@ -34,10 +32,10 @@ namespace WeSay.LexicalModel.Tests
 		public override void SaveItem_LastModifiedIsChangedToLaterTime()
 		{
 			SetState();
-			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
+			DateTime modifiedTimePreSave = DataMapperUnderTest.LastModified;
 			MakeItemDirty(Item);
-			RepositoryUnderTest.SaveItem(Item);
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
+			DataMapperUnderTest.SaveItem(Item);
+			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreSave);
 		}
 
 		[Test]
@@ -46,10 +44,10 @@ namespace WeSay.LexicalModel.Tests
 			SetState();
 			List<LexEntry> itemsToSave = new List<LexEntry>();
 			itemsToSave.Add(Item);
-			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
+			DateTime modifiedTimePreSave = DataMapperUnderTest.LastModified;
 			MakeItemDirty(Item);
-			RepositoryUnderTest.SaveItems(itemsToSave);
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
+			DataMapperUnderTest.SaveItems(itemsToSave);
+			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreSave);
 		}
 
 		private static void MakeItemDirty(LexEntry Item)
@@ -60,7 +58,7 @@ namespace WeSay.LexicalModel.Tests
 		protected override void  LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
 		{
 			SetState();
-			Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
+			Assert.AreEqual(Item.ModificationTime, DataMapperUnderTest.LastModified);
 		}
 
 		[Test]
@@ -70,21 +68,10 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsFalse(Item.IsDirty);
 		}
 
-		protected override void  GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()
-		{
-			SetState();
-			QueryAdapter<LexEntry> query = new QueryAdapter<LexEntry>();
-			query.Show("LexicalForm");
-			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
-			Assert.AreEqual(1, resultsOfQuery.Count);
-			MultiText lexicalForm = (MultiText)resultsOfQuery[0]["LexicalForm"];
-			Assert.AreEqual("Sonne", lexicalForm.Forms[0].Form);
-		}
-
 		protected override void CreateNewRepositoryFromPersistedData()
 		{
-			RepositoryUnderTest.Dispose();
-			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			DataMapperUnderTest.Dispose();
+			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 	}
 }

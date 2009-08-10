@@ -1,25 +1,27 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using Palaso.Data;
+using Palaso.Data.Tests;
 
 namespace WeSay.Data.Tests
 {
     [TestFixture]
-	public class SynchronicRepositoryStateUnitializedTests:
-			IRepositoryStateUnitializedTests<TestItem>
+	public class SynchronicRepositoryStateUnitializedTests :
+		IRepositoryStateUnitializedTests<TestItem>
     {
         [SetUp]
 		public override void SetUp()
         {
-			RepositoryUnderTest =
-					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
-													   new MemoryRepository<TestItem>());
+			DataMapperUnderTest =
+					new SynchronicRepository<TestItem>(new MemoryDataMapper<TestItem>(),
+													   new MemoryDataMapper<TestItem>());
         }
 
         [TearDown]
 		public override void TearDown()
         {
-            RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
         }
     }
 
@@ -30,30 +32,31 @@ namespace WeSay.Data.Tests
         [SetUp]
 		public override void SetUp()
         {
-			RepositoryUnderTest =
-					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
-													   new MemoryRepository<TestItem>());
+			DataMapperUnderTest =
+					new SynchronicRepository<TestItem>(new MemoryDataMapper<TestItem>(),
+													   new MemoryDataMapper<TestItem>());
         }
 
         [TearDown]
 		public override void TearDown()
         {
-            RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
         }
 
+		/* todo cp move to query tests
 		[Test]
-		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
+		protected override void GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
 		{
 			Item.StoredInt = 123;
 			Item.StoredString = "I was stored!";
 			QueryAdapter<TestItem> query = new QueryAdapter<TestItem>();
 			query.Show("StoredInt").Show("StoredString");
-			ResultSet<TestItem> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
+			ResultSet<TestItem> resultsOfQuery = DataMapperUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual(123, resultsOfQuery[0]["StoredInt"]);
 			Assert.AreEqual("I was stored!", resultsOfQuery[0]["StoredString"]);
 		}
-
+		*/
 		protected override void CreateNewRepositoryFromPersistedData()
         {
             //Do nothing.
@@ -67,15 +70,15 @@ namespace WeSay.Data.Tests
         [SetUp]
 		public override void SetUp()
         {
-			RepositoryUnderTest =
-					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
-													   new MemoryRepository<TestItem>());
+			DataMapperUnderTest =
+					new SynchronicRepository<TestItem>(new MemoryDataMapper<TestItem>(),
+													   new MemoryDataMapper<TestItem>());
         }
 
         [TearDown]
 		public override void TearDown()
         {
-            RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
         }
 
 		protected override void CreateNewRepositoryFromPersistedData()
@@ -91,15 +94,15 @@ namespace WeSay.Data.Tests
         [SetUp]
 		public override void SetUp()
         {
-			RepositoryUnderTest =
-					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
-													   new MemoryRepository<TestItem>());
+			DataMapperUnderTest =
+					new SynchronicRepository<TestItem>(new MemoryDataMapper<TestItem>(),
+													   new MemoryDataMapper<TestItem>());
 		}
 
 		[TearDown]
 		public override void TearDown()
 		{
-			RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
@@ -115,15 +118,15 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			RepositoryUnderTest =
-					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
-													   new MemoryRepository<TestItem>());
+			DataMapperUnderTest =
+					new SynchronicRepository<TestItem>(new MemoryDataMapper<TestItem>(),
+													   new MemoryDataMapper<TestItem>());
         }
 
         [TearDown]
 		public override void TearDown()
         {
-            RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
         }
 
         protected override void RepopulateRepositoryFromPersistedData()
@@ -135,15 +138,15 @@ namespace WeSay.Data.Tests
     [TestFixture]
     public class SynchronicRepositoryTests
     {
-		private IRepository<TestItem> _primary;
-		private IRepository<TestItem> _secondary;
+		private IDataMapper<TestItem> _primary;
+		private IDataMapper<TestItem> _secondary;
 		private SynchronicRepository<TestItem> _synchronic;
 
         [SetUp]
         public void Setup()
         {
-            _primary = new MemoryRepository<TestItem>();
-            _secondary = new MemoryRepository<TestItem>();
+			_primary = new MemoryDataMapper<TestItem>();
+			_secondary = new MemoryDataMapper<TestItem>();
             _synchronic = new SynchronicRepository<TestItem>(_primary, _secondary);
         }
 
@@ -157,9 +160,9 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof (ArgumentException))]
         public void PassSameRepositoriesInConstructor_ThrowsArgumentException()
         {
-			using (IRepository<TestItem> repository = new MemoryRepository<TestItem>())
+			using (IDataMapper<TestItem> dataMapper = new MemoryDataMapper<TestItem>())
 			{
-				using (new SynchronicRepository<TestItem>(repository, repository)) {}
+				using (new SynchronicRepository<TestItem>(dataMapper, dataMapper)) {}
 			}
         }
 

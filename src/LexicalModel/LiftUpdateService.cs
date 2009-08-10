@@ -71,8 +71,8 @@ namespace WeSay.LexicalModel
 		//        return;
 		//    }
 
-		//    LiftExporter exporter =
-		//            new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
+		//    WeSayLiftWriter exporter =
+		//            new WeSayLiftWriter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
 		//                    MakeIncrementFileName(DateTime.UtcNow));
 		//    exporter.AddDeletedEntry(entry);
 		//    exporter.End();
@@ -132,7 +132,7 @@ namespace WeSay.LexicalModel
 		//    return true;
 		//}
 
-		//??? Now in LiftRepository.cs
+		//??? Now in WeSayLiftDataMapper.cs
 		//private static string MakeIncrementFileName(DateTime time)
 		//{
 		//    while (true)

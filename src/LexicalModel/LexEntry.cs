@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
+using Palaso.Data;
 using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
@@ -500,8 +501,4 @@ namespace WeSay.LexicalModel
 		}
 	}
 
-	public interface IFindEntries
-	{
-		LexEntry FindFirstEntryMatchingId(string id);
-	}
 }

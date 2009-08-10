@@ -1,34 +1,35 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using Palaso.Data;
 
-namespace WeSay.Data.Tests
+namespace Palaso.Data.Tests // review cp move to Palaso
 {
 	[TestFixture]
 	public class ResultSetTests
 	{
 		private ResultSet<TestItem> _resultSet;
 		List<RecordToken<TestItem>> _results;
-		MemoryRepository<TestItem> _repository;
+		MemoryDataMapper<TestItem> _dataMapper;
 
 
 		[SetUp]
 		public void Setup()
 		{
-			_repository = new MemoryRepository<TestItem>();
+			_dataMapper = new MemoryDataMapper<TestItem>();
 			_results = new List<RecordToken<TestItem>>();
 
-			_results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(8)));
-			_results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(12)));
-			_results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(1)));
-			_results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(3)));
+			_results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(8)));
+			_results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(12)));
+			_results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(1)));
+			_results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(3)));
 
-			_resultSet = new ResultSet<TestItem>(_repository, _results);
+			_resultSet = new ResultSet<TestItem>(_dataMapper, _results);
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
-			_repository.Dispose();
+			_dataMapper.Dispose();
 		}
 
 		[Test]
@@ -43,10 +44,10 @@ namespace WeSay.Data.Tests
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(2)));
+			results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(2)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_dataMapper, results);
 			Assert.AreEqual(2, resultSet.Count);
 
 			int i = 0;
@@ -60,8 +61,8 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void Constructor_ResultsModifiedAfter_ResultSetNotModified()
 		{
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, _results);
-			_results.Add(new RecordToken<TestItem>(_repository, _resultSet[2].Id));
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_dataMapper, _results);
+			_results.Add(new RecordToken<TestItem>(_dataMapper, _resultSet[2].Id));
 			Assert.AreNotEqual(_results.Count, resultSet.Count);
 
 		}
@@ -70,7 +71,7 @@ namespace WeSay.Data.Tests
 	[TestFixture ]
 	public class ResultSetWithQueryTests
 	{
-		MemoryRepository<TestItem> _repository;
+		MemoryDataMapper<TestItem> dataMapper;
 		Dictionary<string, object> _queryResultsEmpty;
 		Dictionary<string, object> _queryResultsB;
 		Dictionary<string, object> _queryResultsA;
@@ -78,7 +79,7 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_repository = new MemoryRepository<TestItem>();
+			dataMapper = new MemoryDataMapper<TestItem>();
 			_queryResultsA = new Dictionary<string, object>();
 			_queryResultsA.Add("string", "A");
 			_queryResultsB = new Dictionary<string, object>();
@@ -90,7 +91,7 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void Teardown()
 		{
-			_repository.Dispose();
+			dataMapper.Dispose();
 		}
 
 		[Test]
@@ -98,12 +99,12 @@ namespace WeSay.Data.Tests
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsEmpty, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsA, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsB, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(dataMapper, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsEmpty, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsA, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsB, new TestRepositoryId(8)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(dataMapper, results);
 			Assert.AreEqual(4, resultSet.Count);
 		}
 
@@ -112,10 +113,10 @@ namespace WeSay.Data.Tests
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsA, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsB, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsA, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsB, new TestRepositoryId(12)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(dataMapper, results);
 			resultSet.Coalesce("string", delegate(object o)
 													{
 														return string.IsNullOrEmpty((string)o);
@@ -128,10 +129,10 @@ namespace WeSay.Data.Tests
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsEmpty, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsEmpty, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(dataMapper, new TestRepositoryId(12)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(dataMapper, results);
 			resultSet.Coalesce("string", delegate(object o)
 													{
 														return string.IsNullOrEmpty((string)o);
@@ -145,12 +146,12 @@ namespace WeSay.Data.Tests
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsEmpty, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(12)));
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsA, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsB, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsEmpty, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(dataMapper, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsA, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsB, new TestRepositoryId(12)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(dataMapper, results);
 			resultSet.Coalesce("string", delegate(object o)
 													{
 														return string.IsNullOrEmpty((string)o);
@@ -165,12 +166,12 @@ namespace WeSay.Data.Tests
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(12)));
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsEmpty, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsB, new TestRepositoryId(12)));
-			results.Add(new RecordToken<TestItem>(_repository, _queryResultsA, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(dataMapper, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsEmpty, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsB, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsA, new TestRepositoryId(8)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(dataMapper, results);
 			resultSet.Coalesce("string", delegate(object o)
 													{
 														return string.IsNullOrEmpty((string)o);

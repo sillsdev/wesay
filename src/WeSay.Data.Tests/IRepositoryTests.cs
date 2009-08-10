@@ -1,27 +1,37 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Palaso.Data;
+
 using NUnit.Framework;
 
-namespace WeSay.Data.Tests
+namespace Palaso.Data.Tests
 {
+	internal class TestQuery<T> : IQuery<T> where T : class, new()
+	{
+		public IEnumerable<IDictionary<string, object>> GetResults(T item)
+		{
+			var result = new Dictionary<string, object> { { "key1", null } };
+			return new[] { result };
+		}
+	}
+
 	public abstract class IRepositoryStateUnitializedTests<T> where T : class, new()
 	{
-		private IRepository<T> _repositoryUnderTest;
-		private readonly QueryAdapter<T> _query = new QueryAdapter<T>();
+		private IDataMapper<T> dataMapperUnderTest;
 
-		public IRepository<T> RepositoryUnderTest
+		public IDataMapper<T> DataMapperUnderTest
 		{
 			get
 			{
-				if (_repositoryUnderTest == null)
+				if (dataMapperUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"RepositoryUnderTest must be set before the tests are run.");
+							"DataMapperUnderTest must be set before the tests are run.");
 				}
-				return _repositoryUnderTest;
+				return dataMapperUnderTest;
 			}
-			set { _repositoryUnderTest = value; }
+			set { dataMapperUnderTest = value; }
 		}
 
 		[SetUp]
@@ -33,14 +43,14 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void CreateItem_NotNull()
 		{
-			Assert.IsNotNull(RepositoryUnderTest.CreateItem());
+			Assert.IsNotNull(DataMapperUnderTest.CreateItem());
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void DeleteItem_Null_Throws()
 		{
-			RepositoryUnderTest.DeleteItem((T) null);
+			DataMapperUnderTest.DeleteItem((T) null);
 		}
 
 		[Test]
@@ -48,14 +58,14 @@ namespace WeSay.Data.Tests
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
 			T item = new T();
-			RepositoryUnderTest.DeleteItem(item);
+			DataMapperUnderTest.DeleteItem(item);
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void DeleteItemById_Null_Throws()
 		{
-			RepositoryUnderTest.DeleteItem((RepositoryId) null);
+			DataMapperUnderTest.DeleteItem((RepositoryId) null);
 		}
 
 		[Test]
@@ -63,26 +73,26 @@ namespace WeSay.Data.Tests
 		public void DeleteItemById_ItemDoesNotExist_Throws()
 		{
 			MyRepositoryId id = new MyRepositoryId();
-			RepositoryUnderTest.DeleteItem(id);
+			DataMapperUnderTest.DeleteItem(id);
 		}
 
 		[Test]
 		public void DeleteAllItems_NothingInRepository_StillNothingInRepository()
 		{
-			RepositoryUnderTest.DeleteAllItems();
-			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
+			DataMapperUnderTest.DeleteAllItems();
+			Assert.AreEqual(0, DataMapperUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void CountAllItems_NoItemsInTheRepostory_ReturnsZero()
 		{
-			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
+			Assert.AreEqual(0, DataMapperUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsEmptyArray()
 		{
-			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
+			Assert.IsEmpty(DataMapperUnderTest.GetAllItems());
 		}
 
 		[Test]
@@ -90,7 +100,7 @@ namespace WeSay.Data.Tests
 		public void GetId_ItemNotInRepository_Throws()
 		{
 			T item = new T();
-			RepositoryUnderTest.GetId(item);
+			DataMapperUnderTest.GetId(item);
 		}
 
 		[Test]
@@ -98,16 +108,16 @@ namespace WeSay.Data.Tests
 		public void GetItem_IdNotInRepository_Throws()
 		{
 			MyRepositoryId id = new MyRepositoryId();
-			RepositoryUnderTest.GetItem(id);
+			DataMapperUnderTest.GetItem(id);
 		}
 
 		[Test]
 		[ExpectedException(typeof (NotSupportedException))]
 		public void GetItemsMatchingQuery_CanQueryIsFalse_Throws()
 		{
-			if (!RepositoryUnderTest.CanQuery)
+			if (!DataMapperUnderTest.CanQuery)
 			{
-				RepositoryUnderTest.GetItemsMatching(_query);
+				DataMapperUnderTest.GetItemsMatching(null);
 			}
 			else
 			{
@@ -116,11 +126,11 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsEmpty()
+		public void GetItemMatchingQuery_CanQueryIsTrue_ReturnsOne()
 		{
-			if (RepositoryUnderTest.CanQuery)
+			if (DataMapperUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(_query).Count);
+				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
 			}
 			else
 			{
@@ -131,14 +141,14 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_ReturnsMinimumPossibleTime()
 		{
-			Assert.AreEqual(new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc), RepositoryUnderTest.LastModified);
+			Assert.AreEqual(new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc), DataMapperUnderTest.LastModified);
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Save_Null_Throws()
 		{
-			RepositoryUnderTest.SaveItem(null);
+			DataMapperUnderTest.SaveItem(null);
 		}
 
 		[Test]
@@ -146,14 +156,14 @@ namespace WeSay.Data.Tests
 		public void Save_ItemDoesNotExist_Throws()
 		{
 			T item = new T();
-			RepositoryUnderTest.SaveItem(item);
+			DataMapperUnderTest.SaveItem(item);
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void SaveItems_Null_Throws()
 		{
-			RepositoryUnderTest.SaveItems(null);
+			DataMapperUnderTest.SaveItems(null);
 		}
 
 		[Test]
@@ -163,16 +173,16 @@ namespace WeSay.Data.Tests
 			T item = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(item);
-			RepositoryUnderTest.SaveItems(itemsToSave);
+			DataMapperUnderTest.SaveItems(itemsToSave);
 		}
 
 		[Test]
 		public void SaveItems_ListIsEmpty_DoNotChangeLastModified()
 		{
 			List<T> itemsToSave = new List<T>();
-			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
-			RepositoryUnderTest.SaveItems(itemsToSave);
-			Assert.AreEqual(modifiedTimePreTestedStateSwitch, RepositoryUnderTest.LastModified);
+			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
+			DataMapperUnderTest.SaveItems(itemsToSave);
+			Assert.AreEqual(modifiedTimePreTestedStateSwitch, DataMapperUnderTest.LastModified);
 		}
 
 		private class MyRepositoryId: RepositoryId
@@ -191,22 +201,22 @@ namespace WeSay.Data.Tests
 
 	public abstract class IRepositoryCreateItemTransitionTests<T> where T : class, new()
 	{
-		private IRepository<T> _repositoryUnderTest;
+		private IDataMapper<T> dataMapperUnderTest;
 		private T item;
 		private RepositoryId id;
 
-		public IRepository<T> RepositoryUnderTest
+		public IDataMapper<T> DataMapperUnderTest
 		{
 			get
 			{
-				if (_repositoryUnderTest == null)
+				if (dataMapperUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"RepositoryUnderTest must be set before the tests are run.");
+							"DataMapperUnderTest must be set before the tests are run.");
 				}
-				return _repositoryUnderTest;
+				return dataMapperUnderTest;
 			}
-			set { _repositoryUnderTest = value; }
+			set { dataMapperUnderTest = value; }
 		}
 
 		protected T Item
@@ -223,8 +233,8 @@ namespace WeSay.Data.Tests
 
 		public void SetState()
 		{
-			Item = RepositoryUnderTest.CreateItem();
-			Id = RepositoryUnderTest.GetId(Item);
+			Item = DataMapperUnderTest.CreateItem();
+			Id = DataMapperUnderTest.GetId(Item);
 		}
 
 		//This method is used to test whether data has been persisted.
@@ -242,21 +252,21 @@ namespace WeSay.Data.Tests
 		public void CreateItem_ReturnsUniqueItem()
 		{
 			SetState();
-			Assert.AreNotEqual(Item, RepositoryUnderTest.CreateItem());
+			Assert.AreNotEqual(Item, DataMapperUnderTest.CreateItem());
 		}
 
 		[Test]
 		public void CreatedItemHasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist) {}
+			if (!DataMapperUnderTest.CanPersist) {}
 			else
 			{
 				CreateNewRepositoryFromPersistedData();
-				RepositoryId[] listOfItems = RepositoryUnderTest.GetAllItems();
+				RepositoryId[] listOfItems = DataMapperUnderTest.GetAllItems();
 				Assert.AreEqual(1, listOfItems.Length);
 				//Would be nice if this worked.. but it doesn't because we have equals for LexEntry is still by reference
-				//T itemFromPersistedData = RepositoryUnderTest.GetItem(listOfItems[0]);
+				//T itemFromPersistedData = DataMapperUnderTest.GetItem(listOfItems[0]);
 				//Assert.AreEqual(item, itemFromPersistedData);
 			}
 		}
@@ -265,118 +275,81 @@ namespace WeSay.Data.Tests
 		public void CountAllItems_ReturnsOne()
 		{
 			SetState();
-			Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
+			Assert.AreEqual(1, DataMapperUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsIdItem()
 		{
 			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetAllItems()[0]);
+			Assert.AreEqual(DataMapperUnderTest.GetId(Item), DataMapperUnderTest.GetAllItems()[0]);
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsCorrectNumberOfExistingItems()
 		{
 			SetState();
-			Assert.AreEqual(1, RepositoryUnderTest.GetAllItems().Length);
+			Assert.AreEqual(1, DataMapperUnderTest.GetAllItems().Length);
 		}
 
 		[Test]
 		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
 		{
 			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetId(Item));
+			Assert.AreEqual(DataMapperUnderTest.GetId(Item), DataMapperUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetId_Item_ReturnsIdOfItem()
 		{
 			SetState();
-			Assert.AreEqual(Id, RepositoryUnderTest.GetId(Item));
+			Assert.AreEqual(Id, DataMapperUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetItem_Id_ReturnsItemWithId()
 		{
 			SetState();
-			Assert.AreSame(Item, RepositoryUnderTest.GetItem(Id));
+			Assert.AreSame(Item, DataMapperUnderTest.GetItem(Id));
 		}
 
 		[Test]
 		public void GetItem_CalledTwiceWithSameId_ReturnsSameItem()
 		{
 			SetState();
-			Assert.AreSame(RepositoryUnderTest.GetItem(Id), RepositoryUnderTest.GetItem(Id));
-		}
-
-		[Test]
-		public void GetItemsMatchingQuery_QueryWithOutShow_ReturnsNoItems()
-		{
-			QueryAdapter<T> queryWithoutShow = new QueryAdapter<T>();
-			SetState();
-			if (RepositoryUnderTest.CanQuery)
-			{
-				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
-				Assert.AreEqual(0, resultSet.Count);
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
-		}
-
-		[Test]
-		public void GetItemsMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
-		{
-			SetState();
-			GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v();
-		}
-
-		protected virtual void GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
-		{
-			if (RepositoryUnderTest.CanQuery)
-			{
-				Assert.Fail(
-					@"This Test is highly dependant on the type of objects that are
-							being managed by the repository and as such should be overridden.");
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
+			Assert.AreSame(DataMapperUnderTest.GetItem(Id), DataMapperUnderTest.GetItem(Id));
 		}
 
 		[Test]
 		public void SaveItem_LastModifiedIsChangedToLaterTime()
 		{
 			SetState();
-			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
-			RepositoryUnderTest.SaveItem(Item);
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
+			DataMapperUnderTest.SaveItem(Item);
+			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
 		public void SaveItem_LastModifiedIsSetInUTC()
 		{
 			SetState();
-			RepositoryUnderTest.SaveItem(Item);
-			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+			DataMapperUnderTest.SaveItem(Item);
+			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
 		}
 
 		[Test]
 		public void SaveItem_ItemHasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist)
+			if (!DataMapperUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted");
 			}
 			else
 			{
-				RepositoryUnderTest.SaveItem(Item);
+				DataMapperUnderTest.SaveItem(Item);
 				CreateNewRepositoryFromPersistedData();
-				Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
+				Assert.AreEqual(1, DataMapperUnderTest.CountAllItems());
 			}
 		}
 
@@ -386,9 +359,9 @@ namespace WeSay.Data.Tests
 			SetState();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(Item);
-			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
-			RepositoryUnderTest.SaveItems(itemsToSave);
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
+			DataMapperUnderTest.SaveItems(itemsToSave);
+			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
@@ -398,47 +371,46 @@ namespace WeSay.Data.Tests
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(Item);
 			Thread.Sleep(50);
-			RepositoryUnderTest.SaveItems(itemsToSave);
-			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+			DataMapperUnderTest.SaveItems(itemsToSave);
+			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
 		}
 
 		[Test]
 		public void SaveItems_ItemHasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist)
+			if (!DataMapperUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted");
 			}
 			else
 			{
-				List<T> itemsToBeSaved = new List<T>();
-				itemsToBeSaved.Add(Item);
-				RepositoryUnderTest.SaveItems(itemsToBeSaved);
+				List<T> itemsToBeSaved = new List<T> { Item };
+				DataMapperUnderTest.SaveItems(itemsToBeSaved);
 				CreateNewRepositoryFromPersistedData();
-				Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
+				Assert.AreEqual(1, DataMapperUnderTest.CountAllItems());
 			}
 		}
 	}
 
 	public abstract class IRepositoryPopulateFromPersistedTests<T> where T : class, new()
 	{
-		private IRepository<T> _repositoryUnderTest;
+		private IDataMapper<T> dataMapperUnderTest;
 		private T item;
 		private RepositoryId id;
 
-		public IRepository<T> RepositoryUnderTest
+		public IDataMapper<T> DataMapperUnderTest
 		{
 			get
 			{
-				if (_repositoryUnderTest == null)
+				if (dataMapperUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"RepositoryUnderTest must be set before the tests are run.");
+							"DataMapperUnderTest must be set before the tests are run.");
 				}
-				return _repositoryUnderTest;
+				return dataMapperUnderTest;
 			}
-			set { _repositoryUnderTest = value; }
+			set { dataMapperUnderTest = value; }
 		}
 
 		protected T Item
@@ -455,9 +427,9 @@ namespace WeSay.Data.Tests
 
 		public void SetState()
 		{
-			RepositoryId[] idsFrompersistedData = RepositoryUnderTest.GetAllItems();
+			RepositoryId[] idsFrompersistedData = DataMapperUnderTest.GetAllItems();
 			Id = idsFrompersistedData[0];
-			Item = RepositoryUnderTest.GetItem(Id);
+			Item = DataMapperUnderTest.GetItem(Id);
 		}
 
 		//This method is used to test whether data has been persisted.
@@ -475,21 +447,21 @@ namespace WeSay.Data.Tests
 		public void CreateItem_ReturnsUniqueItem()
 		{
 			SetState();
-			Assert.AreNotEqual(Item, RepositoryUnderTest.CreateItem());
+			Assert.AreNotEqual(Item, DataMapperUnderTest.CreateItem());
 		}
 
 		[Test]
 		public void CreatedItemHasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist) {}
+			if (!DataMapperUnderTest.CanPersist) {}
 			else
 			{
 				CreateNewRepositoryFromPersistedData();
-				RepositoryId[] listOfItems = RepositoryUnderTest.GetAllItems();
+				RepositoryId[] listOfItems = DataMapperUnderTest.GetAllItems();
 				Assert.AreEqual(1, listOfItems.Length);
 				//Would be nice if this worked.. but it doesn't because we have equals for LexEntry is still by reference
-				//T itemFromPersistedData = RepositoryUnderTest.GetItem(listOfItems[0]);
+				//T itemFromPersistedData = DataMapperUnderTest.GetItem(listOfItems[0]);
 				//Assert.AreEqual(item, itemFromPersistedData);
 			}
 		}
@@ -498,86 +470,49 @@ namespace WeSay.Data.Tests
 		public void CountAllItems_ReturnsOne()
 		{
 			SetState();
-			Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
+			Assert.AreEqual(1, DataMapperUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsIdItem()
 		{
 			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetAllItems()[0]);
+			Assert.AreEqual(DataMapperUnderTest.GetId(Item), DataMapperUnderTest.GetAllItems()[0]);
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsCorrectNumberOfExistingItems()
 		{
 			SetState();
-			Assert.AreEqual(1, RepositoryUnderTest.GetAllItems().Length);
+			Assert.AreEqual(1, DataMapperUnderTest.GetAllItems().Length);
 		}
 
 		[Test]
 		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
 		{
 			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetId(Item));
+			Assert.AreEqual(DataMapperUnderTest.GetId(Item), DataMapperUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetId_Item_ReturnsIdOfItem()
 		{
 			SetState();
-			Assert.AreEqual(Id, RepositoryUnderTest.GetId(Item));
+			Assert.AreEqual(Id, DataMapperUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetItem_Id_ReturnsItemWithId()
 		{
 			SetState();
-			Assert.AreSame(Item, RepositoryUnderTest.GetItem(Id));
+			Assert.AreSame(Item, DataMapperUnderTest.GetItem(Id));
 		}
 
 		[Test]
 		public void GetItem_CalledTwiceWithSameId_ReturnsSameItem()
 		{
 			SetState();
-			Assert.AreSame(RepositoryUnderTest.GetItem(Id), RepositoryUnderTest.GetItem(Id));
-		}
-
-		[Test]
-		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsNoItems()
-		{
-			QueryAdapter<T> queryWithoutShow = new QueryAdapter<T>();
-			SetState();
-			if (RepositoryUnderTest.CanQuery)
-			{
-				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
-				Assert.AreEqual(0, resultSet.Count);
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
-		}
-
-		[Test]
-		public void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
-		{
-			SetState();
-			GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v();
-		}
-
-		protected virtual void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()
-		{
-			if (RepositoryUnderTest.CanQuery)
-			{
-				Assert.Fail(
-					@"This Test is highly dependant on the type of objects that are
-							being managed by the repository and as such should be tested elsewhere.");
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
+			Assert.AreSame(DataMapperUnderTest.GetItem(Id), DataMapperUnderTest.GetItem(Id));
 		}
 
 		[Test]
@@ -590,7 +525,7 @@ namespace WeSay.Data.Tests
 
 		protected virtual void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
 		{
-			if (!RepositoryUnderTest.CanPersist)
+			if (!DataMapperUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted");
 			}
@@ -605,7 +540,7 @@ namespace WeSay.Data.Tests
 		public void LastModified_IsSetInUTC()
 		{
 			SetState();
-			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
 		}
 
 		//This test is virtual because LexEntryRepository needs a special implementation
@@ -613,9 +548,9 @@ namespace WeSay.Data.Tests
 		public virtual void SaveItem_LastModifiedIsChangedToLaterTime()
 		{
 			SetState();
-			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
-			RepositoryUnderTest.SaveItem(Item);
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
+			DateTime modifiedTimePreSave = DataMapperUnderTest.LastModified;
+			DataMapperUnderTest.SaveItem(Item);
+			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreSave);
 		}
 
 		//This test is virtual because LexEntryRepository needs a special implementation
@@ -623,8 +558,8 @@ namespace WeSay.Data.Tests
 		public virtual void SaveItem_LastModifiedIsSetInUTC()
 		{
 			SetState();
-			RepositoryUnderTest.SaveItem(Item);
-			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+			DataMapperUnderTest.SaveItem(Item);
+			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
 		}
 
 		//This test is virtual because LexEntryRepository needs a special implementation
@@ -634,9 +569,9 @@ namespace WeSay.Data.Tests
 			SetState();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(Item);
-			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
-			RepositoryUnderTest.SaveItems(itemsToSave);
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
+			DateTime modifiedTimePreSave = DataMapperUnderTest.LastModified;
+			DataMapperUnderTest.SaveItems(itemsToSave);
+			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreSave);
 		}
 
 		[Test]
@@ -646,30 +581,29 @@ namespace WeSay.Data.Tests
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(Item);
 			Thread.Sleep(50);
-			RepositoryUnderTest.SaveItems(itemsToSave);
-			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+			DataMapperUnderTest.SaveItems(itemsToSave);
+			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
 		}
 	}
 
 	public abstract class IRepositoryDeleteItemTransitionTests<T> where T : class, new()
 	{
-		private IRepository<T> _repositoryUnderTest;
+		private IDataMapper<T> dataMapperUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
-		public IRepository<T> RepositoryUnderTest
+		public IDataMapper<T> DataMapperUnderTest
 		{
 			get
 			{
-				if (_repositoryUnderTest == null)
+				if (dataMapperUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"RepositoryUnderTest must be set before the tests are run.");
+							"DataMapperUnderTest must be set before the tests are run.");
 				}
-				return _repositoryUnderTest;
+				return dataMapperUnderTest;
 			}
-			set { _repositoryUnderTest = value; }
+			set { dataMapperUnderTest = value; }
 		}
 
 		public T Item
@@ -696,13 +630,13 @@ namespace WeSay.Data.Tests
 
 		private void DeleteItem()
 		{
-			RepositoryUnderTest.DeleteItem(Item);
+			DataMapperUnderTest.DeleteItem(Item);
 		}
 
 		private void CreateInitialItem()
 		{
-			this.item = RepositoryUnderTest.CreateItem();
-			this.id = RepositoryUnderTest.GetId(Item);
+			item = DataMapperUnderTest.CreateItem();
+			id = DataMapperUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -710,7 +644,7 @@ namespace WeSay.Data.Tests
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.DeleteItem(Item);
+			DataMapperUnderTest.DeleteItem(Item);
 		}
 
 		[Test]
@@ -718,14 +652,14 @@ namespace WeSay.Data.Tests
 		public void DeleteItem_HasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist)
+			if (!DataMapperUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted.");
 			}
 			else
 			{
 				CreateNewRepositoryFromPersistedData();
-				RepositoryUnderTest.GetItem(id);
+				DataMapperUnderTest.GetItem(id);
 			}
 		}
 
@@ -733,14 +667,14 @@ namespace WeSay.Data.Tests
 		public void CountAllItems_ReturnsZero()
 		{
 			SetState();
-			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
+			Assert.AreEqual(0, DataMapperUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsEmptyArray()
 		{
 			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
+			Assert.IsEmpty(DataMapperUnderTest.GetAllItems());
 		}
 
 		[Test]
@@ -748,7 +682,7 @@ namespace WeSay.Data.Tests
 		public void GetId_DeletedItemWithId_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.GetId(Item);
+			DataMapperUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -756,16 +690,16 @@ namespace WeSay.Data.Tests
 		public void GetItem_DeletedItem_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.GetItem(id);
+			DataMapperUnderTest.GetItem(id);
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsEmpty()
+		public void GetItemMatchingQuery_CanQuery_ReturnsZero()
 		{
 			SetState();
-			if (RepositoryUnderTest.CanQuery)
+			if (DataMapperUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
 			}
 			else
 			{
@@ -777,16 +711,16 @@ namespace WeSay.Data.Tests
 		public void LastModified_IsChangedToLaterTime()
 		{
 			CreateInitialItem();
-			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
 			DeleteItem();
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
 		public void LastModified_IsSetInUTC()
 		{
 			SetState();
-			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
 		}
 
 		//This test is virtual because LexEntryRepository needs to override it
@@ -795,7 +729,7 @@ namespace WeSay.Data.Tests
 		public virtual void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.SaveItem(Item);
+			DataMapperUnderTest.SaveItem(Item);
 		}
 
 		[Test]
@@ -806,29 +740,28 @@ namespace WeSay.Data.Tests
 			T itemNotInRepository = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(itemNotInRepository);
-			RepositoryUnderTest.SaveItems(itemsToSave);
+			DataMapperUnderTest.SaveItems(itemsToSave);
 		}
 	}
 
 	public abstract class IRepositoryDeleteIdTransitionTests<T> where T : class, new()
 	{
-		private IRepository<T> _repositoryUnderTest;
+		private IDataMapper<T> dataMapperUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
-		public IRepository<T> RepositoryUnderTest
+		public IDataMapper<T> DataMapperUnderTest
 		{
 			get
 			{
-				if (_repositoryUnderTest == null)
+				if (dataMapperUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"RepositoryUnderTest must be set before the tests are run.");
+							"DataMapperUnderTest must be set before the tests are run.");
 				}
-				return _repositoryUnderTest;
+				return dataMapperUnderTest;
 			}
-			set { _repositoryUnderTest = value; }
+			set { dataMapperUnderTest = value; }
 		}
 
 		public T Item
@@ -855,13 +788,13 @@ namespace WeSay.Data.Tests
 
 		private void DeleteItem()
 		{
-			RepositoryUnderTest.DeleteItem(this.id);
+			DataMapperUnderTest.DeleteItem(this.id);
 		}
 
 		private void CreateItemToTest()
 		{
-			this.item = RepositoryUnderTest.CreateItem();
-			this.id = RepositoryUnderTest.GetId(Item);
+			this.item = DataMapperUnderTest.CreateItem();
+			this.id = DataMapperUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -869,7 +802,7 @@ namespace WeSay.Data.Tests
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.DeleteItem(id);
+			DataMapperUnderTest.DeleteItem(id);
 		}
 
 		[Test]
@@ -877,14 +810,14 @@ namespace WeSay.Data.Tests
 		public void DeleteItem_HasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist)
+			if (!DataMapperUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted.");
 			}
 			else
 			{
 				CreateNewRepositoryFromPersistedData();
-				RepositoryUnderTest.GetItem(id);
+				DataMapperUnderTest.GetItem(id);
 			}
 		}
 
@@ -892,14 +825,14 @@ namespace WeSay.Data.Tests
 		public void CountAllItems_ReturnsZero()
 		{
 			SetState();
-			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
+			Assert.AreEqual(0, DataMapperUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsEmptyArray()
 		{
 			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
+			Assert.IsEmpty(DataMapperUnderTest.GetAllItems());
 		}
 
 		[Test]
@@ -907,7 +840,7 @@ namespace WeSay.Data.Tests
 		public void GetId_DeletedItemWithId_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.GetId(Item);
+			DataMapperUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -915,16 +848,16 @@ namespace WeSay.Data.Tests
 		public void GetItem_DeletedItem_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.GetItem(id);
+			DataMapperUnderTest.GetItem(id);
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsEmpty()
+		public void GetItemMatchingQuery_CanQuery_ReturnsZero()
 		{
 			SetState();
-			if (RepositoryUnderTest.CanQuery)
+			if (DataMapperUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
 			}
 			else
 			{
@@ -936,16 +869,16 @@ namespace WeSay.Data.Tests
 		public void LastModified_ItemIsDeleted_IsChangedToLaterTime()
 		{
 			CreateItemToTest();
-			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
 			DeleteItem();
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
 		public void LastModified_ItemIsDeleted_IsSetInUTC()
 		{
 			SetState();
-			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
 		}
 
 		//This test is virtual because LexEntryRepository needs to override it
@@ -954,7 +887,7 @@ namespace WeSay.Data.Tests
 		public virtual void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.SaveItem(Item);
+			DataMapperUnderTest.SaveItem(Item);
 		}
 
 		[Test]
@@ -965,29 +898,28 @@ namespace WeSay.Data.Tests
 			T itemNotInRepository = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(itemNotInRepository);
-			RepositoryUnderTest.SaveItems(itemsToSave);
+			DataMapperUnderTest.SaveItems(itemsToSave);
 		}
 	}
 
 	public abstract class IRepositoryDeleteAllItemsTransitionTests<T> where T : class, new()
 	{
-		private IRepository<T> _repositoryUnderTest;
+		private IDataMapper<T> dataMapperUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
-		public IRepository<T> RepositoryUnderTest
+		public IDataMapper<T> DataMapperUnderTest
 		{
 			get
 			{
-				if (_repositoryUnderTest == null)
+				if (dataMapperUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"RepositoryUnderTest must be set before the tests are run.");
+							"DataMapperUnderTest must be set before the tests are run.");
 				}
-				return _repositoryUnderTest;
+				return dataMapperUnderTest;
 			}
-			set { _repositoryUnderTest = value; }
+			set { dataMapperUnderTest = value; }
 		}
 
 		//This method is used to test whether data has been persisted.
@@ -1009,34 +941,34 @@ namespace WeSay.Data.Tests
 
 		private void DeleteAllItems()
 		{
-			RepositoryUnderTest.DeleteAllItems();
+			DataMapperUnderTest.DeleteAllItems();
 		}
 
 		private void CreateInitialItem()
 		{
-			this.item = RepositoryUnderTest.CreateItem();
-			this.id = RepositoryUnderTest.GetId(this.item);
+			this.item = DataMapperUnderTest.CreateItem();
+			this.id = DataMapperUnderTest.GetId(this.item);
 		}
 
 		[Test]
 		public void DeleteAllItems_ItemDoesNotExist_DoesNotThrow()
 		{
 			SetState();
-			RepositoryUnderTest.DeleteAllItems();
+			DataMapperUnderTest.DeleteAllItems();
 		}
 
 		[Test]
 		public void DeleteAllItems_HasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist)
+			if (!DataMapperUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted.");
 			}
 			else
 			{
 				RepopulateRepositoryFromPersistedData();
-				Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
+				Assert.IsEmpty(DataMapperUnderTest.GetAllItems());
 			}
 		}
 
@@ -1044,14 +976,14 @@ namespace WeSay.Data.Tests
 		public void CountAllItems_ReturnsZero()
 		{
 			SetState();
-			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
+			Assert.AreEqual(0, DataMapperUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsEmptyArray()
 		{
 			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
+			Assert.IsEmpty(DataMapperUnderTest.GetAllItems());
 		}
 
 		[Test]
@@ -1059,7 +991,7 @@ namespace WeSay.Data.Tests
 		public void GetId_DeletedItemWithId_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.GetId(item);
+			DataMapperUnderTest.GetId(item);
 		}
 
 		[Test]
@@ -1067,16 +999,16 @@ namespace WeSay.Data.Tests
 		public void GetItem_DeletedItem_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.GetItem(id);
+			DataMapperUnderTest.GetItem(id);
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsEmpty()
+		public void GetItemMatchingQuery_CanQuery_ReturnsZero()
 		{
 			SetState();
-			if (RepositoryUnderTest.CanQuery)
+			if (DataMapperUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
 			}
 			else
 			{
@@ -1088,16 +1020,16 @@ namespace WeSay.Data.Tests
 		public void LastModified_IsChangedToLaterTime()
 		{
 			CreateInitialItem();
-			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
 			DeleteAllItems();
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
 		public void LastModified_IsSetInUTC()
 		{
 			SetState();
-			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
 		}
 
 		[Test]
@@ -1105,7 +1037,7 @@ namespace WeSay.Data.Tests
 		public void Save_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.SaveItem(item);
+			DataMapperUnderTest.SaveItem(item);
 		}
 
 		[Test]
@@ -1115,7 +1047,7 @@ namespace WeSay.Data.Tests
 			T itemNotInRepository = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(itemNotInRepository);
-			RepositoryUnderTest.SaveItems(itemsToSave);
+			DataMapperUnderTest.SaveItems(itemsToSave);
 		}
 	}
 }

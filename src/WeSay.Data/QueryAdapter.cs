@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Palaso.Data;
 
 namespace WeSay.Data
 {

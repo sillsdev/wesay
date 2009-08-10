@@ -64,15 +64,12 @@ namespace Addin.Backup
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 			string wesayZipFilePath = Path.Combine(Path.GetTempPath(), projectInfo.Name + "_wesay.zip");
-			LexEntryRepository repo =
-				projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
-			using (repo.GetRightToAccessLiftExternally())
-			{
-				BackupMaker.BackupToExternal(projectInfo.PathToTopLevelDirectory,
-											 wesayZipFilePath,
-											 projectInfo.FilesBelongingToProject);
-			}
-
+			LexEntryRepository repo = projectInfo.ServiceProvider.GetService(
+				typeof (LexEntryRepository)
+			) as LexEntryRepository;
+			BackupMaker.BackupToExternal(projectInfo.PathToTopLevelDirectory,
+										 wesayZipFilePath,
+										 projectInfo.FilesBelongingToProject);
 
 			var emailProvider = Palaso.Email.EmailProviderFactory.PreferredEmailProvider();
 			var msg = emailProvider.CreateMessage();

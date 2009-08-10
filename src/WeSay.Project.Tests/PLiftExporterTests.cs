@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
+using Palaso.Data;
 using Palaso.TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -11,7 +12,7 @@ using WeSay.LexicalModel;
 namespace WeSay.Project.Tests
 {
 	/// <summary>
-	/// Tests of the LiftExporter, focussed on its support for the PLIFT scenario
+	/// Tests of the WeSayLiftWriter, focussed on its support for the PLIFT scenario
 	/// </summary>
 	[TestFixture]
 	public class PLiftExporterTests
@@ -399,7 +400,6 @@ namespace WeSay.Project.Tests
 
 	class ExportSession : IDisposable
 	{
-		private LexEntryRepository _lexEntryRepository;
 		private TempFile _outputFile;
 		private ProjectDirectorySetupForTesting _projectDir;
 		public List<string> WritingSystemIds { get; set; }
@@ -445,11 +445,7 @@ namespace WeSay.Project.Tests
 
 		}
 
-		public LexEntryRepository Repo
-		{
-			get { return _lexEntryRepository; }
-			set { _lexEntryRepository = value; }
-		}
+		public LexEntryRepository Repo { get; set; }
 
 		public WritingSystem HeadwordWritingSystem { get; set; }
 
@@ -457,7 +453,7 @@ namespace WeSay.Project.Tests
 
 		public LexEntry MakeTestLexEntryInHeadwordWritingSystem(string lexicalForm)
 		{
-			LexEntry entry = Repo.CreateItem();
+			var entry = Repo.CreateItem();
 			entry.LexicalForm[HeadwordWritingSystem.Id] = lexicalForm;
 			Repo.SaveItem(entry);
 			return entry;
@@ -468,6 +464,7 @@ namespace WeSay.Project.Tests
 			Repo.Dispose();
 			_outputFile.Dispose();
 			_projectDir.Dispose();
+			Repo.Dispose();
 		}
 
 		public void AssertHasAtLeastOneMatch(string xpath)
@@ -497,7 +494,7 @@ namespace WeSay.Project.Tests
 
 		public void AssertNoMatchForXPath(string xpath)
 		{
-			XmlDocument doc = new XmlDocument();
+			var doc = new XmlDocument();
 			try
 			{
 				doc.Load(_outputFile.Path);
@@ -507,7 +504,7 @@ namespace WeSay.Project.Tests
 				Console.WriteLine(err.Message);
 				Console.WriteLine(File.ReadAllText(_outputFile.Path));
 			}
-			XmlNode node = doc.SelectSingleNode(xpath);
+			var node = doc.SelectSingleNode(xpath);
 			if (node != null)
 			{
 				Console.WriteLine("Unexpected match for " + xpath);
@@ -530,21 +527,22 @@ namespace WeSay.Project.Tests
 
 		public void DoExport()
 		{
-			PLiftExporter exporter = new PLiftExporter(_outputFile.Path, Repo, Template);
-
-			ResultSet<LexEntry> allEntriesSortedByHeadword =
-					this.Repo.GetAllEntriesSortedByHeadword(
-							this.HeadwordWritingSystem);
-			foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
+			using (PLiftExporter exporter = new PLiftExporter(_outputFile.Path, Repo, Template))
 			{
-				int homographNumber = 0;
-				if ((bool)token["HasHomograph"])
+				ResultSet<LexEntry> allEntriesSortedByHeadword =
+					this.Repo.GetAllEntriesSortedByHeadword(
+						this.HeadwordWritingSystem);
+				foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
 				{
-					homographNumber = (int)token["HomographNumber"];
+					int homographNumber = 0;
+					if ((bool) token["HasHomograph"])
+					{
+						homographNumber = (int) token["HomographNumber"];
+					}
+					exporter.Add(token.RealObject, homographNumber);
 				}
-				exporter.Add(token.RealObject, homographNumber);
+				exporter.End();
 			}
-			exporter.End();
 		}
 
 		public void CheckRelationOutput(LexEntry targetEntry, string relationName)
@@ -564,14 +562,14 @@ namespace WeSay.Project.Tests
 
 		public void MakeEntry()
 		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
+			LexEntry entry = Repo.CreateItem();
 			entry.LexicalForm.SetAlternative("red", "redLexemeForm");
 			entry.LexicalForm.SetAlternative("green", "greenLexemeForm");
 			entry.LexicalForm.SetAlternative("blue", "blueLexemeForm");
 			//leave this blank entry.CitationForm.SetAlternative("red", "redCitation");
 			entry.CitationForm.SetAlternative("green", "greenCitation");
 			entry.CitationForm.SetAlternative("blue", "blueCitation");
-			_lexEntryRepository.SaveItem(entry);
+			Repo.SaveItem(entry);
 		}
 
 		public XmlNodeList GetNodes(string xpath)

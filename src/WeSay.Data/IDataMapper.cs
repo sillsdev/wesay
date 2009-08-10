@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace WeSay.Data
+namespace Palaso.Data
 {
 	public interface IQuery<T> where T: class, new()
 	{
 		IEnumerable<IDictionary<string, object>> GetResults(T item);
 	}
 
-	public interface IRepository<T>: IDisposable where T : class, new()
+	public interface IDataMapper<T>: IDisposable where T : class, new()
 	{
 		DateTime LastModified { get; }
 		bool CanQuery { get; }

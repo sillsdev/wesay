@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WeSay.Data
+namespace Palaso.Data
 {
 	//todo test IComparable
 	public sealed class RecordToken<T>: IComparable<RecordToken<T>>, IEquatable<RecordToken<T>> where T:class ,new()
@@ -10,31 +10,31 @@ namespace WeSay.Data
 
 		private SortedDictionary<string, object> _queryResults;
 		private readonly RepositoryId _id;
-		private readonly IRepository<T> _repository;
+		private readonly IDataMapper<T> _dataMapper;
 
-		public RecordToken(IRepository<T> repository, RepositoryId id)
+		public RecordToken(IDataMapper<T> dataMapper, RepositoryId id)
 		{
-			if (repository == null)
+			if (dataMapper == null)
 			{
-				throw new ArgumentNullException("repository");
+				throw new ArgumentNullException("dataMapper");
 			}
 			if (id == null)
 			{
 				throw new ArgumentNullException("id");
 			}
-			_repository = repository;
+			_dataMapper = dataMapper;
 			_id = id;
 		}
 
-		public RecordToken(IRepository<T> repository,
+		public RecordToken(IDataMapper<T> dataMapper,
 						   IDictionary<string, object> queryResults,
-						   RepositoryId id): this(repository, id)
+						   RepositoryId id): this(dataMapper, id)
 		{
 			if (queryResults == null)
 			{
 				throw new ArgumentNullException("queryResults");
 			}
-			_repository = repository;
+			_dataMapper = dataMapper;
 			_queryResults = new SortedDictionary<string, object>(queryResults); // we need to own this
 		}
 
@@ -46,7 +46,7 @@ namespace WeSay.Data
 		// proxy object
 		public T RealObject
 		{
-			get { return _repository.GetItem(Id); }
+			get { return _dataMapper.GetItem(Id); }
 		}
 
 		public bool TryGetValue(string fieldName, out object value)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Palaso.Data;
 using Palaso.Reporting;
 using Palaso.Text;
 using WeSay.Data;
