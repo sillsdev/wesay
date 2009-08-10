@@ -2,20 +2,20 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Palaso.Data;
-using Palaso.Data.Tests;
+using Palaso.Tests.Data;
 
 namespace WeSay.Data.Tests
 {
     [TestFixture]
 	public class SynchronicRepositoryStateUnitializedTests :
-		IRepositoryStateUnitializedTests<TestItem>
+		IRepositoryStateUnitializedTests<PalasoTestItem>
     {
         [SetUp]
 		public override void SetUp()
         {
 			DataMapperUnderTest =
-					new SynchronicRepository<TestItem>(new MemoryDataMapper<TestItem>(),
-													   new MemoryDataMapper<TestItem>());
+					new SynchronicRepository<PalasoTestItem>(new MemoryDataMapper<PalasoTestItem>(),
+													   new MemoryDataMapper<PalasoTestItem>());
         }
 
         [TearDown]
@@ -27,14 +27,14 @@ namespace WeSay.Data.Tests
 
     [TestFixture]
 	public class SynchronicRepositoryCreateItemTransitionTests:
-			IRepositoryCreateItemTransitionTests<TestItem>
+			IRepositoryCreateItemTransitionTests<PalasoTestItem>
     {
         [SetUp]
 		public override void SetUp()
         {
 			DataMapperUnderTest =
-					new SynchronicRepository<TestItem>(new MemoryDataMapper<TestItem>(),
-													   new MemoryDataMapper<TestItem>());
+					new SynchronicRepository<PalasoTestItem>(new MemoryDataMapper<PalasoTestItem>(),
+													   new MemoryDataMapper<PalasoTestItem>());
         }
 
         [TearDown]
@@ -49,9 +49,9 @@ namespace WeSay.Data.Tests
 		{
 			Item.StoredInt = 123;
 			Item.StoredString = "I was stored!";
-			QueryAdapter<TestItem> query = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> query = new QueryAdapter<PalasoTestItem>();
 			query.Show("StoredInt").Show("StoredString");
-			ResultSet<TestItem> resultsOfQuery = DataMapperUnderTest.GetItemsMatching(query);
+			ResultSet<PalasoTestItem> resultsOfQuery = DataMapperUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual(123, resultsOfQuery[0]["StoredInt"]);
 			Assert.AreEqual("I was stored!", resultsOfQuery[0]["StoredString"]);
@@ -65,14 +65,14 @@ namespace WeSay.Data.Tests
 
     [TestFixture]
 	public class SynchronicRepositoryDeleteItemTransitionTests:
-			IRepositoryDeleteItemTransitionTests<TestItem>
+			IRepositoryDeleteItemTransitionTests<PalasoTestItem>
     {
         [SetUp]
 		public override void SetUp()
         {
 			DataMapperUnderTest =
-					new SynchronicRepository<TestItem>(new MemoryDataMapper<TestItem>(),
-													   new MemoryDataMapper<TestItem>());
+					new SynchronicRepository<PalasoTestItem>(new MemoryDataMapper<PalasoTestItem>(),
+													   new MemoryDataMapper<PalasoTestItem>());
         }
 
         [TearDown]
@@ -89,14 +89,14 @@ namespace WeSay.Data.Tests
 
     [TestFixture]
 	public class SynchronicRepositoryDeleteIdTransitionTests:
-			IRepositoryDeleteIdTransitionTests<TestItem>
+			IRepositoryDeleteIdTransitionTests<PalasoTestItem>
     {
         [SetUp]
 		public override void SetUp()
         {
 			DataMapperUnderTest =
-					new SynchronicRepository<TestItem>(new MemoryDataMapper<TestItem>(),
-													   new MemoryDataMapper<TestItem>());
+					new SynchronicRepository<PalasoTestItem>(new MemoryDataMapper<PalasoTestItem>(),
+													   new MemoryDataMapper<PalasoTestItem>());
 		}
 
 		[TearDown]
@@ -113,14 +113,14 @@ namespace WeSay.Data.Tests
 
 	[TestFixture]
 	public class SynchronicRepositoryDeleteAllItemsTransitionTests:
-			IRepositoryDeleteAllItemsTransitionTests<TestItem>
+			IRepositoryDeleteAllItemsTransitionTests<PalasoTestItem>
 	{
 		[SetUp]
 		public override void SetUp()
 		{
 			DataMapperUnderTest =
-					new SynchronicRepository<TestItem>(new MemoryDataMapper<TestItem>(),
-													   new MemoryDataMapper<TestItem>());
+					new SynchronicRepository<PalasoTestItem>(new MemoryDataMapper<PalasoTestItem>(),
+													   new MemoryDataMapper<PalasoTestItem>());
         }
 
         [TearDown]
@@ -138,16 +138,16 @@ namespace WeSay.Data.Tests
     [TestFixture]
     public class SynchronicRepositoryTests
     {
-		private IDataMapper<TestItem> _primary;
-		private IDataMapper<TestItem> _secondary;
-		private SynchronicRepository<TestItem> _synchronic;
+		private IDataMapper<PalasoTestItem> _primary;
+		private IDataMapper<PalasoTestItem> _secondary;
+		private SynchronicRepository<PalasoTestItem> _synchronic;
 
         [SetUp]
         public void Setup()
         {
-			_primary = new MemoryDataMapper<TestItem>();
-			_secondary = new MemoryDataMapper<TestItem>();
-            _synchronic = new SynchronicRepository<TestItem>(_primary, _secondary);
+			_primary = new MemoryDataMapper<PalasoTestItem>();
+			_secondary = new MemoryDataMapper<PalasoTestItem>();
+			_synchronic = new SynchronicRepository<PalasoTestItem>(_primary, _secondary);
         }
 
         [TearDown]
@@ -160,16 +160,16 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof (ArgumentException))]
         public void PassSameRepositoriesInConstructor_ThrowsArgumentException()
         {
-			using (IDataMapper<TestItem> dataMapper = new MemoryDataMapper<TestItem>())
+			using (IDataMapper<PalasoTestItem> dataMapper = new MemoryDataMapper<PalasoTestItem>())
 			{
-				using (new SynchronicRepository<TestItem>(dataMapper, dataMapper)) {}
+				using (new SynchronicRepository<PalasoTestItem>(dataMapper, dataMapper)) {}
 			}
         }
 
         [Test]
         public void CreateItem_ItemExistsInBothRepositories()
         {
-            TestItem item = _synchronic.CreateItem();
+			PalasoTestItem item = _synchronic.CreateItem();
             _synchronic.SaveItem(item);
             Assert.AreEqual(item, _primary.GetItem(_primary.GetAllItems()[0]));
             Assert.AreEqual(item, _secondary.GetItem(_secondary.GetAllItems()[0]));
@@ -180,7 +180,7 @@ namespace WeSay.Data.Tests
         [Test]
         public void DeleteItemByItem_ItemDeletedInBothRepositories()
         {
-            TestItem item = _synchronic.CreateItem();
+			PalasoTestItem item = _synchronic.CreateItem();
             _synchronic.DeleteItem(item);
             Assert.AreEqual(0, _primary.CountAllItems());
             Assert.AreEqual(0, _secondary.CountAllItems());
@@ -189,7 +189,7 @@ namespace WeSay.Data.Tests
         [Test]
         public void DeleteItemById_ItemDeletedInBothRepositories()
         {
-            TestItem item = _synchronic.CreateItem();
+			PalasoTestItem item = _synchronic.CreateItem();
             _synchronic.DeleteItem(_synchronic.GetId(item));
             Assert.AreEqual(0, _primary.CountAllItems());
             Assert.AreEqual(0, _secondary.CountAllItems());
@@ -198,7 +198,7 @@ namespace WeSay.Data.Tests
         [Test]
         public void ChangeItem_ItemChangedInBothRepositories()
         {
-            TestItem item = _synchronic.CreateItem();
+			PalasoTestItem item = _synchronic.CreateItem();
             item.StoredString = "changed";
             _synchronic.SaveItem(item);
             Assert.AreEqual("changed", _primary.GetItem(_primary.GetAllItems()[0]).StoredString);
@@ -208,16 +208,18 @@ namespace WeSay.Data.Tests
         [Test]
         public void StartWithItemsInSecondary_ItemsCopiedToPrimary()
         {
-            TestItem item = _secondary.CreateItem();
+			PalasoTestItem item = _secondary.CreateItem();
             item.StoredString = "item one";
             item = _secondary.CreateItem();
             item.StoredString = "item two";
 			_synchronic.Dispose();
-            _synchronic = new SynchronicRepository<TestItem>(_primary, _secondary);
+			_synchronic = new SynchronicRepository<PalasoTestItem>(_primary, _secondary);
             Assert.AreEqual(2, _primary.CountAllItems());
-            List<string> strings = new List<string>(2);
-            strings.Add(_primary.GetItem(_primary.GetAllItems()[0]).StoredString);
-            strings.Add(_primary.GetItem(_primary.GetAllItems()[1]).StoredString);
+			var strings = new List<string>(2)
+			{
+				_primary.GetItem(_primary.GetAllItems()[0]).StoredString,
+				_primary.GetItem(_primary.GetAllItems()[1]).StoredString
+			};
             Assert.Contains("item one", strings);
             Assert.Contains("item two", strings);
         }
@@ -225,18 +227,20 @@ namespace WeSay.Data.Tests
         [Test]
         public void StartWithItemsInPrimary_ItemsCopiedToSecondary()
         {
-            TestItem item = _primary.CreateItem();
+			PalasoTestItem item = _primary.CreateItem();
             item.StoredString = "item one";
 			_primary.SaveItem(item);
             item = _primary.CreateItem();
             item.StoredString = "item two";
 			_primary.SaveItem(item);
 			_synchronic.Dispose();
-            _synchronic = new SynchronicRepository<TestItem>(_primary, _secondary);
+			_synchronic = new SynchronicRepository<PalasoTestItem>(_primary, _secondary);
             Assert.AreEqual(2, _secondary.CountAllItems());
-            List<string> strings = new List<string>(2);
-            strings.Add(_secondary.GetItem(_secondary.GetAllItems()[0]).StoredString);
-            strings.Add(_secondary.GetItem(_secondary.GetAllItems()[1]).StoredString);
+			var strings = new List<string>(2)
+			{
+				_secondary.GetItem(_secondary.GetAllItems()[0]).StoredString,
+				_secondary.GetItem(_secondary.GetAllItems()[1]).StoredString
+			};
             Assert.Contains("item one", strings);
             Assert.Contains("item two", strings);
         }
@@ -244,14 +248,14 @@ namespace WeSay.Data.Tests
         [Test]
         public void StartWithItemsInBothButSecondaryNewer_NewestOneWins()
         {
-            TestItem item = _primary.CreateItem();
+			PalasoTestItem item = _primary.CreateItem();
             item.StoredString = "item one";
             _primary.SaveItem(item);
             item = _secondary.CreateItem();
             item.StoredString = "item two";
             _secondary.SaveItem(item);
 			_synchronic.Dispose();
-            _synchronic = new SynchronicRepository<TestItem>(_primary, _secondary);
+			_synchronic = new SynchronicRepository<PalasoTestItem>(_primary, _secondary);
             Assert.AreEqual(1, _primary.CountAllItems());
             Assert.AreEqual(1, _secondary.CountAllItems());
             Assert.AreEqual("item two", _primary.GetItem(_primary.GetAllItems()[0]).StoredString);
@@ -261,14 +265,14 @@ namespace WeSay.Data.Tests
         [Test]
         public void StartWithItemsInBothButPrimaryNewer_NewestOneWins()
         {
-            TestItem item = _secondary.CreateItem();
+			PalasoTestItem item = _secondary.CreateItem();
             item.StoredString = "item one";
             _secondary.SaveItem(item);
             item = _primary.CreateItem();
             item.StoredString = "item two";
             _primary.SaveItem(item);
 			_synchronic.Dispose();
-            _synchronic = new SynchronicRepository<TestItem>(_primary, _secondary);
+			_synchronic = new SynchronicRepository<PalasoTestItem>(_primary, _secondary);
             Assert.AreEqual(1, _primary.CountAllItems());
             Assert.AreEqual(1, _secondary.CountAllItems());
             Assert.AreEqual("item two", _primary.GetItem(_primary.GetAllItems()[0]).StoredString);
