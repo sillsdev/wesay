@@ -35,6 +35,7 @@
 			</sources>
 			<references basedir="${project.output.dir}">
 				<include name="Palaso.dll" />
+				<include name="Palaso.Tests.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="Palaso.TestUtilities.dll" />
 				<include name="System.Drawing.dll" />
