@@ -68,7 +68,9 @@ namespace WeSay.ConfigTool
 						}
 						catch (Exception error)  //WS-1296 where (sometimes) a bogus looking id killed Enchant
 						{
-							ErrorReport.NotifyUserOfProblem("There was a problem asking the Enchant Spelling system about '{0}'.", ws.Id);
+							//ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "There was a problem asking the Enchant Spelling system about '{0}'.", ws.Id);
+
+							//These enchant errors are just too common & useless.  Let's not even report on them.
 						}
 					}
 				}
