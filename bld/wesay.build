@@ -110,6 +110,7 @@
 			<test>
 		  <assemblies>
 			<include name="../output/${configuration}/*.Test*.dll" />
+			<exclude name="../output/${configuration}/Palaso*.Test*.dll" />
 		  </assemblies>
 		  <categories>
 		  </categories>
