@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Data;
 using Palaso.Reporting;
 using Palaso.Text;
 using WeSay.Data;

@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Data;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;

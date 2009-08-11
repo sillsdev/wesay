@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml;
 using LiftIO.Validation;
 using Palaso.Annotations;
+using Palaso.Lift;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
@@ -14,24 +15,35 @@ using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel
 {
-	public class LiftExporter
+	public class WeSayLiftWriter : ILiftWriter<LexEntry>
 	{
 		public const string LiftDateTimeFormat = "yyyy-MM-ddThh:mm:ssZ";
 		private readonly XmlWriter _writer;
 		private readonly Dictionary<string, int> _allIdsExportedSoFar;
 
-		private LiftExporter()
+		#if DEBUG
+		[CLSCompliant(false)]
+		protected StackTrace _constructionStack;
+		#endif
+
+		private WeSayLiftWriter()
 		{
+			#if DEBUG
+			_constructionStack = new StackTrace();
+			#endif
+
 			_allIdsExportedSoFar = new Dictionary<string, int>();
 		}
 
-		public LiftExporter(string path): this()
+		public WeSayLiftWriter(string path): this()
 		{
+			_disposed = true; // Just in case we throw in the constructor
 			_writer = XmlWriter.Create(path, PrepareSettings(false));
 			Start();
+			_disposed = false;
 		}
 
-		public LiftExporter(StringBuilder builder, bool produceFragmentOnly): this()
+		public WeSayLiftWriter(StringBuilder builder, bool produceFragmentOnly): this()
 		{
 			_writer = XmlWriter.Create(builder, PrepareSettings(produceFragmentOnly));
 			if (!produceFragmentOnly)
@@ -413,7 +425,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private void WriteCustomMultiTextField(string tag, MultiText text)
+		private void WriteCustomMultiTextField(string tag, MultiText text)  // review cp see WriteEmbeddedXmlCollection
 		{
 			if (!MultiTextBase.IsEmpty(text))
 			{
@@ -487,7 +499,7 @@ namespace WeSay.LexicalModel
 			Writer.WriteEndElement();
 		}
 
-		public void Add(string propertyName, MultiText text)
+		public void Add(string propertyName, MultiText text) // review cp see WriteEmbeddedXmlCollection
 		{
 			Add(GetOrderedAndFilteredForms(text, propertyName), false);
 			WriteFormsThatNeedToBeTheirOwnFields(text, propertyName);
@@ -495,13 +507,13 @@ namespace WeSay.LexicalModel
 		}
 		private void WriteEmbeddedXmlCollection(MultiText text)
 		{
-			foreach (string rawXml in text.EmbeddedXmlElements)
+			foreach (string rawXml in text.EmbeddedXmlElements) // todo cp Promote roundtripping to Palaso.Lift / Palaso.Data also then can use MultiTextBase here (or a better interface).
 			{
 				Writer.WriteRaw(rawXml);
 			}
 		}
 
-		protected virtual void WriteFormsThatNeedToBeTheirOwnFields(MultiText text, string name)
+		protected virtual void WriteFormsThatNeedToBeTheirOwnFields(MultiText text, string name) // review cp For PLiftExporter GetAudioForms
 		{
 		}
 
@@ -560,7 +572,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private void WriteMultiTextNoWrapper(string propertyName, MultiText text)
+		private void WriteMultiTextNoWrapper(string propertyName, MultiText text) // review cp see WriteEmbeddedXmlCollection
 		{
 			if (!MultiTextBase.IsEmpty(text))
 			{
@@ -597,12 +609,12 @@ namespace WeSay.LexicalModel
 
 		private bool WriteMultiWithWrapperIfNonEmpty(string propertyName,
 													 string wrapperName,
-													 MultiText text)
+													 MultiText text)  // review cp see WriteEmbeddedXmlCollection
 		{
 			if (!MultiTextBase.IsEmpty(text))
 			{
 				Writer.WriteStartElement(wrapperName);
-				Add(propertyName, text);
+				Add(propertyName, text);  // review cp see WriteEmbeddedXmlCollection
 				Writer.WriteEndElement();
 				return true;
 			}
@@ -633,5 +645,51 @@ namespace WeSay.LexicalModel
 
 			Writer.WriteEndElement();
 		}
+
+		#region IDisposable Members
+
+#if DEBUG
+		~WeSayLiftWriter()
+		{
+			if (!_disposed)
+			{
+				throw new ApplicationException("Disposed not explicitly called on WeSayLiftWriter." + "\n" + _constructionStack);
+			}
+		}
+#endif
+
+		[CLSCompliantAttribute(false)]
+		protected bool _disposed;
+
+		public virtual void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!_disposed)
+			{
+				if (disposing)
+				{
+					// dispose-only, i.e. non-finalizable logic
+				}
+
+				// shared (dispose and finalizable) cleanup logic
+				_disposed = true;
+			}
+		}
+
+		protected void VerifyNotDisposed()
+		{
+			if (!_disposed)
+			{
+				throw new ObjectDisposedException("WeSayLiftWriter");
+			}
+		}
+
+		#endregion
+
 	}
 }

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using NUnit.Framework;
+using Palaso.Data;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;

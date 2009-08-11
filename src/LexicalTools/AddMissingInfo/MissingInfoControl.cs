@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Data;
 using Palaso.Misc;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;

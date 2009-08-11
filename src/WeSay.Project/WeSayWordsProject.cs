@@ -38,7 +38,6 @@ namespace WeSay.Project
 		private readonly Dictionary<string, OptionsList> _optionLists;
 		private string _pathToLiftFile;
 		private string _cacheLocationOverride;
-		private FileStream _liftFileStreamForLocking;
 		private LiftUpdateService _liftUpdateService;
 
 		private readonly AddinSet _addins;
@@ -358,15 +357,15 @@ namespace WeSay.Project
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 
-			builder.Register<LiftRepository>( c =>
+			builder.Register<WeSayLiftDataMapper>( c =>
 			  {
 				  try
 				  {
 					  return c.Resolve<IProgressNotificationProvider>().Go
-						  <LiftRepository>(
+						  <WeSayLiftDataMapper>(
 						  "Loading Dictionary",
 						  progressState =>
-						  new LiftRepository(_pathToLiftFile,
+						  new WeSayLiftDataMapper(_pathToLiftFile,
 											 GetSemanticDomainsList(),
 											 progressState));
 				  }
@@ -386,8 +385,6 @@ namespace WeSay.Project
 //                 c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
 //                         progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
 
-
-			//builder.Register<IRepository<LexEntry>>(c => c.Resolve<LexEntryRepository>());
 
 			builder.Register<ICountGiver>(c => c.Resolve<LexEntryRepository>());
 
@@ -746,7 +743,7 @@ namespace WeSay.Project
 			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
 			if (!File.Exists(pathToLiftFile))
 			{
-				Utilities.CreateEmptyLiftFile(pathToLiftFile, LiftExporter.ProducerString, false);
+				Utilities.CreateEmptyLiftFile(pathToLiftFile, WeSayLiftWriter.ProducerString, false);
 			}
 		}
 
@@ -835,7 +832,7 @@ namespace WeSay.Project
 
 		public bool LiftIsLocked
 		{
-			get { return _liftFileStreamForLocking != null; }
+			get { return false; }
 		}
 
 		private void LockLift()
@@ -1030,6 +1027,7 @@ namespace WeSay.Project
 			set { _cacheLocationOverride = value; }
 		}
 
+		// todo: this can be removed?  cp
 		public LiftUpdateService LiftUpdateService
 		{
 			get { return _liftUpdateService; }

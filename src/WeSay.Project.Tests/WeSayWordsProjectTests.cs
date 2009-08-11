@@ -418,6 +418,8 @@ namespace WeSay.Project.Tests
 				{
 					try
 					{
+						// This will leak an application exception due to the Dispose not being called.
+						// due to the constructor throw.
 						project.GetLexEntryRepository();
 					}
 					catch(LiftFormatException)

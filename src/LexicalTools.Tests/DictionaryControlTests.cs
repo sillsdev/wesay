@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Palaso.Data;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;

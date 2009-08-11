@@ -1,17 +1,14 @@
 using System;
 using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
-using System.Xml;
-using LiftIO;
 using LiftIO.Migration;
 using LiftIO.Validation;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 
-namespace WeSay.LexicalModel.Migration
+namespace Palaso.Lift.Migration
 {
 	internal class LiftPreparer
 	{

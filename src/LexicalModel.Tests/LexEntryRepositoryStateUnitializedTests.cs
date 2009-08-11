@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Data.Tests;
@@ -6,28 +7,10 @@ using Palaso.TestUtilities;
 namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
-	public class LexEntryRepositoryStateUnitializedTests : IRepositoryStateUnitializedTests<LexEntry>
+	public class LexEntryRepositoryStateUnitializedTests
 	{
-		private string _persistedFilePath;
-		private TemporaryFolder _tempFolder;
-
-		[SetUp]
-		public override void SetUp()
-		{
-			_tempFolder = new TemporaryFolder();
-			_persistedFilePath = _tempFolder.GetTemporaryFile();
-			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
-		}
-
-		[TearDown]
-		public override void TearDown()
-		{
-			RepositoryUnderTest.Dispose();
-			_tempFolder.Delete();
-		}
-
 		/* NOMORELOCKING
-   [Test]
+		[Test]
 		[ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsWriteableAfterRepositoryIsCreated_Throws()
 		{
@@ -36,13 +19,20 @@ namespace WeSay.LexicalModel.Tests
 			}
 		}
 */
+
 		[Test]
 		[ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsNotWriteableWhenRepositoryIsCreated_Throws()
 		{
-			using (File.OpenWrite(_persistedFilePath))
+			using (TempFile t = TempFile.CreateAndGetPathButDontMakeTheFile())
 			{
-				LiftRepository repository = new LiftRepository(_persistedFilePath);
+				using (File.OpenWrite(t.Path))
+				{
+					// Note: Will throw => Dispose will not be called.
+					using (var dm = new LexEntryRepository(t.Path))
+					{
+					}
+				}
 			}
 		}
 	}

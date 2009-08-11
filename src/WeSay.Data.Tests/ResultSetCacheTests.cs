@@ -1,26 +1,30 @@
 using System;
 using System.Collections.Generic;
+using Palaso.Data;
+using Palaso.Tests.Data;
 using WeSay.Data;
 using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
+	// todo refactor this to using(var session = new TestSession) {} style
+	// todo reimplement tests when QueryObject is changed
 	[TestFixture]
 	public class ResultSetCacheTestsWithSingleRecordTokensFromQuery
 	{
-		private MemoryRepository<TestItem> _repository;
+		private MemoryDataMapper<PalasoTestItem> _dataMapper;
 		private SortDefinition[] _sortDefinitions;
-		private ResultSet<TestItem> _results;
-		private QueryAdapter<TestItem> _queryToCache;
+		private ResultSet<PalasoTestItem> _results;
+		private QueryAdapter<PalasoTestItem> _queryToCache;
 
 		[SetUp]
 		public void Setup()
 		{
-			_repository = new MemoryRepository<TestItem>();
-			PopulateRepositoryWithItemsForQuerying(_repository);
-			_queryToCache = new QueryAdapter<TestItem>();
+			_dataMapper = new MemoryDataMapper<PalasoTestItem>();
+			PopulateRepositoryWithItemsForQuerying(_dataMapper);
+			_queryToCache = new QueryAdapter<PalasoTestItem>();
 			_queryToCache.Show("StoredString");
-			_results = _repository.GetItemsMatching(_queryToCache);
+			_results = _dataMapper.GetItemsMatching(_queryToCache);
 			_sortDefinitions = new SortDefinition[1];
 			_sortDefinitions[0] = new SortDefinition("StoredString", Comparer<string>.Default);
 		}
@@ -28,27 +32,27 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void Teardown()
 		{
-			_repository.Dispose();
+			_dataMapper.Dispose();
 		}
 
-		private void PopulateRepositoryWithItemsForQuerying(MemoryRepository<TestItem> repository)
+		private void PopulateRepositoryWithItemsForQuerying(MemoryDataMapper<PalasoTestItem> dataMapper)
 		{
-			TestItem[] items = new TestItem[3];
-			items[0] = repository.CreateItem();
+			var items = new PalasoTestItem[3];
+			items[0] = dataMapper.CreateItem();
 			items[0].StoredString = "Item 3";
-			repository.SaveItem(items[0]);
-			items[1] = repository.CreateItem();
+			dataMapper.SaveItem(items[0]);
+			items[1] = dataMapper.CreateItem();
 			items[1].StoredString = "Item 0";
-			repository.SaveItem(items[1]);
-			items[2] = repository.CreateItem();
+			dataMapper.SaveItem(items[1]);
+			items[2] = dataMapper.CreateItem();
 			items[2].StoredString = "Item 2";
-			repository.SaveItem(items[2]);
+			dataMapper.SaveItem(items[2]);
 		}
 
 		[Test]
 		public void Constructor_IsPassedUnsortedResultSet_GetResultSetReturnsSorted()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
 			Assert.AreEqual(3, resultSetCacheUnderTest.GetResultSet().Count);
 			Assert.AreEqual("Item 0", resultSetCacheUnderTest.GetResultSet()[0]["StoredString"]);
 			Assert.AreEqual("Item 2", resultSetCacheUnderTest.GetResultSet()[1]["StoredString"]);
@@ -59,14 +63,14 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Constructor_RepositoryNull_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(null, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(null, _sortDefinitions, _results, _queryToCache);
 		}
 
 		[Test]
 		public void Constructor_SortDefinitionNull_SortedByRepositoryId()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, null, _results, _queryToCache);
-			ResultSet<TestItem> resultSet = resultSetCacheUnderTest.GetResultSet();
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, null, _results, _queryToCache);
+			ResultSet<PalasoTestItem> resultSet = resultSetCacheUnderTest.GetResultSet();
 			Assert.AreEqual(3, resultSet.Count);
 			for (int recordTokenNum = 0; recordTokenNum < (resultSet.Count - 1); recordTokenNum++)
 			{
@@ -78,7 +82,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void UpdateItemInCache_Null_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.UpdateItemInCache(null);
 		}
 
@@ -86,19 +90,19 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void UpdateItemInCache_ItemDoesNotExistInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
-			TestItem itemNotInRepository = new TestItem();
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
+			PalasoTestItem itemNotInRepository = new PalasoTestItem();
 			resultSetCacheUnderTest.UpdateItemInCache(itemNotInRepository);
 		}
 
 		[Test]
 		public void UpdateItemInCache_ItemDoesNotExistInCacheButDoesInRepository_ItemIsAddedToResultSetAndSortedCorrectly()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
 
-			TestItem itemCreatedAfterCache = _repository.CreateItem();
+			PalasoTestItem itemCreatedAfterCache = _dataMapper.CreateItem();
 			itemCreatedAfterCache.StoredString = "Item 1";
-			_repository.SaveItem(itemCreatedAfterCache);
+			_dataMapper.SaveItem(itemCreatedAfterCache);
 			resultSetCacheUnderTest.UpdateItemInCache(itemCreatedAfterCache);
 
 			Assert.AreEqual(4, resultSetCacheUnderTest.GetResultSet().Count);
@@ -111,15 +115,15 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void UpdateItemInCache_ItemExists_ResultSetIsUpdatedAndSorted()
 		{
-			TestItem itemToModify = _repository.CreateItem();
+			PalasoTestItem itemToModify = _dataMapper.CreateItem();
 			itemToModify.StoredString = "Item 5";
-			_repository.SaveItem(itemToModify);
+			_dataMapper.SaveItem(itemToModify);
 
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			_results = _dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
 
 			itemToModify.StoredString = "Item 1";
-			_repository.SaveItem(itemToModify);
+			_dataMapper.SaveItem(itemToModify);
 			resultSetCacheUnderTest.UpdateItemInCache(itemToModify);
 
 			Assert.AreEqual(4, resultSetCacheUnderTest.GetResultSet().Count);
@@ -132,12 +136,12 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void UpdateItemInCache_ItemHasNotChanged_ResultSetIsNotChanged()
 		{
-			TestItem unmodifiedItem = _repository.CreateItem();
+			PalasoTestItem unmodifiedItem = _dataMapper.CreateItem();
 			unmodifiedItem.StoredString = "Item 1";
-			_repository.SaveItem(unmodifiedItem);
+			_dataMapper.SaveItem(unmodifiedItem);
 
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			_results = _dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.UpdateItemInCache(unmodifiedItem);
 
 			//Would be a better test but ResultSets don't support equality checks
@@ -153,12 +157,12 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void DeleteItemFromCache_Item_ItemIsNoLongerInResultSet()
 		{
-			TestItem itemToDelete = _repository.CreateItem();
+			PalasoTestItem itemToDelete = _dataMapper.CreateItem();
 			itemToDelete.StoredString = "Item 1";
-			_repository.SaveItem(itemToDelete);
+			_dataMapper.SaveItem(itemToDelete);
 
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			_results = _dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(itemToDelete);
 
 			//Would be a better test but ResultSets don't support equality checks
@@ -174,28 +178,28 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void DeleteItemFromCache_Null_Throws()
 		{
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache((TestItem) null);
+			_results = _dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
+			resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem) null);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCache_ItemNotInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache(new TestItem());
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
+			resultSetCacheUnderTest.DeleteItemFromCache(new PalasoTestItem());
 		}
 
 		[Test]
 		public void DeleteItemFromCacheById_Id_ItemIsNoLongerInResultSet()
 		{
-			TestItem itemToDelete = _repository.CreateItem();
+			PalasoTestItem itemToDelete = _dataMapper.CreateItem();
 			itemToDelete.StoredString = "Item 1";
-			_repository.SaveItem(itemToDelete);
+			_dataMapper.SaveItem(itemToDelete);
 
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			_results = _dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(itemToDelete);
 
 			//Would be a better test but ResultSets don't support equality checks
@@ -211,23 +215,23 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void DeleteItemFromCacheById_Null_Throws()
 		{
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache((TestItem)null);
+			_results = _dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
+			resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem)null);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCacheById_ItemNotInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(RepositoryId.Empty);
 		}
 
 		[Test]
 		public void DeleteAllItemsFromCache_AllItemsAreDeleted()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteAllItemsFromCache();
 			Assert.AreEqual(0, resultSetCacheUnderTest.GetResultSet().Count);
 		}
@@ -236,19 +240,19 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class ResultSetCacheTestsWithMultipleRecordTokensFromQuery
 	{
-		private MemoryRepository<TestItem> _repository;
+		private MemoryDataMapper<PalasoTestItem> dataMapper;
 		private SortDefinition[] _sortDefinitions;
-		private ResultSet<TestItem> _results;
-		private QueryAdapter<TestItem> _queryToCache = null;
+		private ResultSet<PalasoTestItem> _results;
+		private QueryAdapter<PalasoTestItem> _queryToCache = null;
 
 		[SetUp]
 		public void Setup()
 		{
-			_repository = new MemoryRepository<TestItem>();
-			PopulateRepositoryWithItemsForQuerying(_repository);
-			_queryToCache = new QueryAdapter<TestItem>();
+			dataMapper = new MemoryDataMapper<PalasoTestItem>();
+			PopulateRepositoryWithItemsForQuerying(dataMapper);
+			_queryToCache = new QueryAdapter<PalasoTestItem>();
 			_queryToCache.ShowEach("StoredList");
-			_results = _repository.GetItemsMatching(_queryToCache);
+			_results = dataMapper.GetItemsMatching(_queryToCache);
 			_sortDefinitions = new SortDefinition[1];
 			_sortDefinitions[0] = new SortDefinition("StoredList", Comparer<string>.Default);
 		}
@@ -256,19 +260,19 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void Teardown()
 		{
-			_repository.Dispose();
+			dataMapper.Dispose();
 		}
 
-		private void PopulateRepositoryWithItemsForQuerying(MemoryRepository<TestItem> repository)
+		private void PopulateRepositoryWithItemsForQuerying(MemoryDataMapper<PalasoTestItem> dataMapper)
 		{
-			TestItem[] items = new TestItem[2];
-			items[0] = repository.CreateItem();
+			PalasoTestItem[] items = new PalasoTestItem[2];
+			items[0] = dataMapper.CreateItem();
 			items[0].StoredList = PopulateListWith("Item 1", "Item 3");
-			repository.SaveItem(items[0]);
+			dataMapper.SaveItem(items[0]);
 
-			items[1] = repository.CreateItem();
+			items[1] = dataMapper.CreateItem();
 			items[1].StoredList = PopulateListWith("Item 2", "Item 0");
-			repository.SaveItem(items[1]);
+			dataMapper.SaveItem(items[1]);
 		}
 
 		public List<string> PopulateListWith(string string1, string string2)
@@ -282,7 +286,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void Constructor_IsPassedUnsortedResultSet_GetResultSetReturnsSorted()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 			Assert.AreEqual(4, resultSetCacheUnderTest.GetResultSet().Count);
 			Assert.AreEqual("Item 0", resultSetCacheUnderTest.GetResultSet()[0]["StoredList"]);
 			Assert.AreEqual("Item 1", resultSetCacheUnderTest.GetResultSet()[1]["StoredList"]);
@@ -294,7 +298,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void UpdateItemInCache_Null_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.UpdateItemInCache(null);
 		}
 
@@ -302,19 +306,19 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void UpdateItemInCache_ItemDoesNotExistInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
-			TestItem itemNotInRepository = new TestItem();
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
+			PalasoTestItem itemNotInRepository = new PalasoTestItem();
 			resultSetCacheUnderTest.UpdateItemInCache(itemNotInRepository);
 		}
 
 		[Test]
 		public void UpdateItemInCache_ItemDoesNotExistInCacheButDoesInRepository_ItemIsAddedToResultSetAndSortedCorrectly()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
-			TestItem itemCreatedAfterCache = _repository.CreateItem();
+			PalasoTestItem itemCreatedAfterCache = dataMapper.CreateItem();
 			itemCreatedAfterCache.StoredList = PopulateListWith("Item 5", "Item 4");
-			_repository.SaveItem(itemCreatedAfterCache);
+			dataMapper.SaveItem(itemCreatedAfterCache);
 			resultSetCacheUnderTest.UpdateItemInCache(itemCreatedAfterCache);
 
 			Assert.AreEqual(6, resultSetCacheUnderTest.GetResultSet().Count);
@@ -329,15 +333,15 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void UpdateItemInCache_ItemExists_ResultSetIsUpdatedAndSorted()
 		{
-			TestItem itemToModify = _repository.CreateItem();
+			PalasoTestItem itemToModify = dataMapper.CreateItem();
 			itemToModify.StoredList = PopulateListWith("Change Me!", "Me 2!");
-			_repository.SaveItem(itemToModify);
+			dataMapper.SaveItem(itemToModify);
 
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			_results = dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
 			itemToModify.StoredList = PopulateListWith("Item 5", "Item 4");
-			_repository.SaveItem(itemToModify);
+			dataMapper.SaveItem(itemToModify);
 			resultSetCacheUnderTest.UpdateItemInCache(itemToModify);
 
 			Assert.AreEqual(6, resultSetCacheUnderTest.GetResultSet().Count);
@@ -352,12 +356,12 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void UpdateItemInCache_ItemHasNotChanged_ResultSetIsNotChanged()
 		{
-			TestItem unmodifiedItem = _repository.CreateItem();
+			PalasoTestItem unmodifiedItem = dataMapper.CreateItem();
 			unmodifiedItem.StoredList = PopulateListWith("Item 5", "Item 4");
-			_repository.SaveItem(unmodifiedItem);
+			dataMapper.SaveItem(unmodifiedItem);
 
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			_results = dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
 			resultSetCacheUnderTest.UpdateItemInCache(unmodifiedItem);
 
@@ -377,12 +381,12 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void DeleteItemFromCache_Item_ItemIsNoLongerInResultSet()
 		{
-			TestItem itemToDelete = _repository.CreateItem();
+			PalasoTestItem itemToDelete = dataMapper.CreateItem();
 			itemToDelete.StoredList = PopulateListWith("Item 5", "Item 4");
-			_repository.SaveItem(itemToDelete);
+			dataMapper.SaveItem(itemToDelete);
 
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			_results = dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(itemToDelete);
 
 			//Would be a better test but ResultSets don't support equality checks
@@ -399,29 +403,29 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void DeleteItemFromCache_Null_Throws()
 		{
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache((TestItem)null);
+			_results = dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
+			resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem)null);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCache_ItemNotInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache(new TestItem());
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
+			resultSetCacheUnderTest.DeleteItemFromCache(new PalasoTestItem());
 		}
 
 		[Test]
 		public void DeleteItemFromCacheById_Item_ItemIsNoLongerInResultSet()
 		{
-			TestItem itemToDelete = _repository.CreateItem();
+			PalasoTestItem itemToDelete = dataMapper.CreateItem();
 			itemToDelete.StoredList = PopulateListWith("Item 5", "Item 4");
-			_repository.SaveItem(itemToDelete);
+			dataMapper.SaveItem(itemToDelete);
 
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache(_repository.GetId(itemToDelete));
+			_results = dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
+			resultSetCacheUnderTest.DeleteItemFromCache(dataMapper.GetId(itemToDelete));
 
 			//Would be a better test but ResultSets don't support equality checks
 			//Assert.AreEqual(resultsBeforeUpdate, resultsAfterUpdate);
@@ -437,23 +441,23 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void DeleteItemFromCacheById_Null_Throws()
 		{
-			_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache((TestItem)null);
+			_results = dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
+			resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem)null);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCacheById_ItemNotInRepository_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteItemFromCache(RepositoryId.Empty);
 		}
 
 		[Test]
 		public void DeleteAllItemsFromCache_AllItemsAreDeleted()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 			resultSetCacheUnderTest.DeleteAllItemsFromCache();
 			Assert.AreEqual(0, resultSetCacheUnderTest.GetResultSet().Count);
 		}
@@ -462,59 +466,59 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class ResultSetCacheWithMultipleQueries
 	{
-		private MemoryRepository<TestItem> _repository;
+		private MemoryDataMapper<PalasoTestItem> dataMapper;
 		private SortDefinition[] _sortDefinitions;
-		private ResultSet<TestItem> _results;
-		private QueryAdapter<TestItem> _queryToCache;
+		private ResultSet<PalasoTestItem> _results;
+		private QueryAdapter<PalasoTestItem> _queryToCache;
 
 		[SetUp]
 		public void SetUp()
 		{
-			_repository = new MemoryRepository<TestItem>();
-			PopulateRepositoryWithItemsForQuerying(_repository);
+			dataMapper = new MemoryDataMapper<PalasoTestItem>();
+			PopulateRepositoryWithItemsForQuerying(dataMapper);
 
-			_queryToCache = new QueryAdapter<TestItem>();
+			_queryToCache = new QueryAdapter<PalasoTestItem>();
 			_queryToCache.Show("StoredString");
 
-			_results = _repository.GetItemsMatching(_queryToCache);
+			_results = dataMapper.GetItemsMatching(_queryToCache);
 
 			_sortDefinitions = new SortDefinition[1];
 			_sortDefinitions[0] = new SortDefinition("StoredString", Comparer<string>.Default);
 		}
 
-		private void PopulateRepositoryWithItemsForQuerying(MemoryRepository<TestItem> repository)
+		private void PopulateRepositoryWithItemsForQuerying(MemoryDataMapper<PalasoTestItem> dataMapper)
 		{
-			TestItem[] items = new TestItem[3];
-			items[0] = repository.CreateItem();
+			PalasoTestItem[] items = new PalasoTestItem[3];
+			items[0] = dataMapper.CreateItem();
 			items[0].StoredString = "Item 3";
 			items[0].Child.StoredString = "Item 4";
-			repository.SaveItem(items[0]);
-			items[1] = repository.CreateItem();
+			dataMapper.SaveItem(items[0]);
+			items[1] = dataMapper.CreateItem();
 			items[1].StoredString = "Item 0";
 			items[1].Child.StoredString = "Item 1";
-			repository.SaveItem(items[1]);
-			items[2] = repository.CreateItem();
+			dataMapper.SaveItem(items[1]);
+			items[2] = dataMapper.CreateItem();
 			items[2].StoredString = "Item 2";
 			items[2].Child.StoredString = "Item 5";
-			repository.SaveItem(items[2]);
+			dataMapper.SaveItem(items[2]);
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
-			_repository.Dispose();
+			dataMapper.Dispose();
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Add_ResultsSetNull_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
-			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> secondQueryToCache = new QueryAdapter<PalasoTestItem>();
 
 			secondQueryToCache.In("Child").Show("StoredString");
-			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
+			ResultSet<PalasoTestItem> results = dataMapper.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(null, secondQueryToCache);
 		}
@@ -523,12 +527,12 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Add_QueryNull_Throws()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
-			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> secondQueryToCache = new QueryAdapter<PalasoTestItem>();
 
 			secondQueryToCache.In("Child").Show("StoredString");
-			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
+			ResultSet<PalasoTestItem> results = dataMapper.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, null);
 		}
@@ -536,19 +540,19 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void MultipleQueries_QueriedFieldsAreIdentical_ReturnsOnlyOneRecordToken()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
-			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> secondQueryToCache = new QueryAdapter<PalasoTestItem>();
 
 			secondQueryToCache.In("Child").Show("StoredString");
-			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
+			ResultSet<PalasoTestItem> results = dataMapper.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
 
-			TestItem itemCreatedAfterCache = _repository.CreateItem();
+			PalasoTestItem itemCreatedAfterCache = dataMapper.CreateItem();
 			itemCreatedAfterCache.StoredString = "Item 6";
 			itemCreatedAfterCache.Child.StoredString = "Item 6";
-			_repository.SaveItem(itemCreatedAfterCache);
+			dataMapper.SaveItem(itemCreatedAfterCache);
 			resultSetCacheUnderTest.UpdateItemInCache(itemCreatedAfterCache);
 
 			Assert.AreEqual(7, resultSetCacheUnderTest.GetResultSet().Count);
@@ -564,18 +568,18 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void UpdateItemInCache_ItemDoesNotExistInCacheButDoesInRepository_ItemIsAddedToResultSetAndSortedCorrectly()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
-			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> secondQueryToCache = new QueryAdapter<PalasoTestItem>();
 
 			secondQueryToCache.In("Child").Show("StoredString");
-			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
+			ResultSet<PalasoTestItem> results = dataMapper.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
 
-			TestItem itemCreatedAfterCache = _repository.CreateItem();
+			PalasoTestItem itemCreatedAfterCache = dataMapper.CreateItem();
 			itemCreatedAfterCache.StoredString = "Item 6";
-			_repository.SaveItem(itemCreatedAfterCache);
+			dataMapper.SaveItem(itemCreatedAfterCache);
 			resultSetCacheUnderTest.UpdateItemInCache(itemCreatedAfterCache);
 
 			Assert.AreEqual(8, resultSetCacheUnderTest.GetResultSet().Count);
@@ -592,21 +596,21 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void UpdateItemInCache_ItemExists_ResultSetIsUpdatedAndSorted()
 		{
-			TestItem itemToModify = _repository.CreateItem();
+			PalasoTestItem itemToModify = dataMapper.CreateItem();
 			itemToModify.StoredString = "Item 6";
-			_repository.SaveItem(itemToModify);
+			dataMapper.SaveItem(itemToModify);
 
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
-			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> secondQueryToCache = new QueryAdapter<PalasoTestItem>();
 
 			secondQueryToCache.In("Child").Show("StoredString");
-			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
+			ResultSet<PalasoTestItem> results = dataMapper.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
 
 			itemToModify.StoredString = "Item 7";
-			_repository.SaveItem(itemToModify);
+			dataMapper.SaveItem(itemToModify);
 			resultSetCacheUnderTest.UpdateItemInCache(itemToModify);
 
 			Assert.AreEqual(8, resultSetCacheUnderTest.GetResultSet().Count);
@@ -623,17 +627,17 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void UpdateItemInCache_ItemHasNotChanged_ResultSetIsNotChanged()
 		{
-			TestItem unmodifiedItem = _repository.CreateItem();
+			PalasoTestItem unmodifiedItem = dataMapper.CreateItem();
 			unmodifiedItem.StoredString = "Item 6";
-			_repository.SaveItem(unmodifiedItem);
+			dataMapper.SaveItem(unmodifiedItem);
 
-			//_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			//_results = dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
-			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> secondQueryToCache = new QueryAdapter<PalasoTestItem>();
 
 			secondQueryToCache.In("Child").Show("StoredString");
-			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
+			ResultSet<PalasoTestItem> results = dataMapper.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
 
@@ -656,17 +660,17 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void DeleteItemFromCache_Item_ItemIsNoLongerInResultSet()
 		{
-			TestItem itemToDelete = _repository.CreateItem();
+			PalasoTestItem itemToDelete = dataMapper.CreateItem();
 			itemToDelete.StoredString = "Item 6";
-			_repository.SaveItem(itemToDelete);
+			dataMapper.SaveItem(itemToDelete);
 
-			//_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			//_results = dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
-			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> secondQueryToCache = new QueryAdapter<PalasoTestItem>();
 
 			secondQueryToCache.In("Child").Show("StoredString");
-			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
+			ResultSet<PalasoTestItem> results = dataMapper.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
 
@@ -687,17 +691,17 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void DeleteItemFromCacheById_Id_ItemIsNoLongerInResultSet()
 		{
-			TestItem itemToDelete = _repository.CreateItem();
+			PalasoTestItem itemToDelete = dataMapper.CreateItem();
 			itemToDelete.StoredString = "Item 6";
-			_repository.SaveItem(itemToDelete);
+			dataMapper.SaveItem(itemToDelete);
 
-			//_results = _repository.GetItemsMatching(_queryToCache);
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			//_results = dataMapper.GetItemsMatching(_queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
-			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> secondQueryToCache = new QueryAdapter<PalasoTestItem>();
 
 			secondQueryToCache.In("Child").Show("StoredString");
-			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
+			ResultSet<PalasoTestItem> results = dataMapper.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
 
@@ -718,11 +722,11 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void DeleteAllItemsFromCache_AllItemsAreDeleted()
 		{
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions, _results, _queryToCache);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 
-			QueryAdapter<TestItem> secondQueryToCache = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> secondQueryToCache = new QueryAdapter<PalasoTestItem>();
 			secondQueryToCache.In("Child").Show("StoredString");
-			ResultSet<TestItem> results = _repository.GetItemsMatching(secondQueryToCache);
+			ResultSet<PalasoTestItem> results = dataMapper.GetItemsMatching(secondQueryToCache);
 
 			resultSetCacheUnderTest.Add(results, secondQueryToCache);
 
@@ -734,18 +738,18 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentException))]
 		public void ResultSetContainsIdenticalRecordTokens_Throws()
 		{
-			TestItem itemFromWhichToCreateIdenticalRecordTokens = _repository.CreateItem();
+			PalasoTestItem itemFromWhichToCreateIdenticalRecordTokens = dataMapper.CreateItem();
 
 			itemFromWhichToCreateIdenticalRecordTokens.StoredString = "Get me twice!";
 
-			QueryAdapter<TestItem> query1 = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> query1 = new QueryAdapter<PalasoTestItem>();
 			query1.Show("StoredString");
-			QueryAdapter<TestItem> query2 = new QueryAdapter<TestItem>();
+			QueryAdapter<PalasoTestItem> query2 = new QueryAdapter<PalasoTestItem>();
 			query2.Show("StoredString");
 
-			ResultSetCache<TestItem> resultSetCacheUnderTest = new ResultSetCache<TestItem>(_repository, _sortDefinitions);
-			resultSetCacheUnderTest.Add(_repository.GetItemsMatching(query1), query1);
-			resultSetCacheUnderTest.Add(_repository.GetItemsMatching(query2), query2);
+			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions);
+			resultSetCacheUnderTest.Add(dataMapper.GetItemsMatching(query1), query1);
+			resultSetCacheUnderTest.Add(dataMapper.GetItemsMatching(query2), query2);
 		}
 	}
 

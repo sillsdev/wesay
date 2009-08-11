@@ -1,14 +1,13 @@
 using System;
 using System.IO;
-using System.Xml;
 using LiftIO;
 using LiftIO.Validation;
-using NUnit.Framework;
-using Palaso.Progress;
+using Palaso.Lift.Migration;
 using Palaso.Reporting;
-using WeSay.LexicalModel.Migration;
 
-namespace WeSay.LexicalModel.Tests
+using NUnit.Framework;
+
+namespace WeSay.LexicalModel.Tests // review cp move to palaso.lift
 {
 	[TestFixture]
 	public class LiftPreparerTests
@@ -31,7 +30,7 @@ namespace WeSay.LexicalModel.Tests
 
 		private void CreateLiftFileForTesting(string liftVersion, string xmlEntries)
 		{
-			Utilities.CreateEmptyLiftFile(_liftFilePath, LiftExporter.ProducerString, true);
+			Utilities.CreateEmptyLiftFile(_liftFilePath, WeSayLiftWriter.ProducerString, true);
 			//overwrite the blank lift file
 			string liftContents =
 					String.Format(
