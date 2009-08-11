@@ -172,11 +172,7 @@ namespace WeSay.ConfigTool
 			set
 			{
 				_writingSystem = value;
-				if (_writingSystem != null)
-				{
-					textBoxSortTest.Font = _writingSystem.Font;
-					textBoxCustomRules.Font = _writingSystem.Font;
-				}
+				UpdateFontInChildControlsIfNecassary();
 				Refresh();
 			}
 		}
@@ -318,6 +314,21 @@ Z z";
 		private void helpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			Process.Start("http://wesay.org/wiki/How_to_sort_using_a_custom_sort_sequence");
+		}
+
+		public void UpdateFontInChildControlsIfNecassary()
+		{
+			if (_writingSystem != null)
+			{
+				bool fontInTextBoxSortTestIsOutOfDate = (textBoxSortTest.Font != _writingSystem.Font);
+				bool fontInTextBoxCustomRulesIsOutOfDate = (textBoxCustomRules.Font != _writingSystem.Font);
+
+				if (fontInTextBoxCustomRulesIsOutOfDate && fontInTextBoxSortTestIsOutOfDate)
+				{
+					textBoxSortTest.Font = _writingSystem.Font;
+					textBoxCustomRules.Font = _writingSystem.Font;
+				}
+			}
 		}
 	}
 }

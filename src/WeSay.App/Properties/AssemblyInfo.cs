@@ -12,7 +12,7 @@ using System.Security.Permissions;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("WeSay")]
-[assembly: AssemblyProduct("WeSay")]
+[assembly: AssemblyProduct("WeSay")]//NB: this name is used eventually in chorus display
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -74,9 +74,18 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <ExecutableExtension>.exe</ExecutableExtension>
+	  <HintPath>..\..\lib\net2.0\Chorus.exe</HintPath>
+	</Reference>
 	<Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\ICSharpCode.SharpZipLib.dll</HintPath>
+	</Reference>
+	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\LibChorus.dll</HintPath>
 	</Reference>
 	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
@@ -106,7 +115,7 @@
 	<Compile Include="BackupDialog.Designer.cs">
 	  <DependentUpon>BackupDialog.cs</DependentUpon>
 	</Compile>
-	<Compile Include="Synchronize.cs" />
+	<Compile Include="SynchronizeAction.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>

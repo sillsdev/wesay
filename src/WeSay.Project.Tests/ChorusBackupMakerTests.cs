@@ -3,6 +3,8 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using Chorus.sync;
+using Chorus.Utilities;
+using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
 using Palaso.TestUtilities;
 
@@ -72,7 +74,7 @@ namespace WeSay.Project.Tests
 
 			public void AssertFileExistsInRepo(string s)
 			{
-				Chorus.sync.RepositoryManager r = new RepositoryManager(PathToBackupProjectDir, new ProjectFolderConfiguration(SourceProjectDir));
+				var  r = new HgRepository(PathToBackupProjectDir, new NullProgress());
 				Assert.IsTrue(r.GetFileExistsInRepo(Path.Combine(PathToBackupProjectDir ,"test.lift")));
 			}
 		}
@@ -101,10 +103,10 @@ namespace WeSay.Project.Tests
 			using (BackupScenario scenario = new BackupScenario("BackupNow_ExistingRepository_AddsNewFileToBackupDir"))
 			{
 				scenario.BackupNow();
-				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.foo")).Close();
+				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
 				scenario.BackupNow();
-				scenario.AssertFileExistsInWorkingDirectory("blah.foo");
-				scenario.AssertFileExistsInRepo("blah.foo");
+				scenario.AssertFileExistsInWorkingDirectory("blah.lift");
+				scenario.AssertFileExistsInRepo("blah.lift");
 			}
 		}
 
@@ -114,11 +116,11 @@ namespace WeSay.Project.Tests
 			// Test causes a crash in WrapShellCall.exe - is there an updated version?
 			using (BackupScenario scenario = new BackupScenario("BackupNow_RemoveFile_RemovedFromBackupDir"))
 			{
-				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.foo")).Close();
+				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
 				scenario.BackupNow();
-				File.Delete(Path.Combine(scenario.SourceProjectDir, "blah.foo"));
+				File.Delete(Path.Combine(scenario.SourceProjectDir, "blah.lift"));
 				scenario.BackupNow();
-				scenario.AssertFileDoesNotExistInWorkingDirectory("blah.foo");
+				scenario.AssertFileDoesNotExistInWorkingDirectory("blah.lift");
 			}
 		}
 

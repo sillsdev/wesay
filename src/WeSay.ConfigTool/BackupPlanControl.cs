@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using Chorus.sync;
+using Chorus.VcsDrivers.Mercurial;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
@@ -19,7 +20,7 @@ namespace WeSay.ConfigTool
 
 		private void BackupPlanControl_Load(object sender, EventArgs e)
 		{
-			string s = RepositoryManager.GetEnvironmentReadinessMessage("en");
+			string s = HgRepository.GetEnvironmentReadinessMessage("en");
 			if(string.IsNullOrEmpty(s))
 			{
 				_environmentNotReadyLabel.Visible = false;

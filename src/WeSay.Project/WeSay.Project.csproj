@@ -127,6 +127,7 @@
 	<Compile Include="CheckinDescriptionBuilder.cs" />
 	<Compile Include="ChorusBackupMaker.cs" />
 	<Compile Include="BasilProject.cs" />
+	<Compile Include="WeSayChorusProjectConfiguration.cs" />
 	<Compile Include="ConfigFileReader.cs" />
 	<Compile Include="ConfigFileTaskBuilder.cs" />
 	<Compile Include="ConfigMigration\MigrateConfig5To6.cs" />

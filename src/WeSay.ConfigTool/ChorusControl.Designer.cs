@@ -41,6 +41,7 @@ namespace WeSay.ConfigTool
 			this._chorusReadinessMessage = new System.Windows.Forms.Label();
 			this._chorusIsReady = new System.Windows.Forms.Label();
 			this._chorusGetHgLink = new System.Windows.Forms.LinkLabel();
+			this._launchChorus = new System.Windows.Forms.LinkLabel();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			//
@@ -57,10 +58,10 @@ namespace WeSay.ConfigTool
 			//
 			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-			this.label1.Location = new System.Drawing.Point(144, 3);
+			this.label1.Location = new System.Drawing.Point(173, 3);
 			this.label1.MaximumSize = new System.Drawing.Size(330, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(329, 119);
+			this.label1.Size = new System.Drawing.Size(329, 221);
 			this.label1.TabIndex = 1;
 			this.label1.Text = resources.GetString("label1.Text");
 			//
@@ -69,7 +70,7 @@ namespace WeSay.ConfigTool
 			this._chorusNotReady1.AutoSize = true;
 			this._chorusNotReady1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
 			this._chorusNotReady1.ForeColor = System.Drawing.Color.DarkRed;
-			this._chorusNotReady1.Location = new System.Drawing.Point(15, 171);
+			this._chorusNotReady1.Location = new System.Drawing.Point(15, 242);
 			this._chorusNotReady1.MaximumSize = new System.Drawing.Size(500, 0);
 			this._chorusNotReady1.Name = "_chorusNotReady1";
 			this._chorusNotReady1.Size = new System.Drawing.Size(456, 17);
@@ -79,7 +80,7 @@ namespace WeSay.ConfigTool
 			// _chorusGetTortoiseLink
 			//
 			this._chorusGetTortoiseLink.AutoSize = true;
-			this._chorusGetTortoiseLink.Location = new System.Drawing.Point(16, 211);
+			this._chorusGetTortoiseLink.Location = new System.Drawing.Point(16, 282);
 			this._chorusGetTortoiseLink.Name = "_chorusGetTortoiseLink";
 			this._chorusGetTortoiseLink.Size = new System.Drawing.Size(222, 13);
 			this._chorusGetTortoiseLink.TabIndex = 2;
@@ -92,7 +93,7 @@ namespace WeSay.ConfigTool
 			this._chorusNotReady2.AutoSize = true;
 			this._chorusNotReady2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
 			this._chorusNotReady2.ForeColor = System.Drawing.Color.DimGray;
-			this._chorusNotReady2.Location = new System.Drawing.Point(13, 260);
+			this._chorusNotReady2.Location = new System.Drawing.Point(13, 331);
 			this._chorusNotReady2.MaximumSize = new System.Drawing.Size(300, 0);
 			this._chorusNotReady2.Name = "_chorusNotReady2";
 			this._chorusNotReady2.Size = new System.Drawing.Size(264, 17);
@@ -103,7 +104,7 @@ namespace WeSay.ConfigTool
 			//
 			this._chorusReadinessMessage.AutoSize = true;
 			this._chorusReadinessMessage.ForeColor = System.Drawing.Color.DimGray;
-			this._chorusReadinessMessage.Location = new System.Drawing.Point(16, 294);
+			this._chorusReadinessMessage.Location = new System.Drawing.Point(16, 365);
 			this._chorusReadinessMessage.MaximumSize = new System.Drawing.Size(500, 0);
 			this._chorusReadinessMessage.Name = "_chorusReadinessMessage";
 			this._chorusReadinessMessage.Size = new System.Drawing.Size(141, 13);
@@ -114,18 +115,17 @@ namespace WeSay.ConfigTool
 			//
 			this._chorusIsReady.AutoSize = true;
 			this._chorusIsReady.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-			this._chorusIsReady.Location = new System.Drawing.Point(144, 137);
+			this._chorusIsReady.Location = new System.Drawing.Point(175, 233);
 			this._chorusIsReady.MaximumSize = new System.Drawing.Size(330, 0);
 			this._chorusIsReady.Name = "_chorusIsReady";
-			this._chorusIsReady.Size = new System.Drawing.Size(314, 68);
+			this._chorusIsReady.Size = new System.Drawing.Size(327, 85);
 			this._chorusIsReady.TabIndex = 4;
-			this._chorusIsReady.Text = "Chorus is setup and keeping a full history of this project.  Run the Chorus Appli" +
-				"cation to review changes & synchronize with other users or usb keys.";
+			this._chorusIsReady.Text = resources.GetString("_chorusIsReady.Text");
 			//
 			// _chorusGetHgLink
 			//
 			this._chorusGetHgLink.AutoSize = true;
-			this._chorusGetHgLink.Location = new System.Drawing.Point(253, 211);
+			this._chorusGetHgLink.Location = new System.Drawing.Point(253, 282);
 			this._chorusGetHgLink.Name = "_chorusGetHgLink";
 			this._chorusGetHgLink.Size = new System.Drawing.Size(138, 13);
 			this._chorusGetHgLink.TabIndex = 5;
@@ -133,11 +133,23 @@ namespace WeSay.ConfigTool
 			this._chorusGetHgLink.Text = "Or, get Mercurial alone here";
 			this._chorusGetHgLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this._chorusGetHgLink_LinkClicked);
 			//
+			// _launchChorus
+			//
+			this._launchChorus.AutoSize = true;
+			this._launchChorus.Location = new System.Drawing.Point(175, 331);
+			this._launchChorus.Name = "_launchChorus";
+			this._launchChorus.Size = new System.Drawing.Size(136, 13);
+			this._launchChorus.TabIndex = 6;
+			this._launchChorus.TabStop = true;
+			this._launchChorus.Text = "Run the Chorus Application";
+			this._launchChorus.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this._launchChorus_LinkClicked);
+			//
 			// ChorusControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
+			this.Controls.Add(this._launchChorus);
 			this.Controls.Add(this._chorusGetHgLink);
 			this.Controls.Add(this._chorusIsReady);
 			this.Controls.Add(this._chorusReadinessMessage);
@@ -165,6 +177,7 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.Label _chorusReadinessMessage;
 		private System.Windows.Forms.Label _chorusIsReady;
 		private System.Windows.Forms.LinkLabel _chorusGetHgLink;
+		private System.Windows.Forms.LinkLabel _launchChorus;
 
 
 	}
