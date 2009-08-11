@@ -38,11 +38,13 @@ namespace WeSay.UI
 			Brush myBrush = Brushes.Black;
 
 			// Draw the current item text based on the current Font and the custom brush settings.
-			e.Graphics.DrawString(Items[e.Index].ToString(),
-								  e.Font,
-								  myBrush,
-								  e.Bounds,
-								  StringFormat.GenericDefault);
+			TextRenderer.DrawText(e.Graphics, Items[e.Index].ToString(), e.Font, e.Bounds, Color.Black, TextFormatFlags.Left);
+			//Do not use Graphics.Drawstring as it does not use Uniscribe and thus has problems with complex scripts WS-14881
+			//e.Graphics.DrawString(Items[e.Index].ToString(),
+			//                      e.Font,
+			//                      myBrush,
+			//                      e.Bounds,
+			//                      StringFormat.GenericDefault);
 			// If the ListBox has focus, draw a focus rectangle around the selected item.
 			e.DrawFocusRectangle();
 		}
