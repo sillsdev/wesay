@@ -127,19 +127,16 @@ namespace Addin.Transform
 			_settings.FillEmptySettingsWithGuesses(projectInfo);
 			SetupPostTransformMethod(OnDoGrepWork, _settings, 10 /*has some cushion*/);
 			LexEntryRepository repo = projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
-			using (repo.GetRightToAccessLiftExternally())
+			string output = TransformLiftToText(projectInfo, "lift2sfm.xsl", "-sfm.txt");
+			if (string.IsNullOrEmpty(output))
 			{
-				string output = TransformLiftToText(projectInfo, "lift2sfm.xsl", "-sfm.txt");
-				if (string.IsNullOrEmpty(output))
-				{
-					return; // get this when the user cancels
-				}
-				//GrepFile(output, _settings);
+				return; // get this when the user cancels
+			}
+			//GrepFile(output, _settings);
 
-				if (_launchAfterTransform)
-				{
-					Process.Start(output);
-				}
+			if (_launchAfterTransform)
+			{
+				Process.Start(output);
 			}
 		}
 

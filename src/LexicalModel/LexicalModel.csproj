@@ -132,15 +132,19 @@
 	<Compile Include="Foundation\WeSayDataObject.cs" />
 	<Compile Include="Foundation\WritingSystem.cs" />
 	<Compile Include="Foundation\WritingSystemCollection.cs" />
+	<Compile Include="ILiftReaderWriterProvider.cs" />
+	<Compile Include="ILiftWriter.cs" />
 	<Compile Include="IFieldQuery.cs" />
+	<Compile Include="ILiftReader.cs" />
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexEntryFromLiftBuilder.cs" />
 	<Compile Include="LexEntryRepository.cs" />
 	<Compile Include="LexExampleSentence.cs" />
 	<Compile Include="LexRelation.cs" />
 	<Compile Include="LexSense.cs" />
-	<Compile Include="LiftExporter.cs" />
-	<Compile Include="LiftRepository.cs" />
+	<Compile Include="LiftDataMapper.cs" />
+	<Compile Include="WeSayLiftWriter.cs" />
+	<Compile Include="WeSayLiftDataMapper.cs" />
 	<Compile Include="LiftUpdateService.cs" />
 	<Compile Include="Migration\LiftPreparer.cs" />
 	<Compile Include="MissingFieldQuery.cs" />
@@ -148,6 +152,7 @@
 	<Compile Include="Phonetic.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="ResultSetToListOfStringsAdapter.cs" />
+	<Compile Include="WeSayLiftReader.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using WeSay.Data;
-using WeSay.Data.Tests;
+using Palaso.Tests.Data;
 using Palaso.TestUtilities;
 
 namespace WeSay.LexicalModel.Tests
@@ -18,13 +17,13 @@ namespace WeSay.LexicalModel.Tests
 		{
 			_tempFolder = new TemporaryFolder();
 			_persistedFilePath = _tempFolder.GetTemporaryFile();
-			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
 		[TearDown]
 		public override void TearDown()
 		{
-			RepositoryUnderTest.Dispose();
+			DataMapperUnderTest.Dispose();
 			_tempFolder.Delete();
 		}
 
@@ -32,7 +31,7 @@ namespace WeSay.LexicalModel.Tests
 		public void SaveItem_LexEntryIsDirtyIsFalse()
 		{
 			SetState();
-			RepositoryUnderTest.SaveItem(Item);
+			DataMapperUnderTest.SaveItem(Item);
 			Assert.IsFalse(Item.IsDirty);
 		}
 
@@ -42,7 +41,7 @@ namespace WeSay.LexicalModel.Tests
 			SetState();
 			List<LexEntry> itemsToBeSaved = new List<LexEntry>();
 			itemsToBeSaved.Add(Item);
-			RepositoryUnderTest.SaveItems(itemsToBeSaved);
+			DataMapperUnderTest.SaveItems(itemsToBeSaved);
 			Assert.IsFalse(Item.IsDirty);
 		}
 
@@ -53,20 +52,10 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsTrue(Item.IsDirty);
 		}
 
-		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
-		{
-			Item.LexicalForm["de"] = "Sonne";
-			QueryAdapter<LexEntry> query = new QueryAdapter<LexEntry>();
-			query.Show("LexicalForm");
-			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
-			Assert.AreEqual(1, resultsOfQuery.Count);
-			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
-		}
-
 		protected override void CreateNewRepositoryFromPersistedData()
 		{
-			RepositoryUnderTest.Dispose();
-			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			DataMapperUnderTest.Dispose();
+			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 	}
 }

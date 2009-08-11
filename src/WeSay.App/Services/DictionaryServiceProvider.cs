@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using Palaso.Data;
 using Palaso.Reporting;
 using Palaso.Services.Dictionary;
 using Palaso.Text;
@@ -131,25 +132,25 @@ namespace WeSay.App.Services
 			try
 			{
 				Logger.WriteMinorEvent("GetHtmlForEntries()");
-				StringBuilder builder = new StringBuilder();
-				PLiftExporter exporter = new PLiftExporter(builder,
-														   true,
-														   _lexEntryRepository,
-														   _project.DefaultPrintingTemplate);
-
-				foreach (string entryId in entryIds)
+				var builder = new StringBuilder();
+				using (var exporter = new PLiftExporter(
+					builder, true, _lexEntryRepository, _project.DefaultPrintingTemplate
+				))
 				{
-					LexEntry entry = _lexEntryRepository.GetLexEntryWithMatchingId(entryId);
-					if (entry == null)
+					foreach (string entryId in entryIds)
 					{
-						builder.AppendFormat("Error: entry '{0}' not found.", entryId);
+						LexEntry entry = _lexEntryRepository.GetLexEntryWithMatchingId(entryId);
+						if (entry == null)
+						{
+							builder.AppendFormat("Error: entry '{0}' not found.", entryId);
+						}
+						else
+						{
+							exporter.Add(entry);
+						}
 					}
-					else
-					{
-						exporter.Add(entry);
-					}
+					exporter.End();
 				}
-				exporter.End();
 				return _articleMaker.GetHtmlFragment(builder.ToString());
 			}
 			catch (Exception e)

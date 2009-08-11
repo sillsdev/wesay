@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using Palaso.Data;
 using Palaso.Misc;
 using Palaso.Reporting;
 using Palaso.Text;

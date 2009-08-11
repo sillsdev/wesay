@@ -28,11 +28,13 @@ namespace Addin.Transform.Tests
 				PLiftMaker maker = new PLiftMaker();
 				using (var project = p.CreateLoadedProject())
 				{
-					var repository = project.GetLexEntryRepository();
-					string outputPath = Path.Combine(project.PathToExportDirectory, project.Name + ".xhtml");
-					maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate);
-					AssertThatXmlIn.File(outputPath).
-						HasAtLeastOneMatchForXpath("//field[@type='headword']/form[@lang='v']/text[text()='hello']");
+					using (var repository = project.GetLexEntryRepository())
+					{
+						string outputPath = Path.Combine(project.PathToExportDirectory, project.Name + ".xhtml");
+						maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate);
+						AssertThatXmlIn.File(outputPath).
+							HasAtLeastOneMatchForXpath("//field[@type='headword']/form[@lang='v']/text[text()='hello']");
+					}
 				}
 			}
 		}
