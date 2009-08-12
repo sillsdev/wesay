@@ -79,6 +79,11 @@ namespace WeSay.ConfigTool
 			{
 				//If Enchant is not installed we expect an exception.
 			}
+			catch (Exception e)//there are other errors we can get from the enchange binding
+			{
+				ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
+												"The Enchant Spelling engine encountered an error: " + e.Message);
+			}
 			return writingSystemIdsWithSpellCheckingInstalled;
 		}
 
