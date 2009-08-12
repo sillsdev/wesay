@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Chorus.sync;
 using Chorus.Utilities;
+using Chorus.VcsDrivers.Mercurial;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.LexicalModel;
@@ -76,32 +77,16 @@ namespace WeSay.Project
 			_timeOfLastBackupAttempt = DateTime.Now;
 
 			//nb: we're not really using the message yet, at least, not showing it to the user
-			if(!string.IsNullOrEmpty(RepositoryManager.GetEnvironmentReadinessMessage(localizationLanguageId)))
+			if(!string.IsNullOrEmpty(HgRepository.GetEnvironmentReadinessMessage(localizationLanguageId)))
 			{
-				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
+				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", HgRepository.GetEnvironmentReadinessMessage("en"));
 			}
 
 			try
 			{
-				ProjectFolderConfiguration projectFolder = new ProjectFolderConfiguration(pathToProjectDirectory);
-				projectFolder.ExcludePatterns.Add("**/cache");
-				projectFolder.ExcludePatterns.Add("**/Cache");
-				projectFolder.ExcludePatterns.Add("*.old");
-				projectFolder.ExcludePatterns.Add("*.wesayUserMemory");
-				projectFolder.ExcludePatterns.Add("*.tmp");
-				projectFolder.ExcludePatterns.Add("*.bak");
+				ProjectFolderConfiguration projectFolder = new WeSayChorusProjectConfiguration(pathToProjectDirectory);
 
-				projectFolder.IncludePatterns.Add("audio/*.*");
-				projectFolder.IncludePatterns.Add("pictures/*.*");
-				projectFolder.IncludePatterns.Add("**.css"); //stylesheets
-				projectFolder.IncludePatterns.Add("export/*.lpconfig");//lexique pro
-				projectFolder.IncludePatterns.Add("**.lift");
-				projectFolder.IncludePatterns.Add("**.WeSayConfig");
-				projectFolder.IncludePatterns.Add("**WritingSystemPrefs.xml");
-				projectFolder.IncludePatterns.Add("**PartsOfSpeech.xml");
-				projectFolder.IncludePatterns.Add(".hgIgnore");
-
-			   // projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
+				// projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 
 				Chorus.sync.SyncOptions options = new SyncOptions();
 				options.DoMergeWithOthers = false;
@@ -116,26 +101,21 @@ namespace WeSay.Project
 					}
 					else
 					{
-						RepositorySource backupSource = RepositorySource.Create(PathToParentOfRepositories, "backup",
+						var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create(PathToParentOfRepositories, "backup",
 																				false);
 						options.RepositorySourcesToTry.Add(backupSource);
 					}
 				}
 				options.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
 
-				RepositoryManager manager = RepositoryManager.FromRootOrChildFolder(projectFolder);
-
-
-				if (!RepositoryManager.CheckEnvironmentAndShowMessageIfAppropriate("en"))//todo localization
-				{
-					Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
-					return;
-				}
-
-
-				//TODO: figure out how/what/when to show progress. THis is basically just throwing it away
 				IProgress progress = new Chorus.Utilities.StringBuilderProgress();
-				manager.SyncNow(options, progress);
+				var synchronizer = Synchronizer.FromProjectConfiguration(projectFolder, progress);
+				synchronizer.SyncNow(options, progress);
+				if (progress.ToString().Contains("Error"))//TODO: localization issue
+				{
+					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
+													"WeSay background backup failed:\r\n\r\n"+progress.ToString());
+				}
 
 				CheckinDescriptionBuilder.Clear();
 			}
@@ -145,6 +125,7 @@ namespace WeSay.Project
 				//TODO we need some passive way indicating the health of the backup system
 			}
 		}
+
 
 		public void ResetTimeOfLastBackup()
 		{

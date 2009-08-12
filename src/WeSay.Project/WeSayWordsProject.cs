@@ -430,6 +430,7 @@ namespace WeSay.Project
 			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
 
 			builder.Register<CheckinDescriptionBuilder>().SingletonScoped();
+			builder.Register<Chorus.sync.ProjectFolderConfiguration>(new WeSayChorusProjectConfiguration(Path.GetDirectoryName(PathToConfigFile))).SingletonScoped();
 			builder.Register<ChorusBackupMaker>().SingletonScoped();
 
 
