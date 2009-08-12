@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Chorus.SyncPanel;
 using Chorus.VcsDrivers.Mercurial;
 using Mono.Addins;
 using Palaso.UI.WindowsForms.i8n;
@@ -75,10 +74,11 @@ namespace Addin.Backup
 
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			SyncPanelModel model = new SyncPanelModel((Chorus.sync.ProjectFolderConfiguration)projectInfo.ServiceProvider.GetService(typeof(Chorus.sync.ProjectFolderConfiguration)));
-			using (SynchronizeDialog d = new SynchronizeDialog(new Chorus.SyncPanel.SyncPanel(model)))
+			var configuration = (Chorus.sync.ProjectFolderConfiguration)
+								projectInfo.ServiceProvider.GetService(typeof (Chorus.sync.ProjectFolderConfiguration));
+			using(var dlg =new Chorus.UI.Sync.SyncDialog(configuration))
 			{
-				d.ShowDialog(parentForm);
+				dlg.ShowDialog(parentForm);
 			}
 		}
 

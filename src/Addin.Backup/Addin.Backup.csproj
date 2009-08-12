@@ -129,12 +129,6 @@
 	<Compile Include="SendProjectEmailSettingsDialog.Designer.cs">
 	  <DependentUpon>SendProjectEmailSettingsDialog.cs</DependentUpon>
 	</Compile>
-	<Compile Include="Synchronize\SynchronizeDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="Synchronize\SynchronizeDialog.Designer.cs">
-	  <DependentUpon>SynchronizeDialog.cs</DependentUpon>
-	</Compile>
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
@@ -175,10 +169,6 @@
 	<EmbeddedResource Include="SendProjectEmailSettingsDialog.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>SendProjectEmailSettingsDialog.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Synchronize\SynchronizeDialog.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>SynchronizeDialog.cs</DependentUpon>
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
