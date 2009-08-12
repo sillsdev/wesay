@@ -97,24 +97,26 @@ namespace WeSay.Project
 				{
 					if (!Directory.Exists(PathToParentOfRepositories))
 					{
-						ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "Could not Access the backup path, {0}", PathToParentOfRepositories);
+						ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "There was a problem during auto backup: Could not Access the backup path, {0}", PathToParentOfRepositories);
 					}
 					else
 					{
-						var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create(PathToParentOfRepositories, "backup",
+						var projectName = Path.GetFileName(pathToProjectDirectory);
+						var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create("backup", Path.Combine(PathToParentOfRepositories, projectName),
 																				false);
 						options.RepositorySourcesToTry.Add(backupSource);
 					}
 				}
 				options.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
 
-				IProgress progress = new Chorus.Utilities.StringBuilderProgress();
+				var progress = new Chorus.Utilities.StringBuilderProgress();
 				var synchronizer = Synchronizer.FromProjectConfiguration(projectFolder, progress);
 				synchronizer.SyncNow(options, progress);
-				if (progress.ToString().Contains("Error"))//TODO: localization issue
+				var text = progress.Text.ToLower();
+				if (text.Contains("error") || text.Contains("warning"))//TODO: localization issue
 				{
 					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
-													"WeSay background backup failed:\r\n\r\n"+progress.ToString());
+													"There was a problem during auto backup:\r\n\r\n"+progress.Text);
 				}
 
 				CheckinDescriptionBuilder.Clear();

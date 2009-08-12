@@ -75,7 +75,7 @@ namespace WeSay.Project.Tests
 			public void AssertFileExistsInRepo(string s)
 			{
 				var  r = new HgRepository(PathToBackupProjectDir, new NullProgress());
-				Assert.IsTrue(r.GetFileExistsInRepo(Path.Combine(PathToBackupProjectDir ,"test.lift")));
+				Assert.IsTrue(r.GetFileExistsInRepo(s));
 			}
 		}
 
