@@ -1,11 +1,14 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Chorus.UI.Sync;
+using Chorus.VcsDrivers;
 using Chorus.VcsDrivers.Mercurial;
 using Mono.Addins;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
+using WeSay.Project;
 
 namespace Addin.Backup
 {
@@ -76,8 +79,19 @@ namespace Addin.Backup
 		{
 			var configuration = (Chorus.sync.ProjectFolderConfiguration)
 								projectInfo.ServiceProvider.GetService(typeof (Chorus.sync.ProjectFolderConfiguration));
-			using(var dlg =new Chorus.UI.Sync.SyncDialog(configuration))
+			using(var dlg = new SyncDialog(configuration,
+					SyncUIDialogBehaviors.Lazy,
+					SyncUIFeatures.Everything))
 			{
+				dlg.Text = "Wesay Send/Receive";
+				dlg.SyncOptions.DoMergeWithOthers = true;
+				dlg.SyncOptions.DoPullFromOthers = true;
+				dlg.SyncOptions.DoPushToLocalSources = true;
+
+
+			   // leave it with the default, for now... dlg.SyncOptions.RepositorySourcesToTry.Clear();
+				//dlg.SyncOptions.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
+
 				dlg.ShowDialog(parentForm);
 			}
 		}

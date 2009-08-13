@@ -4,6 +4,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using Chorus.sync;
+using Chorus.UI.Sync;
 using Chorus.Utilities;
 using Chorus.VcsDrivers.Mercurial;
 using Palaso.Reporting;
@@ -88,37 +89,51 @@ namespace WeSay.Project
 
 				// projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 
-				Chorus.sync.SyncOptions options = new SyncOptions();
-				options.DoMergeWithOthers = false;
-				options.DoPullFromOthers = false;
-				options.DoPushToLocalSources = true;
-				options.RepositorySourcesToTry.Clear();
-				if (!string.IsNullOrEmpty(PathToParentOfRepositories))
+//                  if (!string.IsNullOrEmpty(PathToParentOfRepositories))
+//                {
+//                    if (!Directory.Exists(PathToParentOfRepositories))
+//                    {
+//                        ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "There was a problem during auto backup: Could not Access the backup path, {0}", PathToParentOfRepositories);
+//                        //no, we still want to check in... return;
+//                    }
+//                    else
+//                    {
+//                        var projectName = Path.GetFileName(pathToProjectDirectory);
+//                        var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create("backup", Path.Combine(PathToParentOfRepositories, projectName),
+//                                                                                false);
+//                        options.RepositorySourcesToTry.Add(backupSource);
+//                    }
+//                }
+
+				using (var dlg = new SyncDialog(projectFolder,
+					   SyncUIDialogBehaviors.StartImmediatelyAndCloseWhenFinished,
+					   SyncUIFeatures.Minimal))
 				{
-					if (!Directory.Exists(PathToParentOfRepositories))
+					dlg.Text = "Wesay Automatic Backup";
+					dlg.SyncOptions.DoMergeWithOthers = false;
+					dlg.SyncOptions.DoPullFromOthers = false;
+					dlg.SyncOptions.DoPushToLocalSources = true;
+					dlg.SyncOptions.RepositorySourcesToTry.Clear();
+					dlg.SyncOptions.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
+
+					//in addition to checking in, will we be doing a backup to another media (e.g. sd card)?
+					if (!string.IsNullOrEmpty(PathToParentOfRepositories))
 					{
-						ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "There was a problem during auto backup: Could not Access the backup path, {0}", PathToParentOfRepositories);
+							var projectName = Path.GetFileName(pathToProjectDirectory);
+							var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create("backupMedia", Path.Combine(PathToParentOfRepositories, projectName),
+																					false);
+							dlg.SyncOptions.RepositorySourcesToTry.Add(backupSource);
 					}
-					else
+
+					dlg.ShowDialog();
+
+					if (dlg.FinalStatus.ErrorEncountered)
 					{
-						var projectName = Path.GetFileName(pathToProjectDirectory);
-						var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create("backup", Path.Combine(PathToParentOfRepositories, projectName),
-																				false);
-						options.RepositorySourcesToTry.Add(backupSource);
+						ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
+														"There was a problem during auto backup:\r\n\r\n" +
+														dlg.FinalStatus.ErrorEncountered);
 					}
 				}
-				options.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
-
-				var progress = new Chorus.Utilities.StringBuilderProgress();
-				var synchronizer = Synchronizer.FromProjectConfiguration(projectFolder, progress);
-				synchronizer.SyncNow(options, progress);
-				var text = progress.Text.ToLower();
-				if (text.Contains("error") || text.Contains("warning"))//TODO: localization issue
-				{
-					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
-													"There was a problem during auto backup:\r\n\r\n"+progress.Text);
-				}
-
 				CheckinDescriptionBuilder.Clear();
 			}
 			catch (Exception error)
