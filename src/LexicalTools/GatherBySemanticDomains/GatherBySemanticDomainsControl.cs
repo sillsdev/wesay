@@ -27,6 +27,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			InitializeComponent();
 
 			InitializeDisplaySettings();
+			_listViewWords.WritingSystem = _presentationModel.WordWritingSystem;
 			RefreshCurrentWords();
 			LoadDomainListCombo();
 			RefreshCurrentDomainAndQuestion();
@@ -69,7 +70,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_meaningBox.Visible = _presentationModel.ShowDefinitionField;
 			_meaningLabel.Visible = _meaningBox.Visible;
 
-			_listViewWords.WritingSystem = _presentationModel.WordWritingSystem;
 			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.WordWritingSystem.Font.GetHeight());
 
 			//    _animatedText.Font = _presentationModel.WordWritingSystem.Font;
