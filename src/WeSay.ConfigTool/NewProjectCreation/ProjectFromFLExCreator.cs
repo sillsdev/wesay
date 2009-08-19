@@ -99,10 +99,26 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				}
 			}
 
-			//enhance... we could go through replacing all "v" fields with the first lexical-unit writing system
+
+			// replace all "v" fields with the first lexical-unit writing system
 			//and all "en" with the first translation one...
 
-			writingSystems.Remove(WritingSystem.IdForUnknownVernacular);
+			var vernacular = GetTopWritingSystem(doc, "//lexical-unit/form/@lang");
+			if (vernacular != string.Empty)
+			{
+				viewTemplate.ChangeWritingSystemId(WritingSystem.IdForUnknownVernacular, vernacular);
+				writingSystems.Remove(WritingSystem.IdForUnknownVernacular);
+			}
+			var analysis = GetTopWritingSystem(doc, "//sense/gloss/@lang");
+			if (analysis == string.Empty)
+			{
+				analysis = GetTopWritingSystem(doc, "//sense/definition/@lang");
+				//nb: we don't want to remove english, even if they don't use it
+			}
+			if (analysis != string.Empty)
+			{
+				viewTemplate.ChangeWritingSystemId(WritingSystem.IdForUnknownAnalysis, analysis);
+			}
 
 			AddWritingSystemsForField(doc, viewTemplate, "//lexical-unit/form/@lang", LexEntry.WellKnownProperties.LexicalUnit);
 			AddWritingSystemsForField(doc, viewTemplate, "//sense/gloss/@lang", LexSense.WellKnownProperties.Gloss);
@@ -128,6 +144,16 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				if (!def.WritingSystemIds.Contains(id))
 					def.WritingSystemIds.Add(id);
 			}
+		}
+
+		private static string GetTopWritingSystem(XmlDocument doc, string xpath)
+		{
+			var nodes = doc.SelectNodes(xpath);
+			if (nodes != null && nodes.Count > 0)
+			{
+				return nodes[0].Value;
+			}
+			return string.Empty;
 		}
 
 		/// <summary>
