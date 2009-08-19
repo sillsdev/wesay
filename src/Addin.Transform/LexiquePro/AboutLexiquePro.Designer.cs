@@ -61,12 +61,11 @@
 			//
 			// label1
 			//
-			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label1.Location = new System.Drawing.Point(27, 23);
 			this.label1.MaximumSize = new System.Drawing.Size(300, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(300, 85);
+			this.label1.Size = new System.Drawing.Size(300, 106);
 			this.label1.TabIndex = 1;
 			this.label1.Text = resources.GetString("label1.Text");
 			//

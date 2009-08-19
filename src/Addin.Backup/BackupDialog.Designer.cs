@@ -51,10 +51,9 @@ namespace Addin.Backup
 			//
 			// _noteLabel
 			//
-			this._noteLabel.AutoSize = true;
-			this._noteLabel.Location = new System.Drawing.Point(146, 51);
+			this._noteLabel.Location = new System.Drawing.Point(146, 44);
 			this._noteLabel.Name = "_noteLabel";
-			this._noteLabel.Size = new System.Drawing.Size(139, 13);
+			this._noteLabel.Size = new System.Drawing.Size(362, 42);
 			this._noteLabel.TabIndex = 2;
 			this._noteLabel.Text = "Secondary status goes here";
 			this._noteLabel.Visible = false;
