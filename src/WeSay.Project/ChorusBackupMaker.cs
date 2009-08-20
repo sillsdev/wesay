@@ -115,6 +115,7 @@ namespace WeSay.Project
 					dlg.SyncOptions.DoPushToLocalSources = true;
 					dlg.SyncOptions.RepositorySourcesToTry.Clear();
 					dlg.SyncOptions.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
+					dlg.UseTargetsAsSpecifiedInSyncOptions=true;
 
 					//in addition to checking in, will we be doing a backup to another media (e.g. sd card)?
 					if (!string.IsNullOrEmpty(PathToParentOfRepositories))
@@ -131,9 +132,9 @@ namespace WeSay.Project
 						dlg.FinalStatus.ErrorEncountered)
 					{
 						ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
-														"There was a problem during auto backup:\r\n\r\n" +
-														dlg.FinalStatus.WarningEncountered +"\r\n"+
-														dlg.FinalStatus.ErrorEncountered);
+														"There was a problem during auto backup. Chorus said:\r\n\r\n" +
+														dlg.FinalStatus.LastWarning +"\r\n"+
+														dlg.FinalStatus.LastError);
 					}
 				}
 				CheckinDescriptionBuilder.Clear();

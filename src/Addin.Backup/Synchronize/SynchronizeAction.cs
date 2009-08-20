@@ -93,6 +93,11 @@ namespace Addin.Backup
 				//dlg.SyncOptions.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
 
 				dlg.ShowDialog(parentForm);
+
+				if (dlg.SyncResult.DidGetChangesFromOthers)
+				{
+					Application.Restart();
+				}
 			}
 
 		}
