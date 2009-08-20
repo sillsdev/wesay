@@ -1,13 +1,16 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace WeSay.ConfigTool.NewProjectCreation
 {
 	public partial class NewProjectInformationDialog : Form
 	{
-		public NewProjectInformationDialog(string pathToProject)
+		public NewProjectInformationDialog(string pathToProject, bool showChangeDefaultWsMessage)
 		{
+			this.Font = this.Font = SystemFonts.MessageBoxFont;
 			InitializeComponent();
 			_whereLabel.Text = string.Format(_whereLabel.Text, pathToProject);
+			label1.Visible = showChangeDefaultWsMessage;
 		}
 
 		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
