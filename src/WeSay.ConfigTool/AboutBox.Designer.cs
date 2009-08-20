@@ -68,7 +68,7 @@ namespace WeSay.ConfigTool
 			//
 			// logoPictureBox
 			//
-			this.logoPictureBox.Image = Resources.WeSaySetupImage;
+			this.logoPictureBox.Image = global::WeSay.ConfigTool.Properties.Resources.WeSaySetupImage;
 			this.logoPictureBox.Location = new System.Drawing.Point(3, 3);
 			this.logoPictureBox.Name = "logoPictureBox";
 			this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 6);
@@ -125,7 +125,6 @@ namespace WeSay.ConfigTool
 			//
 			// label1
 			//
-			this.label1.AutoSize = true;
 			this.label1.Location = new System.Drawing.Point(123, 152);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(290, 104);

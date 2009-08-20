@@ -182,7 +182,7 @@ namespace WeSay.LexicalTools.Tests
 		public void CurrentRecord_InitializedToFirst()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -196,7 +196,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetCurrentRecordToPrevious_AtFirst_StaysAtFirst()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -211,7 +211,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetCurrentRecordToNextThenPrevious_SamePlace()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -227,7 +227,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetCurrentRecordToNext_AtLast_StaysAtLast()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
