@@ -85,7 +85,7 @@ namespace WeSay.Project
 
 			try
 			{
-				ProjectFolderConfiguration projectFolder = new WeSayChorusProjectConfiguration(pathToProjectDirectory);
+				ProjectFolderConfiguration configuration = new WeSayChorusProjectConfiguration(pathToProjectDirectory);
 
 				// projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 
@@ -105,7 +105,7 @@ namespace WeSay.Project
 //                    }
 //                }
 
-				using (var dlg = new SyncDialog(projectFolder,
+				using (var dlg = new SyncDialog(configuration,
 					   SyncUIDialogBehaviors.StartImmediatelyAndCloseWhenFinished,
 					   SyncUIFeatures.Minimal))
 				{
@@ -127,10 +127,12 @@ namespace WeSay.Project
 
 					dlg.ShowDialog();
 
-					if (dlg.FinalStatus.ErrorEncountered)
+					if (dlg.FinalStatus.WarningEncountered ||  //not finding the backup media only counts as a warning
+						dlg.FinalStatus.ErrorEncountered)
 					{
 						ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
 														"There was a problem during auto backup:\r\n\r\n" +
+														dlg.FinalStatus.WarningEncountered +"\r\n"+
 														dlg.FinalStatus.ErrorEncountered);
 					}
 				}
