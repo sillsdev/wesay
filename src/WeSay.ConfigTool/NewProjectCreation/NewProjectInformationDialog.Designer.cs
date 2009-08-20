@@ -40,7 +40,7 @@
 			//
 			this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnOK.Location = new System.Drawing.Point(278, 204);
+			this.btnOK.Location = new System.Drawing.Point(299, 204);
 			this.btnOK.Name = "btnOK";
 			this.btnOK.Size = new System.Drawing.Size(91, 29);
 			this.btnOK.TabIndex = 3;
@@ -49,20 +49,23 @@
 			//
 			// _whereLabel
 			//
-			this._whereLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._whereLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._whereLabel.Location = new System.Drawing.Point(13, 13);
 			this._whereLabel.MaximumSize = new System.Drawing.Size(380, 0);
+			this._whereLabel.MinimumSize = new System.Drawing.Size(0, 40);
 			this._whereLabel.Name = "_whereLabel";
-			this._whereLabel.Size = new System.Drawing.Size(380, 42);
+			this._whereLabel.Size = new System.Drawing.Size(380, 40);
 			this._whereLabel.TabIndex = 4;
 			this._whereLabel.Text = "Your project has been created here:\r\n{0}";
 			//
 			// label3
 			//
-			this.label3.Location = new System.Drawing.Point(13, 94);
+			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label3.Location = new System.Drawing.Point(13, 87);
 			this.label3.MaximumSize = new System.Drawing.Size(380, 0);
+			this.label3.MinimumSize = new System.Drawing.Size(0, 60);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(380, 48);
+			this.label3.Size = new System.Drawing.Size(380, 60);
 			this.label3.TabIndex = 4;
 			this.label3.Text = "The project is ready to use: just click on \"Open in WeSay\" button in the upper-ri" +
 				"ght.  Later, you can come back here and make adjustments.";
@@ -82,10 +85,12 @@
 			//
 			// label1
 			//
-			this.label1.Location = new System.Drawing.Point(13, 142);
+			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(13, 157);
 			this.label1.MaximumSize = new System.Drawing.Size(380, 0);
+			this.label1.MinimumSize = new System.Drawing.Size(0, 40);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(353, 46);
+			this.label1.Size = new System.Drawing.Size(353, 76);
 			this.label1.TabIndex = 4;
 			this.label1.Text = "One important adjustment is to edit the \'v\' writing system, changing its ID to ma" +
 				"tch the Ethnologue/ISO 693 code for this language.";
@@ -96,12 +101,12 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.btnOK;
-			this.ClientSize = new System.Drawing.Size(381, 245);
+			this.ClientSize = new System.Drawing.Size(402, 245);
+			this.Controls.Add(this.btnOK);
 			this.Controls.Add(this.linkLabel1);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this._whereLabel);
-			this.Controls.Add(this.btnOK);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
@@ -109,6 +114,8 @@
 			this.ShowInTaskbar = false;
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.Text = "New Project Information";
+			this.Load += new System.EventHandler(this.FigureOutLabelSizes);
+			this.Resize += new System.EventHandler(this.FigureOutLabelSizes);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
