@@ -152,6 +152,14 @@ namespace WeSay.UI
 			_textBoxTarget.HandleDestroyed -= _textBoxTarget_HandleDestroyed;
 			_textBoxTarget.Disposed -= _textBoxTarget_Disposed;
 			_textBoxTarget = null;
+
+			_textBoxTarget.KeyDown += _textBoxTarget_KeyDown;
+			_textBoxTarget.LostFocus += _textBoxTarget_LostFocus;
+			_textBoxTarget.Enter += OnTextBoxEntered;
+			_textBoxTarget.HandleDestroyed += _textBoxTarget_HandleDestroyed;
+			_textBoxTarget.Disposed += _textBoxTarget_Disposed;
+
+
 		}
 
 		/// <summary>
@@ -229,6 +237,9 @@ namespace WeSay.UI
 			list.Add(newGuy);
 			if (LayoutNeededAfterMadeReal != null && ReferenceControl != null)
 			{
+				// The Layouter subscribes to this event, and includes an Application.DoEvents
+				// which can cause the _textBoxTarget dispose to be handled before we complete
+				// the remainder of TimeForRealObject.
 				LayoutNeededAfterMadeReal.Invoke(this,
 												 list,
 												 list.IndexOf(newGuy),
@@ -236,7 +247,10 @@ namespace WeSay.UI
 												 doGoToNextField,
 												 null);
 			}
-			textBoxTarget.Text = "";
+			if (_textBoxTarget != null)
+			{
+				_textBoxTarget.Text = "";
+			}
 			_inMidstOfTrigger = false;
 			//_textBoxTarget.PrepareForFadeIn();
 		}
