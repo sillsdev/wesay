@@ -37,9 +37,10 @@
 			//
 			// linkLabel1
 			//
+			this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.linkLabel1.AutoSize = true;
 			this.linkLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.linkLabel1.Location = new System.Drawing.Point(27, 326);
+			this.linkLabel1.Location = new System.Drawing.Point(27, 346);
 			this.linkLabel1.Name = "linkLabel1";
 			this.linkLabel1.Size = new System.Drawing.Size(133, 17);
 			this.linkLabel1.TabIndex = 0;
@@ -49,9 +50,10 @@
 			//
 			// linkLabel2
 			//
+			this.linkLabel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.linkLabel2.AutoSize = true;
 			this.linkLabel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.linkLabel2.Location = new System.Drawing.Point(27, 357);
+			this.linkLabel2.Location = new System.Drawing.Point(27, 377);
 			this.linkLabel2.Name = "linkLabel2";
 			this.linkLabel2.Size = new System.Drawing.Size(256, 17);
 			this.linkLabel2.TabIndex = 0;
@@ -61,12 +63,11 @@
 			//
 			// label1
 			//
-			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(27, 20);
+			this.label1.Location = new System.Drawing.Point(27, 10);
 			this.label1.MaximumSize = new System.Drawing.Size(440, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(439, 289);
+			this.label1.Size = new System.Drawing.Size(440, 336);
 			this.label1.TabIndex = 1;
 			this.label1.Text = resources.GetString("label1.Text");
 			//
@@ -74,7 +75,7 @@
 			//
 			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.button1.Location = new System.Drawing.Point(392, 351);
+			this.button1.Location = new System.Drawing.Point(392, 371);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(75, 23);
 			this.button1.TabIndex = 2;
@@ -87,7 +88,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.button1;
-			this.ClientSize = new System.Drawing.Size(499, 386);
+			this.ClientSize = new System.Drawing.Size(499, 406);
 			this.ControlBox = false;
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.label1);

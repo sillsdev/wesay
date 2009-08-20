@@ -70,11 +70,10 @@ namespace WeSay.ConfigTool
 			//
 			// label2
 			//
-			this.label2.AutoSize = true;
 			this.label2.Location = new System.Drawing.Point(16, 40);
 			this.label2.MaximumSize = new System.Drawing.Size(500, 100);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(498, 78);
+			this.label2.Size = new System.Drawing.Size(500, 100);
 			this.label2.TabIndex = 3;
 			this.label2.Text = resources.GetString("label2.Text");
 			//
@@ -90,11 +89,10 @@ namespace WeSay.ConfigTool
 			//
 			// label4
 			//
-			this.label4.AutoSize = true;
 			this.label4.Location = new System.Drawing.Point(16, 204);
 			this.label4.MaximumSize = new System.Drawing.Size(500, 100);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(484, 65);
+			this.label4.Size = new System.Drawing.Size(500, 84);
 			this.label4.TabIndex = 3;
 			this.label4.Text = resources.GetString("label4.Text");
 			//

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.IO;
 using NUnit.Framework;
 using Palaso.TestUtilities;
 using WeSay.ConfigTool.NewProjectCreation;
@@ -45,7 +40,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 
 
 		[Test]
-		public void LoadWritingSystemsFromExistingLift_Normal_AddsNewWritingSystemsToFields()
+		public void LoadWritingSystemsFromExistingLift_Normal_FixesUpWritingSystemsForFields()
 		{
 			using (var lift = new TempLiftFile(@"
 				<entry id='foo'>
@@ -80,6 +75,13 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 
 				ProjectFromFLExCreator.LoadWritingSystemsFromExistingLift(lift.Path, vt, collection);
 				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "v");
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.Citation, "v");
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, "v");
+
+				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "fromLU");
+				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.Citation, "fromLU");
+				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, "fromLU");
+
 				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "fromLU");
 				AssertFieldHasWritingSystem(vt, LexSense.WellKnownProperties.Gloss, "fromGloss");
 				AssertFieldHasWritingSystem(vt, LexSense.WellKnownProperties.Definition, "fromDef");
@@ -87,8 +89,36 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.ExampleSentence, "fromExample");
 				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.Translation, "fromTrans");
 
+				Assert.IsTrue(collection.ContainsKey("en"));
 
 			}
+		}
+
+		[Test]
+		public void LoadWritingSystemsFromExistingLift_LiftIsEmpty_Survives()
+		{
+			using (var lift = new TempLiftFile(@"
+			 ", "0.12"))
+			{
+				var collection = new WritingSystemCollection();
+				collection.Add(WritingSystem.IdForUnknownAnalysis, new WritingSystem());
+				collection.Add(WritingSystem.IdForUnknownVernacular, new WritingSystem());
+				var vt = ViewTemplate.MakeMasterTemplate(collection);
+
+				ProjectFromFLExCreator.LoadWritingSystemsFromExistingLift(lift.Path, vt, collection);
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystem.IdForUnknownVernacular);
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystem.IdForUnknownVernacular);
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystem.IdForUnknownVernacular);
+				Assert.IsTrue(collection.ContainsKey(WritingSystem.IdForUnknownVernacular));
+				Assert.IsTrue(collection.ContainsKey(WritingSystem.IdForUnknownAnalysis));
+
+ }
+		}
+
+		private void AssertFieldFirstWritingSystem(ViewTemplate vt, string fieldName, string wsId)
+		{
+			var f = vt.GetField(fieldName);
+			Assert.AreEqual(wsId,f.WritingSystemIds[0]);
 		}
 
 		private void AssertFieldHasWritingSystem(ViewTemplate vt, string fieldName, string wsId)

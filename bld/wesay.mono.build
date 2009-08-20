@@ -67,6 +67,7 @@
 		<include name="src/**/*.cs" />
 		<include name="src/**/*.resx" />
 		<include name="src/**/*.build" />
+		<include name="lib/common/**" />
 		<include name="lib/mono/**" />
 		<include name="bld/*" />
 		<include name="common/**" />
@@ -266,6 +267,12 @@
 	<target name="package" depends="dist package_clean">
 		<exec program="sh" workingdir="${project.base.dir}">
 			<arg line="debian-src/build" />
+		</exec>
+	</target>
+
+	<target name="package-stable" depends="dist package_clean">
+		<exec program="sh" workingdir="${project.base.dir}">
+			<arg line="debian-src-stable/build" />
 		</exec>
 	</target>
 

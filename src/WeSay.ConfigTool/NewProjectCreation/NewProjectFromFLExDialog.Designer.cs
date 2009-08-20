@@ -58,17 +58,16 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			//
 			// _launchWebPage
 			//
-			this._launchWebPage.AutoSize = true;
 			this._launchWebPage.LinkArea = new System.Windows.Forms.LinkArea(139, 154);
 			this._launchWebPage.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
 			this._launchWebPage.Location = new System.Drawing.Point(26, 165);
 			this._launchWebPage.MaximumSize = new System.Drawing.Size(300, 0);
 			this._launchWebPage.Name = "_launchWebPage";
-			this._launchWebPage.Size = new System.Drawing.Size(291, 42);
+			this._launchWebPage.Size = new System.Drawing.Size(300, 63);
 			this._launchWebPage.TabIndex = 7;
 			this._launchWebPage.TabStop = true;
 			this._launchWebPage.Text = "Don\'t do this if you already have a corresponding WeSay project.  To learn how to" +
-									   " add changes from FLEx to an existing WeSay project, read this web page.";
+				" add changes from FLEx to an existing WeSay project, read this web page.";
 			this._launchWebPage.UseCompatibleTextRendering = true;
 			this._launchWebPage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this._launchWebPage_LinkClicked);
 			//
