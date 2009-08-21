@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
+using Palaso.Misc;
 using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.UI.TextBoxes;
@@ -149,18 +150,13 @@ namespace WeSay.UI
 			//            _listTarget.ListChanged -=new ListChangedEventHandler(_listTarget_ListChanged);
 			_listTarget = null;
 			//            _textBoxTarget.TextChanged -= new EventHandler(_textBoxTarget_TextChanged);
+
+			_textBoxTarget.KeyDown -= _textBoxTarget_KeyDown;
+			_textBoxTarget.LostFocus -= _textBoxTarget_LostFocus;
+			_textBoxTarget.Enter -= OnTextBoxEntered;
 			_textBoxTarget.HandleDestroyed -= _textBoxTarget_HandleDestroyed;
 			_textBoxTarget.Disposed -= _textBoxTarget_Disposed;
 			_textBoxTarget = null;
-
-			//review: Cambell added these in changeset 26037fce181a, but they will crash because the previous line
-			//set it to null.  And... well.. why?  Why would we subscrive to events during a teardown?
-
-//            _textBoxTarget.KeyDown += _textBoxTarget_KeyDown;
-//            _textBoxTarget.LostFocus += _textBoxTarget_LostFocus;
-//            _textBoxTarget.Enter += OnTextBoxEntered;
-//            _textBoxTarget.HandleDestroyed += _textBoxTarget_HandleDestroyed;
-//            _textBoxTarget.Disposed += _textBoxTarget_Disposed;
 
 
 		}
@@ -206,8 +202,8 @@ namespace WeSay.UI
 				return; //teardown was already called
 			}
 
-			WeSayTextBox textBoxTarget = _textBoxTarget;
-			if (textBoxTarget.Text.Trim().Length == 0)
+			//WeSayTextBox textBoxTarget = _textBoxTarget;
+			if (_textBoxTarget.Text.Trim().Length == 0)
 			{
 				return;
 			}
@@ -236,7 +232,7 @@ namespace WeSay.UI
 			//}
 
 			//  object newGuy = _listTarget[e.NewIndex];
-			FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, textBoxTarget.Text);
+			FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
 			list.Add(newGuy);
 			if (LayoutNeededAfterMadeReal != null && ReferenceControl != null)
 			{
