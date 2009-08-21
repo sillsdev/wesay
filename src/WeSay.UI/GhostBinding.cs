@@ -153,11 +153,14 @@ namespace WeSay.UI
 			_textBoxTarget.Disposed -= _textBoxTarget_Disposed;
 			_textBoxTarget = null;
 
-			_textBoxTarget.KeyDown += _textBoxTarget_KeyDown;
-			_textBoxTarget.LostFocus += _textBoxTarget_LostFocus;
-			_textBoxTarget.Enter += OnTextBoxEntered;
-			_textBoxTarget.HandleDestroyed += _textBoxTarget_HandleDestroyed;
-			_textBoxTarget.Disposed += _textBoxTarget_Disposed;
+			//review: Cambell added these in changeset 26037fce181a, but they will crash because the previous line
+			//set it to null.  And... well.. why?  Why would we subscrive to events during a teardown?
+
+//            _textBoxTarget.KeyDown += _textBoxTarget_KeyDown;
+//            _textBoxTarget.LostFocus += _textBoxTarget_LostFocus;
+//            _textBoxTarget.Enter += OnTextBoxEntered;
+//            _textBoxTarget.HandleDestroyed += _textBoxTarget_HandleDestroyed;
+//            _textBoxTarget.Disposed += _textBoxTarget_Disposed;
 
 
 		}
