@@ -42,7 +42,7 @@ namespace WeSay.ConfigTool
 			var path = Path.Combine(DirectoryOfTheApplicationExecutable, "Chorus.exe");
 			try
 			{
-				Process.Start(path, _projectFolderConfiguration.FolderPath);
+				Process.Start(path, '"'+_projectFolderConfiguration.FolderPath+'"');
 			}
 			catch (Exception error)
 			{

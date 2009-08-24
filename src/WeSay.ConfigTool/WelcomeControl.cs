@@ -104,11 +104,17 @@ namespace WeSay.ConfigTool
 		private void OnGetFromUsb(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			var dlg = new Chorus.UI.Clone.GetCloneDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
+			dlg.Model.ProjectFilter = dir => GetLooksLikeWeSayProject(dir);
 			if(DialogResult.Cancel == dlg.ShowDialog())
 				return;
 
 
 			OpenSpecifiedProject(dlg.PathToNewProject);
+		}
+
+		private static bool GetLooksLikeWeSayProject(string directoryPath)
+		{
+			return Directory.GetFiles(directoryPath, "*.WeSayConfig").Length > 0;
 		}
 
 		private void AddOpenProjectChoices()
