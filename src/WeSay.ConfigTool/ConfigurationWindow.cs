@@ -91,7 +91,7 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			OnOpenProject(dlg.FileName, null);
+			OnOpenProject(dlg.FileName);
 		}
 
 		private static string GetInitialDirectory()
@@ -113,25 +113,24 @@ namespace WeSay.ConfigTool
 				}
 			}
 
-			if (initialDirectory == null || initialDirectory == "")
+			if (string.IsNullOrEmpty(initialDirectory))
 			{
 				initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			}
 			return initialDirectory;
 		}
 
-		public void OnOpenProject(object sender, EventArgs e)
+		public void OnOpenProject(string path)
 		{
-			string configFilePath = (string) sender;
-			if (!File.Exists(configFilePath))
+			if (!File.Exists(path) && !Directory.Exists(path))
 			{
 				ErrorReport.NotifyUserOfProblem(
 						"WeSay could not find the file at {0} anymore.  Maybe it was moved or renamed?",
-						configFilePath);
+						path);
 				return;
 			}
 
-			OpenProject(configFilePath);
+			OpenProject(path);
 		}
 
 		private void OnCreateProject(object sender, EventArgs e)
@@ -244,7 +243,6 @@ namespace WeSay.ConfigTool
 			{
 				Project = new WeSayWordsProject();
 
-
 				//just open the accompanying lift file.
 				path = path.Replace(".WeSayConfig", ".lift");
 
@@ -282,6 +280,17 @@ namespace WeSay.ConfigTool
 				return false;
 			}
 
+			SetupProjectControls(BuildInnerContainerForThisProject());
+
+			if (Project != null)
+			{
+				Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
+			}
+			return true;
+		}
+
+		private IContainer BuildInnerContainerForThisProject()
+		{
 			IContainer container = _project.Container.CreateInnerContainer();
 			var containerBuilder = new Autofac.Builder.ContainerBuilder();
 			containerBuilder.Register(typeof(Tasks.TaskListView));
@@ -292,7 +301,7 @@ namespace WeSay.ConfigTool
 			//      autofac's generated factory stuff wasn't working with our version of autofac, so
 			//  i abandoned this
 			//containerBuilder.Register<Control>().FactoryScoped();
-		   // containerBuilder.RegisterGeneratedFactory<ConfigTaskControlFactory>(new TypedService(typeof (Control)));
+			// containerBuilder.RegisterGeneratedFactory<ConfigTaskControlFactory>(new TypedService(typeof (Control)));
 
 			containerBuilder.Register<FieldsControl>();
 			containerBuilder.Register<WritingSystemSetup>();
@@ -306,16 +315,8 @@ namespace WeSay.ConfigTool
 			containerBuilder.Register<IContext>(c => c); // make the context itself available for pushing into contructors
 
 			containerBuilder.Build(container);
-
-			SetupProjectControls(container);
-
-			if (Project != null)
-			{
-				Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
-			}
-			return true;
+			return container;
 		}
-
 
 
 		private void SetupProjectControls(IContext context)
@@ -344,7 +345,7 @@ namespace WeSay.ConfigTool
 			_welcomePage.Dock = DockStyle.Fill;
 			_welcomePage.NewProjectClicked += OnCreateProject;
 			_welcomePage.NewProjectFromFlexClicked += OnCreateProjectFromFLEx;
-			_welcomePage.OpenPreviousProjectClicked += OnOpenProject;
+			_welcomePage.OpenSpecifiedProject += OnOpenProject;
 			_welcomePage.ChooseProjectClicked += OnChooseProject;
 		}
 

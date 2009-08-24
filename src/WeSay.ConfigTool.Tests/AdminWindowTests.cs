@@ -96,7 +96,7 @@ namespace WeSay.ConfigTool.Tests
 		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void TryingToOpenNonExistantProjectDoesntCrash()
 		{
-			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig", null);
+			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig");
 		}
 
 		[Test]

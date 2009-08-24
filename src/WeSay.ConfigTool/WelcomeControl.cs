@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Chorus.VcsDrivers.Mercurial;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool
@@ -14,7 +16,8 @@ namespace WeSay.ConfigTool
 		private ListViewGroup _createProjectGroup;
 		public event EventHandler NewProjectClicked;
 		public event EventHandler NewProjectFromFlexClicked;
-		public event EventHandler OpenPreviousProjectClicked;
+		public Action<string> OpenSpecifiedProject;
+		private DateTime _lastListViewClick;
 		public event EventHandler ChooseProjectClicked;
 
 		public WelcomeControl()
@@ -31,29 +34,48 @@ namespace WeSay.ConfigTool
 
 		private void AddOtherChoices()
 		{
-			System.Windows.Forms.ListViewItem createNewProjectItem = new System.Windows.Forms.ListViewItem("Create new blank project");
+			var createNewProjectItem =
+				new System.Windows.Forms.ListViewItem("Create new blank project");
 			createNewProjectItem.Group = _createProjectGroup;
-			createNewProjectItem.Tag = new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.createNewProject_LinkClicked);
+			createNewProjectItem.Tag =
+				new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.createNewProject_LinkClicked);
 
-			System.Windows.Forms.ListViewItem createFromFLEXItem = new System.Windows.Forms.ListViewItem("Create new project from FLEx LIFT export");
+			var createFromFLEXItem =
+				new System.Windows.Forms.ListViewItem("Create new project from FLEx LIFT export");
 			createFromFLEXItem.Group = _createProjectGroup;
-			createFromFLEXItem.Tag = new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnCreateProjectFromFLEx_LinkClicked);
+			createFromFLEXItem.Tag =
+				new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnCreateProjectFromFLEx_LinkClicked);
 
-			System.Windows.Forms.ListViewItem getFromUSBItem = new System.Windows.Forms.ListViewItem("Get From USB drive", "getFromUsb");
+
+			var getFromUSBItem =
+				new System.Windows.Forms.ListViewItem("Get From USB drive", "getFromUsb");
 			getFromUSBItem.Group = _getProjectChorusGroup;
 			getFromUSBItem.Tag = new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnGetFromUsb);
 			getFromUSBItem.ToolTipText = "Get a project from a Chorus repository on a USB flash drive";
 
-			System.Windows.Forms.ListViewItem getFromInternetItem = new System.Windows.Forms.ListViewItem("Get from Internet");
+			var getFromInternetItem =
+				new System.Windows.Forms.ListViewItem("Get from Internet");
 			getFromInternetItem.Group = _getProjectChorusGroup;
-			getFromInternetItem.Tag = new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnGetFromInternet);
-			getFromInternetItem.ToolTipText = "Get a project from a Chorus repository which is hosted on the internet (e.g. public.languagedepot.org) and put it on this computer";
+			getFromInternetItem.Tag =
+				new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnGetFromInternet);
+			getFromInternetItem.ToolTipText =
+				"Get a project from a Chorus repository which is hosted on the internet (e.g. public.languagedepot.org) and put it on this computer";
 
-			this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-				createNewProjectItem,
-				createFromFLEXItem,
-				getFromUSBItem,
-				getFromInternetItem});
+			if (!string.IsNullOrEmpty(HgRepository.GetEnvironmentReadinessMessage("en")))
+			{
+				getFromUSBItem.ForeColor = Color.Gray;
+				getFromUSBItem.ToolTipText += "\r\n" + HgRepository.GetEnvironmentReadinessMessage("en");
+				getFromInternetItem.ForeColor = Color.Gray;
+				getFromInternetItem.ToolTipText += "\r\n" + HgRepository.GetEnvironmentReadinessMessage("en");
+			}
+
+			listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[]
+											  {
+												  createNewProjectItem,
+												  createFromFLEXItem,
+												  getFromUSBItem,
+												  getFromInternetItem
+											  });
 		}
 
 		private void AddGroups()
@@ -66,7 +88,7 @@ namespace WeSay.ConfigTool
 			_openExistingGroup.Name = "openExisting";
 			_createProjectGroup.Header = "Create";
 			_createProjectGroup.Name = "createProject";
-			_getProjectChorusGroup.Header = "Get Project (Chorus)";
+			_getProjectChorusGroup.Header = "Get";
 			_getProjectChorusGroup.Name = "getProjectChorus";
 
 			this.listView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
@@ -81,7 +103,12 @@ namespace WeSay.ConfigTool
 
 		private void OnGetFromUsb(object sender, LinkLabelLinkClickedEventArgs e)
 		{
+			var dlg = new Chorus.UI.Clone.GetCloneDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
+			if(DialogResult.Cancel == dlg.ShowDialog())
+				return;
 
+
+			OpenSpecifiedProject(dlg.PathToNewProject);
 		}
 
 		private void AddOpenProjectChoices()
@@ -103,7 +130,7 @@ namespace WeSay.ConfigTool
 
 			}
 
-			var browseForProjectItem = new ListViewItem("Browse for a project on this computer", "browse");
+			var browseForProjectItem = new ListViewItem("Other...", "browse");
 			browseForProjectItem.Group = _openExistingGroup;
 			browseForProjectItem.Tag =
 				new LinkLabelLinkClickedEventHandler(openDifferentProject_LinkClicked);
@@ -112,9 +139,9 @@ namespace WeSay.ConfigTool
 
 		private void openRecentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			if (OpenPreviousProjectClicked != null)
+			if (OpenSpecifiedProject != null)
 			{
-				OpenPreviousProjectClicked.Invoke(((LinkLabel) sender).Tag, null);
+				OpenSpecifiedProject.Invoke(((LinkLabel) sender).Tag as string);
 			}
 		}
 
@@ -159,7 +186,7 @@ namespace WeSay.ConfigTool
 			if(_keyNavigationInProgress)
 				return;
 
-			OnChooseItem();
+			_debounceListIndexChangedEvent.Enabled = true;
 		}
 
 		private void OnChooseItem()
@@ -178,9 +205,9 @@ namespace WeSay.ConfigTool
 				string path = item.Tag as string;
 				if(path==null)
 					return;
-				if (OpenPreviousProjectClicked == null)
+				if (OpenSpecifiedProject == null)
 					return;
-				OpenPreviousProjectClicked.Invoke(path, null);
+				OpenSpecifiedProject.Invoke(path);
 				return;
 			}
 
@@ -211,6 +238,12 @@ namespace WeSay.ConfigTool
 				e.Handled = true;
 			}
 
+		}
+
+		private void _debounceListIndexChangedEvent_Tick(object sender, EventArgs e)
+		{
+			_debounceListIndexChangedEvent.Enabled = false;
+			OnChooseItem();
 		}
 	}
 }

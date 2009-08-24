@@ -854,8 +854,7 @@ namespace WeSay.Project
 			{
 				if (String.IsNullOrEmpty(_pathToLiftFile))
 				{
-					_pathToLiftFile = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
-												   Path.GetFileName(ProjectDirectoryPath) + ".lift");
+					_pathToLiftFile = GetPathToLiftFileGivenProjectDirectory();
 				}
 				return _pathToLiftFile;
 			}
@@ -873,6 +872,26 @@ namespace WeSay.Project
 					// Directory.GetParent(value).Parent.FullName;
 				}
 			}
+		}
+
+		private string GetPathToLiftFileGivenProjectDirectory()
+		{
+			//first, we assume it's based on the name of the directory
+			var path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+										   Path.GetFileName(ProjectDirectoryPath) + ".lift");
+
+			//if that doesn't give us one, then we find one which has a matching wesayconfig file
+			if (!File.Exists(path))
+			{
+				foreach (var liftPath in Directory.GetFiles(ProjectDirectoryPath, "*.lift"))
+				{
+					if (File.Exists(liftPath.ToLower().Replace(".lift", ".WeSayConfig")))
+					{
+						return liftPath;
+					}
+				}
+			}
+			return path;
 		}
 
 		public string PathToLiftBackupDir
@@ -1085,6 +1104,14 @@ namespace WeSay.Project
 			get { return _container; }
 		}
 
+		public static string NewProjectDirectory
+		{
+			get
+			{
+				return Path.Combine(
+				   Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WeSay");
+			}
+		}
 
 
 		public override void Save()

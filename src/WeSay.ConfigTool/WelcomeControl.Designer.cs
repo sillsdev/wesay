@@ -37,6 +37,7 @@ namespace WeSay.ConfigTool
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.listView1 = new System.Windows.Forms.ListView();
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+			this._debounceListIndexChangedEvent = new System.Windows.Forms.Timer(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			//
@@ -80,7 +81,7 @@ namespace WeSay.ConfigTool
 			this.listView1.Activation = System.Windows.Forms.ItemActivation.OneClick;
 			this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)));
-			this.listView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.listView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
 			this.listView1.HideSelection = false;
 			this.listView1.Location = new System.Drawing.Point(116, 111);
@@ -104,6 +105,10 @@ namespace WeSay.ConfigTool
 			this.imageList1.Images.SetKeyName(0, "browse");
 			this.imageList1.Images.SetKeyName(1, "getFromUsb");
 			this.imageList1.Images.SetKeyName(2, "wesayProject");
+			//
+			// _debounceListIndexChangedEvent
+			//
+			this._debounceListIndexChangedEvent.Tick += new System.EventHandler(this._debounceListIndexChangedEvent_Tick);
 			//
 			// WelcomeControl
 			//
@@ -130,6 +135,7 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.ListView listView1;
 		private System.Windows.Forms.ImageList imageList1;
+		private System.Windows.Forms.Timer _debounceListIndexChangedEvent;
 
 	}
 }
