@@ -3,6 +3,8 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using Chorus.sync;
+using Chorus.Utilities;
+using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
 using Palaso.TestUtilities;
 
@@ -72,8 +74,8 @@ namespace WeSay.Project.Tests
 
 			public void AssertFileExistsInRepo(string s)
 			{
-				Chorus.sync.RepositoryManager r = new RepositoryManager(PathToBackupProjectDir, new ProjectFolderConfiguration(SourceProjectDir));
-				Assert.IsTrue(r.GetFileExistsInRepo(Path.Combine(PathToBackupProjectDir ,"test.lift")));
+				var  r = new HgRepository(PathToBackupProjectDir, new NullProgress());
+				Assert.IsTrue(r.GetFileExistsInRepo(s));
 			}
 		}
 

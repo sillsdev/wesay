@@ -39,7 +39,7 @@ namespace WeSay.ConfigTool
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
-			this._environmentNotReadyLabel = new System.Windows.Forms.Label();
+			this.readinessPanel1 = new Chorus.UI.Misc.ReadinessPanel();
 			this.SuspendLayout();
 			//
 			// label1
@@ -96,24 +96,22 @@ namespace WeSay.ConfigTool
 			this.label4.TabIndex = 3;
 			this.label4.Text = resources.GetString("label4.Text");
 			//
-			// _environmentNotReadyLabel
+			// readinessPanel1
 			//
-			this._environmentNotReadyLabel.AutoSize = true;
-			this._environmentNotReadyLabel.ForeColor = System.Drawing.Color.Red;
-			this._environmentNotReadyLabel.Location = new System.Drawing.Point(16, 288);
-			this._environmentNotReadyLabel.MaximumSize = new System.Drawing.Size(500, 100);
-			this._environmentNotReadyLabel.Name = "_environmentNotReadyLabel";
-			this._environmentNotReadyLabel.Size = new System.Drawing.Size(217, 13);
-			this._environmentNotReadyLabel.TabIndex = 3;
-			this._environmentNotReadyLabel.Text = "This machine is not ready to use this feature.\r\n";
+			this.readinessPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.readinessPanel1.Location = new System.Drawing.Point(19, 281);
+			this.readinessPanel1.Name = "readinessPanel1";
+			this.readinessPanel1.Size = new System.Drawing.Size(478, 101);
+			this.readinessPanel1.TabIndex = 8;
 			//
 			// BackupPlanControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
+			this.Controls.Add(this.readinessPanel1);
 			this.Controls.Add(this.label3);
-			this.Controls.Add(this._environmentNotReadyLabel);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this._browseButton);
@@ -136,7 +134,7 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label _environmentNotReadyLabel;
+		private Chorus.UI.Misc.ReadinessPanel readinessPanel1;
 
 	}
 }

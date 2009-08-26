@@ -191,14 +191,15 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="NetReflector.dll" Guid="{AE9F3A6E-390F-46B3-AFCB-CE8A2E8EC769}">
 					<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
 				  </Component>
-				  <!--
-		  <Component Id="NetReflector.pdb" Guid="{92497411-A442-436D-9421-FC99DF5298DA}">
-			<File Id="NetReflector.pdb" Name="NetReflector.pdb" KeyPath="yes" Source="..\..\output\release\NetReflector.pdb" />
-		  </Component>
-		  -->
 
 				  <Component Id="Chorus.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CCCC}">
 					<File Id="Chorus.exe" Name="Chorus.exe" KeyPath="yes" Source="..\..\output\release\Chorus.exe" />
+				  </Component>
+				 <Component Id="ChorusMerge.exe" Guid="{345AD323-F201-4104-AE1C-4F039EDE21F7}">
+					<File Id="ChorusMerge.exe" Name="ChorusMerge.exe" KeyPath="yes" Source="..\..\output\release\ChorusMerge.exe" />
+				  </Component>
+				 <Component Id="LibChorus.dll" Guid="{B23662D0-4176-4307-929C-C61855B7B7DF}">
+					<File Id="LibChorus.dll" Name="LibChorus.dll" KeyPath="yes" Source="..\..\output\release\LibChorus.dll" />
 				  </Component>
 
 				  <Component Id="Palaso.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
@@ -336,6 +337,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
 			  <ComponentRef Id="NetReflector.dll" />
 			  <ComponentRef Id="Chorus.exe"/>
+			  <ComponentRef Id="LibChorus.dll"/>
+			  <ComponentRef Id="ChorusMerge.exe"/>
 			  <ComponentRef Id="Palaso.dll"/>
 			  <ComponentRef Id="Palaso.Services.dll" />
 			  <ComponentRef Id="Palaso.Media.dll" />

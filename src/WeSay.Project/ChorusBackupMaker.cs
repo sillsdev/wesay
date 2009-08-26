@@ -4,7 +4,9 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using Chorus.sync;
+using Chorus.UI.Sync;
 using Chorus.Utilities;
+using Chorus.VcsDrivers.Mercurial;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.LexicalModel;
@@ -76,67 +78,65 @@ namespace WeSay.Project
 			_timeOfLastBackupAttempt = DateTime.Now;
 
 			//nb: we're not really using the message yet, at least, not showing it to the user
-			if(!string.IsNullOrEmpty(RepositoryManager.GetEnvironmentReadinessMessage(localizationLanguageId)))
+			if(!string.IsNullOrEmpty(HgRepository.GetEnvironmentReadinessMessage(localizationLanguageId)))
 			{
-				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
+				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", HgRepository.GetEnvironmentReadinessMessage("en"));
 			}
 
 			try
 			{
-				ProjectFolderConfiguration projectFolder = new ProjectFolderConfiguration(pathToProjectDirectory);
-				projectFolder.ExcludePatterns.Add("**/cache");
-				projectFolder.ExcludePatterns.Add("**/Cache");
-				projectFolder.ExcludePatterns.Add("*.old");
-				projectFolder.ExcludePatterns.Add("*.wesayUserMemory");
-				projectFolder.ExcludePatterns.Add("*.tmp");
-				projectFolder.ExcludePatterns.Add("*.bak");
+				ProjectFolderConfiguration configuration = new WeSayChorusProjectConfiguration(pathToProjectDirectory);
 
-				projectFolder.IncludePatterns.Add("audio/*.*");
-				projectFolder.IncludePatterns.Add("pictures/*.*");
-				projectFolder.IncludePatterns.Add("**.css"); //stylesheets
-				projectFolder.IncludePatterns.Add("export/*.lpconfig");//lexique pro
-				projectFolder.IncludePatterns.Add("**.lift");
-				projectFolder.IncludePatterns.Add("**.WeSayConfig");
-				projectFolder.IncludePatterns.Add("**WritingSystemPrefs.xml");
-				projectFolder.IncludePatterns.Add("**PartsOfSpeech.xml");
-				projectFolder.IncludePatterns.Add(".hgIgnore");
+				// projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 
-			   // projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
+//                  if (!string.IsNullOrEmpty(PathToParentOfRepositories))
+//                {
+//                    if (!Directory.Exists(PathToParentOfRepositories))
+//                    {
+//                        ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "There was a problem during auto backup: Could not Access the backup path, {0}", PathToParentOfRepositories);
+//                        //no, we still want to check in... return;
+//                    }
+//                    else
+//                    {
+//                        var projectName = Path.GetFileName(pathToProjectDirectory);
+//                        var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create("backup", Path.Combine(PathToParentOfRepositories, projectName),
+//                                                                                false);
+//                        options.RepositorySourcesToTry.Add(backupSource);
+//                    }
+//                }
 
-				Chorus.sync.SyncOptions options = new SyncOptions();
-				options.DoMergeWithOthers = false;
-				options.DoPullFromOthers = false;
-				options.DoPushToLocalSources = true;
-				options.RepositorySourcesToTry.Clear();
-				if (!string.IsNullOrEmpty(PathToParentOfRepositories))
+				using (var dlg = new SyncDialog(configuration,
+					   SyncUIDialogBehaviors.StartImmediatelyAndCloseWhenFinished,
+					   SyncUIFeatures.Minimal))
 				{
-					if (!Directory.Exists(PathToParentOfRepositories))
+					dlg.Text = "Wesay Automatic Backup";
+					dlg.SyncOptions.DoMergeWithOthers = false;
+					dlg.SyncOptions.DoPullFromOthers = false;
+					dlg.SyncOptions.DoPushToLocalSources = true;
+					dlg.SyncOptions.RepositorySourcesToTry.Clear();
+					dlg.SyncOptions.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
+					dlg.UseTargetsAsSpecifiedInSyncOptions=true;
+
+					//in addition to checking in, will we be doing a backup to another media (e.g. sd card)?
+					if (!string.IsNullOrEmpty(PathToParentOfRepositories))
 					{
-						ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "Could not Access the backup path, {0}", PathToParentOfRepositories);
+							var projectName = Path.GetFileName(pathToProjectDirectory);
+							var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create("backupMedia", Path.Combine(PathToParentOfRepositories, projectName),
+																					false);
+							dlg.SyncOptions.RepositorySourcesToTry.Add(backupSource);
 					}
-					else
+
+					dlg.ShowDialog();
+
+					if (dlg.FinalStatus.WarningEncountered ||  //not finding the backup media only counts as a warning
+						dlg.FinalStatus.ErrorEncountered)
 					{
-						RepositorySource backupSource = RepositorySource.Create(PathToParentOfRepositories, "backup",
-																				false);
-						options.RepositorySourcesToTry.Add(backupSource);
+						ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
+														"There was a problem during auto backup. Chorus said:\r\n\r\n" +
+														dlg.FinalStatus.LastWarning +"\r\n"+
+														dlg.FinalStatus.LastError);
 					}
 				}
-				options.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
-
-				RepositoryManager manager = RepositoryManager.FromRootOrChildFolder(projectFolder);
-
-
-				if (!RepositoryManager.CheckEnvironmentAndShowMessageIfAppropriate("en"))//todo localization
-				{
-					Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
-					return;
-				}
-
-
-				//TODO: figure out how/what/when to show progress. THis is basically just throwing it away
-				IProgress progress = new Chorus.Utilities.StringBuilderProgress();
-				manager.SyncNow(options, progress);
-
 				CheckinDescriptionBuilder.Clear();
 			}
 			catch (Exception error)
@@ -145,6 +145,7 @@ namespace WeSay.Project
 				//TODO we need some passive way indicating the health of the backup system
 			}
 		}
+
 
 		public void ResetTimeOfLastBackup()
 		{
