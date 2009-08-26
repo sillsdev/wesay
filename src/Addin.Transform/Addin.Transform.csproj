@@ -112,11 +112,11 @@
 	<Compile Include="LameProgressDialog.Designer.cs">
 	  <DependentUpon>LameProgressDialog.cs</DependentUpon>
 	</Compile>
-	<Compile Include="PdfDictionary\AboutPrince.cs">
+	<Compile Include="PdfDictionary\AboutMakePdfDictionary.cs">
 	  <SubType>Form</SubType>
 	</Compile>
-	<Compile Include="PdfDictionary\AboutPrince.Designer.cs">
-	  <DependentUpon>AboutPrince.cs</DependentUpon>
+	<Compile Include="PdfDictionary\AboutMakePdfDictionary.Designer.cs">
+	  <DependentUpon>AboutMakePdfDictionary.cs</DependentUpon>
 	</Compile>
 	<Compile Include="PdfDictionary\FLExCompatibleXhtmlWriter.cs" />
 	<Compile Include="LexiquePro\AboutLexiquePro.cs">
@@ -208,8 +208,8 @@
 	<EmbeddedResource Include="plift2html.xsl">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>
-	<EmbeddedResource Include="PdfDictionary\AboutPrince.resx">
-	  <DependentUpon>AboutPrince.cs</DependentUpon>
+	<EmbeddedResource Include="PdfDictionary\AboutMakePdfDictionary.resx">
+	  <DependentUpon>AboutMakePdfDictionary.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
   </ItemGroup>
