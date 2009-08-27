@@ -1072,10 +1072,20 @@ namespace WeSay.Project
 			get { return DefaultViewTemplate; }
 		}
 
+		static public bool PreventBackupForTests
+		{
+			get;
+			set;
+		}
+
 		public ChorusBackupMaker BackupMaker
 		{
 			get { return _backupMaker; }
-			set { _backupMaker = value; }
+			set
+			{
+				if(!PreventBackupForTests)
+						_backupMaker = value;
+			}
 		}
 
 		public IContainer Container
