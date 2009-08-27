@@ -89,7 +89,7 @@ namespace WeSay.ConfigTool
 			//
 			// label4
 			//
-			this.label4.Location = new System.Drawing.Point(16, 204);
+			this.label4.Location = new System.Drawing.Point(16, 235);
 			this.label4.MaximumSize = new System.Drawing.Size(500, 100);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(500, 84);
@@ -100,7 +100,7 @@ namespace WeSay.ConfigTool
 			//
 			this._environmentNotReadyLabel.AutoSize = true;
 			this._environmentNotReadyLabel.ForeColor = System.Drawing.Color.Red;
-			this._environmentNotReadyLabel.Location = new System.Drawing.Point(16, 288);
+			this._environmentNotReadyLabel.Location = new System.Drawing.Point(16, 191);
 			this._environmentNotReadyLabel.MaximumSize = new System.Drawing.Size(500, 100);
 			this._environmentNotReadyLabel.Name = "_environmentNotReadyLabel";
 			this._environmentNotReadyLabel.Size = new System.Drawing.Size(217, 13);

@@ -299,7 +299,6 @@ namespace WeSay.ConfigTool
 			containerBuilder.Register<InterfaceLanguageControl>();
 			containerBuilder.Register<ActionsControl>();
 			containerBuilder.Register<BackupPlanControl>();
-			containerBuilder.Register<ChorusControl>();
 			containerBuilder.Register<OptionListControl>();
 
 			containerBuilder.Register<IContext>(c => c); // make the context itself available for pushing into contructors

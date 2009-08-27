@@ -158,21 +158,6 @@ namespace WeSay.ConfigTool
 			this._backupButton.Text = "Backup";
 			this._backupButton.Click += new System.EventHandler(this.OnAreaButton_Click);
 			//
-			// _chorusButton
-			//
-			this._chorusButton.BackColor = System.Drawing.SystemColors.ControlLight;
-			this._chorusButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._chorusButton.ForeColor = System.Drawing.Color.DimGray;
-			this._chorusButton.Image = global::WeSay.ConfigTool.Properties.Resources.chorus;
-			this._chorusButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this._chorusButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-			this._chorusButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this._chorusButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
-			this._chorusButton.Name = "_chorusButton";
-			this._chorusButton.Size = new System.Drawing.Size(171, 33);
-			this._chorusButton.Text = "Collaboration";
-			this._chorusButton.Click += new System.EventHandler(this.OnAreaButton_Click);
-			//
 			// _optionsListButton
 			//
 			this._optionsListButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold);

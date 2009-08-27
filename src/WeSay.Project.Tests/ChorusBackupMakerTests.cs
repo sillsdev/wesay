@@ -3,6 +3,8 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using Chorus.sync;
+using Chorus.Utilities;
+using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
 using Palaso.TestUtilities;
 
@@ -28,7 +30,7 @@ namespace WeSay.Project.Tests
 			}
 			public string PathToBackupProjectDir
 			{
-				get { return Path.Combine(_backupDir.FolderPath, _projDir.ProjectDirectoryName);}
+				get { return Path.Combine(_backupDir.FolderPath, _projDir.ProjectDirectoryName); }
 			}
 
 			public ChorusBackupMaker BackupMaker
@@ -54,13 +56,13 @@ namespace WeSay.Project.Tests
 
 			public void AssertDirExistsInWorkingDirectory(string s)
 			{
-				string  expectedDir = Path.Combine(PathToBackupProjectDir, s);
+				string expectedDir = Path.Combine(PathToBackupProjectDir, s);
 				Assert.IsTrue(Directory.Exists(expectedDir));
 			}
 
 			public void AssertFileExistsInWorkingDirectory(string s)
 			{
-				string  path = Path.Combine(PathToBackupProjectDir, s);
+				string path = Path.Combine(PathToBackupProjectDir, s);
 				Assert.IsTrue(File.Exists(path));
 			}
 
@@ -72,8 +74,8 @@ namespace WeSay.Project.Tests
 
 			public void AssertFileExistsInRepo(string s)
 			{
-				Chorus.sync.RepositoryManager r = new RepositoryManager(PathToBackupProjectDir, new ProjectFolderConfiguration(SourceProjectDir));
-				Assert.IsTrue(r.GetFileExistsInRepo(Path.Combine(PathToBackupProjectDir ,"test.lift")));
+				var r = new HgRepository(PathToBackupProjectDir, new NullProgress());
+				Assert.IsTrue(r.GetFileExistsInRepo(s));
 			}
 		}
 
