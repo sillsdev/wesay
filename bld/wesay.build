@@ -9,6 +9,8 @@
 				<include name="../**/obj/**" />
 				<include name="../output/**" />
 				<include name="../release/output/*" />
+				<exclude name="../.hg/**" />
+				<exclude name="../lib/**" />
 			</fileset>
 		</delete>
 	</target>
@@ -94,6 +96,12 @@
 	</target>
 
 	<target name="build.only">
+		<copy todir="../output/${configuration}" flatten="true">
+			<fileset basedir="../lib">
+				<include name="net2.0" />
+				<include name="common" />
+			</fileset>
+		</copy>
 		<solution configuration="${configuration}" solutionfile="../src/wesay.sln">
 		</solution>
 		<property name="expected.output" value="../output/${configuration}/WeSay.App.exe"/>
