@@ -54,7 +54,7 @@ namespace WeSay.ConfigTool
 			getFromUSBItem.ToolTipText = "Get a project from a Chorus repository on a USB flash drive";
 
 			var getFromInternetItem =
-				new System.Windows.Forms.ListViewItem("Get from Internet");
+				new System.Windows.Forms.ListViewItem("Get from Internet", "getFromInternet");
 			getFromInternetItem.Group = _getProjectChorusGroup;
 			getFromInternetItem.Tag =
 				new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnGetFromInternet);
@@ -99,17 +99,23 @@ namespace WeSay.ConfigTool
 
 		private void OnGetFromInternet(object sender, LinkLabelLinkClickedEventArgs e)
 		{
+		   using (var dlg = new Chorus.UI.Clone.GetCloneFromInternetDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
+			{
+				if (DialogResult.Cancel == dlg.ShowDialog())
+					return;
+				OpenSpecifiedProject(dlg.PathToNewProject);
+			}
 		}
 
 		private void OnGetFromUsb(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			var dlg = new Chorus.UI.Clone.GetCloneFromUsbDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
-			dlg.Model.ProjectFilter = dir => GetLooksLikeWeSayProject(dir);
-			if(DialogResult.Cancel == dlg.ShowDialog())
-				return;
-
-
-			OpenSpecifiedProject(dlg.PathToNewProject);
+			using (var dlg = new Chorus.UI.Clone.GetCloneFromUsbDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
+			{
+				dlg.Model.ProjectFilter = dir => GetLooksLikeWeSayProject(dir);
+				if (DialogResult.Cancel == dlg.ShowDialog())
+					return;
+				OpenSpecifiedProject(dlg.PathToNewProject);
+			}
 		}
 
 		private static bool GetLooksLikeWeSayProject(string directoryPath)

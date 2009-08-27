@@ -101,10 +101,11 @@ namespace WeSay.ConfigTool
 			// imageList1
 			//
 			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-			this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+			this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
 			this.imageList1.Images.SetKeyName(0, "browse");
 			this.imageList1.Images.SetKeyName(1, "getFromUsb");
 			this.imageList1.Images.SetKeyName(2, "wesayProject");
+			this.imageList1.Images.SetKeyName(3, "getFromInternet");
 			//
 			// _debounceListIndexChangedEvent
 			//
