@@ -12,6 +12,7 @@ namespace Addin.Transform.PdfDictionary
 	{
 		public AboutMakePdfDictionary()
 		{
+			Font = SystemFonts.MessageBoxFont;
 			InitializeComponent();
 		}
 

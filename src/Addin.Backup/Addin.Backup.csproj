@@ -172,13 +172,7 @@
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<None Include="buttonImage.png" />
-  </ItemGroup>
-  <ItemGroup>
 	<None Include="Resources\emailAction.png" />
-	<Content Include="mercurial.bat">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
 	<None Include="Resources\greenSynchronize.png" />
 	<None Include="Resources\greenEmail.png" />
 	<None Include="Resources\greenUsbKey.png" />
