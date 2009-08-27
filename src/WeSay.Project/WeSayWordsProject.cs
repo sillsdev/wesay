@@ -1115,7 +1115,8 @@ namespace WeSay.Project
 				EditorsSaveNow.Invoke(writer, null);
 			}
 
-			BackupMaker.Save(writer);
+			if (BackupMaker != null)
+				BackupMaker.Save(writer);
 
 			_addins.Save(writer);
 

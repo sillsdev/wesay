@@ -243,10 +243,6 @@ namespace WeSay.ConfigTool
 			try
 			{
 				Project = new WeSayWordsProject();
-				if(_disableBackupAndChorusStuffForTests)
-				{
-					_project.BackupMaker = null;
-				}
 
 				//just open the accompanying lift file.
 				path = path.Replace(".WeSayConfig", ".lift");
@@ -272,6 +268,10 @@ namespace WeSay.ConfigTool
 				{
 					throw new ApplicationException(path +
 												   " is not named as a .lift file or .WeSayConfig file.");
+				}
+				if (_disableBackupAndChorusStuffForTests)
+				{
+					_project.BackupMaker = null;
 				}
 			}
 			catch (Exception e)
