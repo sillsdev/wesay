@@ -1087,10 +1087,20 @@ namespace WeSay.Project
 			get { return DefaultViewTemplate; }
 		}
 
+		static public bool PreventBackupForTests
+		{
+			get;
+			set;
+		}
+
 		public ChorusBackupMaker BackupMaker
 		{
 			get { return _backupMaker; }
-			set { _backupMaker = value; }
+			set
+			{
+				if(!PreventBackupForTests)
+						_backupMaker = value;
+			}
 		}
 
 		public IContainer Container
@@ -1138,7 +1148,7 @@ namespace WeSay.Project
 				EditorsSaveNow.Invoke(writer, null);
 			}
 
-			if(BackupMaker!=null)
+			if (BackupMaker != null)
 				BackupMaker.Save(writer);
 
 			_addins.Save(writer);
