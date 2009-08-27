@@ -52,6 +52,7 @@
 				<include name="LiftIO.dll" />
 				<include name="NetReflector.dll" />
 				<include name="Autofac.dll" />
+				<include name="LibChorus.dll" />
 				<include name="Chorus.exe" />
 			</references>
 			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
