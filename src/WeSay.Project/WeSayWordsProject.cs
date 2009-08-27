@@ -38,7 +38,6 @@ namespace WeSay.Project
 		private readonly Dictionary<string, OptionsList> _optionLists;
 		private string _pathToLiftFile;
 		private string _cacheLocationOverride;
-		private LiftUpdateService _liftUpdateService;
 
 		private readonly AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
@@ -1048,12 +1047,7 @@ namespace WeSay.Project
 			set { _cacheLocationOverride = value; }
 		}
 
-		// todo: this can be removed?  cp
-		public LiftUpdateService LiftUpdateService
-		{
-			get { return _liftUpdateService; }
-			set { _liftUpdateService = value; }
-		}
+
 
 		public AddinSet Addins
 		{

@@ -107,10 +107,6 @@ namespace WeSay.App
 					using (_dictionary =
 						   new DictionaryServiceProvider(GetLexEntryRepository(), this, _project))
 					{
-						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
-						{
-							RecoverUnsavedDataIfNeeded();
-						}
 
 						StartDictionaryServices();
 						_dictionary.LastClientDeregistered +=
@@ -164,24 +160,7 @@ namespace WeSay.App
 			_project.ConsiderSynchingOrBackingUp("checkpoint");
 		}
 
-		//!!! Move this into LexEntryRepository and maybe lower.
-		private void RecoverUnsavedDataIfNeeded()
-		{
-			if (!File.Exists(_project.PathToRepository))
-			{
-				return;
-			}
 
-			try
-			{
-				GetLexEntryRepository().BackendRecoverUnsavedChangesOutOfCacheIfNeeded();
-			}
-			catch (IOException e)
-			{
-				ErrorReport.ReportNonFatalException(e);
-				Thread.CurrentThread.Abort();
-			}
-		}
 
 		private void OnBringToFrontRequest(object sender, EventArgs e)
 		{

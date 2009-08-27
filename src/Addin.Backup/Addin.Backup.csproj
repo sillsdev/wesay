@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -173,12 +173,7 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\buttonImage.png" />
-  </ItemGroup>
-  <ItemGroup>
 	<None Include="Resources\emailAction.png" />
-	<Content Include="mercurial.bat">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
 	<None Include="Resources\greenSynchronize.png" />
 	<None Include="Resources\greenEmail.png" />
 	<None Include="Resources\greenUsbKey.png" />

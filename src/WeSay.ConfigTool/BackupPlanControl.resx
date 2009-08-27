@@ -127,6 +127,6 @@ Enter the location of the backup media here:
 </value>
   </data>
   <data name="label4.Text" xml:space="preserve">
-	<value>Second, you need to have regular backups that are stored away from the computer.  This is to guard against loss of data by theft, fire, or natural catastrophe.  WeSay, using the Chorus collaboration component, will automatically create full historical backups on a usb key.  So get several of them and train the WeSay user to rotate them on some regular basis. (TODO: say more about when the sync happens)</value>
+	<value>Second, you need to have regular backups that are stored away from the computer.  This is to guard against loss of data by theft, fire, or natural catastrophe.  First, enable the Send/Recieve action button, which will automatically create full historical backups on a usb key.  So get several of them and train the WeSay user to rotate them on some regular basis, clicking the Send/Receive button to make the backup..  </value>
   </data>
 </root>

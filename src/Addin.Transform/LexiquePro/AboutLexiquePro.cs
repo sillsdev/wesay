@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Addin.Transform.LexiquePro
@@ -7,6 +8,7 @@ namespace Addin.Transform.LexiquePro
 	{
 		public AboutLexiquePro()
 		{
+			Font = SystemFonts.MessageBoxFont;
 			InitializeComponent();
 		}
 
