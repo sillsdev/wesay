@@ -31,8 +31,8 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutMakePdfDictionary));
 			this.linkLabel1 = new System.Windows.Forms.LinkLabel();
 			this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-			this.label1 = new System.Windows.Forms.Label();
 			this.button1 = new System.Windows.Forms.Button();
+			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			//
 			// linkLabel1
@@ -61,16 +61,6 @@
 			this.linkLabel2.Text = "http://wesay.org/wiki/MakePdfDictionary";
 			this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnLinkClicked);
 			//
-			// label1
-			//
-			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(27, 10);
-			this.label1.MaximumSize = new System.Drawing.Size(440, 0);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(440, 336);
-			this.label1.TabIndex = 1;
-			this.label1.Text = resources.GetString("label1.Text");
-			//
 			// button1
 			//
 			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -82,6 +72,21 @@
 			this.button1.Text = "&OK";
 			this.button1.UseVisualStyleBackColor = true;
 			//
+			// textBox1
+			//
+			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.textBox1.BackColor = System.Drawing.SystemColors.Control;
+			this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textBox1.Location = new System.Drawing.Point(12, 12);
+			this.textBox1.Multiline = true;
+			this.textBox1.Name = "textBox1";
+			this.textBox1.Size = new System.Drawing.Size(455, 307);
+			this.textBox1.TabIndex = 3;
+			this.textBox1.Text = resources.GetString("textBox1.Text");
+			//
 			// AboutMakePdfDictionary
 			//
 			this.AcceptButton = this.button1;
@@ -90,8 +95,8 @@
 			this.CancelButton = this.button1;
 			this.ClientSize = new System.Drawing.Size(499, 406);
 			this.ControlBox = false;
+			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.button1);
-			this.Controls.Add(this.label1);
 			this.Controls.Add(this.linkLabel2);
 			this.Controls.Add(this.linkLabel1);
 			this.MaximizeBox = false;
@@ -110,7 +115,7 @@
 
 		private System.Windows.Forms.LinkLabel linkLabel1;
 		private System.Windows.Forms.LinkLabel linkLabel2;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.TextBox textBox1;
 	}
 }
