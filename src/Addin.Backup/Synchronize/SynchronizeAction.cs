@@ -94,7 +94,7 @@ namespace Addin.Backup
 
 				dlg.ShowDialog(parentForm);
 
-				if (dlg.SyncResult.DidGetChangesFromOthers)
+				if (dlg.SyncResult != null && dlg.SyncResult.DidGetChangesFromOthers)
 				{
 					Application.Restart();
 				}
