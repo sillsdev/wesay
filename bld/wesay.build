@@ -10,7 +10,7 @@
 				<include name="../output/**" />
 				<include name="../release/output/*" />
 				<exclude name="../.hg/**" />
-				<exclude name="../lib/** />
+				<exclude name="../lib/**" />
 			</fileset>
 		</delete>
 	</target>
