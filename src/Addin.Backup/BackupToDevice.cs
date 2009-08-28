@@ -28,7 +28,7 @@ namespace Addin.Backup
 			get
 			{
 				return StringCatalog.Get("~Backup To USB Flash Drive",
-										 "Long name for usb flash-drive backup action");
+										 "Long name for action which makes a zip file on a usb flash-drive");
 			}
 		}
 

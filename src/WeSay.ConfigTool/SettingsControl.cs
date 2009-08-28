@@ -35,9 +35,9 @@ namespace WeSay.ConfigTool
 			_backupButton.Tag = context.Resolve<BackupPlanControl>();
 			_areaControls.Add((ConfigurationControlBase) _backupButton.Tag);
 
-//            _chorusButton.Tag = context.Resolve<ChorusControl>();
-//            _areaControls.Add((ConfigurationControlBase)_chorusButton.Tag);
-//
+			_chorusButton.Tag = context.Resolve<ChorusControl>();
+			_areaControls.Add((ConfigurationControlBase)_chorusButton.Tag);
+
 			_optionsListButton.Tag = context.Resolve<OptionListControl>();
 			_areaControls.Add((ConfigurationControlBase) _optionsListButton.Tag);
 

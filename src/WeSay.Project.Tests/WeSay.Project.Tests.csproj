@@ -74,11 +74,6 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\net2.0\Chorus.exe</HintPath>
-	</Reference>
 	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\LibChorus.dll</HintPath>

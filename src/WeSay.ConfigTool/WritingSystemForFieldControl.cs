@@ -66,7 +66,7 @@ namespace WeSay.ConfigTool
 								writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
 							}
 						}
-						catch (Exception error)  //WS-1296 where (sometimes) a bogus looking id killed Enchant
+						catch (Exception)  //WS-1296 where (sometimes) a bogus looking id killed Enchant
 						{
 							//ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "There was a problem asking the Enchant Spelling system about '{0}'.", ws.Id);
 
