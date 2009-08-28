@@ -98,8 +98,8 @@
 	<target name="build.only">
 		<copy todir="../output/${configuration}" flatten="true">
 			<fileset basedir="../lib">
-				<include name="net2.0" />
-				<include name="common" />
+				<include name="net2.0/*" />
+				<include name="common/*" />
 			</fileset>
 		</copy>
 		<solution configuration="${configuration}" solutionfile="../src/wesay.sln">
