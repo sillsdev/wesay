@@ -45,7 +45,7 @@
 			this.label1.Location = new System.Drawing.Point(97, 24);
 			this.label1.MaximumSize = new System.Drawing.Size(250, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(250, 65);
+			this.label1.Size = new System.Drawing.Size(250, 105);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "This will permanently remove this entry.";
 			//
