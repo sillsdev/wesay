@@ -35,9 +35,12 @@ namespace WeSay.ConfigTool
 			this.blueBar = new System.Windows.Forms.Panel();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.listView1 = new System.Windows.Forms.ListView();
-			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+			this._imageList = new System.Windows.Forms.ImageList(this.components);
 			this._debounceListIndexChangedEvent = new System.Windows.Forms.Timer(this.components);
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this._templateButton = new System.Windows.Forms.Button();
+			this._templateLabel = new System.Windows.Forms.Label();
+			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			//
@@ -76,47 +79,68 @@ namespace WeSay.ConfigTool
 			this.pictureBox1.TabIndex = 0;
 			this.pictureBox1.TabStop = false;
 			//
-			// listView1
+			// _imageList
 			//
-			this.listView1.Activation = System.Windows.Forms.ItemActivation.OneClick;
-			this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)));
-			this.listView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-			this.listView1.HideSelection = false;
-			this.listView1.Location = new System.Drawing.Point(116, 111);
-			this.listView1.MultiSelect = false;
-			this.listView1.Name = "listView1";
-			this.listView1.ShowItemToolTips = true;
-			this.listView1.Size = new System.Drawing.Size(271, 227);
-			this.listView1.SmallImageList = this.imageList1;
-			this.listView1.TabIndex = 10;
-			this.listView1.UseCompatibleStateImageBehavior = false;
-			this.listView1.View = System.Windows.Forms.View.SmallIcon;
-			this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
-			this.listView1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listView1_KeyPress);
-			this.listView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listView1_KeyUp);
-			this.listView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView1_KeyDown);
+			this._imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("_imageList.ImageStream")));
+			this._imageList.TransparentColor = System.Drawing.Color.Magenta;
+			this._imageList.Images.SetKeyName(0, "browse");
+			this._imageList.Images.SetKeyName(1, "getFromUsb");
+			this._imageList.Images.SetKeyName(2, "wesayProject");
+			this._imageList.Images.SetKeyName(3, "getFromInternet");
+			this._imageList.Images.SetKeyName(4, "newProject");
+			this._imageList.Images.SetKeyName(5, "flex");
 			//
-			// imageList1
+			// toolTip1
 			//
-			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-			this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
-			this.imageList1.Images.SetKeyName(0, "browse");
-			this.imageList1.Images.SetKeyName(1, "getFromUsb");
-			this.imageList1.Images.SetKeyName(2, "wesayProject");
-			this.imageList1.Images.SetKeyName(3, "getFromInternet");
+			this.toolTip1.AutomaticDelay = 300;
 			//
-			// _debounceListIndexChangedEvent
+			// _templateButton
 			//
-			this._debounceListIndexChangedEvent.Tick += new System.EventHandler(this._debounceListIndexChangedEvent_Tick);
+			this._templateButton.FlatAppearance.BorderSize = 0;
+			this._templateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._templateButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._templateButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this._templateButton.ImageKey = "wesayProject";
+			this._templateButton.ImageList = this._imageList;
+			this._templateButton.Location = new System.Drawing.Point(133, 48);
+			this._templateButton.Name = "_templateButton";
+			this._templateButton.Size = new System.Drawing.Size(351, 23);
+			this._templateButton.TabIndex = 6;
+			this._templateButton.Text = "   templateButton";
+			this._templateButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this._templateButton.UseVisualStyleBackColor = true;
+			this._templateButton.Visible = false;
+			//
+			// _templateLabel
+			//
+			this._templateLabel.AutoSize = true;
+			this._templateLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._templateLabel.ForeColor = System.Drawing.Color.DarkOliveGreen;
+			this._templateLabel.Location = new System.Drawing.Point(313, 48);
+			this._templateLabel.Name = "_templateLabel";
+			this._templateLabel.Size = new System.Drawing.Size(112, 20);
+			this._templateLabel.TabIndex = 7;
+			this._templateLabel.Text = "Template Label";
+			this._templateLabel.Visible = false;
+			//
+			// flowLayoutPanel1
+			//
+			this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(27, 111);
+			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(557, 227);
+			this.flowLayoutPanel1.TabIndex = 8;
 			//
 			// WelcomeControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.Color.White;
-			this.Controls.Add(this.listView1);
+			this.Controls.Add(this.flowLayoutPanel1);
+			this.Controls.Add(this._templateLabel);
+			this.Controls.Add(this._templateButton);
 			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this.blueBar);
@@ -134,9 +158,12 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.Panel blueBar;
 		private System.Windows.Forms.TextBox textBox1;
-		private System.Windows.Forms.ListView listView1;
-		private System.Windows.Forms.ImageList imageList1;
+		private System.Windows.Forms.ImageList _imageList;
 		private System.Windows.Forms.Timer _debounceListIndexChangedEvent;
+		private System.Windows.Forms.ToolTip toolTip1;
+		private System.Windows.Forms.Button _templateButton;
+		private System.Windows.Forms.Label _templateLabel;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 
 	}
 }

@@ -10,94 +10,98 @@ namespace WeSay.ConfigTool
 {
 	public partial class WelcomeControl: UserControl
 	{
-		private bool _keyNavigationInProgress=false;
-		private ListViewGroup _openExistingGroup;
-		private ListViewGroup _getProjectChorusGroup;
-		private ListViewGroup _createProjectGroup;
 		public event EventHandler NewProjectClicked;
 		public event EventHandler NewProjectFromFlexClicked;
 		public Action<string> OpenSpecifiedProject;
-		private DateTime _lastListViewClick;
 		public event EventHandler ChooseProjectClicked;
 
 		public WelcomeControl()
 		{
 			Font = SystemFonts.MessageBoxFont;//use the default OS UI font
 			InitializeComponent();
-			listView1.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 11);//use the default OS UI font
-			listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+		  }
 
-			AddGroups();
-			AddOpenProjectChoices();
-			AddOtherChoices();
-		}
-
-		private void AddOtherChoices()
+		private void LoadButtons()
 		{
-			var createNewProjectItem =
-				new System.Windows.Forms.ListViewItem("Create new blank project");
-			createNewProjectItem.Group = _createProjectGroup;
-			createNewProjectItem.Tag =
-				new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.createNewProject_LinkClicked);
+			flowLayoutPanel1.Controls.Clear();
+			var createAndGetGroup = new TableLayoutPanel();
+			createAndGetGroup.AutoSize = true;
+			AddCreateChoices(createAndGetGroup);
+			AddGetChoices(createAndGetGroup);
 
-			var createFromFLEXItem =
-				new System.Windows.Forms.ListViewItem("Create new project from FLEx LIFT export");
-			createFromFLEXItem.Group = _createProjectGroup;
-			createFromFLEXItem.Tag =
-				new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnCreateProjectFromFLEx_LinkClicked);
-
-
-			var getFromUSBItem =
-				new System.Windows.Forms.ListViewItem("Get From USB drive", "getFromUsb");
-			getFromUSBItem.Group = _getProjectChorusGroup;
-			getFromUSBItem.Tag = new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnGetFromUsb);
-			getFromUSBItem.ToolTipText = "Get a project from a Chorus repository on a USB flash drive";
-
-			var getFromInternetItem =
-				new System.Windows.Forms.ListViewItem("Get from Internet", "getFromInternet");
-			getFromInternetItem.Group = _getProjectChorusGroup;
-			getFromInternetItem.Tag =
-				new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnGetFromInternet);
-			getFromInternetItem.ToolTipText =
-				"Get a project from a Chorus repository which is hosted on the internet (e.g. public.languagedepot.org) and put it on this computer";
-
-			if (!string.IsNullOrEmpty(HgRepository.GetEnvironmentReadinessMessage("en")))
-			{
-				getFromUSBItem.ForeColor = Color.Gray;
-				getFromUSBItem.ToolTipText += "\r\n" + HgRepository.GetEnvironmentReadinessMessage("en");
-				getFromInternetItem.ForeColor = Color.Gray;
-				getFromInternetItem.ToolTipText += "\r\n" + HgRepository.GetEnvironmentReadinessMessage("en");
-			}
-
-			listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[]
-											  {
-												  createNewProjectItem,
-												  createFromFLEXItem,
-												  getFromUSBItem,
-												  getFromInternetItem
-											  });
+			var openChoices = new TableLayoutPanel();
+			openChoices.AutoSize = true;
+			AddSection("Open", openChoices);
+			AddOpenProjectChoices(openChoices);
+			flowLayoutPanel1.Controls.AddRange(new Control[] { createAndGetGroup, openChoices });
 		}
 
-		private void AddGroups()
+		private void AddSection(string sectionName, TableLayoutPanel panel)
 		{
-			_openExistingGroup = new System.Windows.Forms.ListViewGroup("Open", System.Windows.Forms.HorizontalAlignment.Left);
-			_createProjectGroup = new System.Windows.Forms.ListViewGroup("Create", System.Windows.Forms.HorizontalAlignment.Left);
-			_getProjectChorusGroup = new System.Windows.Forms.ListViewGroup("Get Project (Chorus)", System.Windows.Forms.HorizontalAlignment.Left);
-
-			_openExistingGroup.Header = "Open";
-			_openExistingGroup.Name = "openExisting";
-			_createProjectGroup.Header = "Create";
-			_createProjectGroup.Name = "createProject";
-			_getProjectChorusGroup.Header = "Get";
-			_getProjectChorusGroup.Name = "getProjectChorus";
-
-			this.listView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-																						_openExistingGroup,
-																						_createProjectGroup,
-																						_getProjectChorusGroup});
+			 panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+			panel.RowCount++;
+			Label label = new Label();
+			label.Font = new Font(StringCatalog.LabelFont.FontFamily, _templateLabel.Font.Size, _templateLabel.Font.Style);
+			label.ForeColor = _templateLabel.ForeColor;
+			label.Text = sectionName;
+			label.Margin = new Padding(0, 20, 0, 0);
+			panel.Controls.Add(label);
 		}
 
-		private void OnGetFromInternet(object sender, LinkLabelLinkClickedEventArgs e)
+		private void AddFileChoice(string path, TableLayoutPanel panel)
+		{
+			var button = AddChoice(Path.GetFileNameWithoutExtension(path), path, "wesayProject", true, openRecentProject_LinkClicked, panel);
+			button.Tag = path;
+		}
+
+
+		private Button AddChoice(string localizedLabel, string localizedTooltip, string imageKey, bool enabled,
+   EventHandler clickHandler, TableLayoutPanel panel)
+		{
+			panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+			panel.RowCount++;
+			Button button = new Button();
+			button.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+
+			button.Width = _templateButton.Width;//review
+			button.Font = new Font(StringCatalog.LabelFont.FontFamily, _templateButton.Font.Size, _templateButton.Font.Style);
+			button.ImageKey = imageKey;
+			button.ImageList = _imageList;
+			button.ImageAlign = ContentAlignment.MiddleLeft;
+			button.Click += clickHandler;
+			button.Text = "  "+localizedLabel;
+
+			button.FlatAppearance.BorderSize = this._templateButton.FlatAppearance.BorderSize;
+			button.FlatStyle = this._templateButton.FlatStyle;
+			button.ImageAlign = this._templateButton.ImageAlign;
+			button.TextImageRelation = this._templateButton.TextImageRelation ;
+			button.UseVisualStyleBackColor = this._templateButton.UseVisualStyleBackColor;
+			button.Enabled = enabled;
+
+			toolTip1.SetToolTip(button, localizedTooltip);
+			panel.Controls.Add(button);
+			return button;
+		}
+
+		private void AddCreateChoices(TableLayoutPanel panel)
+		{
+			AddSection("Create", panel);
+			AddChoice("Create new blank project", string.Empty, "newProject", true, this.createNewProject_LinkClicked, panel);
+			AddChoice("Create new project from FLEx LIFT export", string.Empty, "flex", true, this.OnCreateProjectFromFLEx_LinkClicked, panel);
+		}
+
+		private void AddGetChoices(TableLayoutPanel panel)
+		{
+			var chorusMessage = HgRepository.GetEnvironmentReadinessMessage("en");
+			bool haveChorus = string.IsNullOrEmpty(chorusMessage);
+
+			AddSection("Get", panel);
+			AddChoice("Get From USB drive", "Get a project from a Chorus repository on a USB flash drive", "getFromUsb", haveChorus, OnGetFromUsb, panel);
+			AddChoice("Get from Internet", "Get a project from a Chorus repository which is hosted on the internet (e.g. public.languagedepot.org) and put it on this computer",
+				"getFromInternet", haveChorus, OnGetFromInternet, panel);
+		}
+
+		private void OnGetFromInternet(object sender, EventArgs e)
 		{
 		   using (var dlg = new Chorus.UI.Clone.GetCloneFromInternetDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
 			{
@@ -107,7 +111,7 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void OnGetFromUsb(object sender, LinkLabelLinkClickedEventArgs e)
+		private void OnGetFromUsb(object sender, EventArgs e)
 		{
 			using (var dlg = new Chorus.UI.Clone.GetCloneFromUsbDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
 			{
@@ -123,41 +127,29 @@ namespace WeSay.ConfigTool
 			return Directory.GetFiles(directoryPath, "*.WeSayConfig").Length > 0;
 		}
 
-		private void AddOpenProjectChoices()
+		private void AddOpenProjectChoices(TableLayoutPanel panel)
 		{
-			bool haveProcessedTopMostProject = false;
 			int count = 0;
 			foreach (string path in Settings.Default.MruConfigFilePaths.Paths)
 			{
-				var item = new ListViewItem(Path.GetFileNameWithoutExtension(path), "wesayProject",
-																 _openExistingGroup);
-				item.Tag = path;
-			   // item.Font=new Font(listView1.Font,FontStyle.Bold);
-				listView1.Items.Add(item);
-				//item.Selected = true;
+				AddFileChoice(path, panel);
 				++count;
-				haveProcessedTopMostProject = true;
-				if (count > 3)
+				if (count > 2)
 					break;
 
 			}
-
-			var browseForProjectItem = new ListViewItem("Other...", "browse");
-			browseForProjectItem.Group = _openExistingGroup;
-			browseForProjectItem.Tag =
-				new LinkLabelLinkClickedEventHandler(openDifferentProject_LinkClicked);
-			listView1.Items.Add(browseForProjectItem);
+			AddChoice("Browse for other projects...", string.Empty, "browse", true, openDifferentProject_LinkClicked, panel);
 		}
 
-		private void openRecentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		private void openRecentProject_LinkClicked(object sender, EventArgs e)
 		{
 			if (OpenSpecifiedProject != null)
 			{
-				OpenSpecifiedProject.Invoke(((LinkLabel) sender).Tag as string);
+				OpenSpecifiedProject.Invoke(((Button) sender).Tag as string);
 			}
 		}
 
-		private void openDifferentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		private void openDifferentProject_LinkClicked(object sender, EventArgs e)
 		{
 			if (ChooseProjectClicked != null)
 			{
@@ -165,7 +157,7 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void createNewProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		private void createNewProject_LinkClicked(object sender, EventArgs e)
 		{
 			if (NewProjectClicked != null)
 			{
@@ -175,17 +167,10 @@ namespace WeSay.ConfigTool
 
 		private void WelcomeControl_Load(object sender, EventArgs e)
 		{
-//            if (flowLayoutPanel2.Controls.Count != 0)
-//            {
-//                flowLayoutPanel2.Controls[0].Focus();
-//            }
-//            else
-//            {
-//                openDifferentProject.Focus();
-//            }
+			LoadButtons();
 		}
 
-		private void OnCreateProjectFromFLEx_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		private void OnCreateProjectFromFLEx_LinkClicked(object sender, EventArgs e)
 		{
 			if (NewProjectFromFlexClicked != null)
 			{
@@ -193,69 +178,5 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void listView1_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if(_keyNavigationInProgress)
-				return;
-
-			_debounceListIndexChangedEvent.Enabled = true;
-		}
-
-		private void OnChooseItem()
-		{
-			if(listView1.SelectedItems.Count ==0)
-				return;
-			ListViewItem item = listView1.SelectedItems[0];
-			if(item==null)
-				return;
-			listView1.SelectedItems.Clear();//don't leave them selected
-
-			LinkLabelLinkClickedEventHandler handler = item.Tag as LinkLabelLinkClickedEventHandler;
-
-			if (handler == null)
-			{
-				string path = item.Tag as string;
-				if(path==null)
-					return;
-				if (OpenSpecifiedProject == null)
-					return;
-				OpenSpecifiedProject.Invoke(path);
-				return;
-			}
-
-			handler.Invoke(this, null);
-		}
-
-		/// <summary>
-		/// this lets us select items with the keyboard without acting like we clicked on them
-		/// </summary>
-		private void listView1_KeyDown(object sender, KeyEventArgs e)
-		{
-			_keyNavigationInProgress = true;
-		}
-
-		/// <summary>
-		/// this lets us select items with the keyboard without acting like we clicked on them
-		/// </summary>
-		private void listView1_KeyUp(object sender, KeyEventArgs e)
-		{
-			_keyNavigationInProgress = false;
-		}
-
-		private void listView1_KeyPress(object sender, KeyPressEventArgs e)
-		{
-			if (e.KeyChar == (char)Keys.Enter)
-			{
-				OnChooseItem();
-				e.Handled = true;
-			}
-
-		}
-
-		private void _debounceListIndexChangedEvent_Tick(object sender, EventArgs e)
-		{
-			_debounceListIndexChangedEvent.Enabled = false;
-			OnChooseItem();
-		}
 	}
 }
