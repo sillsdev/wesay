@@ -12,6 +12,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 	{
 		public ConfirmDelete()
 		{
+			Font = SystemFonts.MessageBoxFont;
 			InitializeComponent();
 		}
 
