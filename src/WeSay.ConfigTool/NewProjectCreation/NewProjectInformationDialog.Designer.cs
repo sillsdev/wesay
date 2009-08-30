@@ -70,6 +70,7 @@
 			this._whereLabel.Location = new System.Drawing.Point(17, 12);
 			this._whereLabel.Multiline = true;
 			this._whereLabel.Name = "_whereLabel";
+			this._whereLabel.ReadOnly = true;
 			this._whereLabel.Size = new System.Drawing.Size(373, 53);
 			this._whereLabel.TabIndex = 7;
 			this._whereLabel.Text = "Your project has been created here:\r\n{0}";
@@ -83,6 +84,7 @@
 			this.textBox2.Location = new System.Drawing.Point(17, 104);
 			this.textBox2.Multiline = true;
 			this.textBox2.Name = "textBox2";
+			this.textBox2.ReadOnly = true;
 			this.textBox2.Size = new System.Drawing.Size(373, 70);
 			this.textBox2.TabIndex = 8;
 			this.textBox2.Text = "The project is ready to use: just click on \"Open in WeSay\" button in the upper-ri" +
@@ -97,6 +99,7 @@
 			this._changeVMessage.Location = new System.Drawing.Point(17, 180);
 			this._changeVMessage.Multiline = true;
 			this._changeVMessage.Name = "_changeVMessage";
+			this._changeVMessage.ReadOnly = true;
 			this._changeVMessage.Size = new System.Drawing.Size(373, 57);
 			this._changeVMessage.TabIndex = 9;
 			this._changeVMessage.Text = "One important adjustment is to edit the \'v\' writing system, changing its ID to ma" +
@@ -121,8 +124,6 @@
 			this.ShowInTaskbar = false;
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.Text = "New Project Information";
-			this.Load += new System.EventHandler(this.FigureOutLabelSizes);
-			this.Resize += new System.EventHandler(this.FigureOutLabelSizes);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
