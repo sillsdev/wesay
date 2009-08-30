@@ -21,15 +21,6 @@ namespace WeSay.ConfigTool
 		private void BackupPlanControl_Load(object sender, EventArgs e)
 		{
 			string s = HgRepository.GetEnvironmentReadinessMessage("en");
-			if(string.IsNullOrEmpty(s))
-			{
-				_environmentNotReadyLabel.Visible = false;
-			}
-			else
-			{
-				_environmentNotReadyLabel.Visible = true;
-				_environmentNotReadyLabel.Text += s;
-			}
 
 			_pathText.Text = WeSayWordsProject.Project.BackupMaker.PathToParentOfRepositories;
 			WeSayWordsProject.Project.EditorsSaveNow += new EventHandler(OnEditorsSaveNow);

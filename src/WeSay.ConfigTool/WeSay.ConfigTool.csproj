@@ -154,6 +154,12 @@
 	<Compile Include="ActionsControl.Designer.cs">
 	  <DependentUpon>ActionsControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="ChorusControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ChorusControl.Designer.cs">
+	  <DependentUpon>ChorusControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="NewProjectCreation\NewProjectFromFLExDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -235,6 +241,10 @@
 	</EmbeddedResource>
 	<EmbeddedResource Include="BackupPlanControl.resx">
 	  <DependentUpon>BackupPlanControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="ChorusControl.resx">
+	  <DependentUpon>ChorusControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="NewProjectCreation\NewProjectFromFLExDialog.resx">

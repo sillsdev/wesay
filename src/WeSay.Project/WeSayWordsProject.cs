@@ -38,7 +38,6 @@ namespace WeSay.Project
 		private readonly Dictionary<string, OptionsList> _optionLists;
 		private string _pathToLiftFile;
 		private string _cacheLocationOverride;
-		private LiftUpdateService _liftUpdateService;
 
 		private readonly AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
@@ -430,6 +429,7 @@ namespace WeSay.Project
 			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
 
 			builder.Register<CheckinDescriptionBuilder>().SingletonScoped();
+			builder.Register<Chorus.sync.ProjectFolderConfiguration>(new WeSayChorusProjectConfiguration(Path.GetDirectoryName(PathToConfigFile))).SingletonScoped();
 			builder.Register<ChorusBackupMaker>().SingletonScoped();
 
 
@@ -484,6 +484,7 @@ namespace WeSay.Project
 			if (backupPlanNav == null)
 			{
 				//make sure we have a fresh copy with any defaults
+
 				BackupMaker = _container.Resolve<ChorusBackupMaker>();
 				return;
 			}
@@ -852,8 +853,7 @@ namespace WeSay.Project
 			{
 				if (String.IsNullOrEmpty(_pathToLiftFile))
 				{
-					_pathToLiftFile = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
-												   Path.GetFileName(ProjectDirectoryPath) + ".lift");
+					_pathToLiftFile = GetPathToLiftFileGivenProjectDirectory();
 				}
 				return _pathToLiftFile;
 			}
@@ -871,6 +871,26 @@ namespace WeSay.Project
 					// Directory.GetParent(value).Parent.FullName;
 				}
 			}
+		}
+
+		private string GetPathToLiftFileGivenProjectDirectory()
+		{
+			//first, we assume it's based on the name of the directory
+			var path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+										   Path.GetFileName(ProjectDirectoryPath) + ".lift");
+
+			//if that doesn't give us one, then we find one which has a matching wesayconfig file
+			if (!File.Exists(path))
+			{
+				foreach (var liftPath in Directory.GetFiles(ProjectDirectoryPath, "*.lift"))
+				{
+					if (File.Exists(liftPath.ToLower().Replace(".lift", ".WeSayConfig")))
+					{
+						return liftPath;
+					}
+				}
+			}
+			return path;
 		}
 
 		public string PathToLiftBackupDir
@@ -1027,12 +1047,7 @@ namespace WeSay.Project
 			set { _cacheLocationOverride = value; }
 		}
 
-		// todo: this can be removed?  cp
-		public LiftUpdateService LiftUpdateService
-		{
-			get { return _liftUpdateService; }
-			set { _liftUpdateService = value; }
-		}
+
 
 		public AddinSet Addins
 		{
@@ -1093,6 +1108,14 @@ namespace WeSay.Project
 			get { return _container; }
 		}
 
+		public static string NewProjectDirectory
+		{
+			get
+			{
+				return Path.Combine(
+				   Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WeSay");
+			}
+		}
 
 
 		public override void Save()

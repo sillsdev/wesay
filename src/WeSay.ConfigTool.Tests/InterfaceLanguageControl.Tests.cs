@@ -160,6 +160,7 @@ namespace WeSay.ConfigTool.Tests
 		private ComboBoxTester CreateNewAndGetLanguageCombo(string path)
 		{
 			_window = new ConfigurationWindow(new string[] {});
+			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 			_window.CreateAndOpenProject(path);
 			GoToUILanguageTab();
@@ -176,8 +177,7 @@ namespace WeSay.ConfigTool.Tests
 		private void OpenExisting(string path)
 		{
 			_window = new ConfigurationWindow(new string[] {});
-			_window.Show();
-			_window = new ConfigurationWindow(new string[] {});
+			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 			_window.OpenProject(path);
 		}

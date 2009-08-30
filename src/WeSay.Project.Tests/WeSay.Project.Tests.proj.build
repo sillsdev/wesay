@@ -46,6 +46,7 @@
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="Palaso.TestUtilities.dll" />
 				<include name="NetReflector.dll" />
+				<include name="LibChorus.dll" />
 				<include name="Chorus.exe" />
 			</references>
 			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
