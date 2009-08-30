@@ -100,7 +100,7 @@
 			this._changeVMessage.Multiline = true;
 			this._changeVMessage.Name = "_changeVMessage";
 			this._changeVMessage.ReadOnly = true;
-			this._changeVMessage.Size = new System.Drawing.Size(373, 57);
+			this._changeVMessage.Size = new System.Drawing.Size(373, 55);
 			this._changeVMessage.TabIndex = 9;
 			this._changeVMessage.Text = "One important adjustment is to edit the \'v\' writing system, changing its ID to ma" +
 				"tch the Ethnologue/ISO 693 code for this language.";
