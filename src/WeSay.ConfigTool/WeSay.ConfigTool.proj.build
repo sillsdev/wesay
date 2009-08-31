@@ -69,7 +69,7 @@
 				<include name="LexicalTools.dll" />
 				<include name="Enchant.Net.dll" />
 				<include name="Mono.Addins.exe" />
-				<include name="Chorus.exe" />
+				<include name="LibChorus.dll" />
 			</references>
 			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
 				<include name="${build.namespace.dir}/**/*.resources" />
