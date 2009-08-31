@@ -40,9 +40,14 @@ namespace WeSay.ConfigTool
 		private void _launchChorus_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{
 			var path = Path.Combine(DirectoryOfTheApplicationExecutable, "Chorus.exe");
+			var projectFolderPath = '"'+_projectFolderConfiguration.FolderPath+'"';
 			try
 			{
-				Process.Start(path, '"'+_projectFolderConfiguration.FolderPath+'"');
+#if MONO
+				Process.Start("mono", path + " " + projectFolderPath);
+#else
+				Process.Start(path, projectFolderPath);
+#endif
 			}
 			catch (Exception error)
 			{
