@@ -1,8 +1,8 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>9.0.21022</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{42FB4CC3-F2D1-4509-87DD-6BBD430CD4AB}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -172,13 +172,8 @@
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<None Include="buttonImage.png" />
-  </ItemGroup>
-  <ItemGroup>
+	<None Include="Resources\buttonImage.png" />
 	<None Include="Resources\emailAction.png" />
-	<Content Include="mercurial.bat">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
 	<None Include="Resources\greenSynchronize.png" />
 	<None Include="Resources\greenEmail.png" />
 	<None Include="Resources\greenUsbKey.png" />

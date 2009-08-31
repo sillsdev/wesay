@@ -69,6 +69,10 @@ namespace WeSay.App
 			{
 				Application.Exit();
 			}
+			if (_commandLineArguments.launchedByUnitTest)
+			{
+				WeSayWordsProject.PreventBackupForTests = true;  //hopefully will help the cross-process dictionary services tests to be more reliable
+			}
 		}
 
 		public bool ServerModeStartRequested
@@ -107,10 +111,6 @@ namespace WeSay.App
 					using (_dictionary =
 						   new DictionaryServiceProvider(GetLexEntryRepository(), this, _project))
 					{
-						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
-						{
-							RecoverUnsavedDataIfNeeded();
-						}
 
 						StartDictionaryServices();
 						_dictionary.LastClientDeregistered +=
@@ -151,6 +151,9 @@ namespace WeSay.App
 
 		private void WireUpChorusEvents()
 		{
+			if(WeSayWordsProject.PreventBackupForTests)
+				return;
+
 			//this is something of a hack... it seems weird to me that the app has the repository, but the project doesn't.
 			//maybe only the project should posses it.
 			_project.BackupMaker.Repository = GetLexEntryRepository();//needed so it can unlock the lift file as needed
@@ -164,24 +167,7 @@ namespace WeSay.App
 			_project.ConsiderSynchingOrBackingUp("checkpoint");
 		}
 
-		//!!! Move this into LexEntryRepository and maybe lower.
-		private void RecoverUnsavedDataIfNeeded()
-		{
-			if (!File.Exists(_project.PathToRepository))
-			{
-				return;
-			}
 
-			try
-			{
-				GetLexEntryRepository().BackendRecoverUnsavedChangesOutOfCacheIfNeeded();
-			}
-			catch (IOException e)
-			{
-				ErrorReport.ReportNonFatalException(e);
-				Thread.CurrentThread.Abort();
-			}
-		}
 
 		private void OnBringToFrontRequest(object sender, EventArgs e)
 		{
@@ -467,6 +453,12 @@ namespace WeSay.App
 							"Start without a user interface (will have no effect if WeSay is already running with a UI."
 					, LongName = "server", DefaultValue = false, ShortName = "")]
 			public bool startInServerMode;
+
+			[Argument(ArgumentTypes.AtMostOnce,
+			HelpText =
+					"Some things, like backup, just gum up automated tests.  This is used to turn them off."
+			, LongName = "launchedByUnitTest", DefaultValue = false, ShortName = "")]
+			public bool launchedByUnitTest;
 		}
 
 		private static void ShowCommandLineError(string e)

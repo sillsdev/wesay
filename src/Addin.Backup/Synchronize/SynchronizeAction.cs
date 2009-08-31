@@ -2,18 +2,16 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Chorus.UI.Sync;
-using Chorus.VcsDrivers;
 using Chorus.VcsDrivers.Mercurial;
 using Mono.Addins;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
-using WeSay.Project;
 
 namespace Addin.Backup
 {
 	[Extension]
-	public class SynchronizeAction : IWeSayAddin, IWeSayAddinHasSettings
+	public class SynchronizeAction : IWeSayAddin//, IWeSayAddinHasSettings
 	{
 		private SynchronizeSettings _settings;
 
@@ -94,7 +92,7 @@ namespace Addin.Backup
 
 				dlg.ShowDialog(parentForm);
 
-				if (dlg.SyncResult.DidGetChangesFromOthers)
+				if (dlg.SyncResult != null && dlg.SyncResult.DidGetChangesFromOthers)
 				{
 					Application.Restart();
 				}

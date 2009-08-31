@@ -92,7 +92,7 @@ namespace WeSay.ConfigTool
 			// labelVersion
 			//
 			this.labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.labelVersion.Location = new System.Drawing.Point(126, 38);
+			this.labelVersion.Location = new System.Drawing.Point(126, 29);
 			this.labelVersion.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
 			this.labelVersion.MaximumSize = new System.Drawing.Size(0, 17);
 			this.labelVersion.Name = "labelVersion";
@@ -115,7 +115,7 @@ namespace WeSay.ConfigTool
 			//
 			this.goWeSayOrg.AutoSize = true;
 			this.goWeSayOrg.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
-			this.goWeSayOrg.Location = new System.Drawing.Point(123, 76);
+			this.goWeSayOrg.Location = new System.Drawing.Point(123, 58);
 			this.goWeSayOrg.Name = "goWeSayOrg";
 			this.goWeSayOrg.Size = new System.Drawing.Size(60, 13);
 			this.goWeSayOrg.TabIndex = 25;
@@ -125,9 +125,9 @@ namespace WeSay.ConfigTool
 			//
 			// label1
 			//
-			this.label1.Location = new System.Drawing.Point(123, 152);
+			this.label1.Location = new System.Drawing.Point(123, 116);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(290, 104);
+			this.label1.Size = new System.Drawing.Size(290, 141);
 			this.label1.TabIndex = 26;
 			this.label1.Text = resources.GetString("label1.Text");
 			//

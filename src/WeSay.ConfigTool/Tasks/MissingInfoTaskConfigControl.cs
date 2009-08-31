@@ -19,8 +19,10 @@ namespace WeSay.ConfigTool.Tasks
 			_viewTemplate = viewTemplate;
 			InitializeComponent();
 
-			_showExampleField.Visible = Configuration.IncludesField(LexicalModel.LexExampleSentence.WellKnownProperties.ExampleSentence);
-			_showExampleField.Checked = Configuration.IncludesField(LexicalModel.LexExampleSentence.WellKnownProperties.Translation);
+			_showExampleFieldBox.Visible = Configuration.IncludesField(LexicalModel.LexExampleSentence.WellKnownProperties.ExampleSentence);
+			//these are separated to get the long label to show in mono
+			 _showExampleLabel.Visible = _showExampleFieldBox.Visible;
+			_showExampleFieldBox.Checked = Configuration.IncludesField(LexicalModel.LexExampleSentence.WellKnownProperties.Translation);
 		}
 		private MissingInfoConfiguration Configuration
 		{
@@ -32,7 +34,7 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void OnShowExampleField_CheckedChanged(object sender, EventArgs e)
 		{
-			Configuration.SetInclusionOfField(LexicalModel.LexExampleSentence.WellKnownProperties.Translation, _showExampleField.Checked);
+			Configuration.SetInclusionOfField(LexicalModel.LexExampleSentence.WellKnownProperties.Translation, _showExampleFieldBox.Checked);
 		}
 
 		private void MissingInfoTaskConfigControl_Load(object sender, EventArgs e)
@@ -62,6 +64,13 @@ namespace WeSay.ConfigTool.Tasks
 										   Configuration.WritingSystemsWhichAreRequired,
 										   "none");
 			}
+		}
+
+		private void MissingInfoTaskConfigControl_BackColorChanged(object sender, EventArgs e)
+		{
+			_showExampleLabel.BackColor = this.BackColor;
+			_requiredToBeFilledInLabel.BackColor = this.BackColor;
+			_matchWhenEmptyLabel.BackColor = this.BackColor;
 		}
 
 	}

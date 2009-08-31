@@ -12,7 +12,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 	{
 		public ConfirmDelete()
 		{
+			Font = SystemFonts.MessageBoxFont;
 			InitializeComponent();
+			textBox1.BackColor = this.BackColor;
 		}
 
 		private void deleteBtn_Click(object sender, EventArgs e)
@@ -27,5 +29,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this.Close();
 
 		}
+
+		private void ConfirmDelete_BackColorChanged(object sender, EventArgs e)
+		{
+			textBox1.BackColor = this.BackColor;
+		}
+
 	}
 }

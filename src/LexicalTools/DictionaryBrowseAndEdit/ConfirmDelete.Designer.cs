@@ -30,24 +30,14 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfirmDelete));
-			this.label1 = new System.Windows.Forms.Label();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.localizationHelper1 = new Palaso.UI.WindowsForms.i8n.LocalizationHelper(this.components);
 			this.deleteBtn = new System.Windows.Forms.Button();
 			this.cancelBtn = new System.Windows.Forms.Button();
+			this.textBox1 = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
-			//
-			// label1
-			//
-			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F);
-			this.label1.Location = new System.Drawing.Point(97, 24);
-			this.label1.MaximumSize = new System.Drawing.Size(250, 0);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(250, 65);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "This will permanently remove this entry.";
 			//
 			// pictureBox1
 			//
@@ -65,7 +55,7 @@
 			//
 			// deleteBtn
 			//
-			this.deleteBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.75F);
+			this.deleteBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
 			this.deleteBtn.Image = global::WeSay.LexicalTools.Properties.Resources.DeleteWord;
 			this.deleteBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.deleteBtn.Location = new System.Drawing.Point(116, 132);
@@ -80,7 +70,7 @@
 			// cancelBtn
 			//
 			this.cancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancelBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.75F);
+			this.cancelBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
 			this.cancelBtn.Location = new System.Drawing.Point(264, 132);
 			this.cancelBtn.Name = "cancelBtn";
 			this.cancelBtn.Size = new System.Drawing.Size(75, 33);
@@ -88,6 +78,22 @@
 			this.cancelBtn.Text = "&Cancel";
 			this.cancelBtn.UseVisualStyleBackColor = true;
 			this.cancelBtn.Click += new System.EventHandler(this.cancelBtn_Click);
+			//
+			// textBox1
+			//
+			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textBox1.Location = new System.Drawing.Point(116, 24);
+			this.textBox1.Multiline = true;
+			this.textBox1.Name = "textBox1";
+			this.textBox1.ReadOnly = true;
+			this.textBox1.Size = new System.Drawing.Size(223, 87);
+			this.textBox1.TabIndex = 4;
+			this.textBox1.TabStop = false;
+			this.textBox1.Text = "This will permanently remove this entry.";
 			//
 			// ConfirmDelete
 			//
@@ -98,14 +104,15 @@
 			this.CancelButton = this.cancelBtn;
 			this.ClientSize = new System.Drawing.Size(359, 177);
 			this.ControlBox = false;
+			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.cancelBtn);
 			this.Controls.Add(this.deleteBtn);
 			this.Controls.Add(this.pictureBox1);
-			this.Controls.Add(this.label1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "ConfirmDelete";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Confirm Delete";
+			this.BackColorChanged += new System.EventHandler(this.ConfirmDelete_BackColorChanged);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
@@ -115,10 +122,10 @@
 
 		#endregion
 
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private Palaso.UI.WindowsForms.i8n.LocalizationHelper localizationHelper1;
 		private System.Windows.Forms.Button deleteBtn;
 		private System.Windows.Forms.Button cancelBtn;
+		private System.Windows.Forms.TextBox textBox1;
 	}
 }

@@ -117,12 +117,13 @@
   <resheader name="writer">
 	<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
+  <data name="textBox1.Text" xml:space="preserve">
 	<value>This feature allows users to get a nice looking document, ready for printing, with just a single mouse click.  To enable this feature, you need to install the engine WeSay uses, something called PrinceXml.  If you use this feature for commerical purposes, you will need to get a license from the authors of PrinceXml.
 
 While PrinceXml itself is flexible and powerful, WeSay currently uses it for printouts using just the most common fields.  It is not our intention to re-invent the various existing (and forethcoming) publishing solutions... this feature is not likely to satisfy you when it comes to final publication.  Instead, it is intended as a quick way to get a draft printout at various stages of development.
 
 If you need something more extensive, please contact us.  We may be able to add something to WeSay, or we may suggest you consider making the printout using SIL's Lexique Pro or SIL's FieldWorks Language Explorer (both free, both for Windows only).
+
 </value>
   </data>
 </root>

@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Palaso.Reporting;
 using Palaso.Services;
 using Palaso.Services.Dictionary;
+using WeSay.Project;
 using WeSay.Project.Tests;
 
 namespace WeSay.App.Tests.Services
@@ -26,6 +27,7 @@ namespace WeSay.App.Tests.Services
 		public void Setup()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
+			WeSayWordsProject.PreventBackupForTests = true;
 		}
 
 		[TearDown]
@@ -378,7 +380,7 @@ namespace WeSay.App.Tests.Services
 			string arguments = '"' + projectDirectorySetup.PathToLiftFile + '"';
 			if (launchInServerMode)
 			{
-				arguments += " -server";
+				arguments += " -server -launchedByUnitTest";
 			}
 			ProcessStartInfo psi = new ProcessStartInfo(@"WeSay.App.exe", arguments);
 			Process p = Process.Start(psi);

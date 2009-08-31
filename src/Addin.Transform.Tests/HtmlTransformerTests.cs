@@ -64,6 +64,7 @@ namespace Addin.Transform.Tests
 //        [Test]
 //        public void CanGetXsltFromResource()
 //        {
+//
 //            ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin();
 //            string path = info.LocateFile("plift2html.xsl");
 //            if (!string.IsNullOrEmpty(path))
