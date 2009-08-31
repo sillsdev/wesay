@@ -73,6 +73,7 @@
 			this._whereLabel.ReadOnly = true;
 			this._whereLabel.Size = new System.Drawing.Size(373, 53);
 			this._whereLabel.TabIndex = 7;
+			this._whereLabel.TabStop = false;
 			this._whereLabel.Text = "Your project has been created here:\r\n{0}";
 			//
 			// textBox2
@@ -87,6 +88,7 @@
 			this.textBox2.ReadOnly = true;
 			this.textBox2.Size = new System.Drawing.Size(373, 70);
 			this.textBox2.TabIndex = 8;
+			this.textBox2.TabStop = false;
 			this.textBox2.Text = "The project is ready to use: just click on \"Open in WeSay\" button in the upper-ri" +
 				"ght.  Later, you can come back here and make adjustments.";
 			//
@@ -102,6 +104,7 @@
 			this._changeVMessage.ReadOnly = true;
 			this._changeVMessage.Size = new System.Drawing.Size(373, 55);
 			this._changeVMessage.TabIndex = 9;
+			this._changeVMessage.TabStop = false;
 			this._changeVMessage.Text = "One important adjustment is to edit the \'v\' writing system, changing its ID to ma" +
 				"tch the Ethnologue/ISO 693 code for this language.";
 			//
