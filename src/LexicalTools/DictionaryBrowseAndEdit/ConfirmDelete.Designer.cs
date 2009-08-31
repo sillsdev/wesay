@@ -89,8 +89,10 @@
 			this.textBox1.Location = new System.Drawing.Point(116, 24);
 			this.textBox1.Multiline = true;
 			this.textBox1.Name = "textBox1";
+			this.textBox1.ReadOnly = true;
 			this.textBox1.Size = new System.Drawing.Size(223, 87);
 			this.textBox1.TabIndex = 4;
+			this.textBox1.TabStop = false;
 			this.textBox1.Text = "This will permanently remove this entry.";
 			//
 			// ConfirmDelete
@@ -110,6 +112,7 @@
 			this.Name = "ConfirmDelete";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Confirm Delete";
+			this.BackColorChanged += new System.EventHandler(this.ConfirmDelete_BackColorChanged);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);

@@ -75,8 +75,10 @@
 			this._matchWhenEmptyLabel.Location = new System.Drawing.Point(17, 175);
 			this._matchWhenEmptyLabel.Multiline = true;
 			this._matchWhenEmptyLabel.Name = "_matchWhenEmptyLabel";
+			this._matchWhenEmptyLabel.ReadOnly = true;
 			this._matchWhenEmptyLabel.Size = new System.Drawing.Size(206, 42);
 			this._matchWhenEmptyLabel.TabIndex = 31;
+			this._matchWhenEmptyLabel.TabStop = false;
 			this._matchWhenEmptyLabel.Text = "Select items where any of the following writing systems are empty:";
 			//
 			// _requiredToBeFilledInLabel
@@ -86,8 +88,10 @@
 			this._requiredToBeFilledInLabel.Location = new System.Drawing.Point(17, 223);
 			this._requiredToBeFilledInLabel.Multiline = true;
 			this._requiredToBeFilledInLabel.Name = "_requiredToBeFilledInLabel";
+			this._requiredToBeFilledInLabel.ReadOnly = true;
 			this._requiredToBeFilledInLabel.Size = new System.Drawing.Size(206, 40);
 			this._requiredToBeFilledInLabel.TabIndex = 32;
+			this._requiredToBeFilledInLabel.TabStop = false;
 			this._requiredToBeFilledInLabel.Text = "And where at least one of the following writing systems is already filled in:";
 			//
 			// _showExampleLabel
@@ -99,8 +103,10 @@
 			this._showExampleLabel.Location = new System.Drawing.Point(38, 269);
 			this._showExampleLabel.Multiline = true;
 			this._showExampleLabel.Name = "_showExampleLabel";
+			this._showExampleLabel.ReadOnly = true;
 			this._showExampleLabel.Size = new System.Drawing.Size(365, 40);
 			this._showExampleLabel.TabIndex = 33;
+			this._showExampleLabel.TabStop = false;
 			this._showExampleLabel.Text = "Also show an editable translation field underneath the example";
 			//
 			// MissingInfoTaskConfigControl
