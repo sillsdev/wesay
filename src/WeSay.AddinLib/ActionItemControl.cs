@@ -142,7 +142,9 @@ namespace WeSay.AddinLib
 					using (XmlTextWriter writer = new FragmentXmlTextWriter(stringWriter))
 					{
 						writer.Formatting = Formatting.Indented;
-						serializer.Serialize(writer, settings);
+						XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+						ns.Add("", ""); //prevent writing namespaces
+						serializer.Serialize(writer, settings, ns);
 						writer.Close();
 					}
 					string settingsXml = builder.ToString();

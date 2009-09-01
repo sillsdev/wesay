@@ -61,8 +61,10 @@ namespace WeSay.Project
 
 		public void Save(XmlWriter writer)
 		{
+			XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+			ns.Add("", "");//don't add the silly namespace on the element
 			XmlSerializer serializer = new XmlSerializer(typeof(ChorusBackupMaker));
-			serializer.Serialize(writer, this);
+			serializer.Serialize(writer, this, ns);
 		}
 
 		public void BackupNow(string pathToProjectDirectory, string localizationLanguageId)
