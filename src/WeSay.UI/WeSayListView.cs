@@ -21,7 +21,7 @@ namespace WeSay.UI
 			AdjustColumnWidth();
 			SimulateListBox = true;
 			_itemsCache = new Dictionary<int, ListViewItem>();
-			_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+			_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
 		}
 
 		[DefaultValue(false)]
@@ -466,7 +466,7 @@ namespace WeSay.UI
 			ResumeLayout();
 		}
 
-		private int _SelectedIndexForUseBeforeSelectedIndicesAreInitialized;
+		private int _selectedIndexForUseBeforeSelectedIndicesAreInitialized;
 
 		[DefaultValue(-1)]
 		[Browsable(true)]
@@ -478,7 +478,7 @@ namespace WeSay.UI
 				{
 					return SelectedIndices[0];
 				}
-				return _SelectedIndexForUseBeforeSelectedIndicesAreInitialized;
+				return _selectedIndexForUseBeforeSelectedIndicesAreInitialized;
 			}
 			set
 			{
@@ -493,7 +493,7 @@ namespace WeSay.UI
 				}
 				if (value == -1)
 				{
-					_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+					_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
 					SelectedIndices.Clear();
 					_selectedItem = null;
 				}
@@ -508,13 +508,13 @@ namespace WeSay.UI
 					// this gets around that
 					if (SelectedIndices.Count == 0)
 					{
-						_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = value;
+						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = value;
 						OnSelectedIndexChanged(new EventArgs());
 					}
 					else
 					{
-						// done with it's usefulness
-						_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+						// done with its usefulness
+						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
 					}
 
 					_selectedItem = SelectedItem;
