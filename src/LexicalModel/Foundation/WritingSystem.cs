@@ -220,7 +220,21 @@ namespace WeSay.Foundation
 					return _font.Name;
 				}
 			}
-			set { _font = new Font(value, FontSize); }
+			set
+			{
+				try
+				{
+					_font = new Font(value, FontSize);
+				}
+				catch (Exception error)
+				{
+					//see http://www.wesay.org/issues/browse/WS-14949
+					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
+													"There is something odd about the font {0} on this computer.  WeSay will have to use the System default font instead."+Environment.NewLine+"The error was: {1}",
+													value, error.Message);
+					_font = new Font(SystemFonts.DefaultFont.FontFamily, FontSize);
+				}
+			}
 		}
 
 		[Browsable(false)]
