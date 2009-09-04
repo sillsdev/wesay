@@ -230,7 +230,7 @@ namespace WeSay.Foundation
 				{
 					//see http://www.wesay.org/issues/browse/WS-14949
 #if MONO
-					const string var hint = String.Empty;
+					const string hint = "";
 #else
 					const string hint = "You may be able to repair the font: by drag it to your desktop, right-click on it, tell it to install, in the meantime, ";
 #endif

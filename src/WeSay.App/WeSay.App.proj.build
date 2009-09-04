@@ -60,6 +60,7 @@
 				<include name="Palaso.dll" />
 				<include name="Palaso.Services.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
+				<include name="LiftIO.dll" />
 				<include name="WeSay.Data.dll" />
 				<include name="WeSay.Foundation.dll" />
 				<include name="WeSay.Project.dll" />
