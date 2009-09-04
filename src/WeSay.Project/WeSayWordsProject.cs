@@ -251,7 +251,14 @@ namespace WeSay.Project
 				//ProjectDirectoryPath = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
 				ProjectDirectoryPath = Directory.GetParent(liftPath).FullName;
 
-				LoadFromProjectDirectoryPath(ProjectDirectoryPath);
+				try
+				{
+					LoadFromProjectDirectoryPath(ProjectDirectoryPath);
+				}
+				catch (LiftFormatException e)
+				{
+					return false;//it's already been reported, not a crash, but we can't go on
+				}
 				return true;
 			}
 			catch (ConfigurationException e)
@@ -376,7 +383,7 @@ namespace WeSay.Project
 				  }
 				  catch(Exception error)
 				  {
-					  throw error;
+					   throw error;
 				  }
 			  });
 

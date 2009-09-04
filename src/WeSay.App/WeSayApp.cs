@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Autofac;
 using CommandLine;
+using LiftIO;
 using Palaso.Reporting;
 using Palaso.Services;
 using Palaso.Services.Dictionary;
@@ -108,8 +109,18 @@ namespace WeSay.App
 					}
 
 
+					LexEntryRepository repository;
+					try
+					{
+						repository = GetLexEntryRepository();
+					}
+					catch (LiftFormatException)
+					{
+						return;//couldn't load, and we've already told the user
+					}
+
 					using (_dictionary =
-						   new DictionaryServiceProvider(GetLexEntryRepository(), this, _project))
+						   new DictionaryServiceProvider(repository, this, _project))
 					{
 						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
 						{

@@ -41,7 +41,7 @@ namespace Palaso.Lift
 				MigrateLiftIfNeeded(progressState);
 				LoadAllLexEntries();
 			}
-			catch (Exception)
+			catch (Exception error)
 			{
 				// Dispose anything that we've created already.
 				_backend.Dispose();
