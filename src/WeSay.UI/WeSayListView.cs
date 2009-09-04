@@ -248,6 +248,18 @@ namespace WeSay.UI
 			base.OnItemSelectionChanged(e);
 			_selectedItem = SelectedItem;
 			OnSelectedIndexChanged(new EventArgs());
+
+			//jh sept 2009 to help with WS-14934 (cambell) Dictionary word list scrolls unnecessarily when editing headword
+			//it'd be better to not scroll, but this occurs to me as a quick way to at least keep it from scrolling to the bottom
+			if (e.Item != null && e.ItemIndex > 0 && Items.Count>0)
+			{
+				var numberToShowBelowSelectedOne = 10;// NB: if the number is too large (more than fits onthe screen), it will simply
+				//make our selected one be at the top of the list, which isn't so bad.
+				int lastOneToShow = Math.Min(Items.Count - 1, e.ItemIndex + numberToShowBelowSelectedOne);
+				Items[lastOneToShow].EnsureVisible();
+				//enhance... figure out where the middle would be, and the arrange for the selected item to be in the middle
+				//this.Height / e.Item.Font.Height
+			}
 		}
 
 		#region extend hot click area to simulate list box behavior
