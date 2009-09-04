@@ -220,7 +220,26 @@ namespace WeSay.Foundation
 					return _font.Name;
 				}
 			}
-			set { _font = new Font(value, FontSize); }
+			set
+			{
+				try
+				{
+					_font = new Font(value, FontSize);
+				}
+				catch (Exception error)
+				{
+					//see http://www.wesay.org/issues/browse/WS-14949
+#if MONO
+					const string var hint = String.Empty;
+#else
+					const string hint = "You may be able to repair the font: by drag it to your desktop, right-click on it, tell it to install, in the meantime, ";
+#endif
+					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
+													"There is a problem with the font {0} on this computer. {1} WeSay will have to use the System default font instead."+Environment.NewLine+"The error was: {2}",
+													value, hint, error.Message);
+					_font = new Font(SystemFonts.DefaultFont.FontFamily, FontSize);
+				}
+			}
 		}
 
 		[Browsable(false)]
