@@ -103,7 +103,12 @@ namespace WeSay.ConfigTool
 
 		private void OnGetFromInternet(object sender, EventArgs e)
 		{
-		   using (var dlg = new Chorus.UI.Clone.GetCloneFromInternetDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
+			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
+			{
+				//e.g. mydocuments/wesay
+				Directory.CreateDirectory(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
+			}
+			using (var dlg = new Chorus.UI.Clone.GetCloneFromInternetDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;

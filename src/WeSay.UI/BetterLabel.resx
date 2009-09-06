@@ -117,19 +117,7 @@
   <resheader name="writer">
 	<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-	<value>17, -47</value>
+  <metadata name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+	<value>False</value>
   </metadata>
-  <data name="betterLabel2.Text" xml:space="preserve">
-	<value>Second, you need to have regular backups that are stored away from the computer.  This is to guard against loss of data by theft, fire, or natural catastrophe.  First, enable the Send/Recieve action button, which will automatically create full historical backups on a usb key.  So get several of them and train the WeSay user to rotate them on some regular basis, clicking the Send/Receive button to make the backup.</value>
-  </data>
-  <data name="betterLabel1.Text" xml:space="preserve">
-	<value>We recommend a two-part backup strategy:
-
-First, purchase a media card that you can insert into the computer and leave permanently installed.  This can be a SD card or a Compact flash card, if the computer has a slot for that, or something based on a PC-Card for older laptops.  For a desktop without any such slots, an alternative is a second hard drive or permantenty plugged-in usb key.This will protect you data from hard drive failure.
-
-Enter the location of the backup media here:
-
-</value>
-  </data>
 </root>
