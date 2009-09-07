@@ -36,6 +36,7 @@
 		<include name="Palaso.dll" />
 		<include name="Palaso.TestUtilities.dll" />
 		<include name="WeSay.Project.dll" />
+		<include name="WeSay.Project.Tests.dll" />
 		<include name="WeSay.ConfigTool.exe" />
 		<include name="LexicalModel.dll" />
 		<include name="WeSay.Foundation.dll" />
