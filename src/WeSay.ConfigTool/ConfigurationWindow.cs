@@ -228,6 +228,10 @@ namespace WeSay.ConfigTool
 			}
 		}
 
+		/// <summary>
+		///
+		/// </summary>
+		/// <returns>true if the project was sucessfully opend</returns>
 		public bool OpenProject(string path)
 		{
 			//System.Configuration.ConfigurationManager.AppSettings["LastConfigFilePath"] = path;
