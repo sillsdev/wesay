@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace WeSay.UI
@@ -10,17 +11,32 @@ namespace WeSay.UI
 	/// </summary>
 	public partial class BetterLabel : TextBox
 	{
-		public BetterLabel():base()
+		public BetterLabel()
 		{
-			Font = SystemFonts.MessageBoxFont;
 			InitializeComponent();
 		}
 
 		//make it transparent
 		private void BetterLabel_ParentChanged(object sender, System.EventArgs e)
 		{
-			BackColor = Parent.BackColor;
-			Parent.BackColorChanged += ((x, y) => BackColor = Parent.BackColor);
+			try
+			{
+				if (DesignMode)
+					return;
+				BackColor = Parent.BackColor;
+				Parent.BackColorChanged += ((x, y) => BackColor = Parent.BackColor);
+			}
+			catch (Exception error)
+			{
+				//trying to harden this against the mysteriously disappearing from a host designer
+			}
+		}
+
+
+		private void BetterLabel_TextChanged(object sender, System.EventArgs e)
+		{
+			//this is apparently dangerous to do in the constructor
+			Font = SystemFonts.MessageBoxFont;
 		}
 
 	}
