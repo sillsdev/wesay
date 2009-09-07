@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				//_recordsListBox.Leave -= _recordsListBox_Leave;
 				//_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
 
-				_findText.KeyDown -= _findText_KeyDown;
+				_searchBox.KeyDown -= _findText_KeyDown;
 			}
 			if (disposing && (components != null))
 			{
@@ -47,9 +47,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this.components = new System.ComponentModel.Container();
 			this.panelWordList = new System.Windows.Forms.Panel();
 			this._btnFind = new System.Windows.Forms.Button();
-			this._findText = new WeSay.UI.AutoCompleteTextBox.WeSayAutoCompleteTextBox();
+			this._searchBox = new WeSay.UI.AutoCompleteTextBox.WeSayAutoCompleteTextBox();
 			this._writingSystemChooser = new System.Windows.Forms.Button();
-			this._findWritingSystemId = new System.Windows.Forms.Label();
+			this._selectedWritingSystemLabel = new System.Windows.Forms.Label();
 			this._recordsListBox = new WeSay.UI.WeSayListView();
 			this.panelTools = new System.Windows.Forms.Panel();
 			this._showAllFieldsToggleButton = new System.Windows.Forms.Button();
@@ -67,9 +67,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			// panelWordList
 			//
 			this.panelWordList.Controls.Add(this._btnFind);
-			this.panelWordList.Controls.Add(this._findText);
+			this.panelWordList.Controls.Add(this._searchBox);
 			this.panelWordList.Controls.Add(this._writingSystemChooser);
-			this.panelWordList.Controls.Add(this._findWritingSystemId);
+			this.panelWordList.Controls.Add(this._selectedWritingSystemLabel);
 			this.panelWordList.Controls.Add(this._recordsListBox);
 			this.panelWordList.Dock = System.Windows.Forms.DockStyle.Left;
 			this.panelWordList.Location = new System.Drawing.Point(0, 0);
@@ -80,7 +80,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			// _btnFind
 			//
 			this._btnFind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this._btnFind.BackColor = this._findText.BackColor;
+			this._btnFind.BackColor = this._searchBox.BackColor;
 			this._btnFind.FlatAppearance.BorderSize = 0;
 			this._btnFind.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
 			this._btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -92,33 +92,33 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this._btnFind.UseVisualStyleBackColor = false;
 			this._btnFind.Click += new System.EventHandler(this.OnFind_Click);
 			//
-			// _findText
+			// _searchBox
 			//
-			this._findText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			this._searchBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._findText.BackColor = System.Drawing.Color.White;
-			this._findText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this._findText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._findText.IsSpellCheckingEnabled = false;
-			this._findText.Location = new System.Drawing.Point(24, 3);
-			this._findText.Multiline = true;
-			this._findText.MultiParagraph = false;
-			this._findText.Name = "_findText";
-			this._findText.PopupBorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this._findText.PopupOffset = new System.Drawing.Point(0, 0);
-			this._findText.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
-			this._findText.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			this._findText.PopupWidth = 200;
-			this._findText.SelectedItem = null;
-			this._findText.Size = new System.Drawing.Size(80, 22);
-			this._findText.TabIndex = 1;
-			this._findText.WordWrap = false;
-			this._findText.AutoCompleteChoiceSelected += new System.EventHandler(this._findText_AutoCompleteChoiceSelected);
+			this._searchBox.BackColor = System.Drawing.Color.White;
+			this._searchBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this._searchBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._searchBox.IsSpellCheckingEnabled = false;
+			this._searchBox.Location = new System.Drawing.Point(24, 3);
+			this._searchBox.Multiline = true;
+			this._searchBox.MultiParagraph = false;
+			this._searchBox.Name = "_searchBox";
+			this._searchBox.PopupBorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this._searchBox.PopupOffset = new System.Drawing.Point(0, 0);
+			this._searchBox.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
+			this._searchBox.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			this._searchBox.PopupWidth = 200;
+			this._searchBox.SelectedItem = null;
+			this._searchBox.Size = new System.Drawing.Size(80, 22);
+			this._searchBox.TabIndex = 1;
+			this._searchBox.WordWrap = false;
+			this._searchBox.AutoCompleteChoiceSelected += new System.EventHandler(this._findText_AutoCompleteChoiceSelected);
 			//
 			// _writingSystemChooser
 			//
 			this._writingSystemChooser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this._writingSystemChooser.BackColor = this._findText.BackColor;
+			this._writingSystemChooser.BackColor = this._searchBox.BackColor;
 			this._writingSystemChooser.FlatAppearance.BorderSize = 0;
 			this._writingSystemChooser.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
 			this._writingSystemChooser.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -130,18 +130,18 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this._writingSystemChooser.UseVisualStyleBackColor = false;
 			this._writingSystemChooser.Click += new System.EventHandler(this.OnWritingSystemChooser_Click);
 			//
-			// _findWritingSystemId
+			// _selectedWritingSystemLabel
 			//
-			this._findWritingSystemId.BackColor = System.Drawing.Color.White;
-			this._findWritingSystemId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-			this._findWritingSystemId.ForeColor = System.Drawing.Color.LightGray;
-			this._findWritingSystemId.Location = new System.Drawing.Point(4, 3);
-			this._findWritingSystemId.Name = "_findWritingSystemId";
-			this._findWritingSystemId.Size = new System.Drawing.Size(20, 19);
-			this._findWritingSystemId.TabIndex = 6;
-			this._findWritingSystemId.Text = "en";
-			this._findWritingSystemId.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this._findWritingSystemId.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnFindWritingSystemId_MouseClick);
+			this._selectedWritingSystemLabel.BackColor = System.Drawing.Color.White;
+			this._selectedWritingSystemLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+			this._selectedWritingSystemLabel.ForeColor = System.Drawing.Color.LightGray;
+			this._selectedWritingSystemLabel.Location = new System.Drawing.Point(4, 3);
+			this._selectedWritingSystemLabel.Name = "_selectedWritingSystemLabel";
+			this._selectedWritingSystemLabel.Size = new System.Drawing.Size(20, 19);
+			this._selectedWritingSystemLabel.TabIndex = 6;
+			this._selectedWritingSystemLabel.Text = "en";
+			this._selectedWritingSystemLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this._selectedWritingSystemLabel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnFindWritingSystemId_MouseClick);
 			//
 			// _recordsListBox
 			//
@@ -291,10 +291,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private Button _btnDeleteWord;
 		private Button _btnNewWord;
 		private Button _btnFind;
-		private WeSayAutoCompleteTextBox _findText;
+		private WeSayAutoCompleteTextBox _searchBox;
 		private Button _writingSystemChooser;
 		private CollapsibleSplitter _splitter;
-		private Label _findWritingSystemId;
+		private Label _selectedWritingSystemLabel;
 		private Button _showAllFieldsToggleButton;
 		private ToolTip toolTip1;
 

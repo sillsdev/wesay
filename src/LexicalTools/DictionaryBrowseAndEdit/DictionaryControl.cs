@@ -24,7 +24,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly ILogger _logger;
-		private readonly ContextMenu _cmWritingSystems;
+		private readonly ContextMenu _writingSystemsMenu;
 		private WritingSystem _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
 		private ResultSet<LexEntry> _records;
@@ -51,7 +51,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_viewTemplate = viewTemplate;
 			_logger = logger;
 			_lexEntryRepository = lexEntryRepository;
-			_cmWritingSystems = new ContextMenu();
+			_writingSystemsMenu = new ContextMenu();
 
 			SetupPickerControlWritingSystems();
 
@@ -70,13 +70,13 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			Control_EntryDetailPanel.LexEntryRepository = _lexEntryRepository;
 
 			_findTextAdapter = new ResultSetToListOfStringsAdapter("Form", _records);
-			_findText.Items = _findTextAdapter;
+			_searchBox.Items = _findTextAdapter;
 
 			SetListWritingSystem(
 					_viewTemplate.GetDefaultWritingSystemForField(
 							Field.FieldNames.EntryLexicalForm.ToString()));
 
-			_findText.KeyDown += _findText_KeyDown;
+			_searchBox.KeyDown += _findText_KeyDown;
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
 
 			_splitter.SetMemory(memory);
@@ -123,7 +123,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
-			_findWritingSystemId.ForeColor = DisplaySettings.Default.WritingSystemLabelColor;
+			_selectedWritingSystemLabel.ForeColor = DisplaySettings.Default.WritingSystemLabelColor;
 		}
 
 		private void SetupPickerControlWritingSystems()
@@ -162,15 +162,15 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			MenuItem item =
 					new MenuItem(writingSystem.Abbreviation + "\t" + StringCatalog.Get(field.DisplayName),
-								 OnCmWritingSystemClicked);
+								 OnWritingSystemMenuItemClicked);
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
-			_cmWritingSystems.MenuItems.Add(item);
+			_writingSystemsMenu.MenuItems.Add(item);
 		}
 
 		private bool WritingSystemExistsInPicker(WritingSystem writingSystem)
 		{
-			foreach (MenuItem item in _cmWritingSystems.MenuItems)
+			foreach (MenuItem item in _writingSystemsMenu.MenuItems)
 			{
 				if (writingSystem.Id == ((WritingSystem) item.Tag).Id)
 				{
@@ -189,6 +189,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		public void SetListWritingSystem(WritingSystem writingSystem)
 		{
+			Guard.AgainstNull(writingSystem,"writingSystem");
 			if (writingSystem == null)
 			{
 				throw new ArgumentNullException();
@@ -200,6 +201,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_listWritingSystem = writingSystem;
 
 			LoadRecords();
+
+			_recordsListBox.RetrieveVirtualItem -= OnRetrieveVirtualItemEvent;
 			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
 
 			//WHy was this here (I'm (JH) scared to remove it)?
@@ -207,34 +210,38 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			// to the first one, then later set it to the one we actually want.
 			//  SetRecordToBeEdited(CurrentRecord);
 
-
 			_recordsListBox.WritingSystem = _listWritingSystem;
 
-			int originalHeight = _findText.Height;
-			_findText.ItemFilterer = FindClosestAndNextClosestAndPrefixedForms;
-			_findText.Items = _findTextAdapter;
-			_findText.WritingSystem = _listWritingSystem;
+			ConfigureSearchBox();
+		}
 
-			_findWritingSystemId.Text = _listWritingSystem.Abbreviation;
-			int width = _findWritingSystemId.Width;
-			_findWritingSystemId.AutoSize = false;
-			_findWritingSystemId.Size = new Size(Math.Min(width, 25), _findText.Height);
-			int heightDifference = _findText.Height - originalHeight;
+		private void ConfigureSearchBox()
+		{
+			int originalHeight = _searchBox.Height;
+			_searchBox.ItemFilterer = FindClosestAndNextClosestAndPrefixedForms;
+			_searchBox.Items = _findTextAdapter;
+			_searchBox.WritingSystem = _listWritingSystem;
+
+			_selectedWritingSystemLabel.Text = _listWritingSystem.Abbreviation;
+			int width = _selectedWritingSystemLabel.Width;
+			_selectedWritingSystemLabel.AutoSize = false;
+			_selectedWritingSystemLabel.Size = new Size(Math.Min(width, 25), _searchBox.Height);
+			int heightDifference = _searchBox.Height - originalHeight;
 
 			_recordsListBox.SetBounds(_recordsListBox.Bounds.X,
 									  _recordsListBox.Bounds.Y + heightDifference,
 									  _recordsListBox.Bounds.Width,
 									  _recordsListBox.Bounds.Height - heightDifference);
 
-			_btnFind.Height = _findText.Height;
-			_writingSystemChooser.Height = _findText.Height;
+			_btnFind.Height = _searchBox.Height;
+			_writingSystemChooser.Height = _searchBox.Height;
 			_btnFind.Image = Resources.Find.GetThumbnailImage(_btnFind.Width - 2,
 															  _btnFind.Width - 2,
 															  ReturnFalse,
 															  IntPtr.Zero);
 
 			_btnFind.Left = _writingSystemChooser.Left - _btnFind.Width;
-			_findText.Width = _btnFind.Left - _findText.Left;
+			_searchBox.Width = _btnFind.Left - _searchBox.Left;
 		}
 
 		private void SetRecordToBeEdited(LexEntry record)
@@ -289,13 +296,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 			{
 				_records = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(_listWritingSystem);
-				_findTextAdapter.Items = _records;
 			}
 			else
 			{
 				_records = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(_listWritingSystem);
-				_findTextAdapter.Items = _records;
 			}
+			 _findTextAdapter.Items = _records;
 			_recordsListBox.DataSource = (BindingList<RecordToken<LexEntry>>) _records;
 		}
 
@@ -312,12 +318,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				//!!! TODO: Get the correct font from the respective writingsystem and maybe put the writingsystem id behind the form!! --TA 8.9.08
 			}
 
-			bool writingSystemUsedInLexicalForm =
-					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id);
 			if (string.IsNullOrEmpty(displayString))
 			{
 				displayString = "(";
-				if (writingSystemUsedInLexicalForm)
+				if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 				{
 					displayString += StringCatalog.Get("~Empty",
 													   "This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.");
@@ -342,7 +346,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 													   ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
 		}
 
-		private void OnCmWritingSystemClicked(object sender, EventArgs e)
+		private void OnWritingSystemMenuItemClicked(object sender, EventArgs e)
 		{
 			MenuItem item = (MenuItem) sender;
 			if (_listWritingSystem != item.Tag)
@@ -355,11 +359,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			Logger.WriteMinorEvent("WritingSystemChooser_Click");
 
-			foreach (MenuItem menuItem in _cmWritingSystems.MenuItems)
+			foreach (MenuItem menuItem in _writingSystemsMenu.MenuItems)
 			{
 				menuItem.Checked = (_listWritingSystem == menuItem.Tag);
 			}
-			_cmWritingSystems.Show(_writingSystemChooser,
+			_writingSystemsMenu.Show(_writingSystemChooser,
 								   new Point(_writingSystemChooser.Width,
 											 _writingSystemChooser.Height));
 		}
@@ -367,7 +371,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void OnFindWritingSystemId_MouseClick(object sender, MouseEventArgs e)
 		{
 			Logger.WriteMinorEvent("FindWritingSystemId_MouseClick");
-			_findText.Focus();
+			_searchBox.Focus();
 		}
 
 		// primarily for testing
@@ -378,20 +382,20 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			{
 				e.Handled = true;
 				e.SuppressKeyPress = true; // otherwise it beeps!
-				SelectItemWithDisplayString(_findText.Text);
+				SelectItemWithDisplayString(_searchBox.Text);
 			}
 		}
 
 		private void _findText_AutoCompleteChoiceSelected(object sender, EventArgs e)
 		{
-			SelectItemWithDisplayString(_findText.Text);
+			SelectItemWithDisplayString(_searchBox.Text);
 		}
 
 		private void OnFind_Click(object sender, EventArgs e)
 		{
 			Logger.WriteMinorEvent("FindButton_Click");
 
-			SelectItemWithDisplayString(_findText.Text);
+			SelectItemWithDisplayString(_searchBox.Text);
 		}
 
 
@@ -477,7 +481,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			//We could solve this by using an accelerator
 			if (keyData == (Keys.Control | Keys.N))
 			{
-				bool FocusWasOnFindTextBox = _findText.Focused;
+				bool FocusWasOnFindTextBox = _searchBox.Focused;
 				_btnNewWord.Focus(); //this is necassary to cause TextBinding to update it's multitext
 				AddNewWord(FocusWasOnFindTextBox);
 				return true;
@@ -485,14 +489,14 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 			if (keyData == (Keys.Control | Keys.F))
 			{
-				if (!_findText.Focused)
+				if (!_searchBox.Focused)
 				{
-					_findText.Focus();
-					_findText.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
+					_searchBox.Focus();
+					_searchBox.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
 				}
 				else
 				{
-					SelectItemWithDisplayString(_findText.Text);
+					SelectItemWithDisplayString(_searchBox.Text);
 				}
 
 				return true;
@@ -517,10 +521,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				LexEntry entry = this._lexEntryRepository.CreateItem();
 				//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 				//_recordListBoxActive = true; // allow onRecordSelectionChanged
-				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(_findText.Text) &&
+				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(_searchBox.Text) &&
 					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 				{
-					entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
+					entry.LexicalForm[_listWritingSystem.Id] = _searchBox.Text.Trim();
 					_lexEntryRepository.SaveItem(entry);
 				}
 				//review: Revert (remove) below for WS-950
