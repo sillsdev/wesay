@@ -324,6 +324,9 @@ namespace WeSay.UI.TextBoxes
 			Control control;
 			if (writingSystem.IsAudio)
 			{
+#if MONO
+				return null;
+#endif
 				if (_serviceProvider == null)
 				{
 					//no, better to just omit it.  throw new ConfigurationException("WeSay cannot handle yet audio in this task.");
