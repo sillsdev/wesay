@@ -313,7 +313,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private void GoToLexicalEntryUseFind(string lexemeForm)
 		{
-			TextBoxTester t = new TextBoxTester("_findText", _window);
+			TextBoxTester t = new TextBoxTester("_searchBox", _window);
 			t.Enter(lexemeForm);
 			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
@@ -523,7 +523,7 @@ namespace WeSay.LexicalTools.Tests
 		public void EmptyDictionary_EnterText_PressFindButton_NoCrash()
 		{
 			StartWithEmpty();
-			TextBoxTester t = new TextBoxTester("_findText", _window);
+			TextBoxTester t = new TextBoxTester("_searchBox", _window);
 			t.Enter("blah");
 			ButtonTester b = new ButtonTester("_btnFind", _window);
 			b.Click();
@@ -825,7 +825,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FindText_EnterTextThenPressFindButton_Finds()
 		{
 			AddInitialEntries();
-			TextBoxTester t = new TextBoxTester("_findText", _window);
+			TextBoxTester t = new TextBoxTester("_searchBox", _window);
 			t.Enter("Secondary");
 			ClickFindButton();
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
@@ -840,7 +840,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FindText_EnterTextOneCharacterAtATime_DoesNotThrow()
 		{
 			AddInitialEntries();
-			TextBoxTester t = new TextBoxTester("_findText", _window);
+			TextBoxTester t = new TextBoxTester("_searchBox", _window);
 			//This is a beter test but gives a cryptic error message
 			//KeyboardController keyboardController = new KeyboardController(t);
 			//t.Properties.Focus();
@@ -858,7 +858,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FindText_Enter_Finds()
 		{
 			AddInitialEntries();
-			TextBoxTester t = new TextBoxTester("_findText", _window);
+			TextBoxTester t = new TextBoxTester("_searchBox", _window);
 			t.Enter("Secondary");
 			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
@@ -871,7 +871,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FindText_EnterWordNotInDictionaryThenPressCtrlN_AddsWordInFindText()
 		{
 			AddInitialEntries();
-			TextBoxTester t = new TextBoxTester("_findText", _window);
+			TextBoxTester t = new TextBoxTester("_searchBox", _window);
 			EnterWordAndPressCtrlN(t, "NewWord", true);
 
 			VerifySelectedWordIs("NewWord");
@@ -901,7 +901,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FindText_EnterWordInDictionaryThenPressCtrlN_AddsWordInFindTextSoTwoEntries()
 		{
 			AddInitialEntries();
-			TextBoxTester t = new TextBoxTester("_findText", _window);
+			TextBoxTester t = new TextBoxTester("_searchBox", _window);
 			t.Enter("Secondary");
 			Application.DoEvents();
 			PressCtrlN(t, true);
@@ -916,7 +916,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FindText_EnterWordInFindBoxThenPressCtrlN_FindTextAppearsAsLexicalFormInNewEntry()
 		{
 			AddInitialEntries();
-			TextBoxTester t = new TextBoxTester("_findText", _window);
+			TextBoxTester t = new TextBoxTester("_searchBox", _window);
 			EnterWordAndPressCtrlN(t, "Show Me In LexicalForm Field", true);
 
 			t = new TextBoxTester(GetLexicalFormControlName(), _window);
@@ -927,7 +927,7 @@ namespace WeSay.LexicalTools.Tests
 		public void NewWord_FindTextNotInDictionary_CreatesNewEmptyWord()
 		{
 			AddInitialEntries();
-			TextBoxTester t = new TextBoxTester("_findText", _window);
+			TextBoxTester t = new TextBoxTester("_searchBox", _window);
 			t.Enter("NewWord");
 
 			ClickAddWord();
@@ -944,7 +944,7 @@ namespace WeSay.LexicalTools.Tests
 		public void NewWord_FindTextInDictionary_CreatesNewEmptyWord()
 		{
 			AddInitialEntries();
-			TextBoxTester t = new TextBoxTester("_findText", _window);
+			TextBoxTester t = new TextBoxTester("_searchBox", _window);
 			t.Enter("Secondary");
 			Application.DoEvents();
 			ClickAddWord();
