@@ -7,6 +7,7 @@ using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.LexicalModel.Foundation.Options;
 #if MONO
 using Palaso.Linq;
@@ -57,7 +58,8 @@ namespace WeSay.LexicalModel
 			#if DEBUG
 			_constructionStackTrace = new StackTrace();
 			#endif
-			_decoratedDataMapper = new WeSayLiftDataMapper(path, null, new ProgressState());
+			_decoratedDataMapper = new WeSayLiftDataMapper(path, null, new ProgressState(),
+				new WeSayLiftReaderWriterProvider(new ProgressState(), new OptionsList(), new string[] { }));
 			_disposed = false;
 		}
 

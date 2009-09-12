@@ -669,7 +669,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void ExpectedAtomicTraitOnEntry()
 		{
-			_builder.ExpectedOptionTraits.Add("flub");
+			_builder.ExpectedOptionTraits = new string[]{"flub"};
 			LexEntry e = MakeSimpleEntry();
 			_builder.MergeInTrait(e, new Trait("flub", "dub"));
 			Assert.AreEqual(1, e.Properties.Count);

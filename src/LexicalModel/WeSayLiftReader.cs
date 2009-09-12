@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using LiftIO.Parsing;
 using LiftIO.Validation;
 using Palaso.Data;
@@ -16,10 +17,16 @@ namespace WeSay.LexicalModel
 		private readonly ProgressState _progressState;
 		private readonly OptionsList _semanticDomainsList; // Review: how is this used in LexEntryFromLiftBuilder.
 
-		public WeSayLiftReader(ProgressState progressState, OptionsList semanticDomainsList)
+		/// <summary>
+		/// the lift format puts all options in "<trait/>", so we need this to know when we have an optioncollection and when it's a single option field</param>
+		/// </summary>
+		private readonly IEnumerable<string> _idsOfSingleOptionFields;
+
+		 public WeSayLiftReader(ProgressState progressState, OptionsList semanticDomainsList, IEnumerable<string>  namesOfSingleOptionFields)
 		{
 			_progressState = progressState;
 			_semanticDomainsList = semanticDomainsList;
+			_idsOfSingleOptionFields = namesOfSingleOptionFields;
 		}
 
 		public void Read(string filePath, MemoryDataMapper<LexEntry> dataMapper)
@@ -30,6 +37,8 @@ namespace WeSay.LexicalModel
 
 			using (LexEntryFromLiftBuilder builder = new LexEntryFromLiftBuilder(dataMapper, _semanticDomainsList))
 			{
+				builder.ExpectedOptionTraits = _idsOfSingleOptionFields;
+
 				LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
 					new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(
 						builder);

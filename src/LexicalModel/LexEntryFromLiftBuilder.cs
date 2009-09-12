@@ -35,14 +35,13 @@ namespace WeSay.LexicalModel
 		}
 
 		public event EventHandler<EntryCreatedEventArgs> EntryCreatedEvent = delegate { };
-		private readonly IList<String> _expectedOptionTraits;
 		private readonly IList<string> _expectedOptionCollectionTraits;
 		private readonly MemoryDataMapper<LexEntry> _dataMapper;
 		private readonly OptionsList _semanticDomainsList;
 
 		public LexEntryFromLiftBuilder(MemoryDataMapper<LexEntry> dataMapper, OptionsList semanticDomainsList)
 		{
-			_expectedOptionTraits = new List<string>();
+			ExpectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
 			_dataMapper = dataMapper;
 			_semanticDomainsList = semanticDomainsList;
@@ -442,9 +441,9 @@ namespace WeSay.LexicalModel
 			collection.Relations.Add(relation);
 		}
 
-		public IList<string> ExpectedOptionTraits
+		public IEnumerable<string> ExpectedOptionTraits
 		{
-			get { return _expectedOptionTraits; }
+			get; set;
 		}
 
 		public IList<string> ExpectedOptionCollectionTraits

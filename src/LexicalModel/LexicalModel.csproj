@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{5F61C809-B6C0-4567-9603-B2198E1AD038}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -143,6 +143,7 @@
 	<Compile Include="LexRelation.cs" />
 	<Compile Include="LexSense.cs" />
 	<Compile Include="LiftDataMapper.cs" />
+	<Compile Include="WeSayLiftReaderWriterProvider.cs" />
 	<Compile Include="WeSayLiftWriter.cs" />
 	<Compile Include="WeSayLiftDataMapper.cs" />
 	<Compile Include="LiftUpdateService.cs" />
