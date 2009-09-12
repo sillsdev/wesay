@@ -143,6 +143,7 @@
 	<Compile Include="LexRelation.cs" />
 	<Compile Include="LexSense.cs" />
 	<Compile Include="LiftDataMapper.cs" />
+	<Compile Include="WeSayLiftReaderWriterProvider.cs" />
 	<Compile Include="WeSayLiftWriter.cs" />
 	<Compile Include="WeSayLiftDataMapper.cs" />
 	<Compile Include="Migration\LiftPreparer.cs" />

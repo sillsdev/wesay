@@ -232,7 +232,7 @@ namespace WeSay.Foundation
 #if MONO
 					const string hint = "";
 #else
-					const string hint = "You may be able to repair the font: by drag it to your desktop, right-click on it, tell it to install, in the meantime, ";
+					const string hint = "You may be able to repair the font: drag it to your desktop, right-click on it, tell it to install. In the meantime, ";
 #endif
 					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
 													"There is a problem with the font {0} on this computer. {1} WeSay will have to use the System default font instead."+Environment.NewLine+"The error was: {2}",

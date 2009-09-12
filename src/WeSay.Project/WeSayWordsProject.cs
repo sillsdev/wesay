@@ -11,6 +11,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Autofac;
 using Autofac.Builder;
+using Autofac.Registrars.Delegate;
 using LiftIO;
 using LiftIO.Validation;
 using Microsoft.Practices.ServiceLocation;
@@ -18,6 +19,8 @@ using Palaso.IO;
 #if MONO
 using Palaso.Linq;
 #endif
+using Palaso.Lift;
+using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using WeSay.AddinLib;
@@ -363,6 +366,11 @@ namespace WeSay.Project
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 
+			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
+			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
+			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
+
+			builder.Register<WeSayLiftReaderWriterProvider>().As(typeof(ILiftReaderWriterProvider<LexEntry>));
 			builder.Register<WeSayLiftDataMapper>( c =>
 			  {
 				  try
@@ -373,7 +381,8 @@ namespace WeSay.Project
 						  progressState =>
 						  new WeSayLiftDataMapper(_pathToLiftFile,
 											 GetSemanticDomainsList(),
-											 progressState));
+											 progressState,
+											 c.Resolve < ILiftReaderWriterProvider<LexEntry>>(new TypedParameter(typeof(ProgressState), progressState))));
 				  }
 				  catch (LiftFormatException error)
 				  {
@@ -462,7 +471,17 @@ namespace WeSay.Project
 			builder.Register(c=>
 				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).ContainerScoped();
 
+
 			_container = builder.Build();
+		}
+
+		private IEnumerable<string> GetIdsOfSingleOptionFields()
+		{
+			foreach (Field field in DefaultViewTemplate.Fields)
+			{
+				if (field.DataTypeName == "Option")
+					yield return field.FieldName;
+			}
 		}
 
 		private OptionsList GetSemanticDomainsList()
