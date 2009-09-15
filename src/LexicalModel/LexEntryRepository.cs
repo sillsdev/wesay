@@ -58,8 +58,7 @@ namespace WeSay.LexicalModel
 			#if DEBUG
 			_constructionStackTrace = new StackTrace();
 			#endif
-			_decoratedDataMapper = new WeSayLiftDataMapper(path, null, new ProgressState(),
-				new WeSayLiftReaderWriterProvider(new ProgressState(), new OptionsList(), new string[] { }));
+			_decoratedDataMapper = new WeSayLiftDataMapper(path, new OptionsList(), new string[] { }, new ProgressState());
 			_disposed = false;
 		}
 
