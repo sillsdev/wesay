@@ -40,6 +40,10 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			return taskConfiguration is GatherBySemanticDomainConfig;
+		}
 
 
 

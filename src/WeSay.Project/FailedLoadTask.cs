@@ -42,14 +42,14 @@ namespace WeSay.Project
 			get { return String.Format("Failed To Load: {0}", _label); }
 		}
 
+		public bool Available
+		{
+			get { return true; }
+		}
+
 		public string Description
 		{
 			get { return String.Format("Error: {0}", _description); }
-		}
-
-		public bool MustBeActivatedDuringPreCache
-		{
-			get { return false; }
 		}
 
 		public Control Control

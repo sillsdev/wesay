@@ -32,7 +32,7 @@ namespace WeSay.App.Tests
 			_project.Tasks = new List<ITask>();
 			_dashboardTask = new MockTask("Dashboard", "The control center.", true);
 			_project.Tasks.Add(_dashboardTask);
-			_dictionaryTask = new MockTask("Dictionary blah blah", "The whole lexicon.", true);
+			_dictionaryTask = new MockDictionaryTask("Dictionary blah blah", "The whole lexicon.", true);
 			_project.Tasks.Add(_dictionaryTask);
 
 			_tabbedForm.InitializeTasks(_project.Tasks);

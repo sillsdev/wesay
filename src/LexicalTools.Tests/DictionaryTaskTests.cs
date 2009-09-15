@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Chorus.UI.Review;
 using NUnit.Framework;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
@@ -39,8 +40,9 @@ namespace WeSay.LexicalTools.Tests
 										Field.MultiplicityType.ZeroOr1,
 										"MultiText"));
 			_lexEntryRepository = new LexEntryRepository(_filePath);
+
 			_task = new DictionaryTask( DictionaryBrowseAndEditConfiguration.CreateForTests(),  _lexEntryRepository,
-				_viewTemplate, new TaskMemoryRepository(), new StringLogger());//, new UserSettingsForTask());
+				_viewTemplate, new TaskMemoryRepository(),   new StringLogger());//, new UserSettingsForTask());
 		}
 
 		[TearDown]
@@ -67,6 +69,16 @@ namespace WeSay.LexicalTools.Tests
 			task.Deactivate();
 		}
 
+		[Test, Ignore("Failing due to ui teardown issues, which aren't the subject of the test")]
+		public void GoToUrl_EntryDoesntExist_OK()
+		{
+			var task = new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository,
+				_viewTemplate, new TaskMemoryRepository(), new StringLogger());
+			task.Activate();
+			task.GoToUrl("notThere");
+			task.Deactivate();
+		}
+
 		[Test]
 		public void CreateAndActivate_LastUrlDoesntExistAnymore_DoesNotCrash()
 		{
@@ -75,7 +87,7 @@ namespace WeSay.LexicalTools.Tests
 			var repository = new TaskMemoryRepository();
 			repository.FindOrCreateSettingsByTaskId(config.TaskName).Set(DictionaryTask.LastUrlKey, "longGone");
 
-			var task = new DictionaryTask(config, _lexEntryRepository, _viewTemplate, repository, new StringLogger());
+			var task = new DictionaryTask(config, _lexEntryRepository, _viewTemplate, repository,  new StringLogger());
 #if DEBUG
 	  //the code doesn't show the errror box in release builds, but
 			//the builder publishing configuration does run tests in release builds
@@ -91,14 +103,14 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullRecordListManager_Throws()
 		{
-			new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), null, _viewTemplate, new TaskMemoryRepository(), new StringLogger());//, new UserSettingsForTask());
+			new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), null, _viewTemplate, new TaskMemoryRepository(),  new StringLogger());//, new UserSettingsForTask());
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
-			new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, null, new TaskMemoryRepository(), new StringLogger());//, new UserSettingsForTask());
+			new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, null, new TaskMemoryRepository(),  new StringLogger());//, new UserSettingsForTask());
 		}
 	}
 }

@@ -23,7 +23,7 @@ namespace WeSay.Project.Tests
 		public void Setup()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
-
+			WeSayWordsProject.PreventBackupForTests = true;
 		}
 
 		[TearDown]

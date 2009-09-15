@@ -38,6 +38,16 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 		}
 
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			return taskConfiguration is GatherWordListConfig && _catalog == ((GatherWordListConfig)taskConfiguration).Catalog;
+		}
+
+		protected WordListCatalog Catalog
+		{
+			get { return _catalog; }
+		}
+
 		public string WordListFileName
 		{
 			get

@@ -4,10 +4,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using Chorus.UI.Review;
+using Palaso.Misc;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.Project;
+using WeSay.UI;
 using Timer=System.Windows.Forms.Timer;
 
 namespace WeSay.App
@@ -20,7 +23,8 @@ namespace WeSay.App
 		public SynchronizationContext synchronizationContext;
 		//        private ProgressDialogHandler _progressHandler;
 
-		public TabbedForm(StatusBarController statusBarController)
+		public TabbedForm(StatusBarController statusBarController,
+			NavigateToRecordEvent navigateToRecordEventToSubscribeTo)
 		{
 			InitializeComponent();
 			tabControl1.TabPages.Clear();
@@ -30,6 +34,18 @@ namespace WeSay.App
 			Debug.Assert(synchronizationContext != null);
 
 			statusBarController.StatusStrip = _statusStrip;
+			if (navigateToRecordEventToSubscribeTo != null)
+			{
+				navigateToRecordEventToSubscribeTo.Subscribe(OnNavigateToUrl);
+			}
+
+		}
+
+		//for tests
+		public TabbedForm(StatusBarController statusBarController)
+			:this(statusBarController, null)
+		{
+
 		}
 
 		public StatusStrip StatusStrip
@@ -89,6 +105,57 @@ namespace WeSay.App
 			}
 		}
 
+		private void OnNavigateToUrl(string url)
+		{
+
+//            if(_taskForExternalNavigateToEntry == null)
+//            {
+//                Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Could not navigate to {0} (no one signed up for that duty!).");
+//                return;
+//            }
+//
+//            var task = _taskForExternalNavigateToEntry as ITask;
+//            Guard.AgainstNull(task, "must be a task");
+//            if (!task.IsActive)
+//            {
+//                Activate();
+//            }
+//            _taskForExternalNavigateToEntry.NavigateToEntry(url);
+
+			GoToUrl(url);
+		}
+
+
+		private delegate void TakesStringArg(string arg);
+
+		public void GoToUrl(string url)
+		{
+			if (InvokeRequired)
+			{
+				Invoke(new TakesStringArg(GoToUrl), url);
+				return;
+			}
+
+			//NB: notice, we only handly URLs to a single task at this point (DictionaryBrowseAndEdit)
+
+			foreach (TabPage page in tabControl1.TabPages)
+			{
+				if (page.Tag is ITaskForExternalNavigateToEntry)
+				{
+					tabControl1.SelectedTab = page;
+
+					((ITask)page.Tag).GoToUrl(url);
+					CurrentUrl = url;
+					return;
+				}
+			}
+			ErrorReport.NotifyUserOfProblem(
+					"Sorry, that URL requires a task which is not currently enabled for this user. ({0})",
+					url);
+			throw new NavigationException("Couldn't locate ");
+		}
+
+
 		private void CreateTabPageForTask(ITask t)
 		{
 			//t.Container = container;
@@ -100,37 +167,6 @@ namespace WeSay.App
 			page.Font = new Font(FontFamily.GenericSansSerif, 9);
 
 			tabControl1.TabPages.Add(page);
-		}
-
-		private delegate void TakesStringArg(string arg);
-
-		public void GoToUrl(string url)
-		{
-			if (InvokeRequired)
-			{
-				Invoke(new TakesStringArg(GoToUrl), url);
-				return;
-			}
-			//todo: find the task in the url, pick the right task,
-			//handle the case where we don't have that task, etc.
-
-			foreach (TabPage page in tabControl1.TabPages)
-			{
-				//todo: temporary hack
-				if (((ITask) page.Tag).Label.Contains("Dictionary"))
-				{
-					//this approach is for user clicking, chokes without an event loop: ActiveTask = (ITask) page.Tag;
-					tabControl1.SelectedTab = page;
-					ActivateTab(page, false);
-					ActiveTask.GoToUrl(url);
-					CurrentUrl = url;
-					return;
-				}
-			}
-			ErrorReport.NotifyUserOfProblem(
-					"Sorry, that URL requires a task which is not currently enabled for this user. ({0})",
-					url);
-			throw new NavigationException("Couldn't locate ");
 		}
 
 		public void MakeFrontMostWindow()
@@ -337,4 +373,6 @@ namespace WeSay.App
 			t.Start();
 		}
 	}
+
+
 }

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Chorus.UI.Review;
 using Palaso.Data;
 using Palaso.Reporting;
 using WeSay.Data;
@@ -141,7 +142,7 @@ namespace WeSay.LexicalTools.Tests
 			exampleNotesField.DisplayName = "ex-note";
 			viewTemplate.Add(exampleNotesField);
 
-			_task = new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, viewTemplate, new TaskMemoryRepository(), new StringLogger());//, new UserSettingsForTask());
+			_task = new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, viewTemplate, new TaskMemoryRepository(),  new StringLogger());//, new UserSettingsForTask());
 			_detailTaskPage = new TabPage();
 			ActivateTask();
 
@@ -630,14 +631,14 @@ namespace WeSay.LexicalTools.Tests
 			ShiftFocus();//this should not be needed, and *is not needed* in the real, running app, or if you step through. I tried for over an hour to get the test code to accurately replicate the run-time situation, but I give up!
 
 			Application.DoEvents();
-			((DictionaryControl) _task.Control).GoToEntry(_firstEntryGuid);
+			((DictionaryControl) _task.Control).GoToEntryWithId(_firstEntryGuid);
 
-		   ((DictionaryControl) _task.Control).GoToEntry(_secondEntryGuid);
+		   ((DictionaryControl) _task.Control).GoToEntryWithId(_secondEntryGuid);
 			Application.DoEvents();
 
 			 Thread.Sleep(1000);
 		   Application.DoEvents();
-			((DictionaryControl) _task.Control).GoToEntry(entry.Id);
+			((DictionaryControl) _task.Control).GoToEntryWithId(entry.Id);
 			Application.DoEvents();
 			Thread.Sleep(1000);
 			Application.DoEvents();
@@ -1189,7 +1190,7 @@ namespace WeSay.LexicalTools.Tests
 			DictionaryControl control = (DictionaryControl)_task.Control;
 			string idOfInitial = control.CurrentRecord.Id;
 			GoToLexicalEntryUseFind("Secondary"); //go away from that one
-			control.GoToEntry(idOfInitial);
+			control.GoToEntryWithId(idOfInitial);
 			Assert.AreEqual(idOfInitial, control.CurrentRecord.Id);
 		}
 
@@ -1199,7 +1200,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddInitialEntries();
 			DictionaryControl control = (DictionaryControl)_task.Control;
-			control.GoToEntry("bogus");
+			control.GoToEntryWithId("bogus");
 		}
 
 		[Test]
@@ -1228,7 +1229,7 @@ namespace WeSay.LexicalTools.Tests
 		//            DictionaryControl control = (DictionaryControl)_task.Control;
 		//            string idOfInitial = control.CurrentRecord.Id;
 		//            GoToLexicalEntryUseFind("Secondary"); //go away from that one
-		//            control.GoToEntry(idOfInitial);
+		//            control.GoToEntryWithId(idOfInitial);
 		//            Assert.AreEqual(idOfInitial, control.CurrentRecord.Id);
 		//        }
 

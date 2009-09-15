@@ -366,7 +366,7 @@ namespace WeSay.App
 			if (liftPath == null)
 			{
 				ErrorReport.NotifyUserOfProblem(
-						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project.");
+						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project, then click the 'Open in WeSay' button from that application's toolbar.");
 				return null;
 			}
 

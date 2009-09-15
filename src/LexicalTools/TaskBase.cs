@@ -101,10 +101,11 @@ namespace WeSay.LexicalTools
 			IsActive = true;
 		}
 
-		public bool MustBeActivatedDuringPreCache
+		public bool Available
 		{
 			get { return true; }
 		}
+
 
 //        private static string MakeSafeName(string fileName)
 //        {

@@ -155,6 +155,7 @@
 	<Compile Include="audio\WeSayAudioFieldBox.Designer.cs">
 	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
 	</Compile>
+	<Compile Include="Event.cs" />
 	<Compile Include="TextBoxes\IControlThatKnowsWritingSystem.cs" />
 	<Compile Include="WeSayListView.cs">
 	  <SubType>Component</SubType>

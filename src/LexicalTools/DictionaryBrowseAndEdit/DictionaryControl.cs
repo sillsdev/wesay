@@ -399,7 +399,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		}
 
 
-		public void GoToEntry(Guid entryGuid)
+		public void GoToEntryWithId(Guid entryGuid)
 		{
 			LexEntry entry = _lexEntryRepository.GetLexEntryWithMatchingGuid(entryGuid);
 			if (entry == null)
@@ -416,7 +416,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		}
 
-		public void GoToEntry(string entryId)
+		public void GoToEntryWithId(string entryId)
 		{
 			LexEntry entry = _lexEntryRepository.GetLexEntryWithMatchingId(entryId);
 			if (entry == null)
@@ -425,6 +425,27 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 			_recordsListBox.SelectedIndex = _records.FindFirstIndex(entry);
 		}
+
+		public void GoToUrl(string url)
+		{
+			GoToEntryWithId(GetIdFromUrl(url));
+		}
+
+		private string GetIdFromUrl(string url)
+		{
+			var parse = System.Web.HttpUtility.ParseQueryString(url);
+			var ids = parse.GetValues("id");
+			if (ids != null && ids.Length > 0)
+			{
+				return ids[0];
+			}
+			if (!parse.HasKeys())
+			{
+				return url;  //old-style, just an id
+			}
+			throw new ApplicationException("Could not parse the url " + url);
+		}
+
 
 		private void SelectItemWithDisplayString(string text)
 		{

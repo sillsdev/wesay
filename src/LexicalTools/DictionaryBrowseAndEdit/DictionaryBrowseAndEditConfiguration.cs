@@ -30,6 +30,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 		}
 
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			return taskConfiguration is DictionaryBrowseAndEditConfiguration;
+		}
 
 		public override string ToString()
 		{

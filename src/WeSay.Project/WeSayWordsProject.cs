@@ -12,6 +12,8 @@ using System.Xml.XPath;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Registrars.Delegate;
+using Chorus;
+using Chorus.UI.Review;
 using LiftIO;
 using LiftIO.Validation;
 using Microsoft.Practices.ServiceLocation;
@@ -362,6 +364,9 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
+			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
+			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>();
+
 			builder.Register(new WordListCatalog()).SingletonScoped();
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
@@ -416,7 +421,9 @@ namespace WeSay.Project
 			//back when we did this assignment.
 			string configFileText = File.ReadAllText(PathToConfigFile);
 
-			builder.Register<ConfigFileReader>(c => new ConfigFileReader(configFileText, catalog)).SingletonScoped();
+			string defaultXmlConfigText = File.ReadAllText(PathToDefaultConfig);
+
+			builder.Register<ConfigFileReader>(c => new ConfigFileReader(configFileText, defaultXmlConfigText,  catalog)).SingletonScoped();
 
 			builder.Register<TaskCollection>().SingletonScoped();
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -8,6 +9,7 @@ using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
 using WeSay.Project;
+using WeSay.UI;
 
 
 /* todo
@@ -24,12 +26,13 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
-	public class DictionaryTask: TaskBase
+	public class DictionaryTask: TaskBase, ITaskForExternalNavigateToEntry
 	{
 		private DictionaryControl _dictionaryControl;
 		private readonly ViewTemplate _viewTemplate;
 		private readonly ILogger _logger;
 		private TaskMemory _taskMemory;
+		private string _pendingNavigationUrl;
 
 		public const string LastUrlKey = "lastUrl";
 
@@ -47,6 +50,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_viewTemplate = viewTemplate;
 			_logger = logger;
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
+
 		}
 
 		public override void Activate()
@@ -63,7 +67,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				{
 					try
 					{
-						  _dictionaryControl.GoToEntry(_taskMemory.Get(LastUrlKey, null));
+						  _dictionaryControl.GoToUrl(_taskMemory.Get(LastUrlKey, null));
 					}
 					catch (Exception error)
 					{
@@ -104,13 +108,27 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		public override void GoToUrl(string url)
 		{
-			_dictionaryControl.GoToEntry(GetEntryFromUrl(url));
+			try
+			{
+				if (IsActive) //activation may be delayed via a timer, if so, just file this away until we are ready for it
+				{
+					_dictionaryControl.GoToUrl(url);
+				}
+				else
+				{
+					if (_taskMemory != null)
+					{
+						_taskMemory.Set(LastUrlKey, url);
+					}
+				}
+			}
+			catch (Exception error)
+			{
+				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Could not navigate to {0}. {1}", url, error.Message);
+			}
 		}
 
-		private static string GetEntryFromUrl(string url)
-		{
-			return url;
-		}
+
 
 		private static string GetUrlFromEntry(LexEntry entry)
 		{
@@ -120,6 +138,17 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				return null;
 			}
 			return id;
+		}
+
+
+		public static string GetUrl(LexEntry entry)
+		{
+			var b = new UriBuilder();
+			b.Scheme = "lift";
+			b.Path = "navigate";
+			b.Query = string.Format("id=john hatton");
+			b.Query = string.Format("view=DictionaryBrowseAndEdit&type=entry&id={0}&guid={1}", entry.GetOrCreateId(true), entry.Guid.ToString());
+			return b.Uri.ToString();
 		}
 
 		/// <summary>
