@@ -146,7 +146,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			var b = new UriBuilder();
 			b.Scheme = "lift";
 			b.Path = "navigate";
-			b.Query = string.Format("id=john hatton");
 			b.Query = string.Format("view=DictionaryBrowseAndEdit&type=entry&id={0}&guid={1}", entry.GetOrCreateId(true), entry.Guid.ToString());
 			return b.Uri.ToString();
 		}
