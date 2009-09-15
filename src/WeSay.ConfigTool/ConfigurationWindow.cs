@@ -411,11 +411,6 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void OnAboutToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			new AboutBox().ShowDialog();
-		}
-
 		private void OnOpenThisProjectInWeSay(object sender, EventArgs e)
 		{
 			_project.Save(); //want the client to see the latest
@@ -455,6 +450,18 @@ namespace WeSay.ConfigTool
 
 				LiftIO.Migration.Migrator.ReverseMigrateFrom13ToFLEx12(_project.PathToLiftFile, dlg.FileName);
 			}
+		}
+
+		private void OnAboutToolStrip_Click(object sender, EventArgs e)
+		{
+			new AboutBox().ShowDialog();
+		}
+
+		private void OnHelpToolStrip_Click(object sender, EventArgs e)
+		{
+			string helpFilePath = Path.Combine(WeSayWordsProject.ApplicationRootDirectory, "WeSay Documentation.chm");
+			var uri = new Uri(helpFilePath);
+			Help.ShowHelp(this, uri.AbsoluteUri);
 		}
 	}
 }
