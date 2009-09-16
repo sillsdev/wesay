@@ -300,7 +300,9 @@ namespace WeSay.App.Tests.Services
 					{
 						Assert.IsTrue(dictionaryService.IsInServerMode());
 						dictionaryService.JumpToEntry("foo1");
-
+						// This test seems timing sensitive on close, resulting in a
+						// exception that doesn't occur if we slow it down a bit.
+						Thread.Sleep(100);
 						Assert.IsFalse(dictionaryService.IsInServerMode());
 					});
 		}
