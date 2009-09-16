@@ -25,6 +25,7 @@
 				<items>
 					<include name="${build.namespace.dir}/**" />
 					<exclude name="${build.namespace.dir}/Resources" />
+					<exclude name="${build.namespace.dir}/Review" />
 				</items>
 			</in>
 			<do>
@@ -57,11 +58,14 @@
 				<include name="WeSay.Data.dll" />
 				<include name="WeSay.Foundation.dll" />
 				<include name="WeSay.UI.dll" />
+				<include name="Chorus.exe" />
+				<include name="LibChorus.dll" />
 				<include name="Palaso.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="Autofac.dll" />
 				<include name="System.Windows.Forms.dll" />
 				<include name="System.Drawing.dll" />
+				<include name="System.Web.dll" />
 				<include name="System.Data.dll" />
 			</references>
 			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">

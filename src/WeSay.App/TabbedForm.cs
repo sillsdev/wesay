@@ -23,6 +23,7 @@ namespace WeSay.App
 		public SynchronizationContext synchronizationContext;
 		//        private ProgressDialogHandler _progressHandler;
 
+		[CLSCompliant(false)]
 		public TabbedForm(StatusBarController statusBarController,
 			NavigateToRecordEvent navigateToRecordEventToSubscribeTo)
 		{

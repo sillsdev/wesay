@@ -57,6 +57,8 @@
 				<include name="CookComputing.XmlRpcV2.dll" />
 				<include name="LexicalModel.dll" />
 				<include name="LexicalTools.dll" />
+				<include name="LibChorus.dll" />
+				<include name="Chorus.exe" />
 				<include name="Palaso.dll" />
 				<include name="Palaso.Services.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
