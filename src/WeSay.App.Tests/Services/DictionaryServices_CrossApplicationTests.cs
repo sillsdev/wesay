@@ -177,6 +177,7 @@ namespace WeSay.App.Tests.Services
 																			"foo",
 																			FindMethods.Exact.
 																					ToString());
+						Thread.Sleep(100); // Timing sensitive?
 						Assert.AreEqual(1, r.ids.Length);
 					});
 		}
