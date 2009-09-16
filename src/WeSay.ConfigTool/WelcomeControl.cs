@@ -118,6 +118,11 @@ namespace WeSay.ConfigTool
 
 		private void OnGetFromUsb(object sender, EventArgs e)
 		{
+			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
+			{
+				//e.g. mydocuments/wesay
+				Directory.CreateDirectory(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
+			}
 			using (var dlg = new Chorus.UI.Clone.GetCloneFromUsbDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				dlg.Model.ProjectFilter = dir => GetLooksLikeWeSayProject(dir);
