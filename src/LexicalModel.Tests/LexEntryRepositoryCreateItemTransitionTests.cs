@@ -14,7 +14,7 @@ namespace WeSay.LexicalModel.Tests
 
 		public LexEntryRepositoryCreateItemTransitionTests()
 		{
-			hasPersistOnCreate = false;
+			_hasPersistOnCreate = false;
 		}
 
 		[SetUp]

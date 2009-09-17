@@ -222,7 +222,7 @@ namespace WeSay.LexicalModel.Tests
 
 		public LiftRepositoryCreateItemTransitionTests()
 		{
-			hasPersistOnCreate = false;
+			_hasPersistOnCreate = false;
 		}
 
 		[SetUp]
