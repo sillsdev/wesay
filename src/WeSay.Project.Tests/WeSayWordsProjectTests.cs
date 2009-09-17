@@ -282,7 +282,7 @@ namespace WeSay.Project.Tests
 				File.WriteAllText(configPath,
 								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
 				XPathDocument doc = new XPathDocument(configPath);
-				WeSayWordsProject.CheckIfConfigFileVersionIsToNew(doc);
+				WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(doc);
 			}
 		}
 
@@ -297,7 +297,7 @@ namespace WeSay.Project.Tests
 				File.WriteAllText(configPath,
 								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
 				XPathDocument doc = new XPathDocument(configPath);
-				WeSayWordsProject.CheckIfConfigFileVersionIsToNew(doc);
+				WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(doc);
 			}
 		}
 

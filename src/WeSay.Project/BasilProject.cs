@@ -13,18 +13,16 @@ namespace WeSay.Project
 	public class BasilProject: IProject, IDisposable
 	{
 		private static BasilProject _singleton;
-		private string _uiFontName;
 
 		protected static BasilProject Singleton
 		{
 			get { return _singleton; }
 			set { _singleton = value; }
 		}
+		public UiConfigurationOptions UiOptions { get; set; }
 
 		private readonly WritingSystemCollection _writingSystems;
 		private string _projectDirectoryPath = string.Empty;
-		private string _stringCatalogSelector = string.Empty;
-		private float _uiFontSize;
 
 		public static BasilProject Project
 		{
@@ -56,6 +54,7 @@ namespace WeSay.Project
 		{
 			Project = this;
 			_writingSystems = new WritingSystemCollection();
+			UiOptions = new UiConfigurationOptions();
 		}
 
 		public virtual void LoadFromProjectDirectoryPath(string projectDirectoryPath)
@@ -114,7 +113,7 @@ namespace WeSay.Project
 			ErrorReport.IsOkToInteractWithUser = false;
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
-			project.StringCatalogSelector = "en";
+			project.UiOptions.Language = "en";
 		}
 
 		public static string GetPretendProjectDirectory()
@@ -180,7 +179,7 @@ namespace WeSay.Project
 			}
 
 			//fall back to the program's common directory
-			string path = Path.Combine(ApplicationCommonDirectory, _stringCatalogSelector + ".po");
+			string path = Path.Combine(ApplicationCommonDirectory, UiOptions.Language + ".po");
 			if (File.Exists(path))
 			{
 				return path;
@@ -197,7 +196,7 @@ namespace WeSay.Project
 			get
 			{
 				return Path.Combine(ProjectDirectoryPath /*ProjectCommonDirectory*/,
-									_stringCatalogSelector + ".po");
+									UiOptions.Language + ".po");
 			}
 		}
 
@@ -293,40 +292,23 @@ namespace WeSay.Project
 		//            Directory.
 		//        }
 
-		public string StringCatalogSelector
-		{
-			get { return _stringCatalogSelector; }
-			set { _stringCatalogSelector = value; }
-		}
-
-		protected string UiFontName
-		{
-			get { return _uiFontName; }
-			set { _uiFontName = value; }
-		}
-
-		protected float UiFontSizeInPoints
-		{
-			get { return _uiFontSize; }
-			set { _uiFontSize = value; }
-		}
 
 		protected void InitStringCatalog()
 		{
 			try
 			{
-				if (_stringCatalogSelector == "test")
+				if (UiOptions.Language == "test")
 				{
-					new StringCatalog("test", UiFontName, UiFontSizeInPoints);
+					new StringCatalog("test", UiOptions.LabelFontName, UiOptions.LabelFontSizeInPoints);
 				}
 				string p = LocateStringCatalog();
 				if (p == null)
 				{
-					new StringCatalog(UiFontName, UiFontSizeInPoints);
+					new StringCatalog(UiOptions.LabelFontName, UiOptions.LabelFontSizeInPoints);
 				}
 				else
 				{
-					new StringCatalog(p, UiFontName, UiFontSizeInPoints);
+					new StringCatalog(p, UiOptions.LabelFontName, UiOptions.LabelFontSizeInPoints);
 				}
 			}
 			catch (FileNotFoundException)

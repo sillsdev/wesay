@@ -44,12 +44,6 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		public override void PreLoad()
-		{
-			base.PreLoad();
-			WeSayWordsProject.Project.EditorsSaveNow += Project_EditorsSaveNow;
-		}
-
 		private void LoadPoFilesIntoCombo(string directory)
 		{
 			_languageCombo.Items.Clear();
@@ -60,7 +54,7 @@ namespace WeSay.ConfigTool
 			{
 				PoProxy selector = new PoProxy(file);
 				_languageCombo.Items.Add(selector);
-				if (WeSayWordsProject.Project.StringCatalogSelector ==
+				if (Options.Language ==
 					selector.fileNameWithoutExtension)
 				{
 					_languageCombo.SelectedItem = selector;
@@ -107,28 +101,11 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void Project_EditorsSaveNow(object owriter, EventArgs e)
-		{
-			XmlWriter writer = (XmlWriter) owriter;
-
-			writer.WriteStartElement("uiOptions");
-			if (!String.IsNullOrEmpty(UILanguage))
-			{
-				writer.WriteAttributeString("uiLanguage", UILanguage);
-			}
-			if (!String.IsNullOrEmpty(LabelName))
-			{
-				writer.WriteAttributeString("uiFont", LabelName);
-				writer.WriteAttributeString("uiFontSize", LabelSizeInPoints.ToString());
-			}
-			writer.WriteEndElement();
-		}
-
 		private string UILanguage
 		{
 			get
 			{
-				return WeSayWordsProject.Project.StringCatalogSelector;
+				return Options.Language;
 				//                if (_languageCombo.SelectedItem == null)
 				//                {
 				//                    return String.Empty;
@@ -139,25 +116,22 @@ namespace WeSay.ConfigTool
 			{
 				if (_languageCombo.SelectedItem != null)
 				{
-					WeSayWordsProject.Project.StringCatalogSelector = value;
+					Options.Language = value;
+					Options.Language = value;
 				}
 			}
 		}
 
-		private static string LabelName
-		{
-			get { return StringCatalog.LabelFont.Name; }
-		}
 
-		private static float LabelSizeInPoints
+		private UiConfigurationOptions Options
 		{
-			get { return StringCatalog.LabelFont.SizeInPoints; }
+			get { return WeSayWordsProject.Project.UiOptions; }
 		}
 
 		private void OnChooseFont(object sender, EventArgs e)
 		{
 			FontDialog dialog = new FontDialog();
-			dialog.Font = StringCatalog.LabelFont;
+			dialog.Font = Options.GetLabelFont();
 			dialog.ShowColor = false;
 			dialog.ShowEffects = false;
 
@@ -174,15 +148,15 @@ namespace WeSay.ConfigTool
 						"There was some problem with choosing that font.  If you just installed it, you might try restarting the program or even your computer.");
 				return;
 			}
-			StringCatalog.LabelFont = dialog.Font;
+			Options.SetLabelFont(dialog.Font);
 			UpdateFontDisplay();
 		}
 
 		private void UpdateFontDisplay()
 		{
 			_fontInfoDisplay.Text = string.Format("{0}, {1} points",
-												  StringCatalog.LabelFont.Name,
-												  (int) StringCatalog.LabelFont.SizeInPoints);
+												  Options.LabelFontName,
+												  Math.Round(Options.LabelFontSizeInPoints));
 		}
 	}
 }

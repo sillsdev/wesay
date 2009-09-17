@@ -130,14 +130,16 @@ namespace WeSay.Project.Tests
 			ChorusBackupMaker b = new ChorusBackupMaker(new CheckinDescriptionBuilder());
 			b.PathToParentOfRepositories = @"z:\";
 			StringBuilder builder = new StringBuilder();
+			//var dom = new XmlDocument();
+			//dom.LoadXml("<foobar><blah></blah></foobar>");
+
 			using (XmlWriter writer = XmlWriter.Create(builder))
 			{
 				b.Save(writer);
-				using (XmlReader reader = XmlReader.Create(new StringReader(builder.ToString())))
-				{
-					ChorusBackupMaker loadedGuy = ChorusBackupMaker.LoadFromReader(reader, new CheckinDescriptionBuilder());
-					Assert.AreEqual(@"z:\", loadedGuy.PathToParentOfRepositories);
-				}
+				var dom = new XmlDocument();
+				dom.Load(new StringReader(builder.ToString()));
+				ChorusBackupMaker loadedGuy = ChorusBackupMaker.CreateFromDom(dom, new CheckinDescriptionBuilder());
+				Assert.AreEqual(@"z:\", loadedGuy.PathToParentOfRepositories);
 
 			}
 		}

@@ -166,7 +166,7 @@ namespace WeSay.App.Tests
 		public void TestFixtureSetUp()
 		{
 			_project = new WeSayWordsProject();
-			_project.StringCatalogSelector = "en";
+			_project.UiOptions.Language = "en";
 			_project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory());
 
 			_project.Tasks = new List<ITask>();

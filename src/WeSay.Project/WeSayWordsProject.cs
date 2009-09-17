@@ -49,7 +49,8 @@ namespace WeSay.Project
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
 
-		public const int CurrentWeSayConfigFileVersion = 6; // This variable must be updated with every new vrsion of the WeSay config file
+		public const int CurrentWeSayConfigFileVersion = 6; // This variable must be updated with every new vrsion of the WeSayConfig file
+		public const int CurrentWeSayUserSpecificConfigFileVersion = 1; // This variable must be updated with every new vrsion of the WeSayUserConfig file
 
 		public event EventHandler EditorsSaveNow;
 
@@ -146,7 +147,7 @@ namespace WeSay.Project
 			RemoveCache();
 			ErrorReport.IsOkToInteractWithUser = false;
 			LoadFromProjectDirectoryPath(ProjectDirectoryPath);
-			StringCatalogSelector = "en";
+			UiOptions.Language = "en";
 		}
 
 		public void RemoveCache()
@@ -309,24 +310,24 @@ namespace WeSay.Project
 			XPathDocument configDoc = GetConfigurationDoc();
 			if (configDoc != null) // will be null if we're creating a new project
 			{
-				XPathNavigator nav = configDoc.CreateNavigator().SelectSingleNode("//uiOptions");
-				if (nav != null)
-				{
-					string ui = nav.GetAttribute("uiLanguage", "");
-					if (!string.IsNullOrEmpty(ui))
-					{
-						StringCatalogSelector = ui;
-					}
-					UiFontName = nav.GetAttribute("uiFont", "");
-					string s = nav.GetAttribute("uiFontSize", string.Empty);
-					float f;
-					if (!float.TryParse(s, out f) || f == 0)
-					{
-						f = 12;
-					}
-					UiFontSizeInPoints = f;
-				}
-				CheckIfConfigFileVersionIsToNew(configDoc);
+//                XPathNavigator nav = configDoc.CreateNavigator().SelectSingleNode("//uiOptions");
+//                if (nav != null)
+//                {
+//                    string ui = nav.GetAttribute("uiLanguage", "");
+//                    if (!string.IsNullOrEmpty(ui))
+//                    {
+//                        UiOptions.Language = ui;
+//                    }
+//                    UiOptions.LabelFontName = nav.GetAttribute("uiFont", "");
+//                    string s = nav.GetAttribute("uiFontSize", string.Empty);
+//                    float f;
+//                    if (!float.TryParse(s, out f) || f == 0)
+//                    {
+//                        f = 12;
+//                    }
+//                    UiOptions.LabelFontSizeInPoints = f;
+//                }
+				CheckIfConfigFileVersionIsTooNew(configDoc);
 				var m = new ConfigurationMigrator();
 				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
@@ -337,10 +338,12 @@ namespace WeSay.Project
 			//review: is this the right place for this?
 			PopulateDIContainer();
 
-			LoadBackupPlan();
+			LoadUserConfig();
+			InitStringCatalog();
+
 		}
 
-		public static void CheckIfConfigFileVersionIsToNew(XPathDocument configurationDoc)
+		public static void CheckIfConfigFileVersionIsTooNew(XPathDocument configurationDoc)
 		{
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") != null)
 			{
@@ -454,6 +457,7 @@ namespace WeSay.Project
 			builder.Register<CheckinDescriptionBuilder>().SingletonScoped();
 			builder.Register<Chorus.sync.ProjectFolderConfiguration>(new WeSayChorusProjectConfiguration(Path.GetDirectoryName(PathToConfigFile))).SingletonScoped();
 			builder.Register<ChorusBackupMaker>().SingletonScoped();
+			builder.Register<UiConfigurationOptions>().SingletonScoped();
 
 
 			//it is sad that we initially used a static for logger, and that hasn't been completely undone yet.
@@ -508,22 +512,26 @@ namespace WeSay.Project
 //            return _container.Resolve(serviceType);
 //        }
 
-		private void LoadBackupPlan()
+		private void LoadUserConfig()
 		{
-			//what a mess. I hate .net new fangled xml stuff...
-			XPathDocument projectDoc = GetConfigurationDoc();
-			XPathNavigator backupPlanNav = projectDoc.CreateNavigator();
-			backupPlanNav = backupPlanNav.SelectSingleNode("configuration/" + ChorusBackupMaker.ElementName);
-			if (backupPlanNav == null)
+			var dom = new XmlDocument();
+			BackupMaker = null;
+			if (File.Exists(PathToUserSpecificConfigFile))
 			{
-				//make sure we have a fresh copy with any defaults
-
-				BackupMaker = _container.Resolve<ChorusBackupMaker>();
-				return;
+				dom.Load(PathToUserSpecificConfigFile);
+				BackupMaker = ChorusBackupMaker.CreateFromDom(dom, _container.Resolve<CheckinDescriptionBuilder>());
+				UiOptions = UiConfigurationOptions.CreateFromDom(dom);
 			}
 
-			XmlReader r = XmlReader.Create(new StringReader(backupPlanNav.OuterXml));
-			BackupMaker = ChorusBackupMaker.LoadFromReader(r, _container.Resolve<CheckinDescriptionBuilder>());
+			if (BackupMaker == null)
+			{
+				BackupMaker = _container.Resolve<ChorusBackupMaker>();
+			}
+
+			if (UiOptions == null)
+			{
+				UiOptions = _container.Resolve<UiConfigurationOptions>();
+			}
 		}
 
 		private static void MoveFilesFromOldDirLayout(string projectDir)
@@ -738,13 +746,14 @@ namespace WeSay.Project
 				}
 				catch (Exception e)
 				{
-					ErrorReport.NotifyUserOfProblem("There was a problem reading the task xml. " +
-													  e.Message);
+					ErrorReport.NotifyUserOfProblem("There was a problem reading the wesay config xml: " + e.Message);
 					projectDoc = null;
 				}
 			}
 			return projectDoc;
 		}
+
+
 
 		public static string PathToDefaultConfig
 		{
@@ -813,9 +822,17 @@ namespace WeSay.Project
 		{
 			get
 			{
-				string name = Path.GetFileNameWithoutExtension(PathToLiftFile);
-				string directoryInProject = PathToWeSaySpecificFilesDirectoryInProject;
-				return GetPathToConfigFile(directoryInProject, name);
+				return GetPathToConfigFile(PathToWeSaySpecificFilesDirectoryInProject,
+					Path.GetFileNameWithoutExtension(PathToLiftFile));
+			}
+		}
+
+		public string PathToUserSpecificConfigFile
+		{
+			get
+			{
+				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+									System.Environment.UserName + ".WeSayUserConfig");
 			}
 		}
 
@@ -1151,6 +1168,7 @@ namespace WeSay.Project
 		}
 
 
+
 		public override void Save()
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
@@ -1181,9 +1199,6 @@ namespace WeSay.Project
 				EditorsSaveNow.Invoke(writer, null);
 			}
 
-			if (BackupMaker != null)
-				BackupMaker.Save(writer);
-
 			_addins.Save(writer);
 
 			writer.WriteEndDocument();
@@ -1193,8 +1208,34 @@ namespace WeSay.Project
 
 			base.Save();
 
+			SaveUserSpecificConfiguration();
 			BackupNow();
 
+		}
+
+		private void SaveUserSpecificConfiguration()
+		{
+			var pendingConfigFile = new TempFileForSafeWriting(Project.PathToUserSpecificConfigFile);
+
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.Indent = true;
+
+			XmlWriter writer = XmlWriter.Create(pendingConfigFile.TempFilePath, settings);
+			writer.WriteStartDocument();
+			writer.WriteStartElement("configuration");
+			writer.WriteAttributeString("version", CurrentWeSayUserSpecificConfigFileVersion.ToString());
+
+
+			if (BackupMaker != null)
+				BackupMaker.Save(writer);
+
+			if (UiOptions != null)
+				UiOptions.Save(writer);
+
+			writer.WriteEndDocument();
+			writer.Close();
+
+			pendingConfigFile.WriteWasSuccessful();
 		}
 
 		public Field GetFieldFromDefaultViewTemplate(string fieldName)
@@ -1441,7 +1482,7 @@ namespace WeSay.Project
 			string[] allFiles = Directory.GetFiles(pathToProjectRoot,
 												   "*",
 												   SearchOption.AllDirectories);
-			string[] antipatterns = { "Cache", "cache", ".bak", ".old", ".liftold", ".wesayUserMemory" };
+			string[] antipatterns = { "Cache", "cache", ".bak", ".old", ".liftold", ".WeSayUserMemory" };
 
 			foreach (string file in allFiles)
 			{
@@ -1470,7 +1511,7 @@ namespace WeSay.Project
 			try
 			{
 				if(BackupMaker!=null)//it will for many tests, which don't need to be slowed down by all this
-					BackupMaker.BackupNow(ProjectDirectoryPath, StringCatalogSelector);
+					BackupMaker.BackupNow(ProjectDirectoryPath, UiOptions.Language);
 			}
 			catch (Exception error)
 			{

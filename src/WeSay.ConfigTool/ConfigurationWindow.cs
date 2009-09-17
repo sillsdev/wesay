@@ -279,8 +279,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception e)
 			{
-				ErrorReport.NotifyUserOfProblem("WeSay was not able to open that project. \r\n" +
-												  e.Message);
+				ErrorReport.NotifyUserOfProblem(e, "WeSay was not able to open that project.");
 				return false;
 			}
 

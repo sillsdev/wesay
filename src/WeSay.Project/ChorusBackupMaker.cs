@@ -51,12 +51,20 @@ namespace WeSay.Project
 			set { _lexEntryRepository = value; }
 		}
 
-		public static ChorusBackupMaker LoadFromReader(XmlReader reader, CheckinDescriptionBuilder checkinDescriptionBuilder)
+
+		/// <returns>null if not found in the dom</returns>
+		public static ChorusBackupMaker CreateFromDom(XmlDocument dom, CheckinDescriptionBuilder checkinDescriptionBuilder)
 		{
-			XmlSerializer serializer = new XmlSerializer(typeof(ChorusBackupMaker));
-			var x = (ChorusBackupMaker)serializer.Deserialize(reader);
-			x.CheckinDescriptionBuilder = checkinDescriptionBuilder;
-			return x;
+			var node = dom.SelectSingleNode("//backupPlan");
+			if(node==null)
+				return null;
+			using (var reader = new StringReader(node.OuterXml))
+			{
+				XmlSerializer serializer = new XmlSerializer(typeof (ChorusBackupMaker));
+				var backupMaker = (ChorusBackupMaker) serializer.Deserialize(reader);
+				backupMaker.CheckinDescriptionBuilder = checkinDescriptionBuilder;
+				return backupMaker;
+			}
 		}
 
 		public void Save(XmlWriter writer)

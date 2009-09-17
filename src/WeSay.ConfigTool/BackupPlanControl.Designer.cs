@@ -40,6 +40,7 @@ namespace WeSay.ConfigTool
 			this.label1 = new System.Windows.Forms.Label();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.betterLabel1 = new WeSay.UI.BetterLabel();
+			this.userSpecificSettingIndicator1 = new WeSay.ConfigTool.UserSpecificSettingIndicator();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -101,9 +102,9 @@ namespace WeSay.ConfigTool
 			this.flowLayoutPanel1.Controls.Add(this.label1);
 			this.flowLayoutPanel1.Controls.Add(this._pathText);
 			this.flowLayoutPanel1.Controls.Add(this._browseButton);
-			this.flowLayoutPanel1.Location = new System.Drawing.Point(19, 192);
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(62, 192);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(562, 31);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(519, 31);
 			this.flowLayoutPanel1.TabIndex = 11;
 			//
 			// betterLabel1
@@ -122,6 +123,14 @@ namespace WeSay.ConfigTool
 			this.betterLabel1.TabStop = false;
 			this.betterLabel1.Text = resources.GetString("betterLabel1.Text");
 			//
+			// userSpecificSettingIndicator1
+			//
+			this.userSpecificSettingIndicator1.BackColor = System.Drawing.SystemColors.Window;
+			this.userSpecificSettingIndicator1.Location = new System.Drawing.Point(19, 186);
+			this.userSpecificSettingIndicator1.Name = "userSpecificSettingIndicator1";
+			this.userSpecificSettingIndicator1.Size = new System.Drawing.Size(40, 47);
+			this.userSpecificSettingIndicator1.TabIndex = 3;
+			//
 			// BackupPlanControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -130,6 +139,7 @@ namespace WeSay.ConfigTool
 			this.Controls.Add(this.flowLayoutPanel1);
 			this.Controls.Add(this.betterLabel2);
 			this.Controls.Add(this.betterLabel1);
+			this.Controls.Add(this.userSpecificSettingIndicator1);
 			this.Controls.Add(this.readinessPanel1);
 			this.Name = "BackupPlanControl";
 			this.Size = new System.Drawing.Size(614, 385);
@@ -151,6 +161,7 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 		private WeSay.UI.BetterLabel betterLabel1;
+		private UserSpecificSettingIndicator userSpecificSettingIndicator1;
 
 	}
 }
