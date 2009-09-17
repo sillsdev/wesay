@@ -550,9 +550,6 @@
 	<None Include="Resources\Warning.bmp" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\people.png" />
-  </ItemGroup>
-  <ItemGroup>
 	<None Include="Resources\person.png" />
   </ItemGroup>
   <ItemGroup>
