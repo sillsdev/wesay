@@ -268,6 +268,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this.Controls.Add(this.panelTools);
 			this.Name = "DictionaryControl";
 			this.Size = new System.Drawing.Size(493, 294);
+			this.Leave += new System.EventHandler(this.DictionaryControl_Leave);
 			this.panelWordList.ResumeLayout(false);
 			this.panelWordList.PerformLayout();
 			this.panelTools.ResumeLayout(false);

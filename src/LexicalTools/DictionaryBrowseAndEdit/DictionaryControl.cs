@@ -660,6 +660,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 		}
 
+		private void DictionaryControl_Leave(object sender, EventArgs e)
+		{
+			SaveAndCleanUpPreviousEntry();
+		}
+
 
 	}
 }
