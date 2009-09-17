@@ -220,6 +220,11 @@ namespace WeSay.LexicalModel.Tests
 		private string _persistedFilePath;
 		private TemporaryFolder _tempFolder;
 
+		public LiftRepositoryCreateItemTransitionTests()
+		{
+			hasPersistOnCreate = false;
+		}
+
 		[SetUp]
 		public override void SetUp()
 		{

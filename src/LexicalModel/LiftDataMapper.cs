@@ -92,7 +92,6 @@ namespace Palaso.Lift
 		public T CreateItem()
 		{
 			T item = _backend.CreateItem();
-			UpdateLiftFileWithNew(item);
 			return item;
 		}
 

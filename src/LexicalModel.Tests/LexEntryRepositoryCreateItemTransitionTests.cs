@@ -12,6 +12,11 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempFolder;
 		private string _persistedFilePath;
 
+		public LexEntryRepositoryCreateItemTransitionTests()
+		{
+			hasPersistOnCreate = false;
+		}
+
 		[SetUp]
 		public override void SetUp()
 		{
