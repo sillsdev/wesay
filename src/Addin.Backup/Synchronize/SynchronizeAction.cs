@@ -79,7 +79,7 @@ namespace Addin.Backup
 								projectInfo.ServiceProvider.GetService(typeof (Chorus.sync.ProjectFolderConfiguration));
 			using(var dlg = new SyncDialog(configuration,
 					SyncUIDialogBehaviors.Lazy,
-					SyncUIFeatures.Everything))
+					SyncUIFeatures.NormalRecommended))
 			{
 				dlg.Text = "Wesay Send/Receive";
 				dlg.SyncOptions.DoMergeWithOthers = true;
