@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Chorus.VcsDrivers.Mercurial;
+using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.ConfigTool.Properties;
 
@@ -92,17 +93,23 @@ namespace WeSay.ConfigTool
 
 		private void AddGetChoices(TableLayoutPanel panel)
 		{
-			var chorusMessage = HgRepository.GetEnvironmentReadinessMessage("en");
-			bool haveChorus = string.IsNullOrEmpty(chorusMessage);
-
 			AddSection("Get", panel);
-			AddChoice("Get From USB drive", "Get a project from a Chorus repository on a USB flash drive", "getFromUsb", haveChorus, OnGetFromUsb, panel);
+			//nb: we want these always enabled, so that we can give a message explaining about hg if needed
+			AddChoice("Get From USB drive", "Get a project from a Chorus repository on a USB flash drive", "getFromUsb", true, OnGetFromUsb, panel);
 			AddChoice("Get from Internet", "Get a project from a Chorus repository which is hosted on the internet (e.g. public.languagedepot.org) and put it on this computer",
-				"getFromInternet", haveChorus, OnGetFromInternet, panel);
+				"getFromInternet", true, OnGetFromInternet, panel);
 		}
 
 		private void OnGetFromInternet(object sender, EventArgs e)
 		{
+			if (!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
+			{
+				using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
+				{
+					dlg.ShowDialog();
+					return;
+				}
+			}
 			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				//e.g. mydocuments/wesay
@@ -118,6 +125,14 @@ namespace WeSay.ConfigTool
 
 		private void OnGetFromUsb(object sender, EventArgs e)
 		{
+			if(!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
+			{
+				using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
+				{
+					dlg.ShowDialog();
+					return;
+				}
+			}
 			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				//e.g. mydocuments/wesay

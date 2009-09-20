@@ -550,7 +550,7 @@
 	<None Include="Resources\Warning.bmp" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\person.png" />
+	<None Include="Resources\userSpecific32x31.png" />
   </ItemGroup>
   <ItemGroup>
 	<Folder Include="Properties\DataSources\" />
