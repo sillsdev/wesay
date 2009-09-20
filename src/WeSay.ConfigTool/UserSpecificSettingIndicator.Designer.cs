@@ -29,7 +29,6 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserSpecificSettingIndicator));
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this._imageButton = new System.Windows.Forms.Button();
 			this.SuspendLayout();
@@ -38,12 +37,13 @@
 			//
 			this._imageButton.FlatAppearance.BorderSize = 0;
 			this._imageButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this._imageButton.Image = ((System.Drawing.Image)(resources.GetObject("_imageButton.Image")));
+			this._imageButton.Image = global::WeSay.ConfigTool.Properties.Resources.userSpecific;
 			this._imageButton.Location = new System.Drawing.Point(3, 3);
 			this._imageButton.Name = "_imageButton";
 			this._imageButton.Size = new System.Drawing.Size(32, 33);
 			this._imageButton.TabIndex = 0;
 			this._imageButton.UseVisualStyleBackColor = true;
+			this._imageButton.Click += new System.EventHandler(this._imageButton_Click);
 			//
 			// UserSpecificSettingIndicator
 			//
