@@ -934,11 +934,22 @@ namespace WeSay.Project
 			{
 				foreach (var liftPath in Directory.GetFiles(ProjectDirectoryPath, "*.lift"))
 				{
-					if (File.Exists(liftPath.ToLower().Replace(".lift", ".WeSayConfig")))
+					if (File.Exists(liftPath.Replace(".lift", ".WeSayConfig")))
 					{
 						return liftPath;
 					}
 				}
+#if mono    //try this too(probably not needed...)
+				//anyhow remember case is sensitive, and a simpe "tolower"
+				//doens't cut it because the exists will fail if it's the wrong case (WS-14982)
+				foreach (var liftPath in Directory.GetFiles(ProjectDirectoryPath, "*.Lift"))
+				{
+					if (File.Exists(liftPath.Replace(".Lift", ".WeSayConfig")))
+					{
+						return liftPath;
+					}
+				}
+#endif
 			}
 			return path;
 		}
