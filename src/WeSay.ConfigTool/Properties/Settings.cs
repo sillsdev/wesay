@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
+using Palaso.Reporting;
 
 namespace WeSay.ConfigTool.Properties
 {
@@ -12,6 +13,10 @@ namespace WeSay.ConfigTool.Properties
 			if (MruConfigFilePaths == null)
 			{
 				MruConfigFilePaths = new MruProjects();
+			}
+			if (Reporting == null)
+			{
+				Reporting = new ReportingSettings();
 			}
 		}
 
@@ -52,6 +57,10 @@ namespace WeSay.ConfigTool.Properties
 			if (MruConfigFilePaths == null)
 			{
 				MruConfigFilePaths = new MruProjects();
+			}
+			if (Reporting == null)
+			{
+				Reporting = new ReportingSettings();
 			}
 			if (!string.IsNullOrEmpty(lastConfigFilePath))
 			{
