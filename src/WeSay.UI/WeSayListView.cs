@@ -251,7 +251,7 @@ namespace WeSay.UI
 
 			//jh sept 2009 to help with WS-14934 (cambell) Dictionary word list scrolls unnecessarily when editing headword
 			//it'd be better to not scroll, but this occurs to me as a quick way to at least keep it from scrolling to the bottom
-			if (e.Item != null && e.ItemIndex > 0 && Items.Count>0)
+			if (!_clickSelecting && e.Item != null && e.ItemIndex > 0 && Items.Count>0)
 			{
 				const int numberToShowBelowSelectedOne = 10;
 				//though we'd like to not scroll at all, this will
