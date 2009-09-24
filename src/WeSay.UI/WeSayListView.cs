@@ -253,8 +253,9 @@ namespace WeSay.UI
 			//it'd be better to not scroll, but this occurs to me as a quick way to at least keep it from scrolling to the bottom
 			if (e.Item != null && e.ItemIndex > 0 && Items.Count>0)
 			{
-				var numberToShowBelowSelectedOne = 10;// NB: if the number is too large (more than fits onthe screen), it will simply
-				//make our selected one be at the top of the list, which isn't so bad.
+				const int numberToShowBelowSelectedOne = 10;
+				//though we'd like to not scroll at all, this will
+				//make our selected one be at least 10 up from the bottom, which isn't so bad.
 				int lastOneToShow = Math.Min(Items.Count - 1, e.ItemIndex + numberToShowBelowSelectedOne);
 				Items[lastOneToShow].EnsureVisible();
 				//enhance... figure out where the middle would be, and the arrange for the selected item to be in the middle
