@@ -25,7 +25,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly ILogger _logger;
-		private readonly ContextMenu _writingSystemsMenu;
 		private WritingSystem _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
 		private ResultSet<LexEntry> _records;
@@ -52,32 +51,31 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_viewTemplate = viewTemplate;
 			_logger = logger;
 			_lexEntryRepository = lexEntryRepository;
-			_writingSystemsMenu = new ContextMenu();
+
+			InitializeComponent();
+
+			if (DesignMode)
+				return;
+
 
 			SetupPickerControlWritingSystems();
 
-			InitializeComponent();
 			InitializeDisplaySettings();
-
-			_writingSystemChooser.Image = Resources.Expand.GetThumbnailImage(6,
-																			 6,
-																			 ReturnFalse,
-																			 IntPtr.Zero);
-			_btnFind.Image = Resources.Find.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
-			_btnDeleteWord.Image = Resources.DeleteWord;
-			_btnNewWord.Image = Resources.NewWord.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
 
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
 			Control_EntryDetailPanel.LexEntryRepository = _lexEntryRepository;
 
 			_findTextAdapter = new ResultSetToListOfStringsAdapter("Form", _records);
-			_searchBox.Items = _findTextAdapter;
+			SearchTextBox.Items = _findTextAdapter;
 
 			SetListWritingSystem(
 					_viewTemplate.GetDefaultWritingSystemForField(
 							Field.FieldNames.EntryLexicalForm.ToString()));
 
-			_searchBox.KeyDown += _findText_KeyDown;
+			_searchTextBoxControl.TextBox.KeyDown += OnFindText_KeyDown;
+			_searchTextBoxControl.TextBox.AutoCompleteChoiceSelected += OnSearchText_AutoCompleteChoiceSelected;
+			_searchTextBoxControl.FindButton.Click += OnFind_Click;
+
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
 
 			_splitter.SetMemory(memory);
@@ -86,11 +84,15 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			UpdateDisplay();
 		}
 
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public EntryViewControl Control_EntryDetailPanel
 		{
 			get { return _entryViewControl; }
 		}
 
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public LexEntry CurrentRecord
 		{
 			get
@@ -124,7 +126,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
-			_selectedWritingSystemLabel.ForeColor = DisplaySettings.Default.WritingSystemLabelColor;
+
 		}
 
 		private void SetupPickerControlWritingSystems()
@@ -132,6 +134,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			RegisterFieldWithPicker(Field.FieldNames.EntryLexicalForm.ToString());
 			RegisterFieldWithPicker(LexSense.WellKnownProperties.Gloss); //Reversal
 		}
+
 
 		private void RegisterFieldWithPicker(string fieldName)
 		{
@@ -166,12 +169,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 								 OnWritingSystemMenuItemClicked);
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
-			_writingSystemsMenu.MenuItems.Add(item);
+			SearchModeMenu.MenuItems.Add(item);
 		}
 
 		private bool WritingSystemExistsInPicker(WritingSystem writingSystem)
 		{
-			foreach (MenuItem item in _writingSystemsMenu.MenuItems)
+			foreach (MenuItem item in SearchModeMenu.MenuItems)
 			{
 				if (writingSystem.Id == ((WritingSystem) item.Tag).Id)
 				{
@@ -179,6 +182,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				}
 			}
 			return false;
+		}
+
+		protected ContextMenu SearchModeMenu
+		{
+			get { return _searchTextBoxControl.SearchModeMenu; }
 		}
 
 		private bool IsWritingSystemUsedInLexicalForm(string writingSystemId)
@@ -191,15 +199,15 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		public void SetListWritingSystem(WritingSystem writingSystem)
 		{
 			Guard.AgainstNull(writingSystem,"writingSystem");
-			if (writingSystem == null)
-			{
-				throw new ArgumentNullException();
-			}
+
+
 			if (_listWritingSystem == writingSystem)
 			{
 				return;
 			}
 			_listWritingSystem = writingSystem;
+
+			//_searchTextBox.ListWritingSystem = writingSystem;
 
 			LoadRecords();
 
@@ -218,31 +226,18 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void ConfigureSearchBox()
 		{
-			int originalHeight = _searchBox.Height;
-			_searchBox.ItemFilterer = FindClosestAndNextClosestAndPrefixedForms;
-			_searchBox.Items = _findTextAdapter;
-			_searchBox.WritingSystem = _listWritingSystem;
+			if(DesignMode )
+				return;
 
-			_selectedWritingSystemLabel.Text = _listWritingSystem.Abbreviation;
-			int width = _selectedWritingSystemLabel.Width;
-			_selectedWritingSystemLabel.AutoSize = false;
-			_selectedWritingSystemLabel.Size = new Size(Math.Min(width, 25), _searchBox.Height);
-			int heightDifference = _searchBox.Height - originalHeight;
+			_searchTextBoxControl.SetWritingSystem(_listWritingSystem);
+			SearchTextBox.ItemFilterer = FindClosestAndNextClosestAndPrefixedForms;
+			SearchTextBox.Items = _findTextAdapter;
 
+			var top = _searchTextBoxControl.Bounds.Bottom + 10;
 			_recordsListBox.SetBounds(_recordsListBox.Bounds.X,
-									  _recordsListBox.Bounds.Y + heightDifference,
+									  top,
 									  _recordsListBox.Bounds.Width,
-									  _recordsListBox.Bounds.Height - heightDifference);
-
-			_btnFind.Height = _searchBox.Height;
-			_writingSystemChooser.Height = _searchBox.Height;
-			_btnFind.Image = Resources.Find.GetThumbnailImage(_btnFind.Width - 2,
-															  _btnFind.Width - 2,
-															  ReturnFalse,
-															  IntPtr.Zero);
-
-			_btnFind.Left = _writingSystemChooser.Left - _btnFind.Width;
-			_searchBox.Width = _btnFind.Left - _searchBox.Left;
+									  (this.Bottom - _bottomButtonPanel.Height) - top - 10);
 		}
 
 		private void SetRecordToBeEdited(LexEntry record)
@@ -356,47 +351,36 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 		}
 
-		private void OnWritingSystemChooser_Click(object sender, EventArgs e)
-		{
-			Logger.WriteMinorEvent("WritingSystemChooser_Click");
 
-			foreach (MenuItem menuItem in _writingSystemsMenu.MenuItems)
-			{
-				menuItem.Checked = (_listWritingSystem == menuItem.Tag);
-			}
-			_writingSystemsMenu.Show(_writingSystemChooser,
-								   new Point(_writingSystemChooser.Width,
-											 _writingSystemChooser.Height));
-		}
 
 		private void OnFindWritingSystemId_MouseClick(object sender, MouseEventArgs e)
 		{
 			Logger.WriteMinorEvent("FindWritingSystemId_MouseClick");
-			_searchBox.Focus();
+			SearchTextBox.Focus();
 		}
 
 		// primarily for testing
 
-		private void _findText_KeyDown(object sender, KeyEventArgs e)
+		private void OnFindText_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Modifiers == Keys.None && e.KeyData == Keys.Enter)
 			{
 				e.Handled = true;
 				e.SuppressKeyPress = true; // otherwise it beeps!
-				SelectItemWithDisplayString(_searchBox.Text);
+				SelectItemWithDisplayString(SearchTextBox.Text);
 			}
 		}
 
-		private void _findText_AutoCompleteChoiceSelected(object sender, EventArgs e)
+		private void OnSearchText_AutoCompleteChoiceSelected(object sender, EventArgs e)
 		{
-			SelectItemWithDisplayString(_searchBox.Text);
+			SelectItemWithDisplayString(SearchTextBox.Text);
 		}
 
 		private void OnFind_Click(object sender, EventArgs e)
 		{
 			Logger.WriteMinorEvent("FindButton_Click");
 
-			SelectItemWithDisplayString(_searchBox.Text);
+			SelectItemWithDisplayString(SearchTextBox.Text);
 		}
 
 
@@ -503,7 +487,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			//We could solve this by using an accelerator
 			if (keyData == (Keys.Control | Keys.N))
 			{
-				bool FocusWasOnFindTextBox = _searchBox.Focused;
+				bool FocusWasOnFindTextBox = SearchTextBox.Focused;
 				_btnNewWord.Focus(); //this is necassary to cause TextBinding to update it's multitext
 				AddNewWord(FocusWasOnFindTextBox);
 				return true;
@@ -511,19 +495,24 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 			if (keyData == (Keys.Control | Keys.F))
 			{
-				if (!_searchBox.Focused)
+				if (!SearchTextBox.Focused)
 				{
-					_searchBox.Focus();
-					_searchBox.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
+					SearchTextBox.Focus();
+					SearchTextBox.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
 				}
 				else
 				{
-					SelectItemWithDisplayString(_searchBox.Text);
+					SelectItemWithDisplayString(SearchTextBox.Text);
 				}
 
 				return true;
 			}
 			return base.ProcessCmdKey(ref msg, keyData);
+		}
+
+		protected WeSayAutoCompleteTextBox SearchTextBox
+		{
+			get { return _searchTextBoxControl.TextBox; }
 		}
 
 		private void OnNewWord_Click(object sender, EventArgs e)
@@ -543,10 +532,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				LexEntry entry = this._lexEntryRepository.CreateItem();
 				//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 				//_recordListBoxActive = true; // allow onRecordSelectionChanged
-				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(_searchBox.Text) &&
+				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(SearchTextBox.Text) &&
 					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 				{
-					entry.LexicalForm[_listWritingSystem.Id] = _searchBox.Text.Trim();
+					entry.LexicalForm[_listWritingSystem.Id] = SearchTextBox.Text.Trim();
 					_lexEntryRepository.SaveItem(entry);
 				}
 				//review: Revert (remove) below for WS-950
@@ -665,6 +654,34 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			SaveAndCleanUpPreviousEntry();
 		}
 
+		private static bool ReturnFalse()
+		{
+			return false;
+		}
 
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && !IsDisposed)
+			{
+				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
+
+				SaveAndCleanUpPreviousEntry();
+
+				//_recordsListBox.Enter -= _recordsListBox_Enter;
+				//_recordsListBox.Leave -= _recordsListBox_Leave;
+				//_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
+
+				SearchTextBox.KeyDown -= OnFindText_KeyDown;
+			}
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
 	}
 }

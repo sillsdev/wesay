@@ -169,6 +169,12 @@
 	<Compile Include="Dashboard\TaskIndicator.designer.cs">
 	  <DependentUpon>TaskIndicator.cs</DependentUpon>
 	</Compile>
+	<Compile Include="DictionaryBrowseAndEdit\SearchBoxControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="DictionaryBrowseAndEdit\SearchBoxControl.Designer.cs">
+	  <DependentUpon>SearchBoxControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="LayoutInfoProvider.cs" />
 	<Compile Include="Review\AdvancedHistory\AdvancedHistoryConfig.cs" />
 	<Compile Include="Review\AdvancedHistory\AdvancedHistoryControl.cs">
@@ -317,6 +323,9 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DictionaryControl.cs</DependentUpon>
 	</EmbeddedResource>
+	<EmbeddedResource Include="DictionaryBrowseAndEdit\SearchBoxControl.resx">
+	  <DependentUpon>SearchBoxControl.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="GatherByWordList\GatherWordListControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
@@ -355,6 +364,12 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\calendar.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\Add18x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\search18x18.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

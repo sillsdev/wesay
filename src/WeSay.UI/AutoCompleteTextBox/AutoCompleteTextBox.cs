@@ -341,7 +341,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		protected override void OnSizeChanged(EventArgs e)
 		{
+			var height = this.Height;
 			base.OnSizeChanged(e);
+			if (height > this.Height)   //this is for the search box, where the ws label could be much taller that the list text
+				this.Height = height;
+
 			if (_listBox != null)
 			{
 				//NB: this height can be multiple lines, so we don't just want the Height
@@ -771,5 +775,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 				return _listBox.Focused;
 			}
 		}
+
 	}
 }
