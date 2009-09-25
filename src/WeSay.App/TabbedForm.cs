@@ -165,8 +165,13 @@ namespace WeSay.App
 			page.Tag = t;
 
 			//this is trying to get around screwing up spacing when the ui font
-			//is a huge one
-			page.Font = new Font(FontFamily.GenericSansSerif, 9);
+			//is a huge one...
+			//JH sep09: doesn't seem to have any effect, at least on windows
+			page.Font = StringCatalog.LabelFont;
+
+			//jh experiment
+			tabControl1.Font = page.Font;
+
 
 			tabControl1.TabPages.Add(page);
 		}
