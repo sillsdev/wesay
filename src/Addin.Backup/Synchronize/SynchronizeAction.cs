@@ -84,7 +84,7 @@ namespace Addin.Backup
 				dlg.Text = "Wesay Send/Receive";
 				dlg.SyncOptions.DoMergeWithOthers = true;
 				dlg.SyncOptions.DoPullFromOthers = true;
-				dlg.SyncOptions.DoPushToLocalSources = true;
+				dlg.SyncOptions.DoSendToOthers = true;
 
 
 			   // leave it with the default, for now... dlg.SyncOptions.RepositorySourcesToTry.Clear();
