@@ -46,6 +46,7 @@ namespace WeSay.UI
 			_control.Sorted = false;
 			_control.MaxDropDownItems = 100;
 			_control.Font = _preferredWritingSystem.Font;
+			_control.Height = _preferredWritingSystem.Font.Height + 10;
 			BuildBoxes(optionRef);
 		}
 
@@ -128,7 +129,7 @@ namespace WeSay.UI
 
 			Panel p = new Panel();
 			p.Controls.Add(_control);
-			p.Size = new Size(initialPanelWidth, _control.Height + 0);
+			p.Size = new Size(initialPanelWidth, _control.Height + 10);
 
 			//            FlagButton flagButton = MakeFlagButton(p.Size);
 			//            p.Controls.Add(flagButton);
