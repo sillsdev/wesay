@@ -112,7 +112,7 @@ namespace WeSay.Project
 					dlg.Text = "Wesay Automatic Backup";
 					dlg.SyncOptions.DoMergeWithOthers = false;
 					dlg.SyncOptions.DoPullFromOthers = false;
-					dlg.SyncOptions.DoPushToLocalSources = true;
+					dlg.SyncOptions.DoSendToOthers = true;
 					dlg.SyncOptions.RepositorySourcesToTry.Clear();
 					dlg.SyncOptions.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
 					dlg.UseTargetsAsSpecifiedInSyncOptions = true;
