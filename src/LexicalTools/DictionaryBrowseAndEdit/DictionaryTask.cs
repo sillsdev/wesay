@@ -2,6 +2,7 @@ using System;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
@@ -104,6 +105,18 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			base.Deactivate();
 			_dictionaryControl.Dispose();
 			_dictionaryControl = null;
+		}
+
+		public string CurrentUrl
+		{
+			get
+			{
+				if (IsActive)
+				{
+					return _dictionaryControl.CurrentUrl;
+				}
+				return "NOTACTIVE";// string.Empty;
+			}
 		}
 
 		public override void GoToUrl(string url)

@@ -8,7 +8,6 @@ namespace WeSay.Project
 	{
 		void Activate();
 		void Deactivate();
-		void GoToUrl(string url);
 		bool IsActive { get; }
 		string Label { get; }
 		bool Available { get; }

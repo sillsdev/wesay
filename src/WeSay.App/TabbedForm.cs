@@ -146,8 +146,7 @@ namespace WeSay.App
 				{
 					tabControl1.SelectedTab = page;
 
-					((ITask)page.Tag).GoToUrl(url);
-					CurrentUrl = url;
+					((ITaskForExternalNavigateToEntry)page.Tag).GoToUrl(url);
 					return;
 				}
 			}
@@ -273,9 +272,17 @@ namespace WeSay.App
 
 		public string CurrentUrl
 		{
-			get { return _currentUrl; }
-			set { _currentUrl = value; }
+			get
+			{
+				if(_activeTask==null)
+					return string.Empty;
+				var t = _activeTask as ITaskForExternalNavigateToEntry;
+				if(t==null)
+					return string.Empty;
+				return t.CurrentUrl;
+			}
 		}
+
 
 		private void OnTabSelected(object sender, TabControlEventArgs e)
 		{

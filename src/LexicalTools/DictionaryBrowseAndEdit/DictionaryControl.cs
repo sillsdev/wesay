@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.Misc;
@@ -418,17 +419,24 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private string GetIdFromUrl(string url)
 		{
-			var parse = System.Web.HttpUtility.ParseQueryString(url);
+			Uri uri;
+			if(!Uri.TryCreate(url, UriKind.Absolute, out uri))
+			{
+			  throw new ApplicationException("Could not parse the url " + url);
+			}
+
+			var parse = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
 			var ids = parse.GetValues("id");
 			if (ids != null && ids.Length > 0)
 			{
 				return ids[0];
 			}
-			if (!parse.HasKeys())
-			{
-				return url;  //old-style, just an id
-			}
-			throw new ApplicationException("Could not parse the url " + url);
+//            if (!parse.HasKeys())
+//            {
+//                return url;  //old-style, just an id
+//            }
+			return string.Empty;
 		}
 
 
@@ -514,6 +522,27 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			get { return _searchTextBoxControl.TextBox; }
 		}
+
+		public string CurrentUrl
+		{
+			get
+			{
+				var entry = CurrentRecord;
+
+				var filename = Path.GetFileName(Project.WeSayWordsProject.Project.PathToLiftFile);
+				filename = Uri.EscapeDataString(filename);
+				string url = string.Format("lift://{0}?type=entry&", filename);
+				url += "guid=" + entry.Guid.ToString() + "&";
+				var id = entry.GetOrCreateId(false);
+				if (string.IsNullOrEmpty(id))
+					return string.Empty;
+				url += "id=" + id;
+
+				url = url.Trim('&');
+				return url;
+			}
+		}
+
 
 		private void OnNewWord_Click(object sender, EventArgs e)
 		{

@@ -300,7 +300,7 @@ namespace WeSay.App.Tests.Services
 					delegate(IDictionaryService dictionaryService)
 					{
 						Assert.IsTrue(dictionaryService.IsInServerMode());
-						dictionaryService.JumpToEntry("foo1");
+						dictionaryService.JumpToEntry("lift://whoknows.lift?id=foo1");
 						// This test seems timing sensitive on close, resulting in a
 						// exception that doesn't occur if we slow it down a bit.
 						Thread.Sleep(100);
@@ -321,10 +321,16 @@ namespace WeSay.App.Tests.Services
 					delegate(IDictionaryService dictionaryService)
 					{
 						Assert.IsTrue(dictionaryService.IsInServerMode());
-						dictionaryService.JumpToEntry("foo2");
-						Assert.AreEqual("foo2", dictionaryService.GetCurrentUrl());
-						dictionaryService.JumpToEntry("foo3");
-						Assert.AreEqual("foo3", dictionaryService.GetCurrentUrl());
+						string url = string.Format("lift://whoknows.lift?id=foo2");
+						dictionaryService.JumpToEntry(url);
+						Thread.Sleep(2000);
+
+						var s = dictionaryService.GetCurrentUrl();
+						Assert.IsTrue(s.Contains("foo2"));
+						url = string.Format("lift://whoknows.lift?id=foo3");
+						dictionaryService.JumpToEntry(url);
+						Thread.Sleep(2000);
+						Assert.IsTrue(dictionaryService.GetCurrentUrl().Contains("foo3"));
 					});
 		}
 

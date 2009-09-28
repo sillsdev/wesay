@@ -26,5 +26,7 @@ namespace WeSay.UI
 
 	public interface ITaskForExternalNavigateToEntry
 	{
+		string CurrentUrl { get; }
+		void GoToUrl(string url);
 	}
 }

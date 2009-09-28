@@ -121,7 +121,7 @@
 	<value>17, -47</value>
   </metadata>
   <data name="betterLabel2.Text" xml:space="preserve">
-	<value>Second, you need to have regular backups that are stored away from the computer.  This is to guard against loss of data by theft, fire, or natural catastrophe.  First, enable the Send/Recieve action button, which will automatically create full historical backups on a usb key.  So get several of them and train the WeSay user to rotate them on some regular basis, clicking the Send/Receive button to make the backup.</value>
+	<value>Second, you need to have regular backups that are stored away from the computer.  This is to guard against loss of data by theft, fire, or natural catastrophe.  First, enable the Send/Recieve action button, which will automatically create full historical backups on a usb key.  Get several of them and train the WeSay user to rotate them on some regular basis, clicking the Send/Receive button to make the backup.</value>
   </data>
   <data name="betterLabel1.Text" xml:space="preserve">
 	<value>We recommend a two-part backup strategy:

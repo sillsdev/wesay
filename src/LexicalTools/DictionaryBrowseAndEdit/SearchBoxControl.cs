@@ -95,7 +95,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			//          _writingSystemChooser.Height = SearchTextBox.Height;
 
 			_writingSystemChooser.Left = Width - _writingSystemChooser.Width;
-			System.Diagnostics.Debug.WriteLine(_writingSystemChooser.Left.ToString()+"="+Width.ToString() + "-" + _writingSystemChooser.Width);
 			_findButton.Left = _writingSystemChooser.Left - _findButton.Width;
 			_textToSearchForBox.Left = _selectedWritingSystemLabel.Right ;
 			_textToSearchForBox.Width = _findButton.Left - _textToSearchForBox.Left;

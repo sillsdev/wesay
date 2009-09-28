@@ -22,6 +22,11 @@ namespace WeSay.App.Tests
 		{
 
 		}
+
+		public string CurrentUrl
+		{
+			get { return string.Empty; }
+		}
 	}
 
 	public class MockTask: ITask
