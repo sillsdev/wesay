@@ -41,6 +41,8 @@ namespace WeSay.UI.audio
 					_logger.WriteConciseHistoricalEvent("Deleted Sound");
 				};
 			_shortSoundFieldControl1.BeforeStartingToRecord += new EventHandler(shortSoundFieldControl1_BeforeStartingToRecord);
+
+			this.Height = _shortSoundFieldControl1.Height + 10;
 		}
 
 		void shortSoundFieldControl1_BeforeStartingToRecord(object sender, EventArgs e)
