@@ -109,21 +109,6 @@ namespace WeSay.App
 
 		private void OnNavigateToUrl(string url)
 		{
-
-//            if(_taskForExternalNavigateToEntry == null)
-//            {
-//                Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Could not navigate to {0} (no one signed up for that duty!).");
-//                return;
-//            }
-//
-//            var task = _taskForExternalNavigateToEntry as ITask;
-//            Guard.AgainstNull(task, "must be a task");
-//            if (!task.IsActive)
-//            {
-//                Activate();
-//            }
-//            _taskForExternalNavigateToEntry.NavigateToEntry(url);
-
 			GoToUrl(url);
 		}
 
