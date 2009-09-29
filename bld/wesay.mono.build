@@ -188,6 +188,7 @@
 		<in>
 			<items>
 				<include name="${project.output.dir}/*.Tests.dll" />
+				<exclude name="${project.output.dir}/Palaso*.dll" />
 			</items>
 		</in>
 		<do>
@@ -198,6 +199,7 @@
 				<include name="${filename}" />
 			</assemblies>
 			<categories>
+				<exclude name="DictionaryServices" />
 				<exclude name="MouseSensitive"/>
 				<exclude name="Windows IME"/>
 				<exclude name="Keyman6"/>
