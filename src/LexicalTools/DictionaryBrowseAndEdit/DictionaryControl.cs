@@ -414,7 +414,15 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		public void GoToUrl(string url)
 		{
-			GoToEntryWithId(GetIdFromUrl(url));
+			//there was a time when this wasn't a real url, but rather just and id
+			if (!url.Contains("lift://"))
+			{
+				GoToEntryWithId(url);
+			}
+			else
+			{
+				GoToEntryWithId(GetIdFromUrl(url));
+			}
 		}
 
 		private string GetIdFromUrl(string url)
@@ -528,18 +536,29 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			get
 			{
 				var entry = CurrentRecord;
-
-				var filename = Path.GetFileName(Project.WeSayWordsProject.Project.PathToLiftFile);
-				filename = Uri.EscapeDataString(filename);
-				string url = string.Format("lift://{0}?type=entry&", filename);
-				url += "guid=" + entry.Guid.ToString() + "&";
-				var id = entry.GetOrCreateId(false);
-				if (string.IsNullOrEmpty(id))
+				if(entry==null)
 					return string.Empty;
-				url += "id=" + id;
 
-				url = url.Trim('&');
-				return url;
+				try
+				{
+					var filename = Path.GetFileName(Project.WeSayWordsProject.Project.PathToLiftFile);
+					filename = Uri.EscapeDataString(filename);
+					string url = string.Format("lift://{0}?type=entry&", filename);
+					url += "guid=" + entry.Guid.ToString() + "&";
+					var id = entry.GetOrCreateId(false);
+					if (string.IsNullOrEmpty(id))
+						return string.Empty;
+					url += "id=" + id;
+
+					url = url.Trim('&');
+					return url;
+
+				}
+				catch (Exception error)
+				{
+					ErrorReport.NotifyUserOfProblem(error, "Could not generate URL for this entry.");
+					return string.Empty;
+				}
 			}
 		}
 

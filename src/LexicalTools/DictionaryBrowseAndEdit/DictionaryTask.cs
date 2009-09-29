@@ -96,7 +96,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			LexEntry entry = _dictionaryControl.CurrentRecord;
 			if(entry !=null)
 			{
-				_taskMemory.Set(LastUrlKey, GetUrlFromEntry(_dictionaryControl.CurrentRecord));
+				_taskMemory.Set(LastUrlKey, _dictionaryControl.CurrentUrl);
 			}
 		}
 
@@ -141,27 +141,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 		}
 
-
-
-		private static string GetUrlFromEntry(LexEntry entry)
-		{
-			var id = entry.GetOrCreateId(false);
-			if(string.IsNullOrEmpty(id))//review... should we then use a guid?
-			{
-				return null;
-			}
-			return id;
-		}
-
-
-		public static string GetUrl(LexEntry entry)
-		{
-			var b = new UriBuilder();
-			b.Scheme = "lift";
-			b.Path = "navigate";
-			b.Query = string.Format("view=DictionaryBrowseAndEdit&type=entry&id={0}&guid={1}", entry.GetOrCreateId(true), entry.Guid.ToString());
-			return b.Uri.ToString();
-		}
 
 		/// <summary>
 		/// The entry detail control associated with this task
