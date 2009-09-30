@@ -325,7 +325,11 @@ namespace WeSay.LexicalModel
 		[ReflectorProperty("optionsListFile", Required = false)]
 		public string OptionsListFile
 		{
-			get { return _optionsListFile; }
+			get { // this is about trying to get the win version to stop outputing <optionsListfile>(return)</optionsListFile>(whereas mono doesn't)
+				if(_optionsListFile==null)
+					return null;
+				return _optionsListFile.Trim();
+			}
 			set { _optionsListFile = value; }
 		}
 

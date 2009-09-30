@@ -8,16 +8,16 @@ using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
-namespace Addin.Backup
+namespace Addin.Backup.Synchronize
 {
 	[Extension]
-	public class SynchronizeAction : IWeSayAddin//, IWeSayAddinHasSettings
+	public class SendReceiveAction : IWeSayAddin//, IWeSayAddinHasSettings
 	{
-		private SynchronizeSettings _settings;
+		private SendReceiveSettings _settings;
 
-		public SynchronizeAction()
+		public SendReceiveAction()
 		{
-			_settings = new SynchronizeSettings();
+			_settings = new SendReceiveSettings();
 		}
 
 		#region IWeSayAddin Members
@@ -36,7 +36,7 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return StringCatalog.Get("~Send/Recieve",
+				return StringCatalog.Get("~Send/Receive",
 										 "Label for action which uses Chorus to synchronize the dictionary with other users, devices, and servers. Here, 'synchronizing' means putting your changes in the repository, and getting changes that others have put in the repository. In English, we are going with Send/Receive because it is similar to email and this is the term Paratext uses.");
 			}
 		}
@@ -46,15 +46,15 @@ namespace Addin.Backup
 			get
 			{
 				return
-						StringCatalog.Get(
-								"~Sends your changes to usb key, server, or other users, and receives the changes made by other members of your team.",
-								"description of synchronize action");
+					StringCatalog.Get(
+						"~Sends your changes to usb key, server, or other users, and receives the changes made by other members of your team.",
+						"description of send/receive action");
 			}
 		}
 
 		public string ID
 		{
-			get { return "SynchronizeAction"; }
+			get { return "SendReceiveAction"; }
 			set { throw new NotImplementedException(); }
 		}
 
@@ -68,7 +68,7 @@ namespace Addin.Backup
 		public object Settings
 		{
 			get { return _settings; }
-			set { _settings = value as SynchronizeSettings; }
+			set { _settings = value as SendReceiveSettings; }
 		}
 
 		#endregion
@@ -78,8 +78,8 @@ namespace Addin.Backup
 			var configuration = (Chorus.sync.ProjectFolderConfiguration)
 								projectInfo.ServiceProvider.GetService(typeof (Chorus.sync.ProjectFolderConfiguration));
 			using(var dlg = new SyncDialog(configuration,
-					SyncUIDialogBehaviors.Lazy,
-					SyncUIFeatures.NormalRecommended))
+										   SyncUIDialogBehaviors.Lazy,
+										   SyncUIFeatures.NormalRecommended))
 			{
 				dlg.Text = "Wesay Send/Receive";
 				dlg.SyncOptions.DoMergeWithOthers = true;
@@ -87,7 +87,7 @@ namespace Addin.Backup
 				dlg.SyncOptions.DoSendToOthers = true;
 
 
-			   // leave it with the default, for now... dlg.SyncOptions.RepositorySourcesToTry.Clear();
+				// leave it with the default, for now... dlg.SyncOptions.RepositorySourcesToTry.Clear();
 				//dlg.SyncOptions.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
 
 				dlg.ShowDialog(parentForm);
@@ -118,8 +118,8 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return StringCatalog.Get("~Send/Recieve Changes to devices, servers, or other users on your network.",
-										 "Long label for synchronize action.");
+				return StringCatalog.Get("~Send/Receive Changes to devices, servers, or other users on your network.",
+										 "Long label for send/receive action.");
 			}
 		}
 
@@ -138,7 +138,7 @@ namespace Addin.Backup
 	}
 
 	[Serializable]
-	public class SynchronizeSettings
+	public class SendReceiveSettings
 	{
 //        private string _pathToExecutable = @"$wesayApplicationDirectory\mercurial.bat";
 //        private string _arguments = @"$projectPath";
