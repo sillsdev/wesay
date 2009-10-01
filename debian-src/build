@@ -1,7 +1,7 @@
 #!/bin/sh
 HERE=`pwd`
 TARGETS='hardy intrepid jaunty'
-REVISION=`echo $BUILD_NUMBER | sed -e 's/:.*$//'`
+REVISION=`echo $BUILD_NUMBER | sed -e 's/[:-].*$//'`
 MAJOR=`sed -e 's/\.${revision}//' bld/version.txt`
 rm -fr build
 mkdir -p output/build
