@@ -339,24 +339,35 @@ namespace WeSay.UI.AutoCompleteTextBox
 			_toolTip.ToolTipTitle = tipTitle;
 		}
 
+		Palaso.Misc.GuardAgainstReentry guard = null;
+
 		protected override void OnSizeChanged(EventArgs e)
 		{
-			var height = this.Height;
-			base.OnSizeChanged(e);
-			if (height > this.Height)   //this is for the search box, where the ws label could be much taller that the list text
-				this.Height = height;
-
-			if (_listBox != null)
+			using (guard = Palaso.Misc.Guard.AgainstReEntryExpected(guard))
 			{
-				//NB: this height can be multiple lines, so we don't just want the Height
-				//this._listBox.ItemHeight = Height;
-				_listBox.ItemHeight = _listBox.Font.Height;
-			}
-			if (_listBox != null && _autoSizePopup)
-			{
-				if (_listBox.Width < Width)
+				Console.WriteLine("Entered: {0}\nEntries: {1}", guard.HasEntered, guard.EntryCount);
+				if (guard.HasEntered)
 				{
-					_listBox.Width = Width;
+					return;
+				}
+
+				var height = this.Height;
+				base.OnSizeChanged(e);
+				if (height > this.Height)   //this is for the search box, where the ws label could be much taller that the list text
+					this.Height = height;
+
+				if (_listBox != null)
+				{
+					//NB: this height can be multiple lines, so we don't just want the Height
+					//this._listBox.ItemHeight = Height;
+					_listBox.ItemHeight = _listBox.Font.Height;
+				}
+				if (_listBox != null && _autoSizePopup)
+				{
+					if (_listBox.Width < Width)
+					{
+						_listBox.Width = Width;
+					}
 				}
 			}
 		}
