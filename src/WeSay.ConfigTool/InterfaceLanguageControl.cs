@@ -47,15 +47,21 @@ namespace WeSay.ConfigTool
 		private void LoadPoFilesIntoCombo(string directory)
 		{
 			_languageCombo.Items.Clear();
-			EnglishPoProxy englishPoProxy = new EnglishPoProxy();
-			_languageCombo.Items.Add(englishPoProxy);
-			_languageCombo.SelectedItem = englishPoProxy;
 			foreach (string file in Directory.GetFiles(directory, "*.po"))
 			{
 				PoProxy selector = new PoProxy(file);
+
+				if (selector.fileNameWithoutExtension == "wesay-en")
+				{
+					selector.LanguageName = "English (Default)";
+				}
+
 				_languageCombo.Items.Add(selector);
-				if (Options.Language ==
-					selector.fileNameWithoutExtension)
+
+				bool currentFileCorrespondsToConfiguredLanguage = (Options.Language == selector.fileNameWithoutExtension);
+
+
+				if (currentFileCorrespondsToConfiguredLanguage)
 				{
 					_languageCombo.SelectedItem = selector;
 				}
@@ -84,7 +90,13 @@ namespace WeSay.ConfigTool
 			}
 
 			public string fileNameWithoutExtension;
-			protected string _languageName;
+			private string _languageName;
+
+			public string LanguageName
+			{
+				get { return _languageName; }
+				set { _languageName = value; }
+			}
 
 			public override string ToString()
 			{
@@ -96,7 +108,7 @@ namespace WeSay.ConfigTool
 		{
 			public EnglishPoProxy()
 			{
-				_languageName = "English (Default)";
+				LanguageName = "English (Default)";
 				fileNameWithoutExtension = string.Empty;
 			}
 		}
@@ -116,7 +128,6 @@ namespace WeSay.ConfigTool
 			{
 				if (_languageCombo.SelectedItem != null)
 				{
-					Options.Language = value;
 					Options.Language = value;
 				}
 			}

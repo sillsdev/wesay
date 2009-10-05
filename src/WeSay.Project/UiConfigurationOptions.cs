@@ -22,7 +22,7 @@ namespace WeSay.Project
 
 		public UiConfigurationOptions()
 		{
-			Language = "en";
+			Language = "wesay-en";
 			LabelFontName = SystemFonts.CaptionFont.FontFamily.Name;
 			LabelFontSizeInPoints = SystemFonts.CaptionFont.SizeInPoints;
 		}

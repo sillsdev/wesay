@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>9.0.21022</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{87AF0B02-2983-486D-857F-D1859535C234}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -325,6 +325,7 @@
 	</EmbeddedResource>
 	<EmbeddedResource Include="DictionaryBrowseAndEdit\SearchBoxControl.resx">
 	  <DependentUpon>SearchBoxControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="GatherByWordList\GatherWordListControl.resx">
 	  <SubType>Designer</SubType>
