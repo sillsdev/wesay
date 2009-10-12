@@ -601,6 +601,10 @@ namespace WeSay.Foundation
 				{
 					throw GetConvertToException(value, destinationType);
 				}
+				if( (String) value == "none") //added as Mono bugfix
+				{
+						return "none";
+				}
 				if ((String) value == String.Empty)
 				{
 					return "none";
@@ -608,6 +612,7 @@ namespace WeSay.Foundation
 				else
 				{
 					string valueAsString = value.ToString();
+
 					string display;
 					if (!GetInstalledSpellCheckingIdsStrategy().Contains(valueAsString))
 					{
@@ -639,7 +644,7 @@ namespace WeSay.Foundation
 			{
 				if ((String) value == "none")
 				{
-					return String.Empty;
+					return "none"; //String.Empty;
 				}
 				else
 				{
@@ -676,7 +681,8 @@ namespace WeSay.Foundation
 					ITypeDescriptorContext context)
 			{
 				List<String> spellCheckerIds = new List<string>();
-				spellCheckerIds.Add(String.Empty); // for 'none'
+
+				spellCheckerIds.Add("none");//String.Empty); // for 'none' (changed for Mono bug)
 
 				try
 				{

@@ -61,7 +61,7 @@ namespace WeSay.ConfigTool
 					{
 						try
 						{
-							if (broker.DictionaryExists(ws.Id))
+							if (broker.DictionaryExists(ws.SpellCheckingId))
 							{
 								writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
 							}
