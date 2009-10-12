@@ -27,10 +27,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		public void ConvertTo_Empty_None()
+		public void ConvertTo_None_None()
 		{
 			Assert.AreEqual("none",
-							_spellCheckerIdToDisplayStringConverter.ConvertTo(string.Empty,
+							_spellCheckerIdToDisplayStringConverter.ConvertTo("none",
 																			  typeof (string)));
 		}
 
@@ -79,9 +79,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		public void ConvertFrom_None_ReturnsEmpty()
+		public void ConvertFrom_None_ReturnsNone()
 		{
-			Assert.AreEqual(string.Empty,
+			Assert.AreEqual("none",
 							_spellCheckerIdToDisplayStringConverter.ConvertFrom("none"));
 		}
 

@@ -607,6 +607,7 @@ namespace WeSay.Foundation
 				}
 				if ((String) value == String.Empty)
 				{
+					Console.WriteLine("Yoyo");
 					return "none";
 				}
 				else
