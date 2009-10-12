@@ -262,7 +262,7 @@ namespace WeSay.UI.TextBoxes
 			set
 			{
 				_isSpellCheckingEnabled = value;
-				if (_isSpellCheckingEnabled)
+				if (_isSpellCheckingEnabled && !(WritingSystem.SpellCheckingId == "none"))
 				{
 					OnSpellCheckingEnabled();
 				}
