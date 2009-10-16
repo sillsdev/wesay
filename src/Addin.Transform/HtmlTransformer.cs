@@ -61,7 +61,7 @@ namespace Addin.Transform
 			string pathToHtml = CreateFileToOpen(projectInfo, true, true);
 			_pathToOutput = pathToHtml;
 
-			string layoutCssPath = projectInfo.LocateFile(Path.Combine("Templates", "defaultDictionary.css"));
+			string layoutCssPath = projectInfo.LocateFile(Path.Combine("templates", "defaultDictionary.css"));
 
 			string destination =Path.Combine(Path.GetDirectoryName(pathToHtml), "defaultDictionary.css");
 
