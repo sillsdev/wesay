@@ -117,9 +117,21 @@ namespace WeSay.Foundation
 				writer.WriteStartElement("form");
 				writer.WriteAttributeString("lang", form.WritingSystemId);
 				//notice, no <text> wrapper
-				writer.WriteString(form.Form);
+				writer.WriteString(GetSafeXmlContents(form.Form));
 				writer.WriteEndElement();
 			}
+		}
+
+		private static XmlNode _xmlNodeUsedForEscaping;
+		public static string GetSafeXmlContents(string text)
+		{
+			if (_xmlNodeUsedForEscaping == null)//notice, this is only done once per run
+			{
+				XmlDocument doc = new XmlDocument();
+				_xmlNodeUsedForEscaping = doc.CreateElement("text", "x", "");
+			}
+			_xmlNodeUsedForEscaping.InnerText = text;
+			return _xmlNodeUsedForEscaping.OuterXml;
 		}
 
 		#region IReportEmptiness Members

@@ -428,7 +428,19 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
 
-		[Test]
+
+		/// <summary>
+		/// regression test of WS-15019
+		/// </summary>
+		 [Test]
+		public void AddWord_WordConsistsOfOnlySegmentSeparatorCharacter_AddedToDatabase()
+		{
+			int originalCount = _lexEntryRepository.CountAllItems();
+			Task.AddWord('\u001F'.ToString(), String.Empty);
+			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
+		}
+
+	   [Test]
 		public void RemainingCount_Initially_RemainingCountEqualsReferenceCount()
 		{
 			Assert.AreEqual(Task.GetReferenceCount(), Task.GetRemainingCount());

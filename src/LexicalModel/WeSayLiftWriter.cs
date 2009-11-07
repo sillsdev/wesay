@@ -528,38 +528,53 @@ namespace WeSay.LexicalModel
 					doMarkTheFirst = false;
 					Writer.WriteAttributeString("first", "true"); //useful for headword
 				}
-				string wrappedTextToExport = "<text>" + form.Form + "</text>";
-				XmlReaderSettings fragmentReaderSettings = new XmlReaderSettings();
-				fragmentReaderSettings.ConformanceLevel = ConformanceLevel.Fragment;
-				XmlReader testerForWellFormedness = XmlReader.Create(new StringReader(wrappedTextToExport));
+//                string wrappedTextToExport = "<text>" + form.Form + "</text>";
+//                XmlReaderSettings fragmentReaderSettings = new XmlReaderSettings();
+//                fragmentReaderSettings.ConformanceLevel = ConformanceLevel.Fragment;
+//                XmlReader testerForWellFormedness = XmlReader.Create(new StringReader(wrappedTextToExport));
+//
+//                bool isTextWellFormedXml = true;
+//                try
+//                {
+//                    while (testerForWellFormedness.Read())
+//                    {
+//                        //Just checking for well formed XML
+//                    }
+//                }
+//                catch
+//                {
+//                    isTextWellFormedXml = false;
+//                }
 
-				bool isTextWellFormedXml = true;
-				try
-				{
-					while (testerForWellFormedness.Read())
-					{
-						//Just checking for well formed XML
-					}
-				}
-				catch
-				{
-					isTextWellFormedXml = false;
-				}
-
-				if(isTextWellFormedXml)
-				{
-					Writer.WriteRaw(wrappedTextToExport);
-				}
-				else
-				{
-					Writer.WriteStartElement("text");
-					Writer.WriteString(form.Form);
-					Writer.WriteEndElement();
-				}
+//                if(isTextWellFormedXml)
+//                {
+				  //this does any necessary escaping
+					Writer.WriteElementString("text", GetSafeXmlContents(form.Form));// .WriteRaw(wrappedTextToExport);
+//                }
+//                else
+//                {
+//                    Writer.WriteStartElement("text");
+//                    Writer.WriteString(form.Form);
+//                    Writer.WriteEndElement();
+//                }
 				WriteFlags(form);
 				Writer.WriteEndElement();
 			}
 		}
+
+			private static XmlNode _xmlNodeUsedForEscaping;
+			public static string GetSafeXmlContents(string text)
+			{
+				if (_xmlNodeUsedForEscaping == null)//notice, this is only done once per run
+				{
+					XmlDocument doc = new XmlDocument();
+					_xmlNodeUsedForEscaping = doc.CreateElement("text", "x", "");
+				}
+				_xmlNodeUsedForEscaping.InnerText = text;
+				return _xmlNodeUsedForEscaping.OuterXml;
+			}
+
+
 
 		private void WriteFlags(IAnnotatable thing)
 		{

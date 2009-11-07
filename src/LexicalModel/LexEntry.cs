@@ -147,6 +147,7 @@ namespace WeSay.LexicalModel
 					_id =
 							_lexicalForm.GetFirstAlternative().Trim().Normalize(
 									NormalizationForm.FormD) + "_" + Guid;
+					_id = System.Xml.XmlConvert.EncodeName(_id);
 					NotifyPropertyChanged("id");
 				}
 				else if (doCreateEvenIfNoLexemeForm)
