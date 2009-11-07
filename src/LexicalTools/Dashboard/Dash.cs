@@ -635,8 +635,14 @@ namespace WeSay.LexicalTools.Dashboard
 		{
 			if (IsActive)
 			{
-				throw new InvalidOperationException(
-					"Activate should not be called when object is active.");
+//                throw new InvalidOperationException(
+//                    "Activate should not be called when object is active.");
+
+				//jdh, because of WS-15018, which is that if for some strange reason (like you're a tester)
+				//you switch back and forth fast enough, this with through, becuase of the "activateAfterScreenRedraw"
+				//timer business.  So now, just don't try to activate twice
+
+				return;
 			}
 
 			SuspendLayout();
