@@ -119,8 +119,8 @@ namespace WeSay.Foundation
 				writer.WriteAttributeString("lang", form.WritingSystemId);
 				//notice, no <text> wrapper
 
-				//todo: the following makes us safe against codes like 0x1F,
-				//but it wrongly escapes things liks <span> EscapeAnyUnicodeCharactersIllegalInXml(form.Form));
+				//the following makes us safe against codes like 0x1F, which can be easily
+				//introduced via a right-click menu in a standard edit box (at least on windows)
 				writer.WriteString(form.Form.EscapeAnyUnicodeCharactersIllegalInXml());
 				writer.WriteEndElement();
 			}
