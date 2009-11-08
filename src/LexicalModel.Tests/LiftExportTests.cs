@@ -622,7 +622,7 @@ namespace WeSay.LexicalModel.Tests
 				ShouldContain(
 					string.Format(
 						"id=\"{0}\"",
-						WeSayLiftWriter.GetHumanReadableId(entry, new Dictionary<string, int>())
+						WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, new Dictionary<string, int>())
 					),
 					session
 				);
@@ -827,7 +827,7 @@ namespace WeSay.LexicalModel.Tests
 				//_lexEntryRepository.SaveItem(entry);
 				Assert.AreEqual(
 					"my id",
-					WeSayLiftWriter.GetHumanReadableId(entry, new Dictionary<string, int>())
+					WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, new Dictionary<string, int>())
 				);
 			}
 		}
@@ -838,7 +838,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
 			Dictionary<string, int> idCounts = new Dictionary<string, int>();
-			WeSayLiftWriter.GetHumanReadableId(entry, idCounts);
+			WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts);
 			Assert.AreEqual(1, idCounts["my id"]);
 		}
 		*/
@@ -849,8 +849,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
 			Dictionary<string, int> idCounts = new Dictionary<string, int>();
-			WeSayLiftWriter.GetHumanReadableId(entry, idCounts);
-			Assert.AreEqual("my id_2", WeSayLiftWriter.GetHumanReadableId(entry, idCounts));
+			WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts);
+			Assert.AreEqual("my id_2", WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts));
 		}
 		*/
 		/* this is not relevant, as we are currently using form_guid as the id
@@ -859,8 +859,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
 			Dictionary<string, int> idCounts = new Dictionary<string, int>();
-			WeSayLiftWriter.GetHumanReadableId(entry, idCounts);
-			WeSayLiftWriter.GetHumanReadableId(entry, idCounts);
+			WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts);
+			WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts);
 			Assert.AreEqual(2, idCounts["my id"]);
 		}
 		*/
@@ -869,7 +869,7 @@ namespace WeSay.LexicalModel.Tests
 		public void GetHumanReadableId_EntryHasNoIdAndNoLexicalForms_GivesDefaultId()
 		{
 			LexEntry entry = new LexEntry();
-			Assert.AreEqual("NoForm", WeSayLiftWriter.GetHumanReadableId(entry, new Dictionary<string, int>()));
+			Assert.AreEqual("NoForm", WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, new Dictionary<string, int>()));
 		}
 		*/
 
@@ -879,8 +879,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = new LexEntry();
 			Dictionary<string, int> idCounts = new Dictionary<string, int>();
-			WeSayLiftWriter.GetHumanReadableId(entry, idCounts);
-			Assert.AreEqual("NoForm_2", WeSayLiftWriter.GetHumanReadableId(entry, idCounts));
+			WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts);
+			Assert.AreEqual("NoForm_2", WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts));
 		}
 		*/
 
@@ -892,7 +892,7 @@ namespace WeSay.LexicalModel.Tests
 			entry.LexicalForm["green"] = "grass";
 			entry.LexicalForm["blue"] = "ocean";
 
-			Assert.AreEqual("grass", WeSayLiftWriter.GetHumanReadableId(entry, new Dictionary<string, int>()));
+			Assert.AreEqual("grass", WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, new Dictionary<string, int>()));
 		}
 		*/
 
@@ -905,7 +905,7 @@ namespace WeSay.LexicalModel.Tests
 			entry.LexicalForm["green"] = "grass";
 			entry.LexicalForm["blue"] = "ocean";
 			Dictionary<string, int> idCounts = new Dictionary<string, int>();
-			WeSayLiftWriter.GetHumanReadableId(entry, idCounts);
+			WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts);
 			Assert.AreEqual(1, idCounts["grass"]);
 		}
 		*/
@@ -917,8 +917,8 @@ namespace WeSay.LexicalModel.Tests
 			entry.LexicalForm["green"] = "grass";
 			entry.LexicalForm["blue"] = "ocean";
 			Dictionary<string, int> idCounts = new Dictionary<string, int>();
-			WeSayLiftWriter.GetHumanReadableId(entry, idCounts);
-			Assert.AreEqual("grass_2", WeSayLiftWriter.GetHumanReadableId(entry, idCounts));
+			WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts);
+			Assert.AreEqual("grass_2", WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts));
 		}
 		*/
 		/*      this is not currently relevant, as we are now using form_guid as the id
@@ -929,8 +929,8 @@ namespace WeSay.LexicalModel.Tests
 			entry.LexicalForm["green"] = "grass";
 			entry.LexicalForm["blue"] = "ocean";
 			Dictionary<string, int> idCounts = new Dictionary<string, int>();
-			WeSayLiftWriter.GetHumanReadableId(entry, idCounts);
-			WeSayLiftWriter.GetHumanReadableId(entry, idCounts);
+			WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts);
+			WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, idCounts);
 			Assert.AreEqual(2, idCounts["grass"]);
 		}
 		*/
@@ -940,7 +940,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm["green"] = "string\t1\n2\r3 4";
-			Assert.AreEqual("string 1 2 3 4", WeSayLiftWriter.GetHumanReadableId(entry, new Dictionary<string, int>()));
+			Assert.AreEqual("string 1 2 3 4", WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, new Dictionary<string, int>()));
 		}
 		*/
 
@@ -949,7 +949,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			var entry = new LexEntry(" ", Guid.NewGuid());
 			Assert.IsTrue(
-				WeSayLiftWriter.GetHumanReadableId(
+				WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(
 					entry, new Dictionary<string, int>()
 				).StartsWith("Id'dPrematurely_")
 			);
@@ -961,7 +961,7 @@ namespace WeSay.LexicalModel.Tests
 			var entry = new LexEntry(" ", Guid.NewGuid());
 			entry.LexicalForm["green"] = "string";
 			Assert.IsTrue(
-				WeSayLiftWriter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith
+				WeSayLiftWriter.GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, new Dictionary<string, int>()).StartsWith
 					("string"));
 		}
 
@@ -1379,6 +1379,52 @@ namespace WeSay.LexicalModel.Tests
 				session.LiftWriter.Add(null, multiText);
 				CheckAnswer(
 					"<form lang=\"de\"><text>This <span href=\"reference\">is well formed</span> XML!</text></form>",
+					session
+				);
+			}
+		}
+
+		[Test]
+		public void Add_MultiTextWithWellFormedXMLAndScaryCharacter_IsExportedAsXML()
+		{
+			using (var session = new LiftExportAsFragmentTestSession())
+			{
+				var multiText = new MultiText();
+				multiText.SetAlternative("de", "This <span href=\"reference\">is well \u001F formed</span> XML!");
+				session.LiftWriter.Add(null, multiText);
+				CheckAnswer(
+					"<form lang=\"de\"><text>This <span href=\"reference\">is well &#x1F; formed</span> XML!</text></form>",
+					session
+				);
+			}
+		}
+		[Test]
+		public void Add_MultiTextWithScaryUnicodeChar_IsExported()
+		{
+			//  1F is the character for "Segment Separator" and you can insert it by right-clicking in windows
+			using (var session = new LiftExportAsFragmentTestSession())
+			{
+				var multiText = new MultiText();
+				multiText.SetAlternative("de", "This has a segment separator character at the end\u001F");
+				session.LiftWriter.Add(null, multiText);
+				CheckAnswer(
+					"<form lang=\"de\"><text>This has a segment separator character at the end&#x1F;</text></form>",
+					session
+				);
+			}
+		}
+
+		[Test]
+		public void Add_MalformedXmlWithWithScaryUnicodeChar_IsExportedAsText()
+		{
+			//  1F is the character for "Segment Separator" and you can insert it by right-clicking in windows
+			using (var session = new LiftExportAsFragmentTestSession())
+			{
+				var multiText = new MultiText();
+				multiText.SetAlternative("de", "This <span href=\"reference\">is not well \u001F formed<span> XML!");
+				session.LiftWriter.Add(null, multiText);
+				CheckAnswer(
+					"<form lang=\"de\"><text>This &lt;span href=\"reference\"&gt;is not well &#x1F; formed&lt;span&gt; XML!</text></form>",
 					session
 				);
 			}

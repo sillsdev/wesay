@@ -7,6 +7,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using LiftIO;
 using Palaso.Text;
+using Palaso.Extensions;
 using LiftIO.Parsing;
 using System.Linq;
 
@@ -117,10 +118,14 @@ namespace WeSay.Foundation
 				writer.WriteStartElement("form");
 				writer.WriteAttributeString("lang", form.WritingSystemId);
 				//notice, no <text> wrapper
-				writer.WriteString(form.Form);
+
+				//todo: the following makes us safe against codes like 0x1F,
+				//but it wrongly escapes things liks <span> EscapeAnyUnicodeCharactersIllegalInXml(form.Form));
+				writer.WriteString(form.Form.EscapeAnyUnicodeCharactersIllegalInXml());
 				writer.WriteEndElement();
 			}
 		}
+
 
 		#region IReportEmptiness Members
 
