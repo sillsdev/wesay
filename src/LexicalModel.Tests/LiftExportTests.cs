@@ -1385,6 +1385,52 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		public void Add_MultiTextWithWellFormedXMLAndScaryCharacter_IsExportedAsXML()
+		{
+			using (var session = new LiftExportAsFragmentTestSession())
+			{
+				var multiText = new MultiText();
+				multiText.SetAlternative("de", "This <span href=\"reference\">is well \u001F formed</span> XML!");
+				session.LiftWriter.Add(null, multiText);
+				CheckAnswer(
+					"<form lang=\"de\"><text>This <span href=\"reference\">is well &#x1F; formed</span> XML!</text></form>",
+					session
+				);
+			}
+		}
+		[Test]
+		public void Add_MultiTextWithScaryUnicodeChar_IsExported()
+		{
+			//  1F is the character for "Segment Separator" and you can insert it by right-clicking in windows
+			using (var session = new LiftExportAsFragmentTestSession())
+			{
+				var multiText = new MultiText();
+				multiText.SetAlternative("de", "This has a segment separator character at the end\u001F");
+				session.LiftWriter.Add(null, multiText);
+				CheckAnswer(
+					"<form lang=\"de\"><text>This has a segment separator character at the end&#x1F;</text></form>",
+					session
+				);
+			}
+		}
+
+		[Test]
+		public void Add_MalformedXmlWithWithScaryUnicodeChar_IsExportedAsText()
+		{
+			//  1F is the character for "Segment Separator" and you can insert it by right-clicking in windows
+			using (var session = new LiftExportAsFragmentTestSession())
+			{
+				var multiText = new MultiText();
+				multiText.SetAlternative("de", "This <span href=\"reference\">is not well \u001F formed<span> XML!");
+				session.LiftWriter.Add(null, multiText);
+				CheckAnswer(
+					"<form lang=\"de\"><text>This &lt;span href=\"reference\"&gt;is not well &#x1F; formed&lt;span&gt; XML!</text></form>",
+					session
+				);
+			}
+		}
+
+		[Test]
 		public void Add_MultiTextWithMalFormedXML_IsExportedText()
 		{
 			using (var session = new LiftExportAsFragmentTestSession())

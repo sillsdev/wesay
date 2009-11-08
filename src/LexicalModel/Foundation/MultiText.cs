@@ -117,7 +117,10 @@ namespace WeSay.Foundation
 				writer.WriteStartElement("form");
 				writer.WriteAttributeString("lang", form.WritingSystemId);
 				//notice, no <text> wrapper
-				writer.WriteString(GetSafeXmlContents(form.Form));
+
+				//todo: the following makes us safe against codes like 0x1F,
+				//but it wrongly escapes things liks <span> EscapeAnyUnicodeCharactersIllegalInXml(form.Form));
+				writer.WriteString(form.Form);
 				writer.WriteEndElement();
 			}
 		}
@@ -131,7 +134,7 @@ namespace WeSay.Foundation
 				_xmlNodeUsedForEscaping = doc.CreateElement("text", "x", "");
 			}
 			_xmlNodeUsedForEscaping.InnerText = text;
-			return _xmlNodeUsedForEscaping.OuterXml;
+			return _xmlNodeUsedForEscaping.InnerXml;
 		}
 
 		#region IReportEmptiness Members
