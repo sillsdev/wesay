@@ -392,7 +392,7 @@ namespace WeSay.Project
 			masterTemplate.Add(literalMeaningField);
 
 			Field noteField = new Field(PalasoDataObject.WellKnownProperties.Note,
-										"WeSayDataObject",
+										"PalasoDataObject",
 										defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Note", "The label for the field showing a note.");
