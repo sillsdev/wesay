@@ -148,7 +148,7 @@ namespace WeSay.Project
 		/// </summary>
 		protected override void WriteFormsThatNeedToBeTheirOwnFields(MultiText text, string name)
 		{
-			foreach(var path in text.GetAudioForms(_viewTemplate.WritingSystems))
+			foreach(var path in GetAudioForms(text, _viewTemplate.WritingSystems))
 			{
 				Writer.WriteStartElement("trait");
 
@@ -157,6 +157,12 @@ namespace WeSay.Project
 				Writer.WriteAttributeString("value", string.Format("..{0}audio{0}" + path.Form, System.IO.Path.DirectorySeparatorChar));
 				Writer.WriteEndElement();
 			}
+		}
+
+		public static IList<LanguageForm> GetAudioForms(MultiText field, WritingSystemCollection writingSytems)
+		{
+			var x = field.Forms.Where((f) => writingSytems[f.WritingSystemId].IsAudio);
+			return new List<LanguageForm>(x);
 		}
 
 		protected override void WriteRelationTarget(LexRelation relation)
@@ -205,7 +211,7 @@ namespace WeSay.Project
 //            if(!_viewTemplate.WritingSystems.Any(p=>p.Value.IsAudio))
 //                return;
 //
-			var paths = entry.LexicalForm.GetAudioForms(_viewTemplate.WritingSystems);
+			var paths = GetAudioForms(entry.LexicalForm, _viewTemplate.WritingSystems);
 			if (paths.Count == 0)
 				return;
 			Writer.WriteStartElement("pronunciation");

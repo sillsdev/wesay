@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Palaso.Text;
 using Palaso.LexicalModel;
@@ -207,7 +208,7 @@ namespace WeSay.LexicalTools
 
 				if (field == null) // show them all
 				{
-					foreach (LanguageForm l in text.GetActualTextForms(WritingSystems))
+					foreach (LanguageForm l in GetActualTextForms(text, WritingSystems))
 					{
 						RenderForm(text, currentItem, rtfBuilder, l, sizeBoost);
 					}
@@ -222,6 +223,12 @@ namespace WeSay.LexicalTools
 				}
 			}
 			return rtfBuilder.ToString();
+		}
+
+		public static IList<LanguageForm> GetActualTextForms(MultiText text, WritingSystemCollection writingSytems)
+		{
+			var x = text.Forms.Where((f) => !writingSytems[f.WritingSystemId].IsAudio);
+			return new List<LanguageForm>(x);
 		}
 
 		private static void RenderForm(MultiText text,

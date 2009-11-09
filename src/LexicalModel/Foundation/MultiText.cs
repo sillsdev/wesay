@@ -8,7 +8,6 @@ using Palaso.Text;
 using LiftIO.Parsing;
 using System.Linq;
 using Palaso.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 
 //using Exortech.NetReflector;
 //using Exortech.NetReflector.Util;
@@ -138,7 +137,7 @@ namespace Palaso.LexicalModel
 		{
 			get { return Empty; }
 		}
-
+		/*
 		/// <summary>
 		/// skip those forms which are in audio writing systems
 		/// </summary>
@@ -153,7 +152,7 @@ namespace Palaso.LexicalModel
 			var x = Forms.Where((f) => writingSytems[f.WritingSystemId].IsAudio);
 			return new List<LanguageForm>(x);
 		}
-
+		*/
 		public void RemoveEmptyStuff()
 		{
 			List<LanguageForm> condemened = new List<LanguageForm>();

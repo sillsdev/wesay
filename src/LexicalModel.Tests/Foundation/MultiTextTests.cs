@@ -231,22 +231,5 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			MultiText.StripMarkers(null);
 		}
 
-
-
-		[Test]
-		public void GetActualTextForms_DropsIsAudioForm()
-		{
-			var writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Add("en", new WritingSystem("en", new Font("Arial", 12)));
-			var audio = new WritingSystem("en", new Font("Arial", 12));
-			audio.IsAudio = true;
-			writingSystemCollection.Add("voice", audio);
-			var m = new MultiText();
-			m.SetAlternative("en", "foo");
-			m.SetAlternative("voice", "boo");
-			Assert.AreEqual(1, m.GetActualTextForms(writingSystemCollection).Count);
-			Assert.AreEqual("foo", m.GetActualTextForms(writingSystemCollection)[0].Form);
-		}
-
 	}
 }
