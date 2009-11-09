@@ -26,9 +26,10 @@ using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using WeSay.AddinLib;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project.ConfigMigration;
 using WeSay.UI;
 using WeSay.UI.audio;
@@ -731,7 +732,7 @@ namespace WeSay.Project
 		}
 		public IServiceLocator ServiceLocator
 		{
-			get { return new WeSay.Foundation.ServiceLocatorAdapter(_container); }
+			get { return new Palaso.LexicalModel.ServiceLocatorAdapter(_container); }
 		}
 
 		private XPathDocument GetConfigurationDoc()

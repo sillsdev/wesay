@@ -4,10 +4,12 @@ using System.Drawing;
 using System.IO;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherBySemanticDomains;
 using WeSay.Project;
 

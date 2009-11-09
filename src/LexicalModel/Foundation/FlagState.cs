@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace WeSay.Foundation
+namespace Palaso.LexicalModel
 {
 	/// <summary>
 	/// Holds a boolean value for, for example, a checkbox
@@ -11,7 +11,7 @@ namespace WeSay.Foundation
 		/// This "backreference" is used to notify the parent of changes.
 		/// IParentable gives access to this during explicit construction.
 		/// </summary>
-		private WeSayDataObject _parent;
+		private PalasoDataObject _parent;
 
 		private bool _isChecked;
 
@@ -22,7 +22,7 @@ namespace WeSay.Foundation
 
 		#region IParentable Members
 
-		public WeSayDataObject Parent
+		public PalasoDataObject Parent
 		{
 			set { _parent = value; }
 		}

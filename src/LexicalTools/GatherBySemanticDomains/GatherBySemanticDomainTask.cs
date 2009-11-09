@@ -10,10 +10,12 @@ using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using System.Linq;
 

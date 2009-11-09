@@ -1,12 +1,12 @@
 using System;
 using NUnit.Framework;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 
 namespace WeSay.LexicalModel.Tests.Foundation
 {
-	internal class TestClass: WeSayDataObject
+	internal class TestClass: PalasoDataObject
 	{
-		public TestClass(WeSayDataObject parent): base(parent) {}
+		public TestClass(PalasoDataObject parent): base(parent) {}
 
 		public override bool IsEmpty
 		{
@@ -15,7 +15,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 	}
 
 	[TestFixture]
-	public class WeSayDataObjectTests
+	public class PalasoObjectTests
 	{
 		[Test]
 		public void NoProperties_NoFlag()

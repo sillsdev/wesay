@@ -9,8 +9,8 @@ using Palaso.Services.Dictionary;
 using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.App.Services

@@ -4,8 +4,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Data;
 using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 

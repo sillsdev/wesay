@@ -1,7 +1,7 @@
 using Palaso.Lift;
 using Palaso.Progress;
 
-using WeSay.Foundation.Options; // review cp move to palaso?
+using Palaso.LexicalModel.Options; // review cp move to palaso?
 
 namespace WeSay.LexicalModel
 {

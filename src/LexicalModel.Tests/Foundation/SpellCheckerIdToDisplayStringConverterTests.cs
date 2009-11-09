@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using NUnit.Framework;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation
 {

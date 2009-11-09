@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WeSay.Foundation
+namespace Palaso.LexicalModel
 {
 	public interface ICountGiver
 	{

@@ -1,9 +1,10 @@
 using System.Collections.Generic;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel;
 
 namespace WeSay.LexicalModel
 {
-	public sealed class LexExampleSentence: WeSayDataObject
+	public sealed class LexExampleSentence: PalasoDataObject
 	{
 		private readonly MultiText _sentence;
 		private readonly MultiText _translation;
@@ -11,7 +12,7 @@ namespace WeSay.LexicalModel
 
 		//!!What!! Is this done this way so that we don't end up storing
 		//  the data in the object database?
-		public new class WellKnownProperties: WeSayDataObject.WellKnownProperties
+		public new class WellKnownProperties: PalasoDataObject.WellKnownProperties
 		{
 			public static string ExampleSentence = "ExampleSentence";
 			public static string Translation = "ExampleTranslation";
@@ -25,7 +26,7 @@ namespace WeSay.LexicalModel
 			}
 		} ;
 
-		public LexExampleSentence(WeSayDataObject parent): base(parent)
+		public LexExampleSentence(PalasoDataObject parent): base(parent)
 		{
 			_sentence = new MultiText(this);
 			_translation = new MultiText(this);

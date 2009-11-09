@@ -1,19 +1,19 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using LiftIO;
 using Palaso.Text;
 using LiftIO.Parsing;
 using System.Linq;
+using Palaso.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 
 //using Exortech.NetReflector;
 //using Exortech.NetReflector.Util;
 
-namespace WeSay.Foundation
+namespace Palaso.LexicalModel
 {
 	/// <summary>
 	/// MultiText holds an array of LanguageForms, indexed by writing system ID.
@@ -23,13 +23,13 @@ namespace WeSay.Foundation
 	[XmlInclude(typeof (LanguageForm))]
 	public class MultiText: MultiTextBase, IParentable, IReportEmptiness, IXmlSerializable
 	{
-		private WeSayDataObject _parent;
+		private PalasoDataObject _parent;
 		public List<string> EmbeddedXmlElements = new List<string>();
 
 		//Adapter pattern: LiftMultitext has some features we would like to use
 		private static LiftMultiText _liftMultitext;
 
-		public MultiText(WeSayDataObject parent)
+		public MultiText(PalasoDataObject parent)
 		{
 			_parent = parent;
 		}
@@ -60,7 +60,7 @@ namespace WeSay.Foundation
 		/// 23 Jan 07, note: starting to switch to using these for notifying parent of changes, too.
 		/// </summary>
 		[XmlIgnore]
-		public WeSayDataObject Parent
+		public PalasoDataObject Parent
 		{
 			protected get { return _parent; }
 			set { _parent = value; }
@@ -69,7 +69,7 @@ namespace WeSay.Foundation
 		/// <summary>
 		/// Subclasses should provide a "Parent" property which set the proper class.
 		/// </summary>
-		public WeSayDataObject ParentAsObject
+		public PalasoDataObject ParentAsObject
 		{
 			get { return Parent; }
 		}
@@ -225,7 +225,7 @@ namespace WeSay.Foundation
 		private static string buildOpenMarker(LiftSpan span)
 		{
 			string openMarker = string.Format(
-					"<span");
+				"<span");
 			if (!String.IsNullOrEmpty(span.Lang))
 			{
 				openMarker += " lang=\"" + span.Lang +"\"";

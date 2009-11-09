@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -34,7 +34,7 @@ namespace WeSay.LexicalTools
 			return AddWidgets(Entry, -1);
 		}
 
-		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
+		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
 		{
 			return AddWidgets((LexEntry) wsdo, insertAtRow);
 		}

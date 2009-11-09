@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
 
 namespace WeSay.UI.audio

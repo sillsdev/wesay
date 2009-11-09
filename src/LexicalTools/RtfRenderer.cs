@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Palaso.Text;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
+using Palaso.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -244,7 +246,7 @@ namespace WeSay.LexicalTools
 			rtfBuilder.Append(" ");
 		}
 
-		private static string RenderGhostedField(WeSayDataObject parent,
+		private static string RenderGhostedField(PalasoDataObject parent,
 												string property,
 												 CurrentItemEventArgs currentItem,
 												 int? number)

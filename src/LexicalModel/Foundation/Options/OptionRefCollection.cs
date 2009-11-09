@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
 
-namespace WeSay.LexicalModel.Foundation.Options
+namespace Palaso.LexicalModel.Options
 {
 	/// <summary>
 	/// Used to refer to this option from a field
@@ -143,7 +143,7 @@ namespace WeSay.LexicalModel.Foundation.Options
 
 		#region IParentable Members
 
-		public WeSayDataObject Parent
+		public PalasoDataObject Parent
 		{
 			set { _whomToNotify = value; }
 		}
@@ -291,7 +291,7 @@ namespace WeSay.LexicalModel.Foundation.Options
 		//                {
 		//                    OptionRef or = new OptionRef();
 		//                    or.Key = key;
-		//                    or.Parent = (WeSayDataObject) _whomToNotify ;
+		//                    or.Parent = (PalasoDataObject) _whomToNotify ;
 		//
 		//                    _optionRefProxyList.Add(or);
 		//                }

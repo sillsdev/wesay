@@ -2,8 +2,8 @@
 using NUnit.Framework;
 using Palaso.TestUtilities;
 using WeSay.ConfigTool.NewProjectCreation;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests.NewProjectCreation

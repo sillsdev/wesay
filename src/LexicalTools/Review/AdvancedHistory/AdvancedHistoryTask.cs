@@ -2,7 +2,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Autofac;
 using Chorus.UI.Review;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
 using WeSay.UI;

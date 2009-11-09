@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Palaso.Text;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
 using System.Linq;
+using Palaso.LexicalModel;
+using WeSay.LexicalModel.Foundation;
+
 #if MONO
 using Palaso.Linq;
 #endif

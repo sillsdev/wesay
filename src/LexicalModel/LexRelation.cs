@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 
 namespace WeSay.LexicalModel
 {
@@ -52,15 +52,15 @@ namespace WeSay.LexicalModel
 	{
 		//private LexRelationType _type;
 		private string _fieldId;
-		//private WeSayDataObject _target;
+		//private PalasoDataObject _target;
 		private string _targetId;
-		private WeSayDataObject _parent;
+		private PalasoDataObject _parent;
 		//
 		//        public LexRelation()
 		//        {
 		//        }
 
-		public LexRelation(string fieldId, string targetId, WeSayDataObject parent)
+		public LexRelation(string fieldId, string targetId, PalasoDataObject parent)
 		{
 			_fieldId = fieldId;
 			_targetId = targetId ?? string.Empty;
@@ -90,7 +90,7 @@ namespace WeSay.LexicalModel
 
 		#region IParentable Members
 
-		public WeSayDataObject Parent
+		public PalasoDataObject Parent
 		{
 			set { _parent = value; }
 		}
@@ -201,12 +201,12 @@ namespace WeSay.LexicalModel
 
 	public class LexRelationCollection: IParentable, IReportEmptiness
 	{
-		private WeSayDataObject _parent;
+		private PalasoDataObject _parent;
 		private List<LexRelation> _relations = new List<LexRelation>();
 
 		#region IParentable Members
 
-		public WeSayDataObject Parent
+		public PalasoDataObject Parent
 		{
 			set { _parent = value; }
 			get { return _parent; }

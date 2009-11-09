@@ -6,8 +6,9 @@ using Palaso.Data;
 using Palaso.Reporting;
 using Palaso.Text;
 using WeSay.Data;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
@@ -20,12 +21,12 @@ namespace WeSay.LexicalTools
 		private readonly Field _field;
 		private readonly EventHandler<CurrentItemEventArgs> _focusDelegate;
 		private readonly LexRelationType _relationType;
-		private readonly WeSayDataObject _relationParent;
+		private readonly PalasoDataObject _relationParent;
 		private SimpleBinding<string> _binding;
 		private Control _control;
 		private ResultSet<LexEntry> _resultSet;
 
-		private RelationController(WeSayDataObject relationParent,
+		private RelationController(PalasoDataObject relationParent,
 								   LexRelationType relationType,
 								   Field field,
 								   LexEntryRepository lexEntryRepository,
@@ -45,7 +46,7 @@ namespace WeSay.LexicalTools
 			get { return _control; }
 		}
 
-		public static Control CreateWidget(WeSayDataObject relationParent,
+		public static Control CreateWidget(PalasoDataObject relationParent,
 										   LexRelationType relationType,
 										   Field field,
 										   LexEntryRepository lexEntryRepository,
@@ -97,7 +98,7 @@ namespace WeSay.LexicalTools
 		{
 			//relations come to us in collections, even when they are atomic
 			// this will get a collection if we already have some for this field, or else
-			// it will make one. If unused, it will be cleaned up at the right time by the WeSayDataObject parent.
+			// it will make one. If unused, it will be cleaned up at the right time by the PalasoDataObject parent.
 			LexRelationCollection targetRelationCollection =
 					_relationParent.GetOrCreateProperty<LexRelationCollection>(_field.FieldName);
 
@@ -112,7 +113,7 @@ namespace WeSay.LexicalTools
 					}
 					else
 					{
-						//we have to make one so we can show the control. It will be cleaned up, if not used, by the WeSayDataObject target
+						//we have to make one so we can show the control. It will be cleaned up, if not used, by the PalasoDataObject target
 						relation = new LexRelation(_field.FieldName, string.Empty, _relationParent);
 						targetRelationCollection.Relations.Add(relation);
 					}

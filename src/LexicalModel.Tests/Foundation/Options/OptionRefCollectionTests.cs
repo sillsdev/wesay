@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Foundation.Options;
+using Palaso.LexicalModel.Options;
+using Palaso.LexicalModel.Options;
+using Palaso.LexicalModel.Options;
 
-namespace WeSay.Foundation.Tests
+namespace Palaso.LexicalModel.Tests
 {
 	[TestFixture]
 	public class OptionRefCollectionTests : IReceivePropertyChangeNotifications

@@ -3,16 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using Palaso.LexicalModel.Options;
 using Palaso.Reporting;
 using Palaso.Text;
-using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Foundation.Options;
 
-namespace WeSay.Foundation
+namespace Palaso.LexicalModel
 {
 	public interface IParentable
 	{
-		WeSayDataObject Parent { set; }
+		PalasoDataObject Parent { set; }
 	}
 
 	public interface IReceivePropertyChangeNotifications
@@ -26,7 +25,7 @@ namespace WeSay.Foundation
 		string Key { get; set; }
 	}
 
-	public abstract class WeSayDataObject: INotifyPropertyChanged,
+	public abstract class PalasoDataObject: INotifyPropertyChanged,
 										   IReceivePropertyChangeNotifications
 	{
 		[NonSerialized]
@@ -35,11 +34,11 @@ namespace WeSay.Foundation
 		/// <summary>
 		/// see comment on _parent field of MultiText for an explanation of this field
 		/// </summary>
-		private WeSayDataObject _parent;
+		private PalasoDataObject _parent;
 
 		private List<KeyValuePair<string, object>> _properties;
 
-		protected WeSayDataObject(WeSayDataObject parent)
+		protected PalasoDataObject(PalasoDataObject parent)
 		{
 			_properties = new List<KeyValuePair<string, object>>();
 			_parent = parent;
@@ -50,7 +49,7 @@ namespace WeSay.Foundation
 		/// <summary>
 		/// see comment on _parent field of MultiText for an explanation of this field
 		/// </summary>
-		public WeSayDataObject Parent
+		public PalasoDataObject Parent
 		{
 			get { return _parent; }
 			set
@@ -156,9 +155,9 @@ namespace WeSay.Foundation
 			child.PropertyChanged -= OnChildObjectPropertyChanged;
 			//prevent the bug where we were acquiring these with each GetProperty<> call
 			child.PropertyChanged += OnChildObjectPropertyChanged;
-			if (child is WeSayDataObject)
+			if (child is PalasoDataObject)
 			{
-				((WeSayDataObject) child).EmptyObjectsRemoved += OnEmptyObjectsRemoved;
+				((PalasoDataObject) child).EmptyObjectsRemoved += OnEmptyObjectsRemoved;
 			}
 		}
 
@@ -408,9 +407,9 @@ namespace WeSay.Foundation
 	public class ListEventHelper
 	{
 		private readonly string _listName;
-		private readonly WeSayDataObject _listOwner;
+		private readonly PalasoDataObject _listOwner;
 
-		public ListEventHelper(WeSayDataObject listOwner, IBindingList list, string listName)
+		public ListEventHelper(PalasoDataObject listOwner, IBindingList list, string listName)
 		{
 			_listOwner = listOwner;
 			_listName = listName;
@@ -428,9 +427,9 @@ namespace WeSay.Foundation
 				IBindingList list = (IBindingList) sender;
 				INotifyPropertyChanged newGuy = (INotifyPropertyChanged) list[e.NewIndex];
 				_listOwner.WireUpChild(newGuy);
-				if (newGuy is WeSayDataObject)
+				if (newGuy is PalasoDataObject)
 				{
-					((WeSayDataObject) newGuy).Parent = _listOwner;
+					((PalasoDataObject) newGuy).Parent = _listOwner;
 				}
 			}
 			_listOwner.NotifyPropertyChanged(_listName);
@@ -440,14 +439,14 @@ namespace WeSay.Foundation
 	public class EmbeddedXmlCollection: IParentable
 	{
 		private List<string> _values;
-		private WeSayDataObject _parent;
+		private PalasoDataObject _parent;
 
 		public EmbeddedXmlCollection()
 		{
 			_values = new List<string>();
 		}
 
-		public WeSayDataObject Parent
+		public PalasoDataObject Parent
 		{
 			set { _parent = value; }
 		}

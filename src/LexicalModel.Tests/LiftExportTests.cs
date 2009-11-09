@@ -6,9 +6,10 @@ using System.Xml;
 using LiftIO.Validation;
 using NUnit.Framework;
 using Palaso.TestUtilities;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
 using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests
@@ -570,7 +571,7 @@ namespace WeSay.LexicalModel.Tests
 			using (var session = new LiftExportAsFragmentTestSession())
 			{
 				LexEntry entry = session.CreateItem();
-				entry.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+				entry.GetOrCreateProperty<MultiText>(PalasoDataObject.WellKnownProperties.Note);
 				//_lexEntryRepository.SaveItem(entry);
 				session.LiftWriter.Add(entry);
 				session.LiftWriter.End();
@@ -1165,7 +1166,7 @@ namespace WeSay.LexicalModel.Tests
 				LexEntry entry = session.CreateItem();
 
 				MultiText m =
-					entry.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+					entry.GetOrCreateProperty<MultiText>(PalasoDataObject.WellKnownProperties.Note);
 				m["zz"] = "orange";
 				//_lexEntryRepository.SaveItem(entry);
 				session.LiftWriter.Add(entry);
@@ -1182,7 +1183,7 @@ namespace WeSay.LexicalModel.Tests
 			{
 				LexExampleSentence example = new LexExampleSentence();
 				MultiText m =
-					example.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+					example.GetOrCreateProperty<MultiText>(PalasoDataObject.WellKnownProperties.Note);
 				m["zz"] = "orange";
 				session.LiftWriter.Add(example);
 				session.LiftWriter.End();
@@ -1198,7 +1199,7 @@ namespace WeSay.LexicalModel.Tests
 			{
 				LexSense sense = new LexSense();
 				MultiText m =
-					sense.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+					sense.GetOrCreateProperty<MultiText>(PalasoDataObject.WellKnownProperties.Note);
 				m["zz"] = "orange";
 				session.LiftWriter.Add(sense);
 				session.LiftWriter.End();
@@ -1287,7 +1288,7 @@ namespace WeSay.LexicalModel.Tests
 				citation["zz"] = "orange";
 
 				MultiText note =
-					entry.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+					entry.GetOrCreateProperty<MultiText>(PalasoDataObject.WellKnownProperties.Note);
 				note["zz"] = "orange";
 
 				MultiText field = entry.GetOrCreateProperty<MultiText>("custom");

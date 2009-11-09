@@ -6,7 +6,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.Text;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
 
 namespace WeSay.UI.TextBoxes

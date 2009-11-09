@@ -1,6 +1,8 @@
 using System.Drawing;
 using NUnit.Framework;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI.TextBoxes;
 

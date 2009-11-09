@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
 
-namespace WeSay.Foundation.Options
+namespace Palaso.LexicalModel.Options
 {
 	[CLSCompliant (false)]
 	public class OptionDisplayAdaptor: IChoiceSystemAdaptor<Option, string, OptionRef>

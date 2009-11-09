@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Palaso.Data;
 using Palaso.Reporting;
 using WeSay.Data;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -235,7 +235,7 @@ namespace WeSay.LexicalTools.Tests
 			return entry;
 		}
 
-		private static LexRelation AddRelation(WeSayDataObject source,
+		private static LexRelation AddRelation(PalasoDataObject source,
 											   string fieldName,
 											   string targetId)
 		{

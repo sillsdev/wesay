@@ -1,4 +1,4 @@
-namespace WeSay.Foundation
+namespace Palaso.LexicalModel
 {
 	public class CommonEnumerations
 	{

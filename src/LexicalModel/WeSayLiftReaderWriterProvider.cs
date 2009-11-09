@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Palaso.Lift;
 using Palaso.Progress;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel.Options;
 
 namespace WeSay.LexicalModel
 {

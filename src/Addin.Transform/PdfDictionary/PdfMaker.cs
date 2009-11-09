@@ -8,7 +8,7 @@ using Mono.Addins;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace Addin.Transform.PdfDictionary

@@ -1,6 +1,6 @@
 ﻿using System.Xml.XPath;
 using Palaso.IO;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 
 namespace WeSay.Project.ConfigMigration
 {

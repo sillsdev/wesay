@@ -2,7 +2,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel.Options;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.Project;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -21,7 +21,7 @@ namespace WeSay.LexicalTools
 		{
 		}
 
-		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
+		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
 		{
 			LexSense sense = (LexSense) wsdo;
 			int rowCount = 0;
@@ -98,7 +98,7 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		public int AddGhost(WeSayDataObject parent, IList<LexSense> list, bool isHeading)
+		public int AddGhost(PalasoDataObject parent, IList<LexSense> list, bool isHeading)
 		{
 			int insertAtRow = -1;
 			string label = GetLabelForMeaning(list.Count);
@@ -131,7 +131,7 @@ namespace WeSay.LexicalTools
 			DetailList.GetLabelControlFromRow(rowOfGhost).Text = GetLabelForMeaning(itemCount);
 		}
 
-		protected override Control MakePictureWidget(WeSayDataObject target, Field field, DetailList detailList)
+		protected override Control MakePictureWidget(PalasoDataObject target, Field field, DetailList detailList)
 		{
 			PictureRef pictureRef = target.GetOrCreateProperty<PictureRef>(field.FieldName);
 

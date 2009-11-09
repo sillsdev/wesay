@@ -7,8 +7,8 @@ using Palaso.Lift;
 using Palaso.Progress;
 using Palaso.Reporting;
 
-using WeSay.Foundation; // review (cp) hope to get rid of this one day.
-using WeSay.Foundation.Options; // review (cp) hope to get rid of this one day.
+using Palaso.LexicalModel; // review (cp) hope to get rid of this one day.
+using Palaso.LexicalModel.Options; // review (cp) hope to get rid of this one day.
 
 namespace WeSay.LexicalModel
 {
@@ -39,8 +39,8 @@ namespace WeSay.LexicalModel
 			{
 				builder.ExpectedOptionTraits = _idsOfSingleOptionFields;
 
-				LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
-					new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(
+				LiftParser<PalasoDataObject, LexEntry, LexSense, LexExampleSentence> parser =
+					new LiftParser<PalasoDataObject, LexEntry, LexSense, LexExampleSentence>(
 						builder);
 
 				parser.SetTotalNumberSteps += parser_SetTotalNumberSteps;
@@ -74,7 +74,7 @@ namespace WeSay.LexicalModel
 
 		private void parser_ParsingWarning(object sender,
 										   LiftParser
-												   <WeSayDataObject, LexEntry, LexSense,
+												   <PalasoDataObject, LexEntry, LexSense,
 												   LexExampleSentence>.ErrorArgs e)
 		{
 			_progressState.ExceptionThatWasEncountered = e.Exception;
@@ -82,7 +82,7 @@ namespace WeSay.LexicalModel
 
 		private void parser_SetStepsCompleted(object sender,
 											  LiftParser
-													  <WeSayDataObject, LexEntry, LexSense,
+													  <PalasoDataObject, LexEntry, LexSense,
 													  LexExampleSentence>.ProgressEventArgs e)
 		{
 			_progressState.NumberOfStepsCompleted = e.Progress;
@@ -91,7 +91,7 @@ namespace WeSay.LexicalModel
 
 		private void parser_SetTotalNumberSteps(object sender,
 												LiftParser
-														<WeSayDataObject, LexEntry, LexSense,
+														<PalasoDataObject, LexEntry, LexSense,
 														LexExampleSentence>.StepsArgs e)
 		{
 			_progressState.TotalNumberOfSteps = e.Steps;

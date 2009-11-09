@@ -7,8 +7,10 @@ using Palaso.Data;
 using Palaso.Reporting;
 using Palaso.Text;
 using WeSay.Data;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
+using Palaso.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 

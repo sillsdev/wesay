@@ -2,8 +2,8 @@ using System;
 using System.Drawing;
 using NUnit.Framework;
 using WeSay.Data.Tests;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests
 {

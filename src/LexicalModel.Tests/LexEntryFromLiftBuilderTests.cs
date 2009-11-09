@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using LiftIO.Parsing;
 using Palaso.Data;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
 using WeSay.Project;
 
 using NUnit.Framework;
@@ -229,7 +230,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry e = MakeSimpleEntry();
 			_builder.MergeInNote(e, string.Empty, MakeBasicLiftMultiText(), string.Empty);
-			MultiText mt = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			MultiText mt = e.GetProperty<MultiText>(PalasoDataObject.WellKnownProperties.Note);
 			Assert.AreEqual("uno", mt["ws-one"]);
 			Assert.AreEqual("dos", mt["ws-two"]);
 		}
@@ -238,7 +239,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry e = MakeSimpleEntry();
 			_builder.MergeInNote(e, "general", MakeBasicLiftMultiText(), string.Empty);
-			MultiText mt = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			MultiText mt = e.GetProperty<MultiText>(PalasoDataObject.WellKnownProperties.Note);
 			Assert.AreEqual("uno", mt["ws-one"]);
 			Assert.AreEqual("dos", mt["ws-two"]);
 		}
@@ -248,9 +249,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry e = MakeSimpleEntry();
 			_builder.MergeInNote(e, "red", MakeBasicLiftMultiText(), "<pretendXmlOfNote/>");
-			MultiText mt = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			MultiText mt = e.GetProperty<MultiText>(PalasoDataObject.WellKnownProperties.Note);
 			Assert.IsNull(mt);
-			var residue =e.GetProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(WeSayDataObject.WellKnownProperties.Note));
+			var residue =e.GetProperty<EmbeddedXmlCollection>(PalasoDataObject.GetEmbeddedXmlNameForProperty(PalasoDataObject.WellKnownProperties.Note));
 			Assert.AreEqual(1,residue.Values.Count);
 			Assert.AreEqual("<pretendXmlOfNote/>", residue.Values[0]);
 		}
@@ -263,10 +264,10 @@ namespace WeSay.LexicalModel.Tests
 			_builder.MergeInNote(e, string.Empty, MakeBasicLiftMultiText("second"), "<pretend xml two/>");
 			_builder.MergeInNote(e, string.Empty, MakeBasicLiftMultiText("third"), "<pretend xml three/>");
 
-			MultiText mt = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			MultiText mt = e.GetProperty<MultiText>(PalasoDataObject.WellKnownProperties.Note);
 			Assert.AreEqual("first", mt["ws-one"]);
 
-			var residue = e.GetProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(WeSayDataObject.WellKnownProperties.Note));
+			var residue = e.GetProperty<EmbeddedXmlCollection>(PalasoDataObject.GetEmbeddedXmlNameForProperty(PalasoDataObject.WellKnownProperties.Note));
 			Assert.AreEqual(2, residue.Values.Count);
 			Assert.AreEqual("<pretend xml two/>", residue.Values[0]);
 			Assert.AreEqual("<pretend xml three/>", residue.Values[1]);
@@ -344,7 +345,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexSense sense = new LexSense();
 			_builder.MergeInNote(sense, null, MakeBasicLiftMultiText(), string.Empty);
-			AssertPropertyHasExpectedMultiText(sense, WeSayDataObject.WellKnownProperties.Note);
+			AssertPropertyHasExpectedMultiText(sense, PalasoDataObject.WellKnownProperties.Note);
 		}
 
 		[Test]
@@ -428,7 +429,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual("uno; UNO", sense.Gloss["ws-one"]);
 		}
 
-		private static void AssertPropertyHasExpectedMultiText(WeSayDataObject dataObject,
+		private static void AssertPropertyHasExpectedMultiText(PalasoDataObject dataObject,
 															   string name)
 		{
 			//must match what is created by MakeBasicLiftMultiText()

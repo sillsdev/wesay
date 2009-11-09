@@ -13,7 +13,7 @@ using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using WeSay.AddinLib;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 
 namespace Addin.Transform
 {

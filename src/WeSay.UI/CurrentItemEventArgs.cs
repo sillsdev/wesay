@@ -1,12 +1,12 @@
 using System;
 using System.ComponentModel;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 
 namespace WeSay.UI
 {
 	public class CurrentItemEventArgs: EventArgs
 	{
-		public WeSayDataObject Parent{ get; set;}
+		public PalasoDataObject Parent{ get; set;}
 		private readonly string _propertyName;
 
 		public string PropertyName
@@ -34,7 +34,7 @@ namespace WeSay.UI
 			_writingSystemId = writingSystemId;
 		}
 
-		public CurrentItemEventArgs(WeSayDataObject parent, string propertyName, string writingSystemId)
+		public CurrentItemEventArgs(PalasoDataObject parent, string propertyName, string writingSystemId)
 		{
 			Parent = parent;
 			_propertyName = propertyName;

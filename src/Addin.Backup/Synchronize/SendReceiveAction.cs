@@ -6,7 +6,7 @@ using Chorus.VcsDrivers.Mercurial;
 using Mono.Addins;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 
 namespace Addin.Backup.Synchronize
 {

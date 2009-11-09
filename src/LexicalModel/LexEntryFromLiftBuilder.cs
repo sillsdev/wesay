@@ -6,9 +6,10 @@ using LiftIO.Parsing;
 using Palaso.Data;
 using Palaso.Text;
 
-using WeSay.Foundation; // review cp WeSayDataObject
-using WeSay.Foundation.Options; // review cp May move to palaso
-using WeSay.LexicalModel.Foundation.Options; // review cp may move to palaso
+using Palaso.LexicalModel; // review cp PalasoDataObject
+using Palaso.LexicalModel.Options; // review cp May move to palaso
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options; // review cp may move to palaso
 
 namespace WeSay.LexicalModel
 {
@@ -21,7 +22,7 @@ namespace WeSay.LexicalModel
 	/// we haven't renamed the interface (ILexiconMerger).
 	/// </summary>
 	internal class LexEntryFromLiftBuilder:
-			ILexiconMerger<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>,
+			ILexiconMerger<PalasoDataObject, LexEntry, LexSense, LexExampleSentence>,
 			IDisposable
 	{
 		public class EntryCreatedEventArgs: EventArgs
@@ -76,7 +77,7 @@ namespace WeSay.LexicalModel
 			return entry;
 		}
 
-		#region ILexiconMerger<WeSayDataObject,LexEntry,LexSense,LexExampleSentence> Members
+		#region ILexiconMerger<PalasoDataObject,LexEntry,LexSense,LexExampleSentence> Members
 
 		public void EntryWasDeleted(Extensible info, DateTime dateDeleted)
 		{
@@ -134,7 +135,7 @@ namespace WeSay.LexicalModel
 										 null);
 		}
 
-		public WeSayDataObject MergeInPronunciation(LexEntry entry,
+		public PalasoDataObject MergeInPronunciation(LexEntry entry,
 													LiftMultiText contents,
 													string rawXml)
 		{
@@ -142,7 +143,7 @@ namespace WeSay.LexicalModel
 			return null;
 		}
 
-		public WeSayDataObject MergeInVariant(LexEntry entry, LiftMultiText contents, string rawXml)
+		public PalasoDataObject MergeInVariant(LexEntry entry, LiftMultiText contents, string rawXml)
 		{
 			entry.GetOrCreateProperty<EmbeddedXmlCollection>("variant").Values.Add(rawXml);
 			return null;
@@ -196,7 +197,7 @@ namespace WeSay.LexicalModel
 			}
 			else
 			{
-				example.GetOrCreateProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(LexExampleSentence.WellKnownProperties.Translation)).Values.Add(rawXml);
+				example.GetOrCreateProperty<EmbeddedXmlCollection>(PalasoDataObject.GetEmbeddedXmlNameForProperty(LexExampleSentence.WellKnownProperties.Translation)).Values.Add(rawXml);
 			}
 		}
 
@@ -233,9 +234,9 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		/// <remarks>The difficult thing here is we don't handle anything but a default note.
 		/// Any other kind, we put in the xml residue for round-tripping.</remarks>
-		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents, string rawXml)
+		public void MergeInNote(PalasoDataObject extensible, string type, LiftMultiText contents, string rawXml)
 		{
-			var noteProperty = extensible.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			var noteProperty = extensible.GetProperty<MultiText>(PalasoDataObject.WellKnownProperties.Note);
 			bool alreadyHaveAOne= !MultiText.IsEmpty(noteProperty);
 
 			bool weCanHandleThisType = string.IsNullOrEmpty(type) ||type == "general";
@@ -247,27 +248,27 @@ namespace WeSay.LexicalModel
 				{
 					writingSystemAlternatives.Add(pair.Key);
 				}
-				noteProperty = extensible.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+				noteProperty = extensible.GetOrCreateProperty<MultiText>(PalasoDataObject.WellKnownProperties.Note);
 				MergeIn(noteProperty, contents);
 			}
 			else //residue
 			{
-				var residue = extensible.GetOrCreateProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(WeSayDataObject.WellKnownProperties.Note));
+				var residue = extensible.GetOrCreateProperty<EmbeddedXmlCollection>(PalasoDataObject.GetEmbeddedXmlNameForProperty(PalasoDataObject.WellKnownProperties.Note));
 				residue.Values.Add(rawXml);
-//                var r = extensible.GetProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(WeSayDataObject.WellKnownProperties.Note));
+//                var r = extensible.GetProperty<EmbeddedXmlCollection>(PalasoDataObject.GetEmbeddedXmlNameForProperty(PalasoDataObject.WellKnownProperties.Note));
 //                Debug.Assert(r != null);
 			}
 		}
 
-		public WeSayDataObject GetOrMakeParentReversal(WeSayDataObject parent,
+		public PalasoDataObject GetOrMakeParentReversal(PalasoDataObject parent,
 													   LiftMultiText contents,
 													   string type)
 		{
 			return null; // we'll get what we need from the rawxml of MergeInReversal
 		}
 
-		public WeSayDataObject MergeInReversal(LexSense sense,
-											   WeSayDataObject parent,
+		public PalasoDataObject MergeInReversal(LexSense sense,
+											   PalasoDataObject parent,
 											   LiftMultiText contents,
 											   string type,
 											   string rawXml)
@@ -276,7 +277,7 @@ namespace WeSay.LexicalModel
 			return null;
 		}
 
-		public WeSayDataObject MergeInEtymology(LexEntry entry,
+		public PalasoDataObject MergeInEtymology(LexEntry entry,
 												string source,
 												string type,
 												LiftMultiText form,
@@ -298,7 +299,7 @@ namespace WeSay.LexicalModel
 
 		public void ProcessFieldDefinition(string tag, LiftMultiText description) {}
 
-		public void MergeInGrammaticalInfo(WeSayDataObject senseOrReversal,
+		public void MergeInGrammaticalInfo(PalasoDataObject senseOrReversal,
 										   string val,
 										   List<Trait> traits)
 		{
@@ -327,7 +328,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private static void AddOrAppendMultiTextProperty(WeSayDataObject dataObject,
+		private static void AddOrAppendMultiTextProperty(PalasoDataObject dataObject,
 														 LiftMultiText contents,
 														 string propertyName,
 														 string noticeToPrependIfNotEmpty)
@@ -343,7 +344,7 @@ namespace WeSay.LexicalModel
 		}
 
 		/*
-		private static void AddMultiTextProperty(WeSayDataObject dataObject, LiftMultiText contents, string propertyName)
+		private static void AddMultiTextProperty(PalasoDataObject dataObject, LiftMultiText contents, string propertyName)
 		{
 			dataObject.Properties.Add(
 				new KeyValuePair<string, object>(propertyName,
@@ -354,7 +355,7 @@ namespace WeSay.LexicalModel
 		/// <summary>
 		/// Handle LIFT's "field" entity which can be found on any subclass of "extensible"
 		/// </summary>
-		public void MergeInField(WeSayDataObject extensible,
+		public void MergeInField(PalasoDataObject extensible,
 								 string typeAttribute,
 								 DateTime dateCreated,
 								 DateTime dateModified,
@@ -382,7 +383,7 @@ namespace WeSay.LexicalModel
 		/// which can be found on any subclass of "extensible", on any "field", and as
 		/// a subclass of "annotation".
 		/// </summary>
-		public void MergeInTrait(WeSayDataObject extensible, Trait trait)
+		public void MergeInTrait(PalasoDataObject extensible, Trait trait)
 		{
 			if (String.IsNullOrEmpty(trait.Name))
 			{
@@ -424,7 +425,7 @@ namespace WeSay.LexicalModel
 			//}
 		}
 
-		public void MergeInRelation(WeSayDataObject extensible,
+		public void MergeInRelation(PalasoDataObject extensible,
 									string relationFieldId,
 									string targetId,
 									string rawXml)
@@ -470,7 +471,7 @@ namespace WeSay.LexicalModel
 			//_entries.Dispose();
 		}
 
-		#region ILexiconMerger<WeSayDataObject,LexEntry,LexSense,LexExampleSentence> Members
+		#region ILexiconMerger<PalasoDataObject,LexEntry,LexSense,LexExampleSentence> Members
 
 		public void FinishEntry(LexEntry entry)
 		{
@@ -524,7 +525,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public void MergeInMedia(WeSayDataObject pronunciation, string href, LiftMultiText caption)
+		public void MergeInMedia(PalasoDataObject pronunciation, string href, LiftMultiText caption)
 		{
 			// review: Currently ignore media. See WS-1128
 		}

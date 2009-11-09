@@ -1,7 +1,8 @@
 using System;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using System.Linq;
 

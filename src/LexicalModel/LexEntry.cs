@@ -4,11 +4,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using Palaso.Data;
+using Palaso.LexicalModel;
 using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Data;
-using WeSay.Foundation;
 
 namespace WeSay.LexicalModel
 {
@@ -17,7 +16,7 @@ namespace WeSay.LexicalModel
 	/// some languages/dictionaries, these will be indistinguishable from "words".
 	/// In others, words are made up of lexical entries.
 	/// </summary>
-	public class LexEntry: WeSayDataObject
+	public class LexEntry: PalasoDataObject
 	{
 		private MultiText _lexicalForm;
 		private Guid _guid;
@@ -43,7 +42,7 @@ namespace WeSay.LexicalModel
 
 		//!!What!! Is this done this way so that we don't end up storing
 		//  the data in the object database?
-		public new class WellKnownProperties: WeSayDataObject.WellKnownProperties
+		public new class WellKnownProperties: PalasoDataObject.WellKnownProperties
 		{
 			public static string Citation = "citation";
 			public static string LexicalUnit = "EntryLexicalForm";

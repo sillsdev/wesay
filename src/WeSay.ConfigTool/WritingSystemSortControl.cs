@@ -10,7 +10,7 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using Palaso.WritingSystems.Collation;
 using Spart;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool

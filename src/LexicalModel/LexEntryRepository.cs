@@ -6,9 +6,11 @@ using Palaso.Misc;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
+using Palaso.LexicalModel.Options;
+using WeSay.LexicalModel.Foundation;
+
 #if MONO
 using Palaso.Linq;
 #else

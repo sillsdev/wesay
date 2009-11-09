@@ -1,8 +1,9 @@
 using System;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel.Options;
+using Palaso.LexicalModel.Options;
 using NUnit.Framework;
 
-namespace WeSay.Foundation.Tests
+namespace Palaso.LexicalModel.Tests
 {
 	[TestFixture]
 	public class OptionRefTests

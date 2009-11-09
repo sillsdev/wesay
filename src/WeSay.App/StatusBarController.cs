@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 
 namespace WeSay.App
 {

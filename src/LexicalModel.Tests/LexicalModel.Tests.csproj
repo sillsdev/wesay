@@ -125,7 +125,7 @@
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	</Compile>
-	<Compile Include="Foundation\WeSayDataObjectTests.cs" />
+	<Compile Include="Foundation\PalasoObjectTests.cs" />
 	<Compile Include="Foundation\WritingSystemCollectionTests.cs" />
 	<Compile Include="Foundation\WritingSystemTests.cs" />
 	<Compile Include="LexEntryRepositoryCachingTests.cs" />

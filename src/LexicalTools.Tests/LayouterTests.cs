@@ -2,7 +2,7 @@ using System;
 using System.Windows.Forms;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools.Tests
 			var b = new Autofac.Builder.ContainerBuilder();
 			b.Register(c => new MediaNamingHelper(new string[] {"en"}));
 
-			Context =   new WeSay.Foundation.ServiceLocatorAdapter(b.Build());
+			Context =   new Palaso.LexicalModel.ServiceLocatorAdapter(b.Build());
 		}
 
 		[Test]

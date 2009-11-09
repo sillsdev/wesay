@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.UI.Properties;
 
 namespace WeSay.UI

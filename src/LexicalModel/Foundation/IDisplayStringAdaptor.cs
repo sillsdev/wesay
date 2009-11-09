@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace WeSay.Foundation
+namespace Palaso.LexicalModel
 {
 	public interface IDisplayStringAdaptor
 	{

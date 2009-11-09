@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using Enchant;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

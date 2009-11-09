@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel;
 
 namespace WeSay.LexicalModel
 {
-	public sealed class LexSense: WeSayDataObject
+	public sealed class LexSense: PalasoDataObject
 	{
 		//private readonly SenseGlossMultiText _gloss;
 		private readonly BindingList<LexExampleSentence> _exampleSentences;
 		private string _id;
 
-		public new class WellKnownProperties: WeSayDataObject.WellKnownProperties
+		public new class WellKnownProperties: PalasoDataObject.WellKnownProperties
 		{
 			public static string PartOfSpeech = "POS";
 			public static string SemanticDomainDdp4 = "semantic-domain-ddp4";
@@ -36,7 +37,7 @@ namespace WeSay.LexicalModel
 			}
 		} ;
 
-		public LexSense(WeSayDataObject parent): base(parent)
+		public LexSense(PalasoDataObject parent): base(parent)
 		{
 			//   _gloss = new SenseGlossMultiText(this);
 			_exampleSentences = new BindingList<LexExampleSentence>();

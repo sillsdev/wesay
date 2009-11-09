@@ -5,8 +5,9 @@ using System.Diagnostics;
 using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using System.Linq;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel
 {
@@ -244,7 +245,7 @@ namespace WeSay.LexicalModel
 				{
 					case null:
 						throw new ArgumentNullException();
-					case "WeSayDataObject":
+					case "PalasoDataObject":
 					case "LexEntry":
 					case "LexSense":
 					case "LexExampleSentence":
@@ -253,7 +254,7 @@ namespace WeSay.LexicalModel
 					default:
 						throw new ArgumentOutOfRangeException("value",
 															  value,
-															  "className must be WeSayDataObject, LexEntry, LexSense, or LexExampleSentence");
+															  "className must be PalasoDataObject, LexEntry, LexSense, or LexExampleSentence");
 				}
 			}
 		}
@@ -268,7 +269,7 @@ namespace WeSay.LexicalModel
 					return false;
 				}
 
-				if (WeSayDataObject.WellKnownProperties.Contains(FieldName))
+				if (PalasoDataObject.WellKnownProperties.Contains(FieldName))
 				{
 					return false;
 				}

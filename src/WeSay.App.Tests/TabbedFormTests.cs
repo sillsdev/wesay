@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 

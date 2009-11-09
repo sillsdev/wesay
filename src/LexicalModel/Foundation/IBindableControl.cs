@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace WeSay.Foundation
+namespace Palaso.LexicalModel
 {
 	public interface IBindableControl<TValueType>
 	{

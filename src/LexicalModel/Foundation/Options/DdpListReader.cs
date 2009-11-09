@@ -1,7 +1,8 @@
 using System.Xml;
 using System.Xml.Serialization;
+using Palaso.LexicalModel;
 
-namespace WeSay.Foundation.Options
+namespace Palaso.LexicalModel.Options
 {
 	public class DdpListReader : GenericOptionListReader
 	{

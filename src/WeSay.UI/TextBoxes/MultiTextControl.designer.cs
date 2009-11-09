@@ -1,5 +1,5 @@
 using System;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 
 namespace WeSay.UI.TextBoxes
 {

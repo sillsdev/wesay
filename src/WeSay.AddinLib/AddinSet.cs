@@ -7,7 +7,7 @@ using System.Xml.XPath;
 using Mono.Addins;
 using Palaso.Reporting;
 using Palaso.Xml;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 
 namespace WeSay.AddinLib
 {

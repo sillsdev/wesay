@@ -3,7 +3,9 @@ using System.ComponentModel;
 using System.Drawing;
 using NUnit.Framework;
 using LiftIO.Parsing;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation
 {

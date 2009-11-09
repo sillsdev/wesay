@@ -6,7 +6,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Palaso.Text;
 
-namespace WeSay.Foundation.Options
+namespace Palaso.LexicalModel.Options
 {
 
 	public interface IOptionListReader

@@ -6,7 +6,7 @@ using Mono.Addins;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 
 namespace Addin.Backup

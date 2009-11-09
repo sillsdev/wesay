@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

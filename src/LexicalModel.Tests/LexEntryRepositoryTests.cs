@@ -5,9 +5,11 @@ using NUnit.Framework;
 using Palaso.Data;
 using Palaso.Text;
 using WeSay.Data;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using Palaso.TestUtilities;
-using WeSay.LexicalModel.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests
 {

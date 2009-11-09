@@ -6,7 +6,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Palaso.Annotations;
 
-namespace WeSay.Foundation.Options
+namespace Palaso.LexicalModel.Options
 {
 	/// <summary>
 	/// This is like a PossibilityList in FieldWorks, or RangeSet in Toolbox

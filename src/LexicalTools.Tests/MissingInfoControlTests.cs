@@ -5,8 +5,8 @@ using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.TestUtilities;
 using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
 

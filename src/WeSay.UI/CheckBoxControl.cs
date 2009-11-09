@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 
 namespace WeSay.UI
 {

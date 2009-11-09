@@ -4,9 +4,10 @@ using System.IO;
 using System.Xml;
 using Exortech.NetReflector;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 using System.Linq;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
@@ -390,7 +391,7 @@ namespace WeSay.Project
 			literalMeaningField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(literalMeaningField);
 
-			Field noteField = new Field(WeSayDataObject.WellKnownProperties.Note,
+			Field noteField = new Field(PalasoDataObject.WellKnownProperties.Note,
 										"WeSayDataObject",
 										defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label

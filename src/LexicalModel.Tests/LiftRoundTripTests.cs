@@ -7,7 +7,7 @@ using LiftIO.Parsing;
 using NUnit.Framework;
 using Palaso.Data;
 using Palaso.TestUtilities;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.Project;
 using System.Linq;
 
@@ -169,7 +169,7 @@ namespace WeSay.LexicalModel.Tests
 
 		 public delegate void Proc<A0, A1>(A0 a0, A1 a1);
 
-		private void TestTraitRoundTripped(string xpathToOwningElement, Proc<WeSayDataObject, List<Trait>> p)
+		private void TestTraitRoundTripped(string xpathToOwningElement, Proc<PalasoDataObject, List<Trait>> p)
 		{
 			LexEntry e = MakeSimpleEntry();
 			List<Trait> traits = new List<Trait>();

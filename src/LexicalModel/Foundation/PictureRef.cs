@@ -1,6 +1,7 @@
 using System.ComponentModel;
+using Palaso.LexicalModel;
 
-namespace WeSay.Foundation
+namespace Palaso.LexicalModel
 {
 	public class PictureRef: IParentable, IValueHolder<string>, IReportEmptiness
 	{
@@ -11,7 +12,7 @@ namespace WeSay.Foundation
 		/// This "backreference" is used to notify the parent of changes.
 		/// IParentable gives access to this during explicit construction.
 		/// </summary>
-		private WeSayDataObject _parent;
+		private PalasoDataObject _parent;
 
 		/// <summary>
 		/// For INotifyPropertyChanged
@@ -20,7 +21,7 @@ namespace WeSay.Foundation
 
 		#region IParentable Members
 
-		public WeSayDataObject Parent
+		public PalasoDataObject Parent
 		{
 			set { _parent = value; }
 		}

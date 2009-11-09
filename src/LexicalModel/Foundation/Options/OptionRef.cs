@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using Palaso.Annotations;
 
-namespace WeSay.Foundation.Options
+namespace Palaso.LexicalModel.Options
 {
 	/// <summary>
 	/// Used to refer to this option from a field.
@@ -29,7 +29,7 @@ namespace WeSay.Foundation.Options
 
 		public OptionRef(): this(string.Empty) {}
 
-		public OptionRef(string key) //WeSay.Foundation.WeSayDataObject parent)
+		public OptionRef(string key) //WeSay.Foundation.PalasoDataObject parent)
 		{
 			_humanReadableKey = key;
 		}
@@ -41,7 +41,7 @@ namespace WeSay.Foundation.Options
 
 		#region IParentable Members
 
-		public WeSayDataObject Parent
+		public PalasoDataObject Parent
 		{
 			set { _parent = value; }
 		}

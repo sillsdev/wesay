@@ -1,6 +1,6 @@
 using System;
 
-namespace WeSay.Foundation.Options
+namespace Palaso.LexicalModel.Options
 {
 	[CLSCompliant (false)]
 	public class DdpOptionDisplayAdaptor : OptionDisplayAdaptor

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
 using System.Linq;

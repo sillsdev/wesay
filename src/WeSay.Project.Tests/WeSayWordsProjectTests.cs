@@ -8,9 +8,9 @@ using LiftIO;
 using NUnit.Framework;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project.ConfigMigration;
 
 namespace WeSay.Project.Tests

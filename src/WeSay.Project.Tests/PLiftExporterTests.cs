@@ -6,8 +6,10 @@ using NUnit.Framework;
 using Palaso.Data;
 using Palaso.TestUtilities;
 using WeSay.Data;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
+using Palaso.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests
 {

@@ -9,9 +9,10 @@ using LiftIO.Validation;
 using Palaso.Annotations;
 using Palaso.Lift;
 using Palaso.Text;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
 
 namespace WeSay.LexicalModel
 {
@@ -136,7 +137,7 @@ namespace WeSay.LexicalModel
 										  LexEntry.WellKnownProperties.Citation,
 										  propertiesAlreadyOutput);
 			WriteWellKnownCustomMultiText(entry,
-										  WeSayDataObject.WellKnownProperties.Note,
+										  PalasoDataObject.WellKnownProperties.Note,
 										  propertiesAlreadyOutput);
 			WriteCustomProperties(entry, propertiesAlreadyOutput);
 			InsertPronunciationIfNeeded(entry, propertiesAlreadyOutput);
@@ -229,7 +230,7 @@ namespace WeSay.LexicalModel
 				Add(example);
 			}
 			WriteWellKnownCustomMultiText(sense,
-										  WeSayDataObject.WellKnownProperties.Note,
+										  PalasoDataObject.WellKnownProperties.Note,
 										  propertiesAlreadyOutput);
 			//   WriteWellKnownUnimplementedProperty(sense, LexSense.WellKnownProperties.Note, propertiesAlreadyOutput);
 			WriteCustomProperties(sense, propertiesAlreadyOutput);
@@ -259,7 +260,7 @@ namespace WeSay.LexicalModel
 			Writer.WriteEndElement();
 		}
 
-		private void WriteWellKnownCustomMultiText(WeSayDataObject item,
+		private void WriteWellKnownCustomMultiText(PalasoDataObject item,
 												   string property,
 												   ICollection<string> propertiesAlreadyOutput)
 		{
@@ -287,7 +288,7 @@ namespace WeSay.LexicalModel
 			return text.Forms;
 		}
 
-		private void WriteCustomProperties(WeSayDataObject item,
+		private void WriteCustomProperties(PalasoDataObject item,
 										   ICollection<string> propertiesAlreadyOutput)
 		{
 			foreach (KeyValuePair<string, object> pair in item.Properties)
@@ -491,7 +492,7 @@ namespace WeSay.LexicalModel
 			if (ShouldOutputProperty(LexExampleSentence.WellKnownProperties.ExampleSentence))
 			{
 				WriteWellKnownCustomMultiText(example,
-											  WeSayDataObject.WellKnownProperties.Note,
+											  PalasoDataObject.WellKnownProperties.Note,
 											  propertiesAlreadyOutput);
 			}
 

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
 using System.Linq;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {

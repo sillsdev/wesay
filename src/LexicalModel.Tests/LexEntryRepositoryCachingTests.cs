@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using Palaso.Data;
 using Palaso.TestUtilities;
-using WeSay.Foundation;
-
 using NUnit.Framework;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests
 {

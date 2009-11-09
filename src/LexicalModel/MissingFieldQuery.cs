@@ -4,9 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using Palaso.Misc;
 using Palaso.Text;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
 
 using Enumerable=Palaso.Linq.Enumerable;
 
@@ -207,7 +208,7 @@ namespace WeSay.LexicalModel
 			return false;
 		}
 
-		private static bool IsSkipped(WeSayDataObject parent, string fieldName)
+		private static bool IsSkipped(PalasoDataObject parent, string fieldName)
 		{
 			return parent.GetHasFlag("flag-skip-" + fieldName);
 		}
@@ -236,7 +237,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private bool IsMissingLexSenseField(WeSayDataObject sense)
+		private bool IsMissingLexSenseField(PalasoDataObject sense)
 		{
 			if (!Field.IsBuiltInViaCode)
 			{
@@ -279,16 +280,16 @@ namespace WeSay.LexicalModel
 			return false;
 		}
 
-		private bool IsMissingCustomField(WeSayDataObject weSayData)
+		private bool IsMissingCustomField(PalasoDataObject palasoData)
 		{
-			IParentable content = weSayData.GetProperty<IParentable>(Field.FieldName);
+			IParentable content = palasoData.GetProperty<IParentable>(Field.FieldName);
 			if (content == null)
 			{
-				return !IsSkipped(weSayData, Field.FieldName);
+				return !IsSkipped(palasoData, Field.FieldName);
 			}
 			if(Field.FieldName == "POS")
 			{
-				if(IsPosUnknown(weSayData))
+				if(IsPosUnknown(palasoData))
 				{
 					return true;
 				}
@@ -296,7 +297,7 @@ namespace WeSay.LexicalModel
 			return IsMissingData(content);
 		}
 
-		private bool IsPosUnknown(WeSayDataObject sense)
+		private bool IsPosUnknown(PalasoDataObject sense)
 		{
 			foreach(KeyValuePair<string, object> property in sense.Properties)
 			if (property.Key == "POS" && (((OptionRef) property.Value).Key == "unknown"))

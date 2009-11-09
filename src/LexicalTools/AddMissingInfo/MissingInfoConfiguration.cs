@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Palaso.Extensions;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using System.Linq;

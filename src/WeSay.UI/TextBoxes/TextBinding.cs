@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 
 namespace WeSay.UI.TextBoxes
 {

@@ -1,8 +1,9 @@
 using System;
 using System.ComponentModel;
 using NUnit.Framework;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel;
+using Palaso.LexicalModel.Options;
+using Palaso.LexicalModel;
 
 namespace WeSay.LexicalModel.Tests
 {

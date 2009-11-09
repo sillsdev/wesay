@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
+using Palaso.LexicalModel;
 
 namespace WeSay.LexicalTools.Tests
 {

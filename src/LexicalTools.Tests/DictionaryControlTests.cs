@@ -5,9 +5,10 @@ using System.Threading;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 using WeSay.UI;
@@ -127,13 +128,13 @@ namespace WeSay.LexicalTools.Tests
 			customPOSField.OptionsListFile = "PartsOfSpeech.xml";
 			viewTemplate.Add(customPOSField);
 
-			Field customNotesField = new Field(WeSayDataObject.WellKnownProperties.Note,
+			Field customNotesField = new Field(PalasoDataObject.WellKnownProperties.Note,
 											   "LexSense",
 											   _analysisWritingSystemIds);
 			customNotesField.DisplayName = "s-note";
 			viewTemplate.Add(customNotesField);
 
-			Field exampleNotesField = new Field(WeSayDataObject.WellKnownProperties.Note,
+			Field exampleNotesField = new Field(PalasoDataObject.WellKnownProperties.Note,
 												"LexExampleSentence",
 												_analysisWritingSystemIds);
 			exampleNotesField.DisplayName = "ex-note";

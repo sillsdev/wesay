@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Palaso.IO;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.ImageGallery;
-using WeSay.Foundation;
+using Palaso.LexicalModel;
 using WeSay.LexicalTools.AddPictures;
 
 namespace WeSay.UI
