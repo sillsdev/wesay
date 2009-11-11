@@ -317,7 +317,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Enchant.Net.dll"/>
 
 			  <ComponentRef Id="autofac.dll"/>
-			  <ComponentRef Id="linqbridge.dll"/>
 			  <ComponentRef Id="irrKlang.NET2.0.dll"/>
 
 			  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
