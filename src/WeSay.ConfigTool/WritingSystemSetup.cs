@@ -76,7 +76,7 @@ namespace WeSay.ConfigTool
 		{
 			WritingSystem selectedWritingSystem = SelectedWritingSystem;
 			_tabControl.Visible = selectedWritingSystem != null;
-			_btnRemove.Enabled = selectedWritingSystem != null;
+			_btnRemove.Enabled = EnableRemove;
 			if (selectedWritingSystem == null)
 			{
 				Console.WriteLine("WritingSystemSetup.UpdateSelection selected is null");
@@ -93,6 +93,16 @@ namespace WeSay.ConfigTool
 
 			_sortingPage.Enabled = !selectedWritingSystem.IsAudio;
 			_fontsPage.Enabled = !selectedWritingSystem.IsAudio;
+		}
+
+		private bool EnableRemove
+		{
+			get
+			{
+				return SelectedWritingSystem != null
+					   && SelectedWritingSystem.Id != WritingSystem.IdForUnknownAnalysis //once they delete english, lots of things are going to break
+					   && _wsListBox.Items.Count > 1; //don't let them delete the last one
+		   }
 		}
 
 		private WritingSystem SelectedWritingSystem
