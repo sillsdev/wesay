@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using Palaso.IO;
 using Palaso.Lift;
-using Palaso.Lift.UiBindings;
+using Palaso.UiBindings;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.ImageGallery;
 using Palaso.LexicalModel;

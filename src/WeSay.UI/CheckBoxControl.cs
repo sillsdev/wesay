@@ -1,6 +1,6 @@
 using System;
 using System.Windows.Forms;
-using Palaso.Lift.UiBindings;
+using Palaso.UiBindings;
 using Palaso.Reporting;
 
 namespace WeSay.UI

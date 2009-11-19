@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.LexicalModel;
 using Palaso.Lift;
-using Palaso.Lift.UiBindings;
+using Palaso.UiBindings;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {

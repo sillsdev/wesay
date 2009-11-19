@@ -9,7 +9,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.LexicalModel;
 using Palaso.Lift;
-using Palaso.Lift.UiBindings;
+using Palaso.UiBindings;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.AutoCompleteTextBox

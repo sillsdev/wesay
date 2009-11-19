@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Palaso.Data;
 using Palaso.Lift.Options;
-using Palaso.Lift.UiBindings;
+using Palaso.UiBindings;
 using Palaso.Misc;
 using Palaso.Progress;
 using Palaso.Text;

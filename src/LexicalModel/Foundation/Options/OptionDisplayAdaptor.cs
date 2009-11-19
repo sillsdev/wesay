@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Palaso.Lift.Options;
-using Palaso.Lift.UiBindings;
+using Palaso.UiBindings;
 
 namespace WeSay.LexicalModel.Foundation.Options
 {

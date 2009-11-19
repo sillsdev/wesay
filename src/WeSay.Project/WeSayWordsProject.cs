@@ -35,7 +35,7 @@ using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration;
 using WeSay.UI;
 using WeSay.UI.audio;
-using Palaso.Lift.UiBindings;
+using Palaso.UiBindings;
 
 namespace WeSay.Project
 {

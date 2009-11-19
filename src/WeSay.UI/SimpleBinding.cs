@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 using Palaso.Lift;
-using Palaso.Lift.UiBindings;
+using Palaso.UiBindings;
 
 namespace WeSay.UI
 {

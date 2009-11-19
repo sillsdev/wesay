@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Palaso.Lift.Options;
-using Palaso.Lift.UiBindings;
+using Palaso.UiBindings;
 using Palaso.Text;
 using WeSay.LexicalModel;
 using System.Linq;

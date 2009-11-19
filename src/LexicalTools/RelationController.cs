@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.Lift;
-using Palaso.Lift.UiBindings;
+using Palaso.UiBindings;
 using Palaso.Reporting;
 using Palaso.Text;
 using WeSay.LexicalModel;
