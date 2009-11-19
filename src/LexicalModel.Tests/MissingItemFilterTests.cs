@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Palaso.LexicalModel.Options;
+using Palaso.Lift.Options;
 
 namespace WeSay.LexicalModel.Tests
 {

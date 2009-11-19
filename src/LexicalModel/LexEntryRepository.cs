@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Palaso.Data;
+using Palaso.Lift.Options;
+using Palaso.Lift.UiBindings;
 using Palaso.Misc;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
 using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
-using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel.Foundation;
 
 #if MONO

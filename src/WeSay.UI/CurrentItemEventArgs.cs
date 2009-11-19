@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using Palaso.LexicalModel;
+using Palaso.Lift;
 
 namespace WeSay.UI
 {

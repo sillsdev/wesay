@@ -5,8 +5,7 @@ using System.Diagnostics;
 using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
-using Palaso.LexicalModel;
-using System.Linq;
+using Palaso.Lift;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel

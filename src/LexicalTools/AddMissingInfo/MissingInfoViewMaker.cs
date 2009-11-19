@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Palaso.Lift;
 using Palaso.UI.WindowsForms.i8n;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

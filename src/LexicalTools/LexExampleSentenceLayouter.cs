@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
-using Palaso.LexicalModel;
+using Palaso.Lift;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;

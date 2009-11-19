@@ -5,11 +5,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Palaso.Lift;
+using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI.TextBoxes;
 

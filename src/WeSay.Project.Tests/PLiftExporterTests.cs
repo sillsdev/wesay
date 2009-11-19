@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
 using Palaso.Data;
 using Palaso.TestUtilities;
-using WeSay.Data;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel;
-using Palaso.LexicalModel;
+using Palaso.Lift;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests

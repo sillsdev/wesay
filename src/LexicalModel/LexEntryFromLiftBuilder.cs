@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using LiftIO.Parsing;
 using Palaso.Data;
-using Palaso.Text;
-
-using Palaso.LexicalModel; // review cp PalasoDataObject
-using Palaso.LexicalModel.Options; // review cp May move to palaso
 using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options; // review cp may move to palaso
+using Palaso.Lift;
+using Palaso.Lift.Options;
+using Palaso.Text;
 
 namespace WeSay.LexicalModel
 {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using Palaso.Lift;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
 using Palaso.LexicalModel;
@@ -14,6 +15,7 @@ using WeSay.LexicalTools.GatherBySemanticDomains;
 using WeSay.Project;
 
 using NUnit.Framework;
+using Palaso.Lift.Options;
 
 namespace WeSay.LexicalTools.Tests
 {

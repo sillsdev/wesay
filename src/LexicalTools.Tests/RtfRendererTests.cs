@@ -2,6 +2,7 @@
 
 using NUnit.Framework;
 using Palaso.LexicalModel;
+using Palaso.Lift;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalTools.Tests

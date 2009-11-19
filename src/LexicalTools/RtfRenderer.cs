@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Palaso.Lift;
+using Palaso.Lift.Options;
 using Palaso.Text;
 using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
 using Palaso.LexicalModel;
 using WeSay.LexicalModel.Foundation;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
 

@@ -4,11 +4,9 @@ using LiftIO.Parsing;
 using LiftIO.Validation;
 using Palaso.Data;
 using Palaso.Lift;
+using Palaso.Lift.Options;
 using Palaso.Progress;
 using Palaso.Reporting;
-
-using Palaso.LexicalModel; // review (cp) hope to get rid of this one day.
-using Palaso.LexicalModel.Options; // review (cp) hope to get rid of this one day.
 
 namespace WeSay.LexicalModel
 {

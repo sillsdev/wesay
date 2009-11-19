@@ -4,9 +4,11 @@ using System.IO;
 using LiftIO.Parsing;
 using Palaso.Data;
 using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
 using Palaso.LexicalModel;
 using Palaso.LexicalModel.Options;
+using Palaso.Lift;
+using Palaso.Lift.Options;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 
 using NUnit.Framework;

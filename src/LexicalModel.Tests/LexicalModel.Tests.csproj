@@ -94,6 +94,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
 	</Reference>
+	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
+	</Reference>
 	<Reference Include="Palaso.Tests, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.Tests.dll</HintPath>
@@ -113,19 +117,14 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Binding.cs" />
 	<Compile Include="ConstructorThrowTests.cs" />
-	<Compile Include="Foundation\MultiTextTests.cs" />
 	<Compile Include="Foundation\Options\OptionList.Tests.cs" />
-	<Compile Include="Foundation\Options\OptionRefCollectionTests.cs" />
-	<Compile Include="Foundation\Options\OptionRefTests.cs" />
 	<Compile Include="Foundation\SpellCheckerIdToDisplayStringConverterTests.cs" />
 	<Compile Include="Foundation\TestResources.Designer.cs">
 	  <DependentUpon>TestResources.resx</DependentUpon>
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	</Compile>
-	<Compile Include="Foundation\PalasoObjectTests.cs" />
 	<Compile Include="Foundation\WritingSystemCollectionTests.cs" />
 	<Compile Include="Foundation\WritingSystemTests.cs" />
 	<Compile Include="LexEntryRepositoryCachingTests.cs" />

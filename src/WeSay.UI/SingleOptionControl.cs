@@ -1,11 +1,11 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Lift;
+using Palaso.Lift.Options;
+using Palaso.Lift.UiBindings;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI

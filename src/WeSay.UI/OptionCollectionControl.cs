@@ -2,7 +2,8 @@ using System;
 using System.Text;
 using System.Windows.Forms;
 using Palaso.LexicalModel.Options;
-using Palaso.LexicalModel.Options;
+using Palaso.Lift.Options;
+using WeSay.LexicalModel.Foundation.Options;
 
 
 namespace WeSay.UI

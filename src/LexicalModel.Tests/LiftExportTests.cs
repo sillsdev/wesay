@@ -4,12 +4,11 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using LiftIO.Validation;
-using NUnit.Framework;
 using Palaso.TestUtilities;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
+using Palaso.Lift;
+
+using NUnit.Framework;
+using Palaso.Lift.Options;
 using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests

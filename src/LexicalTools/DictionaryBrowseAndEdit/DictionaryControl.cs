@@ -8,6 +8,8 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Palaso.Data;
+using Palaso.Lift;
+using Palaso.Lift.UiBindings;
 using Palaso.Misc;
 using Palaso.Reporting;
 using Palaso.Text;

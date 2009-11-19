@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Palaso.Lift;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using Palaso.LexicalModel;

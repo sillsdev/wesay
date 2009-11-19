@@ -22,6 +22,7 @@ using Palaso.IO;
 using Palaso.Linq;
 #endif
 using Palaso.Lift;
+using Palaso.Lift.Options;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
@@ -30,9 +31,11 @@ using Palaso.LexicalModel;
 using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration;
 using WeSay.UI;
 using WeSay.UI.audio;
+using Palaso.Lift.UiBindings;
 
 namespace WeSay.Project
 {

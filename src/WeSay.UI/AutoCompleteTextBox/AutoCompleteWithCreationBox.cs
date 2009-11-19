@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.LexicalModel;
+using Palaso.Lift;
+using Palaso.Lift.UiBindings;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {

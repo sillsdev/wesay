@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Exortech.NetReflector;
+using Palaso.Lift;
 using Palaso.UI.WindowsForms.i8n;
 using Palaso.LexicalModel;
 using WeSay.LexicalModel;

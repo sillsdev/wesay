@@ -8,11 +8,8 @@ using System.Xml;
 using LiftIO.Validation;
 using Palaso.Annotations;
 using Palaso.Lift;
+using Palaso.Lift.Options;
 using Palaso.Text;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
 
 namespace WeSay.LexicalModel
 {

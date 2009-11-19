@@ -4,10 +4,11 @@ using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
 using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
+using Palaso.Lift;
+using Palaso.Lift.Options;
 using WeSay.LexicalModel.Foundation;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI.Tests

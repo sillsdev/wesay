@@ -3,6 +3,7 @@ using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
 using Palaso.LexicalModel.Options;
+using Palaso.Lift.Options;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.Project;

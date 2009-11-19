@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using NUnit.Framework;
 using Palaso.Data;
+using Palaso.Lift.Options;
 using Palaso.Text;
 using WeSay.Data;
 using Palaso.LexicalModel;
@@ -10,6 +11,7 @@ using Palaso.TestUtilities;
 using Palaso.LexicalModel;
 using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel.Foundation;
+using Palaso.Lift;
 
 namespace WeSay.LexicalModel.Tests
 {

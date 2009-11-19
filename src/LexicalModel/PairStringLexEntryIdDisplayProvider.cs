@@ -1,5 +1,5 @@
 using Palaso.Data;
-using Palaso.LexicalModel;
+using Palaso.Lift.UiBindings;
 
 namespace WeSay.LexicalModel
 {

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.i8n;
 using Palaso.LexicalModel;
+using Palaso.Lift.UiBindings;
+using Palaso.UI.WindowsForms.i8n;
+using Palaso.Lift;
 
 namespace WeSay.App
 {

@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Xml;
 using System.Xml.Serialization;
 using Palaso.Annotations;
+using Palaso.Lift.Options;
 
-namespace Palaso.LexicalModel.Options
+namespace Palaso.Lift.Options // TODO Send this out to Palaso.Lift.Options
 {
 	/// <summary>
 	/// This is like a PossibilityList in FieldWorks, or RangeSet in Toolbox

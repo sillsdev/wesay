@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
+using Palaso.Lift;
 using Palaso.Misc;
 using Palaso.Reporting;
 using Palaso.LexicalModel;

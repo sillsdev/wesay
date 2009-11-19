@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Palaso.Lift.Options;
+using Palaso.Lift.UiBindings;
 using Palaso.Text;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
 using System.Linq;
-using Palaso.LexicalModel;
+using Palaso.Lift;
 using WeSay.LexicalModel.Foundation;
 
 #if MONO

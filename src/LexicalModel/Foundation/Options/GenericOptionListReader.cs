@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using Palaso.Lift.Options;
 using Palaso.Text;
+using WeSay.LexicalModel.Foundation.Options;
 
-namespace Palaso.LexicalModel.Options
+namespace Palaso.Lift.Options // TODO Send this out to Palaso.Lift
 {
 
 	public interface IOptionListReader

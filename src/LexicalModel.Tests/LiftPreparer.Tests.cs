@@ -3,6 +3,7 @@ using System.IO;
 using LiftIO;
 using LiftIO.Validation;
 using Palaso.Lift.Migration;
+using Palaso.Progress;
 using Palaso.Reporting;
 
 using NUnit.Framework;
@@ -56,17 +57,19 @@ namespace WeSay.LexicalModel.Tests // review cp move to palaso.lift
 			//FLEx support for Lift started with 0.12
 			CreateLiftFileForTesting("0.10");
 			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
-			Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
+			Assert.IsTrue(preparer.IsMigrationNeeded(), "IsMigrationNeeded Failed");
+			preparer.MigrateLiftFile(new ProgressState());
 			Assert.AreEqual(Validator.LiftVersion, Validator.GetLiftVersion(_liftFilePath));
 		}
 
+		// TODO Move these tests to LiftDataMapperTests
 		[Test]
 		public void MigrateIfNeeded_AlreadyCurrentLift_LiftUntouched()
 		{
 			CreateLiftFileForTesting(Validator.LiftVersion);
 			DateTime startModTime = File.GetLastWriteTimeUtc(_liftFilePath);
 			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
-			Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
+			Assert.IsFalse(preparer.IsMigrationNeeded(), "IsMigrationNeeded Failed");
 			DateTime finishModTime = File.GetLastWriteTimeUtc(_liftFilePath);
 			Assert.AreEqual(startModTime, finishModTime);
 		}

@@ -5,6 +5,7 @@ using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
 using Palaso.LexicalModel;
+using Palaso.Lift;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests

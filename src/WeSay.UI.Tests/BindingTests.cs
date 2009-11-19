@@ -2,6 +2,7 @@ using System.Drawing;
 using NUnit.Framework;
 using Palaso.LexicalModel;
 using Palaso.LexicalModel;
+using Palaso.Lift;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI.TextBoxes;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using Palaso.LexicalModel;
+using Palaso.Lift;
+using Palaso.Lift.UiBindings;
 
 namespace WeSay.LexicalModel
 {

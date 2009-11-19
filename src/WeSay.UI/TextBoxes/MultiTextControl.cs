@@ -6,10 +6,11 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.Text;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
+//using CommonEnumerations=Palaso.Lift.CommonEnumerations;
+using Palaso.Lift;
+//using CommonEnumerations=Palaso.Lift.CommonEnumerations;
 
 namespace WeSay.UI.TextBoxes
 {

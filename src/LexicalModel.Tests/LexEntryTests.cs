@@ -4,6 +4,8 @@ using NUnit.Framework;
 using Palaso.LexicalModel;
 using Palaso.LexicalModel.Options;
 using Palaso.LexicalModel;
+using Palaso.Lift;
+using Palaso.Lift.Options;
 
 namespace WeSay.LexicalModel.Tests
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
+using Palaso.Lift;
 using Palaso.UI.WindowsForms.i8n;
 using Palaso.LexicalModel;
 using WeSay.LexicalModel;

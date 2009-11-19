@@ -1,6 +1,8 @@
 using System.Xml;
 using System.Xml.Serialization;
-using Palaso.LexicalModel;
+using Palaso.Lift;
+using Palaso.Lift.Options;
+using WeSay.LexicalModel.Foundation.Options;
 
 namespace Palaso.LexicalModel.Options
 {

@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Palaso.Lift;
 using Palaso.Reporting;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel;
 
 namespace WeSay.LexicalModel
 {
