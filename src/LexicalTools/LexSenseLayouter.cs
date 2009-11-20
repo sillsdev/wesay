@@ -8,6 +8,7 @@ using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools
 {

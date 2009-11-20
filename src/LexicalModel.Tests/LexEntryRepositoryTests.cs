@@ -12,6 +12,7 @@ using Palaso.LexicalModel;
 using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel.Foundation;
 using Palaso.Lift;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalModel.Tests
 {

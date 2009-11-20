@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Palaso.Lift;
+using Palaso.Lift.Model;
 using Palaso.Lift.Options;
 using Palaso.Text;
 using Palaso.LexicalModel;

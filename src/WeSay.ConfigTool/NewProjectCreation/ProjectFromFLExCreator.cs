@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Palaso.Lift.Model;
 using Palaso.Reporting;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;

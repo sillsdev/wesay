@@ -13,6 +13,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration;
+using Palaso.Lift.Model;
 
 namespace WeSay.Project.Tests
 {

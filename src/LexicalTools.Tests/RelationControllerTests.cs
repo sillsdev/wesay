@@ -10,6 +10,7 @@ using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI.AutoCompleteTextBox;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools.Tests
 {

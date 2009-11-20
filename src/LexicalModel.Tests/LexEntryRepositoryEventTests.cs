@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Palaso.Lift.Model;
 using Palaso.TestUtilities;
 
 

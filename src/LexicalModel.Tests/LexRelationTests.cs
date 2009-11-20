@@ -1,5 +1,6 @@
 using System.IO;
 using NUnit.Framework;
+using Palaso.Lift.Model;
 using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests
@@ -37,7 +38,6 @@ namespace WeSay.LexicalModel.Tests
 																			  Sense);
 
 			LexRelation relation = new LexRelation(synonymRelationType.ID, null, sense);
-			Assert.AreEqual(null, relation.GetTarget(_lexEntryRepository));
 			Assert.AreEqual(string.Empty, relation.Key);
 		}
 
@@ -53,7 +53,6 @@ namespace WeSay.LexicalModel.Tests
 
 			LexRelation relation = new LexRelation(synonymRelationType.ID, "something", sense);
 			relation.Key = null;
-			Assert.AreEqual(null, relation.GetTarget(_lexEntryRepository));
 			Assert.AreEqual(string.Empty, relation.Key);
 		}
 	}

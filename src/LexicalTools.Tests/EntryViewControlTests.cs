@@ -9,6 +9,7 @@ using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools.Tests
 {

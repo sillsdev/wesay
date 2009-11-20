@@ -9,6 +9,7 @@ using System.IO;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.Lift;
+using Palaso.Lift.Model;
 using Palaso.UiBindings;
 using Palaso.Misc;
 using Palaso.Reporting;

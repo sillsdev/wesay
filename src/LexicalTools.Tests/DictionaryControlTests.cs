@@ -17,6 +17,7 @@ using WeSay.UI.TextBoxes;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using Palaso.Lift;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools.Tests
 {

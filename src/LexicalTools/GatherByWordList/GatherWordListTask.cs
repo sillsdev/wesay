@@ -11,6 +11,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools.GatherByWordList
 {

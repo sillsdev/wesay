@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 using NUnit.Framework;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalModel.Tests
 {

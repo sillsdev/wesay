@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using Palaso.Data;
 using Palaso.Lift;
+using Palaso.Lift.Model;
 using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;

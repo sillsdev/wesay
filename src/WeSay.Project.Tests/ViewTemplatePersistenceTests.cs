@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Palaso.LexicalModel;
 using Palaso.Lift;
 using WeSay.LexicalModel;
+using Palaso.Lift.Model;
 
 namespace WeSay.Project.Tests
 {

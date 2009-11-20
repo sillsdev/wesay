@@ -20,6 +20,7 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using System.Linq;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains
 {

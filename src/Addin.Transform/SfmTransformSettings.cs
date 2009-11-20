@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
+using Palaso.Lift.Model;
 
 namespace Addin.Transform
 {

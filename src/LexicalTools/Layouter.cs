@@ -20,6 +20,7 @@ using WeSay.Project;
 using WeSay.UI;
 using System.Linq;
 using WeSay.UI.TextBoxes;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools
 {

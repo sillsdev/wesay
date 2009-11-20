@@ -7,6 +7,7 @@ using Palaso.LexicalModel;
 using Palaso.LexicalModel;
 using Palaso.LexicalModel.Options;
 using Palaso.Lift;
+using Palaso.Lift.Model;
 using Palaso.Lift.Options;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;

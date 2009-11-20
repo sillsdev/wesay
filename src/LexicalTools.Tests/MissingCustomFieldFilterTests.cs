@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Palaso.LexicalModel.Options;
+using Palaso.Lift.Model;
 using Palaso.Lift.Options;
 using WeSay.LexicalModel;
 using Palaso.LexicalModel;

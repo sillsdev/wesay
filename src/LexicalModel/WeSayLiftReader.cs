@@ -4,6 +4,7 @@ using LiftIO.Parsing;
 using LiftIO.Validation;
 using Palaso.Data;
 using Palaso.Lift;
+using Palaso.Lift.Model;
 using Palaso.Lift.Options;
 using Palaso.Progress;
 using Palaso.Reporting;

@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using Palaso.LexicalModel;
+using Palaso.Lift.Model;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;

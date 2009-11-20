@@ -8,6 +8,7 @@ using WeSay.LexicalModel;
 using System.Linq;
 using Palaso.Lift;
 using WeSay.LexicalModel.Foundation;
+using Palaso.Lift.Model;
 
 #if MONO
 using Palaso.Linq;

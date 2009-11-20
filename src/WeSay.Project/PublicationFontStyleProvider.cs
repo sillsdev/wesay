@@ -4,6 +4,7 @@ using System.Text;
 using WeSay.LexicalModel;
 using System.Linq;
 using WeSay.LexicalModel.Foundation;
+using Palaso.Lift.Model;
 
 namespace WeSay.Project
 {

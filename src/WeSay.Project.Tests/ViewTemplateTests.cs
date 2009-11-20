@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using NUnit.Framework;
+using Palaso.Lift.Model;
 using WeSay.Data.Tests;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;

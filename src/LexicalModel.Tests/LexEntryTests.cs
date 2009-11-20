@@ -3,9 +3,9 @@ using System.ComponentModel;
 using NUnit.Framework;
 using Palaso.LexicalModel;
 using Palaso.LexicalModel.Options;
-using Palaso.LexicalModel;
 using Palaso.Lift;
 using Palaso.Lift.Options;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalModel.Tests
 {

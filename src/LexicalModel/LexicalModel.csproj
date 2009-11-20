@@ -129,9 +129,6 @@
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexEntryFromLiftBuilder.cs" />
 	<Compile Include="LexEntryRepository.cs" />
-	<Compile Include="LexExampleSentence.cs" />
-	<Compile Include="LexRelation.cs" />
-	<Compile Include="LexSense.cs" />
 	<Compile Include="WeSayLiftReaderWriterProvider.cs" />
 	<Compile Include="WeSayLiftWriter.cs" />
 	<Compile Include="WeSayLiftDataMapper.cs" />

@@ -12,6 +12,7 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools
 {
@@ -151,7 +152,10 @@ namespace WeSay.LexicalTools
 			picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
 			picker.Box.Items = recordTokenList;
-			picker.Box.SelectedItem = GetRecordTokenFromLexEntry(relation.GetTarget(_lexEntryRepository));
+			if (!String.IsNullOrEmpty(relation.TargetId))
+			{
+				picker.Box.SelectedItem = GetRecordTokenFromLexEntry(_lexEntryRepository.GetLexEntryWithMatchingId(relation.TargetId));
+			}
 
 			picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
 			_control = picker;

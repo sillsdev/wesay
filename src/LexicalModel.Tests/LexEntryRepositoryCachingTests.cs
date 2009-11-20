@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Palaso.Data;
+using Palaso.Lift.Model;
 using Palaso.TestUtilities;
 using NUnit.Framework;
 using WeSay.LexicalModel.Foundation;

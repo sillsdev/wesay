@@ -16,6 +16,7 @@ using WeSay.Project;
 
 using NUnit.Framework;
 using Palaso.Lift.Options;
+using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools.Tests
 {

@@ -7,6 +7,7 @@ using LiftIO.Parsing;
 using NUnit.Framework;
 using Palaso.Data;
 using Palaso.Lift;
+using Palaso.Lift.Model;
 using Palaso.TestUtilities;
 using Palaso.LexicalModel;
 using WeSay.Project;

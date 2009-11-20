@@ -10,6 +10,7 @@ using Palaso.Text;
 using WeSay.Data;
 using Palaso.LexicalModel;
 using WeSay.LexicalModel.Foundation;
+using Palaso.Lift.Model;
 
 #if MONO
 using Palaso.Linq;

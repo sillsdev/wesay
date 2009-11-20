@@ -8,6 +8,7 @@ using System.Xml;
 using LiftIO.Validation;
 using Palaso.Annotations;
 using Palaso.Lift;
+using Palaso.Lift.Model;
 using Palaso.Lift.Options;
 using Palaso.Text;
 
