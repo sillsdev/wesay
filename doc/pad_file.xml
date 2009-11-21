@@ -80,8 +80,8 @@
 			<Application_Info_URL>http://www.wesay.org</Application_Info_URL>
 			<Application_Order_URL />
 			<Application_Screenshot_URL>http://wesay.org/images/8/8a/WesayDash.png</Application_Screenshot_URL>
-			<Application_Icon_URL>http://projects.palaso.org/repositories/changes/wesay/artwork/WeSay.png</Application_Icon_URL>
-			<Application_XML_File_URL>http://projects.palaso.org/repositories/browse/wesay/doc/pad_file.xml</Application_XML_File_URL>
+			<Application_Icon_URL>http://projects.palaso.org/attachments/download/50/WeSay32x32.png</Application_Icon_URL>
+			<Application_XML_File_URL>http://projects.palaso.org/attachments/download/49/pad_file.xml</Application_XML_File_URL>
 		</Application_URLs>
 		<Download_URLs>
 			<Primary_Download_URL>http://wesay.org/downloads/WeSayInstaller.0.6.2131.msi</Primary_Download_URL>
