@@ -270,7 +270,7 @@ namespace WeSay.LexicalTools
 							delegate(RecordToken<LexEntry> token) { return (string) token["Form"] == form; });
 		}
 
-		//        #region Nested type: WeSayDataObjectLabelAdaptor
+		//        #region Nested type: PalasoDataObjectLabelAdaptor
 		//
 		//        private class PairStringLexEntryIdLabelAdaptor : IDisplayStringAdaptor
 		//        {

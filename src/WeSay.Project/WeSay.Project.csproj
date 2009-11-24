@@ -197,6 +197,9 @@
   <ItemGroup>
 	<EmbeddedResource Include="ConfigMigration\MigrateConfig4To5.xsl" />
   </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="ConfigMigration\MigrateConfig6To7.xsl" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.
