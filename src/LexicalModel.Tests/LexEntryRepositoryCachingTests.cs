@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Palaso.Data;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Model;
 using Palaso.TestUtilities;
 using NUnit.Framework;
@@ -14,10 +15,6 @@ namespace WeSay.LexicalModel.Tests
 	{
 		private TemporaryFolder _tempfolder;
 		private LexEntryRepository _repository;
-		private ResultSet<LexEntry> firstResults;
-		private bool _afterEntryDeletedCalled;
-		private bool _afterEntrySavedCalled;
-		private bool _afterEntryModifiedCalled;
 
 		[SetUp]
 		public void Setup()
@@ -25,8 +22,6 @@ namespace WeSay.LexicalModel.Tests
 			_tempfolder = new TemporaryFolder();
 			string persistedFilePath = _tempfolder.GetTemporaryFile();
 			_repository = new LexEntryRepository(persistedFilePath);
-
-			_afterEntryDeletedCalled = _afterEntrySavedCalled = _afterEntryModifiedCalled = false;
 		}
 
 		[TearDown]

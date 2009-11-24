@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
+using Palaso.DictionaryServices.Model;
 using Palaso.Misc;
 using Palaso.Reporting;
 using WeSay.LexicalModel;
@@ -297,11 +298,13 @@ namespace WeSay.LexicalTools
 				if (_record != null)
 				{
 					VerifyHasLexEntryRepository();
-					LexEntryLayouter layout = new LexEntryLayouter(detailList,
-																   ViewTemplate,
-																   _lexEntryRepository,
-																   WeSayWordsProject.Project.ServiceLocator,//clean-up have to send this down the chain
-																   _record);
+					var layout = new LexEntryLayouter(
+						detailList,
+						ViewTemplate,
+						_lexEntryRepository,
+						WeSayWordsProject.Project.ServiceLocator,//clean-up have to send this down the chain
+						_record
+					);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}

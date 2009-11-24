@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Palaso.I8N;
 using Palaso.Lift;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.LexicalModel;
 using WeSay.Project;
+using Palaso.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {

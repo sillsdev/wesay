@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Palaso.Data;
+using Palaso.DictionaryServices.Lift;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Options;
 using Palaso.UiBindings;
 using Palaso.Misc;
 using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using Palaso.Lift.Model;
 

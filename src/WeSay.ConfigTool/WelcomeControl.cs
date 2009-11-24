@@ -2,9 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Chorus.VcsDrivers.Mercurial;
-using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.I8N;
 using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool
@@ -41,7 +39,7 @@ namespace WeSay.ConfigTool
 		{
 			 panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 			panel.RowCount++;
-			Label label = new Label();
+			var label = new Label();
 			label.Font = new Font(StringCatalog.LabelFont.FontFamily, _templateLabel.Font.Size, _templateLabel.Font.Style);
 			label.ForeColor = _templateLabel.ForeColor;
 			label.Text = sectionName;
@@ -61,7 +59,7 @@ namespace WeSay.ConfigTool
 		{
 			panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 			panel.RowCount++;
-			Button button = new Button();
+			var button = new Button();
 			button.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 
 			button.Width = _templateButton.Width;//review
@@ -72,11 +70,11 @@ namespace WeSay.ConfigTool
 			button.Click += clickHandler;
 			button.Text = "  "+localizedLabel;
 
-			button.FlatAppearance.BorderSize = this._templateButton.FlatAppearance.BorderSize;
-			button.FlatStyle = this._templateButton.FlatStyle;
-			button.ImageAlign = this._templateButton.ImageAlign;
-			button.TextImageRelation = this._templateButton.TextImageRelation ;
-			button.UseVisualStyleBackColor = this._templateButton.UseVisualStyleBackColor;
+			button.FlatAppearance.BorderSize = _templateButton.FlatAppearance.BorderSize;
+			button.FlatStyle = _templateButton.FlatStyle;
+			button.ImageAlign = _templateButton.ImageAlign;
+			button.TextImageRelation = _templateButton.TextImageRelation ;
+			button.UseVisualStyleBackColor = _templateButton.UseVisualStyleBackColor;
 			button.Enabled = enabled;
 
 			toolTip1.SetToolTip(button, localizedTooltip);
@@ -87,8 +85,8 @@ namespace WeSay.ConfigTool
 		private void AddCreateChoices(TableLayoutPanel panel)
 		{
 			AddSection("Create", panel);
-			AddChoice("Create new blank project", string.Empty, "newProject", true, this.createNewProject_LinkClicked, panel);
-			AddChoice("Create new project from FLEx LIFT export", string.Empty, "flex", true, this.OnCreateProjectFromFLEx_LinkClicked, panel);
+			AddChoice("Create new blank project", string.Empty, "newProject", true, createNewProject_LinkClicked, panel);
+			AddChoice("Create new project from FLEx LIFT export", string.Empty, "flex", true, OnCreateProjectFromFLEx_LinkClicked, panel);
 		}
 
 		private void AddGetChoices(TableLayoutPanel panel)
@@ -110,12 +108,12 @@ namespace WeSay.ConfigTool
 					return;
 				}
 			}
-			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
+			if (!Directory.Exists(Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				//e.g. mydocuments/wesay
-				Directory.CreateDirectory(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
+				Directory.CreateDirectory(Project.WeSayWordsProject.NewProjectDirectory);
 			}
-			using (var dlg = new Chorus.UI.Clone.GetCloneFromInternetDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
+			using (var dlg = new Chorus.UI.Clone.GetCloneFromInternetDialog(Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
@@ -133,12 +131,12 @@ namespace WeSay.ConfigTool
 					return;
 				}
 			}
-			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
+			if (!Directory.Exists(Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				//e.g. mydocuments/wesay
-				Directory.CreateDirectory(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
+				Directory.CreateDirectory(Project.WeSayWordsProject.NewProjectDirectory);
 			}
-			using (var dlg = new Chorus.UI.Clone.GetCloneFromUsbDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
+			using (var dlg = new Chorus.UI.Clone.GetCloneFromUsbDialog(Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				dlg.Model.ProjectFilter = dir => GetLooksLikeWeSayProject(dir);
 				if (DialogResult.Cancel == dlg.ShowDialog())

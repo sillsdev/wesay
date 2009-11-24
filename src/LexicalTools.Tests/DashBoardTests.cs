@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.TestUtilities;
-using Palaso.LexicalModel;
+using WeSay.Foundation;
 using WeSay.LexicalTools.Dashboard;
 
 using NUnit.Framework;

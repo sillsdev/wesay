@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using Palaso.LexicalModel;
+using WeSay.Foundation;
 
 namespace WeSay.Project
 {

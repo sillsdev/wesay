@@ -2,15 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Lift.Model;
 using Palaso.Lift.Options;
 using Palaso.Text;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel.Foundation;
-using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -33,7 +31,7 @@ namespace WeSay.LexicalTools
 				return string.Empty;
 			}
 
-			StringBuilder rtf = new StringBuilder();
+			var rtf = new StringBuilder();
 			rtf.Append(@"{\rtf1\ansi\uc1\fs28 ");
 			rtf.Append(MakeFontTable());
 			RenderHeadword(entry, rtf, lexEntryRepository);
@@ -99,31 +97,38 @@ namespace WeSay.LexicalTools
 
 		private static void RenderPartOfSpeech(LexSense sense, CurrentItemEventArgs currentItem, StringBuilder rtf)
 		{
-			OptionRef posRef =
-				sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
-			if (posRef != null)
+			OptionRef posRef = sense.GetProperty<OptionRef>(
+				LexSense.WellKnownProperties.PartOfSpeech
+			);
+			if (posRef == null)
 			{
-				OptionsList list =
-					WeSayWordsProject.Project.GetOptionsList(
-						LexSense.WellKnownProperties.PartOfSpeech);
-				if (list != null)
-				{
-					Option posOption = list.GetOptionFromKey(posRef.Value);
-
-					if (posOption != null)
-					{
-						Field posField =
-							WeSayWordsProject.Project.GetFieldFromDefaultViewTemplate(
-								LexSense.WellKnownProperties.PartOfSpeech);
-						if (posField != null)
-						{
-							rtf.Append(@" \i ");
-							rtf.Append(RenderField(posOption.Name, currentItem, 0, posField));
-							rtf.Append(@"\i0 ");
-						}
-					}
-				}
+				return;
 			}
+
+			OptionsList list = WeSayWordsProject.Project.GetOptionsList(
+				LexSense.WellKnownProperties.PartOfSpeech
+			);
+			if (list == null)
+			{
+				return;
+			}
+
+			Option posOption = list.GetOptionFromKey(posRef.Value);
+			if (posOption == null)
+			{
+				return;
+			}
+
+			Field posField = WeSayWordsProject.Project.GetFieldFromDefaultViewTemplate(
+				LexSense.WellKnownProperties.PartOfSpeech
+			);
+			if (posField == null)
+			{
+				return;
+			}
+			rtf.Append(@" \i ");
+			rtf.Append(RenderField(posOption.Name, currentItem, 0, posField));
+			rtf.Append(@"\i0 ");
 		}
 
 		private static void RenderHeadword(LexEntry entry,
@@ -140,12 +145,10 @@ namespace WeSay.LexicalTools
 				rtf.Append(headword.Form);
 				//   rtf.Append(" ");
 
-				int homographNumber = lexEntryRepository.GetHomographNumber(entry,
-																			WeSayWordsProject.
-																					Project.
-																					DefaultViewTemplate
-																					.
-																					HeadwordWritingSystem);
+				int homographNumber = lexEntryRepository.GetHomographNumber(
+					entry,
+					WeSayWordsProject.Project.DefaultViewTemplate.HeadwordWritingSystem
+				);
 				if (homographNumber > 0)
 				{
 					rtf.Append(@"{\super " + homographNumber + "}");
@@ -160,9 +163,9 @@ namespace WeSay.LexicalTools
 
 		private static string MakeFontTable()
 		{
-			StringBuilder rtf = new StringBuilder(@"{\fonttbl");
+			var rtf = new StringBuilder(@"{\fonttbl");
 			int i = 0;
-			foreach (KeyValuePair<string, WritingSystem> ws in WritingSystems)
+			foreach (var ws in WritingSystems)
 			{
 				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + ws.Value.Font.FontFamily.Name +
 						   ";");
@@ -201,7 +204,7 @@ namespace WeSay.LexicalTools
 										  int sizeBoost,
 										  Field field)
 		{
-			StringBuilder rtfBuilder = new StringBuilder();
+			var rtfBuilder = new StringBuilder();
 			if (text != null)
 			{
 				if (text.Count == 0 && currentItem != null && text == currentItem.DataTarget)
@@ -230,7 +233,7 @@ namespace WeSay.LexicalTools
 
 		public static IList<LanguageForm> GetActualTextForms(MultiText text, WritingSystemCollection writingSytems)
 		{
-			var x = text.Forms.Where((f) => !writingSytems[f.WritingSystemId].IsAudio);
+			var x = text.Forms.Where(f => !writingSytems[f.WritingSystemId].IsAudio);
 			return new List<LanguageForm>(x);
 		}
 
@@ -306,7 +309,7 @@ namespace WeSay.LexicalTools
 
 		private static string Utf16ToRtfAnsi(IEnumerable<char> inString)
 		{
-			StringBuilder outString = new StringBuilder();
+			var outString = new StringBuilder();
 			foreach (char c in inString)
 			{
 				if (c > 128)

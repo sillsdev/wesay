@@ -4,8 +4,8 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
+using Palaso.I8N;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
@@ -94,9 +94,9 @@ namespace WeSay.Project
 
 		public virtual void Save(string projectDirectoryPath)
 		{
-			XmlWriterSettings settings = new XmlWriterSettings();
+			var settings = new XmlWriterSettings();
 			settings.Indent = true;
-			XmlWriter writer = XmlWriter.Create(PathToWritingSystemPrefs, settings);
+			var writer = XmlWriter.Create(PathToWritingSystemPrefs, settings);
 			_writingSystems.Write(writer);
 			writer.Close();
 		}
@@ -111,7 +111,7 @@ namespace WeSay.Project
 		public static void InitializeForTests()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
-			BasilProject project = new BasilProject();
+			var project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
 			project.UiOptions.Language = "en";
 		}
@@ -185,10 +185,7 @@ namespace WeSay.Project
 				return path;
 			}
 
-			else
-			{
-				return null;
-			}
+			return null;
 		}
 
 		public string PathToStringCatalogInProjectDir
@@ -217,9 +214,7 @@ namespace WeSay.Project
 
 		protected static string GetTopAppDirectory()
 		{
-			string path;
-
-			path = DirectoryOfTheApplicationExecutable;
+			string path = DirectoryOfTheApplicationExecutable;
 			char sep = Path.DirectorySeparatorChar;
 			int i = path.ToLower().LastIndexOf(sep + "output" + sep);
 

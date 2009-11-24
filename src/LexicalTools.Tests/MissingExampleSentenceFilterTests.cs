@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Model;
 using WeSay.LexicalModel;
 

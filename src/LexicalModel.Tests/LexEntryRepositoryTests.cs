@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using NUnit.Framework;
 using Palaso.Data;
-using Palaso.Lift.Options;
-using Palaso.Text;
-using WeSay.Data;
-using Palaso.LexicalModel;
-using Palaso.TestUtilities;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
-using WeSay.LexicalModel.Foundation;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Lift.Model;
+using Palaso.Lift.Options;
+using Palaso.TestUtilities;
+using Palaso.Text;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests
 {

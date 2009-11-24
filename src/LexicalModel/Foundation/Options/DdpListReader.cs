@@ -4,7 +4,7 @@ using Palaso.Lift;
 using Palaso.Lift.Options;
 using WeSay.LexicalModel.Foundation.Options;
 
-namespace Palaso.LexicalModel.Options
+namespace WeSay.LexicalModel.Foundation.Options
 {
 	public class DdpListReader : GenericOptionListReader
 	{
@@ -30,7 +30,7 @@ namespace Palaso.LexicalModel.Options
 			attrOverrides.Add(typeof(Option), "SearchKeys", attrs);
 
 			return new XmlSerializer(typeof(OptionsList), attrOverrides);
-		 }
+		}
 
 
 

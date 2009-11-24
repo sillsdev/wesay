@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
 using Palaso.LexicalModel;
 using Palaso.Lift.Model;
 using WeSay.LexicalModel;

@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Palaso.LexicalModel;
 using Palaso.Lift;
 
 namespace WeSay.UI.TextBoxes

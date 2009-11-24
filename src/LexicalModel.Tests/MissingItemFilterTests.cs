@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Palaso.LexicalModel.Options;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Model;
 using Palaso.Lift.Options;
 

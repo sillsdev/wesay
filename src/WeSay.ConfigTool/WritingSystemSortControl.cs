@@ -4,10 +4,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.Reflection;
 using System.Windows.Forms;
+using Palaso.I8N;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using Palaso.WritingSystems.Collation;
 using Spart;
 using WeSay.LexicalModel.Foundation;
@@ -30,29 +29,29 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			List<CultureInfo> result =
-					new List<CultureInfo>(CultureInfo.GetCultures(CultureTypes.AllCultures));
+			var result = new List<CultureInfo>(
+				CultureInfo.GetCultures(CultureTypes.AllCultures)
+			);
 
 			result.Sort(
-					delegate(CultureInfo ci1, CultureInfo ci2)
-					{
-						return StringComparer.InvariantCulture.Compare(ci1.DisplayName,
-																	   ci2.DisplayName);
-					});
+				(ci1, ci2) => StringComparer.InvariantCulture.Compare(
+					ci1.DisplayName,
+					ci2.DisplayName
+				)
+			);
 
 			result.Remove(CultureInfo.InvariantCulture);
 
-			List<KeyValuePair<string, string>> sortChoices =
-					new List<KeyValuePair<string, string>>();
+			var sortChoices = new List<KeyValuePair<string, string>>();
 			sortChoices.Add(new KeyValuePair<string, string>(null, "(select a sort method)"));
 
 			foreach (Enum customSortRulesType in Enum.GetValues(typeof (CustomSortRulesType)))
 			{
-				FieldInfo fi = customSortRulesType.GetType().GetField(customSortRulesType.ToString());
+				var fi = customSortRulesType.GetType().GetField(customSortRulesType.ToString());
 
-				DescriptionAttribute[] descriptions =
-						(DescriptionAttribute[])
-						fi.GetCustomAttributes(typeof (DescriptionAttribute), false);
+				var descriptions = (DescriptionAttribute[])fi.GetCustomAttributes(
+					typeof (DescriptionAttribute), false
+				);
 				string description;
 				if (descriptions.Length == 0)
 				{
@@ -154,7 +153,6 @@ namespace WeSay.ConfigTool
 
 		private void comboBoxCultures_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			string oldValue = _writingSystem.SortUsing;
 			_writingSystem.SortUsing = (string) comboBoxCultures.SelectedValue;
 			UpdateCustomRules();
 
@@ -295,7 +293,7 @@ Z z";
 		private void buttonSortTest_Click(object sender, EventArgs e)
 		{
 			string text = textBoxSortTest.Text;
-			string[] stringsToSort = text.Split(new string[] {Environment.NewLine},
+			string[] stringsToSort = text.Split(new[] {Environment.NewLine},
 												StringSplitOptions.RemoveEmptyEntries);
 			Array.Sort(stringsToSort, _writingSystem);
 			string s = string.Empty;

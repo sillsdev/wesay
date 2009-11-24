@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Palaso.Lift.Options;
-using Palaso.UiBindings;
-using Palaso.Text;
-using WeSay.LexicalModel;
 using System.Linq;
+using Palaso.DictionaryServices.Lift;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
-using WeSay.LexicalModel.Foundation;
 using Palaso.Lift.Model;
+using Palaso.Lift.Options;
+using Palaso.Text;
+using Palaso.UiBindings;
+using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 
 #if MONO
 using Palaso.Linq;
@@ -27,8 +29,8 @@ namespace WeSay.Project
 							 LexEntryRepository lexEntryRepository,
 							 ViewTemplate viewTemplate): base(builder, produceFragmentOnly)
 		{
-			this._lexEntryRepository = lexEntryRepository;
-			this._viewTemplate = viewTemplate;
+			_lexEntryRepository = lexEntryRepository;
+			_viewTemplate = viewTemplate;
 			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
 		}
 
@@ -36,8 +38,8 @@ namespace WeSay.Project
 							 LexEntryRepository lexEntryRepository,
 							 ViewTemplate viewTemplate): base(path)
 		{
-			this._lexEntryRepository = lexEntryRepository;
-			this._viewTemplate = viewTemplate;
+			_lexEntryRepository = lexEntryRepository;
+			_viewTemplate = viewTemplate;
 			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
 		}
 
@@ -113,7 +115,7 @@ namespace WeSay.Project
 		{
 			//                headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
 
-			MultiText headword = new MultiText();
+			var headword = new MultiText();
 			foreach (string writingSystemId in _headwordWritingSystemIds)
 			{
 				headword.SetAlternative(writingSystemId, entry.GetHeadWordForm(writingSystemId));
@@ -162,7 +164,7 @@ namespace WeSay.Project
 
 		public static IList<LanguageForm> GetAudioForms(MultiText field, WritingSystemCollection writingSytems)
 		{
-			var x = field.Forms.Where((f) => writingSytems[f.WritingSystemId].IsAudio);
+			var x = field.Forms.Where(f => writingSytems[f.WritingSystemId].IsAudio);
 			return new List<LanguageForm>(x);
 		}
 
@@ -179,7 +181,7 @@ namespace WeSay.Project
 				return;
 			}
 
-			LexEntry target = this._lexEntryRepository.GetLexEntryWithMatchingId(key);
+			LexEntry target = _lexEntryRepository.GetLexEntryWithMatchingId(key);
 			if (target != null)
 			{
 				WriteHeadWordField(target, "headword-of-target");
@@ -217,7 +219,7 @@ namespace WeSay.Project
 				return;
 			Writer.WriteStartElement("pronunciation");
 
-			paths.ForEach((path) =>
+			paths.ForEach(path =>
 							  {
 								  Writer.WriteStartElement("media");
 								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));

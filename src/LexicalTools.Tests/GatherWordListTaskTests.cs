@@ -13,6 +13,7 @@ using Palaso.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
+using Palaso.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.Tests
 {

@@ -94,6 +94,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
 	</Reference>
+	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
+	</Reference>
 	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
@@ -137,15 +141,8 @@
 	<Compile Include="LexEntryRepositoryStateUnitializedTests.cs" />
 	<Compile Include="LexEntryRepository_GetMissingItemTests.cs" />
 	<Compile Include="FieldTests.cs" />
-	<Compile Include="LexEntryTests.cs" />
 	<Compile Include="LexEntryRepositoryTests.cs" />
-	<Compile Include="LexRelationTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
-	<Compile Include="LiftExportTests.cs" />
-	<Compile Include="LexEntryFromLiftBuilderTests.cs" />
-	<Compile Include="LiftPreparer.Tests.cs" />
-	<Compile Include="LiftRepositoryTests.cs" />
-	<Compile Include="LiftRoundTripTests.cs" />
 	<Compile Include="MissingItemFilterTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

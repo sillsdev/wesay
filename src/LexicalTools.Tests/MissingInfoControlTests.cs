@@ -1,11 +1,9 @@
 using System;
 using System.Drawing;
-using System.Threading;
-using System.Windows.Forms;
 using Palaso.Data;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Model;
 using Palaso.TestUtilities;
-using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.AddMissingInfo;
@@ -67,25 +65,28 @@ namespace WeSay.LexicalTools.Tests
 							"Watch out for cars when you cross the street.");
 			CreateTestEntry("dog", "animal with four legs; man's best friend", "He walked his dog.");
 
-			string[] analysisWritingSystemIds = new string[] {"analysis"};
-			string[] vernacularWritingSystemIds = new string[] {_writingSystem.Id};
+			string[] analysisWritingSystemIds = new[] {"analysis"};
+			string[] vernacularWritingSystemIds = new[] {_writingSystem.Id};
 			RtfRenderer.HeadWordWritingSystemId = vernacularWritingSystemIds[0];
 
-			_viewTemplate = new ViewTemplate();
-			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-										"LexEntry",
-										vernacularWritingSystemIds));
-			_viewTemplate.Add(new Field(LexSense.WellKnownProperties.Definition,
-										"LexSense",
-										analysisWritingSystemIds));
+			_viewTemplate = new ViewTemplate
+			{
+				new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+						  "LexEntry",
+						  vernacularWritingSystemIds),
+				new Field(LexSense.WellKnownProperties.Definition,
+						  "LexSense",
+						  analysisWritingSystemIds),
+				new Field(Field.FieldNames.ExampleSentence.ToString(),
+						  "LexExampleSentence",
+						  vernacularWritingSystemIds)
+			};
 
-			_viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(),
-										"LexExampleSentence",
-										vernacularWritingSystemIds));
-			Field exampleTranslationField = new Field(
-					Field.FieldNames.ExampleTranslation.ToString(),
-					"LexExampleSentence",
-					analysisWritingSystemIds);
+			var exampleTranslationField = new Field(
+				Field.FieldNames.ExampleTranslation.ToString(),
+				"LexExampleSentence",
+				analysisWritingSystemIds
+			);
 			_viewTemplate.Add(exampleTranslationField);
 
 			_missingTranslationRecordList =
@@ -95,12 +96,12 @@ namespace WeSay.LexicalTools.Tests
 
 		private void CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)
 		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
+			var entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm[_writingSystem.Id] = lexicalForm;
-			LexSense sense = new LexSense();
+			var sense = new LexSense();
 			entry.Senses.Add(sense);
 			sense.Definition["analysis"] = Definition;
-			LexExampleSentence example = new LexExampleSentence();
+			var example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);
 			example.Sentence[_writingSystem.Id] = exampleSentence;
 			_lexEntryRepository.SaveItem(entry);
@@ -125,7 +126,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Create()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -248,7 +249,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetCurrentRecordToNext_GoesToNext()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -263,7 +264,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetCurrentRecordToPrevious_AfterChangedSoNoLongerMeetsFilter_StaysAtFirst()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -282,7 +283,7 @@ namespace WeSay.LexicalTools.Tests
 				()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -301,7 +302,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetCurrentRecordToNextThenPrevious_AfterChangedSoNoLongerMeetsFilter_SamePlace()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -319,7 +320,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetCurrentRecordToPrevious_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLast()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -344,7 +345,7 @@ namespace WeSay.LexicalTools.Tests
 				()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -367,7 +368,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetCurrentRecordToNext_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLast()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -390,7 +391,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetCurrentRecordToNext_AfterChangedSoNoLongerMeetsFilter_GoesToNext()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -408,7 +409,7 @@ namespace WeSay.LexicalTools.Tests
 		public void ChangedSoNoLongerMeetsFilter_RemovedFromTodoAndAddedToCompleteList()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -435,7 +436,7 @@ namespace WeSay.LexicalTools.Tests
 		public void MakeChange_TaskToldToSaveCorrectRecord()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,
@@ -461,7 +462,7 @@ namespace WeSay.LexicalTools.Tests
 		public void ChangeSoMeetsFilter_AfterChangedSoNoLongerMeetsFilter_StaysHighlighted()
 		{
 			using (
-					MissingInfoControl missingInfoControl =
+					var missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   IsMissingTranslation,

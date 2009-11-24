@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using Palaso.Data;
+using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using Palaso.LexicalModel;
 using Palaso.TestUtilities;

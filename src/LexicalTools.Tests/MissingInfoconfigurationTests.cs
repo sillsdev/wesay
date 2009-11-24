@@ -1,6 +1,5 @@
 ﻿using System;
 using NUnit.Framework;
-using Palaso.LexicalModel.Options;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddMissingInfo;

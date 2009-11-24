@@ -1,11 +1,11 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.I8N;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.UiBindings;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
@@ -66,11 +66,8 @@ namespace WeSay.UI
 					//                    }
 					return key;
 				}
-				else
-				{
-					return _control.Text;
-					// situation where the value isn't currently a member of the approved list
-				}
+				return _control.Text;
+				// situation where the value isn't currently a member of the approved list
 			}
 			set
 			{
@@ -185,7 +182,7 @@ namespace WeSay.UI
 			{
 				return 1;
 			}
-			else if (string.IsNullOrEmpty(b.Key))
+			if (string.IsNullOrEmpty(b.Key))
 			{
 				return -1;
 			}

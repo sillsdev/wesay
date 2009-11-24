@@ -4,6 +4,7 @@ using System.IO;
 using System.Xml;
 using NUnit.Framework;
 using Palaso.Data;
+using Palaso.DictionaryServices.Model;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using Palaso.Lift;
@@ -165,11 +166,13 @@ namespace WeSay.Project.Tests
 				e1.GetOrCreateProperty<MultiText>("color").SetAlternative(session.WritingSystemIds[0], "red");
 				session.Repo.SaveItem(e1);
 
-				Field color = new Field("color",
-										"LexEntry",
-										session.WritingSystemIds,
-										Field.MultiplicityType.ZeroOr1,
-										"MultiText");
+				var color = new Field(
+					"color",
+					"LexEntry",
+					session.WritingSystemIds,
+					Field.MultiplicityType.ZeroOr1,
+					"MultiText"
+				);
 				color.DisplayName = "color";
 				session.Template.Add(color);
 
@@ -401,8 +404,8 @@ namespace WeSay.Project.Tests
 
 	class ExportSession : IDisposable
 	{
-		private TempFile _outputFile;
-		private ProjectDirectorySetupForTesting _projectDir;
+		private readonly TempFile _outputFile;
+		private readonly ProjectDirectorySetupForTesting _projectDir;
 		public List<string> WritingSystemIds { get; set; }
 
 		public ExportSession()
@@ -411,35 +414,39 @@ namespace WeSay.Project.Tests
 			var project = _projectDir.CreateLoadedProject();
 			_outputFile = new TempFile();
 			Repo = new LexEntryRepository(_projectDir.PathToLiftFile);
-			WritingSystemIds = new List<string>(new string[] { "red", "green", "blue", "voice" });
+			WritingSystemIds = new List<string>(new[] { "red", "green", "blue", "voice" });
 			HeadwordWritingSystem =project.WritingSystems.AddSimple("red");
 			project.WritingSystems.AddSimple("green");
 			project.WritingSystems.AddSimple("blue");
 			project.WritingSystems.AddSimple("voice").IsAudio = true;
 
-			Template = new ViewTemplate();
+			Template = new ViewTemplate
+			{
+				new Field(
+					LexEntry.WellKnownProperties.Citation,
+					"LexEntry",
+					new[] {"blue", "red"}),
+				new Field(
+					LexEntry.WellKnownProperties.LexicalUnit,
+					"LexEntry",
+					new[] {"red", "green", "blue", "voice"}),
+				new Field(
+					LexEntry.WellKnownProperties.BaseForm,
+					"LexEntry",
+					WritingSystemIds),
+				new Field(
+					"brother",
+					"LexEntry",
+					WritingSystemIds)
+			};
 
-			Template.Add(new Field(LexEntry.WellKnownProperties.Citation,
-							"LexEntry",
-							new string[] { "blue", "red" }));
-			Template.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit,
-										"LexEntry",
-										new string[] { "red", "green", "blue", "voice" }));
-			Template.Add(new Field(LexEntry.WellKnownProperties.BaseForm,
-										"LexEntry",
-										WritingSystemIds));
-
-			Template.Add(new Field("brother",
-							"LexEntry",
-							WritingSystemIds));
-
-
-
-			Field visibleCustom = new Field("VisibleCustom",
-											"LexEntry",
-											WritingSystemIds,
-											Field.MultiplicityType.ZeroOr1,
-											"MultiText");
+			var visibleCustom = new Field(
+				"VisibleCustom",
+				"LexEntry",
+				WritingSystemIds,
+				Field.MultiplicityType.ZeroOr1,
+				"MultiText"
+			);
 			visibleCustom.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			visibleCustom.DisplayName = "VisibleCustom";
 			Template.Add(visibleCustom);
@@ -528,11 +535,11 @@ namespace WeSay.Project.Tests
 
 		public void DoExport()
 		{
-			using (PLiftExporter exporter = new PLiftExporter(_outputFile.Path, Repo, Template))
+			using (var exporter = new PLiftExporter(_outputFile.Path, Repo, Template))
 			{
-				ResultSet<LexEntry> allEntriesSortedByHeadword =
-					this.Repo.GetAllEntriesSortedByHeadword(
-						this.HeadwordWritingSystem);
+				var allEntriesSortedByHeadword = Repo.GetAllEntriesSortedByHeadword(
+					HeadwordWritingSystem
+				);
 				foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
 				{
 					int homographNumber = 0;
@@ -575,7 +582,7 @@ namespace WeSay.Project.Tests
 
 		public XmlNodeList GetNodes(string xpath)
 		{
-			XmlDocument doc = new XmlDocument();
+			var doc = new XmlDocument();
 			try
 			{
 				doc.Load(_outputFile.Path);
@@ -596,14 +603,14 @@ namespace WeSay.Project.Tests
 
 		public void PrintResult()
 		{
-		  XmlDocument doc = new XmlDocument();
-				doc.Load(_outputFile.Path);
+			var doc = new XmlDocument();
+			doc.Load(_outputFile.Path);
 			PrintNodeToConsole(doc);
 		}
 
 		public  void PrintNodeToConsole(XmlNode node)
 		{
-			XmlWriterSettings settings = new XmlWriterSettings();
+			var settings = new XmlWriterSettings();
 			settings.Indent = true;
 			settings.ConformanceLevel = ConformanceLevel.Fragment;
 			XmlWriter writer = XmlWriter.Create(Console.Out, settings);

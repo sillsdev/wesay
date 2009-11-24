@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace Palaso.LexicalModel
+namespace WeSay.Foundation
 {
 	public interface IThingOnDashboard
 	{

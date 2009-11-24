@@ -1,5 +1,3 @@
-using Resources=WeSay.ConfigTool.Properties.Resources;
-
 namespace WeSay.ConfigTool
 {
 	partial class WelcomeControl

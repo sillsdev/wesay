@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using Palaso.LexicalModel.Options;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Model;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
@@ -38,7 +38,7 @@ namespace WeSay.LexicalTools.Tests
 			WeSayWordsProject.InitializeForTests();
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystemId;
 
-			this._missingFieldName = LexSense.WellKnownProperties.Definition;
+			_missingFieldName = LexSense.WellKnownProperties.Definition;
 
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			_lexicalForm = "vernacular";

@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Mono.Addins;
-using Palaso.LexicalModel;
+using WeSay.Foundation;
 
 namespace WeSay.AddinLib
 {

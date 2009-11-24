@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Exortech.NetReflector;
+using Palaso.DictionaryServices.Model;
+using Palaso.I8N;
 using Palaso.Lift;
-using Palaso.UI.WindowsForms.i8n;
-using Palaso.LexicalModel;
-using WeSay.LexicalModel;
-using System.Linq;
-using WeSay.LexicalModel.Foundation;
 using Palaso.Lift.Model;
+using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
@@ -244,7 +243,7 @@ namespace WeSay.Project
 			MoveToFirstInClass(GetField(Field.FieldNames.ExampleSentence.ToString()));
 
 			//In Nov 2008 (v 0.5) we made the note field multi-paragraph
-			Field note = GetField(LexSense.WellKnownProperties.Note);
+			Field note = GetField(PalasoDataObject.WellKnownProperties.Note);
 			if (!note.IsMultiParagraph)
 			{
 				note.IsMultiParagraph = true;

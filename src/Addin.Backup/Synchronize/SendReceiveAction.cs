@@ -4,9 +4,9 @@ using System.Windows.Forms;
 using Chorus.UI.Sync;
 using Chorus.VcsDrivers.Mercurial;
 using Mono.Addins;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.I8N;
 using WeSay.AddinLib;
-using Palaso.LexicalModel;
+using WeSay.Foundation;
 
 namespace Addin.Backup.Synchronize
 {

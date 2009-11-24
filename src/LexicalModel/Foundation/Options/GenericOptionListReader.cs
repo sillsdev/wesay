@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+﻿using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Palaso.Lift.Options;
-using Palaso.Text;
-using WeSay.LexicalModel.Foundation.Options;
 
-namespace Palaso.Lift.Options // TODO Send this out to Palaso.Lift
+namespace WeSay.LexicalModel.Foundation.Options
 {
-
 	public interface IOptionListReader
 	{
 		OptionsList LoadFromFile(string path);
@@ -29,9 +23,9 @@ namespace Palaso.Lift.Options // TODO Send this out to Palaso.Lift
 
 				foreach (Option option in list.Options)
 				{
-					#if DEBUG
+#if DEBUG
 					Debug.Assert(option.Name.Forms != null);
-					#endif
+#endif
 				}
 				return list;
 			}

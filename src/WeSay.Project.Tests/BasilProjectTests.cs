@@ -1,5 +1,6 @@
 using System.IO;
 using NUnit.Framework;
+using Palaso.I8N;
 using Palaso.TestUtilities;
 using Palaso.UI.WindowsForms.i8n;
 

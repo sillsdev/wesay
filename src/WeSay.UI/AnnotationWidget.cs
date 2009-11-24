@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Lift;
 using Palaso.Reporting;
-using Palaso.LexicalModel;
 using WeSay.UI.Properties;
 
 namespace WeSay.UI

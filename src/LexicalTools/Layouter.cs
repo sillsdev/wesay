@@ -2,25 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Windows.Forms;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.UiBindings;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
-using System.Linq;
 using WeSay.UI.TextBoxes;
 using Palaso.Lift.Model;
+using Palaso.I8N;
 
 namespace WeSay.LexicalTools
 {

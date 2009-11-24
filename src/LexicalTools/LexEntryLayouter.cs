@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
-using Autofac;
 using Microsoft.Practices.ServiceLocation;
+using Palaso.DictionaryServices.Model;
+using Palaso.I8N;
 using Palaso.Lift;
-using Palaso.UI.WindowsForms.i8n;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -59,10 +57,12 @@ namespace WeSay.LexicalTools
 			rowCount += AddCustomFields(entry, insertAtRow + rowCount);
 
 			var rowCountBeforeSenses = rowCount;
-			LexSenseLayouter layouter = new LexSenseLayouter(DetailList,
-															  ActiveViewTemplate,
-															  RecordListManager,
-															  _serviceProvider);
+			var layouter = new LexSenseLayouter(
+				DetailList,
+				ActiveViewTemplate,
+				RecordListManager,
+				_serviceProvider
+			);
 			layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 
@@ -87,7 +87,7 @@ namespace WeSay.LexicalTools
 			Palaso.Misc.Guard.AgainstNull(entry, "entry");
 
 			var namingHelper = (MediaNamingHelper) serviceLocator.GetService(typeof (MediaNamingHelper));
-			var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
+			var ap = new AudioPathProvider(WeSayWordsProject.Project.PathToAudio,
 						() => entry.LexicalForm.GetBestAlternativeString(namingHelper.LexicalUnitWritingSystemIds));
 
 		   return serviceLocator.CreateNewUsing(c=>c.Register(ap));

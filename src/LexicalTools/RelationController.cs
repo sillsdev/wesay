@@ -3,6 +3,7 @@ using System.Collections;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Data;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.UiBindings;
 using Palaso.Reporting;
@@ -57,7 +58,7 @@ namespace WeSay.LexicalTools
 			{
 				throw new ConfigurationException("The field {0} has no writing systems enabled.", field.FieldName);
 			}
-			RelationController controller = new RelationController(relationParent,
+			var controller = new RelationController(relationParent,
 																   relationType,
 																   field,
 																   lexEntryRepository,
@@ -100,7 +101,7 @@ namespace WeSay.LexicalTools
 			//relations come to us in collections, even when they are atomic
 			// this will get a collection if we already have some for this field, or else
 			// it will make one. If unused, it will be cleaned up at the right time by the PalasoDataObject parent.
-			LexRelationCollection targetRelationCollection =
+			var targetRelationCollection =
 					_relationParent.GetOrCreateProperty<LexRelationCollection>(_field.FieldName);
 
 			switch (_relationType.Multiplicity)
@@ -163,7 +164,7 @@ namespace WeSay.LexicalTools
 
 		private WritingSystem GetWritingSystemFromField()
 		{
-			string firstWsId = this._field.WritingSystemIds[0];
+			string firstWsId = _field.WritingSystemIds[0];
 			return BasilProject.Project.WritingSystems[firstWsId];
 		}
 
@@ -207,9 +208,9 @@ namespace WeSay.LexicalTools
 		private AutoCompleteWithCreationBox<T, string> CreatePicker<T>(LexRelation relation)
 				where T : class
 		{
-			AutoCompleteWithCreationBox<T, string> picker =
-					new AutoCompleteWithCreationBox<T, string>(
-							CommonEnumerations.VisibilitySetting.Visible);
+			var picker = new AutoCompleteWithCreationBox<T, string> (
+				CommonEnumerations.VisibilitySetting.Visible
+			);
 			picker.Box.Tag = relation;
 			//                    switch (type.TargetType)
 			//                    {

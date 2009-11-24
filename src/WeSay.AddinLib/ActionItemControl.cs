@@ -5,8 +5,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using Palaso.I8N;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 
 namespace WeSay.AddinLib
 {

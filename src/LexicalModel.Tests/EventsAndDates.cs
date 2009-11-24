@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Model;
 
 namespace WeSay.LexicalModel.Tests
@@ -53,7 +54,6 @@ namespace WeSay.LexicalModel.Tests
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(1000); //else modtime doesn't change
 			_entry.Senses.Add(new LexSense());
-			;
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
@@ -61,7 +61,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void ModifiedDateAfterLexSenseGlossChange()
 		{
-			LexSense sense = new LexSense();
+			var sense = new LexSense();
 			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(1000); //else modtime doesn't change
@@ -73,12 +73,11 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void ModifiedDateAfterAddingExampleSentence()
 		{
-			LexSense sense = new LexSense();
+			var sense = new LexSense();
 			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(1000); //else modtime doesn't change
 			sense.ExampleSentences.Add(new LexExampleSentence());
-			;
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
@@ -86,11 +85,11 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void ModifiedDateAfterChangingExampleSentence()
 		{
-			LexSense sense = new LexSense();
+			var sense = new LexSense();
 			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(1000); //else modtime doesn't change
-			LexExampleSentence example = new LexExampleSentence();
+			var example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);
 			example.Sentence["foo"] = "hello";
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);

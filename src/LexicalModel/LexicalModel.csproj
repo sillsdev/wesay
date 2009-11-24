@@ -102,6 +102,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
 	</Reference>
+	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
+	</Reference>
 	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
@@ -122,22 +126,15 @@
 	<Compile Include="Foundation\Options\DdpOptionDisplayAdaptor.cs" />
 	<Compile Include="Foundation\Options\GenericOptionListReader.cs" />
 	<Compile Include="Foundation\Options\OptionDisplayAdaptor.cs" />
-	<Compile Include="Foundation\Options\OptionsList.cs" />
 	<Compile Include="Foundation\WritingSystem.cs" />
 	<Compile Include="Foundation\WritingSystemCollection.cs" />
 	<Compile Include="IFieldQuery.cs" />
-	<Compile Include="LexEntry.cs" />
-	<Compile Include="LexEntryFromLiftBuilder.cs" />
 	<Compile Include="LexEntryRepository.cs" />
-	<Compile Include="WeSayLiftReaderWriterProvider.cs" />
-	<Compile Include="WeSayLiftWriter.cs" />
-	<Compile Include="WeSayLiftDataMapper.cs" />
 	<Compile Include="MissingFieldQuery.cs" />
 	<Compile Include="PairStringLexEntryIdDisplayProvider.cs" />
 	<Compile Include="Phonetic.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="ResultSetToListOfStringsAdapter.cs" />
-	<Compile Include="WeSayLiftReader.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">

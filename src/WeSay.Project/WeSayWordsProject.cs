@@ -17,26 +17,25 @@ using Chorus.UI.Review;
 using LiftIO;
 using LiftIO.Validation;
 using Microsoft.Practices.ServiceLocation;
+using Palaso.DictionaryServices.Lift;
+using Palaso.DictionaryServices.Model;
 using Palaso.IO;
 #if MONO
 using Palaso.Linq;
 #endif
 using Palaso.Lift;
+using Palaso.Lift.Model;
 using Palaso.Lift.Options;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
+using Palaso.UiBindings;
 using WeSay.AddinLib;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel.Options;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration;
 using WeSay.UI;
-using WeSay.UI.audio;
-using Palaso.UiBindings;
-using Palaso.Lift.Model;
 
 namespace WeSay.Project
 {
@@ -383,7 +382,7 @@ namespace WeSay.Project
 			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
 			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
 
-			builder.Register<WeSayLiftReaderWriterProvider>().As(typeof(ILiftReaderWriterProvider<LexEntry>));
+			builder.Register<Palaso.DictionaryServices.Lift.WeSayLiftReaderWriterProvider>().As(typeof(ILiftReaderWriterProvider<LexEntry>));
 			builder.Register<WeSayLiftDataMapper>( c =>
 			  {
 				  try

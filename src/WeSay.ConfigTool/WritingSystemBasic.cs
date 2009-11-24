@@ -2,8 +2,8 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.LexicalModel.Foundation;
+using Palaso.I8N;
 
 namespace WeSay.ConfigTool
 {
@@ -96,7 +96,7 @@ namespace WeSay.ConfigTool
 			}
 
 			//Mono Bug workaround
-			PropertyValueChangedEventArgs eForMono = new PropertyValueChangedEventArgs(e.ChangedItem, _oldWritingSystemIdForMono);
+			var eForMono = new PropertyValueChangedEventArgs(e.ChangedItem, _oldWritingSystemIdForMono);
 			_oldWritingSystemIdForMono = _writingSystem.Id;
 			e = eForMono;
 

@@ -2,8 +2,8 @@ using System;
 using System.Drawing;
 using NUnit.Framework;
 using Palaso.Data;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Model;
-using WeSay.Data;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel.Foundation;
 
@@ -14,7 +14,7 @@ namespace WeSay.LexicalModel.Tests
 	{
 		private TemporaryFolder _temporaryFolder;
 		private LexEntryRepository _lexEntryRepository;
-		private WritingSystem _lexicalFormWritingSystem =  new WritingSystem("de", SystemFonts.DefaultFont);
+		private readonly WritingSystem _lexicalFormWritingSystem =  new WritingSystem("de", SystemFonts.DefaultFont);
 
 		[SetUp]
 		public void Setup()

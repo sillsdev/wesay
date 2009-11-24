@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Lift.Model;
 using WeSay.LexicalModel.Foundation;
@@ -114,11 +115,11 @@ namespace WeSay.LexicalModel
 		public static string MakeFieldNameSafe(string text)
 		{
 			//parentheses mess up our greps, don't really belong in xml names
-			char[] charsToRemove = new char[]
-									   {
-											   ' ', '(', ')', '*', ']', '[', '?', '{', '}', '\\', '<', '>',
-											   '+', '&'
-									   };
+			char[] charsToRemove = new[]
+			{
+			   ' ', '(', ')', '*', ']', '[', '?', '{', '}', '\\', '<', '>',
+			   '+', '&'
+			};
 			foreach (char c in charsToRemove)
 			{
 				text = text.Replace(c.ToString(), "");
@@ -587,7 +588,7 @@ namespace WeSay.LexicalModel
 			{
 				Debug.Assert(node.Name == "writingSystems");
 				Debug.Assert(node != null);
-				List<string> l = new List<string>();
+				var l = new List<string>();
 				foreach (XmlNode n in node.SelectNodes("id"))
 				{
 					l.Add(n.InnerText);
@@ -605,7 +606,7 @@ namespace WeSay.LexicalModel
 	{
 		public override string[] ValidStrings
 		{
-			get { return new string[] {"LexEntry", "LexSense", "LexExampleSentence"}; }
+			get { return new[] {"LexEntry", "LexSense", "LexExampleSentence"}; }
 		}
 	}
 
@@ -613,7 +614,7 @@ namespace WeSay.LexicalModel
 	{
 		public override string[] ValidStrings
 		{
-			get { return new string[] {"MultiText", "Option", "OptionCollection", "RelationToOneEntry"}; }
+			get { return new[] {"MultiText", "Option", "OptionCollection", "RelationToOneEntry"}; }
 		}
 	}
 

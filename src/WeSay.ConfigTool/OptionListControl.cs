@@ -5,13 +5,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Palaso.I8N;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI.TextBoxes;
 
@@ -184,18 +182,19 @@ namespace WeSay.ConfigTool
 				_currentOption)
 			{
 				SaveEditsToCurrentItem();
-				Option.OptionDisplayProxy proxy = (Option.OptionDisplayProxy) _listBox.SelectedItem;
+				var proxy = (Option.OptionDisplayProxy) _listBox.SelectedItem;
 				splitContainer1.Panel2.Controls.Remove(_nameMultiTextControl);
 
 				_currentOption = proxy.UnderlyingOption;
-				MultiTextControl m = new MultiTextControl(_currentField.WritingSystemIds,
-														  _currentOption.Name,
-														  _currentField.FieldName,
-														  false,
-														  BasilProject.Project.WritingSystems,
-														  CommonEnumerations.VisibilitySetting.
-															  Visible,
-														  _currentField.IsSpellCheckingEnabled, false, null);
+				var m = new MultiTextControl(
+					_currentField.WritingSystemIds,
+					_currentOption.Name,
+					_currentField.FieldName,
+					false,
+					BasilProject.Project.WritingSystems,
+					CommonEnumerations.VisibilitySetting.Visible,
+					_currentField.IsSpellCheckingEnabled, false, null
+				);
 				m.SizeChanged += OnNameControlSizeChanged;
 				m.Bounds = _nameMultiTextControl.Bounds;
 				m.Top = _nameLabel.Top;
@@ -212,9 +211,11 @@ namespace WeSay.ConfigTool
 				var justTextBoxes = from z in m.TextBoxes where z is WeSayTextBox select z;
 				foreach (WeSayTextBox box in justTextBoxes)
 				{
-					TextBinding binding = new TextBinding(_currentOption.Name,
-														  box.WritingSystem.Id,
-														  box);
+					var binding = new TextBinding(
+						_currentOption.Name,
+						box.WritingSystem.Id,
+						box
+					);
 					//hooking on to this is more reliable, sequence-wise, than directly wiring to m.TextChanged
 					binding.DataTarget.PropertyChanged += DataTarget_PropertyChanged;
 				}
@@ -259,7 +260,7 @@ namespace WeSay.ConfigTool
 		private void _btnAdd_Click(object sender, EventArgs e)
 		{
 			_listBox.Focus();   //This is a hack to get the TextBinding to update by losing focus :-(
-			Option newOption = new Option();
+			var newOption = new Option();
 			_newlyCreatedOptions.Add(newOption);
 			_currentList.Options.Add(newOption);
 
@@ -308,7 +309,7 @@ namespace WeSay.ConfigTool
 		{
 			if (_fieldChooser.SelectedItem != null)
 			{
-				Field f = _fieldChooser.SelectedItem as Field;
+				var f = _fieldChooser.SelectedItem as Field;
 				LoadList(f);
 			}
 		}

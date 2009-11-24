@@ -5,8 +5,6 @@ using System.Windows.Forms;
 using Palaso.Lift;
 using Palaso.Misc;
 using Palaso.Reporting;
-using Palaso.LexicalModel;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 

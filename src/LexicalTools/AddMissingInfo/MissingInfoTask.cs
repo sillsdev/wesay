@@ -1,13 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.Data;
+using Palaso.DictionaryServices.Model;
 using Palaso.Misc;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Data;
-using Palaso.LexicalModel;
+//using Palaso.LexicalModel;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;

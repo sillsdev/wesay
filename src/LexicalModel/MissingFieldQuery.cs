@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Lift.Model;
 using Palaso.Lift.Options;
@@ -104,12 +105,9 @@ namespace WeSay.LexicalModel
 			{
 				return "--";
 			}
-			else
-			{
-				string wsTag = "";
-				Enumerable.ForEach(ids, id => wsTag += id);
-				return wsTag;
-			}
+			string wsTag = "";
+			Enumerable.ForEach(ids, id => wsTag += id);
+			return wsTag;
 		}
 
 		private bool IsMissingData(object content)
@@ -129,18 +127,15 @@ namespace WeSay.LexicalModel
 					{
 						return false;
 					}
-					else
+					foreach (LexRelation r in collection.Relations)
 					{
-						foreach (LexRelation r in collection.Relations)
+						if (!string.IsNullOrEmpty(r.TargetId))
 						{
-							if (!string.IsNullOrEmpty(r.TargetId))
-							{
-								return false; // has one non-empty relation
-							}
+							return false; // has one non-empty relation
 						}
-						return true;
-						//collection is empty or all its members don't really have targets
 					}
+					return true;
+					//collection is empty or all its members don't really have targets
 				default:
 					Debug.Fail("unknown DataTypeName");
 					return false;
@@ -218,22 +213,16 @@ namespace WeSay.LexicalModel
 			{
 				return IsMissingCustomField(example);
 			}
-			else
+			if (Field.FieldName == Field.FieldNames.ExampleSentence.ToString())
 			{
-				if (Field.FieldName == Field.FieldNames.ExampleSentence.ToString())
-				{
-					return HasAllRequiredButMissingAtLeastOneWeWantToFillIn(example.Sentence);
-				}
-				else if (Field.FieldName == Field.FieldNames.ExampleTranslation.ToString())
-				{
-					return HasAllRequiredButMissingAtLeastOneWeWantToFillIn(example.Translation);
-				}
-				else
-				{
-					Debug.Fail("unknown FieldName");
-					return false;
-				}
+				return HasAllRequiredButMissingAtLeastOneWeWantToFillIn(example.Sentence);
 			}
+			if (Field.FieldName == Field.FieldNames.ExampleTranslation.ToString())
+			{
+				return HasAllRequiredButMissingAtLeastOneWeWantToFillIn(example.Translation);
+			}
+			Debug.Fail("unknown FieldName");
+			return false;
 		}
 
 		private bool IsMissingLexSenseField(PalasoDataObject sense)
@@ -242,17 +231,14 @@ namespace WeSay.LexicalModel
 			{
 				return IsMissingCustomField(sense);
 			}
-			else
+			//                if(this._field.FieldName == LexSense.WellKnownProperties.Gloss)
+			//                {
+			//                    return IsMissingWritingSystem(sense.Gloss);
+			//                }
+			//                else
 			{
-				//                if(this._field.FieldName == LexSense.WellKnownProperties.Gloss)
-				//                {
-				//                    return IsMissingWritingSystem(sense.Gloss);
-				//                }
-				//                else
-				{
-					Debug.Fail("unknown FieldName");
-					return false;
-				}
+				Debug.Fail("unknown FieldName");
+				return false;
 			}
 		}
 
@@ -262,19 +248,16 @@ namespace WeSay.LexicalModel
 			{
 				return IsMissingCustomField(entry);
 			}
+			if (Field.FieldName == Field.FieldNames.EntryLexicalForm.ToString())
+			{
+				if (HasAllRequiredButMissingAtLeastOneWeWantToFillIn(entry.LexicalForm))
+				{
+					return true;
+				}
+			}
 			else
 			{
-				if (Field.FieldName == Field.FieldNames.EntryLexicalForm.ToString())
-				{
-					if (HasAllRequiredButMissingAtLeastOneWeWantToFillIn(entry.LexicalForm))
-					{
-						return true;
-					}
-				}
-				else
-				{
-					Debug.Fail("unknown FieldName");
-				}
+				Debug.Fail("unknown FieldName");
 			}
 			return false;
 		}
