@@ -382,16 +382,16 @@ namespace WeSay.Project
 			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
 			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
 
-			builder.Register<Palaso.DictionaryServices.Lift.WeSayLiftReaderWriterProvider>().As(typeof(ILiftReaderWriterProvider<LexEntry>));
-			builder.Register<WeSayLiftDataMapper>( c =>
+			builder.Register<Palaso.DictionaryServices.Lift.LiftReaderWriterProvider>().As(typeof(ILiftReaderWriterProvider<LexEntry>));
+			builder.Register<LiftDataMapper>( c =>
 			  {
 				  try
 				  {
 					  return c.Resolve<IProgressNotificationProvider>().Go
-						  <WeSayLiftDataMapper>(
+						  <LiftDataMapper>(
 						  "Loading Dictionary",
 						  progressState =>
-						  new WeSayLiftDataMapper(_pathToLiftFile,
+						  new LiftDataMapper(_pathToLiftFile,
 											 GetSemanticDomainsList(),
 											 progressState,
 											 c.Resolve < ILiftReaderWriterProvider<LexEntry>>(new TypedParameter(typeof(ProgressState), progressState))));
@@ -790,7 +790,7 @@ namespace WeSay.Project
 			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
 			if (!File.Exists(pathToLiftFile))
 			{
-				Utilities.CreateEmptyLiftFile(pathToLiftFile, WeSayLiftWriter.ProducerString, false);
+				Utilities.CreateEmptyLiftFile(pathToLiftFile, LiftWriter.ProducerString, false);
 			}
 		}
 

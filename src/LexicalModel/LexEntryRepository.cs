@@ -62,14 +62,14 @@ namespace WeSay.LexicalModel
 			#if DEBUG
 			_constructionStackTrace = new StackTrace();
 			#endif
-			_decoratedDataMapper = new WeSayLiftDataMapper(path, null, new ProgressState(),
-				new WeSayLiftReaderWriterProvider(new ProgressState(), new OptionsList(), new string[] { }));
+			_decoratedDataMapper = new LiftDataMapper(path, null, new ProgressState(),
+				new LiftReaderWriterProvider(new ProgressState(), new OptionsList(), new string[] { }));
 			_disposed = false;
 		}
 
-		// review: may want to change WeSayLiftDataMapper to IDataMapper<LexEntry> but I (cp) am leaving
+		// review: may want to change LiftDataMapper to IDataMapper<LexEntry> but I (cp) am leaving
 		// this for the moment as would also need to change the container builder.Register in WeSayWordsProject
-		public LexEntryRepository(WeSayLiftDataMapper decoratedDataMapper)
+		public LexEntryRepository(LiftDataMapper decoratedDataMapper)
 		{
 			Guard.AgainstNull(decoratedDataMapper, "decoratedDataMapper");
 			#if DEBUG
