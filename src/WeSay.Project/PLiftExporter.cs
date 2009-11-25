@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Palaso.Linq;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;

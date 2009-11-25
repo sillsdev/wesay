@@ -264,6 +264,9 @@ namespace WeSay.ConfigTool
 			int index = _listBox.Items.Add(newOption.GetDisplayProxy(PreferredWritingSystem));
 			_listBox.SelectedIndex = index;
 			UpdateDisplay();
+			if (_nameMultiTextControl.TextBoxes.Count == 0)
+			{
+			}
 			_nameMultiTextControl.TextBoxes[0].Focus();
 			UserModifiedList();
 		}
@@ -289,12 +292,12 @@ namespace WeSay.ConfigTool
 
 		private void UpdateDisplay()
 		{
-			_btnDelete.Enabled = _listBox.SelectedItem != null;
+			_btnDelete.Enabled = _listBox.SelectedItem != null && _listBox.Items.Count>1;
 			_keyText.Enabled = _newlyCreatedOptions.Contains(_currentOption);
 			_keyText.BackColor = SystemColors.Window;
 			_nameMultiTextControl.Visible = _listBox.SelectedItem != null;
 			_keyText.Visible = _nameMultiTextControl.Visible;
-			_btnAdd.Enabled = (null != _currentField);
+			_btnAdd.Enabled = (null != _currentField) ;
 		}
 
 		private void OnKeyTextChanged(object sender, EventArgs e)

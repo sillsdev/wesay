@@ -11,7 +11,9 @@ using Palaso.Lift;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using Palaso.Extensions;
 using WeSay.LexicalModel.Foundation.Options;
+
 
 namespace WeSay.LexicalModel
 {
@@ -112,7 +114,7 @@ namespace WeSay.LexicalModel
 			List<string> propertiesAlreadyOutput = new List<string>();
 
 			Writer.WriteStartElement("entry");
-			Writer.WriteAttributeString("id", GetHumanReadableId(entry, _allIdsExportedSoFar));
+			Writer.WriteAttributeString("id", GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, _allIdsExportedSoFar));
 
 			if (order > 0)
 			{
@@ -170,7 +172,7 @@ namespace WeSay.LexicalModel
 		/// idsAndCounts will produce different results each time it runs
 		/// </remarks>
 		/// <returns>A base id composed with its count</returns>
-		public static string GetHumanReadableId(LexEntry entry, Dictionary<string, int> idsAndCounts)
+		public static string GetHumanReadableIdWithAnyIllegalUnicodeEscaped(LexEntry entry, Dictionary<string, int> idsAndCounts)
 		{
 			string id = entry.GetOrCreateId(true);
 			/*         if (id == null || id.Length == 0)       // if the entry doesn't claim to have an id
@@ -196,7 +198,7 @@ namespace WeSay.LexicalModel
 				idsAndCounts.Add(id, 1);
 			}
 			*/
-			return id;
+			return id.EscapeAnyUnicodeCharactersIllegalInXml();
 		}
 
 		public void Add(LexSense sense)
@@ -531,7 +533,10 @@ namespace WeSay.LexicalModel
 				string wrappedTextToExport = "<text>" + form.Form + "</text>";
 				XmlReaderSettings fragmentReaderSettings = new XmlReaderSettings();
 				fragmentReaderSettings.ConformanceLevel = ConformanceLevel.Fragment;
-				XmlReader testerForWellFormedness = XmlReader.Create(new StringReader(wrappedTextToExport));
+
+				string scaryUnicodeEscaped = wrappedTextToExport.EscapeAnyUnicodeCharactersIllegalInXml();
+				string safeFromScaryUnicodeSoItStaysEscaped = scaryUnicodeEscaped.Replace("&#x", "");
+				XmlReader testerForWellFormedness = XmlReader.Create(new StringReader(safeFromScaryUnicodeSoItStaysEscaped));
 
 				bool isTextWellFormedXml = true;
 				try
@@ -548,18 +553,19 @@ namespace WeSay.LexicalModel
 
 				if(isTextWellFormedXml)
 				{
-					Writer.WriteRaw(wrappedTextToExport);
+					Writer.WriteRaw(wrappedTextToExport.EscapeAnyUnicodeCharactersIllegalInXml());// .WriteRaw(wrappedTextToExport);
 				}
 				else
 				{
 					Writer.WriteStartElement("text");
-					Writer.WriteString(form.Form);
+					Writer.WriteRaw(form.Form.EscapeSoXmlSeesAsPureTextAndEscapeCharactersIllegalInXml());
 					Writer.WriteEndElement();
 				}
 				WriteFlags(form);
 				Writer.WriteEndElement();
 			}
 		}
+
 
 		private void WriteFlags(IAnnotatable thing)
 		{
@@ -635,7 +641,7 @@ namespace WeSay.LexicalModel
 		public void AddDeletedEntry(LexEntry entry)
 		{
 			Writer.WriteStartElement("entry");
-			Writer.WriteAttributeString("id", GetHumanReadableId(entry, _allIdsExportedSoFar));
+			Writer.WriteAttributeString("id", GetHumanReadableIdWithAnyIllegalUnicodeEscaped(entry, _allIdsExportedSoFar));
 			Writer.WriteAttributeString("dateCreated",
 										entry.CreationTime.ToString(LiftDateTimeFormat));
 			Writer.WriteAttributeString("dateModified",

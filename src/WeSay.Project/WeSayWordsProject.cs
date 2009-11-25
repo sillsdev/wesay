@@ -376,21 +376,25 @@ namespace WeSay.Project
 
 			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
 			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
-			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
 
-			builder.Register<WeSayLiftReaderWriterProvider>().As(typeof(ILiftReaderWriterProvider<LexEntry>));
+			// I (CP) don't think this is needed
+		builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
+
 			builder.Register<WeSayLiftDataMapper>( c =>
 			  {
 				  try
 				  {
 					  return c.Resolve<IProgressNotificationProvider>().Go
 						  <WeSayLiftDataMapper>(
-						  "Loading Dictionary",
-						  progressState =>
-						  new WeSayLiftDataMapper(_pathToLiftFile,
-											 GetSemanticDomainsList(),
-											 progressState,
-											 c.Resolve < ILiftReaderWriterProvider<LexEntry>>(new TypedParameter(typeof(ProgressState), progressState))));
+							  "Loading Dictionary",
+							  progressState =>
+							  new WeSayLiftDataMapper(
+								  _pathToLiftFile,
+								  GetSemanticDomainsList(),
+								  GetIdsOfSingleOptionFields(),
+								  progressState
+							  )
+						  );
 				  }
 				  catch (LiftFormatException error)
 				  {
@@ -481,7 +485,6 @@ namespace WeSay.Project
 
 			builder.Register(c=>
 				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).ContainerScoped();
-
 
 			_container = builder.Build();
 		}
