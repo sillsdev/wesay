@@ -544,6 +544,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 					var filename = Path.GetFileName(Project.WeSayWordsProject.Project.PathToLiftFile);
 					filename = Uri.EscapeDataString(filename);
 					string url = string.Format("lift://{0}?type=entry&", filename);
+					url += "label=" + entry.GetSimpleFormForLogging() + "&";
 					url += "guid=" + entry.Guid.ToString() + "&";
 					var id = entry.GetOrCreateId(false);
 					if (string.IsNullOrEmpty(id))
