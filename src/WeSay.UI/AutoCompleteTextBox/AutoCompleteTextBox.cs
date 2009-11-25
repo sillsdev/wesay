@@ -345,7 +345,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 		{
 			using (guard = Palaso.Misc.Guard.AgainstReEntryExpected(guard))
 			{
-				Console.WriteLine("Entered: {0}\nEntries: {1}", guard.HasEntered, guard.EntryCount);
 				if (guard.HasEntered)
 				{
 					return;

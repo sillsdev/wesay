@@ -464,6 +464,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				return;
 			}
 
+			SetRecordToBeEdited(CurrentRecord);
+
 			if (Control_EntryDetailPanel.DataSource == CurrentRecord)
 			{
 				//we were getting 3 calls to this for each click on a new word
@@ -481,9 +483,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			{
 				Logger.WriteEvent("RecordSelectionChanged Skipping because record is null");
 			}
-
-			SetRecordToBeEdited(CurrentRecord);
-
 
 			//nb: SelectedIndexChanged,  which calls this, is fired twice
 			//once for the deselection, again with the selection
