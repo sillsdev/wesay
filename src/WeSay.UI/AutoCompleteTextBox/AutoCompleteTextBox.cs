@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Code;
 using WeSay.Foundation;
 using WeSay.UI.TextBoxes;
 
@@ -339,13 +340,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 			_toolTip.ToolTipTitle = tipTitle;
 		}
 
-		Palaso.Misc.GuardAgainstReentry guard = null;
-
 		protected override void OnSizeChanged(EventArgs e)
 		{
-			using (guard = Palaso.Misc.Guard.AgainstReEntryExpected(guard))
+			using (var detect = Detect.Reentry(this,"OnSizeChanged"))
 			{
-				if (guard.HasEntered)
+				if (detect.DidReenter)
 				{
 					return;
 				}

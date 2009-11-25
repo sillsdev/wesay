@@ -5,7 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using Palaso.Data;
-using Palaso.Misc;
+using Palaso.Code;
 using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;

@@ -1,7 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Misc;
+using Palaso.Code;
+using Palaso.Code;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
@@ -192,8 +193,6 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private GuardAgainstReentry _sentryOnWritingSystemIdChanged;
-
 		/// <summary>
 		/// Called when, for example, the user changes the id of the selected ws
 		/// </summary>
@@ -201,7 +200,7 @@ namespace WeSay.ConfigTool
 		/// <param name="e"></param>
 		private void OnWritingSystemIdChanged(object sender, EventArgs e)
 		{
-			using (_sentryOnWritingSystemIdChanged = Guard.AgainstReEntry(_sentryOnWritingSystemIdChanged))
+			using (Detect.Reentry(this, "OnWritingSystemIdChanged").AndThrow())
 			{
 				var ws = sender as WritingSystem;
 				var args = e as PropertyValueChangedEventArgs;

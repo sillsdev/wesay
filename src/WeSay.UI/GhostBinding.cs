@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
-using Palaso.Misc;
+using Palaso.Code;
 using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.UI.TextBoxes;

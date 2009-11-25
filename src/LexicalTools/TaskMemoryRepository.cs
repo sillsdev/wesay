@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Palaso.Code;
 using Palaso.Misc;
 
 namespace WeSay.LexicalTools
