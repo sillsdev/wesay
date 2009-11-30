@@ -1,14 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Palaso.Code;
 using Palaso.Data;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
+using Palaso.Misc;
 using Palaso.Reporting;
 using Palaso.Text;
-using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 
@@ -31,20 +33,13 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 				: base(config, lexEntryRepository, viewTemplate, taskMemoryRepository)
 		{
-			if (config.WordListFileName == null)
-			{
-				throw new ArgumentNullException("wordListFileName");
-			}
-			if (config.WordListWritingSystemId == null)
-			{
-				throw new ArgumentNullException("wordListWritingSystemId");
-			}
-			if (viewTemplate == null)
-			{
-				throw new ArgumentNullException("viewTemplate");
-			}
-			Field lexicalFormField =
-					viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			Guard.AgainstNull(config.WordListFileName, "config.WordListFileName");
+			Guard.AgainstNull(config.WordListWritingSystemId, "config.WordListWritingSystemId");
+			Guard.AgainstNull(viewTemplate, "viewTemplate");
+
+			Field lexicalFormField = viewTemplate.GetField(
+				Field.FieldNames.EntryLexicalForm.ToString()
+			);
 			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
 			{
 				_lexicalUnitWritingSystem =
@@ -200,7 +195,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		{
 			get
 			{
-				MultiText m = new MultiText();
+				var m = new MultiText();
 				m.SetAlternative(_writingSystemIdForWordListWords, CurrentWordFromWordlist);
 				return m;
 			}
@@ -208,7 +203,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		public void WordCollected(MultiText newVernacularWord)
 		{
-			LexSense sense = new LexSense();
+			var sense = new LexSense();
 			sense.Definition.MergeIn(CurrentWordAsMultiText);
 			sense.Gloss.MergeIn(CurrentWordAsMultiText);
 			//we use this for matching up, and well, it probably is a good gloss

@@ -5,6 +5,7 @@ using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using System.Linq;
+using Palaso.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {

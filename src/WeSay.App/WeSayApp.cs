@@ -3,19 +3,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using Autofac;
 using CommandLine;
 using LiftIO;
+using Palaso.I8N;
 using Palaso.Reporting;
 using Palaso.Services;
 using Palaso.Services.Dictionary;
 using Palaso.Services.ForServers;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.App.Services;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
-using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -34,7 +32,7 @@ namespace WeSay.App
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			WeSayApp app = new WeSayApp(args);
+			var app = new WeSayApp(args);
 			app.Run();
 		}
 
@@ -47,7 +45,7 @@ namespace WeSay.App
 			{
 				Application.SetCompatibleTextRenderingDefault(false);
 			}
-			catch (Exception) //swallow
+			catch (Exception)
 			{
 				//this fails in some test scenarios; perhaps the unit testing framework is leaving us in
 				//the same appdomain, and that remembers that we called this once before?
@@ -361,7 +359,7 @@ namespace WeSay.App
 
 		private static WeSayWordsProject InitializeProject(string liftPath)
 		{
-			WeSayWordsProject project = new WeSayWordsProject();
+			var project = new WeSayWordsProject();
 			liftPath = DetermineActualLiftPath(liftPath);
 			if (liftPath == null)
 			{
@@ -474,7 +472,7 @@ namespace WeSay.App
 
 		private static void ShowCommandLineError(string e)
 		{
-			Parser p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
+			var p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
 			e = e.Replace("Duplicate 'liftPath' argument",
 						  "Please enclose project path in quotes if it contains spaces.");
 			e += "\r\n\r\n" + p.GetUsageString(200);

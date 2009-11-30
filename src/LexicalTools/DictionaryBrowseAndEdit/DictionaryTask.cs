@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
+using Palaso.DictionaryServices.Model;
+using Palaso.I8N;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;

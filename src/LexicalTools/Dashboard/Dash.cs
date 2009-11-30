@@ -6,12 +6,12 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
+using Palaso.I8N;
 
 namespace WeSay.LexicalTools.Dashboard
 {

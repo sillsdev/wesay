@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using WeSay.AddinLib;
-using WeSay.LexicalModel;
 
 namespace Addin.Transform
 {

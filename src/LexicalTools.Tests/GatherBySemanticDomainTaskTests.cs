@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation.Options;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherBySemanticDomains;
 using WeSay.Project;
+using Palaso.Lift.Options;
 
 using NUnit.Framework;
 
@@ -52,7 +53,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static LexSense AddNewSenseToEntry(LexEntry e)
 		{
-			LexSense s = new LexSense();
+			var s = new LexSense();
 			e.Senses.Add(s);
 			return s;
 		}

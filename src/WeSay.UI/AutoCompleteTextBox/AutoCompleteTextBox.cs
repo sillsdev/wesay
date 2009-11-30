@@ -8,7 +8,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Code;
-using WeSay.Foundation;
+using Palaso.Lift;
+using Palaso.UiBindings;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.AutoCompleteTextBox

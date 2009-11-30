@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Palaso.Data;
 using Palaso.Code;
+using Palaso.DictionaryServices.Lift;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift.Options;
+using Palaso.UiBindings;
 using Palaso.Progress;
 using Palaso.Text;
-using WeSay.Data;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Foundation.Options;
+using WeSay.LexicalModel.Foundation;
+
 #if MONO
 using Palaso.Linq;
 #else
@@ -58,13 +60,15 @@ namespace WeSay.LexicalModel
 			#if DEBUG
 			_constructionStackTrace = new StackTrace();
 			#endif
-			_decoratedDataMapper = new WeSayLiftDataMapper(path, new OptionsList(), new string[] { }, new ProgressState());
+			_decoratedDataMapper = new LiftDataMapper(
+				path, null, new string[] {}, new ProgressState()
+			);
 			_disposed = false;
 		}
 
-		// review: may want to change WeSayLiftDataMapper to IDataMapper<LexEntry> but I (cp) am leaving
+		// review: may want to change LiftDataMapper to IDataMapper<LexEntry> but I (cp) am leaving
 		// this for the moment as would also need to change the container builder.Register in WeSayWordsProject
-		public LexEntryRepository(WeSayLiftDataMapper decoratedDataMapper)
+		public LexEntryRepository(LiftDataMapper decoratedDataMapper)
 		{
 			Guard.AgainstNull(decoratedDataMapper, "decoratedDataMapper");
 			#if DEBUG

@@ -151,7 +151,7 @@ namespace WeSay.Project.Tests.ConfigMigration
 		}
 
 		[Test]
-		public void         V5File_MissingInfoTaskHasSemanticDomainDdp4Field_ConvertedToHyphenatedForm()
+		public void V5File_MissingInfoTaskHasSemanticDomainDdp4Field_ConvertedToHyphenatedForm()
 		{
 			File.WriteAllText(_pathToInputConfig,
 							  @"<?xml version='1.0' encoding='utf-8'?>
@@ -172,10 +172,45 @@ namespace WeSay.Project.Tests.ConfigMigration
 		}
 
 		[Test]
+		public void DoesMigrateV6File()
+		{
+			File.WriteAllText(_pathToInputConfig,
+			@"<?xml version='1.0' encoding='utf-8'?>
+			<configuration version='5'>
+				<components>
+					<viewTemplate></viewTemplate>
+				</components>
+				<tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks>
+			</configuration>");
+			XPathDocument doc = new XPathDocument(_pathToInputConfig);
+			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			Assert.IsTrue(didMigrate);
+			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
+		}
+
+		[Test]
+		public void V6File_ViewTemplateHasWeSayDataObject_ConvertedToPalasoDataObject()
+		{
+			File.WriteAllText(_pathToInputConfig,
+				@"<?xml version='1.0' encoding='utf-8'?>
+				<configuration version='6'>
+					<fields>
+						<field>
+							<className>WeSayDataObject</className>
+							<dataType>MultiText</dataType>
+						</field>
+					</fields>
+				</configuration>");
+			XPathDocument doc = new XPathDocument(_pathToInputConfig);
+			_migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			AssertHasAtLeastOneMatch("//field/className[text()='PalasoDataObject']", _outputPath);
+		}
+
+		[Test]
 		public void DoesNotTouchCurrentFile()
 		{
 			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><configuration version='6'></configuration>");
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='7'></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsFalse(didMigrate);

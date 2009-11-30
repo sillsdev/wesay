@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Linq;
+using Palaso.Lift.Options;
+using Palaso.UiBindings;
 
-namespace WeSay.Foundation.Options
+namespace WeSay.LexicalModel.Foundation.Options
 {
 	[CLSCompliant (false)]
 	public class OptionDisplayAdaptor: IChoiceSystemAdaptor<Option, string, OptionRef>
@@ -150,7 +151,7 @@ namespace WeSay.Foundation.Options
 				//todo: make this prefferd script(s) savvy
 				if (option.Name.GetFirstAlternative().StartsWith(text,
 																 StringComparison.
-																		 CurrentCultureIgnoreCase))
+																	 CurrentCultureIgnoreCase))
 				{
 					show.Add(option);
 				}

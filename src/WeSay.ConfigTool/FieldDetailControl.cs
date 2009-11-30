@@ -2,8 +2,9 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using Enchant;
+using Palaso.Lift;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using WeSay.Project;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

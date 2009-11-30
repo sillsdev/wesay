@@ -1,7 +1,7 @@
 using System.Drawing;
 using Exortech.NetReflector;
 using NUnit.Framework;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation
 {

@@ -1,14 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.Code;
+using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.AddMissingInfo

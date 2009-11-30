@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Enchant;
 using Palaso.Reporting;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
 using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools.Tests

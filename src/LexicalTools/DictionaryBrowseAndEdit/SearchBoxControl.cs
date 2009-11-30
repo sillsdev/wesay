@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.Properties;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;

@@ -1,5 +1,6 @@
 using Palaso.Data;
-using WeSay.Foundation;
+using Palaso.DictionaryServices.Model;
+using Palaso.UiBindings;
 
 namespace WeSay.LexicalModel
 {

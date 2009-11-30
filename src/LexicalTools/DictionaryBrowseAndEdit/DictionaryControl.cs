@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -9,17 +8,17 @@ using System.IO;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.Code;
+using Palaso.I8N;
+using Palaso.UiBindings;
 using Palaso.Misc;
 using Palaso.Reporting;
 using Palaso.Text;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalTools.Properties;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
+using Palaso.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
@@ -166,9 +165,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void AddWritingSystemToPicker(WritingSystem writingSystem, Field field)
 		{
-			MenuItem item =
-					new MenuItem(writingSystem.Abbreviation + "\t" + StringCatalog.Get(field.DisplayName),
-								 OnWritingSystemMenuItemClicked);
+			var item = new MenuItem(
+				writingSystem.Abbreviation + "\t" + StringCatalog.Get(field.DisplayName),
+				OnWritingSystemMenuItemClicked
+			);
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
 			SearchModeMenu.MenuItems.Add(item);
@@ -236,10 +236,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			SearchTextBox.Items = _findTextAdapter;
 
 			var top = _searchTextBoxControl.Bounds.Bottom + 10;
-			_recordsListBox.SetBounds(_recordsListBox.Bounds.X,
-									  top,
-									  _recordsListBox.Bounds.Width,
-									  (this.Bottom - _bottomButtonPanel.Height) - top - 10);
+			_recordsListBox.SetBounds(
+				_recordsListBox.Bounds.X,
+				top,
+				_recordsListBox.Bounds.Width,
+				(Bottom - _bottomButtonPanel.Height) - top - 10
+			);
 		}
 
 		private void SetRecordToBeEdited(LexEntry record)
@@ -306,7 +308,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
 		{
 			RecordToken<LexEntry> recordToken = _records[e.ItemIndex];
-			string displayString = (string) recordToken["Form"];
+			var displayString = (string) recordToken["Form"];
 			e.Item = new ListViewItem(displayString);
 
 			if ((string) recordToken["WritingSystem"] != _listWritingSystem.Id)
@@ -346,23 +348,14 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void OnWritingSystemMenuItemClicked(object sender, EventArgs e)
 		{
-			MenuItem item = (MenuItem) sender;
+			var item = (MenuItem) sender;
 			if (_listWritingSystem != item.Tag)
 			{
 				SetListWritingSystem((WritingSystem) item.Tag);
 			}
 		}
 
-
-
-		private void OnFindWritingSystemId_MouseClick(object sender, MouseEventArgs e)
-		{
-			Logger.WriteMinorEvent("FindWritingSystemId_MouseClick");
-			SearchTextBox.Focus();
-		}
-
 		// primarily for testing
-
 		private void OnFindText_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Modifiers == Keys.None && e.KeyData == Keys.Enter)
@@ -426,7 +419,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 		}
 
-		private string GetIdFromUrl(string url)
+		private static string GetIdFromUrl(string url)
 		{
 			Uri uri;
 			if(!Uri.TryCreate(url, UriKind.Absolute, out uri))
@@ -452,9 +445,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void SelectItemWithDisplayString(string text)
 		{
 			Logger.WriteMinorEvent("SelectItemWithDisplayString");
-			_recordsListBox.SelectedIndex =
-					_records.FindFirstIndex(
-							delegate(RecordToken<LexEntry> token) { return (string) token["Form"] == text; });
+			_recordsListBox.SelectedIndex = _records.FindFirstIndex(
+				token => (string) token["Form"] == text
+			);
 		}
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -541,11 +534,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 				try
 				{
-					var filename = Path.GetFileName(Project.WeSayWordsProject.Project.PathToLiftFile);
+					var filename = Path.GetFileName(WeSayWordsProject.Project.PathToLiftFile);
 					filename = Uri.EscapeDataString(filename);
 					string url = string.Format("lift://{0}?type=entry&", filename);
 					url += "label=" + entry.GetSimpleFormForLogging() + "&";
-					url += "guid=" + entry.Guid.ToString() + "&";
 					var id = entry.GetOrCreateId(false);
 					if (string.IsNullOrEmpty(id))
 						return string.Empty;
@@ -578,7 +570,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			int selectIndex;
 			if (emptyWordIndex == -1)
 			{
-				LexEntry entry = this._lexEntryRepository.CreateItem();
+				LexEntry entry = _lexEntryRepository.CreateItem();
 				//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 				//_recordListBoxActive = true; // allow onRecordSelectionChanged
 				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(SearchTextBox.Text) &&
@@ -590,7 +582,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				//review: Revert (remove) below for WS-950
 				// _lexEntryRepository.SaveItem(entry);
 				LoadRecords();
-				selectIndex = this._records.FindFirstIndex(entry);
+				selectIndex = _records.FindFirstIndex(entry);
 			}
 			else
 			{
@@ -701,11 +693,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void DictionaryControl_Leave(object sender, EventArgs e)
 		{
 			SaveAndCleanUpPreviousEntry();
-		}
-
-		private static bool ReturnFalse()
-		{
-			return false;
 		}
 
 		/// <summary>

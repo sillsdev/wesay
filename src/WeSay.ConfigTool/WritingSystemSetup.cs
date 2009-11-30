@@ -2,10 +2,10 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Code;
+using Palaso.I8N;
 using Palaso.Code;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -110,15 +110,12 @@ namespace WeSay.ConfigTool
 		{
 			get
 			{
-				WsDisplayProxy proxy = _wsListBox.SelectedItem as WsDisplayProxy;
+				var proxy = _wsListBox.SelectedItem as WsDisplayProxy;
 				if (proxy != null)
 				{
 					return proxy.WritingSystem;
 				}
-				else
-				{
-					return null;
-				}
+				return null;
 			}
 		}
 
@@ -157,7 +154,7 @@ namespace WeSay.ConfigTool
 					}
 					catch(Exception )
 					{
-					   font = new Font(System.Drawing.SystemFonts.DefaultFont.SystemFontName, 12);
+					   font = new Font(SystemFonts.DefaultFont.SystemFontName, 12);
 					}
 
 					w = new WritingSystem(s, font);
@@ -171,7 +168,7 @@ namespace WeSay.ConfigTool
 			else
 			{
 				BasilProject.Project.WritingSystems.Add(w.Id, w);
-				WsDisplayProxy item = new WsDisplayProxy(w);
+				var item = new WsDisplayProxy(w);
 				_wsListBox.Items.Add(item);
 				_wsListBox.SelectedItem = item;
 			}

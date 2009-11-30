@@ -6,11 +6,12 @@ using System.Xml;
 using System.Xml.XPath;
 using LiftIO;
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project.ConfigMigration;
 
 namespace WeSay.Project.Tests

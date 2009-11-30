@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
 using Palaso.Code;
+using Palaso.Lift;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI
@@ -24,7 +25,7 @@ namespace WeSay.UI
 
 		private readonly WritingSystem _writingSystem;
 		private readonly string _propertyName;
-		private readonly WeSayDataObject _parent;
+		private readonly PalasoDataObject _parent;
 		private IList<T> _listTarget;
 		private WeSayTextBox _textBoxTarget;
 		private Control _referenceControl;
@@ -45,7 +46,7 @@ namespace WeSay.UI
 
 		private bool _inMidstOfTrigger;
 
-		public GhostBinding(WeSayDataObject parent,
+		public GhostBinding(PalasoDataObject parent,
 							IList<T> targetList,
 							string propertyName,
 							WritingSystem writingSystem,

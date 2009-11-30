@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using Palaso.Data;
+using Palaso.DictionaryServices.Model;
+using Palaso.I8N;
 using Palaso.Reporting;
 using Palaso.Services.Dictionary;
 using Palaso.Text;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.App.Services
@@ -23,7 +23,6 @@ namespace WeSay.App.Services
 		private const int _maxNumberOfEntriesToReturn = 20;
 		public event EventHandler LastClientDeregistered;
 		private readonly HtmlArticleMaker _articleMaker;
-		private SynchronizationContext _uiSynchronizationContext;
 		private readonly LexEntryRepository _lexEntryRepository;
 
 		public DictionaryServiceProvider(LexEntryRepository lexEntryRepository,
@@ -38,11 +37,7 @@ namespace WeSay.App.Services
 												 _project.LocateFile("PartsOfSpeech.xml"));
 		}
 
-		public SynchronizationContext UiSynchronizationContext
-		{
-			get { return _uiSynchronizationContext; }
-			set { _uiSynchronizationContext = value; }
-		}
+		public SynchronizationContext UiSynchronizationContext { get; set; }
 
 		#region IDictionaryService Members
 
@@ -60,7 +55,7 @@ namespace WeSay.App.Services
 			}
 
 			//in case something goes wrong
-			FindResult r = new FindResult();
+			var r = new FindResult();
 			try
 			{
 				Logger.WriteMinorEvent("GetIdsOfMatchingEntries({0},{1},{2})",
@@ -121,10 +116,7 @@ namespace WeSay.App.Services
 						delegate { result = GetHtmlForEntriesCore(entryIds); }, null);
 				return result;
 			}
-			else
-			{
-				return GetHtmlForEntriesCore(entryIds);
-			}
+			return GetHtmlForEntriesCore(entryIds);
 		}
 
 		private string GetHtmlForEntriesCore(IEnumerable<string> entryIds)
@@ -257,15 +249,12 @@ namespace WeSay.App.Services
 						null);
 				return result;
 			}
-			else
-			{
-				return AddEntryCore(lexemeFormWritingSystemId,
-									lexemeForm,
-									definitionWritingSystemId,
-									definition,
-									exampleWritingSystemId,
-									example);
-			}
+			return AddEntryCore(lexemeFormWritingSystemId,
+								lexemeForm,
+								definitionWritingSystemId,
+								definition,
+								exampleWritingSystemId,
+								example);
 		}
 
 		public string AddEntryCore(string lexemeFormWritingSystemId,
@@ -312,7 +301,7 @@ namespace WeSay.App.Services
 					sense = new LexSense();
 					e.Senses.Add(sense);
 				}
-				LexExampleSentence ex = new LexExampleSentence();
+				var ex = new LexExampleSentence();
 				sense.ExampleSentences.Add(ex);
 				ex.Sentence.SetAlternative(exampleWritingSystemId, example);
 			}

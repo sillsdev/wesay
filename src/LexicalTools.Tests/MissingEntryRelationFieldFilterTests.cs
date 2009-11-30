@@ -1,5 +1,6 @@
 using System.IO;
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 
@@ -50,7 +51,6 @@ namespace WeSay.LexicalTools.Tests
 			LexRelationCollection synonyms =
 					_source.GetOrCreateProperty<LexRelationCollection>("synonyms");
 			LexRelation r = new LexRelation("synonyms", _target.GetOrCreateId(true), _source);
-			r.SetTarget(_target);
 			synonyms.Relations.Add(r);
 		}
 
