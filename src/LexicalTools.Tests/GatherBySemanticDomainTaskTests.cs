@@ -6,16 +6,13 @@ using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel;
-using Palaso.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherBySemanticDomains;
 using WeSay.Project;
+using Palaso.Lift.Options;
 
 using NUnit.Framework;
-using Palaso.Lift.Options;
-using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools.Tests
 {

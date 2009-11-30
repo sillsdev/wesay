@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Threading;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
-using Palaso.Lift.Model;
 
 namespace WeSay.LexicalModel.Tests
 {

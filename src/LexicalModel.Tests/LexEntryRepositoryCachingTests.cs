@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
-using Palaso.Lift.Model;
 using Palaso.TestUtilities;
 using NUnit.Framework;
 using WeSay.LexicalModel.Foundation;

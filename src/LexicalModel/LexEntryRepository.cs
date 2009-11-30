@@ -9,9 +9,7 @@ using Palaso.UiBindings;
 using Palaso.Misc;
 using Palaso.Progress;
 using Palaso.Text;
-using WeSay.Data;
 using WeSay.LexicalModel.Foundation;
-using Palaso.Lift.Model;
 
 #if MONO
 using Palaso.Linq;

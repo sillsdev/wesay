@@ -6,7 +6,6 @@ using System.Threading;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.I8N;
-using Palaso.Lift.Model;
 using Palaso.Reporting;
 using Palaso.Services.Dictionary;
 using Palaso.Text;
@@ -56,7 +55,7 @@ namespace WeSay.App.Services
 			}
 
 			//in case something goes wrong
-			FindResult r = new FindResult();
+			var r = new FindResult();
 			try
 			{
 				Logger.WriteMinorEvent("GetIdsOfMatchingEntries({0},{1},{2})",

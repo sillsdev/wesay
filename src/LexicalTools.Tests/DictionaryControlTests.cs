@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
-using Palaso.LexicalModel;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
@@ -18,7 +17,6 @@ using WeSay.UI.TextBoxes;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using Palaso.Lift;
-using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools.Tests
 {

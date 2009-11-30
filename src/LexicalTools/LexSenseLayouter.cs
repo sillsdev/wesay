@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Palaso.DictionaryServices.Model;
+using Palaso.I8N;
 using Palaso.Lift;
 using Palaso.Reporting;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
-using Palaso.Lift.Model;
-using Palaso.I8N;
 
 namespace WeSay.LexicalTools
 {

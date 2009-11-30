@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Palaso.Lift.Model;
+using Palaso.DictionaryServices.Model;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.AddMissingInfo;
@@ -69,9 +69,9 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void MissingInfoTaskConfigControl_BackColorChanged(object sender, EventArgs e)
 		{
-			_showExampleLabel.BackColor = this.BackColor;
-			_requiredToBeFilledInLabel.BackColor = this.BackColor;
-			_matchWhenEmptyLabel.BackColor = this.BackColor;
+			_showExampleLabel.BackColor = BackColor;
+			_requiredToBeFilledInLabel.BackColor = BackColor;
+			_matchWhenEmptyLabel.BackColor = BackColor;
 		}
 
 	}

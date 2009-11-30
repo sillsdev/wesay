@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.UiBindings;
@@ -13,7 +14,6 @@ using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
-using Palaso.Lift.Model;
 using Palaso.I8N;
 
 namespace WeSay.LexicalTools

@@ -9,7 +9,6 @@ using Palaso.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.I8N;
 using Palaso.Lift;
-using Palaso.Lift.Model;
 using Palaso.Lift.Options;
 using Palaso.Misc;
 using Palaso.Reporting;

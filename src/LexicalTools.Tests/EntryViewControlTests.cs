@@ -1,4 +1,3 @@
-using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
@@ -9,7 +8,6 @@ using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
-using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools.Tests
 {

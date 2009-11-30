@@ -6,7 +6,6 @@ using Exortech.NetReflector;
 using Palaso.DictionaryServices.Model;
 using Palaso.I8N;
 using Palaso.Lift;
-using Palaso.Lift.Model;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 

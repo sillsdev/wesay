@@ -2,7 +2,6 @@
 using System.IO;
 using System.Xml;
 using Palaso.DictionaryServices.Model;
-using Palaso.Lift.Model;
 using Palaso.Reporting;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;

@@ -24,7 +24,6 @@ using Palaso.IO;
 using Palaso.Linq;
 #endif
 using Palaso.Lift;
-using Palaso.Lift.Model;
 using Palaso.Lift.Options;
 using Palaso.Progress;
 using Palaso.Reporting;

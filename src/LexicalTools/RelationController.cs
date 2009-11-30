@@ -13,7 +13,6 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
-using Palaso.Lift.Model;
 
 namespace WeSay.LexicalTools
 {

@@ -6,14 +6,13 @@ using System.Xml;
 using System.Xml.XPath;
 using LiftIO;
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
-using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration;
-using Palaso.Lift.Model;
 
 namespace WeSay.Project.Tests
 {

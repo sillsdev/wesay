@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
-using Palaso.Lift.Model;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
 using WeSay.ConfigTool.NewProjectCreation;

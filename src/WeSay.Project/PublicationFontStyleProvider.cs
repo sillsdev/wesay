@@ -1,6 +1,5 @@
 using System.Text;
 using Palaso.DictionaryServices.Model;
-using Palaso.Lift.Model;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
