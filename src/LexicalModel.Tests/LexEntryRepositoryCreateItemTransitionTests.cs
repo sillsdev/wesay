@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
 using Palaso.Tests.Data;
 using Palaso.TestUtilities;
 
@@ -44,7 +45,7 @@ namespace WeSay.LexicalModel.Tests
 		public void SaveItems_LexEntryIsDirtyIsFalse()
 		{
 			SetState();
-			List<LexEntry> itemsToBeSaved = new List<LexEntry>();
+			var itemsToBeSaved = new List<LexEntry>();
 			itemsToBeSaved.Add(Item);
 			DataMapperUnderTest.SaveItems(itemsToBeSaved);
 			Assert.IsFalse(Item.IsDirty);

@@ -1,11 +1,8 @@
 using System;
-
-using System.IO;
 using System.Windows.Forms;
-using Chorus.sync;
 using Chorus.VcsDrivers.Mercurial;
+using Palaso.I8N;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -36,7 +33,7 @@ namespace WeSay.ConfigTool
 		{
 			try
 			{
-				FolderBrowserDialog dialog = new FolderBrowserDialog();
+				var dialog = new FolderBrowserDialog();
 				dialog.Description = "Choose drive or folder for backups";
 				dialog.RootFolder =Environment.SpecialFolder.MyComputer;
 
@@ -51,8 +48,9 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Something went wrong choosing the folder. " +
-																   error.Message);
+				ErrorReport.NotifyUserOfProblem(
+					"Something went wrong choosing the folder. " +
+					error.Message);
 			}
 		}
 	}

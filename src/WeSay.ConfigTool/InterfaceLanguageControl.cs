@@ -2,9 +2,8 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Xml;
+using Palaso.I8N;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -47,12 +46,12 @@ namespace WeSay.ConfigTool
 		private void LoadPoFilesIntoCombo(string directory)
 		{
 			_languageCombo.Items.Clear();
-			EnglishPoProxy englishPoProxy = new EnglishPoProxy();
+			var englishPoProxy = new EnglishPoProxy();
 			_languageCombo.Items.Add(englishPoProxy);
 			_languageCombo.SelectedItem = englishPoProxy;
 			foreach (string file in Directory.GetFiles(directory, "*.po"))
 			{
-				PoProxy selector = new PoProxy(file);
+				var selector = new PoProxy(file);
 				_languageCombo.Items.Add(selector);
 				if (Options.Language ==
 					selector.fileNameWithoutExtension)
@@ -130,7 +129,7 @@ namespace WeSay.ConfigTool
 
 		private void OnChooseFont(object sender, EventArgs e)
 		{
-			FontDialog dialog = new FontDialog();
+			var dialog = new FontDialog();
 			dialog.Font = Options.GetLabelFont();
 			dialog.ShowColor = false;
 			dialog.ShowEffects = false;

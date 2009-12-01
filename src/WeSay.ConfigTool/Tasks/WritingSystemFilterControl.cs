@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
-using WeSay.Foundation;
-
+using WeSay.LexicalModel.Foundation;
 using Enumerable=Palaso.Linq.Enumerable;
 
 namespace WeSay.ConfigTool.Tasks

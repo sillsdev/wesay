@@ -4,8 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Xml;
 using Exortech.NetReflector;
+using WeSay.LexicalModel.Foundation;
 
-namespace WeSay.Foundation
+namespace WeSay.LexicalModel.Foundation
 {
 	[ReflectorType("WritingSystemCollection")]
 	public class WritingSystemCollection: Dictionary<string, WritingSystem>

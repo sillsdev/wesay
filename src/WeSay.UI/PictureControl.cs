@@ -3,9 +3,9 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Palaso.IO;
+using Palaso.UiBindings;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.ImageGallery;
-using WeSay.Foundation;
 using WeSay.LexicalTools.AddPictures;
 
 namespace WeSay.UI
@@ -103,7 +103,7 @@ namespace WeSay.UI
 		{
 			try
 			{
-				OpenFileDialog dialog = new OpenFileDialog();
+				var dialog = new OpenFileDialog();
 				dialog.Filter = "Images|*.jpg;*.png;*.bmp;*.gif";
 				dialog.Multiselect = false;
 				dialog.Title = "Choose image";
@@ -180,8 +180,10 @@ namespace WeSay.UI
 				//the old style was to just give the file name
 				var alternatePath = Path.Combine(_storageFolderPath, _relativePathToImage);
 				if (File.Exists(alternatePath))
+				{
 					return alternatePath;
-				else if (!_relativePathToImage.Contains(Path.DirectorySeparatorChar.ToString()))
+				}
+				if (!_relativePathToImage.Contains(Path.DirectorySeparatorChar.ToString()))
 				{
 					return alternatePath; // show where we expected it to be
 				}
@@ -253,7 +255,7 @@ namespace WeSay.UI
 		private static string TryToGetRootImageCatalogPath()
 		{
 			//look for the cd/dvd
-			var path = Palaso.UI.WindowsForms.ImageGallery.ArtOfReadingImageCollection.TryToGetCollectionPath();
+			var path = ArtOfReadingImageCollection.TryToGetCollectionPath();
 			if(!string.IsNullOrEmpty(path))
 				return path;
 
@@ -274,7 +276,7 @@ namespace WeSay.UI
 
 			return HardDiskPath;
 		}
-		private bool GalleryIsAvailable
+		private static bool GalleryIsAvailable
 		{
 			get
 			{

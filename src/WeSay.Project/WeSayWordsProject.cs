@@ -17,21 +17,24 @@ using Chorus.UI.Review;
 using LiftIO;
 using LiftIO.Validation;
 using Microsoft.Practices.ServiceLocation;
+using Palaso.DictionaryServices.Lift;
+using Palaso.DictionaryServices.Model;
 using Palaso.IO;
 #if MONO
 using Palaso.Linq;
 #endif
 using Palaso.Lift;
+using Palaso.Lift.Options;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
+using Palaso.UiBindings;
 using WeSay.AddinLib;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration;
 using WeSay.UI;
-using WeSay.UI.audio;
 
 namespace WeSay.Project
 {
@@ -49,7 +52,7 @@ namespace WeSay.Project
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
 
-		public const int CurrentWeSayConfigFileVersion = 6; // This variable must be updated with every new vrsion of the WeSayConfig file
+		public const int CurrentWeSayConfigFileVersion = 7; // This variable must be updated with every new vrsion of the WeSayConfig file
 		public const int CurrentWeSayUserSpecificConfigFileVersion = 1; // This variable must be updated with every new vrsion of the WeSayUserConfig file
 
 		public event EventHandler EditorsSaveNow;
@@ -380,15 +383,15 @@ namespace WeSay.Project
 			// I (CP) don't think this is needed
 		builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
 
-			builder.Register<WeSayLiftDataMapper>( c =>
+			builder.Register<LiftDataMapper>( c =>
 			  {
 				  try
 				  {
 					  return c.Resolve<IProgressNotificationProvider>().Go
-						  <WeSayLiftDataMapper>(
+						  <LiftDataMapper>(
 							  "Loading Dictionary",
 							  progressState =>
-							  new WeSayLiftDataMapper(
+						  new LiftDataMapper(
 								  _pathToLiftFile,
 								  GetSemanticDomainsList(),
 								  GetIdsOfSingleOptionFields(),
@@ -734,7 +737,7 @@ namespace WeSay.Project
 		}
 		public IServiceLocator ServiceLocator
 		{
-			get { return new WeSay.Foundation.ServiceLocatorAdapter(_container); }
+			get { return new ServiceLocatorAdapter(_container); }
 		}
 
 		private XPathDocument GetConfigurationDoc()
@@ -789,7 +792,7 @@ namespace WeSay.Project
 			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
 			if (!File.Exists(pathToLiftFile))
 			{
-				Utilities.CreateEmptyLiftFile(pathToLiftFile, WeSayLiftWriter.ProducerString, false);
+				Utilities.CreateEmptyLiftFile(pathToLiftFile, LiftWriter.ProducerString, false);
 			}
 		}
 

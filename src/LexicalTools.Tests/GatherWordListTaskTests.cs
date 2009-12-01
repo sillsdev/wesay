@@ -1,14 +1,14 @@
-using System;
 using System.IO;
 using NUnit.Framework;
 using Palaso.Data;
+using Palaso.Lift;
 using Palaso.Reporting;
-using WeSay.Data;
-using WeSay.Foundation;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
+using Palaso.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.Tests
 {

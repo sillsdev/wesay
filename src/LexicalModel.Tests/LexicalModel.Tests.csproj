@@ -91,6 +91,14 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
 	</Reference>
+	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
+	</Reference>
 	<Reference Include="Palaso.Tests, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.Tests.dll</HintPath>
@@ -113,19 +121,14 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Binding.cs" />
 	<Compile Include="ConstructorThrowTests.cs" />
-	<Compile Include="Foundation\MultiTextTests.cs" />
 	<Compile Include="Foundation\Options\OptionList.Tests.cs" />
-	<Compile Include="Foundation\Options\OptionRefCollectionTests.cs" />
-	<Compile Include="Foundation\Options\OptionRefTests.cs" />
 	<Compile Include="Foundation\SpellCheckerIdToDisplayStringConverterTests.cs" />
 	<Compile Include="Foundation\TestResources.Designer.cs">
 	  <DependentUpon>TestResources.resx</DependentUpon>
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	</Compile>
-	<Compile Include="Foundation\WeSayDataObjectTests.cs" />
 	<Compile Include="Foundation\WritingSystemCollectionTests.cs" />
 	<Compile Include="Foundation\WritingSystemTests.cs" />
 	<Compile Include="LexEntryRepositoryCachingTests.cs" />
@@ -138,15 +141,8 @@
 	<Compile Include="LexEntryRepositoryStateUnitializedTests.cs" />
 	<Compile Include="LexEntryRepository_GetMissingItemTests.cs" />
 	<Compile Include="FieldTests.cs" />
-	<Compile Include="LexEntryTests.cs" />
 	<Compile Include="LexEntryRepositoryTests.cs" />
-	<Compile Include="LexRelationTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
-	<Compile Include="LiftExportTests.cs" />
-	<Compile Include="LexEntryFromLiftBuilderTests.cs" />
-	<Compile Include="LiftPreparer.Tests.cs" />
-	<Compile Include="LiftRepositoryTests.cs" />
-	<Compile Include="LiftRoundTripTests.cs" />
 	<Compile Include="MissingItemFilterTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

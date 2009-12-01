@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Exortech.NetReflector;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using Palaso.DictionaryServices.Model;
+using Palaso.I8N;
+using Palaso.Lift;
 using WeSay.LexicalModel;
-using System.Linq;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
@@ -241,7 +242,7 @@ namespace WeSay.Project
 			MoveToFirstInClass(GetField(Field.FieldNames.ExampleSentence.ToString()));
 
 			//In Nov 2008 (v 0.5) we made the note field multi-paragraph
-			Field note = GetField(LexSense.WellKnownProperties.Note);
+			Field note = GetField(PalasoDataObject.WellKnownProperties.Note);
 			if (!note.IsMultiParagraph)
 			{
 				note.IsMultiParagraph = true;
@@ -390,8 +391,8 @@ namespace WeSay.Project
 			literalMeaningField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(literalMeaningField);
 
-			Field noteField = new Field(WeSayDataObject.WellKnownProperties.Note,
-										"WeSayDataObject",
+			Field noteField = new Field(PalasoDataObject.WellKnownProperties.Note,
+										"PalasoDataObject",
 										defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Note", "The label for the field showing a note.");

@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Mono.Addins;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.I8N;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
@@ -49,7 +49,7 @@ namespace Addin.Backup
 
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			using (BackupDialog d = new BackupDialog(projectInfo))
+			using (var d = new BackupDialog(projectInfo))
 			{
 				d.ShowDialog(parentForm);
 			}

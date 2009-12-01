@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using Palaso.Code;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
+using Palaso.I8N;
 
 namespace WeSay.ConfigTool
 {

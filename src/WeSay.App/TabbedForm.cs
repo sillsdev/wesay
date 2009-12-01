@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using Chorus.UI.Review;
 using Palaso.Code;
+using Palaso.I8N;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.Project;
 using WeSay.UI;
+
 using Timer=System.Windows.Forms.Timer;
 
 namespace WeSay.App
@@ -24,7 +24,8 @@ namespace WeSay.App
 		//        private ProgressDialogHandler _progressHandler;
 
 		[CLSCompliant(false)]
-		public TabbedForm(StatusBarController statusBarController,
+		public TabbedForm(
+			StatusBarController statusBarController,
 			NavigateToRecordEvent navigateToRecordEventToSubscribeTo)
 		{
 			InitializeComponent();
@@ -145,7 +146,7 @@ namespace WeSay.App
 		private void CreateTabPageForTask(ITask t)
 		{
 			//t.Container = container;
-			TabPage page = new TabPage(t.Label);
+			var page = new TabPage(t.Label);
 			page.Tag = t;
 
 			//this is trying to get around screwing up spacing when the ui font
@@ -279,7 +280,7 @@ namespace WeSay.App
 
 		private void ActivateTab(Control page, bool okTouseTimer)
 		{
-			ITask task = (ITask) page.Tag;
+			var task = (ITask) page.Tag;
 			if (ActiveTask == task)
 			{
 				return; //debounce
@@ -310,7 +311,7 @@ namespace WeSay.App
 			page.Text += " " +
 						 StringCatalog.Get("~Loading...",
 										   "Appended to the name of a task, in its tab, while the user is waiting for the task to come up.");
-			Timer t = new Timer();
+			var t = new Timer();
 			t.Tick += delegate
 					  {
 						  t.Stop();
@@ -333,7 +334,7 @@ namespace WeSay.App
 			{
 				task.Activate();
 			}
-			catch (ConfigurationException e) //let others go through the normal bug reporting system
+			catch (ConfigurationException e) //let others go through the normal reporting system
 			{
 				ErrorReport.NotifyUserOfProblem(e.Message);
 				Logger.WriteEvent("Failed Activating");
@@ -357,7 +358,7 @@ namespace WeSay.App
 
 		public void ContinueLaunchingAfterInitialDisplay()
 		{
-			Timer t = new Timer();
+			var t = new Timer();
 			t.Tick += delegate
 					  {
 						  t.Stop();
