@@ -61,6 +61,8 @@
 				<include name="Chorus.exe" />
 				<include name="LibChorus.dll" />
 				<include name="Palaso.dll" />
+				<include name="Palaso.Lift.dll" />
+				<include name="Palaso.DictionaryServices.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="Autofac.dll" />
 				<include name="System.Windows.Forms.dll" />

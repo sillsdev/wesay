@@ -60,6 +60,8 @@
 				<include name="LibChorus.dll" />
 				<include name="Chorus.exe" />
 				<include name="Palaso.dll" />
+				<include name="Palaso.Lift.dll" />
+				<include name="Palaso.DictionaryServices.dll" />
 				<include name="Palaso.Services.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="LiftIO.dll" />

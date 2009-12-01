@@ -56,6 +56,8 @@
 				<include name="Autofac.dll" />
 				<include name="LiftIO.dll" />
 				<include name="Palaso.dll" />
+				<include name="Palaso.Lift.dll" />
+				<include name="Palaso.DictionaryServices.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="System.Data.dll" />
 				<include name="System.Drawing.dll" />

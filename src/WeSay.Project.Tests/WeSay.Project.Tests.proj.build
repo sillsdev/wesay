@@ -43,6 +43,8 @@
 				<include name="LexicalModel.dll" />
 				<include name="LiftIO.dll" />
 				<include name="Palaso.dll" />
+				<include name="Palaso.Lift.dll" />
+				<include name="Palaso.DictionaryServices.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="Palaso.TestUtilities.dll" />
 				<include name="NetReflector.dll" />
