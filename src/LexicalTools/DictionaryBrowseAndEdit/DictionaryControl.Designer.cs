@@ -31,12 +31,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this._btnDeleteWord = new System.Windows.Forms.Button();
 			this._btnNewWord = new System.Windows.Forms.Button();
 			this.panelDetail = new System.Windows.Forms.Panel();
-			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._splitter = new WeSay.UI.CollapsibleSplitter();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.panelWordList.SuspendLayout();
 			this._bottomButtonPanel.SuspendLayout();
-			this.panelDetail.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// panelWordList
@@ -143,24 +141,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			//
 			// panelDetail
 			//
-			this.panelDetail.Controls.Add(this._entryViewControl);
 			this.panelDetail.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panelDetail.Location = new System.Drawing.Point(148, 0);
 			this.panelDetail.Margin = new System.Windows.Forms.Padding(0);
 			this.panelDetail.Name = "panelDetail";
 			this.panelDetail.Size = new System.Drawing.Size(345, 259);
 			this.panelDetail.TabIndex = 0;
-			//
-			// _entryViewControl
-			//
-			this._entryViewControl.DataSource = null;
-			this._entryViewControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._entryViewControl.Location = new System.Drawing.Point(0, 0);
-			this._entryViewControl.Margin = new System.Windows.Forms.Padding(0);
-			this._entryViewControl.Name = "_entryViewControl";
-			this._entryViewControl.ShowNormallyHiddenFields = false;
-			this._entryViewControl.Size = new System.Drawing.Size(345, 259);
-			this._entryViewControl.TabIndex = 0;
 			//
 			// _splitter
 			//
@@ -190,15 +176,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this.panelWordList.ResumeLayout(false);
 			this._bottomButtonPanel.ResumeLayout(false);
 			this._bottomButtonPanel.PerformLayout();
-			this.panelDetail.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-
-		private EntryViewControl _entryViewControl;
 		private Panel panelWordList;
 		private Panel panelDetail;
 		private Panel _bottomButtonPanel;

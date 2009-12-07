@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{87AF0B02-2983-486D-857F-D1859535C234}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -183,6 +183,12 @@
 	<Compile Include="DictionaryBrowseAndEdit\SearchBoxControl.Designer.cs">
 	  <DependentUpon>SearchBoxControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="EntryHeaderView.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="EntryHeaderView.Designer.cs">
+	  <DependentUpon>EntryHeaderView.cs</DependentUpon>
+	</Compile>
 	<Compile Include="LayoutInfoProvider.cs" />
 	<Compile Include="Review\AdvancedHistory\AdvancedHistoryConfig.cs" />
 	<Compile Include="Review\AdvancedHistory\AdvancedHistoryControl.cs">
@@ -334,6 +340,9 @@
 	<EmbeddedResource Include="DictionaryBrowseAndEdit\SearchBoxControl.resx">
 	  <DependentUpon>SearchBoxControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="EntryHeaderView.resx">
+	  <DependentUpon>EntryHeaderView.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="GatherByWordList\GatherWordListControl.resx">
 	  <SubType>Designer</SubType>

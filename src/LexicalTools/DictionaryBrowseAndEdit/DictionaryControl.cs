@@ -24,6 +24,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
 	public partial class DictionaryControl: UserControl
 	{
+		//autofac generates a factory which comes up with all the other needed parameters from its container
+		public delegate DictionaryControl Factory(IUserInterfaceMemory memory);
+
 		private readonly ViewTemplate _viewTemplate;
 		private readonly ILogger _logger;
 		private WritingSystem _listWritingSystem;
@@ -31,6 +34,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private ResultSet<LexEntry> _records;
 		private bool _keepRecordCurrent;
 		private readonly ResultSetToListOfStringsAdapter _findTextAdapter;
+		private EntryViewControl _entryViewControl;
 
 		public DictionaryControl()
 		{
@@ -38,7 +42,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			InitializeComponent();
 		}
 
-		public DictionaryControl(LexEntryRepository lexEntryRepository,
+		public DictionaryControl(EntryViewControl.Factory entryViewControlFactory, LexEntryRepository lexEntryRepository,
 			ViewTemplate viewTemplate, IUserInterfaceMemory memory, ILogger logger)
 		{
 			if (lexEntryRepository == null)
@@ -63,8 +67,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 			InitializeDisplaySettings();
 
-			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
-			Control_EntryDetailPanel.LexEntryRepository = _lexEntryRepository;
 
 			_findTextAdapter = new ResultSetToListOfStringsAdapter("Form", _records);
 			SearchTextBox.Items = _findTextAdapter;
@@ -80,9 +82,26 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
 
 			_splitter.SetMemory(memory);
+			SetupEntryViewControl(entryViewControlFactory);
 			_entryViewControl.SetMemory(memory.CreateNewSection("entryView"));
 
 			UpdateDisplay();
+		}
+
+		private void SetupEntryViewControl(EntryViewControl.Factory factory)
+		{
+			this._entryViewControl = factory();
+			this.panelDetail.Controls.Add(this._entryViewControl);
+
+			this._entryViewControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._entryViewControl.Name = "_entryViewControl";
+			this._entryViewControl.ShowNormallyHiddenFields = false;
+			this._entryViewControl.TabIndex = 0;
+
+			//TODO: remove these, move to ctor
+			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
+			Control_EntryDetailPanel.LexEntryRepository = _lexEntryRepository;
+
 		}
 
 		[Browsable(false)]
@@ -598,10 +617,34 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			Debug.Assert(selectIndex != -1);
 			_recordsListBox.SelectedIndex = selectIndex;
 			OnRecordSelectionChanged(_recordsListBox, new EventArgs());
-			_entryViewControl.Focus();
+			//_entryViewControl.Focus();
+			_entryViewControl.SelectOnCorrectControl();
 
 			_logger.WriteConciseHistoricalEvent("Added Word");
 
+		}
+
+		/// <summary>
+		/// really helpful for debugging focus problems
+		/// </summary>
+		/// <returns></returns>
+		public Control GetWhoHasFocus()
+		{
+			return FindFocus(this);
+		}
+
+		private Control FindFocus(Control parent)
+		{
+			if(parent.Focused)
+				return parent;
+
+			foreach (Control child in parent.Controls)
+			{
+				var c = FindFocus(child);
+				if(c!=null)
+					return c;
+			}
+			return null;
 		}
 
 		private int GetEmptyWordIndex()
@@ -666,7 +709,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 			_recordsListBox.SelectedIndex = index;
 			OnRecordSelectionChanged(this, null);
-			_entryViewControl.Focus();
+			//_entryViewControl.Focus();
+			_entryViewControl.SelectOnCorrectControl();
 		}
 
 

@@ -2,6 +2,9 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
+using Chorus;
+using Chorus.UI.Notes;
+using Chorus.UI.Notes.Bar;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
 using Palaso.Misc;
@@ -14,19 +17,45 @@ namespace WeSay.LexicalTools
 {
 	public partial class EntryViewControl: UserControl
 	{
+		//autofac generates a factory which comes up with all the other needed parameters from its container
+		public delegate EntryViewControl Factory();
+
 		private ViewTemplate _viewTemplate;
 		private LexEntry _record;
 		private Timer _cleanupTimer;
 		private bool _isDisposed;
 		private DetailList _detailListControl;
 
+		private CurrentItemEventArgs _currentItemInFocus;
+		private LexEntryRepository _lexEntryRepository;
+		private bool _showNormallyHiddenFields;
+		private TaskMemory _memory;
+
+
+		//designer and some tests
 		public EntryViewControl()
+		{
+			InitializeComponent();
+			RefreshEntryDetail();
+			//_detailListControl = new DetailList();
+		}
+	   public EntryViewControl(EntryHeaderView.Factory entryHeaderViewFactory)
 		{
 			_viewTemplate = null;
 			InitializeComponent();
+			Controls.Remove(_entryHeaderView);
+		   _entryHeaderView.Dispose();
+			_entryHeaderView = entryHeaderViewFactory();
+		   _entryHeaderView.Dock = DockStyle.Top;
+		   _entryHeaderView.BackColor = BackColor;
+		   Controls.Add(_entryHeaderView);
+		   Controls.SetChildIndex(_panelEntry, 0);
+			Controls.SetChildIndex(_splitter, 1);
+		   Controls.SetChildIndex(_entryHeaderView, 2);
+
+		   _splitter.ControlToHide = _entryHeaderView;
 			RefreshEntryDetail();
 		}
-
 		protected override void OnHandleDestroyed(EventArgs e)
 		{
 			if (_cleanupTimer != null)
@@ -34,6 +63,11 @@ namespace WeSay.LexicalTools
 				_cleanupTimer.Dispose();
 			}
 			base.OnHandleDestroyed(e);
+		}
+
+		public void SelectOnCorrectControl()
+		{
+			_detailListControl.Select();
 		}
 
 		private void _detailListControl_KeyDown(object sender, KeyEventArgs e)
@@ -63,10 +97,21 @@ namespace WeSay.LexicalTools
 				Refresh();
 			}
 		}
+//
+//        public RichTextBox ControlFormattedView
+//        {
+//            get { return _lexicalEntryPreview; }
+//        }
 
-		public RichTextBox ControlFormattedView
+
+		public string RtfContentsOfPreviewForTests//TODO: those tests shouldn't be testing this control
 		{
-			get { return _lexicalEntryPreview; }
+			get { return _entryHeaderView.RtfForTests; }
+		}
+
+		public string TextContentsOfPreviewForTests//TODO: those tests shouldn't be testing this control
+		{
+			get { return _entryHeaderView.TextForTests; }
 		}
 
 		public DetailList ControlEntryDetail
@@ -79,6 +124,7 @@ namespace WeSay.LexicalTools
 			get { return _record; }
 			set
 			{
+				SuspendLayout();
 				Logger.WriteMinorEvent("In DataSource Set");
 				_showNormallyHiddenFields = false;
 
@@ -114,7 +160,7 @@ namespace WeSay.LexicalTools
 					ShowNormallyHiddenFields = false;
 					RefreshEntryDetail();
 				}
-
+				ResumeLayout();
 				Logger.WriteMinorEvent("Exit DataSource Set");
 			}
 		}
@@ -243,7 +289,7 @@ namespace WeSay.LexicalTools
 
 		private void RefreshLexicalEntryPreview()
 		{
-			if (_isDisposed || _lexicalEntryPreview.IsDisposed) ////saw this once get disposed while it was running
+			if (_isDisposed || _entryHeaderView.IsDisposed) ////saw this once get disposed while it was running
 				return;
 
 #if !DEBUG
@@ -251,9 +297,7 @@ namespace WeSay.LexicalTools
 			{
 #endif
 			VerifyHasLexEntryRepository();
-			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record,
-														 _currentItemInFocus,
-														 _lexEntryRepository);
+			_entryHeaderView.UpdateContents(_record,_currentItemInFocus,_lexEntryRepository);
 #if !DEBUG
 			}
 			catch (Exception)
@@ -338,15 +382,13 @@ namespace WeSay.LexicalTools
 			RefreshLexicalEntryPreview();
 		}
 
-		private CurrentItemEventArgs _currentItemInFocus;
-		private LexEntryRepository _lexEntryRepository;
-		private bool _showNormallyHiddenFields;
-		private TaskMemory _memory;
 
-		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
+		private void OnBackColorChanged(object sender, EventArgs e)
 		{
-			_detailListControl.BackColor = BackColor;
-			_lexicalEntryPreview.BackColor = BackColor;
+			if(_detailListControl !=null)
+				_detailListControl.BackColor = BackColor;
+			if(_entryHeaderView!=null)
+				_entryHeaderView.BackColor = BackColor;
 		}
 
 		~EntryViewControl()

@@ -14,6 +14,7 @@ using Autofac.Builder;
 using Autofac.Registrars.Delegate;
 using Chorus;
 using Chorus.UI.Review;
+using Chorus.Utilities;
 using LiftIO;
 using LiftIO.Validation;
 using Microsoft.Practices.ServiceLocation;
@@ -370,8 +371,13 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
+			//TODO: move all this stuff to ChorusSystem
 			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
 			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>();
+
+			builder.Register<ChorusSystem>(new ChorusSystem(Path.GetDirectoryName(PathToConfigFile)));
+			builder.Register<ChorusNotesSystem>(c=>c.Resolve<ChorusSystem>().GetNotesSystem(PathToLiftFile,
+				new NullProgress()));//TODO
 
 			builder.Register(new WordListCatalog()).SingletonScoped();
 
@@ -381,7 +387,7 @@ namespace WeSay.Project
 			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
 
 			// I (CP) don't think this is needed
-		builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
+			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
 
 			builder.Register<LiftDataMapper>( c =>
 			  {

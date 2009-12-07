@@ -101,8 +101,7 @@ namespace WeSay.LexicalTools.Tests
 			try
 			{
 				Assert.IsTrue(
-						((MissingInfoControl) task.Control).EntryViewControl.ControlFormattedView.
-								Text.Contains(_lexicalForm));
+						((MissingInfoControl)task.Control).EntryViewControl.RtfContentsOfPreviewForTests.Contains(_lexicalForm));
 
 				Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 			}

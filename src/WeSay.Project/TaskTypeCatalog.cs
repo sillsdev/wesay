@@ -27,6 +27,18 @@ namespace WeSay.Project
 						 "WeSay.LexicalTools.DictionaryBrowseAndEdit.DictionaryBrowseAndEditConfiguration",
 						 "LexicalTools");
 
+			RegisterControlAndFactory(builder,
+						"WeSay.LexicalTools.DictionaryBrowseAndEdit.DictionaryControl",
+						 "LexicalTools");
+
+			RegisterControlAndFactory(builder,
+						"WeSay.LexicalTools.EntryHeaderView",
+						 "LexicalTools");
+
+			RegisterControlAndFactory(builder,
+						"WeSay.LexicalTools.EntryViewControl",
+						 "LexicalTools");
+
 			//builder.Register<ITaskForExternalNavigateToEntry>(c => (ITaskForExternalNavigateToEntry) c.Resolve("Dictionary"));
 
 			RegisterTask(builder, "GatherWordsBySemanticDomains",
@@ -67,6 +79,19 @@ namespace WeSay.Project
 //            //register the class that holds the configuration for this task
 //            RegisterConfigurationClass(assembly, name, builder, configClassPath);
 //        }
+
+		/// <summary>
+		/// this is a hack fo now (root problem is that this assumbly can't point directly at
+		/// lexicaltools, because of circular dependencies).  Many ways to fix that...
+		/// </summary>
+		private void RegisterControlAndFactory(Autofac.Builder.ContainerBuilder builder,
+					string classPath, string assembly)
+		{
+			Type type = GetType(classPath, assembly);
+			builder.Register(type).FactoryScoped();
+			Type ftype = type.GetNestedType("Factory");
+			builder.RegisterGeneratedFactory(ftype).FactoryScoped();//review
+		}
 
 		private void RegisterTask(Autofac.Builder.ContainerBuilder builder, string name, string classPath, string configClassPath, string assembly)
 		{

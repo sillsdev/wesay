@@ -28,26 +28,27 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 	public class DictionaryTask: TaskBase, ITaskForExternalNavigateToEntry
 	{
 		private DictionaryControl _dictionaryControl;
-		private readonly ViewTemplate _viewTemplate;
-		private readonly ILogger _logger;
+		//private readonly ViewTemplate _viewTemplate;
+		//private readonly ILogger _logger;
 		private TaskMemory _taskMemory;
-		private string _pendingNavigationUrl;
+		//private string _pendingNavigationUrl;
+		DictionaryControl.Factory _dictionaryControlFactory;
 
 		public const string LastUrlKey = "lastUrl";
 
-		public DictionaryTask(DictionaryBrowseAndEditConfiguration config,
+		public DictionaryTask(DictionaryControl.Factory dictionaryControlFactory,
+								DictionaryBrowseAndEditConfiguration config,
 								LexEntryRepository lexEntryRepository,
-								ViewTemplate viewTemplate,
-								TaskMemoryRepository taskMemoryRepository,
-								ILogger logger)
+								TaskMemoryRepository taskMemoryRepository)
 			: base(config, lexEntryRepository, taskMemoryRepository)
 		{
-			if (viewTemplate == null)
-			{
-				throw new ArgumentNullException("viewTemplate");
-			}
-			_viewTemplate = viewTemplate;
-			_logger = logger;
+			_dictionaryControlFactory = dictionaryControlFactory;
+//            if (viewTemplate == null)
+//            {
+//                throw new ArgumentNullException("viewTemplate");
+//            }
+//            _viewTemplate = viewTemplate;
+//            _logger = logger;
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 
 		}
@@ -57,9 +58,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			try
 			{
 				base.Activate();
-				_dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate, _taskMemory.CreateNewSection("view"), _logger);
+			   // _dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate, _taskMemory.CreateNewSection("view"), _logger);
+				_dictionaryControl = _dictionaryControlFactory(_taskMemory.CreateNewSection("view"));
 
-				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnSelectedEntryOfDictionaryControlChanged);
+				 _dictionaryControl.SelectedIndexChanged += new EventHandler(OnSelectedEntryOfDictionaryControlChanged);
 //   Debug.Assert(_userSettings.Get("one", "0") == "1");
 
 				if (_taskMemory != null && _taskMemory.Get(LastUrlKey, null) != null)
@@ -161,11 +163,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 							BasilProject.Project.Name);
 			}
 		}
-
-		public ViewTemplate ViewTemplate
-		{
-			get { return _viewTemplate; }
-		}
+//
+//        public ViewTemplate ViewTemplate
+//        {
+//            get { return _viewTemplate; }
+//        }
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)
 		{
