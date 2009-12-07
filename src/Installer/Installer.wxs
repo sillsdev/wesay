@@ -210,6 +210,14 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="Palaso.Services.dll" Name="Palaso.Services.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Services.dll" />
 				  </Component>
 
+				  <Component Id="Palaso.DictionaryServices.dll" Guid="{3CCA9386-0A99-418D-BF33-E070D6337D2A}">
+					<File Id="Palaso.DictionaryServices.dll" Name="Palaso.DictionaryServices.dll" KeyPath="yes" Source="..\..\output\release\Palaso.DictionaryServices.dll" />
+				  </Component>
+
+				  <Component Id="Palaso.Lift.dll" Guid="{3DDA9386-0A99-418D-BF33-E070D6337DDD}">
+					<File Id="Palaso.Lift.dll" Name="Palaso.Lift.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Lift.dll" />
+				  </Component>
+
 				  <Component Id="Palaso.Media.dll" Guid="{4739D7BD-6D1D-474f-BF01-E012E51361E4}">
 					<File Id="Palaso.Media.dll" Name="Palaso.Media.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Media.dll" />
 				  </Component>
@@ -341,6 +349,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="ChorusMerge.exe"/>
 			  <ComponentRef Id="Palaso.dll"/>
 			  <ComponentRef Id="Palaso.Services.dll" />
+			  <ComponentRef Id="Palaso.DictionaryServices.dll" />
+			  <ComponentRef Id="Palaso.LIFT.dll" />
 			  <ComponentRef Id="Palaso.Media.dll" />
 			  <ComponentRef Id="PalasoUIWindowsForms.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
