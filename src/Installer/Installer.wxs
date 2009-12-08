@@ -350,7 +350,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Palaso.dll"/>
 			  <ComponentRef Id="Palaso.Services.dll" />
 			  <ComponentRef Id="Palaso.DictionaryServices.dll" />
-			  <ComponentRef Id="Palaso.LIFT.dll" />
+			  <ComponentRef Id="Palaso.Lift.dll" />
 			  <ComponentRef Id="Palaso.Media.dll" />
 			  <ComponentRef Id="PalasoUIWindowsForms.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
