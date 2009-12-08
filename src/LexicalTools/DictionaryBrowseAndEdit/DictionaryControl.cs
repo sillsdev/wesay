@@ -417,7 +417,27 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		public void GoToEntryWithId(string entryId)
 		{
-			LexEntry entry = _lexEntryRepository.GetLexEntryWithMatchingId(entryId);
+			//NB: this was written in Dec 2009 while we were discussing getting rid of non-guid ids.
+
+			Guid g=default(Guid);
+			try
+			{
+				g = new Guid(entryId);
+			}
+			catch
+			{
+			}
+			LexEntry entry;
+
+			if(g!=default(Guid))
+			{
+				entry = _lexEntryRepository.GetLexEntryWithMatchingGuid(g);
+			}
+			else
+			{
+				entry = _lexEntryRepository.GetLexEntryWithMatchingId(entryId);
+			}
+
 			if (entry == null)
 			{
 				throw new NavigationException("Could not find the entry with id " + entryId);
@@ -554,13 +574,14 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				try
 				{
 					var filename = Path.GetFileName(WeSayWordsProject.Project.PathToLiftFile);
+					//review: see also: HttpUtility.UrlEncode
 					filename = Uri.EscapeDataString(filename);
 					string url = string.Format("lift://{0}?type=entry&", filename);
 					url += "label=" + entry.GetSimpleFormForLogging() + "&";
-					var id = entry.GetOrCreateId(false);
-					if (string.IsNullOrEmpty(id))
-						return string.Empty;
-					url += "id=" + id;
+//                    var id = entry.GetOrCreateId(false);
+//                    if (string.IsNullOrEmpty(id))
+//                        return string.Empty;
+					url += "id=" + entry.Guid;
 
 					url = url.Trim('&');
 					return url;

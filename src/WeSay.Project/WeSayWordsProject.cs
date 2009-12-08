@@ -376,8 +376,13 @@ namespace WeSay.Project
 			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>();
 
 			builder.Register<ChorusSystem>(new ChorusSystem(Path.GetDirectoryName(PathToConfigFile)));
-			builder.Register<ChorusNotesSystem>(c=>c.Resolve<ChorusSystem>().GetNotesSystem(PathToLiftFile,
-				new NullProgress()));//TODO
+			builder.Register<ChorusNotesSystem>(c=>
+			{
+				var system =c.Resolve<ChorusSystem>().GetNotesSystem(PathToLiftFile,
+														 new NullProgress());
+				system.UrlGenerater = (key) => string.Format("lift://object?type=entry&amp;id={0}", key);
+				return system;
+			}).ContainerScoped();//TODO
 
 			builder.Register(new WordListCatalog()).SingletonScoped();
 
