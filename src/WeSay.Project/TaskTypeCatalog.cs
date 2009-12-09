@@ -55,8 +55,13 @@ namespace WeSay.Project
 						 "LexicalTools");
 			RegisterTask(builder, "AdvancedHistory",
 						 "WeSay.LexicalTools.Review.AdvancedHistory.AdvancedHistoryTask",
-						 "WeSay.LexicalTools.Review.AdvancedHistory.AdvancedHistoryTaskConfig",
+						 "WeSay.LexicalTools.Review.AdvancedHistory.AdvancedHistoryConfig",
 						 "LexicalTools");
+
+			RegisterTask(builder, "NotesBrowser",
+				 "WeSay.LexicalTools.Review.NotesBrowser.NotesBrowserTask",
+				 "WeSay.LexicalTools.Review.NotesBrowser.NotesBrowserConfig",
+				 "LexicalTools");
 
 //            Type type = GetType( "WeSay.LexicalTools.Review.AdvancedHistory.AdvancedHistoryControl", assembly);
 //            TaskNameToTaskType.Add(name, type);

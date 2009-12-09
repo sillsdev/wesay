@@ -3,14 +3,14 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools.Review.AdvancedHistory
 {
-	public interface IAdvancedHistoryTaskConfig : ITaskConfiguration
+	public interface IAdvancedHistoryConfig : ITaskConfiguration
 	{
 
 	}
 
-	public class AdvancedHistoryTaskConfig : TaskConfigurationBase, IAdvancedHistoryTaskConfig
+	public class AdvancedHistoryConfig : TaskConfigurationBase, IAdvancedHistoryConfig
 	{
-		public AdvancedHistoryTaskConfig(string xml)
+		public AdvancedHistoryConfig(string xml)
 			:base(xml)
 		{
 		}
@@ -25,7 +25,7 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 
 		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
 		{
-			return taskConfiguration is AdvancedHistoryTaskConfig;
+			return taskConfiguration is AdvancedHistoryConfig;
 		}
 
 		public override string ToString()

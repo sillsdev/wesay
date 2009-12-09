@@ -1,27 +1,30 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Autofac;
-using Chorus.UI.Review;
+using Chorus;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
-using WeSay.UI;
 
-namespace WeSay.LexicalTools.Review.AdvancedHistory
+
+namespace WeSay.LexicalTools.Review.NotesBrowser
 {
-	public class AdvancedHistoryTask: TaskBase
+	public class NotesBrowserTask: TaskBase
 	{
-		private readonly IContainer _diContainer;
+		private readonly ChorusNotesSystem _chorusNotesSystem;
+		//   private readonly IContainer _diContainer;
 		private Control _control;
 
-		public AdvancedHistoryTask(IAdvancedHistoryConfig config,
-									LexEntryRepository lexEntryRepository,
-								  TaskMemoryRepository taskMemoryRepository,
-			Autofac.IContainer diContainer)
+		public NotesBrowserTask(INotesBrowserConfig config,
+								LexEntryRepository lexEntryRepository,
+								TaskMemoryRepository taskMemoryRepository,
+								ChorusNotesSystem chorusNotesSystem
+								)
 
 			: base(config, lexEntryRepository, taskMemoryRepository)
 		{
-			_diContainer = diContainer;
+			_chorusNotesSystem = chorusNotesSystem;
+			//   _diContainer = diContainer;
 		}
 
 
@@ -51,7 +54,7 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 
 		public override Image DashboardButtonImage
 		{
-			get { return Resources.AdvancedHistory; }
+			get { return Resources.noteBrowser32x32; }
 		}
 
 		public override ButtonStyle DashboardButtonStyle
@@ -59,11 +62,13 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 			get { return ButtonStyle.IconVariableWidth; }
 		}
 
+
 		public override void Activate()
 		{
 			if (_control == null)
 			{
-				_control = _diContainer.Resolve<Chorus.UI.Review.ReviewPage>();
+				//_control = _diContainer.Resolve<Chorus.UI.Notes.NotesPage>();
+				_control = _chorusNotesSystem.CreateNotesBrowserPage();
 			}
 			base.Activate();
 
@@ -88,7 +93,7 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 
 		protected override int ComputeReferenceCount()
 		{
-			return CountNotRelevant; //Todo
+			return CountNotRelevant;
 		}
 
 	}

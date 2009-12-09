@@ -191,13 +191,9 @@
 	</Compile>
 	<Compile Include="LayoutInfoProvider.cs" />
 	<Compile Include="Review\AdvancedHistory\AdvancedHistoryConfig.cs" />
-	<Compile Include="Review\AdvancedHistory\AdvancedHistoryControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Review\AdvancedHistory\AdvancedHistoryControl.Designer.cs">
-	  <DependentUpon>AdvancedHistoryControl.cs</DependentUpon>
-	</Compile>
 	<Compile Include="Review\AdvancedHistory\AdvancedHistoryTask.cs" />
+	<Compile Include="Review\NotesBrowser\NotesBrowserConfig.cs" />
+	<Compile Include="Review\NotesBrowser\NotesBrowserTask.cs" />
 	<Compile Include="TaskConfigurationBase.cs" />
 	<Compile Include="DictionaryBrowseAndEdit\ConfirmDelete.cs">
 	  <SubType>Form</SubType>
@@ -365,10 +361,6 @@
 	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
-	<EmbeddedResource Include="Review\AdvancedHistory\AdvancedHistoryControl.resx">
-	  <DependentUpon>AdvancedHistoryControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\blueDictionary.png" />
@@ -387,7 +379,11 @@
 	<None Include="Resources\Add18x16.png" />
   </ItemGroup>
   <ItemGroup>
+	<None Include="Resources\notesBrowser.svg" />
 	<None Include="Resources\search18x18.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\noteBrowser32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
