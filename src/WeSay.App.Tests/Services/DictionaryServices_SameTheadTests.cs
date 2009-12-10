@@ -1,3 +1,4 @@
+	  #if DictionaryServices
 using NUnit.Framework;
 using Palaso.Services.Dictionary;
 using WeSay.App.Services;
@@ -171,3 +172,4 @@ namespace WeSay.App.Tests.Services
 		}
 	}
 }
+#endif

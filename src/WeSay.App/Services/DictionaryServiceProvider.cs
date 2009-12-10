@@ -13,6 +13,8 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
+#if DictionaryServices
+
 namespace WeSay.App.Services
 {
 	public class DictionaryServiceProvider: MarshalByRefObject, IDictionaryServiceBase, IDisposable
@@ -39,7 +41,7 @@ namespace WeSay.App.Services
 
 		public SynchronizationContext UiSynchronizationContext { get; set; }
 
-		#region IDictionaryService Members
+#region IDictionaryService Members
 
 		public FindResult GetMatchingEntries(string writingSystemId, string form, string findMethod)
 		{
@@ -361,10 +363,12 @@ namespace WeSay.App.Services
 							 });
 		}
 
+
 		public bool IsInServerMode()
 		{
 			return _app.IsInServerMode;
 		}
+
 
 		/*worked fine, but trimmed from the service until need is demonstrated
 		* public string[] GetFormsFromIds(string writingSytemId, string[] ids)
@@ -393,7 +397,7 @@ namespace WeSay.App.Services
 
 		#endregion
 
-		#region IDisposable Members
+#region IDisposable Members
 
 		public void Dispose() {}
 
@@ -404,4 +408,6 @@ namespace WeSay.App.Services
 			return true;
 		}
 	}
+
 }
+#endif

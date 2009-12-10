@@ -1,3 +1,4 @@
+	  #if DictionaryServices
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -427,3 +428,4 @@ namespace WeSay.App.Tests.Services
 		}
 	}
 }
+#endif

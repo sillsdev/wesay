@@ -23,7 +23,9 @@ namespace WeSay.App
 	{
 		//private static Mutex _oneInstancePerProjectMutex;
 		private WeSayWordsProject _project;
+	  #if DictionaryServices
 		private DictionaryServiceProvider _dictionary;
+#endif
 		private readonly CommandLineArguments _commandLineArguments = new CommandLineArguments();
 		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
 		private TabbedForm _tabbedForm;
@@ -117,26 +119,35 @@ namespace WeSay.App
 						return;//couldn't load, and we've already told the user
 					}
 
-					using (_dictionary =
+	   #if DictionaryServices
+				   using (_dictionary =
 						   new DictionaryServiceProvider(repository, this, _project))
 					{
+#endif
 
+#if DictionaryServices
 						StartDictionaryServices();
 						_dictionary.LastClientDeregistered +=
 							_serviceAppSingletonHelper.OnExitIfInServerMode;
-
+#endif
 						WireUpChorusEvents();
 
+#if !DictionaryServices
+						StartUserInterface();
+#endif
+#if DictionaryServices
 						_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
 
 						_dictionary.LastClientDeregistered -=
 							_serviceAppSingletonHelper.OnExitIfInServerMode;
-
+#endif
 						//do a last backup before exiting
 						Logger.WriteEvent("App Exiting Normally.");
 					}
 					_project.BackupNow();
-			   }
+	   #if DictionaryServices
+			  }
+#endif
 		   }
 			finally
 			{
@@ -191,6 +202,7 @@ namespace WeSay.App
 			}
 		}
 
+#if DictionaryServices
 		private void StartDictionaryServices()
 		{
 			////Problem: if there is already a cache miss, this will be slow, and somebody will time out
@@ -211,6 +223,7 @@ namespace WeSay.App
 					   ServiceAppSingletonHelper.State.ServerMode;
 			}
 		}
+#endif
 
 		///// <summary>
 		///// Only show a dialog if the operation takes more than two seconds
@@ -345,9 +358,11 @@ namespace WeSay.App
 
 		private void OnTabbedForm_IntializationComplete(object sender, EventArgs e)
 		{
+	  #if DictionaryServices
 			_serviceAppSingletonHelper.BringToFrontRequest += OnBringToFrontRequest;
 			_serviceAppSingletonHelper.UiReadyForEvents();
 			_dictionary.UiSynchronizationContext = _tabbedForm.synchronizationContext;
+#endif
 		}
 
 		//private static LiftUpdateService SetupUpdateService(LexEntryRepository lexEntryRepository)
