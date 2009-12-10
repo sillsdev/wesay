@@ -192,7 +192,17 @@ namespace WeSay.LexicalModel.Foundation
 				Clear();
 				foreach (WritingSystem w in value)
 				{
-					Add(w.Id, w);
+					if (this.ContainsKey(w.Id))
+					{
+						Palaso.Reporting.ErrorReport.NotifyUserOfProblem(
+							new Palaso.Reporting.ShowOncePerSessionBasedOnExactMessagePolicy(),
+							"Your writing systems file (WritingSystemPrefs.xml) contains multiple entries for {0}. Please report this problem by sending an email to issues@wesay.org.",
+							w.Id);
+					}
+					else
+					{
+						Add(w.Id, w);
+					}
 				}
 			}
 		}
