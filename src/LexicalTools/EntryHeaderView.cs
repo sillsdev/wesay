@@ -5,6 +5,7 @@ using Chorus;
 using Chorus.UI.Notes;
 using Palaso.DictionaryServices.Model;
 using WeSay.LexicalModel;
+using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -16,7 +17,7 @@ namespace WeSay.LexicalTools
 		public delegate EntryHeaderView Factory();
 
 		private NotesBarView _notesBar;
-		private LexEntry _previousRecord=null;
+		private LexEntry _currentRecord=null;
 
 		/// <summary>
 		/// designer only
@@ -30,7 +31,7 @@ namespace WeSay.LexicalTools
 		{
 			InitializeComponent();
 
-			_notesBar = notesSystem.CreateNotesBarView();
+			_notesBar = notesSystem.CreateNotesBarView(id=>WeSayWordsProject.GetUrlFromLexEntry(_currentRecord));
 			_notesBar.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			_notesBar.Dock = System.Windows.Forms.DockStyle.Top;
 			_notesBar.Location = new System.Drawing.Point(0, 0);
@@ -80,18 +81,18 @@ namespace WeSay.LexicalTools
 													  lexEntryRepository);
 			}
 
-			if (record != _previousRecord)
+			if (record != _currentRecord)
 			{
-				_previousRecord = record;
+				_currentRecord = record;
 				if (_notesBar == null)
 					return;
 				if (record == null)
 				{
-					_notesBar.SetIdOfCurrentAnnotatedObject(string.Empty);
+					_notesBar.SetTargetObject(null);
 				}
 				else
 				{
-					_notesBar.SetIdOfCurrentAnnotatedObject(record.Guid.ToString());
+					_notesBar.SetTargetObject(record);
 				}
 			}
 

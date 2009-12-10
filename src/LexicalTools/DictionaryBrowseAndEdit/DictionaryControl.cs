@@ -573,19 +573,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 				try
 				{
-					var filename = Path.GetFileName(WeSayWordsProject.Project.PathToLiftFile);
-					//review: see also: HttpUtility.UrlEncode
-					filename = Uri.EscapeDataString(filename);
-					string url = string.Format("lift://{0}?type=entry&", filename);
-					url += "label=" + entry.GetSimpleFormForLogging() + "&";
-//                    var id = entry.GetOrCreateId(false);
-//                    if (string.IsNullOrEmpty(id))
-//                        return string.Empty;
-					url += "id=" + entry.Guid;
-
-					url = url.Trim('&');
-					return url;
-
+					return WeSayWordsProject.GetUrlFromLexEntry(entry);
 				}
 				catch (Exception error)
 				{
@@ -594,6 +582,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				}
 			}
 		}
+
 
 
 		private void OnNewWord_Click(object sender, EventArgs e)

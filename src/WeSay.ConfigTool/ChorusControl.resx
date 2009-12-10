@@ -390,6 +390,6 @@
 You can also use it to silently keep a full history backup, so that at any point you can see what was done by who &amp; when, and can retrieve old versions.  To keep a backup on a memory card you leave plugged into a laptop, see the "Backup" settings panel.</value>
   </data>
   <data name="_chorusIsReady.Text" xml:space="preserve">
-	<value>WeSay is using Chorus to keep a full history of this project.  Until the WeSay developers add a Review task that is designed for WeSay users, you can used the more advanced Chorus Application to review the project history.</value>
+	<value>WeSay is using Chorus to keep a full history of this project.  You can view that history by enabling the "Advanced History" task, or you can used the more advanced Chorus Application to review the project history.</value>
   </data>
 </root>

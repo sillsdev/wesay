@@ -367,6 +367,20 @@ namespace WeSay.Project
 		   Type serviceType
 		);
 
+		//TOdo: figure out how to move this to wher it belongs... should be doable if/when we
+		//can do container building from within the lexical assemblies.
+		public static string GetUrlFromLexEntry(LexEntry entry)
+		{
+			var filename = Path.GetFileName(Project.PathToLiftFile);
+			//review: see also: HttpUtility.UrlEncode
+			filename = Uri.EscapeDataString(filename);
+			string url = string.Format("lift://{0}?type=entry&", filename);
+			url += "label=" + entry.GetSimpleFormForLogging() + "&";
+			url += "id=" + entry.Guid;
+			url = url.Trim('&');
+			return url;
+		}
+
 		private void PopulateDIContainer()
 		{
 			var builder = new ContainerBuilder();
@@ -380,7 +394,8 @@ namespace WeSay.Project
 			{
 				var system =c.Resolve<ChorusSystem>().GetNotesSystem(PathToLiftFile,
 														 new NullProgress());
-				system.UrlGenerater = (key) => string.Format("lift://object?type=entry&amp;id={0}", key);
+				system.IdGenerator = (target) => ((LexEntry) target).Guid.ToString();
+			  //  system.UrlGenerator = (target, id) => GetUrlFromLexEntry(target as LexEntry);
 				return system;
 			}).ContainerScoped();//TODO
 
