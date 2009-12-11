@@ -25,11 +25,11 @@ namespace WeSay.App
 		private WeSayWordsProject _project;
 	  #if DictionaryServices
 		private DictionaryServiceProvider _dictionary;
+		private IDisposable _serviceLifeTimeHelper;
+		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
 #endif
 		private readonly CommandLineArguments _commandLineArguments = new CommandLineArguments();
-		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
 		private TabbedForm _tabbedForm;
-		private IDisposable _serviceLifeTimeHelper;
 
 		[STAThread]
 		private static void Main(string[] args)
@@ -83,11 +83,13 @@ namespace WeSay.App
 
 		public void Run()
 		{
+#if DictionaryServices
 			string path = DetermineActualLiftPath(_commandLineArguments.liftPath);
 			if (!String.IsNullOrEmpty(path))
 			{
 				path = path.Replace(Path.DirectorySeparatorChar, '-');
 				path = path.Replace(Path.VolumeSeparatorChar, '-');
+
 
 				_serviceAppSingletonHelper =
 						ServiceAppSingletonHelper.CreateServiceAppSingletonHelperIfNeeded(
@@ -96,8 +98,9 @@ namespace WeSay.App
 				{
 					return; // there's already an instance of this app running
 				}
-			}
 
+			}
+#endif
 			try
 			{
 				DisplaySettings.Default.SkinName = Settings.Default.SkinName;
@@ -151,6 +154,7 @@ namespace WeSay.App
 		   }
 			finally
 			{
+	   #if DictionaryServices
 				if (_serviceLifeTimeHelper != null)
 				{
 					_serviceLifeTimeHelper.Dispose();
@@ -159,6 +163,7 @@ namespace WeSay.App
 				{
 					_serviceAppSingletonHelper.Dispose();
 				}
+#endif
 			}
 			Logger.ShutDown();
 			Settings.Default.Save();
@@ -188,7 +193,7 @@ namespace WeSay.App
 		}
 
 
-
+#if DictionaryServices
 		private void OnBringToFrontRequest(object sender, EventArgs e)
 		{
 			if (_tabbedForm == null)
@@ -202,7 +207,7 @@ namespace WeSay.App
 			}
 		}
 
-#if DictionaryServices
+
 		private void StartDictionaryServices()
 		{
 			////Problem: if there is already a cache miss, this will be slow, and somebody will time out
@@ -299,8 +304,10 @@ namespace WeSay.App
 			}
 		}
 
+ #if DictionaryServices
 		public void GoToUrl(string url)
 		{
+
 			_serviceAppSingletonHelper.EnsureUIRunningAndInFront();
 
 			//if it didn't timeout
@@ -309,8 +316,10 @@ namespace WeSay.App
 				Debug.Assert(_tabbedForm != null, "tabbed form should have been started.");
 				_tabbedForm.GoToUrl(url);
 			}
-		}
 
+
+		}
+#endif
 		private void StartUserInterface()
 		{
 			try
