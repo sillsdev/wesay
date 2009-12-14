@@ -11,19 +11,20 @@ namespace WeSay.LexicalTools.Review.NotesBrowser
 {
 	public class NotesBrowserTask: TaskBase
 	{
-		private readonly ChorusNotesSystem _chorusNotesSystem;
 		//   private readonly IContainer _diContainer;
 		private Control _control;
+		System.Func<Chorus.UI.Notes.Browser.NotesBrowserPage> _getBrowserPage;
+
 
 		public NotesBrowserTask(INotesBrowserConfig config,
 								LexEntryRepository lexEntryRepository,
 								TaskMemoryRepository taskMemoryRepository,
-								ChorusNotesSystem chorusNotesSystem
+								System.Func<Chorus.UI.Notes.Browser.NotesBrowserPage> getBrowserPage
 								)
 
 			: base(config, lexEntryRepository, taskMemoryRepository)
 		{
-			_chorusNotesSystem = chorusNotesSystem;
+			_getBrowserPage = getBrowserPage;
 			//   _diContainer = diContainer;
 		}
 
@@ -68,7 +69,8 @@ namespace WeSay.LexicalTools.Review.NotesBrowser
 			if (_control == null)
 			{
 				//_control = _diContainer.Resolve<Chorus.UI.Notes.NotesPage>();
-				_control = _chorusNotesSystem.CreateNotesBrowserPage();
+
+				_control = _getBrowserPage();
 			}
 			base.Activate();
 

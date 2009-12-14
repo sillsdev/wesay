@@ -13,6 +13,8 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Registrars.Delegate;
 using Chorus;
+using Chorus.UI.Notes;
+using Chorus.UI.Notes.Browser;
 using Chorus.UI.Review;
 using Chorus.Utilities;
 using LiftIO;
@@ -389,15 +391,30 @@ namespace WeSay.Project
 			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
 			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>();
 
-			builder.Register<ChorusSystem>(ChorusSystem.CreateAndGuessUserName(Path.GetDirectoryName(PathToConfigFile)));
-			builder.Register<ChorusNotesSystem>(c=>
-			{
-				var system =c.Resolve<ChorusSystem>().GetNotesSystem(PathToLiftFile,
-														 new NullProgress());
-				system.IdGenerator = (target) => ((LexEntry) target).Guid.ToString();
-			  //  system.UrlGenerator = (target, id) => GetUrlFromLexEntry(target as LexEntry);
-				return system;
-			}).ContainerScoped();//TODO
+			builder.Register<ChorusSystem>(new ChorusSystem(Path.GetDirectoryName(PathToConfigFile)));
+//            builder.Register<ChorusNotesSystem>(c=>
+//            {
+//                var system =c.Resolve<ChorusSystem>().GetNotesSystem(PathToLiftFile,
+//                                                         new NullProgress());
+//                system.IdGenerator = (target) => ((LexEntry) target).Guid.ToString();
+//              //  system.UrlGenerator = (target, id) => GetUrlFromLexEntry(target as LexEntry);
+//                return system;
+//            }).ContainerScoped();//TODO
+
+			//add a factory which takes no parameters, which autofac can give to the NotesBrowserTask to use
+			//to create this only if/when it is activated
+			builder.Register<System.Func<Chorus.UI.Notes.Browser.NotesBrowserPage>>(c =>
+				{
+					var chorus = c.Resolve<ChorusSystem>();
+					return () => chorus.WinForms.CreateNotesBrowser();
+				});
+
+			var mapping = new NotesToRecordMapping();
+			mapping.FunctionToGetCurrentUrlForNewNotes = (entry, id)=>GetUrlFromLexEntry(entry as LexEntry);
+			mapping.FunctionToGoFromObjectToItsId = (entry)=>(entry as LexEntry).Guid.ToString();
+			builder.Register<NotesToRecordMapping>(mapping);
+
+			builder.Register<NotesBarView>(c => c.Resolve<ChorusSystem>().WinForms.CreateNotesBar(PathToLiftFile, c.Resolve<NotesToRecordMapping>(), new NullProgress())).FactoryScoped();
 
 			builder.Register(new WordListCatalog()).SingletonScoped();
 

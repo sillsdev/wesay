@@ -27,11 +27,11 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public EntryHeaderView(ChorusNotesSystem notesSystem)
+		public EntryHeaderView(NotesBarView notesBarView)
 		{
 			InitializeComponent();
 
-			_notesBar = notesSystem.CreateNotesBarView(id=>WeSayWordsProject.GetUrlFromLexEntry(_currentRecord));
+			_notesBar = notesBarView;// notesSystem.CreateNotesBarView(id => WeSayWordsProject.GetUrlFromLexEntry(_currentRecord));
 			_notesBar.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			_notesBar.Dock = System.Windows.Forms.DockStyle.Top;
 			_notesBar.Location = new System.Drawing.Point(0, 0);

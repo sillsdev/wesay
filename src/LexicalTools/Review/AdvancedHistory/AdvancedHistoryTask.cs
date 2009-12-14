@@ -63,7 +63,7 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 		{
 			if (_control == null)
 			{
-				_control = _diContainer.Resolve<Chorus.UI.Review.ReviewPage>();
+				_control = _diContainer.Resolve<Chorus.UI.Review.HistoryPage>();
 			}
 			base.Activate();
 
