@@ -81,7 +81,7 @@ namespace Addin.Backup.Synchronize
 										   SyncUIDialogBehaviors.Lazy,
 										   SyncUIFeatures.NormalRecommended))
 			{
-				dlg.Text = "Wesay Send/Receive";
+				dlg.Text = "WeSay Send/Receive";
 				dlg.SyncOptions.DoMergeWithOthers = true;
 				dlg.SyncOptions.DoPullFromOthers = true;
 				dlg.SyncOptions.DoSendToOthers = true;
