@@ -97,7 +97,6 @@ namespace WeSay.ConfigTool
 
 			//Mono Bug workaround
 			PropertyValueChangedEventArgs eForMono = new PropertyValueChangedEventArgs(e.ChangedItem, _oldWritingSystemIdForMono);
-			_oldWritingSystemIdForMono = _writingSystem.Id;
 			e = eForMono;
 
 			Console.WriteLine("Old Id was {0}, new ID is: {1}", e.OldValue, _writingSystem.Id);
@@ -144,6 +143,8 @@ namespace WeSay.ConfigTool
 					WritingSystemIdChanged.Invoke(_writingSystem, e);
 				}
 			}
+
+			_oldWritingSystemIdForMono = _writingSystem.Id; //NB: don't move this up earlier
 		}
 	}
 }
