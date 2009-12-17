@@ -389,9 +389,11 @@ namespace WeSay.Project
 
 			//TODO: move all this stuff to ChorusSystem
 			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
-			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>();
 
-			builder.Register<ChorusSystem>(new ChorusSystem(Path.GetDirectoryName(PathToConfigFile)));
+
+			var chorusSystem = new ChorusSystem(Path.GetDirectoryName(PathToConfigFile));
+			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);
+			builder.Register<ChorusSystem>(chorusSystem);
 //            builder.Register<ChorusNotesSystem>(c=>
 //            {
 //                var system =c.Resolve<ChorusSystem>().GetNotesSystem(PathToLiftFile,
