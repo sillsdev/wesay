@@ -5,6 +5,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -387,37 +388,6 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
-			//TODO: move all this stuff to ChorusSystem
-			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
-
-
-			var chorusSystem = new ChorusSystem(Path.GetDirectoryName(PathToConfigFile));
-			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);
-			builder.Register<ChorusSystem>(chorusSystem);
-//            builder.Register<ChorusNotesSystem>(c=>
-//            {
-//                var system =c.Resolve<ChorusSystem>().GetNotesSystem(PathToLiftFile,
-//                                                         new NullProgress());
-//                system.IdGenerator = (target) => ((LexEntry) target).Guid.ToString();
-//              //  system.UrlGenerator = (target, id) => GetUrlFromLexEntry(target as LexEntry);
-//                return system;
-//            }).ContainerScoped();//TODO
-
-			//add a factory which takes no parameters, which autofac can give to the NotesBrowserTask to use
-			//to create this only if/when it is activated
-			builder.Register<System.Func<Chorus.UI.Notes.Browser.NotesBrowserPage>>(c =>
-				{
-					var chorus = c.Resolve<ChorusSystem>();
-					return () => chorus.WinForms.CreateNotesBrowser();
-				});
-
-			var mapping = new NotesToRecordMapping();
-			mapping.FunctionToGetCurrentUrlForNewNotes = (entry, id)=>GetUrlFromLexEntry(entry as LexEntry);
-			mapping.FunctionToGoFromObjectToItsId = (entry)=>(entry as LexEntry).Guid.ToString();
-			builder.Register<NotesToRecordMapping>(mapping);
-
-			builder.Register<NotesBarView>(c => c.Resolve<ChorusSystem>().WinForms.CreateNotesBar(PathToLiftFile, c.Resolve<NotesToRecordMapping>(), new NullProgress())).FactoryScoped();
-
 			builder.Register(new WordListCatalog()).SingletonScoped();
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
@@ -482,7 +452,8 @@ namespace WeSay.Project
 
 			builder.Register<TaskCollection>().SingletonScoped();
 
-			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems))
+			var viewTemplates = ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems);
+			foreach (var viewTemplate in viewTemplates)
 			{
 				//todo: this isn't going to work if we start using multiple tempates.
 				//will have to go to a naming system.
@@ -491,6 +462,9 @@ namespace WeSay.Project
 
 			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named("PrintingTemplate");
 			builder.Register<WritingSystemCollection>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
+
+			RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
+
 
 			builder.Register<PublicationFontStyleProvider>(c=> new PublicationFontStyleProvider(c.Resolve<ViewTemplate>("PrintingTemplate")));
 
@@ -534,7 +508,43 @@ namespace WeSay.Project
 			builder.Register(c=>
 				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).ContainerScoped();
 
+
 			_container = builder.Build();
+		}
+
+		private void RegisterChorusStuff(ContainerBuilder builder, IEnumerable<IWritingSystem> writingSystemsForChorus)
+		{
+			//TODO: move all this stuff to ChorusSystem
+			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
+			var chorusSystem = new ChorusSystem(Path.GetDirectoryName(PathToConfigFile));
+			chorusSystem.WritingSystems = writingSystemsForChorus;
+			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);
+			builder.Register<ChorusSystem>(chorusSystem);
+
+			//            builder.Register<ChorusNotesSystem>(c=>
+			//            {
+			//                var system =c.Resolve<ChorusSystem>().GetNotesSystem(PathToLiftFile,
+			//                                                         new NullProgress());
+			//                system.IdGenerator = (target) => ((LexEntry) target).Guid.ToString();
+			//              //  system.UrlGenerator = (target, id) => GetUrlFromLexEntry(target as LexEntry);
+			//                return system;
+			//            }).ContainerScoped();//TODO
+
+			//add a factory which takes no parameters, which autofac can give to the NotesBrowserTask to use
+			//to create this only if/when it is activated
+			builder.Register<System.Func<Chorus.UI.Notes.Browser.NotesBrowserPage>>(c =>
+			{
+				var chorus = c.Resolve<ChorusSystem>();
+				return () => chorus.WinForms.CreateNotesBrowser();
+			});
+
+			var mapping = new NotesToRecordMapping();
+			mapping.FunctionToGetCurrentUrlForNewNotes = (entry, id) => GetUrlFromLexEntry(entry as LexEntry);
+			mapping.FunctionToGoFromObjectToItsId = (entry) => (entry as LexEntry).Guid.ToString();
+			builder.Register<NotesToRecordMapping>(mapping);
+
+			builder.Register<NotesBarView>(c => c.Resolve<ChorusSystem>().WinForms.CreateNotesBar(PathToLiftFile, c.Resolve<NotesToRecordMapping>(), new NullProgress())).FactoryScoped();
+
 		}
 
 		private IEnumerable<string> GetIdsOfSingleOptionFields()

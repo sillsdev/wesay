@@ -13,6 +13,7 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.WritingSystems.Collation;
 using Spart;
+using Chorus;
 
 namespace WeSay.LexicalModel.Foundation
 {
@@ -713,5 +714,6 @@ namespace WeSay.LexicalModel.Foundation
 		}
 
 		#endregion
+
 	}
 }

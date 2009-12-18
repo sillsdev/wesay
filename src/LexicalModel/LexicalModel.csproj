@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -87,6 +87,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\icu.net.dll</HintPath>
 	</Reference>
+	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\LibChorus.dll</HintPath>
+	</Reference>
 	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
@@ -127,6 +131,7 @@
 	<Compile Include="Foundation\Options\GenericOptionListReader.cs" />
 	<Compile Include="Foundation\Options\OptionDisplayAdaptor.cs" />
 	<Compile Include="Foundation\WritingSystem.cs" />
+	<Compile Include="Foundation\WritingSystemForChorusAdaptor.cs" />
 	<Compile Include="Foundation\WritingSystemCollection.cs" />
 	<Compile Include="IFieldQuery.cs" />
 	<Compile Include="LexEntryRepository.cs" />

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Chorus;
 using Exortech.NetReflector;
 using Palaso.DictionaryServices.Model;
 using Palaso.I8N;
@@ -701,6 +702,24 @@ namespace WeSay.Project
 		{
 			get { return BasilProject.Project.WritingSystems; }
 		}
+
+		public IEnumerable<Chorus.IWritingSystem> CreateListForChorus()
+		{
+			var list = new List<Chorus.IWritingSystem>();
+		   //for now, chorus wants the default to be the first one.  So lets just
+			//use the first ws of the notefield for that purpose (could improve user control
+			//over this later).
+			var noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);
+			list.Insert(0,new WritingSystemForChorusAdaptor(noteWritingSystem));
+			foreach (var system in WritingSystems.GetActualTextWritingSystems())
+			{
+				if(system!=noteWritingSystem)
+				{
+					list.Add(new WritingSystemForChorusAdaptor(system));
+				}
+			}
+			return list;
+		 }
 	}
 
 	/// <summary>
