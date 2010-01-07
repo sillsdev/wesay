@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
+using Palaso.Code;
 using Palaso.Data;
 using Palaso.Misc;
 using Palaso.Reporting;

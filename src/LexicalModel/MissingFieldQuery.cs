@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Palaso.Code;
 using Palaso.Misc;
 using Palaso.Text;
 using WeSay.Foundation;

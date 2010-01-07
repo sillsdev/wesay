@@ -82,8 +82,8 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private static IServiceProvider CreateLayoutInfoServiceProvider(IServiceLocator serviceLocator, LexEntry entry)
 		{
-			Palaso.Misc.Guard.AgainstNull(serviceLocator, "serviceLocator");
-			Palaso.Misc.Guard.AgainstNull(entry, "entry");
+			Palaso.Code.Guard.AgainstNull(serviceLocator, "serviceLocator");
+			Palaso.Code.Guard.AgainstNull(entry, "entry");
 
 			var namingHelper = (MediaNamingHelper) serviceLocator.GetService(typeof (MediaNamingHelper));
 			var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,

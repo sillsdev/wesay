@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using LiftIO;
 using LiftIO.Merging;
+using Palaso.Code;
 using Palaso.Data;
 using Palaso.Lift.Migration;
 using Palaso.Misc;
