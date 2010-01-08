@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
-using Palaso.Code;
 using Palaso.Data;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
