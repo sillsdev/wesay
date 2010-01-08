@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using Palaso.Code;
 using Palaso.Data;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
