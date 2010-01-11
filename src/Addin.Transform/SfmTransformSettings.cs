@@ -133,6 +133,9 @@ namespace Addin.Transform
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("citation", "lc"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("definition", "d"));
 
+				//for Comparative African WordList
+				pairs.Add(ChangePair.CreateFullMarkerReplacement("CAWL_en", "nb"));
+
 				if (!String.IsNullOrEmpty(_vernacularLanguageWritingSystemId))
 				{
 					pairs.Add(

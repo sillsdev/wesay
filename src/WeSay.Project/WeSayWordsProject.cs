@@ -547,7 +547,7 @@ namespace WeSay.Project
 
 		}
 
-		private IEnumerable<string> GetIdsOfSingleOptionFields()
+		public IEnumerable<string> GetIdsOfSingleOptionFields()
 		{
 			foreach (Field field in DefaultViewTemplate.Fields)
 			{
@@ -556,7 +556,7 @@ namespace WeSay.Project
 			}
 		}
 
-		private OptionsList GetSemanticDomainsList()
+		public OptionsList GetSemanticDomainsList()
 		{
 			return GetOptionsList(LexSense.WellKnownProperties.SemanticDomainDdp4);
 		}

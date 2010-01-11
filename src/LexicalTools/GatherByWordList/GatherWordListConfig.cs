@@ -40,7 +40,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
 		{
-			return taskConfiguration is GatherWordListConfig && _catalog == ((GatherWordListConfig)taskConfiguration).Catalog;
+			return taskConfiguration is GatherWordListConfig && WordListFileName == ((GatherWordListConfig)taskConfiguration).WordListFileName;
 		}
 
 		protected WordListCatalog Catalog

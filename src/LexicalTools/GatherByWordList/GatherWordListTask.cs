@@ -1,30 +1,31 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Palaso.Code;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
-using Palaso.Misc;
+using Palaso.Lift.Options;
+using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.Text;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
-using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.GatherByWordList
 {
 	public class GatherWordListTask: WordGatheringTaskBase
 	{
-		private readonly string _wordListFileName;
+		private readonly string _lexemeFormListFileName;
 		private GatherWordListControl _gatherControl;
-		private List<string> _words;
+		private List<LexEntry> _words;
 		private int _currentWordIndex;
 		private readonly string _writingSystemIdForWordListWords;
 		private readonly WritingSystem _lexicalUnitWritingSystem;
-		// private bool _suspendNotificationOfNavigation=false;
 
 		public GatherWordListTask(IGatherWordListConfig config,
 									LexEntryRepository lexEntryRepository,
@@ -52,7 +53,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				_lexicalUnitWritingSystem = firstWS;
 			}
 
-			_wordListFileName = config.WordListFileName;
+			_lexemeFormListFileName = config.WordListFileName;
 			_words = null;
 			_writingSystemIdForWordListWords = config.WordListWritingSystemId;
 		}
@@ -62,12 +63,12 @@ namespace WeSay.LexicalTools.GatherByWordList
 			string pathLocal =
 					Path.Combine(
 							WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
-							_wordListFileName);
+							_lexemeFormListFileName);
 			string pathToUse = pathLocal;
 			if (!File.Exists(pathLocal))
 			{
 				string pathInProgramDir = Path.Combine(BasilProject.ApplicationCommonDirectory,
-													   _wordListFileName);
+													   _lexemeFormListFileName);
 				pathToUse = pathInProgramDir;
 				if (!File.Exists(pathToUse))
 				{
@@ -78,10 +79,36 @@ namespace WeSay.LexicalTools.GatherByWordList
 					return;
 				}
 			}
+			_words = new List<LexEntry>();
+			if(".lift"==Path.GetExtension(pathToUse).ToLower())
+			{
+				LoadLift(pathToUse);
+			}
+			else
+			{
+				LoadSimpleList(pathToUse);
+			}
 
-			_words = new List<string>();
+			NavigateFirstToShow();
+		}
 
-			using (TextReader r = File.OpenText(pathToUse))
+		private void LoadLift(string path)
+		{
+			//Performance wise, the following is not expecting a huge, 10k word list.
+
+			using (var reader = new Palaso.DictionaryServices.Lift.LiftReader(new NullProgressState(),
+				WeSayWordsProject.Project.GetSemanticDomainsList(),
+				WeSayWordsProject.Project.GetIdsOfSingleOptionFields()))
+			using(var m = new MemoryDataMapper<LexEntry>())
+			{
+				reader.Read(path, m);
+				_words.AddRange(from RepositoryId repositoryId in m.GetAllItems() select m.GetItem(repositoryId));
+			}
+		}
+
+		private void LoadSimpleList(string path)
+		{
+			using (TextReader r = File.OpenText(path))
 			{
 				do
 				{
@@ -94,13 +121,16 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 					if (!string.IsNullOrEmpty(s))//skip blank lines
 					{
-						_words.Add(s);
+						var entry = new LexEntry();
+						entry.LexicalForm.SetAlternative(_writingSystemIdForWordListWords, s);
+						var sense = new LexSense(entry);
+						sense.Gloss.SetAlternative(_writingSystemIdForWordListWords, s);
+						entry.Senses.Add(sense);
+						_words.Add(entry);
 					}
 				}
 				while (true);
 			}
-
-			NavigateFirstToShow();
 		}
 
 		public bool IsTaskComplete
@@ -131,9 +161,22 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 		}
 
-		public string CurrentWordFromWordlist
+		public string CurrentLexemeForm
 		{
-			get { return _words[CurrentIndexIntoWordlist]; }
+			get
+			{
+				return CurrentTemplateLexicalEntry.LexicalForm.GetExactAlternative(_writingSystemIdForWordListWords);
+			}
+		}
+
+		public LexEntry CurrentTemplateLexicalEntry
+		{
+			get
+			{
+				Guard.Against(CurrentIndexIntoWordlist >= _words.Count, "CurrentIndexIntoWordlist must be < _words.Count");
+				Guard.Against(_words.Count == 0, "There are no words in this list.");
+				return _words[CurrentIndexIntoWordlist];
+			}
 		}
 
 		public bool CanNavigateNext
@@ -158,8 +201,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			get { return _currentWordIndex; }
 			set
 			{
+				Guard.Against(value < 0, "_currentWordIndex must be > 0");
 				_currentWordIndex = value;
-				Debug.Assert(CurrentIndexIntoWordlist >= 0);
 
 				//nb: (CurrentWordIndex == _words.Count) is used to mark the "all done" state:
 
@@ -196,19 +239,49 @@ namespace WeSay.LexicalTools.GatherByWordList
 			get
 			{
 				var m = new MultiText();
-				m.SetAlternative(_writingSystemIdForWordListWords, CurrentWordFromWordlist);
+				m.SetAlternative(_writingSystemIdForWordListWords, CurrentLexemeForm);
 				return m;
 			}
 		}
 
 		public void WordCollected(MultiText newVernacularWord)
 		{
-			var sense = new LexSense();
-			sense.Definition.MergeIn(CurrentWordAsMultiText);
-			sense.Gloss.MergeIn(CurrentWordAsMultiText);
+//            var sense = new LexSense();
+//            sense.Definition.MergeIn(CurrentWordAsMultiText);
+//            sense.Gloss.MergeIn(CurrentWordAsMultiText);
+
+//            var templateSense = CurrentTemplateLexicalEntry.Senses.FirstOrDefault();
+//            if(templateSense !=null)
+//            {
+//                foreach (var optionProperty in templateSense.Properties.Where(p => p.Value.GetType() == typeof(OptionRefCollection)))
+//                {
+//                    var templateRefs = templateSense.GetProperty<OptionRefCollection>(optionProperty.Key);
+//                    var destinationOptionRefs =
+//                        sense.GetOrCreateProperty<OptionRefCollection>(optionProperty.Key);
+//                    destinationOptionRefs.AddRange(templateRefs.Keys);
+//                }
+//
+//                foreach (var optionProperty in templateSense.Properties.Where(p => p.Value.GetType() == typeof(OptionRef)))
+//                {
+//                    var optionRef = templateSense.GetProperty<OptionRef>(optionProperty.Key);
+//                    sense.GetOrCreateProperty<OptionRef>(optionProperty.Key).Key = optionRef.Key;
+//                }
+//
+//                foreach (var textProperty in templateSense.Properties.Where(p=>p.Value.GetType()==typeof(MultiText)))
+//                {
+//                    var target = sense.GetOrCreateProperty<MultiText>(textProperty.Key);
+//                    foreach (var form in ((MultiText)textProperty.Value).Forms)
+//                    {
+//                        target.SetAlternative(form.WritingSystemId,form.Form);
+//                    }
+//                }
+//            }
+			//sens
 			//we use this for matching up, and well, it probably is a good gloss
 
-			AddSenseToLexicon(newVernacularWord, sense);
+		  //  AddSenseToLexicon(newVernacularWord, sense);
+			var sense = CurrentTemplateLexicalEntry.Senses.FirstOrDefault();
+			AddSenseToLexicon(newVernacularWord,sense);
 		}
 
 		/// <summary>
@@ -216,6 +289,24 @@ namespace WeSay.LexicalTools.GatherByWordList
 		/// </summary>
 		private void AddSenseToLexicon(MultiTextBase lexemeForm, LexSense sense)
 		{
+			var definition = sense.Definition;
+			if(definition.Empty)
+			{
+				foreach (var form in sense.Gloss.Forms)
+				{
+					definition.SetAlternative(form.WritingSystemId, form.Form);
+				}
+			}
+
+			var gloss = sense.Gloss;
+			if (gloss.Empty)
+			{
+				foreach (var form in sense.Definition.Forms)
+				{
+					gloss.SetAlternative(form.WritingSystemId, form.Form);
+				}
+			}
+
 			//review: the desired semantics of this find are unclear, if we have more than one ws
 			ResultSet<LexEntry> entriesWithSameForm =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(
@@ -332,13 +423,13 @@ namespace WeSay.LexicalTools.GatherByWordList
 				{
 					if (sense.Gloss.ContainsAlternative(_writingSystemIdForWordListWords))
 					{
-						if (sense.Gloss[_writingSystemIdForWordListWords] == CurrentListWord)
+						if (sense.Gloss[_writingSystemIdForWordListWords] == CurrentLexemeForm)
 						{
 							//since we copy the gloss into the defniition, too, if that hasn't been
 							//modified, then we don't want to let it being non-empty keep us from
 							//removing the sense. We're trying to enable typo correcting.
 							if (sense.Definition[_writingSystemIdForWordListWords] ==
-								CurrentListWord)
+								CurrentLexemeForm)
 							{
 								sense.Definition.SetAlternative(_writingSystemIdForWordListWords,
 																null);
@@ -350,7 +441,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 							{
 								//removing the gloss didn't make it empty. So repent of removing the gloss.
 								sense.Gloss.SetAlternative(_writingSystemIdForWordListWords,
-														   CurrentListWord);
+														   CurrentLexemeForm);
 							}
 						}
 					}
@@ -367,9 +458,6 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 		}
 
-		private string CurrentListWord
-		{
-			get { return _words[_currentWordIndex]; }
-		}
+
 	}
 }
