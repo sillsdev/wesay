@@ -1,5 +1,6 @@
 <project name="WeSay Build" default="build">
 	<property name="configuration" value="debug"/>
+	<property name="platform" value="x86"/>
 	<property name="nant.settings.currentframework" value="net-2.0" />
 
 	<target name="clean" description="Delete all previously compiled binaries.">
@@ -102,7 +103,7 @@
 				<include name="common/*" />
 			</fileset>
 		</copy>
-		<solution configuration="${configuration}" solutionfile="../src/wesay.sln">
+		<solution configuration="${configuration}" platform ="${platform}" solutionfile="../src/wesay.sln">
 		</solution>
 		<property name="expected.output" value="../output/${configuration}/WeSay.App.exe"/>
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
