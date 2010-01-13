@@ -8,8 +8,8 @@ Standards-Version: 3.7.3
 Package: wesay
 Section: editors
 Architecture: any
-Depends: libmono-i18n2.0-cil (>=2.0), libmono0 (>=2.0), libmono-corlib2.0-cil (>= 2.0), libmono-system2.0-cil (>=2.0), libmono-system-runtime2.0-cil (>= 2.0), libicu-cil, libmono-winforms2.0-cil
-Conflicts: wesay-stable, scim-panelcontroller (>=1.0.0)
+Depends: libmono-i18n2.0-cil (>=2.0), libmono0 (>=2.0), libmono-corlib2.0-cil (>= 2.0), libmono-system2.0-cil (>=2.0), libmono-system-runtime2.0-cil (>= 2.0), libicu-cil, libmono-winforms2.0-cil, scim-panelcontroller (>=1.0.1)
+Conflicts: wesay-stable
 Description: WeSay, a dictionary creation tool
  Wesay helps people build a dictionary in their own language. It has
  various ways to help native speakers to think of words in their
