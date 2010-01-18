@@ -199,6 +199,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 			_listWritingSystem = writingSystem;
 
+			_recordsListBox.WritingSystem = _listWritingSystem;
+
 			LoadRecords();
 			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
 
@@ -206,9 +208,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			// it is costing us an extra second, as we set the record
 			// to the first one, then later set it to the one we actually want.
 			//  SetRecordToBeEdited(CurrentRecord);
-
-
-			_recordsListBox.WritingSystem = _listWritingSystem;
 
 			int originalHeight = _findText.Height;
 			_findText.ItemFilterer = FindClosestAndNextClosestAndPrefixedForms;

@@ -421,7 +421,14 @@ namespace WeSay.UI
 				{
 					flags |= TextFormatFlags.RightToLeft;
 				}
-				TextRenderer.DrawText(e.Graphics, e.Item.Text, e.Item.Font, bounds, textColor, flags);
+				if (e.Item.Text.Equals("(No Gloss)"))
+				{
+					TextRenderer.DrawText(e.Graphics, e.Item.Text, SystemFonts.DefaultFont, bounds, textColor, flags);
+				}
+				else
+				{
+					TextRenderer.DrawText(e.Graphics, e.Item.Text, Font, bounds, textColor, flags);
+				}
 
 				if (backgroundBrushNeedsDisposal)
 				{
