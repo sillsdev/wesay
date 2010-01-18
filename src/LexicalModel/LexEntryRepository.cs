@@ -501,15 +501,25 @@ namespace WeSay.LexicalModel
 						int senseNumber = 0;
 						foreach (LexSense sense in entryToQuery.Senses)
 						{
-							string rawDefinition = sense.Definition[writingSystem.Id];
-							List<string> definitions = GetTrimmedElementsSeperatedBySemiColon(rawDefinition);
+							List<string> definitions = new List<string>();
+							List<string> glosses = new List<string>();
 
+							string rawDefinition = sense.Definition[writingSystem.Id];
 							string rawGloss = sense.Gloss[writingSystem.Id];
-							List<string> glosses = GetTrimmedElementsSeperatedBySemiColon(rawGloss);
+
+							if(writingSystem.Id.Equals("en"))
+							{
+								definitions = GetTrimmedElementsSeperatedBySemiColon(rawDefinition);
+								glosses = GetTrimmedElementsSeperatedBySemiColon(rawGloss);
+							}
+							else
+							{
+								definitions.Add(rawDefinition);
+								glosses.Add(rawGloss);
+							}
 
 							List<string> definitionAndGlosses = new List<string>();
 							definitionAndGlosses = MergeListsWhileExcludingDoublesAndEmptyStrings(definitions, glosses);
-
 
 							if(definitionAndGlosses.Count == 0)
 							{
