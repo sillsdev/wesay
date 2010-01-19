@@ -315,355 +315,382 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishDefinitionContainsOnlySemiColon_ReturnsListWithNullRecord()
+		public void GetAllEntriesSortedByDefinition_UnicodeDefinitionContainsOnlySemiColon_ReturnsListWithNullRecord()
 		{
 			LexEntry lexEntryWithDefinition = _lexEntryRepository.CreateItem();
 			lexEntryWithDefinition.Senses.Add(new LexSense());
-			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("de", ";");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("UniWS", ";");
+			WritingSystem unicodeWS = new WritingSystem("en", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
 			Assert.AreEqual(null, listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishGlossContainsOnlySemiColon_ReturnsListWithNullRecord()
+		public void GetAllEntriesSortedByDefinition_UnicodeGlossContainsOnlySemiColon_ReturnsListWithNullRecord()
 		{
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("en", ";");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("UniWS", ";");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
 			Assert.AreEqual(null, listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishDefinitionAndGlossAreIdenticalContainsOnlySemiColon_ReturnsListWithOneNullRecord()
+		public void GetAllEntriesSortedByDefinition_UnicodeDefinitionAndGlossAreIdenticalContainsOnlySemiColon_ReturnsListWithOneNullRecord()
 		{
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Definition.SetAlternative("en", ";");
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("en", ";");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithGloss.Senses[0].Definition.SetAlternative("UniWS", ";");
+			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("UniWS", ";");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
 			Assert.AreEqual(null, listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishDefinitionAndGlossAreIdenticalAndHaveTwoIdenticalWordsSeperatedBySemiColon_ReturnsListWithTwoRecords()
+		public void GetAllEntriesSortedByDefinition_UnicodeDefinitionAndGlossAreIdenticalAndHaveTwoIdenticalWordsSeperatedBySemiColon_ReturnsListWithTwoRecords()
 		{
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Definition.SetAlternative("en", "en Word1;en Word2");
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("en", "en Word1;en Word2");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1;UniWS Word2");
+			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1;UniWS Word2");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("en Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishDefinitionHasTwoIdenticalWordsSeperatedBySemiColon_ReturnsListWithOnlyOneRecord()
+		public void GetAllEntriesSortedByDefinition_UnicodeDefinitionHasTwoIdenticalWordsSeperatedBySemiColon_ReturnsListWithOnlyOneRecord()
 		{
 			LexEntry lexEntryWithDefinition = _lexEntryRepository.CreateItem();
 			lexEntryWithDefinition.Senses.Add(new LexSense());
-			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("en", "en Word1;en Word1");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1;UniWS Word1");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishGlossHasTwoIdenticalWordsSeperatedBySemiColon_ReturnsListWithOnlyOneRecord()
+		public void GetAllEntriesSortedByDefinition_UnicodeGlossHasTwoIdenticalWordsSeperatedBySemiColon_ReturnsListWithOnlyOneRecord()
 		{
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("en", "en Word1;en Word1");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1;UniWS Word1");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishDefinitionContainsSemiColon_DefinitionIsSplitAtSemiColonAndEachPartReturned()
+		public void GetAllEntriesSortedByDefinition_UnicodeDefinitionContainsSemiColon_DefinitionIsSplitAtSemiColonAndEachPartReturned()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "en Word2;en Word1");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word2;UniWS Word1");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("en Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishGlossContainsSemiColon_GlossIsSplitAtSemiColonAndEachPartReturned()
+		public void GetAllEntriesSortedByDefinition_UnicodeGlossContainsSemiColon_GlossIsSplitAtSemiColonAndEachPartReturned()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "en Word2;en Word1");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word2;UniWS Word1");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("en Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishDefinitionContainsSemiColon_DefinitionIsSplitAtSemiColonAndExtraWhiteSpaceStrippedAndEachPartReturned()
+		public void GetAllEntriesSortedByDefinition_UnicodeDefinitionContainsSemiColon_DefinitionIsSplitAtSemiColonAndExtraWhiteSpaceStrippedAndEachPartReturned()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "en Word2; en Word1");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word2; UniWS Word1");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("en Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishGlossContainsSemiColon_GlossIsSplitAtSemiColonAndExtraWhiteSpaceStrippedAndEachPartReturned()
+		public void GetAllEntriesSortedByDefinition_UnicodeGlossContainsSemiColon_GlossIsSplitAtSemiColonAndExtraWhiteSpaceStrippedAndEachPartReturned()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "en Word1; en Word2");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1; UniWS Word2");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("en Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishDefinitionAndGlossAreIdenticalAndContainSemiColon_DefinitionIsSplitAtSemiColonAndExtraWhiteSpaceStrippedAndEachPartReturned()
+		public void GetAllEntriesSortedByDefinition_UnicodeDefinitionAndGlossAreIdenticalAndContainSemiColon_DefinitionIsSplitAtSemiColonAndExtraWhiteSpaceStrippedAndEachPartReturned()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "en Word1; en Word2");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "en Word1; en Word2");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1; UniWS Word2");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1; UniWS Word2");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("en Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishDefinitionAndGlossAreIdenticalAndContainSemiColon_DefinitionIsSplitAtSemiColonAndEachPartReturned()
+		public void GetAllEntriesSortedByDefinition_UnicodeDefinitionAndGlossAreIdenticalAndContainSemiColon_DefinitionIsSplitAtSemiColonAndEachPartReturned()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "en Word1;en Word2");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "en Word1;en Word2");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1;UniWS Word2");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1;UniWS Word2");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("en Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishDefinitionContainSemiColonAndOneElementIsIdenticalToGloss_IdenticalElementIsReturnedOnlyOnce()
+		public void GetAllEntriesSortedByDefinition_UnicodeDefinitionContainSemiColonAndOneElementIsIdenticalToGloss_IdenticalElementIsReturnedOnlyOnce()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "en Word1; en Word2");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "en Word1");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1; UniWS Word2");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("en Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishGlossContainSemiColonAndOneElementIsIdenticalToDefinition_IdenticalElementIsReturnedOnlyOnce()
+		public void GetAllEntriesSortedByDefinition_UnicodeGlossContainSemiColonAndOneElementIsIdenticalToDefinition_IdenticalElementIsReturnedOnlyOnce()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "en Word1");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "en Word1; en Word2");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1; UniWS Word2");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("en Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_EnglishDefinitionAndGlossContainSemiColonAndSomeElementsAreIdentical_IdenticalElementsAreReturnedOnlyOnce()
+		public void GetAllEntriesSortedByDefinition_UnicodeDefinitionAndGlossContainSemiColonAndSomeElementsAreIdentical_IdenticalElementsAreReturnedOnlyOnce()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "en Word1;en Word2; en Word3");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "en Word1; en Word3; en Word4");
-			WritingSystem german = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1;UniWS Word2; UniWS Word3");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1; UniWS Word3; UniWS Word4");
+			WritingSystem unicodeWS = new WritingSystem("UniWS", SystemFonts.DefaultFont);
+			unicodeWS.IsUnicode = true;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(4, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("en Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("en Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
-			Assert.AreEqual("en Word3", listOfLexEntriesSortedByDefinition[2]["Form"]);
-			Assert.AreEqual("en Word4", listOfLexEntriesSortedByDefinition[3]["Form"]);
+			Assert.AreEqual("UniWS Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("UniWS Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("UniWS Word3", listOfLexEntriesSortedByDefinition[2]["Form"]);
+			Assert.AreEqual("UniWS Word4", listOfLexEntriesSortedByDefinition[3]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishDefinitionContainsOnlySemiColon_ReturnsListWithOneRecord()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeDefinitionContainsOnlySemiColon_ReturnsListWithOneRecord()
 		{
 			LexEntry lexEntryWithDefinition = _lexEntryRepository.CreateItem();
 			lexEntryWithDefinition.Senses.Add(new LexSense());
-			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("de", ";");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("nonUniWs", ";");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
 			Assert.AreEqual(";", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishGlossContainsOnlySemiColon_ReturnsListWithOneRecord()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeGlossContainsOnlySemiColon_ReturnsListWithOneRecord()
 		{
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("de", ";");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("nonUniWs", ";");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
 			Assert.AreEqual(";", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishDefinitionAndGlossAreIdenticalContainsOnlySemiColon_ReturnsListWithOneRecord()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeDefinitionAndGlossAreIdenticalContainsOnlySemiColon_ReturnsListWithOneRecord()
 		{
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Definition.SetAlternative("de", ";");
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("de", ";");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithGloss.Senses[0].Definition.SetAlternative("nonUniWs", ";");
+			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("nonUniWs", ";");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
 			Assert.AreEqual(";", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishDefinitionAndGlossAreIdenticalAndHaveTwoIdenticalWordsSeperatedBySemiColon_ReturnsListWithOneRecord()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeDefinitionAndGlossAreIdenticalAndHaveTwoIdenticalWordsSeperatedBySemiColon_ReturnsListWithOneRecord()
 		{
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Definition.SetAlternative("de", "de Word1;de Word2");
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("de", "de Word1;de Word2");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word1;nonUniWs Word2");
+			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1;nonUniWs Word2");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1;de Word2", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("nonUniWs Word1;nonUniWs Word2", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishDefinitionContainsSemiColon_DefinitionIsNotSplitAtSemiColon()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeDefinitionContainsSemiColon_DefinitionIsNotSplitAtSemiColon()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word2;de Word1");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word2;nonUniWs Word1");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word2;de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("nonUniWs Word2;nonUniWs Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishGlossContainsSemiColon_GlossIsNotSplitAtSemiColon()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeGlossContainsSemiColon_GlossIsNotSplitAtSemiColon()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word2;de Word1");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word2;nonUniWs Word1");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word2;de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("nonUniWs Word2;nonUniWs Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishDefinitionContainsSemiColonFollowedByWhitespace_DefinitionIsNotSplitAtSemiColon()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeDefinitionContainsSemiColonFollowedByWhitespace_DefinitionIsNotSplitAtSemiColon()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word2; de Word1");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word2; nonUniWs Word1");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word2; de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("nonUniWs Word2; nonUniWs Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishGlossContainsSemiColonFollowedByWhiteSpace_GlossIsNotSplitAtSemiColon()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeGlossContainsSemiColonFollowedByWhiteSpace_GlossIsNotSplitAtSemiColon()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1; de Word2");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word2");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1; de Word2", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("nonUniWs Word1; nonUniWs Word2", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishDefinitionAndGlossAreIdenticalAndContainSemiColon_DefinitionIsNotSplitAtSemiColonOneRecordReturned()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeDefinitionAndGlossAreIdenticalAndContainSemiColon_DefinitionIsNotSplitAtSemiColonOneRecordReturned()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1; de Word2");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1; de Word2");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word2");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word2");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1; de Word2", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("nonUniWs Word1; nonUniWs Word2", listOfLexEntriesSortedByDefinition[0]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishDefinitionContainSemiColonAndOneElementIsIdenticalToGloss_NotSplitAtSemiColonTwoRecordsReturned()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeDefinitionContainSemiColonAndOneElementIsIdenticalToGloss_NotSplitAtSemiColonTwoRecordsReturned()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1; de Word2");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word2");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word1; de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("nonUniWs Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("nonUniWs Word1; nonUniWs Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishGlossContainSemiColonAndOneElementIsIdenticalToDefinition_NotSplitAtSemiColonTwoRecordsReturned()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeGlossContainSemiColonAndOneElementIsIdenticalToDefinition_NotSplitAtSemiColonTwoRecordsReturned()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1; de Word2");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word1");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word2");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word1; de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("nonUniWs Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("nonUniWs Word1; nonUniWs Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_NonEnglishDefinitionAndGlossContainSemiColonAndSomeElementsAreIdentical_NotSplitAtSemiColonTwoRecordsReturned()
+		public void GetAllEntriesSortedByDefinition_NonUnicodeDefinitionAndGlossContainSemiColonAndSomeElementsAreIdentical_NotSplitAtSemiColonTwoRecordsReturned()
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1;de Word2; de Word3");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1; de Word3; de Word4");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word1;nonUniWs Word2; nonUniWs Word3");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word3; nonUniWs Word4");
+			WritingSystem nonUnicodeWs = new WritingSystem("nonUniWs", SystemFonts.DefaultFont);
+			nonUnicodeWs.IsUnicode = false;
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1; de Word3; de Word4", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word1;de Word2; de Word3", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("nonUniWs Word1; nonUniWs Word3; nonUniWs Word4", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("nonUniWs Word1;nonUniWs Word2; nonUniWs Word3", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
