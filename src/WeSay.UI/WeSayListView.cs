@@ -421,13 +421,14 @@ namespace WeSay.UI
 				{
 					flags |= TextFormatFlags.RightToLeft;
 				}
-				if (e.Item.Text.Equals("(No Gloss)"))
+				if (e.Item.Text.Equals("(No Gloss)") || e.Item.Text.Equals("(Empty)"))
 				{
 					TextRenderer.DrawText(e.Graphics, e.Item.Text, SystemFonts.DefaultFont, bounds, textColor, flags);
 				}
 				else
 				{
-					TextRenderer.DrawText(e.Graphics, e.Item.Text, Font, bounds, textColor, flags);
+					string textMinusAccelerators = e.Item.Text.Replace("&","&&");
+					TextRenderer.DrawText(e.Graphics, textMinusAccelerators, Font, bounds, textColor, flags);
 				}
 
 				if (backgroundBrushNeedsDisposal)
