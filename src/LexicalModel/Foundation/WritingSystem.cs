@@ -49,6 +49,7 @@ namespace WeSay.LexicalModel.Foundation
 		private SortComparer _sortComparer;
 		private SortKeyGenerator _sortKeyGenerator;
 		private string _sortUsing;
+		private bool _isUnicode = true;
 
 		public WritingSystem(XmlNode node): this()
 		{
@@ -291,6 +292,13 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get { return _isAudio; }
 			set { _isAudio = value; }
+		}
+
+		[ReflectorProperty("IsUnicode", Required = false)]
+		public bool IsUnicode
+		{
+			get { return _isUnicode; }
+			set { _isUnicode = value; }
 		}
 
 		#region IComparer<string> Members

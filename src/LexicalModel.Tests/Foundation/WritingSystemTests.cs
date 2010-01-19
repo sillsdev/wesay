@@ -33,7 +33,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			string s = NetReflector.Write(ws);
 			string expected = "<WritingSystem><Abbreviation>one</Abbreviation><FontName>" +
 							  font.Name + "</FontName><FontSize>" + font.Size +
-							  "</FontSize><Id>one</Id><IsAudio>False</IsAudio><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>" +
+							  "</FontSize><Id>one</Id><IsAudio>False</IsAudio><IsUnicode>True</IsUnicode><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>" +
 							  "<SpellCheckingId>one</SpellCheckingId></WritingSystem>";
 			Assert.AreEqual(expected, s);
 		}
@@ -79,6 +79,22 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
 			Assert.Greater(writingSystem.Compare("\u00c8dit", "Ed\u00edt"), 0);
+		}
+
+		[Test]
+		public void Constructor_IsAudio_SetToFalse()
+		{
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
+			Assert.IsFalse(writingSystem.IsAudio);
+		}
+
+		[Test]
+		public void Constructor_IsUnicode_SetToTrue()
+		{
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
+			Assert.IsTrue(writingSystem.IsUnicode);
 		}
 
 		[Test]
