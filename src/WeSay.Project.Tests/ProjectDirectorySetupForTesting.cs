@@ -12,7 +12,6 @@ namespace WeSay.Project.Tests
 		private bool _disposed;
 		private readonly string _experimentDir;
 		private readonly string _projectName = "test";
-	  //  private readonly string _pathToTasksBase;
 		private string _projectDirectoryName;
 
 		public ProjectDirectorySetupForTesting(string xmlOfEntries)
@@ -23,16 +22,6 @@ namespace WeSay.Project.Tests
 			_projectDirectoryName = Path.GetRandomFileName();
 			_experimentDir = MakeDir(Path.GetTempPath(), ProjectDirectoryName);
 			WeSayWordsProject.CreateEmptyProjectFiles(_experimentDir, ProjectName);
-//            using (WeSayWordsProject p = new WeSayWordsProject())
-//            {
-//                p.PathToLiftFile = Path.Combine(_experimentDir, ProjectName + ".lift");
-//           //     p.CreateEmptyProjectFiles(_experimentDir);
-//                Assert.IsTrue(File.Exists(p.PathToConfigFile));
-//                _pathToTasksBase = Path.Combine(p.ProjectDirectoryPath, "temptasks.xml");
-//                File.Copy(p.PathToConfigFile, _pathToTasksBase);
-//                p.EditorsSaveNow += p_EditorsSaveNow;
-//                p.Save();
-//            }
 
 			//overwrite the blank lift file
 			string liftContents =
@@ -44,27 +33,6 @@ namespace WeSay.Project.Tests
 
 		}
 
-		private void p_EditorsSaveNow(object sender, EventArgs e)
-		{
-			//ok, the hard part is that now we have a config with tasks, but no view template.
-//            XmlDocument doc = new XmlDocument();
-//            doc.Load(_pathToTasksBase);
-//            XmlWriter writer = (XmlWriter) sender;
-//            IList<ViewTemplate> viewTemplates = WeSayWordsProject.Project.ViewTemplates;
-//            writer.WriteStartElement("components");
-//            foreach (ViewTemplate template in viewTemplates)
-//            {
-//                template.Write(writer);
-//            }
-//            writer.WriteEndElement();
-//
-//            writer.WriteStartElement("tasks");
-//            foreach (XmlNode taskNode in doc.SelectNodes("//task"))
-//            {
-//                taskNode.WriteTo(writer);
-//            }
-//            writer.WriteEndElement();
-		}
 
 		public string PathToDirectory
 		{

@@ -122,13 +122,10 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="DelegateQuery.cs" />
 	<Compile Include="Permuter.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Query.cs" />
 	<Compile Include="QueryAdapter.cs" />
-	<Compile Include="ResultSetCache.cs" />
-	<Compile Include="ResultSetCacheManager.cs" />
 	<Compile Include="SynchronicRepository.cs" />
 	<Compile Include="Properties\InternalsVisible.cs" />
   </ItemGroup>

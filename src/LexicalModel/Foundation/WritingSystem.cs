@@ -8,13 +8,14 @@ using System.Globalization;
 using System.Xml;
 using Enchant;
 using Exortech.NetReflector;
+using Palaso.I8N;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.WritingSystems.Collation;
 using Spart;
+using Chorus;
 
-namespace WeSay.Foundation
+namespace WeSay.LexicalModel.Foundation
 {
 	public enum CustomSortRulesType
 	{
@@ -377,7 +378,7 @@ namespace WeSay.Foundation
 					{
 						Logger.WriteMinorEvent(e.Message);
 						Logger.WriteMinorEvent(
-								"Failed to parse simple sort rules, falling back to system sorting");
+							"Failed to parse simple sort rules, falling back to system sorting");
 					}
 				}
 
@@ -391,7 +392,7 @@ namespace WeSay.Foundation
 					{
 						Logger.WriteMinorEvent(e.Message);
 						Logger.WriteMinorEvent(
-								"Failed to parse ICU sort rules, falling back to system sorting");
+							"Failed to parse ICU sort rules, falling back to system sorting");
 					}
 				}
 				else
@@ -535,13 +536,13 @@ namespace WeSay.Foundation
 			}
 
 			public override StandardValuesCollection GetStandardValues(
-					ITypeDescriptorContext context)
+				ITypeDescriptorContext context)
 			{
 				List<String> keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
 
 				foreach (KeyboardController.KeyboardDescriptor keyboard in
-						KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All))
+					KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All))
 				{
 					keyboards.Add(keyboard.Name);
 				}
@@ -570,7 +571,7 @@ namespace WeSay.Foundation
 			public delegate IList<string> GetInstalledSpellCheckingIdsDelegate();
 
 			private GetInstalledSpellCheckingIdsDelegate _getInstalledSpellCheckingIdsStrategy =
-					DefaultGetInstalledSpellCheckingIdsStrategy;
+				DefaultGetInstalledSpellCheckingIdsStrategy;
 
 			public GetInstalledSpellCheckingIdsDelegate GetInstalledSpellCheckingIdsStrategy
 			{
@@ -580,7 +581,7 @@ namespace WeSay.Foundation
 					if (value == null)
 					{
 						_getInstalledSpellCheckingIdsStrategy =
-								DefaultGetInstalledSpellCheckingIdsStrategy;
+							DefaultGetInstalledSpellCheckingIdsStrategy;
 					}
 					else
 					{
@@ -609,13 +610,19 @@ namespace WeSay.Foundation
 				{
 					throw GetConvertToException(value, destinationType);
 				}
+				if( (String) value == "none") //added as Mono bugfix
+				{
+					return "none";
+				}
 				if ((String) value == String.Empty)
 				{
+					Console.WriteLine("Yoyo");
 					return "none";
 				}
 				else
 				{
 					string valueAsString = value.ToString();
+
 					string display;
 					if (!GetInstalledSpellCheckingIdsStrategy().Contains(valueAsString))
 					{
@@ -647,7 +654,7 @@ namespace WeSay.Foundation
 			{
 				if ((String) value == "none")
 				{
-					return String.Empty;
+					return "none"; //String.Empty;
 				}
 				else
 				{
@@ -655,9 +662,9 @@ namespace WeSay.Foundation
 					// we just want the first part so need to strip off any initial whitespace and get the first
 					// whitespace delimited token: en_US
 					string displayNameWhitespaceStrippedFromBeginning =
-							value.ToString().TrimStart(null);
+						value.ToString().TrimStart(null);
 					string[] whitespaceDelimitedTokens =
-							displayNameWhitespaceStrippedFromBeginning.Split(null);
+						displayNameWhitespaceStrippedFromBeginning.Split(null);
 					string id = whitespaceDelimitedTokens[0];
 					return id;
 				}
@@ -681,10 +688,11 @@ namespace WeSay.Foundation
 			}
 
 			public override StandardValuesCollection GetStandardValues(
-					ITypeDescriptorContext context)
+				ITypeDescriptorContext context)
 			{
 				List<String> spellCheckerIds = new List<string>();
-				spellCheckerIds.Add(String.Empty); // for 'none'
+
+				spellCheckerIds.Add("none");//String.Empty); // for 'none' (changed for Mono bug)
 
 				try
 				{
@@ -714,5 +722,6 @@ namespace WeSay.Foundation
 		}
 
 		#endregion
+
 	}
 }

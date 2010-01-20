@@ -43,6 +43,8 @@
 				<include name="LiftIO.dll" />
 				<include name="NetReflector.dll" />
 				<include name="Palaso.dll" />
+				<include name="Palaso.Lift.dll" />
+				<include name="Palaso.DictionaryServices.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="WeSay.Data.dll" />
 				<include name="WeSay.Foundation.dll" />

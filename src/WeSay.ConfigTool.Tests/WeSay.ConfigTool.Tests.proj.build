@@ -34,8 +34,11 @@
 	  </sources>
 	  <references basedir="${project.output.dir}">
 		<include name="Palaso.dll" />
+		<include name="Palaso.Lift.dll" />
+		<include name="Palaso.DictionaryServices.dll" />
 		<include name="Palaso.TestUtilities.dll" />
 		<include name="WeSay.Project.dll" />
+		<include name="WeSay.Project.Tests.dll" />
 		<include name="WeSay.ConfigTool.exe" />
 		<include name="LexicalModel.dll" />
 		<include name="WeSay.Foundation.dll" />

@@ -5,7 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Mono.Addins;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.I8N;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -89,9 +89,12 @@ namespace Addin.Transform.LexiquePro
 					return null;
 				}
 				var cmd = key.GetValue("") as string;
-				cmd = cmd.Replace("/f", "");
-				cmd = cmd.Replace("\"%1\"", "");
-				cmd = cmd.Replace("\"", "");
+				if (cmd != null)
+				{
+					cmd = cmd.Replace("/f", "");
+					cmd = cmd.Replace("\"%1\"", "");
+					cmd = cmd.Replace("\"", "");
+				}
 
 				return cmd;
 			}
@@ -111,10 +114,10 @@ namespace Addin.Transform.LexiquePro
 			{
 				//In Oct 2008, LP didn't understand "plift" yet.
 				var pliftPath = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + "-plift.lift");
-				using (LameProgressDialog dlg = new LameProgressDialog("Exporting to PLift..."))
+				using (var dlg = new LameProgressDialog("Exporting to PLift..."))
 				{
 					dlg.Show();
-					PLiftMaker maker = new PLiftMaker();
+					var maker = new PLiftMaker();
 					maker.MakePLiftTempFile(pliftPath, lexEntryRepository,
 														projectInfo.ServiceProvider.GetService(typeof (ViewTemplate)) as
 														ViewTemplate);

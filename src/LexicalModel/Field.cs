@@ -5,8 +5,9 @@ using System.Diagnostics;
 using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
-using WeSay.Foundation;
-using System.Linq;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel
 {
@@ -113,11 +114,11 @@ namespace WeSay.LexicalModel
 		public static string MakeFieldNameSafe(string text)
 		{
 			//parentheses mess up our greps, don't really belong in xml names
-			char[] charsToRemove = new char[]
-									   {
-											   ' ', '(', ')', '*', ']', '[', '?', '{', '}', '\\', '<', '>',
-											   '+', '&'
-									   };
+			char[] charsToRemove = new[]
+			{
+			   ' ', '(', ')', '*', ']', '[', '?', '{', '}', '\\', '<', '>',
+			   '+', '&'
+			};
 			foreach (char c in charsToRemove)
 			{
 				text = text.Replace(c.ToString(), "");
@@ -244,7 +245,7 @@ namespace WeSay.LexicalModel
 				{
 					case null:
 						throw new ArgumentNullException();
-					case "WeSayDataObject":
+					case "PalasoDataObject":
 					case "LexEntry":
 					case "LexSense":
 					case "LexExampleSentence":
@@ -253,7 +254,7 @@ namespace WeSay.LexicalModel
 					default:
 						throw new ArgumentOutOfRangeException("value",
 															  value,
-															  "className must be WeSayDataObject, LexEntry, LexSense, or LexExampleSentence");
+															  "className must be PalasoDataObject, LexEntry, LexSense, or LexExampleSentence");
 				}
 			}
 		}
@@ -268,7 +269,7 @@ namespace WeSay.LexicalModel
 					return false;
 				}
 
-				if (WeSayDataObject.WellKnownProperties.Contains(FieldName))
+				if (PalasoDataObject.WellKnownProperties.Contains(FieldName))
 				{
 					return false;
 				}
@@ -325,7 +326,11 @@ namespace WeSay.LexicalModel
 		[ReflectorProperty("optionsListFile", Required = false)]
 		public string OptionsListFile
 		{
-			get { return _optionsListFile; }
+			get { // this is about trying to get the win version to stop outputing <optionsListfile>(return)</optionsListFile>(whereas mono doesn't)
+				if(_optionsListFile==null)
+					return null;
+				return _optionsListFile.Trim();
+			}
 			set { _optionsListFile = value; }
 		}
 
@@ -582,7 +587,7 @@ namespace WeSay.LexicalModel
 			{
 				Debug.Assert(node.Name == "writingSystems");
 				Debug.Assert(node != null);
-				List<string> l = new List<string>();
+				var l = new List<string>();
 				foreach (XmlNode n in node.SelectNodes("id"))
 				{
 					l.Add(n.InnerText);
@@ -600,7 +605,7 @@ namespace WeSay.LexicalModel
 	{
 		public override string[] ValidStrings
 		{
-			get { return new string[] {"LexEntry", "LexSense", "LexExampleSentence"}; }
+			get { return new[] {"LexEntry", "LexSense", "LexExampleSentence"}; }
 		}
 	}
 
@@ -608,7 +613,7 @@ namespace WeSay.LexicalModel
 	{
 		public override string[] ValidStrings
 		{
-			get { return new string[] {"MultiText", "Option", "OptionCollection", "RelationToOneEntry"}; }
+			get { return new[] {"MultiText", "Option", "OptionCollection", "RelationToOneEntry"}; }
 		}
 	}
 

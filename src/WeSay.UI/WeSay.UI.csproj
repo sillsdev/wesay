@@ -121,6 +121,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
 	</Reference>
+	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
+	</Reference>
 	<Reference Include="Palaso.Media, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.Media.dll</HintPath>
@@ -155,6 +159,12 @@
 	<Compile Include="AutoCompleteTextBox\ShortCutTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\TextLengthTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\TriggerState.cs" />
+	<Compile Include="BetterLabel.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="BetterLabel.Designer.cs">
+	  <DependentUpon>BetterLabel.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Buttons\AddButton.cs">
 	  <SubType>Component</SubType>
 	</Compile>
@@ -188,6 +198,7 @@
 	<Compile Include="audio\WeSayAudioFieldBox.Designer.cs">
 	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
 	</Compile>
+	<Compile Include="Event.cs" />
 	<Compile Include="TextBoxes\IControlThatKnowsWritingSystem.cs" />
 	<Compile Include="WeSayListView.cs">
 	  <SubType>Component</SubType>
@@ -278,6 +289,10 @@
   <ItemGroup>
 	<EmbeddedResource Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.resx">
 	  <DependentUpon>AutoCompleteWithCreationBox.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="BetterLabel.resx">
+	  <DependentUpon>BetterLabel.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="CheckBoxControl.resx">

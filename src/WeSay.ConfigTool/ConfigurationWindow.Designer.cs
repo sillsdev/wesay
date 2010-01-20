@@ -39,16 +39,17 @@ namespace WeSay.ConfigTool
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this._chooseProjectLocationDialog = new System.Windows.Forms.FolderBrowserDialog();
 			this.toolStrip2 = new System.Windows.Forms.ToolStrip();
 			this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButton9 = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton10 = new System.Windows.Forms.ToolStripButton();
 			this.openProjectInWeSayToolStripMenuItem = new System.Windows.Forms.ToolStripButton();
 			this._versionToolStripLabel = new System.Windows.Forms.ToolStripLabel();
 			this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
 			this._saveACopyForFLEx54ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripHelpButton = new System.Windows.Forms.ToolStripDropDownButton();
+			this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip2.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -91,18 +92,9 @@ namespace WeSay.ConfigTool
 			//
 			// helpToolStripMenuItem
 			//
-			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.aboutToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
 			this.helpToolStripMenuItem.Text = "&Help";
-			//
-			// aboutToolStripMenuItem
-			//
-			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-			this.aboutToolStripMenuItem.Text = "&About WeSay...";
-			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.OnAboutToolStripMenuItem_Click);
 			//
 			// toolStrip2
 			//
@@ -111,10 +103,10 @@ namespace WeSay.ConfigTool
 			this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this.toolStripButton8,
 			this.toolStripButton9,
-			this.toolStripButton10,
 			this.openProjectInWeSayToolStripMenuItem,
 			this._versionToolStripLabel,
-			this.toolStripDropDownButton1});
+			this.toolStripDropDownButton1,
+			this.toolStripHelpButton});
 			this.toolStrip2.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip2.Name = "toolStrip2";
 			this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -146,17 +138,6 @@ namespace WeSay.ConfigTool
 			this.toolStripButton9.ToolTipText = "Open another WeSay project...";
 			this.toolStripButton9.Click += new System.EventHandler(this.OnChooseProject);
 			//
-			// toolStripButton10
-			//
-			this.toolStripButton10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton10.Image = global::WeSay.ConfigTool.Properties.Resources.about;
-			this.toolStripButton10.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton10.Margin = new System.Windows.Forms.Padding(0, 1, 15, 2);
-			this.toolStripButton10.Name = "toolStripButton10";
-			this.toolStripButton10.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButton10.ToolTipText = "About WeSay Configuration Tool...";
-			this.toolStripButton10.Click += new System.EventHandler(this.OnAboutToolStripMenuItem_Click);
-			//
 			// openProjectInWeSayToolStripMenuItem
 			//
 			this.openProjectInWeSayToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -165,7 +146,7 @@ namespace WeSay.ConfigTool
 			this.openProjectInWeSayToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.openProjectInWeSayToolStripMenuItem.Name = "openProjectInWeSayToolStripMenuItem";
 			this.openProjectInWeSayToolStripMenuItem.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.openProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+			this.openProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
 			this.openProjectInWeSayToolStripMenuItem.Text = "Open in WeSay";
 			this.openProjectInWeSayToolStripMenuItem.ToolTipText = "Open this in WeSay";
 			this.openProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.OnOpenThisProjectInWeSay);
@@ -175,7 +156,7 @@ namespace WeSay.ConfigTool
 			this._versionToolStripLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this._versionToolStripLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
 			this._versionToolStripLabel.Name = "_versionToolStripLabel";
-			this._versionToolStripLabel.Size = new System.Drawing.Size(45, 22);
+			this._versionToolStripLabel.Size = new System.Drawing.Size(42, 22);
 			this._versionToolStripLabel.Text = "version";
 			//
 			// toolStripDropDownButton1
@@ -187,7 +168,7 @@ namespace WeSay.ConfigTool
 			this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
 			this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-			this.toolStripDropDownButton1.Size = new System.Drawing.Size(78, 22);
+			this.toolStripDropDownButton1.Size = new System.Drawing.Size(72, 22);
 			this.toolStripDropDownButton1.Text = "FieldWorks";
 			//
 			// _saveACopyForFLEx54ToolStripMenuItem
@@ -196,6 +177,32 @@ namespace WeSay.ConfigTool
 			this._saveACopyForFLEx54ToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
 			this._saveACopyForFLEx54ToolStripMenuItem.Text = "Save a copy for FLEx 5.4...";
 			this._saveACopyForFLEx54ToolStripMenuItem.Click += new System.EventHandler(this.OnSaveACopyForFLEx5Pt4);
+			//
+			// toolStripHelpButton
+			//
+			this.toolStripHelpButton.AutoToolTip = false;
+			this.toolStripHelpButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripHelpButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.helpToolStripMenuItem1,
+			this.aboutToolStripMenuItem1});
+			this.toolStripHelpButton.Image = global::WeSay.ConfigTool.Properties.Resources.about;
+			this.toolStripHelpButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripHelpButton.Name = "toolStripHelpButton";
+			this.toolStripHelpButton.Size = new System.Drawing.Size(29, 22);
+			//
+			// helpToolStripMenuItem1
+			//
+			this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
+			this.helpToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+			this.helpToolStripMenuItem1.Text = "&Help";
+			this.helpToolStripMenuItem1.Click += new System.EventHandler(this.OnHelpToolStrip_Click);
+			//
+			// aboutToolStripMenuItem1
+			//
+			this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
+			this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+			this.aboutToolStripMenuItem1.Text = "&About WeSay";
+			this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.OnAboutToolStrip_Click);
 			//
 			// ConfigurationWindow
 			//
@@ -225,15 +232,16 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStrip toolStrip2;
 		private System.Windows.Forms.ToolStripButton toolStripButton8;
 		private System.Windows.Forms.ToolStripButton toolStripButton9;
-		private System.Windows.Forms.ToolStripButton toolStripButton10;
 		private System.Windows.Forms.ToolStripButton openProjectInWeSayToolStripMenuItem;
 		private System.Windows.Forms.ToolStripLabel _versionToolStripLabel;
 		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
 		private System.Windows.Forms.ToolStripMenuItem _saveACopyForFLEx54ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripDropDownButton toolStripHelpButton;
+		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
 	}
 }

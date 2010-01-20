@@ -6,12 +6,12 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
+using Palaso.I8N;
 
 namespace WeSay.LexicalTools.Dashboard
 {
@@ -91,7 +91,7 @@ namespace WeSay.LexicalTools.Dashboard
 		{
 			_addedAllButtons = false;
 			_title = new DictionaryStatusControl(_lexEntryRepository.CountAllItems());
-			_title.Font = new Font("Arial", 14);
+			_title.Font = new Font(SystemFonts.DefaultFont.FontFamily, 14);
 			_title.BackColor = Color.Transparent;
 			_title.ShowLogo = true;
 			_title.Width = _panel.Width - _title.Margin.Left - _title.Margin.Right;
@@ -635,8 +635,14 @@ namespace WeSay.LexicalTools.Dashboard
 		{
 			if (IsActive)
 			{
-				throw new InvalidOperationException(
-					"Activate should not be called when object is active.");
+//                throw new InvalidOperationException(
+//                    "Activate should not be called when object is active.");
+
+				//jdh, because of WS-15018, which is that if for some strange reason (like you're a tester)
+				//you switch back and forth fast enough, this with through, becuase of the "activateAfterScreenRedraw"
+				//timer business.  So now, just don't try to activate twice
+
+				return;
 			}
 
 			SuspendLayout();
@@ -645,7 +651,10 @@ namespace WeSay.LexicalTools.Dashboard
 				ThingsToMakeButtonsFor = new List<IThingOnDashboard>();
 				foreach (ITask task in WeSayWordsProject.Project.Tasks)
 				{
-					ThingsToMakeButtonsFor.Add(task);
+					if (task.Available)
+					{
+						ThingsToMakeButtonsFor.Add(task);
+					}
 				}
 				foreach (IWeSayAddin action in AddinSet.GetAddinsForUser())
 				{
@@ -696,7 +705,7 @@ namespace WeSay.LexicalTools.Dashboard
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Describe,
 											  Color.FromArgb(85, 142, 213),
 											  Color.FromArgb(185, 205, 229)));
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Refine,
+			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Review,
 											  Color.FromArgb(250, 192, 144),
 											  Color.FromArgb(252, 213, 181)));
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Share,
@@ -734,15 +743,17 @@ namespace WeSay.LexicalTools.Dashboard
 			}
 		}
 
+		public bool Available
+		{
+			get { return true; }
+		}
+
 		public string Description
 		{
 			get { return StringCatalog.Get("~Switch tasks and see current status of tasks"); }
 		}
 
-		public bool MustBeActivatedDuringPreCache
-		{
-			get { return false; }
-		}
+
 
 		public Control Control
 		{

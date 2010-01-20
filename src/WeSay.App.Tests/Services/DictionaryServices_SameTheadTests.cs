@@ -1,4 +1,4 @@
-using System.IO;
+	  #if DictionaryServices
 using NUnit.Framework;
 using Palaso.Services.Dictionary;
 using WeSay.App.Services;
@@ -45,7 +45,7 @@ namespace WeSay.App.Tests.Services
 
 		private void MakeTestLexEntry(string writingSystemId, string lexicalForm)
 		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
+			var entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm.SetAlternative(writingSystemId, lexicalForm);
 			_lexEntryRepository.SaveItem(entry);
 		}
@@ -140,7 +140,7 @@ namespace WeSay.App.Tests.Services
 																		 "voom",
 																		 FindMethods.Exact.ToString());
 			Assert.AreEqual(id, r.ids[0]);
-			string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] {id});
+			string html = _dictionaryServiceProvider.GetHtmlForEntries(new[] {id});
 			Assert.IsTrue(html.Contains("vlah voom!"));
 			Assert.IsTrue(html.Contains("def of voom"));
 		}
@@ -172,3 +172,4 @@ namespace WeSay.App.Tests.Services
 		}
 	}
 }
+#endif

@@ -30,7 +30,7 @@ namespace WeSay.Project.Tests
 			}
 			public string PathToBackupProjectDir
 			{
-				get { return Path.Combine(_backupDir.FolderPath, _projDir.ProjectDirectoryName); }
+				get { return Path.Combine(_backupDir.FolderPath, _projDir.ProjectDirectoryName);}
 			}
 
 			public ChorusBackupMaker BackupMaker
@@ -56,13 +56,13 @@ namespace WeSay.Project.Tests
 
 			public void AssertDirExistsInWorkingDirectory(string s)
 			{
-				string expectedDir = Path.Combine(PathToBackupProjectDir, s);
+				string  expectedDir = Path.Combine(PathToBackupProjectDir, s);
 				Assert.IsTrue(Directory.Exists(expectedDir));
 			}
 
 			public void AssertFileExistsInWorkingDirectory(string s)
 			{
-				string path = Path.Combine(PathToBackupProjectDir, s);
+				string  path = Path.Combine(PathToBackupProjectDir, s);
 				Assert.IsTrue(File.Exists(path));
 			}
 
@@ -74,7 +74,7 @@ namespace WeSay.Project.Tests
 
 			public void AssertFileExistsInRepo(string s)
 			{
-				var r = new HgRepository(PathToBackupProjectDir, new NullProgress());
+				var  r = new HgRepository(PathToBackupProjectDir, new NullProgress());
 				Assert.IsTrue(r.GetFileExistsInRepo(s));
 			}
 		}
@@ -130,14 +130,16 @@ namespace WeSay.Project.Tests
 			ChorusBackupMaker b = new ChorusBackupMaker(new CheckinDescriptionBuilder());
 			b.PathToParentOfRepositories = @"z:\";
 			StringBuilder builder = new StringBuilder();
+			//var dom = new XmlDocument();
+			//dom.LoadXml("<foobar><blah></blah></foobar>");
+
 			using (XmlWriter writer = XmlWriter.Create(builder))
 			{
 				b.Save(writer);
-				using (XmlReader reader = XmlReader.Create(new StringReader(builder.ToString())))
-				{
-					ChorusBackupMaker loadedGuy = ChorusBackupMaker.LoadFromReader(reader, new CheckinDescriptionBuilder());
-					Assert.AreEqual(@"z:\", loadedGuy.PathToParentOfRepositories);
-				}
+				var dom = new XmlDocument();
+				dom.Load(new StringReader(builder.ToString()));
+				ChorusBackupMaker loadedGuy = ChorusBackupMaker.CreateFromDom(dom, new CheckinDescriptionBuilder());
+				Assert.AreEqual(@"z:\", loadedGuy.PathToParentOfRepositories);
 
 			}
 		}

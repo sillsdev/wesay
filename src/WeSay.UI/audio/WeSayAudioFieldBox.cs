@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
 
 namespace WeSay.UI.audio
@@ -41,6 +41,8 @@ namespace WeSay.UI.audio
 					_logger.WriteConciseHistoricalEvent("Deleted Sound");
 				};
 			_shortSoundFieldControl1.BeforeStartingToRecord += new EventHandler(shortSoundFieldControl1_BeforeStartingToRecord);
+
+			this.Height = _shortSoundFieldControl1.Height + 10;
 		}
 
 		void shortSoundFieldControl1_BeforeStartingToRecord(object sender, EventArgs e)

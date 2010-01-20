@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Addin.LiftReports.Properties;
 using Mono.Addins;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.I8N;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
@@ -94,7 +94,7 @@ namespace Addin.LiftReports
 
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			HtmlReport r = new HtmlReport();
+			var r = new HtmlReport();
 			_pathToOutput = r.GenerateReport(projectInfo.PathToLIFT);
 			if (_launchAfterTransform)
 			{

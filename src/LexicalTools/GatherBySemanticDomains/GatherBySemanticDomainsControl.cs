@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains

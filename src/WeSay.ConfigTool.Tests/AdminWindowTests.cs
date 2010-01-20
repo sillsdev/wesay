@@ -9,6 +9,7 @@ using Palaso.Reporting;
 //using WeSay.Foundation.Tests;
 using Palaso.TestUtilities;
 using WeSay.Project;
+using WeSay.Project.Tests;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -55,6 +56,8 @@ namespace WeSay.ConfigTool.Tests
 			Assert.AreNotEqual(before, after);
 		}
 
+
+
 		//stupid nunitforms will freak 'cause window was closed
 		[Test] //, ExpectedException(typeof(FormsTestAssertionException))]
 		public void AfterCreateProjectAndQuitFilesExist()
@@ -96,7 +99,7 @@ namespace WeSay.ConfigTool.Tests
 		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void TryingToOpenNonExistantProjectDoesntCrash()
 		{
-			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig", null);
+			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig");
 		}
 
 		[Test]
@@ -209,6 +212,29 @@ namespace WeSay.ConfigTool.Tests
 		public void ExistingProjectGetsNewTasks()
 		{
 			_window.CreateAndOpenProject(_projectFolder);
+		}
+	}
+
+	/* these are more modern, without use of static, "pretend" project, or the big setup/teardown of the old style */
+
+	[TestFixture]
+	public class MoreAdminWindowTests
+	{
+
+		[Test]
+		public void OpenProject_OpenedWithDirNameWhichDoesNotMatchProjectName_Opens()
+		{
+			using (var projectDir = new ProjectDirectorySetupForTesting(""))
+			using(var window = new ConfigurationWindow(new string[] {}))
+			{
+				Assert.AreNotEqual(
+					Path.GetFileNameWithoutExtension(projectDir.PathToLiftFile),
+					Path.GetFileName(projectDir.PathToDirectory));
+
+				window.DisableBackupAndChorusStuffForTests();
+				window.Show();
+			   Assert.IsTrue(window.OpenProject(projectDir.PathToDirectory));
+			}
 		}
 	}
 }

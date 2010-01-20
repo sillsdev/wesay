@@ -188,6 +188,7 @@
 		<in>
 			<items>
 				<include name="${project.output.dir}/*.Tests.dll" />
+				<exclude name="${project.output.dir}/Palaso*.dll" />
 			</items>
 		</in>
 		<do>
@@ -198,6 +199,7 @@
 				<include name="${filename}" />
 			</assemblies>
 			<categories>
+				<exclude name="DictionaryServices" />
 				<exclude name="MouseSensitive"/>
 				<exclude name="Windows IME"/>
 				<exclude name="Keyman6"/>
@@ -311,6 +313,16 @@
 		<copy file="${path::combine(project.base.dir, 'src/Installer_Linux/sil-wesay-config.desktop')}" tofile="${path::combine(USR_MENU, 'sil-wesay-config.desktop')}" />
 		<copy file="wesay.mono.runner" tofile="${USR_BIN}/wesay" />
 		<copy file="wesay.configtool.mono.runner" tofile="${USR_BIN}/wesay-config" />
+		<copy file="chorus.mono.runner" tofile="${USR_SHARE}/chorus" />
+		<exec program="chmod">
+			<arg value="755" />
+			<arg value="${USR_SHARE}/chorus" />
+		</exec>
+		<copy file="chorusmerge.mono.runner" tofile="${USR_SHARE}/chorusmerge" />
+		<exec program="chmod">
+			<arg value="755" />
+			<arg value="${USR_SHARE}/chorusmerge" />
+		</exec>
 	</target>
 
 

@@ -81,8 +81,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 		{
 			get
 			{
-				return Path.Combine(
-					Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WeSay");
+				return WeSay.Project.WeSayWordsProject.NewProjectDirectory;
 			}
 		}
 

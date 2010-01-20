@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using Palaso.Lift;
+using Palaso.UiBindings;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI

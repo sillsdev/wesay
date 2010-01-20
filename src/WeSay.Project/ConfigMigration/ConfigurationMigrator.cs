@@ -56,6 +56,12 @@ namespace WeSay.Project.ConfigMigration
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='6']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig6To7.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
 			return didMigrate;
 		}
 

@@ -1,6 +1,8 @@
 using System;
+using Palaso.Lift.Options;
+using WeSay.LexicalModel.Foundation.Options;
 
-namespace WeSay.Foundation.Options
+namespace WeSay.LexicalModel.Foundation.Options
 {
 	[CLSCompliant (false)]
 	public class DdpOptionDisplayAdaptor : OptionDisplayAdaptor

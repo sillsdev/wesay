@@ -137,6 +137,14 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
 	</Reference>
+	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
+	</Reference>
 	<Reference Include="Palaso.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.Services.dll</HintPath>

@@ -3,9 +3,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Data;
-using WeSay.Data;
-using WeSay.Foundation;
-using WeSay.LexicalModel;
+using Palaso.DictionaryServices.Model;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
@@ -99,7 +98,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				_congratulationsControl.Hide();
 				Debug.Assert(_vernacularBox.TextBoxes.Count == 1,
 							 "other code here (for now), assumes exactly one ws/text box");
-				_boxForeignWord.Text = _task.CurrentWordFromWordlist;
+				_boxForeignWord.Text = _task.CurrentLexemeForm;
 				PopulateWordsMatchingCurrentItem();
 			}
 			UpdateEnabledStates();
