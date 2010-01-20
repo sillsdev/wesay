@@ -49,7 +49,23 @@ namespace Addin.Transform.PdfDictionary
 
 		private static string GetPrincePath()
 		{
-			string princePath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+			string programFilesPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+
+			string princePath = AppendPrincePath(programFilesPath);
+			if (File.Exists(princePath))
+			{
+				return princePath;
+			}
+			// else clause is for 32-bit prince on 64 bit OS
+			else
+			{
+				programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+				return AppendPrincePath(programFilesPath);
+			}
+		}
+
+		private static string AppendPrincePath(string princePath)
+		{
 			princePath = Path.Combine(princePath, "prince");
 			princePath = Path.Combine(princePath, "engine");
 			princePath = Path.Combine(princePath, "bin");
