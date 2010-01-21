@@ -354,9 +354,13 @@ namespace WeSay.UI
 		{
 			if (string.IsNullOrEmpty(e.Item.ToolTipText))
 			{
-				if (MeasureItemText(e.Item.Text).Width > Width)
+				string textMinusAccelerators = e.Item.Text.Replace("&", "&&");
+				int textWidth = MeasureItemText(textMinusAccelerators).Width;
+				//This is identical to the width used in OnDrawItem
+				int rectanglesize = ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
+				if (textWidth > rectanglesize)
 				{
-					tooltip.Show(e.Item.Text, this, e.Item.Position, int.MaxValue);
+					tooltip.Show(textMinusAccelerators, this, _currentMouseLocation, int.MaxValue);
 				}
 			}
 			else
