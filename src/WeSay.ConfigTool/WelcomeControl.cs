@@ -118,6 +118,7 @@ namespace WeSay.ConfigTool
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
 				OpenSpecifiedProject(dlg.PathToNewProject);
+				Project.WeSayWordsProject.Project.SetupUserForChorus();
 			}
 		}
 

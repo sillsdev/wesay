@@ -7,12 +7,14 @@ using Mono.Addins;
 using Palaso.I8N;
 using WeSay.AddinLib;
 using WeSay.Foundation;
+using WeSay.Project.Properties;
 
-namespace Addin.Backup.Synchronize
+namespace WeSay.Project.Synchronize
 {
 	[Extension]
 	public class SendReceiveAction : IWeSayAddin//, IWeSayAddinHasSettings
 	{
+		public static string kId = "SendReceiveAction";
 		private SendReceiveSettings _settings;
 
 		public SendReceiveAction()
@@ -24,7 +26,7 @@ namespace Addin.Backup.Synchronize
 
 		public Image ButtonImage
 		{
-			get { return Resources.greenSynchronize; }
+			get { return Resources.sendReceive32x32; }
 		}
 
 		public bool Available
@@ -54,7 +56,7 @@ namespace Addin.Backup.Synchronize
 
 		public string ID
 		{
-			get { return "SendReceiveAction"; }
+			get { return kId; }
 			set { throw new NotImplementedException(); }
 		}
 
@@ -130,7 +132,7 @@ namespace Addin.Backup.Synchronize
 
 		public Image DashboardButtonImage
 		{
-			get { return Resources.greenSynchronize; }
+			get { return Resources.sendReceive32x32; }
 		}
 
 		#endregion

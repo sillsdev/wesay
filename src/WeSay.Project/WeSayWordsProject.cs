@@ -38,6 +38,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration;
+using WeSay.Project.Synchronize;
 using WeSay.UI;
 
 namespace WeSay.Project
@@ -1636,6 +1637,14 @@ namespace WeSay.Project
 			var containerBuilder = new Autofac.Builder.ContainerBuilder();
 			adder.Invoke(containerBuilder);
 			containerBuilder.Build(_container);
+		}
+
+		public void SetupUserForChorus()
+		{
+			//at the moment, all we do here is make sure send/receive is active.
+			//Chorus is providing its own user name (as of Jan 2010, by asking the OS)
+			var action = new SendReceiveAction();
+			_addins.SetDoShowInWeSay(action.ID, true);
 		}
 	}
 
