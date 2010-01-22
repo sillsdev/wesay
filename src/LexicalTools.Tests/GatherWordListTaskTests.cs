@@ -69,6 +69,9 @@ namespace WeSay.LexicalTools.Tests
 					  <form lang='glossWS'>
 						<text>apple</text>
 					  </form>
+					  <form lang='fr'>
+						<text>pom</text>
+					  </form>
 					</lexical-unit>
 					<sense>
 						<gloss lang='glossWS'>
@@ -83,6 +86,13 @@ namespace WeSay.LexicalTools.Tests
 					<lexical-unit>
 					  <form lang='glossWS'>
 						<text>cloud</text>
+					  </form>
+					</lexical-unit>
+				</entry>
+				<entry id='man'>
+					<lexical-unit>
+					  <form lang='fr'>
+						<text>garçon</text>
 					  </form>
 					</lexical-unit>
 				</entry>".Replace("glossWS", _glossingLanguageWSId);
@@ -487,12 +497,34 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CurrentLexemeForm_UsingLift_ShowsFirstItem()
 		{
-			var task = CreateAndActivateLiftTask();
+			var task = CreateAndActivateLiftTask(_glossingLanguageWSId);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("apple", task.CurrentLexemeForm);
 			task.NavigateNext();
 			Assert.AreEqual("cloud", task.CurrentLexemeForm);
 		 }
+
+		[Test]
+		public void CurrentLexemeForm_FieldSpecifiesSecondWritingSystem_GivesCorrectWritingSystemAlternative()
+		{
+
+			var task = CreateAndActivateLiftTask("fr");
+			task.NavigateFirstToShow();
+			Assert.AreEqual("pom", task.CurrentLexemeForm);
+		}
+
+		[Test]
+		public void CurrentLexemeForm_FieldSpecifiesMissingWritingSystemAlternative_GivesFirstNonEmptyOne()
+		{
+			var task = CreateAndActivateLiftTask("notthere");
+			task.NavigateFirstToShow();
+			Assert.AreEqual("apple", task.CurrentLexemeForm);
+			task.NavigateNext();
+			task.NavigateNext();
+			Assert.AreEqual("garçon", task.CurrentLexemeForm);
+		}
+
+
 
 		[Test]
 		public void WordCollected_LiftWithSemanticDomain_CopiedOver()
@@ -526,7 +558,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private LexSense AddWordAndGetFirstSense()
 		{
-			var task = CreateAndActivateLiftTask();
+			var task = CreateAndActivateLiftTask(_glossingLanguageWSId);
 			task.NavigateFirstToShow();
 			task.WordCollected( GetMultiText("apun"));
 			var entries = task.GetRecordsWithMatchingGloss();
@@ -543,9 +575,9 @@ namespace WeSay.LexicalTools.Tests
 			return word;
 		}
 
-		private GatherWordListTask CreateAndActivateLiftTask()
+		private GatherWordListTask CreateAndActivateLiftTask(string ellcitationWritingSystem)
 		{
-		   var t= new GatherWordListTask(GatherWordListConfig.CreateForTests(_liftWordListFile.Path, _glossingLanguageWSId, _catalog),
+		   var t= new GatherWordListTask(GatherWordListConfig.CreateForTests(_liftWordListFile.Path, ellcitationWritingSystem, _catalog),
 										   _lexEntryRepository,
 										  _viewTemplate, new TaskMemoryRepository());
 			t.Activate();
