@@ -1,6 +1,5 @@
 <project name="WeSay Build" default="build">
 	<property name="configuration" value="debug"/>
-	<property name="platform" value="x86"/>	//This is until Irrklang has a 64-bit version
 	<property name="nant.settings.currentframework" value="net-2.0" />
 
 	<target name="clean" description="Delete all previously compiled binaries.">
@@ -103,13 +102,8 @@
 				<include name="common/*" />
 			</fileset>
 		</copy>
-		<!--<solution configuration="${configuration}" solutionfile="../src/wesay.sln">
-		</solution>-->
-		<loadtasks assembly="nanttasks\NAnt.Contrib.Tasks.dll" />
-		<msbuild project="../src/wesay.sln">
-			<property name="Configuration" value="${configuration}"/>
-			<property name="Platform" value="${platform}"/>
-		</msbuild>
+		<solution configuration="${configuration}" solutionfile="../src/wesay.sln">
+		</solution>
 		<property name="expected.output" value="../output/${configuration}/WeSay.App.exe"/>
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
 	</target>
