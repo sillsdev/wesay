@@ -370,7 +370,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 						_words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
 					}
 				}
-				_words.Sort(WordWritingSystem);
+				_words.Sort(WritingSystemUserIsTypingIn);
 				return _words;
 			}
 		}
@@ -499,7 +499,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			{
 				ResultSet<LexEntry> recordTokens =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
-																		 WordWritingSystem);
+																		 WritingSystemUserIsTypingIn);
 				if (recordTokens.Count == 0)//no entries with a matching form
 				{
 					LexEntry entry = LexEntryRepository.CreateItem();
@@ -558,7 +558,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				//so we have to go searching for possible matches at this point.
 				ResultSet<LexEntry> matchingEntries =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
-																		 WordWritingSystem);
+																		 WritingSystemUserIsTypingIn);
 				foreach (RecordToken<LexEntry> recordToken in matchingEntries)
 				{
 					DisassociateCurrentSemanticDomainFromEntry(recordToken); // might remove senses

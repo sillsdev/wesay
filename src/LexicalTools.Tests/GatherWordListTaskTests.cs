@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Palaso.Data;
@@ -34,10 +35,11 @@ namespace WeSay.LexicalTools.Tests
 			WeSayWordsProject.InitializeForTests();
 			_glossingLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 			_vernacularLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
+			BasilProject.Project.WritingSystems.AddSimple("fr");
 
 			_tempFolder = new TemporaryFolder();
 			_simpleWordListFilePath = _tempFolder.GetTemporaryFile();
-			_liftWordListFile = new TempLiftFile("wordlist.lift",_tempFolder, LiftXml, LiftIO.Validation.Validator.LiftVersion);
+//            _liftWordListFile = new TempLiftFile("wordlist.lift",_tempFolder, LiftXml, LiftIO.Validation.Validator.LiftVersion);
 			_filePath = _tempFolder.GetTemporaryFile();
 
 			_lexEntryRepository = new LexEntryRepository(_filePath); // InMemoryRecordListManager();
@@ -51,9 +53,18 @@ namespace WeSay.LexicalTools.Tests
 															TestWritingSystemVernId
 											}));
 
+			_viewTemplate.Add(new Field(LexSense.WellKnownProperties.Definition.ToString(),
+							"LexSense",
+							new string[]
+											{
+													BasilProject.Project.WritingSystems.
+															TestWritingSystemAnalId,
+													"fr"
+											}));
+
 			_catalog = new WordListCatalog();
 			_catalog.Add(_simpleWordListFilePath, new WordListDescription("en","label","longLabel", "description"));
-			_catalog.Add(_liftWordListFile.Path, new WordListDescription("en", "liftWordList", "liftWordListLong", "liftWordListDescription"));
+		   // _catalog.Add(_liftWordListFile.Path, new WordListDescription("en", "liftWordList", "liftWordListLong", "liftWordListDescription"));
 			_task = new GatherWordListTask( GatherWordListConfig.CreateForTests( _simpleWordListFilePath,_glossingLanguageWSId, _catalog),
 											_lexEntryRepository,
 										   _viewTemplate, new TaskMemoryRepository());
@@ -82,6 +93,7 @@ namespace WeSay.LexicalTools.Tests
 							<field type='custom1'><form lang='en'><text>EnglishCustomValue</text></form></field>
 				  </sense>
 				</entry>
+
 				<entry id='two'>
 					<lexical-unit>
 					  <form lang='glossWS'>
@@ -95,7 +107,7 @@ namespace WeSay.LexicalTools.Tests
 						<text>garçon</text>
 					  </form>
 					</lexical-unit>
-				</entry>".Replace("glossWS", _glossingLanguageWSId);
+				</entry>".Replace("glossWS", _glossingLanguageWSId).Replace("bogusWS", _vernacularLanguageWSId);
 			}
 		}
 
@@ -115,7 +127,7 @@ namespace WeSay.LexicalTools.Tests
 					GatherWordListConfig.CreateForTests(_simpleWordListFilePath,
 							WritingSystem.IdForUnknownAnalysis, _catalog),
 					_lexEntryRepository,
-					new ViewTemplate(), new TaskMemoryRepository());
+					_viewTemplate, new TaskMemoryRepository());
 
 			Assert.IsNotNull(g);
 		}
@@ -128,7 +140,7 @@ namespace WeSay.LexicalTools.Tests
 				   GatherWordListConfig.CreateForTests("NotThere.txt",
 						   WritingSystem.IdForUnknownAnalysis, new WordListCatalog()),
 				   _lexEntryRepository,
-				   new ViewTemplate(), new TaskMemoryRepository());
+					_viewTemplate, new TaskMemoryRepository());
 
 			 g.Activate(); //should give a box to user, an exception in this text environment
 		}
@@ -150,14 +162,14 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CurrentLexemeFormFromWordList_AtStart_IsCorrect()
 		{
-			Assert.AreEqual("one", Task.CurrentLexemeForm);
+			Assert.AreEqual("one", Task.CurrentEllicitationForm);
 		}
 
 		[Test]
 		public void NavigateNext_HasAnotherWord_DoesMove()
 		{
 			Task.NavigateNext();
-			Assert.AreEqual("two", Task.CurrentLexemeForm);
+			Assert.AreEqual("two", Task.CurrentEllicitationForm);
 		}
 
 		[Test]
@@ -165,7 +177,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.NavigateNext();
 			Task.NavigatePrevious();
-			Assert.AreEqual("one", Task.CurrentLexemeForm);
+			Assert.AreEqual("one", Task.CurrentEllicitationForm);
 		}
 
 		[Test]
@@ -237,7 +249,7 @@ namespace WeSay.LexicalTools.Tests
 			//add a word with the first wordlist-word already in a sense
 			AddEntryAndSense("one");
 			Task.NavigateFirstToShow();
-			Assert.AreEqual("two", Task.CurrentLexemeForm);
+			Assert.AreEqual("two", Task.CurrentEllicitationForm);
 		}
 
 		[Test]
@@ -247,10 +259,10 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("three");
 
 			Task.NavigateFirstToShow();
-			Assert.AreEqual("one", Task.CurrentLexemeForm);
+			Assert.AreEqual("one", Task.CurrentEllicitationForm);
 			Task.NavigateNext();
 			Assert.IsTrue(Task.CanNavigateNext);
-			Assert.AreEqual("two", Task.CurrentLexemeForm);
+			Assert.AreEqual("two", Task.CurrentEllicitationForm);
 			Task.NavigateNext();
 			Assert.IsTrue(Task.IsTaskComplete); //we don't get to see "three"
 		}
@@ -261,9 +273,9 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("two");
 			Task.NavigateFirstToShow();
 
-			Assert.AreEqual("one", Task.CurrentLexemeForm);
+			Assert.AreEqual("one", Task.CurrentEllicitationForm);
 			Task.NavigateNext();
-			Assert.AreEqual("three", Task.CurrentLexemeForm);
+			Assert.AreEqual("three", Task.CurrentEllicitationForm);
 		}
 
 		[Test]
@@ -272,7 +284,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("one");
 			AddEntryAndSense("two");
 			Task.NavigateFirstToShow();
-			Assert.AreEqual("three", Task.CurrentLexemeForm);
+			Assert.AreEqual("three", Task.CurrentEllicitationForm);
 		}
 
 		[Test]
@@ -497,33 +509,200 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CurrentLexemeForm_UsingLift_ShowsFirstItem()
 		{
-			var task = CreateAndActivateLiftTask(_glossingLanguageWSId);
+			var task = CreateAndActivateLiftTask(new List<string>(new string[]{BasilProject.Project.WritingSystems.
+																				   TestWritingSystemAnalId}), LiftXml);
 			task.NavigateFirstToShow();
-			Assert.AreEqual("apple", task.CurrentLexemeForm);
+			Assert.AreEqual("apple", task.CurrentEllicitationForm);
 			task.NavigateNext();
-			Assert.AreEqual("cloud", task.CurrentLexemeForm);
+			Assert.AreEqual("cloud", task.CurrentEllicitationForm);
 		 }
 
 		[Test]
-		public void CurrentLexemeForm_FieldSpecifiesSecondWritingSystem_GivesCorrectWritingSystemAlternative()
+		public void CurrentLexemeForm_FieldSpecifiesFirstWritingSystem_GivesCorrectWritingSystemAlternative()
 		{
+			const string entries = @"
+				<entry id='one'>
+					<lexical-unit>
+					  <form lang='en'>
+						<text>apple</text>
+					  </form>
+					  <form lang='fr'>
+						<text>pom</text>
+					  </form>
+					</lexical-unit>
+				</entry>";
 
-			var task = CreateAndActivateLiftTask("fr");
+			var task = CreateAndActivateLiftTask(new List<string>(new string[]{"en"}), entries);
 			task.NavigateFirstToShow();
-			Assert.AreEqual("pom", task.CurrentLexemeForm);
+			Assert.AreEqual("apple", task.CurrentEllicitationForm);
 		}
 
 		[Test]
-		public void CurrentLexemeForm_FieldSpecifiesMissingWritingSystemAlternative_GivesFirstNonEmptyOne()
+		public void Activate_NoWordsWithElligibleWritingSystems_GivesMessage()
 		{
-			var task = CreateAndActivateLiftTask("notthere");
+			const string entries = @"
+				<entry id='one'>
+					<lexical-unit>
+					  <form lang='en'>
+						<text>apple</text>
+					  </form>
+					  <form lang='fr'>
+						<text>pom</text>
+					  </form>
+					</lexical-unit>
+				</entry>";
+			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+			{
+				CreateAndActivateLiftTask(new List<string>(new string[] { "th" }), entries);
+			}
+		}
+		[Test]
+		public void Activate_NoWordsWithFirstWSButHaveOthers_NoMessage()
+		{
+			const string entries = @"
+				<entry id='one'>
+					<lexical-unit>
+					  <form lang='en'>
+						<text>apple</text>
+					  </form>
+					  <form lang='fr'>
+						<text>pom</text>
+					  </form>
+					</lexical-unit>
+				</entry>";
+
+			var task =CreateAndActivateLiftTask(new List<string>(new string[] { "th", "fr" }), entries);
 			task.NavigateFirstToShow();
-			Assert.AreEqual("apple", task.CurrentLexemeForm);
-			task.NavigateNext();
-			task.NavigateNext();
-			Assert.AreEqual("garçon", task.CurrentLexemeForm);
 		}
 
+		[Test]
+		public void Activate_NoSenseWithFirstWSButHaveOthers_NoMessage()
+		{
+			const string entries = @"
+				<entry id='one'>
+					<lexical-unit>
+					  <form lang='en'>
+						<text>apple</text>
+					  </form>
+					</lexical-unit>
+					<sense>
+						<gloss lang='en'><text>body</text></gloss>
+						<gloss lang='fr'><text>corps</text></gloss>
+					</sense>
+			   </entry>";
+
+			var task = CreateAndActivateLiftTask(new List<string>(new string[] { "th", "fr" }), entries);
+			task.NavigateFirstToShow();
+		}
+
+		[Test]
+		public void CurrentEllicitationForm_FieldSpecifiesSecondWritingSystemInGloss_GivesCorrectWritingSystemAlternative()
+		{
+			const string entries = @"
+				<entry id='one'>
+					<lexical-unit>
+					  <form lang='en'>
+						<text>body</text>
+					  </form>
+					</lexical-unit>
+					<sense>
+						<gloss lang='en'><text>body</text></gloss>
+						<gloss lang='fr'><text>corps</text></gloss>
+					</sense>
+				</entry>";
+
+			var task = CreateAndActivateLiftTask(new List<string>(new string[]{"fr","en"}), entries);
+			task.NavigateFirstToShow();
+			Assert.AreEqual("corps", task.CurrentEllicitationForm);
+		}
+
+		[Test]
+		public void CurrentEllicitationForm_SenseMissing_GivesCorrectWritingSystemAlternative()
+		{
+			const string entries = @"
+				<entry id='one'>
+					<lexical-unit>
+					  <form lang='en'>
+						<text>body</text>
+					  </form>
+					</lexical-unit>
+				</entry>";
+
+			var task = CreateAndActivateLiftTask(new List<string>(new string[] { "fr", "en" }), entries);
+			task.NavigateFirstToShow();
+			Assert.AreEqual("body", task.CurrentEllicitationForm);
+		}
+		[Test]
+		public void NavigateNext_NextDoesntHaveAndMatchingLanguages_SkipsOver()
+		{
+			const string entries = @"
+				<entry id='one'>
+					<lexical-unit>
+					  <form lang='en'>
+						<text>apple</text>
+					  </form>
+					</lexical-unit>
+				</entry>
+				<entry id='2'>
+					<lexical-unit>
+					  <form lang='bogusWS'>
+						<text>SKIP ME!</text>
+					  </form>
+					</lexical-unit>
+				</entry>
+				<entry id='3'>
+					<lexical-unit>
+					  <form lang='en'>
+						<text>orange</text>
+					  </form>
+					</lexical-unit>
+				</entry>";
+
+			var task = CreateAndActivateLiftTask(new List<string>(new string[]{"en"}),
+								entries);
+			task.NavigateFirstToShow();
+			Assert.AreEqual("apple", task.CurrentEllicitationForm);
+			task.NavigateNext();//skips "Skip me!"
+			Assert.IsFalse(task.IsTaskComplete);
+			Assert.AreEqual("orange", task.CurrentEllicitationForm);
+		}
+		[Test]
+		public void CanNavigateNext_NoFurtherMatchesHaveRequiredLanguages_False()
+		{
+			var wsWhichIsValidButIsntInTheWordList = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
+
+			var entries =@"
+				<entry id='one'>
+					<lexical-unit>
+					  <form lang='glossWS'>
+						<text>apple</text>
+					  </form>
+					</lexical-unit>
+				</entry>
+				<entry id='2'>
+					<lexical-unit>
+					  <form lang='bogusWS'>
+						<text>2</text>
+					  </form>
+					</lexical-unit>
+				</entry>
+				<entry id='3'>
+					<lexical-unit>
+					  <form lang='bogusWS'>
+						<text>3</text>
+					  </form>
+					</lexical-unit>
+				</entry>".Replace("glossWS", _glossingLanguageWSId).Replace("bogusWS", _vernacularLanguageWSId);
+
+			var task = CreateAndActivateLiftTask(new List<string>(new string[]{BasilProject.Project.WritingSystems.TestWritingSystemAnalId}),
+												 entries);
+			task.NavigateFirstToShow();
+			Assert.AreEqual("apple", task.CurrentEllicitationForm);
+			Assert.IsTrue(task.CanNavigateNext); //notice, even though there will be none, thid is defined to say true until we try... it doesn't look ahead
+			task.NavigateNext();
+			Assert.IsTrue(task.IsTaskComplete);
+			Assert.IsFalse(task.CanNavigateNext);
+		}
 
 
 		[Test]
@@ -558,7 +737,8 @@ namespace WeSay.LexicalTools.Tests
 
 		private LexSense AddWordAndGetFirstSense()
 		{
-			var task = CreateAndActivateLiftTask(_glossingLanguageWSId);
+			var task = CreateAndActivateLiftTask(new List<string>(new string[]{BasilProject.Project.WritingSystems.
+																				   TestWritingSystemAnalId}), LiftXml);
 			task.NavigateFirstToShow();
 			task.WordCollected( GetMultiText("apun"));
 			var entries = task.GetRecordsWithMatchingGloss();
@@ -575,11 +755,26 @@ namespace WeSay.LexicalTools.Tests
 			return word;
 		}
 
-		private GatherWordListTask CreateAndActivateLiftTask(string ellcitationWritingSystem)
+		private GatherWordListTask CreateAndActivateLiftTask(IEnumerable<string> definitionWritingSystems, string entriesXml)
 		{
-		   var t= new GatherWordListTask(GatherWordListConfig.CreateForTests(_liftWordListFile.Path, ellcitationWritingSystem, _catalog),
+			var file = new TempLiftFile("wordlist.lift", _tempFolder, entriesXml, LiftIO.Validation.Validator.LiftVersion);
+
+			var vt = new ViewTemplate();
+
+
+			vt.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+										"LexEntry",
+										new string[]
+											{
+													BasilProject.Project.WritingSystems.
+															TestWritingSystemVernId
+											}));
+			vt.Add(new Field(LexSense.WellKnownProperties.Definition.ToString(),
+							"LexSense", definitionWritingSystems));
+
+			var t = new GatherWordListTask(GatherWordListConfig.CreateForTests(file.Path, "xx", _catalog),
 										   _lexEntryRepository,
-										  _viewTemplate, new TaskMemoryRepository());
+										  vt, new TaskMemoryRepository());
 			t.Activate();
 			return t;
 		}

@@ -68,7 +68,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public WritingSystem WordWritingSystem
+		public WritingSystem WritingSystemUserIsTypingIn
 		{
 			get
 			{
