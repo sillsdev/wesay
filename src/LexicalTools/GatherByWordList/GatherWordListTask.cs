@@ -264,9 +264,9 @@ namespace WeSay.LexicalTools.GatherByWordList
 			var sense = CurrentTemplateLexicalEntry.Senses.FirstOrDefault();
 			foreach (var id in _definitionWritingSystemIds)
 			{
-				if (entry.LexicalForm.ContainsAlternative(id)
-					|| sense.Gloss.ContainsAlternative(id)
-					|| sense.Definition.ContainsAlternative(id))
+				if ((entry.LexicalForm!=null && entry.LexicalForm.ContainsAlternative(id))
+					|| (sense!=null && sense.Gloss!=null && sense.Gloss.ContainsAlternative(id))
+					|| (sense!=null && sense.Definition!=null &&sense.Definition.ContainsAlternative(id)))
 					return true;
 			}
 			return false;
