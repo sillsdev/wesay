@@ -1,6 +1,7 @@
 <project name="WeSay Build" default="build">
 	<property name="configuration" value="debug"/>
-	<property name="nant.settings.currentframework" value="net-2.0" />
+	<property name="nant.settings.currentframework" value="net-3.5" />
+	<loadtasks assembly="nanttasks\NAnt.Contrib.Tasks.dll" />
 
 	<target name="clean" description="Delete all previously compiled binaries.">
 		<delete>
@@ -102,8 +103,12 @@
 				<include name="common/*" />
 			</fileset>
 		</copy>
-		<solution configuration="${configuration}" solutionfile="../src/wesay.sln">
-		</solution>
+		<!--<solution configuration="${configuration}" solutionfile="../src/wesay.sln">
+		</solution>-->
+		<msbuild project="..\src\WeSay.sln">
+			<property name="Configuration" value="${configuration}" />
+			<property name="Platform" value="x86" />
+		</msbuild>
 		<property name="expected.output" value="../output/${configuration}/WeSay.App.exe"/>
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
 	</target>
@@ -132,7 +137,6 @@
 			<arg line="WeSay.proj /t:Installer" />
 		</exec>
 		-->
-		<loadtasks assembly="nanttasks\NAnt.Contrib.Tasks.dll" />
 		<msbuild project="WeSay.proj" target="Installer">
 		</msbuild>
 	</target>
