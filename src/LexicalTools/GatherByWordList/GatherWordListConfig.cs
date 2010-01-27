@@ -12,7 +12,11 @@ namespace WeSay.LexicalTools.GatherByWordList
 		{
 			get;
 		}
-		string WordListWritingSystemId
+
+		/// <summary>
+		/// not used by lift-based lists
+		/// </summary>
+		string WordListWritingSystemIdOfOldFlatWordList
 		{
 			get;
 		}
@@ -34,8 +38,18 @@ namespace WeSay.LexicalTools.GatherByWordList
 			get
 			{
 				yield return new KeyValuePair<string, string>("wordListFileName", WordListFileName);
-				yield return new KeyValuePair<string, string>("wordListWritingSystemId", WordListWritingSystemId);
+				yield return new KeyValuePair<string, string>("wordListWritingSystemId", WordListWritingSystemIdOfOldFlatWordList);
 			}
+		}
+
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			return taskConfiguration is GatherWordListConfig && WordListFileName == ((GatherWordListConfig)taskConfiguration).WordListFileName;
+		}
+
+		protected WordListCatalog Catalog
+		{
+			get { return _catalog; }
 		}
 
 		public string WordListFileName
@@ -45,7 +59,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				return GetStringFromConfigNode("wordListFileName");
 			}
 		}
-		public string WordListWritingSystemId
+		public string WordListWritingSystemIdOfOldFlatWordList
 		{
 			get
 			{
@@ -117,8 +131,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 		public void WritingSystemIdChanged(string from, string to)
 		{
 			  //TODO, (maybe?) when we become writeable
-			// if(WordListWritingSystemId==from)
-			//      WordListWritingSystemId=to;
+			// if(WordListWritingSystemIdOfOldFlatWordList==from)
+			//      WordListWritingSystemIdOfOldFlatWordList=to;
 			// mark dirty if necessary
 		}
 	}

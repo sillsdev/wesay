@@ -6,8 +6,11 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.Text;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
+//using CommonEnumerations=Palaso.Lift.CommonEnumerations;
+using Palaso.Lift;
+//using CommonEnumerations=Palaso.Lift.CommonEnumerations;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -264,6 +267,7 @@ namespace WeSay.UI.TextBoxes
 			{
 				if (_widthForWritingSystemLabels == -1)
 				{
+					Size fudgeFactor= new Size(20,0);// it wasn't coming out large enough... could be because of label padding/margin
 					//null happens when this is from a hand-placed designer piece,
 					//in which case we don't really care about aligning anyhow
 					if (_allWritingSystems != null)
@@ -271,7 +275,7 @@ namespace WeSay.UI.TextBoxes
 						foreach (WritingSystem ws in _allWritingSystems.Values)
 						{
 							Size size = TextRenderer.MeasureText(ws.Abbreviation,
-																 _writingSystemLabelFont);
+																 _writingSystemLabelFont) +fudgeFactor;
 
 							if (size.Width > _widthForWritingSystemLabels)
 							{

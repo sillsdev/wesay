@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.UI.WindowsForms.Spelling;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -262,7 +262,7 @@ namespace WeSay.UI.TextBoxes
 			set
 			{
 				_isSpellCheckingEnabled = value;
-				if (_isSpellCheckingEnabled)
+				if (_isSpellCheckingEnabled && !(WritingSystem.SpellCheckingId == "none"))
 				{
 					OnSpellCheckingEnabled();
 				}

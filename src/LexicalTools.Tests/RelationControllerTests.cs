@@ -1,10 +1,9 @@
-using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
 using Palaso.Data;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
 using Palaso.Reporting;
-using WeSay.Data;
-using WeSay.Foundation;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -235,7 +234,7 @@ namespace WeSay.LexicalTools.Tests
 			return entry;
 		}
 
-		private static LexRelation AddRelation(WeSayDataObject source,
+		private static LexRelation AddRelation(PalasoDataObject source,
 											   string fieldName,
 											   string targetId)
 		{

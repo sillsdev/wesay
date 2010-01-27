@@ -2,6 +2,7 @@ using System;
 using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using System.Linq;
 
@@ -67,7 +68,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public WritingSystem WordWritingSystem
+		public WritingSystem WritingSystemUserIsTypingIn
 		{
 			get
 			{

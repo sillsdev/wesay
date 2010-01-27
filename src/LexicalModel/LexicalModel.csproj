@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{5F61C809-B6C0-4567-9603-B2198E1AD038}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -14,6 +14,7 @@
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
 	<OldToolsVersion>2.0</OldToolsVersion>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -121,13 +122,13 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\icu.net.dll</HintPath>
 	</Reference>
+	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\LibChorus.dll</HintPath>
+	</Reference>
 	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
-	</Reference>
-	<Reference Include="LinqBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2b14eb747628076, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\LinqBridge.dll</HintPath>
 	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
@@ -137,11 +138,22 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
 	</Reference>
+	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
+	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
+	<Reference Include="System.Core">
+	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
+	</Reference>
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
@@ -149,54 +161,26 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="Field.cs" />
-	<Compile Include="Foundation\CommonEnumerations.cs" />
-	<Compile Include="Foundation\FlagState.cs" />
-	<Compile Include="Foundation\IBindableControl.cs" />
-	<Compile Include="Foundation\ICountGiver.cs" />
-	<Compile Include="Foundation\IDisplayStringAdaptor.cs" />
-	<Compile Include="Foundation\MultiText.cs" />
 	<Compile Include="Foundation\Options\DdpListReader.cs" />
 	<Compile Include="Foundation\Options\DdpOptionDisplayAdaptor.cs" />
 	<Compile Include="Foundation\Options\GenericOptionListReader.cs" />
-	<Compile Include="Foundation\Options\Option.cs" />
 	<Compile Include="Foundation\Options\OptionDisplayAdaptor.cs" />
-	<Compile Include="Foundation\Options\OptionRef.cs" />
-	<Compile Include="Foundation\Options\OptionRefCollection.cs" />
-	<Compile Include="Foundation\Options\OptionsList.cs" />
-	<Compile Include="Foundation\PictureRef.cs" />
-	<Compile Include="Foundation\WeSayDataObject.cs" />
 	<Compile Include="Foundation\WritingSystem.cs" />
+	<Compile Include="Foundation\WritingSystemForChorusAdaptor.cs" />
 	<Compile Include="Foundation\WritingSystemCollection.cs" />
-	<Compile Include="ILiftReaderWriterProvider.cs" />
-	<Compile Include="ILiftWriter.cs" />
 	<Compile Include="IFieldQuery.cs" />
-	<Compile Include="ILiftReader.cs" />
-	<Compile Include="LexEntry.cs" />
-	<Compile Include="LexEntryFromLiftBuilder.cs" />
 	<Compile Include="LexEntryRepository.cs" />
-	<Compile Include="LexExampleSentence.cs" />
-	<Compile Include="LexRelation.cs" />
-	<Compile Include="LexSense.cs" />
-	<Compile Include="LiftDataMapper.cs" />
-	<Compile Include="WeSayLiftWriter.cs" />
-	<Compile Include="WeSayLiftDataMapper.cs" />
-	<Compile Include="LiftUpdateService.cs" />
-	<Compile Include="Migration\LiftPreparer.cs" />
 	<Compile Include="MissingFieldQuery.cs" />
 	<Compile Include="PairStringLexEntryIdDisplayProvider.cs" />
 	<Compile Include="Phonetic.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="ResultSetToListOfStringsAdapter.cs" />
-	<Compile Include="WeSayLiftReader.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
 	  <Name>WeSay.Data</Name>
 	</ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-	<EmbeddedResource Include="Migration\populateDefinitionFromGloss.xslt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modifyy your build process, add your task inside one of the targets below and uncomment it.

@@ -7,7 +7,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using Palaso.Code;
+using Palaso.Lift;
+using Palaso.UiBindings;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.AutoCompleteTextBox
@@ -341,18 +343,30 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		protected override void OnSizeChanged(EventArgs e)
 		{
-			base.OnSizeChanged(e);
-			if (_listBox != null)
+			using (var detect = Detect.Reentry(this,"OnSizeChanged"))
 			{
-				//NB: this height can be multiple lines, so we don't just want the Height
-				//this._listBox.ItemHeight = Height;
-				_listBox.ItemHeight = _listBox.Font.Height;
-			}
-			if (_listBox != null && _autoSizePopup)
-			{
-				if (_listBox.Width < Width)
+				if (detect.DidReenter)
 				{
-					_listBox.Width = Width;
+					return;
+				}
+
+				var height = this.Height;
+				base.OnSizeChanged(e);
+				if (height > this.Height)   //this is for the search box, where the ws label could be much taller that the list text
+					this.Height = height;
+
+				if (_listBox != null)
+				{
+					//NB: this height can be multiple lines, so we don't just want the Height
+					//this._listBox.ItemHeight = Height;
+					_listBox.ItemHeight = _listBox.Font.Height;
+				}
+				if (_listBox != null && _autoSizePopup)
+				{
+					if (_listBox.Width < Width)
+					{
+						_listBox.Width = Width;
+					}
 				}
 			}
 		}
@@ -771,5 +785,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 				return _listBox.Focused;
 			}
 		}
+
 	}
 }

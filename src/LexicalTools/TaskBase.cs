@@ -1,10 +1,8 @@
 using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.I8N;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -101,10 +99,11 @@ namespace WeSay.LexicalTools
 			IsActive = true;
 		}
 
-		public bool MustBeActivatedDuringPreCache
+		public bool Available
 		{
 			get { return true; }
 		}
+
 
 //        private static string MakeSafeName(string fileName)
 //        {

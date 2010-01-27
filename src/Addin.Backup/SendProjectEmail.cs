@@ -3,11 +3,9 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Mono.Addins;
-using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.I8N;
 using WeSay.AddinLib;
 using WeSay.Foundation;
-using WeSay.LexicalModel;
 
 namespace Addin.Backup
 {
@@ -15,7 +13,6 @@ namespace Addin.Backup
 	public class SendProjectEmail: IWeSayAddin, IWeSayAddinHasSettings
 	{
 		private SendProjectEmailSettings _settings;
-		private string subject;
 
 		public SendProjectEmail()
 		{
@@ -64,9 +61,6 @@ namespace Addin.Backup
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 			string wesayZipFilePath = Path.Combine(Path.GetTempPath(), projectInfo.Name + "_wesay.zip");
-			LexEntryRepository repo = projectInfo.ServiceProvider.GetService(
-				typeof (LexEntryRepository)
-			) as LexEntryRepository;
 			BackupMaker.BackupToExternal(projectInfo.PathToTopLevelDirectory,
 										 wesayZipFilePath,
 										 projectInfo.FilesBelongingToProject);
@@ -134,7 +128,7 @@ namespace Addin.Backup
 
 		public bool DoShowSettingsDialog(Form parentForm, ProjectInfo projectInfo)
 		{
-			SendProjectEmailSettingsDialog dlg = new SendProjectEmailSettingsDialog(_settings);
+			var dlg = new SendProjectEmailSettingsDialog(_settings);
 			return dlg.ShowDialog(parentForm) == DialogResult.OK;
 		}
 

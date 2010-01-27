@@ -126,6 +126,7 @@
 			<exclude name="../output/${configuration}/Palaso*.Test*.dll" />
 		  </assemblies>
 		  <categories>
+			<exclude name="DictionaryServices" />
 		  </categories>
 			</test>
 		</nunit2>

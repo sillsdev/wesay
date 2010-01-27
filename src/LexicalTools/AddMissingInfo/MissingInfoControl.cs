@@ -3,14 +3,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Code;
 using Palaso.Data;
+using Palaso.Code;
+using Palaso.DictionaryServices.Model;
+using Palaso.I8N;
 using Palaso.Misc;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -107,14 +107,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			RecordToken<LexEntry> recordToken;
 			if (sender == _recordsListBox)
 			{
-				recordToken = this._todoRecords[e.ItemIndex];
+				recordToken = _todoRecords[e.ItemIndex];
 			}
 			else
 			{
 				Debug.Assert(sender == _completedRecordsListBox);
-				recordToken = this._completedRecords[e.ItemIndex];
+				recordToken = _completedRecords[e.ItemIndex];
 			}
-			string displayString = (string) recordToken["Form"];
+			var displayString = (string) recordToken["Form"];
 			e.Item = new ListViewItem(displayString);
 			if (!string.IsNullOrEmpty(displayString))
 			{
@@ -198,7 +198,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private bool _recordsListBoxActive;
 		private bool _completedRecordsListBoxActive;
-		private LexEntry _currentEntry;
 
 		private void _recordsListBox_Leave(object sender, EventArgs e)
 		{
@@ -364,14 +363,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 
 			ClearSelectionForRecordsListBox();
-			if (_completedRecords.Count == 0)
-			{
-				CurrentRecord = null;
-			}
-			else
-			{
-				CurrentRecord = _completedRecords[CompletedRecordListCurrentIndex];
-			}
+			CurrentRecord = _completedRecords.Count == 0 ? null : _completedRecords[CompletedRecordListCurrentIndex];
 
 			if (TimeToSaveRecord != null)
 			{
@@ -426,11 +418,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 		}
 
-		public LexEntry CurrentEntry
-		{
-			get { return _currentEntry; }
-			private set { _currentEntry = value; }
-		}
+		public LexEntry CurrentEntry { get; private set; }
 
 		//private void OnRecordsListChanged(object sender, ListChangedEventArgs e)
 		//{
