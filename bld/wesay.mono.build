@@ -188,6 +188,7 @@
 		<in>
 			<items>
 				<include name="${project.output.dir}/*.Tests.dll" />
+				<include name="${project.output.dir}/Palaso*.Test*.dll" />
 			</items>
 		</in>
 		<do>
