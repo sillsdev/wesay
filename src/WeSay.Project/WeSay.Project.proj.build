@@ -40,6 +40,7 @@
 				<include name="**/*.cs" />
 			</sources>
 			<references basedir="${project.output.dir}">
+				<include name="Mono.Addins.exe" />
 				<include name="Palaso.dll" />
 				<include name="Palaso.Lift.dll" />
 				<include name="Palaso.DictionaryServices.dll" />

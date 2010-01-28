@@ -38,6 +38,7 @@
 				<exclude name="SemanticDomainQuery.cs" /> <!-- review: remove from project -->
 			</sources>
 			<references basedir="${project.output.dir}">
+				<include name="LibChorus.dll" />
 				<include name="Autofac.dll" />
 				<include name="Enchant.Net.dll" />
 				<include name="LiftIO.dll" />
