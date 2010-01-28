@@ -15,7 +15,7 @@ namespace WeSay.Project
 			ExcludePatterns.Add("**/cache");
 			ExcludePatterns.Add("**/Cache");
 			ExcludePatterns.Add("*.old");
-			ExcludePatterns.Add("*.wesayUserMemory");
+			ExcludePatterns.Add("*.WeSayUserMemory");
 			ExcludePatterns.Add("*.tmp");
 			ExcludePatterns.Add("*.bak");
 
@@ -25,6 +25,7 @@ namespace WeSay.Project
 			IncludePatterns.Add("export/*.lpconfig");//lexique pro
 			IncludePatterns.Add("**.lift");
 			IncludePatterns.Add("**.WeSayConfig");
+			IncludePatterns.Add("**.WeSayUserConfig");
 			IncludePatterns.Add("**WritingSystemPrefs.xml");
 			IncludePatterns.Add("**PartsOfSpeech.xml");
 			IncludePatterns.Add(".hgIgnore");

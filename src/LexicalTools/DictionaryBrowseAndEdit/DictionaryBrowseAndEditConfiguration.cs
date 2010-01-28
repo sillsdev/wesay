@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.I8N;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
@@ -30,6 +29,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 		}
 
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			return taskConfiguration is DictionaryBrowseAndEditConfiguration;
+		}
 
 		public override string ToString()
 		{

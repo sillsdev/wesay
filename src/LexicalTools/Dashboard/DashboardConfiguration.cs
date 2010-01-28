@@ -61,6 +61,11 @@ namespace WeSay.LexicalTools.Dashboard
 			writer.WriteEndElement();
 		}
 
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			return taskConfiguration is DashboardConfiguration;
+		}
+
 		public bool IsVisible
 		{
 			set

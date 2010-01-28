@@ -16,8 +16,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using Palaso.Code;
 using Palaso.Misc;
-using WeSay.Foundation;
 
 namespace WeSay.UI
 {

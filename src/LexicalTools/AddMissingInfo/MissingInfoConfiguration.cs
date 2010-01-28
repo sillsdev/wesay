@@ -5,6 +5,7 @@ using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using System.Linq;
+using Palaso.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {
@@ -108,6 +109,24 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		public bool IsPinned
 		{
 			get { return false; }
+		}
+
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			var task = taskConfiguration as MissingInfoConfiguration;
+			if(task ==null)
+				return false;
+
+			if(task.TaskName != TaskName)
+				return false;
+
+			if(task.MissingInfoFieldName != MissingInfoFieldName)
+				return false;
+
+			if (task.Label != Label)
+				return false;
+
+			return true;
 		}
 
 		public string FieldsToShowReadOnly

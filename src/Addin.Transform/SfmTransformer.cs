@@ -7,8 +7,8 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Mono.Addins;
+using Palaso.I8N;
 using Palaso.Progress;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 
@@ -54,9 +54,8 @@ namespace Addin.Transform
 		/// </summary>
 		private static void OnDoGrepWork(object sender, DoWorkEventArgs args)
 		{
-			ProgressState progressState = (ProgressState) args.Argument;
-			TransformWorkerArguments workerArguments =
-					(TransformWorkerArguments) (progressState.Arguments);
+			var progressState = (ProgressState) args.Argument;
+			var workerArguments = (TransformWorkerArguments) (progressState.Arguments);
 
 			progressState.StatusLabel = "Converting to MDF...";
 			progressState.NumberOfStepsCompleted++;
@@ -66,17 +65,15 @@ namespace Addin.Transform
 
 		private static void GrepFile(string inputPath, DoWorkEventArgs args)
 		{
-			ProgressState progressState = (ProgressState) args.Argument;
-			TransformWorkerArguments workerArguments =
-					(TransformWorkerArguments) (progressState.Arguments);
-			SfmTransformSettings sfmSettings =
-					(SfmTransformSettings) workerArguments.postTransformArgument;
+			var progressState = (ProgressState) args.Argument;
+			var workerArguments = (TransformWorkerArguments) (progressState.Arguments);
+			var sfmSettings = (SfmTransformSettings) workerArguments.postTransformArgument;
 
 			string tempPath = inputPath + ".tmp";
 			IEnumerable<SfmTransformSettings.ChangePair> pairs = sfmSettings.ChangePairs;
 			using (StreamReader reader = File.OpenText(inputPath))
 			{
-				using (StreamWriter writer = new StreamWriter(tempPath))
+				using (var writer = new StreamWriter(tempPath))
 				{
 					while (!reader.EndOfStream)
 					{
@@ -144,7 +141,7 @@ namespace Addin.Transform
 
 		public bool DoShowSettingsDialog(Form parentForm, ProjectInfo projectInfo)
 		{
-			SFMChangesDialog dlg = new SFMChangesDialog(_settings, projectInfo);
+			var dlg = new SFMChangesDialog(_settings, projectInfo);
 			return dlg.ShowDialog(parentForm) == DialogResult.OK;
 		}
 

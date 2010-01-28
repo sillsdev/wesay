@@ -2,8 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.I8N;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI
@@ -21,8 +21,8 @@ namespace WeSay.UI
 		/// </summary>
 		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate { };
 
-		private readonly int _indexOfLabel;
-		private readonly int _indexOfWidget = 1;
+		private readonly int _indexOfLabel; // todo to const?
+		private readonly int _indexOfWidget = 1; // todo to const?
 
 		private bool _disposed;
 		private readonly StackTrace _stackAtConstruction;
@@ -62,9 +62,16 @@ namespace WeSay.UI
 
 		private void OnMouseClick(object sender, MouseEventArgs e)
 		{
-			this.Select();
+			Select();
 		}
 
+		protected override void OnGotFocus(EventArgs e)
+		{
+			base.OnGotFocus(e);
+			//we don't want to have focus, ourselves
+			if (RowCount >0)
+				MoveInsertionPoint(0);
+		}
 		/// <summary>
 		/// Forces scroll bar to only have vertical scroll bar and not horizontal scroll bar by
 		/// allowing enough space for the scroll bar to be added in (even though it then

@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using System.Xml;
+using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
-using WeSay.Foundation;
-using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
-using System.Linq;
 
 namespace WeSay.ConfigTool.NewProjectCreation
 {
@@ -81,7 +76,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			}
 			catch (Exception)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Could not open the LIFT file.  Is some other program reading or writing it?");
+				ErrorReport.NotifyUserOfProblem("Could not open the LIFT file.  Is some other program reading or writing it?");
 				return false;
 			}
 			return true;
@@ -89,7 +84,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 		public static void LoadWritingSystemsFromExistingLift(string path, ViewTemplate viewTemplate, WritingSystemCollection writingSystems)
 		{
-			XmlDocument doc = new XmlDocument();
+			var doc = new XmlDocument();
 			doc.Load(path);
 			foreach (XmlNode node in doc.SelectNodes("//@lang"))
 			{

@@ -23,7 +23,7 @@ namespace WeSay.App.Tests
 
 
 			_project = new WeSayWordsProject();
-			_project.StringCatalogSelector = "en";
+			_project.UiOptions.Language = "en";
 			_project.LoadFromProjectDirectoryPath(WeSayWordsProject.GetPretendProjectDirectory());
 			_project.Tasks = new List<ITask>();
 			_project.Tasks.Add(new MockTask("Dashboard", "The control center.", true));

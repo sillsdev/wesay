@@ -28,7 +28,7 @@ namespace Microsoft.Practices.ServiceLocation
 		IServiceLocator CreateNewUsing(ContainerAdder adder);
 	}
 }
-namespace WeSay.Foundation
+namespace WeSay.Project
 {
 	/// <summary>
 	/// From autofac google list, author Justin Rudd... looks like it might show up
@@ -124,7 +124,7 @@ namespace WeSay.Foundation
 
 		#region Implementation
 
-		private T GetInstanceWhichWrapsExceptions<T>(Func<T> resolve)
+		private T GetInstanceWhichWrapsExceptions<T>(System.Func<T> resolve)
 		{
 			try
 			{

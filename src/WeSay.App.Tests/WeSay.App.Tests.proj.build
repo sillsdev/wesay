@@ -51,6 +51,7 @@
 				<include name="WeSay.Foundation.Tests.dll" />
 				<include name="WeSay.Project.dll" />
 				<include name="WeSay.Project.Tests.dll" />
+				<include name="WeSay.UI.dll" />
 			</references>
 			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
 				<include name="${build.namespace.dir}/**/*.resources" />

@@ -2,7 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using Palaso.Lift;
+using Palaso.UiBindings;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
