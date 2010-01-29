@@ -37,8 +37,8 @@ using System.Security.Permissions;
 // You can specify all the values or you can default the Revision and Build Numbers
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("0.6.2306")]
-[assembly: AssemblyFileVersion("0.6.2306")]
+[assembly: AssemblyVersion("0.5.1969")]
+[assembly: AssemblyFileVersion("0.5.1969")]
 [assembly: CLSCompliant(true)]
 [assembly: InternalsVisibleTo("WeSay.UI.Tests")]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]

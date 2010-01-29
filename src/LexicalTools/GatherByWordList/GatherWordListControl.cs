@@ -3,9 +3,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Data;
-using WeSay.Data;
-using WeSay.Foundation;
-using WeSay.LexicalModel;
+using Palaso.DictionaryServices.Model;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
@@ -40,8 +39,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
 			_vernacularBox.MinimumSize = _boxForeignWord.Size;
 
-			_listViewOfWordsMatchingCurrentItem.WritingSystem = _task.WordWritingSystem;
-			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.WordWritingSystem.Font.GetHeight());
+			_listViewOfWordsMatchingCurrentItem.WritingSystem = _task.WritingSystemUserIsTypingIn;
+			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.WritingSystemUserIsTypingIn.Font.GetHeight());
 
 			UpdateStuff();
 
@@ -99,7 +98,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 				_congratulationsControl.Hide();
 				Debug.Assert(_vernacularBox.TextBoxes.Count == 1,
 							 "other code here (for now), assumes exactly one ws/text box");
-				_boxForeignWord.Text = _task.CurrentWordFromWordlist;
+				_boxForeignWord.Text = _task.CurrentEllicitationForm;
+
 				PopulateWordsMatchingCurrentItem();
 			}
 			UpdateEnabledStates();

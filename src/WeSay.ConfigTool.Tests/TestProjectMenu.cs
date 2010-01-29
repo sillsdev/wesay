@@ -17,6 +17,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
 			_window = new ConfigurationWindow(new string[] {});
+			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 		}
 
@@ -26,6 +27,7 @@ namespace WeSay.ConfigTool.Tests
 			using(TemporaryFolder f = new TemporaryFolder("ProjectIsCreatedTest") )
 			{
 				_window.CreateAndOpenProject(f.FolderPath);
+				_window.DisableBackupAndChorusStuffForTests();
 				_window.Close();
 				_window.Dispose();
 			}

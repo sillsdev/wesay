@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains
@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			InitializeComponent();
 
 			InitializeDisplaySettings();
-			_listViewWords.WritingSystem = _presentationModel.WordWritingSystem;
+			_listViewWords.WritingSystem = _presentationModel.WritingSystemUserIsTypingIn;
 			RefreshCurrentWords();
 			LoadDomainListCombo();
 			RefreshCurrentDomainAndQuestion();
@@ -59,7 +59,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_meaningBox.BackColor = Color.White;
 
 			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
-															{_presentationModel.WordWritingSystem};
+															{_presentationModel.WritingSystemUserIsTypingIn};
 
 			if( _vernacularBox.WritingSystemsForThisField.Count ==0 ||  _vernacularBox.TextBoxes.Count == 0)
 			{
@@ -70,9 +70,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_meaningBox.Visible = _presentationModel.ShowDefinitionField;
 			_meaningLabel.Visible = _meaningBox.Visible;
 
-			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.WordWritingSystem.Font.GetHeight());
+			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.WritingSystemUserIsTypingIn.Font.GetHeight());
 
-			//    _animatedText.Font = _presentationModel.WordWritingSystem.Font;
+			//    _animatedText.Font = _presentationModel.WritingSystemUserIsTypingIn.Font;
 
 			_reminder.Text = _presentationModel.Reminder;
 

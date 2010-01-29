@@ -43,10 +43,13 @@
 				<include name="LexicalModel.dll" />
 				<include name="LiftIO.dll" />
 				<include name="Palaso.dll" />
+				<include name="Palaso.Lift.dll" />
+				<include name="Palaso.DictionaryServices.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
 				<include name="Palaso.TestUtilities.dll" />
 				<include name="NetReflector.dll" />
 				<include name="LibChorus.dll" />
+				<include name="Chorus.exe" />
 			</references>
 			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
 				<include name="${build.namespace.dir}/**/*.resources" />

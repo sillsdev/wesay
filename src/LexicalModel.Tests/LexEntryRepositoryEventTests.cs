@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
 using Palaso.TestUtilities;
 
 
@@ -19,9 +20,9 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void NewEntry_ByEntry_TriggersModifiedEntryAdded()
 		{
-			using (TemporaryFolder f = new TemporaryFolder("eventTests"))
+			using (var f = new TemporaryFolder("eventTests"))
 			{
-				using (LexEntryRepository r = new LexEntryRepository(f.GetPathForNewTempFile(true)))
+				using (var r = new LexEntryRepository(f.GetPathForNewTempFile(true)))
 				{
 					r.AfterEntryModified += OnEvent;
 					LexEntry entry = r.CreateItem();

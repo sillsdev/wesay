@@ -1,5 +1,6 @@
 using System.IO;
 using NUnit.Framework;
+using Palaso.I8N;
 using Palaso.TestUtilities;
 using Palaso.UI.WindowsForms.i8n;
 
@@ -105,7 +106,7 @@ namespace WeSay.Project.Tests
 			InitializeSampleProject();
 
 			BasilProject project = new BasilProject();
-			project.StringCatalogSelector = "th";
+			project.UiOptions.Language = "th";
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 			Assert.AreEqual("deng", StringCatalog.Get("red"));
 		}
@@ -115,7 +116,7 @@ namespace WeSay.Project.Tests
 		{
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
-			project.StringCatalogSelector = "en";
+			project.UiOptions.Language = "en";
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 
 			Assert.AreEqual("red", StringCatalog.Get("red"));

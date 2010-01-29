@@ -4,7 +4,8 @@ using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
-using WeSay.Foundation;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests

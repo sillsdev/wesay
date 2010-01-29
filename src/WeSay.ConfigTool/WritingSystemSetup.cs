@@ -2,10 +2,10 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Code;
-using Palaso.Misc;
+using Palaso.I8N;
+using Palaso.Code;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -77,7 +77,7 @@ namespace WeSay.ConfigTool
 		{
 			WritingSystem selectedWritingSystem = SelectedWritingSystem;
 			_tabControl.Visible = selectedWritingSystem != null;
-			_btnRemove.Enabled = selectedWritingSystem != null;
+			_btnRemove.Enabled = EnableRemove;
 			if (selectedWritingSystem == null)
 			{
 				Console.WriteLine("WritingSystemSetup.UpdateSelection selected is null");
@@ -96,19 +96,26 @@ namespace WeSay.ConfigTool
 			_fontsPage.Enabled = !selectedWritingSystem.IsAudio;
 		}
 
+		private bool EnableRemove
+		{
+			get
+			{
+				return SelectedWritingSystem != null
+					   && SelectedWritingSystem.Id != WritingSystem.IdForUnknownAnalysis //once they delete english, lots of things are going to break
+					   && _wsListBox.Items.Count > 1; //don't let them delete the last one
+		   }
+		}
+
 		private WritingSystem SelectedWritingSystem
 		{
 			get
 			{
-				WsDisplayProxy proxy = _wsListBox.SelectedItem as WsDisplayProxy;
+				var proxy = _wsListBox.SelectedItem as WsDisplayProxy;
 				if (proxy != null)
 				{
 					return proxy.WritingSystem;
 				}
-				else
-				{
-					return null;
-				}
+				return null;
 			}
 		}
 
@@ -147,7 +154,7 @@ namespace WeSay.ConfigTool
 					}
 					catch(Exception )
 					{
-					   font = new Font(System.Drawing.SystemFonts.DefaultFont.SystemFontName, 12);
+					   font = new Font(SystemFonts.DefaultFont.SystemFontName, 12);
 					}
 
 					w = new WritingSystem(s, font);
@@ -161,7 +168,7 @@ namespace WeSay.ConfigTool
 			else
 			{
 				BasilProject.Project.WritingSystems.Add(w.Id, w);
-				WsDisplayProxy item = new WsDisplayProxy(w);
+				var item = new WsDisplayProxy(w);
 				_wsListBox.Items.Add(item);
 				_wsListBox.SelectedItem = item;
 			}
@@ -183,8 +190,6 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private GuardAgainstReentry _sentryOnWritingSystemIdChanged;
-
 		/// <summary>
 		/// Called when, for example, the user changes the id of the selected ws
 		/// </summary>
@@ -192,7 +197,7 @@ namespace WeSay.ConfigTool
 		/// <param name="e"></param>
 		private void OnWritingSystemIdChanged(object sender, EventArgs e)
 		{
-			using (_sentryOnWritingSystemIdChanged = Guard.AgainstReEntry(_sentryOnWritingSystemIdChanged))
+			using (Detect.Reentry(this, "OnWritingSystemIdChanged").AndThrow())
 			{
 				var ws = sender as WritingSystem;
 				var args = e as PropertyValueChangedEventArgs;

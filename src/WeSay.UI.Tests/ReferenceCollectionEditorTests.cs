@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using WeSay.Project;
+using WeSay.Project;
+using Palaso.Lift;
+using Palaso.Lift.Options;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.UI.AutoCompleteTextBox;
 

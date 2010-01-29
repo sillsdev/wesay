@@ -1,9 +1,10 @@
 ﻿using System.IO;
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
+using Palaso.Reporting;
 using Palaso.TestUtilities;
 using WeSay.ConfigTool.NewProjectCreation;
-using WeSay.Foundation;
-using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests.NewProjectCreation
@@ -115,19 +116,19 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
  }
 		}
 
-		private void AssertFieldFirstWritingSystem(ViewTemplate vt, string fieldName, string wsId)
+		private static void AssertFieldFirstWritingSystem(ViewTemplate vt, string fieldName, string wsId)
 		{
 			var f = vt.GetField(fieldName);
 			Assert.AreEqual(wsId,f.WritingSystemIds[0]);
 		}
 
-		private void AssertFieldHasWritingSystem(ViewTemplate vt, string fieldName, string wsId)
+		private static void AssertFieldHasWritingSystem(ViewTemplate vt, string fieldName, string wsId)
 		{
 			var f = vt.GetField(fieldName);
 			Assert.IsTrue(f.WritingSystemIds.Contains(wsId));
 		}
 
-		private void AssertFieldLacksWritingSystem(ViewTemplate vt, string fieldName, string wsId)
+		private static void AssertFieldLacksWritingSystem(ViewTemplate vt, string fieldName, string wsId)
 		{
 			var f = vt.GetField(fieldName);
 			Assert.IsFalse(f.WritingSystemIds.Contains(wsId));
@@ -172,7 +173,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 			}
 		}
 
-		private void AssertFileExistsInTargetDir(string targetDir, string fileName)
+		private static void AssertFileExistsInTargetDir(string targetDir, string fileName)
 		{
 			Assert.IsTrue(File.Exists(Path.Combine(targetDir, fileName)));
 		}
@@ -187,7 +188,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				{
 					var targetDir = Path.Combine(Path.GetTempPath(), "ProjectFromFLExCreatorTests");
 
-					using(var x = new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+					using(var x = new ErrorReport.NonFatalErrorReportExpected())
 					{
 						Assert.IsFalse(ProjectFromFLExCreator.Create(targetDir, lift.Path));
 					}

@@ -23,6 +23,8 @@ install-stamp:
 	dh_install
 	dh_installdocs
 	dh_installchangelogs
+	dh_desktop
+	dh_icons
 	dh_compress
 	dh_fixperms
 	dh_installdeb

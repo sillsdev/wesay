@@ -1,10 +1,12 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.I8N;
+using Palaso.Lift;
+using Palaso.Lift.Options;
+using Palaso.UiBindings;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
 {
@@ -46,6 +48,7 @@ namespace WeSay.UI
 			_control.Sorted = false;
 			_control.MaxDropDownItems = 100;
 			_control.Font = _preferredWritingSystem.Font;
+			_control.Height = _preferredWritingSystem.Font.Height + 10;
 			BuildBoxes(optionRef);
 		}
 
@@ -63,11 +66,8 @@ namespace WeSay.UI
 					//                    }
 					return key;
 				}
-				else
-				{
-					return _control.Text;
-					// situation where the value isn't currently a member of the approved list
-				}
+				return _control.Text;
+				// situation where the value isn't currently a member of the approved list
 			}
 			set
 			{
@@ -128,7 +128,7 @@ namespace WeSay.UI
 
 			Panel p = new Panel();
 			p.Controls.Add(_control);
-			p.Size = new Size(initialPanelWidth, _control.Height + 0);
+			p.Size = new Size(initialPanelWidth, _control.Height + 10);
 
 			//            FlagButton flagButton = MakeFlagButton(p.Size);
 			//            p.Controls.Add(flagButton);
@@ -182,7 +182,7 @@ namespace WeSay.UI
 			{
 				return 1;
 			}
-			else if (string.IsNullOrEmpty(b.Key))
+			if (string.IsNullOrEmpty(b.Key))
 			{
 				return -1;
 			}

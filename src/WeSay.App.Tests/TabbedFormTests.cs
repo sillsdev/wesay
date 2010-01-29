@@ -6,9 +6,29 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.Project;
+using WeSay.UI;
 
 namespace WeSay.App.Tests
 {
+	public class MockDictionaryTask : MockTask, ITaskForExternalNavigateToEntry
+	{
+		 public MockDictionaryTask(string label, string description, bool isPinned)
+			 :base(label,description,isPinned)
+		 {
+
+		 }
+
+		public void NavigateToEntry(string url)
+		{
+
+		}
+
+		public string CurrentUrl
+		{
+			get { return string.Empty; }
+		}
+	}
+
 	public class MockTask: ITask
 	{
 		private readonly bool _isPinned;
@@ -25,6 +45,11 @@ namespace WeSay.App.Tests
 			_description = description;
 			_isPinned = isPinned;
 			_control = new Control();
+		}
+
+		public bool Available
+		{
+			get { return true; }
 		}
 
 		public Control Control
@@ -101,10 +126,6 @@ namespace WeSay.App.Tests
 			get { return GetRemainingCount(); }
 		}
 
-		public bool MustBeActivatedDuringPreCache
-		{
-			get { return true; }
-		}
 
 		#region IThingOnDashboard Members
 
@@ -150,7 +171,7 @@ namespace WeSay.App.Tests
 		public void TestFixtureSetUp()
 		{
 			_project = new WeSayWordsProject();
-			_project.StringCatalogSelector = "en";
+			_project.UiOptions.Language = "en";
 			_project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory());
 
 			_project.Tasks = new List<ITask>();

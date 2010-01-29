@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Enchant;
 using Palaso.Reporting;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -61,12 +61,12 @@ namespace WeSay.ConfigTool
 					{
 						try
 						{
-							if (broker.DictionaryExists(ws.Id))
+							if (broker.DictionaryExists(ws.SpellCheckingId))
 							{
 								writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
 							}
 						}
-						catch (Exception error)  //WS-1296 where (sometimes) a bogus looking id killed Enchant
+						catch (Exception)  //WS-1296 where (sometimes) a bogus looking id killed Enchant
 						{
 							//ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "There was a problem asking the Enchant Spelling system about '{0}'.", ws.Id);
 

@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using WeSay.AddinLib;
-using WeSay.LexicalModel;
 
 namespace Addin.Transform
 {
@@ -132,6 +132,9 @@ namespace Addin.Transform
 				pairs.Add(ChangePair.CreateFullMarkerReplacement(LexSense.WellKnownProperties.SemanticDomainDdp4, "sd"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("citation", "lc"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("definition", "d"));
+
+				//for Comparative African WordList
+				pairs.Add(ChangePair.CreateFullMarkerReplacement("CAWL_en", "nb"));
 
 				if (!String.IsNullOrEmpty(_vernacularLanguageWritingSystemId))
 				{

@@ -5,8 +5,8 @@ using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
-using WeSay.Foundation;
-using WeSay.Foundation.Tests;
+using WeSay.Project.Tests;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation
 {

@@ -6,11 +6,12 @@ using System.Xml;
 using System.Xml.XPath;
 using LiftIO;
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project.ConfigMigration;
 
 namespace WeSay.Project.Tests
@@ -23,7 +24,7 @@ namespace WeSay.Project.Tests
 		public void Setup()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
-
+			WeSayWordsProject.PreventBackupForTests = true;
 		}
 
 		[TearDown]
@@ -282,7 +283,7 @@ namespace WeSay.Project.Tests
 				File.WriteAllText(configPath,
 								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
 				XPathDocument doc = new XPathDocument(configPath);
-				WeSayWordsProject.CheckIfConfigFileVersionIsToNew(doc);
+				WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(doc);
 			}
 		}
 
@@ -297,7 +298,7 @@ namespace WeSay.Project.Tests
 				File.WriteAllText(configPath,
 								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
 				XPathDocument doc = new XPathDocument(configPath);
-				WeSayWordsProject.CheckIfConfigFileVersionIsToNew(doc);
+				WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(doc);
 			}
 		}
 

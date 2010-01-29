@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
 {

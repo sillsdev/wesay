@@ -1,5 +1,4 @@
 using System;
-using WeSay.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {

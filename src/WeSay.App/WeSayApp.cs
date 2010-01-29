@@ -3,19 +3,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using Autofac;
 using CommandLine;
 using LiftIO;
+using Palaso.I8N;
 using Palaso.Reporting;
 using Palaso.Services;
 using Palaso.Services.Dictionary;
 using Palaso.Services.ForServers;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.App.Services;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
-using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -25,16 +23,18 @@ namespace WeSay.App
 	{
 		//private static Mutex _oneInstancePerProjectMutex;
 		private WeSayWordsProject _project;
+	  #if DictionaryServices
 		private DictionaryServiceProvider _dictionary;
-		private readonly CommandLineArguments _commandLineArguments = new CommandLineArguments();
-		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
-		private TabbedForm _tabbedForm;
 		private IDisposable _serviceLifeTimeHelper;
+		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
+#endif
+		private readonly CommandLineArguments _commandLineArguments = new CommandLineArguments();
+		private TabbedForm _tabbedForm;
 
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			WeSayApp app = new WeSayApp(args);
+			var app = new WeSayApp(args);
 			app.Run();
 		}
 
@@ -47,7 +47,7 @@ namespace WeSay.App
 			{
 				Application.SetCompatibleTextRenderingDefault(false);
 			}
-			catch (Exception) //swallow
+			catch (Exception)
 			{
 				//this fails in some test scenarios; perhaps the unit testing framework is leaving us in
 				//the same appdomain, and that remembers that we called this once before?
@@ -83,11 +83,13 @@ namespace WeSay.App
 
 		public void Run()
 		{
+#if DictionaryServices
 			string path = DetermineActualLiftPath(_commandLineArguments.liftPath);
 			if (!String.IsNullOrEmpty(path))
 			{
 				path = path.Replace(Path.DirectorySeparatorChar, '-');
 				path = path.Replace(Path.VolumeSeparatorChar, '-');
+
 
 				_serviceAppSingletonHelper =
 						ServiceAppSingletonHelper.CreateServiceAppSingletonHelperIfNeeded(
@@ -96,8 +98,9 @@ namespace WeSay.App
 				{
 					return; // there's already an instance of this app running
 				}
-			}
 
+			}
+#endif
 			try
 			{
 				DisplaySettings.Default.SkinName = Settings.Default.SkinName;
@@ -119,33 +122,39 @@ namespace WeSay.App
 						return;//couldn't load, and we've already told the user
 					}
 
-					using (_dictionary =
+	   #if DictionaryServices
+				   using (_dictionary =
 						   new DictionaryServiceProvider(repository, this, _project))
 					{
-						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
-						{
-							RecoverUnsavedDataIfNeeded();
-						}
+#endif
 
+#if DictionaryServices
 						StartDictionaryServices();
 						_dictionary.LastClientDeregistered +=
 							_serviceAppSingletonHelper.OnExitIfInServerMode;
-
+#endif
 						WireUpChorusEvents();
 
+#if !DictionaryServices
+						StartUserInterface();
+#endif
+#if DictionaryServices
 						_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
 
 						_dictionary.LastClientDeregistered -=
 							_serviceAppSingletonHelper.OnExitIfInServerMode;
-
+#endif
 						//do a last backup before exiting
 						Logger.WriteEvent("App Exiting Normally.");
 					}
 					_project.BackupNow();
-			   }
+	   #if DictionaryServices
+			  }
+#endif
 		   }
 			finally
 			{
+	   #if DictionaryServices
 				if (_serviceLifeTimeHelper != null)
 				{
 					_serviceLifeTimeHelper.Dispose();
@@ -154,6 +163,7 @@ namespace WeSay.App
 				{
 					_serviceAppSingletonHelper.Dispose();
 				}
+#endif
 			}
 			Logger.ShutDown();
 			Settings.Default.Save();
@@ -182,25 +192,8 @@ namespace WeSay.App
 			_project.ConsiderSynchingOrBackingUp("checkpoint");
 		}
 
-		//!!! Move this into LexEntryRepository and maybe lower.
-		private void RecoverUnsavedDataIfNeeded()
-		{
-			if (!File.Exists(_project.PathToRepository))
-			{
-				return;
-			}
 
-			try
-			{
-				GetLexEntryRepository().BackendRecoverUnsavedChangesOutOfCacheIfNeeded();
-			}
-			catch (IOException e)
-			{
-				ErrorReport.ReportNonFatalException(e);
-				Thread.CurrentThread.Abort();
-			}
-		}
-
+#if DictionaryServices
 		private void OnBringToFrontRequest(object sender, EventArgs e)
 		{
 			if (_tabbedForm == null)
@@ -213,6 +206,7 @@ namespace WeSay.App
 						delegate { _tabbedForm.MakeFrontMostWindow(); }, null);
 			}
 		}
+
 
 		private void StartDictionaryServices()
 		{
@@ -234,6 +228,7 @@ namespace WeSay.App
 					   ServiceAppSingletonHelper.State.ServerMode;
 			}
 		}
+#endif
 
 		///// <summary>
 		///// Only show a dialog if the operation takes more than two seconds
@@ -309,8 +304,10 @@ namespace WeSay.App
 			}
 		}
 
+ #if DictionaryServices
 		public void GoToUrl(string url)
 		{
+
 			_serviceAppSingletonHelper.EnsureUIRunningAndInFront();
 
 			//if it didn't timeout
@@ -319,8 +316,10 @@ namespace WeSay.App
 				Debug.Assert(_tabbedForm != null, "tabbed form should have been started.");
 				_tabbedForm.GoToUrl(url);
 			}
-		}
 
+
+		}
+#endif
 		private void StartUserInterface()
 		{
 			try
@@ -368,9 +367,11 @@ namespace WeSay.App
 
 		private void OnTabbedForm_IntializationComplete(object sender, EventArgs e)
 		{
+	  #if DictionaryServices
 			_serviceAppSingletonHelper.BringToFrontRequest += OnBringToFrontRequest;
 			_serviceAppSingletonHelper.UiReadyForEvents();
 			_dictionary.UiSynchronizationContext = _tabbedForm.synchronizationContext;
+#endif
 		}
 
 		//private static LiftUpdateService SetupUpdateService(LexEntryRepository lexEntryRepository)
@@ -382,12 +383,12 @@ namespace WeSay.App
 
 		private static WeSayWordsProject InitializeProject(string liftPath)
 		{
-			WeSayWordsProject project = new WeSayWordsProject();
+			var project = new WeSayWordsProject();
 			liftPath = DetermineActualLiftPath(liftPath);
 			if (liftPath == null)
 			{
 				ErrorReport.NotifyUserOfProblem(
-						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project.");
+						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project, then click the 'Open in WeSay' button from that application's toolbar.");
 				return null;
 			}
 
@@ -495,7 +496,7 @@ namespace WeSay.App
 
 		private static void ShowCommandLineError(string e)
 		{
-			Parser p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
+			var p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
 			e = e.Replace("Duplicate 'liftPath' argument",
 						  "Please enclose project path in quotes if it contains spaces.");
 			e += "\r\n\r\n" + p.GetUsageString(200);

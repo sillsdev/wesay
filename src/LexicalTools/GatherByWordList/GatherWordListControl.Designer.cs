@@ -44,7 +44,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this._movingLabel = new WeSay.UI.MovingLabel();
-			this._vernacularBox = new MultiTextControl();
+			this._vernacularBox = new WeSay.UI.TextBoxes.MultiTextControl();
 			this._btnPreviousWord = new WeSay.UI.Buttons.PreviousButton();
 			this._btnNextWord = new WeSay.UI.Buttons.NextButton();
 			this._btnAddWord = new WeSay.UI.Buttons.AddButton();
@@ -58,7 +58,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this._instructionLabel.ForeColor = System.Drawing.Color.DarkGray;
 			this._instructionLabel.Location = new System.Drawing.Point(8, 8);
 			this._instructionLabel.Name = "_instructionLabel";
-			this._instructionLabel.Size = new System.Drawing.Size(424, 20);
+			this._instructionLabel.Size = new System.Drawing.Size(434, 20);
 			this._instructionLabel.TabIndex = 2;
 			this._instructionLabel.Text = "Try thinking of ways to say these words in your language.";
 			//
@@ -160,6 +160,9 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._vernacularBox.BackColor = System.Drawing.Color.White;
 			this._vernacularBox.ColumnCount = 3;
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());

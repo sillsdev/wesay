@@ -1,8 +1,8 @@
-using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
-using WeSay.Foundation.Options;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift.Options;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -97,7 +97,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (EntryViewControl entryViewControl = CreateForm(null, false))
 			{
-				Assert.AreEqual(string.Empty, entryViewControl.ControlFormattedView.Text);
+				Assert.AreEqual(string.Empty, entryViewControl.TextContentsOfPreviewForTests);
 			}
 		}
 
@@ -118,8 +118,8 @@ namespace WeSay.LexicalTools.Tests
 			//nb: this is the key, which for noun happens to be the English display name tested for below
 			using (EntryViewControl entryViewControl = CreateForm(apple, false))
 			{
-				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains("noun"));
-				Assert.IsFalse(entryViewControl.ControlFormattedView.Text.Contains("nombre"));
+				Assert.IsTrue(entryViewControl.RtfContentsOfPreviewForTests.Contains("noun"));
+				Assert.IsFalse(entryViewControl.RtfContentsOfPreviewForTests.Contains("nombre"));
 			}
 		}
 
@@ -128,10 +128,10 @@ namespace WeSay.LexicalTools.Tests
 			using (EntryViewControl entryViewControl = CreateForm(entry, false))
 			{
 				Assert.IsTrue(
-						entryViewControl.ControlFormattedView.Text.Contains(GetLexicalForm(entry)));
-				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains(GetMeaning(entry)));
+						entryViewControl.RtfContentsOfPreviewForTests.Contains(GetLexicalForm(entry)));
+				Assert.IsTrue(entryViewControl.RtfContentsOfPreviewForTests.Contains(GetMeaning(entry)));
 				Assert.IsTrue(
-						entryViewControl.ControlFormattedView.Text.Contains(GetExampleSentence(entry)));
+						entryViewControl.RtfContentsOfPreviewForTests.Contains(GetExampleSentence(entry)));
 			}
 		}
 
@@ -217,7 +217,7 @@ namespace WeSay.LexicalTools.Tests
 				MultiTextControl editControl =
 						(MultiTextControl) entryDetailControl.GetEditControlFromRow(0);
 				editControl.TextBoxes[0].Text = "test";
-				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains("test"));
+				Assert.IsTrue(entryViewControl.RtfContentsOfPreviewForTests.Contains("test"));
 			}
 		}
 
@@ -273,8 +273,8 @@ namespace WeSay.LexicalTools.Tests
 																				   TestWritingSystemVernId)
 					)
 			{
-				entryViewControl.ControlFormattedView.Select();
-				string rtfOriginal = entryViewControl.ControlFormattedView.Rtf;
+			   // entryViewControl.ControlFormattedView.Select();
+				string rtfOriginal = entryViewControl.RtfContentsOfPreviewForTests;
 
 				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
 				Control editControl = entryDetailControl.GetEditControlFromRow(0);
@@ -282,7 +282,7 @@ namespace WeSay.LexicalTools.Tests
 				//JDH added after we added multiple ws's per field. Was: editControl.Select();
 				((MultiTextControl) editControl).TextBoxes[0].Select();
 
-				Assert.AreNotEqual(rtfOriginal, entryViewControl.ControlFormattedView.Rtf);
+				Assert.AreNotEqual(rtfOriginal, entryViewControl.RtfContentsOfPreviewForTests);
 			}
 		}
 
@@ -305,8 +305,8 @@ namespace WeSay.LexicalTools.Tests
 																				   TestWritingSystemVernId)
 					)
 			{
-				entryViewControl.ControlFormattedView.Select();
-				string rtfAppleNothingHighlighted = entryViewControl.ControlFormattedView.Rtf;
+				//entryViewControl.ControlFormattedView.Select();
+				string rtfAppleNothingHighlighted = entryViewControl.RtfContentsOfPreviewForTests;
 
 				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
 				Control editControl = entryDetailControl.GetEditControlFromRow(0);
@@ -315,14 +315,14 @@ namespace WeSay.LexicalTools.Tests
 				((MultiTextControl) editControl).TextBoxes[0].Select();
 
 				Assert.AreNotEqual(rtfAppleNothingHighlighted,
-								   entryViewControl.ControlFormattedView.Rtf);
+								   entryViewControl.RtfContentsOfPreviewForTests);
 
 				entryViewControl.DataSource = banana;
 				entryViewControl.DataSource = apple;
 				//            Debug.WriteLine("Expected: "+rtfAppleNothingHighlighted);
-				//            Debug.WriteLine("Actual:" + lexFieldControl.ControlFormattedView.Rtf);
+				//            Debug.WriteLine("Actual:" + lexFieldControl.RtfContentsOfPreviewForTests);
 				Assert.AreEqual(rtfAppleNothingHighlighted,
-								entryViewControl.ControlFormattedView.Rtf);
+								entryViewControl.RtfContentsOfPreviewForTests);
 			}
 		}
 
@@ -341,8 +341,8 @@ namespace WeSay.LexicalTools.Tests
 																				   TestWritingSystemVernId)
 					)
 			{
-				entryViewControl.ControlFormattedView.Select();
-				string rtfEmptyNothingHighlighted = entryViewControl.ControlFormattedView.Rtf;
+				//entryViewControl.ControlFormattedView.Select();
+				string rtfEmptyNothingHighlighted = entryViewControl.RtfContentsOfPreviewForTests;
 
 				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
 				Control editControl = entryDetailControl.GetEditControlFromRow(0);
@@ -351,7 +351,7 @@ namespace WeSay.LexicalTools.Tests
 				((MultiTextControl) editControl).TextBoxes[0].Select();
 
 				Assert.AreNotEqual(rtfEmptyNothingHighlighted,
-								   entryViewControl.ControlFormattedView.Rtf);
+								   entryViewControl.RtfContentsOfPreviewForTests);
 			}
 		}
 
