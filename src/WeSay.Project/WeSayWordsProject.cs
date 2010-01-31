@@ -464,7 +464,10 @@ namespace WeSay.Project
 			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named("PrintingTemplate");
 			builder.Register<WritingSystemCollection>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
 
-			RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
+			if (string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")))
+			{
+				RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
+			}
 
 
 			builder.Register<PublicationFontStyleProvider>(c=> new PublicationFontStyleProvider(c.Resolve<ViewTemplate>("PrintingTemplate")));

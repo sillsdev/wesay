@@ -234,6 +234,7 @@ namespace WeSay.ConfigTool
 		/// <returns>true if the project was sucessfully opend</returns>
 		public bool OpenProject(string path)
 		{
+			Logger.WriteEvent("OpenProject("+path+")");
 			//System.Configuration.ConfigurationManager.AppSettings["LastConfigFilePath"] = path;
 
 			//strip off any trailing '\'
@@ -279,6 +280,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception e)
 			{
+				Project = null;
 				ErrorReport.NotifyUserOfProblem(e, "WeSay was not able to open that project.");
 				return false;
 			}
