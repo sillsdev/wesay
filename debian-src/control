@@ -2,7 +2,7 @@ Source: wesay
 Section: editors
 Priority: optional
 Maintainer: Cambell Prince <cambell_prince@sil.org>
-Build-Depends: debhelper (>=5), mono-gmcs (>=2.0), nant (>= 0.86-beta1), libmono-nunit2.2-cil, libmono1.0-cil, libmono2.0-cil, libmono-winforms2.0-cil, libmono-system-runtime2.0-cil, mono-2.0-devel
+Build-Depends: debhelper (>=5), mono-gmcs (>=2.0), nant (>= 0.86-beta1), libmono-nunit2.4-cil, libmono1.0-cil, libmono2.0-cil, libmono-winforms2.0-cil, libmono-system-runtime2.0-cil, mono-2.0-devel
 Standards-Version: 3.7.3
 
 Package: wesay
