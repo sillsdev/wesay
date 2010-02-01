@@ -99,7 +99,7 @@ namespace WeSay.LexicalTools
 			IsActive = true;
 		}
 
-		public bool Available
+		public virtual bool Available
 		{
 			get { return true; }
 		}

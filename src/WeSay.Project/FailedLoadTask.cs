@@ -118,7 +118,7 @@ namespace WeSay.Project
 
 		public string LocalizedLabel
 		{
-			get { return StringCatalog.Get(_label); }
+			get { return StringCatalog.Get(Label); }
 		}
 
 		public string LocalizedLongLabel

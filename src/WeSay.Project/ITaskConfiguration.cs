@@ -14,6 +14,7 @@ namespace WeSay.Project
 		string ReferenceCountText { get; }
 		bool IsPinned { get; }
 		bool IsVisible { get; set; }
+		bool IsAvailable{get; }
 		bool IsOptional { get; }
 		void Write(XmlWriter writer);
 

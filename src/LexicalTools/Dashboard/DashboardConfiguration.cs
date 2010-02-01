@@ -48,6 +48,11 @@ namespace WeSay.LexicalTools.Dashboard
 			get { return true; }
 		}
 
+		public bool IsAvailable
+		{
+			get { return true; }
+		}
+
 		public virtual bool IsOptional
 		{
 			get { return false; }

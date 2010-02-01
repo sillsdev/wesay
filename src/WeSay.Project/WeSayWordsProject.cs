@@ -464,10 +464,7 @@ namespace WeSay.Project
 			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named("PrintingTemplate");
 			builder.Register<WritingSystemCollection>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
 
-			if (string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")))
-			{
-				RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
-			}
+			RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
 
 
 			builder.Register<PublicationFontStyleProvider>(c=> new PublicationFontStyleProvider(c.Resolve<ViewTemplate>("PrintingTemplate")));
@@ -518,6 +515,10 @@ namespace WeSay.Project
 
 		private void RegisterChorusStuff(ContainerBuilder builder, IEnumerable<IWritingSystem> writingSystemsForChorus)
 		{
+			//NB: currently, the ctor for ChorusSystem requires hg, since it gets or creates a repo in the path.
+			if (!string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")))
+				return;
+
 			//TODO: move all this stuff to ChorusSystem
 			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
 			var chorusSystem = new ChorusSystem(Path.GetDirectoryName(PathToConfigFile));

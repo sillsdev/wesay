@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WeSay.LexicalTools.Review.AdvancedHistory;
 using WeSay.Project;
 
@@ -34,10 +35,6 @@ namespace WeSay.LexicalTools.Review.NotesBrowser
 			return LongLabel;
 		}
 
-		public bool Available
-		{
-			get { return true; }
-		}
 
 		public string Label
 		{
@@ -53,9 +50,17 @@ namespace WeSay.LexicalTools.Review.NotesBrowser
 		{
 			get
 			{
-				return "This task lets you search for and view notes attached anywhere in the dictionary project.";
+				string d = Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en");
+				if(!string.IsNullOrEmpty(d))
+				{
+					d= "NOT AVAILABLE ON THIS COMPUTER"+Environment.NewLine + Environment.NewLine+d+Environment.NewLine + Environment.NewLine;
+				}
+
+				d += "This task lets you search for and view notes attached anywhere in the dictionary project.";
+				return d;
 			}
 		}
+
 
 		public string RemainingCountText
 		{
@@ -70,6 +75,10 @@ namespace WeSay.LexicalTools.Review.NotesBrowser
 		public bool IsPinned
 		{
 			get { return false; }
+		}
+		public override bool IsAvailable
+		{
+			get { return string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")); }
 		}
 
 	}

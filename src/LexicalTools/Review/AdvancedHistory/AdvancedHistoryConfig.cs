@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Review.AdvancedHistory
@@ -33,10 +34,6 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 			return LongLabel;
 		}
 
-		public bool Available
-		{
-			get { return string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")); }
-		}
 
 		public string Label
 		{
@@ -50,8 +47,16 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 
 		public string Description
 		{
-			get { return "This task is for advisors or very advanced users of projects using Chorus to collaborate as a team. It shows the history of the project: who did what, when.  When time and resources permit, we envision making a different task which brings this information to a wider range of users.  It only works when Chorus is enabled. "+
-				Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en");
+			get {
+
+				string d = Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en");
+				if(!string.IsNullOrEmpty(d))
+				{
+					d= "NOT AVAILABLE ON THIS COMPUTER"+Environment.NewLine + Environment.NewLine+d+Environment.NewLine + Environment.NewLine;
+				}
+
+				d+= "This task is for advisors or very advanced users of projects using Chorus to collaborate as a team. It shows the history of the project: who did what, when.  When time and resources permit, we envision making a different task which brings this information to a wider range of users.  It only works when Chorus is enabled. " ;
+				return d;
 			}
 		}
 

@@ -11,6 +11,7 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 {
 	public class AdvancedHistoryTask: TaskBase
 	{
+		private readonly IAdvancedHistoryConfig _config;
 		private readonly IContainer _diContainer;
 		private Control _control;
 
@@ -21,6 +22,7 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 
 			: base(config, lexEntryRepository, taskMemoryRepository)
 		{
+			_config = config;
 			_diContainer = diContainer;
 		}
 
@@ -31,6 +33,11 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 			{
 				return false;
 			}
+		}
+
+		public override bool Available
+		{
+			get { return string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")); }
 		}
 
 		public override DashboardGroup Group

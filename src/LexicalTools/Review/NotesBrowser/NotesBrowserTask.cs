@@ -37,6 +37,13 @@ namespace WeSay.LexicalTools.Review.NotesBrowser
 			}
 		}
 
+
+		public override bool Available
+		{
+			get { return string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")); }
+		}
+
+
 		public override DashboardGroup Group
 		{
 			get { return DashboardGroup.Review; }
