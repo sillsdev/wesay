@@ -19,13 +19,14 @@
 			</fileset>
 		</copy>
 
+		<copy todir="${build.namespace.dir}" >
+			<fileset basedir=".">
+				<include name="Resources/*" />
+			</fileset>
+		</copy>
+
 		<!-- review: move resx into same folder as .build or Resources -->
 		<!-- could consider using the cd task from nantcontrib -->
-		<resgen todir="${build.namespace.dir}" usesourcepath="true">
-			<resources>
-				<include name="${build.namespace.dir}/*.resx" />
-			</resources>
-		</resgen>
 		<resgen todir="${build.namespace.dir}/Properties" usesourcepath="true">
 			<resources>
 				<include name="${build.namespace.dir}/Properties/*.resx" />
