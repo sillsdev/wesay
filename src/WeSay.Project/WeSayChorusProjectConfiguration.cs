@@ -14,6 +14,9 @@ namespace WeSay.Project
 
 			ExcludePatterns.Add("**/cache");
 			ExcludePatterns.Add("**/Cache");
+			ExcludePatterns.Add("autoFonts.css");
+			ExcludePatterns.Add("autoLayout.css");
+			ExcludePatterns.Add("factoryDicitonary.css");
 			ExcludePatterns.Add("*.old");
 			ExcludePatterns.Add("*.WeSayUserMemory");
 			ExcludePatterns.Add("*.tmp");
@@ -26,8 +29,7 @@ namespace WeSay.Project
 			IncludePatterns.Add("**.lift");
 			IncludePatterns.Add("**.WeSayConfig");
 			IncludePatterns.Add("**.WeSayUserConfig");
-			IncludePatterns.Add("**WritingSystemPrefs.xml");
-			IncludePatterns.Add("**PartsOfSpeech.xml");
+			IncludePatterns.Add("**.xml");
 			IncludePatterns.Add(".hgIgnore");
 
 		}
