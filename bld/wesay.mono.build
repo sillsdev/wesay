@@ -204,6 +204,7 @@
 				<exclude name="Windows IME"/>
 				<exclude name="Keyman6"/>
 				<exclude name="Keyman7"/>
+				<exclude name="NUnit Windows Forms"/>
 			</categories>
 			</test>
 		</nunit2>
@@ -222,10 +223,12 @@
 				<include name="${project.output.dir}/*.Tests.dll" />
 			</assemblies>
 			<categories>
+				<exclude name="DictionaryServices" />
 				<exclude name="MouseSensitive"/>
 				<exclude name="Windows IME"/>
 				<exclude name="Keyman6"/>
 				<exclude name="Keyman7"/>
+				<exclude name="NUnit Windows Forms"/>
 			</categories>
 			</test>
 		</nunit2>
