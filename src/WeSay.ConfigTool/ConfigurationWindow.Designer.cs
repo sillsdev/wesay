@@ -146,7 +146,7 @@ namespace WeSay.ConfigTool
 			this.openProjectInWeSayToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.openProjectInWeSayToolStripMenuItem.Name = "openProjectInWeSayToolStripMenuItem";
 			this.openProjectInWeSayToolStripMenuItem.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.openProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+			this.openProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
 			this.openProjectInWeSayToolStripMenuItem.Text = "Open in WeSay";
 			this.openProjectInWeSayToolStripMenuItem.ToolTipText = "Open this in WeSay";
 			this.openProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.OnOpenThisProjectInWeSay);
@@ -156,7 +156,7 @@ namespace WeSay.ConfigTool
 			this._versionToolStripLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this._versionToolStripLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
 			this._versionToolStripLabel.Name = "_versionToolStripLabel";
-			this._versionToolStripLabel.Size = new System.Drawing.Size(42, 22);
+			this._versionToolStripLabel.Size = new System.Drawing.Size(45, 22);
 			this._versionToolStripLabel.Text = "version";
 			//
 			// toolStripDropDownButton1
@@ -168,7 +168,7 @@ namespace WeSay.ConfigTool
 			this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
 			this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-			this.toolStripDropDownButton1.Size = new System.Drawing.Size(72, 22);
+			this.toolStripDropDownButton1.Size = new System.Drawing.Size(78, 22);
 			this.toolStripDropDownButton1.Text = "FieldWorks";
 			//
 			// _saveACopyForFLEx54ToolStripMenuItem
@@ -214,6 +214,7 @@ namespace WeSay.ConfigTool
 			this.Icon = global::WeSay.ConfigTool.Properties.Resources.WeSaySetupApplicationIcon;
 			this.Name = "ConfigurationWindow";
 			this.Text = "WeSay Configuration Tool";
+			this.Load += new System.EventHandler(this.ConfigurationWindow_Load);
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AdminWindow_FormClosed);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AdminWindow_FormClosing);
 			this.toolStrip2.ResumeLayout(false);

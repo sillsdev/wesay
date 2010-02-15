@@ -461,8 +461,17 @@ namespace WeSay.ConfigTool
 		private void OnHelpToolStrip_Click(object sender, EventArgs e)
 		{
 			string helpFilePath = Path.Combine(WeSayWordsProject.ApplicationRootDirectory, "WeSay Documentation.chm");
-			var uri = new Uri(helpFilePath);
-			Help.ShowHelp(this, uri.AbsoluteUri);
+			if(File.Exists(helpFilePath))
+			{
+				var uri = new Uri(helpFilePath);
+				Help.ShowHelp(this, uri.AbsoluteUri);
+			}
+			Process.Start("http://wesay.org/wiki/Help_And_Contact");
+		}
+
+		private void ConfigurationWindow_Load(object sender, EventArgs e)
+		{
+
 		}
 	}
 }
