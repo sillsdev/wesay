@@ -3,8 +3,6 @@
 # This file is distributed under the same license as the wesay package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
 #
-msgid ""
-msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-03-03 06:45+0000\n"
@@ -93,11 +91,8 @@ msgstr ""
 "dictionnaire imprimé, les mots dérivés ou variants peuvent parfois être "
 "presentés comme sous-entrées de leurs formes de base."
 
-msgid "Looking for USB Keys..."
-msgstr "En train de détecter des clefs USB..."
 
-msgid "Backing Up..."
-msgstr "En train de sauvegarder..."
+msgstr "En train de détecter des clefs USB..."
 
 msgid "Backup Complete"
 msgstr "Fin de la sauvegarde"
@@ -139,12 +134,6 @@ msgstr "Courriel"
 msgid "Synchronize"
 msgstr "Synchroniser"
 
-#. description of syncrhonize action
-msgid "Updates the repository with our work, and gets the work of others."
-msgstr ""
-"Mettre à jour le dépôt avec notre travail, puis charger le travail des "
-"autres."
-
 #. Long label for synchronize action.
 msgid "Synchronize With Repository"
 msgstr "Synchroniser avec le dépôt"
@@ -160,9 +149,6 @@ msgstr "Terminé"
 
 msgid "OK"
 msgstr "OK"
-
-msgid "View Report"
-msgstr "Afficher le rapport"
 
 msgid "Shows some information about the lexicon."
 msgstr "Affiche quelques informations sur le lexique"
@@ -192,9 +178,6 @@ msgstr ""
 "Ouvrir le dictionnaire dans Lexique Pro pour imprimer ou créer une page web. "
 "Nécessite LP en version 3.0 ou supérieure."
 
-msgid "Make Pdf Dictionary"
-msgstr "Créer un dictionnaire en format PDF"
-
 msgid "Export To SFM"
 msgstr "Exporter en SFM"
 
@@ -208,14 +191,9 @@ msgstr "Accueil"
 msgid "Switch tasks and see current status of tasks"
 msgstr "Changer de tâche et voir l'état actuel des tâches"
 
-msgid "{1} dictionary has {0} words"
-msgstr "Le dictionnaire {1} contient {0} mots"
-
 msgid "Cannot find {0}"
 msgstr "Impossible de trouver {0}"
 
-#. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
-#. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
 #. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
 msgid "Empty"
 msgstr "Vide"
@@ -232,17 +210,6 @@ msgstr "Il n'y reste aucun travail pour cette tâche."
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "&This word has no Base Form"
 msgstr "Ce mot n'a pas de forme de base"
-msgstr ""
-
-#. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
-msgid "No Gloss"
-msgstr "Aucune glose"
-
-msgid "Hide &Uncommon Fields"
-msgstr "Cacher les champs rares"
-
-msgid "Show &Uncommon Fields"
-msgstr "Afficher les champs rares"
 
 msgid "&Delete This Word"
 msgstr "&Supprimer ce mot"
@@ -263,7 +230,7 @@ msgstr ""
 "mots dans votre propre langue."
 
 #. This is the field containing an example sentence of a sense of a word.
-#. This is the field containing an example sentence of a sense of a word.
+
 msgid "Example"
 msgstr "Exemple"
 
@@ -278,10 +245,6 @@ msgstr "Signification"
 #. The label for the field showing a single word translation, as used in interlinear text glossing.
 msgid "Gloss"
 msgstr "Glose"
-
-#. Generic desciption of how many items in a task are left to do.
-msgid "Remaining:"
-msgstr "Restant:"
 
 #. Generic description of how many total items there are in a task.
 msgid "Total:"
@@ -318,11 +281,6 @@ msgstr "Autonyme"
 msgid "Definition"
 msgstr "Définition"
 
-#. The label for the field showing the literal meaning of idiom or proverb.
-msgid "Literal Meaning"
-msgstr "Sens littéral"
-
-#. The label for the field showing a note.
 #. The label for the field showing a note.
 msgid "Note"
 msgstr "Note"
@@ -346,10 +304,6 @@ msgstr "Traduction de phrase illustrative"
 #. The label for the field showing Semantic Domains
 msgid "Sem Dom"
 msgstr "Domaine"
-
-#. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
-msgid "Base Form"
-msgstr "Forme de base"
 
 msgid "Cross Reference"
 msgstr "Renvoi"
