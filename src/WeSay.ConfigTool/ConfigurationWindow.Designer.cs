@@ -31,7 +31,6 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigurationWindow));
 			this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,8 +44,6 @@ namespace WeSay.ConfigTool
 			this.toolStripButton9 = new System.Windows.Forms.ToolStripButton();
 			this.openProjectInWeSayToolStripMenuItem = new System.Windows.Forms.ToolStripButton();
 			this._versionToolStripLabel = new System.Windows.Forms.ToolStripLabel();
-			this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-			this._saveACopyForFLEx54ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripHelpButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,7 +102,6 @@ namespace WeSay.ConfigTool
 			this.toolStripButton9,
 			this.openProjectInWeSayToolStripMenuItem,
 			this._versionToolStripLabel,
-			this.toolStripDropDownButton1,
 			this.toolStripHelpButton});
 			this.toolStrip2.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip2.Name = "toolStrip2";
@@ -158,25 +154,6 @@ namespace WeSay.ConfigTool
 			this._versionToolStripLabel.Name = "_versionToolStripLabel";
 			this._versionToolStripLabel.Size = new System.Drawing.Size(45, 22);
 			this._versionToolStripLabel.Text = "version";
-			//
-			// toolStripDropDownButton1
-			//
-			this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this._saveACopyForFLEx54ToolStripMenuItem});
-			this.toolStripDropDownButton1.ForeColor = System.Drawing.SystemColors.ControlDark;
-			this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
-			this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-			this.toolStripDropDownButton1.Size = new System.Drawing.Size(78, 22);
-			this.toolStripDropDownButton1.Text = "FieldWorks";
-			//
-			// _saveACopyForFLEx54ToolStripMenuItem
-			//
-			this._saveACopyForFLEx54ToolStripMenuItem.Name = "_saveACopyForFLEx54ToolStripMenuItem";
-			this._saveACopyForFLEx54ToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-			this._saveACopyForFLEx54ToolStripMenuItem.Text = "Save a copy for FLEx 5.4...";
-			this._saveACopyForFLEx54ToolStripMenuItem.Click += new System.EventHandler(this.OnSaveACopyForFLEx5Pt4);
 			//
 			// toolStripHelpButton
 			//
@@ -239,8 +216,6 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.ToolStripButton toolStripButton9;
 		private System.Windows.Forms.ToolStripButton openProjectInWeSayToolStripMenuItem;
 		private System.Windows.Forms.ToolStripLabel _versionToolStripLabel;
-		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
-		private System.Windows.Forms.ToolStripMenuItem _saveACopyForFLEx54ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripDropDownButton toolStripHelpButton;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
