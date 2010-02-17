@@ -468,7 +468,16 @@ namespace WeSay.LexicalTools.GatherByWordList
 			_currentWordIndex = -1;
 			if(!NavigateNext())
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("This word pack (with {0} entries) does not contain any words in the languages of your definition field.", _words.Count);
+				if (_words == null)//WS-33662, which we could not reproduce
+				{
+					Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, there was a problem loading this word pack. (to WeSay developers: may be reproduction of WS-33662)");
+				}
+				else
+				{
+					Palaso.Reporting.ErrorReport.NotifyUserOfProblem(
+						"This word pack (with {0} entries) does not contain any words in the languages of your definition field.",
+						_words.Count);
+				}
 			}
 		}
 
