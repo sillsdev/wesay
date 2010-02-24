@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
@@ -146,9 +147,9 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 					Assert.IsTrue(ProjectFromFLExCreator.Create(targetDir, lift.Path));
 					var projectName = Path.GetFileNameWithoutExtension(targetDir);
 					Assert.IsTrue(Directory.Exists(targetDir));
-					var liftName = projectName+".lift";
+					var liftName = projectName + ".lift";
 					AssertFileExistsInTargetDir(targetDir, liftName);
-					AssertFileExistsInTargetDir(targetDir, projectName+".wesayconfig");
+					AssertFileExistsInTargetDir(targetDir, projectName+".WeSayConfig");
 
 					var liftPath = Path.Combine(targetDir, liftName);
 					AssertThatXmlIn.File(liftPath).HasAtLeastOneMatchForXpath("//entry[@id='foo']");
