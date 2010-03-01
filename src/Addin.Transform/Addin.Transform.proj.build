@@ -26,6 +26,7 @@
 				<items>
 					<include name="${build.namespace.dir}/**" />
 					<exclude name="${build.namespace.dir}/Resources" />
+					<exclude name="${build.namespace.dir}/OpenOffice" />
 				</items>
 			</in>
 			<do>
@@ -65,6 +66,7 @@
 				<include name="WeSay.Project.dll" />
 				<include name="LexicalModel.dll" />
 				<include name="Prince.dll" />
+				<include name="ICSharpCode.SharpZipLib.dll" />
 			</references>
 			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
 				<include name="${build.namespace.dir}/**/*.resources" />

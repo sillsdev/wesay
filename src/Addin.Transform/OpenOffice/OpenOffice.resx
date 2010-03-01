@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!--
 	Microsoft ResX Schema
@@ -117,44 +117,15 @@
   <resheader name="writer">
 	<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="gears" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\genericAction.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="greenPrinter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\greenPrinter.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="pdfDictionary" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\pdfdictionary.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="printButtonImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\printAction.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SfmTransformerButtonImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\toolbox.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="wordExport" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\wordExport.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="greenLexiquePro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\greenLexiquePro.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="lexiquePro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\lexiquePro.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="greenPdfDictionary" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\greenPdfDictionary.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="xhtml" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\htmlDocument.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="openOffice" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\oooWriter.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
+  <!--
   <data name="OpenOffice.lift2odfContent.xsl" type="System.Resources.ResXFileRef,  System.Windows.Forms">
-	<value>OpenOffice\lift2odfContent.xsl;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+	<value>lift2odfContent.xsl;System.IO.Stream, System.IO, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="OpenOffice.writingSystem2odfStyles.xsl" type="System.Resources.ResXFileRef,  System.Windows.Forms">
-	<value>OpenOffice\writingSystem2odfStyles.xsl;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+
+  <data name="OpenOffice.writingSystem2odfStyles.xsl" type="System.Resources.ResXFileRef">
+	<value>writingSystem2odfStyles.xsl</value>
   </data>
+  -->
 </root>
