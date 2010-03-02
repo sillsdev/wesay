@@ -21,8 +21,7 @@ namespace WeSay.UI.Tests
 		private GhostBinding<Child> _binding;
 		protected bool _didNotify;
 
-		private readonly string _writingSystemId =
-				BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
+		private string _writingSystemId;
 
 		public class Child: PalasoDataObject
 		{
@@ -92,6 +91,7 @@ namespace WeSay.UI.Tests
 		public void Setup()
 		{
 			BasilProject.InitializeForTests();
+			_writingSystemId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 
 			WritingSystem writingSystem = new WritingSystem(_writingSystemId,
 															new Font(FontFamily.GenericSansSerif, 24));
