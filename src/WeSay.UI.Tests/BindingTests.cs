@@ -19,12 +19,6 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		public void Fail_For_Teamcity()
-		{
-			Assert.Fail("Red or not?!");
-		}
-
-		[Test]
 		public void TargetToWidget()
 		{
 			MultiText text = new MultiText();
