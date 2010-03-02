@@ -177,6 +177,7 @@ namespace Addin.Transform.OpenOffice
 		private static void OnDoTransformWork(object sender, DoWorkEventArgs args)
 		{
 			ProgressState progressState = (ProgressState) args.Argument;
+			if (progressState == null) return;
 			TransformWorkerArguments arguments =
 				(TransformWorkerArguments)progressState.Arguments;
 			//ProjectInfo projectInfo = arguments.projectInfo;
