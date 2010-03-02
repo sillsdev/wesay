@@ -125,6 +125,8 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 </xsl:if>
 
 <text:p text:style-name="entry">
+<xsl:variable name="currentWord" select="lexical-unit/form/text"/>
+<text:variable-set text:name="EntryWord" text:display="none" text:formula="{concat('ooow:', $currentWord)}" office:value-type="string" office:string-value="$currentWord"/>
 <xsl:apply-templates/>
 </text:p>
 </xsl:if>
