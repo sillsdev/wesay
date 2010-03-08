@@ -38,6 +38,10 @@ exclude-result-prefixes="xsl"
 
 <xsl:param name="caseLower">abcdefghijklmnopqrstuvwxyz</xsl:param>
 <xsl:param name="caseUpper">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:param>
+<xsl:param name="latinAlt"
+>ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïñòóôõöøùúûüýÿĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłŃńŅņŇňŉŊŋŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽž</xsl:param>
+<xsl:param name="latinEqu"
+>aaaaaaceeeeiiiidnoooooouuuuyaaaaaaaceeeeiiiinoooooouuuuyyaaaaaaccccccccddddeeeeeeeeeegggggggghhhhiiiiiiiiiiiijjkkkllllllllllnnnnnnnnnoooooooorrrrrrssssssssttttttuuuuuuuuuuuuwwyyyzzzzzz</xsl:param>
 <xsl:param name="baseAlternates">ဣဤဥဦဧဩဪ</xsl:param>
 <xsl:param name="baseEquivalent">အအအအအအအ</xsl:param>
 
@@ -49,7 +53,7 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 
 <xsl:variable name="firstLetters">
 <xsl:for-each select="$entries">
-<xsl:value-of select="translate(substring(.,1,1), $baseAlternates, $baseEquivalent)"/>
+<xsl:value-of select="translate(substring(.,1,1), concat($baseAlternates, $latinAlt, $caseUpper), concat($baseEquivalent, $latinEqu, $caseLower))"/>
 </xsl:for-each>
 </xsl:variable>
 
@@ -75,11 +79,9 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 <office:document-content office:version="1.2">
 <office:scripts>
   <office:event-listeners>
-<!--
    <script:event-listener script:language="ooo:script" script:event-name="dom:load" xlink:href="vnd.sun.star.script:WeSay.DictHeaders.js?language=JavaScript&amp;location=document"/>
--->
+   <!-- Using on page-count can cause numerous reruns
    <script:event-listener script:language="ooo:script" script:event-name="office:page-count-change" xlink:href="vnd.sun.star.script:WeSay.DictHeaders.js?language=JavaScript&amp;location=document"/>
-   <!--
    <script:event-listener script:language="ooo:script" script:event-name="office:print" xlink:href="vnd.sun.star.script:WeSay.DictHeaders.js?language=JavaScript&amp;location=document"/>
    -->
   </office:event-listeners>
@@ -119,13 +121,17 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 <xsl:if test="contains($firstLetterEntries, concat('{',@id,'}'))">
 <!-- Assume that the font for the language headings has been set correctly in styles.xml -->
 <text:h text:style-name="Heading_20_1" text:outline-level="1">
-<xsl:value-of select="translate(substring(lexical-unit/form/text, 1, 1), $caseLower, $caseUpper)"/>
+<xsl:value-of select="translate(translate(substring(lexical-unit/form/text, 1, 1), $latinAlt, $latinEqu), $caseLower, $caseUpper)"/>
 </text:h>
 </xsl:if>
 
 <text:p text:style-name="entry">
+<!-- Using variable-set the first word on the page is easy, but it does not solve the last word and
+ it is probably confusing for user. -->
+<!--
 <xsl:variable name="currentWord" select="lexical-unit/form/text"/>
 <text:variable-set text:name="EntryWord" text:display="none" text:formula="{concat('ooow:', $currentWord)}" office:value-type="string" office:string-value="$currentWord"/>
+-->
 <xsl:apply-templates/>
 </text:p>
 </xsl:if>
@@ -136,12 +142,14 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 </xsl:template>
 
 <xsl:template match="citation">
+<xsl:text> </xsl:text>
 <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="sense">
 <xsl:if test="count(ancestor::entry//sense) &gt; 1">
 <xsl:variable name="senseNum"><xsl:number level="multiple" from="entry" count="sense"/></xsl:variable>
+<text:span text:style-name="sense-number">
 <xsl:choose>
 <xsl:when test="$senseNum = 1">
 <text:variable-set text:name="sense" text:formula="1" office:value-type="float" office:value="{$senseNum}" style:data-style-name="N0"><xsl:value-of select="$senseNum"/></text:variable-set>
@@ -150,31 +158,40 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 <text:variable-set text:name="sense" text:formula="ooow:sense+1" office:value-type="float" office:value="{$senseNum}" style:data-style-name="N0"><xsl:value-of select="$senseNum"/></text:variable-set>
 </xsl:otherwise>
 </xsl:choose>
+</text:span>
 </xsl:if>
 <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="definition">
+<xsl:text> </xsl:text>
 <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="example">
+<xsl:text> </xsl:text>
 <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="translation">
+<xsl:text> </xsl:text>
 <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="grammatical-info">
+<xsl:text> </xsl:text>
+<text:span text:style-name="grammatical-info"><xsl:value-of select="@value"/></text:span>
 </xsl:template>
 
 <xsl:template match="form">
-<xsl:apply-templates/><xsl:text> </xsl:text>
+<xsl:apply-templates/>
+<xsl:if test="following-sibling::form">
+<xsl:text> </xsl:text>
+</xsl:if>
 </xsl:template>
 
 <xsl:template match="gloss">
-<xsl:apply-templates/><xsl:text> </xsl:text>
+<!--Ignore, it is often same as other element content.-->
 </xsl:template>
 
 <xsl:template match="text">
@@ -196,6 +213,18 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 </xsl:choose>
 </xsl:template>
 
+<xsl:template match="note">
+<!-- Using this can produce far too many notes for OOo to cope with-->
+<!--
+<office:annotation>
+<dc:creator><xsl:value-of select="@type"/></dc:creator>
+<text:p>
+<xsl:apply-templates />
+</text:p>
+</office:annotation>
+-->
+</xsl:template>
+
 <xsl:template match="field"></xsl:template>
 
 <xsl:template match="span">
@@ -205,17 +234,24 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 
 <xsl:template match="illustration">
 <!-- really we need to scale these images, but that might be better done in a macro -->
+<draw:frame draw:style-name="Illustration_Caption" draw:name="{concat('illustration_caption', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="1" fo:min-width="2.5cm">
+<draw:text-box>
+<text:p text:style-name="Illustration">
 <xsl:choose>
 <xsl:when test="substring(@href, 1,1) = '/'">
-<draw:frame draw:style-name="fr2" draw:name="{concat('illustration', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="1"><draw:image xlink:href="{@href}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
+<draw:frame draw:style-name="Illustration" draw:name="{concat('illustration', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="2" style:rel-width="100%" style:rel-height="scale"><draw:image xlink:href="{@href}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
 </xsl:when>
 <xsl:when test="contains(@href, ':')">
-<draw:frame draw:style-name="fr2" draw:name="{concat('illustration', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="1"><draw:image xlink:href="{@href}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
+<draw:frame draw:style-name="Illustration" draw:name="{concat('illustration', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="2" style:rel-width="100%" style:rel-height="scale"><draw:image xlink:href="{@href}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
 </xsl:when>
 <xsl:otherwise>
-<draw:frame draw:style-name="Illustration" draw:name="{concat('illustration_', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="1" ><draw:image xlink:href="{concat($urlBase,@href)}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
+<draw:frame draw:style-name="Illustration" draw:name="{concat('illustration_', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="2" style:rel-width="100%" style:rel-height="scale"><draw:image xlink:href="{concat($urlBase,@href)}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
 </xsl:otherwise>
 </xsl:choose>
+<xsl:value-of select="ancestor::entry/lexical-unit/form/text"/>
+</text:p>
+</draw:text-box>
+</draw:frame>
 </xsl:template>
 
 </xsl:stylesheet>

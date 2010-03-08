@@ -107,7 +107,7 @@ etymology
   </style:style>
   <xsl:text>
  </xsl:text>
-<style:style style:name="Heading_20_1" style:display-name="Heading 1" style:family="paragraph" style:parent-style-name="Heading" style:next-style-name="Text_20_body" style:default-outline-level="1" style:class="text">
+ <style:style style:name="Heading_20_1" style:display-name="Heading 1" style:family="paragraph" style:parent-style-name="Heading" style:next-style-name="Text_20_body" style:default-outline-level="1" style:class="text">
    <style:text-properties fo:font-size="115%" fo:font-weight="bold" style:font-size-asian="115%" style:font-weight-asian="bold" style:font-size-complex="115%" style:font-weight-complex="bold"  style:font-name="{$primaryFont}" style:font-name-asian="{$primaryFont}" style:font-name-complex="{$primaryFont}"/>
   </style:style>
 <xsl:text>
@@ -125,6 +125,21 @@ etymology
  </xsl:text>
   <style:style style:name="entry" style:display-name="entry" style:family="paragraph" style:parent-style-name="Text_20_body" style:class="text">
    <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0.1cm" fo:orphans="2" fo:widows="2" />
+  </style:style>
+  <xsl:text>
+  </xsl:text>
+  <style:style style:name="Illustration" style:display-name="Illustration" style:family="paragraph" style:parent-style-name="Text_20_body" style:next-style-name="Illustration" style:class="text">
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties style:font-name="{$primaryFont}" style:font-name-asian="{$primaryFont}" style:font-name-complex="{$primaryFont}" fo:font-style="italic" style:font-style-asian="italic" style:font-style-complex="italic"/>
+  </style:style>
+ <xsl:text>
+ </xsl:text>
+  <style:style style:name="sense-number" style:display-name="sense-number" style:family="text">
+   <style:text-properties style:font-name="{$primaryFont}" style:font-name-asian="{$primaryFont}" style:font-name-complex="{$primaryFont}" fo:font-size="10pt" style:font-size-asian="10pt" style:font-size-complex="10pt" style:text-position="super"/>
+  </style:style>
+  <xsl:text>
+  </xsl:text>
+  <style:style style:name="grammatical-info" style:display-name="grammatical-info" style:family="text"><style:text-properties style:font-name="Arial" style:font-name-asian="Tahoma" style:font-name-complex="Tahoma" fo:font-size="10pt" style:font-size-asian="10pt" style:font-size-complex="10pt" fo:font-variant="small-caps"/>
   </style:style>
   <xsl:text>
   </xsl:text>
@@ -237,9 +252,12 @@ etymology
 <xsl:with-param name="lift-element">label</xsl:with-param>
 </xsl:call-template>
 
-<style:style style:name="Illustration" style:family="graphic">
-   <style:graphic-properties style:run-through="background" style:wrap="none" style:number-wrapped-paragraphs="no-limit" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="center" style:horizontal-rel="paragraph" fo:background-color="transparent" style:background-transparency="100%" fo:padding="0cm" fo:border="none">
-	<style:background-image/>
+   <style:style style:name="Illustration_Caption" style:family="graphic">
+   <style:graphic-properties style:run-through="background" style:wrap="dynamic" style:number-wrapped-paragraphs="no-limit" style:vertical-pos="from-top" style:vertical-rel="paragraph" style:horizontal-pos="right" style:horizontal-rel="paragraph" fo:background-color="transparent" style:background-transparency="100%" fo:padding="0cm" fo:border="none"  fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" fo:min-width="2.5cm">
+   </style:graphic-properties>
+   </style:style>
+   <style:style style:name="Illustration" style:family="graphic">
+   <style:graphic-properties style:run-through="background" style:wrap="none" style:number-wrapped-paragraphs="no-limit" style:vertical-pos="from-top" style:vertical-rel="paragraph" style:horizontal-pos="center" style:horizontal-rel="paragraph-content" fo:background-color="transparent" style:background-transparency="100%" fo:padding="0cm" fo:border="none"  fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" draw:image-opacity="100%">
    </style:graphic-properties>
    </style:style>
  </office:styles>

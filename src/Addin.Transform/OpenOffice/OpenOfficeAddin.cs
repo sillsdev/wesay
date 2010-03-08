@@ -10,7 +10,11 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
-
+using Palaso.Data;
+using Palaso.Lift;
+using Palaso.DictionaryServices;
+using Palaso.DictionaryServices.Model;
+using Palaso.DictionaryServices.Lift;
 using Mono.Addins;
 
 using ICSharpCode.SharpZipLib.Zip;
@@ -23,6 +27,7 @@ using Palaso.UI.WindowsForms.Progress;
 using WeSay.Project;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Foundation;
 
 namespace Addin.Transform.OpenOffice
@@ -30,6 +35,7 @@ namespace Addin.Transform.OpenOffice
 	[Extension]
 	public class OpenOfficeAddin : IWeSayAddin
 	{
+		private Boolean _launchAfterExport = true;
 
 		public OpenOfficeAddin()
 		{
@@ -110,7 +116,6 @@ namespace Addin.Transform.OpenOffice
 				args.lexEntryRepository = projectInfo.ServiceProvider.GetService(typeof(LexEntryRepository))
 					as LexEntryRepository;
 
-					//projectInfo.LocateFile(Path.Combine("templates", "odfTemplate"));
 				string templateDir = Path.Combine(projectInfo.PathToApplicationRootDirectory, "templates");
 				args.odfTemplate = Path.Combine(templateDir, "odfTemplate");
 				args.topLevelDir = projectInfo.PathToTopLevelDirectory;
@@ -119,7 +124,7 @@ namespace Addin.Transform.OpenOffice
 					Object [] msgArgs = {args.odfTemplate };
 					ErrorReport.NotifyUserOfProblem("Directory {0} does not exist.", msgArgs);
 				}
-				if (DoTransformWithProgressDialog(args))
+				if (DoTransformWithProgressDialog(args) && _launchAfterExport)
 					Process.Start(odtPath);
 			}
 			catch (Exception e)
@@ -171,6 +176,34 @@ namespace Addin.Transform.OpenOffice
 			public string odfTemplate;
 		}
 
+		private static void SortLift(string outputPath, LexEntryRepository lexEntryRepository, ViewTemplate template)
+		{
+			using (var exporter = new LiftWriter(outputPath))
+			{
+				WritingSystem firstWs = template.HeadwordWritingSystems[0];
+				ResultSet<LexEntry> recordTokens =
+					lexEntryRepository.GetAllEntriesSortedByHeadword(firstWs);
+				int index = 0;
+				foreach (RecordToken<LexEntry> token in recordTokens)
+				{
+					int homographNumber = 0;
+					if ((bool) token["HasHomograph"])
+					{
+						homographNumber = (int) token["HomographNumber"];
+					}
+					LexEntry lexEntry = token.RealObject;
+					EmbeddedXmlCollection sortedAnnotation = new EmbeddedXmlCollection();
+					sortedAnnotation.Values.Add("<annotation name='sorted-index' value='" + (++index) +"'/>");
+
+					lexEntry.Properties.Add(new KeyValuePair<string,object>("SortedIndex", sortedAnnotation));
+
+					exporter.Add(lexEntry, homographNumber);
+				}
+
+				exporter.End();
+			}
+		}
+
 		/// <summary>
 		/// this runs in a worker thread
 		/// </summary>
@@ -183,11 +216,12 @@ namespace Addin.Transform.OpenOffice
 			//ProjectInfo projectInfo = arguments.projectInfo;
 
 
-			string pliftPath = Path.Combine(arguments.exportDir,
-											arguments.name + ".plift");
-			progressState.StatusLabel = "Transforming to PLift";
-			var maker = new PLiftMaker();
-			maker.MakePLiftTempFile(pliftPath, arguments.lexEntryRepository, arguments.viewTemplate);
+			string liftPath = Path.Combine(arguments.exportDir,
+											arguments.name + ".lift");
+			progressState.StatusLabel = "Sorting Lift";
+			SortLift(liftPath, arguments.lexEntryRepository, arguments.viewTemplate);
+			//var maker = new PLiftMaker();
+			//maker.MakePLiftTempFile(pliftPath, arguments.lexEntryRepository, arguments.viewTemplate);
 			String odfTemplate =  arguments.odfTemplate;
 			String contentPath = Path.Combine(arguments.exportDir, "content.xml");
 			String stylesPath = Path.Combine(arguments.exportDir, "styles.xml");
@@ -212,9 +246,12 @@ namespace Addin.Transform.OpenOffice
 				XsltArgumentList xsltArgs = new XsltArgumentList();
 				xsltArgs.AddParam("title", "", arguments.name);
 				// TODO what is the correct url base path for illustrations?
-				xsltArgs.AddParam("urlBase", "", arguments.topLevelDir);
+				// It seems one level up just gets out of the zip file, so use 2 levels here
+				xsltArgs.AddParam("urlBase", "",  ".." + Path.DirectorySeparatorChar +
+						".." + Path.DirectorySeparatorChar +
+						"pictures" + Path.DirectorySeparatorChar);
 
-				transform.Transform(pliftPath, xsltArgs, contentOutput);
+				transform.Transform(liftPath, xsltArgs, contentOutput);
 				contentOutput.Close();
 
 				progressState.StatusLabel = "Preparing ODT styles";
@@ -230,15 +267,8 @@ namespace Addin.Transform.OpenOffice
 				transform.Load(xsltReaderStyles, stylesSettings, new XmlUrlResolver());
 				xsltReaderStyles.Close();
 
-				Field lexicalFormField = arguments.viewTemplate.Fields.Find(f=> f.FieldName == "EntryLexicalForm");
 				xsltArgs = new XsltArgumentList();
-				if (lexicalFormField != null)
-				{
-					if (lexicalFormField.WritingSystemIds.Count > 0)
-					{
-						xsltArgs.AddParam("primaryLangCode", "", lexicalFormField.WritingSystemIds[0]);
-					}
-				}
+				xsltArgs.AddParam("primaryLangCode", "", GetHeadwordWritingSystemId(arguments.viewTemplate));
 
 				transform.Transform(writingSystemPath, xsltArgs, stylesOutput);
 
@@ -264,10 +294,26 @@ namespace Addin.Transform.OpenOffice
 			}
 			catch(Exception e)
 			{
+				progressState.ExceptionThatWasEncountered = e;
 				progressState.WriteToLog(e.Message);
-				throw e;
 			}
 		}
+
+		private static string GetHeadwordWritingSystemId(ViewTemplate viewTemplate)
+		{
+
+				Field lexicalFormField = viewTemplate.Fields.Find(f=> f.FieldName == "EntryLexicalForm");
+				if (lexicalFormField != null)
+				{
+					if (lexicalFormField.WritingSystemIds.Count > 0)
+					{
+						return lexicalFormField.WritingSystemIds[0];
+					}
+				}
+			return "";
+	}
+
+
 /// <summary>
 ///
 /// </summary>
@@ -295,6 +341,12 @@ namespace Addin.Transform.OpenOffice
 				addDirectoryFilesToZip(zipFile, d, zipPath);
 			}
 		}
+
+		public bool LaunchAfterExport
+		{
+			set { _launchAfterExport = value; }
+		}
+
 		/*
 		public static Stream GetXsltStream(string xsltName)
 		{
