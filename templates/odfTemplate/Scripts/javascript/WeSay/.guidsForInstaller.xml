@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--This file is generated and then updated by an MSBuild task.  It preserves the automatically-generated guids assigned files that will be installed on user machines. So it should be held in source control.-->
 <InstallerMetadata>
-  <File Id="basicDictionary.css" Guid="9aa274d4-2566-4f29-90cc-eef733640794" />
-  <File Id="defaultDictionary.css" Guid="dbb95230-0fba-4245-8dc3-819bc0cae285" />
+  <File Id="DictHeaders.js" Guid="f98d8607-2aa1-4e31-a8cf-6b53fe44bdcb" />
+  <File Id="parcel_descriptor.xml" Guid="cf053052-0db8-4af4-8894-81d7364d51a8" />
 </InstallerMetadata>
