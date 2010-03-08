@@ -123,7 +123,7 @@ namespace Addin.Transform
 		{
 			_settings.FillEmptySettingsWithGuesses(projectInfo);
 			SetupPostTransformMethod(OnDoGrepWork, _settings, 10 /*has some cushion*/);
-			LexEntryRepository repo = projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
+			//LexEntryRepository repo = projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
 			string output = TransformLiftToText(projectInfo, "lift2sfm.xsl", "-sfm.txt");
 			if (string.IsNullOrEmpty(output))
 			{
