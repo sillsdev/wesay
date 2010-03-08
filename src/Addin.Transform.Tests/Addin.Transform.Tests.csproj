@@ -160,6 +160,7 @@
 	<Compile Include="PLiftMakerTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="SfmTransformerTests.cs" />
+	<Compile Include="OdfTransformerTests.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\Addin.Transform\Addin.Transform.csproj">

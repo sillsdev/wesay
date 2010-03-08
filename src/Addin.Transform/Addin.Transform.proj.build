@@ -21,6 +21,12 @@
 			</fileset>
 		</copy>
 
+		<copy todir="${path::combine(project.output.dir, 'templates')}">
+			<fileset basedir="../../templates">
+				<include name="**" />
+			</fileset>
+		</copy>
+
 		<foreach item="Folder" property="build.namespace.dir.current">
 			<in>
 				<items>
