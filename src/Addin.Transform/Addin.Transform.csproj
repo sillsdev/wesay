@@ -195,8 +195,8 @@
 	<Compile Include="SfmTransformer.cs" />
 	<Compile Include="LiftTransformer.cs" />
 	<Compile Include="SfmTransformSettings.cs" />
-	<Compile Include="Xhtml\XHtmlTransformer.cs" />
 	<Compile Include="OpenOffice\OpenOfficeAddin.cs" />
+	<Compile Include="Xhtml\XHtml.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
