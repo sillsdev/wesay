@@ -6,7 +6,6 @@
  <manifest:file-entry manifest:media-type="text/xml" manifest:full-path="meta.xml"/>
  <manifest:file-entry manifest:media-type="text/xml" manifest:full-path="settings.xml"/>
  <manifest:file-entry manifest:media-type="text/xml" manifest:full-path="Scripts/javascript/WeSay/parcel-descriptor.xml"/>
- <manifest:file-entry manifest:media-type="text/javascript" manifest:full-path="Scripts/javascript/WeSay/DictHeaders.js"/>
  <manifest:file-entry manifest:media-type="application/binary" manifest:full-path="Scripts/javascript/WeSay/"/>
  <manifest:file-entry manifest:media-type="application/binary" manifest:full-path="Scripts/javascript/"/>
  <manifest:file-entry manifest:media-type="application/binary" manifest:full-path="Scripts/"/>

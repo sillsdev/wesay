@@ -113,11 +113,18 @@ etymology
 <xsl:text>
  </xsl:text>
   <style:style style:name="Header" style:family="paragraph" style:parent-style-name="Standard" style:class="extra">
-   <style:paragraph-properties text:number-lines="false" text:line-number="0">
+   <style:paragraph-properties text:number-lines="false" text:line-number="0" fo:text-align="left">
 	<style:tab-stops>
 	 <style:tab-stop style:position="8.5cm" style:type="center"/>
 	 <style:tab-stop style:position="17cm" style:type="right"/>
 	</style:tab-stops>
+   </style:paragraph-properties>
+   <style:text-properties fo:font-size="10pt" fo:font-weight="bold" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold" style:font-name="{$primaryFont}" style:font-name-asian="{$primaryFont}" style:font-name-complex="{$primaryFont}"/>
+  </style:style>
+  <xsl:text>
+ </xsl:text>
+ <style:style style:name="HeaderFrame" style:family="paragraph" style:parent-style-name="Header" style:class="extra">
+   <style:paragraph-properties text:number-lines="false" text:line-number="0" fo:text-align="right">
    </style:paragraph-properties>
    <style:text-properties fo:font-size="10pt" fo:font-weight="bold" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold" style:font-name="{$primaryFont}" style:font-name-asian="{$primaryFont}" style:font-name-complex="{$primaryFont}"/>
   </style:style>
@@ -251,7 +258,9 @@ etymology
 <xsl:call-template name="text-style">
 <xsl:with-param name="lift-element">label</xsl:with-param>
 </xsl:call-template>
-
+  <style:style style:name="lastEntryHeader" style:family="graphic" style:parent-style-name="Frame">
+   <style:graphic-properties style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page" fo:padding="0cm" fo:border="none" style:shadow="none" style:flow-with-text="false"/>
+  </style:style>
    <style:style style:name="Illustration_Caption" style:family="graphic">
    <style:graphic-properties style:run-through="background" style:wrap="dynamic" style:number-wrapped-paragraphs="no-limit" style:vertical-pos="from-top" style:vertical-rel="paragraph" style:horizontal-pos="right" style:horizontal-rel="paragraph" fo:background-color="transparent" style:background-transparency="100%" fo:padding="0cm" fo:border="none"  fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" fo:min-width="2.5cm">
    </style:graphic-properties>
@@ -283,19 +292,36 @@ etymology
 		<xsl:choose>
 			<xsl:when test="string-length($primaryLangCode) &gt; 0">
 				<text:span text:style-name="{concat('header-word_', $primaryLangCode)}">
-				<text:variable-get text:name="DictFirstWordOnPage" office:value-type="string"></text:variable-get>
+				<text:variable-get text:name="EntryWord" office:value-type="string"></text:variable-get>
 				</text:span>
-				<text:tab/><text:page-number text:select-page="current" style:num-format="Native Numbering">1</text:page-number><text:tab/>
-				<text:span text:style-name="{concat('header-word_', $primaryLangCode)}">
-				<text:variable-get text:name="DictLastWordOnPage" office:value-type="string"></text:variable-get>
-				</text:span>
+				<text:tab/><text:page-number text:select-page="current" style:num-format="Native Numbering">1</text:page-number>
 			</xsl:when>
 			<xsl:otherwise>
-	<text:variable-get text:name="DictFirstWordOnPage" office:value-type="string"></text:variable-get><text:tab/><text:page-number text:select-page="current" style:num-format="Native Numbering">1</text:page-number><text:tab/><text:variable-get text:name="DictLastWordOnPage" office:value-type="string"></text:variable-get>
+				<text:variable-get text:name="EntryWord" office:value-type="string"></text:variable-get><text:tab/><text:page-number text:select-page="current" style:num-format="Native Numbering">1</text:page-number>
 			</xsl:otherwise>
 		  </xsl:choose>
 	</text:p>
    </style:header>
+   <style:footer>
+	<text:p text:style-name="Header" xml:space="default">
+		<draw:frame draw:style-name="lastEntryHeader" draw:name="FooterLastEntryFrame" text:anchor-type="paragraph" svg:x="14cm" svg:y="2cm" svg:width="5cm" draw:z-index="0">
+		<draw:text-box fo:min-height="0.5cm">
+		<text:p text:style-name="HeaderFrame" xml:space="default">
+		<xsl:choose>
+			<xsl:when test="string-length($primaryLangCode) &gt; 0">
+				<text:span text:style-name="{concat('header-word_', $primaryLangCode)}">
+				<text:variable-get text:name="EntryWord" office:value-type="string"></text:variable-get>
+				</text:span>
+			</xsl:when>
+			<xsl:otherwise>
+	<text:variable-get text:name="EntryWord" office:value-type="string"></text:variable-get>
+			</xsl:otherwise>
+		  </xsl:choose>
+		  </text:p>
+		</draw:text-box>
+	   </draw:frame>
+	</text:p>
+   </style:footer>
   </style:master-page>
  </office:master-styles>
 </office:document-styles>

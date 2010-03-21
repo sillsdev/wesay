@@ -51,6 +51,10 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 -->
 <xsl:variable name="entries" select="//entry/lexical-unit/form[position()=1]/text" />
 
+<!-- This relies on the sorted lift export addiing the sorted-index annotation.
+This is well worth it, because it makes the stylesheet parsing speed run at
+something like n log n rather than n^2-->
+<xsl:key name="entryKey" match="entry" use="annotation[@name='sorted-index']/@value"/>
 <xsl:variable name="firstLetters">
 <xsl:for-each select="$entries">
 <xsl:value-of select="translate(substring(.,1,1), concat($baseAlternates, $latinAlt, $caseUpper), concat($baseEquivalent, $latinEqu, $caseLower))"/>
@@ -72,15 +76,16 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 </xsl:variable>
 
 
-<xsl:template match="/">
+<xsl:template match="/lift">
 <!--
 <xsl:message terminate="no"><xsl:value-of select="$firstLetterEntries"/></xsl:message>
 -->
 <office:document-content office:version="1.2">
 <office:scripts>
   <office:event-listeners>
+<!--
    <script:event-listener script:language="ooo:script" script:event-name="dom:load" xlink:href="vnd.sun.star.script:WeSay.DictHeaders.js?language=JavaScript&amp;location=document"/>
-   <!-- Using on page-count can cause numerous reruns
+   Using on page-count can cause numerous reruns
    <script:event-listener script:language="ooo:script" script:event-name="office:page-count-change" xlink:href="vnd.sun.star.script:WeSay.DictHeaders.js?language=JavaScript&amp;location=document"/>
    <script:event-listener script:language="ooo:script" script:event-name="office:print" xlink:href="vnd.sun.star.script:WeSay.DictHeaders.js?language=JavaScript&amp;location=document"/>
    -->
@@ -101,14 +106,26 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 <office:body>
 <office:text text:use-soft-page-breaks="true">
 <text:variable-decls>
+<text:variable-decl office:value-type="string" text:name="EntryWord"/>
 <text:variable-decl office:value-type="string" text:name="DictFirstWordOnPage"/>
 <text:variable-decl office:value-type="string" text:name="DictLastWordOnPage"/>
 </text:variable-decls>
 <text:sequence-decls>
+	<text:sequence-decl text:display-outline-level="0" text:name="Illustration"/>
+	<text:sequence-decl text:display-outline-level="0" text:name="Table"/>
+	<text:sequence-decl text:display-outline-level="0" text:name="Text"/>
+	<text:sequence-decl text:display-outline-level="0" text:name="Drawing"/>
 </text:sequence-decls>
-<text:h text:style-name="Title"><xsl:value-of select="$title" /></text:h>
+<text:h text:style-name="Title">
+	<text:variable-set text:name="EntryWord" text:display="none" text:formula="{concat('ooow:', //entry/lexical-unit/form[position()=1]/text)}" office:value-type="string" office:string-value="{//entry/lexical-unit/form[position()=1]/text}"/>
+	<xsl:value-of select="$title" />
+</text:h>
 <text:section text:style-name="dictionary" text:name="Dictionary">
-   <xsl:apply-templates/>
+	<xsl:for-each select="entry">
+		<xsl:call-template name="entry">
+		<xsl:with-param name="nextEntryPos" select="position()+1"/>
+		</xsl:call-template>
+	</xsl:for-each>
 </text:section>
 <text:p text:style-name="Text_20_body"/>
 </office:text>
@@ -116,22 +133,21 @@ faster than using preceding-sibling axis which is extremely slow for large docs.
 </office:document-content>
 </xsl:template>
 
-<xsl:template match="entry">
+<xsl:template name="entry">
+<xsl:param name="nextEntryPos"/>
 <xsl:if test="not(@dateDeleted)">
+<xsl:variable name="currentWord" select="lexical-unit/form/text"/>
 <xsl:if test="contains($firstLetterEntries, concat('{',@id,'}'))">
 <!-- Assume that the font for the language headings has been set correctly in styles.xml -->
 <text:h text:style-name="Heading_20_1" text:outline-level="1">
+<text:variable-set text:name="EntryWord" text:display="none" text:formula="{concat('ooow:', $currentWord)}" office:value-type="string" office:string-value="{$currentWord}"/>
+
 <xsl:value-of select="translate(translate(substring(lexical-unit/form/text, 1, 1), $latinAlt, $latinEqu), $caseLower, $caseUpper)"/>
 </text:h>
 </xsl:if>
 
 <text:p text:style-name="entry">
-<!-- Using variable-set the first word on the page is easy, but it does not solve the last word and
- it is probably confusing for user. -->
-<!--
-<xsl:variable name="currentWord" select="lexical-unit/form/text"/>
-<text:variable-set text:name="EntryWord" text:display="none" text:formula="{concat('ooow:', $currentWord)}" office:value-type="string" office:string-value="$currentWord"/>
--->
+<text:variable-set text:name="EntryWord" text:display="none" text:formula="{concat('ooow:', $currentWord)}" office:value-type="string" office:string-value="{$currentWord}"/>
 <xsl:apply-templates/>
 </text:p>
 </xsl:if>
