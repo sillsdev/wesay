@@ -164,6 +164,11 @@ namespace WeSay.Project
 			return new List<LanguageForm>(x);
 		}
 
+		protected override bool EntryDoesExist(string id)
+		{
+			return null!= _lexEntryRepository.GetLexEntryWithMatchingId(id);
+		}
+
 		protected override void WriteRelationTarget(LexRelation relation)
 		{
 			if (0 == (ExportOptions & Options.DereferenceRelations))
