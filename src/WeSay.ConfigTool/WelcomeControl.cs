@@ -120,8 +120,7 @@ namespace WeSay.ConfigTool
 				//e.g. mydocuments/wesay
 				Directory.CreateDirectory(Project.WeSayWordsProject.NewProjectDirectory);
 			}
-			var model = new GetCloneFromInternetModel(Project.WeSayWordsProject.NewProjectDirectory);
-			using (var dlg = new Chorus.UI.Clone.GetCloneFromInternetDialog(model))
+			using (var dlg = new Chorus.UI.Clone.GetCloneFromInternetDialog(Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
