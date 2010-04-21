@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Addin.Transform.PdfDictionary;
+using Palaso.DictionaryServices.Lift;
 using Palaso.I8N;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
@@ -94,7 +95,7 @@ namespace Addin.Transform
 				var maker = new PLiftMaker();
 				maker.MakePLiftTempFile(pliftPath, lexEntryRepository,
 										projectInfo.ServiceProvider.GetService(typeof(ViewTemplate)) as
-										ViewTemplate);
+										ViewTemplate, LiftWriter.ByteOrderStyle.NoBOM);
 			}
 
 			var pathToOutput = Path.Combine(projectInfo.PathToExportDirectory,

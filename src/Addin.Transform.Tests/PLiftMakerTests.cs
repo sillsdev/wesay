@@ -1,5 +1,6 @@
 using System.IO;
 using NUnit.Framework;
+using Palaso.DictionaryServices.Lift;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
 
@@ -31,7 +32,7 @@ namespace Addin.Transform.Tests
 					using (var repository = project.GetLexEntryRepository())
 					{
 						string outputPath = Path.Combine(project.PathToExportDirectory, project.Name + ".xhtml");
-						maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate);
+						maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate, LiftWriter.ByteOrderStyle.BOM);
 						AssertThatXmlIn.File(outputPath).
 							HasAtLeastOneMatchForXpath("//field[@type='headword']/form[@lang='v']/text[text()='hello']");
 					}

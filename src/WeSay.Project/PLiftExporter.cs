@@ -32,7 +32,8 @@ namespace WeSay.Project
 
 		public PLiftExporter(string path,
 							 LexEntryRepository lexEntryRepository,
-							 ViewTemplate viewTemplate): base(path)
+							 ViewTemplate viewTemplate)
+			: base(path, LiftWriter.ByteOrderStyle.BOM)
 		{
 			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
