@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Chorus.UI.Clone;
 using Palaso.I8N;
 using WeSay.ConfigTool.Properties;
 
@@ -119,7 +120,8 @@ namespace WeSay.ConfigTool
 				//e.g. mydocuments/wesay
 				Directory.CreateDirectory(Project.WeSayWordsProject.NewProjectDirectory);
 			}
-			using (var dlg = new Chorus.UI.Clone.GetCloneFromInternetDialog(Project.WeSayWordsProject.NewProjectDirectory))
+			var model = new GetCloneFromInternetModel(Project.WeSayWordsProject.NewProjectDirectory);
+			using (var dlg = new Chorus.UI.Clone.GetCloneFromInternetDialog(model))
 			{
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
