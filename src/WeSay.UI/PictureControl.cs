@@ -104,7 +104,7 @@ namespace WeSay.UI
 			try
 			{
 				var dialog = new OpenFileDialog();
-				dialog.Filter = "Images|*.jpg;*.png;*.bmp;*.gif";
+				dialog.Filter = "Images|*.jpg;*.png;*.bmp;*.gif;*.tif";
 				dialog.Multiselect = false;
 				dialog.Title = "Choose image";
 				dialog.InitialDirectory =
