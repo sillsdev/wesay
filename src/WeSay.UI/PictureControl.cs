@@ -289,7 +289,12 @@ namespace WeSay.UI
 				return;
 			}
 			var images = new ArtOfReadingImageCollection();
-			images.LoadIndex(_fileLocator.LocateFile("artofreadingindexv3_en.txt"));
+			string pathToIndexFile = _fileLocator.LocateFile("ArtOfReadingIndexV3_en.txt");
+			if(String.IsNullOrEmpty(pathToIndexFile))
+			{
+				throw new FileNotFoundException("Could not find Art of reading index file.");
+			}
+			images.LoadIndex(pathToIndexFile);
 			images.RootImagePath = TryToGetRootImageCatalogPath();
 			var searchString = SearchTermProvider == null ? string.Empty:SearchTermProvider.SearchString;
 			searchString = images.StripNonMatchingKeywords(searchString);
