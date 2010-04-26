@@ -335,7 +335,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void GetAbbreviation_Uninitialized_ReturnsId()
 		{
 			WritingSystem writingSystem = new WritingSystem();
-			writingSystem.Id = "en";
+			writingSystem.ISO = "en";
 			Assert.AreEqual("en", writingSystem.Abbreviation);
 		}
 

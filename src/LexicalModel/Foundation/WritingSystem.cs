@@ -11,6 +11,7 @@ using Exortech.NetReflector;
 using Palaso.I8N;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
+using Palaso.WritingSystems;
 using Palaso.WritingSystems.Collation;
 using Spart;
 using Chorus;
@@ -34,6 +35,7 @@ namespace WeSay.LexicalModel.Foundation
 	[ReflectorType("WritingSystem")]
 	public class WritingSystem: IComparer<string>, IComparer
 	{
+		private Palaso.WritingSystems.WritingSystemDefinition _palasoWritingSystem = new WritingSystemDefinition();
 		public static string IdForUnknownAnalysis = "en";
 		public static string IdForUnknownVernacular = "v";
 		private string _abbreviation;
@@ -41,7 +43,6 @@ namespace WeSay.LexicalModel.Foundation
 		private string _spellCheckingId;
 
 		private bool _isAudio;
-
 		private Font _font;
 		private string _id;
 		private string _keyboardName;
@@ -81,8 +82,8 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("Id", Required = true)]
 		public string Id
 		{
-			get { return _id; }
-			set { _id = value; }
+			get { return _palasoWritingSystem.Id; }
+			set { throw new InvalidOperationException("This method is obsolete"); }
 		}
 
 		[ReflectorProperty("Abbreviation", Required = false)]
@@ -90,16 +91,16 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (string.IsNullOrEmpty(_abbreviation))
+				if (string.IsNullOrEmpty(_palasoWritingSystem.Abbreviation))
 				{
-					return _id;
+					return _palasoWritingSystem.Id;
 				}
 				else
 				{
-					return _abbreviation;
+					return _palasoWritingSystem.Abbreviation;
 				}
 			}
-			set { _abbreviation = value; }
+			set { _palasoWritingSystem.Abbreviation = value; }
 		}
 
 		//        //we'll be getting rid of this property
@@ -299,6 +300,30 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get { return _isUnicode; }
 			set { _isUnicode = value; }
+		}
+
+		public string Region
+		{
+			get { return _palasoWritingSystem.Region; }
+			set { _palasoWritingSystem.Region = value; }
+		}
+
+		public string Script
+		{
+			get { return _palasoWritingSystem.Script; }
+			set { _palasoWritingSystem.Script = value; }
+		}
+
+		public string Variant
+		{
+			get { return _palasoWritingSystem.Variant; }
+			set { _palasoWritingSystem.Variant = value; }
+		}
+
+		public string ISO
+		{
+			get { return _palasoWritingSystem.ISO; }
+			set { _palasoWritingSystem.ISO = value; }
 		}
 
 		#region IComparer<string> Members
