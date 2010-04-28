@@ -37,11 +37,8 @@ namespace WeSay.LexicalModel.Foundation
 		public static string IdForUnknownVernacular = "v";
 		private string _spellCheckingId;
 
-		private bool _isAudio;
 		private Font _font;
 		private string _id;
-		private string _keyboardName;
-		private bool _rightToLeft;
 		private bool _isUnicode = true;
 
 		public WritingSystem(XmlNode node): this()
@@ -76,10 +73,7 @@ namespace WeSay.LexicalModel.Foundation
 			get { return _palasoWritingSystem.Id; }
 			set
 			{
-				throw new InvalidOperationException("This method is obsolete");
-				//Right now Id has a InvalidOperation setter as palaso treats the Id as a read-only
-				//property consisting of iso-region-script-variant. The id property in WeSay's ws
-				//is supposed to be equivalent to the iso code if I understand correctly.
+				_palasoWritingSystem.ISO = value;
 			}
 		}
 
@@ -230,8 +224,8 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("WindowsKeyman", Required = false)]
 		public string KeyboardName
 		{
-			get { return _keyboardName; }
-			set { _keyboardName = value; }
+			get { return _palasoWritingSystem.Keyboard; }
+			set { _palasoWritingSystem.Keyboard = value; }
 		}
 
 		[Browsable(false)]
@@ -297,8 +291,8 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("RightToLeft", Required = false)]
 		public bool RightToLeft
 		{
-			get { return _rightToLeft; }
-			set { _rightToLeft = value; }
+			get { return _palasoWritingSystem.RightToLeftScript; }
+			set { _palasoWritingSystem.RightToLeftScript = value; }
 		}
 
 		[TypeConverter(typeof (SpellCheckerIdToDisplayStringConverter))]
@@ -307,16 +301,9 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (string.IsNullOrEmpty(_spellCheckingId))
-				{
-					return _id;
-				}
-				else
-				{
-					return _spellCheckingId;
-				}
+				return _palasoWritingSystem.SpellCheckingId;
 			}
-			set { _spellCheckingId = value; }
+			set { _palasoWritingSystem.SpellCheckingId = value; }
 		}
 
 		[ReflectorProperty("IsAudio", Required = false)]
@@ -333,29 +320,29 @@ namespace WeSay.LexicalModel.Foundation
 			set { _isUnicode = value; }
 		}
 
-		public string Region
-		{
-			get { return _palasoWritingSystem.Region; }
-			set { _palasoWritingSystem.Region = value; }
-		}
+		//public string Region
+		//{
+		//    get { return _palasoWritingSystem.Region; }
+		//    set { _palasoWritingSystem.Region = value; }
+		//}
 
-		public string Script
-		{
-			get { return _palasoWritingSystem.Script; }
-			set { _palasoWritingSystem.Script = value; }
-		}
+		//public string Script
+		//{
+		//    get { return _palasoWritingSystem.Script; }
+		//    set { _palasoWritingSystem.Script = value; }
+		//}
 
-		public string Variant
-		{
-			get { return _palasoWritingSystem.Variant; }
-			set { _palasoWritingSystem.Variant = value; }
-		}
+		//public string Variant
+		//{
+		//    get { return _palasoWritingSystem.Variant; }
+		//    set { _palasoWritingSystem.Variant = value; }
+		//}
 
-		public string ISO
-		{
-			get { return _palasoWritingSystem.ISO; }
-			set { _palasoWritingSystem.ISO = value; }
-		}
+		//public string ISO
+		//{
+		//    get { return _palasoWritingSystem.ISO; }
+		//    set { _palasoWritingSystem.ISO = value; }
+		//}
 
 		#region IComparer<string> Members
 
