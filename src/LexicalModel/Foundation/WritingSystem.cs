@@ -67,7 +67,6 @@ namespace WeSay.LexicalModel.Foundation
 		/// </summary>
 		public WritingSystem()
 		{
-			InitializeSorting();
 		}
 
 		/// <summary>
@@ -75,7 +74,7 @@ namespace WeSay.LexicalModel.Foundation
 		/// </summary>
 		public WritingSystem(string id, Font font): this()
 		{
-			_id = id;
+			_palasoWritingSystem.ISO = id;
 			_font = font;
 		}
 
@@ -83,7 +82,13 @@ namespace WeSay.LexicalModel.Foundation
 		public string Id
 		{
 			get { return _palasoWritingSystem.Id; }
-			set { throw new InvalidOperationException("This method is obsolete"); }
+			set
+			{
+				throw new InvalidOperationException("This method is obsolete");
+				//Right now Id has a InvalidOperation setter as palaso treats the Id as a read-only
+				//property consisting of iso-region-script-variant. The id property in WeSay's ws
+				//is supposed to be equivalent to the iso code if I understand correctly.
+			}
 		}
 
 		[ReflectorProperty("Abbreviation", Required = false)]
@@ -137,24 +142,62 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(_sortUsing))
+				if (_palasoWritingSystem.SortUsing == WritingSystemDefinition.SortRulesType.DefaultOrdering)
 				{
 					return Id;
 				}
-				return _sortUsing;
+				if (_palasoWritingSystem.SortUsing == WritingSystemDefinition.SortRulesType.OtherLanguage)
+				{
+					return _palasoWritingSystem.SortRules;
+				}
+				return _palasoWritingSystem.SortUsing.ToString();
 			}
 			set
 			{
-				if (_sortUsing != value)
+				if (_palasoWritingSystem.SortUsing.ToString() != value)
 				{
-					_sortUsing = value;
-					if (!UsesCustomSortRules)
+					WritingSystemDefinition.SortRulesType newSortRulesType = AdaptToSortRulesType(value);
+
+					bool switchingFromNonCustomToCustomSortRules =
+						(!UsesCustomSortRules) && IsCustomSortRuleType(newSortRulesType);
+					bool switchingToDefaultSortOrder =
+						(newSortRulesType == WritingSystemDefinition.SortRulesType.DefaultOrdering);
+					bool switchingToNonDefaultSystemSort =
+						(newSortRulesType == WritingSystemDefinition.SortRulesType.OtherLanguage);
+
+					if (switchingFromNonCustomToCustomSortRules || switchingToDefaultSortOrder)
 					{
-						_customSortRules = null;
+						_palasoWritingSystem.SortRules = null;
 					}
-					InitializeSorting();
+					else if (switchingToNonDefaultSystemSort)
+					{
+						_palasoWritingSystem.SortRules = value;
+					}
+					_palasoWritingSystem.SortUsing = newSortRulesType;
 				}
 			}
+		}
+
+		private WritingSystemDefinition.SortRulesType AdaptToSortRulesType(string sortUsingString)
+		{
+			WritingSystemDefinition.SortRulesType palasoSortRulesType;
+			if(sortUsingString == CustomSortRulesType.CustomICU.ToString())
+			{
+				palasoSortRulesType = WritingSystemDefinition.SortRulesType.CustomICU;
+			}
+			else if(sortUsingString == CustomSortRulesType.CustomSimple.ToString())
+			{
+				palasoSortRulesType = WritingSystemDefinition.SortRulesType.CustomSimple;
+			}
+			else if(sortUsingString == null)
+			{
+				palasoSortRulesType = WritingSystemDefinition.SortRulesType.DefaultOrdering;
+			}
+			else
+			{
+				palasoSortRulesType = WritingSystemDefinition.SortRulesType.OtherLanguage;
+			}
+			return palasoSortRulesType;
 		}
 
 		[Browsable(false)]
@@ -162,12 +205,15 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (SortUsing == null)
-				{
-					return false;
-				}
-				return Enum.IsDefined(typeof (CustomSortRulesType), SortUsing);
+				bool isUsingCustomSortRules = IsCustomSortRuleType(_palasoWritingSystem.SortUsing);
+				return isUsingCustomSortRules;
 			}
+		}
+
+		private bool IsCustomSortRuleType(WritingSystemDefinition.SortRulesType sortRuleType)
+		{
+			return (sortRuleType == WritingSystemDefinition.SortRulesType.CustomICU) ||
+				   (sortRuleType == WritingSystemDefinition.SortRulesType.CustomSimple);
 		}
 
 		/// <summary>
@@ -181,18 +227,17 @@ namespace WeSay.LexicalModel.Foundation
 			{
 				if (!UsesCustomSortRules)
 				{
-					_customSortRules = null;
+					_palasoWritingSystem.SortRules = null;
 					return null;
 				}
-				return _customSortRules ?? string.Empty;
+				return _palasoWritingSystem.SortRules;
 			}
 			set
 			{
 				// should only be set if UsesCustomSortRules == true but can't because of NetReflector
-				if (_customSortRules != value)
+				if (_palasoWritingSystem.SortRules != value)
 				{
-					_customSortRules = value;
-					InitializeSorting();
+					_palasoWritingSystem.SortRules = value;
 				}
 				// cannot do the following due to NetReflector wanting to set to null!
 				// throw new InvalidOperationException("CustomSortRules can only be set when UsesCustomSortRules is true");
@@ -342,7 +387,8 @@ namespace WeSay.LexicalModel.Foundation
 		///<param name="x">The first object to compare.</param>
 		public int Compare(string x, string y)
 		{
-			return _sortComparer(x, y);
+			return _palasoWritingSystem.Collator.Compare(x, y);
+			//return _sortComparer(x, y);
 		}
 
 		public int Compare(object x, object y)
@@ -371,18 +417,6 @@ namespace WeSay.LexicalModel.Foundation
 
 			_sortComparer = cultureInfo.CompareInfo.Compare;
 			_sortKeyGenerator = cultureInfo.CompareInfo.GetSortKey;
-		}
-
-		private void InitializeSorting()
-		{
-			if (UsesCustomSortRules)
-			{
-				InitializeSortingFromCustomRules(CustomSortRules);
-			}
-			else
-			{
-				InitializeSortingFromWritingSystemId(SortUsing);
-			}
 		}
 
 		// This should always succeed. We try to use the rule collator associated

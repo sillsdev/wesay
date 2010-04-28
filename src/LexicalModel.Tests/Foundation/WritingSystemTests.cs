@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Exortech.NetReflector;
 using NUnit.Framework;
@@ -71,6 +73,23 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
+		public void SortUsing_ValueSet_IsValueReturned()
+		{
+			List<string> testValues = new List<string>()
+										   {
+											   "CustomSimple",
+											   "CustomICU",
+											   "NotNullOrEmpty"
+										   };
+			WritingSystem ws = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			foreach (string testValue in testValues)
+			{
+				ws.SortUsing = testValue;
+				Assert.AreEqual(testValue, ws.SortUsing);
+			}
+		}
+
+		[Test]
 		public void Compare_en_sortsLikeEnglish()
 		{
 			WritingSystem writingSystem = new WritingSystem("one",
@@ -120,13 +139,14 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			WritingSystem writingSystem = new WritingSystem("one",
 															new Font(FontFamily.GenericSansSerif, 11));
-			writingSystem.SortUsing = "custom";
+			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
 			string rules = "&n < ng <<< Ng <<< NG";
 			writingSystem.CustomSortRules = rules;
+			Assert.IsNotNull(writingSystem.CustomSortRules);
 			writingSystem.SortUsing = "two";
 			Assert.IsNull(writingSystem.CustomSortRules);
-			writingSystem.SortUsing = "custom";
-			Assert.IsNull(writingSystem.CustomSortRules);
+			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
+			Assert.IsEmpty(writingSystem.CustomSortRules);
 		}
 
 		[Test]
