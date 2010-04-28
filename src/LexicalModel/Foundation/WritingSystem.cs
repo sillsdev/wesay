@@ -265,7 +265,7 @@ namespace WeSay.LexicalModel.Foundation
 				}
 				else
 				{
-					return _font.Name;
+					return _palasoWritingSystem.DefaultFontName;
 				}
 			}
 			set
@@ -287,6 +287,7 @@ namespace WeSay.LexicalModel.Foundation
 													value, hint, error.Message);
 					_font = new Font(SystemFonts.DefaultFont.FontFamily, FontSize);
 				}
+				_palasoWritingSystem.DefaultFontName = _font.Name;
 			}
 		}
 
@@ -302,10 +303,14 @@ namespace WeSay.LexicalModel.Foundation
 				}
 				else
 				{
-					return (int) _font.Size;
+					return (int) _palasoWritingSystem.DefaultFontSize;
 				}
 			}
-			set { _font = new Font(FontName, value); }
+			set
+			{
+				_palasoWritingSystem.DefaultFontSize = value;
+				_font = new Font(FontName, _palasoWritingSystem.DefaultFontSize);
+			}
 		}
 
 		[ReflectorProperty("RightToLeft", Required = false)]
