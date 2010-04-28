@@ -12,9 +12,6 @@ using Palaso.I8N;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.WritingSystems;
-using Palaso.WritingSystems.Collation;
-using Spart;
-using Chorus;
 
 namespace WeSay.LexicalModel.Foundation
 {
@@ -35,11 +32,9 @@ namespace WeSay.LexicalModel.Foundation
 	[ReflectorType("WritingSystem")]
 	public class WritingSystem: IComparer<string>, IComparer
 	{
-		private Palaso.WritingSystems.WritingSystemDefinition _palasoWritingSystem = new WritingSystemDefinition();
+		private WritingSystemDefinition _palasoWritingSystem = new WritingSystemDefinition();
 		public static string IdForUnknownAnalysis = "en";
 		public static string IdForUnknownVernacular = "v";
-		private string _abbreviation;
-		private string _customSortRules;
 		private string _spellCheckingId;
 
 		private bool _isAudio;
@@ -47,9 +42,6 @@ namespace WeSay.LexicalModel.Foundation
 		private string _id;
 		private string _keyboardName;
 		private bool _rightToLeft;
-		private SortComparer _sortComparer;
-		private SortKeyGenerator _sortKeyGenerator;
-		private string _sortUsing;
 		private bool _isUnicode = true;
 
 		public WritingSystem(XmlNode node): this()
@@ -107,17 +99,6 @@ namespace WeSay.LexicalModel.Foundation
 			}
 			set { _palasoWritingSystem.Abbreviation = value; }
 		}
-
-		//        //we'll be getting rid of this property
-		//        [Browsable(true), System.ComponentModel.DisplayName("Vernacular")]
-		//        public string VernacularDefault
-		//        {
-		//            get { return _id; }
-		//            set
-		//            {
-		//                _id = value;
-		//            }
-		//        }
 
 		[Browsable(false)]
 		public Font Font
@@ -408,119 +389,9 @@ namespace WeSay.LexicalModel.Foundation
 			return Id;
 		}
 
-		private void InitializeSortingFromWritingSystemId(string id)
-		{
-			CultureInfo cultureInfo = null;
-			if (!String.IsNullOrEmpty(id))
-			{
-				cultureInfo = GetCultureInfoFromWritingSystemId(id);
-			}
-			if (cultureInfo == null)
-			{
-				cultureInfo = CultureInfo.InvariantCulture;
-			}
-
-			_sortComparer = cultureInfo.CompareInfo.Compare;
-			_sortKeyGenerator = cultureInfo.CompareInfo.GetSortKey;
-		}
-
-		// This should always succeed. We try to use the rule collator associated
-		// with the custom sort rules type, if that still doesn't work then we
-		// fall back to using the system sort from the id or the invariant sort
-		private void InitializeSortingFromCustomRules(string rules)
-		{
-			ICollator collator = null;
-			try
-			{
-				if (SortUsing == CustomSortRulesType.CustomSimple.ToString())
-				{
-					try
-					{
-						collator = new SimpleRulesCollator(rules);
-					}
-					catch (ParserErrorException e)
-					{
-						Logger.WriteMinorEvent(e.Message);
-						Logger.WriteMinorEvent(
-							"Failed to parse simple sort rules, falling back to system sorting");
-					}
-				}
-
-				else if (SortUsing == CustomSortRulesType.CustomICU.ToString())
-				{
-					try
-					{
-						collator = new IcuRulesCollator(rules);
-					}
-					catch (ApplicationException e)
-					{
-						Logger.WriteMinorEvent(e.Message);
-						Logger.WriteMinorEvent(
-							"Failed to parse ICU sort rules, falling back to system sorting");
-					}
-				}
-				else
-				{
-					Debug.Fail("unknown CustomSortRulesType");
-				}
-			}
-			catch (DllNotFoundException e)
-			{
-				Logger.WriteMinorEvent(e.Message);
-				Logger.WriteMinorEvent("Falling back to system sorting");
-			}
-
-			if (collator == null)
-			{
-				InitializeSortingFromWritingSystemId(Id);
-			}
-			else
-			{
-				_sortComparer = collator.Compare;
-				_sortKeyGenerator = collator.GetSortKey;
-			}
-		}
-
-		[DebuggerNonUserCode]
-		private static CultureInfo GetCultureInfoFromWritingSystemId(string sortUsing)
-		{
-			CultureInfo ci;
-			try
-			{
-				ci = CultureInfo.GetCultureInfo(sortUsing);
-			}
-			catch (ArgumentException e)
-			{
-				if (e is ArgumentNullException || e is ArgumentOutOfRangeException)
-				{
-					throw;
-				}
-				ci = TryGetCultureInfoByIetfLanguageTag(sortUsing);
-			}
-			return ci;
-		}
-
-		[DebuggerNonUserCode]
-		private static CultureInfo TryGetCultureInfoByIetfLanguageTag(string ietfLanguageTag)
-		{
-			CultureInfo ci = null;
-			try
-			{
-				ci = CultureInfo.GetCultureInfoByIetfLanguageTag(ietfLanguageTag);
-			}
-			catch (ArgumentException ex)
-			{
-				if (ex is ArgumentNullException || ex is ArgumentOutOfRangeException)
-				{
-					throw;
-				}
-			}
-			return ci;
-		}
-
 		public SortKey GetSortKey(string source)
 		{
-			return _sortKeyGenerator(source);
+			return _palasoWritingSystem.Collator.GetSortKey(source);
 		}
 
 		// Same if behavior is same (not appearance)
