@@ -322,8 +322,8 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("IsAudio", Required = false)]
 		public bool IsAudio
 		{
-			get { return _isAudio; }
-			set { _isAudio = value; }
+			get { return _palasoWritingSystem.IsVoice; }
+			set { _palasoWritingSystem.IsVoice = value; }
 		}
 
 		[ReflectorProperty("IsUnicode", Required = false)]
