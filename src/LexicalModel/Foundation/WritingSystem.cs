@@ -35,20 +35,17 @@ namespace WeSay.LexicalModel.Foundation
 		private WritingSystemDefinition _palasoWritingSystem = new WritingSystemDefinition();
 		public static string IdForUnknownAnalysis = "en";
 		public static string IdForUnknownVernacular = "v";
-		private string _spellCheckingId;
-
-		private Font _font;
-		private string _id;
+		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
 		private bool _isUnicode = true;
 
 		public WritingSystem(XmlNode node): this()
 		{
-			_id = node.Attributes["id"].Value;
+			Id = node.Attributes["id"].Value;
 			XmlNode fontNode = node.SelectSingleNode("font");
 			string name = fontNode.Attributes["name"].Value;
 			float size = float.Parse(fontNode.Attributes["baseSize"].Value);
 
-			_font = new Font(name, size);
+			Font = new Font(name, size);
 		}
 
 		/// <summary>
@@ -64,7 +61,7 @@ namespace WeSay.LexicalModel.Foundation
 		public WritingSystem(string id, Font font): this()
 		{
 			_palasoWritingSystem.ISO = id;
-			_font = font;
+			Font = font;
 		}
 
 		[ReflectorProperty("Id", Required = true)]
@@ -99,13 +96,25 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (_font == null)
+				if ((_palasoWritingSystem.DefaultFontName == null) || (_palasoWritingSystem.DefaultFontSize == 0))
 				{
-					_font = new Font(FontFamily.GenericSansSerif, FontSize);
+					return _fallBackFont;
 				}
-				return _font;
+				return new Font(_palasoWritingSystem.DefaultFontName, _palasoWritingSystem.DefaultFontSize);
 			}
-			set { _font = value; }
+			set
+			{
+				if (value == null)
+				{
+					_palasoWritingSystem.DefaultFontName = _fallBackFont.Name;
+					_palasoWritingSystem.DefaultFontSize = _fallBackFont.Size;
+				}
+				else
+				{
+					_palasoWritingSystem.DefaultFontName = value.Name;
+					_palasoWritingSystem.DefaultFontSize = value.Size;
+				}
+			}
 		}
 
 		/// <summary>
@@ -234,20 +243,13 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (_font == null)
-				{
-					return "Arial";
-				}
-				else
-				{
-					return _palasoWritingSystem.DefaultFontName;
-				}
+				return Font.Name;
 			}
 			set
 			{
 				try
 				{
-					_font = new Font(value, FontSize);
+					Font = new Font(value, FontSize);
 				}
 				catch (Exception error)
 				{
@@ -260,9 +262,8 @@ namespace WeSay.LexicalModel.Foundation
 					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
 													"There is a problem with the font {0} on this computer. {1} WeSay will have to use the System default font instead."+Environment.NewLine+"The error was: {2}",
 													value, hint, error.Message);
-					_font = new Font(SystemFonts.DefaultFont.FontFamily, FontSize);
+					Font = _fallBackFont;
 				}
-				_palasoWritingSystem.DefaultFontName = _font.Name;
 			}
 		}
 
@@ -272,19 +273,11 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (_font == null)
-				{
-					return 12;
-				}
-				else
-				{
-					return (int) _palasoWritingSystem.DefaultFontSize;
-				}
+				return (int) Font.Size;
 			}
 			set
 			{
-				_palasoWritingSystem.DefaultFontSize = value;
-				_font = new Font(FontName, _palasoWritingSystem.DefaultFontSize);
+				Font = new Font(Font.Name, value);
 			}
 		}
 

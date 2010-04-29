@@ -374,5 +374,94 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			writingSystem.Abbreviation = "eng";
 			Assert.AreEqual("eng", writingSystem.Abbreviation);
 		}
+
+		[Test]
+		public void Font_SetNull_GetReturnsGenericSansSerif()
+		{
+			WritingSystem ws = new WritingSystem();
+			ws.Font = null;
+			Assert.AreEqual(FontFamily.GenericSansSerif, ws.Font.FontFamily);
+		}
+
+		[Test]
+		public void Font_SetNull_GetFontSizeIs12()
+		{
+			WritingSystem ws = new WritingSystem();
+			ws.Font = null;
+			Assert.AreEqual(12, ws.Font.Size);
+		}
+
+		[Test]
+		public void Font_SetNull_GetFontNameIsIdenticalToDefaultFontName()
+		{
+			WritingSystem ws = new WritingSystem();
+			ws.Font = null;
+			Assert.AreEqual(ws.Font.Name, ws.FontName);
+		}
+
+		[Test]
+		public void Font_SetValidFont_GetReturnsFont()
+		{
+			WritingSystem ws = new WritingSystem();
+			Font font = new Font(FontFamily.GenericSerif, 14);
+			ws.Font = font;
+			Assert.AreEqual(font, ws.Font);
+		}
+
+		[Test]
+		public void Font_SetValidFont_GetFontNameReturnsFontName()
+		{
+			WritingSystem ws = new WritingSystem();
+			string name = FontFamily.GenericSerif.Name;
+			ws.Font = new Font(name, 14);
+			Assert.AreEqual(name, ws.FontName);
+		}
+
+		[Test]
+		public void Font_SetValidFont_GetFontSizeReturnsFontSize()
+		{
+			WritingSystem ws = new WritingSystem();
+			int size = 14;
+			ws.Font = new Font(FontFamily.GenericSerif.Name, size);
+			Assert.AreEqual(size, ws.FontSize);
+		}
+
+		[Test]
+		public void FontSize_SetSize_GetFontReturnsFontWithSize()
+		{
+			WritingSystem ws = new WritingSystem();
+			int size = 14;
+			ws.Font = new Font(FontFamily.GenericSerif.Name, 8);
+			ws.FontSize = size;
+			Assert.AreEqual(size, ws.Font.Size);
+		}
+
+		[Test]
+		public void FontSize_SetSizeAndFontIsNull_GetFontReturnsFontWithSize()
+		{
+			WritingSystem ws = new WritingSystem();
+			int size = 14;
+			ws.Font = null;
+			ws.FontSize = size;
+			Assert.AreEqual(size, ws.Font.Size);
+		}
+
+		[Test]
+		public void FontName_SetName_GetFontReturnsFontWithName()
+		{
+			WritingSystem ws = new WritingSystem();
+			string name = FontFamily.GenericSerif.Name;
+			ws.Font = new Font(name, 12);
+			Assert.AreEqual(name, ws.Font.Name);
+		}
+
+		[Test]
+		public void FontName_SetBogusName_GetFontReturnsDefaultFont()
+		{
+			WritingSystem ws = new WritingSystem();
+			string name = "bogus";
+			ws.Font = new Font(name, 12);
+			Assert.AreEqual(FontFamily.GenericSansSerif.Name, ws.Font.Name);
+		}
 	}
 }
