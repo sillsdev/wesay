@@ -37,6 +37,7 @@ namespace WeSay.LexicalModel.Foundation
 		public static string IdForUnknownVernacular = "v";
 		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
 		private bool _isUnicode = true;
+		private string _wesaySortRules;
 
 		public WritingSystem(XmlNode node): this()
 		{
@@ -142,19 +143,18 @@ namespace WeSay.LexicalModel.Foundation
 				{
 					WritingSystemDefinition.SortRulesType newSortRulesType = AdaptToSortRulesType(value);
 
-					bool switchingFromNonCustomToCustomSortRules =
-						(!UsesCustomSortRules) && IsCustomSortRuleType(newSortRulesType);
 					bool switchingToDefaultSortOrder =
 						(newSortRulesType == WritingSystemDefinition.SortRulesType.DefaultOrdering);
 					bool switchingToNonDefaultSystemSort =
 						(newSortRulesType == WritingSystemDefinition.SortRulesType.OtherLanguage);
 
-					if (switchingFromNonCustomToCustomSortRules || switchingToDefaultSortOrder)
+					if (switchingToDefaultSortOrder)
 					{
-						_palasoWritingSystem.SortRules = null;
+						_wesaySortRules = _palasoWritingSystem.SortRules = null;
 					}
 					else if (switchingToNonDefaultSystemSort)
 					{
+						_wesaySortRules = null;
 						_palasoWritingSystem.SortRules = value;
 					}
 					_palasoWritingSystem.SortUsing = newSortRulesType;
@@ -211,17 +211,16 @@ namespace WeSay.LexicalModel.Foundation
 			{
 				if (!UsesCustomSortRules)
 				{
-					_palasoWritingSystem.SortRules = null;
 					return null;
 				}
-				return _palasoWritingSystem.SortRules;
+				return _wesaySortRules ?? String.Empty;
 			}
 			set
 			{
 				// should only be set if UsesCustomSortRules == true but can't because of NetReflector
-				if (_palasoWritingSystem.SortRules != value)
+				if (_wesaySortRules != value)
 				{
-					_palasoWritingSystem.SortRules = value;
+					_wesaySortRules = _palasoWritingSystem.SortRules = value;
 				}
 				// cannot do the following due to NetReflector wanting to set to null!
 				// throw new InvalidOperationException("CustomSortRules can only be set when UsesCustomSortRules is true");
