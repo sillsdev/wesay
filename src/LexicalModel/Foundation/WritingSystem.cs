@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Xml;
@@ -68,7 +67,7 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("Id", Required = true)]
 		public string Id
 		{
-			get { return _palasoWritingSystem.Id; }
+			get { return _palasoWritingSystem.ISO; }
 			set
 			{
 				_palasoWritingSystem.ISO = value;
@@ -82,12 +81,9 @@ namespace WeSay.LexicalModel.Foundation
 			{
 				if (string.IsNullOrEmpty(_palasoWritingSystem.Abbreviation))
 				{
-					return _palasoWritingSystem.Id;
+					return _palasoWritingSystem.ISO;
 				}
-				else
-				{
-					return _palasoWritingSystem.Abbreviation;
-				}
+				return _palasoWritingSystem.Abbreviation;
 			}
 			set { _palasoWritingSystem.Abbreviation = value; }
 		}
@@ -365,7 +361,7 @@ namespace WeSay.LexicalModel.Foundation
 
 		public override string ToString()
 		{
-			return Id;
+			return _palasoWritingSystem.ISO;
 		}
 
 		public SortKey GetSortKey(string source)
@@ -376,7 +372,7 @@ namespace WeSay.LexicalModel.Foundation
 		// Same if behavior is same (not appearance)
 		public override int GetHashCode()
 		{
-			int hashCode = HashCombine(Id.GetHashCode(), SortUsing.GetHashCode());
+			int hashCode = HashCombine(_palasoWritingSystem.ISO.GetHashCode(), SortUsing.GetHashCode());
 			if (UsesCustomSortRules)
 			{
 				hashCode = HashCombine(hashCode, CustomSortRules.GetHashCode());
