@@ -29,20 +29,21 @@ namespace WeSay.LexicalModel.Foundation
 	}
 
 	[ReflectorType("WritingSystem")]
-	public class WritingSystem : WritingSystemDefinition, IComparer<string>, IComparer
+	public class WritingSystem : IComparer<string>, IComparer
 	{
 		public static string IdForUnknownAnalysis = "en";
 		public static string IdForUnknownVernacular = "v";
 		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
 		private bool _isUnicode = true;
 		private string _wesaySortRules;
+		private WritingSystemDefinition _palasoWritingSystemDefinition;
 
 		public WritingSystem(XmlNode node): this()
 		{
 			Id = node.Attributes["id"].Value;
 			XmlNode fontNode = node.SelectSingleNode("font");
 			string name = fontNode.Attributes["name"].Value;
-			float size = float.Parse(fontNode.Attributes["baseSize"].Value);
+			float size = float.Parse(fontNode.Attributes["_palasoWritingSystemDefinitionSize"].Value);
 
 			Font = new Font(name, size);
 		}
@@ -52,6 +53,12 @@ namespace WeSay.LexicalModel.Foundation
 		/// </summary>
 		public WritingSystem()
 		{
+			_palasoWritingSystemDefinition = new WritingSystemDefinition();
+		}
+
+		public WritingSystem(WritingSystemDefinition ws)
+		{
+			_palasoWritingSystemDefinition = ws;
 		}
 
 		/// <summary>
@@ -59,17 +66,22 @@ namespace WeSay.LexicalModel.Foundation
 		/// </summary>
 		public WritingSystem(string id, Font font): this()
 		{
-			base.ISO = id;
+			_palasoWritingSystemDefinition = new WritingSystemDefinition(id);
 			Font = font;
+		}
+
+		public WritingSystemDefinition GetAsPalasoWritingSystemDefinition()
+		{
+			return _palasoWritingSystemDefinition;
 		}
 
 		[ReflectorProperty("Id", Required = true)]
 		public string Id
 		{
-			get { return base.ISO; }
+			get { return _palasoWritingSystemDefinition.ISO; }
 			set
 			{
-				base.ISO = value;
+				_palasoWritingSystemDefinition.ISO = value;
 			}
 		}
 
@@ -78,13 +90,13 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (string.IsNullOrEmpty(base.Abbreviation))
+				if (string.IsNullOrEmpty(_palasoWritingSystemDefinition.Abbreviation))
 				{
-					return base.ISO;
+					return _palasoWritingSystemDefinition.ISO;
 				}
-				return base.Abbreviation;
+				return _palasoWritingSystemDefinition.Abbreviation;
 			}
-			set { base.Abbreviation = value; }
+			set { _palasoWritingSystemDefinition.Abbreviation = value; }
 		}
 
 		[Browsable(false)]
@@ -92,23 +104,23 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if ((base.DefaultFontName == null) || (base.DefaultFontSize == 0))
+				if ((_palasoWritingSystemDefinition.DefaultFontName == null) || (_palasoWritingSystemDefinition.DefaultFontSize == 0))
 				{
 					return _fallBackFont;
 				}
-				return new Font(base.DefaultFontName, base.DefaultFontSize);
+				return new Font(_palasoWritingSystemDefinition.DefaultFontName, _palasoWritingSystemDefinition.DefaultFontSize);
 			}
 			set
 			{
 				if (value == null)
 				{
-					base.DefaultFontName = _fallBackFont.Name;
-					base.DefaultFontSize = _fallBackFont.Size;
+					_palasoWritingSystemDefinition.DefaultFontName = _fallBackFont.Name;
+					_palasoWritingSystemDefinition.DefaultFontSize = _fallBackFont.Size;
 				}
 				else
 				{
-					base.DefaultFontName = value.Name;
-					base.DefaultFontSize = value.Size;
+					_palasoWritingSystemDefinition.DefaultFontName = value.Name;
+					_palasoWritingSystemDefinition.DefaultFontSize = value.Size;
 				}
 			}
 		}
@@ -122,19 +134,19 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (base.SortUsing == WritingSystemDefinition.SortRulesType.DefaultOrdering)
+				if (_palasoWritingSystemDefinition.SortUsing == WritingSystemDefinition.SortRulesType.DefaultOrdering)
 				{
 					return Id;
 				}
-				if (base.SortUsing == WritingSystemDefinition.SortRulesType.OtherLanguage)
+				if (_palasoWritingSystemDefinition.SortUsing == WritingSystemDefinition.SortRulesType.OtherLanguage)
 				{
-					return base.SortRules;
+					return _palasoWritingSystemDefinition.SortRules;
 				}
-				return base.SortUsing.ToString();
+				return _palasoWritingSystemDefinition.SortUsing.ToString();
 			}
 			set
 			{
-				if (base.SortUsing.ToString() != value)
+				if (_palasoWritingSystemDefinition.SortUsing.ToString() != value)
 				{
 					WritingSystemDefinition.SortRulesType newSortRulesType = AdaptToSortRulesType(value);
 
@@ -145,14 +157,14 @@ namespace WeSay.LexicalModel.Foundation
 
 					if (switchingToDefaultSortOrder)
 					{
-						_wesaySortRules = base.SortRules = null;
+						_wesaySortRules = _palasoWritingSystemDefinition.SortRules = null;
 					}
 					else if (switchingToNonDefaultSystemSort)
 					{
 						_wesaySortRules = null;
-						base.SortRules = value;
+						_palasoWritingSystemDefinition.SortRules = value;
 					}
-					base.SortUsing = newSortRulesType;
+					_palasoWritingSystemDefinition.SortUsing = newSortRulesType;
 				}
 			}
 		}
@@ -184,7 +196,7 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				bool isUsingCustomSortRules = IsCustomSortRuleType(base.SortUsing);
+				bool isUsingCustomSortRules = IsCustomSortRuleType(_palasoWritingSystemDefinition.SortUsing);
 				return isUsingCustomSortRules;
 			}
 		}
@@ -215,7 +227,7 @@ namespace WeSay.LexicalModel.Foundation
 				// should only be set if UsesCustomSortRules == true but can't because of NetReflector
 				if (_wesaySortRules != value)
 				{
-					_wesaySortRules = base.SortRules = value;
+					_wesaySortRules = _palasoWritingSystemDefinition.SortRules = value;
 				}
 				// cannot do the following due to NetReflector wanting to set to null!
 				// throw new InvalidOperationException("CustomSortRules can only be set when UsesCustomSortRules is true");
@@ -227,8 +239,8 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("WindowsKeyman", Required = false)]
 		public string KeyboardName
 		{
-			get { return base.Keyboard; }
-			set { base.Keyboard = value; }
+			get { return _palasoWritingSystemDefinition.Keyboard; }
+			set { _palasoWritingSystemDefinition.Keyboard = value; }
 		}
 
 		[Browsable(false)]
@@ -278,8 +290,8 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("RightToLeft", Required = false)]
 		public bool RightToLeft
 		{
-			get { return base.RightToLeftScript; }
-			set { base.RightToLeftScript = value; }
+			get { return _palasoWritingSystemDefinition.RightToLeftScript; }
+			set { _palasoWritingSystemDefinition.RightToLeftScript = value; }
 		}
 
 		[TypeConverter(typeof (SpellCheckerIdToDisplayStringConverter))]
@@ -288,16 +300,16 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				return base.SpellCheckingId;
+				return _palasoWritingSystemDefinition.SpellCheckingId;
 			}
-			set { base.SpellCheckingId = value; }
+			set { _palasoWritingSystemDefinition.SpellCheckingId = value; }
 		}
 
 		[ReflectorProperty("IsAudio", Required = false)]
 		public bool IsAudio
 		{
-			get { return base.IsVoice; }
-			set { base.IsVoice = value; }
+			get { return _palasoWritingSystemDefinition.IsVoice; }
+			set { _palasoWritingSystemDefinition.IsVoice = value; }
 		}
 
 		[ReflectorProperty("IsUnicode", Required = false)]
@@ -309,26 +321,26 @@ namespace WeSay.LexicalModel.Foundation
 
 		//public string Region
 		//{
-		//    get { return base.Region; }
-		//    set { base.Region = value; }
+		//    get { return _palasoWritingSystemDefinition.Region; }
+		//    set { _palasoWritingSystemDefinition.Region = value; }
 		//}
 
 		//public string Script
 		//{
-		//    get { return base.Script; }
-		//    set { base.Script = value; }
+		//    get { return _palasoWritingSystemDefinition.Script; }
+		//    set { _palasoWritingSystemDefinition.Script = value; }
 		//}
 
 		//public string Variant
 		//{
-		//    get { return base.Variant; }
-		//    set { base.Variant = value; }
+		//    get { return _palasoWritingSystemDefinition.Variant; }
+		//    set { _palasoWritingSystemDefinition.Variant = value; }
 		//}
 
 		//public string ISO
 		//{
-		//    get { return base.ISO; }
-		//    set { base.ISO = value; }
+		//    get { return _palasoWritingSystemDefinition.ISO; }
+		//    set { _palasoWritingSystemDefinition.ISO = value; }
 		//}
 
 		#region IComparer<string> Members
@@ -347,7 +359,7 @@ namespace WeSay.LexicalModel.Foundation
 		///<param name="x">The first object to compare.</param>
 		public int Compare(string x, string y)
 		{
-			return base.Collator.Compare(x, y);
+			return _palasoWritingSystemDefinition.Collator.Compare(x, y);
 			//return _sortComparer(x, y);
 		}
 
@@ -360,18 +372,18 @@ namespace WeSay.LexicalModel.Foundation
 
 		public override string ToString()
 		{
-			return base.ISO;
+			return _palasoWritingSystemDefinition.ISO;
 		}
 
 		public SortKey GetSortKey(string source)
 		{
-			return base.Collator.GetSortKey(source);
+			return _palasoWritingSystemDefinition.Collator.GetSortKey(source);
 		}
 
 		// Same if behavior is same (not appearance)
 		public override int GetHashCode()
 		{
-			int hashCode = HashCombine(base.ISO.GetHashCode(), SortUsing.GetHashCode());
+			int hashCode = HashCombine(_palasoWritingSystemDefinition.ISO.GetHashCode(), SortUsing.GetHashCode());
 			if (UsesCustomSortRules)
 			{
 				hashCode = HashCombine(hashCode, CustomSortRules.GetHashCode());
