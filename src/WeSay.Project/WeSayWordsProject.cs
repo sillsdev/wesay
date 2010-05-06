@@ -123,7 +123,7 @@ namespace WeSay.Project
 			{
 				File.Delete(PathToPretendWritingSystemPrefs);
 			}
-			wsc.Write(XmlWriter.Create(PathToPretendWritingSystemPrefs));
+			wsc.Write(PathToPretendWritingSystemPrefs);
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.

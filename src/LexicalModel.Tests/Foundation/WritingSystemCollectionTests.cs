@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -7,6 +8,8 @@ using Exortech.NetReflector;
 using NUnit.Framework;
 using WeSay.Project.Tests;
 using WeSay.LexicalModel.Foundation;
+using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel.Tests.Foundation
 {
@@ -50,6 +53,122 @@ namespace WeSay.LexicalModel.Tests.Foundation
 					</WritingSystemCollection>");
 				writer.Close();
 			}
+		}
+
+		private void WriteOldWeSayWritingSystemsFile(string path, WritingSystemCollection wsCollection)
+		{
+			XmlWriter writer = XmlWriter.Create(path);
+			try
+			{
+				writer.WriteStartDocument();
+				NetReflector.Write(writer, wsCollection);
+			}
+			finally
+			{
+				writer.Close();
+			}
+		}
+
+		[Test]
+		public void Load_OnlyOldWeSayWritingSystemsFileExists_WritingSystemsAreLoadedFromThatFile()
+		{
+			using(TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
+			{
+				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
+				WritingSystem ws = CreateDetailedWritingSystem("test");
+				wsCollectionToBeWritten.Add(ws.Id,ws);
+				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
+				wsCollectionToBeWritten.Add(ws2.Id, ws2);
+				TempFile wsPrefs = new TempFile(pretendProjectFolder);
+				WriteOldWeSayWritingSystemsFile(wsPrefs.Path, wsCollectionToBeWritten);
+				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
+				loadedWsCollection.Load(wsPrefs.Path);
+				Assert.IsTrue(WritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection));
+			}
+		}
+
+		private bool WritingSystemCollectionsAreEqual(WritingSystemCollection ws1, WritingSystemCollection ws2)
+		{
+			bool areEqual = true;
+			foreach (KeyValuePair<string, WritingSystem> idWspair in ws1)
+			{
+				areEqual = (ws2.ContainsKey(idWspair.Key));
+				areEqual &= (idWspair.Value.Id == ws2[idWspair.Key].Id);
+				areEqual &= (idWspair.Value.Abbreviation == ws2[idWspair.Key].Abbreviation);
+				areEqual &= (idWspair.Value.CustomSortRules == ws2[idWspair.Key].CustomSortRules);
+				areEqual &= (idWspair.Value.Font.ToString() == ws2[idWspair.Key].Font.ToString());
+				areEqual &= (idWspair.Value.FontName == ws2[idWspair.Key].FontName);
+				areEqual &= (idWspair.Value.FontSize == ws2[idWspair.Key].FontSize);
+				areEqual &= (idWspair.Value.IsAudio == ws2[idWspair.Key].IsAudio);
+				areEqual &= (idWspair.Value.IsUnicode == ws2[idWspair.Key].IsUnicode);
+				areEqual &= (idWspair.Value.KeyboardName == ws2[idWspair.Key].KeyboardName);
+				areEqual &= (idWspair.Value.RightToLeft == ws2[idWspair.Key].RightToLeft);
+				areEqual &= (idWspair.Value.SortUsing == ws2[idWspair.Key].SortUsing);
+				areEqual &= (idWspair.Value.SpellCheckingId == ws2[idWspair.Key].SpellCheckingId);
+			}
+			return areEqual;
+		}
+
+		private WritingSystem CreateDetailedWritingSystem(string languageCode)
+		{
+			WritingSystem ws = new WritingSystem();
+			ws.Id = languageCode;
+			ws.Abbreviation = languageCode;
+			ws.CustomSortRules = "Bogus roolz!";
+			ws.Font = new Font(FontFamily.GenericSansSerif, 12);
+			ws.IsAudio = false;
+			ws.IsUnicode = true;
+			ws.KeyboardName = "Bogus ivories!";
+			ws.RightToLeft = false;
+			ws.SortUsing = CustomSortRulesType.CustomSimple.ToString();
+			ws.SpellCheckingId = languageCode;
+			return ws;
+		}
+
+		[Test]
+		public void Load_OnlyLdmlWritingSystemFilesExist_WritingSystemsAreLoadedFromThoseFiles()
+		{
+			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendLdmlWritingSystemsFolder"))
+			{
+				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
+				WritingSystem ws = CreateDetailedWritingSystem("test");
+				wsCollectionToBeWritten.Add(ws.Id, ws);
+				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
+				wsCollectionToBeWritten.Add(ws2.Id, ws2);
+				WriteLdmlWritingSystemFiles(pretendProjectFolder.FolderPath, wsCollectionToBeWritten);
+				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
+				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				Assert.IsTrue(WritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection));
+			}
+			throw new NotImplementedException();
+		}
+
+		private void WriteLdmlWritingSystemFiles(string pathToStore, WritingSystemCollection wsCollectionToBeWritten)
+		{
+			LdmlInFolderWritingSystemStore store = new LdmlInFolderWritingSystemStore(pathToStore);
+			foreach (KeyValuePair<string, WritingSystem> idWsPair in wsCollectionToBeWritten)
+			{
+				store.Set(idWsPair.Value.GetAsPalasoWritingSystemDefinition());
+			}
+			store.Save();
+		}
+
+		[Test]
+		public void Load_OldWeSayWritingSystemsFileAndLdmlWritingsystemFilesExist_WritingSystemsAreLoadedFromLdml()
+		{
+			throw new NotImplementedException();
+		}
+
+		[Test]
+		public void Roundtripping_Works()
+		{
+			throw new NotImplementedException();
+		}
+
+		[Test]
+		public void Save_CreatesLdmlWritingSystemFiles()
+		{
+			throw new NotImplementedException();
 		}
 
 		[Test]
@@ -110,7 +229,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 			StringBuilder builder = new StringBuilder();
 			XmlWriter writer = XmlWriter.Create(builder);
-			c.Write(writer);
+			writer.WriteStartDocument();
+			NetReflector.Write(writer, c);
+			writer.Close();
 
 			return builder.ToString();
 		}
@@ -153,7 +274,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void DeserializeCollectionViaLoad()
 		{
-			MakeSampleCollection().Write(XmlWriter.Create(_path));
+			MakeSampleCollection().Write(_path);
 
 			WritingSystemCollection c = new WritingSystemCollection();
 			c.Load(_path);

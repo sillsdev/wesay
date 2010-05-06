@@ -3,25 +3,44 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Xml;
+using System.IO;
 using Exortech.NetReflector;
 using WeSay.LexicalModel.Foundation;
+using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
 	[ReflectorType("WritingSystemCollection")]
 	public class WritingSystemCollection: Dictionary<string, WritingSystem>
 	{
+		private LdmlInFolderWritingSystemStore _ldmlInFolderWritingSystemStore;
+
 		public void Load(string path)
 		{
-			NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
-			XmlReader reader = XmlReader.Create(path);
-			try
+			//We are working with Ldml files in a folder
+			if (pathPointsToFolder(path))
 			{
-				r.Read(reader, this);
+				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(path);
+				_ldmlInFolderWritingSystemStore.LoadAllDefinitions();
+				foreach (WritingSystemDefinition writingSystem in _ldmlInFolderWritingSystemStore.WritingSystemDefinitions)
+				{
+					WritingSystem wesayWritingSystem = new WritingSystem(writingSystem);
+					this.Add(wesayWritingSystem.Id, wesayWritingSystem);
+				}
 			}
-			finally
+			//We are working with a legacy WeSay WritingSytemsPrefs.Xml file
+			else
 			{
-				reader.Close();
+				NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
+				XmlReader reader = XmlReader.Create(path);
+				try
+				{
+					r.Read(reader, this);
+				}
+				finally
+				{
+					reader.Close();
+				}
 			}
 		}
 
@@ -52,17 +71,33 @@ namespace WeSay.LexicalModel.Foundation
 			set { base[key] = value; }
 		}
 
-		public void Write(XmlWriter writer)
+		public void Write(string path)
 		{
-			try
+			//We are working with Ldml files in a folder
+			if (pathPointsToFolder(path))
 			{
-				writer.WriteStartDocument();
-				NetReflector.Write(writer, this);
+				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(path);
 			}
-			finally
+			//We are working with a legacy WeSay WritingSytemsPrefs.xml file
+			else
 			{
-				writer.Close();
+				XmlWriterSettings settings = new XmlWriterSettings() {Indent = true};
+				XmlWriter writer = XmlWriter.Create(path, settings);
+				try
+				{
+					writer.WriteStartDocument();
+					NetReflector.Write(writer, this);
+				}
+				finally
+				{
+					writer.Close();
+				}
 			}
+		}
+
+		private bool pathPointsToFolder(string path)
+		{
+			return (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
 		}
 
 		private static NetReflectorTypeTable MakeTypeTable()

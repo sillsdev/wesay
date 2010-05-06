@@ -94,11 +94,7 @@ namespace WeSay.Project
 
 		public virtual void Save(string projectDirectoryPath)
 		{
-			var settings = new XmlWriterSettings();
-			settings.Indent = true;
-			var writer = XmlWriter.Create(PathToWritingSystemPrefs, settings);
-			_writingSystems.Write(writer);
-			writer.Close();
+			_writingSystems.Write(PathToWritingSystemPrefs);
 		}
 
 		/// <summary>
@@ -166,9 +162,23 @@ namespace WeSay.Project
 			return Path.Combine(parentDir, "WritingSystemPrefs.xml");
 		}
 
+		string PathToLdmlWritingSystemsDirectory
+		{
+			get { return ProjectDirectoryPath + "WritingSystems"; }
+		}
+
 		public string PathToDirectoryContaingWritingSystemFilesInProject
 		{
-			get { return ProjectDirectoryPath; }
+			get
+			{
+				bool oldWritingSystemsFileExists = File.Exists(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
+				bool ldmlWritingSystemsExists =
+					(Directory.Exists(PathToLdmlWritingSystemsDirectory)) &&
+					(Directory.GetFiles(PathToLdmlWritingSystemsDirectory).Length == 0);
+				if (oldWritingSystemsFileExists) return ProjectDirectoryPath;
+				else if (ldmlWritingSystemsExists) return PathToLdmlWritingSystemsDirectory;
+				else return GetPathToWritingSystemPrefs(ApplicationCommonDirectory);
+			}
 		}
 
 		public string LocateStringCatalog()
