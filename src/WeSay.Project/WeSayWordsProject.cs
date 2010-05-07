@@ -863,10 +863,10 @@ namespace WeSay.Project
 		/// </summary>
 		/// <param name="pathToWritingSystemPrefs"></param>
 		/// <param name="pathToConfigFile"></param>
-		private static void StickDefaultViewTemplateInNewConfigFile(string pathToWritingSystemPrefs, string pathToConfigFile)
+		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile)
 		{
 			WritingSystemCollection writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Load(pathToWritingSystemPrefs);
+			writingSystemCollection.Load(projectPath);
 
 			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
 			StringBuilder builder = new StringBuilder();

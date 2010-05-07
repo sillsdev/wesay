@@ -15,14 +15,16 @@ namespace WeSay.LexicalModel.Foundation
 	{
 		private LdmlInFolderWritingSystemStore _ldmlInFolderWritingSystemStore;
 
-		public void Load(string path)
+		public void Load(string projectPath)
 		{
 			//We are working with Ldml files in a folder
-			if (pathPointsToFolder(path))
+			string pathToWritingSystemsFolder = GetPathToWritingSystemsFolder(projectPath);
+			if (Directory.Exists(pathToWritingSystemsFolder))
 			{
-				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(path);
+				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(pathToWritingSystemsFolder);
 				_ldmlInFolderWritingSystemStore.LoadAllDefinitions();
-				foreach (WritingSystemDefinition writingSystem in _ldmlInFolderWritingSystemStore.WritingSystemDefinitions)
+				foreach (
+					WritingSystemDefinition writingSystem in _ldmlInFolderWritingSystemStore.WritingSystemDefinitions)
 				{
 					WritingSystem wesayWritingSystem = new WritingSystem(writingSystem);
 					this.Add(wesayWritingSystem.Id, wesayWritingSystem);
@@ -32,7 +34,8 @@ namespace WeSay.LexicalModel.Foundation
 			else
 			{
 				NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
-				XmlReader reader = XmlReader.Create(path);
+				string pathToOldWeSayWritingSystemsFile = GetPathToOldWeSayWritingSystemsFile(projectPath);
+				XmlReader reader = XmlReader.Create(pathToOldWeSayWritingSystemsFile);
 				try
 				{
 					r.Read(reader, this);
@@ -42,6 +45,16 @@ namespace WeSay.LexicalModel.Foundation
 					reader.Close();
 				}
 			}
+		}
+
+		public static string GetPathToOldWeSayWritingSystemsFile(string projectPath)
+		{
+			return projectPath + Path.DirectorySeparatorChar + "WritingSystemPrefs.xml";
+		}
+
+		public static string GetPathToWritingSystemsFolder(string projectPath)
+		{
+			return projectPath + Path.DirectorySeparatorChar + "WritingSystems";
 		}
 
 		/// <summary>
@@ -71,28 +84,30 @@ namespace WeSay.LexicalModel.Foundation
 			set { base[key] = value; }
 		}
 
-		public void Write(string path)
+		public void Write(string projectPath)
 		{
-			//We are working with Ldml files in a folder
-			if (pathPointsToFolder(path))
+			if (_ldmlInFolderWritingSystemStore == null)
 			{
-				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(path);
+				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(GetPathToWritingSystemsFolder(projectPath));
+				foreach (KeyValuePair<string, WritingSystem> pair in this)
+				{
+					_ldmlInFolderWritingSystemStore.Set(pair.Value.GetAsPalasoWritingSystemDefinition());
+				}
+				_ldmlInFolderWritingSystemStore.Save();
 			}
 			//We are working with a legacy WeSay WritingSytemsPrefs.xml file
-			else
+			XmlWriterSettings settings = new XmlWriterSettings() {Indent = true};
+			XmlWriter writer = XmlWriter.Create(GetPathToOldWeSayWritingSystemsFile(projectPath), settings);
+			try
 			{
-				XmlWriterSettings settings = new XmlWriterSettings() {Indent = true};
-				XmlWriter writer = XmlWriter.Create(path, settings);
-				try
-				{
-					writer.WriteStartDocument();
-					NetReflector.Write(writer, this);
-				}
-				finally
-				{
-					writer.Close();
-				}
+				writer.WriteStartDocument();
+				NetReflector.Write(writer, this);
 			}
+			finally
+			{
+				writer.Close();
+			}
+
 		}
 
 		private bool pathPointsToFolder(string path)

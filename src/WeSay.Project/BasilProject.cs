@@ -175,8 +175,8 @@ namespace WeSay.Project
 				bool ldmlWritingSystemsExists =
 					(Directory.Exists(PathToLdmlWritingSystemsDirectory)) &&
 					(Directory.GetFiles(PathToLdmlWritingSystemsDirectory).Length == 0);
-				if (oldWritingSystemsFileExists) return ProjectDirectoryPath;
-				else if (ldmlWritingSystemsExists) return PathToLdmlWritingSystemsDirectory;
+				if (ldmlWritingSystemsExists) return PathToLdmlWritingSystemsDirectory;
+				else if (oldWritingSystemsFileExists) return ProjectDirectoryPath;
 				else return GetPathToWritingSystemPrefs(ApplicationCommonDirectory);
 			}
 		}
@@ -280,12 +280,12 @@ namespace WeSay.Project
 		{
 			if (File.Exists(PathToWritingSystemPrefs))
 			{
-				_writingSystems.Load(PathToWritingSystemPrefs);
+				_writingSystems.Load(ProjectDirectoryPath);
 			}
 			else
 			{
 				//load defaults
-				_writingSystems.Load(GetPathToWritingSystemPrefs(ApplicationCommonDirectory));
+				_writingSystems.Load(ApplicationCommonDirectory);
 			}
 		}
 
