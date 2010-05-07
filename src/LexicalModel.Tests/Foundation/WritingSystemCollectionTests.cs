@@ -215,6 +215,30 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
+		public void Save_WritingSystemReadFromLdmlAndChanged_ChangesSaved()
+		{
+			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
+			{
+				CreateLdmlWritingsystemDefinitionFile(pretendProjectFolder);
+				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
+				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				loadedWsCollection["test"].KeyboardName = "changed";
+				loadedWsCollection.Write(pretendProjectFolder.FolderPath);
+				WritingSystemCollection reloadedWsCollection = new WritingSystemCollection();
+				reloadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				AssertWritingSystemCollectionsAreEqual(loadedWsCollection, reloadedWsCollection);
+			}
+		}
+
+		private void CreateLdmlWritingsystemDefinitionFile(TemporaryFolder pretendProjectFolder)
+		{
+			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
+			WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
+			wsCollectionToBeWritten.Add(ws.Id, ws);
+			wsCollectionToBeWritten.Write(pretendProjectFolder.FolderPath);
+		}
+
+		[Test]
 		public void Load_LdmlFilesInProjectRoot_AreMovedToSubfolder()
 		{
 			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))

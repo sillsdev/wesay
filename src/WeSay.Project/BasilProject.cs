@@ -142,10 +142,7 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return
-						GetPathToWritingSystemPrefs(
-								PathToDirectoryContaingWritingSystemFilesInProject
-								/*ProjectCommonDirectory*/);
+				return WritingSystemCollection.GetPathToOldWeSayWritingSystemsFile(ProjectDirectoryPath);
 			}
 		}
 
@@ -160,25 +157,6 @@ namespace WeSay.Project
 		protected static string GetPathToWritingSystemPrefs(string parentDir)
 		{
 			return Path.Combine(parentDir, "WritingSystemPrefs.xml");
-		}
-
-		string PathToLdmlWritingSystemsDirectory
-		{
-			get { return ProjectDirectoryPath + "WritingSystems"; }
-		}
-
-		public string PathToDirectoryContaingWritingSystemFilesInProject
-		{
-			get
-			{
-				bool oldWritingSystemsFileExists = File.Exists(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
-				bool ldmlWritingSystemsExists =
-					(Directory.Exists(PathToLdmlWritingSystemsDirectory)) &&
-					(Directory.GetFiles(PathToLdmlWritingSystemsDirectory).Length == 0);
-				if (ldmlWritingSystemsExists) return PathToLdmlWritingSystemsDirectory;
-				else if (oldWritingSystemsFileExists) return ProjectDirectoryPath;
-				else return GetPathToWritingSystemPrefs(ApplicationCommonDirectory);
-			}
 		}
 
 		public string LocateStringCatalog()
@@ -278,7 +256,7 @@ namespace WeSay.Project
 
 		protected void InitWritingSystems()
 		{
-			if (File.Exists(PathToWritingSystemPrefs))
+			if (WritingSystemCollection.WritingSystemsExistInProject(ProjectDirectoryPath))
 			{
 				_writingSystems.Load(ProjectDirectoryPath);
 			}
