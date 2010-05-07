@@ -110,7 +110,7 @@ namespace WeSay.Project
 			}
 			catch (Exception) {}
 
-			Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
+			DirectoryInfo projectDirectory = Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
 			Utilities.CreateEmptyLiftFile(PathToPretendLiftFile, "InitializeForTests()", true);
 
 			//setup writing systems
@@ -123,7 +123,13 @@ namespace WeSay.Project
 			{
 				File.Delete(PathToPretendWritingSystemPrefs);
 			}
-			wsc.Write(PathToPretendWritingSystemPrefs);
+			string pathToLdmlWsFolder =
+				WritingSystemCollection.GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
+			if (Directory.Exists(pathToLdmlWsFolder))
+			{
+				Directory.Delete(pathToLdmlWsFolder, true);
+			}
+			wsc.Write(projectDirectory.FullName);
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
@@ -844,7 +850,7 @@ namespace WeSay.Project
 			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
 
 			//hack
-			StickDefaultViewTemplateInNewConfigFile(pathToWritingSystemPrefs, pathToConfigFile);
+			StickDefaultViewTemplateInNewConfigFile(projectDirectoryPath, pathToConfigFile);
 
 			var m = new ConfigurationMigrator();
 			m.MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile), pathToConfigFile);

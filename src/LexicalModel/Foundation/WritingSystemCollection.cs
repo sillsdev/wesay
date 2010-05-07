@@ -20,7 +20,8 @@ namespace WeSay.LexicalModel.Foundation
 			MoveLdmlFilesOutOfRootAndIntoSubDirectory(projectPath); //This is for Flex
 			//Load Ldml files
 			string pathToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(projectPath);
-			if (Directory.Exists(pathToWritingSystemsFolder))
+			string pathToWritingsystemsPrefsFile = GetPathToOldWeSayWritingSystemsFile(projectPath);
+			if (Directory.Exists(pathToWritingSystemsFolder) && (Directory.GetFiles(pathToWritingSystemsFolder, "*.ldml").Length != 0))
 			{
 				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(pathToWritingSystemsFolder);
 				_ldmlInFolderWritingSystemStore.LoadAllDefinitions();
@@ -32,20 +33,31 @@ namespace WeSay.LexicalModel.Foundation
 				}
 			}
 			//Load old WeSay WritingSystems File
-			else
+			if (File.Exists(pathToWritingsystemsPrefsFile))
 			{
 				NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
 				string pathToOldWeSayWritingSystemsFile = GetPathToOldWeSayWritingSystemsFile(projectPath);
 				XmlReader reader = XmlReader.Create(pathToOldWeSayWritingSystemsFile);
+				WritingSystemCollection wesayWsFileCollection = new WritingSystemCollection();
 				try
 				{
-					r.Read(reader, this);
+					r.Read(reader, wesayWsFileCollection);
 				}
 				finally
 				{
 					reader.Close();
 				}
+				foreach (KeyValuePair<string, WritingSystem> pair in wesayWsFileCollection)
+				{
+					if (!this.ContainsKey(pair.Key))
+					{
+						this.Add(pair.Key, pair.Value);
+					}
+					this[pair.Key].IsUnicode = pair.Value.IsUnicode;
+					this[pair.Key].CustomSortRules = pair.Value.CustomSortRules;
+				}
 			}
+
 		}
 
 		private void MoveLdmlFilesOutOfRootAndIntoSubDirectory(string projectRoot)

@@ -94,7 +94,7 @@ namespace WeSay.Project
 
 		public virtual void Save(string projectDirectoryPath)
 		{
-			_writingSystems.Write(PathToWritingSystemPrefs);
+			_writingSystems.Write(projectDirectoryPath);
 		}
 
 		/// <summary>
