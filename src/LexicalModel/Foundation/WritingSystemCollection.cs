@@ -17,8 +17,9 @@ namespace WeSay.LexicalModel.Foundation
 
 		public void Load(string projectPath)
 		{
-			//We are working with Ldml files in a folder
-			string pathToWritingSystemsFolder = GetPathToWritingSystemsFolder(projectPath);
+			MoveLdmlFilesOutOfRootAndIntoSubDirectory(projectPath); //This is for Flex
+			//Load Ldml files
+			string pathToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(projectPath);
 			if (Directory.Exists(pathToWritingSystemsFolder))
 			{
 				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(pathToWritingSystemsFolder);
@@ -30,7 +31,7 @@ namespace WeSay.LexicalModel.Foundation
 					this.Add(wesayWritingSystem.Id, wesayWritingSystem);
 				}
 			}
-			//We are working with a legacy WeSay WritingSytemsPrefs.Xml file
+			//Load old WeSay WritingSystems File
 			else
 			{
 				NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
@@ -47,12 +48,29 @@ namespace WeSay.LexicalModel.Foundation
 			}
 		}
 
+		private void MoveLdmlFilesOutOfRootAndIntoSubDirectory(string projectRoot)
+		{
+			string[] ldmlFiles = Directory.GetFiles(projectRoot, "*.ldml");
+			if(ldmlFiles.Length != 0)
+			{
+				string pathToLdmlWsFolder = GetPathToLdmlWritingSystemsFolder(projectRoot);
+				if (!Directory.Exists(pathToLdmlWsFolder))
+				{
+					Directory.CreateDirectory(pathToLdmlWsFolder);
+				}
+				foreach (string filePath in ldmlFiles)
+				{
+					File.Move(filePath, pathToLdmlWsFolder + Path.DirectorySeparatorChar + Path.GetFileName(filePath));
+				}
+			}
+		}
+
 		public static string GetPathToOldWeSayWritingSystemsFile(string projectPath)
 		{
 			return projectPath + Path.DirectorySeparatorChar + "WritingSystemPrefs.xml";
 		}
 
-		public static string GetPathToWritingSystemsFolder(string projectPath)
+		public static string GetPathToLdmlWritingSystemsFolder(string projectPath)
 		{
 			return projectPath + Path.DirectorySeparatorChar + "WritingSystems";
 		}
@@ -88,7 +106,7 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			if (_ldmlInFolderWritingSystemStore == null)
 			{
-				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(GetPathToWritingSystemsFolder(projectPath));
+				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(GetPathToLdmlWritingSystemsFolder(projectPath));
 				foreach (KeyValuePair<string, WritingSystem> pair in this)
 				{
 					_ldmlInFolderWritingSystemStore.Set(pair.Value.GetAsPalasoWritingSystemDefinition());

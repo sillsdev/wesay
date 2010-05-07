@@ -133,16 +133,17 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				wsCollectionToBeWritten.Add(ws.Id, ws);
 				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
-				WriteLdmlWritingSystemFiles(pretendProjectFolder.FolderPath, wsCollectionToBeWritten);
+				string pathToLdmlWritingSystemsFolder =
+					WritingSystemCollection.GetPathToLdmlWritingSystemsFolder(pretendProjectFolder.FolderPath);
+				WriteLdmlWritingSystemFiles(pathToLdmlWritingSystemsFolder, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
 				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
 				Assert.IsTrue(WritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection));
 			}
 		}
 
-		private void WriteLdmlWritingSystemFiles(string pathToProject, WritingSystemCollection wsCollectionToBeWritten)
+		private void WriteLdmlWritingSystemFiles(string pathToStore, WritingSystemCollection wsCollectionToBeWritten)
 		{
-			string pathToStore = WritingSystemCollection.GetPathToWritingSystemsFolder(pathToProject);
 			LdmlInFolderWritingSystemStore store = new LdmlInFolderWritingSystemStore(pathToStore);
 			foreach (KeyValuePair<string, WritingSystem> idWsPair in wsCollectionToBeWritten)
 			{
@@ -186,18 +187,57 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Roundtripping_Works()
 		{
-			throw new NotImplementedException();
+			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
+			{
+				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
+				WritingSystem ws = CreateDetailedWritingSystem("test");
+				wsCollectionToBeWritten.Add(ws.Id, ws);
+				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
+				wsCollectionToBeWritten.Add(ws2.Id, ws2);
+				wsCollectionToBeWritten.Write(pretendProjectFolder.FolderPath);
+				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
+				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				Assert.IsTrue(WritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection));
+			}
 		}
 
 		[Test]
 		public void Load_LdmlFilesInProjectRoot_AreMovedToSubfolder()
 		{
-			throw new NotImplementedException();
+			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
+			{
+				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
+				WritingSystem ws = CreateDetailedWritingSystem("test");
+				wsCollectionToBeWritten.Add(ws.Id, ws);
+				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
+				wsCollectionToBeWritten.Add(ws2.Id, ws2);
+				WriteLdmlWritingSystemFiles(pretendProjectFolder.FolderPath, wsCollectionToBeWritten);
+				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
+				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				string pathToLdmlWritingSystemsFolder =
+					WritingSystemCollection.GetPathToLdmlWritingSystemsFolder(pretendProjectFolder.FolderPath);
+				Assert.IsTrue(File.Exists(pathToLdmlWritingSystemsFolder + Path.DirectorySeparatorChar + "test.ldml"));
+				Assert.IsTrue(File.Exists(pathToLdmlWritingSystemsFolder + Path.DirectorySeparatorChar + "test2.ldml"));
+			}
 		}
 
 		[Test]
-		public void Save_CreatesLdmlWritingSystemFiles()
+		public void Load_NietherLdmlNorOldWeSayWsPrefsFileExists_LoadsFromDefaultLocation()
 		{
+			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
+			{
+				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
+				WritingSystem ws = CreateDetailedWritingSystem("test");
+				wsCollectionToBeWritten.Add(ws.Id, ws);
+				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
+				wsCollectionToBeWritten.Add(ws2.Id, ws2);
+				WriteLdmlWritingSystemFiles(pretendProjectFolder.FolderPath, wsCollectionToBeWritten);
+				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
+				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				string pathToLdmlWritingSystemsFolder =
+					WritingSystemCollection.GetPathToLdmlWritingSystemsFolder(pretendProjectFolder.FolderPath);
+				Assert.IsTrue(Directory.Exists(pathToLdmlWritingSystemsFolder));
+			}
 			throw new NotImplementedException();
 		}
 
