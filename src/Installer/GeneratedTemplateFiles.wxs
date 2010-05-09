@@ -2,12 +2,16 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
 		<DirectoryRef Id="TemplatesDir">
-			<Component Id="basicDictionary.css" Guid="9AA274D4-2566-4F29-90CC-EEF733640794">
-				<File Id="basicDictionary.css" Name="basicDictionary.css" KeyPath="yes" Source="..\..\templates\basicDictionary.css" />
+			<Component Id="defaultDictionary.css" Guid="15B4EBF9-82E4-4337-AF8C-45BEB7E308B8">
+				<File Id="defaultDictionary.css" Name="defaultDictionary.css" KeyPath="yes" Source="..\..\templates\defaultDictionary.css" />
+			</Component>
+			<Component Id="oldBasicDictionary.css" Guid="65F89227-8B06-4CAD-ABBD-899488223DEF">
+				<File Id="oldBasicDictionary.css" Name="oldBasicDictionary.css" Source="..\..\templates\oldBasicDictionary.css" />
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id="templates">
-			<ComponentRef Id="basicDictionary.css" />
+			<ComponentRef Id="defaultDictionary.css" />
+			<ComponentRef Id="oldBasicDictionary.css" />
 		</ComponentGroup>
 	</Fragment>
 </Wix>

@@ -139,6 +139,17 @@
 	</MakeWixForDirTree>
   </Target>
 
+  <Target Name="MakeWixForMercurial">
+	<MakeWixForDirTree
+				DirectoryReferenceId="mercurial"
+				ComponentGroupId="Mercurial"
+				RootDirectory="$(BaseDirectory)\lib\net2.0\mercurial"
+				OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedMercurial.wxs"
+				MatchRegExPattern=".*">
+	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
+	</MakeWixForDirTree>
+  </Target>
+
   <Target Name="MakeWixForTemplates">
 	<MakeWixForDirTree
 				DirectoryReferenceId="TemplatesDir"
@@ -161,6 +172,7 @@
 	<Message Text="Version: $(Version)" />
 
 	<CallTarget targets="MakeWixForTemplates"/>
+	<CallTarget targets="MakeWixForMercurial"/>
 
 	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
@@ -198,8 +210,9 @@
 
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<CallTarget targets="MakeWixForTemplates"/>
+	<CallTarget targets="MakeWixForMercurial"/>
 
-	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
+	  <!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
 	<FileUpdate Files="$(BaseDirectory)\src\Installer\Installer.wxs" Regex="Property_ProductVersion = \&quot;.*\&quot;"
 				ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />
