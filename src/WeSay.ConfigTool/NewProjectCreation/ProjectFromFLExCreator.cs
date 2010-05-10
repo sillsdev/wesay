@@ -22,14 +22,25 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 			CopyOverRangeFileIfExists(pathToSourceLift, pathToNewDirectory);
 
+			CopyOverLdmlFiles(pathToSourceLift, pathToNewDirectory);
+
 			using (var project = new WeSayWordsProject())
 			{
 				project.LoadFromProjectDirectoryPath(pathToNewDirectory);
 
-				LoadWritingSystemsFromExistingLift(pathToSourceLift, project.DefaultViewTemplate, project.WritingSystems);
+				//LoadWritingSystemsFromExistingLift(pathToSourceLift, project.DefaultViewTemplate, project.WritingSystems);
 				project.Save();
 			}
 			return true;
+		}
+
+		private static void CopyOverLdmlFiles(string pathToSourceLift, string pathToNewDirectory)
+		{
+			foreach (string pathToLdml in Directory.GetFiles(Path.GetDirectoryName(pathToSourceLift), "*.ldml"))
+			{
+				string fileName = Path.GetFileName(pathToLdml);
+				File.Copy(pathToLdml, pathToNewDirectory + Path.DirectorySeparatorChar + fileName);
+			}
 		}
 
 		private static void CopyOverLiftFile(string pathToSourceLift, string pathToNewDirectory)

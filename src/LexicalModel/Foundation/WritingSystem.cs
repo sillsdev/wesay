@@ -78,10 +78,13 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("Id", Required = true)]
 		public string Id
 		{
-			get { return _palasoWritingSystemDefinition.ISO; }
+			get { return _palasoWritingSystemDefinition.Id; }
 			set
 			{
 				_palasoWritingSystemDefinition.ISO = value;
+				_palasoWritingSystemDefinition.Region = "";
+				_palasoWritingSystemDefinition.Script = "";
+				_palasoWritingSystemDefinition.Variant = "";
 			}
 		}
 
@@ -319,24 +322,28 @@ namespace WeSay.LexicalModel.Foundation
 			set { _isUnicode = value; }
 		}
 
+		//[ReflectorProperty("Region", Required = true)]
 		//public string Region
 		//{
 		//    get { return _palasoWritingSystemDefinition.Region; }
 		//    set { _palasoWritingSystemDefinition.Region = value; }
 		//}
 
+		//[ReflectorProperty("Script", Required = true)]
 		//public string Script
 		//{
 		//    get { return _palasoWritingSystemDefinition.Script; }
 		//    set { _palasoWritingSystemDefinition.Script = value; }
 		//}
 
+		//[ReflectorProperty("Variant", Required = true)]
 		//public string Variant
 		//{
 		//    get { return _palasoWritingSystemDefinition.Variant; }
 		//    set { _palasoWritingSystemDefinition.Variant = value; }
 		//}
 
+		//[ReflectorProperty("ISO", Required = true)]
 		//public string ISO
 		//{
 		//    get { return _palasoWritingSystemDefinition.ISO; }
@@ -372,7 +379,7 @@ namespace WeSay.LexicalModel.Foundation
 
 		public override string ToString()
 		{
-			return _palasoWritingSystemDefinition.ISO;
+			return _palasoWritingSystemDefinition.Id;
 		}
 
 		public SortKey GetSortKey(string source)

@@ -83,6 +83,10 @@ namespace WeSay.ConfigTool
 
 		private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
+			if(e.ChangedItem.Value.ToString() == e.OldValue.ToString())
+			{
+				return;
+			}
 				Logger.WriteConciseHistoricalEvent(
 					StringCatalog.Get("Modified {0} of Writing System {1}",
 									  "Checkin Description in WeSay Config Tool used when you edit a writing system."),

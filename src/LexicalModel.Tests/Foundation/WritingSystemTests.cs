@@ -150,6 +150,19 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
+		public void Id_Set_RemovesExistingRegionVariantAndScriptInfo()
+		{
+			WritingSystem writingSystem = new WritingSystem();
+			writingSystem.GetAsPalasoWritingSystemDefinition().ISO = "Iso";
+			writingSystem.GetAsPalasoWritingSystemDefinition().Region = "Region";
+			writingSystem.GetAsPalasoWritingSystemDefinition().Variant = "Variant";
+			writingSystem.GetAsPalasoWritingSystemDefinition().Script = "Script";
+			Assert.AreEqual(writingSystem.Id, "Iso-Script-Region-Variant");
+			writingSystem.Id = "Id";
+			Assert.AreEqual(writingSystem.Id, "Id");
+		}
+
+		[Test]
 		public void CustomSortRules_SortUsingNotCustom_NotSet()
 		{
 			WritingSystem writingSystem = new WritingSystem("one",

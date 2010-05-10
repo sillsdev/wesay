@@ -156,6 +156,27 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			}
 		}
 
+		[Test]
+		public void Load_LdmlWritingSystemsHaveSameIsoCodeButDifferentVariantRegionInfo_DoesNotCrash()
+		{
+			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("projectFolder"))
+			{
+				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
+				WritingSystem ws = CreateDetailedWritingSystem("test");
+				ws.GetAsPalasoWritingSystemDefinition().Region = "Region1";
+				wsCollectionToBeWritten.Add(ws.Id, ws);
+				WritingSystem ws2 = CreateDetailedWritingSystem("test");
+				ws2.GetAsPalasoWritingSystemDefinition().Region = "Region2";
+				wsCollectionToBeWritten.Add(ws2.Id, ws2);
+				string pathToLdmlWritingSystemsFolder =
+					WritingSystemCollection.GetPathToLdmlWritingSystemsFolder(pretendProjectFolder.FolderPath);
+				WriteLdmlWritingSystemFiles(pathToLdmlWritingSystemsFolder, wsCollectionToBeWritten);
+				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
+				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
+			}
+		}
+
 		private void WriteLdmlWritingSystemFiles(string pathToStore, WritingSystemCollection wsCollectionToBeWritten)
 		{
 			LdmlInFolderWritingSystemStore store = new LdmlInFolderWritingSystemStore(pathToStore);
