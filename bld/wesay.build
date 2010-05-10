@@ -103,6 +103,9 @@
 				<include name="common/*" />
 			</fileset>
 		</copy>
+
+	<call target="UnzipMercurial"/>
+
 		<!--<solution configuration="${configuration}" solutionfile="../src/wesay.sln">
 		</solution>-->
 		<msbuild project="..\src\WeSay.sln">
@@ -142,7 +145,13 @@
 		</msbuild>
 	</target>
 
-	<!--
+  <target name="UnzipMercurial">
+	<msbuild project="WeSay.proj" target="UnzipMercurial">
+	</msbuild>
+  </target>
+
+
+  <!--
 	<target name="publish" depends="installer">
 		<exec program="ftp.exe">
 			<arg line="-n -s:ftp.txt" />

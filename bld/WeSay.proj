@@ -31,6 +31,9 @@
   </Target>
 
   <Target Name="Compile">
+
+	<CallTarget targets="UnzipMercurial"/>
+
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Rebuild"
 			 Properties="Configuration=Debug" />
@@ -38,6 +41,11 @@
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Rebuild"
 			 Properties="Configuration=Release" />
+  </Target>
+
+  <Target Name="UnzipMercurial">
+	<Unzip ZipFileName="$(BaseDirectory)\lib\net2.0\Mercurial.zip"
+		   TargetDirectory="$(BaseDirectory)\output\Release"/>
   </Target>
 
   <Target Name="Test">
@@ -143,7 +151,7 @@
 	<MakeWixForDirTree
 				DirectoryReferenceId="mercurial"
 				ComponentGroupId="Mercurial"
-				RootDirectory="$(BaseDirectory)\lib\net2.0\mercurial"
+				RootDirectory="$(BaseDirectory)\output\release\mercurial"
 				OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedMercurial.wxs"
 				MatchRegExPattern=".*">
 	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />

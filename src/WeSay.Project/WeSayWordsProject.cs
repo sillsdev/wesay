@@ -15,6 +15,7 @@ using Autofac.Builder;
 using Autofac.Registrars.Delegate;
 using Chorus;
 using Chorus.UI.Notes;
+using Chorus.UI.Notes.Bar;
 using Chorus.UI.Notes.Browser;
 using Chorus.UI.Review;
 using Chorus.Utilities;
