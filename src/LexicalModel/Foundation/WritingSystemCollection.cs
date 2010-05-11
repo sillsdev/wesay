@@ -30,7 +30,7 @@ namespace WeSay.LexicalModel.Foundation
 				}
 			}
 			//Load old WeSay WritingSystems File
-			if (WeSayWritingSystemsPrefsFileExists(PathToWritingSystemPrefsFile))
+			if (WeSayWritingSystemsPrefsExist(PathToWritingSystemPrefsFile))
 			{
 				NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
 				XmlReader reader = XmlReader.Create(PathToWritingSystemPrefsFile);
@@ -49,16 +49,14 @@ namespace WeSay.LexicalModel.Foundation
 					{
 						this.Add(pair.Key, pair.Value);
 					}
-					this[pair.Key].IsUnicode = pair.Value.IsUnicode;
-					this[pair.Key].CustomSortRules = pair.Value.CustomSortRules;
 				}
 			}
 
 		}
 
-		private static bool WeSayWritingSystemsPrefsFileExists(string pathToWritingSystemPrefsFile)
+		private static bool WeSayWritingSystemsPrefsExist(string pathToWritingSystemPrefsFile)
 		{
-			bool exists = File.Exists(pathToWritingSystemPrefsFile);
+			bool exists = File.Exists(pathToWritingSystemPrefsFile) && (new FileInfo(pathToWritingSystemPrefsFile).Length != 0);
 			return exists;
 		}
 
@@ -70,7 +68,7 @@ namespace WeSay.LexicalModel.Foundation
 
 		public static bool WritingSystemsExistInProject(string pathToWritingSystemPrefsFile, string pathToLdmlWritingSystemsFolder)
 		{
-			return WeSayWritingSystemsPrefsFileExists(pathToWritingSystemPrefsFile) || LdmlWritingSystemsDefinitionsExist(pathToLdmlWritingSystemsFolder);
+			return WeSayWritingSystemsPrefsExist(pathToWritingSystemPrefsFile) || LdmlWritingSystemsDefinitionsExist(pathToLdmlWritingSystemsFolder);
 		}
 
 		/// <summary>
@@ -100,7 +98,7 @@ namespace WeSay.LexicalModel.Foundation
 			set { base[key] = value; }
 		}
 
-		public void Write(string pathToLdmlWritingSystemsFolder, string PathToWritingSystemPrefsFile)
+		public void Write(string pathToLdmlWritingSystemsFolder)
 		{
 			if (_ldmlInFolderWritingSystemStore == null)
 			{
@@ -111,19 +109,6 @@ namespace WeSay.LexicalModel.Foundation
 				}
 			}
 			_ldmlInFolderWritingSystemStore.Save();
-			//We are working with a legacy WeSay WritingSytemsPrefs.xml file to hold some info that we need that palaso can't give us
-			XmlWriterSettings settings = new XmlWriterSettings() {Indent = true};
-			XmlWriter writer = XmlWriter.Create(PathToWritingSystemPrefsFile, settings);
-			try
-			{
-				writer.WriteStartDocument();
-				NetReflector.Write(writer, this);
-			}
-			finally
-			{
-				writer.Close();
-			}
-
 		}
 
 		private static NetReflectorTypeTable MakeTypeTable()

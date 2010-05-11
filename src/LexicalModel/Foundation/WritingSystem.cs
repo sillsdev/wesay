@@ -317,8 +317,8 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("IsUnicode", Required = false)]
 		public bool IsUnicode
 		{
-			get { return _isUnicode; }
-			set { _isUnicode = value; }
+			get { return !_palasoWritingSystemDefinition.IsLegacyEncoded; }
+			set { _palasoWritingSystemDefinition.IsLegacyEncoded = !value; }
 		}
 
 		//[ReflectorProperty("Region", Required = true)]

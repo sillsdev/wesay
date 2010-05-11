@@ -128,7 +128,7 @@ namespace WeSay.Project
 			{
 				Directory.Delete(pathToLdmlWsFolder, true);
 			}
-			wsc.Write(pathToLdmlWsFolder, PathToPretendWritingSystemPrefs);
+			wsc.Write(pathToLdmlWsFolder);
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
