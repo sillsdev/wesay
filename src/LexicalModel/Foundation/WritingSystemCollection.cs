@@ -15,9 +15,8 @@ namespace WeSay.LexicalModel.Foundation
 	{
 		private LdmlInFolderWritingSystemStore _ldmlInFolderWritingSystemStore;
 
-		public void Load(string pathToLdmlWritingSystemsFolder, string PathToWritingSystemPrefsFile)
+		public void Load(string pathToLdmlWritingSystemsFolder)
 		{
-			//Load Ldml files
 			if (LdmlWritingSystemsDefinitionsExist(pathToLdmlWritingSystemsFolder))
 			{
 				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(pathToLdmlWritingSystemsFolder);
@@ -29,7 +28,10 @@ namespace WeSay.LexicalModel.Foundation
 					this.Add(wesayWritingSystem.Id, wesayWritingSystem);
 				}
 			}
-			//Load old WeSay WritingSystems File
+		}
+
+		public void LoadFromLegacyWeSayFile(string PathToWritingSystemPrefsFile)
+		{
 			if (WeSayWritingSystemsPrefsExist(PathToWritingSystemPrefsFile))
 			{
 				NetReflectorReader r = new NetReflectorReader(MakeTypeTable());

@@ -94,7 +94,7 @@ namespace WeSay.Project
 
 		public virtual void Save(string projectDirectoryPath)
 		{
-			_writingSystems.Write(PathToLdmlWritingSystemsFolder(projectDirectoryPath));
+			_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(projectDirectoryPath));
 		}
 
 		/// <summary>
@@ -138,12 +138,12 @@ namespace WeSay.Project
 			protected set { _projectDirectoryPath = value; }
 		}
 
-		public static string PathToWritingSystemPrefs(string parentDir)
+		public static string GetPathToWritingSystemPrefs(string parentDir)
 		{
 				return Path.Combine(parentDir, "WritingSystemPrefs.xml");
 		}
 
-		public static string PathToLdmlWritingSystemsFolder(string parentDir)
+		public static string GetPathToLdmlWritingSystemsFolder(string parentDir)
 		{
 				return Path.Combine(parentDir, "WritingSystems");
 		}
@@ -155,11 +155,6 @@ namespace WeSay.Project
 		//                return GetPathToWritingSystemPrefs(CommonDirectory);
 		//            }
 		//        }
-
-		protected static string GetPathToWritingSystemPrefs(string parentDir)
-		{
-			return Path.Combine(parentDir, "WritingSystemPrefs.xml");
-		}
 
 		public string LocateStringCatalog()
 		{
@@ -258,15 +253,15 @@ namespace WeSay.Project
 
 		protected void InitWritingSystems()
 		{
-			if (WritingSystemCollection.WritingSystemsExistInProject(PathToWritingSystemPrefs(ProjectDirectoryPath), PathToLdmlWritingSystemsFolder(ProjectDirectoryPath)))
+			_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
+			if (_writingSystems.Count == 0)
 			{
-				_writingSystems.Load(PathToLdmlWritingSystemsFolder(ProjectDirectoryPath), PathToWritingSystemPrefs(ProjectDirectoryPath));
+				_writingSystems.LoadFromLegacyWeSayFile(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
 			}
-			else
+			if (_writingSystems.Count == 0)
 			{
 				//load defaults
-				_writingSystems.Load(PathToLdmlWritingSystemsFolder(ProjectDirectoryPath),
-					ApplicationCommonDirectory + Path.DirectorySeparatorChar + "WritingSystemPrefs.xml");
+				_writingSystems.LoadFromLegacyWeSayFile(Path.Combine(ApplicationCommonDirectory, "WritingSystemPrefs.xml"));
 			}
 		}
 

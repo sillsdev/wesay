@@ -123,7 +123,7 @@ namespace WeSay.Project
 			{
 				File.Delete(PathToPretendWritingSystemPrefs);
 			}
-		   string pathToLdmlWsFolder = PathToLdmlWritingSystemsFolder(projectDirectory.FullName);
+		   string pathToLdmlWsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
 			if (Directory.Exists(pathToLdmlWsFolder))
 			{
 				Directory.Delete(pathToLdmlWsFolder, true);
@@ -871,7 +871,7 @@ namespace WeSay.Project
 		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile)
 		{
 			WritingSystemCollection writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Load(PathToLdmlWritingSystemsFolder(projectPath), PathToWritingSystemPrefs(projectPath));
+			writingSystemCollection.Load(GetPathToLdmlWritingSystemsFolder(projectPath));
 
 			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
 			StringBuilder builder = new StringBuilder();

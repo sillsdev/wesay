@@ -76,7 +76,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		public void Load_OnlyOldWeSayWritingSystemsFileExists_WritingSystemsAreLoadedFromThatFile()
+		public void LoadFromLegacyWeSayFile_WritingSystemsAreLoadedFromThatFile()
 		{
 			using(TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
 			{
@@ -87,7 +87,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
 				WriteOldWeSayWritingSystemsFile(_wsPrefsFile.Path, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
+				loadedWsCollection.LoadFromLegacyWeSayFile(_wsPrefsFile.Path);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 			}
 		}
@@ -154,7 +154,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.FolderPath, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
+				loadedWsCollection.Load(_ldmlWsFolder.FolderPath);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 		}
 
@@ -170,7 +170,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.FolderPath, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
+				loadedWsCollection.Load(_ldmlWsFolder.FolderPath);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 		}
 
@@ -185,21 +185,6 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		public void Load_IsUnicodePropertiesAreLoadedFromWeSayWritingSystemPrefsFile()
-		{
-				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
-				WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
-				wsCollectionToBeWritten.Add(ws.Id, ws);
-				WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
-				wsCollectionToBeWritten.Add(ws2.Id, ws2);
-				WriteOldWeSayWritingSystemsFile(_wsPrefsFile.Path, wsCollectionToBeWritten);
-				WriteLdmlWritingSystemFiles(_ldmlWsFolder.FolderPath, wsCollectionToBeWritten);
-				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
-				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
-		}
-
-		[Test]
 		public void Roundtripping_Works()
 		{
 			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
@@ -209,7 +194,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			wsCollectionToBeWritten.Add(ws2.Id, ws2);
 			wsCollectionToBeWritten.Write(_ldmlWsFolder.FolderPath);
 			WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-			loadedWsCollection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
+			loadedWsCollection.Load(_ldmlWsFolder.FolderPath);
 			AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 		}
 
@@ -218,11 +203,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 				CreateLdmlWritingsystemDefinitionFile();
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(_ldmlWsFolder.FolderPath,_wsPrefsFile.Path);
+				loadedWsCollection.Load(_ldmlWsFolder.FolderPath);
 				loadedWsCollection["test"].KeyboardName = "changed";
 				loadedWsCollection.Write(_ldmlWsFolder.FolderPath);
 				WritingSystemCollection reloadedWsCollection = new WritingSystemCollection();
-				reloadedWsCollection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
+				reloadedWsCollection.Load(_ldmlWsFolder.FolderPath);
 				AssertWritingSystemCollectionsAreEqual(loadedWsCollection, reloadedWsCollection);
 		}
 
@@ -261,7 +246,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void RightFont()
 		{
 				CreateSampleWritingSystemFile(_wsPrefsFile.Path);
-				_collection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
+				_collection.LoadFromLegacyWeSayFile(_wsPrefsFile.Path);
 				WritingSystem ws = _collection["PretendAnalysis"];
 				Assert.AreEqual("PretendAnalysis", ws.Id);
 				// since Linux may not have CourierNew, we
@@ -340,7 +325,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			MakeSampleCollection().Write(_ldmlWsFolder.FolderPath);
 
 			WritingSystemCollection c = new WritingSystemCollection();
-			c.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
+			c.Load(_ldmlWsFolder.FolderPath);
 			Assert.IsNotNull(c);
 			Assert.AreEqual(2, c.Values.Count);
 		}
