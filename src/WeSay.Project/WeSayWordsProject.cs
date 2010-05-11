@@ -123,13 +123,12 @@ namespace WeSay.Project
 			{
 				File.Delete(PathToPretendWritingSystemPrefs);
 			}
-			string pathToLdmlWsFolder =
-				WritingSystemCollection.GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
+		   string pathToLdmlWsFolder = PathToLdmlWritingSystemsFolder(projectDirectory.FullName);
 			if (Directory.Exists(pathToLdmlWsFolder))
 			{
 				Directory.Delete(pathToLdmlWsFolder, true);
 			}
-			wsc.Write(projectDirectory.FullName);
+			wsc.Write(pathToLdmlWsFolder, PathToPretendWritingSystemPrefs);
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
@@ -872,7 +871,7 @@ namespace WeSay.Project
 		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile)
 		{
 			WritingSystemCollection writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Load(projectPath);
+			writingSystemCollection.Load(PathToLdmlWritingSystemsFolder(projectPath), PathToWritingSystemPrefs(projectPath));
 
 			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
 			StringBuilder builder = new StringBuilder();

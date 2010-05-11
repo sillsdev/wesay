@@ -17,16 +17,25 @@ namespace WeSay.LexicalModel.Tests.Foundation
 	public class WritingCollectionSystemTests
 	{
 		private WritingSystemCollection _collection;
+		private TemporaryFolder _wesayProjectFolder;
+		private TemporaryFolder _ldmlWsFolder;
+		private TempFile _wsPrefsFile;
 
 		[SetUp]
 		public void Setup()
 		{
+			_wesayProjectFolder = new TemporaryFolder("WesayProject");
+			_ldmlWsFolder = new TemporaryFolder(_wesayProjectFolder, "WritingSystems");
+			_wsPrefsFile = new TempFile(_ldmlWsFolder);
 			_collection = new WritingSystemCollection();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
+			_wsPrefsFile.Dispose();
+			_ldmlWsFolder.Dispose();
+			_wesayProjectFolder.Dispose();
 		}
 
 		private void CreateSampleWritingSystemFile(string path)
@@ -76,11 +85,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				wsCollectionToBeWritten.Add(ws.Id,ws);
 				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
-				TempFile wsPrefs = new TempFile(pretendProjectFolder);
-				string newPsPrefsPath = RenameFileToWritingsystemsPrefs(wsPrefs.Path);
-				WriteOldWeSayWritingSystemsFile(newPsPrefsPath, wsCollectionToBeWritten);
+				WriteOldWeSayWritingSystemsFile(_wsPrefsFile.Path, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				loadedWsCollection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 			}
 		}
@@ -140,27 +147,20 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Load_OnlyLdmlWritingSystemFilesExist_WritingSystemsAreLoadedFromThoseFiles()
 		{
-			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("projectFolder"))
-			{
 				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
 				WritingSystem ws = CreateDetailedWritingSystem("test");
 				wsCollectionToBeWritten.Add(ws.Id, ws);
 				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
-				string pathToLdmlWritingSystemsFolder =
-					WritingSystemCollection.GetPathToLdmlWritingSystemsFolder(pretendProjectFolder.FolderPath);
-				WriteLdmlWritingSystemFiles(pathToLdmlWritingSystemsFolder, wsCollectionToBeWritten);
+				WriteLdmlWritingSystemFiles(_ldmlWsFolder.FolderPath, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				loadedWsCollection.Load(_ldmlWsFolder.FolderPath, "");
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
-			}
 		}
 
 		[Test]
 		public void Load_LdmlWritingSystemsHaveSameIsoCodeButDifferentVariantRegionInfo_DoesNotCrash()
 		{
-			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("projectFolder"))
-			{
 				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
 				WritingSystem ws = CreateDetailedWritingSystem("test");
 				ws.GetAsPalasoWritingSystemDefinition().Region = "Region1";
@@ -168,13 +168,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				WritingSystem ws2 = CreateDetailedWritingSystem("test");
 				ws2.GetAsPalasoWritingSystemDefinition().Region = "Region2";
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
-				string pathToLdmlWritingSystemsFolder =
-					WritingSystemCollection.GetPathToLdmlWritingSystemsFolder(pretendProjectFolder.FolderPath);
-				WriteLdmlWritingSystemFiles(pathToLdmlWritingSystemsFolder, wsCollectionToBeWritten);
+				WriteLdmlWritingSystemFiles(_ldmlWsFolder.FolderPath, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				loadedWsCollection.Load(_ldmlWsFolder.FolderPath, "");
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
-			}
 		}
 
 		private void WriteLdmlWritingSystemFiles(string pathToStore, WritingSystemCollection wsCollectionToBeWritten)
@@ -190,93 +187,51 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Load_IsUnicodeAndCustomSortRulesPropertiesAreLoadedFromWeSayWritingSystemPrefsFile()
 		{
-			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
-			{
 				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
 				WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
 				wsCollectionToBeWritten.Add(ws.Id, ws);
 				WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
-				TempFile wsPrefs = new TempFile(pretendProjectFolder);
-				WriteOldWeSayWritingSystemsFile(wsPrefs.Path, wsCollectionToBeWritten);
-				RenameFileToWritingsystemsPrefs(wsPrefs.Path);
-				WriteLdmlWritingSystemFiles(pretendProjectFolder.FolderPath, wsCollectionToBeWritten);
+				WriteOldWeSayWritingSystemsFile(_wsPrefsFile.Path, wsCollectionToBeWritten);
+				WriteLdmlWritingSystemFiles(_ldmlWsFolder.FolderPath, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				loadedWsCollection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
-			}
-		}
-
-		private string RenameFileToWritingsystemsPrefs(string originalPath)
-		{
-			string newPath = WritingSystemCollection.GetPathToOldWeSayWritingSystemsFile(Path.GetDirectoryName(originalPath));
-			if (File.Exists(newPath))
-			{
-				File.Delete(newPath);
-			}
-			File.Move(originalPath, newPath);
-			return newPath;
 		}
 
 		[Test]
 		public void Roundtripping_Works()
 		{
-			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
-			{
-				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
-				WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
-				wsCollectionToBeWritten.Add(ws.Id, ws);
-				WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
-				wsCollectionToBeWritten.Add(ws2.Id, ws2);
-				wsCollectionToBeWritten.Write(pretendProjectFolder.FolderPath);
-				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
-				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
-			}
+			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
+			WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
+			wsCollectionToBeWritten.Add(ws.Id, ws);
+			WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
+			wsCollectionToBeWritten.Add(ws2.Id, ws2);
+			wsCollectionToBeWritten.Write(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
+			WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
+			loadedWsCollection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
+			AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 		}
 
 		[Test]
 		public void Save_WritingSystemReadFromLdmlAndChanged_ChangesSaved()
 		{
-			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
-			{
-				CreateLdmlWritingsystemDefinitionFile(pretendProjectFolder);
+				CreateLdmlWritingsystemDefinitionFile();
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				loadedWsCollection.Load(_ldmlWsFolder.FolderPath,_wsPrefsFile.Path);
 				loadedWsCollection["test"].KeyboardName = "changed";
-				loadedWsCollection.Write(pretendProjectFolder.FolderPath);
+				loadedWsCollection.Write(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
 				WritingSystemCollection reloadedWsCollection = new WritingSystemCollection();
-				reloadedWsCollection.Load(pretendProjectFolder.FolderPath);
+				reloadedWsCollection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
 				AssertWritingSystemCollectionsAreEqual(loadedWsCollection, reloadedWsCollection);
-			}
 		}
 
-		private void CreateLdmlWritingsystemDefinitionFile(TemporaryFolder pretendProjectFolder)
+		private void CreateLdmlWritingsystemDefinitionFile()
 		{
 			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
 			WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
 			wsCollectionToBeWritten.Add(ws.Id, ws);
-			wsCollectionToBeWritten.Write(pretendProjectFolder.FolderPath);
-		}
-
-		[Test]
-		public void Load_LdmlFilesInProjectRoot_AreMovedToSubfolder()
-		{
-			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
-			{
-				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
-				WritingSystem ws = CreateDetailedWritingSystem("test");
-				wsCollectionToBeWritten.Add(ws.Id, ws);
-				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
-				wsCollectionToBeWritten.Add(ws2.Id, ws2);
-				WriteLdmlWritingSystemFiles(pretendProjectFolder.FolderPath, wsCollectionToBeWritten);
-				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(pretendProjectFolder.FolderPath);
-				string pathToLdmlWritingSystemsFolder =
-					WritingSystemCollection.GetPathToLdmlWritingSystemsFolder(pretendProjectFolder.FolderPath);
-				Assert.IsTrue(File.Exists(pathToLdmlWritingSystemsFolder + Path.DirectorySeparatorChar + "test.ldml"));
-				Assert.IsTrue(File.Exists(pathToLdmlWritingSystemsFolder + Path.DirectorySeparatorChar + "test2.ldml"));
-			}
+			wsCollectionToBeWritten.Write(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
 		}
 
 		[Test]
@@ -305,11 +260,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void RightFont()
 		{
-			using (TempFile wsPrefs = new TempFile())
-			{
-				CreateSampleWritingSystemFile(wsPrefs.Path);
-				string newWsPrefs = RenameFileToWritingsystemsPrefs(wsPrefs.Path);
-				_collection.Load(Path.GetDirectoryName(newWsPrefs));
+				CreateSampleWritingSystemFile(_wsPrefsFile.Path);
+				_collection.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
 				WritingSystem ws = _collection["PretendAnalysis"];
 				Assert.AreEqual("PretendAnalysis", ws.Id);
 				// since Linux may not have CourierNew, we
@@ -317,7 +269,6 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				Font expectedFont = new Font("Courier New", 10);
 				Assert.AreEqual(expectedFont.Name, ws.Font.Name);
 				Assert.AreEqual(expectedFont.Size, ws.Font.Size);
-			}
 		}
 
 
@@ -386,11 +337,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void DeserializeCollectionViaLoad()
 		{
-			TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendProjectFolder");
-			MakeSampleCollection().Write(pretendProjectFolder.FolderPath);
+			MakeSampleCollection().Write(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
 
 			WritingSystemCollection c = new WritingSystemCollection();
-			c.Load(pretendProjectFolder.FolderPath);
+			c.Load(_ldmlWsFolder.FolderPath, _wsPrefsFile.Path);
 			Assert.IsNotNull(c);
 			Assert.AreEqual(2, c.Values.Count);
 		}

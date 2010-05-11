@@ -94,7 +94,7 @@ namespace WeSay.Project
 
 		public virtual void Save(string projectDirectoryPath)
 		{
-			_writingSystems.Write(projectDirectoryPath);
+			_writingSystems.Write(PathToLdmlWritingSystemsFolder(projectDirectoryPath), PathToWritingSystemPrefs(projectDirectoryPath));
 		}
 
 		/// <summary>
@@ -138,12 +138,14 @@ namespace WeSay.Project
 			protected set { _projectDirectoryPath = value; }
 		}
 
-		public string PathToWritingSystemPrefs
+		public static string PathToWritingSystemPrefs(string parentDir)
 		{
-			get
-			{
-				return WritingSystemCollection.GetPathToOldWeSayWritingSystemsFile(ProjectDirectoryPath);
-			}
+				return Path.Combine(parentDir, "WritingSystemPrefs.xml");
+		}
+
+		public static string PathToLdmlWritingSystemsFolder(string parentDir)
+		{
+				return Path.Combine(parentDir, "WritingSystems");
 		}
 
 		//        public string PathToOptionsLists
@@ -256,14 +258,15 @@ namespace WeSay.Project
 
 		protected void InitWritingSystems()
 		{
-			if (WritingSystemCollection.WritingSystemsExistInProject(ProjectDirectoryPath))
+			if (WritingSystemCollection.WritingSystemsExistInProject(PathToWritingSystemPrefs(ProjectDirectoryPath), PathToLdmlWritingSystemsFolder(ProjectDirectoryPath)))
 			{
-				_writingSystems.Load(ProjectDirectoryPath);
+				_writingSystems.Load(PathToLdmlWritingSystemsFolder(ProjectDirectoryPath), PathToWritingSystemPrefs(ProjectDirectoryPath));
 			}
 			else
 			{
 				//load defaults
-				_writingSystems.Load(ApplicationCommonDirectory);
+				_writingSystems.Load(PathToLdmlWritingSystemsFolder(ProjectDirectoryPath),
+					ApplicationCommonDirectory + Path.DirectorySeparatorChar + "WritingSystemPrefs.xml");
 			}
 		}
 

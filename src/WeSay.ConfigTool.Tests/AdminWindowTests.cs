@@ -49,7 +49,7 @@ namespace WeSay.ConfigTool.Tests
 		public void ProjectFilesTouched()
 		{
 			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
-			string p = BasilProject.Project.PathToWritingSystemPrefs;
+			string p = BasilProject.PathToWritingSystemPrefs(BasilProject.GetPretendProjectDirectory());
 			DateTime before = File.GetLastWriteTime(p);
 			_mainWindowTester.Close();
 			DateTime after = File.GetLastWriteTime(p);
@@ -64,7 +64,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			List<string> paths = new List<string>();
 			_window.CreateAndOpenProject(_projectFolder);
-			paths.Add(BasilProject.Project.PathToWritingSystemPrefs);
+			paths.Add(BasilProject.PathToWritingSystemPrefs(_projectFolder));
 			paths.Add(WeSayWordsProject.Project.PathToConfigFile);
 			//paths.Add(WeSayWordsProject.Project.PathToRepository);
 			_mainWindowTester.Close();
