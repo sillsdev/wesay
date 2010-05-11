@@ -35,7 +35,6 @@ namespace WeSay.LexicalModel.Foundation
 		public static string IdForUnknownVernacular = "v";
 		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
 		private bool _isUnicode = true;
-		private string _wesaySortRules;
 		private WritingSystemDefinition _palasoWritingSystemDefinition;
 
 		public WritingSystem(XmlNode node): this()
@@ -153,20 +152,20 @@ namespace WeSay.LexicalModel.Foundation
 				{
 					WritingSystemDefinition.SortRulesType newSortRulesType = AdaptToSortRulesType(value);
 
-					bool switchingToDefaultSortOrder =
-						(newSortRulesType == WritingSystemDefinition.SortRulesType.DefaultOrdering);
 					bool switchingToNonDefaultSystemSort =
 						(newSortRulesType == WritingSystemDefinition.SortRulesType.OtherLanguage);
+					bool switchingFromNonDefaultSystemSort =
+						(_palasoWritingSystemDefinition.SortUsing == WritingSystemDefinition.SortRulesType.OtherLanguage);
 
-					if (switchingToDefaultSortOrder)
+					if (switchingToNonDefaultSystemSort)
 					{
-						_wesaySortRules = _palasoWritingSystemDefinition.SortRules = null;
-					}
-					else if (switchingToNonDefaultSystemSort)
-					{
-						_wesaySortRules = null;
 						_palasoWritingSystemDefinition.SortRules = value;
 					}
+					if (switchingFromNonDefaultSystemSort)
+					{
+						_palasoWritingSystemDefinition.SortRules = null;
+					}
+
 					_palasoWritingSystemDefinition.SortUsing = newSortRulesType;
 				}
 			}
@@ -223,14 +222,14 @@ namespace WeSay.LexicalModel.Foundation
 				{
 					return null;
 				}
-				return _wesaySortRules ?? String.Empty;
+				return _palasoWritingSystemDefinition.SortRules ?? String.Empty;
 			}
 			set
 			{
 				// should only be set if UsesCustomSortRules == true but can't because of NetReflector
-				if (_wesaySortRules != value)
+				if (_palasoWritingSystemDefinition.SortRules != value)
 				{
-					_wesaySortRules = _palasoWritingSystemDefinition.SortRules = value;
+					_palasoWritingSystemDefinition.SortRules = value;
 				}
 				// cannot do the following due to NetReflector wanting to set to null!
 				// throw new InvalidOperationException("CustomSortRules can only be set when UsesCustomSortRules is true");

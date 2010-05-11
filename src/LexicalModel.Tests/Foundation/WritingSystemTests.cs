@@ -77,8 +77,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			List<string> testValues = new List<string>()
 										   {
-											   "CustomSimple",
-											   "CustomICU",
+											   CustomSortRulesType.CustomSimple.ToString(),
+											   CustomSortRulesType.CustomICU.ToString(),
 											   "NotNullOrEmpty"
 										   };
 			WritingSystem ws = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
