@@ -22,23 +22,15 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 			CopyOverRangeFileIfExists(pathToSourceLift, pathToNewDirectory);
 
-			RemoveUnneededWritingSystems(pathToNewDirectory);
 			CopyOverLdmlFiles(pathToSourceLift, BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory));
 
 			using (var project = new WeSayWordsProject())
 			{
 				project.LoadFromProjectDirectoryPath(pathToNewDirectory);
+				SetWritingSystemsForFields(pathToSourceLift, project.DefaultViewTemplate, project.WritingSystems);
 				project.Save();
 			}
 			return true;
-		}
-
-		private static void RemoveUnneededWritingSystems(string pathToNewDirectory)
-		{
-			foreach (string path in Directory.GetFiles(BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory)))
-			{
-				File.Delete(path);
-			}
 		}
 
 		private static void CopyOverLdmlFiles(string pathToSourceLift, string pathToNewDirectory)
@@ -100,18 +92,21 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			return true;
 		}
 
-		public static void LoadWritingSystemsFromExistingLiftTA(string path, ViewTemplate viewTemplate, WritingSystemCollection writingSystems)
+		public static void SetWritingSystemsForFields(string path, ViewTemplate viewTemplate, WritingSystemCollection writingSystems)
 		{
 			var doc = new XmlDocument();
 			doc.Load(path);
 			foreach (XmlNode node in doc.SelectNodes("//@lang"))
 			{
+				if (node.Value == "x-spec" && !writingSystems.ContainsKey("x-spec"))
+				{
+					writingSystems.AddSimple("x-spec");
+				}
 				if (!writingSystems.ContainsKey(node.Value))
 				{
-					writingSystems.AddSimple(node.Value);
+					throw new ApplicationException(String.Format("The imported Flex project is missing a description for the \"{0}\" writing system.", node.Value));
 				}
 			}
-
 
 			// replace all "v" fields with the first lexical-unit writing system
 			//and all "en" with the first translation one...
