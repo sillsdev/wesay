@@ -154,10 +154,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.Services.dll</HintPath>
-	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\PalasoUIWindowsForms.dll</HintPath>
@@ -181,14 +177,12 @@
 	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
 	</Compile>
 	<Compile Include="LexEntryRepositoryLoaderService.cs" />
-	<Compile Include="Services\DictionaryServiceProvider.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
 	<Compile Include="registrySettingsProvider.cs" />
-	<Compile Include="Services\HtmlArticleMaker.cs" />
 	<Compile Include="Properties\Settings.cs" />
 	<Compile Include="StatusBarController.cs" />
 	<Compile Include="TabbedForm.cs">

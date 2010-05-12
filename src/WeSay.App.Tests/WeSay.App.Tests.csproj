@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{7DA57D98-255B-46DE-BF94-D163695A0568}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -145,10 +145,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.Services.dll</HintPath>
-	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
@@ -156,10 +152,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Services\DictionaryServices_CrossApplicationTests.cs" />
-	<Compile Include="Services\DictionaryServices_SameTheadTests.cs" />
 	<Compile Include="FullUIAppTests.cs" />
-	<Compile Include="Services\HtmlArticleMakerTests.cs" />
 	<Compile Include="TabbedFormNavigationTests.cs" />
 	<Compile Include="TabbedFormTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
@@ -201,6 +194,9 @@
 	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
 	  <Name>WeSay.UI</Name>
 	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

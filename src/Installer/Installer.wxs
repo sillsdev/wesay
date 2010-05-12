@@ -210,10 +210,10 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="Palaso.dll" Name="Palaso.dll" KeyPath="yes" Source="..\..\output\release\Palaso.dll" />
 				  </Component>
 
-				  <Component Id="Palaso.Services.dll" Guid="{B8D67640-A995-42ec-B13C-0B1EECC65659}">
+<!--                  <Component Id="Palaso.Services.dll" Guid="{B8D67640-A995-42ec-B13C-0B1EECC65659}">
 					<File Id="Palaso.Services.dll" Name="Palaso.Services.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Services.dll" />
 				  </Component>
-
+-->
 				  <Component Id="Palaso.DictionaryServices.dll" Guid="{3CCA9386-0A99-418D-BF33-E070D6337D2A}">
 					<File Id="Palaso.DictionaryServices.dll" Name="Palaso.DictionaryServices.dll" KeyPath="yes" Source="..\..\output\release\Palaso.DictionaryServices.dll" />
 				  </Component>
@@ -352,7 +352,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LibChorus.dll"/>
 			  <ComponentRef Id="ChorusMerge.exe"/>
 			  <ComponentRef Id="Palaso.dll"/>
-			  <ComponentRef Id="Palaso.Services.dll" />
+<!--              <ComponentRef Id="Palaso.Services.dll" />-->
 			  <ComponentRef Id="Palaso.DictionaryServices.dll" />
 			  <ComponentRef Id="Palaso.Lift.dll" />
 			  <ComponentRef Id="Palaso.Media.dll" />
