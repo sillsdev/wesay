@@ -154,10 +154,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="irrKlang.NET2.0.dll" Name="irrKlang.NET2.0.dll" KeyPath="yes" Source="..\..\output\release\irrKlang.NET2.0.dll" />
 				  </Component>
 
-				  <Component Id="CookComputing.XmlRpcV2.dll" Guid="{C23D78B7-A7F2-4dc2-9B7F-8A004167FF12}">
-					<File Id="CookComputing.XmlRpcV2.dll" Name="CookComputing.XmlRpcV2.dll" KeyPath="yes" Source="..\..\output\release\CookComputing.XmlRpcV2.dll" />
-				  </Component>
-
 				  <Component Id="ICSharpCode.SharpZipLib.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D9D7}">
 					<File Id="ICSharpCode.SharpZipLib.dll" Name="ICSharpCode.SharpZipLib.dll" KeyPath="yes" Source="..\..\output\release\ICSharpCode.SharpZipLib.dll" />
 				  </Component>
@@ -338,7 +334,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="irrKlang.NET2.0.dll"/>
 
 			  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
-			  <ComponentRef Id="CookComputing.XmlRpcV2.dll" />
 			  <ComponentRef Id="KeymanLink.dll" />
 
 			  <ComponentRef Id="LexicalModel.dll" />
