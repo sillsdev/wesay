@@ -105,10 +105,10 @@ namespace WeSay.LexicalModel.Foundation
 			if (_ldmlInFolderWritingSystemStore == null)
 			{
 				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(pathToLdmlWritingSystemsFolder);
-				foreach (KeyValuePair<string, WritingSystem> pair in this)
-				{
-					_ldmlInFolderWritingSystemStore.Set(pair.Value.GetAsPalasoWritingSystemDefinition());
-				}
+			}
+			foreach (KeyValuePair<string, WritingSystem> pair in this)
+			{
+				_ldmlInFolderWritingSystemStore.Set(pair.Value.GetAsPalasoWritingSystemDefinition());
 			}
 			_ldmlInFolderWritingSystemStore.Save();
 		}

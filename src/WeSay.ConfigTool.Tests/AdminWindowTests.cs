@@ -64,7 +64,13 @@ namespace WeSay.ConfigTool.Tests
 		{
 			List<string> paths = new List<string>();
 			_window.CreateAndOpenProject(_projectFolder);
-			paths.Add(BasilProject.GetPathToWritingSystemPrefs(_projectFolder));
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "en.ldml"));
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "es.ldml"));
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "fr.ldml"));
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "id.ldml"));
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "th.ldml"));
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "tpi.ldml"));
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "v.ldml"));
 			paths.Add(WeSayWordsProject.Project.PathToConfigFile);
 			//paths.Add(WeSayWordsProject.Project.PathToRepository);
 			_mainWindowTester.Close();

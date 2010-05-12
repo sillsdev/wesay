@@ -257,11 +257,13 @@ namespace WeSay.Project
 			if (_writingSystems.Count == 0)
 			{
 				_writingSystems.LoadFromLegacyWeSayFile(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
+				_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
+				File.Delete(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
 			}
 			if (_writingSystems.Count == 0)
 			{
 				//load defaults
-				_writingSystems.LoadFromLegacyWeSayFile(Path.Combine(ApplicationCommonDirectory, "WritingSystemPrefs.xml"));
+				_writingSystems.Load(Path.Combine(ApplicationCommonDirectory, "WritingSystems"));
 			}
 		}
 

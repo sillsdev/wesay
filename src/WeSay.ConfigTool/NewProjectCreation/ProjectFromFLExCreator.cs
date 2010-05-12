@@ -22,16 +22,23 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 			CopyOverRangeFileIfExists(pathToSourceLift, pathToNewDirectory);
 
-			CopyOverLdmlFiles(pathToSourceLift, pathToNewDirectory);
+			RemoveUnneededWritingSystems(pathToNewDirectory);
+			CopyOverLdmlFiles(pathToSourceLift, BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory));
 
 			using (var project = new WeSayWordsProject())
 			{
 				project.LoadFromProjectDirectoryPath(pathToNewDirectory);
-
-				//LoadWritingSystemsFromExistingLift(pathToSourceLift, project.DefaultViewTemplate, project.WritingSystems);
 				project.Save();
 			}
 			return true;
+		}
+
+		private static void RemoveUnneededWritingSystems(string pathToNewDirectory)
+		{
+			foreach (string path in Directory.GetFiles(BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory)))
+			{
+				File.Delete(path);
+			}
 		}
 
 		private static void CopyOverLdmlFiles(string pathToSourceLift, string pathToNewDirectory)
@@ -39,7 +46,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			foreach (string pathToLdml in Directory.GetFiles(Path.GetDirectoryName(pathToSourceLift), "*.ldml"))
 			{
 				string fileName = Path.GetFileName(pathToLdml);
-				File.Copy(pathToLdml, pathToNewDirectory + Path.DirectorySeparatorChar + fileName);
+				File.Copy(pathToLdml, Path.Combine(pathToNewDirectory, fileName), true);
 			}
 		}
 
@@ -93,7 +100,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			return true;
 		}
 
-		public static void LoadWritingSystemsFromExistingLift(string path, ViewTemplate viewTemplate, WritingSystemCollection writingSystems)
+		public static void LoadWritingSystemsFromExistingLiftTA(string path, ViewTemplate viewTemplate, WritingSystemCollection writingSystems)
 		{
 			var doc = new XmlDocument();
 			doc.Load(path);
