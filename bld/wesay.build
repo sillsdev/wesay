@@ -16,21 +16,6 @@
 		</delete>
 	</target>
 
-	<target name="revision_svn">
-		<property name="svn.info.log" value="svninfo.txt"/>
-		<exec
-			program="svn.exe"
-			basedir="C:\Program Files\Subversion\bin"
-			commandline="info http://code.wesay.org/Palaso/trunk/Palaso"
-			output="${svn.info.log}"
-		/>
-		<loadfile property="svn.head.revision" file="${svn.info.log}" />
-		<regex pattern="^Revision: (?'revision'.*)$" input="${svn.head.revision}" options="Multiline" />
-		<property name="revision" value="${string::trim(revision)}" />
-		<echo message="Revision: ${revision}" />
-		<delete file="${svn.info.log}" />
-	</target>
-
 	<target name="revision_teamcityhg">
 		<property name="teamcity" value="${environment::get-variable('BUILD_NUMBER')}" />
 		<regex pattern="^(?'revision'[^:-]*)" input="${teamcity}" />
