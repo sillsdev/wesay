@@ -39,7 +39,7 @@ namespace WeSay.LexicalModel.Foundation
 
 		public WritingSystem(XmlNode node): this()
 		{
-			Id = node.Attributes["id"].Value;
+			ISO = node.Attributes["id"].Value;
 			XmlNode fontNode = node.SelectSingleNode("font");
 			string name = fontNode.Attributes["name"].Value;
 			float size = float.Parse(fontNode.Attributes["_palasoWritingSystemDefinitionSize"].Value);
@@ -74,17 +74,35 @@ namespace WeSay.LexicalModel.Foundation
 			return _palasoWritingSystemDefinition;
 		}
 
-		[ReflectorProperty("Id", Required = true)]
+		[Browsable(false)]
 		public string Id
 		{
 			get { return _palasoWritingSystemDefinition.Id; }
-			set
-			{
-				_palasoWritingSystemDefinition.ISO = value;
-				_palasoWritingSystemDefinition.Region = "";
-				_palasoWritingSystemDefinition.Script = "";
-				_palasoWritingSystemDefinition.Variant = "";
-			}
+		}
+
+		[ReflectorProperty("Id", Required = true)]
+		public string ISO
+		{
+			get { return _palasoWritingSystemDefinition.ISO; }
+			set { _palasoWritingSystemDefinition.ISO = value; }
+		}
+
+		public string Script
+		{
+			get { return _palasoWritingSystemDefinition.Script; }
+			set { _palasoWritingSystemDefinition.Script = value; }
+		}
+
+		public string Region
+		{
+			get { return _palasoWritingSystemDefinition.Region; }
+			set { _palasoWritingSystemDefinition.Region = value; }
+		}
+
+		public string Variant
+		{
+			get { return _palasoWritingSystemDefinition.Variant; }
+			set { _palasoWritingSystemDefinition.Variant = value; }
 		}
 
 		[ReflectorProperty("Abbreviation", Required = false)]
@@ -320,34 +338,6 @@ namespace WeSay.LexicalModel.Foundation
 			get { return !_palasoWritingSystemDefinition.IsLegacyEncoded; }
 			set { _palasoWritingSystemDefinition.IsLegacyEncoded = !value; }
 		}
-
-		//[ReflectorProperty("Region", Required = true)]
-		//public string Region
-		//{
-		//    get { return _palasoWritingSystemDefinition.Region; }
-		//    set { _palasoWritingSystemDefinition.Region = value; }
-		//}
-
-		//[ReflectorProperty("Script", Required = true)]
-		//public string Script
-		//{
-		//    get { return _palasoWritingSystemDefinition.Script; }
-		//    set { _palasoWritingSystemDefinition.Script = value; }
-		//}
-
-		//[ReflectorProperty("Variant", Required = true)]
-		//public string Variant
-		//{
-		//    get { return _palasoWritingSystemDefinition.Variant; }
-		//    set { _palasoWritingSystemDefinition.Variant = value; }
-		//}
-
-		//[ReflectorProperty("ISO", Required = true)]
-		//public string ISO
-		//{
-		//    get { return _palasoWritingSystemDefinition.ISO; }
-		//    set { _palasoWritingSystemDefinition.ISO = value; }
-		//}
 
 		#region IComparer<string> Members
 

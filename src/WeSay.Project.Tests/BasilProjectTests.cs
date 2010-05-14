@@ -211,7 +211,7 @@ namespace WeSay.Project.Tests
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
 			WritingSystemCollection wsCollection = new WritingSystemCollection();
-			WritingSystem ws = new WritingSystem(){Id = "ldmlWs"};
+			WritingSystem ws = new WritingSystem(){ISO = "ldmlWs"};
 			wsCollection.Add(ws.Id, ws);
 			wsCollection.Write(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
 			project.LoadFromProjectDirectoryPath(_projectDirectory);

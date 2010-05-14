@@ -35,7 +35,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			string s = NetReflector.Write(ws);
 			string expected = "<WritingSystem><Abbreviation>one</Abbreviation><FontName>" +
 							  font.Name + "</FontName><FontSize>" + font.Size +
-							  "</FontSize><Id>one</Id><IsAudio>False</IsAudio><IsUnicode>True</IsUnicode><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>" +
+							  "</FontSize><IsAudio>False</IsAudio><Id>one</Id><IsUnicode>True</IsUnicode><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>" +
 							  "<SpellCheckingId>one</SpellCheckingId></WritingSystem>";
 			Assert.AreEqual(expected, s);
 		}
@@ -147,19 +147,6 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			Assert.IsNull(writingSystem.CustomSortRules);
 			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
 			Assert.IsEmpty(writingSystem.CustomSortRules);
-		}
-
-		[Test]
-		public void Id_Set_RemovesExistingRegionVariantAndScriptInfo()
-		{
-			WritingSystem writingSystem = new WritingSystem();
-			writingSystem.GetAsPalasoWritingSystemDefinition().ISO = "Iso";
-			writingSystem.GetAsPalasoWritingSystemDefinition().Region = "Region";
-			writingSystem.GetAsPalasoWritingSystemDefinition().Variant = "Variant";
-			writingSystem.GetAsPalasoWritingSystemDefinition().Script = "Script";
-			Assert.AreEqual(writingSystem.Id, "Iso-Script-Region-Variant");
-			writingSystem.Id = "Id";
-			Assert.AreEqual(writingSystem.Id, "Id");
 		}
 
 		[Test]
@@ -360,7 +347,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void GetSpellCheckingId_Uninitialized_ReturnsId()
 		{
 			WritingSystem writingSystem = new WritingSystem();
-			writingSystem.Id = "en";
+			writingSystem.ISO = "en";
 			Assert.AreEqual("en", writingSystem.SpellCheckingId);
 		}
 
@@ -368,7 +355,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void GetAbbreviation_Uninitialized_ReturnsId()
 		{
 			WritingSystem writingSystem = new WritingSystem();
-			writingSystem.Id = "en";
+			writingSystem.ISO = "en";
 			Assert.AreEqual("en", writingSystem.Abbreviation);
 		}
 
