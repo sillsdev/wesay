@@ -115,7 +115,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		private WritingSystem CreateDetailedWritingSystem(string languageCode)
 		{
 			WritingSystem ws = new WritingSystem();
-			ws.Id = languageCode;
+			ws.ISO = languageCode;
 			ws.Abbreviation = languageCode;
 			ws.CustomSortRules = "";
 			ws.Font = new Font(FontFamily.GenericSansSerif, 12);
@@ -131,7 +131,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		private WritingSystem CreateDetailedWritingSystemThatCantBeRepresentedByPalaso(string languageCode)
 		{
 			WritingSystem ws = new WritingSystem();
-			ws.Id = languageCode;
+			ws.ISO = languageCode;
 			ws.Abbreviation = languageCode;
 			ws.CustomSortRules = "Bogus roolz!";
 			ws.Font = new Font(FontFamily.GenericSansSerif, 12);
@@ -182,6 +182,27 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				store.Set(idWsPair.Value.GetAsPalasoWritingSystemDefinition());
 			}
 			store.Save();
+		}
+
+		[Test]
+		public void Write_LoadedWritingSystemIsDeleted_DeletionIsRoundTripped()
+		{
+			//Write out two writing systems
+			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
+			WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
+			wsCollectionToBeWritten.Add(ws.Id, ws);
+			WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
+			wsCollectionToBeWritten.Add(ws2.Id, ws2);
+			wsCollectionToBeWritten.Write(_ldmlWsFolder.FolderPath);
+			//load them up again
+			WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
+			loadedWsCollection.Load(_ldmlWsFolder.FolderPath);
+			loadedWsCollection.Remove(ws.Id);   //remove one
+			loadedWsCollection.Write(_ldmlWsFolder.FolderPath); //write out the remaining writing system
+			//Now check that it hasn't come back!
+			WritingSystemCollection loadedWsCollection2 = new WritingSystemCollection();
+			loadedWsCollection2.Load(_ldmlWsFolder.FolderPath);
+			Assert.IsFalse(loadedWsCollection2.ContainsKey(ws.Id));
 		}
 
 		[Test]

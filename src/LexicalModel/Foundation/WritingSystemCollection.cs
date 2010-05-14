@@ -111,6 +111,13 @@ namespace WeSay.LexicalModel.Foundation
 				_ldmlInFolderWritingSystemStore.Set(pair.Value.GetAsPalasoWritingSystemDefinition());
 			}
 			_ldmlInFolderWritingSystemStore.Save();
+			foreach (string pathToLdmlFile in Directory.GetFiles(pathToLdmlWritingSystemsFolder, "*.ldml"))
+			{
+				if(!this.ContainsKey(Path.GetFileNameWithoutExtension(pathToLdmlFile)))
+				{
+					File.Delete(pathToLdmlFile);
+				}
+			}
 		}
 
 		private static NetReflectorTypeTable MakeTypeTable()
