@@ -1,54 +1,137 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <WritingSystemCollection>
-  <AnalysisWritingSystemDefaultId>en</AnalysisWritingSystemDefaultId>
   <members>
 	<WritingSystem>
-	  <FontName>Arial</FontName>
-	  <FontSize>12</FontSize>
-	  <Id>v</Id>
-	</WritingSystem>
-	<WritingSystem>
+	  <Abbreviation>eng</Abbreviation>
 	  <FontName>Arial</FontName>
 	  <FontSize>12</FontSize>
 	  <Id>en</Id>
-	  <Abbreviation>eng</Abbreviation>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>en</SortUsing>
+	  <SpellCheckingId>en</SpellCheckingId>
 	</WritingSystem>
-
-  <WritingSystem>
-	<FontName>Arial</FontName>
-	<FontSize>12</FontSize>
-	<Id>fr</Id>
-	<Abbreviation>fr</Abbreviation>
-  </WritingSystem>
-
 	<WritingSystem>
+	  <Abbreviation>fr</Abbreviation>
+	  <FontName>Charis SIL</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>fr</Id>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>fr</SortUsing>
+	  <SpellCheckingId>fr</SpellCheckingId>
+	</WritingSystem>
+	<WritingSystem>
+	  <Abbreviation>tp</Abbreviation>
 	  <FontName>Arial</FontName>
 	  <FontSize>12</FontSize>
 	  <Id>tpi</Id>
-	  <Abbreviation>tp</Abbreviation>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>tpi</SortUsing>
+	  <SpellCheckingId>tpi</SpellCheckingId>
 	</WritingSystem>
-
-  <WritingSystem>
-	<FontName>Arial</FontName>
-	<FontSize>12</FontSize>
-	<Id>id</Id>
-	<Abbreviation>ind</Abbreviation>
-  </WritingSystem>
-
-
-  <WritingSystem>
-	<FontName>Arial</FontName>
-	<FontSize>12</FontSize>
-	<Id>th</Id>
-	<Abbreviation>th</Abbreviation>
-  </WritingSystem>
-  <WritingSystem>
-	<FontName>Arial</FontName>
-	<FontSize>12</FontSize>
-	<Id>es</Id>
-	<Abbreviation>span</Abbreviation>
-  </WritingSystem>
+	<WritingSystem>
+	  <Abbreviation>ind</Abbreviation>
+	  <FontName>Arial</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>id</Id>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>id</SortUsing>
+	  <SpellCheckingId>id</SpellCheckingId>
+	</WritingSystem>
+	<WritingSystem>
+	  <Abbreviation>th</Abbreviation>
+	  <FontName>Arial</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>th</Id>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>th</SortUsing>
+	  <SpellCheckingId>th</SpellCheckingId>
+	</WritingSystem>
+	<WritingSystem>
+	  <Abbreviation>span</Abbreviation>
+	  <FontName>Arial</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>es</Id>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>es</SortUsing>
+	  <SpellCheckingId>es</SpellCheckingId>
+	</WritingSystem>
+	<WritingSystem>
+	  <Abbreviation>x-spec</Abbreviation>
+	  <FontName>Microsoft Sans Serif</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>x-spec</Id>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>x-spec</SortUsing>
+	  <SpellCheckingId>x-spec</SpellCheckingId>
+	</WritingSystem>
+	<WritingSystem>
+	  <Abbreviation>ha</Abbreviation>
+	  <FontName>Microsoft Sans Serif</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>ha</Id>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>ha</SortUsing>
+	  <SpellCheckingId>ha</SpellCheckingId>
+	</WritingSystem>
+	<WritingSystem>
+	  <Abbreviation>swh</Abbreviation>
+	  <FontName>Microsoft Sans Serif</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>swh</Id>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>swh</SortUsing>
+	  <SpellCheckingId>swh</SpellCheckingId>
+	</WritingSystem>
+	<WritingSystem>
+	  <Abbreviation>x-unk</Abbreviation>
+	  <FontName>Microsoft Sans Serif</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>x-unk</Id>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>x-unk</SortUsing>
+	  <SpellCheckingId>x-unk</SpellCheckingId>
+	</WritingSystem>
+	<WritingSystem>
+	  <Abbreviation>ha-CL</Abbreviation>
+	  <FontName>Microsoft Sans Serif</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>ha-CL</Id>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>ha-CL</SortUsing>
+	  <SpellCheckingId>ha-CL</SpellCheckingId>
+	</WritingSystem>
+	<WritingSystem>
+	  <Abbreviation>por</Abbreviation>
+	  <FontName>Charis SIL</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>pt</Id>
+	  <IsAudio>False</IsAudio>
+	  <IsUnicode>True</IsUnicode>
+	  <RightToLeft>False</RightToLeft>
+	  <SortUsing>pt</SortUsing>
+	  <SpellCheckingId>pt</SpellCheckingId>
+	</WritingSystem>
   </members>
-
-  <VernacularWritingSystemDefaultId>v</VernacularWritingSystemDefaultId>
 </WritingSystemCollection>
