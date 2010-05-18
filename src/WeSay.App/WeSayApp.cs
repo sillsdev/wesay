@@ -93,6 +93,7 @@ namespace WeSay.App
 					return; //couldn't load, and we've already told the user
 				}
 				WireUpChorusEvents();
+				StartUserInterface();
 
 				//do a last backup before exiting
 				Logger.WriteEvent("App Exiting Normally.");
@@ -103,6 +104,54 @@ namespace WeSay.App
 			Logger.ShutDown();
 			Settings.Default.Save();
 		}
+
+			   private void StartUserInterface()
+	   {
+		   try
+		   {
+			   _project.AddToContainer(b => b.Register<StatusBarController>());
+			   _project.AddToContainer(b => b.Register<TabbedForm>());
+			   _tabbedForm = _project.Container.Resolve<TabbedForm>();
+			   _tabbedForm.Show(); // so the user sees that we did launch
+			   _tabbedForm.Text =
+					   StringCatalog.Get("~WeSay",
+										 "It's up to you whether to bother translating this or not.") +
+					   ": " + _project.Name + "        " + ErrorReport.UserFriendlyVersionString;
+			   Application.DoEvents();
+
+			  //todo: this is what we're supposed to use the autofac "modules" for
+			   //couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
+			   _project.AddToContainer(b => b.Register<ICurrentWorkTask>(_tabbedForm));
+			   _project.AddToContainer(b => b.Register<StatusStrip>(_tabbedForm.StatusStrip));
+			   _project.AddToContainer(b => b.Register(TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(_project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject )));
+
+			   _project.LoadTasksFromConfigFile();
+
+			   Application.DoEvents();
+			   _tabbedForm.ContinueLaunchingAfterInitialDisplay();
+			   _tabbedForm.Activate();
+			   _tabbedForm.BringToFront(); //needed if we were previously in server mode
+
+			   RtfRenderer.HeadWordWritingSystemId =
+					   _project.DefaultViewTemplate.HeadwordWritingSystem.Id;
+
+			   //run the ui
+			   Application.Run(_tabbedForm);
+
+			   Settings.Default.SkinName = DisplaySettings.Default.SkinName;
+		   }
+		   catch (IOException e)
+		   {
+			   ErrorReport.NotifyUserOfProblem(e.Message);
+		   }
+	   }
+
+	   //private static LiftUpdateService SetupUpdateService(LexEntryRepository lexEntryRepository)
+	   //{
+	   //    LiftUpdateService liftUpdateService;
+	   //    liftUpdateService = new LiftUpdateService(lexEntryRepository);
+	   //    return liftUpdateService;
+	   //}
 
 		private LexEntryRepository GetLexEntryRepository()
 		{
