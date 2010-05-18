@@ -53,7 +53,7 @@ namespace WeSay.ConfigTool
 			// _launchChorus
 			//
 			this._launchChorus.AutoSize = true;
-			this._launchChorus.Location = new System.Drawing.Point(142, 333);
+			this._launchChorus.Location = new System.Drawing.Point(142, 349);
 			this._launchChorus.Name = "_launchChorus";
 			this._launchChorus.Size = new System.Drawing.Size(180, 17);
 			this._launchChorus.TabIndex = 6;
@@ -65,7 +65,8 @@ namespace WeSay.ConfigTool
 			//
 			this.readinessPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.readinessPanel1.Location = new System.Drawing.Point(24, 258);
+			this.readinessPanel1.BackColor = System.Drawing.SystemColors.InactiveCaption;
+			this.readinessPanel1.Location = new System.Drawing.Point(145, 176);
 			this.readinessPanel1.Name = "readinessPanel1";
 			this.readinessPanel1.Size = new System.Drawing.Size(478, 101);
 			this.readinessPanel1.TabIndex = 7;
@@ -81,7 +82,7 @@ namespace WeSay.ConfigTool
 			this.betterLabel1.Multiline = true;
 			this.betterLabel1.Name = "betterLabel1";
 			this.betterLabel1.ReadOnly = true;
-			this.betterLabel1.Size = new System.Drawing.Size(450, 196);
+			this.betterLabel1.Size = new System.Drawing.Size(450, 167);
 			this.betterLabel1.TabIndex = 9;
 			this.betterLabel1.TabStop = false;
 			this.betterLabel1.Text = resources.GetString("betterLabel1.Text");
@@ -93,11 +94,11 @@ namespace WeSay.ConfigTool
 			this._chorusIsReady.BackColor = System.Drawing.SystemColors.Window;
 			this._chorusIsReady.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._chorusIsReady.Font = new System.Drawing.Font("Segoe UI", 10F);
-			this._chorusIsReady.Location = new System.Drawing.Point(145, 219);
+			this._chorusIsReady.Location = new System.Drawing.Point(145, 283);
 			this._chorusIsReady.Multiline = true;
 			this._chorusIsReady.Name = "_chorusIsReady";
 			this._chorusIsReady.ReadOnly = true;
-			this._chorusIsReady.Size = new System.Drawing.Size(450, 92);
+			this._chorusIsReady.Size = new System.Drawing.Size(450, 63);
 			this._chorusIsReady.TabIndex = 10;
 			this._chorusIsReady.TabStop = false;
 			this._chorusIsReady.Text = resources.GetString("_chorusIsReady.Text");
