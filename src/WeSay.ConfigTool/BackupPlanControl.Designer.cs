@@ -33,7 +33,6 @@ namespace WeSay.ConfigTool
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BackupPlanControl));
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.readinessPanel1 = new Chorus.UI.Misc.ReadinessPanel();
 			this.betterLabel2 = new WeSay.UI.BetterLabel();
 			this._browseButton = new System.Windows.Forms.Button();
 			this._pathText = new System.Windows.Forms.TextBox();
@@ -43,15 +42,6 @@ namespace WeSay.ConfigTool
 			this.userSpecificSettingIndicator1 = new WeSay.ConfigTool.UserSpecificSettingIndicator();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
-			//
-			// readinessPanel1
-			//
-			this.readinessPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.readinessPanel1.Location = new System.Drawing.Point(19, 281);
-			this.readinessPanel1.Name = "readinessPanel1";
-			this.readinessPanel1.Size = new System.Drawing.Size(478, 101);
-			this.readinessPanel1.TabIndex = 8;
 			//
 			// betterLabel2
 			//
@@ -140,7 +130,6 @@ namespace WeSay.ConfigTool
 			this.Controls.Add(this.betterLabel2);
 			this.Controls.Add(this.betterLabel1);
 			this.Controls.Add(this.userSpecificSettingIndicator1);
-			this.Controls.Add(this.readinessPanel1);
 			this.Name = "BackupPlanControl";
 			this.Size = new System.Drawing.Size(614, 385);
 			this.Load += new System.EventHandler(this.BackupPlanControl_Load);
@@ -154,7 +143,6 @@ namespace WeSay.ConfigTool
 		#endregion
 
 		private System.Windows.Forms.ToolTip toolTip1;
-		private Chorus.UI.Misc.ReadinessPanel readinessPanel1;
 		private WeSay.UI.BetterLabel betterLabel2;
 		private System.Windows.Forms.Button _browseButton;
 		private System.Windows.Forms.TextBox _pathText;
