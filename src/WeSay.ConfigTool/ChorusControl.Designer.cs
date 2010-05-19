@@ -65,10 +65,11 @@ namespace WeSay.ConfigTool
 			//
 			this.readinessPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.readinessPanel1.BackColor = System.Drawing.SystemColors.InactiveCaption;
-			this.readinessPanel1.Location = new System.Drawing.Point(145, 176);
+			this.readinessPanel1.BackColor = System.Drawing.SystemColors.Window;
+			this.readinessPanel1.Location = new System.Drawing.Point(88, 176);
 			this.readinessPanel1.Name = "readinessPanel1";
-			this.readinessPanel1.Size = new System.Drawing.Size(478, 101);
+			this.readinessPanel1.ProjectFolderPath = null;
+			this.readinessPanel1.Size = new System.Drawing.Size(507, 101);
 			this.readinessPanel1.TabIndex = 7;
 			//
 			// betterLabel1
