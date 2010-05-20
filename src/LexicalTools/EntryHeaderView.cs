@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Chorus;
-using Chorus.UI.Notes;
 using Chorus.UI.Notes.Bar;
 using Palaso.DictionaryServices.Model;
 using WeSay.LexicalModel;
-using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools

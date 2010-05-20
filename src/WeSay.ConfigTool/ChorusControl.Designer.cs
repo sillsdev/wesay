@@ -53,7 +53,7 @@ namespace WeSay.ConfigTool
 			// _launchChorus
 			//
 			this._launchChorus.AutoSize = true;
-			this._launchChorus.Location = new System.Drawing.Point(142, 349);
+			this._launchChorus.Location = new System.Drawing.Point(142, 232);
 			this._launchChorus.Name = "_launchChorus";
 			this._launchChorus.Size = new System.Drawing.Size(180, 17);
 			this._launchChorus.TabIndex = 6;
@@ -66,7 +66,7 @@ namespace WeSay.ConfigTool
 			this.readinessPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.readinessPanel1.BackColor = System.Drawing.SystemColors.Window;
-			this.readinessPanel1.Location = new System.Drawing.Point(88, 176);
+			this.readinessPanel1.Location = new System.Drawing.Point(88, 270);
 			this.readinessPanel1.Name = "readinessPanel1";
 			this.readinessPanel1.ProjectFolderPath = null;
 			this.readinessPanel1.Size = new System.Drawing.Size(507, 101);
@@ -95,7 +95,7 @@ namespace WeSay.ConfigTool
 			this._chorusIsReady.BackColor = System.Drawing.SystemColors.Window;
 			this._chorusIsReady.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._chorusIsReady.Font = new System.Drawing.Font("Segoe UI", 10F);
-			this._chorusIsReady.Location = new System.Drawing.Point(145, 283);
+			this._chorusIsReady.Location = new System.Drawing.Point(145, 172);
 			this._chorusIsReady.Multiline = true;
 			this._chorusIsReady.Name = "_chorusIsReady";
 			this._chorusIsReady.ReadOnly = true;
