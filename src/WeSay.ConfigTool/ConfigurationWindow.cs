@@ -167,6 +167,9 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
+
+			Logger.WriteEvent("Attempting create new project from FLEx Export...");
+
 			if (ProjectFromFLExCreator.Create(dlg.PathToNewProjectDirectory, dlg.PathToLift))
 			{
 				if (OpenProject(dlg.PathToNewProjectDirectory))
