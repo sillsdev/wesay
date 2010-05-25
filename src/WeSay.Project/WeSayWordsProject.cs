@@ -524,6 +524,7 @@ namespace WeSay.Project
 			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
 			var chorusSystem = new ChorusSystem(Path.GetDirectoryName(PathToConfigFile));
 			chorusSystem.WritingSystems = writingSystemsForChorus;
+			builder.Register(writingSystemsForChorus);
 			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);
 			builder.Register<ChorusSystem>(chorusSystem);
 
