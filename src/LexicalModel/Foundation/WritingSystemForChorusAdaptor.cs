@@ -1,3 +1,4 @@
+using System;
 using Palaso.UI.WindowsForms.Keyboarding;
 
 namespace WeSay.LexicalModel.Foundation
@@ -36,6 +37,11 @@ namespace WeSay.LexicalModel.Foundation
 		public string FontName
 		{
 			get { return _writingSystem.FontName; }
+		}
+
+		public int FontSize
+		{
+			get { return _writingSystem.FontSize; }
 		}
 	}
 }
