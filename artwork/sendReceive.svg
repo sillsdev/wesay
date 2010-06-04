@@ -15,7 +15,7 @@
    id="svg3379"
    version="1.1"
    inkscape:version="0.47pre3 "
-   sodipodi:docname="New document 2">
+   sodipodi:docname="sendReceive.svg">
   <defs
 	 id="defs3381">
 	<inkscape:perspective
@@ -121,7 +121,10 @@
 	 id="layer1">
 	<g
 	   id="g2978"
-	   transform="matrix(0.79649742,0,0,0.79649742,248.56237,-977.38743)">
+	   transform="matrix(0.79649742,0,0,0.79649742,248.56237,-977.38743)"
+	   inkscape:export-filename="C:\dev\wesayDev\artwork\sendreceive32x32.png"
+	   inkscape:export-xdpi="90"
+	   inkscape:export-ydpi="90">
 	  <path
 		 style="fill:url(#linearGradient3785);fill-opacity:1;stroke:#2c476e;stroke-width:0;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
 		 d="m 2.943258,1539.3394 -15.497995,22.8787 -7.28922,-5.0312 3.148042,16.6971 16.73160199,-2.9687 -7.78229499,-5.3716 15.529853,-22.9258 -4.839987,-3.2785 z"
