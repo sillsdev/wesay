@@ -42,7 +42,7 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 
 		public string LongLabel
 		{
-			get { return "Advanced History"; }
+			get { return "History"; }
 		}
 
 		public string Description
