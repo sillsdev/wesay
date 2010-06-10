@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Chorus.UI.Clone;
 using Palaso.I8N;
 using WeSay.ConfigTool.Properties;
 
@@ -106,14 +107,14 @@ namespace WeSay.ConfigTool
 
 		private void OnGetFromInternet(object sender, EventArgs e)
 		{
-			if (!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
-			{
-				using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
-				{
-					dlg.ShowDialog();
-					return;
-				}
-			}
+//            if (!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
+//            {
+//                using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
+//                {
+//                    dlg.ShowDialog();
+//                    return;
+//                }
+//            }
 			if (!Directory.Exists(Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				//e.g. mydocuments/wesay
@@ -130,14 +131,14 @@ namespace WeSay.ConfigTool
 
 		private void OnGetFromUsb(object sender, EventArgs e)
 		{
-			if(!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
-			{
-				using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
-				{
-					dlg.ShowDialog();
-					return;
-				}
-			}
+//            if(!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
+//            {
+//                using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
+//                {
+//                    dlg.ShowDialog();
+//                    return;
+//                }
+//            }
 			if (!Directory.Exists(Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				//e.g. mydocuments/wesay

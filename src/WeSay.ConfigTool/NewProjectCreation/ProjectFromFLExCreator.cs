@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Xml;
+using Palaso.Code;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using WeSay.LexicalModel.Foundation;
@@ -12,24 +13,40 @@ namespace WeSay.ConfigTool.NewProjectCreation
 	{
 		public static bool Create(string pathToNewDirectory, string pathToSourceLift)
 		{
-			if (!ReportIfLocked(pathToSourceLift))
-				return false;
-
-			if (!CreateProjectDirectory(pathToNewDirectory))
-				return false;
-
-			CopyOverLiftFile(pathToSourceLift, pathToNewDirectory);
-
-			CopyOverRangeFileIfExists(pathToSourceLift, pathToNewDirectory);
-
-			using (var project = new WeSayWordsProject())
+			try
 			{
-				project.LoadFromProjectDirectoryPath(pathToNewDirectory);
+				if (!ReportIfLocked(pathToSourceLift))
+					return false;
 
-				LoadWritingSystemsFromExistingLift(pathToSourceLift, project.DefaultViewTemplate, project.WritingSystems);
-				project.Save();
+				if (!CreateProjectDirectory(pathToNewDirectory))
+					return false;
+
+				CopyOverLiftFile(pathToSourceLift, pathToNewDirectory);
+
+				CopyOverRangeFileIfExists(pathToSourceLift, pathToNewDirectory);
+
+				using (var project = new WeSayWordsProject())
+				{
+					project.LoadFromProjectDirectoryPath(pathToNewDirectory);
+					try
+					{
+						LoadWritingSystemsFromExistingLift(pathToSourceLift, project.DefaultViewTemplate, project.WritingSystems);
+					}
+					catch (Exception e)
+					{
+						Palaso.Reporting.ErrorReport.NotifyUserOfProblem(e, "There was a problem reading that file.");
+						Directory.Delete(pathToNewDirectory, true);
+						return false;
+					}
+					project.Save();
+				}
+				return true;
 			}
-			return true;
+			catch(Exception e)
+			{
+				Palaso.Reporting.ErrorReport.NotifyUserOfProblem(e, "There was a problem creating the project from that folder.");
+				return false;
+			}
 		}
 
 		private static void CopyOverLiftFile(string pathToSourceLift, string pathToNewDirectory)
@@ -54,6 +71,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 		{
 			try
 			{
+				RequireThat.Directory(directory).DoesNotExist();
 				WeSayWordsProject.CreateEmptyProjectFiles(directory);
 			}
 			catch (Exception e)
@@ -85,7 +103,8 @@ namespace WeSay.ConfigTool.NewProjectCreation
 		public static void LoadWritingSystemsFromExistingLift(string path, ViewTemplate viewTemplate, WritingSystemCollection writingSystems)
 		{
 			var doc = new XmlDocument();
-			doc.Load(path);
+			doc.Load(path); //will throw if the file is ill-formed
+
 			foreach (XmlNode node in doc.SelectNodes("//@lang"))
 			{
 				if (!writingSystems.ContainsKey(node.Value))

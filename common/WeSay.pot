@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WeSay"
 "Report-Msgid-Bugs-To: hattonjohn@gmail.com"
-"POT-Creation-Date: 2010-03-02T15:31:21"
-"PO-Revision-Date: 2010-03-02T15:31:21"
+"POT-Creation-Date: 2010-05-19T01:51:35"
+"PO-Revision-Date: 2010-05-19T01:51:35"
 "Last-Translator: "
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -42,253 +42,249 @@ msgstr ""
 msgid "Identify the \"base form\" word that this word is built from. In the printed dictionary, the derived or variant words can optionally be shown as subentries of their base forms."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Looking for USB Keys..."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Backing Up..."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Backup Complete"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Files backed up to {0}"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Files were not backed up."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\BackupDialog.cs
+#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Please insert the USB Key to backup to."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\BackupDialog.Designer.cs
+#; ..\src\Addin.Backup\BackupDialog.Designer.cs
 msgid "&Cancel"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\BackupToDevice.cs
+#; ..\src\Addin.Backup\BackupToDevice.cs
 #. Long name for action which makes a zip file on a usb flash-drive
 msgid "Backup To USB Flash Drive"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\BackupToDevice.cs
+#; ..\src\Addin.Backup\BackupToDevice.cs
 #. description of usb backup action
 msgid "Saves a backup on an external device, like a USB key."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\BackupToDevice.cs
+#; ..\src\Addin.Backup\BackupToDevice.cs
 #. Short buton label for usb flash-drive backup action
 msgid "Backup"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\SendProjectEmail.cs
+#; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email this dictionary to {0}"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\SendProjectEmail.cs
+#; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email this dictionary as a compressed attachment"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Backup\SendProjectEmail.cs
+#; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.LiftReports\ReportMaker.cs
+#; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "View Report"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.LiftReports\ReportMaker.cs
+#; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "Shows some information about the lexicon."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.LiftReports\ReportMaker.cs
+#; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "Report"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Transform\HtmlInWord.cs
+#; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Export to Word"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Transform\HtmlInWord.cs
+#; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Creates a very basic dictionary publication in Microsoft Word."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Transform\HtmlTransformer.cs
+#; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Export to HTML"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Transform\HtmlTransformer.cs
+#; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Creates a simple Html version of the dictionary.  Not a very good way to go."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Transform\LexiquePro\LexiqueProSender.cs
+#; ..\src\Addin.Transform\LexiquePro\LexiqueProSender.cs
 msgid "Open in Lexique Pro"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Transform\LexiquePro\LexiqueProSender.cs
+#; ..\src\Addin.Transform\LexiquePro\LexiqueProSender.cs
 msgid "Open dictionary in Lexique Pro for printing or web-page creation. Requires version LP ver 3.0 or higher."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Transform\PdfDictionary\PdfMaker.cs
+#; ..\src\Addin.Transform\PdfDictionary\PdfMaker.cs
 msgid "Make Pdf Dictionary"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Transform\SfmTransformer.cs
+#; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "Export To SFM"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Transform\SfmTransformer.cs
+#; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "Saves the lexicon in a form of standard format."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Addin.Transform\Xhtml\XHtml.cs
-msgid "Export to XHTML"
-msgstr ""
-
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.cs
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.UI\PictureControl.cs
+#; ..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.cs
+#; ..\src\WeSay.UI\PictureControl.cs
 msgid "Cannot find {0}"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalModel\KeyToEntryIdInitializer.cs
+#; ..\src\LexicalModel\KeyToEntryIdInitializer.cs
 #. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoControl.cs
+#; ..\src\LexicalTools\AddMissingInfo\MissingInfoControl.cs
 #. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
+#; ..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 #. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
 msgid "Empty"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoControl.cs
+#; ..\src\LexicalTools\AddMissingInfo\MissingInfoControl.cs
 msgid "Congratulations. You have completed this task."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoControl.cs
+#; ..\src\LexicalTools\AddMissingInfo\MissingInfoControl.cs
 msgid "There is no work left to be done on this task."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoViewMaker.cs
+#; ..\src\LexicalTools\AddMissingInfo\MissingInfoViewMaker.cs
 #. The user will click this to say that this word has no baseform.  E.g. Kindness has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "&This word has no Base Form"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\Dashboard\Dash.cs
+#; ..\src\LexicalTools\Dashboard\Dash.cs
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\Dashboard\Dash.cs
+#; ..\src\LexicalTools\Dashboard\Dash.cs
 msgid "Switch tasks and see current status of tasks"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\Dashboard\DictionaryStatusControl.designer.cs
+#; ..\src\LexicalTools\Dashboard\DictionaryStatusControl.designer.cs
 msgid "{1} dictionary has {0} words"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
+#; ..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
+#; ..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 msgid "Hide &Uncommon Fields"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
+#; ..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 msgid "Show &Uncommon Fields"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.Designer.cs
+#; ..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.Designer.cs
 msgid "&Delete This Word"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.Designer.cs
+#; ..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.Designer.cs
 msgid "&New Word"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryTask.cs
+#; ..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryTask.cs
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainTask.cs
+#; ..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainTask.cs
 #. This is shown in the Gather By Semantic Domains task after each semantic domain question. The questions contain example words to help clarify what the domain is about, and this was added to remind the user that he/she is gathering based on the domain, not these examples.
 msgid "Do not just translate these words; instead think of words in your own language."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word.
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word.
 msgid "Example"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field for putting in a translation of an example sentence.
 msgid "Translation"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\LexSenseLayouter.cs
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\LexSenseLayouter.cs
+#; ..\src\LexicalTools\LexSenseLayouter.cs
+#; ..\src\LexicalTools\LexSenseLayouter.cs
 #. This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.
 msgid "Meaning"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\LexSenseLayouter.cs
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\LexicalTools\LexSenseLayouter.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a single word translation, as used in interlinear text glossing.
 msgid "Gloss"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\TaskBase.cs
+#; ..\src\LexicalTools\TaskBase.cs
 #. Generic desciption of how many items in a task are left to do.
 msgid "Remaining:"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\LexicalTools\TaskBase.cs
+#; ..\src\LexicalTools\TaskBase.cs
 #. Generic description of how many total items there are in a task.
 msgid "Total:"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.App\Services\DictionaryServiceProvider.cs
-#. This is what we call it when something goes wrong but it's the computer's fault, not the user's.
-msgid "Program Error"
-msgstr ""
-
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.App\StatusBarController.cs
+#; ..\src\WeSay.App\StatusBarController.cs
 #. Shown at the bottom of the screen.
 msgid "Dictionary has {0} words"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.App\TabbedForm.cs
+#; ..\src\WeSay.App\TabbedForm.cs
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
 msgid "Loading..."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.App\WeSayApp.cs
-msgid "Please wait while WeSay prepares your data"
-msgstr ""
-
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.App\WeSayApp.cs
+#; ..\src\WeSay.App\WeSayApp.cs
 #. It's up to you whether to bother translating this or not.
 msgid "WeSay"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
+#; ..\src\WeSay.App\WeSayApp.cs
+msgid "Please wait while WeSay prepares your data"
+msgstr ""
+
+#; ..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
 #. Label for action which uses Chorus to synchronize the dictionary with other users, devices, and servers. Here, 'synchronizing' means putting your changes in the repository, and getting changes that others have put in the repository. In English, we are going with Send/Receive because it is similar to email and this is the term Paratext uses.
 msgid "Send/Receive"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
+#; ..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
 #. description of send/receive action
 msgid "Sends your changes to usb key, server, or other users, and receives the changes made by other members of your team."
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
+#; ..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
+#. Long label for send/receive action.
+msgid "Send/Receive Changes to devices, servers, or other users on your network."
+msgstr ""
+
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. Long label for send/receive action.
 msgid "Send/Receive Changes to devices, servers, or other users on your network."
 msgstr ""
@@ -298,63 +294,63 @@ msgstr ""
 msgid "Word"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field holding the citation form, which is how the word will be displayed in the dictionary.  This is used in languages where the lexeme form may be different from what the Headword should be.
 msgid "Citation Form"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the definition of the word.
 msgid "Definition"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the literal meaning of idiom or proverb.
 msgid "Literal Meaning"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a note.
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a note.
 msgid "Note"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a picture.
 msgid "Picture"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Part Of Speech
 msgid "POS"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing an example use of the word.
 msgid "Example Sentence"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the example sentence translated into other languages.
 msgid "Example Translation"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Semantic Domains
 msgid "Sem Dom"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
 msgid "Cross Reference"
 msgstr ""
 
-#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.UI\SingleOptionControl.cs
+#; ..\src\WeSay.UI\SingleOptionControl.cs
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
 msgstr ""

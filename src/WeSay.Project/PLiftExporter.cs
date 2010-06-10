@@ -32,7 +32,8 @@ namespace WeSay.Project
 
 		public PLiftExporter(string path,
 							 LexEntryRepository lexEntryRepository,
-							 ViewTemplate viewTemplate): base(path)
+							 ViewTemplate viewTemplate)
+			: base(path, LiftWriter.ByteOrderStyle.BOM)
 		{
 			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
@@ -162,6 +163,11 @@ namespace WeSay.Project
 		{
 			var x = field.Forms.Where(f => writingSytems[f.WritingSystemId].IsAudio);
 			return new List<LanguageForm>(x);
+		}
+
+		protected override bool EntryDoesExist(string id)
+		{
+			return null!= _lexEntryRepository.GetLexEntryWithMatchingId(id);
 		}
 
 		protected override void WriteRelationTarget(LexRelation relation)

@@ -75,6 +75,13 @@ namespace Addin.Transform.Tests
 			Assert.IsFalse(result.Contains("g_en"));
 		}
 
+		[Test]
+		public void CanSwapLinesWithinRecord()
+		{
+			string result = LaunchWithConversionString(@"(\\ge.*?\n)(.*\n)*?(\\dt.*?\n) $3$2$1");
+			Assert.IsTrue(result.Contains("\\dt 11/Feb/2008" + Environment.NewLine + "\\sd 1.1\n" + Environment.NewLine + "\\ge hello" + Environment.NewLine));
+		}
+
 		/// <summary>
 		/// this is a regression test.  It was not tagging pronunciation correctly
 		/// </summary>

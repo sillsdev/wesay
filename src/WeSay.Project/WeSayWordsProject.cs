@@ -15,6 +15,7 @@ using Autofac.Builder;
 using Autofac.Registrars.Delegate;
 using Chorus;
 using Chorus.UI.Notes;
+using Chorus.UI.Notes.Bar;
 using Chorus.UI.Notes.Browser;
 using Chorus.UI.Review;
 using Chorus.Utilities;
@@ -523,6 +524,7 @@ namespace WeSay.Project
 			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
 			var chorusSystem = new ChorusSystem(Path.GetDirectoryName(PathToConfigFile));
 			chorusSystem.WritingSystems = writingSystemsForChorus;
+			builder.Register(writingSystemsForChorus);
 			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);
 			builder.Register<ChorusSystem>(chorusSystem);
 

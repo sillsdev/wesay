@@ -167,6 +167,9 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
+
+			Logger.WriteEvent("Attempting create new project from FLEx Export...");
+
 			if (ProjectFromFLExCreator.Create(dlg.PathToNewProjectDirectory, dlg.PathToLift))
 			{
 				if (OpenProject(dlg.PathToNewProjectDirectory))
@@ -314,7 +317,7 @@ namespace WeSay.ConfigTool
 			containerBuilder.Register<InterfaceLanguageControl>();
 			containerBuilder.Register<ActionsControl>();
 			containerBuilder.Register<BackupPlanControl>();
-			containerBuilder.Register<ChorusControl>();
+//            containerBuilder.Register<ChorusControl>();
 			containerBuilder.Register<OptionListControl>();
 
 			containerBuilder.Register<IContext>(c => c); // make the context itself available for pushing into contructors

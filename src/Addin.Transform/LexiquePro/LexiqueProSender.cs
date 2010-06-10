@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Mono.Addins;
+using Palaso.DictionaryServices.Lift;
 using Palaso.I8N;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
@@ -71,7 +72,9 @@ namespace Addin.Transform.LexiquePro
 
 			try
 			{
-				Process.Start(GetPathToLexiquePro(), "/f " + "\"" + pliftPath + "\"");
+				var startInfo= new ProcessStartInfo(GetPathToLexiquePro(), "/f " + "\"" + pliftPath + "\"");
+				startInfo.WorkingDirectory = Path.GetDirectoryName(GetPathToLexiquePro());
+				Process.Start(startInfo);
 			}
 			catch (Exception error)
 			{
@@ -120,7 +123,8 @@ namespace Addin.Transform.LexiquePro
 					var maker = new PLiftMaker();
 					maker.MakePLiftTempFile(pliftPath, lexEntryRepository,
 														projectInfo.ServiceProvider.GetService(typeof (ViewTemplate)) as
-														ViewTemplate);
+														ViewTemplate,
+														LiftWriter.ByteOrderStyle.BOM);
 				}
 				return pliftPath;
 			}

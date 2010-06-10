@@ -42,7 +42,7 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 
 		public string LongLabel
 		{
-			get { return "Advanced History"; }
+			get { return "History"; }
 		}
 
 		public string Description
@@ -55,7 +55,7 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 					d= "NOT AVAILABLE ON THIS COMPUTER"+Environment.NewLine + Environment.NewLine+d+Environment.NewLine + Environment.NewLine;
 				}
 
-				d+= "This task is for advisors or very advanced users of projects using Chorus to collaborate as a team. It shows the history of the project: who did what, when.  When time and resources permit, we envision making a different task which brings this information to a wider range of users.  It only works when Chorus is enabled. " ;
+				d+= "This task is for advisors or very advanced users of projects using Chorus to collaborate as a team. It shows the history of the project: who did what, when.  When time and resources permit, we envision making a different task which brings this information to a wider range of users." ;
 				return d;
 			}
 		}

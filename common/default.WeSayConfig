@@ -13,6 +13,6 @@
 	<task taskName="GatherWordsBySemanticDomains" visible="true"><semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName></task>
   </tasks>
   <addins>
-	<addin id="ManualBackupToDevice" showInWeSay="True" />
+	<addin id="SendReceiveAction" showInWeSay="True" />
   </addins>
 </configuration>

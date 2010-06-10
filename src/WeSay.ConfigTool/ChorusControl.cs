@@ -22,17 +22,7 @@ namespace WeSay.ConfigTool
 			this.Font = SystemFonts.MessageBoxFont;//use the default OS UI font
 			InitializeComponent();
 
-			var msg = HgRepository.GetEnvironmentReadinessMessage("en");
-			if (string.IsNullOrEmpty(msg))
-			{
-			}
-			else
-			{
-				_launchChorus.Visible = false;
-				_chorusIsReady.Visible = false;
-			}
-//            _syncPanel.ProjectFolderConfig = new ProjectFolderConfiguration(Project.BasilProject.Project.ProjectDirectoryPath);
-//            _historyPanel.ProjectFolderConfig = _syncPanel.ProjectFolderConfig;
+			readinessPanel1.ProjectFolderPath = projectFolderConfiguration.FolderPath;
 		}
 
 
