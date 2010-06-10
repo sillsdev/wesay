@@ -178,7 +178,7 @@ namespace Addin.Transform.OpenOffice
 
 		private static void SortLift(string outputPath, LexEntryRepository lexEntryRepository, ViewTemplate template)
 		{
-			using (var exporter = new LiftWriter(outputPath))
+			using (var exporter = new LiftWriter(outputPath, LiftWriter.ByteOrderStyle.NoBOM))
 			{
 				WritingSystem firstWs = template.HeadwordWritingSystems[0];
 				ResultSet<LexEntry> recordTokens =

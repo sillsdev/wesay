@@ -36,7 +36,6 @@
 	</TargetFrameworkSubset>
 	<TargetZone>LocalIntranet</TargetZone>
 	<GenerateManifests>false</GenerateManifests>
-	<ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
