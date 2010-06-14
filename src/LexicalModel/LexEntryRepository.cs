@@ -11,11 +11,11 @@ using Palaso.Progress;
 using Palaso.Text;
 using WeSay.LexicalModel.Foundation;
 
-//#if MONO
+#if MONO
 using Palaso.Linq;
-//#else
+#else
 
-//#endif
+#endif
 
 namespace WeSay.LexicalModel
 {

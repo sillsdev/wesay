@@ -216,25 +216,18 @@ namespace WeSay.Project
 //            if(!_viewTemplate.WritingSystems.Any(p=>p.Value.IsAudio))
 //                return;
 //
-			IList<Palaso.Text.LanguageForm> paths = GetAudioForms(entry.LexicalForm, _viewTemplate.WritingSystems);
+			var paths = GetAudioForms(entry.LexicalForm, _viewTemplate.WritingSystems);
 			if (paths.Count == 0)
 				return;
 			Writer.WriteStartElement("pronunciation");
 
-			Palaso.Linq.Enumerable.ForEach(paths, path =>
-							  {
-								  Writer.WriteStartElement("media");
-								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));
-								  Writer.WriteEndElement();
-							  });
-			/*
 			paths.ForEach(path =>
 							  {
 								  Writer.WriteStartElement("media");
 								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));
 								  Writer.WriteEndElement();
 							  });
-*/
+
 			Writer.WriteEndElement();
 		}
 
