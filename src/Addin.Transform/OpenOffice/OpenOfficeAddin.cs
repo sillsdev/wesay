@@ -332,6 +332,8 @@ namespace Addin.Transform.OpenOffice
 			foreach (string f in fileNames)
 			{
 				string fileName = Path.GetFileName(f);
+				// ignore hidden files
+				if (fileName.StartsWith(".")) continue;
 				string zipPath = Path.Combine(zipDirectory, fileName);
 				zipFile.Add(f, zipPath);
 			}
