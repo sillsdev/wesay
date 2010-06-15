@@ -16,8 +16,6 @@ using NUnit.Framework;
 
 namespace Addin.Transform.Tests
 {
-
-
 	[TestFixture]
 	public class OdfTransformerTests
 	{
@@ -31,8 +29,8 @@ namespace Addin.Transform.Tests
 		public void Setup()
 		{
 			string xmlOfEntries = @" <entry id='foo1'>
-										<lexical-unit><form lang='v'><text>hello</text></form></lexical-unit>
-								 </entry>";
+						<lexical-unit><form lang='v'><text>hello</text></form></lexical-unit>
+				</entry>";
 			_testProject = new WeSay.Project.Tests.ProjectDirectorySetupForTesting(xmlOfEntries);
 			_project = _testProject.CreateLoadedProject();
 			_projectInfo = _project.GetProjectInfoForAddin();
@@ -70,6 +68,7 @@ namespace Addin.Transform.Tests
 			ZipFile odtZip = new ZipFile(odtFile);
 			ZipEntry manifest = odtZip.GetEntry("META-INF/manifest.xml");
 			Assert.IsNotNull(manifest);
+			odtZip.Close();
 		}
 	}
 }
