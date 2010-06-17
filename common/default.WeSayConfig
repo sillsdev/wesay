@@ -9,7 +9,8 @@
 	<task taskName="AdvancedHistory" visible="false" />
 	<task taskName="NotesBrowser" visible="false" />
 
-	<task taskName="GatherWordList" visible="false"><wordListFileName>SILCAWL.lift</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
+	<task taskName="GatherWordList" visible="false"><wordListFileName>SILCAWL</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
+	<task taskName="GatherWordList" visible="false"><wordListFileName>SILCAWL-MozambiqueAddendum</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
 	<task taskName="GatherWordsBySemanticDomains" visible="true"><semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName></task>
   </tasks>
   <addins>
