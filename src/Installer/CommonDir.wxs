@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
 	<DirectoryRef Id='ProgramDir'>
 	  <Directory Id="common" Name="common">
 
@@ -8,12 +8,20 @@
 		<Component Id="PartsOfSpeech.xml" Guid="{6B734BDE-1702-418D-93BC-40A7F310B14F}">
 		  <File Id="PartsOfSpeech.xml" Name="PartsOfSpeech.xml" KeyPath="yes" Source="..\..\common\PartsOfSpeech.xml" />
 		</Component>
-		<Component Id="sampleWordList.txt" Guid="{0F09882D-8D30-49B9-90F6-61D20D17E14F}">
-		  <File Id="sampleWordList.txt" Name="sampleWordList.txt" KeyPath="yes" Source="..\..\common\sampleWordList.txt" />
-		</Component>
-		<Component Id="SILCAWL.lift" Guid="{51F4A62A-A216-43bf-820B-3683F64FBA19}">
-		  <File Id="SILCAWL.lift" Name="SILCAWL.lift" KeyPath="yes" Source="..\..\common\SILCAWL.lift" />
-		</Component>
+
+		<Directory Id="wordpacks" Name="wordpacks">
+		  <Directory Id="SILCAWL" Name="SILCAWL">
+			<Component Id="SILCAWL.lift" Guid="{51F4A62A-A216-43bf-820B-3683F64FBA19}">
+			  <File Id="SILCAWL.lift" Name="SILCAWL.lift" KeyPath="yes" Source="..\..\common\SILCAWL\SILCAWL.lift" />
+			</Component>
+		  </Directory>
+		  <Directory Id="SILCAWL-MozambiqueAddendum" Name="SILCAWL-MozambiqueAddendum">
+			<Component Id="SILCAWL-MozambiqueAddendum.lift" Guid="{A6664CDF-8E27-487f-84FE-594675B7F112}">
+			  <File Id="SILCAWL-MozambiqueAddendum.lift" Name="SILCAWL-MozambiqueAddendum.lift" KeyPath="yes" Source="..\..\common\SILCAWL-MozambiqueAddendum\SILCAWL-MozambiqueAddendum.lift" />
+			</Component>
+		  </Directory>
+		</Directory>
+
 		<Component Id="SemanticDomains.xml" Guid="{0D314BE5-ABB3-4AB9-A698-F94FFA8B250C}">
 		  <File Id="SemanticDomains.xml" Name="SemanticDomains.xml" KeyPath="yes" Source="..\..\common\SemanticDomains.xml" />
 		</Component>
@@ -47,8 +55,8 @@
 
 	<ComponentGroup Id="defaultFiles">
 	  <ComponentRef Id="PartsOfSpeech.xml" />
-	  <ComponentRef Id="sampleWordList.txt" />
 	  <ComponentRef Id="SILCAWL.lift" />
+	  <ComponentRef Id="SILCAWL-MozambiqueAddendum.lift" />
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="default.WeSayConfig" />
 	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
