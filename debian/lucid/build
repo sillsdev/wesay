@@ -11,7 +11,7 @@ cp ../linux/mono/2.0/Debug/wesay-src-$MAJOR.$REVISION.tar.gz wesay_$MAJOR.$REVIS
 mkdir wesay-$MAJOR.$REVISION
 cd wesay-$MAJOR.$REVISION
 tar xzf ../wesay_$MAJOR.$REVISION.orig.tar.gz
-cp -r ../../../debian-src debian
+cp -r ../../../debian/lucid debian
 export DEBSIGN_KEYID="mono teamcity"
 dch -v $MAJOR.$REVISION-1sil1 "Daily Build"
 /home/bob/bin/mpdebuild --vadd .%d --distrib "$TARGETS" --configfile /home/bob/pbuilder/pbuilderrc-%d-new --auto-debsign
