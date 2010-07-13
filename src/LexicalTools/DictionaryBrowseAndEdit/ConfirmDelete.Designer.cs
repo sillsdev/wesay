@@ -61,7 +61,7 @@
 			this.deleteBtn.Location = new System.Drawing.Point(116, 132);
 			this.deleteBtn.Name = "deleteBtn";
 			this.deleteBtn.Size = new System.Drawing.Size(121, 33);
-			this.deleteBtn.TabIndex = 2;
+			this.deleteBtn.TabIndex = 1;
 			this.deleteBtn.Text = "&Delete";
 			this.deleteBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.deleteBtn.UseVisualStyleBackColor = true;
@@ -74,7 +74,7 @@
 			this.cancelBtn.Location = new System.Drawing.Point(264, 132);
 			this.cancelBtn.Name = "cancelBtn";
 			this.cancelBtn.Size = new System.Drawing.Size(75, 33);
-			this.cancelBtn.TabIndex = 3;
+			this.cancelBtn.TabIndex = 0;
 			this.cancelBtn.Text = "&Cancel";
 			this.cancelBtn.UseVisualStyleBackColor = true;
 			this.cancelBtn.Click += new System.EventHandler(this.cancelBtn_Click);
@@ -97,7 +97,6 @@
 			//
 			// ConfirmDelete
 			//
-			this.AcceptButton = this.deleteBtn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;

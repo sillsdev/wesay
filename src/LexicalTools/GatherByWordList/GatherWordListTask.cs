@@ -42,6 +42,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			Guard.AgainstNull(config.WordListWritingSystemIdOfOldFlatWordList, "config.WordListWritingSystemIdOfOldFlatWordList");
 			Guard.AgainstNull(viewTemplate, "viewTemplate");
 
+			//enhance: this isn't really true anymore, as we're moving to wordpack (where it's the folder)
+			//for now, this is figure out more carefully in GetPathToUse
 			_usingLiftFile =  ".lift"==Path.GetExtension(config.WordListFileName).ToLower();
 
 			Field lexicalFormField = viewTemplate.GetField(
@@ -69,25 +71,10 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		private void LoadWordList()
 		{
-			string pathLocal =
-					Path.Combine(
-							WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
-							_lexemeFormListFileName);
-			string pathToUse = pathLocal;
-			if (!File.Exists(pathLocal))
-			{
-				string pathInProgramDir = Path.Combine(BasilProject.ApplicationCommonDirectory,
-													   _lexemeFormListFileName);
-				pathToUse = pathInProgramDir;
-				if (!File.Exists(pathToUse))
-				{
-					ErrorReport.NotifyUserOfProblem(
-							"WeSay could not find the wordlist.  It expected to find it either at {0} or {1}.",
-							pathLocal,
-							pathInProgramDir);
-					return;
-				}
-			}
+			string pathToUse = GetPathToUse();
+			if(pathToUse == null)
+				return;
+
 			_words = new List<LexEntry>();
 			if (_usingLiftFile)
 			{
@@ -99,6 +86,54 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 
 			NavigateFirstToShow();
+		}
+
+		/// <summary>
+		/// all we know at this point is the name of the wordlist. It could be found in various places
+		/// </summary>
+		/// <returns></returns>
+		private string GetPathToUse()
+		{
+			//back before wordpacks, when wordlists were just a txt file, the didn't get a whole
+			//folder to themselves.
+			string pathInProject =
+				Path.Combine(
+					WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
+					_lexemeFormListFileName);
+			if (File.Exists(pathInProject))
+				return pathInProject;
+
+			//ok, if it wasn't an old-style list, it should be a lift wordpack
+			_usingLiftFile = true;
+
+			//because wordpacks came along after several years, we can expect there are some
+			//configs which list the .lift, and some don't, so it's easier to be tolerant here
+			//than to fix each one.
+			var wordpackFolderName = _lexemeFormListFileName.Replace(".lift", "");
+
+			//look  for a custom wordpack in the project folder
+			string wordpackDirectory = Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
+								wordpackFolderName);
+			string pathInProjectOwnFolder = Path.Combine(wordpackDirectory, wordpackFolderName + ".lift");
+			if (File.Exists(pathInProjectOwnFolder))
+				return pathInProject;
+
+			//look for a factory wordpack in the program folder (during development, in the "common/wordpacks" folder)
+			wordpackDirectory = Path.Combine(BasilProject.ApplicationCommonDirectory,
+								"wordpacks");
+			wordpackDirectory = Path.Combine(wordpackDirectory,
+								wordpackFolderName);
+			string pathInProgramDirOwnFolder = Path.Combine(wordpackDirectory,
+								wordpackFolderName+".lift");
+			if (File.Exists(pathInProgramDirOwnFolder))
+				return pathInProgramDirOwnFolder;
+
+			ErrorReport.NotifyUserOfProblem(
+				"WeSay could not find the wordlist.  It expected to find it either at {0}, {1}, or {2}.",
+				pathInProject, //legacy
+				pathInProjectOwnFolder,
+				pathInProgramDirOwnFolder);
+			return null;
 		}
 
 		private void LoadLift(string path)

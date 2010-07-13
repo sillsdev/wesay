@@ -201,14 +201,13 @@ namespace WeSay.ConfigTool
 			{
 				var ws = sender as WritingSystem;
 				var args = e as PropertyValueChangedEventArgs;
-				if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
+				if (args != null && IdComponentChanged(args.ChangedItem.PropertyDescriptor.Name))
 				{
-					string oldId = args.OldValue.ToString();
+					string oldId = ConstructOldId(ws, args);
 					Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged changing to {0}", ws.Id);
 					if (!WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId))
 					{
-						Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged oh no");
-						ws.Id = oldId; //couldn't make the change
+					   throw new ApplicationException(String.Format("Could not change Writingsystem Id {0} to {1} in Lift file.", oldId, ws.Id));
 					}
 					//                Reporting.ErrorReporter.NotifyUserOfProblem(
 					//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
@@ -224,6 +223,43 @@ namespace WeSay.ConfigTool
 				_wsListBox.EndUpdate();
 				_wsListBox.Invalidate();
 			}
+		}
+
+		private bool IdComponentChanged(string propertyName)
+		{
+			return propertyName == "ISO" || propertyName == "Region" || propertyName == "Variant" || propertyName == "Script";
+		}
+
+		private string ConstructOldId(WritingSystem ws, PropertyValueChangedEventArgs args)
+		{
+			string oldId = "";
+			string oldPropertyValue = args.OldValue.ToString();
+			switch (args.ChangedItem.PropertyDescriptor.Name)
+			{
+				case "ISO":
+					oldId = oldPropertyValue + AppendOrNot(ws.Script) + AppendOrNot(ws.Region) + AppendOrNot(ws.Variant);
+					break;
+				case "Script":
+					oldId = ws.ISO + AppendOrNot(oldPropertyValue) + AppendOrNot(ws.Region) + AppendOrNot(ws.Variant);
+					break;
+				case "Region":
+					oldId = ws.ISO + AppendOrNot(ws.Script) + AppendOrNot(oldPropertyValue) + AppendOrNot(ws.Variant);
+					break;
+				case "Variant":
+					oldId = ws.ISO + AppendOrNot(ws.Script) + AppendOrNot(ws.Region) + AppendOrNot(oldPropertyValue);
+					break;
+			}
+			return oldId;
+		}
+
+		string AppendOrNot(string idComponent)
+		{
+			string stringToAppend = "";
+			if(!String.IsNullOrEmpty(idComponent))
+			{
+				stringToAppend = '-' + idComponent;
+			}
+			return stringToAppend;
 		}
 
 		private void OnIsAudioChanged(object sender, EventArgs e)

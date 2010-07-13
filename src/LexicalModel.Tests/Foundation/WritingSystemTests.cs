@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Exortech.NetReflector;
 using NUnit.Framework;
@@ -33,7 +35,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			string s = NetReflector.Write(ws);
 			string expected = "<WritingSystem><Abbreviation>one</Abbreviation><FontName>" +
 							  font.Name + "</FontName><FontSize>" + font.Size +
-							  "</FontSize><Id>one</Id><IsAudio>False</IsAudio><IsUnicode>True</IsUnicode><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>" +
+							  "</FontSize><IsAudio>False</IsAudio><Id>one</Id><IsUnicode>True</IsUnicode><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>" +
 							  "<SpellCheckingId>one</SpellCheckingId></WritingSystem>";
 			Assert.AreEqual(expected, s);
 		}
@@ -68,6 +70,23 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
 			Assert.Less(writingSystem.Compare("\u00c8dit", "Ed\u00edt"), 0);
+		}
+
+		[Test]
+		public void SortUsing_ValueSet_IsValueReturned()
+		{
+			List<string> testValues = new List<string>()
+										   {
+											   CustomSortRulesType.CustomSimple.ToString(),
+											   CustomSortRulesType.CustomICU.ToString(),
+											   "NotNullOrEmpty"
+										   };
+			WritingSystem ws = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			foreach (string testValue in testValues)
+			{
+				ws.SortUsing = testValue;
+				Assert.AreEqual(testValue, ws.SortUsing);
+			}
 		}
 
 		[Test]
@@ -120,13 +139,14 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			WritingSystem writingSystem = new WritingSystem("one",
 															new Font(FontFamily.GenericSansSerif, 11));
-			writingSystem.SortUsing = "custom";
+			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
 			string rules = "&n < ng <<< Ng <<< NG";
 			writingSystem.CustomSortRules = rules;
+			Assert.IsNotNull(writingSystem.CustomSortRules);
 			writingSystem.SortUsing = "two";
 			Assert.IsNull(writingSystem.CustomSortRules);
-			writingSystem.SortUsing = "custom";
-			Assert.IsNull(writingSystem.CustomSortRules);
+			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
+			Assert.IsEmpty(writingSystem.CustomSortRules);
 		}
 
 		[Test]
@@ -327,7 +347,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void GetSpellCheckingId_Uninitialized_ReturnsId()
 		{
 			WritingSystem writingSystem = new WritingSystem();
-			writingSystem.Id = "en";
+			writingSystem.ISO = "en";
 			Assert.AreEqual("en", writingSystem.SpellCheckingId);
 		}
 
@@ -335,7 +355,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void GetAbbreviation_Uninitialized_ReturnsId()
 		{
 			WritingSystem writingSystem = new WritingSystem();
-			writingSystem.Id = "en";
+			writingSystem.ISO = "en";
 			Assert.AreEqual("en", writingSystem.Abbreviation);
 		}
 
@@ -353,6 +373,95 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			WritingSystem writingSystem = new WritingSystem();
 			writingSystem.Abbreviation = "eng";
 			Assert.AreEqual("eng", writingSystem.Abbreviation);
+		}
+
+		[Test]
+		public void Font_SetNull_GetReturnsGenericSansSerif()
+		{
+			WritingSystem ws = new WritingSystem();
+			ws.Font = null;
+			Assert.AreEqual(FontFamily.GenericSansSerif, ws.Font.FontFamily);
+		}
+
+		[Test]
+		public void Font_SetNull_GetFontSizeIs12()
+		{
+			WritingSystem ws = new WritingSystem();
+			ws.Font = null;
+			Assert.AreEqual(12, ws.Font.Size);
+		}
+
+		[Test]
+		public void Font_SetNull_GetFontNameIsIdenticalToDefaultFontName()
+		{
+			WritingSystem ws = new WritingSystem();
+			ws.Font = null;
+			Assert.AreEqual(ws.Font.Name, ws.FontName);
+		}
+
+		[Test]
+		public void Font_SetValidFont_GetReturnsFont()
+		{
+			WritingSystem ws = new WritingSystem();
+			Font font = new Font(FontFamily.GenericSerif, 14);
+			ws.Font = font;
+			Assert.AreEqual(font, ws.Font);
+		}
+
+		[Test]
+		public void Font_SetValidFont_GetFontNameReturnsFontName()
+		{
+			WritingSystem ws = new WritingSystem();
+			string name = FontFamily.GenericSerif.Name;
+			ws.Font = new Font(name, 14);
+			Assert.AreEqual(name, ws.FontName);
+		}
+
+		[Test]
+		public void Font_SetValidFont_GetFontSizeReturnsFontSize()
+		{
+			WritingSystem ws = new WritingSystem();
+			int size = 14;
+			ws.Font = new Font(FontFamily.GenericSerif.Name, size);
+			Assert.AreEqual(size, ws.FontSize);
+		}
+
+		[Test]
+		public void FontSize_SetSize_GetFontReturnsFontWithSize()
+		{
+			WritingSystem ws = new WritingSystem();
+			int size = 14;
+			ws.Font = new Font(FontFamily.GenericSerif.Name, 8);
+			ws.FontSize = size;
+			Assert.AreEqual(size, ws.Font.Size);
+		}
+
+		[Test]
+		public void FontSize_SetSizeAndFontIsNull_GetFontReturnsFontWithSize()
+		{
+			WritingSystem ws = new WritingSystem();
+			int size = 14;
+			ws.Font = null;
+			ws.FontSize = size;
+			Assert.AreEqual(size, ws.Font.Size);
+		}
+
+		[Test]
+		public void FontName_SetName_GetFontReturnsFontWithName()
+		{
+			WritingSystem ws = new WritingSystem();
+			string name = FontFamily.GenericSerif.Name;
+			ws.Font = new Font(name, 12);
+			Assert.AreEqual(name, ws.Font.Name);
+		}
+
+		[Test]
+		public void FontName_SetBogusName_GetFontReturnsDefaultFont()
+		{
+			WritingSystem ws = new WritingSystem();
+			string name = "bogus";
+			ws.Font = new Font(name, 12);
+			Assert.AreEqual(FontFamily.GenericSansSerif.Name, ws.Font.Name);
 		}
 	}
 }

@@ -16,6 +16,9 @@ namespace WeSay.Project
 			{
 				foreach (var task in configFileReader.GetTasksConfigurations(context))
 				{
+#if MONO
+					if(task.TaskName != "NotesBrowser")
+#endif
 					Add(task);
 				}
 
