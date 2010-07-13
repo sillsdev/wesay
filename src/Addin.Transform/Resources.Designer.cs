@@ -122,5 +122,32 @@ namespace Addin.Transform {
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
+
+		internal static System.Drawing.Bitmap xhtml {
+			get {
+				object obj = ResourceManager.GetObject("xhtml", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap openOffice {
+			get {
+				object obj = ResourceManager.GetObject("openOffice", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static String openOfficeLift2odfContent {
+			get {
+				String obj = ResourceManager.GetString("OpenOffice.lift2odfContent.xsl", resourceCulture);
+				return obj;
+			}
+		}
+		internal static String openOfficeWritingSystem2odfStyles{
+			get {
+				String obj = ResourceManager.GetString("OpenOffice.writingSystem2odfStyles.xsl", resourceCulture);
+				return obj;
+			}
+		}
 	}
 }

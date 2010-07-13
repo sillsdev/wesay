@@ -7,9 +7,9 @@ namespace WeSay.UI.audio
 	public class AudioPathProvider
 	{
 		private readonly string _pathToAudioFiles;
-		private readonly Func<string> _entryNameFunction;
+		private readonly System.Func<string> _entryNameFunction;
 
-		public AudioPathProvider(string pathToAudioFiles, Func<string> entryNameFunction)
+		public AudioPathProvider(string pathToAudioFiles, System.Func<string> entryNameFunction)
 		{
 			_pathToAudioFiles = pathToAudioFiles;
 			_entryNameFunction = entryNameFunction;

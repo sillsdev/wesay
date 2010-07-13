@@ -101,7 +101,7 @@ namespace WeSay.Project
 		/// <summary>
 		/// See comment on BasilProject.InitializeForTests()
 		/// </summary>
-		public new static void InitializeForTests()
+		public new static WeSayWordsProject InitializeForTests()
 		{
 			WeSayWordsProject project = new WeSayWordsProject();
 
@@ -128,7 +128,7 @@ namespace WeSay.Project
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
-
+			return project;
 		}
 
 		public static string PathToPretendLiftFile
@@ -338,6 +338,7 @@ namespace WeSay.Project
 //                }
 				CheckIfConfigFileVersionIsTooNew(configDoc);
 				var m = new ConfigurationMigrator();
+				Console.WriteLine("{0}",PathToConfigFile);
 				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
@@ -926,10 +927,6 @@ namespace WeSay.Project
 		public override void Dispose()
 		{
 			base.Dispose();
-			if (LiftIsLocked)
-			{
-				ReleaseLockOnLift();
-			}
 			if(_container !=null)
 			{
 				_container.Dispose();//this will dispose of objects in the container (at least those with the normal "lifetype" setting)
