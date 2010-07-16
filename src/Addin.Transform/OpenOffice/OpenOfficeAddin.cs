@@ -236,7 +236,7 @@ namespace Addin.Transform.OpenOffice
 				transform = new XslCompiledTransform();
 
 				System.IO.StringReader sr =
-					   new System.IO.StringReader(Resources.openOfficeLift2odfContent);
+					   new System.IO.StringReader(Resources.lift2odfContent);
 
 				XmlReader xsltReader = XmlReader.Create(sr, readerSettings);
 				XsltSettings settings = new XsltSettings(true, true);
@@ -258,19 +258,18 @@ namespace Addin.Transform.OpenOffice
 
 				transform = new XslCompiledTransform();
 
-				string writingSystemPath = Path.Combine(arguments.topLevelDir,
-														"WritingSystemPrefs.xml");
-				System.IO.StringReader srStyles =
-					   new System.IO.StringReader(Resources.openOfficeWritingSystem2odfStyles);
+				StringReader srStyles = new StringReader(Resources.ldml2odfStyles);
 				XmlReader xsltReaderStyles = XmlReader.Create(srStyles, readerSettings);
 				XsltSettings stylesSettings = new XsltSettings(true, true);
 				transform.Load(xsltReaderStyles, stylesSettings, new XmlUrlResolver());
 				xsltReaderStyles.Close();
 
 				xsltArgs = new XsltArgumentList();
-				xsltArgs.AddParam("primaryLangCode", "", GetHeadwordWritingSystemId(arguments.viewTemplate));
+				xsltArgs.AddParam("primaryWritingSystem", "", GetHeadwordWritingSystemId(arguments.viewTemplate));
 
-				transform.Transform(writingSystemPath, xsltArgs, stylesOutput);
+				string pathToTempFile = CreateSingleWritingsystemsFileForEasyXslProcessing();
+				transform.Transform(pathToTempFile, xsltArgs, stylesOutput);
+				File.Delete(pathToTempFile);
 
 				stylesOutput.Close();
 				if (File.Exists(arguments.odtPath))
@@ -298,6 +297,82 @@ namespace Addin.Transform.OpenOffice
 				progressState.WriteToLog(e.Message);
 			}
 		}
+
+		private static string CreateSingleWritingsystemsFileForEasyXslProcessing()
+		{
+			string pathToTempFile = Path.GetTempFileName();
+
+			StreamWriter tempFileWriter = new StreamWriter(pathToTempFile);
+			string xmlHeader = @"<?xml version=""1.0"" encoding=""utf-8""?>";
+			tempFileWriter.WriteLine(xmlHeader);
+			tempFileWriter.WriteLine("<root>");
+
+			string pathToLdmlWritingSystemsFolder =
+				BasilProject.GetPathToLdmlWritingSystemsFolder(BasilProject.Project.ProjectDirectoryPath);
+
+			foreach (string fileName in Directory.GetFiles(pathToLdmlWritingSystemsFolder, "*.ldml"))
+			{
+				StreamReader ldmlFileStream = new StreamReader(fileName);
+				string line;
+				while ((line = ldmlFileStream.ReadLine()) != null)
+				{
+					if(line.Contains("<?xml"))
+					{
+						continue;
+					}
+					tempFileWriter.WriteLine(line);
+				}
+				ldmlFileStream.Close();
+			}
+			tempFileWriter.WriteLine("</root>");
+			tempFileWriter.Close();
+			return pathToTempFile;
+		}
+
+		//private static string GetPathToPrimaryWritingSystemsLdmlFile(TransformWorkerArguments arguments)
+		//{
+		//    string pathToHeadWordWritingSystemLdmlFile = "";
+		//    string pathToLdmlWritingSystemsFolder =
+		//        BasilProject.GetPathToLdmlWritingSystemsFolder(BasilProject.Project.ProjectDirectoryPath);
+		//    foreach (string fileName in Directory.GetFiles(pathToLdmlWritingSystemsFolder))
+		//    {
+		//        if(Path.GetFileNameWithoutExtension(fileName) == GetHeadwordWritingSystemId(arguments.viewTemplate))
+		//        {
+		//            pathToHeadWordWritingSystemLdmlFile = Path.GetFullPath(fileName);
+		//            break;
+		//        }
+		//    }
+		//    if(String.IsNullOrEmpty(pathToHeadWordWritingSystemLdmlFile)){
+		//        string errorMessage = String.Format(
+		//            "No Ldml writing system file could be found in folder {0}. The headword writing system is {1}",
+		//            pathToLdmlWritingSystemsFolder, GetHeadwordWritingSystemId(arguments.viewTemplate));
+		//        throw new ApplicationException(errorMessage);
+
+		//    }
+		//    return pathToHeadWordWritingSystemLdmlFile;
+		//}
+
+		//private static string CreateTempFileContainingListOfLdmlWritingSystemFiles()
+		//{
+		//    string pathToTempFile = Path.GetTempFileName();
+		//    StreamWriter tempFileWriter = new StreamWriter(pathToTempFile, false, System.Text.Encoding.UTF8);
+		//    XmlWriter xmlListOfLdmlWritingsystemFiles = XmlWriter.Create(tempFileWriter);
+		//    xmlListOfLdmlWritingsystemFiles.WriteStartDocument();
+		//    string pathToLdmlWritingSystemsFolder =
+		//        BasilProject.GetPathToLdmlWritingSystemsFolder(BasilProject.Project.ProjectDirectoryPath);
+		//    xmlListOfLdmlWritingsystemFiles.WriteStartElement("LdmlWsFiles");
+		//    foreach (string fileName in Directory.GetFiles(pathToLdmlWritingSystemsFolder, "*.ldml"))
+		//    {
+		//        xmlListOfLdmlWritingsystemFiles.WriteStartElement("LdmlWsFile");
+		//        xmlListOfLdmlWritingsystemFiles.WriteString(Path.GetFullPath(fileName));
+		//        xmlListOfLdmlWritingsystemFiles.WriteEndElement();
+		//    }
+		//    xmlListOfLdmlWritingsystemFiles.WriteEndElement();
+		//    xmlListOfLdmlWritingsystemFiles.WriteEndDocument();
+		//    xmlListOfLdmlWritingsystemFiles.Close();
+		//    tempFileWriter.Close();
+		//    return pathToTempFile;
+		//}
 
 		private static string GetHeadwordWritingSystemId(ViewTemplate viewTemplate)
 		{

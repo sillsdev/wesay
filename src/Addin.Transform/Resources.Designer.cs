@@ -137,15 +137,17 @@ namespace Addin.Transform {
 			}
 		}
 
-		internal static String openOfficeLift2odfContent {
+		internal static String lift2odfContent
+		{
 			get {
-				String obj = ResourceManager.GetString("OpenOffice.lift2odfContent.xsl", resourceCulture);
+				String obj = ResourceManager.GetString("lift2odfContent", resourceCulture);
 				return obj;
 			}
 		}
-		internal static String openOfficeWritingSystem2odfStyles{
+		internal static String ldml2odfStyles
+		{
 			get {
-				String obj = ResourceManager.GetString("OpenOffice.writingSystem2odfStyles.xsl", resourceCulture);
+				String obj = ResourceManager.GetString("ldml2odfStyles", resourceCulture);
 				return obj;
 			}
 		}
