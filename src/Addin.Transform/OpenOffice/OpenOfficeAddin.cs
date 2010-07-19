@@ -247,9 +247,7 @@ namespace Addin.Transform.OpenOffice
 				xsltArgs.AddParam("title", "", arguments.name);
 				// TODO what is the correct url base path for illustrations?
 				// It seems one level up just gets out of the zip file, so use 2 levels here
-				xsltArgs.AddParam("urlBase", "",  ".." + Path.DirectorySeparatorChar +
-						".." + Path.DirectorySeparatorChar +
-						"pictures" + Path.DirectorySeparatorChar);
+				xsltArgs.AddParam("urlBase", "",  "../../pictures/");
 
 				transform.Transform(liftPath, xsltArgs, contentOutput);
 				contentOutput.Close();
