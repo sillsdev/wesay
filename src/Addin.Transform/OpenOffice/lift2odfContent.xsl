@@ -95,10 +95,9 @@ something like n log n rather than n^2-->
 <office:automatic-styles>
 	<style:style style:name="dictionary" style:family="section">
    <style:section-properties style:editable="false">
-	<style:columns fo:column-count="3" fo:column-gap="0.497cm">
-	 <style:column style:rel-width="3165*" fo:start-indent="0cm" fo:end-indent="0.249cm"/>
-	 <style:column style:rel-width="3307*" fo:start-indent="0.249cm" fo:end-indent="0.249cm"/>
-	 <style:column style:rel-width="3166*" fo:start-indent="0.249cm" fo:end-indent="0cm"/>
+	<style:columns fo:column-count="2" fo:column-gap="0.497cm">
+	 <style:column style:rel-width="4818*" fo:start-indent="0cm" fo:end-indent="0.249cm"/>
+	 <style:column style:rel-width="4818*" fo:start-indent="0.249cm" fo:end-indent="0cm"/>
 	</style:columns>
    </style:section-properties>
    </style:style>
