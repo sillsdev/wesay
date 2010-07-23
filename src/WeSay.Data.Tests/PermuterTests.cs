@@ -106,7 +106,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultSingleItem_Throws()
 		{
 			Permuter.Permute(null, "", 9);
@@ -120,14 +120,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultListOfItems_Throws()
 		{
 			Permuter.Permute(null, "", new int[] {9});
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullListOfItems_Throws()
 		{
 			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
@@ -135,14 +135,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultListOfListOfItems_Throws()
 		{
 			Permuter.Permute(null, "", new int[][] {new int[] {9}});
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultListResults_Throws()
 		{
 			Permuter.Permute(null, GetSingleItemResult());

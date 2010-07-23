@@ -66,7 +66,7 @@ namespace WeSay.LexicalTools.Tests
 			_tempFolder.Delete();
 		}
 
-		[Test, ExpectedException(typeof(ConfigurationException))]
+		[Test, NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ConfigurationException))]
 		public void NoWritingSystemsEnabledOnField_ThrowsConfigurationException()
 		{
 				_singleSynonymRelationField.WritingSystemIds.Clear();

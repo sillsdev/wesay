@@ -39,14 +39,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void CopyToNullArray()
 		{
 			_collection.CopyTo(null, 0);
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void CopyToIndexLessThanZero()
 		{
 			T[] array = new T[_itemCount];
@@ -54,7 +54,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentException))]
 		public void CopyToArrayIsMultidimensional()
 		{
 			T[,] array = new T[_itemCount + 1,_itemCount + 1];
@@ -62,7 +62,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentException))]
 		public void CopyToIndexEqualLengthOfArray()
 		{
 			T[] array = new T[_itemCount + 1];
@@ -74,7 +74,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentException))]
 		public void CopyToIndexGreaterThanLengthOfArray()
 		{
 			T[] array = new T[_itemCount];
@@ -87,7 +87,7 @@ namespace WeSay.Data.Tests
 		/// end of the destination array.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof (ArgumentException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentException))]
 		public void CopyToOutOfSpace()
 		{
 			T[] array = new T[_itemCount];
@@ -105,7 +105,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidCastException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (InvalidCastException))]
 		public void CopyToInvalidCast()
 		{
 			MyClass[] array = new MyClass[_itemCount + 1];

@@ -117,6 +117,7 @@
 		  </assemblies>
 		  <categories>
 			<exclude name="DictionaryServices" />
+			<exclude name="UsesObsoleteExpectedExceptionAttribute" /> <!--TeamCity 4.5.5 couldn't handle these when we upgraded to nunit 2.5 -->
 		  </categories>
 			</test>
 		</nunit2>

@@ -35,7 +35,7 @@ namespace Addin.Backup.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ApplicationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ApplicationException))]
 		public void ThrowIfCannotCreateDestination()
 		{
 			BackupMaker.BackupToExternal(BasilProject.GetPretendProjectDirectory(),
@@ -44,7 +44,7 @@ namespace Addin.Backup.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ApplicationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ApplicationException))]
 		public void ThrowIfSourceDoesntExist()
 		{
 			BackupMaker.BackupToExternal(Path.GetRandomFileName(), _destinationZip, _filesToBackup);
@@ -115,7 +115,7 @@ namespace Addin.Backup.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ZipException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ZipException))]
 		public void BackupToExternal_FileToBackUpIsLocked_Throws()
 		{
 			TemporaryFolder folderForBackup = new TemporaryFolder("Backup Test");
