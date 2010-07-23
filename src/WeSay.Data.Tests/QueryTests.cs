@@ -366,8 +366,10 @@ namespace WeSay.Data.Tests
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {new Result(new KV("StoredInt", 24))};
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
+
+
 
 		[Test]
 		public void GetResultsOnInQuery_WithShowSelectingNullItem_OneNullItem()
@@ -383,7 +385,7 @@ namespace WeSay.Data.Tests
 																					  null))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -394,7 +396,7 @@ namespace WeSay.Data.Tests
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[] {};
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -404,7 +406,7 @@ namespace WeSay.Data.Tests
 			Query queryWithOutAtLeastOne = new Query(typeof(PalasoTestItem)).In("Child").Show("StoredString");
 			IEnumerable<IDictionary<string, object>> results = queryWithAtLeastOne.GetResults(item);
 			IEnumerable<IDictionary<string, object>> expectedResult = queryWithOutAtLeastOne.GetResults(item);
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -528,7 +530,7 @@ namespace WeSay.Data.Tests
 			Query queryWithOutAtLeastOne = new Query(typeof(PalasoTestItem)).Show("StoredString");
 			IEnumerable<IDictionary<string, object>> results = queryWithAtLeastOne.GetResults(item);
 			IEnumerable<IDictionary<string, object>> expectedResult = queryWithOutAtLeastOne.GetResults(item);
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -594,7 +596,7 @@ namespace WeSay.Data.Tests
 			Query queryWithOutAtLeastOne = new Query(typeof(PalasoTestItem)).ForEach("ChildItemList").Show("StoredString");
 			IEnumerable<IDictionary<string, object>> results = queryWithAtLeastOne.GetResults(item);
 			IEnumerable<IDictionary<string, object>> expectedResult = queryWithOutAtLeastOne.GetResults(item);
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -719,7 +721,7 @@ namespace WeSay.Data.Tests
 																	  new Result(new KV("StoredInt", 3))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -756,7 +758,7 @@ namespace WeSay.Data.Tests
 																					  "ChildStoredString",
 																					  "3"))
 															  };
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -804,7 +806,7 @@ namespace WeSay.Data.Tests
 																					  "3"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 	}
 
@@ -865,7 +867,7 @@ namespace WeSay.Data.Tests
 																						"string2"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -900,7 +902,7 @@ namespace WeSay.Data.Tests
 																					 "value2"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -939,7 +941,7 @@ namespace WeSay.Data.Tests
 																					 "value2"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -986,7 +988,7 @@ namespace WeSay.Data.Tests
 																					 "value2"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -1033,7 +1035,7 @@ namespace WeSay.Data.Tests
 																					 "value2"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 	}
 }
