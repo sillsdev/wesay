@@ -263,7 +263,7 @@ namespace Addin.Transform.OpenOffice
 				xsltReaderStyles.Close();
 
 				xsltArgs = new XsltArgumentList();
-				xsltArgs.AddParam("primaryWritingSystem", "", GetHeadwordWritingSystemId(arguments.viewTemplate));
+				xsltArgs.AddParam("primaryLangCode", "", GetHeadwordWritingSystemId(arguments.viewTemplate));
 
 				string pathToTempFile = CreateSingleWritingsystemsFileForEasyXslProcessing();
 				transform.Transform(pathToTempFile, xsltArgs, stylesOutput);

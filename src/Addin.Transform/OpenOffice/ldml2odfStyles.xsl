@@ -34,7 +34,7 @@
 	<xsl:param name="primaryLangCode" select="'th'"/>
 
 	<xsl:variable name="primaryFont"
-				  select="/root/ldml/special[palaso:abbreviation/@value=$primaryLangCode]/palaso:defaultFontFamily/@value"/>
+				  select="/root/ldml[identity/language/@type=$primaryLangCode]/special/palaso:defaultFontFamily/@value"/>
 	<xsl:strip-space elements="text:p text:span"/>
 	<!-- indent is nice for debugging, but it introduces stray spaces
 The xsl:text elements below are used to introduce line breaks
