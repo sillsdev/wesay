@@ -26,7 +26,7 @@ namespace WeSay.LexicalModel.Tests
 			string filePath = _temporaryFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(filePath);
 			_headwordWritingSystem = new WritingSystem();
-			_headwordWritingSystem.Id = "primary";
+			_headwordWritingSystem.ISO = "primary";
 		}
 
 		[TearDown]
