@@ -58,7 +58,7 @@ namespace WeSay.LexicalModel.Tests
 			return entry;
 		}
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void Get_FieldNull_Throws()
 		{
 			Field fieldToFill = null;
@@ -79,7 +79,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void Get_WritingSystemNull_Throws()
 		{
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "fr" });

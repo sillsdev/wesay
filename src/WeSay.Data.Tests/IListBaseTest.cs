@@ -25,14 +25,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetItemNegativeIndex()
 		{
 			T item = (T) _list[-1];
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetItemPastTheEnd()
 		{
 			T item = (T) _list[_list.Count];
@@ -259,14 +259,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemNegativeIndex()
 		{
 			base.SetItemNegativeIndex();
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemPastTheEnd()
 		{
 			base.SetItemPastTheEnd();
@@ -291,14 +291,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void InsertNegativeIndex()
 		{
 			base.InsertNegativeIndex();
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void InsertPastTheEnd()
 		{
 			base.InsertPastTheEnd();
@@ -317,14 +317,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void RemoveAtNegativeIndex()
 		{
 			base.RemoveAtNegativeIndex();
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void RemoveAtPastTheEnd()
 		{
 			base.RemoveAtPastTheEnd();
@@ -346,42 +346,42 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void SetItem()
 		{
 			base.SetItem();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Add()
 		{
 			base.Add();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Clear()
 		{
 			base.Clear();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Insert()
 		{
 			base.Insert();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Remove()
 		{
 			base.Remove();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void RemoveAt()
 		{
 			base.RemoveAt();
@@ -409,49 +409,49 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemNegativeIndex()
 		{
 			base.SetItemNegativeIndex();
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemPastTheEnd()
 		{
 			base.SetItemPastTheEnd();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Add()
 		{
 			base.Add();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Clear()
 		{
 			base.Clear();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Insert()
 		{
 			base.Insert();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Remove()
 		{
 			base.Remove();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void RemoveAt()
 		{
 			base.RemoveAt();
@@ -473,42 +473,42 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void SetItem()
 		{
 			base.SetItem();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Add()
 		{
 			base.Add();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Clear()
 		{
 			base.Clear();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Insert()
 		{
 			base.Insert();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Remove()
 		{
 			base.Remove();
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void RemoveAt()
 		{
 			base.RemoveAt();

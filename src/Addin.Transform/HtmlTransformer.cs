@@ -99,13 +99,13 @@ namespace Addin.Transform
 			}
 
 			var pathToOutput = Path.Combine(projectInfo.PathToExportDirectory,
-											projectInfo.Name + ".xhtml");
+											projectInfo.Name + ".html");
 			if (File.Exists(pathToOutput))
 			{
 				File.Delete(pathToOutput);
 			}
 
-			var htmWriter = new FLExCompatibleXhtmlWriter();
+			var htmWriter = new FLExCompatibleXhtmlWriter(includeXmlDirective, linkToUserCss);
 			using (var reader = new StreamReader(pliftPath))
 			{
 				using (var file = new StreamWriter(pathToOutput, false, new UTF8Encoding(false)))
@@ -114,7 +114,6 @@ namespace Addin.Transform
 				}
 			}
 			return pathToOutput;
-
 		}
 	}
 }

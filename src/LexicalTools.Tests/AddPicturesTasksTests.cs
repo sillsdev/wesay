@@ -12,7 +12,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class AddPicturesTasksAbnormalSetupTests
 	{
-		[Test, ExpectedException(typeof(Palaso.Reporting.ConfigurationException))]
+		[Test, NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(Palaso.Reporting.ConfigurationException))]
 		public void Activate_IndexNotFound_GivesUserMessage()
 		{
 				using (var repoFile = new TempLiftFile(""))

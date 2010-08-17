@@ -92,7 +92,7 @@ namespace WeSay.Data.Tests
 		/// collection before reading the value of the Current property.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (InvalidOperationException))]
 		public void CurrentThrowsBeforeMoveNext()
 		{
 			IEnumerator enumerator = _enumerable.GetEnumerator();
@@ -105,7 +105,7 @@ namespace WeSay.Data.Tests
 		/// collection before reading the value of the Current property.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (InvalidOperationException))]
 		public void CurrentThrowsAfterResetBeforeMoveNext()
 		{
 			IEnumerator enumerator = _enumerable.GetEnumerator();
@@ -119,7 +119,7 @@ namespace WeSay.Data.Tests
 		/// MoveNext returned false, which indicates the end of the collection.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (InvalidOperationException))]
 		public void CurrentThrowsAtEndOfCollection()
 		{
 			IEnumerator enumerator = _enumerable.GetEnumerator();

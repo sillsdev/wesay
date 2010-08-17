@@ -2,16 +2,46 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
 		<DirectoryRef Id="TemplatesDir">
-			<Component Id="defaultDictionary.css" Guid="15B4EBF9-82E4-4337-AF8C-45BEB7E308B8">
+			<Component Id="defaultDictionary.css" Guid="DBB95230-0FBA-4245-8DC3-819BC0CAE285">
 				<File Id="defaultDictionary.css" Name="defaultDictionary.css" KeyPath="yes" Source="..\..\templates\defaultDictionary.css" />
 			</Component>
-			<Component Id="oldBasicDictionary.css" Guid="65F89227-8B06-4CAD-ABBD-899488223DEF">
-				<File Id="oldBasicDictionary.css" Name="oldBasicDictionary.css" Source="..\..\templates\oldBasicDictionary.css" />
-			</Component>
+			<Directory Id="TemplatesDir.odfTemplate" Name="odfTemplate">
+				<Component Id="meta.xml" Guid="7DF25C27-062B-4A31-B0E1-7BC152D4456B">
+					<File Id="meta.xml" Name="meta.xml" KeyPath="yes" Source="..\..\templates\odfTemplate\meta.xml" />
+				</Component>
+				<Component Id="mimetype" Guid="EB8C38B5-21CD-452E-824B-E6D7C55DCCFA">
+					<File Id="mimetype" Name="mimetype" Source="..\..\templates\odfTemplate\mimetype" />
+				</Component>
+				<Component Id="settings.xml" Guid="4D12A284-018F-4C14-BED6-34E5101B6A83">
+					<File Id="settings.xml" Name="settings.xml" Source="..\..\templates\odfTemplate\settings.xml" />
+				</Component>
+				<Directory Id="TemplatesDir.odfTemplate.META_INF" Name="META-INF">
+					<Component Id="manifest.xml" Guid="A0987AE7-752E-4EFC-9CE7-B1896F7E6874">
+						<File Id="manifest.xml" Name="manifest.xml" KeyPath="yes" Source="..\..\templates\odfTemplate\META-INF\manifest.xml" />
+					</Component>
+				</Directory>
+				<Directory Id="TemplatesDir.odfTemplate.Scripts" Name="Scripts">
+					<Directory Id="TemplatesDir.odfTemplate.Scripts.javascript" Name="javascript">
+						<Directory Id="TemplatesDir.odfTemplate.Scripts.javascript.WeSay" Name="WeSay">
+							<Component Id="DictHeaders.js" Guid="F98D8607-2AA1-4E31-A8CF-6B53FE44BDCB">
+								<File Id="DictHeaders.js" Name="DictHeaders.js" KeyPath="yes" Source="..\..\templates\odfTemplate\Scripts\javascript\WeSay\DictHeaders.js" />
+							</Component>
+							<Component Id="parcel_descriptor.xml" Guid="CF053052-0DB8-4AF4-8894-81D7364D51A8">
+								<File Id="parcel_descriptor.xml" Name="parcel-descriptor.xml" Source="..\..\templates\odfTemplate\Scripts\javascript\WeSay\parcel-descriptor.xml" />
+							</Component>
+						</Directory>
+					</Directory>
+				</Directory>
+			</Directory>
 		</DirectoryRef>
 		<ComponentGroup Id="templates">
 			<ComponentRef Id="defaultDictionary.css" />
-			<ComponentRef Id="oldBasicDictionary.css" />
+			<ComponentRef Id="meta.xml" />
+			<ComponentRef Id="mimetype" />
+			<ComponentRef Id="settings.xml" />
+			<ComponentRef Id="manifest.xml" />
+			<ComponentRef Id="DictHeaders.js" />
+			<ComponentRef Id="parcel_descriptor.xml" />
 		</ComponentGroup>
 	</Fragment>
 </Wix>
