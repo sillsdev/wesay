@@ -12,12 +12,12 @@
 		<Directory Id="wordpacks" Name="wordpacks">
 		  <Directory Id="SILCAWL" Name="SILCAWL">
 			<Component Id="SILCAWL.lift" Guid="{51F4A62A-A216-43bf-820B-3683F64FBA19}">
-			  <File Id="SILCAWL.lift" Name="SILCAWL.lift" KeyPath="yes" Source="..\..\common\SILCAWL\SILCAWL.lift" />
+			  <File Id="SILCAWL.lift" Name="SILCAWL.lift" KeyPath="yes" Source="..\..\common\wordpacks\SILCAWL\SILCAWL.lift" />
 			</Component>
 		  </Directory>
 		  <Directory Id="SILCAWL_MozambiqueAddendum" Name="SILCAWL_MozambiqueAddendum">
 			<Component Id="SILCAWL_MozambiqueAddendum.lift" Guid="{A6664CDF-8E27-487f-84FE-594675B7F112}">
-			  <File Id="SILCAWL_MozambiqueAddendum.lift" Name="SILCAWL_MozambiqueAddendum.lift" KeyPath="yes" Source="..\..\common\SILCAWL-MozambiqueAddendum\SILCAWL-MozambiqueAddendum.lift" />
+			  <File Id="SILCAWL_MozambiqueAddendum.lift" Name="SILCAWL_MozambiqueAddendum.lift" KeyPath="yes" Source="..\..\common\wordpacks\SILCAWL-MozambiqueAddendum\SILCAWL-MozambiqueAddendum.lift" />
 			</Component>
 		  </Directory>
 		</Directory>
@@ -29,7 +29,7 @@
 		  <File Id="default.WeSayConfig" Name="default.WeSayConfig" KeyPath="yes" Source="..\..\common\default.WeSayConfig" />
 		</Component>
 		<Component Id="CommonWritingSystemPrefs.xml" Guid="{2D64A565-57BC-4D0C-BAAF-13AB5A686E9B}">
-		  <File Id="CommonwritingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="..\..\common\writingSystemPrefs.xml" />
+		  <File Id="CommonwritingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="..\..\common\WritingSystemPrefs.xml" />
 		</Component>
 
 		<Component Id="Ddp4.xml" Guid="{0036EBE1-93B6-463e-A089-8DB1201E61A6}">
