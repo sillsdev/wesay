@@ -28,9 +28,6 @@
 		<Component Id="default.WeSayConfig" Guid="{4D0210A0-095D-48DE-9399-4074A97864A4}">
 		  <File Id="default.WeSayConfig" Name="default.WeSayConfig" KeyPath="yes" Source="..\..\common\default.WeSayConfig" />
 		</Component>
-		<Component Id="CommonWritingSystemPrefs.xml" Guid="{2D64A565-57BC-4D0C-BAAF-13AB5A686E9B}">
-		  <File Id="CommonwritingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="..\..\common\WritingSystemPrefs.xml" />
-		</Component>
 
 		<Component Id="WrtingSystems_en.ldml" Guid="">
 		  <File Id="WrtingSystems_en.ldml" Name="WrtingSystems_en.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\en.ldml" />
