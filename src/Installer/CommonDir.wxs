@@ -15,9 +15,9 @@
 			  <File Id="SILCAWL.lift" Name="SILCAWL.lift" KeyPath="yes" Source="..\..\common\SILCAWL\SILCAWL.lift" />
 			</Component>
 		  </Directory>
-		  <Directory Id="SILCAWL-MozambiqueAddendum" Name="SILCAWL-MozambiqueAddendum">
-			<Component Id="SILCAWL-MozambiqueAddendum.lift" Guid="{A6664CDF-8E27-487f-84FE-594675B7F112}">
-			  <File Id="SILCAWL-MozambiqueAddendum.lift" Name="SILCAWL-MozambiqueAddendum.lift" KeyPath="yes" Source="..\..\common\SILCAWL-MozambiqueAddendum\SILCAWL-MozambiqueAddendum.lift" />
+		  <Directory Id="SILCAWL_MozambiqueAddendum" Name="SILCAWL_MozambiqueAddendum">
+			<Component Id="SILCAWL_MozambiqueAddendum.lift" Guid="{A6664CDF-8E27-487f-84FE-594675B7F112}">
+			  <File Id="SILCAWL_MozambiqueAddendum.lift" Name="SILCAWL_MozambiqueAddendum.lift" KeyPath="yes" Source="..\..\common\SILCAWL-MozambiqueAddendum\SILCAWL-MozambiqueAddendum.lift" />
 			</Component>
 		  </Directory>
 		</Directory>
@@ -56,7 +56,7 @@
 	<ComponentGroup Id="defaultFiles">
 	  <ComponentRef Id="PartsOfSpeech.xml" />
 	  <ComponentRef Id="SILCAWL.lift" />
-	  <ComponentRef Id="SILCAWL-MozambiqueAddendum.lift" />
+	  <ComponentRef Id="SILCAWL_MozambiqueAddendum.lift" />
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="default.WeSayConfig" />
 	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
