@@ -13,14 +13,25 @@ namespace Addin.Transform.PdfDictionary
 	{
 		private XmlWriter _writer;
 		private char _currentLetter;
+		private bool _linkToUserCss;
+		private bool _includeXmlDirective;
 
 		public FLExCompatibleXhtmlWriter()
 		{
+			_linkToUserCss = false;
+			_includeXmlDirective = false;
+		}
+
+		public FLExCompatibleXhtmlWriter(bool includeXmlDirective, bool linkToUserCss)
+		{
+			_includeXmlDirective = includeXmlDirective;
+			_linkToUserCss = linkToUserCss;
 		}
 
 		public void Write(TextReader pliftReader, TextWriter textWriter)
 		{
 			XmlWriterSettings writerSettings = new XmlWriterSettings();
+			writerSettings.OmitXmlDeclaration = !_includeXmlDirective;
 			writerSettings.Encoding = new UTF8Encoding(false);//set false to stop sticking on the BOM, which trips up princeXML
 			writerSettings.Indent = true;
 
@@ -30,10 +41,13 @@ namespace Addin.Transform.PdfDictionary
 				_writer.WriteStartElement("html");
 				_writer.WriteStartElement("head");
 //  just removed because I'm having trouble nailing down precedence, and we add these explicitly to prince
-//                _writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
-//                _writer.WriteRaw("<LINK rel='stylesheet' href='autoLayout.css' type='text/css' />");
-//                _writer.WriteRaw("<LINK rel='stylesheet' href='autoFonts.css' type='text/css' />");
-//                _writer.WriteRaw("<LINK rel='stylesheet' href='customLayout.css' type='text/css' />");
+				if (_linkToUserCss)
+				{
+					_writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
+					_writer.WriteRaw("<LINK rel='stylesheet' href='autoLayout.css' type='text/css' />");
+					_writer.WriteRaw("<LINK rel='stylesheet' href='autoFonts.css' type='text/css' />");
+					_writer.WriteRaw("<LINK rel='stylesheet' href='customLayout.css' type='text/css' />");
+				}
 				_writer.WriteEndElement();
 				_writer.WriteStartElement("body");
 				WriteClassAttr("dicBody");
@@ -104,7 +118,7 @@ namespace Addin.Transform.PdfDictionary
 		{
 			XPathNavigator target=  relation.SelectSingleNode("field[@type='headword-of-target']");
 ////span[@class='crossrefs']/span[@class='crossref-targets' and count(span[@class='xitem']) == 2]");
-			string rtype = relation.GetAttribute("type",string.Empty);
+			//string rtype = relation.GetAttribute("type",string.Empty);
 			StartSpan("xitem");
 			WriteSpan("crossref", GetLang(target), target.Value);
 			EndSpan();
@@ -432,7 +446,6 @@ namespace Addin.Transform.PdfDictionary
 			_writer.WriteStartElement("span");
 			_writer.WriteAttributeString("class", className);
 		}
-
 		private void StartSpan(string className, string lang, string text)
 		{
 			_writer.WriteStartElement("span");
@@ -440,26 +453,29 @@ namespace Addin.Transform.PdfDictionary
 			_writer.WriteAttributeString("lang", lang);
 			_writer.WriteValue(text);
 		}
+
 		private void WriteSpan(string className, string lang, string text)
 		{
 			StartSpan(className,lang,text);
 			_writer.WriteEndElement();
 		}
+/*
 		private void WriteSpn(string className, string lang, string text)
 		{
 			StartSpan(className, lang, text);
 			_writer.WriteEndElement();
 		}
+
 		private void StartSpan(string className, string lang)
 		{
 			_writer.WriteStartElement("span");
 			_writer.WriteAttributeString("class", className);
 			_writer.WriteAttributeString("lang", lang);
 		}
-
 		private string GetAttribute(XPathNavigator current, string name)
 		{
 			return current.GetAttribute(name, string.Empty);
 		}
+*/
 	}
 }

@@ -17,7 +17,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithField_NullField_Throws()
 		{
 			new MissingFieldQuery(null, null, null);

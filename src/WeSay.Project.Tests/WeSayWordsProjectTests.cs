@@ -60,7 +60,7 @@ namespace WeSay.Project.Tests
 				using (File.OpenWrite(p.PathToLiftFile))
 				{
 					WritingSystem ws = project.WritingSystems["v"];
-					ws.Id = "newIdForV";
+					ws.ISO = "newIdForV";
 					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
 						Assert.IsFalse(project.MakeWritingSystemIdChange(ws, "v"));
@@ -79,7 +79,7 @@ namespace WeSay.Project.Tests
 				doc.Load(p.PathToLiftFile);
 				Assert.IsNotNull(doc.SelectNodes("//form[lang='v']"));
 				WritingSystem ws = project.WritingSystems["v"];
-				ws.Id = "newIdForV";
+				ws.ISO = "newIdForV";
 				Assert.IsTrue(project.MakeWritingSystemIdChange(ws, "v"));
 				doc.Load(p.PathToLiftFile);
 				Assert.IsNotNull(doc.SelectNodes("//form[lang='newIdForV']"));
@@ -122,7 +122,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void WeSayDirNotInValidBasilDir()
 		{
 			using (var dir = new Palaso.TestUtilities.TemporaryFolder("WeSayDirNotInValidBasilDir"))
@@ -272,7 +272,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ApplicationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ApplicationException))]
 		public void WeSayConfigFileIsToNew_Throws()
 		{
 

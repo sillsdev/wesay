@@ -31,7 +31,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void SetWritingSystem_Null_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
@@ -39,7 +39,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (InvalidOperationException))]
 		public void WritingSystem_Unassigned_Get_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
@@ -47,7 +47,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (InvalidOperationException))]
 		public void WritingSystem_Unassigned_Focused_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
@@ -55,7 +55,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (InvalidOperationException))]
 		public void WritingSystem_Unassigned_Unfocused_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();

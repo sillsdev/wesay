@@ -47,6 +47,7 @@
 				<include name="WeSay.Project.Tests.dll" /> <!-- review: remove this one day please -->
 				<include name="LexicalModel.dll" />
 				<include name="Addin.Transform.dll" />
+				<include name="ICSharpCode.SharpZipLib.dll" />
 			</references>
 			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
 				<include name="${build.namespace.dir}/**/*.resources" />

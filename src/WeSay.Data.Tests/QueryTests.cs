@@ -42,49 +42,49 @@ namespace WeSay.Data.Tests
 	public class QueryTests
 	{
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void In_Null_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).In(null);
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void In_PropertyDoesNotExist_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).In("IDontExist");
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void In_EmptyString_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).In(string.Empty);
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void ForEach_Null_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).ForEach(null);
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ForEach_EmptyString_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).ForEach(string.Empty);
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ForEach_PropertyDoesNotExist_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).ForEach("IDontExist");
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ForEach_PropertyDoesNotReturnIEnumerableOfT_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).ForEach("Child");
@@ -97,42 +97,42 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Show_Null_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).Show(null);
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Show_EmptyString_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).Show(string.Empty);
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Show_PropertyDoesNotExist_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).Show("IDontExist");
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void ShowEach_Null_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).ShowEach(null);
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ShowEach_EmptyString_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).ShowEach(string.Empty);
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ShowEach_PropertyDoesNotExist_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).ShowEach("IDontExist");
@@ -146,14 +146,14 @@ namespace WeSay.Data.Tests
 
 		[Test]
 		//even though a string is IEnumerable<char> we don't really want to treat it that way
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ShowEach_PropertyIsString_Throws()
 		{
 			Assert.IsNotNull(new Query(typeof (PalasoTestItem)).ShowEach("StoredString"));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ShowEach_PropertyIsNotIEnumerable_Throws()
 		{
 			Assert.IsNotNull(new Query(typeof (PalasoTestItem)).ShowEach("Child"));
@@ -166,7 +166,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void GetResults_Null_Throws()
 		{
 			Query q = new Query(typeof (PalasoTestItem));
@@ -177,7 +177,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetResults_NotInstanceOfType_Throws()
 		{
 			Query q = new Query(typeof (PalasoTestItem));
@@ -188,7 +188,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Show_LabelAlreadyUsed_Throws()
 		{
 			new Query(typeof (PalasoTestItem)).Show("StoredString").ForEach("ChildItemList").Show(
@@ -203,7 +203,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Show_LabelAlreadyUsedInBranch_Throws()
 		{
 			Query query = new Query(typeof (PalasoTestItem));
@@ -220,7 +220,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ShowEach_LabelAlreadyUsed_Throws()
 		{
 			new Query(typeof (TestMultiple)).ShowEach("Strings", "a").ShowEach("KeyValuePairs", "a");
@@ -366,8 +366,10 @@ namespace WeSay.Data.Tests
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 															  {new Result(new KV("StoredInt", 24))};
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
+
+
 
 		[Test]
 		public void GetResultsOnInQuery_WithShowSelectingNullItem_OneNullItem()
@@ -383,7 +385,7 @@ namespace WeSay.Data.Tests
 																					  null))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -394,7 +396,7 @@ namespace WeSay.Data.Tests
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[] {};
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -404,7 +406,7 @@ namespace WeSay.Data.Tests
 			Query queryWithOutAtLeastOne = new Query(typeof(PalasoTestItem)).In("Child").Show("StoredString");
 			IEnumerable<IDictionary<string, object>> results = queryWithAtLeastOne.GetResults(item);
 			IEnumerable<IDictionary<string, object>> expectedResult = queryWithOutAtLeastOne.GetResults(item);
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -528,7 +530,7 @@ namespace WeSay.Data.Tests
 			Query queryWithOutAtLeastOne = new Query(typeof(PalasoTestItem)).Show("StoredString");
 			IEnumerable<IDictionary<string, object>> results = queryWithAtLeastOne.GetResults(item);
 			IEnumerable<IDictionary<string, object>> expectedResult = queryWithOutAtLeastOne.GetResults(item);
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -594,7 +596,7 @@ namespace WeSay.Data.Tests
 			Query queryWithOutAtLeastOne = new Query(typeof(PalasoTestItem)).ForEach("ChildItemList").Show("StoredString");
 			IEnumerable<IDictionary<string, object>> results = queryWithAtLeastOne.GetResults(item);
 			IEnumerable<IDictionary<string, object>> expectedResult = queryWithOutAtLeastOne.GetResults(item);
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -719,7 +721,7 @@ namespace WeSay.Data.Tests
 																	  new Result(new KV("StoredInt", 3))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -756,7 +758,7 @@ namespace WeSay.Data.Tests
 																					  "ChildStoredString",
 																					  "3"))
 															  };
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -804,7 +806,7 @@ namespace WeSay.Data.Tests
 																					  "3"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 	}
 
@@ -865,7 +867,7 @@ namespace WeSay.Data.Tests
 																						"string2"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -900,7 +902,7 @@ namespace WeSay.Data.Tests
 																					 "value2"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -939,7 +941,7 @@ namespace WeSay.Data.Tests
 																					 "value2"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -986,7 +988,7 @@ namespace WeSay.Data.Tests
 																					 "value2"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 
 		[Test]
@@ -1033,7 +1035,7 @@ namespace WeSay.Data.Tests
 																					 "value2"))
 															  };
 
-			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
+			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
 	}
 }
