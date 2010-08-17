@@ -15,7 +15,6 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 	{
 
 		[Test]
-		[ExpectedException(typeof(ApplicationException))]
 		public void SetWritingSystemsForFields_LiftFileContainsWritingsystemsForWhichThereIsNoDefinition_Throws()
 		{
 			using (var lift = new TempLiftFile(@"
@@ -33,7 +32,9 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				//put one guy in there already
 				int originalCount = collection.Count;// collection.Count;
 
-				ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);
+				Assert.Throws<ApplicationException>(
+					() => ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection)
+				);
 			}
 		}
 
