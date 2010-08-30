@@ -25,7 +25,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 
-		[Test]
+		/*[Test]
+		//This test is obsolete as we no longer serialize writing systems for to the old WritingSystemPrefs.xml file but instead use LDML
 		public void SerializeOne()
 		{
 			// since Linux may not have Arial, we
@@ -35,16 +36,16 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			string s = NetReflector.Write(ws);
 			string expected = "<WritingSystem><Abbreviation>one</Abbreviation><FontName>" +
 							  font.Name + "</FontName><FontSize>" + font.Size +
-							  "</FontSize><IsAudio>False</IsAudio><Id>one</Id><IsUnicode>True</IsUnicode><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>" +
+							  "</FontSize><IsAudio>False</IsAudio><Id>one</Id><IsUnicode>True</IsUnicode><WindowsKeyman /><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>" +
 							  "<SpellCheckingId>one</SpellCheckingId></WritingSystem>";
 			Assert.AreEqual(expected, s);
-		}
+		}*/
 
 		[Test]
 		public void DeserializeOne()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof (WritingSystem));
+			t.Add(typeof(WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
 			WritingSystem ws =
 				(WritingSystem)
@@ -55,11 +56,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			Font font = new Font("Tahoma", 99);
 			Assert.IsNotNull(ws);
 			Assert.AreEqual(font.Name, ws.FontName);
+			Assert.AreEqual("", ws.KeyboardName);
 			Assert.AreEqual("one", ws.Id);
 			Assert.AreEqual(font.Size, ws.FontSize);
 		}
-
-
 
 		[Test]
 		public void Compare_fr_sortsLikeFrench()
