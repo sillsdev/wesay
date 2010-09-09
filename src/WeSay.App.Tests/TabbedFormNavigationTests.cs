@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Project;
@@ -51,12 +52,13 @@ namespace WeSay.App.Tests
 			_tabbedForm.IntializationComplete += OnTabbedForm_IntializationComplete;
 			_tabbedForm.ContinueLaunchingAfterInitialDisplay();
 			Application.DoEvents();
-			for (int i = 0;i < 1000;i++)
+			for (int i = 0;i < 50;i++)
 			{
 				if (_didRaiseInitializedEvent)
 				{
 					break;
 				}
+				Thread.Sleep(100);
 				Application.DoEvents();
 			}
 			Assert.IsTrue(_didRaiseInitializedEvent);
