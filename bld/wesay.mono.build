@@ -209,6 +209,7 @@
 				<exclude name="Keyman6"/>
 				<exclude name="Keyman7"/>
 				<exclude name="NUnit Windows Forms"/>
+				<exclude name="UsesObsoleteExpectedExceptionAttribute" />
 			</categories>
 			</test>
 		</nunit2>
@@ -233,6 +234,7 @@
 				<exclude name="Keyman6"/>
 				<exclude name="Keyman7"/>
 				<exclude name="NUnit Windows Forms"/>
+				<exclude name="UsesObsoleteExpectedExceptionAttribute" />
 			</categories>
 			</test>
 		</nunit2>-->
