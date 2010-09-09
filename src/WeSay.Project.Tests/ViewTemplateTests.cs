@@ -50,7 +50,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Index_DoesNotHaveFieldDefinition_Throws()
 		{
 			ViewTemplate viewTemplate = PopulateViewTemplate();
@@ -76,7 +76,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void TryGetField_NullKey_Throws()
 		{
 			ViewTemplate viewTemplate = PopulateViewTemplate();
@@ -94,14 +94,14 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void SynchronizeInventories_nullMasterTemplate_throws()
 		{
 			ViewTemplate.UpdateUserViewTemplate(null, new ViewTemplate());
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void SynchronizeInventories_nullUserTemplate_throws()
 		{
 			ViewTemplate.UpdateUserViewTemplate(new ViewTemplate(), null);

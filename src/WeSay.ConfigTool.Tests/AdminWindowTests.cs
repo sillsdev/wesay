@@ -96,7 +96,7 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void TryingToOpenNonExistantProjectDoesntCrash()
 		{
 			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig");

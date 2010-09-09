@@ -58,7 +58,7 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void AddNewPath_NullPath_Throws()
 		{
 			_mruProjects.AddNewPath(null);

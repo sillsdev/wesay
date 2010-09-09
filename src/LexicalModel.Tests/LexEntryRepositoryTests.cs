@@ -75,7 +75,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void GetAllEntriesSortedByHeadword_Null_Throws()
 		{
 			_lexEntryRepository.GetAllEntriesSortedByHeadword(null);
@@ -137,7 +137,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void GetAllEntriesSortedByLexicalFormOrAlternative_Null_Throws()
 		{
 			_lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(null);
@@ -204,7 +204,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void GetAllEntriesSortedByDefinition_Null_Throws()
 		{
 			_lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(null);
@@ -795,7 +795,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithSimilarLexicalForm_WritingSystemNull_Throws()
 		{
 			WritingSystem ws = null;
@@ -917,7 +917,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithMatchingLexicalForm_WritingSystemNull_Throws()
 		{
 			WritingSystem lexicalFormWritingSystem = null;
@@ -962,7 +962,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void GetLexEntryWithMatchingGuid_GuidIsEmpty_Throws()
 		{
 			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingGuid(Guid.Empty);
@@ -986,7 +986,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ApplicationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ApplicationException))]
 		public void GetLexEntryWithMatchingGuid_MultipleGuidMatchesInRepo_Throws()
 		{
 			LexEntry lexEntryWithGuid = _lexEntryRepository.CreateItem();
@@ -998,7 +998,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void GetLexEntryWithMatchingId_IdIsEmpty_Throws()
 		{
 			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingId("");
@@ -1022,7 +1022,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ApplicationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ApplicationException))]
 		public void GetLexEntryWithMatchingId_MultipleIdMatchesInRepo_Throws()
 		{
 			LexEntry lexEntryWithId = _lexEntryRepository.CreateItem();
@@ -1034,7 +1034,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithMatchingGlossSortedByLexicalForm_WritingSystemNull_Throws()
 		{
 			WritingSystem writingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
@@ -1044,7 +1044,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithMatchingGlossSortedByLexicalForm_LanguageFormNull_Throws()
 		{
 			LanguageForm glossLanguageForm = new LanguageForm("en", "en Gloss", new MultiText());

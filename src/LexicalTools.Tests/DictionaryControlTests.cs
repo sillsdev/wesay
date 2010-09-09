@@ -1202,7 +1202,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (NavigationException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NavigationException))]
 		public void GotoEntry_EntryNotInList_Throws()
 		{
 			AddInitialEntries();

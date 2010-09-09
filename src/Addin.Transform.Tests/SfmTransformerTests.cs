@@ -52,7 +52,7 @@ namespace Addin.Transform.Tests
 
 /* NOMORELOCKING
 		[Test]
-		[ExpectedException(typeof (IOException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (IOException))]
 		public void ThrowsMeaningfulExceptionIfOutputFileIsLocked()
 		{
 			try

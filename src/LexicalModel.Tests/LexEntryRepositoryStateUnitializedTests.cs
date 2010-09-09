@@ -11,7 +11,7 @@ namespace WeSay.LexicalModel.Tests
 	{
 		/* NOMORELOCKING
 		[Test]
-		[ExpectedException(typeof(IOException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsWriteableAfterRepositoryIsCreated_Throws()
 		{
 			using (File.OpenWrite(_persistedFilePath))
@@ -21,7 +21,7 @@ namespace WeSay.LexicalModel.Tests
 */
 
 		[Test]
-		[ExpectedException(typeof(IOException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsNotWriteableWhenRepositoryIsCreated_Throws()
 		{
 			using (TempFile t = TempFile.CreateAndGetPathButDontMakeTheFile())
