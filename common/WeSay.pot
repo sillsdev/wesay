@@ -285,6 +285,11 @@ msgid "Send/Receive Changes to devices, servers, or other users on your network.
 msgstr ""
 
 #; ..\src\WeSay.Project\ViewTemplate.cs
+#. Long label for send/receive action.
+msgid "Send/Receive Changes to devices, servers, or other users on your network."
+msgstr ""
+
+#; C:\Documents and Settings\KRS\My Documents\projects\wesay\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the Lexeme Form of the entry.
 msgid "Word"
 msgstr ""
