@@ -40,7 +40,7 @@ namespace WeSay.Project
 
 		public string Label
 		{
-			get { return String.Format("Failed To Load: {0}", _label); }
+			get { return StringCatalog.GetFormatted("~Failed To Load: {0}", "", _label); }
 		}
 
 		public bool Available
@@ -50,7 +50,7 @@ namespace WeSay.Project
 
 		public string Description
 		{
-			get { return String.Format("Error: {0}", _description); }
+			get { return StringCatalog.GetFormatted("~Error: {0}", "", _description); }
 		}
 
 		public Control Control
