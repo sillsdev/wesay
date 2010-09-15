@@ -98,6 +98,7 @@
 	  <ComponentRef Id="Ddp4Questions_en.xml"/>
 	  <ComponentRef Id="Ddp4Questions_fr.xml"/>
 	  <ComponentRef Id="Ddp4Questions_id.xml"/>
+	  <ComponentRef Id="Ddp4Questions_th.xml"/>
 	</ComponentGroup>
 
   </Fragment>
