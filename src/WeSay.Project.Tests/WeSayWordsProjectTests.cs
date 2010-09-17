@@ -122,7 +122,6 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void WeSayDirNotInValidBasilDir()
 		{
 			using (var dir = new Palaso.TestUtilities.TemporaryFolder("WeSayDirNotInValidBasilDir"))
@@ -130,7 +129,7 @@ namespace WeSay.Project.Tests
 				string weSayDir = dir.FolderPath; // MakeDir(experimentDir, "WeSay");
 				string wordsPath = Path.Combine(weSayDir, "AAA.words");
 				File.Create(wordsPath).Close();
-				TryLoading(wordsPath, dir.FolderPath);
+				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() => TryLoading(wordsPath, dir.FolderPath));
 			}
 		}
 
@@ -272,7 +271,6 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ApplicationException))]
 		public void WeSayConfigFileIsToNew_Throws()
 		{
 
@@ -283,7 +281,7 @@ namespace WeSay.Project.Tests
 				File.WriteAllText(configPath,
 								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
 				XPathDocument doc = new XPathDocument(configPath);
-				WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(doc);
+				Assert.Throws<ApplicationException>(() => WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(doc));
 			}
 		}
 

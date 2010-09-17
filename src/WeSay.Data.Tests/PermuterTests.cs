@@ -106,46 +106,41 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultSingleItem_Throws()
 		{
-			Permuter.Permute(null, "", 9);
+			Assert.Throws<ArgumentNullException>(() => Permuter.Permute(null, "", 9));
 		}
 
 		[Test]
 		public void Permute_NullSingleItem_Succeeds()
 		{
-			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
+			var result = new List<Dictionary<string, object>>();
 			Permuter.Permute(result, "", (object) null);
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultListOfItems_Throws()
 		{
-			Permuter.Permute(null, "", new int[] {9});
+			Assert.Throws<ArgumentNullException>(() => Permuter.Permute(null, "", new int[] {9}));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullListOfItems_Throws()
 		{
 			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
-			Permuter.Permute(result, null);
+			Assert.Throws<ArgumentNullException>(() => Permuter.Permute(result, null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultListOfListOfItems_Throws()
 		{
-			Permuter.Permute(null, "", new int[][] {new int[] {9}});
+			Assert.Throws<ArgumentNullException>(() => Permuter.Permute(null, "", new int[][] {new int[] {9}}));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Permute_NullResultListResults_Throws()
 		{
-			Permuter.Permute(null, GetSingleItemResult());
+			Assert.Throws<ArgumentNullException>(() => Permuter.Permute(null, GetSingleItemResult()));
 		}
 
 		[Test]

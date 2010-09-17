@@ -208,23 +208,23 @@ namespace WeSay.LexicalTools.Tests
 
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ApplicationException))]
 		public void ConstructWithTemplate_NonExistantSemanticDomainFilePath_Throws()
 		{
-			new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(Path.GetRandomFileName()),
-															_lexEntryRepository,
-															_viewTemplate,
-															new TaskMemoryRepository(),
-															new StringLogger());
+			Assert.Throws<ApplicationException>(() =>
+				new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(Path.GetRandomFileName()),
+												_lexEntryRepository,
+												_viewTemplate,
+												new TaskMemoryRepository(),
+												new StringLogger()));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithTemplate_NullTemplate_Throws()
 		{
-			new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
-										   _lexEntryRepository,
-										   null, new TaskMemoryRepository(), new StringLogger());
+			Assert.Throws<ArgumentNullException>(() =>
+				new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
+											   _lexEntryRepository,
+											   null, new TaskMemoryRepository(), new StringLogger()));
 		}
 
 
@@ -265,17 +265,15 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void CurrentDomainIndex_SetNegative_Throws()
 		{
-			Task.CurrentDomainIndex = -1;
+			Assert.Throws<ArgumentOutOfRangeException>(() => Task.CurrentDomainIndex = -1);
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void CurrentDomainIndex_SetGreaterThanCountOfDomains_Throws()
 		{
-			Task.CurrentDomainIndex = Task.DomainKeys.Count;
+			Assert.Throws<ArgumentOutOfRangeException>(() => Task.CurrentDomainIndex = Task.DomainKeys.Count);
 		}
 
 		[Test]
@@ -291,17 +289,15 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void CurrentQuestionIndex_SetNegative_Throws()
 		{
-			Task.CurrentQuestionIndex = -1;
+			Assert.Throws<ArgumentOutOfRangeException>(() => Task.CurrentQuestionIndex = -1);
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void CurrentQuestionIndex_SetGreaterThanCountOfQuestions_Throws()
 		{
-			Task.CurrentQuestionIndex = Task.Questions.Count;
+			Assert.Throws<ArgumentOutOfRangeException>(() => Task.CurrentQuestionIndex = Task.Questions.Count);
 		}
 
 		[Test]
@@ -414,10 +410,9 @@ namespace WeSay.LexicalTools.Tests
 		#endregion
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void AddWord_null_Throws()
 		{
-			Task.AddWord(null);
+			Assert.Throws<ArgumentNullException>(() => Task.AddWord(null));
 		}
 
 
@@ -429,15 +424,14 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
 
-
 		/// <summary>
 		/// regression test of WS-15019
 		/// </summary>
-		 [Test]
+		[Test]
 		public void AddWord_WordConsistsOfOnlySegmentSeparatorCharacter_AddedToDatabase()
 		{
 			int originalCount = _lexEntryRepository.CountAllItems();
-			Task.AddWord('\u001F'.ToString(), String.Empty);
+			Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() => Task.AddWord('\u001F'.ToString(), String.Empty));
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
 
@@ -500,10 +494,9 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void RemoveWord_null_Throws()
 		{
-			Task.DetachFromMatchingEntries(null);
+			Assert.Throws<ArgumentNullException>(() => Task.DetachFromMatchingEntries(null));
 		}
 
 		[Test]
@@ -1063,17 +1056,15 @@ namespace WeSay.LexicalTools.Tests
 		#endregion
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void WordsInDomain_NegativeIndex_Throws()
 		{
-			Task.WordsInDomain(-1);
+			Assert.Throws<ArgumentOutOfRangeException>(() => Task.WordsInDomain(-1));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void WordsInDomain_IndexBeyondDomainCount_Throws()
 		{
-			Task.WordsInDomain(Task.DomainKeys.Count);
+			Assert.Throws<ArgumentOutOfRangeException>(() => Task.WordsInDomain(Task.DomainKeys.Count));
 		}
 
 		[Test]
