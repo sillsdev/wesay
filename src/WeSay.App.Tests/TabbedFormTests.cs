@@ -203,12 +203,11 @@ namespace WeSay.App.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void InitializeTasks_NullTaskList_Throws()
 		{
 			using(TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController()))
 			{
-				tabbedForm.InitializeTasks(null);
+				Assert.Throws<ArgumentNullException>(() => tabbedForm.InitializeTasks(null));
 			}
 		}
 
@@ -312,14 +311,13 @@ namespace WeSay.App.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void SetActiveTask_Null_Throws()
 		{
 			using(TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController()))
 			{
 				tabbedForm.InitializeTasks(_project.Tasks);
 
-				tabbedForm.ActiveTask = null;
+				Assert.Throws<ArgumentNullException>(() => tabbedForm.ActiveTask = null);
 			}
 		}
 

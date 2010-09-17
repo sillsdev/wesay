@@ -36,17 +36,15 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public void ConvertTo_ConvertingToAnythingButString_Throws()
 		{
-			_spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", typeof (bool));
+			Assert.Throws<NotSupportedException>(() => _spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", typeof (bool)));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void ConvertTo_ConvertingToNull_Throws()
 		{
-			_spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", null);
+			Assert.Throws<ArgumentNullException>(() =>_spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", null));
 		}
 
 		[Test]

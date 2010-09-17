@@ -242,18 +242,17 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void NotifyThatLexEntryHasBeenUpdated_Null_Throws()
 		{
-			_repository.NotifyThatLexEntryHasBeenUpdated(null);
+			Assert.Throws<ArgumentNullException>(() =>_repository.NotifyThatLexEntryHasBeenUpdated(null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void NotifyThatLexEntryHasBeenUpdated_LexEntryDoesNotExistInRepository_Throws()
 		{
 			LexEntry entryToUpdate = new LexEntry();
-			_repository.NotifyThatLexEntryHasBeenUpdated(entryToUpdate);
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+				_repository.NotifyThatLexEntryHasBeenUpdated(entryToUpdate));
 		}
 
 		[Test]

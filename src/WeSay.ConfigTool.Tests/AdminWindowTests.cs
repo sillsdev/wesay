@@ -102,7 +102,6 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
-		[Category("UsesNUnit2.5")]
 		public void TryingToOpenNonExistantProjectDoesntCrash()
 		{
 			Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(

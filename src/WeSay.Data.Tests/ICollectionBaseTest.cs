@@ -39,46 +39,37 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void CopyToNullArray()
 		{
-			_collection.CopyTo(null, 0);
+			Assert.Throws<ArgumentNullException>(() => _collection.CopyTo(null, 0));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void CopyToIndexLessThanZero()
 		{
 			T[] array = new T[_itemCount];
-			_collection.CopyTo(array, -1);
+			Assert.Throws<ArgumentOutOfRangeException>(() => _collection.CopyTo(array, -1));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentException))]
 		public void CopyToArrayIsMultidimensional()
 		{
 			T[,] array = new T[_itemCount + 1,_itemCount + 1];
-			_collection.CopyTo(array, 0);
+			Assert.Throws<ArgumentException>(() => _collection.CopyTo(array, 0));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentException))]
-		public void CopyToIndexEqualLengthOfArray()
+		public virtual void CopyToIndexEqualLengthOfArray()
 		{
 			T[] array = new T[_itemCount + 1];
-			_collection.CopyTo(array, _itemCount + 1);
-			if (_itemCount == 0)
-			{
-				throw new ArgumentException();
-			}
+			Assert.Throws<ArgumentException>(() => _collection.CopyTo(array, _itemCount + 1));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentException))]
 		public void CopyToIndexGreaterThanLengthOfArray()
 		{
 			T[] array = new T[_itemCount];
-			_collection.CopyTo(array, _itemCount + 1);
+			Assert.Throws<ArgumentException>(() => _collection.CopyTo(array, _itemCount + 1));
 		}
 
 		/// <summary>
@@ -87,11 +78,10 @@ namespace WeSay.Data.Tests
 		/// end of the destination array.
 		/// </summary>
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentException))]
 		public void CopyToOutOfSpace()
 		{
 			T[] array = new T[_itemCount];
-			_collection.CopyTo(array, 1);
+			Assert.Throws<ArgumentException>(() => _collection.CopyTo(array, 1));
 		}
 
 		private class MyClass
@@ -105,15 +95,10 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (InvalidCastException))]
-		public void CopyToInvalidCast()
+		public virtual void CopyToInvalidCast()
 		{
 			MyClass[] array = new MyClass[_itemCount + 1];
-			_collection.CopyTo(array, 0);
-			if (_itemCount == 0)
-			{
-				throw new InvalidCastException();
-			}
+			Assert.Throws<InvalidCastException>(() => _collection.CopyTo(array, 0));
 		}
 	}
 
@@ -163,5 +148,20 @@ namespace WeSay.Data.Tests
 			_collection = new ArrayList();
 			_itemCount = 0;
 		}
+
+
+		//These two tests are inherited from ICollectionBaseTest<T> and are meaningless for an empty ICollection.
+		[Test]
+		public override void CopyToIndexEqualLengthOfArray()
+		{
+			Assert.AreEqual(_itemCount, 0);
+		}
+
+		[Test]
+		public override void CopyToInvalidCast()
+		{
+			Assert.AreEqual(_itemCount, 0);
+		}
+
 	}
 }

@@ -42,52 +42,45 @@ namespace WeSay.Data.Tests
 	public class QueryTests
 	{
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void In_Null_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).In(null);
+			Assert.Throws<ArgumentNullException>(() => new Query(typeof (PalasoTestItem)).In(null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void In_PropertyDoesNotExist_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).In("IDontExist");
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).In("IDontExist"));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void In_EmptyString_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).In(string.Empty);
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).In(string.Empty));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void ForEach_Null_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).ForEach(null);
+			Assert.Throws<ArgumentNullException>(() => new Query(typeof (PalasoTestItem)).ForEach(null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ForEach_EmptyString_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).ForEach(string.Empty);
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).ForEach(string.Empty));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ForEach_PropertyDoesNotExist_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).ForEach("IDontExist");
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).ForEach("IDontExist"));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ForEach_PropertyDoesNotReturnIEnumerableOfT_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).ForEach("Child");
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).ForEach("Child"));
 		}
 
 		[Test]
@@ -97,45 +90,39 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void Show_Null_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).Show(null);
+			Assert.Throws<ArgumentNullException>(() => new Query(typeof (PalasoTestItem)).Show(null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Show_EmptyString_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).Show(string.Empty);
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).Show(string.Empty));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Show_PropertyDoesNotExist_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).Show("IDontExist");
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).Show("IDontExist"));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void ShowEach_Null_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).ShowEach(null);
+			Assert.Throws<ArgumentNullException>(() => new Query(typeof (PalasoTestItem)).ShowEach(null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ShowEach_EmptyString_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).ShowEach(string.Empty);
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).ShowEach(string.Empty));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ShowEach_PropertyDoesNotExist_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).ShowEach("IDontExist");
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).ShowEach("IDontExist"));
 		}
 
 		[Test]
@@ -146,17 +133,15 @@ namespace WeSay.Data.Tests
 
 		[Test]
 		//even though a string is IEnumerable<char> we don't really want to treat it that way
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ShowEach_PropertyIsString_Throws()
 		{
-			Assert.IsNotNull(new Query(typeof (PalasoTestItem)).ShowEach("StoredString"));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).ShowEach("StoredString"));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ShowEach_PropertyIsNotIEnumerable_Throws()
 		{
-			Assert.IsNotNull(new Query(typeof (PalasoTestItem)).ShowEach("Child"));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).ShowEach("Child"));
 		}
 
 		[Test]
@@ -166,49 +151,45 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 		public void GetResults_Null_Throws()
 		{
 			Query q = new Query(typeof (PalasoTestItem));
 			IEnumerable<IDictionary<string, object>> results = q.GetResults(null);
 			// we have to actually use the IEnumerable or it won't execute
 			// since it is generated
-			results.GetEnumerator().MoveNext();
+			Assert.Throws<ArgumentNullException>(() => results.GetEnumerator().MoveNext());
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetResults_NotInstanceOfType_Throws()
 		{
 			Query q = new Query(typeof (PalasoTestItem));
 			IEnumerable<IDictionary<string, object>> results = q.GetResults(new object());
 			// we have to actually use the IEnumerable or it won't execute
 			// since it is generated
-			results.GetEnumerator().MoveNext();
+			Assert.Throws<ArgumentOutOfRangeException>(() => results.GetEnumerator().MoveNext());
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Show_LabelAlreadyUsed_Throws()
 		{
-			new Query(typeof (PalasoTestItem)).Show("StoredString").ForEach("ChildItemList").Show(
-					"StoredString");
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).Show("StoredString").ForEach("ChildItemList").Show(
+					"StoredString"));
 		}
 
 		[Test]
-		public void Show_DifferentLabel_Okay()
+		public void Show_DifferentLabel_DoesNotThrow()
 		{
 			new Query(typeof (PalasoTestItem)).Show("StoredString").ForEach("ChildItemList").Show(
 					"StoredString", "ChildrenStoredString");
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Show_LabelAlreadyUsedInBranch_Throws()
 		{
 			Query query = new Query(typeof (PalasoTestItem));
 			query.In("Child").Show("StoredString");
-			query.ForEach("ChildItemList").Show("StoredString");
+			Assert.Throws<ArgumentOutOfRangeException>(() => query.ForEach("ChildItemList").Show("StoredString"));
 		}
 
 		[Test]
@@ -220,10 +201,10 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void ShowEach_LabelAlreadyUsed_Throws()
 		{
-			new Query(typeof (TestMultiple)).ShowEach("Strings", "a").ShowEach("KeyValuePairs", "a");
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+				new Query(typeof (TestMultiple)).ShowEach("Strings", "a").ShowEach("KeyValuePairs", "a"));
 		}
 
 		[Test]

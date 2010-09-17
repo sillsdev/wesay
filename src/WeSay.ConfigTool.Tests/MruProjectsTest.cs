@@ -58,7 +58,6 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
-		[Category("UsesNUnit2.5")]
 		public void AddNewPath_NullPath_Throws()
 		{
 			Assert.Throws<ArgumentNullException>(

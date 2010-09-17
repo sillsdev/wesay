@@ -133,7 +133,6 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void Activate_MissingWordListFile_GivesMessage()
 		{
 			GatherWordListTask g = new GatherWordListTask(
@@ -142,12 +141,11 @@ namespace WeSay.LexicalTools.Tests
 				   _lexEntryRepository,
 					_viewTemplate, new TaskMemoryRepository());
 
-			 g.Activate(); //should give a box to user, an exception in this text environment
+			 Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() => g.Activate()); //should give a box to user, an exception in this text environment
 		}
 
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void Activate_WritingSystemNotInCurrentList_GivesMessage()
 		{
 			GatherWordListTask g = new GatherWordListTask(
@@ -156,7 +154,7 @@ namespace WeSay.LexicalTools.Tests
 				_lexEntryRepository,
 				_viewTemplate, new TaskMemoryRepository());
 
-			g.Activate(); //should give a box to user, an exception in this text environment
+			Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() => g.Activate()); //should give a box to user, an exception in this text environment
 		}
 
 		[Test]

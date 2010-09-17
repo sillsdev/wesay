@@ -1202,12 +1202,11 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NavigationException))]
 		public void GotoEntry_EntryNotInList_Throws()
 		{
 			AddInitialEntries();
 			DictionaryControl control = (DictionaryControl)_task.Control;
-			control.GoToEntryWithId("bogus");
+			Assert.Throws<NavigationException>(() => control.GoToEntryWithId("bogus"));
 		}
 
 

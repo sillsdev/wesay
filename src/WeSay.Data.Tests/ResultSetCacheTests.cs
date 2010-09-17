@@ -60,10 +60,10 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void Constructor_RepositoryNull_Throws()
 		{
-			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(null, _sortDefinitions, _results, _queryToCache);
+			Assert.Throws<ArgumentNullException>(() =>
+				new ResultSetCache<PalasoTestItem>(null, _sortDefinitions, _results, _queryToCache));
 		}
 
 		[Test]
@@ -79,20 +79,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void UpdateItemInCache_Null_Throws()
 		{
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.UpdateItemInCache(null);
+			Assert.Throws<ArgumentNullException>(() => resultSetCacheUnderTest.UpdateItemInCache(null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void UpdateItemInCache_ItemDoesNotExistInRepository_Throws()
 		{
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
 			PalasoTestItem itemNotInRepository = new PalasoTestItem();
-			resultSetCacheUnderTest.UpdateItemInCache(itemNotInRepository);
+			Assert.Throws<ArgumentOutOfRangeException>(() => resultSetCacheUnderTest.UpdateItemInCache(itemNotInRepository));
 		}
 
 		[Test]
@@ -175,20 +173,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void DeleteItemFromCache_Null_Throws()
 		{
 			_results = _dataMapper.GetItemsMatching(_queryToCache);
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem) null);
+			Assert.Throws<ArgumentNullException>(() => resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem) null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCache_ItemNotInRepository_Throws()
 		{
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache(new PalasoTestItem());
+			Assert.Throws<ArgumentOutOfRangeException>(() => resultSetCacheUnderTest.DeleteItemFromCache(new PalasoTestItem()));
 		}
 
 		[Test]
@@ -212,20 +208,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void DeleteItemFromCacheById_Null_Throws()
 		{
 			_results = _dataMapper.GetItemsMatching(_queryToCache);
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem)null);
+			Assert.Throws<ArgumentNullException>(() => resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem)null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCacheById_ItemNotInRepository_Throws()
 		{
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(_dataMapper, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache(RepositoryId.Empty);
+			Assert.Throws<ArgumentOutOfRangeException>(() => resultSetCacheUnderTest.DeleteItemFromCache(RepositoryId.Empty));
 		}
 
 		[Test]
@@ -295,20 +289,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void UpdateItemInCache_Null_Throws()
 		{
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.UpdateItemInCache(null);
+			Assert.Throws<ArgumentNullException>(() => resultSetCacheUnderTest.UpdateItemInCache(null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void UpdateItemInCache_ItemDoesNotExistInRepository_Throws()
 		{
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
 			PalasoTestItem itemNotInRepository = new PalasoTestItem();
-			resultSetCacheUnderTest.UpdateItemInCache(itemNotInRepository);
+			Assert.Throws<ArgumentOutOfRangeException>(() => resultSetCacheUnderTest.UpdateItemInCache(itemNotInRepository));
 		}
 
 		[Test]
@@ -400,20 +392,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void DeleteItemFromCache_Null_Throws()
 		{
 			_results = dataMapper.GetItemsMatching(_queryToCache);
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem)null);
+			Assert.Throws<ArgumentNullException>(() => resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem)null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCache_ItemNotInRepository_Throws()
 		{
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache(new PalasoTestItem());
+			Assert.Throws<ArgumentOutOfRangeException>(() => resultSetCacheUnderTest.DeleteItemFromCache(new PalasoTestItem()));
 		}
 
 		[Test]
@@ -438,20 +428,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void DeleteItemFromCacheById_Null_Throws()
 		{
 			_results = dataMapper.GetItemsMatching(_queryToCache);
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem)null);
+			Assert.Throws<ArgumentNullException>(() => resultSetCacheUnderTest.DeleteItemFromCache((PalasoTestItem)null));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemFromCacheById_ItemNotInRepository_Throws()
 		{
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
-			resultSetCacheUnderTest.DeleteItemFromCache(RepositoryId.Empty);
+			Assert.Throws<ArgumentOutOfRangeException>(() => resultSetCacheUnderTest.DeleteItemFromCache(RepositoryId.Empty));
 		}
 
 		[Test]
@@ -510,7 +498,6 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void Add_ResultsSetNull_Throws()
 		{
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
@@ -520,11 +507,10 @@ namespace WeSay.Data.Tests
 			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<PalasoTestItem> results = dataMapper.GetItemsMatching(secondQueryToCache);
 
-			resultSetCacheUnderTest.Add(null, secondQueryToCache);
+			Assert.Throws<ArgumentNullException>(() => resultSetCacheUnderTest.Add(null, secondQueryToCache));
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentNullException))]
 		public void Add_QueryNull_Throws()
 		{
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
@@ -534,10 +520,9 @@ namespace WeSay.Data.Tests
 			secondQueryToCache.In("Child").Show("StoredString");
 			ResultSet<PalasoTestItem> results = dataMapper.GetItemsMatching(secondQueryToCache);
 
-			resultSetCacheUnderTest.Add(results, null);
+			Assert.Throws<ArgumentNullException>(() => resultSetCacheUnderTest.Add(results, null));
 		}
 
-		[Test]
 		public void MultipleQueries_QueriedFieldsAreIdentical_ReturnsOnlyOneRecordToken()
 		{
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions, _results, _queryToCache);
@@ -735,7 +720,6 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof(ArgumentException))]
 		public void ResultSetContainsIdenticalRecordTokens_Throws()
 		{
 			PalasoTestItem itemFromWhichToCreateIdenticalRecordTokens = dataMapper.CreateItem();
@@ -749,7 +733,7 @@ namespace WeSay.Data.Tests
 
 			ResultSetCache<PalasoTestItem> resultSetCacheUnderTest = new ResultSetCache<PalasoTestItem>(dataMapper, _sortDefinitions);
 			resultSetCacheUnderTest.Add(dataMapper.GetItemsMatching(query1), query1);
-			resultSetCacheUnderTest.Add(dataMapper.GetItemsMatching(query2), query2);
+			Assert.Throws<ArgumentException>(() => resultSetCacheUnderTest.Add(dataMapper.GetItemsMatching(query2), query2));
 		}
 	}
 
