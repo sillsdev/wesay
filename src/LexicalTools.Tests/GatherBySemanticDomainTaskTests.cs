@@ -430,8 +430,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWord_WordConsistsOfOnlySegmentSeparatorCharacter_AddedToDatabase()
 		{
-			int originalCount = _lexEntryRepository.CountAllItems();
-			Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() => Task.AddWord('\u001F'.ToString(), String.Empty));
+			int originalCount = _lexEntryRepository.CountAllItems();Task.AddWord('\u001F'.ToString(), String.Empty);
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
 
