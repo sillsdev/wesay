@@ -291,7 +291,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel6.Size = new System.Drawing.Size(481, 42);
 			this.tableLayoutPanel6.TabIndex = 31;
-			this.tableLayoutPanel6.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel6_Paint);
 			//
 			// _meaningBox
 			//
