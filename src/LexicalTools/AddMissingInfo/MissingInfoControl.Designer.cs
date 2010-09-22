@@ -71,6 +71,8 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this._btnPreviousWord = new WeSay.UI.Buttons.PreviousButton();
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._congratulationsControl = new WeSay.LexicalTools.CongratulationsControl();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -78,6 +80,8 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
 			this._buttonPanel.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// splitContainer1
@@ -109,13 +113,11 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//
 			// splitContainer2.Panel1
 			//
-			this.splitContainer2.Panel1.Controls.Add(this.label1);
-			this.splitContainer2.Panel1.Controls.Add(this._recordsListBox);
+			this.splitContainer2.Panel1.Controls.Add(this.tableLayoutPanel1);
 			//
 			// splitContainer2.Panel2
 			//
-			this.splitContainer2.Panel2.Controls.Add(this._completedRecordsLabel);
-			this.splitContainer2.Panel2.Controls.Add(this._completedRecordsListBox);
+			this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel2);
 			this.splitContainer2.Size = new System.Drawing.Size(126, 407);
 			this.splitContainer2.SplitterDistance = 178;
 			this.splitContainer2.TabIndex = 10;
@@ -125,7 +127,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//
 			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-			this.label1.Location = new System.Drawing.Point(3, 3);
+			this.label1.Location = new System.Drawing.Point(3, 0);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(49, 16);
 			this.label1.TabIndex = 11;
@@ -133,13 +135,11 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//
 			// _recordsListBox
 			//
-			this._recordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._recordsListBox.Location = new System.Drawing.Point(0, 21);
+			this._recordsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._recordsListBox.Location = new System.Drawing.Point(3, 19);
 			this._recordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
 			this._recordsListBox.Name = "_recordsListBox";
-			this._recordsListBox.Size = new System.Drawing.Size(129, 155);
+			this._recordsListBox.Size = new System.Drawing.Size(120, 156);
 			this._recordsListBox.TabIndex = 2;
 			this._recordsListBox.View = System.Windows.Forms.View.SmallIcon;
 			//
@@ -149,9 +149,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._completedRecordsLabel.AutoSize = true;
 			this._completedRecordsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-			this._completedRecordsLabel.Location = new System.Drawing.Point(3, 3);
+			this._completedRecordsLabel.Location = new System.Drawing.Point(3, 0);
 			this._completedRecordsLabel.Name = "_completedRecordsLabel";
-			this._completedRecordsLabel.Size = new System.Drawing.Size(77, 16);
+			this._completedRecordsLabel.Size = new System.Drawing.Size(120, 16);
 			this._completedRecordsLabel.TabIndex = 0;
 			this._completedRecordsLabel.Text = "Completed:";
 			//
@@ -160,10 +160,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this._completedRecordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._completedRecordsListBox.Location = new System.Drawing.Point(0, 21);
+			this._completedRecordsListBox.Location = new System.Drawing.Point(3, 19);
 			this._completedRecordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
 			this._completedRecordsListBox.Name = "_completedRecordsListBox";
-			this._completedRecordsListBox.Size = new System.Drawing.Size(129, 181);
+			this._completedRecordsListBox.Size = new System.Drawing.Size(120, 203);
 			this._completedRecordsListBox.TabIndex = 3;
 			this._completedRecordsListBox.View = System.Windows.Forms.View.SmallIcon;
 			//
@@ -216,26 +216,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//
 			// _entryViewControl
 			//
-//            this._entryViewControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-//                        | System.Windows.Forms.AnchorStyles.Left)
-//                        | System.Windows.Forms.AnchorStyles.Right)));
-//            this._entryViewControl.AutoScroll = true;
-//            this._entryViewControl.BackColor = System.Drawing.SystemColors.ActiveCaption;
-//            this._entryViewControl.DataSource = null;
-//            this._entryViewControl.Location = new System.Drawing.Point(0, 0);
-//            this._entryViewControl.Name = "_entryViewControl";
-//            this._entryViewControl.ShowNormallyHiddenFields = false;
-			this._entryViewControl.Size = new System.Drawing.Size(511, 355);
-//            this._entryViewControl.TabIndex = 0;
 			this._entryViewControl.DataSource = null;
 			this._entryViewControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._entryViewControl.Location = new System.Drawing.Point(0, 0);
 			this._entryViewControl.Margin = new System.Windows.Forms.Padding(0);
 			this._entryViewControl.Name = "_entryViewControl";
 			this._entryViewControl.ShowNormallyHiddenFields = false;
-		  //  this._entryViewControl.Size = new System.Drawing.Size(345, 264);
+			this._entryViewControl.Size = new System.Drawing.Size(511, 407);
 			this._entryViewControl.TabIndex = 0;
-
 			//
 			// _congratulationsControl
 			//
@@ -244,6 +232,36 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this._congratulationsControl.Name = "_congratulationsControl";
 			this._congratulationsControl.Size = new System.Drawing.Size(511, 407);
 			this._congratulationsControl.TabIndex = 9;
+			//
+			// tableLayoutPanel1
+			//
+			this.tableLayoutPanel1.ColumnCount = 1;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this._recordsListBox, 0, 1);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 2;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(126, 178);
+			this.tableLayoutPanel1.TabIndex = 12;
+			//
+			// tableLayoutPanel2
+			//
+			this.tableLayoutPanel2.ColumnCount = 1;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.Controls.Add(this._completedRecordsLabel, 0, 0);
+			this.tableLayoutPanel2.Controls.Add(this._completedRecordsListBox, 0, 1);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 2;
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(126, 225);
+			this.tableLayoutPanel2.TabIndex = 4;
 			//
 			// MissingInfoControl
 			//
@@ -256,12 +274,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.ResumeLayout(false);
 			this.splitContainer2.Panel1.ResumeLayout(false);
-			this.splitContainer2.Panel1.PerformLayout();
 			this.splitContainer2.Panel2.ResumeLayout(false);
-			this.splitContainer2.Panel2.PerformLayout();
 			this.splitContainer2.ResumeLayout(false);
 			this._buttonPanel.ResumeLayout(false);
 			this._buttonPanel.PerformLayout();
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
+			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel2.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -281,6 +301,8 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		private Label labelNextHotKey;
 		private PreviousButton _btnPreviousWord;
 		private Panel _buttonPanel;
+		private TableLayoutPanel tableLayoutPanel1;
+		private TableLayoutPanel tableLayoutPanel2;
 
 	}
 }
