@@ -1,4 +1,4 @@
-# Thai translation for wesay
+﻿# Thai translation for wesay
 # Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
 # This file is distributed under the same license as the wesay package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2010-09-20 16:05+0700\n"
+"PO-Revision-Date: 2010-09-22 14:38+0700\n"
 "Last-Translator: Cambell <cambell.prince@gmail.com>\n"
 "Language-Team: Thai <th@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -51,11 +51,6 @@ msgstr "ระบุว่า \"รูปแบบพื้นฐาน\" ขอ
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Looking for USB Keys..."
 msgstr "ค้นหาอุปกรณ์เก็บข้อมูล USB"
-
-# ; ..\src\Addin.Backup\BackupDialog.cs
-#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
-msgid "Backing Up..."
-msgstr "กำลังสำรองข้อมูล"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
@@ -152,11 +147,11 @@ msgstr "การตั้งค่าการส่งชิ้นงานท
 
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\GraphComponents\Plotter.cs
 msgid "<"
-msgstr "ก่อนหน้านี้"
+msgstr "<"
 
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\GraphComponents\Plotter.cs
 msgid ">"
-msgstr "ถัดไป"
+msgstr ">"
 
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\GraphComponents\Plotter.cs
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\AutoCompleteTextBox\AutoCompleteWithCreationBox.Designer.cs
@@ -220,6 +215,12 @@ msgstr "นำออกไปที่ HTML"
 #, fuzzy
 msgid "Creates a simple Html version of the dictionary.  Not a very good way to go."
 msgstr "สร้างคำแปล HTML แบบง่ายในพจนานุกรม,พร้อมสำหรับการพิมพ์"
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LameProgressDialog.Designer.cs
+#, fuzzy
+msgid "Backing up..."
+msgstr "กำลังสำรองข้อมูล"
 
 #. It's up to you whether to bother translating this or not.
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LameProgressDialog.Designer.cs
@@ -469,7 +470,7 @@ msgstr "ยืนยันการลบ"
 #. The long label for the task that lets you see all entries, search for entries, and edit various fields.  We don't like the English name very much, so feel free to call this something very different in the language you are translating to.
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryBrowseAndEditConfiguration.cs
 msgid "Dictionary Browse && Edit"
-msgstr "หาข้อมูลในพจนานุกรมและแก้ไข"
+msgstr "พจนานุกรม"
 
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
@@ -511,6 +512,26 @@ msgstr "ดูคำทั้งหมด {0} ใน {1}"
 msgid "en"
 msgstr "en"
 
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
+msgid "Semantic Domains"
+msgstr "ชุดของคำ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
+msgid "Gather Words By Semantic Domain"
+msgstr "รวบรวมคำศัพท์"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
+msgid "Collect new words organized by semantic domains and questions about those domains."
+msgstr "รวบรวมคำใหม่ตามหมวดความหมาย และคำถามเกี่ยวกับหมวดความหมายต่างๆ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
+msgid "Domains without words"
+msgstr "ยังไม่มีคำศัพท์"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
+msgid "Total domains:"
+msgstr "ชุดของคำทั้งหมด"
+
 # ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 #. The label for the field showing the Lexeme Form of the entry.
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
@@ -529,6 +550,20 @@ msgstr "เข้าสู่"
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 msgid "Try thinking of words you use to talk about these things."
 msgstr "ลองคิดคำที่ใช้เพื่อจะพูดถึงสิ่งนี้"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
+#, fuzzy
+msgid "Question goes here."
+msgstr "สถานะในขณะนี้"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
+#, fuzzy
+msgid "Description goes here."
+msgstr "สถานะในขณะนี้"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
+msgid "\"Don't translate\" warning goes here."
+msgstr ""
 
 # ; ..\src\LexicalTools\LexSenseLayouter.cs
 # ; ..\src\LexicalTools\LexSenseLayouter.cs
@@ -843,14 +878,6 @@ msgstr "ไม่ทราบ"
 #~ msgstr ""
 #~ "รวบรวมคำใหม่ที่แปลจากคำในภาษาอื่น.นี่คือ รายการคำและอนุประโยคประมาณ 900  และวลีจาก "
 #~ "PNG"
-
-#~ msgid "Collect Words By Semantic Domain"
-#~ msgstr "รวบรวมคำตามหมวดความหมาย"
-
-#~ msgid ""
-#~ "Collect new words organized by semantic domains and questions about those "
-#~ "domains."
-#~ msgstr "รวบรวมคำใหม่ตามหมวดความหมาย และคำถามเกี่ยวกับหมวดความหมายต่างๆ"
 
 #~ msgid "Send a zipped email containing all your WeSay work."
 #~ msgstr "ส่งงาน WeSay ทั้งหมดที่ผ่านการบีบอัดข้อมูลแล้วทางอีเมล"
