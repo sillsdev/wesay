@@ -10,14 +10,13 @@ using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
-	public class BasilProject: IProject, IDisposable
+	public class BasilProject: IDisposable
 	{
 		private static BasilProject _singleton;
 
 		protected static BasilProject Singleton
 		{
 			get { return _singleton; }
-			set { _singleton = value; }
 		}
 		public UiConfigurationOptions UiOptions { get; set; }
 

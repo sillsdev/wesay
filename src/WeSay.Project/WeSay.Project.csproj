@@ -195,7 +195,6 @@
 	<Compile Include="TaskTypeCatalog.cs" />
 	<Compile Include="ViewTemplate.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />
-	<Compile Include="IProject.cs" />
 	<Compile Include="ITask.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="WeSayWordsProject.cs" />
