@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<CSharpFiles Include="$(BaseDirectory)\**\*.cs"/>
+	<CSharpFiles Include="$(BaseDirectory)\**\*.cs" Exclude="$(BaseDirectory)\**\*Tests\**;$(BaseDirectory)\**\WeSay.ConfigTool\**" />
 	<XmlFiles Include="$(BaseDirectory)\common\**\*.WeSayConfig"/>
   </ItemGroup>
 

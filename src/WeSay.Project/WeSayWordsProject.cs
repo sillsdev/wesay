@@ -101,7 +101,7 @@ namespace WeSay.Project
 		/// <summary>
 		/// See comment on BasilProject.InitializeForTests()
 		/// </summary>
-		public new static void InitializeForTests()
+		public new static WeSayWordsProject InitializeForTests()
 		{
 			WeSayWordsProject project = new WeSayWordsProject();
 
@@ -111,7 +111,7 @@ namespace WeSay.Project
 			}
 			catch (Exception) {}
 
-			Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
+			DirectoryInfo projectDirectory = Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
 			Utilities.CreateEmptyLiftFile(PathToPretendLiftFile, "InitializeForTests()", true);
 
 			//setup writing systems
@@ -124,11 +124,16 @@ namespace WeSay.Project
 			{
 				File.Delete(PathToPretendWritingSystemPrefs);
 			}
-			wsc.Write(XmlWriter.Create(PathToPretendWritingSystemPrefs));
+		   string pathToLdmlWsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
+			if (Directory.Exists(pathToLdmlWsFolder))
+			{
+				Directory.Delete(pathToLdmlWsFolder, true);
+			}
+			wsc.Write(pathToLdmlWsFolder);
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
-
+			return project;
 		}
 
 		public static string PathToPretendLiftFile
@@ -338,6 +343,7 @@ namespace WeSay.Project
 //                }
 				CheckIfConfigFileVersionIsTooNew(configDoc);
 				var m = new ConfigurationMigrator();
+				Console.WriteLine("{0}",PathToConfigFile);
 				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
@@ -838,15 +844,18 @@ namespace WeSay.Project
 		{
 
 			Directory.CreateDirectory(projectDirectoryPath);
-			string pathToWritingSystemPrefs = GetPathToWritingSystemPrefs(projectDirectoryPath);
-			File.Copy(GetPathToWritingSystemPrefs(ApplicationCommonDirectory), pathToWritingSystemPrefs);
-
-
+			string pathProjectToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectoryPath);
+			string pathCommonToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(ApplicationCommonDirectory);
+			Directory.CreateDirectory(pathProjectToWritingSystemsFolder);
+			foreach (string path in Directory.GetFiles(pathCommonToWritingSystemsFolder, "*.ldml"))
+			{
+				File.Copy(path, Path.Combine(pathProjectToWritingSystemsFolder, Path.GetFileName(path)));
+			}
 			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath, projectName);
 			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
 
 			//hack
-			StickDefaultViewTemplateInNewConfigFile(pathToWritingSystemPrefs, pathToConfigFile);
+			StickDefaultViewTemplateInNewConfigFile(projectDirectoryPath, pathToConfigFile);
 
 			var m = new ConfigurationMigrator();
 			m.MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile), pathToConfigFile);
@@ -865,10 +874,10 @@ namespace WeSay.Project
 		/// </summary>
 		/// <param name="pathToWritingSystemPrefs"></param>
 		/// <param name="pathToConfigFile"></param>
-		private static void StickDefaultViewTemplateInNewConfigFile(string pathToWritingSystemPrefs, string pathToConfigFile)
+		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile)
 		{
 			WritingSystemCollection writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Load(pathToWritingSystemPrefs);
+			writingSystemCollection.Load(GetPathToLdmlWritingSystemsFolder(projectPath));
 
 			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
 			StringBuilder builder = new StringBuilder();
@@ -926,10 +935,6 @@ namespace WeSay.Project
 		public override void Dispose()
 		{
 			base.Dispose();
-			if (LiftIsLocked)
-			{
-				ReleaseLockOnLift();
-			}
 			if(_container !=null)
 			{
 				_container.Dispose();//this will dispose of objects in the container (at least those with the normal "lifetype" setting)

@@ -52,8 +52,8 @@
 		<!-- <include name="Lift2WeSay\SampleDataProcessor.proj.build" /> -->
 		<include name="WeSay.ConfigTool\WeSay.ConfigTool.proj.build" />
 		<include name="WeSay.ConfigTool.Tests\WeSay.ConfigTool.Tests.proj.build" />
-		<!-- <include name="Addin.LiftReports\Addin.LiftReports.proj.build" /> -->
-		<!-- <include name="Addin.LiftReports.Tests\Addin.LiftReports.Tests.proj.build" /> -->
+		<include name="Addin.LiftReports\Addin.LiftReports.proj.build" />
+		<include name="Addin.LiftReports.Tests\Addin.LiftReports.Tests.proj.build" />
 		<include name="Addin.Backup\Addin.Backup.proj.build" />
 		<include name="Addin.Transform\Addin.Transform.proj.build" />
 		<include name="WeSay.AddinLib.Tests\WeSay.AddinLib.Tests.proj.build" />
@@ -75,6 +75,7 @@
 		<include name="SampleProjects/**" />
 		<include name="templates/**" />
 		<exclude name=".hg/**" />
+		<exclude name="**/*~" />
 	</fileset>
 
 	<target name="clean" description="Delete all previously compiled binaries.">
@@ -315,7 +316,7 @@
 		</copy>
 		<copy todir="${path::combine(USR_SHARE, 'templates')}">
 			<fileset basedir="${path::combine(project.base.dir, 'templates')}">
-				<include name="*" />
+				<include name="**" />
 			 </fileset>
 		</copy>
 		<copy todir="${USR_ICONS}">

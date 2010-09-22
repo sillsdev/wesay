@@ -89,8 +89,7 @@
 			this.textBox2.Size = new System.Drawing.Size(373, 70);
 			this.textBox2.TabIndex = 8;
 			this.textBox2.TabStop = false;
-			this.textBox2.Text = "The project is ready to use: just click on \"Open in WeSay\" button in the upper-ri" +
-				"ght.  Later, you can come back here and make adjustments.";
+			this.textBox2.Text = "The project is ready to use: just click on \"Open in WeSay\" button in the upper-right.  Later, you can come back here and make adjustments.";
 			//
 			// _changeVMessage
 			//
