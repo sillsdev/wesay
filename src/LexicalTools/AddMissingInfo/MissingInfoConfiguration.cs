@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Palaso.Extensions;
+using Palaso.I8N;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -98,12 +99,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		public string RemainingCountText
 		{
-			get { return "Entries without this:"; }
+			get { return StringCatalog.Get("~Entries without this:"); }
 		}
 
 		public string ReferenceCountText
 		{
-			get { return "Total Entries:"; }
+			get { return StringCatalog.Get("Total Entries:"); }
 		}
 
 		public bool IsPinned

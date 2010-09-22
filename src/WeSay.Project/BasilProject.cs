@@ -10,14 +10,13 @@ using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
-	public class BasilProject: IProject, IDisposable
+	public class BasilProject: IDisposable
 	{
 		private static BasilProject _singleton;
 
 		protected static BasilProject Singleton
 		{
 			get { return _singleton; }
-			set { _singleton = value; }
 		}
 		public UiConfigurationOptions UiOptions { get; set; }
 
@@ -94,11 +93,7 @@ namespace WeSay.Project
 
 		public virtual void Save(string projectDirectoryPath)
 		{
-			var settings = new XmlWriterSettings();
-			settings.Indent = true;
-			var writer = XmlWriter.Create(PathToWritingSystemPrefs, settings);
-			_writingSystems.Write(writer);
-			writer.Close();
+			_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(projectDirectoryPath));
 		}
 
 		/// <summary>
@@ -142,15 +137,14 @@ namespace WeSay.Project
 			protected set { _projectDirectoryPath = value; }
 		}
 
-		public string PathToWritingSystemPrefs
+		public static string GetPathToWritingSystemPrefs(string parentDir)
 		{
-			get
-			{
-				return
-						GetPathToWritingSystemPrefs(
-								PathToDirectoryContaingWritingSystemFilesInProject
-								/*ProjectCommonDirectory*/);
-			}
+				return Path.Combine(parentDir, "WritingSystemPrefs.xml");
+		}
+
+		public static string GetPathToLdmlWritingSystemsFolder(string parentDir)
+		{
+				return Path.Combine(parentDir, "WritingSystems");
 		}
 
 		//        public string PathToOptionsLists
@@ -160,16 +154,6 @@ namespace WeSay.Project
 		//                return GetPathToWritingSystemPrefs(CommonDirectory);
 		//            }
 		//        }
-
-		protected static string GetPathToWritingSystemPrefs(string parentDir)
-		{
-			return Path.Combine(parentDir, "WritingSystemPrefs.xml");
-		}
-
-		public string PathToDirectoryContaingWritingSystemFilesInProject
-		{
-			get { return ProjectDirectoryPath; }
-		}
 
 		public string LocateStringCatalog()
 		{
@@ -268,14 +252,17 @@ namespace WeSay.Project
 
 		protected void InitWritingSystems()
 		{
-			if (File.Exists(PathToWritingSystemPrefs))
+			_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
+			if (_writingSystems.Count == 0)
 			{
-				_writingSystems.Load(PathToWritingSystemPrefs);
+				_writingSystems.LoadFromLegacyWeSayFile(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
+				_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
+				File.Delete(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
 			}
-			else
+			if (_writingSystems.Count == 0)
 			{
 				//load defaults
-				_writingSystems.Load(GetPathToWritingSystemPrefs(ApplicationCommonDirectory));
+				_writingSystems.Load(Path.Combine(ApplicationCommonDirectory, "WritingSystems"));
 			}
 		}
 
@@ -312,5 +299,11 @@ namespace WeSay.Project
 				new StringCatalog();
 			}
 		}
+
+		public static string VersionString
+		{
+			get { return Application.ProductVersion; }
+		}
+
 	}
 }

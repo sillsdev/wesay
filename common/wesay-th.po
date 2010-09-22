@@ -7,370 +7,859 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2007-11-23 05:56+0000\n"
-"PO-Revision-Date: 2008-02-04 14:00+0000\n"
-"Last-Translator: Den <dekdoinnang@hotmail.com>\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2010-09-20 16:05+0700\n"
+"Last-Translator: Cambell <cambell.prince@gmail.com>\n"
 "Language-Team: Thai <th@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2008-02-05 09:12+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Thai\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
-# ; ..\src\CommonTools\DashboardControl.cs
-#. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
-#, fuzzy
-msgid "Home"
-msgstr "หน้าหลัก"
+# ; ..\src\LexicalTools\LexSenseLayouter.cs
+# ; ..\src\LexicalTools\LexSenseLayouter.cs
+msgid "Meanings"
+msgstr "ความหมาย"
 
-msgid "Dictionary Browse & Edit"
-msgstr "ดูข้อมูลในพจนานุกรมและแก้ไข"
-
-#, fuzzy
-msgid "Add Meanings"
-msgstr "ป้อนความหมาย"
-
-msgid "Add meanings to entries where they are missing."
+msgid "Add meanings (senses) to entries where they are missing."
 msgstr "ป้อนความหมายของคำที่ยังไม่ได้รับการป้อน"
 
-msgid "Add Parts of Speech"
+msgid "Parts of Speech"
 msgstr "ป้อนชนิดของคำ"
 
-msgid "Add a Part Of Speech to senses where they are missing."
+msgid "Add parts of speech to senses where they are missing."
 msgstr "ป้อนการแยกส่วนคำบรรยายสู่ที่ที่ขาดความหมาย"
 
-#, fuzzy
-msgid "Add Examples"
-msgstr "ป้อนตัวอย่าง"
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+msgid "Example Sentences"
+msgstr "ตัวอย่างประโยค"
 
-#, fuzzy
-msgid "Add example sentences to entries where they are missing."
+msgid "Add example sentences to senses where they are missing."
 msgstr "ป้อนประโยคตัวอย่างของคำที่ยังไม่ได้รับการป้อน"
 
-msgid "Add Base Forms"
-msgstr "ป้อนรูปแบบพื้นฐาน"
-
-msgid ""
-"Identify the \"base form\" word that this word is built from. In the printed "
-"dictionary, these can optionally be shown as subentries."
-msgstr ""
-"ระบุว่า \"รูปแบบพื้นฐาน\" ของคำนั้นๆมีรากศัพท์มาจากไหน "
-"ในพจนานุกรมทั่วไปที่ตีพิมพ์ขึ้นมาเป็นหนังสือ "
-"จะมีให้เห็นเพียงแค่เป็นหัวข้อย่อยเท่านั้น"
-
-msgid "Collect Word List (D)"
-msgstr "รวบรวมรายการคำ(D)"
-
-msgid ""
-"Collect new words by translating from words in another language. This is a "
-"list of 1700 words from John Duerksen."
-msgstr ""
-"รวบรวมคำใหม่ที่กำลังแปลจากคำในภาษาอื่น. นี่คือรายการของ 1700 คำ จากจอห์น  "
-"เดอร์คเซน"
-
-msgid "Collect Word List (PNG)"
-msgstr "รวบรวมรายการคำ(PNG)"
-
-msgid ""
-"Collect new words by translating from words in another language. This is a "
-"list of around 900 words and phrases from PNG."
-msgstr ""
-"รวบรวมคำใหม่ที่แปลจากคำในภาษาอื่น.นี่คือ รายการคำและอนุประโยคประมาณ 900  "
-"และวลีจาก PNG"
-
-msgid "Collect Words By Semantic Domain"
-msgstr "รวบรวมคำตามหมวดความหมาย"
+msgid "Base Forms"
+msgstr "รูปแบบพื้นฐาน"
 
 #, fuzzy
-msgid ""
-"Collect new words organized by semantic domains and questions about those "
-"domains."
-msgstr "รวบรวมคำใหม่ตามหมวดความหมาย และคำถามเกี่ยวกับหมวดความหมายต่างๆ"
-
-# ; ..\src\CommonTools\ActionsControl.cs
-#, fuzzy
-msgid "Actions"
-msgstr "การทำงาน"
+msgid "Identify the \"base form\" word that this word is built from. In the printed dictionary, the derived or variant words can optionally be shown as subentries of their base forms."
+msgstr "ระบุว่า \"รูปแบบพื้นฐาน\" ของคำนั้นๆมีรากศัพท์มาจากไหน ในพจนานุกรมทั่วไปที่ตีพิมพ์ขึ้นมาเป็นหนังสือ จะมีให้เห็นเพียงแค่เป็นหัวข้อย่อยเท่านั้น"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Looking for USB Keys..."
 msgstr "ค้นหาอุปกรณ์เก็บข้อมูล USB"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Backing Up..."
 msgstr "กำลังสำรองข้อมูล"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Backup Complete"
 msgstr "เสร็จสิ้นการสำรองข้อมูล"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Files backed up to {0}"
 msgstr "แฟ้มข้อมูลถูกสำรองไว้ใน {0}"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Files were not backed up."
 msgstr "ยังไม่มีการสำรองแฟ้มข้อมูล"
 
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\SendProjectEmailSettingsDialog.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LexiquePro\AboutLexiquePro.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\PdfDictionary\AboutMakePdfDictionary.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SFMChangesDialog.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.AddinLib\ActionSetupDialog.Designer.cs
+msgid "&OK"
+msgstr "&ตกลง"
+
 # ; ..\src\Addin.Backup\BackupDialog.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Please insert the USB Key to backup to."
 msgstr "โปรดติดตั้งอุปกรณ์เก็บข้อมูล USB เพื่อสำรองข้อมูล"
 
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
+msgid "Unable to look for the device due to an error."
+msgstr "ไม่สามารถดูอุปกรณ์พิเศษในขณะที่เกิดความผิดพลาด"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.Designer.cs
+msgid "status goes here"
+msgstr "สถานะในขณะนี้"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.Designer.cs
+msgid "Secondary status goes here"
+msgstr "สถานะส่วนสำรองขณะนี้"
+
 # ; ..\src\Addin.Backup\BackupDialog.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\SendProjectEmailSettingsDialog.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SFMChangesDialog.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\ConfirmDelete.Designer.cs
 msgid "&Cancel"
 msgstr "ยกเลิก"
 
 # ; ..\src\Addin.Backup\BackupToDevice.cs
-#. Label for usb flash-drive backup action
-#, fuzzy
-msgid "Backup To Device"
+#. Long name for action which makes a zip file on a usb flash-drive
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupToDevice.cs
+msgid "Backup To USB Flash Drive"
 msgstr "สำรองข้อมูลลงในอุปกรณ์"
 
 # ; ..\src\Addin.Backup\BackupToDevice.cs
 #. description of usb backup action
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupToDevice.cs
 msgid "Saves a backup on an external device, like a USB key."
 msgstr "เก็บข้อมูลสำรองในอุปกรณ์เชื่อมต่อภายนอก เช่น อุปกรณ์เก็บข้อมูล USB"
 
-# ; ..\src\Addin.Backup\SendProjectEmail.cs
-#, fuzzy
-msgid "Email My Work to {0}"
-msgstr "ส่งงานทางอีเมลถึง {0}"
+#. Short buton label for usb flash-drive backup action
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupToDevice.cs
+msgid "Backup"
+msgstr "สำรองข้อมูล"
 
 # ; ..\src\Addin.Backup\SendProjectEmail.cs
-#, fuzzy
-msgid "Send a zipped email containing all your WeSay work."
-msgstr "ส่งงาน WeSay ทั้งหมดที่ผ่านการบีบอัดข้อมูลแล้วทางอีเมล"
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\SendProjectEmail.cs
+msgid "Email this dictionary to {0}"
+msgstr "ส่งพจนานุกรมทางอีเมลถึง {0}"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\SendProjectEmail.cs
+msgid "Email this dictionary as a compressed attachment"
+msgstr "อีเมลพจนุกรมโดยการบีบอัดข้อมูลเพื่อแนบไปด้วย"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\SendProjectEmail.cs
+msgid "The latest WeSay project data is attached."
+msgstr "ชิ้นงานล่าสุดของWeSayที่ถูกแนบมาด้วย"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\SendProjectEmail.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\SendProjectEmailSettingsDialog.Designer.cs
+msgid "Email"
+msgstr "อีเมล"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\SendProjectEmailSettingsDialog.Designer.cs
+msgid "Recipient Name"
+msgstr "ชื่อผู้รับ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\SendProjectEmailSettingsDialog.Designer.cs
+msgid "Send Project Email Settings..."
+msgstr "การตั้งค่าการส่งชิ้นงานทางอีเมล"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\GraphComponents\Plotter.cs
+msgid "<"
+msgstr "ก่อนหน้านี้"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\GraphComponents\Plotter.cs
+msgid ">"
+msgstr "ถัดไป"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\GraphComponents\Plotter.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\AutoCompleteTextBox\AutoCompleteWithCreationBox.Designer.cs
+msgid "+"
+msgstr "+"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\GraphComponents\Plotter.cs
+msgid "-"
+msgstr "-"
 
 # ; ..\src\Addin.LiftReports\ReportMaker.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\Report.Designer.cs
+msgid "Lexicon Report"
+msgstr "ดูการแสดงผลพจนานุกรม"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\Report.Designer.cs
+msgid "Entries Contents"
+msgstr "การส่งเข้าเนื้อหา"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\Report.Designer.cs
+msgid "Senses Contents"
+msgstr "เนื้อหาที่มีความหมายหลาย ๆ อย่าง"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\Report.Designer.cs
+msgid "label4"
+msgstr "label4"
+
+# ; ..\src\Addin.LiftReports\ReportMaker.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\ReportMaker.cs
 msgid "View Report"
 msgstr "ดูการแสดงผล"
 
 # ; ..\src\Addin.LiftReports\ReportMaker.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\ReportMaker.cs
 msgid "Shows some information about the lexicon."
-msgstr "แสดงข้อมูลเกี่ยวกับรายการคำ"
+msgstr "แสดงข้อมูลเกี่ยวกับพจนานุกรม"
 
+# ; ..\src\Addin.LiftReports\ReportMaker.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\ReportMaker.cs
+msgid "Report"
+msgstr "ดูการแสดงผล"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.LiftReports\XPathChart.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\LongStartupNotification.Designer.cs
+msgid "label1"
+msgstr "label1"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\HtmlInWord.cs
 msgid "Export to Word"
 msgstr "นำออกไปที่ Word"
 
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\HtmlInWord.cs
 msgid "Creates a very basic dictionary publication in Microsoft Word."
 msgstr "สร้างเป็นพจนานุกรมที่พื้นฐานมากใน ไมโครซอฟ เวิอด"
 
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Export to HTML"
 msgstr "นำออกไปที่ HTML"
 
-msgid "Creates a simple Html version of the dictionary, ready for printing."
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\HtmlTransformer.cs
+#, fuzzy
+msgid "Creates a simple Html version of the dictionary.  Not a very good way to go."
 msgstr "สร้างคำแปล HTML แบบง่ายในพจนานุกรม,พร้อมสำหรับการพิมพ์"
 
+#. It's up to you whether to bother translating this or not.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LameProgressDialog.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\LongStartupNotification.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\TabbedForm.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
+msgid "WeSay"
+msgstr "เราบอก"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LexiquePro\AboutLexiquePro.Designer.cs
+msgid "http://lexiquepro.com"
+msgstr "http://lexiquepro.com"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LexiquePro\AboutLexiquePro.Designer.cs
+msgid "http://lexiquepro.com/test.htm"
+msgstr "http://lexiquepro.com/test.htm"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LexiquePro\AboutLexiquePro.Designer.cs
+msgid "About Lexique Pro"
+msgstr "เกี่ยวกับ Lexique Pro"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LexiquePro\LexiqueProSender.cs
+msgid "Open in Lexique Pro"
+msgstr "เปิดใช้ Lexique Pro"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LexiquePro\LexiqueProSender.cs
+msgid "Open dictionary in Lexique Pro for printing or web-page creation. Requires version LP ver 3.0 or higher."
+msgstr "เปิดพจนานุกรมในLexique Pro ปริ๊น หรือ การสร้าง web - page ต้องใช้ เวอร์ชั่น LP เวอร์ชั่น 3.0 หรือรุ่นที่สูงกว่า"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
+msgid "Save in OpenOffice"
+msgstr "บันทึกใน OpenOffice"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
+msgid "Open Document Text"
+msgstr "เปิดข้อความในเอกสาร"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\PdfDictionary\AboutMakePdfDictionary.Designer.cs
+msgid "http://princexml.com"
+msgstr "http://princexml.com"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\PdfDictionary\AboutMakePdfDictionary.Designer.cs
+msgid "http://wesay.org/wiki/MakePdfDictionary"
+msgstr "http://wesay.org/wiki/MakePdfDictionary"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\PdfDictionary\AboutMakePdfDictionary.Designer.cs
+#, fuzzy
+msgid "About Make Pdf Dictionary"
+msgstr "เกี่ยวกับการสร้างพจนานุกรมโดยใช้ Pdf"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\PdfDictionary\PdfMaker.cs
+msgid "Make Pdf Dictionary"
+msgstr "สร้างพจนานุกรมโดยใช้Pdf"
+
+# ; ..\src\CommonTools\DashboardControl.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SFMChangesDialog.Designer.cs
+msgid "Tweaks"
+msgstr "กดเข้า"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SFMChangesDialog.Designer.cs
+msgid "Language Output"
+msgstr "ภาษาที่ส่งออก"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SFMChangesDialog.Designer.cs
+msgid "English"
+msgstr "ภาษาอังกฤษ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SFMChangesDialog.Designer.cs
+msgid "National"
+msgstr "ภาษาประจำชาติ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SFMChangesDialog.Designer.cs
+msgid "Regional"
+msgstr "ภาษาประจำถิ่น"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SFMChangesDialog.Designer.cs
+msgid "Vernacular"
+msgstr "ภาษาพื้นเมือง"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SFMChangesDialog.Designer.cs
+#, fuzzy
+msgid "Setup Standard Format Export..."
+msgstr "คำอธิบาย"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SfmTransformer.cs
 msgid "Export To SFM"
 msgstr "นำออกไปสู่ SFM"
 
 # ; ..\src\Addin.Transform\SfmTransformer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SfmTransformer.cs
 #, fuzzy
 msgid "Saves the lexicon in a form of standard format."
-msgstr "จัดเก็บรายการคำในรูปแบบ SFM"
+msgstr "จัดเก็บพจนุกรมในรูปแบบมาตราฐาน SFM"
 
-#. The description of the Actions task.
-msgid "Backup, print, etc."
-msgstr "สำรอง,พิมพ์, อื่นๆ."
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\Xhtml\XHtml.cs
+#, fuzzy
+msgid "Export to XHTML"
+msgstr "นำออกไปที่ HTML"
 
-# ; ..\src\CommonTools\CurrentTaskIndicatorControl.Designer.cs
-msgid "Current task:"
-msgstr "งานปัจุบัน"
-
-# ; ..\src\CommonTools\DashboardControl.cs
-msgid "Tasks"
-msgstr "งาน"
-
-# ; ..\src\CommonTools\DashboardControl.cs
-msgid "Switch tasks and see current status of tasks"
-msgstr "สลับงานและดูสถานะปัจจุบันของงาน"
-
-# ; ..\src\CommonTools\DictionaryStatusControl.Designer.cs
-msgid "Your dictionary has {0} words"
-msgstr "พจนานุกรมของท่านมี {0} คำ"
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Image
+#: Picker Test
+#: App\ImagePicker\Form1.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\RelationControlTestApp\Form1.Designer.cs
+msgid "Form1"
+msgstr "Form1"
 
 # ; ..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Image
+#: Picker Test
+#: App\ImagePicker\ImageDisplayWidget.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\PictureControl.cs
 msgid "Cannot find {0}"
 msgstr "ไม่พบ {0}"
 
-# ; ..\src\LexicalModel\LexEntry.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Image
+#: Picker Test
+#: App\ImagePicker\ImageDisplayWidget.Designer.cs
+msgid "Choose Image..."
+msgstr "เลือกรูปภาพ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Image
+#: Picker Test
+#: App\ImagePicker\ImageDisplayWidget.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\PictureControl.Designer.cs
+msgid "What is the problem?"
+msgstr "ปัญหานี้คืออะไร"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Image
+#: Picker Test
+#: App\ImagePicker\ImageDisplayWidget.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\PictureControl.Designer.cs
+msgid "Remove Image..."
+msgstr "ย้ายภาพ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalModel\Foundation\WritingSystem.cs
+msgid "Not installed"
+msgstr "ยังไม่ติดตั้ง"
+
+#. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
+#. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
+#. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalModel\KeyToEntryIdInitializer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoControl.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
+msgid "Empty"
+msgstr "ว่าง"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoConfiguration.cs
+msgid "Entries without this:"
+msgstr "ป้อนเข้าโดยปราศจากสิ่งนี้"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoConfiguration.cs
+msgid "Total Entries:"
+msgstr "ป้อนเข้าทั้งหมด"
+
+# ; ..\src\LexicalTools\MissingInfoControl.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoControl.cs
+msgid "Congratulations. You have completed this task."
+msgstr "ขอแสดงความยินดี ท่านทำงานชิ้นนี้เสร็จแล้ว"
+
+# ; ..\src\LexicalTools\MissingInfoControl.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoControl.cs
+msgid "There is no work left to be done on this task."
+msgstr "ไม่มีสิ่งที่ต้องทำในงานชิ้นนี้แล้ว"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoControl.Designer.cs
+msgid "To Do:"
+msgstr "ต้องทำ"
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoControl.Designer.cs
+msgid "Completed:"
+msgstr "ข้อมูลสำรองที่สมบูรณ์"
+
+# ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+# ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
+# ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoControl.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
+msgid "(Page Down Key)"
+msgstr "เลื่อนลง"
+
+#. The user will click this to say that this word has no baseform.  E.g. Kindness has Kind as a baseform, but Kind has no other word as a baseform.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\AddMissingInfo\MissingInfoViewMaker.cs
+msgid "&This word has no Base Form"
+msgstr "คำนี้ไม่มีรูปแบบพื้นฐาน"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\AddPictures\AddPicturesControl.Designer.cs
+msgid "Search Words"
+msgstr "ค้นหาคำ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\AddPictures\AddPicturesControl.Designer.cs
+msgid "Search"
+msgstr "ค้นหา"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\CongratulationsControl.Designer.cs
+msgid "✔"
+msgstr "✔"
+
+# ; ..\src\CommonTools\DashboardControl.cs
+#. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\Dash.cs
 #, fuzzy
-msgid "No Senses"
-msgstr "ไม่มีความหมาย"
+msgid "Home"
+msgstr "หน้าหลัก"
+
+# ; ..\src\CommonTools\DashboardControl.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\Dash.cs
+msgid "Switch tasks and see current status of tasks"
+msgstr "สลับงานและดูสถานะปัจจุบันของงาน"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\Dash.Designer.cs
+msgid "NOTE: This control should be the same size as the initial tab page size so the in"
+msgstr "NOTE: This control should be the same size as the initial tab page size so the in"
+
+# ; ..\src\CommonTools\DictionaryStatusControl.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\DictionaryStatusControl.designer.cs
+msgid "{1} dictionary has {0} words"
+msgstr "พจนานุกรมของท่านมี {0} คำ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\GroupHeader.designer.cs
+msgid "_label"
+msgstr "_label"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\TaskIndicator.designer.cs
+msgid "Gather from Foo words"
+msgstr "Gather from Foo words"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\TaskIndicator.designer.cs
+msgid "See words in Foo, write the same words in Boo"
+msgstr "See words in Foo, write the same words in Boo"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\ConfirmDelete.Designer.cs
+msgid "&Delete"
+msgstr "&ลบ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\ConfirmDelete.Designer.cs
+msgid "This will permanently remove this entry."
+msgstr "สิ่งนี้จะถูกลบออกจากการป้อนอย่างถาวร"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\ConfirmDelete.Designer.cs
+msgid "Confirm Delete"
+msgstr "ยืนยันการลบ"
+
+#. The label for the task that lets you see all entries, search for entries, and edit various fields.  We don't like the English name very much, so feel free to call this something very different in the language you are translating to.
+#. The long label for the task that lets you see all entries, search for entries, and edit various fields.  We don't like the English name very much, so feel free to call this something very different in the language you are translating to.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryBrowseAndEditConfiguration.cs
+msgid "Dictionary Browse && Edit"
+msgstr "หาข้อมูลในพจนานุกรมและแก้ไข"
 
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 msgid "No Gloss"
 msgstr "ไม่โดดเด่น"
 
-msgid "Hide Uncommon Fields"
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
+#, fuzzy
+msgid "Hide &Uncommon Fields"
 msgstr "ซ่อนพื้นที่สงวน"
 
-msgid "Show Uncommon Fields"
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
+#, fuzzy
+msgid "Show &Uncommon Fields"
 msgstr "แสดงพื้นที่สงวน"
 
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.Designer.cs
+msgid "&Show All Fields"
+msgstr "แสดงพื้นที่ทั้งหมด"
+
 # ; ..\src\LexicalTools\DictionaryControl.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.Designer.cs
 msgid "&Delete This Word"
 msgstr "ลบคำนี้"
 
 # ; ..\src\LexicalTools\DictionaryControl.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.Designer.cs
 msgid "&New Word"
 msgstr "คำใหม่"
 
-msgid "&Show All Fields"
-msgstr "แสดงพื้นที่ทั้งหมด"
-
 # ; ..\src\LexicalTools\DictionaryTask.cs
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryTask.cs
 #, fuzzy
 msgid "See all {0} {1} words."
 msgstr "ดูคำทั้งหมด {0} ใน {1}"
 
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\SearchBoxControl.Designer.cs
+msgid "en"
+msgstr "en"
+
 # ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 #. The label for the field showing the Lexeme Form of the entry.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
 msgid "Word"
 msgstr "คำ"
 
 # ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 # ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
-# ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
-#, fuzzy
-msgid "(Page Down Key)"
-msgstr "Page Down"
-
-# ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
-# ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
 msgid "(Enter Key)"
-msgstr "Enter"
+msgstr "เข้าสู่"
 
 # ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 msgid "Try thinking of words you use to talk about these things."
 msgstr "ลองคิดคำที่ใช้เพื่อจะพูดถึงสิ่งนี้"
 
+# ; ..\src\LexicalTools\LexSenseLayouter.cs
+# ; ..\src\LexicalTools\LexSenseLayouter.cs
+#. This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\LexSenseLayouter.cs
+msgid "Meaning"
+msgstr "ความหมาย"
+
+#. This is shown in the Gather By Semantic Domains task after each semantic domain question. The questions contain example words to help clarify what the domain is about, and this was added to remind the user that he/she is gathering based on the domain, not these examples.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainTask.cs
+msgid "Do not just translate these words; instead think of words in your own language."
+msgstr "แปลโดยไม่ต้องคิดถึงคำในคำในภาษานั้น ๆ"
+
 # ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
 msgid "Try thinking of ways to say these words in your language."
 msgstr "ลองคิดวิธีพูดคำนี้ในภาษาของท่าน"
 
 # ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
 msgid "Word:"
 msgstr "คำ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
+msgid "Foobar"
+msgstr "Foobar"
 
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word.
-#. This is the field containing an example sentence of a sense of a word."), "Sentence
+#. This is the field containing an example sentence of a sense of a word.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\LexExampleSentenceLayouter.cs
 msgid "Example"
 msgstr "ตัวอย่าง"
 
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field for putting in a translation of an example sentence.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\LexExampleSentenceLayouter.cs
 msgid "Translation"
 msgstr "คำแปล"
 
+#. The label for the field showing a single word translation, as used in interlinear text glossing.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\LexSenseLayouter.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
+#, fuzzy
+msgid "Gloss"
+msgstr "ไม่โดดเด่น"
+
 # ; ..\src\LexicalTools\LexSenseLayouter.cs
 # ; ..\src\LexicalTools\LexSenseLayouter.cs
-#. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well.
-msgid "Meaning"
-msgstr "ความหมาย"
+#. Generic desciption of how many items in a task are left to do.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\TaskBase.cs
+msgid "Remaining:"
+msgstr "คงเหลือ"
 
-# ; ..\src\LexicalTools\MissingInfoControl.cs
-#, fuzzy
-msgid "Congratulations. You have completed this task."
-msgstr "ขอแสดงความยินดี ท่านทำงานชิ้นนี้เสร็จแล้ว"
+#. Generic description of how many total items there are in a task.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\TaskBase.cs
+msgid "Total:"
+msgstr "รวม"
 
-# ; ..\src\LexicalTools\MissingInfoControl.cs
-#, fuzzy
-msgid "There is no work left to be done on this task."
-msgstr "ไม่มีสิ่งที่ต้องทำในงานชิ้นนี้แล้ว"
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\RelationControlTestApp\Form1.Designer.cs
+msgid "Refresh"
+msgstr "Refresh"
 
-msgid "To Do:"
-msgstr "ต้องทำ"
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\RelationControlTestApp\Form1.Designer.cs
+msgid "Key"
+msgstr "Key"
 
-# ; ..\src\Addin.Backup\BackupDialog.cs
-#, fuzzy
-msgid "Completed:"
-msgstr "ข้อมูลสำรองที่สมบูรณ์"
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\RelationControlTestApp\Form1.Designer.cs
+msgid "Value"
+msgstr "Value"
 
-#. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
-msgid "This word has no Base Form"
-msgstr "คำนี้ไม่มีรูปแบบพื้นฐาน"
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\RelationControlTestApp\Form1.Designer.cs
+msgid "Placeholder for control which uses generics so breaks the designer"
+msgstr "Placeholder for control which uses generics so breaks the designer"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\RelationControlTestApp\Form1.Designer.cs
+msgid "Reference Collection"
+msgstr "Reference Collection"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\RelationControlTestApp\Form1.Designer.cs
+msgid "Source Collection"
+msgstr "Source Collection"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.AddinLib\ActionItemControl.cs
+msgid "Make visible in WeSay"
+msgstr "ทำให้ WeSay ปรากฏ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.AddinLib\ActionItemControl.cs
+msgid "Make invisible in WeSay"
+msgstr "ทำให้ WeSay ไม่ปรากฏ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.AddinLib\ActionItemControl.designer.cs
+msgid "blah blah blah"
+msgstr "blah blah blah"
+
+# ; ..\src\CommonTools\ActionsControl.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.AddinLib\ActionItemControl.designer.cs
+msgid "Action Name"
+msgstr "ชื่อผู้ใช้ระบบปฏิบัติการ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.AddinLib\ActionItemControl.designer.cs
+msgid "Set up..."
+msgstr "ตั้งค่า"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.AddinLib\ActionItemControl.designer.cs
+msgid "Visible In WeSay"
+msgstr "ทำให้ปรากฏใน WeSay"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.AddinLib\ActionItemControl.designer.cs
+msgid "More Info..."
+msgstr "ข้อมูลเพิ่มเติม"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.AddinLib\ActionSetupDialog.Designer.cs
+msgid "Setup Action..."
+msgstr "ตั้งค่าระบบปฏิบัติการ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\CommandLineParser.cs
+msgid "Count number of lines in the input text."
+msgstr "นับจำนวนบรรทัดในการเพิ่มเข้าของข้อความ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\CommandLineParser.cs
+msgid "Count number of words in the input text."
+msgstr "นับจำนวนคำในการเพิ่มเข้าของข้อความ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\CommandLineParser.cs
+msgid "Count number of chars in the input text."
+msgstr "Count number of chars in the input text."
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\CommandLineParser.cs
+msgid "Input files to count."
+msgstr "เพิ่มแฟ้มเข้าเพื่อนับ"
+
+# ; ..\src\CommonTools\DictionaryStatusControl.Designer.cs
+#. Shown at the bottom of the screen.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\StatusBarController.cs
+msgid "Dictionary has {0} words"
+msgstr "พจนานุกรมของท่านมี {0} คำ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\StatusBarController.cs
+msgid "error"
+msgstr "ล้มเหลว"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\TabbedForm.cs
 msgid "Loading..."
-msgstr "ข้อมูลสำรอง"
+msgstr "กำลังโหลด"
 
-#. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
-msgid "WeSay"
-msgstr "เราบอก"
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\TabbedForm.Designer.cs
+msgid "tabPage2"
+msgstr "tabPage2"
 
-#. The label for the field holding the citation form.
-msgid "CitationForm"
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
+msgid "Please wait while WeSay prepares your data"
+msgstr "กรุณารอในขณะที่ WeSay กำลังเตรียมข้อมูล"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
+msgid "Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\")."
+msgstr "หนทางเข้าสู่ Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\")."
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
+msgid "Language to show the user interface in."
+msgstr "ภาษาที่ใช้แสดงในหน้าของผู้่ใช้"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
+msgid "Start without a user interface (will have no effect if WeSay is already running with a UI."
+msgstr "Start without a user interface (will have no effect if WeSay is already running with a UI."
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
+msgid "Some things, like backup, just gum up automated tests.  This is used to turn them off."
+msgstr "Some things, like backup, just gum up automated tests.  This is used to turn them off."
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ChorusBackupMaker.cs
+msgid "Wesay Automatic Backup"
+msgstr "WeSay สำรองข้อมูลอัตโนมัติ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\FailedLoadTask.cs
+msgid "Failed To Load: {0}"
+msgstr "ล้มเหลวในการโหลดข้อมูล"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\FailedLoadTask.cs
+msgid "Error: {0}"
+msgstr "ล้มเหลว{0}"
+
+#. Label for action which uses Chorus to synchronize the dictionary with other users, devices, and servers. Here, 'synchronizing' means putting your changes in the repository, and getting changes that others have put in the repository. In English, we are going with Send/Receive because it is similar to email and this is the term Paratext uses.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
+msgid "Send/Receive"
+msgstr "ส่ง/รับ"
+
+#. description of send/receive action
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
+msgid "Sends your changes to usb key, server, or other users, and receives the changes made by other members of your team."
+msgstr "ส่งการเปลี่ยนแปลงของคุณผ่าน usb, server,หรือผู้ใช้อื่น หรือรับการเปลี่ยนแปลงของสมาชิกอื่น ๆ ในทีมของคุณเอง"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
+msgid "WeSay Send/Receive"
+msgstr "WeSay ส่ง/รับ"
+
+#. Long label for send/receive action.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
+msgid "Send/Receive Changes to devices, servers, or other users on your network."
+msgstr "ส่ง/รับ การเปลี่ยนแปลงอุปกรณ์พิเศษ,server,หรือ ผู้ใช้คนอื่นในระบบเครือข่าย"
+
+#. The label for the field holding the citation form, which is how the word will be displayed in the dictionary.  This is used in languages where the lexeme form may be different from what the Headword should be.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
+#, fuzzy
+msgid "Citation Form"
 msgstr "รูปแบบการอ้างอิง"
 
 #. The label for the field showing the definition of the word.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
 msgid "Definition"
 msgstr "คำอธิบาย"
 
 #. The label for the field showing the literal meaning of idiom or proverb.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
 msgid "Literal Meaning"
 msgstr "ควาหมายตัวอักษร"
 
 #. The label for the field showing a note.
 #. The label for the field showing a note.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
 msgid "Note"
 msgstr "ข้อความ"
+
+#. The label for the field showing a picture.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
+msgid "Picture"
+msgstr "รูปภาพ"
 
 # ; ..\src\WeSay.Project\ViewTemplate.cs
 # ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Part Of Speech
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
 msgid "POS"
 msgstr "หน้าที่ของคำ"
-
-#. The label for the field showing a picture.
-msgid "Picture"
-msgstr "รูปภาพ"
 
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. The label for the field showing an example use of the word.
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
 msgid "Example Sentence"
-msgstr "ตัวอย่าง"
+msgstr "ตัวอย่างประโยค"
 
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. The label for the field showing the example sentence translated into other languages.
-#, fuzzy
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
 msgid "Example Translation"
-msgstr "คำแปล"
+msgstr "ตัวอย่าคำแปล"
 
 # ; ..\src\WeSay.Project\ViewTemplate.cs
 # ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Semantic Domains
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
 #, fuzzy
 msgid "Sem Dom"
 msgstr "หมวดความหมาย"
 
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
 msgid "Base Form"
 msgstr "รูปแบบพื้นฐาน"
 
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
+msgid "Cross Reference"
+msgstr "คำที่เกี่ยวข้อง"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\CheckBoxControl.Designer.cs
+msgid "checkBox1"
+msgstr "checkBox1"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\PictureControl.Designer.cs
+msgid "Choose Image File..."
+msgstr "เลือกแฟ้มภาพ"
+
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\PictureControl.Designer.cs
+msgid "Search Gallery..."
+msgstr "หาจากห้องภาพ"
+
 # ; ..\src\WeSay.UI\SingleOptionControl.cs
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\SingleOptionControl.cs
 msgid "unknown"
 msgstr "ไม่ทราบ"
+
+#~ msgid "Add Meanings"
+#~ msgstr "ป้อนความหมาย"
+
+#~ msgid "Add Examples"
+#~ msgstr "ป้อนตัวอย่าง"
+
+#~ msgid "Add Base Forms"
+#~ msgstr "ป้อนรูปแบบพื้นฐาน"
+
+#~ msgid "Collect Word List (D)"
+#~ msgstr "รวบรวมรายการคำ(D)"
+
+#~ msgid ""
+#~ "Collect new words by translating from words in another language. This is "
+#~ "a list of 1700 words from John Duerksen."
+#~ msgstr ""
+#~ "รวบรวมคำใหม่ที่กำลังแปลจากคำในภาษาอื่น. นี่คือรายการของ 1700 คำ จากจอห์น  เดอร์คเซน"
+
+#~ msgid "Collect Word List (PNG)"
+#~ msgstr "รวบรวมรายการคำ(PNG)"
+
+#~ msgid ""
+#~ "Collect new words by translating from words in another language. This is "
+#~ "a list of around 900 words and phrases from PNG."
+#~ msgstr ""
+#~ "รวบรวมคำใหม่ที่แปลจากคำในภาษาอื่น.นี่คือ รายการคำและอนุประโยคประมาณ 900  และวลีจาก "
+#~ "PNG"
+
+#~ msgid "Collect Words By Semantic Domain"
+#~ msgstr "รวบรวมคำตามหมวดความหมาย"
+
+#~ msgid ""
+#~ "Collect new words organized by semantic domains and questions about those "
+#~ "domains."
+#~ msgstr "รวบรวมคำใหม่ตามหมวดความหมาย และคำถามเกี่ยวกับหมวดความหมายต่างๆ"
+
+#~ msgid "Send a zipped email containing all your WeSay work."
+#~ msgstr "ส่งงาน WeSay ทั้งหมดที่ผ่านการบีบอัดข้อมูลแล้วทางอีเมล"
+
+#~ msgid "Backup, print, etc."
+#~ msgstr "สำรอง,พิมพ์, อื่นๆ."
+
+#~ msgid "Current task:"
+#~ msgstr "งานปัจุบัน"
+
+#~ msgid "No Senses"
+#~ msgstr "ไม่มีความหมาย"

@@ -3,26 +3,74 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Xml;
+using System.IO;
 using Exortech.NetReflector;
 using WeSay.LexicalModel.Foundation;
+using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
 	[ReflectorType("WritingSystemCollection")]
 	public class WritingSystemCollection: Dictionary<string, WritingSystem>
 	{
-		public void Load(string path)
+		private LdmlInFolderWritingSystemStore _ldmlInFolderWritingSystemStore;
+
+		public void Load(string pathToLdmlWritingSystemsFolder)
 		{
-			NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
-			XmlReader reader = XmlReader.Create(path);
-			try
+			if (LdmlWritingSystemsDefinitionsExist(pathToLdmlWritingSystemsFolder))
 			{
-				r.Read(reader, this);
+				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(pathToLdmlWritingSystemsFolder);
+				_ldmlInFolderWritingSystemStore.LoadAllDefinitions();
+				foreach (
+					WritingSystemDefinition writingSystem in _ldmlInFolderWritingSystemStore.WritingSystemDefinitions)
+				{
+					WritingSystem wesayWritingSystem = new WritingSystem(writingSystem);
+					this.Add(wesayWritingSystem.Id, wesayWritingSystem);
+				}
 			}
-			finally
+		}
+
+		public void LoadFromLegacyWeSayFile(string PathToWritingSystemPrefsFile)
+		{
+			if (WeSayWritingSystemsPrefsExist(PathToWritingSystemPrefsFile))
 			{
-				reader.Close();
+				NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
+				XmlReader reader = XmlReader.Create(PathToWritingSystemPrefsFile);
+				WritingSystemCollection wesayWsFileCollection = new WritingSystemCollection();
+				try
+				{
+					r.Read(reader, wesayWsFileCollection);
+				}
+				finally
+				{
+					reader.Close();
+				}
+				foreach (KeyValuePair<string, WritingSystem> pair in wesayWsFileCollection)
+				{
+					if (!this.ContainsKey(pair.Key))
+					{
+						this.Add(pair.Key, pair.Value);
+					}
+				}
 			}
+
+		}
+
+		private static bool WeSayWritingSystemsPrefsExist(string pathToWritingSystemPrefsFile)
+		{
+			bool exists = File.Exists(pathToWritingSystemPrefsFile) && (new FileInfo(pathToWritingSystemPrefsFile).Length != 0);
+			return exists;
+		}
+
+		private static bool LdmlWritingSystemsDefinitionsExist(string pathToLdmlWritingSystemsFolder)
+		{
+			bool exists = Directory.Exists(pathToLdmlWritingSystemsFolder) && (Directory.GetFiles(pathToLdmlWritingSystemsFolder, "*.ldml").Length != 0);
+			return exists;
+		}
+
+		public static bool WritingSystemsExistInProject(string pathToWritingSystemPrefsFile, string pathToLdmlWritingSystemsFolder)
+		{
+			return WeSayWritingSystemsPrefsExist(pathToWritingSystemPrefsFile) || LdmlWritingSystemsDefinitionsExist(pathToLdmlWritingSystemsFolder);
 		}
 
 		/// <summary>
@@ -52,16 +100,23 @@ namespace WeSay.LexicalModel.Foundation
 			set { base[key] = value; }
 		}
 
-		public void Write(XmlWriter writer)
+		public void Write(string pathToLdmlWritingSystemsFolder)
 		{
-			try
+			if (_ldmlInFolderWritingSystemStore == null)
 			{
-				writer.WriteStartDocument();
-				NetReflector.Write(writer, this);
+				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(pathToLdmlWritingSystemsFolder);
 			}
-			finally
+			foreach (KeyValuePair<string, WritingSystem> pair in this)
 			{
-				writer.Close();
+				_ldmlInFolderWritingSystemStore.Set(pair.Value.GetAsPalasoWritingSystemDefinition());
+			}
+			_ldmlInFolderWritingSystemStore.Save();
+			foreach (string pathToLdmlFile in Directory.GetFiles(pathToLdmlWritingSystemsFolder, "*.ldml"))
+			{
+				if(!this.ContainsKey(Path.GetFileNameWithoutExtension(pathToLdmlFile)))
+				{
+					File.Delete(pathToLdmlFile);
+				}
 			}
 		}
 

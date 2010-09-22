@@ -30,6 +30,7 @@ namespace WeSay.Project
 			IncludePatterns.Add("**.WeSayConfig");
 			IncludePatterns.Add("**.WeSayUserConfig");
 			IncludePatterns.Add("**.xml");
+			IncludePatterns.Add("WritingSystems/*.ldml");
 			IncludePatterns.Add(".hgIgnore");
 
 		}
