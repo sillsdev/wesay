@@ -300,5 +300,11 @@ namespace WeSay.Project
 				new StringCatalog();
 			}
 		}
+
+		public static string VersionString
+		{
+			get { return Application.ProductVersion; }
+		}
+
 	}
 }
