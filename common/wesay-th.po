@@ -221,11 +221,6 @@ msgstr "นำออกไปที่ HTML"
 msgid "Creates a simple Html version of the dictionary.  Not a very good way to go."
 msgstr "สร้างคำแปล HTML แบบง่ายในพจนานุกรม,พร้อมสำหรับการพิมพ์"
 
-# ; ..\src\Addin.Backup\BackupDialog.cs
-#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LameProgressDialog.Designer.cs
-msgid "Backing up..."
-msgstr "กำลังสำรองข้อมูล"
-
 #. It's up to you whether to bother translating this or not.
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LameProgressDialog.Designer.cs
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\LongStartupNotification.Designer.cs
