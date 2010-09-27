@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.TestUtilities;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests

@@ -5,10 +5,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using Chorus.sync;
 using Chorus.UI.Sync;
-using Chorus.Utilities;
 using Chorus.VcsDrivers.Mercurial;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project

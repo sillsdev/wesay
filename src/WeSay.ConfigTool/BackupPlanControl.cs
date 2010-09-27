@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 using Chorus.VcsDrivers.Mercurial;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using WeSay.Project;
 

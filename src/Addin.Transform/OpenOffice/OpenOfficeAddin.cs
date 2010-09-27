@@ -19,7 +19,7 @@ using Mono.Addins;
 
 using ICSharpCode.SharpZipLib.Zip;
 
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.Progress;
 using Palaso.UI.WindowsForms.Progress;

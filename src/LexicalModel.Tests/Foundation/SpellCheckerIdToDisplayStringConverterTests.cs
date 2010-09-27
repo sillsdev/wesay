@@ -1,8 +1,7 @@
 using System;
 using System.Globalization;
 using NUnit.Framework;
-using Palaso.I8N;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.i18n;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation

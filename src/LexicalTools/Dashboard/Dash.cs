@@ -11,7 +11,7 @@ using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
-using Palaso.I8N;
+using Palaso.i18n;
 
 namespace WeSay.LexicalTools.Dashboard
 {

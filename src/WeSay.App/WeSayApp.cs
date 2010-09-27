@@ -4,7 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
 using LiftIO;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using WeSay.App.Properties;
 using WeSay.LexicalModel;

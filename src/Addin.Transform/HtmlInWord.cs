@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Mono.Addins;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.UI.WindowsForms.i18n;
 using WeSay.AddinLib;
 
 namespace Addin.Transform
