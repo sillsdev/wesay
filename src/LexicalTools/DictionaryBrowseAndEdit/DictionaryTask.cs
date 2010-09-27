@@ -59,7 +59,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			{
 				base.Activate();
 			   // _dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate, _taskMemory.CreateNewSection("view"), _logger);
-				_dictionaryControl = _dictionaryControlFactory(_taskMemory.CreateNewSection("view"));
+				var temp = _taskMemory.CreateNewSection("view");
+				_dictionaryControl = _dictionaryControlFactory(temp);
 
 				 _dictionaryControl.SelectedIndexChanged += new EventHandler(OnSelectedEntryOfDictionaryControlChanged);
 //   Debug.Assert(_userSettings.Get("one", "0") == "1");
