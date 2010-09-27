@@ -47,6 +47,7 @@ namespace WeSay.LexicalTools
 			Controls.SetChildIndex(_notesBar, 0);
 #endif
 			_notesBar.SizeChanged += new EventHandler(_notesBar_SizeChanged);
+			_notesBar.AutoScaleMode = AutoScaleMode.None;
 			DoLayout();
 		}
 
