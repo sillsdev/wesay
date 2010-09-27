@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using Mono.Addins;
 using Palaso.DictionaryServices.Lift;
-using Palaso.I8N;
+using Palaso.i18n;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;

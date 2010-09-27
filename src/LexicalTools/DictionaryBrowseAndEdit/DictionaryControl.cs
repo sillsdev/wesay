@@ -8,7 +8,7 @@ using System.IO;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.Code;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.UiBindings;
 using Palaso.Misc;
 using Palaso.Reporting;
