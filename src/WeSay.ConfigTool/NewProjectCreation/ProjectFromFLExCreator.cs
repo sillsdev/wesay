@@ -25,19 +25,12 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 				CopyOverRangeFileIfExists(pathToSourceLift, pathToNewDirectory);
 
+			CopyOverLdmlFiles(pathToSourceLift, BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory));
+
 				using (var project = new WeSayWordsProject())
 				{
 					project.LoadFromProjectDirectoryPath(pathToNewDirectory);
-					try
-					{
-						LoadWritingSystemsFromExistingLift(pathToSourceLift, project.DefaultViewTemplate, project.WritingSystems);
-					}
-					catch (Exception e)
-					{
-						Palaso.Reporting.ErrorReport.NotifyUserOfProblem(e, "There was a problem reading that file.");
-						Directory.Delete(pathToNewDirectory, true);
-						return false;
-					}
+				SetWritingSystemsForFields(pathToSourceLift, project.DefaultViewTemplate, project.WritingSystems);
 					project.Save();
 				}
 				return true;
@@ -46,6 +39,15 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			{
 				Palaso.Reporting.ErrorReport.NotifyUserOfProblem(e, "There was a problem creating the project from that folder.");
 				return false;
+			}
+		}
+
+		private static void CopyOverLdmlFiles(string pathToSourceLift, string pathToNewDirectory)
+		{
+			foreach (string pathToLdml in Directory.GetFiles(Path.GetDirectoryName(pathToSourceLift), "*.ldml"))
+			{
+				string fileName = Path.GetFileName(pathToLdml);
+				File.Copy(pathToLdml, Path.Combine(pathToNewDirectory, fileName), true);
 			}
 		}
 
@@ -100,19 +102,22 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			return true;
 		}
 
-		public static void LoadWritingSystemsFromExistingLift(string path, ViewTemplate viewTemplate, WritingSystemCollection writingSystems)
+		public static void SetWritingSystemsForFields(string path, ViewTemplate viewTemplate, WritingSystemCollection writingSystems)
 		{
 			var doc = new XmlDocument();
 			doc.Load(path); //will throw if the file is ill-formed
 
 			foreach (XmlNode node in doc.SelectNodes("//@lang"))
 			{
+				if (node.Value == "x-spec" && !writingSystems.ContainsKey("x-spec"))
+				{
+					writingSystems.AddSimple("x-spec");
+				}
 				if (!writingSystems.ContainsKey(node.Value))
 				{
-					writingSystems.AddSimple(node.Value);
+					throw new ApplicationException(String.Format("The imported Flex project is missing a description for the \"{0}\" writing system.", node.Value));
 				}
 			}
-
 
 			// replace all "v" fields with the first lexical-unit writing system
 			//and all "en" with the first translation one...

@@ -60,7 +60,9 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void AddNewPath_NullPath_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => _mruProjects.AddNewPath(null));
+			Assert.Throws<ArgumentNullException>(
+				() => _mruProjects.AddNewPath(null)
+			);
 		}
 
 		[Test]
