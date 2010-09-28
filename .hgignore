@@ -30,3 +30,4 @@ config
 nant.resx.bak
 glob:lib/*.Tests.dll
 glob:desktop.ini
+glob:Mercurial
