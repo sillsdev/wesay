@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Palaso.Code;
 using Palaso.Reporting;
 using WeSay.LexicalModel.Foundation;
-using Palaso.I8N;
+using Palaso.i18n;
 
 namespace WeSay.ConfigTool
 {

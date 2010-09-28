@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Project;
-using Palaso.I8N;
+using Palaso.i18n;
 
 namespace WeSay.LexicalTools.Dashboard
 {

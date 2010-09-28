@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Xml;
 using Enchant;
 using Exortech.NetReflector;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.WritingSystems.Collation;

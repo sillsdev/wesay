@@ -5,7 +5,7 @@ using System.Xml;
 using Chorus;
 using Exortech.NetReflector;
 using Palaso.DictionaryServices.Model;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Lift;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;

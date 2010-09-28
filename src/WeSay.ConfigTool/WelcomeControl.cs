@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Chorus.UI.Clone;
-using Palaso.I8N;
+using Palaso.i18n;
 using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool

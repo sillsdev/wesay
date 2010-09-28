@@ -8,7 +8,7 @@ using System.Xml;
 using Palaso.Data;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
