@@ -2,7 +2,7 @@ using System;
 using System.Windows.Forms;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Model;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Lift;
 using WeSay.LexicalModel;
 using WeSay.Project;

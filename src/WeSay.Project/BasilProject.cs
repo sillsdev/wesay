@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using WeSay.LexicalModel.Foundation;
 

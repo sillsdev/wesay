@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.UsbDrive;
 using WeSay.AddinLib;

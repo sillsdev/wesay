@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Palaso.Extensions;
-using Palaso.I8N;
+using Palaso.i18n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;

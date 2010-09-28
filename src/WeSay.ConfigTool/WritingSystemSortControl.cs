@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.WritingSystems.Collation;
 using Spart;

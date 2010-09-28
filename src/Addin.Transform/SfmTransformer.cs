@@ -7,7 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Mono.Addins;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Progress;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
