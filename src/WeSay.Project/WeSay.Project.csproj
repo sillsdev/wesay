@@ -184,8 +184,8 @@
 	<Compile Include="WeSayChorusProjectConfiguration.cs" />
 	<Compile Include="ConfigFileReader.cs" />
 	<Compile Include="ConfigFileTaskBuilder.cs" />
-	<Compile Include="ConfigMigration\MigrateConfig5To6.cs" />
-	<Compile Include="ConfigMigration\ConfigurationMigrator.cs" />
+	<Compile Include="ConfigMigration\WeSayConfig\MigrateConfig5To6.cs" />
+	<Compile Include="ConfigMigration\WeSayConfig\ConfigurationMigrator.cs" />
 	<Compile Include="FailedLoadTask.cs" />
 	<Compile Include="ITaskConfiguration.cs" />
 	<Compile Include="PLiftExporter.cs" />
@@ -223,26 +223,26 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig0To1.xsl">
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig0To1.xsl">
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig1To2.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig1To2.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig2To3.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig2To3.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig3To4.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig3To4.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig5To6.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig5To6.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig4To5.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig4To5.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig6To7.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig6To7.xsl" />
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -251,6 +251,9 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\sendReceive32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<Folder Include="ConfigMigration\UserConfig\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

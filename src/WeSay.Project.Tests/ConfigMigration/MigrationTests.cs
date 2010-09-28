@@ -5,6 +5,7 @@ using System.Xml.XPath;
 using NUnit.Framework;
 using Palaso.TestUtilities;
 using WeSay.Project.ConfigMigration;
+using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project.Tests.ConfigMigration
 {

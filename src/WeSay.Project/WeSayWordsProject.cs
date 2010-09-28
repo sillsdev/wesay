@@ -39,6 +39,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration;
+using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
 

@@ -6,7 +6,7 @@ using System.Xml.XPath;
 using System.Xml.Xsl;
 using Palaso.Reporting;
 
-namespace WeSay.Project.ConfigMigration
+namespace WeSay.Project.ConfigMigration.WeSayConfig
 {
 	public class ConfigurationMigrator
 	{
