@@ -143,51 +143,51 @@
 	<Reference Include="System.Xml" />
 	<Reference Include="Autofac, Version=1.4.4.561, Culture=neutral, PublicKeyToken=17863af14b0044da">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\Autofac.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Autofac.dll</HintPath>
 	</Reference>
 	<Reference Include="ChorusMerge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\ChorusMerge.exe</HintPath>
+	  <HintPath>..\..\lib\net2.0\ChorusMerge.exe</HintPath>
 	</Reference>
 	<Reference Include="irrKlang.NET2.0, Version=1.1.2.0, Culture=neutral, PublicKeyToken=a854741bd80517c7">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\irrKlang.NET2.0.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\irrKlang.NET2.0.dll</HintPath>
 	</Reference>
 	<Reference Include="LiftIO, Version=1.1.32.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\LiftIO.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
 	</Reference>
 	<Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\NDesk.DBus.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\NDesk.DBus.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\Palaso.DictionaryServices.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\Palaso.Lift.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso.Media, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\Palaso.Media.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Palaso.Media.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\Palaso.Services.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Palaso.Services.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\Palaso.Tests.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Palaso.Tests.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso.TestUtilities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\Palaso.TestUtilities.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Palaso.TestUtilities.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\mono\PalasoUIWindowsForms.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
 	<Reference Include="mscorlib" />
 	<Reference Include="System.Core">
