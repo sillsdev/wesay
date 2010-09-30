@@ -235,10 +235,10 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				_presentationModel.DetachFromMatchingEntries(word);
 
 				_meaningBox.ClearAllText();
-				Point destination = _vernacularBox.Location;
-				destination.Offset(_vernacularBox.TextBoxes[0].Location);
+				Point absolutePosition = GetAbsoluteLocationOfControl(_vernacularBox);
+				Point destination = absolutePosition;
 				Point start = _listViewWords.GetItemRectangle(_listViewWords.SelectedIndex).Location;
-				start.Offset(_listViewWords.Location);
+				start.Offset(GetAbsoluteLocationOfControl(_listViewWords));
 
 				RefreshCurrentWords();
 				_animationIsMovingFromList = false;
@@ -247,6 +247,18 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			}
 			_vernacularBox.FocusOnFirstWsAlternative();
+		}
+
+		private Point GetAbsoluteLocationOfControl(Control controlToLocate)
+		{
+			Control currentcontrolInHierarchy = controlToLocate;
+			Point absolutePosition = currentcontrolInHierarchy.Location;
+			while(currentcontrolInHierarchy.Parent != null)
+			{
+				currentcontrolInHierarchy = currentcontrolInHierarchy.Parent;
+				absolutePosition = absolutePosition + (Size) currentcontrolInHierarchy.Location;
+			}
+			return absolutePosition;
 		}
 
 		private void _btnAddWord_Click(object sender, EventArgs e)
@@ -266,10 +278,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			int index = _listViewWords.FindStringExact(word);
 
-			Point start = _vernacularBox.Location;
-			start.Offset(_vernacularBox.TextBoxes[0].Location);
+			Point start = GetAbsoluteLocationOfControl(_vernacularBox);
 			Point destination = _listViewWords.GetItemRectangle(index).Location;
-			destination.Offset(_listViewWords.Location);
+			destination.Offset(GetAbsoluteLocationOfControl(_listViewWords));
 
 			_movingLabel.Text = word;
 			_animationIsMovingFromList = true;
