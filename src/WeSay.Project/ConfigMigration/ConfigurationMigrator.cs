@@ -62,7 +62,46 @@ namespace WeSay.Project.ConfigMigration
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='7']") != null)
+			{
+				MigrateInCode(configurationDoc, targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
 			return didMigrate;
+
+		}
+
+		private void MigrateInCode(XPathDocument configurationDoc, string targetPath)
+		{
+			XPathNavigator navigator = configurationDoc.CreateNavigator();
+
+			string tempFilePath = Path.GetTempFileName();
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.Indent = true;
+			XmlWriter writer = XmlWriter.Create(tempFilePath, settings);
+
+			using (writer)
+			{
+				writer.WriteStartDocument();
+				navigator.MoveToFirstChild();
+
+				if (navigator.Name != "configuration"){throw new ApplicationException("The configuration file does not have the expected format. 'configuration' was not the first node found.");}
+
+				writer.WriteStartElement("configuration");
+				writer.WriteAttributeString("version", "8");
+				CopyChildren(writer, navigator);
+			}
+			SafelyMoveTempFileTofinalDestination(tempFilePath, targetPath);
+		}
+
+		private void CopyChildren(XmlWriter writer, XPathNavigator navigator)
+		{
+			navigator.MoveToFirstChild();
+			do
+			{
+				writer.WriteNode(navigator, true);
+			} while (navigator.MoveToNext());
 		}
 
 		public static void MigrateUsingXSLT(IXPathNavigable configurationDoc,
@@ -98,19 +137,24 @@ namespace WeSay.Project.ConfigMigration
 						}
 						writer.Close();
 					}
-					string s = targetPath + ".tmp";
-					if (File.Exists(s))
-					{
-						File.Delete(s);
-					}
-					if (File.Exists(targetPath)) //review: JDH added this because of a failing test, and from my reading, the target shouldn't need to pre-exist
-					{
-						File.Move(targetPath, s);
-					}
-					File.Move(tempPath, targetPath);
-					File.Delete(s);
+					SafelyMoveTempFileTofinalDestination(tempPath, targetPath);
 				}
 			}
+		}
+
+		private static void SafelyMoveTempFileTofinalDestination(string tempPath, string targetPath)
+		{
+			string s = targetPath + ".tmp";
+			if (File.Exists(s))
+			{
+				File.Delete(s);
+			}
+			if (File.Exists(targetPath)) //review: JDH added this because of a failing test, and from my reading, the target shouldn't need to pre-exist
+			{
+				File.Move(targetPath, s);
+			}
+			File.Move(tempPath, targetPath);
+			File.Delete(s);
 		}
 	}
 }

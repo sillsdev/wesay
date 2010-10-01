@@ -257,7 +257,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				_recordsListBox.Bounds.X,
 				top,
 				_recordsListBox.Bounds.Width,
-				(Bottom - _bottomButtonPanel.Height) - top - 10
+				(Bottom - _bottomButtonTable.Height) - top - 10
 			);
 		}
 
@@ -770,6 +770,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				components.Dispose();
 			}
 			base.Dispose(disposing);
+		}
+
+		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+		{
+
 		}
 	}
 }
