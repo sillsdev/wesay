@@ -15,6 +15,8 @@ namespace WeSay.ConfigTool.NewProjectCreation
 		{
 			try
 			{
+				Logger.WriteEvent(@"Starting Project creation from " + pathToSourceLift);
+
 				if (!ReportIfLocked(pathToSourceLift))
 					return false;
 
@@ -25,19 +27,30 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 				CopyOverRangeFileIfExists(pathToSourceLift, pathToNewDirectory);
 
-			CopyOverLdmlFiles(pathToSourceLift, BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory));
+				CopyOverLdmlFiles(pathToSourceLift, BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory));
 
 				using (var project = new WeSayWordsProject())
 				{
 					project.LoadFromProjectDirectoryPath(pathToNewDirectory);
-				SetWritingSystemsForFields(pathToSourceLift, project.DefaultViewTemplate, project.WritingSystems);
+					SetWritingSystemsForFields(pathToSourceLift, project.DefaultViewTemplate, project.WritingSystems);
 					project.Save();
 				}
+				Logger.WriteEvent(@"Finished Importing");
 				return true;
+
 			}
 			catch(Exception e)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem(e, "There was a problem creating the project from that folder.");
+				Palaso.Reporting.ErrorReport.NotifyUserOfProblem(e, "WeSay was unable to finish importing that LIFT file.  If you cannot fix the problem yourself, please zip and send the exported folder to issues (at) wesay (dot) org");
+				try
+				{
+					Logger.WriteEvent(@"Removing would-be target directory");
+					Directory.Delete(pathToNewDirectory, true);
+				}
+				catch (Exception)
+				{
+					//swallow
+				}
 				return false;
 			}
 		}
@@ -47,6 +60,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			foreach (string pathToLdml in Directory.GetFiles(Path.GetDirectoryName(pathToSourceLift), "*.ldml"))
 			{
 				string fileName = Path.GetFileName(pathToLdml);
+				Logger.WriteMinorEvent(@"Copying LDML file " + fileName);
 				File.Copy(pathToLdml, Path.Combine(pathToNewDirectory, fileName), true);
 			}
 		}
@@ -55,6 +69,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 		{
 			var projectName = Path.GetFileNameWithoutExtension(pathToNewDirectory);
 			var pathToTargetLift = Path.Combine(pathToNewDirectory, projectName+".lift");
+			Logger.WriteMinorEvent(@"Copying Lift file " + pathToSourceLift);
 			File.Copy(pathToSourceLift, pathToTargetLift, true);
 		}
 
@@ -65,6 +80,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			if(File.Exists(pathToSourceRange))
 			{
 				var pathToTargetRanges = Path.Combine(pathToNewDirectory, projectName + ".lift-ranges");
+				Logger.WriteMinorEvent(@"Copying Range file " + pathToTargetRanges);
 				File.Copy(pathToSourceRange, pathToTargetRanges, true);
 			}
 		}
@@ -115,7 +131,9 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				}
 				if (!writingSystems.ContainsKey(node.Value))
 				{
-					throw new ApplicationException(String.Format("The imported Flex project is missing a description for the \"{0}\" writing system.", node.Value));
+					ErrorReport.NotifyUserOfProblem(
+						"WeSay had a problem locating information on at least one writing system used in the LIFT export from FLEx.  In the folder containing the LIFT file, there should have been a file named '{0}.ldml'", node.Value);
+					throw new ApplicationException(@"The writing system '"+node.Value+"' was not found in the list of loaded writing systems. Could be that the ldml was missing?");
 				}
 			}
 
