@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Xml;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
@@ -122,6 +123,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 		{
 			var doc = new XmlDocument();
 			doc.Load(path); //will throw if the file is ill-formed
+			var missingWritingSystems = new StringBuilder();
 
 			foreach (XmlNode node in doc.SelectNodes("//@lang"))
 			{
@@ -131,12 +133,17 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				}
 				if (!writingSystems.ContainsKey(node.Value))
 				{
-					ErrorReport.NotifyUserOfProblem(
-						"WeSay had a problem locating information on at least one writing system used in the LIFT export from FLEx.  In the folder containing the LIFT file, there should have been a file named '{0}.ldml'", node.Value);
-					throw new ApplicationException(@"The writing system '"+node.Value+"' was not found in the list of loaded writing systems. Could be that the ldml was missing?");
+					writingSystems.AddSimple(node.Value);
+					missingWritingSystems.AppendFormat("{0},", node.Value);
 				}
 			}
 
+			if(missingWritingSystems.Length > 0)
+			{
+				var list = missingWritingSystems.ToString().Trim(new char[]{','});
+					ErrorReport.NotifyUserOfProblem(
+						"WeSay had a problem locating information on at least one writing system used in the LIFT export from FLEx.  One known cause of this is an old version of FLEx. In the folder containing the LIFT file, there should have been '___.ldml' files for the following writing systems: {0}.\r\nBecause these Writing System definitions were not found, WeSay will create blank writing systems for each of these, which you will need to set up with the right fonts, keyboards, etc.", list);
+			}
 			// replace all "v" fields with the first lexical-unit writing system
 			//and all "en" with the first translation one...
 
