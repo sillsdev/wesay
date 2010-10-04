@@ -31,8 +31,8 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 				//put one guy in there already
 				int originalCount = collection.Count;// collection.Count;
-
-				Assert.Throws<ApplicationException>(
+				ErrorReport.IsOkToInteractWithUser = false;
+				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(
 					() => ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection)
 				);
 			}
