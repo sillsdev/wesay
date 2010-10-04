@@ -20,18 +20,6 @@
 						<File Id="manifest.xml" Name="manifest.xml" KeyPath="yes" Source="..\..\templates\odfTemplate\META-INF\manifest.xml" />
 					</Component>
 				</Directory>
-				<Directory Id="TemplatesDir.odfTemplate.Scripts" Name="Scripts">
-					<Directory Id="TemplatesDir.odfTemplate.Scripts.javascript" Name="javascript">
-						<Directory Id="TemplatesDir.odfTemplate.Scripts.javascript.WeSay" Name="WeSay">
-							<Component Id="DictHeaders.js" Guid="F98D8607-2AA1-4E31-A8CF-6B53FE44BDCB">
-								<File Id="DictHeaders.js" Name="DictHeaders.js" KeyPath="yes" Source="..\..\templates\odfTemplate\Scripts\javascript\WeSay\DictHeaders.js" />
-							</Component>
-							<Component Id="parcel_descriptor.xml" Guid="CF053052-0DB8-4AF4-8894-81D7364D51A8">
-								<File Id="parcel_descriptor.xml" Name="parcel-descriptor.xml" Source="..\..\templates\odfTemplate\Scripts\javascript\WeSay\parcel-descriptor.xml" />
-							</Component>
-						</Directory>
-					</Directory>
-				</Directory>
 			</Directory>
 		</DirectoryRef>
 		<ComponentGroup Id="templates">
@@ -40,8 +28,6 @@
 			<ComponentRef Id="mimetype" />
 			<ComponentRef Id="settings.xml" />
 			<ComponentRef Id="manifest.xml" />
-			<ComponentRef Id="DictHeaders.js" />
-			<ComponentRef Id="parcel_descriptor.xml" />
 		</ComponentGroup>
 	</Fragment>
 </Wix>
