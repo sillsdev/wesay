@@ -59,7 +59,7 @@ namespace WeSay.Project
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
 
-		public const int CurrentWeSayConfigFileVersion = 7; // This variable must be updated with every new vrsion of the WeSayConfig file
+		public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
 		public const int CurrentWeSayUserSpecificConfigFileVersion = 1; // This variable must be updated with every new vrsion of the WeSayUserConfig file
 
 		public event EventHandler EditorsSaveNow;

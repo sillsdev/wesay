@@ -74,7 +74,7 @@ namespace Addin.Transform.OpenOffice
 
 		public string LocalizedLabel
 		{
-			get { return StringCatalog.Get("Open Document Text");  }
+			get { return StringCatalog.Get("Make OpenOffice Document"); }
 		}
 
 		public string LocalizedLongLabel

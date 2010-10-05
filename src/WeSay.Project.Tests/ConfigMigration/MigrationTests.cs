@@ -208,10 +208,28 @@ namespace WeSay.Project.Tests.ConfigMigration
 		}
 
 		[Test]
+		public void V7File_ConfigFileIsVersion7_ConvertedToVersion8()
+		{
+			File.WriteAllText(_pathToInputConfig,
+				@"<?xml version='1.0' encoding='utf-8'?>
+				<configuration version='7'>
+					<fields>
+						<field>
+							<className>WeSayDataObject</className>
+							<dataType>MultiText</dataType>
+						</field>
+					</fields>
+				</configuration>");
+			XPathDocument doc = new XPathDocument(_pathToInputConfig);
+			_migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			AssertHasAtLeastOneMatch("//configuration[@version='8']", _outputPath);
+		}
+
+		[Test]
 		public void DoesNotTouchCurrentFile()
 		{
 			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><configuration version='7'></configuration>");
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='8'></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsFalse(didMigrate);

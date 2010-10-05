@@ -144,9 +144,17 @@ namespace WeSay.UI
 			get { return controlToHide; }
 			set
 			{
-				controlToHide = value;
-				hiddenControlHeight = controlToHide.Height;
-				hiddenControlWidth = controlToHide.Width;
+				if (value == null)
+				{
+					hiddenControlHeight = 0;
+					hiddenControlWidth = 0;
+				}
+				else
+				{
+					controlToHide = value;
+					hiddenControlHeight = controlToHide.Height;
+					hiddenControlWidth = controlToHide.Width;
+				}
 			}
 		}
 

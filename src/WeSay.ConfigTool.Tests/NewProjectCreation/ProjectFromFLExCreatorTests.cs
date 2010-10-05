@@ -15,8 +15,10 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 	{
 
 		[Test]
-		public void SetWritingSystemsForFields_LiftFileContainsWritingsystemsForWhichThereIsNoDefinition_Throws()
+		public void SetWritingSystemsForFields_LiftFileContainsWritingsystemsForWhichThereIsNoDefinition_TellsUser()
 		{
+			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+
 			using (var lift = new TempLiftFile(@"
 				<entry id='foo'>
 					<lexical-unit>
@@ -29,12 +31,16 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				collection.Add(WritingSystem.IdForUnknownVernacular/*v*/, new WritingSystem());
 				collection.Add("en", new WritingSystem());
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
-				//put one guy in there already
-				int originalCount = collection.Count;// collection.Count;
+	//put one guy in there already
+				 int originalCount = collection.Count;// collection.Count;
 
-				Assert.Throws<ApplicationException>(
-					() => ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection)
-				);
+				Assert.IsFalse(collection.ContainsKey("blah"));
+
+				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(
+					 () => ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection)
+				 );
+
+				Assert.IsTrue(collection.ContainsKey("blah"));
 			}
 		}
 
