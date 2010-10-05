@@ -4,13 +4,12 @@ using System.Xml;
 using System.Xml.XPath;
 using NUnit.Framework;
 using Palaso.TestUtilities;
-using WeSay.Project.ConfigMigration;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project.Tests.ConfigMigration
 {
 	[TestFixture]
-	public class MigrationTests
+	public class WeSayConfigMigrationTests
 	{
 		private string _pathToInputConfig;
 		private string _outputPath;

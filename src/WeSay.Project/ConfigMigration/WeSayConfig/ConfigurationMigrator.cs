@@ -109,7 +109,7 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 											 string targetPath)
 		{
 			Logger.WriteEvent("Migrating Configuration File {0}", xsltName);
-			var resourceName = "ConfigMigration."+ xsltName;
+			var resourceName = "ConfigMigration.WeSayConfig."+ xsltName;
 			using (
 					Stream stream =
 							Assembly.GetExecutingAssembly().GetManifestResourceStream(

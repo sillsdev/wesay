@@ -167,7 +167,7 @@
 	<Compile Include="BasilProjectTests.cs" />
 	<Compile Include="ChorusBackupMakerTests.cs" />
 	<Compile Include="LiftUpdateTests.cs" />
-	<Compile Include="ConfigMigration\MigrationTests.cs" />
+	<Compile Include="ConfigMigration\WeSayConfigMigrationTests.cs" />
 	<Compile Include="PLiftExporterTests.cs" />
 	<Compile Include="ProjectDirectorySetupForTesting.cs" />
 	<Compile Include="TestResources.Designer.cs">
