@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -9,7 +10,7 @@ namespace WeSay.Project.ConfigMigration.UserConfig
 {
 	public class WeSayUserConfigMigrator
 	{
-		private Migrator _migrator;
+		private readonly Migrator _migrator;
 
 		public WeSayUserConfigMigrator(string filePath)
 		{
@@ -20,9 +21,12 @@ namespace WeSay.Project.ConfigMigration.UserConfig
 
 		public void MigrateIfNeeded()
 		{
-			if (_migrator.NeedsMigration())
+			if (File.Exists(_migrator.SourceFilePath))
 			{
-				_migrator.Migrate();
+				if (_migrator.NeedsMigration())
+				{
+					_migrator.Migrate();
+				}
 			}
 		}
 

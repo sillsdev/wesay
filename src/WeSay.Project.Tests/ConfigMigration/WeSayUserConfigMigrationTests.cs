@@ -35,7 +35,6 @@ namespace WeSay.Project.Tests.ConfigMigration
 					File.WriteAllText(file.Path, v1);
 					var migrator = new WeSayUserConfigMigrator(file.Path);
 					migrator.MigrateIfNeeded();
-					string result = File.ReadAllText(file.Path);
 					AssertThatXmlIn.File(file.Path).HasAtLeastOneMatchForXpath("configuration[@version='2']");
 					AssertThatXmlIn.File(file.Path).HasAtLeastOneMatchForXpath("configuration/uiOptions[language='th']");
 				}

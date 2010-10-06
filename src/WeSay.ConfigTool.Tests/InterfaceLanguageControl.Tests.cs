@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
-//using WeSay.Foundation.Tests;
 using Palaso.TestUtilities;
 
 namespace WeSay.ConfigTool.Tests
@@ -23,7 +22,7 @@ namespace WeSay.ConfigTool.Tests
 
 		private void GoToUILanguageTab()
 		{
-			ToolStrip toolstrip = (ToolStrip) _window.Controls.Find("_areasToolStrip", true)[0];
+			var toolstrip = (ToolStrip) _window.Controls.Find("_areasToolStrip", true)[0];
 			foreach (ToolStripButton button in toolstrip.Items)
 			{
 				if (button.Text.Contains("Language"))
@@ -135,6 +134,20 @@ namespace WeSay.ConfigTool.Tests
 			}
 		}
 
+		[Test]
+		public void SetToLanguage_FileHas2LetterLanguageCode()
+		{
+			using (var folder = new TemporaryFolder("InterfaceLanguageControlTests"))
+			{
+				var t = CreateNewAndGetLanguageCombo(folder.Path);
+				t.Select("Thai"); // Select a known tranlsation; language = th
+				CloseApp();
+				var files = Directory.GetFiles(folder.Path, "*.WeSayUserConfig");
+				Assert.That(files.Length, Is.EqualTo(1));
+				AssertThatXmlIn.File(files[0]).HasAtLeastOneMatchForXpath("configuration/uiOptions[language='th']");
+			}
+		}
+
 		private static object FindDefaultEnglishItem(ComboBox combo)
 		{
 			foreach (object o in combo.Items)
@@ -170,7 +183,7 @@ namespace WeSay.ConfigTool.Tests
 		private ComboBoxTester GoToTabAndGetLanguageCombo()
 		{
 			GoToUILanguageTab();
-			ComboBoxTester t = new ComboBoxTester("_languageCombo", _window);
+			var t = new ComboBoxTester("_languageCombo", _window);
 			return t;
 		}
 
