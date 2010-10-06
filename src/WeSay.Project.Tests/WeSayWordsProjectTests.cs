@@ -13,6 +13,7 @@ using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project.ConfigMigration;
+using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project.Tests
 {

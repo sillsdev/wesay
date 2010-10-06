@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -6,7 +6,7 @@ using System.Xml.XPath;
 using System.Xml.Xsl;
 using Palaso.Reporting;
 
-namespace WeSay.Project.ConfigMigration
+namespace WeSay.Project.ConfigMigration.WeSayConfig
 {
 	public class ConfigurationMigrator
 	{
@@ -109,7 +109,7 @@ namespace WeSay.Project.ConfigMigration
 											 string targetPath)
 		{
 			Logger.WriteEvent("Migrating Configuration File {0}", xsltName);
-			var resourceName = "ConfigMigration."+ xsltName;
+			var resourceName = "ConfigMigration.WeSayConfig."+ xsltName;
 			using (
 					Stream stream =
 							Assembly.GetExecutingAssembly().GetManifestResourceStream(

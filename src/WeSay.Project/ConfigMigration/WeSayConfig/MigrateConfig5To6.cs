@@ -1,8 +1,7 @@
 ﻿using System.Xml.XPath;
 using Palaso.IO;
-using WeSay.Project;
 
-namespace WeSay.Project.ConfigMigration
+namespace WeSay.Project.ConfigMigration.WeSayConfig
 {
 	public class MigrateConfig5To6
 	{
