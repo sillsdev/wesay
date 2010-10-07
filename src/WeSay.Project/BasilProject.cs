@@ -171,7 +171,6 @@ namespace WeSay.Project
 
 			//fall back to the program's common directory
 			matchingFiles = Directory.GetFiles(ApplicationCommonDirectory, filePattern);
-			string path = Path.Combine(ApplicationCommonDirectory, UiOptions.Language + ".po");
 			if (matchingFiles.Length > 0)
 			{
 				return matchingFiles[0];

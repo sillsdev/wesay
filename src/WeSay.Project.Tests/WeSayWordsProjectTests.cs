@@ -430,5 +430,26 @@ namespace WeSay.Project.Tests
 				Assert.IsTrue(gotException);
 			}
 		}
+
+		[Test]
+		public void LoadProject_EmptyLanguageInUserConfig_ReadsDefaultEn()
+		{
+			string config = @"<?xml version='1.0' encoding='utf-8'?>
+<configuration version='2'>
+  <backupPlan />
+  <uiOptions>
+	<language></language>
+	<labelFontName>Angsana New</labelFontName>
+	<labelFontSizeInPoints>18</labelFontSizeInPoints>
+  </uiOptions>
+</configuration>".Replace("'", "\"");
+
+			using (var projectDir = new ProjectDirectorySetupForTesting(""))
+			{
+				File.WriteAllText(projectDir.PathToUserConfigFile, config);
+				var project = projectDir.CreateLoadedProject();
+				Assert.That(project.UiOptions.Language, Is.EqualTo("en"));
+			}
+		}
 	}
 }
