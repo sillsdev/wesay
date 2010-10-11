@@ -37,6 +37,10 @@ namespace WeSay.Project
 			{
 				XmlSerializer serializer = new XmlSerializer(typeof(UiConfigurationOptions));
 				var uiOptions = (UiConfigurationOptions)serializer.Deserialize(reader);
+				if (String.IsNullOrEmpty(uiOptions.Language))
+				{
+					uiOptions.Language = "en";
+				}
 				return uiOptions;
 			}
 		}

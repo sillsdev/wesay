@@ -1,4 +1,4 @@
-﻿# Thai translation for wesay
+# Thai translation for wesay
 # Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
 # This file is distributed under the same license as the wesay package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
@@ -51,6 +51,11 @@ msgstr "ระบุว่า \"รูปแบบพื้นฐาน\" ขอ
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Looking for USB Keys..."
 msgstr "ค้นหาอุปกรณ์เก็บข้อมูล USB"
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+#: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
+msgid "Backing Up..."
+msgstr "กำลังสำรองข้อมูล"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
 #: C:\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs

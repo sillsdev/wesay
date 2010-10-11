@@ -155,30 +155,28 @@ namespace WeSay.Project
 		//            }
 		//        }
 
+
+		// <summary>
+		// Locates the StringCatalog file, matching any file ending in <language>.po first in the Project folder,
+		// then in the Application Common folder.
+		// </summary>
 		public string LocateStringCatalog()
 		{
-			if (File.Exists(PathToStringCatalogInProjectDir))
+			string filePattern = "*" + UiOptions.Language + ".po";
+			var matchingFiles = Directory.GetFiles(ProjectDirectoryPath, filePattern);
+			if (matchingFiles.Length > 0)
 			{
-				return PathToStringCatalogInProjectDir;
+				return matchingFiles[0];
 			}
 
 			//fall back to the program's common directory
-			string path = Path.Combine(ApplicationCommonDirectory, UiOptions.Language + ".po");
-			if (File.Exists(path))
+			matchingFiles = Directory.GetFiles(ApplicationCommonDirectory, filePattern);
+			if (matchingFiles.Length > 0)
 			{
-				return path;
+				return matchingFiles[0];
 			}
 
 			return null;
-		}
-
-		public string PathToStringCatalogInProjectDir
-		{
-			get
-			{
-				return Path.Combine(ProjectDirectoryPath /*ProjectCommonDirectory*/,
-									UiOptions.Language + ".po");
-			}
 		}
 
 		public static string ApplicationCommonDirectory

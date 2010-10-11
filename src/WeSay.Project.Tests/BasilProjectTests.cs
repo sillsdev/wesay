@@ -37,7 +37,7 @@ namespace WeSay.Project.Tests
 		{
 			Directory.CreateDirectory(_projectDirectory);
 			Directory.CreateDirectory(GetCommonDirectory());
-			string pathToStringCatalogInProjectDir = Path.Combine(GetCommonDirectory(), "th.po");
+			string pathToStringCatalogInProjectDir = Path.Combine(GetCommonDirectory(), "wesay.th.po");
 			using (StreamWriter writer = File.CreateText(pathToStringCatalogInProjectDir))
 			{
 				writer.Write(TestResources.poStrings);

@@ -12,12 +12,8 @@ using System.Xml;
 using System.Xml.XPath;
 using Autofac;
 using Autofac.Builder;
-using Autofac.Registrars.Delegate;
 using Chorus;
-using Chorus.UI.Notes;
 using Chorus.UI.Notes.Bar;
-using Chorus.UI.Notes.Browser;
-using Chorus.UI.Review;
 using Chorus.Utilities;
 using LiftIO;
 using LiftIO.Validation;
@@ -28,9 +24,7 @@ using Palaso.IO;
 #if MONO
 using Palaso.Linq;
 #endif
-using Palaso.Lift;
 using Palaso.Lift.Options;
-using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using Palaso.UiBindings;
@@ -38,7 +32,8 @@ using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
-using WeSay.Project.ConfigMigration;
+using WeSay.Project.ConfigMigration.UserConfig;
+using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
 
@@ -59,7 +54,7 @@ namespace WeSay.Project
 		private Autofac.IContainer _container;
 
 		public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
-		public const int CurrentWeSayUserSpecificConfigFileVersion = 1; // This variable must be updated with every new vrsion of the WeSayUserConfig file
+		public const int CurrentWeSayUserSpecificConfigFileVersion = 2; // This variable must be updated with every new vrsion of the WeSayUserConfig file
 
 		public event EventHandler EditorsSaveNow;
 
@@ -353,6 +348,9 @@ namespace WeSay.Project
 			//review: is this the right place for this?
 			PopulateDIContainer();
 
+			var userConfigMigrator = new WeSayUserConfigMigrator(PathToUserSpecificConfigFile);
+			userConfigMigrator.MigrateIfNeeded();
+
 			LoadUserConfig();
 			InitStringCatalog();
 
@@ -424,12 +422,8 @@ namespace WeSay.Project
 				  }
 				  catch (LiftFormatException error)
 				  {
-					  Palaso.Reporting.ErrorReport.NotifyUserOfProblem(error.Message);
-					  throw error;
-				  }
-				  catch(Exception error)
-				  {
-					   throw error;
+					  ErrorReport.NotifyUserOfProblem(error.Message);
+					  throw;
 				  }
 			  });
 
@@ -939,30 +933,6 @@ namespace WeSay.Project
 			{
 				_container.Dispose();//this will dispose of objects in the container (at least those with the normal "lifetype" setting)
 			}
-		}
-
-		/// <remark>
-		/// The protection provided by this simple opproach is obviously limitted;
-		/// it will keep the lift file safe normally... but could lead to non-data-loosing crashes
-		/// if some automated process was sitting out there, just waiting to open as soon as we realease
-		/// </summary>
-		private void ReleaseLockOnLift()
-		{
-			//Debug.Assert(_liftFileStreamForLocking != null);
-			//_liftFileStreamForLocking.Close();
-			//_liftFileStreamForLocking.Dispose();
-			//_liftFileStreamForLocking = null;
-		}
-
-		public bool LiftIsLocked
-		{
-			get { return false; }
-		}
-
-		private void LockLift()
-		{
-			//Debug.Assert(_liftFileStreamForLocking == null);
-			//_liftFileStreamForLocking = File.OpenRead(PathToLiftFile);
 		}
 
 		public override string Name

@@ -156,6 +156,7 @@
 	<Compile Include="AdminWindowTests.cs" />
 	<Compile Include="CauseProblemWithAutoCompleteTestsWithCreationTests.cs" />
 	<Compile Include="BackupPlanControl.Tests.cs" />
+	<Compile Include="MigrationTests.cs" />
 	<Compile Include="MruProjectsTest.cs" />
 	<Compile Include="FieldDetailControlTests.cs" />
 	<Compile Include="InterfaceLanguageControl.Tests.cs" />

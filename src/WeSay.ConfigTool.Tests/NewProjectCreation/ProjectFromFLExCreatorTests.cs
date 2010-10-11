@@ -15,7 +15,6 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 	{
 
 		[Test]
-		public void SetWritingSystemsForFields_LiftFileContainsWritingsystemsForWhichThereIsNoDefinition_TellsUser()
 		{
 			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 
@@ -34,13 +33,8 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				//put one guy in there already
 				int originalCount = collection.Count;// collection.Count;
 
-				Assert.IsFalse(collection.ContainsKey("blah"));
-
-				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(
 					() => ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection)
 				);
-
-				Assert.IsTrue(collection.ContainsKey("blah"));
 			}
 		}
 
