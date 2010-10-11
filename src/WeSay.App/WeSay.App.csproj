@@ -194,7 +194,6 @@
 	<Compile Include="LongStartupNotification.Designer.cs">
 	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
 	</Compile>
-	<Compile Include="LexEntryRepositoryLoaderService.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
