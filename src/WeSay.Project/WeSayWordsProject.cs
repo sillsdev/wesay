@@ -274,7 +274,7 @@ namespace WeSay.Project
 				{
 					LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 				}
-				catch (LiftFormatException e)
+				catch (LiftFormatException)
 				{
 					return false;//it's already been reported, not a crash, but we can't go on
 				}
@@ -1484,7 +1484,6 @@ namespace WeSay.Project
 								  string.Format("type=\"{0}\"", field.FieldName));
 					 }
 				 });
-			return true;
 		}
 
 		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)

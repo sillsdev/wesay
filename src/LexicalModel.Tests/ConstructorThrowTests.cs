@@ -66,7 +66,7 @@ namespace WeSay.LexicalModel.Tests
 				{
 				}
 			}
-			catch (ApplicationException e)
+			catch (ApplicationException)
 			{
 			}
 			finally
@@ -87,7 +87,7 @@ namespace WeSay.LexicalModel.Tests
 					testClass.ThrowMe();
 				}
 			}
-			catch (ApplicationException e)
+			catch (ApplicationException)
 			{
 			}
 			finally
