@@ -1528,13 +1528,14 @@
 	  <name>
 		<form ws="en">Tree</form>
 		<form ws="fr">Les arbres</form>
-		<form ws="th">ใช้คำซึ่งกล่าวถึงพืชซึ่งมีขนาดใหญ่และมีลำต้นเป็นเนื้อไม้</form>
+		<form ws="th">ต้นไม้</form>
 	  </name>
 	  <abbreviation>
 		<form ws="en">1.5.1</form>
 	  </abbreviation>
 	  <description>
 		<form ws="en">Use this domain for trees--flowering plants with roots, stems, and leaves, which are large and have a wooden trunk (Phylum Spermatophyta, Subdivision Angiospermae). Also include the evergreen trees (Phylum Spermatophyta, Subdivision Gymnospermae). Evergreen trees do not have flowers, but have cone like fruits (pinecones) that contain seeds. Their leaves are shaped like needles and are retained for over a year.</form>
+		<form ws="th">ใช้คำซึ่งกล่าวถึงพืชซึ่งมีขนาดใหญ่และมีลำต้นเป็นเนื้อไม้</form>
 	  </description>
 	  <searchkeys>
 		<form ws="en">tree, arboreal</form>
