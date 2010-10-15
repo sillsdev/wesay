@@ -11,6 +11,7 @@ using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.WritingSystems;
+using Palaso.Keyboarding;
 
 namespace WeSay.LexicalModel.Foundation
 {
@@ -257,7 +258,7 @@ namespace WeSay.LexicalModel.Foundation
 		[TypeConverter(typeof (KeyboardListHelper))]
 		[Browsable(true)]
 		[ReflectorProperty("WindowsKeyman", Required = false)]
-		public string KeyboardName
+		public KeyboardDescriptor Keyboard
 		{
 			get { return _palasoWritingSystemDefinition.Keyboard; }
 			set { _palasoWritingSystemDefinition.Keyboard = value; }
@@ -411,28 +412,21 @@ namespace WeSay.LexicalModel.Foundation
 											 object value,
 											 Type destinationType)
 			{
-				if ((String) value == String.Empty)
-				{
-					return "default";
-				}
-				else
-				{
-					return value;
-				}
+				return ((KeyboardDescriptor) value).KeyboardName;
 			}
 
 			public override object ConvertFrom(ITypeDescriptorContext context,
 											   CultureInfo culture,
 											   object value)
 			{
-				if ((String) value == "default")
+				foreach (KeyboardDescriptor keyboard in KeyboardController.GetAvailableKeyboards(Engines.All))
 				{
-					return String.Empty;
+					if(keyboard.KeyboardName == (string) value)
+					{
+						return keyboard;
+					}
 				}
-				else
-				{
-					return value;
-				}
+				return KeyboardDescriptor.DefaultKeyboard; //this should never be hit as only valid values can be chosen fro the dropdown list
 			}
 
 			public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
@@ -455,13 +449,14 @@ namespace WeSay.LexicalModel.Foundation
 			public override StandardValuesCollection GetStandardValues(
 				ITypeDescriptorContext context)
 			{
-				List<String> keyboards = new List<string>();
-				keyboards.Add(String.Empty); // for 'default'
+				List<KeyboardDescriptor> keyboards = new List<KeyboardDescriptor>();
+				KeyboardDescriptor defaultKeyboard = new KeyboardDescriptor("default", Engines.None, "default");
+				keyboards.Add(defaultKeyboard); // for 'default'
 
-				foreach (KeyboardController.KeyboardDescriptor keyboard in
-					KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All))
+				foreach (KeyboardDescriptor keyboard in
+					KeyboardController.GetAvailableKeyboards(Engines.All))
 				{
-					keyboards.Add(keyboard.Name);
+					keyboards.Add(keyboard);
 				}
 				return new StandardValuesCollection(keyboards);
 			}

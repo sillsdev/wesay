@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
+using Palaso.Keyboarding;
 using WeSay.Project.Tests;
 using WeSay.LexicalModel.Foundation;
 using Palaso.TestUtilities;
@@ -105,7 +106,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				Assert.AreEqual(idWspair.Value.FontSize, ws2[idWspair.Key].FontSize);
 				Assert.AreEqual(idWspair.Value.IsAudio, ws2[idWspair.Key].IsAudio);
 				Assert.AreEqual(idWspair.Value.IsUnicode, ws2[idWspair.Key].IsUnicode);
-				Assert.AreEqual(idWspair.Value.KeyboardName, ws2[idWspair.Key].KeyboardName);
+				Assert.AreEqual(idWspair.Value.Keyboard, ws2[idWspair.Key].Keyboard);
 				Assert.AreEqual(idWspair.Value.RightToLeft, ws2[idWspair.Key].RightToLeft);
 				Assert.AreEqual(idWspair.Value.SortUsing, ws2[idWspair.Key].SortUsing);
 				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2[idWspair.Key].SpellCheckingId);
@@ -121,7 +122,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			ws.Font = new Font(FontFamily.GenericSansSerif, 12);
 			ws.IsAudio = false;
 			ws.IsUnicode = true;
-			ws.KeyboardName = "Bogus ivories!";
+			ws.Keyboard = new KeyboardDescriptor("Bogus ivories!", Engines.Windows, "YayForWordPlays123");
 			ws.RightToLeft = false;
 			ws.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			ws.SpellCheckingId = languageCode;
@@ -137,7 +138,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			ws.Font = new Font(FontFamily.GenericSansSerif, 12);
 			ws.IsAudio = false;
 			ws.IsUnicode = false;
-			ws.KeyboardName = "Bogus ivories!";
+			ws.Keyboard = new KeyboardDescriptor("Bogus ivories!", Engines.Windows, "YayForWordPlays123");
 			ws.RightToLeft = false;
 			ws.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			ws.SpellCheckingId = languageCode;
@@ -225,7 +226,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				CreateLdmlWritingsystemDefinitionFile();
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
 				loadedWsCollection.Load(_ldmlWsFolder.FolderPath);
-				loadedWsCollection["test"].KeyboardName = "changed";
+				loadedWsCollection["test"].Keyboard = new KeyboardDescriptor("Bogus ivories!", Engines.Windows, "YayForWordPlays123");
 				loadedWsCollection.Write(_ldmlWsFolder.FolderPath);
 				WritingSystemCollection reloadedWsCollection = new WritingSystemCollection();
 				reloadedWsCollection.Load(_ldmlWsFolder.FolderPath);

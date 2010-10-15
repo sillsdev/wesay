@@ -170,7 +170,7 @@ namespace WeSay.Project.Tests
 				Assert.AreEqual(idWspair.Value.FontSize, ws2[idWspair.Key].FontSize);
 				Assert.AreEqual(idWspair.Value.IsAudio, ws2[idWspair.Key].IsAudio);
 				Assert.AreEqual(idWspair.Value.IsUnicode, ws2[idWspair.Key].IsUnicode);
-				Assert.AreEqual(idWspair.Value.KeyboardName, ws2[idWspair.Key].KeyboardName);
+				Assert.AreEqual(idWspair.Value.Keyboard, ws2[idWspair.Key].Keyboard);
 				Assert.AreEqual(idWspair.Value.RightToLeft, ws2[idWspair.Key].RightToLeft);
 				Assert.AreEqual(idWspair.Value.SortUsing, ws2[idWspair.Key].SortUsing);
 				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2[idWspair.Key].SpellCheckingId);

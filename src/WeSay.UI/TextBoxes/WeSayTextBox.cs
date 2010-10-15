@@ -366,12 +366,12 @@ namespace WeSay.UI.TextBoxes
 					"WritingSystem must be initialized prior to use.");
 			}
 
-			if (_writingSystem.KeyboardName == null || _writingSystem.KeyboardName == string.Empty)
+			if (_writingSystem.Keyboard == null)
 			{
 				KeyboardController.DeactivateKeyboard();
 				return;
 			}
-			KeyboardController.ActivateKeyboard(_writingSystem.KeyboardName);
+			KeyboardController.ActivateKeyboard(_writingSystem.Keyboard);
 		}
 
 		protected override void OnLeave(EventArgs e)

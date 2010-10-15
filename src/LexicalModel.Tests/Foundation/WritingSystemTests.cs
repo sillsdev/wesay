@@ -56,7 +56,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			Font font = new Font("Tahoma", 99);
 			Assert.IsNotNull(ws);
 			Assert.AreEqual(font.Name, ws.FontName);
-			Assert.AreEqual("", ws.KeyboardName);
+			Assert.AreEqual("", ws.Keyboard);
 			Assert.AreEqual("one", ws.Id);
 			Assert.AreEqual(font.Size, ws.FontSize);
 		}

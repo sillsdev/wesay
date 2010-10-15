@@ -14,13 +14,13 @@ namespace WeSay.LexicalModel.Foundation
 
 		public void ActivateKeyboard()
 		{
-			if (string.IsNullOrEmpty(_writingSystem.KeyboardName))
+			if (_writingSystem.Keyboard == null)
 			{
 				KeyboardController.DeactivateKeyboard();
 			}
 			else
 			{
-				KeyboardController.ActivateKeyboard(_writingSystem.KeyboardName);
+				KeyboardController.ActivateKeyboard(_writingSystem.Keyboard);
 			}
 		}
 
