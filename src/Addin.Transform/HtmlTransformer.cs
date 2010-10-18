@@ -3,10 +3,9 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using System.Xml.Xsl;
 using Addin.Transform.PdfDictionary;
-using Mono.Addins;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.DictionaryServices.Lift;
+using Palaso.I8N;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -61,7 +60,7 @@ namespace Addin.Transform
 			string pathToHtml = CreateFileToOpen(projectInfo, true, true);
 			_pathToOutput = pathToHtml;
 
-			string layoutCssPath = projectInfo.LocateFile(Path.Combine("Templates", "defaultDictionary.css"));
+			string layoutCssPath = projectInfo.LocateFile(Path.Combine("templates", "defaultDictionary.css"));
 
 			string destination =Path.Combine(Path.GetDirectoryName(pathToHtml), "defaultDictionary.css");
 
@@ -90,13 +89,13 @@ namespace Addin.Transform
 
 			LexEntryRepository lexEntryRepository = projectInfo.ServiceProvider.GetService(typeof(LexEntryRepository)) as LexEntryRepository;
 			var pliftPath = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + ".plift");
-			using (LameProgressDialog dlg = new LameProgressDialog("Exporting to PLift..."))
+			using (var dlg = new LameProgressDialog("Exporting to PLift..."))
 			{
 				dlg.Show();
-				PLiftMaker maker = new PLiftMaker();
+				var maker = new PLiftMaker();
 				maker.MakePLiftTempFile(pliftPath, lexEntryRepository,
 										projectInfo.ServiceProvider.GetService(typeof(ViewTemplate)) as
-										ViewTemplate);
+										ViewTemplate, LiftWriter.ByteOrderStyle.NoBOM);
 			}
 
 			var pathToOutput = Path.Combine(projectInfo.PathToExportDirectory,

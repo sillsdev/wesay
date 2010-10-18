@@ -7,8 +7,8 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Mono.Addins;
+using Palaso.I8N;
 using Palaso.Progress;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 
@@ -54,9 +54,8 @@ namespace Addin.Transform
 		/// </summary>
 		private static void OnDoGrepWork(object sender, DoWorkEventArgs args)
 		{
-			ProgressState progressState = (ProgressState) args.Argument;
-			TransformWorkerArguments workerArguments =
-					(TransformWorkerArguments) (progressState.Arguments);
+			var progressState = (ProgressState) args.Argument;
+			var workerArguments = (TransformWorkerArguments) (progressState.Arguments);
 
 			progressState.StatusLabel = "Converting to MDF...";
 			progressState.NumberOfStepsCompleted++;
@@ -66,36 +65,30 @@ namespace Addin.Transform
 
 		private static void GrepFile(string inputPath, DoWorkEventArgs args)
 		{
-			ProgressState progressState = (ProgressState) args.Argument;
-			TransformWorkerArguments workerArguments =
-					(TransformWorkerArguments) (progressState.Arguments);
-			SfmTransformSettings sfmSettings =
-					(SfmTransformSettings) workerArguments.postTransformArgument;
+			var progressState = (ProgressState) args.Argument;
+			var workerArguments = (TransformWorkerArguments) (progressState.Arguments);
+			var sfmSettings = (SfmTransformSettings) workerArguments.postTransformArgument;
 
 			string tempPath = inputPath + ".tmp";
 			IEnumerable<SfmTransformSettings.ChangePair> pairs = sfmSettings.ChangePairs;
 			using (StreamReader reader = File.OpenText(inputPath))
 			{
-				using (StreamWriter writer = new StreamWriter(tempPath))
+				using (var writer = new StreamWriter(tempPath))
 				{
-					while (!reader.EndOfStream)
+					if (progressState.Cancel)
 					{
-						string line = reader.ReadLine();
-						if (progressState.Cancel)
-						{
-							return;
-						}
-						if (line.StartsWith("\\dt "))
-						{
-							line = ConvertDateLineToToolboxFormat(line);
-						}
-						//we don't have a way of knowing      progressState.NumberOfStepsCompleted = ;
+						return;
+					}
+					//we don't have a way of knowing      progressState.NumberOfStepsCompleted = ;
+					foreach (string r in BreakUpSfmIntoRecords(reader))
+					{
+						string record = r;
 						foreach (SfmTransformSettings.ChangePair pair in pairs)
 						{
 							//this is super slow
-							line = pair.regex.Replace(line, pair.to);
+							record = pair.regex.Replace(record, pair.to);
 						}
-						writer.WriteLine(line);
+						writer.Write(record);
 					}
 					writer.Close();
 				}
@@ -109,6 +102,30 @@ namespace Addin.Transform
 			File.Move(tempPath, inputPath); //, backupPath);
 			progressState.NumberOfStepsCompleted = progressState.TotalNumberOfSteps;
 			Thread.Sleep(500); //don't event see that message otherwise
+		}
+
+		static private IEnumerable<string> BreakUpSfmIntoRecords(StreamReader reader)
+		{
+			List<string> records = new List<string>();
+			string record = "";
+			string line = "";
+			while (!reader.EndOfStream)
+			{
+				line = reader.ReadLine();
+				if(line != Environment.NewLine)
+				{
+					if (line.StartsWith("\\dt "))
+					{
+						line = ConvertDateLineToToolboxFormat(line);
+					}
+					record += line + Environment.NewLine;
+				}
+				if(reader.EndOfStream || line == Environment.NewLine)
+				{
+					records.Add(record);
+				}
+			}
+			return records;
 		}
 
 		private static string ConvertDateLineToToolboxFormat(string line)
@@ -126,7 +143,7 @@ namespace Addin.Transform
 		{
 			_settings.FillEmptySettingsWithGuesses(projectInfo);
 			SetupPostTransformMethod(OnDoGrepWork, _settings, 10 /*has some cushion*/);
-			LexEntryRepository repo = projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
+			//LexEntryRepository repo = projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
 			string output = TransformLiftToText(projectInfo, "lift2sfm.xsl", "-sfm.txt");
 			if (string.IsNullOrEmpty(output))
 			{
@@ -144,7 +161,7 @@ namespace Addin.Transform
 
 		public bool DoShowSettingsDialog(Form parentForm, ProjectInfo projectInfo)
 		{
-			SFMChangesDialog dlg = new SFMChangesDialog(_settings, projectInfo);
+			var dlg = new SFMChangesDialog(_settings, projectInfo);
 			return dlg.ShowDialog(parentForm) == DialogResult.OK;
 		}
 

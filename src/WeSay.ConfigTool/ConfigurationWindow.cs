@@ -91,7 +91,7 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			OnOpenProject(dlg.FileName, null);
+			OnOpenProject(dlg.FileName);
 		}
 
 		private static string GetInitialDirectory()
@@ -113,25 +113,24 @@ namespace WeSay.ConfigTool
 				}
 			}
 
-			if (initialDirectory == null || initialDirectory == "")
+			if (string.IsNullOrEmpty(initialDirectory))
 			{
 				initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			}
 			return initialDirectory;
 		}
 
-		public void OnOpenProject(object sender, EventArgs e)
+		public void OnOpenProject(string path)
 		{
-			string configFilePath = (string) sender;
-			if (!File.Exists(configFilePath))
+			if (!File.Exists(path) && !Directory.Exists(path))
 			{
 				ErrorReport.NotifyUserOfProblem(
 						"WeSay could not find the file at {0} anymore.  Maybe it was moved or renamed?",
-						configFilePath);
+						path);
 				return;
 			}
 
-			OpenProject(configFilePath);
+			OpenProject(path);
 		}
 
 		private void OnCreateProject(object sender, EventArgs e)
@@ -168,6 +167,9 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
+
+			Logger.WriteEvent("Attempting create new project from FLEx Export...");
+
 			if (ProjectFromFLExCreator.Create(dlg.PathToNewProjectDirectory, dlg.PathToLift))
 			{
 				if (OpenProject(dlg.PathToNewProjectDirectory))
@@ -229,8 +231,13 @@ namespace WeSay.ConfigTool
 			}
 		}
 
+		/// <summary>
+		///
+		/// </summary>
+		/// <returns>true if the project was sucessfully opend</returns>
 		public bool OpenProject(string path)
 		{
+			Logger.WriteEvent("OpenProject("+path+")");
 			//System.Configuration.ConfigurationManager.AppSettings["LastConfigFilePath"] = path;
 
 			//strip off any trailing '\'
@@ -276,11 +283,22 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception e)
 			{
-				ErrorReport.NotifyUserOfProblem("WeSay was not able to open that project. \r\n" +
-												  e.Message);
+				Project = null;
+				ErrorReport.NotifyUserOfProblem(e, "WeSay was not able to open that project.");
 				return false;
 			}
 
+			SetupProjectControls(BuildInnerContainerForThisProject());
+
+			if (Project != null)
+			{
+				Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
+			}
+			return true;
+		}
+
+		private IContainer BuildInnerContainerForThisProject()
+		{
 			IContainer container = _project.Container.CreateInnerContainer();
 			var containerBuilder = new Autofac.Builder.ContainerBuilder();
 			containerBuilder.Register(typeof(Tasks.TaskListView));
@@ -291,7 +309,7 @@ namespace WeSay.ConfigTool
 			//      autofac's generated factory stuff wasn't working with our version of autofac, so
 			//  i abandoned this
 			//containerBuilder.Register<Control>().FactoryScoped();
-		   // containerBuilder.RegisterGeneratedFactory<ConfigTaskControlFactory>(new TypedService(typeof (Control)));
+			// containerBuilder.RegisterGeneratedFactory<ConfigTaskControlFactory>(new TypedService(typeof (Control)));
 
 			containerBuilder.Register<FieldsControl>();
 			containerBuilder.Register<WritingSystemSetup>();
@@ -299,21 +317,14 @@ namespace WeSay.ConfigTool
 			containerBuilder.Register<InterfaceLanguageControl>();
 			containerBuilder.Register<ActionsControl>();
 			containerBuilder.Register<BackupPlanControl>();
+//            containerBuilder.Register<ChorusControl>();
 			containerBuilder.Register<OptionListControl>();
 
 			containerBuilder.Register<IContext>(c => c); // make the context itself available for pushing into contructors
 
 			containerBuilder.Build(container);
-
-			SetupProjectControls(container);
-
-			if (Project != null)
-			{
-				Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
-			}
-			return true;
+			return container;
 		}
-
 
 
 		private void SetupProjectControls(IContext context)
@@ -342,7 +353,7 @@ namespace WeSay.ConfigTool
 			_welcomePage.Dock = DockStyle.Fill;
 			_welcomePage.NewProjectClicked += OnCreateProject;
 			_welcomePage.NewProjectFromFlexClicked += OnCreateProjectFromFLEx;
-			_welcomePage.OpenPreviousProjectClicked += OnOpenProject;
+			_welcomePage.OpenSpecifiedProject += OnOpenProject;
 			_welcomePage.ChooseProjectClicked += OnChooseProject;
 		}
 
@@ -404,11 +415,6 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void OnAboutToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			new AboutBox().ShowDialog();
-		}
-
 		private void OnOpenThisProjectInWeSay(object sender, EventArgs e)
 		{
 			_project.Save(); //want the client to see the latest
@@ -448,6 +454,27 @@ namespace WeSay.ConfigTool
 
 				LiftIO.Migration.Migrator.ReverseMigrateFrom13ToFLEx12(_project.PathToLiftFile, dlg.FileName);
 			}
+		}
+
+		private void OnAboutToolStrip_Click(object sender, EventArgs e)
+		{
+			new AboutBox().ShowDialog();
+		}
+
+		private void OnHelpToolStrip_Click(object sender, EventArgs e)
+		{
+			string helpFilePath = Path.Combine(WeSayWordsProject.ApplicationRootDirectory, "WeSay Documentation.chm");
+			if(File.Exists(helpFilePath))
+			{
+				var uri = new Uri(helpFilePath);
+				Help.ShowHelp(this, uri.AbsoluteUri);
+			}
+			Process.Start("http://wesay.org/wiki/Help_And_Contact");
+		}
+
+		private void ConfigurationWindow_Load(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

@@ -1,21 +1,14 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using Autofac;
 using CommandLine;
 using LiftIO;
+using Palaso.I8N;
 using Palaso.Reporting;
-using Palaso.Services;
-using Palaso.Services.Dictionary;
-using Palaso.Services.ForServers;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
-using WeSay.App.Services;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
-using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -25,16 +18,14 @@ namespace WeSay.App
 	{
 		//private static Mutex _oneInstancePerProjectMutex;
 		private WeSayWordsProject _project;
-		private DictionaryServiceProvider _dictionary;
+
 		private readonly CommandLineArguments _commandLineArguments = new CommandLineArguments();
-		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
 		private TabbedForm _tabbedForm;
-		private IDisposable _serviceLifeTimeHelper;
 
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			WeSayApp app = new WeSayApp(args);
+			var app = new WeSayApp(args);
 			app.Run();
 		}
 
@@ -47,7 +38,7 @@ namespace WeSay.App
 			{
 				Application.SetCompatibleTextRenderingDefault(false);
 			}
-			catch (Exception) //swallow
+			catch (Exception)
 			{
 				//this fails in some test scenarios; perhaps the unit testing framework is leaving us in
 				//the same appdomain, and that remembers that we called this once before?
@@ -83,81 +74,84 @@ namespace WeSay.App
 
 		public void Run()
 		{
-			string path = DetermineActualLiftPath(_commandLineArguments.liftPath);
-			if (!String.IsNullOrEmpty(path))
+			DisplaySettings.Default.SkinName = Settings.Default.SkinName;
+			using (_project = InitializeProject(_commandLineArguments.liftPath))
 			{
-				path = path.Replace(Path.DirectorySeparatorChar, '-');
-				path = path.Replace(Path.VolumeSeparatorChar, '-');
-
-				_serviceAppSingletonHelper =
-						ServiceAppSingletonHelper.CreateServiceAppSingletonHelperIfNeeded(
-								"WeSay-" + path, _commandLineArguments.startInServerMode);
-				if (_serviceAppSingletonHelper == null)
+				if (_project == null)
 				{
-					return; // there's already an instance of this app running
+					return;
 				}
+
+
+				LexEntryRepository repository;
+				try
+				{
+					repository = GetLexEntryRepository();
+				}
+				catch (LiftFormatException)
+				{
+					return; //couldn't load, and we've already told the user
+				}
+				WireUpChorusEvents();
+				StartUserInterface();
+
+				//do a last backup before exiting
+				Logger.WriteEvent("App Exiting Normally.");
 			}
-
-			try
-			{
-				DisplaySettings.Default.SkinName = Settings.Default.SkinName;
-				using (_project = InitializeProject(_commandLineArguments.liftPath))
-				{
-					if (_project == null)
-					{
-						return;
-					}
+			_project.BackupNow();
 
 
-					LexEntryRepository repository;
-					try
-					{
-						repository = GetLexEntryRepository();
-					}
-					catch (LiftFormatException)
-					{
-						return;//couldn't load, and we've already told the user
-					}
-
-					using (_dictionary =
-						   new DictionaryServiceProvider(repository, this, _project))
-					{
-						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
-						{
-							RecoverUnsavedDataIfNeeded();
-						}
-
-						StartDictionaryServices();
-						_dictionary.LastClientDeregistered +=
-							_serviceAppSingletonHelper.OnExitIfInServerMode;
-
-						WireUpChorusEvents();
-
-						_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
-
-						_dictionary.LastClientDeregistered -=
-							_serviceAppSingletonHelper.OnExitIfInServerMode;
-
-						//do a last backup before exiting
-						Logger.WriteEvent("App Exiting Normally.");
-					}
-					_project.BackupNow();
-			   }
-		   }
-			finally
-			{
-				if (_serviceLifeTimeHelper != null)
-				{
-					_serviceLifeTimeHelper.Dispose();
-				}
-				if (_serviceAppSingletonHelper != null)
-				{
-					_serviceAppSingletonHelper.Dispose();
-				}
-			}
 			Logger.ShutDown();
 			Settings.Default.Save();
 		}
+
+			   private void StartUserInterface()
+	   {
+		   try
+		   {
+			   _project.AddToContainer(b => b.Register<StatusBarController>());
+			   _project.AddToContainer(b => b.Register<TabbedForm>());
+			   _tabbedForm = _project.Container.Resolve<TabbedForm>();
+			   _tabbedForm.Show(); // so the user sees that we did launch
+			   _tabbedForm.Text =
+					   StringCatalog.Get("~WeSay",
+										 "It's up to you whether to bother translating this or not.") +
+					   ": " + _project.Name + "        " + ErrorReport.UserFriendlyVersionString;
+			   Application.DoEvents();
+
+			  //todo: this is what we're supposed to use the autofac "modules" for
+			   //couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
+			   _project.AddToContainer(b => b.Register<ICurrentWorkTask>(_tabbedForm));
+			   _project.AddToContainer(b => b.Register<StatusStrip>(_tabbedForm.StatusStrip));
+			   _project.AddToContainer(b => b.Register(TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(_project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject )));
+
+			   _project.LoadTasksFromConfigFile();
+
+			   Application.DoEvents();
+			   _tabbedForm.ContinueLaunchingAfterInitialDisplay();
+			   _tabbedForm.Activate();
+			   _tabbedForm.BringToFront(); //needed if we were previously in server mode
+
+			   RtfRenderer.HeadWordWritingSystemId =
+					   _project.DefaultViewTemplate.HeadwordWritingSystem.Id;
+
+			   //run the ui
+			   Application.Run(_tabbedForm);
+
+			   Settings.Default.SkinName = DisplaySettings.Default.SkinName;
+		   }
+		   catch (IOException e)
+		   {
+			   ErrorReport.NotifyUserOfProblem(e.Message);
+		   }
+	   }
+
+	   //private static LiftUpdateService SetupUpdateService(LexEntryRepository lexEntryRepository)
+	   //{
+	   //    LiftUpdateService liftUpdateService;
+	   //    liftUpdateService = new LiftUpdateService(lexEntryRepository);
+	   //    return liftUpdateService;
+	   //}
 
 		private LexEntryRepository GetLexEntryRepository()
 		{
@@ -182,58 +176,8 @@ namespace WeSay.App
 			_project.ConsiderSynchingOrBackingUp("checkpoint");
 		}
 
-		//!!! Move this into LexEntryRepository and maybe lower.
-		private void RecoverUnsavedDataIfNeeded()
-		{
-			if (!File.Exists(_project.PathToRepository))
-			{
-				return;
-			}
 
-			try
-			{
-				GetLexEntryRepository().BackendRecoverUnsavedChangesOutOfCacheIfNeeded();
-			}
-			catch (IOException e)
-			{
-				ErrorReport.ReportNonFatalException(e);
-				Thread.CurrentThread.Abort();
-			}
-		}
 
-		private void OnBringToFrontRequest(object sender, EventArgs e)
-		{
-			if (_tabbedForm == null)
-			{
-				_serviceAppSingletonHelper.EnsureUIRunningAndInFront();
-			}
-			else
-			{
-				_tabbedForm.synchronizationContext.Send(
-						delegate { _tabbedForm.MakeFrontMostWindow(); }, null);
-			}
-		}
-
-		private void StartDictionaryServices()
-		{
-			////Problem: if there is already a cache miss, this will be slow, and somebody will time out
-			//StartCacheWatchingStuff();
-
-			Logger.WriteMinorEvent("Starting Dictionary Services at {0}",
-								   DictionaryAccessor.GetServiceName(_project.PathToLiftFile));
-			_serviceLifeTimeHelper =
-					IpcSystem.StartServingObject(
-							DictionaryAccessor.GetServiceName(_project.PathToLiftFile), _dictionary);
-		}
-
-		public bool IsInServerMode
-		{
-			get
-			{
-				return _serviceAppSingletonHelper.CurrentState ==
-					   ServiceAppSingletonHelper.State.ServerMode;
-			}
-		}
 
 		///// <summary>
 		///// Only show a dialog if the operation takes more than two seconds
@@ -309,85 +253,15 @@ namespace WeSay.App
 			}
 		}
 
-		public void GoToUrl(string url)
+
+	   private static WeSayWordsProject InitializeProject(string liftPath)
 		{
-			_serviceAppSingletonHelper.EnsureUIRunningAndInFront();
-
-			//if it didn't timeout
-			if (_serviceAppSingletonHelper.CurrentState == ServiceAppSingletonHelper.State.UiMode)
-			{
-				Debug.Assert(_tabbedForm != null, "tabbed form should have been started.");
-				_tabbedForm.GoToUrl(url);
-			}
-		}
-
-		private void StartUserInterface()
-		{
-			try
-			{
-				_project.AddToContainer(b => b.Register<StatusBarController>());
-				_project.AddToContainer(b => b.Register<TabbedForm>());
-				_tabbedForm = _project.Container.Resolve<TabbedForm>();
-				_tabbedForm.Show(); // so the user sees that we did launch
-				_tabbedForm.Text =
-						StringCatalog.Get("~WeSay",
-										  "It's up to you whether to bother translating this or not.") +
-						": " + _project.Name + "        " + ErrorReport.UserFriendlyVersionString;
-				Application.DoEvents();
-
-			   //todo: this is what we're supposed to use the autofac "modules" for
-				//couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
-				_project.AddToContainer(b => b.Register<ICurrentWorkTask>(_tabbedForm));
-				_project.AddToContainer(b => b.Register<StatusStrip>(_tabbedForm.StatusStrip));
-				_project.AddToContainer(b => b.Register(TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(_project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject )));
-
-
-				_project.LoadTasksFromConfigFile();
-
-				Application.DoEvents();
-				_tabbedForm.IntializationComplete += OnTabbedForm_IntializationComplete;
-				_tabbedForm.ContinueLaunchingAfterInitialDisplay();
-				_tabbedForm.Activate();
-				_tabbedForm.BringToFront(); //needed if we were previously in server mode
-
-				RtfRenderer.HeadWordWritingSystemId =
-						_project.DefaultViewTemplate.HeadwordWritingSystem.Id;
-
-				//run the ui
-				Application.Run(_tabbedForm);
-
-				Settings.Default.SkinName = DisplaySettings.Default.SkinName;
-			}
-			catch (IOException e)
-			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
-			}
-		}
-
-
-
-		private void OnTabbedForm_IntializationComplete(object sender, EventArgs e)
-		{
-			_serviceAppSingletonHelper.BringToFrontRequest += OnBringToFrontRequest;
-			_serviceAppSingletonHelper.UiReadyForEvents();
-			_dictionary.UiSynchronizationContext = _tabbedForm.synchronizationContext;
-		}
-
-		//private static LiftUpdateService SetupUpdateService(LexEntryRepository lexEntryRepository)
-		//{
-		//    LiftUpdateService liftUpdateService;
-		//    liftUpdateService = new LiftUpdateService(lexEntryRepository);
-		//    return liftUpdateService;
-		//}
-
-		private static WeSayWordsProject InitializeProject(string liftPath)
-		{
-			WeSayWordsProject project = new WeSayWordsProject();
+			var project = new WeSayWordsProject();
 			liftPath = DetermineActualLiftPath(liftPath);
 			if (liftPath == null)
 			{
 				ErrorReport.NotifyUserOfProblem(
-						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project.");
+						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project, then click the 'Open in WeSay' button from that application's toolbar.");
 				return null;
 			}
 
@@ -495,7 +369,7 @@ namespace WeSay.App
 
 		private static void ShowCommandLineError(string e)
 		{
-			Parser p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
+			var p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
 			e = e.Replace("Duplicate 'liftPath' argument",
 						  "Please enclose project path in quotes if it contains spaces.");
 			e += "\r\n\r\n" + p.GetUsageString(200);

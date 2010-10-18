@@ -31,6 +31,9 @@
   </Target>
 
   <Target Name="Compile">
+
+	<CallTarget targets="UnzipMercurial"/>
+
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Rebuild"
 			 Properties="Configuration=Debug" />
@@ -38,6 +41,11 @@
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Rebuild"
 			 Properties="Configuration=Release" />
+  </Target>
+
+  <Target Name="UnzipMercurial">
+	<Unzip ZipFileName="$(BaseDirectory)\lib\net2.0\Mercurial.zip"
+		   TargetDirectory="$(BaseDirectory)\output\Release"/>
   </Target>
 
   <Target Name="Test">
@@ -139,6 +147,17 @@
 	</MakeWixForDirTree>
   </Target>
 
+  <Target Name="MakeWixForMercurial">
+	<MakeWixForDirTree
+				DirectoryReferenceId="mercurial"
+				ComponentGroupId="Mercurial"
+				RootDirectory="$(BaseDirectory)\output\release\mercurial"
+				OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedMercurial.wxs"
+				MatchRegExPattern=".*">
+	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
+	</MakeWixForDirTree>
+  </Target>
+
   <Target Name="MakeWixForTemplates">
 	<MakeWixForDirTree
 				DirectoryReferenceId="TemplatesDir"
@@ -161,6 +180,7 @@
 	<Message Text="Version: $(Version)" />
 
 	<CallTarget targets="MakeWixForTemplates"/>
+	<CallTarget targets="MakeWixForMercurial"/>
 
 	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
@@ -198,8 +218,9 @@
 
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<CallTarget targets="MakeWixForTemplates"/>
+	<CallTarget targets="MakeWixForMercurial"/>
 
-	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
+	  <!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
 	<FileUpdate Files="$(BaseDirectory)\src\Installer\Installer.wxs" Regex="Property_ProductVersion = \&quot;.*\&quot;"
 				ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />

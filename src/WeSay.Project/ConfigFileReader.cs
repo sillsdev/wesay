@@ -3,26 +3,35 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml.XPath;
 using Autofac;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 
 
 namespace WeSay.Project
 {
 	public class ConfigFileReader
 	{
-		private readonly string _xmlConfiguration;
+		private readonly string _currentXmlConfiguration;
+		private readonly string _defaultXmlConfiguration;
 		private readonly TaskTypeCatalog _taskTypes;
 
-		public ConfigFileReader(string xmlConfiguration, TaskTypeCatalog taskTypes)
+		public ConfigFileReader(string currentXmlConfiguration, string defaultXmlConfiguration, TaskTypeCatalog taskTypes)
 		{
-			_xmlConfiguration = xmlConfiguration;
+			_currentXmlConfiguration = currentXmlConfiguration;
+			_defaultXmlConfiguration = defaultXmlConfiguration;
 			_taskTypes = taskTypes;
 		}
 
 		public IEnumerable<ITaskConfiguration> GetTasksConfigurations(IContext context)
 		{
-			XPathDocument doc = new XPathDocument(new StringReader(_xmlConfiguration));
 			var configs = new List<ITaskConfiguration>();
+			GetTasks(_currentXmlConfiguration, context, configs);
+			GetTasks(_defaultXmlConfiguration, context, configs);
+			return configs;
+		}
+
+		private void GetTasks(string xml, IContext context, List<ITaskConfiguration> configs)
+		{
+			XPathDocument doc = new XPathDocument(new StringReader(xml));
 			XPathNavigator navigator = doc.CreateNavigator();
 			XPathNodeIterator taskListNodeIterator = navigator.Select("configuration/tasks/task");
 			foreach (XPathNavigator taskNode in taskListNodeIterator)
@@ -30,10 +39,12 @@ namespace WeSay.Project
 				ITaskConfiguration configuration = CreateTaskConfiguration(context,_taskTypes, taskNode);
 				if (configuration != null)
 				{
-					configs.Add(configuration);
+					if(!configs.Exists(t=> t.AreEquivalent(configuration)))
+					{
+						configs.Add(configuration);
+					}
 				}
 			}
-			return configs;
 		}
 
 

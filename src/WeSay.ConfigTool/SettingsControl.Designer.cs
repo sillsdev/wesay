@@ -38,7 +38,6 @@ namespace WeSay.ConfigTool
 			this._actionsButton = new System.Windows.Forms.ToolStripButton();
 			this._interfaceLanguageButton = new System.Windows.Forms.ToolStripButton();
 			this._backupButton = new System.Windows.Forms.ToolStripButton();
-			this._chorusButton = new System.Windows.Forms.ToolStripButton();
 			this._optionsListButton = new System.Windows.Forms.ToolStripButton();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this._areaPanel = new System.Windows.Forms.Panel();
@@ -60,7 +59,6 @@ namespace WeSay.ConfigTool
 			this._actionsButton,
 			this._interfaceLanguageButton,
 			this._backupButton,
-			this._chorusButton,
 			this._optionsListButton});
 			this._areasToolStrip.Location = new System.Drawing.Point(0, 20);
 			this._areasToolStrip.Name = "_areasToolStrip";
@@ -168,7 +166,7 @@ namespace WeSay.ConfigTool
 			this._optionsListButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._optionsListButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
 			this._optionsListButton.Name = "_optionsListButton";
-			this._optionsListButton.Size = new System.Drawing.Size(116, 36);
+			this._optionsListButton.Size = new System.Drawing.Size(171, 36);
 			this._optionsListButton.Text = "Option Lists";
 			this._optionsListButton.Click += new System.EventHandler(this.OnAreaButton_Click);
 			//
@@ -239,7 +237,6 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.ToolStripButton _actionsButton;
 		private System.Windows.Forms.ToolStripButton _interfaceLanguageButton;
 		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.ToolStripButton _chorusButton;
 		private System.Windows.Forms.ToolStripButton _writingSystemButton;
 		private ToolStripButton _optionsListButton;
 		private Panel _areaPanel;

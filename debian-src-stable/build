@@ -1,9 +1,9 @@
 #!/bin/sh
 HERE=`pwd`
-TARGETS='hardy intrepid jaunty'
+TARGETS='hardy intrepid jaunty karmic'
 REVISION=`echo $BUILD_NUMBER | sed -e 's/[:-].*$//'`
 MAJOR=`sed -e 's/\.${revision}//' bld/version.txt`
-rm -fr build
+rm -fr output/build
 mkdir -p output/build
 cd output/build
 cp ../linux/mono/2.0/Debug/wesay-src-$MAJOR.$REVISION.tar.gz wesay-stable-$MAJOR.$REVISION.orig.tar.gz

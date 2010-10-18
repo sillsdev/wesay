@@ -2,6 +2,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Palaso.Data;
+using Palaso.DictionaryServices.Lift;
+using Palaso.DictionaryServices.Model;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -22,9 +24,9 @@ namespace Addin.Transform
 		//    return path;
 		//}
 
-		public void  MakePLiftTempFile(string outputPath, LexEntryRepository lexEntryRepository, ViewTemplate template)
+		public void  MakePLiftTempFile(string outputPath, LexEntryRepository lexEntryRepository, ViewTemplate template, LiftWriter.ByteOrderStyle style)
 		{
-			using (PLiftExporter exporter = new PLiftExporter(outputPath, lexEntryRepository, template))
+			using (var exporter = new PLiftExporter(outputPath, lexEntryRepository, template))
 			{
 				ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);

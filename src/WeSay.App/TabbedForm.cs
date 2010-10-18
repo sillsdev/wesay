@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using Chorus.UI.Review;
+using Palaso.Code;
+using Palaso.I8N;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.Project;
+using WeSay.UI;
+
 using Timer=System.Windows.Forms.Timer;
 
 namespace WeSay.App
@@ -20,7 +23,10 @@ namespace WeSay.App
 		public SynchronizationContext synchronizationContext;
 		//        private ProgressDialogHandler _progressHandler;
 
-		public TabbedForm(StatusBarController statusBarController)
+		[CLSCompliant(false)]
+		public TabbedForm(
+			StatusBarController statusBarController,
+			NavigateToRecordEvent navigateToRecordEventToSubscribeTo)
 		{
 			InitializeComponent();
 			tabControl1.TabPages.Clear();
@@ -29,7 +35,20 @@ namespace WeSay.App
 			synchronizationContext = SynchronizationContext.Current;
 			Debug.Assert(synchronizationContext != null);
 
+			_statusStrip.Font = StringCatalog.ModifyFontForLocalization(_statusStrip.Font);
 			statusBarController.StatusStrip = _statusStrip;
+			if (navigateToRecordEventToSubscribeTo != null)
+			{
+				navigateToRecordEventToSubscribeTo.Subscribe(OnNavigateToUrl);
+			}
+
+		}
+
+		//for tests
+		public TabbedForm(StatusBarController statusBarController)
+			:this(statusBarController, null)
+		{
+
 		}
 
 		public StatusStrip StatusStrip
@@ -89,18 +108,11 @@ namespace WeSay.App
 			}
 		}
 
-		private void CreateTabPageForTask(ITask t)
+		private void OnNavigateToUrl(string url)
 		{
-			//t.Container = container;
-			TabPage page = new TabPage(t.Label);
-			page.Tag = t;
-
-			//this is trying to get around screwing up spacing when the ui font
-			//is a huge one
-			page.Font = new Font(FontFamily.GenericSansSerif, 9);
-
-			tabControl1.TabPages.Add(page);
+			GoToUrl(url);
 		}
+
 
 		private delegate void TakesStringArg(string arg);
 
@@ -111,19 +123,22 @@ namespace WeSay.App
 				Invoke(new TakesStringArg(GoToUrl), url);
 				return;
 			}
-			//todo: find the task in the url, pick the right task,
-			//handle the case where we don't have that task, etc.
+
+			//NB: notice, we only handly URLs to a single task at this point (DictionaryBrowseAndEdit)
 
 			foreach (TabPage page in tabControl1.TabPages)
 			{
-				//todo: temporary hack
-				if (((ITask) page.Tag).Label.Contains("Dictionary"))
+				if (page.Tag is ITaskForExternalNavigateToEntry)
 				{
-					//this approach is for user clicking, chokes without an event loop: ActiveTask = (ITask) page.Tag;
 					tabControl1.SelectedTab = page;
-					ActivateTab(page, false);
-					ActiveTask.GoToUrl(url);
-					CurrentUrl = url;
+#if MONO    //For some reason .net fires this event if TabPages.Clear has been used. Mono does not.
+					if(!tabControl1.IsHandleCreated)
+					{
+						OnTabSelected(tabControl1, new TabControlEventArgs (tabControl1.SelectedTab, tabControl1.SelectedIndex, TabControlAction.Selected));
+					}
+#endif
+
+					((ITaskForExternalNavigateToEntry)page.Tag).GoToUrl(url);
 					return;
 				}
 			}
@@ -131,6 +146,25 @@ namespace WeSay.App
 					"Sorry, that URL requires a task which is not currently enabled for this user. ({0})",
 					url);
 			throw new NavigationException("Couldn't locate ");
+		}
+
+
+		private void CreateTabPageForTask(ITask t)
+		{
+			//t.Container = container;
+			var page = new TabPage(t.Label);
+			page.Tag = t;
+
+			//this is trying to get around screwing up spacing when the ui font
+			//is a huge one...
+			//JH sep09: doesn't seem to have any effect, at least on windows
+			page.Font = StringCatalog.LabelFont;
+
+			//jh experiment
+			tabControl1.Font = page.Font;
+
+
+			tabControl1.TabPages.Add(page);
 		}
 
 		public void MakeFrontMostWindow()
@@ -230,9 +264,17 @@ namespace WeSay.App
 
 		public string CurrentUrl
 		{
-			get { return _currentUrl; }
-			set { _currentUrl = value; }
+			get
+			{
+				if(_activeTask==null)
+					return string.Empty;
+				var t = _activeTask as ITaskForExternalNavigateToEntry;
+				if(t==null)
+					return string.Empty;
+				return t.CurrentUrl;
+			}
 		}
+
 
 		private void OnTabSelected(object sender, TabControlEventArgs e)
 		{
@@ -244,7 +286,7 @@ namespace WeSay.App
 
 		private void ActivateTab(Control page, bool okTouseTimer)
 		{
-			ITask task = (ITask) page.Tag;
+			var task = (ITask) page.Tag;
 			if (ActiveTask == task)
 			{
 				return; //debounce
@@ -275,7 +317,7 @@ namespace WeSay.App
 			page.Text += " " +
 						 StringCatalog.Get("~Loading...",
 										   "Appended to the name of a task, in its tab, while the user is waiting for the task to come up.");
-			Timer t = new Timer();
+			var t = new Timer();
 			t.Tick += delegate
 					  {
 						  t.Stop();
@@ -298,7 +340,7 @@ namespace WeSay.App
 			{
 				task.Activate();
 			}
-			catch (ConfigurationException e) //let others go through the normal bug reporting system
+			catch (ConfigurationException e) //let others go through the normal reporting system
 			{
 				ErrorReport.NotifyUserOfProblem(e.Message);
 				Logger.WriteEvent("Failed Activating");
@@ -322,7 +364,7 @@ namespace WeSay.App
 
 		public void ContinueLaunchingAfterInitialDisplay()
 		{
-			Timer t = new Timer();
+			var t = new Timer();
 			t.Tick += delegate
 					  {
 						  t.Stop();
@@ -337,4 +379,6 @@ namespace WeSay.App
 			t.Start();
 		}
 	}
+
+
 }

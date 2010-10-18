@@ -48,17 +48,17 @@
 			this._description.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._description.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this._description.Location = new System.Drawing.Point(17, 41);
+			this._description.Location = new System.Drawing.Point(17, 34);
 			this._description.Multiline = true;
 			this._description.Name = "_description";
-			this._description.Size = new System.Drawing.Size(358, 94);
+			this._description.Size = new System.Drawing.Size(358, 139);
 			this._description.TabIndex = 22;
 			//
 			// _setupLabel
 			//
 			this._setupLabel.AutoSize = true;
 			this._setupLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._setupLabel.Location = new System.Drawing.Point(14, 150);
+			this._setupLabel.Location = new System.Drawing.Point(14, 187);
 			this._setupLabel.Name = "_setupLabel";
 			this._setupLabel.Size = new System.Drawing.Size(48, 13);
 			this._setupLabel.TabIndex = 21;
@@ -73,7 +73,7 @@
 			this.Controls.Add(this._setupLabel);
 			this.Controls.Add(this.label2);
 			this.Name = "DefaultTaskConfigurationControl";
-			this.Size = new System.Drawing.Size(410, 180);
+			this.Size = new System.Drawing.Size(410, 235);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

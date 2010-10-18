@@ -188,7 +188,7 @@
 		<in>
 			<items>
 				<include name="${project.output.dir}/*.Tests.dll" />
-				<exclude name="${project.output.dir}/Palaso*.Test*.dll" />
+				<exclude name="${project.output.dir}/Palaso*.dll" />
 			</items>
 		</in>
 		<do>
@@ -199,10 +199,12 @@
 				<include name="${filename}" />
 			</assemblies>
 			<categories>
+				<exclude name="DictionaryServices" />
 				<exclude name="MouseSensitive"/>
 				<exclude name="Windows IME"/>
 				<exclude name="Keyman6"/>
 				<exclude name="Keyman7"/>
+				<exclude name="NUnit Windows Forms"/>
 			</categories>
 			</test>
 		</nunit2>
@@ -213,7 +215,7 @@
 		<echo message="******                  End Test run!                        ********"/>
 		<echo message="*********************************************************************"/>
 
-<!-- Run the tests a second time, failing as soon as possible. We do this so that TeamCity indicates a failed build on failing tests-->
+<!-- Run the tests a second time, failing as soon as possible. We do this so that TeamCity indicates a failed build on failing tests
 		<nunit2 haltonfailure="true" failonerror="true">
 			<formatter type="Plain" usefile="false" />
 			<test>
@@ -221,13 +223,15 @@
 				<include name="${project.output.dir}/*.Tests.dll" />
 			</assemblies>
 			<categories>
+				<exclude name="DictionaryServices" />
 				<exclude name="MouseSensitive"/>
 				<exclude name="Windows IME"/>
 				<exclude name="Keyman6"/>
 				<exclude name="Keyman7"/>
+				<exclude name="NUnit Windows Forms"/>
 			</categories>
 			</test>
-		</nunit2>
+		</nunit2>-->
 	</target>
 
 	<target name="dist" depends="assemblyinfo make-output-dir, set-build-config, set-runtime-config">
@@ -312,6 +316,16 @@
 		<copy file="${path::combine(project.base.dir, 'src/Installer_Linux/sil-wesay-config.desktop')}" tofile="${path::combine(USR_MENU, 'sil-wesay-config.desktop')}" />
 		<copy file="wesay.mono.runner" tofile="${USR_BIN}/wesay" />
 		<copy file="wesay.configtool.mono.runner" tofile="${USR_BIN}/wesay-config" />
+		<copy file="chorus.mono.runner" tofile="${USR_SHARE}/chorus" />
+		<exec program="chmod">
+			<arg value="755" />
+			<arg value="${USR_SHARE}/chorus" />
+		</exec>
+		<copy file="chorusmerge.mono.runner" tofile="${USR_SHARE}/chorusmerge" />
+		<exec program="chmod">
+			<arg value="755" />
+			<arg value="${USR_SHARE}/chorusmerge" />
+		</exec>
 	</target>
 
 

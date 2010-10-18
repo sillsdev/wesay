@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
-using WeSay.Foundation;
+using Palaso.DictionaryServices.Model;
 using WeSay.LexicalModel;
-using System.Linq;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
@@ -22,7 +20,7 @@ namespace WeSay.Project
 
 		private Field FindFieldWithFieldName(string name)
 		{
-			return _template.Fields.Find(delegate(Field f) { return f.FieldName == name; });
+			return _template.Fields.Find(f => f.FieldName == name);
 		}
 
 		public string GetAutoFontsCascadingStyleSheetLinesForWritingSystem(WritingSystem ws)

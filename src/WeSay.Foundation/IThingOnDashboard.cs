@@ -31,6 +31,7 @@ namespace WeSay.Foundation
 		Gather,
 		Describe,
 		Refine,
-		Share
+		Review,
+		Share,
 	}
 }

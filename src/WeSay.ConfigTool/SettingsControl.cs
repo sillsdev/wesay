@@ -37,7 +37,7 @@ namespace WeSay.ConfigTool
 
 //            _chorusButton.Tag = context.Resolve<ChorusControl>();
 //            _areaControls.Add((ConfigurationControlBase)_chorusButton.Tag);
-//
+
 			_optionsListButton.Tag = context.Resolve<OptionListControl>();
 			_areaControls.Add((ConfigurationControlBase) _optionsListButton.Tag);
 

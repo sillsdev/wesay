@@ -61,6 +61,7 @@
 	<Compile Include="biatah.wxs" />
 	<Compile Include="GeneratedPOFiles.wxs" />
 	<Compile Include="GeneratedTemplateFiles.wxs" />
+	<Compile Include="GeneratedMercurial.wxs" />
 	<Compile Include="SampleData.wxs" />
 	<Compile Include="Installer.wxs" />
 	<Compile Include="CommonDir.wxs" />

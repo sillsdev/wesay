@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<configuration version="6">
+<configuration version="7">
   <uiOptions uiFont="Microsoft Sans Serif" uiFontSize="8.25">
   </uiOptions>
   <components>
@@ -135,7 +135,7 @@
 		  </writingSystems>
 		</field>
 		<field>
-		  <className>WeSayDataObject</className>
+		  <className>PalasoDataObject</className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Note</displayName>
 		  <enabled>True</enabled>

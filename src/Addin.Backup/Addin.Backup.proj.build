@@ -56,9 +56,12 @@
 				<include name="Palaso.dll" />
 				<include name="Palaso.Backup.dll" />
 				<include name="PalasoUIWindowsForms.dll" />
+				<include name="LibChorus.dll" />
+				<include name="Chorus.exe" />
 				<include name="ICSharpCode.SharpZipLib.dll" />
 				<include name="LexicalModel.dll" />
 				<include name="WeSay.Foundation.dll" />
+				<include name="WeSay.Project.dll" />
 				<include name="WeSay.AddinLib.dll" />
 				<include name="WeSay.UI.dll" />
 				<include name="Mono.Addins.exe" />

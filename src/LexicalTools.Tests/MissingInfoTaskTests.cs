@@ -1,6 +1,5 @@
-using System;
 using NUnit.Framework;
-using WeSay.Foundation.Options;
+using Palaso.DictionaryServices.Model;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddMissingInfo;
@@ -37,7 +36,7 @@ namespace WeSay.LexicalTools.Tests
 			WeSayWordsProject.InitializeForTests();
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystemId;
 
-			this._missingFieldName = LexSense.WellKnownProperties.Definition;
+			_missingFieldName = LexSense.WellKnownProperties.Definition;
 
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			_lexicalForm = "vernacular";
@@ -102,8 +101,7 @@ namespace WeSay.LexicalTools.Tests
 			try
 			{
 				Assert.IsTrue(
-						((MissingInfoControl) task.Control).EntryViewControl.ControlFormattedView.
-								Text.Contains(_lexicalForm));
+						((MissingInfoControl)task.Control).EntryViewControl.RtfContentsOfPreviewForTests.Contains(_lexicalForm));
 
 				Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 			}

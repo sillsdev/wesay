@@ -18,7 +18,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</ProjectGuid>
 	<OutputType>WinExe</OutputType>
@@ -31,7 +31,7 @@
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
 	<OldToolsVersion>2.0</OldToolsVersion>
-	<TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
 	<TargetFrameworkSubset>
 	</TargetFrameworkSubset>
   </PropertyGroup>
@@ -129,6 +129,11 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\Castle.DynamicProxy.dll</HintPath>
 	</Reference>
+	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <ExecutableExtension>.exe</ExecutableExtension>
+	  <HintPath>..\..\lib\net2.0\Chorus.exe</HintPath>
+	</Reference>
 	<Reference Include="CookComputing.XmlRpcV2, Version=2.2.0.4, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\CookComputing.XmlRpcV2.dll</HintPath>
@@ -137,17 +142,17 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
 	</Reference>
-	<Reference Include="LinqBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2b14eb747628076, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\LinqBridge.dll</HintPath>
-	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.Services.dll</HintPath>
+	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
@@ -155,6 +160,9 @@
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Configuration" />
+	<Reference Include="System.Core">
+	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
+	</Reference>
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
@@ -169,14 +177,12 @@
 	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
 	</Compile>
 	<Compile Include="LexEntryRepositoryLoaderService.cs" />
-	<Compile Include="Services\DictionaryServiceProvider.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
 	<Compile Include="registrySettingsProvider.cs" />
-	<Compile Include="Services\HtmlArticleMaker.cs" />
 	<Compile Include="Properties\Settings.cs" />
 	<Compile Include="StatusBarController.cs" />
 	<Compile Include="TabbedForm.cs">

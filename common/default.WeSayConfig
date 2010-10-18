@@ -6,11 +6,13 @@
 	<task taskName="AddMissingInfo" visible="false"><field>POS</field><label>Parts of Speech</label><longLabel>Add Parts of Speech</longLabel><description>Add parts of speech to senses where they are missing.</description><showFields>POS</showFields><readOnly>definition, ExampleSentence</readOnly></task>
 	<task taskName="AddMissingInfo" visible="false"><field>ExampleSentence</field><label>Example Sentences</label><longLabel>Add Example Sentences</longLabel><description>Add example sentences to senses where they are missing.</description><showFields>ExampleSentence</showFields><readOnly>definition</readOnly></task>
 	<task taskName="AddMissingInfo" visible="false"><field>BaseForm</field><label>Base Forms</label><longLabel>Add Base Forms</longLabel><description>Identify the "base form" word that this word is built from. In the printed dictionary, the derived or variant words can optionally be shown as subentries of their base forms.</description><showFields>BaseForm</showFields></task>
+	<task taskName="AdvancedHistory" visible="false" />
+	<task taskName="NotesBrowser" visible="false" />
 
-	<task taskName="GatherWordList" visible="false"><wordListFileName>DuerksenWords.txt</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
+	<task taskName="GatherWordList" visible="false"><wordListFileName>SILCAWL.lift</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
 	<task taskName="GatherWordsBySemanticDomains" visible="true"><semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName></task>
   </tasks>
   <addins>
-	<addin id="ManualBackupToDevice" showInWeSay="True" />
+	<addin id="SendReceiveAction" showInWeSay="True" />
   </addins>
 </configuration>

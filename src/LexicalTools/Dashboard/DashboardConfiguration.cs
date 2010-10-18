@@ -48,6 +48,11 @@ namespace WeSay.LexicalTools.Dashboard
 			get { return true; }
 		}
 
+		public bool IsAvailable
+		{
+			get { return true; }
+		}
+
 		public virtual bool IsOptional
 		{
 			get { return false; }
@@ -59,6 +64,11 @@ namespace WeSay.LexicalTools.Dashboard
 			writer.WriteAttributeString("taskName", TaskName);
 			writer.WriteAttributeString("visible", IsVisible ? "true" : "false");
 			writer.WriteEndElement();
+		}
+
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			return taskConfiguration is DashboardConfiguration;
 		}
 
 		public bool IsVisible
