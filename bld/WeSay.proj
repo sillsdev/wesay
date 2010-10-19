@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="tasks/Microsoft.Sdc.Common.tasks" />
-
   <PropertyGroup>
 	<BaseDirectory>$(MSBuildProjectDirectory)\..</BaseDirectory>
   </PropertyGroup>
@@ -13,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<CSharpFiles Include="$(BaseDirectory)\**\*.cs"/>
+	<CSharpFiles Include="$(BaseDirectory)\**\*.cs" Exclude="$(BaseDirectory)\**\*Tests\**;$(BaseDirectory)\**\WeSay.ConfigTool\**" />
 	<XmlFiles Include="$(BaseDirectory)\common\**\*.WeSayConfig"/>
   </ItemGroup>
 
