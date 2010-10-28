@@ -34,6 +34,7 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration.UserConfig;
 using WeSay.Project.ConfigMigration.WeSayConfig;
+using WeSay.Project.ConfigMigration.WritingSystems;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
 
@@ -341,6 +342,9 @@ namespace WeSay.Project
 				Console.WriteLine("{0}",PathToConfigFile);
 				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
+			var writingSystemPrefsToLdmlMigrator = new WritingSystemPrefsToLdmlMigrator(ProjectDirectoryPath);
+			writingSystemPrefsToLdmlMigrator.MigrateIfNeeded();
+
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
 			//container change InitializeViewTemplatesFromProjectFiles();

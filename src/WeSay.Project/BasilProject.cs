@@ -253,12 +253,6 @@ namespace WeSay.Project
 			_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
 			if (_writingSystems.Count == 0)
 			{
-				_writingSystems.LoadFromLegacyWeSayFile(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
-				_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
-				File.Delete(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
-			}
-			if (_writingSystems.Count == 0)
-			{
 				//load defaults
 				_writingSystems.Load(Path.Combine(ApplicationCommonDirectory, "WritingSystems"));
 			}
