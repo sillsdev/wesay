@@ -195,15 +195,13 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void OnWritingSystemIdChanged(object sender, EventArgs e)
+		private void OnWritingSystemIdChanged(WritingSystem ws, string propertyname, string oldPropertyValue)
 		{
 			using (Detect.Reentry(this, "OnWritingSystemIdChanged").AndThrow())
 			{
-				var ws = sender as WritingSystem;
-				var args = e as PropertyValueChangedEventArgs;
-				if (args != null && IdComponentChanged(args.ChangedItem.PropertyDescriptor.Name))
+				if (String.IsNullOrEmpty(propertyname) && IdComponentChanged(propertyname))
 				{
-					string oldId = ConstructOldId(ws, args);
+					string oldId = ConstructOldId(ws, propertyname, oldPropertyValue);
 					Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged changing to {0}", ws.Id);
 					if (!WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId))
 					{
@@ -230,11 +228,10 @@ namespace WeSay.ConfigTool
 			return propertyName == "ISO" || propertyName == "Region" || propertyName == "Variant" || propertyName == "Script";
 		}
 
-		private string ConstructOldId(WritingSystem ws, PropertyValueChangedEventArgs args)
+		private string ConstructOldId(WritingSystem ws, string propertyName, string oldPropertyValue)
 		{
 			string oldId = "";
-			string oldPropertyValue = args.OldValue.ToString();
-			switch (args.ChangedItem.PropertyDescriptor.Name)
+			switch (propertyName)
 			{
 				case "ISO":
 					oldId = oldPropertyValue + AppendOrNot(ws.Script) + AppendOrNot(ws.Region) + AppendOrNot(ws.Variant);
