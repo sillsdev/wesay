@@ -11,25 +11,14 @@ namespace WeSay.ConfigTool
 {
 	public partial class WritingSystemBasic: UserControl
 	{
-		private WritingSystem _oldWritingSystemForMono;	//This is part of a workaround for Mono on 4-Aug-2009 TA
-														//Mono does not returns e.Old=e.Current for PropertyChanges
+		private WritingSystem _oldWritingSystemValues;
 
 		private WritingSystem _writingSystem;
 		private WritingSystemCollection _writingSystemCollection;
 
-		public delegate void WritingSystemIdChanged(WritingSystem ws, string propertyName, string oldValue);
+		public delegate void WritingSystemIdChanged(WritingSystem newWritingSystemValue, WritingSystem oldWritingSystemValues);
 		public event WritingSystemIdChanged WritingSystemIdChangedEvent;
 		public event EventHandler IsAudioChanged;
-
-		//        public class PropertyChangingEventArgs : PropertyChangedEventArgs
-		//        {
-		//            public bool Cancel = false;
-		//
-		//            public PropertyChangingEventArgs(string propertyName)
-		//                : base(propertyName)
-		//            {
-		//            }
-		//        }
 
 		/// <summary>
 		/// called when the user wants to change the actual id of a ws, which has large reprocussions
@@ -48,12 +37,13 @@ namespace WeSay.ConfigTool
 			set
 			{
 				_writingSystem = value;
-				_oldWritingSystemForMono = new WritingSystem
+				_oldWritingSystemValues = new WritingSystem
 				{
 					ISO = _writingSystem.ISO,
 					Region = _writingSystem.Region,
 					Variant = _writingSystem.Variant,
-					Script = _writingSystem.Script
+					Script = _writingSystem.Script,
+					IsAudio = _writingSystem.IsAudio
 				};
 				_writingSystemProperties.SelectedObject = _writingSystem;
 				// _fontProperties.SelectedObjects = new object[] { _writingSystem, helper };
@@ -90,120 +80,87 @@ namespace WeSay.ConfigTool
 
 		private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
-			e = GetNewEventArgsBecauseOfMonoBug(e);
-			somethingelse(e.ChangedItem.PropertyDescriptor.Name, e.ChangedItem.Value.ToString(), e.OldValue.ToString());
+			string propertyName = e.ChangedItem.PropertyDescriptor.Name;
+			bool requiresAction = (propertyName == "ISO") ||
+								  (propertyName == "Region") ||
+								  (propertyName == "Variant") ||
+								  (propertyName == "Script") ||
+								  (propertyName == "IsAudio");
+			if (!requiresAction) { return; }
+
+
+			Logger.WriteConciseHistoricalEvent(
+				StringCatalog.Get("Modified {0} of Writing System {1}",
+								  "Checkin Description in WeSay Config Tool used when you edit a writing system."),
+				propertyName, _writingSystem.Id);
+
+			IdChanged();
 		}
 
-		private void somethingelse(string propertyName, string newValue, string oldValue)
+		public void IdChanged()
 		{
-			if(newValue == oldValue)
+			if(_writingSystem.Id == _oldWritingSystemValues.Id)
 			{
 				return;
 			}
 
-			bool requiresAction = (propertyName == "ISO")      ||
-						  (propertyName == "Region")   ||
-						  (propertyName == "Variant")  ||
-						  (propertyName == "Script")   ||
-						  (propertyName == "IsAudio");
+			Console.WriteLine("Old Id was {0}, new ID is: {1}", _oldWritingSystemValues.Id, _writingSystem.Id);
 
-				Logger.WriteConciseHistoricalEvent(
-					StringCatalog.Get("Modified {0} of Writing System {1}",
-									  "Checkin Description in WeSay Config Tool used when you edit a writing system."),
-					propertyName, _writingSystem.Id);
-
-				if (!requiresAction){return; }
-
-				Console.WriteLine("Old Id was {0}, new ID is: {1}", oldValue, newValue);
-
-
-				if (_writingSystemCollection.ContainsKey(_writingSystem.Id))
+			if (_writingSystemCollection.ContainsKey(_writingSystem.Id))
+			{
+				ErrorReport.NotifyUserOfProblem(String.Format(
+					"Sorry, there is already a Writing System with the ID {0}.", _writingSystem.Id));
+				RevertWritingSystemToOldValues();
+			}
+			else if (_writingSystem.ISO != null && _writingSystem.ISO.Contains(" "))
+			{
+				ErrorReport.NotifyUserOfProblem(
+					"Sorry, the writingsystem Id should conform to ISO 639-3 and may not contain spaces");
+				RevertWritingSystemToOldValues();
+			}
+			else if (TriedToChangeKnownLanguageId(_oldWritingSystemValues.Id, "en", "English") ||
+				TriedToChangeKnownLanguageId(_oldWritingSystemValues.Id, "fr", "French") ||
+				TriedToChangeKnownLanguageId(_oldWritingSystemValues.Id, "id", "Indonesian") ||
+				TriedToChangeKnownLanguageId(_oldWritingSystemValues.Id, "es", "Spanish") ||
+				TriedToChangeKnownLanguageId(_oldWritingSystemValues.Id, "tpi", "Tok Pisin") ||
+				TriedToChangeKnownLanguageId(_oldWritingSystemValues.Id, "th", "Thai"))
+			{
+				RevertWritingSystemToOldValues();
+			}
+			else if(_writingSystem.Id != _oldWritingSystemValues.Id)
+			{
+				if (WritingSystemIdChangedEvent != null)
 				{
-					ErrorReport.NotifyUserOfProblem(String.Format(
-						"Sorry, there is already a Writing System with the ID {0}.", _writingSystem.Id));
-					_writingSystem.ISO = _oldWritingSystemForMono.ISO;
-					_writingSystem.Region = _oldWritingSystemForMono.Region;
-					_writingSystem.Variant = _oldWritingSystemForMono.Variant;
-					_writingSystem.Script = _oldWritingSystemForMono.Script;
+					WritingSystemIdChangedEvent.Invoke(_writingSystem, _oldWritingSystemValues);
 				}
-				else if (propertyName == "ISO")
-				{
-					string iso = newValue;
+			}
 
-					if (iso != null && iso.Contains(" "))
-					{
-						ErrorReport.NotifyUserOfProblem(
-							"Sorry, the writingsystem Id should conform to ISO 639-3 and may not contain spaces");
-						_writingSystem.ISO = oldValue.ToString();
-					}
-
-					if (TriedToChangeKnownLanguageId(oldValue.ToString(), "en", "English") ||
-						TriedToChangeKnownLanguageId(oldValue.ToString(), "fr", "French") ||
-						TriedToChangeKnownLanguageId(oldValue.ToString(), "id", "Indonesian") ||
-						TriedToChangeKnownLanguageId(oldValue.ToString(), "es", "Spanish") ||
-						TriedToChangeKnownLanguageId(oldValue.ToString(), "tpi", "Tok Pisin") ||
-						TriedToChangeKnownLanguageId(oldValue.ToString(), "th", "Thai"))
-					{
-						_writingSystem.ISO = _oldWritingSystemForMono.ISO;
-					}
-				}
-				if(_writingSystem.Id != _oldWritingSystemForMono.Id)
+			if (_writingSystem.IsAudio != _oldWritingSystemValues.IsAudio)
+			{
+				if (IsAudioChanged != null)
 				{
-					if (WritingSystemIdChangedEvent != null)
-					{
-						WritingSystemIdChangedEvent.Invoke(_writingSystem, propertyName, oldValue);
-					}
+					IsAudioChanged.Invoke(this, null);
 				}
+			}
 
 			//nb: don't do this ealier, since some of this code revers what the user tried to change
 			//(setting it earlier let to http://www.wesay.org/issues/browse/WS-15031)
-			_oldWritingSystemForMono = new WritingSystem
+			_oldWritingSystemValues = new WritingSystem
 			{
 				ISO = _writingSystem.ISO,
 				Region = _writingSystem.Region,
 				Variant = _writingSystem.Variant,
 				Script = _writingSystem.Script
 			};
-
-			if (propertyName == "IsAudio")
-			{
-				if (IsAudioChanged != null)
-				{
-					IsAudioChanged.Invoke(this, null);
-				}
-				if (WritingSystemIdChangedEvent != null)
-				{
-					WritingSystemIdChangedEvent.Invoke(_writingSystem, "ISO", oldValue);
-					WritingSystemIdChangedEvent.Invoke(_writingSystem, "Script", oldValue);
-					WritingSystemIdChangedEvent.Invoke(_writingSystem, "Region", oldValue);
-					WritingSystemIdChangedEvent.Invoke(_writingSystem, "Variant", oldValue);
-				}
-			}
 		}
 
-		private PropertyValueChangedEventArgs GetNewEventArgsBecauseOfMonoBug(PropertyValueChangedEventArgs e)
+		private void RevertWritingSystemToOldValues()
 		{
-			if (e.ChangedItem.PropertyDescriptor.Name == "ISO")
-			{
-				e = new PropertyValueChangedEventArgs(e.ChangedItem, _oldWritingSystemForMono.ISO);
-			}
-			else if (e.ChangedItem.PropertyDescriptor.Name == "Region")
-			{
-				e = new PropertyValueChangedEventArgs(e.ChangedItem, _oldWritingSystemForMono.Region);
-			}
-			else if (e.ChangedItem.PropertyDescriptor.Name == "Variant")
-			{
-				e = new PropertyValueChangedEventArgs(e.ChangedItem, _oldWritingSystemForMono.Variant);
-			}
-			else if (e.ChangedItem.PropertyDescriptor.Name == "Script")
-			{
-				e = new PropertyValueChangedEventArgs(e.ChangedItem, _oldWritingSystemForMono.Script);
-			}
-			else if (e.ChangedItem.PropertyDescriptor.Name == "IsAudio")
-			{
-				e = new PropertyValueChangedEventArgs(e.ChangedItem, _oldWritingSystemForMono.IsAudio);
-			}
-			return e;
+			_writingSystem.IsAudio = false;
+			_writingSystem.ISO = _oldWritingSystemValues.ISO;
+			_writingSystem.Region = _oldWritingSystemValues.Region;
+			_writingSystem.Variant = _oldWritingSystemValues.Variant;
+			_writingSystem.Script = _oldWritingSystemValues.Script;
 		}
 	}
 }
