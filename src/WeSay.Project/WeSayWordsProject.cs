@@ -344,6 +344,8 @@ namespace WeSay.Project
 			}
 			var writingSystemPrefsToLdmlMigrator = new WritingSystemPrefsToLdmlMigrator(ProjectDirectoryPath);
 			writingSystemPrefsToLdmlMigrator.MigrateIfNeeded();
+			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
+			wsCreator.CreateNonExistantWritingSystemsFoundInLift(this.PathToLiftFile);
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
