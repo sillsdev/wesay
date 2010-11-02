@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using WeSay.LexicalModel.Foundation;
 
@@ -32,7 +33,12 @@ namespace WeSay.Project.ConfigMigration.WritingSystems
 						{
 							if (!writingSystems.Keys.Contains(reader.Value))
 							{
-								writingSystems.AddSimple(reader.Value);
+								string id = reader.Value;
+								WritingSystem ws = writingSystems.AddSimple(id);
+								if(id.Contains("Zxxx-x-audio"))
+								{
+									ws.IsAudio = true;
+								}
 							}
 						}
 					}
