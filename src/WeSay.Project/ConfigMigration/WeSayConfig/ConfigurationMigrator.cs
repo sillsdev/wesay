@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using Palaso.Reporting;
+using WeSay.Project.ConfigMigration.WritingSystems;
 
 namespace WeSay.Project.ConfigMigration.WeSayConfig
 {
@@ -64,7 +65,7 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 			}
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='7']") != null)
 			{
-				MigrateInCode(configurationDoc, targetPath);
+				MigrateInCodeFromVersion7To8(configurationDoc, targetPath);
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
@@ -72,8 +73,15 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 
 		}
 
-		private void MigrateInCode(XPathDocument configurationDoc, string targetPath)
+		private void MigrateInCodeFromVersion7To8(XPathDocument configurationDoc, string targetPath)
 		{
+			var writingSystemPrefsToLdmlMigrator = new WritingSystemPrefsToLdmlMigrator(WeSayWordsProject.Project.ProjectDirectoryPath);
+			var oldidToNewIdMap = writingSystemPrefsToLdmlMigrator.MigrateIfNeeded();
+
+			WritingSystemIdChanger idInConfigFileChanger = new WritingSystemIdChanger(targetPath);
+			idInConfigFileChanger.ChangeWritingSystemIdInConfigFile(oldidToNewIdMap);
+
+			configurationDoc = new XPathDocument(targetPath);
 			XPathNavigator navigator = configurationDoc.CreateNavigator();
 
 			string tempFilePath = Path.GetTempFileName();
