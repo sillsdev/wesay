@@ -8,7 +8,7 @@ using Palaso.Migration;
 
 namespace WeSay.Project.ConfigMigration
 {
-	internal class XslFromResourceMigrator : XslMigrator
+	internal class XslFromResourceMigrator : XslMigrationStrategy
 	{
 		public XslFromResourceMigrator(int fromVersion, int toVersion, string xslSource) : base(fromVersion, toVersion, xslSource)
 		{
