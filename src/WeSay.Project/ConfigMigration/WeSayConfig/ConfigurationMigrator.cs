@@ -11,9 +11,23 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 {
 	public class ConfigurationMigrator
 	{
-		public bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc,
-														  string targetPath)
+		public bool MigrateConfigurationXmlIfNeeded(string pathToConfigFile, string targetPath)
 		{
+			XPathDocument configurationDoc = null;
+			if (File.Exists(pathToConfigFile))
+			{
+				try
+				{
+					configurationDoc = new XPathDocument(pathToConfigFile);
+					//projectDoc.Load(Project.PathToConfigFile);
+				}
+				catch (Exception e)
+				{
+					ErrorReport.NotifyUserOfProblem("There was a problem reading the wesay config xml: " + e.Message);
+					configurationDoc = null;
+				}
+			}
+
 			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
 			bool didMigrate = false;
@@ -65,7 +79,7 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 			}
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='7']") != null)
 			{
-				MigrateInCodeFromVersion7To8(configurationDoc, targetPath);
+				MigrateInCodeFromVersion7To8(pathToConfigFile, targetPath);
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
@@ -73,33 +87,25 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 
 		}
 
-		private void MigrateInCodeFromVersion7To8(XPathDocument configurationDoc, string targetPath)
+		private void MigrateInCodeFromVersion7To8(string pathToConfigFile, string targetPath)
 		{
-			var writingSystemPrefsToLdmlMigrator = new WritingSystemPrefsToLdmlMigrator(WeSayWordsProject.Project.ProjectDirectoryPath);
+			string pathToProject = Path.GetDirectoryName(targetPath);
+			var writingSystemPrefsToLdmlMigrator = new WritingSystemPrefsToLdmlMigrator(pathToProject);
 			var oldidToNewIdMap = writingSystemPrefsToLdmlMigrator.MigrateIfNeeded();
 
-			WritingSystemIdChanger idInConfigFileChanger = new WritingSystemIdChanger(targetPath);
+			WritingSystemIdChanger idInConfigFileChanger = new WritingSystemIdChanger(pathToConfigFile);
 			idInConfigFileChanger.ChangeWritingSystemIdInConfigFile(oldidToNewIdMap);
 
-			configurationDoc = new XPathDocument(targetPath);
-			XPathNavigator navigator = configurationDoc.CreateNavigator();
-
 			string tempFilePath = Path.GetTempFileName();
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.Indent = true;
-			XmlWriter writer = XmlWriter.Create(tempFilePath, settings);
 
-			using (writer)
-			{
-				writer.WriteStartDocument();
-				navigator.MoveToFirstChild();
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.Load(pathToConfigFile);
+			XmlNode versionNode = xmlDoc.SelectSingleNode("configuration/@version");
+			string versionNumber = versionNode.Value;
+			if(versionNumber!= "7"){throw new ApplicationException("Expected a config file version 7.");}
+			versionNode.Value = "8";
+			xmlDoc.Save(tempFilePath);
 
-				if (navigator.Name != "configuration"){throw new ApplicationException("The configuration file does not have the expected format. 'configuration' was not the first node found.");}
-
-				writer.WriteStartElement("configuration");
-				writer.WriteAttributeString("version", "8");
-				CopyChildren(writer, navigator);
-			}
 			SafelyMoveTempFileTofinalDestination(tempFilePath, targetPath);
 		}
 

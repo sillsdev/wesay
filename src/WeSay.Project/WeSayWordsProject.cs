@@ -318,30 +318,12 @@ namespace WeSay.Project
 			//may have already been done, but maybe not
 			MoveFilesFromOldDirLayout(projectDirectoryPath);
 
-			XPathDocument configDoc = GetConfigurationDoc();
-			if (configDoc != null) // will be null if we're creating a new project
+			if (File.Exists(PathToConfigFile)) // will be null if we're creating a new project
 			{
-//                XPathNavigator nav = configDoc.CreateNavigator().SelectSingleNode("//uiOptions");
-//                if (nav != null)
-//                {
-//                    string ui = nav.GetAttribute("uiLanguage", "");
-//                    if (!string.IsNullOrEmpty(ui))
-//                    {
-//                        UiOptions.Language = ui;
-//                    }
-//                    UiOptions.LabelFontName = nav.GetAttribute("uiFont", "");
-//                    string s = nav.GetAttribute("uiFontSize", string.Empty);
-//                    float f;
-//                    if (!float.TryParse(s, out f) || f == 0)
-//                    {
-//                        f = 12;
-//                    }
-//                    UiOptions.LabelFontSizeInPoints = f;
-//                }
-				CheckIfConfigFileVersionIsTooNew(configDoc);
+				CheckIfConfigFileVersionIsTooNew(PathToConfigFile);
 				var m = new ConfigurationMigrator();
 				Console.WriteLine("{0}",PathToConfigFile);
-				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
+				m.MigrateConfigurationXmlIfNeeded(PathToConfigFile, PathToConfigFile);
 			}
 			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
 			wsCreator.CreateNonExistantWritingSystemsFoundInLift(this.PathToLiftFile);
@@ -361,8 +343,9 @@ namespace WeSay.Project
 
 		}
 
-		public static void CheckIfConfigFileVersionIsTooNew(XPathDocument configurationDoc)
+		public static void CheckIfConfigFileVersionIsTooNew(string pathToConfigFile)
 		{
+			XPathDocument configurationDoc = new XPathDocument(pathToConfigFile);
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") != null)
 			{
 				string versionNumberAsString =
@@ -712,8 +695,7 @@ namespace WeSay.Project
 		public bool MigrateConfigurationXmlIfNeeded()
 		{
 			var m = new ConfigurationMigrator();
-			return m.MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile),
-												   PathToConfigFile);
+			return m.MigrateConfigurationXmlIfNeeded(PathToConfigFile, PathToConfigFile);
 		}
 
 
@@ -857,7 +839,7 @@ namespace WeSay.Project
 			StickDefaultViewTemplateInNewConfigFile(projectDirectoryPath, pathToConfigFile);
 
 			var m = new ConfigurationMigrator();
-			m.MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile), pathToConfigFile);
+			m.MigrateConfigurationXmlIfNeeded(pathToConfigFile, pathToConfigFile);
 
 			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
 			if (!File.Exists(pathToLiftFile))

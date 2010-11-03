@@ -21,7 +21,7 @@ namespace WeSay.Project
 		public UiConfigurationOptions UiOptions { get; set; }
 
 		private readonly WritingSystemCollection _writingSystems;
-		private string _projectDirectoryPath = string.Empty;
+		private static string _projectDirectoryPath = string.Empty;
 
 		public static BasilProject Project
 		{

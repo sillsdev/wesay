@@ -60,6 +60,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void WritingSystemPrefsContainsVariousInfo_Migrate_WritingSystemsAreIdenticalForWeSayPurposes()
 		{
+			WeSayWordsProject.InitializeForTests();
 			WritingSystemCollection _writingSystemsFromWritingSystemPrefs = new WritingSystemCollection();
 			WritingSystemCollection _writingSystemsFromLdml = new WritingSystemCollection();
 			using (TemporaryFolder tempFolder = new TemporaryFolder())
@@ -83,6 +84,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void WritingSystemPrefs_Migrate_LdmlFilesAreCreatedAndNamedAccordingToRfcTag()
 		{
+			WeSayWordsProject.InitializeForTests();
 			WritingSystemCollection _writingSystemsFromWritingSystemPrefs = new WritingSystemCollection();
 			WritingSystemCollection _writingSystemsFromLdml = new WritingSystemCollection();
 			using (TemporaryFolder tempFolder = new TemporaryFolder())
@@ -108,6 +110,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void WritingSystemPrefs_Migrate_AudioWritingSystemIsTreatedCorrectly()
 		{
+			WeSayWordsProject.InitializeForTests();
 			WritingSystemCollection _writingSystemsFromWritingSystemPrefs = new WritingSystemCollection();
 			WritingSystemCollection _writingSystemsFromLdml = new WritingSystemCollection();
 			using (TemporaryFolder tempFolder = new TemporaryFolder())
