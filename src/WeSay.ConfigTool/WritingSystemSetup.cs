@@ -193,21 +193,16 @@ namespace WeSay.ConfigTool
 		/// <summary>
 		/// Called when, for example, the user changes the id of the selected ws
 		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void OnWritingSystemIdChanged(object sender, EventArgs e)
+		private void OnWritingSystemIdChanged(WritingSystem writingSystem, WritingSystem oldWritingSystemValues)
 		{
 			using (Detect.Reentry(this, "OnWritingSystemIdChanged").AndThrow())
 			{
-				var ws = sender as WritingSystem;
-				var args = e as PropertyValueChangedEventArgs;
-				if (args != null && IdComponentChanged(args.ChangedItem.PropertyDescriptor.Name))
+				if (writingSystem.Id != oldWritingSystemValues.Id)
 				{
-					string oldId = ConstructOldId(ws, args);
-					Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged changing to {0}", ws.Id);
-					if (!WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId))
+					Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged changing to {0}", writingSystem.Id);
+					if (!WeSayWordsProject.Project.MakeWritingSystemIdChange(writingSystem, oldWritingSystemValues.Id))
 					{
-					   throw new ApplicationException(String.Format("Could not change Writingsystem Id {0} to {1} in Lift file.", oldId, ws.Id));
+					   throw new ApplicationException(String.Format("Could not change Writingsystem Id {0} to {1} in Lift file.", oldWritingSystemValues.Id, writingSystem.Id));
 					}
 					//                Reporting.ErrorReporter.NotifyUserOfProblem(
 					//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
@@ -223,33 +218,6 @@ namespace WeSay.ConfigTool
 				_wsListBox.EndUpdate();
 				_wsListBox.Invalidate();
 			}
-		}
-
-		private bool IdComponentChanged(string propertyName)
-		{
-			return propertyName == "ISO" || propertyName == "Region" || propertyName == "Variant" || propertyName == "Script";
-		}
-
-		private string ConstructOldId(WritingSystem ws, PropertyValueChangedEventArgs args)
-		{
-			string oldId = "";
-			string oldPropertyValue = args.OldValue.ToString();
-			switch (args.ChangedItem.PropertyDescriptor.Name)
-			{
-				case "ISO":
-					oldId = oldPropertyValue + AppendOrNot(ws.Script) + AppendOrNot(ws.Region) + AppendOrNot(ws.Variant);
-					break;
-				case "Script":
-					oldId = ws.ISO + AppendOrNot(oldPropertyValue) + AppendOrNot(ws.Region) + AppendOrNot(ws.Variant);
-					break;
-				case "Region":
-					oldId = ws.ISO + AppendOrNot(ws.Script) + AppendOrNot(oldPropertyValue) + AppendOrNot(ws.Variant);
-					break;
-				case "Variant":
-					oldId = ws.ISO + AppendOrNot(ws.Script) + AppendOrNot(ws.Region) + AppendOrNot(oldPropertyValue);
-					break;
-			}
-			return oldId;
 		}
 
 		string AppendOrNot(string idComponent)

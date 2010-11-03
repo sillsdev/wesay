@@ -34,8 +34,10 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration.UserConfig;
 using WeSay.Project.ConfigMigration.WeSayConfig;
+using WeSay.Project.ConfigMigration.WritingSystems;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
+using WritingSystem=WeSay.LexicalModel.Foundation.WritingSystem;
 
 namespace WeSay.Project
 {
@@ -341,6 +343,9 @@ namespace WeSay.Project
 				Console.WriteLine("{0}",PathToConfigFile);
 				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
+			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
+			wsCreator.CreateNonExistantWritingSystemsFoundInLift(this.PathToLiftFile);
+
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
 			//container change InitializeViewTemplatesFromProjectFiles();
@@ -1411,6 +1416,16 @@ namespace WeSay.Project
 
 		private delegate void DelegateThatTouchesLiftFile(string pathToLiftFile);
 
+		public bool ChangeWritingSystemIdsInLiftFile(string oldId, string newId)
+		{
+			return DoSomethingToLiftFile((p) =>
+										 //todo: expand the regular expression here to account for all reasonable patterns
+										 FileUtils.GrepFile(PathToLiftFile,
+															string.Format("lang\\s*=\\s*[\"']{0}[\"']",
+																		  Regex.Escape(oldId)),
+															string.Format("lang=\"{0}\"", newId)));
+		}
+
 		private bool DoSomethingToLiftFile(DelegateThatTouchesLiftFile doSomething)
 		{
 			if(!File.Exists(PathToLiftFile))
@@ -1462,12 +1477,7 @@ namespace WeSay.Project
 
 		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)
 		{
-			if (DoSomethingToLiftFile((p) =>
-					 //todo: expand the regular expression here to account for all reasonable patterns
-					 FileUtils.GrepFile(PathToLiftFile,
-							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
-											Regex.Escape(oldId)),
-							  string.Format("lang=\"{0}\"", ws.Id))))
+			if (ChangeWritingSystemIdsInLiftFile(oldId, ws.Id))
 			{
 				WritingSystems.IdOfWritingSystemChanged(ws, oldId);
 				DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
