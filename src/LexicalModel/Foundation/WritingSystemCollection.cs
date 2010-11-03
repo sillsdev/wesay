@@ -30,12 +30,6 @@ namespace WeSay.LexicalModel.Foundation
 			}
 		}
 
-		public void Remove(string writingSystemId)
-		{
-			_ldmlInFolderWritingSystemStore.Remove(writingSystemId);
-			base.Remove(writingSystemId);
-		}
-
 		public void LoadFromLegacyWeSayFile(string PathToWritingSystemPrefsFile)
 		{
 			if (WeSayWritingSystemsPrefsExist(PathToWritingSystemPrefsFile))

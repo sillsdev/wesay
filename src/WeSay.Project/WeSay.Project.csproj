@@ -176,6 +176,7 @@
 	<Compile Include="ChorusBackupMaker.cs" />
 	<Compile Include="BasilProject.cs" />
 	<Compile Include="ConfigMigration\UserConfig\WeSayUserConfigMigrator.cs" />
+	<Compile Include="ConfigMigration\WeSayConfig\WritingSystemIdChanger.cs" />
 	<Compile Include="ConfigMigration\WritingSystems\WritingSystemPrefsToLdmlMigrator.cs" />
 	<Compile Include="ConfigMigration\WritingSystems\WritingSystemsFromLiftCreator.cs" />
 	<Compile Include="ConfigMigration\XslFromResourceMigrator.cs" />

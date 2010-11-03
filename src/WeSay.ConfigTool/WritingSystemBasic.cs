@@ -112,7 +112,7 @@ namespace WeSay.ConfigTool
 					"Sorry, there is already a Writing System with the ID {0}.", _writingSystem.Id));
 				RevertWritingSystemToOldValues();
 			}
-			else if (_writingSystem.ISO != null && _writingSystem.ISO.Contains(" "))
+			else if (_writingSystem.Id != null && _writingSystem.Id.Contains(" "))
 			{
 				ErrorReport.NotifyUserOfProblem(
 					"Sorry, the writingsystem Id should conform to ISO 639-3 and may not contain spaces");
