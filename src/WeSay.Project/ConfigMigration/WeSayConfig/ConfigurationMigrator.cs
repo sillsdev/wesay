@@ -13,20 +13,7 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 	{
 		public bool MigrateConfigurationXmlIfNeeded(string pathToConfigFile, string targetPath)
 		{
-			XPathDocument configurationDoc = null;
-			if (File.Exists(pathToConfigFile))
-			{
-				try
-				{
-					configurationDoc = new XPathDocument(pathToConfigFile);
-					//projectDoc.Load(Project.PathToConfigFile);
-				}
-				catch (Exception e)
-				{
-					ErrorReport.NotifyUserOfProblem("There was a problem reading the wesay config xml: " + e.Message);
-					configurationDoc = null;
-				}
-			}
+			XPathDocument configurationDoc = GetConfigurationFileAsXPathDocument(pathToConfigFile);
 
 			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
@@ -79,12 +66,33 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 			}
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='7']") != null)
 			{
-				MigrateInCodeFromVersion7To8(pathToConfigFile, targetPath);
+				string pathToMostRecentConfigFile = pathToConfigFile;
+				if (didMigrate){pathToMostRecentConfigFile = targetPath;}
+				MigrateInCodeFromVersion7To8(pathToMostRecentConfigFile, targetPath);
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
 			return didMigrate;
 
+		}
+
+		private XPathDocument GetConfigurationFileAsXPathDocument(string pathToConfigFile)
+		{
+			XPathDocument configurationDoc = null;
+			if (File.Exists(pathToConfigFile))
+			{
+				try
+				{
+					configurationDoc = new XPathDocument(pathToConfigFile);
+					//projectDoc.Load(Project.PathToConfigFile);
+				}
+				catch (Exception e)
+				{
+					ErrorReport.NotifyUserOfProblem("There was a problem reading the wesay config xml: " + e.Message);
+					configurationDoc = null;
+				}
+			}
+			return configurationDoc;
 		}
 
 		private void MigrateInCodeFromVersion7To8(string pathToConfigFile, string targetPath)
