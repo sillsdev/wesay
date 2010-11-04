@@ -400,12 +400,16 @@ namespace WeSay.Project
 						  <LiftDataMapper>(
 							  "Loading Dictionary",
 							  progressState =>
-						  new LiftDataMapper(
-								  _pathToLiftFile,
-								  GetSemanticDomainsList(),
-								  GetIdsOfSingleOptionFields(),
-								  progressState
-							  )
+								  {
+									  var mapper =  new WeSayLiftDataMapper(
+										  _pathToLiftFile,
+										  GetSemanticDomainsList(),
+										  GetIdsOfSingleOptionFields(),
+										  progressState
+										  );
+
+									  return mapper;
+								  }
 						  );
 				  }
 				  catch (LiftFormatException error)
