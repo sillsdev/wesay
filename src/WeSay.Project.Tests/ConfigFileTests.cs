@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.XPath;
 using NUnit.Framework;
 using Palaso.TestUtilities;
@@ -21,7 +22,7 @@ namespace WeSay.Project.Tests
 			File.WriteAllText(pathToConfigFile,
 								  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
 			ConfigFile configFile = new ConfigFile(pathToConfigFile);
-			Assert.AreEqual(configFile.LatestVersion, configFile.Version);
+			Assert.AreEqual(ConfigFile.LatestVersion, configFile.Version);
 		}
 
 		[Test]
@@ -54,16 +55,10 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void DefaultConfigFile_DoesntNeedMigrating()
 		{
-			//WeSayWordsProject.InitializeForTests();
-			//using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting(""))
-			//{
-			//        using (var proj = p.CreateLoadedProject())
-			//        {
-			//            bool migrated = proj.MigrateConfigurationXmlIfNeeded();
-			//            Assert.IsFalse(migrated, "The default config file should never need migrating");
-			//        }
-			//}
-			throw new NotImplementedException("This test is implemented badly.");
+			XmlDocument configFile = new XmlDocument();
+			configFile.Load(WeSayWordsProject.PathToDefaultConfig);
+			XmlNode versionNode = configFile.SelectSingleNode("configuration/@version");
+			Assert.AreEqual(ConfigFile.LatestVersion, Convert.ToInt32(versionNode.Value));
 		}
 
 		private string GetV7ConfigFileContent()

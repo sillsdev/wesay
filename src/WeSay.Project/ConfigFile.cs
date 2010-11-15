@@ -23,7 +23,7 @@ namespace WeSay.Project
 			MigrateIfNecassary();
 		}
 
-		public int LatestVersion
+		static public int LatestVersion
 		{
 			get { return 9; }
 		}

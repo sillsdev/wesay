@@ -274,6 +274,7 @@ namespace WeSay.Project.Tests.ConfigMigration
 		[Test]
 		public void NewProject_ContainsOnlyLegacyWeSayWritingsystemsFile_WritingSystemsAreConvertedToLdml()
 		{
+			WeSayWordsProject.InitializeForTests();
 			CreateVersion7ProjectFiles();
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			BasilProject project = new BasilProject();
