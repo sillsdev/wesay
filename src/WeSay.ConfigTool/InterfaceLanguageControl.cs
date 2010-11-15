@@ -91,7 +91,7 @@ namespace WeSay.ConfigTool
 			private static string PoFilePathToLanguageCode(string poFilePath)
 			{
 				var parts = poFilePath.Split(new[] {'.', '-'});
-				return parts[1];
+				return parts[parts.Length - 2];
 			}
 
 			public override string ToString()
