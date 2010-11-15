@@ -20,7 +20,6 @@ namespace WeSay.Project
 			{
 				throw new ApplicationException("The config file is too new for this version of wesay. Please download a newer version of wesay from www.wesay.org");
 			}
-			MigrateIfNecassary();
 		}
 
 		static public int LatestVersion
@@ -49,7 +48,7 @@ namespace WeSay.Project
 			}
 		}
 
-		private void MigrateIfNecassary()
+		public void MigrateIfNecassary()
 		{
 			var m = new ConfigurationMigrator();
 			Console.WriteLine("{0}", _path);

@@ -90,9 +90,9 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 
 		private void MigrateInCodeFromVersion8To9(string pathToMostRecentConfigFile, string targetPath)
 		{
-			string pathToProjectDirectory = "";
 			if (WeSayWordsProject.ProjectExists())  //this is false for many tests
 			{
+				string pathToProjectDirectory = WeSayWordsProject.Project.ProjectDirectoryPath;
 				if (!String.IsNullOrEmpty(pathToProjectDirectory))
 				{
 					string pathToWritingSystemsFolder =

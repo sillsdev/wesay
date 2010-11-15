@@ -327,6 +327,7 @@ namespace WeSay.Project
 			if (File.Exists(PathToConfigFile)) // will be null if we're creating a new project
 			{
 				_configFile = new ConfigFile(PathToConfigFile);
+				_configFile.MigrateIfNecassary();
 			}
 
 			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
