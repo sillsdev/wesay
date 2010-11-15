@@ -109,12 +109,14 @@ namespace WeSay.LexicalModel.Foundation
 			set { _palasoWritingSystemDefinition.Variant = value; }
 		}
 
+		[Browsable(false)]
 		public RFC5646Tag Rfc5646Tag
 		{
 			get { return _palasoWritingSystemDefinition.Rfc5646Tag; }
 			set { _palasoWritingSystemDefinition.Rfc5646Tag = value; }
 		}
 
+		[Browsable(false)]
 		public RFC5646Tag Rfc5646TagOnLoad
 		{
 			get { return _palasoWritingSystemDefinition.Rfc5646TagOnLoad; }
