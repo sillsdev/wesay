@@ -99,7 +99,7 @@ namespace WeSay.Project
 					Writer.WriteStartElement("field");
 					Writer.WriteAttributeString("type",
 												fieldName == "POS" ? "grammatical-info" : fieldName);
-					Add(labelForms, false);
+					WriteLanguageFormsInWrapper(labelForms, "form", false);
 					Writer.WriteEndElement();
 				}
 			}
@@ -136,7 +136,7 @@ namespace WeSay.Project
 				{
 					var textWritingSystems = _viewTemplate.WritingSystems.GetActualTextWritingSystems();
 					var ids = from ws in textWritingSystems select ws.Id;
-					Add(text.Forms.Where(f=>ids.Contains(f.WritingSystemId) ), true);
+					WriteLanguageFormsInWrapper(text.Forms.Where(f=>ids.Contains(f.WritingSystemId) ), "form", true);
 				}
 
 				Writer.WriteEndElement();
