@@ -203,7 +203,7 @@ namespace WeSay.Project.Tests.ConfigMigration
 		}
 
 		[Test]
-		public void V7File_ConfigFileIsVersion7_ConvertedToVersion8()
+		public void V7File_ConfigFileIsVersion7_ConvertedToLatest()
 		{
 			File.WriteAllText(_pathToInputConfig,
 				@"<?xml version='1.0' encoding='utf-8'?>
@@ -216,14 +216,14 @@ namespace WeSay.Project.Tests.ConfigMigration
 					</fields>
 				</configuration>");
 			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
-			AssertHasAtLeastOneMatch("//configuration[@version='8']", _outputPath);
+			AssertHasAtLeastOneMatch(String.Format("//configuration[@version='{0}']",WeSayWordsProject.CurrentWeSayConfigFileVersion), _outputPath);
 		}
 
 		[Test]
 		public void DoesNotTouchCurrentFile()
 		{
 			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><configuration version='8'></configuration>");
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='9'></configuration>");
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			Assert.IsFalse(didMigrate);
 		}
@@ -259,10 +259,10 @@ namespace WeSay.Project.Tests.ConfigMigration
 		[Test]
 		public void NewProject_ContainsOnlyLegacyWeSayWritingsystemsFile_WritingSystemsAreLoadedFromThatFile()
 		{
-
+			WeSayWordsProject.InitializeForTests();
 			CreateVersion7ProjectFiles();
 			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
-			AssertHasAtLeastOneMatch("//configuration[@version='8']", _outputPath);
+			AssertHasAtLeastOneMatch(String.Format("//configuration[@version='{0}']",WeSayWordsProject.CurrentWeSayConfigFileVersion), _outputPath);
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(_projectFolder.Path);
 

@@ -81,28 +81,44 @@ namespace WeSay.LexicalModel.Foundation
 		}
 
 		[ReflectorProperty("Id", Required = true)]
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
 		public string ISO
 		{
 			get { return _palasoWritingSystemDefinition.ISO; }
 			set { _palasoWritingSystemDefinition.ISO = value; }
 		}
 
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
 		public string Script
 		{
 			get { return _palasoWritingSystemDefinition.Script; }
 			set { _palasoWritingSystemDefinition.Script = value; }
 		}
 
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
 		public string Region
 		{
 			get { return _palasoWritingSystemDefinition.Region; }
 			set { _palasoWritingSystemDefinition.Region = value; }
 		}
 
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
 		public string Variant
 		{
 			get { return _palasoWritingSystemDefinition.Variant; }
 			set { _palasoWritingSystemDefinition.Variant = value; }
+		}
+
+		public RFC5646Tag Rfc5646Tag
+		{
+			get { return _palasoWritingSystemDefinition.Rfc5646Tag; }
+			set { _palasoWritingSystemDefinition.Rfc5646Tag = value; }
+		}
+
+		public RFC5646Tag Rfc5646TagOnLoad
+		{
+			get { return _palasoWritingSystemDefinition.Rfc5646TagOnLoad; }
+			set { _palasoWritingSystemDefinition.Rfc5646TagOnLoad = value;}
 		}
 
 		[ReflectorProperty("Abbreviation", Required = false)]

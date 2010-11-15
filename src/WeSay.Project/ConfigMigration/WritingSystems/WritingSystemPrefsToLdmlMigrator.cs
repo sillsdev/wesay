@@ -22,66 +22,34 @@ namespace WeSay.Project.ConfigMigration.WritingSystems
 			_pathToProjectFolder = pathToProjectFolder;
 		}
 
-		public Dictionary<string, string> MigrateIfNeeded()
+		public void MigrateIfNeeded()
 		{
+			if(!WeSayWordsProject.ProjectExists()){return;}  //this is the case for many tests
 			string pathToWritingSystemPrefsFile = BasilProject.GetPathToWritingSystemPrefs(_pathToProjectFolder);
-			Dictionary<string, string> oldIdToNewIdMap = new Dictionary<string, string>();
 			if (File.Exists(pathToWritingSystemPrefsFile))
 			{
 				string pathToLdmlWritingSystemsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(_pathToProjectFolder);
 				WritingSystemCollection writingSystems = new WritingSystemCollection();
 				writingSystems.LoadFromLegacyWeSayFile(pathToWritingSystemPrefsFile);
-				oldIdToNewIdMap = MapOldIdsToNewIdsInProjectFiles(pathToWritingSystemPrefsFile);
+				MapOldIdsToNewIdsInProjectFiles(writingSystems);
 				writingSystems.Write(pathToLdmlWritingSystemsFolder);
 				File.Delete(pathToWritingSystemPrefsFile);
 			}
-			return oldIdToNewIdMap;
 		}
 
-		private Dictionary<string, string> MapOldIdsToNewIdsInProjectFiles(string pathToWritingSystemPrefsFile)
+		private void MapOldIdsToNewIdsInProjectFiles(WritingSystemCollection writingSystems)
 		{
-			Dictionary<string, string> oldidToNewIdmap = GetMapOfOldIdsToNewIds(pathToWritingSystemPrefsFile);
-
-			foreach (KeyValuePair<string, string> oldIdNewIdPair in oldidToNewIdmap)
+			foreach (WritingSystem ws in writingSystems.Values)
 			{
-				if (!WeSayWordsProject.Project.ChangeWritingSystemIdsInLiftFile(oldIdNewIdPair.Key, oldIdNewIdPair.Value)) { throw new ApplicationException(String.Format("An error occured while migrating the writing system {0} to {1} in your lift file.", oldIdNewIdPair.Key, oldIdNewIdPair.Value)); }
-			}
-			return oldidToNewIdmap;
-		}
-
-		private Dictionary<string, string> GetMapOfOldIdsToNewIds(string pathToWritingSystemPrefsFile)
-		{
-			Dictionary<string, string> oldIdToNewIdMap = new Dictionary<string, string>();
-			using(XmlReader reader = XmlReader.Create(pathToWritingSystemPrefsFile))
-			{
-				while(reader.Read())
-				{
-					if(reader.Name == "WritingSystem")
+					if (!WeSayWordsProject.Project.ChangeWritingSystemIdsInLiftFile(ws.Rfc5646TagOnLoad.CompleteTag,ws.Id))
 					{
-						string oldId = "";
-						bool isAudio = false;
-
-						while(!(reader.Name == "WritingSystem" && reader.NodeType == XmlNodeType.EndElement))
-						{
-							reader.Read();
-							if(reader.Name == "Id")
-							{
-								oldId = reader.ReadString();
-							}
-							else if(reader.Name == "IsAudio")
-							{
-								isAudio = Convert.ToBoolean(reader.ReadString());
-							}
-						}
-						string newId = new WritingSystem() { ISO = oldId, IsAudio = isAudio }.Id;
-						if (oldId != newId)
-						{
-							oldIdToNewIdMap.Add(oldId, newId);
-						}
+						throw new ApplicationException(
+							String.Format(
+								"An error occured while migrating the writing system {0} to {1} in your lift file.",
+								ws.Rfc5646TagOnLoad.CompleteTag, ws.Id));
 					}
-				}
+					WeSayWordsProject.Project.ConfigFile.ReplaceWritingSystemId(ws.Rfc5646TagOnLoad.CompleteTag, ws.Id);
 			}
-			return oldIdToNewIdMap;
 		}
 	}
 }

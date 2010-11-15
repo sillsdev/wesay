@@ -106,23 +106,6 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		public void DefaultConfigFile_DoesntNeedMigrating()
-		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting(""))
-			{
-				XPathDocument defaultConfig = new XPathDocument(WeSayWordsProject.PathToDefaultConfig);
-				using (TempFile f = new TempFile())
-				{
-					using (var proj = p.CreateLoadedProject())
-					{
-						bool migrated = proj.MigrateConfigurationXmlIfNeeded();
-						Assert.IsFalse(migrated, "The default config file should never need migrating");
-					}
-				}
-			}
-		}
-
-		[Test]
 		public void WeSayDirNotInValidBasilDir()
 		{
 			using (var dir = new Palaso.TestUtilities.TemporaryFolder("WeSayDirNotInValidBasilDir"))
@@ -267,34 +250,6 @@ namespace WeSay.Project.Tests
 				p.Save();
 				f.FieldName = newName;
 				p.MakeFieldNameChange(f, oldName);
-			}
-		}
-
-		[Test]
-		public void WeSayConfigFileIsToNew_Throws()
-		{
-
-			using (ProjectDirectorySetupForTesting projectDir = new ProjectDirectorySetupForTesting(""))
-			{
-				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
-				const int version = WeSayWordsProject.CurrentWeSayConfigFileVersion + 1;
-				File.WriteAllText(configPath,
-								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
-			   Assert.Throws<ApplicationException>(() => WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(configPath));
-			}
-		}
-
-		[Test]
-		public void WeSayConfigFileIsToCurrent_DoesNotThrow()
-		{
-
-			using (ProjectDirectorySetupForTesting projectDir = new ProjectDirectorySetupForTesting(""))
-			{
-				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
-				const int version = WeSayWordsProject.CurrentWeSayConfigFileVersion;
-				File.WriteAllText(configPath,
-								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
-				WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(configPath);
 			}
 		}
 

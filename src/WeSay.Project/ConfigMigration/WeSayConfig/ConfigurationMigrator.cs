@@ -66,14 +66,57 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 			}
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='7']") != null)
 			{
+				//This migration step is actually related to writing systems
 				string pathToMostRecentConfigFile = pathToConfigFile;
 				if (didMigrate){pathToMostRecentConfigFile = targetPath;}
 				MigrateInCodeFromVersion7To8(pathToMostRecentConfigFile, targetPath);
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='8']") != null)
+			{
+				//This migration step is actually related only to writing systems and does not effect the configuration file at all.
+				//However, we only want this step to effect writing systems that were created during the migration from config version 7
+				//to config version 8 (roughly 0.9.0 - 0.9.32) so this is a natural place to do it.
+				string pathToMostRecentConfigFile = pathToConfigFile;
+				if (didMigrate) { pathToMostRecentConfigFile = targetPath; }
+				MigrateInCodeFromVersion8To9(pathToMostRecentConfigFile, targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
 			return didMigrate;
 
+		}
+
+		private void MigrateInCodeFromVersion8To9(string pathToMostRecentConfigFile, string targetPath)
+		{
+			string pathToProjectDirectory = "";
+			if (WeSayWordsProject.ProjectExists())  //this is false for many tests
+			{
+				if (!String.IsNullOrEmpty(pathToProjectDirectory))
+				{
+					string pathToWritingSystemsFolder =
+						BasilProject.GetPathToLdmlWritingSystemsFolder(pathToProjectDirectory);
+
+					if (Directory.Exists(pathToWritingSystemsFolder)) //This is false for many tests
+					{
+						foreach (
+							string pathToLdmlFile in
+								Directory.GetFiles(pathToWritingSystemsFolder, "*.ldml"))
+						{
+							XmlDocument ldmlFile = new XmlDocument();
+							ldmlFile.Load(pathToLdmlFile);
+							XmlNode variantNode = ldmlFile.SelectSingleNode("/ldml/identity/variant/@type");
+							if (variantNode != null && variantNode.Value == "Zxxx")
+							{
+								File.Delete(pathToLdmlFile);
+								//These files were mistakenly created during 0.7-0.9 migration of audio writing systems
+							}
+						}
+					}
+				}
+			}
+			UpVersionNumberInConfigFile(targetPath, pathToMostRecentConfigFile);
 		}
 
 		private XPathDocument GetConfigurationFileAsXPathDocument(string pathToConfigFile)
@@ -99,31 +142,24 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 		{
 			string pathToProject = Path.GetDirectoryName(targetPath);
 			var writingSystemPrefsToLdmlMigrator = new WritingSystemPrefsToLdmlMigrator(pathToProject);
-			var oldidToNewIdMap = writingSystemPrefsToLdmlMigrator.MigrateIfNeeded();
+			writingSystemPrefsToLdmlMigrator.MigrateIfNeeded();
 
-			WritingSystemIdChanger idInConfigFileChanger = new WritingSystemIdChanger(pathToConfigFile);
-			idInConfigFileChanger.ChangeWritingSystemIdInConfigFile(oldidToNewIdMap);
+			UpVersionNumberInConfigFile(targetPath, pathToConfigFile);
+		}
 
+		private void UpVersionNumberInConfigFile(string targetPath, string pathToConfigFile)
+		{
 			string tempFilePath = Path.GetTempFileName();
 
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(pathToConfigFile);
 			XmlNode versionNode = xmlDoc.SelectSingleNode("configuration/@version");
-			string versionNumber = versionNode.Value;
-			if(versionNumber!= "7"){throw new ApplicationException("Expected a config file version 7.");}
-			versionNode.Value = "8";
+			int versionNumber = Convert.ToInt32(versionNode.Value);
+			versionNumber++;
+			versionNode.Value = versionNumber.ToString();
 			xmlDoc.Save(tempFilePath);
 
 			SafelyMoveTempFileTofinalDestination(tempFilePath, targetPath);
-		}
-
-		private void CopyChildren(XmlWriter writer, XPathNavigator navigator)
-		{
-			navigator.MoveToFirstChild();
-			do
-			{
-				writer.WriteNode(navigator, true);
-			} while (navigator.MoveToNext());
 		}
 
 		public static void MigrateUsingXSLT(IXPathNavigable configurationDoc,
