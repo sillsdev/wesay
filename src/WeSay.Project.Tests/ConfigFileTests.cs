@@ -15,17 +15,6 @@ namespace WeSay.Project.Tests
 	public class ConfigFileTests
 	{
 		[Test]
-		public void Constructor_OldConfigFile_VersionOfFileIsSameAsLatestVersionAfterConstructorExecutes()
-		{
-			WeSayWordsProject.InitializeForTests();
-			string pathToConfigFile = Path.GetTempFileName();
-			File.WriteAllText(pathToConfigFile,
-								  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
-			ConfigFile configFile = new ConfigFile(pathToConfigFile);
-			Assert.AreEqual(ConfigFile.LatestVersion, configFile.Version);
-		}
-
-		[Test]
 		public void ChangeWritingSystemId_IdExists_IsChanged()
 		{
 			WeSayWordsProject.InitializeForTests();
