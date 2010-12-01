@@ -6,7 +6,6 @@ using Palaso.IO;
 using Palaso.UiBindings;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.ImageGallery;
-using WeSay.LexicalTools.AddPictures;
 
 namespace WeSay.UI
 {
