@@ -6,7 +6,7 @@ using Palaso.IO;
 using Palaso.UiBindings;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.ImageGallery;
-using WeSay.LexicalTools.AddPictures;
+//using WeSay.LexicalTools.AddPictures;
 
 namespace WeSay.UI
 {
@@ -47,7 +47,7 @@ namespace WeSay.UI
 
 			if (string.IsNullOrEmpty(_relativePathToImage))
 			{
-				_searchGalleryLink.Visible = GalleryIsAvailable;
+				_searchGalleryLink.Visible = ArtOfReadingImageCollection.IsAvailable();
 				_chooseImageLink.Visible = true;
 				_pictureBox.Visible = false;
 				_problemLabel.Visible = false;
@@ -60,7 +60,7 @@ namespace WeSay.UI
 				string s = String.Format("~Cannot find {0}", GetPathToImage());
 				toolTip1.SetToolTip(this, s);
 				toolTip1.SetToolTip(_problemLabel, s);
-				_searchGalleryLink.Visible = GalleryIsAvailable;
+				_searchGalleryLink.Visible = ArtOfReadingImageCollection.IsAvailable();
 				_chooseImageLink.Visible = true;
 				Height = _problemLabel.Bottom + 5;
 			}
@@ -225,7 +225,7 @@ namespace WeSay.UI
 		private void _chooseImageLink_MouseEnter(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = Color.Blue;
-			_searchGalleryLink.LinkColor = GalleryIsAvailable ? Color.Blue : _shyLinkColor;
+			_searchGalleryLink.LinkColor = ArtOfReadingImageCollection.IsAvailable() ? Color.Blue : _shyLinkColor;
 		}
 
 		private void _chooseImageLink_MouseLeave(object sender, EventArgs e)
@@ -242,7 +242,7 @@ namespace WeSay.UI
 		private void ImageDisplayWidget_MouseHover(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = Color.Blue;
-			_searchGalleryLink.LinkColor = GalleryIsAvailable ? Color.Blue : _shyLinkColor;
+			_searchGalleryLink.LinkColor = ArtOfReadingImageCollection.IsAvailable() ? Color.Blue : _shyLinkColor;
 			_removeImageLink.LinkColor = Color.Blue;
 		}
 
@@ -252,40 +252,11 @@ namespace WeSay.UI
 			_searchGalleryLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
 		}
-		private static string TryToGetRootImageCatalogPath()
-		{
-			//look for the cd/dvd
-			var path = ArtOfReadingImageCollection.TryToGetCollectionPath();
-			if(!string.IsNullOrEmpty(path))
-				return path;
 
-			//look for it in a hard-coded location
-			string HardDiskPath = @"c:\art of reading\images";
-			if (Environment.OSVersion.Platform == PlatformID.Unix)
-			{
-				HardDiskPath = @"/usr/share/wesay/ArtOfReading/images";
-				if (!Directory.Exists(HardDiskPath))
-				{
-					HardDiskPath = @"/usr/share/ArtOfReading/images";
-				}
-				if (!Directory.Exists(HardDiskPath))
-				{
-					HardDiskPath = @"/var/share/ArtOfReading/images";
-				}
-			}
 
-			return HardDiskPath;
-		}
-		private static bool GalleryIsAvailable
-		{
-			get
-			{
-				return Directory.Exists(TryToGetRootImageCatalogPath());
-			}
-		}
 		private void OnSearchGalleryLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			if(!GalleryIsAvailable)
+			if (!ArtOfReadingImageCollection.IsAvailable())
 			{
 				MessageBox.Show("Could not find the Art Of Reading image collection.");
 				return;
@@ -297,7 +268,7 @@ namespace WeSay.UI
 				throw new FileNotFoundException("Could not find Art of reading index file.");
 			}
 			images.LoadIndex(pathToIndexFile);
-			images.RootImagePath = TryToGetRootImageCatalogPath();
+			images.RootImagePath = ArtOfReadingImageCollection.TryToGetRootImageCatalogPath();
 			var searchString = SearchTermProvider == null ? string.Empty:SearchTermProvider.SearchString;
 			searchString = images.StripNonMatchingKeywords(searchString);
 			using (var chooser = new PictureChooser(images, searchString))
