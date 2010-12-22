@@ -43,6 +43,7 @@ namespace WeSay.Project
 {
 	public class WeSayWordsProject : BasilProject, IFileLocator
 	{
+		private ConfigFile _configFile;
 		private IList<ITask> _tasks;
 		private ViewTemplate _defaultViewTemplate;
 		private IList<ViewTemplate> _viewTemplates;
@@ -55,7 +56,7 @@ namespace WeSay.Project
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
 
-		public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
+		public static int CurrentWeSayConfigFileVersion = WeSay.Project.ConfigFile.LatestVersion;
 		public const int CurrentWeSayUserSpecificConfigFileVersion = 2; // This variable must be updated with every new vrsion of the WeSayUserConfig file
 
 		public event EventHandler EditorsSaveNow;
@@ -93,6 +94,11 @@ namespace WeSay.Project
 				}
 				return (WeSayWordsProject) Singleton;
 			}
+		}
+
+		public static bool ProjectExists() //This is useful for tests
+		{
+			return Singleton != null;
 		}
 
 		/// <summary>
@@ -320,13 +326,12 @@ namespace WeSay.Project
 
 			if (File.Exists(PathToConfigFile)) // will be null if we're creating a new project
 			{
-				CheckIfConfigFileVersionIsTooNew(PathToConfigFile);
-				var m = new ConfigurationMigrator();
-				Console.WriteLine("{0}",PathToConfigFile);
-				m.MigrateConfigurationXmlIfNeeded(PathToConfigFile, PathToConfigFile);
+				_configFile = new ConfigFile(PathToConfigFile);
+				_configFile.MigrateIfNecassary();
 			}
+
 			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
-			wsCreator.CreateNonExistantWritingSystemsFoundInLift(this.PathToLiftFile);
+			wsCreator.CreateNonExistantWritingSystemsFoundInLift(PathToLiftFile);
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
@@ -341,20 +346,6 @@ namespace WeSay.Project
 			LoadUserConfig();
 			InitStringCatalog();
 
-		}
-
-		public static void CheckIfConfigFileVersionIsTooNew(string pathToConfigFile)
-		{
-			XPathDocument configurationDoc = new XPathDocument(pathToConfigFile);
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") != null)
-			{
-				string versionNumberAsString =
-					configurationDoc.CreateNavigator().SelectSingleNode("configuration").GetAttribute("version", "");
-				if(int.Parse(versionNumberAsString) > CurrentWeSayConfigFileVersion)
-				{
-					throw new ApplicationException("The config file is too new for this version of wesay. Please download a newer version of wesay from www.wesay.org");
-				}
-			}
 		}
 
 		[Serializable]
@@ -1212,6 +1203,10 @@ namespace WeSay.Project
 			}
 		}
 
+		public ConfigFile ConfigFile
+		{
+			get { return _configFile; }
+		}
 
 
 		public override void Save()

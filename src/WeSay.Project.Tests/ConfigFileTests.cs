@@ -1,5 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
-<configuration version="9">
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.XPath;
+using NUnit.Framework;
+using Palaso.TestUtilities;
+using WeSay.Project.ConfigMigration.WeSayConfig;
+
+namespace WeSay.Project.Tests
+{
+	[TestFixture]
+	public class ConfigFileTests
+	{
+		[Test]
+		public void ChangeWritingSystemId_IdExists_IsChanged()
+		{
+			WeSayWordsProject.InitializeForTests();
+			string pathToConfigFile = Path.GetTempFileName();
+			File.WriteAllText(pathToConfigFile,
+								  GetV7ConfigFileContent());
+			ConfigFile configFile = new ConfigFile(pathToConfigFile);
+			configFile.ReplaceWritingSystemId("hi-u", "hi-Zxxx-x-audio");
+			string newFileContent = File.ReadAllText(pathToConfigFile);
+			Assert.IsFalse(newFileContent.Contains("hi-u"));
+			Assert.IsTrue(newFileContent.Contains("hi-Zxxx-x-audio"));
+		}
+
+		[Test]
+		public void ChangeWritingSystemId_DoesnotExist_NoChange()
+		{
+			WeSayWordsProject.InitializeForTests();
+			string pathToConfigFile = Path.GetTempFileName();
+			File.WriteAllText(pathToConfigFile,
+								  GetV7ConfigFileContent());
+			ConfigFile configFile = new ConfigFile(pathToConfigFile);
+			configFile.ReplaceWritingSystemId("hi-up", "hi-Zxxx-x-audio");
+			string newFileContent = File.ReadAllText(pathToConfigFile);
+			Assert.IsFalse(newFileContent.Contains("hi-Zxxx-x-audio"));
+		}
+
+		[Test]
+		public void DefaultConfigFile_DoesntNeedMigrating()
+		{
+			XmlDocument configFile = new XmlDocument();
+			configFile.Load(WeSayWordsProject.PathToDefaultConfig);
+			XmlNode versionNode = configFile.SelectSingleNode("configuration/@version");
+			Assert.AreEqual(ConfigFile.LatestVersion, Convert.ToInt32(versionNode.Value));
+		}
+
+		private string GetV7ConfigFileContent()
+		{
+			return
+				@"<?xml version='1.0' encoding='utf-8'?>
+<configuration version='7'>
   <components>
 	<viewTemplate>
 	  <fields>
@@ -14,7 +69,9 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>v</id>
+			<id>hi-u</id>
+			<id>tap-Zxxx-x-audio</id>
+			<id>lalaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -28,7 +85,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
-			<id>v</id>
+			<id>hi-u</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -127,7 +184,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>v</id>
+			<id>hi-u</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -170,7 +227,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
-			<id>v</id>
+			<id>hi-u</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -184,7 +241,7 @@
 		  <multiplicity>ZeroOrMore</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
-			<id>v</id>
+			<id>hi-u</id>
 		  </writingSystems>
 		</field>
 	  </fields>
@@ -192,9 +249,9 @@
 	</viewTemplate>
   </components>
   <tasks>
-	<task taskName="Dashboard" visible="true" />
-	<task taskName="Dictionary" visible="true" />
-	<task taskName="AddMissingInfo" visible="false">
+	<task taskName='Dashboard' visible='true' />
+	<task taskName='Dictionary' visible='true' />
+	<task taskName='AddMissingInfo' visible='false'>
 	  <label>Meanings</label>
 	  <longLabel>Add Meanings</longLabel>
 	  <description>Add meanings (senses) to entries where they are missing.</description>
@@ -204,7 +261,7 @@
 	  <writingSystemsToMatch />
 	  <writingSystemsWhichAreRequired />
 	</task>
-	<task taskName="AddMissingInfo" visible="false">
+	<task taskName='AddMissingInfo' visible='false'>
 	  <label>Parts of Speech</label>
 	  <longLabel>Add Parts of Speech</longLabel>
 	  <description>Add parts of speech to senses where they are missing.</description>
@@ -214,7 +271,7 @@
 	  <writingSystemsToMatch />
 	  <writingSystemsWhichAreRequired />
 	</task>
-	<task taskName="AddMissingInfo" visible="false">
+	<task taskName='AddMissingInfo' visible='false'>
 	  <label>Example Sentences</label>
 	  <longLabel>Add Example Sentences</longLabel>
 	  <description>Add example sentences to senses where they are missing.</description>
@@ -224,32 +281,32 @@
 	  <writingSystemsToMatch />
 	  <writingSystemsWhichAreRequired />
 	</task>
-	<task taskName="AddMissingInfo" visible="false">
+	<task taskName='AddMissingInfo' visible='false'>
 	  <label>Base Forms</label>
 	  <longLabel>Add Base Forms</longLabel>
-	  <description>Identify the "base form" word that this word is built from. In the printed dictionary, the derived or variant words can optionally be shown as subentries of their base forms.</description>
+	  <description>Identify the 'base form' word that this word is built from. In the printed dictionary, the derived or variant words can optionally be shown as subentries of their base forms.</description>
 	  <field>BaseForm</field>
 	  <showFields>BaseForm</showFields>
 	  <readOnly />
 	  <writingSystemsToMatch />
 	  <writingSystemsWhichAreRequired />
 	</task>
-	<task taskName="AdvancedHistory" visible="false" />
-	<task taskName="NotesBrowser" visible="false" />
-	<task taskName="GatherWordList" visible="false">
-	  <wordListFileName>SILCAWL</wordListFileName>
+	<task taskName='AdvancedHistory' visible='false' />
+	<task taskName='NotesBrowser' visible='false' />
+	<task taskName='GatherWordList' visible='false'>
+	  <wordListFileName>SILCAWL.lift</wordListFileName>
 	  <wordListWritingSystemId>en</wordListWritingSystemId>
 	</task>
-	<task taskName="GatherWordList" visible="false">
-	  <wordListFileName>SILCAWL-MozambiqueAddendum</wordListFileName>
-	  <wordListWritingSystemId>en</wordListWritingSystemId>
-	</task>
-	<task taskName="GatherWordsBySemanticDomains" visible="true">
+	<task taskName='GatherWordsBySemanticDomains' visible='true'>
 	  <semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName>
 	  <showMeaningField>False</showMeaningField>
 	</task>
   </tasks>
   <addins>
-	<addin id="SendReceiveAction" showInWeSay="True" />
+	<addin id='SendReceiveAction' showInWeSay='True' />
   </addins>
-</configuration>
+</configuration>"
+					.Replace("'", "\"");
+		}
+	}
+}
