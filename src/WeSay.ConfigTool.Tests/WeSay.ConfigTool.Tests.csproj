@@ -170,9 +170,6 @@
 	<Compile Include="TestProjectMenu.cs" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>

@@ -44,7 +44,7 @@
 	<Target Name="Test" DependsOnTargets="Build">
 		<CreateItem
 			Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-			Exclude="$(RootDir)/output/$(Configuration)/Palaso*.dll;$(RootDir)/output/$(Configuration)/LexicalTools.Tests.dll">
+			Exclude="$(RootDir)/output/$(Configuration)/Palaso*.dll">
 			<Output ItemName="TestAssemblies" TaskParameter="Include" />
 		</CreateItem>
 		<NUnitTeamCity
