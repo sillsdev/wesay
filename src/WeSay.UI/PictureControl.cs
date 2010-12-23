@@ -6,7 +6,6 @@ using Palaso.IO;
 using Palaso.UiBindings;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.ImageGallery;
-using WeSay.LexicalTools.AddPictures;
 
 namespace WeSay.UI
 {
@@ -255,7 +254,7 @@ namespace WeSay.UI
 		private static string TryToGetRootImageCatalogPath()
 		{
 			//look for the cd/dvd
-			var path = ArtOfReadingImageCollection.TryToGetCollectionPath();
+			var path = ArtOfReadingImageCollection.TryToGetRootImageCatalogPath();
 			if(!string.IsNullOrEmpty(path))
 				return path;
 
