@@ -347,11 +347,18 @@ namespace WeSay.App
 				return;
 			}
 
-			// RunCommand(new ActivateTaskCommand(page, task));
 			task.Control.Dock = DockStyle.Fill;
-			task.Control.SuspendLayout();
-			page.Controls.Add(task.Control);
-			task.Control.ResumeLayout(false);
+
+			if(task.Control.GetType() == typeof(Chorus.UI.Notes.Browser.NotesBrowserPage))
+			{
+				page.Controls.Add(task.Control);
+			}
+			else //I (JH) don't know what problem this code was intended to solve, but it prevents the notes browser from docking properly
+			{
+				task.Control.SuspendLayout();
+				page.Controls.Add(task.Control);
+				task.Control.ResumeLayout(false);
+			}
 			task.Control.SelectNextControl(task.Control, true, true, true, true);
 			task.Control.PerformLayout();
 			task.Control.Invalidate(true);
