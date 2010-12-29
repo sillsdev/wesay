@@ -25,6 +25,7 @@ using Palaso.IO;
 using Palaso.Linq;
 #endif
 using Palaso.Lift.Options;
+using Palaso.Progress.LogBox;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using Palaso.UiBindings;
