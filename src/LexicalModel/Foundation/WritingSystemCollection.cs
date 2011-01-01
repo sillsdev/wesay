@@ -15,6 +15,12 @@ namespace WeSay.LexicalModel.Foundation
 	{
 		private LdmlInFolderWritingSystemStore _ldmlInFolderWritingSystemStore;
 
+		public WritingSystemCollection()
+			: base(StringComparer.OrdinalIgnoreCase)
+		{
+
+		}
+
 		public void Load(string pathToLdmlWritingSystemsFolder)
 		{
 			if (LdmlWritingSystemsDefinitionsExist(pathToLdmlWritingSystemsFolder))
