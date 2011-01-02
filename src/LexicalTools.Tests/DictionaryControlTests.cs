@@ -600,13 +600,13 @@ namespace WeSay.LexicalTools.Tests
 		{
 			SingleOptionControl combo = GetOptionControl(fieldLabel);
 
-			combo.Value = "verb";
+			combo.Value = "Verb";
 
 			LexEntry entry = GetCurrentEntry();
 			CycleTheCurrentEntryOutAndBackIn(entry);
 
 			combo = GetOptionControl(fieldLabel);
-			Assert.AreEqual("verb", combo.Value);
+			Assert.AreEqual("Verb", combo.Value);
 		}
 
 		[Test]

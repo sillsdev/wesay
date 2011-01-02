@@ -84,8 +84,8 @@ namespace WeSay.LexicalModel.Foundation
 		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
 		public string ISO
 		{
-			get { return _palasoWritingSystemDefinition.ISO; }
-			set { _palasoWritingSystemDefinition.ISO = value; }
+			get { return _palasoWritingSystemDefinition.ISO639; }
+			set { _palasoWritingSystemDefinition.ISO639 = value; }
 		}
 
 		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
@@ -130,7 +130,7 @@ namespace WeSay.LexicalModel.Foundation
 			{
 				if (string.IsNullOrEmpty(_palasoWritingSystemDefinition.Abbreviation))
 				{
-					return _palasoWritingSystemDefinition.ISO;
+					return _palasoWritingSystemDefinition.ISO639;
 				}
 				return _palasoWritingSystemDefinition.Abbreviation;
 			}
@@ -397,7 +397,7 @@ namespace WeSay.LexicalModel.Foundation
 		// Same if behavior is same (not appearance)
 		public override int GetHashCode()
 		{
-			int hashCode = HashCombine(_palasoWritingSystemDefinition.ISO.GetHashCode(), SortUsing.GetHashCode());
+			int hashCode = HashCombine(_palasoWritingSystemDefinition.ISO639.GetHashCode(), SortUsing.GetHashCode());
 			if (UsesCustomSortRules)
 			{
 				hashCode = HashCombine(hashCode, CustomSortRules.GetHashCode());
