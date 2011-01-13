@@ -117,9 +117,12 @@
 		/>
 		<Message Text="Starting pdebuild -- lucid i386" />
 		<Exec
-			Command='pdebuild --configfile /home/bob/pbuilder/pbuilderrc-lucid-lingnet --use-pdebuild-internal --auto-debsign"'
+			Command='pdebuild --configfile /home/bob/pbuilder/pbuilderrc-lucid-lingnet --use-pdebuild-internal --auto-debsign'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
+	</Target>
+
+	<Target Name="Upload" DependsOnTargets="Installer">
 		<Message Text="Starting dput -- lucid i386" />
 		<Exec
 			Command='dput LINGNET /home/bob/pbuilder/results/lucid/$(ApplicationNameLC)_$(Version)*.changes'
