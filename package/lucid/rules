@@ -1,15 +1,15 @@
 #!/usr/bin/make -f
 
-NANT=MONO_SHARED_DIR=/tmp nant -buildfile:bld/wesay.mono.build
+XBUILD=MONO_SHARED_DIR=/tmp xbuild build/build.mono.proj /p:RootDir=.
 build: build-stamp
 build-stamp:
 	dh_testdir
-	$(NANT) build-only
+	$(XBUILD) /target:Compile
 	touch build-stamp
 
 clean:
 	dh_testdir
-	$(NANT) clean
+	$(XBUILD) /target:Clean
 	rm -f *-stamp
 	dh_clean
 
@@ -18,7 +18,7 @@ install-stamp:
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-	$(NANT) install -D:INSTALL_DIR=../debian/tmp
+	$(XBUILD) /target:Install /p:InstallDir=../debian/tmp
 	dh_installdirs
 	dh_install
 	dh_installdocs

@@ -6,16 +6,23 @@
 	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<!-- <UsingTask TaskName="MakeWixForDirTree" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" /> -->
 	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="Archive" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="NUnitTeamCity" AssemblyFile="$(agent_home_dir)/plugins/dotnetPlugin/bin/JetBrains.BuildServer.MSBuildLoggers.dll" />
 
 	<PropertyGroup>
 		<Solution>WeSay.sln</Solution>
 		<ApplicationName>WeSay</ApplicationName>
+		<ApplicationNameLC>wesay</ApplicationNameLC>
 		<Configuration>DebugMono</Configuration>
 	</PropertyGroup>
 
 	<Import Project="$(RootDir)/build/build.common.proj" />
+
+	<PropertyGroup>
+		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
+
+	</PropertyGroup>
 
 	<Target Name="Build">
 		<CallTarget Targets="Clean"/>
@@ -52,5 +59,119 @@
 			ExcludeCategory="SkipOnBuildServer;SkipOnTeamCity;KnownMonoIssue;NUnit Windows Forms"
 			NUnitVersion="NUnit-2.5.5" />
 	</Target>
+
+	<!-- Source Package -->
+	<ItemGroup>
+		<Source Include="$(RootDir)/src/**/*.build" />
+		<Source Include="$(RootDir)/src/**/*.cs" />
+		<Source Include="$(RootDir)/src/**/*.resx" />
+		<Source Include="$(RootDir)/src/**/Resources/*" />
+		<Source Include="$(RootDir)/src/**/*.png" />
+		<Source Include="$(RootDir)/src/**/*.xsl" />
+		<Source Include="$(RootDir)/src/**/*.htm" />
+		<Source Include="$(RootDir)/src/Installer_Linux/**" />
+		<Source Include="$(RootDir)/lib/DebugMono/**" />
+		<Source Include="$(RootDir)/lib/ReleaseMono/**" />
+		<Source Include="$(RootDir)/lib/common/**" />
+		<Source Include="$(RootDir)/artwork/**" />
+		<Source Include="$(RootDir)/build/*.proj" />
+		<Source Include="$(RootDir)/build/mono/*" />
+		<Source Include="$(RootDir)/common/**" />
+		<Source Include="$(RootDir)/SampleProjects/**" />
+		<Source Include="$(RootDir)/templates/**" />
+	</ItemGroup>
+	<Target Name="SourcePackage" DependsOnTargets="SetAssemblyVersion">
+		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)_$(Version).tar.gz">
+			<Output TaskParameter="Value" PropertyName="SourcePackageFileName" />
+		</CreateProperty>
+		<Message Text="Archive source to '$(SourcePackageFileName)'" />
+		<Archive
+			Command="Tar"
+			InputFilePaths="@(Source)"
+			OutputFileName="$(SourcePackageFileName)"
+			BasePath="$(RootDir)"
+			WorkingDir="$(RootDir)"
+		/>
+	</Target>
+
+	<!-- Installer (Packaging) -->
+	<ItemGroup>
+		<DebianControlFiles Include="$(RootDir)/package/lucid/**" />
+	</ItemGroup>
+	<Target Name="Installer" DependsOnTargets="SourcePackage">
+		<CreateProperty Value="$(OutputDir)/Package/$(ApplicationNameLC)-$(Version)">
+			<Output TaskParameter="Value" PropertyName="InstallerBaseDir" />
+		</CreateProperty>
+		<MakeDir Directories="$(OutputDir)/Package" />
+		<Copy SourceFiles="$(SourcePackageFileName)" DestinationFiles="$(OutputDir)/Package/$(ApplicationNameLC)_$(Version).orig.tar.gz" />
+		<MakeDir Directories="$(InstallerBaseDir)" />
+		<Exec
+			Command="tar -xzf $(OutputDir)/Package/$(ApplicationNameLC)_$(Version).orig.tar.gz"
+			WorkingDirectory="$(InstallerBaseDir)"
+		/>
+		<MakeDir Directories="$(InstallerBaseDir)/debian" />
+		<Copy SourceFiles="@(DebianControlFiles)" DestinationFolder="$(InstallerBaseDir)/debian" />
+		<Exec
+			Command='dch -v $(Version)-1palaso1 "Auto Build"'
+			WorkingDirectory="$(InstallerBaseDir)"
+		/>
+		<Message Text="Starting pdebuild -- lucid i386" />
+		<Exec
+			Command='pdebuild --configfile /home/bob/pbuilder/pbuilderrc-lucid-lingnet --use-pdebuild-internal --auto-debsign"'
+			WorkingDirectory="$(InstallerBaseDir)"
+		/>
+		<Message Text="Starting dput -- lucid i386" />
+		<Exec
+			Command='dput LINGNET /home/bob/pbuilder/results/lucid/$(ApplicationNameLC)_$(Version)*.changes'
+			WorkingDirectory="$(InstallerBaseDir)"
+		/>
+	</Target>
+
+	<!-- Install -->
+	<!-- The Install Target must be called from an MSBuild task so as to include the output from the previous MSBuild in the ItemGroup below -->
+	<ItemGroup>
+		<ExecutableFiles Include="$(OutputDir)/*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*.mdb" />
+		<CommonFiles Include="$(RootDir)/common/*" />
+		<TemplateFiles Include="$(RootDir)/templates/**" />
+		<IconFiles Include="$(RootDir)/src/Installer_Linux/icons/**" />
+		<MenuFiles Include="$(RootDir)/src/Installer_Linux/*.desktop" />
+		<WrapperFiles Include="$(RootDir)/build/mono/*" />
+	</ItemGroup>
+	<PropertyGroup>
+		<InstallUsrBin>$(InstallDir)/usr/bin</InstallUsrBin>
+		<InstallApp>$(InstallDir)/usr/share/$(ApplicationNameLC)</InstallApp>
+		<InstallIcon>$(InstallDir)/usr/share/icons</InstallIcon>
+		<InstallMenu>$(InstallDir)/usr/share/applications</InstallMenu>
+	</PropertyGroup>
+	<Target Name="Install">
+		<Copy
+			DestinationFolder="$(InstallApp)"
+			SourceFiles="@(ExecutableFiles)"
+		/>
+		<Copy
+			DestinationFolder="$(InstallApp)/common"
+			SourceFiles="@(CommonFiles)"
+		/>
+		<Copy
+			DestinationFolder="$(InstallApp)/templates"
+			SourceFiles="@(TemplateFiles)"
+		/>
+		<Copy
+			DestinationFolder="$(InstallIcon)"
+			SourceFiles="@(IconFiles)"
+		/>
+		<Copy
+			DestinationFolder="$(InstallMenu)"
+			SourceFiles="@(MenuFiles)"
+		/>
+		<Copy
+			DestinationFolder="$(InstallUsrBin)"
+			SourceFiles="@(WrapperFiles)"
+		/>
+		<Exec
+			Command="chmod 755 $(InstallUsrBin)/wesay $(InstallUsrBin)/wesay-config $(InstallUsrBin)/chorus $(InstallUsrBin)/chorusmerge"
+		/>
+	</Target>
+
 
 </Project>
