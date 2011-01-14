@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-XBUILD=MONO_SHARED_DIR=/tmp xbuild build/build.mono.proj /p:RootDir=.
+XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild build/build.mono.proj /p:RootDir=.
 build: build-stamp
 build-stamp:
 	dh_testdir
