@@ -62,14 +62,16 @@
 
 	<!-- Source Package -->
 	<ItemGroup>
-		<Source Include="$(RootDir)/src/**/*.build" />
-		<Source Include="$(RootDir)/src/**/*.cs" />
-		<Source Include="$(RootDir)/src/**/*.resx" />
-		<Source Include="$(RootDir)/src/**/Resources/*" />
-		<Source Include="$(RootDir)/src/**/*.png" />
-		<Source Include="$(RootDir)/src/**/*.xsl" />
-		<Source Include="$(RootDir)/src/**/*.htm" />
-		<Source Include="$(RootDir)/src/Installer_Linux/**" />
+		<ExistingPackageFiles Include="$(OutputDir)/wesay*.tar.gz" />
+		<ExistingPackageBuildFiles Include="$(OutputDir)/Package/**/*" />
+		<ExistingPackageBuildFiles Include="$(OutputDir)/Package/**" />
+	</ItemGroup>
+	<Target Name="PackageClean">
+		<Delete Files="@(ExistingPackageFiles)" />
+		<Delete Files="@(ExistingPackageBuildFiles)" />
+	</Target>
+	<ItemGroup>
+		<Source Include="$(RootDir)/src/**/*" Exclude="$(RootDir)/src/**/obj/**/*;$(RootDir)/src/**/bin/**/*" />
 		<Source Include="$(RootDir)/lib/DebugMono/**" />
 		<Source Include="$(RootDir)/lib/ReleaseMono/**" />
 		<Source Include="$(RootDir)/lib/common/**" />
@@ -80,7 +82,7 @@
 		<Source Include="$(RootDir)/SampleProjects/**" />
 		<Source Include="$(RootDir)/templates/**" />
 	</ItemGroup>
-	<Target Name="SourcePackage" DependsOnTargets="SetAssemblyVersion">
+	<Target Name="SourcePackage" DependsOnTargets="PackageClean;SetAssemblyVersion">
 		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)_$(Version).tar.gz">
 			<Output TaskParameter="Value" PropertyName="SourcePackageFileName" />
 		</CreateProperty>
@@ -117,7 +119,7 @@
 		/>
 		<Message Text="Starting pdebuild -- lucid i386" />
 		<Exec
-			Command='pdebuild --configfile /home/bob/pbuilder/pbuilderrc-lucid-lingnet --use-pdebuild-internal --auto-debsign'
+			Command='pdebuild --configfile /home/bob/pbuilder/pbuilderrc-lucid-lingnet --auto-debsign'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
 	</Target>

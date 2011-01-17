@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild build/build.mono.proj /p:RootDir=.
+XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild build/build.mono.proj /p:RootDir=$(CURDIR)
 build: build-stamp
 build-stamp:
 	dh_testdir
@@ -17,7 +17,7 @@ install: build install-stamp
 install-stamp:
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	$(XBUILD) /target:Install /p:InstallDir=../debian/tmp
 	dh_installdirs
 	dh_install
