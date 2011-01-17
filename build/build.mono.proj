@@ -119,7 +119,7 @@
 		/>
 		<Message Text="Starting pdebuild -- lucid i386" />
 		<Exec
-			Command='pdebuild --configfile /home/bob/pbuilder/pbuilderrc-lucid-lingnet --auto-debsign'
+			Command='pdebuild --configfile /home/bob/pbuilder/pbuilderrc-lucid-lingnet --debsign-k "mono teamcity" --auto-debsign'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
 	</Target>
