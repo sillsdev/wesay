@@ -195,7 +195,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
-	<Reference Include="mscorlib" />
 	<Reference Include="System.Core">
 	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
 	</Reference>
