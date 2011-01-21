@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using Enchant;
 using Exortech.NetReflector;
@@ -34,8 +35,7 @@ namespace WeSay.LexicalModel.Foundation
 		public static string IdForUnknownAnalysis = "en";
 		public static string IdForUnknownVernacular = "v";
 		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
-		private bool _isUnicode = true;
-		private WritingSystemDefinition _palasoWritingSystemDefinition;
+		private readonly WritingSystemDefinition _palasoWritingSystemDefinition;
 
 		public WritingSystem(XmlNode node): this()
 		{
@@ -58,6 +58,11 @@ namespace WeSay.LexicalModel.Foundation
 		public WritingSystem(WritingSystemDefinition ws)
 		{
 			_palasoWritingSystemDefinition = ws;
+			// Force the collation to use the SystemCollator (CultureInvariant). This sorts -c c b a as a b c -c
+			// The default ICU does not.
+			// FlexCompatibleHtmlWriterTests.Entries_PrecededByLetterDivs fails without this.
+			_palasoWritingSystemDefinition.SortUsing = WritingSystemDefinition.SortRulesType.OtherLanguage;
+			_palasoWritingSystemDefinition.SortRules = null;
 		}
 
 		/// <summary>
@@ -207,7 +212,7 @@ namespace WeSay.LexicalModel.Foundation
 			}
 		}
 
-		private WritingSystemDefinition.SortRulesType AdaptToSortRulesType(string sortUsingString)
+		private static WritingSystemDefinition.SortRulesType AdaptToSortRulesType(string sortUsingString)
 		{
 			WritingSystemDefinition.SortRulesType palasoSortRulesType;
 			if(sortUsingString == CustomSortRulesType.CustomICU.ToString())
@@ -239,7 +244,7 @@ namespace WeSay.LexicalModel.Foundation
 			}
 		}
 
-		private bool IsCustomSortRuleType(WritingSystemDefinition.SortRulesType sortRuleType)
+		private static bool IsCustomSortRuleType(WritingSystemDefinition.SortRulesType sortRuleType)
 		{
 			return (sortRuleType == WritingSystemDefinition.SortRulesType.CustomICU) ||
 				   (sortRuleType == WritingSystemDefinition.SortRulesType.CustomSimple);
@@ -473,29 +478,13 @@ namespace WeSay.LexicalModel.Foundation
 			public override StandardValuesCollection GetStandardValues(
 				ITypeDescriptorContext context)
 			{
-				List<String> keyboards = new List<string>();
+				var keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
 
-				foreach (KeyboardController.KeyboardDescriptor keyboard in
-					KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All))
-				{
-					keyboards.Add(keyboard.Name);
-				}
+				keyboards.AddRange(KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All).Select(keyboard => keyboard.Name));
 				return new StandardValuesCollection(keyboards);
 			}
 		}
-
-		#endregion
-
-		#region Nested type: SortComparer
-
-		private delegate int SortComparer(string s1, string s2);
-
-		#endregion
-
-		#region Nested type: SortKeyGenerator
-
-		private delegate SortKey SortKeyGenerator(string s);
 
 		#endregion
 
