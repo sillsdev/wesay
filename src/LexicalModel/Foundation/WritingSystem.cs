@@ -83,8 +83,8 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("Id", Required = true)]
 		public string ISO
 		{
-			get { return _palasoWritingSystemDefinition.ISO; }
-			set { _palasoWritingSystemDefinition.ISO = value; }
+			get { return _palasoWritingSystemDefinition.ISO693; }
+			set { _palasoWritingSystemDefinition.ISO693 = value; }
 		}
 
 		public string Script
@@ -112,7 +112,7 @@ namespace WeSay.LexicalModel.Foundation
 			{
 				if (string.IsNullOrEmpty(_palasoWritingSystemDefinition.Abbreviation))
 				{
-					return _palasoWritingSystemDefinition.ISO;
+					return _palasoWritingSystemDefinition.ISO693;
 				}
 				return _palasoWritingSystemDefinition.Abbreviation;
 			}
@@ -379,7 +379,7 @@ namespace WeSay.LexicalModel.Foundation
 		// Same if behavior is same (not appearance)
 		public override int GetHashCode()
 		{
-			int hashCode = HashCombine(_palasoWritingSystemDefinition.ISO.GetHashCode(), SortUsing.GetHashCode());
+			int hashCode = HashCombine(_palasoWritingSystemDefinition.ISO693.GetHashCode(), SortUsing.GetHashCode());
 			if (UsesCustomSortRules)
 			{
 				hashCode = HashCombine(hashCode, CustomSortRules.GetHashCode());
