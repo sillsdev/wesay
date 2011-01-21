@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -6,7 +5,6 @@ using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
-using WeSay.Project.Tests;
 using WeSay.LexicalModel.Foundation;
 using Palaso.TestUtilities;
 using Palaso.WritingSystems;
@@ -14,7 +12,7 @@ using Palaso.WritingSystems;
 namespace WeSay.LexicalModel.Tests.Foundation
 {
 	[TestFixture]
-	public class WritingCollectionSystemTests
+	public class WritingSystemCollectionTests
 	{
 		private WritingSystemCollection _collection;
 		private TemporaryFolder _wesayProjectFolder;
@@ -99,7 +97,6 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				Assert.IsTrue(ws2.ContainsKey(idWspair.Key));
 				Assert.AreEqual(idWspair.Value.Id, ws2[idWspair.Key].Id);
 				Assert.AreEqual(idWspair.Value.Abbreviation, ws2[idWspair.Key].Abbreviation);
-				Assert.AreEqual(idWspair.Value.CustomSortRules, ws2[idWspair.Key].CustomSortRules);
 				Assert.AreEqual(idWspair.Value.Font.ToString(), ws2[idWspair.Key].Font.ToString());
 				Assert.AreEqual(idWspair.Value.FontName, ws2[idWspair.Key].FontName);
 				Assert.AreEqual(idWspair.Value.FontSize, ws2[idWspair.Key].FontSize);
@@ -108,6 +105,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				Assert.AreEqual(idWspair.Value.KeyboardName, ws2[idWspair.Key].KeyboardName);
 				Assert.AreEqual(idWspair.Value.RightToLeft, ws2[idWspair.Key].RightToLeft);
 				Assert.AreEqual(idWspair.Value.SortUsing, ws2[idWspair.Key].SortUsing);
+				Assert.AreEqual(idWspair.Value.CustomSortRules, ws2[idWspair.Key].CustomSortRules);
 				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2[idWspair.Key].SpellCheckingId);
 			}
 		}
@@ -161,23 +159,23 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Load_LdmlWritingSystemsHaveSameIsoCodeButDifferentVariantRegionInfo_DoesNotCrash()
 		{
-				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
+				var wsCollectionToBeWritten = new WritingSystemCollection();
 				WritingSystem ws = CreateDetailedWritingSystem("test");
 				ws.GetAsPalasoWritingSystemDefinition().Region = "Region1";
 				wsCollectionToBeWritten.Add(ws.Id, ws);
 				WritingSystem ws2 = CreateDetailedWritingSystem("test");
 				ws2.GetAsPalasoWritingSystemDefinition().Region = "Region2";
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
-				WriteLdmlWritingSystemFiles(_ldmlWsFolder.FolderPath, wsCollectionToBeWritten);
-				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.Load(_ldmlWsFolder.FolderPath);
+				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
+				var loadedWsCollection = new WritingSystemCollection();
+				loadedWsCollection.Load(_ldmlWsFolder.Path);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 		}
 
-		private void WriteLdmlWritingSystemFiles(string pathToStore, WritingSystemCollection wsCollectionToBeWritten)
+		private static void WriteLdmlWritingSystemFiles(string pathToStore, WritingSystemCollection wsCollectionToBeWritten)
 		{
-			LdmlInFolderWritingSystemStore store = new LdmlInFolderWritingSystemStore(pathToStore);
-			foreach (KeyValuePair<string, WritingSystem> idWsPair in wsCollectionToBeWritten)
+			var store = new LdmlInFolderWritingSystemStore(pathToStore);
+			foreach (var idWsPair in wsCollectionToBeWritten)
 			{
 				store.Set(idWsPair.Value.GetAsPalasoWritingSystemDefinition());
 			}

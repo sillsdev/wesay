@@ -58,11 +58,6 @@ namespace WeSay.LexicalModel.Foundation
 		public WritingSystem(WritingSystemDefinition ws)
 		{
 			_palasoWritingSystemDefinition = ws;
-			// Force the collation to use the SystemCollator (CultureInvariant). This sorts -c c b a as a b c -c
-			// The default ICU does not.
-			// FlexCompatibleHtmlWriterTests.Entries_PrecededByLetterDivs fails without this.
-			_palasoWritingSystemDefinition.SortUsing = WritingSystemDefinition.SortRulesType.OtherLanguage;
-			_palasoWritingSystemDefinition.SortRules = null;
 		}
 
 		/// <summary>
