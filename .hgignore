@@ -7,7 +7,6 @@ bld\BuildHistory/*.log
 LiftIO.Tests.pdb
 templates\.guidsForInstaller.xml
 common\.guidsForInstaller.xml
-
 output
 Thumbs.db
 .bzr

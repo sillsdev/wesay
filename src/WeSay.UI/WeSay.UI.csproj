@@ -135,6 +135,13 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
+	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
+	</Reference>
+	<None Include="..\..\lib\common\Enchant.Net.dll.config">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
 	<Reference Include="System" />
 	<Reference Include="System.Core">
 	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
