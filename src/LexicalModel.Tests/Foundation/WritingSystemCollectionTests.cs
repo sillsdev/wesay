@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
+using Palaso.Xml;
 using WeSay.Project.Tests;
 using WeSay.LexicalModel.Foundation;
 
@@ -108,9 +109,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			WritingSystemCollection c = MakeSampleCollection();
 
-			StringBuilder builder = new StringBuilder();
-			XmlWriter writer = XmlWriter.Create(builder);
-			c.Write(writer);
+			var builder = new StringBuilder();
+			using (var writer = XmlWriter.Create(builder, CanonicalXmlSettings.CreateXmlWriterSettings()))
+			{
+				c.Write(writer);
+			}
 
 			return builder.ToString();
 		}
@@ -153,9 +156,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void DeserializeCollectionViaLoad()
 		{
-			MakeSampleCollection().Write(XmlWriter.Create(_path));
+			MakeSampleCollection().Write(XmlWriter.Create(_path, CanonicalXmlSettings.CreateXmlWriterSettings()));
 
-			WritingSystemCollection c = new WritingSystemCollection();
+			var c = new WritingSystemCollection();
 			c.Load(_path);
 			Assert.IsNotNull(c);
 			Assert.AreEqual(2, c.Values.Count);

@@ -118,16 +118,21 @@ namespace Addin.Backup.Tests
 		[ExpectedException(typeof(ZipException))]
 		public void BackupToExternal_FileToBackUpIsLocked_Throws()
 		{
-			TemporaryFolder folderForBackup = new TemporaryFolder("Backup Test");
-			string backUpFileName = Path.Combine(folderForBackup.FolderPath, "Backup Test.zip");
+			using (var folderForBackup = new TemporaryFolder("Backup Test"))
+			{
+				string backUpFileName = Path.Combine(folderForBackup.FolderPath, "Backup Test.zip");
 
-			//Create and lock a lift file
-			TempLiftFile fileToBackUp = new TempLiftFile("TempLiftFile.lift", folderForBackup,"", "0.13");
+				//Create and lock a lift file
+				var fileToBackUp = new TempLiftFile("TempLiftFile.lift", folderForBackup, "", "0.13");
 
-			//This is our lock
-			FileStream liftFileStreamForLocking = new FileStream(fileToBackUp.Path, FileMode.Open, FileAccess.Read, FileShare.None);
+				//This is our lock
+				var liftFileStreamForLocking = new FileStream(
+					fileToBackUp.Path, FileMode.Open, FileAccess.Read, FileShare.None
+				);
 
-			BackupMaker.BackupToExternal(Path.GetDirectoryName(fileToBackUp.Path), backUpFileName, new string[]{fileToBackUp.Path});
+				BackupMaker.BackupToExternal(Path.GetDirectoryName(fileToBackUp.Path), backUpFileName,
+											 new string[] {fileToBackUp.Path});
+			}
 		}
 
 		[Test]

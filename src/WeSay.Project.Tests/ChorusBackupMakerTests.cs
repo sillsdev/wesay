@@ -7,6 +7,7 @@ using Chorus.Utilities;
 using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
 using Palaso.TestUtilities;
+using Palaso.Xml;
 
 namespace WeSay.Project.Tests
 {
@@ -127,18 +128,18 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void CanSerializeAndDeserializeSettings()
 		{
-			ChorusBackupMaker b = new ChorusBackupMaker(new CheckinDescriptionBuilder());
+			var b = new ChorusBackupMaker(new CheckinDescriptionBuilder());
 			b.PathToParentOfRepositories = @"z:\";
-			StringBuilder builder = new StringBuilder();
+			var builder = new StringBuilder();
 			//var dom = new XmlDocument();
 			//dom.LoadXml("<foobar><blah></blah></foobar>");
 
-			using (XmlWriter writer = XmlWriter.Create(builder))
+			using (var writer = XmlWriter.Create(builder, CanonicalXmlSettings.CreateXmlWriterSettings()))
 			{
 				b.Save(writer);
 				var dom = new XmlDocument();
 				dom.Load(new StringReader(builder.ToString()));
-				ChorusBackupMaker loadedGuy = ChorusBackupMaker.CreateFromDom(dom, new CheckinDescriptionBuilder());
+				var loadedGuy = ChorusBackupMaker.CreateFromDom(dom, new CheckinDescriptionBuilder());
 				Assert.AreEqual(@"z:\", loadedGuy.PathToParentOfRepositories);
 
 			}

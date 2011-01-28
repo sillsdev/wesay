@@ -12,6 +12,7 @@ using System.Xml.Xsl;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
+using Palaso.Xml;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
@@ -224,12 +225,10 @@ namespace Addin.Transform
 				else
 				{
 					//all this is to stop sticking on the BOM, which trips up princeXML
-					XmlWriterSettings writerSettings = new XmlWriterSettings();
+					XmlWriterSettings writerSettings = CanonicalXmlSettings.CreateXmlWriterSettings();
 					writerSettings.Encoding = new UTF8Encoding(false);
 
-					using (
-							XmlWriter writer = XmlWriter.Create(workerArguments.outputStream,
-																writerSettings))
+					using (var writer = XmlWriter.Create(workerArguments.outputStream, writerSettings))
 					{
 						transform.Transform(workerArguments.inputDocument,
 											workerArguments.xsltArguments,

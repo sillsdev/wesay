@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using Palaso.Reporting;
+using Palaso.Xml;
 
 namespace WeSay.Project.ConfigMigration
 {
@@ -80,14 +81,12 @@ namespace WeSay.Project.ConfigMigration
 				{
 					throw new ApplicationException("Could not find the resource "+resourceName);
 				}
-				XslCompiledTransform transform = new XslCompiledTransform();
-				using (XmlReader reader = XmlReader.Create(stream))
+				var transform = new XslCompiledTransform();
+				using (var reader = XmlReader.Create(stream))
 				{
 					transform.Load(reader);
 					string tempPath = Path.GetTempFileName();
-					XmlWriterSettings settings = new XmlWriterSettings();
-					settings.Indent = true;
-					using (XmlWriter writer = XmlWriter.Create(tempPath, settings))
+					using (var writer = XmlWriter.Create(tempPath, CanonicalXmlSettings.CreateXmlWriterSettings()))
 					{
 						transform.Transform(configurationDoc, writer);
 						var tempfiles = transform.TemporaryFiles;

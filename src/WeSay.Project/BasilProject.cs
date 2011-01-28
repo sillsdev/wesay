@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml;
 using Palaso.I8N;
 using Palaso.Reporting;
+using Palaso.Xml;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
@@ -94,11 +95,11 @@ namespace WeSay.Project
 
 		public virtual void Save(string projectDirectoryPath)
 		{
-			var settings = new XmlWriterSettings();
-			settings.Indent = true;
-			var writer = XmlWriter.Create(PathToWritingSystemPrefs, settings);
-			_writingSystems.Write(writer);
-			writer.Close();
+			using (var writer = XmlWriter.Create(PathToWritingSystemPrefs, CanonicalXmlSettings.CreateXmlWriterSettings()))
+			{
+				_writingSystems.Write(writer);
+				writer.Close();
+			}
 		}
 
 		/// <summary>

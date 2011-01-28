@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.TestUtilities;
+using Palaso.Xml;
 using WeSay.LexicalModel;
 using Palaso.Lift;
 using WeSay.LexicalModel.Foundation;
@@ -609,10 +610,7 @@ namespace WeSay.Project.Tests
 
 		public  void PrintNodeToConsole(XmlNode node)
 		{
-			var settings = new XmlWriterSettings();
-			settings.Indent = true;
-			settings.ConformanceLevel = ConformanceLevel.Fragment;
-			XmlWriter writer = XmlWriter.Create(Console.Out, settings);
+			var writer = XmlWriter.Create(Console.Out, CanonicalXmlSettings.CreateXmlWriterSettings(ConformanceLevel.Fragment));
 			node.WriteContentTo(writer);
 			writer.Flush();
 			Console.WriteLine();

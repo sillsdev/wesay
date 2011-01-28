@@ -34,6 +34,7 @@ using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using Palaso.UiBindings;
+using Palaso.Xml;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
@@ -105,11 +106,11 @@ namespace WeSay.Project
 		{
 			WeSayWordsProject project = new WeSayWordsProject();
 
-			try
-			{
+			//try
+			//{
 				File.Delete(PathToPretendLiftFile);
-			}
-			catch (Exception) {}
+			//}
+			//catch (Exception) {}
 
 			Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
 			Utilities.CreateEmptyLiftFile(PathToPretendLiftFile, "InitializeForTests()", true);
@@ -124,7 +125,7 @@ namespace WeSay.Project
 			{
 				File.Delete(PathToPretendWritingSystemPrefs);
 			}
-			wsc.Write(XmlWriter.Create(PathToPretendWritingSystemPrefs));
+			wsc.Write(XmlWriter.Create(PathToPretendWritingSystemPrefs, CanonicalXmlSettings.CreateXmlWriterSettings()));
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
@@ -867,19 +868,17 @@ namespace WeSay.Project
 		/// <param name="pathToConfigFile"></param>
 		private static void StickDefaultViewTemplateInNewConfigFile(string pathToWritingSystemPrefs, string pathToConfigFile)
 		{
-			WritingSystemCollection writingSystemCollection = new WritingSystemCollection();
+			var writingSystemCollection = new WritingSystemCollection();
 			writingSystemCollection.Load(pathToWritingSystemPrefs);
 
 			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
-			StringBuilder builder = new StringBuilder();
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.OmitXmlDeclaration = true;
-			using (var writer = XmlWriter.Create(builder, settings))
+			var builder = new StringBuilder();
+			using (var writer = XmlWriter.Create(builder, CanonicalXmlSettings.CreateXmlWriterSettings(ConformanceLevel.Fragment)))
 			{
 				template.Write(writer);
 			}
 
-			XmlDocument doc = new XmlDocument();
+			var doc = new XmlDocument();
 			doc.Load(pathToConfigFile);
 			var e = doc.SelectSingleNode("configuration").AppendChild(doc.CreateElement("components"));
 			e.InnerXml = builder.ToString();
@@ -1253,10 +1252,8 @@ namespace WeSay.Project
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
 
 			var pendingConfigFile = new TempFileForSafeWriting(Project.PathToConfigFile);
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.Indent = true;
 
-			XmlWriter writer = XmlWriter.Create(pendingConfigFile.TempFilePath, settings);
+			var writer = XmlWriter.Create(pendingConfigFile.TempFilePath, CanonicalXmlSettings.CreateXmlWriterSettings());
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
 			writer.WriteAttributeString("version", CurrentWeSayConfigFileVersion.ToString());
@@ -1296,10 +1293,7 @@ namespace WeSay.Project
 		{
 			var pendingConfigFile = new TempFileForSafeWriting(Project.PathToUserSpecificConfigFile);
 
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.Indent = true;
-
-			XmlWriter writer = XmlWriter.Create(pendingConfigFile.TempFilePath, settings);
+			var writer = XmlWriter.Create(pendingConfigFile.TempFilePath, CanonicalXmlSettings.CreateXmlWriterSettings());
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
 			writer.WriteAttributeString("version", CurrentWeSayUserSpecificConfigFileVersion.ToString());

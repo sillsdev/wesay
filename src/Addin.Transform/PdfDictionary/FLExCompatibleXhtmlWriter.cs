@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using System.Linq;
+using Palaso.Xml;
 
 namespace Addin.Transform.PdfDictionary
 {
@@ -20,16 +21,13 @@ namespace Addin.Transform.PdfDictionary
 
 		public void Write(TextReader pliftReader, TextWriter textWriter)
 		{
-			XmlWriterSettings writerSettings = new XmlWriterSettings();
-			writerSettings.Encoding = new UTF8Encoding(false);//set false to stop sticking on the BOM, which trips up princeXML
-			writerSettings.Indent = true;
-
-			using (_writer = XmlWriter.Create(textWriter, writerSettings))
+			using (_writer = XmlWriter.Create(textWriter, CanonicalXmlSettings.CreateXmlWriterSettings()))
 			{
 				//  _writer.WriteProcessingInstruction("xml-stylesheet", @"type='text/css' href='dictionary.css");
 				_writer.WriteStartElement("html");
 				_writer.WriteStartElement("head");
 //  just removed because I'm having trouble nailing down precedence, and we add these explicitly to prince
+//  Note: If these ever come back that WriteRaw will not write chorus compliant formatting.  Use WriteNode instead. CP 2011-01
 //                _writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
 //                _writer.WriteRaw("<LINK rel='stylesheet' href='autoLayout.css' type='text/css' />");
 //                _writer.WriteRaw("<LINK rel='stylesheet' href='autoFonts.css' type='text/css' />");
