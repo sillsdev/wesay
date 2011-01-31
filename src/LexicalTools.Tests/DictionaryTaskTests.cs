@@ -107,14 +107,14 @@ namespace WeSay.LexicalTools.Tests
 		}
 //
 //        [Test]
-//        [ExpectedException(typeof (ArgumentNullException))]
+//        [NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 //        public void Create_NullRecordListManager_Throws()
 //        {
 //            new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), null, _viewTemplate, new TaskMemoryRepository(),  new StringLogger());//, new UserSettingsForTask());
 //        }
 //
 //        [Test]
-//        [ExpectedException(typeof (ArgumentNullException))]
+//        [NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (ArgumentNullException))]
 //        public void Create_NullviewTemplate_Throws()
 //        {
 //            new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, null, new TaskMemoryRepository(),  new StringLogger());//, new UserSettingsForTask());

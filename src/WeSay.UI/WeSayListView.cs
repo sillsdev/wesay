@@ -15,6 +15,8 @@ namespace WeSay.UI
 		private IList _dataSource;
 		private readonly Dictionary<int, ListViewItem> _itemsCache;
 
+		private bool _ensureVisibleCalledBeforeWindowHandleCreated = false;
+
 		public WeSayListView()
 		{
 			InitializeComponent();
@@ -543,8 +545,25 @@ namespace WeSay.UI
 					}
 
 					_selectedItem = SelectedItem;
-					EnsureVisible(value);
+					if (!IsHandleCreated) //this is a mono bug workaround.
+					{
+						_ensureVisibleCalledBeforeWindowHandleCreated = true;
+					}
+					else
+					{
+						EnsureVisible(value);
+					}
 				}
+			}
+		}
+
+		protected override void OnHandleCreated(EventArgs e)
+		{
+			base.OnHandleCreated(e);
+			if (_ensureVisibleCalledBeforeWindowHandleCreated)
+			{
+				EnsureVisible(SelectedIndex);
+				_ensureVisibleCalledBeforeWindowHandleCreated = false;
 			}
 		}
 

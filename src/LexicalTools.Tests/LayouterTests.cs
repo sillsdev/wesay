@@ -28,19 +28,17 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullBuilder_Throws()
 		{
-			new LexEntryLayouter(null, new ViewTemplate(), null, Context, new LexEntry());
+			Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(null, new ViewTemplate(), null, Context, new LexEntry()));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
 			using (DetailList detailList = new DetailList())
 			{
-				new LexEntryLayouter(detailList, null, null, Context, new LexEntry());
+				Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(detailList, null, null, Context, new LexEntry()));
 			}
 		}
 

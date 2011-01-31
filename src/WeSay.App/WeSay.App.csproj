@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
 	<OutputPath>..\..\output\Mono Release\</OutputPath>
 	<DefineConstants>TRACE;MONO</DefineConstants>
@@ -18,7 +19,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>9.0.21022</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</ProjectGuid>
 	<OutputType>WinExe</OutputType>
@@ -30,10 +31,25 @@
 	</FileUpgradeFlags>
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
-	<OldToolsVersion>2.0</OldToolsVersion>
+	<OldToolsVersion>3.5</OldToolsVersion>
 	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-	<TargetFrameworkSubset>
-	</TargetFrameworkSubset>
+	<TargetZone>LocalIntranet</TargetZone>
+	<GenerateManifests>false</GenerateManifests>
+	<PublishUrl>publish\</PublishUrl>
+	<Install>true</Install>
+	<InstallFrom>Disk</InstallFrom>
+	<UpdateEnabled>false</UpdateEnabled>
+	<UpdateMode>Foreground</UpdateMode>
+	<UpdateInterval>7</UpdateInterval>
+	<UpdateIntervalUnits>Days</UpdateIntervalUnits>
+	<UpdatePeriodically>false</UpdatePeriodically>
+	<UpdateRequired>false</UpdateRequired>
+	<MapFileExtensions>true</MapFileExtensions>
+	<ApplicationRevision>0</ApplicationRevision>
+	<ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+	<IsWebBootstrapper>false</IsWebBootstrapper>
+	<UseApplicationTrust>false</UseApplicationTrust>
+	<BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -49,6 +65,8 @@
 	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 	<ApplicationIcon>..\..\artwork\WeSay.ico</ApplicationIcon>
+	<UseVSHostingProcess>true</UseVSHostingProcess>
+	<PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -176,7 +194,6 @@
 	<Compile Include="LongStartupNotification.Designer.cs">
 	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
 	</Compile>
-	<Compile Include="LexEntryRepositoryLoaderService.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
@@ -194,6 +211,7 @@
 	<Compile Include="WeSayApp.cs">
 	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />
+	<None Include="Properties\app.manifest" />
 	<None Include="Properties\Settings.settings">
 	  <Generator>SettingsSingleFileGenerator</Generator>
 	  <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -253,6 +271,23 @@
 	  <Link>plift2html.xsl</Link>
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+	  <Visible>False</Visible>
+	  <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+	  <Install>false</Install>
+	</BootstrapperPackage>
+	<BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+	  <Visible>False</Visible>
+	  <ProductName>.NET Framework 3.5 SP1</ProductName>
+	  <Install>true</Install>
+	</BootstrapperPackage>
+	<BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+	  <Visible>False</Visible>
+	  <ProductName>Windows Installer 3.1</ProductName>
+	  <Install>true</Install>
+	</BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

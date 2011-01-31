@@ -66,8 +66,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			this._launchWebPage.Size = new System.Drawing.Size(300, 63);
 			this._launchWebPage.TabIndex = 7;
 			this._launchWebPage.TabStop = true;
-			this._launchWebPage.Text = "Don\'t do this if you already have a corresponding WeSay project.  To learn how to" +
-				" add changes from FLEx to an existing WeSay project, read this web page.";
+			this._launchWebPage.Text = "Don\'t do this if you already have a corresponding WeSay project.  To learn how to add changes from FLEx to an existing WeSay project, read this web page.";
 			this._launchWebPage.UseCompatibleTextRendering = true;
 			this._launchWebPage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this._launchWebPage_LinkClicked);
 			//

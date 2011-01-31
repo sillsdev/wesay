@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Code;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Code;
 using Palaso.Reporting;
 using WeSay.LexicalModel.Foundation;
@@ -193,22 +193,16 @@ namespace WeSay.ConfigTool
 		/// <summary>
 		/// Called when, for example, the user changes the id of the selected ws
 		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void OnWritingSystemIdChanged(object sender, EventArgs e)
+		private void OnWritingSystemIdChanged(WritingSystem writingSystem, WritingSystem oldWritingSystemValues)
 		{
 			using (Detect.Reentry(this, "OnWritingSystemIdChanged").AndThrow())
 			{
-				var ws = sender as WritingSystem;
-				var args = e as PropertyValueChangedEventArgs;
-				if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
+				if (writingSystem.Id != oldWritingSystemValues.Id)
 				{
-					string oldId = args.OldValue.ToString();
-					Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged changing to {0}", ws.Id);
-					if (!WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId))
+					Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged changing to {0}", writingSystem.Id);
+					if (!WeSayWordsProject.Project.MakeWritingSystemIdChange(writingSystem, oldWritingSystemValues.Id))
 					{
-						Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged oh no");
-						ws.Id = oldId; //couldn't make the change
+					   throw new ApplicationException(String.Format("Could not change Writingsystem Id {0} to {1} in Lift file.", oldWritingSystemValues.Id, writingSystem.Id));
 					}
 					//                Reporting.ErrorReporter.NotifyUserOfProblem(
 					//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
@@ -224,6 +218,16 @@ namespace WeSay.ConfigTool
 				_wsListBox.EndUpdate();
 				_wsListBox.Invalidate();
 			}
+		}
+
+		string AppendOrNot(string idComponent)
+		{
+			string stringToAppend = "";
+			if(!String.IsNullOrEmpty(idComponent))
+			{
+				stringToAppend = '-' + idComponent;
+			}
+			return stringToAppend;
 		}
 
 		private void OnIsAudioChanged(object sender, EventArgs e)

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using WeSay.Project;
 
@@ -18,8 +18,7 @@ namespace WeSay.ConfigTool
 
 		private void OnLoad(object sender, EventArgs e)
 		{
-			LoadPoFilesIntoCombo(
-					WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject);
+			LoadPoFilesIntoCombo(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject);
 			LoadPoFilesIntoCombo(BasilProject.ApplicationCommonDirectory);
 
 			UpdateFontDisplay();
@@ -30,7 +29,7 @@ namespace WeSay.ConfigTool
 		{
 			if (_languageCombo.SelectedItem != null)
 			{
-				var lang = ((PoProxy) _languageCombo.SelectedItem).fileNameWithoutExtension;
+				var lang = ((PoProxy) _languageCombo.SelectedItem).LanguageCode;
 				if (UILanguage != lang)
 				{
 					UILanguage = lang;
@@ -54,7 +53,7 @@ namespace WeSay.ConfigTool
 				var selector = new PoProxy(file);
 				_languageCombo.Items.Add(selector);
 				if (Options.Language ==
-					selector.fileNameWithoutExtension)
+					selector.LanguageCode)
 				{
 					_languageCombo.SelectedItem = selector;
 				}
@@ -63,31 +62,41 @@ namespace WeSay.ConfigTool
 
 		private class PoProxy
 		{
-			public PoProxy() {}
+			public string LanguageCode { get; protected set; }
+			protected string LanguageName { private get; set; }
 
-			public PoProxy(string path)
+			protected PoProxy()
 			{
-				fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
-				_languageName = fileNameWithoutExtension;
+			}
+
+			public PoProxy(string poFilePath)
+			{
+				LanguageCode = PoFilePathToLanguageCode(poFilePath);
+				LanguageName = LanguageCode;
 				try
 				{
-					string contents = File.ReadAllText(path);
+					string contents = File.ReadAllText(poFilePath);
 					Match m = Regex.Match(contents, @"# (.*) translation");
 					if (m.Success)
 					{
-						_languageName = m.Groups[1].Value.Trim();
+						LanguageName = m.Groups[1].Value.Trim();
 					}
 				}
-				catch (Exception) //couldn't extract a better name
+				// ReSharper disable EmptyGeneralCatchClause
+				catch
 				{}
+				// ReSharper restore EmptyGeneralCatchClause
 			}
 
-			public string fileNameWithoutExtension;
-			protected string _languageName;
+			private static string PoFilePathToLanguageCode(string poFilePath)
+			{
+				var parts = poFilePath.Split(new[] {'.', '-'});
+				return parts[parts.Length - 2];
+			}
 
 			public override string ToString()
 			{
-				return _languageName;
+				return LanguageName;
 			}
 		}
 
@@ -95,8 +104,8 @@ namespace WeSay.ConfigTool
 		{
 			public EnglishPoProxy()
 			{
-				_languageName = "English (Default)";
-				fileNameWithoutExtension = string.Empty;
+				LanguageName = "English (Default)";
+				LanguageCode = string.Empty;
 			}
 		}
 
@@ -129,10 +138,12 @@ namespace WeSay.ConfigTool
 
 		private void OnChooseFont(object sender, EventArgs e)
 		{
-			var dialog = new FontDialog();
-			dialog.Font = Options.GetLabelFont();
-			dialog.ShowColor = false;
-			dialog.ShowEffects = false;
+			var dialog = new FontDialog
+							 {
+								 Font = Options.GetLabelFont(),
+								 ShowColor = false,
+								 ShowEffects = false
+							 };
 
 			try //strange, but twice we've found situations where ShowDialog crashes on windows
 			{

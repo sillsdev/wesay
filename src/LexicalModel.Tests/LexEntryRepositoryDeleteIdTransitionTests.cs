@@ -6,7 +6,11 @@ using Palaso.TestUtilities;
 
 namespace WeSay.LexicalModel.Tests
 {
-	[TestFixture]
+	//"FailsDueToSomeTeamCityProblemWhenInvokeFromWeSayTest" is about the inherited tests
+	//which check for an ArgumentOutOfRangeException, which started failing on TeamCity
+	//only, when we upgraded to nunit 2.5.  These problems might hopefully go away when we move
+	//to a newer TeamCity.
+	[TestFixture, Category("FailsDueToSomeTeamCityProblemWhenInvokeFromWeSayTest")]
 	public class LexEntryRepositoryDeleteIdTransitionTests :
 		IRepositoryDeleteIdTransitionTests<LexEntry>
 	{
@@ -29,12 +33,11 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public override void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
 			Item.Senses.Add(new LexSense());
-			DataMapperUnderTest.SaveItem(Item);
+			Assert.Throws<ArgumentOutOfRangeException>(() =>DataMapperUnderTest.SaveItem(Item));
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()

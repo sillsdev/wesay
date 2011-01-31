@@ -2,414 +2,414 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
 		<DirectoryRef Id="mercurial">
-			<Component Id="hg.exe" Guid="A1D0594B-CCF9-4115-89E6-B5788DFD2E27">
+			<Component Id="hg.exe" Guid="DDB9924E-0522-4D4C-9CD1-A0E86DECFD25">
 				<File Id="hg.exe" Name="hg.exe" KeyPath="yes" Source="..\..\output\release\mercurial\hg.exe" />
 			</Component>
-			<Component Id="library.zip" Guid="CD7A5E6B-F183-4157-8C76-14228BE816FB">
+			<Component Id="library.zip" Guid="8FB1A9C3-41A3-4AAF-8710-9D6DFA5AE923">
 				<File Id="library.zip" Name="library.zip" Source="..\..\output\release\mercurial\library.zip" />
 			</Component>
-			<Component Id="python26.dll" Guid="97153F6F-F0C1-4A65-B7BC-6EB5C1200B89">
+			<Component Id="python26.dll" Guid="E846C1B7-9274-4A78-A213-42641149A231">
 				<File Id="python26.dll" Name="python26.dll" Source="..\..\output\release\mercurial\python26.dll" />
 			</Component>
-			<Component Id="ReadMe.html" Guid="22894AC9-158B-40BD-8272-067504BB7843">
+			<Component Id="ReadMe.html" Guid="578DF7F6-40C9-4236-8F72-F91597CDFBD4">
 				<File Id="ReadMe.html" Name="ReadMe.html" Source="..\..\output\release\mercurial\ReadMe.html" />
 			</Component>
 			<Directory Id="mercurial.hgrc.d" Name="hgrc.d">
-				<Component Id="Mercurial.rc" Guid="7D5425BF-B855-42F1-A705-D962E929B852">
+				<Component Id="Mercurial.rc" Guid="EA090811-95B8-42E9-AF68-34F003706E8D">
 					<File Id="Mercurial.rc" Name="Mercurial.rc" KeyPath="yes" Source="..\..\output\release\mercurial\hgrc.d\Mercurial.rc" />
 				</Component>
-				<Component Id="MergeTools.rc" Guid="DFB404CF-F414-4DAD-8800-63E9289E962F">
+				<Component Id="MergeTools.rc" Guid="283F7766-591C-4EAD-B9C5-687900C7A321">
 					<File Id="MergeTools.rc" Name="MergeTools.rc" Source="..\..\output\release\mercurial\hgrc.d\MergeTools.rc" />
 				</Component>
 			</Directory>
 			<Directory Id="mercurial.templates" Name="templates">
-				<Component Id="map_cmdline.changelog" Guid="329CABC4-E871-465A-8D9E-D158AB94243C">
+				<Component Id="map_cmdline.changelog" Guid="3EEA8A94-EDEA-4222-97DD-09E3982DE641">
 					<File Id="map_cmdline.changelog" Name="map-cmdline.changelog" KeyPath="yes" Source="..\..\output\release\mercurial\templates\map-cmdline.changelog" />
 				</Component>
-				<Component Id="map_cmdline.compact" Guid="D953C8F2-6740-414F-8187-8E4C2F3D1FD1">
+				<Component Id="map_cmdline.compact" Guid="69F31967-3A18-48AD-9923-C53CFF51CEAA">
 					<File Id="map_cmdline.compact" Name="map-cmdline.compact" Source="..\..\output\release\mercurial\templates\map-cmdline.compact" />
 				</Component>
-				<Component Id="map_cmdline.default" Guid="2E3EE5E0-5582-4304-80DF-722B81634E42">
+				<Component Id="map_cmdline.default" Guid="F3B19B4D-1AAC-4A05-A01E-62669CD42B2E">
 					<File Id="map_cmdline.default" Name="map-cmdline.default" Source="..\..\output\release\mercurial\templates\map-cmdline.default" />
 				</Component>
-				<Component Id="map_cmdline.xml" Guid="4961B4A0-E7A8-4B29-8797-449C751C1E04">
+				<Component Id="map_cmdline.xml" Guid="80AEB685-9486-4A06-ADF7-E3B039000011">
 					<File Id="map_cmdline.xml" Name="map-cmdline.xml" Source="..\..\output\release\mercurial\templates\map-cmdline.xml" />
 				</Component>
-				<Component Id="template_vars.txt" Guid="9D3BFFF3-11BE-45CE-9114-9E7F0B3428A4">
+				<Component Id="template_vars.txt" Guid="8AF376A3-727A-4222-9F2D-A89848F6AB4D">
 					<File Id="template_vars.txt" Name="template-vars.txt" Source="..\..\output\release\mercurial\templates\template-vars.txt" />
 				</Component>
 				<Directory Id="mercurial.templates.atom" Name="atom">
-					<Component Id="changelog.tmpl" Guid="7A880064-C603-42E3-82B0-CDB522642754">
+					<Component Id="changelog.tmpl" Guid="E47BF6DC-3999-4397-9614-CED04DE5361B">
 						<File Id="changelog.tmpl" Name="changelog.tmpl" KeyPath="yes" Source="..\..\output\release\mercurial\templates\atom\changelog.tmpl" />
 					</Component>
-					<Component Id="changelogentry.tmpl" Guid="A8E02277-E52E-4EFF-9830-5CB9120B6A7F">
+					<Component Id="changelogentry.tmpl" Guid="C2B1EEC5-3F89-4EE6-AEC0-DFAA023FD28B">
 						<File Id="changelogentry.tmpl" Name="changelogentry.tmpl" Source="..\..\output\release\mercurial\templates\atom\changelogentry.tmpl" />
 					</Component>
-					<Component Id="error.tmpl" Guid="748E996C-648C-4727-9270-33D99F8C3C6F">
+					<Component Id="error.tmpl" Guid="D723B33F-E116-4F94-A35D-3F9BC49659D5">
 						<File Id="error.tmpl" Name="error.tmpl" Source="..\..\output\release\mercurial\templates\atom\error.tmpl" />
 					</Component>
-					<Component Id="filelog.tmpl" Guid="1CF0CBB2-6CEF-4C2B-9D56-B9D7F431EFBA">
+					<Component Id="filelog.tmpl" Guid="0D83ADFF-C0FE-4ECE-91A3-B0872B7BBC57">
 						<File Id="filelog.tmpl" Name="filelog.tmpl" Source="..\..\output\release\mercurial\templates\atom\filelog.tmpl" />
 					</Component>
-					<Component Id="header.tmpl" Guid="B4C097EC-3EA5-4BE3-BD26-5EAC450672F8">
+					<Component Id="header.tmpl" Guid="47394D25-162F-4DC9-8809-B212E41E2757">
 						<File Id="header.tmpl" Name="header.tmpl" Source="..\..\output\release\mercurial\templates\atom\header.tmpl" />
 					</Component>
-					<Component Id="map" Guid="60D956A1-17C2-47D9-9D27-F702A39F3859">
+					<Component Id="map" Guid="14B8A5CF-622B-4497-BDA1-A29E0AC7F9A8">
 						<File Id="map" Name="map" Source="..\..\output\release\mercurial\templates\atom\map" />
 					</Component>
-					<Component Id="tagentry.tmpl" Guid="67D2EE19-02E4-468E-989E-73FEF3187941">
+					<Component Id="tagentry.tmpl" Guid="0A7D4AD9-8CC0-4011-8C39-22B50D30A3AB">
 						<File Id="tagentry.tmpl" Name="tagentry.tmpl" Source="..\..\output\release\mercurial\templates\atom\tagentry.tmpl" />
 					</Component>
-					<Component Id="tags.tmpl" Guid="48F859F0-5582-45C8-9030-66B1016B846C">
+					<Component Id="tags.tmpl" Guid="F877E6EC-53EB-4C67-9C1F-E3E61DE08C7C">
 						<File Id="tags.tmpl" Name="tags.tmpl" Source="..\..\output\release\mercurial\templates\atom\tags.tmpl" />
 					</Component>
 				</Directory>
 				<Directory Id="mercurial.templates.coal" Name="coal">
-					<Component Id="header.tmpl1" Guid="29D652A3-B9AA-4063-807E-707938AE5DF2">
+					<Component Id="header.tmpl1" Guid="9F5F1BC5-BCC0-48B8-BF34-D1F38A8A832D">
 						<File Id="header.tmpl1" Name="header.tmpl" KeyPath="yes" Source="..\..\output\release\mercurial\templates\coal\header.tmpl" />
 					</Component>
-					<Component Id="map1" Guid="34C8E21B-5660-4877-8B73-FD275F5ABD87">
+					<Component Id="map1" Guid="5F190749-F976-49A9-B4C2-3C65C6FB5AF4">
 						<File Id="map1" Name="map" Source="..\..\output\release\mercurial\templates\coal\map" />
 					</Component>
 				</Directory>
 				<Directory Id="mercurial.templates.gitweb" Name="gitweb">
-					<Component Id="branches.tmpl" Guid="A9BC0892-635D-4E3E-8185-425E557FD83E">
+					<Component Id="branches.tmpl" Guid="9132AFE6-96EA-458E-B238-32ECEE9B73A1">
 						<File Id="branches.tmpl" Name="branches.tmpl" KeyPath="yes" Source="..\..\output\release\mercurial\templates\gitweb\branches.tmpl" />
 					</Component>
-					<Component Id="changelog.tmpl1" Guid="94F02982-E16B-41A0-B5F5-0E8BA3FBCF31">
+					<Component Id="changelog.tmpl1" Guid="73C2513A-8163-48EC-8CF2-9628C63F8272">
 						<File Id="changelog.tmpl1" Name="changelog.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\changelog.tmpl" />
 					</Component>
-					<Component Id="changelogentry.tmpl1" Guid="BDE490B3-3064-424A-8667-6318F5F01178">
+					<Component Id="changelogentry.tmpl1" Guid="ACB03F19-CF80-4F8A-91CF-6CD7B38D03C3">
 						<File Id="changelogentry.tmpl1" Name="changelogentry.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\changelogentry.tmpl" />
 					</Component>
-					<Component Id="changeset.tmpl" Guid="8B067322-4AA2-439D-92EA-7D4369658435">
+					<Component Id="changeset.tmpl" Guid="D57ADA0E-35C7-43D6-B0DD-D822B3889CAE">
 						<File Id="changeset.tmpl" Name="changeset.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\changeset.tmpl" />
 					</Component>
-					<Component Id="error.tmpl1" Guid="5A776E9D-6B37-45F8-BDFB-7CA991CF411F">
+					<Component Id="error.tmpl1" Guid="A5126ADE-3077-46DA-B100-3B3D19EDA1B4">
 						<File Id="error.tmpl1" Name="error.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\error.tmpl" />
 					</Component>
-					<Component Id="fileannotate.tmpl" Guid="13D522C5-413D-43CE-B47C-AE6B0A704965">
+					<Component Id="fileannotate.tmpl" Guid="4D7492B6-A3DF-4757-9384-503064A8E3B3">
 						<File Id="fileannotate.tmpl" Name="fileannotate.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\fileannotate.tmpl" />
 					</Component>
-					<Component Id="filediff.tmpl" Guid="325D09B4-B47A-43B1-956A-2D2404DABB5A">
+					<Component Id="filediff.tmpl" Guid="3E08399D-E91A-4265-AEC6-BB267798C4A2">
 						<File Id="filediff.tmpl" Name="filediff.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\filediff.tmpl" />
 					</Component>
-					<Component Id="filelog.tmpl1" Guid="302A1775-97E5-4869-BF63-F60D1B28CEC5">
+					<Component Id="filelog.tmpl1" Guid="F287B8D8-FA29-472F-82F4-6E1516B09B38">
 						<File Id="filelog.tmpl1" Name="filelog.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\filelog.tmpl" />
 					</Component>
-					<Component Id="filerevision.tmpl" Guid="C31ED922-6DC8-4F0C-A945-54BC425A5F48">
+					<Component Id="filerevision.tmpl" Guid="5C702DC9-E57B-4318-B74E-F22B8958309D">
 						<File Id="filerevision.tmpl" Name="filerevision.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\filerevision.tmpl" />
 					</Component>
-					<Component Id="footer.tmpl" Guid="6034E798-B6BD-479A-9272-06A93C5A5093">
+					<Component Id="footer.tmpl" Guid="FB99E404-7D11-4F22-9BE1-D4F7E679B548">
 						<File Id="footer.tmpl" Name="footer.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\footer.tmpl" />
 					</Component>
-					<Component Id="graph.tmpl" Guid="01CD626C-BFF0-4E2D-A966-AB1957FB84E6">
+					<Component Id="graph.tmpl" Guid="5FC93941-1E0C-4115-8AAA-ECC55F41F224">
 						<File Id="graph.tmpl" Name="graph.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\graph.tmpl" />
 					</Component>
-					<Component Id="header.tmpl2" Guid="36767EAE-DD7C-4950-8202-CD499ABC5243">
+					<Component Id="header.tmpl2" Guid="231C6F64-8244-41D9-A50F-AB68E0AD8E98">
 						<File Id="header.tmpl2" Name="header.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\header.tmpl" />
 					</Component>
-					<Component Id="index.tmpl" Guid="FF0916F3-D3BB-4AEA-A0A8-59761BD4A5B1">
+					<Component Id="index.tmpl" Guid="BD2C048C-69EF-401D-86AB-9B652DABEBBB">
 						<File Id="index.tmpl" Name="index.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\index.tmpl" />
 					</Component>
-					<Component Id="manifest.tmpl" Guid="BCB90140-5D15-405A-8797-5FBB89CA9539">
+					<Component Id="manifest.tmpl" Guid="0995ECD9-61BB-413C-89B5-277AFA9FCB7D">
 						<File Id="manifest.tmpl" Name="manifest.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\manifest.tmpl" />
 					</Component>
-					<Component Id="map2" Guid="B15AD1CD-1C5D-4001-84A3-AEF75A963E36">
+					<Component Id="map2" Guid="EFF0E073-ED92-4302-A0B9-894783DAB08B">
 						<File Id="map2" Name="map" Source="..\..\output\release\mercurial\templates\gitweb\map" />
 					</Component>
-					<Component Id="notfound.tmpl" Guid="C8FB7D3A-A3DF-4196-8C0D-B06F06F8EF91">
+					<Component Id="notfound.tmpl" Guid="0014FEEC-3D07-41F6-AC63-E9FB078D64BC">
 						<File Id="notfound.tmpl" Name="notfound.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\notfound.tmpl" />
 					</Component>
-					<Component Id="search.tmpl" Guid="1E1707CE-956D-441D-901F-FC583C9185D6">
+					<Component Id="search.tmpl" Guid="1A535471-57A0-4374-8C86-034340A45920">
 						<File Id="search.tmpl" Name="search.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\search.tmpl" />
 					</Component>
-					<Component Id="shortlog.tmpl" Guid="6B78A341-FE48-486F-8028-45C53DD97B63">
+					<Component Id="shortlog.tmpl" Guid="C129EDB3-D7C1-441B-ACA8-40FB781ABD09">
 						<File Id="shortlog.tmpl" Name="shortlog.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\shortlog.tmpl" />
 					</Component>
-					<Component Id="summary.tmpl" Guid="E3499398-ADA8-4106-B7D2-0C2D0D0D84FE">
+					<Component Id="summary.tmpl" Guid="8AC1768B-C1CF-41B1-B083-43094F2D7F4A">
 						<File Id="summary.tmpl" Name="summary.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\summary.tmpl" />
 					</Component>
-					<Component Id="tags.tmpl1" Guid="E0693966-4A90-4D39-A8C5-A7D8D8328A4B">
+					<Component Id="tags.tmpl1" Guid="C74E3F69-2D67-4176-9597-2E0C0B021C9B">
 						<File Id="tags.tmpl1" Name="tags.tmpl" Source="..\..\output\release\mercurial\templates\gitweb\tags.tmpl" />
 					</Component>
 				</Directory>
 				<Directory Id="mercurial.templates.monoblue" Name="monoblue">
-					<Component Id="branches.tmpl1" Guid="65F3B7A1-DE0E-4668-8329-5AD196475E94">
+					<Component Id="branches.tmpl1" Guid="8925151B-60DB-4991-B88C-7FC9FC37B7DC">
 						<File Id="branches.tmpl1" Name="branches.tmpl" KeyPath="yes" Source="..\..\output\release\mercurial\templates\monoblue\branches.tmpl" />
 					</Component>
-					<Component Id="changelog.tmpl2" Guid="AC32131C-A937-4F8B-B585-5C944A112AF6">
+					<Component Id="changelog.tmpl2" Guid="702C7BD1-D29F-40C6-8814-36D1EB300E0C">
 						<File Id="changelog.tmpl2" Name="changelog.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\changelog.tmpl" />
 					</Component>
-					<Component Id="changelogentry.tmpl2" Guid="F913CA6F-01B1-42C4-9FB3-0213AB36B93D">
+					<Component Id="changelogentry.tmpl2" Guid="ED10C0E2-5A69-49AD-BAC4-3ED180F35509">
 						<File Id="changelogentry.tmpl2" Name="changelogentry.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\changelogentry.tmpl" />
 					</Component>
-					<Component Id="changeset.tmpl1" Guid="D46E1CA2-06F4-4873-8775-EC153FFFF3CE">
+					<Component Id="changeset.tmpl1" Guid="C34F8472-CAA1-4246-8729-415EDDA71917">
 						<File Id="changeset.tmpl1" Name="changeset.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\changeset.tmpl" />
 					</Component>
-					<Component Id="error.tmpl2" Guid="40125FD9-17C3-4079-9624-6F26044C1038">
+					<Component Id="error.tmpl2" Guid="6FBE9037-6B96-43B4-AFD3-C314F8357813">
 						<File Id="error.tmpl2" Name="error.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\error.tmpl" />
 					</Component>
-					<Component Id="fileannotate.tmpl1" Guid="58AA7D39-C03E-4D74-8966-5DD570B419A8">
+					<Component Id="fileannotate.tmpl1" Guid="914AA99E-BE56-4DFA-AF3B-5925186A5482">
 						<File Id="fileannotate.tmpl1" Name="fileannotate.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\fileannotate.tmpl" />
 					</Component>
-					<Component Id="filediff.tmpl1" Guid="56C39417-ECFB-4802-ADD6-928EAA537EAB">
+					<Component Id="filediff.tmpl1" Guid="E7708BCA-BFB1-4D7D-B6DB-2A87C828B0CE">
 						<File Id="filediff.tmpl1" Name="filediff.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\filediff.tmpl" />
 					</Component>
-					<Component Id="filelog.tmpl2" Guid="00E251C6-0DDB-43CA-B909-557A8EA61901">
+					<Component Id="filelog.tmpl2" Guid="35001E55-2A0F-4C11-95DA-3E2D154861B1">
 						<File Id="filelog.tmpl2" Name="filelog.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\filelog.tmpl" />
 					</Component>
-					<Component Id="filerevision.tmpl1" Guid="1332966C-82BF-4CA4-A94D-F70287C940A2">
+					<Component Id="filerevision.tmpl1" Guid="265B3D70-570E-4EEE-8E97-F64EF293ACE6">
 						<File Id="filerevision.tmpl1" Name="filerevision.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\filerevision.tmpl" />
 					</Component>
-					<Component Id="footer.tmpl1" Guid="201801F9-2E22-4932-B6B6-5C18BE98F8C0">
+					<Component Id="footer.tmpl1" Guid="963007A5-5890-4C55-A09E-172F3E94B216">
 						<File Id="footer.tmpl1" Name="footer.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\footer.tmpl" />
 					</Component>
-					<Component Id="graph.tmpl1" Guid="2A5B8C00-DF28-49B9-A490-E4432BEEA6E6">
+					<Component Id="graph.tmpl1" Guid="59D2388C-7D0D-4570-8EA4-5676B91D0974">
 						<File Id="graph.tmpl1" Name="graph.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\graph.tmpl" />
 					</Component>
-					<Component Id="header.tmpl3" Guid="A44EF513-2DE8-41AE-B810-98F1D55AAC0F">
+					<Component Id="header.tmpl3" Guid="59A3242A-4D16-428A-9B34-432E6DE48A6B">
 						<File Id="header.tmpl3" Name="header.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\header.tmpl" />
 					</Component>
-					<Component Id="index.tmpl1" Guid="B95A6FA5-13E6-49C2-8D79-2265846B2AB4">
+					<Component Id="index.tmpl1" Guid="9D3B92FF-0704-4DFA-8005-39E7FE70BFFD">
 						<File Id="index.tmpl1" Name="index.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\index.tmpl" />
 					</Component>
-					<Component Id="manifest.tmpl1" Guid="CA2A3BAE-B2F6-4E20-BEE0-A262B21EB116">
+					<Component Id="manifest.tmpl1" Guid="DE7AB2D3-4C91-4217-B7F9-6166D902ABA2">
 						<File Id="manifest.tmpl1" Name="manifest.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\manifest.tmpl" />
 					</Component>
-					<Component Id="map3" Guid="01FDA4E6-C7AC-4466-8411-DD4E5B37D5D1">
+					<Component Id="map3" Guid="19DB406D-EEC4-442B-9B5E-06F8410E2CAB">
 						<File Id="map3" Name="map" Source="..\..\output\release\mercurial\templates\monoblue\map" />
 					</Component>
-					<Component Id="notfound.tmpl1" Guid="00545B2A-87F6-4E39-A480-0B75A22E51E7">
+					<Component Id="notfound.tmpl1" Guid="45901B92-8736-4851-8373-F95118443C10">
 						<File Id="notfound.tmpl1" Name="notfound.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\notfound.tmpl" />
 					</Component>
-					<Component Id="search.tmpl1" Guid="F6351044-BCA8-44B4-8FCD-BF4B35CBF8D9">
+					<Component Id="search.tmpl1" Guid="F2A5C30F-E674-4C80-8E89-7CFFBA89F2B5">
 						<File Id="search.tmpl1" Name="search.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\search.tmpl" />
 					</Component>
-					<Component Id="shortlog.tmpl1" Guid="E2763DA2-A920-4F00-AE8E-913460CE4AD1">
+					<Component Id="shortlog.tmpl1" Guid="C50E6E7A-27C9-4737-8AD9-2B6F771625C6">
 						<File Id="shortlog.tmpl1" Name="shortlog.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\shortlog.tmpl" />
 					</Component>
-					<Component Id="summary.tmpl1" Guid="EDF2F266-E247-44AD-AEC2-E79AE18937A9">
+					<Component Id="summary.tmpl1" Guid="54675B99-5AD4-4A10-87B3-9772EE6C8280">
 						<File Id="summary.tmpl1" Name="summary.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\summary.tmpl" />
 					</Component>
-					<Component Id="tags.tmpl2" Guid="EDB3389F-3A12-45A5-8F7A-BCFC3DB4A550">
+					<Component Id="tags.tmpl2" Guid="C984BD09-FE71-4C29-BC78-693732AE3F26">
 						<File Id="tags.tmpl2" Name="tags.tmpl" Source="..\..\output\release\mercurial\templates\monoblue\tags.tmpl" />
 					</Component>
 				</Directory>
 				<Directory Id="mercurial.templates.paper" Name="paper">
-					<Component Id="branches.tmpl2" Guid="F891EF9E-98E9-4B48-9DF0-27B24C1627E0">
+					<Component Id="branches.tmpl2" Guid="197D774A-3BED-4F9F-97A3-D83EA96ADA3B">
 						<File Id="branches.tmpl2" Name="branches.tmpl" KeyPath="yes" Source="..\..\output\release\mercurial\templates\paper\branches.tmpl" />
 					</Component>
-					<Component Id="changeset.tmpl2" Guid="E12B9E0D-A7EA-44DD-8B13-2F3401B05CFB">
+					<Component Id="changeset.tmpl2" Guid="B1D5714F-C082-4D93-AB2A-70A8C6EBC5CD">
 						<File Id="changeset.tmpl2" Name="changeset.tmpl" Source="..\..\output\release\mercurial\templates\paper\changeset.tmpl" />
 					</Component>
-					<Component Id="error.tmpl3" Guid="C4EA785B-64E3-4CD7-BFA9-49FBC9603349">
+					<Component Id="error.tmpl3" Guid="17350448-1477-4046-AD7A-2410F7C7443E">
 						<File Id="error.tmpl3" Name="error.tmpl" Source="..\..\output\release\mercurial\templates\paper\error.tmpl" />
 					</Component>
-					<Component Id="fileannotate.tmpl2" Guid="4DC05D32-4CD1-46CE-A5BC-438D768FFFE2">
+					<Component Id="fileannotate.tmpl2" Guid="1D4740AA-3DFE-4714-A29E-6C7783EB4C07">
 						<File Id="fileannotate.tmpl2" Name="fileannotate.tmpl" Source="..\..\output\release\mercurial\templates\paper\fileannotate.tmpl" />
 					</Component>
-					<Component Id="filediff.tmpl2" Guid="813D6318-E0D0-4220-BF32-D75393F51116">
+					<Component Id="filediff.tmpl2" Guid="4F1F687F-1F33-461B-92F2-272345F00F92">
 						<File Id="filediff.tmpl2" Name="filediff.tmpl" Source="..\..\output\release\mercurial\templates\paper\filediff.tmpl" />
 					</Component>
-					<Component Id="filelog.tmpl3" Guid="0E706D0A-A163-4E57-845C-11C6F311022D">
+					<Component Id="filelog.tmpl3" Guid="4D7E7DEA-6621-4848-B322-3352FC628363">
 						<File Id="filelog.tmpl3" Name="filelog.tmpl" Source="..\..\output\release\mercurial\templates\paper\filelog.tmpl" />
 					</Component>
-					<Component Id="filelogentry.tmpl" Guid="0A5CE186-3EAB-42AB-8CEE-104BB331AFF1">
+					<Component Id="filelogentry.tmpl" Guid="13A402BB-A6BB-4E8C-B193-46B28D44400F">
 						<File Id="filelogentry.tmpl" Name="filelogentry.tmpl" Source="..\..\output\release\mercurial\templates\paper\filelogentry.tmpl" />
 					</Component>
-					<Component Id="filerevision.tmpl2" Guid="2B7882F5-421D-4FEB-AB89-F7F31EEAF1BA">
+					<Component Id="filerevision.tmpl2" Guid="1171A1AE-02E0-43C7-951E-FE2C8837AE0A">
 						<File Id="filerevision.tmpl2" Name="filerevision.tmpl" Source="..\..\output\release\mercurial\templates\paper\filerevision.tmpl" />
 					</Component>
-					<Component Id="footer.tmpl2" Guid="23FF7C84-DCB5-43AA-96FF-037AAD684BCC">
+					<Component Id="footer.tmpl2" Guid="43431AD7-47A0-4D39-A20F-CF1A56D45938">
 						<File Id="footer.tmpl2" Name="footer.tmpl" Source="..\..\output\release\mercurial\templates\paper\footer.tmpl" />
 					</Component>
-					<Component Id="graph.tmpl2" Guid="E814EB34-03E3-4696-A3C8-21E6050F688D">
+					<Component Id="graph.tmpl2" Guid="957E3E0B-AC2A-4A37-8CD5-7CD2FBE2E5FA">
 						<File Id="graph.tmpl2" Name="graph.tmpl" Source="..\..\output\release\mercurial\templates\paper\graph.tmpl" />
 					</Component>
-					<Component Id="header.tmpl4" Guid="03641E37-085E-414A-ABCE-DDFB4F55BCEF">
+					<Component Id="header.tmpl4" Guid="1A363DED-C34D-4B21-9B4C-3BC992B7B2CA">
 						<File Id="header.tmpl4" Name="header.tmpl" Source="..\..\output\release\mercurial\templates\paper\header.tmpl" />
 					</Component>
-					<Component Id="index.tmpl2" Guid="0F76DEA7-8BC7-4D71-AA44-AD7FF701ACD0">
+					<Component Id="index.tmpl2" Guid="2FA2C140-279D-431B-9984-DCB124C891ED">
 						<File Id="index.tmpl2" Name="index.tmpl" Source="..\..\output\release\mercurial\templates\paper\index.tmpl" />
 					</Component>
-					<Component Id="manifest.tmpl2" Guid="228A66CC-0805-4957-AB3D-1871D3E4E73C">
+					<Component Id="manifest.tmpl2" Guid="C8F6BDDA-13D3-4EF6-BB5B-D9B8A8FBF802">
 						<File Id="manifest.tmpl2" Name="manifest.tmpl" Source="..\..\output\release\mercurial\templates\paper\manifest.tmpl" />
 					</Component>
-					<Component Id="map4" Guid="97CDA36E-AEE5-4C61-9DFC-A8121B184BE1">
+					<Component Id="map4" Guid="D18F5066-04AE-47C1-A5DD-0E20E3256675">
 						<File Id="map4" Name="map" Source="..\..\output\release\mercurial\templates\paper\map" />
 					</Component>
-					<Component Id="notfound.tmpl2" Guid="9AC39385-BB1D-4979-BC8F-91DB1F420D84">
+					<Component Id="notfound.tmpl2" Guid="87F3C8A6-58F5-43E6-A7D4-ACF6B7919720">
 						<File Id="notfound.tmpl2" Name="notfound.tmpl" Source="..\..\output\release\mercurial\templates\paper\notfound.tmpl" />
 					</Component>
-					<Component Id="search.tmpl2" Guid="6320C8C4-C7CE-4210-A23D-675E606ED383">
+					<Component Id="search.tmpl2" Guid="39B932BC-2D2D-491B-AAC7-FC1186F0CD6F">
 						<File Id="search.tmpl2" Name="search.tmpl" Source="..\..\output\release\mercurial\templates\paper\search.tmpl" />
 					</Component>
-					<Component Id="shortlog.tmpl2" Guid="A8C93F1A-8837-440A-82F8-631A1D6825F4">
+					<Component Id="shortlog.tmpl2" Guid="BC5EE304-F853-4E9F-9EE7-0B0FB08A9FBE">
 						<File Id="shortlog.tmpl2" Name="shortlog.tmpl" Source="..\..\output\release\mercurial\templates\paper\shortlog.tmpl" />
 					</Component>
-					<Component Id="shortlogentry.tmpl" Guid="9182612F-7B8C-4C37-9C82-EDFAB3429883">
+					<Component Id="shortlogentry.tmpl" Guid="CC4844AA-D164-448A-8D5A-9FEC6F95B5BC">
 						<File Id="shortlogentry.tmpl" Name="shortlogentry.tmpl" Source="..\..\output\release\mercurial\templates\paper\shortlogentry.tmpl" />
 					</Component>
-					<Component Id="tags.tmpl3" Guid="9CD621C5-9E95-499B-B9A3-FC3BC8C0F4EE">
+					<Component Id="tags.tmpl3" Guid="08CB6465-E2C9-4C65-85C0-8F1EDC8421D3">
 						<File Id="tags.tmpl3" Name="tags.tmpl" Source="..\..\output\release\mercurial\templates\paper\tags.tmpl" />
 					</Component>
 				</Directory>
 				<Directory Id="mercurial.templates.raw" Name="raw">
-					<Component Id="changeset.tmpl3" Guid="6B8DD1C0-31ED-4EDD-8F69-4A7A15BE8C91">
+					<Component Id="changeset.tmpl3" Guid="B718C4F7-8724-4E33-A41E-2385D4B0B7A3">
 						<File Id="changeset.tmpl3" Name="changeset.tmpl" KeyPath="yes" Source="..\..\output\release\mercurial\templates\raw\changeset.tmpl" />
 					</Component>
-					<Component Id="error.tmpl4" Guid="FC3E2778-9532-4CCB-8386-5DE4048A2D0E">
+					<Component Id="error.tmpl4" Guid="15FB5A16-6874-48BF-A839-6B30B2B6728F">
 						<File Id="error.tmpl4" Name="error.tmpl" Source="..\..\output\release\mercurial\templates\raw\error.tmpl" />
 					</Component>
-					<Component Id="fileannotate.tmpl3" Guid="FB4712DF-2CFD-4F87-A038-CEBDB01E3C0E">
+					<Component Id="fileannotate.tmpl3" Guid="C910884A-17B3-47D7-99C4-AE4C74445FEA">
 						<File Id="fileannotate.tmpl3" Name="fileannotate.tmpl" Source="..\..\output\release\mercurial\templates\raw\fileannotate.tmpl" />
 					</Component>
-					<Component Id="filediff.tmpl3" Guid="3B48DDC5-FFEB-4C33-B781-4A07F7B99906">
+					<Component Id="filediff.tmpl3" Guid="565D7DE3-2DC3-4C26-98DE-4AA4A986328B">
 						<File Id="filediff.tmpl3" Name="filediff.tmpl" Source="..\..\output\release\mercurial\templates\raw\filediff.tmpl" />
 					</Component>
-					<Component Id="index.tmpl3" Guid="C8B54E76-79F3-4820-8352-26260B7EF00C">
+					<Component Id="index.tmpl3" Guid="A1178CD5-E56B-47A0-A164-6AA7DF9C16CD">
 						<File Id="index.tmpl3" Name="index.tmpl" Source="..\..\output\release\mercurial\templates\raw\index.tmpl" />
 					</Component>
-					<Component Id="manifest.tmpl3" Guid="43DD7F17-7C6D-46C1-8BDE-D5FFF623B73A">
+					<Component Id="manifest.tmpl3" Guid="C64139D3-4D88-4B77-9F77-3B655E4EE8AD">
 						<File Id="manifest.tmpl3" Name="manifest.tmpl" Source="..\..\output\release\mercurial\templates\raw\manifest.tmpl" />
 					</Component>
-					<Component Id="map5" Guid="27480E6E-6DD9-4352-9709-A976B4D6DAC0">
+					<Component Id="map5" Guid="83E35AF5-A6B0-489A-A407-70A2C627F439">
 						<File Id="map5" Name="map" Source="..\..\output\release\mercurial\templates\raw\map" />
 					</Component>
-					<Component Id="notfound.tmpl3" Guid="E0799112-03BE-43AF-9C17-976D6D876C30">
+					<Component Id="notfound.tmpl3" Guid="3D4ECB48-FA45-4AA2-9D94-9E1614E69959">
 						<File Id="notfound.tmpl3" Name="notfound.tmpl" Source="..\..\output\release\mercurial\templates\raw\notfound.tmpl" />
 					</Component>
 				</Directory>
 				<Directory Id="mercurial.templates.rss" Name="rss">
-					<Component Id="changelog.tmpl3" Guid="C774D8B1-23BF-4D6D-8AC7-D837E3E4C03E">
+					<Component Id="changelog.tmpl3" Guid="43D58D8A-8E92-49C0-B643-C00F67B3EA58">
 						<File Id="changelog.tmpl3" Name="changelog.tmpl" KeyPath="yes" Source="..\..\output\release\mercurial\templates\rss\changelog.tmpl" />
 					</Component>
-					<Component Id="changelogentry.tmpl3" Guid="07D66F43-3612-4BC0-A4A3-2DA0F9840D8D">
+					<Component Id="changelogentry.tmpl3" Guid="638EA471-7D3B-437E-9963-B07CB2463D97">
 						<File Id="changelogentry.tmpl3" Name="changelogentry.tmpl" Source="..\..\output\release\mercurial\templates\rss\changelogentry.tmpl" />
 					</Component>
-					<Component Id="error.tmpl5" Guid="5DE710A8-4526-412B-AFA0-E812E5DE2941">
+					<Component Id="error.tmpl5" Guid="E2C19182-938D-4511-844B-B479DDFDD216">
 						<File Id="error.tmpl5" Name="error.tmpl" Source="..\..\output\release\mercurial\templates\rss\error.tmpl" />
 					</Component>
-					<Component Id="filelog.tmpl4" Guid="CBD9A3D4-59A2-4AC2-9544-92B02B0D4406">
+					<Component Id="filelog.tmpl4" Guid="F5F33688-6083-4B55-AC18-1E617782E12A">
 						<File Id="filelog.tmpl4" Name="filelog.tmpl" Source="..\..\output\release\mercurial\templates\rss\filelog.tmpl" />
 					</Component>
-					<Component Id="filelogentry.tmpl1" Guid="623FE1D7-47FF-4D11-9FB8-215025C3F2D0">
+					<Component Id="filelogentry.tmpl1" Guid="0C8CCCE9-E05B-4448-952D-C5A5B3006231">
 						<File Id="filelogentry.tmpl1" Name="filelogentry.tmpl" Source="..\..\output\release\mercurial\templates\rss\filelogentry.tmpl" />
 					</Component>
-					<Component Id="header.tmpl5" Guid="0C64DED3-E516-417E-AC74-3EB3E825D4CB">
+					<Component Id="header.tmpl5" Guid="9730A621-C03E-4A78-BFD0-0EE4C6F26374">
 						<File Id="header.tmpl5" Name="header.tmpl" Source="..\..\output\release\mercurial\templates\rss\header.tmpl" />
 					</Component>
-					<Component Id="map6" Guid="7A702530-8622-45EE-9593-A20AA863AEFB">
+					<Component Id="map6" Guid="FB0BBEA1-1042-4647-86B2-F7462B31218E">
 						<File Id="map6" Name="map" Source="..\..\output\release\mercurial\templates\rss\map" />
 					</Component>
-					<Component Id="tagentry.tmpl1" Guid="4EF3E5A7-9636-4AF9-94E7-17CB80CFDED3">
+					<Component Id="tagentry.tmpl1" Guid="9ADC1D12-B565-4C98-B0D6-E65496D99616">
 						<File Id="tagentry.tmpl1" Name="tagentry.tmpl" Source="..\..\output\release\mercurial\templates\rss\tagentry.tmpl" />
 					</Component>
-					<Component Id="tags.tmpl4" Guid="B4147093-9E2E-430D-A040-977352427621">
+					<Component Id="tags.tmpl4" Guid="25172CD4-4415-482C-983A-81C01B75FE31">
 						<File Id="tags.tmpl4" Name="tags.tmpl" Source="..\..\output\release\mercurial\templates\rss\tags.tmpl" />
 					</Component>
 				</Directory>
 				<Directory Id="mercurial.templates.spartan" Name="spartan">
-					<Component Id="branches.tmpl3" Guid="A4C6E7B3-7F82-46EE-BB90-E436A4E5B957">
+					<Component Id="branches.tmpl3" Guid="ED148E07-57AC-4845-88FA-045B7802C5C6">
 						<File Id="branches.tmpl3" Name="branches.tmpl" KeyPath="yes" Source="..\..\output\release\mercurial\templates\spartan\branches.tmpl" />
 					</Component>
-					<Component Id="changelog.tmpl4" Guid="561FE788-11DF-4B89-8759-1F01D9489B05">
+					<Component Id="changelog.tmpl4" Guid="BFF6C5E6-C79E-40EB-B352-10C239E23374">
 						<File Id="changelog.tmpl4" Name="changelog.tmpl" Source="..\..\output\release\mercurial\templates\spartan\changelog.tmpl" />
 					</Component>
-					<Component Id="changelogentry.tmpl4" Guid="B6C76204-C07A-44DC-B77F-1431323333E6">
+					<Component Id="changelogentry.tmpl4" Guid="C04DF345-BE4D-4F06-8FB4-85AF1060972C">
 						<File Id="changelogentry.tmpl4" Name="changelogentry.tmpl" Source="..\..\output\release\mercurial\templates\spartan\changelogentry.tmpl" />
 					</Component>
-					<Component Id="changeset.tmpl4" Guid="2F47B942-0737-483F-B780-FB7EFD75366B">
+					<Component Id="changeset.tmpl4" Guid="87966D93-7EA9-40EC-9A21-024F72911FFF">
 						<File Id="changeset.tmpl4" Name="changeset.tmpl" Source="..\..\output\release\mercurial\templates\spartan\changeset.tmpl" />
 					</Component>
-					<Component Id="error.tmpl6" Guid="E2A56BA5-BBB7-46A1-9876-40B4E5143E8B">
+					<Component Id="error.tmpl6" Guid="47280F0A-4048-4A82-9F8F-63080592105D">
 						<File Id="error.tmpl6" Name="error.tmpl" Source="..\..\output\release\mercurial\templates\spartan\error.tmpl" />
 					</Component>
-					<Component Id="fileannotate.tmpl4" Guid="D51897BA-7A2B-4462-ADE1-153BE0434737">
+					<Component Id="fileannotate.tmpl4" Guid="AC7E5827-1AC0-4E54-8554-FE1563DE4D00">
 						<File Id="fileannotate.tmpl4" Name="fileannotate.tmpl" Source="..\..\output\release\mercurial\templates\spartan\fileannotate.tmpl" />
 					</Component>
-					<Component Id="filediff.tmpl4" Guid="FA2C6B17-D9F7-4D11-8C33-62EE5F3F1D08">
+					<Component Id="filediff.tmpl4" Guid="74C76DAD-96E4-439F-A1CA-E342B6A6004B">
 						<File Id="filediff.tmpl4" Name="filediff.tmpl" Source="..\..\output\release\mercurial\templates\spartan\filediff.tmpl" />
 					</Component>
-					<Component Id="filelog.tmpl5" Guid="2052C711-7D4F-4AAB-978E-B9C4CF88F77D">
+					<Component Id="filelog.tmpl5" Guid="058AA907-F143-466E-8E50-34C6FBD88D25">
 						<File Id="filelog.tmpl5" Name="filelog.tmpl" Source="..\..\output\release\mercurial\templates\spartan\filelog.tmpl" />
 					</Component>
-					<Component Id="filelogentry.tmpl2" Guid="95E5881E-83AE-46E5-9820-E03AC995F474">
+					<Component Id="filelogentry.tmpl2" Guid="30F650D6-0F42-4753-9F52-E6E8EB6068CF">
 						<File Id="filelogentry.tmpl2" Name="filelogentry.tmpl" Source="..\..\output\release\mercurial\templates\spartan\filelogentry.tmpl" />
 					</Component>
-					<Component Id="filerevision.tmpl3" Guid="F08958B8-1764-4D69-BBDC-3D2DD2AFE1DA">
+					<Component Id="filerevision.tmpl3" Guid="D4A94057-F068-4707-BBBB-2AFA5F5FF410">
 						<File Id="filerevision.tmpl3" Name="filerevision.tmpl" Source="..\..\output\release\mercurial\templates\spartan\filerevision.tmpl" />
 					</Component>
-					<Component Id="footer.tmpl3" Guid="2E9D99F8-8712-4570-A5B8-8B407B33F068">
+					<Component Id="footer.tmpl3" Guid="095343DE-CF9B-4A4C-8AF2-16F9B24BE384">
 						<File Id="footer.tmpl3" Name="footer.tmpl" Source="..\..\output\release\mercurial\templates\spartan\footer.tmpl" />
 					</Component>
-					<Component Id="graph.tmpl3" Guid="D7C58A38-F2D7-42DE-962F-D6779692AD7D">
+					<Component Id="graph.tmpl3" Guid="FF830BDC-4976-4A70-A9DB-9EFFC556268C">
 						<File Id="graph.tmpl3" Name="graph.tmpl" Source="..\..\output\release\mercurial\templates\spartan\graph.tmpl" />
 					</Component>
-					<Component Id="header.tmpl6" Guid="728D76A4-D35A-474B-AB2E-D6A41280DCFA">
+					<Component Id="header.tmpl6" Guid="234A4410-5C0B-4145-8879-38B9A8F948C0">
 						<File Id="header.tmpl6" Name="header.tmpl" Source="..\..\output\release\mercurial\templates\spartan\header.tmpl" />
 					</Component>
-					<Component Id="index.tmpl4" Guid="0152F9E3-2082-41EC-B7C3-D3F00DCCE465">
+					<Component Id="index.tmpl4" Guid="B3C5316B-851D-41A0-87C5-29C0873572A4">
 						<File Id="index.tmpl4" Name="index.tmpl" Source="..\..\output\release\mercurial\templates\spartan\index.tmpl" />
 					</Component>
-					<Component Id="manifest.tmpl4" Guid="968C8440-6822-4FF8-9C26-A7DA84DA8807">
+					<Component Id="manifest.tmpl4" Guid="5AF56198-2434-489C-9650-1C6D9D8EC3EF">
 						<File Id="manifest.tmpl4" Name="manifest.tmpl" Source="..\..\output\release\mercurial\templates\spartan\manifest.tmpl" />
 					</Component>
-					<Component Id="map7" Guid="8B7AF860-FE5F-465E-A0CD-090B5D2C5086">
+					<Component Id="map7" Guid="16306A7E-A38E-435B-8214-6953ADCC358A">
 						<File Id="map7" Name="map" Source="..\..\output\release\mercurial\templates\spartan\map" />
 					</Component>
-					<Component Id="notfound.tmpl4" Guid="E09169E6-BC79-434C-BF99-A3761A2E96D3">
+					<Component Id="notfound.tmpl4" Guid="BDD6E5DC-F676-42E7-A748-E53FDB611865">
 						<File Id="notfound.tmpl4" Name="notfound.tmpl" Source="..\..\output\release\mercurial\templates\spartan\notfound.tmpl" />
 					</Component>
-					<Component Id="search.tmpl3" Guid="6E2E1890-5F31-4625-9CE0-9377D7167E85">
+					<Component Id="search.tmpl3" Guid="CF7E18DB-78A2-41DC-A5E8-BE0465C288E5">
 						<File Id="search.tmpl3" Name="search.tmpl" Source="..\..\output\release\mercurial\templates\spartan\search.tmpl" />
 					</Component>
-					<Component Id="shortlog.tmpl3" Guid="B5B2672F-E901-43F7-A71B-3D56FFBC2341">
+					<Component Id="shortlog.tmpl3" Guid="EA4B25A1-1F91-4AAF-840E-4905ACCA1D55">
 						<File Id="shortlog.tmpl3" Name="shortlog.tmpl" Source="..\..\output\release\mercurial\templates\spartan\shortlog.tmpl" />
 					</Component>
-					<Component Id="shortlogentry.tmpl1" Guid="FF0B6451-7428-4938-8345-8A7E090F4C1A">
+					<Component Id="shortlogentry.tmpl1" Guid="58FFC284-B554-4DAD-9645-131884C68F95">
 						<File Id="shortlogentry.tmpl1" Name="shortlogentry.tmpl" Source="..\..\output\release\mercurial\templates\spartan\shortlogentry.tmpl" />
 					</Component>
-					<Component Id="tags.tmpl5" Guid="7A42AE41-2DAF-435A-9B87-94408D5B49C1">
+					<Component Id="tags.tmpl5" Guid="788ED7B3-3C87-481C-8C48-6284BACB2A6F">
 						<File Id="tags.tmpl5" Name="tags.tmpl" Source="..\..\output\release\mercurial\templates\spartan\tags.tmpl" />
 					</Component>
 				</Directory>
 				<Directory Id="mercurial.templates.static" Name="static">
-					<Component Id="background.png" Guid="B42C2CBC-48C6-43C0-9341-649599B13CB9">
+					<Component Id="background.png" Guid="C2C5413E-2EE7-4838-BCB6-8143F56B4BB2">
 						<File Id="background.png" Name="background.png" KeyPath="yes" Source="..\..\output\release\mercurial\templates\static\background.png" />
 					</Component>
-					<Component Id="coal_file.png" Guid="B6B2C8D4-F459-45C5-B34B-2327C3ACA0EE">
+					<Component Id="coal_file.png" Guid="8F5B6555-4269-4E1A-B81C-9B8240816993">
 						<File Id="coal_file.png" Name="coal-file.png" Source="..\..\output\release\mercurial\templates\static\coal-file.png" />
 					</Component>
-					<Component Id="coal_folder.png" Guid="CFBD2F39-CC72-4ADD-B9CE-7AF577A8316E">
+					<Component Id="coal_folder.png" Guid="50786FA7-1A7E-44F2-97E9-BF4F0C7C6A51">
 						<File Id="coal_folder.png" Name="coal-folder.png" Source="..\..\output\release\mercurial\templates\static\coal-folder.png" />
 					</Component>
-					<Component Id="excanvas.js" Guid="9CED4301-E8D9-48ED-AC73-D623C61DB400">
+					<Component Id="excanvas.js" Guid="037FE192-A133-4D74-BA9B-AE7A53675E22">
 						<File Id="excanvas.js" Name="excanvas.js" Source="..\..\output\release\mercurial\templates\static\excanvas.js" />
 					</Component>
-					<Component Id="graph.js" Guid="D8D1BE33-F326-4144-9710-869694455655">
+					<Component Id="graph.js" Guid="F676BA5F-88A3-4C4F-B5A1-8820E6B7E5E2">
 						<File Id="graph.js" Name="graph.js" Source="..\..\output\release\mercurial\templates\static\graph.js" />
 					</Component>
-					<Component Id="hgicon.png" Guid="DA5210E3-BC07-49F6-9968-5C5B459B7A96">
+					<Component Id="hgicon.png" Guid="59D606B2-0872-4742-B87A-535FDD0746B0">
 						<File Id="hgicon.png" Name="hgicon.png" Source="..\..\output\release\mercurial\templates\static\hgicon.png" />
 					</Component>
-					<Component Id="hglogo.png" Guid="A803E21E-ED3D-444A-944E-36E27EEADE3A">
+					<Component Id="hglogo.png" Guid="24F3AEB7-A073-4810-9EE3-A66D1CAFFCB6">
 						<File Id="hglogo.png" Name="hglogo.png" Source="..\..\output\release\mercurial\templates\static\hglogo.png" />
 					</Component>
-					<Component Id="style_coal.css" Guid="D20095DA-F6D5-4C29-85C9-6855699C2D81">
+					<Component Id="style_coal.css" Guid="168C93D3-3F51-49B9-836E-8327CD6AA1AA">
 						<File Id="style_coal.css" Name="style-coal.css" Source="..\..\output\release\mercurial\templates\static\style-coal.css" />
 					</Component>
-					<Component Id="style_gitweb.css" Guid="A356A2C1-24DF-4F06-997F-218114928A02">
+					<Component Id="style_gitweb.css" Guid="7FE9419F-874B-4CB8-86DC-4B112611D7CD">
 						<File Id="style_gitweb.css" Name="style-gitweb.css" Source="..\..\output\release\mercurial\templates\static\style-gitweb.css" />
 					</Component>
-					<Component Id="style_monoblue.css" Guid="B62275A8-486D-44D9-A837-F05914E6385E">
+					<Component Id="style_monoblue.css" Guid="58607ACD-4CE7-4040-A31A-8CC12D82E8FC">
 						<File Id="style_monoblue.css" Name="style-monoblue.css" Source="..\..\output\release\mercurial\templates\static\style-monoblue.css" />
 					</Component>
-					<Component Id="style_paper.css" Guid="D694DB1C-ACDA-4595-B959-C325451670B0">
+					<Component Id="style_paper.css" Guid="7EEF53CE-9879-4381-ABBD-473B907DF98A">
 						<File Id="style_paper.css" Name="style-paper.css" Source="..\..\output\release\mercurial\templates\static\style-paper.css" />
 					</Component>
-					<Component Id="style.css" Guid="660873C5-D112-42F7-B49B-3A7B0CB61C49">
+					<Component Id="style.css" Guid="C9BD451A-A7E5-41FC-AA65-C1BCEAD8E847">
 						<File Id="style.css" Name="style.css" Source="..\..\output\release\mercurial\templates\static\style.css" />
 					</Component>
 				</Directory>

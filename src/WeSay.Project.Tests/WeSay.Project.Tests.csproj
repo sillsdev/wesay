@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -13,7 +14,8 @@
 	</FileUpgradeFlags>
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
-	<OldToolsVersion>2.0</OldToolsVersion>
+	<OldToolsVersion>3.5</OldToolsVersion>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -28,6 +30,7 @@
 	<RootNamespace>WeSay.Project.Tests</RootNamespace>
 	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -141,7 +144,7 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
 	</Reference>
@@ -154,6 +157,9 @@
 	  <HintPath>..\..\lib\net2.0\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
+	<Reference Include="System.Core">
+	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
+	</Reference>
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
@@ -162,8 +168,11 @@
   <ItemGroup>
 	<Compile Include="BasilProjectTests.cs" />
 	<Compile Include="ChorusBackupMakerTests.cs" />
+	<Compile Include="ConfigFileTests.cs" />
+	<Compile Include="ConfigMigration\WeSayUserConfigMigrationTests.cs" />
+	<Compile Include="ConfigMigration\WritingSystemPrefsToLdmlMigratorTests.cs" />
 	<Compile Include="LiftUpdateTests.cs" />
-	<Compile Include="ConfigMigration\MigrationTests.cs" />
+	<Compile Include="ConfigMigration\WeSayConfigMigrationTests.cs" />
 	<Compile Include="PLiftExporterTests.cs" />
 	<Compile Include="ProjectDirectorySetupForTesting.cs" />
 	<Compile Include="TestResources.Designer.cs">

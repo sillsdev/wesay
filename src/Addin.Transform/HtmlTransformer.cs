@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using Addin.Transform.PdfDictionary;
 using Palaso.DictionaryServices.Lift;
-using Palaso.I8N;
+using Palaso.i18n;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -80,32 +80,24 @@ namespace Addin.Transform
 										  bool includeXmlDirective,
 										  bool linkToUserCss)
 		{
-			//TODO: update this comment in light of the passing of db4o
-			//the problem we're addressing here is that when this is launched from the wesay configuration
-			//that won't (and doesn't want to) have locked up the db4o db by making a record list manager,
-			//which it normally has no need for.
-			//So if we're in that situation, we temporarily try to make one and then release it,
-			//so it isn't locked when the user says "open wesay"
-
 			LexEntryRepository lexEntryRepository = projectInfo.ServiceProvider.GetService(typeof(LexEntryRepository)) as LexEntryRepository;
 			var pliftPath = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + ".plift");
-			using (var dlg = new LameProgressDialog("Exporting to PLift..."))
-			{
-				dlg.Show();
+
+
 				var maker = new PLiftMaker();
 				maker.MakePLiftTempFile(pliftPath, lexEntryRepository,
 										projectInfo.ServiceProvider.GetService(typeof(ViewTemplate)) as
 										ViewTemplate, LiftWriter.ByteOrderStyle.NoBOM);
-			}
+
 
 			var pathToOutput = Path.Combine(projectInfo.PathToExportDirectory,
-											projectInfo.Name + ".xhtml");
+											projectInfo.Name + ".html");
 			if (File.Exists(pathToOutput))
 			{
 				File.Delete(pathToOutput);
 			}
 
-			var htmWriter = new FLExCompatibleXhtmlWriter();
+			var htmWriter = new FLExCompatibleXhtmlWriter(includeXmlDirective, linkToUserCss);
 			using (var reader = new StreamReader(pliftPath))
 			{
 				using (var file = new StreamWriter(pathToOutput, false, new UTF8Encoding(false)))
@@ -114,7 +106,6 @@ namespace Addin.Transform
 				}
 			}
 			return pathToOutput;
-
 		}
 	}
 }

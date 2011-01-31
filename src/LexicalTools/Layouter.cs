@@ -14,7 +14,7 @@ using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
-using Palaso.I8N;
+using Palaso.i18n;
 
 namespace WeSay.LexicalTools
 {

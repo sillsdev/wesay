@@ -2,18 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using Enchant;
 using Exortech.NetReflector;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
-using Palaso.WritingSystems.Collation;
-using Spart;
-using Chorus;
+using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
@@ -32,33 +30,21 @@ namespace WeSay.LexicalModel.Foundation
 	}
 
 	[ReflectorType("WritingSystem")]
-	public class WritingSystem: IComparer<string>, IComparer
+	public class WritingSystem : IComparer<string>, IComparer
 	{
 		public static string IdForUnknownAnalysis = "en";
 		public static string IdForUnknownVernacular = "v";
-		private string _abbreviation;
-		private string _customSortRules;
-		private string _spellCheckingId;
-
-		private bool _isAudio;
-
-		private Font _font;
-		private string _id;
-		private string _keyboardName;
-		private bool _rightToLeft;
-		private SortComparer _sortComparer;
-		private SortKeyGenerator _sortKeyGenerator;
-		private string _sortUsing;
-		private bool _isUnicode = true;
+		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
+		private readonly WritingSystemDefinition _palasoWritingSystemDefinition;
 
 		public WritingSystem(XmlNode node): this()
 		{
-			_id = node.Attributes["id"].Value;
+			ISO = node.Attributes["id"].Value;
 			XmlNode fontNode = node.SelectSingleNode("font");
 			string name = fontNode.Attributes["name"].Value;
-			float size = float.Parse(fontNode.Attributes["baseSize"].Value);
+			float size = float.Parse(fontNode.Attributes["_palasoWritingSystemDefinitionSize"].Value);
 
-			_font = new Font(name, size);
+			Font = new Font(name, size);
 		}
 
 		/// <summary>
@@ -66,7 +52,12 @@ namespace WeSay.LexicalModel.Foundation
 		/// </summary>
 		public WritingSystem()
 		{
-			InitializeSorting();
+			_palasoWritingSystemDefinition = new WritingSystemDefinition();
+		}
+
+		public WritingSystem(WritingSystemDefinition ws)
+		{
+			_palasoWritingSystemDefinition = ws;
 		}
 
 		/// <summary>
@@ -74,15 +65,62 @@ namespace WeSay.LexicalModel.Foundation
 		/// </summary>
 		public WritingSystem(string id, Font font): this()
 		{
-			_id = id;
-			_font = font;
+			_palasoWritingSystemDefinition = new WritingSystemDefinition(id);
+			Font = font;
+		}
+
+		public WritingSystemDefinition GetAsPalasoWritingSystemDefinition()
+		{
+			return _palasoWritingSystemDefinition;
+		}
+
+		[Browsable(false)]
+		public string Id
+		{
+			get { return _palasoWritingSystemDefinition.Id; }
 		}
 
 		[ReflectorProperty("Id", Required = true)]
-		public string Id
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
+		public string ISO
 		{
-			get { return _id; }
-			set { _id = value; }
+			get { return _palasoWritingSystemDefinition.ISO639; }
+			set { _palasoWritingSystemDefinition.ISO639 = value; }
+		}
+
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
+		public string Script
+		{
+			get { return _palasoWritingSystemDefinition.Script; }
+			set { _palasoWritingSystemDefinition.Script = value; }
+		}
+
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
+		public string Region
+		{
+			get { return _palasoWritingSystemDefinition.Region; }
+			set { _palasoWritingSystemDefinition.Region = value; }
+		}
+
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
+		public string Variant
+		{
+			get { return _palasoWritingSystemDefinition.Variant; }
+			set { _palasoWritingSystemDefinition.Variant = value; }
+		}
+
+		[Browsable(false)]
+		public RFC5646Tag Rfc5646Tag
+		{
+			get { return _palasoWritingSystemDefinition.Rfc5646Tag; }
+			set { _palasoWritingSystemDefinition.Rfc5646Tag = value; }
+		}
+
+		[Browsable(false)]
+		public RFC5646Tag Rfc5646TagOnLoad
+		{
+			get { return _palasoWritingSystemDefinition.Rfc5646TagOnLoad; }
+			set { _palasoWritingSystemDefinition.Rfc5646TagOnLoad = value;}
 		}
 
 		[ReflectorProperty("Abbreviation", Required = false)]
@@ -90,41 +128,39 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (string.IsNullOrEmpty(_abbreviation))
+				if (string.IsNullOrEmpty(_palasoWritingSystemDefinition.Abbreviation))
 				{
-					return _id;
+					return _palasoWritingSystemDefinition.ISO639;
 				}
-				else
-				{
-					return _abbreviation;
-				}
+				return _palasoWritingSystemDefinition.Abbreviation;
 			}
-			set { _abbreviation = value; }
+			set { _palasoWritingSystemDefinition.Abbreviation = value; }
 		}
-
-		//        //we'll be getting rid of this property
-		//        [Browsable(true), System.ComponentModel.DisplayName("Vernacular")]
-		//        public string VernacularDefault
-		//        {
-		//            get { return _id; }
-		//            set
-		//            {
-		//                _id = value;
-		//            }
-		//        }
 
 		[Browsable(false)]
 		public Font Font
 		{
 			get
 			{
-				if (_font == null)
+				if ((_palasoWritingSystemDefinition.DefaultFontName == null) || (_palasoWritingSystemDefinition.DefaultFontSize == 0))
 				{
-					_font = new Font(FontFamily.GenericSansSerif, FontSize);
+					return _fallBackFont;
 				}
-				return _font;
+				return new Font(_palasoWritingSystemDefinition.DefaultFontName, _palasoWritingSystemDefinition.DefaultFontSize);
 			}
-			set { _font = value; }
+			set
+			{
+				if (value == null)
+				{
+					_palasoWritingSystemDefinition.DefaultFontName = _fallBackFont.Name;
+					_palasoWritingSystemDefinition.DefaultFontSize = _fallBackFont.Size;
+				}
+				else
+				{
+					_palasoWritingSystemDefinition.DefaultFontName = value.Name;
+					_palasoWritingSystemDefinition.DefaultFontSize = value.Size;
+				}
+			}
 		}
 
 		/// <summary>
@@ -136,24 +172,61 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(_sortUsing))
+				if (_palasoWritingSystemDefinition.SortUsing == WritingSystemDefinition.SortRulesType.DefaultOrdering)
 				{
 					return Id;
 				}
-				return _sortUsing;
+				if (_palasoWritingSystemDefinition.SortUsing == WritingSystemDefinition.SortRulesType.OtherLanguage)
+				{
+					return _palasoWritingSystemDefinition.SortRules;
+				}
+				return _palasoWritingSystemDefinition.SortUsing.ToString();
 			}
 			set
 			{
-				if (_sortUsing != value)
+				if (_palasoWritingSystemDefinition.SortUsing.ToString() != value)
 				{
-					_sortUsing = value;
-					if (!UsesCustomSortRules)
+					WritingSystemDefinition.SortRulesType newSortRulesType = AdaptToSortRulesType(value);
+
+					bool switchingToNonDefaultSystemSort =
+						(newSortRulesType == WritingSystemDefinition.SortRulesType.OtherLanguage);
+					bool switchingFromNonDefaultSystemSort =
+						(_palasoWritingSystemDefinition.SortUsing == WritingSystemDefinition.SortRulesType.OtherLanguage);
+
+					if (switchingToNonDefaultSystemSort)
 					{
-						_customSortRules = null;
+						_palasoWritingSystemDefinition.SortRules = value;
 					}
-					InitializeSorting();
+					if (switchingFromNonDefaultSystemSort)
+					{
+						_palasoWritingSystemDefinition.SortRules = null;
+					}
+
+					_palasoWritingSystemDefinition.SortUsing = newSortRulesType;
 				}
 			}
+		}
+
+		private static WritingSystemDefinition.SortRulesType AdaptToSortRulesType(string sortUsingString)
+		{
+			WritingSystemDefinition.SortRulesType palasoSortRulesType;
+			if(sortUsingString == CustomSortRulesType.CustomICU.ToString())
+			{
+				palasoSortRulesType = WritingSystemDefinition.SortRulesType.CustomICU;
+			}
+			else if(sortUsingString == CustomSortRulesType.CustomSimple.ToString())
+			{
+				palasoSortRulesType = WritingSystemDefinition.SortRulesType.CustomSimple;
+			}
+			else if(sortUsingString == null)
+			{
+				palasoSortRulesType = WritingSystemDefinition.SortRulesType.DefaultOrdering;
+			}
+			else
+			{
+				palasoSortRulesType = WritingSystemDefinition.SortRulesType.OtherLanguage;
+			}
+			return palasoSortRulesType;
 		}
 
 		[Browsable(false)]
@@ -161,12 +234,15 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (SortUsing == null)
-				{
-					return false;
-				}
-				return Enum.IsDefined(typeof (CustomSortRulesType), SortUsing);
+				bool isUsingCustomSortRules = IsCustomSortRuleType(_palasoWritingSystemDefinition.SortUsing);
+				return isUsingCustomSortRules;
 			}
+		}
+
+		private static bool IsCustomSortRuleType(WritingSystemDefinition.SortRulesType sortRuleType)
+		{
+			return (sortRuleType == WritingSystemDefinition.SortRulesType.CustomICU) ||
+				   (sortRuleType == WritingSystemDefinition.SortRulesType.CustomSimple);
 		}
 
 		/// <summary>
@@ -180,18 +256,16 @@ namespace WeSay.LexicalModel.Foundation
 			{
 				if (!UsesCustomSortRules)
 				{
-					_customSortRules = null;
 					return null;
 				}
-				return _customSortRules ?? string.Empty;
+				return _palasoWritingSystemDefinition.SortRules ?? String.Empty;
 			}
 			set
 			{
 				// should only be set if UsesCustomSortRules == true but can't because of NetReflector
-				if (_customSortRules != value)
+				if (_palasoWritingSystemDefinition.SortRules != value)
 				{
-					_customSortRules = value;
-					InitializeSorting();
+					_palasoWritingSystemDefinition.SortRules = value;
 				}
 				// cannot do the following due to NetReflector wanting to set to null!
 				// throw new InvalidOperationException("CustomSortRules can only be set when UsesCustomSortRules is true");
@@ -203,8 +277,8 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("WindowsKeyman", Required = false)]
 		public string KeyboardName
 		{
-			get { return _keyboardName; }
-			set { _keyboardName = value; }
+			get { return _palasoWritingSystemDefinition.Keyboard; }
+			set { _palasoWritingSystemDefinition.Keyboard = value; }
 		}
 
 		[Browsable(false)]
@@ -213,20 +287,13 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (_font == null)
-				{
-					return "Arial";
-				}
-				else
-				{
-					return _font.Name;
-				}
+				return Font.Name;
 			}
 			set
 			{
 				try
 				{
-					_font = new Font(value, FontSize);
+					Font = new Font(value, FontSize);
 				}
 				catch (Exception error)
 				{
@@ -239,7 +306,7 @@ namespace WeSay.LexicalModel.Foundation
 					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
 													"There is a problem with the font {0} on this computer. {1} WeSay will have to use the System default font instead."+Environment.NewLine+"The error was: {2}",
 													value, hint, error.Message);
-					_font = new Font(SystemFonts.DefaultFont.FontFamily, FontSize);
+					Font = _fallBackFont;
 				}
 			}
 		}
@@ -250,23 +317,19 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (_font == null)
-				{
-					return 12;
-				}
-				else
-				{
-					return (int) _font.Size;
-				}
+				return (int) Font.Size;
 			}
-			set { _font = new Font(FontName, value); }
+			set
+			{
+				Font = new Font(Font.Name, value);
+			}
 		}
 
 		[ReflectorProperty("RightToLeft", Required = false)]
 		public bool RightToLeft
 		{
-			get { return _rightToLeft; }
-			set { _rightToLeft = value; }
+			get { return _palasoWritingSystemDefinition.RightToLeftScript; }
+			set { _palasoWritingSystemDefinition.RightToLeftScript = value; }
 		}
 
 		[TypeConverter(typeof (SpellCheckerIdToDisplayStringConverter))]
@@ -275,30 +338,23 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if (string.IsNullOrEmpty(_spellCheckingId))
-				{
-					return _id;
-				}
-				else
-				{
-					return _spellCheckingId;
-				}
+				return _palasoWritingSystemDefinition.SpellCheckingId;
 			}
-			set { _spellCheckingId = value; }
+			set { _palasoWritingSystemDefinition.SpellCheckingId = value; }
 		}
 
 		[ReflectorProperty("IsAudio", Required = false)]
 		public bool IsAudio
 		{
-			get { return _isAudio; }
-			set { _isAudio = value; }
+			get { return _palasoWritingSystemDefinition.IsVoice; }
+			set { _palasoWritingSystemDefinition.IsVoice = value; }
 		}
 
 		[ReflectorProperty("IsUnicode", Required = false)]
 		public bool IsUnicode
 		{
-			get { return _isUnicode; }
-			set { _isUnicode = value; }
+			get { return !_palasoWritingSystemDefinition.IsLegacyEncoded; }
+			set { _palasoWritingSystemDefinition.IsLegacyEncoded = !value; }
 		}
 
 		#region IComparer<string> Members
@@ -317,7 +373,8 @@ namespace WeSay.LexicalModel.Foundation
 		///<param name="x">The first object to compare.</param>
 		public int Compare(string x, string y)
 		{
-			return _sortComparer(x, y);
+			return _palasoWritingSystemDefinition.Collator.Compare(x, y);
+			//return _sortComparer(x, y);
 		}
 
 		public int Compare(object x, object y)
@@ -329,140 +386,18 @@ namespace WeSay.LexicalModel.Foundation
 
 		public override string ToString()
 		{
-			return Id;
-		}
-
-		private void InitializeSortingFromWritingSystemId(string id)
-		{
-			CultureInfo cultureInfo = null;
-			if (!String.IsNullOrEmpty(id))
-			{
-				cultureInfo = GetCultureInfoFromWritingSystemId(id);
-			}
-			if (cultureInfo == null)
-			{
-				cultureInfo = CultureInfo.InvariantCulture;
-			}
-
-			_sortComparer = cultureInfo.CompareInfo.Compare;
-			_sortKeyGenerator = cultureInfo.CompareInfo.GetSortKey;
-		}
-
-		private void InitializeSorting()
-		{
-			if (UsesCustomSortRules)
-			{
-				InitializeSortingFromCustomRules(CustomSortRules);
-			}
-			else
-			{
-				InitializeSortingFromWritingSystemId(SortUsing);
-			}
-		}
-
-		// This should always succeed. We try to use the rule collator associated
-		// with the custom sort rules type, if that still doesn't work then we
-		// fall back to using the system sort from the id or the invariant sort
-		private void InitializeSortingFromCustomRules(string rules)
-		{
-			ICollator collator = null;
-			try
-			{
-				if (SortUsing == CustomSortRulesType.CustomSimple.ToString())
-				{
-					try
-					{
-						collator = new SimpleRulesCollator(rules);
-					}
-					catch (ParserErrorException e)
-					{
-						Logger.WriteMinorEvent(e.Message);
-						Logger.WriteMinorEvent(
-							"Failed to parse simple sort rules, falling back to system sorting");
-					}
-				}
-
-				else if (SortUsing == CustomSortRulesType.CustomICU.ToString())
-				{
-					try
-					{
-						collator = new IcuRulesCollator(rules);
-					}
-					catch (ApplicationException e)
-					{
-						Logger.WriteMinorEvent(e.Message);
-						Logger.WriteMinorEvent(
-							"Failed to parse ICU sort rules, falling back to system sorting");
-					}
-				}
-				else
-				{
-					Debug.Fail("unknown CustomSortRulesType");
-				}
-			}
-			catch (DllNotFoundException e)
-			{
-				Logger.WriteMinorEvent(e.Message);
-				Logger.WriteMinorEvent("Falling back to system sorting");
-			}
-
-			if (collator == null)
-			{
-				InitializeSortingFromWritingSystemId(Id);
-			}
-			else
-			{
-				_sortComparer = collator.Compare;
-				_sortKeyGenerator = collator.GetSortKey;
-			}
-		}
-
-		[DebuggerNonUserCode]
-		private static CultureInfo GetCultureInfoFromWritingSystemId(string sortUsing)
-		{
-			CultureInfo ci;
-			try
-			{
-				ci = CultureInfo.GetCultureInfo(sortUsing);
-			}
-			catch (ArgumentException e)
-			{
-				if (e is ArgumentNullException || e is ArgumentOutOfRangeException)
-				{
-					throw;
-				}
-				ci = TryGetCultureInfoByIetfLanguageTag(sortUsing);
-			}
-			return ci;
-		}
-
-		[DebuggerNonUserCode]
-		private static CultureInfo TryGetCultureInfoByIetfLanguageTag(string ietfLanguageTag)
-		{
-			CultureInfo ci = null;
-			try
-			{
-				ci = CultureInfo.GetCultureInfoByIetfLanguageTag(ietfLanguageTag);
-			}
-			catch (ArgumentException ex)
-			{
-				if (ex is ArgumentNullException || ex is ArgumentOutOfRangeException)
-				{
-					throw;
-				}
-			}
-			return ci;
+			return _palasoWritingSystemDefinition.Id;
 		}
 
 		public SortKey GetSortKey(string source)
 		{
-			return _sortKeyGenerator(source);
+			return _palasoWritingSystemDefinition.Collator.GetSortKey(source);
 		}
 
 		// Same if behavior is same (not appearance)
 		public override int GetHashCode()
 		{
-			int hashCode = HashCombine(Id.GetHashCode(), SortUsing.GetHashCode());
+			int hashCode = HashCombine(_palasoWritingSystemDefinition.ISO639.GetHashCode(), SortUsing.GetHashCode());
 			if (UsesCustomSortRules)
 			{
 				hashCode = HashCombine(hashCode, CustomSortRules.GetHashCode());
@@ -538,29 +473,13 @@ namespace WeSay.LexicalModel.Foundation
 			public override StandardValuesCollection GetStandardValues(
 				ITypeDescriptorContext context)
 			{
-				List<String> keyboards = new List<string>();
+				var keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
 
-				foreach (KeyboardController.KeyboardDescriptor keyboard in
-					KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All))
-				{
-					keyboards.Add(keyboard.Name);
-				}
+				keyboards.AddRange(KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All).Select(keyboard => keyboard.Name));
 				return new StandardValuesCollection(keyboards);
 			}
 		}
-
-		#endregion
-
-		#region Nested type: SortComparer
-
-		private delegate int SortComparer(string s1, string s2);
-
-		#endregion
-
-		#region Nested type: SortKeyGenerator
-
-		private delegate SortKey SortKeyGenerator(string s);
 
 		#endregion
 

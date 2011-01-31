@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Text;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.i8n;
 
 namespace WeSay.Project
 {

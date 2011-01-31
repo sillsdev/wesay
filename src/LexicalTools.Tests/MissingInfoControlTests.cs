@@ -136,47 +136,42 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullRecords_Throws()
 		{
-			using (
-					new MissingInfoControl(null,
-										   _viewTemplate,
-										   IsMissingTranslation,
-										   _lexEntryRepository, new TaskMemory())) {}
+			Assert.Throws<ArgumentNullException>(() => new MissingInfoControl(null,
+																				  _viewTemplate,
+																				  IsMissingTranslation,
+																				  _lexEntryRepository, new TaskMemory()));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
-			using (
-					new MissingInfoControl(_missingTranslationRecordList,
-										   null,
-										   IsMissingTranslation,
-										   _lexEntryRepository, new TaskMemory())) {}
+			Assert.Throws<ArgumentNullException>(() =>
+													 new MissingInfoControl(_missingTranslationRecordList,
+																			null,
+																			IsMissingTranslation,
+																			_lexEntryRepository, new TaskMemory()));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullFilter_Throws()
 		{
-			using (
-					new MissingInfoControl(_missingTranslationRecordList,
-										   _viewTemplate,
-										   null,
-										   _lexEntryRepository, new TaskMemory())) {}
+			Assert.Throws<ArgumentNullException>(() =>
+													 new MissingInfoControl(_missingTranslationRecordList,
+																			_viewTemplate,
+																			null,
+																			_lexEntryRepository, new TaskMemory()));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullAllRecords_Throws()
 		{
-			using (
+			Assert.Throws<ArgumentNullException>(() =>
 					new MissingInfoControl(_missingTranslationRecordList,
 										   _viewTemplate,
 										   IsMissingTranslation,
-										   null, null)) {}
+										   null, null));
 		}
 
 		[Test]

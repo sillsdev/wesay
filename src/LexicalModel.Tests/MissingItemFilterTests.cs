@@ -17,10 +17,9 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithField_NullField_Throws()
 		{
-			new MissingFieldQuery(null, null, null);
+			Assert.Throws<ArgumentNullException>(() => new MissingFieldQuery(null, null, null));
 		}
 
 		[Test]

@@ -4,26 +4,25 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.Xml;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
-	public class BasilProject: IProject, IDisposable
+	public class BasilProject: IDisposable
 	{
 		private static BasilProject _singleton;
 
 		protected static BasilProject Singleton
 		{
 			get { return _singleton; }
-			set { _singleton = value; }
 		}
 		public UiConfigurationOptions UiOptions { get; set; }
 
 		private readonly WritingSystemCollection _writingSystems;
-		private string _projectDirectoryPath = string.Empty;
+		private static string _projectDirectoryPath = string.Empty;
 
 		public static BasilProject Project
 		{
@@ -95,11 +94,7 @@ namespace WeSay.Project
 
 		public virtual void Save(string projectDirectoryPath)
 		{
-			using (var writer = XmlWriter.Create(PathToWritingSystemPrefs, CanonicalXmlSettings.CreateXmlWriterSettings()))
-			{
-				_writingSystems.Write(writer);
-				writer.Close();
-			}
+			_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(projectDirectoryPath));
 		}
 
 		/// <summary>
@@ -143,15 +138,14 @@ namespace WeSay.Project
 			protected set { _projectDirectoryPath = value; }
 		}
 
-		public string PathToWritingSystemPrefs
+		public static string GetPathToWritingSystemPrefs(string parentDir)
 		{
-			get
-			{
-				return
-						GetPathToWritingSystemPrefs(
-								PathToDirectoryContaingWritingSystemFilesInProject
-								/*ProjectCommonDirectory*/);
-			}
+				return Path.Combine(parentDir, "WritingSystemPrefs.xml");
+		}
+
+		public static string GetPathToLdmlWritingSystemsFolder(string parentDir)
+		{
+				return Path.Combine(parentDir, "WritingSystems");
 		}
 
 		//        public string PathToOptionsLists
@@ -162,40 +156,28 @@ namespace WeSay.Project
 		//            }
 		//        }
 
-		protected static string GetPathToWritingSystemPrefs(string parentDir)
-		{
-			return Path.Combine(parentDir, "WritingSystemPrefs.xml");
-		}
 
-		public string PathToDirectoryContaingWritingSystemFilesInProject
-		{
-			get { return ProjectDirectoryPath; }
-		}
-
+		// <summary>
+		// Locates the StringCatalog file, matching any file ending in <language>.po first in the Project folder,
+		// then in the Application Common folder.
+		// </summary>
 		public string LocateStringCatalog()
 		{
-			if (File.Exists(PathToStringCatalogInProjectDir))
+			string filePattern = "*" + UiOptions.Language + ".po";
+			var matchingFiles = Directory.GetFiles(ProjectDirectoryPath, filePattern);
+			if (matchingFiles.Length > 0)
 			{
-				return PathToStringCatalogInProjectDir;
+				return matchingFiles[0];
 			}
 
 			//fall back to the program's common directory
-			string path = Path.Combine(ApplicationCommonDirectory, UiOptions.Language + ".po");
-			if (File.Exists(path))
+			matchingFiles = Directory.GetFiles(ApplicationCommonDirectory, filePattern);
+			if (matchingFiles.Length > 0)
 			{
-				return path;
+				return matchingFiles[0];
 			}
 
 			return null;
-		}
-
-		public string PathToStringCatalogInProjectDir
-		{
-			get
-			{
-				return Path.Combine(ProjectDirectoryPath /*ProjectCommonDirectory*/,
-									UiOptions.Language + ".po");
-			}
 		}
 
 		public static string ApplicationCommonDirectory
@@ -269,14 +251,11 @@ namespace WeSay.Project
 
 		protected void InitWritingSystems()
 		{
-			if (File.Exists(PathToWritingSystemPrefs))
-			{
-				_writingSystems.Load(PathToWritingSystemPrefs);
-			}
-			else
+			_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
+			if (_writingSystems.Count == 0)
 			{
 				//load defaults
-				_writingSystems.Load(GetPathToWritingSystemPrefs(ApplicationCommonDirectory));
+				_writingSystems.Load(Path.Combine(ApplicationCommonDirectory, "WritingSystems"));
 			}
 		}
 
@@ -313,5 +292,11 @@ namespace WeSay.Project
 				new StringCatalog();
 			}
 		}
+
+		public static string VersionString
+		{
+			get { return Application.ProductVersion; }
+		}
+
 	}
 }

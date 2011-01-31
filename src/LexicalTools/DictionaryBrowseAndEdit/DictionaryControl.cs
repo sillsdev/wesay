@@ -8,7 +8,7 @@ using System.IO;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.Code;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.UiBindings;
 using Palaso.Misc;
 using Palaso.Reporting;
@@ -257,7 +257,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				_recordsListBox.Bounds.X,
 				top,
 				_recordsListBox.Bounds.Width,
-				(Bottom - _bottomButtonPanel.Height) - top - 10
+				(Bottom - _bottomButtonTable.Height) - top - 10
 			);
 		}
 
@@ -770,6 +770,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				components.Dispose();
 			}
 			base.Dispose(disposing);
+		}
+
+		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+		{
+
 		}
 	}
 }

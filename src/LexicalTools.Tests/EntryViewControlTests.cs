@@ -114,7 +114,7 @@ namespace WeSay.LexicalTools.Tests
 			LexSense sense = apple.Senses[0];
 			OptionRef o;
 			o = sense.GetOrCreateProperty<OptionRef>("POS");
-			o.Value = "noun";
+			o.Value = "Noun";
 			//nb: this is the key, which for noun happens to be the English display name tested for below
 			using (EntryViewControl entryViewControl = CreateForm(apple, false))
 			{

@@ -31,35 +31,32 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void SetWritingSystem_Null_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
-			textBox.WritingSystem = null;
+			Assert.Throws<ArgumentNullException>(() => textBox.WritingSystem = null);
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void WritingSystem_Unassigned_Get_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
-			WritingSystem ws = textBox.WritingSystem;
+			WritingSystem ws;
+			Assert.Throws<InvalidOperationException>(() => ws= textBox.WritingSystem);
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void WritingSystem_Unassigned_Focused_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
-			textBox.AssignKeyboardFromWritingSystem();
+			Assert.Throws<InvalidOperationException>(() => textBox.AssignKeyboardFromWritingSystem());
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void WritingSystem_Unassigned_Unfocused_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
-			textBox.ClearKeyboard();
+			Assert.Throws<InvalidOperationException>(() => textBox.ClearKeyboard());
 		}
 	}
 }

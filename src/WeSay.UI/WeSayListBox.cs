@@ -91,7 +91,10 @@ namespace WeSay.UI
 		public object ItemToNotDrawYet
 		{
 			get { return _itemToNotDrawYet; }
-			set { _itemToNotDrawYet = value; }
+			set {
+					_itemToNotDrawYet = value;
+					Refresh();
+				}
 		}
 	}
 }

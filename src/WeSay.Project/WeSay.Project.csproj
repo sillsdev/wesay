@@ -1,8 +1,9 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>9.0.21022</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -13,7 +14,7 @@
 	</FileUpgradeFlags>
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
-	<OldToolsVersion>2.0</OldToolsVersion>
+	<OldToolsVersion>3.5</OldToolsVersion>
 	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -29,6 +30,7 @@
 	<RootNamespace>WeSay.Project</RootNamespace>
 	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -174,6 +176,12 @@
 	<Compile Include="CheckinDescriptionBuilder.cs" />
 	<Compile Include="ChorusBackupMaker.cs" />
 	<Compile Include="BasilProject.cs" />
+	<Compile Include="ConfigFile.cs" />
+	<Compile Include="ConfigMigration\UserConfig\WeSayUserConfigMigrator.cs" />
+	<Compile Include="ConfigMigration\WeSayConfig\WritingSystemIdChanger.cs" />
+	<Compile Include="ConfigMigration\WritingSystems\WritingSystemPrefsToLdmlMigrator.cs" />
+	<Compile Include="ConfigMigration\WritingSystems\WritingSystemsFromLiftCreator.cs" />
+	<Compile Include="ConfigMigration\XslFromResourceMigrator.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
@@ -184,8 +192,8 @@
 	<Compile Include="WeSayChorusProjectConfiguration.cs" />
 	<Compile Include="ConfigFileReader.cs" />
 	<Compile Include="ConfigFileTaskBuilder.cs" />
-	<Compile Include="ConfigMigration\MigrateConfig5To6.cs" />
-	<Compile Include="ConfigMigration\ConfigurationMigrator.cs" />
+	<Compile Include="ConfigMigration\WeSayConfig\MigrateConfig5To6.cs" />
+	<Compile Include="ConfigMigration\WeSayConfig\ConfigurationMigrator.cs" />
 	<Compile Include="FailedLoadTask.cs" />
 	<Compile Include="ITaskConfiguration.cs" />
 	<Compile Include="PLiftExporter.cs" />
@@ -195,7 +203,6 @@
 	<Compile Include="TaskTypeCatalog.cs" />
 	<Compile Include="ViewTemplate.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />
-	<Compile Include="IProject.cs" />
 	<Compile Include="ITask.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="WeSayWordsProject.cs" />
@@ -224,33 +231,37 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig0To1.xsl">
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig0To1.xsl">
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig1To2.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig1To2.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig2To3.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig2To3.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig3To4.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig3To4.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig5To6.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig5To6.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig4To5.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig4To5.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig6To7.xsl" />
+	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig6To7.xsl" />
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\sendReceive32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="ConfigMigration\UserConfig\Migrate1To2.xsl" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

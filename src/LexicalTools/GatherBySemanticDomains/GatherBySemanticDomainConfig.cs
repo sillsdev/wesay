@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Palaso.i18n;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains
@@ -54,27 +55,27 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 		public string Label
 		{
-			get { return "Semantic Domains"; }
+			get { return StringCatalog.Get("Semantic Domains"); }
 		}
 
 		public string LongLabel
 		{
-			get { return "Gather Words By Semantic Domain"; }
+			get { return StringCatalog.Get("Gather Words By Semantic Domain"); }
 		}
 
 		public string Description
 		{
-			get { return "Collect new words organized by semantic domains and questions about those domains."; }
+			get { return StringCatalog.Get("Collect new words organized by semantic domains and questions about those domains."); }
 		}
 
 		public string RemainingCountText
 		{
-			get { return "Domains without words"; }
+			get { return StringCatalog.Get("Domains without words"); }
 		}
 
 		public string ReferenceCountText
 		{
-			get { return "Total domains:"; }
+			get { return StringCatalog.Get("Total domains:"); }
 		}
 
 		public bool IsPinned
