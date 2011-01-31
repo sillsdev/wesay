@@ -110,11 +110,12 @@ namespace WeSay.Project
 		{
 			WeSayWordsProject project = new WeSayWordsProject();
 
-			//try
-			//{
+			// File.Delete throws if the path is not present on Mono.
+			try
+			{
 				File.Delete(PathToPretendLiftFile);
-			//}
-			//catch (Exception) {}
+			}
+			catch (Exception) {}
 
 			DirectoryInfo projectDirectory = Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
 			Utilities.CreateEmptyLiftFile(PathToPretendLiftFile, "InitializeForTests()", true);
