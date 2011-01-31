@@ -7,7 +7,6 @@ bld\BuildHistory/*.log
 LiftIO.Tests.pdb
 templates\.guidsForInstaller.xml
 common\.guidsForInstaller.xml
-
 output
 Thumbs.db
 .bzr
@@ -31,3 +30,5 @@ nant.resx.bak
 glob:lib/*.Tests.dll
 glob:desktop.ini
 glob:Mercurial
+glob:build/old
+glob:lib/$(Configuration)
