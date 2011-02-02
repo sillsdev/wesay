@@ -3,11 +3,12 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.TestUtilities;
 using WeSay.Foundation;
+using WeSay.LexicalModel;
 using WeSay.LexicalTools.Dashboard;
 
 using NUnit.Framework;
 
-namespace WeSay.LexicalModel.Tests
+namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
 	public class DashBoardTests
