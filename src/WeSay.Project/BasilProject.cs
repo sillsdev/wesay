@@ -248,6 +248,17 @@ namespace WeSay.Project
 			}
 		}
 
+		public static void CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(string projectDirectoryPath)
+		{
+			string pathProjectToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectoryPath);
+			string pathCommonToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(ApplicationCommonDirectory);
+			Directory.CreateDirectory(pathProjectToWritingSystemsFolder);
+			foreach (string path in Directory.GetFiles(pathCommonToWritingSystemsFolder, "*.ldml"))
+			{
+				File.Copy(path, Path.Combine(pathProjectToWritingSystemsFolder, Path.GetFileName(path)));
+			}
+		}
+
 		protected void InitWritingSystems()
 		{
 			_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
@@ -260,7 +271,8 @@ namespace WeSay.Project
 			if (_writingSystems.Count == 0)
 			{
 				//load defaults
-				_writingSystems.Load(Path.Combine(ApplicationCommonDirectory, "WritingSystems"));
+				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
+				_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
 			}
 		}
 

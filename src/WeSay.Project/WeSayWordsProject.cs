@@ -838,13 +838,7 @@ namespace WeSay.Project
 		{
 
 			Directory.CreateDirectory(projectDirectoryPath);
-			string pathProjectToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectoryPath);
-			string pathCommonToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(ApplicationCommonDirectory);
-			Directory.CreateDirectory(pathProjectToWritingSystemsFolder);
-			foreach (string path in Directory.GetFiles(pathCommonToWritingSystemsFolder, "*.ldml"))
-			{
-				File.Copy(path, Path.Combine(pathProjectToWritingSystemsFolder, Path.GetFileName(path)));
-			}
+			CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(projectDirectoryPath);
 			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath, projectName);
 			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
 
