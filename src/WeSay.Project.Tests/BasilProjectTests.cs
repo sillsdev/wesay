@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
@@ -134,6 +135,24 @@ namespace WeSay.Project.Tests
 			Assert.AreEqual(7, project.WritingSystems.Count);
 			Assert.IsTrue(project.WritingSystems.ContainsKey("en"));
 			Assert.IsTrue(project.WritingSystems.ContainsKey("tpi"));
+		}
+
+		[Test]
+		//WS-33900
+		public void NewProject_ContainsNoWritingsystemFiles_DefaultsAreLoadedButWeDontWriteToTheFilesInTheCommonDirectory()
+		{
+			InitializeSampleProject();
+			File.Delete(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory));
+			BasilProject project = new BasilProject();
+			project.LoadFromProjectDirectoryPath(_projectDirectory);
+			string pathToWritingSystemsInApplicationCommonDirectory = BasilProject.GetPathToLdmlWritingSystemsFolder(BasilProject.ApplicationCommonDirectory);
+			string englishLdmlContent = File.ReadAllText(Path.Combine(pathToWritingSystemsInApplicationCommonDirectory, "en.ldml"));
+
+			WritingSystem ws = project.WritingSystems["en"];
+			if (ws.Abbreviation == "writeme!"){throw new ApplicationException("This test seems to have failed at some point and the en.ldml file in the application common directory neesds to be reverted before the next test run.");}
+			ws.Abbreviation = "writeme!";
+			project.Save();
+			Assert.AreEqual(englishLdmlContent, File.ReadAllText(Path.Combine(pathToWritingSystemsInApplicationCommonDirectory, "en.ldml")));
 		}
 
 		[Test]
