@@ -137,7 +137,7 @@ namespace WeSay.Project.Tests
 			Assert.IsTrue(project.WritingSystems.ContainsKey("tpi"));
 		}
 
-		[Test, Ignore("May be responsible for a bunch of BackupMakerTests Failing on TeamCity")]
+		[Test]
 		//WS-33900
 		public void NewProject_ContainsNoWritingsystemFiles_DefaultsAreLoadedButWeDontWriteToTheFilesInTheCommonDirectory()
 		{
