@@ -7,7 +7,7 @@ using WeSay.Project;
 
 namespace Addin.Backup.Tests
 {
-	[TestFixture, Ignore("Breaking on Team City suddenly, don't have time to figure it out.")]
+	[TestFixture, Ignore("Breaking on Team City as of 8d7a9b2d8b22, don't have time to figure it out.")]
 	public class BackupMakerTests
 	{
 		public BackupMaker _backupMaker;
