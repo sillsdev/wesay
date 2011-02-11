@@ -708,6 +708,9 @@ namespace WeSay.LexicalTools.Dashboard
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Review,
 											  Color.FromArgb(250, 192, 144),
 											  Color.FromArgb(252, 213, 181)));
+			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Refine,
+											  Color.FromArgb(250, 192, 144),
+											  Color.FromArgb(252, 213, 181)));
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Share,
 											  Color.FromArgb(119, 147, 60),
 											  Color.White));
