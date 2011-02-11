@@ -58,14 +58,12 @@ namespace WeSay.LexicalModel.Tests
 			return entry;
 		}
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void Get_FieldNull_Throws()
 		{
 			Field fieldToFill = null;
 			WritingSystem lexicalFormWritingSystem = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> sortedResults =
-				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
-			Assert.AreEqual(0, sortedResults.Count);
+			Assert.Throws<ArgumentNullException>(() =>
+				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem));
 		}
 
 		[Test]
@@ -79,13 +77,12 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void Get_WritingSystemNull_Throws()
 		{
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "fr" });
 			WritingSystem lexicalFormWritingSystem = null;
-			ResultSet<LexEntry> sortedResults =
-				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
+			Assert.Throws<ArgumentNullException>(() =>
+				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem));
 		}
 
 		[Test]

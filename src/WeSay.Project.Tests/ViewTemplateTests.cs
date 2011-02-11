@@ -50,11 +50,11 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Index_DoesNotHaveFieldDefinition_Throws()
 		{
 			ViewTemplate viewTemplate = PopulateViewTemplate();
-			Field field = viewTemplate["none"];
+			Field field;
+			Assert.Throws<ArgumentOutOfRangeException>(() => field= viewTemplate["none"]);
 		}
 
 		[Test]
@@ -76,12 +76,11 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void TryGetField_NullKey_Throws()
 		{
 			ViewTemplate viewTemplate = PopulateViewTemplate();
 			Field field;
-			viewTemplate.TryGetField(null, out field);
+			Assert.Throws<ArgumentNullException>(() => viewTemplate.TryGetField(null, out field));
 		}
 
 		private static ViewTemplate PopulateViewTemplate()
@@ -94,17 +93,15 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void SynchronizeInventories_nullMasterTemplate_throws()
 		{
-			ViewTemplate.UpdateUserViewTemplate(null, new ViewTemplate());
+			Assert.Throws<ArgumentNullException>(() => ViewTemplate.UpdateUserViewTemplate(null, new ViewTemplate()));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void SynchronizeInventories_nullUserTemplate_throws()
 		{
-			ViewTemplate.UpdateUserViewTemplate(new ViewTemplate(), null);
+			Assert.Throws<ArgumentNullException>(() => ViewTemplate.UpdateUserViewTemplate(new ViewTemplate(), null));
 		}
 
 		[Test]

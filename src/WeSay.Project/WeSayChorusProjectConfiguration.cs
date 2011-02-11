@@ -16,7 +16,7 @@ namespace WeSay.Project
 			ExcludePatterns.Add("**/Cache");
 			ExcludePatterns.Add("autoFonts.css");
 			ExcludePatterns.Add("autoLayout.css");
-			ExcludePatterns.Add("factoryDicitonary.css");
+			ExcludePatterns.Add("defaultDictionary.css");
 			ExcludePatterns.Add("*.old");
 			ExcludePatterns.Add("*.WeSayUserMemory");
 			ExcludePatterns.Add("*.tmp");
@@ -30,6 +30,7 @@ namespace WeSay.Project
 			IncludePatterns.Add("**.WeSayConfig");
 			IncludePatterns.Add("**.WeSayUserConfig");
 			IncludePatterns.Add("**.xml");
+			IncludePatterns.Add("WritingSystems/*.ldml");
 			IncludePatterns.Add(".hgIgnore");
 
 		}

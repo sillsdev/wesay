@@ -34,6 +34,8 @@
 			this._whereLabel = new System.Windows.Forms.TextBox();
 			this.textBox2 = new System.Windows.Forms.TextBox();
 			this._changeVMessage = new System.Windows.Forms.TextBox();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// btnOK
@@ -52,7 +54,7 @@
 			this.linkLabel1.AutoSize = true;
 			this.linkLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.linkLabel1.LinkColor = System.Drawing.Color.Gray;
-			this.linkLabel1.Location = new System.Drawing.Point(14, 68);
+			this.linkLabel1.Location = new System.Drawing.Point(3, 59);
 			this.linkLabel1.MinimumSize = new System.Drawing.Size(360, 0);
 			this.linkLabel1.Name = "linkLabel1";
 			this.linkLabel1.Size = new System.Drawing.Size(360, 15);
@@ -67,11 +69,11 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._whereLabel.BackColor = System.Drawing.SystemColors.Control;
 			this._whereLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this._whereLabel.Location = new System.Drawing.Point(17, 12);
+			this._whereLabel.Location = new System.Drawing.Point(3, 3);
 			this._whereLabel.Multiline = true;
 			this._whereLabel.Name = "_whereLabel";
 			this._whereLabel.ReadOnly = true;
-			this._whereLabel.Size = new System.Drawing.Size(373, 53);
+			this._whereLabel.Size = new System.Drawing.Size(372, 53);
 			this._whereLabel.TabIndex = 7;
 			this._whereLabel.TabStop = false;
 			this._whereLabel.Text = "Your project has been created here:\r\n{0}";
@@ -82,11 +84,11 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBox2.BackColor = System.Drawing.SystemColors.Control;
 			this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textBox2.Location = new System.Drawing.Point(17, 104);
+			this.textBox2.Location = new System.Drawing.Point(3, 77);
 			this.textBox2.Multiline = true;
 			this.textBox2.Name = "textBox2";
 			this.textBox2.ReadOnly = true;
-			this.textBox2.Size = new System.Drawing.Size(373, 70);
+			this.textBox2.Size = new System.Drawing.Size(372, 70);
 			this.textBox2.TabIndex = 8;
 			this.textBox2.TabStop = false;
 			this.textBox2.Text = "The project is ready to use: just click on \"Open in WeSay\" button in the upper-ri" +
@@ -98,28 +100,44 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._changeVMessage.BackColor = System.Drawing.SystemColors.Control;
 			this._changeVMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this._changeVMessage.Location = new System.Drawing.Point(17, 180);
+			this._changeVMessage.Location = new System.Drawing.Point(3, 153);
 			this._changeVMessage.Multiline = true;
 			this._changeVMessage.Name = "_changeVMessage";
 			this._changeVMessage.ReadOnly = true;
-			this._changeVMessage.Size = new System.Drawing.Size(373, 55);
+			this._changeVMessage.Size = new System.Drawing.Size(372, 55);
 			this._changeVMessage.TabIndex = 9;
 			this._changeVMessage.TabStop = false;
 			this._changeVMessage.Text = "One important adjustment is to edit the \'v\' writing system, changing its ID to ma" +
 				"tch the Ethnologue/ISO 693 code for this language.";
 			//
+			// tableLayoutPanel1
+			//
+			this.tableLayoutPanel1.ColumnCount = 1;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.Controls.Add(this._whereLabel, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this._changeVMessage, 0, 3);
+			this.tableLayoutPanel1.Controls.Add(this.linkLabel1, 0, 1);
+			this.tableLayoutPanel1.Controls.Add(this.textBox2, 0, 2);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 5;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(378, 223);
+			this.tableLayoutPanel1.TabIndex = 10;
+			//
 			// NewProjectInformationDialog
 			//
 			this.AcceptButton = this.btnOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.CancelButton = this.btnOK;
 			this.ClientSize = new System.Drawing.Size(402, 282);
-			this.Controls.Add(this._changeVMessage);
-			this.Controls.Add(this.textBox2);
-			this.Controls.Add(this._whereLabel);
+			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.btnOK);
-			this.Controls.Add(this.linkLabel1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
@@ -127,8 +145,9 @@
 			this.ShowInTaskbar = false;
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.Text = "New Project Information";
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
@@ -139,5 +158,6 @@
 		private System.Windows.Forms.TextBox _whereLabel;
 		private System.Windows.Forms.TextBox textBox2;
 		private System.Windows.Forms.TextBox _changeVMessage;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 	}
 }

@@ -66,15 +66,15 @@ namespace WeSay.LexicalTools.Tests
 			_tempFolder.Delete();
 		}
 
-		[Test, ExpectedException(typeof(ConfigurationException))]
+		[Test]
 		public void NoWritingSystemsEnabledOnField_ThrowsConfigurationException()
 		{
 				_singleSynonymRelationField.WritingSystemIds.Clear();
-				RelationController.CreateWidget(_source,
+				Assert.Throws<ConfigurationException>(() => RelationController.CreateWidget(_source,
 												_singleSynonymRelationType,
 												_singleSynonymRelationField,
 												_lexEntryRepository,
-												delegate { });
+												delegate { }));
 		}
 
 		[Test]

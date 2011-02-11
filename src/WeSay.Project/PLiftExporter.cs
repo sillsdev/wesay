@@ -99,7 +99,7 @@ namespace WeSay.Project
 					Writer.WriteStartElement("field");
 					Writer.WriteAttributeString("type",
 												fieldName == "POS" ? "grammatical-info" : fieldName);
-					Add(labelForms, false);
+					WriteLanguageFormsInWrapper(labelForms, "form", false);
 					Writer.WriteEndElement();
 				}
 			}
@@ -136,7 +136,7 @@ namespace WeSay.Project
 				{
 					var textWritingSystems = _viewTemplate.WritingSystems.GetActualTextWritingSystems();
 					var ids = from ws in textWritingSystems select ws.Id;
-					Add(text.Forms.Where(f=>ids.Contains(f.WritingSystemId) ), true);
+					WriteLanguageFormsInWrapper(text.Forms.Where(f=>ids.Contains(f.WritingSystemId) ), "form", true);
 				}
 
 				Writer.WriteEndElement();
@@ -216,18 +216,25 @@ namespace WeSay.Project
 //            if(!_viewTemplate.WritingSystems.Any(p=>p.Value.IsAudio))
 //                return;
 //
-			var paths = GetAudioForms(entry.LexicalForm, _viewTemplate.WritingSystems);
+			IList<Palaso.Text.LanguageForm> paths = GetAudioForms(entry.LexicalForm, _viewTemplate.WritingSystems);
 			if (paths.Count == 0)
 				return;
 			Writer.WriteStartElement("pronunciation");
 
+			Palaso.Linq.Enumerable.ForEach(paths, path =>
+							  {
+								  Writer.WriteStartElement("media");
+								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));
+								  Writer.WriteEndElement();
+							  });
+			/*
 			paths.ForEach(path =>
 							  {
 								  Writer.WriteStartElement("media");
 								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));
 								  Writer.WriteEndElement();
 							  });
-
+*/
 			Writer.WriteEndElement();
 		}
 

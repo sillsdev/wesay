@@ -5,7 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Chorus.UI.Review;
 using Palaso.Code;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using WeSay.App.Properties;
 using WeSay.Project;

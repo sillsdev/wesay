@@ -12,12 +12,8 @@ using System.Xml;
 using System.Xml.XPath;
 using Autofac;
 using Autofac.Builder;
-using Autofac.Registrars.Delegate;
 using Chorus;
-using Chorus.UI.Notes;
 using Chorus.UI.Notes.Bar;
-using Chorus.UI.Notes.Browser;
-using Chorus.UI.Review;
 using Chorus.Utilities;
 using LiftIO;
 using LiftIO.Validation;
@@ -28,9 +24,7 @@ using Palaso.IO;
 #if MONO
 using Palaso.Linq;
 #endif
-using Palaso.Lift;
 using Palaso.Lift.Options;
-using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using Palaso.UiBindings;
@@ -39,7 +33,8 @@ using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
-using WeSay.Project.ConfigMigration;
+using WeSay.Project.ConfigMigration.UserConfig;
+using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
 
@@ -59,8 +54,8 @@ namespace WeSay.Project
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
 
-		public const int CurrentWeSayConfigFileVersion = 7; // This variable must be updated with every new vrsion of the WeSayConfig file
-		public const int CurrentWeSayUserSpecificConfigFileVersion = 1; // This variable must be updated with every new vrsion of the WeSayUserConfig file
+		public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
+		public const int CurrentWeSayUserSpecificConfigFileVersion = 2; // This variable must be updated with every new vrsion of the WeSayUserConfig file
 
 		public event EventHandler EditorsSaveNow;
 
@@ -102,7 +97,7 @@ namespace WeSay.Project
 		/// <summary>
 		/// See comment on BasilProject.InitializeForTests()
 		/// </summary>
-		public new static void InitializeForTests()
+		public new static WeSayWordsProject InitializeForTests()
 		{
 			WeSayWordsProject project = new WeSayWordsProject();
 
@@ -112,7 +107,7 @@ namespace WeSay.Project
 			}
 			catch (Exception) {}
 
-			Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
+			DirectoryInfo projectDirectory = Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
 			Utilities.CreateEmptyLiftFile(PathToPretendLiftFile, "InitializeForTests()", true);
 
 			//setup writing systems
@@ -125,11 +120,16 @@ namespace WeSay.Project
 			{
 				File.Delete(PathToPretendWritingSystemPrefs);
 			}
-			wsc.Write(XmlWriter.Create(PathToPretendWritingSystemPrefs, CanonicalXmlSettings.CreateXmlWriterSettings()));
+		   string pathToLdmlWsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
+			if (Directory.Exists(pathToLdmlWsFolder))
+			{
+				Directory.Delete(pathToLdmlWsFolder, true);
+			}
+			wsc.Write(pathToLdmlWsFolder);
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
-
+			return project;
 		}
 
 		public static string PathToPretendLiftFile
@@ -270,7 +270,7 @@ namespace WeSay.Project
 				{
 					LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 				}
-				catch (LiftFormatException e)
+				catch (LiftFormatException)
 				{
 					return false;//it's already been reported, not a crash, but we can't go on
 				}
@@ -339,6 +339,7 @@ namespace WeSay.Project
 //                }
 				CheckIfConfigFileVersionIsTooNew(configDoc);
 				var m = new ConfigurationMigrator();
+				Console.WriteLine("{0}",PathToConfigFile);
 				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
@@ -347,6 +348,9 @@ namespace WeSay.Project
 
 			//review: is this the right place for this?
 			PopulateDIContainer();
+
+			var userConfigMigrator = new WeSayUserConfigMigrator(PathToUserSpecificConfigFile);
+			userConfigMigrator.MigrateIfNeeded();
 
 			LoadUserConfig();
 			InitStringCatalog();
@@ -419,12 +423,8 @@ namespace WeSay.Project
 				  }
 				  catch (LiftFormatException error)
 				  {
-					  Palaso.Reporting.ErrorReport.NotifyUserOfProblem(error.Message);
-					  throw error;
-				  }
-				  catch(Exception error)
-				  {
-					   throw error;
+					  ErrorReport.NotifyUserOfProblem(error.Message);
+					  throw;
 				  }
 			  });
 
@@ -839,15 +839,12 @@ namespace WeSay.Project
 		{
 
 			Directory.CreateDirectory(projectDirectoryPath);
-			string pathToWritingSystemPrefs = GetPathToWritingSystemPrefs(projectDirectoryPath);
-			File.Copy(GetPathToWritingSystemPrefs(ApplicationCommonDirectory), pathToWritingSystemPrefs);
-
-
+			CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(projectDirectoryPath);
 			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath, projectName);
 			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
 
 			//hack
-			StickDefaultViewTemplateInNewConfigFile(pathToWritingSystemPrefs, pathToConfigFile);
+			StickDefaultViewTemplateInNewConfigFile(projectDirectoryPath, pathToConfigFile);
 
 			var m = new ConfigurationMigrator();
 			m.MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile), pathToConfigFile);
@@ -866,10 +863,10 @@ namespace WeSay.Project
 		/// </summary>
 		/// <param name="pathToWritingSystemPrefs"></param>
 		/// <param name="pathToConfigFile"></param>
-		private static void StickDefaultViewTemplateInNewConfigFile(string pathToWritingSystemPrefs, string pathToConfigFile)
+		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile)
 		{
 			var writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Load(pathToWritingSystemPrefs);
+			writingSystemCollection.Load(GetPathToLdmlWritingSystemsFolder(projectPath));
 
 			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
 			var builder = new StringBuilder();
@@ -925,38 +922,10 @@ namespace WeSay.Project
 		public override void Dispose()
 		{
 			base.Dispose();
-			if (LiftIsLocked)
-			{
-				ReleaseLockOnLift();
-			}
 			if(_container !=null)
 			{
 				_container.Dispose();//this will dispose of objects in the container (at least those with the normal "lifetype" setting)
 			}
-		}
-
-		/// <remark>
-		/// The protection provided by this simple opproach is obviously limitted;
-		/// it will keep the lift file safe normally... but could lead to non-data-loosing crashes
-		/// if some automated process was sitting out there, just waiting to open as soon as we realease
-		/// </summary>
-		private void ReleaseLockOnLift()
-		{
-			//Debug.Assert(_liftFileStreamForLocking != null);
-			//_liftFileStreamForLocking.Close();
-			//_liftFileStreamForLocking.Dispose();
-			//_liftFileStreamForLocking = null;
-		}
-
-		public bool LiftIsLocked
-		{
-			get { return false; }
-		}
-
-		private void LockLift()
-		{
-			//Debug.Assert(_liftFileStreamForLocking == null);
-			//_liftFileStreamForLocking = File.OpenRead(PathToLiftFile);
 		}
 
 		public override string Name
@@ -1473,7 +1442,6 @@ namespace WeSay.Project
 								  string.Format("type=\"{0}\"", field.FieldName));
 					 }
 				 });
-			return true;
 		}
 
 		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)

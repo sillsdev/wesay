@@ -290,7 +290,8 @@ namespace WeSay.LexicalTools
 				//that ws isn't actually part of our configuration, so can't get a special font for it
 			}
 			string rtf = @"\f" + GetFontNumber(writingSystem);
-			rtf += @"\fs" + (sizeBoost + writingSystem.Font.SizeInPoints) * 2 + " ";
+			int fontSize = Convert.ToInt16((sizeBoost + writingSystem.Font.SizeInPoints)*2);
+			rtf += @"\fs" + fontSize + " ";
 			return rtf;
 		}
 

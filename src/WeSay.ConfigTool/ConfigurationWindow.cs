@@ -341,8 +341,18 @@ namespace WeSay.ConfigTool
 			{
 				projectName = Project.Name;
 			}
-			Text = projectName + " - WeSay Configuration Tool";
-			_versionToolStripLabel.Text = ErrorReport.UserFriendlyVersionString;
+			Text = String.Format(
+				"{0} {1}: {2}",
+				"WeSay Configuration Tool",
+				BasilProject.VersionString,
+				projectName
+			);
+
+			_versionToolStripLabel.Text = String.Format(
+				"{0} {1}",
+				"WeSay Configuration Tool",
+				BasilProject.VersionString
+			);
 		}
 
 		private void InstallWelcomePage()

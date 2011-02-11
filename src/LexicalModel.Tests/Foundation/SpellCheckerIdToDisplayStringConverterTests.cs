@@ -1,8 +1,7 @@
 using System;
 using System.Globalization;
 using NUnit.Framework;
-using Palaso.I8N;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.i18n;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation
@@ -36,17 +35,15 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
 		public void ConvertTo_ConvertingToAnythingButString_Throws()
 		{
-			_spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", typeof (bool));
+			Assert.Throws<NotSupportedException>(() => _spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", typeof (bool)));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConvertTo_ConvertingToNull_Throws()
 		{
-			_spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", null);
+			Assert.Throws<ArgumentNullException>(() =>_spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", null));
 		}
 
 		[Test]

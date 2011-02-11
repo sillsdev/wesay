@@ -5,7 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Reporting;

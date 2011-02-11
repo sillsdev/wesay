@@ -59,26 +59,23 @@ namespace WeSay.UI.Tests
 
 #if (DEBUG)
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_RowLessThan0_throws()
 		{
-			_control.MoveInsertionPoint(-1);
+			Assert.Throws<ArgumentOutOfRangeException>(() => _control.MoveInsertionPoint(-1));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_NoRows_throws()
 		{
-			_control.MoveInsertionPoint(0);
+			Assert.Throws<ArgumentOutOfRangeException>(() => _control.MoveInsertionPoint(0));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_PastLastRow_throws()
 		{
 			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
 			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
-			_control.MoveInsertionPoint(2);
+			Assert.Throws<ArgumentOutOfRangeException>(() => _control.MoveInsertionPoint(2));
 		}
 #endif
 

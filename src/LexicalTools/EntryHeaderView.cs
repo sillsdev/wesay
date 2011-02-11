@@ -16,6 +16,7 @@ namespace WeSay.LexicalTools
 
 		private NotesBarView _notesBar;
 		private LexEntry _currentRecord=null;
+		private string _rtfFormattedTextOfEntry;
 
 		/// <summary>
 		/// designer only
@@ -40,9 +41,14 @@ namespace WeSay.LexicalTools
 			_notesBar.TabStop = false;
 			//_notesBar.Visible = false;//wait until we have a record to show
 			_notesBar.Height = kNotesBarHeight;
+#if MONO
+			//do nothing. We don't want people to make notes because it causes mono to crash
+#else
 			this.Controls.Add(_notesBar);
 			Controls.SetChildIndex(_notesBar, 0);
+#endif
 			_notesBar.SizeChanged += new EventHandler(_notesBar_SizeChanged);
+			_notesBar.AutoScaleMode = AutoScaleMode.None;
 			DoLayout();
 		}
 
@@ -74,9 +80,10 @@ namespace WeSay.LexicalTools
 			}
 			else
 			{
-				_entryPreview.Rtf = RtfRenderer.ToRtf(record,
+				_rtfFormattedTextOfEntry = RtfRenderer.ToRtf(record,
 													  currentItemInFocus,
 													  lexEntryRepository);
+				_entryPreview.Rtf = _rtfFormattedTextOfEntry;
 			}
 
 			if (record != _currentRecord)
@@ -120,6 +127,11 @@ namespace WeSay.LexicalTools
 			int height = Height - _notesBar.Height;
 			_entryPreview.Visible = (height > 20);
 			_entryPreview.Height = height;
+		}
+
+		private void OnEntryView_FontChanged(object sender, EventArgs e)
+		{
+			_entryPreview.Rtf = _rtfFormattedTextOfEntry;
 		}
 	}
 }

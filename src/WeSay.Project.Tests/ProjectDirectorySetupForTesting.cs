@@ -49,9 +49,24 @@ namespace WeSay.Project.Tests
 			get { return Path.Combine(_experimentDir, "test.wesayConfig"); }
 		}
 
-		public string PathToWritingSystemFile
+		public string PathToUserConfigFile
 		{
-			get { return Path.Combine(_experimentDir, "WritingSystemPrefs.xml"); }
+			get
+			{
+				var files = Directory.GetFiles(PathToDirectory, "*.WeSayUserConfig");
+				if (files.Length > 1)
+				{
+					throw new IndexOutOfRangeException(String.Format(
+						"Too many WeSayUserConfig files ({0}) in test folder.",
+						files.Length
+					));
+				}
+				if (files.Length == 1)
+				{
+					return files[0];
+				}
+				return Path.Combine(PathToDirectory, Environment.UserName + ".WeSayUserConfig");
+			}
 		}
 
 		public string PathToFactoryDefaultsPartsOfSpeech

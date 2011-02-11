@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Palaso.IO;
+using Palaso.Reporting;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddPictures;
@@ -12,7 +10,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class AddPicturesTasksAbnormalSetupTests
 	{
-		[Test, ExpectedException(typeof(Palaso.Reporting.ConfigurationException))]
+		[Test]
 		public void Activate_IndexNotFound_GivesUserMessage()
 		{
 				using (var repoFile = new TempLiftFile(""))
@@ -23,7 +21,7 @@ namespace WeSay.LexicalTools.Tests
 						var task = new AddPicturesTask(config, repo,
 							new TaskMemoryRepository(),
 							new FileLocator(new string[0])  );
-						task.Activate();
+						Assert.Throws<ConfigurationException>(() => task.Activate());
 					}
 				}
 		}

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Palaso.I8N;
+using Palaso.i18n;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
@@ -52,7 +52,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			get {
 				return
-					"This task allow and advanced user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay."; }
+					"This task allows an advanced user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay."; }
 		}
 
 		public string RemainingCountText

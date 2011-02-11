@@ -35,19 +35,19 @@ namespace Addin.Backup.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ApplicationException))]
 		public void ThrowIfCannotCreateDestination()
 		{
+
+			Assert.Throws<ApplicationException>(() =>
 			BackupMaker.BackupToExternal(BasilProject.GetPretendProjectDirectory(),
 										 "Q:\\" + Path.GetRandomFileName(),
-										 _filesToBackup);
+										 _filesToBackup));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ApplicationException))]
 		public void ThrowIfSourceDoesntExist()
 		{
-			BackupMaker.BackupToExternal(Path.GetRandomFileName(), _destinationZip, _filesToBackup);
+			Assert.Throws<ApplicationException>(() => BackupMaker.BackupToExternal(Path.GetRandomFileName(), _destinationZip, _filesToBackup));
 		}
 
 		[Test]
@@ -115,12 +115,11 @@ namespace Addin.Backup.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ZipException))]
 		public void BackupToExternal_FileToBackUpIsLocked_Throws()
 		{
 			using (var folderForBackup = new TemporaryFolder("Backup Test"))
 			{
-				string backUpFileName = Path.Combine(folderForBackup.FolderPath, "Backup Test.zip");
+				string backUpFileName = Path.Combine(folderForBackup.Path, "Backup Test.zip");
 
 				//Create and lock a lift file
 				var fileToBackUp = new TempLiftFile("TempLiftFile.lift", folderForBackup, "", "0.13");
@@ -130,8 +129,11 @@ namespace Addin.Backup.Tests
 					fileToBackUp.Path, FileMode.Open, FileAccess.Read, FileShare.None
 				);
 
-				BackupMaker.BackupToExternal(Path.GetDirectoryName(fileToBackUp.Path), backUpFileName,
-											 new string[] {fileToBackUp.Path});
+				Assert.Throws<ZipException>(
+					() => BackupMaker.BackupToExternal(
+						Path.GetDirectoryName(fileToBackUp.Path), backUpFileName, new[] {fileToBackUp.Path}
+					)
+				);
 			}
 		}
 

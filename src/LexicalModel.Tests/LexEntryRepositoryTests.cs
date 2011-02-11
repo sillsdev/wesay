@@ -26,7 +26,7 @@ namespace WeSay.LexicalModel.Tests
 			string filePath = _temporaryFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(filePath);
 			_headwordWritingSystem = new WritingSystem();
-			_headwordWritingSystem.Id = "primary";
+			_headwordWritingSystem.ISO = "primary";
 		}
 
 		[TearDown]
@@ -75,10 +75,9 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetAllEntriesSortedByHeadword_Null_Throws()
 		{
-			_lexEntryRepository.GetAllEntriesSortedByHeadword(null);
+			Assert.Throws<ArgumentNullException>(() => _lexEntryRepository.GetAllEntriesSortedByHeadword(null));
 		}
 
 		[Test]
@@ -137,10 +136,9 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetAllEntriesSortedByLexicalFormOrAlternative_Null_Throws()
 		{
-			_lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(null);
+			Assert.Throws<ArgumentNullException>(() => _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(null));
 		}
 
 		[Test]
@@ -204,10 +202,9 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetAllEntriesSortedByDefinition_Null_Throws()
 		{
-			_lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(null);
+			Assert.Throws<ArgumentNullException>(() => _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(null));
 		}
 
 		[Test]
@@ -795,15 +792,14 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithSimilarLexicalForm_WritingSystemNull_Throws()
 		{
 			WritingSystem ws = null;
-			ResultSet<LexEntry> matches =
+			Assert.Throws<ArgumentNullException>(() =>
 					 _lexEntryRepository.GetEntriesWithSimilarLexicalForm("",
 																		  ws,
 																		  ApproximateMatcherOptions.
-																				  IncludePrefixedForms);
+																				  IncludePrefixedForms));
 		}
 
 		[Test]
@@ -917,11 +913,11 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithMatchingLexicalForm_WritingSystemNull_Throws()
 		{
 			WritingSystem lexicalFormWritingSystem = null;
-			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("de Word1", lexicalFormWritingSystem);
+			Assert.Throws<ArgumentNullException>(() =>
+				_lexEntryRepository.GetEntriesWithMatchingLexicalForm("de Word1", lexicalFormWritingSystem));
 		}
 
 		[Test]
@@ -962,10 +958,9 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void GetLexEntryWithMatchingGuid_GuidIsEmpty_Throws()
 		{
-			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingGuid(Guid.Empty);
+			Assert.Throws<ArgumentOutOfRangeException>(() => _lexEntryRepository.GetLexEntryWithMatchingGuid(Guid.Empty));
 		}
 
 		[Test]
@@ -986,7 +981,6 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ApplicationException))]
 		public void GetLexEntryWithMatchingGuid_MultipleGuidMatchesInRepo_Throws()
 		{
 			LexEntry lexEntryWithGuid = _lexEntryRepository.CreateItem();
@@ -994,14 +988,13 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithGuid.Guid = guidToFind;
 			LexEntry lexEntryWithConflictingGuid = _lexEntryRepository.CreateItem();
 			lexEntryWithConflictingGuid.Guid = guidToFind;
-			_lexEntryRepository.GetLexEntryWithMatchingGuid(guidToFind);
+			Assert.Throws<ApplicationException>(() => _lexEntryRepository.GetLexEntryWithMatchingGuid(guidToFind));
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void GetLexEntryWithMatchingId_IdIsEmpty_Throws()
 		{
-			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingId("");
+			Assert.Throws<ArgumentOutOfRangeException>(() => _lexEntryRepository.GetLexEntryWithMatchingId(""));
 		}
 
 		[Test]
@@ -1022,7 +1015,6 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ApplicationException))]
 		public void GetLexEntryWithMatchingId_MultipleIdMatchesInRepo_Throws()
 		{
 			LexEntry lexEntryWithId = _lexEntryRepository.CreateItem();
@@ -1030,27 +1022,25 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithId.Id = idToFind;
 			LexEntry lexEntryWithConflictingId = _lexEntryRepository.CreateItem();
 			lexEntryWithConflictingId.Id = idToFind;
-			_lexEntryRepository.GetLexEntryWithMatchingId(idToFind);
+			Assert.Throws<ApplicationException>(() => _lexEntryRepository.GetLexEntryWithMatchingId(idToFind));
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithMatchingGlossSortedByLexicalForm_WritingSystemNull_Throws()
 		{
 			WritingSystem writingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> list =
+			Assert.Throws<ArgumentNullException>(() =>
 					_lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
-							null, writingSystem);
+							null, writingSystem));
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithMatchingGlossSortedByLexicalForm_LanguageFormNull_Throws()
 		{
 			LanguageForm glossLanguageForm = new LanguageForm("en", "en Gloss", new MultiText());
-			ResultSet<LexEntry> list =
+			Assert.Throws<ArgumentNullException>(() =>
 					_lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
-							glossLanguageForm, null);
+							glossLanguageForm, null));
 		}
 
 		[Test]

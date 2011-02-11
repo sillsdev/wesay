@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Lift;
 using WeSay.LexicalModel;
 using WeSay.Project;

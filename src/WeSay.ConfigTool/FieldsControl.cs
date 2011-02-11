@@ -1,6 +1,6 @@
 using System;
 using System.Windows.Forms;
-using Palaso.I8N;
+using Palaso.i18n;
 using Palaso.Reporting;
 using WeSay.ConfigTool.Properties;
 using WeSay.LexicalModel;
