@@ -119,7 +119,7 @@ namespace Addin.Backup.Tests
 		{
 			using (var folderForBackup = new TemporaryFolder("Backup Test"))
 			{
-				string backUpFileName = Path.Combine(folderForBackup.FolderPath, "Backup Test.zip");
+				string backUpFileName = Path.Combine(folderForBackup.Path, "Backup Test.zip");
 
 				//Create and lock a lift file
 				var fileToBackUp = new TempLiftFile("TempLiftFile.lift", folderForBackup, "", "0.13");
@@ -129,7 +129,11 @@ namespace Addin.Backup.Tests
 					fileToBackUp.Path, FileMode.Open, FileAccess.Read, FileShare.None
 				);
 
-				Assert.Throws<ZipException>(() =>BackupMaker.BackupToExternal(Path.GetDirectoryName(fileToBackUp.Path), backUpFileName, new string[]{fileToBackUp.Path}));
+				Assert.Throws<ZipException>(
+					() => BackupMaker.BackupToExternal(
+						Path.GetDirectoryName(fileToBackUp.Path), backUpFileName, new[] {fileToBackUp.Path}
+					)
+				);
 			}
 		}
 

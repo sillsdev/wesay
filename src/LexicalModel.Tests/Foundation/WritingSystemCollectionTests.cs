@@ -298,9 +298,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			var builder = new StringBuilder();
 			using (var writer = XmlWriter.Create(builder, CanonicalXmlSettings.CreateXmlWriterSettings()))
 			{
-			writer.WriteStartDocument();
-			NetReflector.Write(writer, c);
-			writer.Close();
+				writer.WriteStartDocument();
+				NetReflector.Write(writer, c);
+				writer.Close();
 			}
 
 			return builder.ToString();
@@ -344,10 +344,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void DeserializeCollectionViaLoad()
 		{
-			MakeSampleCollection().Write(_ldmlWsFolder.FolderPath);
+			MakeSampleCollection().Write(_ldmlWsFolder.Path);
 
 			var c = new WritingSystemCollection();
-			c.Load(_ldmlWsFolder.FolderPath);
+			c.Load(_ldmlWsFolder.Path);
 			Assert.IsNotNull(c);
 			Assert.AreEqual(2, c.Values.Count);
 		}
