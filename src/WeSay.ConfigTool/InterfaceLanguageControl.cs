@@ -60,7 +60,7 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private class PoProxy
+		internal class PoProxy
 		{
 			public string LanguageCode { get; protected set; }
 			protected string LanguageName { private get; set; }
@@ -72,7 +72,7 @@ namespace WeSay.ConfigTool
 			public PoProxy(string poFilePath)
 			{
 				LanguageCode = PoFilePathToLanguageCode(poFilePath);
-				LanguageName = LanguageCode;
+				LanguageName = "";
 				try
 				{
 					string contents = File.ReadAllText(poFilePath);
@@ -80,6 +80,19 @@ namespace WeSay.ConfigTool
 					if (m.Success)
 					{
 						LanguageName = m.Groups[1].Value.Trim();
+					}
+					else
+					{
+						m = Regex.Match(contents, @"Language-Team: ([^<]+) <");
+						if (m.Success)
+						{
+							LanguageName = m.Groups[1].Value.Trim();
+						}
+						//else
+						//{
+						//    // fallback, in case we cannot find the language name in the Po file
+						//    LanguageName = LanguageCode;
+						//}
 					}
 				}
 				// ReSharper disable EmptyGeneralCatchClause
