@@ -147,7 +147,6 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Animator.cs" />
 	<Compile Include="AnnotationWidget.cs">
 	</Compile>
 	<Compile Include="audio\AudioPathProvider.cs" />
@@ -211,9 +210,6 @@
 	</Compile>
 	<Compile Include="WeSayListView.Designer.cs">
 	  <DependentUpon>WeSayListView.cs</DependentUpon>
-	</Compile>
-	<Compile Include="MovingLabel.cs">
-	  <SubType>Component</SubType>
 	</Compile>
 	<Compile Include="PictureControl.cs">
 	  <SubType>UserControl</SubType>

@@ -44,8 +44,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 			UpdateStuff();
 
-			_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
-			_movingLabel.Finished += OnAnimator_Finished;
+			_flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
+			_flyingLabel.Finished += OnAnimator_Finished;
 		}
 
 		private void InitializeDisplaySettings()
@@ -57,7 +57,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		{
 			if (_animationIsMovingFromList)
 			{
-				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
+				_vernacularBox.TextBoxes[0].Text = _flyingLabel.Text;
 			}
 			var box = _vernacularBox.TextBoxes[0];
 			box.Focus();
@@ -227,7 +227,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				// _vernacularBox.TextBoxes[0].Text = word;
 
 				_animationIsMovingFromList = true;
-				_movingLabel.Go(word, start, destination);
+				_flyingLabel.Go(word, start, destination);
 			}
 		}
 	}

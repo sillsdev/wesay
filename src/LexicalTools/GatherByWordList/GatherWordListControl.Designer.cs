@@ -1,4 +1,5 @@
 using System;
+using Palaso.UI.WindowsForms.Widgets.Flying;
 using WeSay.UI;
 using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
@@ -43,7 +44,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
-			this._movingLabel = new WeSay.UI.MovingLabel();
+			this._flyingLabel = new FlyingLabel();
 			this._vernacularBox = new WeSay.UI.TextBoxes.MultiTextControl();
 			this._btnPreviousWord = new WeSay.UI.Buttons.PreviousButton();
 			this._btnNextWord = new WeSay.UI.Buttons.NextButton();
@@ -144,13 +145,13 @@ namespace WeSay.LexicalTools.GatherByWordList
 			//
 			// _movingLabel
 			//
-			this._movingLabel.BackColor = System.Drawing.Color.Transparent;
-			this._movingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-			this._movingLabel.Location = new System.Drawing.Point(0, 0);
-			this._movingLabel.Name = "_movingLabel";
-			this._movingLabel.Size = new System.Drawing.Size(100, 23);
-			this._movingLabel.TabIndex = 10;
-			this._movingLabel.Visible = false;
+			this._flyingLabel.BackColor = System.Drawing.Color.Transparent;
+			this._flyingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+			this._flyingLabel.Location = new System.Drawing.Point(0, 0);
+			this._flyingLabel.Name = "_flyingLabel";
+			this._flyingLabel.Size = new System.Drawing.Size(100, 23);
+			this._flyingLabel.TabIndex = 10;
+			this._flyingLabel.Visible = false;
 			//
 			// _vernacularBox
 			//
@@ -248,7 +249,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this.Controls.Add(this._btnNextWord);
 			this.Controls.Add(this._btnAddWord);
 			this.Controls.Add(this._congratulationsControl);
-			this.Controls.Add(this._movingLabel);
+			this.Controls.Add(this._flyingLabel);
 			this.Name = "GatherWordListControl";
 			this.Size = new System.Drawing.Size(511, 429);
 			this.Load += new System.EventHandler(this.GatherWordListControl_Load);
@@ -272,7 +273,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private System.Windows.Forms.Label label5;
 		private MultiTextControl _vernacularBox;
 		private CongratulationsControl _congratulationsControl;
-		private WeSay.UI.MovingLabel _movingLabel;
+		private FlyingLabel _flyingLabel;
 
 
 	}
