@@ -1,9 +1,11 @@
+using System;
 using System.IO;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -147,6 +149,47 @@ namespace WeSay.ConfigTool.Tests
 				AssertThatXmlIn.File(files[0]).HasAtLeastOneMatchForXpath("configuration/uiOptions[language='th']");
 			}
 		}
+
+		[Test]
+		public void PoProxy_LegacyStyleTranslationLinePresent_FindsValidLanguageString()
+		{
+			string contents = @"
+# Spanish translation for wesay
+# An additional comment
+".Replace("'", "\"");
+			using (var tempFile = new TempFile(contents))
+			{
+				var poProxy = new ConfigTool.InterfaceLanguageControl.PoProxy(tempFile.Path);
+				Assert.IsNotEmpty(poProxy.ToString());
+			}
+		}
+
+		[Test]
+		public void PoProxy_TransifexStyleLanguageTeamLinePresent_FindsValidLanguageString()
+		{
+			string contents = @"
+# An additional comment
+'Language-Team: Spanish <es@li.org>\n'
+".Replace("'", "\"");
+			using (var tempFile = new TempFile(contents))
+			{
+				var poProxy = new ConfigTool.InterfaceLanguageControl.PoProxy(tempFile.Path);
+				Assert.AreEqual("Spanish", poProxy.ToString());
+			}
+		}
+
+		[Test]
+		public void PoProxy_PoFilesInCommonFolder_EachPoFileHasLanguageName()
+		{
+			foreach (string file in Directory.GetFiles(BasilProject.ApplicationCommonDirectory, "*.po"))
+			{
+				var poProxy = new ConfigTool.InterfaceLanguageControl.PoProxy(file);
+				Assert.IsNotEmpty(poProxy.ToString(), String.Format("Could not extract language name from po file: {0}", file));
+			}
+
+
+		}
+
 
 		private static object FindDefaultEnglishItem(ComboBox combo)
 		{
