@@ -536,7 +536,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddEntryToRecordList("peixe", "fish", Task.DomainKeys[0]);
 
-			Task.PrepareToMoveWordToEditArea("raposa");
+			Task.PrepareToMoveWordToEditArea("peixe");
 			var meaning = Task.GetMeaningForWordRecentlyMovedToEditArea();
 
 			Assert.AreEqual("fish", meaning["en"]);
@@ -548,7 +548,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddEntryToRecordList("peixe", null, Task.DomainKeys[0]);
 
-			Task.PrepareToMoveWordToEditArea("raposa");
+			Task.PrepareToMoveWordToEditArea("peixe");
 			var meaning = Task.GetMeaningForWordRecentlyMovedToEditArea();
 
 			Assert.IsFalse(meaning.ContainsAlternative("en"));

@@ -553,6 +553,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		public void PrepareToMoveWordToEditArea(string lexicalForm)
 		{
 			VerifyTaskActivated();
+			_savedSenseDuringMoveToEditArea = null;
 
 			if (lexicalForm == null)
 			{
@@ -586,7 +587,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 		private void DisassociateCurrentSemanticDomainFromEntry(RecordToken<LexEntry> recordToken)
 		{
-			_savedSenseDuringMoveToEditArea = null;
+
 
 			// have to iterate through these in reverse order
 			// since they might get modified
