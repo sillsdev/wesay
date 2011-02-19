@@ -163,11 +163,8 @@ namespace WeSay.UI.TextBoxes
 			get { return _inputBoxes; }
 		}
 
-		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public MultiText MultiText
+		public MultiText GetMultiText()
 		{
-			get
-			{
 				//we don't have a binding that would keep an internal multitext up to date.
 				//This seems cleaner and sufficient, at the moment.
 				MultiText mt = new MultiText();
@@ -176,6 +173,18 @@ namespace WeSay.UI.TextBoxes
 					mt.SetAlternative(box.WritingSystem.Id, box.Text);
 				}
 				return mt;
+		}
+
+		/// <summary>
+		/// Copy the forms into the boxes that we already have. Does not change which boxes we have!
+		/// </summary>
+		/// <param name="text"></param>
+		public void SetMultiText(MultiText text)
+		{
+			foreach (IControlThatKnowsWritingSystem box in TextBoxes)
+			{
+				var s =  text.GetExactAlternative(box.WritingSystem.Id);
+				box.Text = s ?? string.Empty;
 			}
 		}
 
@@ -393,7 +402,7 @@ namespace WeSay.UI.TextBoxes
 			set
 			{
 				_writingSystemsForThisField = value;
-				BuildBoxes(MultiText);
+				BuildBoxes(GetMultiText());
 			}
 		}
 
@@ -405,7 +414,7 @@ namespace WeSay.UI.TextBoxes
 				if (_showAnnotationWidget != value)
 				{
 					_showAnnotationWidget = value;
-					BuildBoxes(MultiText);
+					BuildBoxes(GetMultiText());
 				}
 			}
 		}

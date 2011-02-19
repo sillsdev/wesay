@@ -232,23 +232,35 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				}
 
 
-				_presentationModel.DetachFromMatchingEntries(word);
+				_presentationModel.PrepareToMoveWordToEditArea(word);
 
-				_meaningBox.ClearAllText();
 				Point absolutePosition = GetAbsoluteLocationOfControl(_vernacularBox);
 				Point destination = absolutePosition;
 				Point start = _listViewWords.GetItemRectangle(_listViewWords.SelectedIndex).Location;
 				start.Offset(GetAbsoluteLocationOfControl(_listViewWords));
 
 				RefreshCurrentWords();
-				_animationIsMovingFromList = false;
-
+				_animationIsMovingFromList = true;
+				if (_meaningBox.Visible)
+				{
+					_meaningBox.ClearAllText();
+					_meaningBox.SetMultiText(_presentationModel.GetMeaningForWordRecentlyMovedToEditArea());
+				}
 				_movingLabel.Go(word, start, destination);
 
 			}
 			_vernacularBox.FocusOnFirstWsAlternative();
 		}
 
+		private void _animator_Finished(object sender, EventArgs e)
+		{
+			if (_animationIsMovingFromList)
+			{
+				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
+			}
+
+			_listViewWords.ItemToNotDrawYet = null;
+		}
 		private Point GetAbsoluteLocationOfControl(Control controlToLocate)
 		{
 			Control currentcontrolInHierarchy = controlToLocate;
@@ -283,7 +295,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			destination.Offset(GetAbsoluteLocationOfControl(_listViewWords));
 
 			_movingLabel.Text = word;
-			_animationIsMovingFromList = true;
+			_animationIsMovingFromList = false;
 
 			_movingLabel.Go(word, start, destination);
 			_vernacularBox.FocusOnFirstWsAlternative();
@@ -299,15 +311,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			get { return _meaningBox.TextBoxes[0].Text.Trim(); }
 		}
 
-		private void _animator_Finished(object sender, EventArgs e)
-		{
-			if (!_animationIsMovingFromList)
-			{
-				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
-			}
-
-			_listViewWords.ItemToNotDrawYet = null;
-		}
 
 		private void _domainName_DrawItem(object sender, DrawItemEventArgs e)
 		{

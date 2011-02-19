@@ -515,7 +515,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					var entriesMatchingWord = new List<LexEntry>(from RecordToken<LexEntry> x in recordTokens select x.RealObject);
 					foreach (var entry in entriesMatchingWord)
 					{
-						if(HasMatchingGloss(entry, gloss))
+						if(HasMatchingSense(entry, gloss))
 						{
 							modifiedEntries.Add(entry);
 							AddCurrentSemanticDomainToEntry(entry, gloss);
@@ -534,17 +534,23 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					}
 				}
 			}
-
+			_savedSenseDuringMoveToEditArea = null;
 			UpdateCurrentWords();
 			return modifiedEntries;
 		}
 
-		private bool HasMatchingGloss(LexEntry entry, string gloss)
+		/// <summary>
+		/// A sense is "matching" if the gloss is the same, or this is the sense that we decided to edit when
+		/// they clicked on the word in the list. That later part allows us to change the gloss, instead of just
+		/// make a new sense with the new gloss (leading most likely to extra senses where the gloss was just mispelled or something)
+		/// </summary>
+		private bool HasMatchingSense(LexEntry entry, string gloss)
 		{
-			return null != entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id));
+			return (null !=entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id))
+						   ||  entry.Senses.Contains(_savedSenseDuringMoveToEditArea));
 		}
 
-		public void DetachFromMatchingEntries(string lexicalForm)
+		public void PrepareToMoveWordToEditArea(string lexicalForm)
 		{
 			VerifyTaskActivated();
 
@@ -568,8 +574,20 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			UpdateCurrentWords();
 		}
 
+		private LexSense _savedSenseDuringMoveToEditArea;
+
+		//when we pull a word out of the list, we remembered its meaning, so that we can make that available
+		//down in the edit area.
+		public MultiText GetMeaningForWordRecentlyMovedToEditArea()
+		{
+			var text= _savedSenseDuringMoveToEditArea.Definition;
+			return text;
+		}
+
 		private void DisassociateCurrentSemanticDomainFromEntry(RecordToken<LexEntry> recordToken)
 		{
+			_savedSenseDuringMoveToEditArea = null;
+
 			// have to iterate through these in reverse order
 			// since they might get modified
 			LexEntry entry = recordToken.RealObject;
@@ -580,7 +598,11 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 				if (semanticDomains != null)
 				{
-					semanticDomains.Remove(CurrentDomainKey);
+					if (semanticDomains.Contains(CurrentDomainKey))
+					{
+						RememberMeaningOfDissociatedWord(sense);
+						semanticDomains.Remove(CurrentDomainKey);
+					}
 				}
 			}
 			entry.CleanUpAfterEditting();
@@ -594,24 +616,48 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
-		private void AddCurrentSemanticDomainToEntry(LexEntry entry, string gloss)
+		/// <summary>
+		/// we're moving this word to the edit area, so if possible, give us a meaning to use down there.
+		/// </summary>
+		private void RememberMeaningOfDissociatedWord(LexSense sense)
+		{
+			// when it comes to meanings, we can't cope with more than one. So we could conceivably
+			//run this code several times while dissaociating one word (vary rare, but possible).
+			//so then, the user is going to get the last meaning we encounter, not the others, in the
+			//meaning edit box.
+
+			//nb: I made it save the whole sense, as this is cleaner code and conceivalbe could be helpful
+			//in the future
+
+			_savedSenseDuringMoveToEditArea = sense;
+		}
+
+		private void AddCurrentSemanticDomainToEntry(LexEntry entry, string meaning)
 		{
 			LexSense sense = null;
 			//is the gloss empty? THen just ggrab the first sense
-			if (string.IsNullOrEmpty(gloss))
+			if (string.IsNullOrEmpty(meaning))
 			{
 				sense = entry.Senses.FirstOrDefault();
 			}
 			else
 			{
-				//is there a sense with a matching gloss?
-				sense = entry.Senses.FirstOrDefault(
-					s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id));
+				if (entry.Senses.Contains(_savedSenseDuringMoveToEditArea))
+				{
+					sense = _savedSenseDuringMoveToEditArea;
+					sense.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
+				}
+				else
+				{
+					//is there a sense with a matching gloss?
+					sense = entry.Senses.FirstOrDefault(
+						s => s.Definition.ContainsEqualForm(meaning, DefinitionWritingSystem.Id));
+				}
 			}
 			if(sense==null)
 			{
 				sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
-				sense.Definition.SetAlternative(DefinitionWritingSystem.Id, gloss);
+				sense.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
 			}
 			OptionRefCollection semanticDomains =
 				sense.GetOrCreateProperty<OptionRefCollection>(_semanticDomainField.FieldName);
@@ -917,6 +963,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 								out pastEndIndex);
 			return (pastEndIndex == beginIndex);
 		}
+
 
 
 	}
