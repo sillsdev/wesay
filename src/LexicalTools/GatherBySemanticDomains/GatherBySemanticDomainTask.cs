@@ -581,8 +581,11 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		//down in the edit area.
 		public MultiText GetMeaningForWordRecentlyMovedToEditArea()
 		{
-			var text= _savedSenseDuringMoveToEditArea.Definition;
-			return text;
+			if(_savedSenseDuringMoveToEditArea !=null)
+			{
+				return _savedSenseDuringMoveToEditArea.Definition;
+			}
+			return new MultiText();
 		}
 
 		private void DisassociateCurrentSemanticDomainFromEntry(RecordToken<LexEntry> recordToken)
