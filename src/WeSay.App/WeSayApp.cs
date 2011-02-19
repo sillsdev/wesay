@@ -16,7 +16,7 @@ namespace WeSay.App
 {
 	public class WeSayApp
 	{
-		//private static Mutex _oneInstancePerProjectMutex;
+		private static Mutex _oneInstancePerProjectMutex;
 		private WeSayWordsProject _project;
 
 		private readonly CommandLineArguments _commandLineArguments = new CommandLineArguments();
@@ -25,13 +25,19 @@ namespace WeSay.App
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			var app = new WeSayApp(args);
-			app.Run();
+			try
+			{
+				var app = new WeSayApp(args);
+				app.Run();
+			}
+			finally
+			{
+				ReleaseMutexForThisProject();
+			}
 		}
 
 		public WeSayApp(string[] args)
 		{
-			// Palaso.Services.ForClients.IpcSystem.IsWcfAvailable = false;
 			Application.EnableVisualStyles();
 			//leave this at the top:
 			try
@@ -61,51 +67,92 @@ namespace WeSay.App
 			{
 				Application.Exit();
 			}
+
 			if (_commandLineArguments.launchedByUnitTest)
 			{
 				WeSayWordsProject.PreventBackupForTests = true;  //hopefully will help the cross-process dictionary services tests to be more reliable
 			}
 		}
 
-		public bool ServerModeStartRequested
+		private static void ReleaseMutexForThisProject()
 		{
-			get { return _commandLineArguments.startInServerMode; }
+			if (_oneInstancePerProjectMutex != null)
+			{
+				_oneInstancePerProjectMutex.ReleaseMutex();
+			}
+		}
+
+		private static bool GrabTokenForThisProject(string pathToLiftFile)
+		{
+			string mutexId = pathToLiftFile;
+			if (mutexId != null)
+			{
+				bool mutexCreated;
+				mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
+				mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
+				_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexCreated);
+				if (!mutexCreated) // can I acquire?
+				{
+					//    Process[] processes = Process.GetProcessesByName("WeSay.App");
+					//    foreach (Process process in processes)
+					//    {
+
+					//        // we should make window title include the database name.
+					//        if(process.MainWindowTitle == "WeSay: " + project.Name)
+					//        {
+					//            process.WaitForInputIdle(4000); // wait four seconds at most
+					//            //process.MainWindowHandle;
+					//            break;
+					//        }
+					//    }
+					_oneInstancePerProjectMutex = null;
+					ErrorReport.NotifyUserOfProblem("Another copy of WeSay is already open with " + pathToLiftFile + ". If you cannot find that WeSay, restart your computer.");
+					return false;
+				}
+			}
+			return true;
 		}
 
 		public void Run()
 		{
-			DisplaySettings.Default.SkinName = Settings.Default.SkinName;
-			using (_project = InitializeProject(_commandLineArguments.liftPath))
-			{
-				if (_project == null)
+				DisplaySettings.Default.SkinName = Settings.Default.SkinName;
+
+				using (_project = InitializeProject(_commandLineArguments.liftPath))
 				{
-					return;
+					if (_project == null)
+					{
+						return;
+					}
+
+
+					if (!GrabTokenForThisProject(_project.PathToLiftFile))
+					{
+						return;
+					}
+
+					LexEntryRepository repository;
+					try
+					{
+						repository = GetLexEntryRepository();
+					}
+					catch (LiftFormatException)
+					{
+						return; //couldn't load, and we've already told the user
+					}
+					WireUpChorusEvents();
+					StartUserInterface();
+
+					//do a last backup before exiting
+					Logger.WriteEvent("App Exiting Normally.");
 				}
+				_project.BackupNow();
 
+				Logger.ShutDown();
+				Settings.Default.Save();
 
-				LexEntryRepository repository;
-				try
-				{
-					repository = GetLexEntryRepository();
-				}
-				catch (LiftFormatException)
-				{
-					return; //couldn't load, and we've already told the user
-				}
-				WireUpChorusEvents();
-				StartUserInterface();
-
-				//do a last backup before exiting
-				Logger.WriteEvent("App Exiting Normally.");
-			}
-			_project.BackupNow();
-
-
-			Logger.ShutDown();
-			Settings.Default.Save();
 		}
 
-			   private void StartUserInterface()
+	   private void StartUserInterface()
 	   {
 		   try
 		   {

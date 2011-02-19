@@ -154,7 +154,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				return;
 			}
-			_task.WordCollected(_vernacularBox.MultiText);
+			_task.WordCollected(_vernacularBox.GetMultiText());
 
 			//_listViewOfWordsMatchingCurrentItem.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";
