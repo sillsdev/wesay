@@ -20,10 +20,10 @@ namespace WeSay.UI
 		public WeSayListView()
 		{
 			InitializeComponent();
-			AdjustColumnWidth();
-			SimulateListBox = true;
 			_itemsCache = new Dictionary<int, ListViewItem>();
 			_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+			SimulateListBox = true;
+			AdjustColumnWidth();
 		}
 
 		[DefaultValue(false)]
@@ -477,13 +477,14 @@ namespace WeSay.UI
 
 		protected override void OnResize(EventArgs e)
 		{
-			AdjustColumnWidth();
 			base.OnResize(e);
+			AdjustColumnWidth();
 		}
 
 		private void AdjustColumnWidth()
 		{
 			int newWidth = ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
+			newWidth = Math.Max(newWidth, 300);
 			SuspendLayout();
 			if (Columns.Count > 0)
 			{
@@ -565,6 +566,8 @@ namespace WeSay.UI
 				EnsureVisible(SelectedIndex);
 				_ensureVisibleCalledBeforeWindowHandleCreated = false;
 			}
+			SimulateListBox = true;
+			AdjustColumnWidth();
 		}
 
 		public object SelectedItem
