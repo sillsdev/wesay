@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Code;
 using Palaso.i18n;
-using Palaso.Code;
 using Palaso.Reporting;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -201,9 +200,9 @@ namespace WeSay.ConfigTool
 			{
 				var ws = sender as WritingSystem;
 				var args = e as PropertyValueChangedEventArgs;
-				if (args != null && IdComponentChanged(args.ChangedItem.PropertyDescriptor.Name))
+				if (args != null)
 				{
-					string oldId = ConstructOldId(ws, args);
+					string oldId = args.OldValue.ToString();
 					Console.WriteLine("WritingSystemSetup.OnWritingSystemIdChanged changing to {0}", ws.Id);
 					if (!WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId))
 					{
@@ -225,47 +224,6 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private bool IdComponentChanged(string propertyName)
-		{
-			return propertyName == "ISO" || propertyName == "Region" || propertyName == "Variant" || propertyName == "Script";
-		}
-
-		private string ConstructOldId(WritingSystem ws, PropertyValueChangedEventArgs args)
-		{
-			string oldId = "";
-			string oldPropertyValue = args.OldValue.ToString();
-			switch (args.ChangedItem.PropertyDescriptor.Name)
-			{
-				case "ISO":
-					oldId = oldPropertyValue + AppendOrNot(ws.Script) + AppendOrNot(ws.Region) + AppendOrNot(ws.Variant);
-					break;
-				case "Script":
-					oldId = ws.ISO + AppendOrNot(oldPropertyValue) + AppendOrNot(ws.Region) + AppendOrNot(ws.Variant);
-					break;
-				case "Region":
-					oldId = ws.ISO + AppendOrNot(ws.Script) + AppendOrNot(oldPropertyValue) + AppendOrNot(ws.Variant);
-					break;
-				case "Variant":
-					oldId = ws.ISO + AppendOrNot(ws.Script) + AppendOrNot(ws.Region) + AppendOrNot(oldPropertyValue);
-					break;
-			}
-			return oldId;
-		}
-
-		string AppendOrNot(string idComponent)
-		{
-			string stringToAppend = "";
-			if(!String.IsNullOrEmpty(idComponent))
-			{
-				stringToAppend = '-' + idComponent;
-			}
-			return stringToAppend;
-		}
-
-		private void OnIsAudioChanged(object sender, EventArgs e)
-		{
-			UpdateSelection();
-		}
 	}
 
 	/// <summary>
