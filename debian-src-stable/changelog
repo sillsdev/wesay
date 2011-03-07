@@ -1,6 +1,0 @@
-wesay-stable (0.6-1sil1) hardy; urgency=low
-
-  * Updated to upstream wesay stable 0.6.
-  * Status is still experimental in Linux / Ubuntu (but getting better all the time).
-
- -- Cambell Prince <cambell_prince@sil.org>  Fri, 28 Nov 2008 10:57:47 +0700
