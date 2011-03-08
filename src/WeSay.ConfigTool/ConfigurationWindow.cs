@@ -80,6 +80,7 @@ namespace WeSay.ConfigTool
 
 		private void OnChooseProject(object sender, EventArgs e)
 		{
+			SaveAndDisposeProject();
 			OpenFileDialog dlg = new OpenFileDialog();
 			dlg.Title = "Open WeSay Project...";
 			dlg.DefaultExt = ".WeSayConfig";
@@ -394,21 +395,25 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void AdminWindow_FormClosed(object sender, FormClosedEventArgs e)
+		private void OnFormClosed(object sender, FormClosedEventArgs e)
 		{
 			if (_projectSettingsControl != null)
 			{
 				_projectSettingsControl.Dispose();
 			}
 			Logger.WriteEvent("App Exiting Normally.");
-
-		   if (_project != null)
+			if (Project != null)
 			{
 				_project.Dispose();
 			}
 		}
 
-		private void AdminWindow_FormClosing(object sender, FormClosingEventArgs e)
+		private void OnFormClosing(object sender, FormClosingEventArgs e)
+		{
+			SaveAndDisposeProject();
+		}
+
+		private void SaveAndDisposeProject()
 		{
 			try
 			{
@@ -417,12 +422,17 @@ namespace WeSay.ConfigTool
 					Project.Save();
 				}
 				Settings.Default.Save();
+				if (Project != null)
+				{
+					_project.Dispose();
+				}
 			}
 			catch (Exception error)
 			{
 				//would make it impossible to quit. e.Cancel = true;
 				ErrorReport.NotifyUserOfProblem(error.Message);
 			}
+			Project = null;
 		}
 
 		private void OnOpenThisProjectInWeSay(object sender, EventArgs e)
