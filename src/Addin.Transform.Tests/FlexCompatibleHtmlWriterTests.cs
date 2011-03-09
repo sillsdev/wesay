@@ -14,9 +14,6 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.Project.Tests;
 using Palaso.Lift; // review: really?
-#if MONO
-using Palaso.Linq;
-#endif
 
 namespace Addin.Transform.Tests
 {
@@ -174,7 +171,7 @@ namespace Addin.Transform.Tests
             _entry.Senses.Add(sense);
             sense.Definition.SetAlternative("en", "fruit");
             sense.Definition.SetAlternative("fr", "pomme");
-            sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech).Key = "noun";
+			sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech).Key = "Noun";
         }
 
         [Test]
