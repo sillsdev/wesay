@@ -175,9 +175,7 @@
   <ItemGroup>
 	<Compile Include="BasilProjectTests.cs" />
 	<Compile Include="ChorusBackupMakerTests.cs" />
-	<Compile Include="ConfigFileTests.cs" />
 	<Compile Include="ConfigMigration\WeSayUserConfigMigrationTests.cs" />
-	<Compile Include="ConfigMigration\WritingSystemPrefsToLdmlMigratorTests.cs" />
 	<Compile Include="LiftUpdateTests.cs" />
 	<Compile Include="ConfigMigration\WeSayConfigMigrationTests.cs" />
 	<Compile Include="PLiftExporterTests.cs" />

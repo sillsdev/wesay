@@ -21,9 +21,6 @@ using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Lift;
 using Palaso.DictionaryServices.Model;
 using Palaso.IO;
-#if MONO
-using Palaso.Linq;
-#endif
 using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;

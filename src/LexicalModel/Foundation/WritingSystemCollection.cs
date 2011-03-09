@@ -52,25 +52,6 @@ namespace WeSay.LexicalModel.Foundation
 						this.Add(pair.Key, pair.Value);
 					}
 				}
-
-				//This is necassary to set the Rfc5646TagOnLoad property in the writing systems which helps us rename writing systems in config and lift files
-				XmlDocument wsCollectionFile= new XmlDocument();
-				wsCollectionFile.Load(PathToWritingSystemPrefsFile);
-				XmlNodeList writingSystemNodes = wsCollectionFile.SelectNodes("//WritingSystem");
-				foreach (XmlNode writingSystemNode in writingSystemNodes)
-				{
-					XmlNode idNode = writingSystemNode.SelectSingleNode("Id");
-					XmlNode isAudioNode = writingSystemNode.SelectSingleNode("IsAudio");
-					RFC5646Tag oldRFCTag = new RFC5646Tag(idNode.InnerText, String.Empty, String.Empty, String.Empty);
-					WritingSystem ws = new WritingSystem();
-					ws.Rfc5646Tag = oldRFCTag;
-					if (isAudioNode != null)
-					{
-						ws.IsAudio = Convert.ToBoolean(isAudioNode.InnerText);
-					}
-					RFC5646Tag newTag = ws.Rfc5646Tag;
-					wesayWsFileCollection[newTag.CompleteTag].Rfc5646TagOnLoad = oldRFCTag;
-				}
 			}
 
 		}
