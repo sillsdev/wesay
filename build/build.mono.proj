@@ -146,7 +146,7 @@
 		<ExecutableFiles Include="$(OutputDir)/*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*.mdb" />
 		<CommonFiles Include="$(RootDir)/common/**/*" />
 		<TemplateFiles Include="$(RootDir)/templates/**/*" />
-		<IconFiles Include="$(RootDir)/src/Installer_Linux/icons/**" />
+		<IconFiles Include="$(RootDir)/src/Installer_Linux/icons/**/*" />
 		<MenuFiles Include="$(RootDir)/src/Installer_Linux/*.desktop" />
 		<WrapperFiles Include="$(RootDir)/build/mono/*" />
 	</ItemGroup>
@@ -162,16 +162,16 @@
 			SourceFiles="@(ExecutableFiles)"
 		/>
 		<Copy
-			DestinationFolder="$(InstallApp)/common"
 			SourceFiles="@(CommonFiles)"
+			DestinationFiles="@(CommonFiles->'$(InstallApp)/common/%(RecursiveDir)%(Filename)%(Extension)')"
 		/>
 		<Copy
-			DestinationFolder="$(InstallApp)/templates"
 			SourceFiles="@(TemplateFiles)"
+			DestinationFiles="@(TemplateFiles->'$(InstallApp)/templates/%(RecursiveDir)%(Filename)%(Extension)')"
 		/>
 		<Copy
-			DestinationFolder="$(InstallIcon)"
 			SourceFiles="@(IconFiles)"
+			DestinationFiles="@(IconFiles->'$(InstallIcon)/%(RecursiveDir)%(Filename)%(Extension)')"
 		/>
 		<Copy
 			DestinationFolder="$(InstallMenu)"
