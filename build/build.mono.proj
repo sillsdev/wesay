@@ -74,13 +74,13 @@
 		<Source Include="$(RootDir)/src/**/*" Exclude="$(RootDir)/src/**/obj/**/*;$(RootDir)/src/**/bin/**/*" />
 		<Source Include="$(RootDir)/lib/DebugMono/**" />
 		<Source Include="$(RootDir)/lib/ReleaseMono/**" />
-		<Source Include="$(RootDir)/lib/common/**" />
+		<Source Include="$(RootDir)/lib/common/**/*" />
 		<Source Include="$(RootDir)/artwork/**" />
 		<Source Include="$(RootDir)/build/*.proj" />
 		<Source Include="$(RootDir)/build/mono/*" />
-		<Source Include="$(RootDir)/common/**" />
-		<Source Include="$(RootDir)/SampleProjects/**" />
-		<Source Include="$(RootDir)/templates/**" />
+		<Source Include="$(RootDir)/common/**/*" />
+		<Source Include="$(RootDir)/SampleProjects/**/*" Exclude="$(RootDir)/SampleProjects/PRETEND/**/*" />
+		<Source Include="$(RootDir)/templates/**/*" />
 	</ItemGroup>
 	<Target Name="SourcePackage" DependsOnTargets="PackageClean;SetAssemblyVersion">
 		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)_$(Version).tar.gz">
@@ -127,8 +127,16 @@
 	<Target Name="Upload" DependsOnTargets="Installer">
 		<Message Text="Starting dput -- lucid i386" />
 		<Exec
-			Command='dput LINGNET /home/bob/pbuilder/results/lucid/$(ApplicationNameLC)_$(Version)*.changes'
-			WorkingDirectory="$(InstallerBaseDir)"
+			Command='dput PALASO-lucid /home/bob/pbuilder/results/lucid/$(ApplicationNameLC)_$(Version)*.changes'
+			WorkingDirectory="$(RootDir)"
+		/>
+	</Target>
+
+	<Target Name="UploadLingnet" DependsOnTargets="Installer">
+		<Message Text="Starting dput -- lucid i386" />
+		<Exec
+			Command='dput LINGNET-lucid /home/bob/pbuilder/results/lucid/$(ApplicationNameLC)_$(Version)*.changes'
+			WorkingDirectory="$(RootDir)"
 		/>
 	</Target>
 
