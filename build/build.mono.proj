@@ -144,8 +144,8 @@
 	<!-- The Install Target must be called from an MSBuild task so as to include the output from the previous MSBuild in the ItemGroup below -->
 	<ItemGroup>
 		<ExecutableFiles Include="$(OutputDir)/*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*.mdb" />
-		<CommonFiles Include="$(RootDir)/common/*" />
-		<TemplateFiles Include="$(RootDir)/templates/**" />
+		<CommonFiles Include="$(RootDir)/common/**/*" />
+		<TemplateFiles Include="$(RootDir)/templates/**/*" />
 		<IconFiles Include="$(RootDir)/src/Installer_Linux/icons/**" />
 		<MenuFiles Include="$(RootDir)/src/Installer_Linux/*.desktop" />
 		<WrapperFiles Include="$(RootDir)/build/mono/*" />
