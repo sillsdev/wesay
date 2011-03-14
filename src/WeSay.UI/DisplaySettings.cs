@@ -175,6 +175,17 @@ namespace WeSay.UI
 			CurrentIndicatorColor = BackgroundColor;
 		}
 
+		private static Size MeasureText(IDeviceContext dc, string text, Font font, Size proposedSize, TextFormatFlags textFormatFlags)
+		{
+			Size result = TextRenderer.MeasureText(dc, text, font, proposedSize, textFormatFlags);
+#if MONO
+			// Compensate for low calculation of MeasureText mono 2.6.7
+			result.Width = (result.Width * 11) / 10;
+			result.Height = (result.Height * 11) / 10;
+#endif
+			return result;
+		}
+
 		public static List<Size> GetPossibleTextSizes(IDeviceContext dc,
 													  string text,
 													  Font font,
@@ -183,20 +194,22 @@ namespace WeSay.UI
 			Dictionary<int, int> requiredSizes = new Dictionary<int, int>();
 			int maxWidth;
 			Size sizeNeeded;
-			sizeNeeded = TextRenderer.MeasureText(dc,
-												  text,
-												  font,
-												  new Size(int.MaxValue, int.MaxValue),
-												  textFormatFlags);
+			sizeNeeded = MeasureText(dc,
+				text,
+				font,
+				new Size(int.MaxValue, int.MaxValue),
+				textFormatFlags
+			);
 			maxWidth = sizeNeeded.Width;
 			requiredSizes.Add(sizeNeeded.Height, sizeNeeded.Width);
 			for (int i = 1;i < maxWidth;++i)
 			{
-				sizeNeeded = TextRenderer.MeasureText(dc,
-													  text,
-													  font,
-													  new Size(i, int.MaxValue),
-													  textFormatFlags);
+				sizeNeeded = MeasureText(dc,
+					text,
+					font,
+					new Size(i, int.MaxValue),
+					textFormatFlags
+				);
 				if (!requiredSizes.ContainsKey(sizeNeeded.Height))
 				{
 					requiredSizes.Add(sizeNeeded.Height, sizeNeeded.Width);
