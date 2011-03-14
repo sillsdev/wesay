@@ -23,8 +23,14 @@ namespace WeSay.Project
 		public UiConfigurationOptions()
 		{
 			Language = "en";
+#if MONO
+			// Default font size (in mono 2.6.7) is too large.
+			LabelFontName = "FreeSans";
+			LabelFontSizeInPoints = 9;
+#else
 			LabelFontName = SystemFonts.CaptionFont.FontFamily.Name;
 			LabelFontSizeInPoints = SystemFonts.CaptionFont.SizeInPoints;
+#endif
 		}
 
 		/// <returns>null if not found in the dom</returns>
