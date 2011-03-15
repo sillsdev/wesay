@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -26,7 +26,9 @@
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<OutputType>Library</OutputType>
+	<AssemblyName>LexicalModel.Tests</AssemblyName>
 	<RootNamespace>WeSay.LexicalModel.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 	<PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
@@ -38,8 +40,10 @@
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<OutputType>Library</OutputType>
+	<AssemblyName>LexicalModel.Tests</AssemblyName>
 	<DebugSymbols>true</DebugSymbols>
 	<RootNamespace>WeSay.LexicalModel.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
@@ -50,7 +54,9 @@
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
 	<OutputType>Library</OutputType>
+	<AssemblyName>LexicalModel.Tests</AssemblyName>
 	<RootNamespace>WeSay.LexicalModel.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<Optimize>true</Optimize>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 	<WarningLevel>4</WarningLevel>
@@ -63,8 +69,10 @@
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
 	<OutputType>Library</OutputType>
+	<AssemblyName>LexicalModel.Tests</AssemblyName>
 	<DebugSymbols>true</DebugSymbols>
 	<RootNamespace>WeSay.LexicalModel.Tests</RootNamespace>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -76,8 +84,6 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
-	<Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -88,7 +94,6 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|x86' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -99,7 +104,6 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|x86' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -110,9 +114,44 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\$(Configuration)\LiftIO.dll</HintPath>
+	</Reference>
+	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
+	</Reference>
+	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\common\nunit.framework.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.Tests, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\$(Configuration)\Palaso.Tests.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.TestUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\$(Configuration)\Palaso.TestUtilities.dll</HintPath>
+	</Reference>
+	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
+	</Reference>
 	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
@@ -128,42 +167,6 @@
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
-	<Reference Include="LiftIO, Version=1.1.32.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\%24%28Configuration%29\LiftIO.dll</HintPath>
-	</Reference>
-	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
-	</Reference>
-	<Reference Include="nunit.framework, Version=2.5.5.10112, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\nunit.framework.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.DictionaryServices, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.DictionaryServices.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.Lift.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Tests, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.Tests.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.TestUtilities, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.TestUtilities.dll</HintPath>
-	</Reference>
-	<Reference Include="PalasoUIWindowsForms, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\%24%28Configuration%29\PalasoUIWindowsForms.dll</HintPath>
-	</Reference>
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="ConstructorThrowTests.cs" />
