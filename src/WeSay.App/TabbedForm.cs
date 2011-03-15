@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using Chorus.UI.Review;
@@ -32,6 +33,8 @@ namespace WeSay.App
 			tabControl1.TabPages.Clear();
 			tabControl1.Selected += OnTabSelected;
 
+			tabControl1.FontChanged += OnTabControlFontChanged;
+
 			synchronizationContext = SynchronizationContext.Current;
 			Debug.Assert(synchronizationContext != null);
 
@@ -49,6 +52,13 @@ namespace WeSay.App
 			:this(statusBarController, null)
 		{
 
+		}
+
+		private void OnTabControlFontChanged(object sender, EventArgs e)
+		{
+			var font = tabControl1.Font;
+			int tabHeight = (font.Height * 15) / 10;
+			tabControl1.ItemSize = new Size(0, tabHeight);
 		}
 
 		public StatusStrip StatusStrip
