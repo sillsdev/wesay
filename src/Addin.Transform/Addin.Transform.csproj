@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -133,22 +133,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
 	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
-	</Reference>
-	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
-	</Reference>
 	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
@@ -156,10 +140,6 @@
 	<None Include="..\..\lib\common\Enchant.Net.dll.config">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
-	<Reference Include="Palaso.TestUtilities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.TestUtilities.dll</HintPath>
-	</Reference>
 	<Reference Include="Prince, Version=1.0.2830.36745, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\Prince.dll</HintPath>
@@ -176,6 +156,26 @@
 	<Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\ICSharpCode.SharpZipLib.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.DictionaryServices, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.DictionaryServices.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.Lift, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.Lift.dll</HintPath>
+	</Reference>
+	<Reference Include="PalasoUIWindowsForms, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\PalasoUIWindowsForms.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.TestUtilities, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.TestUtilities.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -318,6 +318,7 @@
   </Target>
   -->
   <PropertyGroup>
-	<PostBuildEvent></PostBuildEvent>
+	<PostBuildEvent>
+	</PostBuildEvent>
   </PropertyGroup>
 </Project>

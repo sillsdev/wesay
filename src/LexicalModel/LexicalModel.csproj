@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -109,44 +109,27 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' ">
-	<None Include="..\..\lib\$(Configuration)\icudt40.dll">
+	<None Include="..\..\lib\%24%28Configuration%29\icudt40.dll">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
-	<None Include="..\..\lib\$(Configuration)\icuin40.dll">
+	<None Include="..\..\lib\%24%28Configuration%29\icuin40.dll">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
-	<None Include="..\..\lib\$(Configuration)\icuuc40.dll">
+	<None Include="..\..\lib\%24%28Configuration%29\icuuc40.dll">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+	<None Include="..\..\lib\%24%28Configuration%29\icu.net.dll.config">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
   </ItemGroup>
   <ItemGroup>
-	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-	  <SpecificVersion>False</SpecificVersion>
-	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\$(Configuration)\Chorus.exe</HintPath>
-	</Reference>
 	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
 	</Reference>
-	<Reference Include="icu.net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\icu.net.dll</HintPath>
-	</Reference>
-	<None Include="..\..\lib\$(Configuration)\icu.net.dll.config">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
-	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\LibChorus.dll</HintPath>
-	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso, Version=1.3.301.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
@@ -155,46 +138,62 @@
 	<Reference Include="System.Xml" />
 	<Reference Include="Autofac, Version=1.4.4.561, Culture=neutral, PublicKeyToken=17863af14b0044da">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Autofac.dll</HintPath>
-	</Reference>
-	<Reference Include="ChorusMerge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\ChorusMerge.exe</HintPath>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Autofac.dll</HintPath>
 	</Reference>
 	<Reference Include="irrKlang.NET2.0, Version=1.1.2.0, Culture=neutral, PublicKeyToken=a854741bd80517c7">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\irrKlang.NET2.0.dll</HintPath>
+	  <HintPath>..\..\lib\%24%28Configuration%29\irrKlang.NET2.0.dll</HintPath>
 	</Reference>
 	<Reference Include="LiftIO, Version=1.1.32.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\LiftIO.dll</HintPath>
+	  <HintPath>..\..\lib\%24%28Configuration%29\LiftIO.dll</HintPath>
 	</Reference>
 	<Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\NDesk.DBus.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Media, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.Media.dll</HintPath>
+	  <HintPath>..\..\lib\%24%28Configuration%29\NDesk.DBus.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\$(Configuration)\Palaso.Services.dll</HintPath>
 	</Reference>
-	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
-	</Reference>
 	<Reference Include="System.Core">
 	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
+	</Reference>
+	<Reference Include="Chorus, Version=1.3.20.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Chorus.exe</HintPath>
+	</Reference>
+	<Reference Include="icu.net, Version=4.2.1.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\icu.net.dll</HintPath>
+	</Reference>
+	<Reference Include="LibChorus, Version=1.3.20.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\LibChorus.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.dll</HintPath>
+	</Reference>
+	<Reference Include="ChorusMerge, Version=1.3.20.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\ChorusMerge.exe</HintPath>
+	</Reference>
+	<Reference Include="Palaso.DictionaryServices, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.DictionaryServices.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.Lift, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.Lift.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.Media, Version=1.3.301.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.Media.dll</HintPath>
+	</Reference>
+	<Reference Include="PalasoUIWindowsForms, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>

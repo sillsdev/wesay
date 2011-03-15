@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -26,9 +26,7 @@
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Foundation</AssemblyName>
 	<RootNamespace>WeSay.Foundation</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -39,10 +37,8 @@
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Foundation</AssemblyName>
 	<DebugSymbols>true</DebugSymbols>
 	<RootNamespace>WeSay.Foundation</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
@@ -53,9 +49,7 @@
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
 	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Foundation</AssemblyName>
 	<RootNamespace>WeSay.Foundation</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<Optimize>true</Optimize>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 	<WarningLevel>4</WarningLevel>
@@ -68,10 +62,8 @@
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
 	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Foundation</AssemblyName>
 	<DebugSymbols>true</DebugSymbols>
 	<RootNamespace>WeSay.Foundation</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -83,6 +75,8 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -93,6 +87,7 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|x86' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -103,6 +98,7 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|x86' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -113,6 +109,7 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
 	<Reference Include="System" />

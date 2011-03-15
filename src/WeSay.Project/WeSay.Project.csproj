@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -26,9 +26,7 @@
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Project</AssemblyName>
 	<RootNamespace>WeSay.Project</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -39,10 +37,8 @@
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Project</AssemblyName>
 	<DebugSymbols>true</DebugSymbols>
 	<RootNamespace>WeSay.Project</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
@@ -53,9 +49,7 @@
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
 	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Project</AssemblyName>
 	<RootNamespace>WeSay.Project</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<Optimize>true</Optimize>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 	<WarningLevel>4</WarningLevel>
@@ -68,10 +62,8 @@
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
 	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Project</AssemblyName>
 	<DebugSymbols>true</DebugSymbols>
 	<RootNamespace>WeSay.Project</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -83,6 +75,8 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -93,6 +87,7 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|x86' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -103,6 +98,7 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|x86' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -113,54 +109,9 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Autofac, Version=1.4.4.561, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Autofac.dll</HintPath>
-	</Reference>
-	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\$(Configuration)\Chorus.exe</HintPath>
-	</Reference>
-	<Reference Include="Commons.Xml.Relaxng, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Commons.Xml.Relaxng.dll</HintPath>
-	</Reference>
-	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\LibChorus.dll</HintPath>
-	</Reference>
-	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\LiftIO.dll</HintPath>
-	</Reference>
-	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
-	</Reference>
-	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
-	</Reference>
-	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
-	</Reference>
 	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
@@ -176,6 +127,50 @@
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
+	<Reference Include="Autofac, Version=1.4.4.561, Culture=neutral, PublicKeyToken=17863af14b0044da">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Autofac.dll</HintPath>
+	</Reference>
+	<Reference Include="Chorus, Version=1.3.20.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Chorus.exe</HintPath>
+	</Reference>
+	<Reference Include="Commons.Xml.Relaxng, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\common\Commons.Xml.Relaxng.dll</HintPath>
+	</Reference>
+	<Reference Include="LibChorus, Version=1.3.20.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\LibChorus.dll</HintPath>
+	</Reference>
+	<Reference Include="LiftIO, Version=1.1.32.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\LiftIO.dll</HintPath>
+	</Reference>
+	<Reference Include="Mono.Addins, Version=0.4.0.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
+	</Reference>
+	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.DictionaryServices, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.DictionaryServices.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.Lift, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\Palaso.Lift.dll</HintPath>
+	</Reference>
+	<Reference Include="PalasoUIWindowsForms, Version=1.5.4.0, Culture=neutral, PublicKeyToken=null">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\%24%28Configuration%29\PalasoUIWindowsForms.dll</HintPath>
+	</Reference>
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="BaseTaskConfig.cs" />
