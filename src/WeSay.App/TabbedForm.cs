@@ -168,9 +168,11 @@ namespace WeSay.App
 			//this is trying to get around screwing up spacing when the ui font
 			//is a huge one...
 			//JH sep09: doesn't seem to have any effect, at least on windows
-			page.Font = StringCatalog.LabelFont;
+			//CP mar11: this causes extra localization helper scaling on mono, and does nothing useful on windows.
+			//page.Font = StringCatalog.LabelFont;
 
 			//jh experiment
+			//cp needed for mono to trigger the OnTabcontrolFontChaned event. NB The localization needs work, it's too enthusiastic about scaling.
 			tabControl1.Font = page.Font;
 
 
