@@ -180,8 +180,8 @@ namespace WeSay.UI
 			Size result = TextRenderer.MeasureText(dc, text, font, proposedSize, textFormatFlags);
 #if MONO
 			// Compensate for low calculation of MeasureText mono 2.6.7
-			result.Width = (result.Width * 11) / 10;
-			result.Height = (result.Height * 11) / 10;
+			result.Width = (result.Width * 12) / 10;
+			result.Height = (result.Height * 12) / 10;
 #endif
 			return result;
 		}
