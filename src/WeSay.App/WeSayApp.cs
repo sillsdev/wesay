@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
 using LiftIO;
+using Palaso.Code;
 using Palaso.i18n;
 using Palaso.Reporting;
 using WeSay.App.Properties;
@@ -84,31 +85,37 @@ namespace WeSay.App
 
 		private static bool GrabTokenForThisProject(string pathToLiftFile)
 		{
+			Guard.AgainstNull(pathToLiftFile, "pathToLiftFile");
 			string mutexId = pathToLiftFile;
-			if (mutexId != null)
+			mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
+			mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
+			bool mutexCreated = false;
+			const int waitInterval = 100;
+			for (int i = 0; i < 4000; i += waitInterval)
 			{
-				bool mutexCreated;
-				mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
-				mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
 				_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexCreated);
-				if (!mutexCreated) // can I acquire?
+				if (mutexCreated)
 				{
-					//    Process[] processes = Process.GetProcessesByName("WeSay.App");
-					//    foreach (Process process in processes)
-					//    {
-
-					//        // we should make window title include the database name.
-					//        if(process.MainWindowTitle == "WeSay: " + project.Name)
-					//        {
-					//            process.WaitForInputIdle(4000); // wait four seconds at most
-					//            //process.MainWindowHandle;
-					//            break;
-					//        }
-					//    }
-					_oneInstancePerProjectMutex = null;
-					ErrorReport.NotifyUserOfProblem("Another copy of WeSay is already open with " + pathToLiftFile + ". If you cannot find that WeSay, restart your computer.");
-					return false;
+					break;
 				}
+				Thread.Sleep(waitInterval);
+			}
+			if (!mutexCreated) // cannot acquire?
+			{
+				_oneInstancePerProjectMutex = null;
+				//var processes = Process.GetProcessesByName("WeSay.App");
+				//foreach (var process in processes)
+				//{
+				//    // we should make window title include the database name.
+				//    if (process.MainWindowTitle.Contains(_project.Name))
+				//    {
+				//        process.WaitForInputIdle(4000); // wait four seconds at most
+				//        //process.MainWindowHandle;
+				//        return false;
+				//    }
+				//}
+				ErrorReport.NotifyUserOfProblem("Another copy of WeSay is already open with " + pathToLiftFile + ". If you cannot find that WeSay, restart your computer.");
+				return false;
 			}
 			return true;
 		}
