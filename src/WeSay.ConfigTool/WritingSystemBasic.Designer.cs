@@ -42,7 +42,7 @@ namespace WeSay.ConfigTool
 			this._writingSystemProperties.Size = new System.Drawing.Size(281, 185);
 			this._writingSystemProperties.TabIndex = 2;
 			this._writingSystemProperties.ToolbarVisible = false;
-			this._writingSystemProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.OnPropertyValueChanged);
+			this._writingSystemProperties.PropertyValueChanged += OnPropertyValueChanged;
 			//
 			// WritingSystemBasic
 			//

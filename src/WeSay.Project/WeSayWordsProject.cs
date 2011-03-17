@@ -25,6 +25,7 @@ using Palaso.IO;
 using Palaso.Linq;
 #endif
 using Palaso.Lift.Options;
+using Palaso.Progress.LogBox;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using Palaso.UiBindings;
@@ -35,13 +36,16 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration.UserConfig;
 using WeSay.Project.ConfigMigration.WeSayConfig;
+using WeSay.Project.ConfigMigration.WritingSystems;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
+using WritingSystem=WeSay.LexicalModel.Foundation.WritingSystem;
 
 namespace WeSay.Project
 {
 	public class WeSayWordsProject : BasilProject, IFileLocator
 	{
+		private ConfigFile _configFile;
 		private IList<ITask> _tasks;
 		private ViewTemplate _defaultViewTemplate;
 		private IList<ViewTemplate> _viewTemplates;
@@ -54,7 +58,7 @@ namespace WeSay.Project
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
 
-		public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
+		public static int CurrentWeSayConfigFileVersion = WeSay.Project.ConfigFile.LatestVersion;
 		public const int CurrentWeSayUserSpecificConfigFileVersion = 2; // This variable must be updated with every new vrsion of the WeSayUserConfig file
 
 		public event EventHandler EditorsSaveNow;
@@ -94,6 +98,11 @@ namespace WeSay.Project
 			}
 		}
 
+		public static bool ProjectExists() //This is useful for tests
+		{
+			return Singleton != null;
+		}
+
 		/// <summary>
 		/// See comment on BasilProject.InitializeForTests()
 		/// </summary>
@@ -120,7 +129,7 @@ namespace WeSay.Project
 			{
 				File.Delete(PathToPretendWritingSystemPrefs);
 			}
-		   string pathToLdmlWsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
+			string pathToLdmlWsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
 			if (Directory.Exists(pathToLdmlWsFolder))
 			{
 				Directory.Delete(pathToLdmlWsFolder, true);
@@ -317,31 +326,15 @@ namespace WeSay.Project
 			//may have already been done, but maybe not
 			MoveFilesFromOldDirLayout(projectDirectoryPath);
 
-			XPathDocument configDoc = GetConfigurationDoc();
-			if (configDoc != null) // will be null if we're creating a new project
+			if (File.Exists(PathToConfigFile)) // will be null if we're creating a new project
 			{
-//                XPathNavigator nav = configDoc.CreateNavigator().SelectSingleNode("//uiOptions");
-//                if (nav != null)
-//                {
-//                    string ui = nav.GetAttribute("uiLanguage", "");
-//                    if (!string.IsNullOrEmpty(ui))
-//                    {
-//                        UiOptions.Language = ui;
-//                    }
-//                    UiOptions.LabelFontName = nav.GetAttribute("uiFont", "");
-//                    string s = nav.GetAttribute("uiFontSize", string.Empty);
-//                    float f;
-//                    if (!float.TryParse(s, out f) || f == 0)
-//                    {
-//                        f = 12;
-//                    }
-//                    UiOptions.LabelFontSizeInPoints = f;
-//                }
-				CheckIfConfigFileVersionIsTooNew(configDoc);
-				var m = new ConfigurationMigrator();
-				Console.WriteLine("{0}",PathToConfigFile);
-				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
+				_configFile = new ConfigFile(PathToConfigFile);
+				_configFile.MigrateIfNecassary();
 			}
+
+			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
+			wsCreator.CreateNonExistantWritingSystemsFoundInLift(PathToLiftFile);
+
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
 			//container change InitializeViewTemplatesFromProjectFiles();
@@ -355,19 +348,6 @@ namespace WeSay.Project
 			LoadUserConfig();
 			InitStringCatalog();
 
-		}
-
-		public static void CheckIfConfigFileVersionIsTooNew(XPathDocument configurationDoc)
-		{
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") != null)
-			{
-				string versionNumberAsString =
-					configurationDoc.CreateNavigator().SelectSingleNode("configuration").GetAttribute("version", "");
-				if(int.Parse(versionNumberAsString) > CurrentWeSayConfigFileVersion)
-				{
-					throw new ApplicationException("The config file is too new for this version of wesay. Please download a newer version of wesay from www.wesay.org");
-				}
-			}
 		}
 
 		[Serializable]
@@ -413,12 +393,16 @@ namespace WeSay.Project
 						  <LiftDataMapper>(
 							  "Loading Dictionary",
 							  progressState =>
-						  new LiftDataMapper(
-								  _pathToLiftFile,
-								  GetSemanticDomainsList(),
-								  GetIdsOfSingleOptionFields(),
-								  progressState
-							  )
+								  {
+									  var mapper =  new WeSayLiftDataMapper(
+										  _pathToLiftFile,
+										  GetSemanticDomainsList(),
+										  GetIdsOfSingleOptionFields(),
+										  progressState
+										  );
+
+									  return mapper;
+								  }
 						  );
 				  }
 				  catch (LiftFormatException error)
@@ -708,8 +692,7 @@ namespace WeSay.Project
 		public bool MigrateConfigurationXmlIfNeeded()
 		{
 			var m = new ConfigurationMigrator();
-			return m.MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile),
-												   PathToConfigFile);
+			return m.MigrateConfigurationXmlIfNeeded(PathToConfigFile, PathToConfigFile);
 		}
 
 
@@ -847,7 +830,7 @@ namespace WeSay.Project
 			StickDefaultViewTemplateInNewConfigFile(projectDirectoryPath, pathToConfigFile);
 
 			var m = new ConfigurationMigrator();
-			m.MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile), pathToConfigFile);
+			m.MigrateConfigurationXmlIfNeeded(pathToConfigFile, pathToConfigFile);
 
 			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
 			if (!File.Exists(pathToLiftFile))
@@ -1044,6 +1027,12 @@ namespace WeSay.Project
 		{
 			return GetFileLocator().LocateFile(fileName, descriptionForErrorMessage);
 		}
+
+		public string LocateOptionalFile(string fileName)
+		{
+			return GetFileLocator().LocateOptionalFile(fileName);
+		}
+
 		/// <summary>
 		/// Find the file, starting with the project dirs and moving to the app dirs.
 		/// This allows a user to override an installed file by making thier own.
@@ -1214,6 +1203,10 @@ namespace WeSay.Project
 			}
 		}
 
+		public ConfigFile ConfigFile
+		{
+			get { return _configFile; }
+		}
 
 
 		public override void Save()
@@ -1395,6 +1388,16 @@ namespace WeSay.Project
 
 		private delegate void DelegateThatTouchesLiftFile(string pathToLiftFile);
 
+		public bool ChangeWritingSystemIdsInLiftFile(string oldId, string newId)
+		{
+			return DoSomethingToLiftFile((p) =>
+										 //todo: expand the regular expression here to account for all reasonable patterns
+										 FileUtils.GrepFile(PathToLiftFile,
+															string.Format("lang\\s*=\\s*[\"']{0}[\"']",
+																		  Regex.Escape(oldId)),
+															string.Format("lang=\"{0}\"", newId)));
+		}
+
 		private bool DoSomethingToLiftFile(DelegateThatTouchesLiftFile doSomething)
 		{
 			if(!File.Exists(PathToLiftFile))
@@ -1446,12 +1449,7 @@ namespace WeSay.Project
 
 		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)
 		{
-			if (DoSomethingToLiftFile((p) =>
-					 //todo: expand the regular expression here to account for all reasonable patterns
-					 FileUtils.GrepFile(PathToLiftFile,
-							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
-											Regex.Escape(oldId)),
-							  string.Format("lang=\"{0}\"", ws.Id))))
+			if (ChangeWritingSystemIdsInLiftFile(oldId, ws.Id))
 			{
 				WritingSystems.IdOfWritingSystemChanged(ws, oldId);
 				DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);

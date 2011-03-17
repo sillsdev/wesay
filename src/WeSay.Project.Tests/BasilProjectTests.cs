@@ -125,60 +125,6 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		public void NewProject_ContainsOnlyLegacyWeSayWritingsystemsFile_WritingSystemsAreLoadedFromThatFile()
-		{
-			InitializeSampleProject();
-			BasilProject project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(_projectDirectory);
-
-			Assert.AreEqual(2, project.WritingSystems.Count);
-			Assert.IsTrue(project.WritingSystems.ContainsKey("PretendAnalysis"));
-			Assert.IsTrue(project.WritingSystems.ContainsKey("PretendVernacular"));
-		}
-
-		[Test]
-		public void NewProject_ContainsOnlyLegacyWeSayWritingsystemsFile_WritingSystemsAreConvertedToLdml()
-		{
-			InitializeSampleProject();
-			BasilProject project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(_projectDirectory);
-			WritingSystemCollection wsCollection = new WritingSystemCollection();
-			wsCollection.Load(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
-
-			AssertWritingSystemCollectionsAreEqual(project.WritingSystems, wsCollection);
-		}
-
-		[Test]
-		public void NewProject_ContainsOnlyLegacyWeSayWritingsystemsFile_LegacyFileIsDeleted()
-		{
-			InitializeSampleProject();
-			BasilProject project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(_projectDirectory);
-
-			Assert.IsFalse(File.Exists(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory)));
-		}
-
-		private void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection ws1, WritingSystemCollection ws2)
-		{
-			foreach (KeyValuePair<string, WritingSystem> idWspair in ws1)
-			{
-				Assert.IsTrue(ws2.ContainsKey(idWspair.Key));
-				Assert.AreEqual(idWspair.Value.Id, ws2[idWspair.Key].Id);
-				Assert.AreEqual(idWspair.Value.Abbreviation, ws2[idWspair.Key].Abbreviation);
-				Assert.AreEqual(idWspair.Value.CustomSortRules, ws2[idWspair.Key].CustomSortRules);
-				Assert.AreEqual(idWspair.Value.Font.ToString(), ws2[idWspair.Key].Font.ToString());
-				Assert.AreEqual(idWspair.Value.FontName, ws2[idWspair.Key].FontName);
-				Assert.AreEqual(idWspair.Value.FontSize, ws2[idWspair.Key].FontSize);
-				Assert.AreEqual(idWspair.Value.IsAudio, ws2[idWspair.Key].IsAudio);
-				Assert.AreEqual(idWspair.Value.IsUnicode, ws2[idWspair.Key].IsUnicode);
-				Assert.AreEqual(idWspair.Value.KeyboardName, ws2[idWspair.Key].KeyboardName);
-				Assert.AreEqual(idWspair.Value.RightToLeft, ws2[idWspair.Key].RightToLeft);
-				Assert.AreEqual(idWspair.Value.SortUsing, ws2[idWspair.Key].SortUsing);
-				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2[idWspair.Key].SpellCheckingId);
-			}
-		}
-
-		[Test]
 		public void NewProject_ContainsNoWritingsystemFiles_DefaultsAreLoaded()
 		{
 			InitializeSampleProject();

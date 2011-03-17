@@ -174,7 +174,7 @@ namespace Addin.Transform.Tests
             _entry.Senses.Add(sense);
             sense.Definition.SetAlternative("en", "fruit");
             sense.Definition.SetAlternative("fr", "pomme");
-            sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech).Key = "noun";
+			sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech).Key = "Noun";
         }
 
         [Test]

@@ -363,7 +363,7 @@ namespace WeSay.UI.TextBoxes
 
 			_inputBoxes.Add(control);
 
-			string text = multiText[writingSystem.Id];
+			string text = multiText.GetExactAlternative(writingSystem.Id);
 			if(_isMultiParagraph) //review... stuff was coming in with just \n, and the text box then didn't show the paragarph marks
 			{
 				text = text.Replace("\r\n", "\n");
