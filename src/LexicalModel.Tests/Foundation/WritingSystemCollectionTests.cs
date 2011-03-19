@@ -352,5 +352,16 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			Assert.AreEqual(2, c.Values.Count);
 		}
 
+		// Test for WS-33950 and covers WS-33951 also
+		[Test]
+		public void RemoveThenAddSame_SaveDoesntThrow()
+		{
+			var store = MakeSampleCollection();
+			store.Write(_ldmlWsFolder.Path);
+			store.Remove("one");
+			store.Add("one", new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 12)));
+			store.Write(_ldmlWsFolder.Path);
+		}
+
 	}
 }
