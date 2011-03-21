@@ -14,13 +14,13 @@ namespace WeSay.LexicalModel.Foundation
 
 		public void ActivateKeyboard()
 		{
-			if (string.IsNullOrEmpty(_writingSystem.KeyboardName))
+			if (string.IsNullOrEmpty(_writingSystem.Keyboard))
 			{
 				KeyboardController.DeactivateKeyboard();
 			}
 			else
 			{
-				KeyboardController.ActivateKeyboard(_writingSystem.KeyboardName);
+				KeyboardController.ActivateKeyboard(_writingSystem.Keyboard);
 			}
 		}
 
@@ -36,12 +36,12 @@ namespace WeSay.LexicalModel.Foundation
 
 		public string FontName
 		{
-			get { return _writingSystem.FontName; }
+			get { return _writingSystem.DefaultFontName; }
 		}
 
 		public int FontSize
 		{
-			get { return _writingSystem.FontSize; }
+			get { return (int)_writingSystem.DefaultFontSize; }
 		}
 	}
 }

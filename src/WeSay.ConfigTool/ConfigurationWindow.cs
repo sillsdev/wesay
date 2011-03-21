@@ -312,6 +312,7 @@ namespace WeSay.ConfigTool
 			//containerBuilder.Register<Control>().FactoryScoped();
 			// containerBuilder.RegisterGeneratedFactory<ConfigTaskControlFactory>(new TypedService(typeof (Control)));
 
+
 			containerBuilder.Register<FieldsControl>();
 			containerBuilder.Register<WritingSystemSetup>();
 			containerBuilder.Register<FieldsControl>();

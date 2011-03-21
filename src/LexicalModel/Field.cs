@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using WeSay.LexicalModel.Foundation;
+using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel
 {
@@ -393,9 +395,9 @@ namespace WeSay.LexicalModel
 		/// <summary>
 		/// omit audio writing systems
 		/// </summary>
-		public IEnumerable<string> GetTextOnlyWritingSystemIds(WritingSystemCollection systems)
+		public IEnumerable<string> GetTextOnlyWritingSystemIds(IWritingSystemStore writingSystems)
 		{
-			return systems.TrimToActualTextWritingSystemIds(_writingSystemIds);
+			return writingSystems.WritingSystemDefinitions.Where(ws => ws.IsVoice).Select(ws => ws.Id);
 		}
 
 		[Browsable(false)]

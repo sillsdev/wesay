@@ -367,21 +367,9 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>SettingsControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="WritingSystemBasic.resx">
-	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
 	<EmbeddedResource Include="WritingSystemForFieldControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WritingSystemForFieldControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="WritingSystemSetup.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="WritingSystemSortControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>WritingSystemSortControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<None Include="app.config" />
 	<None Include="Properties\Settings.settings">
@@ -449,12 +437,6 @@
 	<Compile Include="SettingsControl.Designer.cs">
 	  <DependentUpon>SettingsControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="WritingSystemBasic.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="WritingSystemBasic.Designer.cs">
-	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
-	</Compile>
 	<Compile Include="WritingSystemForFieldControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -463,15 +445,6 @@
 	</Compile>
 	<Compile Include="WritingSystemSetup.cs">
 	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="WritingSystemSetup.Designer.cs">
-	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
-	</Compile>
-	<Compile Include="WritingSystemSortControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="WritingSystemSortControl.Designer.cs">
-	  <DependentUpon>WritingSystemSortControl.cs</DependentUpon>
 	</Compile>
   </ItemGroup>
   <ItemGroup>

@@ -284,7 +284,7 @@ namespace WeSay.LexicalModel
 
 				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(headWordQuery);
 				var sortOrder = new SortDefinition[4];
-				sortOrder[0] = new SortDefinition("Form", writingSystem);
+				sortOrder[0] = new SortDefinition("Form", writingSystem.Collator);
 				sortOrder[1] = new SortDefinition("OrderForRoundTripping", Comparer<int>.Default);
 				sortOrder[2] = new SortDefinition("OrderInFile", Comparer<int>.Default);
 				sortOrder[3] = new SortDefinition("CreationTime", Comparer<DateTime>.Default);
@@ -384,7 +384,7 @@ namespace WeSay.LexicalModel
 				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(lexicalFormWithAlternativeQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[1];
-				sortOrder[0] = new SortDefinition("Form", writingSystem);
+				sortOrder[0] = new SortDefinition("Form", writingSystem.Collator);
 
 				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormWithAlternativeQuery));
 			}
@@ -422,7 +422,7 @@ namespace WeSay.LexicalModel
 				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(lexicalFormQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[1];
-				sortOrder[0] = new SortDefinition("Form", writingSystem);
+				sortOrder[0] = new SortDefinition("Form", writingSystem.Collator);
 
 				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormQuery));
 			}
@@ -549,7 +549,7 @@ namespace WeSay.LexicalModel
 				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(definitionQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[2];
-				sortOrder[0] = new SortDefinition("Form", writingSystem);
+				sortOrder[0] = new SortDefinition("Form", writingSystem.Collator);
 				sortOrder[1] = new SortDefinition("Sense", Comparer<int>.Default);
 				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, definitionQuery));
 			}
@@ -716,7 +716,7 @@ namespace WeSay.LexicalModel
 					);
 				ResultSet<LexEntry> itemsMatchingQuery = GetItemsMatching(MatchingGlossQuery);
 				SortDefinition[] sortDefinition = new SortDefinition[4];
-				sortDefinition[0] = new SortDefinition("Form", lexicalUnitWritingSystem);
+				sortDefinition[0] = new SortDefinition("Form", lexicalUnitWritingSystem.Collator);
 				sortDefinition[1] = new SortDefinition("Gloss", StringComparer.InvariantCulture);
 				sortDefinition[2] = new SortDefinition("GlossWritingSystem", StringComparer.InvariantCulture);
 				sortDefinition[3] = new SortDefinition("SenseNumber", Comparer<int>.Default);
@@ -930,7 +930,7 @@ namespace WeSay.LexicalModel
 				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(lexicalFormQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[1];
-				sortOrder[0] = new SortDefinition("Form", lexicalUnitWritingSystem);
+				sortOrder[0] = new SortDefinition("Form", lexicalUnitWritingSystem.Collator);
 
 				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormQuery));
 			}
