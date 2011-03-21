@@ -93,7 +93,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 		private void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection ws1, WritingSystemCollection ws2)
 		{
-			foreach (KeyValuePair<string, WritingSystem> idWspair in ws1)
+			foreach (var idWspair in ws1)
 			{
 				Assert.IsTrue(ws2.ContainsKey(idWspair.Key));
 				Assert.AreEqual(idWspair.Value.Id, ws2[idWspair.Key].Id);
@@ -338,7 +338,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			NetReflectorReader r = new NetReflectorReader(t);
 			WritingSystemCollection c = r.Read(MakeXmlFromCollection()) as WritingSystemCollection;
 			Assert.IsNotNull(c);
-			Assert.AreEqual(2, c.Values.Count);
+			Assert.AreEqual(2, c.Count);
 		}
 
 		[Test]
@@ -349,7 +349,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			var c = new WritingSystemCollection();
 			c.Load(_ldmlWsFolder.Path);
 			Assert.IsNotNull(c);
-			Assert.AreEqual(2, c.Values.Count);
+			Assert.AreEqual(2, c.Count);
 		}
 
 	}

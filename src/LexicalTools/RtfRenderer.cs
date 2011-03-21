@@ -182,7 +182,7 @@ namespace WeSay.LexicalTools
 		private static int GetFontNumber(WritingSystem writingSystem)
 		{
 			int i = 0;
-			foreach (KeyValuePair<string, WritingSystem> ws in WritingSystems)
+			foreach (var ws in WritingSystems)
 			{
 				if (ws.Value == writingSystem)
 				{

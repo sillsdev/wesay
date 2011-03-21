@@ -146,7 +146,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			writingSystem.SortUsing = "two";
 			Assert.IsNull(writingSystem.CustomSortRules);
 			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
-			Assert.IsEmpty(writingSystem.CustomSortRules);
+			Assert.IsEmpty(writingSystem.CustomSortRules.ToString());
 		}
 
 		[Test]

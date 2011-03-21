@@ -370,7 +370,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 						_words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
 					}
 				}
-				_words.Sort(WritingSystemUserIsTypingIn);
+				_words.Sort(WritingSystemUserIsTypingIn.Collator);
 				return _words;
 			}
 		}

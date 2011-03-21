@@ -263,12 +263,13 @@ namespace WeSay.Project
 		protected void InitWritingSystems()
 		{
 			_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
-			if (_writingSystems.Count == 0)
-			{
-				_writingSystems.LoadFromLegacyWeSayFile(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
-				_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
-				File.Delete(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
-			}
+			// TODO Chris move this to the migrator
+			//if (_writingSystems.Count == 0)
+			//{
+			//    _writingSystems.LoadFromLegacyWeSayFile(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
+			//    _writingSystems.Write(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
+			//    File.Delete(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
+			//}
 			if (_writingSystems.Count == 0)
 			{
 				//load defaults
