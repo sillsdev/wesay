@@ -76,7 +76,7 @@ namespace WeSay.UI
 				_writingSystem = value;
 				Font = value.Font;
 				ItemHeight = (int) (Math.Ceiling(value.Font.GetHeight()));
-				if (value.RightToLeft)
+				if (value.RightToLeftScript)
 				{
 					RightToLeft = RightToLeft.Yes;
 				}

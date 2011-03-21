@@ -161,7 +161,7 @@ namespace WeSay.Project
 
 		public static IList<LanguageForm> GetAudioForms(MultiText field, WritingSystemCollection writingSytems)
 		{
-			var x = field.Forms.Where(f => writingSytems[f.WritingSystemId].IsAudio);
+			var x = field.Forms.Where(f => writingSytems[f.WritingSystemId].IsVoice);
 			return new List<LanguageForm>(x);
 		}
 

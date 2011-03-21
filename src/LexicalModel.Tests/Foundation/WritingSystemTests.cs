@@ -55,10 +55,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			// need to test against the font mapping
 			Font font = new Font("Tahoma", 99);
 			Assert.IsNotNull(ws);
-			Assert.AreEqual(font.Name, ws.FontName);
-			Assert.AreEqual("", ws.KeyboardName);
+			Assert.AreEqual(font.Name, ws.DefaultFontName);
+			Assert.AreEqual("", ws.Keyboard);
 			Assert.AreEqual("one", ws.Id);
-			Assert.AreEqual(font.Size, ws.FontSize);
+			Assert.AreEqual(font.Size, ws.DefaultFontSize);
 		}
 
 		[Test]
@@ -105,7 +105,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			WritingSystem writingSystem = new WritingSystem("one",
 															new Font(FontFamily.GenericSansSerif, 11));
-			Assert.IsFalse(writingSystem.IsAudio);
+			Assert.IsFalse(writingSystem.IsVoice);
 		}
 
 		[Test]
@@ -113,7 +113,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			WritingSystem writingSystem = new WritingSystem("one",
 															new Font(FontFamily.GenericSansSerif, 11));
-			Assert.IsTrue(writingSystem.IsUnicode);
+			Assert.IsTrue(writingSystem.IsUnicodeEncoded);
 		}
 
 		[Test]
@@ -396,7 +396,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			WritingSystem ws = new WritingSystem();
 			ws.Font = null;
-			Assert.AreEqual(ws.Font.Name, ws.FontName);
+			Assert.AreEqual(ws.Font.Name, ws.DefaultFontName);
 		}
 
 		[Test]
@@ -414,7 +414,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			WritingSystem ws = new WritingSystem();
 			string name = FontFamily.GenericSerif.Name;
 			ws.Font = new Font(name, 14);
-			Assert.AreEqual(name, ws.FontName);
+			Assert.AreEqual(name, ws.DefaultFontName);
 		}
 
 		[Test]
@@ -423,7 +423,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			WritingSystem ws = new WritingSystem();
 			int size = 14;
 			ws.Font = new Font(FontFamily.GenericSerif.Name, size);
-			Assert.AreEqual(size, ws.FontSize);
+			Assert.AreEqual(size, ws.DefaultFontSize);
 		}
 
 		[Test]
@@ -432,7 +432,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			WritingSystem ws = new WritingSystem();
 			int size = 14;
 			ws.Font = new Font(FontFamily.GenericSerif.Name, 8);
-			ws.FontSize = size;
+			ws.DefaultFontSize = size;
 			Assert.AreEqual(size, ws.Font.Size);
 		}
 
@@ -442,7 +442,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			WritingSystem ws = new WritingSystem();
 			int size = 14;
 			ws.Font = null;
-			ws.FontSize = size;
+			ws.DefaultFontSize = size;
 			Assert.AreEqual(size, ws.Font.Size);
 		}
 

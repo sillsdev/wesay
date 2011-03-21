@@ -510,7 +510,7 @@ namespace WeSay.LexicalModel
 							string rawDefinition = sense.Definition[writingSystem.Id];
 							string rawGloss = sense.Gloss[writingSystem.Id];
 
-							if(writingSystem.IsUnicode)
+							if(writingSystem.IsUnicodeEncoded)
 							{
 								definitions = GetTrimmedElementsSeperatedBySemiColon(rawDefinition);
 								glosses = GetTrimmedElementsSeperatedBySemiColon(rawGloss);

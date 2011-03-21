@@ -733,7 +733,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private Size MeasureItem(IDeviceContext dc, string s)
 		{
 			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.NoClipping;
-			if (WritingSystem != null && WritingSystem.RightToLeft)
+			if (WritingSystem != null && WritingSystem.RightToLeftScript)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}

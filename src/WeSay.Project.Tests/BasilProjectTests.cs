@@ -132,8 +132,8 @@ namespace WeSay.Project.Tests
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 
 			Assert.AreEqual(2, project.WritingSystems.Count);
-			Assert.IsTrue(project.WritingSystems.ContainsKey("PretendAnalysis"));
-			Assert.IsTrue(project.WritingSystems.ContainsKey("PretendVernacular"));
+			Assert.IsTrue(project.WritingSystems.Contains("PretendAnalysis"));
+			Assert.IsTrue(project.WritingSystems.Contains("PretendVernacular"));
 		}
 
 		[Test]
@@ -162,17 +162,17 @@ namespace WeSay.Project.Tests
 		{
 			foreach (var idWspair in ws1)
 			{
-				Assert.IsTrue(ws2.ContainsKey(idWspair.Key));
+				Assert.IsTrue(ws2.Contains(idWspair.Key));
 				Assert.AreEqual(idWspair.Value.Id, ws2[idWspair.Key].Id);
 				Assert.AreEqual(idWspair.Value.Abbreviation, ws2[idWspair.Key].Abbreviation);
 				Assert.AreEqual(idWspair.Value.CustomSortRules, ws2[idWspair.Key].CustomSortRules);
 				Assert.AreEqual(idWspair.Value.Font.ToString(), ws2[idWspair.Key].Font.ToString());
-				Assert.AreEqual(idWspair.Value.FontName, ws2[idWspair.Key].FontName);
-				Assert.AreEqual(idWspair.Value.FontSize, ws2[idWspair.Key].FontSize);
-				Assert.AreEqual(idWspair.Value.IsAudio, ws2[idWspair.Key].IsAudio);
-				Assert.AreEqual(idWspair.Value.IsUnicode, ws2[idWspair.Key].IsUnicode);
-				Assert.AreEqual(idWspair.Value.KeyboardName, ws2[idWspair.Key].KeyboardName);
-				Assert.AreEqual(idWspair.Value.RightToLeft, ws2[idWspair.Key].RightToLeft);
+				Assert.AreEqual(idWspair.Value.DefaultFontName, ws2[idWspair.Key].DefaultFontName);
+				Assert.AreEqual(idWspair.Value.DefaultFontSize, ws2[idWspair.Key].DefaultFontSize);
+				Assert.AreEqual(idWspair.Value.IsVoice, ws2[idWspair.Key].IsVoice);
+				Assert.AreEqual(idWspair.Value.IsUnicodeEncoded, ws2[idWspair.Key].IsUnicodeEncoded);
+				Assert.AreEqual(idWspair.Value.Keyboard, ws2[idWspair.Key].Keyboard);
+				Assert.AreEqual(idWspair.Value.RightToLeftScript, ws2[idWspair.Key].RightToLeftScript);
 				Assert.AreEqual(idWspair.Value.SortUsing, ws2[idWspair.Key].SortUsing);
 				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2[idWspair.Key].SpellCheckingId);
 			}
@@ -187,8 +187,8 @@ namespace WeSay.Project.Tests
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 
 			Assert.AreEqual(7, project.WritingSystems.Count);
-			Assert.IsTrue(project.WritingSystems.ContainsKey("en"));
-			Assert.IsTrue(project.WritingSystems.ContainsKey("tpi"));
+			Assert.IsTrue(project.WritingSystems.Contains("en"));
+			Assert.IsTrue(project.WritingSystems.Contains("tpi"));
 		}
 
 		[Test]
@@ -219,8 +219,8 @@ namespace WeSay.Project.Tests
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 
 			Assert.AreEqual(2, project.WritingSystems.Count);
-			Assert.IsTrue(project.WritingSystems.ContainsKey("PretendAnalysis"));
-			Assert.IsTrue(project.WritingSystems.ContainsKey("PretendVernacular"));
+			Assert.IsTrue(project.WritingSystems.Contains("PretendAnalysis"));
+			Assert.IsTrue(project.WritingSystems.Contains("PretendVernacular"));
 		}
 
 		[Test]
@@ -235,7 +235,7 @@ namespace WeSay.Project.Tests
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 
 			Assert.AreEqual(1, project.WritingSystems.Count);
-			Assert.IsTrue(project.WritingSystems.ContainsKey("ldmlWs"));
+			Assert.IsTrue(project.WritingSystems.Contains("ldmlWs"));
 		}
 	}
 }

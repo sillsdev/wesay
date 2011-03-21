@@ -121,20 +121,20 @@ namespace WeSay.LexicalModel.Foundation
 		//}
 		public IList<string> TrimToActualTextWritingSystemIds(IList<string> ids)
 		{
-			var x = ids.Where((id) => !this[id].IsAudio);
+			var x = ids.Where((id) => !this[id].IsVoice);
 			return new List<string>(x);
 		}
 
 		public IList<string> TrimToAudioWritingSystemIds(IList<string> ids)
 		{
-			var x = ids.Where((id) => this[id].IsAudio);
+			var x = ids.Where((id) => this[id].IsVoice);
 			return new List<string>(x);
 		}
 
 		public IEnumerable<WritingSystem> GetActualTextWritingSystems()
 		{
 			WritingSystemDefinition x;
-			return this.Values.Where((ws) => !ws.IsAudio);
+			return this.Values.Where((ws) => !ws.IsVoice);
 		}
 
 		public IEnumerable<WritingSystem> GetAllWritingSystems()

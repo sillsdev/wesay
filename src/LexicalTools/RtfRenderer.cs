@@ -232,7 +232,7 @@ namespace WeSay.LexicalTools
 
 		public static IList<LanguageForm> GetActualTextForms(MultiText text, WritingSystemCollection writingSytems)
 		{
-			var x = text.Forms.Where(f => !writingSytems[f.WritingSystemId].IsAudio);
+			var x = text.Forms.Where(f => !writingSytems[f.WritingSystemId].IsVoice);
 			return new List<LanguageForm>(x);
 		}
 

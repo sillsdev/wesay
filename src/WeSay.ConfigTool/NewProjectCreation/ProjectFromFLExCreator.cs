@@ -127,11 +127,11 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 			foreach (XmlNode node in doc.SelectNodes("//@lang"))
 			{
-				if (node.Value == "x-spec" && !writingSystems.ContainsKey("x-spec"))
+				if (node.Value == "x-spec" && !writingSystems.Contains("x-spec"))
 				{
 					writingSystems.AddSimple("x-spec");
 				}
-				if (!writingSystems.ContainsKey(node.Value))
+				if (!writingSystems.Contains(node.Value))
 				{
 					writingSystems.AddSimple(node.Value);
 					missingWritingSystems.AppendFormat("{0},", node.Value);

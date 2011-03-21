@@ -186,7 +186,7 @@ namespace WeSay.UI.TextBoxes
 				{
 					flags |= TextFormatFlags.WordBreak;
 				}
-				if (_writingSystem != null && WritingSystem.RightToLeft)
+				if (_writingSystem != null && WritingSystem.RightToLeftScript)
 				{
 					flags |= TextFormatFlags.RightToLeft;
 				}
@@ -239,7 +239,7 @@ namespace WeSay.UI.TextBoxes
 				//hack for testing
 				//   this.Height = (int) Math.Ceiling( Font.GetHeight());
 
-				if (value.RightToLeft)
+				if (value.RightToLeftScript)
 				{
 					RightToLeft = RightToLeft.Yes;
 				}
@@ -366,12 +366,12 @@ namespace WeSay.UI.TextBoxes
 					"WritingSystem must be initialized prior to use.");
 			}
 
-			if (_writingSystem.KeyboardName == null || _writingSystem.KeyboardName == string.Empty)
+			if (_writingSystem.Keyboard == null || _writingSystem.Keyboard == string.Empty)
 			{
 				KeyboardController.DeactivateKeyboard();
 				return;
 			}
-			KeyboardController.ActivateKeyboard(_writingSystem.KeyboardName);
+			KeyboardController.ActivateKeyboard(_writingSystem.Keyboard);
 		}
 
 		protected override void OnLeave(EventArgs e)

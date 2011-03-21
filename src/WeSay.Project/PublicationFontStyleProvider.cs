@@ -28,7 +28,7 @@ namespace WeSay.Project
 			var builder = new StringBuilder();
 //            var family = FontFamily.Families.FirstOrDefault(f => f.Name == ws.FontName);
 
-			builder.AppendLine("font-family: '" + ws.FontName + "';");
+			builder.AppendLine("font-family: '" + ws.DefaultFontName + "';");
 
 			var word = FindFieldWithFieldName(LexEntry.WellKnownProperties.LexicalUnit);
 

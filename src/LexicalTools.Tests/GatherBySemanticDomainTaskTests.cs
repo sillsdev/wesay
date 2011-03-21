@@ -77,7 +77,7 @@ namespace WeSay.LexicalTools.Tests
 
 			v.Add(new Field(LexSense.WellKnownProperties.Definition,"LexSense", new string[]{"en"}));
 
-			if(!v.WritingSystems.ContainsKey("en"))
+			if(!v.WritingSystems.Contains("en"))
 			{
 				v.WritingSystems.Add("en", new WritingSystem("en", new Font("arial", 12)));
 			}

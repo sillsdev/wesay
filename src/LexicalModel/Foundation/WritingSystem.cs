@@ -15,25 +15,31 @@ namespace WeSay.LexicalModel.Foundation
 		public static string IdForUnknownVernacular;
 		public static string IdForUnknownAnalysis;
 
+		// TODO Use of this ctor should be removed.  Maybe a helper?
 		public WritingSystem(string testWritingSystemVernId, Font font)
 		{
 			throw new NotImplementedException();
 		}
 
+		//TODO This is fine to keep, but if a real WS is to be created, e.g. in tests then use the 1 arg ctor
 		public WritingSystem()
 		{
 			throw new NotImplementedException();
 		}
 
-		public string FontName { get; private set; }
-		public bool IsUnicode { get; set; } // Rename  TODO Introduce IsUnicodeEncoded to palaso wsd.
+		public WritingSystem(string id)
+		{
+		}
 
-		public bool IsAudio { get; set; } // Rename to IsVoice
+		//public string DefaultFontName { get; private set; }
+		//public int DefaultFontSize { get; set; }
+		public bool IsUnicodeEncoded { get; set; } // TODO Introduce IsUnicodeEncoded to palaso wsd.
 
-		public bool RightToLeft { get; set; }
+		//public bool IsVoice { get; set; } // Rename to IsVoice
+		//public bool RightToLeftScript { get; set; }
+		//public string Keyboard { get; set; }
 
-		public string KeyboardName { get; set; }
-
+		// TODO Move to a helper
 		public Font Font
 		{
 			get
@@ -43,14 +49,13 @@ namespace WeSay.LexicalModel.Foundation
 			set { throw new NotImplementedException(); }
 		}
 
+		// TODO Remove the use of Value wherever it occurs
 		public WritingSystem Value
 		{
 			get { throw new NotImplementedException(); }
 		}
 
 		public object CustomSortRules { get; set; }
-
-		public int FontSize { get; set; }
 
 		public string Key
 		{
@@ -216,6 +221,7 @@ namespace WeSay.LexicalModel.Foundation
 
 		#endregion
 
+		// TODO Remove this
 		public WritingSystemDefinition GetAsPalasoWritingSystemDefinition()
 		{
 			throw new NotImplementedException();

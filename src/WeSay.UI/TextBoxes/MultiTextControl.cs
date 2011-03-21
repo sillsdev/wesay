@@ -97,7 +97,7 @@ namespace WeSay.UI.TextBoxes
 //            }
 			foreach (var id in writingSystemIds)
 			{
-				if (allWritingSystems.ContainsKey(id)) //why wouldn't it?
+				if (allWritingSystems.Contains(id)) //why wouldn't it?
 				{
 					_writingSystemsForThisField.Add(allWritingSystems[id]);
 				}
@@ -335,7 +335,7 @@ namespace WeSay.UI.TextBoxes
 		private Control AddTextBox(WritingSystem writingSystem, MultiTextBase multiText)
 		{
 			Control control;
-			if (writingSystem.IsAudio)
+			if (writingSystem.IsVoice)
 			{
 #if MONO
 				return null;

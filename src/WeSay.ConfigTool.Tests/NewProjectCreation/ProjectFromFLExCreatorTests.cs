@@ -34,13 +34,13 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 	//put one guy in there already
 				 int originalCount = collection.Count;// collection.Count;
 
-				Assert.IsFalse(collection.ContainsKey("blah"));
+				Assert.IsFalse(collection.Contains("blah"));
 
 				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(
 					 () => ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection)
 				 );
 
-				Assert.IsTrue(collection.ContainsKey("blah"));
+				Assert.IsTrue(collection.Contains("blah"));
 			}
 		}
 
@@ -63,7 +63,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				int originalCount = collection.Count;// collection.Count;
 
 				ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);
-				Assert.IsTrue(collection.ContainsKey("x-spec"));
+				Assert.IsTrue(collection.Contains("x-spec"));
 			}
 		}
 
@@ -122,7 +122,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.ExampleSentence, "fromExample");
 				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.Translation, "fromTrans");
 
-				Assert.IsTrue(collection.ContainsKey("en"));
+				Assert.IsTrue(collection.Contains("en"));
 
 			}
 		}
@@ -142,8 +142,8 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystem.IdForUnknownVernacular);
 				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystem.IdForUnknownVernacular);
 				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystem.IdForUnknownVernacular);
-				Assert.IsTrue(collection.ContainsKey(WritingSystem.IdForUnknownVernacular));
-				Assert.IsTrue(collection.ContainsKey(WritingSystem.IdForUnknownAnalysis));
+				Assert.IsTrue(collection.Contains(WritingSystem.IdForUnknownVernacular));
+				Assert.IsTrue(collection.Contains(WritingSystem.IdForUnknownAnalysis));
 
  }
 		}

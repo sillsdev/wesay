@@ -333,7 +333,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		{
 
 			if (!_usingLiftFile &&
-					!WeSayWordsProject.Project.WritingSystems.ContainsKey(
+					!WeSayWordsProject.Project.WritingSystems.Contains(
 							 _preferredEllicitationWritingSystem))
 			{
 				ErrorReport.NotifyUserOfProblem(

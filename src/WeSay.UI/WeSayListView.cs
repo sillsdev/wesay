@@ -146,7 +146,7 @@ namespace WeSay.UI
 				}
 				_writingSystem = value;
 				Font = value.Font;
-				if (value.RightToLeft)
+				if (value.RightToLeftScript)
 				{
 					RightToLeft = RightToLeft.Yes;
 				}
@@ -423,7 +423,7 @@ namespace WeSay.UI
 				e.Graphics.FillRectangle(backgroundBrush, bounds);
 				TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
 										TextFormatFlags.EndEllipsis;
-				if (_writingSystem != null && WritingSystem.RightToLeft)
+				if (_writingSystem != null && WritingSystem.RightToLeftScript)
 				{
 					flags |= TextFormatFlags.RightToLeft;
 				}
@@ -588,7 +588,7 @@ namespace WeSay.UI
 			e.DrawBorder();
 			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
 									TextFormatFlags.VerticalCenter;
-			if (_writingSystem != null && WritingSystem.RightToLeft)
+			if (_writingSystem != null && WritingSystem.RightToLeftScript)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
@@ -608,7 +608,7 @@ namespace WeSay.UI
 		private Size MeasureItemText(string text)
 		{
 			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left;
-			if (_writingSystem != null && WritingSystem.RightToLeft)
+			if (_writingSystem != null && WritingSystem.RightToLeftScript)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}

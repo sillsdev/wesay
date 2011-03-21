@@ -418,7 +418,7 @@ namespace WeSay.Project.Tests
 			HeadwordWritingSystem =project.WritingSystems.AddSimple("red");
 			project.WritingSystems.AddSimple("green");
 			project.WritingSystems.AddSimple("blue");
-			project.WritingSystems.AddSimple("voice").IsAudio = true;
+			project.WritingSystems.AddSimple("voice").IsVoice = true;
 
 			Template = new ViewTemplate
 			{

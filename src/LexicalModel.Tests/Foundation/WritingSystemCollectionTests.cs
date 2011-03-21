@@ -95,16 +95,16 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			foreach (var idWspair in ws1)
 			{
-				Assert.IsTrue(ws2.ContainsKey(idWspair.Key));
+				Assert.IsTrue(ws2.Contains(idWspair.Key));
 				Assert.AreEqual(idWspair.Value.Id, ws2[idWspair.Key].Id);
 				Assert.AreEqual(idWspair.Value.Abbreviation, ws2[idWspair.Key].Abbreviation);
 				Assert.AreEqual(idWspair.Value.Font.ToString(), ws2[idWspair.Key].Font.ToString());
-				Assert.AreEqual(idWspair.Value.FontName, ws2[idWspair.Key].FontName);
-				Assert.AreEqual(idWspair.Value.FontSize, ws2[idWspair.Key].FontSize);
-				Assert.AreEqual(idWspair.Value.IsAudio, ws2[idWspair.Key].IsAudio);
-				Assert.AreEqual(idWspair.Value.IsUnicode, ws2[idWspair.Key].IsUnicode);
-				Assert.AreEqual(idWspair.Value.KeyboardName, ws2[idWspair.Key].KeyboardName);
-				Assert.AreEqual(idWspair.Value.RightToLeft, ws2[idWspair.Key].RightToLeft);
+				Assert.AreEqual(idWspair.Value.DefaultFontName, ws2[idWspair.Key].DefaultFontName);
+				Assert.AreEqual(idWspair.Value.DefaultFontSize, ws2[idWspair.Key].DefaultFontSize);
+				Assert.AreEqual(idWspair.Value.IsVoice, ws2[idWspair.Key].IsVoice);
+				Assert.AreEqual(idWspair.Value.IsUnicodeEncoded, ws2[idWspair.Key].IsUnicodeEncoded);
+				Assert.AreEqual(idWspair.Value.Keyboard, ws2[idWspair.Key].Keyboard);
+				Assert.AreEqual(idWspair.Value.RightToLeftScript, ws2[idWspair.Key].RightToLeftScript);
 				Assert.AreEqual(idWspair.Value.SortUsing, ws2[idWspair.Key].SortUsing);
 				Assert.AreEqual(idWspair.Value.CustomSortRules, ws2[idWspair.Key].CustomSortRules);
 				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2[idWspair.Key].SpellCheckingId);
@@ -118,10 +118,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			ws.Abbreviation = languageCode;
 			ws.CustomSortRules = "";
 			ws.Font = new Font(FontFamily.GenericSansSerif, 12);
-			ws.IsAudio = false;
-			ws.IsUnicode = true;
-			ws.KeyboardName = "Bogus ivories!";
-			ws.RightToLeft = false;
+			ws.IsVoice = false;
+			ws.IsUnicodeEncoded = true;
+			ws.Keyboard = "Bogus ivories!";
+			ws.RightToLeftScript = false;
 			ws.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			ws.SpellCheckingId = languageCode;
 			return ws;
@@ -134,10 +134,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			ws.Abbreviation = languageCode;
 			ws.CustomSortRules = "Bogus roolz!";
 			ws.Font = new Font(FontFamily.GenericSansSerif, 12);
-			ws.IsAudio = false;
-			ws.IsUnicode = false;
-			ws.KeyboardName = "Bogus ivories!";
-			ws.RightToLeft = false;
+			ws.IsVoice = false;
+			ws.IsUnicodeEncoded = false;
+			ws.Keyboard = "Bogus ivories!";
+			ws.RightToLeftScript = false;
 			ws.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			ws.SpellCheckingId = languageCode;
 			return ws;
@@ -201,7 +201,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			//Now check that it hasn't come back!
 			WritingSystemCollection loadedWsCollection2 = new WritingSystemCollection();
 			loadedWsCollection2.Load(_ldmlWsFolder.FolderPath);
-			Assert.IsFalse(loadedWsCollection2.ContainsKey(ws.Id));
+			Assert.IsFalse(loadedWsCollection2.Contains(ws.Id));
 		}
 
 		[Test]
@@ -224,7 +224,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				CreateLdmlWritingsystemDefinitionFile();
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
 				loadedWsCollection.Load(_ldmlWsFolder.FolderPath);
-				loadedWsCollection["test"].KeyboardName = "changed";
+				loadedWsCollection["test"].Keyboard = "changed";
 				loadedWsCollection.Write(_ldmlWsFolder.FolderPath);
 				WritingSystemCollection reloadedWsCollection = new WritingSystemCollection();
 				reloadedWsCollection.Load(_ldmlWsFolder.FolderPath);
@@ -245,7 +245,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			var writingSystemCollection = new WritingSystemCollection();
 			writingSystemCollection.Add("en", new WritingSystem("en", new Font("Arial", 12)));
 			var audio = new WritingSystem("en", new Font("Arial", 12));
-			audio.IsAudio = true;
+			audio.IsVoice = true;
 			writingSystemCollection.Add("voice", audio);
 
 			var ids = writingSystemCollection.TrimToActualTextWritingSystemIds(new List<string>() { "en", "voice" });

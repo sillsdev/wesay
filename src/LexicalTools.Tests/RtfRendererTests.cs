@@ -17,7 +17,7 @@ namespace WeSay.LexicalTools.Tests
 			var writingSystemCollection = new WritingSystemCollection();
 			writingSystemCollection.Add("en", new WritingSystem("en", new Font("Arial", 12)));
 			var audio = new WritingSystem("en", new Font("Arial", 12));
-			audio.IsAudio = true;
+			audio.IsVoice = true;
 			writingSystemCollection.Add("voice", audio);
 			var m = new MultiText();
 			m.SetAlternative("en", "foo");

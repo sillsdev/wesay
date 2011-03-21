@@ -29,7 +29,7 @@ namespace Addin.Transform
 		{
 			if (String.IsNullOrEmpty(VernacularLanguageWritingSystemId))
 			{
-				if (projectInfo.WritingSystems.ContainsKey("v"))
+				if (projectInfo.WritingSystems.Contains("v"))
 				{
 					VernacularLanguageWritingSystemId = "v";
 				}
@@ -48,19 +48,19 @@ namespace Addin.Transform
 
 			if (String.IsNullOrEmpty(NationalLanguageWritingSystemId))
 			{
-				if (projectInfo.WritingSystems.ContainsKey("tpi")) //melanesian pidgin
+				if (projectInfo.WritingSystems.Contains("tpi")) //melanesian pidgin
 				{
 					NationalLanguageWritingSystemId = "tpi";
 				}
-				if (projectInfo.WritingSystems.ContainsKey("TPI")) //melanesian pidgin
+				if (projectInfo.WritingSystems.Contains("TPI")) //melanesian pidgin
 				{
 					NationalLanguageWritingSystemId = "TPI";
 				}
-				if (projectInfo.WritingSystems.ContainsKey("th")) //thai
+				if (projectInfo.WritingSystems.Contains("th")) //thai
 				{
 					NationalLanguageWritingSystemId = "th";
 				}
-				if (projectInfo.WritingSystems.ContainsKey("fr")) //french
+				if (projectInfo.WritingSystems.Contains("fr")) //french
 				{
 					NationalLanguageWritingSystemId = "fr";
 				}
