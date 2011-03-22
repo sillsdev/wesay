@@ -115,10 +115,10 @@ namespace Addin.Transform.PdfDictionary
 
 			using (var f = File.CreateText(path))
 			{
-				foreach (var pair in writingSystemCollection)
+				foreach (var writingSystem in writingSystemCollection)
 				{
-					f.WriteLine(":lang("+pair.Key+") {");
-					f.WriteLine(styleProvider.GetAutoFontsCascadingStyleSheetLinesForWritingSystem(pair.Value));
+					f.WriteLine(":lang("+writingSystem.Id+") {");
+					f.WriteLine(styleProvider.GetAutoFontsCascadingStyleSheetLinesForWritingSystem(writingSystem));
 					f.WriteLine("}");
 					f.WriteLine();
 				}

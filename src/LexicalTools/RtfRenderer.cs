@@ -166,7 +166,7 @@ namespace WeSay.LexicalTools
 			int i = 0;
 			foreach (var ws in WritingSystems)
 			{
-				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + ws.Value.Font.FontFamily.Name +
+				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + ws.Font.FontFamily.Name +
 						   ";");
 				i++;
 			}
@@ -184,7 +184,7 @@ namespace WeSay.LexicalTools
 			int i = 0;
 			foreach (var ws in WritingSystems)
 			{
-				if (ws.Value == writingSystem)
+				if (ws == writingSystem)
 				{
 					break;
 				}

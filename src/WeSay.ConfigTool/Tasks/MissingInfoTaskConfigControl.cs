@@ -52,8 +52,8 @@ namespace WeSay.ConfigTool.Tasks
 			{
 				_relevantWritingSystems = new List<WritingSystem>();
 				var relevantWritingSystems = from x in _viewTemplate.WritingSystems
-											 where field.WritingSystemIds.Contains(x.Key)
-											 select x.Value;
+											 where field.WritingSystemIds.Contains(x.Id)
+											 select x;
 				_relevantWritingSystems.AddRange(relevantWritingSystems);
 
 

@@ -49,18 +49,12 @@ namespace WeSay.LexicalModel.Foundation
 			set { throw new NotImplementedException(); }
 		}
 
-		// TODO Remove the use of Value wherever it occurs
-		public WritingSystem Value
-		{
-			get { throw new NotImplementedException(); }
-		}
-
 		public object CustomSortRules { get; set; }
 
-		public string Key
-		{
-			get { throw new NotImplementedException(); }
-		}
+		//public string Id
+		//{
+		//    get { throw new NotImplementedException(); }
+		//}
 
 		#region Nested type: SpellCheckerIdToDisplayStringConverter
 
@@ -229,9 +223,11 @@ namespace WeSay.LexicalModel.Foundation
 
 		public new string SortUsing { get; set; }
 
+		// TODO Should be able to use .Collator on PWSD
 		public IComparable Compare(string èdit, string edít)
 		{
 			throw new NotImplementedException();
 		}
+
 	}
 }

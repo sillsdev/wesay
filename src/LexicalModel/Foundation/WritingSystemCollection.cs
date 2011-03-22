@@ -92,5 +92,10 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			throw new NotImplementedException();
 		}
+
+		public new WritingSystem Get(string key)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
