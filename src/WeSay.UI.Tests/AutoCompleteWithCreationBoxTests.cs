@@ -226,7 +226,7 @@ namespace WeSay.UI.Tests
 			SetKeyAndShow("3");
 			//the +3 fudge here is because the actual height of the
 			//inner text box is something less than the Font's GetHeight
-			Assert.Greater(_control.Height + 3, _ws.Font.GetHeight());
+			Assert.Greater(_control.Height + 3, WritingSystemInfo.CreateFont(_ws).GetHeight());
 		}
 
 		//------------------------------------------------------------

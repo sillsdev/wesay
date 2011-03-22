@@ -204,6 +204,7 @@
 	<Compile Include="Foundation\WritingSystemCollection.cs" />
 	<Compile Include="Foundation\WritingSystemForChorusAdaptor.cs" />
 	<Compile Include="Foundation\WritingSystemCollection_V1.cs" />
+	<Compile Include="Foundation\WritingSystemInfo.cs" />
 	<Compile Include="Foundation\WritingSystem_V1.cs" />
 	<Compile Include="IFieldQuery.cs" />
 	<Compile Include="LexEntryRepository.cs" />

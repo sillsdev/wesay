@@ -145,7 +145,7 @@ namespace WeSay.UI
 					throw new ArgumentNullException();
 				}
 				_writingSystem = value;
-				Font = value.Font;
+				Font = WritingSystemInfo.CreateFont(value);
 				if (value.RightToLeftScript)
 				{
 					RightToLeft = RightToLeft.Yes;
@@ -594,7 +594,7 @@ namespace WeSay.UI
 			}
 			TextRenderer.DrawText(e.Graphics,
 								  e.ToolTipText,
-								  _writingSystem.Font,
+								  WritingSystemInfo.CreateFont(_writingSystem),
 								  e.Bounds,
 								  tooltip.ForeColor,
 								  flags);
@@ -617,7 +617,7 @@ namespace WeSay.UI
 			{
 				return TextRenderer.MeasureText(g,
 												text,
-												_writingSystem.Font,
+											   WritingSystemInfo.CreateFont(_writingSystem),
 												new Size(maxWidth, int.MaxValue),
 												flags);
 			}

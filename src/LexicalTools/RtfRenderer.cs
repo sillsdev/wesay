@@ -166,7 +166,7 @@ namespace WeSay.LexicalTools
 			int i = 0;
 			foreach (var ws in WritingSystems)
 			{
-				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + ws.Font.FontFamily.Name +
+				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + WritingSystemInfo.CreateFont(ws).FontFamily.Name +
 						   ";");
 				i++;
 			}
@@ -290,7 +290,7 @@ namespace WeSay.LexicalTools
 				//that ws isn't actually part of our configuration, so can't get a special font for it
 			}
 			string rtf = @"\f" + GetFontNumber(writingSystem);
-			int fontSize = Convert.ToInt16((sizeBoost + writingSystem.Font.SizeInPoints)*2);
+			int fontSize = Convert.ToInt16((sizeBoost + WritingSystemInfo.CreateFont(writingSystem).SizeInPoints)*2);
 			rtf += @"\fs" + fontSize + " ";
 			return rtf;
 		}

@@ -99,7 +99,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				Assert.IsTrue(rhs.Contains(lhsWritingSystem.Id));
 				Assert.AreEqual(lhsWritingSystem.Id, rhsWritingSystem.Id);
 				Assert.AreEqual(lhsWritingSystem.Abbreviation, rhsWritingSystem.Abbreviation);
-				Assert.AreEqual(lhsWritingSystem.Font.ToString(), rhsWritingSystem.Font.ToString());
+				Assert.AreEqual(WritingSystemInfo.CreateFont(lhsWritingSystem).ToString(), WritingSystemInfo.CreateFont(rhsWritingSystem).ToString());
 				Assert.AreEqual(lhsWritingSystem.DefaultFontName, rhsWritingSystem.DefaultFontName);
 				Assert.AreEqual(lhsWritingSystem.DefaultFontSize, rhsWritingSystem.DefaultFontSize);
 				Assert.AreEqual(lhsWritingSystem.IsVoice, rhsWritingSystem.IsVoice);
@@ -118,8 +118,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			ws.ISO = languageCode;
 			ws.Abbreviation = languageCode;
 			ws.CustomSortRules = "";
-			ws.Font = new Font(FontFamily.GenericSansSerif, 12);
 			ws.IsVoice = false;
+			ws.DefaultFontName = new Font(FontFamily.GenericSansSerif, 12).Name;
+			ws.DefaultFontSize = new Font(FontFamily.GenericSansSerif, 12).Size; ws.IsVoice = false;
 			ws.IsUnicodeEncoded = true;
 			ws.Keyboard = "Bogus ivories!";
 			ws.RightToLeftScript = false;
@@ -134,7 +135,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			ws.ISO = languageCode;
 			ws.Abbreviation = languageCode;
 			ws.CustomSortRules = "Bogus roolz!";
-			ws.Font = new Font(FontFamily.GenericSansSerif, 12);
+			ws.DefaultFontName = new Font(FontFamily.GenericSansSerif, 12).Name;
+			ws.DefaultFontSize = new Font(FontFamily.GenericSansSerif, 12).Size;
 			ws.IsVoice = false;
 			ws.IsUnicodeEncoded = false;
 			ws.Keyboard = "Bogus ivories!";
@@ -163,10 +165,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 				var wsCollectionToBeWritten = new WritingSystemCollection();
 				WritingSystem ws = CreateDetailedWritingSystem("test");
-				ws.GetAsPalasoWritingSystemDefinition().Region = "Region1";
+				ws.Region = "Region1";
 				wsCollectionToBeWritten.Add(ws.Id, ws);
 				WritingSystem ws2 = CreateDetailedWritingSystem("test");
-				ws2.GetAsPalasoWritingSystemDefinition().Region = "Region2";
+				ws2.Region = "Region2";
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
 				var loadedWsCollection = new WritingSystemCollection();
@@ -179,7 +181,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			var store = new LdmlInFolderWritingSystemStore(pathToStore);
 			foreach (var writingSystem in wsCollectionToBeWritten)
 			{
-				store.Set(writingSystem.GetAsPalasoWritingSystemDefinition());
+				store.Set(writingSystem);
 			}
 			store.Save();
 		}
@@ -273,8 +275,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				// since Linux may not have CourierNew, we
 				// need to test against the font mapping
 				Font expectedFont = new Font("Courier New", 10);
-				Assert.AreEqual(expectedFont.Name, ws.Font.Name);
-				Assert.AreEqual(expectedFont.Size, ws.Font.Size);
+				Assert.AreEqual(expectedFont.Name, WritingSystemInfo.CreateFont(ws).Name);
+				Assert.AreEqual(expectedFont.Size, WritingSystemInfo.CreateFont(ws).Size);
 		}
 
 
