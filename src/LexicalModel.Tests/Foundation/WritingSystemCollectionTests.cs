@@ -82,9 +82,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			{
 				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
 				WritingSystem ws = CreateDetailedWritingSystem("test");
-				wsCollectionToBeWritten.Add(ws.Id,ws);
+				wsCollectionToBeWritten.Set(ws);
 				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
-				wsCollectionToBeWritten.Add(ws2.Id, ws2);
+				wsCollectionToBeWritten.Set(ws2);
 				WriteOldWeSayWritingSystemsFile(_wsPrefsFile.Path, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
 				//loadedWsCollection.LoadFromLegacyWeSayFile(_wsPrefsFile.Path);
@@ -152,9 +152,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
 				WritingSystem ws = CreateDetailedWritingSystem("test");
-				wsCollectionToBeWritten.Add(ws.Id, ws);
+				wsCollectionToBeWritten.Set(ws);
 				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
-				wsCollectionToBeWritten.Add(ws2.Id, ws2);
+				wsCollectionToBeWritten.Set(ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.FolderPath, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
 				loadedWsCollection.Load(_ldmlWsFolder.FolderPath);
@@ -167,10 +167,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				var wsCollectionToBeWritten = new WritingSystemCollection();
 				WritingSystem ws = CreateDetailedWritingSystem("test");
 				ws.Region = "Region1";
-				wsCollectionToBeWritten.Add(ws.Id, ws);
+				wsCollectionToBeWritten.Set(ws);
 				WritingSystem ws2 = CreateDetailedWritingSystem("test");
 				ws2.Region = "Region2";
-				wsCollectionToBeWritten.Add(ws2.Id, ws2);
+				wsCollectionToBeWritten.Set(ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
 				var loadedWsCollection = new WritingSystemCollection();
 				loadedWsCollection.Load(_ldmlWsFolder.Path);
@@ -193,9 +193,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			//Write out two writing systems
 			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
 			WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
-			wsCollectionToBeWritten.Add(ws.Id, ws);
+			wsCollectionToBeWritten.Set(ws);
 			WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
-			wsCollectionToBeWritten.Add(ws2.Id, ws2);
+			wsCollectionToBeWritten.Set(ws2);
 			wsCollectionToBeWritten.Write(_ldmlWsFolder.FolderPath);
 			//load them up again
 			WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
@@ -213,9 +213,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
 			WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
-			wsCollectionToBeWritten.Add(ws.Id, ws);
+			wsCollectionToBeWritten.Set(ws);
 			WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
-			wsCollectionToBeWritten.Add(ws2.Id, ws2);
+			wsCollectionToBeWritten.Set(ws2);
 			wsCollectionToBeWritten.Write(_ldmlWsFolder.FolderPath);
 			WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
 			loadedWsCollection.Load(_ldmlWsFolder.FolderPath);
@@ -239,7 +239,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
 			WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
-			wsCollectionToBeWritten.Add(ws.Id, ws);
+			wsCollectionToBeWritten.Set(ws);
 			wsCollectionToBeWritten.Write(_ldmlWsFolder.FolderPath);
 		}
 
@@ -247,10 +247,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void TrimToActualTextWritingSystemIds_RemovesAudio()
 		{
 			var writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Add("en", new WritingSystem("en"));
+			writingSystemCollection.Set(new WritingSystem("en"));
 			var audio = new WritingSystem("en");
 			audio.IsVoice = true;
-			writingSystemCollection.Add("voice", audio);
+			writingSystemCollection.Set(audio);
 
 			var ids = writingSystemCollection.TrimToActualTextWritingSystemIds(new List<string>() { "en", "voice" });
 			Assert.AreEqual(1, ids.Count);
@@ -315,8 +315,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		private static WritingSystemCollection MakeSampleCollection()
 		{
 			WritingSystemCollection c = new WritingSystemCollection();
-			c.Add("one", new WritingSystem("one"));
-			c.Add("two", new WritingSystem("two"));
+			c.Set(new WritingSystem("one"));
+			c.Set(new WritingSystem("two"));
 			return c;
 		}
 

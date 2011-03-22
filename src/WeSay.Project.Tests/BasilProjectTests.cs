@@ -232,7 +232,7 @@ namespace WeSay.Project.Tests
 			BasilProject project = new BasilProject();
 			WritingSystemCollection wsCollection = new WritingSystemCollection();
 			WritingSystem ws = new WritingSystem(){ISO = "ldmlWs"};
-			wsCollection.Add(ws.Id, ws);
+			wsCollection.Set(ws);
 			wsCollection.Write(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 

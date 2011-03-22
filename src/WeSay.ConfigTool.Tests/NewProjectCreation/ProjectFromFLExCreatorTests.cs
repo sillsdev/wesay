@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.ConfigTool.NewProjectCreation;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -28,8 +29,8 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				</entry>", "0.12"))
 			{
 				var collection = new WritingSystemCollection();
-				collection.Add(WritingSystemInfo.IdForUnknownVernacular/*v*/, new WritingSystem());
-				collection.Add("en", new WritingSystem());
+				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownVernacular));
+				collection.Set(WritingSystem.FromRFC5646("en"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 	//put one guy in there already
 				 int originalCount = collection.Count;// collection.Count;
@@ -56,8 +57,8 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				</entry>", "0.12"))
 			{
 				var collection = new WritingSystemCollection();
-				collection.Add(WritingSystemInfo.IdForUnknownVernacular/*v*/, new WritingSystem());
-				collection.Add("en", new WritingSystem());
+				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownVernacular));
+				collection.Set(WritingSystem.FromRFC5646("en"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 				//put one guy in there already
 				int originalCount = collection.Count;// collection.Count;
@@ -98,12 +99,12 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 		</entry>", "0.12"))
 			{
 				var collection = new WritingSystemCollection();
-				collection.Add("en", new WritingSystem());
-				collection.Add("fromLU", new WritingSystem());
-				collection.Add("fromGloss", new WritingSystem());
-				collection.Add("fromDef", new WritingSystem());
-				collection.Add("fromExample", new WritingSystem());
-				collection.Add("fromTrans", new WritingSystem());
+				collection.Set(new WritingSystem("en"));
+				collection.Set(new WritingSystem("fromLU"));
+				collection.Set(new WritingSystem("fromGloss"));
+				collection.Set(new WritingSystem("fromDef"));
+				collection.Set(new WritingSystem("fromExample"));
+				collection.Set(new WritingSystem("fromTrans"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 
 				ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);
@@ -134,8 +135,8 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 			 ", "0.12"))
 			{
 				var collection = new WritingSystemCollection();
-				collection.Add(WritingSystemInfo.IdForUnknownAnalysis, new WritingSystem());
-				collection.Add(WritingSystemInfo.IdForUnknownVernacular, new WritingSystem());
+				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownVernacular));
+				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownAnalysis));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 
 				ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);

@@ -15,10 +15,10 @@ namespace WeSay.LexicalTools.Tests
 		public void GetActualTextForms_DropsIsAudioForm()
 		{
 			var writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Add("en", new WritingSystem("en"));
+			writingSystemCollection.Set(new WritingSystem("en"));
 			var audio = new WritingSystem("en");
 			audio.IsVoice = true;
-			writingSystemCollection.Add("voice", audio);
+			writingSystemCollection.Set(audio);
 			var m = new MultiText();
 			m.SetAlternative("en", "foo");
 			m.SetAlternative("voice", "boo");

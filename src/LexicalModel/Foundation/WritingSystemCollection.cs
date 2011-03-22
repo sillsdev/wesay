@@ -50,10 +50,10 @@ namespace WeSay.LexicalModel.Foundation
 		}
 
 		// TODO Change to Set, also has sig change (no key).
-		public void Add(string testWritingSystemVernId, WritingSystem p1)
-		{
-			throw new NotImplementedException();
-		}
+		//public void Add(string testWritingSystemVernId, WritingSystem p1)
+		//{
+		//    throw new NotImplementedException();
+		//}
 
 		// TODO Move to Palaso
 		public void OnWritingSystemIDChange(WritingSystem ws, string oldId)
