@@ -19,19 +19,13 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
-		// TODO Use .Get everywhere
-		public WritingSystem this[string id]
+		public new WritingSystem Get(string id)
 		{
-			get { throw new NotImplementedException(); }
+			throw new NotImplementedException();
 		}
 
-		public IEnumerable<WritingSystem> Values { get; private set; }
+		//public new IEnumerable<WritingSystem> WritingSystemDefinitions { get; private set; }
 
-
-		public IEnumerable<string> Keys
-		{
-			get { throw new NotImplementedException(); }
-		}
 
 		// TODO Needs to change to Save() path is in ctor
 		public void Write(string getPathToLdmlWritingSystemsFolder)
@@ -39,6 +33,7 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
+		// TODO remove
 		public void Load(string getPathToLdmlWritingSystemsFolder)
 		{
 			throw new NotImplementedException();
@@ -54,6 +49,7 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
+		// TODO Change to Set, also has sig change (no key).
 		public void Add(string testWritingSystemVernId, WritingSystem p1)
 		{
 			throw new NotImplementedException();

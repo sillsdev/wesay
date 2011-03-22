@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 		}
 
 		[SetUp]

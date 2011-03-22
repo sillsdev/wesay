@@ -711,7 +711,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 				// should verify that this writing system is in optionslist
 				_semanticDomainWritingSystem =
-					BasilProject.Project.WritingSystems[WritingSystemIdForNamesAndQuestions];
+					BasilProject.Project.WritingSystems.Get(WritingSystemIdForNamesAndQuestions);
 				string semanticDomainType = reader.GetAttribute("semantic-domain-type");
 				// todo should verify that domain type matches type of optionList in semantic domain field
 

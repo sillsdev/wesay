@@ -35,11 +35,11 @@ namespace Addin.Transform
 				}
 				else //guess
 				{
-					foreach (string id in projectInfo.WritingSystems.Keys)
+					foreach (var writingSystem in projectInfo.WritingSystems)
 					{
-						if (!"en fr chn th tpi".Contains(id))
+						if (!"en fr chn th tpi".Contains(writingSystem.Id))
 						{
-							VernacularLanguageWritingSystemId = id;
+							VernacularLanguageWritingSystemId = writingSystem.Id;
 							break;
 						}
 					}

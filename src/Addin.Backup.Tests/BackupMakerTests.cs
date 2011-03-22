@@ -18,7 +18,7 @@ namespace Addin.Backup.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			_destinationZip = Path.Combine(Path.GetTempPath(), Path.GetTempFileName() + ".zip");
 			_sourceProjectPath = BasilProject.GetPretendProjectDirectory();
 			_backupMaker = new BackupMaker();

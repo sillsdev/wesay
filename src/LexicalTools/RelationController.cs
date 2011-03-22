@@ -164,7 +164,7 @@ namespace WeSay.LexicalTools
 		private WritingSystem GetWritingSystemFromField()
 		{
 			string firstWsId = _field.WritingSystemIds[0];
-			return BasilProject.Project.WritingSystems[firstWsId];
+			return BasilProject.Project.WritingSystems.Get(firstWsId);
 		}
 
 		//private static LexEntry Identity(LexEntry e) {

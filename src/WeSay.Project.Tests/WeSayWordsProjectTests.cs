@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -60,7 +60,7 @@ namespace WeSay.Project.Tests
 				WeSayWordsProject project = p.CreateLoadedProject();
 				using (File.OpenWrite(p.PathToLiftFile))
 				{
-					WritingSystem ws = project.WritingSystems["v"];
+					WritingSystem ws = project.WritingSystems.Get("v");
 					ws.ISO = "newIdForV";
 					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
@@ -79,7 +79,7 @@ namespace WeSay.Project.Tests
 				XmlDocument doc = new XmlDocument();
 				doc.Load(p.PathToLiftFile);
 				Assert.IsNotNull(doc.SelectNodes("//form[lang='v']"));
-				WritingSystem ws = project.WritingSystems["v"];
+				WritingSystem ws = project.WritingSystems.Get("v");
 				ws.ISO = "newIdForV";
 				Assert.IsTrue(project.MakeWritingSystemIdChange(ws, "v"));
 				doc.Load(p.PathToLiftFile);

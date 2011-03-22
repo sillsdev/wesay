@@ -54,7 +54,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				if (fieldDefn.WritingSystemIds.Count > 0)
 				{
-					ws = BasilProject.Project.WritingSystems[fieldDefn.WritingSystemIds[0]];
+					ws = BasilProject.Project.WritingSystems.Get(fieldDefn.WritingSystemIds[0]);
 				}
 				else
 				{

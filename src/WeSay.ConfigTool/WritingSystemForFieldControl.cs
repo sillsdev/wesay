@@ -57,7 +57,7 @@ namespace WeSay.ConfigTool
 			{
 				using (Broker broker = new Broker())
 				{
-					foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
+					foreach (WritingSystem ws in BasilProject.Project.WritingSystems.WritingSystemDefinitions)
 					{
 						try
 						{
@@ -232,7 +232,7 @@ namespace WeSay.ConfigTool
 																						hasSpellCheckerInstalled));
 				_writingSystemListBox.SetItemChecked(i, true);
 			}
-			foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
+			foreach (WritingSystem ws in BasilProject.Project.WritingSystems.WritingSystemDefinitions)
 			{
 				if (!CurrentField.WritingSystemIds.Contains(ws.Id))
 				{

@@ -212,7 +212,7 @@ namespace WeSay.ConfigTool.Tests
 		public void RunAndExitWithoutOpening()
 		{
 			_mainWindowTester.Close();
-			WeSayWordsProject.InitializeForTests(); // for Teardown
+			WeSayProjectTestHelper.InitializeForTests(); // for Teardown
 		}
 
 		[Test]

@@ -30,7 +30,7 @@ namespace Addin.Transform
 			if (_projectInfo != null)
 			{
 				languageCombo.Items.Clear();
-				foreach (WritingSystem ws in _projectInfo.WritingSystems.Values)
+				foreach (WritingSystem ws in _projectInfo.WritingSystems.WritingSystemDefinitions)
 				{
 					languageCombo.Items.Add(ws.Id);
 				}

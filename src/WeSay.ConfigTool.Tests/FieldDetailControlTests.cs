@@ -13,7 +13,7 @@ namespace WeSay.ConfigTool.Tests
 		[SetUp]
 		public void Setup()
 		{
-			BasilProject.InitializeForTests();
+			BasilProjectTestHelper.InitializeForTests();
 			_control = new FieldDetailControl();
 
 			_field = new Field("test", "LexEntry", new string[] {"en_US"});

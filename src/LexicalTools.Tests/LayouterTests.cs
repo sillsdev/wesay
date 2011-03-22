@@ -20,7 +20,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			var b = new Autofac.Builder.ContainerBuilder();
 			b.Register(c => new MediaNamingHelper(new string[] {"en"}));
 

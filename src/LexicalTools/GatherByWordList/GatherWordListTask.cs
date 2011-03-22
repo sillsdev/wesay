@@ -57,7 +57,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			else
 			{
 				string firstWSid = lexicalFormField.WritingSystemIds[0];
-				WritingSystem firstWS = BasilProject.Project.WritingSystems[firstWSid];
+				WritingSystem firstWS = BasilProject.Project.WritingSystems.Get(firstWSid);
 				_lexicalUnitWritingSystem = firstWS;
 			}
 

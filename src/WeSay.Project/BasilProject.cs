@@ -11,6 +11,24 @@ using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
+	public class BasilProjectTestHelper
+	{
+		/// <summary>
+		/// Many tests throughout the system will not care at all about project related things,
+		/// but they will break if there is no project initialized, since many things
+		/// will reach the project through a static property.
+		/// Those tests can just call this before doing anything else, so
+		/// that other things don't break.
+		/// </summary>
+		public static void InitializeForTests()
+		{
+			ErrorReport.IsOkToInteractWithUser = false;
+			var project = new BasilProject();
+			project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory());
+			project.UiOptions.Language = "en";
+		}
+	}
+
 	public class BasilProject: IDisposable
 	{
 		private static BasilProject _singleton;
@@ -97,21 +115,6 @@ namespace WeSay.Project
 			_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(projectDirectoryPath));
 		}
 
-		/// <summary>
-		/// Many tests throughout the system will not care at all about project related things,
-		/// but they will break if there is no project initialized, since many things
-		/// will reach the project through a static property.
-		/// Those tests can just call this before doing anything else, so
-		/// that other things don't break.
-		/// </summary>
-		public static void InitializeForTests()
-		{
-			ErrorReport.IsOkToInteractWithUser = false;
-			var project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
-			project.UiOptions.Language = "en";
-		}
-
 		public static string GetPretendProjectDirectory()
 		{
 			return Path.Combine(GetTopAppDirectory(), Path.Combine("SampleProjects", "PRETEND"));
@@ -127,7 +130,7 @@ namespace WeSay.Project
 			List<WritingSystem> l = new List<WritingSystem>();
 			foreach (string id in writingSystemIds)
 			{
-				l.Add(WritingSystems[id]);
+				l.Add(WritingSystems.Get(id));
 			}
 			return l;
 		}

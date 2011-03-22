@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.AddinLib;
@@ -18,7 +18,7 @@ namespace Addin.Transform.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			_filePath = Path.GetTempFileName();
 			_liftFilePath = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_filePath);

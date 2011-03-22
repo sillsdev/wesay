@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			_glossingLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 			_vernacularLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 			BasilProject.Project.WritingSystems.AddSimple("fr");

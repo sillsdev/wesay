@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
@@ -163,18 +163,18 @@ namespace WeSay.Project.Tests
 			foreach (var idWspair in ws1)
 			{
 				Assert.IsTrue(ws2.Contains(idWspair.Key));
-				Assert.AreEqual(idWspair.Value.Id, ws2[idWspair.Key].Id);
-				Assert.AreEqual(idWspair.Value.Abbreviation, ws2[idWspair.Key].Abbreviation);
-				Assert.AreEqual(idWspair.Value.CustomSortRules, ws2[idWspair.Key].CustomSortRules);
-				Assert.AreEqual(idWspair.Value.Font.ToString(), ws2[idWspair.Key].Font.ToString());
-				Assert.AreEqual(idWspair.Value.DefaultFontName, ws2[idWspair.Key].DefaultFontName);
-				Assert.AreEqual(idWspair.Value.DefaultFontSize, ws2[idWspair.Key].DefaultFontSize);
-				Assert.AreEqual(idWspair.Value.IsVoice, ws2[idWspair.Key].IsVoice);
-				Assert.AreEqual(idWspair.Value.IsUnicodeEncoded, ws2[idWspair.Key].IsUnicodeEncoded);
-				Assert.AreEqual(idWspair.Value.Keyboard, ws2[idWspair.Key].Keyboard);
-				Assert.AreEqual(idWspair.Value.RightToLeftScript, ws2[idWspair.Key].RightToLeftScript);
-				Assert.AreEqual(idWspair.Value.SortUsing, ws2[idWspair.Key].SortUsing);
-				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2[idWspair.Key].SpellCheckingId);
+				Assert.AreEqual(idWspair.Value.Id, ws2.Get(idWspair.Key).Id);
+				Assert.AreEqual(idWspair.Value.Abbreviation, ws2.Get(idWspair.Key).Abbreviation);
+				Assert.AreEqual(idWspair.Value.CustomSortRules, ws2.Get(idWspair.Key).CustomSortRules);
+				Assert.AreEqual(idWspair.Value.Font.ToString(), ws2.Get(idWspair.Key).Font.ToString());
+				Assert.AreEqual(idWspair.Value.DefaultFontName, ws2.Get(idWspair.Key).DefaultFontName);
+				Assert.AreEqual(idWspair.Value.DefaultFontSize, ws2.Get(idWspair.Key).DefaultFontSize);
+				Assert.AreEqual(idWspair.Value.IsVoice, ws2.Get(idWspair.Key).IsVoice);
+				Assert.AreEqual(idWspair.Value.IsUnicodeEncoded, ws2.Get(idWspair.Key).IsUnicodeEncoded);
+				Assert.AreEqual(idWspair.Value.Keyboard, ws2.Get(idWspair.Key).Keyboard);
+				Assert.AreEqual(idWspair.Value.RightToLeftScript, ws2.Get(idWspair.Key).RightToLeftScript);
+				Assert.AreEqual(idWspair.Value.SortUsing, ws2.Get(idWspair.Key).SortUsing);
+				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2.Get(idWspair.Key).SpellCheckingId);
 			}
 		}
 
@@ -202,7 +202,7 @@ namespace WeSay.Project.Tests
 			string pathToWritingSystemsInApplicationCommonDirectory = BasilProject.GetPathToLdmlWritingSystemsFolder(BasilProject.ApplicationCommonDirectory);
 			string englishLdmlContent = File.ReadAllText(Path.Combine(pathToWritingSystemsInApplicationCommonDirectory, "en.ldml"));
 
-			WritingSystem ws = project.WritingSystems["en"];
+			WritingSystem ws = project.WritingSystems.Get("en");
 			if (ws.Abbreviation == "writeme!"){throw new ApplicationException("This test seems to have failed at some point and the en.ldml file in the application common directory neesds to be reverted before the next test run.");}
 			ws.Abbreviation = "writeme!";
 			project.Save();

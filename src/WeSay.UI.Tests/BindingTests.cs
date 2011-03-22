@@ -15,7 +15,7 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			BasilProject.InitializeForTests();
+			BasilProjectTestHelper.InitializeForTests();
 		}
 
 		[Test]

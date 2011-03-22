@@ -40,6 +40,47 @@ using WeSay.UI;
 
 namespace WeSay.Project
 {
+	public class WeSayProjectTestHelper
+	{
+		/// <summary>
+		/// See comment on BasilProject.InitializeForTests()
+		/// </summary>
+		public new static WeSayWordsProject InitializeForTests()
+		{
+			WeSayWordsProject project = new WeSayWordsProject();
+
+			try
+			{
+				File.Delete(WeSayWordsProject.PathToPretendLiftFile);
+			}
+			catch (Exception) {}
+
+			DirectoryInfo projectDirectory = Directory.CreateDirectory(Path.GetDirectoryName(WeSayWordsProject.PathToPretendLiftFile));
+			Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
+
+			//setup writing systems
+			WritingSystemCollection wsc = new WritingSystemCollection();
+			wsc.Add(wsc.TestWritingSystemVernId,
+					new WritingSystem(wsc.TestWritingSystemVernId, new Font("Courier", 10)));
+			wsc.Add(wsc.TestWritingSystemAnalId,
+					new WritingSystem(wsc.TestWritingSystemAnalId, new Font("Arial", 15)));
+			if (File.Exists(WeSayWordsProject.PathToPretendWritingSystemPrefs))
+			{
+				File.Delete(WeSayWordsProject.PathToPretendWritingSystemPrefs);
+			}
+			string pathToLdmlWsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
+			if (Directory.Exists(pathToLdmlWsFolder))
+			{
+				Directory.Delete(pathToLdmlWsFolder, true);
+			}
+			wsc.Write(pathToLdmlWsFolder);
+
+			project.SetupProjectDirForTests(WeSayWordsProject.PathToPretendLiftFile);
+			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
+			return project;
+		}
+	}
+
 	public class WeSayWordsProject : BasilProject, IFileLocator
 	{
 		private IList<ITask> _tasks;
@@ -92,44 +133,6 @@ namespace WeSay.Project
 				}
 				return (WeSayWordsProject) Singleton;
 			}
-		}
-
-		/// <summary>
-		/// See comment on BasilProject.InitializeForTests()
-		/// </summary>
-		public new static WeSayWordsProject InitializeForTests()
-		{
-			WeSayWordsProject project = new WeSayWordsProject();
-
-			try
-			{
-				File.Delete(PathToPretendLiftFile);
-			}
-			catch (Exception) {}
-
-			DirectoryInfo projectDirectory = Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
-			Utilities.CreateEmptyLiftFile(PathToPretendLiftFile, "InitializeForTests()", true);
-
-			//setup writing systems
-			WritingSystemCollection wsc = new WritingSystemCollection();
-			wsc.Add(wsc.TestWritingSystemVernId,
-					new WritingSystem(wsc.TestWritingSystemVernId, new Font("Courier", 10)));
-			wsc.Add(wsc.TestWritingSystemAnalId,
-					new WritingSystem(wsc.TestWritingSystemAnalId, new Font("Arial", 15)));
-			if (File.Exists(PathToPretendWritingSystemPrefs))
-			{
-				File.Delete(PathToPretendWritingSystemPrefs);
-			}
-		   string pathToLdmlWsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
-			if (Directory.Exists(pathToLdmlWsFolder))
-			{
-				Directory.Delete(pathToLdmlWsFolder, true);
-			}
-			wsc.Write(pathToLdmlWsFolder);
-
-			project.SetupProjectDirForTests(PathToPretendLiftFile);
-			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
-			return project;
 		}
 
 		public static string PathToPretendLiftFile
@@ -1175,7 +1178,7 @@ namespace WeSay.Project
 				{
 					return WritingSystems.UnknownVernacularWritingSystem;
 				}
-				return WritingSystems[f.WritingSystemIds[0]];
+				return WritingSystems.Get(f.WritingSystemIds[0]);
 			}
 		}
 

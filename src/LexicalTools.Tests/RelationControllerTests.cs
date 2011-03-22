@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 
 			_tempFolder = new TemporaryFolder();
 			_filePath = _tempFolder.GetTemporaryFile();

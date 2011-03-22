@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -96,18 +96,18 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			foreach (var idWspair in ws1)
 			{
 				Assert.IsTrue(ws2.Contains(idWspair.Key));
-				Assert.AreEqual(idWspair.Value.Id, ws2[idWspair.Key].Id);
-				Assert.AreEqual(idWspair.Value.Abbreviation, ws2[idWspair.Key].Abbreviation);
-				Assert.AreEqual(idWspair.Value.Font.ToString(), ws2[idWspair.Key].Font.ToString());
-				Assert.AreEqual(idWspair.Value.DefaultFontName, ws2[idWspair.Key].DefaultFontName);
-				Assert.AreEqual(idWspair.Value.DefaultFontSize, ws2[idWspair.Key].DefaultFontSize);
-				Assert.AreEqual(idWspair.Value.IsVoice, ws2[idWspair.Key].IsVoice);
-				Assert.AreEqual(idWspair.Value.IsUnicodeEncoded, ws2[idWspair.Key].IsUnicodeEncoded);
-				Assert.AreEqual(idWspair.Value.Keyboard, ws2[idWspair.Key].Keyboard);
-				Assert.AreEqual(idWspair.Value.RightToLeftScript, ws2[idWspair.Key].RightToLeftScript);
-				Assert.AreEqual(idWspair.Value.SortUsing, ws2[idWspair.Key].SortUsing);
-				Assert.AreEqual(idWspair.Value.CustomSortRules, ws2[idWspair.Key].CustomSortRules);
-				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2[idWspair.Key].SpellCheckingId);
+				Assert.AreEqual(idWspair.Value.Id, ws2.Get(idWspair.Key).Id);
+				Assert.AreEqual(idWspair.Value.Abbreviation, ws2.Get(idWspair.Key).Abbreviation);
+				Assert.AreEqual(idWspair.Value.Font.ToString(), ws2.Get(idWspair.Key).Font.ToString());
+				Assert.AreEqual(idWspair.Value.DefaultFontName, ws2.Get(idWspair.Key).DefaultFontName);
+				Assert.AreEqual(idWspair.Value.DefaultFontSize, ws2.Get(idWspair.Key).DefaultFontSize);
+				Assert.AreEqual(idWspair.Value.IsVoice, ws2.Get(idWspair.Key).IsVoice);
+				Assert.AreEqual(idWspair.Value.IsUnicodeEncoded, ws2.Get(idWspair.Key).IsUnicodeEncoded);
+				Assert.AreEqual(idWspair.Value.Keyboard, ws2.Get(idWspair.Key).Keyboard);
+				Assert.AreEqual(idWspair.Value.RightToLeftScript, ws2.Get(idWspair.Key).RightToLeftScript);
+				Assert.AreEqual(idWspair.Value.SortUsing, ws2.Get(idWspair.Key).SortUsing);
+				Assert.AreEqual(idWspair.Value.CustomSortRules, ws2.Get(idWspair.Key).CustomSortRules);
+				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2.Get(idWspair.Key).SpellCheckingId);
 			}
 		}
 
@@ -224,7 +224,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				CreateLdmlWritingsystemDefinitionFile();
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
 				loadedWsCollection.Load(_ldmlWsFolder.FolderPath);
-				loadedWsCollection["test"].Keyboard = "changed";
+				loadedWsCollection.Get("test").Keyboard = "changed";
 				loadedWsCollection.Write(_ldmlWsFolder.FolderPath);
 				WritingSystemCollection reloadedWsCollection = new WritingSystemCollection();
 				reloadedWsCollection.Load(_ldmlWsFolder.FolderPath);
@@ -257,9 +257,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void MissingIdIsHandledOk()
 		{
 			WritingSystemCollection x = new WritingSystemCollection();
-			WritingSystem ws = x["unheardof"];
+			WritingSystem ws = x.Get("unheardof");
 			Assert.IsNotNull(ws);
-			Assert.AreSame(ws, x["unheardof"], "Expected to get exactly the same one each time");
+			Assert.AreSame(ws, x.Get("unheardof"), "Expected to get exactly the same one each time");
 		}
 
 		[Test]
@@ -267,7 +267,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 				CreateSampleWritingSystemFile(_wsPrefsFile.Path);
 				_collection.LoadFromLegacyWeSayFile(_wsPrefsFile.Path);
-				WritingSystem ws = _collection["PretendAnalysis"];
+				WritingSystem ws = _collection.Get("PretendAnalysis");
 				Assert.AreEqual("PretendAnalysis", ws.Id);
 				// since Linux may not have CourierNew, we
 				// need to test against the font mapping

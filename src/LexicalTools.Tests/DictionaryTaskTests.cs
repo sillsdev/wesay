@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools.Tests
 			_tempFolder = new TemporaryFolder();
 			_filePath = _tempFolder.GetTemporaryFile();
 
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			string[] vernacularWritingSystemIds = new string[]
 													  {
 															  BasilProject.Project.WritingSystems.

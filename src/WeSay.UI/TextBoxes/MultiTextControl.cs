@@ -99,7 +99,7 @@ namespace WeSay.UI.TextBoxes
 			{
 				if (allWritingSystems.Contains(id)) //why wouldn't it?
 				{
-					_writingSystemsForThisField.Add(allWritingSystems[id]);
+					_writingSystemsForThisField.Add(allWritingSystems.Get(id));
 				}
 			}
 			_showAnnotationWidget = showAnnotationWidget;
@@ -281,7 +281,7 @@ namespace WeSay.UI.TextBoxes
 					//in which case we don't really care about aligning anyhow
 					if (_allWritingSystems != null)
 					{
-						foreach (WritingSystem ws in _allWritingSystems.Values)
+						foreach (WritingSystem ws in _allWritingSystems.WritingSystemDefinitions)
 						{
 							Size size = TextRenderer.MeasureText(ws.Abbreviation,
 																 _writingSystemLabelFont) +fudgeFactor;

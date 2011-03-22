@@ -185,7 +185,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				if (field.WritingSystemIds.Count > 0)
 				{
-					listWritingSystem = writingSystems[field.WritingSystemIds[0]];
+					listWritingSystem = writingSystems.Get(field.WritingSystemIds[0]);
 				}
 				else
 				{

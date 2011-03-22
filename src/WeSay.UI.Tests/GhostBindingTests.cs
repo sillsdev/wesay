@@ -90,7 +90,7 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			BasilProject.InitializeForTests();
+			BasilProjectTestHelper.InitializeForTests();
 			_writingSystemId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 
 			WritingSystem writingSystem = new WritingSystem(_writingSystemId,

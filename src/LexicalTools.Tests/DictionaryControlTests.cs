@@ -40,7 +40,7 @@ namespace WeSay.LexicalTools.Tests
 		[TestFixtureSetUp]
 		public void SetupFixture()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 		}
 
 		public override void Setup()

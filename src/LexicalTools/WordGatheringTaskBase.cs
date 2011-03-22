@@ -46,7 +46,7 @@ namespace WeSay.LexicalTools
 			{
 				throw new ConfigurationException(string.Format("The field {0} must have at least one non-audio writing system.", field.DisplayName));
 			}
-			return BasilProject.Project.WritingSystems[ids.First()];
+			return BasilProject.Project.WritingSystems.Get(ids.First());
 		}
 
 		public override DashboardGroup Group
