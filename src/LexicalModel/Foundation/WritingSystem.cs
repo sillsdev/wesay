@@ -18,10 +18,6 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
-		public WritingSystem(string id)
-		{
-		}
-
 		//public string DefaultFontName { get; private set; }
 		//public int DefaultFontSize { get; set; }
 		public bool IsUnicodeEncoded { get; set; } // TODO Introduce IsUnicodeEncoded to palaso wsd.

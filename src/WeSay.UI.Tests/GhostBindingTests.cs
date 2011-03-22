@@ -93,7 +93,7 @@ namespace WeSay.UI.Tests
 			BasilProjectTestHelper.InitializeForTests();
 			_writingSystemId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 
-			WritingSystem writingSystem = new WritingSystem(_writingSystemId);
+			WritingSystem writingSystem = WritingSystem.FromRFC5646(_writingSystemId);
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);
 			_papaNameWidget.Text = "John";
 			_ghostFirstNameWidget = new WeSayTextBox(writingSystem, null);

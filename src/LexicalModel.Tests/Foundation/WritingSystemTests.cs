@@ -13,7 +13,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void NoSetupDefaultFont()
 		{
-			WritingSystem ws = new WritingSystem("xx");
+			WritingSystem ws = WritingSystem.FromRFC5646("xx");
 			Assert.AreEqual(33, WritingSystemInfo.CreateFont(ws).Size);
 		}
 
@@ -32,7 +32,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			// since Linux may not have Arial, we
 			// need to test against the font mapping
 			Font font = new Font("Arial", 99);
-			WritingSystem ws = new WritingSystem("one");
+			WritingSystem ws = WritingSystem.FromRFC5646("one");
 			string s = NetReflector.Write(ws);
 			string expected = "<WritingSystem><Abbreviation>one</Abbreviation><FontName>" +
 							  font.Name + "</FontName><FontSize>" + font.Size +
@@ -64,7 +64,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Compare_fr_sortsLikeFrench()
 		{
-			WritingSystem writingSystem = new WritingSystem("one");
+			WritingSystem writingSystem = WritingSystem.FromRFC5646("one");
 			writingSystem.SortUsing = "fr";
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
@@ -81,7 +81,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 											   CustomSortRulesType.CustomICU.ToString(),
 											   "NotNullOrEmpty"
 										   };
-			WritingSystem ws = new WritingSystem("one");
+			WritingSystem ws = WritingSystem.FromRFC5646("one");
 			foreach (string testValue in testValues)
 			{
 				ws.SortUsing = testValue;
@@ -92,7 +92,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Compare_en_sortsLikeEnglish()
 		{
-			WritingSystem writingSystem = new WritingSystem("one");
+			WritingSystem writingSystem = WritingSystem.FromRFC5646("one");
 			writingSystem.SortUsing = "en-US";
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
@@ -102,21 +102,21 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Constructor_IsAudio_SetToFalse()
 		{
-			WritingSystem writingSystem = new WritingSystem("one");
+			WritingSystem writingSystem = WritingSystem.FromRFC5646("one");
 			Assert.IsFalse(writingSystem.IsVoice);
 		}
 
 		[Test]
 		public void Constructor_IsUnicode_SetToTrue()
 		{
-			WritingSystem writingSystem = new WritingSystem("one");
+			WritingSystem writingSystem = WritingSystem.FromRFC5646("one");
 			Assert.IsTrue(writingSystem.IsUnicodeEncoded);
 		}
 
 		[Test]
 		public void SortUsing_customWithNoRules_sortsLikeInvariant()
 		{
-			WritingSystem writingSystem = new WritingSystem("one");
+			WritingSystem writingSystem = WritingSystem.FromRFC5646("one");
 			writingSystem.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			// hard to test because half of the system locales use the invariant table: http://blogs.msdn.com/michkap/archive/2004/12/29/344136.aspx
 		}
@@ -124,7 +124,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void SortUsing_null_Id()
 		{
-			WritingSystem writingSystem = new WritingSystem("one");
+			WritingSystem writingSystem = WritingSystem.FromRFC5646("one");
 			writingSystem.SortUsing = null;
 			Assert.AreEqual(writingSystem.Id, writingSystem.SortUsing);
 		}
@@ -132,7 +132,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void SortUsing_HasCustomSortRulesSortUsingNotCustom_ClearsCustomSortRules()
 		{
-			WritingSystem writingSystem = new WritingSystem("one");
+			WritingSystem writingSystem = WritingSystem.FromRFC5646("one");
 			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
 			string rules = "&n < ng <<< Ng <<< NG";
 			writingSystem.CustomSortRules = rules;
@@ -146,7 +146,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void CustomSortRules_SortUsingNotCustom_NotSet()
 		{
-			WritingSystem writingSystem = new WritingSystem("one");
+			WritingSystem writingSystem = WritingSystem.FromRFC5646("one");
 			writingSystem.SortUsing = "two";
 			string rules = "&n < ng <<< Ng <<< NG";
 			writingSystem.CustomSortRules = rules;
@@ -156,7 +156,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void CustomSortRules_SortUsingCustomSortRules_Set()
 		{
-			WritingSystem writingSystem = new WritingSystem("one");
+			WritingSystem writingSystem = WritingSystem.FromRFC5646("one");
 			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
 
 			string rules = "&n < ng <<< Ng <<< NG";
@@ -167,7 +167,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void CustomSortRules_SerializeAndDeserialize()
 		{
-			WritingSystem ws = new WritingSystem("one");
+			WritingSystem ws = WritingSystem.FromRFC5646("one");
 			ws.DefaultFontName = "Arial";
 			ws.DefaultFontSize = 99;
 			ws.SortUsing = CustomSortRulesType.CustomICU.ToString();
@@ -248,10 +248,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_SameIdDefaultsDifferentFont_Same()
 		{
-			WritingSystem writingSystem1 = new WritingSystem("ws");
+			WritingSystem writingSystem1 = WritingSystem.FromRFC5646("ws");
 			writingSystem1.DefaultFontName = "Arial";
 			writingSystem1.DefaultFontSize = 12;
-			WritingSystem writingSystem2 = new WritingSystem("ws");
+			WritingSystem writingSystem2 = WritingSystem.FromRFC5646("ws");
 			writingSystem2.DefaultFontName = "Arial";
 			writingSystem2.DefaultFontSize = 22;
 
@@ -261,9 +261,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_SameIdSortUsingNoCustomRules_Same()
 		{
-			WritingSystem writingSystem1 = new WritingSystem("ws");
+			WritingSystem writingSystem1 = WritingSystem.FromRFC5646("ws");
 			writingSystem1.SortUsing = "th";
-			WritingSystem writingSystem2 = new WritingSystem("ws");
+			WritingSystem writingSystem2 = WritingSystem.FromRFC5646("ws");
 			writingSystem2.SortUsing = "th";
 
 			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
@@ -272,11 +272,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_SameIdSortUsingCustomRules_Same()
 		{
-			WritingSystem writingSystem1 = new WritingSystem("ws");
+			WritingSystem writingSystem1 = WritingSystem.FromRFC5646("ws");
 			writingSystem1.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			writingSystem1.CustomSortRules = "A";
 
-			WritingSystem writingSystem2 = new WritingSystem("ws");
+			WritingSystem writingSystem2 = WritingSystem.FromRFC5646("ws");
 			writingSystem2.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			writingSystem2.CustomSortRules = "A";
 
@@ -286,8 +286,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentId_Different()
 		{
-			WritingSystem writingSystem1 = new WritingSystem("ws");
-			WritingSystem writingSystem2 = new WritingSystem("sw");
+			WritingSystem writingSystem1 = WritingSystem.FromRFC5646("ws");
+			WritingSystem writingSystem2 = WritingSystem.FromRFC5646("sw");
 
 			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
 		}
@@ -295,9 +295,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentSortUsing_Different()
 		{
-			WritingSystem writingSystem1 = new WritingSystem("ws");
+			WritingSystem writingSystem1 = WritingSystem.FromRFC5646("ws");
 			writingSystem1.SortUsing = "th";
-			WritingSystem writingSystem2 = new WritingSystem("ws");
+			WritingSystem writingSystem2 = WritingSystem.FromRFC5646("ws");
 			writingSystem2.SortUsing = "th-TH";
 
 			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
@@ -306,11 +306,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentCustomSortRuleTypes_Different()
 		{
-			WritingSystem writingSystem1 = new WritingSystem("ws");
+			WritingSystem writingSystem1 = WritingSystem.FromRFC5646("ws");
 			writingSystem1.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			writingSystem1.CustomSortRules = "A";
 
-			WritingSystem writingSystem2 = new WritingSystem("ws");
+			WritingSystem writingSystem2 = WritingSystem.FromRFC5646("ws");
 			writingSystem2.SortUsing = CustomSortRulesType.CustomICU.ToString();
 			writingSystem2.CustomSortRules = "A";
 
@@ -320,11 +320,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentCustomSortRules_Different()
 		{
-			WritingSystem writingSystem1 = new WritingSystem("ws");
+			WritingSystem writingSystem1 = WritingSystem.FromRFC5646("ws");
 			writingSystem1.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			writingSystem1.CustomSortRules = "A";
 
-			WritingSystem writingSystem2 = new WritingSystem("ws");
+			WritingSystem writingSystem2 = WritingSystem.FromRFC5646("ws");
 			writingSystem2.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			writingSystem2.CustomSortRules = "A a";
 

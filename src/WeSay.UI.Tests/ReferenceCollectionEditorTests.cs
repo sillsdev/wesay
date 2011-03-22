@@ -16,7 +16,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class ReferenceCollectionEditorTests: IReceivePropertyChangeNotifications
 	{
-		private readonly WritingSystem _ws = new WritingSystem("test");
+		private readonly WritingSystem _ws = WritingSystem.FromRFC5646("test");
 		private ReferenceCollectionEditor<Option, string, OptionRef> _control;
 		private Form _window;
 		private OptionsList _sourceChoices;

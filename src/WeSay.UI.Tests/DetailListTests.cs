@@ -9,7 +9,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class DetailListTests
 	{
-		private readonly WritingSystem _ws = new WritingSystem("test");
+		private readonly WritingSystem _ws = WritingSystem.FromRFC5646("test");
 		private DetailList _control;
 		private Control _focussedControl;
 		private Form _window;

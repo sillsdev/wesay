@@ -126,8 +126,8 @@ namespace WeSay.Project.Tests
 		private static ViewTemplate MakeMasterInventory()
 		{
 			WritingSystemCollection w = new WritingSystemCollection();
-			w.Set(new WritingSystem("red"));
-			w.Set(new WritingSystem("white"));
+			w.Set(WritingSystem.FromRFC5646("red"));
+			w.Set(WritingSystem.FromRFC5646("white"));
 			return ViewTemplate.MakeMasterTemplate(w);
 		}
 

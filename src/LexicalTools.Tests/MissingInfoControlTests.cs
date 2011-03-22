@@ -54,7 +54,7 @@ namespace WeSay.LexicalTools.Tests
 			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			_writingSystem = new WritingSystem("pretendVernacular");
+			_writingSystem = WritingSystem.FromRFC5646("pretendVernacular");
 
 			CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
 			CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");

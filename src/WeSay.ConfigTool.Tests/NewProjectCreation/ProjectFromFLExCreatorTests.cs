@@ -99,12 +99,12 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 		</entry>", "0.12"))
 			{
 				var collection = new WritingSystemCollection();
-				collection.Set(new WritingSystem("en"));
-				collection.Set(new WritingSystem("fromLU"));
-				collection.Set(new WritingSystem("fromGloss"));
-				collection.Set(new WritingSystem("fromDef"));
-				collection.Set(new WritingSystem("fromExample"));
-				collection.Set(new WritingSystem("fromTrans"));
+				collection.Set(WritingSystem.FromRFC5646("en"));
+				collection.Set(WritingSystem.FromRFC5646("fromLU"));
+				collection.Set(WritingSystem.FromRFC5646("fromGloss"));
+				collection.Set(WritingSystem.FromRFC5646("fromDef"));
+				collection.Set(WritingSystem.FromRFC5646("fromExample"));
+				collection.Set(WritingSystem.FromRFC5646("fromTrans"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 
 				ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);

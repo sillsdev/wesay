@@ -23,7 +23,7 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			WeSayTextBox widget =
-					new WeSayTextBox(new WritingSystem("vernacular"), null);
+					new WeSayTextBox(WritingSystem.FromRFC5646("vernacular"), null);
 			new TextBinding(text, "vernacular", widget);
 
 			text["vernacular"] = "hello";
@@ -37,7 +37,7 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			WeSayTextBox widget =
-					new WeSayTextBox(new WritingSystem("vernacular"), null);
+					new WeSayTextBox(WritingSystem.FromRFC5646("vernacular"), null);
 
 			var binding = new TextBinding(text, "vernacular", widget);
 

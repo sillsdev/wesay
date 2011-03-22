@@ -34,11 +34,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1");
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 
 			LexEntry entryAfterFirstQuery = _repository.CreateItem();
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual(null, results[0]["Form"]);
 			Assert.AreEqual("word 1", results[1]["Form"]);
@@ -57,12 +57,12 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 
 			entryBeforeFirstQuery.LexicalForm.SetAlternative("de", "word 1");
 			_repository.SaveItem(entryBeforeFirstQuery);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(1, results.Count);
 			Assert.AreEqual("word 1", results[0]["Form"]);
 		}
@@ -74,13 +74,13 @@ namespace WeSay.LexicalModel.Tests
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0"));
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1"));
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 
 			entriesToModify[0].LexicalForm["de"] = "word 3";
 			entriesToModify[1].LexicalForm["de"] = "word 2";
 			_repository.SaveItems(entriesToModify);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual("word 2", results[0]["Form"]);
 			Assert.AreEqual("word 3", results[1]["Form"]);
@@ -92,11 +92,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteItem(entrytoBeDeleted);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -105,11 +105,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteItem(_repository.GetId(entrytoBeDeleted));
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -118,11 +118,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteAllItems();
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -131,11 +131,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1");
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 
 			LexEntry entryAfterFirstQuery = _repository.CreateItem();
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual(null, results[0]["Form"]);
 			Assert.AreEqual("word 1", results[1]["Form"]);
@@ -146,12 +146,12 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 
 			entryBeforeFirstQuery.LexicalForm.SetAlternative("de", "word 1");
 			_repository.SaveItem(entryBeforeFirstQuery);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(1, results.Count);
 			Assert.AreEqual("word 1", results[0]["Form"]);
 		}
@@ -163,13 +163,13 @@ namespace WeSay.LexicalModel.Tests
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0"));
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1"));
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 
 			entriesToModify[0].LexicalForm["de"] = "word 3";
 			entriesToModify[1].LexicalForm["de"] = "word 2";
 			_repository.SaveItems(entriesToModify);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual("word 2", results[0]["Form"]);
 			Assert.AreEqual("word 3", results[1]["Form"]);
@@ -181,11 +181,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteItem(entrytoBeDeleted);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -194,11 +194,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteItem(_repository.GetId(entrytoBeDeleted));
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -207,11 +207,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteAllItems();
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -226,7 +226,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateCaches();
 			entryToUpdate.LexicalForm.SetAlternative("de", "word 1");
 			_repository.NotifyThatLexEntryHasBeenUpdated(entryToUpdate);
-			WritingSystem writingSystemToMatch = new WritingSystem("de");
+			WritingSystem writingSystemToMatch = WritingSystem.FromRFC5646("de");
 			ResultSet<LexEntry> headWordResults = _repository.GetAllEntriesSortedByHeadword(writingSystemToMatch);
 			ResultSet<LexEntry> lexicalFormResults = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystemToMatch);
 			Assert.AreEqual("word 1", headWordResults[0]["Form"]);
@@ -235,7 +235,7 @@ namespace WeSay.LexicalModel.Tests
 
 		private void CreateCaches()
 		{
-			WritingSystem writingSystemToMatch = new WritingSystem("de");
+			WritingSystem writingSystemToMatch = WritingSystem.FromRFC5646("de");
 			_repository.GetAllEntriesSortedByHeadword(writingSystemToMatch);
 			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystemToMatch);
 			//_repository.GetAllEntriesSortedByDefinitionOrGloss(writingSystemToMatch);
@@ -261,11 +261,11 @@ namespace WeSay.LexicalModel.Tests
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "de" });
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1");
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 
 			LexEntry entryAfterFirstQuery = _repository.CreateItem();
 
-			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual(null, results[0]["Form"]);
 			Assert.AreEqual("word 1", results[1]["Form"]);
@@ -278,12 +278,12 @@ namespace WeSay.LexicalModel.Tests
 
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 
 			entryBeforeFirstQuery.LexicalForm.SetAlternative("de", "word 1");
 			_repository.SaveItem(entryBeforeFirstQuery);
 
-			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(1, results.Count);
 			Assert.AreEqual("word 1", results[0]["Form"]);
 		}
@@ -297,13 +297,13 @@ namespace WeSay.LexicalModel.Tests
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0"));
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1"));
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 
 			entriesToModify[0].LexicalForm["de"] = "word 3";
 			entriesToModify[1].LexicalForm["de"] = "word 2";
 			_repository.SaveItems(entriesToModify);
 
-			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual("word 2", results[0]["Form"]);
 			Assert.AreEqual("word 3", results[1]["Form"]);
@@ -316,11 +316,11 @@ namespace WeSay.LexicalModel.Tests
 
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteItem(entrytoBeDeleted);
 
-			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -331,11 +331,11 @@ namespace WeSay.LexicalModel.Tests
 
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteItem(_repository.GetId(entrytoBeDeleted));
 
-			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -346,11 +346,11 @@ namespace WeSay.LexicalModel.Tests
 
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteAllItems();
 
-			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -368,11 +368,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 1");
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 
 			LexEntry entryAfterFirstQuery = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 2");
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual("word 1", results[0]["Form"]);
 			Assert.AreEqual("word 2", results[1]["Form"]);
@@ -383,12 +383,12 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 
 			entryBeforeFirstQuery.Senses[0].Definition.SetAlternative("de", "word 1");
 			_repository.SaveItem(entryBeforeFirstQuery);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(1, results.Count);
 			Assert.AreEqual("word 1", results[0]["Form"]);
 		}
@@ -400,13 +400,13 @@ namespace WeSay.LexicalModel.Tests
 			entriesToModify.Add(CreateEntryWithDefinitionBeforeFirstQuery("de", "word 0"));
 			entriesToModify.Add(CreateEntryWithDefinitionBeforeFirstQuery("de", "word 1"));
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 
 			entriesToModify[0].Senses[0].Definition["de"] = "word 3";
 			entriesToModify[1].Senses[0].Definition["de"] = "word 2";
 			_repository.SaveItems(entriesToModify);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual("word 2", results[0]["Form"]);
 			Assert.AreEqual("word 3", results[1]["Form"]);
@@ -417,11 +417,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteItem(entrytoBeDeleted);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -430,11 +430,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteItem(_repository.GetId(entrytoBeDeleted));
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -443,11 +443,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 
 			_repository.DeleteAllItems();
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystem("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(WritingSystem.FromRFC5646("de"));
 			Assert.AreEqual(0, results.Count);
 		}
 
