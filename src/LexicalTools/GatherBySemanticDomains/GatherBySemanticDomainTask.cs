@@ -100,10 +100,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
-			WritingSystem definitionWS;
-			viewTemplate.WritingSystems.TryGetValue(definitionWsId, out definitionWS);
-			Guard.AgainstNull(definitionWS, "Defintion Writing System");
-			DefinitionWritingSystem = definitionWS;
+			WritingSystem writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
+			Guard.AgainstNull(writingSystemForDefinition, "Defintion Writing System");
+			DefinitionWritingSystem = writingSystemForDefinition;
 
 			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
 		}

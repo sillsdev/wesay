@@ -283,12 +283,12 @@ namespace WeSay.LexicalTools
 
 		private static string SwitchToWritingSystem(string writingSystemId, int sizeBoost)
 		{
-			WritingSystem writingSystem;
-			if (!WritingSystems.TryGetValue(writingSystemId, out writingSystem))
+			if (!WritingSystems.Contains(writingSystemId))
 			{
 				return "";
 				//that ws isn't actually part of our configuration, so can't get a special font for it
 			}
+			WritingSystem writingSystem = WritingSystems.Get(writingSystemId);
 			string rtf = @"\f" + GetFontNumber(writingSystem);
 			int fontSize = Convert.ToInt16((sizeBoost + writingSystem.Font.SizeInPoints)*2);
 			rtf += @"\fs" + fontSize + " ";

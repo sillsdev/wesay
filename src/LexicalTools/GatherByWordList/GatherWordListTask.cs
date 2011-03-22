@@ -244,12 +244,11 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		public WritingSystem GetWritingSystemOfLanguageForm(LanguageForm languageForm)
 		{
-			WritingSystem ws;
-			if(!_viewTemplate.WritingSystems.TryGetValue(languageForm.WritingSystemId, out ws))
+			if(!_viewTemplate.WritingSystems.Contains(languageForm.WritingSystemId))
 			{
 				return null;
 			}
-			return ws;
+			return _viewTemplate.WritingSystems.Get(languageForm.WritingSystemId);
 		}
 
 		public LexSense CurrentTemplateSense

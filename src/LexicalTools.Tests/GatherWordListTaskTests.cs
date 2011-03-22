@@ -497,9 +497,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			get
 			{
-				WritingSystem vernWs;
-				BasilProject.Project.WritingSystems.TryGetValue(_vernacularLanguageWSId, out vernWs);
-				return vernWs;
+				return BasilProject.Project.WritingSystems.Get(_vernacularLanguageWSId);
 			}
 		}
 

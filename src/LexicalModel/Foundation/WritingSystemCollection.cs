@@ -72,10 +72,10 @@ namespace WeSay.LexicalModel.Foundation
 		}
 
 		// TODO Change to Get everywhere
-		public bool TryGetValue(string writingSystemId, out WritingSystem writingSystem)
-		{
-			throw new NotImplementedException();
-		}
+		//public bool TryGetValue(string writingSystemId, out WritingSystem writingSystem)
+		//{
+		//    throw new NotImplementedException();
+		//}
 
 		// TODO Change everywhere to use WS with one arg ctor
 		public WritingSystem AddSimple(string id)
