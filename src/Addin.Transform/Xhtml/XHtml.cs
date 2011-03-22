@@ -80,7 +80,7 @@ namespace Addin.Transform.Xhtml
 
 			using (var f = File.CreateText(path))
 			{
-				foreach (var pair in writingSystemCollection)
+				foreach (var pair in writingSystemCollection.WritingSystemDefinitions)
 				{
 					f.WriteLine(":lang("+pair.Key+") {");
 					f.WriteLine(styleProvider.GetAutoFontsCascadingStyleSheetLinesForWritingSystem(pair.Value));

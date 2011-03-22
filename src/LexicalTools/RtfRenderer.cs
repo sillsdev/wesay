@@ -164,7 +164,7 @@ namespace WeSay.LexicalTools
 		{
 			var rtf = new StringBuilder(@"{\fonttbl");
 			int i = 0;
-			foreach (var ws in WritingSystems)
+			foreach (var ws in WritingSystems.WritingSystemDefinitions)
 			{
 				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + ws.Value.Font.FontFamily.Name +
 						   ";");
@@ -182,7 +182,7 @@ namespace WeSay.LexicalTools
 		private static int GetFontNumber(WritingSystem writingSystem)
 		{
 			int i = 0;
-			foreach (var ws in WritingSystems)
+			foreach (var ws in WritingSystems.WritingSystemDefinitions)
 			{
 				if (ws.Value == writingSystem)
 				{

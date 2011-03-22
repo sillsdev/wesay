@@ -7,7 +7,7 @@ using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
-	public class WritingSystemCollection : LdmlInFolderWritingSystemStore, IEnumerable<WritingSystem>
+	public class WritingSystemCollection : LdmlInFolderWritingSystemStore/*, IEnumerable<WritingSystem>*/
 	{
 		public string TestWritingSystemVernId;
 		public string TestWritingSystemAnalId;
@@ -60,7 +60,7 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			throw new NotImplementedException();
 		}
-
+		/*
 		public IEnumerator<WritingSystem> GetEnumerator()
 		{
 			throw new NotImplementedException();
@@ -70,6 +70,9 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			return GetEnumerator();
 		}
+		*/
+
+		public new IEnumerable<WritingSystem> WritingSystemDefinitions { get; private set; }
 
 	}
 }

@@ -94,7 +94,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 		private void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection ws1, WritingSystemCollection ws2)
 		{
-			foreach (var idWspair in ws1)
+			foreach (var idWspair in ws1.WritingSystemDefinitions)
 			{
 				Assert.IsTrue(ws2.Contains(idWspair.Key));
 				Assert.AreEqual(idWspair.Value.Id, ws2.Get(idWspair.Key).Id);
@@ -177,7 +177,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		private static void WriteLdmlWritingSystemFiles(string pathToStore, WritingSystemCollection wsCollectionToBeWritten)
 		{
 			var store = new LdmlInFolderWritingSystemStore(pathToStore);
-			foreach (var idWsPair in wsCollectionToBeWritten)
+			foreach (var idWsPair in wsCollectionToBeWritten.WritingSystemDefinitions)
 			{
 				store.Set(idWsPair.Value.GetAsPalasoWritingSystemDefinition());
 			}

@@ -160,7 +160,7 @@ namespace WeSay.Project.Tests
 
 		private void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection ws1, WritingSystemCollection ws2)
 		{
-			foreach (var idWspair in ws1)
+			foreach (var idWspair in ws1.WritingSystemDefinitions)
 			{
 				Assert.IsTrue(ws2.Contains(idWspair.Key));
 				Assert.AreEqual(idWspair.Value.Id, ws2.Get(idWspair.Key).Id);
