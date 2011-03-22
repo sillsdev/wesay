@@ -415,10 +415,12 @@ namespace WeSay.Project.Tests
 			_outputFile = new TempFile();
 			Repo = new LexEntryRepository(_projectDir.PathToLiftFile);
 			WritingSystemIds = new List<string>(new[] { "red", "green", "blue", "voice" });
-			HeadwordWritingSystem =project.WritingSystems.AddSimple("red");
-			project.WritingSystems.AddSimple("green");
-			project.WritingSystems.AddSimple("blue");
-			project.WritingSystems.AddSimple("voice").IsVoice = true;
+			HeadwordWritingSystem = WritingSystem.FromRFC5646("red");
+			project.WritingSystems.Set(HeadwordWritingSystem);
+			project.WritingSystems.Set(WritingSystem.FromRFC5646("green"));
+			project.WritingSystems.Set(WritingSystem.FromRFC5646("green"));
+			project.WritingSystems.Set(WritingSystem.FromRFC5646("blue"));
+			project.WritingSystems.Set(WritingSystem.VoiceFromRFC5646(""));
 
 			Template = new ViewTemplate
 			{

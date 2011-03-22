@@ -165,7 +165,7 @@ namespace WeSay.Project.Tests
 		{
 			ViewTemplate viewTemplate = PopulateViewTemplate();
 			viewTemplate.Fields[0].WritingSystemIds.Contains("en");
-			viewTemplate.ChangeWritingSystemId("en", "x");
+			viewTemplate.OnWritingSystemIDChange("en", "x");
 			Assert.IsFalse(viewTemplate.Fields[0].WritingSystemIds.Contains("en"));
 			Assert.IsTrue(viewTemplate.Fields[0].WritingSystemIds.Contains("x"));
 		}

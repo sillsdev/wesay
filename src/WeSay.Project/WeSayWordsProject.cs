@@ -45,7 +45,7 @@ namespace WeSay.Project
 		/// <summary>
 		/// See comment on BasilProject.InitializeForTests()
 		/// </summary>
-		public new static WeSayWordsProject InitializeForTests()
+		public static WeSayWordsProject InitializeForTests()
 		{
 			WeSayWordsProject project = new WeSayWordsProject();
 
@@ -1456,8 +1456,8 @@ namespace WeSay.Project
 											Regex.Escape(oldId)),
 							  string.Format("lang=\"{0}\"", ws.Id))))
 			{
-				WritingSystems.IdOfWritingSystemChanged(ws, oldId);
-				DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
+				WritingSystems.OnWritingSystemIDChange(ws, oldId);
+				DefaultViewTemplate.OnWritingSystemIDChange(oldId, ws.Id);
 
 				if (WritingSystemChanged != null)
 				{

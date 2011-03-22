@@ -212,9 +212,10 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void NewProject_ContainsLdmlWritingSystemFiles_LdmlFilesAreLoaded()
 		{
+			Assert.Fail("Move to migrator");
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
-			project.WritingSystems.LoadFromLegacyWeSayFile(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory));
+			//project.WritingSystems.LoadFromLegacyWeSayFile(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory));
 			File.Delete(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory));
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 

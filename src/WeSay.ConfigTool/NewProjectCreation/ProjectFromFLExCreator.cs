@@ -5,6 +5,7 @@ using System.Xml;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
@@ -127,13 +128,15 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 			foreach (XmlNode node in doc.SelectNodes("//@lang"))
 			{
+				// Now that FLEx writes out LDML this fix for x-spec shouldn't be necessary CP 2011-03
+				// Leaving it in anyway for now.
 				if (node.Value == "x-spec" && !writingSystems.Contains("x-spec"))
 				{
-					writingSystems.AddSimple("x-spec");
+					writingSystems.Set(new WritingSystemDefinition("x-spec"));
 				}
 				if (!writingSystems.Contains(node.Value))
 				{
-					writingSystems.AddSimple(node.Value);
+					writingSystems.Set(new WritingSystemDefinition(node.Value));
 					missingWritingSystems.AppendFormat("{0},", node.Value);
 				}
 			}
@@ -150,7 +153,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			var vernacular = GetTopWritingSystem(doc, "//lexical-unit/form/@lang");
 			if (vernacular != string.Empty)
 			{
-				viewTemplate.ChangeWritingSystemId(WritingSystem.IdForUnknownVernacular, vernacular);
+				viewTemplate.OnWritingSystemIDChange(WritingSystem.IdForUnknownVernacular, vernacular);
 				writingSystems.Remove(WritingSystem.IdForUnknownVernacular);
 			}
 			var analysis = GetTopWritingSystem(doc, "//sense/gloss/@lang");
@@ -161,7 +164,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			}
 			if (analysis != string.Empty)
 			{
-				viewTemplate.ChangeWritingSystemId(WritingSystem.IdForUnknownAnalysis, analysis);
+				viewTemplate.OnWritingSystemIDChange(WritingSystem.IdForUnknownAnalysis, analysis);
 			}
 
 			AddWritingSystemsForField(doc, viewTemplate, "//lexical-unit/form/@lang", LexEntry.WellKnownProperties.LexicalUnit);

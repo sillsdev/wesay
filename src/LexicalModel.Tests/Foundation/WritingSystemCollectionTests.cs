@@ -77,7 +77,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void LoadFromLegacyWeSayFile_WritingSystemsAreLoadedFromThatFile()
 		{
-			using(TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
+			Assert.Fail("Move to migrator");
+			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
 			{
 				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection();
 				WritingSystem ws = CreateDetailedWritingSystem("test");
@@ -86,7 +87,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
 				WriteOldWeSayWritingSystemsFile(_wsPrefsFile.Path, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection();
-				loadedWsCollection.LoadFromLegacyWeSayFile(_wsPrefsFile.Path);
+				//loadedWsCollection.LoadFromLegacyWeSayFile(_wsPrefsFile.Path);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 			}
 		}
@@ -265,8 +266,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void RightFont()
 		{
+			Assert.Fail("Move to migrator");
+
 				CreateSampleWritingSystemFile(_wsPrefsFile.Path);
-				_collection.LoadFromLegacyWeSayFile(_wsPrefsFile.Path);
+				//_collection.LoadFromLegacyWeSayFile(_wsPrefsFile.Path);
 				WritingSystem ws = _collection.Get("PretendAnalysis");
 				Assert.AreEqual("PretendAnalysis", ws.Id);
 				// since Linux may not have CourierNew, we

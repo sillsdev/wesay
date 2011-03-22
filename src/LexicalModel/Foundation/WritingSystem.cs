@@ -233,5 +233,16 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			throw new NotImplementedException();
 		}
+
+		// TODO add this to palaso
+		public static WritingSystem FromRFC5646(string rftTag)
+		{
+			throw new NotImplementedException();
+		}
+
+		public static WritingSystemDefinition VoiceFromRFC5646(string empty)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

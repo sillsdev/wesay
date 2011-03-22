@@ -570,7 +570,7 @@ namespace WeSay.Project
 
 		#endregion
 
-		public void ChangeWritingSystemId(string from, string to)
+		public void OnWritingSystemIDChange(string from, string to)
 		{
 			foreach (Field field in Fields)
 			{

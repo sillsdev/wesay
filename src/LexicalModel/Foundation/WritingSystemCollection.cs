@@ -55,8 +55,8 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
-		// TODO this is suspect, migrator?
-		public void IdOfWritingSystemChanged(WritingSystem ws, string oldId)
+		// TODO Move to Palaso
+		public void OnWritingSystemIDChange(WritingSystem ws, string oldId)
 		{
 			throw new NotImplementedException();
 		}
@@ -71,22 +71,5 @@ namespace WeSay.LexicalModel.Foundation
 			return GetEnumerator();
 		}
 
-		// TODO Change to Get everywhere
-		//public bool TryGetValue(string writingSystemId, out WritingSystem writingSystem)
-		//{
-		//    throw new NotImplementedException();
-		//}
-
-		// TODO Change everywhere to use WS with one arg ctor
-		public WritingSystem AddSimple(string id)
-		{
-			throw new NotImplementedException();
-		}
-
-		// TODO move to migrator
-		public void LoadFromLegacyWeSayFile(string getPathToWritingSystemPrefs)
-		{
-			throw new NotImplementedException();
-		}
 	}
 }
