@@ -33,7 +33,7 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
-		// TODO remove
+		// TODO remove (it is private and called in the ctor)
 		public void Load(string getPathToLdmlWritingSystemsFolder)
 		{
 			throw new NotImplementedException();

@@ -100,7 +100,6 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				Assert.IsTrue(rhs.Contains(lhsWritingSystem.Id));
 				Assert.AreEqual(lhsWritingSystem.Id, rhsWritingSystem.Id);
 				Assert.AreEqual(lhsWritingSystem.Abbreviation, rhsWritingSystem.Abbreviation);
-				Assert.AreEqual(WritingSystemInfo.CreateFont(lhsWritingSystem).ToString(), WritingSystemInfo.CreateFont(rhsWritingSystem).ToString());
 				Assert.AreEqual(lhsWritingSystem.DefaultFontName, rhsWritingSystem.DefaultFontName);
 				Assert.AreEqual(lhsWritingSystem.DefaultFontSize, rhsWritingSystem.DefaultFontSize);
 				Assert.AreEqual(lhsWritingSystem.IsVoice, rhsWritingSystem.IsVoice);
