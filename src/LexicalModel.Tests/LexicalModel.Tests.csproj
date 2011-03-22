@@ -3,7 +3,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>9.0.21022</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{123D695C-0D5D-46E5-893F-39EC4E0B01B8}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -171,6 +171,7 @@
 	  <DesignTime>True</DesignTime>
 	</Compile>
 	<Compile Include="Foundation\WritingSystemCollectionTests.cs" />
+	<Compile Include="Foundation\WritingSystemInfoTests.cs" />
 	<Compile Include="Foundation\WritingSystemTests.cs" />
 	<Compile Include="LexEntryRepositoryCachingTests.cs" />
 	<Compile Include="LexEntryRepositoryCreatedFromPersistedData.cs" />

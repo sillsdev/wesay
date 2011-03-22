@@ -79,7 +79,7 @@ namespace WeSay.LexicalTools.Tests
 
 			if(!v.WritingSystems.Contains("en"))
 			{
-				v.WritingSystems.Add("en", new WritingSystem("en", new Font("arial", 12)));
+				v.WritingSystems.Add("en", new WritingSystem("en"));
 			}
 			return v;
 		}
@@ -1171,14 +1171,14 @@ namespace WeSay.LexicalTools.Tests
 						@"<?xml version='1.0' encoding='utf-8'?>
 <semantic-domain-questions semantic-domain-type='DDP4' lang='fr'>
 <semantic-domain guid='I63403699-07C1-43F3-A47C-069D6E4316E5' id='1 Universe, creation'>
-<question>Quels sont les mots qui font référence à tout ce qu'on peut voir?</question>
+<question>Quels sont les mots qui font rï¿½fï¿½rence ï¿½ tout ce qu'on peut voir?</question>
 </semantic-domain>
 <semantic-domain guid='I999581C4-1611-4ACB-AE1B-5E6C1DFE6F0C' id='1.1 Sky'>
 <question>Quels sont les mots qui signifient le ciel?</question>
-<question>Quels sont les mots qui signifient l'endroit ou le pays au-delà du ciel?</question>
-<question>Quels sont les mots qui décrivent l'aspect du ciel?</question>
-<question>Quels sont les mots qui décrivent l'endroit où le ciel touche la terre?</question>
-<question>Quel terme général fait référence aux objets dans le ciel?</question>
+<question>Quels sont les mots qui signifient l'endroit ou le pays au-delï¿½ du ciel?</question>
+<question>Quels sont les mots qui dï¿½crivent l'aspect du ciel?</question>
+<question>Quels sont les mots qui dï¿½crivent l'endroit oï¿½ le ciel touche la terre?</question>
+<question>Quel terme gï¿½nï¿½ral fait rï¿½fï¿½rence aux objets dans le ciel?</question>
 </semantic-domain></semantic-domain-type>");
 			}
 

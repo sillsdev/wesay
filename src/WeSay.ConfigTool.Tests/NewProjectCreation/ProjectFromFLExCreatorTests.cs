@@ -28,7 +28,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				</entry>", "0.12"))
 			{
 				var collection = new WritingSystemCollection();
-				collection.Add(WritingSystem.IdForUnknownVernacular/*v*/, new WritingSystem());
+				collection.Add(WritingSystemInfo.IdForUnknownVernacular/*v*/, new WritingSystem());
 				collection.Add("en", new WritingSystem());
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 	//put one guy in there already
@@ -56,7 +56,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				</entry>", "0.12"))
 			{
 				var collection = new WritingSystemCollection();
-				collection.Add(WritingSystem.IdForUnknownVernacular/*v*/, new WritingSystem());
+				collection.Add(WritingSystemInfo.IdForUnknownVernacular/*v*/, new WritingSystem());
 				collection.Add("en", new WritingSystem());
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 				//put one guy in there already
@@ -134,16 +134,16 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 			 ", "0.12"))
 			{
 				var collection = new WritingSystemCollection();
-				collection.Add(WritingSystem.IdForUnknownAnalysis, new WritingSystem());
-				collection.Add(WritingSystem.IdForUnknownVernacular, new WritingSystem());
+				collection.Add(WritingSystemInfo.IdForUnknownAnalysis, new WritingSystem());
+				collection.Add(WritingSystemInfo.IdForUnknownVernacular, new WritingSystem());
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 
 				ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystem.IdForUnknownVernacular);
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystem.IdForUnknownVernacular);
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystem.IdForUnknownVernacular);
-				Assert.IsTrue(collection.Contains(WritingSystem.IdForUnknownVernacular));
-				Assert.IsTrue(collection.Contains(WritingSystem.IdForUnknownAnalysis));
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystemInfo.IdForUnknownVernacular);
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystemInfo.IdForUnknownVernacular);
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystemInfo.IdForUnknownVernacular);
+				Assert.IsTrue(collection.Contains(WritingSystemInfo.IdForUnknownVernacular));
+				Assert.IsTrue(collection.Contains(WritingSystemInfo.IdForUnknownAnalysis));
 
  }
 		}

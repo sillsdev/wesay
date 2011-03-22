@@ -158,23 +158,24 @@ namespace WeSay.Project.Tests
 			Assert.IsFalse(File.Exists(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory)));
 		}
 
-		private void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection ws1, WritingSystemCollection ws2)
+		private static void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection lhs, WritingSystemCollection rhs)
 		{
-			foreach (var idWspair in ws1.WritingSystemDefinitions)
+			foreach (var lhsWritingSystem in lhs.WritingSystemDefinitions)
 			{
-				Assert.IsTrue(ws2.Contains(idWspair.Key));
-				Assert.AreEqual(idWspair.Value.Id, ws2.Get(idWspair.Key).Id);
-				Assert.AreEqual(idWspair.Value.Abbreviation, ws2.Get(idWspair.Key).Abbreviation);
-				Assert.AreEqual(idWspair.Value.CustomSortRules, ws2.Get(idWspair.Key).CustomSortRules);
-				Assert.AreEqual(idWspair.Value.Font.ToString(), ws2.Get(idWspair.Key).Font.ToString());
-				Assert.AreEqual(idWspair.Value.DefaultFontName, ws2.Get(idWspair.Key).DefaultFontName);
-				Assert.AreEqual(idWspair.Value.DefaultFontSize, ws2.Get(idWspair.Key).DefaultFontSize);
-				Assert.AreEqual(idWspair.Value.IsVoice, ws2.Get(idWspair.Key).IsVoice);
-				Assert.AreEqual(idWspair.Value.IsUnicodeEncoded, ws2.Get(idWspair.Key).IsUnicodeEncoded);
-				Assert.AreEqual(idWspair.Value.Keyboard, ws2.Get(idWspair.Key).Keyboard);
-				Assert.AreEqual(idWspair.Value.RightToLeftScript, ws2.Get(idWspair.Key).RightToLeftScript);
-				Assert.AreEqual(idWspair.Value.SortUsing, ws2.Get(idWspair.Key).SortUsing);
-				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2.Get(idWspair.Key).SpellCheckingId);
+				Assert.IsTrue(rhs.Contains(lhsWritingSystem.Id));
+				var rhsWritingSystem = rhs.Get(lhsWritingSystem.Id);
+				Assert.AreEqual(lhsWritingSystem.Id, rhsWritingSystem.Id);
+				Assert.AreEqual(lhsWritingSystem.Abbreviation, rhsWritingSystem.Abbreviation);
+				Assert.AreEqual(lhsWritingSystem.CustomSortRules, rhsWritingSystem.CustomSortRules);
+				Assert.AreEqual(WritingSystemInfo.CreateFont(lhsWritingSystem).ToString(), WritingSystemInfo.CreateFont(rhsWritingSystem).ToString());
+				Assert.AreEqual(lhsWritingSystem.DefaultFontName, rhsWritingSystem.DefaultFontName);
+				Assert.AreEqual(lhsWritingSystem.DefaultFontSize, rhsWritingSystem.DefaultFontSize);
+				Assert.AreEqual(lhsWritingSystem.IsVoice, rhsWritingSystem.IsVoice);
+				Assert.AreEqual(lhsWritingSystem.IsUnicodeEncoded, rhsWritingSystem.IsUnicodeEncoded);
+				Assert.AreEqual(lhsWritingSystem.Keyboard, rhsWritingSystem.Keyboard);
+				Assert.AreEqual(lhsWritingSystem.RightToLeftScript, rhsWritingSystem.RightToLeftScript);
+				Assert.AreEqual(lhsWritingSystem.SortUsing, rhsWritingSystem.SortUsing);
+				Assert.AreEqual(lhsWritingSystem.SpellCheckingId, rhsWritingSystem.SpellCheckingId);
 			}
 		}
 

@@ -61,9 +61,9 @@ namespace WeSay.Project
 			//setup writing systems
 			WritingSystemCollection wsc = new WritingSystemCollection();
 			wsc.Add(wsc.TestWritingSystemVernId,
-					new WritingSystem(wsc.TestWritingSystemVernId, new Font("Courier", 10)));
+					new WritingSystem(wsc.TestWritingSystemVernId));
 			wsc.Add(wsc.TestWritingSystemAnalId,
-					new WritingSystem(wsc.TestWritingSystemAnalId, new Font("Arial", 15)));
+					new WritingSystem(wsc.TestWritingSystemAnalId));
 			if (File.Exists(WeSayWordsProject.PathToPretendWritingSystemPrefs))
 			{
 				File.Delete(WeSayWordsProject.PathToPretendWritingSystemPrefs);

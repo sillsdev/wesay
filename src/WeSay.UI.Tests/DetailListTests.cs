@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.LexicalModel.Foundation;
@@ -10,7 +9,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class DetailListTests
 	{
-		private readonly WritingSystem _ws = new WritingSystem("test", new Font("Arial", 30));
+		private readonly WritingSystem _ws = new WritingSystem("test");
 		private DetailList _control;
 		private Control _focussedControl;
 		private Form _window;
@@ -18,6 +17,8 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
+			_ws.DefaultFontName = "Arial";
+			_ws.DefaultFontSize = 30;
 			_control = new DetailList();
 			//Application.Init();
 		}

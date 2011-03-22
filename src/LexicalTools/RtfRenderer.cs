@@ -166,7 +166,7 @@ namespace WeSay.LexicalTools
 			int i = 0;
 			foreach (var ws in WritingSystems.WritingSystemDefinitions)
 			{
-				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + ws.Value.Font.FontFamily.Name +
+				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + WritingSystemInfo.CreateFont(ws).FontFamily.Name +
 						   ";");
 				i++;
 			}
@@ -184,7 +184,7 @@ namespace WeSay.LexicalTools
 			int i = 0;
 			foreach (var ws in WritingSystems.WritingSystemDefinitions)
 			{
-				if (ws.Value == writingSystem)
+				if (ws == writingSystem)
 				{
 					break;
 				}
@@ -290,7 +290,7 @@ namespace WeSay.LexicalTools
 			}
 			WritingSystem writingSystem = WritingSystems.Get(writingSystemId);
 			string rtf = @"\f" + GetFontNumber(writingSystem);
-			int fontSize = Convert.ToInt16((sizeBoost + writingSystem.Font.SizeInPoints)*2);
+			int fontSize = Convert.ToInt16((sizeBoost + WritingSystemInfo.CreateFont(writingSystem).SizeInPoints)*2);
 			rtf += @"\fs" + fontSize + " ";
 			return rtf;
 		}

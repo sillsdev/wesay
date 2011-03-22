@@ -13,15 +13,15 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void NoSetupDefaultFont()
 		{
-			WritingSystem ws = new WritingSystem("xx", new Font("Times", 33));
-			Assert.AreEqual(33, ws.Font.Size);
+			WritingSystem ws = new WritingSystem("xx");
+			Assert.AreEqual(33, WritingSystemInfo.CreateFont(ws).Size);
 		}
 
 		[Test]
 		public void Construct_DefaultFont()
 		{
 			WritingSystem ws = new WritingSystem();
-			Assert.IsNotNull(ws.Font);
+			Assert.IsNotNull(WritingSystemInfo.CreateFont(ws));
 		}
 
 
@@ -32,7 +32,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			// since Linux may not have Arial, we
 			// need to test against the font mapping
 			Font font = new Font("Arial", 99);
-			WritingSystem ws = new WritingSystem("one", font);
+			WritingSystem ws = new WritingSystem("one");
 			string s = NetReflector.Write(ws);
 			string expected = "<WritingSystem><Abbreviation>one</Abbreviation><FontName>" +
 							  font.Name + "</FontName><FontSize>" + font.Size +
@@ -64,12 +64,12 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Compare_fr_sortsLikeFrench()
 		{
-			WritingSystem writingSystem = new WritingSystem("one",
-															new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one");
 			writingSystem.SortUsing = "fr";
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
-			Assert.Less(writingSystem.Compare("\u00c8dit", "Ed\u00edt"), 0);
+
+			Assert.Less(writingSystem.Collator.Compare("\u00c8dit", "Ed\u00edt"), 0);
 		}
 
 		[Test]
@@ -81,7 +81,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 											   CustomSortRulesType.CustomICU.ToString(),
 											   "NotNullOrEmpty"
 										   };
-			WritingSystem ws = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem ws = new WritingSystem("one");
 			foreach (string testValue in testValues)
 			{
 				ws.SortUsing = testValue;
@@ -92,35 +92,31 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Compare_en_sortsLikeEnglish()
 		{
-			WritingSystem writingSystem = new WritingSystem("one",
-															new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one");
 			writingSystem.SortUsing = "en-US";
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
-			Assert.Greater(writingSystem.Compare("\u00c8dit", "Ed\u00edt"), 0);
+			Assert.Greater(writingSystem.Collator.Compare("\u00c8dit", "Ed\u00edt"), 0);
 		}
 
 		[Test]
 		public void Constructor_IsAudio_SetToFalse()
 		{
-			WritingSystem writingSystem = new WritingSystem("one",
-															new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one");
 			Assert.IsFalse(writingSystem.IsVoice);
 		}
 
 		[Test]
 		public void Constructor_IsUnicode_SetToTrue()
 		{
-			WritingSystem writingSystem = new WritingSystem("one",
-															new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one");
 			Assert.IsTrue(writingSystem.IsUnicodeEncoded);
 		}
 
 		[Test]
 		public void SortUsing_customWithNoRules_sortsLikeInvariant()
 		{
-			WritingSystem writingSystem = new WritingSystem("one",
-															new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one");
 			writingSystem.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			// hard to test because half of the system locales use the invariant table: http://blogs.msdn.com/michkap/archive/2004/12/29/344136.aspx
 		}
@@ -128,8 +124,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void SortUsing_null_Id()
 		{
-			WritingSystem writingSystem = new WritingSystem("one",
-															new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one");
 			writingSystem.SortUsing = null;
 			Assert.AreEqual(writingSystem.Id, writingSystem.SortUsing);
 		}
@@ -137,8 +132,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void SortUsing_HasCustomSortRulesSortUsingNotCustom_ClearsCustomSortRules()
 		{
-			WritingSystem writingSystem = new WritingSystem("one",
-															new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one");
 			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
 			string rules = "&n < ng <<< Ng <<< NG";
 			writingSystem.CustomSortRules = rules;
@@ -152,8 +146,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void CustomSortRules_SortUsingNotCustom_NotSet()
 		{
-			WritingSystem writingSystem = new WritingSystem("one",
-															new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one");
 			writingSystem.SortUsing = "two";
 			string rules = "&n < ng <<< Ng <<< NG";
 			writingSystem.CustomSortRules = rules;
@@ -163,8 +156,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void CustomSortRules_SortUsingCustomSortRules_Set()
 		{
-			WritingSystem writingSystem = new WritingSystem("one",
-															new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one");
 			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
 
 			string rules = "&n < ng <<< Ng <<< NG";
@@ -175,7 +167,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void CustomSortRules_SerializeAndDeserialize()
 		{
-			WritingSystem ws = new WritingSystem("one", new Font("Arial", 99));
+			WritingSystem ws = new WritingSystem("one");
+			ws.DefaultFontName = "Arial";
+			ws.DefaultFontSize = 99;
 			ws.SortUsing = CustomSortRulesType.CustomICU.ToString();
 
 			string rules = "&n < ng <<< Ng <<< NG";
@@ -254,10 +248,12 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_SameIdDefaultsDifferentFont_Same()
 		{
-			Font font1 = new Font("Arial", 12);
-			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
-			Font font2 = new Font("Arial", 22);
-			WritingSystem writingSystem2 = new WritingSystem("ws", font2);
+			WritingSystem writingSystem1 = new WritingSystem("ws");
+			writingSystem1.DefaultFontName = "Arial";
+			writingSystem1.DefaultFontSize = 12;
+			WritingSystem writingSystem2 = new WritingSystem("ws");
+			writingSystem2.DefaultFontName = "Arial";
+			writingSystem2.DefaultFontSize = 22;
 
 			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
 		}
@@ -265,11 +261,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_SameIdSortUsingNoCustomRules_Same()
 		{
-			Font font1 = new Font("Arial", 12);
-			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			WritingSystem writingSystem1 = new WritingSystem("ws");
 			writingSystem1.SortUsing = "th";
-			Font font2 = new Font("Arial", 22);
-			WritingSystem writingSystem2 = new WritingSystem("ws", font2);
+			WritingSystem writingSystem2 = new WritingSystem("ws");
 			writingSystem2.SortUsing = "th";
 
 			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
@@ -278,13 +272,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_SameIdSortUsingCustomRules_Same()
 		{
-			Font font1 = new Font("Arial", 12);
-			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			WritingSystem writingSystem1 = new WritingSystem("ws");
 			writingSystem1.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			writingSystem1.CustomSortRules = "A";
 
-			Font font2 = new Font("Arial", 22);
-			WritingSystem writingSystem2 = new WritingSystem("ws", font2);
+			WritingSystem writingSystem2 = new WritingSystem("ws");
 			writingSystem2.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			writingSystem2.CustomSortRules = "A";
 
@@ -294,9 +286,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentId_Different()
 		{
-			Font font1 = new Font("Arial", 12);
-			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
-			WritingSystem writingSystem2 = new WritingSystem("sw", font1);
+			WritingSystem writingSystem1 = new WritingSystem("ws");
+			WritingSystem writingSystem2 = new WritingSystem("sw");
 
 			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
 		}
@@ -304,10 +295,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentSortUsing_Different()
 		{
-			Font font1 = new Font("Arial", 12);
-			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			WritingSystem writingSystem1 = new WritingSystem("ws");
 			writingSystem1.SortUsing = "th";
-			WritingSystem writingSystem2 = new WritingSystem("ws", font1);
+			WritingSystem writingSystem2 = new WritingSystem("ws");
 			writingSystem2.SortUsing = "th-TH";
 
 			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
@@ -316,12 +306,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentCustomSortRuleTypes_Different()
 		{
-			Font font1 = new Font("Arial", 12);
-			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			WritingSystem writingSystem1 = new WritingSystem("ws");
 			writingSystem1.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			writingSystem1.CustomSortRules = "A";
 
-			WritingSystem writingSystem2 = new WritingSystem("ws", font1);
+			WritingSystem writingSystem2 = new WritingSystem("ws");
 			writingSystem2.SortUsing = CustomSortRulesType.CustomICU.ToString();
 			writingSystem2.CustomSortRules = "A";
 
@@ -331,12 +320,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentCustomSortRules_Different()
 		{
-			Font font1 = new Font("Arial", 12);
-			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			WritingSystem writingSystem1 = new WritingSystem("ws");
 			writingSystem1.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			writingSystem1.CustomSortRules = "A";
 
-			WritingSystem writingSystem2 = new WritingSystem("ws", font1);
+			WritingSystem writingSystem2 = new WritingSystem("ws");
 			writingSystem2.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			writingSystem2.CustomSortRules = "A a";
 
@@ -375,93 +363,5 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			Assert.AreEqual("eng", writingSystem.Abbreviation);
 		}
 
-		[Test]
-		public void Font_SetNull_GetReturnsGenericSansSerif()
-		{
-			WritingSystem ws = new WritingSystem();
-			ws.Font = null;
-			Assert.AreEqual(FontFamily.GenericSansSerif, ws.Font.FontFamily);
-		}
-
-		[Test]
-		public void Font_SetNull_GetFontSizeIs12()
-		{
-			WritingSystem ws = new WritingSystem();
-			ws.Font = null;
-			Assert.AreEqual(12, ws.Font.Size);
-		}
-
-		[Test]
-		public void Font_SetNull_GetFontNameIsIdenticalToDefaultFontName()
-		{
-			WritingSystem ws = new WritingSystem();
-			ws.Font = null;
-			Assert.AreEqual(ws.Font.Name, ws.DefaultFontName);
-		}
-
-		[Test]
-		public void Font_SetValidFont_GetReturnsFont()
-		{
-			WritingSystem ws = new WritingSystem();
-			Font font = new Font(FontFamily.GenericSerif, 14);
-			ws.Font = font;
-			Assert.AreEqual(font, ws.Font);
-		}
-
-		[Test]
-		public void Font_SetValidFont_GetFontNameReturnsFontName()
-		{
-			WritingSystem ws = new WritingSystem();
-			string name = FontFamily.GenericSerif.Name;
-			ws.Font = new Font(name, 14);
-			Assert.AreEqual(name, ws.DefaultFontName);
-		}
-
-		[Test]
-		public void Font_SetValidFont_GetFontSizeReturnsFontSize()
-		{
-			WritingSystem ws = new WritingSystem();
-			int size = 14;
-			ws.Font = new Font(FontFamily.GenericSerif.Name, size);
-			Assert.AreEqual(size, ws.DefaultFontSize);
-		}
-
-		[Test]
-		public void FontSize_SetSize_GetFontReturnsFontWithSize()
-		{
-			WritingSystem ws = new WritingSystem();
-			int size = 14;
-			ws.Font = new Font(FontFamily.GenericSerif.Name, 8);
-			ws.DefaultFontSize = size;
-			Assert.AreEqual(size, ws.Font.Size);
-		}
-
-		[Test]
-		public void FontSize_SetSizeAndFontIsNull_GetFontReturnsFontWithSize()
-		{
-			WritingSystem ws = new WritingSystem();
-			int size = 14;
-			ws.Font = null;
-			ws.DefaultFontSize = size;
-			Assert.AreEqual(size, ws.Font.Size);
-		}
-
-		[Test]
-		public void FontName_SetName_GetFontReturnsFontWithName()
-		{
-			WritingSystem ws = new WritingSystem();
-			string name = FontFamily.GenericSerif.Name;
-			ws.Font = new Font(name, 12);
-			Assert.AreEqual(name, ws.Font.Name);
-		}
-
-		[Test]
-		public void FontName_SetBogusName_GetFontReturnsDefaultFont()
-		{
-			WritingSystem ws = new WritingSystem();
-			string name = "bogus";
-			ws.Font = new Font(name, 12);
-			Assert.AreEqual(FontFamily.GenericSansSerif.Name, ws.Font.Name);
-		}
 	}
 }

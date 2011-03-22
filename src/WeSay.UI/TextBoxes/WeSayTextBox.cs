@@ -234,7 +234,7 @@ namespace WeSay.UI.TextBoxes
 					throw new ArgumentNullException();
 				}
 				_writingSystem = value;
-				Font = value.Font;
+				Font = WritingSystemInfo.CreateFont(value);
 
 				//hack for testing
 				//   this.Height = (int) Math.Ceiling( Font.GetHeight());

@@ -245,12 +245,6 @@
 	<Compile Include="FieldDetailControl.Designer.cs">
 	  <DependentUpon>FieldDetailControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="FontControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="FontControl.designer.cs">
-	  <DependentUpon>FontControl.cs</DependentUpon>
-	</Compile>
 	<Compile Include="NewProjectCreation\NewProject.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -309,10 +303,6 @@
 	<EmbeddedResource Include="FieldDetailControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>FieldDetailControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="FontControl.resx">
-	  <DependentUpon>FontControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="NewProjectCreation\NewProject.resx">
 	  <SubType>Designer</SubType>

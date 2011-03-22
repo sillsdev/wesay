@@ -323,10 +323,10 @@ namespace WeSay.Project
 		public static ViewTemplate MakeMasterTemplate(WritingSystemCollection writingSystems)
 		{
 			List<String> defaultVernacularSet = new List<string>();
-			defaultVernacularSet.Add(WritingSystem.IdForUnknownVernacular);
+			defaultVernacularSet.Add(WritingSystemInfo.IdForUnknownVernacular);
 
 			List<String> defaultAnalysisSet = new List<string>();
-			defaultAnalysisSet.Add(WritingSystem.IdForUnknownAnalysis);
+			defaultAnalysisSet.Add(WritingSystemInfo.IdForUnknownAnalysis);
 
 			ViewTemplate masterTemplate = new ViewTemplate();
 

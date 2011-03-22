@@ -9,17 +9,8 @@ using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
-
 	public class WritingSystem : WritingSystemDefinition
 	{
-		public static string IdForUnknownVernacular;
-		public static string IdForUnknownAnalysis;
-
-		// TODO Use of this ctor should be removed.  Maybe a helper?
-		public WritingSystem(string testWritingSystemVernId, Font font)
-		{
-			throw new NotImplementedException();
-		}
 
 		//TODO This is fine to keep, but if a real WS is to be created, e.g. in tests then use the 1 arg ctor
 		public WritingSystem()
@@ -40,27 +31,23 @@ namespace WeSay.LexicalModel.Foundation
 		//public string Keyboard { get; set; }
 
 		// TODO Move to a helper
-		public Font Font
-		{
-			get
-			{
-				return new Font(DefaultFontName, DefaultFontSize);
-			}
-			set { throw new NotImplementedException(); }
-		}
 
-		// TODO Remove the use of Value wherever it occurs
-		public WritingSystem Value
-		{
-			get { throw new NotImplementedException(); }
-		}
+		//public void SetFont(Font value)
+		//{
+		//    throw new NotImplementedException();
+		//}
+
+		//public Font CreateFont()
+		//{
+		//    return new Font(DefaultFontName, DefaultFontSize);
+		//}
 
 		public object CustomSortRules { get; set; }
 
-		public string Key
-		{
-			get { throw new NotImplementedException(); }
-		}
+		//public string Id
+		//{
+		//    get { throw new NotImplementedException(); }
+		//}
 
 		#region Nested type: SpellCheckerIdToDisplayStringConverter
 
@@ -221,18 +208,15 @@ namespace WeSay.LexicalModel.Foundation
 
 		#endregion
 
-		// TODO Remove this
-		public WritingSystemDefinition GetAsPalasoWritingSystemDefinition()
-		{
-			throw new NotImplementedException();
-		}
-
+		// TODO this is only used in tests: should we care about conversion to/from string?
 		public new string SortUsing { get; set; }
 
-		public IComparable Compare(string èdit, string edít)
-		{
-			throw new NotImplementedException();
-		}
+		// TODO Should be able to use .Collator on PWSD
+		//public IComparable Compare(string ï¿½dit, string edï¿½t)
+		//{
+		//    throw new NotImplementedException();
+		//}
+
 
 		// TODO add this to palaso
 		public static WritingSystem FromRFC5646(string rftTag)

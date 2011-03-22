@@ -92,23 +92,24 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			}
 		}
 
-		private void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection ws1, WritingSystemCollection ws2)
+		private void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection lhs, WritingSystemCollection rhs)
 		{
-			foreach (var idWspair in ws1.WritingSystemDefinitions)
+			foreach (var lhsWritingSystem in lhs.WritingSystemDefinitions)
 			{
-				Assert.IsTrue(ws2.Contains(idWspair.Key));
-				Assert.AreEqual(idWspair.Value.Id, ws2.Get(idWspair.Key).Id);
-				Assert.AreEqual(idWspair.Value.Abbreviation, ws2.Get(idWspair.Key).Abbreviation);
-				Assert.AreEqual(idWspair.Value.Font.ToString(), ws2.Get(idWspair.Key).Font.ToString());
-				Assert.AreEqual(idWspair.Value.DefaultFontName, ws2.Get(idWspair.Key).DefaultFontName);
-				Assert.AreEqual(idWspair.Value.DefaultFontSize, ws2.Get(idWspair.Key).DefaultFontSize);
-				Assert.AreEqual(idWspair.Value.IsVoice, ws2.Get(idWspair.Key).IsVoice);
-				Assert.AreEqual(idWspair.Value.IsUnicodeEncoded, ws2.Get(idWspair.Key).IsUnicodeEncoded);
-				Assert.AreEqual(idWspair.Value.Keyboard, ws2.Get(idWspair.Key).Keyboard);
-				Assert.AreEqual(idWspair.Value.RightToLeftScript, ws2.Get(idWspair.Key).RightToLeftScript);
-				Assert.AreEqual(idWspair.Value.SortUsing, ws2.Get(idWspair.Key).SortUsing);
-				Assert.AreEqual(idWspair.Value.CustomSortRules, ws2.Get(idWspair.Key).CustomSortRules);
-				Assert.AreEqual(idWspair.Value.SpellCheckingId, ws2.Get(idWspair.Key).SpellCheckingId);
+				var rhsWritingSystem = rhs.Get(lhsWritingSystem.Id);
+				Assert.IsTrue(rhs.Contains(lhsWritingSystem.Id));
+				Assert.AreEqual(lhsWritingSystem.Id, rhsWritingSystem.Id);
+				Assert.AreEqual(lhsWritingSystem.Abbreviation, rhsWritingSystem.Abbreviation);
+				Assert.AreEqual(WritingSystemInfo.CreateFont(lhsWritingSystem).ToString(), WritingSystemInfo.CreateFont(rhsWritingSystem).ToString());
+				Assert.AreEqual(lhsWritingSystem.DefaultFontName, rhsWritingSystem.DefaultFontName);
+				Assert.AreEqual(lhsWritingSystem.DefaultFontSize, rhsWritingSystem.DefaultFontSize);
+				Assert.AreEqual(lhsWritingSystem.IsVoice, rhsWritingSystem.IsVoice);
+				Assert.AreEqual(lhsWritingSystem.IsUnicodeEncoded, rhsWritingSystem.IsUnicodeEncoded);
+				Assert.AreEqual(lhsWritingSystem.Keyboard, rhsWritingSystem.Keyboard);
+				Assert.AreEqual(lhsWritingSystem.RightToLeftScript, rhsWritingSystem.RightToLeftScript);
+				Assert.AreEqual(lhsWritingSystem.SortUsing, rhsWritingSystem.SortUsing);
+				Assert.AreEqual(lhsWritingSystem.CustomSortRules, rhsWritingSystem.CustomSortRules);
+				Assert.AreEqual(lhsWritingSystem.SpellCheckingId, rhsWritingSystem.SpellCheckingId);
 			}
 		}
 
@@ -118,8 +119,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			ws.ISO = languageCode;
 			ws.Abbreviation = languageCode;
 			ws.CustomSortRules = "";
-			ws.Font = new Font(FontFamily.GenericSansSerif, 12);
 			ws.IsVoice = false;
+			ws.DefaultFontName = new Font(FontFamily.GenericSansSerif, 12).Name;
+			ws.DefaultFontSize = new Font(FontFamily.GenericSansSerif, 12).Size; ws.IsVoice = false;
 			ws.IsUnicodeEncoded = true;
 			ws.Keyboard = "Bogus ivories!";
 			ws.RightToLeftScript = false;
@@ -134,7 +136,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			ws.ISO = languageCode;
 			ws.Abbreviation = languageCode;
 			ws.CustomSortRules = "Bogus roolz!";
-			ws.Font = new Font(FontFamily.GenericSansSerif, 12);
+			ws.DefaultFontName = new Font(FontFamily.GenericSansSerif, 12).Name;
+			ws.DefaultFontSize = new Font(FontFamily.GenericSansSerif, 12).Size;
 			ws.IsVoice = false;
 			ws.IsUnicodeEncoded = false;
 			ws.Keyboard = "Bogus ivories!";
@@ -163,10 +166,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 				var wsCollectionToBeWritten = new WritingSystemCollection();
 				WritingSystem ws = CreateDetailedWritingSystem("test");
-				ws.GetAsPalasoWritingSystemDefinition().Region = "Region1";
+				ws.Region = "Region1";
 				wsCollectionToBeWritten.Add(ws.Id, ws);
 				WritingSystem ws2 = CreateDetailedWritingSystem("test");
-				ws2.GetAsPalasoWritingSystemDefinition().Region = "Region2";
+				ws2.Region = "Region2";
 				wsCollectionToBeWritten.Add(ws2.Id, ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
 				var loadedWsCollection = new WritingSystemCollection();
@@ -177,9 +180,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		private static void WriteLdmlWritingSystemFiles(string pathToStore, WritingSystemCollection wsCollectionToBeWritten)
 		{
 			var store = new LdmlInFolderWritingSystemStore(pathToStore);
-			foreach (var idWsPair in wsCollectionToBeWritten.WritingSystemDefinitions)
+			foreach (var writingSystem in wsCollectionToBeWritten.WritingSystemDefinitions)
 			{
-				store.Set(idWsPair.Value.GetAsPalasoWritingSystemDefinition());
+				store.Set(writingSystem);
 			}
 			store.Save();
 		}
@@ -244,8 +247,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void TrimToActualTextWritingSystemIds_RemovesAudio()
 		{
 			var writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Add("en", new WritingSystem("en", new Font("Arial", 12)));
-			var audio = new WritingSystem("en", new Font("Arial", 12));
+			writingSystemCollection.Add("en", new WritingSystem("en"));
+			var audio = new WritingSystem("en");
 			audio.IsVoice = true;
 			writingSystemCollection.Add("voice", audio);
 
@@ -275,8 +278,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				// since Linux may not have CourierNew, we
 				// need to test against the font mapping
 				Font expectedFont = new Font("Courier New", 10);
-				Assert.AreEqual(expectedFont.Name, ws.Font.Name);
-				Assert.AreEqual(expectedFont.Size, ws.Font.Size);
+				Assert.AreEqual(expectedFont.Name, WritingSystemInfo.CreateFont(ws).Name);
+				Assert.AreEqual(expectedFont.Size, WritingSystemInfo.CreateFont(ws).Size);
 		}
 
 
@@ -312,8 +315,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		private static WritingSystemCollection MakeSampleCollection()
 		{
 			WritingSystemCollection c = new WritingSystemCollection();
-			c.Add("one", new WritingSystem("one", new Font("Arial", 11)));
-			c.Add("two", new WritingSystem("two", new Font("Times New Roman", 22)));
+			c.Add("one", new WritingSystem("one"));
+			c.Add("two", new WritingSystem("two"));
 			return c;
 		}
 

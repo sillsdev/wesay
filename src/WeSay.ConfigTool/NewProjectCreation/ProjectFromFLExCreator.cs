@@ -153,8 +153,8 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			var vernacular = GetTopWritingSystem(doc, "//lexical-unit/form/@lang");
 			if (vernacular != string.Empty)
 			{
-				viewTemplate.OnWritingSystemIDChange(WritingSystem.IdForUnknownVernacular, vernacular);
-				writingSystems.Remove(WritingSystem.IdForUnknownVernacular);
+				viewTemplate.OnWritingSystemIDChange(WritingSystemInfo.IdForUnknownVernacular, vernacular);
+				writingSystems.Remove(WritingSystemInfo.IdForUnknownVernacular);
 			}
 			var analysis = GetTopWritingSystem(doc, "//sense/gloss/@lang");
 			if (analysis == string.Empty)
@@ -164,7 +164,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			}
 			if (analysis != string.Empty)
 			{
-				viewTemplate.OnWritingSystemIDChange(WritingSystem.IdForUnknownAnalysis, analysis);
+				viewTemplate.OnWritingSystemIDChange(WritingSystemInfo.IdForUnknownAnalysis, analysis);
 			}
 
 			AddWritingSystemsForField(doc, viewTemplate, "//lexical-unit/form/@lang", LexEntry.WellKnownProperties.LexicalUnit);

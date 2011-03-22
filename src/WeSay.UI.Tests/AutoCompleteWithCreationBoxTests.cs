@@ -35,7 +35,9 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_ws = new WritingSystem("xx", new Font("Arial", (float) 55.9));
+			_ws = new WritingSystem("xx");
+			_ws.DefaultFontName = "Arial";
+			_ws.DefaultFontSize = (float) 55.9;
 			//            _createNewClickedFired=false;
 			//            _valueChangedFired = false;
 			_sourceChoices = new OptionsList();
@@ -226,7 +228,7 @@ namespace WeSay.UI.Tests
 			SetKeyAndShow("3");
 			//the +3 fudge here is because the actual height of the
 			//inner text box is something less than the Font's GetHeight
-			Assert.Greater(_control.Height + 3, _ws.Font.GetHeight());
+			Assert.Greater(_control.Height + 3, WritingSystemInfo.CreateFont(_ws).GetHeight());
 		}
 
 		//------------------------------------------------------------
