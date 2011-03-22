@@ -23,7 +23,7 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			WeSayTextBox widget =
-					new WeSayTextBox(new WritingSystem("vernacular", new Font("Arial", 12)), null);
+					new WeSayTextBox(new WritingSystem("vernacular"), null);
 			new TextBinding(text, "vernacular", widget);
 
 			text["vernacular"] = "hello";
@@ -37,7 +37,7 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			WeSayTextBox widget =
-					new WeSayTextBox(new WritingSystem("vernacular", new Font("Arial", 12)), null);
+					new WeSayTextBox(new WritingSystem("vernacular"), null);
 
 			var binding = new TextBinding(text, "vernacular", widget);
 

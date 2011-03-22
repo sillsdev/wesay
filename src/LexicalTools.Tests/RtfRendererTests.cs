@@ -15,8 +15,8 @@ namespace WeSay.LexicalTools.Tests
 		public void GetActualTextForms_DropsIsAudioForm()
 		{
 			var writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Add("en", new WritingSystem("en", new Font("Arial", 12)));
-			var audio = new WritingSystem("en", new Font("Arial", 12));
+			writingSystemCollection.Add("en", new WritingSystem("en"));
+			var audio = new WritingSystem("en");
 			audio.IsVoice = true;
 			writingSystemCollection.Add("voice", audio);
 			var m = new MultiText();

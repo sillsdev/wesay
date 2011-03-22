@@ -48,8 +48,7 @@ namespace WeSay.LexicalTools.Tests
 			base.Setup();
 			_tempFolder = new TemporaryFolder();
 			_vernacularWritingSystem =
-					new WritingSystem(BasilProject.Project.WritingSystems.TestWritingSystemVernId,
-									  SystemFonts.DefaultFont);
+					new WritingSystem(BasilProject.Project.WritingSystems.TestWritingSystemVernId);
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
 
 			_filePath = _tempFolder.GetTemporaryFile();

@@ -16,7 +16,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class ReferenceCollectionEditorTests: IReceivePropertyChangeNotifications
 	{
-		private readonly WritingSystem _ws = new WritingSystem("test", new Font("Arial", 30));
+		private readonly WritingSystem _ws = new WritingSystem("test");
 		private ReferenceCollectionEditor<Option, string, OptionRef> _control;
 		private Form _window;
 		private OptionsList _sourceChoices;
@@ -26,6 +26,8 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
+			_ws.DefaultFontName = "Arial";
+			_ws.DefaultFontSize = 30;
 			_sourceChoices = new OptionsList();
 			AddSourceChoice("one", "1");
 			AddSourceChoice("two", "2");

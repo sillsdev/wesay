@@ -246,8 +246,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void TrimToActualTextWritingSystemIds_RemovesAudio()
 		{
 			var writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Add("en", new WritingSystem("en", new Font("Arial", 12)));
-			var audio = new WritingSystem("en", new Font("Arial", 12));
+			writingSystemCollection.Add("en", new WritingSystem("en"));
+			var audio = new WritingSystem("en");
 			audio.IsVoice = true;
 			writingSystemCollection.Add("voice", audio);
 
@@ -312,8 +312,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		private static WritingSystemCollection MakeSampleCollection()
 		{
 			WritingSystemCollection c = new WritingSystemCollection();
-			c.Add("one", new WritingSystem("one", new Font("Arial", 11)));
-			c.Add("two", new WritingSystem("two", new Font("Times New Roman", 22)));
+			c.Add("one", new WritingSystem("one"));
+			c.Add("two", new WritingSystem("two"));
 			return c;
 		}
 

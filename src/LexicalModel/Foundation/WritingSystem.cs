@@ -11,11 +11,6 @@ namespace WeSay.LexicalModel.Foundation
 {
 	public class WritingSystem : WritingSystemDefinition
 	{
-		// TODO Use of this ctor should be removed.  Maybe a helper?
-		public WritingSystem(string testWritingSystemVernId, Font font)
-		{
-			throw new NotImplementedException();
-		}
 
 		//TODO This is fine to keep, but if a real WS is to be created, e.g. in tests then use the 1 arg ctor
 		public WritingSystem()
@@ -23,9 +18,9 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
-		//public WritingSystem(string id)
-		//{
-		//}
+		public WritingSystem(string id)
+		{
+		}
 
 		//public string DefaultFontName { get; private set; }
 		//public int DefaultFontSize { get; set; }

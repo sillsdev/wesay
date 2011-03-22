@@ -79,7 +79,7 @@ namespace WeSay.LexicalTools.Tests
 
 			if(!v.WritingSystems.Contains("en"))
 			{
-				v.WritingSystems.Add("en", new WritingSystem("en", new Font("arial", 12)));
+				v.WritingSystems.Add("en", new WritingSystem("en"));
 			}
 			return v;
 		}
