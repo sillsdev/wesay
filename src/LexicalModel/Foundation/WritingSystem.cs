@@ -23,9 +23,9 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
-		public WritingSystem(string id)
-		{
-		}
+		//public WritingSystem(string id)
+		//{
+		//}
 
 		//public string DefaultFontName { get; private set; }
 		//public int DefaultFontSize { get; set; }
@@ -213,13 +213,14 @@ namespace WeSay.LexicalModel.Foundation
 
 		#endregion
 
+		// TODO this is only used in tests: should we care about conversion to/from string?
 		public new string SortUsing { get; set; }
 
 		// TODO Should be able to use .Collator on PWSD
-		public IComparable Compare(string èdit, string edít)
-		{
-			throw new NotImplementedException();
-		}
+		//public IComparable Compare(string èdit, string edít)
+		//{
+		//    throw new NotImplementedException();
+		//}
 
 	}
 }

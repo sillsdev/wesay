@@ -69,7 +69,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			writingSystem.SortUsing = "fr";
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
-			Assert.Less(writingSystem.Compare("\u00c8dit", "Ed\u00edt"), 0);
+
+			Assert.Less(writingSystem.Collator.Compare("\u00c8dit", "Ed\u00edt"), 0);
 		}
 
 		[Test]
@@ -97,7 +98,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			writingSystem.SortUsing = "en-US";
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
-			Assert.Greater(writingSystem.Compare("\u00c8dit", "Ed\u00edt"), 0);
+			Assert.Greater(writingSystem.Collator.Compare("\u00c8dit", "Ed\u00edt"), 0);
 		}
 
 		[Test]
