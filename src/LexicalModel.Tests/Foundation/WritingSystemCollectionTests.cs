@@ -175,7 +175,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 		private static void WriteLdmlWritingSystemFiles(string pathToStore, WritingSystemCollection wsCollectionToBeWritten)
 		{
-			var store = new LdmlInFolderWritingSystemStore(pathToStore);
+			var store = new LdmlInFolderWritingSystemRepository(pathToStore);
 			foreach (var idWsPair in wsCollectionToBeWritten)
 			{
 				store.Set(idWsPair.Value.GetAsPalasoWritingSystemDefinition());
