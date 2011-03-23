@@ -228,5 +228,17 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			throw new NotImplementedException();
 		}
+
+		// TODO Move to palaso wsd
+		public void SortUsingOtherLanguage(string fr)
+		{
+			throw new NotImplementedException();
+		}
+
+		// TODO move to palaso wsd
+		public void SortUsingCustomICU(string lastPrimaryIgnorable)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

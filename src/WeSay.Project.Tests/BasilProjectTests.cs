@@ -174,6 +174,7 @@ namespace WeSay.Project.Tests
 				Assert.AreEqual(lhsWritingSystem.IsUnicodeEncoded, rhsWritingSystem.IsUnicodeEncoded);
 				Assert.AreEqual(lhsWritingSystem.Keyboard, rhsWritingSystem.Keyboard);
 				Assert.AreEqual(lhsWritingSystem.RightToLeftScript, rhsWritingSystem.RightToLeftScript);
+				Assert.AreEqual(lhsWritingSystem.SortRules, rhsWritingSystem.SortRules);
 				Assert.AreEqual(lhsWritingSystem.SortUsing, rhsWritingSystem.SortUsing);
 				Assert.AreEqual(lhsWritingSystem.SpellCheckingId, rhsWritingSystem.SpellCheckingId);
 			}

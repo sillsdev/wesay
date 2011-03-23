@@ -118,14 +118,13 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			WritingSystem ws = new WritingSystem();
 			ws.ISO = languageCode;
 			ws.Abbreviation = languageCode;
-			ws.CustomSortRules = "";
 			ws.IsVoice = false;
 			ws.DefaultFontName = new Font(FontFamily.GenericSansSerif, 12).Name;
 			ws.DefaultFontSize = new Font(FontFamily.GenericSansSerif, 12).Size; ws.IsVoice = false;
 			ws.IsUnicodeEncoded = true;
 			ws.Keyboard = "Bogus ivories!";
 			ws.RightToLeftScript = false;
-			ws.SortUsing = CustomSortRulesType.CustomSimple.ToString();
+			ws.SortUsingCustomICU("");
 			ws.SpellCheckingId = languageCode;
 			return ws;
 		}
@@ -135,14 +134,13 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			WritingSystem ws = new WritingSystem();
 			ws.ISO = languageCode;
 			ws.Abbreviation = languageCode;
-			ws.CustomSortRules = "Bogus roolz!";
 			ws.DefaultFontName = new Font(FontFamily.GenericSansSerif, 12).Name;
 			ws.DefaultFontSize = new Font(FontFamily.GenericSansSerif, 12).Size;
 			ws.IsVoice = false;
 			ws.IsUnicodeEncoded = false;
 			ws.Keyboard = "Bogus ivories!";
 			ws.RightToLeftScript = false;
-			ws.SortUsing = CustomSortRulesType.CustomSimple.ToString();
+			ws.SortUsingCustomICU("bogus rules");
 			ws.SpellCheckingId = languageCode;
 			return ws;
 		}

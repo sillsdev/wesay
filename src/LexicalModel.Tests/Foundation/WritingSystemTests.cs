@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Exortech.NetReflector;
 using NUnit.Framework;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation
@@ -65,7 +66,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void Compare_fr_sortsLikeFrench()
 		{
 			WritingSystem writingSystem = new WritingSystem("one");
-			writingSystem.SortUsing = "fr";
+			writingSystem.SortUsingOtherLanguage("fr");
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
 
