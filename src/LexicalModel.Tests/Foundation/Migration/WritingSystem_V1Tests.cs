@@ -69,7 +69,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		public void CustomSortRules_SerializeAndDeserialize()
 		{
 			WritingSystem_V1 ws = new WritingSystem_V1("one", new Font("Arial", 99));
-			ws.SortUsing = CustomSortRulesType.CustomICU.ToString();
+			ws.SortUsing = WritingSystem_V1.CustomSortRulesType.CustomICU.ToString();
 
 			string rules = "&n < ng <<< Ng <<< NG";
 			ws.CustomSortRules = rules;
@@ -96,7 +96,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 					"<WritingSystem><CustomSortRules>test</CustomSortRules><SortUsing>CustomSimple</SortUsing><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.AreEqual("test", ws.CustomSortRules);
-			Assert.AreEqual(CustomSortRulesType.CustomSimple.ToString(), ws.SortUsing);
+			Assert.AreEqual(WritingSystem_V1.CustomSortRulesType.CustomSimple.ToString(), ws.SortUsing);
 		}
 
 		[Test]
@@ -111,7 +111,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 					"<WritingSystem><SortUsing>CustomSimple</SortUsing><CustomSortRules>test</CustomSortRules><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.AreEqual("test", ws.CustomSortRules);
-			Assert.AreEqual(CustomSortRulesType.CustomSimple.ToString(), ws.SortUsing);
+			Assert.AreEqual(WritingSystem_V1.CustomSortRulesType.CustomSimple.ToString(), ws.SortUsing);
 		}
 	}
 }
