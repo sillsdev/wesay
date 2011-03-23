@@ -163,6 +163,8 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="ConstructorThrowTests.cs" />
+	<Compile Include="Foundation\Migration\WritingSystemMigratorTests.cs" />
+	<Compile Include="Foundation\Migration\WritingSystem_V1Tests.cs" />
 	<Compile Include="Foundation\Options\OptionList.Tests.cs" />
 	<Compile Include="Foundation\SpellCheckerIdToDisplayStringConverterTests.cs" />
 	<Compile Include="Foundation\TestResources.Designer.cs">

@@ -9,7 +9,7 @@ namespace WeSay.ConfigTool
 	{
 		private readonly WritingSystemSetupView _view;
 
-		public WritingSystemSetup(ILogger logger, IWritingSystemStore store)
+		public WritingSystemSetup(ILogger logger, IWritingSystemRepository store)
 			: base("set up fonts, keyboards, and sorting", logger)
 		{
 			_view = new WritingSystemSetupView(new WritingSystemSetupModel(store))

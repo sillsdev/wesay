@@ -7,7 +7,7 @@ using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
-	public class WritingSystemCollection : LdmlInFolderWritingSystemStore/*, IEnumerable<WritingSystem>*/
+	public class WritingSystemCollection : LdmlInFolderWritingSystemRepository/*, IEnumerable<WritingSystem>*/
 	{
 		public WritingSystem UnknownAnalysisWritingSystem { get; private set; }
 		public WritingSystem UnknownVernacularWritingSystem { get; private set; }
