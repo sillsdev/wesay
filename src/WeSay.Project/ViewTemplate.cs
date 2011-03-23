@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using Chorus;
 using Exortech.NetReflector;
@@ -603,7 +604,7 @@ namespace WeSay.Project
 			}
 			if (listWritingSystem == null)
 			{
-				listWritingSystem = writingSystems.UnknownVernacularWritingSystem;
+				listWritingSystem = writingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
 			}
 			return listWritingSystem;
 		}
@@ -692,11 +693,15 @@ namespace WeSay.Project
 				}
 			}
 
-			return WritingSystems.TrimToActualTextWritingSystemIds(fieldControllingHeadwordOutput.WritingSystemIds);
+			return TrimToActualTextWritingSystemIds(fieldControllingHeadwordOutput.WritingSystemIds);
 		}
 
+		private IList<string> TrimToActualTextWritingSystemIds(IEnumerable<string> writingSystemsIds)
+		{
 
-
+			var textWritingSystemIds = writingSystemsIds.Where(id => !WritingSystems.Get(id).IsVoice);
+			return new List<string>(textWritingSystemIds);
+		}
 
 		public WritingSystemCollection WritingSystems
 		{
@@ -711,7 +716,7 @@ namespace WeSay.Project
 			//over this later).
 			var noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);
 			list.Insert(0,new WritingSystemForChorusAdaptor(noteWritingSystem));
-			foreach (var system in WritingSystems.GetActualTextWritingSystems())
+			foreach (var system in WritingSystems.TextWritingSystems())
 			{
 				if(system!=noteWritingSystem)
 				{

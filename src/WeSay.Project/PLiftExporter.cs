@@ -134,7 +134,7 @@ namespace WeSay.Project
 
 				if (!MultiTextBase.IsEmpty(text))
 				{
-					var textWritingSystems = _viewTemplate.WritingSystems.GetActualTextWritingSystems();
+					var textWritingSystems = _viewTemplate.WritingSystems.TextWritingSystems();
 					var ids = from ws in textWritingSystems select ws.Id;
 					WriteLanguageFormsInWrapper(text.Forms.Where(f=>ids.Contains(f.WritingSystemId) ), "form", true);
 				}

@@ -159,7 +159,7 @@ namespace WeSay.Project.Tests
 
 		private static void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection lhs, WritingSystemCollection rhs)
 		{
-			foreach (var lhsWritingSystem in lhs.WritingSystemDefinitions)
+			foreach (var lhsWritingSystem in lhs.AllWritingSystems)
 			{
 				Assert.IsTrue(rhs.Contains(lhsWritingSystem.Id));
 				var rhsWritingSystem = rhs.Get(lhsWritingSystem.Id);

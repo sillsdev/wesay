@@ -93,7 +93,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 		private void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection lhs, WritingSystemCollection rhs)
 		{
-			foreach (var lhsWritingSystem in lhs.WritingSystemDefinitions)
+			foreach (var lhsWritingSystem in lhs.AllWritingSystems)
 			{
 				var rhsWritingSystem = rhs.Get(lhsWritingSystem.Id);
 				Assert.IsTrue(rhs.Contains(lhsWritingSystem.Id));
@@ -176,7 +176,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		private static void WriteLdmlWritingSystemFiles(string pathToStore, WritingSystemCollection wsCollectionToBeWritten)
 		{
 			var store = new LdmlInFolderWritingSystemStore(pathToStore);
-			foreach (var writingSystem in wsCollectionToBeWritten.WritingSystemDefinitions)
+			foreach (var writingSystem in wsCollectionToBeWritten.AllWritingSystems)
 			{
 				store.Set(writingSystem);
 			}
@@ -237,20 +237,6 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			WritingSystem ws = CreateDetailedWritingSystem("test");
 			wsCollectionToBeWritten.Set(ws);
 			wsCollectionToBeWritten.Save();
-		}
-
-		[Test]
-		public void TrimToActualTextWritingSystemIds_RemovesAudio()
-		{
-			var writingSystemCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
-			writingSystemCollection.Set(WritingSystem.FromRFC5646("en"));
-			var audio = WritingSystem.FromRFC5646("en");
-			audio.IsVoice = true;
-			writingSystemCollection.Set(audio);
-
-			var ids = writingSystemCollection.TrimToActualTextWritingSystemIds(new List<string>() { "en", "voice" });
-			Assert.AreEqual(1, ids.Count);
-			Assert.AreEqual("en", ids[0]);
 		}
 
 		[Test]

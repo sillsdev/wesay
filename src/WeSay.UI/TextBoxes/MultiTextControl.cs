@@ -281,7 +281,7 @@ namespace WeSay.UI.TextBoxes
 					//in which case we don't really care about aligning anyhow
 					if (_allWritingSystems != null)
 					{
-						foreach (WritingSystem ws in _allWritingSystems.WritingSystemDefinitions)
+						foreach (WritingSystem ws in _allWritingSystems.AllWritingSystems)
 						{
 							Size size = TextRenderer.MeasureText(ws.Abbreviation,
 																 _writingSystemLabelFont) +fudgeFactor;
