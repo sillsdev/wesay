@@ -10,6 +10,20 @@ using Palaso.WritingSystems;
 namespace WeSay.LexicalModel.Foundation
 {
 
+	public enum CustomSortRulesType
+	{
+		/// <summary>
+		/// Custom Simple (Shoebox/Toolbox) style rules
+		/// </summary>
+		[Description("Custom Simple (Shoebox style) rules")]
+		CustomSimple,
+		/// <summary>
+		/// Custom ICU rules
+		/// </summary>
+		[Description("Custom ICU rules")]
+		CustomICU
+	}
+
 	public class WritingSystem : WritingSystemDefinition
 	{
 		public static string IdForUnknownVernacular;
