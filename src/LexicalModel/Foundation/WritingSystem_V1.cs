@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Xml;
@@ -11,42 +12,32 @@ using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.WritingSystems;
+using Spart;
+using WeSay.LexicalModel.Foundation.WritingSystemMigration;
 
 namespace WeSay.LexicalModel.Foundation
 {
-	public enum CustomSortRulesType
-	{
-		/// <summary>
-		/// Custom Simple (Shoebox/Toolbox) style rules
-		/// </summary>
-		[Description("Custom Simple (Shoebox style) rules")]
-		CustomSimple,
-		/// <summary>
-		/// Custom ICU rules
-		/// </summary>
-		[Description("Custom ICU rules")]
-		CustomICU
-	}
 
 	[ReflectorType("WritingSystem")]
 	public class WritingSystem_V1 : IComparer<string>, IComparer
 	{
-		public static string IdForUnknownAnalysis = "en";
-		public static string IdForUnknownVernacular = "v";
+		public enum CustomSortRulesType
+		{
+			/// <summary>
+			/// Custom Simple (Shoebox/Toolbox) style rules
+			/// </summary>
+			[Description("Custom Simple (Shoebox style) rules")]
+			CustomSimple,
+			/// <summary>
+			/// Custom ICU rules
+			/// </summary>
+			[Description("Custom ICU rules")]
+			CustomICU
+		}
 		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
 		private bool _isUnicode = true;
+		private string _abbreviation;
 		private WritingSystemDefinition _palasoWritingSystemDefinition;
-
-		public WritingSystem_V1(XmlNode node)
-			: this()
-		{
-			ISO = node.Attributes["id"].Value;
-			XmlNode fontNode = node.SelectSingleNode("font");
-			string name = fontNode.Attributes["name"].Value;
-			float size = float.Parse(fontNode.Attributes["_palasoWritingSystemDefinitionSize"].Value);
-
-			Font = new Font(name, size);
-		}
 
 		/// <summary>
 		/// default constructor required for deserialization
@@ -56,69 +47,34 @@ namespace WeSay.LexicalModel.Foundation
 			_palasoWritingSystemDefinition = new WritingSystemDefinition();
 		}
 
-		public WritingSystem_V1(WritingSystemDefinition ws)
-		{
-			_palasoWritingSystemDefinition = ws;
-		}
-
-		/// <summary>
-		/// default for testing only
-		/// </summary>
 		public WritingSystem_V1(string id, Font font)
-			: this()
 		{
-			_palasoWritingSystemDefinition = new WritingSystemDefinition(id);
+			ISO = id;
 			Font = font;
-		}
-
-		public WritingSystemDefinition GetAsPalasoWritingSystemDefinition()
-		{
-			return _palasoWritingSystemDefinition;
-		}
-
-		[Browsable(false)]
-		public string Id
-		{
-			get { return _palasoWritingSystemDefinition.Id; }
+			_palasoWritingSystemDefinition = new WritingSystemDefinition();
 		}
 
 		[ReflectorProperty("Id", Required = true)]
-		public string ISO
-		{
-			get { return _palasoWritingSystemDefinition.ISO; }
-			set { _palasoWritingSystemDefinition.ISO = value; }
-		}
+		public string ISO{ get; set;}
 
-		public string Script
-		{
-			get { return _palasoWritingSystemDefinition.Script; }
-			set { _palasoWritingSystemDefinition.Script = value; }
-		}
+		public string Script { get; set; }
 
-		public string Region
-		{
-			get { return _palasoWritingSystemDefinition.Region; }
-			set { _palasoWritingSystemDefinition.Region = value; }
-		}
+		public string Region { get; set; }
 
-		public string Variant
-		{
-			get { return _palasoWritingSystemDefinition.Variant; }
-			set { _palasoWritingSystemDefinition.Variant = value; }
-		}
+		public string Variant { get; set; }
 
 		[ReflectorProperty("Abbreviation", Required = false)]
 		public string Abbreviation
 		{
 			get
 			{
-				if (string.IsNullOrEmpty(_palasoWritingSystemDefinition.Abbreviation))
+				if (string.IsNullOrEmpty(_abbreviation))
 				{
-					return _palasoWritingSystemDefinition.ISO;
+					return ISO;
 				}
-				return _palasoWritingSystemDefinition.Abbreviation;
+				return _abbreviation;
 			}
-			set { _palasoWritingSystemDefinition.Abbreviation = value; }
+			set { _abbreviation = value; }
 		}
 
 		[Browsable(false)]
@@ -126,23 +82,23 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			get
 			{
-				if ((_palasoWritingSystemDefinition.DefaultFontName == null) || (_palasoWritingSystemDefinition.DefaultFontSize == 0))
+				if ((FontName == null) || (FontSize == 0))
 				{
 					return _fallBackFont;
 				}
-				return new Font(_palasoWritingSystemDefinition.DefaultFontName, _palasoWritingSystemDefinition.DefaultFontSize);
+				return new Font(FontName, FontSize);
 			}
 			set
 			{
 				if (value == null)
 				{
-					_palasoWritingSystemDefinition.DefaultFontName = _fallBackFont.Name;
-					_palasoWritingSystemDefinition.DefaultFontSize = _fallBackFont.Size;
+					FontName = _fallBackFont.Name;
+					FontSize = Convert.ToInt32(_fallBackFont.Size);
 				}
 				else
 				{
-					_palasoWritingSystemDefinition.DefaultFontName = value.Name;
-					_palasoWritingSystemDefinition.DefaultFontSize = value.Size;
+					FontName = value.Name;
+					FontSize = Convert.ToInt32(value.Size);
 				}
 			}
 		}
@@ -152,194 +108,43 @@ namespace WeSay.LexicalModel.Foundation
 		/// </summary>
 		[Browsable(false)]
 		[ReflectorProperty("SortUsing", Required = false)]
-		public string SortUsing
-		{
-			get
-			{
-				if (_palasoWritingSystemDefinition.SortUsing == WritingSystemDefinition.SortRulesType.DefaultOrdering)
-				{
-					return Id;
-				}
-				if (_palasoWritingSystemDefinition.SortUsing == WritingSystemDefinition.SortRulesType.OtherLanguage)
-				{
-					return _palasoWritingSystemDefinition.SortRules;
-				}
-				return _palasoWritingSystemDefinition.SortUsing.ToString();
-			}
-			set
-			{
-				if (_palasoWritingSystemDefinition.SortUsing.ToString() != value)
-				{
-					WritingSystemDefinition.SortRulesType newSortRulesType = AdaptToSortRulesType(value);
-
-					bool switchingToNonDefaultSystemSort =
-						(newSortRulesType == WritingSystemDefinition.SortRulesType.OtherLanguage);
-					bool switchingFromNonDefaultSystemSort =
-						(_palasoWritingSystemDefinition.SortUsing == WritingSystemDefinition.SortRulesType.OtherLanguage);
-
-					if (switchingToNonDefaultSystemSort)
-					{
-						_palasoWritingSystemDefinition.SortRules = value;
-					}
-					if (switchingFromNonDefaultSystemSort)
-					{
-						_palasoWritingSystemDefinition.SortRules = null;
-					}
-
-					_palasoWritingSystemDefinition.SortUsing = newSortRulesType;
-				}
-			}
-		}
-
-		private WritingSystemDefinition.SortRulesType AdaptToSortRulesType(string sortUsingString)
-		{
-			WritingSystemDefinition.SortRulesType palasoSortRulesType;
-			if (sortUsingString == CustomSortRulesType.CustomICU.ToString())
-			{
-				palasoSortRulesType = WritingSystemDefinition.SortRulesType.CustomICU;
-			}
-			else if (sortUsingString == CustomSortRulesType.CustomSimple.ToString())
-			{
-				palasoSortRulesType = WritingSystemDefinition.SortRulesType.CustomSimple;
-			}
-			else if (sortUsingString == null)
-			{
-				palasoSortRulesType = WritingSystemDefinition.SortRulesType.DefaultOrdering;
-			}
-			else
-			{
-				palasoSortRulesType = WritingSystemDefinition.SortRulesType.OtherLanguage;
-			}
-			return palasoSortRulesType;
-		}
+		public string SortUsing{ get; set; }
 
 		[Browsable(false)]
-		public bool UsesCustomSortRules
-		{
-			get
-			{
-				bool isUsingCustomSortRules = IsCustomSortRuleType(_palasoWritingSystemDefinition.SortUsing);
-				return isUsingCustomSortRules;
-			}
-		}
-
-		private bool IsCustomSortRuleType(WritingSystemDefinition.SortRulesType sortRuleType)
-		{
-			return (sortRuleType == WritingSystemDefinition.SortRulesType.CustomICU) ||
-				   (sortRuleType == WritingSystemDefinition.SortRulesType.CustomSimple);
-		}
+		public bool UsesCustomSortRules { get; set; }
 
 		/// <summary>
 		/// returns null if UsesCustomSortRules is false
 		/// </summary>
 		[Browsable(false)]
 		[ReflectorProperty("CustomSortRules", Required = false)]
-		public string CustomSortRules
-		{
-			get
-			{
-				if (!UsesCustomSortRules)
-				{
-					return null;
-				}
-				return _palasoWritingSystemDefinition.SortRules ?? String.Empty;
-			}
-			set
-			{
-				// should only be set if UsesCustomSortRules == true but can't because of NetReflector
-				if (_palasoWritingSystemDefinition.SortRules != value)
-				{
-					_palasoWritingSystemDefinition.SortRules = value;
-				}
-				// cannot do the following due to NetReflector wanting to set to null!
-				// throw new InvalidOperationException("CustomSortRules can only be set when UsesCustomSortRules is true");
-			}
-		}
+		public string CustomSortRules{ get; set; }
 
 		[TypeConverter(typeof(KeyboardListHelper))]
 		[Browsable(true)]
 		[ReflectorProperty("WindowsKeyman", Required = false)]
-		public string KeyboardName
-		{
-			get { return _palasoWritingSystemDefinition.Keyboard; }
-			set { _palasoWritingSystemDefinition.Keyboard = value; }
-		}
+		public string KeyboardName{ get; set; }
 
 		[Browsable(false)]
 		[ReflectorProperty("FontName", Required = true)]
-		public string FontName
-		{
-			get
-			{
-				return Font.Name;
-			}
-			set
-			{
-				try
-				{
-					Font = new Font(value, FontSize);
-				}
-				catch (Exception error)
-				{
-					//see http://www.wesay.org/issues/browse/WS-14949
-#if MONO
-					const string hint = "";
-#else
-					const string hint = "You may be able to repair the font: drag it to your desktop, right-click on it, tell it to install. In the meantime, ";
-#endif
-					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
-													"There is a problem with the font {0} on this computer. {1} WeSay will have to use the System default font instead." + Environment.NewLine + "The error was: {2}",
-													value, hint, error.Message);
-					Font = _fallBackFont;
-				}
-			}
-		}
+		public string FontName{ get; set; }
 
 		[Browsable(false)]
 		[ReflectorProperty("FontSize", Required = true)]
-		public int FontSize
-		{
-			get
-			{
-				return (int)Font.Size;
-			}
-			set
-			{
-				Font = new Font(Font.Name, value);
-			}
-		}
+		public int FontSize{ get; set; }
 
 		[ReflectorProperty("RightToLeft", Required = false)]
-		public bool RightToLeft
-		{
-			get { return _palasoWritingSystemDefinition.RightToLeftScript; }
-			set { _palasoWritingSystemDefinition.RightToLeftScript = value; }
-		}
+		public bool RightToLeft{ get; set; }
 
 		[TypeConverter(typeof(SpellCheckerIdToDisplayStringConverter))]
 		[ReflectorProperty("SpellCheckingId", Required = false)]
-		public string SpellCheckingId
-		{
-			get
-			{
-				return _palasoWritingSystemDefinition.SpellCheckingId;
-			}
-			set { _palasoWritingSystemDefinition.SpellCheckingId = value; }
-		}
+		public string SpellCheckingId{ get; set; }
 
 		[ReflectorProperty("IsAudio", Required = false)]
-		public bool IsAudio
-		{
-			get { return _palasoWritingSystemDefinition.IsVoice; }
-			set { _palasoWritingSystemDefinition.IsVoice = value; }
-		}
+		public bool IsAudio{ get; set; }
 
 		[ReflectorProperty("IsUnicode", Required = false)]
-		public bool IsUnicode
-		{
-			get { return !_palasoWritingSystemDefinition.IsLegacyEncoded; }
-			set { _palasoWritingSystemDefinition.IsLegacyEncoded = !value; }
-		}
+		public bool IsUnicode{ get; set; }
 
 		#region IComparer<string> Members
 

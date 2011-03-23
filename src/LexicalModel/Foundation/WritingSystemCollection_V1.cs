@@ -11,7 +11,7 @@ using Palaso.WritingSystems;
 namespace WeSay.LexicalModel.Foundation
 {
 	[ReflectorType("WritingSystemCollection")]
-	public class WritingSystemCollection_V1: Dictionary<string, WritingSystem>
+	public class WritingSystemCollection_V1: Dictionary<string, WritingSystem_V1>
 	{
 		public void LoadFromLegacyWeSayFile(string PathToWritingSystemPrefsFile)
 		{
@@ -28,11 +28,11 @@ namespace WeSay.LexicalModel.Foundation
 				{
 					reader.Close();
 				}
-				foreach (KeyValuePair<string, WritingSystem> pair in wesayWsFileCollection)
+				foreach (KeyValuePair<string, WritingSystem_V1> pair in wesayWsFileCollection)
 				{
-					if (!this.ContainsKey(pair.Key))
+					if (!ContainsKey(pair.Key))
 					{
-						this.Add(pair.Key, pair.Value);
+						Add(pair.Key, pair.Value);
 					}
 				}
 			}
@@ -45,101 +45,44 @@ namespace WeSay.LexicalModel.Foundation
 			return exists;
 		}
 
-		private static bool LdmlWritingSystemsDefinitionsExist(string pathToLdmlWritingSystemsFolder)
-		{
-			bool exists = Directory.Exists(pathToLdmlWritingSystemsFolder) && (Directory.GetFiles(pathToLdmlWritingSystemsFolder, "*.ldml").Length != 0);
-			return exists;
-		}
-
-		public static bool WritingSystemsExistInProject(string pathToWritingSystemPrefsFile, string pathToLdmlWritingSystemsFolder)
-		{
-			return WeSayWritingSystemsPrefsExist(pathToWritingSystemPrefsFile) || LdmlWritingSystemsDefinitionsExist(pathToLdmlWritingSystemsFolder);
-		}
-
 		private static NetReflectorTypeTable MakeTypeTable()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
 			t.Add(typeof (WritingSystemCollection_V1));
-			t.Add(typeof (WritingSystem));
+			t.Add(typeof (WritingSystem_V1));
 			return t;
-		}
-
-		public void IdOfWritingSystemChanged(WritingSystem ws, string oldKey)
-		{
-			Remove(oldKey);
-			//            if (_analysisWritingSystemDefaultId == oldKey)
-			//            {
-			//                _analysisWritingSystemDefaultId = ws.Id;
-			//            }
-			//            if (_vernacularWritingSystemDefaultId  == oldKey)
-			//            {
-			//                _vernacularWritingSystemDefaultId = ws.Id;
-			//            }
-			Add(ws.Id, ws);
 		}
 
 		/// <summary>
 		/// For serialization only
 		/// </summary>
 		[ReflectorArray("members", Required = true)]
-		public WritingSystem[] MembersAsArray
+		public WritingSystem_V1[] MembersAsArray
 		{
 			get
 			{
-				WritingSystem[] holder = new WritingSystem[Values.Count];
+				WritingSystem_V1[] holder = new WritingSystem_V1[Values.Count];
 				Values.CopyTo(holder, 0);
 				return holder;
 			}
 			set
 			{
 				Clear();
-				foreach (WritingSystem w in value)
+				foreach (WritingSystem_V1 w in value)
 				{
-					if (this.ContainsKey(w.Id))
+					if (this.ContainsKey(w.ISO))
 					{
 						Palaso.Reporting.ErrorReport.NotifyUserOfProblem(
 							new Palaso.Reporting.ShowOncePerSessionBasedOnExactMessagePolicy(),
 							"Your writing systems file (WritingSystemPrefs.xml) contains multiple entries for {0}. Please report this problem by sending an email to issues@wesay.org.",
-							w.Id);
+							w.ISO);
 					}
 					else
 					{
-						Add(w.Id, w);
+						Add(w.ISO, w);
 					}
 				}
 			}
-		}
-
-		//private WritingSystem GetWritingSystem(string id)
-		//{
-		//    if (!ContainsKey(id))
-		//    {
-		//        System.Drawing.Font font = new System.Drawing.Font("Arial", 12, FontStyle.Italic);//italic 'cause something's wrong
-		//        Add(id, new WritingSystem(id, font));
-		//    }
-		//    return this[id];
-		//}
-		public IList<string> TrimToActualTextWritingSystemIds(IList<string> ids)
-		{
-			var x = ids.Where((id) => !this[id].IsVoice);
-			return new List<string>(x);
-		}
-
-		public IList<string> TrimToAudioWritingSystemIds(IList<string> ids)
-		{
-			var x = ids.Where((id) => this[id].IsVoice);
-			return new List<string>(x);
-		}
-
-		public IEnumerable<WritingSystem> GetActualTextWritingSystems()
-		{
-			WritingSystemDefinition x;
-			return this.Values.Where((ws) => !ws.IsVoice);
-		}
-
-		public IEnumerable<WritingSystem> GetAllWritingSystems()
-		{
-			return this.Values;
 		}
 	}
 }
