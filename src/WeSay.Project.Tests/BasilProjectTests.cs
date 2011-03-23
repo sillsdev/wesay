@@ -166,7 +166,6 @@ namespace WeSay.Project.Tests
 				var rhsWritingSystem = rhs.Get(lhsWritingSystem.Id);
 				Assert.AreEqual(lhsWritingSystem.Id, rhsWritingSystem.Id);
 				Assert.AreEqual(lhsWritingSystem.Abbreviation, rhsWritingSystem.Abbreviation);
-				Assert.AreEqual(lhsWritingSystem.CustomSortRules, rhsWritingSystem.CustomSortRules);
 				Assert.AreEqual(lhsWritingSystem.DefaultFontName, rhsWritingSystem.DefaultFontName);
 				Assert.AreEqual(lhsWritingSystem.DefaultFontSize, rhsWritingSystem.DefaultFontSize);
 				Assert.AreEqual(lhsWritingSystem.IsVoice, rhsWritingSystem.IsVoice);

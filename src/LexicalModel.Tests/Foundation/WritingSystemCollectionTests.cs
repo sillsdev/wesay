@@ -107,7 +107,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				Assert.AreEqual(lhsWritingSystem.Keyboard, rhsWritingSystem.Keyboard);
 				Assert.AreEqual(lhsWritingSystem.RightToLeftScript, rhsWritingSystem.RightToLeftScript);
 				Assert.AreEqual(lhsWritingSystem.SortUsing, rhsWritingSystem.SortUsing);
-				Assert.AreEqual(lhsWritingSystem.CustomSortRules, rhsWritingSystem.CustomSortRules);
+				Assert.AreEqual(lhsWritingSystem.SortRules, rhsWritingSystem.SortRules);
 				Assert.AreEqual(lhsWritingSystem.SpellCheckingId, rhsWritingSystem.SpellCheckingId);
 			}
 		}

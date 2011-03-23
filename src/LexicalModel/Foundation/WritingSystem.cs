@@ -8,17 +8,13 @@ namespace WeSay.LexicalModel.Foundation
 	{
 		public bool IsUnicodeEncoded { get; set; } // TODO Introduce IsUnicodeEncoded to palaso wsd.
 
-		public object CustomSortRules { get; set; }
-
-		// TODO this is only used in tests: should we care about conversion to/from string?
-		public new string SortUsing { get; set; }
-
 		// TODO add this to palaso
 		public static WritingSystem FromRFC5646(string rftTag)
 		{
 			throw new NotImplementedException();
 		}
 
+		// TODO add this to palaso
 		public static WritingSystemDefinition VoiceFromRFC5646(string empty)
 		{
 			throw new NotImplementedException();
@@ -32,6 +28,12 @@ namespace WeSay.LexicalModel.Foundation
 
 		// TODO move to palaso wsd
 		public void SortUsingCustomICU(string lastPrimaryIgnorable)
+		{
+			throw new NotImplementedException();
+		}
+
+		// TODO move to palaso wsd
+		public void SortUsingCustomSimple(string p0)
 		{
 			throw new NotImplementedException();
 		}
