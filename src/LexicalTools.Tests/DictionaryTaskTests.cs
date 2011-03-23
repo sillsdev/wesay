@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 
@@ -29,8 +30,7 @@ namespace WeSay.LexicalTools.Tests
 			WeSayProjectTestHelper.InitializeForTests();
 			string[] vernacularWritingSystemIds = new string[]
 													  {
-															  BasilProject.Project.WritingSystems.
-																	  TestWritingSystemVernId
+															  WritingSystemInfo.VernacularIdForTest
 													  };
 			_viewTemplate = new ViewTemplate();
 			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),

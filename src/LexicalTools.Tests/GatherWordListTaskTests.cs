@@ -33,8 +33,8 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			WeSayProjectTestHelper.InitializeForTests();
-			_glossingLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
-			_vernacularLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
+			_glossingLanguageWSId = WritingSystemInfo.AnalysisIdForTest;
+			_vernacularLanguageWSId = WritingSystemInfo.VernacularIdForTest;
 			BasilProject.Project.WritingSystems.Set(WritingSystem.FromRFC5646("fr"));
 
 			_tempFolder = new TemporaryFolder();
@@ -49,18 +49,20 @@ namespace WeSay.LexicalTools.Tests
 										"LexEntry",
 										new string[]
 											{
-													BasilProject.Project.WritingSystems.
-															TestWritingSystemVernId
+													WritingSystemInfo.VernacularIdForTest
 											}));
 
-			_viewTemplate.Add(new Field(LexSense.WellKnownProperties.Definition.ToString(),
-							"LexSense",
-							new string[]
-											{
-													BasilProject.Project.WritingSystems.
-															TestWritingSystemAnalId,
-													"fr"
-											}));
+			_viewTemplate.Add(
+				new Field(
+					LexSense.WellKnownProperties.Definition.ToString(),
+					"LexSense",
+					new string[]
+						{
+							WritingSystemInfo.AnalysisIdForTest,
+							"fr"
+						}
+				 )
+			 );
 
 			_catalog = new WordListCatalog();
 			_catalog.Add(_simpleWordListFilePath, new WordListDescription("en","label","longLabel", "description"));
@@ -505,8 +507,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CurrentLexemeForm_UsingLift_ShowsFirstItem()
 		{
-			var task = CreateAndActivateLiftTask(new List<string>(new string[]{BasilProject.Project.WritingSystems.
-																				   TestWritingSystemAnalId}), LiftXml);
+			var task = CreateAndActivateLiftTask(
+				new List<string>(new[] { WritingSystemInfo.AnalysisIdForTest }), LiftXml
+			);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("apple", task.CurrentEllicitationForm);
 			task.NavigateNext();
@@ -665,7 +668,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CanNavigateNext_NoFurtherMatchesHaveRequiredLanguages_False()
 		{
-			var wsWhichIsValidButIsntInTheWordList = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
+			var wsWhichIsValidButIsntInTheWordList = WritingSystemInfo.VernacularIdForTest;
 
 			var entries =@"
 				<entry id='one'>
@@ -690,7 +693,7 @@ namespace WeSay.LexicalTools.Tests
 					</lexical-unit>
 				</entry>".Replace("glossWS", _glossingLanguageWSId).Replace("bogusWS", _vernacularLanguageWSId);
 
-			var task = CreateAndActivateLiftTask(new List<string>(new string[]{BasilProject.Project.WritingSystems.TestWritingSystemAnalId}),
+			var task = CreateAndActivateLiftTask(new List<string>(new string[] { WritingSystemInfo.AnalysisIdForTest }),
 												 entries);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("apple", task.CurrentEllicitationForm);
@@ -733,8 +736,10 @@ namespace WeSay.LexicalTools.Tests
 
 		private LexSense AddWordAndGetFirstSense()
 		{
-			var task = CreateAndActivateLiftTask(new List<string>(new string[]{BasilProject.Project.WritingSystems.
-																				   TestWritingSystemAnalId}), LiftXml);
+			var task = CreateAndActivateLiftTask(
+				new List<string>(new[] { WritingSystemInfo.AnalysisIdForTest }),
+				LiftXml
+			);
 			task.NavigateFirstToShow();
 			task.WordCollected( GetMultiText("apun"));
 			var entries = task.GetRecordsWithMatchingGloss();
@@ -757,20 +762,22 @@ namespace WeSay.LexicalTools.Tests
 
 			var vt = new ViewTemplate();
 
+			vt.Add(new Field(
+				Field.FieldNames.EntryLexicalForm.ToString(),
+				"LexEntry",
+				new[] { WritingSystemInfo.VernacularIdForTest }
+			));
+			vt.Add(new Field(
+				LexSense.WellKnownProperties.Definition.ToString(),
+				"LexSense", definitionWritingSystems
+			));
 
-			vt.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-										"LexEntry",
-										new string[]
-											{
-													BasilProject.Project.WritingSystems.
-															TestWritingSystemVernId
-											}));
-			vt.Add(new Field(LexSense.WellKnownProperties.Definition.ToString(),
-							"LexSense", definitionWritingSystems));
-
-			var t = new GatherWordListTask(GatherWordListConfig.CreateForTests(file.Path, "xx", _catalog),
-										   _lexEntryRepository,
-										  vt, new TaskMemoryRepository());
+			var t = new GatherWordListTask(
+				GatherWordListConfig.CreateForTests(file.Path, "xx", _catalog),
+				_lexEntryRepository,
+				vt,
+				new TaskMemoryRepository()
+			);
 			t.Activate();
 			return t;
 		}

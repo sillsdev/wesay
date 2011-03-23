@@ -5,6 +5,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Options;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
@@ -43,13 +44,11 @@ namespace WeSay.LexicalTools.Tests
 
 			string[] analysisWritingSystemIds = new string[]
 													{
-															BasilProject.Project.WritingSystems.
-																	TestWritingSystemAnalId
+														WritingSystemInfo.AnalysisIdForTest
 													};
 			string[] vernacularWritingSystemIds = new string[]
 													  {
-															  BasilProject.Project.WritingSystems.
-																	  TestWritingSystemVernId
+														  WritingSystemInfo.VernacularIdForTest
 													  };
 			RtfRenderer.HeadWordWritingSystemId = vernacularWritingSystemIds[0];
 
@@ -139,14 +138,12 @@ namespace WeSay.LexicalTools.Tests
 		[Ignore("For now, we also show the ghost field in this situation.")]
 		public void EditField_SingleControl()
 		{
-			using (
-					EntryViewControl entryViewControl = CreateFilteredForm(apple,
-																		   _primaryMeaningFieldName,
-																		   "LexSense",
-																		   BasilProject.Project.
-																				   WritingSystems.
-																				   TestWritingSystemAnalId)
-					)
+			using (EntryViewControl entryViewControl = CreateFilteredForm(
+				apple,
+				_primaryMeaningFieldName,
+				"LexSense",
+				WritingSystemInfo.AnalysisIdForTest
+			))
 			{
 				Assert.AreEqual(1, entryViewControl.ControlEntryDetail.Count);
 			}
@@ -155,14 +152,12 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EditField_SingleControlWithGhost()
 		{
-			using (
-					EntryViewControl entryViewControl = CreateFilteredForm(apple,
-																		   _primaryMeaningFieldName,
-																		   "LexSense",
-																		   BasilProject.Project.
-																				   WritingSystems.
-																				   TestWritingSystemAnalId)
-					)
+			using (EntryViewControl entryViewControl = CreateFilteredForm(
+				apple,
+				_primaryMeaningFieldName,
+				"LexSense",
+				WritingSystemInfo.AnalysisIdForTest
+			))
 			{
 				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.Count);
 			}
@@ -177,14 +172,12 @@ namespace WeSay.LexicalTools.Tests
 
 		private void EnsureField_Change_UpdatesSenseMeaning(LexEntry entry)
 		{
-			using (
-					EntryViewControl entryViewControl = CreateFilteredForm(entry,
-																		   _primaryMeaningFieldName,
-																		   "LexSense",
-																		   BasilProject.Project.
-																				   WritingSystems.
-																				   TestWritingSystemAnalId)
-					)
+			using (EntryViewControl entryViewControl = CreateFilteredForm(
+				entry,
+				_primaryMeaningFieldName,
+				"LexSense",
+				WritingSystemInfo.AnalysisIdForTest
+			))
 			{
 				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
 				Label labelControl = entryDetailControl.GetLabelControlFromRow(0);
@@ -208,9 +201,7 @@ namespace WeSay.LexicalTools.Tests
 																				   EntryLexicalForm.
 																				   ToString(),
 																		   "LexEntry",
-																		   BasilProject.Project.
-																				   WritingSystems.
-																				   TestWritingSystemVernId)
+																		   WritingSystemInfo.VernacularIdForTest)
 					)
 			{
 				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
@@ -268,9 +259,7 @@ namespace WeSay.LexicalTools.Tests
 																				   EntryLexicalForm.
 																				   ToString(),
 																		   "LexEntry",
-																		   BasilProject.Project.
-																				   WritingSystems.
-																				   TestWritingSystemVernId)
+																		   WritingSystemInfo.VernacularIdForTest)
 					)
 			{
 			   // entryViewControl.ControlFormattedView.Select();
@@ -300,9 +289,7 @@ namespace WeSay.LexicalTools.Tests
 																				   EntryLexicalForm.
 																				   ToString(),
 																		   "LexEntry",
-																		   BasilProject.Project.
-																				   WritingSystems.
-																				   TestWritingSystemVernId)
+																		   WritingSystemInfo.VernacularIdForTest)
 					)
 			{
 				//entryViewControl.ControlFormattedView.Select();
@@ -336,9 +323,7 @@ namespace WeSay.LexicalTools.Tests
 																				   EntryLexicalForm.
 																				   ToString(),
 																		   "LexEntry",
-																		   BasilProject.Project.
-																				   WritingSystems.
-																				   TestWritingSystemVernId)
+																		   WritingSystemInfo.VernacularIdForTest)
 					)
 			{
 				//entryViewControl.ControlFormattedView.Select();
@@ -400,8 +385,7 @@ namespace WeSay.LexicalTools.Tests
 #if GlossMeaning
 			sense.Gloss[GetSomeValidWsIdForField("SenseGloss")] = meaning;
 #else
-			sense.Definition[WeSayWordsProject.Project.WritingSystems.TestWritingSystemAnalId] =
-					meaning;
+			sense.Definition[WritingSystemInfo.AnalysisIdForTest] = meaning;
 #endif
 			LexExampleSentence example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);

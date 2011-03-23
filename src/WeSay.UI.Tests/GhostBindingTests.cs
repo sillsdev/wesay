@@ -91,7 +91,7 @@ namespace WeSay.UI.Tests
 		public void Setup()
 		{
 			BasilProjectTestHelper.InitializeForTests();
-			_writingSystemId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
+			_writingSystemId = WritingSystemInfo.AnalysisIdForTest;
 
 			WritingSystem writingSystem = WritingSystem.FromRFC5646(_writingSystemId);
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);

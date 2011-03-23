@@ -47,9 +47,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			base.Setup();
 			_tempFolder = new TemporaryFolder();
-			_vernacularWritingSystem = WritingSystem.FromRFC5646(
-				BasilProject.Project.WritingSystems.TestWritingSystemVernId
-			);
+			_vernacularWritingSystem = WritingSystem.FromRFC5646(WritingSystemInfo.VernacularIdForTest);
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
 
 			_filePath = _tempFolder.GetTemporaryFile();
@@ -57,8 +55,7 @@ namespace WeSay.LexicalTools.Tests
 
 			_analysisWritingSystemIds = new string[]
 													{
-															BasilProject.Project.WritingSystems.
-																	TestWritingSystemAnalId
+															WritingSystemInfo.AnalysisIdForTest
 													};
 			string[] vernacularWritingSystemIds = new string[] {_vernacularWritingSystem.Id};
 			ViewTemplate viewTemplate = new ViewTemplate();
@@ -774,8 +771,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetLexicalFormControlName()
 		{
-			return Field.FieldNames.EntryLexicalForm + "_" +
-				   BasilProject.Project.WritingSystems.TestWritingSystemVernId;
+			return Field.FieldNames.EntryLexicalForm + "_" +WritingSystemInfo.VernacularIdForTest;
 		}
 
 		private void TypeInLexicalForm(string value)
@@ -791,8 +787,7 @@ namespace WeSay.LexicalTools.Tests
 #if GlossMeaning
 			return Field.FieldNames.SenseGloss + "_" + BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 #else
-			return LexSense.WellKnownProperties.Definition + "_" +
-				   BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
+			return LexSense.WellKnownProperties.Definition + "_" + WritingSystemInfo.AnalysisIdForTest;
 #endif
 		}
 

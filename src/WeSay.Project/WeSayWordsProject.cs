@@ -60,8 +60,8 @@ namespace WeSay.Project
 
 			//setup writing systems
 			WritingSystemCollection wsc = new WritingSystemCollection();
-			wsc.Set(WritingSystem.FromRFC5646(wsc.TestWritingSystemVernId));
-			wsc.Set(WritingSystem.FromRFC5646(wsc.TestWritingSystemAnalId));
+			wsc.Set(WritingSystem.FromRFC5646(WritingSystemInfo.VernacularIdForTest));
+			wsc.Set(WritingSystem.FromRFC5646(WritingSystemInfo.AnalysisIdForTest));
 			if (File.Exists(WeSayWordsProject.PathToPretendWritingSystemPrefs))
 			{
 				File.Delete(WeSayWordsProject.PathToPretendWritingSystemPrefs);
