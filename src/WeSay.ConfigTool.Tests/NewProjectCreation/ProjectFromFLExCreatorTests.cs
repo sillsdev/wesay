@@ -12,14 +12,15 @@ using WeSay.Project;
 namespace WeSay.ConfigTool.Tests.NewProjectCreation
 {
 	[TestFixture]
-	public class ProjectFromFLExCreatorTests
+	public class ProjectFromFlexCreatorTests
 	{
 
 		[Test]
 		public void SetWritingSystemsForFields_LiftFileContainsWritingsystemsForWhichThereIsNoDefinition_TellsUser()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+			ErrorReport.IsOkToInteractWithUser = false;
 
+			using (var tempFolder = new TemporaryFolder("ProjectFromFLExCreatorTests"))
 			using (var lift = new TempLiftFile(@"
 				<entry id='foo'>
 					<lexical-unit>
@@ -28,18 +29,18 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 					</lexical-unit>
 				</entry>", "0.12"))
 			{
-				var collection = new WritingSystemCollection();
+				var collection = new WritingSystemCollection(tempFolder.Path);
 				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownVernacular));
 				collection.Set(WritingSystem.FromRFC5646("en"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
-	//put one guy in there already
-				 int originalCount = collection.Count;// collection.Count;
+				//put one guy in there already
+				int originalCount = collection.Count; // collection.Count;
 
 				Assert.IsFalse(collection.Contains("blah"));
 
 				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(
-					 () => ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection)
-				 );
+					() => ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection)
+					);
 
 				Assert.IsTrue(collection.Contains("blah"));
 			}
@@ -48,6 +49,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 		[Test]
 		public void SetWritingSystemsForFields_LiftFileContainsWritingsystemNamed_xspec_xspecIsAddedToWritingSystems()
 		{
+			using (var tempFolder = new TemporaryFolder("ProjectFromFLExCreatorTests"))
 			using (var lift = new TempLiftFile(@"
 				<entry id='foo'>
 					<lexical-unit>
@@ -56,7 +58,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 					</lexical-unit>
 				</entry>", "0.12"))
 			{
-				var collection = new WritingSystemCollection();
+				var collection = new WritingSystemCollection(tempFolder.Path);
 				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownVernacular));
 				collection.Set(WritingSystem.FromRFC5646("en"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
@@ -71,6 +73,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 		[Test]
 		public void SetWritingSystemsForFields_Normal_FixesUpWritingSystemsForFields()
 		{
+			using (var tempFolder = new TemporaryFolder("ProjectFromFLExCreatorTests"))
 			using (var lift = new TempLiftFile(@"
 				<entry id='foo'>
 					<lexical-unit>
@@ -98,7 +101,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				</sense>
 		</entry>", "0.12"))
 			{
-				var collection = new WritingSystemCollection();
+				var collection = new WritingSystemCollection(tempFolder.Path);
 				collection.Set(WritingSystem.FromRFC5646("en"));
 				collection.Set(WritingSystem.FromRFC5646("fromLU"));
 				collection.Set(WritingSystem.FromRFC5646("fromGloss"));
@@ -131,10 +134,11 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 		[Test]
 		public void SetWritingSystemsForFields_LiftIsEmpty_Survives()
 		{
+			using (var tempFolder = new TemporaryFolder("ProjectFromFLExCreatorTests"))
 			using (var lift = new TempLiftFile(@"
 			 ", "0.12"))
 			{
-				var collection = new WritingSystemCollection();
+				var collection = new WritingSystemCollection(tempFolder.Path);
 				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownVernacular));
 				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownAnalysis));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);

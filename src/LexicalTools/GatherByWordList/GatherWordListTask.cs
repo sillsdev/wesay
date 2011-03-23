@@ -52,7 +52,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
 			{
 				_lexicalUnitWritingSystem =
-						BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+						BasilProject.Project.WritingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
 			}
 			else
 			{

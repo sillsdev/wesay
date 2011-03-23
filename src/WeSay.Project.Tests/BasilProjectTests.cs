@@ -142,8 +142,7 @@ namespace WeSay.Project.Tests
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
-			WritingSystemCollection wsCollection = new WritingSystemCollection();
-			wsCollection.Load(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
+			WritingSystemCollection wsCollection = new WritingSystemCollection(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
 
 			AssertWritingSystemCollectionsAreEqual(project.WritingSystems, wsCollection);
 		}
@@ -160,7 +159,7 @@ namespace WeSay.Project.Tests
 
 		private static void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection lhs, WritingSystemCollection rhs)
 		{
-			foreach (var lhsWritingSystem in lhs.WritingSystemDefinitions)
+			foreach (var lhsWritingSystem in lhs.AllWritingSystems)
 			{
 				Assert.IsTrue(rhs.Contains(lhsWritingSystem.Id));
 				var rhsWritingSystem = rhs.Get(lhsWritingSystem.Id);
@@ -229,10 +228,10 @@ namespace WeSay.Project.Tests
 		{
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
-			WritingSystemCollection wsCollection = new WritingSystemCollection();
+			WritingSystemCollection wsCollection = new WritingSystemCollection(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
 			WritingSystem ws = new WritingSystem(){ISO = "ldmlWs"};
 			wsCollection.Set(ws);
-			wsCollection.Write(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
+			wsCollection.Save();
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 
 			Assert.AreEqual(1, project.WritingSystems.Count);

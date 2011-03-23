@@ -31,7 +31,7 @@ namespace WeSay.LexicalTools
 			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
 			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
 			{
-				_lexicalFormWritingSystem = writingSystems.UnknownVernacularWritingSystem;
+				_lexicalFormWritingSystem = writingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
 			}
 			else
 			{

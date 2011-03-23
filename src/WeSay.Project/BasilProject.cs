@@ -39,7 +39,7 @@ namespace WeSay.Project
 		}
 		public UiConfigurationOptions UiOptions { get; set; }
 
-		private readonly WritingSystemCollection _writingSystems;
+		private WritingSystemCollection _writingSystems;
 		private string _projectDirectoryPath = string.Empty;
 
 		public static BasilProject Project
@@ -71,7 +71,7 @@ namespace WeSay.Project
 		public BasilProject()
 		{
 			Project = this;
-			_writingSystems = new WritingSystemCollection();
+			_writingSystems = null;
 			UiOptions = new UiConfigurationOptions();
 		}
 
@@ -107,12 +107,7 @@ namespace WeSay.Project
 
 		public virtual void Save()
 		{
-			Save(_projectDirectoryPath);
-		}
-
-		public virtual void Save(string projectDirectoryPath)
-		{
-			_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(projectDirectoryPath));
+			_writingSystems.Save();
 		}
 
 		public static string GetPretendProjectDirectory()
@@ -265,7 +260,14 @@ namespace WeSay.Project
 
 		protected void InitWritingSystems()
 		{
-			_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
+			if (!Directory.Exists(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath)))
+			{
+				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
+			}
+			_writingSystems = new WritingSystemCollection(
+				GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath)
+			);
+
 			// TODO Chris move this to the migrator
 			//if (_writingSystems.Count == 0)
 			//{
@@ -273,12 +275,6 @@ namespace WeSay.Project
 			//    _writingSystems.Write(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
 			//    File.Delete(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
 			//}
-			if (_writingSystems.Count == 0)
-			{
-				//load defaults
-				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
-				_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
-			}
 		}
 
 		//        /// <summary>

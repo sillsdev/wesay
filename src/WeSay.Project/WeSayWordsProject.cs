@@ -59,19 +59,20 @@ namespace WeSay.Project
 			Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
 
 			//setup writing systems
-			WritingSystemCollection wsc = new WritingSystemCollection();
+			string pathToLdmlWsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
+			WritingSystemCollection wsc = new WritingSystemCollection(pathToLdmlWsFolder);
 			wsc.Set(WritingSystem.FromRFC5646(WritingSystemInfo.VernacularIdForTest));
 			wsc.Set(WritingSystem.FromRFC5646(WritingSystemInfo.AnalysisIdForTest));
 			if (File.Exists(WeSayWordsProject.PathToPretendWritingSystemPrefs))
 			{
 				File.Delete(WeSayWordsProject.PathToPretendWritingSystemPrefs);
 			}
-			string pathToLdmlWsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
+
 			if (Directory.Exists(pathToLdmlWsFolder))
 			{
 				Directory.Delete(pathToLdmlWsFolder, true);
 			}
-			wsc.Write(pathToLdmlWsFolder);
+			wsc.Save();
 
 			project.SetupProjectDirForTests(WeSayWordsProject.PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
@@ -866,8 +867,7 @@ namespace WeSay.Project
 		/// <param name="pathToConfigFile"></param>
 		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile)
 		{
-			var writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Load(GetPathToLdmlWritingSystemsFolder(projectPath));
+			var writingSystemCollection = new WritingSystemCollection(GetPathToLdmlWritingSystemsFolder(projectPath));
 
 			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
 			var builder = new StringBuilder();
@@ -1174,7 +1174,7 @@ namespace WeSay.Project
 				Field f = DefaultViewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit);
 				if (f.WritingSystemIds.Count == 0)
 				{
-					return WritingSystems.UnknownVernacularWritingSystem;
+					return WritingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
 				}
 				return WritingSystems.Get(f.WritingSystemIds[0]);
 			}

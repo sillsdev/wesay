@@ -24,9 +24,12 @@ namespace WeSay.LexicalModel.Foundation
 		public bool IsUnicodeEncoded { get; set; } // TODO Introduce IsUnicodeEncoded to palaso wsd.
 
 		// TODO add this to palaso
-		public static WritingSystem FromRFC5646(string rftTag)
+		public static WritingSystem FromRFC5646(string tag)
 		{
-			throw new NotImplementedException();
+			var x = new WritingSystem();
+			x.ISO639 = tag;
+			return x;
+
 		}
 
 		// TODO add this to palaso

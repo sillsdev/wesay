@@ -7,10 +7,18 @@ using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
-	public class WritingSystemCollection : LdmlInFolderWritingSystemRepository/*, IEnumerable<WritingSystem>*/
+	public class WritingSystemCollection : LdmlInFolderWritingSystemRepository
 	{
-		public WritingSystem UnknownAnalysisWritingSystem { get; private set; }
-		public WritingSystem UnknownVernacularWritingSystem { get; private set; }
+		// TODO Make this private, and should still build
+		private WritingSystemCollection()
+		{
+			throw new NotImplementedException();
+		}
+
+		public WritingSystemCollection(string getPathToLdmlWritingSystemsFolder)
+		{
+			throw new NotImplementedException();
+		}
 
 		public bool Contains(string id)
 		{
@@ -22,55 +30,19 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
-		//public new IEnumerable<WritingSystem> WritingSystemDefinitions { get; private set; }
-
-
-		// TODO Needs to change to Save() path is in ctor
-		public void Write(string getPathToLdmlWritingSystemsFolder)
+		// CP TODO
+		public IEnumerable<WritingSystem> TextWritingSystems()
 		{
 			throw new NotImplementedException();
 		}
 
-		// TODO remove (it is private and called in the ctor)
-		public void Load(string getPathToLdmlWritingSystemsFolder)
-		{
-			throw new NotImplementedException();
-		}
-
-		public IList<string> TrimToActualTextWritingSystemIds(IList<string> writingSystemIds)
-		{
-			throw new NotImplementedException();
-		}
-
-		public IEnumerable<WritingSystem> GetActualTextWritingSystems()
-		{
-			throw new NotImplementedException();
-		}
-
-		// TODO Change to Set, also has sig change (no key).
-		//public void Add(string testWritingSystemVernId, WritingSystem p1)
-		//{
-		//    throw new NotImplementedException();
-		//}
+		public new IEnumerable<WritingSystem> AllWritingSystems { get; private set; }
 
 		// TODO Move to Palaso
 		public void OnWritingSystemIDChange(WritingSystem ws, string oldId)
 		{
 			throw new NotImplementedException();
 		}
-		/*
-		public IEnumerator<WritingSystem> GetEnumerator()
-		{
-			throw new NotImplementedException();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
-		*/
-
-		public new IEnumerable<WritingSystem> WritingSystemDefinitions { get; private set; }
 
 	}
 }
