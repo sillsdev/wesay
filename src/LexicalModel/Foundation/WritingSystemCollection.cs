@@ -9,8 +9,21 @@ namespace WeSay.LexicalModel.Foundation
 {
 	public class WritingSystemCollection : LdmlInFolderWritingSystemStore/*, IEnumerable<WritingSystem>*/
 	{
+		// TODO Make this private, and should still build
+		private WritingSystemCollection()
+		{
+			throw new NotImplementedException();
+		}
+
+		public WritingSystemCollection(string getPathToLdmlWritingSystemsFolder)
+		{
+			throw new NotImplementedException();
+		}
+
+		// TODO refactor wesay so that these are no longer used.
 		public WritingSystem UnknownAnalysisWritingSystem { get; private set; }
 		public WritingSystem UnknownVernacularWritingSystem { get; private set; }
+
 
 		public bool Contains(string id)
 		{
@@ -37,11 +50,13 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
+		// CP TODO
 		public IList<string> TrimToActualTextWritingSystemIds(IList<string> writingSystemIds)
 		{
 			throw new NotImplementedException();
 		}
 
+		// CP TODO
 		public IEnumerable<WritingSystem> GetActualTextWritingSystems()
 		{
 			throw new NotImplementedException();
