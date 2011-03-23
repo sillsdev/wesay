@@ -184,9 +184,7 @@ namespace Addin.Transform.Tests
             // The windows SystemCollator using CultureInvariant sorts hyphens with the text, rather than default unicode
             // order.
             // To make this test pass we provide a custom ICU sort rule to do the same.
-			_project.WritingSystems.Get("v").SortUsing = WritingSystemDefinition.SortRulesType.CustomICU.ToString();
-			_project.WritingSystems.Get("v").CustomSortRules = "&[last primary ignorable] <<< '-' <<< ' '";
-
+			_project.WritingSystems.Get("v").SortUsingCustomICU("&[last primary ignorable] <<< '-' <<< ' '");
             var entries = new List<LexEntry>();
             entries.Add(_entry);
 
