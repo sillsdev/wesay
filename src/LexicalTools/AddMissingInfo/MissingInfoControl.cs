@@ -173,7 +173,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		private static WritingSystem GetListWritingSystem()
 		{
 			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
-			WritingSystem listWritingSystem = writingSystems.UnknownVernacularWritingSystem;
+			WritingSystem listWritingSystem = writingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
 
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will

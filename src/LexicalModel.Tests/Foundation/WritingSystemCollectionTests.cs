@@ -111,23 +111,23 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			}
 		}
 
-		private WritingSystem CreateDetailedWritingSystem(string languageCode)
+		private static WritingSystem CreateDetailedWritingSystem(string languageCode)
 		{
 			WritingSystem ws = new WritingSystem();
 			ws.ISO = languageCode;
 			ws.Abbreviation = languageCode;
 			ws.IsVoice = false;
 			ws.DefaultFontName = new Font(FontFamily.GenericSansSerif, 12).Name;
-			ws.DefaultFontSize = new Font(FontFamily.GenericSansSerif, 12).Size; ws.IsVoice = false;
+			ws.DefaultFontSize = new Font(FontFamily.GenericSansSerif, 12).Size;
+			ws.IsVoice = false;
 			ws.IsUnicodeEncoded = true;
 			ws.Keyboard = "Bogus ivories!";
 			ws.RightToLeftScript = false;
-			ws.SortUsingCustomICU("");
-			// review should be SortUsingCustomSimple was ws.SortUsing = CustomSortRulesType.CustomSimple.ToString();
+			ws.SortUsingCustomSimple("");
 			ws.SpellCheckingId = languageCode;
 			return ws;
 		}
-
+/*  Chris says: How is this any different from CreateDetailedWritingSystem???
 		private WritingSystem CreateDetailedWritingSystemThatCantBeRepresentedByPalaso(string languageCode)
 		{
 			WritingSystem ws = new WritingSystem();
@@ -139,11 +139,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			ws.IsUnicodeEncoded = false;
 			ws.Keyboard = "Bogus ivories!";
 			ws.RightToLeftScript = false;
-			ws.SortUsingCustomICU("bogus rules");
-			// review should be SortUsingCustomSimple was ws.SortUsing = CustomSortRulesType.CustomSimple.ToString();
+			ws.SortUsingCustomSimple("bogus rules");
 			ws.SpellCheckingId = languageCode;
 			return ws;
 		}
+ * */
 
 		[Test]
 		public void Load_OnlyLdmlWritingSystemFilesExist_WritingSystemsAreLoadedFromThoseFiles()
@@ -155,7 +155,6 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				wsCollectionToBeWritten.Set(ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
-				loadedWsCollection.Load(_ldmlWsFolder.Path);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 		}
 
@@ -171,7 +170,6 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				wsCollectionToBeWritten.Set(ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
 				var loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
-				loadedWsCollection.Load(_ldmlWsFolder.Path);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 		}
 
@@ -190,19 +188,19 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			//Write out two writing systems
 			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
-			WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
+			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
+			WritingSystem ws = CreateDetailedWritingSystem("test");
 			wsCollectionToBeWritten.Set(ws);
-			WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
+			//WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
+			WritingSystem ws2 = CreateDetailedWritingSystem("test2");
 			wsCollectionToBeWritten.Set(ws2);
 			wsCollectionToBeWritten.Save();
 			//load them up again
 			WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
-			loadedWsCollection.Load(_ldmlWsFolder.Path);
 			loadedWsCollection.Remove(ws.Id);   //remove one
-			loadedWsCollection.Write(_ldmlWsFolder.Path); //write out the remaining writing system
+			loadedWsCollection.Save();
 			//Now check that it hasn't come back!
 			WritingSystemCollection loadedWsCollection2 = new WritingSystemCollection(_ldmlWsFolder.Path);
-			loadedWsCollection2.Load(_ldmlWsFolder.Path);
 			Assert.IsFalse(loadedWsCollection2.Contains(ws.Id));
 		}
 
@@ -210,13 +208,14 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void Roundtripping_Works()
 		{
 			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
-			WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
+			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
+			WritingSystem ws = CreateDetailedWritingSystem("test");
 			wsCollectionToBeWritten.Set(ws);
-			WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
+			//WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
+			WritingSystem ws2 = CreateDetailedWritingSystem("test2");
 			wsCollectionToBeWritten.Set(ws2);
-			wsCollectionToBeWritten.Write(_ldmlWsFolder.Path);
+			wsCollectionToBeWritten.Save();
 			WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
-			loadedWsCollection.Load(_ldmlWsFolder.Path);
 			AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 		}
 
@@ -225,20 +224,19 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 				CreateLdmlWritingsystemDefinitionFile();
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
-				loadedWsCollection.Load(_ldmlWsFolder.Path);
 				loadedWsCollection.Get("test").Keyboard = "changed";
-				loadedWsCollection.Write(_ldmlWsFolder.Path);
+				loadedWsCollection.Save();
 				WritingSystemCollection reloadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
-				reloadedWsCollection.Load(_ldmlWsFolder.Path);
 				AssertWritingSystemCollectionsAreEqual(loadedWsCollection, reloadedWsCollection);
 		}
 
 		private void CreateLdmlWritingsystemDefinitionFile()
 		{
 			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
-			WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
+			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
+			WritingSystem ws = CreateDetailedWritingSystem("test");
 			wsCollectionToBeWritten.Set(ws);
-			wsCollectionToBeWritten.Write(_ldmlWsFolder.Path);
+			wsCollectionToBeWritten.Save();
 		}
 
 		[Test]
@@ -325,14 +323,15 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void WritingSystemCollection_HasUnknownVernacular()
 		{
 			WritingSystemCollection c = new WritingSystemCollection(_ldmlWsFolder.Path);
-			Assert.IsNotNull(c.UnknownVernacularWritingSystem);
+			Assert.IsNotNull(c.Get(WritingSystemInfo.IdForUnknownVernacular));
+
 		}
 
 		[Test]
 		public void WritingSystemCollection_HasUnknownAnalysis()
 		{
 			WritingSystemCollection c = new WritingSystemCollection(_ldmlWsFolder.Path);
-			Assert.IsNotNull(c.UnknownAnalysisWritingSystem);
+			Assert.IsNotNull(c.Get(WritingSystemInfo.IdForUnknownAnalysis));
 		}
 
 		// TODO For migrator

@@ -21,7 +21,7 @@ namespace WeSay.LexicalModel.Foundation
 		}
 
 		// TODO refactor wesay so that these are no longer used.
-		public WritingSystem UnknownAnalysisWritingSystem { get; private set; }
+		//public WritingSystem UnknownAnalysisWritingSystem { get; private set; }
 		public WritingSystem UnknownVernacularWritingSystem { get; private set; }
 
 
@@ -37,18 +37,6 @@ namespace WeSay.LexicalModel.Foundation
 
 		//public new IEnumerable<WritingSystem> WritingSystemDefinitions { get; private set; }
 
-
-		// TODO Needs to change to Save() path is in ctor
-		public void Write(string getPathToLdmlWritingSystemsFolder)
-		{
-			throw new NotImplementedException();
-		}
-
-		// TODO remove (it is private and called in the ctor)
-		public void Load(string getPathToLdmlWritingSystemsFolder)
-		{
-			throw new NotImplementedException();
-		}
 
 		// CP TODO
 		public IList<string> TrimToActualTextWritingSystemIds(IList<string> writingSystemIds)

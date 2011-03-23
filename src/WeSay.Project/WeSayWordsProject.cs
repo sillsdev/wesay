@@ -1174,7 +1174,7 @@ namespace WeSay.Project
 				Field f = DefaultViewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit);
 				if (f.WritingSystemIds.Count == 0)
 				{
-					return WritingSystems.UnknownVernacularWritingSystem;
+					return WritingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
 				}
 				return WritingSystems.Get(f.WritingSystemIds[0]);
 			}

@@ -453,10 +453,10 @@ namespace WeSay.LexicalTools
 			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field, false);
 			WritingSystem preferredWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(field.FieldName);
-			if (preferredWritingSystem == _viewTemplate.WritingSystems.UnknownVernacularWritingSystem)
+			if (preferredWritingSystem == _viewTemplate.WritingSystems.Get(WritingSystemInfo.IdForUnknownVernacular))
 			{
 				//this is a better choice
-				preferredWritingSystem = _viewTemplate.WritingSystems.UnknownAnalysisWritingSystem;
+				preferredWritingSystem = _viewTemplate.WritingSystems.Get(WritingSystemInfo.IdForUnknownAnalysis);
 
 				Palaso.Reporting.ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
 																 "The option box {0} had the topmost writing system set to {1}, but that writing system was not found.", field.DisplayName, field.WritingSystemIds[0]);
