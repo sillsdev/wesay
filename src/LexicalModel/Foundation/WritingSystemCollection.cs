@@ -20,6 +20,7 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
+		// successfully moved to Palaso
 		public bool Contains(string id)
 		{
 			throw new NotImplementedException();
@@ -30,12 +31,10 @@ namespace WeSay.LexicalModel.Foundation
 			throw new NotImplementedException();
 		}
 
-		// CP TODO
-		public IEnumerable<WritingSystem> TextWritingSystems()
-		{
-			throw new NotImplementedException();
-		}
-
+		// successfully moved to Palaso
+		public IEnumerable<WritingSystem> TextWritingSystems
+ { get; private set; }
+		// successfully moved to Palaso
 		public new IEnumerable<WritingSystem> AllWritingSystems { get; private set; }
 
 		// TODO Move to Palaso

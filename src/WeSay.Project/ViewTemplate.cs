@@ -716,7 +716,7 @@ namespace WeSay.Project
 			//over this later).
 			var noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);
 			list.Insert(0,new WritingSystemForChorusAdaptor(noteWritingSystem));
-			foreach (var system in WritingSystems.TextWritingSystems())
+			foreach (var system in WritingSystems.TextWritingSystems)
 			{
 				if(system!=noteWritingSystem)
 				{
