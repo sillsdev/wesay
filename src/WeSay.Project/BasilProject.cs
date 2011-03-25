@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml;
 using Palaso.i18n;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using Palaso.Xml;
 using WeSay.LexicalModel.Foundation;
 
@@ -120,9 +121,9 @@ namespace WeSay.Project
 			get { return _writingSystems; }
 		}
 
-		public IList<WritingSystem> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
+		public IList<WritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
 		{
-			List<WritingSystem> l = new List<WritingSystem>();
+			List<WritingSystemDefinition> l = new List<WritingSystemDefinition>();
 			foreach (string id in writingSystemIds)
 			{
 				l.Add(WritingSystems.Get(id));

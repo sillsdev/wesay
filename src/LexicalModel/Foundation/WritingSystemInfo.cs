@@ -1,10 +1,11 @@
 ﻿using System.Drawing;
+using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
 	public class WritingSystemInfo
 	{
-		public static Font CreateFont(WritingSystem writingSystem)
+		public static Font CreateFont(WritingSystemDefinition writingSystem)
 		{
 			return new Font(writingSystem.DefaultFontName, writingSystem.DefaultFontSize);
 		}

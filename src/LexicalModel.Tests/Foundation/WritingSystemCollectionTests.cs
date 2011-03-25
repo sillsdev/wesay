@@ -80,9 +80,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
 			{
 				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
-				WritingSystem ws = CreateDetailedWritingSystem("test");
+				WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 				wsCollectionToBeWritten.Set(ws);
-				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
+				WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test2");
 				wsCollectionToBeWritten.Set(ws2);
 				WriteOldWeSayWritingSystemsFile(_wsPrefsFile.Path, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
@@ -111,9 +111,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			}
 		}
 
-		private static WritingSystem CreateDetailedWritingSystem(string languageCode)
+		private static WritingSystemDefinition CreateDetailedWritingSystem(string languageCode)
 		{
-			WritingSystem ws = new WritingSystem();
+			WritingSystemDefinition ws = new WritingSystemDefinition();
 			ws.ISO = languageCode;
 			ws.Abbreviation = languageCode;
 			ws.IsVoice = false;
@@ -149,9 +149,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void Load_OnlyLdmlWritingSystemFilesExist_WritingSystemsAreLoadedFromThoseFiles()
 		{
 				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
-				WritingSystem ws = CreateDetailedWritingSystem("test");
+				WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 				wsCollectionToBeWritten.Set(ws);
-				WritingSystem ws2 = CreateDetailedWritingSystem("test2");
+				WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test2");
 				wsCollectionToBeWritten.Set(ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
 				WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
@@ -162,10 +162,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void Load_LdmlWritingSystemsHaveSameIsoCodeButDifferentVariantRegionInfo_DoesNotCrash()
 		{
 				var wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
-				WritingSystem ws = CreateDetailedWritingSystem("test");
+				WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 				ws.Region = "Region1";
 				wsCollectionToBeWritten.Set(ws);
-				WritingSystem ws2 = CreateDetailedWritingSystem("test");
+				WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test");
 				ws2.Region = "Region2";
 				wsCollectionToBeWritten.Set(ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
@@ -189,10 +189,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			//Write out two writing systems
 			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
 			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
-			WritingSystem ws = CreateDetailedWritingSystem("test");
+			WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 			wsCollectionToBeWritten.Set(ws);
 			//WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
-			WritingSystem ws2 = CreateDetailedWritingSystem("test2");
+			WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test2");
 			wsCollectionToBeWritten.Set(ws2);
 			wsCollectionToBeWritten.Save();
 			//load them up again
@@ -209,10 +209,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
 			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
-			WritingSystem ws = CreateDetailedWritingSystem("test");
+			WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 			wsCollectionToBeWritten.Set(ws);
 			//WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
-			WritingSystem ws2 = CreateDetailedWritingSystem("test2");
+			WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test2");
 			wsCollectionToBeWritten.Set(ws2);
 			wsCollectionToBeWritten.Save();
 			WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
@@ -234,7 +234,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
 			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
-			WritingSystem ws = CreateDetailedWritingSystem("test");
+			WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 			wsCollectionToBeWritten.Set(ws);
 			wsCollectionToBeWritten.Save();
 		}
@@ -243,7 +243,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void MissingIdIsHandledOk()
 		{
 			WritingSystemCollection x = new WritingSystemCollection(_ldmlWsFolder.Path);
-			WritingSystem ws = x.Get("unheardof");
+			WritingSystemDefinition ws = x.Get("unheardof");
 			Assert.IsNotNull(ws);
 			Assert.AreSame(ws, x.Get("unheardof"), "Expected to get exactly the same one each time");
 		}
@@ -255,7 +255,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 				CreateSampleWritingSystemFile(_wsPrefsFile.Path);
 				//_collection.LoadFromLegacyWeSayFile(_wsPrefsFile.Path);
-				WritingSystem ws = _collection.Get("PretendAnalysis");
+				WritingSystemDefinition ws = _collection.Get("PretendAnalysis");
 				Assert.AreEqual("PretendAnalysis", ws.Id);
 				// since Linux may not have CourierNew, we
 				// need to test against the font mapping
@@ -300,8 +300,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 		private static WritingSystemCollection MakeSampleCollection(WritingSystemCollection writingSystemStore)
 		{
-			writingSystemStore.Set(WritingSystem.FromRFC5646("one"));
-			writingSystemStore.Set(WritingSystem.FromRFC5646("two"));
+			writingSystemStore.Set(WritingSystemDefinition.FromLanguage("one"));
+			writingSystemStore.Set(WritingSystemDefinition.FromLanguage("two"));
 			return writingSystemStore;
 		}
 

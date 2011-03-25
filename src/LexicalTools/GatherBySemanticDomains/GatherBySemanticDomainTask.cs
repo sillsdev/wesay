@@ -12,6 +12,7 @@ using Palaso.i18n;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -29,7 +30,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private List<string> _domainNames;
 		private List<string> _words;
 
-		private WritingSystem _semanticDomainWritingSystem;
+		private WritingSystemDefinition _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
 		private OptionsList _semanticDomainOptionsList;
 
@@ -39,7 +40,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private readonly TaskMemory _taskMemory;
 		private GatherBySemanticDomainConfig _config;
 		private readonly ILogger _logger;
-		public WritingSystem DefinitionWritingSystem { get; set; }
+		public WritingSystemDefinition DefinitionWritingSystem { get; set; }
 
 		public GatherBySemanticDomainTask(
 			GatherBySemanticDomainConfig config,
@@ -100,7 +101,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
-			WritingSystem writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
+			WritingSystemDefinition writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
 			Guard.AgainstNull(writingSystemForDefinition, "Defintion Writing System");
 			DefinitionWritingSystem = writingSystemForDefinition;
 
@@ -448,7 +449,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
-		public WritingSystem SemanticDomainWritingSystem
+		public WritingSystemDefinition SemanticDomainWritingSystem
 		{
 			get
 			{

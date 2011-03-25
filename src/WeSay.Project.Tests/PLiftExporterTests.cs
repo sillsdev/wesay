@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using Palaso.Xml;
 using WeSay.LexicalModel;
 using Palaso.Lift;
@@ -415,12 +416,14 @@ namespace WeSay.Project.Tests
 			_outputFile = new TempFile();
 			Repo = new LexEntryRepository(_projectDir.PathToLiftFile);
 			WritingSystemIds = new List<string>(new[] { "red", "green", "blue", "voice" });
-			HeadwordWritingSystem = WritingSystem.FromRFC5646("red");
+			HeadwordWritingSystem = WritingSystemDefinition.FromLanguage("red");
 			project.WritingSystems.Set(HeadwordWritingSystem);
-			project.WritingSystems.Set(WritingSystem.FromRFC5646("green"));
-			project.WritingSystems.Set(WritingSystem.FromRFC5646("green"));
-			project.WritingSystems.Set(WritingSystem.FromRFC5646("blue"));
-			project.WritingSystems.Set(WritingSystem.VoiceFromRFC5646(""));
+			project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("green"));
+			project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("green"));
+			project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("blue"));
+			var voiceWritingSystem = WritingSystemDefinition.FromLanguage("en");
+			voiceWritingSystem.IsVoice = true;
+			project.WritingSystems.Set(voiceWritingSystem);
 
 			Template = new ViewTemplate
 			{
@@ -457,7 +460,7 @@ namespace WeSay.Project.Tests
 
 		public LexEntryRepository Repo { get; set; }
 
-		public WritingSystem HeadwordWritingSystem { get; set; }
+		public WritingSystemDefinition HeadwordWritingSystem { get; set; }
 
 		public ViewTemplate Template { get; set; }
 

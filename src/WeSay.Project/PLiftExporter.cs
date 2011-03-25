@@ -9,6 +9,7 @@ using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Text;
 using Palaso.UiBindings;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
@@ -69,7 +70,7 @@ namespace WeSay.Project
 
 		public override void Add(LexEntry entry)
 		{
-			WritingSystem headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
+			WritingSystemDefinition headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
 			int h = _lexEntryRepository.GetHomographNumber(entry, headWordWritingSystem);
 			Add(entry, h);
 		}

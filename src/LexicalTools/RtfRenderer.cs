@@ -6,6 +6,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Text;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -179,7 +180,7 @@ namespace WeSay.LexicalTools
 			get { return BasilProject.Project.WritingSystems; }
 		}
 
-		private static int GetFontNumber(WritingSystem writingSystem)
+		private static int GetFontNumber(WritingSystemDefinition writingSystem)
 		{
 			int i = 0;
 			foreach (var ws in WritingSystems.AllWritingSystems)
@@ -288,7 +289,7 @@ namespace WeSay.LexicalTools
 				return "";
 				//that ws isn't actually part of our configuration, so can't get a special font for it
 			}
-			WritingSystem writingSystem = WritingSystems.Get(writingSystemId);
+			WritingSystemDefinition writingSystem = WritingSystems.Get(writingSystemId);
 			string rtf = @"\f" + GetFontNumber(writingSystem);
 			int fontSize = Convert.ToInt16((sizeBoost + WritingSystemInfo.CreateFont(writingSystem).SizeInPoints)*2);
 			rtf += @"\fs" + fontSize + " ";

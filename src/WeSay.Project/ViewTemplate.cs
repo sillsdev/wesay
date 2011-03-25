@@ -8,6 +8,7 @@ using Exortech.NetReflector;
 using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
 using Palaso.Lift;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
@@ -49,12 +50,12 @@ namespace WeSay.Project
 
 		//todo: this is simplistic. Switch to the plural form
 		[Obsolete]
-		public WritingSystem HeadwordWritingSystem
+		public WritingSystemDefinition HeadwordWritingSystem
 		{
 			get { return GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit); }
 		}
 
-		public IList<WritingSystem> HeadwordWritingSystems
+		public IList<WritingSystemDefinition> HeadwordWritingSystems
 		{
 			get
 			{
@@ -589,10 +590,10 @@ namespace WeSay.Project
 			return false;
 		}
 
-		public WritingSystem GetDefaultWritingSystemForField(string fieldName)
+		public WritingSystemDefinition GetDefaultWritingSystemForField(string fieldName)
 		{
 			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
-			WritingSystem listWritingSystem = null;
+			WritingSystemDefinition listWritingSystem = null;
 			Field field = GetField(fieldName);
 			//Debug.Assert(field != null, fieldName + "not found.");
 			if (field != null)

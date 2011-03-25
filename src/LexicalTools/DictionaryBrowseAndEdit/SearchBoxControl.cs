@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.Properties;
 using WeSay.UI;
@@ -53,7 +54,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystem ListWritingSystem
+		public WritingSystemDefinition ListWritingSystem
 		{
 			get
 			{
@@ -67,7 +68,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		}
 
-		public void SetWritingSystem(WritingSystem writingSystem)
+		public void SetWritingSystem(WritingSystemDefinition writingSystem)
 		{
 			ListWritingSystem = writingSystem;
 			_selectedWritingSystemLabel.Text = writingSystem.Abbreviation;

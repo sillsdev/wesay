@@ -30,8 +30,8 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				</entry>", "0.12"))
 			{
 				var collection = new WritingSystemCollection(tempFolder.Path);
-				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownVernacular));
-				collection.Set(WritingSystem.FromRFC5646("en"));
+				collection.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownVernacular));
+				collection.Set(WritingSystemDefinition.FromLanguage("en"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 				//put one guy in there already
 				int originalCount = collection.Count; // collection.Count;
@@ -59,8 +59,8 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				</entry>", "0.12"))
 			{
 				var collection = new WritingSystemCollection(tempFolder.Path);
-				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownVernacular));
-				collection.Set(WritingSystem.FromRFC5646("en"));
+				collection.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownVernacular));
+				collection.Set(WritingSystemDefinition.FromLanguage("en"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 				//put one guy in there already
 				int originalCount = collection.Count;// collection.Count;
@@ -102,12 +102,12 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 		</entry>", "0.12"))
 			{
 				var collection = new WritingSystemCollection(tempFolder.Path);
-				collection.Set(WritingSystem.FromRFC5646("en"));
-				collection.Set(WritingSystem.FromRFC5646("fromLU"));
-				collection.Set(WritingSystem.FromRFC5646("fromGloss"));
-				collection.Set(WritingSystem.FromRFC5646("fromDef"));
-				collection.Set(WritingSystem.FromRFC5646("fromExample"));
-				collection.Set(WritingSystem.FromRFC5646("fromTrans"));
+				collection.Set(WritingSystemDefinition.FromLanguage("en"));
+				collection.Set(WritingSystemDefinition.FromLanguage("fromLU"));
+				collection.Set(WritingSystemDefinition.FromLanguage("fromGloss"));
+				collection.Set(WritingSystemDefinition.FromLanguage("fromDef"));
+				collection.Set(WritingSystemDefinition.FromLanguage("fromExample"));
+				collection.Set(WritingSystemDefinition.FromLanguage("fromTrans"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 
 				ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);
@@ -139,8 +139,8 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 			 ", "0.12"))
 			{
 				var collection = new WritingSystemCollection(tempFolder.Path);
-				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownVernacular));
-				collection.Set(WritingSystem.FromRFC5646(WritingSystemInfo.IdForUnknownAnalysis));
+				collection.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownVernacular));
+				collection.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownAnalysis));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 
 				ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);

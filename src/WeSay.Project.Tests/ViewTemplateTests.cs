@@ -3,6 +3,7 @@ using System.Drawing;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.Data.Tests;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
@@ -129,8 +130,8 @@ namespace WeSay.Project.Tests
 			using (var tempFolder = new TemporaryFolder("ProjectFromViewTemplateTests"))
 			{
 				WritingSystemCollection w = new WritingSystemCollection(tempFolder.Path);
-				w.Set(WritingSystem.FromRFC5646("red"));
-				w.Set(WritingSystem.FromRFC5646("white"));
+				w.Set(WritingSystemDefinition.FromLanguage("red"));
+				w.Set(WritingSystemDefinition.FromLanguage("white"));
 				return ViewTemplate.MakeMasterTemplate(w);
 			}
 		}

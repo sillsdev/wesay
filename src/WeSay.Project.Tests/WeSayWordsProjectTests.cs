@@ -10,6 +10,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project.ConfigMigration;
@@ -60,7 +61,7 @@ namespace WeSay.Project.Tests
 				WeSayWordsProject project = p.CreateLoadedProject();
 				using (File.OpenWrite(p.PathToLiftFile))
 				{
-					WritingSystem ws = project.WritingSystems.Get("v");
+					WritingSystemDefinition ws = project.WritingSystems.Get("v");
 					ws.ISO = "newIdForV";
 					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
@@ -79,7 +80,7 @@ namespace WeSay.Project.Tests
 				XmlDocument doc = new XmlDocument();
 				doc.Load(p.PathToLiftFile);
 				Assert.IsNotNull(doc.SelectNodes("//form[lang='v']"));
-				WritingSystem ws = project.WritingSystems.Get("v");
+				WritingSystemDefinition ws = project.WritingSystems.Get("v");
 				ws.ISO = "newIdForV";
 				Assert.IsTrue(project.MakeWritingSystemIdChange(ws, "v"));
 				doc.Load(p.PathToLiftFile);

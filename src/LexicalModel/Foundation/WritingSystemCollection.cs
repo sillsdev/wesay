@@ -10,11 +10,13 @@ namespace WeSay.LexicalModel.Foundation
 	public class WritingSystemCollection : LdmlInFolderWritingSystemRepository
 	{
 		// TODO Make this private, and should still build
+		// not used in Palaso; not used in WeSay either
 		private WritingSystemCollection()
 		{
 			throw new NotImplementedException();
 		}
 
+		// already present in LdmlInFolderWS
 		public WritingSystemCollection(string getPathToLdmlWritingSystemsFolder)
 		{
 			throw new NotImplementedException();
@@ -25,20 +27,20 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			throw new NotImplementedException();
 		}
-
-		public new WritingSystem Get(string id)
+		// already in Palaso
+		public new WritingSystemDefinition Get(string id)
 		{
 			throw new NotImplementedException();
 		}
 
 		// successfully moved to Palaso
-		public IEnumerable<WritingSystem> TextWritingSystems
+		public IEnumerable<WritingSystemDefinition> TextWritingSystems
  { get; private set; }
 		// successfully moved to Palaso
-		public new IEnumerable<WritingSystem> AllWritingSystems { get; private set; }
+		public new IEnumerable<WritingSystemDefinition> AllWritingSystems { get; private set; }
 
-		// TODO Move to Palaso
-		public void OnWritingSystemIDChange(WritingSystem ws, string oldId)
+		// successfully moved to Palaso
+		public void OnWritingSystemIDChange(WritingSystemDefinition ws, string oldId)
 		{
 			throw new NotImplementedException();
 		}

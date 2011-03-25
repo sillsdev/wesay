@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using NUnit.Framework;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation
@@ -10,7 +11,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Font_SetNull_GetReturnsGenericSansSerif()
 		{
-			WritingSystem ws = new WritingSystem();
+			WritingSystemDefinition ws = new WritingSystemDefinition();
 			//ws.SetFont(null);
 			Assert.AreEqual(FontFamily.GenericSansSerif, WritingSystemInfo.CreateFont(ws).FontFamily);
 		}
@@ -18,7 +19,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Font_SetNull_GetFontSizeIs12()
 		{
-			WritingSystem ws = new WritingSystem();
+			WritingSystemDefinition ws = new WritingSystemDefinition();
 			//ws.SetFont(null);
 			Assert.AreEqual(12, WritingSystemInfo.CreateFont(ws).Size);
 		}
@@ -26,7 +27,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Font_SetNull_GetFontNameIsIdenticalToDefaultFontName()
 		{
-			WritingSystem ws = new WritingSystem();
+			WritingSystemDefinition ws = new WritingSystemDefinition();
 			//ws.SetFont(null);
 			Assert.AreEqual(WritingSystemInfo.CreateFont(ws).Name, ws.DefaultFontName);
 		}

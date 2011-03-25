@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
@@ -23,7 +24,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(GatherWordListTask task, WritingSystem lexicalUnitWritingSystem)
+		public GatherWordListControl(GatherWordListTask task, WritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			_task = task;
 
@@ -33,7 +34,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
-			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
+			_vernacularBox.WritingSystemsForThisField = new WritingSystemDefinition[]
 															{lexicalUnitWritingSystem};
 			_vernacularBox.TextChanged += _vernacularBox_TextChanged;
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;

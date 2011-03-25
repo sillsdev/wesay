@@ -2,6 +2,7 @@
 
 using NUnit.Framework;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.Project;
 using Palaso.Lift;
 using WeSay.LexicalModel.Foundation;
@@ -18,8 +19,8 @@ namespace WeSay.LexicalTools.Tests
 			using (var tempFolder = new TemporaryFolder("ProjectFromRtfRendererTests"))
 			{
 				var writingSystemCollection = new WritingSystemCollection(tempFolder.Path);
-				writingSystemCollection.Set(WritingSystem.FromRFC5646("en"));
-				var audio = WritingSystem.FromRFC5646("en");
+				writingSystemCollection.Set(WritingSystemDefinition.FromLanguage("en"));
+				var audio = WritingSystemDefinition.FromLanguage("en");
 				audio.IsVoice = true;
 				writingSystemCollection.Set(audio);
 				var m = new MultiText();

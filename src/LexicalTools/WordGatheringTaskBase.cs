@@ -1,5 +1,6 @@
 using System;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
@@ -10,7 +11,7 @@ namespace WeSay.LexicalTools
 {
 	public abstract class WordGatheringTaskBase: TaskBase
 	{
-		private readonly WritingSystem _lexicalFormWritingSystem;
+		private readonly WritingSystemDefinition _lexicalFormWritingSystem;
 		private readonly ViewTemplate _viewTemplate;
 
 		protected WordGatheringTaskBase(ITaskConfiguration config,
@@ -39,7 +40,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		protected WritingSystem GetFirstTestWritingSystemOfField(Field field)
+		protected WritingSystemDefinition GetFirstTestWritingSystemOfField(Field field)
 		{
 			var ids = field.GetTextOnlyWritingSystemIds(BasilProject.Project.WritingSystems);
 			if(ids.Count()==0)
@@ -68,7 +69,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public WritingSystem WritingSystemUserIsTypingIn
+		public WritingSystemDefinition WritingSystemUserIsTypingIn
 		{
 			get
 			{

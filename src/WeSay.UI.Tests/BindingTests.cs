@@ -1,5 +1,6 @@
 using System.Drawing;
 using NUnit.Framework;
+using Palaso.WritingSystems;
 using WeSay.Project;
 using WeSay.Project;
 using Palaso.Lift;
@@ -23,7 +24,7 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			WeSayTextBox widget =
-					new WeSayTextBox(WritingSystem.FromRFC5646("vernacular"), null);
+					new WeSayTextBox(WritingSystemDefinition.FromLanguage("vernacular"), null);
 			new TextBinding(text, "vernacular", widget);
 
 			text["vernacular"] = "hello";
@@ -37,7 +38,7 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			WeSayTextBox widget =
-					new WeSayTextBox(WritingSystem.FromRFC5646("vernacular"), null);
+					new WeSayTextBox(WritingSystemDefinition.FromLanguage("vernacular"), null);
 
 			var binding = new TextBinding(text, "vernacular", widget);
 

@@ -28,6 +28,7 @@ using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using Palaso.UiBindings;
+using Palaso.WritingSystems;
 using Palaso.Xml;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
@@ -61,8 +62,8 @@ namespace WeSay.Project
 			//setup writing systems
 			string pathToLdmlWsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
 			WritingSystemCollection wsc = new WritingSystemCollection(pathToLdmlWsFolder);
-			wsc.Set(WritingSystem.FromRFC5646(WritingSystemInfo.VernacularIdForTest));
-			wsc.Set(WritingSystem.FromRFC5646(WritingSystemInfo.AnalysisIdForTest));
+			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.VernacularIdForTest));
+			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.AnalysisIdForTest));
 			if (File.Exists(WeSayWordsProject.PathToPretendWritingSystemPrefs))
 			{
 				File.Delete(WeSayWordsProject.PathToPretendWritingSystemPrefs);
@@ -1167,7 +1168,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public WritingSystem HeadWordWritingSystem
+		public WritingSystemDefinition HeadWordWritingSystem
 		{
 			get
 			{
@@ -1445,7 +1446,7 @@ namespace WeSay.Project
 				 });
 		}
 
-		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)
+		public bool MakeWritingSystemIdChange(WritingSystemDefinition ws, string oldId)
 		{
 			if (DoSomethingToLiftFile((p) =>
 					 //todo: expand the regular expression here to account for all reasonable patterns
