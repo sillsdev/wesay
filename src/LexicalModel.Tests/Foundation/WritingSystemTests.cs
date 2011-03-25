@@ -10,6 +10,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void NoSetupDefaultFont()
 		{
+			Assert.Fail("cjh: bogus test");
 			var ws = WritingSystemDefinition.FromLanguage("xx");
 			Assert.AreEqual(33, WritingSystemInfo.CreateFont(ws).Size);
 		}
@@ -17,6 +18,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Construct_DefaultFont()
 		{
+			Assert.Fail("cjh: bogus test");
 			var ws = new WritingSystemDefinition();
 			Assert.IsNotNull(WritingSystemInfo.CreateFont(ws));
 		}
@@ -24,7 +26,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Compare_fr_sortsLikeFrench()
 		{
-			var writingSystem = WritingSystemDefinition.FromLanguage("one");
+			var writingSystem = WritingSystemDefinition.FromLanguage("en");
 			writingSystem.SortUsingOtherLanguage("fr");
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
@@ -35,7 +37,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Compare_en_sortsLikeEnglish()
 		{
-			var writingSystem = WritingSystemDefinition.FromLanguage("one");
+			var writingSystem = WritingSystemDefinition.FromLanguage("th");
 			writingSystem.SortUsingOtherLanguage("en-US");
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
@@ -45,21 +47,21 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Constructor_IsAudio_SetToFalse()
 		{
-			var writingSystem = WritingSystemDefinition.FromLanguage("one");
+			var writingSystem = WritingSystemDefinition.FromLanguage("th");
 			Assert.IsFalse(writingSystem.IsVoice);
 		}
 
 		[Test]
 		public void Constructor_IsUnicode_SetToTrue()
 		{
-			var writingSystem = WritingSystemDefinition.FromLanguage("one");
+			var writingSystem = WritingSystemDefinition.FromLanguage("th");
 			Assert.IsTrue(writingSystem.IsUnicodeEncoded);
 		}
 
 		[Test, Ignore]
 		public void SortUsing_CustomSimpleWithNoRules_sortsLikeInvariant()
 		{
-			var writingSystem = WritingSystemDefinition.FromLanguage("one");
+			var writingSystem = WritingSystemDefinition.FromLanguage("th");
 			writingSystem.SortUsingCustomSimple("");
 			// hard to test because half of the system locales use the invariant table: http://blogs.msdn.com/michkap/archive/2004/12/29/344136.aspx
 		}
@@ -69,7 +71,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			// Not convinced that this needs to be true. Given that the sort method is known to be OtherLanguage then
 			// the implementation can just ignore sort rules and use the id instead.
-			var writingSystem = WritingSystemDefinition.FromLanguage("one");
+			Assert.Fail("cjh: See comment in test.  Not sure about the validity of this contract");
+			var writingSystem = WritingSystemDefinition.FromLanguage("th");
 			writingSystem.SortUsingOtherLanguage(null);
 			Assert.AreEqual(writingSystem.Id, writingSystem.SortRules);
 		}
@@ -78,19 +81,21 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void SortUsingCustomICU_WithSortRules_SetsSortRulesAndSortUsing()
 		{
 			const string rules = "&n < ng <<< Ng <<< NG";
-			WritingSystemDefinition writingSystem = WritingSystemDefinition.FromLanguage("one");
+			WritingSystemDefinition writingSystem = WritingSystemDefinition.FromLanguage("th");
 			writingSystem.SortUsingCustomICU(rules);
 			Assert.AreEqual(rules, writingSystem.SortRules);
 			Assert.AreEqual(WritingSystemDefinition.SortRulesType.CustomICU, writingSystem.SortUsing);
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void GetHashCode_SameIdDefaultsDifferentFont_Same()
 		{
-			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("ws");
+			Assert.Fail("cjh: Why is this test failing? I don't see why these objects aren't the same");
+			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.DefaultFontName = "Arial";
 			writingSystem1.DefaultFontSize = 12;
-			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("ws");
+			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem2.DefaultFontName = "Arial";
 			writingSystem2.DefaultFontSize = 22;
 
@@ -98,23 +103,27 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void GetHashCode_SameIdSortUsingNoCustomRules_Same()
 		{
-			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("ws");
+			Assert.Fail("cjh: Why is this test failing? I don't see why these objects aren't the same");
+			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingOtherLanguage("th");
-			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("ws");
+			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem2.SortUsingOtherLanguage("th");
 
 			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void GetHashCode_SameIdSortUsingCustomRules_Same()
 		{
-			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("ws");
+			Assert.Fail("cjh: Why is this test failing? I don't see why these objects aren't the same");
+			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingCustomSimple("A");
 
-			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("ws");
+			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingCustomSimple("A");
 
 			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
@@ -123,8 +132,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentId_Different()
 		{
-			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("ws");
-			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("sw");
+			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
+			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("th");
 
 			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
 		}
@@ -132,9 +141,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentSortUsing_Different()
 		{
-			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("ws");
+			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingOtherLanguage("th");
-			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("ws");
+			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingOtherLanguage("th-TH");
 
 			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
@@ -143,10 +152,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentCustomSortRuleTypes_Different()
 		{
-			var writingSystem1 = WritingSystemDefinition.FromLanguage("ws");
+			var writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingCustomSimple("A");
 
-			var writingSystem2 = WritingSystemDefinition.FromLanguage("ws");
+			var writingSystem2 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem2.SortUsingCustomICU("A");
 
 			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
@@ -155,10 +164,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void GetHashCode_DifferentCustomSortRules_Different()
 		{
-			var writingSystem1 = WritingSystemDefinition.FromLanguage("ws");
+			var writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingCustomSimple("A");
 
-			var writingSystem2 = WritingSystemDefinition.FromLanguage("ws");
+			var writingSystem2 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem2.SortUsingCustomSimple("A a");
 
 			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());

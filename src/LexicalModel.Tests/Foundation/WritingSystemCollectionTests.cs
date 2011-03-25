@@ -25,6 +25,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			_wesayProjectFolder = new TemporaryFolder("WesayProject");
 			_ldmlWsFolder = new TemporaryFolder(_wesayProjectFolder, "WritingSystems");
+			IWritingSystemRepository c = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			_wsPrefsFile = new TempFile(_ldmlWsFolder);
 		}
 
@@ -189,10 +190,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			//Write out two writing systems
 			IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
-			WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
+			WritingSystemDefinition ws = CreateDetailedWritingSystem("en");
 			wsCollectionToBeWritten.Set(ws);
 			//WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
-			WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test2");
+			WritingSystemDefinition ws2 = CreateDetailedWritingSystem("th");
 			wsCollectionToBeWritten.Set(ws2);
 			wsCollectionToBeWritten.Save();
 			//load them up again
@@ -209,10 +210,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
-			WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
+			WritingSystemDefinition ws = CreateDetailedWritingSystem("th");
 			wsCollectionToBeWritten.Set(ws);
 			//WritingSystem ws2 = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test2");
-			WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test2");
+			WritingSystemDefinition ws2 = CreateDetailedWritingSystem("en");
 			wsCollectionToBeWritten.Set(ws2);
 			wsCollectionToBeWritten.Save();
 			IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
@@ -224,7 +225,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 				CreateLdmlWritingsystemDefinitionFile();
 				IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
-				loadedWsCollection.Get("test").Keyboard = "changed";
+				loadedWsCollection.Get("en").Keyboard = "changed";
 				loadedWsCollection.Save();
 				IWritingSystemRepository reloadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 				AssertWritingSystemCollectionsAreEqual(loadedWsCollection, reloadedWsCollection);
@@ -234,18 +235,20 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
-			WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
+			WritingSystemDefinition ws = CreateDetailedWritingSystem("en");
 			wsCollectionToBeWritten.Set(ws);
 			wsCollectionToBeWritten.Save();
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void MissingIdIsHandledOk()
 		{
+			Assert.Fail("Seems really low value to me CH 2011-03");
 			IWritingSystemRepository x = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
-			WritingSystemDefinition ws = x.Get("en");
+			WritingSystemDefinition ws = x.Get("unheardof");
 			Assert.IsNotNull(ws);
-			Assert.AreSame(ws, x.Get("en"), "Expected to get exactly the same one each time");
+			Assert.AreSame(ws, x.Get("unheardof"), "Expected to get exactly the same one each time");
 		}
 
 		[Test]
@@ -306,16 +309,20 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void WritingSystemCollection_HasUnknownVernacular()
 		{
+			Assert.Fail("WeSayProject Tests should perhaps implement this... cjh");
+
 			IWritingSystemRepository c = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			Assert.IsNotNull(c.Get(WritingSystemInfo.IdForUnknownVernacular));
-
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void WritingSystemCollection_HasUnknownAnalysis()
 		{
+			Assert.Fail("WeSayProject Tests should perhaps implement this... cjh");
 			IWritingSystemRepository c = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			Assert.IsNotNull(c.Get(WritingSystemInfo.IdForUnknownAnalysis));
 		}

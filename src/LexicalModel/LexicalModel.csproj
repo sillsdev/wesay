@@ -203,6 +203,7 @@
 	<Compile Include="Foundation\SpellCheckerIdToDisplayStringConverter.cs" />
 	<Compile Include="Foundation\WritingSystemForChorusAdaptor.cs" />
 	<Compile Include="Foundation\WritingSystemCollection_V1.cs" />
+	<Compile Include="Foundation\WritingSystemInfo.cs" />
 	<Compile Include="Foundation\WritingSystemMigration\LdmlDataMapper.cs" />
 	<Compile Include="Foundation\WritingSystemMigration\LdmlNodeComparerV0.cs" />
 	<Compile Include="Foundation\WritingSystemMigration\PalasoWritingSystemDefinitionV0.cs" />

@@ -9,26 +9,30 @@ namespace WeSay.LexicalModel.Tests.Foundation
 	public class WritingSystemInfoTests
 	{
 		[Test]
-		public void Font_SetNull_GetReturnsGenericSansSerif()
+
+		public void CreateFont_Default_GetReturnsGenericSansSerif()
 		{
-			WritingSystemDefinition ws = new WritingSystemDefinition();
-			//ws.SetFont(null);
+			var ws = new WritingSystemDefinition();
 			Assert.AreEqual(FontFamily.GenericSansSerif, WritingSystemInfo.CreateFont(ws).FontFamily);
 		}
 
 		[Test]
-		public void Font_SetNull_GetFontSizeIs12()
+		public void CreateFont_Default_GetFontSizeIs12()
 		{
-			WritingSystemDefinition ws = new WritingSystemDefinition();
-			//ws.SetFont(null);
+			var ws = new WritingSystemDefinition();
 			Assert.AreEqual(12, WritingSystemInfo.CreateFont(ws).Size);
 		}
 
 		[Test]
-		public void Font_SetNull_GetFontNameIsIdenticalToDefaultFontName()
+		public void CreateFont_WithFontName_NameSetToFontName()
 		{
-			WritingSystemDefinition ws = new WritingSystemDefinition();
-			//ws.SetFont(null);
+			var ws = new WritingSystemDefinition
+						 {
+							 DefaultFontName = FontFamily.GenericSerif.Name
+						 };
+			// Assert the precondition
+			Assert.AreNotEqual(FontFamily.GenericSansSerif.Name, ws.DefaultFontName);
+			// Assert the test
 			Assert.AreEqual(WritingSystemInfo.CreateFont(ws).Name, ws.DefaultFontName);
 		}
 	}
