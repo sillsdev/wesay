@@ -27,7 +27,7 @@ namespace WeSay.LexicalModel.Tests
 			string filePath = _temporaryFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(filePath);
 			_headwordWritingSystem = new WritingSystemDefinition();
-			_headwordWritingSystem.ISO = "primary";
+			_headwordWritingSystem.ISO = "en";
 		}
 
 		[TearDown]
@@ -318,7 +318,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithDefinition = _lexEntryRepository.CreateItem();
 			lexEntryWithDefinition.Senses.Add(new LexSense());
-			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("UniWS", ";");
+			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("en", ";");
 			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
@@ -331,8 +331,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("UniWS", ";");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("en", ";");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -344,9 +344,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Definition.SetAlternative("UniWS", ";");
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("UniWS", ";");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithGloss.Senses[0].Definition.SetAlternative("en", ";");
+			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("en", ";");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -358,9 +358,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1;UniWS Word2");
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1;UniWS Word2");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithGloss.Senses[0].Definition.SetAlternative("en", "UniWS Word1;UniWS Word2");
+			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("en", "UniWS Word1;UniWS Word2");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
@@ -373,8 +373,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithDefinition = _lexEntryRepository.CreateItem();
 			lexEntryWithDefinition.Senses.Add(new LexSense());
-			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1;UniWS Word1");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("en", "UniWS Word1;UniWS Word1");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -386,8 +386,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1;UniWS Word1");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("en", "UniWS Word1;UniWS Word1");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -399,8 +399,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word2;UniWS Word1");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "UniWS Word2;UniWS Word1");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
@@ -413,8 +413,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word2;UniWS Word1");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "UniWS Word2;UniWS Word1");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
@@ -427,8 +427,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word2; UniWS Word1");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "UniWS Word2; UniWS Word1");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
@@ -441,8 +441,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1; UniWS Word2");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "UniWS Word1; UniWS Word2");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
@@ -455,9 +455,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1; UniWS Word2");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1; UniWS Word2");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "UniWS Word1; UniWS Word2");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "UniWS Word1; UniWS Word2");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
@@ -470,9 +470,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1;UniWS Word2");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1;UniWS Word2");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "UniWS Word1;UniWS Word2");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "UniWS Word1;UniWS Word2");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
@@ -485,9 +485,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1; UniWS Word2");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "UniWS Word1; UniWS Word2");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "UniWS Word1");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
@@ -500,9 +500,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1; UniWS Word2");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "UniWS Word1");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "UniWS Word1; UniWS Word2");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
@@ -515,9 +515,9 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("UniWS", "UniWS Word1;UniWS Word2; UniWS Word3");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("UniWS", "UniWS Word1; UniWS Word3; UniWS Word4");
-			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("UniWS");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("en", "UniWS Word1;UniWS Word2; UniWS Word3");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "UniWS Word1; UniWS Word3; UniWS Word4");
+			WritingSystemDefinition unicodeWS = WritingSystemDefinition.FromLanguage("en");
 			unicodeWS.IsUnicodeEncoded = true;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(unicodeWS);
 			Assert.AreEqual(4, listOfLexEntriesSortedByDefinition.Count);
@@ -533,7 +533,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry lexEntryWithDefinition = _lexEntryRepository.CreateItem();
 			lexEntryWithDefinition.Senses.Add(new LexSense());
 			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("nonUniWs", ";");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -546,7 +546,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithGloss.Senses.Add(new LexSense());
 			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("nonUniWs", ";");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -560,7 +560,7 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithGloss.Senses.Add(new LexSense());
 			lexEntryWithGloss.Senses[0].Definition.SetAlternative("nonUniWs", ";");
 			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("nonUniWs", ";");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -574,7 +574,7 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithGloss.Senses.Add(new LexSense());
 			lexEntryWithGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word1;nonUniWs Word2");
 			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1;nonUniWs Word2");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -587,7 +587,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word2;nonUniWs Word1");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -600,7 +600,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word2;nonUniWs Word1");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -613,7 +613,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word2; nonUniWs Word1");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -625,8 +625,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word2");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("en", "nonUniWs Word1; nonUniWs Word2");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -640,7 +640,7 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word2");
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word2");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
@@ -654,7 +654,7 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word2");
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
@@ -669,7 +669,7 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word1");
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word2");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
@@ -684,7 +684,7 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("nonUniWs", "nonUniWs Word1;nonUniWs Word2; nonUniWs Word3");
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("nonUniWs", "nonUniWs Word1; nonUniWs Word3; nonUniWs Word4");
-			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("nonUniWs");
+			WritingSystemDefinition nonUnicodeWs = WritingSystemDefinition.FromLanguage("en");
 			nonUnicodeWs.IsUnicodeEncoded = false;
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(nonUnicodeWs);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);

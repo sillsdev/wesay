@@ -149,9 +149,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void Load_OnlyLdmlWritingSystemFilesExist_WritingSystemsAreLoadedFromThoseFiles()
 		{
 				IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
-				WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
+				WritingSystemDefinition ws = CreateDetailedWritingSystem("th");
 				wsCollectionToBeWritten.Set(ws);
-				WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test2");
+				WritingSystemDefinition ws2 = CreateDetailedWritingSystem("en");
 				wsCollectionToBeWritten.Set(ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
 				IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
@@ -162,11 +162,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void Load_LdmlWritingSystemsHaveSameIsoCodeButDifferentVariantRegionInfo_DoesNotCrash()
 		{
 				var wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
-				WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
-				ws.Region = "Region1";
+				WritingSystemDefinition ws = CreateDetailedWritingSystem("th");
+				ws.Region = "BR";
 				wsCollectionToBeWritten.Set(ws);
-				WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test");
-				ws2.Region = "Region2";
+				WritingSystemDefinition ws2 = CreateDetailedWritingSystem("th");
+				ws2.Region = "AQ";
 				wsCollectionToBeWritten.Set(ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
 				var loadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
@@ -243,9 +243,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void MissingIdIsHandledOk()
 		{
 			IWritingSystemRepository x = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
-			WritingSystemDefinition ws = x.Get("unheardof");
+			WritingSystemDefinition ws = x.Get("en");
 			Assert.IsNotNull(ws);
-			Assert.AreSame(ws, x.Get("unheardof"), "Expected to get exactly the same one each time");
+			Assert.AreSame(ws, x.Get("en"), "Expected to get exactly the same one each time");
 		}
 
 		[Test]
