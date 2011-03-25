@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Xml;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using WeSay.LexicalModel.Foundation;
-using WeSay.Project;
 
-namespace WeSay.ConfigTool.NewProjectCreation
+namespace WeSay.Project
 {
 	/// <summary>
 	/// WeSay uses more files than raw lift; for example, it has a .WeSayConfig file to hold the configuration of tasks.
@@ -32,19 +29,40 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			_viewTemplate = viewTemplate;
 			_writingSystems = writingSystems;
 		}
+//
+		/// <summary>
+		/// Will create whatever files are needed for wesay to use a valid lift folder, based on what it finds.
+		/// </summary>
+//        public static void PrepareLiftFolderForWeSay(string pathToLiftFolder)
+//        {
+//            using (var project = new WeSayWordsProject())
+//            {
+//                project.LoadFromProjectDirectoryPath(pathToLiftFolder);
+//                var creator = new ProjectFromLiftFolderCreator(project.PathToLiftFile, project.DefaultViewTemplate, project.WritingSystems);
+//
+//                creator.SetWritingSystemsForFields();
+//                project.Save();
+//            }
+//
+//        }
 
-		public void PrepareLiftFolderForWeSay()
+
+		/// <summary>
+		/// Will create whatever files are needed for wesay to use a valid lift folder, based on what it finds.
+		/// </summary>
+		public static void PrepareLiftFolderForWeSay(WeSayWordsProject project)
 		{
-			SetWritingSystemsForFields();
+			var creator = new ProjectFromLiftFolderCreator(project.PathToLiftFile, project.DefaultViewTemplate, project.WritingSystems);
+			creator.SetWritingSystemsForFields();
 		}
 
-		private void SetWritingSystemsForFields()
+		internal void SetWritingSystemsForFields()
 		{
-			var doc = new XmlDocument();
-			doc.Load(_path); //will throw if the file is ill-formed
+			var liftDom = new XmlDocument();
+			liftDom.Load(_path); //will throw if the file is ill-formed
 			var missingWritingSystems = new StringBuilder();
 
-			foreach (XmlNode node in doc.SelectNodes("//@lang"))
+			foreach (XmlNode node in liftDom.SelectNodes("//@lang"))
 			{
 				if (node.Value == "x-spec" && !_writingSystems.ContainsKey("x-spec"))
 				{
@@ -66,16 +84,16 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			// replace all "v" fields with the first lexical-unit writing system
 			//and all "en" with the first translation one...
 
-			var vernacular = GetTopWritingSystem(doc, "//lexical-unit/form/@lang");
+			var vernacular = GetTopWritingSystem(liftDom, "//lexical-unit/form/@lang");
 			if (vernacular != String.Empty)
 			{
 				_viewTemplate.ChangeWritingSystemId(WritingSystem.IdForUnknownVernacular, vernacular);
 				_writingSystems.Remove(WritingSystem.IdForUnknownVernacular);
 			}
-			var analysis = GetTopWritingSystem(doc, "//sense/gloss/@lang");
+			var analysis = GetTopWritingSystem(liftDom, "//sense/gloss/@lang");
 			if (analysis == String.Empty)
 			{
-				analysis = GetTopWritingSystem(doc, "//sense/definition/@lang");
+				analysis = GetTopWritingSystem(liftDom, "//sense/definition/@lang");
 				//nb: we don't want to remove english, even if they don't use it
 			}
 			if (analysis != String.Empty)
@@ -83,15 +101,15 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				_viewTemplate.ChangeWritingSystemId(WritingSystem.IdForUnknownAnalysis, analysis);
 			}
 
-			AddWritingSystemsForField(doc,  "//lexical-unit/form/@lang", LexEntry.WellKnownProperties.LexicalUnit);
-			AddWritingSystemsForField(doc,  "//sense/gloss/@lang", LexSense.WellKnownProperties.Gloss);
+			AddWritingSystemsForField(liftDom,  "//lexical-unit/form/@lang", LexEntry.WellKnownProperties.LexicalUnit);
+			AddWritingSystemsForField(liftDom,  "//sense/gloss/@lang", LexSense.WellKnownProperties.Gloss);
 
-			AddWritingSystemsForField(doc,  "//sense/definition/form/@lang", LexSense.WellKnownProperties.Definition);
+			AddWritingSystemsForField(liftDom,  "//sense/definition/form/@lang", LexSense.WellKnownProperties.Definition);
 
 			AddAllGlossWritingSystemsToDefinition();
 
-			AddWritingSystemsForField(doc,  "//example/form/@lang", LexExampleSentence.WellKnownProperties.ExampleSentence);
-			AddWritingSystemsForField(doc,  "//translation/form/@lang", LexExampleSentence.WellKnownProperties.Translation);
+			AddWritingSystemsForField(liftDom,  "//example/form/@lang", LexExampleSentence.WellKnownProperties.ExampleSentence);
+			AddWritingSystemsForField(liftDom,  "//translation/form/@lang", LexExampleSentence.WellKnownProperties.Translation);
 
 			//------------ hack
 			var gloss = _viewTemplate.GetField(LexSense.WellKnownProperties.Gloss);

@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
-using WeSay.ConfigTool.NewProjectCreation;
 using WeSay.LexicalModel.Foundation;
-using WeSay.Project;
 
-namespace WeSay.ConfigTool.Tests.NewProjectCreation
+namespace WeSay.Project.Tests
 {
 	[TestFixture]
 	public class ProjectFromLiftFolderCreatorTests
@@ -39,7 +33,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				var creator = new ProjectFromLiftFolderCreator(lift.Path, vt, collection);
 
 				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(
-					 () => creator.PrepareLiftFolderForWeSay()
+					 () => creator.SetWritingSystemsForFields()
 				 );
 
 				Assert.IsTrue(collection.ContainsKey("blah"));
@@ -65,7 +59,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				int originalCount = writingSystems.Count;// collection.Count;
 
 				var creator = new ProjectFromLiftFolderCreator(lift.Path, vt, writingSystems);
-				creator.PrepareLiftFolderForWeSay();
+				creator.SetWritingSystemsForFields();
 				Assert.IsTrue(writingSystems.ContainsKey("x-spec"));
 			}
 		}
@@ -110,7 +104,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 
 				var creator = new ProjectFromLiftFolderCreator(lift.Path, vt, writingSystems);
-				creator.PrepareLiftFolderForWeSay();
+				creator.SetWritingSystemsForFields();
 				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "v");
 				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.Citation, "v");
 				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, "v");
@@ -143,7 +137,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 
 				var creator = new ProjectFromLiftFolderCreator(lift.Path, vt, writingSystems);
-				creator.PrepareLiftFolderForWeSay();
+				creator.SetWritingSystemsForFields();
 				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystem.IdForUnknownVernacular);
 				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystem.IdForUnknownVernacular);
 				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystem.IdForUnknownVernacular);

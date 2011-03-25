@@ -401,5 +401,20 @@ namespace WeSay.Project.Tests
 				Assert.That(project.UiOptions.Language, Is.EqualTo("en"));
 			}
 		}
+
+
+
+		[Test]
+		public void LoadFromProjectDirectoryPath_NoPreviousWeSaySpecificFiles_CreatesWeSayConfigAndPartsOfSpeech()
+		{
+			using (var projectDir = new ProjectDirectorySetupForTesting(""))
+			{
+				File.Delete(projectDir.PathToConfigFile);
+				File.Delete(projectDir.PathToUserConfigFile);
+				var project = new WeSayWordsProject();
+				project.LoadFromProjectDirectoryPath(projectDir.PathToDirectory);
+				Assert.IsTrue(File.Exists(projectDir.PathToConfigFile));
+			}
+		}
 	}
 }

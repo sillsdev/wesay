@@ -323,22 +323,66 @@ namespace WeSay.Project
 		{
 			ProjectDirectoryPath = projectDirectoryPath;
 
+			if (!File.Exists(PathToConfigFile))
+			{
+				var liftWithSameNameAsFolder = Path.Combine(projectDirectoryPath,
+															Path.GetFileName(projectDirectoryPath) + ".lift");
+
+				string projectName;
+
+				if(File.Exists(liftWithSameNameAsFolder))
+				{
+					PathToLiftFile = liftWithSameNameAsFolder;
+					projectName = Path.GetFileName(projectDirectoryPath);
+				}
+				else
+				{
+					var liftPaths = Directory.GetFiles(projectDirectoryPath, "*.lift");
+					if(liftPaths.Length==0)
+					{
+						ErrorReport.NotifyUserOfProblem("Could not find a LIFT file to us in " + projectDirectoryPath);
+						return;
+					}
+					if (liftPaths.Length > 1)
+					{
+						ErrorReport.NotifyUserOfProblem("Expected only on LIFT file in {0}, but there were {1}. Remove all but one and try again.", projectDirectoryPath, liftPaths.Length);
+						return;
+					}
+					PathToLiftFile = liftPaths[0];
+					projectName = Path.GetFileName(Path.GetFileNameWithoutExtension(liftPaths[0]));
+				}
+				CreateEmptyProjectFiles(projectDirectoryPath, projectName);
+				LoadFromProjectDirectoryPathInner(projectDirectoryPath);
+
+				//will rarely be needed... only when we're starting with a raw lift folder
+				ProjectFromLiftFolderCreator.PrepareLiftFolderForWeSay(this);
+				Save();
+			}
+			else
+			{
+				LoadFromProjectDirectoryPathInner(projectDirectoryPath);
+			}
+		}
+
+		private void LoadFromProjectDirectoryPathInner(string projectDirectoryPath)
+		{
+			ProjectDirectoryPath = projectDirectoryPath;
+
 			//may have already been done, but maybe not
 			MoveFilesFromOldDirLayout(projectDirectoryPath);
 
+			bool needToProcessConfigAfterCreation=false;
 			if (File.Exists(PathToConfigFile)) // will be null if we're creating a new project
 			{
 				_configFile = new ConfigFile(PathToConfigFile);
 				_configFile.MigrateIfNecassary();
 			}
 
+
 			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
 			wsCreator.CreateNonExistantWritingSystemsFoundInLift(PathToLiftFile);
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
-
-			//container change InitializeViewTemplatesFromProjectFiles();
-
 			//review: is this the right place for this?
 			PopulateDIContainer();
 
@@ -347,7 +391,6 @@ namespace WeSay.Project
 
 			LoadUserConfig();
 			InitStringCatalog();
-
 		}
 
 		[Serializable]
@@ -818,10 +861,18 @@ namespace WeSay.Project
 			string name = Path.GetFileName(projectDirectoryPath);
 			CreateEmptyProjectFiles(projectDirectoryPath, name);
 		}
+
+		/// <summary>
+		/// note this now works for folders that have lift stuff, just no wesay stuff
+		/// </summary>
+		/// <param name="projectDirectoryPath"></param>
+		/// <param name="projectName"></param>
 		public static void CreateEmptyProjectFiles(string projectDirectoryPath, string projectName)
 		{
-
-			Directory.CreateDirectory(projectDirectoryPath);
+			if(!Directory.Exists(projectDirectoryPath))
+			{
+				Directory.CreateDirectory(projectDirectoryPath);
+			}
 			CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(projectDirectoryPath);
 			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath, projectName);
 			File.Copy(PathToDefaultConfig, pathToConfigFile, true);

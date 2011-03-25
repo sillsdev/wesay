@@ -175,6 +175,7 @@
 	<Compile Include="ConfigMigration\WeSayConfigMigrationTests.cs" />
 	<Compile Include="PLiftExporterTests.cs" />
 	<Compile Include="ProjectDirectorySetupForTesting.cs" />
+	<Compile Include="ProjectFromLiftFolderCreatorTests.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>

@@ -33,16 +33,10 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 				CopyOverLdmlFiles(pathToSourceLift, BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory));
 
-				using (var project = new WeSayWordsProject())
-				{
-					project.LoadFromProjectDirectoryPath(pathToNewDirectory);
+				//TODO: this, I think, won't be needed at all once we have the project invoking ProjectFromLiftFolderCreator automatically
+				//when we open any project folder
+				//ProjectFromLiftFolderCreator.PrepareLiftFolderForWeSay(pathToNewDirectory);
 
-					//TODO: this, I think, won't be needed at all once we have the project invoking ProjectFromLiftFolderCreator automatically
-					//when we open any project folder
-					var creator = new ProjectFromLiftFolderCreator(pathToSourceLift, project.DefaultViewTemplate, project.WritingSystems);
-					creator.PrepareLiftFolderForWeSay();
-					project.Save();
-				}
 				Logger.WriteEvent(@"Finished Importing");
 				return true;
 

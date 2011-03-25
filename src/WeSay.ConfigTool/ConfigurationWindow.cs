@@ -235,7 +235,7 @@ namespace WeSay.ConfigTool
 		/// <summary>
 		///
 		/// </summary>
-		/// <returns>true if the project was sucessfully opend</returns>
+		/// <returns>true if the project was sucessfully opened</returns>
 		public bool OpenProject(string path)
 		{
 			Logger.WriteEvent("OpenProject("+path+")");
