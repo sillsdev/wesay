@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools
 			_viewTemplate = viewTemplate;
 			Field lexicalFormField =
 					viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
+			IWritingSystemRepository writingSystems = BasilProject.Project.WritingSystems;
 			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
 			{
 				_lexicalFormWritingSystem = writingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);

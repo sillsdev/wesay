@@ -120,7 +120,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			return true;
 		}
 
-		public static void SetWritingSystemsForFields(string path, ViewTemplate viewTemplate, WritingSystemCollection writingSystems)
+		public static void SetWritingSystemsForFields(string path, ViewTemplate viewTemplate, IWritingSystemRepository writingSystems)
 		{
 			var doc = new XmlDocument();
 			doc.Load(path); //will throw if the file is ill-formed

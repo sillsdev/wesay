@@ -173,7 +173,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private static WritingSystemDefinition GetListWritingSystem()
 		{
-			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
+			IWritingSystemRepository writingSystems = BasilProject.Project.WritingSystems;
 			WritingSystemDefinition listWritingSystem = writingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
 
 			// use the master view Template instead of the one for this task. (most likely the one for this

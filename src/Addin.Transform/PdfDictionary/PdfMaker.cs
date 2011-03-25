@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Mono.Addins;
 using Palaso.i18n;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.AddinLib;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -110,7 +111,7 @@ namespace Addin.Transform.PdfDictionary
 			}
 		}
 
-		private void CreateAutoFontsStyleSheet(string path, PublicationFontStyleProvider styleProvider, WritingSystemCollection writingSystemCollection)
+		private void CreateAutoFontsStyleSheet(string path, PublicationFontStyleProvider styleProvider, IWritingSystemRepository writingSystemCollection)
 		{
 
 			using (var f = File.CreateText(path))

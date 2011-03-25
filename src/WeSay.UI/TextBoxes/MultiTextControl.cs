@@ -26,7 +26,7 @@ namespace WeSay.UI.TextBoxes
 			CommonEnumerations.VisibilitySetting.Visible;
 
 		private static int _widthForWritingSystemLabels = -1;
-		private static WritingSystemCollection _allWritingSystems;
+		private static IWritingSystemRepository _allWritingSystems;
 		private static Font _writingSystemLabelFont;
 		private readonly bool _isSpellCheckingEnabled;
 		private readonly bool _isMultiParagraph;
@@ -44,7 +44,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public MultiTextControl(WritingSystemCollection allWritingSystems, IServiceProvider serviceProvider)
+		public MultiTextControl(IWritingSystemRepository allWritingSystems, IServiceProvider serviceProvider)
 		{
 			if (DesignMode)
 			{
@@ -83,7 +83,7 @@ namespace WeSay.UI.TextBoxes
 
 		public MultiTextControl(IList<string> writingSystemIds,
 								MultiText multiTextToCopyFormsFrom, string nameForTesting,
-								bool showAnnotationWidget, WritingSystemCollection allWritingSystems,
+								bool showAnnotationWidget, IWritingSystemRepository allWritingSystems,
 								CommonEnumerations.VisibilitySetting visibility, bool isSpellCheckingEnabled,
 								bool isMultiParagraph, IServiceProvider serviceProvider): this(allWritingSystems, serviceProvider)
 		{

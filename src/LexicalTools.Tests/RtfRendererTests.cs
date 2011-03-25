@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (var tempFolder = new TemporaryFolder("ProjectFromRtfRendererTests"))
 			{
-				var writingSystemCollection = new WritingSystemCollection(tempFolder.Path);
+				var writingSystemCollection = new LdmlInFolderWritingSystemRepository(tempFolder.Path);
 				writingSystemCollection.Set(WritingSystemDefinition.FromLanguage("en"));
 				var audio = WritingSystemDefinition.FromLanguage("en");
 				audio.IsVoice = true;

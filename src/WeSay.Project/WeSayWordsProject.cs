@@ -61,7 +61,7 @@ namespace WeSay.Project
 
 			//setup writing systems
 			string pathToLdmlWsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
-			WritingSystemCollection wsc = new WritingSystemCollection(pathToLdmlWsFolder);
+			IWritingSystemRepository wsc = new LdmlInFolderWritingSystemRepository(pathToLdmlWsFolder);
 			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.VernacularIdForTest));
 			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.AnalysisIdForTest));
 			if (File.Exists(WeSayWordsProject.PathToPretendWritingSystemPrefs))
@@ -467,7 +467,7 @@ namespace WeSay.Project
 			}
 
 			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named("PrintingTemplate");
-			builder.Register<WritingSystemCollection>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
+			builder.Register<IWritingSystemRepository>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
 
 			RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
 
@@ -868,7 +868,7 @@ namespace WeSay.Project
 		/// <param name="pathToConfigFile"></param>
 		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile)
 		{
-			var writingSystemCollection = new WritingSystemCollection(GetPathToLdmlWritingSystemsFolder(projectPath));
+			var writingSystemCollection = new LdmlInFolderWritingSystemRepository(GetPathToLdmlWritingSystemsFolder(projectPath));
 
 			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
 			var builder = new StringBuilder();

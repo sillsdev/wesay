@@ -322,7 +322,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public static ViewTemplate MakeMasterTemplate(WritingSystemCollection writingSystems)
+		public static ViewTemplate MakeMasterTemplate(IWritingSystemRepository writingSystems)
 		{
 			List<String> defaultVernacularSet = new List<string>();
 			defaultVernacularSet.Add(WritingSystemInfo.IdForUnknownVernacular);
@@ -592,7 +592,7 @@ namespace WeSay.Project
 
 		public WritingSystemDefinition GetDefaultWritingSystemForField(string fieldName)
 		{
-			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
+			IWritingSystemRepository writingSystems = BasilProject.Project.WritingSystems;
 			WritingSystemDefinition listWritingSystem = null;
 			Field field = GetField(fieldName);
 			//Debug.Assert(field != null, fieldName + "not found.");
@@ -704,7 +704,7 @@ namespace WeSay.Project
 			return new List<string>(textWritingSystemIds);
 		}
 
-		public WritingSystemCollection WritingSystems
+		public IWritingSystemRepository WritingSystems
 		{
 			get { return BasilProject.Project.WritingSystems; }
 		}

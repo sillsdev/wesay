@@ -175,7 +175,7 @@ namespace WeSay.LexicalTools
 			return rtf.ToString();
 		}
 
-		private static WritingSystemCollection WritingSystems
+		private static IWritingSystemRepository WritingSystems
 		{
 			get { return BasilProject.Project.WritingSystems; }
 		}
@@ -231,7 +231,7 @@ namespace WeSay.LexicalTools
 			return rtfBuilder.ToString();
 		}
 
-		public static IList<LanguageForm> GetActualTextForms(MultiText text, WritingSystemCollection writingSytems)
+		public static IList<LanguageForm> GetActualTextForms(MultiText text, IWritingSystemRepository writingSytems)
 		{
 			var x = text.Forms.Where(f => !writingSytems.Get(f.WritingSystemId).IsVoice);
 			return new List<LanguageForm>(x);

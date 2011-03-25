@@ -40,7 +40,7 @@ namespace WeSay.Project
 		}
 		public UiConfigurationOptions UiOptions { get; set; }
 
-		private WritingSystemCollection _writingSystems;
+		private IWritingSystemRepository _writingSystems;
 		private string _projectDirectoryPath = string.Empty;
 
 		public static BasilProject Project
@@ -116,7 +116,7 @@ namespace WeSay.Project
 			return Path.Combine(GetTopAppDirectory(), Path.Combine("SampleProjects", "PRETEND"));
 		}
 
-		public WritingSystemCollection WritingSystems
+		public IWritingSystemRepository WritingSystems
 		{
 			get { return _writingSystems; }
 		}
@@ -265,7 +265,7 @@ namespace WeSay.Project
 			{
 				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
 			}
-			_writingSystems = new WritingSystemCollection(
+			_writingSystems = new LdmlInFolderWritingSystemRepository(
 				GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath)
 			);
 

@@ -4,6 +4,7 @@ using Chorus.UI.Review;
 using NUnit.Framework;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;

@@ -15,7 +15,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 	[TestFixture]
 	public class WritingSystemCollectionTests
 	{
-		private WritingSystemCollection _collection;
+		private IWritingSystemRepository _collection;
 		private TemporaryFolder _wesayProjectFolder;
 		private TemporaryFolder _ldmlWsFolder;
 		private TempFile _wsPrefsFile;
@@ -59,7 +59,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			}
 		}
 
-		private void WriteOldWeSayWritingSystemsFile(string path, WritingSystemCollection wsCollection)
+		private void WriteOldWeSayWritingSystemsFile(string path, IWritingSystemRepository wsCollection)
 		{
 			XmlWriter writer = XmlWriter.Create(path);
 			try
@@ -79,19 +79,19 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			Assert.Fail("Move to migrator");
 			using (TemporaryFolder pretendProjectFolder = new TemporaryFolder("pretendWeSayProjectFolder"))
 			{
-				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
+				IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 				WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 				wsCollectionToBeWritten.Set(ws);
 				WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test2");
 				wsCollectionToBeWritten.Set(ws2);
 				WriteOldWeSayWritingSystemsFile(_wsPrefsFile.Path, wsCollectionToBeWritten);
-				WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
+				IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 				//loadedWsCollection.LoadFromLegacyWeSayFile(_wsPrefsFile.Path);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 			}
 		}
 
-		private void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection lhs, WritingSystemCollection rhs)
+		private void AssertWritingSystemCollectionsAreEqual(IWritingSystemRepository lhs, IWritingSystemRepository rhs)
 		{
 			foreach (var lhsWritingSystem in lhs.AllWritingSystems)
 			{
@@ -148,20 +148,20 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Load_OnlyLdmlWritingSystemFilesExist_WritingSystemsAreLoadedFromThoseFiles()
 		{
-				WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
+				IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 				WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 				wsCollectionToBeWritten.Set(ws);
 				WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test2");
 				wsCollectionToBeWritten.Set(ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
-				WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
+				IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 		}
 
 		[Test]
 		public void Load_LdmlWritingSystemsHaveSameIsoCodeButDifferentVariantRegionInfo_DoesNotCrash()
 		{
-				var wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
+				var wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 				WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 				ws.Region = "Region1";
 				wsCollectionToBeWritten.Set(ws);
@@ -169,11 +169,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				ws2.Region = "Region2";
 				wsCollectionToBeWritten.Set(ws2);
 				WriteLdmlWritingSystemFiles(_ldmlWsFolder.Path, wsCollectionToBeWritten);
-				var loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
+				var loadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 				AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 		}
 
-		private static void WriteLdmlWritingSystemFiles(string pathToStore, WritingSystemCollection wsCollectionToBeWritten)
+		private static void WriteLdmlWritingSystemFiles(string pathToStore, IWritingSystemRepository wsCollectionToBeWritten)
 		{
 			var store = new LdmlInFolderWritingSystemRepository(pathToStore);
 			foreach (var writingSystem in wsCollectionToBeWritten.AllWritingSystems)
@@ -187,7 +187,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void Write_LoadedWritingSystemIsDeleted_DeletionIsRoundTripped()
 		{
 			//Write out two writing systems
-			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
+			IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
 			WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 			wsCollectionToBeWritten.Set(ws);
@@ -196,18 +196,18 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			wsCollectionToBeWritten.Set(ws2);
 			wsCollectionToBeWritten.Save();
 			//load them up again
-			WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
+			IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			loadedWsCollection.Remove(ws.Id);   //remove one
 			loadedWsCollection.Save();
 			//Now check that it hasn't come back!
-			WritingSystemCollection loadedWsCollection2 = new WritingSystemCollection(_ldmlWsFolder.Path);
+			IWritingSystemRepository loadedWsCollection2 = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			Assert.IsFalse(loadedWsCollection2.Contains(ws.Id));
 		}
 
 		[Test]
 		public void Roundtripping_Works()
 		{
-			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
+			IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
 			WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 			wsCollectionToBeWritten.Set(ws);
@@ -215,7 +215,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			WritingSystemDefinition ws2 = CreateDetailedWritingSystem("test2");
 			wsCollectionToBeWritten.Set(ws2);
 			wsCollectionToBeWritten.Save();
-			WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
+			IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 		}
 
@@ -223,16 +223,16 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void Save_WritingSystemReadFromLdmlAndChanged_ChangesSaved()
 		{
 				CreateLdmlWritingsystemDefinitionFile();
-				WritingSystemCollection loadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
+				IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 				loadedWsCollection.Get("test").Keyboard = "changed";
 				loadedWsCollection.Save();
-				WritingSystemCollection reloadedWsCollection = new WritingSystemCollection(_ldmlWsFolder.Path);
+				IWritingSystemRepository reloadedWsCollection = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 				AssertWritingSystemCollectionsAreEqual(loadedWsCollection, reloadedWsCollection);
 		}
 
 		private void CreateLdmlWritingsystemDefinitionFile()
 		{
-			WritingSystemCollection wsCollectionToBeWritten = new WritingSystemCollection(_ldmlWsFolder.Path);
+			IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			//WritingSystem ws = CreateDetailedWritingSystemThatCantBeRepresentedByPalaso("test");
 			WritingSystemDefinition ws = CreateDetailedWritingSystem("test");
 			wsCollectionToBeWritten.Set(ws);
@@ -242,7 +242,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void MissingIdIsHandledOk()
 		{
-			WritingSystemCollection x = new WritingSystemCollection(_ldmlWsFolder.Path);
+			IWritingSystemRepository x = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			WritingSystemDefinition ws = x.Get("unheardof");
 			Assert.IsNotNull(ws);
 			Assert.AreSame(ws, x.Get("unheardof"), "Expected to get exactly the same one each time");
@@ -298,7 +298,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		//    return builder.ToString();
 		//}
 
-		private static WritingSystemCollection MakeSampleCollection(WritingSystemCollection writingSystemStore)
+		private static IWritingSystemRepository MakeSampleCollection(IWritingSystemRepository writingSystemStore)
 		{
 			writingSystemStore.Set(WritingSystemDefinition.FromLanguage("one"));
 			writingSystemStore.Set(WritingSystemDefinition.FromLanguage("two"));
@@ -308,7 +308,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void WritingSystemCollection_HasUnknownVernacular()
 		{
-			WritingSystemCollection c = new WritingSystemCollection(_ldmlWsFolder.Path);
+			IWritingSystemRepository c = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			Assert.IsNotNull(c.Get(WritingSystemInfo.IdForUnknownVernacular));
 
 		}
@@ -316,7 +316,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void WritingSystemCollection_HasUnknownAnalysis()
 		{
-			WritingSystemCollection c = new WritingSystemCollection(_ldmlWsFolder.Path);
+			IWritingSystemRepository c = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			Assert.IsNotNull(c.Get(WritingSystemInfo.IdForUnknownAnalysis));
 		}
 
@@ -339,11 +339,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void DeserializeCollectionViaLoad()
 		{
-			var store = new WritingSystemCollection(_ldmlWsFolder.Path);
+			var store = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			MakeSampleCollection(store);
 			store.Save();
 
-			var c = new WritingSystemCollection(_ldmlWsFolder.Path);
+			var c = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
 			Assert.IsNotNull(c);
 			Assert.AreEqual(2, c.Count);
 		}

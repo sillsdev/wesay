@@ -29,7 +29,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 					</lexical-unit>
 				</entry>", "0.12"))
 			{
-				var collection = new WritingSystemCollection(tempFolder.Path);
+				var collection = new LdmlInFolderWritingSystemRepository(tempFolder.Path);
 				collection.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownVernacular));
 				collection.Set(WritingSystemDefinition.FromLanguage("en"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
@@ -58,7 +58,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 					</lexical-unit>
 				</entry>", "0.12"))
 			{
-				var collection = new WritingSystemCollection(tempFolder.Path);
+				var collection = new LdmlInFolderWritingSystemRepository(tempFolder.Path);
 				collection.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownVernacular));
 				collection.Set(WritingSystemDefinition.FromLanguage("en"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
@@ -101,7 +101,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				</sense>
 		</entry>", "0.12"))
 			{
-				var collection = new WritingSystemCollection(tempFolder.Path);
+				var collection = new LdmlInFolderWritingSystemRepository(tempFolder.Path);
 				collection.Set(WritingSystemDefinition.FromLanguage("en"));
 				collection.Set(WritingSystemDefinition.FromLanguage("fromLU"));
 				collection.Set(WritingSystemDefinition.FromLanguage("fromGloss"));
@@ -138,7 +138,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 			using (var lift = new TempLiftFile(@"
 			 ", "0.12"))
 			{
-				var collection = new WritingSystemCollection(tempFolder.Path);
+				var collection = new LdmlInFolderWritingSystemRepository(tempFolder.Path);
 				collection.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownVernacular));
 				collection.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownAnalysis));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);

@@ -160,7 +160,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public static IList<LanguageForm> GetAudioForms(MultiText field, WritingSystemCollection writingSytems)
+		public static IList<LanguageForm> GetAudioForms(MultiText field, IWritingSystemRepository writingSytems)
 		{
 			var x = field.Forms.Where(f => writingSytems.Get(f.WritingSystemId).IsVoice);
 			return new List<LanguageForm>(x);
