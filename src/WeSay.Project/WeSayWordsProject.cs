@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using Autofac;
@@ -247,29 +248,42 @@ namespace WeSay.Project
 									PathToConfigFile));
 					return false;
 				}
-				try
+
+				if (!File.Exists(PathToConfigFile))
 				{
-					using (FileStream fs = File.OpenRead(PathToConfigFile))
+					var result = MessageBox.Show(
+						"This project does not have the WeSay-specific configuration files.  A new set of files will be created, and later you can use the WeSayConfiguration Tool to set up things the way you want.",
+						"WeSay",MessageBoxButtons.OKCancel);
+
+					if (result != DialogResult.OK)
+						return false;
+				}
+				else
+				{
+					try
 					{
-						fs.Close();
+						using (FileStream fs = File.OpenRead(PathToConfigFile))
+						{
+							fs.Close();
+						}
 					}
-				}
-				catch (UnauthorizedAccessException)
-				{
-					ErrorReport.NotifyUserOfProblem(
+					catch (UnauthorizedAccessException)
+					{
+						ErrorReport.NotifyUserOfProblem(
 							String.Format(
-									"WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
-									PathToConfigFile));
-					return false;
-				}
-				catch (IOException e)
-				{
-					ErrorReport.NotifyUserOfProblem(
+								"WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
+								PathToConfigFile));
+						return false;
+					}
+					catch (IOException e)
+					{
+						ErrorReport.NotifyUserOfProblem(
 							String.Format(
-									"WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
-									PathToConfigFile,
-									e.Message));
-					return false;
+								"WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
+								PathToConfigFile,
+								e.Message));
+						return false;
+					}
 				}
 
 				//ProjectDirectoryPath = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
