@@ -128,6 +128,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void NewProject_ContainsOnlyLegacyWeSayWritingsystemsFile_WritingSystemsAreLoadedFromThatFile()
 		{
+			Assert.Fail("cjh: move to migrator?");
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
@@ -151,6 +152,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void NewProject_ContainsOnlyLegacyWeSayWritingsystemsFile_LegacyFileIsDeleted()
 		{
+			Assert.Fail("cjh: move to migrator?");
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
@@ -227,6 +229,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void NewProject_ContainsLdmlAndLegacyWritingSystemFiles_OnlyLdmlFilesAreLoaded()
 		{
+			Assert.Fail("cjh: move to migrator?");
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
 			IWritingSystemRepository wsCollection = new LdmlInFolderWritingSystemRepository(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));

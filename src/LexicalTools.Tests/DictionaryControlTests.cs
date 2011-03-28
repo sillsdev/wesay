@@ -183,7 +183,7 @@ namespace WeSay.LexicalTools.Tests
 							  bool includeExample)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm.SetAlternative(_vernacularWritingSystem.Id, lexemeForm);
+			entry.LexicalForm.SetAlternative("th", lexemeForm);
 
 			LexSense sense = new LexSense();
 			entry.Senses.Add(sense);
@@ -198,7 +198,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				LexExampleSentence ex = new LexExampleSentence();
 				sense.ExampleSentences.Add(ex);
-				ex.Sentence.SetAlternative("x", "hello");
+				ex.Sentence.SetAlternative("th", "hello");
 			}
 			_lexEntryRepository.SaveItem(entry);
 			return entry.Guid;
@@ -772,7 +772,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetLexicalFormControlName()
 		{
-			return Field.FieldNames.EntryLexicalForm + "_" +WritingSystemInfo.VernacularIdForTest;
+			return Field.FieldNames.EntryLexicalForm + "_" + WritingSystemInfo.VernacularIdForTest;
 		}
 
 		private void TypeInLexicalForm(string value)

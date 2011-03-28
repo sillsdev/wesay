@@ -36,7 +36,7 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_ws = WritingSystemDefinition.FromLanguage("xx");
+			_ws = WritingSystemDefinition.FromLanguage("qaa");
 			_ws.DefaultFontName = "Arial";
 			_ws.DefaultFontSize = (float) 55.9;
 			//            _createNewClickedFired=false;

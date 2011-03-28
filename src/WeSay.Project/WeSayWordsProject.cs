@@ -55,15 +55,9 @@ namespace WeSay.Project
 				File.Delete(WeSayWordsProject.PathToPretendLiftFile);
 			}
 			catch (Exception) {}
-
 			DirectoryInfo projectDirectory = Directory.CreateDirectory(Path.GetDirectoryName(WeSayWordsProject.PathToPretendLiftFile));
-			Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
-
-			//setup writing systems
 			string pathToLdmlWsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
-			IWritingSystemRepository wsc = new LdmlInFolderWritingSystemRepository(pathToLdmlWsFolder);
-			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.VernacularIdForTest));
-			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.AnalysisIdForTest));
+
 			if (File.Exists(WeSayWordsProject.PathToPretendWritingSystemPrefs))
 			{
 				File.Delete(WeSayWordsProject.PathToPretendWritingSystemPrefs);
@@ -73,6 +67,15 @@ namespace WeSay.Project
 			{
 				Directory.Delete(pathToLdmlWsFolder, true);
 			}
+
+			Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
+
+			//setup writing systems
+			Directory.CreateDirectory(pathToLdmlWsFolder);
+			IWritingSystemRepository wsc = new LdmlInFolderWritingSystemRepository(pathToLdmlWsFolder);
+			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.VernacularIdForTest));
+			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.AnalysisIdForTest));
+
 			wsc.Save();
 
 			project.SetupProjectDirForTests(WeSayWordsProject.PathToPretendLiftFile);

@@ -130,14 +130,21 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			{
 				// Now that FLEx writes out LDML this fix for x-spec shouldn't be necessary CP 2011-03
 				// Leaving it in anyway for now.
-				if (node.Value == "x-spec" && !writingSystems.Contains("x-spec"))
+				if (node.Value == "x-spec")
 				{
-					writingSystems.Set(new WritingSystemDefinition("x-spec"));
+					if (!writingSystems.Contains("qaa-x-spec"))
+					{
+						writingSystems.Set(new WritingSystemDefinition("qaa", "", "", "x-spec", "", false));
+					}
 				}
-				if (!writingSystems.Contains(node.Value))
+				else
 				{
-					writingSystems.Set(new WritingSystemDefinition(node.Value));
-					missingWritingSystems.AppendFormat("{0},", node.Value);
+					if (!writingSystems.Contains(node.Value))
+					{
+						//writingSystems.Set(WritingSystemDefinition.Parse(node.Value)); // TODO make this work CP 2011-03
+						writingSystems.Set(new WritingSystemDefinition(node.Value)); // This is bogus if flex has say ...-fonipa-x-etic
+						missingWritingSystems.AppendFormat("{0},", node.Value);
+					}
 				}
 			}
 

@@ -397,7 +397,7 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		public IEnumerable<string> GetTextOnlyWritingSystemIds(IWritingSystemRepository writingSystems)
 		{
-			return writingSystems.WritingSystemDefinitions.Where(ws => ws.IsVoice).Select(ws => ws.Id);
+			return writingSystems.TextWritingSystems.Select(ws => ws.Id);
 		}
 
 		[Browsable(false)]

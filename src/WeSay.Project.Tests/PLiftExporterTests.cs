@@ -409,6 +409,9 @@ namespace WeSay.Project.Tests
 		private readonly ProjectDirectorySetupForTesting _projectDir;
 		public List<string> WritingSystemIds { get; set; }
 
+		public const string Red = "red";
+		public const string Blue = "blue";
+
 		public ExportSession()
 		{
 			_projectDir = new ProjectDirectorySetupForTesting("");
@@ -418,7 +421,6 @@ namespace WeSay.Project.Tests
 			WritingSystemIds = new List<string>(new[] { "red", "green", "blue", "voice" });
 			HeadwordWritingSystem = WritingSystemDefinition.FromLanguage("red");
 			project.WritingSystems.Set(HeadwordWritingSystem);
-			project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("green"));
 			project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("green"));
 			project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("blue"));
 			var voiceWritingSystem = WritingSystemDefinition.FromLanguage("en");
