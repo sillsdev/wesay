@@ -103,17 +103,6 @@ namespace WeSay.Project.Tests
 				}
 		}
 
-		[Test]
-		public void WeSayDirNotInValidBasilDir()
-		{
-			using (var dir = new Palaso.TestUtilities.TemporaryFolder("WeSayDirNotInValidBasilDir"))
-			{
-				string weSayDir = dir.FolderPath; // MakeDir(experimentDir, "WeSay");
-				string wordsPath = Path.Combine(weSayDir, "AAA.words");
-				File.Create(wordsPath).Close();
-				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() => TryLoading(wordsPath, dir.FolderPath));
-			}
-		}
 
 		[Test]
 		public void LoadPartsOfSpeechList()
