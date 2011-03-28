@@ -13,7 +13,6 @@ namespace WeSay.LexicalModel.Foundation
 	[ReflectorType("WritingSystemCollection")]
 	public class WritingSystemCollection: Dictionary<string, WritingSystem>
 	{
-		private LdmlInFolderWritingSystemStore _ldmlInFolderWritingSystemStore;
 
 		public WritingSystemCollection()
 			: base(StringComparer.OrdinalIgnoreCase)
@@ -25,10 +24,10 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			if (LdmlWritingSystemsDefinitionsExist(pathToLdmlWritingSystemsFolder))
 			{
-				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(pathToLdmlWritingSystemsFolder);
-				_ldmlInFolderWritingSystemStore.LoadAllDefinitions();
+				var ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(pathToLdmlWritingSystemsFolder);
+				ldmlInFolderWritingSystemStore.LoadAllDefinitions();
 				foreach (
-					WritingSystemDefinition writingSystem in _ldmlInFolderWritingSystemStore.WritingSystemDefinitions)
+					WritingSystemDefinition writingSystem in ldmlInFolderWritingSystemStore.WritingSystemDefinitions)
 				{
 					WritingSystem wesayWritingSystem = new WritingSystem(writingSystem);
 					this.Add(wesayWritingSystem.Id, wesayWritingSystem);
@@ -127,15 +126,17 @@ namespace WeSay.LexicalModel.Foundation
 
 		public void Write(string pathToLdmlWritingSystemsFolder)
 		{
-			if (_ldmlInFolderWritingSystemStore == null)
-			{
-				_ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(pathToLdmlWritingSystemsFolder);
-			}
+			var ldmlInFolderWritingSystemStore = new LdmlInFolderWritingSystemStore(pathToLdmlWritingSystemsFolder);
 			foreach (KeyValuePair<string, WritingSystem> pair in this)
 			{
-				_ldmlInFolderWritingSystemStore.Set(pair.Value.GetAsPalasoWritingSystemDefinition());
+				var writingSystemDefinition = pair.Value.GetAsPalasoWritingSystemDefinition();
+				if (!ldmlInFolderWritingSystemStore.CanSet(writingSystemDefinition))
+				{
+					ldmlInFolderWritingSystemStore.Remove(pair.Key);
+				}
+				ldmlInFolderWritingSystemStore.Set(writingSystemDefinition);
 			}
-			_ldmlInFolderWritingSystemStore.Save();
+			ldmlInFolderWritingSystemStore.Save();
 			foreach (string pathToLdmlFile in Directory.GetFiles(pathToLdmlWritingSystemsFolder, "*.ldml"))
 			{
 				if(!this.ContainsKey(Path.GetFileNameWithoutExtension(pathToLdmlFile)))
@@ -317,5 +318,6 @@ namespace WeSay.LexicalModel.Foundation
 		{
 			return this.Values;
 		}
+
 	}
 }
