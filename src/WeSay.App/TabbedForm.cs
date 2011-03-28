@@ -309,6 +309,7 @@ namespace WeSay.App
 				{
 					ActivateTask(page, task);
 				}
+				UsageReporter.SendNavigationNotice(task.Label);
 			}
 		}
 

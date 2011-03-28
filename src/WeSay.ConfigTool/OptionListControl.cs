@@ -24,7 +24,7 @@ namespace WeSay.ConfigTool
 		private bool _currentListWasModified;
 
 		public OptionListControl(ILogger logger)
-			: base("set up choices for option fields", logger)
+			: base("set up choices for option fields", logger,"optionLists")
 		{
 			InitializeComponent();
 			VisibleChanged += OptionListControl_VisibleChanged;

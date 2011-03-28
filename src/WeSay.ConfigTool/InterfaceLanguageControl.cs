@@ -11,7 +11,7 @@ namespace WeSay.ConfigTool
 	public partial class InterfaceLanguageControl: ConfigurationControlBase
 	{
 		public InterfaceLanguageControl(ILogger logger)
-			: base("settings for the user interface", logger)
+			: base("settings for the user interface", logger,"interfaceLanguage")
 		{
 			InitializeComponent();
 		}

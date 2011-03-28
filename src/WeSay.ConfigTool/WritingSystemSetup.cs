@@ -13,7 +13,7 @@ namespace WeSay.ConfigTool
 	{
 
 		public WritingSystemSetup(ILogger logger)
-			: base("set up fonts, keyboards, and sorting", logger)
+			: base("set up fonts, keyboards, and sorting", logger,"writingSystems")
 		{
 			InitializeComponent();
 			Resize += WritingSystemSetup_Resize;

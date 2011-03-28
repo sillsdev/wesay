@@ -12,7 +12,7 @@ namespace WeSay.ConfigTool
 	{
 		private bool _loading = false;
 
-		public FieldsControl(ILogger logger): base("set up the fields for the dictionary", logger)
+		public FieldsControl(ILogger logger): base("set up the fields for the dictionary", logger,"fields")
 		{
 			InitializeComponent();
 			_btnAddField.Image = Resources.genericLittleNewButton;
