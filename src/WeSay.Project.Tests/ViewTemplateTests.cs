@@ -130,8 +130,8 @@ namespace WeSay.Project.Tests
 			using (var tempFolder = new TemporaryFolder("ProjectFromViewTemplateTests"))
 			{
 				IWritingSystemRepository w = new LdmlInFolderWritingSystemRepository(tempFolder.Path);
-				w.Set(WritingSystemDefinition.FromLanguage("red"));
-				w.Set(WritingSystemDefinition.FromLanguage("white"));
+				w.Set(WritingSystemDefinition.FromLanguage("aaa"));
+				w.Set(WritingSystemDefinition.FromLanguage("aab"));
 				return ViewTemplate.MakeMasterTemplate(w);
 			}
 		}

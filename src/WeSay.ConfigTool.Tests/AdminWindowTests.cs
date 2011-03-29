@@ -162,6 +162,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void NewProjectShowsMultipleWritingSystems()
 		{
+			Assert.Fail("cjh: this test reflects the old UI: redesign test for the new UI, otherwise remove test?");
 			_window.CreateAndOpenProject(_projectFolder);
 
 			ClickToolStripButton("_writingSystemButton");

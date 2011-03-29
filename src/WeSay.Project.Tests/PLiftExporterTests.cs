@@ -53,8 +53,8 @@ namespace WeSay.Project.Tests
 			using (var session = new ExportSession())
 			{
 				LexEntry e1 = session.Repo.CreateItem();
-				e1.LexicalForm["red"] = "r";
-				e1.LexicalForm["voice"] = "pretendFileName";
+				e1.LexicalForm[session.Red] = "r";
+				e1.LexicalForm[session.Voice] = "pretendFileName";
 
 				session.DoExport();
 				var path = string.Format("..{0}audio{0}pretendFileName", Path.DirectorySeparatorChar);
@@ -76,16 +76,16 @@ namespace WeSay.Project.Tests
 							 session.WritingSystemIds));
 
 				LexEntry e1 = session.Repo.CreateItem();
-				e1.LexicalForm["red"] = "r";
+				e1.LexicalForm[session.Red] = "r";
 				var sense = new LexSense(e1);
 				e1.Senses.Add(sense);
 				var example = new LexExampleSentence(sense);
 				sense.ExampleSentences.Add(example);
-				example.Sentence["green"] = "a sentence";
-				example.Sentence["voice"] = "pretendFileName";
+				example.Sentence[session.Green] = "a sentence";
+				example.Sentence[session.Voice] = "pretendFileName";
 
 				session.DoExport();
-				session.AssertHasAtLeastOneMatch("lift/entry/sense/example/form[@lang='green']");
+				session.AssertHasAtLeastOneMatchWithArgs("lift/entry/sense/example/form[@lang='{0}']", session.Green);
 				var path = string.Format("..{0}audio{0}pretendFileName", Path.DirectorySeparatorChar);
 				session.AssertHasAtLeastOneMatch("lift/entry/sense/example/trait[@name='audio' and @value='"+path+"']");
 			}
@@ -97,13 +97,13 @@ namespace WeSay.Project.Tests
 			using (var session = new ExportSession())
 			{
 				LexEntry e1 = session.Repo.CreateItem();
-				e1.LexicalForm["red"] = "r";
-				e1.LexicalForm["voice"] = "v";
-				e1.LexicalForm["blue"] = "b";
+				e1.LexicalForm[session.Red] = "r";
+				e1.LexicalForm[session.Voice] = "v";
+				e1.LexicalForm[session.Blue] = "b";
 
 				session.DoExport();
-				session.AssertHasAtLeastOneMatch("lift/entry/lexical-unit/form[@lang='blue']");//sanity check
-				session.AssertNoMatchForXPath("lift/entry/lexical-unit/form[@lang='voice']");
+				session.AssertHasAtLeastOneMatchWithArgs("lift/entry/lexical-unit/form[@lang='{0}']", session.Blue);//sanity check
+				session.AssertNoMatchForXPathWithArgs("lift/entry/lexical-unit/form[@lang='{0}']", session.Voice);
 			}
 		}
 
@@ -113,14 +113,14 @@ namespace WeSay.Project.Tests
 			using (var session = new ExportSession())
 			{
 				LexEntry e1 = session.Repo.CreateItem();
-				e1.CitationForm["red"] = "r";
-				e1.CitationForm["voice"] = "v";
-				e1.CitationForm["blue"] = "b";
+				e1.CitationForm[session.Red] = "r";
+				e1.CitationForm[session.Voice] = "v";
+				e1.CitationForm[session.Blue] = "b";
 
 				session.DoExport();
 				session.PrintResult();
-				session.AssertHasAtLeastOneMatch("lift/entry/citation/form[@lang='blue']");//sanity check
-				session.AssertNoMatchForXPath("lift/entry/citation/form[@lang='voice']");
+				session.AssertHasAtLeastOneMatchWithArgs("lift/entry/citation/form[@lang='{0}']", session.Blue);//sanity check
+				session.AssertNoMatchForXPathWithArgs("lift/entry/citation/form[@lang='{0}']", session.Voice);
 			}
 		}
 
@@ -130,13 +130,13 @@ namespace WeSay.Project.Tests
 			using (var session = new ExportSession())
 			{
 				LexEntry e1 = session.Repo.CreateItem();
-				e1.CitationForm["red"] = "r";
-				e1.CitationForm["voice"] = "g";
-				e1.CitationForm["blue"] = "b";
+				e1.CitationForm[session.Red] = "r";
+				e1.CitationForm[session.Voice] = "g";
+				e1.CitationForm[session.Blue] = "b";
 
 				session.DoExport();
 				session.PrintResult();
-				session.AssertHasAtLeastOneMatch("lift/entry/field[@type='headword']/form[@lang='blue']");//sanity check
+				session.AssertHasAtLeastOneMatchWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']", session.Blue);//sanity check
 				session.AssertNoMatchForXPath("lift/entry/field[@type='headword']/form[@lang='voice']");
 			}
 		}
@@ -164,7 +164,7 @@ namespace WeSay.Project.Tests
 			{
 				LexEntry e1 = session.Repo.CreateItem();
 				e1.LexicalForm["test"] = "sunset";
-				e1.GetOrCreateProperty<MultiText>("color").SetAlternative(session.WritingSystemIds[0], "red");
+				e1.GetOrCreateProperty<MultiText>("color").SetAlternative(session.WritingSystemIds[0], session.Red);
 				session.Repo.SaveItem(e1);
 
 				var color = new Field(
@@ -199,7 +199,7 @@ namespace WeSay.Project.Tests
 
 				session.DoExport();
 				session.AssertHasAtLeastOneMatch("lift/entry/lexical-unit/form[text='one']");
-				session.AssertNoMatchForXPath("lift/entry/lexical-unit/form[text='red']");
+				session.AssertNoMatchForXPathWithArgs("lift/entry/lexical-unit/form[text='{0}']", session.Red);
 			}
 		}
 
@@ -245,7 +245,7 @@ namespace WeSay.Project.Tests
 											   .WritingSystemIds[1],
 										   "redLexemeForm");
 
-				session.AssertNoMatchForXPath("lift/entry/field[@type='headword']/form[@lang='green']");
+				session.AssertNoMatchForXPathWithArgs("lift/entry/field[@type='headword']/form[@lang='{0}']", session.Green);
 			}
 		}
 
@@ -409,8 +409,10 @@ namespace WeSay.Project.Tests
 		private readonly ProjectDirectorySetupForTesting _projectDir;
 		public List<string> WritingSystemIds { get; set; }
 
-		public const string Red = "red";
-		public const string Blue = "blue";
+		public string Red = "aaa";
+		public string Blue = "aab";
+		public string Green = "aac";
+		public string Voice = "aad";
 
 		public ExportSession()
 		{
@@ -418,12 +420,12 @@ namespace WeSay.Project.Tests
 			var project = _projectDir.CreateLoadedProject();
 			_outputFile = new TempFile();
 			Repo = new LexEntryRepository(_projectDir.PathToLiftFile);
-			WritingSystemIds = new List<string>(new[] { "red", "green", "blue", "voice" });
-			HeadwordWritingSystem = WritingSystemDefinition.FromLanguage("red");
+			WritingSystemIds = new List<string>(new[] { Red, Green, Blue, Voice });
+			HeadwordWritingSystem = WritingSystemDefinition.FromLanguage(Red);
 			project.WritingSystems.Set(HeadwordWritingSystem);
-			project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("green"));
-			project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("blue"));
-			var voiceWritingSystem = WritingSystemDefinition.FromLanguage("en");
+			project.WritingSystems.Set(WritingSystemDefinition.FromLanguage(Green));
+			project.WritingSystems.Set(WritingSystemDefinition.FromLanguage(Blue));
+			var voiceWritingSystem = WritingSystemDefinition.FromLanguage(Voice);
 			voiceWritingSystem.IsVoice = true;
 			project.WritingSystems.Set(voiceWritingSystem);
 
@@ -432,11 +434,11 @@ namespace WeSay.Project.Tests
 				new Field(
 					LexEntry.WellKnownProperties.Citation,
 					"LexEntry",
-					new[] {"blue", "red"}),
+					new[] {Blue, Red, Voice}),
 				new Field(
 					LexEntry.WellKnownProperties.LexicalUnit,
 					"LexEntry",
-					new[] {"red", "green", "blue", "voice"}),
+					new[] {Red, Green, Blue, Voice}),
 				new Field(
 					LexEntry.WellKnownProperties.BaseForm,
 					"LexEntry",
@@ -477,9 +479,9 @@ namespace WeSay.Project.Tests
 		public void Dispose()
 		{
 			Repo.Dispose();
-			_outputFile.Dispose();
 			_projectDir.Dispose();
-			Repo.Dispose();
+			_outputFile.Dispose();
+			//Repo.Dispose();
 		}
 
 		public void AssertHasAtLeastOneMatch(string xpath)
@@ -542,7 +544,7 @@ namespace WeSay.Project.Tests
 
 		public void DoExport()
 		{
-			using (var exporter = new PLiftExporter(_outputFile.Path, Repo, Template))
+			var exporter = new PLiftExporter(_outputFile.Path, Repo, Template);
 			{
 				var allEntriesSortedByHeadword = Repo.GetAllEntriesSortedByHeadword(
 					HeadwordWritingSystem
@@ -558,6 +560,7 @@ namespace WeSay.Project.Tests
 				}
 				exporter.End();
 			}
+			exporter.Dispose();
 		}
 
 		public void CheckRelationOutput(LexEntry targetEntry, string relationName)
@@ -578,12 +581,12 @@ namespace WeSay.Project.Tests
 		public void MakeEntry()
 		{
 			LexEntry entry = Repo.CreateItem();
-			entry.LexicalForm.SetAlternative("red", "redLexemeForm");
-			entry.LexicalForm.SetAlternative("green", "greenLexemeForm");
-			entry.LexicalForm.SetAlternative("blue", "blueLexemeForm");
-			//leave this blank entry.CitationForm.SetAlternative("red", "redCitation");
-			entry.CitationForm.SetAlternative("green", "greenCitation");
-			entry.CitationForm.SetAlternative("blue", "blueCitation");
+			entry.LexicalForm.SetAlternative(Red, "redLexemeForm");
+			entry.LexicalForm.SetAlternative(Green, "greenLexemeForm");
+			entry.LexicalForm.SetAlternative(Blue, "blueLexemeForm");
+			//leave this blank entry.CitationForm.SetAlternative(Red, "redCitation");
+			entry.CitationForm.SetAlternative(Green, "greenCitation");
+			entry.CitationForm.SetAlternative(Blue, "blueCitation");
 			Repo.SaveItem(entry);
 		}
 

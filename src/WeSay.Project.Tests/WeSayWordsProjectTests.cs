@@ -61,11 +61,11 @@ namespace WeSay.Project.Tests
 				WeSayWordsProject project = p.CreateLoadedProject();
 				using (File.OpenWrite(p.PathToLiftFile))
 				{
-					WritingSystemDefinition ws = project.WritingSystems.Get("v");
-					ws.ISO = "newIdForV";
+					WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
+					ws.ISO = "aac";
 					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
-						Assert.IsFalse(project.MakeWritingSystemIdChange(ws, "v"));
+						Assert.IsFalse(project.MakeWritingSystemIdChange(ws, "qaa"));
 					}
 				}
 			}
@@ -79,13 +79,13 @@ namespace WeSay.Project.Tests
 				WeSayWordsProject project = p.CreateLoadedProject();
 				XmlDocument doc = new XmlDocument();
 				doc.Load(p.PathToLiftFile);
-				Assert.IsNotNull(doc.SelectNodes("//form[lang='v']"));
-				WritingSystemDefinition ws = project.WritingSystems.Get("v");
-				ws.ISO = "newIdForV";
-				Assert.IsTrue(project.MakeWritingSystemIdChange(ws, "v"));
+				Assert.IsNotNull(doc.SelectNodes("//form[lang='qaa']"));
+				WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
+				ws.ISO = "aac";
+				Assert.IsTrue(project.MakeWritingSystemIdChange(ws, "qaa"));
 				doc.Load(p.PathToLiftFile);
-				Assert.IsNotNull(doc.SelectNodes("//form[lang='newIdForV']"));
-				Assert.AreEqual("newIdForV", ws.Id);
+				Assert.IsNotNull(doc.SelectNodes("//form[lang='aac']"));
+				Assert.AreEqual("aac", ws.Id);
 
 			}
 		}
