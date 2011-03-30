@@ -137,11 +137,11 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 			{
 				var collection = new LdmlInFolderWritingSystemRepository(tempFolder.Path);
 				collection.Set(WritingSystemDefinition.FromLanguage("qaa"));
-				collection.Set(WritingSystemDefinition.FromRFC5646("aaa", String.Empty, String.Empty, "x-fromLU"));
-				collection.Set(WritingSystemDefinition.FromRFC5646("aab", String.Empty, String.Empty, "x-fromGloss"));
-				collection.Set(WritingSystemDefinition.FromRFC5646("aac", String.Empty, String.Empty, "x-fromDef"));
-				collection.Set(WritingSystemDefinition.FromRFC5646("aad", String.Empty, String.Empty, "x-fromExample"));
-				collection.Set(WritingSystemDefinition.FromRFC5646("aae", String.Empty, String.Empty, "x-fromTrans"));
+				collection.Set(WritingSystemDefinition.FromRFC5646Subtags("aaa", String.Empty, String.Empty, "x-fromLU"));
+				collection.Set(WritingSystemDefinition.FromRFC5646Subtags("aab", String.Empty, String.Empty, "x-fromGloss"));
+				collection.Set(WritingSystemDefinition.FromRFC5646Subtags("aac", String.Empty, String.Empty, "x-fromDef"));
+				collection.Set(WritingSystemDefinition.FromRFC5646Subtags("aad", String.Empty, String.Empty, "x-fromExample"));
+				collection.Set(WritingSystemDefinition.FromRFC5646Subtags("aae", String.Empty, String.Empty, "x-fromTrans"));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 
 				ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);
