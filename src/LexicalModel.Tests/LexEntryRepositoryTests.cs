@@ -27,7 +27,7 @@ namespace WeSay.LexicalModel.Tests
 			string filePath = _temporaryFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(filePath);
 			_headwordWritingSystem = new WritingSystemDefinition();
-			_headwordWritingSystem.ISO = "en";
+			_headwordWritingSystem.ISO = "aaa";
 		}
 
 		[TearDown]
@@ -1172,7 +1172,6 @@ namespace WeSay.LexicalModel.Tests
 		[Category("WritingSystemRefactor")]
 		public void GetHomographNumber_AssignesUniqueNumbers()
 		{
-			Assert.Fail("cjh: Why is the first Assert included in here: shouldn't the id be the same as 'en'?");
 			LexEntry entryOther = MakeEntryWithLexemeForm("en", "blue");
 			Assert.AreNotEqual("en", _headwordWritingSystem.Id);
 			LexEntry[] entries = new LexEntry[3];
@@ -1193,7 +1192,6 @@ namespace WeSay.LexicalModel.Tests
 		[Category("WritingSystemRefactor")]
 		public void GetHomographNumber_ThirdEntry_Returns3()
 		{
-			Assert.Fail("cjh: Why is the first Assert included in here: shouldn't the id be the same as 'en'?");
 			LexEntry entryOther = MakeEntryWithLexemeForm("en", "blue");
 			Assert.AreNotEqual("en", _headwordWritingSystem.Id);
 			LexEntry entry1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");

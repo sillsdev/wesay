@@ -67,14 +67,13 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				//put one guy in there already
 				int originalCount = collection.Count; // collection.Count;
 
-				Assert.IsFalse(collection.Contains("aaa"));
+				Assert.IsFalse(collection.Contains("aaa-fonipa-x-etic"));
 
-				// cjh: uncomment to see the real error: ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);
 				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(
 					() => ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection)
 					);
 
-				Assert.IsTrue(collection.Contains("aaa"));
+				Assert.IsTrue(collection.Contains("aaa-fonipa-x-etic"));
 			}
 		}
 
@@ -106,7 +105,6 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 		[Test]
 		public void SetWritingSystemsForFields_Normal_FixesUpWritingSystemsForFields()
 		{
-			Assert.Fail("I have fixed up this test as far I as know.  I don't know why the last Assert is in this test.");
 			using (var tempFolder = new TemporaryFolder("ProjectFromFLExCreatorTests"))
 			using (var lift = new TempLiftFile(@"
 				<entry id='foo'>
@@ -136,7 +134,8 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 		</entry>", "0.12"))
 			{
 				var collection = new LdmlInFolderWritingSystemRepository(tempFolder.Path);
-				collection.Set(WritingSystemDefinition.FromLanguage("qaa"));
+				collection.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownVernacular));
+				collection.Set(WritingSystemDefinition.FromLanguage("one"));
 				collection.Set(WritingSystemDefinition.FromRFC5646Subtags("aaa", String.Empty, String.Empty, "x-fromLU"));
 				collection.Set(WritingSystemDefinition.FromRFC5646Subtags("aab", String.Empty, String.Empty, "x-fromGloss"));
 				collection.Set(WritingSystemDefinition.FromRFC5646Subtags("aac", String.Empty, String.Empty, "x-fromDef"));
@@ -145,9 +144,9 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 
 				ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "qaa");
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.Citation, "qaa");
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, "qaa");
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "one");
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.Citation, "one");
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, "one");
 
 				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "aaa-x-fromLU");
 				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.Citation, "aaa-x-fromLU");
@@ -156,11 +155,11 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "aaa-x-fromLU");
 				AssertFieldHasWritingSystem(vt, LexSense.WellKnownProperties.Gloss, "aab-x-fromGloss");
 				AssertFieldHasWritingSystem(vt, LexSense.WellKnownProperties.Definition, "aac-x-fromDef");
-				AssertFieldLacksWritingSystem(vt, LexExampleSentence.WellKnownProperties.ExampleSentence, "qaa");
+				AssertFieldLacksWritingSystem(vt, LexExampleSentence.WellKnownProperties.ExampleSentence, WritingSystemInfo.IdForUnknownVernacular);
 				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.ExampleSentence, "aad-x-fromExample");
 				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.Translation, "aae-x-fromTrans");
 
-				Assert.IsTrue(collection.Contains("qaa"));
+				Assert.IsTrue(collection.Contains("one"));
 
 			}
 		}
