@@ -57,12 +57,6 @@ namespace WeSay.LexicalModel.Foundation
 		[ReflectorProperty("Id", Required = true)]
 		public string ISO{ get; set;}
 
-		public string Script { get; set; }
-
-		public string Region { get; set; }
-
-		public string Variant { get; set; }
-
 		[ReflectorProperty("Abbreviation", Required = false)]
 		public string Abbreviation
 		{

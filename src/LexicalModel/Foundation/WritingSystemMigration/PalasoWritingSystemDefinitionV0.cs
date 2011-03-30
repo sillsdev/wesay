@@ -76,6 +76,8 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 
 		public bool IsLegacyEncoded { get; set; }
 
+		public bool IsVoice { get; set; }
+
 		public enum SortRulesType
 		{
 			/// <summary>
