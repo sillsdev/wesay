@@ -330,6 +330,8 @@ namespace WeSay.LexicalTools
 			{
 				case "Picture":
 					box = MakePictureWidget(target, customField, _detailList);
+					if (box == null)
+						return rowCount; // other code does the user notification
 					break;
 				case "Flag":
 					box = MakeCheckBoxWidget(target, customField);
@@ -516,6 +518,7 @@ namespace WeSay.LexicalTools
 
 		protected virtual Control MakePictureWidget(PalasoDataObject target, Field field, DetailList detailList)
 		{
+			ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),"Sorry, pictures are only supported on senses");
 			return null;//only LexSenseLayouter actually has this
 		}
 	}
