@@ -150,7 +150,7 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 				wsDef.SortRules = writingSystem.CustomSortRules;
 				wsDef.SortUsing = GetEquivalentPalasoSortRulesType(writingSystem.SortUsing);
 				wsDef.SpellCheckingId = writingSystem.SpellCheckingId;
-				//wsDef.DateModified = DateTime.Now;
+				wsDef.DateModified = DateTime.Now;
 				//wsDef.VerboseDescription //not written out by ldmladaptor - flex?
 				//wsDef.StoreID = ??? //what to do?
 				//wsDef.NativeName //not written out by ldmladaptor - flex?

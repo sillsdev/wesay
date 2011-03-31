@@ -37,11 +37,6 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 
 			public string PathToLdmlWsRepo { get; private set; }
 
-			public Dictionary<string, string> OldToNewRfcTagMap
-			{
-				get { return _oldToNewRfcTagMap; }
-			}
-
 			public XmlNamespaceManager NamespaceManager
 			{
 				get { return _namespaceManager; }
@@ -180,7 +175,55 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsCustomSortRules_whatTodo()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsCustomSimpleSortRules_CustomSortRulesAreInLdml()
+		{
+			using (var environment = new TestEnvironment())
+			{
+				string sortUsing = "CustomSimple";
+				string sortRules =
+@"N n
+O o";
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
+														  "", sortRules, "", 0, "en", false, true, "", false, sortUsing, "")
+					);
+				var migrator = new WritingSystemMigrator(
+					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
+					environment.PathToWsPrefsFile,
+					environment.ChangeRfcTags);
+				migrator.Migrate();
+				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
+				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath(
+					String.Format("/ldml/collations/collation/special/palaso:sortRulesType[@value='{0}']", sortUsing), environment.NamespaceManager
+					);
+				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath("/ldml/collations/collation/rules/p[text()='N'] "); //Only checking one character. Hopefully this means the rest are there too.
+			}
+		}
+
+		[Test]
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsCustomIcuSortRules_CustomSortRulesAreInLdml()
+		{
+			using (var environment = new TestEnvironment())
+			{
+				string sortUsing = "CustomICU";
+				string sortRules = "&amp; C &lt; č";
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
+														  "", sortRules, "", 0, "en", false, true, "", false, sortUsing, "")
+					);
+				var migrator = new WritingSystemMigrator(
+					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
+					environment.PathToWsPrefsFile,
+					environment.ChangeRfcTags);
+				migrator.Migrate();
+				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
+				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath(
+					String.Format("/ldml/collations/collation/special/palaso:sortRulesType[@value='{0}']", sortUsing), environment.NamespaceManager
+					);
+				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath("/ldml/collations/collation/rules/p"); //Only checking one character. Hopefully this means the rest are there too.
+			}
+		}
+
+		[Test]
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsSortRulesFromOtherLanguage_whatTodo()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -340,6 +383,35 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
+		public void MigrateIfNecassary_WsPrefsFileContainsRfcTagThatChangesOnMigration_MigrationDelegateIsCalled()
+		{
+			using (var environment = new TestEnvironment())
+			{
+				string language = "en";
+				bool isAudio = true;
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
+														  language, "", "", 0, language, isAudio, true, "", false,
+														  "", "")
+					);
+				bool delegateCalledCorrectly = false;
+				var migrator = new WritingSystemMigrator(
+					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
+					environment.PathToWsPrefsFile,
+					delegate(Dictionary<string, string> oldToNewRfcTagsMap)
+						{
+							if(oldToNewRfcTagsMap["en"].Equals("en-Zxxx-x-audio"))
+							{
+								delegateCalledCorrectly = true;
+							}
+						}
+					);
+				migrator.Migrate();
+
+				Assert.IsTrue(delegateCalledCorrectly);
+			}
+		}
+
+		[Test]
 		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsIsAudioIsTrue_ScriptContainsZxxxAndVariantContainsXDashAudio()
 		{
 			using (var environment = new TestEnvironment())
@@ -418,9 +490,8 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		{
 			using (var environment = new TestEnvironment())
 			{
-				string propertyInQuestion = "en-audio";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, propertyInQuestion, false, true, "", false,
+														  "", "", "", 0, "en", false, true, "", false,
 														  "", "")
 					);
 				var migrator = new WritingSystemMigrator(
@@ -428,10 +499,9 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 					environment.PathToWsPrefsFile,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
-				string pathToEnFile = environment.GetFileForOriginalRfcTag(propertyInQuestion);
+				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 
-				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type = 'en']");
-				throw new NotImplementedException();
+				AssertThatXmlIn.File(pathToEnFile).HasNoMatchForXpath("/ldml/identity/generation[@date = '0001-01-01T00:00:00']");
 			}
 		}
 
@@ -451,13 +521,18 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				string spellCheckingId
 				)
 			{
+				string sortRulesXml = String.Empty;
+				if(!String.IsNullOrEmpty(customSortRules))
+				{
+					sortRulesXml = String.Format("<CustomSortRules>{0}</CustomSortRules>", customSortRules);
+				}
 				return String.Format(
 					@"<?xml version='1.0' encoding='utf-8'?>
 <WritingSystemCollection>
   <members>
 	<WritingSystem>
 	  <Abbreviation>{0}</Abbreviation>
-	  <CustomSortRules>{1}</CustomSortRules>
+	  {1}
 	  <FontName>{2}</FontName>
 	  <FontSize>{3}</FontSize>
 	  <Id>{4}</Id>
@@ -470,7 +545,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 	</WritingSystem>
   </members>
 </WritingSystemCollection>".Replace("'", "\""),
-					abbreviation, customSortRules, fontName, fontSize, id, isAudio,
+					abbreviation, sortRulesXml, fontName, fontSize, id, isAudio,
 					isUnicode, keyboard, rightToleft, sortUsing, spellCheckingId
 					);
 			}
