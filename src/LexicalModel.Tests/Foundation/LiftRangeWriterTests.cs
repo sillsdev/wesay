@@ -89,6 +89,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				CheckResultsFromSimpleList(path);
 			}
 		}
+
 		[Test]
 		public void Save_OptionListEmpty_OK()
 		{
