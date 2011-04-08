@@ -185,8 +185,8 @@ namespace WeSay.ConfigTool
 			_description.Enabled = _field.UserCanDeleteOrModify;
 			_normallyHidden.Enabled = _field.CanOmitFromMainViewTemplate;
 			_multiParagraphLabel.Visible =
-				_multiParagraph.Visible = _field.DataTypeName == Field.BuiltInDataType.MultiText.ToString();
-			_multiParagraph.Enabled = !_field.IsBuiltInViaCode;
+			_multiParagraph.Visible = _field.DataTypeName == Field.BuiltInDataType.MultiText.ToString();
+			_multiParagraph.Enabled = _field.UserCanDeleteOrModify;
 			_writingSystemsControlLabel.Visible = _writingSystemsControl.Visible = _field.DataTypeName != Field.BuiltInDataType.Picture.ToString();
 
 		}
