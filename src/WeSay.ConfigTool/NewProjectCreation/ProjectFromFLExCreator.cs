@@ -120,7 +120,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			return true;
 		}
 
-		public static void SetWritingSystemsForFields(string path, ViewTemplate viewTemplate, WritingSystemCollection writingSystems)
+		public static void SetWritingSystemsForFields(string path, ViewTemplate viewTemplate, IWritingSystemRepository writingSystems)
 		{
 			var doc = new XmlDocument();
 			doc.Load(path); //will throw if the file is ill-formed
@@ -128,15 +128,9 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 			foreach (XmlNode node in doc.SelectNodes("//@lang"))
 			{
-				// Now that FLEx writes out LDML this fix for x-spec shouldn't be necessary CP 2011-03
-				// Leaving it in anyway for now.
-				if (node.Value == "x-spec" && !writingSystems.Contains("x-spec"))
-				{
-					writingSystems.Set(new WritingSystemDefinition("x-spec"));
-				}
 				if (!writingSystems.Contains(node.Value))
 				{
-					writingSystems.Set(new WritingSystemDefinition(node.Value));
+					writingSystems.Set(WritingSystemDefinition.FromRFC5646Tag(RFC5646Tag.Parse(node.Value)));
 					missingWritingSystems.AppendFormat("{0},", node.Value);
 				}
 			}

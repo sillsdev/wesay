@@ -1,13 +1,14 @@
 using System;
 using Palaso.UI.WindowsForms.Keyboarding;
+using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
 	public class WritingSystemForChorusAdaptor : Chorus.IWritingSystem
 	{
-		private readonly WritingSystem _writingSystem;
+		private readonly WritingSystemDefinition _writingSystem;
 
-		public WritingSystemForChorusAdaptor(WritingSystem writingSystem)
+		public WritingSystemForChorusAdaptor(WritingSystemDefinition writingSystem)
 		{
 			_writingSystem = writingSystem;
 		}

@@ -12,6 +12,7 @@ using Palaso.Lift.Options;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.Text;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -26,7 +27,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private List<LexEntry> _words;
 		private int _currentWordIndex;
 		private readonly string _preferredEllicitationWritingSystem;
-		private readonly WritingSystem _lexicalUnitWritingSystem;
+		private readonly WritingSystemDefinition _lexicalUnitWritingSystem;
 		private IList<string> _definitionWritingSystemIds;
 		private bool _usingLiftFile;
 
@@ -52,12 +53,12 @@ namespace WeSay.LexicalTools.GatherByWordList
 			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
 			{
 				_lexicalUnitWritingSystem =
-						BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+						BasilProject.Project.WritingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
 			}
 			else
 			{
 				string firstWSid = lexicalFormField.WritingSystemIds[0];
-				WritingSystem firstWS = BasilProject.Project.WritingSystems.Get(firstWSid);
+				WritingSystemDefinition firstWS = BasilProject.Project.WritingSystems.Get(firstWSid);
 				_lexicalUnitWritingSystem = firstWS;
 			}
 
@@ -242,7 +243,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 		}
 
-		public WritingSystem GetWritingSystemOfLanguageForm(LanguageForm languageForm)
+		public WritingSystemDefinition GetWritingSystemOfLanguageForm(LanguageForm languageForm)
 		{
 			if(!_viewTemplate.WritingSystems.Contains(languageForm.WritingSystemId))
 			{

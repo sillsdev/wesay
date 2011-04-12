@@ -9,6 +9,7 @@ using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Text;
 using Palaso.UiBindings;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
@@ -69,7 +70,7 @@ namespace WeSay.Project
 
 		public override void Add(LexEntry entry)
 		{
-			WritingSystem headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
+			WritingSystemDefinition headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
 			int h = _lexEntryRepository.GetHomographNumber(entry, headWordWritingSystem);
 			Add(entry, h);
 		}
@@ -134,7 +135,7 @@ namespace WeSay.Project
 
 				if (!MultiTextBase.IsEmpty(text))
 				{
-					var textWritingSystems = _viewTemplate.WritingSystems.GetActualTextWritingSystems();
+					var textWritingSystems = _viewTemplate.WritingSystems.TextWritingSystems;
 					var ids = from ws in textWritingSystems select ws.Id;
 					WriteLanguageFormsInWrapper(text.Forms.Where(f=>ids.Contains(f.WritingSystemId) ), "form", true);
 				}
@@ -159,7 +160,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public static IList<LanguageForm> GetAudioForms(MultiText field, WritingSystemCollection writingSytems)
+		public static IList<LanguageForm> GetAudioForms(MultiText field, IWritingSystemRepository writingSytems)
 		{
 			var x = field.Forms.Where(f => writingSytems.Get(f.WritingSystemId).IsVoice);
 			return new List<LanguageForm>(x);

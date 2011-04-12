@@ -4,6 +4,7 @@ using System.IO;
 using NUnit.Framework;
 using Palaso.i18n;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests
@@ -127,6 +128,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void NewProject_ContainsOnlyLegacyWeSayWritingsystemsFile_WritingSystemsAreLoadedFromThatFile()
 		{
+			Assert.Fail("cjh: move to migrator?");
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
@@ -142,8 +144,7 @@ namespace WeSay.Project.Tests
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
-			WritingSystemCollection wsCollection = new WritingSystemCollection();
-			wsCollection.Load(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
+			IWritingSystemRepository wsCollection = new LdmlInFolderWritingSystemRepository(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
 
 			AssertWritingSystemCollectionsAreEqual(project.WritingSystems, wsCollection);
 		}
@@ -151,6 +152,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void NewProject_ContainsOnlyLegacyWeSayWritingsystemsFile_LegacyFileIsDeleted()
 		{
+			Assert.Fail("cjh: move to migrator?");
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
@@ -158,9 +160,9 @@ namespace WeSay.Project.Tests
 			Assert.IsFalse(File.Exists(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory)));
 		}
 
-		private static void AssertWritingSystemCollectionsAreEqual(WritingSystemCollection lhs, WritingSystemCollection rhs)
+		private static void AssertWritingSystemCollectionsAreEqual(IWritingSystemRepository lhs, IWritingSystemRepository rhs)
 		{
-			foreach (var lhsWritingSystem in lhs.WritingSystemDefinitions)
+			foreach (var lhsWritingSystem in lhs.AllWritingSystems)
 			{
 				Assert.IsTrue(rhs.Contains(lhsWritingSystem.Id));
 				var rhsWritingSystem = rhs.Get(lhsWritingSystem.Id);
@@ -202,7 +204,7 @@ namespace WeSay.Project.Tests
 			string pathToWritingSystemsInApplicationCommonDirectory = BasilProject.GetPathToLdmlWritingSystemsFolder(BasilProject.ApplicationCommonDirectory);
 			string englishLdmlContent = File.ReadAllText(Path.Combine(pathToWritingSystemsInApplicationCommonDirectory, "en.ldml"));
 
-			WritingSystem ws = project.WritingSystems.Get("en");
+			WritingSystemDefinition ws = project.WritingSystems.Get("en");
 			if (ws.Abbreviation == "writeme!"){throw new ApplicationException("This test seems to have failed at some point and the en.ldml file in the application common directory neesds to be reverted before the next test run.");}
 			ws.Abbreviation = "writeme!";
 			project.Save();
@@ -227,12 +229,13 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void NewProject_ContainsLdmlAndLegacyWritingSystemFiles_OnlyLdmlFilesAreLoaded()
 		{
+			Assert.Fail("cjh: move to migrator?");
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
-			WritingSystemCollection wsCollection = new WritingSystemCollection();
-			WritingSystem ws = new WritingSystem(){ISO = "ldmlWs"};
+			IWritingSystemRepository wsCollection = new LdmlInFolderWritingSystemRepository(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
+			WritingSystemDefinition ws = new WritingSystemDefinition(){ISO = "ldmlWs"};
 			wsCollection.Set(ws);
-			wsCollection.Write(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
+			wsCollection.Save();
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 
 			Assert.AreEqual(1, project.WritingSystems.Count);

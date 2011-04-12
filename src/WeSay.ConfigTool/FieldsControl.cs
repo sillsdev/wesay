@@ -195,7 +195,7 @@ namespace WeSay.ConfigTool
 		{
 			// TODO inject the IWritingSystemStore in the ctor
 			var writingSystemStore = WeSayWordsProject.Project.WritingSystems;
-			var writingSystemIds = writingSystemStore.WritingSystemDefinitions.Select(ws => ws.Id);
+			var writingSystemIds = writingSystemStore.AllWritingSystems.Select(ws => ws.Id);
 
 			var f = new Field(
 				MakeUniqueFieldName(),

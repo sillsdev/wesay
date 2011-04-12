@@ -6,6 +6,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherBySemanticDomains;
@@ -79,7 +80,7 @@ namespace WeSay.LexicalTools.Tests
 
 			if(!v.WritingSystems.Contains("en"))
 			{
-				v.WritingSystems.Set(WritingSystem.FromRFC5646("en"));
+				v.WritingSystems.Set(WritingSystemDefinition.FromLanguage("en"));
 			}
 			return v;
 		}

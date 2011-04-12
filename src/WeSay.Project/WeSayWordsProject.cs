@@ -28,6 +28,7 @@ using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using Palaso.UiBindings;
+using Palaso.WritingSystems;
 using Palaso.Xml;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
@@ -54,24 +55,28 @@ namespace WeSay.Project
 				File.Delete(WeSayWordsProject.PathToPretendLiftFile);
 			}
 			catch (Exception) {}
-
 			DirectoryInfo projectDirectory = Directory.CreateDirectory(Path.GetDirectoryName(WeSayWordsProject.PathToPretendLiftFile));
-			Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
+			string pathToLdmlWsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
 
-			//setup writing systems
-			WritingSystemCollection wsc = new WritingSystemCollection();
-			wsc.Set(WritingSystem.FromRFC5646(WritingSystemInfo.VernacularIdForTest));
-			wsc.Set(WritingSystem.FromRFC5646(WritingSystemInfo.AnalysisIdForTest));
 			if (File.Exists(WeSayWordsProject.PathToPretendWritingSystemPrefs))
 			{
 				File.Delete(WeSayWordsProject.PathToPretendWritingSystemPrefs);
 			}
-			string pathToLdmlWsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.FullName);
+
 			if (Directory.Exists(pathToLdmlWsFolder))
 			{
 				Directory.Delete(pathToLdmlWsFolder, true);
 			}
-			wsc.Write(pathToLdmlWsFolder);
+
+			Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
+
+			//setup writing systems
+			Directory.CreateDirectory(pathToLdmlWsFolder);
+			IWritingSystemRepository wsc = new LdmlInFolderWritingSystemRepository(pathToLdmlWsFolder);
+			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.VernacularIdForTest));
+			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.AnalysisIdForTest));
+
+			wsc.Save();
 
 			project.SetupProjectDirForTests(WeSayWordsProject.PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
@@ -465,7 +470,7 @@ namespace WeSay.Project
 			}
 
 			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named("PrintingTemplate");
-			builder.Register<WritingSystemCollection>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
+			builder.Register<IWritingSystemRepository>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
 
 			RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
 
@@ -866,8 +871,7 @@ namespace WeSay.Project
 		/// <param name="pathToConfigFile"></param>
 		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile)
 		{
-			var writingSystemCollection = new WritingSystemCollection();
-			writingSystemCollection.Load(GetPathToLdmlWritingSystemsFolder(projectPath));
+			var writingSystemCollection = new LdmlInFolderWritingSystemRepository(GetPathToLdmlWritingSystemsFolder(projectPath));
 
 			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
 			var builder = new StringBuilder();
@@ -1167,14 +1171,14 @@ namespace WeSay.Project
 			}
 		}
 
-		public WritingSystem HeadWordWritingSystem
+		public WritingSystemDefinition HeadWordWritingSystem
 		{
 			get
 			{
 				Field f = DefaultViewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit);
 				if (f.WritingSystemIds.Count == 0)
 				{
-					return WritingSystems.UnknownVernacularWritingSystem;
+					return WritingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
 				}
 				return WritingSystems.Get(f.WritingSystemIds[0]);
 			}
@@ -1445,7 +1449,7 @@ namespace WeSay.Project
 				 });
 		}
 
-		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)
+		public bool MakeWritingSystemIdChange(WritingSystemDefinition ws, string oldId)
 		{
 			if (DoSomethingToLiftFile((p) =>
 					 //todo: expand the regular expression here to account for all reasonable patterns

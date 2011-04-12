@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
 
@@ -58,7 +59,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_meaningBox.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.None;
 			_meaningBox.BackColor = Color.White;
 
-			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
+			_vernacularBox.WritingSystemsForThisField = new WritingSystemDefinition[]
 															{_presentationModel.WritingSystemUserIsTypingIn};
 
 			if( _vernacularBox.WritingSystemsForThisField.Count ==0 ||  _vernacularBox.TextBoxes.Count == 0)
@@ -66,7 +67,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				Palaso.Reporting.ErrorReport.ReportFatalMessageWithStackTrace("Apparent issue WS-1202 reproduction. We would like to have a copy of your .wesayconfig file.");
 			}
 
-			_meaningBox.WritingSystemsForThisField = new WritingSystem[] {_presentationModel.DefinitionWritingSystem};
+			_meaningBox.WritingSystemsForThisField = new WritingSystemDefinition[] {_presentationModel.DefinitionWritingSystem};
 			_meaningBox.Visible = _presentationModel.ShowDefinitionField;
 			_meaningLabel.Visible = _meaningBox.Visible;
 

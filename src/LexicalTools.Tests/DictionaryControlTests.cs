@@ -7,6 +7,7 @@ using Palaso.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
@@ -27,7 +28,7 @@ namespace WeSay.LexicalTools.Tests
 		private DictionaryTask _task;
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
-		private WritingSystem _vernacularWritingSystem;
+		private WritingSystemDefinition _vernacularWritingSystem;
 		private TabControl _tabControl;
 		private Form _window;
 		private TabPage _detailTaskPage;
@@ -47,7 +48,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			base.Setup();
 			_tempFolder = new TemporaryFolder();
-			_vernacularWritingSystem = WritingSystem.FromRFC5646(WritingSystemInfo.VernacularIdForTest);
+			_vernacularWritingSystem = WritingSystemDefinition.FromLanguage(WritingSystemInfo.VernacularIdForTest);
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
 
 			_filePath = _tempFolder.GetTemporaryFile();
@@ -182,7 +183,7 @@ namespace WeSay.LexicalTools.Tests
 							  bool includeExample)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm.SetAlternative(_vernacularWritingSystem.Id, lexemeForm);
+			entry.LexicalForm.SetAlternative("th", lexemeForm);
 
 			LexSense sense = new LexSense();
 			entry.Senses.Add(sense);
@@ -197,7 +198,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				LexExampleSentence ex = new LexExampleSentence();
 				sense.ExampleSentences.Add(ex);
-				ex.Sentence.SetAlternative("x", "hello");
+				ex.Sentence.SetAlternative("th", "hello");
 			}
 			_lexEntryRepository.SaveItem(entry);
 			return entry.Guid;
@@ -771,7 +772,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetLexicalFormControlName()
 		{
-			return Field.FieldNames.EntryLexicalForm + "_" +WritingSystemInfo.VernacularIdForTest;
+			return Field.FieldNames.EntryLexicalForm + "_" + WritingSystemInfo.VernacularIdForTest;
 		}
 
 		private void TypeInLexicalForm(string value)

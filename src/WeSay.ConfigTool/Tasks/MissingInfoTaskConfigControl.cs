@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Palaso.DictionaryServices.Model;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.AddMissingInfo;
@@ -12,7 +13,7 @@ namespace WeSay.ConfigTool.Tasks
 	public partial class MissingInfoTaskConfigControl : DefaultTaskConfigurationControl
 	{
 		private readonly ViewTemplate _viewTemplate;
-		private List<WritingSystem> _relevantWritingSystems;
+		private List<WritingSystemDefinition> _relevantWritingSystems;
 
 		public MissingInfoTaskConfigControl(MissingInfoConfiguration config, ViewTemplate viewTemplate)
 			:base(config, true)
@@ -50,8 +51,8 @@ namespace WeSay.ConfigTool.Tasks
 
 			if (_matchWhenEmpty.Visible)
 			{
-				_relevantWritingSystems = new List<WritingSystem>();
-				var relevantWritingSystems = from x in _viewTemplate.WritingSystems.WritingSystemDefinitions
+				_relevantWritingSystems = new List<WritingSystemDefinition>();
+				var relevantWritingSystems = from x in _viewTemplate.WritingSystems.AllWritingSystems
 											 where field.WritingSystemIds.Contains(x.Id)
 											 select x;
 				_relevantWritingSystems.AddRange(relevantWritingSystems);

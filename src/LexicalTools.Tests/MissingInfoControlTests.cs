@@ -3,6 +3,7 @@ using System.Drawing;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.AddMissingInfo;
@@ -20,7 +21,7 @@ namespace WeSay.LexicalTools.Tests
 		private string _filePath;
 		private ResultSet<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
-		private WritingSystem _writingSystem;
+		private WritingSystemDefinition _writingSystem;
 
 		private static bool IsMissingTranslation(LexEntry entry)
 		{
@@ -54,7 +55,7 @@ namespace WeSay.LexicalTools.Tests
 			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			_writingSystem = WritingSystem.FromRFC5646("pretendVernacular");
+			_writingSystem = WritingSystemDefinition.FromLanguage("pretendVernacular");
 
 			CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
 			CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
