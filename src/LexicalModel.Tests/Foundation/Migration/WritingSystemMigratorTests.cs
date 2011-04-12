@@ -78,7 +78,30 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsFontName_FontNameIsInLdml()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingId_IdIsInLdml()
+		{
+			using (var environment = new TestEnvironment())
+			{
+				const string id = "en-US-fonipa-x-etic";
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(id, "",
+														  "", "", "", 0, false, "", "", true, false)
+					);
+				var migrator = new WritingSystemMigrator(
+					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
+					environment.PathToWsPrefsFile,
+					environment.ChangeRfcTags);
+				migrator.Migrate();
+				string pathToEnFile = environment.GetFileForOriginalRfcTag(id);
+				AssertThatXmlIn.File(pathToEnFile).
+					HasAtLeastOneMatchForXpath(String.Format(
+					"/ldml/identity/language[@type='{0}']", id),
+					environment.NamespaceManager
+					);
+			}
+		}
+
+		[Test]
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingFontName_FontNameIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -101,7 +124,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsFontSize_FontSizeIsInLdml()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingFontSize_FontSizeIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -124,7 +147,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsKeyboardName_KeyboardNameIsInLdml()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingKeyboardName_KeyboardNameIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -147,11 +170,11 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsAbbreviation_AbbreviationIsInLdml()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingAbbreviation_AbbreviationIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
-				const string abbreviation = "v";
+				const string abbreviation = "Eng";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", abbreviation,
 														  "", "", "", 0, false, "", "", true, false)
 					);
@@ -170,7 +193,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsCustomSimpleSortRules_CustomSortRulesAreInLdml()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingCustomSimpleSortRules_CustomSortRulesAreInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -194,7 +217,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsCustomIcuSortRules_CustomSortRulesAreInLdml()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingCustomIcuSortRules_CustomSortRulesAreInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -216,7 +239,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsSortRulesFromOtherLanguage_OtherLanguageIsInLdml()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingSortRulesFromOtherLanguage_OtherLanguageIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -263,7 +286,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsIsUnicodeEncodedIsFalse_IsLegacyIsTrueInLdml()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsUnicodeEncodedIsFalse_IsLegacyIsTrueInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -286,7 +309,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsIsUnicodeEncodedIsTrue_IsLegacyDoesNotAppearInLdml()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsUnicodeEncodedIsTrue_IsLegacyDoesNotAppearInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -309,7 +332,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsRightToLeftIsTrue_CharacterOrientationIsMarkedRightToLeftInLdml()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingRightToLeftIsTrue_CharacterOrientationIsMarkedRightToLeftInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -329,7 +352,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsRightToLeftIsFalse_CharacterOrientationIsnotContainedInLdml()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingRightToLeftIsFalse_CharacterOrientationIsnotContainedInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -400,7 +423,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsIsAudioIsTrue_ScriptContainsZxxxAndVariantContainsXDashAudio()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsAudioIsTrue_ScriptContainsZxxxAndVariantContainsXDashAudio()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -424,7 +447,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsIsAudioIsTrueAndrfcTagAlreadyHasScript_ScriptContainsZxxxAndVariantContainsXDashAudioDashScript()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsAudioIsTrueAndrfcTagAlreadyHasScript_ScriptContainsZxxxAndVariantContainsXDashAudioDashScript()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -448,7 +471,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsIsAudioIsFalse_audioIsRemovedFromRfcTag()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsAudioIsFalse_audioIsRemovedFromRfcTag()
 		{
 			using (var environment = new TestEnvironment())
 			{
