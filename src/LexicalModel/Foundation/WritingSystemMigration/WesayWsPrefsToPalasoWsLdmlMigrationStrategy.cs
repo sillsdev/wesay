@@ -147,10 +147,25 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 				wsDef.Keyboard = writingSystem.KeyboardName;
 				wsDef.IsVoice = writingSystem.IsAudio;
 				wsDef.RightToLeftScript = writingSystem.RightToLeft;
-				wsDef.SortRules = writingSystem.CustomSortRules;
-				wsDef.SortUsing = GetEquivalentPalasoSortRulesType(writingSystem.SortUsing);
 				wsDef.SpellCheckingId = writingSystem.SpellCheckingId;
 				wsDef.DateModified = DateTime.Now;
+				if (String.IsNullOrEmpty(writingSystem.SortUsing))
+				{
+					//when no custom sort rules were specified
+					wsDef.SortRules = String.IsNullOrEmpty(writingSystem.CustomSortRules) ? writingSystem.ISO : writingSystem.CustomSortRules;
+					wsDef.SortUsing = PalasoWritingSystemDefinitionV0.SortRulesType.OtherLanguage;
+				}
+				else if (writingSystem.SortUsing.Equals("CustomICU"))
+				{
+					wsDef.SortRules = writingSystem.CustomSortRules;
+					wsDef.SortUsing = PalasoWritingSystemDefinitionV0.SortRulesType.CustomICU;
+				}
+				else if (writingSystem.SortUsing.Equals("CustomSimple"))
+				{
+					wsDef.SortRules = writingSystem.CustomSortRules;
+					wsDef.SortUsing = PalasoWritingSystemDefinitionV0.SortRulesType.CustomSimple;
+				}
+
 				//wsDef.VerboseDescription //not written out by ldmladaptor - flex?
 				//wsDef.StoreID = ??? //what to do?
 				//wsDef.NativeName //not written out by ldmladaptor - flex?
@@ -160,19 +175,6 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 				oldToNewRfcTagMap.Add(oldRfcTag, wsDef.Rfc5646);
 			}
 			_changer(oldToNewRfcTagMap);
-		}
-
-		private PalasoWritingSystemDefinitionV0.SortRulesType GetEquivalentPalasoSortRulesType(string sortRulesType)
-		{
-			if (sortRulesType.Equals("CustomICU"))
-			{
-				return PalasoWritingSystemDefinitionV0.SortRulesType.CustomICU;
-			}
-			if (sortRulesType.Equals("CustomSimple"))
-			{
-				return PalasoWritingSystemDefinitionV0.SortRulesType.CustomSimple;
-			}
-			return PalasoWritingSystemDefinitionV0.SortRulesType.DefaultOrdering;
 		}
 
 		public int FromVersion
