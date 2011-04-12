@@ -260,7 +260,6 @@ O o";
 					environment.NamespaceManager
 					);
 			}
-			throw new NotImplementedException();
 		}
 
 		[Test]
@@ -284,7 +283,6 @@ O o";
 					environment.NamespaceManager
 					);
 			}
-			throw new NotImplementedException();
 		}
 
 		[Test]
