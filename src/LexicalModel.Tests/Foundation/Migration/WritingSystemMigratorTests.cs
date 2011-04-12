@@ -20,12 +20,13 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 			private readonly string _pathToWsPrefsFile;
 			private readonly TemporaryFolder _pretendProjectDirectory;
 			private readonly XmlNamespaceManager _namespaceManager;
+			private readonly string _pathToLdmlWsRepo = "";
 
 			public TestEnvironment()
 			{
 				_pretendProjectDirectory = new TemporaryFolder("PretendWeSayProject");
 				_pathToWsPrefsFile = Path.Combine(_pretendProjectDirectory.Path, "WritingSystemPrefs.xml");
-				PathToLdmlWsRepo = Path.Combine(_pretendProjectDirectory.Path, "WritingSystems");
+				_pathToLdmlWsRepo = Path.Combine(_pretendProjectDirectory.Path, "WritingSystems");
 				_namespaceManager = new XmlNamespaceManager(new NameTable());
 				NamespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
 			}
@@ -35,8 +36,6 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				get { return _pathToWsPrefsFile; }
 			}
 
-			public string PathToLdmlWsRepo { get; private set; }
-
 			public XmlNamespaceManager NamespaceManager
 			{
 				get { return _namespaceManager; }
@@ -44,7 +43,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 
 			public string GetFileForOriginalRfcTag(string oldRfcTag)
 			{
-				return Path.Combine(PathToLdmlWsRepo, _oldToNewRfcTagMap[oldRfcTag] + ".ldml");
+				return Path.Combine(_pathToLdmlWsRepo, _oldToNewRfcTagMap[oldRfcTag] + ".ldml");
 			}
 
 			public void WriteContentToWsPrefsFile(string content)
@@ -59,19 +58,19 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 
 			public void Dispose()
 			{
-				if (Directory.Exists(PathToLdmlWsRepo))
+				if (Directory.Exists(_pathToLdmlWsRepo))
 				{
-					foreach (var ldmlFile in Directory.GetFiles(PathToLdmlWsRepo))
+					foreach (var ldmlFile in Directory.GetFiles(_pathToLdmlWsRepo))
 					{
 						File.Delete(ldmlFile);
 					}
-					Directory.Delete(PathToLdmlWsRepo);
+					Directory.Delete(_pathToLdmlWsRepo);
 				}
 				if (File.Exists(_pathToWsPrefsFile))
 				{
 					File.Delete(_pathToWsPrefsFile);
 				}
-				if (Directory.Exists(PathToLdmlWsRepo))
+				if (Directory.Exists(_pathToLdmlWsRepo))
 				{
 					Directory.Delete(_pretendProjectDirectory.Path);
 				}
@@ -83,10 +82,9 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		{
 			using (var environment = new TestEnvironment())
 			{
-				string propertyInQuestion = "Arial";
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", propertyInQuestion, 0, "en", false, true, "", false,
-														  "", "")
+				const string fontName = "Arial";
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  "", "", fontName, 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -96,7 +94,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
-					"/ldml/special/palaso:defaultFontFamily[@value='{0}']", propertyInQuestion),
+					"/ldml/special/palaso:defaultFontFamily[@value='{0}']", fontName),
 					environment.NamespaceManager
 					);
 			}
@@ -107,10 +105,9 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		{
 			using (var environment = new TestEnvironment())
 			{
-				int propertyInQuestion = 12;
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", propertyInQuestion, "en", false, true, "", false,
-														  "", "")
+				const int fontSize = 12;
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  "", "", "", fontSize, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -120,7 +117,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
-					"/ldml/special/palaso:defaultFontSize[@value='{0}']", propertyInQuestion),
+					"/ldml/special/palaso:defaultFontSize[@value='{0}']", fontSize),
 					environment.NamespaceManager
 					);
 			}
@@ -131,10 +128,9 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		{
 			using (var environment = new TestEnvironment())
 			{
-				string propertyInQuestion = "IPA Unicode 5.1(ver 1.2 US) MSK";
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, "en", false, true, propertyInQuestion, false,
-														  "", "")
+				const string keyboardName = "IPA Unicode 5.1(ver 1.2 US) MSK";
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  "", "", "", 0, false, "", keyboardName, true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -144,7 +140,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
-					"/ldml/special/palaso:defaultKeyboard[@value='{0}']", propertyInQuestion),
+					"/ldml/special/palaso:defaultKeyboard[@value='{0}']", keyboardName),
 					environment.NamespaceManager
 					);
 			}
@@ -156,9 +152,8 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 			using (var environment = new TestEnvironment())
 			{
 				string propertyInQuestion = "v";
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  propertyInQuestion, "", "", 0, "en", false, true, "", false,
-														  "", "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", propertyInQuestion,
+														  "", "", "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -183,8 +178,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				string sortRules =
 @"N n
 O o";
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", sortRules, "", 0, "en", false, true, "", false, sortUsing, "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "", sortUsing, sortRules, "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -206,8 +200,7 @@ O o";
 			{
 				string sortUsing = "CustomICU";
 				string sortRules = "&amp; C &lt; č";
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", sortRules, "", 0, "en", false, true, "", false, sortUsing, "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "", sortUsing, sortRules, "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -223,14 +216,14 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsSortRulesFromOtherLanguage_whatTodo()
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainsSortRulesFromOtherLanguage_OtherLanguageIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
-				string propertyInQuestion = "v";
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, "en", false, true, "", false,
-														  "", "")
+				string otherLanguage = "de";
+				string sortUsing = "OtherLanguage";
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  sortUsing, otherLanguage, "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -240,7 +233,7 @@ O o";
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
-					"/ldml/special/palaso:abbreviation[@value='{0}']", propertyInQuestion),
+					"/ldml/collations/collation/alias[@source='{0}']", otherLanguage),
 					environment.NamespaceManager
 					);
 			}
@@ -253,9 +246,8 @@ O o";
 			using (var environment = new TestEnvironment())
 			{
 				bool propertyInQuestion = false;
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, "en", false, propertyInQuestion, "", false,
-														  "", "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  "", "", "", 0, false, "", "", propertyInQuestion, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -277,9 +269,8 @@ O o";
 			using (var environment = new TestEnvironment())
 			{
 				bool propertyInQuestion = true;
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, "en", false, propertyInQuestion, "", false,
-														  "", "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  "", "", "", 0, false, "", "", propertyInQuestion, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -301,9 +292,8 @@ O o";
 			using (var environment = new TestEnvironment())
 			{
 				bool propertyInQuestion = true;
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, "en", false, true, "", propertyInQuestion,
-														  "", "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  "", "", "", 0, propertyInQuestion, "", "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -322,9 +312,8 @@ O o";
 			using (var environment = new TestEnvironment())
 			{
 				bool propertyInQuestion = false;
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, "en", false, true, "", propertyInQuestion,
-														  "", "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  "", "", "", 0, propertyInQuestion, "", "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -343,9 +332,8 @@ O o";
 			using (var environment = new TestEnvironment())
 			{
 				bool propertyInQuestion = false;
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, "en", false, true, "", propertyInQuestion,
-														  "", "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  "", "", "", 0, propertyInQuestion, "", "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -364,9 +352,8 @@ O o";
 			using (var environment = new TestEnvironment())
 			{
 				string propertyInQuestion = "spell";
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, "en", false, true, "", false,
-														  "", propertyInQuestion)
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  "", "", "", 0, false, propertyInQuestion, "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -389,9 +376,8 @@ O o";
 			{
 				string language = "en";
 				bool isAudio = true;
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  language, "", "", 0, language, isAudio, true, "", false,
-														  "", "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(language, language,
+														  "", "", "", 0, false, "", "", true, isAudio)
 					);
 				bool delegateCalledCorrectly = false;
 				var migrator = new WritingSystemMigrator(
@@ -418,9 +404,8 @@ O o";
 			{
 				string language = "en";
 				bool isAudio = false;
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, language, isAudio, true, "", false,
-														  "", "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(language, "",
+														  "", "", "", 0, false, "", "", true, isAudio)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -443,9 +428,8 @@ O o";
 			{
 				string language = "en-Latn";
 				bool isAudio = true;
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, language, isAudio, true, "", false,
-														  "", "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(language, "",
+														  "", "", "", 0, false, "", "", true, isAudio)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -467,9 +451,8 @@ O o";
 			using (var environment = new TestEnvironment())
 			{
 				string propertyInQuestion = "en-audio";
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, propertyInQuestion, false, true, "", false,
-														  "", "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(propertyInQuestion, "",
+														  "", "", "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -490,9 +473,8 @@ O o";
 		{
 			using (var environment = new TestEnvironment())
 			{
-				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(
-														  "", "", "", 0, "en", false, true, "", false,
-														  "", "")
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  "", "", "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
@@ -508,18 +490,17 @@ O o";
 		public class WritingSystemPrefsFileContent
 		{
 			public static string SingleWritingSystem(
+				string id,
 				string abbreviation,
+				string sortUsing,
 				string customSortRules,
 				string fontName,
 				int fontSize,
-				string id,
-				bool isAudio,
-				bool isUnicode,
-				string keyboard,
 				bool rightToleft,
-				string sortUsing,
-				string spellCheckingId
-				)
+				string spellCheckingId,
+				string keyboard,
+				bool isUnicode,
+				bool isAudio)
 			{
 				string sortRulesXml = String.Empty;
 				if(!String.IsNullOrEmpty(customSortRules))
