@@ -7,13 +7,14 @@ using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.UI.WindowsForms.Spelling;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {
 	public partial class WeSayTextBox: TextBox, IControlThatKnowsWritingSystem
 	{
-		private WritingSystem _writingSystem;
+		private WritingSystemDefinition _writingSystem;
 
 		private bool _multiParagraph;
 		private readonly string _nameForLogging;
@@ -201,7 +202,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public WeSayTextBox(WritingSystem ws, string nameForLogging): this()
+		public WeSayTextBox(WritingSystemDefinition ws, string nameForLogging): this()
 		{
 			_nameForLogging = nameForLogging;
 			WritingSystem = ws;
@@ -216,7 +217,7 @@ namespace WeSay.UI.TextBoxes
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystem WritingSystem
+		public WritingSystemDefinition WritingSystem
 		{
 			get
 			{

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Palaso.Code;
 using Palaso.Lift;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
@@ -23,7 +24,7 @@ namespace WeSay.UI
 		/// </summary>
 		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate { };
 
-		private readonly WritingSystem _writingSystem;
+		private readonly WritingSystemDefinition _writingSystem;
 		private readonly string _propertyName;
 		private readonly PalasoDataObject _parent;
 		private IList<T> _listTarget;
@@ -49,7 +50,7 @@ namespace WeSay.UI
 		public GhostBinding(PalasoDataObject parent,
 							IList<T> targetList,
 							string propertyName,
-							WritingSystem writingSystem,
+							WritingSystemDefinition writingSystem,
 							WeSayTextBox textBoxTarget)
 		{
 			_parent = parent;
@@ -257,7 +258,7 @@ namespace WeSay.UI
 
 		private static void FillInMultiTextOfNewObject(object o,
 													   string propertyName,
-													   WritingSystem writingSystem,
+													   WritingSystemDefinition writingSystem,
 													   string value)
 		{
 			PropertyInfo info = o.GetType().GetProperty(propertyName);

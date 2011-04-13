@@ -9,6 +9,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
 using Palaso.Misc;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -67,7 +68,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//            _records.ListChanged += OnRecordsListChanged;
 			// this needs to be after so it will get change event after the ListBox
 
-			WritingSystem listWritingSystem = GetListWritingSystem();
+			WritingSystemDefinition listWritingSystem = GetListWritingSystem();
 
 			_recordsListBox.BorderStyle = BorderStyle.None;
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
@@ -170,10 +171,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 		}
 
-		private static WritingSystem GetListWritingSystem()
+		private static WritingSystemDefinition GetListWritingSystem()
 		{
-			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
-			WritingSystem listWritingSystem = writingSystems.UnknownVernacularWritingSystem;
+			IWritingSystemRepository writingSystems = BasilProject.Project.WritingSystems;
+			WritingSystemDefinition listWritingSystem = writingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
 
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will

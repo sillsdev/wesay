@@ -7,6 +7,7 @@ using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherByWordList;
@@ -35,7 +36,7 @@ namespace WeSay.LexicalTools.Tests
 			WeSayProjectTestHelper.InitializeForTests();
 			_glossingLanguageWSId = WritingSystemInfo.AnalysisIdForTest;
 			_vernacularLanguageWSId = WritingSystemInfo.VernacularIdForTest;
-			BasilProject.Project.WritingSystems.Set(WritingSystem.FromRFC5646("fr"));
+			BasilProject.Project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("fr"));
 
 			_tempFolder = new TemporaryFolder();
 			_simpleWordListFilePath = _tempFolder.GetTemporaryFile();
@@ -495,7 +496,7 @@ namespace WeSay.LexicalTools.Tests
 			return entries[0];
 		}
 
-		private WritingSystem VernWs
+		private WritingSystemDefinition VernWs
 		{
 			get
 			{

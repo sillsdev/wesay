@@ -6,6 +6,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Text;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -164,7 +165,7 @@ namespace WeSay.LexicalTools
 		{
 			var rtf = new StringBuilder(@"{\fonttbl");
 			int i = 0;
-			foreach (var ws in WritingSystems.WritingSystemDefinitions)
+			foreach (var ws in WritingSystems.AllWritingSystems)
 			{
 				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + WritingSystemInfo.CreateFont(ws).FontFamily.Name +
 						   ";");
@@ -174,15 +175,15 @@ namespace WeSay.LexicalTools
 			return rtf.ToString();
 		}
 
-		private static WritingSystemCollection WritingSystems
+		private static IWritingSystemRepository WritingSystems
 		{
 			get { return BasilProject.Project.WritingSystems; }
 		}
 
-		private static int GetFontNumber(WritingSystem writingSystem)
+		private static int GetFontNumber(WritingSystemDefinition writingSystem)
 		{
 			int i = 0;
-			foreach (var ws in WritingSystems.WritingSystemDefinitions)
+			foreach (var ws in WritingSystems.AllWritingSystems)
 			{
 				if (ws == writingSystem)
 				{
@@ -230,7 +231,7 @@ namespace WeSay.LexicalTools
 			return rtfBuilder.ToString();
 		}
 
-		public static IList<LanguageForm> GetActualTextForms(MultiText text, WritingSystemCollection writingSytems)
+		public static IList<LanguageForm> GetActualTextForms(MultiText text, IWritingSystemRepository writingSytems)
 		{
 			var x = text.Forms.Where(f => !writingSytems.Get(f.WritingSystemId).IsVoice);
 			return new List<LanguageForm>(x);
@@ -288,7 +289,7 @@ namespace WeSay.LexicalTools
 				return "";
 				//that ws isn't actually part of our configuration, so can't get a special font for it
 			}
-			WritingSystem writingSystem = WritingSystems.Get(writingSystemId);
+			WritingSystemDefinition writingSystem = WritingSystems.Get(writingSystemId);
 			string rtf = @"\f" + GetFontNumber(writingSystem);
 			int fontSize = Convert.ToInt16((sizeBoost + WritingSystemInfo.CreateFont(writingSystem).SizeInPoints)*2);
 			rtf += @"\fs" + fontSize + " ";

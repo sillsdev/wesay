@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using NUnit.Framework;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
@@ -9,7 +10,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class DetailListTests
 	{
-		private readonly WritingSystem _ws = WritingSystem.FromRFC5646("test");
+		private readonly WritingSystemDefinition _ws = WritingSystemDefinition.FromLanguage("qaa");
 		private DetailList _control;
 		private Control _focussedControl;
 		private Form _window;

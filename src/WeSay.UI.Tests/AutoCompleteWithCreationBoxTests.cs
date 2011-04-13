@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
+using Palaso.WritingSystems;
 using WeSay.Project;
 using WeSay.Project;
 using Palaso.Lift;
@@ -29,13 +30,13 @@ namespace WeSay.UI.Tests
 		/// </summary>
 		private OptionRef _dataBeingEditted;
 
-		private WritingSystem _ws;
+		private WritingSystemDefinition _ws;
 		private OptionDisplayAdaptor _displayAdaptor;
 
 		[SetUp]
 		public void Setup()
 		{
-			_ws = WritingSystem.FromRFC5646("xx");
+			_ws = WritingSystemDefinition.FromLanguage("qaa");
 			_ws.DefaultFontName = "Arial";
 			_ws.DefaultFontSize = (float) 55.9;
 			//            _createNewClickedFired=false;

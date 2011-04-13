@@ -2,13 +2,14 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
 {
 	public partial class WeSayListBox: ListBox
 	{
-		private WritingSystem _writingSystem;
+		private WritingSystemDefinition _writingSystem;
 		private object _itemToNotDrawYet;
 
 		public WeSayListBox()
@@ -56,7 +57,7 @@ namespace WeSay.UI
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystem WritingSystem
+		public WritingSystemDefinition WritingSystem
 		{
 			get
 			{

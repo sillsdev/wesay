@@ -35,7 +35,7 @@ namespace Addin.Transform
 				}
 				else //guess
 				{
-					foreach (var writingSystem in projectInfo.WritingSystems.WritingSystemDefinitions)
+					foreach (var writingSystem in projectInfo.WritingSystems.AllWritingSystems)
 					{
 						if (!"en fr chn th tpi".Contains(writingSystem.Id))
 						{

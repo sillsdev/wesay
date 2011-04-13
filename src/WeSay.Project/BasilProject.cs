@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml;
 using Palaso.i18n;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using Palaso.Xml;
 using WeSay.LexicalModel.Foundation;
 
@@ -39,7 +40,7 @@ namespace WeSay.Project
 		}
 		public UiConfigurationOptions UiOptions { get; set; }
 
-		private readonly WritingSystemCollection _writingSystems;
+		private IWritingSystemRepository _writingSystems;
 		private string _projectDirectoryPath = string.Empty;
 
 		public static BasilProject Project
@@ -71,7 +72,7 @@ namespace WeSay.Project
 		public BasilProject()
 		{
 			Project = this;
-			_writingSystems = new WritingSystemCollection();
+			_writingSystems = null;
 			UiOptions = new UiConfigurationOptions();
 		}
 
@@ -107,12 +108,7 @@ namespace WeSay.Project
 
 		public virtual void Save()
 		{
-			Save(_projectDirectoryPath);
-		}
-
-		public virtual void Save(string projectDirectoryPath)
-		{
-			_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(projectDirectoryPath));
+			_writingSystems.Save();
 		}
 
 		public static string GetPretendProjectDirectory()
@@ -120,14 +116,14 @@ namespace WeSay.Project
 			return Path.Combine(GetTopAppDirectory(), Path.Combine("SampleProjects", "PRETEND"));
 		}
 
-		public WritingSystemCollection WritingSystems
+		public IWritingSystemRepository WritingSystems
 		{
 			get { return _writingSystems; }
 		}
 
-		public IList<WritingSystem> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
+		public IList<WritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
 		{
-			List<WritingSystem> l = new List<WritingSystem>();
+			List<WritingSystemDefinition> l = new List<WritingSystemDefinition>();
 			foreach (string id in writingSystemIds)
 			{
 				l.Add(WritingSystems.Get(id));
@@ -265,7 +261,14 @@ namespace WeSay.Project
 
 		protected void InitWritingSystems()
 		{
-			_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
+			if (!Directory.Exists(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath)))
+			{
+				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
+			}
+			_writingSystems = new LdmlInFolderWritingSystemRepository(
+				GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath)
+			);
+
 			// TODO Chris move this to the migrator
 			//if (_writingSystems.Count == 0)
 			//{
@@ -273,12 +276,6 @@ namespace WeSay.Project
 			//    _writingSystems.Write(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
 			//    File.Delete(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
 			//}
-			if (_writingSystems.Count == 0)
-			{
-				//load defaults
-				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
-				_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
-			}
 		}
 
 		//        /// <summary>

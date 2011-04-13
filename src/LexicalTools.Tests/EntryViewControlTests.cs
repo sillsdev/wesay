@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Options;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;

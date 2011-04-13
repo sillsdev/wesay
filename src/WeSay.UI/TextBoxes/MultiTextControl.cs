@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.Text;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
 //using CommonEnumerations=Palaso.Lift.CommonEnumerations;
@@ -16,7 +17,7 @@ namespace WeSay.UI.TextBoxes
 {
 	public partial class MultiTextControl: TableLayoutPanel
 	{
-		private IList<WritingSystem> _writingSystemsForThisField;
+		private IList<WritingSystemDefinition> _writingSystemsForThisField;
 		private readonly List<Control> _inputBoxes;
 		private bool _showAnnotationWidget;
 		private IServiceProvider _serviceProvider;
@@ -25,7 +26,7 @@ namespace WeSay.UI.TextBoxes
 			CommonEnumerations.VisibilitySetting.Visible;
 
 		private static int _widthForWritingSystemLabels = -1;
-		private static WritingSystemCollection _allWritingSystems;
+		private static IWritingSystemRepository _allWritingSystems;
 		private static Font _writingSystemLabelFont;
 		private readonly bool _isSpellCheckingEnabled;
 		private readonly bool _isMultiParagraph;
@@ -43,7 +44,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public MultiTextControl(WritingSystemCollection allWritingSystems, IServiceProvider serviceProvider)
+		public MultiTextControl(IWritingSystemRepository allWritingSystems, IServiceProvider serviceProvider)
 		{
 			if (DesignMode)
 			{
@@ -82,12 +83,12 @@ namespace WeSay.UI.TextBoxes
 
 		public MultiTextControl(IList<string> writingSystemIds,
 								MultiText multiTextToCopyFormsFrom, string nameForTesting,
-								bool showAnnotationWidget, WritingSystemCollection allWritingSystems,
+								bool showAnnotationWidget, IWritingSystemRepository allWritingSystems,
 								CommonEnumerations.VisibilitySetting visibility, bool isSpellCheckingEnabled,
 								bool isMultiParagraph, IServiceProvider serviceProvider): this(allWritingSystems, serviceProvider)
 		{
 			Name = nameForTesting + "-mtc";
-			_writingSystemsForThisField = new List<WritingSystem>();
+			_writingSystemsForThisField = new List<WritingSystemDefinition>();
 //            foreach (KeyValuePair<string, WritingSystem> pair in allWritingSystems)
 //            {
 //                if (writingSystemIds.Contains(pair.Key))
@@ -200,7 +201,7 @@ namespace WeSay.UI.TextBoxes
 				RowStyles.Clear();
 			}
 			Debug.Assert(RowCount == 0);
-			foreach (WritingSystem writingSystem in WritingSystemsForThisField)
+			foreach (WritingSystemDefinition writingSystem in WritingSystemsForThisField)
 			{
 				RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
@@ -281,7 +282,7 @@ namespace WeSay.UI.TextBoxes
 					//in which case we don't really care about aligning anyhow
 					if (_allWritingSystems != null)
 					{
-						foreach (WritingSystem ws in _allWritingSystems.WritingSystemDefinitions)
+						foreach (WritingSystemDefinition ws in _allWritingSystems.AllWritingSystems)
 						{
 							Size size = TextRenderer.MeasureText(ws.Abbreviation,
 																 _writingSystemLabelFont) +fudgeFactor;
@@ -332,7 +333,7 @@ namespace WeSay.UI.TextBoxes
 			return label;
 		}
 
-		private Control AddTextBox(WritingSystem writingSystem, MultiTextBase multiText)
+		private Control AddTextBox(WritingSystemDefinition writingSystem, MultiTextBase multiText)
 		{
 			Control control;
 			if (writingSystem.IsVoice)
@@ -396,7 +397,7 @@ namespace WeSay.UI.TextBoxes
 		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IList<WritingSystem> WritingSystemsForThisField
+		public IList<WritingSystemDefinition> WritingSystemsForThisField
 		{
 			get { return _writingSystemsForThisField; }
 			set

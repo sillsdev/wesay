@@ -5,6 +5,7 @@ using Palaso.Data;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
@@ -42,11 +43,11 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_viewTemplate = config.CreateViewTemplate(defaultViewTemplate);
 		 }
 
-		private WritingSystem GetLexicalUnitWritingSystem()
+		private WritingSystemDefinition GetLexicalUnitWritingSystem()
 		{
 			//NB: don't replace these ugly static uses with the _viewTemplate we were given... that won't have what we're looking for here
 
-			var ws = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+			var ws = BasilProject.Project.WritingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
 			Field fieldDefn = WeSayWordsProject.Project.DefaultViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());

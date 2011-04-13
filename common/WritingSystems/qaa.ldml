@@ -3,7 +3,7 @@
 	<identity>
 		<version number="" />
 		<generation date="0001-01-01T00:00:00" />
-		<language type="v" />
+		<language type="qaa" />
 	</identity>
 	<collations />
 	<special xmlns:palaso="urn://palaso.org/ldmlExtensions/v1">
