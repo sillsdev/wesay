@@ -130,7 +130,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			{
 				if (!writingSystems.Contains(node.Value))
 				{
-					writingSystems.Set(WritingSystemDefinition.FromRFC5646Tag(RFC5646Tag.Parse(node.Value)));
+					writingSystems.Set(WritingSystemDefinition.Parse(node.Value));
 					missingWritingSystems.AppendFormat("{0},", node.Value);
 				}
 			}
