@@ -7,7 +7,7 @@ using Palaso.WritingSystems.Migration;
 
 namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 {
-	class WesayWsPrefsToPalasoWsLdmlMigrationStrategy:IMigrationStrategy
+	public class WesayWsPrefsToPalasoWsLdmlMigrationStrategy:IMigrationStrategy
 	{
 		internal class SubTag
 		{
@@ -105,16 +105,24 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 			}
 
 		}
-		private ConsumerLevelRfcTagChanger _changer;
 
-		public WesayWsPrefsToPalasoWsLdmlMigrationStrategy(ConsumerLevelRfcTagChanger rfcTagChanger)
+		public class MigrationInfo
 		{
-			_changer = rfcTagChanger;
+			public string RfcTagBeforeMigration;
+			public string RfcTagAfterMigration;
+		}
+
+		public delegate void OnMigrationFn(IEnumerable<MigrationInfo> migrationInfo);
+		private readonly OnMigrationFn _onMigrationCallback;
+
+		public WesayWsPrefsToPalasoWsLdmlMigrationStrategy(OnMigrationFn migrationCb)
+		{
+			_onMigrationCallback = migrationCb;
 		}
 
 		public void Migrate(string sourceFilePath, string destinationFilePath)
 		{
-			var oldToNewRfcTagMap = new Dictionary<string, string>();
+			var migrationInfo = new List<MigrationInfo>();
 			if(!Directory.Exists(destinationFilePath))
 			{
 				Directory.CreateDirectory(destinationFilePath);
@@ -124,7 +132,8 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 
 			foreach (var writingSystem in _wesayWsCollection.Values)
 			{
-				string oldRfcTag = writingSystem.ISO;
+				var currentMigrationInfo = new MigrationInfo();
+				currentMigrationInfo.RfcTagBeforeMigration = writingSystem.ISO;
 				var wsDef = new PalasoWritingSystemDefinitionV0();
 				if(writingSystem.IsAudio)
 				{
@@ -145,7 +154,6 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 				wsDef.Abbreviation = writingSystem.Abbreviation;
 				wsDef.IsLegacyEncoded = !writingSystem.IsUnicode;
 				wsDef.Keyboard = writingSystem.KeyboardName;
-				wsDef.IsVoice = writingSystem.IsAudio;
 				wsDef.RightToLeftScript = writingSystem.RightToLeft;
 				wsDef.SpellCheckingId = writingSystem.SpellCheckingId;
 				wsDef.DateModified = DateTime.Now;
@@ -172,9 +180,21 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 
 				string pathForNewLdmlFile = Path.Combine(destinationFilePath, wsDef.Rfc5646 + ".ldml");
 				new PalasoLdmlAdaptorV0().Write(pathForNewLdmlFile, wsDef, null);
-				oldToNewRfcTagMap.Add(oldRfcTag, wsDef.Rfc5646);
+
+				currentMigrationInfo.RfcTagAfterMigration = wsDef.Rfc5646;
+				migrationInfo.Add(currentMigrationInfo);
 			}
-			_changer(oldToNewRfcTagMap);
+			_onMigrationCallback(migrationInfo);
+		}
+
+		public void PreMigrate()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void PostMigrate(string sourcePath, string destinationPath)
+		{
+			throw new NotImplementedException();
 		}
 
 		public int FromVersion

@@ -16,7 +16,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 	{
 		private class TestEnvironment : IDisposable
 		{
-			private Dictionary<string, string> _oldToNewRfcTagMap;
+			private IEnumerable<WesayWsPrefsToPalasoWsLdmlMigrationStrategy.MigrationInfo> _oldToNewRfcTagMap;
 			private readonly string _pathToWsPrefsFile;
 			private readonly TemporaryFolder _pretendProjectDirectory;
 			private readonly XmlNamespaceManager _namespaceManager;
@@ -43,7 +43,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 
 			public string GetFileForOriginalRfcTag(string oldRfcTag)
 			{
-				return Path.Combine(_pathToLdmlWsRepo, _oldToNewRfcTagMap[oldRfcTag] + ".ldml");
+				return Path.Combine(_pathToLdmlWsRepo, _oldToNewRfcTagMap.First(info => info.RfcTagAfterMigration == oldRfcTag).RfcTagAfterMigration + ".ldml");
 			}
 
 			public void WriteContentToWsPrefsFile(string content)
@@ -51,9 +51,9 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				File.WriteAllText(_pathToWsPrefsFile, content);
 			}
 
-			public void ChangeRfcTags(Dictionary<string, string> oldToNewRfcTagMap)
+			public void ChangeRfcTags(IEnumerable<WesayWsPrefsToPalasoWsLdmlMigrationStrategy.MigrationInfo> migrationInfo)
 			{
-				_oldToNewRfcTagMap = oldToNewRfcTagMap;
+				_oldToNewRfcTagMap = migrationInfo;
 			}
 
 			public void Dispose()
@@ -408,9 +408,11 @@ O o";
 				var migrator = new WritingSystemMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.PathToWsPrefsFile,
-					delegate(Dictionary<string, string> oldToNewRfcTagsMap)
+					delegate(IEnumerable<WesayWsPrefsToPalasoWsLdmlMigrationStrategy.MigrationInfo> oldToNewRfcTagsMap)
 						{
-							if(oldToNewRfcTagsMap["en"].Equals("en-Zxxx-x-audio"))
+							if(oldToNewRfcTagsMap.
+								First(info => info.RfcTagAfterMigration == "en").
+								RfcTagAfterMigration =="en-Zxxx-x-audio")
 							{
 								delegateCalledCorrectly = true;
 							}
@@ -476,6 +478,29 @@ O o";
 			using (var environment = new TestEnvironment())
 			{
 				const string id = "en-audio";
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(id, "",
+														  "", "", "", 0, false, "", "", true, false)
+					);
+				var migrator = new WritingSystemMigrator(
+					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
+					environment.PathToWsPrefsFile,
+					environment.ChangeRfcTags);
+				migrator.Migrate();
+				string pathToEnFile = environment.GetFileForOriginalRfcTag(id);
+
+				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type = 'en']");
+				AssertThatXmlIn.File(pathToEnFile).HasNoMatchForXpath("/ldml/identity/script");
+				AssertThatXmlIn.File(pathToEnFile).HasNoMatchForXpath("/ldml/identity/region");
+				AssertThatXmlIn.File(pathToEnFile).HasNoMatchForXpath("/ldml/identity/variant");
+			}
+		}
+
+		[Test]
+		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsAudioIsFalse_AudioIsRemovedFromRfcTag()
+		{
+			using (var environment = new TestEnvironment())
+			{
+				const string id = "en-Audio";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(id, "",
 														  "", "", "", 0, false, "", "", true, false)
 					);

@@ -8,17 +8,20 @@ using Palaso.WritingSystems.Migration;
 
 namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 {
-	public class WritingSystemMigrator:Migrator
+	public class WritingSystemMigrator:MigratorBase
 	{
-		private Dictionary<string, string> _oldToNewRfcTagMap = new Dictionary<string, string>();
-		private ConsumerLevelRfcTagChanger _rfcTagChanger;
+		private WesayWsPrefsToPalasoWsLdmlMigrationStrategy.OnMigrationFn _rfcTagChanger;
 		private string _pathToSourceFile;
 
-		public WritingSystemMigrator(int versionToMigrateTo, string sourceFilePath, ConsumerLevelRfcTagChanger rfcTagChanger) : base(versionToMigrateTo, sourceFilePath)
+		public WritingSystemMigrator(int versionToMigrateTo, string sourceFilePath, WesayWsPrefsToPalasoWsLdmlMigrationStrategy.OnMigrationFn rfcTagChanger)
+			: base(versionToMigrateTo)
 		{
 			_rfcTagChanger = rfcTagChanger;
 			_pathToSourceFile = sourceFilePath;
 		}
+
+		private string BackupFilePath { get; set; }
+		private string SourceFilePath { get; set; }
 
 		public void Migrate()
 		{
@@ -34,7 +37,7 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 			if (currentVersion == 0)
 			{
 				string pathToWritingSystemRepoToCreate = Path.Combine(Path.GetDirectoryName(SourceFilePath), "WritingSystems");
-				var strategy = new WesayWsPrefsToPalasoWsLdmlMigrationStrategy(UpdateOldToNewRfcTagMap);
+				var strategy = new WesayWsPrefsToPalasoWsLdmlMigrationStrategy(_rfcTagChanger);
 				string sourceFilePath = SourceFilePath;
 				string destinationFilePath = String.Format("{0}.Migrate_{1}_{2}", SourceFilePath, strategy.FromVersion,
 													strategy.ToVersion);
@@ -55,15 +58,6 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 						Directory.Delete(filePath);
 					}
 				}
-			}
-			_rfcTagChanger(_oldToNewRfcTagMap);
-		}
-
-		void UpdateOldToNewRfcTagMap(Dictionary<string, string> oldToNewRfcTagMapFromSingleStrategy)
-		{
-			foreach (var oldandNewRfcTagPair in oldToNewRfcTagMapFromSingleStrategy)
-			{
-				_oldToNewRfcTagMap[oldandNewRfcTagPair.Key] = oldandNewRfcTagPair.Value;
 			}
 		}
 	}

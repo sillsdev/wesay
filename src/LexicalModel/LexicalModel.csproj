@@ -205,7 +205,6 @@
 	<Compile Include="Foundation\WritingSystemCollection_V1.cs" />
 	<Compile Include="Foundation\WritingSystemInfo.cs" />
 	<Compile Include="Foundation\WritingSystemMigration\LdmlDataMapper.cs" />
-	<Compile Include="Foundation\WritingSystemMigration\LdmlNodeComparerV0.cs" />
 	<Compile Include="Foundation\WritingSystemMigration\PalasoWritingSystemDefinitionV0.cs" />
 	<Compile Include="Foundation\WritingSystemMigration\WesayWsPrefsToPalasoWsLdmlMigrationStrategy.cs" />
 	<Compile Include="Foundation\WritingSystemMigration\WritingSystemMigrator.cs" />
