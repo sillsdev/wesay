@@ -173,6 +173,8 @@
 	  <DesignTime>True</DesignTime>
 	</Compile>
 	<Compile Include="Foundation\WritingSystemCollectionTests.cs" />
+	<Compile Include="Foundation\WritingSystemCollection_V1Tests.cs">
+	</Compile>
 	<Compile Include="Foundation\WritingSystemInfoTests.cs" />
 	<Compile Include="Foundation\WritingSystemTests.cs" />
 	<Compile Include="LexEntryRepositoryCachingTests.cs" />
