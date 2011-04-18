@@ -43,7 +43,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 
 			public string GetFileForOriginalRfcTag(string oldRfcTag)
 			{
-				return Path.Combine(_pathToLdmlWsRepo, _oldToNewRfcTagMap.First(info => info.RfcTagAfterMigration == oldRfcTag).RfcTagAfterMigration + ".ldml");
+				return Path.Combine(_pathToLdmlWsRepo, _oldToNewRfcTagMap.First(info => info.RfcTagBeforeMigration == oldRfcTag).RfcTagAfterMigration + ".ldml");
 			}
 
 			public void WriteContentToWsPrefsFile(string content)
@@ -411,7 +411,7 @@ O o";
 					delegate(IEnumerable<WesayWsPrefsToPalasoWsLdmlMigrationStrategy.MigrationInfo> oldToNewRfcTagsMap)
 						{
 							if(oldToNewRfcTagsMap.
-								First(info => info.RfcTagAfterMigration == "en").
+								First(info => info.RfcTagBeforeMigration == "en").
 								RfcTagAfterMigration =="en-Zxxx-x-audio")
 							{
 								delegateCalledCorrectly = true;

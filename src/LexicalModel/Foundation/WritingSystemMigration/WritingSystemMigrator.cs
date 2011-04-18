@@ -10,39 +10,37 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 {
 	public class WritingSystemMigrator:MigratorBase
 	{
+		private readonly string _sourceFilePath;
 		private WesayWsPrefsToPalasoWsLdmlMigrationStrategy.OnMigrationFn _rfcTagChanger;
-		private string _pathToSourceFile;
 
 		public WritingSystemMigrator(int versionToMigrateTo, string sourceFilePath, WesayWsPrefsToPalasoWsLdmlMigrationStrategy.OnMigrationFn rfcTagChanger)
 			: base(versionToMigrateTo)
 		{
 			_rfcTagChanger = rfcTagChanger;
-			_pathToSourceFile = sourceFilePath;
+			_sourceFilePath = sourceFilePath;
 		}
-
-		private string BackupFilePath { get; set; }
-		private string SourceFilePath { get; set; }
 
 		public void Migrate()
 		{
+			string _backupFilePath = _sourceFilePath + ".bak";
 			var filesToDelete = new List<string>();
 			var directoriesToDelete = new List<string>();
-			if (File.Exists(BackupFilePath))
+			if (File.Exists(_backupFilePath))
 			{
-				File.Delete(BackupFilePath);
+				File.Delete(_backupFilePath);
 			}
-			File.Copy(SourceFilePath, BackupFilePath);
-			filesToDelete.Add(BackupFilePath);
-			int currentVersion = new WritingSystemPrefsVersionGetter().GetFileVersion(_pathToSourceFile);
+			File.Copy(_sourceFilePath, _backupFilePath);
+			filesToDelete.Add(_backupFilePath);
+			int currentVersion = new WritingSystemPrefsVersionGetter().GetFileVersion(_sourceFilePath);
 			if (currentVersion == 0)
 			{
-				string pathToWritingSystemRepoToCreate = Path.Combine(Path.GetDirectoryName(SourceFilePath), "WritingSystems");
+				string pathToWritingSystemRepoToCreate = Path.Combine(Path.GetDirectoryName(_sourceFilePath), "WritingSystems");
 				var strategy = new WesayWsPrefsToPalasoWsLdmlMigrationStrategy(_rfcTagChanger);
-				string sourceFilePath = SourceFilePath;
-				string destinationFilePath = String.Format("{0}.Migrate_{1}_{2}", SourceFilePath, strategy.FromVersion,
+				string sourceFilePath = _sourceFilePath;
+				string destinationFilePath = String.Format("{0}.Migrate_{1}_{2}", _sourceFilePath, strategy.FromVersion,
 													strategy.ToVersion);
 				strategy.Migrate(sourceFilePath, destinationFilePath);
-				File.Delete(SourceFilePath);
+				File.Delete(_sourceFilePath);
 				Directory.Move(destinationFilePath, pathToWritingSystemRepoToCreate);
 				foreach (var filePath in filesToDelete)
 				{
