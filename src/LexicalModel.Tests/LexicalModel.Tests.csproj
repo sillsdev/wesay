@@ -172,7 +172,7 @@
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	</Compile>
-	<Compile Include="Foundation\WritingSystemCollectionTests.cs" />
+	<Compile Include="Foundation\LdmlInFolderWritingSystemRepositoryTests.cs" />
 	<Compile Include="Foundation\WritingSystemCollection_V1Tests.cs">
 	</Compile>
 	<Compile Include="Foundation\WritingSystemInfoTests.cs" />
