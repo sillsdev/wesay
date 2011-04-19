@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Palaso.Migration;
-using Palaso.WritingSystems.Migration;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 {
@@ -11,7 +11,7 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 	{
 		internal class SubTag
 		{
-			private List<string> _subTagParts;
+			private readonly List<string> _subTagParts;
 
 			public SubTag()
 			{
@@ -127,14 +127,13 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 			{
 				Directory.CreateDirectory(destinationFilePath);
 			}
-			var _wesayWsCollection = new WritingSystemCollection_V1();
-			_wesayWsCollection.LoadFromLegacyWeSayFile(sourceFilePath);
+			var wesayWsCollection = new WritingSystemCollection_V1();
+			wesayWsCollection.LoadFromLegacyWeSayFile(sourceFilePath);
 
-			foreach (var writingSystem in _wesayWsCollection.Values)
+			foreach (var writingSystem in wesayWsCollection.Values)
 			{
-				var currentMigrationInfo = new MigrationInfo();
-				currentMigrationInfo.RfcTagBeforeMigration = writingSystem.ISO;
-				var wsDef = new PalasoWritingSystemDefinitionV0();
+				var currentMigrationInfo = new MigrationInfo {RfcTagBeforeMigration = writingSystem.ISO};
+				var wsDef = new WritingSystemDefinitionV0();
 				if(writingSystem.IsAudio)
 				{
 					wsDef.Script = WellKnownSubTags.Audio.Script;
@@ -161,17 +160,17 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 				{
 					//when no custom sort rules were specified
 					wsDef.SortRules = String.IsNullOrEmpty(writingSystem.CustomSortRules) ? writingSystem.ISO : writingSystem.CustomSortRules;
-					wsDef.SortUsing = PalasoWritingSystemDefinitionV0.SortRulesType.OtherLanguage;
+					wsDef.SortUsing = WritingSystemDefinitionV0.SortRulesType.OtherLanguage;
 				}
 				else if (writingSystem.SortUsing.Equals("CustomICU"))
 				{
 					wsDef.SortRules = writingSystem.CustomSortRules;
-					wsDef.SortUsing = PalasoWritingSystemDefinitionV0.SortRulesType.CustomICU;
+					wsDef.SortUsing = WritingSystemDefinitionV0.SortRulesType.CustomICU;
 				}
 				else if (writingSystem.SortUsing.Equals("CustomSimple"))
 				{
 					wsDef.SortRules = writingSystem.CustomSortRules;
-					wsDef.SortUsing = PalasoWritingSystemDefinitionV0.SortRulesType.CustomSimple;
+					wsDef.SortUsing = WritingSystemDefinitionV0.SortRulesType.CustomSimple;
 				}
 
 				//wsDef.VerboseDescription //not written out by ldmladaptor - flex?
@@ -179,7 +178,7 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 				//wsDef.NativeName //not written out by ldmladaptor - flex?
 
 				string pathForNewLdmlFile = Path.Combine(destinationFilePath, wsDef.Rfc5646 + ".ldml");
-				new PalasoLdmlAdaptorV0().Write(pathForNewLdmlFile, wsDef, null);
+				new LdmlAdaptorV0().Write(pathForNewLdmlFile, wsDef, null);
 
 				currentMigrationInfo.RfcTagAfterMigration = wsDef.Rfc5646;
 				migrationInfo.Add(currentMigrationInfo);
