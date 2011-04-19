@@ -168,6 +168,7 @@
   <ItemGroup>
 	<Compile Include="BasilProjectTests.cs" />
 	<Compile Include="ChorusBackupMakerTests.cs" />
+	<Compile Include="CommonDirectoryFileTests.cs" />
 	<Compile Include="ConfigMigration\WeSayUserConfigMigrationTests.cs" />
 	<Compile Include="LiftUpdateTests.cs" />
 	<Compile Include="ConfigMigration\WeSayConfigMigrationTests.cs" />

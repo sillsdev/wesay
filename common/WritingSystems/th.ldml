@@ -10,5 +10,6 @@
 		<palaso:abbreviation value="th" />
 		<palaso:defaultFontFamily value="Arial" />
 		<palaso:defaultFontSize value="12" />
+		<palaso:version value="1" />
 	</special>
 </ldml>
