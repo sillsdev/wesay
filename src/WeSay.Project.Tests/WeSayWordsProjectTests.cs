@@ -454,30 +454,25 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		//This test was formerly part of the LdmlInFolderWritingSystemCollectionTests and needs to be changed to test that a new WeSayProject comes with an "UnknownVernacular" writingsystem 4/19/2011
+		//This test was formerly part of the LdmlInFolderWritingSystemCollectionTests TA 4/19/2011
 		[Category("WritingSystemRefactor")]
 		public void ProjectCreation_WritingSystemCollection_HasUnknownVernacular()
 		{
-			throw new NotImplementedException();
-			//string pathToWritingSystemsFolder
-			//Assert.Fail("WeSayProject Tests should perhaps implement this... cjh");
-
-			//IWritingSystemRepository c = new LdmlInFolderWritingSystemRepository(pathToWritingSystemsFolder);
-			//Assert.IsNotNull(c.Get(WritingSystemInfo.IdForUnknownVernacular));
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemInfo.IdForUnknownVernacular));
+			}
 		}
 
 		[Test]
-		//This test was formerly part of the LdmlInFolderWritingSystemCollectionTests and needs to be changed to test that a new WeSayProject comes with an "UnknownAnalysis" writingsystem 4/19/2011
+		//This test was formerly part of the LdmlInFolderWritingSystemCollectionTests TA 4/19/2011
 		[Category("WritingSystemRefactor")]
 		public void WritingSystemCollection_HasUnknownAnalysis()
 		{
-			throw new NotImplementedException();
-			//using (var e = new TestEnvironment())
-			//{
-			//    Assert.Fail("WeSayProject Tests should perhaps implement this... cjh");
-			//    IWritingSystemRepository c = new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
-			//    Assert.IsNotNull(c.Get(WritingSystemInfo.IdForUnknownAnalysis));
-			//}
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemInfo.IdForUnknownAnalysis));
+			}
 		}
 	}
 }
