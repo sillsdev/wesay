@@ -77,6 +77,7 @@ namespace WeSay.Project
 			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.AnalysisIdForTest));
 			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownVernacular));
 
+
 			wsc.Save();
 
 			project.SetupProjectDirForTests(WeSayWordsProject.PathToPretendLiftFile);

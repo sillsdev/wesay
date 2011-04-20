@@ -25,7 +25,7 @@ namespace WeSay.LexicalTools.Tests
 		private string _semanticDomainFilePath;
 		private string _filePath;
 		private ViewTemplate _viewTemplate;
-		private static string _vernacularWritingSystemId = "br";
+		private static string _vernacularWritingSystemId = WritingSystemInfo.VernacularIdForTest;
 
 		[TestFixtureSetUp]
 		public void FixtureSetup()
