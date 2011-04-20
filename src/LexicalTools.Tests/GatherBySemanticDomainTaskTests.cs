@@ -1165,6 +1165,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ParseFrenchSemanticDomainFile_Localized()
 		{
+			WeSayWordsProject.Project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("fr"));
 			string frenchSemanticDomainFilePath = Path.GetTempFileName();
 			using (StreamWriter streamWriter = File.CreateText(frenchSemanticDomainFilePath))
 			{
