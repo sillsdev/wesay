@@ -7,15 +7,14 @@ namespace WeSay.ConfigTool
 {
 	public class WritingSystemSetup: ConfigurationControlBase
 	{
-		private readonly WritingSystemSetupView _view;
-
 		public WritingSystemSetup(ILogger logger, IWritingSystemRepository store)
 			: base("set up fonts, keyboards, and sorting", logger)
 		{
-			_view = new WritingSystemSetupView(new WritingSystemSetupModel(store))
+			var view = new WritingSystemSetupView(new WritingSystemSetupModel(store))
 						{
 							Dock = DockStyle.Fill
 						};
+			Controls.Add(view);
 		}
 
 	}
