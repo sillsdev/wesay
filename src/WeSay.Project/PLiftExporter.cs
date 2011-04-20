@@ -280,7 +280,7 @@ namespace WeSay.Project
 			{
 				return text.Forms;
 			}
-			return text.GetOrderedAndFilteredForms(f.GetTextOnlyWritingSystemIds(_viewTemplate.WritingSystems));
+			return text.GetOrderedAndFilteredForms(_viewTemplate.WritingSystems.FilterForTextIds(f.WritingSystemIds));
 		}
 	}
 }

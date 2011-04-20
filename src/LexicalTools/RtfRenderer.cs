@@ -214,9 +214,10 @@ namespace WeSay.LexicalTools
 
 				if (field == null) // show them all
 				{
-					foreach (LanguageForm l in GetActualTextForms(text, WritingSystems))
+					foreach (string id in WritingSystems.FilterForTextIds(text.Forms.Select(f=>f.WritingSystemId)))
 					{
-						RenderForm(text, currentItem, rtfBuilder, l, sizeBoost);
+						var form = text.Forms.First(f => f.WritingSystemId == id);
+						RenderForm(text, currentItem, rtfBuilder, form, sizeBoost);
 					}
 				}
 				else //todo: show all those turned on for the field?
@@ -231,11 +232,11 @@ namespace WeSay.LexicalTools
 			return rtfBuilder.ToString();
 		}
 
-		public static IList<LanguageForm> GetActualTextForms(MultiText text, IWritingSystemRepository writingSytems)
-		{
-			var x = text.Forms.Where(f => !writingSytems.Get(f.WritingSystemId).IsVoice);
-			return new List<LanguageForm>(x);
-		}
+		//public static IList<LanguageForm> GetActualTextForms(MultiText text, IWritingSystemRepository writingSytems)
+		//{
+		//    var x = text.Forms.Where(f => !writingSytems.Get(f.WritingSystemId).IsVoice);
+		//    return new List<LanguageForm>(x);
+		//}
 
 		private static void RenderForm(MultiText text,
 									   CurrentItemEventArgs currentItem,

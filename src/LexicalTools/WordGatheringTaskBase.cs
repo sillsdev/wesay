@@ -36,13 +36,14 @@ namespace WeSay.LexicalTools
 			}
 			else
 			{
-				_lexicalFormWritingSystem = GetFirstTestWritingSystemOfField(lexicalFormField);
+
+				_lexicalFormWritingSystem = GetFirstTextWritingSystemOfField(lexicalFormField);
 			}
 		}
 
-		protected WritingSystemDefinition GetFirstTestWritingSystemOfField(Field field)
+		protected WritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
 		{
-			var ids = field.GetTextOnlyWritingSystemIds(BasilProject.Project.WritingSystems);
+			var ids = BasilProject.Project.WritingSystems.FilterForTextIds(field.WritingSystemIds);
 			if(ids.Count()==0)
 			{
 				throw new ConfigurationException(string.Format("The field {0} must have at least one non-audio writing system.", field.DisplayName));
