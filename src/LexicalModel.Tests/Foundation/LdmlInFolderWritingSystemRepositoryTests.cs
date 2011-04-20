@@ -29,15 +29,15 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 			public void CreateLdmlWritingSystemDefinitionFile()
 			{
-				IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(_ldmlWsFolder.Path);
+				IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(PathToWritingSystemsFolder);
 				WritingSystemDefinition ws = CreateDetailedWritingSystem("en");
 				wsCollectionToBeWritten.Set(ws);
 				wsCollectionToBeWritten.Save();
 			}
 
-			public static IWritingSystemRepository MakeSampleCollection()
+			public IWritingSystemRepository MakeSampleCollection()
 			{
-				var writingSystemStore = new LdmlInFolderWritingSystemRepository();
+				var writingSystemStore = new LdmlInFolderWritingSystemRepository(PathToWritingSystemsFolder);
 				writingSystemStore.Set(WritingSystemDefinition.FromLanguage("en"));
 				writingSystemStore.Set(WritingSystemDefinition.FromLanguage("de"));
 				return writingSystemStore;
@@ -187,7 +187,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			using (var e = new TestEnvironment())
 			{
-				var store = TestEnvironment.MakeSampleCollection();
+				var store = e.MakeSampleCollection();
 
 				store.Save();
 

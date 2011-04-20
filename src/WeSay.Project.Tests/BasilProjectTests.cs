@@ -126,6 +126,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void NewProject_ContainsOnlyLegacyWeSayWritingsystemsFile_WritingSystemsAreLoadedFromThatFile()
 		{
 			Assert.Fail("cjh: move to migrator?");
@@ -150,6 +151,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void NewProject_ContainsOnlyLegacyWeSayWritingsystemsFile_LegacyFileIsDeleted()
 		{
 			Assert.Fail("cjh: move to migrator?");
@@ -212,6 +214,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void NewProject_ContainsLdmlWritingSystemFiles_LdmlFilesAreLoaded()
 		{
 			Assert.Fail("Move to migrator");
@@ -227,6 +230,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void NewProject_ContainsLdmlAndLegacyWritingSystemFiles_OnlyLdmlFilesAreLoaded()
 		{
 			Assert.Fail("cjh: move to migrator?");

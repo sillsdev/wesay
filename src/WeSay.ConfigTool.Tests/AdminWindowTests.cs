@@ -160,6 +160,7 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void NewProjectShowsMultipleWritingSystems()
 		{
 			Assert.Fail("cjh: this test reflects the old UI: redesign test for the new UI, otherwise remove test?");

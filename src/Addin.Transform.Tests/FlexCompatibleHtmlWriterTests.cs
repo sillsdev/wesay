@@ -88,8 +88,6 @@ namespace Addin.Transform.Tests
 
             var pathToDefinition = "div/div/div[@class='entry']/span[@class='senses']/span[@class='sense']/span[@class='definition_L2']";
             AssertBodyHas(pathToDefinition);
-			Assert.Fail(
-				"cjh: the XML body in this test is missing the definition_L2.  PLiftExporter is not properly creating this XML portion from the lexentry...");
             AssertBodyHas(pathToDefinition+"/span[@class='xitem' and @lang='en' and text()='fruit']");
             AssertBodyHas(pathToDefinition+"/span[@class='xitem' and @lang='fr' and text()='pomme']");
         }
@@ -134,8 +132,6 @@ namespace Addin.Transform.Tests
             var pathToSense = "div/div/div[@class='entry']/span[@class='senses']/span[@class='sense']";
             var pathToExamples = pathToSense+"/span[@class='examples']";
             AssertBodyHas(pathToExamples);
-			Assert.Fail(
-				"cjh: the XML body in this test is missing the example sentences for the sense, and I don't know why.  PLiftExporter is not creating XML from the lexentry...");
 			AssertBodyHas(pathToExamples + "/span[@class='example' and @lang='qaa' and text()='first example']");
 			AssertBodyHas(pathToExamples + "/span[@class='example' and @lang='qaa' and text()='second example']");
             //notice, they aren't nested in example

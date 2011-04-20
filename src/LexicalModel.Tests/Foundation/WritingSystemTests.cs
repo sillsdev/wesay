@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
@@ -8,19 +9,35 @@ namespace WeSay.LexicalModel.Tests.Foundation
 	public class WritingSystemTests
 	{
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void NoSetupDefaultFont()
 		{
-			Assert.Fail("cjh: bogus test");
-			var ws = WritingSystemDefinition.FromLanguage("xx");
-			Assert.AreEqual(33, WritingSystemInfo.CreateFont(ws).Size);
+			Assert.Fail("cjh: Delete me. This is now a bogus test since it is testing the WritingSystem constructor taking a Font, and we removed that constructor.");
+			//WritingSystem ws = new WritingSystem("xx", new Font("Times", 33));
+			//Assert.AreEqual(33, WritingSystemInfo.CreateFont(ws).Size);
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void Construct_DefaultFont()
 		{
-			Assert.Fail("cjh: bogus test");
+			Assert.Fail("cjh: This is a bogus test since the constructor no longer sets a default Font; this test is replaced by the two tests below it");
+			//WritingSystem ws = new WritingSystem();
+			//Assert.IsNotNull(ws.Font);
+		}
+
+		[Test]
+		public void DefaultConstructor_GetFontSize_Returns0()
+		{
 			var ws = new WritingSystemDefinition();
-			Assert.IsNotNull(WritingSystemInfo.CreateFont(ws));
+			Assert.AreEqual(0, ws.DefaultFontSize);
+		}
+
+		[Test]
+		public void DefaultConstructor_GetFontName_ReturnsEmpty()
+		{
+			var ws = new WritingSystemDefinition();
+			Assert.IsNullOrEmpty(ws.DefaultFontName);
 		}
 
 		[Test]
@@ -67,11 +84,12 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void SortUsingOtherLanguage_Null_SetToId()
 		{
 			// Not convinced that this needs to be true. Given that the sort method is known to be OtherLanguage then
 			// the implementation can just ignore sort rules and use the id instead.
-			Assert.Fail("cjh: See comment in test.  Not sure about the validity of this contract");
+			Assert.Fail("cjh: See comment in test.  Not sure about the validity of this contract. Palaso returns empty string, but wesay expects the id.  TA thinks that SortUsingOtherLanguage(null) should throw.");
 			var writingSystem = WritingSystemDefinition.FromLanguage("th");
 			writingSystem.SortUsingOtherLanguage(null);
 			Assert.AreEqual(writingSystem.Id, writingSystem.SortRules);
@@ -91,7 +109,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Category("WritingSystemRefactor")]
 		public void GetHashCode_SameIdDefaultsDifferentFont_Same()
 		{
-			Assert.Fail("cjh: Why is this test failing? I don't see why these objects aren't the same");
+			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
 			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.DefaultFontName = "Arial";
 			writingSystem1.DefaultFontSize = 12;
@@ -106,7 +124,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Category("WritingSystemRefactor")]
 		public void GetHashCode_SameIdSortUsingNoCustomRules_Same()
 		{
-			Assert.Fail("cjh: Why is this test failing? I don't see why these objects aren't the same");
+			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
 			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingOtherLanguage("th");
 			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("en");
@@ -119,7 +137,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Category("WritingSystemRefactor")]
 		public void GetHashCode_SameIdSortUsingCustomRules_Same()
 		{
-			Assert.Fail("cjh: Why is this test failing? I don't see why these objects aren't the same");
+			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
 			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingCustomSimple("A");
 
@@ -130,8 +148,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void GetHashCode_DifferentId_Different()
 		{
+			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
 			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("th");
 
@@ -139,8 +159,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void GetHashCode_DifferentSortUsing_Different()
 		{
+			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
 			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingOtherLanguage("th");
 			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("en");
@@ -150,8 +172,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void GetHashCode_DifferentCustomSortRuleTypes_Different()
 		{
+			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
 			var writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingCustomSimple("A");
 
@@ -162,8 +186,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
+		[Category("WritingSystemRefactor")]
 		public void GetHashCode_DifferentCustomSortRules_Different()
 		{
+			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
 			var writingSystem1 = WritingSystemDefinition.FromLanguage("en");
 			writingSystem1.SortUsingCustomSimple("A");
 
