@@ -455,7 +455,7 @@ namespace WeSay.Project.Tests
 
 		[Test]
 		//This test was formerly part of the LdmlInFolderWritingSystemCollectionTests TA 4/19/2011
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void ProjectCreation_WritingSystemCollection_HasUnknownVernacular()
 		{
 			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
@@ -466,7 +466,7 @@ namespace WeSay.Project.Tests
 
 		[Test]
 		//This test was formerly part of the LdmlInFolderWritingSystemCollectionTests TA 4/19/2011
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void WritingSystemCollection_HasUnknownAnalysis()
 		{
 			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())

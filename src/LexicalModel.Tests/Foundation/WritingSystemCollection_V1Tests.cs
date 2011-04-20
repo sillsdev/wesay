@@ -53,7 +53,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void TrimToActualTextWritingSystemIds_RemovesAudio()
 		{
 			Assert.Fail("The method under test here should NEVER be used again... it is not relevant in the context of migration and this class should ONLY be used in the context of migration. This test should be ignored/ removed imho. TA 4/18/2011");
@@ -69,7 +69,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void MissingIdIsHandledOk()
 		{
 			Assert.Fail("The method under test creates a new writing system if it does not exist. It is NOT testing that a given writing system exists on creation. We should never have a need to create writing systems apart from those in the file to be migrated. This test should be ignored/ removed imho. TA 4/18/2011");
@@ -95,7 +95,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void SerializeCollection()
 		{
 			Assert.Fail("We should never be writing out (ie serializing) a writing system collection again... it is not relevant in the context of migration and this class should ONLY be used in the context of migration. This test should be ignored/ removed imho. TA 4/18/2011");
@@ -131,7 +131,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void WritingSystemCollection_V1_HasUnknownVernacular()
 		{
 			Assert.Fail("The method under test actually creates a new writing system if it does not exist. It is NOT testing that a given writing system exists on creation. Ie if I write out a new WritingSystemCollection_V1 it will NOT contain 'UnknownVernacularWritingSystem'. We should never have a need to create writing systems apart from those in the file to be migrated. This test should be ignored/ removed imho. TA 4/18/2011");
@@ -140,7 +140,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void WritingSystemCollection_V1_HasUnknownAnalysis()
 		{
 			Assert.Fail("The method under test actually creates a new writing system if it does not exist. It is NOT testing that a given writing system exists on creation. Ie if I write out a new WritingSystemCollection_V1 it will NOT contain 'UnknownAnalysisWritingSystem'. We should never have a need to create writing systems apart from those in the file to be migrated. This test should be ignored/ removed imho. TA 4/18/2011");

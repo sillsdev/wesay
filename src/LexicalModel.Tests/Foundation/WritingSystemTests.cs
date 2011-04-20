@@ -9,7 +9,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 	public class WritingSystemTests
 	{
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void NoSetupDefaultFont()
 		{
 			Assert.Fail("cjh: Delete me. This is now a bogus test since it is testing the WritingSystem constructor taking a Font, and we removed that constructor.");
@@ -18,7 +18,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void Construct_DefaultFont()
 		{
 			Assert.Fail("cjh: This is a bogus test since the constructor no longer sets a default Font; this test is replaced by the two tests below it");
@@ -84,7 +84,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void SortUsingOtherLanguage_Null_SetToId()
 		{
 			// Not convinced that this needs to be true. Given that the sort method is known to be OtherLanguage then
@@ -106,7 +106,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void GetHashCode_SameIdDefaultsDifferentFont_Same()
 		{
 			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
@@ -121,7 +121,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void GetHashCode_SameIdSortUsingNoCustomRules_Same()
 		{
 			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
@@ -134,7 +134,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void GetHashCode_SameIdSortUsingCustomRules_Same()
 		{
 			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
@@ -148,7 +148,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void GetHashCode_DifferentId_Different()
 		{
 			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
@@ -159,7 +159,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void GetHashCode_DifferentSortUsing_Different()
 		{
 			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
@@ -172,7 +172,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void GetHashCode_DifferentCustomSortRuleTypes_Different()
 		{
 			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
@@ -186,7 +186,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void GetHashCode_DifferentCustomSortRules_Different()
 		{
 			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");

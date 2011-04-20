@@ -1169,7 +1169,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void GetHomographNumber_AssignesUniqueNumbers()
 		{
 			LexEntry entryOther = MakeEntryWithLexemeForm("en", "blue");
@@ -1189,7 +1189,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void GetHomographNumber_ThirdEntry_Returns3()
 		{
 			LexEntry entryOther = MakeEntryWithLexemeForm("en", "blue");

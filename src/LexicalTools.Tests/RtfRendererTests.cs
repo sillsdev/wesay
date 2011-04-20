@@ -14,7 +14,7 @@ namespace WeSay.LexicalTools.Tests
 	{
 
 		[Test]
-		[Category("WritingSystemRefactor")]
+		[Category("For review")]
 		public void GetActualTextForms_DropsIsAudioForm()
 		{
 			Assert.Fail("We removed this method in favor of a more general one on the writingsystemrepo.");
