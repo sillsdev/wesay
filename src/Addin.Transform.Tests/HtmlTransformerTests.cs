@@ -48,12 +48,13 @@ namespace Addin.Transform.Tests
 
 		private void LaunchAddin()
 		{
-			string contents =
-					string.Format(
-							@"<?xml version='1.0' encoding='utf-8'?>
-<lift  version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>",
-							Validator.LiftVersion);
-			File.WriteAllText(_liftFilePath, contents);
+// cjh: what's the point of this file... it doesn't seem to be used anywhere...
+//            string contents =
+//                    string.Format(
+//                            @"<?xml version='1.0' encoding='utf-8'?>
+//<lift  version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>",
+//                            Validator.LiftVersion);
+//            File.WriteAllText(_liftFilePath, contents);
 			_addin.Launch(null,
 						  WeSayWordsProject.Project.GetProjectInfoForAddin());
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
