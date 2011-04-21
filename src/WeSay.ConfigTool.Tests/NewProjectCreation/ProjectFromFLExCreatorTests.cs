@@ -262,6 +262,7 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 		<palaso:abbreviation value=""test"" />
 		<palaso:defaultFontFamily value=""Arial"" />
 		<palaso:defaultFontSize value=""12"" />
+		<palaso:version value=""1"" />
 	</special>
 </ldml>";
 
@@ -273,6 +274,41 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 					ldmlFile.MoveTo(Path.Combine(testDir.Path, "qaa.ldml"));
 					var targetDir = testDir.Combine("target");
 					Assert.IsTrue(ProjectFromFLExCreator.Create(targetDir, lift.Path));
+					AssertFileExistsInTargetDir(Path.Combine(targetDir, "WritingSystems"), "qaa.ldml");
+				}
+			}
+		}
+
+		[Test]
+		public void Create_OldLdmlWritingSystemsFound_CopiesWritingSystemsAndMigratesThem()
+		{
+			string ldmlText =
+@"<?xml version=""1.0"" encoding=""utf-8""?>
+<ldml>
+	<identity>
+		<version number="""" />
+		<generation date=""0001-01-01T00:00:00"" />
+		<language type=""qaa"" />
+	</identity>
+	<collations />
+	<special xmlns:palaso=""urn://palaso.org/ldmlExtensions/v1"">
+		<palaso:abbreviation value=""test"" />
+		<palaso:defaultFontFamily value=""Arial"" />
+		<palaso:defaultFontSize value=""12"" />
+	</special>
+</ldml>";
+
+			using (var testDir = new TemporaryFolder("NormalSituation_CreatesProject"))
+			{
+				var lift = new TempLiftFile(testDir, "", "0.12");
+				using (var ldmlFile = new TempFile(ldmlText))
+				{
+					ldmlFile.MoveTo(Path.Combine(testDir.Path, "qaa.ldml"));
+					var targetDir = testDir.Combine("target");
+					//using (var report = new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+					{
+						Assert.IsTrue(ProjectFromFLExCreator.Create(targetDir, lift.Path));
+					}
 					AssertFileExistsInTargetDir(Path.Combine(targetDir, "WritingSystems"), "qaa.ldml");
 				}
 			}
