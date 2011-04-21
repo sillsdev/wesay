@@ -97,8 +97,11 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 				//put one guy in there already
 				int originalCount = collection.Count;// collection.Count;
 
-				ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);
-				Assert.IsTrue(collection.Contains("qaa-x-spec"));
+				using (var report = new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+				{
+					ProjectFromFLExCreator.SetWritingSystemsForFields(lift.Path, vt, collection);
+				}
+				Assert.IsTrue(collection.Contains("x-spec"));
 			}
 		}
 
