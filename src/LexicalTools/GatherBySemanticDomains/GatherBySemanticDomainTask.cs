@@ -20,6 +20,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
 	public class GatherBySemanticDomainTask: WordGatheringTaskBase
 	{
+		public ViewTemplate ViewTemplate { get; set; }
 		internal const string DomainIndexTaskMemoryKey = "DomainIndex";
 		internal const string QuestionIndexTaskMemoryKey= "QuestionIndex";
 		private readonly string _semanticDomainQuestionsFileName;
@@ -54,6 +55,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				viewTemplate, taskMemoryRepository
 			)
 		{
+			ViewTemplate = viewTemplate;
 			Guard.AgainstNull(config, "config");
 			Guard.AgainstNull(viewTemplate, "viewTemplate");
 			_config = config;

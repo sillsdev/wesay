@@ -27,7 +27,7 @@ namespace WeSay.UI.TextBoxes
 		private static int _widthForWritingSystemLabels = -1;
 		private static WritingSystemCollection _allWritingSystems;
 		private static Font _writingSystemLabelFont;
-		private readonly bool _isSpellCheckingEnabled;
+		public bool IsSpellCheckingEnabled { get; set; }
 		private readonly bool _isMultiParagraph;
 
 		public MultiTextControl(): this(null, null)
@@ -104,7 +104,7 @@ namespace WeSay.UI.TextBoxes
 			}
 			_showAnnotationWidget = showAnnotationWidget;
 			_visibility = visibility;
-			_isSpellCheckingEnabled = isSpellCheckingEnabled;
+			IsSpellCheckingEnabled = isSpellCheckingEnabled;
 			_isMultiParagraph = isMultiParagraph;
 			BuildBoxes(multiTextToCopyFormsFrom);
 		}
@@ -357,7 +357,7 @@ namespace WeSay.UI.TextBoxes
 				box.Multiline = true;
 				box.WordWrap = true;
 				box.MultiParagraph = _isMultiParagraph;
-				box.IsSpellCheckingEnabled = _isSpellCheckingEnabled;
+				box.IsSpellCheckingEnabled = IsSpellCheckingEnabled;
 				//box.Enabled = !box.ReadOnly;
 			}
 

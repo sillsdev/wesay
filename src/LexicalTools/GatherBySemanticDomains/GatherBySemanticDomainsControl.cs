@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
@@ -66,9 +67,28 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				Palaso.Reporting.ErrorReport.ReportFatalMessageWithStackTrace("Apparent issue WS-1202 reproduction. We would like to have a copy of your .wesayconfig file.");
 			}
 
-			_meaningBox.WritingSystemsForThisField = new WritingSystem[] {_presentationModel.DefinitionWritingSystem};
-			_meaningBox.Visible = _presentationModel.ShowDefinitionField;
-			_meaningLabel.Visible = _meaningBox.Visible;
+			//bit of a hack here... we make our own meaning box as a less intrusive way to add spell checking to
+			//this box, which wasn't really designed to work well with auto-generated designer code.
+			//so all this is to be able to turn IsSpellCheckingEnabled before the box is built.
+
+			var meaning = new MultiTextControl(_presentationModel.ViewTemplate.WritingSystems, null);
+			meaning.IsSpellCheckingEnabled = true;
+			meaning.ShowAnnotationWidget = false;
+			meaning.WritingSystemsForThisField = new WritingSystem[] { _presentationModel.DefinitionWritingSystem };
+			meaning.Visible = _presentationModel.ShowDefinitionField;
+			meaning.Anchor = _meaningBox.Anchor;
+			meaning.BackColor = _meaningBox.BackColor;
+			meaning.AutoSize = _meaningBox.AutoSize;
+			meaning.AutoSizeMode = _meaningBox.AutoSizeMode;
+			meaning.Location = _meaningBox.Location;
+			meaning.Size = _meaningBox.Size;
+			meaning.TabIndex = _meaningBox.TabIndex;
+			meaning.KeyDown  += new System.Windows.Forms.KeyEventHandler(this._boxVernacularWord_KeyDown);
+			this.tableLayoutPanel6.Controls.Remove(this._meaningBox);
+			this.tableLayoutPanel6.Controls.Add(meaning, 1, 1);
+
+			_meaningLabel.Visible = _presentationModel.ShowDefinitionField;
+
 
 			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.WritingSystemUserIsTypingIn.Font.GetHeight());
 

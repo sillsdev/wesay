@@ -34,7 +34,7 @@
 			// _showMeaningField
 			//
 			this._showMeaningField.AutoSize = true;
-			this._showMeaningField.Location = new System.Drawing.Point(17, 178);
+			this._showMeaningField.Location = new System.Drawing.Point(17, 203);
 			this._showMeaningField.Name = "_showMeaningField";
 			this._showMeaningField.Size = new System.Drawing.Size(308, 17);
 			this._showMeaningField.TabIndex = 23;
