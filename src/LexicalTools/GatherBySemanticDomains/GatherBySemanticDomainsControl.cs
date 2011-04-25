@@ -86,8 +86,8 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			meaning.KeyDown  += new System.Windows.Forms.KeyEventHandler(this._boxVernacularWord_KeyDown);
 			this.tableLayoutPanel6.Controls.Remove(this._meaningBox);
 			this.tableLayoutPanel6.Controls.Add(meaning, 1, 1);
-
-			_meaningLabel.Visible = _presentationModel.ShowDefinitionField;
+			_meaningBox = meaning;
+		   _meaningLabel.Visible = _presentationModel.ShowDefinitionField;
 
 
 			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.WritingSystemUserIsTypingIn.Font.GetHeight());
