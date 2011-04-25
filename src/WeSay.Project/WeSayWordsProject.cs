@@ -350,6 +350,7 @@ namespace WeSay.Project
 				Console.WriteLine("{0}",PathToConfigFile);
 				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
+			var writingSystemMigrator = new
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
 			//container change InitializeViewTemplatesFromProjectFiles();

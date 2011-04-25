@@ -5,9 +5,9 @@ using System.Linq;
 using Palaso.Migration;
 using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
-namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
+namespace WeSay.Project.ConfigMigration.WritingSystem
 {
-	public class WesayWsPrefsToPalasoWsLdmlMigrationStrategy:IMigrationStrategy
+	public class WritingSystemPrefsToLdmlMigrationStrategy : IMigrationStrategy
 	{
 		internal class SubTag
 		{
@@ -115,7 +115,7 @@ namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
 		public delegate void OnMigrationFn(IEnumerable<MigrationInfo> migrationInfo);
 		private readonly OnMigrationFn _onMigrationCallback;
 
-		public WesayWsPrefsToPalasoWsLdmlMigrationStrategy(OnMigrationFn migrationCb)
+		public WritingSystemPrefsToLdmlMigrationStrategy(OnMigrationFn migrationCb)
 		{
 			_onMigrationCallback = migrationCb;
 		}

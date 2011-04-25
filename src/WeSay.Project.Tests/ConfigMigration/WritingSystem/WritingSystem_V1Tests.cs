@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+﻿using System.Drawing;
 using Exortech.NetReflector;
 using NUnit.Framework;
-using WeSay.LexicalModel.Foundation;
+using WeSay.Project.ConfigMigration.WritingSystem;
 
-namespace WeSay.LexicalModel.Tests.Foundation.Migration
+namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 {
 	[TestFixture]
 	public class WritingSystem_V1Tests

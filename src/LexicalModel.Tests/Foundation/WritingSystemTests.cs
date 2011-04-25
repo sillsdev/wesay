@@ -8,23 +8,6 @@ namespace WeSay.LexicalModel.Tests.Foundation
 	[TestFixture]
 	public class WritingSystemTests
 	{
-		[Test]
-		[Category("For review")]
-		public void NoSetupDefaultFont()
-		{
-			Assert.Fail("cjh: Delete me. This is now a bogus test since it is testing the WritingSystem constructor taking a Font, and we removed that constructor.");
-			//WritingSystem ws = new WritingSystem("xx", new Font("Times", 33));
-			//Assert.AreEqual(33, WritingSystemInfo.CreateFont(ws).Size);
-		}
-
-		[Test]
-		[Category("For review")]
-		public void Construct_DefaultFont()
-		{
-			Assert.Fail("cjh: This is a bogus test since the constructor no longer sets a default Font; this test is replaced by the two tests below it");
-			//WritingSystem ws = new WritingSystem();
-			//Assert.IsNotNull(ws.Font);
-		}
 
 		[Test]
 		public void DefaultConstructor_GetFontSize_Returns0()
@@ -84,18 +67,6 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		[Category("For review")]
-		public void SortUsingOtherLanguage_Null_SetToId()
-		{
-			// Not convinced that this needs to be true. Given that the sort method is known to be OtherLanguage then
-			// the implementation can just ignore sort rules and use the id instead.
-			Assert.Fail("cjh: See comment in test.  Not sure about the validity of this contract. Palaso returns empty string, but wesay expects the id.  TA thinks that SortUsingOtherLanguage(null) should throw.");
-			var writingSystem = WritingSystemDefinition.FromLanguage("th");
-			writingSystem.SortUsingOtherLanguage(null);
-			Assert.AreEqual(writingSystem.Id, writingSystem.SortRules);
-		}
-
-		[Test]
 		public void SortUsingCustomICU_WithSortRules_SetsSortRulesAndSortUsing()
 		{
 			const string rules = "&n < ng <<< Ng <<< NG";
@@ -103,100 +74,6 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			writingSystem.SortUsingCustomICU(rules);
 			Assert.AreEqual(rules, writingSystem.SortRules);
 			Assert.AreEqual(WritingSystemDefinition.SortRulesType.CustomICU, writingSystem.SortUsing);
-		}
-
-		[Test]
-		[Category("For review")]
-		public void GetHashCode_SameIdDefaultsDifferentFont_Same()
-		{
-			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
-			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem1.DefaultFontName = "Arial";
-			writingSystem1.DefaultFontSize = 12;
-			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem2.DefaultFontName = "Arial";
-			writingSystem2.DefaultFontSize = 22;
-
-			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
-		}
-
-		[Test]
-		[Category("For review")]
-		public void GetHashCode_SameIdSortUsingNoCustomRules_Same()
-		{
-			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
-			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem1.SortUsingOtherLanguage("th");
-			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem2.SortUsingOtherLanguage("th");
-
-			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
-		}
-
-		[Test]
-		[Category("For review")]
-		public void GetHashCode_SameIdSortUsingCustomRules_Same()
-		{
-			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
-			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem1.SortUsingCustomSimple("A");
-
-			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem1.SortUsingCustomSimple("A");
-
-			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
-		}
-
-		[Test]
-		[Category("For review")]
-		public void GetHashCode_DifferentId_Different()
-		{
-			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
-			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
-			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("th");
-
-			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
-		}
-
-		[Test]
-		[Category("For review")]
-		public void GetHashCode_DifferentSortUsing_Different()
-		{
-			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
-			WritingSystemDefinition writingSystem1 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem1.SortUsingOtherLanguage("th");
-			WritingSystemDefinition writingSystem2 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem1.SortUsingOtherLanguage("th-TH");
-
-			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
-		}
-
-		[Test]
-		[Category("For review")]
-		public void GetHashCode_DifferentCustomSortRuleTypes_Different()
-		{
-			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
-			var writingSystem1 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem1.SortUsingCustomSimple("A");
-
-			var writingSystem2 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem2.SortUsingCustomICU("A");
-
-			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
-		}
-
-		[Test]
-		[Category("For review")]
-		public void GetHashCode_DifferentCustomSortRules_Different()
-		{
-			Assert.Fail("cjh: GetHashCode is only used in the old WeSay WritingSystem_V1 class... delete test");
-			var writingSystem1 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem1.SortUsingCustomSimple("A");
-
-			var writingSystem2 = WritingSystemDefinition.FromLanguage("en");
-			writingSystem2.SortUsingCustomSimple("A a");
-
-			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
 		}
 
 		[Test]

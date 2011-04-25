@@ -137,10 +137,10 @@ namespace WeSay.Project
 			protected set { _projectDirectoryPath = value; }
 		}
 
-		public static string GetPathToWritingSystemPrefs(string parentDir)
-		{
-				return Path.Combine(parentDir, "WritingSystemPrefs.xml");
-		}
+		//public static string GetPathToWritingSystemPrefs(string parentDir)
+		//{
+		//        return Path.Combine(parentDir, "WritingSystemPrefs.xml");
+		//}
 
 		public static string GetPathToLdmlWritingSystemsFolder(string parentDir)
 		{

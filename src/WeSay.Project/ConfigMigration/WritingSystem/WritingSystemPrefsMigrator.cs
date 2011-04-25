@@ -1,41 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Palaso.Migration;
-using Palaso.WritingSystems.Migration;
 
-namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
+namespace WeSay.Project.ConfigMigration.WritingSystem
 {
-	public class WritingSystemMigrator:MigratorBase
+	public class WritingSystemPrefsMigrator : MigratorBase
 	{
 		private readonly string _sourceFilePath;
-		private WesayWsPrefsToPalasoWsLdmlMigrationStrategy.OnMigrationFn _rfcTagChanger;
+		private readonly WritingSystemPrefsToLdmlMigrationStrategy.OnMigrationFn _onWritingSystemTagChange;
 
-		public WritingSystemMigrator(int versionToMigrateTo, string sourceFilePath, WesayWsPrefsToPalasoWsLdmlMigrationStrategy.OnMigrationFn rfcTagChanger)
+		public WritingSystemPrefsMigrator(int versionToMigrateTo, string sourceFilePath, WritingSystemPrefsToLdmlMigrationStrategy.OnMigrationFn onWritingSystemTagChange)
 			: base(versionToMigrateTo)
 		{
-			_rfcTagChanger = rfcTagChanger;
+			_onWritingSystemTagChange = onWritingSystemTagChange;
 			_sourceFilePath = sourceFilePath;
+		}
+
+		public bool NeedsMigration()
+		{
+			return File.Exists(_sourceFilePath);
 		}
 
 		public void Migrate()
 		{
-			string _backupFilePath = _sourceFilePath + ".bak";
+			string backupFilePath = _sourceFilePath + ".bak";
 			var filesToDelete = new List<string>();
 			var directoriesToDelete = new List<string>();
-			if (File.Exists(_backupFilePath))
+			if (File.Exists(backupFilePath))
 			{
-				File.Delete(_backupFilePath);
+				File.Delete(backupFilePath);
 			}
-			File.Copy(_sourceFilePath, _backupFilePath);
-			filesToDelete.Add(_backupFilePath);
+			File.Copy(_sourceFilePath, backupFilePath);
+			filesToDelete.Add(backupFilePath);
 			int currentVersion = new WritingSystemPrefsVersionGetter().GetFileVersion(_sourceFilePath);
 			if (currentVersion == 0)
 			{
 				string pathToWritingSystemRepoToCreate = Path.Combine(Path.GetDirectoryName(_sourceFilePath), "WritingSystems");
-				var strategy = new WesayWsPrefsToPalasoWsLdmlMigrationStrategy(_rfcTagChanger);
+				var strategy = new WritingSystemPrefsToLdmlMigrationStrategy(_onWritingSystemTagChange);
 				string sourceFilePath = _sourceFilePath;
 				string destinationFilePath = String.Format("{0}.Migrate_{1}_{2}", _sourceFilePath, strategy.FromVersion,
 													strategy.ToVersion);

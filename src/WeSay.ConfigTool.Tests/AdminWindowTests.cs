@@ -159,18 +159,6 @@ namespace WeSay.ConfigTool.Tests
 			//            GotoProjectTab("_tasksPage");
 		}
 
-		[Test]
-		[Category("For review")]
-		public void NewProjectShowsMultipleWritingSystems()
-		{
-			Assert.Fail("cjh: this test reflects the old UI: redesign test for the new UI, otherwise remove test?");
-			_window.CreateAndOpenProject(_projectFolder);
-
-			ClickToolStripButton("_writingSystemButton");
-			//GotoProjectTab("_writingSystemPage");
-			ListBoxTester c = new ListBoxTester("_wsListBox", _window);
-			Assert.Greater(c.Properties.Items.Count, 2);
-		}
 
 		//        private static void GotoProjectTab(string projectTabName)
 		//        {

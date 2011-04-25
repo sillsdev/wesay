@@ -13,7 +13,6 @@ using Palaso.TestUtilities;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
-using WeSay.Project.ConfigMigration;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project.Tests
@@ -474,5 +473,33 @@ namespace WeSay.Project.Tests
 				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemInfo.IdForUnknownAnalysis));
 			}
 		}
+
+		[Test]
+		//WS-33900
+		public void NewProject_ContainsNoWritingsystemFiles_DefaultsAreLoadedButWeDontWriteToTheFilesInTheCommonDirectory()
+		{
+			using (var environment = new ProjectDirectorySetupForTesting(""))
+			{
+				var project = new WeSayWordsProject();
+				project.LoadFromProjectDirectoryPath(environment.PathToDirectory);
+				string pathToWritingSystemsInApplicationCommonDirectory =
+					BasilProject.GetPathToLdmlWritingSystemsFolder(BasilProject.ApplicationCommonDirectory);
+				string englishLdmlContent =
+					File.ReadAllText(Path.Combine(pathToWritingSystemsInApplicationCommonDirectory, "en.ldml"));
+
+				WritingSystemDefinition ws = project.WritingSystems.Get("en");
+				if (ws.Abbreviation == "writeme!")
+				{
+					throw new ApplicationException(
+						"This test seems to have failed at some point and the en.ldml file in the application common directory neesds to be reverted before the next test run.");
+				}
+				ws.Abbreviation = "writeme!";
+				project.Save();
+				Assert.AreEqual(
+					englishLdmlContent,
+					File.ReadAllText(Path.Combine(pathToWritingSystemsInApplicationCommonDirectory, "en.ldml")));
+			}
+		}
+
 	}
 }

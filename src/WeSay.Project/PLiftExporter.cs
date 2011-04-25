@@ -19,7 +19,7 @@ namespace WeSay.Project
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly LexEntryRepository _lexEntryRepository;
-		private readonly IList<string> _headwordWritingSystemIds;
+		private readonly IEnumerable<string> _headwordWritingSystemIds;
 
 		public PLiftExporter(StringBuilder builder,
 							 bool produceFragmentOnly,
@@ -36,9 +36,21 @@ namespace WeSay.Project
 							 ViewTemplate viewTemplate)
 			: base(path, LiftWriter.ByteOrderStyle.BOM)
 		{
+			_disposed = true; // In case we throw in the constructor
 			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
-			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
+			_headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());
+			_disposed = false;
+		}
+
+		public override void Dispose()
+		{
+			base.Dispose();
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
 		}
 
 		private Options _options = Options.DereferenceRelations | Options.DereferenceOptions |

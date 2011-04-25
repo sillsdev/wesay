@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using Palaso.Migration;
 
-namespace WeSay.LexicalModel.Foundation.WritingSystemMigration
+namespace WeSay.Project.ConfigMigration.WritingSystem
 {
 	public class WritingSystemPrefsVersionGetter:IFileVersion
 	{

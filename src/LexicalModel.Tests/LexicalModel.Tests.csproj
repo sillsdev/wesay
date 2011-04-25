@@ -163,8 +163,6 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="ConstructorThrowTests.cs" />
-	<Compile Include="Foundation\Migration\WritingSystemMigratorTests.cs" />
-	<Compile Include="Foundation\Migration\WritingSystem_V1Tests.cs" />
 	<Compile Include="Foundation\Options\OptionList.Tests.cs" />
 	<Compile Include="Foundation\SpellCheckerIdToDisplayStringConverterTests.cs" />
 	<Compile Include="Foundation\TestResources.Designer.cs">
@@ -173,8 +171,6 @@
 	  <DesignTime>True</DesignTime>
 	</Compile>
 	<Compile Include="Foundation\LdmlInFolderWritingSystemRepositoryTests.cs" />
-	<Compile Include="Foundation\WritingSystemCollection_V1Tests.cs">
-	</Compile>
 	<Compile Include="Foundation\WritingSystemInfoTests.cs" />
 	<Compile Include="Foundation\WritingSystemTests.cs" />
 	<Compile Include="LexEntryRepositoryCachingTests.cs" />

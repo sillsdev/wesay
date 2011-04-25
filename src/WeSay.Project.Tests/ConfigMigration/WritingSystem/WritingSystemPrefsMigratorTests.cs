@@ -2,38 +2,38 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using NUnit.Framework;
 using Palaso.TestUtilities;
 using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation.WritingSystemMigration;
+using WeSay.Project.ConfigMigration.WritingSystem;
 
-namespace WeSay.LexicalModel.Tests.Foundation.Migration
+namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 {
 	[TestFixture]
-	public class WritingSystemMigratorTests
+	public class WritingSystemPrefsMigratorTests
 	{
 		private class TestEnvironment : IDisposable
 		{
-			private IEnumerable<WesayWsPrefsToPalasoWsLdmlMigrationStrategy.MigrationInfo> _oldToNewRfcTagMap;
-			private readonly string _pathToWsPrefsFile;
-			private readonly TemporaryFolder _pretendProjectDirectory;
+			private IEnumerable<WesayWsPrefsToPalasoWsLdmlMigrationStrategy.MigrationInfo> _tagMigrationInfo;
+
+			private readonly string _wsPrefsFilePath;
+			private readonly string _ldmlRepositoryPath = "";
+			private readonly TemporaryFolder _testFolder;
 			private readonly XmlNamespaceManager _namespaceManager;
-			private readonly string _pathToLdmlWsRepo = "";
 
 			public TestEnvironment()
 			{
-				_pretendProjectDirectory = new TemporaryFolder("PretendWeSayProject");
-				_pathToWsPrefsFile = Path.Combine(_pretendProjectDirectory.Path, "WritingSystemPrefs.xml");
-				_pathToLdmlWsRepo = Path.Combine(_pretendProjectDirectory.Path, "WritingSystems");
+				_testFolder = new TemporaryFolder("WritingSystemMigratorTests");
+				_wsPrefsFilePath = Path.Combine(_testFolder.Path, "WritingSystemPrefs.xml");
+				_ldmlRepositoryPath = Path.Combine(_testFolder.Path, "WritingSystems");
 				_namespaceManager = new XmlNamespaceManager(new NameTable());
 				NamespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
 			}
 
-			public string PathToWsPrefsFile
+			public string WsPrefsFilePath
 			{
-				get { return _pathToWsPrefsFile; }
+				get { return _wsPrefsFilePath; }
 			}
 
 			public XmlNamespaceManager NamespaceManager
@@ -43,42 +43,42 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 
 			public string GetFileForOriginalRfcTag(string oldRfcTag)
 			{
-				return Path.Combine(_pathToLdmlWsRepo, _oldToNewRfcTagMap.First(info => info.RfcTagBeforeMigration == oldRfcTag).RfcTagAfterMigration + ".ldml");
+				return Path.Combine(_ldmlRepositoryPath, _tagMigrationInfo.First(info => info.RfcTagBeforeMigration == oldRfcTag).RfcTagAfterMigration + ".ldml");
 			}
 
 			public void WriteContentToWsPrefsFile(string content)
 			{
-				File.WriteAllText(_pathToWsPrefsFile, content);
+				File.WriteAllText(_wsPrefsFilePath, content);
 			}
 
 			public void ChangeRfcTags(IEnumerable<WesayWsPrefsToPalasoWsLdmlMigrationStrategy.MigrationInfo> migrationInfo)
 			{
-				_oldToNewRfcTagMap = migrationInfo;
+				_tagMigrationInfo = migrationInfo;
 			}
 
 			public void Dispose()
 			{
-				if (Directory.Exists(_pathToLdmlWsRepo))
+				if (Directory.Exists(_ldmlRepositoryPath))
 				{
-					foreach (var ldmlFile in Directory.GetFiles(_pathToLdmlWsRepo))
+					foreach (var ldmlFile in Directory.GetFiles(_ldmlRepositoryPath))
 					{
 						File.Delete(ldmlFile);
 					}
-					Directory.Delete(_pathToLdmlWsRepo);
+					Directory.Delete(_ldmlRepositoryPath);
 				}
-				if (File.Exists(_pathToWsPrefsFile))
+				if (File.Exists(_wsPrefsFilePath))
 				{
-					File.Delete(_pathToWsPrefsFile);
+					File.Delete(_wsPrefsFilePath);
 				}
-				if (Directory.Exists(_pathToLdmlWsRepo))
+				if (Directory.Exists(_ldmlRepositoryPath))
 				{
-					Directory.Delete(_pretendProjectDirectory.Path);
+					Directory.Delete(_testFolder.Path);
 				}
 			}
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingId_IdIsInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingId_IdIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -86,9 +86,9 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(id, "",
 														  "", "", "", 0, false, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag(id);
@@ -101,7 +101,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingFontName_FontNameIsInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingFontName_FontNameIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -109,9 +109,9 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
 														  "", "", fontName, 0, false, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -124,7 +124,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingFontSize_FontSizeIsInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingFontSize_FontSizeIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -132,9 +132,9 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
 														  "", "", "", fontSize, false, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -147,7 +147,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingKeyboardName_KeyboardNameIsInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingKeyboardName_KeyboardNameIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -155,9 +155,9 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
 														  "", "", "", 0, false, "", keyboardName, true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -170,7 +170,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingAbbreviation_AbbreviationIsInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingAbbreviation_AbbreviationIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -178,9 +178,9 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", abbreviation,
 														  "", "", "", 0, false, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -193,7 +193,7 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingCustomSimpleSortRules_CustomSortRulesAreInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingCustomSimpleSortRules_CustomSortRulesAreInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -203,9 +203,9 @@ namespace WeSay.LexicalModel.Tests.Foundation.Migration
 O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "", sortUsing, sortRules, "", 0, false, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -217,7 +217,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingCustomIcuSortRules_CustomSortRulesAreInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingCustomIcuSortRules_CustomSortRulesAreInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -225,9 +225,9 @@ O o";
 				const string sortRules = "&amp; C &lt; č";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "", sortUsing, sortRules, "", 0, false, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -239,7 +239,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingSortRulesFromOtherLanguage_OtherLanguageIsInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingSortRulesFromOtherLanguage_OtherLanguageIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -248,9 +248,9 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
 														  sortUsing, otherLanguage, "", 0, false, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -263,7 +263,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWswithNoSortRuleInfoSpecified_LdmlSpecifiesIdAsLanguageToSortOn()
+		public void MigrateIfNecessary_WsPrefsFileContainsWswithNoSortRuleInfoSpecified_LdmlSpecifiesIdAsLanguageToSortOn()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -271,9 +271,9 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(id, "",
 														  "", "", "", 0, false, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -286,7 +286,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsUnicodeEncodedIsFalse_IsLegacyIsTrueInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingIsUnicodeEncodedIsFalse_IsLegacyIsTrueInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -294,9 +294,9 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
 														  "", "", "", 0, false, "", "", isUnicodeEncoded, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -309,7 +309,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsUnicodeEncodedIsTrue_IsLegacyDoesNotAppearInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingIsUnicodeEncodedIsTrue_IsLegacyDoesNotAppearInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -317,9 +317,9 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
 														  "", "", "", 0, false, "", "", isUnicodeEncoded, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -332,7 +332,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingRightToLeftIsTrue_CharacterOrientationIsMarkedRightToLeftInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingRightToLeftIsTrue_CharacterOrientationIsMarkedRightToLeftInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -340,9 +340,9 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
 														  "", "", "", 0, rightToleft, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -352,7 +352,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingRightToLeftIsFalse_CharacterOrientationIsnotContainedInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingRightToLeftIsFalse_CharacterOrientationIsnotContainedInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -360,9 +360,9 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
 														  "", "", "", 0, rightToleft, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -372,7 +372,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsSpellCheckingId_SpellCheckingIdIsInLdml()
+		public void MigrateIfNecessary_WsPrefsFileContainsSpellCheckingId_SpellCheckingIdIsInLdml()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -380,9 +380,9 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
 														  "", "", "", 0, false, spellCheckingId, "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -395,7 +395,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsRfcTagThatChangesOnMigration_MigrationDelegateIsCalled()
+		public void MigrateIfNecessary_WsPrefsFileContainsRfcTagThatChangesOnMigration_MigrationDelegateIsCalled()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -405,9 +405,9 @@ O o";
 														  "", "", "", 0, false, "", "", true, isAudio)
 					);
 				bool delegateCalledCorrectly = false;
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					delegate(IEnumerable<WesayWsPrefsToPalasoWsLdmlMigrationStrategy.MigrationInfo> oldToNewRfcTagsMap)
 						{
 							if(oldToNewRfcTagsMap.
@@ -425,7 +425,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsAudioIsTrue_ScriptContainsZxxxAndVariantContainsXDashAudio()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingIsAudioIsTrue_ScriptContainsZxxxAndVariantContainsXDashAudio()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -434,9 +434,9 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(language, "",
 														  "", "", "", 0, false, "", "", true, isAudio)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
@@ -449,7 +449,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsAudioIsTrueAndrfcTagAlreadyHasScript_ScriptContainsZxxxAndVariantContainsXDashAudioDashScript()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingIsAudioIsTrueAndrfcTagAlreadyHasScript_ScriptContainsZxxxAndVariantContainsXDashAudioDashScript()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -458,9 +458,9 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(language, "",
 														  "", "", "", 0, false, "", "", true, isAudio)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag(language);
@@ -473,7 +473,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsAudioIsFalse_audioIsRemovedFromRfcTag()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingIsAudioIsFalse_audioIsRemovedFromRfcTag()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -481,9 +481,9 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(id, "",
 														  "", "", "", 0, false, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag(id);
@@ -496,7 +496,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_WsPrefsFileContainsWsContainingIsAudioIsFalse_AudioIsRemovedFromRfcTag()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsContainingIsAudioIsFalse_AudioIsRemovedFromRfcTag()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -504,9 +504,9 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(id, "",
 														  "", "", "", 0, false, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag(id);
@@ -519,21 +519,40 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecassary_DateModified_IsSetToRecentTime()
+		public void MigrateIfNecessary_DateModified_IsSetToRecentTime()
 		{
 			using (var environment = new TestEnvironment())
 			{
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
 														  "", "", "", 0, false, "", "", true, false)
 					);
-				var migrator = new WritingSystemMigrator(
+				var migrator = new WritingSystemPrefsMigrator(
 					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
-					environment.PathToWsPrefsFile,
+					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 
 				AssertThatXmlIn.File(pathToEnFile).HasNoMatchForXpath("/ldml/identity/generation[@date = '0001-01-01T00:00:00']");
+			}
+		}
+
+		[Test]
+		public void MigrateIfNecessary_SuccessfulMigration_LegacyFileIsDeleted()
+		{
+			using (var environment = new TestEnvironment())
+			{
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
+														  "", "", "", 0, false, "", "", true, false)
+					);
+				var migrator = new WritingSystemPrefsMigrator(
+					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
+					environment.WsPrefsFilePath,
+					environment.ChangeRfcTags);
+				migrator.Migrate();
+
+				Assert.That(File.Exists(environment.WsPrefsFilePath), Is.False);
+
 			}
 		}
 
@@ -550,7 +569,8 @@ O o";
 				string spellCheckingId,
 				string keyboard,
 				bool isUnicode,
-				bool isAudio)
+				bool isAudio
+			)
 			{
 				string sortRulesXml = String.Empty;
 				if(!String.IsNullOrEmpty(customSortRules))
@@ -558,7 +578,7 @@ O o";
 					sortRulesXml = String.Format("<CustomSortRules>{0}</CustomSortRules>", customSortRules);
 				}
 				return String.Format(
-					@"<?xml version='1.0' encoding='utf-8'?>
+@"<?xml version='1.0' encoding='utf-8'?>
 <WritingSystemCollection>
   <members>
 	<WritingSystem>

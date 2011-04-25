@@ -1,14 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using System.Xml;
 using System.IO;
 using Exortech.NetReflector;
-using WeSay.LexicalModel.Foundation;
-using Palaso.WritingSystems;
 
-namespace WeSay.LexicalModel.Foundation
+namespace WeSay.Project.ConfigMigration.WritingSystem
 {
 	[ReflectorType("WritingSystemCollection")]
 	public class WritingSystemCollection_V1: Dictionary<string, WritingSystem_V1>

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
 using Chorus;
 using Exortech.NetReflector;
@@ -680,7 +679,7 @@ namespace WeSay.Project
 			set { _doWantGhosts = value; }
 		}
 
-		public IList<string> GetHeadwordWritingSystemIds()
+		public IEnumerable<string> GetHeadwordWritingSystemIds()
 		{
 			Field fieldControllingHeadwordOutput =
 				GetField(LexEntry.WellKnownProperties.Citation);
@@ -693,15 +692,7 @@ namespace WeSay.Project
 					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
 				}
 			}
-
-			return TrimToActualTextWritingSystemIds(fieldControllingHeadwordOutput.WritingSystemIds);
-		}
-
-		private IList<string> TrimToActualTextWritingSystemIds(IEnumerable<string> writingSystemsIds)
-		{
-
-			var textWritingSystemIds = writingSystemsIds.Where(id => !WritingSystems.Get(id).IsVoice);
-			return new List<string>(textWritingSystemIds);
+			return WritingSystems.FilterForTextIds(fieldControllingHeadwordOutput.WritingSystemIds);
 		}
 
 		public IWritingSystemRepository WritingSystems
@@ -716,12 +707,12 @@ namespace WeSay.Project
 			//use the first ws of the notefield for that purpose (could improve user control
 			//over this later).
 			var noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);
-			list.Insert(0,new WritingSystemForChorusAdaptor(noteWritingSystem));
+			list.Insert(0,new ChorusWritingSystemAdaptor(noteWritingSystem));
 			foreach (var system in WritingSystems.TextWritingSystems)
 			{
 				if(system!=noteWritingSystem)
 				{
-					list.Add(new WritingSystemForChorusAdaptor(system));
+					list.Add(new ChorusWritingSystemAdaptor(system));
 				}
 			}
 			return list;

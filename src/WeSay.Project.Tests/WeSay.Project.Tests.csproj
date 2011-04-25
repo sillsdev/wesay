@@ -169,9 +169,12 @@
 	<Compile Include="BasilProjectTests.cs" />
 	<Compile Include="ChorusBackupMakerTests.cs" />
 	<Compile Include="CommonDirectoryFileTests.cs" />
-	<Compile Include="ConfigMigration\WeSayUserConfigMigrationTests.cs" />
+	<Compile Include="ConfigMigration\UserConfig\WeSayUserConfigMigrationTests.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingCollectionSystemTests.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsMigratorTests.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingSystem_V1Tests.cs" />
 	<Compile Include="LiftUpdateTests.cs" />
-	<Compile Include="ConfigMigration\WeSayConfigMigrationTests.cs" />
+	<Compile Include="ConfigMigration\WeSayConfig\WeSayConfigMigrationTests.cs" />
 	<Compile Include="PLiftExporterTests.cs" />
 	<Compile Include="ProjectDirectorySetupForTesting.cs" />
 	<Compile Include="TestResources.Designer.cs">
