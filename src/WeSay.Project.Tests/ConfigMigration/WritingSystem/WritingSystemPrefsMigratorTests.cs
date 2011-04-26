@@ -15,7 +15,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 	{
 		private class TestEnvironment : IDisposable
 		{
-			private IEnumerable<WesayWsPrefsToPalasoWsLdmlMigrationStrategy.MigrationInfo> _tagMigrationInfo;
+			private IEnumerable<WritingSystemPrefsToLdmlMigrationStrategy.MigrationInfo> _tagMigrationInfo;
 
 			private readonly string _wsPrefsFilePath;
 			private readonly string _ldmlRepositoryPath = "";
@@ -51,7 +51,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				File.WriteAllText(_wsPrefsFilePath, content);
 			}
 
-			public void ChangeRfcTags(IEnumerable<WesayWsPrefsToPalasoWsLdmlMigrationStrategy.MigrationInfo> migrationInfo)
+			public void ChangeRfcTags(IEnumerable<WritingSystemPrefsToLdmlMigrationStrategy.MigrationInfo> migrationInfo)
 			{
 				_tagMigrationInfo = migrationInfo;
 			}
@@ -87,7 +87,6 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 														  "", "", "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -110,7 +109,6 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 														  "", "", fontName, 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -133,7 +131,6 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 														  "", "", "", fontSize, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -156,7 +153,6 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 														  "", "", "", 0, false, "", keyboardName, true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -179,7 +175,6 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 														  "", "", "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -204,7 +199,6 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "", sortUsing, sortRules, "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -226,7 +220,6 @@ O o";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "", sortUsing, sortRules, "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -249,7 +242,6 @@ O o";
 														  sortUsing, otherLanguage, "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -272,7 +264,6 @@ O o";
 														  "", "", "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -295,7 +286,6 @@ O o";
 														  "", "", "", 0, false, "", "", isUnicodeEncoded, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -318,7 +308,6 @@ O o";
 														  "", "", "", 0, false, "", "", isUnicodeEncoded, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -341,7 +330,6 @@ O o";
 														  "", "", "", 0, rightToleft, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -361,7 +349,6 @@ O o";
 														  "", "", "", 0, rightToleft, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -381,7 +368,6 @@ O o";
 														  "", "", "", 0, false, spellCheckingId, "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -406,9 +392,8 @@ O o";
 					);
 				bool delegateCalledCorrectly = false;
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
-					delegate(IEnumerable<WesayWsPrefsToPalasoWsLdmlMigrationStrategy.MigrationInfo> oldToNewRfcTagsMap)
+					delegate(IEnumerable<WritingSystemPrefsToLdmlMigrationStrategy.MigrationInfo> oldToNewRfcTagsMap)
 						{
 							if(oldToNewRfcTagsMap.
 								First(info => info.RfcTagBeforeMigration == "en").
@@ -435,7 +420,6 @@ O o";
 														  "", "", "", 0, false, "", "", true, isAudio)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -459,7 +443,6 @@ O o";
 														  "", "", "", 0, false, "", "", true, isAudio)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -482,7 +465,6 @@ O o";
 														  "", "", "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -505,7 +487,6 @@ O o";
 														  "", "", "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -527,7 +508,6 @@ O o";
 														  "", "", "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -546,7 +526,6 @@ O o";
 														  "", "", "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
-					WritingSystemDefinition.LatestWritingSystemDefinitionVersion,
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
 				migrator.Migrate();
@@ -556,50 +535,5 @@ O o";
 			}
 		}
 
-		public class WritingSystemPrefsFileContent
-		{
-			public static string SingleWritingSystem(
-				string id,
-				string abbreviation,
-				string sortUsing,
-				string customSortRules,
-				string fontName,
-				int fontSize,
-				bool rightToleft,
-				string spellCheckingId,
-				string keyboard,
-				bool isUnicode,
-				bool isAudio
-			)
-			{
-				string sortRulesXml = String.Empty;
-				if(!String.IsNullOrEmpty(customSortRules))
-				{
-					sortRulesXml = String.Format("<CustomSortRules>{0}</CustomSortRules>", customSortRules);
-				}
-				return String.Format(
-@"<?xml version='1.0' encoding='utf-8'?>
-<WritingSystemCollection>
-  <members>
-	<WritingSystem>
-	  <Abbreviation>{0}</Abbreviation>
-	  {1}
-	  <FontName>{2}</FontName>
-	  <FontSize>{3}</FontSize>
-	  <Id>{4}</Id>
-	  <IsAudio>{5}</IsAudio>
-	  <IsUnicode>{6}</IsUnicode>
-	  <WindowsKeyman>{7}</WindowsKeyman>
-	  <RightToLeft>{8}</RightToLeft>
-	  <SortUsing>{9}</SortUsing>
-	  <SpellCheckingId>{10}</SpellCheckingId>
-	</WritingSystem>
-  </members>
-</WritingSystemCollection>".Replace("'", "\""),
-					abbreviation, sortRulesXml, fontName, fontSize, id, isAudio,
-					isUnicode, keyboard, rightToleft, sortUsing, spellCheckingId
-					);
-			}
-		}
 	}
 }

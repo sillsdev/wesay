@@ -8,7 +8,6 @@ using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
-using WeSay.LexicalModel.Foundation;
 using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel

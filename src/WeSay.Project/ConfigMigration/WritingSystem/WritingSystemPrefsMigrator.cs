@@ -5,13 +5,12 @@ using Palaso.Migration;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
 {
-	public class WritingSystemPrefsMigrator : MigratorBase
+	public class WritingSystemPrefsMigrator
 	{
 		private readonly string _sourceFilePath;
 		private readonly WritingSystemPrefsToLdmlMigrationStrategy.OnMigrationFn _onWritingSystemTagChange;
 
-		public WritingSystemPrefsMigrator(int versionToMigrateTo, string sourceFilePath, WritingSystemPrefsToLdmlMigrationStrategy.OnMigrationFn onWritingSystemTagChange)
-			: base(versionToMigrateTo)
+		public WritingSystemPrefsMigrator(string sourceFilePath, WritingSystemPrefsToLdmlMigrationStrategy.OnMigrationFn onWritingSystemTagChange)
 		{
 			_onWritingSystemTagChange = onWritingSystemTagChange;
 			_sourceFilePath = sourceFilePath;
@@ -20,6 +19,11 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		public bool NeedsMigration()
 		{
 			return File.Exists(_sourceFilePath);
+		}
+
+		public string WritingSystemsFolder(string basePath)
+		{
+			return Path.Combine(basePath, "WritingSystems");
 		}
 
 		public void Migrate()
@@ -33,30 +37,27 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			}
 			File.Copy(_sourceFilePath, backupFilePath);
 			filesToDelete.Add(backupFilePath);
-			int currentVersion = new WritingSystemPrefsVersionGetter().GetFileVersion(_sourceFilePath);
-			if (currentVersion == 0)
+
+			string ldmlPath = WritingSystemsFolder(Path.GetDirectoryName(_sourceFilePath));
+			var strategy = new WritingSystemPrefsToLdmlMigrationStrategy(_onWritingSystemTagChange);
+			string sourceFilePath = _sourceFilePath;
+			string destinationFilePath = String.Format("{0}.Migrate_{1}_{2}", _sourceFilePath, strategy.FromVersion,
+												strategy.ToVersion);
+			strategy.Migrate(sourceFilePath, destinationFilePath);
+			File.Delete(_sourceFilePath);
+			Directory.Move(destinationFilePath, ldmlPath);
+			foreach (var filePath in filesToDelete)
 			{
-				string pathToWritingSystemRepoToCreate = Path.Combine(Path.GetDirectoryName(_sourceFilePath), "WritingSystems");
-				var strategy = new WritingSystemPrefsToLdmlMigrationStrategy(_onWritingSystemTagChange);
-				string sourceFilePath = _sourceFilePath;
-				string destinationFilePath = String.Format("{0}.Migrate_{1}_{2}", _sourceFilePath, strategy.FromVersion,
-													strategy.ToVersion);
-				strategy.Migrate(sourceFilePath, destinationFilePath);
-				File.Delete(_sourceFilePath);
-				Directory.Move(destinationFilePath, pathToWritingSystemRepoToCreate);
-				foreach (var filePath in filesToDelete)
+				if (File.Exists(filePath))
 				{
-					if (File.Exists(filePath))
-					{
-						File.Delete(filePath);
-					}
+					File.Delete(filePath);
 				}
-				foreach (var filePath in directoriesToDelete)
+			}
+			foreach (var filePath in directoriesToDelete)
+			{
+				if (Directory.Exists(filePath))
 				{
-					if (Directory.Exists(filePath))
-					{
-						Directory.Delete(filePath);
-					}
+					Directory.Delete(filePath);
 				}
 			}
 		}

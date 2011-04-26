@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,9 +20,6 @@ using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Lift;
 using Palaso.DictionaryServices.Model;
 using Palaso.IO;
-#if MONO
-using Palaso.Linq;
-#endif
 using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
@@ -36,6 +32,7 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration.UserConfig;
 using WeSay.Project.ConfigMigration.WeSayConfig;
+using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
 
@@ -350,7 +347,8 @@ namespace WeSay.Project
 				Console.WriteLine("{0}",PathToConfigFile);
 				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
-			var writingSystemMigrator = new
+			var writingSystemMigrator = new WritingSystemsMigrator(ProjectDirectoryPath);
+			writingSystemMigrator.MigrateIfNeeded();
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
 			//container change InitializeViewTemplatesFromProjectFiles();
@@ -467,7 +465,7 @@ namespace WeSay.Project
 			var viewTemplates = ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems);
 			foreach (var viewTemplate in viewTemplates)
 			{
-				//todo: this isn't going to work if we start using multiple tempates.
+				//todo: this isn't going to work if we start using multiple templates.
 				//will have to go to a naming system.
 				builder.Register(viewTemplate).SingletonScoped();
 			}
