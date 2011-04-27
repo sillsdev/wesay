@@ -201,7 +201,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			using (var e = new TestEnvironment())
 			{
 				//change the version to 9
-				WriteStringTofileAtXpath(e.PathToConfigFile, "//configuration[@version]", "9");
+				WriteStringToFileAtXpath(e.PathToConfigFile, "//configuration[@version]", "9");
 
 				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
@@ -209,7 +209,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			}
 		}
 
-		private void WriteStringTofileAtXpath(string pathtoFile, string xPath, string valueToWrite)
+		private void WriteStringToFileAtXpath(string pathtoFile, string xPath, string valueToWrite)
 		{
 			XmlDocument configFile = new XmlDocument();
 			configFile.Load(pathtoFile);
@@ -249,7 +249,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment())
 			{
-				WriteStringTofileAtXpath(e.PathToLiftFile, "/lift[@version]", "0.14");
+				WriteStringToFileAtXpath(e.PathToLiftFile, "/lift[@version]", "0.14");
 
 				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
@@ -269,12 +269,28 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void MigrateIfNeeded_WritingSystemPrefsConatinsAudioWritingSystem_IsMigratedCorrectly()
+		public void MigrateIfNeeded_WritingSystemPrefsContainsAudioWritingSystem_IsMigratedCorrectly()
 		{
 			using (var e = new TestEnvironment())
 			{
+				var language = "english";
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(language, language, "", "", "", 12, false, language, "", false, true));
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				migrator.MigrateIfNecessary();
+
+				AssertThatXmlIn.File(e.WritingSystemFilePath("qaa-Zxxx-x-english-audio")).HasAtLeastOneMatchForXpath(
+						"/ldml/identity/language[@type='qaa']"
+					);
+				AssertThatXmlIn.File(e.WritingSystemFilePath("qaa-Zxxx-x-english-audio")).HasAtLeastOneMatchForXpath(
+						"/ldml/identity/script[@type='Zxxx']"
+					);
+				AssertThatXmlIn.File(e.WritingSystemFilePath("qaa-Zxxx-x-english-audio")).HasNoMatchForXpath(
+						"/ldml/identity/territory"
+					);
+				AssertThatXmlIn.File(e.WritingSystemFilePath("qaa-Zxxx-x-english-audio")).HasAtLeastOneMatchForXpath(
+						"/ldml/identity/variant[@type='x-english-audio']"
+					);
 			}
-			throw new NotImplementedException();
 		}
 	}
 }
