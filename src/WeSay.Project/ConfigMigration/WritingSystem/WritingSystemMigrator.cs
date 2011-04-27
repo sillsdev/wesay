@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 using Palaso.IO;
 using Palaso.Reporting;
 using Palaso.WritingSystems.Migration;
@@ -14,6 +15,8 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 	public class WritingSystemsMigrator
 	{
 		private delegate void DelegateThatTouchesFile(string filePath);
+		List<string> _pathsToConfigFiles = new List<string>();
+		List<string> _pathsToLiftFiles = new List<string>();
 
 		public WritingSystemsMigrator(string projectPath)
 		{
@@ -32,8 +35,10 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			get { return Path.Combine(ProjectPath, "WritingSystemPrefs.xml"); }
 		}
 
-		public void MigrateIfNeeded()
+		public void MigrateIfNecessary()
 		{
+			_pathsToConfigFiles.AddRange(Directory.GetFiles(ProjectPath, "*.WeSayConfig"));
+			_pathsToLiftFiles.AddRange(Directory.GetFiles(ProjectPath, "*.lift"));
 			var oldMigrator = new WritingSystemPrefsMigrator(WritingSystemsOldPrefsFilePath, OnWritingSystemTagChange);
 			oldMigrator.MigrateIfNecassary();
 			var ldmlMigrator = new LdmlInFolderWritingSystemRepositoryMigrator(WritingSystemsPath, OnWritingSystemTagChange);
@@ -42,75 +47,92 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		public void OnWritingSystemTagChange(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> newToOldTagMap)
 		{
-			foreach (var map in newToOldTagMap)
+			//Only change rfcTags in files where they have actually changed
+			foreach (var oldAndNewRfcTag in newToOldTagMap.Where(m => !m.RfcTagBeforeMigration.Equals(m.RfcTagAfterMigration)))
 			{
-				RenameWritingSystemTagInFile(LiftFilePath, "WeSay Dictionary File", (filePath) =>
-																					//todo: expand the regular expression here to account for all reasonable patterns
-																					FileUtils.GrepFile(
-																						filePath,
-																						string.Format(
-																							@"lang\s*=\s*[""']{0}[""']",
-																							Regex.Escape(map.RfcTagBeforeMigration)),
-																						string.Format(@"lang=""{0}""",
-																									  map.RfcTagAfterMigration)
-																						)
-					);
-			}
-		}
-
-		protected string LiftFilePath
-		{
-			//this code lifted from WeSayWordsProject.GetPathToLiftFileGivenProjectDirectory()
-			get
-			{
-				//first, we assume it's based on the name of the directory
-				var path = Path.Combine(ProjectPath,
-											   Path.GetFileName(ProjectPath) + ".lift");
-
-				//if that doesn't give us one, then we find one which has a matching wesayconfig file
-				if (!File.Exists(path))
+				//foreach (var liftFilePath in _pathsToLiftFiles)
+				//{
+				//    RenameWritingSystemTagInFile(liftFilePath, "WeSay Dictionary File", (pathToFileToChange) =>
+				//                                                                        //todo: expand the regular expression here to account for all reasonable patterns
+				//                                                                        FileUtils.GrepFile(
+				//                                                                            pathToFileToChange,
+				//                                                                            string.Format(
+				//                                                                                @"lang\s*=\s*[""']{0}[""']",
+				//                                                                                Regex.Escape(
+				//                                                                                    oldAndNewRfcTag.
+				//                                                                                        RfcTagBeforeMigration)),
+				//                                                                            string.Format(
+				//                                                                                @"lang=""{0}""",
+				//                                                                                oldAndNewRfcTag.RfcTagAfterMigration)
+				//                                                                            )
+				//    );
+				//}
+				foreach (var configFilepath in _pathsToConfigFiles)
 				{
-					foreach (var liftPath in Directory.GetFiles(ProjectPath, "*.lift"))
+					string tempFile = Path.GetTempFileName();
+					File.Copy(configFilepath, tempFile, true);
+					int versionOfConfigFileInWhichWeCanRenameRfcTags = 8;
+					XmlDocument configFileXmlDocument = new XmlDocument();
+
+					configFileXmlDocument.Load(configFilepath);
+
+					XmlNode versionNode = configFileXmlDocument.SelectSingleNode("configuration/@version");
+					if ((versionNode == null) || (Convert.ToInt32(versionNode.Value) != versionOfConfigFileInWhichWeCanRenameRfcTags))
 					{
-						if (File.Exists(liftPath.Replace(".lift", ".WeSayConfig")))
-						{
-							return liftPath;
-						}
+						throw new ApplicationException(
+							"Some writing system Rfc tags were changed during writingsystem migration and WeSay needs to update your '.WeSayConfig' file. However, that file is not version {0} and so WeSay cannot make the necassary changes.");
 					}
-#if mono    //try this too(probably not needed...)
-				//anyhow remember case is sensitive, and a simpe "tolower"
-				//doens't cut it because the exists will fail if it's the wrong case (WS-14982)
-				foreach (var liftPath in Directory.GetFiles(ProjectDirectoryPath, "*.Lift"))
-				{
-					if (File.Exists(liftPath.Replace(".Lift", ".WeSayConfig")))
-					{
-						return liftPath;
+
+					ReplaceWritingSystemIdsAtXPath(configFileXmlDocument, "//writingSystems/id", oldAndNewRfcTag);
+					ReplaceWritingSystemIdsAtXPath(configFileXmlDocument, "//writingSystemsToMatch", oldAndNewRfcTag);
+					ReplaceWritingSystemIdsAtXPath(configFileXmlDocument, "//writingSystemsWhichAreRequired", oldAndNewRfcTag);
+
+					configFileXmlDocument.Save(tempFile);
+					SafelyMoveTempFileTofinalDestination(tempFile, configFilepath);
 					}
-				}
-#endif
-				}
-				return path;
 			}
 		}
 
-		private bool RenameWritingSystemTagInFile(string filePath, string uiFileDescription, DelegateThatTouchesFile doSomething)
+		private void ReplaceWritingSystemIdsAtXPath(XmlDocument configFileXmlDocument, string xPath, LdmlVersion0MigrationStrategy.MigrationInfo oldAndNewRfcTag)
 		{
-			if (!File.Exists(filePath))
-				return false;
-			try
+			XmlNodeList writingSystemIdNodes;
+			writingSystemIdNodes = configFileXmlDocument.SelectNodes(xPath);
+			foreach (XmlNode writingsystemidNode in writingSystemIdNodes)
 			{
-				doSomething(filePath);
-				return true;
-			}
-			catch (Exception error)
-			{
-				ErrorReport.NotifyUserOfProblem("Another program has {0} open, so we cannot make the writing system change.  Make sure no other instances of WeSay are running.\n\n\t'{1}'", uiFileDescription, filePath);
-				return false;
+				var newIds = new StringBuilder();
+				foreach (var writingSystemId in writingsystemidNode.InnerText.Split(','))
+				{
+					var trimmedWritingSystemId = writingSystemId.Trim();
+					//If we already have a writingSystemId append a comma
+					if (newIds.Length != 0)
+					{
+						newIds.Append(", ");
+					}
+
+					if (trimmedWritingSystemId.Equals(oldAndNewRfcTag.RfcTagBeforeMigration))
+					{
+						newIds.Append(oldAndNewRfcTag.RfcTagAfterMigration);
+						continue;
+					}
+					newIds.Append(trimmedWritingSystemId);
+				}
+				writingsystemidNode.InnerText = newIds.ToString();
 			}
 		}
 
-
-
-
+		private void SafelyMoveTempFileTofinalDestination(string tempPath, string targetPath)
+		{
+			string s = targetPath + ".tmp";
+			if (File.Exists(s))
+			{
+				File.Delete(s);
+			}
+			if (File.Exists(targetPath)) //review: JDH added this because of a failing test, and from my reading, the target shouldn't need to pre-exist
+			{
+				File.Move(targetPath, s);
+			}
+			File.Move(tempPath, targetPath);
+			File.Delete(s);
+		}
 	}
 }
