@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
-using Palaso.IO;
-using Palaso.Reporting;
 using Palaso.WritingSystems.Migration;
 using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
@@ -15,8 +12,6 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 	public class WritingSystemsMigrator
 	{
 		private delegate void DelegateThatTouchesFile(string filePath);
-		List<string> _pathsToConfigFiles = new List<string>();
-		List<string> _pathsToLiftFiles = new List<string>();
 
 		public WritingSystemsMigrator(string projectPath)
 		{
@@ -37,8 +32,6 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		public void MigrateIfNecessary()
 		{
-			_pathsToConfigFiles.AddRange(Directory.GetFiles(ProjectPath, "*.WeSayConfig"));
-			_pathsToLiftFiles.AddRange(Directory.GetFiles(ProjectPath, "*.lift"));
 			var oldMigrator = new WritingSystemPrefsMigrator(WritingSystemsOldPrefsFilePath, OnWritingSystemTagChange);
 			oldMigrator.MigrateIfNecassary();
 			var ldmlMigrator = new LdmlInFolderWritingSystemRepositoryMigrator(WritingSystemsPath, OnWritingSystemTagChange);
@@ -50,7 +43,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			//Only change rfcTags in files where they have actually changed
 			foreach (var oldAndNewRfcTag in newToOldTagMap.Where(m => !m.RfcTagBeforeMigration.Equals(m.RfcTagAfterMigration)))
 			{
-				//foreach (var liftFilePath in _pathsToLiftFiles)
+				//foreach (var liftFilePath in Directory.GetFiles(ProjectPath, "*.lift"))
 				//{
 				//    RenameWritingSystemTagInFile(liftFilePath, "WeSay Dictionary File", (pathToFileToChange) =>
 				//                                                                        //todo: expand the regular expression here to account for all reasonable patterns
@@ -67,20 +60,22 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				//                                                                            )
 				//    );
 				//}
-				foreach (var configFilepath in _pathsToConfigFiles)
+
+				//The replacement strategy in this section should be specially tailored to the latest version of the '.WeSayConfig' file. I.e. the config file should always be migrated before the writing systems. If we up the config file version this section may need to be updated.
+				foreach (var configFilepath in Directory.GetFiles(ProjectPath, "*.WeSayConfig"))
 				{
 					string tempFile = Path.GetTempFileName();
 					File.Copy(configFilepath, tempFile, true);
-					int versionOfConfigFileInWhichWeCanRenameRfcTags = 8;
+
 					XmlDocument configFileXmlDocument = new XmlDocument();
+					configFileXmlDocument.Load(tempFile);
 
-					configFileXmlDocument.Load(configFilepath);
-
+					const int versionOfConfigFileInWhichWeCanRenameRfcTags = 8;
 					XmlNode versionNode = configFileXmlDocument.SelectSingleNode("configuration/@version");
 					if ((versionNode == null) || (Convert.ToInt32(versionNode.Value) != versionOfConfigFileInWhichWeCanRenameRfcTags))
 					{
-						throw new ApplicationException(
-							"Some writing system Rfc tags were changed during writingsystem migration and WeSay needs to update your '.WeSayConfig' file. However, that file is not version {0} and so WeSay cannot make the necassary changes.");
+						throw new ApplicationException(String.Format(
+							"Some writing system Rfc tags were changed during writingsystem migration and WeSay needs to update your '.WeSayConfig' file. However, that file is not version {0} and so WeSay cannot make the necassary changes.", versionOfConfigFileInWhichWeCanRenameRfcTags));
 					}
 
 					ReplaceWritingSystemIdsAtXPath(configFileXmlDocument, "//writingSystems/id", oldAndNewRfcTag);
@@ -89,7 +84,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 					configFileXmlDocument.Save(tempFile);
 					SafelyMoveTempFileTofinalDestination(tempFile, configFilepath);
-					}
+				}
 			}
 		}
 
