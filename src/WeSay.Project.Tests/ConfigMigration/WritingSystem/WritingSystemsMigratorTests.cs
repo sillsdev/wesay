@@ -166,9 +166,16 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment())
 			{
+				XmlDocument configFile = new XmlDocument();
+				configFile.Load(e.PathToConfigFile);
+				XmlNode versionNode = configFile.SelectSingleNode("//configuration[@version]");
+				versionNode.Attributes[0].Value = "9";
+				configFile.Save(e.PathToConfigFile);
 
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				Assert.Throws<ApplicationException>(() => migrator.MigrateIfNecessary());
 			}
-			throw new NotImplementedException();
 		}
 
 		[Test]
@@ -206,26 +213,6 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment())
 			{
-			}
-			throw new NotImplementedException();
-		}
-
-		[Test]
-		public void MigrateIfNecassary_RfcTagIsChangedInConfigFile_BackupOfOriginalFileExists()
-		{
-			using (var environment = new TestEnvironment())
-			{
-
-			}
-			throw new NotImplementedException();
-		}
-
-		[Test]
-		public void MigrateIfNecassary_RfcTagIsChangedInLiftFile_BackupOfOriginalFileExists()
-		{
-			using (var environment = new TestEnvironment())
-			{
-
 			}
 			throw new NotImplementedException();
 		}
