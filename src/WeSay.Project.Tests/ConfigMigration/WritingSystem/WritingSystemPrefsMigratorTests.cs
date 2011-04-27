@@ -42,9 +42,14 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				get { return _namespaceManager; }
 			}
 
+			public string LdmlRepositoryPath
+			{
+				get { return _ldmlRepositoryPath; }
+			}
+
 			public string GetFileForOriginalRfcTag(string oldRfcTag)
 			{
-				return Path.Combine(_ldmlRepositoryPath, _tagMigrationInfo.First(info => info.RfcTagBeforeMigration == oldRfcTag).RfcTagAfterMigration + ".ldml");
+				return Path.Combine(LdmlRepositoryPath, _tagMigrationInfo.First(info => info.RfcTagBeforeMigration == oldRfcTag).RfcTagAfterMigration + ".ldml");
 			}
 
 			public void WriteContentToWsPrefsFile(string content)
@@ -59,19 +64,19 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 			public void Dispose()
 			{
-				if (Directory.Exists(_ldmlRepositoryPath))
+				if (Directory.Exists(LdmlRepositoryPath))
 				{
-					foreach (var ldmlFile in Directory.GetFiles(_ldmlRepositoryPath))
+					foreach (var ldmlFile in Directory.GetFiles(LdmlRepositoryPath))
 					{
 						File.Delete(ldmlFile);
 					}
-					Directory.Delete(_ldmlRepositoryPath);
+					Directory.Delete(LdmlRepositoryPath);
 				}
 				if (File.Exists(_wsPrefsFilePath))
 				{
 					File.Delete(_wsPrefsFilePath);
 				}
-				if (Directory.Exists(_ldmlRepositoryPath))
+				if (Directory.Exists(LdmlRepositoryPath))
 				{
 					Directory.Delete(_testFolder.Path);
 				}
@@ -536,5 +541,21 @@ O o";
 			}
 		}
 
+		[Test]
+		public void MigrateIfNecessary_WsPrefsFileContainsMultipleWs_MultipleLdmlFilesAreCreated()
+		{
+			using (var environment = new TestEnvironment())
+			{
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogus1", "bogus2")
+					);
+				var migrator = new WritingSystemPrefsMigrator(
+					environment.WsPrefsFilePath,
+					environment.ChangeRfcTags);
+				migrator.MigrateIfNecassary();
+
+				Assert.That(File.Exists(Path.Combine(environment.LdmlRepositoryPath, "bogus1.ldml")), Is.True);
+				Assert.That(File.Exists(Path.Combine(environment.LdmlRepositoryPath, "bogus2.ldml")), Is.True);
+			}
+		}
 	}
 }
