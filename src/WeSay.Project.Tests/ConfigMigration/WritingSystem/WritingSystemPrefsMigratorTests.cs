@@ -6,6 +6,7 @@ using System.Xml;
 using NUnit.Framework;
 using Palaso.TestUtilities;
 using Palaso.WritingSystems;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.Project.ConfigMigration.WritingSystem;
 
 namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
@@ -15,7 +16,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 	{
 		private class TestEnvironment : IDisposable
 		{
-			private IEnumerable<WritingSystemPrefsToLdmlMigrationStrategy.MigrationInfo> _tagMigrationInfo;
+			private IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> _tagMigrationInfo;
 
 			private readonly string _wsPrefsFilePath;
 			private readonly string _ldmlRepositoryPath = "";
@@ -51,7 +52,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				File.WriteAllText(_wsPrefsFilePath, content);
 			}
 
-			public void ChangeRfcTags(IEnumerable<WritingSystemPrefsToLdmlMigrationStrategy.MigrationInfo> migrationInfo)
+			public void ChangeRfcTags(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationInfo)
 			{
 				_tagMigrationInfo = migrationInfo;
 			}
@@ -89,7 +90,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag(id);
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
@@ -111,7 +112,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
@@ -133,7 +134,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
@@ -155,7 +156,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
@@ -177,7 +178,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
@@ -201,7 +202,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath(
 					String.Format("/ldml/collations/collation/special/palaso:sortRulesType[@value='{0}']", sortUsing), environment.NamespaceManager
@@ -222,7 +223,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath(
 					String.Format("/ldml/collations/collation/special/palaso:sortRulesType[@value='{0}']", sortUsing), environment.NamespaceManager
@@ -244,7 +245,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
@@ -266,7 +267,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
@@ -288,7 +289,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
@@ -310,7 +311,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasNoMatchForXpath(
@@ -332,7 +333,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath("/ldml/layout/orientation[@characters='right-to-left']");
@@ -351,7 +352,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasNoMatchForXpath("/ldml/layout/orientation/@characters");
@@ -370,7 +371,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 				AssertThatXmlIn.File(pathToEnFile).
 					HasAtLeastOneMatchForXpath(String.Format(
@@ -393,7 +394,7 @@ O o";
 				bool delegateCalledCorrectly = false;
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
-					delegate(IEnumerable<WritingSystemPrefsToLdmlMigrationStrategy.MigrationInfo> oldToNewRfcTagsMap)
+					delegate(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> oldToNewRfcTagsMap)
 						{
 							if(oldToNewRfcTagsMap.
 								First(info => info.RfcTagBeforeMigration == "en").
@@ -403,7 +404,7 @@ O o";
 							}
 						}
 					);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 
 				Assert.IsTrue(delegateCalledCorrectly);
 			}
@@ -422,7 +423,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 
 				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type = 'en']");
@@ -445,7 +446,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag(language);
 
 				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type = 'en-Latn']");
@@ -467,7 +468,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag(id);
 
 				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type = 'en']");
@@ -489,7 +490,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag(id);
 
 				AssertThatXmlIn.File(pathToEnFile).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type = 'en']");
@@ -510,7 +511,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
 
 				AssertThatXmlIn.File(pathToEnFile).HasNoMatchForXpath("/ldml/identity/generation[@date = '0001-01-01T00:00:00']");
@@ -528,7 +529,7 @@ O o";
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
 					environment.ChangeRfcTags);
-				migrator.Migrate();
+				migrator.MigrateIfNecassary();
 
 				Assert.That(File.Exists(environment.WsPrefsFilePath), Is.False);
 

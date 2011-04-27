@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using Palaso.IO;
 using Palaso.Reporting;
 using Palaso.WritingSystems.Migration;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
 {
@@ -33,31 +34,63 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		public void MigrateIfNeeded()
 		{
-			//WritingSystemPrefsMigrator oldMigrator = new WritingSystemPrefsMigrator()
-
-
-
-			//LdmlInFolderWritingSystemRepositoryMigrator _ldmlMigrator;
-
+			var oldMigrator = new WritingSystemPrefsMigrator(WritingSystemsOldPrefsFilePath, OnWritingSystemTagChange);
+			oldMigrator.MigrateIfNecassary();
+			var ldmlMigrator = new LdmlInFolderWritingSystemRepositoryMigrator(WritingSystemsPath, OnWritingSystemTagChange);
+			ldmlMigrator.Migrate();
 		}
 
-		public void OnWritingSystemTagChange(string newTag, string oldTag)
+		public void OnWritingSystemTagChange(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> newToOldTagMap)
 		{
-			RenameWritingSystemTagInFile(LiftFilePath, "WeSay Dictionary File", (filePath) =>
-				//todo: expand the regular expression here to account for all reasonable patterns
-				FileUtils.GrepFile(
-					filePath,
-					string.Format(@"lang\s*=\s*[""']{0}[""']", Regex.Escape(oldTag)),
-					string.Format(@"lang=""{0}""", newTag)
-				)
-			);
-
-			//DefaultViewTemplate.OnWritingSystemIDChange(oldTag, ws.Id);
+			foreach (var map in newToOldTagMap)
+			{
+				RenameWritingSystemTagInFile(LiftFilePath, "WeSay Dictionary File", (filePath) =>
+																					//todo: expand the regular expression here to account for all reasonable patterns
+																					FileUtils.GrepFile(
+																						filePath,
+																						string.Format(
+																							@"lang\s*=\s*[""']{0}[""']",
+																							Regex.Escape(map.RfcTagBeforeMigration)),
+																						string.Format(@"lang=""{0}""",
+																									  map.RfcTagAfterMigration)
+																						)
+					);
+			}
 		}
 
 		protected string LiftFilePath
 		{
-			get { throw new NotImplementedException(); }
+			//this code lifted from WeSayWordsProject.GetPathToLiftFileGivenProjectDirectory()
+			get
+			{
+				//first, we assume it's based on the name of the directory
+				var path = Path.Combine(ProjectPath,
+											   Path.GetFileName(ProjectPath) + ".lift");
+
+				//if that doesn't give us one, then we find one which has a matching wesayconfig file
+				if (!File.Exists(path))
+				{
+					foreach (var liftPath in Directory.GetFiles(ProjectPath, "*.lift"))
+					{
+						if (File.Exists(liftPath.Replace(".lift", ".WeSayConfig")))
+						{
+							return liftPath;
+						}
+					}
+#if mono    //try this too(probably not needed...)
+				//anyhow remember case is sensitive, and a simpe "tolower"
+				//doens't cut it because the exists will fail if it's the wrong case (WS-14982)
+				foreach (var liftPath in Directory.GetFiles(ProjectDirectoryPath, "*.Lift"))
+				{
+					if (File.Exists(liftPath.Replace(".Lift", ".WeSayConfig")))
+					{
+						return liftPath;
+					}
+				}
+#endif
+				}
+				return path;
+			}
 		}
 
 		private bool RenameWritingSystemTagInFile(string filePath, string uiFileDescription, DelegateThatTouchesFile doSomething)
