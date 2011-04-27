@@ -348,7 +348,7 @@ namespace WeSay.Project
 				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
 			var writingSystemMigrator = new WritingSystemsMigrator(ProjectDirectoryPath);
-			writingSystemMigrator.MigrateIfNeeded();
+			writingSystemMigrator.MigrateIfNecessary();
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
 			//container change InitializeViewTemplatesFromProjectFiles();

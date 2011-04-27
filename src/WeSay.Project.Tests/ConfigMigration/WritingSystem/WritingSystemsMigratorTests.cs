@@ -25,7 +25,9 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 				_namespaceManager = new XmlNamespaceManager(new NameTable());
 				_namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
+				var pathToConfigFile = Path.Combine(_folder.Path, "test.WeSayConfig");
 				_configFile = new TempFile(configFileContent);
+				_configFile.MoveTo(pathToConfigFile);
 			}
 
 			//This config file was created by opening WeSay 0.9.69 Config tool and turning on every option that I could find that might insert a writingsystem into the config file. Then I removed any redundancies for brevity sake. This probably means that the config file here would not load in WeSay but it contains the relevant xml for writingsystems
@@ -73,7 +75,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			<showFields>definition</showFields>
 			<readOnly>semantic-domain-ddp4</readOnly>
 			<writingSystemsToMatch>bogusws1, bogusws2</writingSystemsToMatch>
-			<writingSystemsWhichAreRequired>en, bogusws1, bogusws2</writingSystemsWhichAreRequired>
+			<writingSystemsWhichAreRequired>bogusws1, bogusws2</writingSystemsWhichAreRequired>
 		</task>
 	</tasks>
 </configuration>".Replace("\"", "'");
@@ -86,8 +88,8 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 			public void Dispose()
 			{
-				_folder.Dispose();
 				_configFile.Dispose();
+				_folder.Dispose();
 			}
 
 			public string WritingSystemsPath
@@ -115,9 +117,9 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				return Path.Combine(WritingSystemsPath, String.Format("{0}.ldml", tag));
 			}
 
-			public void WriteToPrefsFile(string language)
+			public void WriteToPrefsFile(string content)
 			{
-				File.WriteAllText(WritingSystemsOldPrefsFilePath, WritingSystemPrefsFileContent.SingleWritingSystemForLanguage(language));
+				File.WriteAllText(WritingSystemsOldPrefsFilePath, content);
 			}
 		}
 
@@ -126,9 +128,9 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment())
 			{
-				e.WriteToPrefsFile("qaa-x-test");
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystemForLanguage("qaa-x-test"));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
-				migrator.MigrateIfNeeded();
+				migrator.MigrateIfNecessary();
 
 				AssertThatXmlIn.File(e.WritingSystemFilePath("qaa-x-test")).HasAtLeastOneMatchForXpath(
 					"/ldml/special/palaso:version[@value='1']",
@@ -141,24 +143,22 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment())
 			{
-
-				e.WriteToPrefsFile("qaa-x-test");
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
-				migrator.MigrateIfNeeded();
+				migrator.MigrateIfNecessary();
 				AssertThatXmlIn.File(e.PathToConfigFile).HasAtLeastOneMatchForXpath(
-						"/configuration/components/viewTemplate/fields/field/writingSystems/id[0][text()='x-bogusws1']"
+						"/configuration/components/viewTemplate/fields/field/writingSystems/id[1][text()='x-bogusws1']"
 					);
 				AssertThatXmlIn.File(e.PathToConfigFile).HasAtLeastOneMatchForXpath(
-						"/configuration/components/viewTemplate/fields/field/writingSystems/id[1][text()='x-bogusws2']"
+						"/configuration/components/viewTemplate/fields/field/writingSystems/id[2][text()='x-bogusws2']"
 					);
 				AssertThatXmlIn.File(e.PathToConfigFile).HasAtLeastOneMatchForXpath(
-						"/configuration/tasks/task/writingSystemsToMatch[text()='x-bogusws1, x-bogusws1']"
+						"/configuration/tasks/task/writingSystemsToMatch[text()='x-bogusws1, x-bogusws2']"
 					);
 				AssertThatXmlIn.File(e.PathToConfigFile).HasAtLeastOneMatchForXpath(
-						"/configuration/tasks/task/writingSystemsWhichAreRequired[text()='x-bogusws1, x-bogusws1']"
+						"/configuration/tasks/task/writingSystemsWhichAreRequired[text()='x-bogusws1, x-bogusws2']"
 					);
 			}
-			throw new NotImplementedException();
 		}
 
 		[Test]
@@ -197,9 +197,37 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			using (var e = new TestEnvironment())
 			{
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
-				migrator.MigrateIfNeeded();
+				migrator.MigrateIfNecessary();
 			}
 		}
 
+		[Test]
+		public void MigrateIfNeeded_WritingSystemPrefsConatinsAudioWritingSystem_IsMigratedCorrectly()
+		{
+			using (var e = new TestEnvironment())
+			{
+			}
+			throw new NotImplementedException();
+		}
+
+		[Test]
+		public void MigrateIfNecassary_RfcTagIsChangedInConfigFile_BackupOfOriginalFileExists()
+		{
+			using (var environment = new TestEnvironment())
+			{
+
+			}
+			throw new NotImplementedException();
+		}
+
+		[Test]
+		public void MigrateIfNecassary_RfcTagIsChangedInLiftFile_BackupOfOriginalFileExists()
+		{
+			using (var environment = new TestEnvironment())
+			{
+
+			}
+			throw new NotImplementedException();
+		}
 	}
 }
