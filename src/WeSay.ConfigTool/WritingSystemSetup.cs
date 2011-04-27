@@ -12,6 +12,7 @@ namespace WeSay.ConfigTool
 		{
 			var view = new WritingSystemSetupView(new WritingSystemSetupModel(store))
 						{
+							LeftColumnWidth = 350,
 							Dock = DockStyle.Fill
 						};
 			Controls.Add(view);
