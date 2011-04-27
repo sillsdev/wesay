@@ -106,23 +106,16 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		}
 
-		public class MigrationInfo
-		{
-			public string RfcTagBeforeMigration;
-			public string RfcTagAfterMigration;
-		}
+		private readonly LdmlVersion0MigrationStrategy.OnMigrationFn _onMigrationCallback;
 
-		public delegate void OnMigrationFn(IEnumerable<MigrationInfo> migrationInfo);
-		private readonly OnMigrationFn _onMigrationCallback;
-
-		public WritingSystemPrefsToLdmlMigrationStrategy(OnMigrationFn migrationCb)
+		public WritingSystemPrefsToLdmlMigrationStrategy(LdmlVersion0MigrationStrategy.OnMigrationFn migrationCb)
 		{
 			_onMigrationCallback = migrationCb;
 		}
 
 		public void Migrate(string sourceFilePath, string destinationFilePath)
 		{
-			var migrationInfo = new List<MigrationInfo>();
+			var migrationInfo = new List<LdmlVersion0MigrationStrategy.MigrationInfo>();
 			if(!Directory.Exists(destinationFilePath))
 			{
 				Directory.CreateDirectory(destinationFilePath);
@@ -132,7 +125,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 			foreach (var writingSystem in wesayWsCollection.Values)
 			{
-				var currentMigrationInfo = new MigrationInfo {RfcTagBeforeMigration = writingSystem.ISO};
+				var currentMigrationInfo = new LdmlVersion0MigrationStrategy.MigrationInfo {RfcTagBeforeMigration = writingSystem.ISO};
 				var wsDef = new WritingSystemDefinitionV0();
 				if(writingSystem.IsAudio)
 				{

@@ -2,23 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using Palaso.Migration;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
 {
 	public class WritingSystemPrefsMigrator
 	{
 		private readonly string _sourceFilePath;
-		private readonly WritingSystemPrefsToLdmlMigrationStrategy.OnMigrationFn _onWritingSystemTagChange;
+		private readonly LdmlVersion0MigrationStrategy.OnMigrationFn _onWritingSystemTagChange;
 
-		public WritingSystemPrefsMigrator(string sourceFilePath, WritingSystemPrefsToLdmlMigrationStrategy.OnMigrationFn onWritingSystemTagChange)
+		public WritingSystemPrefsMigrator(string sourceFilePath, LdmlVersion0MigrationStrategy.OnMigrationFn onWritingSystemTagChange)
 		{
 			_onWritingSystemTagChange = onWritingSystemTagChange;
 			_sourceFilePath = sourceFilePath;
-		}
-
-		public bool NeedsMigration()
-		{
-			return File.Exists(_sourceFilePath);
 		}
 
 		public string WritingSystemsFolder(string basePath)
@@ -26,8 +22,12 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			return Path.Combine(basePath, "WritingSystems");
 		}
 
-		public void Migrate()
+		public void MigrateIfNecassary()
 		{
+			if(!File.Exists(_sourceFilePath))
+			{
+				return;
+			}
 			string backupFilePath = _sourceFilePath + ".bak";
 			var filesToDelete = new List<string>();
 			var directoriesToDelete = new List<string>();
