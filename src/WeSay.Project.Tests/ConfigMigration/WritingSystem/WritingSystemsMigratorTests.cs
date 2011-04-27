@@ -18,6 +18,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			private readonly TemporaryFolder _folder;
 			private readonly XmlNamespaceManager _namespaceManager;
 			private TempFile _configFile;
+			private TempFile _liftFile;
 
 			public TestEnvironment()
 			{
@@ -28,6 +29,9 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				var pathToConfigFile = Path.Combine(_folder.Path, "test.WeSayConfig");
 				_configFile = new TempFile(configFileContent);
 				_configFile.MoveTo(pathToConfigFile);
+				var pathtoLiftFile = Path.Combine(_folder.Path, "test.lift");
+				_liftFile = new TempFile(liftFileContent);
+				_liftFile.MoveTo(pathtoLiftFile);
 			}
 
 			//This config file was created by opening WeSay 0.9.69 Config tool and turning on every option that I could find that might insert a writingsystem into the config file. Then I removed any redundancies for brevity sake. This probably means that the config file here would not load in WeSay but it contains the relevant xml for writingsystems
@@ -81,6 +85,31 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 </configuration>".Replace("\"", "'");
 			#endregion
 
+			private string liftFileContent =
+			#region LongFileContent
+ @"<?xml version='1.0' encoding='utf-8'?>
+<lift
+	version='0.13'
+	producer='WeSay 1.0.0.0'>
+	<entry
+		id='chùuchìi mǔu rɔ̂ɔp_dd15cbc4-9085-4d66-af3d-8428f078a7da'
+		dateCreated='2008-11-03T06:17:24Z'
+		dateModified='2009-10-12T04:05:40Z'
+		guid='dd15cbc4-9085-4d66-af3d-8428f078a7da'>
+		<lexical-unit>
+			<form
+				lang='bogusws1'>
+				<text>chùuchìi mǔu krɔ̂ɔp</text>
+			</form>
+			<form
+				lang='bogusws2'>
+				<text>ฉู่ฉี่หมูรอบ</text>
+			</form>
+		</lexical-unit>
+	</entry>
+</lift>".Replace("'", "\"");
+#endregion
+
 			public string ProjectPath
 			{
 				get { return _folder.Path; }
@@ -110,6 +139,11 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			public string PathToConfigFile
 			{
 				get { return _configFile.Path; }
+			}
+
+			public string PathToLiftFile
+			{
+				get { return _liftFile.Path; }
 			}
 
 			public string WritingSystemFilePath(string tag)
@@ -166,16 +200,22 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment())
 			{
-				XmlDocument configFile = new XmlDocument();
-				configFile.Load(e.PathToConfigFile);
-				XmlNode versionNode = configFile.SelectSingleNode("//configuration[@version]");
-				versionNode.Attributes[0].Value = "9";
-				configFile.Save(e.PathToConfigFile);
+				//change the version to 9
+				WriteStringTofileAtXpath(e.PathToConfigFile, "//configuration[@version]", "9");
 
 				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
-				Assert.Throws<ApplicationException>(() => migrator.MigrateIfNecessary());
+				Assert.Throws<ApplicationException>(migrator.MigrateIfNecessary);
 			}
+		}
+
+		private void WriteStringTofileAtXpath(string pathtoFile, string xPath, string valueToWrite)
+		{
+			XmlDocument configFile = new XmlDocument();
+			configFile.Load(pathtoFile);
+			XmlNode versionNode = configFile.SelectSingleNode(xPath);
+			versionNode.Attributes[0].Value = valueToWrite;
+			configFile.Save(pathtoFile);
 		}
 
 		[Test]
@@ -183,9 +223,25 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment())
 			{
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				migrator.MigrateIfNecessary();
+				XmlDocument doc = new XmlDocument();
+				doc.Load(e.PathToLiftFile);
+				XmlNodeList nodes = doc.SelectNodes("//@lang");
+				XmlNode node = nodes.Item(0);
 
+				Assert.AreEqual("x-bogusws1", nodes.Item(0).InnerText);
+				Assert.AreEqual("x-bogusws2", nodes.Item(1).InnerText);
+
+				//The below doesn't work correctly unfortunately
+				//AssertThatXmlIn.File(e.PathToLiftFile).HasAtLeastOneMatchForXpath(
+				//        "//[@lang[1]='x-bogusws1']"
+				//    );
+				//AssertThatXmlIn.File(e.PathToLiftFile).HasAtLeastOneMatchForXpath(
+				//        "//[@lang[2]='x-bogusws2']"
+				//    );
 			}
-			throw new NotImplementedException();
 		}
 
 		[Test]
@@ -193,9 +249,13 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment())
 			{
+				WriteStringTofileAtXpath(e.PathToLiftFile, "/lift[@version]", "0.14");
+
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				Assert.Throws<ApplicationException>(migrator.MigrateIfNecessary);
 
 			}
-			throw new NotImplementedException();
 		}
 
 		[Test]
