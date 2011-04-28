@@ -33,6 +33,7 @@ namespace Addin.Transform.Tests
         {
             _projectDir = new ProjectDirectorySetupForTesting("");
             _project = _projectDir.CreateLoadedProject();
+			_project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("fr"));
             _repo = _project.GetLexEntryRepository();
             _entry = _repo.CreateItem();
 			_entry.LexicalForm.SetAlternative("qaa", "apple");
