@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using NUnit.Framework;
-using WeSay.Data.Tests;
-using Palaso.TestUtilities;
+using Palaso.IO;
 
 namespace WeSay.LexicalModel.Tests
 {

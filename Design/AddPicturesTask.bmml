@@ -1,0 +1,60 @@
+<mockup version="1.0" skin="sketch">
+  <controls>
+	<control controlID="0" controlTypeID="com.balsamiq.mockups::TabBar" x="154" y="100" w="490" h="486" zOrder="0" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>Home%2C%20Dictionary%20Browse%20%26%20Edit%2C%20Add%20Pictures</text>
+		<selectedIndex>2</selectedIndex>
+	  </controlProperties>
+	</control>
+	<control controlID="2" controlTypeID="com.balsamiq.mockups::List" x="171" y="187" w="100" h="338" zOrder="1" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>Apple%0ABanana%0Aorange-a%0Aorange-b%0APear</text>
+		<selectedIndex>1</selectedIndex>
+	  </controlProperties>
+	</control>
+	<control controlID="3" controlTypeID="com.balsamiq.mockups::VerticalScrollBar" x="266" y="187" w="-1" h="338" zOrder="2" locked="false" isInGroup="-1"/>
+	<control controlID="4" controlTypeID="com.balsamiq.mockups::IconLabel" x="333" y="259" w="-1" h="-1" zOrder="3" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>banana</text>
+		<icon>JewelIcon%7Csmall</icon>
+	  </controlProperties>
+	</control>
+	<control controlID="5" controlTypeID="com.balsamiq.mockups::Label" x="311" y="193" w="-1" h="-1" zOrder="4" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>search%20words%3A</text>
+	  </controlProperties>
+	</control>
+	<control controlID="7" controlTypeID="com.balsamiq.mockups::IconLabel" x="410" y="259" w="-1" h="-1" zOrder="5" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>apple</text>
+		<icon>JewelIcon%7Csmall</icon>
+	  </controlProperties>
+	</control>
+	<control controlID="8" controlTypeID="com.balsamiq.mockups::SearchBox" x="410" y="194" w="-1" h="-1" zOrder="6" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>fruit%2C%20yellow</text>
+	  </controlProperties>
+	</control>
+	<control controlID="9" controlTypeID="com.balsamiq.mockups::Label" x="311" y="219" w="-1" h="-1" zOrder="7" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>click%20on%20a%20picture%20below%20to%20use%20it%20with%20this%20word</text>
+	  </controlProperties>
+	</control>
+	<control controlID="10" controlTypeID="com.balsamiq.mockups::IconLabel" x="483" y="259" w="-1" h="-1" zOrder="8" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>tree</text>
+		<icon>JewelIcon%7Csmall</icon>
+	  </controlProperties>
+	</control>
+	<control controlID="11" controlTypeID="com.balsamiq.mockups::Button" x="339" y="497" w="-1" h="-1" zOrder="9" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>Go%20to%20next%20word%20with%20matching%20meaning</text>
+	  </controlProperties>
+	</control>
+	<control controlID="13" controlTypeID="com.balsamiq.mockups::Tooltip" x="659" y="154" w="248" h="79" zOrder="10" locked="false" isInGroup="-1">
+	  <controlProperties>
+		<text>Search%20for%20pictures%20using%20the%20meanings%20of%20the%20words.%20%20Show%20words%20with%20matches%20in%20bold%20font.</text>
+	  </controlProperties>
+	</control>
+  </controls>
+</mockup>

@@ -55,6 +55,8 @@ namespace WeSay.App
 			OsCheck();
 			Logger.Init();
 			SetupErrorHandling();
+
+
 			//problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
 
 			//bring in settings from any previous version
@@ -63,8 +65,7 @@ namespace WeSay.App
 				Settings.Default.Upgrade();
 				Settings.Default.NeedUpgrade = false;
 			}
-			UsageReporter.AppNameToUseInDialogs = "WeSay";
-			UsageReporter.AppNameToUseInReporting = "WeSayApp";
+			 SetUpReporting();
 
 			if (!Parser.ParseArguments(args, _commandLineArguments, ShowCommandLineError))
 			{
@@ -75,6 +76,18 @@ namespace WeSay.App
 			{
 				WeSayWordsProject.PreventBackupForTests = true;  //hopefully will help the cross-process dictionary services tests to be more reliable
 			}
+		}
+
+		private static void SetUpReporting()
+		{
+			if (Settings.Default.Reporting == null)
+			{
+				Settings.Default.Reporting = new ReportingSettings();
+				Settings.Default.Save();
+			}
+			UsageReporter.Init(Settings.Default.Reporting, "wesay.palaso.org", "UA-22170471-6");
+			UsageReporter.AppNameToUseInDialogs = "WeSay";
+			UsageReporter.AppNameToUseInReporting = "WeSayApp";
 		}
 
 		public static void ReleaseMutexForThisProject()

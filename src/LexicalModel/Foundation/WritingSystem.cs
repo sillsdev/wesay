@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using Enchant;
 using Exortech.NetReflector;
@@ -34,8 +35,7 @@ namespace WeSay.LexicalModel.Foundation
 		public static string IdForUnknownAnalysis = "en";
 		public static string IdForUnknownVernacular = "v";
 		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
-		private bool _isUnicode = true;
-		private WritingSystemDefinition _palasoWritingSystemDefinition;
+		private readonly WritingSystemDefinition _palasoWritingSystemDefinition;
 
 		public WritingSystem(XmlNode node): this()
 		{
@@ -81,28 +81,46 @@ namespace WeSay.LexicalModel.Foundation
 		}
 
 		[ReflectorProperty("Id", Required = true)]
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
 		public string ISO
 		{
-			get { return _palasoWritingSystemDefinition.ISO; }
-			set { _palasoWritingSystemDefinition.ISO = value; }
+			get { return _palasoWritingSystemDefinition.ISO639; }
+			set { _palasoWritingSystemDefinition.ISO639 = value; }
 		}
 
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
 		public string Script
 		{
 			get { return _palasoWritingSystemDefinition.Script; }
 			set { _palasoWritingSystemDefinition.Script = value; }
 		}
 
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
 		public string Region
 		{
 			get { return _palasoWritingSystemDefinition.Region; }
 			set { _palasoWritingSystemDefinition.Region = value; }
 		}
 
+		[Obsolete("Please use the RFC5646Tag property to set the RFC5646 tag as this avoids invalid intermediate tags.")]
 		public string Variant
 		{
 			get { return _palasoWritingSystemDefinition.Variant; }
 			set { _palasoWritingSystemDefinition.Variant = value; }
+		}
+
+		[Browsable(false)]
+		public RFC5646Tag Rfc5646Tag
+		{
+			get { return _palasoWritingSystemDefinition.Rfc5646Tag; }
+			set { _palasoWritingSystemDefinition.Rfc5646Tag = value; }
+		}
+
+		[Browsable(false)]
+		public RFC5646Tag Rfc5646TagOnLoad
+		{
+			get { return _palasoWritingSystemDefinition.Rfc5646TagOnLoad; }
+			set { _palasoWritingSystemDefinition.Rfc5646TagOnLoad = value;}
 		}
 
 		[ReflectorProperty("Abbreviation", Required = false)]
@@ -112,7 +130,7 @@ namespace WeSay.LexicalModel.Foundation
 			{
 				if (string.IsNullOrEmpty(_palasoWritingSystemDefinition.Abbreviation))
 				{
-					return _palasoWritingSystemDefinition.ISO;
+					return _palasoWritingSystemDefinition.ISO639;
 				}
 				return _palasoWritingSystemDefinition.Abbreviation;
 			}
@@ -189,7 +207,7 @@ namespace WeSay.LexicalModel.Foundation
 			}
 		}
 
-		private WritingSystemDefinition.SortRulesType AdaptToSortRulesType(string sortUsingString)
+		private static WritingSystemDefinition.SortRulesType AdaptToSortRulesType(string sortUsingString)
 		{
 			WritingSystemDefinition.SortRulesType palasoSortRulesType;
 			if(sortUsingString == CustomSortRulesType.CustomICU.ToString())
@@ -221,7 +239,7 @@ namespace WeSay.LexicalModel.Foundation
 			}
 		}
 
-		private bool IsCustomSortRuleType(WritingSystemDefinition.SortRulesType sortRuleType)
+		private static bool IsCustomSortRuleType(WritingSystemDefinition.SortRulesType sortRuleType)
 		{
 			return (sortRuleType == WritingSystemDefinition.SortRulesType.CustomICU) ||
 				   (sortRuleType == WritingSystemDefinition.SortRulesType.CustomSimple);
@@ -379,7 +397,7 @@ namespace WeSay.LexicalModel.Foundation
 		// Same if behavior is same (not appearance)
 		public override int GetHashCode()
 		{
-			int hashCode = HashCombine(_palasoWritingSystemDefinition.ISO.GetHashCode(), SortUsing.GetHashCode());
+			int hashCode = HashCombine(_palasoWritingSystemDefinition.ISO639.GetHashCode(), SortUsing.GetHashCode());
 			if (UsesCustomSortRules)
 			{
 				hashCode = HashCombine(hashCode, CustomSortRules.GetHashCode());
@@ -455,29 +473,13 @@ namespace WeSay.LexicalModel.Foundation
 			public override StandardValuesCollection GetStandardValues(
 				ITypeDescriptorContext context)
 			{
-				List<String> keyboards = new List<string>();
+				var keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
 
-				foreach (KeyboardController.KeyboardDescriptor keyboard in
-					KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All))
-				{
-					keyboards.Add(keyboard.Name);
-				}
+				keyboards.AddRange(KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All).Select(keyboard => keyboard.Name));
 				return new StandardValuesCollection(keyboards);
 			}
 		}
-
-		#endregion
-
-		#region Nested type: SortComparer
-
-		private delegate int SortComparer(string s1, string s2);
-
-		#endregion
-
-		#region Nested type: SortKeyGenerator
-
-		private delegate SortKey SortKeyGenerator(string s);
 
 		#endregion
 

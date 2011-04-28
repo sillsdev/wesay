@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -96,9 +96,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			_reminder.Text = _presentationModel.Reminder;
 
-		   _movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
+		   _flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 
-			_movingLabel.Finished += _animator_Finished;
+			_flyingLabel.Finished += _animator_Finished;
 
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made
@@ -266,7 +266,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					_meaningBox.ClearAllText();
 					_meaningBox.SetMultiText(_presentationModel.GetMeaningForWordRecentlyMovedToEditArea());
 				}
-				_movingLabel.Go(word, start, destination);
+				_flyingLabel.Go(word, start, destination);
 
 			}
 			_vernacularBox.FocusOnFirstWsAlternative();
@@ -276,7 +276,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			if (_animationIsMovingFromList)
 			{
-				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
+				_vernacularBox.TextBoxes[0].Text = _flyingLabel.Text;
 			}
 
 			_listViewWords.ItemToNotDrawYet = null;
@@ -314,10 +314,10 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			Point destination = _listViewWords.GetItemRectangle(index).Location;
 			destination.Offset(GetAbsoluteLocationOfControl(_listViewWords));
 
-			_movingLabel.Text = word;
+			_flyingLabel.Text = word;
 			_animationIsMovingFromList = false;
 
-			_movingLabel.Go(word, start, destination);
+			_flyingLabel.Go(word, start, destination);
 			_vernacularBox.FocusOnFirstWsAlternative();
 		}
 

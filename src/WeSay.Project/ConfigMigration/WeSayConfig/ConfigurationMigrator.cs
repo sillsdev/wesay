@@ -5,15 +5,17 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using Palaso.Reporting;
+using WeSay.Project.ConfigMigration.WritingSystems;
 using Palaso.Xml;
 
 namespace WeSay.Project.ConfigMigration.WeSayConfig
 {
 	public class ConfigurationMigrator
 	{
-		public bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc,
-														  string targetPath)
+		public bool MigrateConfigurationXmlIfNeeded(string pathToConfigFile, string targetPath)
 		{
+			XPathDocument configurationDoc = GetConfigurationFileAsXPathDocument(pathToConfigFile);
+
 			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
 			bool didMigrate = false;
@@ -65,7 +67,21 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 			}
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='7']") != null)
 			{
-				MigrateInCode(configurationDoc, targetPath);
+				//This migration step is actually related to writing systems
+				string pathToMostRecentConfigFile = pathToConfigFile;
+				if (didMigrate){pathToMostRecentConfigFile = targetPath;}
+				MigrateInCodeFromVersion7To8(pathToMostRecentConfigFile, targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='8']") != null)
+			{
+				//This migration step is actually related only to writing systems and does not effect the configuration file at all.
+				//However, we only want this step to effect writing systems that were created during the migration from config version 7
+				//to config version 8 (roughly 0.9.0 - 0.9.32) so this is a natural place to do it.
+				string pathToMostRecentConfigFile = pathToConfigFile;
+				if (didMigrate) { pathToMostRecentConfigFile = targetPath; }
+				MigrateInCodeFromVersion8To9(pathToMostRecentConfigFile, targetPath);
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
@@ -73,36 +89,78 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 
 		}
 
-		private void MigrateInCode(XPathDocument configurationDoc, string targetPath)
+		private void MigrateInCodeFromVersion8To9(string pathToMostRecentConfigFile, string targetPath)
 		{
-			XPathNavigator navigator = configurationDoc.CreateNavigator();
-
-			string tempFilePath = Path.GetTempFileName();
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.Indent = true;
-			XmlWriter writer = XmlWriter.Create(tempFilePath, settings);
-
-			using (writer)
+			if (WeSayWordsProject.ProjectExists())  //this is false for many tests
 			{
-				writer.WriteStartDocument();
-				navigator.MoveToFirstChild();
+				string pathToProjectDirectory = WeSayWordsProject.Project.ProjectDirectoryPath;
+				if (!String.IsNullOrEmpty(pathToProjectDirectory))
+				{
+					string pathToWritingSystemsFolder =
+						BasilProject.GetPathToLdmlWritingSystemsFolder(pathToProjectDirectory);
 
-				if (navigator.Name != "configuration"){throw new ApplicationException("The configuration file does not have the expected format. 'configuration' was not the first node found.");}
-
-				writer.WriteStartElement("configuration");
-				writer.WriteAttributeString("version", "8");
-				CopyChildren(writer, navigator);
+					if (Directory.Exists(pathToWritingSystemsFolder)) //This is false for many tests
+					{
+						foreach (
+							string pathToLdmlFile in
+								Directory.GetFiles(pathToWritingSystemsFolder, "*.ldml"))
+						{
+							XmlDocument ldmlFile = new XmlDocument();
+							ldmlFile.Load(pathToLdmlFile);
+							XmlNode variantNode = ldmlFile.SelectSingleNode("/ldml/identity/variant/@type");
+							if (variantNode != null && variantNode.Value == "Zxxx")
+							{
+								File.Delete(pathToLdmlFile);
+								//These files were mistakenly created during 0.7-0.9 migration of audio writing systems
+							}
+						}
+					}
+				}
 			}
-			SafelyMoveTempFileTofinalDestination(tempFilePath, targetPath);
+			UpVersionNumberInConfigFile(targetPath, pathToMostRecentConfigFile);
 		}
 
-		private void CopyChildren(XmlWriter writer, XPathNavigator navigator)
+		private XPathDocument GetConfigurationFileAsXPathDocument(string pathToConfigFile)
 		{
-			navigator.MoveToFirstChild();
-			do
+			XPathDocument configurationDoc = null;
+			if (File.Exists(pathToConfigFile))
 			{
-				writer.WriteNode(navigator, true);
-			} while (navigator.MoveToNext());
+				try
+				{
+					configurationDoc = new XPathDocument(pathToConfigFile);
+					//projectDoc.Load(Project.PathToConfigFile);
+				}
+				catch (Exception e)
+				{
+					ErrorReport.NotifyUserOfProblem("There was a problem reading the wesay config xml: " + e.Message);
+					configurationDoc = null;
+				}
+			}
+			return configurationDoc;
+		}
+
+		private void MigrateInCodeFromVersion7To8(string pathToConfigFile, string targetPath)
+		{
+			string pathToProject = Path.GetDirectoryName(targetPath);
+			var writingSystemPrefsToLdmlMigrator = new WritingSystemPrefsToLdmlMigrator(pathToProject);
+			writingSystemPrefsToLdmlMigrator.MigrateIfNeeded();
+
+			UpVersionNumberInConfigFile(targetPath, pathToConfigFile);
+		}
+
+		private void UpVersionNumberInConfigFile(string targetPath, string pathToConfigFile)
+		{
+			string tempFilePath = Path.GetTempFileName();
+
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.Load(pathToConfigFile);
+			XmlNode versionNode = xmlDoc.SelectSingleNode("configuration/@version");
+			int versionNumber = Convert.ToInt32(versionNode.Value);
+			versionNumber++;
+			versionNode.Value = versionNumber.ToString();
+			xmlDoc.Save(tempFilePath);
+
+			SafelyMoveTempFileTofinalDestination(tempFilePath, targetPath);
 		}
 
 		public static void MigrateUsingXSLT(IXPathNavigable configurationDoc,

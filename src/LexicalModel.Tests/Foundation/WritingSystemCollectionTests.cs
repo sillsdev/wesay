@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
+using Palaso.IO;
 using Palaso.Xml;
 using WeSay.LexicalModel.Foundation;
 using Palaso.TestUtilities;
@@ -25,7 +26,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			_wesayProjectFolder = new TemporaryFolder("WesayProject");
 			_ldmlWsFolder = new TemporaryFolder(_wesayProjectFolder, "WritingSystems");
-			_wsPrefsFile = new TempFile(_ldmlWsFolder);
+			_wsPrefsFile = new TempFileFromFolder(_ldmlWsFolder);
 			_collection = new WritingSystemCollection();
 		}
 

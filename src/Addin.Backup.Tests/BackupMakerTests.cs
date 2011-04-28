@@ -40,7 +40,7 @@ namespace Addin.Backup.Tests
 
 			Assert.Throws<ApplicationException>(() =>
 			BackupMaker.BackupToExternal(BasilProject.GetPretendProjectDirectory(),
-										 "Q:\\" + Path.GetRandomFileName(),
+										 "QQ:\\" + Path.GetRandomFileName(),
 										 _filesToBackup));
 		}
 

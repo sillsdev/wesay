@@ -13,7 +13,7 @@ namespace WeSay.ConfigTool.Tasks
 		public TaskListPresentationModel Model { get; set; }
 
 		public TaskListView(ILogger logger, IContext diContainer)
-			: base("set up tasks for the user", logger)
+			: base("set up tasks for the user", logger, "tasks")
 		{
 			_diContainer = diContainer;
 
