@@ -549,5 +549,21 @@ namespace WeSay.Project.Tests
 				}
 			}
 		}
+
+		[Test]
+		public void NewProject_ContainsOnlyEnglishAndUnknownWritingSystems()
+		{
+			var namespaceManager = new XmlNamespaceManager(new NameTable());
+			namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
+			using (var projectFolder = new TemporaryFolder("MigrationTest"))
+			{
+				WeSayWordsProject.CreateEmptyProjectFiles(projectFolder.Path);
+				string pathToLdmlWritingSystemsFolder =
+					WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(projectFolder.Path);
+				Assert.IsTrue(File.Exists(Path.Combine(pathToLdmlWritingSystemsFolder, "en.ldml")));
+				Assert.IsTrue(File.Exists(Path.Combine(pathToLdmlWritingSystemsFolder, "qaa.ldml")));
+				Assert.AreEqual(2, Directory.GetFiles(pathToLdmlWritingSystemsFolder).Length);
+			}
+		}
 	}
 }
