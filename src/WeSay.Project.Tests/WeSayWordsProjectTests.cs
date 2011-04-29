@@ -15,6 +15,7 @@ using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project.ConfigMigration.WeSayConfig;
+using WeSay.Project.Tests.ConfigMigration.WritingSystem;
 
 namespace WeSay.Project.Tests
 {
@@ -500,5 +501,68 @@ namespace WeSay.Project.Tests
 			}
 		}
 
+		[Test]
+		public void OpenProject_WritingsystemsAreInOldWsPrefsFormat_WritingSystemsAreMigrated()
+		{
+			var language = "english";
+			using(var projectDirectory = new TemporaryFolder())
+			{
+				//setting up a minimal WeSay project with an old writingsystemprefs.xml file
+				var project = new WeSayWordsProject();
+				var wsPrefsFile = new TempFile(projectDirectory);
+				string liftFilePath = Path.Combine(projectDirectory.Path, "test.lift");
+				wsPrefsFile.MoveTo(Path.Combine(projectDirectory.Path, "WritingSystemPrefs.xml"));
+				File.Copy(Path.Combine(project.ApplicationTestDirectory, "PRETEND.WeSayConfig"), Path.Combine(projectDirectory.Path, "test.WeSayConfig"));
+				File.Copy(WeSayWordsProject.PathToPretendLiftFile, liftFilePath);
+				string wsToMigrateXml = WritingSystemPrefsFileContent.GetSingleWritingSystemXml(language, language, "", "", "", 12,
+																					false, language, "", false, true);
+				string english = WritingSystemPrefsFileContent.GetSingleWritingSystemXmlForLanguage("en");
+				File.WriteAllText(wsPrefsFile.Path, WritingSystemPrefsFileContent.WrapWritingSystemXmlWithCollectionXml(wsToMigrateXml+english));
+
+				project.LoadFromLiftLexiconPath(liftFilePath);
+
+				string newLdmlWritingSystemFilePath =
+					Path.Combine(WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.Path), "qaa-Zxxx-x-english-audio.ldml");
+				AssertThatXmlIn.File(newLdmlWritingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='qaa']");
+				AssertThatXmlIn.File(newLdmlWritingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/script[@type='Zxxx']");
+				AssertThatXmlIn.File(newLdmlWritingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
+				AssertThatXmlIn.File(newLdmlWritingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/variant[@type='x-english-audio']");
+			}
+		}
+
+		[Test]
+		public void NewProject_WritingsystemFilesAreLatestVersion()
+		{
+			var namespaceManager = new XmlNamespaceManager(new NameTable());
+			namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
+			using (var projectFolder = new TemporaryFolder("MigrationTest"))
+			{
+				WeSayWordsProject.CreateEmptyProjectFiles(projectFolder.Path);
+				foreach (var ldmlFilePath in Directory.GetFiles(WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(projectFolder.Path)))
+				{
+					XmlDocument ldmlFileXml = new XmlDocument();
+					ldmlFileXml.Load(ldmlFilePath);
+					XmlNode versionNode = ldmlFileXml.SelectSingleNode("/ldml/special/palaso:version[@value='1']/@value",
+																	   namespaceManager);
+					Assert.AreEqual("1", versionNode.Value);
+				}
+			}
+		}
+
+		[Test]
+		public void NewProject_ContainsOnlyEnglishAndUnknownWritingSystems()
+		{
+			var namespaceManager = new XmlNamespaceManager(new NameTable());
+			namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
+			using (var projectFolder = new TemporaryFolder("MigrationTest"))
+			{
+				WeSayWordsProject.CreateEmptyProjectFiles(projectFolder.Path);
+				string pathToLdmlWritingSystemsFolder =
+					WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(projectFolder.Path);
+				Assert.IsTrue(File.Exists(Path.Combine(pathToLdmlWritingSystemsFolder, "en.ldml")));
+				Assert.IsTrue(File.Exists(Path.Combine(pathToLdmlWritingSystemsFolder, "qaa.ldml")));
+				Assert.AreEqual(2, Directory.GetFiles(pathToLdmlWritingSystemsFolder).Length);
+			}
+		}
 	}
 }

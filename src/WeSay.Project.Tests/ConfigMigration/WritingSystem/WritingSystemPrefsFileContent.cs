@@ -4,6 +4,14 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 {
 	public class WritingSystemPrefsFileContent
 	{
+
+		public static string GetSingleWritingSystemXmlForLanguage(string language)
+		{
+			return GetSingleWritingSystemXml(
+				language, language, "", "", "Arial", 11, false, language, language, true, false
+			);
+		}
+
 		public static string GetSingleWritingSystemXml(
 			string id,
 			string abbreviation,
