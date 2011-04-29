@@ -168,6 +168,7 @@
   <ItemGroup>
 	<Compile Include="BasilProjectTests.cs" />
 	<Compile Include="ChorusBackupMakerTests.cs" />
+	<Compile Include="ConfigFileTests.cs" />
 	<Compile Include="CommonDirectoryFileTests.cs" />
 	<Compile Include="ConfigMigration\UserConfig\WeSayUserConfigMigrationTests.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingCollectionSystemTests.cs" />
@@ -179,6 +180,7 @@
 	<Compile Include="ConfigMigration\WeSayConfig\WeSayConfigMigrationTests.cs" />
 	<Compile Include="PLiftExporterTests.cs" />
 	<Compile Include="ProjectDirectorySetupForTesting.cs" />
+	<Compile Include="ProjectFromLiftFolderCreatorTests.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>

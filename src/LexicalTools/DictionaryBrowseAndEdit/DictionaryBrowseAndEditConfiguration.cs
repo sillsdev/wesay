@@ -36,7 +36,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		public override string ToString()
 		{
-			return "Dictionary Browse & Edit";
+			return "Dictionary Browse && Edit";
 		}
 
 		public string LongLabel

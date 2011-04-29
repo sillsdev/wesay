@@ -160,7 +160,7 @@
 	<Compile Include="MruProjectsTest.cs" />
 	<Compile Include="FieldDetailControlTests.cs" />
 	<Compile Include="InterfaceLanguageControl.Tests.cs" />
-	<Compile Include="NewProjectCreation\ProjectFromFLExCreatorTests.cs" />
+	<Compile Include="NewProjectCreation\ProjectFromRawFLExLiftFilesCreatorTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>

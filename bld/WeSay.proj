@@ -127,7 +127,7 @@
 			 OutputFile="$(BaseDirectory)\common\WeSay.pot"
 			 MsdIdBugsTo="hattonjohn@gmail.com"
 			 XmlFiles="@(XmlFiles)"
-			 XPathToStrings="//label | //description[not(@UseInConstructor='false')]"
+			 XPathToStrings="//label | //longLabel | //description[not(@UseInConstructor='false')]"
 			 CSharpFiles="@(CSharpFiles)">
 	</MakePot>
   </Target>

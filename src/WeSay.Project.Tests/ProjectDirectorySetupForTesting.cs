@@ -69,25 +69,7 @@ namespace WeSay.Project.Tests
 			}
 		}
 
-		public string PathToFactoryDefaultsPartsOfSpeech
-		{
-			get
-			{
-				string fileName = "WritingSystemPrefs.xml";
-				string path = Path.Combine(BasilProject.ApplicationCommonDirectory, fileName);
-				if (File.Exists(path))
-				{
-					return path;
-				}
 
-				path = Path.Combine(BasilProject.DirectoryOfTheApplicationExecutable, fileName);
-				if (File.Exists(path))
-				{
-					return path;
-				}
-				return path;
-			}
-		}
 
 		private static string MakeDir(string existingParent, string newChild)
 		{

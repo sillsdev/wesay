@@ -41,7 +41,7 @@ namespace WeSay.Project
 		public UiConfigurationOptions UiOptions { get; set; }
 
 		private IWritingSystemRepository _writingSystems;
-		private string _projectDirectoryPath = string.Empty;
+		private static string _projectDirectoryPath = string.Empty;
 
 		public static BasilProject Project
 		{
@@ -255,7 +255,11 @@ namespace WeSay.Project
 			Directory.CreateDirectory(pathProjectToWritingSystemsFolder);
 			foreach (string path in Directory.GetFiles(pathCommonToWritingSystemsFolder, "*.ldml"))
 			{
-				File.Copy(path, Path.Combine(pathProjectToWritingSystemsFolder, Path.GetFileName(path)));
+				var destPath = Path.Combine(pathProjectToWritingSystemsFolder, Path.GetFileName(path));
+				if (!File.Exists(destPath))
+				{
+					File.Copy(path, destPath);
+				}
 			}
 		}
 

@@ -5,6 +5,7 @@ using System.Xml;
 using NUnit.Framework;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
+using Palaso.IO;
 using Palaso.TestUtilities;
 using Palaso.WritingSystems;
 using Palaso.Xml;

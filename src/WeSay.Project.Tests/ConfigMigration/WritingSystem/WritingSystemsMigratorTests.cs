@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using NUnit.Framework;
+using Palaso.IO;
 using Palaso.TestUtilities;
 using WeSay.Project.ConfigMigration.WritingSystem;
 
@@ -17,8 +15,8 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			private readonly TemporaryFolder _folder;
 			private readonly XmlNamespaceManager _namespaceManager;
-			private TempFile _configFile;
-			private TempFile _liftFile;
+			private readonly TempFile _configFile;
+			private readonly TempFile _liftFile;
 
 			public TestEnvironment()
 			{
@@ -27,15 +25,15 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				_namespaceManager = new XmlNamespaceManager(new NameTable());
 				_namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
 				var pathToConfigFile = Path.Combine(_folder.Path, "test.WeSayConfig");
-				_configFile = new TempFile(configFileContent);
+				_configFile = new TempFile(_configFileContent);
 				_configFile.MoveTo(pathToConfigFile);
 				var pathtoLiftFile = Path.Combine(_folder.Path, "test.lift");
-				_liftFile = new TempFile(liftFileContent);
+				_liftFile = new TempFile(_liftFileContent);
 				_liftFile.MoveTo(pathtoLiftFile);
 			}
 
 			//This config file was created by opening WeSay 0.9.69 Config tool and turning on every option that I could find that might insert a writingsystem into the config file. Then I removed any redundancies for brevity sake. This probably means that the config file here would not load in WeSay but it contains the relevant xml for writingsystems
-			private string configFileContent =
+			private readonly string _configFileContent =
 			#region LongFileContent
  @"<?xml version='1.0' encoding='utf-8'?>
 <configuration
@@ -85,7 +83,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 </configuration>".Replace("\"", "'");
 			#endregion
 
-			private string liftFileContent =
+			private readonly string _liftFileContent =
 			#region LongFileContent
  @"<?xml version='1.0' encoding='utf-8'?>
 <lift
@@ -121,12 +119,12 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				_folder.Dispose();
 			}
 
-			public string WritingSystemsPath
+			private string WritingSystemsPath
 			{
 				get { return Path.Combine(ProjectPath, "WritingSystems"); }
 			}
 
-			public string WritingSystemsOldPrefsFilePath
+			private string WritingSystemsOldPrefsFilePath
 			{
 				get { return Path.Combine(ProjectPath, "WritingSystemPrefs.xml"); }
 			}
@@ -209,9 +207,9 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			}
 		}
 
-		private void WriteStringToFileAtXpath(string pathtoFile, string xPath, string valueToWrite)
+		private static void WriteStringToFileAtXpath(string pathtoFile, string xPath, string valueToWrite)
 		{
-			XmlDocument configFile = new XmlDocument();
+			var configFile = new XmlDocument();
 			configFile.Load(pathtoFile);
 			XmlNode versionNode = configFile.SelectSingleNode(xPath);
 			versionNode.Attributes[0].Value = valueToWrite;
@@ -226,10 +224,9 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
 				migrator.MigrateIfNecessary();
-				XmlDocument doc = new XmlDocument();
+				var doc = new XmlDocument();
 				doc.Load(e.PathToLiftFile);
 				XmlNodeList nodes = doc.SelectNodes("//@lang");
-				XmlNode node = nodes.Item(0);
 
 				Assert.AreEqual("x-bogusws1", nodes.Item(0).InnerText);
 				Assert.AreEqual("x-bogusws2", nodes.Item(1).InnerText);
@@ -273,7 +270,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment())
 			{
-				var language = "english";
+				const string language = "english";
 				e.WriteToPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(language, language, "", "", "", 12, false, language, "", false, true));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
 				migrator.MigrateIfNecessary();

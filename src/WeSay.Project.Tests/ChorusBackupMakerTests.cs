@@ -6,6 +6,7 @@ using Chorus.sync;
 using Chorus.Utilities;
 using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
+using Palaso.Progress.LogBox;
 using Palaso.TestUtilities;
 using Palaso.Xml;
 

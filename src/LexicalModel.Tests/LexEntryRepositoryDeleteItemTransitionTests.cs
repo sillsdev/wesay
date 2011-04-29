@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
+using Palaso.IO;
 using Palaso.Tests.Data;
 using Palaso.TestUtilities;
 

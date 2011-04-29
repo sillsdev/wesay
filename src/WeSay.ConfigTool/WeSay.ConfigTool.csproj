@@ -257,7 +257,7 @@
 	<Compile Include="NewProjectCreation\NewProjectInformationDialog.Designer.cs">
 	  <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
 	</Compile>
-	<Compile Include="NewProjectCreation\ProjectFromFLExCreator.cs" />
+	<Compile Include="NewProjectCreation\ProjectFromRawFLExLiftFilesCreator.cs" />
 	<Compile Include="OptionListControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

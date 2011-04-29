@@ -186,7 +186,9 @@ namespace WeSay.LexicalTools.Dashboard
 					{
 						ProjectInfo projectInfo =
 							WeSayWordsProject.Project.GetProjectInfoForAddin();
+						UsageReporter.SendNavigationNotice(addin.ID);
 						addin.Launch(ParentForm, projectInfo);
+
 					}
 					catch (Exception error)
 					{

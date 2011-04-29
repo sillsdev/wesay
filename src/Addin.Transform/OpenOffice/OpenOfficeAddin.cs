@@ -152,7 +152,11 @@ namespace Addin.Transform.OpenOffice
 				//dlg.CancelRequested += new EventHandler(OnCancelRequested);
 				dlg.ProgressState.Arguments = arguments;
 				dlg.ShowDialog();
+
+				//REVIEW (jh oct 2010): Doesn't the progress dialog already run this method at the right time?
 				worker.RunWorkerAsync();
+
+
 				if (dlg.ProgressStateResult != null &&
 					dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
 				{

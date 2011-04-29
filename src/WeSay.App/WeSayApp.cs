@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -7,6 +8,7 @@ using LiftIO;
 using Palaso.Code;
 using Palaso.i18n;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.Progress;
 using WeSay.App.Properties;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
@@ -53,6 +55,8 @@ namespace WeSay.App
 			OsCheck();
 			Logger.Init();
 			SetupErrorHandling();
+
+
 			//problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
 
 			//bring in settings from any previous version
@@ -61,8 +65,7 @@ namespace WeSay.App
 				Settings.Default.Upgrade();
 				Settings.Default.NeedUpgrade = false;
 			}
-			UsageReporter.AppNameToUseInDialogs = "WeSay";
-			UsageReporter.AppNameToUseInReporting = "WeSayApp";
+			 SetUpReporting();
 
 			if (!Parser.ParseArguments(args, _commandLineArguments, ShowCommandLineError))
 			{
@@ -75,45 +78,77 @@ namespace WeSay.App
 			}
 		}
 
-		private static void ReleaseMutexForThisProject()
+		private static void SetUpReporting()
+		{
+			if (Settings.Default.Reporting == null)
+			{
+				Settings.Default.Reporting = new ReportingSettings();
+				Settings.Default.Save();
+			}
+			UsageReporter.Init(Settings.Default.Reporting, "wesay.palaso.org", "UA-22170471-6");
+			UsageReporter.AppNameToUseInDialogs = "WeSay";
+			UsageReporter.AppNameToUseInReporting = "WeSayApp";
+		}
+
+		public static void ReleaseMutexForThisProject()
 		{
 			if (_oneInstancePerProjectMutex != null)
 			{
 				_oneInstancePerProjectMutex.ReleaseMutex();
+				_oneInstancePerProjectMutex = null;
 			}
 		}
 
 		private static bool GrabTokenForThisProject(string pathToLiftFile)
 		{
+			//ok, here's how this complex method works...
+			//First, we try to get the mutex quickly and quitely.
+			//If that fails, we put up a dialog and wait a number of seconds,
+			//while we wait for the mutex to come free.
+
 			Guard.AgainstNull(pathToLiftFile, "pathToLiftFile");
 			string mutexId = pathToLiftFile;
 			mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
 			mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
-			bool mutexCreated = false;
-			const int waitInterval = 100;
-			for (int i = 0; i < 4000; i += waitInterval)
+			bool mutexAcquired = false;
+			try
 			{
-				_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexCreated);
-				if (mutexCreated)
-				{
-					break;
-				}
-				Thread.Sleep(waitInterval);
+				_oneInstancePerProjectMutex = Mutex.OpenExisting(mutexId);
+				mutexAcquired = _oneInstancePerProjectMutex.WaitOne(1 * 1000);
 			}
-			if (!mutexCreated) // cannot acquire?
+			catch (WaitHandleCannotBeOpenedException e)//doesn't exist, we're the first.
+			{
+				_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexAcquired);
+				mutexAcquired = true;
+			}
+			catch (AbandonedMutexException e)
+			{
+				//that's ok, we'll get it below
+			}
+
+			using (var dlg = new SimpleProgressDialog("Waiting for other WeSay to finish..."))
+			{
+				dlg.Show();
+				try
+				{
+					_oneInstancePerProjectMutex = Mutex.OpenExisting(mutexId);
+					mutexAcquired = _oneInstancePerProjectMutex.WaitOne(10 * 1000);
+				}
+				catch (AbandonedMutexException e)
+				{
+					_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexAcquired);
+					mutexAcquired = true;
+				}
+			   catch (Exception e)
+				{
+					ErrorReport.NotifyUserOfProblem(e,
+						"There was a problem starting WeSay which might require that you restart your computer.");
+				}
+			}
+
+			if (!mutexAcquired) // cannot acquire?
 			{
 				_oneInstancePerProjectMutex = null;
-				//var processes = Process.GetProcessesByName("WeSay.App");
-				//foreach (var process in processes)
-				//{
-				//    // we should make window title include the database name.
-				//    if (process.MainWindowTitle.Contains(_project.Name))
-				//    {
-				//        process.WaitForInputIdle(4000); // wait four seconds at most
-				//        //process.MainWindowHandle;
-				//        return false;
-				//    }
-				//}
 				ErrorReport.NotifyUserOfProblem("Another copy of WeSay is already open with " + pathToLiftFile + ". If you cannot find that WeSay, restart your computer.");
 				return false;
 			}

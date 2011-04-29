@@ -9,9 +9,7 @@ using Palaso.Text;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
-//using CommonEnumerations=Palaso.Lift.CommonEnumerations;
 using Palaso.Lift;
-//using CommonEnumerations=Palaso.Lift.CommonEnumerations;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -28,7 +26,7 @@ namespace WeSay.UI.TextBoxes
 		private static int _widthForWritingSystemLabels = -1;
 		private static IWritingSystemRepository _allWritingSystems;
 		private static Font _writingSystemLabelFont;
-		private readonly bool _isSpellCheckingEnabled;
+		public bool IsSpellCheckingEnabled { get; set; }
 		private readonly bool _isMultiParagraph;
 
 		public MultiTextControl(): this(null, null)
@@ -105,7 +103,7 @@ namespace WeSay.UI.TextBoxes
 			}
 			_showAnnotationWidget = showAnnotationWidget;
 			_visibility = visibility;
-			_isSpellCheckingEnabled = isSpellCheckingEnabled;
+			IsSpellCheckingEnabled = isSpellCheckingEnabled;
 			_isMultiParagraph = isMultiParagraph;
 			BuildBoxes(multiTextToCopyFormsFrom);
 		}
@@ -358,13 +356,13 @@ namespace WeSay.UI.TextBoxes
 				box.Multiline = true;
 				box.WordWrap = true;
 				box.MultiParagraph = _isMultiParagraph;
-				box.IsSpellCheckingEnabled = _isSpellCheckingEnabled;
+				box.IsSpellCheckingEnabled = IsSpellCheckingEnabled;
 				//box.Enabled = !box.ReadOnly;
 			}
 
 			_inputBoxes.Add(control);
 
-			string text = multiText[writingSystem.Id];
+			string text = multiText.GetExactAlternative(writingSystem.Id);
 			if(_isMultiParagraph) //review... stuff was coming in with just \n, and the text box then didn't show the paragarph marks
 			{
 				text = text.Replace("\r\n", "\n");

@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 using Palaso.Reporting;
 
@@ -8,12 +9,15 @@ namespace WeSay.ConfigTool
 		private readonly string _header;
 		protected readonly ILogger _logger;
 
-		public ConfigurationControlBase(string header, ILogger logger)
+		public ConfigurationControlBase(string header, ILogger logger, string nameForUsageReporting)
 		{
 			_header = header;
 			_logger = logger;
+			NameForUsageReporting = nameForUsageReporting;
 			SetStyle(ControlStyles.ResizeRedraw, true);
 		}
+
+		public string NameForUsageReporting{ get; private set;}
 
 		public virtual void PreLoad() {}
 

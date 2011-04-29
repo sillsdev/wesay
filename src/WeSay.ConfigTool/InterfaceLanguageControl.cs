@@ -11,7 +11,7 @@ namespace WeSay.ConfigTool
 	public partial class InterfaceLanguageControl: ConfigurationControlBase
 	{
 		public InterfaceLanguageControl(ILogger logger)
-			: base("settings for the user interface", logger)
+			: base("settings for the user interface", logger,"interfaceLanguage")
 		{
 			InitializeComponent();
 		}
@@ -104,7 +104,7 @@ namespace WeSay.ConfigTool
 			private static string PoFilePathToLanguageCode(string poFilePath)
 			{
 				var parts = poFilePath.Split(new[] {'.', '-'});
-				return parts[1];
+				return parts[parts.Length - 2];
 			}
 
 			public override string ToString()

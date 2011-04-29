@@ -42,9 +42,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 				_pathToInputConfig,
 				"<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks>"
 			);
-			var doc = new XPathDocument(_pathToInputConfig);
-
-			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 
 			Assert.IsTrue(didMigrate);
 			var outputDoc = new XmlDocument();
@@ -59,8 +57,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 				_pathToInputConfig,
 				"<?xml version='1.0' encoding='utf-8'?><configuration version='1'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>"
 			);
-			var doc = new XPathDocument(_pathToInputConfig);
-			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			Assert.IsTrue(didMigrate);
 			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
@@ -72,8 +69,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 				_pathToInputConfig,
 				"<?xml version='1.0' encoding='utf-8'?><configuration version='2'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>"
 			);
-			var doc = new XPathDocument(_pathToInputConfig);
-			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			Assert.IsTrue(didMigrate);
 			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
@@ -85,8 +81,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 				_pathToInputConfig,
 				"<?xml version='1.0' encoding='utf-8'?><configuration version='3'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>"
 			);
-			var doc = new XPathDocument(_pathToInputConfig);
-			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			Assert.IsTrue(didMigrate);
 			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
@@ -98,8 +93,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 				_pathToInputConfig,
 				"<?xml version='1.0' encoding='utf-8'?><configuration version='4'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>"
 			);
-			var doc = new XPathDocument(_pathToInputConfig);
-			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			Assert.IsTrue(didMigrate);
 			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
@@ -117,8 +111,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 					<tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks>
 				</configuration>"
 			);
-			var doc = new XPathDocument(_pathToInputConfig);
-			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			Assert.IsTrue(didMigrate);
 			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
@@ -140,7 +133,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 										</components>
 									</configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
-			_migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			AssertHasAtLeastOneMatch("//field[className/@text()='LexSense' && fieldName/@text()='literal-meaning']", _outputPath);
 		}
 		*/
@@ -161,8 +154,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 						</components>
 					</configuration>"
 			);
-			var doc = new XPathDocument(_pathToInputConfig);
-			_migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			AssertHasAtLeastOneMatch("//field/fieldName[text()='semantic-domain-ddp4']", _outputPath);
 		}
 
@@ -182,8 +174,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 							</task>
 						</tasks></components></configuration>"
 			);
-			var doc = new XPathDocument(_pathToInputConfig);
-			_migrator.MigrateConfigurationXmlIfNeeded(doc,_outputPath);
+			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig,_outputPath);
 			AssertHasAtLeastOneMatch("//task/field[text()='semantic-domain-ddp4']", _outputPath);
 			AssertHasAtLeastOneMatch("//task/showFields[text()='semantic-domain-ddp4']", _outputPath);
 			AssertHasAtLeastOneMatch("//task/readOnly[text()='semantic-domain-ddp4']", _outputPath);
@@ -200,8 +191,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 				</components>
 				<tasks><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks>
 			</configuration>");
-			var doc = new XPathDocument(_pathToInputConfig);
-			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			Assert.IsTrue(didMigrate);
 			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
 		}
@@ -219,8 +209,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 						</field>
 					</fields>
 				</configuration>");
-			var doc = new XPathDocument(_pathToInputConfig);
-			_migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			AssertHasAtLeastOneMatch("//field/className[text()='PalasoDataObject']", _outputPath);
 		}
 
@@ -237,8 +226,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 						</field>
 					</fields>
 				</configuration>");
-			var doc = new XPathDocument(_pathToInputConfig);
-			_migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			AssertHasAtLeastOneMatch("//configuration[@version='8']", _outputPath);
 		}
 
@@ -249,8 +237,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 				_pathToInputConfig,
 				"<?xml version='1.0' encoding='utf-8'?><configuration version='8'></configuration>"
 			);
-			var doc = new XPathDocument(_pathToInputConfig);
-			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			Assert.IsFalse(didMigrate);
 		}
 

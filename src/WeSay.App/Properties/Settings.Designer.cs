@@ -70,5 +70,16 @@ namespace WeSay.App.Properties {
 				this["SkinName"] = value;
 			}
 		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public global::Palaso.Reporting.ReportingSettings Reporting {
+			get {
+				return ((global::Palaso.Reporting.ReportingSettings)(this["Reporting"]));
+			}
+			set {
+				this["Reporting"] = value;
+			}
+		}
 	}
 }

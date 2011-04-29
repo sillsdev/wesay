@@ -8,7 +8,7 @@ namespace WeSay.ConfigTool
 	public class WritingSystemSetup: ConfigurationControlBase
 	{
 		public WritingSystemSetup(ILogger logger, IWritingSystemRepository store)
-			: base("set up fonts, keyboards, and sorting", logger)
+			: base("set up fonts, keyboards, and sorting", logger, "writingSystems")
 		{
 			var view = new WritingSystemSetupView(new WritingSystemSetupModel(store))
 						{

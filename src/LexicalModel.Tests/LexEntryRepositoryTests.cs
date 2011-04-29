@@ -23,11 +23,10 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_temporaryFolder = new TemporaryFolder();
-			string filePath = _temporaryFolder.GetTemporaryFile();
+			_temporaryFolder = new TemporaryFolder("LexEntryRepositoryTests");
+			string filePath = _temporaryFolder.GetPathForNewTempFile(false);
 			_lexEntryRepository = new LexEntryRepository(filePath);
-			_headwordWritingSystem = new WritingSystemDefinition();
-			_headwordWritingSystem.ISO = "aaa";
+			_headwordWritingSystem = new WritingSystemDefinition("aaa");
 		}
 
 		[TearDown]

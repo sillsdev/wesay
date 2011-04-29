@@ -485,6 +485,8 @@ namespace WeSay.UI
 		private void AdjustColumnWidth()
 		{
 			int newWidth = ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
+			// Column width seems to have some maximum, after which it allows multiple columns.
+			// So we constrain it to a 'reasonable' but large enough value.
 			newWidth = Math.Max(newWidth, 300);
 			SuspendLayout();
 			if (Columns.Count > 0)

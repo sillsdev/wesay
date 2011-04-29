@@ -30,6 +30,7 @@
 	<RootNamespace>WeSay.Project</RootNamespace>
 	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	<PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -175,13 +176,16 @@
 	<Compile Include="CheckinDescriptionBuilder.cs" />
 	<Compile Include="ChorusBackupMaker.cs" />
 	<Compile Include="BasilProject.cs" />
+	<Compile Include="ConfigFile.cs" />
 	<Compile Include="ConfigMigration\UserConfig\WeSayUserConfigMigrator.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystemMigrator.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsToLdmlMigrationStrategy.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystemCollection_V1.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsMigrator.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingSystemsFromLiftCreator.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystem_V1.cs" />
 	<Compile Include="ConfigMigration\XslFromResourceMigrator.cs" />
+	<Compile Include="ProjectFromLiftFolderCreator.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
@@ -262,6 +266,9 @@
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="ConfigMigration\UserConfig\Migrate1To2.xsl" />
+  </ItemGroup>
+  <ItemGroup>
+	<Folder Include="ConfigMigration\NewFolder1\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

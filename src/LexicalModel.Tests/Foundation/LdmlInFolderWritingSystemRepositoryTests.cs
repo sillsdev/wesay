@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
 using NUnit.Framework;
+using Palaso.IO;
 using Palaso.TestUtilities;
 using Palaso.WritingSystems;
 
@@ -20,7 +20,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			{
 				_wesayProjectFolder = new TemporaryFolder("WesayProject");
 				_ldmlWsFolder = new TemporaryFolder(_wesayProjectFolder, "WritingSystems");
-				_wsPrefsFile = new TempFile(_ldmlWsFolder);
+				_wsPrefsFile = new TempFile(_ldmlWsFolder.Path);
 			}
 
 			public string PathToWritingSystemsFolder
@@ -73,12 +73,14 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 			public static WritingSystemDefinition CreateDetailedWritingSystem(string languageCode)
 			{
-				var ws = new WritingSystemDefinition();
-				ws.ISO = languageCode;
-				ws.Abbreviation = languageCode;
-				ws.IsVoice = false;
-				ws.DefaultFontName = new Font(FontFamily.GenericSansSerif, 12).Name;
-				ws.DefaultFontSize = new Font(FontFamily.GenericSansSerif, 12).Size;
+				var ws = new WritingSystemDefinition
+					{
+						ISO639 = languageCode,
+						Abbreviation = languageCode,
+						IsVoice = false,
+						DefaultFontName = new Font(FontFamily.GenericSansSerif, 12).Name,
+						DefaultFontSize = new Font(FontFamily.GenericSansSerif, 12).Size
+					};
 				ws.IsVoice = false;
 				ws.IsUnicodeEncoded = true;
 				ws.Keyboard = "Bogus ivories!";

@@ -7,6 +7,7 @@ using System.Xml.XPath;
 using LiftIO;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
+using Palaso.IO;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
@@ -37,11 +38,11 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void UpdateFileStructure_LiftByItself_DoesNothing()
 		{
-			using (TemporaryFolder f = new TemporaryFolder("OpeningLiftFile_MissingConfigFile_GivesMessage"))
+			using (var f = new TemporaryFolder("OpeningLiftFile_MissingConfigFile_GivesMessage"))
 			{
-				using(TempLiftFile lift = new TempLiftFile(f, "", "0.13"))
+				using(var lift = new TempLiftFile(f, "", "0.13"))
 				{
-					using(WeSayWordsProject p = new WeSayWordsProject())
+					using(var p = new WeSayWordsProject())
 					{
 						Assert.AreEqual(lift.Path,p.UpdateFileStructure(lift.Path));
 					}
@@ -55,7 +56,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void MakeWritingSystemIdChange_FileLocked_NotifiesUser()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 				using (File.OpenWrite(p.PathToLiftFile))
@@ -73,7 +74,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void MakeWritingSystemIdChange_WritingSystemFoundInLift_Changed()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 				XmlDocument doc = new XmlDocument();
@@ -88,6 +89,7 @@ namespace WeSay.Project.Tests
 
 			}
 		}
+
 		/// <summary>
 		/// related to ws-944: Crash opening lift file from FLEx which was sitting in My Documents without a configuration file
 		/// </summary>
@@ -108,29 +110,13 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void DefaultConfigFile_DoesntNeedMigrating()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting(""))
+			using (var p = new ProjectDirectorySetupForTesting(""))
 			{
-				XPathDocument defaultConfig = new XPathDocument(WeSayWordsProject.PathToDefaultConfig);
-				using (TempFile f = new TempFile())
+				using (var proj = p.CreateLoadedProject())
 				{
-					using (var proj = p.CreateLoadedProject())
-					{
-						bool migrated = proj.MigrateConfigurationXmlIfNeeded();
-						Assert.IsFalse(migrated, "The default config file should never need migrating");
-					}
+					bool migrated = proj.MigrateConfigurationXmlIfNeeded();
+					Assert.IsFalse(migrated, "The default config file should never need migrating");
 				}
-			}
-		}
-
-		[Test]
-		public void WeSayDirNotInValidBasilDir()
-		{
-			using (var dir = new Palaso.TestUtilities.TemporaryFolder("WeSayDirNotInValidBasilDir"))
-			{
-				string weSayDir = dir.FolderPath; // MakeDir(experimentDir, "WeSay");
-				string wordsPath = Path.Combine(weSayDir, "AAA.words");
-				File.Create(wordsPath).Close();
-				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() => TryLoading(wordsPath, dir.FolderPath));
 			}
 		}
 
@@ -230,9 +216,8 @@ namespace WeSay.Project.Tests
 				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
 				File.WriteAllText(configPath,
 								  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
-				XPathDocument doc = new XPathDocument(configPath);
 				string outputPath = Path.Combine(projectDir.PathToDirectory, Path.GetTempFileName());
-				new ConfigurationMigrator().MigrateConfigurationXmlIfNeeded(doc, outputPath);
+				new ConfigurationMigrator().MigrateConfigurationXmlIfNeeded(configPath, outputPath);
 				XmlDocument docFile = new XmlDocument();
 				docFile.Load(outputPath);
 				XmlNode node = docFile.SelectSingleNode("configuration");
@@ -301,14 +286,13 @@ namespace WeSay.Project.Tests
 			}
 		}
 
-
 		/// <summary>
 		/// check  (WS-1030) When WeSay is open and you try to change a field, get green box, should get friendly message.
 		/// </summary>
 		[Test]
 		public void MakeFieldNameChange_FileLocked_NotifiesUser()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 				using (File.OpenWrite(p.PathToLiftFile))
@@ -341,14 +325,14 @@ namespace WeSay.Project.Tests
 				builder.AppendFormat(@"
 				<entry id='{0}'>
 					<lexical-unit>
-					  <form lang='v'>
+					  <form lang='qaa'>
 						<text>{0}</text>
 					  </form>
 					</lexical-unit>
 					<sense>
 						<grammatical-info value='n'/>
 						<definition><form lang='en'><text>blah blah {0} blah blah</text></form></definition>
-						<example lang='v'><text>and example of lah blah {0} blah blah</text></example>
+						<example lang='qaa'><text>and example of lah blah {0} blah blah</text></example>
 					</sense>
 				</entry>", i);
 			}
@@ -370,7 +354,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void PathProvidedAsSimpleFileName_GetsConverted()
 		{
-			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				string oldWorkingDir= System.Environment.CurrentDirectory;
 				try
@@ -449,6 +433,21 @@ namespace WeSay.Project.Tests
 				File.WriteAllText(projectDir.PathToUserConfigFile, config);
 				var project = projectDir.CreateLoadedProject();
 				Assert.That(project.UiOptions.Language, Is.EqualTo("en"));
+			}
+		}
+
+
+
+		[Test]
+		public void LoadFromProjectDirectoryPath_NoPreviousWeSaySpecificFiles_CreatesWeSayConfigAndPartsOfSpeech()
+		{
+			using (var projectDir = new ProjectDirectorySetupForTesting(""))
+			{
+				File.Delete(projectDir.PathToConfigFile);
+				File.Delete(projectDir.PathToUserConfigFile);
+				var project = new WeSayWordsProject();
+				project.LoadFromProjectDirectoryPath(projectDir.PathToDirectory);
+				Assert.IsTrue(File.Exists(projectDir.PathToConfigFile));
 			}
 		}
 
