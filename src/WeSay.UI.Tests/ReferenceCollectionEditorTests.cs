@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
+using Palaso.WritingSystems;
 using WeSay.Project;
 using WeSay.Project;
 using Palaso.Lift;
@@ -16,7 +17,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class ReferenceCollectionEditorTests: IReceivePropertyChangeNotifications
 	{
-		private readonly WritingSystem _ws = new WritingSystem("test", new Font("Arial", 30));
+		private readonly WritingSystemDefinition _ws = WritingSystemDefinition.FromLanguage("qaa");
 		private ReferenceCollectionEditor<Option, string, OptionRef> _control;
 		private Form _window;
 		private OptionsList _sourceChoices;
@@ -26,6 +27,8 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
+			_ws.DefaultFontName = "Arial";
+			_ws.DefaultFontSize = 30;
 			_sourceChoices = new OptionsList();
 			AddSourceChoice("one", "1");
 			AddSourceChoice("two", "2");
@@ -35,7 +38,7 @@ namespace WeSay.UI.Tests
 
 			_chosenItems = new OptionRefCollection(this);
 
-			List<WritingSystem> writingSystems = new List<WritingSystem>();
+			List<WritingSystemDefinition> writingSystems = new List<WritingSystemDefinition>();
 			writingSystems.Add(_ws);
 
 			_control = new ReferenceCollectionEditor<Option, string, OptionRef>(

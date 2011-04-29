@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Palaso.i18n;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.ConfigTool.Properties;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -190,10 +193,14 @@ namespace WeSay.ConfigTool
 
 		private void OnAddField_Click(object sender, EventArgs e)
 		{
+			// TODO inject the IWritingSystemStore in the ctor
+			var writingSystemStore = WeSayWordsProject.Project.WritingSystems;
+			var writingSystemIds = writingSystemStore.AllWritingSystems.Select(ws => ws.Id);
+
 			var f = new Field(
 				MakeUniqueFieldName(),
 				"LexEntry",
-				WeSayWordsProject.Project.WritingSystems.Keys);
+				writingSystemIds);
 			ViewTemplate.Fields.Add(f);
 			LoadInventory();
 			_tabControl.SelectedTab = _setupTab;

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using Palaso.TestUtilities;
 using WeSay.Project.ConfigMigration.UserConfig;
-
 using NUnit.Framework;
 
-namespace WeSay.Project.Tests.ConfigMigration
+namespace WeSay.Project.Tests.ConfigMigration.UserConfig
 {
 	[TestFixture]
 	public class WeSayUserConfigMigrationTests

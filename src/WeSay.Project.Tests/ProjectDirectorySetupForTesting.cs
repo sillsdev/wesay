@@ -7,7 +7,7 @@ namespace WeSay.Project.Tests
 	/// <summary>
 	/// Creates a valid WeSay project directory in temp dir, and removes it when disposed.
 	/// </summary>
-	public class ProjectDirectorySetupForTesting: IDisposable
+	public class ProjectDirectorySetupForTesting : IDisposable
 	{
 		private bool _disposed;
 		private readonly string _experimentDir;

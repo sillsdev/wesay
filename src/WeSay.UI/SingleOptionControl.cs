@@ -6,6 +6,7 @@ using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.UiBindings;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
@@ -15,7 +16,7 @@ namespace WeSay.UI
 		private readonly OptionsList _list;
 		private readonly ComboBox _control = new ComboBox();
 		private readonly string _nameForLogging;
-		private readonly WritingSystem _preferredWritingSystem;
+		private readonly WritingSystemDefinition _preferredWritingSystem;
 
 		public event EventHandler ValueChanged;
 
@@ -36,7 +37,7 @@ namespace WeSay.UI
 			base.OnHandleDestroyed(e);
 		}
 
-		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, WritingSystem preferredWritingSystem)
+		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, WritingSystemDefinition preferredWritingSystem)
 		{
 			_list = list;
 			_nameForLogging = nameForLogging;
@@ -47,8 +48,8 @@ namespace WeSay.UI
 			_control.AutoCompleteSource = AutoCompleteSource.ListItems;
 			_control.Sorted = false;
 			_control.MaxDropDownItems = 100;
-			_control.Font = _preferredWritingSystem.Font;
-			_control.Height = _preferredWritingSystem.Font.Height + 10;
+			_control.Font = WritingSystemInfo.CreateFont(_preferredWritingSystem);
+			_control.Height = WritingSystemInfo.CreateFont(_preferredWritingSystem).Height + 10;
 			BuildBoxes(optionRef);
 		}
 

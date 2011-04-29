@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
+using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.Data.Tests;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
@@ -125,10 +127,13 @@ namespace WeSay.Project.Tests
 
 		private static ViewTemplate MakeMasterInventory()
 		{
-			WritingSystemCollection w = new WritingSystemCollection();
-			w.Add("red", new WritingSystem("red", new Font("arial", 12)));
-			w.Add("white", new WritingSystem("white", new Font("arial", 12)));
-			return ViewTemplate.MakeMasterTemplate(w);
+			using (var tempFolder = new TemporaryFolder("ProjectFromViewTemplateTests"))
+			{
+				IWritingSystemRepository w = new LdmlInFolderWritingSystemRepository(tempFolder.Path);
+				w.Set(WritingSystemDefinition.FromLanguage("aaa"));
+				w.Set(WritingSystemDefinition.FromLanguage("aab"));
+				return ViewTemplate.MakeMasterTemplate(w);
+			}
 		}
 
 		[Test]
@@ -165,7 +170,7 @@ namespace WeSay.Project.Tests
 		{
 			ViewTemplate viewTemplate = PopulateViewTemplate();
 			viewTemplate.Fields[0].WritingSystemIds.Contains("en");
-			viewTemplate.ChangeWritingSystemId("en", "x");
+			viewTemplate.OnWritingSystemIDChange("en", "x");
 			Assert.IsFalse(viewTemplate.Fields[0].WritingSystemIds.Contains("en"));
 			Assert.IsTrue(viewTemplate.Fields[0].WritingSystemIds.Contains("x"));
 		}

@@ -23,7 +23,7 @@ using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.Progress;
 using Palaso.UI.WindowsForms.Progress;
-
+using Palaso.WritingSystems;
 using WeSay.Project;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
@@ -184,7 +184,7 @@ namespace Addin.Transform.OpenOffice
 		{
 			using (var exporter = new LiftWriter(outputPath, LiftWriter.ByteOrderStyle.NoBOM))
 			{
-				WritingSystem firstWs = template.HeadwordWritingSystems[0];
+				WritingSystemDefinition firstWs = template.HeadwordWritingSystems[0];
 				ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(firstWs);
 				int index = 0;

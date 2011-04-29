@@ -4,6 +4,7 @@ using System.IO;
 using NUnit.Framework;
 using Palaso.i18n;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests
@@ -124,64 +125,5 @@ namespace WeSay.Project.Tests
 			Assert.AreEqual("red", StringCatalog.Get("red"));
 		}
 
-		[Test]
-		public void NewProject_ContainsNoWritingsystemFiles_DefaultsAreLoaded()
-		{
-			InitializeSampleProject();
-			File.Delete(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory));
-			BasilProject project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(_projectDirectory);
-
-			Assert.AreEqual(7, project.WritingSystems.Count);
-			Assert.IsTrue(project.WritingSystems.ContainsKey("en"));
-			Assert.IsTrue(project.WritingSystems.ContainsKey("tpi"));
-		}
-
-		[Test]
-		//WS-33900
-		public void NewProject_ContainsNoWritingsystemFiles_DefaultsAreLoadedButWeDontWriteToTheFilesInTheCommonDirectory()
-		{
-			InitializeSampleProject();
-			File.Delete(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory));
-			BasilProject project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(_projectDirectory);
-			string pathToWritingSystemsInApplicationCommonDirectory = BasilProject.GetPathToLdmlWritingSystemsFolder(BasilProject.ApplicationCommonDirectory);
-			string englishLdmlContent = File.ReadAllText(Path.Combine(pathToWritingSystemsInApplicationCommonDirectory, "en.ldml"));
-
-			WritingSystem ws = project.WritingSystems["en"];
-			if (ws.Abbreviation == "writeme!"){throw new ApplicationException("This test seems to have failed at some point and the en.ldml file in the application common directory neesds to be reverted before the next test run.");}
-			ws.Abbreviation = "writeme!";
-			project.Save();
-			Assert.AreEqual(englishLdmlContent, File.ReadAllText(Path.Combine(pathToWritingSystemsInApplicationCommonDirectory, "en.ldml")));
-		}
-
-		[Test]
-		public void NewProject_ContainsLdmlWritingSystemFiles_LdmlFilesAreLoaded()
-		{
-			InitializeSampleProject();
-			BasilProject project = new BasilProject();
-			project.WritingSystems.LoadFromLegacyWeSayFile(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory));
-			File.Delete(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory));
-			project.LoadFromProjectDirectoryPath(_projectDirectory);
-
-			Assert.AreEqual(2, project.WritingSystems.Count);
-			Assert.IsTrue(project.WritingSystems.ContainsKey("PretendAnalysis"));
-			Assert.IsTrue(project.WritingSystems.ContainsKey("PretendVernacular"));
-		}
-
-		[Test]
-		public void NewProject_ContainsLdmlAndLegacyWritingSystemFiles_OnlyLdmlFilesAreLoaded()
-		{
-			InitializeSampleProject();
-			BasilProject project = new BasilProject();
-			WritingSystemCollection wsCollection = new WritingSystemCollection();
-			WritingSystem ws = new WritingSystem(){ISO = "ldmlWs"};
-			wsCollection.Add(ws.Id, ws);
-			wsCollection.Write(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
-			project.LoadFromProjectDirectoryPath(_projectDirectory);
-
-			Assert.AreEqual(1, project.WritingSystems.Count);
-			Assert.IsTrue(project.WritingSystems.ContainsKey("ldmlWs"));
-		}
 	}
 }

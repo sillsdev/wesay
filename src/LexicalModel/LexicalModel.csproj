@@ -33,7 +33,6 @@
 	  </CustomCommands>
 	</CustomCommands>
 	<additionalargs>-lib:../lib/mono,../lib/common</additionalargs>
-	<PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -201,9 +200,9 @@
 	<Compile Include="Foundation\Options\DdpOptionDisplayAdaptor.cs" />
 	<Compile Include="Foundation\Options\GenericOptionListReader.cs" />
 	<Compile Include="Foundation\Options\OptionDisplayAdaptor.cs" />
-	<Compile Include="Foundation\WritingSystem.cs" />
-	<Compile Include="Foundation\WritingSystemForChorusAdaptor.cs" />
-	<Compile Include="Foundation\WritingSystemCollection.cs" />
+	<Compile Include="Foundation\SpellCheckerIdToDisplayStringConverter.cs" />
+	<Compile Include="Foundation\ChorusWritingSystemAdaptor.cs" />
+	<Compile Include="Foundation\WritingSystemInfo.cs" />
 	<Compile Include="IFieldQuery.cs" />
 	<Compile Include="LexEntryRepository.cs" />
 	<Compile Include="MissingFieldQuery.cs" />

@@ -22,7 +22,7 @@ namespace Addin.Transform.Tests
 		public void EntryMakeItToPLift()
 		{
 			var xmlOfEntries = @" <entry id='foo1'>
-										<lexical-unit><form lang='v'><text>hello</text></form></lexical-unit>
+										<lexical-unit><form lang='qaa'><text>hello</text></form></lexical-unit>
 								 </entry>";
 			using (var p = new WeSay.Project.Tests.ProjectDirectorySetupForTesting(xmlOfEntries))
 			{
@@ -34,7 +34,7 @@ namespace Addin.Transform.Tests
 						string outputPath = Path.Combine(project.PathToExportDirectory, project.Name + ".xhtml");
 						maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate, LiftWriter.ByteOrderStyle.BOM);
 						AssertThatXmlIn.File(outputPath).
-							HasAtLeastOneMatchForXpath("//field[@type='headword']/form[@lang='v']/text[text()='hello']");
+							HasAtLeastOneMatchForXpath("//field[@type='headword']/form[@lang='qaa']/text[text()='hello']");
 					}
 				}
 			}

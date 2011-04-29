@@ -4,7 +4,9 @@ using Chorus.UI.Review;
 using NUnit.Framework;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 
@@ -26,11 +28,10 @@ namespace WeSay.LexicalTools.Tests
 			_tempFolder = new TemporaryFolder();
 			_filePath = _tempFolder.GetTemporaryFile();
 
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			string[] vernacularWritingSystemIds = new string[]
 													  {
-															  BasilProject.Project.WritingSystems.
-																	  TestWritingSystemVernId
+															  WritingSystemInfo.VernacularIdForTest
 													  };
 			_viewTemplate = new ViewTemplate();
 			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),

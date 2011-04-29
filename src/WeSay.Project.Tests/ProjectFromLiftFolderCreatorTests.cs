@@ -1,7 +1,10 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.IO;
+using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests
@@ -9,118 +12,177 @@ namespace WeSay.Project.Tests
 	[TestFixture]
 	public class ProjectFromLiftFolderCreatorTests
 	{
+		private class TestEnvironment : IDisposable
+		{
+			private TemporaryFolder _folder;
+			private TempLiftFile _liftFile;
+			private IWritingSystemRepository _writingSystems;
+
+			public TestEnvironment()
+			{
+				ErrorReport.IsOkToInteractWithUser = false;
+				_folder = new TemporaryFolder("ProjectFromLiftFolderCreatorTests");
+			}
+
+			public IWritingSystemRepository WritingSystems
+			{
+				get {
+					if (_writingSystems == null)
+					{
+						_writingSystems = new LdmlInFolderWritingSystemRepository(WritingSystemsPath);
+					}
+					return _writingSystems;
+				}
+			}
+
+			private string WritingSystemsPath
+			{
+				get { return Path.Combine(_folder.Path, "WritingSystems"); }
+			}
+
+			public string LiftFilePath
+			{
+				get
+				{
+					return _liftFile == null ? String.Empty : _liftFile.Path;
+				}
+			}
+
+			public void Dispose()
+			{
+				if (_liftFile != null)
+				{
+					_liftFile.Dispose();
+				}
+				_folder.Dispose();
+			}
+
+			public void CreateLiftFile(string content, string version)
+			{
+				_liftFile = new TempLiftFile(_folder, content, version);
+			}
+
+		}
+
 		[Test]
 		public void SetWritingSystemsForFields_LiftFileContainsWritingsystemsForWhichThereIsNoDefinition_TellsUser()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
-
-			using (var lift = new TempLiftFile(@"
-				<entry id='foo'>
-					<lexical-unit>
-						<form lang='blah'><text></text></form>
-						<form lang='en'><text></text></form>
-					</lexical-unit>
-				</entry>", "0.12"))
+			using (var e = new TestEnvironment())
 			{
-				var collection = new WritingSystemCollection();
-				collection.Add(WritingSystem.IdForUnknownVernacular/*v*/, new WritingSystem());
-				collection.Add("en", new WritingSystem());
+				e.CreateLiftFile(
+					@"<entry id='foo'>
+						<lexical-unit>
+							<form lang='qaa-x-blah'><text></text></form>
+							<form lang='en'><text></text></form>
+						</lexical-unit>
+					  </entry>",
+					  "0.12"
+				);
+				var collection = e.WritingSystems;
+				collection.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownVernacular));
+				collection.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownAnalysis));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 				//put one guy in there already
 				int originalCount = collection.Count;// collection.Count;
 
-				Assert.IsFalse(collection.ContainsKey("blah"));
-				var creator = new ProjectFromLiftFolderCreator(lift.Path, vt, collection);
+				Assert.IsFalse(collection.Contains("qaa-x-blah"));
+				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, collection);
 
 				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(
-					 () => creator.SetWritingSystemsForFields()
+					 creator.SetWritingSystemsForFields
 				 );
 
-				Assert.IsTrue(collection.ContainsKey("blah"));
+				Assert.IsTrue(collection.Contains("qaa-x-blah"));
 			}
 		}
 
 		[Test]
 		public void SetWritingSystemsForFields_LiftFileContainsWritingsystemNamed_xspec_xspecIsAddedToWritingSystems()
 		{
-			using (var lift = new TempLiftFile(@"
-				<entry id='foo'>
-					<lexical-unit>
-						<form lang='x-spec'><text></text></form>
-						<form lang='en'><text></text></form>
-					</lexical-unit>
-				</entry>", "0.12"))
+			using (var e = new TestEnvironment())
 			{
-				var writingSystems = new WritingSystemCollection();
-				writingSystems.Add(WritingSystem.IdForUnknownVernacular/*v*/, new WritingSystem());
-				writingSystems.Add("en", new WritingSystem());
+				e.CreateLiftFile(
+					@"<entry id='foo'>
+						<lexical-unit>
+							<form lang='x-spec'><text></text></form>
+							<form lang='en'><text></text></form>
+						</lexical-unit>
+					</entry>",
+					"0.12"
+				);
+				var writingSystems = e.WritingSystems;
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownVernacular));
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownAnalysis));
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 				//put one guy in there already
 				int originalCount = writingSystems.Count;// collection.Count;
 
-				var creator = new ProjectFromLiftFolderCreator(lift.Path, vt, writingSystems);
+				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, writingSystems);
 				creator.SetWritingSystemsForFields();
-				Assert.IsTrue(writingSystems.ContainsKey("x-spec"));
+				Assert.IsTrue(writingSystems.Contains("x-spec"));
 			}
 		}
 
 		[Test]
 		public void SetWritingSystemsForFields_Normal_FixesUpWritingSystemsForFields()
 		{
-			using (var lift = new TempLiftFile(@"
-				<entry id='foo'>
-					<lexical-unit>
-						<form lang='fromLU'><text></text></form>
-					</lexical-unit>
-				<sense	id='***_a86d6759-f9ea-4710-a818-2b4be9b81c98'>
-				  <gloss lang='fromGloss'>
-					  <text>meaning</text>
-				  </gloss>
-				  <definition>
-					<form lang='fromDef'>
-					  <text>meaning</text>
-					</form>
-				  </definition>
-				  <example>
-					<form lang='fromExample'>
-					  <text>example</text>
-					</form>
-					<translation>
-					  <form lang='fromTrans'>
-						<text>translation</text>
-					  </form>
-					</translation>
-				  </example>
-				</sense>
-		</entry>", "0.12"))
+			using (var e = new TestEnvironment())
 			{
-				var writingSystems = new WritingSystemCollection();
-				writingSystems.Add("en", new WritingSystem());
-				writingSystems.Add("fromLU", new WritingSystem());
-				writingSystems.Add("fromGloss", new WritingSystem());
-				writingSystems.Add("fromDef", new WritingSystem());
-				writingSystems.Add("fromExample", new WritingSystem());
-				writingSystems.Add("fromTrans", new WritingSystem());
+				e.CreateLiftFile(
+					@"<entry id='foo'>
+						<lexical-unit>
+							<form lang='qaa-x-fromLU'><text></text></form>
+						</lexical-unit>
+						<sense	id='***_a86d6759-f9ea-4710-a818-2b4be9b81c98'>
+							<gloss lang='qaa-x-fromGloss'>
+								<text>meaning</text>
+							</gloss>
+							<definition>
+								<form lang='qaa-x-fromDef'>
+									<text>meaning</text>
+								</form>
+							</definition>
+							<example>
+								<form lang='qaa-x-fromExample'>
+									<text>example</text>
+								</form>
+								<translation>
+									<form lang='qaa-x-fromTrans'>
+										<text>translation</text>
+									</form>
+								</translation>
+							</example>
+						</sense>
+					</entry>",
+					"0.12"
+				);
+				var writingSystems = e.WritingSystems;
+				writingSystems.Set(WritingSystemDefinition.Parse("en"));
+				writingSystems.Set(WritingSystemDefinition.Parse("qaa-x-fromLU"));
+				writingSystems.Set(WritingSystemDefinition.Parse("qaa-x-fromGloss"));
+				writingSystems.Set(WritingSystemDefinition.Parse("qaa-x-fromDef"));
+				writingSystems.Set(WritingSystemDefinition.Parse("qaa-x-fromExample"));
+				writingSystems.Set(WritingSystemDefinition.Parse("qaa-x-fromTrans"));
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 
-				var creator = new ProjectFromLiftFolderCreator(lift.Path, vt, writingSystems);
+				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, writingSystems);
 				creator.SetWritingSystemsForFields();
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "v");
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.Citation, "v");
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, "v");
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystemInfo.IdForUnknownVernacular);
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystemInfo.IdForUnknownVernacular);
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystemInfo.IdForUnknownVernacular);
 
-				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "fromLU");
-				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.Citation, "fromLU");
-				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, "fromLU");
+				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "qaa-x-fromLU");
+				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.Citation, "qaa-x-fromLU");
+				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, "qaa-x-fromLU");
 
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "fromLU");
-				AssertFieldHasWritingSystem(vt, LexSense.WellKnownProperties.Gloss, "fromGloss");
-				AssertFieldHasWritingSystem(vt, LexSense.WellKnownProperties.Definition, "fromDef");
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "qaa-x-fromLU");
+				AssertFieldHasWritingSystem(vt, LexSense.WellKnownProperties.Gloss, "qaa-x-fromGloss");
+				AssertFieldHasWritingSystem(vt, LexSense.WellKnownProperties.Definition, "qaa-x-fromDef");
 				AssertFieldLacksWritingSystem(vt, LexExampleSentence.WellKnownProperties.ExampleSentence, "v");
-				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.ExampleSentence, "fromExample");
-				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.Translation, "fromTrans");
+				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.ExampleSentence, "qaa-x-fromExample");
+				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.Translation, "qaa-x-fromTrans");
 
-				Assert.IsTrue(writingSystems.ContainsKey("en"));
+				Assert.IsTrue(writingSystems.Contains("en"));
 
 			}
 		}
@@ -128,21 +190,21 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void SetWritingSystemsForFields_LiftIsEmpty_Survives()
 		{
-			using (var lift = new TempLiftFile(@"
-			 ", "0.12"))
+			using (var e = new TestEnvironment())
 			{
-				var writingSystems = new WritingSystemCollection();
-				writingSystems.Add(WritingSystem.IdForUnknownAnalysis, new WritingSystem());
-				writingSystems.Add(WritingSystem.IdForUnknownVernacular, new WritingSystem());
+				e.CreateLiftFile("", "0.12");
+				var writingSystems = e.WritingSystems;
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownVernacular));
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownAnalysis));
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 
-				var creator = new ProjectFromLiftFolderCreator(lift.Path, vt, writingSystems);
+				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, writingSystems);
 				creator.SetWritingSystemsForFields();
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystem.IdForUnknownVernacular);
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystem.IdForUnknownVernacular);
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystem.IdForUnknownVernacular);
-				Assert.IsTrue(writingSystems.ContainsKey(WritingSystem.IdForUnknownVernacular));
-				Assert.IsTrue(writingSystems.ContainsKey(WritingSystem.IdForUnknownAnalysis));
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystemInfo.IdForUnknownVernacular);
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystemInfo.IdForUnknownVernacular);
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystemInfo.IdForUnknownVernacular);
+				Assert.IsTrue(writingSystems.Contains(WritingSystemInfo.IdForUnknownVernacular));
+				Assert.IsTrue(writingSystems.Contains(WritingSystemInfo.IdForUnknownAnalysis));
 
 			}
 		}

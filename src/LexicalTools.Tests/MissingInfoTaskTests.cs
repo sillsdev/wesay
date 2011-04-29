@@ -34,7 +34,7 @@ namespace WeSay.LexicalTools.Tests
 			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystemId;
 
 			_missingFieldName = LexSense.WellKnownProperties.Definition;

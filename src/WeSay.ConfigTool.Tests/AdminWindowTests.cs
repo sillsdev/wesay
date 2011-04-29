@@ -70,7 +70,7 @@ namespace WeSay.ConfigTool.Tests
 			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "id.ldml"));
 			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "th.ldml"));
 			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "tpi.ldml"));
-			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "v.ldml"));
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "qaa.ldml"));
 			paths.Add(WeSayWordsProject.Project.PathToConfigFile);
 			//paths.Add(WeSayWordsProject.Project.PathToRepository);
 			_mainWindowTester.Close();
@@ -159,16 +159,6 @@ namespace WeSay.ConfigTool.Tests
 			//            GotoProjectTab("_tasksPage");
 		}
 
-		[Test]
-		public void NewProjectShowsMultipleWritingSystems()
-		{
-			_window.CreateAndOpenProject(_projectFolder);
-
-			ClickToolStripButton("_writingSystemButton");
-			//GotoProjectTab("_writingSystemPage");
-			ListBoxTester c = new ListBoxTester("_wsListBox", _window);
-			Assert.Greater(c.Properties.Items.Count, 2);
-		}
 
 		//        private static void GotoProjectTab(string projectTabName)
 		//        {
@@ -212,7 +202,7 @@ namespace WeSay.ConfigTool.Tests
 		public void RunAndExitWithoutOpening()
 		{
 			_mainWindowTester.Close();
-			WeSayWordsProject.InitializeForTests(); // for Teardown
+			WeSayProjectTestHelper.InitializeForTests(); // for Teardown
 		}
 
 		[Test]

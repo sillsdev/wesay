@@ -641,7 +641,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			this.Controls.Add(this._flyingLabel);
 			this.Name = "GatherBySemanticDomainsControl";
 			this.Size = new System.Drawing.Size(654, 386);
-			this.Load += new System.EventHandler(this.GatherBySemanticDomainsControl_Load);
 			this.BackColorChanged += new System.EventHandler(this.GatherWordListControl_BackColorChanged);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();

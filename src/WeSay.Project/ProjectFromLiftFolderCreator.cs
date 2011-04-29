@@ -3,6 +3,7 @@ using System.Text;
 using System.Xml;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
@@ -21,9 +22,9 @@ namespace WeSay.Project
 	{
 		private readonly string _path;
 		private readonly ViewTemplate _viewTemplate;
-		private readonly WritingSystemCollection _writingSystems;
+		private readonly IWritingSystemRepository _writingSystems;
 
-		public ProjectFromLiftFolderCreator(string path, ViewTemplate viewTemplate, WritingSystemCollection writingSystems)
+		public ProjectFromLiftFolderCreator(string path, ViewTemplate viewTemplate, IWritingSystemRepository writingSystems)
 		{
 			_path = path;
 			_viewTemplate = viewTemplate;
@@ -64,16 +65,17 @@ namespace WeSay.Project
 
 			foreach (XmlNode node in liftDom.SelectNodes("//@lang"))
 			{
-				if (node.Value == "x-spec" && !_writingSystems.ContainsKey("x-spec"))
+				if (node.Value == "x-spec" && !_writingSystems.Contains("x-spec"))
 				{
-					_writingSystems.AddSimple("x-spec");
+					_writingSystems.Set(WritingSystemDefinition.Parse("x-spec"));
 				}
-				if (!_writingSystems.ContainsKey(node.Value))
+				if (!_writingSystems.Contains(node.Value))
 				{
-					_writingSystems.AddSimple(node.Value);
+					_writingSystems.Set(WritingSystemDefinition.Parse(node.Value));
 					missingWritingSystems.AppendFormat("{0},", node.Value);
 				}
 			}
+			_writingSystems.Save();
 
 			if(missingWritingSystems.Length > 0)
 			{
@@ -87,8 +89,11 @@ namespace WeSay.Project
 			var vernacular = GetTopWritingSystem(liftDom, "//lexical-unit/form/@lang");
 			if (vernacular != String.Empty)
 			{
-				_viewTemplate.ChangeWritingSystemId(WritingSystem.IdForUnknownVernacular, vernacular);
-				_writingSystems.Remove(WritingSystem.IdForUnknownVernacular);
+				_viewTemplate.OnWritingSystemIDChange(WritingSystemInfo.IdForUnknownVernacular, vernacular);
+				if (_writingSystems.Contains(WritingSystemInfo.IdForUnknownVernacular))
+				{
+					_writingSystems.Remove(WritingSystemInfo.IdForUnknownVernacular);
+				}
 			}
 			var analysis = GetTopWritingSystem(liftDom, "//sense/gloss/@lang");
 			if (analysis == String.Empty)
@@ -98,7 +103,7 @@ namespace WeSay.Project
 			}
 			if (analysis != String.Empty)
 			{
-				_viewTemplate.ChangeWritingSystemId(WritingSystem.IdForUnknownAnalysis, analysis);
+				_viewTemplate.OnWritingSystemIDChange(WritingSystemInfo.IdForUnknownAnalysis, analysis);
 			}
 
 			AddWritingSystemsForField(liftDom,  "//lexical-unit/form/@lang", LexEntry.WellKnownProperties.LexicalUnit);

@@ -1,26 +1,26 @@
-using System;
 using Palaso.UI.WindowsForms.Keyboarding;
+using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
-	public class WritingSystemForChorusAdaptor : Chorus.IWritingSystem
+	public class ChorusWritingSystemAdaptor : Chorus.IWritingSystem
 	{
-		private readonly WritingSystem _writingSystem;
+		private readonly WritingSystemDefinition _writingSystem;
 
-		public WritingSystemForChorusAdaptor(WritingSystem writingSystem)
+		public ChorusWritingSystemAdaptor(WritingSystemDefinition writingSystem)
 		{
 			_writingSystem = writingSystem;
 		}
 
 		public void ActivateKeyboard()
 		{
-			if (string.IsNullOrEmpty(_writingSystem.KeyboardName))
+			if (string.IsNullOrEmpty(_writingSystem.Keyboard))
 			{
 				KeyboardController.DeactivateKeyboard();
 			}
 			else
 			{
-				KeyboardController.ActivateKeyboard(_writingSystem.KeyboardName);
+				KeyboardController.ActivateKeyboard(_writingSystem.Keyboard);
 			}
 		}
 
@@ -36,12 +36,12 @@ namespace WeSay.LexicalModel.Foundation
 
 		public string FontName
 		{
-			get { return _writingSystem.FontName; }
+			get { return _writingSystem.DefaultFontName; }
 		}
 
 		public int FontSize
 		{
-			get { return _writingSystem.FontSize; }
+			get { return (int)_writingSystem.DefaultFontSize; }
 		}
 	}
 }
