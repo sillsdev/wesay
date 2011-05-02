@@ -509,7 +509,7 @@ namespace WeSay.Project.Tests
 			{
 				//setting up a minimal WeSay project with an old writingsystemprefs.xml file
 				var project = new WeSayWordsProject();
-				var wsPrefsFile = new TempFile(projectDirectory);
+				var wsPrefsFile = projectDirectory.GetNewTempFile(true);
 				string liftFilePath = Path.Combine(projectDirectory.Path, "test.lift");
 				wsPrefsFile.MoveTo(Path.Combine(projectDirectory.Path, "WritingSystemPrefs.xml"));
 				File.Copy(Path.Combine(project.ApplicationTestDirectory, "PRETEND.WeSayConfig"), Path.Combine(projectDirectory.Path, "test.WeSayConfig"));
