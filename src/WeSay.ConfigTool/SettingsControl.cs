@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Autofac;
+using Palaso.Reporting;
 
 namespace WeSay.ConfigTool
 {
@@ -81,10 +82,12 @@ namespace WeSay.ConfigTool
 				c.SetOtherStuff();
 
 				_areaHeader.Text = "";
-				_areaHeader.Font = new Font("Tahoma", 11F, FontStyle.Bold);
+				_areaHeader.Font = new Font("Tahoma", 10F, FontStyle.Bold);
 				_areaHeader.AppendText(button.Text + ": ");
-				_areaHeader.SelectionFont = new Font("Tahoma", 11F, FontStyle.Regular);
+				_areaHeader.SelectionFont = new Font("Tahoma", 10F, FontStyle.Regular);
 				_areaHeader.AppendText(c.Header);
+
+				UsageReporter.SendNavigationNotice("settings/"+c.NameForUsageReporting);
 			}
 		}
 

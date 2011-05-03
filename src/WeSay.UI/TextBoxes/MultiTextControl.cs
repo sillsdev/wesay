@@ -6,17 +6,16 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.Text;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
-//using CommonEnumerations=Palaso.Lift.CommonEnumerations;
 using Palaso.Lift;
-//using CommonEnumerations=Palaso.Lift.CommonEnumerations;
 
 namespace WeSay.UI.TextBoxes
 {
 	public partial class MultiTextControl: TableLayoutPanel
 	{
-		private IList<WritingSystem> _writingSystemsForThisField;
+		private IList<WritingSystemDefinition> _writingSystemsForThisField;
 		private readonly List<Control> _inputBoxes;
 		private bool _showAnnotationWidget;
 		private IServiceProvider _serviceProvider;
@@ -25,9 +24,9 @@ namespace WeSay.UI.TextBoxes
 			CommonEnumerations.VisibilitySetting.Visible;
 
 		private static int _widthForWritingSystemLabels = -1;
-		private static WritingSystemCollection _allWritingSystems;
+		private static IWritingSystemRepository _allWritingSystems;
 		private static Font _writingSystemLabelFont;
-		private readonly bool _isSpellCheckingEnabled;
+		public bool IsSpellCheckingEnabled { get; set; }
 		private readonly bool _isMultiParagraph;
 
 		public MultiTextControl(): this(null, null)
@@ -43,7 +42,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public MultiTextControl(WritingSystemCollection allWritingSystems, IServiceProvider serviceProvider)
+		public MultiTextControl(IWritingSystemRepository allWritingSystems, IServiceProvider serviceProvider)
 		{
 			if (DesignMode)
 			{
@@ -82,12 +81,12 @@ namespace WeSay.UI.TextBoxes
 
 		public MultiTextControl(IList<string> writingSystemIds,
 								MultiText multiTextToCopyFormsFrom, string nameForTesting,
-								bool showAnnotationWidget, WritingSystemCollection allWritingSystems,
+								bool showAnnotationWidget, IWritingSystemRepository allWritingSystems,
 								CommonEnumerations.VisibilitySetting visibility, bool isSpellCheckingEnabled,
 								bool isMultiParagraph, IServiceProvider serviceProvider): this(allWritingSystems, serviceProvider)
 		{
 			Name = nameForTesting + "-mtc";
-			_writingSystemsForThisField = new List<WritingSystem>();
+			_writingSystemsForThisField = new List<WritingSystemDefinition>();
 //            foreach (KeyValuePair<string, WritingSystem> pair in allWritingSystems)
 //            {
 //                if (writingSystemIds.Contains(pair.Key))
@@ -97,14 +96,14 @@ namespace WeSay.UI.TextBoxes
 //            }
 			foreach (var id in writingSystemIds)
 			{
-				if (allWritingSystems.ContainsKey(id)) //why wouldn't it?
+				if (allWritingSystems.Contains(id)) //why wouldn't it?
 				{
-					_writingSystemsForThisField.Add(allWritingSystems[id]);
+					_writingSystemsForThisField.Add(allWritingSystems.Get(id));
 				}
 			}
 			_showAnnotationWidget = showAnnotationWidget;
 			_visibility = visibility;
-			_isSpellCheckingEnabled = isSpellCheckingEnabled;
+			IsSpellCheckingEnabled = isSpellCheckingEnabled;
 			_isMultiParagraph = isMultiParagraph;
 			BuildBoxes(multiTextToCopyFormsFrom);
 		}
@@ -163,11 +162,8 @@ namespace WeSay.UI.TextBoxes
 			get { return _inputBoxes; }
 		}
 
-		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public MultiText MultiText
+		public MultiText GetMultiText()
 		{
-			get
-			{
 				//we don't have a binding that would keep an internal multitext up to date.
 				//This seems cleaner and sufficient, at the moment.
 				MultiText mt = new MultiText();
@@ -176,6 +172,18 @@ namespace WeSay.UI.TextBoxes
 					mt.SetAlternative(box.WritingSystem.Id, box.Text);
 				}
 				return mt;
+		}
+
+		/// <summary>
+		/// Copy the forms into the boxes that we already have. Does not change which boxes we have!
+		/// </summary>
+		/// <param name="text"></param>
+		public void SetMultiText(MultiText text)
+		{
+			foreach (IControlThatKnowsWritingSystem box in TextBoxes)
+			{
+				var s =  text.GetExactAlternative(box.WritingSystem.Id);
+				box.Text = s ?? string.Empty;
 			}
 		}
 
@@ -191,7 +199,7 @@ namespace WeSay.UI.TextBoxes
 				RowStyles.Clear();
 			}
 			Debug.Assert(RowCount == 0);
-			foreach (WritingSystem writingSystem in WritingSystemsForThisField)
+			foreach (WritingSystemDefinition writingSystem in WritingSystemsForThisField)
 			{
 				RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
@@ -272,7 +280,7 @@ namespace WeSay.UI.TextBoxes
 					//in which case we don't really care about aligning anyhow
 					if (_allWritingSystems != null)
 					{
-						foreach (WritingSystem ws in _allWritingSystems.Values)
+						foreach (WritingSystemDefinition ws in _allWritingSystems.AllWritingSystems)
 						{
 							Size size = TextRenderer.MeasureText(ws.Abbreviation,
 																 _writingSystemLabelFont) +fudgeFactor;
@@ -323,10 +331,10 @@ namespace WeSay.UI.TextBoxes
 			return label;
 		}
 
-		private Control AddTextBox(WritingSystem writingSystem, MultiTextBase multiText)
+		private Control AddTextBox(WritingSystemDefinition writingSystem, MultiTextBase multiText)
 		{
 			Control control;
-			if (writingSystem.IsAudio)
+			if (writingSystem.IsVoice)
 			{
 #if MONO
 				return null;
@@ -348,7 +356,7 @@ namespace WeSay.UI.TextBoxes
 				box.Multiline = true;
 				box.WordWrap = true;
 				box.MultiParagraph = _isMultiParagraph;
-				box.IsSpellCheckingEnabled = _isSpellCheckingEnabled;
+				box.IsSpellCheckingEnabled = IsSpellCheckingEnabled;
 				//box.Enabled = !box.ReadOnly;
 			}
 
@@ -387,13 +395,13 @@ namespace WeSay.UI.TextBoxes
 		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IList<WritingSystem> WritingSystemsForThisField
+		public IList<WritingSystemDefinition> WritingSystemsForThisField
 		{
 			get { return _writingSystemsForThisField; }
 			set
 			{
 				_writingSystemsForThisField = value;
-				BuildBoxes(MultiText);
+				BuildBoxes(GetMultiText());
 			}
 		}
 
@@ -405,7 +413,7 @@ namespace WeSay.UI.TextBoxes
 				if (_showAnnotationWidget != value)
 				{
 					_showAnnotationWidget = value;
-					BuildBoxes(MultiText);
+					BuildBoxes(GetMultiText());
 				}
 			}
 		}

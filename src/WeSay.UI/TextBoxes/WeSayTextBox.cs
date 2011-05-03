@@ -7,13 +7,14 @@ using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.UI.WindowsForms.Spelling;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {
 	public partial class WeSayTextBox: TextBox, IControlThatKnowsWritingSystem
 	{
-		private WritingSystem _writingSystem;
+		private WritingSystemDefinition _writingSystem;
 
 		private bool _multiParagraph;
 		private readonly string _nameForLogging;
@@ -186,7 +187,7 @@ namespace WeSay.UI.TextBoxes
 				{
 					flags |= TextFormatFlags.WordBreak;
 				}
-				if (_writingSystem != null && WritingSystem.RightToLeft)
+				if (_writingSystem != null && WritingSystem.RightToLeftScript)
 				{
 					flags |= TextFormatFlags.RightToLeft;
 				}
@@ -201,7 +202,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public WeSayTextBox(WritingSystem ws, string nameForLogging): this()
+		public WeSayTextBox(WritingSystemDefinition ws, string nameForLogging): this()
 		{
 			_nameForLogging = nameForLogging;
 			WritingSystem = ws;
@@ -216,7 +217,7 @@ namespace WeSay.UI.TextBoxes
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystem WritingSystem
+		public WritingSystemDefinition WritingSystem
 		{
 			get
 			{
@@ -234,12 +235,12 @@ namespace WeSay.UI.TextBoxes
 					throw new ArgumentNullException();
 				}
 				_writingSystem = value;
-				Font = value.Font;
+				Font = WritingSystemInfo.CreateFont(value);
 
 				//hack for testing
 				//   this.Height = (int) Math.Ceiling( Font.GetHeight());
 
-				if (value.RightToLeft)
+				if (value.RightToLeftScript)
 				{
 					RightToLeft = RightToLeft.Yes;
 				}
@@ -366,12 +367,12 @@ namespace WeSay.UI.TextBoxes
 					"WritingSystem must be initialized prior to use.");
 			}
 
-			if (_writingSystem.KeyboardName == null || _writingSystem.KeyboardName == string.Empty)
+			if (_writingSystem.Keyboard == null || _writingSystem.Keyboard == string.Empty)
 			{
 				KeyboardController.DeactivateKeyboard();
 				return;
 			}
-			KeyboardController.ActivateKeyboard(_writingSystem.KeyboardName);
+			KeyboardController.ActivateKeyboard(_writingSystem.Keyboard);
 		}
 
 		protected override void OnLeave(EventArgs e)

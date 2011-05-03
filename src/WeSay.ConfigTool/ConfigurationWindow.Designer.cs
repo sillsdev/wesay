@@ -192,8 +192,8 @@ namespace WeSay.ConfigTool
 			this.Name = "ConfigurationWindow";
 			this.Text = "WeSay Configuration Tool";
 			this.Load += new System.EventHandler(this.ConfigurationWindow_Load);
-			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AdminWindow_FormClosed);
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AdminWindow_FormClosing);
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnFormClosed);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
 			this.toolStrip2.ResumeLayout(false);
 			this.toolStrip2.PerformLayout();
 			this.ResumeLayout(false);

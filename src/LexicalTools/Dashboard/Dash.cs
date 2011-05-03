@@ -186,7 +186,9 @@ namespace WeSay.LexicalTools.Dashboard
 					{
 						ProjectInfo projectInfo =
 							WeSayWordsProject.Project.GetProjectInfoForAddin();
+						UsageReporter.SendNavigationNotice(addin.ID);
 						addin.Launch(ParentForm, projectInfo);
+
 					}
 					catch (Exception error)
 					{
@@ -706,6 +708,9 @@ namespace WeSay.LexicalTools.Dashboard
 											  Color.FromArgb(85, 142, 213),
 											  Color.FromArgb(185, 205, 229)));
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Review,
+											  Color.FromArgb(250, 192, 144),
+											  Color.FromArgb(252, 213, 181)));
+			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Refine,
 											  Color.FromArgb(250, 192, 144),
 											  Color.FromArgb(252, 213, 181)));
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Share,

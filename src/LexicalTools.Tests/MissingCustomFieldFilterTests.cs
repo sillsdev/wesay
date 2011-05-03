@@ -175,6 +175,28 @@ namespace WeSay.LexicalTools.Tests
 			custom["analysis"] = "filler";
 			Assert.AreEqual(true, _missingCustomFieldFilter.FilteringPredicate(entry));
 		}
+
+		[Test]
+		public void FilteringPredicate_HasRequiredButNotEmpty_IsChosen()
+		{
+			var entry = new LexEntry();
+			var custom = entry.GetOrCreateProperty<MultiText>("customField");
+			custom["en"] = "hello";
+
+			var field = new Field("customField", "LexEntry", new[] { "en","fr" });
+			var hasEnglishButNotFrenchFilter = new MissingFieldQuery(field, new string[]{"fr"}, new string[]{"en"});
+			Assert.IsTrue(hasEnglishButNotFrenchFilter.FilteringPredicate(entry));
+		}
+
+		[Test]
+		public void FilteringPredicate_EntryDoesNotHaveAnInstanceOfTheField_IsNotChosen()
+		{
+			var entry = new LexEntry();
+
+			var field = new Field("customField", "LexEntry", new[] { "en", "fr" });
+			var hasEnglishButNotFrenchFilter = new MissingFieldQuery(field, new string[] { "fr" }, new string[] { "en" });
+			Assert.IsFalse(hasEnglishButNotFrenchFilter.FilteringPredicate(entry));
+		}
 	}
 
 	[TestFixture]

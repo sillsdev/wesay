@@ -12,6 +12,7 @@ using Palaso.i18n;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -20,6 +21,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
 	public class GatherBySemanticDomainTask: WordGatheringTaskBase
 	{
+		public ViewTemplate ViewTemplate { get; set; }
 		internal const string DomainIndexTaskMemoryKey = "DomainIndex";
 		internal const string QuestionIndexTaskMemoryKey= "QuestionIndex";
 		private readonly string _semanticDomainQuestionsFileName;
@@ -29,7 +31,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private List<string> _domainNames;
 		private List<string> _words;
 
-		private WritingSystem _semanticDomainWritingSystem;
+		private WritingSystemDefinition _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
 		private OptionsList _semanticDomainOptionsList;
 
@@ -39,7 +41,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private readonly TaskMemory _taskMemory;
 		private GatherBySemanticDomainConfig _config;
 		private readonly ILogger _logger;
-		public WritingSystem DefinitionWritingSystem { get; set; }
+		public WritingSystemDefinition DefinitionWritingSystem { get; set; }
 
 		public GatherBySemanticDomainTask(
 			GatherBySemanticDomainConfig config,
@@ -54,6 +56,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				viewTemplate, taskMemoryRepository
 			)
 		{
+			ViewTemplate = viewTemplate;
 			Guard.AgainstNull(config, "config");
 			Guard.AgainstNull(viewTemplate, "viewTemplate");
 			_config = config;
@@ -100,10 +103,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
-			WritingSystem definitionWS;
-			viewTemplate.WritingSystems.TryGetValue(definitionWsId, out definitionWS);
-			Guard.AgainstNull(definitionWS, "Defintion Writing System");
-			DefinitionWritingSystem = definitionWS;
+			WritingSystemDefinition writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
+			Guard.AgainstNull(writingSystemForDefinition, "Defintion Writing System");
+			DefinitionWritingSystem = writingSystemForDefinition;
 
 			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
 		}
@@ -370,7 +372,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 						_words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
 					}
 				}
-				_words.Sort(WritingSystemUserIsTypingIn);
+				_words.Sort(WritingSystemUserIsTypingIn.Collator);
 				return _words;
 			}
 		}
@@ -449,7 +451,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
-		public WritingSystem SemanticDomainWritingSystem
+		public WritingSystemDefinition SemanticDomainWritingSystem
 		{
 			get
 			{
@@ -515,7 +517,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					var entriesMatchingWord = new List<LexEntry>(from RecordToken<LexEntry> x in recordTokens select x.RealObject);
 					foreach (var entry in entriesMatchingWord)
 					{
-						if(HasMatchingGloss(entry, gloss))
+						if(HasMatchingSense(entry, gloss))
 						{
 							modifiedEntries.Add(entry);
 							AddCurrentSemanticDomainToEntry(entry, gloss);
@@ -534,19 +536,26 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					}
 				}
 			}
-
+			_savedSenseDuringMoveToEditArea = null;
 			UpdateCurrentWords();
 			return modifiedEntries;
 		}
 
-		private bool HasMatchingGloss(LexEntry entry, string gloss)
+		/// <summary>
+		/// A sense is "matching" if the gloss is the same, or this is the sense that we decided to edit when
+		/// they clicked on the word in the list. That later part allows us to change the gloss, instead of just
+		/// make a new sense with the new gloss (leading most likely to extra senses where the gloss was just mispelled or something)
+		/// </summary>
+		private bool HasMatchingSense(LexEntry entry, string gloss)
 		{
-			return null != entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id));
+			return (null !=entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id))
+						   ||  entry.Senses.Contains(_savedSenseDuringMoveToEditArea));
 		}
 
-		public void DetachFromMatchingEntries(string lexicalForm)
+		public void PrepareToMoveWordToEditArea(string lexicalForm)
 		{
 			VerifyTaskActivated();
+			_savedSenseDuringMoveToEditArea = null;
 
 			if (lexicalForm == null)
 			{
@@ -568,8 +577,23 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			UpdateCurrentWords();
 		}
 
+		private LexSense _savedSenseDuringMoveToEditArea;
+
+		//when we pull a word out of the list, we remembered its meaning, so that we can make that available
+		//down in the edit area.
+		public MultiText GetMeaningForWordRecentlyMovedToEditArea()
+		{
+			if(_savedSenseDuringMoveToEditArea !=null)
+			{
+				return _savedSenseDuringMoveToEditArea.Definition;
+			}
+			return new MultiText();
+		}
+
 		private void DisassociateCurrentSemanticDomainFromEntry(RecordToken<LexEntry> recordToken)
 		{
+
+
 			// have to iterate through these in reverse order
 			// since they might get modified
 			LexEntry entry = recordToken.RealObject;
@@ -580,7 +604,11 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 				if (semanticDomains != null)
 				{
-					semanticDomains.Remove(CurrentDomainKey);
+					if (semanticDomains.Contains(CurrentDomainKey))
+					{
+						RememberMeaningOfDissociatedWord(sense);
+						semanticDomains.Remove(CurrentDomainKey);
+					}
 				}
 			}
 			entry.CleanUpAfterEditting();
@@ -594,24 +622,48 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
-		private void AddCurrentSemanticDomainToEntry(LexEntry entry, string gloss)
+		/// <summary>
+		/// we're moving this word to the edit area, so if possible, give us a meaning to use down there.
+		/// </summary>
+		private void RememberMeaningOfDissociatedWord(LexSense sense)
+		{
+			// when it comes to meanings, we can't cope with more than one. So we could conceivably
+			//run this code several times while dissaociating one word (vary rare, but possible).
+			//so then, the user is going to get the last meaning we encounter, not the others, in the
+			//meaning edit box.
+
+			//nb: I made it save the whole sense, as this is cleaner code and conceivalbe could be helpful
+			//in the future
+
+			_savedSenseDuringMoveToEditArea = sense;
+		}
+
+		private void AddCurrentSemanticDomainToEntry(LexEntry entry, string meaning)
 		{
 			LexSense sense = null;
 			//is the gloss empty? THen just ggrab the first sense
-			if (string.IsNullOrEmpty(gloss))
+			if (string.IsNullOrEmpty(meaning))
 			{
 				sense = entry.Senses.FirstOrDefault();
 			}
 			else
 			{
-				//is there a sense with a matching gloss?
-				sense = entry.Senses.FirstOrDefault(
-					s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id));
+				if (entry.Senses.Contains(_savedSenseDuringMoveToEditArea))
+				{
+					sense = _savedSenseDuringMoveToEditArea;
+					sense.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
+				}
+				else
+				{
+					//is there a sense with a matching gloss?
+					sense = entry.Senses.FirstOrDefault(
+						s => s.Definition.ContainsEqualForm(meaning, DefinitionWritingSystem.Id));
+				}
 			}
 			if(sense==null)
 			{
 				sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
-				sense.Definition.SetAlternative(DefinitionWritingSystem.Id, gloss);
+				sense.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
 			}
 			OptionRefCollection semanticDomains =
 				sense.GetOrCreateProperty<OptionRefCollection>(_semanticDomainField.FieldName);
@@ -661,7 +713,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 				// should verify that this writing system is in optionslist
 				_semanticDomainWritingSystem =
-					BasilProject.Project.WritingSystems[WritingSystemIdForNamesAndQuestions];
+					BasilProject.Project.WritingSystems.Get(WritingSystemIdForNamesAndQuestions);
 				string semanticDomainType = reader.GetAttribute("semantic-domain-type");
 				// todo should verify that domain type matches type of optionList in semantic domain field
 
@@ -917,6 +969,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 								out pastEndIndex);
 			return (pastEndIndex == beginIndex);
 		}
+
 
 
 	}

@@ -7,7 +7,7 @@ namespace WeSay.Project.Tests
 	/// <summary>
 	/// Creates a valid WeSay project directory in temp dir, and removes it when disposed.
 	/// </summary>
-	public class ProjectDirectorySetupForTesting: IDisposable
+	public class ProjectDirectorySetupForTesting : IDisposable
 	{
 		private bool _disposed;
 		private readonly string _experimentDir;
@@ -69,25 +69,7 @@ namespace WeSay.Project.Tests
 			}
 		}
 
-		public string PathToFactoryDefaultsPartsOfSpeech
-		{
-			get
-			{
-				string fileName = "WritingSystemPrefs.xml";
-				string path = Path.Combine(BasilProject.ApplicationCommonDirectory, fileName);
-				if (File.Exists(path))
-				{
-					return path;
-				}
 
-				path = Path.Combine(BasilProject.DirectoryOfTheApplicationExecutable, fileName);
-				if (File.Exists(path))
-				{
-					return path;
-				}
-				return path;
-			}
-		}
 
 		private static string MakeDir(string existingParent, string newChild)
 		{

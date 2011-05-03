@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<configuration version="9">
+<configuration version="8">
   <components>
 	<viewTemplate>
 	  <fields>
@@ -14,7 +14,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>v</id>
+			<id>qaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -28,7 +28,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
-			<id>v</id>
+			<id>qaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -127,7 +127,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>v</id>
+			<id>qaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -170,7 +170,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
-			<id>v</id>
+			<id>qaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -184,7 +184,7 @@
 		  <multiplicity>ZeroOrMore</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
-			<id>v</id>
+			<id>qaa</id>
 		  </writingSystems>
 		</field>
 	  </fields>

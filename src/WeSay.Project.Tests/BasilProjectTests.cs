@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Palaso.i18n;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests
@@ -123,46 +125,5 @@ namespace WeSay.Project.Tests
 			Assert.AreEqual("red", StringCatalog.Get("red"));
 		}
 
-		[Test]
-		public void NewProject_ContainsNoWritingsystemFiles_DefaultsAreLoaded()
-		{
-			InitializeSampleProject();
-			File.Delete(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory));
-			BasilProject project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(_projectDirectory);
-
-			Assert.AreEqual(7, project.WritingSystems.Count);
-			Assert.IsTrue(project.WritingSystems.ContainsKey("en"));
-			Assert.IsTrue(project.WritingSystems.ContainsKey("tpi"));
-		}
-
-		[Test]
-		public void NewProject_ContainsLdmlWritingSystemFiles_LdmlFilesAreLoaded()
-		{
-			InitializeSampleProject();
-			BasilProject project = new BasilProject();
-			project.WritingSystems.LoadFromLegacyWeSayFile(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory));
-			File.Delete(BasilProject.GetPathToWritingSystemPrefs(_projectDirectory));
-			project.LoadFromProjectDirectoryPath(_projectDirectory);
-
-			Assert.AreEqual(2, project.WritingSystems.Count);
-			Assert.IsTrue(project.WritingSystems.ContainsKey("PretendAnalysis"));
-			Assert.IsTrue(project.WritingSystems.ContainsKey("PretendVernacular"));
-		}
-
-		[Test]
-		public void NewProject_ContainsLdmlAndLegacyWritingSystemFiles_OnlyLdmlFilesAreLoaded()
-		{
-			InitializeSampleProject();
-			BasilProject project = new BasilProject();
-			WritingSystemCollection wsCollection = new WritingSystemCollection();
-			WritingSystem ws = new WritingSystem(){ISO = "ldmlWs"};
-			wsCollection.Add(ws.Id, ws);
-			wsCollection.Write(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectDirectory));
-			project.LoadFromProjectDirectoryPath(_projectDirectory);
-
-			Assert.AreEqual(1, project.WritingSystems.Count);
-			Assert.IsTrue(project.WritingSystems.ContainsKey("ldmlWs"));
-		}
 	}
 }

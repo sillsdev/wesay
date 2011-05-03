@@ -261,12 +261,21 @@ namespace WeSay.LexicalModel
 			return false;
 		}
 
+		/// <summary>
+		/// NB here is now a misleading name... what we really mean is "is ready to be filled in".
+		/// </summary>
 		private bool IsMissingCustomField(PalasoDataObject palasoData)
 		{
 			IParentable content = palasoData.GetProperty<IParentable>(Field.FieldName);
 			if (content == null)
 			{
-				return !IsSkipped(palasoData, Field.FieldName);
+				if (IsSkipped(palasoData, Field.FieldName))
+					return false;
+
+				//	WS-33978 situation: when some writing system is required don't flag it if the entire field is missing
+				if (_writingSystemsWhichAreRequired.Length > 0)
+					return false;
+				return true;
 			}
 			if(Field.FieldName == "POS")
 			{

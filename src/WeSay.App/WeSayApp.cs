@@ -1,11 +1,14 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
 using LiftIO;
+using Palaso.Code;
 using Palaso.i18n;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.Progress;
 using WeSay.App.Properties;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
@@ -16,7 +19,7 @@ namespace WeSay.App
 {
 	public class WeSayApp
 	{
-		//private static Mutex _oneInstancePerProjectMutex;
+		private static Mutex _oneInstancePerProjectMutex;
 		private WeSayWordsProject _project;
 
 		private readonly CommandLineArguments _commandLineArguments = new CommandLineArguments();
@@ -25,13 +28,19 @@ namespace WeSay.App
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			var app = new WeSayApp(args);
-			app.Run();
+			try
+			{
+				var app = new WeSayApp(args);
+				app.Run();
+			}
+			finally
+			{
+				ReleaseMutexForThisProject();
+			}
 		}
 
 		public WeSayApp(string[] args)
 		{
-			// Palaso.Services.ForClients.IpcSystem.IsWcfAvailable = false;
 			Application.EnableVisualStyles();
 			//leave this at the top:
 			try
@@ -46,6 +55,8 @@ namespace WeSay.App
 			OsCheck();
 			Logger.Init();
 			SetupErrorHandling();
+
+
 			//problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
 
 			//bring in settings from any previous version
@@ -54,58 +65,136 @@ namespace WeSay.App
 				Settings.Default.Upgrade();
 				Settings.Default.NeedUpgrade = false;
 			}
-			UsageReporter.AppNameToUseInDialogs = "WeSay";
-			UsageReporter.AppNameToUseInReporting = "WeSayApp";
+			 SetUpReporting();
 
 			if (!Parser.ParseArguments(args, _commandLineArguments, ShowCommandLineError))
 			{
 				Application.Exit();
 			}
+
 			if (_commandLineArguments.launchedByUnitTest)
 			{
 				WeSayWordsProject.PreventBackupForTests = true;  //hopefully will help the cross-process dictionary services tests to be more reliable
 			}
 		}
 
-		public bool ServerModeStartRequested
+		private static void SetUpReporting()
 		{
-			get { return _commandLineArguments.startInServerMode; }
+			if (Settings.Default.Reporting == null)
+			{
+				Settings.Default.Reporting = new ReportingSettings();
+				Settings.Default.Save();
+			}
+			UsageReporter.Init(Settings.Default.Reporting, "wesay.palaso.org", "UA-22170471-6");
+			UsageReporter.AppNameToUseInDialogs = "WeSay";
+			UsageReporter.AppNameToUseInReporting = "WeSayApp";
+		}
+
+		public static void ReleaseMutexForThisProject()
+		{
+			if (_oneInstancePerProjectMutex != null)
+			{
+				_oneInstancePerProjectMutex.ReleaseMutex();
+				_oneInstancePerProjectMutex = null;
+			}
+		}
+
+		private static bool GrabTokenForThisProject(string pathToLiftFile)
+		{
+			//ok, here's how this complex method works...
+			//First, we try to get the mutex quickly and quitely.
+			//If that fails, we put up a dialog and wait a number of seconds,
+			//while we wait for the mutex to come free.
+
+			Guard.AgainstNull(pathToLiftFile, "pathToLiftFile");
+			string mutexId = pathToLiftFile;
+			mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
+			mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
+			bool mutexAcquired = false;
+			try
+			{
+				_oneInstancePerProjectMutex = Mutex.OpenExisting(mutexId);
+				mutexAcquired = _oneInstancePerProjectMutex.WaitOne(1 * 1000);
+			}
+			catch (WaitHandleCannotBeOpenedException e)//doesn't exist, we're the first.
+			{
+				_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexAcquired);
+				mutexAcquired = true;
+			}
+			catch (AbandonedMutexException e)
+			{
+				//that's ok, we'll get it below
+			}
+
+			using (var dlg = new SimpleProgressDialog("Waiting for other WeSay to finish..."))
+			{
+				dlg.Show();
+				try
+				{
+					_oneInstancePerProjectMutex = Mutex.OpenExisting(mutexId);
+					mutexAcquired = _oneInstancePerProjectMutex.WaitOne(10 * 1000);
+				}
+				catch (AbandonedMutexException e)
+				{
+					_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexAcquired);
+					mutexAcquired = true;
+				}
+			   catch (Exception e)
+				{
+					ErrorReport.NotifyUserOfProblem(e,
+						"There was a problem starting WeSay which might require that you restart your computer.");
+				}
+			}
+
+			if (!mutexAcquired) // cannot acquire?
+			{
+				_oneInstancePerProjectMutex = null;
+				ErrorReport.NotifyUserOfProblem("Another copy of WeSay is already open with " + pathToLiftFile + ". If you cannot find that WeSay, restart your computer.");
+				return false;
+			}
+			return true;
 		}
 
 		public void Run()
 		{
-			DisplaySettings.Default.SkinName = Settings.Default.SkinName;
-			using (_project = InitializeProject(_commandLineArguments.liftPath))
-			{
-				if (_project == null)
+				DisplaySettings.Default.SkinName = Settings.Default.SkinName;
+
+				using (_project = InitializeProject(_commandLineArguments.liftPath))
 				{
-					return;
+					if (_project == null)
+					{
+						return;
+					}
+
+
+					if (!GrabTokenForThisProject(_project.PathToLiftFile))
+					{
+						return;
+					}
+
+					LexEntryRepository repository;
+					try
+					{
+						repository = GetLexEntryRepository();
+					}
+					catch (LiftFormatException)
+					{
+						return; //couldn't load, and we've already told the user
+					}
+					WireUpChorusEvents();
+					StartUserInterface();
+
+					//do a last backup before exiting
+					Logger.WriteEvent("App Exiting Normally.");
 				}
+				_project.BackupNow();
 
+				Logger.ShutDown();
+				Settings.Default.Save();
 
-				LexEntryRepository repository;
-				try
-				{
-					repository = GetLexEntryRepository();
-				}
-				catch (LiftFormatException)
-				{
-					return; //couldn't load, and we've already told the user
-				}
-				WireUpChorusEvents();
-				StartUserInterface();
-
-				//do a last backup before exiting
-				Logger.WriteEvent("App Exiting Normally.");
-			}
-			_project.BackupNow();
-
-
-			Logger.ShutDown();
-			Settings.Default.Save();
 		}
 
-			   private void StartUserInterface()
+	   private void StartUserInterface()
 	   {
 		   try
 		   {

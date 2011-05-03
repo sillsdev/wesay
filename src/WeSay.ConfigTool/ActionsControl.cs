@@ -12,7 +12,7 @@ namespace WeSay.ConfigTool
 	public partial class ActionsControl: ConfigurationControlBase
 	{
 		public ActionsControl(ILogger logger)
-			: base("setup and use plug-in actions", logger)
+			: base("setup and use plug-in actions", logger, "actions")
 		{
 			InitializeComponent();
 		}

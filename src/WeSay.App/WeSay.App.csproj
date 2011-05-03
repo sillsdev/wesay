@@ -195,6 +195,12 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="CommandLineParser.cs" />
+	<Compile Include="SimpleProgressDialog.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="SimpleProgressDialog.Designer.cs">
+	  <DependentUpon>SimpleProgressDialog.cs</DependentUpon>
+	</Compile>
 	<Compile Include="LongStartupNotification.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -257,6 +263,10 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="SimpleProgressDialog.resx">
+	  <DependentUpon>SimpleProgressDialog.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>

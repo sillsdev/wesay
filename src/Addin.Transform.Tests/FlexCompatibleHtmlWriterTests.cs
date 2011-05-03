@@ -30,9 +30,10 @@ namespace Addin.Transform.Tests
         {
             _projectDir = new ProjectDirectorySetupForTesting("");
             _project = _projectDir.CreateLoadedProject();
+			_project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("fr"));
             _repo = _project.GetLexEntryRepository();
             _entry = _repo.CreateItem();
-            _entry.LexicalForm.SetAlternative("v", "apple");
+			_entry.LexicalForm.SetAlternative("qaa", "apple");
 
           
             _project.DefaultPrintingTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.Add("fr");
@@ -129,8 +130,8 @@ namespace Addin.Transform.Tests
             var pathToSense = "div/div/div[@class='entry']/span[@class='senses']/span[@class='sense']";
             var pathToExamples = pathToSense+"/span[@class='examples']";
             AssertBodyHas(pathToExamples);
-            AssertBodyHas(pathToExamples + "/span[@class='example' and @lang='v' and text()='first example']");
-            AssertBodyHas(pathToExamples + "/span[@class='example' and @lang='v' and text()='second example']");
+			AssertBodyHas(pathToExamples + "/span[@class='example' and @lang='qaa' and text()='first example']");
+			AssertBodyHas(pathToExamples + "/span[@class='example' and @lang='qaa' and text()='second example']");
             //notice, they aren't nested in example
             var pathToTranslations = pathToExamples+"/span[@class='translations']";
             AssertBodyHas(pathToTranslations);
@@ -154,13 +155,13 @@ namespace Addin.Transform.Tests
             _entry.Senses.Add(sense);
             var e = new LexExampleSentence(sense);
             sense.ExampleSentences.Add(e);
-            e.Sentence.SetAlternative("v", "first example");
+			e.Sentence.SetAlternative("qaa", "first example");
             e.Translation.SetAlternative("en", "english translation");
             e.Translation.SetAlternative("fr", "un exemple");
 
             e = new LexExampleSentence(sense);
             sense.ExampleSentences.Add(e);
-            e.Sentence.SetAlternative("v", "second example");
+			e.Sentence.SetAlternative("qaa", "second example");
             e.Translation.SetAlternative("en", "english translation");
             e.Translation.SetAlternative("fr", "un autre exemple");
         }
@@ -181,19 +182,17 @@ namespace Addin.Transform.Tests
             // The windows SystemCollator using CultureInvariant sorts hyphens with the text, rather than default unicode
             // order.
             // To make this test pass we provide a custom ICU sort rule to do the same.
-            _project.WritingSystems["v"].SortUsing = WritingSystemDefinition.SortRulesType.CustomICU.ToString();
-            _project.WritingSystems["v"].CustomSortRules = "&[last primary ignorable] <<< '-' <<< ' '";
-
+			_project.WritingSystems.Get("qaa").SortUsingCustomICU("&[last primary ignorable] <<< '-' <<< ' '");
             var entries = new List<LexEntry>();
             entries.Add(_entry);
 
             var pineapple = _repo.CreateItem();
             entries.Add(pineapple);
-            pineapple.LexicalForm.SetAlternative("v", "-pineapple");//should skip hyphen
+			pineapple.LexicalForm.SetAlternative("qaa", "-pineapple");//should skip hyphen
 
             var pear = _repo.CreateItem();
             entries.Add(pear);
-            pear.LexicalForm.SetAlternative("v", "pear");
+			pear.LexicalForm.SetAlternative("qaa", "pear");
             
             var contents = GetXhtmlContents(entries);
 
@@ -220,7 +219,7 @@ namespace Addin.Transform.Tests
  
             var word = _repo.CreateItem();
             entries.Add(word);
-            word.LexicalForm.SetAlternative("v", "ee");
+			word.LexicalForm.SetAlternative("qaa", "ee");
 
             var contents = GetXhtmlContents(entries);
 
@@ -231,9 +230,9 @@ namespace Addin.Transform.Tests
         public void TwoEntryCrossRefferences()
         {
             var targetOne = _repo.CreateItem();
-            targetOne.LexicalForm.SetAlternative("v", "targetOne");
+			targetOne.LexicalForm.SetAlternative("qaa", "targetOne");
             var targetTwo = _repo.CreateItem();
-            targetTwo.LexicalForm.SetAlternative("v", "targetTwo");
+			targetTwo.LexicalForm.SetAlternative("qaa", "targetTwo");
 
             var crossRefs =_entry.GetOrCreateProperty<LexRelationCollection>(LexEntry.WellKnownProperties.CrossReference);
             crossRefs.Relations.Add(new LexRelation(LexEntry.WellKnownProperties.CrossReference, targetOne.Id, _entry));
@@ -254,7 +253,7 @@ namespace Addin.Transform.Tests
 		public void RelationToADeletedEntryIgnored()
 		{
 			var targetOne = _repo.CreateItem();
-			targetOne.LexicalForm.SetAlternative("v", "targetOne");
+			targetOne.LexicalForm.SetAlternative("qaa", "targetOne");
 
 			var crossRefs = _entry.GetOrCreateProperty<LexRelationCollection>(LexEntry.WellKnownProperties.CrossReference);
 			crossRefs.Relations.Add(new LexRelation(LexEntry.WellKnownProperties.CrossReference, "longGone", _entry));
@@ -272,7 +271,7 @@ namespace Addin.Transform.Tests
 
             var secondOne = _repo.CreateItem();
             entries.Add(secondOne);
-            secondOne.LexicalForm.SetAlternative("v", _entry.GetHeadWordForm("v"));
+			secondOne.LexicalForm.SetAlternative("qaa", _entry.GetHeadWordForm("qaa"));
 
             var contents = GetXhtmlContents(entries);
 
@@ -289,7 +288,7 @@ namespace Addin.Transform.Tests
 
             var secondOne = _repo.CreateItem();
             entries.Add(secondOne);
-            secondOne.LexicalForm.SetAlternative("v", "banana");
+			secondOne.LexicalForm.SetAlternative("qaa", "banana");
 
             var contents = GetXhtmlContents(entries);
 

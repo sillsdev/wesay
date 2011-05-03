@@ -9,6 +9,7 @@ using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Text;
 using Palaso.UiBindings;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
@@ -18,7 +19,7 @@ namespace WeSay.Project
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly LexEntryRepository _lexEntryRepository;
-		private readonly IList<string> _headwordWritingSystemIds;
+		private readonly IEnumerable<string> _headwordWritingSystemIds;
 
 		public PLiftExporter(StringBuilder builder,
 							 bool produceFragmentOnly,
@@ -35,9 +36,21 @@ namespace WeSay.Project
 							 ViewTemplate viewTemplate)
 			: base(path, LiftWriter.ByteOrderStyle.BOM)
 		{
+			_disposed = true; // In case we throw in the constructor
 			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
-			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
+			_headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());
+			_disposed = false;
+		}
+
+		public override void Dispose()
+		{
+			base.Dispose();
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
 		}
 
 		private Options _options = Options.DereferenceRelations | Options.DereferenceOptions |
@@ -69,7 +82,7 @@ namespace WeSay.Project
 
 		public override void Add(LexEntry entry)
 		{
-			WritingSystem headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
+			WritingSystemDefinition headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
 			int h = _lexEntryRepository.GetHomographNumber(entry, headWordWritingSystem);
 			Add(entry, h);
 		}
@@ -134,7 +147,7 @@ namespace WeSay.Project
 
 				if (!MultiTextBase.IsEmpty(text))
 				{
-					var textWritingSystems = _viewTemplate.WritingSystems.GetActualTextWritingSystems();
+					var textWritingSystems = _viewTemplate.WritingSystems.TextWritingSystems;
 					var ids = from ws in textWritingSystems select ws.Id;
 					WriteLanguageFormsInWrapper(text.Forms.Where(f => ids.Contains(f.WritingSystemId)), "form", true);
 				}
@@ -159,9 +172,9 @@ namespace WeSay.Project
 			}
 		}
 
-		public static IList<LanguageForm> GetAudioForms(MultiText field, WritingSystemCollection writingSytems)
+		public static IList<LanguageForm> GetAudioForms(MultiText field, IWritingSystemRepository writingSytems)
 		{
-			var x = field.Forms.Where(f => writingSytems[f.WritingSystemId].IsAudio);
+			var x = field.Forms.Where(f => writingSytems.Get(f.WritingSystemId).IsVoice);
 			return new List<LanguageForm>(x);
 		}
 
@@ -279,7 +292,7 @@ namespace WeSay.Project
 			{
 				return text.Forms;
 			}
-			return text.GetOrderedAndFilteredForms(f.GetTextOnlyWritingSystemIds(_viewTemplate.WritingSystems));
+			return text.GetOrderedAndFilteredForms(_viewTemplate.WritingSystems.FilterForTextIds(f.WritingSystemIds));
 		}
 	}
 }

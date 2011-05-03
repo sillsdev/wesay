@@ -5,7 +5,6 @@ using Palaso.TestUtilities;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Dashboard;
-
 using NUnit.Framework;
 
 namespace WeSay.LexicalTools.Tests

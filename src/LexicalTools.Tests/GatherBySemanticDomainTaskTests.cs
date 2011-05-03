@@ -6,6 +6,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherBySemanticDomains;
@@ -24,12 +25,12 @@ namespace WeSay.LexicalTools.Tests
 		private string _semanticDomainFilePath;
 		private string _filePath;
 		private ViewTemplate _viewTemplate;
-		private static string _vernacularWritingSystemId = "br";
+		private static string _vernacularWritingSystemId = WritingSystemInfo.VernacularIdForTest;
 
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 		}
 
 		[SetUp]
@@ -77,9 +78,9 @@ namespace WeSay.LexicalTools.Tests
 
 			v.Add(new Field(LexSense.WellKnownProperties.Definition,"LexSense", new string[]{"en"}));
 
-			if(!v.WritingSystems.ContainsKey("en"))
+			if(!v.WritingSystems.Contains("en"))
 			{
-				v.WritingSystems.Add("en", new WritingSystem("en", new Font("arial", 12)));
+				v.WritingSystems.Set(WritingSystemDefinition.FromLanguage("en"));
 			}
 			return v;
 		}
@@ -119,7 +120,8 @@ namespace WeSay.LexicalTools.Tests
 		private void AddSenseToEntry(LexEntry e, string gloss, string domainToAdd)
 		{
 			LexSense s = AddNewSenseToEntry(e);
-			s.Definition.SetAlternative("en", gloss);
+			if(!string.IsNullOrEmpty(gloss))
+				s.Definition.SetAlternative("en", gloss);
 			if (!string.IsNullOrEmpty(domainToAdd))
 			{
 				OptionRefCollection o =
@@ -467,7 +469,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentDomainIndex = 3;
 			Task.AddWord("boo");
 			int originalCount = Task.GetRemainingCount();
-			Task.DetachFromMatchingEntries("boo");
+			Task.PrepareToMoveWordToEditArea("boo");
 			Assert.AreEqual(originalCount + 1, Task.GetRemainingCount());
 		}
 
@@ -493,13 +495,13 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void RemoveWord_null_Throws()
+		public void PrepareToMoveWordToEditArea_null_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => Task.DetachFromMatchingEntries(null));
+			Assert.Throws<ArgumentNullException>(() => Task.PrepareToMoveWordToEditArea(null));
 		}
 
 		[Test]
-		public void RemoveWord_HasOnlyLexemeForm_DeletesWord()
+		public void PrepareToMoveWordToEditArea_HasOnlyLexemeForm_DeletesWord()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
@@ -513,38 +515,61 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
-			Task.DetachFromMatchingEntries("peixe");
+			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
-		public void RemoveWord_WordExistsWithDefAndSemanticDomain_Disassociated()
+		public void PrepareToMoveWordToEditArea_WordExistsWithDefAndSemanticDomain_Disassociated()
 		{
 			AddEntryToRecordList("peixe", "fish", Task.DomainKeys[0]);
 			AddEntryToRecordList("raposa", "fox", Task.DomainKeys[0]);
 			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
-			Task.DetachFromMatchingEntries("raposa");
+			Task.PrepareToMoveWordToEditArea("raposa");
 			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
 			Assert.AreEqual(3, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
-		public void RemoveWord_WordExistsWithTwoDefsHavingSemanticDomain_DisassociatesBothSenses()
+		public void SetMeaningMultiTextForWordRecentlyMovedToEditArea_WordHad1Meaning_SetProperly()
+		{
+			AddEntryToRecordList("peixe", "fish", Task.DomainKeys[0]);
+
+			Task.PrepareToMoveWordToEditArea("peixe");
+			var meaning = Task.GetMeaningForWordRecentlyMovedToEditArea();
+
+			Assert.AreEqual("fish", meaning["en"]);
+		}
+
+
+		[Test]
+		public void SetMeaningMultiTextForWordRecentlyMovedToEditArea_WordHad0Meaning_SetProperly()
+		{
+			AddEntryToRecordList("peixe", null, Task.DomainKeys[0]);
+
+			Task.PrepareToMoveWordToEditArea("peixe");
+			var meaning = Task.GetMeaningForWordRecentlyMovedToEditArea();
+
+			Assert.IsFalse(meaning.ContainsAlternative("en"));
+		}
+
+		[Test]
+		public void PrepareToMoveWordToEditArea_WordExistsWithTwoDefsHavingSemanticDomain_DisassociatesBothSenses()
 		{
 			AddEntryToRecordList("peixe", "fish", Task.DomainKeys[0]);
 			LexEntry e = AddEntryToRecordList("raposa", "fox", Task.DomainKeys[0]);
 			AddSenseToEntry(e, "special", Task.DomainKeys[0]);
 			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
-			Task.DetachFromMatchingEntries("raposa");
+			Task.PrepareToMoveWordToEditArea("raposa");
 			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
 			Assert.AreEqual(2, Task.CurrentWords.Count);
 		}
 
 		[Test]
-		public void RemoveWord_HasAnotherSense_DisassociatesWordFromDomain()
+		public void PrepareToMoveWordToEditArea_HasAnotherSense_DisassociatesWordFromDomain()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
@@ -560,13 +585,13 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
-			Task.DetachFromMatchingEntries("peixe");
+			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
-		public void RemoveWord_HasAnotherSense_RemovesEmptySense()
+		public void PrepareToMoveWordToEditArea_HasAnotherSense_RemovesEmptySense()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
@@ -582,14 +607,14 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
-			Task.DetachFromMatchingEntries("peixe");
+			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 			Assert.AreEqual(1, e.Senses.Count);
 		}
 
 		[Test]
-		public void RemoveWord_HasTwoLexicalForms_DisassociatesWordFromDomain()
+		public void PrepareToMoveWordToEditArea_HasTwoLexicalForms_DisassociatesWordFromDomain()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
@@ -604,13 +629,13 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
-			Task.DetachFromMatchingEntries("peixe");
+			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
-		public void RemoveWord_HasCustomFieldInEntry_DisassociatesWordFromDomain()
+		public void PrepareToMoveWordToEditArea_HasCustomFieldInEntry_DisassociatesWordFromDomain()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
@@ -627,13 +652,13 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
-			Task.DetachFromMatchingEntries("peixe");
+			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
-		public void RemoveWord_HasCustomFieldInSense_DisassociatesWordFromDomain()
+		public void PrepareToMoveWordToEditArea_HasCustomFieldInSense_DisassociatesWordFromDomain()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
@@ -651,13 +676,13 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
-			Task.DetachFromMatchingEntries("peixe");
+			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
-		public void RemoveWord_DoesNotHaveSemanticDomainFieldInSense_DoNothing()
+		public void PrepareToMoveWordToEditArea_DoesNotHaveSemanticDomainFieldInSense_DoNothing()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
@@ -670,13 +695,13 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
-			Task.DetachFromMatchingEntries("peixe");
+			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
-		public void RemoveWord_HasCustomFieldInExample_DisassociatesWordFromDomain()
+		public void PrepareToMoveWordToEditArea_HasCustomFieldInExample_DisassociatesWordFromDomain()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
@@ -696,13 +721,13 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
-			Task.DetachFromMatchingEntries("peixe");
+			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
-		public void RemoveWord_WordNotInDatabase_DoNothing()
+		public void PrepareToMoveWordToEditArea_WordNotInDatabase_DoNothing()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("v", "peshi");
@@ -716,7 +741,7 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
-			Task.DetachFromMatchingEntries("peshi");
+			Task.PrepareToMoveWordToEditArea("peshi");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
@@ -742,7 +767,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			FillAllDomainsWithWords();
 			Task.CurrentDomainIndex = 3;
-			Task.DetachFromMatchingEntries("3");
+			Task.PrepareToMoveWordToEditArea("3");
 			Task.GotoNextDomainLackingAnswers();
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
 			Assert.AreEqual(3, Task.CurrentDomainIndex);
@@ -928,7 +953,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			var originalWordCount =_lexEntryRepository.CountAllItems();
 			var entries1 = Task.AddWord("onee", "1");
-			Task.DetachFromMatchingEntries("one");//this is what the control currently does when you click on a word in the list so you can edit it
+			Task.PrepareToMoveWordToEditArea("one");//this is what the control currently does when you click on a word in the list so you can edit it
 			var entries2 = Task.AddWord("one", "1");
 
 			Assert.AreEqual(1, _lexEntryRepository.CountAllItems()-originalWordCount, "Should only create one new word");
@@ -946,7 +971,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			var originalWordCount = _lexEntryRepository.CountAllItems();
 			var entries1 = Task.AddWord("one", "01");
-			Task.DetachFromMatchingEntries("one");//this is what the control currently does when you click on a word in the list so you can edit it
+			Task.PrepareToMoveWordToEditArea("one");//this is what the control currently does when you click on a word in the list so you can edit it
 			var entries2 = Task.AddWord("one", "1");
 
 			Assert.AreEqual(1, _lexEntryRepository.CountAllItems() - originalWordCount, "Should only create one new word");
@@ -1140,6 +1165,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ParseFrenchSemanticDomainFile_Localized()
 		{
+			WeSayWordsProject.Project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("fr"));
 			string frenchSemanticDomainFilePath = Path.GetTempFileName();
 			using (StreamWriter streamWriter = File.CreateText(frenchSemanticDomainFilePath))
 			{
@@ -1147,14 +1173,14 @@ namespace WeSay.LexicalTools.Tests
 						@"<?xml version='1.0' encoding='utf-8'?>
 <semantic-domain-questions semantic-domain-type='DDP4' lang='fr'>
 <semantic-domain guid='I63403699-07C1-43F3-A47C-069D6E4316E5' id='1 Universe, creation'>
-<question>Quels sont les mots qui font référence à tout ce qu'on peut voir?</question>
+<question>Quels sont les mots qui font rï¿½fï¿½rence ï¿½ tout ce qu'on peut voir?</question>
 </semantic-domain>
 <semantic-domain guid='I999581C4-1611-4ACB-AE1B-5E6C1DFE6F0C' id='1.1 Sky'>
 <question>Quels sont les mots qui signifient le ciel?</question>
-<question>Quels sont les mots qui signifient l'endroit ou le pays au-delà du ciel?</question>
-<question>Quels sont les mots qui décrivent l'aspect du ciel?</question>
-<question>Quels sont les mots qui décrivent l'endroit où le ciel touche la terre?</question>
-<question>Quel terme général fait référence aux objets dans le ciel?</question>
+<question>Quels sont les mots qui signifient l'endroit ou le pays au-delï¿½ du ciel?</question>
+<question>Quels sont les mots qui dï¿½crivent l'aspect du ciel?</question>
+<question>Quels sont les mots qui dï¿½crivent l'endroit oï¿½ le ciel touche la terre?</question>
+<question>Quel terme gï¿½nï¿½ral fait rï¿½fï¿½rence aux objets dans le ciel?</question>
 </semantic-domain></semantic-domain-type>");
 			}
 

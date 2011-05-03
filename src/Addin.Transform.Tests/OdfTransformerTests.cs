@@ -1,4 +1,3 @@
-
 using System;
 using System.IO;
 using System.Xml;
@@ -8,8 +7,6 @@ using Addin.Transform.OpenOffice;
 using WeSay.Project;
 using WeSay.Project.Tests;
 using WeSay.AddinLib;
-using WeSay.LexicalModel;
-using LiftIO.Validation;
 using ICSharpCode.SharpZipLib.Zip;
 
 using NUnit.Framework;
@@ -21,17 +18,17 @@ namespace Addin.Transform.Tests
 	{
 		private class EnvironmentForTest : IDisposable
 		{
-			private ProjectDirectorySetupForTesting _testProject;
-			private WeSayWordsProject _project;
-			private ProjectInfo _projectInfo;
+			private readonly ProjectDirectorySetupForTesting _testProject;
+			private readonly WeSayWordsProject _project;
+			private readonly ProjectInfo _projectInfo;
 
 			public EnvironmentForTest()
 			{
 				ErrorReport.IsOkToInteractWithUser = false;
-				string xmlOfEntries = @" <entry id='foo1'>
-							<lexical-unit><form lang='v'><text>hello</text></form></lexical-unit>
+				const string xmlOfEntries = @" <entry id='foo1'>
+							<lexical-unit><form lang='qaa'><text>hello</text></form></lexical-unit>
 					</entry>";
-				_testProject = new WeSay.Project.Tests.ProjectDirectorySetupForTesting(xmlOfEntries);
+				_testProject = new ProjectDirectorySetupForTesting(xmlOfEntries);
 				_project = _testProject.CreateLoadedProject();
 				_projectInfo = _project.GetProjectInfoForAddin();
 
@@ -74,26 +71,24 @@ namespace Addin.Transform.Tests
 
 			private static void CopyFolder(string sourceFolder, string destFolder)
 			{
-				if (!Directory.Exists( destFolder ))
-					Directory.CreateDirectory( destFolder );
-				string[] files = Directory.GetFiles( sourceFolder );
+				if (!Directory.Exists(destFolder))
+					Directory.CreateDirectory(destFolder);
+				string[] files = Directory.GetFiles(sourceFolder);
 				foreach (string file in files)
 				{
-					string name = Path.GetFileName( file );
-					string dest = Path.Combine( destFolder, name );
-					File.Copy( file, dest );
+					string name = Path.GetFileName(file);
+					string dest = Path.Combine(destFolder, name);
+					File.Copy(file, dest);
 				}
-				string[] folders = Directory.GetDirectories( sourceFolder );
+				string[] folders = Directory.GetDirectories(sourceFolder);
 				foreach (string folder in folders)
 				{
-					string name = Path.GetFileName( folder );
-					string dest = Path.Combine( destFolder, name );
-					CopyFolder( folder, dest );
+					string name = Path.GetFileName(folder);
+					string dest = Path.Combine(destFolder, name);
+					CopyFolder(folder, dest);
 				}
 			}
 		}
-
-
 
 		[Test]
 		public void TestOpenDocumentExport()
@@ -108,13 +103,13 @@ namespace Addin.Transform.Tests
 				bool succeeded = (new FileInfo(e.OdtFile).Length > 0);
 				Assert.IsTrue(succeeded);
 
-				XmlNamespaceManager nsManager = new XmlNamespaceManager(new NameTable());
+				var nsManager = new XmlNamespaceManager(new NameTable());
 				nsManager.AddNamespace("text", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
 				nsManager.AddNamespace("style","urn:oasis:names:tc:opendocument:xmlns:style:1.0" );
 				AssertThatXmlIn.File(e.OdtContent).HasAtLeastOneMatchForXpath("//text:p", nsManager);
 				AssertThatXmlIn.File(e.OdtStyles).HasAtLeastOneMatchForXpath("//style:font-face", nsManager);
 
-				ZipFile odtZip = new ZipFile(e.OdtFile);
+				var odtZip = new ZipFile(e.OdtFile);
 				ZipEntry manifest = odtZip.GetEntry("META-INF/manifest.xml");
 				Assert.IsNotNull(manifest);
 				odtZip.Close();

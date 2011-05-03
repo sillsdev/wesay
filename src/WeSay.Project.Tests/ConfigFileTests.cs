@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Xml;
-using System.Xml.XPath;
 using NUnit.Framework;
-using Palaso.TestUtilities;
-using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project.Tests
 {
@@ -17,11 +11,11 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void ChangeWritingSystemId_IdExists_IsChanged()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			string pathToConfigFile = Path.GetTempFileName();
 			File.WriteAllText(pathToConfigFile,
 								  GetV7ConfigFileContent());
-			ConfigFile configFile = new ConfigFile(pathToConfigFile);
+			var configFile = new ConfigFile(pathToConfigFile);
 			configFile.ReplaceWritingSystemId("hi-u", "hi-Zxxx-x-audio");
 			string newFileContent = File.ReadAllText(pathToConfigFile);
 			Assert.IsFalse(newFileContent.Contains("hi-u"));
@@ -31,11 +25,11 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void ChangeWritingSystemId_DoesnotExist_NoChange()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			string pathToConfigFile = Path.GetTempFileName();
 			File.WriteAllText(pathToConfigFile,
 								  GetV7ConfigFileContent());
-			ConfigFile configFile = new ConfigFile(pathToConfigFile);
+			var configFile = new ConfigFile(pathToConfigFile);
 			configFile.ReplaceWritingSystemId("hi-up", "hi-Zxxx-x-audio");
 			string newFileContent = File.ReadAllText(pathToConfigFile);
 			Assert.IsFalse(newFileContent.Contains("hi-Zxxx-x-audio"));
@@ -44,13 +38,13 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void DefaultConfigFile_DoesntNeedMigrating()
 		{
-			XmlDocument configFile = new XmlDocument();
+			var configFile = new XmlDocument();
 			configFile.Load(WeSayWordsProject.PathToDefaultConfig);
 			XmlNode versionNode = configFile.SelectSingleNode("configuration/@version");
 			Assert.AreEqual(ConfigFile.LatestVersion, Convert.ToInt32(versionNode.Value));
 		}
 
-		private string GetV7ConfigFileContent()
+		private static string GetV7ConfigFileContent()
 		{
 			return
 				@"<?xml version='1.0' encoding='utf-8'?>

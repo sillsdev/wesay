@@ -13,6 +13,7 @@ using Palaso.UiBindings;
 using Palaso.Misc;
 using Palaso.Reporting;
 using Palaso.Text;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -29,7 +30,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private readonly ViewTemplate _viewTemplate;
 		private readonly ILogger _logger;
-		private WritingSystem _listWritingSystem;
+		private WritingSystemDefinition _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
 		private ResultSet<LexEntry> _records;
 		private bool _keepRecordCurrent;
@@ -163,9 +164,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			{
 				if (field.WritingSystemIds.Count > 0)
 				{
-					IList<WritingSystem> writingSystems =
+					IList<WritingSystemDefinition> writingSystems =
 							BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
-					foreach (WritingSystem writingSystem in writingSystems)
+					foreach (WritingSystemDefinition writingSystem in writingSystems)
 					{
 						if (!WritingSystemExistsInPicker(writingSystem))
 						{
@@ -182,7 +183,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 		}
 
-		private void AddWritingSystemToPicker(WritingSystem writingSystem, Field field)
+		private void AddWritingSystemToPicker(WritingSystemDefinition writingSystem, Field field)
 		{
 			var item = new MenuItem(
 				writingSystem.Abbreviation + "\t" + StringCatalog.Get(field.DisplayName),
@@ -193,11 +194,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			SearchModeMenu.MenuItems.Add(item);
 		}
 
-		private bool WritingSystemExistsInPicker(WritingSystem writingSystem)
+		private bool WritingSystemExistsInPicker(WritingSystemDefinition writingSystem)
 		{
 			foreach (MenuItem item in SearchModeMenu.MenuItems)
 			{
-				if (writingSystem.Id == ((WritingSystem) item.Tag).Id)
+				if (writingSystem.Id == ((WritingSystemDefinition) item.Tag).Id)
 				{
 					return true;
 				}
@@ -217,7 +218,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 																	ToString());
 		}
 
-		public void SetListWritingSystem(WritingSystem writingSystem)
+		public void SetListWritingSystem(WritingSystemDefinition writingSystem)
 		{
 			Guard.AgainstNull(writingSystem,"writingSystem");
 
@@ -368,7 +369,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			var item = (MenuItem) sender;
 			if (_listWritingSystem != item.Tag)
 			{
-				SetListWritingSystem((WritingSystem) item.Tag);
+				SetListWritingSystem((WritingSystemDefinition) item.Tag);
 			}
 		}
 
