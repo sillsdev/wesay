@@ -260,15 +260,18 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void WeSayConfigFileIsToNew_Throws()
 		{
-
 			using (ProjectDirectorySetupForTesting projectDir = new ProjectDirectorySetupForTesting(""))
 			{
-				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
-				const int version = WeSayWordsProject.CurrentWeSayConfigFileVersion + 1;
-				File.WriteAllText(configPath,
-								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
-				XPathDocument doc = new XPathDocument(configPath);
-				Assert.Throws<ApplicationException>(() => WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(doc));
+				string configFilePath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
+				const int version = ConfigFile.LatestVersion + 1;
+				File.WriteAllText(
+					configFilePath,
+					String.Format(
+						"<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>"
+						, version
+					)
+				);
+				Assert.Throws<ApplicationException>(() => new ConfigFile(configFilePath));
 			}
 		}
 
@@ -276,14 +279,13 @@ namespace WeSay.Project.Tests
 		public void WeSayConfigFileIsToCurrent_DoesNotThrow()
 		{
 
-			using (ProjectDirectorySetupForTesting projectDir = new ProjectDirectorySetupForTesting(""))
+			using (var projectDir = new ProjectDirectorySetupForTesting(""))
 			{
-				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
-				const int version = WeSayWordsProject.CurrentWeSayConfigFileVersion;
-				File.WriteAllText(configPath,
+				string configFilePath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
+				const int version = ConfigFile.LatestVersion;
+				File.WriteAllText(configFilePath,
 								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
-				XPathDocument doc = new XPathDocument(configPath);
-				WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(doc);
+				var configFile = new ConfigFile(configFilePath);
 			}
 		}
 
