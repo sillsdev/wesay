@@ -3,10 +3,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
 "Report-Msgid-Bugs-To: http://issues.wesay.org/\n"
-"POT-Creation-Date: 2011-01-31T04:35:21\n"
-"PO-Revision-Date: 2011-02-14 04:17+0000\n"
+"POT-Creation-Date: 2011-04-28T04:35:01\n"
+"PO-Revision-Date: 2011-03-22 15:09+0000\n"
 "Last-Translator: palaso_admin <admin@palaso.org>\n"
-"Language-Team: Thai <>\n"
+"Language-Team: Thai (http://www.transifex.net/projects/p/wesay/team/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,10 +15,13 @@ msgstr ""
 
 # Project-Id-Version: WeSay
 # Report-Msgid-Bugs-To: hattonjohn@gmail.com
-# POT-Creation-Date: 2011-01-31T04:35:21
+# POT-Creation-Date: 2011-04-28T04:35:01
 # Content-Type: text/plain; charset=UTF-8
 msgid "Meanings"
 msgstr "ความหมาย"
+
+msgid "Add Meanings"
+msgstr ""
 
 msgid "Add meanings (senses) to entries where they are missing."
 msgstr "ป้อนความหมายของคำที่ยังไม่ได้รับการป้อน"
@@ -26,11 +29,17 @@ msgstr "ป้อนความหมายของคำที่ยังไ
 msgid "Parts of Speech"
 msgstr "ป้อนชนิดของคำ"
 
+msgid "Add Parts of Speech"
+msgstr ""
+
 msgid "Add parts of speech to senses where they are missing."
 msgstr "ป้อนการแยกส่วนคำบรรยายสู่ที่ที่ขาดความหมาย"
 
 msgid "Example Sentences"
 msgstr "ตัวอย่างประโยค"
+
+msgid "Add Example Sentences"
+msgstr ""
 
 msgid "Add example sentences to senses where they are missing."
 msgstr "ป้อนประโยคตัวอย่างของคำที่ยังไม่ได้รับการป้อน"
@@ -38,7 +47,13 @@ msgstr "ป้อนประโยคตัวอย่างของคำท
 msgid "Base Forms"
 msgstr "รูปแบบพื้นฐาน"
 
-msgid "Identify the \"base form\" word that this word is built from. In the printed dictionary, the derived or variant words can optionally be shown as subentries of their base forms."
+msgid "Add Base Forms"
+msgstr ""
+
+msgid ""
+"Identify the \"base form\" word that this word is built from. In the printed"
+" dictionary, the derived or variant words can optionally be shown as "
+"subentries of their base forms."
 msgstr ""
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
@@ -197,16 +212,19 @@ msgid "Export to HTML"
 msgstr "นำออกไปที่ HTML"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\HtmlTransformer.cs
-msgid "Creates a simple Html version of the dictionary.  Not a very good way to go."
+msgid ""
+"Creates a simple Html version of the dictionary.  Not a very good way to go."
 msgstr ""
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LameProgressDialog.Designer.cs
+#: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\SimpleProgressDialog.Designer.cs
 msgid "Backing up..."
 msgstr ""
 
 #. It's up to you whether to bother translating this or not.
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LameProgressDialog.Designer.cs
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\LongStartupNotification.Designer.cs
+#: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\SimpleProgressDialog.Designer.cs
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\TabbedForm.Designer.cs
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
 msgid "WeSay"
@@ -229,8 +247,12 @@ msgid "Open in Lexique Pro"
 msgstr "เปิดใช้ Lexique Pro"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LexiquePro\LexiqueProSender.cs
-msgid "Open dictionary in Lexique Pro for printing or web-page creation. Requires version LP ver 3.0 or higher."
-msgstr "เปิดพจนานุกรมในLexique Pro ปริ๊น หรือ การสร้าง web - page ต้องใช้ เวอร์ชั่น LP เวอร์ชั่น 3.0 หรือรุ่นที่สูงกว่า"
+msgid ""
+"Open dictionary in Lexique Pro for printing or web-page creation. Requires "
+"version LP ver 3.0 or higher."
+msgstr ""
+"เปิดพจนานุกรมในLexique Pro ปริ๊น หรือ การสร้าง web - page ต้องใช้ เวอร์ชั่น "
+"LP เวอร์ชั่น 3.0 หรือรุ่นที่สูงกว่า"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
 msgid "Save in OpenOffice"
@@ -403,8 +425,12 @@ msgid "Switch tasks and see current status of tasks"
 msgstr "สลับงานและดูสถานะปัจจุบันของงาน"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\Dash.Designer.cs
-msgid "NOTE: This control should be the same size as the initial tab page size so the in"
-msgstr "NOTE: This control should be the same size as the initial tab page size so the in"
+msgid ""
+"NOTE: This control should be the same size as the initial tab page size so "
+"the in"
+msgstr ""
+"NOTE: This control should be the same size as the initial tab page size so "
+"the in"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\DictionaryStatusControl.designer.cs
 msgid "{1} dictionary has {0} words"
@@ -493,7 +519,9 @@ msgid "Gather Words By Semantic Domain"
 msgstr "รวบรวมคำศัพท์"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
-msgid "Collect new words organized by semantic domains and questions about those domains."
+msgid ""
+"Collect new words organized by semantic domains and questions about those "
+"domains."
 msgstr "รวบรวมคำใหม่ตามหมวดความหมาย และคำถามเกี่ยวกับหมวดความหมายต่างๆ"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
@@ -546,7 +574,9 @@ msgstr "ความหมาย"
 #. the domain is about, and this was added to remind the user that he/she is
 #. gathering based on the domain, not these examples.
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainTask.cs
-msgid "Do not just translate these words; instead think of words in your own language."
+msgid ""
+"Do not just translate these words; instead think of words in your own "
+"language."
 msgstr "แปลโดยไม่ต้องคิดถึงคำในคำในภาษานั้น ๆ"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
@@ -696,12 +726,20 @@ msgid "Language to show the user interface in."
 msgstr "ภาษาที่ใช้แสดงในหน้าของผู้่ใช้"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
-msgid "Start without a user interface (will have no effect if WeSay is already running with a UI."
-msgstr "Start without a user interface (will have no effect if WeSay is already running with a UI."
+msgid ""
+"Start without a user interface (will have no effect if WeSay is already "
+"running with a UI."
+msgstr ""
+"Start without a user interface (will have no effect if WeSay is already "
+"running with a UI."
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
-msgid "Some things, like backup, just gum up automated tests.  This is used to turn them off."
-msgstr "Some things, like backup, just gum up automated tests.  This is used to turn them off."
+msgid ""
+"Some things, like backup, just gum up automated tests.  This is used to turn"
+" them off."
+msgstr ""
+"Some things, like backup, just gum up automated tests.  This is used to turn"
+" them off."
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Gather"
@@ -746,8 +784,12 @@ msgstr "ส่ง/รับ"
 
 #. description of send/receive action
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
-msgid "Sends your changes to usb key, server, or other users, and receives the changes made by other members of your team."
-msgstr "ส่งการเปลี่ยนแปลงของคุณผ่าน usb, server,หรือผู้ใช้อื่น หรือรับการเปลี่ยนแปลงของสมาชิกอื่น ๆ ในทีมของคุณเอง"
+msgid ""
+"Sends your changes to usb key, server, or other users, and receives the "
+"changes made by other members of your team."
+msgstr ""
+"ส่งการเปลี่ยนแปลงของคุณผ่าน usb, server,หรือผู้ใช้อื่น "
+"หรือรับการเปลี่ยนแปลงของสมาชิกอื่น ๆ ในทีมของคุณเอง"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
 msgid "WeSay Send/Receive"
@@ -755,8 +797,10 @@ msgstr "WeSay ส่ง/รับ"
 
 #. Long label for send/receive action.
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
-msgid "Send/Receive Changes to devices, servers, or other users on your network."
-msgstr "ส่ง/รับ การเปลี่ยนแปลงอุปกรณ์พิเศษ,server,หรือ ผู้ใช้คนอื่นในระบบเครือข่าย"
+msgid ""
+"Send/Receive Changes to devices, servers, or other users on your network."
+msgstr ""
+"ส่ง/รับ การเปลี่ยนแปลงอุปกรณ์พิเศษ,server,หรือ ผู้ใช้คนอื่นในระบบเครือข่าย"
 
 #. The label for the field holding the citation form, which is how the word
 #. will be displayed in the dictionary.  This is used in languages where the
