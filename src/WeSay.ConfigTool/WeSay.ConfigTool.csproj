@@ -361,6 +361,9 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WritingSystemForFieldControl.cs</DependentUpon>
 	</EmbeddedResource>
+	<EmbeddedResource Include="WritingSystemSetup.resx">
+	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
+	</EmbeddedResource>
 	<None Include="app.config" />
 	<None Include="Properties\Settings.settings">
 	  <Generator>SettingsSingleFileGenerator</Generator>
