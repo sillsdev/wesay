@@ -1,22 +1,35 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Palaso.UI.WindowsForms.WritingSystems;
 
 namespace WeSay.ConfigTool.NewProjectCreation
 {
-	public partial class NewProject: Form
+	public partial class NewProjectDialog : Form
 	{
-		public NewProject()
+		private readonly string _destinationDirectory;
+		public string Iso639Code;
+		public string LanguageName;
+
+
+		public NewProjectDialog()
 		{
 			InitializeComponent();
+		}
+
+		public NewProjectDialog(string destinationDirectory)
+		{
+			_destinationDirectory = destinationDirectory;
+			InitializeComponent();
+			Icon = Application.OpenForms[0].Icon;
 			btnOK.Enabled = false;
 			_pathLabel.Text = "";
 		}
 
 		protected virtual bool EnableOK
 		{
-			get { return NameLooksOk; }
+			get { return NameLooksOk && !string.IsNullOrEmpty(Iso639Code); }
 		}
 
 		protected void _textProjectName_TextChanged(object sender, EventArgs e)
@@ -77,29 +90,46 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			}
 		}
 
-		private static string DestinationDirectory
-		{
-			get
-			{
-				return WeSay.Project.WeSayWordsProject.NewProjectDirectory;
-			}
-		}
-
 		public string PathToNewProjectDirectory
 		{
-			get { return Path.Combine(DestinationDirectory, _textProjectName.Text); }
+			get { return Path.Combine(_destinationDirectory, _textProjectName.Text); }
 		}
 
-		protected void btnOK_Click(object sender, EventArgs e)
+		protected void OnBtnOK_Click(object sender, EventArgs e)
 		{
+			ProjectName = _textProjectName.Text.Trim();
 			DialogResult = DialogResult.OK;
 			Close();
 		}
 
-		protected void btnCancel_Click(object sender, EventArgs e)
+		public string ProjectName
+		{
+			get;
+			private set;
+		}
+
+		protected void OnBtnCancel_Click(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Cancel;
 			Close();
+		}
+
+		private void _chooseLanguageButton_Click(object sender, EventArgs e)
+		{
+			using (var dlg = new LookupISOCodeDialog())
+			{
+				if (DialogResult.OK != dlg.ShowDialog())
+				{
+					return;
+				}
+				_languageInfoLabel.Text = string.Format("{0} ({1})", dlg.ISOCodeAndName.Name, dlg.ISOCode);
+				Iso639Code = dlg.ISOCodeAndName.Code;
+				LanguageName = dlg.ISOCodeAndName.Name;
+				if (_textProjectName.Text.Trim().Length == 0)
+				{
+					_textProjectName.Text = dlg.ISOCodeAndName.Name;
+				}
+			}
 		}
 	}
 }
