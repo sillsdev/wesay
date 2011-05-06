@@ -66,7 +66,7 @@ namespace WeSay.Project.Tests
 					ws.ISO = "aac";
 					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
-						Assert.IsFalse(project.MakeWritingSystemIdChange(ws, "qaa"));
+						Assert.IsFalse(project.MakeWritingSystemIdChange("aac", "qaa"));
 					}
 				}
 			}
@@ -83,7 +83,7 @@ namespace WeSay.Project.Tests
 				Assert.IsNotNull(doc.SelectNodes("//form[lang='qaa']"));
 				WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
 				ws.ISO = "aac";
-				Assert.IsTrue(project.MakeWritingSystemIdChange(ws, "qaa"));
+				Assert.IsTrue(project.MakeWritingSystemIdChange("aac", "qaa"));
 				doc.Load(p.PathToLiftFile);
 				Assert.IsNotNull(doc.SelectNodes("//form[lang='aac']"));
 				Assert.AreEqual("aac", ws.Id);

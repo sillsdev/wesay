@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.WritingSystems;
@@ -10,6 +11,7 @@ namespace WeSay.ConfigTool
 		public WritingSystemSetup(ILogger logger, IWritingSystemRepository store)
 			: base("set up fonts, keyboards, and sorting", logger, "writingSystems")
 		{
+			store.WritingSystemIdChanged += OnWritingSystemIdChanged;
 			var view = new WritingSystemSetupView(new WritingSystemSetupModel(store))
 						{
 							LeftColumnWidth = 350,
@@ -18,5 +20,9 @@ namespace WeSay.ConfigTool
 			Controls.Add(view);
 		}
 
+		private static void OnWritingSystemIdChanged(object sender, WritingSystemIdChangedEventArgs e)
+		{
+			Project.WeSayWordsProject.Project.MakeWritingSystemIdChange(e.NewId, e.OldId);
+		}
 	}
 }
