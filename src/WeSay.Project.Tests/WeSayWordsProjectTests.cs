@@ -564,5 +564,33 @@ namespace WeSay.Project.Tests
 				Assert.AreEqual(2, Directory.GetFiles(pathToLdmlWritingSystemsFolder).Length);
 			}
 		}
+
+		[Test]
+		public void IsWritingSystemInUse_ViewTemplateIsUsingWritingSystem_ReturnsTrue()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				Assert.That(project.IsWritingSystemInUse("en"), Is.True);
+			}
+		}
+
+		[Test]
+		public void IsWritingSystemInUse_LiftFileContainsWritingSystem_ReturnsTrue()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
+				Assert.That(project.IsWritingSystemInUse("de"), Is.True);
+			}
+		}
+
+		[Test]
+		public void IsWritingSystemInUse_WritingSystemIsNotUsed_ReturnsFalse()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				Assert.That(project.IsWritingSystemInUse("de"), Is.False);
+			}
+		}
 	}
 }

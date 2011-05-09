@@ -1583,6 +1583,21 @@ namespace WeSay.Project
 			return false;
 		}
 
+		public bool IsWritingSystemInUse(string id)
+		{
+			return DefaultViewTemplate.IsWritingSystemInUse(id) || IsWritingSystemUsedInLiftFile(id);
+		}
+
+		private bool IsWritingSystemUsedInLiftFile(string id)
+		{
+			if(!File.Exists(PathToLiftFile))
+			{
+				return false;
+			}
+			string regex = string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(id));
+			return FileUtils.GrepFile(PathToLiftFile, regex);
+		}
+
 		/// <summary>
 		/// Files to process when backing up or checking in
 		/// </summary>
