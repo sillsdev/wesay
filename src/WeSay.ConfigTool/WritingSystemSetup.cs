@@ -12,12 +12,19 @@ namespace WeSay.ConfigTool
 			: base("set up fonts, keyboards, and sorting", logger, "writingSystems")
 		{
 			store.WritingSystemIdChanged += OnWritingSystemIdChanged;
-			var view = new WritingSystemSetupView(new WritingSystemSetupModel(store))
+			var writingSystemSetupModel = new WritingSystemSetupModel(store);
+			var view = new WritingSystemSetupView(writingSystemSetupModel)
 						{
 							LeftColumnWidth = 350,
 							Dock = DockStyle.Fill
 						};
+			writingSystemSetupModel.BeforeDeleted += OnBeforeDeleted;
 			Controls.Add(view);
+		}
+
+		private void OnBeforeDeleted(object sender, BeforeDeletedEventArgs args)
+		{
+			args.CanDelete = !Project.WeSayWordsProject.Project.IsWritingSystemInUse(args.WritingSystemId);
 		}
 
 		private static void OnWritingSystemIdChanged(object sender, WritingSystemIdChangedEventArgs e)
