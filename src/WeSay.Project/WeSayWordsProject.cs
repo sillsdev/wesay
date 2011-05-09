@@ -101,7 +101,7 @@ namespace WeSay.Project
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
 
-		public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
+		//public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
 		public const int CurrentWeSayUserSpecificConfigFileVersion = 2; // This variable must be updated with every new vrsion of the WeSayUserConfig file
 
 		public event EventHandler EditorsSaveNow;
@@ -406,19 +406,6 @@ namespace WeSay.Project
 
 			LoadUserConfig();
 			InitStringCatalog();
-		}
-
-		public static void CheckIfConfigFileVersionIsTooNew(XPathDocument configurationDoc)
-		{
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") != null)
-			{
-				string versionNumberAsString =
-					configurationDoc.CreateNavigator().SelectSingleNode("configuration").GetAttribute("version", "");
-				if (int.Parse(versionNumberAsString) > CurrentWeSayConfigFileVersion)
-				{
-					throw new ApplicationException("The config file is too new for this version of wesay. Please download a newer version of wesay from www.wesay.org");
-				}
-			}
 		}
 
 		[Serializable]
@@ -1296,7 +1283,7 @@ namespace WeSay.Project
 			var writer = XmlWriter.Create(pendingConfigFile.TempFilePath, CanonicalXmlSettings.CreateXmlWriterSettings());
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
-			writer.WriteAttributeString("version", CurrentWeSayConfigFileVersion.ToString());
+			writer.WriteAttributeString("version", ConfigFile.LatestVersion.ToString());
 
 			writer.WriteStartElement("components");
 			foreach (ViewTemplate template in ViewTemplates)

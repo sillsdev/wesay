@@ -30,7 +30,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 
 		private readonly string _queryToCheckConfigVersion = String.Format(
 			"configuration[@version='{0}']",
-			WeSayWordsProject.CurrentWeSayConfigFileVersion
+			ConfigFile.LatestVersion
 		);
 
 		private readonly ConfigurationMigrator _migrator = new ConfigurationMigrator();

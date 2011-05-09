@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Xml;
-using System.Xml.XPath;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project
 {
 	public class ConfigFile
 	{
+		public const int LatestVersion = 8;
+
 		private string _path;
 
 		public ConfigFile(string pathToconfigFile)
@@ -20,11 +18,6 @@ namespace WeSay.Project
 			{
 				throw new ApplicationException("The config file is too new for this version of wesay. Please download a newer version of wesay from www.wesay.org");
 			}
-		}
-
-		static public int LatestVersion
-		{
-			get { return 9; }
 		}
 
 		public string Path
@@ -37,7 +30,7 @@ namespace WeSay.Project
 		{
 			get
 			{
-				XmlDocument configFile = new XmlDocument();
+				var configFile = new XmlDocument();
 				configFile.Load(_path);
 				XmlNode versionNode = configFile.SelectSingleNode("configuration/@version");
 				if(versionNode == null)
@@ -60,7 +53,7 @@ namespace WeSay.Project
 			string pathToConfigFile = _path;
 			string tempFile = System.IO.Path.GetTempFileName();
 			File.Copy(pathToConfigFile, tempFile, true);
-			XmlDocument xmlDoc = new XmlDocument();
+			var xmlDoc = new XmlDocument();
 
 			xmlDoc.Load(tempFile);
 			switch (Version)
@@ -69,9 +62,6 @@ namespace WeSay.Project
 					ReplaceAsInVersion7(xmlDoc, oldId, newId);
 					break;
 				case 8:
-					ReplaceAsInVersion7(xmlDoc, oldId, newId);
-					break;
-				case 9:
 					ReplaceAsInVersion7(xmlDoc, oldId, newId);
 					break;
 				default:
@@ -83,7 +73,7 @@ namespace WeSay.Project
 			SafelyMoveTempFileTofinalDestination(tempFile, pathToConfigFile);
 		}
 
-		private void SafelyMoveTempFileTofinalDestination(string tempPath, string targetPath)
+		private static void SafelyMoveTempFileTofinalDestination(string tempPath, string targetPath)
 		{
 			string s = targetPath + ".tmp";
 			if (File.Exists(s))
@@ -98,7 +88,7 @@ namespace WeSay.Project
 			File.Delete(s);
 		}
 
-		private void ReplaceAsInVersion7(XmlDocument xmlDoc, string oldId, string newId)
+		private static void ReplaceAsInVersion7(XmlDocument xmlDoc, string oldId, string newId)
 		{
 			XmlNodeList writingSystemIdNodes = xmlDoc.SelectNodes("//writingSystems/id");
 			foreach (XmlNode writingsystemidNode in writingSystemIdNodes)
