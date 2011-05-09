@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Autofac;
 
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.ConfigTool.NewProjectCreation;
 using WeSay.ConfigTool.Properties;
 using WeSay.ConfigTool.Tasks;
@@ -136,12 +137,12 @@ namespace WeSay.ConfigTool
 
 		private void OnCreateProject(object sender, EventArgs e)
 		{
-			NewProject dlg = new NewProject();
+			NewProjectDialog dlg = new NewProjectDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
 			if (DialogResult.OK != dlg.ShowDialog())
 			{
 				return;
 			}
-			CreateAndOpenProject(dlg.PathToNewProjectDirectory);
+			CreateAndOpenProject(dlg.PathToNewProjectDirectory, dlg.Iso639Code);
 
 			PointOutOpenWeSayButton();
 		}
@@ -191,7 +192,7 @@ namespace WeSay.ConfigTool
 
 		}
 
-		public void CreateAndOpenProject(string directoryPath)
+		public void CreateAndOpenProject(string directoryPath, string languageTag)
 		{
 			//the "wesay" part may not exist yet
 			if (!Directory.GetParent(directoryPath).Exists)
@@ -201,6 +202,9 @@ namespace WeSay.ConfigTool
 
 			CreateNewProject(directoryPath);
 			OpenProject(directoryPath);
+			var genericWritingSystemShippedWithWs = Project.WritingSystems.Get("qaa");
+			genericWritingSystemShippedWithWs.ISO639 = languageTag;
+			Project.WritingSystems.Set(genericWritingSystemShippedWithWs);
 			 if(_project != null)
 			 {
 				 var logger = _project.Container.Resolve<ILogger>();
@@ -235,7 +239,7 @@ namespace WeSay.ConfigTool
 		/// <summary>
 		///
 		/// </summary>
-		/// <returns>true if the project was sucessfully opened</returns>
+		/// <returns>true if the project was sucessfully opend</returns>
 		public bool OpenProject(string path)
 		{
 			Logger.WriteEvent("OpenProject("+path+")");
@@ -311,7 +315,6 @@ namespace WeSay.ConfigTool
 			//  i abandoned this
 			//containerBuilder.Register<Control>().FactoryScoped();
 			// containerBuilder.RegisterGeneratedFactory<ConfigTaskControlFactory>(new TypedService(typeof (Control)));
-
 
 			containerBuilder.Register<FieldsControl>();
 			containerBuilder.Register<WritingSystemSetup>();

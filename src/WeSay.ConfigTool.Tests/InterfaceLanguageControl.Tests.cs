@@ -219,7 +219,7 @@ namespace WeSay.ConfigTool.Tests
 			_window = new ConfigurationWindow(new string[] {});
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
-			_window.CreateAndOpenProject(path);
+			_window.CreateAndOpenProject(path, "th");
 			GoToUILanguageTab();
 			return new ComboBoxTester("_languageCombo", _window);
 		}

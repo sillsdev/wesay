@@ -63,8 +63,8 @@ namespace WeSay.ConfigTool.Tests
 		public void AfterCreateProjectAndQuitFilesExist()
 		{
 			List<string> paths = new List<string>();
-			_window.CreateAndOpenProject(_projectFolder);
-			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "qaa.ldml"));
+			_window.CreateAndOpenProject(_projectFolder, "th");
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "th.ldml"));
 			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "en.ldml"));
 			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "es.ldml"));
 			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "fr.ldml"));
@@ -113,7 +113,7 @@ namespace WeSay.ConfigTool.Tests
 		[Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
 		public void WalkTabsAfterCreateNewProject()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 			WalkTopLevelTabs();
 
 		}
@@ -121,7 +121,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void CreateNewProjectThenOpen()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 		}
 
 		[Test]
@@ -143,7 +143,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void NewProjectHasValidStructure()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 			string path = WeSayWordsProject.Project.PathToConfigFile;
 			XPathDocument doc = new XPathDocument(path);
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version]"));
@@ -153,7 +153,7 @@ namespace WeSay.ConfigTool.Tests
 
 		private void CreateProjectAndGoToTaskControl()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 
 			ClickToolStripButton("_tasksButton");
 			//            GotoProjectTab("_tasksPage");
@@ -208,7 +208,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void ExistingProjectGetsNewTasks()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 		}
 	}
 

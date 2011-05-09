@@ -390,12 +390,12 @@ namespace WeSay.Project
 				_configFile = new ConfigFile(PathToConfigFile);
 				_configFile.MigrateIfNecassary();
 			}
-			var writingSystemMigrator = new WritingSystemsMigrator(ProjectDirectoryPath);
-			writingSystemMigrator.MigrateIfNecessary();
-
 
 			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
 			wsCreator.CreateNonExistantWritingSystemsFoundInLift(PathToLiftFile);
+
+			var writingSystemMigrator = new WritingSystemsMigrator(ProjectDirectoryPath);
+			writingSystemMigrator.MigrateIfNecessary();
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			//review: is this the right place for this?
@@ -889,6 +889,7 @@ namespace WeSay.Project
 				Directory.CreateDirectory(projectDirectoryPath);
 			}
 			CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(projectDirectoryPath);
+
 			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath, projectName);
 			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
 
@@ -1502,23 +1503,22 @@ namespace WeSay.Project
 				 });
 		}
 
-		public bool MakeWritingSystemIdChange(WritingSystemDefinition ws, string oldId)
+		public bool MakeWritingSystemIdChange(string newId, string oldId)
 		{
 			if (DoSomethingToLiftFile((p) =>
 					 //todo: expand the regular expression here to account for all reasonable patterns
 					 FileUtils.GrepFile(PathToLiftFile,
 							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
 											Regex.Escape(oldId)),
-							  string.Format("lang=\"{0}\"", ws.Id))))
+							  string.Format("lang=\"{0}\"", newId))))
 			{
-				WritingSystems.OnWritingSystemIDChange(ws, oldId);
-				DefaultViewTemplate.OnWritingSystemIDChange(oldId, ws.Id);
+				DefaultViewTemplate.OnWritingSystemIDChange(oldId, newId);
 
 				if (WritingSystemChanged != null)
 				{
 					StringPair p = new StringPair();
 					p.from = oldId;
-					p.to = ws.Id;
+					p.to = newId;
 					WritingSystemChanged.Invoke(this, p);
 				}
 				return true;
@@ -1568,6 +1568,21 @@ namespace WeSay.Project
 				}
 			}
 			return false;
+		}
+
+		public bool IsWritingSystemInUse(string id)
+		{
+			return DefaultViewTemplate.IsWritingSystemInUse(id) || IsWritingSystemUsedInLiftFile(id);
+		}
+
+		private bool IsWritingSystemUsedInLiftFile(string id)
+		{
+			if(!File.Exists(PathToLiftFile))
+			{
+				return false;
+			}
+			string regex = string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(id));
+			return FileUtils.GrepFile(PathToLiftFile, regex);
 		}
 
 		/// <summary>

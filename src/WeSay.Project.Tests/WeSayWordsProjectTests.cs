@@ -66,7 +66,7 @@ namespace WeSay.Project.Tests
 					ws.ISO = "aac";
 					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
-						Assert.IsFalse(project.MakeWritingSystemIdChange(ws, "qaa"));
+						Assert.IsFalse(project.MakeWritingSystemIdChange("aac", "qaa"));
 					}
 				}
 			}
@@ -83,7 +83,7 @@ namespace WeSay.Project.Tests
 				Assert.IsNotNull(doc.SelectNodes("//form[lang='qaa']"));
 				WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
 				ws.ISO = "aac";
-				Assert.IsTrue(project.MakeWritingSystemIdChange(ws, "qaa"));
+				Assert.IsTrue(project.MakeWritingSystemIdChange("aac", "qaa"));
 				doc.Load(p.PathToLiftFile);
 				Assert.IsNotNull(doc.SelectNodes("//form[lang='aac']"));
 				Assert.AreEqual("aac", ws.Id);
@@ -564,6 +564,34 @@ namespace WeSay.Project.Tests
 				Assert.IsTrue(File.Exists(Path.Combine(pathToLdmlWritingSystemsFolder, "en.ldml")));
 				Assert.IsTrue(File.Exists(Path.Combine(pathToLdmlWritingSystemsFolder, "qaa.ldml")));
 				Assert.AreEqual(2, Directory.GetFiles(pathToLdmlWritingSystemsFolder).Length);
+			}
+		}
+
+		[Test]
+		public void IsWritingSystemInUse_ViewTemplateIsUsingWritingSystem_ReturnsTrue()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				Assert.That(project.IsWritingSystemInUse("en"), Is.True);
+			}
+		}
+
+		[Test]
+		public void IsWritingSystemInUse_LiftFileContainsWritingSystem_ReturnsTrue()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
+				Assert.That(project.IsWritingSystemInUse("de"), Is.True);
+			}
+		}
+
+		[Test]
+		public void IsWritingSystemInUse_WritingSystemIsNotUsed_ReturnsFalse()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				Assert.That(project.IsWritingSystemInUse("de"), Is.False);
 			}
 		}
 	}
