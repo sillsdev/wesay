@@ -589,6 +589,18 @@ namespace WeSay.Project
 			return false;
 		}
 
+		public bool IsWritingSystemInUse(string writingSystemId)
+		{
+			foreach (var field in Fields)
+			{
+				if(field.WritingSystemIds.Contains(writingSystemId))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 		public WritingSystemDefinition GetDefaultWritingSystemForField(string fieldName)
 		{
 			IWritingSystemRepository writingSystems = BasilProject.Project.WritingSystems;
