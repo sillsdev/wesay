@@ -35,7 +35,12 @@ namespace WeSay.ConfigTool.NewProjectCreation
 		protected void _textProjectName_TextChanged(object sender, EventArgs e)
 		{
 			btnOK.Enabled = EnableOK;
-			if (btnOK.Enabled)
+			UpdateMessage();
+		}
+
+		private void UpdateMessage()
+		{
+			if(NameLooksOk)
 			{
 				string[] dirs = PathToNewProjectDirectory.Split(Path.DirectorySeparatorChar);
 				if (dirs.Length > 1)
@@ -47,17 +52,14 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 				_pathLabel.Invalidate();
 				Debug.WriteLine(_pathLabel.Text);
+				if (string.IsNullOrEmpty(Iso639Code))
+				{
+					_pathLabel.Text += Environment.NewLine + "Please choose a language to continue.";
+				}
 			}
 			else
 			{
-				if (_textProjectName.Text.Length > 0)
-				{
-					_pathLabel.Text = "Unable to create a new project there.";
-				}
-				else
-				{
-					_pathLabel.Text = "";
-				}
+				_pathLabel.Text = "Unable to create a new project there.";
 			}
 		}
 
@@ -128,6 +130,11 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				if (_textProjectName.Text.Trim().Length == 0)
 				{
 					_textProjectName.Text = dlg.ISOCodeAndName.Name;
+				}
+				else
+				{
+					btnOK.Enabled = EnableOK;
+					UpdateMessage();
 				}
 			}
 		}
