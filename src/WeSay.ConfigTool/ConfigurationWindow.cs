@@ -398,19 +398,6 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void OnFormClosed(object sender, FormClosedEventArgs e)
-		{
-			if (_projectSettingsControl != null)
-			{
-				_projectSettingsControl.Dispose();
-			}
-			Logger.WriteEvent("App Exiting Normally.");
-			if (Project != null)
-			{
-				_project.Dispose();
-			}
-		}
-
 		private void OnFormClosing(object sender, FormClosingEventArgs e)
 		{
 			SaveAndDisposeProject();
@@ -425,6 +412,10 @@ namespace WeSay.ConfigTool
 					Project.Save();
 				}
 				Settings.Default.Save();
+				if (_projectSettingsControl != null)
+				{
+					_projectSettingsControl.Dispose();
+				}
 				if (Project != null)
 				{
 					_project.Dispose();
@@ -493,11 +484,6 @@ namespace WeSay.ConfigTool
 				Help.ShowHelp(this, uri.AbsoluteUri);
 			}
 			Process.Start("http://wesay.org/wiki/Help_And_Contact");
-		}
-
-		private void ConfigurationWindow_Load(object sender, EventArgs e)
-		{
-
 		}
 	}
 }
