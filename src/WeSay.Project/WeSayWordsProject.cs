@@ -391,11 +391,11 @@ namespace WeSay.Project
 				_configFile.MigrateIfNecassary();
 			}
 
-			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
-			wsCreator.CreateNonExistantWritingSystemsFoundInLift(PathToLiftFile);
-
 			var writingSystemMigrator = new WritingSystemsMigrator(ProjectDirectoryPath);
 			writingSystemMigrator.MigrateIfNecessary();
+
+			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
+			wsCreator.CreateNonExistantWritingSystemsFoundInLift(PathToLiftFile);
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			//review: is this the right place for this?
