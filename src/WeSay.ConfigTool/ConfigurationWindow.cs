@@ -81,7 +81,6 @@ namespace WeSay.ConfigTool
 
 		private void OnChooseProject(object sender, EventArgs e)
 		{
-			SaveAndDisposeProject();
 			OpenFileDialog dlg = new OpenFileDialog();
 			dlg.Title = "Open WeSay Project...";
 			dlg.DefaultExt = ".WeSayConfig";
@@ -92,7 +91,7 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
-
+			SaveAndDisposeProject();
 			OnOpenProject(dlg.FileName);
 		}
 
