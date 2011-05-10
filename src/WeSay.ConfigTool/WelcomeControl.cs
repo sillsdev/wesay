@@ -68,15 +68,8 @@ namespace WeSay.ConfigTool
 			button.Font = new Font(StringCatalog.LabelFont.FontFamily, _templateButton.Font.Size, _templateButton.Font.Style);
 
 			button.ImageAlign = ContentAlignment.MiddleLeft;
-			if(imageKey=="solid")//sorry, this hack is becuase starting in VS2010, I can't change the res file for an x86 app from an 64-bit development computer
-			{
-				button.Image = Image.FromFile(FileLocator.GetFileDistributedWithApplication("solid16x16.png"));
-			}
-			else
-			{
-				button.ImageKey = imageKey;
-				button.ImageList = _imageList;
-			}
+			button.ImageKey = imageKey;
+			button.ImageList = _imageList;
 			button.Click += clickHandler;
 			button.Text = "  "+localizedLabel;
 
