@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Autofac;
 using Palaso.Reporting;
+using WeSay.ConfigTool.Tasks;
 
 namespace WeSay.ConfigTool
 {
@@ -13,6 +14,7 @@ namespace WeSay.ConfigTool
 
 		public SettingsControl(IContext context)
 		{
+			this.Disposed += OnDisposed;
 			_areaControls = new List<ConfigurationControlBase>();
 
 			InitializeComponent();
@@ -43,7 +45,26 @@ namespace WeSay.ConfigTool
 			_areaControls.Add((ConfigurationControlBase) _optionsListButton.Tag);
 
 			SetStyle(ControlStyles.ResizeRedraw, true); //makes OnPaint work
+
 		}
+
+		private void OnDisposed(object sender, EventArgs e)
+		{
+			DisposeConfigurationControl(_tasksButton.Tag);
+			DisposeConfigurationControl(_writingSystemButton.Tag);
+			DisposeConfigurationControl(_fieldsButton.Tag);
+			DisposeConfigurationControl(_interfaceLanguageButton.Tag);
+			DisposeConfigurationControl(_actionsButton.Tag);
+			DisposeConfigurationControl(_backupButton.Tag);
+			DisposeConfigurationControl(_optionsListButton.Tag);
+		}
+
+		private void DisposeConfigurationControl(object controlToDispose)
+		{
+			ConfigurationControlBase control = controlToDispose as ConfigurationControlBase;
+			control.Dispose();
+		}
+
 
 		///*something left over from this class's predaccesor, which may be useful*/
 		////seems to help with some, not with others
