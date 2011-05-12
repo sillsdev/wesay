@@ -461,7 +461,7 @@ namespace WeSay.Project.Tests
 		{
 			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
 			{
-				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemInfo.IdForUnknownVernacular));
+				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemInfo.OtherIdForTest));
 			}
 		}
 
@@ -472,7 +472,7 @@ namespace WeSay.Project.Tests
 		{
 			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
 			{
-				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemInfo.IdForUnknownAnalysis));
+				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemInfo.AnalysisIdForTest));
 			}
 		}
 

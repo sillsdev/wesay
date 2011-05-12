@@ -17,5 +17,6 @@ namespace WeSay.LexicalModel.Foundation
 		// TODO move these into a WeSayTestUtilities or some such
 		public static string AnalysisIdForTest = "en";
 		public static string VernacularIdForTest = "th";
+		public static string OtherIdForTest = "qaa";
 	}
 }

@@ -128,7 +128,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			GatherWordListTask g = new GatherWordListTask(
 					GatherWordListConfig.CreateForTests(_simpleWordListFilePath,
-							WritingSystemInfo.IdForUnknownAnalysis, _catalog),
+							WritingSystemInfo.AnalysisIdForTest, _catalog),
 					_lexEntryRepository,
 					_viewTemplate, new TaskMemoryRepository());
 
@@ -140,7 +140,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			GatherWordListTask g = new GatherWordListTask(
 				   GatherWordListConfig.CreateForTests("NotThere.txt",
-						   WritingSystemInfo.IdForUnknownAnalysis, new WordListCatalog()),
+						   WritingSystemInfo.AnalysisIdForTest, new WordListCatalog()),
 				   _lexEntryRepository,
 					_viewTemplate, new TaskMemoryRepository());
 

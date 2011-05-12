@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools.Tests
 				foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)
 				{
 					hasExample = true;
-					if (exampleSentence.Translation[WritingSystemInfo.IdForUnknownAnalysis].Length == 0)
+					if (exampleSentence.Translation[WritingSystemInfo.AnalysisIdForTest].Length == 0)
 					{
 						return true;
 					}
@@ -55,7 +55,7 @@ namespace WeSay.LexicalTools.Tests
 			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			_writingSystem = WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownVernacular);
+			_writingSystem = WritingSystemDefinition.FromLanguage(WritingSystemInfo.OtherIdForTest);
 
 			CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
 			CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
@@ -64,7 +64,7 @@ namespace WeSay.LexicalTools.Tests
 							"Watch out for cars when you cross the street.");
 			CreateTestEntry("dog", "animal with four legs; man's best friend", "He walked his dog.");
 
-			string[] analysisWritingSystemIds = new[] {WritingSystemInfo.IdForUnknownAnalysis};
+			string[] analysisWritingSystemIds = new[] { WritingSystemInfo.AnalysisIdForTest };
 			string[] vernacularWritingSystemIds = new[] {_writingSystem.Id};
 			RtfRenderer.HeadWordWritingSystemId = vernacularWritingSystemIds[0];
 
@@ -99,7 +99,7 @@ namespace WeSay.LexicalTools.Tests
 			entry.LexicalForm[_writingSystem.Id] = lexicalForm;
 			var sense = new LexSense();
 			entry.Senses.Add(sense);
-			sense.Definition[WritingSystemInfo.IdForUnknownAnalysis] = Definition;
+			sense.Definition[WritingSystemInfo.AnalysisIdForTest] = Definition;
 			var example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);
 			example.Sentence[_writingSystem.Id] = exampleSentence;
@@ -111,7 +111,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexSense sense = entry.Senses[0];
 			LexExampleSentence example = sense.ExampleSentences[0];
-			example.Translation[WritingSystemInfo.IdForUnknownAnalysis] = translation;
+			example.Translation[WritingSystemInfo.AnalysisIdForTest] = translation;
 		}
 
 		[TearDown]

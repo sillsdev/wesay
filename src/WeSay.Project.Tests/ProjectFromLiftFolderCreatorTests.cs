@@ -79,8 +79,8 @@ namespace WeSay.Project.Tests
 					  "0.12"
 				);
 				var collection = e.WritingSystems;
-				collection.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownVernacular));
-				collection.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownAnalysis));
+				collection.Set(WritingSystemDefinition.Parse(WritingSystemInfo.OtherIdForTest));
+				collection.Set(WritingSystemDefinition.Parse(WritingSystemInfo.AnalysisIdForTest));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 				//put one guy in there already
 				int originalCount = collection.Count;// collection.Count;
@@ -111,8 +111,8 @@ namespace WeSay.Project.Tests
 					"0.12"
 				);
 				var writingSystems = e.WritingSystems;
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownVernacular));
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownAnalysis));
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.OtherIdForTest));
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.AnalysisIdForTest));
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 				//put one guy in there already
 				int originalCount = writingSystems.Count;// collection.Count;
@@ -167,9 +167,9 @@ namespace WeSay.Project.Tests
 
 				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, writingSystems);
 				creator.SetWritingSystemsForFields();
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystemInfo.IdForUnknownVernacular);
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystemInfo.IdForUnknownVernacular);
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystemInfo.IdForUnknownVernacular);
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystemInfo.OtherIdForTest);
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystemInfo.OtherIdForTest);
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystemInfo.OtherIdForTest);
 
 				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "qaa-x-fromLU");
 				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.Citation, "qaa-x-fromLU");
@@ -194,17 +194,17 @@ namespace WeSay.Project.Tests
 			{
 				e.CreateLiftFile("", "0.12");
 				var writingSystems = e.WritingSystems;
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownVernacular));
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.IdForUnknownAnalysis));
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.OtherIdForTest));
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.AnalysisIdForTest));
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 
 				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, writingSystems);
 				creator.SetWritingSystemsForFields();
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystemInfo.IdForUnknownVernacular);
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystemInfo.IdForUnknownVernacular);
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystemInfo.IdForUnknownVernacular);
-				Assert.IsTrue(writingSystems.Contains(WritingSystemInfo.IdForUnknownVernacular));
-				Assert.IsTrue(writingSystems.Contains(WritingSystemInfo.IdForUnknownAnalysis));
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystemInfo.OtherIdForTest);
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystemInfo.OtherIdForTest);
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystemInfo.OtherIdForTest);
+				Assert.IsTrue(writingSystems.Contains(WritingSystemInfo.OtherIdForTest));
+				Assert.IsTrue(writingSystems.Contains(WritingSystemInfo.AnalysisIdForTest));
 
 			}
 		}
