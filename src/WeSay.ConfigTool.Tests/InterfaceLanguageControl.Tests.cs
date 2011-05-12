@@ -52,7 +52,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -76,7 +76,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -133,7 +133,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 

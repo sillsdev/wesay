@@ -4,6 +4,7 @@ using NUnit.Framework;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
+using WeSay.TestUtilities;
 
 namespace Addin.Transform.Tests
 {

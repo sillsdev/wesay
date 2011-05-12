@@ -2,6 +2,7 @@
 using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.Project;
+using WeSay.TestUtilities;
 
 namespace Addin.LiftReports.Tests
 {

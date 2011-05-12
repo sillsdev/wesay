@@ -5,6 +5,7 @@ using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
+using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
 {

@@ -31,6 +31,14 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="LiftIO, Version=1.1.32.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Core">
 	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -45,8 +53,15 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="WeSayProjectTestHelper.cs" />
 	<Compile Include="WritingSystemsIdsForTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
+	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
+	  <Name>WeSay.Project</Name>
+	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

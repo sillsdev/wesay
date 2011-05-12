@@ -197,6 +197,10 @@
 	  <Project>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</Project>
 	  <Name>WeSay.ConfigTool</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\WeSay.TestUtilities\WeSay.TestUtilities.csproj">
+	  <Project>{FEC3014D-0067-4D59-A838-3B046EC3C352}</Project>
+	  <Name>WeSay.TestUtilities</Name>
+	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="TestResources.resx">

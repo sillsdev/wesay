@@ -10,6 +10,7 @@ using Palaso.Reporting;
 using Palaso.TestUtilities;
 using WeSay.Project;
 using WeSay.Project.Tests;
+using WeSay.TestUtilities;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -42,7 +43,7 @@ namespace WeSay.ConfigTool.Tests
 				WeSayWordsProject.Project.Dispose();
 			}
 
-			TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
+			Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
 		}
 
 		[Test]

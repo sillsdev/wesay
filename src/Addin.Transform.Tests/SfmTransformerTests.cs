@@ -4,6 +4,7 @@ using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.AddinLib;
 using WeSay.Project;
+using WeSay.TestUtilities;
 
 namespace Addin.Transform.Tests
 {

@@ -165,6 +165,10 @@
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
 	  <Name>WeSay.Project</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\WeSay.TestUtilities\WeSay.TestUtilities.csproj">
+	  <Project>{FEC3014D-0067-4D59-A838-3B046EC3C352}</Project>
+	  <Name>WeSay.TestUtilities</Name>
+	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

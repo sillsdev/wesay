@@ -4,6 +4,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
 using Palaso.TestUtilities;
 using WeSay.Project;
+using WeSay.TestUtilities;
 
 namespace Addin.Backup.Tests
 {
