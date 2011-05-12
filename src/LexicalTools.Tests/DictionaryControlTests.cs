@@ -12,6 +12,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
+using WeSay.TestUtilities;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
@@ -48,7 +49,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			base.Setup();
 			_tempFolder = new TemporaryFolder();
-			_vernacularWritingSystem = WritingSystemDefinition.FromLanguage(WritingSystemInfo.VernacularIdForTest);
+			_vernacularWritingSystem = WritingSystemDefinition.FromLanguage(WritingSystemsIdsForTests.VernacularIdForTest);
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
 
 			_filePath = _tempFolder.GetTemporaryFile();
@@ -56,7 +57,7 @@ namespace WeSay.LexicalTools.Tests
 
 			_analysisWritingSystemIds = new string[]
 													{
-															WritingSystemInfo.AnalysisIdForTest
+															WritingSystemsIdsForTests.AnalysisIdForTest
 													};
 			string[] vernacularWritingSystemIds = new string[] {_vernacularWritingSystem.Id};
 			ViewTemplate viewTemplate = new ViewTemplate();
@@ -769,7 +770,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetLexicalFormControlName()
 		{
-			return Field.FieldNames.EntryLexicalForm + "_" + WritingSystemInfo.VernacularIdForTest;
+			return Field.FieldNames.EntryLexicalForm + "_" + WritingSystemsIdsForTests.VernacularIdForTest;
 		}
 
 		private void TypeInLexicalForm(string value)
@@ -785,7 +786,7 @@ namespace WeSay.LexicalTools.Tests
 #if GlossMeaning
 			return Field.FieldNames.SenseGloss + "_" + BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 #else
-			return LexSense.WellKnownProperties.Definition + "_" + WritingSystemInfo.AnalysisIdForTest;
+			return LexSense.WellKnownProperties.Definition + "_" + WritingSystemsIdsForTests.AnalysisIdForTest;
 #endif
 		}
 

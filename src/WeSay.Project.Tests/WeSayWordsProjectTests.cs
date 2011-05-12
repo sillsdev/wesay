@@ -16,6 +16,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.Tests.ConfigMigration.WritingSystem;
+using WeSay.TestUtilities;
 
 namespace WeSay.Project.Tests
 {
@@ -461,7 +462,7 @@ namespace WeSay.Project.Tests
 		{
 			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
 			{
-				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemInfo.OtherIdForTest));
+				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.OtherIdForTest));
 			}
 		}
 
@@ -472,7 +473,7 @@ namespace WeSay.Project.Tests
 		{
 			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
 			{
-				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemInfo.AnalysisIdForTest));
+				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.AnalysisIdForTest));
 			}
 		}
 

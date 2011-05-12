@@ -10,10 +10,5 @@ namespace WeSay.LexicalModel.Foundation
 			float size = writingSystem.DefaultFontSize > 0 ? writingSystem.DefaultFontSize : 12;
 			return new Font(writingSystem.DefaultFontName, size);
 		}
-
-		// TODO move these into a WeSayTestUtilities or some such
-		public static string AnalysisIdForTest = "en";
-		public static string VernacularIdForTest = "th";
-		public static string OtherIdForTest = "qaa";
 	}
 }

@@ -86,7 +86,7 @@ namespace WeSay.Project.Tests
 			{
 				BasilProject.Project.Dispose();
 			}
-			TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
+			Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
 		}
 
 		//  not relevant anymore

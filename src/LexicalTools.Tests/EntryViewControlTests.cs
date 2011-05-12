@@ -8,6 +8,7 @@ using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
+using WeSay.TestUtilities;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
@@ -45,11 +46,11 @@ namespace WeSay.LexicalTools.Tests
 
 			string[] analysisWritingSystemIds = new string[]
 													{
-														WritingSystemInfo.AnalysisIdForTest
+														WritingSystemsIdsForTests.AnalysisIdForTest
 													};
 			string[] vernacularWritingSystemIds = new string[]
 													  {
-														  WritingSystemInfo.VernacularIdForTest
+														  WritingSystemsIdsForTests.VernacularIdForTest
 													  };
 			RtfRenderer.HeadWordWritingSystemId = vernacularWritingSystemIds[0];
 
@@ -143,7 +144,7 @@ namespace WeSay.LexicalTools.Tests
 				apple,
 				_primaryMeaningFieldName,
 				"LexSense",
-				WritingSystemInfo.AnalysisIdForTest
+				WritingSystemsIdsForTests.AnalysisIdForTest
 			))
 			{
 				Assert.AreEqual(1, entryViewControl.ControlEntryDetail.Count);
@@ -157,7 +158,7 @@ namespace WeSay.LexicalTools.Tests
 				apple,
 				_primaryMeaningFieldName,
 				"LexSense",
-				WritingSystemInfo.AnalysisIdForTest
+				WritingSystemsIdsForTests.AnalysisIdForTest
 			))
 			{
 				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.Count);
@@ -177,7 +178,7 @@ namespace WeSay.LexicalTools.Tests
 				entry,
 				_primaryMeaningFieldName,
 				"LexSense",
-				WritingSystemInfo.AnalysisIdForTest
+				WritingSystemsIdsForTests.AnalysisIdForTest
 			))
 			{
 				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
@@ -202,7 +203,7 @@ namespace WeSay.LexicalTools.Tests
 																				   EntryLexicalForm.
 																				   ToString(),
 																		   "LexEntry",
-																		   WritingSystemInfo.VernacularIdForTest)
+																		   WritingSystemsIdsForTests.VernacularIdForTest)
 					)
 			{
 				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
@@ -260,7 +261,7 @@ namespace WeSay.LexicalTools.Tests
 																				   EntryLexicalForm.
 																				   ToString(),
 																		   "LexEntry",
-																		   WritingSystemInfo.VernacularIdForTest)
+																		   WritingSystemsIdsForTests.VernacularIdForTest)
 					)
 			{
 			   // entryViewControl.ControlFormattedView.Select();
@@ -290,7 +291,7 @@ namespace WeSay.LexicalTools.Tests
 																				   EntryLexicalForm.
 																				   ToString(),
 																		   "LexEntry",
-																		   WritingSystemInfo.VernacularIdForTest)
+																		   WritingSystemsIdsForTests.VernacularIdForTest)
 					)
 			{
 				//entryViewControl.ControlFormattedView.Select();
@@ -324,7 +325,7 @@ namespace WeSay.LexicalTools.Tests
 																				   EntryLexicalForm.
 																				   ToString(),
 																		   "LexEntry",
-																		   WritingSystemInfo.VernacularIdForTest)
+																		   WritingSystemsIdsForTests.VernacularIdForTest)
 					)
 			{
 				//entryViewControl.ControlFormattedView.Select();
@@ -386,7 +387,7 @@ namespace WeSay.LexicalTools.Tests
 #if GlossMeaning
 			sense.Gloss[GetSomeValidWsIdForField("SenseGloss")] = meaning;
 #else
-			sense.Definition[WritingSystemInfo.AnalysisIdForTest] = meaning;
+			sense.Definition[WritingSystemsIdsForTests.AnalysisIdForTest] = meaning;
 #endif
 			LexExampleSentence example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);

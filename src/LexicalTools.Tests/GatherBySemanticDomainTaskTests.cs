@@ -14,6 +14,7 @@ using WeSay.Project;
 using Palaso.Lift.Options;
 
 using NUnit.Framework;
+using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -25,7 +26,7 @@ namespace WeSay.LexicalTools.Tests
 		private string _semanticDomainFilePath;
 		private string _filePath;
 		private ViewTemplate _viewTemplate;
-		private static string _vernacularWritingSystemId = WritingSystemInfo.VernacularIdForTest;
+		private static string _vernacularWritingSystemId = WritingSystemsIdsForTests.VernacularIdForTest;
 
 		[TestFixtureSetUp]
 		public void FixtureSetup()

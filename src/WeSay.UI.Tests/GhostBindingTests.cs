@@ -8,6 +8,7 @@ using WeSay.Project;
 using WeSay.Project;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
+using WeSay.TestUtilities;
 using WeSay.UI.TextBoxes;
 using Palaso.Lift;
 
@@ -92,7 +93,7 @@ namespace WeSay.UI.Tests
 		public void Setup()
 		{
 			BasilProjectTestHelper.InitializeForTests();
-			_writingSystemId = WritingSystemInfo.AnalysisIdForTest;
+			_writingSystemId = WritingSystemsIdsForTests.AnalysisIdForTest;
 
 			WritingSystemDefinition writingSystem = WritingSystemDefinition.FromLanguage(_writingSystemId);
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);

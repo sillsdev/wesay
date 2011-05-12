@@ -37,6 +37,7 @@ using WeSay.Project.ConfigMigration.UserConfig;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.Project.Synchronize;
+using WeSay.TestUtilities;
 using WeSay.UI;
 
 namespace WeSay.Project
@@ -73,9 +74,9 @@ namespace WeSay.Project
 			//setup writing systems
 			Directory.CreateDirectory(pathToLdmlWsFolder);
 			IWritingSystemRepository wsc = new LdmlInFolderWritingSystemRepository(pathToLdmlWsFolder);
-			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.VernacularIdForTest));
-			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.AnalysisIdForTest));
-			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.OtherIdForTest));
+			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemsIdsForTests.VernacularIdForTest));
+			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemsIdsForTests.AnalysisIdForTest));
+			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemsIdsForTests.OtherIdForTest));
 
 
 			wsc.Save();

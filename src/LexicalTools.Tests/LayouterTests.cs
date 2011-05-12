@@ -7,6 +7,7 @@ using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
+using WeSay.TestUtilities;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 using Palaso.Lift;
@@ -111,9 +112,9 @@ namespace WeSay.LexicalTools.Tests
 		private static LexEntry GetNewEntry()
 		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm[WritingSystemInfo.VernacularIdForTest] =
+			entry.LexicalForm[WritingSystemsIdsForTests.VernacularIdForTest] =
 					"WordInVernacular";
-			entry.LexicalForm[WritingSystemInfo.AnalysisIdForTest] =
+			entry.LexicalForm[WritingSystemsIdsForTests.AnalysisIdForTest] =
 					"WordInAnalysis";
 			AddSense(entry);
 			AddSense(entry);
@@ -138,11 +139,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			string[] analysisWritingSystemIds = new string[]
 													{
-															WritingSystemInfo.AnalysisIdForTest
+															WritingSystemsIdsForTests.AnalysisIdForTest
 													};
 			string[] vernacularWritingSystemIds = new string[]
 													  {
-															  WritingSystemInfo.VernacularIdForTest
+															  WritingSystemsIdsForTests.VernacularIdForTest
 													  };
 			ViewTemplate viewTemplate = new ViewTemplate();
 			Field field = new Field(Field.FieldNames.EntryLexicalForm.ToString(),
@@ -189,7 +190,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexExampleSentence example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);
-			example.Sentence[WritingSystemInfo.VernacularIdForTest] = "sentence";
+			example.Sentence[WritingSystemsIdsForTests.VernacularIdForTest] = "sentence";
 		}
 	}
 }

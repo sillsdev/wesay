@@ -13,6 +13,7 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 using Palaso.DictionaryServices.Model;
+using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -34,8 +35,8 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			WeSayProjectTestHelper.InitializeForTests();
-			_glossingLanguageWSId = WritingSystemInfo.AnalysisIdForTest;
-			_vernacularLanguageWSId = WritingSystemInfo.VernacularIdForTest;
+			_glossingLanguageWSId = WritingSystemsIdsForTests.AnalysisIdForTest;
+			_vernacularLanguageWSId = WritingSystemsIdsForTests.VernacularIdForTest;
 			BasilProject.Project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("fr"));
 
 			_tempFolder = new TemporaryFolder();
@@ -50,7 +51,7 @@ namespace WeSay.LexicalTools.Tests
 										"LexEntry",
 										new string[]
 											{
-													WritingSystemInfo.VernacularIdForTest
+													WritingSystemsIdsForTests.VernacularIdForTest
 											}));
 
 			_viewTemplate.Add(
@@ -59,7 +60,7 @@ namespace WeSay.LexicalTools.Tests
 					"LexSense",
 					new string[]
 						{
-							WritingSystemInfo.AnalysisIdForTest,
+							WritingSystemsIdsForTests.AnalysisIdForTest,
 							"fr"
 						}
 				 )
@@ -128,7 +129,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			GatherWordListTask g = new GatherWordListTask(
 					GatherWordListConfig.CreateForTests(_simpleWordListFilePath,
-							WritingSystemInfo.AnalysisIdForTest, _catalog),
+							WritingSystemsIdsForTests.AnalysisIdForTest, _catalog),
 					_lexEntryRepository,
 					_viewTemplate, new TaskMemoryRepository());
 
@@ -140,7 +141,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			GatherWordListTask g = new GatherWordListTask(
 				   GatherWordListConfig.CreateForTests("NotThere.txt",
-						   WritingSystemInfo.AnalysisIdForTest, new WordListCatalog()),
+						   WritingSystemsIdsForTests.AnalysisIdForTest, new WordListCatalog()),
 				   _lexEntryRepository,
 					_viewTemplate, new TaskMemoryRepository());
 
@@ -509,7 +510,7 @@ namespace WeSay.LexicalTools.Tests
 		public void CurrentLexemeForm_UsingLift_ShowsFirstItem()
 		{
 			var task = CreateAndActivateLiftTask(
-				new List<string>(new[] { WritingSystemInfo.AnalysisIdForTest }), LiftXml
+				new List<string>(new[] { WritingSystemsIdsForTests.AnalysisIdForTest }), LiftXml
 			);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("apple", task.CurrentEllicitationForm);
@@ -669,7 +670,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CanNavigateNext_NoFurtherMatchesHaveRequiredLanguages_False()
 		{
-			var wsWhichIsValidButIsntInTheWordList = WritingSystemInfo.VernacularIdForTest;
+			var wsWhichIsValidButIsntInTheWordList = WritingSystemsIdsForTests.VernacularIdForTest;
 
 			var entries =@"
 				<entry id='one'>
@@ -694,7 +695,7 @@ namespace WeSay.LexicalTools.Tests
 					</lexical-unit>
 				</entry>".Replace("glossWS", _glossingLanguageWSId).Replace("bogusWS", _vernacularLanguageWSId);
 
-			var task = CreateAndActivateLiftTask(new List<string>(new string[] { WritingSystemInfo.AnalysisIdForTest }),
+			var task = CreateAndActivateLiftTask(new List<string>(new string[] { WritingSystemsIdsForTests.AnalysisIdForTest }),
 												 entries);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("apple", task.CurrentEllicitationForm);
@@ -738,7 +739,7 @@ namespace WeSay.LexicalTools.Tests
 		private LexSense AddWordAndGetFirstSense()
 		{
 			var task = CreateAndActivateLiftTask(
-				new List<string>(new[] { WritingSystemInfo.AnalysisIdForTest }),
+				new List<string>(new[] { WritingSystemsIdsForTests.AnalysisIdForTest }),
 				LiftXml
 			);
 			task.NavigateFirstToShow();
@@ -766,7 +767,7 @@ namespace WeSay.LexicalTools.Tests
 			vt.Add(new Field(
 				Field.FieldNames.EntryLexicalForm.ToString(),
 				"LexEntry",
-				new[] { WritingSystemInfo.VernacularIdForTest }
+				new[] { WritingSystemsIdsForTests.VernacularIdForTest }
 			));
 			vt.Add(new Field(
 				LexSense.WellKnownProperties.Definition.ToString(),

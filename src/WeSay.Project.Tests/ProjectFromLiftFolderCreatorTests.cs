@@ -6,6 +6,7 @@ using Palaso.Reporting;
 using Palaso.TestUtilities;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
+using WeSay.TestUtilities;
 
 namespace WeSay.Project.Tests
 {
@@ -79,8 +80,8 @@ namespace WeSay.Project.Tests
 					  "0.12"
 				);
 				var collection = e.WritingSystems;
-				collection.Set(WritingSystemDefinition.Parse(WritingSystemInfo.OtherIdForTest));
-				collection.Set(WritingSystemDefinition.Parse(WritingSystemInfo.AnalysisIdForTest));
+				collection.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.OtherIdForTest));
+				collection.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.AnalysisIdForTest));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 				//put one guy in there already
 				int originalCount = collection.Count;// collection.Count;
@@ -111,8 +112,8 @@ namespace WeSay.Project.Tests
 					"0.12"
 				);
 				var writingSystems = e.WritingSystems;
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.OtherIdForTest));
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.AnalysisIdForTest));
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.OtherIdForTest));
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.AnalysisIdForTest));
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 				//put one guy in there already
 				int originalCount = writingSystems.Count;// collection.Count;
@@ -167,9 +168,9 @@ namespace WeSay.Project.Tests
 
 				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, writingSystems);
 				creator.SetWritingSystemsForFields();
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystemInfo.OtherIdForTest);
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystemInfo.OtherIdForTest);
-				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystemInfo.OtherIdForTest);
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystemsIdsForTests.OtherIdForTest);
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystemsIdsForTests.OtherIdForTest);
+				AssertFieldLacksWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystemsIdsForTests.OtherIdForTest);
 
 				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "qaa-x-fromLU");
 				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.Citation, "qaa-x-fromLU");
@@ -194,17 +195,17 @@ namespace WeSay.Project.Tests
 			{
 				e.CreateLiftFile("", "0.12");
 				var writingSystems = e.WritingSystems;
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.OtherIdForTest));
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemInfo.AnalysisIdForTest));
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.OtherIdForTest));
+				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.AnalysisIdForTest));
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 
 				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, writingSystems);
 				creator.SetWritingSystemsForFields();
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystemInfo.OtherIdForTest);
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystemInfo.OtherIdForTest);
-				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystemInfo.OtherIdForTest);
-				Assert.IsTrue(writingSystems.Contains(WritingSystemInfo.OtherIdForTest));
-				Assert.IsTrue(writingSystems.Contains(WritingSystemInfo.AnalysisIdForTest));
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, WritingSystemsIdsForTests.OtherIdForTest);
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.Citation, WritingSystemsIdsForTests.OtherIdForTest);
+				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, WritingSystemsIdsForTests.OtherIdForTest);
+				Assert.IsTrue(writingSystems.Contains(WritingSystemsIdsForTests.OtherIdForTest));
+				Assert.IsTrue(writingSystems.Contains(WritingSystemsIdsForTests.AnalysisIdForTest));
 
 			}
 		}
