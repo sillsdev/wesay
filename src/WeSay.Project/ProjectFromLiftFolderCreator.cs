@@ -89,10 +89,10 @@ namespace WeSay.Project
 			var vernacular = GetTopWritingSystem(liftDom, "//lexical-unit/form/@lang");
 			if (vernacular != String.Empty)
 			{
-				_viewTemplate.OnWritingSystemIDChange(WritingSystemInfo.IdForUnknownVernacular, vernacular);
-				if (_writingSystems.Contains(WritingSystemInfo.IdForUnknownVernacular))
+				_viewTemplate.OnWritingSystemIDChange(WeSayWordsProject.VernacularWritingSystemIdForProjectCreation, vernacular);
+				if (_writingSystems.Contains(WeSayWordsProject.VernacularWritingSystemIdForProjectCreation))
 				{
-					_writingSystems.Remove(WritingSystemInfo.IdForUnknownVernacular);
+					_writingSystems.Remove(WeSayWordsProject.VernacularWritingSystemIdForProjectCreation);
 				}
 			}
 			var analysis = GetTopWritingSystem(liftDom, "//sense/gloss/@lang");
@@ -103,7 +103,7 @@ namespace WeSay.Project
 			}
 			if (analysis != String.Empty)
 			{
-				_viewTemplate.OnWritingSystemIDChange(WritingSystemInfo.IdForUnknownAnalysis, analysis);
+				_viewTemplate.OnWritingSystemIDChange(WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation, analysis);
 			}
 
 			AddWritingSystemsForField(liftDom,  "//lexical-unit/form/@lang", LexEntry.WellKnownProperties.LexicalUnit);

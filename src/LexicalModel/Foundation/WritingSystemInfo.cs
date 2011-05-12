@@ -11,9 +11,6 @@ namespace WeSay.LexicalModel.Foundation
 			return new Font(writingSystem.DefaultFontName, size);
 		}
 
-		public static string IdForUnknownAnalysis = "en";
-		public static string IdForUnknownVernacular = "qaa";
-
 		// TODO move these into a WeSayTestUtilities or some such
 		public static string AnalysisIdForTest = "en";
 		public static string VernacularIdForTest = "th";

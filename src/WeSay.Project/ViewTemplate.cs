@@ -323,11 +323,9 @@ namespace WeSay.Project
 
 		public static ViewTemplate MakeMasterTemplate(IWritingSystemRepository writingSystems)
 		{
-			List<String> defaultVernacularSet = new List<string>();
-			defaultVernacularSet.Add(WritingSystemInfo.IdForUnknownVernacular);
+			var defaultVernacularSet = new List<string> {WeSayWordsProject.VernacularWritingSystemIdForProjectCreation};
 
-			List<String> defaultAnalysisSet = new List<string>();
-			defaultAnalysisSet.Add(WritingSystemInfo.IdForUnknownAnalysis);
+			var defaultAnalysisSet = new List<string> {WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation};
 
 			ViewTemplate masterTemplate = new ViewTemplate();
 

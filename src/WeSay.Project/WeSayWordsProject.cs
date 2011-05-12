@@ -75,7 +75,7 @@ namespace WeSay.Project
 			IWritingSystemRepository wsc = new LdmlInFolderWritingSystemRepository(pathToLdmlWsFolder);
 			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.VernacularIdForTest));
 			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.AnalysisIdForTest));
-			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.IdForUnknownVernacular));
+			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemInfo.OtherIdForTest));
 
 
 			wsc.Save();
@@ -111,6 +111,9 @@ namespace WeSay.Project
 			public string from;
 			public string to;
 		}
+
+		public const string VernacularWritingSystemIdForProjectCreation = "qaa";
+		public const string AnalysisWritingSystemIdForProjectCreation = "en";
 
 		public event EventHandler<StringPair> WritingSystemChanged;
 
