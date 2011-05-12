@@ -7,6 +7,7 @@ using Exortech.NetReflector;
 using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
 using Palaso.Lift;
+using Palaso.Reporting;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
@@ -601,22 +602,16 @@ namespace WeSay.Project
 
 		public WritingSystemDefinition GetDefaultWritingSystemForField(string fieldName)
 		{
-			IWritingSystemRepository writingSystems = BasilProject.Project.WritingSystems;
-			WritingSystemDefinition listWritingSystem = null;
 			Field field = GetField(fieldName);
-			//Debug.Assert(field != null, fieldName + "not found.");
-			if (field != null)
+			if (field == null)
 			{
-				if (field.WritingSystemIds.Count > 0)
-				{
-					listWritingSystem = writingSystems.Get(field.WritingSystemIds[0]);
-				}
+				throw new ConfigurationException(String.Format("The field {0} has not been enabled for your project. Please enable it in the WeSay config tool.", fieldName));
 			}
-			if (listWritingSystem == null)
+			if(field.WritingSystemIds.Count == 0)
 			{
-				listWritingSystem = writingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
+				throw new ConfigurationException(String.Format("The field {0} has no writing system associated with it. Please assign a writing system to it in the WeSay config tool.", fieldName));
 			}
-			return listWritingSystem;
+			return BasilProject.Project.WritingSystems.Get(field.WritingSystemIds[0]);
 		}
 
 		public bool IsFieldFirstInClass(Field field)

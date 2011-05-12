@@ -47,21 +47,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			//for now, this is figure out more carefully in GetPathToUse
 			_usingLiftFile =  ".lift"==Path.GetExtension(config.WordListFileName).ToLower();
 
-			Field lexicalFormField = viewTemplate.GetField(
-				Field.FieldNames.EntryLexicalForm.ToString()
-			);
-			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
-			{
-				_lexicalUnitWritingSystem =
-						BasilProject.Project.WritingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
-			}
-			else
-			{
-				string firstWSid = lexicalFormField.WritingSystemIds[0];
-				WritingSystemDefinition firstWS = BasilProject.Project.WritingSystems.Get(firstWSid);
-				_lexicalUnitWritingSystem = firstWS;
-			}
-
+			_lexicalUnitWritingSystem =
+				viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
 			_lexemeFormListFileName = config.WordListFileName;
 			_words = null;
 			_preferredEllicitationWritingSystem = config.WordListWritingSystemIdOfOldFlatWordList;

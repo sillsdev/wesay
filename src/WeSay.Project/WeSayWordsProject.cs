@@ -1228,12 +1228,7 @@ namespace WeSay.Project
 		{
 			get
 			{
-				Field f = DefaultViewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit);
-				if (f.WritingSystemIds.Count == 0)
-				{
-					return WritingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
-				}
-				return WritingSystems.Get(f.WritingSystemIds[0]);
+				return DefaultViewTemplate.GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit);
 			}
 		}
 

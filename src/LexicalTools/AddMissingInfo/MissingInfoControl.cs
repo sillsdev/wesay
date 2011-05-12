@@ -173,28 +173,8 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private static WritingSystemDefinition GetListWritingSystem()
 		{
-			IWritingSystemRepository writingSystems = BasilProject.Project.WritingSystems;
-			WritingSystemDefinition listWritingSystem = writingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
-
-			// use the master view Template instead of the one for this task. (most likely the one for this
-			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
-			Field field =
-					WeSayWordsProject.Project.DefaultViewTemplate.GetField(
-							Field.FieldNames.EntryLexicalForm.ToString());
-
-			if (field != null)
-			{
-				if (field.WritingSystemIds.Count > 0)
-				{
-					listWritingSystem = writingSystems.Get(field.WritingSystemIds[0]);
-				}
-				else
-				{
-					throw new ConfigurationException("There are no writing systems enabled for the Field '{0}'",
-												 field.FieldName);
-				}
-			}
-			return listWritingSystem;
+			return WeSayWordsProject.Project.DefaultViewTemplate.GetDefaultWritingSystemForField(
+				Field.FieldNames.EntryLexicalForm.ToString());
 		}
 
 		private bool _recordsListBoxActive;

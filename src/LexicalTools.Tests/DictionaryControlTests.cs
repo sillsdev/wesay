@@ -226,14 +226,11 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void Construct_EmptyViewTemplate_NoCrash()
+		public void Construct_EmptyViewTemplate_Crashes()
 		{
-			using (
-					DictionaryControl e = new DictionaryControl(_entryViewFactory, _lexEntryRepository,
-																new ViewTemplate(), new TaskMemory(), new CheckinDescriptionBuilder()))
-			{
-				Assert.IsNotNull(e);
-			}
+			Assert.Throws<ConfigurationException>(() => new DictionaryControl(_entryViewFactory, _lexEntryRepository,
+																			  new ViewTemplate(), new TaskMemory(),
+																			  new CheckinDescriptionBuilder()));
 		}
 
 		[Test]

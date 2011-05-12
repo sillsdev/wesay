@@ -27,18 +27,8 @@ namespace WeSay.LexicalTools
 			}
 
 			_viewTemplate = viewTemplate;
-			Field lexicalFormField =
-					viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			IWritingSystemRepository writingSystems = BasilProject.Project.WritingSystems;
-			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
-			{
-				_lexicalFormWritingSystem = writingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
-			}
-			else
-			{
-
-				_lexicalFormWritingSystem = GetFirstTextWritingSystemOfField(lexicalFormField);
-			}
+			_lexicalFormWritingSystem =
+				viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
 		}
 
 		protected WritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
