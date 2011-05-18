@@ -57,13 +57,13 @@
 			//
 			this.deleteBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
 			this.deleteBtn.Image = global::WeSay.LexicalTools.Properties.Resources.DeleteWord;
-			this.deleteBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.deleteBtn.Location = new System.Drawing.Point(116, 132);
+			this.deleteBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.deleteBtn.Location = new System.Drawing.Point(26, 132);
 			this.deleteBtn.Name = "deleteBtn";
-			this.deleteBtn.Size = new System.Drawing.Size(121, 33);
+			this.deleteBtn.Size = new System.Drawing.Size(120, 36);
 			this.deleteBtn.TabIndex = 1;
 			this.deleteBtn.Text = "&Delete";
-			this.deleteBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.deleteBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.deleteBtn.UseVisualStyleBackColor = true;
 			this.deleteBtn.Click += new System.EventHandler(this.deleteBtn_Click);
 			//
@@ -71,9 +71,9 @@
 			//
 			this.cancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.cancelBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-			this.cancelBtn.Location = new System.Drawing.Point(264, 132);
+			this.cancelBtn.Location = new System.Drawing.Point(219, 132);
 			this.cancelBtn.Name = "cancelBtn";
-			this.cancelBtn.Size = new System.Drawing.Size(75, 33);
+			this.cancelBtn.Size = new System.Drawing.Size(120, 36);
 			this.cancelBtn.TabIndex = 0;
 			this.cancelBtn.Text = "&Cancel";
 			this.cancelBtn.UseVisualStyleBackColor = true;
