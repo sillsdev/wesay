@@ -149,13 +149,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				wsDef.RightToLeftScript = writingSystem.RightToLeft;
 				wsDef.SpellCheckingId = writingSystem.SpellCheckingId;
 				wsDef.DateModified = DateTime.Now;
-				if (String.IsNullOrEmpty(writingSystem.SortUsing))
-				{
-					//when no custom sort rules were specified
-					wsDef.SortRules = String.IsNullOrEmpty(writingSystem.CustomSortRules) ? writingSystem.ISO : writingSystem.CustomSortRules;
-					wsDef.SortUsing = WritingSystemDefinitionV0.SortRulesType.OtherLanguage;
-				}
-				else if (writingSystem.SortUsing.Equals("CustomICU"))
+				if (writingSystem.SortUsing.Equals("CustomICU"))
 				{
 					wsDef.SortRules = writingSystem.CustomSortRules;
 					wsDef.SortUsing = WritingSystemDefinitionV0.SortRulesType.CustomICU;
@@ -164,6 +158,12 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				{
 					wsDef.SortRules = writingSystem.CustomSortRules;
 					wsDef.SortUsing = WritingSystemDefinitionV0.SortRulesType.CustomSimple;
+				}
+				else if (!String.IsNullOrEmpty(writingSystem.SortUsing))
+				{
+					//when sorting like other language
+					wsDef.SortRules = writingSystem.SortUsing;
+					wsDef.SortUsing = WritingSystemDefinitionV0.SortRulesType.OtherLanguage;
 				}
 
 				//wsDef.VerboseDescription //not written out by ldmladaptor - flex?

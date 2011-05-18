@@ -245,7 +245,7 @@ O o";
 				const string otherLanguage = "de";
 				const string sortUsing = "";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
-														  sortUsing, otherLanguage, "", 0, false, "", "", true, false)
+														  otherLanguage, "", "", 0, false, "", "", true, false)
 					);
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
