@@ -39,13 +39,18 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			filesToDelete.Add(backupFilePath);
 
 			string ldmlPath = WritingSystemsFolder(Path.GetDirectoryName(_sourceFilePath));
-			var strategy = new WritingSystemPrefsToLdmlMigrationStrategy(_onWritingSystemTagChange);
-			string sourceFilePath = _sourceFilePath;
-			string destinationFilePath = String.Format("{0}.Migrate_{1}_{2}", _sourceFilePath, strategy.FromVersion,
-												strategy.ToVersion);
-			strategy.Migrate(sourceFilePath, destinationFilePath);
-			File.Delete(_sourceFilePath);
-			Directory.Move(destinationFilePath, ldmlPath);
+
+			//hack because I need this to work for the workshop tomorrow, but it needs more thought/testing
+			if (!Directory.Exists(ldmlPath))
+			{
+				var strategy = new WritingSystemPrefsToLdmlMigrationStrategy(_onWritingSystemTagChange);
+				string sourceFilePath = _sourceFilePath;
+				string destinationFilePath = String.Format("{0}.Migrate_{1}_{2}", _sourceFilePath, strategy.FromVersion,
+														   strategy.ToVersion);
+				strategy.Migrate(sourceFilePath, destinationFilePath);
+				File.Delete(_sourceFilePath);
+				Directory.Move(destinationFilePath, ldmlPath);
+			}
 			foreach (var filePath in filesToDelete)
 			{
 				if (File.Exists(filePath))
