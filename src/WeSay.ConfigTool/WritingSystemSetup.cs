@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.WritingSystems;
+using Palaso.UI.WindowsForms.WritingSystems.WSTree;
 using Palaso.WritingSystems;
 
 namespace WeSay.ConfigTool
@@ -16,6 +17,10 @@ namespace WeSay.ConfigTool
 			InitializeComponent();
 			store.WritingSystemIdChanged += OnWritingSystemIdChanged;
 			var writingSystemSetupModel = new WritingSystemSetupModel(store);
+			writingSystemSetupModel.WritingSystemSuggestor.SuggestVoice = true;
+			writingSystemSetupModel.WritingSystemSuggestor.SuggestIpa = false; // pretty unlikely in WeSay
+			writingSystemSetupModel.WritingSystemSuggestor.SuggestDialects = false; // pretty unlikely in WeSay
+
 			_view = new WritingSystemSetupView(writingSystemSetupModel)
 						{
 							LeftColumnWidth = 350,
