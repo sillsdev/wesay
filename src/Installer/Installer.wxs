@@ -96,6 +96,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<Shortcut Id="startmenuShortcut"  Directory="WeSayShortcutDir" Name="WeSay"
 						 WorkingDirectory="ProgramDir" Target="[!WeSay.App.exe]"  Icon ="WeSay.App.exe" />
 
+					<Shortcut Id="desktopShortcut"  Directory="DesktopFolder" Name="WeSay"
+						 WorkingDirectory="INSTALLDIR" Target="[!WeSay.App.exe]"  Icon ="WeSay.App.exe" />
+
 				  </Component>
 
 				  <Component Id="WeSayConfigurationTool" Guid="{26CD1460-94D4-44CD-832A-EA750F5AA92A}">
