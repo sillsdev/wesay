@@ -173,9 +173,7 @@ namespace WeSay.AddinLib
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem(
-						"WeSay encountered an error while looking for Addins (e.g., Actions).  The error was: {0}",
-						error.Message);
+				ErrorReport.NotifyUserOfProblem(error, "WeSay encountered an error while looking for Addins (e.g., Actions).");
 			}
 			return addins;
 		}
