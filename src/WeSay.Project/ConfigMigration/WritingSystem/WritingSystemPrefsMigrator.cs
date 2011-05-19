@@ -48,9 +48,12 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				string destinationFilePath = String.Format("{0}.Migrate_{1}_{2}", _sourceFilePath, strategy.FromVersion,
 														   strategy.ToVersion);
 				strategy.Migrate(sourceFilePath, destinationFilePath);
-				File.Delete(_sourceFilePath);
+
 				Directory.Move(destinationFilePath, ldmlPath);
 			}
+
+			File.Delete(_sourceFilePath);
+
 			foreach (var filePath in filesToDelete)
 			{
 				if (File.Exists(filePath))
