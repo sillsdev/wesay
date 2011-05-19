@@ -272,7 +272,7 @@ namespace WeSay.Project.Tests
 						, version
 					)
 				);
-				Assert.Throws<ApplicationException>(() => new ConfigFile(configFilePath));
+				Assert.Throws<ConfigurationFileTooNewException>(() => new ConfigFile(configFilePath));
 			}
 		}
 

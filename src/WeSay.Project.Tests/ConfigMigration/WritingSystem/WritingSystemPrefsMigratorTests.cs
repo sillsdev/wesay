@@ -261,7 +261,7 @@ O o";
 		}
 
 		[Test]
-		public void MigrateIfNecessary_WsPrefsFileContainsWswithNoSortRuleInfoSpecified_LdmlSpecifiesIdAsLanguageToSortOn()
+		public void MigrateIfNecessary_WsPrefsFileContainsWsWithNoSortInfoSpecified_LdmlContainsNoSortInfo()
 		{
 			using (var environment = new TestEnvironment())
 			{
@@ -274,11 +274,7 @@ O o";
 					environment.ChangeRfcTags);
 				migrator.MigrateIfNecassary();
 				string pathToEnFile = environment.GetFileForOriginalRfcTag("en");
-				AssertThatXmlIn.File(pathToEnFile).
-					HasAtLeastOneMatchForXpath(String.Format(
-					"/ldml/collations/collation/base/alias[@source='{0}']", id),
-					environment.NamespaceManager
-					);
+				AssertThatXmlIn.File(pathToEnFile).HasNoMatchForXpath("/ldml/collations/collation");
 			}
 		}
 
