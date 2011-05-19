@@ -285,6 +285,12 @@ namespace WeSay.ConfigTool
 					_project.BackupMaker = null;
 				}
 			}
+			catch (ConfigurationFileTooNewException e)
+			{
+				Project = null;
+				ErrorReport.NotifyUserOfProblem(e.Message);
+				return false;
+			}
 			catch (Exception e)
 			{
 				Project = null;
