@@ -231,7 +231,14 @@ namespace Addin.Transform.PdfDictionary
 
 			_writer.WriteStartElement("img");
 //            _writer.WriteAttributeString("src", string.Format("..{0}pictures{0}{1}", Path.DirectorySeparatorChar, href));
-			_writer.WriteAttributeString("src", string.Format("..{0}{1}", Path.DirectorySeparatorChar, href));
+			var picturePath = href;
+
+			//there was a version of lift where the "pictures" was explict, some where it isn't.
+			if(!picturePath.StartsWith("pictures"))
+			{
+				picturePath = Path.Combine("pictures", picturePath);
+			}
+			_writer.WriteAttributeString("src", string.Format("..{0}{1}", Path.DirectorySeparatorChar, picturePath));
 			_writer.WriteEndElement();
 
 			if (headwordFieldNode != null && !string.IsNullOrEmpty(headwordFieldNode.Value))
