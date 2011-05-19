@@ -440,9 +440,11 @@ namespace WeSay.ConfigTool
 			_project.Save(); //want the client to see the latest
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo = new ProcessStartInfo(Path.Combine(dir, "WeSay.App.exe"),
-															  string.Format("\"{0}\"",
+															  string.Format(" -launchedByConfigTool \"{0}\"",
 																			_project.PathToLiftFile));
+
 			Process.Start(startInfo);
+			Close();//quit
 		}
 
 		private void OnExit_Click(object sender, EventArgs e)

@@ -3,12 +3,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Autofac;
 using CommandLine;
 using LiftIO;
 using Palaso.Code;
 using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
+using Palaso.UiBindings;
 using WeSay.App.Properties;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
@@ -198,7 +200,12 @@ namespace WeSay.App
 	   {
 		   try
 		   {
-			   _project.AddToContainer(b => b.Register<StatusBarController>());
+			   _project.AddToContainer(b => b.Register<StatusBarController>(container =>
+																				{
+																					var controller =new StatusBarController(container.Resolve<ICountGiver>());
+																					controller.ShowConfigLauncher = _commandLineArguments.launchedByConfigTool;
+																					return controller;
+																				}));
 			   _project.AddToContainer(b => b.Register<TabbedForm>());
 			   _tabbedForm = _project.Container.Resolve<TabbedForm>();
 			   _tabbedForm.Show(); // so the user sees that we did launch
@@ -457,6 +464,12 @@ namespace WeSay.App
 					"Some things, like backup, just gum up automated tests.  This is used to turn them off."
 			, LongName = "launchedByUnitTest", DefaultValue = false, ShortName = "")]
 			public bool launchedByUnitTest;
+
+			[Argument(ArgumentTypes.AtMostOnce,
+	HelpText =
+			"Make it easy to get back to the configuration tool."
+	, LongName = "launchedByConfigTool", DefaultValue = false, ShortName = "")]
+			public bool launchedByConfigTool;
 		}
 
 		private static void ShowCommandLineError(string e)
