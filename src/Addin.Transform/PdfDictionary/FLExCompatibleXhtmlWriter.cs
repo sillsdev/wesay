@@ -230,7 +230,8 @@ namespace Addin.Transform.PdfDictionary
 
 
 			_writer.WriteStartElement("img");
-			_writer.WriteAttributeString("src", string.Format("..{0}pictures{0}{1}", Path.DirectorySeparatorChar,href));
+//            _writer.WriteAttributeString("src", string.Format("..{0}pictures{0}{1}", Path.DirectorySeparatorChar, href));
+			_writer.WriteAttributeString("src", string.Format("..{0}{1}", Path.DirectorySeparatorChar, href));
 			_writer.WriteEndElement();
 
 			if (headwordFieldNode != null && !string.IsNullOrEmpty(headwordFieldNode.Value))
