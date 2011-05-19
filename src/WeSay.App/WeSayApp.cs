@@ -352,6 +352,12 @@ namespace WeSay.App
 			}
 		}
 
+		private static void RunConfigTool()
+		{
+			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
+			ProcessStartInfo startInfo = new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"));
+			Process.Start(startInfo);
+		}
 
 	   private static WeSayWordsProject InitializeProject(string liftPath)
 		{
@@ -359,8 +365,8 @@ namespace WeSay.App
 			liftPath = DetermineActualLiftPath(liftPath);
 			if (liftPath == null)
 			{
-				ErrorReport.NotifyUserOfProblem(
-						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project, then click the 'Open in WeSay' button from that application's toolbar.");
+				MessageBox.Show(StringCatalog.Get("Welcome to WeSay.\r\nThe Configuration Tool will now open so that you can make a new project or choose an existing one."), StringCatalog.Get("No Default Project","The label on the message box which the user sees if WeSay can't figure out what project to open."), MessageBoxButtons.OK, MessageBoxIcon.Information);
+				RunConfigTool();
 				return null;
 			}
 
