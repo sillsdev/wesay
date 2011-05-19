@@ -36,6 +36,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<Property Id ="ALLUSERS">1</Property>
 
 			<Directory Id="TARGETDIR" Name="SourceDir">
+			  <Directory Id="DesktopFolder" Name="Desktop"/>
 			  <Directory Id='ProgramMenuFolder' Name='Programs'>
 				<Directory Id='WeSayShortcutDir' Name='WeSay'>
 				  <Component Id ='removeShortcutDir' Guid ="{6DB2042E-998C-482a-A46A-A1EC83C059E0}">
