@@ -170,14 +170,14 @@ namespace WeSay.ConfigTool
 			// helpToolStripMenuItem1
 			//
 			this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
-			this.helpToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+			this.helpToolStripMenuItem1.Size = new System.Drawing.Size(145, 22);
 			this.helpToolStripMenuItem1.Text = "&Help";
 			this.helpToolStripMenuItem1.Click += new System.EventHandler(this.OnHelpToolStrip_Click);
 			//
 			// aboutToolStripMenuItem1
 			//
 			this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-			this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+			this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(145, 22);
 			this.aboutToolStripMenuItem1.Text = "&About WeSay";
 			this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.OnAboutToolStrip_Click);
 			//
@@ -191,8 +191,6 @@ namespace WeSay.ConfigTool
 			this.Icon = global::WeSay.ConfigTool.Properties.Resources.WeSaySetupApplicationIcon;
 			this.Name = "ConfigurationWindow";
 			this.Text = "WeSay Configuration Tool";
-			this.Load += new System.EventHandler(this.ConfigurationWindow_Load);
-			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnFormClosed);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
 			this.toolStrip2.ResumeLayout(false);
 			this.toolStrip2.PerformLayout();

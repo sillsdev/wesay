@@ -36,6 +36,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<Property Id ="ALLUSERS">1</Property>
 
 			<Directory Id="TARGETDIR" Name="SourceDir">
+			  <Directory Id="DesktopFolder" Name="Desktop"/>
 			  <Directory Id='ProgramMenuFolder' Name='Programs'>
 				<Directory Id='WeSayShortcutDir' Name='WeSay'>
 				  <Component Id ='removeShortcutDir' Guid ="{6DB2042E-998C-482a-A46A-A1EC83C059E0}">
@@ -96,6 +97,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<Shortcut Id="startmenuShortcut"  Directory="WeSayShortcutDir" Name="WeSay"
 						 WorkingDirectory="ProgramDir" Target="[!WeSay.App.exe]"  Icon ="WeSay.App.exe" />
 
+					<Shortcut Id="desktopShortcut"  Directory="DesktopFolder" Name="WeSay"
+						 WorkingDirectory="INSTALLDIR" Target="[!WeSay.App.exe]"  Icon ="WeSay.App.exe" />
+
 				  </Component>
 
 				  <Component Id="WeSayConfigurationTool" Guid="{26CD1460-94D4-44CD-832A-EA750F5AA92A}">
@@ -142,11 +146,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 				  <Component Id="autofac.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
 					<File Id="autofac.dll" Name="autofac.dll" KeyPath="yes" Source="..\..\output\release\autofac.dll" />
-				  </Component>
-				  <!--  NB: before removing this, we would need to remove Palaso's need for it, and that would make it not work with 0.6.
-					So the plan is to remove it when we switch to 0.+ & 0.9 -->
-				  <Component Id="linqbridge.dll" Guid="{D5FE0CB8-19D7-4457-8D6C-43E56E9A6FA0}">
-					<File Id="linqbridge.dll" Name="linqbridge.dll" KeyPath="yes" Source="..\..\output\release\linqbridge.dll" />
 				  </Component>
 
 				  <!-- audio recording/playback engine used by palaso.media -->
@@ -286,9 +285,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="WeSay.AddinLib.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7902222}">
 					<File Id="WeSay.AddinLib.dll" Name="WeSay.AddinLib.dll" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.dll" />
 				  </Component>
-				  <Component Id="Mono.Addins.exe" Guid="{6A969A5B-E42E-4dc7-A486-7828B54D9522}">
-					<File  Id="Mono.Addins.exe" Name="Mono.Addins.exe" KeyPath="yes" Source="..\..\output\release\Mono.Addins.exe" />
-					<RemoveFile Id="Mono.Addins.exe" Name="Mono.Addins.exe" On="install"/>
+				  <Component Id="Mono.Addins.dll" Guid="{6A969A5B-E42E-4dc7-A486-7828B54D9522}">
+					<File  Id="Mono.Addins.dll" Name="Mono.Addins.dll" KeyPath="yes" Source="..\..\output\release\Mono.Addins.dll" />
+					<RemoveFile Id="Mono.Addins.dll" Name="Mono.Addins.dll" On="install"/>
 				  </Component>
 
 				  <Component Id="Icu.Net.dll" Guid="{7EEB48AE-7494-4408-924F-24BCA99A6E22}">
@@ -330,7 +329,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Enchant.Net.dll"/>
 
 			  <ComponentRef Id="autofac.dll"/>
-			  <ComponentRef Id="linqbridge.dll"/>
 			  <ComponentRef Id="irrKlang.NET2.0.dll"/>
 
 			  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
@@ -372,7 +370,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="log4net.dll"/>
 			  <ComponentRef Id="commons.dll"/>
 			  <ComponentRef Id="WeSay.AddinLib.dll"/>
-			  <ComponentRef Id="Mono.Addins.exe"/>
+			  <ComponentRef Id="Mono.Addins.dll"/>
 
 			  <ComponentRef Id="Icu.Net.dll"/>
 

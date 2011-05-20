@@ -5,12 +5,11 @@ namespace WeSay.ConfigTool.NewProjectCreation
 {
 	public partial class NewProjectInformationDialog : Form
 	{
-		public NewProjectInformationDialog(string pathToProject, bool showChangeDefaultWsMessage)
+		public NewProjectInformationDialog(string pathToProject)
 		{
 			this.Font = SystemFonts.MessageBoxFont; // use the default os font
 			InitializeComponent();
 			_whereLabel.Text = string.Format(_whereLabel.Text, pathToProject);
-			_changeVMessage.Visible = showChangeDefaultWsMessage;
 		}
 
 		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

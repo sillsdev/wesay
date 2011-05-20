@@ -45,6 +45,7 @@
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 	<Commandlineparameters>/usr/share/wesay/WeSay.ConfigTool.exe /home/keith/WeSay/krstest/krstest.lift</Commandlineparameters>
 	<Externalconsole>true</Externalconsole>
+	<PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -131,7 +132,7 @@
   <ItemGroup>
 	<Reference Include="Mono.Addins, Version=0.4.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
+	  <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>

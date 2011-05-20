@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
 {
 	public partial class WeSayListView: ListView
 	{
-		private WritingSystem _writingSystem;
+		private WritingSystemDefinition _writingSystem;
 		private int _itemToNotDrawYet = -1;
 		private IList _dataSource;
 		private readonly Dictionary<int, ListViewItem> _itemsCache;
@@ -127,7 +128,7 @@ namespace WeSay.UI
 		[Browsable(false)]
 		[DefaultValue(null)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystem WritingSystem
+		public WritingSystemDefinition WritingSystem
 		{
 			get
 			{
@@ -145,8 +146,8 @@ namespace WeSay.UI
 					throw new ArgumentNullException();
 				}
 				_writingSystem = value;
-				Font = value.Font;
-				if (value.RightToLeft)
+				Font = WritingSystemInfo.CreateFont(value);
+				if (value.RightToLeftScript)
 				{
 					RightToLeft = RightToLeft.Yes;
 				}
@@ -423,7 +424,7 @@ namespace WeSay.UI
 				e.Graphics.FillRectangle(backgroundBrush, bounds);
 				TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
 										TextFormatFlags.EndEllipsis;
-				if (_writingSystem != null && WritingSystem.RightToLeft)
+				if (_writingSystem != null && WritingSystem.RightToLeftScript)
 				{
 					flags |= TextFormatFlags.RightToLeft;
 				}
@@ -484,6 +485,8 @@ namespace WeSay.UI
 		private void AdjustColumnWidth()
 		{
 			int newWidth = ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
+			// Column width seems to have some maximum, after which it allows multiple columns.
+			// So we constrain it to a 'reasonable' but large enough value.
 			newWidth = Math.Max(newWidth, 300);
 			SuspendLayout();
 			if (Columns.Count > 0)
@@ -588,13 +591,13 @@ namespace WeSay.UI
 			e.DrawBorder();
 			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
 									TextFormatFlags.VerticalCenter;
-			if (_writingSystem != null && WritingSystem.RightToLeft)
+			if (_writingSystem != null && WritingSystem.RightToLeftScript)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
 			TextRenderer.DrawText(e.Graphics,
 								  e.ToolTipText,
-								  _writingSystem.Font,
+								  WritingSystemInfo.CreateFont(_writingSystem),
 								  e.Bounds,
 								  tooltip.ForeColor,
 								  flags);
@@ -608,7 +611,7 @@ namespace WeSay.UI
 		private Size MeasureItemText(string text)
 		{
 			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left;
-			if (_writingSystem != null && WritingSystem.RightToLeft)
+			if (_writingSystem != null && WritingSystem.RightToLeftScript)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
@@ -617,7 +620,7 @@ namespace WeSay.UI
 			{
 				return TextRenderer.MeasureText(g,
 												text,
-												_writingSystem.Font,
+											   WritingSystemInfo.CreateFont(_writingSystem),
 												new Size(maxWidth, int.MaxValue),
 												flags);
 			}

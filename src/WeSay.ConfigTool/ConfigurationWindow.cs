@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Autofac;
 
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.ConfigTool.NewProjectCreation;
 using WeSay.ConfigTool.Properties;
 using WeSay.ConfigTool.Tasks;
@@ -80,7 +81,6 @@ namespace WeSay.ConfigTool
 
 		private void OnChooseProject(object sender, EventArgs e)
 		{
-			SaveAndDisposeProject();
 			OpenFileDialog dlg = new OpenFileDialog();
 			dlg.Title = "Open WeSay Project...";
 			dlg.DefaultExt = ".WeSayConfig";
@@ -91,7 +91,7 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
-
+			SaveAndDisposeProject();
 			OnOpenProject(dlg.FileName);
 		}
 
@@ -136,12 +136,12 @@ namespace WeSay.ConfigTool
 
 		private void OnCreateProject(object sender, EventArgs e)
 		{
-			NewProject dlg = new NewProject();
+			NewProjectDialog dlg = new NewProjectDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
 			if (DialogResult.OK != dlg.ShowDialog())
 			{
 				return;
 			}
-			CreateAndOpenProject(dlg.PathToNewProjectDirectory);
+			CreateAndOpenProject(dlg.PathToNewProjectDirectory, dlg.Iso639Code);
 
 			PointOutOpenWeSayButton();
 		}
@@ -171,11 +171,11 @@ namespace WeSay.ConfigTool
 
 			Logger.WriteEvent("Attempting create new project from FLEx Export...");
 
-			if (ProjectFromFLExCreator.Create(dlg.PathToNewProjectDirectory, dlg.PathToLift))
+			if (ProjectFromRawFLExLiftFilesCreator.Create(dlg.PathToNewProjectDirectory, dlg.PathToLift))
 			{
 				if (OpenProject(dlg.PathToNewProjectDirectory))
 				{
-					using (var info = new NewProjectInformationDialog(dlg.PathToNewProjectDirectory, false))
+					using (var info = new NewProjectInformationDialog(dlg.PathToNewProjectDirectory))
 					{
 						info.ShowDialog();
 					}
@@ -191,7 +191,7 @@ namespace WeSay.ConfigTool
 
 		}
 
-		public void CreateAndOpenProject(string directoryPath)
+		public void CreateAndOpenProject(string directoryPath, string languageTag)
 		{
 			//the "wesay" part may not exist yet
 			if (!Directory.GetParent(directoryPath).Exists)
@@ -201,6 +201,9 @@ namespace WeSay.ConfigTool
 
 			CreateNewProject(directoryPath);
 			OpenProject(directoryPath);
+			var genericWritingSystemShippedWithWs = Project.WritingSystems.Get("qaa");
+			genericWritingSystemShippedWithWs.ISO639 = languageTag;
+			Project.WritingSystems.Set(genericWritingSystemShippedWithWs);
 			 if(_project != null)
 			 {
 				 var logger = _project.Container.Resolve<ILogger>();
@@ -209,7 +212,7 @@ namespace WeSay.ConfigTool
 
 				 if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
 				 {
-					 using (var dlg = new NewProjectInformationDialog(directoryPath, true))
+					 using (var dlg = new NewProjectInformationDialog(directoryPath))
 					 {
 						 dlg.ShowDialog();
 					 }
@@ -281,6 +284,12 @@ namespace WeSay.ConfigTool
 				{
 					_project.BackupMaker = null;
 				}
+			}
+			catch (ConfigurationFileTooNewException e)
+			{
+				Project = null;
+				ErrorReport.NotifyUserOfProblem(e.Message);
+				return false;
 			}
 			catch (Exception e)
 			{
@@ -395,19 +404,6 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void OnFormClosed(object sender, FormClosedEventArgs e)
-		{
-			if (_projectSettingsControl != null)
-			{
-				_projectSettingsControl.Dispose();
-			}
-			Logger.WriteEvent("App Exiting Normally.");
-			if (Project != null)
-			{
-				_project.Dispose();
-			}
-		}
-
 		private void OnFormClosing(object sender, FormClosingEventArgs e)
 		{
 			SaveAndDisposeProject();
@@ -422,6 +418,10 @@ namespace WeSay.ConfigTool
 					Project.Save();
 				}
 				Settings.Default.Save();
+				if (_projectSettingsControl != null)
+				{
+					_projectSettingsControl.Dispose();
+				}
 				if (Project != null)
 				{
 					_project.Dispose();
@@ -440,9 +440,11 @@ namespace WeSay.ConfigTool
 			_project.Save(); //want the client to see the latest
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo = new ProcessStartInfo(Path.Combine(dir, "WeSay.App.exe"),
-															  string.Format("\"{0}\"",
+															  string.Format(" -launchedByConfigTool \"{0}\"",
 																			_project.PathToLiftFile));
+
 			Process.Start(startInfo);
+			Close();//quit
 		}
 
 		private void OnExit_Click(object sender, EventArgs e)
@@ -490,11 +492,6 @@ namespace WeSay.ConfigTool
 				Help.ShowHelp(this, uri.AbsoluteUri);
 			}
 			Process.Start("http://wesay.org/wiki/Help_And_Contact");
-		}
-
-		private void ConfigurationWindow_Load(object sender, EventArgs e)
-		{
-
 		}
 	}
 }

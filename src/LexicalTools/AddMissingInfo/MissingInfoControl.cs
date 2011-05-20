@@ -9,6 +9,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
 using Palaso.Misc;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -67,7 +68,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//            _records.ListChanged += OnRecordsListChanged;
 			// this needs to be after so it will get change event after the ListBox
 
-			WritingSystem listWritingSystem = GetListWritingSystem();
+			WritingSystemDefinition listWritingSystem = GetListWritingSystem();
 
 			_recordsListBox.BorderStyle = BorderStyle.None;
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
@@ -170,30 +171,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 		}
 
-		private static WritingSystem GetListWritingSystem()
+		private static WritingSystemDefinition GetListWritingSystem()
 		{
-			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
-			WritingSystem listWritingSystem = writingSystems.UnknownVernacularWritingSystem;
-
-			// use the master view Template instead of the one for this task. (most likely the one for this
-			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
-			Field field =
-					WeSayWordsProject.Project.DefaultViewTemplate.GetField(
-							Field.FieldNames.EntryLexicalForm.ToString());
-
-			if (field != null)
-			{
-				if (field.WritingSystemIds.Count > 0)
-				{
-					listWritingSystem = writingSystems[field.WritingSystemIds[0]];
-				}
-				else
-				{
-					throw new ConfigurationException("There are no writing systems enabled for the Field '{0}'",
-												 field.FieldName);
-				}
-			}
-			return listWritingSystem;
+			return WeSayWordsProject.Project.DefaultViewTemplate.GetDefaultWritingSystemForField(
+				Field.FieldNames.EntryLexicalForm.ToString());
 		}
 
 		private bool _recordsListBoxActive;

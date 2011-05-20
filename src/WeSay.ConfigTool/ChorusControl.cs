@@ -16,7 +16,7 @@ namespace WeSay.ConfigTool
 		private readonly ProjectFolderConfiguration _projectFolderConfiguration;
 
 		public ChorusControl(ILogger logger, Chorus.sync.ProjectFolderConfiguration projectFolderConfiguration)
-			: base("set up synchronization with team members", logger)
+			: base("set up synchronization with team members", logger,"chorus")
 		{
 			_projectFolderConfiguration = projectFolderConfiguration;
 			this.Font = SystemFonts.MessageBoxFont;//use the default OS UI font

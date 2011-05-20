@@ -67,7 +67,7 @@ namespace WeSay.LexicalTools.Dashboard
 			Invalidate(true);
 		}
 
-		private static void OnRunConfigureTool(object sender, EventArgs e)
+		public static void OnRunConfigureTool(object sender, EventArgs e)
 		{
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo =
@@ -98,6 +98,7 @@ namespace WeSay.LexicalTools.Dashboard
 			_title.TabStop = false;
 			_buttonRows.Clear();
 			_panel.Controls.Add(_title);
+
 
 			foreach (ButtonGroup group in _buttonGroups)
 			{
@@ -186,7 +187,9 @@ namespace WeSay.LexicalTools.Dashboard
 					{
 						ProjectInfo projectInfo =
 							WeSayWordsProject.Project.GetProjectInfoForAddin();
+						UsageReporter.SendNavigationNotice(addin.ID);
 						addin.Launch(ParentForm, projectInfo);
+
 					}
 					catch (Exception error)
 					{

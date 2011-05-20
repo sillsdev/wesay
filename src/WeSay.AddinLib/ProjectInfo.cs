@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.Design;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.AddinLib
@@ -14,7 +15,7 @@ namespace WeSay.AddinLib
 		private readonly string[] _filesBelongingToProject;
 
 		private readonly FileLocater _locateFile;
-		private readonly WritingSystemCollection _writingSystems;
+		private readonly IWritingSystemRepository _writingSystems;
 		private readonly object _project;
 		public IServiceProvider ServiceProvider;
 
@@ -25,7 +26,7 @@ namespace WeSay.AddinLib
 						   string pathToExportDirectory,
 						   string[] filesBelongingToProject,
 						   FileLocater locateFile,
-						   WritingSystemCollection writingSystems,
+						   IWritingSystemRepository writingSystems,
 						   IServiceProvider serviceProvider,
 						   // these signatures were to reduce the dependencies on addins that didn't need this stuff
 						   object project)
@@ -79,7 +80,7 @@ namespace WeSay.AddinLib
 			get { return _filesBelongingToProject; }
 		}
 
-		public WritingSystemCollection WritingSystems
+		public IWritingSystemRepository WritingSystems
 		{
 			get { return _writingSystems; }
 		}

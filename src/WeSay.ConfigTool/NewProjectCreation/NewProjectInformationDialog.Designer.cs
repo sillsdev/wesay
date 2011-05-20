@@ -33,7 +33,6 @@
 			this.linkLabel1 = new System.Windows.Forms.LinkLabel();
 			this._whereLabel = new System.Windows.Forms.TextBox();
 			this.textBox2 = new System.Windows.Forms.TextBox();
-			this._changeVMessage = new System.Windows.Forms.TextBox();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
@@ -94,28 +93,11 @@
 			this.textBox2.Text = "The project is ready to use: just click on \"Open in WeSay\" button in the upper-ri" +
 				"ght.  Later, you can come back here and make adjustments.";
 			//
-			// _changeVMessage
-			//
-			this._changeVMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._changeVMessage.BackColor = System.Drawing.SystemColors.Control;
-			this._changeVMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this._changeVMessage.Location = new System.Drawing.Point(3, 153);
-			this._changeVMessage.Multiline = true;
-			this._changeVMessage.Name = "_changeVMessage";
-			this._changeVMessage.ReadOnly = true;
-			this._changeVMessage.Size = new System.Drawing.Size(372, 55);
-			this._changeVMessage.TabIndex = 9;
-			this._changeVMessage.TabStop = false;
-			this._changeVMessage.Text = "One important adjustment is to edit the \'v\' writing system, changing its ID to ma" +
-				"tch the Ethnologue/ISO 693 code for this language.";
-			//
 			// tableLayoutPanel1
 			//
 			this.tableLayoutPanel1.ColumnCount = 1;
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel1.Controls.Add(this._whereLabel, 0, 0);
-			this.tableLayoutPanel1.Controls.Add(this._changeVMessage, 0, 3);
 			this.tableLayoutPanel1.Controls.Add(this.linkLabel1, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.textBox2, 0, 2);
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
@@ -157,7 +139,6 @@
 		private System.Windows.Forms.LinkLabel linkLabel1;
 		private System.Windows.Forms.TextBox _whereLabel;
 		private System.Windows.Forms.TextBox textBox2;
-		private System.Windows.Forms.TextBox _changeVMessage;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 	}
 }

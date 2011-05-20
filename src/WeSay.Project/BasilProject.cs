@@ -6,11 +6,30 @@ using System.Windows.Forms;
 using System.Xml;
 using Palaso.i18n;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using Palaso.Xml;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
+	public class BasilProjectTestHelper
+	{
+		/// <summary>
+		/// Many tests throughout the system will not care at all about project related things,
+		/// but they will break if there is no project initialized, since many things
+		/// will reach the project through a static property.
+		/// Those tests can just call this before doing anything else, so
+		/// that other things don't break.
+		/// </summary>
+		public static void InitializeForTests()
+		{
+			ErrorReport.IsOkToInteractWithUser = false;
+			var project = new BasilProject();
+			project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory());
+			project.UiOptions.Language = "en";
+		}
+	}
+
 	public class BasilProject: IDisposable
 	{
 		private static BasilProject _singleton;
@@ -21,8 +40,8 @@ namespace WeSay.Project
 		}
 		public UiConfigurationOptions UiOptions { get; set; }
 
-		private readonly WritingSystemCollection _writingSystems;
-		private string _projectDirectoryPath = string.Empty;
+		private IWritingSystemRepository _writingSystems;
+		private static string _projectDirectoryPath = string.Empty;
 
 		public static BasilProject Project
 		{
@@ -53,7 +72,7 @@ namespace WeSay.Project
 		public BasilProject()
 		{
 			Project = this;
-			_writingSystems = new WritingSystemCollection();
+			_writingSystems = null;
 			UiOptions = new UiConfigurationOptions();
 		}
 
@@ -89,27 +108,7 @@ namespace WeSay.Project
 
 		public virtual void Save()
 		{
-			Save(_projectDirectoryPath);
-		}
-
-		public virtual void Save(string projectDirectoryPath)
-		{
-			_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(projectDirectoryPath));
-		}
-
-		/// <summary>
-		/// Many tests throughout the system will not care at all about project related things,
-		/// but they will break if there is no project initialized, since many things
-		/// will reach the project through a static property.
-		/// Those tests can just call this before doing anything else, so
-		/// that other things don't break.
-		/// </summary>
-		public static void InitializeForTests()
-		{
-			ErrorReport.IsOkToInteractWithUser = false;
-			var project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
-			project.UiOptions.Language = "en";
+			_writingSystems.Save();
 		}
 
 		public static string GetPretendProjectDirectory()
@@ -117,17 +116,17 @@ namespace WeSay.Project
 			return Path.Combine(GetTopAppDirectory(), Path.Combine("SampleProjects", "PRETEND"));
 		}
 
-		public WritingSystemCollection WritingSystems
+		public IWritingSystemRepository WritingSystems
 		{
 			get { return _writingSystems; }
 		}
 
-		public IList<WritingSystem> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
+		public IList<WritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
 		{
-			List<WritingSystem> l = new List<WritingSystem>();
+			List<WritingSystemDefinition> l = new List<WritingSystemDefinition>();
 			foreach (string id in writingSystemIds)
 			{
-				l.Add(WritingSystems[id]);
+				l.Add(WritingSystems.Get(id));
 			}
 			return l;
 		}
@@ -138,10 +137,10 @@ namespace WeSay.Project
 			protected set { _projectDirectoryPath = value; }
 		}
 
-		public static string GetPathToWritingSystemPrefs(string parentDir)
-		{
-				return Path.Combine(parentDir, "WritingSystemPrefs.xml");
-		}
+		//public static string GetPathToWritingSystemPrefs(string parentDir)
+		//{
+		//        return Path.Combine(parentDir, "WritingSystemPrefs.xml");
+		//}
 
 		public static string GetPathToLdmlWritingSystemsFolder(string parentDir)
 		{
@@ -256,25 +255,31 @@ namespace WeSay.Project
 			Directory.CreateDirectory(pathProjectToWritingSystemsFolder);
 			foreach (string path in Directory.GetFiles(pathCommonToWritingSystemsFolder, "*.ldml"))
 			{
-				File.Copy(path, Path.Combine(pathProjectToWritingSystemsFolder, Path.GetFileName(path)));
+				var destPath = Path.Combine(pathProjectToWritingSystemsFolder, Path.GetFileName(path));
+				if (!File.Exists(destPath))
+				{
+					File.Copy(path, destPath);
+				}
 			}
 		}
 
 		protected void InitWritingSystems()
 		{
-			_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
-			if (_writingSystems.Count == 0)
+			if (!Directory.Exists(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath)))
 			{
-				_writingSystems.LoadFromLegacyWeSayFile(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
-				_writingSystems.Write(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
-				File.Delete(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
-			}
-			if (_writingSystems.Count == 0)
-			{
-				//load defaults
 				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
-				_writingSystems.Load(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
 			}
+			_writingSystems = new LdmlInFolderWritingSystemRepository(
+				GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath)
+			);
+
+			// TODO Chris move this to the migrator
+			//if (_writingSystems.Count == 0)
+			//{
+			//    _writingSystems.LoadFromLegacyWeSayFile(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
+			//    _writingSystems.Write(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
+			//    File.Delete(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
+			//}
 		}
 
 		//        /// <summary>

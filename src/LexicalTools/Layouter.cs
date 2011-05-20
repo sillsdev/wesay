@@ -8,6 +8,7 @@ using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.UiBindings;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
@@ -208,7 +209,7 @@ namespace WeSay.LexicalTools
 
 		protected GhostBinding<T> MakeGhostBinding<T>(PalasoDataObject parent, IList<T> list,
 													  string ghostPropertyName,
-													  WritingSystem writingSystem,
+													  WritingSystemDefinition writingSystem,
 													  WeSayTextBox entry)
 				where T : PalasoDataObject, new()
 		{
@@ -454,15 +455,7 @@ namespace WeSay.LexicalTools
 		{
 			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field, false);
-			WritingSystem preferredWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(field.FieldName);
-			if (preferredWritingSystem == _viewTemplate.WritingSystems.UnknownVernacularWritingSystem)
-			{
-				//this is a better choice
-				preferredWritingSystem = _viewTemplate.WritingSystems.UnknownAnalysisWritingSystem;
-
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
-																 "The option box {0} had the topmost writing system set to {1}, but that writing system was not found.", field.DisplayName, field.WritingSystemIds[0]);
-			}
+			WritingSystemDefinition preferredWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(field.FieldName);
 			SingleOptionControl control = new SingleOptionControl(optionRefTarget,
 																  list,
 																  field.FieldName,
@@ -479,7 +472,7 @@ namespace WeSay.LexicalTools
 				target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			//            OptionCollectionControl control =
 			//                   new OptionCollectionControl(refsOfChoices, availableOptions, field.WritingSystemIds[0]);
-			IList<WritingSystem> writingSystems =
+			IList<WritingSystemDefinition> writingSystems =
 				BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
 			IChoiceSystemAdaptor<Option, string, OptionRef> displayAdaptor;
 

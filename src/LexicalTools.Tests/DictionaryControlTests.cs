@@ -7,10 +7,12 @@ using Palaso.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
+using WeSay.TestUtilities;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
@@ -27,7 +29,7 @@ namespace WeSay.LexicalTools.Tests
 		private DictionaryTask _task;
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
-		private WritingSystem _vernacularWritingSystem;
+		private WritingSystemDefinition _vernacularWritingSystem;
 		private TabControl _tabControl;
 		private Form _window;
 		private TabPage _detailTaskPage;
@@ -40,16 +42,14 @@ namespace WeSay.LexicalTools.Tests
 		[TestFixtureSetUp]
 		public void SetupFixture()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 		}
 
 		public override void Setup()
 		{
 			base.Setup();
 			_tempFolder = new TemporaryFolder();
-			_vernacularWritingSystem =
-					new WritingSystem(BasilProject.Project.WritingSystems.TestWritingSystemVernId,
-									  SystemFonts.DefaultFont);
+			_vernacularWritingSystem = WritingSystemDefinition.FromLanguage(WritingSystemsIdsForTests.VernacularIdForTest);
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
 
 			_filePath = _tempFolder.GetTemporaryFile();
@@ -57,8 +57,7 @@ namespace WeSay.LexicalTools.Tests
 
 			_analysisWritingSystemIds = new string[]
 													{
-															BasilProject.Project.WritingSystems.
-																	TestWritingSystemAnalId
+															WritingSystemsIdsForTests.AnalysisIdForTest
 													};
 			string[] vernacularWritingSystemIds = new string[] {_vernacularWritingSystem.Id};
 			ViewTemplate viewTemplate = new ViewTemplate();
@@ -185,7 +184,7 @@ namespace WeSay.LexicalTools.Tests
 							  bool includeExample)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm.SetAlternative(_vernacularWritingSystem.Id, lexemeForm);
+			entry.LexicalForm.SetAlternative("th", lexemeForm);
 
 			LexSense sense = new LexSense();
 			entry.Senses.Add(sense);
@@ -200,7 +199,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				LexExampleSentence ex = new LexExampleSentence();
 				sense.ExampleSentences.Add(ex);
-				ex.Sentence.SetAlternative("x", "hello");
+				ex.Sentence.SetAlternative("th", "hello");
 			}
 			_lexEntryRepository.SaveItem(entry);
 			return entry.Guid;
@@ -228,14 +227,11 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void Construct_EmptyViewTemplate_NoCrash()
+		public void Construct_EmptyViewTemplate_Crashes()
 		{
-			using (
-					DictionaryControl e = new DictionaryControl(_entryViewFactory, _lexEntryRepository,
-																new ViewTemplate(), new TaskMemory(), new CheckinDescriptionBuilder()))
-			{
-				Assert.IsNotNull(e);
-			}
+			Assert.Throws<ConfigurationException>(() => new DictionaryControl(_entryViewFactory, _lexEntryRepository,
+																			  new ViewTemplate(), new TaskMemory(),
+																			  new CheckinDescriptionBuilder()));
 		}
 
 		[Test]
@@ -600,13 +596,13 @@ namespace WeSay.LexicalTools.Tests
 		{
 			SingleOptionControl combo = GetOptionControl(fieldLabel);
 
-			combo.Value = "verb";
+			combo.Value = "Verb";
 
 			LexEntry entry = GetCurrentEntry();
 			CycleTheCurrentEntryOutAndBackIn(entry);
 
 			combo = GetOptionControl(fieldLabel);
-			Assert.AreEqual("verb", combo.Value);
+			Assert.AreEqual("Verb", combo.Value);
 		}
 
 		[Test]
@@ -774,8 +770,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetLexicalFormControlName()
 		{
-			return Field.FieldNames.EntryLexicalForm + "_" +
-				   BasilProject.Project.WritingSystems.TestWritingSystemVernId;
+			return Field.FieldNames.EntryLexicalForm + "_" + WritingSystemsIdsForTests.VernacularIdForTest;
 		}
 
 		private void TypeInLexicalForm(string value)
@@ -791,8 +786,7 @@ namespace WeSay.LexicalTools.Tests
 #if GlossMeaning
 			return Field.FieldNames.SenseGloss + "_" + BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 #else
-			return LexSense.WellKnownProperties.Definition + "_" +
-				   BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
+			return LexSense.WellKnownProperties.Definition + "_" + WritingSystemsIdsForTests.AnalysisIdForTest;
 #endif
 		}
 

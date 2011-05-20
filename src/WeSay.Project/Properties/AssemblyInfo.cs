@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using Mono.Addins;
@@ -43,3 +44,4 @@ using Mono.Addins;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]
 [assembly: Addin]
 [assembly: AddinDependency("WeSay.AddinLib", "1.0")]
+[assembly: InternalsVisibleTo("WeSay.Project.Tests")]

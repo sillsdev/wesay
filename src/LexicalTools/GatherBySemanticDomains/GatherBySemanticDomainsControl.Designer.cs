@@ -1,4 +1,5 @@
 using System;
+using Palaso.UI.WindowsForms.Widgets.Flying;
 using WeSay.UI;
 using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
@@ -63,7 +64,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			this.multiTextControl2 = new WeSay.UI.TextBoxes.MultiTextControl();
 			this.multiTextControl1 = new WeSay.UI.TextBoxes.MultiTextControl();
 			this.multiTextControl3 = new WeSay.UI.TextBoxes.MultiTextControl();
-			this._movingLabel = new WeSay.UI.MovingLabel();
+			this._flyingLabel = new FlyingLabel();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel5.SuspendLayout();
@@ -621,13 +622,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			//
 			// _movingLabel
 			//
-			this._movingLabel.BackColor = System.Drawing.Color.Transparent;
-			this._movingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-			this._movingLabel.Location = new System.Drawing.Point(0, 0);
-			this._movingLabel.Name = "_movingLabel";
-			this._movingLabel.Size = new System.Drawing.Size(100, 23);
-			this._movingLabel.TabIndex = 25;
-			this._movingLabel.Visible = false;
+			this._flyingLabel.BackColor = System.Drawing.Color.Transparent;
+			this._flyingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+			this._flyingLabel.Location = new System.Drawing.Point(0, 0);
+			this._flyingLabel.Name = "_flyingLabel";
+			this._flyingLabel.Size = new System.Drawing.Size(100, 23);
+			this._flyingLabel.TabIndex = 25;
+			this._flyingLabel.Visible = false;
 			//
 			// GatherBySemanticDomainsControl
 			//
@@ -637,10 +638,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			this.Controls.Add(this.multiTextControl2);
 			this.Controls.Add(this.multiTextControl1);
 			this.Controls.Add(this.multiTextControl3);
-			this.Controls.Add(this._movingLabel);
+			this.Controls.Add(this._flyingLabel);
 			this.Name = "GatherBySemanticDomainsControl";
 			this.Size = new System.Drawing.Size(654, 386);
-			this.Load += new System.EventHandler(this.GatherBySemanticDomainsControl_Load);
 			this.BackColorChanged += new System.EventHandler(this.GatherWordListControl_BackColorChanged);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
@@ -675,7 +675,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private System.Windows.Forms.Label _question;
 		private System.Windows.Forms.Label _description;
 		private WeSay.UI.CirclesProgressIndicator _questionIndicator;
-		private MovingLabel _movingLabel;
+		private FlyingLabel _flyingLabel;
 		private System.Windows.Forms.Label _reminder;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.ToolTip toolTip1;

@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
@@ -24,7 +25,7 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void CreateWithWritingSystem()
 		{
-			WritingSystem ws = new WritingSystem();
+			WritingSystemDefinition ws = new WritingSystemDefinition();
 			WeSayTextBox textBox = new WeSayTextBox(ws, null);
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
@@ -41,7 +42,7 @@ namespace WeSay.UI.Tests
 		public void WritingSystem_Unassigned_Get_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
-			WritingSystem ws;
+			WritingSystemDefinition ws;
 			Assert.Throws<InvalidOperationException>(() => ws= textBox.WritingSystem);
 		}
 

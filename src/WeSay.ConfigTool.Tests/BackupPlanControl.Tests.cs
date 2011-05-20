@@ -85,7 +85,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			_window = new ConfigurationWindow(new string[] { });
 			_window.Show();
-			_window.CreateAndOpenProject(directoryPath);
+			_window.CreateAndOpenProject(directoryPath, "th");
 			GoToBackupTab();
 		   // return new ComboBoxTester("_languageCombo", _window);
 		}

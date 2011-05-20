@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using NUnit.Framework;
+using Palaso.WritingSystems;
 using WeSay.Project;
 using WeSay.Project;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
+using WeSay.TestUtilities;
 using WeSay.UI.TextBoxes;
 using Palaso.Lift;
 
@@ -90,11 +92,10 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			BasilProject.InitializeForTests();
-			_writingSystemId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
+			BasilProjectTestHelper.InitializeForTests();
+			_writingSystemId = WritingSystemsIdsForTests.AnalysisIdForTest;
 
-			WritingSystem writingSystem = new WritingSystem(_writingSystemId,
-															new Font(FontFamily.GenericSansSerif, 24));
+			WritingSystemDefinition writingSystem = WritingSystemDefinition.FromLanguage(_writingSystemId);
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);
 			_papaNameWidget.Text = "John";
 			_ghostFirstNameWidget = new WeSayTextBox(writingSystem, null);

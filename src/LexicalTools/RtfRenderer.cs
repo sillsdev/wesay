@@ -6,6 +6,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Text;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -164,9 +165,9 @@ namespace WeSay.LexicalTools
 		{
 			var rtf = new StringBuilder(@"{\fonttbl");
 			int i = 0;
-			foreach (var ws in WritingSystems)
+			foreach (var ws in WritingSystems.AllWritingSystems)
 			{
-				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + ws.Value.Font.FontFamily.Name +
+				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + WritingSystemInfo.CreateFont(ws).FontFamily.Name +
 						   ";");
 				i++;
 			}
@@ -174,17 +175,17 @@ namespace WeSay.LexicalTools
 			return rtf.ToString();
 		}
 
-		private static WritingSystemCollection WritingSystems
+		private static IWritingSystemRepository WritingSystems
 		{
 			get { return BasilProject.Project.WritingSystems; }
 		}
 
-		private static int GetFontNumber(WritingSystem writingSystem)
+		private static int GetFontNumber(WritingSystemDefinition writingSystem)
 		{
 			int i = 0;
-			foreach (KeyValuePair<string, WritingSystem> ws in WritingSystems)
+			foreach (var ws in WritingSystems.AllWritingSystems)
 			{
-				if (ws.Value == writingSystem)
+				if (ws == writingSystem)
 				{
 					break;
 				}
@@ -213,9 +214,10 @@ namespace WeSay.LexicalTools
 
 				if (field == null) // show them all
 				{
-					foreach (LanguageForm l in GetActualTextForms(text, WritingSystems))
+					foreach (string id in WritingSystems.FilterForTextIds(text.Forms.Select(f=>f.WritingSystemId)))
 					{
-						RenderForm(text, currentItem, rtfBuilder, l, sizeBoost);
+						var form = text.Forms.First(f => f.WritingSystemId == id);
+						RenderForm(text, currentItem, rtfBuilder, form, sizeBoost);
 					}
 				}
 				else //todo: show all those turned on for the field?
@@ -230,11 +232,11 @@ namespace WeSay.LexicalTools
 			return rtfBuilder.ToString();
 		}
 
-		public static IList<LanguageForm> GetActualTextForms(MultiText text, WritingSystemCollection writingSytems)
-		{
-			var x = text.Forms.Where(f => !writingSytems[f.WritingSystemId].IsAudio);
-			return new List<LanguageForm>(x);
-		}
+		//public static IList<LanguageForm> GetActualTextForms(MultiText text, IWritingSystemRepository writingSytems)
+		//{
+		//    var x = text.Forms.Where(f => !writingSytems.Get(f.WritingSystemId).IsVoice);
+		//    return new List<LanguageForm>(x);
+		//}
 
 		private static void RenderForm(MultiText text,
 									   CurrentItemEventArgs currentItem,
@@ -283,14 +285,14 @@ namespace WeSay.LexicalTools
 
 		private static string SwitchToWritingSystem(string writingSystemId, int sizeBoost)
 		{
-			WritingSystem writingSystem;
-			if (!WritingSystems.TryGetValue(writingSystemId, out writingSystem))
+			if (!WritingSystems.Contains(writingSystemId))
 			{
 				return "";
 				//that ws isn't actually part of our configuration, so can't get a special font for it
 			}
+			WritingSystemDefinition writingSystem = WritingSystems.Get(writingSystemId);
 			string rtf = @"\f" + GetFontNumber(writingSystem);
-			int fontSize = Convert.ToInt16((sizeBoost + writingSystem.Font.SizeInPoints)*2);
+			int fontSize = Convert.ToInt16((sizeBoost + WritingSystemInfo.CreateFont(writingSystem).SizeInPoints)*2);
 			rtf += @"\fs" + fontSize + " ";
 			return rtf;
 		}

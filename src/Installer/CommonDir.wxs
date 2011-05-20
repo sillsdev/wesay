@@ -30,26 +30,11 @@
 		</Component>
 
 		<Directory Id="WritingSystems" Name="WritingSystems">
-		<Component Id="WrtingSystems_en.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BDF}">
-		  <File Id="WrtingSystems_en.ldml" Name="WrtingSystems_en.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\en.ldml" />
+		<Component Id="WritingSystems_en.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BDF}">
+		  <File Id="WritingSystems_en.ldml" Name="en.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\en.ldml" />
 		</Component>
-		<Component Id="WrtingSystems_es.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD1}">
-		  <File Id="WrtingSystems_es.ldml" Name="WrtingSystems_es.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\es.ldml" />
-		</Component>
-		<Component Id="WrtingSystems_fr.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD2}">
-		  <File Id="WrtingSystems_fr.ldml" Name="WrtingSystems_fr.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\fr.ldml" />
-		</Component>
-		<Component Id="WrtingSystems_id.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD3}">
-		  <File Id="WrtingSystems_id.ldml" Name="WrtingSystems_id.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\id.ldml" />
-		</Component>
-		<Component Id="WrtingSystems_th.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD4}">
-		  <File Id="WrtingSystems_th.ldml" Name="WrtingSystems_th.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\th.ldml" />
-		</Component>
-		<Component Id="WrtingSystems_tpi.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD5}">
-		  <File Id="WrtingSystems_tpi.ldml" Name="WrtingSystems_tpi.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\tpi.ldml" />
-		</Component>
-		<Component Id="WrtingSystems_v.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD6}">
-		  <File Id="WrtingSystems_v.ldml" Name="WrtingSystems_v.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\v.ldml" />
+		<Component Id="WritingSystems_qaa.ldml" Guid="{75a4c53d-2aaf-4355-9dec-f2b6c19ee0f9}">
+		  <File Id="WritingSystems_qaa.ldml" Name="qaa.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\qaa.ldml" />
 		</Component>
 		</Directory>
 
@@ -87,13 +72,8 @@
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="default.WeSayConfig" />
 	  <ComponentRef Id="ArtOfReadingIndexV3_en.txt"/>
-	  <ComponentRef Id="WrtingSystems_en.ldml" />
-	  <ComponentRef Id="WrtingSystems_es.ldml" />
-	  <ComponentRef Id="WrtingSystems_fr.ldml" />
-	  <ComponentRef Id="WrtingSystems_id.ldml" />
-	  <ComponentRef Id="WrtingSystems_th.ldml" />
-	  <ComponentRef Id="WrtingSystems_tpi.ldml" />
-	  <ComponentRef Id="WrtingSystems_v.ldml" />
+	  <ComponentRef Id="WritingSystems_en.ldml" />
+	  <ComponentRef Id="WritingSystems_qaa.ldml" />
 	</ComponentGroup>
 
 	<ComponentGroup Id="ddpStuff">

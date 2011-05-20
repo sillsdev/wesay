@@ -7,6 +7,8 @@ using Exortech.NetReflector;
 using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
 using Palaso.Lift;
+using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
@@ -48,12 +50,12 @@ namespace WeSay.Project
 
 		//todo: this is simplistic. Switch to the plural form
 		[Obsolete]
-		public WritingSystem HeadwordWritingSystem
+		public WritingSystemDefinition HeadwordWritingSystem
 		{
 			get { return GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit); }
 		}
 
-		public IList<WritingSystem> HeadwordWritingSystems
+		public IList<WritingSystemDefinition> HeadwordWritingSystems
 		{
 			get
 			{
@@ -320,13 +322,11 @@ namespace WeSay.Project
 			}
 		}
 
-		public static ViewTemplate MakeMasterTemplate(WritingSystemCollection writingSystems)
+		public static ViewTemplate MakeMasterTemplate(IWritingSystemRepository writingSystems)
 		{
-			List<String> defaultVernacularSet = new List<string>();
-			defaultVernacularSet.Add(WritingSystem.IdForUnknownVernacular);
+			var defaultVernacularSet = new List<string> {WeSayWordsProject.VernacularWritingSystemIdForProjectCreation};
 
-			List<String> defaultAnalysisSet = new List<string>();
-			defaultAnalysisSet.Add(WritingSystem.IdForUnknownAnalysis);
+			var defaultAnalysisSet = new List<string> {WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation};
 
 			ViewTemplate masterTemplate = new ViewTemplate();
 
@@ -570,7 +570,7 @@ namespace WeSay.Project
 
 		#endregion
 
-		public void ChangeWritingSystemId(string from, string to)
+		public void OnWritingSystemIDChange(string from, string to)
 		{
 			foreach (Field field in Fields)
 			{
@@ -588,24 +588,30 @@ namespace WeSay.Project
 			return false;
 		}
 
-		public WritingSystem GetDefaultWritingSystemForField(string fieldName)
+		public bool IsWritingSystemInUse(string writingSystemId)
 		{
-			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
-			WritingSystem listWritingSystem = null;
-			Field field = GetField(fieldName);
-			//Debug.Assert(field != null, fieldName + "not found.");
-			if (field != null)
+			foreach (var field in Fields)
 			{
-				if (field.WritingSystemIds.Count > 0)
+				if(field.WritingSystemIds.Contains(writingSystemId))
 				{
-					listWritingSystem = writingSystems[field.WritingSystemIds[0]];
+					return true;
 				}
 			}
-			if (listWritingSystem == null)
+			return false;
+		}
+
+		public WritingSystemDefinition GetDefaultWritingSystemForField(string fieldName)
+		{
+			Field field = GetField(fieldName);
+			if (field == null)
 			{
-				listWritingSystem = writingSystems.UnknownVernacularWritingSystem;
+				throw new ConfigurationException(String.Format("The field {0} has not been enabled for your project. Please enable it in the WeSay config tool.", fieldName));
 			}
-			return listWritingSystem;
+			if(field.WritingSystemIds.Count == 0)
+			{
+				throw new ConfigurationException(String.Format("The field {0} has no writing system associated with it. Please assign a writing system to it in the WeSay config tool.", fieldName));
+			}
+			return BasilProject.Project.WritingSystems.Get(field.WritingSystemIds[0]);
 		}
 
 		public bool IsFieldFirstInClass(Field field)
@@ -678,7 +684,7 @@ namespace WeSay.Project
 			set { _doWantGhosts = value; }
 		}
 
-		public IList<string> GetHeadwordWritingSystemIds()
+		public IEnumerable<string> GetHeadwordWritingSystemIds()
 		{
 			Field fieldControllingHeadwordOutput =
 				GetField(LexEntry.WellKnownProperties.Citation);
@@ -691,14 +697,10 @@ namespace WeSay.Project
 					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
 				}
 			}
-
-			return WritingSystems.TrimToActualTextWritingSystemIds(fieldControllingHeadwordOutput.WritingSystemIds);
+			return WritingSystems.FilterForTextIds(fieldControllingHeadwordOutput.WritingSystemIds);
 		}
 
-
-
-
-		public WritingSystemCollection WritingSystems
+		public IWritingSystemRepository WritingSystems
 		{
 			get { return BasilProject.Project.WritingSystems; }
 		}
@@ -710,12 +712,12 @@ namespace WeSay.Project
 			//use the first ws of the notefield for that purpose (could improve user control
 			//over this later).
 			var noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);
-			list.Insert(0,new WritingSystemForChorusAdaptor(noteWritingSystem));
-			foreach (var system in WritingSystems.GetActualTextWritingSystems())
+			list.Insert(0,new ChorusWritingSystemAdaptor(noteWritingSystem));
+			foreach (var system in WritingSystems.TextWritingSystems)
 			{
 				if(system!=noteWritingSystem)
 				{
-					list.Add(new WritingSystemForChorusAdaptor(system));
+					list.Add(new ChorusWritingSystemAdaptor(system));
 				}
 			}
 			return list;

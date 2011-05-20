@@ -686,7 +686,7 @@ namespace WeSay.UI
 			b.Dispose();
 
 			// dispose the Graphics object
-			g.Dispose();
+			//Removed by JH Dec 2010 (wasn't causing a problem). SHould not be disposing of this graphic that we didn't create. g.Dispose();
 		}
 
 		private int DetermineYCoordForGripperOnVerticalBar(Rectangle r)

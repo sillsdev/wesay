@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using Chorus.UI.Clone;
 using Palaso.i18n;
+using Palaso.IO;
 using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool
@@ -65,9 +66,10 @@ namespace WeSay.ConfigTool
 
 			button.Width = _templateButton.Width;//review
 			button.Font = new Font(StringCatalog.LabelFont.FontFamily, _templateButton.Font.Size, _templateButton.Font.Style);
+
+			button.ImageAlign = ContentAlignment.MiddleLeft;
 			button.ImageKey = imageKey;
 			button.ImageList = _imageList;
-			button.ImageAlign = ContentAlignment.MiddleLeft;
 			button.Click += clickHandler;
 			button.Text = "  "+localizedLabel;
 
@@ -87,7 +89,7 @@ namespace WeSay.ConfigTool
 		{
 			AddSection("Create", panel);
 			AddChoice("Create new blank project", string.Empty, "newProject", true, createNewProject_LinkClicked, panel);
-			AddChoice("Create new project from FLEx LIFT export", string.Empty, "flex", true, OnCreateProjectFromFLEx_LinkClicked, panel);
+			AddChoice("Create new project from a set of plain LIFT files","Use this after using SOLID to convert Toolbox Files to LIFT", "solid", true, OnCreateProjectFromPlainLift_LinkClicked, panel);
 		}
 
 		private void AddGetChoices(TableLayoutPanel panel)
@@ -95,7 +97,7 @@ namespace WeSay.ConfigTool
 			AddSection("Get", panel);
 			//nb: we want these always enabled, so that we can give a message explaining about hg if needed
 
-			var usbButton = AddChoice("Get From USB drive", "Get a project from a Chorus repository on a USB flash drive", "getFromUsb", true, OnGetFromUsb, panel);
+			var usbButton = AddChoice("Get From USB drive", "Get a project from a Chorus repository on a USB flash drive, created by either WeSay or FLEx (using LiftBridge)", "getFromUsb", true, OnGetFromUsb, panel);
 			var internetButton = AddChoice("Get from Internet", "Get a project from a Chorus repository which is hosted on the internet (e.g. public.languagedepot.org) and put it on this computer",
 				"getFromInternet", true, OnGetFromInternet, panel);
 			if (!string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")))
@@ -146,16 +148,17 @@ namespace WeSay.ConfigTool
 			}
 			using (var dlg = new Chorus.UI.Clone.GetCloneFromUsbDialog(Project.WeSayWordsProject.NewProjectDirectory))
 			{
-				dlg.Model.ProjectFilter = dir => GetLooksLikeWeSayProject(dir);
+				dlg.Model.ProjectFilter = dir => GetLooksLikeLiftChorusFolder(dir);
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
 				OpenSpecifiedProject(dlg.PathToNewProject);
 			}
 		}
 
-		private static bool GetLooksLikeWeSayProject(string directoryPath)
+		private static bool GetLooksLikeLiftChorusFolder(string directoryPath)
 		{
-			return Directory.GetFiles(directoryPath, "*.WeSayConfig").Length > 0;
+			return Directory.GetFiles(directoryPath, "*.lift").Length > 0 &&
+				Directory.Exists(Path.Combine(directoryPath,".hg"));
 		}
 
 		private void AddOpenProjectChoices(TableLayoutPanel panel)
@@ -201,7 +204,7 @@ namespace WeSay.ConfigTool
 			LoadButtons();
 		}
 
-		private void OnCreateProjectFromFLEx_LinkClicked(object sender, EventArgs e)
+		private void OnCreateProjectFromPlainLift_LinkClicked(object sender, EventArgs e)
 		{
 			if (NewProjectFromFlexClicked != null)
 			{

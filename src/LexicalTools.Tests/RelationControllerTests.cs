@@ -6,7 +6,9 @@ using Palaso.Lift;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
+using WeSay.TestUtilities;
 using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.LexicalTools.Tests
@@ -27,7 +29,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 
 			_tempFolder = new TemporaryFolder();
 			_filePath = _tempFolder.GetTemporaryFile();
@@ -42,7 +44,7 @@ namespace WeSay.LexicalTools.Tests
 
 			_synonymsRelationField = new Field("synonyms",
 											   "LexEntry",
-											   new string[] {"vernacular"},
+											   new string[] { WritingSystemsIdsForTests.OtherIdForTest },
 											   Field.MultiplicityType.ZeroOrMore,
 											   "RelationToOneEntry");
 			_synonymsRelationType = new LexRelationType("synonyms",
@@ -51,7 +53,7 @@ namespace WeSay.LexicalTools.Tests
 
 			_singleSynonymRelationField = new Field("synonym",
 											  "LexEntry",
-											  new string[] {"vernacular"},
+											  new string[] { WritingSystemsIdsForTests.OtherIdForTest },
 											  Field.MultiplicityType.ZeroOr1,
 											  "RelationToOneEntry");
 			_singleSynonymRelationType = new LexRelationType("synonym",
@@ -133,7 +135,7 @@ namespace WeSay.LexicalTools.Tests
 														_lexEntryRepository,
 														delegate { });
 
-			Assert.AreEqual(_target.LexicalForm["vernacular"], c.Text);
+			Assert.AreEqual(_target.LexicalForm[WritingSystemsIdsForTests.OtherIdForTest], c.Text);
 		}
 
 		[Test]
@@ -176,7 +178,7 @@ namespace WeSay.LexicalTools.Tests
 														_singleSynonymRelationField,
 														_lexEntryRepository,
 														delegate { });
-			c.Text = _target.LexicalForm["vernacular"];
+			c.Text = _target.LexicalForm[WritingSystemsIdsForTests.OtherIdForTest];
 
 			Assert.AreEqual(_target.Id, relation.Key);
 		}
@@ -199,7 +201,7 @@ namespace WeSay.LexicalTools.Tests
 
 			LexEntry newEntry = _lexEntryRepository.GetLexEntryWithMatchingId(relation.Key);
 			Assert.IsNotNull(newEntry);
-			Assert.AreEqual("new", newEntry.LexicalForm["vernacular"]);
+			Assert.AreEqual("new", newEntry.LexicalForm[WritingSystemsIdsForTests.OtherIdForTest]);
 		}
 
 		[Test]
@@ -223,7 +225,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 
-			entry.LexicalForm.SetAlternative("vernacular", lexemeForm);
+			entry.LexicalForm.SetAlternative(WritingSystemsIdsForTests.OtherIdForTest, lexemeForm);
 
 			LexSense sense = new LexSense();
 			entry.Senses.Add(sense);
