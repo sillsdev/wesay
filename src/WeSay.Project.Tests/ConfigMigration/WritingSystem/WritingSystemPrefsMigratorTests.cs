@@ -16,7 +16,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 	{
 		private class TestEnvironment : IDisposable
 		{
-			private IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> _tagMigrationInfo;
+			private IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> _tagMigrationInfo = new List<LdmlVersion0MigrationStrategy.MigrationInfo>();
 
 			private readonly string _wsPrefsFilePath;
 			private readonly string _ldmlRepositoryPath = "";
@@ -49,7 +49,13 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 			public string GetFileForOriginalRfcTag(string oldRfcTag)
 			{
-				return Path.Combine(LdmlRepositoryPath, _tagMigrationInfo.First(info => info.RfcTagBeforeMigration == oldRfcTag).RfcTagAfterMigration + ".ldml");
+				var migrationinfoForOldRfcTag =
+					_tagMigrationInfo.FirstOrDefault(info => info.RfcTagBeforeMigration == oldRfcTag);
+				if( migrationinfoForOldRfcTag != null)
+				{
+					return Path.Combine(LdmlRepositoryPath, migrationinfoForOldRfcTag.RfcTagAfterMigration + ".ldml");
+				}
+				return Path.Combine(LdmlRepositoryPath, oldRfcTag + ".ldml");
 			}
 
 			public void WriteContentToWsPrefsFile(string content)
@@ -243,7 +249,6 @@ O o";
 			using (var environment = new TestEnvironment())
 			{
 				const string otherLanguage = "de";
-				const string sortUsing = "";
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem("en", "",
 														  otherLanguage, "", "", 0, false, "", "", true, false)
 					);
@@ -549,8 +554,52 @@ O o";
 					environment.ChangeRfcTags);
 				migrator.MigrateIfNecassary();
 
-				Assert.That(File.Exists(Path.Combine(environment.LdmlRepositoryPath, "bogus1.ldml")), Is.True);
-				Assert.That(File.Exists(Path.Combine(environment.LdmlRepositoryPath, "bogus2.ldml")), Is.True);
+				Assert.That(File.Exists(environment.GetFileForOriginalRfcTag("bogus1")), Is.True);
+				Assert.That(File.Exists(environment.GetFileForOriginalRfcTag("bogus2")), Is.True);
+			}
+		}
+
+		[Test]
+		public void MigrateIfNecessary_LdmlForWritingSystemInWsPrefsFileAlreadyExists_LdmlIsUntouched()
+		{
+			using (var environment = new TestEnvironment())
+			{
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystemForLanguage("en"));
+
+				var ws = WritingSystemDefinition.FromLanguage("en");
+				ws.Abbreviation = "untouched";
+				Directory.CreateDirectory(environment.LdmlRepositoryPath);
+				new LdmlAdaptor().Write(Path.Combine(environment.LdmlRepositoryPath, "en.ldml"), ws, null);
+
+				var migrator = new WritingSystemPrefsMigrator(
+					environment.WsPrefsFilePath,
+					environment.ChangeRfcTags);
+				migrator.MigrateIfNecassary();
+
+				AssertThatXmlIn.File(environment.GetFileForOriginalRfcTag("en")).HasAtLeastOneMatchForXpath(
+					"/ldml/special/palaso:abbreviation[@value='untouched']",
+					environment.NamespaceManager);
+			}
+		}
+
+		[Test]
+		public void MigrateIfNecessary_LdmlForWritingSystemInWsPrefsFileAlreadyExists_LdmlIsCreatedForOtherWritingSystemsInWsPrefsFile()
+		{
+			using (var environment = new TestEnvironment())
+			{
+				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("en", "de")
+					);
+				var ws = WritingSystemDefinition.FromLanguage("en");
+				ws.Abbreviation = "untouched";
+				Directory.CreateDirectory(environment.LdmlRepositoryPath);
+				new LdmlAdaptor().Write(Path.Combine(environment.LdmlRepositoryPath, "en.ldml"), ws, null);
+
+				var migrator = new WritingSystemPrefsMigrator(
+					environment.WsPrefsFilePath,
+					environment.ChangeRfcTags);
+				migrator.MigrateIfNecassary();
+
+				Assert.That(File.Exists(environment.GetFileForOriginalRfcTag("de")), Is.True);
 			}
 		}
 	}

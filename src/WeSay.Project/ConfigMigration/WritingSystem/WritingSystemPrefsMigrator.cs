@@ -38,19 +38,38 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			File.Copy(_sourceFilePath, backupFilePath);
 			filesToDelete.Add(backupFilePath);
 
-			string ldmlPath = WritingSystemsFolder(Path.GetDirectoryName(_sourceFilePath));
+			string writingSystemFolderPath = WritingSystemsFolder(Path.GetDirectoryName(_sourceFilePath));
 
-			//hack because I need this to work for the workshop tomorrow, but it needs more thought/testing
-			if (!Directory.Exists(ldmlPath))
+
+			var strategy = new WritingSystemPrefsToLdmlMigrationStrategy(_onWritingSystemTagChange);
+			string sourceFilePath = _sourceFilePath;
+			string tempFolderPath = String.Format("{0}.Migrate_{1}_{2}", _sourceFilePath, strategy.FromVersion,
+													   strategy.ToVersion);
+			strategy.Migrate(sourceFilePath, tempFolderPath);
+
+			var filesInTempFolder = Directory.GetFiles(tempFolderPath);
+			if (filesInTempFolder.Length != 0)
 			{
-				var strategy = new WritingSystemPrefsToLdmlMigrationStrategy(_onWritingSystemTagChange);
-				string sourceFilePath = _sourceFilePath;
-				string destinationFilePath = String.Format("{0}.Migrate_{1}_{2}", _sourceFilePath, strategy.FromVersion,
-														   strategy.ToVersion);
-				strategy.Migrate(sourceFilePath, destinationFilePath);
-
-				Directory.Move(destinationFilePath, ldmlPath);
+				if(!Directory.Exists(writingSystemFolderPath))
+				{
+					Directory.CreateDirectory(writingSystemFolderPath);
+				}
 			}
+
+			foreach (string ldmlFilePath in filesInTempFolder)
+			{
+				var fileName = Path.GetFileName(ldmlFilePath);
+				var destinationFilePath = Path.Combine(writingSystemFolderPath, fileName);
+				if(!File.Exists(destinationFilePath))
+				{
+					File.Move(ldmlFilePath, destinationFilePath);
+				}
+				else
+				{
+					File.Delete(ldmlFilePath);
+				}
+			}
+			Directory.Delete(tempFolderPath);
 
 			File.Delete(_sourceFilePath);
 
