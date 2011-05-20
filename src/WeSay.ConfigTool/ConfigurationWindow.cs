@@ -175,7 +175,7 @@ namespace WeSay.ConfigTool
 			{
 				if (OpenProject(dlg.PathToNewProjectDirectory))
 				{
-					using (var info = new NewProjectInformationDialog(dlg.PathToNewProjectDirectory, false))
+					using (var info = new NewProjectInformationDialog(dlg.PathToNewProjectDirectory))
 					{
 						info.ShowDialog();
 					}
@@ -212,7 +212,7 @@ namespace WeSay.ConfigTool
 
 				 if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
 				 {
-					 using (var dlg = new NewProjectInformationDialog(directoryPath, true))
+					 using (var dlg = new NewProjectInformationDialog(directoryPath))
 					 {
 						 dlg.ShowDialog();
 					 }
