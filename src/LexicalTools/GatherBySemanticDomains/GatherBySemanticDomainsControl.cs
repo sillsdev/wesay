@@ -65,7 +65,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			if( _vernacularBox.WritingSystemsForThisField.Count ==0 ||  _vernacularBox.TextBoxes.Count == 0)
 			{
-				Palaso.Reporting.ErrorReport.ReportFatalMessageWithStackTrace("Apparent issue WS-1202 reproduction. We would like to have a copy of your .wesayconfig file.");
+				Palaso.Reporting.ErrorReport.ReportFatalMessageWithStackTrace(String.Format("This task cannot be used with an audio/voice writing system.  Please change the '{0}' writing system in the config tool to not be audio/voice.", _presentationModel.WritingSystemUserIsTypingIn.Abbreviation));
 			}
 
 			//bit of a hack here... we make our own meaning box as a less intrusive way to add spell checking to
