@@ -21,6 +21,16 @@ namespace WeSay.ConfigTool
 		private WeSayWordsProject _project;
 		private bool _disableBackupAndChorusStuffForTests= false;
 
+		/// <summary>
+		/// Used to make a note that after we've closed down nicely, the user has requested that we run WeSay
+		/// </summary>
+		private bool _openWeSayAfterSaving;
+		/// <summary>
+		/// Used to temporarily store the path while the project closes down, but we still need to know the path
+		/// so we can ask WeSay to open it
+		/// </summary>
+		private string _pathToOpenWeSay;
+
 		public ConfigurationWindow(string[] args)
 		{
 			InitializeComponent();
@@ -407,6 +417,10 @@ namespace WeSay.ConfigTool
 		private void OnFormClosing(object sender, FormClosingEventArgs e)
 		{
 			SaveAndDisposeProject();
+			if(_openWeSayAfterSaving)
+			{
+				RunWeSay();
+			}
 		}
 
 		private void SaveAndDisposeProject()
@@ -437,14 +451,19 @@ namespace WeSay.ConfigTool
 
 		private void OnOpenThisProjectInWeSay(object sender, EventArgs e)
 		{
-			_project.Save(); //want the client to see the latest
+			_pathToOpenWeSay = _project.PathToLiftFile;//this will get cleared as the config tool cleans up
+			_openWeSayAfterSaving = true;
+			Close();
+		}
+
+		private void RunWeSay()
+		{
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo = new ProcessStartInfo(Path.Combine(dir, "WeSay.App.exe"),
 															  string.Format(" -launchedByConfigTool \"{0}\"",
-																			_project.PathToLiftFile));
+																			_pathToOpenWeSay));
 
 			Process.Start(startInfo);
-			Close();//quit
 		}
 
 		private void OnExit_Click(object sender, EventArgs e)
