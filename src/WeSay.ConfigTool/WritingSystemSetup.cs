@@ -18,7 +18,8 @@ namespace WeSay.ConfigTool
 			store.WritingSystemIdChanged += OnWritingSystemIdChanged;
 			var writingSystemSetupModel = new WritingSystemSetupModel(store);
 			writingSystemSetupModel.WritingSystemSuggestor.SuggestVoice = true;
-			writingSystemSetupModel.WritingSystemSuggestor.SuggestIpa = false; // pretty unlikely in WeSay
+			//nb: I (JH) wanted to hide IPA, but then in one week 2 people locally asked for it...
+			writingSystemSetupModel.WritingSystemSuggestor.SuggestIpa = true;
 			writingSystemSetupModel.WritingSystemSuggestor.SuggestDialects = false; // pretty unlikely in WeSay
 
 			_view = new WritingSystemSetupView(writingSystemSetupModel)
