@@ -353,7 +353,7 @@ namespace WeSay.Project
 			writingSystemMigrator.MigrateIfNecessary();
 
 			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
-			wsCreator.CreateNonExistantWritingSystemsFoundInLift(PathToLiftFile);
+			wsCreator.CreateNonExistentWritingSystemsFoundInLift(PathToLiftFile);
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			//review: is this the right place for this?
