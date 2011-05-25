@@ -55,6 +55,15 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				<text>ฉู่ฉี่หมูรอบ</text>
 			</form>
 		</lexical-unit>
+		<sense
+			id='df801833-d55b-4492-b501-650da7bc7b73'>
+			<definition>
+				<form
+					lang='en'>
+					<text>A kind of curry fried with crispy pork</text>
+				</form>
+			</definition>
+		</sense>
 	</entry>
 </lift>".Replace("'", "\"");
 

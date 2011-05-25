@@ -25,20 +25,22 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				string pathToLdmlWritingSystemsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(_pathToProjectFolder);
 				IWritingSystemRepository writingSystems = new LdmlInFolderWritingSystemRepository(pathToLdmlWritingSystemsFolder);
 				var idsToChange = new Dictionary<string, string>();
-				var idsInFile = new List<string>();
-				var seenIds = new List<string>();
+				var uniqueIdsInFile = new List<string>();
 				using (var reader = XmlReader.Create(pathToLiftFile))
 				{
 					while (reader.Read())
 					{
 						if (reader.MoveToAttribute("lang"))
 						{
-							idsInFile.Add(reader.Value);
+							if (!uniqueIdsInFile.Contains(reader.Value))
+							{
+								uniqueIdsInFile.Add(reader.Value);
+							}
 						}
 					}
 				}
 
-				foreach (string idInFile in idsInFile)
+				foreach (string idInFile in uniqueIdsInFile)
 				{
 					var tagCleaner = new Rfc5646TagCleaner(idInFile);
 					tagCleaner.Clean();
@@ -46,9 +48,9 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 					if (newId != idInFile)
 					{
-						if (idsInFile.Contains(newId)) // check for writing system id collision (rare)
+						if (uniqueIdsInFile.Contains(newId)) // check for writing system id collision (rare)
 						{
-							newId = MakeUniqueTag(newId, idsInFile);
+							newId = MakeUniqueTag(newId, uniqueIdsInFile);
 						}
 						idsToChange[idInFile] = newId;
 					}
