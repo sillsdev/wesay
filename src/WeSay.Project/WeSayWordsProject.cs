@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,7 +12,6 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
-using Autofac;
 using Autofac.Builder;
 using Chorus;
 using Chorus.UI.Notes.Bar;
@@ -38,6 +38,7 @@ using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
+using IContainer=Autofac.IContainer;
 
 namespace WeSay.Project
 {
@@ -348,12 +349,15 @@ namespace WeSay.Project
 				_configFile = new ConfigFile(PathToConfigFile);
 				_configFile.MigrateIfNecassary();
 			}
-
-			var writingSystemMigrator = new WritingSystemsMigrator(ProjectDirectoryPath);
-			writingSystemMigrator.MigrateIfNecessary();
-
-			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
-			wsCreator.CreateNonExistentWritingSystemsFoundInLift(PathToLiftFile);
+			var dialog = new ProgressDialog();
+			var worker = new BackgroundWorker();
+			worker.DoWork += OnDoMigration;
+			dialog.BackgroundWorker = worker;
+			dialog.CanCancel = false;
+			dialog.BarStyle = ProgressBarStyle.Marquee;
+			dialog.Text = "Migrating writing systems...";
+			dialog.StatusText = "Please wait while WeSay migrates your writing systems.";
+			dialog.ShowDialog();
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			//review: is this the right place for this?
@@ -364,6 +368,14 @@ namespace WeSay.Project
 
 			LoadUserConfig();
 			InitStringCatalog();
+		}
+
+		private void OnDoMigration(object sender, DoWorkEventArgs e)
+		{
+			var writingSystemMigrator = new WritingSystemsMigrator(ProjectDirectoryPath);
+			writingSystemMigrator.MigrateIfNecessary();
+			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
+			wsCreator.CreateNonExistentWritingSystemsFoundInLift(PathToLiftFile);
 		}
 
 		[Serializable]
