@@ -56,7 +56,7 @@ namespace WeSay.Project.Tests
 		/// check  (WS-1004) Exception: Access to the path is denied
 		/// </summary>
 		[Test]
-		public void MakeWritingSystemIdChange_FileLocked_NotifiesUser()
+		public void Save_LiftFileLocked_NotifiesUser()
 		{
 			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
@@ -65,29 +65,53 @@ namespace WeSay.Project.Tests
 				{
 					WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
 					ws.ISO = "aac";
+					project.MakeWritingSystemIdChange("aac", "qaa");
 					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
-						Assert.IsFalse(project.MakeWritingSystemIdChange("aac", "qaa"));
+						project.Save();
 					}
 				}
 			}
 		}
 
 		[Test]
-		public void MakeWritingSystemIdChange_WritingSystemFoundInLift_Changed()
+		public void Save_MakeWritingSystemIdChangeOnWritingSystemFoundInLiftWasPreviosulyCalled_Changed()
 		{
 			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 				XmlDocument doc = new XmlDocument();
 				doc.Load(p.PathToLiftFile);
-				Assert.IsNotNull(doc.SelectNodes("//form[lang='qaa']"));
+				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='qaa']").Count);
 				WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
 				ws.ISO = "aac";
-				Assert.IsTrue(project.MakeWritingSystemIdChange("aac", "qaa"));
+				project.MakeWritingSystemIdChange("qaa", "aac");
+				project.Save();
 				doc.Load(p.PathToLiftFile);
-				Assert.IsNotNull(doc.SelectNodes("//form[lang='aac']"));
+				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='aac']").Count);
 				Assert.AreEqual("aac", ws.Id);
+
+			}
+		}
+
+		[Test]
+		public void Save_MakeWritingSystemIdChangeOnWritingSystemFoundInLiftWasPreviosulyCalledMultipleTimes_ChangedCorrectly()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				XmlDocument doc = new XmlDocument();
+				doc.Load(p.PathToLiftFile);
+				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='qaa']").Count);
+				WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
+				ws.ISO = "en";
+				project.MakeWritingSystemIdChange("qaa", "en");
+				ws.ISO = "de";
+				project.MakeWritingSystemIdChange("en", "de");
+				project.Save();
+				doc.Load(p.PathToLiftFile);
+				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='de']").Count);
+				Assert.AreEqual("de", ws.Id);
 
 			}
 		}
@@ -386,7 +410,7 @@ namespace WeSay.Project.Tests
 		public void GetLexEntryRepository_LiftIsBad_NotfiesUser()
 		{
 			//here the lang attribute is missing (as it was from a user's lexique pro output)
-
+			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = true;
 			using (var projectDir =
 				new WeSay.Project.Tests.ProjectDirectorySetupForTesting(
 					@"
