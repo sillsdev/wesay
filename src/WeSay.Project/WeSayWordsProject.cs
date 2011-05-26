@@ -349,15 +349,22 @@ namespace WeSay.Project
 				_configFile = new ConfigFile(PathToConfigFile);
 				_configFile.MigrateIfNecassary();
 			}
-			var dialog = new ProgressDialog();
-			var worker = new BackgroundWorker();
-			worker.DoWork += OnDoMigration;
-			dialog.BackgroundWorker = worker;
-			dialog.CanCancel = false;
-			dialog.BarStyle = ProgressBarStyle.Marquee;
-			dialog.Text = "Migrating writing systems...";
-			dialog.StatusText = "Please wait while WeSay migrates your writing systems.";
-			dialog.ShowDialog();
+			if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
+			{
+				var dialog = new ProgressDialog();
+				var worker = new BackgroundWorker();
+				worker.DoWork += OnDoMigration;
+				dialog.BackgroundWorker = worker;
+				dialog.CanCancel = false;
+				dialog.BarStyle = ProgressBarStyle.Marquee;
+				dialog.Text = "Migrating writing systems...";
+				dialog.StatusText = "Please wait while WeSay migrates your writing systems.";
+				dialog.ShowDialog();
+			}
+			else
+			{
+				OnDoMigration(null, null);  // this ensures that migration will occur even when the dilog box isn't shown i.e. during tests
+			}
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			//review: is this the right place for this?
