@@ -14,6 +14,8 @@ using System.Xml;
 using System.Xml.XPath;
 using Autofac.Builder;
 using Chorus;
+using Chorus.FileTypeHanders.lift;
+using Chorus.sync;
 using Chorus.UI.Notes.Bar;
 using Chorus.Utilities;
 using LiftIO;
@@ -503,7 +505,9 @@ namespace WeSay.Project
 			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
 
 			builder.Register<CheckinDescriptionBuilder>().SingletonScoped();
-			builder.Register<Chorus.sync.ProjectFolderConfiguration>(new WeSayChorusProjectConfiguration(Path.GetDirectoryName(PathToConfigFile))).SingletonScoped();
+			var configuration = new ProjectFolderConfiguration(Path.GetDirectoryName(PathToConfigFile));
+			LiftFolder.AddLiftFileInfoToFolderConfiguration(configuration);
+			builder.Register<Chorus.sync.ProjectFolderConfiguration>(configuration).SingletonScoped();
 			builder.Register<ChorusBackupMaker>().SingletonScoped();
 			builder.Register<UiConfigurationOptions>().SingletonScoped();
 

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Chorus.FileTypeHanders.lift;
 using Chorus.sync;
 using Chorus.UI.Sync;
 using Chorus.VcsDrivers.Mercurial;
@@ -93,7 +94,8 @@ namespace WeSay.Project
 
 			try
 			{
-				ProjectFolderConfiguration configuration = new WeSayChorusProjectConfiguration(pathToProjectDirectory);
+				var configuration = new ProjectFolderConfiguration(pathToProjectDirectory);
+				LiftFolder.AddLiftFileInfoToFolderConfiguration(configuration);
 
 				// projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 

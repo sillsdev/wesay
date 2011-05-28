@@ -192,7 +192,6 @@
 	</Compile>
 	<Compile Include="Synchronize\SendReceiveAction.cs" />
 	<Compile Include="UiConfigurationOptions.cs" />
-	<Compile Include="WeSayChorusProjectConfiguration.cs" />
 	<Compile Include="ConfigFileReader.cs" />
 	<Compile Include="ConfigFileTaskBuilder.cs" />
 	<Compile Include="ConfigMigration\WeSayConfig\MigrateConfig5To6.cs" />
