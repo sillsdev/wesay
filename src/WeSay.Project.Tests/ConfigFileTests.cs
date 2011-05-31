@@ -37,6 +37,18 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		public void MigrateIfNeeded_AfterMigrationTheNewConfigFileIsLoaded()
+		{
+			WeSayProjectTestHelper.InitializeForTests();
+			string pathToConfigFile = Path.GetTempFileName();
+			File.WriteAllText(pathToConfigFile,
+								  GetV7ConfigFileContent());
+			var configFile = new ConfigFile(pathToConfigFile);
+			configFile.MigrateIfNecassary();
+			Assert.That(configFile.Version, Is.EqualTo(8));
+		}
+
+		[Test]
 		public void DefaultConfigFile_DoesntNeedMigrating()
 		{
 			var configFile = new XmlDocument();
