@@ -410,6 +410,11 @@ namespace WeSay.ConfigTool
 
 		private void OnFormClosing(object sender, FormClosingEventArgs e)
 		{
+			// Fix WS-34029. If the project settings control has the focus while we close,
+			// their leave control events may try and use a disposed project resource.
+			// So we set the focus to the form first, causing the focussed control to lose focus.
+			Focus();
+
 			SaveAndDisposeProject();
 		}
 
