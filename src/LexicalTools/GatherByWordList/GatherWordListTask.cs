@@ -443,7 +443,6 @@ namespace WeSay.LexicalTools.GatherByWordList
 					}
 				}
 				entry.Senses.Add(sense);
-				LexEntryRepository.NotifyThatLexEntryHasBeenUpdated(entry);
 				//REVIEW: June 2011, Hatton added this, because of WS-34024: if a new *meaning* was added to an existing entry,
 				//and then the user quit, this change was unsaved.
 				LexEntryRepository.SaveItem(entry);
