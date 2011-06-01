@@ -79,7 +79,6 @@ namespace WeSay.LexicalTools
 			LexEntry newGuy = CreateNewLexEntry(e);
 			WritingSystemDefinition writingSystem = GetWritingSystemFromField();
 			_lexEntryRepository.SaveItem(newGuy);
-			_lexEntryRepository.NotifyThatLexEntryHasBeenUpdated(newGuy);
 			_resultSet = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystem);
 			e.NewlyCreatedItem = GetRecordTokenFromLexEntry(newGuy);
 		}
