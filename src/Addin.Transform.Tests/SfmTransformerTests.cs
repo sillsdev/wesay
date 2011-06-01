@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.IO;
 using LiftIO.Validation;
 using NUnit.Framework;
-using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.Project;
+using WeSay.TestUtilities;
 
 namespace Addin.Transform.Tests
 {
@@ -16,7 +16,7 @@ namespace Addin.Transform.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			_addin = new SfmTransformer();
 			_addin.LaunchAfterTransform = false;
 		}

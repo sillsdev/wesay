@@ -10,7 +10,7 @@ namespace WeSay.ConfigTool
 	public partial class BackupPlanControl: ConfigurationControlBase
 	{
 		public BackupPlanControl(ILogger logger)
-			: base("prepare for the worst", logger)
+			: base("prepare for the worst", logger,"backupPlan")
 		{
 			InitializeComponent();
 		}

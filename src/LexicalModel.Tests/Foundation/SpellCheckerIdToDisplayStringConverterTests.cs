@@ -9,7 +9,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 	[TestFixture]
 	public class SpellCheckerIdToDisplayStringConverterTests
 	{
-		private WritingSystem.SpellCheckerIdToDisplayStringConverter
+		private SpellCheckerIdToDisplayStringConverter
 			_spellCheckerIdToDisplayStringConverter;
 
 		private string _idKnownToWindows;
@@ -21,7 +21,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			_idKnownToWindows = "en_US";
 			_idNotKnownToWindows = "xY_Xy";
 			_spellCheckerIdToDisplayStringConverter =
-				new WritingSystem.SpellCheckerIdToDisplayStringConverter();
+				new SpellCheckerIdToDisplayStringConverter();
 			_spellCheckerIdToDisplayStringConverter.GetInstalledSpellCheckingIdsStrategy =
 				delegate { return new string[] {_idKnownToWindows, _idNotKnownToWindows}; };
 		}

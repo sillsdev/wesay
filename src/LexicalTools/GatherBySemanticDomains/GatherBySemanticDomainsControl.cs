@@ -1,8 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
@@ -54,38 +53,42 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 
 			//they have a border in the design view because otherwise they're hard to find
-			_vernacularBox.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.None;
+			_vernacularBox.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
 			_vernacularBox.BackColor = Color.White;
-			_meaningBox.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.None;
+			_meaningBox.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
 			_meaningBox.BackColor = Color.White;
 
-			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
-															{_presentationModel.WritingSystemUserIsTypingIn};
+			_vernacularBox.WritingSystemsForThisField = new[]
+				{
+					_presentationModel.WritingSystemUserIsTypingIn
+				};
 
 			if( _vernacularBox.WritingSystemsForThisField.Count ==0 ||  _vernacularBox.TextBoxes.Count == 0)
 			{
-				Palaso.Reporting.ErrorReport.ReportFatalMessageWithStackTrace("Apparent issue WS-1202 reproduction. We would like to have a copy of your .wesayconfig file.");
+				Palaso.Reporting.ErrorReport.ReportFatalMessageWithStackTrace(String.Format("This task cannot be used with an audio/voice writing system.  Please change the '{0}' writing system in the config tool to not be audio/voice.", _presentationModel.WritingSystemUserIsTypingIn.Abbreviation));
 			}
 
 			//bit of a hack here... we make our own meaning box as a less intrusive way to add spell checking to
 			//this box, which wasn't really designed to work well with auto-generated designer code.
 			//so all this is to be able to turn IsSpellCheckingEnabled before the box is built.
 
-			var meaning = new MultiTextControl(_presentationModel.ViewTemplate.WritingSystems, null);
-			meaning.IsSpellCheckingEnabled = true;
-			meaning.ShowAnnotationWidget = false;
-			meaning.WritingSystemsForThisField = new WritingSystem[] { _presentationModel.DefinitionWritingSystem };
-			meaning.Visible = _presentationModel.ShowDefinitionField;
-			meaning.Anchor = _meaningBox.Anchor;
-			meaning.BackColor = _meaningBox.BackColor;
-			meaning.AutoSize = _meaningBox.AutoSize;
-			meaning.AutoSizeMode = _meaningBox.AutoSizeMode;
-			meaning.Location = _meaningBox.Location;
-			meaning.Size = _meaningBox.Size;
-			meaning.TabIndex = _meaningBox.TabIndex;
-			meaning.KeyDown  += new System.Windows.Forms.KeyEventHandler(this._boxVernacularWord_KeyDown);
-			this.tableLayoutPanel6.Controls.Remove(this._meaningBox);
-			this.tableLayoutPanel6.Controls.Add(meaning, 1, 1);
+			var meaning = new MultiTextControl(_presentationModel.ViewTemplate.WritingSystems, null)
+				{
+					IsSpellCheckingEnabled = true,
+					ShowAnnotationWidget = false,
+					WritingSystemsForThisField = new[] {_presentationModel.DefinitionWritingSystem},
+					Visible = _presentationModel.ShowDefinitionField,
+					Anchor = _meaningBox.Anchor,
+					BackColor = _meaningBox.BackColor,
+					AutoSize = _meaningBox.AutoSize,
+					AutoSizeMode = _meaningBox.AutoSizeMode,
+					Location = _meaningBox.Location,
+					Size = _meaningBox.Size,
+					TabIndex = _meaningBox.TabIndex
+				};
+			meaning.KeyDown  += _boxVernacularWord_KeyDown;
+			tableLayoutPanel6.Controls.Remove(_meaningBox);
+			tableLayoutPanel6.Controls.Add(meaning, 1, 1);
 			_meaningBox = meaning;
 		   _meaningLabel.Visible = _presentationModel.ShowDefinitionField;
 
@@ -96,13 +99,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			_reminder.Text = _presentationModel.Reminder;
 
-		   _movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
+		   _flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 
-			_movingLabel.Finished += _animator_Finished;
+			_flyingLabel.Finished += _animator_Finished;
 
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made
-			List<string> majorRomanWritingSystems = new List<string>(new string[] {"en", "id", "fr"});
+			var majorRomanWritingSystems = new List<string>(new[] {"en", "id", "fr"});
 			if(majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemId))
 			{
 #if MONO
@@ -266,7 +269,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					_meaningBox.ClearAllText();
 					_meaningBox.SetMultiText(_presentationModel.GetMeaningForWordRecentlyMovedToEditArea());
 				}
-				_movingLabel.Go(word, start, destination);
+				_flyingLabel.Go(word, start, destination);
 
 			}
 			_vernacularBox.FocusOnFirstWsAlternative();
@@ -276,12 +279,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			if (_animationIsMovingFromList)
 			{
-				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
+				_vernacularBox.TextBoxes[0].Text = _flyingLabel.Text;
 			}
 
 			_listViewWords.ItemToNotDrawYet = null;
 		}
-		private Point GetAbsoluteLocationOfControl(Control controlToLocate)
+
+		private static Point GetAbsoluteLocationOfControl(Control controlToLocate)
 		{
 			Control currentcontrolInHierarchy = controlToLocate;
 			Point absolutePosition = currentcontrolInHierarchy.Location;
@@ -314,10 +318,10 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			Point destination = _listViewWords.GetItemRectangle(index).Location;
 			destination.Offset(GetAbsoluteLocationOfControl(_listViewWords));
 
-			_movingLabel.Text = word;
+			_flyingLabel.Text = word;
 			_animationIsMovingFromList = false;
 
-			_movingLabel.Go(word, start, destination);
+			_flyingLabel.Go(word, start, destination);
 			_vernacularBox.FocusOnFirstWsAlternative();
 		}
 
@@ -398,9 +402,5 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_btnAddWord_Click(this, null);
 		}
 
-		private void GatherBySemanticDomainsControl_Load(object sender, EventArgs e)
-		{
-
-		}
 	}
 }

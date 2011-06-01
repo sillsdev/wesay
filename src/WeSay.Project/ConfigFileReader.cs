@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml.XPath;
 using Autofac;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 
@@ -111,7 +112,7 @@ namespace WeSay.Project
 		}
 		*/
 		// review: this might belong in a nother file...
-		public static IEnumerable<ViewTemplate> CreateViewTemplates(string xmlConfiguration, WritingSystemCollection writingSystems)
+		public static IEnumerable<ViewTemplate> CreateViewTemplates(string xmlConfiguration, IWritingSystemRepository writingSystems)
 		{
 			XPathDocument doc = new XPathDocument(new StringReader(xmlConfiguration));
 

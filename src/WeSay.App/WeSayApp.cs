@@ -3,12 +3,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Autofac;
 using CommandLine;
 using LiftIO;
 using Palaso.Code;
 using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
+using Palaso.UiBindings;
 using WeSay.App.Properties;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
@@ -55,6 +57,8 @@ namespace WeSay.App
 			OsCheck();
 			Logger.Init();
 			SetupErrorHandling();
+
+
 			//problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
 
 			//bring in settings from any previous version
@@ -63,8 +67,7 @@ namespace WeSay.App
 				Settings.Default.Upgrade();
 				Settings.Default.NeedUpgrade = false;
 			}
-			UsageReporter.AppNameToUseInDialogs = "WeSay";
-			UsageReporter.AppNameToUseInReporting = "WeSayApp";
+			 SetUpReporting();
 
 			if (!Parser.ParseArguments(args, _commandLineArguments, ShowCommandLineError))
 			{
@@ -75,6 +78,18 @@ namespace WeSay.App
 			{
 				WeSayWordsProject.PreventBackupForTests = true;  //hopefully will help the cross-process dictionary services tests to be more reliable
 			}
+		}
+
+		private static void SetUpReporting()
+		{
+			if (Settings.Default.Reporting == null)
+			{
+				Settings.Default.Reporting = new ReportingSettings();
+				Settings.Default.Save();
+			}
+			UsageReporter.Init(Settings.Default.Reporting, "wesay.palaso.org", "UA-22170471-6");
+			UsageReporter.AppNameToUseInDialogs = "WeSay";
+			UsageReporter.AppNameToUseInReporting = "WeSayApp";
 		}
 
 		public static void ReleaseMutexForThisProject()
@@ -185,7 +200,12 @@ namespace WeSay.App
 	   {
 		   try
 		   {
-			   _project.AddToContainer(b => b.Register<StatusBarController>());
+			   _project.AddToContainer(b => b.Register<StatusBarController>(container =>
+																				{
+																					var controller =new StatusBarController(container.Resolve<ICountGiver>());
+																					controller.ShowConfigLauncher = _commandLineArguments.launchedByConfigTool;
+																					return controller;
+																				}));
 			   _project.AddToContainer(b => b.Register<TabbedForm>());
 			   _tabbedForm = _project.Container.Resolve<TabbedForm>();
 			   _tabbedForm.Show(); // so the user sees that we did launch
@@ -332,6 +352,12 @@ namespace WeSay.App
 			}
 		}
 
+		private static void RunConfigTool()
+		{
+			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
+			ProcessStartInfo startInfo = new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"));
+			Process.Start(startInfo);
+		}
 
 	   private static WeSayWordsProject InitializeProject(string liftPath)
 		{
@@ -339,8 +365,8 @@ namespace WeSay.App
 			liftPath = DetermineActualLiftPath(liftPath);
 			if (liftPath == null)
 			{
-				ErrorReport.NotifyUserOfProblem(
-						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project, then click the 'Open in WeSay' button from that application's toolbar.");
+				MessageBox.Show(StringCatalog.Get("Welcome to WeSay.\r\nThe Configuration Tool will now open so that you can make a new project or choose an existing one."), StringCatalog.Get("No Default Project","The label on the message box which the user sees if WeSay can't figure out what project to open."), MessageBoxButtons.OK, MessageBoxIcon.Information);
+				RunConfigTool();
 				return null;
 			}
 
@@ -444,6 +470,12 @@ namespace WeSay.App
 					"Some things, like backup, just gum up automated tests.  This is used to turn them off."
 			, LongName = "launchedByUnitTest", DefaultValue = false, ShortName = "")]
 			public bool launchedByUnitTest;
+
+			[Argument(ArgumentTypes.AtMostOnce,
+	HelpText =
+			"Make it easy to get back to the configuration tool."
+	, LongName = "launchedByConfigTool", DefaultValue = false, ShortName = "")]
+			public bool launchedByConfigTool;
 		}
 
 		private static void ShowCommandLineError(string e)

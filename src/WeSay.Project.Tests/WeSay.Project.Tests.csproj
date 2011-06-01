@@ -168,11 +168,21 @@
   <ItemGroup>
 	<Compile Include="BasilProjectTests.cs" />
 	<Compile Include="ChorusBackupMakerTests.cs" />
-	<Compile Include="ConfigMigration\WeSayUserConfigMigrationTests.cs" />
+	<Compile Include="ConfigFileTests.cs" />
+	<Compile Include="CommonDirectoryFileTests.cs" />
+	<Compile Include="ConfigMigration\UserConfig\WeSayUserConfigMigrationTests.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingSystemsFromConfigFileCreatorTests.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingSystemsFromLiftCreatorTests.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingCollectionSystemTests.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsFileContent.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsMigratorTests.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingSystemsMigratorTests.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingSystem_V1Tests.cs" />
 	<Compile Include="LiftUpdateTests.cs" />
-	<Compile Include="ConfigMigration\WeSayConfigMigrationTests.cs" />
+	<Compile Include="ConfigMigration\WeSayConfig\WeSayConfigMigrationTests.cs" />
 	<Compile Include="PLiftExporterTests.cs" />
 	<Compile Include="ProjectDirectorySetupForTesting.cs" />
+	<Compile Include="ProjectFromLiftFolderCreatorTests.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
@@ -204,6 +214,10 @@
 	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
 	  <Name>WeSay.Project</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.TestUtilities\WeSay.TestUtilities.csproj">
+	  <Project>{FEC3014D-0067-4D59-A838-3B046EC3C352}</Project>
+	  <Name>WeSay.TestUtilities</Name>
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>

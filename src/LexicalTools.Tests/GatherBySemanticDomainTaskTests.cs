@@ -6,6 +6,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherBySemanticDomains;
@@ -13,6 +14,7 @@ using WeSay.Project;
 using Palaso.Lift.Options;
 
 using NUnit.Framework;
+using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -24,12 +26,12 @@ namespace WeSay.LexicalTools.Tests
 		private string _semanticDomainFilePath;
 		private string _filePath;
 		private ViewTemplate _viewTemplate;
-		private static string _vernacularWritingSystemId = "br";
+		private static string _vernacularWritingSystemId = WritingSystemsIdsForTests.VernacularIdForTest;
 
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 		}
 
 		[SetUp]
@@ -77,9 +79,9 @@ namespace WeSay.LexicalTools.Tests
 
 			v.Add(new Field(LexSense.WellKnownProperties.Definition,"LexSense", new string[]{"en"}));
 
-			if(!v.WritingSystems.ContainsKey("en"))
+			if(!v.WritingSystems.Contains("en"))
 			{
-				v.WritingSystems.Add("en", new WritingSystem("en", new Font("arial", 12)));
+				v.WritingSystems.Set(WritingSystemDefinition.FromLanguage("en"));
 			}
 			return v;
 		}
@@ -1164,6 +1166,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ParseFrenchSemanticDomainFile_Localized()
 		{
+			WeSayWordsProject.Project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("fr"));
 			string frenchSemanticDomainFilePath = Path.GetTempFileName();
 			using (StreamWriter streamWriter = File.CreateText(frenchSemanticDomainFilePath))
 			{
@@ -1171,14 +1174,14 @@ namespace WeSay.LexicalTools.Tests
 						@"<?xml version='1.0' encoding='utf-8'?>
 <semantic-domain-questions semantic-domain-type='DDP4' lang='fr'>
 <semantic-domain guid='I63403699-07C1-43F3-A47C-069D6E4316E5' id='1 Universe, creation'>
-<question>Quels sont les mots qui font référence à tout ce qu'on peut voir?</question>
+<question>Quels sont les mots qui font rï¿½fï¿½rence ï¿½ tout ce qu'on peut voir?</question>
 </semantic-domain>
 <semantic-domain guid='I999581C4-1611-4ACB-AE1B-5E6C1DFE6F0C' id='1.1 Sky'>
 <question>Quels sont les mots qui signifient le ciel?</question>
-<question>Quels sont les mots qui signifient l'endroit ou le pays au-delà du ciel?</question>
-<question>Quels sont les mots qui décrivent l'aspect du ciel?</question>
-<question>Quels sont les mots qui décrivent l'endroit où le ciel touche la terre?</question>
-<question>Quel terme général fait référence aux objets dans le ciel?</question>
+<question>Quels sont les mots qui signifient l'endroit ou le pays au-delï¿½ du ciel?</question>
+<question>Quels sont les mots qui dï¿½crivent l'aspect du ciel?</question>
+<question>Quels sont les mots qui dï¿½crivent l'endroit oï¿½ le ciel touche la terre?</question>
+<question>Quel terme gï¿½nï¿½ral fait rï¿½fï¿½rence aux objets dans le ciel?</question>
 </semantic-domain></semantic-domain-type>");
 			}
 

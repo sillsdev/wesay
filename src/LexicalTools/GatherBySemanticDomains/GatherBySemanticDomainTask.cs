@@ -12,6 +12,7 @@ using Palaso.i18n;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -30,7 +31,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private List<string> _domainNames;
 		private List<string> _words;
 
-		private WritingSystem _semanticDomainWritingSystem;
+		private WritingSystemDefinition _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
 		private OptionsList _semanticDomainOptionsList;
 
@@ -40,7 +41,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private readonly TaskMemory _taskMemory;
 		private GatherBySemanticDomainConfig _config;
 		private readonly ILogger _logger;
-		public WritingSystem DefinitionWritingSystem { get; set; }
+		public WritingSystemDefinition DefinitionWritingSystem { get; set; }
 
 		public GatherBySemanticDomainTask(
 			GatherBySemanticDomainConfig config,
@@ -102,10 +103,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
-			WritingSystem definitionWS;
-			viewTemplate.WritingSystems.TryGetValue(definitionWsId, out definitionWS);
-			Guard.AgainstNull(definitionWS, "Defintion Writing System");
-			DefinitionWritingSystem = definitionWS;
+			WritingSystemDefinition writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
+			Guard.AgainstNull(writingSystemForDefinition, "Defintion Writing System");
+			DefinitionWritingSystem = writingSystemForDefinition;
 
 			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
 		}
@@ -372,7 +372,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 						_words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
 					}
 				}
-				_words.Sort(WritingSystemUserIsTypingIn);
+				_words.Sort(WritingSystemUserIsTypingIn.Collator);
 				return _words;
 			}
 		}
@@ -451,7 +451,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
-		public WritingSystem SemanticDomainWritingSystem
+		public WritingSystemDefinition SemanticDomainWritingSystem
 		{
 			get
 			{
@@ -713,7 +713,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 				// should verify that this writing system is in optionslist
 				_semanticDomainWritingSystem =
-					BasilProject.Project.WritingSystems[WritingSystemIdForNamesAndQuestions];
+					BasilProject.Project.WritingSystems.Get(WritingSystemIdForNamesAndQuestions);
 				string semanticDomainType = reader.GetAttribute("semantic-domain-type");
 				// todo should verify that domain type matches type of optionList in semantic domain field
 

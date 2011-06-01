@@ -162,10 +162,9 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
 	</Reference>
-	<Reference Include="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+	<Reference Include="Mono.Addins, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
+	  <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
@@ -211,6 +210,12 @@
 	<Compile Include="ChorusControl.Designer.cs">
 	  <DependentUpon>ChorusControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="NewProjectCreation\NewProjectDialog.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="NewProjectCreation\NewProjectDialog.Designer.cs">
+	  <DependentUpon>NewProjectDialog.cs</DependentUpon>
+	</Compile>
 	<Compile Include="NewProjectCreation\NewProjectFromFLExDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -245,25 +250,13 @@
 	<Compile Include="FieldDetailControl.Designer.cs">
 	  <DependentUpon>FieldDetailControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="FontControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="FontControl.designer.cs">
-	  <DependentUpon>FontControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProject.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProject.Designer.cs">
-	  <DependentUpon>NewProject.cs</DependentUpon>
-	</Compile>
 	<Compile Include="NewProjectCreation\NewProjectInformationDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>
 	<Compile Include="NewProjectCreation\NewProjectInformationDialog.Designer.cs">
 	  <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
 	</Compile>
-	<Compile Include="NewProjectCreation\ProjectFromFLExCreator.cs" />
+	<Compile Include="NewProjectCreation\ProjectFromRawFLExLiftFilesCreator.cs" />
 	<Compile Include="OptionListControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -298,6 +291,10 @@
 	  <DependentUpon>ChorusControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
+	<EmbeddedResource Include="NewProjectCreation\NewProjectDialog.resx">
+	  <DependentUpon>NewProjectDialog.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
 	<EmbeddedResource Include="NewProjectCreation\NewProjectFromFLExDialog.resx">
 	  <DependentUpon>NewProjectFromFLExDialog.cs</DependentUpon>
 	  <SubType>Designer</SubType>
@@ -309,14 +306,6 @@
 	<EmbeddedResource Include="FieldDetailControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>FieldDetailControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="FontControl.resx">
-	  <DependentUpon>FontControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="NewProjectCreation\NewProject.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>NewProject.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="NewProjectCreation\NewProjectInformationDialog.resx">
 	  <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
@@ -367,21 +356,12 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>SettingsControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="WritingSystemBasic.resx">
-	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
 	<EmbeddedResource Include="WritingSystemForFieldControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WritingSystemForFieldControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="WritingSystemSetup.resx">
-	  <SubType>Designer</SubType>
 	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="WritingSystemSortControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>WritingSystemSortControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<None Include="app.config" />
 	<None Include="Properties\Settings.settings">
@@ -449,12 +429,6 @@
 	<Compile Include="SettingsControl.Designer.cs">
 	  <DependentUpon>SettingsControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="WritingSystemBasic.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="WritingSystemBasic.Designer.cs">
-	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
-	</Compile>
 	<Compile Include="WritingSystemForFieldControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -463,15 +437,6 @@
 	</Compile>
 	<Compile Include="WritingSystemSetup.cs">
 	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="WritingSystemSetup.Designer.cs">
-	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
-	</Compile>
-	<Compile Include="WritingSystemSortControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="WritingSystemSortControl.Designer.cs">
-	  <DependentUpon>WritingSystemSortControl.cs</DependentUpon>
 	</Compile>
   </ItemGroup>
   <ItemGroup>

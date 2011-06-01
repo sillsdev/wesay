@@ -127,7 +127,7 @@
 			 OutputFile="$(BaseDirectory)\common\WeSay.pot"
 			 MsdIdBugsTo="hattonjohn@gmail.com"
 			 XmlFiles="@(XmlFiles)"
-			 XPathToStrings="//label | //description[not(@UseInConstructor='false')]"
+			 XPathToStrings="//label | //longLabel | //description[not(@UseInConstructor='false')]"
 			 CSharpFiles="@(CSharpFiles)">
 	</MakePot>
   </Target>
@@ -191,10 +191,10 @@
 	<MSBuild Projects="$(BaseDirectory)\src\Installer\Installer.wixproj"/>
 
 	<!-- remove an existing one with the same name, if necessary -->
-	<Delete Files="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi" TreatErrorsAsWarnings="false" />
+	<Delete Files="$(BaseDirectory)\output\installer\WeSayInstaller-$(version).msi" TreatErrorsAsWarnings="false" />
 
 	<Move SourceFiles="$(BaseDirectory)\output\installer\WeSayInstaller.msi"
-			DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi"/>
+			DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller-$(version).msi"/>
   </Target>
 
   <!-- for use on a dev machine to test installer script -->
@@ -229,10 +229,10 @@
 	<MSBuild Projects="$(BaseDirectory)\src\Installer\Installer.wixproj"/>
 
 	<!-- remove an existing one with the same name, if necessary -->
-	<Delete Files="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi" TreatErrorsAsWarnings="false" />
+	<Delete Files="$(BaseDirectory)\output\installer\WeSayInstaller-$(version).msi" TreatErrorsAsWarnings="false" />
 
 	<Move SourceFiles="$(BaseDirectory)\output\installer\WeSayInstaller.msi"
-			DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi"/>
+			DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller-$(version).msi"/>
   </Target>
 
 
@@ -245,7 +245,7 @@
 	</CreateProperty>
 	<Message Text="Version: $(Version)" />
 
-	<Exec Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller.$(Version).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller.$(Version).msi'
+	<Exec Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller-$(version).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller-$(version).msi'
 		   WorkingDirectory="$(BaseDirectory)" />
   </Target>
 

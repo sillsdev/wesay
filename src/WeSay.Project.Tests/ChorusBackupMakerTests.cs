@@ -6,6 +6,7 @@ using Chorus.sync;
 using Chorus.Utilities;
 using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
+using Palaso.Progress.LogBox;
 using Palaso.TestUtilities;
 using Palaso.Xml;
 
@@ -90,12 +91,12 @@ namespace WeSay.Project.Tests
 				scenario.AssertDirExistsInWorkingDirectory(".hg");
 				scenario.AssertFileExistsInRepo("test.lift");
 				scenario.AssertFileExistsInRepo("test.WeSayConfig");
-				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "v.ldml"));
-				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "tpi.ldml"));
+				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "qaa.ldml"));
+				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "en.ldml"));
 				scenario.AssertFileExistsInWorkingDirectory("test.lift");
 				scenario.AssertFileExistsInWorkingDirectory("test.WeSayConfig");
-				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "v.ldml"));
-				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "tpi.ldml"));
+				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "qaa.ldml"));
+				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "en.ldml"));
 			}
 		}
 

@@ -11,9 +11,10 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 {
 	public class ConfigurationMigrator
 	{
-		public bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc,
-														  string targetPath)
+		public bool MigrateConfigurationXmlIfNeeded(string pathToConfigFile, string targetPath)
 		{
+			XPathDocument configurationDoc = GetConfigurationFileAsXPathDocument(pathToConfigFile);
+
 			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
 			bool didMigrate = false;
@@ -66,21 +67,20 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='7']") != null)
 			{
 				MigrateInCode(configurationDoc, targetPath);
-				configurationDoc = new XPathDocument(targetPath);
+				//configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
 			return didMigrate;
 
 		}
 
-		private void MigrateInCode(XPathDocument configurationDoc, string targetPath)
+		private static void MigrateInCode(XPathDocument configurationDoc, string targetPath)
 		{
 			XPathNavigator navigator = configurationDoc.CreateNavigator();
 
 			string tempFilePath = Path.GetTempFileName();
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.Indent = true;
-			XmlWriter writer = XmlWriter.Create(tempFilePath, settings);
+			var settings = CanonicalXmlSettings.CreateXmlWriterSettings();
+			var writer = XmlWriter.Create(tempFilePath, settings);
 
 			using (writer)
 			{
@@ -96,13 +96,32 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 			SafelyMoveTempFileTofinalDestination(tempFilePath, targetPath);
 		}
 
-		private void CopyChildren(XmlWriter writer, XPathNavigator navigator)
+		private static void CopyChildren(XmlWriter writer, XPathNavigator navigator)
 		{
 			navigator.MoveToFirstChild();
 			do
 			{
 				writer.WriteNode(navigator, true);
 			} while (navigator.MoveToNext());
+		}
+
+		private static XPathDocument GetConfigurationFileAsXPathDocument(string pathToConfigFile)
+		{
+			XPathDocument configurationDoc = null;
+			if (File.Exists(pathToConfigFile))
+			{
+				try
+				{
+					configurationDoc = new XPathDocument(pathToConfigFile);
+					//projectDoc.Load(Project.PathToConfigFile);
+				}
+				catch (Exception e)
+				{
+					ErrorReport.NotifyUserOfProblem("There was a problem reading the wesay config xml: " + e.Message);
+					configurationDoc = null;
+				}
+			}
+			return configurationDoc;
 		}
 
 		public static void MigrateUsingXSLT(IXPathNavigable configurationDoc,

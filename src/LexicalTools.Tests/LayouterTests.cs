@@ -3,8 +3,11 @@ using System.Windows.Forms;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
+using WeSay.TestUtilities;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 using Palaso.Lift;
@@ -20,7 +23,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			var b = new Autofac.Builder.ContainerBuilder();
 			b.Register(c => new MediaNamingHelper(new string[] {"en"}));
 
@@ -109,9 +112,9 @@ namespace WeSay.LexicalTools.Tests
 		private static LexEntry GetNewEntry()
 		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemVernId] =
+			entry.LexicalForm[WritingSystemsIdsForTests.VernacularIdForTest] =
 					"WordInVernacular";
-			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemAnalId] =
+			entry.LexicalForm[WritingSystemsIdsForTests.AnalysisIdForTest] =
 					"WordInAnalysis";
 			AddSense(entry);
 			AddSense(entry);
@@ -136,13 +139,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			string[] analysisWritingSystemIds = new string[]
 													{
-															BasilProject.Project.WritingSystems.
-																	TestWritingSystemAnalId
+															WritingSystemsIdsForTests.AnalysisIdForTest
 													};
 			string[] vernacularWritingSystemIds = new string[]
 													  {
-															  BasilProject.Project.WritingSystems.
-																	  TestWritingSystemVernId
+															  WritingSystemsIdsForTests.VernacularIdForTest
 													  };
 			ViewTemplate viewTemplate = new ViewTemplate();
 			Field field = new Field(Field.FieldNames.EntryLexicalForm.ToString(),
@@ -189,8 +190,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexExampleSentence example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);
-			example.Sentence[BasilProject.Project.WritingSystems.TestWritingSystemVernId] =
-					"sentence";
+			example.Sentence[WritingSystemsIdsForTests.VernacularIdForTest] = "sentence";
 		}
 	}
 }

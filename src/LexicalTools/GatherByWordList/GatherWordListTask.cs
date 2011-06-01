@@ -12,6 +12,7 @@ using Palaso.Lift.Options;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.Text;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -26,7 +27,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private List<LexEntry> _words;
 		private int _currentWordIndex;
 		private readonly string _preferredEllicitationWritingSystem;
-		private readonly WritingSystem _lexicalUnitWritingSystem;
+		private readonly WritingSystemDefinition _lexicalUnitWritingSystem;
 		private IList<string> _definitionWritingSystemIds;
 		private bool _usingLiftFile;
 
@@ -46,21 +47,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			//for now, this is figure out more carefully in GetPathToUse
 			_usingLiftFile =  ".lift"==Path.GetExtension(config.WordListFileName).ToLower();
 
-			Field lexicalFormField = viewTemplate.GetField(
-				Field.FieldNames.EntryLexicalForm.ToString()
-			);
-			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
-			{
-				_lexicalUnitWritingSystem =
-						BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
-			}
-			else
-			{
-				string firstWSid = lexicalFormField.WritingSystemIds[0];
-				WritingSystem firstWS = BasilProject.Project.WritingSystems[firstWSid];
-				_lexicalUnitWritingSystem = firstWS;
-			}
-
+			_lexicalUnitWritingSystem =
+				viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
 			_lexemeFormListFileName = config.WordListFileName;
 			_words = null;
 			_preferredEllicitationWritingSystem = config.WordListWritingSystemIdOfOldFlatWordList;
@@ -242,14 +230,13 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 		}
 
-		public WritingSystem GetWritingSystemOfLanguageForm(LanguageForm languageForm)
+		public WritingSystemDefinition GetWritingSystemOfLanguageForm(LanguageForm languageForm)
 		{
-			WritingSystem ws;
-			if(!_viewTemplate.WritingSystems.TryGetValue(languageForm.WritingSystemId, out ws))
+			if(!_viewTemplate.WritingSystems.Contains(languageForm.WritingSystemId))
 			{
 				return null;
 			}
-			return ws;
+			return _viewTemplate.WritingSystems.Get(languageForm.WritingSystemId);
 		}
 
 		public LexSense CurrentTemplateSense
@@ -333,7 +320,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		{
 
 			if (!_usingLiftFile &&
-					!WeSayWordsProject.Project.WritingSystems.ContainsKey(
+					!WeSayWordsProject.Project.WritingSystems.Contains(
 							 _preferredEllicitationWritingSystem))
 			{
 				ErrorReport.NotifyUserOfProblem(
@@ -343,6 +330,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 			if (_words == null)
 			{
+				Cursor.Current = Cursors.WaitCursor;
 				LoadWordList();
 			}
 			base.Activate();
@@ -434,6 +422,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				entry.LexicalForm.MergeIn(lexemeForm);
 				entry.Senses.Add(sense);
 				LexEntryRepository.SaveItem(entry);
+				Logger.WriteEvent("WordList-Adding new word '{0}'and givin the sense '{1}'", entry.GetSimpleFormForLogging(), sense.Gloss.Forms[0] );
 			}
 			else
 			{
@@ -448,12 +437,17 @@ namespace WeSay.LexicalTools.GatherByWordList
 								s.Gloss.GetExactAlternative(glossWeAreAdding.WritingSystemId);
 						if (glossInThisWritingSystem == glossWeAreAdding.Form)
 						{
+							Logger.WriteEvent("WordList '{0}' already exists in '{1}'", sense.Gloss.Forms[0], entry.GetSimpleFormForLogging());
 							return; //don't add it again
 						}
 					}
 				}
 				entry.Senses.Add(sense);
-				LexEntryRepository.NotifyThatLexEntryHasBeenUpdated(entry);
+				//REVIEW: June 2011, Hatton added this, because of WS-34024: if a new *meaning* was added to an existing entry,
+				//and then the user quit, this change was unsaved.
+				LexEntryRepository.SaveItem(entry);
+				Logger.WriteEvent("WordList-Added '{0}' to preexisting '{1}'", sense.Gloss.Forms[0], entry.GetSimpleFormForLogging());
+
 			}
 		}
 
@@ -521,13 +515,13 @@ namespace WeSay.LexicalTools.GatherByWordList
 			CurrentIndexIntoWordlist = 0;
 		}
 
-		public ResultSet<LexEntry> NotifyOfAddedWord()
-		{
-			return
-					LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
-							CurrentWordAsMultiText.Find(_preferredEllicitationWritingSystem),
-							_lexicalUnitWritingSystem);
-		}
+//        public ResultSet<LexEntry> NotifyOfAddedWord()
+//        {
+//            return
+//                    LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
+//                            CurrentWordAsMultiText.Find(_preferredEllicitationWritingSystem),
+//                            _lexicalUnitWritingSystem);
+//        }
 
 		public ResultSet<LexEntry> GetRecordsWithMatchingGloss()
 		{

@@ -10,6 +10,7 @@ using Palaso.Reporting;
 using Palaso.TestUtilities;
 using WeSay.Project;
 using WeSay.Project.Tests;
+using WeSay.TestUtilities;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -42,7 +43,7 @@ namespace WeSay.ConfigTool.Tests
 				WeSayWordsProject.Project.Dispose();
 			}
 
-			TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
+			Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
 		}
 
 		[Test]
@@ -63,14 +64,14 @@ namespace WeSay.ConfigTool.Tests
 		public void AfterCreateProjectAndQuitFilesExist()
 		{
 			List<string> paths = new List<string>();
-			_window.CreateAndOpenProject(_projectFolder);
-			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "en.ldml"));
-			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "es.ldml"));
-			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "fr.ldml"));
-			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "id.ldml"));
+			_window.CreateAndOpenProject(_projectFolder, "th");
 			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "th.ldml"));
-			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "tpi.ldml"));
-			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "v.ldml"));
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "en.ldml"));
+			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "es.ldml"));
+			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "fr.ldml"));
+			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "id.ldml"));
+			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "th.ldml"));
+			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "tpi.ldml"));
 			paths.Add(WeSayWordsProject.Project.PathToConfigFile);
 			//paths.Add(WeSayWordsProject.Project.PathToRepository);
 			_mainWindowTester.Close();
@@ -113,7 +114,7 @@ namespace WeSay.ConfigTool.Tests
 		[Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
 		public void WalkTabsAfterCreateNewProject()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 			WalkTopLevelTabs();
 
 		}
@@ -121,7 +122,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void CreateNewProjectThenOpen()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 		}
 
 		[Test]
@@ -143,7 +144,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void NewProjectHasValidStructure()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 			string path = WeSayWordsProject.Project.PathToConfigFile;
 			XPathDocument doc = new XPathDocument(path);
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version]"));
@@ -153,22 +154,12 @@ namespace WeSay.ConfigTool.Tests
 
 		private void CreateProjectAndGoToTaskControl()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 
 			ClickToolStripButton("_tasksButton");
 			//            GotoProjectTab("_tasksPage");
 		}
 
-		[Test]
-		public void NewProjectShowsMultipleWritingSystems()
-		{
-			_window.CreateAndOpenProject(_projectFolder);
-
-			ClickToolStripButton("_writingSystemButton");
-			//GotoProjectTab("_writingSystemPage");
-			ListBoxTester c = new ListBoxTester("_wsListBox", _window);
-			Assert.Greater(c.Properties.Items.Count, 2);
-		}
 
 		//        private static void GotoProjectTab(string projectTabName)
 		//        {
@@ -212,13 +203,13 @@ namespace WeSay.ConfigTool.Tests
 		public void RunAndExitWithoutOpening()
 		{
 			_mainWindowTester.Close();
-			WeSayWordsProject.InitializeForTests(); // for Teardown
+			WeSayProjectTestHelper.InitializeForTests(); // for Teardown
 		}
 
 		[Test]
 		public void ExistingProjectGetsNewTasks()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 		}
 	}
 

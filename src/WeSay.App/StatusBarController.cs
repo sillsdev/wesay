@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Palaso.i18n;
 using Palaso.UiBindings;
+using WeSay.App.Properties;
+using WeSay.LexicalTools.Dashboard;
 
 namespace WeSay.App
 {
@@ -10,10 +13,22 @@ namespace WeSay.App
 		private readonly ICountGiver _countGiver;
 		private Timer _timer;
 		private readonly ToolStripStatusLabel _wordCountLabel;
+		private ToolStripItem _launchConfigToolLink;
 
 		public StatusBarController(ICountGiver counterGiver)
 		{
 			_countGiver = counterGiver;
+
+			_launchConfigToolLink = new ToolStripButton()
+										{
+											Text = "Configure This Project...",
+											//doesn't work Alignment = ToolStripItemAlignment.Right
+
+
+										};
+			_launchConfigToolLink.Margin = new Padding(100,0,0,0);
+			_launchConfigToolLink.Image = Resources.WeSayConfigMenuSized;
+			_launchConfigToolLink.Click += Dash.OnRunConfigureTool;
 			_wordCountLabel = new ToolStripStatusLabel();
 
 			_timer = new Timer();
@@ -36,12 +51,20 @@ namespace WeSay.App
 			_timer.Start();
 		}
 
+		public bool ShowConfigLauncher
+		{
+			set
+			{
+				_launchConfigToolLink.Visible = value;
+			}
+		}
+
 		public StatusStrip StatusStrip
 		{
 			get { return null;}
 			set
 			{
-				value.Items.AddRange(new ToolStripItem[] { _wordCountLabel });
+				value.Items.AddRange(new ToolStripItem[] { _wordCountLabel, _launchConfigToolLink });
 			}
 		}
 

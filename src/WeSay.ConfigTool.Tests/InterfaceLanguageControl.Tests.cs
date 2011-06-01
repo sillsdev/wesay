@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
+using Palaso.IO;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
 using WeSay.Project;
@@ -51,7 +52,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -75,7 +76,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -103,7 +104,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -132,7 +133,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -218,7 +219,7 @@ namespace WeSay.ConfigTool.Tests
 			_window = new ConfigurationWindow(new string[] {});
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
-			_window.CreateAndOpenProject(path);
+			_window.CreateAndOpenProject(path, "th");
 			GoToUILanguageTab();
 			return new ComboBoxTester("_languageCombo", _window);
 		}

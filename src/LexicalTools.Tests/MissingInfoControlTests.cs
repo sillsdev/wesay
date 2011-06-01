@@ -3,12 +3,14 @@ using System.Drawing;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
 
 using NUnit.Framework;
+using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -20,7 +22,7 @@ namespace WeSay.LexicalTools.Tests
 		private string _filePath;
 		private ResultSet<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
-		private WritingSystem _writingSystem;
+		private WritingSystemDefinition _writingSystem;
 
 		private static bool IsMissingTranslation(LexEntry entry)
 		{
@@ -36,7 +38,7 @@ namespace WeSay.LexicalTools.Tests
 				foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)
 				{
 					hasExample = true;
-					if (exampleSentence.Translation["analysis"].Length == 0)
+					if (exampleSentence.Translation[WritingSystemsIdsForTests.AnalysisIdForTest].Length == 0)
 					{
 						return true;
 					}
@@ -48,14 +50,13 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 
 			_tempFolder = new TemporaryFolder();
 			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			_writingSystem = new WritingSystem("pretendVernacular",
-											   new Font(FontFamily.GenericSansSerif, 24));
+			_writingSystem = WritingSystemDefinition.FromLanguage(WritingSystemsIdsForTests.OtherIdForTest);
 
 			CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
 			CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
@@ -64,7 +65,7 @@ namespace WeSay.LexicalTools.Tests
 							"Watch out for cars when you cross the street.");
 			CreateTestEntry("dog", "animal with four legs; man's best friend", "He walked his dog.");
 
-			string[] analysisWritingSystemIds = new[] {"analysis"};
+			string[] analysisWritingSystemIds = new[] { WritingSystemsIdsForTests.AnalysisIdForTest };
 			string[] vernacularWritingSystemIds = new[] {_writingSystem.Id};
 			RtfRenderer.HeadWordWritingSystemId = vernacularWritingSystemIds[0];
 
@@ -99,7 +100,7 @@ namespace WeSay.LexicalTools.Tests
 			entry.LexicalForm[_writingSystem.Id] = lexicalForm;
 			var sense = new LexSense();
 			entry.Senses.Add(sense);
-			sense.Definition["analysis"] = Definition;
+			sense.Definition[WritingSystemsIdsForTests.AnalysisIdForTest] = Definition;
 			var example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);
 			example.Sentence[_writingSystem.Id] = exampleSentence;
@@ -111,7 +112,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexSense sense = entry.Senses[0];
 			LexExampleSentence example = sense.ExampleSentences[0];
-			example.Translation["analysis"] = translation;
+			example.Translation[WritingSystemsIdsForTests.AnalysisIdForTest] = translation;
 		}
 
 		[TearDown]
