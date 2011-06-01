@@ -52,25 +52,14 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 						{
 							newId = MakeUniqueTag(newId, uniqueIdsInFile);
 						}
-						idsToChange[idInFile] = newId;
+						Palaso.IO.FileUtils.GrepFile(pathToLiftFile,
+												 String.Format(@"lang\s*=\s*[""']{0}[""']", idInFile),
+												 String.Format(@"lang=""{0}""", newId));
 					}
-				}
-
-				foreach (var pair in idsToChange)
-				{
-					string fromId = pair.Key;
-					string toId = pair.Value;
-
-					// Update WritingSystems
-					if (!writingSystems.Contains(toId))
+					if(!writingSystems.Contains(newId))
 					{
-						writingSystems.Set(WritingSystemDefinition.Parse(toId));
+						writingSystems.Set(WritingSystemDefinition.Parse(newId));
 					}
-
-					// Update the LIFT file
-					Palaso.IO.FileUtils.GrepFile(pathToLiftFile,
-												 String.Format(@"lang\s*=\s*[""']{0}[""']", fromId),
-												 String.Format(@"lang=""{0}""", toId));
 				}
 				writingSystems.Save();
 			}

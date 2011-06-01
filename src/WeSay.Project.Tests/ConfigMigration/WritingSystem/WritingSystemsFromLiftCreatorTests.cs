@@ -54,6 +54,10 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				lang='audio'>
 				<text>ฉู่ฉี่หมูรอบ</text>
 			</form>
+			<form
+				lang='de'>
+				<text>ฉู่ฉี่หมูรอบ</text>
+			</form>
 		</lexical-unit>
 		<sense
 			id='df801833-d55b-4492-b501-650da7bc7b73'>
@@ -159,6 +163,22 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				environment.Creator.CreateNonExistentWritingSystemsFoundInLift(environment.PathToLiftFileWithDuplicates);
 				AssertThatXmlIn.File(environment.PathToLiftFileWithDuplicates).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-wee-dupl1']");
 				AssertThatXmlIn.File(environment.PathToLiftFileWithDuplicates).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-wee']");
+			}
+		}
+
+		[Test]
+		public void CreateNonExistentWritingSystemsFoundInLift_LiftFileContainsConformantRfcTagWithNoCorrespondingLdml_CreatesLdml()
+		{
+			using (var environment = new TestEnvironment())
+			{
+				environment.Creator.CreateNonExistentWritingSystemsFoundInLift(environment.PathToLiftFile);
+				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='de']");
+				string writingSystem1FilePath = Path.Combine(environment.WritingSystemsPath, "de.ldml");
+				Assert.That(File.Exists(writingSystem1FilePath), Is.True);
+				AssertThatXmlIn.File(writingSystem1FilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='de']");
+				AssertThatXmlIn.File(writingSystem1FilePath).HasNoMatchForXpath("/ldml/identity/script");
+				AssertThatXmlIn.File(writingSystem1FilePath).HasNoMatchForXpath("/ldml/identity/territory");
+				AssertThatXmlIn.File(writingSystem1FilePath).HasNoMatchForXpath("/ldml/identity/variant");
 			}
 		}
 	}
