@@ -86,51 +86,13 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 					string tempFile = Path.GetTempFileName();
 					File.Copy(configFilepath, tempFile, true);
 
-					XmlDocument configFileXmlDocument = new XmlDocument();
-					configFileXmlDocument.Load(tempFile);
-
-					const int versionOfConfigFileInWhichWeCanRenameRfcTags = 8;
-					XmlNode versionNode = configFileXmlDocument.SelectSingleNode("configuration/@version");
-					if ((versionNode == null) || (Convert.ToInt32(versionNode.Value) != versionOfConfigFileInWhichWeCanRenameRfcTags))
+					var configFile = new ConfigFile(tempFile);
+					foreach (var oldAndNewId in newToOldTagMap)
 					{
-						throw new ApplicationException(String.Format(
-							"Some writing system Rfc tags were changed during writingsystem migration and WeSay needs to update your '.WeSayConfig' file. However, that file is not version {0} and so WeSay cannot make the necassary changes.", versionOfConfigFileInWhichWeCanRenameRfcTags));
+						configFile.ReplaceWritingSystemId(oldAndNewId.RfcTagBeforeMigration, oldAndNewId.RfcTagAfterMigration);
 					}
-
-					ReplaceWritingSystemIdsAtXPath(configFileXmlDocument, "//writingSystems/id", oldAndNewRfcTag);
-					ReplaceWritingSystemIdsAtXPath(configFileXmlDocument, "//writingSystemsToMatch", oldAndNewRfcTag);
-					ReplaceWritingSystemIdsAtXPath(configFileXmlDocument, "//writingSystemsWhichAreRequired", oldAndNewRfcTag);
-
-					configFileXmlDocument.Save(tempFile);
 					SafelyMoveTempFileTofinalDestination(tempFile, configFilepath);
 				}
-			}
-		}
-
-		private void ReplaceWritingSystemIdsAtXPath(XmlDocument configFileXmlDocument, string xPath, LdmlVersion0MigrationStrategy.MigrationInfo oldAndNewRfcTag)
-		{
-			XmlNodeList writingSystemIdNodes;
-			writingSystemIdNodes = configFileXmlDocument.SelectNodes(xPath);
-			foreach (XmlNode writingsystemidNode in writingSystemIdNodes)
-			{
-				var newIds = new StringBuilder();
-				foreach (var writingSystemId in writingsystemidNode.InnerText.Split(','))
-				{
-					var trimmedWritingSystemId = writingSystemId.Trim();
-					//If we already have a writingSystemId append a comma
-					if (newIds.Length != 0)
-					{
-						newIds.Append(", ");
-					}
-
-					if (trimmedWritingSystemId.Equals(oldAndNewRfcTag.RfcTagBeforeMigration))
-					{
-						newIds.Append(oldAndNewRfcTag.RfcTagAfterMigration);
-						continue;
-					}
-					newIds.Append(trimmedWritingSystemId);
-				}
-				writingsystemidNode.InnerText = newIds.ToString();
 			}
 		}
 

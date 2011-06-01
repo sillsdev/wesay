@@ -203,7 +203,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
-				Assert.Throws<ApplicationException>(migrator.MigrateIfNecessary);
+				Assert.Throws<ConfigurationFileTooNewException>(migrator.MigrateIfNecessary);
 			}
 		}
 

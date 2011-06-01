@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using Palaso.WritingSystems;
 using Palaso.WritingSystems.Migration;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project
@@ -66,134 +68,88 @@ namespace WeSay.Project
 
 		public void ReplaceWritingSystemId(string oldId, string newId)
 		{
-			string pathToConfigFile = _configFilePath;
-			string tempFile = System.IO.Path.GetTempFileName();
-			File.Copy(pathToConfigFile, tempFile, true);
-			var xmlDoc = new XmlDocument();
-
-			xmlDoc.Load(tempFile);
-			switch (Version)
-			{
-				case 7:
-					ReplaceAsInVersion7(xmlDoc, oldId, newId);
-					break;
-				case 8:
-					ReplaceAsInVersion7(xmlDoc, oldId, newId);
-					break;
-				default:
-					throw new ApplicationException(
-						String.Format("Can not rename writing systems in config files of version {0}.", Version));
-			}
-
-			xmlDoc.Save(tempFile);
-			SafelyMoveTempFileTofinalDestination(tempFile, pathToConfigFile);
+			ReplaceWritingSystemIdsAtXPath("//writingSystems/id", oldId, newId);
+			ReplaceWritingSystemIdsAtXPath("//writingSystemsToMatch", oldId, newId);
+			ReplaceWritingSystemIdsAtXPath("//writingSystemsWhichAreRequired", oldId, newId);
+			ReplaceWritingSystemIdsAtXPath("//EnglishLanguageWritingSystemId", oldId, newId);
+			ReplaceWritingSystemIdsAtXPath("//RegionalLanguageWritingSystemId", oldId, newId);
+			ReplaceWritingSystemIdsAtXPath("//NationalLanguageWritingSystemId", oldId, newId);
+			ReplaceWritingSystemIdsAtXPath("//VernacularLanguageWritingSystemId", oldId, newId);
+			_xmlDocument.Save(_configFilePath);
 		}
 
-		private static void SafelyMoveTempFileTofinalDestination(string tempPath, string targetPath)
+		private void ReplaceWritingSystemIdsAtXPath(string xPath, string oldId, string newId)
 		{
-			string s = targetPath + ".tmp";
-			if (File.Exists(s))
-			{
-				File.Delete(s);
-			}
-			if (File.Exists(targetPath)) //review: JDH added this because of a failing test, and from my reading, the target shouldn't need to pre-exist
-			{
-				File.Move(targetPath, s);
-			}
-			File.Move(tempPath, targetPath);
-			File.Delete(s);
-		}
-
-		private static void ReplaceAsInVersion7(XmlDocument xmlDoc, string oldId, string newId)
-		{
-			XmlNodeList writingSystemIdNodes = xmlDoc.SelectNodes("//writingSystems/id");
+			XmlNodeList writingSystemIdNodes = _xmlDocument.SelectNodes(xPath);
 			foreach (XmlNode writingsystemidNode in writingSystemIdNodes)
 			{
-				if (writingsystemidNode.InnerText == oldId)
+				var newIds = new StringBuilder();
+				foreach (var writingSystemId in writingsystemidNode.InnerText.Split(','))
 				{
-					writingsystemidNode.InnerText = newId;
+					var trimmedWritingSystemId = writingSystemId.Trim();
+					//If we already have a writingSystemId append a comma
+					if (newIds.Length != 0)
+					{
+						newIds.Append(", ");
+					}
+
+					if (trimmedWritingSystemId.Equals(oldId))
+					{
+						newIds.Append(newId);
+						continue;
+					}
+					newIds.Append(trimmedWritingSystemId);
 				}
+				writingsystemidNode.InnerText = newIds.ToString();
 			}
 		}
 
-		public void CreateNonExistentWritingSystemsFoundInConfigFile(string pathToWritingSystemsFolder)
+		private IEnumerable<string> WritingSystemsInUse
 		{
-				XmlNode versionNode = _xmlDocument.SelectSingleNode("configuration/@version");
-				if (versionNode == null)
-				{
-					throw new ApplicationException("Unable to determine the config file version.");
-				}
-				int versionOf_xmlDocument = Convert.ToInt32(versionNode.Value);
-				//versions 8 and 9 are structurally identical
-				if ((versionOf_xmlDocument != 8) && (versionOf_xmlDocument != 9))
-				{
-					throw new ConfigurationFileTooNewException(8, versionOf_xmlDocument);
-				}
-
-				//this section fixes all the writingsystems in the fields section
-				var fieldWritingSystemNodes =
-					_xmlDocument.SelectNodes("/configuration/components/viewTemplate/fields/field/writingSystems/id");
-				if (fieldWritingSystemNodes != null)
-				{
-					foreach (XmlNode node in fieldWritingSystemNodes)
-					{
-						node.InnerXml = GetNewId(node.InnerXml);
-					}
-				}
-
-				//this section fixes all the writing systems in the tasks section
-				var tasksWritingSystemNodes = _xmlDocument.SelectNodes("/configuration/tasks/task/writingSystemsToMatch").Cast<XmlNode>().Concat(_xmlDocument.SelectNodes("/configuration/tasks/task/writingSystemsWhichAreRequired").Cast<XmlNode>());
-				if (tasksWritingSystemNodes != null)
-				{
-					foreach (XmlNode node in tasksWritingSystemNodes)
-					{
-						//The innerxml is a comma separated list so we need to split and trim
-						node.InnerXml = String.Join(", ", node.InnerXml.Split(',').Select(str => str.Trim()).Select(str => GetNewId(str)).ToArray());
-					}
-				}
-
-				//this section  fixes the writing systems in the sfm export task
-				var sfmExportWritingSystemNodes =
+			get
+			{
+				IEnumerable<string> fieldWritingsystems = _xmlDocument.SelectNodes("/configuration/components/viewTemplate/fields/field/writingSystems/id").Cast<XmlNode>().Select(node => node.InnerXml);
+				IEnumerable<string> taskWritingSystems = _xmlDocument.SelectNodes("/configuration/tasks/task/writingSystemsToMatch").Cast<XmlNode>().Concat(
+										 _xmlDocument.SelectNodes("/configuration/tasks/task/writingSystemsWhichAreRequired").Cast<XmlNode>()).
+										 SelectMany(node=>node.InnerXml.Split(',').Select(str => str.Trim()));
+				IEnumerable<string> sfmExportWritingSystems =
 					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/EnglishLanguageWritingSystemId").Cast<XmlNode>().Concat(
 					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/NationalLanguageWritingSystemId").Cast<XmlNode>()).Concat(
 					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/RegionalLanguageWritingSystemId").Cast<XmlNode>()).Concat(
-					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/VernacularLanguageWritingSystemId").Cast<XmlNode>());
-				if (sfmExportWritingSystemNodes != null)
-				{
-					foreach (XmlNode node in sfmExportWritingSystemNodes)
-					{
-						//The innerxml is a comma separated list so we need to split and trim
-						node.InnerXml = GetNewId(node.InnerXml);
-					}
-				}
-
-				_xmlDocument.Save(_configFilePath);
-
-				var writingSystemRepo = new LdmlInFolderWritingSystemRepository(pathToWritingSystemsFolder);
-				foreach (var newId in _oldToNewIdMap.Values)
-				{
-					if (!writingSystemRepo.Contains(newId))
-					{
-						writingSystemRepo.Set(WritingSystemDefinition.Parse(newId));
-					}
-				}
-				writingSystemRepo.Save();
+					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/VernacularLanguageWritingSystemId").Cast<XmlNode>()).
+					Select(node => node.InnerXml); ;
+				return fieldWritingsystems.Concat(taskWritingSystems).Concat(sfmExportWritingSystems).Distinct().Where(str => !String.IsNullOrEmpty(str));
+			}
 		}
 
-		private string GetNewId(string currentWritingSystemId)
+		public void CreateWritingSystemsForIdsInFileWhereNecassary(string pathToWritingSystemsFolder)
 		{
-			if (!_oldToNewIdMap.Keys.Contains(currentWritingSystemId))
+			var writingSystemRepo = new LdmlInFolderWritingSystemRepository(pathToWritingSystemsFolder);
+			foreach (var wsId in WritingSystemsInUse)
 			{
+				string conformantId = GetNewId(wsId);
+				if(conformantId != wsId)
+				{
+					if (WritingSystemsInUse.Any(str => str.Equals(conformantId, StringComparison.OrdinalIgnoreCase)))
+					{
+						conformantId = MakeUniqueTag(conformantId, WritingSystemsInUse);
+					}
+					ReplaceWritingSystemId(wsId, conformantId);
+				}
+				if (!writingSystemRepo.Contains(conformantId))
+				{
+					writingSystemRepo.Set(WritingSystemDefinition.Parse(conformantId));
+				}
+			}
+			writingSystemRepo.Save();
+		}
+
+		private static string GetNewId(string currentWritingSystemId)
+		{
 				var rfcTagCleaner = new Rfc5646TagCleaner(currentWritingSystemId);
 				rfcTagCleaner.Clean();
 				string newId = rfcTagCleaner.GetCompleteTag();
-				if (_oldToNewIdMap.Values.Any(str => str.Equals(newId, StringComparison.OrdinalIgnoreCase)))
-				{
-					newId = MakeUniqueTag(newId, _oldToNewIdMap.Values);
-				}
-				_oldToNewIdMap[currentWritingSystemId] = newId;
-			}
-			return _oldToNewIdMap[currentWritingSystemId];
+			return newId;
 		}
 
 		private static string MakeUniqueTag(string rfcTag, IEnumerable<string> uniqueRfcTags)

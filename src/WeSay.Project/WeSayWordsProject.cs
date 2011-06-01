@@ -46,7 +46,6 @@ namespace WeSay.Project
 {
 	public class WeSayWordsProject : BasilProject, IFileLocator
 	{
-		private ConfigFile _configFile;
 		private IList<ITask> _tasks;
 		private ViewTemplate _defaultViewTemplate;
 		private IList<ViewTemplate> _viewTemplates;
@@ -345,12 +344,6 @@ namespace WeSay.Project
 			//may have already been done, but maybe not
 			MoveFilesFromOldDirLayout(projectDirectoryPath);
 
-			bool needToProcessConfigAfterCreation=false;
-			if (File.Exists(PathToConfigFile)) // will be null if we're creating a new project
-			{
-				_configFile = new ConfigFile(PathToConfigFile);
-				_configFile.MigrateIfNecassary();
-			}
 			if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
 			{
 				var dialog = new ProgressDialog();
@@ -372,19 +365,29 @@ namespace WeSay.Project
 			//review: is this the right place for this?
 			PopulateDIContainer();
 
-			var userConfigMigrator = new WeSayUserConfigMigrator(PathToUserSpecificConfigFile);
-			userConfigMigrator.MigrateIfNeeded();
-
 			LoadUserConfig();
 			InitStringCatalog();
 		}
 
 		private void OnDoMigration(object sender, DoWorkEventArgs e)
 		{
+			ConfigFile configFile = null;
+			if (File.Exists(PathToConfigFile)) // will be null if we're creating a new project
+			{
+				configFile = new ConfigFile(PathToConfigFile);
+				configFile.MigrateIfNecassary();
+			}
 			var writingSystemMigrator = new WritingSystemsMigrator(ProjectDirectoryPath);
 			writingSystemMigrator.MigrateIfNecessary();
-			WritingSystemsFromLiftCreator wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
+			var wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
 			wsCreator.CreateNonExistentWritingSystemsFoundInLift(PathToLiftFile);
+			if (configFile != null)
+			{
+				configFile.CreateWritingSystemsForIdsInFileWhereNecassary(BasilProject.GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
+			}
+
+			var userConfigMigrator = new WeSayUserConfigMigrator(PathToUserSpecificConfigFile);
+			userConfigMigrator.MigrateIfNeeded();
 		}
 
 		[Serializable]
@@ -1244,12 +1247,6 @@ namespace WeSay.Project
 				   Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WeSay");
 			}
 		}
-
-		public ConfigFile ConfigFile
-		{
-			get { return _configFile; }
-		}
-
 
 		public override void Save()
 		{

@@ -505,7 +505,59 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		public void OpenProject_WritingsystemsAreInOldWsPrefsFormat_WritingSystemsAreMigrated()
+		public void OpenProject_ConfigFileContainsWritingSystemIdForWhichThereIsNoLdml_LdmlIsCreated()
+		{
+			using (var projectDirectory = new TemporaryFolder())
+			{
+				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
+				var project = new WeSayWordsProject();
+				string liftFilePath = Path.Combine(projectDirectory.Path, "test.lift");
+				File.WriteAllText(liftFilePath, "<?xml version='1.0' encoding='utf-8'?><lift version='0.12'></lift>");
+
+				//Grab a valid configfile and insert german into it
+				string configFilePath = Path.Combine(projectDirectory.Path, "test.WeSayConfig");
+				File.Copy(Path.Combine(project.ApplicationTestDirectory, "PRETEND.WeSayConfig"), configFilePath);
+				var configFile = new XmlDocument();
+				configFile.Load(configFilePath);
+				var node = configFile.SelectSingleNode(
+					"/configuration/components/viewTemplate/fields/field/writingSystems/id");
+				node.InnerXml = "de";
+				configFile.Save(configFilePath);
+
+				project.LoadFromProjectDirectoryPath(projectDirectory.Path);
+
+				Assert.That(project.WritingSystems.Contains("de"));
+			}
+		}
+
+		[Test]
+		public void OpenProject_ConfigFileContainsWritingSystemIdForWhichThereIsNoLdml_ProjectHasWritingSystem()
+		{
+			using (var projectDirectory = new TemporaryFolder())
+			{
+				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
+				var project = new WeSayWordsProject();
+				string liftFilePath = Path.Combine(projectDirectory.Path, "test.lift");
+				File.WriteAllText(liftFilePath, "<?xml version='1.0' encoding='utf-8'?><lift version='0.12'></lift>");
+
+				//Grab a valid configfile and insert german into it
+				string configFilePath = Path.Combine(projectDirectory.Path, "test.WeSayConfig");
+				File.Copy(Path.Combine(project.ApplicationTestDirectory, "PRETEND.WeSayConfig"), configFilePath);
+				var configFile = new XmlDocument();
+				configFile.Load(configFilePath);
+				var node = configFile.SelectSingleNode(
+					"/configuration/components/viewTemplate/fields/field/writingSystems/id");
+				node.InnerXml = "de";
+				configFile.Save(configFilePath);
+
+				project.LoadFromProjectDirectoryPath(projectDirectory.Path);
+
+				Assert.That(File.Exists(Path.Combine(WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.Path), "de.ldml")), Is.True);
+			}
+		}
+
+		[Test]
+		public void LoadFromLiftLexiconPath_WritingsystemsAreInOldWsPrefsFormat_WritingSystemsAreMigrated()
 		{
 			var language = "english";
 			using(var projectDirectory = new TemporaryFolder())
