@@ -422,7 +422,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				entry.LexicalForm.MergeIn(lexemeForm);
 				entry.Senses.Add(sense);
 				LexEntryRepository.SaveItem(entry);
-				Logger.Singleton.WriteConciseHistoricalEvent("WordList-Adding new word '{0}'and givin the sense '{1}'", entry.GetSimpleFormForLogging(), sense.Gloss.Forms[0] );
+				Logger.WriteEvent("WordList-Adding new word '{0}'and givin the sense '{1}'", entry.GetSimpleFormForLogging(), sense.Gloss.Forms[0] );
 			}
 			else
 			{
@@ -437,7 +437,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 								s.Gloss.GetExactAlternative(glossWeAreAdding.WritingSystemId);
 						if (glossInThisWritingSystem == glossWeAreAdding.Form)
 						{
-							Logger.Singleton.WriteConciseHistoricalEvent("WordList '{0}' already exists in '{1}'", sense.Gloss.Forms[0], entry.GetSimpleFormForLogging());
+							Logger.WriteEvent("WordList '{0}' already exists in '{1}'", sense.Gloss.Forms[0], entry.GetSimpleFormForLogging());
 							return; //don't add it again
 						}
 					}
@@ -447,7 +447,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				//REVIEW: June 2011, Hatton added this, because of WS-34024: if a new *meaning* was added to an existing entry,
 				//and then the user quit, this change was unsaved.
 				LexEntryRepository.SaveItem(entry);
-				Logger.Singleton.WriteConciseHistoricalEvent("WordList-Added '{0}' to preexisting '{1}'", sense.Gloss.Forms[0], entry.GetSimpleFormForLogging());
+				Logger.WriteEvent("WordList-Added '{0}' to preexisting '{1}'", sense.Gloss.Forms[0], entry.GetSimpleFormForLogging());
 
 			}
 		}
