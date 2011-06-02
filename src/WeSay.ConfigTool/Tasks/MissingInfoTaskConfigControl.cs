@@ -14,6 +14,7 @@ namespace WeSay.ConfigTool.Tasks
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private List<WritingSystemDefinition> _relevantWritingSystems;
+		private Field _field;
 
 		public MissingInfoTaskConfigControl(MissingInfoConfiguration config, ViewTemplate viewTemplate)
 			:base(config, true)
@@ -41,8 +42,8 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void MissingInfoTaskConfigControl_Load(object sender, EventArgs e)
 		{
-			var field = _viewTemplate.GetField(Configuration.MissingInfoFieldName);
-			_matchWhenEmpty.Visible = field.DataTypeName == Field.BuiltInDataType.MultiText.ToString();
+			_field = _viewTemplate.GetField(Configuration.MissingInfoFieldName);
+			_matchWhenEmpty.Visible = _field.DataTypeName == Field.BuiltInDataType.MultiText.ToString();
 			_matchWhenEmptyLabel.Visible = _matchWhenEmpty.Visible;
 			_requiredToBeFilledIn.Visible = _matchWhenEmpty.Visible;
 			_requiredToBeFilledInLabel.Visible = _requiredToBeFilledIn.Visible;
@@ -51,20 +52,34 @@ namespace WeSay.ConfigTool.Tasks
 
 			if (_matchWhenEmpty.Visible)
 			{
-				_relevantWritingSystems = new List<WritingSystemDefinition>();
-				var relevantWritingSystems = from x in _viewTemplate.WritingSystems.AllWritingSystems
-											 where field.WritingSystemIds.Contains(x.Id)
-											 select x;
-				_relevantWritingSystems.AddRange(relevantWritingSystems);
+				Configuration.WritingSystemIdChanged += OnWritingSystemChanged;
+				UpdateWritingSystemFilterControls();
+			}
+		}
+
+		private void UpdateWritingSystemFilterControls()
+		{
+			_relevantWritingSystems = new List<WritingSystemDefinition>();
+			var relevantWritingSystems = from x in _viewTemplate.WritingSystems.AllWritingSystems
+										 where _field.WritingSystemIds.Contains(x.Id)
+										 select x;
+			_relevantWritingSystems.AddRange(relevantWritingSystems);
 
 
-				_matchWhenEmpty.Init(_relevantWritingSystems,
-									 Configuration.WritingSystemsWeWantToFillIn,
-									 "any");
-				// _matchWhenEmpty.Changed += new EventHandler(_matchWhenEmpty_Changed);
-				_requiredToBeFilledIn.Init(_relevantWritingSystems,
-										   Configuration.WritingSystemsWhichAreRequired,
-										   "none");
+			_matchWhenEmpty.Init(_relevantWritingSystems,
+								 Configuration.WritingSystemsWeWantToFillIn,
+								 "any");
+			// _matchWhenEmpty.Changed += new EventHandler(_matchWhenEmpty_Changed);
+			_requiredToBeFilledIn.Init(_relevantWritingSystems,
+									   Configuration.WritingSystemsWhichAreRequired,
+									   "none");
+		}
+
+		private void OnWritingSystemChanged(object sender, EventArgs e)
+		{
+			if (_matchWhenEmpty.Visible)
+			{
+				UpdateWritingSystemFilterControls();
 			}
 		}
 

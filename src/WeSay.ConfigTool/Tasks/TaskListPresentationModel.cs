@@ -31,7 +31,7 @@ namespace WeSay.ConfigTool.Tasks
 			{
 				if (null == task as ICareThatWritingSystemIdChanged)
 					continue;
-				((ICareThatWritingSystemIdChanged)task).WritingSystemIdChanged(pair.from, pair.to);
+				((ICareThatWritingSystemIdChanged)task).OnWritingSystemIdChanged(pair.from, pair.to);
 			}
 		}
 	}

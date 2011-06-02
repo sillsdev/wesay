@@ -10,7 +10,7 @@ using Palaso.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {
-	public class MissingInfoConfiguration : TaskConfigurationBase, ITaskConfiguration
+	public class MissingInfoConfiguration : TaskConfigurationBase, ITaskConfiguration, ICareThatWritingSystemIdChanged
 	{
 		private List<string> _fieldsToShow;
 		private List<string> _writingSystemsWeWantToFillIn;
@@ -27,6 +27,32 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		public override string ToString()
 		{
 			return LongLabel;
+		}
+
+		public event EventHandler WritingSystemIdChanged;
+
+		public void OnWritingSystemIdChanged(string from, string to)
+		{
+			int indexToReplace =
+				_writingSystemsWeWantToFillIn.FindIndex(id => id.Equals(from, StringComparison.OrdinalIgnoreCase));
+			if (indexToReplace != -1)
+			{
+				_writingSystemsWeWantToFillIn.RemoveAt(indexToReplace);
+				_writingSystemsWeWantToFillIn.Add(to);
+			}
+
+
+			indexToReplace =
+				_writingSystemsWhichAreRequired.FindIndex(id => id.Equals(from, StringComparison.OrdinalIgnoreCase));
+			if (indexToReplace != -1)
+			{
+				_writingSystemsWhichAreRequired.RemoveAt(indexToReplace);
+				_writingSystemsWhichAreRequired.Add(to);
+			}
+			if(WritingSystemIdChanged != null)
+			{
+				WritingSystemIdChanged(this, new EventArgs());
+			}
 		}
 
 		public DashboardGroup Group

@@ -128,7 +128,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 
 
-		public void WritingSystemIdChanged(string from, string to)
+		public void OnWritingSystemIdChanged(string from, string to)
 		{
 			  //TODO, (maybe?) when we become writeable
 			// if(WordListWritingSystemIdOfOldFlatWordList==from)
