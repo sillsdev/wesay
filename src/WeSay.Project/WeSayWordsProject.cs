@@ -352,8 +352,8 @@ namespace WeSay.Project
 				dialog.BackgroundWorker = worker;
 				dialog.CanCancel = false;
 				dialog.BarStyle = ProgressBarStyle.Marquee;
-				dialog.Text = "Migrating writing systems...";
-				dialog.StatusText = "Please wait while WeSay migrates your writing systems.";
+				dialog.Text = "Checking file consistency.";
+				dialog.StatusText = "Please wait while WeSay ensures that your project files are up to date and consistent with eachother.";
 				dialog.ShowDialog();
 			}
 			else
