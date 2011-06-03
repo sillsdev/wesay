@@ -96,8 +96,8 @@ namespace WeSay.ConfigTool
 			this._writingSystemButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
 			this._writingSystemButton.Name = "_writingSystemButton";
 			this._writingSystemButton.RightToLeftAutoMirrorImage = true;
-			this._writingSystemButton.Size = new System.Drawing.Size(138, 41);
-			this._writingSystemButton.Text = "Writing System";
+			this._writingSystemButton.Size = new System.Drawing.Size(133, 41);
+			this._writingSystemButton.Text = "Input Systems";
 			this._writingSystemButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
 			this._writingSystemButton.Click += new System.EventHandler(this.OnAreaButton_Click);
 			//
