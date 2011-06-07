@@ -405,7 +405,6 @@ namespace WeSay.Project
 			//migrate user config
 			var userConfigMigrator = new WeSayUserConfigMigrator(userConfigPath);
 			userConfigMigrator.MigrateIfNeeded();
-			_migrationAlreadyOccured = true;
 		}
 
 		[Serializable]
