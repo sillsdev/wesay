@@ -256,7 +256,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				foreach (KeyboardController.KeyboardDescriptor keyboard in
 					KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All))
 				{
-					keyboards.Add(keyboard.Name);
+					keyboards.Add(keyboard.Id);
 				}
 				return new StandardValuesCollection(keyboards);
 			}
