@@ -343,7 +343,6 @@ namespace WeSay.Project
 
 			//may have already been done, but maybe not
 			MoveFilesFromOldDirLayout(projectDirectoryPath);
-
 			if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
 			{
 				var dialog = new ProgressDialog();
@@ -371,23 +370,42 @@ namespace WeSay.Project
 
 		private void OnDoMigration(object sender, DoWorkEventArgs e)
 		{
+			MigrateProjectFilesAndCheckForOrphanedWritingSystems(ProjectDirectoryPath);
+		}
+
+		private static void MigrateProjectFilesAndCheckForOrphanedWritingSystems(string projectDirectory)
+		{
+			string liftFilePath = GetPathToLiftFileGivenProjectDirectory(projectDirectory);
+			string configFilePath = GetPathToConfigFile(projectDirectory, Path.GetFileNameWithoutExtension(liftFilePath));
+			string writingSystemFolderPath = GetPathToLdmlWritingSystemsFolder(projectDirectory);
+			string userConfigPath = PathToUserSpecificConfigFile(projectDirectory);
+
+			//migrate the config file
 			ConfigFile configFile = null;
-			if (File.Exists(PathToConfigFile)) // will be null if we're creating a new project
+			if (File.Exists(configFilePath)) // will be null if we're creating a new project
 			{
-				configFile = new ConfigFile(PathToConfigFile);
+				configFile = new ConfigFile(configFilePath);
 				configFile.MigrateIfNecassary();
 			}
-			var writingSystemMigrator = new WritingSystemsMigrator(ProjectDirectoryPath);
+
+			//migrate writing systems
+			var writingSystemMigrator = new WritingSystemsMigrator(projectDirectory);
 			writingSystemMigrator.MigrateIfNecessary();
-			var wsCreator = new WritingSystemsFromLiftCreator(ProjectDirectoryPath);
-			wsCreator.CreateNonExistentWritingSystemsFoundInLift(PathToLiftFile);
+
+			//check for orphaned writing systems in Lift
+			var wsCreator = new WritingSystemsFromLiftCreator(projectDirectory);
+			wsCreator.CreateNonExistentWritingSystemsFoundInLift(liftFilePath);
+
+			//check for orphaned writing systems in the config file
 			if (configFile != null)
 			{
-				configFile.CreateWritingSystemsForIdsInFileWhereNecassary(BasilProject.GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
+				configFile.CreateWritingSystemsForIdsInFileWhereNecassary(writingSystemFolderPath);
 			}
 
-			var userConfigMigrator = new WeSayUserConfigMigrator(PathToUserSpecificConfigFile);
+			//migrate user config
+			var userConfigMigrator = new WeSayUserConfigMigrator(userConfigPath);
 			userConfigMigrator.MigrateIfNeeded();
+			_migrationAlreadyOccured = true;
 		}
 
 		[Serializable]
@@ -611,9 +629,9 @@ namespace WeSay.Project
 		{
 			var dom = new XmlDocument();
 			BackupMaker = null;
-			if (File.Exists(PathToUserSpecificConfigFile))
+			if (File.Exists(PathToUserSpecificConfigFile(ProjectDirectoryPath)))
 			{
-				dom.Load(PathToUserSpecificConfigFile);
+				dom.Load(PathToUserSpecificConfigFile(ProjectDirectoryPath));
 				BackupMaker = ChorusBackupMaker.CreateFromDom(dom, _container.Resolve<CheckinDescriptionBuilder>());
 				UiOptions = UiConfigurationOptions.CreateFromDom(dom);
 			}
@@ -877,17 +895,16 @@ namespace WeSay.Project
 			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath, projectName);
 			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
 
-			var m = new ConfigurationMigrator();
-			m.MigrateConfigurationXmlIfNeeded(pathToConfigFile, pathToConfigFile);
-
-			//hack
-			StickDefaultViewTemplateInNewConfigFile(projectDirectoryPath, pathToConfigFile);
-
 			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
 			if (!File.Exists(pathToLiftFile))
 			{
 				Utilities.CreateEmptyLiftFile(pathToLiftFile, LiftWriter.ProducerString, false);
 			}
+
+			MigrateProjectFilesAndCheckForOrphanedWritingSystems(projectDirectoryPath);
+
+			//hack
+			StickDefaultViewTemplateInNewConfigFile(projectDirectoryPath, pathToConfigFile);
 		}
 
 		/// <summary>
@@ -924,13 +941,9 @@ namespace WeSay.Project
 			}
 		}
 
-		public string PathToUserSpecificConfigFile
+		public static string PathToUserSpecificConfigFile(string projectDirectory)
 		{
-			get
-			{
-				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
-									System.Environment.UserName + ".WeSayUserConfig");
-			}
+			return Path.Combine(projectDirectory, System.Environment.UserName + ".WeSayUserConfig");
 		}
 
 		private static string GetPathToConfigFile(string directoryInProject, string name)
@@ -972,7 +985,7 @@ namespace WeSay.Project
 			{
 				if (String.IsNullOrEmpty(_pathToLiftFile))
 				{
-					_pathToLiftFile = GetPathToLiftFileGivenProjectDirectory();
+					_pathToLiftFile = GetPathToLiftFileGivenProjectDirectory(ProjectDirectoryPath);
 				}
 				return _pathToLiftFile;
 			}
@@ -992,16 +1005,16 @@ namespace WeSay.Project
 			}
 		}
 
-		private string GetPathToLiftFileGivenProjectDirectory()
+		private static string GetPathToLiftFileGivenProjectDirectory(string projectDirectoryPath)
 		{
 			//first, we assume it's based on the name of the directory
-			var path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
-										   Path.GetFileName(ProjectDirectoryPath) + ".lift");
+			var path = Path.Combine(projectDirectoryPath,
+										   Path.GetFileName(projectDirectoryPath) + ".lift");
 
 			//if that doesn't give us one, then we find one which has a matching wesayconfig file
 			if (!File.Exists(path))
 			{
-				foreach (var liftPath in Directory.GetFiles(ProjectDirectoryPath, "*.lift"))
+				foreach (var liftPath in Directory.GetFiles(projectDirectoryPath, "*.lift"))
 				{
 					if (File.Exists(liftPath.Replace(".lift", ".WeSayConfig")))
 					{
@@ -1292,7 +1305,7 @@ namespace WeSay.Project
 
 		private void SaveUserSpecificConfiguration()
 		{
-			var pendingConfigFile = new TempFileForSafeWriting(Project.PathToUserSpecificConfigFile);
+			var pendingConfigFile = new TempFileForSafeWriting(PathToUserSpecificConfigFile(ProjectDirectoryPath));
 
 			var writer = XmlWriter.Create(pendingConfigFile.TempFilePath, CanonicalXmlSettings.CreateXmlWriterSettings());
 			writer.WriteStartDocument();
