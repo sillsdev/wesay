@@ -135,5 +135,10 @@ namespace WeSay.LexicalTools.GatherByWordList
 			//      WordListWritingSystemIdOfOldFlatWordList=to;
 			// mark dirty if necessary
 		}
+
+		public void OnWritingSystemIdDeleted(string id)
+		{
+			//do nothing until the comment above is resolved
+		}
 	}
 }

@@ -27,5 +27,6 @@ namespace WeSay.Project
 	public interface ICareThatWritingSystemIdChanged
 	{
 		void OnWritingSystemIdChanged(string from, string to);
+		void OnWritingSystemIdDeleted(string id);
 	}
 }

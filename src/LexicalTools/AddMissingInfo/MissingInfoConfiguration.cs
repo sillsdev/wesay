@@ -30,6 +30,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		}
 
 		public event EventHandler WritingSystemIdChanged;
+		public event EventHandler WritingSystemIdDeleted;
 
 		public void OnWritingSystemIdChanged(string from, string to)
 		{
@@ -52,6 +53,28 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			if(WritingSystemIdChanged != null)
 			{
 				WritingSystemIdChanged(this, new EventArgs());
+			}
+		}
+
+		public void OnWritingSystemIdDeleted(string idToDelete)
+		{
+			int indexToReplace =
+				_writingSystemsWeWantToFillIn.FindIndex(id => id.Equals(idToDelete, StringComparison.OrdinalIgnoreCase));
+			if (indexToReplace != -1)
+			{
+				_writingSystemsWeWantToFillIn.RemoveAt(indexToReplace);
+			}
+
+
+			indexToReplace =
+				_writingSystemsWhichAreRequired.FindIndex(id => id.Equals(idToDelete, StringComparison.OrdinalIgnoreCase));
+			if (indexToReplace != -1)
+			{
+				_writingSystemsWhichAreRequired.RemoveAt(indexToReplace);
+			}
+			if (WritingSystemIdDeleted != null)
+			{
+				WritingSystemIdDeleted(this, new EventArgs());
 			}
 		}
 

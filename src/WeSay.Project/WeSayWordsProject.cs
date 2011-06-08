@@ -73,6 +73,7 @@ namespace WeSay.Project
 		public const string AnalysisWritingSystemIdForProjectCreation = "en";
 
 		public event EventHandler<StringPair> WritingSystemChanged;
+		public event WritingSystemDeleted WritingSystemDeleted;
 
 		public WeSayWordsProject()
 		{
@@ -1510,6 +1511,16 @@ namespace WeSay.Project
 			}
 
 			return false;
+		}
+
+		public void DeleteWritingSystemId(string id)
+		{
+			DefaultViewTemplate.DeleteWritingSystem(id);
+
+			if (WritingSystemDeleted != null)
+			{
+				WritingSystemDeleted(this, new WritingSystemDeletedEventArgs(id));
+			}
 		}
 
 		/// <summary>

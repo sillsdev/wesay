@@ -54,8 +54,14 @@ namespace WeSay.ConfigTool.Tasks
 			{
 				_field.WritingSystemsChanged += OnWritingSystemsChanged;
 				Configuration.WritingSystemIdChanged += OnWritingSystemsChanged;
+				Configuration.WritingSystemIdDeleted += OnWritingSystemsDeleted;
 				UpdateWritingSystemFilterControls();
 			}
+		}
+
+		private void OnWritingSystemsDeleted(object sender, EventArgs e)
+		{
+			UpdateWritingSystemFilterControls();
 		}
 
 		private void UpdateWritingSystemFilterControls()

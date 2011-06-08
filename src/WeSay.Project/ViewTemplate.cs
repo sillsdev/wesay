@@ -722,6 +722,14 @@ namespace WeSay.Project
 			}
 			return list;
 		 }
+
+		public void DeleteWritingSystem(string id)
+		{
+			foreach (Field field in Fields)
+			{
+				field.WritingSystemIds.Remove(id);
+			}
+		}
 	}
 
 	/// <summary>

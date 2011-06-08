@@ -28,6 +28,7 @@ namespace WeSay.ConfigTool
 							Dock = DockStyle.Fill
 						};
 			writingSystemSetupModel.BeforeDeleted += OnBeforeDeleted;
+			store.WritingSystemDeleted += OnWritingSystemDeleted;
 			Controls.Add(_view);
 		}
 
@@ -48,9 +49,14 @@ namespace WeSay.ConfigTool
 
 		}
 
-		private void OnBeforeDeleted(object sender, BeforeDeletedEventArgs args)
+		private static void OnBeforeDeleted(object sender, BeforeDeletedEventArgs args)
 		{
 			args.CanDelete = !Project.WeSayWordsProject.Project.IsWritingSystemUsedInLiftFile(args.WritingSystemId);
+		}
+
+		private static void OnWritingSystemDeleted(object sender, WritingSystemDeletedEventArgs args)
+		{
+			Project.WeSayWordsProject.Project.DeleteWritingSystemId(args.Id);
 		}
 
 		private static void OnWritingSystemIdChanged(object sender, WritingSystemIdChangedEventArgs e)
