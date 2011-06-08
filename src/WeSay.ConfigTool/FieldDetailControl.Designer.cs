@@ -303,8 +303,8 @@ namespace WeSay.ConfigTool
 			this._writingSystemsControlLabel.Name = "_writingSystemsControlLabel";
 			this._writingSystemsControlLabel.Size = new System.Drawing.Size(104, 16);
 			this._writingSystemsControlLabel.TabIndex = 10;
-			this._writingSystemsControlLabel.Text = "Writing Systems";
-			this.toolTip1.SetToolTip(this._writingSystemsControlLabel, "Mark which writing systems to show for this field.");
+			this._writingSystemsControlLabel.Text = "Input Systems";
+			this.toolTip1.SetToolTip(this._writingSystemsControlLabel, "Mark which input systems to use for this field.");
 			//
 			// _multiParagraphLabel
 			//
