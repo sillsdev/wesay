@@ -16,7 +16,7 @@ namespace WeSay.LexicalModel
 	public class Field
 	{
 		private string _fieldName;
-		private List<string> _writingSystemIds;
+		private BindingList<string> _writingSystemIds;
 		private string _displayName = string.Empty;
 		private string _description = string.Empty;
 		private string _className = string.Empty;
@@ -93,7 +93,8 @@ namespace WeSay.LexicalModel
 		{
 			FieldName = field.FieldName;
 			ClassName = field.ClassName;
-			_writingSystemIds = new List<string>();
+			_writingSystemIds = new BindingList<string>();
+			_writingSystemIds.ListChanged += OnWritingSystemIdsChanged;
 			foreach (string id in field.WritingSystemIds)
 			{
 				WritingSystemIds.Add(id);
@@ -387,8 +388,29 @@ namespace WeSay.LexicalModel
 														"Writing System argument" + i + "is null");
 					}
 				}
-				_writingSystemIds = new List<string>(value);
+				if(_writingSystemIds != null)
+				{
+					_writingSystemIds.ListChanged -= OnWritingSystemIdsChanged;
+				}
+				_writingSystemIds = new BindingList<string>(value);
+				_writingSystemIds.ListChanged += OnWritingSystemIdsChanged;
+				FireWritingSystemsChangedEvent();
 			}
+		}
+
+		private void FireWritingSystemsChangedEvent()
+		{
+			if(WritingSystemsChanged != null)
+			{
+				WritingSystemsChanged(this, new EventArgs());
+			}
+		}
+
+		public event EventHandler WritingSystemsChanged;
+
+		private void OnWritingSystemIdsChanged(object sender, ListChangedEventArgs e)
+		{
+			FireWritingSystemsChangedEvent();
 		}
 
 		/// <summary>
@@ -445,7 +467,7 @@ namespace WeSay.LexicalModel
 
 		public void ChangeWritingSystemId(string oldId, string newId)
 		{
-			int i = _writingSystemIds.FindIndex(delegate(string id) { return id == oldId; });
+			int i = _writingSystemIds.IndexOf(oldId);
 			if (i > -1)
 			{
 				_writingSystemIds[i] = newId;
@@ -533,7 +555,7 @@ namespace WeSay.LexicalModel
 		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)
 		{
-			return _writingSystemIds.Exists(delegate(string s) { return s == writingSystemId; });
+			return _writingSystemIds.Any(id => id == writingSystemId);
 		}
 
 		public static void ModifyMasterFromUser(Field master, Field user)

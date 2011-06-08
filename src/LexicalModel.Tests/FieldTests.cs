@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace WeSay.LexicalModel.Tests
@@ -6,8 +7,13 @@ namespace WeSay.LexicalModel.Tests
 	[TestFixture]
 	public class FieldTests
 	{
+		private bool _eventFired;
+
 		[SetUp]
-		public void Setup() {}
+		public void Setup()
+		{
+			_eventFired = false;
+		}
 
 		[TearDown]
 		public void TearDown() {}
@@ -131,6 +137,39 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(1, master.WritingSystemIds.Count);
 			Assert.IsTrue(master.WritingSystemIds.Contains("keepme"));
 			Assert.IsFalse(master.WritingSystemIds.Contains("dropme"));
+		}
+
+		[Test]
+		public void WritingSystems_Changed_FiresEvent()
+		{
+			Field field = new Field();
+			field.WritingSystemsChanged += OnWritingSystemIdsChanged;
+			field.WritingSystemIds.Add("en-US");
+			Assert.That(_eventFired, Is.True);
+		}
+
+		private void OnWritingSystemIdsChanged(object sender, EventArgs e)
+		{
+			_eventFired = true;
+		}
+
+		[Test]
+		public void WritingSystems_SwitchedOut_FiresEvent()
+		{
+			Field field = new Field();
+			field.WritingSystemsChanged += OnWritingSystemIdsChanged;
+			field.WritingSystemIds= new List<string>();
+			Assert.That(_eventFired, Is.True);
+		}
+
+		[Test]
+		public void WritingSystems_SwitchedOutThenChanged_FiresEvent()
+		{
+			Field field = new Field();
+			field.WritingSystemIds = new List<string>();
+			field.WritingSystemsChanged += OnWritingSystemIdsChanged;
+			field.WritingSystemIds.Add("en-US");
+			Assert.That(_eventFired, Is.True);
 		}
 	}
 }

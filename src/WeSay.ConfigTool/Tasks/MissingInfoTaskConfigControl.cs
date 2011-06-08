@@ -52,7 +52,8 @@ namespace WeSay.ConfigTool.Tasks
 
 			if (_matchWhenEmpty.Visible)
 			{
-				Configuration.WritingSystemIdChanged += OnWritingSystemChanged;
+				_field.WritingSystemsChanged += OnWritingSystemsChanged;
+				Configuration.WritingSystemIdChanged += OnWritingSystemsChanged;
 				UpdateWritingSystemFilterControls();
 			}
 		}
@@ -75,7 +76,7 @@ namespace WeSay.ConfigTool.Tasks
 									   "none");
 		}
 
-		private void OnWritingSystemChanged(object sender, EventArgs e)
+		private void OnWritingSystemsChanged(object sender, EventArgs e)
 		{
 			if (_matchWhenEmpty.Visible)
 			{
