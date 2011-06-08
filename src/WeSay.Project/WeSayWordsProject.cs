@@ -1555,12 +1555,7 @@ namespace WeSay.Project
 			return false;
 		}
 
-		public bool IsWritingSystemInUse(string id)
-		{
-			return DefaultViewTemplate.IsWritingSystemInUse(id) || IsWritingSystemUsedInLiftFile(id);
-		}
-
-		private bool IsWritingSystemUsedInLiftFile(string id)
+		public bool IsWritingSystemUsedInLiftFile(string id)
 		{
 			if(!File.Exists(PathToLiftFile))
 			{

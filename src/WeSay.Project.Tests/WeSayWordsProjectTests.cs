@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -89,6 +90,19 @@ namespace WeSay.Project.Tests
 				Assert.IsNotNull(doc.SelectNodes("//form[lang='aac']"));
 				Assert.AreEqual("aac", ws.Id);
 
+			}
+		}
+
+		[Test]
+		public void MakeWritingSystemIdChange_WritingSystemUsedInViewTemplate_Changed()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				Assert.That(project.DefaultViewTemplate.IsWritingSystemInUse("qaa"), Is.True);
+				project.MakeWritingSystemIdChange("de", "qaa");
+				Assert.That(project.DefaultViewTemplate.IsWritingSystemInUse("de"), Is.True);
+				Assert.That(project.DefaultViewTemplate.IsWritingSystemInUse("qaa"), Is.False);
 			}
 		}
 
@@ -621,21 +635,12 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		public void IsWritingSystemInUse_ViewTemplateIsUsingWritingSystem_ReturnsTrue()
-		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
-			{
-				Assert.That(project.IsWritingSystemInUse("en"), Is.True);
-			}
-		}
-
-		[Test]
 		public void IsWritingSystemInUse_LiftFileContainsWritingSystem_ReturnsTrue()
 		{
 			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
 			{
 				File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
-				Assert.That(project.IsWritingSystemInUse("de"), Is.True);
+				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
 			}
 		}
 
@@ -644,7 +649,7 @@ namespace WeSay.Project.Tests
 		{
 			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
 			{
-				Assert.That(project.IsWritingSystemInUse("de"), Is.False);
+				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
 			}
 		}
 	}

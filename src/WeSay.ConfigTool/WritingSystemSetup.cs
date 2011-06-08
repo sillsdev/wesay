@@ -50,7 +50,7 @@ namespace WeSay.ConfigTool
 
 		private void OnBeforeDeleted(object sender, BeforeDeletedEventArgs args)
 		{
-			args.CanDelete = !Project.WeSayWordsProject.Project.IsWritingSystemInUse(args.WritingSystemId);
+			args.CanDelete = !Project.WeSayWordsProject.Project.IsWritingSystemUsedInLiftFile(args.WritingSystemId);
 		}
 
 		private static void OnWritingSystemIdChanged(object sender, WritingSystemIdChangedEventArgs e)
