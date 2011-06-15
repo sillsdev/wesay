@@ -23,8 +23,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			if (File.Exists(pathToLiftFile))
 			{
 				string pathToLdmlWritingSystemsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(_pathToProjectFolder);
-				IWritingSystemRepository writingSystems = new LdmlInFolderWritingSystemRepository(pathToLdmlWritingSystemsFolder);
-				var idsToChange = new Dictionary<string, string>();
+				var writingSystems = new LdmlInFolderWritingSystemRepository(pathToLdmlWritingSystemsFolder);
 				var uniqueIdsInFile = new List<string>();
 				using (var reader = XmlReader.Create(pathToLiftFile))
 				{
@@ -42,9 +41,13 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 				foreach (string idInFile in uniqueIdsInFile)
 				{
-					var tagCleaner = new Rfc5646TagCleaner(idInFile);
-					tagCleaner.Clean();
-					string newId = tagCleaner.GetCompleteTag();
+					string newId = idInFile;
+					if(!(idInFile.StartsWith("x", StringComparison.OrdinalIgnoreCase) && writingSystems.Contains(idInFile)))
+					{
+						var tagCleaner = new Rfc5646TagCleaner(idInFile);
+						tagCleaner.Clean();
+						newId = tagCleaner.GetCompleteTag();
+					}
 
 					if (newId != idInFile)
 					{
