@@ -27,6 +27,7 @@ using Palaso.IO;
 using Palaso.Lift.Options;
 using Palaso.Progress.LogBox;
 using Palaso.Reporting;
+using Palaso.Text;
 using Palaso.UI.WindowsForms.Progress;
 using Palaso.UiBindings;
 using Palaso.WritingSystems;
@@ -1411,6 +1412,10 @@ namespace WeSay.Project
 				reader = _container.Resolve<IOptionListReader>();
 			}
 			OptionsList list = reader.LoadFromFile(pathToOptionsList);
+			foreach (var oldNewId in _changedWritingSystemIds)
+			{
+				ChangeIdInOptionListIfNecassary(oldNewId.Key, oldNewId.Value, list);
+			}
 			_optionLists.Add(name, list);
 		}
 
@@ -1524,12 +1529,39 @@ namespace WeSay.Project
 			}
 			DefaultViewTemplate.OnWritingSystemIDChange(oldId, newId);
 
+			foreach (var optionlist in _optionLists.Values)
+			{
+				ChangeIdInOptionListIfNecassary(oldId, newId, optionlist);
+			}
+
 			if (WritingSystemChanged != null)
 			{
 				StringPair p = new StringPair();
 				p.from = oldId;
 				p.to = newId;
 				WritingSystemChanged.Invoke(this, p);
+			}
+		}
+
+		private void ChangeIdInOptionListIfNecassary(string oldId, string newId, OptionsList optionlist)
+		{
+			var abbreviationLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
+																	   option => option.Abbreviation.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+
+			var nameLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
+															   option => option.Name.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+
+			var descriptionForms = new List<LanguageForm>(optionlist.Options.Select(
+															  option => option.Description.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+
+			var formsToChange = abbreviationLanguageForms.Concat(nameLanguageForms).Concat(descriptionForms);
+
+			foreach (var form in formsToChange)
+			{
+				if (form != null)
+				{
+					form.WritingSystemId = newId;
+				}
 			}
 		}
 

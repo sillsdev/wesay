@@ -84,6 +84,39 @@ namespace WeSay.Project.Tests
 				XmlDocument doc = new XmlDocument();
 				doc.Load(p.PathToLiftFile);
 				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='qaa']").Count);
+				project.MakeWritingSystemIdChange("qaa", "aac");
+				project.Save();
+				doc.Load(p.PathToLiftFile);
+				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='aac']").Count);
+			}
+		}
+
+		[Test]
+		public void Save_MakeWritingSystemIdChangeOnWritingSystemFoundInLiftWasPreviosulyCalledMultipleTimes_ChangedCorrectly()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				XmlDocument doc = new XmlDocument();
+				doc.Load(p.PathToLiftFile);
+				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='qaa']").Count);
+				project.MakeWritingSystemIdChange("qaa", "en");
+				project.MakeWritingSystemIdChange("en", "de");
+				project.Save();
+				doc.Load(p.PathToLiftFile);
+				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='de']").Count);
+			}
+		}
+
+		[Test]
+		public void Save_MakeWritingSystemIdChangeOnWritingSystemFoundInOptionListWasPreviosulyCalled_Changed()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				XmlDocument doc = new XmlDocument();
+				doc.Load(p.PathToLiftFile);
+				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='qaa']").Count);
 				WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
 				ws.ISO = "aac";
 				project.MakeWritingSystemIdChange("qaa", "aac");
@@ -91,12 +124,61 @@ namespace WeSay.Project.Tests
 				doc.Load(p.PathToLiftFile);
 				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='aac']").Count);
 				Assert.AreEqual("aac", ws.Id);
-
+				throw new NotImplementedException();
 			}
 		}
 
-[Test]
-		public void Save_MakeWritingSystemIdChangeOnWritingSystemFoundInLiftWasPreviosulyCalledMultipleTimes_ChangedCorrectly()
+		[Test]
+		public void Save_MakeWritingSystemIdChangeOnWritingSystemFoundInOptionListWasPreviosulyCalledMultipleTimes_ChangedCorrectly()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				XmlDocument doc = new XmlDocument();
+				doc.Load(p.PathToLiftFile);
+				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='qaa']").Count);
+				project.MakeWritingSystemIdChange("qaa", "en");
+				project.MakeWritingSystemIdChange("en", "de");
+				project.Save();
+				doc.Load(p.PathToLiftFile);
+				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='de']").Count);
+				throw new NotImplementedException();
+			}
+		}
+
+		[Test]
+		public void MakeWritingSystemIdChange_OptionListIsAlreadyLoaded_OptionListIsChanged()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				var optionList = project.GetOptionsList("POS");
+				Assert.That(optionList.GetOptionFromKey("Verb").Abbreviation["en"], Is.EqualTo("verb"));
+				Assert.That(optionList.GetOptionFromKey("Verb").Name["en"], Is.EqualTo("verb"));
+				Assert.That(optionList.GetOptionFromKey("Verb").Description["en"], Is.EqualTo(""));
+				project.MakeWritingSystemIdChange("en", "de");
+				Assert.That(optionList.GetOptionFromKey("Verb").Abbreviation["de"], Is.EqualTo("verb"));
+				Assert.That(optionList.GetOptionFromKey("Verb").Name["de"], Is.EqualTo("verb"));
+				Assert.That(optionList.GetOptionFromKey("Verb").Description["de"], Is.EqualTo(""));
+			}
+		}
+
+		[Test]
+		public void MakeWritingSystemIdChange_LoadList_OptionListIsChanged()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				project.MakeWritingSystemIdChange("en", "de");
+				var optionList = project.GetOptionsList("POS");
+				Assert.That(optionList.GetOptionFromKey("Verb").Abbreviation["de"], Is.EqualTo("verb"));
+				Assert.That(optionList.GetOptionFromKey("Verb").Name["de"], Is.EqualTo("verb"));
+				Assert.That(optionList.GetOptionFromKey("Verb").Description["de"], Is.EqualTo(""));
+			}
+		}
+
+		[Test]
+		public void MakeWritingSystemIdChange_OptionListIsNotChangedOnDisk()
 		{
 			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
@@ -115,6 +197,26 @@ namespace WeSay.Project.Tests
 				Assert.AreEqual("de", ws.Id);
 
 			}
+			throw new NotImplementedException();
+		}
+
+		[Test]
+		public void MakeWritingSystemIdChange_DefaultViewTemplateContainsFieldsWithWritingSystem_FieldsAreUpdated()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				var optionList = project.GetOptionsList("POS");
+				Assert.That(optionList.GetOptionFromKey("verb").Abbreviation["en"], Is.EqualTo("Verb"));
+				Assert.That(optionList.GetOptionFromKey("verb").Name["en"], Is.EqualTo("Verb"));
+				Assert.That(optionList.GetOptionFromKey("verb").Description["en"], Is.EqualTo("Verb"));
+				project.MakeWritingSystemIdChange("en", "de");
+				Assert.That(optionList.GetOptionFromKey("verb").Abbreviation["de"], Is.EqualTo("Verb"));
+				Assert.That(optionList.GetOptionFromKey("verb").Name["de"], Is.EqualTo("Verb"));
+				Assert.That(optionList.GetOptionFromKey("verb").Description["de"], Is.EqualTo("Verb"));
+
+			}
+			throw new NotImplementedException();
 		}
 
 
