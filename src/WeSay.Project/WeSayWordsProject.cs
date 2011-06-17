@@ -57,6 +57,7 @@ namespace WeSay.Project
 		private IList<LexRelationType> _relationTypes;
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
+		readonly Dictionary<string, string> _changedWritingSystemIds = new Dictionary<string, string>();
 
 		//public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
 		public const int CurrentWeSayUserSpecificConfigFileVersion = 2; // This variable must be updated with every new vrsion of the WeSayUserConfig file
@@ -1297,6 +1298,7 @@ namespace WeSay.Project
 			pendingConfigFile.WriteWasSuccessful();
 
 			base.Save();
+			CommitWritingSystemIdChangesToLiftFile();
 
 			SaveUserSpecificConfiguration();
 			BackupNow();
@@ -1489,28 +1491,46 @@ namespace WeSay.Project
 				 });
 		}
 
-		public bool MakeWritingSystemIdChange(string newId, string oldId)
+		private void MakeWritingSystemIdChangeInLiftFile(string oldId, string newId)
 		{
 			if (DoSomethingToLiftFile((p) =>
-					 //todo: expand the regular expression here to account for all reasonable patterns
+				//todo: expand the regular expression here to account for all reasonable patterns
 					 FileUtils.GrepFile(PathToLiftFile,
 							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
 											Regex.Escape(oldId)),
-							  string.Format("lang=\"{0}\"", newId))))
+							  string.Format("lang=\"{0}\"", newId)))) ;
+		}
+
+		private void CommitWritingSystemIdChangesToLiftFile()
+		{
+			foreach (var kvp in _changedWritingSystemIds)
 			{
-				DefaultViewTemplate.OnWritingSystemIDChange(oldId, newId);
-
-				if (WritingSystemChanged != null)
-				{
-					StringPair p = new StringPair();
-					p.from = oldId;
-					p.to = newId;
-					WritingSystemChanged.Invoke(this, p);
-				}
-				return true;
+				MakeWritingSystemIdChangeInLiftFile(kvp.Key, kvp.Value);
 			}
+		}
 
-			return false;
+		public void MakeWritingSystemIdChange(string oldId, string newId)
+		{
+			//this is the case the first time someone changes a writing system Id
+			if (!_changedWritingSystemIds.Any(kvp => kvp.Key.Equals(oldId, StringComparison.OrdinalIgnoreCase)))
+			{
+				_changedWritingSystemIds.Add(oldId, newId);
+			}
+			// this is the case if they have changed the writing system id before
+			else if (_changedWritingSystemIds.Any(kvp => kvp.Value.Equals(oldId, StringComparison.OrdinalIgnoreCase)))
+			{
+				var key = _changedWritingSystemIds.First(kvp => kvp.Value.Equals(oldId, StringComparison.OrdinalIgnoreCase)).Key;
+				_changedWritingSystemIds[key] = newId;
+			}
+			DefaultViewTemplate.OnWritingSystemIDChange(oldId, newId);
+
+			if (WritingSystemChanged != null)
+			{
+				StringPair p = new StringPair();
+				p.from = oldId;
+				p.to = newId;
+				WritingSystemChanged.Invoke(this, p);
+			}
 		}
 
 		public void DeleteWritingSystemId(string id)

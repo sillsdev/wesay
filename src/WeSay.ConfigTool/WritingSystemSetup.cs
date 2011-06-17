@@ -62,7 +62,7 @@ namespace WeSay.ConfigTool
 
 		private static void OnWritingSystemIdChanged(object sender, WritingSystemIdChangedEventArgs e)
 		{
-			Project.WeSayWordsProject.Project.MakeWritingSystemIdChange(e.NewId, e.OldId);
+			Project.WeSayWordsProject.Project.MakeWritingSystemIdChange(e.OldId, e.NewId);
 		}
 	}
 }
