@@ -350,6 +350,7 @@ namespace WeSay.Project
 				var dialog = new ProgressDialog();
 				var worker = new BackgroundWorker();
 				worker.DoWork += OnDoMigration;
+				worker.RunWorkerCompleted += OnWorkerCompleted;
 				dialog.BackgroundWorker = worker;
 				dialog.CanCancel = false;
 				dialog.BarStyle = ProgressBarStyle.Marquee;
@@ -368,6 +369,14 @@ namespace WeSay.Project
 
 			LoadUserConfig();
 			InitStringCatalog();
+		}
+
+		private static void OnWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			if (e.Error != null)
+			{
+				throw e.Error;
+			}
 		}
 
 		private void OnDoMigration(object sender, DoWorkEventArgs e)
