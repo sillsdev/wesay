@@ -209,11 +209,11 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 		private static void WriteStringToFileAtXpath(string pathtoFile, string xPath, string valueToWrite)
 		{
-			var configFile = new XmlDocument();
-			configFile.Load(pathtoFile);
-			XmlNode versionNode = configFile.SelectSingleNode(xPath);
+			var file = new XmlDocument();
+			file.Load(pathtoFile);
+			XmlNode versionNode = file.SelectSingleNode(xPath);
 			versionNode.Attributes[0].Value = valueToWrite;
-			configFile.Save(pathtoFile);
+			file.Save(pathtoFile);
 		}
 
 		[Test]
@@ -242,16 +242,21 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void MigrateIfNeeded_LiftFileIsVersionOtherThanWhatWeKnowTheWritingSystemMigratorCanChange_Throws()
+		public void MigrateIfNeeded_LiftFileIsVersionOtherThanWhatWeKnowTheWritingSystemMigratorCanChange_LeavesLiftAlone()
 		{
 			using (var e = new TestEnvironment())
 			{
-				WriteStringToFileAtXpath(e.PathToLiftFile, "/lift[@version]", "0.14");
+				WriteStringToFileAtXpath(e.PathToLiftFile, "/lift[@version]", "0.12");
 
 				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
-				Assert.Throws<ApplicationException>(migrator.MigrateIfNecessary);
+				migrator.MigrateIfNecessary();
+				var doc = new XmlDocument();
+				doc.Load(e.PathToLiftFile);
+				XmlNodeList nodes = doc.SelectNodes("//@lang");
 
+				Assert.AreEqual("bogusws1", nodes.Item(0).InnerText);
+				Assert.AreEqual("bogusws2", nodes.Item(1).InnerText);
 			}
 		}
 

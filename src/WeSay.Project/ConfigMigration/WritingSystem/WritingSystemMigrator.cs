@@ -52,15 +52,19 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 					string tempFile = Path.GetTempFileName();
 					File.Copy(liftFilePath, tempFile, true);
 
-					XmlDocument configFileXmlDocument = new XmlDocument();
-					configFileXmlDocument.Load(tempFile);
+					var reader = XmlReader.Create(tempFile);
+					reader.MoveToContent();
+					while(reader.NodeType != XmlNodeType.Element && reader.Name != "lift")
+					{
+						reader.Read();
+					}
 
 					const string versionOfConfigFileInWhichWeCanRenameRfcTags = "0.13";
-					XmlNode versionNode = configFileXmlDocument.SelectSingleNode("/lift/@version");
-					if ((versionNode == null) || (versionNode.Value != versionOfConfigFileInWhichWeCanRenameRfcTags))
+					string versionNode = reader.GetAttribute("version");
+					reader.Close();
+					if (versionNode != versionOfConfigFileInWhichWeCanRenameRfcTags)
 					{
-						throw new ApplicationException(String.Format(
-							"Some writing system Rfc tags were changed during writingsystem migration and WeSay needs to update your '.lift' file. However, that file is not version {0} and so WeSay cannot make the necassary changes.", versionOfConfigFileInWhichWeCanRenameRfcTags));
+						continue;
 					}
 
 					RenameWritingSystemTagInFile(tempFile, "WeSay Dictionary File", (pathToFileToChange) =>
