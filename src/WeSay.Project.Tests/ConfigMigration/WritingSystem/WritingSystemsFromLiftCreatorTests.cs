@@ -136,6 +136,19 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
+		public void CreateNonExistentWritingSystemsFoundInLift_LiftFileContainsNonConformantRfcTag_WSIdChangeLogUpdated()
+		{
+			using (var e = new TestEnvironment("x-bogusws1", "audio"))
+			{
+				e.Creator.CreateNonExistentWritingSystemsFoundInLift(e.PathToLiftFile);
+				Assert.That(File.Exists(e.GetLdmlFileforWs("x-bogusws1")));
+				Assert.That(File.Exists(e.GetLdmlFileforWs("qaa-Zxxx-x-audio")));
+				string idChangeLogFilePath = Path.Combine(e.WritingSystemsPath, "idchangelog.xml");
+				AssertThatXmlIn.File(idChangeLogFilePath).HasAtLeastOneMatchForXpath("/WritingSystemChangeLog/Changes[Add/Id/text()='x-bogusws1' and Add/Id/text()='qaa-Zxxx-x-audio']");
+			}
+		}
+
+		[Test]
 		public void CreateNonExistentWritingSystemsFoundInLift_LiftFileContainsNonConformantRfcTag_UpdatesRfcTagInLiftFile()
 		{
 			using (var environment = new TestEnvironment("Zxxx-x-bogusws1", "audio"))

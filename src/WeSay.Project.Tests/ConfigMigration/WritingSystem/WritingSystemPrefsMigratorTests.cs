@@ -28,6 +28,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				_testFolder = new TemporaryFolder("WritingSystemMigratorTests");
 				_wsPrefsFilePath = Path.Combine(_testFolder.Path, "WritingSystemPrefs.xml");
 				_ldmlRepositoryPath = Path.Combine(_testFolder.Path, "WritingSystems");
+				Directory.CreateDirectory(LdmlRepositoryPath);
 				_namespaceManager = new XmlNamespaceManager(new NameTable());
 				NamespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
 			}

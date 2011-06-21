@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Palaso.Migration;
+using Palaso.WritingSystems;
 using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
@@ -40,8 +41,10 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 			string writingSystemFolderPath = WritingSystemsFolder(Path.GetDirectoryName(_sourceFilePath));
 
-
-			var strategy = new WritingSystemPrefsToLdmlMigrationStrategy(_onWritingSystemTagChange);
+			var changeLog =
+				new WritingSystemChangeLog(
+					new WritingSystemChangeLogDataMapper(Path.Combine(writingSystemFolderPath, "idchangelog.xml")));
+			var strategy = new WritingSystemPrefsToLdmlMigrationStrategy(_onWritingSystemTagChange, changeLog);
 			string sourceFilePath = _sourceFilePath;
 			string tempFolderPath = String.Format("{0}.Migrate_{1}_{2}", _sourceFilePath, strategy.FromVersion,
 													   strategy.ToVersion);

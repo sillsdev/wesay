@@ -242,6 +242,93 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
+		public void MigrateIfNeeded_PrefsFileContainsIdThatIsMigrated_WritingSystemChangeLogIsUpdated()
+		{
+			using (var e = new TestEnvironment())
+			{
+				const string language = "en";
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(language, language, "", "", "", 12, false, language, "", false, true));
+				string writingSystemsPath = Path.Combine(e.ProjectPath, "WritingSystems");
+				string idChangeLogFilePath = Path.Combine(writingSystemsPath, "idchangelog.xml");
+				Directory.CreateDirectory(writingSystemsPath);
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				migrator.MigrateIfNecessary();
+				AssertThatXmlIn.File(idChangeLogFilePath).HasAtLeastOneMatchForXpath("/WritingSystemChangeLog/Changes/Change/To[text()='en-Zxxx-x-audio']");
+			}
+		}
+
+		[Test]
+		public void MigrateIfNeeded_PrefsFileContainsIdThatIsNotMigrated_WritingSystemChangeLogDoesNotExist()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystemForLanguage("en"));
+				string writingSystemsPath = Path.Combine(e.ProjectPath, "WritingSystems");
+				string idChangeLogFilePath = Path.Combine(writingSystemsPath, "idchangelog.xml");
+				Directory.CreateDirectory(writingSystemsPath);
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				migrator.MigrateIfNecessary();
+				// The change log does not exist because no id needed migrating
+				Assert.That(File.Exists(idChangeLogFilePath), Is.Not.True);
+			}
+		}
+
+
+		[Test]
+		public void MigrateIfNeeded_LdmlV0ContainsIdThatIsNotMigrated_WritingSystemChangeLogDoesNotExist()
+		{
+			using (var e = new TestEnvironment())
+			{
+				string writingSystemsPath = Path.Combine(e.ProjectPath, "WritingSystems");
+				string ldmlFilePath = Path.Combine(writingSystemsPath, "en.ldml");
+				string idChangeLogFilePath = Path.Combine(writingSystemsPath, "idchangelog.xml");
+				Directory.CreateDirectory(writingSystemsPath);
+				File.WriteAllText(ldmlFilePath, LdmlContentForTests.Version0English());
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				migrator.MigrateIfNecessary();
+				// The change log does not exist because no id needed migrating
+				Assert.That(File.Exists(idChangeLogFilePath), Is.Not.True);
+			}
+		}
+
+
+		[Test]
+		public void MigrateIfNeeded_LdmlV0ContainsIdThatNeedsMigrating_WritingSystemChangeLogUpdated()
+		{
+			using (var e = new TestEnvironment())
+			{
+				string writingSystemsPath = Path.Combine(e.ProjectPath, "WritingSystems");
+				string ldmlFilePath = Path.Combine(writingSystemsPath, "blah.ldml");
+				string idChangeLogFilePath = Path.Combine(writingSystemsPath, "idchangelog.xml");
+				Directory.CreateDirectory(writingSystemsPath);
+				File.WriteAllText(ldmlFilePath, LdmlContentForTests.Version0("blah","","",""));
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				migrator.MigrateIfNecessary();
+
+				AssertThatXmlIn.File(idChangeLogFilePath).HasAtLeastOneMatchForXpath("/WritingSystemChangeLog/Changes/Change/To[text()='x-blah']");
+			}
+		}
+
+		[Test]
+		public void MigrateIfNeeded_WSPrefsAndLdmlV0ContainsIdsThatNeedMigrating_WritingSystemChangeLogUpdated()
+		{
+			using (var e = new TestEnvironment())
+			{
+				const string language = "zzas";
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(language, language, "", "", "", 12, false, language, "", false, true));
+				string writingSystemsPath = Path.Combine(e.ProjectPath, "WritingSystems");
+				string ldmlFilePath = Path.Combine(writingSystemsPath, "en-ltlt.ldml");
+				string idChangeLogFilePath = Path.Combine(writingSystemsPath, "idchangelog.xml");
+				Directory.CreateDirectory(writingSystemsPath);
+				File.WriteAllText(ldmlFilePath, LdmlContentForTests.Version0("en-ltlt", "", "", ""));
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				migrator.MigrateIfNecessary();
+				AssertThatXmlIn.File(idChangeLogFilePath).HasAtLeastOneMatchForXpath("/WritingSystemChangeLog/Changes/Change/To[text()='en-x-ltlt']");
+				AssertThatXmlIn.File(idChangeLogFilePath).HasAtLeastOneMatchForXpath("/WritingSystemChangeLog/Changes/Change/To[text()='qaa-Zxxx-x-zzas-audio']");
+			}
+		}
+
+		[Test]
 		public void MigrateIfNeeded_LiftFileIsVersionOtherThanWhatWeKnowTheWritingSystemMigratorCanChange_LeavesLiftAlone()
 		{
 			using (var e = new TestEnvironment())
@@ -276,6 +363,8 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			using (var e = new TestEnvironment())
 			{
 				const string language = "english";
+				string writingSystemsPath = Path.Combine(e.ProjectPath, "WritingSystems");
+				Directory.CreateDirectory(writingSystemsPath);
 				e.WriteToPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(language, language, "", "", "", 12, false, language, "", false, true));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
 				migrator.MigrateIfNecessary();
