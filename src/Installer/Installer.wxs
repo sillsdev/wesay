@@ -28,11 +28,17 @@ rest of the app the first time the icon is run.  If this is not behavior you
 are trying to support, you're better off using non-advertised shortcuts. "-->
 
 		  <PropertyRef Id="NETFRAMEWORK35" />
-		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 3.5.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
+		  <PropertyRef Id="NETFRAMEWORK35_SP_LEVEL"/>
+		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 3.5 SP1.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
 			Installed OR NETFRAMEWORK35
 		  </Condition>
+		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 3.5 SP1.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
+			[CDATA[Installed OR (NETFRAMEWORK35_SP_LEVEL and NOT NETFRAMEWORK35_SP_LEVEL = "#0")]]
+		  </Condition>
 
-			<!--because of bug, this needs to be 1 -->
+
+
+		  <!--because of bug, this needs to be 1 -->
 			<Property Id ="ALLUSERS">1</Property>
 
 			<Directory Id="TARGETDIR" Name="SourceDir">
