@@ -116,7 +116,7 @@ namespace WeSay.App
 			try
 			{
 				_oneInstancePerProjectMutex = Mutex.OpenExisting(mutexId);
-				mutexAcquired = _oneInstancePerProjectMutex.WaitOne(1 * 1000);
+				mutexAcquired = _oneInstancePerProjectMutex.WaitOne(TimeSpan.FromMilliseconds(1 * 1000), false);
 			}
 			catch (WaitHandleCannotBeOpenedException e)//doesn't exist, we're the first.
 			{
@@ -134,7 +134,7 @@ namespace WeSay.App
 				try
 				{
 					_oneInstancePerProjectMutex = Mutex.OpenExisting(mutexId);
-					mutexAcquired = _oneInstancePerProjectMutex.WaitOne(10 * 1000);
+					mutexAcquired = _oneInstancePerProjectMutex.WaitOne(TimeSpan.FromMilliseconds(10 * 1000), false);
 				}
 				catch (AbandonedMutexException e)
 				{
