@@ -116,10 +116,6 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
-	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>

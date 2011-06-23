@@ -187,9 +187,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="LexicalTools.pdb" Guid="{DB30AF44-2E65-49AB-84E4-969CB6605CCA}">
 					<File Id="LexicalTools.pdb" Name="LexicalTools.pdb" KeyPath="yes" Source="..\..\output\release\LexicalTools.pdb" />
 				  </Component>
-				  <Component Id="LiftIO.dll" Guid="{EC2E5E3E-19E8-4680-8377-447DBDDE9BDF}">
-					<File Id="LiftIO.dll" Name="LiftIO.dll" KeyPath="yes" Source="..\..\output\release\LiftIO.dll" />
-				  </Component>
 				  <Component Id="Commons.Xml.Relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
 					<File Id="Commons.Xml.Relaxng.dll" Name="Commons.Xml.Relaxng.dll" KeyPath="yes" Source="..\..\output\release\Commons.Xml.Relaxng.dll" />
 				  </Component>
@@ -344,7 +341,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalModel.pdb" />
 			  <ComponentRef Id="LexicalTools.dll" />
 			  <ComponentRef Id="LexicalTools.pdb" />
-			  <ComponentRef Id="LiftIO.dll" />
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
 			  <ComponentRef Id="NetReflector.dll" />
 			  <ComponentRef Id="Chorus.exe"/>

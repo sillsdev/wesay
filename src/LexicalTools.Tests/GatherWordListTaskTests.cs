@@ -760,7 +760,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private GatherWordListTask CreateAndActivateLiftTask(IEnumerable<string> definitionWritingSystems, string entriesXml)
 		{
-			var file = new TempLiftFile("wordlist.lift", _tempFolder, entriesXml, LiftIO.Validation.Validator.LiftVersion);
+			var file = new TempLiftFile("wordlist.lift", _tempFolder, entriesXml, Palaso.Lift.Validation.Validator.LiftVersion);
 
 			var vt = new ViewTemplate();
 

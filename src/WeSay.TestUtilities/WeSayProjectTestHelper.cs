@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using LiftIO;
 using Palaso.WritingSystems;
 using WeSay.Project;
 
@@ -36,7 +32,7 @@ namespace WeSay.TestUtilities
 				Directory.Delete(pathToLdmlWsFolder, true);
 			}
 
-			Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
+			Palaso.Lift.Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
 
 			//setup writing systems
 			Directory.CreateDirectory(pathToLdmlWsFolder);
