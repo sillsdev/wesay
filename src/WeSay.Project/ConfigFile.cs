@@ -127,41 +127,51 @@ namespace WeSay.Project
 			var writingSystemRepo = new LdmlInFolderWritingSystemRepository(pathToWritingSystemsFolder);
 			foreach (var wsId in WritingSystemsInUse)
 			{
-				string conformantId = GetNewId(wsId);
-				if(conformantId != wsId)
+				// Check if it's in the repo
+				if (writingSystemRepo.Contains(wsId))
 				{
-					if (WritingSystemsInUse.Any(str => str.Equals(conformantId, StringComparison.OrdinalIgnoreCase)))
+					continue;
+				}
+				// It's an orphan
+				// Clean it
+				var conformantWritingSystem = WritingSystemDefinition.Parse(CleanWritingSystemIdIfNecessary(wsId));
+				// If it changed, then change
+				if (conformantWritingSystem.RFC5646 != wsId)
+				{
+					// Check for duplicates
+					int duplicateCount = 0;
+					for (;;)
 					{
-						conformantId = MakeUniqueTag(conformantId, WritingSystemsInUse);
+						string id = conformantWritingSystem.RFC5646;
+						if (WritingSystemsInUse.Any(s => s.Equals(id, StringComparison.OrdinalIgnoreCase)))
+						{
+							duplicateCount++;
+							conformantWritingSystem = WritingSystemDefinition.Parse(conformantWritingSystem.RFC5646);
+							conformantWritingSystem.AddToPrivateUse(String.Format("dupl{0}", duplicateCount));
+						} else
+						{
+							break;
+						}
 					}
-					ReplaceWritingSystemId(wsId, conformantId);
+					ReplaceWritingSystemId(wsId, conformantWritingSystem.RFC5646);
 				}
-				if (!writingSystemRepo.Contains(conformantId))
+				// Check if it's in the repo
+				if (writingSystemRepo.Contains(conformantWritingSystem.RFC5646))
 				{
-					writingSystemRepo.Set(WritingSystemDefinition.Parse(conformantId));
+					continue;
 				}
+				// It's not in the repo so set it
+				writingSystemRepo.Set(conformantWritingSystem);
 			}
 			writingSystemRepo.Save();
 		}
 
-		private static string GetNewId(string currentWritingSystemId)
+		private static string CleanWritingSystemIdIfNecessary(string writingSystemId)
 		{
-				var rfcTagCleaner = new Rfc5646TagCleaner(currentWritingSystemId);
-				rfcTagCleaner.Clean();
-				string newId = rfcTagCleaner.GetCompleteTag();
+			var rfcTagCleaner = new Rfc5646TagCleaner(writingSystemId);
+			rfcTagCleaner.Clean();
+			string newId = rfcTagCleaner.GetCompleteTag();
 			return newId;
-		}
-
-		private static string MakeUniqueTag(string rfcTag, IEnumerable<string> uniqueRfcTags)
-		{
-			int duplicateNumber = 0;
-			string newRfcTag;
-			do
-			{
-				duplicateNumber++;
-				newRfcTag = rfcTag + String.Format("-dupl{0}", duplicateNumber);
-			} while (uniqueRfcTags.Any(s => s.Equals(newRfcTag, StringComparison.OrdinalIgnoreCase)));
-			return newRfcTag;
 		}
 	}
 }

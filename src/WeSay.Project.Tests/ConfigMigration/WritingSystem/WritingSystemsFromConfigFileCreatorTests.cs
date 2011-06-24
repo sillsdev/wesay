@@ -190,6 +190,33 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
+		public void CreateNonExistentWritingSystemsxFoundInLift_FieldsXmlContainsNonConformantRfcTagWithDuplicates_UpdatesRfcTagInFieldsXmlOfConfigFile()
+		{
+			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingFieldWithWritingSystems("x-aaa", "aaa")))
+			{
+				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystemsPath);
+
+				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
+					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='x-aaa']");
+				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
+					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='aaa']");
+
+
+				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "x-aaa" + ".ldml");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='']");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/script[@type='']");
+				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/variant[@type='x-aaa']");
+
+				writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "qaa-Zxxx-x-audio-dupl1" + ".ldml");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='aaa']");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/script[@type='']");
+				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/variant[@type='']");
+			}
+		}
+
+		[Test]
 		public void CreateNonExistentWritingSystemsFoundInLift_FieldsXmlContainsNonConformantRfcTagWithDuplicates_UpdatesRfcTagInFieldsXmlOfConfigFile()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingFieldWithWritingSystems("qaa-audio", "qaa-Zxxx-x-audio")))
