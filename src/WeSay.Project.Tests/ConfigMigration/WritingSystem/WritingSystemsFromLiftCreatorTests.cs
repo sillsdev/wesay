@@ -201,16 +201,30 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		//This test makes sure that nonexisting private use tags are migrated if necassary
+
 		public void CreateNonExistentWritingSystemsFoundInLift_LiftFileContainsEntirelyPrivateUseRfcTagThatDoesNotExistInRepo_RfcTagIsNotMigrated()
 		{
-			using (var e = new TestEnvironment("x-en-Zxxx-x-audio"))
+			using (var e = new TestEnvironment("x-blah"))
 			{
 				e.Creator.CreateNonExistentWritingSystemsFoundInLift(e.PathToLiftFile);
-				Assert.That(File.Exists(e.GetLdmlFileforWs("x-en-Zxxx-x-audio")), Is.False);
-				Assert.That(File.Exists(e.GetLdmlFileforWs("en-Zxxx-x-audio")), Is.True);
-				AssertThatXmlIn.File(e.PathToLiftFile).HasNoMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-en-Zxxx-x-audio']");
-				AssertThatXmlIn.File(e.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='en-Zxxx-x-audio']");
+				//Assert.That(File.Exists(e.GetLdmlFileforWs("x-en-Zxxx-x-audio")), Is.False);
+				Assert.That(File.Exists(e.GetLdmlFileforWs("x-blah")), Is.True);
+				//AssertThatXmlIn.File(e.PathToLiftFile).HasNoMatchForXpath("/lift/entry/lexical-unit/form[@lang='']");
+				AssertThatXmlIn.File(e.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-blah']");
+			}
+		}
+
+		[Test]
+		//This test makes sure that nonexisting private use tags are migrated if necessary
+		public void CreateNonExistentWritingSystemsFoundInLift_LiftFileContainsAudioTagThatDoesNotExistInRepo_RfcTagIsMigrated()
+		{
+			using (var e = new TestEnvironment("x-audio"))
+			{
+				e.Creator.CreateNonExistentWritingSystemsFoundInLift(e.PathToLiftFile);
+				Assert.That(File.Exists(e.GetLdmlFileforWs("x-audio")), Is.False);
+				Assert.That(File.Exists(e.GetLdmlFileforWs("qaa-Zxxx-x-audio")), Is.True);
+				AssertThatXmlIn.File(e.PathToLiftFile).HasNoMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-audio']");
+				AssertThatXmlIn.File(e.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='qaa-Zxxx-x-audio']");
 			}
 		}
 	}
