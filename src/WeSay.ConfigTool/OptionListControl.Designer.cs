@@ -34,16 +34,15 @@ namespace WeSay.ConfigTool
 			this.components = new System.ComponentModel.Container();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._listBox = new System.Windows.Forms.ListBox();
-			this._keyText = new System.Windows.Forms.TextBox();
 			this._nameLabel = new System.Windows.Forms.Label();
-			this._keyLabel = new System.Windows.Forms.Label();
 			this._nameMultiTextControl = new WeSay.UI.TextBoxes.MultiTextControl();
-			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this._toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this._btnAdd = new System.Windows.Forms.ToolStripButton();
 			this._btnDelete = new System.Windows.Forms.ToolStripButton();
 			this._fieldChooser = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
+			this._keyLabel = new System.Windows.Forms.Label();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -64,9 +63,8 @@ namespace WeSay.ConfigTool
 			//
 			// splitContainer1.Panel2
 			//
-			this.splitContainer1.Panel2.Controls.Add(this._keyText);
-			this.splitContainer1.Panel2.Controls.Add(this._nameLabel);
 			this.splitContainer1.Panel2.Controls.Add(this._keyLabel);
+			this.splitContainer1.Panel2.Controls.Add(this._nameLabel);
 			this.splitContainer1.Panel2.Controls.Add(this._nameMultiTextControl);
 			this.splitContainer1.Size = new System.Drawing.Size(392, 182);
 			this.splitContainer1.SplitterDistance = 101;
@@ -84,17 +82,6 @@ namespace WeSay.ConfigTool
 			this._listBox.TabIndex = 0;
 			this._listBox.SelectedIndexChanged += new System.EventHandler(this.OnSelectedIndexChanged);
 			//
-			// _keyText
-			//
-			this._keyText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this._keyText.Location = new System.Drawing.Point(56, 94);
-			this._keyText.Name = "_keyText";
-			this._keyText.Size = new System.Drawing.Size(140, 20);
-			this._keyText.TabIndex = 2;
-			this.toolTip1.SetToolTip(this._keyText, "The key that will show up in the xml file; if this option list were to be lost, i" +
-					"t is the key that would need to communicate what value the field is set to.");
-			this._keyText.TextChanged += new System.EventHandler(this.OnKeyTextChanged);
-			//
 			// _nameLabel
 			//
 			this._nameLabel.AutoSize = true;
@@ -103,15 +90,6 @@ namespace WeSay.ConfigTool
 			this._nameLabel.Size = new System.Drawing.Size(35, 13);
 			this._nameLabel.TabIndex = 1;
 			this._nameLabel.Text = "Name";
-			//
-			// _keyLabel
-			//
-			this._keyLabel.AutoSize = true;
-			this._keyLabel.Location = new System.Drawing.Point(3, 94);
-			this._keyLabel.Name = "_keyLabel";
-			this._keyLabel.Size = new System.Drawing.Size(25, 13);
-			this._keyLabel.TabIndex = 1;
-			this._keyLabel.Text = "Key";
 			//
 			// _nameMultiTextControl
 			//
@@ -133,19 +111,30 @@ namespace WeSay.ConfigTool
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.IsSpellCheckingEnabled = false;
 			this._nameMultiTextControl.Location = new System.Drawing.Point(56, 11);
 			this._nameMultiTextControl.MinimumSize = new System.Drawing.Size(140, 20);
 			this._nameMultiTextControl.Name = "_nameMultiTextControl";
 			this._nameMultiTextControl.ShowAnnotationWidget = false;
 			this._nameMultiTextControl.Size = new System.Drawing.Size(140, 20);
 			this._nameMultiTextControl.TabIndex = 0;
+			this._toolTip.SetToolTip(this._nameMultiTextControl, "__");
 			//
-			// toolTip1
+			// _toolTip
 			//
-			this.toolTip1.AutomaticDelay = 200;
-			this.toolTip1.AutoPopDelay = 8000;
-			this.toolTip1.InitialDelay = 200;
-			this.toolTip1.ReshowDelay = 40;
+			this._toolTip.AutomaticDelay = 200;
+			this._toolTip.AutoPopDelay = 8000;
+			this._toolTip.InitialDelay = 200;
+			this._toolTip.ReshowDelay = 40;
 			//
 			// toolStrip1
 			//
@@ -168,7 +157,7 @@ namespace WeSay.ConfigTool
 			this._btnAdd.Image = global::WeSay.ConfigTool.Properties.Resources.NewOptionListItem;
 			this._btnAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._btnAdd.Name = "_btnAdd";
-			this._btnAdd.Size = new System.Drawing.Size(83, 22);
+			this._btnAdd.Size = new System.Drawing.Size(91, 22);
 			this._btnAdd.Text = "New Option";
 			this._btnAdd.Click += new System.EventHandler(this._btnAdd_Click);
 			//
@@ -177,7 +166,7 @@ namespace WeSay.ConfigTool
 			this._btnDelete.Image = global::WeSay.ConfigTool.Properties.Resources.deleteOptionListItem;
 			this._btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._btnDelete.Name = "_btnDelete";
-			this._btnDelete.Size = new System.Drawing.Size(93, 22);
+			this._btnDelete.Size = new System.Drawing.Size(100, 22);
 			this._btnDelete.Text = "Delete Option";
 			this._btnDelete.Click += new System.EventHandler(this._btnDelete_Click);
 			//
@@ -199,6 +188,16 @@ namespace WeSay.ConfigTool
 			this.label1.Size = new System.Drawing.Size(43, 15);
 			this.label1.TabIndex = 26;
 			this.label1.Text = "Field:";
+			//
+			// _keyLabel
+			//
+			this._keyLabel.AutoSize = true;
+			this._keyLabel.ForeColor = System.Drawing.Color.Silver;
+			this._keyLabel.Location = new System.Drawing.Point(53, 44);
+			this._keyLabel.Name = "_keyLabel";
+			this._keyLabel.Size = new System.Drawing.Size(98, 13);
+			this._keyLabel.TabIndex = 4;
+			this._keyLabel.Text = "Key in LIFT file: foo";
 			//
 			// OptionListControl
 			//
@@ -228,15 +227,14 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.ListBox _listBox;
 		private MultiTextControl _nameMultiTextControl;
-		private System.Windows.Forms.TextBox _keyText;
-		private System.Windows.Forms.Label _keyLabel;
-		private System.Windows.Forms.ToolTip toolTip1;
+		private System.Windows.Forms.ToolTip _toolTip;
 		private System.Windows.Forms.Label _nameLabel;
 		private System.Windows.Forms.ToolStrip toolStrip1;
 		private System.Windows.Forms.ToolStripButton _btnAdd;
 		private System.Windows.Forms.ToolStripButton _btnDelete;
 		private System.Windows.Forms.ComboBox _fieldChooser;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label _keyLabel;
 
 	}
 }
