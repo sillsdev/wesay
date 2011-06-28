@@ -75,7 +75,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			{
 				var ws = new WritingSystemDefinition
 					{
-						ISO639 = languageCode,
+						Language = languageCode,
 						Abbreviation = languageCode,
 						IsVoice = false,
 						DefaultFontName = new Font(FontFamily.GenericSansSerif, 12).Name,

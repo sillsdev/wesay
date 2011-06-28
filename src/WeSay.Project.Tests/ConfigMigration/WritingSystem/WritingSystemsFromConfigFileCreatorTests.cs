@@ -264,11 +264,12 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingFieldWithWritingSystems("en", "audio")))
 			{
-				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "en" + ".ldml");
+				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.WritingSystemsPath);
 
 				var enWs = WritingSystemDefinition.FromLanguage("en");
 				enWs.Abbreviation = "Dont change me!";
-				new LdmlAdaptor().Write(writingSystemFilePath, enWs, null);
+				wsRepo.Set(enWs);
+				wsRepo.Save();
 
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystemsPath);
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
@@ -276,11 +277,12 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
 					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='qaa-Zxxx-x-audio']");
 
-				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='en']");
-				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
-				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
-				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/variant");
-				AssertThatXmlIn.File(writingSystemFilePath).
+				var pathToLdml = Path.Combine(environment.WritingSystemsPath, "en.ldml");
+				AssertThatXmlIn.File(pathToLdml).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='en']");
+				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/script");
+				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/territory");
+				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/variant");
+				AssertThatXmlIn.File(pathToLdml).
 					HasAtLeastOneMatchForXpath("/ldml/special/palaso:abbreviation[@value='Dont change me!']", environment.NamespaceManager);
 			}
 		}

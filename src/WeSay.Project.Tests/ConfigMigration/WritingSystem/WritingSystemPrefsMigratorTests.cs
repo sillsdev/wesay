@@ -569,8 +569,9 @@ O o";
 
 				var ws = WritingSystemDefinition.FromLanguage("en");
 				ws.Abbreviation = "untouched";
-				Directory.CreateDirectory(environment.LdmlRepositoryPath);
-				new LdmlAdaptor().Write(Path.Combine(environment.LdmlRepositoryPath, "en.ldml"), ws, null);
+				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.LdmlRepositoryPath);
+				wsRepo.Set(ws);
+				wsRepo.Save();
 
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
@@ -592,8 +593,9 @@ O o";
 					);
 				var ws = WritingSystemDefinition.FromLanguage("en");
 				ws.Abbreviation = "untouched";
-				Directory.CreateDirectory(environment.LdmlRepositoryPath);
-				new LdmlAdaptor().Write(Path.Combine(environment.LdmlRepositoryPath, "en.ldml"), ws, null);
+				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.LdmlRepositoryPath);
+				wsRepo.Set(ws);
+				wsRepo.Save();
 
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,

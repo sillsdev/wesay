@@ -212,8 +212,9 @@ namespace WeSay.ConfigTool
 			CreateNewProject(directoryPath);
 			OpenProject(directoryPath);
 			var genericWritingSystemShippedWithWs = Project.WritingSystems.Get("qaa");
-			genericWritingSystemShippedWithWs.ISO639 = languageTag;
+			genericWritingSystemShippedWithWs.Language = languageTag;
 			Project.WritingSystems.Set(genericWritingSystemShippedWithWs);
+			Project.WritingSystems.Save();
 			 if(_project != null)
 			 {
 				 var logger = _project.Container.Resolve<ILogger>();
