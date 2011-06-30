@@ -326,14 +326,14 @@ namespace WeSay.UI.Buttons
 
 		private void buttonDown()
 		{
-			//_buttonIsDown = true;
-			//Invalidate();
+			_buttonIsDown = true;
+			Invalidate();
 		}
 
 		private void buttonUp()
 		{
-			//_buttonIsDown = false;
-			//Invalidate();
+			_buttonIsDown = false;
+			Invalidate();
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)

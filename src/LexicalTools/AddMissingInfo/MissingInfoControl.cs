@@ -482,7 +482,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			SetCurrentRecordToPrevious();
 		}
 
-		private void OnBtnNextWordClick(object sender, MouseEventArgs e)
+		private void OnBtnNextWordClick(object sender, EventArgs e)
 		{
 			SetCurrentRecordToNext();
 		}

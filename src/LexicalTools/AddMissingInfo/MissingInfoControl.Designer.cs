@@ -248,7 +248,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this._btnNextWord.Size = new System.Drawing.Size(50, 50);
 			this._btnNextWord.TabIndex = 1;
 			this._btnNextWord.TabStop = false;
-			this._btnNextWord.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnBtnNextWordClick);
+			this._btnNextWord.Click += new System.EventHandler(this.OnBtnNextWordClick);
 			//
 			// labelNextHotKey
 			//
