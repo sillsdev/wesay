@@ -136,27 +136,27 @@ namespace WeSay.Project
 				// Clean it
 				var conformantWritingSystem = WritingSystemDefinition.Parse(CleanWritingSystemIdIfNecessary(wsId));
 				// If it changed, then change
-				if (conformantWritingSystem.RFC5646 != wsId)
+				if (conformantWritingSystem.Id != wsId)
 				{
 					// Check for duplicates
 					int duplicateCount = 0;
 					for (;;)
 					{
-						string id = conformantWritingSystem.RFC5646;
+						string id = conformantWritingSystem.Id;
 						if (WritingSystemsInUse.Any(s => s.Equals(id, StringComparison.OrdinalIgnoreCase)))
 						{
 							duplicateCount++;
-							conformantWritingSystem = WritingSystemDefinition.Parse(conformantWritingSystem.RFC5646);
+							conformantWritingSystem = WritingSystemDefinition.Parse(conformantWritingSystem.Id);
 							conformantWritingSystem.AddToPrivateUse(String.Format("dupl{0}", duplicateCount));
 						} else
 						{
 							break;
 						}
 					}
-					ReplaceWritingSystemId(wsId, conformantWritingSystem.RFC5646);
+					ReplaceWritingSystemId(wsId, conformantWritingSystem.Id);
 				}
 				// Check if it's in the repo
-				if (writingSystemRepo.Contains(conformantWritingSystem.RFC5646))
+				if (writingSystemRepo.Contains(conformantWritingSystem.Id))
 				{
 					continue;
 				}
