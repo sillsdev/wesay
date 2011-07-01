@@ -404,8 +404,8 @@ namespace WeSay.Project
 			writingSystemMigrator.MigrateIfNecessary();
 
 			//check for orphaned writing systems in Lift
-			var wsCreator = new WritingSystemsFromLiftCreator(projectDirectory);
-			wsCreator.CreateNonExistentWritingSystemsFoundInLift(liftFilePath);
+			var wsCreator = new WritingSystemsFromLiftCreator(writingSystemFolderPath, liftFilePath);
+			wsCreator.CreateNonExistentWritingSystemsFoundInLift();
 
 			//check for orphaned writing systems in the config file
 			if (configFile != null)
