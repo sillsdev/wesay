@@ -24,7 +24,6 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 					Assert.IsTrue(Directory.Exists(targetDir));
 					var liftName = projectName + ".lift";
 					AssertFileExistsInTargetDir(targetDir, liftName);
-					AssertFileExistsInTargetDir(targetDir, projectName+".WeSayConfig");
 
 					var liftPath = Path.Combine(targetDir, liftName);
 					AssertThatXmlIn.File(liftPath).HasAtLeastOneMatchForXpath("//entry[@id='foo']");

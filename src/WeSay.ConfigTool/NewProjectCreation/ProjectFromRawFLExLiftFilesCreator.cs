@@ -58,6 +58,10 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 		private static void CopyOverLdmlFiles(string pathToSourceLift, string pathToNewDirectory)
 		{
+			if(!Directory.Exists(pathToNewDirectory))
+			{
+				Directory.CreateDirectory(pathToNewDirectory);
+			}
 			foreach (string pathToLdml in Directory.GetFiles(Path.GetDirectoryName(pathToSourceLift), "*.ldml"))
 			{
 				string fileName = Path.GetFileName(pathToLdml);
