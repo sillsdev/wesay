@@ -213,6 +213,12 @@ namespace WeSay.ConfigTool
 			OpenProject(directoryPath);
 			var genericWritingSystemShippedWithWs = Project.WritingSystems.Get("qaa");
 			genericWritingSystemShippedWithWs.Language = languageTag;
+			//this is to accomodate Flex which expects to have a custom language tag
+			//as the first private use subtag when the language subtag is qaa
+			if (genericWritingSystemShippedWithWs.Language == WellKnownSubTags.Unlisted.Language)
+			{
+				genericWritingSystemShippedWithWs.Variant = "x-" + "Unlisted";
+			}
 			Project.WritingSystems.Set(genericWritingSystemShippedWithWs);
 			Project.WritingSystems.Save();
 			 if(_project != null)
