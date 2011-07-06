@@ -460,9 +460,14 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private static string GetIdFromUrl(string url)
 		{
 			Uri uri;
-			if(!Uri.TryCreate(url, UriKind.Absolute, out uri))
+
+			//WS-34080: this function can't handle domain names (here, the name of the lift file) which have %20's.
+			//note: we are also removing ones which could be elsewhere in the url, but since we're only after the id, it's ok.
+			var urlWithoutSpaces = url.Replace("%20", "");
+
+			if(!Uri.TryCreate(urlWithoutSpaces, UriKind.Absolute, out uri))
 			{
-			  throw new ApplicationException("Could not parse the url " + url);
+			  throw new ApplicationException("Could not parse the url " + urlWithoutSpaces);
 			}
 
 			var parse = System.Web.HttpUtility.ParseQueryString(uri.Query);

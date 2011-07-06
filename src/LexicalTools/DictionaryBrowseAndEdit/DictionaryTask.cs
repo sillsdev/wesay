@@ -65,18 +65,19 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				 _dictionaryControl.SelectedIndexChanged += new EventHandler(OnSelectedEntryOfDictionaryControlChanged);
 //   Debug.Assert(_userSettings.Get("one", "0") == "1");
 
-				if (_taskMemory != null && _taskMemory.Get(LastUrlKey, null) != null)
+				var url = _taskMemory.Get(LastUrlKey, null);
+				if (_taskMemory != null && url != null)
 				{
 					try
 					{
-						  _dictionaryControl.GoToUrl(_taskMemory.Get(LastUrlKey, null));
+						  _dictionaryControl.GoToUrl(url);
 					}
 					catch (Exception error)
 					{
 						//there's no scenario where it is worth crashing or even notifying
 						Logger.WriteEvent("Error: " + error.Message);
 #if DEBUG
-						ErrorReport.NotifyUserOfProblem("Only seeing this because youre in debug mode:\r\n"+error.Message);
+						ErrorReport.NotifyUserOfProblem(error,"Could not find the entry at '{0}'\r\n{1}", url,error.Message);
 #endif
 					}
 				}
