@@ -28,11 +28,17 @@ rest of the app the first time the icon is run.  If this is not behavior you
 are trying to support, you're better off using non-advertised shortcuts. "-->
 
 		  <PropertyRef Id="NETFRAMEWORK35" />
-		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 3.5.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
+		  <PropertyRef Id="NETFRAMEWORK35_SP_LEVEL"/>
+		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 3.5 SP1.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
 			Installed OR NETFRAMEWORK35
 		  </Condition>
+		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 3.5 SP1.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
+			Installed OR (NETFRAMEWORK35_SP_LEVEL and NOT NETFRAMEWORK35_SP_LEVEL = "#0")
+		  </Condition>
 
-			<!--because of bug, this needs to be 1 -->
+
+
+		  <!--because of bug, this needs to be 1 -->
 			<Property Id ="ALLUSERS">1</Property>
 
 			<Directory Id="TARGETDIR" Name="SourceDir">
@@ -180,9 +186,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 				  <Component Id="LexicalTools.pdb" Guid="{DB30AF44-2E65-49AB-84E4-969CB6605CCA}">
 					<File Id="LexicalTools.pdb" Name="LexicalTools.pdb" KeyPath="yes" Source="..\..\output\release\LexicalTools.pdb" />
-				  </Component>
-				  <Component Id="LiftIO.dll" Guid="{EC2E5E3E-19E8-4680-8377-447DBDDE9BDF}">
-					<File Id="LiftIO.dll" Name="LiftIO.dll" KeyPath="yes" Source="..\..\output\release\LiftIO.dll" />
 				  </Component>
 				  <Component Id="Commons.Xml.Relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
 					<File Id="Commons.Xml.Relaxng.dll" Name="Commons.Xml.Relaxng.dll" KeyPath="yes" Source="..\..\output\release\Commons.Xml.Relaxng.dll" />
@@ -338,7 +341,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalModel.pdb" />
 			  <ComponentRef Id="LexicalTools.dll" />
 			  <ComponentRef Id="LexicalTools.pdb" />
-			  <ComponentRef Id="LiftIO.dll" />
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
 			  <ComponentRef Id="NetReflector.dll" />
 			  <ComponentRef Id="Chorus.exe"/>

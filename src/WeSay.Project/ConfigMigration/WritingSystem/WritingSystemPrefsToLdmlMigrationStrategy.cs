@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Palaso.Migration;
+using Palaso.WritingSystems;
 using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
@@ -107,10 +108,12 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		}
 
 		private readonly LdmlVersion0MigrationStrategy.OnMigrationFn _onMigrationCallback;
+		private IAuditTrail _changeLog;
 
-		public WritingSystemPrefsToLdmlMigrationStrategy(LdmlVersion0MigrationStrategy.OnMigrationFn migrationCb)
+		public WritingSystemPrefsToLdmlMigrationStrategy(LdmlVersion0MigrationStrategy.OnMigrationFn migrationCb, IAuditTrail changeLog)
 		{
 			_onMigrationCallback = migrationCb;
+			_changeLog = changeLog;
 		}
 
 		public void Migrate(string sourceFilePath, string destinationFilePath)
@@ -174,6 +177,10 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				new LdmlAdaptorV0().Write(pathForNewLdmlFile, wsDef, null);
 
 				currentMigrationInfo.RfcTagAfterMigration = wsDef.Rfc5646;
+				if (currentMigrationInfo.RfcTagBeforeMigration != currentMigrationInfo.RfcTagAfterMigration)
+				{
+					_changeLog.LogChange(currentMigrationInfo.RfcTagBeforeMigration, currentMigrationInfo.RfcTagAfterMigration);
+				}
 				migrationInfo.Add(currentMigrationInfo);
 			}
 			_onMigrationCallback(migrationInfo);

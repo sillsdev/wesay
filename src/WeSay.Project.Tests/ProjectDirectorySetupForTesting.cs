@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using LiftIO.Validation;
+using Palaso.Lift.Validation;
 
 namespace WeSay.Project.Tests
 {

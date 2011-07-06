@@ -20,6 +20,9 @@ namespace WeSay.ConfigTool
 		private OptionsList _currentList;
 		private Option _currentOption;
 		private Field _currentField;
+		/// <summary>
+		/// the new ones change their key as their names are editted. Old ones don't.
+		/// </summary>
 		private readonly List<Option> _newlyCreatedOptions = new List<Option>();
 		private bool _currentListWasModified;
 
@@ -28,10 +31,16 @@ namespace WeSay.ConfigTool
 		{
 			InitializeComponent();
 			VisibleChanged += OptionListControl_VisibleChanged;
-
 			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
 			_currentListWasModified = false;
 		}
+
+		void OnName_Changed(object sender, EventArgs e)
+		{
+			UpdateKeyLabel();
+		}
+
+
 
 		private void OnEditorSaveNow(object sender, EventArgs e)
 		{
@@ -200,13 +209,16 @@ namespace WeSay.ConfigTool
 				m.Top = _nameLabel.Top;
 				m.BorderStyle = BorderStyle.FixedSingle;
 				m.Anchor = _nameMultiTextControl.Anchor;
+				m.TextChanged +=new EventHandler(OnName_Changed);
 
 				_nameMultiTextControl = m;
 				splitContainer1.Panel2.Controls.Add(m);
 
+				/* user can't change this anymore. It was confusing to people an probably not needed
 				_keyText.TextChanged -= OnKeyTextChanged;
 				_keyText.Text = proxy.UnderlyingOption.Key;
 				_keyText.TextChanged += OnKeyTextChanged;
+				*/
 
 				var justTextBoxes = from z in m.TextBoxes where z is WeSayTextBox select z;
 				foreach (WeSayTextBox box in justTextBoxes)
@@ -217,9 +229,10 @@ namespace WeSay.ConfigTool
 						box
 					);
 					//hooking on to this is more reliable, sequence-wise, than directly wiring to m.TextChanged
+					//JH (2011): Maybe so, but this doesn't fire until they tab away, and that's too late.
 					binding.DataTarget.PropertyChanged += DataTarget_PropertyChanged;
 				}
-				_keyText.Left = _nameMultiTextControl.Left;
+				AdjustLocations();
 				UpdateDisplay();
 			}
 		}
@@ -231,10 +244,9 @@ namespace WeSay.ConfigTool
 
 		private void AdjustLocations()
 		{
-			_keyText.Left = _nameMultiTextControl.Left;
-			_keyText.Top = _nameMultiTextControl.Bottom + 20;
-			_keyText.Width = _nameMultiTextControl.Width;
-			_keyLabel.Top = _keyText.Top;
+			_keyLabel.Left = _nameMultiTextControl.Left;
+			_keyLabel.Top = _nameMultiTextControl.Bottom + 20;
+			_keyLabel.Width = _nameMultiTextControl.Width;
 		}
 
 		private void SaveEditsToCurrentItem()
@@ -243,18 +255,43 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
-			_currentOption.Key = _keyText.Text;
+			_currentOption.Key = ProposedKey;
+		}
+
+		protected string ProposedKey
+		{
+			get
+			{
+				if (_newlyCreatedOptions.Contains(_currentOption))
+				{
+					//we prefer a major language for the key
+					var key =
+						_nameMultiTextControl.GetMultiText().GetBestAlternativeString(new[]
+																						  {
+																							  "en", "fr", "th", "es", "pt",
+																							  "id"
+																						  });
+					if (!string.IsNullOrEmpty(key))
+						return key;
+				}
+				return _currentOption.Key;
+			}
 		}
 
 		private void DataTarget_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			_keyText.Text = _currentOption.Key;
+			UpdateKeyLabel();
 			//will automatically change as we type, if the key isn't set yet
 
 			//this weirdness is because I couldn't get the list item to update
 			// with any of the normal, documented means (e.g. _listBox.Text)
 			_listBox.Items[_listBox.SelectedIndex] = _listBox.SelectedItem;
 			UserModifiedList();
+		}
+
+		private void UpdateKeyLabel()
+		{
+			_keyLabel.Text = "Id in LIFT file: " + ProposedKey;
 		}
 
 		private void _btnAdd_Click(object sender, EventArgs e)
@@ -296,16 +333,9 @@ namespace WeSay.ConfigTool
 		private void UpdateDisplay()
 		{
 			_btnDelete.Enabled = _listBox.SelectedItem != null && _listBox.Items.Count>1;
-			_keyText.Enabled = _newlyCreatedOptions.Contains(_currentOption);
-			_keyText.BackColor = SystemColors.Window;
+			UpdateKeyLabel();
 			_nameMultiTextControl.Visible = _listBox.SelectedItem != null;
-			_keyText.Visible = _nameMultiTextControl.Visible;
 			_btnAdd.Enabled = (null != _currentField) ;
-		}
-
-		private void OnKeyTextChanged(object sender, EventArgs e)
-		{
-			UserModifiedList();
 		}
 
 		private void OnFieldChooser_SelectedIndexChanged(object sender, EventArgs e)
@@ -316,5 +346,6 @@ namespace WeSay.ConfigTool
 				LoadList(f);
 			}
 		}
+
 	}
 }

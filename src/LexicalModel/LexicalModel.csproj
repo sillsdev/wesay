@@ -153,10 +153,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\irrKlang.NET2.0.dll</HintPath>
 	</Reference>
-	<Reference Include="LiftIO, Version=1.1.32.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
-	</Reference>
 	<Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\NDesk.DBus.dll</HintPath>

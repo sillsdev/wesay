@@ -28,6 +28,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				_testFolder = new TemporaryFolder("WritingSystemMigratorTests");
 				_wsPrefsFilePath = Path.Combine(_testFolder.Path, "WritingSystemPrefs.xml");
 				_ldmlRepositoryPath = Path.Combine(_testFolder.Path, "WritingSystems");
+				Directory.CreateDirectory(LdmlRepositoryPath);
 				_namespaceManager = new XmlNamespaceManager(new NameTable());
 				NamespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
 			}
@@ -568,8 +569,9 @@ O o";
 
 				var ws = WritingSystemDefinition.FromLanguage("en");
 				ws.Abbreviation = "untouched";
-				Directory.CreateDirectory(environment.LdmlRepositoryPath);
-				new LdmlAdaptor().Write(Path.Combine(environment.LdmlRepositoryPath, "en.ldml"), ws, null);
+				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.LdmlRepositoryPath);
+				wsRepo.Set(ws);
+				wsRepo.Save();
 
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
@@ -591,8 +593,9 @@ O o";
 					);
 				var ws = WritingSystemDefinition.FromLanguage("en");
 				ws.Abbreviation = "untouched";
-				Directory.CreateDirectory(environment.LdmlRepositoryPath);
-				new LdmlAdaptor().Write(Path.Combine(environment.LdmlRepositoryPath, "en.ldml"), ws, null);
+				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.LdmlRepositoryPath);
+				wsRepo.Set(ws);
+				wsRepo.Save();
 
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,

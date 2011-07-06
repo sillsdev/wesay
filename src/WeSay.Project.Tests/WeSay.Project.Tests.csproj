@@ -120,10 +120,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\LibChorus.dll</HintPath>
 	</Reference>
-	<Reference Include="LiftIO, Version=0.1.0.32, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
-	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>

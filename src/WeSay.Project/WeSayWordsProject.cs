@@ -18,13 +18,13 @@ using Chorus.FileTypeHanders.lift;
 using Chorus.sync;
 using Chorus.UI.Notes.Bar;
 using Chorus.Utilities;
-using LiftIO;
-using LiftIO.Validation;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Lift;
 using Palaso.DictionaryServices.Model;
 using Palaso.IO;
+using Palaso.Lift;
 using Palaso.Lift.Options;
+using Palaso.Lift.Validation;
 using Palaso.Progress.LogBox;
 using Palaso.Reporting;
 using Palaso.Text;
@@ -351,6 +351,7 @@ namespace WeSay.Project
 				var dialog = new ProgressDialog();
 				var worker = new BackgroundWorker();
 				worker.DoWork += OnDoMigration;
+				worker.RunWorkerCompleted += OnWorkerCompleted;
 				dialog.BackgroundWorker = worker;
 				dialog.CanCancel = false;
 				dialog.BarStyle = ProgressBarStyle.Marquee;
@@ -369,6 +370,14 @@ namespace WeSay.Project
 
 			LoadUserConfig();
 			InitStringCatalog();
+		}
+
+		private static void OnWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			if (e.Error != null)
+			{
+				throw e.Error;
+			}
 		}
 
 		private void OnDoMigration(object sender, DoWorkEventArgs e)
@@ -396,8 +405,8 @@ namespace WeSay.Project
 			writingSystemMigrator.MigrateIfNecessary();
 
 			//check for orphaned writing systems in Lift
-			var wsCreator = new WritingSystemsFromLiftCreator(projectDirectory);
-			wsCreator.CreateNonExistentWritingSystemsFoundInLift(liftFilePath);
+			var wsCreator = new WritingSystemsFromLiftCreator(writingSystemFolderPath, liftFilePath);
+			wsCreator.CreateNonExistentWritingSystemsFoundInLift();
 
 			//check for orphaned writing systems in the config file
 			if (configFile != null)

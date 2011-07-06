@@ -11,61 +11,99 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 {
 	class WritingSystemsFromLiftCreator
 	{
-		private readonly string _pathToProjectFolder;
+		private readonly string _liftFilePath;
+		private readonly string _writingSystemFolderPath;
 
-		public WritingSystemsFromLiftCreator(string pathToProjectFolder)
+		public WritingSystemsFromLiftCreator(string writingSystemFolderPath, string liftFilePath)
 		{
-			_pathToProjectFolder = pathToProjectFolder;
+			_writingSystemFolderPath = writingSystemFolderPath;
+			_liftFilePath = liftFilePath;
 		}
 
-		public void CreateNonExistentWritingSystemsFoundInLift(string pathToLiftFile)
+		private IEnumerable<string> WritingSystemsInUse
 		{
-			if (File.Exists(pathToLiftFile))
+			get
 			{
-				string pathToLdmlWritingSystemsFolder = BasilProject.GetPathToLdmlWritingSystemsFolder(_pathToProjectFolder);
-				var writingSystems = new LdmlInFolderWritingSystemRepository(pathToLdmlWritingSystemsFolder);
-				var uniqueIdsInFile = new List<string>();
-				using (var reader = XmlReader.Create(pathToLiftFile))
+				var uniqueIds = new List<string>();
+				using (var reader = XmlReader.Create(_liftFilePath))
 				{
 					while (reader.Read())
 					{
 						if (reader.MoveToAttribute("lang"))
 						{
-							if (!uniqueIdsInFile.Contains(reader.Value))
+							if (!uniqueIds.Contains(reader.Value))
 							{
-								uniqueIdsInFile.Add(reader.Value);
+								uniqueIds.Add(reader.Value);
 							}
 						}
 					}
 				}
-
-				foreach (string idInFile in uniqueIdsInFile)
-				{
-					string newId = idInFile;
-					if(!(idInFile.StartsWith("x", StringComparison.OrdinalIgnoreCase) && writingSystems.Contains(idInFile)))
-					{
-						var tagCleaner = new Rfc5646TagCleaner(idInFile);
-						tagCleaner.Clean();
-						newId = tagCleaner.GetCompleteTag();
-					}
-
-					if (newId != idInFile)
-					{
-						if (uniqueIdsInFile.Contains(newId)) // check for writing system id collision (rare)
-						{
-							newId = MakeUniqueTag(newId, uniqueIdsInFile);
-						}
-						Palaso.IO.FileUtils.GrepFile(pathToLiftFile,
-												 String.Format(@"lang\s*=\s*[""']{0}[""']", idInFile),
-												 String.Format(@"lang=""{0}""", newId));
-					}
-					if(!writingSystems.Contains(newId))
-					{
-						writingSystems.Set(WritingSystemDefinition.Parse(newId));
-					}
-				}
-				writingSystems.Save();
+				return uniqueIds;
 			}
+		}
+
+		private static string CleanWritingSystemIdIfNecessary(string writingSystemId)
+		{
+			var rfcTagCleaner = new Rfc5646TagCleaner(writingSystemId);
+			rfcTagCleaner.Clean();
+			string newId = rfcTagCleaner.GetCompleteTag();
+			return newId;
+		}
+
+		private void ReplaceWritingSystemId(string oldId, string newId)
+		{
+			Palaso.IO.FileUtils.GrepFile(_liftFilePath,
+			 String.Format(@"lang\s*=\s*[""']{0}[""']", oldId),
+			 String.Format(@"lang=""{0}""", newId));
+		}
+
+		public void CreateNonExistentWritingSystemsFoundInLift()
+		{
+			/* Note: This method is identical/copied from ConfigFile.CreateWritingSystemsForIdsInFileWhereNecassary
+			 * If an improvement in the algorithm is made here (or over there!) make sure to update the old one.
+			 * Maybe somebody should pull this method out into a class or something. */
+
+			var writingSystemRepo = new LdmlInFolderWritingSystemRepository(_writingSystemFolderPath);
+			foreach (var wsId in WritingSystemsInUse)
+			{
+				// Check if it's in the repo
+				if (writingSystemRepo.Contains(wsId))
+				{
+					continue;
+				}
+				// It's an orphan
+				// Clean it
+				var conformantWritingSystem = WritingSystemDefinition.Parse(CleanWritingSystemIdIfNecessary(wsId));
+				// If it changed, then change
+				if (conformantWritingSystem.RFC5646 != wsId)
+				{
+					// Check for duplicates
+					int duplicateCount = 0;
+					for (; ; )
+					{
+						string id = conformantWritingSystem.RFC5646;
+						if (WritingSystemsInUse.Any(s => s.Equals(id, StringComparison.OrdinalIgnoreCase)))
+						{
+							duplicateCount++;
+							conformantWritingSystem = WritingSystemDefinition.Parse(conformantWritingSystem.RFC5646);
+							conformantWritingSystem.AddToPrivateUse(String.Format("dupl{0}", duplicateCount));
+						}
+						else
+						{
+							break;
+						}
+					}
+					ReplaceWritingSystemId(wsId, conformantWritingSystem.RFC5646);
+				}
+				// Check if it's in the repo
+				if (writingSystemRepo.Contains(conformantWritingSystem.RFC5646))
+				{
+					continue;
+				}
+				// It's not in the repo so set it
+				writingSystemRepo.Set(conformantWritingSystem);
+			}
+			writingSystemRepo.Save();
 		}
 
 		private static string MakeUniqueTag(string rfcTag, IEnumerable<string> uniqueRfcTags)

@@ -3,13 +3,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using Autofac;
 using CommandLine;
-using LiftIO;
 using Palaso.Code;
 using Palaso.i18n;
+using Palaso.Lift;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.Progress;
 using Palaso.UiBindings;
 using WeSay.App.Properties;
 using WeSay.LexicalModel;
@@ -116,7 +114,7 @@ namespace WeSay.App
 			try
 			{
 				_oneInstancePerProjectMutex = Mutex.OpenExisting(mutexId);
-				mutexAcquired = _oneInstancePerProjectMutex.WaitOne(1 * 1000);
+				mutexAcquired = _oneInstancePerProjectMutex.WaitOne(TimeSpan.FromMilliseconds(1 * 1000), false);
 			}
 			catch (WaitHandleCannotBeOpenedException e)//doesn't exist, we're the first.
 			{
@@ -134,7 +132,7 @@ namespace WeSay.App
 				try
 				{
 					_oneInstancePerProjectMutex = Mutex.OpenExisting(mutexId);
-					mutexAcquired = _oneInstancePerProjectMutex.WaitOne(10 * 1000);
+					mutexAcquired = _oneInstancePerProjectMutex.WaitOne(TimeSpan.FromMilliseconds(10 * 1000), false);
 				}
 				catch (AbandonedMutexException e)
 				{

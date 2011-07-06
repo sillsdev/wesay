@@ -133,10 +133,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\net2.0\LibChorus.dll</HintPath>
 	</Reference>
-	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
-	</Reference>
 	<Reference Include="Mono.Addins, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
@@ -264,9 +260,6 @@
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="ConfigMigration\UserConfig\Migrate1To2.xsl" />
-  </ItemGroup>
-  <ItemGroup>
-	<Folder Include="ConfigMigration\NewFolder1\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

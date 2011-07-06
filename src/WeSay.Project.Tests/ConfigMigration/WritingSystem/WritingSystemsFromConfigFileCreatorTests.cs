@@ -59,7 +59,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void CreateNonExistentWritingSystemsFoundInLift_FieldXmlContainsNonConformantRfcTag_CreatesConformingWritingSystem()
+		public void CreateNonExistentWritingSystemsFoundInConfig_FieldXmlContainsNonConformantRfcTag_CreatesConformingWritingSystem()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingFieldWithWritingSystems("bogusws1", "audio")))
 			{
@@ -80,7 +80,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void CreateNonExistentWritingSystemsFoundInLift_TasksXmlContainsNonConformantRfcTag_CreatesConformingWritingSystem()
+		public void CreateNonExistentWritingSystemsFoundInConfig_TasksXmlContainsNonConformantRfcTag_CreatesConformingWritingSystem()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingMissingInfoTaskWithWritingSystems("bogusws1", "audio", "de", "Zxxx")))
 			{
@@ -113,7 +113,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void CreateNonExistentWritingSystemsFoundInLift_AddinsXmlContainsNonConformantRfcTag_CreatesConformingWritingSystem()
+		public void CreateNonExistentWritingSystemsFoundInConfig_AddinsXmlContainsNonConformantRfcTag_CreatesConformingWritingSystem()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingSfmExporterAddinWithWritingSystems("de", "bogusws1", "audio", "Zxxx")))
 			{
@@ -147,7 +147,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void CreateNonExistentWritingSystemsFoundInLift_FieldContainsNonConformantRfcTag_UpdatesRfcTagInFieldXmlOfConfigFile()
+		public void CreateNonExistentWritingSystemsFoundInConfig_FieldContainsNonConformantRfcTag_UpdatesRfcTagInFieldXmlOfConfigFile()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingFieldWithWritingSystems("bogusws1", "audio")))
 			{
@@ -160,7 +160,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void CreateNonExistentWritingSystemsFoundInLift_TasksXmlContainsNonConformantRfcTag_UpdatesRfcTagInTasksXmlOfConfigFile()
+		public void CreateNonExistentWritingSystemsFoundInConfig_TasksXmlContainsNonConformantRfcTag_UpdatesRfcTagInTasksXmlOfConfigFile()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingMissingInfoTaskWithWritingSystems("bogusws1", "audio", "de", "Zxxx")))
 			{
@@ -173,7 +173,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void CreateNonExistentWritingSystemsFoundInLift_AddinsXmlContainsNonConformantRfcTag_UpdatesRfcTagInAddinsXmlOfConfigFile()
+		public void CreateNonExistentWritingSystemsFoundInConfig_AddinsXmlContainsNonConformantRfcTag_UpdatesRfcTagInAddinsXmlOfConfigFile()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingSfmExporterAddinWithWritingSystems("en", "bogusws1", "audio", "Zxxx")))
 			{
@@ -190,7 +190,34 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void CreateNonExistentWritingSystemsFoundInLift_FieldsXmlContainsNonConformantRfcTagWithDuplicates_UpdatesRfcTagInFieldsXmlOfConfigFile()
+		public void CreateNonExistentWritingSystemsFoundInConfig_WS34066RegressionTest_UpdatesRfcTagInFieldsXmlOfConfigFile()
+		{
+			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingFieldWithWritingSystems("x-aaa", "aaa")))
+			{
+				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystemsPath);
+
+				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
+					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='x-aaa']");
+				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
+					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='aaa']");
+
+
+				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "x-aaa" + ".ldml");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='']");
+				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
+				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/variant[@type='x-aaa']");
+
+				writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "aaa" + ".ldml");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='aaa']");
+				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
+				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
+				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/variant");
+			}
+		}
+
+		[Test]
+		public void CreateNonExistentWritingSystemsFoundInConfig_FieldsXmlContainsNonConformantRfcTagWithDuplicates_UpdatesRfcTagInFieldsXmlOfConfigFile()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingFieldWithWritingSystems("qaa-audio", "qaa-Zxxx-x-audio")))
 			{
@@ -216,7 +243,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void CreateNonExistentWritingSystemsFoundInLift_XmlContainsSameWsTwice_SecondInstanceIsNotSeenAsDuplicateWritingSystem()
+		public void CreateNonExistentWritingSystemsFoundInConfig_XmlContainsSameWsTwice_SecondInstanceIsNotSeenAsDuplicateWritingSystem()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingSfmExporterAddinWithWritingSystems("qaa-audio", "qaa-audio","en","de")))
 			{
@@ -233,15 +260,16 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void CreateNonExistentWritingSystemsFoundInLift_FieldsXmlContainsRfcTagThatAfterBeingMadeConformMatchesExistingLdml_LdmlFilesAreLeftUnchanged()
+		public void CreateNonExistentWritingSystemsFoundInConfig_FieldsXmlContainsRfcTagThatAfterBeingMadeConformMatchesExistingLdml_LdmlFilesAreLeftUnchanged()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentCreator.GetConfigFileContainingFieldWithWritingSystems("en", "audio")))
 			{
-				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "en" + ".ldml");
+				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.WritingSystemsPath);
 
 				var enWs = WritingSystemDefinition.FromLanguage("en");
 				enWs.Abbreviation = "Dont change me!";
-				new LdmlAdaptor().Write(writingSystemFilePath, enWs, null);
+				wsRepo.Set(enWs);
+				wsRepo.Save();
 
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystemsPath);
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
@@ -249,11 +277,12 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
 					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='qaa-Zxxx-x-audio']");
 
-				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='en']");
-				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
-				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
-				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/variant");
-				AssertThatXmlIn.File(writingSystemFilePath).
+				var pathToLdml = Path.Combine(environment.WritingSystemsPath, "en.ldml");
+				AssertThatXmlIn.File(pathToLdml).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='en']");
+				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/script");
+				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/territory");
+				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/variant");
+				AssertThatXmlIn.File(pathToLdml).
 					HasAtLeastOneMatchForXpath("/ldml/special/palaso:abbreviation[@value='Dont change me!']", environment.NamespaceManager);
 			}
 		}

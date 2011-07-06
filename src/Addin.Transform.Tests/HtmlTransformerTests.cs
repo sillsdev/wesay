@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;

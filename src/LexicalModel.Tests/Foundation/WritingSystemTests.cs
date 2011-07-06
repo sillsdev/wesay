@@ -77,18 +77,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		public void GetSpellCheckingId_Uninitialized_ReturnsId()
-		{
-			var writingSystem = new WritingSystemDefinition();
-			writingSystem.ISO639 = "en";
-			Assert.AreEqual("en", writingSystem.SpellCheckingId);
-		}
-
-		[Test]
 		public void GetAbbreviation_Uninitialized_ReturnsId()
 		{
 			var writingSystem = new WritingSystemDefinition();
-			writingSystem.ISO639 = "en";
+			writingSystem.Language = "en";
 			Assert.AreEqual("en", writingSystem.Abbreviation);
 		}
 

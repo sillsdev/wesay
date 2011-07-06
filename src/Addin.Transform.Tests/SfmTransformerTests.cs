@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using LiftIO.Validation;
 using NUnit.Framework;
+using Palaso.Lift.Validation;
 using WeSay.AddinLib;
 using WeSay.Project;
 using WeSay.TestUtilities;

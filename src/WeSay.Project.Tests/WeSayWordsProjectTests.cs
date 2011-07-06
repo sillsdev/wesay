@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.XPath;
-using LiftIO;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
 using Palaso.IO;
+using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.Tests.ConfigMigration.WritingSystem;
 using WeSay.TestUtilities;
@@ -692,6 +689,7 @@ namespace WeSay.Project.Tests
 			{
 				//setting up a minimal WeSay project with an old writingsystemprefs.xml file
 				var project = new WeSayWordsProject();
+
 				var wsPrefsFile = projectDirectory.GetNewTempFile(true);
 				string liftFilePath = Path.Combine(projectDirectory.Path, "test.lift");
 				wsPrefsFile.MoveTo(Path.Combine(projectDirectory.Path, "WritingSystemPrefs.xml"));
