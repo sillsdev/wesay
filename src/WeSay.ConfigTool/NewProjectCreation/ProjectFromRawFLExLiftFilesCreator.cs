@@ -24,8 +24,9 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				if (!ReportIfLocked(pathToSourceLift))
 					return false;
 
-				if (!CreateProjectDirectory(pathToNewDirectory))
-					return false;
+				RequireThat.Directory(pathToNewDirectory).DoesNotExist();
+
+				Directory.CreateDirectory(pathToNewDirectory);
 
 				CopyOverLiftFile(pathToSourceLift, pathToNewDirectory);
 
@@ -33,9 +34,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 				CopyOverLdmlFiles(pathToSourceLift, BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory));
 
-				//TODO: this, I think, won't be needed at all once we have the project invoking ProjectFromLiftFolderCreator automatically
-				//when we open any project folder
-				//ProjectFromLiftFolderCreator.PrepareLiftFolderForWeSay(pathToNewDirectory);
+				//The config file is created on project open when all of the orphaned writing systems have been identified.
 
 				Logger.WriteEvent(@"Finished Importing");
 				return true;
@@ -86,23 +85,6 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				File.Copy(pathToSourceRange, pathToTargetRanges, true);
 			}
 		}
-
-		private static bool CreateProjectDirectory(string directory)
-		{
-			try
-			{
-				RequireThat.Directory(directory).DoesNotExist();
-				WeSayWordsProject.CreateEmptyProjectFiles(directory);
-			}
-			catch (Exception e)
-			{
-				ErrorReport.NotifyUserOfProblem(
-					"WeSay was not able to create a project there. \r\n" + e.Message);
-				return false;
-			}
-			return true;
-		}
-
 
 		private static bool ReportIfLocked(string lift)
 		{

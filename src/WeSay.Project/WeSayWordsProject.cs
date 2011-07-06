@@ -391,26 +391,25 @@ namespace WeSay.Project
 			string writingSystemFolderPath = GetPathToLdmlWritingSystemsFolder(projectDirectory);
 			string userConfigPath = PathToUserSpecificConfigFile(projectDirectory);
 
+			//migrate writing systems
+			var writingSystemMigrator = new WritingSystemsMigrator(projectDirectory);
+			writingSystemMigrator.MigrateIfNecessary();
+
 			//migrate the config file
 			ConfigFile configFile = null;
 			if (File.Exists(configFilePath)) // will be null if we're creating a new project
 			{
 				configFile = new ConfigFile(configFilePath);
 				configFile.MigrateIfNecassary();
+				//check for orphaned writing systems in the config file
+				configFile.CreateWritingSystemsForIdsInFileWhereNecassary(writingSystemFolderPath);
 			}
 
-			//migrate writing systems
-			var writingSystemMigrator = new WritingSystemsMigrator(projectDirectory);
-			writingSystemMigrator.MigrateIfNecessary();
-
-			//check for orphaned writing systems in Lift
-			var wsCreator = new WritingSystemsFromLiftCreator(writingSystemFolderPath, liftFilePath);
-			wsCreator.CreateNonExistentWritingSystemsFoundInLift();
-
-			//check for orphaned writing systems in the config file
-			if (configFile != null)
+			if (File.Exists(liftFilePath)) // will be null if we're creating a new project
 			{
-				configFile.CreateWritingSystemsForIdsInFileWhereNecassary(writingSystemFolderPath);
+				//check for orphaned writing systems in Lift
+				var wsCreator = new WritingSystemsFromLiftCreator(writingSystemFolderPath, liftFilePath);
+				wsCreator.CreateNonExistentWritingSystemsFoundInLift();
 			}
 
 			//migrate user config
@@ -900,7 +899,12 @@ namespace WeSay.Project
 			{
 				Directory.CreateDirectory(projectDirectoryPath);
 			}
-			CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(projectDirectoryPath);
+
+			MigrateProjectFilesAndCheckForOrphanedWritingSystems(projectDirectoryPath);
+			if (Directory.GetFiles(GetPathToLdmlWritingSystemsFolder(projectDirectoryPath)).Count() == 0)
+			{
+				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(projectDirectoryPath);
+			}
 
 			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath, projectName);
 			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
@@ -910,8 +914,6 @@ namespace WeSay.Project
 			{
 				Utilities.CreateEmptyLiftFile(pathToLiftFile, LiftWriter.ProducerString, false);
 			}
-
-			MigrateProjectFilesAndCheckForOrphanedWritingSystems(projectDirectoryPath);
 
 			//hack
 			StickDefaultViewTemplateInNewConfigFile(projectDirectoryPath, pathToConfigFile);
