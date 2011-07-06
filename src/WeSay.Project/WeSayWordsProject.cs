@@ -21,6 +21,7 @@ using Chorus.Utilities;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Lift;
 using Palaso.DictionaryServices.Model;
+using Palaso.i18n;
 using Palaso.IO;
 using Palaso.Lift;
 using Palaso.Lift.Options;
@@ -51,6 +52,7 @@ namespace WeSay.Project
 		private ViewTemplate _defaultViewTemplate;
 		private IList<ViewTemplate> _viewTemplates;
 		private readonly Dictionary<string, OptionsList> _optionLists;
+		private readonly List<OptionsList> _modifiedOptionsLists = new List<OptionsList>();
 		private string _pathToLiftFile;
 		private string _cacheLocationOverride;
 
@@ -1304,6 +1306,34 @@ namespace WeSay.Project
 
 			writer.WriteEndDocument();
 			writer.Close();
+			foreach (var field in ViewTemplates.SelectMany(template => template.Fields))
+			{
+				//this checks wether any of the optionlists need saving
+				if (!String.IsNullOrEmpty(field.OptionsListFile) &&
+					_optionLists.ContainsKey(field.OptionsListFile) &&
+					_modifiedOptionsLists.Contains(_optionLists[field.OptionsListFile]))
+				{
+					//notice that we always save to the project directory, even if we started with the
+					//one in the program files directory.
+					string path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, field.OptionsListFile);
+
+					try
+					{
+						_optionLists[field.OptionsListFile].SaveToFile(path);
+						Container.Resolve<ILogger>().WriteConciseHistoricalEvent(
+							StringCatalog.Get("Edited list for {0} field",
+											  "Checkin Description in WeSay Config Tool used when you edit an option list."), field.Key);
+					}
+					catch (Exception error)
+					{
+						ErrorReport.NotifyUserOfProblem(
+							"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
+							path,
+							error.Message);
+					}
+				}
+			}
+
 
 			pendingConfigFile.WriteWasSuccessful();
 
@@ -1404,6 +1434,14 @@ namespace WeSay.Project
 			}
 
 			return _optionLists[field.OptionsListFile];
+		}
+
+		public void MarkOptionListAsUpdated(OptionsList list)
+		{
+			if (!_modifiedOptionsLists.Contains(list))
+			{
+				_modifiedOptionsLists.Add(list);
+			}
 		}
 
 		private void LoadOptionsList(string fieldName,string pathToOptionsList)
@@ -1564,6 +1602,11 @@ namespace WeSay.Project
 															  option => option.Description.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
 
 			var formsToChange = abbreviationLanguageForms.Concat(nameLanguageForms).Concat(descriptionForms);
+
+			if(formsToChange.Count() > 0)
+			{
+				MarkOptionListAsUpdated(optionlist);
+			}
 
 			foreach (var form in formsToChange)
 			{
