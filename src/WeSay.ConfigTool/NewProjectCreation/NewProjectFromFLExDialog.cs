@@ -66,7 +66,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 		{
 			using(var dlg = new OpenFileDialog())
 			{
-				dlg.Title = "Locate LIFT exported from FLEx";
+				dlg.Title = "Locate LIFT file";
 				dlg.AutoUpgradeEnabled = true;
 				dlg.RestoreDirectory = true;
 				dlg.DefaultExt = ".lift";
