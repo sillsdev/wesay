@@ -13,21 +13,23 @@ namespace Addin.Transform.PdfDictionary
 	public class FLExCompatibleXhtmlWriter
 	{
 		private XmlWriter _writer;
-		private char _currentLetter;
+		/// <summary>
+		/// normally 'a', or 'b', etc, but can also be "ng", "th", etc.
+		/// </summary>
+		private string _currentLetterGroup = string.Empty;
 		private bool _linkToUserCss;
-		private bool _includeXmlDirective;
 
-		public FLExCompatibleXhtmlWriter()
+		public FLExCompatibleXhtmlWriter():this(false)
 		{
-			_linkToUserCss = false;
-			_includeXmlDirective = false;
 		}
 
-		public FLExCompatibleXhtmlWriter(bool includeXmlDirective, bool linkToUserCss)
+		public FLExCompatibleXhtmlWriter(bool linkToUserCss)
 		{
-			_includeXmlDirective = includeXmlDirective;
 			_linkToUserCss = linkToUserCss;
+			Grouper = new MultigraphParser(new string[]{} );//property needs to be set by the client to get anything interesting
 		}
+
+		public MultigraphParser Grouper { get; set; }
 
 		public void Write(TextReader pliftReader, TextWriter textWriter)
 		{
@@ -64,7 +66,7 @@ namespace Addin.Transform.PdfDictionary
 					EndDiv();//entry
 				}
 
-				if (_currentLetter != default(char))
+				if (_currentLetterGroup != string.Empty)
 				{
 					EndDiv(); //the last letHead div}
 					EndDiv(); //the last letData div
@@ -340,42 +342,24 @@ namespace Addin.Transform.PdfDictionary
 			if(string.IsNullOrEmpty(headword))
 				return;
 
-			char letter=default(char);
-			foreach (var c in headword.ToCharArray())
+			var group = Grouper.GetFirstMultigraph(headword);
+			if(group != _currentLetterGroup)
 			{
-				if (char.IsLetterOrDigit(c))
-				{
-					letter = c;
-					break;
-				}
-				if (System.Globalization.UnicodeCategory.PrivateUse == char.GetUnicodeCategory(c))//see WS-1412
-				{
-					letter = c; //safe to assume it's a letter... someday the writing system could tell us
-					break;
-				}
-			}
-			if(letter == default(char))
-				return;
-
-			letter = Char.ToUpper(letter);
-
-			if(letter != _currentLetter)
-			{
-				if(_currentLetter != default(char))
+				if(_currentLetterGroup != string.Empty)
 				{
 					EndDiv();//finish off the previous letData
 					EndDiv();//finish off the previous letHead
 				}
-				_currentLetter = letter;
+				_currentLetterGroup = group;
 				StartDiv("letHead");
 				StartDiv("letter");
-				if(char.ToLower(letter)==char.ToUpper(letter))
+				if(group.ToLowerInvariant() == group.ToUpperInvariant())
 				{
-					_writer.WriteValue(letter.ToString());
+					_writer.WriteValue(group.ToString());
 				}
 				else
 				{
-					_writer.WriteValue(letter + " " + char.ToLower(letter));
+					_writer.WriteValue(group + " " + group.ToLowerInvariant());
 				}
 				EndDiv();
 				StartDiv("letData");

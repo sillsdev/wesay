@@ -50,13 +50,19 @@
 	find the project or create a new one.</p>
 
 <h3>Configuration Tool hand-off to WeSay</h3>
-<p>Previosly, it was possible to leave the WeSay Configuration Tool running while you ran WeSay; this could lead to confusion and potentially lost changes.  Now, when you click "Open
+<p>Previously, it was possible to leave the WeSay Configuration Tool running while you ran WeSay; this could lead to confusion and potentially lost changes.  Now, when you click "Open
 	in WeSay", the Configuration Tool closes first.&nbsp; Then, in order to make it
 	easy to get back to the Configuration tool, a &quot;Configure this project...&quot; button
 	appears at the bottom of the WeSay window.&nbsp; Note: when you run WeSay any
 	other way, this button is hidden, since you don't normally want WeSay users
 	messing with the configuration.&nbsp; As before, you can still right-click on
 	the WeSay Home page to get that same command.</p>
+<h3>Printing Improvement</h3>
+<p>A team in language with digraphs ("th", "ng") wanted words starting with these letters to be grouped together.
+	Note, it is not enough to make them <emph>sort</emph> together;
+	we need a way for you to explicity identify these clusters of lettters.  Doing
+	that should eventually be part of setting up an <emph>input system</emph>.
+	But for now, you can identify them by listing the multigraphs, one-per-line, in a file named "multigraphs.txt" in the "export" directory of the WeSay project.  </p>
 <h3>Bug Fixes</h3>
 <p>Fixed: homographs that were collected in the same session using the "Gather By Wordlist" task not saved, if you quit before going to another task.</p>
 <p>Fixed: Spell checking not enabled for meaning field in gather by Semantic Domains</p>

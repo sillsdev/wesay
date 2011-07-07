@@ -96,7 +96,7 @@ namespace Addin.Transform.PdfDictionary
 
 			progressState.StatusLabel = "Converting dictionary to XHTML...";
 
-			string htmlPath = CreateFileToOpen(projectInfo, true, false);
+			string htmlPath = CreateFileToOpen(projectInfo, false);
 
 			if (string.IsNullOrEmpty(htmlPath))
 			{

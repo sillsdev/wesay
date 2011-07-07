@@ -61,7 +61,7 @@ namespace Addin.Transform.Xhtml
 			CreateAutoFontsStyleSheet(autoFonts, (PublicationFontStyleProvider)projectInfo.ServiceProvider.GetService(typeof(PublicationFontStyleProvider)), projectInfo.WritingSystems);
 
 			// export to html
-			string htmlPath = CreateFileToOpen(projectInfo, true, true);
+			string htmlPath = CreateFileToOpen(projectInfo, true);
 			if (string.IsNullOrEmpty(htmlPath))
 			{
 				return; // get this when the user cancels

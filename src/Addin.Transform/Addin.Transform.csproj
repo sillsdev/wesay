@@ -193,6 +193,7 @@
 	  <DependentUpon>AboutLexiquePro.cs</DependentUpon>
 	</Compile>
 	<Compile Include="LexiquePro\LexiqueProSender.cs" />
+	<Compile Include="PdfDictionary\MultigraphParser.cs" />
 	<Compile Include="PdfDictionary\PdfMaker.cs" />
 	<Compile Include="HtmlInWord.cs" />
 	<Compile Include="HtmlTransformer.cs" />

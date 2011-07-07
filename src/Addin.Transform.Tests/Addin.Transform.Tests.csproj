@@ -159,6 +159,7 @@
   <ItemGroup>
 	<Compile Include="FlexCompatibleHtmlWriterTests.cs" />
 	<Compile Include="HtmlTransformerTests.cs" />
+	<Compile Include="MultigraphParserTests.cs" />
 	<Compile Include="PLiftMakerTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="SfmTransformerTests.cs" />
