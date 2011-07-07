@@ -85,7 +85,13 @@ namespace WeSay.App
 				Settings.Default.Reporting = new ReportingSettings();
 				Settings.Default.Save();
 			}
-			UsageReporter.Init(Settings.Default.Reporting, "wesay.palaso.org", "UA-22170471-6");
+			UsageReporter.Init(Settings.Default.Reporting, "wesay.palaso.org", "UA-22170471-6",
+#if DEBUG
+ true
+#else
+ false
+#endif
+			);
 			UsageReporter.AppNameToUseInDialogs = "WeSay";
 			UsageReporter.AppNameToUseInReporting = "WeSayApp";
 		}

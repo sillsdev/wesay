@@ -111,6 +111,7 @@ namespace WeSay.UI
 				if (dialog.ShowDialog() == DialogResult.OK)
 				{
 					PictureChosen(dialog.FileName);
+					UsageReporter.SendNavigationNotice("PictureControl/AddFromFileSystem");
 				}
 			}
 			catch (Exception error)
@@ -136,6 +137,7 @@ namespace WeSay.UI
 				UpdateDisplay();
 
 				NotifyChanged();
+
 			}
 			catch (Exception error)
 			{
@@ -280,6 +282,7 @@ namespace WeSay.UI
 				if (DialogResult.OK == chooser.ShowDialog())
 				{
 					PictureChosen(chooser.ChosenPath);
+					UsageReporter.SendNavigationNotice("PictureControl/AddFromArtOfReading");
 				}
 			}
 		}

@@ -194,7 +194,7 @@ namespace WeSay.LexicalTools
 
 		public string Label
 		{
-			get { return StringCatalog.Get(_label); }
+			get { return _label; }
 		}
 
 		/// <summary>
