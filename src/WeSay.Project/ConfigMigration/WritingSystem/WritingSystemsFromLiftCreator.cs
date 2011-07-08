@@ -77,22 +77,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				// If it changed, then change
 				if (conformantWritingSystem.RFC5646 != wsId)
 				{
-					// Check for duplicates
-					int duplicateCount = 0;
-					for (; ; )
-					{
-						string id = conformantWritingSystem.RFC5646;
-						if (WritingSystemsInUse.Any(s => s.Equals(id, StringComparison.OrdinalIgnoreCase)))
-						{
-							duplicateCount++;
-							conformantWritingSystem = WritingSystemDefinition.Parse(conformantWritingSystem.RFC5646);
-							conformantWritingSystem.AddToPrivateUse(String.Format("dupl{0}", duplicateCount));
-						}
-						else
-						{
-							break;
-						}
-					}
+					conformantWritingSystem.MakeUnique(WritingSystemsInUse);
 					ReplaceWritingSystemId(wsId, conformantWritingSystem.RFC5646);
 				}
 				// Check if it's in the repo

@@ -218,5 +218,16 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				AssertThatXmlIn.File(e.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='qaa-Zxxx-x-audio']");
 			}
 		}
+
+		[Test]
+		public void CreateNonExistentWritingSystemsFoundInLift_LiftFileContainsNonConformantRfcTagWithDuplicatesContainingduplicateMarker_UpdatesRfcTagInLiftFile()
+		{
+			using (var environment = new TestEnvironment("wee-dupl1", "x-wee-dupl1"))
+			{
+				environment.Creator.CreateNonExistentWritingSystemsFoundInLift();
+				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-wee-dupl1']");
+				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-wee-dupl1-dupl0']");
+			}
+		}
 	}
 }

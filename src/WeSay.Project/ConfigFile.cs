@@ -122,6 +122,9 @@ namespace WeSay.Project
 			}
 		}
 
+		/* Note: This method is identical/copied from WritingSystemsFromLiftCreator.CreateNonExistentWritingSystemsFoundInLift
+		 * If an improvement in the algorithm is made here (or over there!) make sure to update the old one.
+		 * Maybe somebody should pull this method out into a class or something. */
 		public void CreateWritingSystemsForIdsInFileWhereNecassary(string pathToWritingSystemsFolder)
 		{
 			var writingSystemRepo = new LdmlInFolderWritingSystemRepository(pathToWritingSystemsFolder);
@@ -138,21 +141,7 @@ namespace WeSay.Project
 				// If it changed, then change
 				if (conformantWritingSystem.Id != wsId)
 				{
-					// Check for duplicates
-					int duplicateCount = 0;
-					for (;;)
-					{
-						string id = conformantWritingSystem.Id;
-						if (WritingSystemsInUse.Any(s => s.Equals(id, StringComparison.OrdinalIgnoreCase)))
-						{
-							duplicateCount++;
-							conformantWritingSystem = WritingSystemDefinition.Parse(conformantWritingSystem.Id);
-							conformantWritingSystem.AddToPrivateUse(String.Format("dupl{0}", duplicateCount));
-						} else
-						{
-							break;
-						}
-					}
+					conformantWritingSystem.MakeUnique(WritingSystemsInUse);
 					ReplaceWritingSystemId(wsId, conformantWritingSystem.Id);
 				}
 				// Check if it's in the repo
