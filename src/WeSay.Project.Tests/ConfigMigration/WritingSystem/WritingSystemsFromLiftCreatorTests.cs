@@ -156,7 +156,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			using (var environment = new TestEnvironment("wee", "x-wee"))
 			{
 				environment.Creator.CreateNonExistentWritingSystemsFoundInLift();
-				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-wee-dupl1']");
+				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-wee-dupl0']");
 				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-wee']");
 			}
 		}
