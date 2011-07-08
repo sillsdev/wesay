@@ -95,6 +95,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="OptionListFileContent.cs" />
 	<Compile Include="WeSayProjectTestHelper.cs" />
 	<Compile Include="WritingSystemsIdsForTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
