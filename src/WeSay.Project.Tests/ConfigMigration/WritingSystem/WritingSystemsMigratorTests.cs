@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Palaso.IO;
 using Palaso.TestUtilities;
 using WeSay.Project.ConfigMigration.WritingSystem;
+using WeSay.TestUtilities;
 
 namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 {
@@ -245,27 +246,10 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		public void MigrateIfNeeded_OptionListContainsWritingSystemIdThatIsMigrated_WritingSystemIdIsChanged()
 		{
 			using (var e = new TestEnvironment())
-			{var optionListContent =
-#region filecontent
- @"<?xml version='1.0' encoding='utf-8'?>
-<optionsList xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
-  <option>
-	<key>one</key>
-	<name>
-	  <form lang='bogusws1'>eins</form>
-	  <form lang='bogusws2'>one</form>
-	</name>
-	<abbreviation>
-	  <form lang='bogusws1'>eins</form>
-	  <form lang='bogusws2'>one</form>
-	</abbreviation>
-	<description />
-  </option>
-</optionsList>".Replace("'","\"");
-#endregion
+			{
 				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
 				var optionListPath = Path.Combine(e.ProjectPath, "options.xml");
-				File.WriteAllText(optionListPath, optionListContent);
+				File.WriteAllText(optionListPath, OptionListFileContent.GetOptionListWithWritingSystems("bogusws1", "bogusws2"));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
 				migrator.MigrateIfNecessary();
 				var doc = new XmlDocument();

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Xml;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
@@ -106,40 +108,60 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		public void Save_MakeWritingSystemIdChangeOnWritingSystemFoundInOptionListWasPreviosulyCalled_Changed()
+		public void Save_ContentAndWritingSystemContainedInOptionListIsChanged_FileContentAndWritingSystemIsChanged()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (var p = new ProjectDirectorySetupForTesting(""))
 			{
+				//create an option list file containing en and de writing systems
+				const string optionListName = "options.xml";
+				var optionListPath = Path.Combine(p.PathToDirectory, optionListName);
+				File.WriteAllText(optionListPath, OptionListFileContent.GetOptionListWithWritingSystems(
+					WritingSystemsIdsForTests.AnalysisIdForTest, WritingSystemsIdsForTests.OtherIdForTest));
+				//create the project
 				WeSayWordsProject project = p.CreateLoadedProject();
-				XmlDocument doc = new XmlDocument();
-				doc.Load(p.PathToLiftFile);
-				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='qaa']").Count);
-				WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
-				ws.ISO = "aac";
-				project.MakeWritingSystemIdChange("qaa", "aac");
+				//Add an option to the list
+				//Got to create a field to pass to the project
+				Field fieldThatUsesOptionsList = new Field{OptionsListFile = optionListName};
+				var optionList = project.GetOptionsList(fieldThatUsesOptionsList, false);
+				var multitextToAdd = new MultiText();
+				multitextToAdd.SetAlternative(WritingSystemsIdsForTests.OtherIdForTest, "yodel");
+				optionList.Options.Add(new Option("entry", multitextToAdd));
+				project.MarkOptionListAsUpdated(optionList);
+				//Simulate a writing system change made by the UI
+				var wsToChange = project.WritingSystems.Get("qaa");
+				wsToChange.Language = "de";
+				project.WritingSystems.Set(wsToChange);
+				project.MakeWritingSystemIdChange("qaa", "de");
 				project.Save();
-				doc.Load(p.PathToLiftFile);
-				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='aac']").Count);
-				Assert.AreEqual("aac", ws.Id);
-				throw new NotImplementedException();
+				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/name/form[@lang='qaa']");
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='de'][text()='one']");
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/abbreviation/form[@lang='de'][text()='one']");
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='de'][text()='yodel']");
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/abbreviation/form[@lang='de'][text()='yodel']");
 			}
 		}
 
 		[Test]
-		public void Save_MakeWritingSystemIdChangeOnWritingSystemFoundInOptionListWasPreviosulyCalledMultipleTimes_ChangedCorrectly()
+		public void Save_OptionListWasNeverLoadedButWritingSystemContainedThereinWasChanged_FileIsUpdated()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (var p = new ProjectDirectorySetupForTesting(""))
 			{
+				//create an option list file containing en and de writing systems
+				const string optionListName = "options.xml";
+				var optionListPath = Path.Combine(p.PathToDirectory, optionListName);
+				File.WriteAllText(optionListPath, OptionListFileContent.GetOptionListWithWritingSystems(
+					WritingSystemsIdsForTests.AnalysisIdForTest, WritingSystemsIdsForTests.OtherIdForTest));
+				//create the project
 				WeSayWordsProject project = p.CreateLoadedProject();
-				XmlDocument doc = new XmlDocument();
-				doc.Load(p.PathToLiftFile);
-				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='qaa']").Count);
-				project.MakeWritingSystemIdChange("qaa", "en");
-				project.MakeWritingSystemIdChange("en", "de");
+				//Simulate a writing system change made by the UI
+				var wsToChange = project.WritingSystems.Get("qaa");
+				wsToChange.Language = "de";
+				project.WritingSystems.Set(wsToChange);
+				project.MakeWritingSystemIdChange("qaa", "de");
 				project.Save();
-				doc.Load(p.PathToLiftFile);
-				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='de']").Count);
-				throw new NotImplementedException();
+				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/name/form[@lang='qaa']");
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='de'][text()='one']");
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/abbreviation/form[@lang='de'][text()='one']");
 			}
 		}
 
@@ -175,45 +197,58 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		//the change should be happening when the project saves so that all files are nice and in sync
 		public void MakeWritingSystemIdChange_OptionListIsNotChangedOnDisk()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (var p = new ProjectDirectorySetupForTesting(""))
 			{
+				//create an option list file containing en and de writing systems
+				const string optionListName = "options.xml";
+				var optionListPath = Path.Combine(p.PathToDirectory, optionListName);
+				File.WriteAllText(optionListPath, OptionListFileContent.GetOptionListWithWritingSystems(
+					WritingSystemsIdsForTests.AnalysisIdForTest, WritingSystemsIdsForTests.OtherIdForTest));
+				//create the project
 				WeSayWordsProject project = p.CreateLoadedProject();
-				XmlDocument doc = new XmlDocument();
-				doc.Load(p.PathToLiftFile);
-				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='qaa']").Count);
-				WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
-				ws.ISO = "en";
-				project.MakeWritingSystemIdChange("qaa", "en");
-				ws.ISO = "de";
-				project.MakeWritingSystemIdChange("en", "de");
-				project.Save();
-				doc.Load(p.PathToLiftFile);
-				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='de']").Count);
-				Assert.AreEqual("de", ws.Id);
+				//Add an option to the list
+				//Got to create a field to pass to the project
+				Field fieldThatUsesOptionsList = new Field { OptionsListFile = optionListName };
+				var optionList = project.GetOptionsList(fieldThatUsesOptionsList, false);
+				var multitextToAdd = new MultiText();
+				multitextToAdd.SetAlternative(WritingSystemsIdsForTests.OtherIdForTest, "yodel");
+				optionList.Options.Add(new Option("entry", multitextToAdd));
+				project.MarkOptionListAsUpdated(optionList);
+				//Simulate a writing system change made by the UI
+				var wsToChange = project.WritingSystems.Get("qaa");
+				wsToChange.Language = "de";
+				project.WritingSystems.Set(wsToChange);
+				project.MakeWritingSystemIdChange("qaa", "de");
+				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/name/form[@lang='de']");
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='qaa'][text()='one']");
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/abbreviation/form[@lang='qaa'][text()='one']");
+				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/name/form[@lang='de'][text()='yodel']");
+				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/abbreviation/form[@lang='de'][text()='yodel']");
 
 			}
-			throw new NotImplementedException();
 		}
 
 		[Test]
 		public void MakeWritingSystemIdChange_DefaultViewTemplateContainsFieldsWithWritingSystem_FieldsAreUpdated()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (var p = new ProjectDirectorySetupForTesting(""))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
-				var optionList = project.GetOptionsList("POS");
-				Assert.That(optionList.GetOptionFromKey("verb").Abbreviation["en"], Is.EqualTo("Verb"));
-				Assert.That(optionList.GetOptionFromKey("verb").Name["en"], Is.EqualTo("Verb"));
-				Assert.That(optionList.GetOptionFromKey("verb").Description["en"], Is.EqualTo("Verb"));
-				project.MakeWritingSystemIdChange("en", "de");
-				Assert.That(optionList.GetOptionFromKey("verb").Abbreviation["de"], Is.EqualTo("Verb"));
-				Assert.That(optionList.GetOptionFromKey("verb").Name["de"], Is.EqualTo("Verb"));
-				Assert.That(optionList.GetOptionFromKey("verb").Description["de"], Is.EqualTo("Verb"));
-
+				var fieldsUsingQaa = new List<Field>(project.ViewTemplates.SelectMany(template => template.Fields).Where(field => field.WritingSystemIds.Contains("qaa")));
+				//Simulate a writing system change made by the UI
+				var wsToChange = project.WritingSystems.Get("qaa");
+				wsToChange.Language = "de";
+				project.WritingSystems.Set(wsToChange);
+				project.MakeWritingSystemIdChange("qaa", "de");
+				foreach (var field in fieldsUsingQaa)
+				{
+					Assert.That(!field.WritingSystemIds.Contains("qaa"));
+					Assert.That(field.WritingSystemIds.Contains("de"));
+				}
 			}
-			throw new NotImplementedException();
 		}
 
 

@@ -1306,23 +1306,17 @@ namespace WeSay.Project
 
 			writer.WriteEndDocument();
 			writer.Close();
-			foreach (var field in ViewTemplates.SelectMany(template => template.Fields))
+			foreach (var modifiedOptionsList in _modifiedOptionsLists)
 			{
-				//this checks wether any of the optionlists need saving
-				if (!String.IsNullOrEmpty(field.OptionsListFile) &&
-					_optionLists.ContainsKey(field.OptionsListFile) &&
-					_modifiedOptionsLists.Contains(_optionLists[field.OptionsListFile]))
-				{
+				var fileAssociatedWithOptionsList =
+					_optionLists.Where(opt => opt.Value == modifiedOptionsList).Select(opt => opt.Key).First();
 					//notice that we always save to the project directory, even if we started with the
 					//one in the program files directory.
-					string path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, field.OptionsListFile);
+					string path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, fileAssociatedWithOptionsList);
 
 					try
 					{
-						_optionLists[field.OptionsListFile].SaveToFile(path);
-						Container.Resolve<ILogger>().WriteConciseHistoricalEvent(
-							StringCatalog.Get("Edited list for {0} field",
-											  "Checkin Description in WeSay Config Tool used when you edit an option list."), field.Key);
+						_optionLists[fileAssociatedWithOptionsList].SaveToFile(path);
 					}
 					catch (Exception error)
 					{
@@ -1330,6 +1324,36 @@ namespace WeSay.Project
 							"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
 							path,
 							error.Message);
+					}
+			}
+
+			//Now make writingsystem changes to any optionlists found in the project directory
+			//this code is copied from the migrator
+			//Now let's replace writing systems in OptionLists
+
+			foreach (var kvp in _changedWritingSystemIds)
+			{
+				var xmlDoc = new XmlDocument();
+				foreach (var filePath in Directory.GetFiles(ProjectDirectoryPath))
+				{
+					try
+					{
+						xmlDoc.Load(filePath);
+						if (xmlDoc.SelectSingleNode("/optionsList") != null)
+						{
+							foreach (XmlNode node in xmlDoc.SelectNodes("//form"))
+							{
+								if (node.Attributes["lang"].Value == kvp.Key)
+								{
+									node.Attributes["lang"].Value = kvp.Value;
+								}
+							}
+						}
+						xmlDoc.Save(filePath);
+					}
+					catch (Exception e)
+					{
+						//Do nothing. If the load failed then it's not an optionlist.
 					}
 				}
 			}
@@ -1461,7 +1485,7 @@ namespace WeSay.Project
 			OptionsList list = reader.LoadFromFile(pathToOptionsList);
 			foreach (var oldNewId in _changedWritingSystemIds)
 			{
-				ChangeIdInOptionListIfNecassary(oldNewId.Key, oldNewId.Value, list);
+				ChangeIdInLoadedOptionListIfNecassary(oldNewId.Key, oldNewId.Value, list);
 			}
 			_optionLists.Add(name, list);
 		}
@@ -1578,7 +1602,7 @@ namespace WeSay.Project
 
 			foreach (var optionlist in _optionLists.Values)
 			{
-				ChangeIdInOptionListIfNecassary(oldId, newId, optionlist);
+				ChangeIdInLoadedOptionListIfNecassary(oldId, newId, optionlist);
 			}
 
 			if (WritingSystemChanged != null)
@@ -1590,7 +1614,7 @@ namespace WeSay.Project
 			}
 		}
 
-		private void ChangeIdInOptionListIfNecassary(string oldId, string newId, OptionsList optionlist)
+		private void ChangeIdInLoadedOptionListIfNecassary(string oldId, string newId, OptionsList optionlist)
 		{
 			var abbreviationLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
 																	   option => option.Abbreviation.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
