@@ -242,6 +242,61 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
+		public void MigrateIfNeeded_OptionListContainsWritingSystemIdThatIsMigrated_WritingSystemIdIsChanged()
+		{
+			using (var e = new TestEnvironment())
+			{var optionListContent =
+#region filecontent
+ @"<?xml version='1.0' encoding='utf-8'?>
+<optionsList xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+  <option>
+	<key>one</key>
+	<name>
+	  <form lang='bogusws1'>eins</form>
+	  <form lang='bogusws2'>one</form>
+	</name>
+	<abbreviation>
+	  <form lang='bogusws1'>eins</form>
+	  <form lang='bogusws2'>one</form>
+	</abbreviation>
+	<description />
+  </option>
+</optionsList>".Replace("'","\"");
+#endregion
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
+				var optionListPath = Path.Combine(e.ProjectPath, "options.xml");
+				File.WriteAllText(optionListPath, optionListContent);
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				migrator.MigrateIfNecessary();
+				var doc = new XmlDocument();
+				doc.Load(optionListPath);
+				XmlNodeList nameNodes = doc.SelectNodes("//name/form/@lang");
+				Assert.AreEqual("x-bogusws1", nameNodes.Item(0).InnerText);
+				Assert.AreEqual("x-bogusws2", nameNodes.Item(1).InnerText);
+				nameNodes = doc.SelectNodes("//abbreviation/form/@lang");
+				Assert.AreEqual("x-bogusws1", nameNodes.Item(0).InnerText);
+				Assert.AreEqual("x-bogusws2", nameNodes.Item(1).InnerText);
+			}
+		}
+
+		[Test]
+		//OptionLists can have any file name it seems. So we need to make sure that we don't
+		//choke on load and don't change anything.
+		public void MigrateIfNeeded_FileIsNotOptionList_LeftAlone()
+		{
+			using (var e = new TestEnvironment())
+			{
+				const string optionListContent = "Just some text in a file.";
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
+				var optionListPath = Path.Combine(e.ProjectPath, "options.xml");
+				File.WriteAllText(optionListPath, optionListContent);
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				migrator.MigrateIfNecessary();
+				Assert.AreEqual(optionListContent, File.ReadAllText(optionListPath));
+			}
+		}
+
+		[Test]
 		public void MigrateIfNeeded_PrefsFileContainsIdThatIsMigrated_WritingSystemChangeLogIsUpdated()
 		{
 			using (var e = new TestEnvironment())
