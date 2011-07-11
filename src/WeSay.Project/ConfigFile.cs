@@ -141,7 +141,7 @@ namespace WeSay.Project
 				// If it changed, then change
 				if (conformantWritingSystem.Id != wsId)
 				{
-					conformantWritingSystem.MakeUnique(WritingSystemsInUse);
+					conformantWritingSystem = WritingSystemDefinition.CreateCopyWithUniqueId(conformantWritingSystem,WritingSystemsInUse);
 					ReplaceWritingSystemId(wsId, conformantWritingSystem.Id);
 				}
 				// Check if it's in the repo
