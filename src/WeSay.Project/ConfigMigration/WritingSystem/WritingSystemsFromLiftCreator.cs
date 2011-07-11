@@ -77,7 +77,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				// If it changed, then change
 				if (conformantWritingSystem.RFC5646 != wsId)
 				{
-					conformantWritingSystem.MakeUnique(WritingSystemsInUse);
+					conformantWritingSystem = WritingSystemDefinition.CreateCopyWithUniqueId(conformantWritingSystem, WritingSystemsInUse);
 					ReplaceWritingSystemId(wsId, conformantWritingSystem.RFC5646);
 				}
 				// Check if it's in the repo
