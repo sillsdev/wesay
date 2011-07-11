@@ -7,7 +7,7 @@ Standards-Version: 3.7.3
 
 Package: wesay
 Section: editors
-Architecture: any
+Architecture: all
 Depends: libmono-i18n2.0-cil (>=2.6.7-3ubuntu1~palaso2), libmono0 (>=2.6.7-3ubuntu1~palaso2), libmono-corlib2.0-cil (>=2.6.7-3ubuntu1~palaso2), libmono-system2.0-cil (>=2.6.7-3ubuntu1~palaso2), libmono-system-runtime2.0-cil (>=2.6.7-3ubuntu1~palaso2), libmono-winforms2.0-cil (>=2.6.7-3ubuntu1~palaso2), happycoders-libsocket (>= 1.6-1ubuntu1), libndesk-dbus1.0-cil (>=0.6.0)
 Conflicts: wesay-stable
 Description: WeSay, a dictionary creation tool
