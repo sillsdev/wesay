@@ -2,25 +2,27 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
+using Palaso.IO;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
 using Palaso.WritingSystems.Migration;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
 {
-	class WritingSystemsFromLiftCreator
+	class WritingSystemsInLiftFileHelper
 	{
 		private readonly string _liftFilePath;
 		private readonly string _writingSystemFolderPath;
 
-		public WritingSystemsFromLiftCreator(string writingSystemFolderPath, string liftFilePath)
+		public WritingSystemsInLiftFileHelper(string writingSystemFolderPath, string liftFilePath)
 		{
 			_writingSystemFolderPath = writingSystemFolderPath;
 			_liftFilePath = liftFilePath;
 		}
 
-		private IEnumerable<string> WritingSystemsInUse()
+		public IEnumerable<string> WritingSystemsInUse()
 		{
 				var uniqueIds = new List<string>();
 				using (var reader = XmlReader.Create(_liftFilePath))
@@ -39,14 +41,23 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				return uniqueIds;
 		}
 
-		private void ReplaceWritingSystemId(string oldId, string newId)
+		public void ReplaceWritingSystemId(string oldId, string newId)
 		{
-			Palaso.IO.FileUtils.GrepFile(_liftFilePath,
-			 String.Format(@"lang\s*=\s*[""']{0}[""']", oldId),
-			 String.Format(@"lang=""{0}""", newId));
+			try
+			{
+				Palaso.IO.FileUtils.GrepFile(_liftFilePath,
+				String.Format(@"lang\s*=\s*[""']{0}[""']", Regex.Escape(oldId)),
+				String.Format(@"lang=""{0}""", newId));
+			}
+			catch (Exception error)
+			{
+				ErrorReport.NotifyUserOfProblem("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
+			}
+
+
 		}
 
-		public void CreateNonExistentWritingSystemsFoundInLift()
+		public void CreateNonExistentWritingSystemsFoundInFile()
 		{
 			var writingSystemRepository =
 				new LdmlInFolderWritingSystemRepository(_writingSystemFolderPath);

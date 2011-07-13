@@ -411,8 +411,20 @@ namespace WeSay.Project
 			if (File.Exists(liftFilePath)) // will be null if we're creating a new project
 			{
 				//check for orphaned writing systems in Lift
-				var wsCreator = new WritingSystemsFromLiftCreator(writingSystemFolderPath, liftFilePath);
-				wsCreator.CreateNonExistentWritingSystemsFoundInLift();
+				var wsCreator = new WritingSystemsInLiftFileHelper(writingSystemFolderPath, liftFilePath);
+				wsCreator.CreateNonExistentWritingSystemsFoundInFile();
+			}
+
+			foreach (var file in Directory.GetFiles(projectDirectory))
+			{
+				var fileExtension = Path.GetExtension(file);
+				//Optionlists can have ANY filename it seems. So We have to check all file. But we are going to exclude .lift and .wesayconfig files.
+				if(fileExtension.Equals(".lift", StringComparison.OrdinalIgnoreCase) || fileExtension.Equals(".WeSayConfig", StringComparison.OrdinalIgnoreCase))
+				{
+					continue;
+				}
+				var optionListHelper = new WritingSystemsInOptionsListFileHelper(writingSystemFolderPath, file);
+				optionListHelper.CreateNonExistentWritingSystemsFoundInFile();
 			}
 
 			//migrate user config
@@ -1335,28 +1347,12 @@ namespace WeSay.Project
 
 			foreach (var kvp in _changedWritingSystemIds)
 			{
-				var xmlDoc = new XmlDocument();
 				foreach (var filePath in Directory.GetFiles(ProjectDirectoryPath))
 				{
-					try
-					{
-						xmlDoc.Load(filePath);
-						if (xmlDoc.SelectSingleNode("/optionsList") != null)
-						{
-							foreach (XmlNode node in xmlDoc.SelectNodes("//form"))
-							{
-								if (node.Attributes["lang"].Value == kvp.Key)
-								{
-									node.Attributes["lang"].Value = kvp.Value;
-								}
-							}
-						}
-						xmlDoc.Save(filePath);
-					}
-					catch (Exception e)
-					{
-						//Do nothing. If the load failed then it's not an optionlist.
-					}
+					var helper =
+						new WritingSystemsInOptionsListFileHelper(
+							GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath), filePath);
+					helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
 				}
 			}
 
@@ -1571,12 +1567,8 @@ namespace WeSay.Project
 
 		private void MakeWritingSystemIdChangeInLiftFile(string oldId, string newId)
 		{
-			if (DoSomethingToLiftFile((p) =>
-				//todo: expand the regular expression here to account for all reasonable patterns
-					 FileUtils.GrepFile(PathToLiftFile,
-							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
-											Regex.Escape(oldId)),
-							  string.Format("lang=\"{0}\"", newId)))) ;
+			var helper = new WritingSystemsInLiftFileHelper(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath), PathToLiftFile);
+			helper.ReplaceWritingSystemId(oldId, newId);
 		}
 
 		private void CommitWritingSystemIdChangesToLiftFile()

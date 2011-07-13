@@ -13,7 +13,7 @@ using WeSay.Project.ConfigMigration.WritingSystem;
 namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 {
 	[TestFixture]
-	public class WritingSystemsFromLiftCreatorTests
+	public class WritingSystemsInLiftFileHelperTests
 	{
 		private class TestEnvironment : IDisposable {
 			private readonly TemporaryFolder _folder;
@@ -25,12 +25,12 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 			public TestEnvironment(string rfctag, string rfctag2)
 			{
-				_folder = new TemporaryFolder("WritingSystemsFromLiftCreator");
+				_folder = new TemporaryFolder("WritingSystemsInLiftFileHelper");
 				var pathtoLiftFile1 = Path.Combine(_folder.Path, "test1.lift");
 				_liftFile1 = new TempFile(String.Format(_liftFile1Content, rfctag, rfctag2));
 				_liftFile1.MoveTo(pathtoLiftFile1);
 
-				Creator = new WritingSystemsFromLiftCreator(WritingSystemsPath, _liftFile1.Path);
+				Helper = new WritingSystemsInLiftFileHelper(WritingSystemsPath, _liftFile1.Path);
 			}
 
 #region LongFileContent
@@ -76,7 +76,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				get { return _folder.Path; }
 			}
 
-			public WritingSystemsFromLiftCreator Creator { get; private set; }
+			public WritingSystemsInLiftFileHelper Helper { get; private set; }
 
 			public void Dispose()
 			{
@@ -114,7 +114,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment("x-bogusws1", "audio"))
 			{
-				e.Creator.CreateNonExistentWritingSystemsFoundInLift();
+				e.Helper.CreateNonExistentWritingSystemsFoundInFile();
 				Assert.That(File.Exists(e.GetLdmlFileforWs("x-bogusws1")));
 				Assert.That(File.Exists(e.GetLdmlFileforWs("qaa-Zxxx-x-audio")));
 				AssertThatXmlIn.File(e.GetLdmlFileforWs("x-bogusws1")).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='']");
@@ -131,7 +131,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment("x-bogusws1", "audio"))
 			{
-				e.Creator.CreateNonExistentWritingSystemsFoundInLift();
+				e.Helper.CreateNonExistentWritingSystemsFoundInFile();
 				Assert.That(File.Exists(e.GetLdmlFileforWs("x-bogusws1")));
 				Assert.That(File.Exists(e.GetLdmlFileforWs("qaa-Zxxx-x-audio")));
 				string idChangeLogFilePath = Path.Combine(e.WritingSystemsPath, "idchangelog.xml");
@@ -144,7 +144,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var environment = new TestEnvironment("Zxxx-x-bogusws1", "audio"))
 			{
-				environment.Creator.CreateNonExistentWritingSystemsFoundInLift();
+				environment.Helper.CreateNonExistentWritingSystemsFoundInFile();
 				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='qaa-Zxxx-x-bogusws1']");
 				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='qaa-Zxxx-x-audio']");
 			}
@@ -155,7 +155,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var environment = new TestEnvironment("wee", "x-wee"))
 			{
-				environment.Creator.CreateNonExistentWritingSystemsFoundInLift();
+				environment.Helper.CreateNonExistentWritingSystemsFoundInFile();
 				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-wee-dupl0']");
 				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-wee']");
 			}
@@ -166,7 +166,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment("de", "x-dontcare"))
 			{
-				e.Creator.CreateNonExistentWritingSystemsFoundInLift();
+				e.Helper.CreateNonExistentWritingSystemsFoundInFile();
 				AssertThatXmlIn.File(e.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='de']");
 				Assert.That(File.Exists(e.GetLdmlFileforWs("de")), Is.True);
 				AssertThatXmlIn.File(e.GetLdmlFileforWs("de")).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='de']");
@@ -183,7 +183,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			using (var e = new TestEnvironment("x-en-Zxxx-x-audio"))
 			{
 				e.WriteContentToLdmlFileInWritingSystemFolderWithName("x-en-Zxxx-x-audio", LdmlContentForTests.Version0("x-en", "Zxxx", "", "x-audio"));
-				e.Creator.CreateNonExistentWritingSystemsFoundInLift();
+				e.Helper.CreateNonExistentWritingSystemsFoundInFile();
 				Assert.That(File.Exists(e.GetLdmlFileforWs("x-en-Zxxx-x-audio")), Is.True);
 				Assert.That(File.Exists(e.GetLdmlFileforWs("en-Zxxx-x-audio")), Is.False);
 				AssertThatXmlIn.File(e.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-en-Zxxx-x-audio']");
@@ -197,7 +197,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment("x-blah"))
 			{
-				e.Creator.CreateNonExistentWritingSystemsFoundInLift();
+				e.Helper.CreateNonExistentWritingSystemsFoundInFile();
 				//Assert.That(File.Exists(e.GetLdmlFileforWs("x-en-Zxxx-x-audio")), Is.False);
 				Assert.That(File.Exists(e.GetLdmlFileforWs("x-blah")), Is.True);
 				//AssertThatXmlIn.File(e.PathToLiftFile).HasNoMatchForXpath("/lift/entry/lexical-unit/form[@lang='']");
@@ -211,7 +211,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var e = new TestEnvironment("x-audio"))
 			{
-				e.Creator.CreateNonExistentWritingSystemsFoundInLift();
+				e.Helper.CreateNonExistentWritingSystemsFoundInFile();
 				Assert.That(File.Exists(e.GetLdmlFileforWs("x-audio")), Is.False);
 				Assert.That(File.Exists(e.GetLdmlFileforWs("qaa-Zxxx-x-audio")), Is.True);
 				AssertThatXmlIn.File(e.PathToLiftFile).HasNoMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-audio']");
@@ -224,7 +224,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		{
 			using (var environment = new TestEnvironment("wee-dupl1", "x-wee-dupl1"))
 			{
-				environment.Creator.CreateNonExistentWritingSystemsFoundInLift();
+				environment.Helper.CreateNonExistentWritingSystemsFoundInFile();
 				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-wee-dupl1']");
 				AssertThatXmlIn.File(environment.PathToLiftFile).HasAtLeastOneMatchForXpath("/lift/entry/lexical-unit/form[@lang='x-wee-dupl1-dupl0']");
 			}
