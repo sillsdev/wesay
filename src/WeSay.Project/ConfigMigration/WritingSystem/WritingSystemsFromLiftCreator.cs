@@ -48,7 +48,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		public void CreateNonExistentWritingSystemsFoundInLift()
 		{
-			IWritingSystemRepository writingSystemRepository =
+			var writingSystemRepository =
 				new LdmlInFolderWritingSystemRepository(_writingSystemFolderPath);
 			OrphanFinder.FindOrphans(WritingSystemsInUse, ReplaceWritingSystemId, writingSystemRepository);
 		}

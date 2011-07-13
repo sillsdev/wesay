@@ -180,7 +180,6 @@
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystemsFromLiftCreator.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystem_V1.cs" />
 	<Compile Include="ConfigMigration\XslFromResourceMigrator.cs" />
-	<Compile Include="OrphanFinder.cs" />
 	<Compile Include="ProjectFromLiftFolderCreator.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>

@@ -121,7 +121,7 @@ namespace WeSay.Project
 
 		public void CreateWritingSystemsForIdsInFileWhereNecassary(string pathToWritingSystemsFolder)
 		{
-			IWritingSystemRepository writingSystemRepository =
+			var writingSystemRepository =
 				new LdmlInFolderWritingSystemRepository(pathToWritingSystemsFolder);
 			OrphanFinder.FindOrphans(WritingSystemsInUse, ReplaceWritingSystemId, writingSystemRepository);
 		}
