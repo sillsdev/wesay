@@ -104,7 +104,7 @@ namespace WeSay.Project
 			}
 		}
 
-		private IEnumerable<string> WritingSystemsInUse()
+		public IEnumerable<string> WritingSystemsInUse()
 		{
 				IEnumerable<string> fieldWritingsystems = _xmlDocument.SelectNodes("/configuration/components/viewTemplate/fields/field/writingSystems/id").Cast<XmlNode>().Select(node => node.InnerXml);
 				IEnumerable<string> taskWritingSystems = _xmlDocument.SelectNodes("/configuration/tasks/task/writingSystemsToMatch").Cast<XmlNode>().Concat(

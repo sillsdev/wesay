@@ -15,6 +15,7 @@ using Palaso.TestUtilities;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.Project.ConfigMigration.WeSayConfig;
+using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.Project.Tests.ConfigMigration.WritingSystem;
 using WeSay.TestUtilities;
 
@@ -743,6 +744,63 @@ namespace WeSay.Project.Tests
 				AssertThatXmlIn.File(newLdmlWritingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/script[@type='Zxxx']");
 				AssertThatXmlIn.File(newLdmlWritingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
 				AssertThatXmlIn.File(newLdmlWritingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/variant[@type='x-english-audio']");
+			}
+		}
+
+		[Test]
+		public void LoadFromLiftLexiconPath_LiftConfigFileAndOptionListContainVariousNonConformantAndOrOrphanedWritingSystems_WritingSystemsAreMigrated()
+		{
+			using (var projectDirectory = new TemporaryFolder("OrphanWritingSystemsTest"))
+			{
+				//Create Config, Lift and OptionList files as well as a writing system folder.
+				//These files contain various orphans
+				string configFilePath = Path.Combine(projectDirectory.Path, "test.WeSayConfig");
+				File.WriteAllText(configFilePath, ConfigFileContentForTests.GetCompleteV8ConfigFile("en","config","de"));
+				string liftFilePath = Path.Combine(projectDirectory.Path, "test.lift");
+				File.WriteAllText(liftFilePath, LiftContentForTests.WrapEntriesInLiftElements("0.13",
+					LiftContentForTests.GetSingleEntryWithWritingSystems("option", "de")
+					));
+				string optionListPath = Path.Combine(projectDirectory.Path, "options.list");
+				File.WriteAllText(optionListPath, OptionListFileContent.GetOptionListWithWritingSystems("option", "x-changeme"));
+				string writingSystemFolderPath = Path.Combine(projectDirectory.Path, "WritingSystems");
+				Directory.CreateDirectory(writingSystemFolderPath);
+				//Now populate the writing system repo with an "en" writing system and a "qaa-x-changedWs" writing system as well as
+				//a changelog that  indicates that "x-changedWs" got changed to "qaa-x-changedWs"
+				var wsRepo = new LdmlInFolderWritingSystemRepository(writingSystemFolderPath);
+				var ws = new WritingSystemDefinition("en");
+				var ws1 = new WritingSystemDefinition("x-changeme");
+				wsRepo.Set(ws);
+				wsRepo.Set(ws1);
+				wsRepo.Save();
+				ws1.SetAllRfc5646LanguageTagComponents("fr", "Latn", "US", "x-CHANGED");
+				wsRepo.Set(ws1);
+				wsRepo.Save();
+
+				//Now open the project
+				var project = new WeSayWordsProject();
+				project.LoadFromLiftLexiconPath(liftFilePath);
+
+				Assert.That(project.WritingSystems.Contains("en"));
+				Assert.That(project.WritingSystems.Contains("x-config"));
+				Assert.That(project.WritingSystems.Contains("de"));
+				Assert.That(project.WritingSystems.Contains("x-option"));
+				Assert.That(project.WritingSystems.Contains("fr-Latn-US-x-CHANGED"));
+
+				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "en.ldml")));
+				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "x-config.ldml")));
+				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "de.ldml")));
+				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "x-option.ldml")));
+				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "fr-Latn-US-x-CHANGED.ldml")));
+
+				var configFile = new ConfigFile(configFilePath);
+				Assert.That(configFile.WritingSystemsInUse().Count(), Is.EqualTo(3));
+				Assert.That(configFile.WritingSystemsInUse().All(wsId => wsId.Equals("en") || wsId.Equals("x-config") || wsId.Equals("de")));
+				var liftFileHelper = new WritingSystemsInLiftFileHelper(writingSystemFolderPath, liftFilePath);
+				Assert.That(liftFileHelper.WritingSystemsInUse().Count(), Is.EqualTo(2));
+				Assert.That(liftFileHelper.WritingSystemsInUse().All(wsId => wsId.Equals("x-option") || wsId.Equals("de")));
+				var optionListFileHelper = new WritingSystemsInOptionsListFileHelper(writingSystemFolderPath, optionListPath);
+				Assert.That(optionListFileHelper.WritingSystemsInUse().Count(), Is.EqualTo(2));
+				Assert.That(optionListFileHelper.WritingSystemsInUse().All(wsId => wsId.Equals("x-option") || wsId.Equals("fr-Latn-US-x-CHANGED")));
 			}
 		}
 
