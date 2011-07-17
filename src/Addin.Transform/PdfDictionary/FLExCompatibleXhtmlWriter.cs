@@ -359,12 +359,21 @@ namespace Addin.Transform.PdfDictionary
 				}
 				else
 				{
-					_writer.WriteValue(group + " " + group.ToLowerInvariant());
+					_writer.WriteValue(CapitalizeFirstOnly(group) + " " + group.ToLowerInvariant());
 				}
 				EndDiv();
 				StartDiv("letData");
 			}
 		}
+
+		private string CapitalizeFirstOnly(string multigraph)
+		{
+			string output = multigraph.Substring(0, 1);
+			if(multigraph.Length>1)
+				output += multigraph.Substring(1).ToLowerInvariant();
+			return output;
+		}
+
 		private void EndSpan()
 		{
 			_writer.WriteEndElement();
