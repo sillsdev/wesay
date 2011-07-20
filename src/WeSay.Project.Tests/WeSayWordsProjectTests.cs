@@ -793,14 +793,14 @@ namespace WeSay.Project.Tests
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "fr-Latn-US-x-CHANGED.ldml")));
 
 				var configFile = new ConfigFile(configFilePath);
-				Assert.That(configFile.WritingSystemsInUse().Count(), Is.EqualTo(3));
-				Assert.That(configFile.WritingSystemsInUse().All(wsId => wsId.Equals("en") || wsId.Equals("x-config") || wsId.Equals("de")));
+				Assert.That(configFile.WritingSystemsInUse.Count(), Is.EqualTo(3));
+				Assert.That(configFile.WritingSystemsInUse.All(wsId => wsId.Equals("en") || wsId.Equals("x-config") || wsId.Equals("de")));
 				var liftFileHelper = new WritingSystemsInLiftFileHelper(writingSystemFolderPath, liftFilePath);
-				Assert.That(liftFileHelper.WritingSystemsInUse().Count(), Is.EqualTo(2));
-				Assert.That(liftFileHelper.WritingSystemsInUse().All(wsId => wsId.Equals("x-option") || wsId.Equals("de")));
+				Assert.That(liftFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
+				Assert.That(liftFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("x-option") || wsId.Equals("de")));
 				var optionListFileHelper = new WritingSystemsInOptionsListFileHelper(writingSystemFolderPath, optionListPath);
-				Assert.That(optionListFileHelper.WritingSystemsInUse().Count(), Is.EqualTo(2));
-				Assert.That(optionListFileHelper.WritingSystemsInUse().All(wsId => wsId.Equals("x-option") || wsId.Equals("fr-Latn-US-x-CHANGED")));
+				Assert.That(optionListFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
+				Assert.That(optionListFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("x-option") || wsId.Equals("fr-Latn-US-x-CHANGED")));
 			}
 		}
 

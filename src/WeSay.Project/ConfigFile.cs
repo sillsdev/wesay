@@ -104,26 +104,44 @@ namespace WeSay.Project
 			}
 		}
 
-		public IEnumerable<string> WritingSystemsInUse()
+		public IEnumerable<string> WritingSystemsInUse
 		{
-				IEnumerable<string> fieldWritingsystems = _xmlDocument.SelectNodes("/configuration/components/viewTemplate/fields/field/writingSystems/id").Cast<XmlNode>().Select(node => node.InnerXml);
-				IEnumerable<string> taskWritingSystems = _xmlDocument.SelectNodes("/configuration/tasks/task/writingSystemsToMatch").Cast<XmlNode>().Concat(
-										 _xmlDocument.SelectNodes("/configuration/tasks/task/writingSystemsWhichAreRequired").Cast<XmlNode>()).
-										 SelectMany(node=>node.InnerXml.Split(',').Select(str => str.Trim()));
+			get
+			{
+				IEnumerable<string> fieldWritingsystems =
+					_xmlDocument.SelectNodes("/configuration/components/viewTemplate/fields/field/writingSystems/id").
+						Cast<XmlNode>().Select(node => node.InnerXml);
+				IEnumerable<string> taskWritingSystems = _xmlDocument.SelectNodes(
+					"/configuration/tasks/task/writingSystemsToMatch").Cast<XmlNode>().Concat(
+					_xmlDocument.SelectNodes("/configuration/tasks/task/writingSystemsWhichAreRequired").Cast<XmlNode>())
+					.
+					SelectMany(node => node.InnerXml.Split(',').Select(str => str.Trim()));
 				IEnumerable<string> sfmExportWritingSystems =
-					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/EnglishLanguageWritingSystemId").Cast<XmlNode>().Concat(
-					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/NationalLanguageWritingSystemId").Cast<XmlNode>()).Concat(
-					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/RegionalLanguageWritingSystemId").Cast<XmlNode>()).Concat(
-					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/VernacularLanguageWritingSystemId").Cast<XmlNode>()).
-					Select(node => node.InnerXml); ;
-				return fieldWritingsystems.Concat(taskWritingSystems).Concat(sfmExportWritingSystems).Distinct().Where(str => !String.IsNullOrEmpty(str));
+					_xmlDocument.SelectNodes(
+						"/configuration/addins/addin/SfmTransformSettings/EnglishLanguageWritingSystemId").Cast<XmlNode>
+						().Concat(
+						_xmlDocument.SelectNodes(
+							"/configuration/addins/addin/SfmTransformSettings/NationalLanguageWritingSystemId").Cast
+							<XmlNode>()).Concat(
+						_xmlDocument.SelectNodes(
+							"/configuration/addins/addin/SfmTransformSettings/RegionalLanguageWritingSystemId").Cast
+							<XmlNode>()).Concat(
+						_xmlDocument.SelectNodes(
+							"/configuration/addins/addin/SfmTransformSettings/VernacularLanguageWritingSystemId").Cast
+							<XmlNode>()).
+						Select(node => node.InnerXml);
+				;
+				return
+					fieldWritingsystems.Concat(taskWritingSystems).Concat(sfmExportWritingSystems).Distinct().Where(
+						str => !String.IsNullOrEmpty(str));
+			}
 		}
 
 		public void CreateWritingSystemsForIdsInFileWhereNecassary(string pathToWritingSystemsFolder)
 		{
 			var writingSystemRepository =
 				new LdmlInFolderWritingSystemRepository(pathToWritingSystemsFolder);
-			OrphanFinder.FindOrphans(WritingSystemsInUse, ReplaceWritingSystemId, writingSystemRepository);
+			WritingSystemOrphanFinder.FindOrphans(WritingSystemsInUse, ReplaceWritingSystemId, writingSystemRepository);
 		}
 	}
 }

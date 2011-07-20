@@ -22,8 +22,10 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			_liftFilePath = liftFilePath;
 		}
 
-		public IEnumerable<string> WritingSystemsInUse()
+		public IEnumerable<string> WritingSystemsInUse
 		{
+			get
+			{
 				var uniqueIds = new List<string>();
 				using (var reader = XmlReader.Create(_liftFilePath))
 				{
@@ -39,6 +41,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 					}
 				}
 				return uniqueIds;
+			}
 		}
 
 		public void ReplaceWritingSystemId(string oldId, string newId)
@@ -61,7 +64,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		{
 			var writingSystemRepository =
 				new LdmlInFolderWritingSystemRepository(_writingSystemFolderPath);
-			OrphanFinder.FindOrphans(WritingSystemsInUse, ReplaceWritingSystemId, writingSystemRepository);
+			WritingSystemOrphanFinder.FindOrphans(WritingSystemsInUse, ReplaceWritingSystemId, writingSystemRepository);
 		}
 	}
 }
