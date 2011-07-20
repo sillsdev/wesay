@@ -59,10 +59,10 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 						reader.Read();
 					}
 
-					const string versionOfConfigFileInWhichWeCanRenameRfcTags = "0.13";
+					const string versionOfLiftFileInWhichWeCanRenameRfcTags = "0.13";
 					string versionNode = reader.GetAttribute("version");
 					reader.Close();
-					if (versionNode != versionOfConfigFileInWhichWeCanRenameRfcTags)
+					if (versionNode != versionOfLiftFileInWhichWeCanRenameRfcTags)
 					{
 						continue;
 					}
@@ -96,6 +96,31 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 						configFile.ReplaceWritingSystemId(oldAndNewId.RfcTagBeforeMigration, oldAndNewId.RfcTagAfterMigration);
 					}
 					SafelyMoveTempFileTofinalDestination(tempFile, configFilepath);
+				}
+
+				//Now let's replace writing systems in OptionLists
+				var xmlDoc = new XmlDocument();
+				foreach (var filePath in Directory.GetFiles(ProjectPath))
+				{
+					try
+					{
+						xmlDoc.Load(filePath);
+						if (xmlDoc.SelectSingleNode("/optionsList") != null)
+						{
+							foreach (XmlNode node in xmlDoc.SelectNodes("//form"))
+							{
+								if (node.Attributes["lang"].Value == oldAndNewRfcTag.RfcTagBeforeMigration)
+								{
+									node.Attributes["lang"].Value = oldAndNewRfcTag.RfcTagAfterMigration;
+								}
+							}
+						}
+						xmlDoc.Save(filePath);
+					}
+					catch(Exception e)
+					{
+						//Do nothing. If the load failed then it's not an optionlist.
+					}
 				}
 			}
 		}

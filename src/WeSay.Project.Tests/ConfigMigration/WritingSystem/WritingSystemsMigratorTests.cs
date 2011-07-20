@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Palaso.IO;
 using Palaso.TestUtilities;
 using WeSay.Project.ConfigMigration.WritingSystem;
+using WeSay.TestUtilities;
 
 namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 {
@@ -238,6 +239,44 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				//AssertThatXmlIn.File(e.PathToLiftFile).HasAtLeastOneMatchForXpath(
 				//        "//[@lang[2]='x-bogusws2']"
 				//    );
+			}
+		}
+
+		[Test]
+		public void MigrateIfNeeded_OptionListContainsWritingSystemIdThatIsMigrated_WritingSystemIdIsChanged()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
+				var optionListPath = Path.Combine(e.ProjectPath, "options.xml");
+				File.WriteAllText(optionListPath, OptionListFileContent.GetOptionListWithWritingSystems("bogusws1", "bogusws2"));
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				migrator.MigrateIfNecessary();
+				var doc = new XmlDocument();
+				doc.Load(optionListPath);
+				XmlNodeList nameNodes = doc.SelectNodes("//name/form/@lang");
+				Assert.AreEqual("x-bogusws1", nameNodes.Item(0).InnerText);
+				Assert.AreEqual("x-bogusws2", nameNodes.Item(1).InnerText);
+				nameNodes = doc.SelectNodes("//abbreviation/form/@lang");
+				Assert.AreEqual("x-bogusws1", nameNodes.Item(0).InnerText);
+				Assert.AreEqual("x-bogusws2", nameNodes.Item(1).InnerText);
+			}
+		}
+
+		[Test]
+		//OptionLists can have any file name it seems. So we need to make sure that we don't
+		//choke on load and don't change anything.
+		public void MigrateIfNeeded_FileIsNotOptionList_LeftAlone()
+		{
+			using (var e = new TestEnvironment())
+			{
+				const string optionListContent = "Just some text in a file.";
+				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
+				var optionListPath = Path.Combine(e.ProjectPath, "options.xml");
+				File.WriteAllText(optionListPath, optionListContent);
+				var migrator = new WritingSystemsMigrator(e.ProjectPath);
+				migrator.MigrateIfNecessary();
+				Assert.AreEqual(optionListContent, File.ReadAllText(optionListPath));
 			}
 		}
 

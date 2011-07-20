@@ -32,7 +32,6 @@ namespace WeSay.ConfigTool
 			InitializeComponent();
 			VisibleChanged += OptionListControl_VisibleChanged;
 			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
-			_currentListWasModified = false;
 		}
 
 		void OnName_Changed(object sender, EventArgs e)
@@ -44,34 +43,7 @@ namespace WeSay.ConfigTool
 
 		private void OnEditorSaveNow(object sender, EventArgs e)
 		{
-			SaveCurrentList();
-		}
-
-		private void SaveCurrentList()
-		{
-			if (_currentListWasModified)
-			{
-				SaveEditsToCurrentItem();
-				//notice that we always save to the project directory, even if we started with the
-				//one in the program files directory.
-				string path =
-						Path.Combine(
-								WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
-								_currentField.OptionsListFile);
-
-				try
-				{
-					_currentList.SaveToFile(path);
-					_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Edited list for {0} field", "Checkin Description in WeSay Config Tool used when you edit an option list."), _currentField.Key);
-				}
-				catch (Exception error)
-				{
-					ErrorReport.NotifyUserOfProblem(
-							"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
-							path,
-							error.Message);
-				}
-			}
+			SaveEditsToCurrentItem();
 		}
 
 		private void OptionListControl_VisibleChanged(object sender, EventArgs e)
@@ -128,12 +100,10 @@ namespace WeSay.ConfigTool
 		{
 			try
 			{
-				SaveCurrentList();
 				_currentField = field;
 				_currentList = WeSayWordsProject.Project.GetOptionsList(_currentField, true);
 
 				_listBox.Items.Clear();
-				_currentListWasModified = false;
 				foreach (Option option in _currentList.Options)
 				{
 					_listBox.Items.Add(option.GetDisplayProxy(PreferredWritingSystem));
@@ -327,7 +297,7 @@ namespace WeSay.ConfigTool
 
 		private void UserModifiedList()
 		{
-			_currentListWasModified = true;
+			WeSayWordsProject.Project.MarkOptionListAsUpdated(_currentList);
 		}
 
 		private void UpdateDisplay()

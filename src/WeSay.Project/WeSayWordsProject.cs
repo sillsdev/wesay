@@ -21,12 +21,14 @@ using Chorus.Utilities;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Lift;
 using Palaso.DictionaryServices.Model;
+using Palaso.i18n;
 using Palaso.IO;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Lift.Validation;
 using Palaso.Progress.LogBox;
 using Palaso.Reporting;
+using Palaso.Text;
 using Palaso.UI.WindowsForms.Progress;
 using Palaso.UiBindings;
 using Palaso.WritingSystems;
@@ -50,6 +52,7 @@ namespace WeSay.Project
 		private ViewTemplate _defaultViewTemplate;
 		private IList<ViewTemplate> _viewTemplates;
 		private readonly Dictionary<string, OptionsList> _optionLists;
+		private readonly List<OptionsList> _modifiedOptionsLists = new List<OptionsList>();
 		private string _pathToLiftFile;
 		private string _cacheLocationOverride;
 
@@ -408,8 +411,20 @@ namespace WeSay.Project
 			if (File.Exists(liftFilePath)) // will be null if we're creating a new project
 			{
 				//check for orphaned writing systems in Lift
-				var wsCreator = new WritingSystemsFromLiftCreator(writingSystemFolderPath, liftFilePath);
-				wsCreator.CreateNonExistentWritingSystemsFoundInLift();
+				var wsCreator = new WritingSystemsInLiftFileHelper(writingSystemFolderPath, liftFilePath);
+				wsCreator.CreateNonExistentWritingSystemsFoundInFile();
+			}
+
+			foreach (var file in Directory.GetFiles(projectDirectory))
+			{
+				var fileExtension = Path.GetExtension(file);
+				//Optionlists can have ANY filename it seems. So We have to check all file. But we are going to exclude .lift and .wesayconfig files.
+				if(fileExtension.Equals(".lift", StringComparison.OrdinalIgnoreCase) || fileExtension.Equals(".WeSayConfig", StringComparison.OrdinalIgnoreCase))
+				{
+					continue;
+				}
+				var optionListHelper = new WritingSystemsInOptionsListFileHelper(writingSystemFolderPath, file);
+				optionListHelper.CreateNonExistentWritingSystemsFoundInFile();
 			}
 
 			//migrate user config
@@ -1305,6 +1320,42 @@ namespace WeSay.Project
 
 			writer.WriteEndDocument();
 			writer.Close();
+			foreach (var modifiedOptionsList in _modifiedOptionsLists)
+			{
+				var fileAssociatedWithOptionsList =
+					_optionLists.Where(opt => opt.Value == modifiedOptionsList).Select(opt => opt.Key).First();
+					//notice that we always save to the project directory, even if we started with the
+					//one in the program files directory.
+					string path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, fileAssociatedWithOptionsList);
+
+					try
+					{
+						_optionLists[fileAssociatedWithOptionsList].SaveToFile(path);
+					}
+					catch (Exception error)
+					{
+						ErrorReport.NotifyUserOfProblem(
+							"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
+							path,
+							error.Message);
+					}
+			}
+
+			//Now make writingsystem changes to any optionlists found in the project directory
+			//this code is copied from the migrator
+			//Now let's replace writing systems in OptionLists
+
+			foreach (var kvp in _changedWritingSystemIds)
+			{
+				foreach (var filePath in Directory.GetFiles(ProjectDirectoryPath))
+				{
+					var helper =
+						new WritingSystemsInOptionsListFileHelper(
+							GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath), filePath);
+					helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
+				}
+			}
+
 
 			pendingConfigFile.WriteWasSuccessful();
 
@@ -1407,6 +1458,14 @@ namespace WeSay.Project
 			return _optionLists[field.OptionsListFile];
 		}
 
+		public void MarkOptionListAsUpdated(OptionsList list)
+		{
+			if (!_modifiedOptionsLists.Contains(list))
+			{
+				_modifiedOptionsLists.Add(list);
+			}
+		}
+
 		private void LoadOptionsList(string fieldName,string pathToOptionsList)
 		{
 			string name = Path.GetFileName(pathToOptionsList);
@@ -1422,6 +1481,10 @@ namespace WeSay.Project
 				reader = _container.Resolve<IOptionListReader>();
 			}
 			OptionsList list = reader.LoadFromFile(pathToOptionsList);
+			foreach (var oldNewId in _changedWritingSystemIds)
+			{
+				ChangeIdInLoadedOptionListIfNecassary(oldNewId.Key, oldNewId.Value, list);
+			}
 			_optionLists.Add(name, list);
 		}
 
@@ -1504,12 +1567,8 @@ namespace WeSay.Project
 
 		private void MakeWritingSystemIdChangeInLiftFile(string oldId, string newId)
 		{
-			if (DoSomethingToLiftFile((p) =>
-				//todo: expand the regular expression here to account for all reasonable patterns
-					 FileUtils.GrepFile(PathToLiftFile,
-							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
-											Regex.Escape(oldId)),
-							  string.Format("lang=\"{0}\"", newId)))) ;
+			var helper = new WritingSystemsInLiftFileHelper(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath), PathToLiftFile);
+			helper.ReplaceWritingSystemId(oldId, newId);
 		}
 
 		private void CommitWritingSystemIdChangesToLiftFile()
@@ -1535,12 +1594,44 @@ namespace WeSay.Project
 			}
 			DefaultViewTemplate.OnWritingSystemIDChange(oldId, newId);
 
+			foreach (var optionlist in _optionLists.Values)
+			{
+				ChangeIdInLoadedOptionListIfNecassary(oldId, newId, optionlist);
+			}
+
 			if (WritingSystemChanged != null)
 			{
 				StringPair p = new StringPair();
 				p.from = oldId;
 				p.to = newId;
 				WritingSystemChanged.Invoke(this, p);
+			}
+		}
+
+		private void ChangeIdInLoadedOptionListIfNecassary(string oldId, string newId, OptionsList optionlist)
+		{
+			var abbreviationLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
+																	   option => option.Abbreviation.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+
+			var nameLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
+															   option => option.Name.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+
+			var descriptionForms = new List<LanguageForm>(optionlist.Options.Select(
+															  option => option.Description.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+
+			var formsToChange = abbreviationLanguageForms.Concat(nameLanguageForms).Concat(descriptionForms);
+
+			if(formsToChange.Count() > 0)
+			{
+				MarkOptionListAsUpdated(optionlist);
+			}
+
+			foreach (var form in formsToChange)
+			{
+				if (form != null)
+				{
+					form.WritingSystemId = newId;
+				}
 			}
 		}
 

@@ -104,63 +104,44 @@ namespace WeSay.Project
 			}
 		}
 
-		private IEnumerable<string> WritingSystemsInUse
+		public IEnumerable<string> WritingSystemsInUse
 		{
 			get
 			{
-				IEnumerable<string> fieldWritingsystems = _xmlDocument.SelectNodes("/configuration/components/viewTemplate/fields/field/writingSystems/id").Cast<XmlNode>().Select(node => node.InnerXml);
-				IEnumerable<string> taskWritingSystems = _xmlDocument.SelectNodes("/configuration/tasks/task/writingSystemsToMatch").Cast<XmlNode>().Concat(
-										 _xmlDocument.SelectNodes("/configuration/tasks/task/writingSystemsWhichAreRequired").Cast<XmlNode>()).
-										 SelectMany(node=>node.InnerXml.Split(',').Select(str => str.Trim()));
+				IEnumerable<string> fieldWritingsystems =
+					_xmlDocument.SelectNodes("/configuration/components/viewTemplate/fields/field/writingSystems/id").
+						Cast<XmlNode>().Select(node => node.InnerXml);
+				IEnumerable<string> taskWritingSystems = _xmlDocument.SelectNodes(
+					"/configuration/tasks/task/writingSystemsToMatch").Cast<XmlNode>().Concat(
+					_xmlDocument.SelectNodes("/configuration/tasks/task/writingSystemsWhichAreRequired").Cast<XmlNode>())
+					.
+					SelectMany(node => node.InnerXml.Split(',').Select(str => str.Trim()));
 				IEnumerable<string> sfmExportWritingSystems =
-					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/EnglishLanguageWritingSystemId").Cast<XmlNode>().Concat(
-					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/NationalLanguageWritingSystemId").Cast<XmlNode>()).Concat(
-					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/RegionalLanguageWritingSystemId").Cast<XmlNode>()).Concat(
-					_xmlDocument.SelectNodes("/configuration/addins/addin/SfmTransformSettings/VernacularLanguageWritingSystemId").Cast<XmlNode>()).
-					Select(node => node.InnerXml); ;
-				return fieldWritingsystems.Concat(taskWritingSystems).Concat(sfmExportWritingSystems).Distinct().Where(str => !String.IsNullOrEmpty(str));
+					_xmlDocument.SelectNodes(
+						"/configuration/addins/addin/SfmTransformSettings/EnglishLanguageWritingSystemId").Cast<XmlNode>
+						().Concat(
+						_xmlDocument.SelectNodes(
+							"/configuration/addins/addin/SfmTransformSettings/NationalLanguageWritingSystemId").Cast
+							<XmlNode>()).Concat(
+						_xmlDocument.SelectNodes(
+							"/configuration/addins/addin/SfmTransformSettings/RegionalLanguageWritingSystemId").Cast
+							<XmlNode>()).Concat(
+						_xmlDocument.SelectNodes(
+							"/configuration/addins/addin/SfmTransformSettings/VernacularLanguageWritingSystemId").Cast
+							<XmlNode>()).
+						Select(node => node.InnerXml);
+				;
+				return
+					fieldWritingsystems.Concat(taskWritingSystems).Concat(sfmExportWritingSystems).Distinct().Where(
+						str => !String.IsNullOrEmpty(str));
 			}
 		}
 
-		/* Note: This method is identical/copied from WritingSystemsFromLiftCreator.CreateNonExistentWritingSystemsFoundInLift
-		 * If an improvement in the algorithm is made here (or over there!) make sure to update the old one.
-		 * Maybe somebody should pull this method out into a class or something. */
 		public void CreateWritingSystemsForIdsInFileWhereNecassary(string pathToWritingSystemsFolder)
 		{
-			var writingSystemRepo = new LdmlInFolderWritingSystemRepository(pathToWritingSystemsFolder);
-			foreach (var wsId in WritingSystemsInUse)
-			{
-				// Check if it's in the repo
-				if (writingSystemRepo.Contains(wsId))
-				{
-					continue;
-				}
-				// It's an orphan
-				// Clean it
-				var conformantWritingSystem = WritingSystemDefinition.Parse(CleanWritingSystemIdIfNecessary(wsId));
-				// If it changed, then change
-				if (conformantWritingSystem.Id != wsId)
-				{
-					conformantWritingSystem = WritingSystemDefinition.CreateCopyWithUniqueId(conformantWritingSystem,WritingSystemsInUse);
-					ReplaceWritingSystemId(wsId, conformantWritingSystem.Id);
-				}
-				// Check if it's in the repo
-				if (writingSystemRepo.Contains(conformantWritingSystem.Id))
-				{
-					continue;
-				}
-				// It's not in the repo so set it
-				writingSystemRepo.Set(conformantWritingSystem);
-			}
-			writingSystemRepo.Save();
-		}
-
-		private static string CleanWritingSystemIdIfNecessary(string writingSystemId)
-		{
-			var rfcTagCleaner = new Rfc5646TagCleaner(writingSystemId);
-			rfcTagCleaner.Clean();
-			string newId = rfcTagCleaner.GetCompleteTag();
-			return newId;
+			var writingSystemRepository =
+				new LdmlInFolderWritingSystemRepository(pathToWritingSystemsFolder);
+			WritingSystemOrphanFinder.FindOrphans(WritingSystemsInUse, ReplaceWritingSystemId, writingSystemRepository);
 		}
 	}
 }

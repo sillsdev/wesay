@@ -177,7 +177,7 @@
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsToLdmlMigrationStrategy.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystemCollection_V1.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsMigrator.cs" />
-	<Compile Include="ConfigMigration\WritingSystem\WritingSystemsFromLiftCreator.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingSystemsInLiftFileHelper.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystem_V1.cs" />
 	<Compile Include="ConfigMigration\XslFromResourceMigrator.cs" />
 	<Compile Include="ProjectFromLiftFolderCreator.cs" />

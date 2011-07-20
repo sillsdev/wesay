@@ -167,7 +167,7 @@
 	<Compile Include="ConfigFileTests.cs" />
 	<Compile Include="CommonDirectoryFileTests.cs" />
 	<Compile Include="ConfigMigration\UserConfig\WeSayUserConfigMigrationTests.cs" />
-	<Compile Include="ConfigMigration\WritingSystem\WritingSystemsFromLiftCreatorTests.cs" />
+	<Compile Include="ConfigMigration\WritingSystem\WritingSystemsInLiftFileHelperTests.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingCollectionSystemTests.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsFileContent.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsMigratorTests.cs" />
