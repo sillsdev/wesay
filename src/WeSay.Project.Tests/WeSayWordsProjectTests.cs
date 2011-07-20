@@ -772,7 +772,7 @@ namespace WeSay.Project.Tests
 				wsRepo.Set(ws);
 				wsRepo.Set(ws1);
 				wsRepo.Save();
-				ws1.SetAllTagComponents("fr", "Latn", "US", "x-CHANGED");
+				ws1.SetAllComponents("fr", "Latn", "US", "x-CHANGED");
 				wsRepo.Set(ws1);
 				wsRepo.Save();
 
