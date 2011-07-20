@@ -470,7 +470,9 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void CreateNonExistentWritingSystemsFoundInConfig_TasksXmlContainsNonConformantRfcTag_UpdatesRfcTagInTasksXmlOfConfigFile()
 		{
-			using (var environment = new TestEnvironment(ConfigFileContentForTests.GetConfigFileSnippetContainingMissingInfoTaskWithWritingSystems("bogusws1", "audio", "de", "Zxxx")))
+			using (var environment = new TestEnvironment(
+				ConfigFileContentForTests.WrapContentInConfigurationTags(
+				ConfigFileContentForTests.GetConfigFileSnippetContainingMissingInfoTaskWithWritingSystems("bogusws1", "audio", "de", "Zxxx"))))
 			{
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystemsPath);
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
@@ -601,7 +603,9 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void CreateNonExistentWritingSystemsFoundInConfig_FieldsXmlContainsRfcTagThatAfterBeingMadeConformMatchesExistingLdml_LdmlFilesAreLeftUnchanged()
 		{
-			using (var environment = new TestEnvironment(ConfigFileContentForTests.GetConfigFileSnippetContainingFieldWithWritingSystems("en", "audio")))
+			using (var environment = new TestEnvironment(
+				ConfigFileContentForTests.WrapContentInConfigurationTags(
+				ConfigFileContentForTests.GetConfigFileSnippetContainingFieldWithWritingSystems("en", "audio"))))
 			{
 				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.WritingSystemsPath);
 
