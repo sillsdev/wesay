@@ -24,7 +24,7 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			WeSayTextBox widget =
-					new WeSayTextBox(WritingSystemDefinition.FromLanguage("qaa"), null);
+					new WeSayTextBox(WritingSystemDefinition.Parse("qaa"), null);
 			new TextBinding(text, "vernacular", widget);
 
 			text["vernacular"] = "hello";
@@ -38,7 +38,7 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			WeSayTextBox widget =
-					new WeSayTextBox(WritingSystemDefinition.FromLanguage("qaa"), null);
+					new WeSayTextBox(WritingSystemDefinition.Parse("qaa"), null);
 
 			var binding = new TextBinding(text, "vernacular", widget);
 

@@ -174,7 +174,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		// Same if behavior is same (not appearance)
 		public override int GetHashCode()
 		{
-			int hashCode = HashCombine(_palasoWritingSystemDefinition.ISO.GetHashCode(), SortUsing.GetHashCode());
+			int hashCode = HashCombine(_palasoWritingSystemDefinition.Language.GetHashCode(), SortUsing.GetHashCode());
 			if (UsesCustomSortRules)
 			{
 				hashCode = HashCombine(hashCode, CustomSortRules.GetHashCode());

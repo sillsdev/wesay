@@ -609,7 +609,7 @@ namespace WeSay.Project.Tests
 			{
 				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.WritingSystemsPath);
 
-				var enWs = WritingSystemDefinition.FromLanguage("en");
+				var enWs = WritingSystemDefinition.Parse("en");
 				enWs.Abbreviation = "Dont change me!";
 				wsRepo.Set(enWs);
 				wsRepo.Save();

@@ -567,7 +567,7 @@ O o";
 			{
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystemForLanguage("en"));
 
-				var ws = WritingSystemDefinition.FromLanguage("en");
+				var ws = WritingSystemDefinition.Parse("en");
 				ws.Abbreviation = "untouched";
 				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.LdmlRepositoryPath);
 				wsRepo.Set(ws);
@@ -591,7 +591,7 @@ O o";
 			{
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("en", "de")
 					);
-				var ws = WritingSystemDefinition.FromLanguage("en");
+				var ws = WritingSystemDefinition.Parse("en");
 				ws.Abbreviation = "untouched";
 				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.LdmlRepositoryPath);
 				wsRepo.Set(ws);

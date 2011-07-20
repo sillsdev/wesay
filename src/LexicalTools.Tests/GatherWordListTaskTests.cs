@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools.Tests
 			WeSayProjectTestHelper.InitializeForTests();
 			_glossingLanguageWSId = WritingSystemsIdsForTests.AnalysisIdForTest;
 			_vernacularLanguageWSId = WritingSystemsIdsForTests.VernacularIdForTest;
-			BasilProject.Project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("fr"));
+			BasilProject.Project.WritingSystems.Set(WritingSystemDefinition.Parse("fr"));
 
 			_tempFolder = new TemporaryFolder();
 			_simpleWordListFilePath = _tempFolder.GetTemporaryFile();

@@ -39,8 +39,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			public IWritingSystemRepository MakeSampleCollection()
 			{
 				var writingSystemStore = new LdmlInFolderWritingSystemRepository(PathToWritingSystemsFolder);
-				writingSystemStore.Set(WritingSystemDefinition.FromLanguage("en"));
-				writingSystemStore.Set(WritingSystemDefinition.FromLanguage("de"));
+				writingSystemStore.Set(WritingSystemDefinition.Parse("en"));
+				writingSystemStore.Set(WritingSystemDefinition.Parse("de"));
 				return writingSystemStore;
 			}
 

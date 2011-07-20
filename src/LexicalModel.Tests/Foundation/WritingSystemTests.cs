@@ -26,7 +26,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Compare_fr_sortsLikeFrench()
 		{
-			var writingSystem = WritingSystemDefinition.FromLanguage("en");
+			var writingSystem = WritingSystemDefinition.Parse("en");
 			writingSystem.SortUsingOtherLanguage("fr");
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
@@ -37,7 +37,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Compare_en_sortsLikeEnglish()
 		{
-			var writingSystem = WritingSystemDefinition.FromLanguage("th");
+			var writingSystem = WritingSystemDefinition.Parse("th");
 			writingSystem.SortUsingOtherLanguage("en-US");
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
@@ -47,21 +47,21 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		[Test]
 		public void Constructor_IsAudio_SetToFalse()
 		{
-			var writingSystem = WritingSystemDefinition.FromLanguage("th");
+			var writingSystem = WritingSystemDefinition.Parse("th");
 			Assert.IsFalse(writingSystem.IsVoice);
 		}
 
 		[Test]
 		public void Constructor_IsUnicode_SetToTrue()
 		{
-			var writingSystem = WritingSystemDefinition.FromLanguage("th");
+			var writingSystem = WritingSystemDefinition.Parse("th");
 			Assert.IsTrue(writingSystem.IsUnicodeEncoded);
 		}
 
 		[Test, Ignore]
 		public void SortUsing_CustomSimpleWithNoRules_sortsLikeInvariant()
 		{
-			var writingSystem = WritingSystemDefinition.FromLanguage("th");
+			var writingSystem = WritingSystemDefinition.Parse("th");
 			writingSystem.SortUsingCustomSimple("");
 			// hard to test because half of the system locales use the invariant table: http://blogs.msdn.com/michkap/archive/2004/12/29/344136.aspx
 		}
@@ -70,7 +70,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void SortUsingCustomICU_WithSortRules_SetsSortRulesAndSortUsing()
 		{
 			const string rules = "&n < ng <<< Ng <<< NG";
-			WritingSystemDefinition writingSystem = WritingSystemDefinition.FromLanguage("th");
+			WritingSystemDefinition writingSystem = WritingSystemDefinition.Parse("th");
 			writingSystem.SortUsingCustomICU(rules);
 			Assert.AreEqual(rules, writingSystem.SortRules);
 			Assert.AreEqual(WritingSystemDefinition.SortRulesType.CustomICU, writingSystem.SortUsing);

@@ -81,7 +81,7 @@ namespace WeSay.LexicalTools.Tests
 
 			if(!v.WritingSystems.Contains("en"))
 			{
-				v.WritingSystems.Set(WritingSystemDefinition.FromLanguage("en"));
+				v.WritingSystems.Set(WritingSystemDefinition.Parse("en"));
 			}
 			return v;
 		}
@@ -1166,7 +1166,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ParseFrenchSemanticDomainFile_Localized()
 		{
-			WeSayWordsProject.Project.WritingSystems.Set(WritingSystemDefinition.FromLanguage("fr"));
+			WeSayWordsProject.Project.WritingSystems.Set(WritingSystemDefinition.Parse("fr"));
 			string frenchSemanticDomainFilePath = Path.GetTempFileName();
 			using (StreamWriter streamWriter = File.CreateText(frenchSemanticDomainFilePath))
 			{

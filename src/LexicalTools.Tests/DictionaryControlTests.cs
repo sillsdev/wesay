@@ -49,7 +49,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			base.Setup();
 			_tempFolder = new TemporaryFolder();
-			_vernacularWritingSystem = WritingSystemDefinition.FromLanguage(WritingSystemsIdsForTests.VernacularIdForTest);
+			_vernacularWritingSystem = WritingSystemDefinition.Parse(WritingSystemsIdsForTests.VernacularIdForTest);
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
 
 			_filePath = _tempFolder.GetTemporaryFile();

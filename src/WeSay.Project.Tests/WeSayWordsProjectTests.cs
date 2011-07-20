@@ -65,7 +65,7 @@ namespace WeSay.Project.Tests
 				using (File.OpenWrite(p.PathToLiftFile))
 				{
 					WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
-					ws.ISO = "aac";
+					ws.Language = "aac";
 					project.MakeWritingSystemIdChange("aac", "qaa");
 					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
@@ -772,7 +772,7 @@ namespace WeSay.Project.Tests
 				wsRepo.Set(ws);
 				wsRepo.Set(ws1);
 				wsRepo.Save();
-				ws1.SetAllRfc5646LanguageTagComponents("fr", "Latn", "US", "x-CHANGED");
+				ws1.SetAllTagComponents("fr", "Latn", "US", "x-CHANGED");
 				wsRepo.Set(ws1);
 				wsRepo.Save();
 

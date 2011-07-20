@@ -37,9 +37,9 @@ namespace WeSay.TestUtilities
 			//setup writing systems
 			Directory.CreateDirectory(pathToLdmlWsFolder);
 			IWritingSystemRepository wsc = new LdmlInFolderWritingSystemRepository(pathToLdmlWsFolder);
-			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemsIdsForTests.VernacularIdForTest));
-			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemsIdsForTests.AnalysisIdForTest));
-			wsc.Set(WritingSystemDefinition.FromLanguage(WritingSystemsIdsForTests.OtherIdForTest));
+			wsc.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.VernacularIdForTest));
+			wsc.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.AnalysisIdForTest));
+			wsc.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.OtherIdForTest));
 
 
 			wsc.Save();

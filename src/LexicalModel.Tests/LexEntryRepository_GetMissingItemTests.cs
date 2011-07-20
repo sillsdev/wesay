@@ -14,7 +14,7 @@ namespace WeSay.LexicalModel.Tests
 	{
 		private TemporaryFolder _temporaryFolder;
 		private LexEntryRepository _lexEntryRepository;
-		private readonly WritingSystemDefinition _lexicalFormWritingSystem =  WritingSystemDefinition.FromLanguage("de");
+		private readonly WritingSystemDefinition _lexicalFormWritingSystem =  WritingSystemDefinition.Parse("de");
 
 		[SetUp]
 		public void Setup()
@@ -62,7 +62,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Get_FieldNull_Throws()
 		{
 			Field fieldToFill = null;
-			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.FromLanguage("de");
+			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.Parse("de");
 			Assert.Throws<ArgumentNullException>(() =>
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem));
 		}
@@ -71,7 +71,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Get_FieldNameDoesNotExist_ReturnsEmpty()
 		{
 			Field fieldToFill = new Field("I do not exist!", "LexEntry", new string[] { "fr" });
-			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.FromLanguage("de");
+			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.Parse("de");
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
 			Assert.AreEqual(0, sortedResults.Count);
@@ -92,7 +92,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateLexentryWithLexicalFormButWithoutCitation("de Word2", "de");
 			CreateLexentryWithLexicalFormButWithoutCitation("de Word1", "de");
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "de" });
-			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.FromLanguage("de");
+			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.Parse("de");
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
 			Assert.AreEqual(2, sortedResults.Count);
@@ -107,7 +107,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry lexEntryWithMissingCitation = _lexEntryRepository.CreateItem();
 			_lexEntryRepository.SaveItem(lexEntryWithMissingCitation);
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "de" });
-			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.FromLanguage("fr");
+			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.Parse("fr");
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
 			Assert.AreEqual(1, sortedResults.Count);
@@ -119,7 +119,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			CreateLexentryWithLexicalFormButWithoutCitation("de Word1", "de");
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.LexicalUnit, "LexEntry", new string[] { "de" });
-			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.FromLanguage("de");
+			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.Parse("de");
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
 			Assert.AreEqual(0, sortedResults.Count);
@@ -131,7 +131,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateLexentryWithOnlyCitationForm("de Word2", "de");
 			CreateLexentryWithOnlyCitationForm("de Word1", "de");
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "fr" });
-			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.FromLanguage("de");
+			WritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.Parse("de");
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
 			Assert.AreEqual(2, sortedResults.Count);
