@@ -150,13 +150,13 @@ namespace WeSay.UI
 		{
 
 
-			if (!_list.Options.Exists(delegate(Option o) { return (o.Key == string.Empty); }))
+			if (!_list.Options.Exists(delegate(Option o) { return (o.Key == string.Empty || o.Key == "unknown"); }))
 			{
 				MultiText unspecifiedMultiText = new MultiText();
 				unspecifiedMultiText.SetAlternative(_preferredWritingSystem.Id,
 													StringCatalog.Get("~unknown",
 																	  "This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field."));
-				Option unspecifiedOption = new Option(string.Empty, unspecifiedMultiText);
+				Option unspecifiedOption = new Option("unknown", unspecifiedMultiText);
 				_control.Items.Add(new Option.OptionDisplayProxy(unspecifiedOption,
 																 _preferredWritingSystem.Id));
 			}
