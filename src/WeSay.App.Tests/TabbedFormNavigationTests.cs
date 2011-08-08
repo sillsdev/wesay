@@ -22,9 +22,9 @@ namespace WeSay.App.Tests
 		public void Setup()
 		{
 			string entriesXml =
-					@"<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>
-								<entry id='foo2'><lexical-unit><form lang='qaa'><text>fooTwo</text></form></lexical-unit></entry>
-								<entry id='foo3'><lexical-unit><form lang='qaa'><text>fooThree</text></form></lexical-unit></entry>";
+					@"<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>
+								<entry id='foo2'><lexical-unit><form lang='qaa-x-qaa'><text>fooTwo</text></form></lexical-unit></entry>
+								<entry id='foo3'><lexical-unit><form lang='qaa-x-qaa'><text>fooThree</text></form></lexical-unit></entry>";
 			_projectDirectory = new ProjectDirectorySetupForTesting(entriesXml);
 
 			_project = new WeSayWordsProject();

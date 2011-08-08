@@ -14,7 +14,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>qaa</id>
+			<id>qaa-x-qaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -28,7 +28,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
-			<id>qaa</id>
+			<id>qaa-x-qaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -127,7 +127,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>qaa</id>
+			<id>qaa-x-qaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -170,7 +170,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
-			<id>qaa</id>
+			<id>qaa-x-qaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -184,7 +184,7 @@
 		  <multiplicity>ZeroOrMore</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
-			<id>qaa</id>
+			<id>qaa-x-qaa</id>
 		  </writingSystems>
 		</field>
 	  </fields>

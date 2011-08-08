@@ -33,8 +33,8 @@
 		<Component Id="WritingSystems_en.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BDF}">
 		  <File Id="WritingSystems_en.ldml" Name="en.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\en.ldml" />
 		</Component>
-		<Component Id="WritingSystems_qaa.ldml" Guid="{75a4c53d-2aaf-4355-9dec-f2b6c19ee0f9}">
-		  <File Id="WritingSystems_qaa.ldml" Name="qaa.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\qaa.ldml" />
+		<Component Id="qaa-x-qaa.ldml" Guid="{75a4c53d-2aaf-4355-9dec-f2b6c19ee0f9}">
+		  <File Id="qaa-x-qaa.ldml" Name="qaa-x-qaa.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\qaa-x-qaa.ldml" />
 		</Component>
 		</Directory>
 
@@ -73,7 +73,7 @@
 	  <ComponentRef Id="default.WeSayConfig" />
 	  <ComponentRef Id="ArtOfReadingIndexV3_en.txt"/>
 	  <ComponentRef Id="WritingSystems_en.ldml" />
-	  <ComponentRef Id="WritingSystems_qaa.ldml" />
+	  <ComponentRef Id="qaa-x-qaa.ldml" />
 	</ComponentGroup>
 
 	<ComponentGroup Id="ddpStuff">

@@ -73,7 +73,7 @@ namespace WeSay.Project
 			public string to;
 		}
 
-		public const string VernacularWritingSystemIdForProjectCreation = "qaa";
+		public const string VernacularWritingSystemIdForProjectCreation = "qaa-x-qaa";
 		public const string AnalysisWritingSystemIdForProjectCreation = "en";
 
 		public event EventHandler<StringPair> WritingSystemChanged;

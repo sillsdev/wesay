@@ -10,7 +10,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class DetailListTests
 	{
-		private readonly WritingSystemDefinition _ws = WritingSystemDefinition.Parse("qaa");
+		private readonly WritingSystemDefinition _ws = WritingSystemDefinition.Parse("qaa-x-qaa");
 		private DetailList _control;
 		private Control _focussedControl;
 		private Form _window;
