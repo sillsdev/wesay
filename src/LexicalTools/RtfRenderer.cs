@@ -74,7 +74,10 @@ namespace WeSay.LexicalTools
 #if GlossMeaning
 				rtf.Append(" " + RenderField(sense.Gloss, currentItem));
 #else
-			rtf.Append(" " + RenderField(sense.Definition, currentItem));
+			// Render the Definition (meaning) field
+			Field dfnField = WeSayWordsProject.Project.GetFieldFromDefaultViewTemplate(
+	LexSense.WellKnownProperties.Definition);
+			rtf.Append(" " + RenderField(sense.Definition, currentItem, 0, dfnField));
 #endif
 			//                rtf.Append(@"\i0 ");
 
@@ -216,15 +219,16 @@ namespace WeSay.LexicalTools
 				{
 					foreach (string id in WritingSystems.FilterForTextIds(text.Forms.Select(f=>f.WritingSystemId)))
 					{
+
 						var form = text.Forms.First(f => f.WritingSystemId == id);
 						RenderForm(text, currentItem, rtfBuilder, form, sizeBoost);
 					}
 				}
-				else //todo: show all those turned on for the field?
+				else // show all forms turned on in the field
 				{
-					LanguageForm form = text.GetBestAlternative(field.WritingSystemIds);
-					if (form != null)
+					foreach (string id in field.WritingSystemIds.Intersect(text.Forms.Select(f=>f.WritingSystemId)))
 					{
+						var form = text.Forms.First(f => f.WritingSystemId == id);
 						RenderForm(text, currentItem, rtfBuilder, form, sizeBoost);
 					}
 				}
