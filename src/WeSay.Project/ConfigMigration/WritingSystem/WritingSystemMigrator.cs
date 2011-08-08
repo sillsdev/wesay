@@ -37,7 +37,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		{
 			var oldMigrator = new WritingSystemPrefsMigrator(WritingSystemsOldPrefsFilePath, OnWritingSystemTagChange);
 			oldMigrator.MigrateIfNecassary();
-			var ldmlMigrator = new LdmlInFolderWritingSystemRepositoryMigrator(WritingSystemsPath, OnWritingSystemTagChange);
+			var ldmlMigrator = new LdmlInFolderWritingSystemRepositoryMigrator(WritingSystemsPath, OnWritingSystemTagChange, true);
 			ldmlMigrator.Migrate();
 		}
 
