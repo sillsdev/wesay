@@ -617,6 +617,21 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		public void ProjectCreation_WritingSystemLdml_IsLatestVersion()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				var namespaceManager = new XmlNamespaceManager(new NameTable());
+				namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
+				var wsFolderPath = WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(project.ProjectDirectoryPath);
+				var pathToEnglish = Path.Combine(wsFolderPath, "en.ldml");
+				AssertThatXmlIn.File(pathToEnglish).HasAtLeastOneMatchForXpath(String.Format("/ldml/special/palaso:version[@value = {0}]", WritingSystemDefinition.LatestWritingSystemDefinitionVersion), namespaceManager);
+				var pathToQaa = Path.Combine(wsFolderPath, "qaa.ldml");
+				AssertThatXmlIn.File(pathToQaa).HasAtLeastOneMatchForXpath(String.Format("/ldml/special/palaso:version[@value = {0}]", WritingSystemDefinition.LatestWritingSystemDefinitionVersion), namespaceManager);
+			}
+		}
+
+		[Test]
 		//This test was formerly part of the LdmlInFolderWritingSystemCollectionTests TA 4/19/2011
 		[Category("For review")]
 		public void ProjectCreation_WritingSystemCollection_HasUnknownVernacular()
