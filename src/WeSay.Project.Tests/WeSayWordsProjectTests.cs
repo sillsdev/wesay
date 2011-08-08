@@ -796,26 +796,26 @@ namespace WeSay.Project.Tests
 				project.LoadFromLiftLexiconPath(liftFilePath);
 
 				Assert.That(project.WritingSystems.Contains("en"));
-				Assert.That(project.WritingSystems.Contains("x-config"));
+				Assert.That(project.WritingSystems.Contains("qaa-x-config"));
 				Assert.That(project.WritingSystems.Contains("de"));
-				Assert.That(project.WritingSystems.Contains("x-option"));
+				Assert.That(project.WritingSystems.Contains("qaa-x-option"));
 				Assert.That(project.WritingSystems.Contains("fr-Latn-US-x-CHANGED"));
 
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "en.ldml")));
-				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "x-config.ldml")));
+				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "qaa-x-config.ldml")));
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "de.ldml")));
-				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "x-option.ldml")));
+				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "qaa-x-option.ldml")));
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "fr-Latn-US-x-CHANGED.ldml")));
 
 				var configFile = new ConfigFile(configFilePath);
 				Assert.That(configFile.WritingSystemsInUse.Count(), Is.EqualTo(3));
-				Assert.That(configFile.WritingSystemsInUse.All(wsId => wsId.Equals("en") || wsId.Equals("x-config") || wsId.Equals("de")));
+				Assert.That(configFile.WritingSystemsInUse.All(wsId => wsId.Equals("en") || wsId.Equals("qaa-x-config") || wsId.Equals("de")));
 				var liftFileHelper = new WritingSystemsInLiftFileHelper(writingSystemFolderPath, liftFilePath);
 				Assert.That(liftFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
-				Assert.That(liftFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("x-option") || wsId.Equals("de")));
+				Assert.That(liftFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("de")));
 				var optionListFileHelper = new WritingSystemsInOptionsListFileHelper(writingSystemFolderPath, optionListPath);
 				Assert.That(optionListFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
-				Assert.That(optionListFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("x-option") || wsId.Equals("fr-Latn-US-x-CHANGED")));
+				Assert.That(optionListFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("fr-Latn-US-x-CHANGED")));
 			}
 		}
 

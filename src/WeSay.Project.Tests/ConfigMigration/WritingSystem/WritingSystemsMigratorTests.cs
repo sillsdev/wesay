@@ -4,6 +4,7 @@ using System.Xml;
 using NUnit.Framework;
 using Palaso.IO;
 using Palaso.TestUtilities;
+using Palaso.WritingSystems;
 using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.TestUtilities;
 
@@ -166,7 +167,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				migrator.MigrateIfNecessary();
 
 				AssertThatXmlIn.File(e.WritingSystemFilePath("qaa-x-test")).HasAtLeastOneMatchForXpath(
-					"/ldml/special/palaso:version[@value='1']",
+					String.Format("/ldml/special/palaso:version[@value='{0}']", WritingSystemDefinition.LatestWritingSystemDefinitionVersion),
 					e.NamespaceManager);
 			}
 		}
@@ -180,16 +181,16 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
 				migrator.MigrateIfNecessary();
 				AssertThatXmlIn.File(e.PathToConfigFile).HasAtLeastOneMatchForXpath(
-						"/configuration/components/viewTemplate/fields/field/writingSystems/id[1][text()='x-bogusws1']"
+						"/configuration/components/viewTemplate/fields/field/writingSystems/id[1][text()='qaa-x-bogusws1']"
 					);
 				AssertThatXmlIn.File(e.PathToConfigFile).HasAtLeastOneMatchForXpath(
-						"/configuration/components/viewTemplate/fields/field/writingSystems/id[2][text()='x-bogusws2']"
+						"/configuration/components/viewTemplate/fields/field/writingSystems/id[2][text()='qaa-x-bogusws2']"
 					);
 				AssertThatXmlIn.File(e.PathToConfigFile).HasAtLeastOneMatchForXpath(
-						"/configuration/tasks/task/writingSystemsToMatch[text()='x-bogusws1, x-bogusws2']"
+						"/configuration/tasks/task/writingSystemsToMatch[text()='qaa-x-bogusws1, qaa-x-bogusws2']"
 					);
 				AssertThatXmlIn.File(e.PathToConfigFile).HasAtLeastOneMatchForXpath(
-						"/configuration/tasks/task/writingSystemsWhichAreRequired[text()='x-bogusws1, x-bogusws2']"
+						"/configuration/tasks/task/writingSystemsWhichAreRequired[text()='qaa-x-bogusws1, qaa-x-bogusws2']"
 					);
 			}
 		}
@@ -229,8 +230,8 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				doc.Load(e.PathToLiftFile);
 				XmlNodeList nodes = doc.SelectNodes("//@lang");
 
-				Assert.AreEqual("x-bogusws1", nodes.Item(0).InnerText);
-				Assert.AreEqual("x-bogusws2", nodes.Item(1).InnerText);
+				Assert.AreEqual("qaa-x-bogusws1", nodes.Item(0).InnerText);
+				Assert.AreEqual("qaa-x-bogusws2", nodes.Item(1).InnerText);
 
 				//The below doesn't work correctly unfortunately
 				//AssertThatXmlIn.File(e.PathToLiftFile).HasAtLeastOneMatchForXpath(
@@ -255,11 +256,11 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				var doc = new XmlDocument();
 				doc.Load(optionListPath);
 				XmlNodeList nameNodes = doc.SelectNodes("//name/form/@lang");
-				Assert.AreEqual("x-bogusws1", nameNodes.Item(0).InnerText);
-				Assert.AreEqual("x-bogusws2", nameNodes.Item(1).InnerText);
+				Assert.AreEqual("qaa-x-bogusws1", nameNodes.Item(0).InnerText);
+				Assert.AreEqual("qaa-x-bogusws2", nameNodes.Item(1).InnerText);
 				nameNodes = doc.SelectNodes("//abbreviation/form/@lang");
-				Assert.AreEqual("x-bogusws1", nameNodes.Item(0).InnerText);
-				Assert.AreEqual("x-bogusws2", nameNodes.Item(1).InnerText);
+				Assert.AreEqual("qaa-x-bogusws1", nameNodes.Item(0).InnerText);
+				Assert.AreEqual("qaa-x-bogusws2", nameNodes.Item(1).InnerText);
 			}
 		}
 
@@ -344,7 +345,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
 				migrator.MigrateIfNecessary();
 
-				AssertThatXmlIn.File(idChangeLogFilePath).HasAtLeastOneMatchForXpath("/WritingSystemChangeLog/Changes/Change/To[text()='x-blah']");
+				AssertThatXmlIn.File(idChangeLogFilePath).HasAtLeastOneMatchForXpath("/WritingSystemChangeLog/Changes/Change/To[text()='qaa-x-blah']");
 			}
 		}
 

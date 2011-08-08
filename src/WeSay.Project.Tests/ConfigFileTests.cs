@@ -373,8 +373,8 @@ namespace WeSay.Project.Tests
 			{
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystemsPath);
 
-				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "x-bogusws1" + ".ldml");
-				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='']");
+				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "qaa-x-bogusws1" + ".ldml");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='qaa']");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
 				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/variant[@type='x-bogusws1']");
@@ -394,8 +394,8 @@ namespace WeSay.Project.Tests
 			{
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystemsPath);
 
-				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "x-bogusws1" + ".ldml");
-				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='']");
+				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "qaa-x-bogusws1" + ".ldml");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='qaa']");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
 				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/variant[@type='x-bogusws1']");
@@ -412,11 +412,11 @@ namespace WeSay.Project.Tests
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/variant");
 
-				writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "qaa-Zxxx" + ".ldml");
+				writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "qaa-x-Zxxx" + ".ldml");
 				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='qaa']");
-				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/script[@type='Zxxx']");
+				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
-				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/variant");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/variant[@type='x-Zxxx']");
 			}
 		}
 
@@ -428,8 +428,8 @@ namespace WeSay.Project.Tests
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystemsPath);
 
 
-				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "x-bogusws1" + ".ldml");
-				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='']");
+				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "qaa-x-bogusws1" + ".ldml");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='qaa']");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
 				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/variant[@type='x-bogusws1']");
@@ -446,11 +446,11 @@ namespace WeSay.Project.Tests
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/variant");
 
-				writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "qaa-Zxxx" + ".ldml");
+				writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "qaa-x-Zxxx" + ".ldml");
 				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='qaa']");
-				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/script[@type='Zxxx']");
+				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
-				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/variant");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/variant[@type='x-Zxxx']");
 			}
 		}
 
@@ -461,7 +461,7 @@ namespace WeSay.Project.Tests
 			{
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystemsPath);
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
-					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='x-bogusws1']");
+					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='qaa-x-bogusws1']");
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
 					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='qaa-Zxxx-x-audio']");
 			}
@@ -476,9 +476,9 @@ namespace WeSay.Project.Tests
 			{
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystemsPath);
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
-					"/configuration/tasks/task/writingSystemsToMatch[text()='x-bogusws1, qaa-Zxxx-x-audio']");
+					"/configuration/tasks/task/writingSystemsToMatch[text()='qaa-x-bogusws1, qaa-Zxxx-x-audio']");
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
-					"/configuration/tasks/task/writingSystemsWhichAreRequired[text()='de, qaa-Zxxx']");
+					"/configuration/tasks/task/writingSystemsWhichAreRequired[text()='de, qaa-x-Zxxx']");
 			}
 		}
 
@@ -492,11 +492,11 @@ namespace WeSay.Project.Tests
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
 					"/configuration/addins/addin/SfmTransformSettings/EnglishLanguageWritingSystemId[text()='en']");
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
-					"/configuration/addins/addin/SfmTransformSettings/NationalLanguageWritingSystemId[text()='x-bogusws1']");
+					"/configuration/addins/addin/SfmTransformSettings/NationalLanguageWritingSystemId[text()='qaa-x-bogusws1']");
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
 					"/configuration/addins/addin/SfmTransformSettings/RegionalLanguageWritingSystemId[text()='qaa-Zxxx-x-audio']");
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
-					"/configuration/addins/addin/SfmTransformSettings/VernacularLanguageWritingSystemId[text()='qaa-Zxxx']");
+					"/configuration/addins/addin/SfmTransformSettings/VernacularLanguageWritingSystemId[text()='qaa-x-Zxxx']");
 			}
 		}
 
@@ -509,13 +509,13 @@ namespace WeSay.Project.Tests
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystemsPath);
 
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
-					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='x-aaa']");
+					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='qaa-x-aaa']");
 				AssertThatXmlIn.File(environment.ConfigFilePath).HasAtLeastOneMatchForXpath(
 					"/configuration/components/viewTemplate/fields/field/writingSystems/id[text()='aaa']");
 
 
-				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "x-aaa" + ".ldml");
-				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='']");
+				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "qaa-x-aaa" + ".ldml");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='qaa']");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
 				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/variant[@type='x-aaa']");
