@@ -609,10 +609,7 @@ namespace WeSay.Project
 			}
 			if(field.WritingSystemIds.Count == 0)
 			{
-				// fix for WS-3413
-				// cjh: we used to throw a ConfigurationException here, but we have decided to quietly fix the field by adding the
-				// analysis writing system for project creation to the field and continuing on as normal
-				field.WritingSystemIds.Add(WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation);
+				throw new ConfigurationException(String.Format("The field {0} has no writing system associated with it. Please assign a writing system to it in the WeSay config tool.", fieldName));
 			}
 			return BasilProject.Project.WritingSystems.Get(field.WritingSystemIds[0]);
 		}
