@@ -237,5 +237,19 @@ namespace WeSay.Project.Tests
 			master.Fields.Add(field);
 			Assert.That(master.IsWritingSystemInUse("en"), Is.True);
 		}
+
+		[Test]
+		public void GetDefaultWritingSystemForField_FieldHasNoWritingSystem_ReturnsWSIDForProjectCreation()
+		{
+			// regression test for WS-3413
+			// cjh: we used to throw a ConfigurationException, but we have decided to quietly fix the field by adding the
+			// analysis writing system for project creation to the field and continuing on as normal
+			BasilProjectTestHelper.InitializeForTests();
+			ViewTemplate master = new ViewTemplate();
+			Field field = new Field();
+			field.FieldName = "Note";
+			master.Fields.Add(field);
+			Assert.That(master.GetDefaultWritingSystemForField("Note").Id, Is.EqualTo(WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation));
+		}
 	}
 }
