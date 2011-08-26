@@ -30,7 +30,6 @@ namespace WeSay.ConfigTool.NewProjectCreation
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewProjectFromFLExDialog));
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this._infoLabel = new WeSay.UI.BetterLabel();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.label1 = new System.Windows.Forms.Label();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -44,6 +43,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			this._btnOk = new System.Windows.Forms.Button();
 			this._btnCancel = new System.Windows.Forms.Button();
 			this._linkLabel = new System.Windows.Forms.LinkLabel();
+			this._infoLabel = new WeSay.UI.BetterLabel();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
@@ -73,20 +73,6 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(442, 298);
 			this.tableLayoutPanel1.TabIndex = 0;
-			//
-			// _infoLabel
-			//
-			this._infoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._infoLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this._infoLabel.Location = new System.Drawing.Point(3, 3);
-			this._infoLabel.Multiline = true;
-			this._infoLabel.Name = "_infoLabel";
-			this._infoLabel.ReadOnly = true;
-			this._infoLabel.Size = new System.Drawing.Size(436, 115);
-			this._infoLabel.TabIndex = 0;
-			this._infoLabel.TabStop = false;
-			this._infoLabel.Text = resources.GetString("_infoLabel.Text");
 			//
 			// tableLayoutPanel2
 			//
@@ -217,7 +203,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			this._btnOk.Name = "_btnOk";
 			this._btnOk.Size = new System.Drawing.Size(75, 23);
 			this._btnOk.TabIndex = 0;
-			this._btnOk.Text = "&Ok";
+			this._btnOk.Text = "&OK";
 			this._btnOk.UseVisualStyleBackColor = true;
 			//
 			// _btnCancel
@@ -241,12 +227,29 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			this._linkLabel.Text = "Don\'t do this if you already have a corresponding WeSay project.  To learn how to" +
 				" add changes from FLEx to an existing WeSay project, read this web page.";
 			//
+			// _infoLabel
+			//
+			this._infoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._infoLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this._infoLabel.Location = new System.Drawing.Point(3, 3);
+			this._infoLabel.Multiline = true;
+			this._infoLabel.Name = "_infoLabel";
+			this._infoLabel.ReadOnly = true;
+			this._infoLabel.Size = new System.Drawing.Size(436, 115);
+			this._infoLabel.TabIndex = 0;
+			this._infoLabel.TabStop = false;
+			this._infoLabel.Text = resources.GetString("_infoLabel.Text");
+			//
 			// NewProjectFromFLExDialog
 			//
 			this.ClientSize = new System.Drawing.Size(442, 298);
 			this.Controls.Add(this.tableLayoutPanel1);
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "NewProjectFromFLExDialog";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+			this.Text = "Create new project from a set of plain LIFT files";
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.tableLayoutPanel2.ResumeLayout(false);

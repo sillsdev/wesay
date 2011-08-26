@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.WritingSystems;
+using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool.NewProjectCreation
 {
@@ -25,6 +26,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			Icon = Application.OpenForms[0].Icon;
 			btnOK.Enabled = false;
 			_pathLabel.Text = "";
+			Icon = Resources.WeSaySetupApplicationIcon;
 		}
 
 		protected virtual bool EnableOK
