@@ -18,7 +18,7 @@ namespace Addin.Backup
 		{
 			_projectInfo = projectInfo;
 			InitializeComponent();
-			_topLabel.Text = "~Looking for USB Keys...";
+			_topLabel.Text = "~Looking for USB Flash Drives...";
 			pictureBox1.Image = Resources.backupToDeviceImage;
 			_cancelButton.Text = StringCatalog.Get(_cancelButton.Text);
 			_cancelButton.Font = StringCatalog.ModifyFontForLocalization(_cancelButton.Font);
@@ -83,7 +83,7 @@ namespace Addin.Backup
 				}
 				else
 				{
-					_topLabel.Text = "~Please insert the USB Key to backup to.";
+					_topLabel.Text = "~Please insert the USB Flash Drive to backup to.";
 				}
 			}
 			catch (Exception error)
