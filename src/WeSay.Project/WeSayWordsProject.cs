@@ -376,7 +376,7 @@ namespace WeSay.Project
 
 		private static void OnWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			if (e.Error != null)
+			if (e != null && e.Error != null)
 			{
 				throw e.Error;
 			}
