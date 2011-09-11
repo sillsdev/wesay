@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool.NewProjectCreation
 {
@@ -18,6 +19,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			_btnCancel.Click += OnBtnCancel_Click;
 			_linkLabel.Click += OnLinkLabel_Clicked;
 			_pathtoProjectLabel.Text = String.Empty;
+			Icon = Resources.WeSaySetupApplicationIcon;
 		}
 
 		public string PathToLift

@@ -711,7 +711,19 @@ namespace WeSay.Project
 		   //for now, chorus wants the default to be the first one.  So lets just
 			//use the first ws of the notefield for that purpose (could improve user control
 			//over this later).
-			var noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);
+
+			// fix for WS-34130
+			WritingSystemDefinition noteWritingSystem;
+			try
+			{
+				noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);
+			}
+			catch (ConfigurationException)
+			{
+				// if no writing system is defined for the Note field, so just use the default AnalysisWritingSystem
+				noteWritingSystem = new WritingSystemDefinition(WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation);
+			}
+
 			list.Insert(0,new ChorusWritingSystemAdaptor(noteWritingSystem));
 			foreach (var system in WritingSystems.TextWritingSystems)
 			{

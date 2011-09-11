@@ -253,5 +253,16 @@ namespace WeSay.Project.Tests
 			master.Fields.Add(field);
 			Assert.That(master.IsWritingSystemInUse("en"), Is.True);
 		}
+
+		[Test]
+		public void CreateListForChorus_NotesFieldHasNoWritingSystems_DoesNotThrow()
+		{
+			BasilProjectTestHelper.InitializeForTests();
+			var master = new ViewTemplate();
+			var noteField = new Field();
+			noteField.FieldName = "Note";
+			master.Fields.Add(noteField);
+			Assert.DoesNotThrow(() => master.CreateListForChorus());
+		}
 	}
 }

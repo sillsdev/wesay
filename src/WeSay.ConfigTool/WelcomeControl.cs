@@ -97,7 +97,7 @@ namespace WeSay.ConfigTool
 			AddSection("Get", panel);
 			//nb: we want these always enabled, so that we can give a message explaining about hg if needed
 
-			var usbButton = AddChoice("Get From USB drive", "Get a project from a Chorus repository on a USB flash drive, created by either WeSay or FLEx (using LiftBridge)", "getFromUsb", true, OnGetFromUsb, panel);
+			var usbButton = AddChoice("Get from USB drive", "Get a project from a Chorus repository on a USB flash drive, created by either WeSay or FLEx (using LiftBridge)", "getFromUsb", true, OnGetFromUsb, panel);
 			var internetButton = AddChoice("Get from Internet", "Get a project from a Chorus repository which is hosted on the internet (e.g. public.languagedepot.org) and put it on this computer",
 				"getFromInternet", true, OnGetFromInternet, panel);
 			if (!string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")))

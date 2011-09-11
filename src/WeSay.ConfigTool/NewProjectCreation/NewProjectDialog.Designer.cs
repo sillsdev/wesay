@@ -142,7 +142,7 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "NewProjectDialog";
-			this.Text = "New Project";
+			this.Text = "Create New Blank Project";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

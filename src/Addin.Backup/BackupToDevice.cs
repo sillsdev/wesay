@@ -36,7 +36,7 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return StringCatalog.Get("~Saves a backup on an external device, like a USB key.",
+				return StringCatalog.Get("~Saves a backup on an external device, like a USB Flash Drive.",
 										 "description of usb backup action");
 			}
 		}
