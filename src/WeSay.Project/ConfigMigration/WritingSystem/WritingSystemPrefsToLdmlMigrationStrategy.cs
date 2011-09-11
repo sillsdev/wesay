@@ -107,10 +107,10 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		}
 
-		private readonly LdmlVersion0MigrationStrategy.OnMigrationFn _onMigrationCallback;
+		private readonly LdmlVersion0MigrationStrategy.MigrationHandler _onMigrationCallback;
 		private IAuditTrail _changeLog;
 
-		public WritingSystemPrefsToLdmlMigrationStrategy(LdmlVersion0MigrationStrategy.OnMigrationFn migrationCb, IAuditTrail changeLog)
+		public WritingSystemPrefsToLdmlMigrationStrategy(LdmlVersion0MigrationStrategy.MigrationHandler migrationCb, IAuditTrail changeLog)
 		{
 			_onMigrationCallback = migrationCb;
 			_changeLog = changeLog;

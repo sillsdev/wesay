@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using NUnit.Framework;
 using Palaso.IO;
 using Palaso.TestUtilities;
 using Palaso.WritingSystems;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.LexicalModel.Tests.Foundation
 {
@@ -30,7 +32,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 			public void CreateLdmlWritingSystemDefinitionFile()
 			{
-				IWritingSystemRepository wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(PathToWritingSystemsFolder);
+				IWritingSystemRepository wsCollectionToBeWritten = GetWritingSystemRepository(PathToWritingSystemsFolder);
 				WritingSystemDefinition ws = CreateDetailedWritingSystem("en");
 				wsCollectionToBeWritten.Set(ws);
 				wsCollectionToBeWritten.Save();
@@ -38,7 +40,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 			public IWritingSystemRepository MakeSampleCollection()
 			{
-				var writingSystemStore = new LdmlInFolderWritingSystemRepository(PathToWritingSystemsFolder);
+				var writingSystemStore = GetWritingSystemRepository(PathToWritingSystemsFolder);
 				writingSystemStore.Set(WritingSystemDefinition.Parse("en"));
 				writingSystemStore.Set(WritingSystemDefinition.Parse("de"));
 				return writingSystemStore;
@@ -97,14 +99,14 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			using (var e = new TestEnvironment())
 			{
 				IWritingSystemRepository wsCollectionToBeWritten =
-					new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+					GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				WritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("en");
 				wsCollectionToBeWritten.Set(ws);
 				WritingSystemDefinition ws2 = TestEnvironment.CreateDetailedWritingSystem("de");
 				wsCollectionToBeWritten.Set(ws2);
 				wsCollectionToBeWritten.Save();
 
-				IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+				IWritingSystemRepository loadedWsCollection = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				TestEnvironment.AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 			}
 		}
@@ -114,7 +116,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			using (var e = new TestEnvironment())
 			{
-				var wsCollectionToBeWritten = new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+				var wsCollectionToBeWritten = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				WritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("th");
 				ws.Region = "BR";
 				wsCollectionToBeWritten.Set(ws);
@@ -122,7 +124,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				ws2.Region = "AQ";
 				wsCollectionToBeWritten.Set(ws2);
 				wsCollectionToBeWritten.Save();
-				var loadedWsCollection = new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+				var loadedWsCollection = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				TestEnvironment.AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 			}
 		}
@@ -134,7 +136,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			{
 				//Write out two writing systems
 				IWritingSystemRepository wsCollectionToBeWritten =
-					new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+					GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				WritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("en");
 				wsCollectionToBeWritten.Set(ws);
 				WritingSystemDefinition ws2 = TestEnvironment.CreateDetailedWritingSystem("th");
@@ -142,13 +144,13 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				wsCollectionToBeWritten.Save();
 
 				//load them up again
-				IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+				IWritingSystemRepository loadedWsCollection = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				loadedWsCollection.Remove(ws.Id); //remove one
 				loadedWsCollection.Save();
 
 				//Now check that it hasn't come back!
 				IWritingSystemRepository loadedWsCollection2 =
-					new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+					GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				Assert.IsFalse(loadedWsCollection2.Contains(ws.Id));
 			}
 		}
@@ -158,16 +160,34 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			using (var e = new TestEnvironment())
 			{
-				IWritingSystemRepository wsCollectionToBeWritten =
-					new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+				IWritingSystemRepository wsCollectionToBeWritten = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				WritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("th");
 				wsCollectionToBeWritten.Set(ws);
 				WritingSystemDefinition ws2 = TestEnvironment.CreateDetailedWritingSystem("en");
 				wsCollectionToBeWritten.Set(ws2);
 				wsCollectionToBeWritten.Save();
-				IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+				IWritingSystemRepository loadedWsCollection = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				TestEnvironment.AssertWritingSystemCollectionsAreEqual(wsCollectionToBeWritten, loadedWsCollection);
 			}
+		}
+
+		private static IWritingSystemRepository GetWritingSystemRepository(string writingSystemdPath)
+		{
+			return LdmlInFolderWritingSystemRepository.Initialize(
+				writingSystemdPath,
+				OnWritingSystemMigration,
+				OnWritingSystemLoadProblem
+			);
+		}
+
+		private static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
+		{
+			throw new ApplicationException("Unexpected Writing System load problem during test.");
+		}
+
+		private static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+		{
+			throw new ApplicationException("Unexpected Writing System migration during test.");
 		}
 
 		[Test]
@@ -176,11 +196,11 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			using (var e = new TestEnvironment())
 			{
 				e.CreateLdmlWritingSystemDefinitionFile();
-				IWritingSystemRepository loadedWsCollection = new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+				IWritingSystemRepository loadedWsCollection = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				loadedWsCollection.Get("en").Keyboard = "changed";
 				loadedWsCollection.Save();
 				IWritingSystemRepository reloadedWsCollection =
-					new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+					GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				TestEnvironment.AssertWritingSystemCollectionsAreEqual(loadedWsCollection, reloadedWsCollection);
 			}
 		}
@@ -194,7 +214,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 
 				store.Save();
 
-				var c = new LdmlInFolderWritingSystemRepository(e.PathToWritingSystemsFolder);
+				var c = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
 				Assert.IsNotNull(c);
 				Assert.AreEqual(2, c.Count);
 			}

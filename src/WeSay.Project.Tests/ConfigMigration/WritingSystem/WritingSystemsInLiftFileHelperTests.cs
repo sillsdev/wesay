@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Xml;
 using NUnit.Framework;
 using Palaso.IO;
 using Palaso.TestUtilities;
@@ -30,7 +28,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				_liftFile1 = new TempFile(String.Format(_liftFile1Content, rfctag, rfctag2));
 				_liftFile1.MoveTo(pathtoLiftFile1);
 
-				Helper = new WritingSystemsInLiftFileHelper(WritingSystemsPath, _liftFile1.Path);
+				Helper = new WritingSystemsInLiftFileHelper(WritingSystems, _liftFile1.Path);
 			}
 
 #region LongFileContent
@@ -69,9 +67,12 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		</sense>
 	</entry>
 </lift>".Replace("'", "\"");
-#endregion
 
-			public string ProjectPath
+			private IWritingSystemRepository _writingSystems;
+
+			#endregion
+
+			private string ProjectPath
 			{
 				get { return _folder.Path; }
 			}
@@ -82,6 +83,28 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			{
 				_liftFile1.Dispose();
 				_folder.Dispose();
+			}
+
+			private IWritingSystemRepository WritingSystems
+			{
+				get
+				{
+					return _writingSystems ?? (_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
+						WritingSystemsPath,
+						OnWritingSystemMigration,
+						OnWritingSystemLoadProblem
+					));
+				}
+			}
+
+			private static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
+			{
+				throw new ApplicationException("Unexpected Writing System load problem during test.");
+			}
+
+			private static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+			{
+				throw new ApplicationException("Unexpected Writing System migration during test.");
 			}
 
 			public string WritingSystemsPath

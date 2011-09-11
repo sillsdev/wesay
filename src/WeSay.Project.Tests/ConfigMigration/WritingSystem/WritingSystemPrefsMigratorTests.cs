@@ -19,16 +19,17 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			private IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> _tagMigrationInfo = new List<LdmlVersion0MigrationStrategy.MigrationInfo>();
 
 			private readonly string _wsPrefsFilePath;
-			private readonly string _ldmlRepositoryPath = "";
+			private readonly string _writingSystemsPath = "";
 			private readonly TemporaryFolder _testFolder;
 			private readonly XmlNamespaceManager _namespaceManager;
+			private IWritingSystemRepository _writingSystems;
 
 			public TestEnvironment()
 			{
 				_testFolder = new TemporaryFolder("WritingSystemMigratorTests");
 				_wsPrefsFilePath = Path.Combine(_testFolder.Path, "WritingSystemPrefs.xml");
-				_ldmlRepositoryPath = Path.Combine(_testFolder.Path, "WritingSystems");
-				Directory.CreateDirectory(LdmlRepositoryPath);
+				_writingSystemsPath = Path.Combine(_testFolder.Path, "WritingSystems");
+				Directory.CreateDirectory(WritingSystemsPath);
 				_namespaceManager = new XmlNamespaceManager(new NameTable());
 				NamespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
 			}
@@ -43,9 +44,31 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				get { return _namespaceManager; }
 			}
 
-			public string LdmlRepositoryPath
+			public IWritingSystemRepository WritingSystems
 			{
-				get { return _ldmlRepositoryPath; }
+				get
+				{
+					return _writingSystems ?? (_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
+						WritingSystemsPath,
+						OnWritingSystemMigration,
+						OnWritingSystemLoadProblem
+					));
+				}
+			}
+
+			private static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
+			{
+				throw new ApplicationException("Unexpected Writing System load problem during test.");
+			}
+
+			private static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+			{
+				throw new ApplicationException("Unexpected Writing System migration during test.");
+			}
+
+			private string WritingSystemsPath
+			{
+				get { return _writingSystemsPath; }
 			}
 
 			public string GetFileForOriginalRfcTag(string oldRfcTag)
@@ -54,9 +77,9 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 					_tagMigrationInfo.FirstOrDefault(info => info.RfcTagBeforeMigration == oldRfcTag);
 				if( migrationinfoForOldRfcTag != null)
 				{
-					return Path.Combine(LdmlRepositoryPath, migrationinfoForOldRfcTag.RfcTagAfterMigration + ".ldml");
+					return Path.Combine(WritingSystemsPath, migrationinfoForOldRfcTag.RfcTagAfterMigration + ".ldml");
 				}
-				return Path.Combine(LdmlRepositoryPath, oldRfcTag + ".ldml");
+				return Path.Combine(WritingSystemsPath, oldRfcTag + ".ldml");
 			}
 
 			public void WriteContentToWsPrefsFile(string content)
@@ -71,19 +94,19 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 			public void Dispose()
 			{
-				if (Directory.Exists(LdmlRepositoryPath))
+				if (Directory.Exists(WritingSystemsPath))
 				{
-					foreach (var ldmlFile in Directory.GetFiles(LdmlRepositoryPath))
+					foreach (var ldmlFile in Directory.GetFiles(WritingSystemsPath))
 					{
 						File.Delete(ldmlFile);
 					}
-					Directory.Delete(LdmlRepositoryPath);
+					Directory.Delete(WritingSystemsPath);
 				}
 				if (File.Exists(_wsPrefsFilePath))
 				{
 					File.Delete(_wsPrefsFilePath);
 				}
-				if (Directory.Exists(LdmlRepositoryPath))
+				if (Directory.Exists(WritingSystemsPath))
 				{
 					Directory.Delete(_testFolder.Path);
 				}
@@ -569,7 +592,7 @@ O o";
 
 				var ws = WritingSystemDefinition.Parse("en");
 				ws.Abbreviation = "untouched";
-				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.LdmlRepositoryPath);
+				var wsRepo = environment.WritingSystems;
 				wsRepo.Set(ws);
 				wsRepo.Save();
 
@@ -593,7 +616,7 @@ O o";
 					);
 				var ws = WritingSystemDefinition.Parse("en");
 				ws.Abbreviation = "untouched";
-				var wsRepo = new LdmlInFolderWritingSystemRepository(environment.LdmlRepositoryPath);
+				var wsRepo = environment.WritingSystems;
 				wsRepo.Set(ws);
 				wsRepo.Save();
 

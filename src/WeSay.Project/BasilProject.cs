@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Xml;
 using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
-using Palaso.Xml;
-using WeSay.LexicalModel.Foundation;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project
 {
@@ -97,6 +96,26 @@ namespace WeSay.Project
 			}
 		}
 
+		protected static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
+		{
+			string message = @"There were some problems while loading the writing systems definitions in this project.
+You can continue to work, but do let us know about the problem.
+There are problems in:
+";
+			foreach (var problem in problems)
+			{
+				message += String.Format("  {0}", problem.Exception.Message);
+			}
+
+			Palaso.Reporting.ErrorReport.NotifyUserOfProblem(message);
+
+		}
+
+		protected static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+		{
+			throw new ApplicationException("WritingSystem migration should have been done by now, but it seems it hasn't.");
+		}
+
 //        public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
   //      {
 //            _projectDirectoryPath = projectDirectoryPath;
@@ -123,12 +142,7 @@ namespace WeSay.Project
 
 		public IList<WritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
 		{
-			List<WritingSystemDefinition> l = new List<WritingSystemDefinition>();
-			foreach (string id in writingSystemIds)
-			{
-				l.Add(WritingSystems.Get(id));
-			}
-			return l;
+			return writingSystemIds.Select(id => WritingSystems.Get(id)).ToList();
 		}
 
 		public string ProjectDirectoryPath
@@ -269,27 +283,15 @@ namespace WeSay.Project
 			{
 				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
 			}
-			_writingSystems = new LdmlInFolderWritingSystemRepository(
-				GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath)
-			);
-
-			// TODO Chris move this to the migrator
-			//if (_writingSystems.Count == 0)
-			//{
-			//    _writingSystems.LoadFromLegacyWeSayFile(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
-			//    _writingSystems.Write(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath));
-			//    File.Delete(GetPathToWritingSystemPrefs(ProjectDirectoryPath));
-			//}
+			if (_writingSystems == null)
+			{
+				_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
+					GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath),
+					OnWritingSystemMigration,
+					OnWritingSystemLoadProblem
+				);
+			}
 		}
-
-		//        /// <summary>
-		//        /// Get the options lists, e.g. PartsOfSpeech, from files
-		//        /// </summary>
-		//        private void InitOptionsLists()
-		//        {
-		//            Directory.
-		//        }
-
 
 		protected void InitStringCatalog()
 		{

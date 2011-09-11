@@ -13,6 +13,7 @@ using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
 using Palaso.WritingSystems;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.LexicalModel;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.ConfigMigration.WritingSystem;
@@ -781,7 +782,9 @@ namespace WeSay.Project.Tests
 				Directory.CreateDirectory(writingSystemFolderPath);
 				//Now populate the writing system repo with an "en" writing system and a "qaa-x-changedWs" writing system as well as
 				//a changelog that  indicates that "x-changedWs" got changed to "qaa-x-changedWs"
-				var wsRepo = new LdmlInFolderWritingSystemRepository(writingSystemFolderPath);
+				var wsRepo = LdmlInFolderWritingSystemRepository.Initialize(
+					writingSystemFolderPath, OnWritingSystemMigrationHandler, OnWritingSystemLoadProblem
+				);
 				var ws = new WritingSystemDefinition("en");
 				var ws1 = new WritingSystemDefinition("x-changeme");
 				wsRepo.Set(ws);
@@ -810,13 +813,23 @@ namespace WeSay.Project.Tests
 				var configFile = new ConfigFile(configFilePath);
 				Assert.That(configFile.WritingSystemsInUse.Count(), Is.EqualTo(3));
 				Assert.That(configFile.WritingSystemsInUse.All(wsId => wsId.Equals("en") || wsId.Equals("qaa-x-config") || wsId.Equals("de")));
-				var liftFileHelper = new WritingSystemsInLiftFileHelper(writingSystemFolderPath, liftFilePath);
+				var liftFileHelper = new WritingSystemsInLiftFileHelper(wsRepo, liftFilePath);
 				Assert.That(liftFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
 				Assert.That(liftFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("de")));
-				var optionListFileHelper = new WritingSystemsInOptionsListFileHelper(writingSystemFolderPath, optionListPath);
+				var optionListFileHelper = new WritingSystemsInOptionsListFileHelper(wsRepo, optionListPath);
 				Assert.That(optionListFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
 				Assert.That(optionListFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("fr-Latn-US-x-CHANGED")));
 			}
+		}
+
+		private void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
+		{
+			throw new NotImplementedException();
+		}
+
+		private void OnWritingSystemMigrationHandler(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+		{
+			throw new NotImplementedException();
 		}
 
 		[Test]

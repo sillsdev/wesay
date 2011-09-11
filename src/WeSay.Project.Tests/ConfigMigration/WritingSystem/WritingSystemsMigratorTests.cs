@@ -195,19 +195,22 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			}
 		}
 
-		[Test]
-		public void MigrateIfNeeded_ConfigFileIsVersionOtherThanWhatWeKnowTheWritingSystemMigratorCanChange_Throws()
-		{
-			using (var e = new TestEnvironment())
-			{
-				//change the version to 9
-				WriteStringToFileAtXpath(e.PathToConfigFile, "//configuration[@version]", "9");
+		// This test is bogus, it is testing the writing systems migration with the config file which is not related.
+		// Maybe could have a test that checks that the wsprefs fails if it's too new, and also the ldml migrator fails
+		// if too new (but this should be in palaso).
+		//[Test]
+		//public void MigrateIfNeeded_ConfigFileIsVersionOtherThanWhatWeKnowTheWritingSystemMigratorCanChange_Throws()
+		//{
+		//    using (var e = new TestEnvironment())
+		//    {
+		//        const int versionTooNew = ConfigFile.LatestVersion + 1;
+		//        WriteStringToFileAtXpath(e.PathToConfigFile, "//configuration[@version]", versionTooNew.ToString());
 
-				e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
-				var migrator = new WritingSystemsMigrator(e.ProjectPath);
-				Assert.Throws<ConfigurationFileTooNewException>(migrator.MigrateIfNecessary);
-			}
-		}
+		//        e.WriteToPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("bogusws1", "bogusws2"));
+		//        var migrator = new WritingSystemsMigrator(e.ProjectPath);
+		//        Assert.Throws<ConfigurationFileTooNewException>(migrator.MigrateIfNecessary);
+		//    }
+		//}
 
 		private static void WriteStringToFileAtXpath(string pathtoFile, string xPath, string valueToWrite)
 		{

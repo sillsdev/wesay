@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,11 +16,9 @@ using Chorus;
 using Chorus.FileTypeHanders.lift;
 using Chorus.sync;
 using Chorus.UI.Notes.Bar;
-using Chorus.Utilities;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Lift;
 using Palaso.DictionaryServices.Model;
-using Palaso.i18n;
 using Palaso.IO;
 using Palaso.Lift;
 using Palaso.Lift.Options;
@@ -35,7 +32,6 @@ using Palaso.WritingSystems;
 using Palaso.Xml;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration.UserConfig;
 using WeSay.Project.ConfigMigration.WeSayConfig;
@@ -43,6 +39,7 @@ using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
 using IContainer=Autofac.IContainer;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project
 {
@@ -398,6 +395,13 @@ namespace WeSay.Project
 			var writingSystemMigrator = new WritingSystemsMigrator(projectDirectory);
 			writingSystemMigrator.MigrateIfNecessary();
 
+			// Load the writing systems
+			var writingSystemRepository = LdmlInFolderWritingSystemRepository.Initialize(
+				GetPathToLdmlWritingSystemsFolder(projectDirectory),
+				OnWritingSystemMigration,
+				OnWritingSystemLoadProblem
+			);
+
 			//migrate the config file
 			ConfigFile configFile = null;
 			if (File.Exists(configFilePath)) // will be null if we're creating a new project
@@ -405,13 +409,13 @@ namespace WeSay.Project
 				configFile = new ConfigFile(configFilePath);
 				configFile.MigrateIfNecassary();
 				//check for orphaned writing systems in the config file
-				configFile.CreateWritingSystemsForIdsInFileWhereNecassary(writingSystemFolderPath);
+				configFile.CreateWritingSystemsForIdsInFileWhereNecassary(writingSystemRepository);
 			}
 
 			if (File.Exists(liftFilePath)) // will be null if we're creating a new project
 			{
 				//check for orphaned writing systems in Lift
-				var wsCreator = new WritingSystemsInLiftFileHelper(writingSystemFolderPath, liftFilePath);
+				var wsCreator = new WritingSystemsInLiftFileHelper(writingSystemRepository, liftFilePath);
 				wsCreator.CreateNonExistentWritingSystemsFoundInFile();
 			}
 
@@ -423,7 +427,7 @@ namespace WeSay.Project
 				{
 					continue;
 				}
-				var optionListHelper = new WritingSystemsInOptionsListFileHelper(writingSystemFolderPath, file);
+				var optionListHelper = new WritingSystemsInOptionsListFileHelper(writingSystemRepository, file);
 				optionListHelper.CreateNonExistentWritingSystemsFoundInFile();
 			}
 
@@ -939,13 +943,16 @@ namespace WeSay.Project
 		/// code, but everything else from template xml files.  So this opens up the default config
 		/// and sticks a nice new code-computed default view template into it.
 		/// </summary>
-		/// <param name="pathToWritingSystemPrefs"></param>
+		/// <param name="projectPath"></param>
 		/// <param name="pathToConfigFile"></param>
 		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile)
 		{
-			var writingSystemCollection = new LdmlInFolderWritingSystemRepository(GetPathToLdmlWritingSystemsFolder(projectPath));
-
-			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
+			var writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
+				GetPathToLdmlWritingSystemsFolder(projectPath),
+				OnWritingSystemMigration,
+				OnWritingSystemLoadProblem
+			);
+			var template = ViewTemplate.MakeMasterTemplate(writingSystems);
 			var builder = new StringBuilder();
 			using (var writer = XmlWriter.Create(builder, CanonicalXmlSettings.CreateXmlWriterSettings(ConformanceLevel.Fragment)))
 			{
@@ -1349,9 +1356,7 @@ namespace WeSay.Project
 			{
 				foreach (var filePath in Directory.GetFiles(ProjectDirectoryPath))
 				{
-					var helper =
-						new WritingSystemsInOptionsListFileHelper(
-							GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath), filePath);
+					var helper = new WritingSystemsInOptionsListFileHelper(WritingSystems, filePath);
 					helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
 				}
 			}
@@ -1567,7 +1572,7 @@ namespace WeSay.Project
 
 		private void MakeWritingSystemIdChangeInLiftFile(string oldId, string newId)
 		{
-			var helper = new WritingSystemsInLiftFileHelper(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath), PathToLiftFile);
+			var helper = new WritingSystemsInLiftFileHelper(WritingSystems, PathToLiftFile);
 			helper.ReplaceWritingSystemId(oldId, newId);
 		}
 

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Palaso.WritingSystems;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.Project;
 
 namespace WeSay.TestUtilities
@@ -36,7 +38,9 @@ namespace WeSay.TestUtilities
 
 			//setup writing systems
 			Directory.CreateDirectory(pathToLdmlWsFolder);
-			IWritingSystemRepository wsc = new LdmlInFolderWritingSystemRepository(pathToLdmlWsFolder);
+			IWritingSystemRepository wsc = LdmlInFolderWritingSystemRepository.Initialize(
+				pathToLdmlWsFolder, OnMigrationHandler, OnWritingSystemLoadProblem
+			);
 			wsc.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.VernacularIdForTest));
 			wsc.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.AnalysisIdForTest));
 			wsc.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.OtherIdForTest));
@@ -47,6 +51,16 @@ namespace WeSay.TestUtilities
 			project.SetupProjectDirForTests(WeSayWordsProject.PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
 			return project;
+		}
+
+		private static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
+		{
+			throw new ApplicationException("Unexpected WritingSystem load problem in test.");
+		}
+
+		private static void OnMigrationHandler(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+		{
+			throw new ApplicationException("Unexpected WritingSystem migration in test.");
 		}
 	}
 }
