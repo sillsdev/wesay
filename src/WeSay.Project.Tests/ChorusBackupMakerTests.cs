@@ -21,6 +21,7 @@ namespace WeSay.Project.Tests
 
 			public BackupScenario(string testName)
 			{
+				Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 				_projDir = new ProjectDirectorySetupForTesting("");
 
 				_backupMaker = new ChorusBackupMaker(new CheckinDescriptionBuilder());

@@ -131,7 +131,7 @@ namespace WeSay.Project
 					if (!string.IsNullOrEmpty(PathToParentOfRepositories))
 					{
 							var projectName = Path.GetFileName(pathToProjectDirectory);
-							var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create("backupMedia", Path.Combine(PathToParentOfRepositories, projectName),
+							var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create("test-backup-media", Path.Combine(PathToParentOfRepositories, projectName),
 																					false);
 							dlg.SyncOptions.RepositorySourcesToTry.Add(backupSource);
 					}
