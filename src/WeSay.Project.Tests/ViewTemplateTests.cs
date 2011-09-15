@@ -134,7 +134,8 @@ namespace WeSay.Project.Tests
 				IWritingSystemRepository w = LdmlInFolderWritingSystemRepository.Initialize(
 					tempFolder.Path,
 					OnWritingSystemMigration,
-					OnWritingSystemLoadProblem
+					OnWritingSystemLoadProblem,
+					WritingSystemCompatibility.Flex7V0Compatible
 				);
 				w.Set(WritingSystemDefinition.Parse("aaa"));
 				w.Set(WritingSystemDefinition.Parse("aab"));

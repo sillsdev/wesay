@@ -176,7 +176,8 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			return LdmlInFolderWritingSystemRepository.Initialize(
 				writingSystemdPath,
 				OnWritingSystemMigration,
-				OnWritingSystemLoadProblem
+				OnWritingSystemLoadProblem,
+				WritingSystemCompatibility.Flex7V0Compatible
 			);
 		}
 

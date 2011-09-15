@@ -399,7 +399,8 @@ namespace WeSay.Project
 			var writingSystemRepository = LdmlInFolderWritingSystemRepository.Initialize(
 				GetPathToLdmlWritingSystemsFolder(projectDirectory),
 				OnWritingSystemMigration,
-				OnWritingSystemLoadProblem
+				OnWritingSystemLoadProblem,
+				WritingSystemCompatibility.Flex7V0Compatible
 			);
 
 			//migrate the config file
@@ -950,7 +951,8 @@ namespace WeSay.Project
 			var writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
 				GetPathToLdmlWritingSystemsFolder(projectPath),
 				OnWritingSystemMigration,
-				OnWritingSystemLoadProblem
+				OnWritingSystemLoadProblem,
+				WritingSystemCompatibility.Flex7V0Compatible
 			);
 			var template = ViewTemplate.MakeMasterTemplate(writingSystems);
 			var builder = new StringBuilder();

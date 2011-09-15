@@ -51,7 +51,8 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 					return _writingSystems ?? (_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
 						WritingSystemsPath,
 						OnWritingSystemMigration,
-						OnWritingSystemLoadProblem
+						OnWritingSystemLoadProblem,
+						WritingSystemCompatibility.Flex7V0Compatible
 					));
 				}
 			}

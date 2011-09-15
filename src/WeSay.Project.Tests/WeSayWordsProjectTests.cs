@@ -783,7 +783,10 @@ namespace WeSay.Project.Tests
 				//Now populate the writing system repo with an "en" writing system and a "qaa-x-changedWs" writing system as well as
 				//a changelog that  indicates that "x-changedWs" got changed to "qaa-x-changedWs"
 				var wsRepo = LdmlInFolderWritingSystemRepository.Initialize(
-					writingSystemFolderPath, OnWritingSystemMigrationHandler, OnWritingSystemLoadProblem
+					writingSystemFolderPath,
+					OnWritingSystemMigrationHandler,
+					OnWritingSystemLoadProblem,
+					WritingSystemCompatibility.Flex7V0Compatible
 				);
 				var ws = new WritingSystemDefinition("en");
 				var ws1 = new WritingSystemDefinition("x-changeme");

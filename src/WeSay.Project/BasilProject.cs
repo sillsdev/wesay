@@ -288,7 +288,8 @@ There are problems in:
 				_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
 					GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath),
 					OnWritingSystemMigration,
-					OnWritingSystemLoadProblem
+					OnWritingSystemLoadProblem,
+					WritingSystemCompatibility.Flex7V0Compatible
 				);
 			}
 		}
