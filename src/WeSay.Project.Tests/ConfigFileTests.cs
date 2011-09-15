@@ -530,7 +530,7 @@ namespace WeSay.Project.Tests
 		public void CreateNonExistentWritingSystemsFoundInConfig_WS34066RegressionTest_UpdatesRfcTagInFieldsXmlOfConfigFile()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentForTests.WrapContentInConfigurationTags(
-				ConfigFileContentForTests.GetConfigFileSnippetContainingFieldWithWritingSystems("x-aaa", "aaa"))))
+				ConfigFileContentForTests.GetConfigFileSnippetContainingFieldWithWritingSystems("qaa-x-aaa", "aaa"))))
 			{
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystems);
 

@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using System.Text;
 using System.Xml;
-using Chorus.sync;
-using Chorus.Utilities;
 using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
 using Palaso.Progress.LogBox;
@@ -17,9 +15,10 @@ namespace WeSay.Project.Tests
 	{
 		class BackupScenario : IDisposable
 		{
-			private ProjectDirectorySetupForTesting _projDir;
-			private TemporaryFolder _backupDir;
-			private ChorusBackupMaker _backupMaker;
+			private readonly ProjectDirectorySetupForTesting _projDir;
+			private readonly TemporaryFolder _backupDir;
+			private readonly ChorusBackupMaker _backupMaker;
+
 			public BackupScenario(string testName)
 			{
 				_projDir = new ProjectDirectorySetupForTesting("");
@@ -27,15 +26,16 @@ namespace WeSay.Project.Tests
 				_backupMaker = new ChorusBackupMaker(new CheckinDescriptionBuilder());
 				_backupDir = new TemporaryFolder(testName);
 
-				_backupMaker.PathToParentOfRepositories = _backupDir.FolderPath;
+				_backupMaker.PathToParentOfRepositories = _backupDir.Path;
 
 			}
-			public string PathToBackupProjectDir
+
+			private string PathToBackupProjectDir
 			{
-				get { return Path.Combine(_backupDir.FolderPath, _projDir.ProjectDirectoryName);}
+				get { return Path.Combine(_backupDir.Path, _projDir.ProjectDirectoryName);}
 			}
 
-			public ChorusBackupMaker BackupMaker
+			private ChorusBackupMaker BackupMaker
 			{
 				get { return _backupMaker; }
 			}
@@ -85,7 +85,7 @@ namespace WeSay.Project.Tests
 		[Category("Known Mono Issue")]
 		public void BackupNow_FirstTime_CreatesValidRepositoryAndWorkingTree()
 		{
-			using (BackupScenario scenario = new BackupScenario("BackupNow_NewFolder_CreatesNewRepository"))
+			using (var scenario = new BackupScenario("BackupNow_NewFolder_CreatesNewRepository"))
 			{
 				scenario.BackupNow();
 				scenario.AssertDirExistsInWorkingDirectory(".hg");
@@ -104,7 +104,7 @@ namespace WeSay.Project.Tests
 		public void BackupNow_ExistingRepository_AddsNewFileToBackupDir()
 		{
 			// Test causes a crash in WrapShellCall.exe - is there an updated version?
-			using (BackupScenario scenario = new BackupScenario("BackupNow_ExistingRepository_AddsNewFileToBackupDir"))
+			using (var scenario = new BackupScenario("BackupNow_ExistingRepository_AddsNewFileToBackupDir"))
 			{
 				scenario.BackupNow();
 				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
@@ -118,7 +118,7 @@ namespace WeSay.Project.Tests
 		public void BackupNow_RemoveFile_RemovedFromBackupDir()
 		{
 			// Test causes a crash in WrapShellCall.exe - is there an updated version?
-			using (BackupScenario scenario = new BackupScenario("BackupNow_RemoveFile_RemovedFromBackupDir"))
+			using (var scenario = new BackupScenario("BackupNow_RemoveFile_RemovedFromBackupDir"))
 			{
 				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
 				scenario.BackupNow();

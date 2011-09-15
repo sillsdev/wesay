@@ -79,7 +79,7 @@ namespace WeSay.Project
 			if(pathToProjectDirectory.ToLower().IndexOf(@"sampleprojects\pretend")>=0)
 			{
 				return; //no way... if you want a unit test that includes CHorus, do it without
-						//that no deprecated monstrosity.
+						//that now deprecated monstrosity.
 			}
 #if DEBUG
 			Debug.Assert(pathToProjectDirectory.ToLower().IndexOf("wesaydev") < 0, "Whoops, something is trying to do a checkin of the wesay code!");
