@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
 using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.TestUtilities;
 
 namespace WeSay.Project.Tests
@@ -15,7 +16,7 @@ namespace WeSay.Project.Tests
 	{
 		private class TestEnvironment : IDisposable
 		{
-			private TemporaryFolder _folder;
+			private readonly TemporaryFolder _folder;
 			private TempLiftFile _liftFile;
 			private IWritingSystemRepository _writingSystems;
 
@@ -27,13 +28,25 @@ namespace WeSay.Project.Tests
 
 			public IWritingSystemRepository WritingSystems
 			{
-				get {
-					if (_writingSystems == null)
-					{
-						_writingSystems = new LdmlInFolderWritingSystemRepository(WritingSystemsPath);
-					}
-					return _writingSystems;
+				get
+				{
+					return _writingSystems ?? (_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
+						WritingSystemsPath,
+						OnWritingSystemMigration,
+						OnWritingSystemLoadProblem,
+						WritingSystemCompatibility.Flex7V0Compatible
+					));
 				}
+			}
+
+			private static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
+			{
+				throw new ApplicationException("Unexpected Writing System load problem during test.");
+			}
+
+			private static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+			{
+				throw new ApplicationException("Unexpected Writing System migration during test.");
 			}
 
 			private string WritingSystemsPath

@@ -25,7 +25,7 @@ namespace Addin.Transform.Tests
 		public void Setup()
 		{
 			const string xmlOfEntries = @" <entry id='foo1'>
-						<lexical-unit><form lang='qaa'><text>hello</text></form></lexical-unit>
+						<lexical-unit><form lang='qaa-x-qaa'><text>hello</text></form></lexical-unit>
 				</entry>";
 			_testProject = new ProjectDirectorySetupForTesting(xmlOfEntries);
 			_project = _testProject.CreateLoadedProject();

@@ -1,17 +1,17 @@
 using System;
-using System.Drawing;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
 using Palaso.TestUtilities;
 using Palaso.WritingSystems;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.Data.Tests;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests
 {
 	[TestFixture]
-	public class viewTemplateTests: IEnumerableBaseTest<Field>
+	public class ViewTemplateTests: IEnumerableBaseTest<Field>
 	{
 		[SetUp]
 		public override void SetUp()
@@ -26,37 +26,39 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void Create()
 		{
-			ViewTemplate viewTemplate = new ViewTemplate();
+			var viewTemplate = new ViewTemplate();
 			Assert.IsNotNull(viewTemplate);
 		}
 
 		[Test]
 		public void Contains_HasFieldDefinition_True()
 		{
-			ViewTemplate viewTemplate = PopulateViewTemplate();
+			var viewTemplate = PopulateViewTemplate();
 			Assert.IsTrue(viewTemplate.Contains("field1"));
 		}
 
 		[Test]
 		public void Contains_DoesNotHaveFieldDefinition_False()
 		{
-			ViewTemplate viewTemplate = PopulateViewTemplate();
+			var viewTemplate = PopulateViewTemplate();
 			Assert.IsFalse(viewTemplate.Contains("none"));
 		}
 
 		[Test]
 		public void Index_HasFieldDefinition_FieldDefinition()
 		{
-			ViewTemplate viewTemplate = PopulateViewTemplate();
+			var viewTemplate = PopulateViewTemplate();
 			Assert.IsNotNull(viewTemplate["field1"]);
 		}
 
 		[Test]
 		public void Index_DoesNotHaveFieldDefinition_Throws()
 		{
-			ViewTemplate viewTemplate = PopulateViewTemplate();
+			var viewTemplate = PopulateViewTemplate();
+#pragma warning disable 219 // field is assigned but never used.
 			Field field;
-			Assert.Throws<ArgumentOutOfRangeException>(() => field= viewTemplate["none"]);
+			Assert.Throws<ArgumentOutOfRangeException>(() => field = viewTemplate["none"]);
+#pragma warning restore 219
 		}
 
 		[Test]
@@ -87,10 +89,10 @@ namespace WeSay.Project.Tests
 
 		private static ViewTemplate PopulateViewTemplate()
 		{
-			ViewTemplate f = new ViewTemplate();
-			f.Add(new Field("field1", "LexEntry", new string[] {"en", "br", "th"}));
-			f.Add(new Field("field2", "LexEntry", new string[] {"th"}));
-			f.Add(new Field("field2", "LexEntry", new string[] {"en", "br"}));
+			var f = new ViewTemplate();
+			f.Add(new Field("field1", "LexEntry", new[] {"en", "br", "th"}));
+			f.Add(new Field("field2", "LexEntry", new[] {"th"}));
+			f.Add(new Field("field2", "LexEntry", new[] {"en", "br"}));
 			return f;
 		}
 
@@ -109,7 +111,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void SynchronizeInventories_empty_empty()
 		{
-			ViewTemplate v = new ViewTemplate();
+			var v = new ViewTemplate();
 			ViewTemplate.UpdateUserViewTemplate(v, new ViewTemplate());
 			Assert.IsEmpty(v);
 		}
@@ -119,7 +121,7 @@ namespace WeSay.Project.Tests
 		{
 			ViewTemplate master = MakeMasterInventory();
 			int count = master.Count;
-			ViewTemplate empty = new ViewTemplate();
+			var empty = new ViewTemplate();
 			ViewTemplate.UpdateUserViewTemplate(master, empty);
 
 			Assert.AreEqual(count, master.Count);
@@ -129,11 +131,26 @@ namespace WeSay.Project.Tests
 		{
 			using (var tempFolder = new TemporaryFolder("ProjectFromViewTemplateTests"))
 			{
-				IWritingSystemRepository w = new LdmlInFolderWritingSystemRepository(tempFolder.Path);
+				IWritingSystemRepository w = LdmlInFolderWritingSystemRepository.Initialize(
+					tempFolder.Path,
+					OnWritingSystemMigration,
+					OnWritingSystemLoadProblem,
+					WritingSystemCompatibility.Flex7V0Compatible
+				);
 				w.Set(WritingSystemDefinition.Parse("aaa"));
 				w.Set(WritingSystemDefinition.Parse("aab"));
 				return ViewTemplate.MakeMasterTemplate(w);
 			}
+		}
+
+		private static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
+		{
+			throw new ApplicationException("Unexpected Writing System load problem during test.");
+		}
+
+		private static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+		{
+			throw new ApplicationException("Unexpected Writing System migration during test.");
 		}
 
 		[Test]
@@ -144,10 +161,10 @@ namespace WeSay.Project.Tests
 			Assert.IsFalse(master.Contains(Field.FieldNames.ExampleTranslation.ToString()),
 						   "If translation is turned on by default, you must fix the test which sees if it is turned on by the user inventory");
 			int count = master.Count;
-			ViewTemplate simple = new ViewTemplate();
+			var simple = new ViewTemplate();
 			simple.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(),
 								 "LexExampleSentence",
-								 new String[] {"en"}));
+								 new[] {"en"}));
 			ViewTemplate.UpdateUserViewTemplate(master, simple);
 
 			Assert.AreEqual(count, master.Count);
@@ -159,8 +176,8 @@ namespace WeSay.Project.Tests
 		{
 			ViewTemplate master = MakeMasterInventory();
 			int count = master.Count;
-			ViewTemplate usersTemplate = new ViewTemplate();
-			usersTemplate.Add(new Field("dummy", "LexEntry", new String[] {"en"}));
+			var usersTemplate = new ViewTemplate();
+			usersTemplate.Add(new Field("dummy", "LexEntry", new[] {"en"}));
 			ViewTemplate.UpdateUserViewTemplate(master, usersTemplate);
 			Assert.IsTrue(usersTemplate.Contains("dummy"));
 		}
@@ -179,10 +196,10 @@ namespace WeSay.Project.Tests
 		public void UpdateUserViewTemplate_Jan2008Upgrade_DefinitionIsEnabled()
 		{
 			ViewTemplate master = MakeMasterInventory();
-			ViewTemplate simple = new ViewTemplate();
-			Field definitionField = new Field(LexSense.WellKnownProperties.Definition,
+			var simple = new ViewTemplate();
+			var definitionField = new Field(LexSense.WellKnownProperties.Definition,
 											  "LexSense",
-											  new String[] {"en"});
+											  new[] {"en"});
 			definitionField.Enabled = false;
 			simple.Add(definitionField);
 			ViewTemplate.UpdateUserViewTemplate(master, simple);
@@ -196,12 +213,12 @@ namespace WeSay.Project.Tests
 			ViewTemplate simple = new ViewTemplate();
 			Field definitionField = new Field(LexSense.WellKnownProperties.Definition,
 											  "LexSense",
-											  new String[] {"en", "a", "b"});
+											  new[] {"en", "a", "b"});
 			definitionField.Enabled = false;
 			simple.Add(definitionField);
 			Field glossField = new Field(LexSense.WellKnownProperties.Gloss,
 										 "LexSense",
-										 new String[] {"b", "c"});
+										 new[] {"b", "c"});
 			simple.Add(glossField);
 			ViewTemplate.UpdateUserViewTemplate(master, simple);
 			Assert.AreEqual(4, definitionField.WritingSystemIds.Count);

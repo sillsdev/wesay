@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Palaso.Migration;
 using Palaso.WritingSystems;
 using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
@@ -10,9 +9,9 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 	public class WritingSystemPrefsMigrator
 	{
 		private readonly string _sourceFilePath;
-		private readonly LdmlVersion0MigrationStrategy.OnMigrationFn _onWritingSystemTagChange;
+		private readonly LdmlVersion0MigrationStrategy.MigrationHandler _onWritingSystemTagChange;
 
-		public WritingSystemPrefsMigrator(string sourceFilePath, LdmlVersion0MigrationStrategy.OnMigrationFn onWritingSystemTagChange)
+		public WritingSystemPrefsMigrator(string sourceFilePath, LdmlVersion0MigrationStrategy.MigrationHandler onWritingSystemTagChange)
 		{
 			_onWritingSystemTagChange = onWritingSystemTagChange;
 			_sourceFilePath = sourceFilePath;

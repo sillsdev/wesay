@@ -9,6 +9,6 @@ namespace WeSay.TestUtilities
 	{
 		public static string AnalysisIdForTest = "en";
 		public static string VernacularIdForTest = "th";
-		public static string OtherIdForTest = "qaa";
+		public static string OtherIdForTest = "qaa-x-qaa";
 	}
 }

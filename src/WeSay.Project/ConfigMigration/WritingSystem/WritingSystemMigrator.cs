@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using Palaso.IO;
 using Palaso.Reporting;
+using Palaso.WritingSystems;
 using Palaso.WritingSystems.Migration;
 using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
@@ -37,7 +38,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		{
 			var oldMigrator = new WritingSystemPrefsMigrator(WritingSystemsOldPrefsFilePath, OnWritingSystemTagChange);
 			oldMigrator.MigrateIfNecassary();
-			var ldmlMigrator = new LdmlInFolderWritingSystemRepositoryMigrator(WritingSystemsPath, OnWritingSystemTagChange);
+			var ldmlMigrator = new LdmlInFolderWritingSystemRepositoryMigrator(WritingSystemsPath, OnWritingSystemTagChange, WritingSystemCompatibility.Flex7V0Compatible);
 			ldmlMigrator.Migrate();
 		}
 

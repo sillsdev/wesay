@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
 using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project
@@ -23,7 +20,6 @@ namespace WeSay.Project
 
 	public class ConfigFile
 	{
-		private readonly Dictionary<string, string> _oldToNewIdMap = new Dictionary<string, string>();
 		public const int LatestVersion = 8;
 		private readonly XmlDocument _xmlDocument = new XmlDocument();
 
@@ -137,10 +133,8 @@ namespace WeSay.Project
 			}
 		}
 
-		public void CreateWritingSystemsForIdsInFileWhereNecassary(string pathToWritingSystemsFolder)
+		public void CreateWritingSystemsForIdsInFileWhereNecassary(IWritingSystemRepository writingSystemRepository)
 		{
-			var writingSystemRepository =
-				new LdmlInFolderWritingSystemRepository(pathToWritingSystemsFolder);
 			WritingSystemOrphanFinder.FindOrphans(WritingSystemsInUse, ReplaceWritingSystemId, writingSystemRepository);
 		}
 	}
