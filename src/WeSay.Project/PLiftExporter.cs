@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Palaso.Linq;
@@ -10,6 +11,7 @@ using Palaso.Lift.Options;
 using Palaso.Text;
 using Palaso.UiBindings;
 using Palaso.WritingSystems;
+using Palaso.Extensions;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
@@ -20,6 +22,7 @@ namespace WeSay.Project
 		private readonly ViewTemplate _viewTemplate;
 		private readonly LexEntryRepository _lexEntryRepository;
 		private readonly IEnumerable<string> _headwordWritingSystemIds;
+		private string _path;
 
 		public PLiftExporter(StringBuilder builder,
 							 bool produceFragmentOnly,
@@ -36,6 +39,7 @@ namespace WeSay.Project
 							 ViewTemplate viewTemplate)
 			: base(path, LiftWriter.ByteOrderStyle.BOM)
 		{
+			_path = path;
 			_disposed = true; // In case we throw in the constructor
 			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
@@ -55,6 +59,7 @@ namespace WeSay.Project
 
 		private Options _options = Options.DereferenceRelations | Options.DereferenceOptions |
 								   Options.DetermineHeadword;
+
 
 
 		[Flags]
@@ -282,6 +287,37 @@ namespace WeSay.Project
 				return false;
 			}
 			return (f.Enabled);
+		}
+
+		/// <summary>
+		/// This is to help Lexique Pro (or anyone else reading it) get the right urls to pictures, when the lift is down in Export.
+		/// </summary>
+		/// <param name="pictureRef"></param>
+		protected override void WriteIllustrationElement(PictureRef pictureRef)
+		{
+			//base does this:             WriteURLRef("illustration", pictureRef.Value, pictureRef.Caption);
+			//base.WriteIllustrationElement(pictureRef);
+
+			string url = pictureRef.Value;
+			string dirWeAreWritingTo = Path.GetDirectoryName(_path);
+			string parentDir = Directory.GetParent(dirWeAreWritingTo).FullName;
+			if (!File.Exists(Path.Combine(dirWeAreWritingTo, url))) //something needs fixing
+			{
+				string upOne = Path.Combine(parentDir, url);
+				if(File.Exists(upOne))
+				{
+					url = "..".CombineForPath(url);
+				}
+				else
+				{
+					string addPicturesDir = parentDir.CombineForPath("pictures", url);
+					if(File.Exists(addPicturesDir))
+					{
+						url = "..".CombineForPath("pictures", url);
+					}
+				}
+			}
+			WriteURLRef("illustration", url, pictureRef.Caption);
 		}
 
 		protected override LanguageForm[] GetOrderedAndFilteredForms(MultiTextBase text,
