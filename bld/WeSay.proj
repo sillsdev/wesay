@@ -149,7 +149,7 @@
 	<MakeWixForDirTree
 				DirectoryReferenceId="mercurial"
 				ComponentGroupId="Mercurial"
-				RootDirectory="$(BaseDirectory)\output\release\mercurial"
+				RootDirectory="$(BaseDirectory)\mercurial"
 				OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedMercurial.wxs"
 				MatchRegExPattern=".*">
 	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
