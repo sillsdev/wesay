@@ -79,6 +79,10 @@
 
 	<target name="rebuild" depends="clean, build" />
 
+	<target name="UnzipMercurial">
+		<unzip zipfile="../lib/net2.0/Mercurial.zip" todir="../" />
+	</target>
+
 	<target name="build.solution" depends="assemblyinfo">
 		<call target="build.only"/>
 	</target>
@@ -91,8 +95,6 @@
 			</fileset>
 		</copy>
 
-	<call target="UnzipMercurial"/>
-
 		<!--<solution configuration="${configuration}" solutionfile="../src/wesay.sln">
 		</solution>-->
 		<msbuild project="..\src\WeSay.sln">
@@ -103,7 +105,7 @@
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
 	</target>
 
-	<target name="test" depends="build.solution">
+	<target name="test" depends="UnzipMercurial,build">
 		<call target="test.only"/>
 	</target>
 
@@ -133,12 +135,6 @@
 		<msbuild project="WeSay.proj" target="Installer">
 		</msbuild>
 	</target>
-
-  <target name="UnzipMercurial">
-	<msbuild project="WeSay.proj" target="UnzipMercurial">
-	</msbuild>
-  </target>
-
 
   <!--
 	<target name="publish" depends="installer">
