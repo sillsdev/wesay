@@ -299,21 +299,25 @@ namespace WeSay.Project
 			//base.WriteIllustrationElement(pictureRef);
 
 			string url = pictureRef.Value;
-			string dirWeAreWritingTo = Path.GetDirectoryName(_path);
-			string parentDir = Directory.GetParent(dirWeAreWritingTo).FullName;
-			if (!File.Exists(Path.Combine(dirWeAreWritingTo, url))) //something needs fixing
+			if (_path != null)  //it's null during some tests
 			{
-				string upOne = Path.Combine(parentDir, url);
-				if(File.Exists(upOne))
+				var dirWeAreWritingTo = Path.GetDirectoryName(_path);
+
+				string parentDir = Directory.GetParent(dirWeAreWritingTo).FullName;
+				if (!File.Exists(Path.Combine(dirWeAreWritingTo, url))) //something needs fixing
 				{
-					url = "..".CombineForPath(url);
-				}
-				else
-				{
-					string addPicturesDir = parentDir.CombineForPath("pictures", url);
-					if(File.Exists(addPicturesDir))
+					string upOne = Path.Combine(parentDir, url);
+					if (File.Exists(upOne))
 					{
-						url = "..".CombineForPath("pictures", url);
+						url = "..".CombineForPath(url);
+					}
+					else
+					{
+						string addPicturesDir = parentDir.CombineForPath("pictures", url);
+						if (File.Exists(addPicturesDir))
+						{
+							url = "..".CombineForPath("pictures", url);
+						}
 					}
 				}
 			}
