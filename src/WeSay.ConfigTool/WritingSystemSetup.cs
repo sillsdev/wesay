@@ -4,6 +4,7 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.WritingSystems;
 using Palaso.UI.WindowsForms.WritingSystems.WSTree;
 using Palaso.WritingSystems;
+using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
@@ -30,11 +31,29 @@ namespace WeSay.ConfigTool
 			writingSystemSetupModel.BeforeDeleted += OnBeforeDeleted;
 			store.WritingSystemDeleted += OnWritingSystemDeleted;
 			Controls.Add(_view);
+			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
+		}
+
+		private void OnEditorSaveNow(object sender, EventArgs e)
+		{
+			SetWritingSystemsInRepo();
+			UnwireBeforeClosing();
 		}
 
 		public void SetWritingSystemsInRepo_OnLeave(object sender, EventArgs e)
 		{
+			SetWritingSystemsInRepo();
+		}
+
+		private void SetWritingSystemsInRepo()
+		{
 			_view.SetWritingSystemsInRepo();
+		}
+
+		private void UnwireBeforeClosing()
+		{
+			Leave -= SetWritingSystemsInRepo_OnLeave;
+			_view.UnwireBeforeClosing();
 		}
 
 		private void InitializeComponent()

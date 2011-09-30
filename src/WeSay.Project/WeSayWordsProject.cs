@@ -1350,8 +1350,6 @@ namespace WeSay.Project
 					}
 			}
 
-			//Now make writingsystem changes to any optionlists found in the project directory
-			//this code is copied from the migrator
 			//Now let's replace writing systems in OptionLists
 
 			foreach (var kvp in _changedWritingSystemIds)
