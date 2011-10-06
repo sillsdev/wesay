@@ -1703,6 +1703,20 @@ namespace WeSay.Project
 			return FileUtils.GrepFile(PathToLiftFile, regex);
 		}
 
+		public bool IsWritingSystemUsedInOptionLists(string writingSystemId)
+		{
+			string regex = string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(writingSystemId));
+			foreach (KeyValuePair<string, OptionsList> pair in _optionLists)
+			{
+				string optionListFilePath = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, pair.Key);
+				if (File.Exists(optionListFilePath) && FileUtils.GrepFile(optionListFilePath, regex))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 		/// <summary>
 		/// Files to process when backing up or checking in
 		/// </summary>

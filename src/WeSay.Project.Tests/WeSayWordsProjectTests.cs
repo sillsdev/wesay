@@ -885,5 +885,58 @@ namespace WeSay.Project.Tests
 				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
 			}
 		}
+
+		[Test]
+		public void IsWritingSystemInUseInLift_LiftFileContainsWritingSystem_ReturnsTrue()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
+				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
+			}
+		}
+
+		[Test]
+		public void IsWritingSystemInUseInLift_WritingSystemIsNotUsed_ReturnsFalse()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
+			}
+		}
+
+		[Test]
+		public void IsWritingSystemInUseInOptionLists_WritingSystemIsNotUsed_ReturnsFalse()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				Assert.That(project.IsWritingSystemUsedInOptionLists("de"), Is.False);
+			}
+		}
+
+		[Test]
+		public void IsWritingSystemInUseInOptionLists_OptionsListHasWritingSystem_ReturnsTrue()
+		{
+			using (var p = new ProjectDirectorySetupForTesting(""))
+			{
+				//create an option list file containing en and de writing systems
+				const string optionListName = "options.xml";
+				var optionListPath = Path.Combine(p.PathToDirectory, optionListName);
+				File.WriteAllText(optionListPath, OptionListFileContent.GetOptionListWithWritingSystems(
+					"aaa", "bbb"));
+				//create the project
+				WeSayWordsProject project = p.CreateLoadedProject();
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='aaa']");
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='bbb']");
+
+
+				//Add an option to the list (first create a field to pass to the project)
+				// this will register the optionList with the project
+				Field fieldThatUsesOptionsList = new Field { OptionsListFile = optionListName };
+				project.GetOptionsList(fieldThatUsesOptionsList, false);
+
+				Assert.That(project.IsWritingSystemUsedInOptionLists("aaa"), Is.True);
+			}
+		}
 	}
 }

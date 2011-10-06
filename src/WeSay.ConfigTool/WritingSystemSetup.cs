@@ -70,8 +70,16 @@ namespace WeSay.ConfigTool
 
 		private static void OnBeforeDeleted(object sender, BeforeDeletedEventArgs args)
 		{
-			args.CanDelete = !Project.WeSayWordsProject.Project.IsWritingSystemUsedInLiftFile(args.WritingSystemId);
-			args.ErrorMessage = "It's in use in the LIFT file.";
+			if (Project.WeSayWordsProject.Project.IsWritingSystemUsedInLiftFile(args.WritingSystemId))
+			{
+				args.CanDelete = false;
+				args.ErrorMessage = "It's in use in the LIFT file.";
+			}
+			else if (Project.WeSayWordsProject.Project.IsWritingSystemUsedInOptionLists(args.WritingSystemId))
+			{
+				args.CanDelete = false;
+				args.ErrorMessage = "It's in use in an option list file.";
+			}
 		}
 
 		private static void OnWritingSystemDeleted(object sender, WritingSystemDeletedEventArgs args)
