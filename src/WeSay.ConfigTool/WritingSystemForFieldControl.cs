@@ -37,7 +37,7 @@ namespace WeSay.ConfigTool
 
 			public override string ToString()
 			{
-				string displayString = WritingSystem.ToString();
+				string displayString = WritingSystem.ListLabel;
 				if (HasSpellCheckerInstalled)
 				{
 					displayString += " (Has spell checker)";
