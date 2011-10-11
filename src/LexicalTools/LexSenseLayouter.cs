@@ -40,6 +40,7 @@ namespace WeSay.LexicalTools
 				{
 					Control meaningControl = MakeBoundControl(sense.Definition, field);
 #endif
+					//NB: http://jira.palaso.org/issues/browse/WS-33937 describes how this makes it hard to change this in English (but not other languages)
 					string label = StringCatalog.Get("~Meaning");
 					LexEntry entry = sense.Parent as LexEntry;
 					if (entry != null) // && entry.Senses.Count > 1)
