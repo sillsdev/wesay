@@ -154,6 +154,14 @@
 				MatchRegExPattern=".*">
 	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
 	</MakeWixForDirTree>
+	<MakeWixForDirTree
+			DirectoryReferenceId="MercurialExtensions"
+	ComponentGroupId="MercurialExtensions"
+	RootDirectory="$(BaseDirectory)\MercurialExtensions"
+			OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedMercurialExtensions.wxs"
+			MatchRegExPattern=".*">
+	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
+	</MakeWixForDirTree>
   </Target>
 
   <Target Name="MakeWixForTemplates">

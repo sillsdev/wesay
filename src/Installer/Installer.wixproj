@@ -62,6 +62,7 @@
 	<Compile Include="GeneratedPOFiles.wxs" />
 	<Compile Include="GeneratedTemplateFiles.wxs" />
 	<Compile Include="GeneratedMercurial.wxs" />
+	<Compile Include="GeneratedMercurialExtensions.wxs" />
 	<Compile Include="SampleData.wxs" />
 	<Compile Include="Installer.wxs" />
 	<Compile Include="CommonDir.wxs" />
