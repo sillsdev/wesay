@@ -287,7 +287,7 @@ namespace WeSay.App.Tests
 			using(TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController()))
 			{
 				tabbedForm.InitializeTasks(_project.Tasks);
-				tabbedForm.ActiveTask = _project.Tasks[3];
+				tabbedForm.SetActiveTask(_project.Tasks[3]);
 			}
 			using(var x = new TabbedForm(new NullStatusBarController()))
 			{
@@ -317,7 +317,7 @@ namespace WeSay.App.Tests
 			{
 				tabbedForm.InitializeTasks(_project.Tasks);
 
-				Assert.Throws<ArgumentNullException>(() => tabbedForm.ActiveTask = null);
+				Assert.Throws<ArgumentNullException>(() => tabbedForm.SetActiveTask(null));
 			}
 		}
 
@@ -328,7 +328,7 @@ namespace WeSay.App.Tests
 			{
 				tabbedForm.InitializeTasks(_project.Tasks);
 				ITask initialWorkTask = tabbedForm.CurrentWorkTask;
-				tabbedForm.ActiveTask = _project.Tasks[0];
+				tabbedForm.SetActiveTask(_project.Tasks[0]);
 				Assert.AreSame(initialWorkTask, tabbedForm.CurrentWorkTask);
 			}
 		}
@@ -352,7 +352,7 @@ namespace WeSay.App.Tests
 				tabbedForm.InitializeTasks(_project.Tasks);
 				Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive, "1");
 
-				tabbedForm.ActiveTask = _project.Tasks[1];
+				tabbedForm.SetActiveTask(_project.Tasks[1]);
 				Assert.IsFalse(((MockTask) _project.Tasks[0]).IsActive, "2");
 				Assert.IsTrue(((MockTask) _project.Tasks[1]).IsActive, "3");
 			}
@@ -369,7 +369,7 @@ namespace WeSay.App.Tests
 			tabbedForm.InitializeTasks(_project.Tasks);
 			Assert.IsTrue(((MockTask)_project.Tasks[0]).IsActive, "1");
 
-			tabbedForm.ActiveTask = _project.Tasks[3];
+			tabbedForm.SetActiveTask(_project.Tasks[3]);
 			Assert.IsFalse(((MockTask) _project.Tasks[0]).IsActive, "2");
 			Assert.IsTrue(((MockTask) _project.Tasks[3]).IsActive, "3");
 			Assert.AreEqual(_project.Tasks[3].Label, tabbedForm.TabLabels[2], "4");
@@ -384,8 +384,8 @@ namespace WeSay.App.Tests
 			{
 				tabbedForm.InitializeTasks(_project.Tasks);
 
-				tabbedForm.ActiveTask = _project.Tasks[2];
-				tabbedForm.ActiveTask = _project.Tasks[3];
+				tabbedForm.SetActiveTask(_project.Tasks[2]);
+				tabbedForm.SetActiveTask(_project.Tasks[3]);
 				Assert.IsTrue(((MockTask) _project.Tasks[3]).IsActive);
 				Assert.IsFalse(((MockTask) _project.Tasks[2]).IsActive);
 

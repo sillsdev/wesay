@@ -79,8 +79,8 @@ namespace WeSay.App.Tests
 		[Test]
 		public void ShouldSwitchToDictionaryTaskWhenURLCallsForItAndIsNotNew()
 		{
-			_tabbedForm.ActiveTask = _dictionaryTask;
-			_tabbedForm.ActiveTask = _dashboardTask;
+			_tabbedForm.SetActiveTask(_dictionaryTask);
+			_tabbedForm.SetActiveTask(_dashboardTask);
 			_tabbedForm.GoToUrl("lift://somefile.lift?id=foo2");
 			Assert.AreEqual(_dictionaryTask, _tabbedForm.ActiveTask);
 		}
@@ -88,7 +88,7 @@ namespace WeSay.App.Tests
 		[Test]
 		public void ShouldStayInDictionaryTaskWhenURLCallsForIt()
 		{
-			_tabbedForm.ActiveTask = _dictionaryTask;
+			_tabbedForm.SetActiveTask(_dictionaryTask);
 			_tabbedForm.GoToUrl("lift://somefile.lift?id=foo2");
 			Assert.AreEqual(_dictionaryTask, _tabbedForm.ActiveTask);
 		}

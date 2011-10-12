@@ -79,7 +79,7 @@ namespace WeSay.App
 
 			if (taskList.Count > 0)
 			{
-				ActiveTask = taskList[0];
+				SetActiveTask(taskList[0]);
 			}
 		}
 
@@ -181,43 +181,44 @@ namespace WeSay.App
 		public ITask ActiveTask
 		{
 			get { return _activeTask; }
-			set
+		}
+		public void SetActiveTask(ITask task)
+		{
+			if (task == null)
 			{
-				if (value == null)
+				throw new ArgumentNullException();
+			}
+			TabPage tabPageToActivate = null;
+			if (task.IsPinned)
+			{
+				foreach (TabPage page in tabControl1.TabPages)
 				{
-					throw new ArgumentNullException();
-				}
-				TabPage tabPageToActivate = null;
-				if (value.IsPinned)
-				{
-					foreach (TabPage page in tabControl1.TabPages)
+					if (page.Tag == task)
 					{
-						if (page.Tag == value)
-						{
-							tabPageToActivate = page;
-							break;
-						}
-					}
-				}
-				else
-				{
-					SetCurrentWorkTask(value);
-					tabPageToActivate = _currentWorkTab;
-				}
-
-				if (tabPageToActivate != null)
-				{
-					if (tabControl1.SelectedTab != tabPageToActivate)
-					{
-						tabControl1.SelectedTab = tabPageToActivate;
-					}
-					else
-					{
-						ActivateTab(tabPageToActivate, true);
+						tabPageToActivate = page;
+						break;
 					}
 				}
 			}
+			else
+			{
+				SetCurrentWorkTask(task);
+				tabPageToActivate = _currentWorkTab;
+			}
+
+			if (tabPageToActivate != null)
+			{
+				if (tabControl1.SelectedTab != tabPageToActivate)
+				{
+					tabControl1.SelectedTab = tabPageToActivate;
+				}
+				else
+				{
+					ActivateTab(tabPageToActivate, true);
+				}
+			}
 		}
+
 
 		private void SetCurrentWorkTask(ITask value)
 		{
@@ -295,7 +296,7 @@ namespace WeSay.App
 			if (ActiveTask != null)
 			{
 				ActiveTask.Deactivate();
-				_activeTask = null;
+				_activeTask =null;
 			}
 			if (task != null)
 			{

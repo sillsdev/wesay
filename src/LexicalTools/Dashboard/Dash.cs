@@ -174,7 +174,7 @@ namespace WeSay.LexicalTools.Dashboard
 			ITask task = b.ThingToShowOnDashboard as ITask;
 			if (task != null && _currentWorkTaskProvider != null)
 			{
-				_currentWorkTaskProvider.ActiveTask = task;
+				_currentWorkTaskProvider.SetActiveTask(task);
 			}
 			else
 			{

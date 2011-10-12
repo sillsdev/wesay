@@ -55,8 +55,8 @@ namespace WeSay.App.Tests
 		[Test]
 		public void AAA()
 		{
-			tabbedForm.ActiveTask = _project.Tasks[1];
-			tabbedForm.ActiveTask = _project.Tasks[0];
+			tabbedForm.SetActiveTask(_project.Tasks[1];
+			tabbedForm.SetActiveTask(_project.Tasks[0];
 		}
 
 
