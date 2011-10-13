@@ -1,0 +1,19 @@
+wesay (0.9.0-1palaso1) lucid; urgency=low
+
+  * Updated to upstream wesay 0.9.x
+
+ -- Cambell Prince <cambell_prince@sil.org>  Thu, 13 Jan 2011 13:31:20 +0700
+
+wesay (0.4-1sil1) hardy; urgency=low
+
+  * Updated to upstream wesay stable 0.4.
+  * Status is still experimental in Linux / Ubuntu
+
+ -- Cambell Prince <cambell_prince@sil.org>  Fri, 28 Nov 2008 10:57:47 +0700
+
+wesay (0.1-1sil1) hardy; urgency=low
+
+  * Initial build
+  *
+
+ -- Martin Hosken <martin_hosken@sil.org>  Sat, 18 Oct 2008 15:15:32 +0700

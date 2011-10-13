@@ -1143,6 +1143,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		[Category("NUnit Windows Forms")]
 		public void AddingNewWord_ClearsShowHiddenState()
 		{
 			AddInitialEntries();
