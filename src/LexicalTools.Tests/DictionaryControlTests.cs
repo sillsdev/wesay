@@ -1216,6 +1216,7 @@ namespace WeSay.LexicalTools.Tests
 
 		[Test]
 		[Category("NUnit Windows Forms")]
+		[Platform(Exclude="Unix")] // MouseController uses Win32.GetCursorPos so not portable
 		public void ClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_DeleteButtonStaysEnabled()
 		{
 			AddInitialEntries();
