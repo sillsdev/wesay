@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -188,9 +189,21 @@ namespace WeSay.UI
 												  font,
 												  new Size(int.MaxValue, int.MaxValue),
 												  textFormatFlags);
-			maxWidth = sizeNeeded.Width;
 			requiredSizes.Add(sizeNeeded.Height, sizeNeeded.Width);
-			for (int i = 1;i < maxWidth;++i)
+			// ws-34187: Better feedback for slower computers
+			// This was starting at 1 and going by increments of 1,
+			// and measuretext is slow. So for SIL CAWL, it was talking 30 seconds
+			// on slow machines!  Not only did this mean that they wouldn't
+			// see this popup unless they were very patient, but worse, if they
+			// were just trying to launch the task, we wouldn't get the OnClick
+			// for 30 seconds.  It's still a hack, but I (JH) made it at least start
+			// at a reasonable spot, make larger jumps, and stop looking after the box
+			// is already large
+			int minWidth = 200;
+			int stepSize = 40;
+			int kAsWideAsWeWouldWant = 500;
+			maxWidth = Math.Min(sizeNeeded.Width, kAsWideAsWeWouldWant);
+			for (int i = minWidth;i < maxWidth; i=i+stepSize)
 			{
 				sizeNeeded = TextRenderer.MeasureText(dc,
 													  text,
