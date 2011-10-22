@@ -57,6 +57,7 @@ TD
 {
 	vertical-align: top;
 	font-weight: normal;
+	border: 1px solid #FFFFFF;
 }
 .queryBox
 {
@@ -64,11 +65,19 @@ TD
 	width: 138px;
 	background-color: #FFFFFF;
 }
+.queryBox IMG
+{
+	margin-right: 3px;
+	margin-top: 5px;
+}
 .itemList
 {
 	background-color: #FFFFFF;
-	height: 77px;
+	height: 78px;
 	width: 0px;
+	margin-bottom: 537px;
+	border: 1px solid #000000;
+	overflow: scroll;
 }
 .fieldLabel
 {
@@ -92,6 +101,10 @@ TD
 TABLE
 {
 	margin-bottom: 10px;
+}
+TABLE.itemList
+{
+	border: 1px none #FFFFFF;
 }
 #select
 {
