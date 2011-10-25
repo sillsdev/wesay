@@ -776,8 +776,6 @@ namespace WeSay.Project.Tests
 				File.WriteAllText(liftFilePath, LiftContentForTests.WrapEntriesInLiftElements("0.13",
 					LiftContentForTests.GetSingleEntryWithWritingSystems("option", "de")
 					));
-				string optionListPath = Path.Combine(projectDirectory.Path, "options.list");
-				File.WriteAllText(optionListPath, OptionListFileContent.GetOptionListWithWritingSystems("option", "x-changeme"));
 				string writingSystemFolderPath = Path.Combine(projectDirectory.Path, "WritingSystems");
 				Directory.CreateDirectory(writingSystemFolderPath);
 				//Now populate the writing system repo with an "en" writing system and a "qaa-x-changedWs" writing system as well as
@@ -819,9 +817,6 @@ namespace WeSay.Project.Tests
 				var liftFileHelper = new WritingSystemsInLiftFileHelper(wsRepo, liftFilePath);
 				Assert.That(liftFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
 				Assert.That(liftFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("de")));
-				var optionListFileHelper = new WritingSystemsInOptionsListFileHelper(wsRepo, optionListPath);
-				Assert.That(optionListFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
-				Assert.That(optionListFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("fr-Latn-US-x-CHANGED")));
 			}
 		}
 
@@ -902,40 +897,6 @@ namespace WeSay.Project.Tests
 			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
 			{
 				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
-			}
-		}
-
-		[Test]
-		public void IsWritingSystemInUseInOptionLists_WritingSystemIsNotUsed_ReturnsFalse()
-		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
-			{
-				Assert.That(project.IsWritingSystemUsedInOptionLists("de"), Is.False);
-			}
-		}
-
-		[Test]
-		public void IsWritingSystemInUseInOptionLists_OptionsListHasWritingSystem_ReturnsTrue()
-		{
-			using (var p = new ProjectDirectorySetupForTesting(""))
-			{
-				//create an option list file containing en and de writing systems
-				const string optionListName = "options.xml";
-				var optionListPath = Path.Combine(p.PathToDirectory, optionListName);
-				File.WriteAllText(optionListPath, OptionListFileContent.GetOptionListWithWritingSystems(
-					"aaa", "bbb"));
-				//create the project
-				WeSayWordsProject project = p.CreateLoadedProject();
-				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='aaa']");
-				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='bbb']");
-
-
-				//Add an option to the list (first create a field to pass to the project)
-				// this will register the optionList with the project
-				Field fieldThatUsesOptionsList = new Field { OptionsListFile = optionListName };
-				project.GetOptionsList(fieldThatUsesOptionsList, false);
-
-				Assert.That(project.IsWritingSystemUsedInOptionLists("aaa"), Is.True);
 			}
 		}
 	}
