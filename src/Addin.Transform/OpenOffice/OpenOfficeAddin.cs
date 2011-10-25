@@ -44,7 +44,7 @@ namespace Addin.Transform.OpenOffice
 
 		public string LocalizedName
 		{
-			get { return StringCatalog.Get("Save in OpenOffice"); }
+			get { return StringCatalog.Get("Make OpenOffice Document"); }
 		}
 
 		public string ID
