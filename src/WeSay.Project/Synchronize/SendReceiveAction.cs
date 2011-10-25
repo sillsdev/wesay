@@ -102,6 +102,11 @@ namespace WeSay.Project.Synchronize
 
 		}
 
+		public bool Deprecated
+		{
+			get { return false; }
+		}
+
 		#endregion
 
 		#region IThingOnDashboard Members

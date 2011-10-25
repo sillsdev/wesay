@@ -133,6 +133,12 @@ namespace Addin.Transform.OpenOffice
 			}
 		}
 
+		public bool Deprecated
+		{
+			get { return false; }
+		}
+
+
 		/// <summary>
 		///
 		/// </summary>

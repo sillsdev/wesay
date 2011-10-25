@@ -90,6 +90,11 @@ namespace Addin.Backup
 			msg.Send(emailProvider); // review (CP): This is different from the mapi popup used previously
 		}
 
+		public bool Deprecated
+		{
+			get { return true; }
+		}
+
 		/// <summary>
 		/// all this is just so that wesay doesn't hang waiting for this to happen.
 		/// </summary>

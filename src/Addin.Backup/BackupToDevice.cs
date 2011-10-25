@@ -55,6 +55,11 @@ namespace Addin.Backup
 			}
 		}
 
+		public bool Deprecated
+		{
+			get { return true; }
+		}
+
 		#endregion
 
 		#region IThingOnDashboard Members
