@@ -110,7 +110,7 @@ namespace Addin.Transform.PdfDictionary
 				var stylesheetPaths = new List<string>();
 
 				var autoLayout = Path.Combine(projectInfo.PathToExportDirectory, "autoLayout.css");
-				var factoryLayout = projectInfo.LocateFile(Path.Combine("Templates", "defaultDictionary.css"));
+				var factoryLayout = projectInfo.LocateFile(Path.Combine("templates", "defaultDictionary.css"));
 				File.Copy(factoryLayout, autoLayout, true);
 
 				var autoFonts = Path.Combine(projectInfo.PathToExportDirectory, "autoFonts.css");
