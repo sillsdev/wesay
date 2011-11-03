@@ -156,7 +156,8 @@
 	</ItemGroup>
 	<PropertyGroup>
 		<InstallUsrBin>$(InstallDir)/usr/bin</InstallUsrBin>
-		<InstallApp>$(InstallDir)/usr/share/$(ApplicationNameLC)</InstallApp>
+		<InstallApp>$(InstallDir)/usr/lib/$(ApplicationNameLC)</InstallApp>
+		<InstallData>$(InstallDir)/usr/share/$(ApplicationNameLC)</InstallData>
 		<InstallIcon>$(InstallDir)/usr/share/icons</InstallIcon>
 		<InstallMenu>$(InstallDir)/usr/share/applications</InstallMenu>
 	</PropertyGroup>
@@ -166,11 +167,11 @@
 			SourceFiles="@(ExecutableFiles)"
 		/>
 		<Copy
-			DestinationFolder="$(InstallApp)/common"
+			DestinationFolder="$(InstallData)/common"
 			SourceFiles="@(CommonFiles)"
 		/>
 		<Copy
-			DestinationFolder="$(InstallApp)/templates"
+			DestinationFolder="$(InstallData)/templates"
 			SourceFiles="@(TemplateFiles)"
 		/>
 		<Copy
