@@ -1,3 +1,10 @@
+wesay (1.1.0-1palaso1) lucid; urgency=low
+
+  * Updated to upstream wesay 1.1.x
+  * need to find out how to set the version
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Wed, 02 Nov 2011 09:42:52 +0700
+
 wesay (0.9.0-1palaso1) lucid; urgency=low
 
   * Updated to upstream wesay 0.9.x
