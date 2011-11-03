@@ -86,6 +86,9 @@
 		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)_$(Version).tar.gz">
 			<Output TaskParameter="Value" PropertyName="SourcePackageFileName" />
 		</CreateProperty>
+		<CreateProperty Value="$(OutputDir)/Package/$(ApplicationNameLC)-$(Version)">
+			<Output TaskParameter="Value" PropertyName="TarBaseDir" />
+		</CreateProperty>
 		<Message Text="Archive source to '$(SourcePackageFileName)'" />
 		<Archive
 			Command="Tar"
@@ -93,6 +96,15 @@
 			OutputFileName="$(SourcePackageFileName)"
 			BasePath="$(RootDir)"
 			WorkingDir="$(RootDir)"
+		/>
+		<MakeDir Directories="$(TarBaseDir)" />
+		<Exec
+			Command="tar -xzf $(SourcePackageFileName)"
+			WorkingDirectory="$(TarBaseDir)"
+		/>
+		<Exec
+			Command="tar -czf $(SourcePackageFileName) $(ApplicationNameLC)-$(Version)"
+			WorkingDirectory="$(OutputDir)/Package"
 		/>
 	</Target>
 
