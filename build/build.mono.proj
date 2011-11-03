@@ -86,7 +86,7 @@
 		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)_$(Version).tar.gz">
 			<Output TaskParameter="Value" PropertyName="SourcePackageFileName" />
 		</CreateProperty>
-		<CreateProperty Value="$(OutputDir)/Package/$(ApplicationNameLC)-$(Version)">
+		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)-$(Version)">
 			<Output TaskParameter="Value" PropertyName="TarBaseDir" />
 		</CreateProperty>
 		<Message Text="Archive source to '$(SourcePackageFileName)'" />
@@ -104,27 +104,27 @@
 		/>
 		<Exec
 			Command="tar -czf $(SourcePackageFileName) $(ApplicationNameLC)-$(Version)"
-			WorkingDirectory="$(OutputDir)/Package"
+			WorkingDirectory="$(OutputDir)"
 		/>
 	</Target>
 
 	<!-- Installer (Packaging) -->
 	<ItemGroup>
-		<DebianControlFiles Include="$(RootDir)/package/lucid/**" />
+		<DebianControlFiles Include="$(RootDir)/package/lucid/**/*" />
 	</ItemGroup>
 	<Target Name="Installer" DependsOnTargets="SourcePackage">
 		<CreateProperty Value="$(OutputDir)/Package/$(ApplicationNameLC)-$(Version)">
 			<Output TaskParameter="Value" PropertyName="InstallerBaseDir" />
 		</CreateProperty>
+		<RemoveDir Directories="$(InstallerBaseDir)" />
 		<MakeDir Directories="$(OutputDir)/Package" />
 		<Copy SourceFiles="$(SourcePackageFileName)" DestinationFiles="$(OutputDir)/Package/$(ApplicationNameLC)_$(Version).orig.tar.gz" />
-		<MakeDir Directories="$(InstallerBaseDir)" />
 		<Exec
 			Command="tar -xzf $(OutputDir)/Package/$(ApplicationNameLC)_$(Version).orig.tar.gz"
-			WorkingDirectory="$(InstallerBaseDir)"
+			WorkingDirectory="$(OutputDir)/Package"
 		/>
 		<MakeDir Directories="$(InstallerBaseDir)/debian" />
-		<Copy SourceFiles="@(DebianControlFiles)" DestinationFolder="$(InstallerBaseDir)/debian" />
+		<Copy SourceFiles="@(DebianControlFiles)" DestinationFiles="$(InstallerBaseDir)/debian/%(RecursiveDir)%(Filename)%(Extension)" />
 		<Exec
 			Command='dch -v $(Version)-1palaso1 "Auto Build"'
 			WorkingDirectory="$(InstallerBaseDir)"
@@ -167,16 +167,16 @@
 			SourceFiles="@(ExecutableFiles)"
 		/>
 		<Copy
-			DestinationFolder="$(InstallData)/common"
 			SourceFiles="@(CommonFiles)"
+			DestinationFiles="$(InstallData)/common/%(RecursiveDir)%(Filename)%(Extension)"
 		/>
 		<Copy
-			DestinationFolder="$(InstallData)/templates"
 			SourceFiles="@(TemplateFiles)"
+			DestinationFiles="$(InstallData)/templates/%(RecursiveDir)%(Filename)%(Extension)"
 		/>
 		<Copy
-			DestinationFolder="$(InstallIcon)"
 			SourceFiles="@(IconFiles)"
+			DestinationFiles="$(InstallIcon)/%(RecursiveDir)%(Filename)%(Extension)"
 		/>
 		<Copy
 			DestinationFolder="$(InstallMenu)"
