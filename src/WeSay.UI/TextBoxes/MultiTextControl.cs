@@ -7,12 +7,14 @@ using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
 using Palaso.Lift;
 
 namespace WeSay.UI.TextBoxes
 {
+	/// <summary>
+	/// This control presents a table of input fields, with one row for each input system. For audio input systems, it presents a control for recording and playback.
+	/// </summary>
 	public partial class MultiTextControl: TableLayoutPanel
 	{
 		private IList<WritingSystemDefinition> _writingSystemsForThisField;
