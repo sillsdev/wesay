@@ -211,17 +211,22 @@ namespace WeSay.ConfigTool
 
 			CreateNewProject(directoryPath);
 			OpenProject(directoryPath);
-			var genericWritingSystemShippedWithWs = Project.WritingSystems.Get("qaa-x-qaa");
-			genericWritingSystemShippedWithWs.Language = languageTag;
-			genericWritingSystemShippedWithWs.Variant = ""; //remove x-qaa
-			//this is to accomodate Flex which expects to have a custom language tag
-			//as the first private use subtag when the language subtag is qaa
-			if (genericWritingSystemShippedWithWs.Language == WellKnownSubTags.Unlisted.Language)
+
+			if (!Project.WritingSystems.Contains(languageTag))
 			{
-				genericWritingSystemShippedWithWs.Variant = "x-" + "Unlisted";
+				var genericWritingSystemShippedWithWs = Project.WritingSystems.Get("qaa-x-qaa");
+				genericWritingSystemShippedWithWs.Language = languageTag;
+				genericWritingSystemShippedWithWs.Variant = ""; //remove x-qaa
+				//this is to accomodate Flex which expects to have a custom language tag
+				//as the first private use subtag when the language subtag is qaa
+				if (genericWritingSystemShippedWithWs.Language == WellKnownSubTags.Unlisted.Language)
+				{
+					genericWritingSystemShippedWithWs.Variant = "x-" + "Unlisted";
+				}
+				Project.WritingSystems.Set(genericWritingSystemShippedWithWs);
+				Project.WritingSystems.Save();
 			}
-			Project.WritingSystems.Set(genericWritingSystemShippedWithWs);
-			Project.WritingSystems.Save();
+
 			 if(_project != null)
 			 {
 				 var logger = _project.Container.Resolve<ILogger>();

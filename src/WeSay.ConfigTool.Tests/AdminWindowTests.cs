@@ -211,6 +211,13 @@ namespace WeSay.ConfigTool.Tests
 		{
 			_window.CreateAndOpenProject(_projectFolder, "th");
 		}
+
+		// WS-34217: Regression test to ensure that English can be selected at project creation
+		[Test]
+		public void CreateAndOpenProject_EnglishAsVernacular_DoesNotCrash()
+		{
+			Assert.That(() => _window.CreateAndOpenProject(_projectFolder, "en"), Throws.Nothing);
+		}
 	}
 
 	/* these are more modern, without use of static, "pretend" project, or the big setup/teardown of the old style */
