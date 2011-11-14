@@ -18,7 +18,7 @@
 
 </HEAD>
 <BODY LANG="en-US" DIR="LTR">
-<H1>Welcome to WeSay <FONT COLOR="#c0504d">1.1.x-Development</FONT></H1>
+<H1>Welcome to WeSay <FONT COLOR="#c0504d">1.3.x-Development</FONT></H1>
 <HR>
 
 <p class="MsoNormal">You have installed a <em>development version</em> of WeSay.&#160; This is a team effort, and <span style="color: #9bbb59">we really appreciate</span> your willingness to give WeSay a spin and send us feedback.&#160; </p>
@@ -27,47 +27,60 @@
 
 <p class="MsoNormal">WeSay comes in two flavors: 'stable' (even numbered ones) and 'development' (odd numbered ones).&#160;&#160; The even versions receive critical bug fixes, but not new features or anything risky.</p>
 
-<p class="MsoNormal">If crashes or other bugs would be a major problem for you, please uninstall this version and get our most recent <a href="http://wesay.org/downloads">1.0.xxxx one</a>.&#160; If you are helping us advance WeSay, are evaluating WeSay's capabilities, or are just willing to risk the occasional bug, this is the version for you.&#160; This is where we are currently adding new abilities in response to your requests, and we need people to help ensure that it can become stable, too. Eventually, we will retire 1.0 and 1.1 will be relabeled '1.2 - Stable'. Note that at times we post new 'odd' versions almost daily.&#160; If you report a bug via <a href="mailto:issues@wesay.org">issues@wesay.org</a>, we can often times fix it and provide a new release within hours.&#160; So let us know if you're in a hurry for a fix.</p>
+<p class="MsoNormal">If crashes or other bugs would be a major problem for you, please uninstall this version and get our most recent <a href="http://wesay.org/downloads">1.2.xxxx one</a>.&#160; If you are helping us advance WeSay, are evaluating WeSay's capabilities, or are just willing to risk the occasional bug, this is the version for you.&#160; This is where we are currently adding new abilities in response to your requests, and we need people to help ensure that it can become stable, too. Eventually, we will retire 1.2
+	and 1.3 will be relabeled '1.4 - Stable'. Note that at times we post new 'odd' versions almost daily.&#160; If you report a bug via <a href="mailto:issues@wesay.org">issues@wesay.org</a>, we can often times fix it and provide a new release within hours.&#160; So let us know if you're in a hurry for a fix.</p>
 
-<h1 class="Section1">What's New in 1.1?</h1>
+<h1 class="Section1">What's New in 1.3?</h1>
 
-<h3>Improved FLEx Collaboration</h3>
-<p class="MsoNormal">We have made various changes to smooth the process of sharing data with FLEx. Internally, these have required a lot of work, but on the surface, you won't see much of a change.</p>
+<h3>Display glosses in Gather by Semantic Domain Task</h3>
+<p class="MsoNormal">If you configure this task so that users can enter a gloss (in addition to the vernacular word), the gloss will now show up, in grey, under the word in the list.  An advisor requested this as it helps him see what is being gathered.</p>
 
-<h3>Completely new "Input Systems" tab</h3>
-<p class="MsoNormal">In the Configuration Tool, the old "Writing Systems" tab has been replaced with an "Input Systems" one which is both easier and more powerful.  For example, adding a system to hold ipa or audio recordings is now done with a single click.</p>
+<h3>New Image Toolbox</h3>
+<h4>Importing and Image</h4>
+	<p class="MsoNormal">Previously, WeSay supported selecting images from the Art Of
+		Reading collection via search (starting, automatically, by looking for pictures that match the gloss).  Now when you click to add an image,&nbsp;
+		the Image Toolbox opens, and lets you:</p>
+	<ul>
+		<li>
+			<p class="MsoNormal">
+				Scan in a drawing</p>
+		</li>
+		<li>
+			<p class="MsoNormal">
+				Get a picture from your camera</p>
+		</li>
+		<li>
+			<p class="MsoNormal">
+				Choose an image from Art of Reading
+				(as before)</p>
+		</li>
+		<li>
+			<p class="MsoNormal">
+				Choose a file from your file system (as before)</p>
+		</li>
+	</ul>
+	<h4>
+		Intellectual Property</h4>
+	<p class="MsoNormal">
+		For any of these images, WeSay now can read and write metadata about the image:
+		the illustrator, copyright, and license. For the license, you can answer a
+		few questions and WeSay will select a nice Creative Commons license to match your wishes.&nbsp;This meta data will be invisibly embedded in the image itself, so that this
+		information will be readable now and in the future by other tools which
+		understand image metadata.</p>
+	<h4>
+		Cropping</h4>
+	<p class="MsoNormal">
+		The Image Toolbox has a very simple cropping tool, built-in.</p>
+	<h3>
+		New Art Of Reading Download</h3>
+	<p>
+		SIL has recently granted a Creative Commons License for
+		<a href="http://bloom.palaso.org/art-of-reading/">Art Of Reading</a>, and Palaso
+		has created a downloadable installer for the collection.&nbsp;Just install it,
+		and suddenly Bloom and WeSay will be able to use it.&nbsp;Naturally, our
+		version has all the metadata embedded: the illustrator (where known), Copyright,
+		Creative Commons license, and keywords.</p>
 
-<h3>Indonesian "Art Of Reading"</h3>
-<p class="MsoNormal">When you click "Find Picture" to choose and image from "Art Of Reading", you can now type in Indonesian search terms</p>
-
-<h3>Send/Receive Improvements</h3>
-<p>The Send/Receive system now offers more help when it detects common problems, like a mistyped password.</p>
-	<p>You can now set up Send/Receive with a LAN server/networked drive.</p>
-
-<h3>Usability Improvements</h3>
-<p>Previously, if WeSay could not figure out what project to open, it just told you "sorry".  Now, it
-	tells you &quot;Welcome to WeSay&quot; and then runs the Configuration Tool, where you can
-	find the project or create a new one.</p>
-
-<h3>Configuration Tool hand-off to WeSay</h3>
-<p>Previously, it was possible to leave the WeSay Configuration Tool running while you ran WeSay; this could lead to confusion and potentially lost changes.  Now, when you click "Open
-	in WeSay", the Configuration Tool closes first.&nbsp; Then, in order to make it
-	easy to get back to the Configuration tool, a &quot;Configure this project...&quot; button
-	appears at the bottom of the WeSay window.&nbsp; Note: when you run WeSay any
-	other way, this button is hidden, since you don't normally want WeSay users
-	messing with the configuration.&nbsp; As before, you can still right-click on
-	the WeSay Home page to get that same command.</p>
-<h3>Printing Improvement</h3>
-<p>A team in language with digraphs ("th", "ng") wanted words starting with these letters to be grouped together.
-	Note, it is not enough to make them <emph>sort</emph> together;
-	we need a way for you to explicitly identify these clusters of letters.  Doing
-	that should eventually be part of setting up an <emph>input system</emph>.
-	But for now, you can identify them by listing the multigraphs, one-per-line, in a file named "multigraphs.txt" in the "export" directory of the WeSay project.  </p>
-<h3>Bug Fixes</h3>
-<p>Fixed: homographs that were collected in the same session using the "Gather By Wordlist" task not saved, if you quit before going to another task.</p>
-<p>Fixed: Spell checking not enabled for meaning field in gather by Semantic Domains</p>
-<p>Fixed: In fields configuration control there were enabled settings that don't make sense for the current datatype, or were not appropriate to change for built-in fields.</p>
-	<p>Fixed: When a language project had spaces in its name,&nbsp; Notes didn't work.</p>
 
 <h1 class="Section1">What Now?</h1>
 
