@@ -829,10 +829,23 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			get
 			{
-				return new Font(MeaningWritingSystem.DefaultFontName,
-								MeaningWritingSystem.DefaultFontSize);
-			}
+				float defaultFontSize = MeaningWritingSystem.DefaultFontSize;
+				if (defaultFontSize == 0)//saw this happen with a project coming in from FLEx
+					defaultFontSize = 12;
 
+				try
+				{
+					return new Font(MeaningWritingSystem.DefaultFontName,
+									defaultFontSize);
+				}
+				catch (Exception error)
+				{
+					Palaso.Reporting.ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),  error,
+																	 "There was a problem getting the font for the meaning field, using Typeface {0} and Size {1}.  See if you can fix this using the Input Systems tab of theConfiguration Tool.", MeaningWritingSystem.DefaultFontName,
+									defaultFontSize);
+					return SystemFonts.DefaultFont;
+				}
+			}
 		}
 
 
