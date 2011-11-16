@@ -131,15 +131,15 @@
 		/>
 		<Message Text="Starting pdebuild -- lucid i386" />
 		<Exec
-			Command='pdebuild --configfile /home/bob/pbuilder/pbuilderrc-lucid-lingnet --debsign-k "mono teamcity" --auto-debsign'
+			Command='pdebuild --architecture i386 --configfile /home/bob/pbuilder/pbuilderrc-lucid-i386-lingnet --debsign-k "mono teamcity" --auto-debsign'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
 	</Target>
 
 	<Target Name="Upload" DependsOnTargets="Installer">
-		<Message Text="Starting dput -- lucid i386" />
+		<Message Text="Startingq dput -- lucid i386" />
 		<Exec
-			Command='dput LINGNET /home/bob/pbuilder/results/lucid/$(ApplicationNameLC)_$(Version)*.changes'
+			Command='dput LINGNET /home/bob/pbuilder/results/lucid/$(ApplicationNameLC)_$(Version)_i386.changes'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
 	</Target>
