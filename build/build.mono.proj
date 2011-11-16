@@ -129,17 +129,17 @@
 			Command='dch -v $(Version)-1palaso1 "Auto Build"'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
-		<Message Text="Starting pdebuild -- lucid i386" />
+		<Message Text="Starting pdebuild -- $(Dist) i386" />
 		<Exec
-			Command='pdebuild --architecture i386 --configfile /home/bob/pbuilder/pbuilderrc-lucid-i386-lingnet --debsign-k "mono teamcity" --auto-debsign'
+			Command='pdebuild --architecture i386 --configfile /home/bob/pbuilder/pbuilderrc-$(Dist)-i386-lingnet --debsign-k "mono teamcity" --auto-debsign'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
 	</Target>
 
 	<Target Name="Upload" DependsOnTargets="Installer">
-		<Message Text="Startingq dput -- lucid i386" />
+		<Message Text="Startingq dput -- $(Dist) i386" />
 		<Exec
-			Command='dput LINGNET /home/bob/pbuilder/results/lucid/$(ApplicationNameLC)_$(Version)_i386.changes'
+			Command='dput LINGNET /home/bob/pbuilder/results/$(Dist)/$(ApplicationNameLC)_$(Version)_i386.changes'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
 	</Target>
