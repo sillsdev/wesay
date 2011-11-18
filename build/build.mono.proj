@@ -116,7 +116,14 @@
 		<CreateProperty Value="$(OutputDir)/Package/$(ApplicationNameLC)-$(Version)">
 			<Output TaskParameter="Value" PropertyName="InstallerBaseDir" />
 		</CreateProperty>
-		<RemoveDir Directories="$(InstallerBaseDir)" />
+		<CreateItem Include="$(InstallerBaseDir)/**/*;$(InstallerBaseDir)/**">
+			<Output TaskParameter="Include" ItemName="OldInstallerFiles" />
+		</CreateItem>
+		<CreateItem Include="@(OldInstallerFiles->'%(RootDir)%(Directory)')">
+			<Output TaskParameter="Include" ItemName="FoldersToDelete" />
+		</CreateItem>
+		<Delete Files="@(OldInstallerFiles)" />
+		<RemoveDir Directories="$(FoldersToDelete)" />
 		<MakeDir Directories="$(OutputDir)/Package" />
 		<Copy SourceFiles="$(SourcePackageFileName)" DestinationFiles="$(OutputDir)/Package/$(ApplicationNameLC)_$(Version).orig.tar.gz" />
 		<Exec
