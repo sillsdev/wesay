@@ -149,9 +149,9 @@
 	</Target>
 
 	<Target Name="Upload" DependsOnTargets="Installer">
-		<Message Text="Startingq dput -- $(Dist) i386" />
+		<Message Text="Starting dput -- $(Dist) i386" />
 		<Exec
-			Command='dput LINGNET-$(Dist) /home/bob/pbuilder/results/$(Dist)/$(ApplicationNameLC)_$(Version)_i386.changes'
+			Command='dput LINGNET-$(Dist) /home/bob/pbuilder/results/$(Dist)/$(ApplicationNameLC)_$(Version)-1palaso1_i386.changes'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
 	</Target>
