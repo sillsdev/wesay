@@ -102,13 +102,13 @@ namespace WeSay.ConfigTool
 			// _fieldName
 			//
 			this._fieldName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this._fieldName.Location = new System.Drawing.Point(119, 29);
 			this._fieldName.Name = "_fieldName";
 			this._fieldName.Size = new System.Drawing.Size(178, 20);
 			this._fieldName.TabIndex = 1;
-			this.toolTip1.SetToolTip(this._fieldName, "The name that will be used in the LIFT xml file. Only a small set of punctuation " +
-					"characters are allowed.");
+			this.toolTip1.SetToolTip(this._fieldName, "This corresponds to the FLEx \"Custom Field Name\", and is the name that will be us" +
+		"ed in the LIFT xml file. ");
 			this._fieldName.TextChanged += new System.EventHandler(this._fieldName_TextChanged);
 			//
 			// _displayLabel
@@ -136,7 +136,7 @@ namespace WeSay.ConfigTool
 			// _displayName
 			//
 			this._displayName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this._displayName.Location = new System.Drawing.Point(119, 3);
 			this._displayName.Name = "_displayName";
 			this._displayName.Size = new System.Drawing.Size(178, 20);
@@ -170,7 +170,7 @@ namespace WeSay.ConfigTool
 			// _classNameCombo
 			//
 			this._classNameCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this._classNameCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this._classNameCombo.FormattingEnabled = true;
 			this._classNameCombo.Location = new System.Drawing.Point(119, 55);
@@ -182,7 +182,7 @@ namespace WeSay.ConfigTool
 			// _dataTypeCombo
 			//
 			this._dataTypeCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this._dataTypeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this._dataTypeCombo.FormattingEnabled = true;
 			this._dataTypeCombo.Location = new System.Drawing.Point(119, 82);
@@ -194,7 +194,7 @@ namespace WeSay.ConfigTool
 			// _optionsFileName
 			//
 			this._optionsFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this._optionsFileName.Enabled = false;
 			this._optionsFileName.Location = new System.Drawing.Point(119, 109);
 			this._optionsFileName.Name = "_optionsFileName";
@@ -235,7 +235,7 @@ namespace WeSay.ConfigTool
 			this._enableSpellingLabel.TabIndex = 11;
 			this._enableSpellingLabel.Text = "Spelling";
 			this.toolTip1.SetToolTip(this._enableSpellingLabel, "Tick this box to enable spell checking for writing systems with installed spell c" +
-					"hecker support");
+		"hecker support");
 			//
 			// _optionListFileLabel
 			//
@@ -270,12 +270,12 @@ namespace WeSay.ConfigTool
 			this.spellingNotEnabledWarning.Size = new System.Drawing.Size(263, 26);
 			this.spellingNotEnabledWarning.TabIndex = 13;
 			this.spellingNotEnabledWarning.Text = "Spellchecking has not been installed on this machine. Please install Enchant to e" +
-				"nable this feature.";
+	"nable this feature.";
 			//
 			// _description
 			//
 			this._description.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this._description.Enabled = false;
 			this._description.Location = new System.Drawing.Point(119, 339);
 			this._description.Multiline = true;
@@ -301,7 +301,7 @@ namespace WeSay.ConfigTool
 			this._writingSystemsControlLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._writingSystemsControlLabel.Location = new System.Drawing.Point(3, 230);
 			this._writingSystemsControlLabel.Name = "_writingSystemsControlLabel";
-			this._writingSystemsControlLabel.Size = new System.Drawing.Size(104, 16);
+			this._writingSystemsControlLabel.Size = new System.Drawing.Size(91, 16);
 			this._writingSystemsControlLabel.TabIndex = 10;
 			this._writingSystemsControlLabel.Text = "Input Systems";
 			this.toolTip1.SetToolTip(this._writingSystemsControlLabel, "Mark which input systems to use for this field.");

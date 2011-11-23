@@ -46,6 +46,9 @@ namespace WeSay.ConfigTool.Tasks
 
 			foreach (var task in Model.Tasks)
 			{
+				if (!Model.DoShowTask(task))
+					continue;
+
 				bool showCheckMark = task.IsVisible || (!task.IsOptional);
 
 				_taskList.Items.Add(task, showCheckMark);

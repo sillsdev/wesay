@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using Palaso.Data;
@@ -791,6 +792,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 		public override void Activate()
 		{
+#if DEBUG
+			//Thread.Sleep(5000);
+#endif
 			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
 
 			base.Activate();

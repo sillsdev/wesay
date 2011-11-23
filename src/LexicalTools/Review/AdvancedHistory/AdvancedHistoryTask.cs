@@ -70,10 +70,16 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 		{
 			if (_control == null)
 			{
-				_control = _diContainer.Resolve<Chorus.UI.Review.HistoryPage>();
+				var f =  _diContainer.Resolve<Chorus.UI.Review.HistoryPage.Factory>();
+				_control = f(new HistoryPageOptions() {RevisionListOptions = new RevisionListOptions()
+																				 {
+																					 //TODO: introduce a box to enable this mode,
+																					 //but it's too complicated to have by default
+																					 //in wesay
+																					 ShowRevisionChoiceControls = false
+																				 }});
 			}
 			base.Activate();
-
 		}
 
 

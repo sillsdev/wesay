@@ -776,8 +776,6 @@ namespace WeSay.Project.Tests
 				File.WriteAllText(liftFilePath, LiftContentForTests.WrapEntriesInLiftElements("0.13",
 					LiftContentForTests.GetSingleEntryWithWritingSystems("option", "de")
 					));
-				string optionListPath = Path.Combine(projectDirectory.Path, "options.list");
-				File.WriteAllText(optionListPath, OptionListFileContent.GetOptionListWithWritingSystems("option", "x-changeme"));
 				string writingSystemFolderPath = Path.Combine(projectDirectory.Path, "WritingSystems");
 				Directory.CreateDirectory(writingSystemFolderPath);
 				//Now populate the writing system repo with an "en" writing system and a "qaa-x-changedWs" writing system as well as
@@ -819,9 +817,6 @@ namespace WeSay.Project.Tests
 				var liftFileHelper = new WritingSystemsInLiftFileHelper(wsRepo, liftFilePath);
 				Assert.That(liftFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
 				Assert.That(liftFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("de")));
-				var optionListFileHelper = new WritingSystemsInOptionsListFileHelper(wsRepo, optionListPath);
-				Assert.That(optionListFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
-				Assert.That(optionListFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("fr-Latn-US-x-CHANGED")));
 			}
 		}
 
@@ -879,6 +874,25 @@ namespace WeSay.Project.Tests
 
 		[Test]
 		public void IsWritingSystemInUse_WritingSystemIsNotUsed_ReturnsFalse()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
+			}
+		}
+
+		[Test]
+		public void IsWritingSystemInUseInLift_LiftFileContainsWritingSystem_ReturnsTrue()
+		{
+			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			{
+				File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
+				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
+			}
+		}
+
+		[Test]
+		public void IsWritingSystemInUseInLift_WritingSystemIsNotUsed_ReturnsFalse()
 		{
 			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
 			{

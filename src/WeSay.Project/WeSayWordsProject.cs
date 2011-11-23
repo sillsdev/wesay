@@ -388,7 +388,6 @@ namespace WeSay.Project
 		{
 			string liftFilePath = GetPathToLiftFileGivenProjectDirectory(projectDirectory);
 			string configFilePath = GetPathToConfigFile(projectDirectory, Path.GetFileNameWithoutExtension(liftFilePath));
-			string writingSystemFolderPath = GetPathToLdmlWritingSystemsFolder(projectDirectory);
 			string userConfigPath = PathToUserSpecificConfigFile(projectDirectory);
 
 			//migrate writing systems
@@ -403,14 +402,14 @@ namespace WeSay.Project
 				WritingSystemCompatibility.Flex7V0Compatible
 			);
 
-			//migrate the config file
-			ConfigFile configFile = null;
+			//migrate the project config file
+			ConfigFile projectConfigFile = null;
 			if (File.Exists(configFilePath)) // will be null if we're creating a new project
 			{
-				configFile = new ConfigFile(configFilePath);
-				configFile.MigrateIfNecassary();
+				projectConfigFile = new ConfigFile(configFilePath);
+				projectConfigFile.MigrateIfNecassary();
 				//check for orphaned writing systems in the config file
-				configFile.CreateWritingSystemsForIdsInFileWhereNecassary(writingSystemRepository);
+				projectConfigFile.CreateWritingSystemsForIdsInFileWhereNecassary(writingSystemRepository);
 			}
 
 			if (File.Exists(liftFilePath)) // will be null if we're creating a new project
@@ -418,18 +417,6 @@ namespace WeSay.Project
 				//check for orphaned writing systems in Lift
 				var wsCreator = new WritingSystemsInLiftFileHelper(writingSystemRepository, liftFilePath);
 				wsCreator.CreateNonExistentWritingSystemsFoundInFile();
-			}
-
-			foreach (var file in Directory.GetFiles(projectDirectory))
-			{
-				var fileExtension = Path.GetExtension(file);
-				//Optionlists can have ANY filename it seems. So We have to check all file. But we are going to exclude .lift and .wesayconfig files.
-				if(fileExtension.Equals(".lift", StringComparison.OrdinalIgnoreCase) || fileExtension.Equals(".WeSayConfig", StringComparison.OrdinalIgnoreCase))
-				{
-					continue;
-				}
-				var optionListHelper = new WritingSystemsInOptionsListFileHelper(writingSystemRepository, file);
-				optionListHelper.CreateNonExistentWritingSystemsFoundInFile();
 			}
 
 			//migrate user config

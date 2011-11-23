@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
@@ -91,6 +92,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				IsActive = false;
 				throw;
 			}
+
+#if DEBUG
+			//Thread.Sleep(5000);
+#endif
 		}
 
 		void OnSelectedEntryOfDictionaryControlChanged(object sender, EventArgs e)

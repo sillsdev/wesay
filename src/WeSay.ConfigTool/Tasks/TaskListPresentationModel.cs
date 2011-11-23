@@ -56,6 +56,11 @@ namespace WeSay.ConfigTool.Tasks
 				task.OnWritingSystemIdChanged(pair.from, pair.to);
 			}
 		}
+
+		public bool DoShowTask(ITaskConfiguration task)
+		{
+			return task.Label != "Dashboard";
+		}
 	}
 
 }

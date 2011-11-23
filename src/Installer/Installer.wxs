@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
-<!-- will be used later on in this file.                                                                 -->
-<?define Property_ProductVersion = "0.9.25" ?> <!--this is replaced at build time by the msbuild 'package' target -->
+<!-- will be used later on in this file.  this value should be B U I  LD_SCRIPT_MUST_REPLACE_AT_RUNTIME (in quotes) -->
+<?define Property_ProductVersion = "BUILD_SCRIPT_MUST_REPLACE_AT_RUNTIME" ?> <!--this is replaced at build time by the msbuild 'package' target -->
 <?define Property_ProductCode = "*" ?> <!-- auto-generate a new guid each time -->
 <?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?> <!--Don't even think of EVER changing this -->
 
@@ -64,6 +64,10 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 				  <Directory Id="mercurial" Name="mercurial">
 					<!-- a generated fragment from GeneratedMercurial.wxs will fill this in -->
+				  </Directory>
+
+				  <Directory Id="MercurialExtensions" Name="MercurialExtensions">
+					<!-- a generated fragment from GeneratedMercurialExtensions.wxs will fill this in -->
 				  </Directory>
 
 				  <Component Id="DocFiles" Guid="{F533B47C-A6F4-4284-A257-59C3C9B54526}">
@@ -387,6 +391,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			 <ComponentGroupRef Id ="templates"/>
 			  <ComponentGroupRef Id ="PoFiles"/>
 			  <ComponentGroupRef Id ="Mercurial"/>
+			  <ComponentGroupRef Id ="MercurialExtensions"/>
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 			<Icon Id="WeSay.App.exe" SourceFile ="..\..\output\release\WeSay.App.exe" />

@@ -34,6 +34,7 @@ namespace WeSay.LexicalTools.Dashboard
 		private readonly Padding _buttonRowMargin;
 		private readonly Padding _buttonMargin;
 		private int _buttonsPerRow;
+		private bool _suspendLayout;
 
 		private const TextFormatFlags ToolTipFormatFlags =
 			TextFormatFlags.WordBreak | TextFormatFlags.NoFullWidthCharacterBreak |
@@ -174,7 +175,7 @@ namespace WeSay.LexicalTools.Dashboard
 			ITask task = b.ThingToShowOnDashboard as ITask;
 			if (task != null && _currentWorkTaskProvider != null)
 			{
-				_currentWorkTaskProvider.ActiveTask = task;
+				_currentWorkTaskProvider.SetActiveTask(task);
 			}
 			else
 			{
@@ -726,11 +727,14 @@ namespace WeSay.LexicalTools.Dashboard
 				throw new InvalidOperationException(
 					"Deactivate should only be called once after Activate.");
 			}
-			SuspendLayout(); //NB: In WS-1234, the user found this to be really slow (!,??), hence the suspend
+			_panel.SuspendLayout(); //NB: In WS-1234, the user found this to be really slow (!,??), hence the suspend
+			_suspendLayout = true;
 			_toolTip.RemoveAll();
 			_panel.Controls.Clear();
 			ResumeLayout();
+			_suspendLayout = false;
 			_isActive = false;
+  //          Debug.Fail("stop");
 		}
 
 		public void GoToUrl(string url) {}
@@ -874,7 +878,8 @@ namespace WeSay.LexicalTools.Dashboard
 
 		protected override void OnPaintBackground(PaintEventArgs e)
 		{
-			DisplaySettings.Default.PaintBackground(this, e);
+		   if(!_suspendLayout)
+			   DisplaySettings.Default.PaintBackground(this, e);
 		}
 
 		protected override void OnMouseWheel(MouseEventArgs e)
@@ -937,6 +942,16 @@ namespace WeSay.LexicalTools.Dashboard
 
 		private void _toolTip_Popup(object sender, PopupEventArgs e)
 		{
+		   //todo: This code can take 30 seconds or more to complete! if you make the dash small and then drag the window,
+			//it goes navel-gazing for a long time. (JH noticed Oct 2011).
+
+			//This is also implicated in involvement in WS-34187) "Better feedback for slower computers"
+			//because we're talking about replacing all this with html, I'm just going to make
+			//this not run when it has no business running.
+
+			if (_suspendLayout)
+				return;
+
 			DashboardButton button = e.AssociatedControl as DashboardButton;
 			if (button == null)
 			{
