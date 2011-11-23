@@ -143,7 +143,7 @@
 		/>
 		<Message Text="Starting pdebuild -- $(Dist) i386" />
 		<Exec
-			Command='pdebuild --architecture i386 --configfile /home/bob/pbuilder/pbuilderrc-$(Dist)-i386-lingnet --debsign-k "mono teamcity" --auto-debsign'
+			Command='pdebuild --architecture i386 --configfile /home/bob/pbuilder/pbuilderrc-$(Dist)-i386-lingnet --debbuildopts "-sa" --debsign-k "mono teamcity" --auto-debsign'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
 	</Target>
