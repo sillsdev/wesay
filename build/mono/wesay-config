@@ -1,2 +1,2 @@
 #!/bin/sh
-exec mono /usr/lib/wesay/WeSay.ConfigTool.exe "$@"
+exec mono "/usr/lib/wesay/WeSay Configuration Tool.exe" "$@"
