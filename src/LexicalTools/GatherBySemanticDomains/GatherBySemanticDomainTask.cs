@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -975,6 +976,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		}
 
 
-
+		public Font GetFontOfSemanticDomainField()
+		{
+			return WritingSystemInfo.CreateFont(_semanticDomainWritingSystem);
+		}
 	}
 }

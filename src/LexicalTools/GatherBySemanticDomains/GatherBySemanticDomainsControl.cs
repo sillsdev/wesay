@@ -103,6 +103,8 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			_flyingLabel.Finished += _animator_Finished;
 
+			_domainListComboBox.Font = _presentationModel.GetFontOfSemanticDomainField();
+
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made
 			var majorRomanWritingSystems = new List<string>(new[] {"en", "id", "fr"});
