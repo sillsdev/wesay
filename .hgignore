@@ -26,9 +26,11 @@ config
 *.usertasks
 *~
 *.orig
+*.mdb
 nant.resx.bak
 glob:lib/*.Tests.dll
 glob:desktop.ini
 glob:Mercurial
 glob:build/old
 glob:lib/$(Configuration)
+test-results
