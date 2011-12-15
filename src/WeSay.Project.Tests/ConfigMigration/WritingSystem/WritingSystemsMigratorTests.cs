@@ -360,13 +360,13 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				const string language = "zzas";
 				e.WriteToPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystem(language, language, "", "", "", 12, false, language, "", false, true));
 				string writingSystemsPath = Path.Combine(e.ProjectPath, "WritingSystems");
-				string ldmlFilePath = Path.Combine(writingSystemsPath, "en-ltlt.ldml");
+				string ldmlFilePath = Path.Combine(writingSystemsPath, "en-bogus.ldml");
 				string idChangeLogFilePath = Path.Combine(writingSystemsPath, "idchangelog.xml");
 				Directory.CreateDirectory(writingSystemsPath);
-				File.WriteAllText(ldmlFilePath, LdmlContentForTests.Version0("en-ltlt", "", "", ""));
+				File.WriteAllText(ldmlFilePath, LdmlContentForTests.Version0("en-bogus", "", "", ""));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
 				migrator.MigrateIfNecessary();
-				AssertThatXmlIn.File(idChangeLogFilePath).HasAtLeastOneMatchForXpath("/WritingSystemChangeLog/Changes/Change/To[text()='en-x-ltlt']");
+				AssertThatXmlIn.File(idChangeLogFilePath).HasAtLeastOneMatchForXpath("/WritingSystemChangeLog/Changes/Change/To[text()='en-x-bogus']");
 				AssertThatXmlIn.File(idChangeLogFilePath).HasAtLeastOneMatchForXpath("/WritingSystemChangeLog/Changes/Change/To[text()='qaa-Zxxx-x-zzas-audio']");
 			}
 		}
