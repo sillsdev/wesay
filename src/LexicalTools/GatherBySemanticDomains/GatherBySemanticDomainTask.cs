@@ -10,6 +10,8 @@ using System.Xml;
 using Palaso.Data;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
+using Palaso.DictionaryServices.Processors;
+using Palaso.Lift.Merging;
 using Palaso.Text;
 using Palaso.i18n;
 using Palaso.Lift;
@@ -19,6 +21,7 @@ using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
+using NullProgress = Palaso.Progress.LogBox.NullProgress;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
@@ -520,6 +523,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			return AddWord(lexicalForm, string.Empty);
 		}
 
+		/// <summary>
+		/// Adds this word and gloss, potentially adding the current semantic domain to multiple entriew with that word and gloss.
+		/// </summary>
+		/// <param name="lexicalForm"></param>
+		/// <param name="gloss"></param>
+		/// <returns>the entries that were modified </returns>
 		public IList<LexEntry> AddWord(string lexicalForm, string gloss)
 		{
 			VerifyTaskActivated();
@@ -644,6 +653,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					{
 						RememberMeaningOfDissociatedWord(sense);
 						semanticDomains.Remove(CurrentDomainKey);
+						entry.Senses.Remove(sense);//if we don't do this and it has a meaning, we'll fail to delete the word when the user is trying to correct the spelling. (WS-34245)
 					}
 				}
 			}
@@ -684,10 +694,41 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 			else
 			{
-				if (entry.Senses.Contains(_savedSenseDuringMoveToEditArea))
+				if (_savedSenseDuringMoveToEditArea!=null) //we are editing a word we entered previously
 				{
-					sense = _savedSenseDuringMoveToEditArea;
-					sense.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
+					  if (entry.Senses.Contains(_savedSenseDuringMoveToEditArea))
+					  {
+						  //review: What is this case? I think it's where the word spelling didn't change, AND the old entry had some other sense(s), so it's still around
+						  sense = _savedSenseDuringMoveToEditArea;
+						  sense.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
+					  }
+					  else //we're bringing this sense in from the old spelling of the word
+					  {
+						  //in this case, we have this saved sense we want to put back,
+						  //which could conceivably have example sentences and other stuff
+						  //so update the meaning in case they edited that
+						  _savedSenseDuringMoveToEditArea.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
+
+							//is there a sense with a matching gloss?
+							sense = entry.Senses.FirstOrDefault(
+								s => s.Definition.ContainsEqualForm(meaning, DefinitionWritingSystem.Id));
+							if (sense != null)
+							{
+								//now, can we merge this sense in?
+
+								if (!SenseMerger.TryMergeSenseWithSomeExistingSense(sense, _savedSenseDuringMoveToEditArea, new NullProgress()))
+								{
+									//ah well, they'll have to hand-merge at some point
+									//Enhance: add a chorus note
+									entry.Senses.Add(_savedSenseDuringMoveToEditArea);
+								}
+							}
+							else //ok, no matching sense to try and merge with, so just add this
+							{
+								entry.Senses.Add(_savedSenseDuringMoveToEditArea);
+								sense = _savedSenseDuringMoveToEditArea;
+							}
+					  }
 				}
 				else
 				{
