@@ -159,12 +159,12 @@
 	<!-- Install -->
 	<!-- The Install Target must be called from an MSBuild task so as to include the output from the previous MSBuild in the ItemGroup below -->
 	<ItemGroup>
-		<ExecutableFiles Include="$(OutputDir)/*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*.mdb" />
+		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/build/mono/chorusmerge" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*.mdb" />
 		<CommonFiles Include="$(RootDir)/common/**/*" />
 		<TemplateFiles Include="$(RootDir)/templates/**/*" />
 		<IconFiles Include="$(RootDir)/src/Installer_Linux/icons/**/*" />
 		<MenuFiles Include="$(RootDir)/src/Installer_Linux/*.desktop" />
-		<WrapperFiles Include="$(RootDir)/build/mono/*" />
+		<WrapperFiles Include="$(RootDir)/build/mono/*" Exclude="$(RootDir)/build/mono/chorusmerge" />
 	</ItemGroup>
 	<PropertyGroup>
 		<InstallUsrBin>$(InstallDir)/usr/bin</InstallUsrBin>
@@ -199,7 +199,10 @@
 			SourceFiles="@(WrapperFiles)"
 		/>
 		<Exec
-			Command="chmod 755 $(InstallUsrBin)/wesay $(InstallUsrBin)/wesay-config $(InstallUsrBin)/chorus $(InstallUsrBin)/chorusmerge"
+			Command="chmod 755 $(InstallUsrBin)/wesay $(InstallUsrBin)/wesay-config $(InstallUsrBin)/chorus"
+		/>
+		<Exec
+			Command="chmod 755 $(InstallApp)/chorusmerge"
 		/>
 	</Target>
 
