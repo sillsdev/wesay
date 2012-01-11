@@ -36,16 +36,24 @@ namespace Addin.Transform.PdfDictionary
 			using (_writer = XmlWriter.Create(textWriter, CanonicalXmlSettings.CreateXmlWriterSettings()))
 			{
 				//  _writer.WriteProcessingInstruction("xml-stylesheet", @"type='text/css' href='dictionary.css");
+				_writer.WriteRaw("<!DOCTYPE HTML>");
 				_writer.WriteStartElement("html");
 				_writer.WriteStartElement("head");
-//  just removed because I'm having trouble nailing down precedence, and we add these explicitly to prince
-//  Note: If these ever come back that WriteRaw will not write chorus compliant formatting.  Use WriteNode instead. CP 2011-01
+				_writer.WriteStartElement("meta");
+				_writer.WriteAttributeString("charset", "UTF-8");
+//            	_writer.WriteAttributeString("http-equiv", "content-type");
+//				_writer.WriteAttributeString("content","text/html; charset=utf-8");
+				_writer.WriteEndElement();
+
+
+				//  Note: WriteRaw will not write chorus compliant formatting.  Use WriteNode instead. CP 2011-01
+				//jh: Cambell, exported stuff shouldn't be part of chorus send/receive.
 				if (_linkToUserCss)
 				{
-					_writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
 					_writer.WriteRaw("<LINK rel='stylesheet' href='autoLayout.css' type='text/css' />");
 					_writer.WriteRaw("<LINK rel='stylesheet' href='autoFonts.css' type='text/css' />");
 					_writer.WriteRaw("<LINK rel='stylesheet' href='customLayout.css' type='text/css' />");
+					_writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
 				}
 				_writer.WriteEndElement();
 				_writer.WriteStartElement("body");
@@ -116,6 +124,9 @@ namespace Addin.Transform.PdfDictionary
 		private void DoRelation(XPathNavigator relation)
 		{
 			XPathNavigator target=  relation.SelectSingleNode("field[@type='headword-of-target']");
+			if (target == null)
+				return;
+
 ////span[@class='crossrefs']/span[@class='crossref-targets' and count(span[@class='xitem']) == 2]");
 			//string rtype = relation.GetAttribute("type",string.Empty);
 			StartSpan("xitem");
@@ -408,7 +419,20 @@ namespace Addin.Transform.PdfDictionary
 				case "grammatical-info":
 					DoGrammaticalInfo(entryNav);
 					break;
+				default:
+					DoGenericField(entryNav);
+					break;
 			}
+		}
+
+		private void DoGenericField(XPathNavigator entryNav)
+		{
+			StartSpan(entryNav.GetAttribute("type",string.Empty)+" custom");
+			foreach (XPathNavigator form in entryNav.SelectChildren("form", string.Empty))
+			{
+				WriteSpan("xitem", GetLang(form), form.Value);
+			}
+			EndSpan();
 		}
 
 		private void DoHeadWord(XPathNavigator headwordFieldNav)
