@@ -4,6 +4,7 @@ TARGETS="lucid maverick natty oneiric"
 #PUBLISH='PALASO'
 PUBLISH='LINGNET'
 #REVISION=`echo $BUILD_NUMBER | sed -e 's/[:-].*$//'`
+VARIANT='lingnet'
 PRODUCT='wesay'
 ZIPTYPE='gz'
 DEST=../output
