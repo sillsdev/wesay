@@ -1,3 +1,10 @@
+wesay (1.1.2-1) UNRELEASED; urgency=low
+
+  * 1.1 beta with auto keyboard switching disabled
+  * now building palaso and chorus binaries from source
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 13 Jan 2012 21:53:49 +0700
+
 wesay (1.1.0-1palaso1) lucid; urgency=low
 
   * Updated to upstream wesay 1.1.x
