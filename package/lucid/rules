@@ -8,8 +8,7 @@ CHORUS_XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild build/build.mono.proj /p:Root
 build: build-stamp
 build-stamp:
 	dh_testdir
-	tar xfz externals/chorus-$(CHORUSVER).tar.gz
-	PALASOVER=$(shell ls -1 chorus-$(CHORUSVER)/externals/libpalaso-* | sed -e 's/.*externals\/libpalaso\-\(.*\).tar.gz/\1/')
+	PALASOVER=$(shell tar xfz externals/chorus-$(CHORUSVER).tar.gz && ls -1 chorus-$(CHORUSVER)/externals/libpalaso-* | sed -e 's/.*externals\/libpalaso\-\(.*\).tar.gz/\1/')
 	tar xfz externals/libpalaso-$(PALASOVER).tar.gz
 	$(PALASO_XBUILD) /target:Compile
 	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.dll* chorus-$(CHORUSVER)/lib/DebugMono
