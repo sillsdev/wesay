@@ -81,19 +81,19 @@
 		<Source Include="$(RootDir)/common/**/*" />
 		<Source Include="$(RootDir)/doc/**/*" />
 		<Source Include="$(RootDir)/SampleProjects/**" />
-		<Source Include="$(RootDir)/package/**/*" />
 		<Source Include="$(RootDir)/test/*" />
 		<Source Include="$(RootDir)/templates/**/*" />
 		<Source Include="$(RootDir)/externals/*" />
 	</ItemGroup>
 	<Target Name="SourcePackage" DependsOnTargets="PackageClean;SetAssemblyVersion">
-		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)_$(Version).tar.gz">
+		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)-$(Version).tar.gz">
 			<Output TaskParameter="Value" PropertyName="SourcePackageFileName" />
 		</CreateProperty>
 		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)-$(Version)">
 			<Output TaskParameter="Value" PropertyName="TarBaseDir" />
 		</CreateProperty>
 		<Message Text="Archive source to '$(SourcePackageFileName)'" />
+		<MakeDir Directories="$(OutputDir)" />
 		<Archive
 			Command="Tar"
 			InputFilePaths="@(Source)"
