@@ -12,7 +12,7 @@ NO_DPUT=1
 
 BASE=$(dpkg-parsechangelog -lchangelog| grep ^Vers | cut -d\  -f2 | cut -d\- -f1)
 
-xbuild /target:SourcePackage /p:Configuration=DebugMono /p:BUILD_NUMBER="${BASE}.abcd" ${teamcity_build_checkoutDir}/build/build.mono.proj  || exit $?
+xbuild /target:SourcePackage /p:Configuration=DebugMono /p:BUILD_NUMBER="${BASE}.abcd" $1/build/build.mono.proj  || exit $?
 
 cp ${teamcity_build_checkoutDir}/output/DebugMono/${PRODUCT}-${BASE}.tar.gz ~/upstream/${PRODUCT}_${BASE}.orig.tar.gz  || exit $?
 
