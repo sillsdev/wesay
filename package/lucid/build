@@ -14,6 +14,6 @@ BASE=$(dpkg-parsechangelog -lchangelog| grep ^Vers | cut -d\  -f2 | cut -d\- -f1
 
 xbuild /target:SourcePackage /p:Configuration=DebugMono /p:BUILD_NUMBER="${BASE}.abcd" /p:RootDir=$1 $1/build/build.mono.proj  || exit $?
 
-cp ${teamcity_build_checkoutDir}/output/DebugMono/${PRODUCT}-${BASE}.tar.gz ~/upstream/${PRODUCT}_${BASE}.orig.tar.gz  || exit $?
+cp $1/output/DebugMono/${PRODUCT}-${BASE}.tar.gz ~/upstream/${PRODUCT}_${BASE}.orig.tar.gz  || exit $?
 
 source /home/bob/pbuilder/build.common
