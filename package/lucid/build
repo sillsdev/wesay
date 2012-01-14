@@ -8,6 +8,8 @@ PRODUCT='wesay'
 ZIPTYPE='gz'
 DEST=../output
 
+NO_DPUT=1
+
 BASE=$(dpkg-parsechangelog -lchangelog| grep ^Vers | cut -d\  -f2 | cut -d\- -f1)
 
 xbuild /target:SourcePackage /p:Configuration=DebugMono /p:BUILD_NUMBER="${BASE}.abcd" ${teamcity_build_checkoutDir}/build/build.mono.proj
