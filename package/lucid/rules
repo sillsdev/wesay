@@ -4,8 +4,8 @@ CHORUSVER=$(shell ls -1 externals/chorus-* | sed -e 's/externals\/chorus\-\(.*\)
 PALASOVER=$(shell tar tfz externals/chorus-$(CHORUSVER).tar.gz | grep libpalaso | sed -e 's/.*externals\/libpalaso\-\(.*\).tar.gz/\1/')
 
 XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild build/build.mono.proj /p:RootDir=$(CURDIR)
-PALASO_XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild build/build.mono.proj /p:RootDir=$(CURDIR)
-CHORUS_XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild build/build.mono.proj /p:RootDir=$(CURDIR)
+PALASO_XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild libpalaso-$(PALASOVER)/build/build.mono.proj /p:RootDir=$(CURDIR)/libpalaso-$(PALASOVER)
+CHORUS_XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild chorus-$(CHORUSVER)/build/build.mono.proj /p:RootDir=$(CURDIR)/chorus-$(CHORUSVER)
 build: build-stamp
 build-stamp:
 	dh_testdir
