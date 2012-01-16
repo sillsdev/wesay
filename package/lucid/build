@@ -8,6 +8,7 @@ VARIANT='lingnet'
 PRODUCT='wesay'
 ZIPTYPE='gz'
 DEST=../output
+BUILDINGDIR=$(HERE)/../..
 
 NO_DPUT=1
 AMD64_MAINBUILD=1
