@@ -21,7 +21,10 @@ if [ "${TCTARGET}" = "lucid" ]; then
 else
 	rm ${BUILDINGDIR}/*build*
 fi
+
 source /home/bob/pbuilder/build.common
 
+mkdir ${DEST}/results
+cp /home/bob/pbuilder/results/lucid/${PRODUCT}_${BASE}* ${DEST}/results
 
 
