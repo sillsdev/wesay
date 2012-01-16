@@ -11,11 +11,11 @@ build-stamp:
 	dh_testdir
 	tar xfz externals/chorus-$(CHORUSVER).tar.gz
 	tar xfz chorus-$(CHORUSVER)/externals/libpalaso-$(PALASOVER).tar.gz
-	$(PALASO_XBUILD) /target:Compile
+	$(PALASO_XBUILD) /target:Compile /p:Configuration=DebugMono
 	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.dll* chorus-$(CHORUSVER)/lib/DebugMono
 	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.TestUtilities.dll* chorus-$(CHORUSVER)/lib/DebugMono
 	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.BuildTasks.dll chorus-$(CHORUSVER)/build
-	$(CHORUS_XBUILD) /target:Compile
+	$(CHORUS_XBUILD) /target:Compile /p:Configuration=DebugMono
 	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.dll* lib/DebugMono
 	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.TestUtilities.dll* lib/DebugMono
 	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.DictionaryServices.dll* lib/DebugMono
@@ -27,7 +27,7 @@ build-stamp:
 	cp chorus-$(CHORUSVER)/output/DebugMono/Chorus.exe* lib/DebugMono
 	cp chorus-$(CHORUSVER)/output/DebugMono/ChorusMerge.exe* lib/DebugMono
 	cp chorus-$(CHORUSVER)/output/DebugMono/LibChorus.dll* lib/DebugMono
-	$(XBUILD) /target:Compile
+	$(XBUILD) /target:Compile /p:Configuration=DebugMono
 	touch build-stamp
 
 clean:
