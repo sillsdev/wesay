@@ -22,7 +22,7 @@ build-stamp:
 	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.Lift.dll* lib/DebugMono
 	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.Tests.dll* lib/DebugMono
 	cp libpalaso-$(PALASOVER)/output/DebugMono/PalasoUIWindowsForms.dll* lib/DebugMono
-	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.Media.dll* lib/DebugMono
+	#cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.Media.dll* lib/DebugMono
 	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.BuildTasks.dll build
 	cp chorus-$(CHORUSVER)/output/DebugMono/Chorus.exe* lib/DebugMono
 	cp chorus-$(CHORUSVER)/output/DebugMono/ChorusMerge.exe* lib/DebugMono
