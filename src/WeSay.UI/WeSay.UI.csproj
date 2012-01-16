@@ -128,7 +128,7 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.Media, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="Palaso.Media, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\$(Configuration)\Palaso.Media.dll</HintPath>
 	</Reference>
@@ -204,10 +204,10 @@
 	<Compile Include="CollapsibleSplitter.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Include="audio\WeSayAudioFieldBox.cs">
+	<Compile Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="audio\WeSayAudioFieldBox.Designer.cs">
+	<Compile Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.Designer.cs">
 	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
 	</Compile>
 	<Compile Include="Event.cs" />
@@ -333,7 +333,7 @@
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
-	<EmbeddedResource Include="audio\WeSayAudioFieldBox.resx">
+	<EmbeddedResource Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.resx">
 	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>

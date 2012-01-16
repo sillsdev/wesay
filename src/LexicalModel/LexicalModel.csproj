@@ -174,7 +174,7 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.Media, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+	<Reference Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="Palaso.Media, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\$(Configuration)\Palaso.Media.dll</HintPath>
 	</Reference>
