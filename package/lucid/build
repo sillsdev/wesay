@@ -7,7 +7,7 @@ PUBLISH='LINGNET'
 VARIANT='lingnet'
 PRODUCT='wesay'
 ZIPTYPE='gz'
-DEST=../output
+DEST=${HERE}/../output
 BUILDINGDIR=${HERE}/../../building
 
 NO_DPUT=1
@@ -27,7 +27,7 @@ source /home/bob/pbuilder/build.common
 if [ "${TCTARGET}" = "lucid" ]; then
 	mkdir ${DEST}/results || exit $?
 	pwd
-	cp /home/bob/pbuilder/results/lucid/${PRODUCT}_${BASE}* ${DEST}/results
+	cp /home/bob/pbuilder/results/lucid/${PRODUCT}_${BASE}* ${DEST}/results || exit $?
 	test -e ${DEST}/results/${PRODUCT}_${BASE}.orig.tar.gz || exit $?
 fi
 
