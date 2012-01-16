@@ -10,6 +10,7 @@ ZIPTYPE='gz'
 DEST=../output
 
 NO_DPUT=1
+AMD64_MAINBUILD=1
 
 BASE=$(dpkg-parsechangelog -lchangelog| grep ^Vers | cut -d\  -f2 | cut -d\- -f1)
 
