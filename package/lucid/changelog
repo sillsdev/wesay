@@ -1,3 +1,9 @@
+wesay (1.1.3-1) UNRELEASED; urgency=low
+
+  * default font for new writing systems is now DejaVu Sans, 12
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Tue, 17 Jan 2012 13:56:15 +0700
+
 wesay (1.1.2-1) UNRELEASED; urgency=low
 
   * 1.1 beta with auto keyboard switching disabled
