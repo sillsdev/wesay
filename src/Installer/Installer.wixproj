@@ -6,7 +6,7 @@
 	<SchemaVersion>2.0</SchemaVersion>
 	<OutputName>WeSayInstaller</OutputName>
 	<OutputType>Package</OutputType>
-	<WixToolPath>C:\Program Files\Windows Installer XML v3\bin\</WixToolPath>
+	<WixToolPath>C:\Program Files\Windows Installer XML v3.5\bin\</WixToolPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 	<OutputPath>..\..\output\installer\</OutputPath>
@@ -68,11 +68,11 @@
 	<Compile Include="CommonDir.wxs" />
   </ItemGroup>
   <ItemGroup>
-	<WixExtension Include="C:\Program Files\Windows Installer XML v3\bin\WixUtilExtension.dll" />
-	<WixExtension Include="C:\Program Files\Windows Installer XML v3\bin\WixNetFxExtension.dll" />
+	<WixExtension Include="C:\Program Files\Windows Installer XML v3.5\bin\WixUtilExtension.dll" />
+	<WixExtension Include="C:\Program Files\Windows Installer XML v3.5\bin\WixNetFxExtension.dll" />
   </ItemGroup>
   <ItemGroup>
 	<Content Include="Welcome.htm" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" />
 </Project>
