@@ -1034,6 +1034,14 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		}
 
 
-
+		public Font GetFontOfSemanticDomainField()
+		{
+			if (_semanticDomainWritingSystem == null) // just in case there is no WS for the semDom field (not likely)
+			{
+				_semanticDomainWritingSystem = new WritingSystemDefinition("qaa");
+				_semanticDomainWritingSystem.DefaultFontName = "Microsoft Sans Serif";
+			}
+			return WritingSystemInfo.CreateFont(_semanticDomainWritingSystem);
+		}
 	}
 }

@@ -56,6 +56,9 @@
 		<Component Id="Ddp4Questions_nep.xml" Guid="{29d9ffa0-64ac-11e0-ae3e-0800200c9a66}">
 		  <File Id="Ddp4Questions_nep.xml" Name="Ddp4Questions-nep.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-nep.xml" />
 		</Component>
+		<Component Id="Ddp4Questions_km.xml" Guid="{E105135D-206E-4E35-BC20-325B3304228B}">
+		  <File Id="Ddp4Questions_km.xml" Name="Ddp4Questions-km.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-km.xml" />
+		</Component>
 
 		<Component Id="ArtOfReadingIndexV3_en.txt" Guid="{34302393-949D-42e8-BEE8-8C52B03F571A}">
 		  <File Id="ArtOfReadingIndexV3_en.txt" Name="ArtOfReadingIndexV3_en.txt" KeyPath="yes" Source="..\..\common\ArtOfReadingIndexV3_en.txt" />
@@ -83,6 +86,7 @@
 	  <ComponentRef Id="Ddp4Questions_id.xml"/>
 	  <ComponentRef Id="Ddp4Questions_th.xml"/>
 	  <ComponentRef Id="Ddp4Questions_nep.xml"/>
+	  <ComponentRef Id="Ddp4Questions_km.xml"/>
 	</ComponentGroup>
 
   </Fragment>

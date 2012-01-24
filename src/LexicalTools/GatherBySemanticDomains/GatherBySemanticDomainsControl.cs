@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -105,6 +105,8 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		   _flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 
 			_flyingLabel.Finished += _animator_Finished;
+
+			_domainListComboBox.Font = _presentationModel.GetFontOfSemanticDomainField();
 
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made

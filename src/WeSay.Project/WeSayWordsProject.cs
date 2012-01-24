@@ -1119,6 +1119,16 @@ namespace WeSay.Project
 			return GetFileLocator().LocateOptionalFile(fileName);
 		}
 
+		public string LocateDirectory(string directoryName)
+		{
+			return GetFileLocator().LocateDirectory(directoryName);
+		}
+
+		public string LocateDirectory(string directoryName, string descriptionForErrorMessage)
+		{
+			return GetFileLocator().LocateDirectory(directoryName, descriptionForErrorMessage);
+		}
+
 		/// <summary>
 		/// Find the file, starting with the project dirs and moving to the app dirs.
 		/// This allows a user to override an installed file by making thier own.
