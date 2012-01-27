@@ -375,7 +375,7 @@ namespace WeSay.Project
 		{
 			if (e != null && e.Error != null)
 			{
-				throw e.Error;
+				throw new ApplicationException("Error during migration.", e.Error);
 			}
 		}
 
