@@ -847,7 +847,11 @@ namespace WeSay.Project
 		public ProjectInfo GetProjectInfoForAddin()
 		{
 			return new ProjectInfo(Name,
+#if MONO
+								   ApplicationSharedDirectory,
+#else
 								   ApplicationRootDirectory,
+#endif
 								   ProjectDirectoryPath,
 								   PathToLiftFile,
 								   PathToExportDirectory,

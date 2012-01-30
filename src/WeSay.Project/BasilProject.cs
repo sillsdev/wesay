@@ -212,6 +212,14 @@ There are problems in:
 			get { return DirectoryOfTheApplicationExecutable; }
 		}
 
+		public static string ApplicationSharedDirectory
+		{
+			get {
+			string commonpath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+			return Path.Combine(commonpath, "wesay");
+		}
+		}
+
 		public string ApplicationTestDirectory
 		{
 			get { return Path.Combine(GetTopAppDirectory(), "test"); }
