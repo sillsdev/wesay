@@ -1,0 +1,17 @@
+Source: wesay
+Section: editors
+Priority: optional
+Maintainer: Cambell Prince <cambell_prince@sil.org>
+Build-Depends: debhelper (>=7), mono-gmcs (>=2.10), mono-xbuild, libmono2.0-cil, libmono-winforms2.0-cil, libmono-system-runtime2.0-cil, mono-devel, cli-common-dev (>= 0.7.0), libicu-cil, libenchant-dev
+Standards-Version: 3.8.4
+
+Package: wesay
+Section: editors
+Architecture: all
+Depends: ${misc:Depends}, ${cli:Depends}, libmono-microsoft-visualbasic8.0-cil
+Conflicts: wesay-stable
+Description: A dictionary creation tool
+ WeSay helps people build a dictionary in their own language. It has
+ various ways to help native speakers to think of words in their
+ language and enter some basic data about them (no backslash codes,
+ just forms to fill in).

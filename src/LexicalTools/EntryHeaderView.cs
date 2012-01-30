@@ -131,6 +131,10 @@ namespace WeSay.LexicalTools
 
 		private void OnEntryView_FontChanged(object sender, EventArgs e)
 		{
+			if (String.IsNullOrEmpty(_rtfFormattedTextOfEntry)) // This check needed by mono 2.6.x CP 2010-12
+			{
+				return;
+			}
 			_entryPreview.Rtf = _rtfFormattedTextOfEntry;
 		}
 	}

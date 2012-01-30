@@ -1,6 +1,0 @@
-hg purge --all
-hg revert --all -X ../lib
-hg pull
-hg update $1
-shift
-$@

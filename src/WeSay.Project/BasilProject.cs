@@ -195,12 +195,29 @@ There are problems in:
 
 		public static string ApplicationCommonDirectory
 		{
-			get { return Path.Combine(GetTopAppDirectory(), "common"); }
+			get {
+				string returndir = Path.Combine(GetTopAppDirectory(), "common");
+				if (!Directory.Exists(returndir))
+				{
+					string commonpath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+					commonpath = Path.Combine(commonpath, "wesay");
+					returndir = Path.Combine(commonpath, "common");
+				}
+				return returndir;
+			}
 		}
 
 		public static string ApplicationRootDirectory
 		{
 			get { return DirectoryOfTheApplicationExecutable; }
+		}
+
+		public static string ApplicationSharedDirectory
+		{
+			get {
+			string commonpath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+			return Path.Combine(commonpath, "wesay");
+		}
 		}
 
 		public string ApplicationTestDirectory
