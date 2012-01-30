@@ -53,6 +53,7 @@ install-stamp:
 	dh_fixperms
 	dh_clifixperms
 	dh_clideps -d -i
+	dh_shlibdeps
 	dh_installdeb
 	dh_gencontrol
 	dh_md5sums
