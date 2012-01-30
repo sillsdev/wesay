@@ -215,9 +215,18 @@ There are problems in:
 		public static string ApplicationSharedDirectory
 		{
 			get {
-			string commonpath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-			return Path.Combine(commonpath, "wesay");
+		string shareddir;
+				bool unitTesting = Assembly.GetEntryAssembly() == null;
+				if (unitTesting)
+				{
+			shareddir = DirectoryOfTheApplicationExecutable;
 		}
+		else
+				{
+			string commonpath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+			shareddir = Path.Combine(commonpath, "wesay");
+		}
+		return shareddir;
 		}
 
 		public string ApplicationTestDirectory
