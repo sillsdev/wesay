@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Palaso.DictionaryServices.Lift;
 using Palaso.Reporting;
 using Palaso.TestUtilities;
+using WeSay.Project;
 
 namespace Addin.Transform.Tests
 {
@@ -35,6 +36,30 @@ namespace Addin.Transform.Tests
 						maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate, LiftWriter.ByteOrderStyle.BOM);
 						AssertThatXmlIn.File(outputPath).
 							HasAtLeastOneMatchForXpath("//field[@type='headword']/form[@lang='qaa-x-qaa']/text[text()='hello']");
+					}
+				}
+			}
+		}
+
+
+		//Regression... there was a switch in how Lexique pro handled grammatical-info, such that it needs the raw-lift-style (previously we gave it what looked like a custom field)
+		[Test]
+		public void MakePLiftTempFile_ExportPartOfSpeechAsGrammaticalInfoElementSpecified_GrammaticalInfoOutputAsElement()
+		{
+			var xmlOfEntries = @" <entry id='foo1'>
+										<sense><grammatical-info value='noun'></grammatical-info></sense>
+								 </entry>";
+			using (var p = new WeSay.Project.Tests.ProjectDirectorySetupForTesting(xmlOfEntries))
+			{
+				PLiftMaker maker = new PLiftMaker() { Options = PLiftExporter.DefaultOptions | PLiftExporter.Options.ExportPartOfSpeechAsGrammaticalInfoElement }; ;
+				using (var project = p.CreateLoadedProject())
+				{
+					using (var repository = project.GetLexEntryRepository())
+					{
+						string outputPath = Path.Combine(project.PathToExportDirectory, project.Name + ".plift");
+						maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate, LiftWriter.ByteOrderStyle.BOM);
+						AssertThatXmlIn.File(outputPath).
+							HasAtLeastOneMatchForXpath("//sense/grammatical-info[@value='noun']");
 					}
 				}
 			}

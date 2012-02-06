@@ -57,8 +57,10 @@ namespace WeSay.Project
 			base.Dispose(disposing);
 		}
 
-		private Options _options = Options.DereferenceRelations | Options.DereferenceOptions |
+		public const Options DefaultOptions = Options.DereferenceRelations | Options.DereferenceOptions |
 								   Options.DetermineHeadword;
+
+		private Options _options = DefaultOptions;
 
 
 
@@ -68,7 +70,8 @@ namespace WeSay.Project
 			NormalLift = 0,
 			DereferenceRelations = 1,
 			DereferenceOptions = 2,
-			DetermineHeadword = 4
+			DetermineHeadword = 4,
+			ExportPartOfSpeechAsGrammaticalInfoElement = 8 //this just means export it as normal lift, rather than making it look like a custom fied.
 		} ;
 
 		/// <summary>
@@ -216,7 +219,7 @@ namespace WeSay.Project
 
 		protected override void WritePosCore(OptionRef pos)
 		{
-			if (0 != (_options & Options.DereferenceOptions))
+			if ((0 == (_options & Options.ExportPartOfSpeechAsGrammaticalInfoElement)) && (0 != (_options & Options.DereferenceOptions)))
 			{
 				WriteDisplayNameFieldForOption(pos, LexSense.WellKnownProperties.PartOfSpeech);
 			}
