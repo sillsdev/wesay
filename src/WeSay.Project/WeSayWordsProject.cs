@@ -23,6 +23,7 @@ using Palaso.IO;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Lift.Validation;
+using Palaso.Progress;
 using Palaso.Progress.LogBox;
 using Palaso.Reporting;
 using Palaso.Text;
@@ -450,9 +451,9 @@ namespace WeSay.Project
 			var builder = new ContainerBuilder();
 
 			builder.Register(new WordListCatalog()).SingletonScoped();
-
+#if !MONO
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
-
+#endif
 			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
 			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
 
@@ -463,21 +464,25 @@ namespace WeSay.Project
 			  {
 				  try
 				  {
+#if !MONO
 					  return c.Resolve<IProgressNotificationProvider>().Go
 						  <LiftDataMapper>(
 							  "Loading Dictionary",
 							  progressState =>
 								  {
+#endif
 									  var mapper =  new WeSayLiftDataMapper(
 										  _pathToLiftFile,
 										  GetSemanticDomainsList(),
 										  GetIdsOfSingleOptionFields(),
-										  progressState
+										  new ProgressState ()
 										  );
 
 									  return mapper;
+#if !MONO
 								  }
 						  );
+#endif
 				  }
 				  catch (LiftFormatException error)
 				  {
