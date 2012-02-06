@@ -64,7 +64,7 @@ namespace Addin.Transform.Tests
 											  projectinfo.Name + ".pdf");
 			_addin.Launch(null, projectinfo);
 			Assert.IsTrue(File.Exists(_pdfPath));
-			bool succeeded = (new FileInfo(pdfPath).Length > 0);
+			bool succeeded = (new FileInfo(_pdfPath).Length > 0);
 			Assert.IsTrue(succeeded);
 		}
 	}
