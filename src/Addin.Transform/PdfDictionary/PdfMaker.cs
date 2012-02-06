@@ -62,7 +62,7 @@ namespace Addin.Transform.PdfDictionary
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			if (!PrinceXmlWrapper.IsPrinceInstalled)
+			if (!Available)
 				throw new ConfigurationException(
 					"WeSay could not find PrinceXml.  Make sure you've installed it (get it from princexml.com).");
 
@@ -147,8 +147,11 @@ namespace Addin.Transform.PdfDictionary
 
 				PrinceXmlWrapper.CreatePdf(htmlPath, stylesheetPaths, pdfPath);
 
-				progressState.StatusLabel = "Opening PDF...";
-				Process.Start(pdfPath);
+				if (_launchAfterTransform)
+				{
+					progressState.StatusLabel = "Opening PDF...";
+					Process.Start(pdfPath);
+				}
 			}
 			catch (Exception error)
 			{
