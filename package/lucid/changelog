@@ -1,8 +1,10 @@
 wesay (1.1.5-1) UNRELEASED; urgency=low
 
   * disable progress box on "Loading dictionary"
+  * simple pdf generation with princexml enabled
+	  N.B. use libreoffice for better pdfs
 
- -- Daniel Glassey <daniel_glassey@sil.org>  Mon, 06 Feb 2012 15:52:34 +0700
+ -- Daniel Glassey <daniel_glassey@sil.org>  Mon, 06 Feb 2012 15:54:29 +0700
 
 wesay (1.1.4-1) UNRELEASED; urgency=low
 
