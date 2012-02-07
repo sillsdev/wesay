@@ -126,9 +126,7 @@ namespace WeSay.Project
 			}
 		}
 
-		/// <summary>
-		/// nb: this is used both for the headword of an article, but also for the target of a relation.
-		/// </summary>
+
 		private void WriteHeadWordField(LexEntry entry, string outputFieldName)
 		{
 			//                headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
@@ -207,9 +205,26 @@ namespace WeSay.Project
 			LexEntry target = _lexEntryRepository.GetLexEntryWithMatchingId(key);
 			if (target != null)
 			{
-				WriteHeadWordField(target, "headword-of-target");
+				WriteHeadWordFieldForRelation(target, "headword-of-target");
 			}
 		}
+		private void WriteHeadWordFieldForRelation(LexEntry entry, string outputFieldName)
+		{
+			//                headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
+
+			var headword = new MultiText();
+			foreach (string writingSystemId in _headwordWritingSystemIds)
+			{
+				var headWordForm = entry.GetHeadWordForm(writingSystemId);
+				if(!string.IsNullOrEmpty(headWordForm))
+				{
+					headword.SetAlternative(writingSystemId, headWordForm);
+					break;//we only want the first non-empty one
+				}
+			}
+			WriteMultiTextAsArtificialField(outputFieldName, headword);
+		}
+
 		protected override string GetOutputRelationName(LexRelation relation)
 		{
 			var s= relation.FieldId.Replace("confer", "cf");//hack. Other names are left as-is.
