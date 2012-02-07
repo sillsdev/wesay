@@ -92,6 +92,9 @@ namespace WeSay.LexicalTools.Tests
 						<gloss lang='glossWS'>
 							<text>apple</text>
 					</gloss>
+						<gloss lang='es'>
+							<text>manzana</text>
+						</gloss>
 							<grammatical-info value='noun' />
 							<trait name='semantic-domain-ddp4' value='fruit'/>
 							<field type='custom1'><form lang='en'><text>EnglishCustomValue</text></form></field>
@@ -736,6 +739,18 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("EnglishCustomValue", custom.GetExactAlternative("en"));
 		}
 
+		/// <summary>
+		/// for example, the SIL-CAWL list has lots of glossing langs... people don't want all those copied in (and then showing up in the list of languages from the project!)
+		/// </summary>
+		[Test]
+		public void WordCollected_LiftWithExtraLangs_OnlyThoseFormsFromLangsInThisProjectAreCopiedOver()
+		{
+			LexSense firstSense = AddWordAndGetFirstSense();
+			Assert.IsFalse(firstSense.Definition.ContainsAlternative("es"), "should not have received spanish definition because it wasn't in the viewtemplate");
+			Assert.IsFalse(firstSense.Gloss.ContainsAlternative("es"), "should not have received spanish gloss because it wasn't in the viewtemplate");
+		}
+
+
 		private LexSense AddWordAndGetFirstSense()
 		{
 			var task = CreateAndActivateLiftTask(
@@ -773,6 +788,17 @@ namespace WeSay.LexicalTools.Tests
 				LexSense.WellKnownProperties.Definition.ToString(),
 				"LexSense", definitionWritingSystems
 			));
+			vt.Add(
+					new Field(
+						LexSense.WellKnownProperties.Gloss.ToString(),
+						"LexSense",
+						new string[]
+										{
+											WritingSystemsIdsForTests.AnalysisIdForTest,
+											"fr"
+										}
+					 )
+				);
 
 			var t = new GatherWordListTask(
 				GatherWordListConfig.CreateForTests(file.Path, "xx", _catalog),
