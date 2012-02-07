@@ -66,9 +66,19 @@ namespace WeSay.LexicalTools.Tests
 				 )
 			 );
 
+			_viewTemplate.Add(
+						new Field(
+							LexSense.WellKnownProperties.Gloss.ToString(),
+							"LexSense",
+							new string[]
+											{
+												WritingSystemsIdsForTests.AnalysisIdForTest,
+												"fr"
+											}
+						 )
+					 );
 			_catalog = new WordListCatalog();
 			_catalog.Add(_simpleWordListFilePath, new WordListDescription("en","label","longLabel", "description"));
-		   // _catalog.Add(_liftWordListFile.Path, new WordListDescription("en", "liftWordList", "liftWordListLong", "liftWordListDescription"));
 			_task = new GatherWordListTask( GatherWordListConfig.CreateForTests( _simpleWordListFilePath,_glossingLanguageWSId, _catalog),
 											_lexEntryRepository,
 										   _viewTemplate, new TaskMemoryRepository());
@@ -91,13 +101,13 @@ namespace WeSay.LexicalTools.Tests
 					<sense>
 						<gloss lang='glossWS'>
 							<text>apple</text>
-					</gloss>
+						</gloss>
 						<gloss lang='es'>
 							<text>manzana</text>
 						</gloss>
-							<grammatical-info value='noun' />
-							<trait name='semantic-domain-ddp4' value='fruit'/>
-							<field type='custom1'><form lang='en'><text>EnglishCustomValue</text></form></field>
+						<grammatical-info value='noun' />
+						<trait name='semantic-domain-ddp4' value='fruit'/>
+						<field type='custom1'><form lang='en'><text>EnglishCustomValue</text></form></field>
 				  </sense>
 				</entry>
 

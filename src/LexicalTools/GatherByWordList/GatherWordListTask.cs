@@ -424,7 +424,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				{
 					//this check makes sure we don't introduce a form form a lang we allow for gloss, but not def
 					if (_definitionWritingSystemIds.Contains(form.WritingSystemId))
-					definition.SetAlternative(form.WritingSystemId, form.Form);
+						definition.SetAlternative(form.WritingSystemId, form.Form);
 				}
 			}
 
@@ -473,7 +473,11 @@ namespace WeSay.LexicalTools.GatherByWordList
 						}
 					}
 				}
+				if(sense.Gloss.Forms.Length==0 && sense.Definition.Forms.Length ==0 && sense.ExampleSentences.Count==0)
+					return;//nothing worth adding (may happen in unit test)
+
 				entry.Senses.Add(sense);
+
 				//REVIEW: June 2011, Hatton added this, because of WS-34024: if a new *meaning* was added to an existing entry,
 				//and then the user quit, this change was unsaved.
 				LexEntryRepository.SaveItem(entry);
