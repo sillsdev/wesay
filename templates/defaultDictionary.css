@@ -331,3 +331,9 @@ font-style: italic;
 	font-family: Sans-Serif;
 
 }
+
+/* NB: hatton added, not part of what we got form FLEx */
+SPAN.customFieldLabel
+{
+	font-style: italic;
+}

@@ -227,8 +227,9 @@ namespace WeSay.Project
 
 		protected override string GetOutputRelationName(LexRelation relation)
 		{
-			var s= relation.FieldId.Replace("confer", "cf");//hack. Other names are left as-is.
-			s = s.Replace("BaseForm", "see");//hack... not sure what we want here
+			//Enhance: add "printed-dictionary-label" to fielddefns, so that people have control over this from wesay config.
+			var s= relation.FieldId.Replace("confer", "see");
+			s = s.Replace("BaseForm", "from");
 			return s;
 		}
 

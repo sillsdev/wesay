@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Linq;
 using Palaso.Xml;
+using WeSay.Project;
 
 namespace Addin.Transform.PdfDictionary
 {
@@ -18,14 +19,16 @@ namespace Addin.Transform.PdfDictionary
 		/// </summary>
 		private string _currentLetterGroup = string.Empty;
 		private bool _linkToUserCss;
+		private readonly ViewTemplate _viewTemplate;
 
-		public FLExCompatibleXhtmlWriter():this(false)
+		public FLExCompatibleXhtmlWriter():this(false, new ViewTemplate())
 		{
 		}
 
-		public FLExCompatibleXhtmlWriter(bool linkToUserCss)
+		public FLExCompatibleXhtmlWriter(bool linkToUserCss, ViewTemplate viewTemplate)
 		{
 			_linkToUserCss = linkToUserCss;
+			_viewTemplate = viewTemplate;
 			Grouper = new MultigraphParser(new string[]{} );//property needs to be set by the client to get anything interesting
 		}
 
@@ -42,10 +45,10 @@ namespace Addin.Transform.PdfDictionary
 //  Note: If these ever come back that WriteRaw will not write chorus compliant formatting.  Use WriteNode instead. CP 2011-01
 				if (_linkToUserCss)
 				{
-					_writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
 					_writer.WriteRaw("<LINK rel='stylesheet' href='autoLayout.css' type='text/css' />");
 					_writer.WriteRaw("<LINK rel='stylesheet' href='autoFonts.css' type='text/css' />");
 					_writer.WriteRaw("<LINK rel='stylesheet' href='customLayout.css' type='text/css' />");
+					_writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
 				}
 				_writer.WriteEndElement();
 				_writer.WriteStartElement("body");
@@ -408,7 +411,29 @@ namespace Addin.Transform.PdfDictionary
 				case "grammatical-info":
 					DoGrammaticalInfo(entryNav);
 					break;
+
+				default:
+					DoCustomField(entryNav);
+					break;
 			}
+		}
+
+		private void DoCustomField(XPathNavigator fieldNav)
+		{
+			var type = fieldNav.GetAttribute("type", string.Empty);
+			XPathNodeIterator forms = fieldNav.SelectChildren("form", string.Empty);
+
+			if (!forms.MoveNext())
+				return;
+
+			var label = _viewTemplate.GetField(type).DisplayName; //enhance: give the user a way to choose the label, separately from the on-screen label
+			StartSpan("customFieldLabel", "en" /*we don't really know the label language*/, label);
+			EndSpan();
+
+			do
+			{
+				WriteSpan(type, GetLang(forms.Current), forms.Current.Value);
+			} while (forms.MoveNext());
 		}
 
 		private void DoHeadWord(XPathNavigator headwordFieldNav)
