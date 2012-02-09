@@ -200,8 +200,7 @@ There are problems in:
 				if (!Directory.Exists(returndir))
 				{
 					string commonpath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-					commonpath = Path.Combine(commonpath, "wesay");
-					returndir = Path.Combine(commonpath, "common");
+					returndir = Path.Combine(commonpath, "wesay");
 				}
 				return returndir;
 			}
