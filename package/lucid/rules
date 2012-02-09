@@ -43,7 +43,7 @@ install-stamp:
 	dh_testdir
 	dh_testroot
 	dh_prep
-	$(XBUILD) /target:Install /p:InstallDir=../debian/wesay
+	$(XBUILD) /target:Install /p:InstallDir=../debian/wesay/usr
 	dh_installdirs
 	dh_install
 	dh_installdocs
