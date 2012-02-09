@@ -171,11 +171,11 @@
 		<WrapperFiles Include="$(RootDir)/build/mono/*" Exclude="$(RootDir)/build/mono/chorusmerge" />
 	</ItemGroup>
 	<PropertyGroup>
-		<InstallUsrBin>$(InstallDir)/usr/bin</InstallUsrBin>
-		<InstallApp>$(InstallDir)/usr/lib/$(ApplicationNameLC)</InstallApp>
-		<InstallData>$(InstallDir)/usr/share/$(ApplicationNameLC)</InstallData>
-		<InstallIcon>$(InstallDir)/usr/share/icons</InstallIcon>
-		<InstallMenu>$(InstallDir)/usr/share/applications</InstallMenu>
+		<InstallUsrBin>$(InstallDir)/bin</InstallUsrBin>
+		<InstallApp>$(InstallDir)/lib/$(ApplicationNameLC)</InstallApp>
+		<InstallData>$(InstallDir)/share/$(ApplicationNameLC)</InstallData>
+		<InstallIcon>$(InstallDir)/share/icons</InstallIcon>
+		<InstallMenu>$(InstallDir)/share/applications</InstallMenu>
 	</PropertyGroup>
 	<Target Name="Install">
 		<Copy
@@ -184,7 +184,7 @@
 		/>
 		<Copy
 			SourceFiles="@(CommonFiles)"
-			DestinationFiles="$(InstallData)/common/%(RecursiveDir)%(Filename)%(Extension)"
+			DestinationFiles="$(InstallData)/%(RecursiveDir)%(Filename)%(Extension)"
 		/>
 		<Copy
 			SourceFiles="@(TemplateFiles)"
