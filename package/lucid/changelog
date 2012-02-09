@@ -1,9 +1,10 @@
 wesay (1.1.6-1) UNRELEASED; urgency=low
 
-  * fix template location and common dir
+  * WS-34300 fix template location and common dir
 	  this was breaking xhtml and simple pdf export
+  * hatton: Fix WS-34227
 
- -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 09 Feb 2012 10:49:08 +0700
+ -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 09 Feb 2012 10:57:01 +0700
 
 wesay (1.1.5-1) UNRELEASED; urgency=low
 
