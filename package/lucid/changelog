@@ -1,0 +1,61 @@
+wesay (1.1.6-1) UNRELEASED; urgency=low
+
+  * fix template location and common dir
+	  this was breaking xhtml and simple pdf export
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 09 Feb 2012 10:49:08 +0700
+
+wesay (1.1.5-1) UNRELEASED; urgency=low
+
+  * disable progress box on "Loading dictionary"
+  * simple pdf generation with princexml enabled
+	  N.B. use libreoffice for better pdfs
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Mon, 06 Feb 2012 15:54:29 +0700
+
+wesay (1.1.4-1) UNRELEASED; urgency=low
+
+  * fix odf template location finding
+  * merge with default to get more fixes
+
+ -- Daniel Glassey <daniel@glassey>  Mon, 30 Jan 2012 14:00:48 +0700
+
+wesay (1.1.3-1) UNRELEASED; urgency=low
+
+  * default font for new writing systems is now DejaVu Sans, 12
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Tue, 17 Jan 2012 13:56:15 +0700
+
+wesay (1.1.2-1) UNRELEASED; urgency=low
+
+  * 1.1 beta with auto keyboard switching disabled
+  * now building palaso and chorus binaries from source
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 13 Jan 2012 21:53:49 +0700
+
+wesay (1.1.0-1palaso1) lucid; urgency=low
+
+  * Updated to upstream wesay 1.1.x
+  * need to find out how to set the version
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Wed, 02 Nov 2011 09:42:52 +0700
+
+wesay (0.9.0-1palaso1) lucid; urgency=low
+
+  * Updated to upstream wesay 0.9.x
+
+ -- Cambell Prince <cambell_prince@sil.org>  Thu, 13 Jan 2011 13:31:20 +0700
+
+wesay (0.4-1sil1) hardy; urgency=low
+
+  * Updated to upstream wesay stable 0.4.
+  * Status is still experimental in Linux / Ubuntu
+
+ -- Cambell Prince <cambell_prince@sil.org>  Fri, 28 Nov 2008 10:57:47 +0700
+
+wesay (0.1-1sil1) hardy; urgency=low
+
+  * Initial build
+  *
+
+ -- Martin Hosken <martin_hosken@sil.org>  Sat, 18 Oct 2008 15:15:32 +0700

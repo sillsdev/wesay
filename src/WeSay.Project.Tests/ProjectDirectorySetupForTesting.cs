@@ -46,7 +46,7 @@ namespace WeSay.Project.Tests
 
 		public string PathToConfigFile
 		{
-			get { return Path.Combine(_experimentDir, "test.wesayConfig"); }
+			get { return Path.Combine(_experimentDir, "test.WeSayConfig"); }
 		}
 
 		public string PathToUserConfigFile

@@ -1,12 +1,13 @@
+using System;
 using System.IO;
 using System.Xml;
+using Palaso.Reporting;
+using Palaso.TestUtilities;
 using Addin.Transform.OpenOffice;
 using WeSay.Project;
 using WeSay.Project.Tests;
 using WeSay.AddinLib;
 using ICSharpCode.SharpZipLib.Zip;
-
-using Palaso.TestUtilities;
 
 using NUnit.Framework;
 
@@ -15,57 +16,104 @@ namespace Addin.Transform.Tests
 	[TestFixture]
 	public class OdfTransformerTests
 	{
-		private OpenOfficeAddin _addin;
-		private ProjectDirectorySetupForTesting _testProject;
-		private WeSayWordsProject _project;
-		private ProjectInfo _projectInfo;
-		private bool _succeeded;
-
-		[SetUp]
-		public void Setup()
+		private class EnvironmentForTest : IDisposable
 		{
-			const string xmlOfEntries = @" <entry id='foo1'>
+			private readonly ProjectDirectorySetupForTesting _testProject;
+			private readonly WeSayWordsProject _project;
+			private readonly ProjectInfo _projectInfo;
+
+			public EnvironmentForTest()
+			{
+				ErrorReport.IsOkToInteractWithUser = false;
+				const string xmlOfEntries = @" <entry id='foo1'>
 						<lexical-unit><form lang='qaa-x-qaa'><text>hello</text></form></lexical-unit>
-				</entry>";
-			_testProject = new ProjectDirectorySetupForTesting(xmlOfEntries);
-			_project = _testProject.CreateLoadedProject();
-			_projectInfo = _project.GetProjectInfoForAddin();
-			_addin = new OpenOfficeAddin();
-			_addin.LaunchAfterExport= false;
-			_succeeded = false;
-		}
+					</entry>";
+				_testProject = new ProjectDirectorySetupForTesting(xmlOfEntries);
+				_project = _testProject.CreateLoadedProject();
+				_projectInfo = _project.GetProjectInfoForAddin();
 
-		[TearDown]
-		public void TearDown()
-		{
-			if (_succeeded)
+				string sourceTemplateDir = Path.Combine(_projectInfo.PathToApplicationRootDirectory, String.Format("..{0}..{0}templates", Path.DirectorySeparatorChar));
+				TestUtilities.DeleteFolderThatMayBeInUse(OutputTemplateDir);
+				CopyFolder(sourceTemplateDir, OutputTemplateDir);
+			}
+
+			public ProjectInfo ProjectInfo
+			{
+				get { return _projectInfo; }
+			}
+
+			private string OutputTemplateDir
+			{
+				get { return Path.Combine(_projectInfo.PathToApplicationRootDirectory, "templates"); }
+			}
+
+			public string OdtFile
+			{
+				get { return Path.Combine(_projectInfo.PathToExportDirectory, _projectInfo.Name + ".odt"); }
+			}
+
+			public string OdtContent
+			{
+				get { return Path.Combine(_projectInfo.PathToExportDirectory, "content.xml"); }
+			}
+
+			public string OdtStyles
+			{
+				get { return Path.Combine(_projectInfo.PathToExportDirectory, "styles.xml"); }
+			}
+
+			public void Dispose ()
 			{
 				_project.Dispose();
 				_testProject.Dispose();
+				TestUtilities.DeleteFolderThatMayBeInUse(OutputTemplateDir);
+			}
+
+			private static void CopyFolder(string sourceFolder, string destFolder)
+			{
+				if (!Directory.Exists(destFolder))
+					Directory.CreateDirectory(destFolder);
+				string[] files = Directory.GetFiles(sourceFolder);
+				foreach (string file in files)
+				{
+					string name = Path.GetFileName(file);
+					string dest = Path.Combine(destFolder, name);
+					File.Copy(file, dest);
+				}
+				string[] folders = Directory.GetDirectories(sourceFolder);
+				foreach (string folder in folders)
+				{
+					string name = Path.GetFileName(folder);
+					string dest = Path.Combine(destFolder, name);
+					CopyFolder(folder, dest);
+				}
 			}
 		}
 
 		[Test]
 		public void TestOpenDocumentExport()
 		{
-			_addin.Launch(null,  _projectInfo);
-			string odtFile =Path.Combine(_projectInfo.PathToExportDirectory, _projectInfo.Name + ".odt");
-			Assert.IsTrue(File.Exists(odtFile));
-			_succeeded = (new FileInfo(odtFile).Length > 0);
-			Assert.IsTrue(_succeeded);
-			string odtContent =Path.Combine(_projectInfo.PathToExportDirectory, "content.xml");
-			string odtStyles =Path.Combine(_projectInfo.PathToExportDirectory, "styles.xml");
+			using (var e = new EnvironmentForTest())
+			{
+				var addin = new OpenOfficeAddin();
+				addin.LaunchAfterExport= false;
 
-			var nsManager = new XmlNamespaceManager(new NameTable());
-			nsManager.AddNamespace("text", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
-			nsManager.AddNamespace("style","urn:oasis:names:tc:opendocument:xmlns:style:1.0" );
-			AssertThatXmlIn.File(odtContent).HasAtLeastOneMatchForXpath("//text:p", nsManager);
-			AssertThatXmlIn.File(odtStyles).HasAtLeastOneMatchForXpath("//style:font-face", nsManager);
+				addin.Launch(null,  e.ProjectInfo);
+				Assert.IsTrue(File.Exists(e.OdtFile));
+				bool succeeded = (new FileInfo(e.OdtFile).Length > 0);
+				Assert.IsTrue(succeeded);
 
-			var odtZip = new ZipFile(odtFile);
-			ZipEntry manifest = odtZip.GetEntry("META-INF/manifest.xml");
-			Assert.IsNotNull(manifest);
-			odtZip.Close();
+				var nsManager = new XmlNamespaceManager(new NameTable());
+				nsManager.AddNamespace("text", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
+				nsManager.AddNamespace("style","urn:oasis:names:tc:opendocument:xmlns:style:1.0" );
+				AssertThatXmlIn.File(e.OdtContent).HasAtLeastOneMatchForXpath("//text:p", nsManager);
+				AssertThatXmlIn.File(e.OdtStyles).HasAtLeastOneMatchForXpath("//style:font-face", nsManager);
+
+				var odtZip = new ZipFile(e.OdtFile);
+				ZipEntry manifest = odtZip.GetEntry("META-INF/manifest.xml");
+				Assert.IsNotNull(manifest);
+				odtZip.Close();
+			}
 		}
 	}
 }

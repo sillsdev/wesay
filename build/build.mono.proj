@@ -1,0 +1,214 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<RootDir>$(teamcity_build_checkoutDir)</RootDir>
+	</PropertyGroup>
+
+	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<!-- <UsingTask TaskName="MakeWixForDirTree" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" /> -->
+	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="Archive" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="NUnitTeamCity" AssemblyFile="$(agent_home_dir)/plugins/dotnetPlugin/bin/JetBrains.BuildServer.MSBuildLoggers.dll" />
+
+	<PropertyGroup>
+		<Solution>WeSay.sln</Solution>
+		<ApplicationName>WeSay</ApplicationName>
+		<ApplicationNameLC>wesay</ApplicationNameLC>
+		<Configuration>DebugMono</Configuration>
+	</PropertyGroup>
+
+	<Import Project="$(RootDir)/build/build.common.proj" />
+
+	<PropertyGroup>
+		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
+
+	</PropertyGroup>
+
+	<Target Name="Build">
+		<CallTarget Targets="Clean"/>
+		<CallTarget Targets="SetAssemblyVersion"/>
+		<CallTarget Targets="Compile"/>
+		<Message Text="Build Complete"/>
+	</Target>
+
+	<ItemGroup>
+		<ExistingObjectFiles
+			Include="$(RootDir)/**/obj/**/*;$(RootDir)/output/$(Configuration)/**/*"
+			Exclude="$(RootDir)/.hg/**/*"
+		/>
+	</ItemGroup>
+	<Target Name="Clean">
+		<Delete Files="@(ExistingObjectFiles)" />
+	</Target>
+
+	<Target Name="Compile">
+		<MSBuild
+			Projects="$(RootDir)\src\$(Solution)"
+			Targets="Build"
+			Properties="Configuration=$(Configuration)" />
+	</Target>
+
+	<Target Name="Test" DependsOnTargets="Build">
+		<CreateItem
+			Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
+			Exclude="$(RootDir)/output/$(Configuration)/Palaso*.dll">
+			<Output ItemName="TestAssemblies" TaskParameter="Include" />
+		</CreateItem>
+		<NUnitTeamCity
+			Assemblies="@(TestAssemblies)"
+			ExcludeCategory="SkipOnBuildServer;SkipOnTeamCity;KnownMonoIssue;NUnit Windows Forms"
+			NUnitVersion="NUnit-2.5.5" />
+	</Target>
+
+	<!-- Source Package -->
+	<ItemGroup>
+		<ExistingPackageFiles Include="$(OutputDir)/wesay*.tar.gz" />
+		<ExistingPackageBuildFiles Include="$(OutputDir)/Package/**/*" />
+		<ExistingPackageBuildFiles Include="$(OutputDir)/Package/**" />
+	</ItemGroup>
+	<Target Name="PackageClean">
+		<Delete Files="@(ExistingPackageFiles)" />
+		<Delete Files="@(ExistingPackageBuildFiles)" />
+	</Target>
+	<ItemGroup>
+		<Source Include="$(RootDir)/src/**/*" Exclude="$(RootDir)/src/**/obj/**/*;$(RootDir)/src/**/bin/**/*" />
+		<Source Include="$(RootDir)/lib/DebugMono/**" Exclude="$(RootDir)/lib/DebugMono/*Palaso*;$(RootDir)/lib/DebugMono/*Chorus*" />
+		<Source Include="$(RootDir)/lib/ReleaseMono/**" Exclude="$(RootDir)/lib/ReleaseMono/*Palaso*;$(RootDir)/lib/ReleaseMono/*Chorus*" />
+		<Source Include="$(RootDir)/lib/common/**" />
+		<Source Include="$(RootDir)/artwork/**" />
+		<Source Include="$(RootDir)/build/*.proj" />
+		<Source Include="$(RootDir)/build/mono/*" />
+		<Source Include="$(RootDir)/common/**/*" />
+		<Source Include="$(RootDir)/doc/**/*" />
+		<Source Include="$(RootDir)/SampleProjects/**" />
+		<Source Include="$(RootDir)/test/*" />
+		<Source Include="$(RootDir)/templates/**/*" />
+		<Source Include="$(RootDir)/externals/*" />
+	</ItemGroup>
+	<Target Name="SourcePackage" DependsOnTargets="PackageClean;SetAssemblyVersion">
+		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)-$(Version).tar.gz">
+			<Output TaskParameter="Value" PropertyName="SourcePackageFileName" />
+		</CreateProperty>
+		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)-$(Version)">
+			<Output TaskParameter="Value" PropertyName="TarBaseDir" />
+		</CreateProperty>
+		<Message Text="Archive source to '$(SourcePackageFileName)'" />
+		<MakeDir Directories="$(OutputDir)" />
+		<Archive
+			Command="Tar"
+			InputFilePaths="@(Source)"
+			OutputFileName="$(SourcePackageFileName)"
+			BasePath="$(RootDir)"
+			WorkingDir="$(RootDir)"
+		/>
+		<MakeDir Directories="$(TarBaseDir)" />
+		<Exec
+			Command="tar -xzf $(SourcePackageFileName)"
+			WorkingDirectory="$(TarBaseDir)"
+		/>
+		<Exec
+			Command="tar -czf $(SourcePackageFileName) $(ApplicationNameLC)-$(Version)"
+			WorkingDirectory="$(OutputDir)"
+		/>
+	</Target>
+
+	<!-- Installer (Packaging) -->
+	<ItemGroup>
+		<DebianControlFiles Include="$(RootDir)/package/lucid/**/*" />
+	</ItemGroup>
+	<Target Name="Installer" DependsOnTargets="SourcePackage">
+		<CreateProperty Value="$(OutputDir)/Package/$(ApplicationNameLC)-$(Version)">
+			<Output TaskParameter="Value" PropertyName="InstallerBaseDir" />
+		</CreateProperty>
+		<CreateItem Include="$(InstallerBaseDir)/**/*;$(InstallerBaseDir)/**">
+			<Output TaskParameter="Include" ItemName="OldInstallerFiles" />
+		</CreateItem>
+		<CreateItem Include="@(OldInstallerFiles->'%(RootDir)%(Directory)')">
+			<Output TaskParameter="Include" ItemName="FoldersToDelete" />
+		</CreateItem>
+		<Delete Files="@(OldInstallerFiles)" />
+		<RemoveDir Directories="$(FoldersToDelete)" />
+		<MakeDir Directories="$(OutputDir)/Package" />
+		<Copy SourceFiles="$(SourcePackageFileName)" DestinationFiles="$(OutputDir)/Package/$(ApplicationNameLC)_$(Version).orig.tar.gz" />
+		<Exec
+			Command="tar -xzf $(OutputDir)/Package/$(ApplicationNameLC)_$(Version).orig.tar.gz"
+			WorkingDirectory="$(OutputDir)/Package"
+		/>
+		<MakeDir Directories="$(InstallerBaseDir)/debian" />
+		<Copy SourceFiles="@(DebianControlFiles)" DestinationFiles="$(InstallerBaseDir)/debian/%(RecursiveDir)%(Filename)%(Extension)" />
+		<Exec
+			Command='dch -v $(Version)-1palaso1 "Auto Build"'
+			WorkingDirectory="$(InstallerBaseDir)"
+		/>
+		<Message Text="pbuilder update" />
+		<Exec
+			Command='sudo pbuilder --update --configfile /home/bob/pbuilder/pbuilderrc-$(Dist)-i386-lingnet'
+			WorkingDirectory="$(InstallerBaseDir)"
+		/>
+		<Message Text="Starting pdebuild -- $(Dist) i386" />
+		<Exec
+			Command='pdebuild --architecture i386 --configfile /home/bob/pbuilder/pbuilderrc-$(Dist)-i386-lingnet --debbuildopts "" --debbuildopts "-sa" --debsign-k "mono teamcity" --auto-debsign'
+			WorkingDirectory="$(InstallerBaseDir)"
+		/>
+	</Target>
+
+	<Target Name="Upload" DependsOnTargets="Installer">
+		<Message Text="Starting dput -- $(Dist) i386" />
+		<Exec
+			Command='dput LINGNET-$(Dist) /home/bob/pbuilder/results/$(Dist)/$(ApplicationNameLC)_$(Version)-1palaso1_i386.changes'
+			WorkingDirectory="$(InstallerBaseDir)"
+		/>
+	</Target>
+
+	<!-- Install -->
+	<!-- The Install Target must be called from an MSBuild task so as to include the output from the previous MSBuild in the ItemGroup below -->
+	<ItemGroup>
+		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/build/mono/chorusmerge" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*.mdb" />
+		<CommonFiles Include="$(RootDir)/common/**/*" />
+		<TemplateFiles Include="$(RootDir)/templates/**/*" />
+		<IconFiles Include="$(RootDir)/src/Installer_Linux/icons/**/*" />
+		<MenuFiles Include="$(RootDir)/src/Installer_Linux/*.desktop" />
+		<WrapperFiles Include="$(RootDir)/build/mono/*" Exclude="$(RootDir)/build/mono/chorusmerge" />
+	</ItemGroup>
+	<PropertyGroup>
+		<InstallUsrBin>$(InstallDir)/bin</InstallUsrBin>
+		<InstallApp>$(InstallDir)/lib/$(ApplicationNameLC)</InstallApp>
+		<InstallData>$(InstallDir)/share/$(ApplicationNameLC)</InstallData>
+		<InstallIcon>$(InstallDir)/share/icons</InstallIcon>
+		<InstallMenu>$(InstallDir)/share/applications</InstallMenu>
+	</PropertyGroup>
+	<Target Name="Install">
+		<Copy
+			DestinationFolder="$(InstallApp)"
+			SourceFiles="@(ExecutableFiles)"
+		/>
+		<Copy
+			SourceFiles="@(CommonFiles)"
+			DestinationFiles="$(InstallData)/%(RecursiveDir)%(Filename)%(Extension)"
+		/>
+		<Copy
+			SourceFiles="@(TemplateFiles)"
+			DestinationFiles="$(InstallData)/templates/%(RecursiveDir)%(Filename)%(Extension)"
+		/>
+		<Copy
+			SourceFiles="@(IconFiles)"
+			DestinationFiles="$(InstallIcon)/%(RecursiveDir)%(Filename)%(Extension)"
+		/>
+		<Copy
+			DestinationFolder="$(InstallMenu)"
+			SourceFiles="@(MenuFiles)"
+		/>
+		<Copy
+			DestinationFolder="$(InstallUsrBin)"
+			SourceFiles="@(WrapperFiles)"
+		/>
+		<Exec
+			Command="chmod 755 $(InstallUsrBin)/wesay $(InstallUsrBin)/wesay-config $(InstallUsrBin)/chorus"
+		/>
+		<Exec
+			Command="chmod 755 $(InstallApp)/chorusmerge"
+		/>
+	</Target>
+
+
+</Project>

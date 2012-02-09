@@ -62,7 +62,7 @@ namespace Addin.Transform.PdfDictionary
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			if (!PrinceXmlWrapper.IsPrinceInstalled)
+			if (!Available)
 				throw new ConfigurationException(
 					"WeSay could not find PrinceXml.  Make sure you've installed it (get it from princexml.com).");
 
@@ -110,7 +110,7 @@ namespace Addin.Transform.PdfDictionary
 				var stylesheetPaths = new List<string>();
 
 				var autoLayout = Path.Combine(projectInfo.PathToExportDirectory, "autoLayout.css");
-				var factoryLayout = projectInfo.LocateFile(Path.Combine("Templates", "defaultDictionary.css"));
+				var factoryLayout = projectInfo.LocateFile(Path.Combine("templates", "defaultDictionary.css"));
 				File.Copy(factoryLayout, autoLayout, true);
 
 				var autoFonts = Path.Combine(projectInfo.PathToExportDirectory, "autoFonts.css");
@@ -147,8 +147,11 @@ namespace Addin.Transform.PdfDictionary
 
 				PrinceXmlWrapper.CreatePdf(htmlPath, stylesheetPaths, pdfPath);
 
-				progressState.StatusLabel = "Opening PDF...";
-				Process.Start(pdfPath);
+				if (_launchAfterTransform)
+				{
+					progressState.StatusLabel = "Opening PDF...";
+					Process.Start(pdfPath);
+				}
 			}
 			catch (Exception error)
 			{
