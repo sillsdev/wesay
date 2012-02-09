@@ -3,8 +3,9 @@ wesay (1.1.6-1) UNRELEASED; urgency=low
   * WS-34300 fix template location and common dir
 	  this was breaking xhtml and simple pdf export
   * hatton: Fix WS-34227
+  * WS-1187 PrinceXML export really working now
 
- -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 09 Feb 2012 10:57:01 +0700
+ -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 09 Feb 2012 11:02:48 +0700
 
 wesay (1.1.5-1) UNRELEASED; urgency=low
 
