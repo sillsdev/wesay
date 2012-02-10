@@ -146,13 +146,13 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
-		public void LONotInstalledDoesNotThrow()
+		public void LONotInstalledThrowsConfigurationException()
 		{
 			using (var e = new EnvironmentForTest())
 			{
 				var addin = new LibreOfficePdf();
 				Assert.IsFalse(addin.Available);
-				Assert.DoesNotThrow(
+				Assert.Throws<ConfigurationException>(
 					() => { addin.Launch(null,  e.ProjectInfo); }
 				);
 			}
