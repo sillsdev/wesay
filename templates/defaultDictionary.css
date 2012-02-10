@@ -331,9 +331,16 @@ font-style: italic;
 	font-family: Sans-Serif;
 
 }
-
+.pictureRight img
+{
+	width: 100%;
+}
 /* NB: hatton added, not part of what we got form FLEx */
-SPAN.customFieldLabel
+.customFieldLabel
 {
 	font-style: italic;
+}
+.entry
+{
+	text-indent: 1cm hanging;
 }

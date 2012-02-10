@@ -229,35 +229,50 @@ namespace Addin.Transform.PdfDictionary
 
 		private void DoIllustration(XPathNavigator pictureNode, XPathNavigator headwordFieldNode)
 		{
-			var href = pictureNode.GetAttribute("href", string.Empty);
+
+				var href = pictureNode.GetAttribute("href", string.Empty);
 			var caption = pictureNode.GetAttribute("label", string.Empty);
 			StartSpan("pictureRight");
-
-
-			_writer.WriteStartElement("img");
-//            _writer.WriteAttributeString("src", string.Format("..{0}pictures{0}{1}", Path.DirectorySeparatorChar, href));
-			var picturePath = href;
-
-			//there was a version of lift where the "pictures" was explict, some where it isn't.
-			if(!picturePath.StartsWith("pictures"))
+			try
 			{
-				picturePath = Path.Combine("pictures", picturePath);
-			}
-			_writer.WriteAttributeString("src", string.Format("..{0}{1}", Path.DirectorySeparatorChar, picturePath));
-			_writer.WriteEndElement();
 
-			if (headwordFieldNode != null && !string.IsNullOrEmpty(headwordFieldNode.Value))
-			{
-				StartDiv("pictureCaption");
-				WriteSpan("pictureLabel", GetLang(headwordFieldNode), headwordFieldNode.Value);
-				EndDiv();
-			}
-			EndSpan();
+				_writer.WriteStartElement("img");
+				//            _writer.WriteAttributeString("src", string.Format("..{0}pictures{0}{1}", Path.DirectorySeparatorChar, href));
+				var picturePath = href;
 
-			if(!string.IsNullOrEmpty(caption))
-			{
-				WriteSpan("pictureCaption", "en"/*todo*/, caption);
+				//there was a version of lift where the "pictures" was explict, some where it isn't.
+				if (!picturePath.StartsWith("pictures"))
+				{
+					picturePath = Path.Combine("pictures", picturePath);
+				}
+				_writer.WriteAttributeString("src", string.Format("..{0}{1}", Path.DirectorySeparatorChar, picturePath));
+				_writer.WriteEndElement();
+
+
+				if (!string.IsNullOrEmpty(caption))
+				{
+					StartDiv("pictureCaption");
+					WriteSpan("pictureLabel", "en" /*todo*/, caption);
+					EndDiv();
+				}
+
+				else if (headwordFieldNode != null && !string.IsNullOrEmpty(headwordFieldNode.Value))
+				{
+					var form = headwordFieldNode.SelectSingleNode("//text").Value;
+					var lang = headwordFieldNode.SelectSingleNode("form").GetAttribute("lang", "");
+					StartDiv("pictureCaption");
+					WriteSpan("pictureLabel", lang, form);
+					EndDiv();
+				}
+
 			}
+			catch (Exception)
+			{
+#if DEBUG
+				throw;
+#endif
+			}
+			finally { EndSpan(); }
 		}
 
 		private void DoExamples(XPathNavigator senseNav)
