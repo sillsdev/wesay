@@ -95,6 +95,7 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
+		[Category("SkipOnTeamCity")]
 		public void TestOpenDocumentPdf()
 		{
 			using (var e = new EnvironmentForTest())
@@ -124,14 +125,11 @@ namespace Addin.Transform.Tests
 			using (var e = new EnvironmentForTest())
 			{
 				var addin = new LibreOfficePdf();
-				//addin.LaunchAfterExport= false;
 
 				addin.Launch(null,  e.ProjectInfo);
 				Assert.IsTrue(File.Exists(e.PdfFile));
 				bool succeeded = (new FileInfo(e.PdfFile).Length > 0);
 				Assert.IsTrue(succeeded);
-				//Process runpdf = Process.Start(e.PdfFile);
-				//runpdf.WaitForExit();
 			}
 		}
 	}
