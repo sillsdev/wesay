@@ -198,6 +198,9 @@ namespace Addin.Transform.PdfDictionary
 				loffice.StartInfo.FileName = "libreoffice";
 				loffice.Start();
 				loffice.WaitForExit();
+				int ecode = loffice.ExitCode;
+				if (ecode != 0)
+					throw new ApplicationException("LibreOffice did not convert the file to Pdf: " + ecode.ToString());
 
 				if (_launchAfterExport)
 				{
