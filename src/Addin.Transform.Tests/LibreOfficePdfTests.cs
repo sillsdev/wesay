@@ -9,6 +9,7 @@ using WeSay.Project.Tests;
 using WeSay.AddinLib;
 
 using NUnit.Framework;
+using System.Threading;
 
 namespace Addin.Transform.Tests
 {
@@ -130,6 +131,7 @@ namespace Addin.Transform.Tests
 				Assert.IsTrue(File.Exists(e.PdfFile));
 				bool succeeded = (new FileInfo(e.PdfFile).Length > 0);
 				Assert.IsTrue(succeeded);
+				Thread.Sleep(500);
 			}
 		}
 

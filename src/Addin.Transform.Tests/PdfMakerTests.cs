@@ -6,6 +6,7 @@ using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using Addin.Transform.PdfDictionary;
+using System.Threading;
 
 namespace Addin.Transform.Tests
 {
@@ -53,6 +54,7 @@ namespace Addin.Transform.Tests
 		public void CreateAndOpen()
 		{
 			LaunchAddin();
+			Thread.Sleep(500);
 			Process.Start(_pdfPath);
 		}
 
