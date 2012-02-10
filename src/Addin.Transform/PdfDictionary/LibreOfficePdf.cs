@@ -78,9 +78,28 @@ namespace Addin.Transform.PdfDictionary
 			{
 				try
 				{
-					return true;
+#if MONO
+					Process loffice = new Process();
+					loffice.StartInfo.Arguments = "-headless -h";//|head -1";//|cut -d\\  -f2";
+					loffice.StartInfo.RedirectStandardOutput = true;
+					loffice.StartInfo.UseShellExecute = false;
+					loffice.StartInfo.FileName = "libreoffice";
+					loffice.Start();
+					string output = loffice.StandardOutput.ReadLine();
+					loffice.WaitForExit();
+					int ecode = loffice.ExitCode;
+					if (ecode==0 && !String.IsNullOrEmpty(output))
+					{
+						string[] words = output.Split(' ');
+						decimal loversion = Convert.ToDecimal(words[1]);
+						decimal minver = new decimal( 3.4 );
+						if (loversion.CompareTo(minver) >= 0)
+							return true;
+					}
+#endif
+					return false;
 				}
-				catch (Exception)
+				catch (Exception error)
 				{
 					return false;
 				}
