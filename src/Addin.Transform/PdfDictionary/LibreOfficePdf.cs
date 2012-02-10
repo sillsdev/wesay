@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Mono.Addins;
+using Palaso.IO;
 using Palaso.i18n;
 using Palaso.Progress;
 using Palaso.Reporting;
@@ -20,6 +21,13 @@ namespace Addin.Transform.PdfDictionary
 	{
 		private Boolean _launchAfterExport = true;
 		private string _odtFile;
+		enum availStatus
+		{
+			NotChecked,
+			NotInstalled,
+			Available
+		}
+		private availStatus _isAvailable = availStatus.NotChecked;
 
 		public string LocalizedName
 		{
@@ -76,6 +84,10 @@ namespace Addin.Transform.PdfDictionary
 		{
 			get
 			{
+				if (_isAvailable == availStatus.Available)
+					return true;
+				if (_isAvailable == availStatus.NotInstalled)
+					return false;
 				try
 				{
 					bool retval = false;
@@ -117,7 +129,10 @@ namespace Addin.Transform.PdfDictionary
 									decimal loversion = Convert.ToDecimal(words[1]);
 									decimal minver = new decimal( 3.4 );
 									if (loversion.CompareTo(minver) >= 0)
+									{
+										_isAvailable = availStatus.Available;
 										retval = true;
+									}
 									break;
 								}
 
@@ -127,13 +142,51 @@ namespace Addin.Transform.PdfDictionary
 						}
 					}
 #endif
+					if (!retval)
+					{
+						_isAvailable = availStatus.NotInstalled;
+					}
+
 					return retval;
 				}
 				catch (Exception error)
 				{
+					_isAvailable = availStatus.NotInstalled;
 					return false;
 				}
 			}
+		}
+
+		private string UserConfigDir
+		{
+			get {
+				if (!Available) return null;
+
+				string homedir = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+				return Path.Combine(homedir, ".libreoffice");
+			}
+		}
+
+		private string UserCliConfigDir
+		{
+			get { return UserConfigDir + "-cli"; }
+		}
+
+		private bool CheckUserCliConfigDir()
+		{
+			if (!Available)
+			{
+				return false;
+			}
+			if (!Directory.Exists(UserCliConfigDir))
+			{
+				Directory.CreateDirectory(UserCliConfigDir);
+			}
+			if (!Directory.Exists(UserCliConfigDir))
+			{
+				return false;
+			}
+			return true;
 		}
 
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
@@ -141,6 +194,10 @@ namespace Addin.Transform.PdfDictionary
 			if (!Available)
 				throw new ConfigurationException(
 					"WeSay could not find LibreOffice 3.4 or newer.  Make sure you have installed it.");
+			if (!CheckUserCliConfigDir())
+				throw new ConfigurationException(
+					"WeSay could not configure LibreOffice 3.4 or newer.  Make sure you have installed it.");
+
 
 			OpenOfficeAddin odtAddin = new OpenOfficeAddin();
 
@@ -192,7 +249,8 @@ namespace Addin.Transform.PdfDictionary
 
 				Process loffice = new Process();
 				loffice.StartInfo.WorkingDirectory = projectInfo.PathToExportDirectory;
-				loffice.StartInfo.Arguments = "--headless --convert-to pdf " + OdtFile;
+				loffice.StartInfo.Arguments = "--headless -env:UserInstallation=file://" +
+					UserCliConfigDir + " --convert-to pdf " + OdtFile;
 				loffice.StartInfo.UseShellExecute = true;
 				loffice.StartInfo.FileName = "libreoffice";
 				loffice.Start();
