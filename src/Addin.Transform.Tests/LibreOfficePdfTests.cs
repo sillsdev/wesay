@@ -132,5 +132,31 @@ namespace Addin.Transform.Tests
 				Assert.IsTrue(succeeded);
 			}
 		}
+
+		[Test]
+		public void LONotInstalledCheckDoesNotThrow()
+		{
+			using (var e = new EnvironmentForTest())
+			{
+				var addin = new LibreOfficePdf();
+				Assert.DoesNotThrow(
+					() => { if (addin.Available) {};  }
+				);
+			}
+		}
+
+		[Test]
+		public void LONotInstalledDoesNotThrow()
+		{
+			using (var e = new EnvironmentForTest())
+			{
+				var addin = new LibreOfficePdf();
+				Assert.IsFalse(addin.Available);
+				Assert.DoesNotThrow(
+					() => { addin.Launch(null,  e.ProjectInfo); }
+				);
+			}
+		}
+
 	}
 }
