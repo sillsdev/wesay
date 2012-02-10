@@ -149,7 +149,7 @@ namespace Addin.Transform.PdfDictionary
 
 					return retval;
 				}
-				catch (Exception error)
+				catch (Exception)
 				{
 					_isAvailable = availStatus.NotInstalled;
 					return false;
@@ -265,7 +265,6 @@ namespace Addin.Transform.PdfDictionary
 					Process runpdf = new Process();
 					runpdf.StartInfo.FileName = pdfPath;
 					runpdf.Start();
-					//Process.Start(pdfPath);
 				}
 			}
 			catch (Exception error)
