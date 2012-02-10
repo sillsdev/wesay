@@ -1,3 +1,13 @@
+wesay (1.1.7-1) UNRELEASED; urgency=low
+
+  * WS-34305 Use LibreOffice 3.4 or later to create a pdf
+	  See https://wiki.ubuntu.com/LibreOffice for instructions for installing
+	  LibreOffice 3.4 on lucid (which also works for natty)
+	  it comes with oneiric onwards
+  * add Suggests on libreoffice-writer >= 3.4, and pdf-viewer
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 10 Feb 2012 16:04:46 +0700
+
 wesay (1.1.6-1) UNRELEASED; urgency=low
 
   * WS-34300 fix template location and common dir

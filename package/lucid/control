@@ -9,6 +9,7 @@ Package: wesay
 Section: editors
 Architecture: all
 Depends: ${misc:Depends}, ${cli:Depends}, libmono-microsoft-visualbasic8.0-cil
+Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer
 Conflicts: wesay-stable
 Description: A dictionary creation tool
  WeSay helps people build a dictionary in their own language. It has
