@@ -22,7 +22,7 @@ namespace Addin.Transform.PdfDictionary
 	{
 		public override string LocalizedName
 		{
-			get { return StringCatalog.Get("~Make Pdf Dictionary"); }
+			get { return StringCatalog.Get("~Make Simple Pdf Dictionary"); }
 		}
 
 		public override string ID
