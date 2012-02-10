@@ -221,6 +221,7 @@
 	<Compile Include="SfmTransformSettings.cs" />
 	<Compile Include="OpenOffice\OpenOfficeAddin.cs" />
 	<Compile Include="Xhtml\XHtml.cs" />
+	<Compile Include="PdfDictionary\LibreOfficePdf.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">

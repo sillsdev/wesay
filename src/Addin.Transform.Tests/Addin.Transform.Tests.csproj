@@ -161,6 +161,7 @@
 	<Compile Include="SfmTransformerTests.cs" />
 	<Compile Include="OdfTransformerTests.cs" />
 	<Compile Include="PdfMakerTests.cs" />
+	<Compile Include="LibreOfficePdfTests.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\Addin.Transform\Addin.Transform.csproj">
