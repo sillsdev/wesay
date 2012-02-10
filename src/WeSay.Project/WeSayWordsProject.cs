@@ -1129,6 +1129,11 @@ namespace WeSay.Project
 			return GetFileLocator().LocateDirectory(directoryName, descriptionForErrorMessage);
 		}
 
+		public IFileLocator CloneAndCustomize(IEnumerable<string> addedSearchPaths)
+		{
+			throw new NotImplementedException(); // just wouldn't make sense, since this entire thing has the IFileLocator interface
+		}
+
 		/// <summary>
 		/// Find the file, starting with the project dirs and moving to the app dirs.
 		/// This allows a user to override an installed file by making thier own.
