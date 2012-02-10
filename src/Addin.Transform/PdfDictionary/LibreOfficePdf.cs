@@ -78,26 +78,56 @@ namespace Addin.Transform.PdfDictionary
 			{
 				try
 				{
+					bool retval = false;
 #if MONO
+					// find which libreoffice
+					// check versionrc file exists ../lib/libreoffice/program/versionrc
+					// open versionrc file for reading
+					// look at each line and split at '='
+					// look for words[0] = OOOBaseVersion
+					// version number is words[1], check is >= 3.4
+
 					Process loffice = new Process();
-					loffice.StartInfo.Arguments = "-headless -h";//|head -1";//|cut -d\\  -f2";
+					loffice.StartInfo.Arguments = "libreoffice";
 					loffice.StartInfo.RedirectStandardOutput = true;
 					loffice.StartInfo.UseShellExecute = false;
-					loffice.StartInfo.FileName = "libreoffice";
+					loffice.StartInfo.FileName = "which";
 					loffice.Start();
 					string output = loffice.StandardOutput.ReadLine();
 					loffice.WaitForExit();
 					int ecode = loffice.ExitCode;
 					if (ecode==0 && !String.IsNullOrEmpty(output))
 					{
-						string[] words = output.Split(' ');
-						decimal loversion = Convert.ToDecimal(words[1]);
-						decimal minver = new decimal( 3.4 );
-						if (loversion.CompareTo(minver) >= 0)
-							return true;
+						string binpath = Path.GetDirectoryName(output);
+						string installedpath = Path.GetDirectoryName(binpath);
+						string rcpath = Path.Combine (installedpath, "lib");
+						rcpath = Path.Combine (rcpath, "libreoffice");
+						rcpath = Path.Combine (rcpath, "program");
+						rcpath = Path.Combine (rcpath, "versionrc");
+						if (File.Exists(rcpath))
+						{
+							StreamReader rcfile = File.OpenText(rcpath);
+							string rcline;
+							rcline = rcfile.ReadLine();
+							while (!String.IsNullOrEmpty(rcline))
+							{
+								string[] words = rcline.Split('=');
+								if (words[0] == "OOOBaseVersion")
+								{
+									decimal loversion = Convert.ToDecimal(words[1]);
+									decimal minver = new decimal( 3.4 );
+									if (loversion.CompareTo(minver) >= 0)
+										retval = true;
+									break;
+								}
+
+								rcline = rcfile.ReadLine();
+							}
+
+						}
 					}
 #endif
-					return false;
+					return retval;
 				}
 				catch (Exception error)
 				{
