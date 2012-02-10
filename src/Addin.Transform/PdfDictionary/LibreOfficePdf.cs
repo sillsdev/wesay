@@ -16,7 +16,7 @@ using WeSay.Foundation;
 namespace Addin.Transform.PdfDictionary
 {
 	[Extension]
-	public class LibreOfficePdf : IWeSayAddin, IWeSayAddinHasMoreInfo
+	public class LibreOfficePdf : IWeSayAddin //, IWeSayAddinHasMoreInfo
 	{
 		private Boolean _launchAfterExport = true;
 		private string _odtFile;
@@ -161,7 +161,6 @@ namespace Addin.Transform.PdfDictionary
 				worker.DoWork += OnDoWork;
 				dlg.BackgroundWorker = worker;
 				dlg.CanCancel = true;
-				//dlg.CancelRequested += new EventHandler(OnCancelRequested);
 				dlg.ProgressState.Arguments = projectInfo;
 
 				dlg.ShowDialog();
@@ -217,11 +216,11 @@ namespace Addin.Transform.PdfDictionary
 			}
 		}
 
-		public void ShowMoreInfoDialog(Form parentForm)
+		/* public void ShowMoreInfoDialog(Form parentForm)
 		{
 			var dlg = new Addin.Transform.PdfDictionary.AboutMakePdfDictionary();
 			dlg.ShowDialog();
-		}
+		}*/
 
 		public bool LaunchAfterExport
 		{
