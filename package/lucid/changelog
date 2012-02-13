@@ -1,3 +1,9 @@
+wesay (1.1.8-1) UNRELEASED; urgency=low
+
+  * WS-34306 disable liftreports which has not been used on windows for years
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Mon, 13 Feb 2012 14:29:43 +0700
+
 wesay (1.1.7-1) UNRELEASED; urgency=low
 
   * WS-34305 Use LibreOffice 3.4 or later to create a pdf
