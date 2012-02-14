@@ -29,6 +29,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private readonly string _preferredEllicitationWritingSystem;
 		private readonly WritingSystemDefinition _lexicalUnitWritingSystem;
 		private IList<string> _definitionWritingSystemIds;
+		private IList<string> _glossWritingSystemIds;
 		private bool _usingLiftFile;
 
 		public GatherWordListTask(IGatherWordListConfig config,
@@ -55,6 +56,14 @@ namespace WeSay.LexicalTools.GatherByWordList
 			var f = viewTemplate.GetField(LexSense.WellKnownProperties.Definition);
 			Guard.AgainstNull(f, "No field for definition");
 			_definitionWritingSystemIds = f.WritingSystemIds;
+
+			 f = viewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
+			if(f!=null)
+				_glossWritingSystemIds = f.WritingSystemIds;
+			else
+			{
+				_glossWritingSystemIds = new List<string>();
+			}
 		}
 
 		private void LoadWordList()
@@ -394,12 +403,28 @@ namespace WeSay.LexicalTools.GatherByWordList
 		/// </summary>
 		private void AddSenseToLexicon(MultiTextBase lexemeForm, LexSense sense)
 		{
+			//remove from the gloss and def any forms we don't want in our project for those fields
+			foreach (var form in sense.Gloss.Forms)
+			{
+				if (!_glossWritingSystemIds.Contains(form.WritingSystemId))
+					sense.Gloss.SetAlternative(form.WritingSystemId, null);
+			}
+			foreach (var form in sense.Definition.Forms)
+			{
+				if (!_definitionWritingSystemIds.Contains(form.WritingSystemId))
+					sense.Definition.SetAlternative(form.WritingSystemId, null);
+			}
+
+			//I don't recall why we did this, but what it is doing is populating def from gloss and vice-versa, where there are blanks
+
 			var definition = sense.Definition;
 			if(definition.Empty)
 			{
 				foreach (var form in sense.Gloss.Forms)
 				{
-					definition.SetAlternative(form.WritingSystemId, form.Form);
+					//this check makes sure we don't introduce a form form a lang we allow for gloss, but not def
+					if (_definitionWritingSystemIds.Contains(form.WritingSystemId))
+						definition.SetAlternative(form.WritingSystemId, form.Form);
 				}
 			}
 
@@ -408,6 +433,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				foreach (var form in sense.Definition.Forms)
 				{
+					//this check makes sure we don't introduce a form form a lang we allow for def, but not gloss
+					if (_glossWritingSystemIds.Contains(form.WritingSystemId))
 					gloss.SetAlternative(form.WritingSystemId, form.Form);
 				}
 			}
@@ -416,13 +443,17 @@ namespace WeSay.LexicalTools.GatherByWordList
 			ResultSet<LexEntry> entriesWithSameForm =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(
 							lexemeForm[_lexicalUnitWritingSystem.Id], _lexicalUnitWritingSystem);
+			LanguageForm firstGloss = new LanguageForm("en", "-none-",null);
+			if(sense.Gloss.Forms.Length>0)
+				firstGloss = sense.Gloss.Forms[0];
+
 			if (entriesWithSameForm.Count == 0)
 			{
 				LexEntry entry = LexEntryRepository.CreateItem();
 				entry.LexicalForm.MergeIn(lexemeForm);
 				entry.Senses.Add(sense);
 				LexEntryRepository.SaveItem(entry);
-				Logger.WriteEvent("WordList-Adding new word '{0}'and givin the sense '{1}'", entry.GetSimpleFormForLogging(), sense.Gloss.Forms[0] );
+				Logger.WriteEvent("WordList-Adding new word '{0}'and givin the sense '{1}'", entry.GetSimpleFormForLogging(), firstGloss );
 			}
 			else
 			{
@@ -432,21 +463,25 @@ namespace WeSay.LexicalTools.GatherByWordList
 				{
 					if (sense.Gloss.Forms.Length > 0)
 					{
-						LanguageForm glossWeAreAdding = sense.Gloss.Forms[0];
+						LanguageForm glossWeAreAdding = firstGloss;
 						string glossInThisWritingSystem =
 								s.Gloss.GetExactAlternative(glossWeAreAdding.WritingSystemId);
 						if (glossInThisWritingSystem == glossWeAreAdding.Form)
 						{
-							Logger.WriteEvent("WordList '{0}' already exists in '{1}'", sense.Gloss.Forms[0], entry.GetSimpleFormForLogging());
+							Logger.WriteEvent("WordList '{0}' already exists in '{1}'", firstGloss, entry.GetSimpleFormForLogging());
 							return; //don't add it again
 						}
 					}
 				}
+				if(sense.Gloss.Forms.Length==0 && sense.Definition.Forms.Length ==0 && sense.ExampleSentences.Count==0)
+					return;//nothing worth adding (may happen in unit test)
+
 				entry.Senses.Add(sense);
+
 				//REVIEW: June 2011, Hatton added this, because of WS-34024: if a new *meaning* was added to an existing entry,
 				//and then the user quit, this change was unsaved.
 				LexEntryRepository.SaveItem(entry);
-				Logger.WriteEvent("WordList-Added '{0}' to preexisting '{1}'", sense.Gloss.Forms[0], entry.GetSimpleFormForLogging());
+				Logger.WriteEvent("WordList-Added '{0}' to preexisting '{1}'", firstGloss, entry.GetSimpleFormForLogging());
 
 			}
 		}

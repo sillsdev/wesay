@@ -10,6 +10,7 @@ using System.Xml;
 using Palaso.Data;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
+using Palaso.Text;
 using Palaso.i18n;
 using Palaso.Lift;
 using Palaso.Lift.Options;
@@ -31,7 +32,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private Dictionary<string, List<string>> _domainQuestions;
 		private List<string> _domainKeys;
 		private List<string> _domainNames;
-		private List<string> _words;
+		private List<WordDisplay> _words;
 
 		private WritingSystemDefinition _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
@@ -352,7 +353,19 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			return pastEndIndex - beginIndex;
 		}
 
-		public List<string> CurrentWords
+		public class WordDisplay
+		{
+			public LanguageForm Vernacular;
+			public LanguageForm Meaning;
+
+			public override string ToString()
+			{
+				// Review: Since we draw items by hand, not really sure how this is used.
+				return Vernacular.Form;
+			}
+		}
+
+		public List<WordDisplay> CurrentWords
 		{
 			get
 			{
@@ -360,7 +373,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 				if (_words == null)
 				{
-					_words = new List<string>();
+					_words = new List<WordDisplay>();
 					ResultSet<LexEntry> recordTokens = GetAllEntriesSortedBySemanticDomain();
 					int beginIndex;
 					int pastEndIndex;
@@ -371,12 +384,29 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					for (int i = beginIndex;i < pastEndIndex;i++)
 					{
 						LexEntry entry = recordTokens[i].RealObject;
-						_words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
+						//was _words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
+						LanguageForm form = entry.LexicalForm.GetBestAlternative(new string[] {WordWritingSystemId});
+						var wordDisplay = new WordDisplay()
+											  {
+												  Vernacular = form
+											  };
+						if (entry.Senses.Count > 0)
+						{
+							wordDisplay.Meaning = entry.Senses[0].Definition.GetBestAlternative(new string[] { DefinitionWritingSystem.Id });
+						}
+						_words.Add(wordDisplay);
+
 					}
 				}
-				_words.Sort(WritingSystemUserIsTypingIn.Collator);
+			   // TODO: figure out how to do sorting on complext objects using this collator:    _words.Sort(FormWritingSystem.Collator);
+				_words.Sort(new Comparison<WordDisplay>(CompareForms));
 				return _words;
 			}
+		}
+
+		private int CompareForms(WordDisplay x, WordDisplay y)
+		{
+			return FormWritingSystem.Collator.Compare(x.Vernacular.Form, y.Vernacular.Form);
 		}
 
 		public bool HasNextDomainQuestion
@@ -503,7 +533,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			{
 				ResultSet<LexEntry> recordTokens =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
-																		 WritingSystemUserIsTypingIn);
+																		 FormWritingSystem);
 				if (recordTokens.Count == 0)//no entries with a matching form
 				{
 					LexEntry entry = LexEntryRepository.CreateItem();
@@ -554,26 +584,30 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 						   ||  entry.Senses.Contains(_savedSenseDuringMoveToEditArea));
 		}
 
-		public void PrepareToMoveWordToEditArea(string lexicalForm)
+
+		[Obsolete("for retrofitting tests only")]
+		public void PrepareToMoveWordToEditArea(string form)
+		{
+			PrepareToMoveWordToEditArea(new WordDisplay(){Vernacular = new LanguageForm(FormWritingSystem.Id, form, null)});
+		}
+
+		public void PrepareToMoveWordToEditArea(WordDisplay wordDisplay)
 		{
 			VerifyTaskActivated();
 			_savedSenseDuringMoveToEditArea = null;
 
-			if (lexicalForm == null)
+			if (wordDisplay == null)
 			{
 				throw new ArgumentNullException();
 			}
-			if (lexicalForm != string.Empty)
+			// this task was coded to have a list of word-forms, not actual entries.
+			//so we have to go searching for possible matches at this point.
+			ResultSet<LexEntry> matchingEntries =
+				LexEntryRepository.GetEntriesWithMatchingLexicalForm(wordDisplay.Vernacular.Form,
+																		FormWritingSystem);
+			foreach (RecordToken<LexEntry> recordToken in matchingEntries)
 			{
-				// this task was coded to have a list of word-forms, not actual entries.
-				//so we have to go searching for possible matches at this point.
-				ResultSet<LexEntry> matchingEntries =
-					LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
-																		 WritingSystemUserIsTypingIn);
-				foreach (RecordToken<LexEntry> recordToken in matchingEntries)
-				{
-					DisassociateCurrentSemanticDomainFromEntry(recordToken); // might remove senses
-				}
+				DisassociateCurrentSemanticDomainFromEntry(recordToken); // might remove senses
 			}
 
 			UpdateCurrentWords();
@@ -786,10 +820,34 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
-		public bool ShowDefinitionField
+		public bool ShowMeaningField
 		{
 			get { return _config.ShowMeaningField; }
 		}
+
+		public Font MeaningFont
+		{
+			get
+			{
+				float defaultFontSize = MeaningWritingSystem.DefaultFontSize;
+				if (defaultFontSize == 0)//saw this happen with a project coming in from FLEx
+					defaultFontSize = 12;
+
+				try
+				{
+					return new Font(MeaningWritingSystem.DefaultFontName,
+									defaultFontSize);
+				}
+				catch (Exception error)
+				{
+					Palaso.Reporting.ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),  error,
+																	 "There was a problem getting the font for the meaning field, using Typeface {0} and Size {1}.  See if you can fix this using the Input Systems tab of theConfiguration Tool.", MeaningWritingSystem.DefaultFontName,
+									defaultFontSize);
+					return SystemFonts.DefaultFont;
+				}
+			}
+		}
+
 
 		public override void Activate()
 		{

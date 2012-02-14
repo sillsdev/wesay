@@ -40,8 +40,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
 			_vernacularBox.MinimumSize = _boxForeignWord.Size;
 
-			_listViewOfWordsMatchingCurrentItem.WritingSystem = _task.WritingSystemUserIsTypingIn;
-			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.WritingSystemUserIsTypingIn.Font.GetHeight());
+			_listViewOfWordsMatchingCurrentItem.FormWritingSystem = _task.FormWritingSystem;
+			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.FormWritingSystem.Font.GetHeight());
 
 			UpdateStuff();
 
