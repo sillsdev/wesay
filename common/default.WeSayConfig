@@ -117,6 +117,20 @@
 		  </writingSystems>
 		</field>
 		<field>
+		  <className>LexSense</className>
+		  <dataType>MultiText</dataType>
+		  <displayName>SILCAWL</displayName>
+		  <enabled>False</enabled>
+		  <fieldName>SILCAWL</fieldName>
+		  <multiParagraph>True</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>NormallyHidden</visibility>
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
+		</field>
+		<field>
 		  <className>LexExampleSentence</className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Example Sentence</displayName>
