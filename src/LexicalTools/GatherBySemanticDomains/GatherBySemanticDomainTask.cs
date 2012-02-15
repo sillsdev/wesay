@@ -386,6 +386,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 						LexEntry entry = recordTokens[i].RealObject;
 						//was _words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
 						LanguageForm form = entry.LexicalForm.GetBestAlternative(new string[] {WordWritingSystemId});
+						if (form == null)
+							continue; //happens if there is a word with this domain, but no lexeme form
+
 						var wordDisplay = new WordDisplay()
 											  {
 												  Vernacular = form
