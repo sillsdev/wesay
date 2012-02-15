@@ -163,18 +163,6 @@ namespace WeSay.LexicalTools.Tests
 
 
 		[Test]
-		public void Activate_WritingSystemNotInCurrentList_GivesMessage()
-		{
-			GatherWordListTask g = new GatherWordListTask(
-				GatherWordListConfig.CreateForTests(_simpleWordListFilePath,
-					"z7z", new WordListCatalog()),
-				_lexEntryRepository,
-				_viewTemplate, new TaskMemoryRepository());
-
-			Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() => g.Activate()); //should give a box to user, an exception in this text environment
-		}
-
-		[Test]
 		public void CurrentLexemeFormFromWordList_AtStart_IsCorrect()
 		{
 			Assert.AreEqual("one", Task.CurrentPromptingForm);
