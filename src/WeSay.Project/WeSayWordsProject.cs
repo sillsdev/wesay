@@ -1134,10 +1134,6 @@ namespace WeSay.Project
 			throw new NotImplementedException(); // just wouldn't make sense, since this entire thing has the IFileLocator interface
 		}
 
-		public IFileLocator CloneAndCustomize(IEnumerable<string> addedSearchPaths)
-		{
-			throw new NotImplementedException();//right. we don't implement this from IFileLocator
-		}
 
 		/// <summary>
 		/// Find the file, starting with the project dirs and moving to the app dirs.
