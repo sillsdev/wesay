@@ -159,6 +159,8 @@ namespace Addin.Transform.PdfDictionary
 
 		private string UserConfigDir
 		{
+// Note that libreoffice 3.5.0 and newer use homedir/.config/libreoffice
+// so will need to update this file to handle that DG: 02/2012
 			get {
 				if (!Available) return null;
 
