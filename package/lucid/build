@@ -1,0 +1,33 @@
+#!/bin/bash
+HERE=`pwd`
+TARGETS="lucid maverick natty oneiric"
+#PUBLISH='PALASO'
+PUBLISH='LINGNET'
+#REVISION=`echo $BUILD_NUMBER | sed -e 's/[:-].*$//'`
+VARIANT='lingnet'
+PRODUCT='wesay'
+ZIPTYPE='gz'
+DEST=${HERE}/../output
+BUILDINGDIR=${HERE}/../../building
+
+#NO_DPUT=1
+AMD64_MAINBUILD=1
+
+BASE=$(dpkg-parsechangelog -lchangelog| grep ^Vers | cut -d\  -f2 | cut -d\- -f1)
+
+if [ "${TCTARGET}" = "lucid" ]; then
+	for file in `grep -rsl Arial $1/common/WritingSystems/*`; do sed -i 's/Arial/DejaVu Sans/g' $file; done
+	xbuild /target:SourcePackage /p:Configuration=DebugMono /p:BUILD_NUMBER="${BASE}.abcd" /p:RootDir=$1 $1/build/build.mono.proj  || exit $?
+	cp $1/output/DebugMono/${PRODUCT}-${BASE}.tar.gz ~/upstream/${PRODUCT}_${BASE}.orig.tar.gz  || exit $?
+else
+	rm ${BUILDINGDIR}/*build*
+fi
+
+source /home/bob/pbuilder/build.common
+
+if [ "${TCTARGET}" = "lucid" ]; then
+	mkdir ${DEST}/results || exit $?
+	cp /home/bob/pbuilder/results/lucid/${PRODUCT}_${BASE}-* ${DEST}/results || exit $?
+	cp /home/bob/pbuilder/results/lucid/${PRODUCT}_${BASE}.orig.tar.gz ${DEST}/results || exit $?
+	test -e ${DEST}/results/${PRODUCT}_${BASE}.orig.tar.gz || exit $?
+fi

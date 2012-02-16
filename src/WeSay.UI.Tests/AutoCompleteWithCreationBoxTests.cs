@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using Palaso.WritingSystems;
 using WeSay.Project;
-using WeSay.Project;
 using Palaso.Lift;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
