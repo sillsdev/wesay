@@ -1,3 +1,11 @@
+wesay (1.1.9-1) UNRELEASED; urgency=low
+
+  * update palaso lib to get fixes from there
+  * update chorus lib to get fixes from there
+  * fix ProblemNotification dialog
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 16 Feb 2012 09:27:52 +0700
+
 wesay (1.1.8-1) UNRELEASED; urgency=low
 
   * WS-34306 disable liftreports which has not been used on windows for years
