@@ -1,3 +1,9 @@
+wesay (1.1.10-1) UNRELEASED; urgency=low
+
+  * disabled complaint about missing keyboard ime if autoswitching disabled
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 17 Feb 2012 14:27:00 +0700
+
 wesay (1.1.9-1) UNRELEASED; urgency=low
 
   * update palaso lib to get fixes from there
