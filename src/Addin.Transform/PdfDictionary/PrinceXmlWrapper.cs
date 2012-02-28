@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Palaso.IO;
 
 namespace Addin.Transform.PdfDictionary
 {
@@ -20,13 +21,13 @@ namespace Addin.Transform.PdfDictionary
 			}
 		}
 
-		public static bool CreatePdf(string htmlPath,
+		public static void CreatePdf(string htmlPath,
 									 IEnumerable<string> styleSheetPaths,
 									 string pdfPath)
 		{
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
 			{
-				return false;
+				throw new NotImplementedException("Not implemented for Linux");
 			}
 			string princePath = GetPrincePath();
 			Prince p;
@@ -39,12 +40,18 @@ namespace Addin.Transform.PdfDictionary
 				p = new Prince(); //maybe it would look in %path%?
 			}
 		   // no: this makes princexml think we're putting out ascii:  p.SetHTML(true);
-			p.SetLog(Path.GetTempFileName());
+			using (var log = new TempFile())
+			{
+				p.SetLog(log.Path);
 			foreach (string styleSheetPath in styleSheetPaths)
 			{
 				p.AddStyleSheet(styleSheetPath);
 			}
-			return p.Convert(htmlPath, pdfPath);
+				if(!p.Convert(htmlPath, pdfPath))
+				{
+					throw new ApplicationException(File.ReadAllText(log.Path));
+				}
+			}
 		}
 
 		private static string GetPrincePath()
