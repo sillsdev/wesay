@@ -258,7 +258,7 @@ namespace Addin.Transform.PdfDictionary
 
 				else if (headwordFieldNode != null && !string.IsNullOrEmpty(headwordFieldNode.Value))
 				{
-					var form = headwordFieldNode.SelectSingleNode("//text").Value;
+					var form = headwordFieldNode.SelectSingleNode(".//text").Value;
 					var lang = headwordFieldNode.SelectSingleNode("form").GetAttribute("lang", "");
 					StartDiv("pictureCaption");
 					WriteSpan("pictureLabel", lang, form);

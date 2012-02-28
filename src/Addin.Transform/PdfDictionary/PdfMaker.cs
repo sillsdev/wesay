@@ -152,7 +152,7 @@ namespace Addin.Transform.PdfDictionary
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem(error.Message);
+				ErrorReport.NotifyUserOfProblem(error, "There was a problem creating the PDF.");
 			}
 		}
 
