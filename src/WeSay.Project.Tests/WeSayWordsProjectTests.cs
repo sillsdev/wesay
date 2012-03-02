@@ -899,5 +899,53 @@ namespace WeSay.Project.Tests
 				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
 			}
 		}
+
+		[Test]
+		public void LoadFromDirectoryPath_FolderAndLiftFileNameDifferInCase_PathToLiftFileCorrectCase()
+		{
+			using (var e = new ProjectDirectorySetupForTesting(""))
+			{
+				var project = new WeSayWordsProject();
+				project.LoadFromProjectDirectoryPath(e.PathToDirectory);
+				Assert.That(project.PathToLiftFile, Is.EqualTo(e.PathToLiftFile));
+			}
+		}
+
+		[Test]
+		public void LoadFromDirectoryPath_WithNoWeSayConfigFileFolderAndLiftFileNameDifferInCase_PathToLiftFileCorrectCase()
+		{
+			using (var e = new ProjectDirectorySetupForTesting(""))
+			{
+				File.Delete(e.PathToConfigFile);
+				var project = new WeSayWordsProject();
+				project.LoadFromProjectDirectoryPath(e.PathToDirectory);
+				Assert.That(project.PathToLiftFile, Is.EqualTo(e.PathToLiftFile));
+			}
+		}
+
+		[Test]
+		public void LoadFromDirectoryPath_WithNoWeSayConfigFileFolderAndMultipleLiftFilesAndLiftFileNameDifferInCase_PathToLiftFileCorrectCase()
+		{
+			using (var e = new ProjectDirectorySetupForTesting(""))
+			{
+				File.Delete(e.PathToConfigFile);
+				string extraLiftFilePath = Path.Combine(e.PathToDirectory, "extra.lift");
+				File.WriteAllText(extraLiftFilePath, @"<lift />");
+				var project = new WeSayWordsProject();
+				project.LoadFromProjectDirectoryPath(e.PathToDirectory);
+				Assert.That(project.PathToLiftFile, Is.EqualTo(e.PathToLiftFile));
+			}
+		}
+
+		[Test]
+		public void LoadFromLiftLexiconPath_FolderAndLiftFileNameDifferInCase_PathToLiftFileCorrectCase()
+		{
+			using (var e = new ProjectDirectorySetupForTesting(""))
+			{
+				var project = new WeSayWordsProject();
+				project.LoadFromLiftLexiconPath(e.PathToLiftFile);
+				Assert.That(project.PathToLiftFile, Is.EqualTo(e.PathToLiftFile));
+			}
+		}
 	}
 }
