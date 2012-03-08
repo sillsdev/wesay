@@ -44,7 +44,7 @@
 		<Component Id="Ddp4Questions_en.xml" Guid="{D89FD082-3189-4ade-8477-A07B60C99790}">
 		  <File Id="Ddp4Questions_en.xml" Name="Ddp4Questions-en.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-en.xml" />
 		</Component>
-		<Component Id="Ddp4Questions_en.xml" Guid="{85389B7C-D544-429d-9010-E2E4A437A769}">
+		<Component Id="Ddp4Questions_es.xml" Guid="{85389B7C-D544-429d-9010-E2E4A437A769}">
 		  <File Id="Ddp4Questions_es.xml" Name="Ddp4Questions-es.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-es.xml" />
 		</Component>
 		<Component Id="Ddp4Questions_fr.xml" Guid="{48879B52-29CB-4197-B238-5276AFB8CB4B}">
@@ -53,7 +53,7 @@
 		<Component Id="Ddp4Questions_id.xml" Guid="{242A15FA-A451-43e5-B91B-B7977BADA5EE}">
 		  <File Id="Ddp4Questions_id.xml" Name="Ddp4Questions-id.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-id.xml" />
 		</Component>
-		<Component Id="Ddp4Questions_id.xml" Guid="{E105135D-206E-4E35-BC20-325B3304228B}">
+		<Component Id="Ddp4Questions_km.xml" Guid="{E105135D-206E-4E35-BC20-325B3304228B}">
 		  <File Id="Ddp4Questions_km.xml" Name="Ddp4Questions-km.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-km.xml" />
 		</Component>
 		<Component Id="Ddp4Questions_ne.xml" Guid="{29d9ffa0-64ac-11e0-ae3e-0800200c9a66}">
@@ -65,7 +65,7 @@
 		<Component Id="Ddp4Questions_th.xml" Guid="{06E02A57-BE56-4113-8D9D-975EB15D1FA5}">
 		  <File Id="Ddp4Questions_th.xml" Name="Ddp4Questions-th.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-th.xml" />
 		</Component>
-		<Component Id="Ddp4Questions_th.xml" Guid="{D4682CE7-E895-4057-BFD9-D8AEBB3865C7}">
+		<Component Id="Ddp4Questions_zh_CN.xml" Guid="{D4682CE7-E895-4057-BFD9-D8AEBB3865C7}">
 		  <File Id="Ddp4Questions_zh_CN.xml" Name="Ddp4Questions-zh-CN.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-zh-CN.xml" />
 		</Component>
 
