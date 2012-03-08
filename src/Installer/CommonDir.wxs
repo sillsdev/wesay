@@ -56,10 +56,10 @@
 		<Component Id="Ddp4Questions_id.xml" Guid="{E105135D-206E-4E35-BC20-325B3304228B}">
 		  <File Id="Ddp4Questions_km.xml" Name="Ddp4Questions-km.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-km.xml" />
 		</Component>
-		<Component Id="Ddp4Questions_nep.xml" Guid="{29d9ffa0-64ac-11e0-ae3e-0800200c9a66}">
+		<Component Id="Ddp4Questions_ne.xml" Guid="{29d9ffa0-64ac-11e0-ae3e-0800200c9a66}">
 		  <File Id="Ddp4Questions_ne.xml" Name="Ddp4Questions-ne.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-ne.xml" />
 		</Component>
-		<Component Id="Ddp4Questions_nep.xml" Guid="{AD338C0B-6289-48bf-8CA2-28DE404571E0}">
+		<Component Id="Ddp4Questions_ru.xml" Guid="{AD338C0B-6289-48bf-8CA2-28DE404571E0}">
 		  <File Id="Ddp4Questions_ru.xml" Name="Ddp4Questions-ru.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-ru.xml" />
 		</Component>
 		<Component Id="Ddp4Questions_th.xml" Guid="{06E02A57-BE56-4113-8D9D-975EB15D1FA5}">
