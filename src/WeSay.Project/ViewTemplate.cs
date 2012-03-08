@@ -381,6 +381,15 @@ namespace WeSay.Project
 			glossField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(glossField);
 
+			Field silCawlField = new Field("SILCAWL",
+										 "LexSense", new string[]{"en"});
+			silCawlField.DisplayName = "SIL CAWL #";
+			silCawlField.Description = "The SIL CAWL wordlist # for this entry, (see the SIL CAWL wordlist task).";
+			silCawlField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			silCawlField.Enabled = false;
+			silCawlField.IsSpellCheckingEnabled = false;
+			masterTemplate.Add(silCawlField);
+
 			Field literalMeaningField = new Field("literal-meaning", "LexEntry", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Literal Meaning",

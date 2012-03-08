@@ -290,6 +290,8 @@ namespace WeSay.LexicalModel
 				{
 					return false;
 				}
+				if (FieldName == "SILCAWL")
+					return false;
 
 				return true;
 			}
@@ -311,6 +313,21 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		[Browsable(false)]
+		public bool UserCanModifyWritingSystemsAndSpelling
+		{
+			get
+			{
+				if (_fieldName == "SILCAWL" ||
+					_fieldName =="Picture" ||
+					_fieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
 		[TypeConverter(typeof (DataTypeClassConverter))]
 		[Description(
 				"The type of the field. E.g. multilingual text, option, option collection, relation."
