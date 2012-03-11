@@ -314,12 +314,28 @@ namespace WeSay.LexicalModel
 		}
 
 		[Browsable(false)]
-		public bool UserCanModifyWritingSystemsAndSpelling
+		public bool UserCanModifyWritingSystems
 		{
 			get
 			{
 				if (_fieldName == "SILCAWL" ||
-					_fieldName =="Picture" ||
+					_fieldName =="Picture")
+					// || Don't disable this:  it is actually used to change the language used when displaying domains:  _fieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+
+		public bool UserCanModifySpellCheckFeature
+		{
+			get
+			{
+				if (_fieldName == "SILCAWL" ||
+					_fieldName == "Picture" ||
 					_fieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
 				{
 					return false;
@@ -328,6 +344,8 @@ namespace WeSay.LexicalModel
 				return true;
 			}
 		}
+
+
 		[TypeConverter(typeof (DataTypeClassConverter))]
 		[Description(
 				"The type of the field. E.g. multilingual text, option, option collection, relation."
@@ -568,6 +586,7 @@ namespace WeSay.LexicalModel
 			get { return _isMultiParagraph; }
 			set { _isMultiParagraph = value;}
 		}
+
 
 		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)

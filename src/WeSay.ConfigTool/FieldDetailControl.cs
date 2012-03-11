@@ -188,7 +188,8 @@ namespace WeSay.ConfigTool
 			_multiParagraph.Visible = _field.DataTypeName == Field.BuiltInDataType.MultiText.ToString();
 			_multiParagraph.Enabled = _field.UserCanDeleteOrModify;
 			_writingSystemsControlLabel.Visible =
-			_writingSystemsControl.Visible = _enableSpelling.Visible = _field.UserCanModifyWritingSystemsAndSpelling;// _field.DataTypeName != Field.BuiltInDataType.Picture.ToString();
+			_writingSystemsControl.Visible = _field.UserCanModifyWritingSystems;
+			_enableSpelling.Visible = _field.UserCanModifySpellCheckFeature;
 
 		}
 
