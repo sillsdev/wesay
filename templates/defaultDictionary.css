@@ -340,7 +340,8 @@ font-style: italic;
 {
 	font-style: italic;
 }
-.entry
-{
-	text-indent: 1cm hanging;
-}
+/* This triggers a bug in PrinceXml when there is a picture and the definition is long*/
+/*.entry*/
+/*{*/
+	/*text-indent: 1cm hanging;*/
+/*}*/
