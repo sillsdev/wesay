@@ -340,10 +340,11 @@ font-style: italic;
 {
 	font-style: italic;
 }
-.entry
-{
-	text-indent: 1cm hanging;
-}
+/*We want this, but it triggers a bug in PrinceXml 7.1 and 8.0
+.entry*/
+/*{*/
+	/*text-indent: 1cm hanging;*/
+/*}*/
 
 /* by default, don't show any custom fields */
 SPAN.custom
