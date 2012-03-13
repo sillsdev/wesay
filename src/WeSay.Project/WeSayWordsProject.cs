@@ -1666,27 +1666,27 @@ namespace WeSay.Project
 		/// </summary>
 		/// <param name="pathToLift"></param>
 		/// <returns>true if it displayed an error message</returns>
-		public static bool CheckLiftAndReportErrors(string pathToLift)
-		{
-			try
-			{
-				string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
-				if (!String.IsNullOrEmpty(errors))
-				{
-					ErrorReport.NotifyUserOfProblem(
-							"The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
-							pathToLift,
-							errors);
-					return true;
-				}
-			}
-			catch (Exception e)
-			{
-				ErrorReport.ReportNonFatalException(e);
-				return true;
-			}
-			return false;
-		}
+//        public static bool CheckLiftAndReportErrors(string pathToLift)
+//        {
+//            try
+//            {
+//                string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
+//                if (!String.IsNullOrEmpty(errors))
+//                {
+//                    ErrorReport.NotifyUserOfProblem(
+//                            "The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
+//                            pathToLift,
+//                            errors);
+//                    return true;
+//                }
+//            }
+//            catch (Exception e)
+//            {
+//                ErrorReport.ReportNonFatalException(e);
+//                return true;
+//            }
+//            return false;
+//        }
 
 		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)
 		{
