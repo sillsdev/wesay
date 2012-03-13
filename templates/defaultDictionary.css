@@ -340,11 +340,7 @@ font-style: italic;
 {
 	font-style: italic;
 }
-/*We want this, but it triggers a bug in PrinceXml 7.1 and 8.0
-.entry*/
-/*{*/
-	/*text-indent: 1cm hanging;*/
-/*}*/
+
 
 /* by default, don't show any custom fields */
 SPAN.custom
@@ -364,3 +360,11 @@ SPAN.plural
 /* we want parentheses around the plural. we would like the 'pl' to be italics, but can't do it*/
 .plural .xitem::before { content: "(pl " }
 .plural .xitem::after { content: ")" ; }
+
+/* headwords hang out to the left for easier locating */
+.entry
+{
+	/* text-indent: 1cm hanging;  Kills PrinceXml 7.1 and 8.0, so we are doing the margin-left and .headword margin-left to simulate it */
+	margin-left: 1cm;
+}
+.headword { margin-left: -1cm }
