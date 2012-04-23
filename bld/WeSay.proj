@@ -145,25 +145,6 @@
 	</MakeWixForDirTree>
   </Target>
 
-  <Target Name="MakeWixForMercurial">
-	<MakeWixForDirTree
-				DirectoryReferenceId="mercurial"
-				ComponentGroupId="Mercurial"
-				RootDirectory="$(BaseDirectory)\mercurial"
-				OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedMercurial.wxs"
-				MatchRegExPattern=".*">
-	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
-	</MakeWixForDirTree>
-	<MakeWixForDirTree
-			DirectoryReferenceId="MercurialExtensions"
-	ComponentGroupId="MercurialExtensions"
-	RootDirectory="$(BaseDirectory)\MercurialExtensions"
-			OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedMercurialExtensions.wxs"
-			MatchRegExPattern=".*">
-	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
-	</MakeWixForDirTree>
-  </Target>
-
   <Target Name="MakeWixForTemplates">
 	<MakeWixForDirTree
 				DirectoryReferenceId="TemplatesDir"
@@ -186,7 +167,6 @@
 	<Message Text="Version: $(Version)" />
 
 	<CallTarget targets="MakeWixForTemplates"/>
-	<CallTarget targets="MakeWixForMercurial"/>
 
 	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
@@ -207,10 +187,10 @@
 
   <!-- for use on a dev machine to test installer script -->
   <Target Name="InstallerWithBogusBuildNumber">
-	<CreateProperty Value="1234:abcd">
+	<CreateProperty Value="1234-abcd">
 	  <Output PropertyName="BUILD_NUMBER" TaskParameter="Value"/>
 	</CreateProperty>
-	<CallTarget Targets="Install"/>
+	<CallTarget Targets="Installer"/>
   </Target>
 
 	<Target Name="Installer">
@@ -224,7 +204,6 @@
 
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<CallTarget targets="MakeWixForTemplates"/>
-	<CallTarget targets="MakeWixForMercurial"/>
 
 	  <!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->

@@ -62,13 +62,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 							<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
 						</Directory>
 
-				  <Directory Id="mercurial" Name="mercurial">
-					<!-- a generated fragment from GeneratedMercurial.wxs will fill this in -->
-				  </Directory>
-
-				  <Directory Id="MercurialExtensions" Name="MercurialExtensions">
-					<!-- a generated fragment from GeneratedMercurialExtensions.wxs will fill this in -->
-				  </Directory>
+				  <Merge  Id="ChorusMergeModule" Language="1033" SourceFile="..\..\lib\ChorusMergeModule.msm" DiskId="1" />
 
 				  <Component Id="DocFiles" Guid="{F533B47C-A6F4-4284-A257-59C3C9B54526}">
 					<File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="..\..\doc\Welcome.htm" />
@@ -198,16 +192,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
 				  </Component>
 
-				  <Component Id="Chorus.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CCCC}">
-					<File Id="Chorus.exe" Name="Chorus.exe" KeyPath="yes" Source="..\..\output\release\Chorus.exe" />
-				  </Component>
-				 <Component Id="ChorusMerge.exe" Guid="{345AD323-F201-4104-AE1C-4F039EDE21F7}">
-					<File Id="ChorusMerge.exe" Name="ChorusMerge.exe" KeyPath="yes" Source="..\..\output\release\ChorusMerge.exe" />
-				  </Component>
-				 <Component Id="LibChorus.dll" Guid="{B23662D0-4176-4307-929C-C61855B7B7DF}">
-					<File Id="LibChorus.dll" Name="LibChorus.dll" KeyPath="yes" Source="..\..\output\release\LibChorus.dll" />
-				  </Component>
-
 				  <Component Id="Palaso.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
 					<File Id="Palaso.dll" Name="Palaso.dll" KeyPath="yes" Source="..\..\output\release\Palaso.dll" />
 				  </Component>
@@ -326,6 +310,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 			  <ComponentRef Id="DocFiles"/>
 
+			  <MergeRef Id="ChorusMergeModule" />
+
 			  <!-- assemblies -->
 			  <ComponentRef Id="WeSayConfigurationTool" />
 			  <ComponentRef Id="WeSayConfigurationTool.exe.config" />
@@ -347,9 +333,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalTools.pdb" />
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
 			  <ComponentRef Id="NetReflector.dll" />
-			  <ComponentRef Id="Chorus.exe"/>
-			  <ComponentRef Id="LibChorus.dll"/>
-			  <ComponentRef Id="ChorusMerge.exe"/>
 			  <ComponentRef Id="Palaso.dll"/>
 <!--              <ComponentRef Id="Palaso.Services.dll" />-->
 			  <ComponentRef Id="Palaso.DictionaryServices.dll" />
@@ -388,10 +371,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentGroupRef Id ="defaultFiles"/>
 			  <ComponentGroupRef Id ="ddpStuff"/>
 			  <ComponentGroupRef Id ="biatahSample"/>
-			 <ComponentGroupRef Id ="templates"/>
+			  <ComponentGroupRef Id ="templates"/>
 			  <ComponentGroupRef Id ="PoFiles"/>
-			  <ComponentGroupRef Id ="Mercurial"/>
-			  <ComponentGroupRef Id ="MercurialExtensions"/>
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 			<Icon Id="WeSay.App.exe" SourceFile ="..\..\output\release\WeSay.App.exe" />
