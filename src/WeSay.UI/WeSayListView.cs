@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.DictionaryServices.Model;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
@@ -114,7 +115,15 @@ namespace WeSay.UI
 			base.OnRetrieveVirtualItem(e);
 			if (e.Item == null)
 			{
-				e.Item = new ListViewItem(_dataSource[e.ItemIndex].ToString());
+				var entry = _dataSource[e.ItemIndex] as LexEntry;
+				if(entry!=null)
+				{
+					e.Item = new ListViewItem(entry.GetHeadWordForm(_writingSystem.Id));
+				}
+				else
+				{
+					e.Item = new ListViewItem( _dataSource[e.ItemIndex].ToString());
+				}
 			}
 
 			if (e.ItemIndex == SelectedIndex)
@@ -134,6 +143,8 @@ namespace WeSay.UI
 			{
 				if (_writingSystem == null)
 				{
+					if(DesignMode)
+						return new WritingSystemDefinition();
 					throw new InvalidOperationException(
 							"WritingSystem must be initialized prior to use.");
 				}

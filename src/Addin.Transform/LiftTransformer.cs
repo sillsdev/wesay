@@ -69,6 +69,10 @@ namespace Addin.Transform
 		{
 			get { return true; }
 		}
+		public bool Deprecated
+		{
+			get { return false; }
+		}
 
 		//for unit tests
 		public string PathToOutput
