@@ -114,6 +114,8 @@ namespace Addin.Transform.PdfDictionary
 				var stylesheetPaths = new List<string>();
 
 				var autoLayout = Path.Combine(projectInfo.PathToExportDirectory, "autoLayout.css");
+
+				//NB: when running on dev machine, this is actually going to get this out of output, not templates, so you have to restart wesay to see changes.
 				var factoryLayout = projectInfo.LocateFile(Path.Combine("Templates", "defaultDictionary.css"));
 				File.Copy(factoryLayout, autoLayout, true);
 
