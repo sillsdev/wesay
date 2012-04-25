@@ -213,11 +213,19 @@ namespace WeSay.App
 			   _project.AddToContainer(b => b.Register<TabbedForm>());
 			   _tabbedForm = _project.Container.Resolve<TabbedForm>();
 			   _tabbedForm.Show(); // so the user sees that we did launch
-			   _tabbedForm.Text = String.Format(
+			var versionString = BasilProject.VersionString;
+#if ALPHA
+			   versionString += " ALPHA";
+#endif
+#if BETA
+			   versionString += " BETA";
+#endif
+
+			_tabbedForm.Text = String.Format(
 				   "{0} {1}: {2}",
 				   StringCatalog.Get("~WeSay",
 									 "It's up to you whether to bother translating this or not."),
-				   BasilProject.VersionString,
+				   versionString,
 				   _project.Name
 			   );
 			   Application.DoEvents();

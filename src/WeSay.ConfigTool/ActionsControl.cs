@@ -51,7 +51,7 @@ namespace WeSay.ConfigTool
 			{
 				//this alreadyFound business is a hack to prevent duplication in some
 				// situation I haven't tracked down yet.
-				if (!alreadyFound.Contains(addin.ID))
+				if (!alreadyFound.Contains(addin.ID) && !addin.Deprecated)
 				{
 					alreadyFound.Add(addin.ID);
 					AddAddin(addin);
