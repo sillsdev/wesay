@@ -96,7 +96,11 @@ namespace Addin.Transform.PdfDictionary
 
 			progressState.StatusLabel = "Converting dictionary to XHTML...";
 
-			string htmlPath = CreateFileToOpen(projectInfo, false);
+			//  not including because historyically we had trouble nailing down precedence, and we add these explicitly to prince.
+			//  Prince has gone through several versions now, so we *could* try turning the links back on and see if the problem is gone.
+			bool includeCSSLinks = false;
+
+			string htmlPath = CreateFileToOpen(projectInfo, includeCSSLinks);
 
 			if (string.IsNullOrEmpty(htmlPath))
 			{

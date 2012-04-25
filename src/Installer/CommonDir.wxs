@@ -28,6 +28,9 @@
 		<Component Id="default.WeSayConfig" Guid="{4D0210A0-095D-48DE-9399-4074A97864A4}">
 		  <File Id="default.WeSayConfig" Name="default.WeSayConfig" KeyPath="yes" Source="..\..\common\default.WeSayConfig" />
 		</Component>
+		<Component Id="exiftool.exe" Guid="{85C1218D-890D-45db-AF3E-A1599E6D35F6}">
+		  <File Id="exiftool.exe" Name="exiftool.exe" KeyPath="yes" Source="..\..\common\exiftool.exe" />
+		</Component>
 
 		<Directory Id="WritingSystems" Name="WritingSystems">
 		<Component Id="WritingSystems_en.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BDF}">
@@ -84,6 +87,7 @@
 
 
 	<ComponentGroup Id="defaultFiles">
+	  <ComponentRef Id="exiftool.exe" />
 	  <ComponentRef Id="PartsOfSpeech.xml" />
 	  <ComponentRef Id="SILCAWL.lift" />
 	  <ComponentRef Id="SILCAWL_MozambiqueAddendum.lift" />
