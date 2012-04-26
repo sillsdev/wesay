@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -121,6 +122,11 @@ namespace WeSay.ConfigTool
 			if (string.IsNullOrEmpty(initialDirectory))
 			{
 				initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+				string wesayDirectory = Path.Combine(initialDirectory, "WeSay");
+				if (Directory.Exists(wesayDirectory))
+				{
+					initialDirectory = wesayDirectory;
+				}
 			}
 			return initialDirectory;
 		}
@@ -311,7 +317,7 @@ namespace WeSay.ConfigTool
 			catch (Exception e)
 			{
 				Project = null;
-				ErrorReport.NotifyUserOfProblem(e, "WeSay was not able to open that project.");
+				ErrorReport.NotifyUserOfProblem(e, "WeSay was not able to open that project." + e.Message);
 				return false;
 			}
 
@@ -443,6 +449,9 @@ namespace WeSay.ConfigTool
 				{
 					Project.Save();
 				}
+				//SettingsProviderCollection lProviders = Settings.Default.Providers;
+				//SettingsProvider provider;
+				//string[] mrupaths = Settings.Default.MruConfigFilePaths.Paths;
 				Settings.Default.Save();
 				if (_projectSettingsControl != null)
 				{
