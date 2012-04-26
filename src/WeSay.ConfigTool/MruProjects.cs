@@ -15,23 +15,37 @@ namespace WeSay.ConfigTool
 		}
 
 		private readonly List<string> _paths;
+		//private string[] _nonstalepaths;
+		private static int _numRuns = 0;
 
 		public MruProjects()
 		{
 			_paths = new List<string>();
+			//_nonstalepaths = new string[] {"test"};
+			MorePaths = new string[] { "/home/daniel/WeSay/bhele_dictionary/bhy.WeSayConfig", "two" };
+			_numRuns++;
 		}
 
-		[XmlElement("Path")]
+		//[XmlArrayItem(ElementName = "Path", IsNullable = false)]
+		//[XmlArray(ElementName="Paths", IsNullable = true)]
+		//[XmlArrayItem(ElementName= "Path",  IsNullable=true, Type = typeof(string))]
+		//[XmlArray]
+		//[XmlIgnore]
 		public string[] Paths
 		{
 			get
 			{
-				List<string> paths = new List<string>(GetNonStalePaths());
-				return paths.ToArray();
+				return _paths.ToArray();
+				//List<string> nspaths = new List<string>(GetNonStalePaths());
+				//_nonstalepaths = new string[nspaths.Count];//paths.ToArray();
+				//nspaths.CopyTo(_nonstalepaths);
+				//_nonstalepaths = new string[] { "/home/daniel/WeSay/bhele_dictionary/bhy.WeSayConfig" };
+				//return _nonstalepaths;
 			}
 			set
 			{
-				_paths.Clear();
+				//_nonstalepaths = value;
+				//_paths.Clear();
 				if (value != null)
 				{
 					foreach (string path in value)
@@ -44,6 +58,8 @@ namespace WeSay.ConfigTool
 				}
 			}
 		}
+
+		public string[] MorePaths;
 
 		[XmlIgnore]
 		public string Latest
@@ -86,7 +102,9 @@ namespace WeSay.ConfigTool
 			}
 			_paths.Remove(path);
 
-			_paths.Insert(0, path);
+			Paths = new string[] { path };
+			MorePaths = new string[] { "/home/daniel/WeSay/bhele_dictionary/bhy.WeSayConfig", "three" };
+			//WeSay.ConfigTool.Properties.Settings.Default.Save();
 			return true;
 		}
 	}
