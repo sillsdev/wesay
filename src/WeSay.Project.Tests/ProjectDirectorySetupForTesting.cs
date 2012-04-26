@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Palaso.Lift.Validation;
+using Palaso.TestUtilities;
 
 namespace WeSay.Project.Tests
 {
@@ -10,18 +11,20 @@ namespace WeSay.Project.Tests
 	public class ProjectDirectorySetupForTesting : IDisposable
 	{
 		private bool _disposed;
-		private readonly string _experimentDir;
-		private readonly string _projectName = "test";
-		private string _projectDirectoryName;
+		private const string ProjectName = "Test"; // Note the capital making a case difference from the folder name.
+		private const string ProjectFolder = "test";
+
+		private readonly TemporaryFolder _testFolder;
+		private readonly TemporaryFolder _projectRootFolder;
 
 		public ProjectDirectorySetupForTesting(string xmlOfEntries)
 				: this(xmlOfEntries, Validator.LiftVersion) {}
 
 		public ProjectDirectorySetupForTesting(string xmlOfEntries, string liftVersion)
 		{
-			_projectDirectoryName = Path.GetRandomFileName();
-			_experimentDir = MakeDir(Path.GetTempPath(), ProjectDirectoryName);
-			WeSayWordsProject.CreateEmptyProjectFiles(_experimentDir, ProjectName);
+			_testFolder = new TemporaryFolder("WeSayProjectTest");
+			_projectRootFolder = new TemporaryFolder(_testFolder, ProjectFolder);
+			WeSayWordsProject.CreateEmptyProjectFiles(_projectRootFolder.Path, ProjectName);
 
 			//overwrite the blank lift file
 			string liftContents =
@@ -36,17 +39,17 @@ namespace WeSay.Project.Tests
 
 		public string PathToDirectory
 		{
-			get { return _experimentDir; }
+			get { return _projectRootFolder.Path; }
 		}
 
 		public string PathToLiftFile
 		{
-			get { return Path.Combine(_experimentDir, "test.lift"); }
+			get { return Path.Combine(_projectRootFolder.Path, "Test.lift"); }
 		}
 
 		public string PathToConfigFile
 		{
-			get { return Path.Combine(_experimentDir, "test.WeSayConfig"); }
+			get { return Path.Combine(_projectRootFolder.Path, "Test.WeSayConfig"); }
 		}
 
 		public string PathToUserConfigFile
@@ -69,15 +72,6 @@ namespace WeSay.Project.Tests
 			}
 		}
 
-
-
-		private static string MakeDir(string existingParent, string newChild)
-		{
-			string dir = Path.Combine(existingParent, newChild);
-			Directory.CreateDirectory(dir);
-			return dir;
-		}
-
 		#region IDisposable Members
 
 		~ProjectDirectorySetupForTesting()
@@ -94,18 +88,14 @@ namespace WeSay.Project.Tests
 			get { return _disposed; }
 		}
 
-		public string ProjectName
-		{
-			get { return _projectName; }
-		}
-
 		public string ProjectDirectoryName
 		{
-			get { return _projectDirectoryName; }
+			get { return _projectRootFolder.Path; }
 		}
 
 		public void Dispose()
 		{
+			_testFolder.Dispose();
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
@@ -114,11 +104,6 @@ namespace WeSay.Project.Tests
 		{
 			if (!IsDisposed)
 			{
-				if (disposing)
-				{
-					Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
-				}
-
 				// shared (dispose and finalizable) cleanup logic
 				_disposed = true;
 			}
@@ -137,9 +122,8 @@ namespace WeSay.Project.Tests
 		public WeSayWordsProject CreateLoadedProject()
 		{
 
-			WeSayWordsProject p = new WeSayWordsProject();
+			var p = new WeSayWordsProject();
 			p.LoadFromLiftLexiconPath(PathToLiftFile);
-
 
 			return p;
 		}

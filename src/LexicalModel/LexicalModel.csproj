@@ -108,17 +108,6 @@
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' ">
-	<None Include="..\..\lib\$(Configuration)\icudt40.dll">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
-	<None Include="..\..\lib\$(Configuration)\icuin40.dll">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
-	<None Include="..\..\lib\$(Configuration)\icuuc40.dll">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
-  </ItemGroup>
   <ItemGroup>
 	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
 	  <SpecificVersion>False</SpecificVersion>
@@ -129,9 +118,9 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
 	</Reference>
-	<Reference Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="icu.net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+	<Reference Include="icu.net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\icu.net.dll</HintPath>
+	  <HintPath>\usr\lib\cli\icu-cil-0.1.2\icu.net.dll</HintPath>
 	</Reference>
 	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
 	  <SpecificVersion>False</SpecificVersion>

@@ -34,7 +34,6 @@ namespace WeSay.ConfigTool
 		public ConfigurationWindow(string[] args)
 		{
 			InitializeComponent();
-			openProjectInWeSayToolStripMenuItem.LocationChanged += new EventHandler(openProjectInWeSayToolStripMenuItem_LocationChanged);
 			Project = null;
 
 			//            if (this.DesignMode)
@@ -52,11 +51,6 @@ namespace WeSay.ConfigTool
 			{
 				UpdateWindowCaption();
 			}
-		}
-
-		void openProjectInWeSayToolStripMenuItem_LocationChanged(object sender, EventArgs e)
-		{
-
 		}
 
 		private WeSayWordsProject Project
@@ -449,6 +443,7 @@ namespace WeSay.ConfigTool
 				{
 					Project.Save();
 				}
+
 				Settings.Default.Save();
 				if (_projectSettingsControl != null)
 				{

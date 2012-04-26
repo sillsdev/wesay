@@ -340,7 +340,31 @@ font-style: italic;
 {
 	font-style: italic;
 }
+
+
+/* by default, don't show any custom fields */
+SPAN.custom
+{
+	display:none;
+}
+
+/* though plural is a custom field, it's probably the most common one,
+	and this serves as an example of how to cause your field to display.
+	Just copy this into the "customLayout.css", and change all the "plural"'s
+	to the name of your custom field. */
+SPAN.plural
+{
+	display:inline;
+	font-weight: normal;
+}
+/* we want parentheses around the plural. we would like the 'pl' to be italics, but can't do it*/
+.plural .xitem::before { content: "(pl " }
+.plural .xitem::after { content: ")" ; }
+
+/* headwords hang out to the left for easier locating */
 .entry
 {
-	text-indent: 1cm hanging;
+	/* text-indent: 1cm hanging;  Kills PrinceXml 7.1 and 8.0, so we are doing the margin-left and .headword margin-left to simulate it */
+	margin-left: 1cm;
 }
+.headword { margin-left: -1cm }

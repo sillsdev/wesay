@@ -301,32 +301,14 @@ namespace WeSay.Project
 
 			if (!File.Exists(PathToConfigFile))
 			{
-				var liftWithSameNameAsFolder = Path.Combine(projectDirectoryPath,
-															Path.GetFileName(projectDirectoryPath) + ".lift");
-
-				string projectName;
-
-				if(File.Exists(liftWithSameNameAsFolder))
+				string preferredLiftFile = GetPathToLiftFileGivenProjectDirectory(projectDirectoryPath);
+				if (String.IsNullOrEmpty(preferredLiftFile))
 				{
-					PathToLiftFile = liftWithSameNameAsFolder;
-					projectName = Path.GetFileName(projectDirectoryPath);
+					return;
 				}
-				else
-				{
-					var liftPaths = Directory.GetFiles(projectDirectoryPath, "*.lift");
-					if(liftPaths.Length==0)
-					{
-						ErrorReport.NotifyUserOfProblem("Could not find a LIFT file to us in " + projectDirectoryPath);
-						return;
-					}
-					if (liftPaths.Length > 1)
-					{
-						ErrorReport.NotifyUserOfProblem("Expected only on LIFT file in {0}, but there were {1}. Remove all but one and try again.", projectDirectoryPath, liftPaths.Length);
-						return;
-					}
-					PathToLiftFile = liftPaths[0];
-					projectName = Path.GetFileName(Path.GetFileNameWithoutExtension(liftPaths[0]));
-				}
+				PathToLiftFile = preferredLiftFile;
+				string projectName = Path.GetFileName(Path.GetFileNameWithoutExtension(preferredLiftFile));
+
 				CreateEmptyProjectFiles(projectDirectoryPath, projectName);
 				LoadFromProjectDirectoryPathInner(projectDirectoryPath);
 
@@ -387,8 +369,8 @@ namespace WeSay.Project
 
 		private static void MigrateProjectFilesAndCheckForOrphanedWritingSystems(string projectDirectory)
 		{
-			string liftFilePath = GetPathToLiftFileGivenProjectDirectory(projectDirectory);
-			string configFilePath = GetPathToConfigFile(projectDirectory, Path.GetFileNameWithoutExtension(liftFilePath));
+			string liftFilePath = GetPathToLiftFileGivenProjectDirectoryQuietly(projectDirectory);
+			string configFilePath = GetPathToConfigFile(projectDirectory, GetProjectNameFromLiftFilePath(liftFilePath));
 			string userConfigPath = PathToUserSpecificConfigFile(projectDirectory);
 
 			//migrate writing systems
@@ -423,6 +405,11 @@ namespace WeSay.Project
 			//migrate user config
 			var userConfigMigrator = new WeSayUserConfigMigrator(userConfigPath);
 			userConfigMigrator.MigrateIfNeeded();
+		}
+
+		private static string GetProjectNameFromLiftFilePath(string liftFilePath)
+		{
+			return String.IsNullOrEmpty(liftFilePath) ? "" : Path.GetFileNameWithoutExtension(liftFilePath);
 		}
 
 		[Serializable]
@@ -968,8 +955,10 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return GetPathToConfigFile(PathToWeSaySpecificFilesDirectoryInProject,
-					Path.GetFileNameWithoutExtension(PathToLiftFile));
+				return GetPathToConfigFile(
+					PathToWeSaySpecificFilesDirectoryInProject,
+					GetProjectNameFromLiftFilePath(PathToLiftFile)
+				);
 			}
 		}
 
@@ -980,8 +969,7 @@ namespace WeSay.Project
 
 		private static string GetPathToConfigFile(string directoryInProject, string name)
 		{
-			return Path.Combine(directoryInProject,
-								name + ".WeSayConfig");
+			return String.IsNullOrEmpty(name) ? "" : Path.Combine(directoryInProject, name + ".WeSayConfig");
 		}
 
 		/// <summary>
@@ -1008,7 +996,7 @@ namespace WeSay.Project
 
 		public override string Name
 		{
-			get { return Path.GetFileNameWithoutExtension(PathToLiftFile); }
+			get { return GetProjectNameFromLiftFilePath(PathToLiftFile); }
 		}
 
 		public string PathToLiftFile
@@ -1037,35 +1025,56 @@ namespace WeSay.Project
 			}
 		}
 
+		private static string GetPathToLiftFileGivenProjectDirectoryQuietly(string projectDirectoryPath)
+		{
+			return GetPathToLiftFileGivenProjectDirectory(projectDirectoryPath, false);
+		}
+
 		private static string GetPathToLiftFileGivenProjectDirectory(string projectDirectoryPath)
 		{
-			//first, we assume it's based on the name of the directory
-			var path = Path.Combine(projectDirectoryPath,
-										   Path.GetFileName(projectDirectoryPath) + ".lift");
+			return GetPathToLiftFileGivenProjectDirectory(projectDirectoryPath, true);
+		}
 
-			//if that doesn't give us one, then we find one which has a matching wesayconfig file
-			if (!File.Exists(path))
+		private static string GetPathToLiftFileGivenProjectDirectory(string projectDirectoryPath, bool canNotify)
+		{
+			string preferredLiftFile;
+			var liftPaths = Directory.GetFiles(projectDirectoryPath, "*.lift");
+			if (liftPaths.Length == 0)
 			{
-				foreach (var liftPath in Directory.GetFiles(projectDirectoryPath, "*.lift"))
+				if (canNotify)
 				{
-					if (File.Exists(liftPath.Replace(".lift", ".WeSayConfig")))
-					{
-						return liftPath;
-					}
+					ErrorReport.NotifyUserOfProblem("Could not find a LIFT file to us in " + projectDirectoryPath);
 				}
-#if mono    //try this too(probably not needed...)
-				//anyhow remember case is sensitive, and a simpe "tolower"
-				//doens't cut it because the exists will fail if it's the wrong case (WS-14982)
-				foreach (var liftPath in Directory.GetFiles(ProjectDirectoryPath, "*.Lift"))
-				{
-					if (File.Exists(liftPath.Replace(".Lift", ".WeSayConfig")))
-					{
-						return liftPath;
-					}
-				}
-#endif
+				return null;
 			}
-			return path;
+			if (liftPaths.Length == 1)
+			{
+				preferredLiftFile = liftPaths[0];
+			}
+			else
+			{
+				string parentDirectoryName = projectDirectoryPath.Split(new[] { Path.DirectorySeparatorChar }).LastOrDefault();
+				preferredLiftFile = liftPaths.FirstOrDefault(
+					fileName => String.Compare(
+						Path.GetFileNameWithoutExtension(fileName),
+						parentDirectoryName,
+						StringComparison.OrdinalIgnoreCase
+					) == 0
+				);
+				if (String.IsNullOrEmpty(preferredLiftFile))
+				{
+					if (canNotify)
+					{
+						ErrorReport.NotifyUserOfProblem(
+							"Expected only one LIFT file in {0}, but there were {1}. Remove all but one and try again.",
+							projectDirectoryPath,
+							liftPaths.Length
+						);
+					}
+					return null;
+				}
+			}
+			return preferredLiftFile;
 		}
 
 		public string PathToLiftBackupDir
@@ -1666,27 +1675,27 @@ namespace WeSay.Project
 		/// </summary>
 		/// <param name="pathToLift"></param>
 		/// <returns>true if it displayed an error message</returns>
-		public static bool CheckLiftAndReportErrors(string pathToLift)
-		{
-			try
-			{
-				string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
-				if (!String.IsNullOrEmpty(errors))
-				{
-					ErrorReport.NotifyUserOfProblem(
-							"The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
-							pathToLift,
-							errors);
-					return true;
-				}
-			}
-			catch (Exception e)
-			{
-				ErrorReport.ReportNonFatalException(e);
-				return true;
-			}
-			return false;
-		}
+//        public static bool CheckLiftAndReportErrors(string pathToLift)
+//        {
+//            try
+//            {
+//                string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
+//                if (!String.IsNullOrEmpty(errors))
+//                {
+//                    ErrorReport.NotifyUserOfProblem(
+//                            "The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
+//                            pathToLift,
+//                            errors);
+//                    return true;
+//                }
+//            }
+//            catch (Exception e)
+//            {
+//                ErrorReport.ReportNonFatalException(e);
+//                return true;
+//            }
+//            return false;
+//        }
 
 		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)
 		{

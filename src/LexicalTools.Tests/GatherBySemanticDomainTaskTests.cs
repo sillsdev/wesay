@@ -1192,7 +1192,7 @@ namespace WeSay.LexicalTools.Tests
 																			 new TaskMemoryRepository(),
 																			 new StringLogger());
 			task.Activate();
-			Assert.AreEqual("1 L'univers physique", task.DomainNames[0]);
+			Assert.AreEqual("1 L’univers, la création", task.DomainNames[0]);
 			Assert.AreEqual(" 1.1 Ciel", task.DomainNames[1]);
 			Assert.AreEqual("fr", task.SemanticDomainWritingSystemId);
 

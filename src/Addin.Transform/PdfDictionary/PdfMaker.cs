@@ -110,7 +110,9 @@ namespace Addin.Transform.PdfDictionary
 				var stylesheetPaths = new List<string>();
 
 				var autoLayout = Path.Combine(projectInfo.PathToExportDirectory, "autoLayout.css");
+
 				var factoryLayout = projectInfo.LocateFile(Path.Combine("templates", "defaultDictionary.css"));
+				//NB: when running on dev machine, this is actually going to get this out of output, not templates, so you have to restart wesay to see changes.
 				File.Copy(factoryLayout, autoLayout, true);
 
 				var autoFonts = Path.Combine(projectInfo.PathToExportDirectory, "autoFonts.css");
@@ -155,7 +157,7 @@ namespace Addin.Transform.PdfDictionary
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem(error.Message);
+				ErrorReport.NotifyUserOfProblem(error, "There was a problem creating the PDF.");
 			}
 		}
 

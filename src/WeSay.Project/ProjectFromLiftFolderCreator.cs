@@ -4,7 +4,6 @@ using System.Xml;
 using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
@@ -79,7 +78,7 @@ namespace WeSay.Project
 
 			if(missingWritingSystems.Length > 0)
 			{
-				var list = missingWritingSystems.ToString().Trim(new char[]{','});
+				var list = missingWritingSystems.ToString().Trim(new[]{','});
 				ErrorReport.NotifyUserOfProblem(
 					"WeSay had a problem locating information on at least one writing system used in the LIFT export from FLEx.  One known cause of this is an old version of FLEx. In the folder containing the LIFT file, there should have been '___.ldml' files for the following writing systems: {0}.\r\nBecause these Writing System definitions were not found, WeSay will create blank writing systems for each of these, which you will need to set up with the right fonts, keyboards, etc.", list);
 			}

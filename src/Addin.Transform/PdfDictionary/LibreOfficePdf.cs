@@ -96,8 +96,10 @@ namespace Addin.Transform.PdfDictionary
 					// check versionrc file exists ../lib/libreoffice/program/versionrc
 					// open versionrc file for reading
 					// look at each line and split at '='
-					// look for words[0] = OOOBaseVersion
-					// version number is words[1], check is >= 3.4
+
+					// DG - Apr2012 libreoffice 3.5 changed the format so now checking ProductMajor
+					// look for words[0] = ProductMajor
+					// version number is words[1], check is >= 340
 
 					Process loffice = new Process();
 					loffice.StartInfo.Arguments = "libreoffice";
@@ -124,11 +126,11 @@ namespace Addin.Transform.PdfDictionary
 							while (!String.IsNullOrEmpty(rcline))
 							{
 								string[] words = rcline.Split('=');
-								if (words[0] == "OOOBaseVersion")
+								if (words[0] == "ProductMajor")
 								{
-									decimal loversion = Convert.ToDecimal(words[1]);
-									decimal minver = new decimal( 3.4 );
-									if (loversion.CompareTo(minver) >= 0)
+									int loversion = Convert.ToInt32(words[1]);
+									int minver = 340;
+									if (loversion >= minver)
 									{
 										_isAvailable = availStatus.Available;
 										retval = true;
