@@ -1,8 +1,9 @@
 wesay (1.1.10-1) UNRELEASED; urgency=low
 
   * disabled complaint about missing keyboard ime if autoswitching disabled
+  * update palaso, chorus and wesay to windows wesay 1.2
 
- -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 17 Feb 2012 14:27:00 +0700
+ -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 27 Apr 2012 13:59:45 +0700
 
 wesay (1.1.9-1) UNRELEASED; urgency=low
 
