@@ -4,6 +4,7 @@ Comment=Create a dictionary
 GenericName=Lexicon Editor
 Exec=wesay %f
 Icon=sil-wesay
+MimeType=application/x-lift;
 Terminal=false
 Type=Application
 Categories=GTK;GNOME;Office;
