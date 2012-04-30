@@ -48,6 +48,7 @@ install-stamp:
 	dh_install
 	dh_installdocs
 	dh_installchangelogs
+	dh_installmime
 	dh_icons
 	dh_compress
 	dh_fixperms

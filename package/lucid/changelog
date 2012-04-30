@@ -1,3 +1,9 @@
+wesay (1.1.11-1) UNRELEASED; urgency=low
+
+  * WS-34262 mime types to allow lift and wesayconfig files to open from gui
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Mon, 30 Apr 2012 10:34:54 +0700
+
 wesay (1.1.10-1) UNRELEASED; urgency=low
 
   * disabled complaint about missing keyboard ime if autoswitching disabled
