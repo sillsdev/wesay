@@ -21,6 +21,7 @@ namespace Addin.Transform.PdfDictionary
 	{
 		private Boolean _launchAfterExport = true;
 		private string _odtFile;
+		int ProductMajor;
 		enum availStatus
 		{
 			NotChecked,
@@ -91,6 +92,7 @@ namespace Addin.Transform.PdfDictionary
 				try
 				{
 					bool retval = false;
+					ProductMajor = 0;
 #if MONO
 					// find which libreoffice
 					// check versionrc file exists ../lib/libreoffice/program/versionrc
@@ -128,9 +130,9 @@ namespace Addin.Transform.PdfDictionary
 								string[] words = rcline.Split('=');
 								if (words[0] == "ProductMajor")
 								{
-									int loversion = Convert.ToInt32(words[1]);
+									ProductMajor = Convert.ToInt32(words[1]);
 									int minver = 340;
-									if (loversion >= minver)
+									if (ProductMajor >= minver)
 									{
 										_isAvailable = availStatus.Available;
 										retval = true;
@@ -166,8 +168,18 @@ namespace Addin.Transform.PdfDictionary
 			get {
 				if (!Available) return null;
 
-				string homedir = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-				return Path.Combine(homedir, ".libreoffice");
+				string ucdir;
+				if (ProductMajor < 350)
+				{
+					string homedir = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+					ucdir = Path.Combine(homedir, ".libreoffice");
+				}
+				else
+				{
+					string homedir = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+					ucdir = Path.Combine (homedir, "libreoffice");
+				}
+				return ucdir;
 			}
 		}
 
