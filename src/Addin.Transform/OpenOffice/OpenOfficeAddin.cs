@@ -54,7 +54,7 @@ namespace Addin.Transform.OpenOffice
 
 		public string Description
 		{
-			get { return "Save the dictionary in Open Document Text (OpenOffice) format."; }
+			get { return "Do not use. Use Make Pdf Dictionary instead."; }
 		}
 
 		public Image ButtonImage
@@ -81,7 +81,7 @@ namespace Addin.Transform.OpenOffice
 		{
 			get {
 				return  StringCatalog.Get(
-						"Save the dictionary in Open Document Text (OpenOffice) format.");
+						"Do not use. Use Make Pdf Dictionary instead.");
 			}
 		}
 
