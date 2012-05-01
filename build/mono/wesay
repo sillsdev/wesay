@@ -1,2 +1,2 @@
 #!/bin/sh
-exec mono /usr/lib/wesay/WeSay.App.exe "$@"
+MONO_ENABLE_SHM=1 exec mono /usr/lib/wesay/WeSay.App.exe "$@"
