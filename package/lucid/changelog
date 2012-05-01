@@ -4,8 +4,9 @@ wesay (1.1.11-1) UNRELEASED; urgency=low
   * WS-34260 chorus - disable win32text extension warning
   * WS-34363 stop two versions of wesay running for same lift file
   * WS-34295 libreoffice 3.5 and pdf creation
+  * WS-34366 pictures not always show in OO export
 
- -- Daniel Glassey <daniel_glassey@sil.org>  Tue, 01 May 2012 10:41:48 +0700
+ -- Daniel Glassey <daniel_glassey@sil.org>  Tue, 01 May 2012 14:40:09 +0700
 
 wesay (1.1.10-1) UNRELEASED; urgency=low
 
