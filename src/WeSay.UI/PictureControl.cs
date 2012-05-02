@@ -262,14 +262,7 @@ namespace WeSay.UI
 				MessageBox.Show("Could not find the Art Of Reading image collection.");
 				return;
 			}
-			var images = new ArtOfReadingImageCollection();
-			string pathToIndexFile = _fileLocator.LocateFile("ArtOfReadingIndexV3_en.txt");
-			if (String.IsNullOrEmpty(pathToIndexFile))
-			{
-				throw new FileNotFoundException("Could not find Art of reading index file.");
-			}
-			images.LoadIndex(pathToIndexFile);
-			images.RootImagePath = ArtOfReadingImageCollection.TryToGetRootImageCatalogPath();
+			var images = ArtOfReadingImageCollection.FromStandardLocations() as ArtOfReadingImageCollection;
 			var searchString = SearchTermProvider == null ? string.Empty : SearchTermProvider.SearchString;
 			searchString = images.StripNonMatchingKeywords(searchString);
 			using (var chooser = new PictureChooser(images, searchString))
