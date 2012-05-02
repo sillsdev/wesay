@@ -47,7 +47,7 @@ namespace WeSay.UI
 
 			if (string.IsNullOrEmpty(_relativePathToImage))
 			{
-				_imageToolboxLink.Visible = ArtOfReadingImageCollection.IsAvailable();
+				_imageToolboxLink.Visible = true;
 				_pictureBox.Visible = false;
 				_problemLabel.Visible = false;
 				Height = _imageToolboxLink.Bottom + 5;
