@@ -54,7 +54,7 @@ namespace Addin.Transform.OpenOffice
 
 		public string Description
 		{
-			get { return "Save the dictionary in Open Document Text (OpenOffice) format."; }
+			get { return "Do not use. Use Make Pdf Dictionary instead."; }
 		}
 
 		public Image ButtonImage
@@ -81,7 +81,7 @@ namespace Addin.Transform.OpenOffice
 		{
 			get {
 				return  StringCatalog.Get(
-						"Save the dictionary in Open Document Text (OpenOffice) format.");
+						"Do not use. Use Make Pdf Dictionary instead.");
 			}
 		}
 
@@ -251,7 +251,7 @@ namespace Addin.Transform.OpenOffice
 				xsltArgs.AddParam("title", "", arguments.name);
 				// TODO what is the correct url base path for illustrations?
 				// It seems one level up just gets out of the zip file, so use 2 levels here
-				xsltArgs.AddParam("urlBase", "",  "../../pictures/");
+				xsltArgs.AddParam("urlBase", "",  "../../");
 
 				transform.Transform(liftPath, xsltArgs, contentOutput);
 				contentOutput.Close();
