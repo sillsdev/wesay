@@ -6,8 +6,10 @@ wesay (1.1.11-1) UNRELEASED; urgency=low
   * WS-34295 libreoffice 3.5 and pdf creation
   * WS-34366 pictures not always show in OO export
   * WS-34359 detect Art Of Reading images in /usr/share/SIL/ArtOfReading/images
+  * WS-34361 CAWL word list added extra input systems to lift file
+  * WS-34379 setting clipboard to null or empty string throws an exception
 
- -- Daniel Glassey <daniel_glassey@sil.org>  Tue, 01 May 2012 17:13:59 +0700
+ -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 03 May 2012 15:41:12 +0700
 
 wesay (1.1.10-1) UNRELEASED; urgency=low
 
