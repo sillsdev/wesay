@@ -8,8 +8,8 @@ Standards-Version: 3.8.4
 Package: wesay
 Section: editors
 Architecture: all
-Depends: ${misc:Depends}, ${cli:Depends}, libmono-microsoft-visualbasic8.0-cil, art-of-reading
-Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer
+Depends: ${misc:Depends}, ${cli:Depends}, libmono-microsoft-visualbasic8.0-cil
+Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer, art-of-reading
 Conflicts: wesay-stable
 Description: A dictionary creation tool
  WeSay helps people build a dictionary in their own language. It has
