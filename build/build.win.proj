@@ -68,7 +68,7 @@
 	<Target Name="UnzipMercurial" DependsOnTargets="">
 		<!-- Extract a zip file-->
 		<!-- This output path is different from the old wesay, but the same as chorus.  WeSay used to be output/release/mercurial -->
-		<DNZip TaskAction="Extract" ExtractPath="$(RootDir)" ZipFileName="$(RootDir)/lib/Debug/Mercurial.zip"/>
+		<DNZip TaskAction="Extract" ExtractPath="$(RootDir)" ZipFileName="$(RootDir)/lib/Release/Mercurial.zip"/>
 	</Target>
 
 <!-- -->
