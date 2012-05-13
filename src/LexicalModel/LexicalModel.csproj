@@ -120,7 +120,7 @@
 	</Reference>
 	<Reference Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="icu.net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\icu.net.dll</HintPath>
+	  <HintPath>..\..\lib\$(Configuration)\icu.net.dll</HintPath>
 	</Reference>
 	<Reference Condition=" '$(Configuration)' == 'DebugMono' Or '$(Configuration)' == 'ReleaseMono' " Include="icu.net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
 	  <SpecificVersion>False</SpecificVersion>
