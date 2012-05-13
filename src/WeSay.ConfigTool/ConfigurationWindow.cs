@@ -311,7 +311,7 @@ namespace WeSay.ConfigTool
 			catch (Exception e)
 			{
 				Project = null;
-				ErrorReport.NotifyUserOfProblem(e, "WeSay was not able to open that project.");
+				ErrorReport.NotifyUserOfProblem(e, "WeSay was not able to open that project." + e.Message);
 				return false;
 			}
 
@@ -443,6 +443,7 @@ namespace WeSay.ConfigTool
 				{
 					Project.Save();
 				}
+
 				Settings.Default.Save();
 				if (_projectSettingsControl != null)
 				{

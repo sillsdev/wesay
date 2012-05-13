@@ -37,4 +37,8 @@
   <File Id="wesay.tpi.po" Guid="f0d5500e-5bff-43a1-be87-cc785b3efcc8" />
   <File Id="wesay.vi.po" Guid="f562d3c4-6260-4b44-a489-22cbfdfe1f02" />
   <File Id="wesay.zh_CN.po" Guid="abe20632-477d-4b2a-b135-ec3fdf0194f1" />
+  <File Id="wesay.az.po" Guid="286a5c5a-db1c-421b-bc75-08bac801638a" />
+  <File Id="wesay.hi.po" Guid="fdadb576-8836-4515-b059-67223530506c" />
+  <File Id="wesay.km.po" Guid="0d50cc6a-4c0a-418b-a830-598d1ea05e68" />
+  <File Id="wesay.lo.po" Guid="569a4d3a-b7d0-4b09-afb6-2c37c8079beb" />
 </InstallerMetadata>
