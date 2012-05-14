@@ -56,7 +56,9 @@
 	</Target>
 
 	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">
-		<CreateItem Include="$(RootDir)/output/$(Configuration)/*.Tests.dll">
+		<CreateItem
+			Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
+			Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll" >
 			<Output ItemName="TestAssemblies" TaskParameter="Include" />
 		</CreateItem>
 		<NUnitTeamCity
