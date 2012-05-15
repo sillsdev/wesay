@@ -164,7 +164,7 @@
 			File="$(RootDir)\output\installer\DownloadPointers.htm"
 			DatePlaceholder='DEV_RELEASE_DATE'
 			Regex='DEV_VERSION_NUMBER'
-			ReplacementText = "$(Version)" />
+			ReplacementText = "$(Version)$(ReleaseString)" />
 
 	</Target>
 
