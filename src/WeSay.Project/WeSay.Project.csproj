@@ -88,7 +88,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
 	<DebugSymbols>true</DebugSymbols>
 	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
+	<DefineConstants>TRACE;$(Release)</DefineConstants>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 	<Optimize>true</Optimize>
 	<DebugType>pdbonly</DebugType>
