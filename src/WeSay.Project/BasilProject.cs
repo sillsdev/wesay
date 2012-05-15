@@ -107,7 +107,7 @@ There are problems in:
 				message += String.Format("  {0}", problem.Exception.Message);
 			}
 
-			Palaso.Reporting.ErrorReport.NotifyUserOfProblem(message);
+			ErrorReport.NotifyUserOfProblem(message);
 
 		}
 
@@ -199,7 +199,7 @@ There are problems in:
 				string returndir = Path.Combine(GetTopAppDirectory(), "common");
 				if (!Directory.Exists(returndir))
 				{
-					string commonpath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+					string commonpath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 					returndir = Path.Combine(commonpath, "wesay");
 				}
 				return returndir;
@@ -222,7 +222,7 @@ There are problems in:
 				}
 				else
 						{
-					string commonpath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+					string commonpath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 					shareddir = Path.Combine(commonpath, "wesay");
 				}
 				return shareddir;
@@ -347,7 +347,17 @@ There are problems in:
 
 		public static string VersionString
 		{
-			get { return Application.ProductVersion; }
+			get
+			{
+				string versionString = Application.ProductVersion;
+#if ALPHA
+				versionString += " ALPHA";
+#endif
+#if BETA
+				versionString += " BETA";
+#endif
+				return versionString;
+			}
 		}
 
 	}

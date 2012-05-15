@@ -79,7 +79,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
 	<DebugSymbols>true</DebugSymbols>
 	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
+	<DefineConstants>TRACE;DEBUG;$(Release)</DefineConstants>
 	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 	<DebugType>full</DebugType>
 	<PlatformTarget>x86</PlatformTarget>

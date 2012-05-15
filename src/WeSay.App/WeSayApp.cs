@@ -145,7 +145,7 @@ namespace WeSay.App
 					_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexAcquired);
 					mutexAcquired = true;
 				}
-			   catch (Exception e)
+				catch (Exception e)
 				{
 					ErrorReport.NotifyUserOfProblem(e,
 						"There was a problem starting WeSay which might require that you restart your computer.");
@@ -204,37 +204,37 @@ namespace WeSay.App
 	   {
 		   try
 		   {
-			   _project.AddToContainer(b => b.Register<StatusBarController>(container =>
-																				{
-																					var controller =new StatusBarController(container.Resolve<ICountGiver>());
-																					controller.ShowConfigLauncher = _commandLineArguments.launchedByConfigTool;
-																					return controller;
-																				}));
+			   _project.AddToContainer(
+				   b => b.Register<StatusBarController>(
+					   container =>
+					   {
+						   var controller = new StatusBarController(container.Resolve<ICountGiver>());
+						   controller.ShowConfigLauncher = _commandLineArguments.launchedByConfigTool;
+						   return controller;
+					   }));
 			   _project.AddToContainer(b => b.Register<TabbedForm>());
 			   _tabbedForm = _project.Container.Resolve<TabbedForm>();
 			   _tabbedForm.Show(); // so the user sees that we did launch
-			var versionString = BasilProject.VersionString;
-#if ALPHA
-			   versionString += " ALPHA";
-#endif
-#if BETA
-			   versionString += " BETA";
-#endif
-
-			_tabbedForm.Text = String.Format(
+			   var versionString = BasilProject.VersionString;
+			   _tabbedForm.Text = String.Format(
 				   "{0} {1}: {2}",
-				   StringCatalog.Get("~WeSay",
-									 "It's up to you whether to bother translating this or not."),
+				   StringCatalog.Get(
+					   "~WeSay",
+					   "It's up to you whether to bother translating this or not."),
 				   versionString,
 				   _project.Name
-			   );
+				   );
 			   Application.DoEvents();
 
-			  //todo: this is what we're supposed to use the autofac "modules" for
+			   //todo: this is what we're supposed to use the autofac "modules" for
 			   //couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
 			   _project.AddToContainer(b => b.Register<ICurrentWorkTask>(_tabbedForm));
 			   _project.AddToContainer(b => b.Register<StatusStrip>(_tabbedForm.StatusStrip));
-			   _project.AddToContainer(b => b.Register(TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(_project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject )));
+			   _project.AddToContainer(
+				   b =>
+				   b.Register(
+					   TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(
+						   _project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject)));
 
 			   _project.LoadTasksFromConfigFile();
 
@@ -244,7 +244,7 @@ namespace WeSay.App
 			   _tabbedForm.BringToFront(); //needed if we were previously in server mode
 
 			   RtfRenderer.HeadWordWritingSystemId =
-					   _project.DefaultViewTemplate.HeadwordWritingSystem.Id;
+				   _project.DefaultViewTemplate.HeadwordWritingSystem.Id;
 
 			   //run the ui
 			   Application.Run(_tabbedForm);

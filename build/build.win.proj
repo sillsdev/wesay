@@ -74,8 +74,7 @@
 		<DNZip TaskAction="Extract" ExtractPath="$(RootDir)" ZipFileName="$(RootDir)/lib/Release/Mercurial.zip"/>
 	</Target>
 
-<!-- -->
-
+	<!-- Installer Targets -->
 	<ItemGroup>
 		<SampleFiles
 			Include="$(RootDir)\SampleProjects\src\**\*.*"
@@ -131,6 +130,10 @@
 		<CallTarget targets="MakeWixForTemplates"/>
 	</Target>
 
+	<PropertyGroup>
+		<ReleaseString Condition="'$(Release)' == 'ALPHA'">-Alpha</ReleaseString>
+		<ReleaseString Condition="'$(Release)' == 'BETA'">-Beta</ReleaseString>
+	</PropertyGroup>
 	<Target Name="Installer" DependsOnTargets="CleanInstaller; VersionNumbers; MakeWixForDistFiles; Build ">
 		<!-- set the version number in the installer configuration program.  Perhaps there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
@@ -151,14 +154,14 @@
 		<File
 			TaskAction="Move"
 			Path="$(RootDir)\output\installer\WeSayInstaller.msi"
-			TargetPath="$(RootDir)\output\installer\WeSayInstaller-$(version).msi" />
+			TargetPath="$(RootDir)\output\installer\WeSayInstaller-$(version)$(ReleaseString).msi" />
 	</Target>
 
 	<Target Name="Upload" DependsOnTargets="VersionNumbers; Installer" >
-		<Message Text="Attempting rsync of WeSayInstaller.$(Version).msi" Importance="high"/>
+		<Message Text="Attempting rsync of WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
 
 		<Exec
-			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller-$(version).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller-$(version).msi'
+			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller-$(version)$(ReleaseString).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller-$(version)$(ReleaseString).msi'
 			WorkingDirectory="$(RootDir)" />
 	</Target>
 
