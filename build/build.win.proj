@@ -146,23 +146,39 @@
 
 		<MSBuild Projects="$(RootDir)\src\Installer\Installer.wixproj"/>
 
-		<!-- remove an existing one with the same name, if necessary -->
-		<Delete
-			Files="$(RootDir)\output\installer\WeSayInstaller-$(version).msi"
-			TreatErrorsAsWarnings="false" />
-
 		<File
 			TaskAction="Move"
 			Path="$(RootDir)\output\installer\WeSayInstaller.msi"
-			TargetPath="$(RootDir)\output\installer\WeSayInstaller-$(version)$(ReleaseString).msi" />
+			TargetPath="$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi" />
 	</Target>
 
-	<Target Name="Upload" DependsOnTargets="VersionNumbers; Installer" >
-		<Message Text="Attempting rsync of WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
+	<!-- Upload -->
+	<Target Name="MakeDownloadPointers" DependsOnTargets="VersionNumbers" >
+		<!-- copy it so we aren't modifying the original, which then is a pain on dev machines -->
+		<Copy
+			SourceFiles ="$(RootDir)\src\Installer\DownloadPointers.htm"
+			DestinationFolder ="$(RootDir)\output\installer" />
 
+		<!-- replace some parts of the file with the version number & date -->
+		<FileUpdate
+			File="$(RootDir)\output\installer\DownloadPointers.htm"
+			DatePlaceholder='DEV_RELEASE_DATE'
+			Regex='DEV_VERSION_NUMBER'
+			ReplacementText = "$(Version)" />
+
+	</Target>
+
+	<Target Name="Upload" DependsOnTargets="VersionNumbers; Installer; MakeDownloadPointers" >
+		<Message Text="Attempting rsync of WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
 		<Exec
-			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller-$(version)$(ReleaseString).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller-$(version)$(ReleaseString).msi'
+			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller.$(version)$(ReleaseString).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller.$(version)$(ReleaseString).msi'
 			WorkingDirectory="$(RootDir)" />
+
+		<Message Text="Attempting rsync of DownloadPointers.htm" Importance="high"/>
+		<Exec
+			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\DownloadPointers.htm" bob@wesay.org:/var/www/downloads/DownloadPointers.htm'
+			WorkingDirectory="$(RootDir)" />
+
 	</Target>
 
 </Project>
