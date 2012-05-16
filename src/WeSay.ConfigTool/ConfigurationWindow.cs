@@ -35,8 +35,8 @@ namespace WeSay.ConfigTool
 		{
 			InitializeComponent();
 #if !DEVBUILD
-			this.nonFatalErrorNowToolStripMenuItem.Hide();
-			this.fatalErrorNowToolStripMenuItem.Hide();
+			this.nonFatalErrorNowToolStripMenuItem.Visible = false;
+			this.fatalErrorNowToolStripMenuItem.Visible = false;
 #endif
 			Project = null;
 
