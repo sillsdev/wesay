@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using CommandLine;
 using Palaso.Code;
 using Palaso.i18n;
+using Palaso.IO;
 using Palaso.Lift;
 using Palaso.Reporting;
 using Palaso.UiBindings;
@@ -498,6 +499,22 @@ namespace WeSay.App
 			e += "\r\n\r\n" + p.GetUsageString(200);
 			MessageBox.Show(e, "WeSay Command Line Problem");
 		}
+
+		public static void ShowHelpTopic(string topicLink)
+		{
+			string helpFilePath = FileLocator.GetFileDistributedWithApplication("WeSay_Helps.chm");
+			if (File.Exists(helpFilePath))
+			{
+				//var uri = new Uri(helpFilePath);
+				Help.ShowHelp(new Label(), helpFilePath, topicLink);
+			}
+			else
+			{
+				Process.Start("http://wesay.palaso.org/help/");
+			}
+			UsageReporter.SendNavigationNotice("Help: " + topicLink);
+		}
+
 	}
 
 	internal class ThreadExceptionHandler

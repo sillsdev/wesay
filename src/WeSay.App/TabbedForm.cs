@@ -387,6 +387,15 @@ namespace WeSay.App
 			t.Interval = 1;
 			t.Start();
 		}
+
+		private void OnKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.F1)
+			{
+				WeSayApp.ShowHelpTopic("");
+			}
+
+		}
 	}
 
 
