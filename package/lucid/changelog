@@ -1,9 +1,18 @@
+wesay (1.1.12-1) UNRELEASED; urgency=low
+
+  * error reporting is now a separate app so should make reporting crashes easier
+  * option to send error report by email can use thunderbird or
+	   xdg-email which uses the default email program such as evolution or kmail
+  * WS-34367 chorus not closing
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Wed, 16 May 2012 11:53:33 +0700
+
 wesay (1.1.11-1) UNRELEASED; urgency=low
 
-  * WS-34262 mime types to allow lift and wesayconfig files to open from gui
-  * WS-34260 chorus - disable win32text extension warning
+  * WS-34362 mime types to allow lift and wesayconfig files to open from gui
+  * WS-34360 chorus - disable win32text extension warning
   * WS-34363 stop two versions of wesay running for same lift file
-  * WS-34295 libreoffice 3.5 and pdf creation
+  * WS-34305 libreoffice 3.5 and pdf creation
   * WS-34366 pictures not always show in OO export
   * WS-34359 detect Art Of Reading images in /usr/share/SIL/ArtOfReading/images
   * WS-34361 CAWL word list added extra input systems to lift file
