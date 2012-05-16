@@ -34,6 +34,10 @@ namespace WeSay.ConfigTool
 		public ConfigurationWindow(string[] args)
 		{
 			InitializeComponent();
+#if !DEVBUILD
+			this.nonFatalErrorNowToolStripMenuItem.Hide();
+			this.fatalErrorNowToolStripMenuItem.Hide();
+#endif
 			Project = null;
 
 			//            if (this.DesignMode)
@@ -503,6 +507,29 @@ namespace WeSay.ConfigTool
 				Help.ShowHelp(this, uri.AbsoluteUri);
 			}
 			Process.Start("http://wesay.org/wiki/Help_And_Contact");
+		}
+
+		private void NonFatalErrorNow(object sender, EventArgs e)
+		{
+			try
+			{
+				throw new ApplicationException("Non fatal exception test");
+			}
+			catch(Exception err)
+			{
+				ErrorReport.ReportNonFatalException(err);
+			}
+		}
+		private void FatalErrorNow(object sender, EventArgs e)
+		{
+			try
+			{
+				throw new ApplicationException("Fatal exception test");
+			}
+			catch(Exception err)
+			{
+				ErrorReport.ReportFatalException(err);
+			}
 		}
 	}
 }

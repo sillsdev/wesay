@@ -43,6 +43,8 @@ namespace WeSay.ConfigTool
 			this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButton9 = new System.Windows.Forms.ToolStripButton();
 			this.openProjectInWeSayToolStripMenuItem = new System.Windows.Forms.ToolStripButton();
+			this.nonFatalErrorNowToolStripMenuItem = new System.Windows.Forms.ToolStripButton();
+			this.fatalErrorNowToolStripMenuItem = new System.Windows.Forms.ToolStripButton();
 			this._versionToolStripLabel = new System.Windows.Forms.ToolStripLabel();
 			this.toolStripHelpButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,6 +103,8 @@ namespace WeSay.ConfigTool
 			this.toolStripButton8,
 			this.toolStripButton9,
 			this.openProjectInWeSayToolStripMenuItem,
+			this.fatalErrorNowToolStripMenuItem,
+			this.nonFatalErrorNowToolStripMenuItem,
 			this._versionToolStripLabel,
 			this.toolStripHelpButton});
 			this.toolStrip2.Location = new System.Drawing.Point(0, 0);
@@ -146,6 +150,32 @@ namespace WeSay.ConfigTool
 			this.openProjectInWeSayToolStripMenuItem.Text = "Open in WeSay";
 			this.openProjectInWeSayToolStripMenuItem.ToolTipText = "Open this in WeSay";
 			this.openProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.OnOpenThisProjectInWeSay);
+			//
+			// nonFatalErrorNowToolStripMenuItem
+			//
+			this.nonFatalErrorNowToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.nonFatalErrorNowToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+			this.nonFatalErrorNowToolStripMenuItem.Image = global::WeSay.ConfigTool.Properties.Resources.WeSayMenuSized;
+			this.nonFatalErrorNowToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.nonFatalErrorNowToolStripMenuItem.Name = "nonFatalErrorNowToolStripMenuItem";
+			this.nonFatalErrorNowToolStripMenuItem.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+			this.nonFatalErrorNowToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+			this.nonFatalErrorNowToolStripMenuItem.Text = "Minor Error";
+			this.nonFatalErrorNowToolStripMenuItem.ToolTipText = "Report Non Fatal Error Now";
+			this.nonFatalErrorNowToolStripMenuItem.Click += new System.EventHandler(this.NonFatalErrorNow);
+			//
+			// fatalErrorNowToolStripMenuItem
+			//
+			this.fatalErrorNowToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.fatalErrorNowToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+			this.fatalErrorNowToolStripMenuItem.Image = global::WeSay.ConfigTool.Properties.Resources.WeSayMenuSized;
+			this.fatalErrorNowToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.fatalErrorNowToolStripMenuItem.Name = "fatalErrorNowToolStripMenuItem";
+			this.fatalErrorNowToolStripMenuItem.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+			this.fatalErrorNowToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+			this.fatalErrorNowToolStripMenuItem.Text = "Crash";
+			this.fatalErrorNowToolStripMenuItem.ToolTipText = "Report Fatal Error Now";
+			this.fatalErrorNowToolStripMenuItem.Click += new System.EventHandler(this.FatalErrorNow);
 			//
 			// _versionToolStripLabel
 			//
@@ -213,6 +243,8 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.ToolStripButton toolStripButton8;
 		private System.Windows.Forms.ToolStripButton toolStripButton9;
 		private System.Windows.Forms.ToolStripButton openProjectInWeSayToolStripMenuItem;
+		private System.Windows.Forms.ToolStripButton nonFatalErrorNowToolStripMenuItem;
+		private System.Windows.Forms.ToolStripButton fatalErrorNowToolStripMenuItem;
 		private System.Windows.Forms.ToolStripLabel _versionToolStripLabel;
 		private System.Windows.Forms.ToolStripDropDownButton toolStripHelpButton;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
