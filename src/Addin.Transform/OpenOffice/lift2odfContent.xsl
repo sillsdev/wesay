@@ -259,8 +259,11 @@ something like n log n rather than n^2-->
 <xsl:when test="contains(@href, ':')">
 <draw:frame draw:style-name="Illustration" draw:name="{concat('illustration', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="2" style:rel-width="100%" style:rel-height="scale"><draw:image xlink:href="{@href}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
 </xsl:when>
-<xsl:otherwise>
+<xsl:when test="substring(@href, 1,9) = 'pictures/'">
 <draw:frame draw:style-name="Illustration" draw:name="{concat('illustration_', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="2" style:rel-width="100%" style:rel-height="scale"><draw:image xlink:href="{concat($urlBase,@href)}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
+</xsl:when>
+<xsl:otherwise>
+<draw:frame draw:style-name="Illustration" draw:name="{concat('illustration_', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="2" style:rel-width="100%" style:rel-height="scale"><draw:image xlink:href="{concat($urlBase,'pictures/',@href)}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
 </xsl:otherwise>
 </xsl:choose>
 <xsl:value-of select="ancestor::entry/lexical-unit/form/text"/>

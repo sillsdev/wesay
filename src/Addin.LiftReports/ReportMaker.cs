@@ -25,6 +25,10 @@ namespace Addin.LiftReports
 		{
 			get { return true; }
 		}
+		public bool Deprecated
+		{
+			get { return false; }
+		}
 
 		public string LocalizedName
 		{

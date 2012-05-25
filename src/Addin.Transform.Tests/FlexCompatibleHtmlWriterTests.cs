@@ -14,9 +14,6 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.Project.Tests;
 using Palaso.Lift; // review: really?
-#if MONO
-using Palaso.Linq;
-#endif
 
 namespace Addin.Transform.Tests
 {

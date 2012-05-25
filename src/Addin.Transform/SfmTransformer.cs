@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Mono.Addins;
@@ -11,6 +12,7 @@ using Palaso.i18n;
 using Palaso.Progress;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
+using System.Linq;
 
 namespace Addin.Transform
 {
@@ -57,8 +59,7 @@ namespace Addin.Transform
 			var progressState = (ProgressState) args.Argument;
 			var workerArguments = (TransformWorkerArguments) (progressState.Arguments);
 
-			progressState.StatusLabel = "Converting to MDF...";
-			progressState.NumberOfStepsCompleted++;
+			progressState.StatusLabel = "Converting to MDF (can take a very long time)...";
 			//System.Threading.Thread.Sleep(100);//don't event see that message otherwise
 			GrepFile(workerArguments.outputFilePath, args);
 		}
@@ -68,9 +69,16 @@ namespace Addin.Transform
 			var progressState = (ProgressState) args.Argument;
 			var workerArguments = (TransformWorkerArguments) (progressState.Arguments);
 			var sfmSettings = (SfmTransformSettings) workerArguments.postTransformArgument;
+			int entriesCount = workerArguments.inputDocument.SelectNodes("//entry").Count;
 
 			string tempPath = inputPath + ".tmp";
 			IEnumerable<SfmTransformSettings.ChangePair> pairs = sfmSettings.ChangePairs;
+
+			if(!pairs.Any())
+			{
+				return;
+			}
+
 			using (StreamReader reader = File.OpenText(inputPath))
 			{
 				using (var writer = new StreamWriter(tempPath))
@@ -80,15 +88,19 @@ namespace Addin.Transform
 						return;
 					}
 					//we don't have a way of knowing      progressState.NumberOfStepsCompleted = ;
+					int count = 0;
 					foreach (string r in BreakUpSfmIntoRecords(reader))
 					{
 						string record = r;
 						foreach (SfmTransformSettings.ChangePair pair in pairs)
 						{
-							//this is super slow
-							record = pair.regex.Replace(record, pair.to);
+							record = pair.DoChange(record);
 						}
 						writer.Write(record);
+						progressState.NumberOfStepsCompleted++;
+						count++;
+						if(count % 20 ==0 )
+							progressState.StatusLabel = "Converting to MDF: "+count + "/" + entriesCount;
 					}
 					writer.Close();
 				}
@@ -106,8 +118,8 @@ namespace Addin.Transform
 
 		static private IEnumerable<string> BreakUpSfmIntoRecords(StreamReader reader)
 		{
-			List<string> records = new List<string>();
-			string record = "";
+			var record = new StringBuilder();
+
 			string line = "";
 			while (!reader.EndOfStream)
 			{
@@ -118,14 +130,15 @@ namespace Addin.Transform
 					{
 						line = ConvertDateLineToToolboxFormat(line);
 					}
-					record += line + Environment.NewLine;
+					record.Append(line);
+					record.Append(Environment.NewLine);
 				}
-				if(reader.EndOfStream || line == Environment.NewLine)
+				if(reader.EndOfStream || line.Length==0)
 				{
-					records.Add(record);
+					yield return record.ToString();
+					record = new StringBuilder();
 				}
 			}
-			return records;
 		}
 
 		private static string ConvertDateLineToToolboxFormat(string line)

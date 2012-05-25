@@ -77,9 +77,11 @@ namespace WeSay.App
 			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this._statusStrip);
 			this.Icon = global::WeSay.App.Properties.Resources.ApplicationIcon;
+			this.KeyPreview = true;
 			this.Name = "TabbedForm";
 			this.Text = "WeSay";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
 			this.tabControl1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this._localizationHelper)).EndInit();
 			this.ResumeLayout(false);

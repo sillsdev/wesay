@@ -189,9 +189,11 @@ namespace WeSay.ConfigTool
 			this.ClientSize = new System.Drawing.Size(781, 522);
 			this.Controls.Add(this.toolStrip2);
 			this.Icon = global::WeSay.ConfigTool.Properties.Resources.WeSaySetupApplicationIcon;
+			this.KeyPreview = true;
 			this.Name = "ConfigurationWindow";
 			this.Text = "WeSay Configuration Tool";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
 			this.toolStrip2.ResumeLayout(false);
 			this.toolStrip2.PerformLayout();
 			this.ResumeLayout(false);
