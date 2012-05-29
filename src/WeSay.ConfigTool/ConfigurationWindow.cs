@@ -323,7 +323,13 @@ namespace WeSay.ConfigTool
 
 			if (Project != null)
 			{
-				Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
+				// DG May 2012 - work around mono not being able to save the paths
+				// it looked like changing Settings.Default.MruConfigFilePaths
+				// was changing something other than the one in Settings.Default
+				// so changes weren't being saved
+				MruProjects mruproj = Settings.Default.MruConfigFilePaths;
+				mruproj.AddNewPath(Project.PathToConfigFile);
+				Settings.Default.MruConfigFilePaths = mruproj;
 			}
 			return true;
 		}
