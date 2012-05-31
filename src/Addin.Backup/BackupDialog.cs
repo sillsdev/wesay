@@ -24,7 +24,7 @@ namespace Addin.Backup
 			_cancelButton.Font = StringCatalog.ModifyFontForLocalization(_cancelButton.Font);
 		}
 
-		private void DoBackup(UsbDriveInfo info)
+		private void DoBackup(IUsbDriveInfo info)
 		{
 			_checkForUsbKeyTimer.Enabled = false;
 			_noteLabel.Visible = false;
@@ -57,7 +57,7 @@ namespace Addin.Backup
 			_checkForUsbKeyTimer.Enabled = false;
 		}
 
-		public List<UsbDriveInfo> GetLogicalUsbDisks()
+		public List<IUsbDriveInfo> GetLogicalUsbDisks()
 		{
 			return UsbDriveInfo.GetDrives();
 		}
@@ -76,7 +76,7 @@ namespace Addin.Backup
 		{
 			try
 			{
-				List<UsbDriveInfo> usbDrives = GetLogicalUsbDisks();
+				List<IUsbDriveInfo> usbDrives = GetLogicalUsbDisks();
 				if ((usbDrives.Count > 0) && (usbDrives[0].IsReady))
 				{
 					DoBackup(usbDrives[0]);
