@@ -4,8 +4,9 @@ wesay (1.1.12-1) UNRELEASED; urgency=low
   * option to send error report by email can use thunderbird or
 	   xdg-email which uses the default email program such as evolution or kmail
   * WS-34367 chorus not closing
+  * change vb dependency to 10.0
 
- -- Daniel Glassey <daniel_glassey@sil.org>  Wed, 16 May 2012 11:53:33 +0700
+ -- Daniel Glassey <daniel_glassey@sil.org>  Sat, 02 Jun 2012 10:57:08 +0700
 
 wesay (1.1.11-1) UNRELEASED; urgency=low
 
