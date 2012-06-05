@@ -5,8 +5,11 @@ wesay (1.1.12-1) UNRELEASED; urgency=low
 	   xdg-email which uses the default email program such as evolution or kmail
   * WS-34367 chorus not closing
   * change vb dependency to 10.0
+  * most recently used projects now show in wesay config
+  * WS-34372 detect USB properly and complain if more than 1
+  * WS-34337 Get from USB and USB Send/receive should now work
 
- -- Daniel Glassey <daniel_glassey@sil.org>  Sat, 02 Jun 2012 10:57:08 +0700
+ -- Daniel Glassey <daniel_glassey@sil.org>  Tue, 05 Jun 2012 11:39:45 +0700
 
 wesay (1.1.11-1) UNRELEASED; urgency=low
 
