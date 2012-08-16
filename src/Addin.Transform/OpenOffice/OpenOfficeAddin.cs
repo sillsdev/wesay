@@ -225,6 +225,29 @@ namespace Addin.Transform.OpenOffice
 				(TransformWorkerArguments)progressState.Arguments;
 			//ProjectInfo projectInfo = arguments.projectInfo;
 
+			if (File.Exists(arguments.odtPath))
+			{
+				bool fileDeleted = false;
+				while (!fileDeleted)
+				{
+					try
+					{
+						File.Delete(arguments.odtPath);
+						fileDeleted = !File.Exists(arguments.odtPath);
+					}
+					catch (IOException)
+					{
+						var dialogResult =
+							MessageBox.Show(
+								"WeSay was unable to remove the old .odt file. This may be because it is open in another program. Please close the file before clicking OK.",
+								"Unable to open file.", MessageBoxButtons.OKCancel);
+						if (dialogResult == DialogResult.Cancel)
+						{
+							return;
+						}
+					}
+				}
+			}
 
 			string liftPath = Path.Combine(arguments.exportDir,
 											arguments.name + ".lift");
@@ -280,8 +303,6 @@ namespace Addin.Transform.OpenOffice
 				File.Delete(pathToTempFile);
 
 				stylesOutput.Close();
-				if (File.Exists(arguments.odtPath))
-					File.Delete(arguments.odtPath);
 				progressState.StatusLabel = "Creating ODT file";
 				ZipFile zipFile = ZipFile.Create(arguments.odtPath);
 				zipFile.BeginUpdate();
