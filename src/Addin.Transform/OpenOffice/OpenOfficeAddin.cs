@@ -239,8 +239,8 @@ namespace Addin.Transform.OpenOffice
 					{
 						var dialogResult =
 							MessageBox.Show(
-								"WeSay was unable to remove the old .odt file. This may be because it is open in another program. Please close the file before clicking OK.",
-								"Unable to open file.", MessageBoxButtons.OKCancel);
+								StringCatalog.Get("WeSay was unable to remove the old .odt file. This may be because it is open in another program. Please close the file before clicking OK."),
+								StringCatalog.Get("Unable to delete old file."), MessageBoxButtons.OKCancel);
 						if (dialogResult == DialogResult.Cancel)
 						{
 							return;
