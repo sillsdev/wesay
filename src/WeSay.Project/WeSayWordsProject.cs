@@ -1635,27 +1635,36 @@ namespace WeSay.Project
 
 		private void ChangeIdInLoadedOptionListIfNecassary(string oldId, string newId, OptionsList optionlist)
 		{
-			var abbreviationLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
-																	   option => option.Abbreviation.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
 
-			var nameLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
-															   option => option.Name.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+			var abbreviationMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Abbreviation));
+			var nameMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Name));
+			var descriptionMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Description));
 
-			var descriptionForms = new List<LanguageForm>(optionlist.Options.Select(
-															  option => option.Description.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+			var multiTextsToChange = abbreviationMultiText.Concat(nameMultiText).Concat(descriptionMultiText);
 
-			var formsToChange = abbreviationLanguageForms.Concat(nameLanguageForms).Concat(descriptionForms);
-
-			if(formsToChange.Count() > 0)
+			if (multiTextsToChange.Any())
 			{
 				MarkOptionListAsUpdated(optionlist);
 			}
 
-			foreach (var form in formsToChange)
+			foreach (var multiText in multiTextsToChange.Where(mt=>mt.ContainsAlternative(oldId)))
 			{
-				if (form != null)
+				var existingLanguageFormWithOldId = multiText.Find(oldId);
+				var existingLanguageFormWithNewId = multiText.Find(newId);
+
+				//If a non empty languageForm with the newId already exists, keep it around. Else delete it and change the writing system in the language form with the oldId
+				if(existingLanguageFormWithNewId == null)
 				{
-					form.WritingSystemId = newId;
+					existingLanguageFormWithOldId.WritingSystemId = newId;
+				}
+				else if(String.IsNullOrEmpty(existingLanguageFormWithNewId.Form))
+				{
+					multiText.RemoveLanguageForm(existingLanguageFormWithNewId);
+					existingLanguageFormWithOldId.WritingSystemId = newId;
+				}
+				else
+				{
+					multiText.RemoveLanguageForm(existingLanguageFormWithOldId);
 				}
 			}
 		}

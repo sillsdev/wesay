@@ -29,9 +29,16 @@ namespace WeSay.ConfigTool
 							Dock = DockStyle.Fill
 						};
 			writingSystemSetupModel.BeforeDeleted += OnBeforeDeleted;
+			writingSystemSetupModel.BeforeConflated += OnBeforeConflated;
 			store.WritingSystemDeleted += OnWritingSystemDeleted;
+			store.WritingSystemConflated += OnWritingStemConflated;
 			Controls.Add(_view);
 			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
+		}
+
+		private void OnWritingStemConflated(object sender, WritingSystemConflatedEventArgs e)
+		{
+			WeSayWordsProject.Project.MakeWritingSystemIdChange(e.OldId, e.NewId);
 		}
 
 		private void OnEditorSaveNow(object sender, EventArgs e)
@@ -74,14 +81,19 @@ namespace WeSay.ConfigTool
 			args.ErrorMessage = "It's in use in the LIFT file.";
 		}
 
+		private void OnBeforeConflated(object sender, BeforeConflatedEventArgs args)
+		{
+			args.CanConflate = true; //WeSay always lets people conflate.
+		}
+
 		private static void OnWritingSystemDeleted(object sender, WritingSystemDeletedEventArgs args)
 		{
-			Project.WeSayWordsProject.Project.DeleteWritingSystemId(args.Id);
+			WeSayWordsProject.Project.DeleteWritingSystemId(args.Id);
 		}
 
 		private static void OnWritingSystemIdChanged(object sender, WritingSystemIdChangedEventArgs e)
 		{
-			Project.WeSayWordsProject.Project.MakeWritingSystemIdChange(e.OldId, e.NewId);
+			WeSayWordsProject.Project.MakeWritingSystemIdChange(e.OldId, e.NewId);
 		}
 	}
 }

@@ -583,7 +583,14 @@ namespace WeSay.Project
 		{
 			foreach (Field field in Fields)
 			{
-				field.ChangeWritingSystemId(from, to);
+				if (field.WritingSystemIds.Contains(to))
+				{
+					field.WritingSystemIds.Remove(from);
+				}
+				else
+				{
+					field.ChangeWritingSystemId(from, to);
+				}
 			}
 		}
 

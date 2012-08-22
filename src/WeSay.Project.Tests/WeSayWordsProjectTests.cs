@@ -185,6 +185,23 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		public void MakeWritingSystemIdChange_ChangingWritingSystemIdToWritingSystemIdThatAlreadyExistsInOptionListIsAlreadyLoaded_OptionListIsChanged()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				var optionList = project.GetOptionsList("POS");
+				optionList.GetOptionFromKey("Noun").Abbreviation["de"] = "HaWo";
+				optionList.GetOptionFromKey("Noun").Name["de"] = "Hauptwort";
+				optionList.GetOptionFromKey("Noun").Description["de"] = "Wort, das für sich selbst bestehen kann.";
+				project.MakeWritingSystemIdChange("de", "fr");
+				Assert.That(optionList.GetOptionFromKey("Noun").Abbreviation["fr"], Is.EqualTo("nom"));
+				Assert.That(optionList.GetOptionFromKey("Noun").Name["fr"], Is.EqualTo("nom"));
+				Assert.That(optionList.GetOptionFromKey("Noun").Description["fr"], Is.EqualTo("Wort, das für sich selbst bestehen kann."));
+			}
+		}
+
+		[Test]
 		public void MakeWritingSystemIdChange_LoadList_OptionListIsChanged()
 		{
 			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
@@ -195,6 +212,24 @@ namespace WeSay.Project.Tests
 				Assert.That(optionList.GetOptionFromKey("Verb").Abbreviation["de"], Is.EqualTo("verb"));
 				Assert.That(optionList.GetOptionFromKey("Verb").Name["de"], Is.EqualTo("verb"));
 				Assert.That(optionList.GetOptionFromKey("Verb").Description["de"], Is.EqualTo(""));
+			}
+		}
+
+		[Test]
+		public void MakeWritingSystemIdChange_ChangingWritingSystemIdToWritingSystemIdThatAlreadyExistsLoadList_OptionListIsChangedAndDuplicatesAreConflated()
+		{
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				project.MakeWritingSystemIdChange("es", "fr");  //fr is already contained in the default PoS optionlist, thus this would cause a duplicate
+				var optionList = project.GetOptionsList("POS");
+				Assert.That(optionList.GetOptionFromKey("Verb").Abbreviation.Forms.Count(form => form.WritingSystemId=="fr"), Is.EqualTo(1));
+				Assert.That(optionList.GetOptionFromKey("Verb").Name.Forms.Count(form => form.WritingSystemId == "fr"), Is.EqualTo(1));
+				Assert.That(optionList.GetOptionFromKey("Verb").Description.Forms.Count(form => form.WritingSystemId == "fr"), Is.EqualTo(0));
+
+				Assert.That(optionList.GetOptionFromKey("Verb").Abbreviation["fr"], Is.EqualTo("verbe"));
+				Assert.That(optionList.GetOptionFromKey("Verb").Name["fr"], Is.EqualTo("verbe"));
+				Assert.That(optionList.GetOptionFromKey("Verb").Description["fr"], Is.EqualTo(""));
 			}
 		}
 
@@ -253,6 +288,28 @@ namespace WeSay.Project.Tests
 			}
 		}
 
+		[Test]
+		public void MakeWritingSystemIdChange_DefaultViewTemplateContainsFieldsWithWritingSystemAsWritingSystemWeAreChangingTo_FieldsAreUpdatedAndOnlyContainSingleInstanceOfId()
+		{
+			using (var p = new ProjectDirectorySetupForTesting(""))
+			{
+				WeSayWordsProject project = p.CreateLoadedProject();
+				var fieldsUsingQaa = new List<Field>(project.ViewTemplates.SelectMany(template => template.Fields).Where(field => field.WritingSystemIds.Contains("qaa-x-qaa")));
+				//add the "de" writingsystem to every field that is using qaa-x-qaa so that we cause duplication when we change "qaa-x-qaa" to de
+				foreach (var field in fieldsUsingQaa)
+				{
+					field.WritingSystemIds.Add("de");
+				}
+				//Simulate a writing system conflation made by the UI
+				project.MakeWritingSystemIdChange("qaa-x-qaa", "de");
+
+				foreach (var field in fieldsUsingQaa)
+				{
+					Assert.That(field.WritingSystemIds.Count(wsId => wsId=="qaa-x-qaa"), Is.EqualTo(1));
+					Assert.That(field.WritingSystemIds.Contains("de"));
+				}
+			}
+		}
 
 		/// <summary>
 		/// related to ws-944: Crash opening lift file from FLEx which was sitting in My Documents without a configuration file
