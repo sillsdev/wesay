@@ -39,16 +39,23 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			if (indexToReplace != -1)
 			{
 				_writingSystemsWeWantToFillIn.RemoveAt(indexToReplace);
-				_writingSystemsWeWantToFillIn.Add(to);
+				//check whether the new id is already cinfigured for use. This can happen when writing systems are conflated
+				if (_writingSystemsWeWantToFillIn.FindIndex((id => id.Equals(to, StringComparison.OrdinalIgnoreCase))) == -1)
+				{
+					_writingSystemsWeWantToFillIn.Add(to);
+				}
 			}
-
 
 			indexToReplace =
 				_writingSystemsWhichAreRequired.FindIndex(id => id.Equals(from, StringComparison.OrdinalIgnoreCase));
 			if (indexToReplace != -1)
 			{
 				_writingSystemsWhichAreRequired.RemoveAt(indexToReplace);
-				_writingSystemsWhichAreRequired.Add(to);
+				//check whether the new id is already cinfigured for use. This can happen when writing systems are conflated
+				if (_writingSystemsWhichAreRequired.FindIndex((id => id.Equals(to, StringComparison.OrdinalIgnoreCase))) == -1)
+				{
+					_writingSystemsWhichAreRequired.Add(to);
+				}
 			}
 			if(WritingSystemIdChanged != null)
 			{
