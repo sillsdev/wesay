@@ -10,7 +10,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 	<OutputPath>..\..\output\installer\</OutputPath>
-	<IntermediateOutputPath>output\wixobj\debug</IntermediateOutputPath>
+	<IntermediateOutputPath>output\wixobj\$(Configuration)</IntermediateOutputPath>
 	<DefineConstants>Debug</DefineConstants>
 	<AllowIdenticalRows>False</AllowIdenticalRows>
 	<CabinetCachePath>
@@ -54,8 +54,8 @@
 	<VerboseOutput>False</VerboseOutput>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-	<OutputPath>bin\Release\</OutputPath>
-	<IntermediateOutputPath>obj\Release\</IntermediateOutputPath>
+	<OutputPath>..\..\output\installer\</OutputPath>
+	<IntermediateOutputPath>output\wixobj\$(Configuration)</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
 	<Compile Include="biatah.wxs" />

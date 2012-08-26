@@ -1,4 +1,5 @@
 using System;
+using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
 using WeSay.Foundation;
@@ -60,13 +61,22 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public WritingSystemDefinition WritingSystemUserIsTypingIn
+		public WritingSystemDefinition FormWritingSystem
 		{
 			get
 			{
 				VerifyTaskActivated();
 				return _lexicalFormWritingSystem;
 			}
+		}
+		public WritingSystemDefinition MeaningWritingSystem
+		{
+			get
+			{
+				VerifyTaskActivated();
+				return _viewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition);
+			}
+
 		}
 
 		protected ViewTemplate ViewTemplate

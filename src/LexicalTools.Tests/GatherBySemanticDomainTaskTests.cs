@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Reporting;
@@ -378,14 +379,14 @@ namespace WeSay.LexicalTools.Tests
 			_lexEntryRepository.SaveItem(e);
 
 			Task.CurrentDomainIndex = 0;
-			List<string> words = Task.CurrentWords;
-			Assert.Contains("peixe", words);
+		   var words = Task.CurrentWords;
+			Assert.IsTrue(Task.CurrentWords.Any(w => w.Vernacular.Form == "peixe"));
 		}
 
 		[Test]
 		public void CurrentWords_ChangeQuestion_SameWordList()
 		{
-			List<string> wordList = Task.CurrentWords;
+		   var wordList = Task.CurrentWords;
 			Task.CurrentQuestionIndex = 2;
 			Assert.AreSame(wordList, Task.CurrentWords);
 		}
@@ -393,7 +394,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CurrentWords_ChangeDomain_NewWordList()
 		{
-			List<string> wordList = Task.CurrentWords;
+		   var wordList = Task.CurrentWords;
 			Task.CurrentDomainIndex = 2;
 			Assert.AreNotSame(wordList, Task.CurrentWords);
 		}
@@ -479,7 +480,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("vernacular", String.Empty);
-			Assert.Contains("vernacular", Task.CurrentWords);
+			Assert.IsTrue(Task.CurrentWords.Any(w=>w.Vernacular.Form=="vernacular"));
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
 
@@ -498,7 +499,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void PrepareToMoveWordToEditArea_null_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => Task.PrepareToMoveWordToEditArea(null));
+			Assert.Throws<ArgumentNullException>(() => Task.PrepareToMoveWordToEditArea((GatherBySemanticDomainTask.WordDisplay) null));
 		}
 
 		[Test]
@@ -529,7 +530,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
 			Task.PrepareToMoveWordToEditArea("raposa");
-			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
+			Assert.IsFalse(Task.CurrentWords.Any(w=>w.Vernacular.Form=="raposa"));
 			Assert.AreEqual(3, _lexEntryRepository.CountAllItems());
 		}
 
@@ -565,7 +566,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
 			Task.PrepareToMoveWordToEditArea("raposa");
-			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
+			Assert.IsFalse(Task.CurrentWords.Any(w=>w.Vernacular.Form==("raposa")));
 			Assert.AreEqual(2, Task.CurrentWords.Count);
 		}
 

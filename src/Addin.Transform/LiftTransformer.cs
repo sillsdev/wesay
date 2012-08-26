@@ -69,6 +69,10 @@ namespace Addin.Transform
 		{
 			get { return true; }
 		}
+		public bool Deprecated
+		{
+			get { return false; }
+		}
 
 		//for unit tests
 		public string PathToOutput
@@ -212,7 +216,7 @@ namespace Addin.Transform
 
 				progressState.StatusLabel = "Transforming...";
 				int entriesCount = workerArguments.inputDocument.SelectNodes("//entry").Count;
-				progressState.TotalNumberOfSteps = entriesCount + workerArguments.postTransformSteps;
+				progressState.TotalNumberOfSteps = 2*(entriesCount) + workerArguments.postTransformSteps;
 				_staticProgressStateForWorker = progressState;
 				workerArguments.xsltArguments.XsltMessageEncountered += OnXsltMessageEncountered;
 

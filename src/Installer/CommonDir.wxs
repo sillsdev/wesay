@@ -8,6 +8,9 @@
 		<Component Id="PartsOfSpeech.xml" Guid="{6B734BDE-1702-418D-93BC-40A7F310B14F}">
 		  <File Id="PartsOfSpeech.xml" Name="PartsOfSpeech.xml" KeyPath="yes" Source="..\..\common\PartsOfSpeech.xml" />
 		</Component>
+		<Component Id="WeSay_Helps.chm" Guid="{8E2B2894-675B-4B8D-85CF-D9938466EC61}">
+		  <File Id="WeSay_Helps.chm" Name="WeSay_Helps.chm" KeyPath="yes" Source="..\..\common\WeSay_Helps.chm" />
+		</Component>
 
 		<Directory Id="wordpacks" Name="wordpacks">
 		  <Directory Id="SILCAWL" Name="SILCAWL">
@@ -27,6 +30,9 @@
 		</Component>
 		<Component Id="default.WeSayConfig" Guid="{4D0210A0-095D-48DE-9399-4074A97864A4}">
 		  <File Id="default.WeSayConfig" Name="default.WeSayConfig" KeyPath="yes" Source="..\..\common\default.WeSayConfig" />
+		</Component>
+		<Component Id="exiftool.exe" Guid="{85C1218D-890D-45db-AF3E-A1599E6D35F6}">
+		  <File Id="exiftool.exe" Name="exiftool.exe" KeyPath="yes" Source="..\..\common\exiftool.exe" />
 		</Component>
 
 		<Directory Id="WritingSystems" Name="WritingSystems">
@@ -84,7 +90,9 @@
 
 
 	<ComponentGroup Id="defaultFiles">
+	  <ComponentRef Id="exiftool.exe" />
 	  <ComponentRef Id="PartsOfSpeech.xml" />
+	  <ComponentRef Id="WeSay_Helps.chm" />
 	  <ComponentRef Id="SILCAWL.lift" />
 	  <ComponentRef Id="SILCAWL_MozambiqueAddendum.lift" />
 	  <ComponentRef Id="SemanticDomains.xml" />

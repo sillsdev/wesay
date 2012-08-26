@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -26,11 +27,12 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private GatherWordListControl _gatherControl;
 		private List<LexEntry> _words;
 		private int _currentWordIndex;
-		private readonly string _preferredEllicitationWritingSystem;
+		private readonly string _preferredPromptingWritingSystemId;
 		private readonly WritingSystemDefinition _lexicalUnitWritingSystem;
 		private IList<string> _definitionWritingSystemIds;
 		private IList<string> _glossWritingSystemIds;
 		private bool _usingLiftFile;
+		public string LoadFailureMessage;
 
 		public GatherWordListTask(IGatherWordListConfig config,
 									LexEntryRepository lexEntryRepository,
@@ -52,7 +54,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
 			_lexemeFormListFileName = config.WordListFileName;
 			_words = null;
-			_preferredEllicitationWritingSystem = config.WordListWritingSystemIdOfOldFlatWordList;
+			_preferredPromptingWritingSystemId = config.WordListWritingSystemIdOfOldFlatWordList;
 			var f = viewTemplate.GetField(LexSense.WellKnownProperties.Definition);
 			Guard.AgainstNull(f, "No field for definition");
 			_definitionWritingSystemIds = f.WritingSystemIds;
@@ -63,6 +65,20 @@ namespace WeSay.LexicalTools.GatherByWordList
 			else
 			{
 				_glossWritingSystemIds = new List<string>();
+			}
+			if (_definitionWritingSystemIds.Count > 0)
+				_preferredPromptingWritingSystemId = _definitionWritingSystemIds[0];
+		}
+
+		public WritingSystemDefinition PromptingWritingSystem
+		{
+			get
+			{
+				if (!_viewTemplate.WritingSystems.Contains(_preferredPromptingWritingSystemId))
+				{
+					return _viewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition);//shouldn't ever happen
+				}
+				return _viewTemplate.WritingSystems.Get(_preferredPromptingWritingSystemId);
 			}
 		}
 
@@ -163,9 +179,9 @@ namespace WeSay.LexicalTools.GatherByWordList
 					if (!string.IsNullOrEmpty(s))//skip blank lines
 					{
 						var entry = new LexEntry();
-						entry.LexicalForm.SetAlternative(_preferredEllicitationWritingSystem, s);
+						entry.LexicalForm.SetAlternative(_preferredPromptingWritingSystemId, s);
 						var sense = new LexSense(entry);
-						sense.Gloss.SetAlternative(_preferredEllicitationWritingSystem, s);
+						sense.Gloss.SetAlternative(_preferredPromptingWritingSystemId, s);
 						entry.Senses.Add(sense);
 						_words.Add(entry);
 					}
@@ -202,17 +218,17 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 		}
 
-		public string CurrentEllicitationForm
+		public string CurrentPromptingForm
 		{
 			get
 			{
-				var form = CurrentEllicitationLanguageForm;
+				var form = CurrentPromptingLanguageForm;
 				if(form!=null)
 					return form.Form;
 				return string.Empty;
 			}
 		}
-		public LanguageForm CurrentEllicitationLanguageForm
+		public LanguageForm CurrentPromptingLanguageForm
 		{
 			get
 			{
@@ -308,7 +324,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			get { return CurrentIndexIntoWordlist > 0; }
 		}
 
-		private int CurrentIndexIntoWordlist
+		public int CurrentIndexIntoWordlist
 		{
 			get { return _currentWordIndex; }
 			set
@@ -330,11 +346,11 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 			if (!_usingLiftFile &&
 					!WeSayWordsProject.Project.WritingSystems.Contains(
-							 _preferredEllicitationWritingSystem))
+							 _preferredPromptingWritingSystemId))
 			{
 				ErrorReport.NotifyUserOfProblem(
 						"The writing system of the words in the word list will be used to add reversals and definitions.  Therefore, it needs to be in the list of writing systems for this project.  Either change the writing system that this task uses for the word list (currently '{0}') or add a writing system with this id to the project.",
-						_preferredEllicitationWritingSystem);
+						_preferredPromptingWritingSystemId);
 			}
 
 			if (_words == null)
@@ -353,9 +369,15 @@ namespace WeSay.LexicalTools.GatherByWordList
 			get
 			{
 				var m = new MultiText();
-				m.SetAlternative(_preferredEllicitationWritingSystem, CurrentEllicitationForm);
+				m.SetAlternative(_preferredPromptingWritingSystemId, CurrentPromptingForm);
 				return m;
 			}
+		}
+
+		public IList Words
+		{
+			get { return _words; }
+
 		}
 
 		public void WordCollected(MultiText newVernacularWord)
@@ -406,12 +428,15 @@ namespace WeSay.LexicalTools.GatherByWordList
 			//remove from the gloss and def any forms we don't want in our project for those fields
 			foreach (var form in sense.Gloss.Forms)
 			{
-				if (!_glossWritingSystemIds.Contains(form.WritingSystemId))
+				//why are we checking definition writing system here? Well, the whole gloss/def thing continues to be murky. When gathering, we're just
+				//trying to populate both.  And if you have your 1st def be, say, french, and don't have that in your glosses, well
+				// in the WordList task, you won't see the words you gathered, because that's based on glosses!
+				if (!_glossWritingSystemIds.Contains(form.WritingSystemId) && !_definitionWritingSystemIds.Contains(form.WritingSystemId))
 					sense.Gloss.SetAlternative(form.WritingSystemId, null);
 			}
 			foreach (var form in sense.Definition.Forms)
 			{
-				if (!_definitionWritingSystemIds.Contains(form.WritingSystemId))
+				if (!_definitionWritingSystemIds.Contains(form.WritingSystemId) && !_glossWritingSystemIds.Contains(form.WritingSystemId))
 					sense.Definition.SetAlternative(form.WritingSystemId, null);
 			}
 
@@ -496,6 +521,11 @@ namespace WeSay.LexicalTools.GatherByWordList
 			_gatherControl = null;
 		}
 
+		public void NavigateToIndex(int i)
+		{
+			CurrentIndexIntoWordlist = i;
+		}
+
 		public void NavigatePrevious()
 		{
 			--CurrentIndexIntoWordlist;
@@ -534,13 +564,31 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				if (_words == null)//WS-33662, which we could not reproduce
 				{
+					LoadFailureMessage = "Sorry, there was a problem loading this word pack.";
 					Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, there was a problem loading this word pack. (to WeSay developers: may be reproduction of WS-33662)");
 				}
 				else
 				{
-					Palaso.Reporting.ErrorReport.NotifyUserOfProblem(
-						"This word pack (with {0} entries) does not contain any words in the languages of your definition field.",
-						_words.Count);
+					var firstLexeme = _words.First().LexicalForm;
+					var s = "";
+					foreach(var form in firstLexeme.Forms)
+					{
+						var name = form.WritingSystemId;
+						if (_viewTemplate.WritingSystems.Contains(form.WritingSystemId))
+							name = _viewTemplate.WritingSystems.Get(form.WritingSystemId).LanguageName;
+						else
+						{	//if these langs aren't in the project, we might not be able to look them up, so do them by hand
+							if (form.WritingSystemId == "en")///SIL CAWL comes with French and English
+								name = "English";
+							else if (form.WritingSystemId == "fr")
+								name = "French";
+						}
+						s += " "+ name + ",";
+					}
+					s = s.Trim(new char[] {' ', ','});
+					LoadFailureMessage = string.Format(
+						"To use this word pack, set your first definition field to one of ({0}).", s);
+					Palaso.Reporting.ErrorReport.NotifyUserOfProblem(LoadFailureMessage);
 				}
 			}
 		}
@@ -554,14 +602,14 @@ namespace WeSay.LexicalTools.GatherByWordList
 //        {
 //            return
 //                    LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
-//                            CurrentWordAsMultiText.Find(_preferredEllicitationWritingSystem),
+//                            CurrentWordAsMultiText.Find(_preferredPromptingWritingSystemId),
 //                            _lexicalUnitWritingSystem);
 //        }
 
 		public ResultSet<LexEntry> GetRecordsWithMatchingGloss()
 		{
-			//var form = CurrentWordAsMultiText.GetBestAlternative(new string[]{_preferredEllicitationWritingSystem});
-			var form = CurrentEllicitationLanguageForm;
+			//var form = CurrentWordAsMultiText.GetBestAlternative(new string[]{_preferredPromptingWritingSystemId});
+			var form = CurrentPromptingLanguageForm;
 			return
 						LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
 								form,
@@ -591,27 +639,27 @@ namespace WeSay.LexicalTools.GatherByWordList
 				LexSense sense = entry.Senses[i];
 				if (sense.Gloss != null)
 				{
-					if (sense.Gloss.ContainsAlternative(_preferredEllicitationWritingSystem))
+					if (sense.Gloss.ContainsAlternative(_preferredPromptingWritingSystemId))
 					{
-						if (sense.Gloss[_preferredEllicitationWritingSystem] == CurrentEllicitationForm)
+						if (sense.Gloss[_preferredPromptingWritingSystemId] == CurrentPromptingForm)
 						{
 							//since we copy the gloss into the defniition, too, if that hasn't been
 							//modified, then we don't want to let it being non-empty keep us from
 							//removing the sense. We're trying to enable typo correcting.
-							if (sense.Definition[_preferredEllicitationWritingSystem] ==
-								CurrentEllicitationForm)
+							if (sense.Definition[_preferredPromptingWritingSystemId] ==
+								CurrentPromptingForm)
 							{
-								sense.Definition.SetAlternative(_preferredEllicitationWritingSystem,
+								sense.Definition.SetAlternative(_preferredPromptingWritingSystemId,
 																null);
 								sense.Definition.RemoveEmptyStuff();
 							}
-							sense.Gloss.SetAlternative(_preferredEllicitationWritingSystem, null);
+							sense.Gloss.SetAlternative(_preferredPromptingWritingSystemId, null);
 							sense.Gloss.RemoveEmptyStuff();
 							if (!sense.IsEmptyForPurposesOfDeletion)
 							{
 								//removing the gloss didn't make it empty. So repent of removing the gloss.
-								sense.Gloss.SetAlternative(_preferredEllicitationWritingSystem,
-														   CurrentEllicitationForm);
+								sense.Gloss.SetAlternative(_preferredPromptingWritingSystemId,
+														   CurrentPromptingForm);
 							}
 						}
 					}
