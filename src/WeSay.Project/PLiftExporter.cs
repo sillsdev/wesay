@@ -318,6 +318,8 @@ namespace WeSay.Project
 			//base.WriteIllustrationElement(pictureRef);
 
 			string url = pictureRef.Value;
+			if (url == null) // Fixes WS-34480 PLIFT-exporting actions don't work after going in Browse & Edit if image is missing
+				return;
 			if (_path != null)  //it's null during some tests
 			{
 				var dirWeAreWritingTo = Path.GetDirectoryName(_path);
