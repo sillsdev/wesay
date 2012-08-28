@@ -20,6 +20,13 @@
 
 	<Import Project="$(RootDir)/build/build.common.proj" />
 
+	<ItemGroup>
+		<CSharpFiles
+			Include="$(RootDir)\**\*.cs"
+			Exclude="$(RootDir)\**\*Tests\**;$(RootDir)\**\WeSay.ConfigTool\**" />
+		<XmlFiles Include="$(RootDir)\common\**\*.WeSayConfig"/>
+	</ItemGroup>
+
 	<Target Name="Build">
 		<CallTarget Targets="Clean"/>
 		<CallTarget Targets="SetAssemblyVersion"/>
