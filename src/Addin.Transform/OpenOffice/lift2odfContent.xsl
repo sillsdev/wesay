@@ -49,7 +49,7 @@ exclude-result-prefixes="xsl"
 Preparing the variables before hand allows a simple contains test, which is much
 faster than using preceding-sibling axis which is extremely slow for large docs.
 -->
-<xsl:variable name="entries" select="//entry/lexical-unit/form[position()=1]/text" />
+<xsl:variable name="entries" select="//entry/lexical-unit[not(following-sibling::citation)]/form[position()=1]/text | //entry/citation/form[position()=1]/text" />
 
 <!-- This relies on the sorted lift export addiing the sorted-index annotation.
 This is well worth it, because it makes the stylesheet parsing speed run at
