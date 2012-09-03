@@ -326,7 +326,10 @@ etymology
 							 style:family="text">
 					<style:text-properties style:font-name="Times New Roman"
 										   style:font-name-asian="Tahoma"
-										   style:font-name-complex="Tahoma"/>
+										   style:font-name-complex="Tahoma"
+										   fo:font-weight="bold"
+										   style:font-weight-asian="bold"
+										   style:font-weight-complex="bold"/>
 				</style:style>
 				<xsl:text>
 			 </xsl:text>
