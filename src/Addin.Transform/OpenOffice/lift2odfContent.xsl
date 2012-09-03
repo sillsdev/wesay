@@ -210,6 +210,7 @@ something like n log n rather than n^2-->
 </xsl:template>
 
 <xsl:template match="text">
+<xsl:if test="not(ancestor::lexical-unit/following-sibling::citation)">
 <!-- take language from the parent form -->
 <xsl:variable name="lang" select="../@lang"/>
 <!-- style is based on the element name above the form -->
@@ -226,6 +227,7 @@ something like n log n rather than n^2-->
 </text:span>
 </xsl:otherwise>
 </xsl:choose>
+</xsl:if>
 </xsl:template>
 
 <xsl:template match="note">
