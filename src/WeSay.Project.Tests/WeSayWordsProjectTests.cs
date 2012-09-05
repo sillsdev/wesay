@@ -305,7 +305,7 @@ namespace WeSay.Project.Tests
 
 				foreach (var field in fieldsUsingQaa)
 				{
-					Assert.That(field.WritingSystemIds.Count(wsId => wsId=="qaa-x-qaa"), Is.EqualTo(1));
+					Assert.That(field.WritingSystemIds.Count(wsId => wsId=="de"), Is.EqualTo(1));
 					Assert.That(field.WritingSystemIds.Contains("de"));
 				}
 			}

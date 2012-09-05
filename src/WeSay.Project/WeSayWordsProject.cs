@@ -1376,8 +1376,15 @@ namespace WeSay.Project
 			{
 				foreach (var filePath in Directory.GetFiles(ProjectDirectoryPath))
 				{
-					var helper = new WritingSystemsInOptionsListFileHelper(WritingSystems, filePath);
-					helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
+					try
+					{
+						var helper = new WritingSystemsInOptionsListFileHelper(WritingSystems, filePath);
+						helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
+					}
+					catch(IOException e)
+					{
+						ErrorReport.NotifyUserOfProblem(e.Message + " " + PathToLiftFile);
+					}
 				}
 			}
 
@@ -1385,7 +1392,14 @@ namespace WeSay.Project
 			pendingConfigFile.WriteWasSuccessful();
 
 			base.Save();
-			CommitWritingSystemIdChangesToLiftFile();
+			try
+			{
+				CommitWritingSystemIdChangesToLiftFile();
+			}
+			catch(IOException e)
+			{
+				ErrorReport.NotifyUserOfProblem(e.Message + " " + PathToLiftFile);
+			}
 
 			SaveUserSpecificConfiguration();
 			BackupNow();
