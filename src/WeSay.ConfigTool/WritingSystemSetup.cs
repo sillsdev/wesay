@@ -31,10 +31,16 @@ namespace WeSay.ConfigTool
 			writingSystemSetupModel.AskIfDataExistsInWritingSystemToBeDeleted += OnAskIfDataExistsInWritingSystemToBeDeleted;
 			writingSystemSetupModel.AskIfOkToConflateWritingSystems += OnAskIfOkToConflateWritingSystems;
 			writingSystemSetupModel.AskIfOkToDeleteWritingSystems += OnAskIfOkToDeleteWritingSystems;
+			//_view.UserWantsHelpWithDeletingWritingSystems += OnUserWantsHelpWithDeletingWritingSystems;   //enable this line when the help file is ready! TA Sept-12-2012
 			store.WritingSystemDeleted += OnWritingSystemDeleted;
 			store.WritingSystemConflated += OnWritingSystemConflated;
 			Controls.Add(_view);
 			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
+		}
+
+		private void OnUserWantsHelpWithDeletingWritingSystems(object sender, EventArgs e)
+		{
+			Program.ShowHelpTopic("DeleteInputSystem");
 		}
 
 		private void OnAskIfOkToDeleteWritingSystems(object sender, AskIfOkToDeleteEventArgs args)
