@@ -28,15 +28,21 @@ namespace WeSay.ConfigTool
 							LeftColumnWidth = 350,
 							Dock = DockStyle.Fill
 						};
-			writingSystemSetupModel.BeforeDeleted += OnBeforeDeleted;
-			writingSystemSetupModel.BeforeConflated += OnBeforeConflated;
+			writingSystemSetupModel.AskIfDataExistsInWritingSystemToBeDeleted += OnAskIfDataExistsInWritingSystemToBeDeleted;
+			writingSystemSetupModel.AskIfOkToConflateWritingSystems += OnAskIfOkToConflateWritingSystems;
+			writingSystemSetupModel.AskIfOkToDeleteWritingSystems += OnAskIfOkToDeleteWritingSystems;
 			store.WritingSystemDeleted += OnWritingSystemDeleted;
-			store.WritingSystemConflated += OnWritingStemConflated;
+			store.WritingSystemConflated += OnWritingSystemConflated;
 			Controls.Add(_view);
 			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
 		}
 
-		private void OnWritingStemConflated(object sender, WritingSystemConflatedEventArgs e)
+		private void OnAskIfOkToDeleteWritingSystems(object sender, AskIfOkToDeleteEventArgs args)
+		{
+			args.CanDelete = true;  //WeSay always lets people delete.
+		}
+
+		private void OnWritingSystemConflated(object sender, WritingSystemConflatedEventArgs e)
 		{
 			WeSayWordsProject.Project.MakeWritingSystemIdChange(e.OldId, e.NewId);
 		}
@@ -75,13 +81,13 @@ namespace WeSay.ConfigTool
 
 		}
 
-		private static void OnBeforeDeleted(object sender, BeforeDeletedEventArgs args)
+		private static void OnAskIfDataExistsInWritingSystemToBeDeleted(object sender, AskIfDataExistsInWritingSystemToBeDeletedEventArgs args)
 		{
-			args.CanDelete = !WeSayWordsProject.Project.IsWritingSystemUsedInLiftFile(args.WritingSystemId);
+			args.ProjectContainsDataInWritingSystemToBeDeleted = WeSayWordsProject.Project.IsWritingSystemUsedInLiftFile(args.WritingSystemId);
 			args.ErrorMessage = "It's in use in the LIFT file.";
 		}
 
-		private void OnBeforeConflated(object sender, BeforeConflatedEventArgs args)
+		private void OnAskIfOkToConflateWritingSystems(object sender, AskIfOkToConflateEventArgs args)
 		{
 			args.CanConflate = true; //WeSay always lets people conflate.
 		}
