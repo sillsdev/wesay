@@ -31,7 +31,7 @@ namespace WeSay.ConfigTool
 			writingSystemSetupModel.AskIfDataExistsInWritingSystemToBeDeleted += OnAskIfDataExistsInWritingSystemToBeDeleted;
 			writingSystemSetupModel.AskIfOkToConflateWritingSystems += OnAskIfOkToConflateWritingSystems;
 			writingSystemSetupModel.AskIfOkToDeleteWritingSystems += OnAskIfOkToDeleteWritingSystems;
-			//_view.UserWantsHelpWithDeletingWritingSystems += OnUserWantsHelpWithDeletingWritingSystems;   //enable this line when the help file is ready! TA Sept-12-2012
+			_view.UserWantsHelpWithDeletingWritingSystems += OnUserWantsHelpWithDeletingWritingSystems;
 			store.WritingSystemDeleted += OnWritingSystemDeleted;
 			store.WritingSystemConflated += OnWritingSystemConflated;
 			Controls.Add(_view);
@@ -40,7 +40,7 @@ namespace WeSay.ConfigTool
 
 		private void OnUserWantsHelpWithDeletingWritingSystems(object sender, EventArgs e)
 		{
-			Program.ShowHelpTopic("DeleteInputSystem");
+			Program.ShowHelpTopic("/WeSay_Configuration_Tool/Input_Systems/Delete_or_merge_an_input_system.htm");
 		}
 
 		private void OnAskIfOkToDeleteWritingSystems(object sender, AskIfOkToDeleteEventArgs args)
