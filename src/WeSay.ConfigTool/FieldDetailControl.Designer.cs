@@ -234,7 +234,7 @@ namespace WeSay.ConfigTool
 			this._enableSpellingLabel.Size = new System.Drawing.Size(57, 16);
 			this._enableSpellingLabel.TabIndex = 11;
 			this._enableSpellingLabel.Text = "Spelling";
-			this.toolTip1.SetToolTip(this._enableSpellingLabel, "Tick this box to enable spell checking for writing systems with installed spell c" +
+			this.toolTip1.SetToolTip(this._enableSpellingLabel, "Tick this box to enable spell checking for input systems with installed spell c" +
 		"hecker support");
 			//
 			// _optionListFileLabel

@@ -146,7 +146,7 @@ namespace WeSay.UI
 					if(DesignMode)
 						return new WritingSystemDefinition();
 					throw new InvalidOperationException(
-							"WritingSystem must be initialized prior to use.");
+							"Input system must be initialized prior to use.");
 				}
 				return _writingSystem;
 			}

@@ -373,7 +373,7 @@ namespace Addin.Transform.OpenOffice
 		//    }
 		//    if(String.IsNullOrEmpty(pathToHeadWordWritingSystemLdmlFile)){
 		//        string errorMessage = String.Format(
-		//            "No Ldml writing system file could be found in folder {0}. The headword writing system is {1}",
+		//            "No Ldml input system file could be found in folder {0}. The headword input system is {1}",
 		//            pathToLdmlWritingSystemsFolder, GetHeadwordWritingSystemId(arguments.viewTemplate));
 		//        throw new ApplicationException(errorMessage);
 

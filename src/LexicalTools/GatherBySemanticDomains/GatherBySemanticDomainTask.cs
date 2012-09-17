@@ -95,7 +95,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					{
 						throw new ApplicationException(
 							string.Format(
-								"Could not find the semanticDomainQuestions file {0}. Expected to find it at: {1} or {2}. The name of the file is influenced by the first enabled writing system for the Semantic Domain Field.",
+								"Could not find the semanticDomainQuestions file {0}. Expected to find it at: {1} or {2}. The name of the file is influenced by the first enabled input system for the Semantic Domain Field.",
 								_semanticDomainQuestionsFileName,
 								pathInProject,
 								pathInProgramDir));
@@ -107,7 +107,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
 			WritingSystemDefinition writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
-			Guard.AgainstNull(writingSystemForDefinition, "Defintion Writing System");
+			Guard.AgainstNull(writingSystemForDefinition, "Definition input System");
 			DefinitionWritingSystem = writingSystemForDefinition;
 
 			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
@@ -807,7 +807,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					{
 						_alreadyReportedWSLookupFailure = true;
 						ErrorReport.NotifyUserOfProblem(
-							"WeSay was unable to get a writing system to use from the configuration Semantic Domain Field. English will be used.");
+							"WeSay was unable to get an input system to use from the configuration Semantic Domain Field. English will be used.");
 					}
 				}
 				return ws;

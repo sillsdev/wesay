@@ -74,7 +74,7 @@ namespace WeSay.UI
 				if (_formWritingSystem == null)
 				{
 					throw new InvalidOperationException(
-							"FormWritingSystem must be initialized prior to use.");
+							"Form input system must be initialized prior to use.");
 				}
 				return _formWritingSystem;
 			}

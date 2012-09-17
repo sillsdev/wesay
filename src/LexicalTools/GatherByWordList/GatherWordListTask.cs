@@ -349,7 +349,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 							 _preferredPromptingWritingSystemId))
 			{
 				ErrorReport.NotifyUserOfProblem(
-						"The writing system of the words in the word list will be used to add reversals and definitions.  Therefore, it needs to be in the list of writing systems for this project.  Either change the writing system that this task uses for the word list (currently '{0}') or add a writing system with this id to the project.",
+						"The input system of the words in the word list will be used to add reversals and definitions.  Therefore, it needs to be in the list of input systems for this project.  Either change the input system that this task uses for the word list (currently '{0}') or add an input system with this id to the project.",
 						_preferredPromptingWritingSystemId);
 			}
 

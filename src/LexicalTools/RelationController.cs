@@ -56,7 +56,7 @@ namespace WeSay.LexicalTools
 		{
 			if (field.WritingSystemIds.Count == 0)
 			{
-				throw new ConfigurationException("The field {0} has no writing systems enabled.", field.FieldName);
+				throw new ConfigurationException("The field {0} has no input systems enabled.", field.FieldName);
 			}
 			var controller = new RelationController(relationParent,
 																   relationType,

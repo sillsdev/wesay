@@ -1581,7 +1581,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
+				ErrorReport.NotifyUserOfProblem("Another program has WeSay's dictionary file open, so we cannot make the input system change.  Make sure WeSay isn't running.");
 				return false;
 			}
 

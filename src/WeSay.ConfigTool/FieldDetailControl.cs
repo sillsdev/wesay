@@ -148,7 +148,7 @@ namespace WeSay.ConfigTool
 			AddComboItem(_dataTypeCombo,
 						 _field.DataTypeName,
 						 Field.BuiltInDataType.MultiText,
-						 "Text in one or more writing systems");
+						 "Text in one or more input systems");
 			AddComboItem(_dataTypeCombo,
 						 _field.DataTypeName,
 						 Field.BuiltInDataType.Option,

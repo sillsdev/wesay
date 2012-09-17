@@ -923,7 +923,7 @@ namespace WeSay.Project.Tests
 					));
 				string writingSystemFolderPath = Path.Combine(projectDirectory.Path, "WritingSystems");
 				Directory.CreateDirectory(writingSystemFolderPath);
-				//Now populate the writing system repo with an "en" writing system and a "qaa-x-changedWs" writing system as well as
+				//Now populate the input system repo with an "en" input system and a "qaa-x-changedWs" input system as well as
 				//a changelog that  indicates that "x-changedWs" got changed to "qaa-x-changedWs"
 				var wsRepo = LdmlInFolderWritingSystemRepository.Initialize(
 					writingSystemFolderPath,

@@ -177,7 +177,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				else
 				{
 					ErrorReport.NotifyUserOfProblem(
-							"There are no writing systems enabled for the Field '{0}'",
+							"There are no input systems enabled for the Field '{0}'",
 							field.FieldName);
 				}
 			}

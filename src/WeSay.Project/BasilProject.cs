@@ -113,7 +113,7 @@ There are problems in:
 
 		protected static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
 		{
-			throw new ApplicationException("WritingSystem migration should have been done by now, but it seems it hasn't.");
+			throw new ApplicationException("Input system migration should have been done by now, but it seems it hasn't.");
 		}
 
 //        public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)

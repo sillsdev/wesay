@@ -490,7 +490,7 @@ namespace WeSay.Project
 
 			ddp4Field.DisplayName = "Sem Dom";
 			ddp4Field.Description =
-					"The semantic domains of the sense, using Ron Moe's Dictionary Development Process version 4.\r\n. You can enter these directly by typing the number of the domain, its name, or a word used in the description. You can also use the Gather By Semantic Domains Task, which will try to use the writing system chosen by this field.";
+					"The semantic domains of the sense, using Ron Moe's Dictionary Development Process version 4.\r\n. You can enter these directly by typing the number of the domain, its name, or a word used in the description. You can also use the Gather By Semantic Domains Task, which will try to use the input system chosen by this field.";
 			ddp4Field.DataTypeName = "OptionCollection";
 			ddp4Field.OptionsListFile = "Ddp4.xml";
 			ddp4Field.Enabled = true;
@@ -625,7 +625,7 @@ namespace WeSay.Project
 			}
 			if(field.WritingSystemIds.Count == 0)
 			{
-				throw new ConfigurationException(String.Format("The field {0} has no writing system associated with it. Please assign a writing system to it in the WeSay config tool.", fieldName));
+				throw new ConfigurationException(String.Format("The field {0} has no input system associated with it. Please assign an input system to it in the WeSay config tool.", fieldName));
 			}
 			return BasilProject.Project.WritingSystems.Get(field.WritingSystemIds[0]);
 		}

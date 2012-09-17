@@ -80,7 +80,7 @@ namespace WeSay.Project
 			{
 				var list = missingWritingSystems.ToString().Trim(new[]{','});
 				ErrorReport.NotifyUserOfProblem(
-					"WeSay had a problem locating information on at least one writing system used in the LIFT export from FLEx.  One known cause of this is an old version of FLEx. In the folder containing the LIFT file, there should have been '___.ldml' files for the following writing systems: {0}.\r\nBecause these Writing System definitions were not found, WeSay will create blank writing systems for each of these, which you will need to set up with the right fonts, keyboards, etc.", list);
+					"WeSay had a problem locating information on at least one input system used in the LIFT export from FLEx.  One known cause of this is an old version of FLEx. In the folder containing the LIFT file, there should have been '___.ldml' files for the following input systems: {0}.\r\nBecause these input system definitions were not found, WeSay will create blank input systems for each of these, which you will need to set up with the right fonts, keyboards, etc.", list);
 			}
 			// replace all "v" fields with the first lexical-unit writing system
 			//and all "en" with the first translation one...
