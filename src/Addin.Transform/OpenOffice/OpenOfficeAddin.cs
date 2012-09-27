@@ -205,7 +205,7 @@ namespace Addin.Transform.OpenOffice
 					EmbeddedXmlCollection sortedAnnotation = new EmbeddedXmlCollection();
 					sortedAnnotation.Values.Add("<annotation name='sorted-index' value='" + (++index) +"'/>");
 
-					lexEntry.Properties.Add(new KeyValuePair<string,object>("SortedIndex", sortedAnnotation));
+					lexEntry.Properties.Add(new KeyValuePair<string,IPalasoDataObjectProperty>("SortedIndex", sortedAnnotation));
 
 					exporter.Add(lexEntry, homographNumber);
 				}

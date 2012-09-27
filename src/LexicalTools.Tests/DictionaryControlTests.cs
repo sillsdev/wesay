@@ -298,11 +298,7 @@ namespace WeSay.LexicalTools.Tests
 			GoToLexicalEntryUseFind("Initial"); //go away
 			GoToLexicalEntryUseFind(form); //come back
 
-			KeyValuePair<string, object> item2 = new KeyValuePair<string, object>("test",
-																				  new LexRelation(
-																						  "b",
-																						  "bbb",
-																						  entry));
+			var item2 = new KeyValuePair<string, IPalasoDataObjectProperty>("test", new LexRelation("b","bbb",entry));
 			entry.Properties.Add(item2);
 
 			GetEditControl("*EntryLexicalForm").FocusOnFirstWsAlternative();
