@@ -302,6 +302,10 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 
 
+				  <!-- used by PalasoUIWindowsForms for talking to scanner-->
+				  <Component Id="Interop.WIA.dll" Guid="{47038218-2646-4F83-BE95-4F83A8D41811}">
+					<File Id="Interop.WIA.dll" Name="Interop.WIA.dll" KeyPath="yes" Source="..\..\output\release\Interop.WIA.dll" />
+				  </Component>
 				</Directory>
 			  </Directory>
 			</Directory>
@@ -325,7 +329,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 			  <ComponentRef Id="autofac.dll"/>
 			  <ComponentRef Id="irrKlang.NET2.0.dll"/>
-
+			  <ComponentRef Id="Interop.WIA.dll" />
 			  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
 			  <ComponentRef Id="KeymanLink.dll" />
 
