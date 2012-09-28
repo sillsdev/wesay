@@ -476,7 +476,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				LexEntry entry = LexEntryRepository.CreateItem();
 				entry.LexicalForm.MergeIn(lexemeForm);
-				entry.Senses.Add(sense);
+				entry.Senses.Add(sense.Clone());
 				LexEntryRepository.SaveItem(entry);
 				Logger.WriteEvent("WordList-Adding new word '{0}'and givin the sense '{1}'", entry.GetSimpleFormForLogging(), firstGloss );
 			}
@@ -516,6 +516,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			base.Deactivate();
 			if (_gatherControl != null)
 			{
+				_gatherControl.Cleanup();
 				_gatherControl.Dispose();
 			}
 			_gatherControl = null;
@@ -636,33 +637,9 @@ namespace WeSay.LexicalTools.GatherByWordList
 			LexEntry entry = recordToken.RealObject;
 			for (int i = entry.Senses.Count - 1;i >= 0;i--)
 			{
-				LexSense sense = entry.Senses[i];
-				if (sense.Gloss != null)
+				if(entry.Senses[i].Equals(CurrentTemplateSense))
 				{
-					if (sense.Gloss.ContainsAlternative(_preferredPromptingWritingSystemId))
-					{
-						if (sense.Gloss[_preferredPromptingWritingSystemId] == CurrentPromptingForm)
-						{
-							//since we copy the gloss into the defniition, too, if that hasn't been
-							//modified, then we don't want to let it being non-empty keep us from
-							//removing the sense. We're trying to enable typo correcting.
-							if (sense.Definition[_preferredPromptingWritingSystemId] ==
-								CurrentPromptingForm)
-							{
-								sense.Definition.SetAlternative(_preferredPromptingWritingSystemId,
-																null);
-								sense.Definition.RemoveEmptyStuff();
-							}
-							sense.Gloss.SetAlternative(_preferredPromptingWritingSystemId, null);
-							sense.Gloss.RemoveEmptyStuff();
-							if (!sense.IsEmptyForPurposesOfDeletion)
-							{
-								//removing the gloss didn't make it empty. So repent of removing the gloss.
-								sense.Gloss.SetAlternative(_preferredPromptingWritingSystemId,
-														   CurrentPromptingForm);
-							}
-						}
-					}
+					entry.Senses.RemoveAt(i);
 				}
 			}
 			entry.CleanUpAfterEditting();
