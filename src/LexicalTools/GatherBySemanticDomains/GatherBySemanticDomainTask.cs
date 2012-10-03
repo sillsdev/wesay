@@ -637,16 +637,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 		private void DisassociateCurrentSemanticDomainFromEntry(RecordToken<LexEntry> recordToken)
 		{
-
-
 			// have to iterate through these in reverse order
 			// since they might get modified
 			LexEntry entry = recordToken.RealObject;
 			for (int i = entry.Senses.Count - 1;i >= 0;i--)
 			{
 				LexSense sense = entry.Senses[i];
-				OptionRefCollection semanticDomains =
-					sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
+				var semanticDomains = sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 				if (semanticDomains != null)
 				{
 					if (semanticDomains.Contains(CurrentDomainKey))
@@ -687,8 +684,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private void AddCurrentSemanticDomainToEntry(LexEntry entry, string meaning)
 		{
 			LexSense sense = null;
-			//is the gloss empty? THen just ggrab the first sense
-			if (string.IsNullOrEmpty(meaning))
+			////This can lead to wrongly assigned semantic domains in the case of multiple senses. Say I gather "shoot"  in the "weapons" domain (no idea if that even exists but bear with me)
+			////then I gather "shoot" in the "plants" domain. Both domains would be assigned to the same sense. That being said I assume this approach was taken because it will USUALLY be
+			////what the user intends as homographs/multiple senses are not as frequent as one sense belonging to multiple domains (i.e. "Rain" could be "Universe/Creation", "Agriculture",
+			////"Times of year" etc etc.) --TA Oct/3/2012
+			//is the meaning empty? Then just grab the first sense
+			if (ShowMeaningField && string.IsNullOrEmpty(meaning))
 			{
 				sense = entry.Senses.FirstOrDefault();
 			}
@@ -707,11 +708,15 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 						  //in this case, we have this saved sense we want to put back,
 						  //which could conceivably have example sentences and other stuff
 						  //so update the meaning in case they edited that
-						  _savedSenseDuringMoveToEditArea.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
+						  if (ShowMeaningField)
+						  {
+							  _savedSenseDuringMoveToEditArea.Definition.SetAlternative(DefinitionWritingSystem.Id,
+																						meaning);
+						  }
 
-							//is there a sense with a matching gloss?
+						  //is there a sense with a matching gloss?
 							sense = entry.Senses.FirstOrDefault(
-								s => s.Definition.ContainsEqualForm(meaning, DefinitionWritingSystem.Id));
+								s => s.Definition.ContainsEqualForm(_savedSenseDuringMoveToEditArea.Definition[DefinitionWritingSystem.Id], DefinitionWritingSystem.Id));
 							if (sense != null)
 							{
 								//now, can we merge this sense in?
