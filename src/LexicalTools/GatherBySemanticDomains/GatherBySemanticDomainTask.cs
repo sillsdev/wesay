@@ -393,9 +393,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 											  {
 												  Vernacular = form
 											  };
-						if (entry.Senses.Count > 0)
+						var firstSenseMatchingCurrentDomain =
+							entry.Senses.FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).
+									Contains(CurrentDomainKey));
+						if(firstSenseMatchingCurrentDomain != null)
 						{
-							wordDisplay.Meaning = entry.Senses[0].Definition.GetBestAlternative(new string[] { DefinitionWritingSystem.Id });
+							wordDisplay.Meaning = firstSenseMatchingCurrentDomain.Definition.GetBestAlternative(new[] {DefinitionWritingSystem.Id});
 						}
 						_words.Add(wordDisplay);
 
@@ -577,7 +580,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					}
 				}
 			}
-			_savedSenseDuringMoveToEditArea = null;
+			_savedSensesDuringMoveToEditArea = null;
 			UpdateCurrentWords();
 			return modifiedEntries;
 		}
@@ -589,8 +592,8 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		/// </summary>
 		private bool HasMatchingSense(LexEntry entry, string gloss)
 		{
-			return (null !=entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id))
-						   ||  entry.Senses.Contains(_savedSenseDuringMoveToEditArea));
+			return (entry.Senses.Any(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id))
+						   ||  (_savedSensesDuringMoveToEditArea != null && entry.Senses.Intersect(_savedSensesDuringMoveToEditArea).Any()));
 		}
 
 
@@ -603,7 +606,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		public void PrepareToMoveWordToEditArea(WordDisplay wordDisplay)
 		{
 			VerifyTaskActivated();
-			_savedSenseDuringMoveToEditArea = null;
+			_savedSensesDuringMoveToEditArea = null;
 
 			if (wordDisplay == null)
 			{
@@ -612,57 +615,67 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			// this task was coded to have a list of word-forms, not actual entries.
 			//so we have to go searching for possible matches at this point.
 			ResultSet<LexEntry> matchingEntries =
-				LexEntryRepository.GetEntriesWithMatchingLexicalForm(wordDisplay.Vernacular.Form,
-																		FormWritingSystem);
+				LexEntryRepository.GetEntriesWithMatchingLexicalForm(wordDisplay.Vernacular.Form, FormWritingSystem);
 			foreach (RecordToken<LexEntry> recordToken in matchingEntries)
 			{
-				DisassociateCurrentSemanticDomainFromEntry(recordToken); // might remove senses
+				// have to iterate through these in reverse order since they might get modified
+				LexEntry entry = recordToken.RealObject;
+				_savedSensesDuringMoveToEditArea = new List<LexSense>();
+				//If we aren't showing the meaning field then we are going let any edits effect all matching Senses
+				if (!ShowMeaningField)
+				{
+					for (int i = entry.Senses.Count - 1; i >= 0; i--)
+					{
+						LexSense sense = entry.Senses[i];
+						var semanticDomains = sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
+						if (semanticDomains != null)
+						{
+							if (semanticDomains.Contains(CurrentDomainKey))
+							{
+								RememberMeaningOfDissociatedWord(sense);
+								entry.Senses.Remove(sense);
+								//if we don't do this and it has a meaning, we'll fail to delete the word when the user is trying to correct the spelling. (WS-34245)
+							}
+						}
+					}
+				}
+				//If we are showing the meaning field then we only let edits effect the sense that matches the shown meaning (definition)
+				else
+				{
+					var firstSenseMatchingSemDomAndMeaning =
+						entry.Senses.FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey)
+														&& s.Definition.GetBestAlternative(new[]{DefinitionWritingSystem.Id}) == wordDisplay.Meaning);
+					if (firstSenseMatchingSemDomAndMeaning != null)
+					{
+						RememberMeaningOfDissociatedWord(firstSenseMatchingSemDomAndMeaning);
+						entry.Senses.Remove(firstSenseMatchingSemDomAndMeaning);
+					}
+				}
+				entry.CleanUpAfterEditting();
+				if (entry.IsEmptyExceptForLexemeFormForPurposesOfDeletion)
+				{
+					LexEntryRepository.DeleteItem(entry); // if there are no senses left, get rid of it
+				}
+				else
+				{
+					LexEntryRepository.SaveItem(entry);
+				}
 			}
 
 			UpdateCurrentWords();
 		}
 
-		private LexSense _savedSenseDuringMoveToEditArea;
+		private List<LexSense> _savedSensesDuringMoveToEditArea ;
 
 		//when we pull a word out of the list, we remembered its meaning, so that we can make that available
 		//down in the edit area.
 		public MultiText GetMeaningForWordRecentlyMovedToEditArea()
 		{
-			if(_savedSenseDuringMoveToEditArea !=null)
+			if(_savedSensesDuringMoveToEditArea !=null)
 			{
-				return _savedSenseDuringMoveToEditArea.Definition;
+				return _savedSensesDuringMoveToEditArea[0].Definition;
 			}
 			return new MultiText();
-		}
-
-		private void DisassociateCurrentSemanticDomainFromEntry(RecordToken<LexEntry> recordToken)
-		{
-			// have to iterate through these in reverse order
-			// since they might get modified
-			LexEntry entry = recordToken.RealObject;
-			for (int i = entry.Senses.Count - 1;i >= 0;i--)
-			{
-				LexSense sense = entry.Senses[i];
-				var semanticDomains = sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
-				if (semanticDomains != null)
-				{
-					if (semanticDomains.Contains(CurrentDomainKey))
-					{
-						RememberMeaningOfDissociatedWord(sense);
-						semanticDomains.Remove(CurrentDomainKey);
-						entry.Senses.Remove(sense);//if we don't do this and it has a meaning, we'll fail to delete the word when the user is trying to correct the spelling. (WS-34245)
-					}
-				}
-			}
-			entry.CleanUpAfterEditting();
-			if (entry.IsEmptyExceptForLexemeFormForPurposesOfDeletion)
-			{
-				LexEntryRepository.DeleteItem(entry); // if there are no senses left, get rid of it
-			}
-			else
-			{
-				LexEntryRepository.SaveItem(entry);
-			}
 		}
 
 		/// <summary>
@@ -678,7 +691,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			//nb: I made it save the whole sense, as this is cleaner code and conceivalbe could be helpful
 			//in the future
 
-			_savedSenseDuringMoveToEditArea = sense;
+			_savedSensesDuringMoveToEditArea.Add(sense);
 		}
 
 		private void AddCurrentSemanticDomainToEntry(LexEntry entry, string meaning)
@@ -695,45 +708,41 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 			else
 			{
-				if (_savedSenseDuringMoveToEditArea!=null) //we are editing a word we entered previously
+				if (_savedSensesDuringMoveToEditArea!=null) //we are editing a word we entered previously
 				{
-					  if (entry.Senses.Contains(_savedSenseDuringMoveToEditArea))
-					  {
-						  //review: What is this case? I think it's where the word spelling didn't change, AND the old entry had some other sense(s), so it's still around
-						  sense = _savedSenseDuringMoveToEditArea;
-						  sense.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
-					  }
-					  else //we're bringing this sense in from the old spelling of the word
-					  {
-						  //in this case, we have this saved sense we want to put back,
-						  //which could conceivably have example sentences and other stuff
-						  //so update the meaning in case they edited that
-						  if (ShowMeaningField)
-						  {
-							  _savedSenseDuringMoveToEditArea.Definition.SetAlternative(DefinitionWritingSystem.Id,
-																						meaning);
-						  }
+					//in this case, we have this saved sense we want to put back,
+					//which could conceivably have example sentences and other stuff
+					//so update the meaning in case they edited that
+					if (ShowMeaningField)
+					{
+						_savedSensesDuringMoveToEditArea[0].Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
+					}
 
-						  //is there a sense with a matching gloss?
-							sense = entry.Senses.FirstOrDefault(
-								s => s.Definition.ContainsEqualForm(_savedSenseDuringMoveToEditArea.Definition[DefinitionWritingSystem.Id], DefinitionWritingSystem.Id));
-							if (sense != null)
-							{
-								//now, can we merge this sense in?
+					//are there senses with a matching glosses?
+					foreach (var lexSense in _savedSensesDuringMoveToEditArea)
+					{
+						sense = entry.Senses.FirstOrDefault(s =>s.Definition.ContainsEqualForm(
+								lexSense.Definition[DefinitionWritingSystem.Id],
+								DefinitionWritingSystem.Id));
+						if (sense != null)
+						{
+							//now, can we merge this sense in?
 
-								if (!SenseMerger.TryMergeSenseWithSomeExistingSense(sense, _savedSenseDuringMoveToEditArea, new NullProgress()))
-								{
-									//ah well, they'll have to hand-merge at some point
-									//Enhance: add a chorus note
-									entry.Senses.Add(_savedSenseDuringMoveToEditArea);
-								}
-							}
-							else //ok, no matching sense to try and merge with, so just add this
+							if (
+								!SenseMerger.TryMergeSenseWithSomeExistingSense(sense, lexSense,
+																				new NullProgress()))
 							{
-								entry.Senses.Add(_savedSenseDuringMoveToEditArea);
-								sense = _savedSenseDuringMoveToEditArea;
+								//ah well, they'll have to hand-merge at some point
+								//Enhance: add a chorus note
+								entry.Senses.Add(lexSense);
 							}
-					  }
+						}
+						else //ok, no matching sense to try and merge with, so just add this
+						{
+							entry.Senses.Add(lexSense);
+							sense = lexSense;
+						}
+					}
 				}
 				else
 				{
@@ -763,9 +772,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			string domainKey = DomainKeys[domainIndex];
 
-			beginIndex = recordTokens.FindFirstIndex(
-				token => (string) token["SemanticDomain"] == domainKey
-			);
+			beginIndex = recordTokens.FindFirstIndex(token => ((string) token["SemanticDomain"]) == domainKey);
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;

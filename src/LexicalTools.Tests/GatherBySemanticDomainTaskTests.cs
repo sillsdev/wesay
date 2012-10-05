@@ -895,6 +895,113 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("example2", modifiedEntries.First().Senses[1].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
 		}
 
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsNotEnabled_EntryHasMultipleSensesSomeMatchingSemDomOthersNot_AllSensesMatchingSemanticDomainAreMovedToNewEntry_SensesNotMatchingStayOnOldEntry()
+		{
+			_config.ShowMeaningField = false;
+			var entry = MakeEntryWithMeaning("peixe2");
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "de_form", Task.DomainKeys[0]));
+			entry.Senses.Add(GetSenseWithDefAndSemDom("fr", "oui", Task.DomainKeys[1]));
+
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
+			Task.PrepareToMoveWordToEditArea("peixe2");
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems(), "should stay in repo because of non matching sem dom");
+
+			Task.AddWord("peixe1", "");
+			Assert.AreEqual(2, _lexEntryRepository.CountAllItems(), "should have created a new entry.");
+			Assert.AreEqual(1, entry.Senses.Count, "expected to end up with 1 sense as the two matching the current domain should have been moved");
+			Assert.That(entry.Senses.All(s => !s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])), Is.True);
+			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1",WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
+			Assert.AreEqual(2, newEntry.Senses.Count, "expected to end up with 2 sense as the two matching the current domain should have been moved");
+			Assert.That(newEntry.LexicalForm[_vernacularWritingSystemId], Is.EqualTo("peixe1"));
+			Assert.That(newEntry.Senses.All(s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])), Is.True);
+		}
+
+		private LexSense GetSenseWithDefAndSemDom(string defWs, string defForm, string semDom)
+		{
+			var newSense = new LexSense();
+			newSense.Definition.SetAlternative(defWs, defForm);
+			var semDoms = newSense.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4);
+			semDoms.Add(semDom.Trim());
+			return newSense;
+		}
+
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsNotEnabled_EntryHasMultipleSensesAllMatchingSemDom_AllSensesMatchingSemanticDomainAreMovedToNewEntry_OldEntryIsDeleted()
+		{
+			_config.ShowMeaningField = false;
+			var entry = MakeEntryWithMeaning("peixe2");
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "de_word", Task.DomainKeys[0]));
+			var sensesToMove =
+				entry.Senses.Where(
+					s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0]));
+
+			Task.PrepareToMoveWordToEditArea("peixe2");
+			Assert.AreEqual(0, _lexEntryRepository.CountAllItems(), "expected it to be removed from the lexicon");
+
+			Task.AddWord("peixe1", "");
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems(), "expected new entry 'peixe1' in lexicon");
+			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1", WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
+			Assert.That(sensesToMove.All(movedSense => newEntry.Senses.Contains(movedSense)));
+			Assert.That(newEntry.Senses.All(s=>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])));
+		}
+
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsEnabled_EntryHasMultipleSensesSomeMatchingSemDomOthersNot_SensesMatchingMovedMeaningIsMovedToNewEntry_SensesNotMatchingStayOnOldEntry()
+		{
+			_config.ShowMeaningField = true;
+			var entry = MakeEntryWithMeaning("peixe2");
+			var firstSense = entry.Senses[0];
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "de_word", Task.DomainKeys[0]));
+			var secondSense = entry.Senses[1];
+
+			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
+												 {
+													 Vernacular = entry.LexicalForm.GetBestAlternative(new []{_vernacularWritingSystemId}),
+													 Meaning = secondSense.Definition.GetBestAlternative(new[]{Task.DefinitionWritingSystem.Id})
+												 });
+			Task.AddWord("peixe1", "de_word");
+
+			Assert.AreEqual(2, _lexEntryRepository.CountAllItems(), "expected new entry 'peixe1' in lexicon");
+			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1", WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
+			Assert.AreEqual(1, entry.Senses.Count, "expected the sense with the non matching meaning to still be around");
+			Assert.That(entry.Senses[0], Is.EqualTo(firstSense));
+			Assert.AreEqual(1, newEntry.Senses.Count, "expected the sense with the matching meaning to be added to the existing one");
+			Assert.That(newEntry.Senses[0], Is.EqualTo(secondSense));
+		}
+
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsEnabled_EntryHasOneSenseMatchingSemDom_SenseIsMovedToNewEntry_OldEntryIsDeleted()
+		{
+			_config.ShowMeaningField = true;
+			var entry = MakeEntryWithMeaning("peixe2");
+			var firstSense = entry.Senses[0];
+
+			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
+			{
+				Vernacular = entry.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
+				Meaning = firstSense.Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+			});
+			Task.AddWord("peixe1", "de_word");
+
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems(), "expected new entry 'peixe1' in lexicon");
+			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1", WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
+			Assert.AreEqual(1, newEntry.Senses.Count, "expected the sense with the non matching meaning to still be around");
+			Assert.That(newEntry.Senses[0], Is.EqualTo(firstSense));
+		}
+
+		[Test]
+		public void CurrentWords_MeaningFieldIsEnabled_EntryHasMultipleSenses_NotFirstSenseThatHasMatchingSemanticDomain_DefinitionOfFirstSenseWithmatchingSemanticDomainIsShown()
+		{
+			_config.ShowMeaningField = true;
+			var entry = MakeEntryWithMeaning("peixe2");
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "form", Task.DomainKeys[1]));
+			_lexEntryRepository.SaveItem(entry);
+
+			Task.CurrentDomainIndex = 1;
+			Assert.That(Task.CurrentWords[0].Meaning.Form, Is.EqualTo("form"));
+		}
+
 		/// <summary>
 		///
 		/// </summary>
