@@ -1002,6 +1002,37 @@ namespace WeSay.LexicalTools.Tests
 			Assert.That(Task.CurrentWords[0].Meaning.Form, Is.EqualTo("form"));
 		}
 
+		[Test]
+		public void CurrentWords_MeaningFieldIsEnabled_EntryHasMultipleSenses_OneSenseMatchesSemDomOtherHasNoSemDomAtAll_DefinitionOfFirstSenseWithMatchingSemanticDomainIsShown()
+		{
+			_config.ShowMeaningField = true;
+			var entry = MakeEntryWithMeaning("peixe2");
+			entry.Senses.Add(new LexSense());   //This sense needs to be before the sense we are looking for. i.e. order is relevant
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "form", Task.DomainKeys[1]));
+			_lexEntryRepository.SaveItem(entry);
+
+			Task.CurrentDomainIndex = 1;
+			Assert.That(Task.CurrentWords[0].Meaning.Form, Is.EqualTo("form"));
+		}
+
+		[Test]
+		public void PrepareToMoveWordToEditArea_MeaningFieldIsEnabled_EntryHasMultipleSenses_OneSenseMatchesSemDomOtherHasNoSemDomAtAll_CorrectSenseIsRemovedForEdit()
+		{
+			_config.ShowMeaningField = true;
+			var entry = MakeEntryWithMeaning("peixe2");
+			entry.Senses.Add(new LexSense());   //This sense needs to be before the sense we are looking for. i.e. order is relevant
+			var senseWeWantToEdit = GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "form", Task.DomainKeys[1]);
+			entry.Senses.Add(senseWeWantToEdit);
+			_lexEntryRepository.SaveItem(entry);
+
+			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
+			{
+				Vernacular = entry.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
+				Meaning = senseWeWantToEdit.Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+			});
+			Assert.That(!entry.Senses.Contains(senseWeWantToEdit), Is.False);
+		}
+
 		/// <summary>
 		///
 		/// </summary>

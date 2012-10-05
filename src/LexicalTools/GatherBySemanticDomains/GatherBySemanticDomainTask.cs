@@ -394,8 +394,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 												  Vernacular = form
 											  };
 						var firstSenseMatchingCurrentDomain =
-							entry.Senses.FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).
-									Contains(CurrentDomainKey));
+							entry.Senses.
+									Where(s=>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4) != null).
+										FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey));
 						if(firstSenseMatchingCurrentDomain != null)
 						{
 							wordDisplay.Meaning = firstSenseMatchingCurrentDomain.Definition.GetBestAlternative(new[] {DefinitionWritingSystem.Id});
@@ -643,7 +644,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				else
 				{
 					var firstSenseMatchingSemDomAndMeaning =
-						entry.Senses.FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey)
+						entry.Senses.
+							Where(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4) != null).
+								FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey)
 														&& s.Definition.GetBestAlternative(new[]{DefinitionWritingSystem.Id}) == wordDisplay.Meaning);
 					if (firstSenseMatchingSemDomAndMeaning != null)
 					{
