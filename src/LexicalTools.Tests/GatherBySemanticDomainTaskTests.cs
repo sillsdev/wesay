@@ -789,12 +789,16 @@ namespace WeSay.LexicalTools.Tests
 			preexistingEntry.Senses[0].ExampleSentences.Add(example1);
 
 			var entryWithMistake = MakeEntryWithMeaning("peixe1");
-
 			var lexExampleSentence = new LexExampleSentence();
 			lexExampleSentence.Sentence.SetAlternative(_vernacularWritingSystemId, "example2");
 			entryWithMistake.Senses[0].ExampleSentences.Add(lexExampleSentence);
 			var originalCount = AddEntry(entryWithMistake);
-			Task.PrepareToMoveWordToEditArea("peixe1");
+
+			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
+												 {
+													 Vernacular = entryWithMistake.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
+													 Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+												 });
 			Assert.AreEqual(originalCount-1, _lexEntryRepository.CountAllItems(),"expected it to be removed from the lexicon");
 			var modifiedEntries = Task.AddWord("peixe2", "the meaning");
 			Assert.AreEqual(1, modifiedEntries.Count);
@@ -818,12 +822,16 @@ namespace WeSay.LexicalTools.Tests
 			preexistingEntry.Senses[0].ExampleSentences.Add(example1);
 
 			var entryWithMistake = MakeEntryWithMeaning("peixe1");
-
 			var lexExampleSentence = new LexExampleSentence();
 			lexExampleSentence.Sentence.SetAlternative(_vernacularWritingSystemId, "example2");
 			entryWithMistake.Senses[0].ExampleSentences.Add(lexExampleSentence);
 			var originalCount = AddEntry(entryWithMistake);
-			Task.PrepareToMoveWordToEditArea("peixe1");
+
+			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
+												{
+													Vernacular = entryWithMistake.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
+													Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+												});
 			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems(), "expected it to be removed from the lexicon");
 			var modifiedEntries = Task.AddWord("peixe2", "the meaning2");
 			Assert.AreEqual(1, modifiedEntries.Count);
