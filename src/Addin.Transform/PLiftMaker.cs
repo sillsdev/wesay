@@ -28,6 +28,8 @@ namespace Addin.Transform
 		{
 			using (var exporter = new PLiftExporter(outputPath, lexEntryRepository, template))
 			{
+				exporter.ExportOptions = Options;
+
 				ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);
 				foreach (RecordToken<LexEntry> token in recordTokens)
@@ -43,6 +45,8 @@ namespace Addin.Transform
 				exporter.End();
 			}
 		}
+
+		public PLiftExporter.Options Options = PLiftExporter.DefaultOptions;
 
 		public static Stream GetXsltStream(string xsltName)
 		{

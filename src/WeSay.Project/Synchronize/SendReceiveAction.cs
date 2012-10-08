@@ -49,7 +49,7 @@ namespace WeSay.Project.Synchronize
 			{
 				return
 					StringCatalog.Get(
-						"~Sends your changes to USB flashd drive, server, or other users, and receives the changes made by other members of your team.",
+						"~Sends your changes to a USB flash drive, server, or other users, and receives the changes made by other members of your team.",
 						"description of send/receive action");
 			}
 		}

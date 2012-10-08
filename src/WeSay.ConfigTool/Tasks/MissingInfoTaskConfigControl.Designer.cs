@@ -79,7 +79,7 @@
 			this._matchWhenEmptyLabel.Size = new System.Drawing.Size(206, 42);
 			this._matchWhenEmptyLabel.TabIndex = 31;
 			this._matchWhenEmptyLabel.TabStop = false;
-			this._matchWhenEmptyLabel.Text = "Select items where any of the following writing systems are empty:";
+			this._matchWhenEmptyLabel.Text = "Select items where any of the following input systems are empty:";
 			//
 			// _requiredToBeFilledInLabel
 			//
@@ -92,7 +92,7 @@
 			this._requiredToBeFilledInLabel.Size = new System.Drawing.Size(206, 40);
 			this._requiredToBeFilledInLabel.TabIndex = 32;
 			this._requiredToBeFilledInLabel.TabStop = false;
-			this._requiredToBeFilledInLabel.Text = "And where at least one of the following writing systems is already filled in:";
+			this._requiredToBeFilledInLabel.Text = "And where at least one of the following input systems is already filled in:";
 			//
 			// _showExampleLabel
 			//

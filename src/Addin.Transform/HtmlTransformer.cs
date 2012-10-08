@@ -98,7 +98,7 @@ namespace Addin.Transform
 				File.Delete(pathToOutput);
 			}
 
-			var htmWriter = new FLExCompatibleXhtmlWriter(linkToUserCss);
+			var htmWriter = new FLExCompatibleXhtmlWriter(linkToUserCss, ((WeSay.Project.WeSayWordsProject) projectInfo.Project).DefaultViewTemplate);
 
 			SetupLetterGroups(projectInfo, htmWriter);
 

@@ -41,12 +41,12 @@ namespace WeSay.Project.Tests
 
 			private static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
 			{
-				throw new ApplicationException("Unexpected Writing System load problem during test.");
+				throw new ApplicationException("Unexpected input system load problem during test.");
 			}
 
 			private static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
 			{
-				throw new ApplicationException("Unexpected Writing System migration during test.");
+				throw new ApplicationException("Unexpected input system migration during test.");
 			}
 
 			private string WritingSystemsPath

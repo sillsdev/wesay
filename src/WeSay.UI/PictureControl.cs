@@ -47,7 +47,7 @@ namespace WeSay.UI
 
 			if (string.IsNullOrEmpty(_relativePathToImage))
 			{
-				_imageToolboxLink.Visible = ArtOfReadingImageCollection.IsAvailable();
+				_imageToolboxLink.Visible = true;
 				_pictureBox.Visible = false;
 				_problemLabel.Visible = false;
 				Height = _imageToolboxLink.Bottom + 5;
@@ -217,7 +217,7 @@ namespace WeSay.UI
 				//if we couldn't load it (like if it's missing), best to carry on and let them pick a new one
 			}
 
-			using(var dlg = new Palaso.UI.WindowsForms.ImageToolbox.ImageToolboxDialog(currentImage, searchString))
+			using(var dlg = new Palaso.UI.WindowsForms.ImageToolbox.ImageToolboxDialog(currentImage ?? new PalasoImage(), searchString))
 			{
 				if(DialogResult.OK == dlg.ShowDialog(this.ParentForm))
 				{

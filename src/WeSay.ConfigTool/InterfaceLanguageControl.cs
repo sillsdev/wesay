@@ -83,7 +83,7 @@ namespace WeSay.ConfigTool
 					}
 					else
 					{
-						m = Regex.Match(contents, @"Language-Team: ([^\(\\]+) [\(<]");
+						m = Regex.Match(contents, @"Language-Team: (.+) (\(http|<)");
 						if (m.Success)
 						{
 							LanguageName = m.Groups[1].Value.Trim();

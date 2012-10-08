@@ -16,9 +16,8 @@ namespace WeSay.LexicalTools.AddPictures
 	public class AddPicturesTask : TaskBase
 	{
 		private readonly AddPicturesConfig _config;
-		private readonly IFileLocator _fileLocator;
 		private Control _view;
-		private ArtOfReadingImageCollection _imageCollection;
+		private IImageCollection _imageCollection;
 
 		public AddPicturesTask( AddPicturesConfig config,
 									LexEntryRepository lexEntryRepository,
@@ -27,23 +26,16 @@ namespace WeSay.LexicalTools.AddPictures
 			: base(config, lexEntryRepository, taskMemoryRepository)
 		{
 			_config = config;
-			_fileLocator = fileLocator;
 		}
 
 		public override void Activate()
 		{
 			base.Activate();
-			_imageCollection = new ArtOfReadingImageCollection();
-			var path = _fileLocator.LocateFile("artofreadingindexv3_en.txt");
-			if(string.IsNullOrEmpty(path) || !File.Exists(path))
+			_imageCollection = ArtOfReadingImageCollection.FromStandardLocations();
+			if(_imageCollection == null)
 			{
-				//NonFatalErrorDialog.Show(string.Format("Could not locate image index at {0}'",path));
 				throw new ConfigurationException("Could not locate image index.");
 			}
-			_imageCollection.LoadIndex(path);
-
-
-
 		}
 
 

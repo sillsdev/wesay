@@ -22,7 +22,7 @@ namespace Addin.Transform.PdfDictionary
 	{
 		public override string LocalizedName
 		{
-			get { return StringCatalog.Get("~Make Pdf Dictionary"); }
+			get { return StringCatalog.Get("~Make Simple Pdf Dictionary"); }
 		}
 
 		public override string ID
@@ -62,7 +62,7 @@ namespace Addin.Transform.PdfDictionary
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			if (!PrinceXmlWrapper.IsPrinceInstalled)
+			if (!Available)
 				throw new ConfigurationException(
 					"WeSay could not find PrinceXml.  Make sure you've installed it (get it from princexml.com).");
 
@@ -96,7 +96,11 @@ namespace Addin.Transform.PdfDictionary
 
 			progressState.StatusLabel = "Converting dictionary to XHTML...";
 
-			string htmlPath = CreateFileToOpen(projectInfo, false);
+			//  not including because historyically we had trouble nailing down precedence, and we add these explicitly to prince.
+			//  Prince has gone through several versions now, so we *could* try turning the links back on and see if the problem is gone.
+			bool includeCSSLinks = false;
+
+			string htmlPath = CreateFileToOpen(projectInfo, includeCSSLinks);
 
 			if (string.IsNullOrEmpty(htmlPath))
 			{
@@ -110,7 +114,9 @@ namespace Addin.Transform.PdfDictionary
 				var stylesheetPaths = new List<string>();
 
 				var autoLayout = Path.Combine(projectInfo.PathToExportDirectory, "autoLayout.css");
-				var factoryLayout = projectInfo.LocateFile(Path.Combine("Templates", "defaultDictionary.css"));
+
+				var factoryLayout = projectInfo.LocateFile(Path.Combine("templates", "defaultDictionary.css"));
+				//NB: when running on dev machine, this is actually going to get this out of output, not templates, so you have to restart wesay to see changes.
 				File.Copy(factoryLayout, autoLayout, true);
 
 				var autoFonts = Path.Combine(projectInfo.PathToExportDirectory, "autoFonts.css");
@@ -147,12 +153,15 @@ namespace Addin.Transform.PdfDictionary
 
 				PrinceXmlWrapper.CreatePdf(htmlPath, stylesheetPaths, pdfPath);
 
-				progressState.StatusLabel = "Opening PDF...";
-				Process.Start(pdfPath);
+				if (_launchAfterTransform)
+				{
+					progressState.StatusLabel = "Opening PDF...";
+					Process.Start(pdfPath);
+				}
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem(error.Message);
+				ErrorReport.NotifyUserOfProblem(error, "There was a problem creating the PDF.");
 			}
 		}
 

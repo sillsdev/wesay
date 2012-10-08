@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -68,7 +68,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			if( _vernacularBox.WritingSystemsForThisField.Count ==0 ||  _vernacularBox.TextBoxes.Count == 0)
 			{
-				Palaso.Reporting.ErrorReport.ReportFatalMessageWithStackTrace(String.Format("This task cannot be used with the audio/voice writing system '{0}'. Please use the config tool to specify a non-audio writing system for this task.", _presentationModel.FormWritingSystem.Abbreviation));
+				Palaso.Reporting.ErrorReport.ReportFatalMessageWithStackTrace(String.Format("This task cannot be used with the audio/voice input system '{0}'. Please use the config tool to specify a non-audio input system for this task.", _presentationModel.FormWritingSystem.Abbreviation));
 			}
 
 			//bit of a hack here... we make our own meaning box as a less intrusive way to add spell checking to
@@ -105,6 +105,8 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		   _flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 
 			_flyingLabel.Finished += _animator_Finished;
+
+			_domainListComboBox.Font = _presentationModel.GetFontOfSemanticDomainField();
 
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made

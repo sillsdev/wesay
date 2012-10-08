@@ -79,7 +79,8 @@ namespace Addin.Transform.Tests
 		public void CanSwapLinesWithinRecord()
 		{
 			string result = LaunchWithConversionString(@"(\\ge.*?\n)(.*\n)*?(\\dt.*?\n) $3$2$1");
-			Assert.IsTrue(result.Contains("\\dt 11/Feb/2008" + Environment.NewLine + "\\sd 1.1" + Environment.NewLine + "\\ge hello" + Environment.NewLine));
+			Assert.IsTrue(result.IndexOf("\\dt") < result.IndexOf("\\sd"));
+			Assert.IsTrue(result.IndexOf("\\sd") < result.IndexOf("\\ge"));
 		}
 
 		/// <summary>

@@ -120,7 +120,7 @@ namespace Addin.Transform.LexiquePro
 				using (var dlg = new LameProgressDialog("Exporting to PLift..."))
 				{
 					dlg.Show();
-					var maker = new PLiftMaker();
+					var maker = new PLiftMaker() {Options = PLiftExporter.DefaultOptions | PLiftExporter.Options.ExportPartOfSpeechAsGrammaticalInfoElement};
 					maker.MakePLiftTempFile(pliftPath, lexEntryRepository,
 														projectInfo.ServiceProvider.GetService(typeof (ViewTemplate)) as
 														ViewTemplate,

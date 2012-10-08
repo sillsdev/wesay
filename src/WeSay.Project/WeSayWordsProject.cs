@@ -23,6 +23,7 @@ using Palaso.IO;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Lift.Validation;
+using Palaso.Progress;
 using Palaso.Progress.LogBox;
 using Palaso.Reporting;
 using Palaso.Text;
@@ -300,32 +301,14 @@ namespace WeSay.Project
 
 			if (!File.Exists(PathToConfigFile))
 			{
-				var liftWithSameNameAsFolder = Path.Combine(projectDirectoryPath,
-															Path.GetFileName(projectDirectoryPath) + ".lift");
-
-				string projectName;
-
-				if(File.Exists(liftWithSameNameAsFolder))
+				string preferredLiftFile = GetPathToLiftFileGivenProjectDirectory(projectDirectoryPath);
+				if (String.IsNullOrEmpty(preferredLiftFile))
 				{
-					PathToLiftFile = liftWithSameNameAsFolder;
-					projectName = Path.GetFileName(projectDirectoryPath);
+					return;
 				}
-				else
-				{
-					var liftPaths = Directory.GetFiles(projectDirectoryPath, "*.lift");
-					if(liftPaths.Length==0)
-					{
-						ErrorReport.NotifyUserOfProblem("Could not find a LIFT file to us in " + projectDirectoryPath);
-						return;
-					}
-					if (liftPaths.Length > 1)
-					{
-						ErrorReport.NotifyUserOfProblem("Expected only on LIFT file in {0}, but there were {1}. Remove all but one and try again.", projectDirectoryPath, liftPaths.Length);
-						return;
-					}
-					PathToLiftFile = liftPaths[0];
-					projectName = Path.GetFileName(Path.GetFileNameWithoutExtension(liftPaths[0]));
-				}
+				PathToLiftFile = preferredLiftFile;
+				string projectName = Path.GetFileName(Path.GetFileNameWithoutExtension(preferredLiftFile));
+
 				CreateEmptyProjectFiles(projectDirectoryPath, projectName);
 				LoadFromProjectDirectoryPathInner(projectDirectoryPath);
 
@@ -375,7 +358,7 @@ namespace WeSay.Project
 		{
 			if (e != null && e.Error != null)
 			{
-				throw e.Error;
+				throw new ApplicationException("Error during migration.", e.Error);
 			}
 		}
 
@@ -386,8 +369,8 @@ namespace WeSay.Project
 
 		private static void MigrateProjectFilesAndCheckForOrphanedWritingSystems(string projectDirectory)
 		{
-			string liftFilePath = GetPathToLiftFileGivenProjectDirectory(projectDirectory);
-			string configFilePath = GetPathToConfigFile(projectDirectory, Path.GetFileNameWithoutExtension(liftFilePath));
+			string liftFilePath = GetPathToLiftFileGivenProjectDirectoryQuietly(projectDirectory);
+			string configFilePath = GetPathToConfigFile(projectDirectory, GetProjectNameFromLiftFilePath(liftFilePath));
 			string userConfigPath = PathToUserSpecificConfigFile(projectDirectory);
 
 			//migrate writing systems
@@ -424,6 +407,11 @@ namespace WeSay.Project
 			userConfigMigrator.MigrateIfNeeded();
 		}
 
+		private static string GetProjectNameFromLiftFilePath(string liftFilePath)
+		{
+			return String.IsNullOrEmpty(liftFilePath) ? "" : Path.GetFileNameWithoutExtension(liftFilePath);
+		}
+
 		[Serializable]
 	//    [ComVisible(true)]
 		public delegate object ServiceCreatorCallback(
@@ -450,9 +438,9 @@ namespace WeSay.Project
 			var builder = new ContainerBuilder();
 
 			builder.Register(new WordListCatalog()).SingletonScoped();
-
+#if !MONO
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
-
+#endif
 			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
 			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
 
@@ -463,21 +451,25 @@ namespace WeSay.Project
 			  {
 				  try
 				  {
+#if !MONO
 					  return c.Resolve<IProgressNotificationProvider>().Go
 						  <LiftDataMapper>(
 							  "Loading Dictionary",
 							  progressState =>
 								  {
+#endif
 									  var mapper =  new WeSayLiftDataMapper(
 										  _pathToLiftFile,
 										  GetSemanticDomainsList(),
 										  GetIdsOfSingleOptionFields(),
-										  progressState
+										  new ProgressState ()
 										  );
 
 									  return mapper;
+#if !MONO
 								  }
 						  );
+#endif
 				  }
 				  catch (LiftFormatException error)
 				  {
@@ -847,7 +839,11 @@ namespace WeSay.Project
 		public ProjectInfo GetProjectInfoForAddin()
 		{
 			return new ProjectInfo(Name,
+#if MONO
+								   ApplicationSharedDirectory,
+#else
 								   ApplicationRootDirectory,
+#endif
 								   ProjectDirectoryPath,
 								   PathToLiftFile,
 								   PathToExportDirectory,
@@ -959,8 +955,10 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return GetPathToConfigFile(PathToWeSaySpecificFilesDirectoryInProject,
-					Path.GetFileNameWithoutExtension(PathToLiftFile));
+				return GetPathToConfigFile(
+					PathToWeSaySpecificFilesDirectoryInProject,
+					GetProjectNameFromLiftFilePath(PathToLiftFile)
+				);
 			}
 		}
 
@@ -971,8 +969,7 @@ namespace WeSay.Project
 
 		private static string GetPathToConfigFile(string directoryInProject, string name)
 		{
-			return Path.Combine(directoryInProject,
-								name + ".WeSayConfig");
+			return String.IsNullOrEmpty(name) ? "" : Path.Combine(directoryInProject, name + ".WeSayConfig");
 		}
 
 		/// <summary>
@@ -999,7 +996,7 @@ namespace WeSay.Project
 
 		public override string Name
 		{
-			get { return Path.GetFileNameWithoutExtension(PathToLiftFile); }
+			get { return GetProjectNameFromLiftFilePath(PathToLiftFile); }
 		}
 
 		public string PathToLiftFile
@@ -1028,35 +1025,56 @@ namespace WeSay.Project
 			}
 		}
 
+		private static string GetPathToLiftFileGivenProjectDirectoryQuietly(string projectDirectoryPath)
+		{
+			return GetPathToLiftFileGivenProjectDirectory(projectDirectoryPath, false);
+		}
+
 		private static string GetPathToLiftFileGivenProjectDirectory(string projectDirectoryPath)
 		{
-			//first, we assume it's based on the name of the directory
-			var path = Path.Combine(projectDirectoryPath,
-										   Path.GetFileName(projectDirectoryPath) + ".lift");
+			return GetPathToLiftFileGivenProjectDirectory(projectDirectoryPath, true);
+		}
 
-			//if that doesn't give us one, then we find one which has a matching wesayconfig file
-			if (!File.Exists(path))
+		private static string GetPathToLiftFileGivenProjectDirectory(string projectDirectoryPath, bool canNotify)
+		{
+			string preferredLiftFile;
+			var liftPaths = Directory.GetFiles(projectDirectoryPath, "*.lift");
+			if (liftPaths.Length == 0)
 			{
-				foreach (var liftPath in Directory.GetFiles(projectDirectoryPath, "*.lift"))
+				if (canNotify)
 				{
-					if (File.Exists(liftPath.Replace(".lift", ".WeSayConfig")))
-					{
-						return liftPath;
-					}
+					ErrorReport.NotifyUserOfProblem("Could not find a LIFT file to us in " + projectDirectoryPath);
 				}
-#if mono    //try this too(probably not needed...)
-				//anyhow remember case is sensitive, and a simpe "tolower"
-				//doens't cut it because the exists will fail if it's the wrong case (WS-14982)
-				foreach (var liftPath in Directory.GetFiles(ProjectDirectoryPath, "*.Lift"))
-				{
-					if (File.Exists(liftPath.Replace(".Lift", ".WeSayConfig")))
-					{
-						return liftPath;
-					}
-				}
-#endif
+				return null;
 			}
-			return path;
+			if (liftPaths.Length == 1)
+			{
+				preferredLiftFile = liftPaths[0];
+			}
+			else
+			{
+				string parentDirectoryName = projectDirectoryPath.Split(new[] { Path.DirectorySeparatorChar }).LastOrDefault();
+				preferredLiftFile = liftPaths.FirstOrDefault(
+					fileName => String.Compare(
+						Path.GetFileNameWithoutExtension(fileName),
+						parentDirectoryName,
+						StringComparison.OrdinalIgnoreCase
+					) == 0
+				);
+				if (String.IsNullOrEmpty(preferredLiftFile))
+				{
+					if (canNotify)
+					{
+						ErrorReport.NotifyUserOfProblem(
+							"Expected only one LIFT file in {0}, but there were {1}. Remove all but one and try again.",
+							projectDirectoryPath,
+							liftPaths.Length
+						);
+					}
+					return null;
+				}
+			}
+			return preferredLiftFile;
 		}
 
 		public string PathToLiftBackupDir
@@ -1117,6 +1135,21 @@ namespace WeSay.Project
 		public string LocateOptionalFile(string fileName)
 		{
 			return GetFileLocator().LocateOptionalFile(fileName);
+		}
+
+		public string LocateDirectory(string directoryName)
+		{
+			return GetFileLocator().LocateDirectory(directoryName);
+		}
+
+		public string LocateDirectory(string directoryName, string descriptionForErrorMessage)
+		{
+			return GetFileLocator().LocateDirectory(directoryName, descriptionForErrorMessage);
+		}
+
+		public IFileLocator CloneAndCustomize(IEnumerable<string> addedSearchPaths)
+		{
+			throw new NotImplementedException(); // just wouldn't make sense, since this entire thing has the IFileLocator interface
 		}
 
 		/// <summary>
@@ -1288,6 +1321,15 @@ namespace WeSay.Project
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
 
+			//this adds a writing system to any enabled fields that don't have one
+			foreach (var field in ViewTemplates.SelectMany(x=>x.Fields))
+			{
+				if(field.Enabled && field.WritingSystemIds.Count == 0)
+				{
+					field.WritingSystemIds.Add(WritingSystems.AllWritingSystems.First().Id);
+				}
+			}
+
 			var pendingConfigFile = new TempFileForSafeWriting(Project.PathToConfigFile);
 
 			var writer = XmlWriter.Create(pendingConfigFile.TempFilePath, CanonicalXmlSettings.CreateXmlWriterSettings());
@@ -1337,14 +1379,27 @@ namespace WeSay.Project
 					}
 			}
 
-			//Now let's replace writing systems in OptionLists
-
+			//Now let's replace and delete writing systems in OptionLists
 			foreach (var kvp in _changedWritingSystemIds)
 			{
 				foreach (var filePath in Directory.GetFiles(ProjectDirectoryPath))
 				{
-					var helper = new WritingSystemsInOptionsListFileHelper(WritingSystems, filePath);
-					helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
+					try
+					{
+						var helper = new WritingSystemsInOptionsListFileHelper(WritingSystems, filePath);
+						if (String.IsNullOrEmpty(kvp.Value))
+						{
+							helper.DeleteWritingSystemId(kvp.Key);
+						}
+						else
+						{
+							helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
+						}
+					}
+					catch(IOException e)
+					{
+						ErrorReport.NotifyUserOfProblem(e.Message + " " + PathToLiftFile);
+					}
 				}
 			}
 
@@ -1352,7 +1407,14 @@ namespace WeSay.Project
 			pendingConfigFile.WriteWasSuccessful();
 
 			base.Save();
-			CommitWritingSystemIdChangesToLiftFile();
+			try
+			{
+				CommitWritingSystemIdChangesToLiftFile();
+			}
+			catch(IOException e)
+			{
+				ErrorReport.NotifyUserOfProblem(e.Message + " " + PathToLiftFile);
+			}
 
 			SaveUserSpecificConfiguration();
 			BackupNow();
@@ -1519,7 +1581,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
+				ErrorReport.NotifyUserOfProblem("Another program has WeSay's dictionary file open, so we cannot make the input system change.  Make sure WeSay isn't running.");
 				return false;
 			}
 
@@ -1557,17 +1619,20 @@ namespace WeSay.Project
 				 });
 		}
 
-		private void MakeWritingSystemIdChangeInLiftFile(string oldId, string newId)
-		{
-			var helper = new WritingSystemsInLiftFileHelper(WritingSystems, PathToLiftFile);
-			helper.ReplaceWritingSystemId(oldId, newId);
-		}
-
 		private void CommitWritingSystemIdChangesToLiftFile()
 		{
+			var helper = new WritingSystemsInLiftFileHelper(WritingSystems, PathToLiftFile);
 			foreach (var kvp in _changedWritingSystemIds)
 			{
-				MakeWritingSystemIdChangeInLiftFile(kvp.Key, kvp.Value);
+				if (String.IsNullOrEmpty(kvp.Value))
+				{
+					helper.DeleteWritingSystemId(kvp.Key);
+				}
+				else
+				{
+					helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
+				}
+
 			}
 		}
 
@@ -1596,44 +1661,84 @@ namespace WeSay.Project
 				StringPair p = new StringPair();
 				p.from = oldId;
 				p.to = newId;
-				WritingSystemChanged.Invoke(this, p);
+				WritingSystemChanged(this, p);
 			}
 		}
 
 		private void ChangeIdInLoadedOptionListIfNecassary(string oldId, string newId, OptionsList optionlist)
 		{
-			var abbreviationLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
-																	   option => option.Abbreviation.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
 
-			var nameLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
-															   option => option.Name.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+			var abbreviationMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Abbreviation));
+			var nameMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Name));
+			var descriptionMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Description));
 
-			var descriptionForms = new List<LanguageForm>(optionlist.Options.Select(
-															  option => option.Description.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+			var multiTextsToChange = abbreviationMultiText.Concat(nameMultiText).Concat(descriptionMultiText);
 
-			var formsToChange = abbreviationLanguageForms.Concat(nameLanguageForms).Concat(descriptionForms);
-
-			if(formsToChange.Count() > 0)
+			if (multiTextsToChange.Any())
 			{
 				MarkOptionListAsUpdated(optionlist);
 			}
 
-			foreach (var form in formsToChange)
+			foreach (var multiText in multiTextsToChange.Where(mt=>mt.ContainsAlternative(oldId)))
 			{
-				if (form != null)
+				var existingLanguageFormWithOldId = multiText.Find(oldId);
+				var existingLanguageFormWithNewId = multiText.Find(newId);
+
+				//If a non empty languageForm with the newId already exists, keep it around. Else delete it and change the writing system in the language form with the oldId
+				if(existingLanguageFormWithNewId == null)
 				{
-					form.WritingSystemId = newId;
+					existingLanguageFormWithOldId.WritingSystemId = newId;
+				}
+				else if(String.IsNullOrEmpty(existingLanguageFormWithNewId.Form))
+				{
+					multiText.RemoveLanguageForm(existingLanguageFormWithNewId);
+					existingLanguageFormWithOldId.WritingSystemId = newId;
+				}
+				else
+				{
+					multiText.RemoveLanguageForm(existingLanguageFormWithOldId);
 				}
 			}
 		}
 
 		public void DeleteWritingSystemId(string id)
 		{
+			_changedWritingSystemIds.Add(id, String.Empty); //adding it to the _changedWritingSystemIds makes sure that all the changes are made in the correct order
+
 			DefaultViewTemplate.DeleteWritingSystem(id);
 
 			if (WritingSystemDeleted != null)
 			{
 				WritingSystemDeleted(this, new WritingSystemDeletedEventArgs(id));
+			}
+
+			foreach (var optionsList in _optionLists.Values)
+			{
+				DeleteIdInLoadedOptionListsIfNecassary(id, optionsList);
+			}
+		}
+
+		private void DeleteIdInLoadedOptionListsIfNecassary(string id, OptionsList optionlist)
+		{
+
+			var abbreviationMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Abbreviation));
+			var nameMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Name));
+			var descriptionMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Description));
+
+			var multiTextsToChange = abbreviationMultiText.Concat(nameMultiText).Concat(descriptionMultiText);
+
+			if (multiTextsToChange.Any())
+			{
+				MarkOptionListAsUpdated(optionlist);
+			}
+
+			foreach (var multiText in multiTextsToChange.Where(mt => mt.ContainsAlternative(id)))
+			{
+				var languageFormWithId = multiText.Find(id);
+				if (languageFormWithId != null)
+				{
+					multiText.RemoveLanguageForm(languageFormWithId);
+				}
 			}
 		}
 
@@ -1642,27 +1747,27 @@ namespace WeSay.Project
 		/// </summary>
 		/// <param name="pathToLift"></param>
 		/// <returns>true if it displayed an error message</returns>
-		public static bool CheckLiftAndReportErrors(string pathToLift)
-		{
-			try
-			{
-				string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
-				if (!String.IsNullOrEmpty(errors))
-				{
-					ErrorReport.NotifyUserOfProblem(
-							"The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
-							pathToLift,
-							errors);
-					return true;
-				}
-			}
-			catch (Exception e)
-			{
-				ErrorReport.ReportNonFatalException(e);
-				return true;
-			}
-			return false;
-		}
+//        public static bool CheckLiftAndReportErrors(string pathToLift)
+//        {
+//            try
+//            {
+//                string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
+//                if (!String.IsNullOrEmpty(errors))
+//                {
+//                    ErrorReport.NotifyUserOfProblem(
+//                            "The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
+//                            pathToLift,
+//                            errors);
+//                    return true;
+//                }
+//            }
+//            catch (Exception e)
+//            {
+//                ErrorReport.ReportNonFatalException(e);
+//                return true;
+//            }
+//            return false;
+//        }
 
 		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)
 		{

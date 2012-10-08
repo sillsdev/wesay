@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Chorus.UI.Clone;
+using Palaso.Extensions;
 using Palaso.i18n;
 using Palaso.IO;
 using WeSay.ConfigTool.Properties;
@@ -157,8 +158,9 @@ namespace WeSay.ConfigTool
 
 		private static bool GetLooksLikeLiftChorusFolder(string directoryPath)
 		{
-			return Directory.GetFiles(directoryPath, "*.lift").Length > 0 &&
-				Directory.Exists(Path.Combine(directoryPath,".hg"));
+			var hgDataFolder = directoryPath.CombineForPath(".hg", "store", "data");
+			return Directory.Exists(hgDataFolder)
+				&& Directory.GetFiles(hgDataFolder, "*.lift.i").Length > 0;
 		}
 
 		private void AddOpenProjectChoices(TableLayoutPanel panel)

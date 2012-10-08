@@ -5,6 +5,9 @@
 			<Component Id="defaultDictionary.css" Guid="DBB95230-0FBA-4245-8DC3-819BC0CAE285">
 				<File Id="defaultDictionary.css" Name="defaultDictionary.css" KeyPath="yes" Source="..\..\templates\defaultDictionary.css" />
 			</Component>
+			<Component Id="defaultDictionary.css.orig" Guid="83AE8616-BFA8-4D47-A9BB-782ECCFB87D9">
+				<File Id="defaultDictionary.css.orig" Name="defaultDictionary.css.orig" Source="..\..\templates\defaultDictionary.css.orig" />
+			</Component>
 			<Directory Id="TemplatesDir.odfTemplate" Name="odfTemplate">
 				<Component Id="meta.xml" Guid="7DF25C27-062B-4A31-B0E1-7BC152D4456B">
 					<File Id="meta.xml" Name="meta.xml" KeyPath="yes" Source="..\..\templates\odfTemplate\meta.xml" />
@@ -24,6 +27,7 @@
 		</DirectoryRef>
 		<ComponentGroup Id="templates">
 			<ComponentRef Id="defaultDictionary.css" />
+			<ComponentRef Id="defaultDictionary.css.orig" />
 			<ComponentRef Id="meta.xml" />
 			<ComponentRef Id="mimetype" />
 			<ComponentRef Id="settings.xml" />

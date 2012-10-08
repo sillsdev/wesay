@@ -57,8 +57,10 @@ namespace WeSay.Project
 			base.Dispose(disposing);
 		}
 
-		private Options _options = Options.DereferenceRelations | Options.DereferenceOptions |
+		public const Options DefaultOptions = Options.DereferenceRelations | Options.DereferenceOptions |
 								   Options.DetermineHeadword;
+
+		private Options _options = DefaultOptions;
 
 
 
@@ -68,7 +70,8 @@ namespace WeSay.Project
 			NormalLift = 0,
 			DereferenceRelations = 1,
 			DereferenceOptions = 2,
-			DetermineHeadword = 4
+			DetermineHeadword = 4,
+			ExportPartOfSpeechAsGrammaticalInfoElement = 8 //this just means export it as normal lift, rather than making it look like a custom fied.
 		} ;
 
 		/// <summary>
@@ -123,9 +126,7 @@ namespace WeSay.Project
 			}
 		}
 
-		/// <summary>
-		/// nb: this is used both for the headword of an article, but also for the target of a relation.
-		/// </summary>
+
 		private void WriteHeadWordField(LexEntry entry, string outputFieldName)
 		{
 			//                headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
@@ -154,7 +155,7 @@ namespace WeSay.Project
 				{
 					var textWritingSystems = _viewTemplate.WritingSystems.TextWritingSystems;
 					var ids = from ws in textWritingSystems select ws.Id;
-					WriteLanguageFormsInWrapper(text.Forms.Where(f=>ids.Contains(f.WritingSystemId) ), "form", true);
+					WriteLanguageFormsInWrapper(text.Forms.Where(f => ids.Contains(f.WritingSystemId)), "form", true);
 				}
 
 				Writer.WriteEndElement();
@@ -204,19 +205,37 @@ namespace WeSay.Project
 			LexEntry target = _lexEntryRepository.GetLexEntryWithMatchingId(key);
 			if (target != null)
 			{
-				WriteHeadWordField(target, "headword-of-target");
+				WriteHeadWordFieldForRelation(target, "headword-of-target");
 			}
 		}
+		private void WriteHeadWordFieldForRelation(LexEntry entry, string outputFieldName)
+		{
+			//                headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
+
+			var headword = new MultiText();
+			foreach (string writingSystemId in _headwordWritingSystemIds)
+			{
+				var headWordForm = entry.GetHeadWordForm(writingSystemId);
+				if(!string.IsNullOrEmpty(headWordForm))
+				{
+					headword.SetAlternative(writingSystemId, headWordForm);
+					break;//we only want the first non-empty one
+				}
+			}
+			WriteMultiTextAsArtificialField(outputFieldName, headword);
+		}
+
 		protected override string GetOutputRelationName(LexRelation relation)
 		{
-			var s= relation.FieldId.Replace("confer", "cf");//hack. Other names are left as-is.
-			s = s.Replace("BaseForm", "see");//hack... not sure what we want here
+			//Enhance: add "printed-dictionary-label" to fielddefns, so that people have control over this from wesay config.
+			var s= relation.FieldId.Replace("confer", "see");
+			s = s.Replace("BaseForm", "from");
 			return s;
 		}
 
 		protected override void WritePosCore(OptionRef pos)
 		{
-			if (0 != (_options & Options.DereferenceOptions))
+			if ((0 == (_options & Options.ExportPartOfSpeechAsGrammaticalInfoElement)) && (0 != (_options & Options.DereferenceOptions)))
 			{
 				WriteDisplayNameFieldForOption(pos, LexSense.WellKnownProperties.PartOfSpeech);
 			}
@@ -299,6 +318,8 @@ namespace WeSay.Project
 			//base.WriteIllustrationElement(pictureRef);
 
 			string url = pictureRef.Value;
+			if (url == null) // Fixes WS-34480 PLIFT-exporting actions don't work after going in Browse & Edit if image is missing
+				return;
 			if (_path != null)  //it's null during some tests
 			{
 				var dirWeAreWritingTo = Path.GetDirectoryName(_path);

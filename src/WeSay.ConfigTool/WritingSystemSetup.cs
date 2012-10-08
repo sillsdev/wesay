@@ -28,10 +28,28 @@ namespace WeSay.ConfigTool
 							LeftColumnWidth = 350,
 							Dock = DockStyle.Fill
 						};
-			writingSystemSetupModel.BeforeDeleted += OnBeforeDeleted;
+			writingSystemSetupModel.AskIfOkToConflateWritingSystems += OnAskIfOkToConflateWritingSystems;
+			writingSystemSetupModel.AskIfOkToDeleteWritingSystems += OnAskIfOkToDeleteWritingSystems;
+			_view.UserWantsHelpWithDeletingWritingSystems += OnUserWantsHelpWithDeletingWritingSystems;
 			store.WritingSystemDeleted += OnWritingSystemDeleted;
+			store.WritingSystemConflated += OnWritingSystemConflated;
 			Controls.Add(_view);
 			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
+		}
+
+		private void OnUserWantsHelpWithDeletingWritingSystems(object sender, EventArgs e)
+		{
+			Program.ShowHelpTopic("/WeSay_Configuration_Tool/Input_Systems/Delete_or_merge_an_input_system.htm");
+		}
+
+		private void OnAskIfOkToDeleteWritingSystems(object sender, AskIfOkToDeleteEventArgs args)
+		{
+			args.CanDelete = true;  //WeSay always lets people delete.
+		}
+
+		private void OnWritingSystemConflated(object sender, WritingSystemConflatedEventArgs e)
+		{
+			WeSayWordsProject.Project.MakeWritingSystemIdChange(e.OldId, e.NewId);
 		}
 
 		private void OnEditorSaveNow(object sender, EventArgs e)
@@ -68,20 +86,25 @@ namespace WeSay.ConfigTool
 
 		}
 
-		private static void OnBeforeDeleted(object sender, BeforeDeletedEventArgs args)
+		private static void OnAskIfDataExistsInWritingSystemToBeDeleted(object sender, AskIfDataExistsInWritingSystemToBeDeletedEventArgs args)
 		{
-			args.CanDelete = !WeSayWordsProject.Project.IsWritingSystemUsedInLiftFile(args.WritingSystemId);
+			args.ProjectContainsDataInWritingSystemToBeDeleted = WeSayWordsProject.Project.IsWritingSystemUsedInLiftFile(args.WritingSystemId);
 			args.ErrorMessage = "It's in use in the LIFT file.";
+		}
+
+		private void OnAskIfOkToConflateWritingSystems(object sender, AskIfOkToConflateEventArgs args)
+		{
+			args.CanConflate = true; //WeSay always lets people conflate.
 		}
 
 		private static void OnWritingSystemDeleted(object sender, WritingSystemDeletedEventArgs args)
 		{
-			Project.WeSayWordsProject.Project.DeleteWritingSystemId(args.Id);
+			WeSayWordsProject.Project.DeleteWritingSystemId(args.Id);
 		}
 
 		private static void OnWritingSystemIdChanged(object sender, WritingSystemIdChangedEventArgs e)
 		{
-			Project.WeSayWordsProject.Project.MakeWritingSystemIdChange(e.OldId, e.NewId);
+			WeSayWordsProject.Project.MakeWritingSystemIdChange(e.OldId, e.NewId);
 		}
 	}
 }

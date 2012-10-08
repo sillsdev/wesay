@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Linq;
 using Palaso.Xml;
+using WeSay.Project;
 
 namespace Addin.Transform.PdfDictionary
 {
@@ -18,14 +19,16 @@ namespace Addin.Transform.PdfDictionary
 		/// </summary>
 		private string _currentLetterGroup = string.Empty;
 		private bool _linkToUserCss;
+		private readonly ViewTemplate _viewTemplate;
 
-		public FLExCompatibleXhtmlWriter():this(false)
+		public FLExCompatibleXhtmlWriter():this(false, new ViewTemplate())
 		{
 		}
 
-		public FLExCompatibleXhtmlWriter(bool linkToUserCss)
+		public FLExCompatibleXhtmlWriter(bool linkToUserCss, ViewTemplate viewTemplate)
 		{
 			_linkToUserCss = linkToUserCss;
+			_viewTemplate = viewTemplate;
 			Grouper = new MultigraphParser(new string[]{} );//property needs to be set by the client to get anything interesting
 		}
 
@@ -36,16 +39,24 @@ namespace Addin.Transform.PdfDictionary
 			using (_writer = XmlWriter.Create(textWriter, CanonicalXmlSettings.CreateXmlWriterSettings()))
 			{
 				//  _writer.WriteProcessingInstruction("xml-stylesheet", @"type='text/css' href='dictionary.css");
+				_writer.WriteRaw("<!DOCTYPE HTML>");
 				_writer.WriteStartElement("html");
 				_writer.WriteStartElement("head");
-//  just removed because I'm having trouble nailing down precedence, and we add these explicitly to prince
-//  Note: If these ever come back that WriteRaw will not write chorus compliant formatting.  Use WriteNode instead. CP 2011-01
+				_writer.WriteStartElement("meta");
+				_writer.WriteAttributeString("charset", "UTF-8");
+//            	_writer.WriteAttributeString("http-equiv", "content-type");
+//				_writer.WriteAttributeString("content","text/html; charset=utf-8");
+				_writer.WriteEndElement();
+
+
+				//  Note: WriteRaw will not write chorus compliant formatting.  Use WriteNode instead. CP 2011-01
+				//jh: Cambell, exported stuff shouldn't be part of chorus send/receive.
 				if (_linkToUserCss)
 				{
-					_writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
 					_writer.WriteRaw("<LINK rel='stylesheet' href='autoLayout.css' type='text/css' />");
 					_writer.WriteRaw("<LINK rel='stylesheet' href='autoFonts.css' type='text/css' />");
 					_writer.WriteRaw("<LINK rel='stylesheet' href='customLayout.css' type='text/css' />");
+					_writer.WriteRaw("<LINK rel='stylesheet' href='customFonts.css' type='text/css' />");
 				}
 				_writer.WriteEndElement();
 				_writer.WriteStartElement("body");
@@ -116,6 +127,9 @@ namespace Addin.Transform.PdfDictionary
 		private void DoRelation(XPathNavigator relation)
 		{
 			XPathNavigator target=  relation.SelectSingleNode("field[@type='headword-of-target']");
+			if (target == null)
+				return;
+
 ////span[@class='crossrefs']/span[@class='crossref-targets' and count(span[@class='xitem']) == 2]");
 			//string rtype = relation.GetAttribute("type",string.Empty);
 			StartSpan("xitem");
@@ -226,35 +240,50 @@ namespace Addin.Transform.PdfDictionary
 
 		private void DoIllustration(XPathNavigator pictureNode, XPathNavigator headwordFieldNode)
 		{
-			var href = pictureNode.GetAttribute("href", string.Empty);
+
+				var href = pictureNode.GetAttribute("href", string.Empty);
 			var caption = pictureNode.GetAttribute("label", string.Empty);
 			StartSpan("pictureRight");
-
-
-			_writer.WriteStartElement("img");
-//            _writer.WriteAttributeString("src", string.Format("..{0}pictures{0}{1}", Path.DirectorySeparatorChar, href));
-			var picturePath = href;
-
-			//there was a version of lift where the "pictures" was explict, some where it isn't.
-			if(!picturePath.StartsWith("pictures"))
+			try
 			{
-				picturePath = Path.Combine("pictures", picturePath);
-			}
-			_writer.WriteAttributeString("src", string.Format("..{0}{1}", Path.DirectorySeparatorChar, picturePath));
-			_writer.WriteEndElement();
 
-			if (headwordFieldNode != null && !string.IsNullOrEmpty(headwordFieldNode.Value))
-			{
-				StartDiv("pictureCaption");
-				WriteSpan("pictureLabel", GetLang(headwordFieldNode), headwordFieldNode.Value);
-				EndDiv();
-			}
-			EndSpan();
+				_writer.WriteStartElement("img");
+				//            _writer.WriteAttributeString("src", string.Format("..{0}pictures{0}{1}", Path.DirectorySeparatorChar, href));
+				var picturePath = href;
 
-			if(!string.IsNullOrEmpty(caption))
-			{
-				WriteSpan("pictureCaption", "en"/*todo*/, caption);
+				//there was a version of lift where the "pictures" was explict, some where it isn't.
+				if (!picturePath.StartsWith("pictures"))
+				{
+					picturePath = Path.Combine("pictures", picturePath);
+				}
+				_writer.WriteAttributeString("src", string.Format("..{0}{1}", Path.DirectorySeparatorChar, picturePath));
+				_writer.WriteEndElement();
+
+
+				if (!string.IsNullOrEmpty(caption))
+				{
+					StartDiv("pictureCaption");
+					WriteSpan("pictureLabel", "en" /*todo*/, caption);
+					EndDiv();
+				}
+
+				else if (headwordFieldNode != null && !string.IsNullOrEmpty(headwordFieldNode.Value))
+				{
+					var form = headwordFieldNode.SelectSingleNode(".//text").Value;
+					var lang = headwordFieldNode.SelectSingleNode("form").GetAttribute("lang", "");
+					StartDiv("pictureCaption");
+					WriteSpan("pictureLabel", lang, form);
+					EndDiv();
+				}
+
 			}
+			catch (Exception)
+			{
+#if DEBUG
+				throw;
+#endif
+			}
+			finally { EndSpan(); }
 		}
 
 		private void DoExamples(XPathNavigator senseNav)
@@ -408,7 +437,29 @@ namespace Addin.Transform.PdfDictionary
 				case "grammatical-info":
 					DoGrammaticalInfo(entryNav);
 					break;
+
+				default:
+					DoCustomField(entryNav);
+					break;
 			}
+		}
+
+		private void DoCustomField(XPathNavigator fieldNav)
+		{
+			var type = fieldNav.GetAttribute("type", string.Empty);
+			XPathNodeIterator forms = fieldNav.SelectChildren("form", string.Empty);
+
+			if (!forms.MoveNext())
+				return;
+
+			var label = _viewTemplate.GetField(type).DisplayName; //enhance: give the user a way to choose the label, separately from the on-screen label
+			StartSpan("customFieldLabel", "en" /*we don't really know the label language*/, label);
+			EndSpan();
+
+			do
+			{
+				WriteSpan(type, GetLang(forms.Current), forms.Current.Value);
+			} while (forms.MoveNext());
 		}
 
 		private void DoHeadWord(XPathNavigator headwordFieldNav)

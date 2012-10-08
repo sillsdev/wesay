@@ -126,12 +126,13 @@ namespace WeSay.ConfigTool
 			SaveWritingSystemIdsForField(-1);
 		}
 
-		private void SaveWritingSystemIdsForField(int aboutToBeCheckedItemIndex)
+
+		private void SaveWritingSystemIdsForField(int indexOfItemWhichShouldBeConsideredChecked)
 		{
 			CurrentField.WritingSystemIds.Clear();
 			for (int i = 0;i < _writingSystemListBox.Items.Count;i++)
 			{
-				if (_writingSystemListBox.GetItemChecked(i) || i == aboutToBeCheckedItemIndex)
+				if (_writingSystemListBox.GetItemChecked(i) || i == indexOfItemWhichShouldBeConsideredChecked)
 				{
 					WritingSystemDefinition ws =
 							((WritingSystemListBoxAdaptor) _writingSystemListBox.Items[i]).
@@ -169,7 +170,7 @@ namespace WeSay.ConfigTool
 			_writingSystemListBox.Items.RemoveAt(index);
 			--index;
 			_writingSystemListBox.Items.Insert(index, item);
-			_writingSystemListBox.SetItemChecked(index, isChecked);
+			_writingSystemListBox.SetItemCheckedReally(index, isChecked);
 			_writingSystemListBox.SelectedIndex = index;
 			if (isChecked)
 			{
@@ -191,7 +192,7 @@ namespace WeSay.ConfigTool
 			_writingSystemListBox.Items.RemoveAt(index);
 			++index;
 			_writingSystemListBox.Items.Insert(index, item);
-			_writingSystemListBox.SetItemChecked(index, isChecked);
+			_writingSystemListBox.SetItemCheckedReally(index, isChecked);
 			_writingSystemListBox.SelectedIndex = index;
 			if (isChecked)
 			{
@@ -231,7 +232,7 @@ namespace WeSay.ConfigTool
 				int i =
 						_writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws,
 																						hasSpellCheckerInstalled));
-				_writingSystemListBox.SetItemChecked(i, true);
+				_writingSystemListBox.SetItemCheckedReally(i, true);
 			}
 			foreach (WritingSystemDefinition ws in BasilProject.Project.WritingSystems.AllWritingSystems)
 			{
@@ -242,7 +243,7 @@ namespace WeSay.ConfigTool
 					int i =
 							_writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws,
 																							hasSpellCheckerInstalled));
-					_writingSystemListBox.SetItemChecked(i, false);
+					_writingSystemListBox.SetItemCheckedReally(i, false);
 				}
 			}
 		}

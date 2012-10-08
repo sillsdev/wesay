@@ -298,11 +298,7 @@ namespace WeSay.LexicalTools.Tests
 			GoToLexicalEntryUseFind("Initial"); //go away
 			GoToLexicalEntryUseFind(form); //come back
 
-			KeyValuePair<string, object> item2 = new KeyValuePair<string, object>("test",
-																				  new LexRelation(
-																						  "b",
-																						  "bbb",
-																						  entry));
+			var item2 = new KeyValuePair<string, IPalasoDataObjectProperty>("test", new LexRelation("b","bbb",entry));
 			entry.Properties.Add(item2);
 
 			GetEditControl("*EntryLexicalForm").FocusOnFirstWsAlternative();
@@ -1143,6 +1139,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		[Category("NUnit Windows Forms")]
 		public void AddingNewWord_ClearsShowHiddenState()
 		{
 			AddInitialEntries();
@@ -1215,6 +1212,7 @@ namespace WeSay.LexicalTools.Tests
 
 		[Test]
 		[Category("NUnit Windows Forms")]
+		[Platform(Exclude="Unix")] // MouseController uses Win32.GetCursorPos so not portable
 		public void ClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_DeleteButtonStaysEnabled()
 		{
 			AddInitialEntries();
