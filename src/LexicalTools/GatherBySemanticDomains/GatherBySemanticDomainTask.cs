@@ -733,10 +733,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 						if (sense != null)
 						{
 							//now, can we merge this sense in?
-
-							if (
-								!SenseMerger.TryMergeSenseWithSomeExistingSense(sense, lexSense,
-																				new NullProgress()))
+							if (!SenseMerger.TryMergeSenseWithSomeExistingSense(sense, lexSense, new string[]{}, new NullProgress()))
 							{
 								//ah well, they'll have to hand-merge at some point
 								//Enhance: add a chorus note
@@ -753,8 +750,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				else
 				{
 					//is there a sense with a matching gloss?
-					sense = entry.Senses.FirstOrDefault(
-						s => s.Definition.ContainsEqualForm(meaning, DefinitionWritingSystem.Id));
+					sense = entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(meaning, DefinitionWritingSystem.Id));
 				}
 			}
 			if(sense==null)
