@@ -460,35 +460,34 @@ namespace WeSay.App
 		private class CommandLineArguments
 		{
 			[DefaultArgument(ArgumentTypes.AtMostOnce,
-					// DefaultValue = @"..\..\SampleProjects\Thai\WeSay\thai5000.words",
-					HelpText =
-							"Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\")."
-					)]
+								HelpText ="Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\").")]
 			public string liftPath;
 
-			//            [Argument(ArgumentTypes.AtMostOnce,
-			//                HelpText = "Language to show the user interface in.",
-			//                LongName = "ui",
-			//                ShortName = "")]
-			//            public string ui = null;
+			//[Argument(ArgumentTypes.AtMostOnce,  HelpText = "Language to show the user interface in.", LongName = "ui", ShortName = "")]
+			//public string ui = null;
 
 			[Argument(ArgumentTypes.AtMostOnce,
-					HelpText =
-							"Start without a user interface (will have no effect if WeSay is already running with a UI."
-					, LongName = "server", DefaultValue = false, ShortName = "")]
+						HelpText = "Start without a user interface (will have no effect if WeSay is already running with a UI.",
+						LongName = "server",
+						DefaultValue = false, ShortName = "")]
 			public bool startInServerMode;
 
 			[Argument(ArgumentTypes.AtMostOnce,
-			HelpText =
-					"Some things, like backup, just gum up automated tests.  This is used to turn them off."
-			, LongName = "launchedByUnitTest", DefaultValue = false, ShortName = "")]
+						HelpText ="Some things, like backup, just gum up automated tests.  This is used to turn them off.",
+						LongName = "launchedByUnitTest",
+						DefaultValue = false,
+						ShortName = "")]
 			public bool launchedByUnitTest;
 
 			[Argument(ArgumentTypes.AtMostOnce,
-	HelpText =
-			"Make it easy to get back to the configuration tool."
-	, LongName = "launchedByConfigTool", DefaultValue = false, ShortName = "")]
+						HelpText = "Make it easy to get back to the configuration tool.",
+						LongName = "launchedByConfigTool", DefaultValue = false, ShortName = "")]
 			public bool launchedByConfigTool;
+
+			[Argument(ArgumentTypes.AtMostOnce,
+						HelpText = "Enable use of the help editor by pressing Ctrl+F1",
+						LongName = "helpbuilder", DefaultValue = false, ShortName = "")]
+			public bool helpbuilder;
 		}
 
 		private static void ShowCommandLineError(string e)

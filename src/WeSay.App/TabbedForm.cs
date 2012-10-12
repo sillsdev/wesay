@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Chorus.UI.Review;
@@ -29,6 +30,13 @@ namespace WeSay.App
 			NavigateToRecordEvent navigateToRecordEventToSubscribeTo)
 		{
 			InitializeComponent();
+			if (_helpProvider.FoundHelpMapping && !File.Exists(_helpProvider.HelpFilePath))
+			{
+				ErrorReport.ReportNonFatalException(new FileNotFoundException(String.Format(
+					"WeSay could not find the help file at {0}. " +
+					"This is not a critical error and you will be able to continue working; but please do take a moment and let the developers know about this problem.",
+					_helpProvider.HelpFilePath)));
+			}
 			tabControl1.TabPages.Clear();
 			tabControl1.Selected += OnTabSelected;
 
@@ -390,10 +398,7 @@ namespace WeSay.App
 
 		private void OnKeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.KeyCode == Keys.F1)
-			{
-				WeSayApp.ShowHelpTopic("");
-			}
+			//if (e.KeyCode == Keys.F1) //help is now handled by the HelpProvider
 
 		}
 	}
