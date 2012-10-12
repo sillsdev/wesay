@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<XmlHelp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HelpFile="WeSay_Helps.chm" xmlns="http://vulcan.edu.pl/HelpDescription">
+  <Control Name="WeSay.ConfigTool.ConfigurationWindow" HelpKeyword="WeSay_Configuration_Tool\WeSay_Configuration_Tool_overview.htm" HelpNavigator="Topic" ShowHelp="true">
+	<Control Name="SettingsControl" HelpNavigator="Topic" ShowHelp="true">
+	  <Control Name="_areaPanel" HelpKeyword="WeSay_Configuration_Tool\Fields\Fields_overview.htm" HelpNavigator="Topic" ShowHelp="true">
+		<Control Name="TaskListView" HelpKeyword="WeSay_Configuration_Tool\Tasks\Tasks_overview.htm" HelpNavigator="Topic" ShowHelp="true">
+		  <Control Name="splitContainer1" HelpNavigator="Find" ShowHelp="false">
+			<Control Name="" HelpNavigator="Topic" ShowHelp="true">
+			  <Control Name="DefaultTaskConfigurationControl" HelpNavigator="Topic" ShowHelp="true">
+				<Control Name="_description" HelpNavigator="TableOfContents" ShowHelp="false" />
+			  </Control>
+			  <Control Name="_taskList" HelpKeyword="WeSay_Configuration_Tool\Tasks\Tasks_overview.htm" HelpNavigator="Topic" ShowHelp="true" />
+			</Control>
+		  </Control>
+		</Control>
+		<Control Name="WritingSystemSetup" HelpKeyword="/WeSay_Configuration_Tool/Input_Systems/Input_Systems_overview.htm" HelpNavigator="Topic" ShowHelp="true">
+		  <Control Name="WritingSystemSetupView" HelpNavigator="Topic" ShowHelp="true">
+			<Control Name="splitContainer1" HelpNavigator="Topic" ShowHelp="true">
+			  <Control Name="" HelpNavigator="Topic" ShowHelp="true">
+				<Control Name="splitContainer2" HelpNavigator="Topic" ShowHelp="true">
+				  <Control Name="" HelpNavigator="Topic" ShowHelp="true">
+					<Control Name="_propertiesTabControl" HelpNavigator="Topic" ShowHelp="true">
+					  <Control Name="_tabControl" HelpKeyword="WeSay_Configuration_Tool\Input_Systems\Input_Systems_overview.htm" HelpNavigator="Topic" ShowHelp="true">
+						<Control Name="_sortingPage" HelpNavigator="Topic" ShowHelp="true">
+						  <Control Name="_sortControl" HelpNavigator="Topic" ShowHelp="true">
+							<Control Name="tableLayoutPanel5" HelpNavigator="Topic" ShowHelp="true">
+							  <Control Name="tableLayoutPanel3" HelpKeyword="WeSay_Configuration_Tool\Input_Systems\Custom_sort_sequence.htm" HelpNavigator="Topic" ShowHelp="true" />
+							</Control>
+						  </Control>
+						</Control>
+						<BindingContext ContextName="Sorting" HelpKeyword="WeSay_Configuration_Tool\Input_Systems\Sorting_tab.htm" HelpNavigator="Topic" ShowHelp="true" />
+						<BindingContext ContextName="Spelling" HelpKeyword="WeSay_Configuration_Tool\Input_Systems\Spelling_tab.htm" HelpNavigator="Topic" ShowHelp="true" />
+						<BindingContext ContextName="Fonts" HelpKeyword="WeSay_Configuration_Tool\Input_Systems\Fonts_tab.htm" HelpNavigator="Topic" ShowHelp="true" />
+						<BindingContext ContextName="Identifiers" HelpKeyword="WeSay_Configuration_Tool\Input_Systems\Identifiers_tab.htm" HelpNavigator="Topic" ShowHelp="true" />
+						<BindingContext ContextName="Keyboards" HelpKeyword="WeSay_Configuration_Tool\Input_Systems\Keyboard_tab.htm" HelpNavigator="Topic" ShowHelp="true" />
+					  </Control>
+					</Control>
+				  </Control>
+				</Control>
+			  </Control>
+			</Control>
+		  </Control>
+		</Control>
+		<Control Name="ActionsControl" HelpNavigator="Topic" ShowHelp="true">
+		  <Control Name="_addinsList" HelpKeyword="WeSay_Configuration_Tool\Actions\Actions_overview.htm" HelpNavigator="Topic" ShowHelp="true" />
+		</Control>
+		<Control Name="InterfaceLanguageControl" HelpKeyword="WeSay_Configuration_Tool\Interface_Language\Interface_Language_overview.htm" HelpNavigator="Topic" ShowHelp="true" />
+		<Control Name="BackupPlanControl" HelpKeyword="WeSay_Configuration_Tool\Backup\Backup_Media_Location.htm" HelpNavigator="Topic" ShowHelp="true" />
+		<Control Name="OptionListControl" HelpKeyword="WeSay_Configuration_Tool\Options_list\Add_or_delete_an_option.htm" HelpNavigator="Topic" ShowHelp="true" />
+	  </Control>
+	</Control>
+	<Control Name="WelcomeControl" HelpKeyword="WeSay_Configuration_Tool\First_Window.htm" HelpNavigator="Topic" ShowHelp="true" />
+  </Control>
+  <Control Name="WeSay.ConfigTool.Tasks.TaskListView" HelpKeyword="WeSay_Configuration_Tool\Input_Systems\Input_Systems_overview.htm" HelpNavigator="KeywordIndex" ShowHelp="true" />
+  <Control Name="Palaso.UI.WindowsForms.WritingSystems.DeleteInputSystemDialog" HelpKeyword="WeSay_Configuration_Tool\Input_Systems\Delete_or_merge_an_input_system.htm" HelpNavigator="Topic" ShowHelp="true" />
+</XmlHelp>
