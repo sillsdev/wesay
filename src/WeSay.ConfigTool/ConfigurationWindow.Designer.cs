@@ -31,6 +31,7 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,6 +48,7 @@ namespace WeSay.ConfigTool
 			this.toolStripHelpButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this._helpProvider = new Vulcan.Uczniowie.HelpProvider.HelpComponent(this.components);
 			this.toolStrip2.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -219,5 +221,6 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.ToolStripDropDownButton toolStripHelpButton;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
+		protected Vulcan.Uczniowie.HelpProvider.HelpComponent _helpProvider;
 	}
 }

@@ -33,6 +33,13 @@ namespace WeSay.ConfigTool
 		public ConfigurationWindow(string[] args)
 		{
 			InitializeComponent();
+			if(_helpProvider.FoundHelpMapping && !File.Exists(_helpProvider.HelpFilePath))
+			{
+				ErrorReport.ReportNonFatalException(new FileNotFoundException(String.Format(
+					"WeSay could not find the help file at {0}. " +
+					"This is not a critical error and you will be able to continue working; but please do take a moment and let the developers know about this problem.",
+					_helpProvider.HelpFilePath)));
+			}
 			Project = null;
 
 			//            if (this.DesignMode)
@@ -497,10 +504,7 @@ namespace WeSay.ConfigTool
 
 		private void OnKeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.KeyCode == Keys.F1)
-			{
-				Program.ShowHelpTopic("");
-			}
+			//if (e.KeyCode == Keys.F1) This key is now handled by the HelpProvider
 		}
 
 	}
