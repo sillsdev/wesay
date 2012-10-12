@@ -53,4 +53,10 @@
   </Control>
   <Control Name="WeSay.ConfigTool.Tasks.TaskListView" HelpKeyword="WeSay_Configuration_Tool\Input_Systems\Input_Systems_overview.htm" HelpNavigator="KeywordIndex" ShowHelp="true" />
   <Control Name="Palaso.UI.WindowsForms.WritingSystems.DeleteInputSystemDialog" HelpKeyword="WeSay_Configuration_Tool\Input_Systems\Delete_or_merge_an_input_system.htm" HelpNavigator="Topic" ShowHelp="true" />
+  <Control Name="WeSay.App.TabbedForm" HelpKeyword="" HelpNavigator="Topic" ShowHelp="true">
+	<Control Name="tabControl1" HelpKeyword="WeSay_Program\WeSay_overview.htm" HelpNavigator="Topic" ShowHelp="true">
+	  <BindingContext ContextName="Home" HelpKeyword="Concepts\Home_tab.htm" HelpNavigator="Topic" ShowHelp="true" />
+	  <BindingContext ContextName="Dictionary Browse &amp;&amp; Edit" HelpKeyword="WeSay_Program\Describe\Dictionary_Browse_&amp;_Edit_(WeSay).htm" HelpNavigator="Topic" ShowHelp="true" />
+	</Control>
+  </Control>
 </XmlHelp>
