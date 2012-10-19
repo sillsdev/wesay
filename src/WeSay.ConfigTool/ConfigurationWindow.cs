@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Autofac;
 using Palaso.Reporting;
@@ -33,12 +35,29 @@ namespace WeSay.ConfigTool
 		public ConfigurationWindow(string[] args)
 		{
 			InitializeComponent();
-			if(_helpProvider.FoundHelpMapping && !File.Exists(_helpProvider.HelpFilePath))
+
+			_helpProvider.RegisterPrimaryHelpFileMapping("wesay.helpmap");
+			_helpProvider.RegisterSecondaryHelpMapping("chorus.helpmap");
+
+			if(_helpProvider.FoundHelpMapping)
 			{
-				ErrorReport.ReportNonFatalException(new FileNotFoundException(String.Format(
-					"WeSay could not find the help file at {0}. " +
-					"This is not a critical error and you will be able to continue working; but please do take a moment and let the developers know about this problem.",
-					_helpProvider.HelpFilePath)));
+				var missingHelpFiles = new List<string>();
+				foreach (var helpFilePath in _helpProvider.HelpFilePaths)
+				{
+					if(!File.Exists(helpFilePath))
+					{
+						missingHelpFiles.Add(helpFilePath);
+					}
+				}
+				if (missingHelpFiles.Count > 0)
+				{
+					var missingFileList = missingHelpFiles.Aggregate("", (current, missingFile) => current + (missingFile + Environment.NewLine));
+					ErrorReport.ReportNonFatalException(new FileNotFoundException(String.Format(
+						"WeSay could not find some help files. " +
+						"This is not a critical error and you will be able to continue working; but please do take a moment and let the developers know about this problem." +
+						"the missing files were: {0}",
+						missingFileList)));
+				}
 			}
 			Project = null;
 
@@ -506,6 +525,5 @@ namespace WeSay.ConfigTool
 		{
 			//if (e.KeyCode == Keys.F1) This key is now handled by the HelpProvider
 		}
-
 	}
 }

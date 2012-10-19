@@ -262,7 +262,7 @@
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="Resources\help.mapping" />
+	<EmbeddedResource Include="Resources\wesay.helpmap" />
 	<None Include="Resources\sendReceive32x32.png" />
   </ItemGroup>
   <ItemGroup>
