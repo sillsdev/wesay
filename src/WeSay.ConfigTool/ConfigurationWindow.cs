@@ -39,26 +39,6 @@ namespace WeSay.ConfigTool
 			_helpProvider.RegisterPrimaryHelpFileMapping("wesay.helpmap");
 			_helpProvider.RegisterSecondaryHelpMapping("chorus.helpmap");
 
-			if(_helpProvider.FoundHelpMapping)
-			{
-				var missingHelpFiles = new List<string>();
-				foreach (var helpFilePath in _helpProvider.HelpFilePaths)
-				{
-					if(!File.Exists(helpFilePath))
-					{
-						missingHelpFiles.Add(helpFilePath);
-					}
-				}
-				if (missingHelpFiles.Count > 0)
-				{
-					var missingFileList = missingHelpFiles.Aggregate("", (current, missingFile) => current + (missingFile + Environment.NewLine));
-					ErrorReport.ReportNonFatalException(new FileNotFoundException(String.Format(
-						"WeSay could not find some help files. " +
-						"This is not a critical error and you will be able to continue working; but please do take a moment and let the developers know about this problem." +
-						"the missing files were: {0}",
-						missingFileList)));
-				}
-			}
 			Project = null;
 
 			//            if (this.DesignMode)
