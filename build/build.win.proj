@@ -29,9 +29,16 @@
 
 	<Target Name="Build">
 		<CallTarget Targets="Clean"/>
+		<CallTarget Targets="CopyHelpMapIntoSourceTree" />
 		<CallTarget Targets="SetAssemblyVersion"/>
 		<CallTarget Targets="Compile"/>
 		<Message Text="Build Complete"/>
+	</Target>
+
+	<Target Name="CopyHelpMapIntoSourceTree">
+		<Copy
+			SourceFiles ="$(RootDir)\FromBuildServer\wesay.helpmap"
+			DestinationFolder ="$(RootDir)\src\WeSay.Project\Resources" />
 	</Target>
 
 	<ItemGroup>
