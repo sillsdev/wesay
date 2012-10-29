@@ -71,6 +71,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 
 
+				  <Component Id="WeSay_Helps.chm" Guid="{8E2B2894-675B-4B8D-85CF-D9938466EC61}">
+					<File Id="WeSay_Helps.chm" Name="WeSay_Helps.chm" KeyPath="yes" Source="..\..\WeSay_Helps.chm" />
+				  </Component>
 
 				  <Component Id="WeSay.App.exe" Guid="{406B533F-C5D5-49AD-9DC9-12375B80949F}">
 					<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.App.exe" KeyPath="yes" />
@@ -319,7 +322,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id ="removeShortcutDir"/>
 
 			  <ComponentRef Id="DocFiles"/>
-
+			  <ComponentRef Id="WeSay_Helps.chm" />
 			  <MergeRef Id="ChorusMergeModule" />
 
 			  <!-- assemblies -->
