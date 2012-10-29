@@ -27,8 +27,14 @@
 		<XmlFiles Include="$(RootDir)\common\**\*.WeSayConfig"/>
 	</ItemGroup>
 
+	<Target Name="DownloadDistFiles">
+		<WebDownload FileUri="https://dl.dropbox.com/s/599lb0od6shtqqa/WeSay_Helps.chm?dl=1" FileName="$(RootDir)\External"></WebDownload>
+		<WebDownload FileUri="https://dl.dropbox.com/s/kj91auval00jv90/wesay.helpmap?dl=1" FileName="$(RootDir)\External"></WebDownload>
+	</Target>
+
 	<Target Name="Build">
 		<CallTarget Targets="Clean"/>
+		<CallTarget Targets="DownloadDistFiles" />
 		<CallTarget Targets="CopyHelpMapIntoSourceTree" />
 		<CallTarget Targets="SetAssemblyVersion"/>
 		<CallTarget Targets="Compile"/>
@@ -37,7 +43,7 @@
 
 	<Target Name="CopyHelpMapIntoSourceTree">
 		<Copy
-			SourceFiles ="$(RootDir)\FromBuildServer\wesay.helpmap"
+			SourceFiles ="$(RootDir)\External\wesay.helpmap"
 			DestinationFolder ="$(RootDir)\src\WeSay.Project\Resources" />
 	</Target>
 
