@@ -29,6 +29,7 @@
 	</ItemGroup>
 
 	<Target Name="DownloadDistFiles">
+		<MakeDir Directories= "$(RootDir)\External"/>
 		<WebDownload FileUri="https://dl.dropbox.com/s/599lb0od6shtqqa/WeSay_Helps.chm?dl=1" FileName="$(RootDir)\External\WeSay_Helps.chm"></WebDownload>
 		<WebDownload FileUri="https://dl.dropbox.com/s/kj91auval00jv90/wesay.helpmap?dl=1" FileName="$(RootDir)\External\wesay.helpmap"></WebDownload>
 	</Target>
