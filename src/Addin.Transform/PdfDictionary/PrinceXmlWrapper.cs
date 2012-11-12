@@ -25,10 +25,6 @@ namespace Addin.Transform.PdfDictionary
 									 IEnumerable<string> styleSheetPaths,
 									 string pdfPath)
 		{
-			if (Environment.OSVersion.Platform == PlatformID.Unix)
-			{
-				throw new NotImplementedException("Not implemented for Linux");
-			}
 			string princePath = GetPrincePath();
 			Prince p;
 			if (File.Exists(princePath))
@@ -56,6 +52,9 @@ namespace Addin.Transform.PdfDictionary
 
 		private static string GetPrincePath()
 		{
+#if MONO
+			return "/usr/bin/prince";
+#else
 			string programFilesPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
 			string princePath = AppendPrincePath(programFilesPath);
@@ -69,6 +68,7 @@ namespace Addin.Transform.PdfDictionary
 				programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
 				return AppendPrincePath(programFilesPath);
 			}
+#endif
 		}
 
 		private static string AppendPrincePath(string princePath)

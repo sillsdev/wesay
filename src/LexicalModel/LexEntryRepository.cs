@@ -5,6 +5,7 @@ using Palaso.Data;
 using Palaso.Code;
 using Palaso.DictionaryServices.Lift;
 using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.UiBindings;
 using Palaso.Progress;
@@ -618,7 +619,7 @@ namespace WeSay.LexicalModel
 						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
 						foreach (LexSense sense in entry.Senses)
 						{
-							foreach (KeyValuePair<string, object> pair in sense.Properties)
+							foreach (var pair in sense.Properties)
 							{
 								if (pair.Key == fieldName)
 								{

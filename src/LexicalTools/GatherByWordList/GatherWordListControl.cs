@@ -276,5 +276,10 @@ namespace WeSay.LexicalTools.GatherByWordList
 				_flyingLabel.Go(word, start, destination);
 			}
 		}
+
+		public void Cleanup()
+		{
+			AddCurrentWord();
+		}
 	}
 }

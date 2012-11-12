@@ -1,0 +1,107 @@
+wesay (1.1.11-1) UNRELEASED; urgency=low
+
+  * WS-34262 mime types to allow lift and wesayconfig files to open from gui
+  * WS-34260 chorus - disable win32text extension warning
+  * WS-34363 stop two versions of wesay running for same lift file
+  * WS-34295 libreoffice 3.5 and pdf creation
+  * WS-34366 pictures not always show in OO export
+  * WS-34359 detect Art Of Reading images in /usr/share/SIL/ArtOfReading/images
+  * WS-34361 CAWL word list added extra input systems to lift file
+  * WS-34379 setting clipboard to null or empty string throws an exception
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 03 May 2012 15:41:12 +0700
+
+wesay (1.1.10-1) UNRELEASED; urgency=low
+
+  * disabled complaint about missing keyboard ime if autoswitching disabled
+  * update palaso, chorus and wesay to windows wesay 1.2
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 27 Apr 2012 13:59:45 +0700
+
+wesay (1.1.9-1) UNRELEASED; urgency=low
+
+  * update palaso lib to get fixes from there
+  * update chorus lib to get fixes from there
+  * fix ProblemNotification dialog
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 16 Feb 2012 09:27:52 +0700
+
+wesay (1.1.8-1) UNRELEASED; urgency=low
+
+  * WS-34306 disable liftreports which has not been used on windows for years
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Mon, 13 Feb 2012 14:29:43 +0700
+
+wesay (1.1.7-1) UNRELEASED; urgency=low
+
+  * WS-34305 Use LibreOffice 3.4 or later to create a pdf
+	  See https://wiki.ubuntu.com/LibreOffice for instructions for installing
+	  LibreOffice 3.4 on lucid (which also works for natty)
+	  it comes with oneiric onwards
+  * add Suggests on libreoffice-writer >= 3.4, and pdf-viewer
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 10 Feb 2012 16:04:46 +0700
+
+wesay (1.1.6-1) UNRELEASED; urgency=low
+
+  * WS-34300 fix template location and common dir
+	  this was breaking xhtml and simple pdf export
+  * hatton: Fix WS-34227
+  * WS-1187 PrinceXML export really working now
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 09 Feb 2012 11:02:48 +0700
+
+wesay (1.1.5-1) UNRELEASED; urgency=low
+
+  * disable progress box on "Loading dictionary"
+  * simple pdf generation with princexml enabled
+	  N.B. use libreoffice for better pdfs
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Mon, 06 Feb 2012 15:54:29 +0700
+
+wesay (1.1.4-1) UNRELEASED; urgency=low
+
+  * fix odf template location finding
+  * merge with default to get more fixes
+
+ -- Daniel Glassey <daniel@glassey>  Mon, 30 Jan 2012 14:00:48 +0700
+
+wesay (1.1.3-1) UNRELEASED; urgency=low
+
+  * default font for new writing systems is now DejaVu Sans, 12
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Tue, 17 Jan 2012 13:56:15 +0700
+
+wesay (1.1.2-1) UNRELEASED; urgency=low
+
+  * 1.1 beta with auto keyboard switching disabled
+  * now building palaso and chorus binaries from source
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 13 Jan 2012 21:53:49 +0700
+
+wesay (1.1.0-1palaso1) lucid; urgency=low
+
+  * Updated to upstream wesay 1.1.x
+  * need to find out how to set the version
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Wed, 02 Nov 2011 09:42:52 +0700
+
+wesay (0.9.0-1palaso1) lucid; urgency=low
+
+  * Updated to upstream wesay 0.9.x
+
+ -- Cambell Prince <cambell_prince@sil.org>  Thu, 13 Jan 2011 13:31:20 +0700
+
+wesay (0.4-1sil1) hardy; urgency=low
+
+  * Updated to upstream wesay stable 0.4.
+  * Status is still experimental in Linux / Ubuntu
+
+ -- Cambell Prince <cambell_prince@sil.org>  Fri, 28 Nov 2008 10:57:47 +0700
+
+wesay (0.1-1sil1) hardy; urgency=low
+
+  * Initial build
+  *
+
+ -- Martin Hosken <martin_hosken@sil.org>  Sat, 18 Oct 2008 15:15:32 +0700

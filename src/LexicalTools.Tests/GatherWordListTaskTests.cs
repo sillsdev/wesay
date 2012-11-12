@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using NUnit.Framework;
 using Palaso.Data;
+using Palaso.DictionaryServices.Lift;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
@@ -460,7 +462,7 @@ namespace WeSay.LexicalTools.Tests
 		/// test support for spell fixing (ideally, this would move the sense, but this what we do for now)
 		/// </summary>
 		[Test]
-		public void RemovingAssociationWhereSenseHasExample_DoesNothing()
+		public void TryToRemoveAssociationWithListWordFromEntry_SenseHasExample_DoesNothing()
 		{
 			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
@@ -748,6 +750,42 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsFalse(firstSense.Gloss.ContainsAlternative("es"), "should not have received spanish gloss because it wasn't in the viewtemplate");
 		}
 
+		[Test]
+		public void TryToRemoveAssociationWithListWordFromEntry_SenseInDictIsIdenticalToSenseInWordList_AssociationIsRemoved()
+		{
+			Task.NavigateAbsoluteFirst();
+			Task.WordCollected(GetMultiText("test"));
+			var resultSet = Task.GetRecordsWithMatchingGloss();
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			Task.TryToRemoveAssociationWithListWordFromEntry(resultSet[0]);
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void TryToRemoveAssociationWithListWordFromEntry_SenseInDictHasOneMorePropertyThanSenseInWordList_AssociationIsNotRemoved()
+		{
+			Task.NavigateAbsoluteFirst();
+			Task.WordCollected(GetMultiText("test"));
+			var token = Task.GetRecordsWithMatchingGloss()[0];
+			var senseToModify = token.RealObject.Senses[(int) token["SenseNumber"]];
+			senseToModify.GetOrCreateProperty<MultiText>("ExtraProperty");
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			Task.TryToRemoveAssociationWithListWordFromEntry(token);
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+		}
+
+		[Test]
+		//Here I consider information that was removed to have been intentionally removed so we are NOT removing the association
+		public void TryToRemoveAssociationWithListWordFromEntry_SenseInDictIsHasOneLessPropertyThanSenseInWordList_AssociationIsNotRemoved()
+		{
+			Task.NavigateAbsoluteFirst();
+			Task.WordCollected(GetMultiText("test"));
+			Task.CurrentTemplateSense.GetOrCreateProperty<MultiText>("ExtraProperty");
+			var token = Task.GetRecordsWithMatchingGloss()[0];
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			Task.TryToRemoveAssociationWithListWordFromEntry(token);
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+		}
 
 		private LexSense AddWordAndGetFirstSense()
 		{

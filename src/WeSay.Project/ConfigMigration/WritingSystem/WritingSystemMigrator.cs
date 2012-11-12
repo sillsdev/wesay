@@ -154,7 +154,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem("Another program has {0} open, so we cannot make the writing system change.  Make sure no other instances of WeSay are running.\n\n\t'{1}'", uiFileDescription, filePath);
+				ErrorReport.NotifyUserOfProblem("Another program has {0} open, so we cannot make the input system change.  Make sure no other instances of WeSay are running.\n\n\t'{1}'", uiFileDescription, filePath);
 				return false;
 			}
 		}

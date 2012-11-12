@@ -420,7 +420,7 @@ namespace WeSay.LexicalModel
 					if (s == null)
 					{
 						throw new ArgumentNullException("value",
-														"Writing System argument" + i + "is null");
+														"Input System argument" + i + "is null");
 					}
 				}
 				if(_writingSystemIds != null)

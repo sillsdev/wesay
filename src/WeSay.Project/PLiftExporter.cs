@@ -155,7 +155,7 @@ namespace WeSay.Project
 				{
 					var textWritingSystems = _viewTemplate.WritingSystems.TextWritingSystems;
 					var ids = from ws in textWritingSystems select ws.Id;
-					WriteLanguageFormsInWrapper(text.Forms.Where(f=>ids.Contains(f.WritingSystemId) ), "form", true);
+					WriteLanguageFormsInWrapper(text.Forms.Where(f => ids.Contains(f.WritingSystemId)), "form", true);
 				}
 
 				Writer.WriteEndElement();
@@ -318,6 +318,8 @@ namespace WeSay.Project
 			//base.WriteIllustrationElement(pictureRef);
 
 			string url = pictureRef.Value;
+			if (url == null) // Fixes WS-34480 PLIFT-exporting actions don't work after going in Browse & Edit if image is missing
+				return;
 			if (_path != null)  //it's null during some tests
 			{
 				var dirWeAreWritingTo = Path.GetDirectoryName(_path);

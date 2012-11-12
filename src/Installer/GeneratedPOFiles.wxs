@@ -2,8 +2,11 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
 		<DirectoryRef Id="common">
+			<Component Id="wesay.az.po" Guid="286A5C5A-DB1C-421B-BC75-08BAC801638A">
+				<File Id="wesay.az.po" Name="wesay.az.po" KeyPath="yes" Source="..\..\common\wesay.az.po" />
+			</Component>
 			<Component Id="wesay.da.po" Guid="296A1524-D8B6-4AD8-ABE0-557D33004863">
-				<File Id="wesay.da.po" Name="wesay.da.po" KeyPath="yes" Source="..\..\common\wesay.da.po" />
+				<File Id="wesay.da.po" Name="wesay.da.po" Source="..\..\common\wesay.da.po" />
 			</Component>
 			<Component Id="wesay.es.po" Guid="9BD4F952-BA55-4C0F-B99C-E39C287096BB">
 				<File Id="wesay.es.po" Name="wesay.es.po" Source="..\..\common\wesay.es.po" />
@@ -14,11 +17,20 @@
 			<Component Id="wesay.he.po" Guid="644DE46B-B91A-4AC4-ACE0-3B72D97F344A">
 				<File Id="wesay.he.po" Name="wesay.he.po" Source="..\..\common\wesay.he.po" />
 			</Component>
+			<Component Id="wesay.hi.po" Guid="FDADB576-8836-4515-B059-67223530506C">
+				<File Id="wesay.hi.po" Name="wesay.hi.po" Source="..\..\common\wesay.hi.po" />
+			</Component>
 			<Component Id="wesay.id.po" Guid="3A18D9FB-6E2B-4513-957E-E3EE7368304D">
 				<File Id="wesay.id.po" Name="wesay.id.po" Source="..\..\common\wesay.id.po" />
 			</Component>
 			<Component Id="wesay.is.po" Guid="268FC1EB-DAA4-4700-A19C-BC03A5B78F07">
 				<File Id="wesay.is.po" Name="wesay.is.po" Source="..\..\common\wesay.is.po" />
+			</Component>
+			<Component Id="wesay.km.po" Guid="0D50CC6A-4C0A-418B-A830-598D1EA05E68">
+				<File Id="wesay.km.po" Name="wesay.km.po" Source="..\..\common\wesay.km.po" />
+			</Component>
+			<Component Id="wesay.lo.po" Guid="569A4D3A-B7D0-4B09-AFB6-2C37C8079BEB">
+				<File Id="wesay.lo.po" Name="wesay.lo.po" Source="..\..\common\wesay.lo.po" />
 			</Component>
 			<Component Id="wesay.my.po" Guid="273C57F2-2367-4021-AB12-5B439725C9B2">
 				<File Id="wesay.my.po" Name="wesay.my.po" Source="..\..\common\wesay.my.po" />
@@ -58,12 +70,16 @@
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id="PoFiles">
+			<ComponentRef Id="wesay.az.po" />
 			<ComponentRef Id="wesay.da.po" />
 			<ComponentRef Id="wesay.es.po" />
 			<ComponentRef Id="wesay.fr.po" />
 			<ComponentRef Id="wesay.he.po" />
+			<ComponentRef Id="wesay.hi.po" />
 			<ComponentRef Id="wesay.id.po" />
 			<ComponentRef Id="wesay.is.po" />
+			<ComponentRef Id="wesay.km.po" />
+			<ComponentRef Id="wesay.lo.po" />
 			<ComponentRef Id="wesay.my.po" />
 			<ComponentRef Id="wesay.nl.po" />
 			<ComponentRef Id="wesay.oc.po" />

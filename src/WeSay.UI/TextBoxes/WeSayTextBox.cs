@@ -224,7 +224,7 @@ namespace WeSay.UI.TextBoxes
 				if (_writingSystem == null)
 				{
 					throw new InvalidOperationException(
-						"WritingSystem must be initialized prior to use.");
+						"Input system must be initialized prior to use.");
 				}
 				return _writingSystem;
 			}
@@ -364,7 +364,7 @@ namespace WeSay.UI.TextBoxes
 			if (_writingSystem == null)
 			{
 				throw new InvalidOperationException(
-					"WritingSystem must be initialized prior to use.");
+					"Input system must be initialized prior to use.");
 			}
 
 			if (_writingSystem.Keyboard == null || _writingSystem.Keyboard == string.Empty)
@@ -388,7 +388,7 @@ namespace WeSay.UI.TextBoxes
 			if (_writingSystem == null)
 			{
 				throw new InvalidOperationException(
-					"WritingSystem must be initialized prior to use.");
+					"Input system must be initialized prior to use.");
 			}
 
 			KeyboardController.DeactivateKeyboard();

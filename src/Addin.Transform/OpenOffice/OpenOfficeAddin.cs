@@ -205,7 +205,7 @@ namespace Addin.Transform.OpenOffice
 					EmbeddedXmlCollection sortedAnnotation = new EmbeddedXmlCollection();
 					sortedAnnotation.Values.Add("<annotation name='sorted-index' value='" + (++index) +"'/>");
 
-					lexEntry.Properties.Add(new KeyValuePair<string,object>("SortedIndex", sortedAnnotation));
+					lexEntry.Properties.Add(new KeyValuePair<string,IPalasoDataObjectProperty>("SortedIndex", sortedAnnotation));
 
 					exporter.Add(lexEntry, homographNumber);
 				}
@@ -225,6 +225,29 @@ namespace Addin.Transform.OpenOffice
 				(TransformWorkerArguments)progressState.Arguments;
 			//ProjectInfo projectInfo = arguments.projectInfo;
 
+			if (File.Exists(arguments.odtPath))
+			{
+				bool fileDeleted = false;
+				while (!fileDeleted)
+				{
+					try
+					{
+						File.Delete(arguments.odtPath);
+						fileDeleted = !File.Exists(arguments.odtPath);
+					}
+					catch (IOException)
+					{
+						var dialogResult =
+							MessageBox.Show(
+								StringCatalog.Get("WeSay was unable to remove the old .odt file. This may be because it is open in another program. Please close the file before clicking OK."),
+								StringCatalog.Get("Unable to delete old file."), MessageBoxButtons.OKCancel);
+						if (dialogResult == DialogResult.Cancel)
+						{
+							return;
+						}
+					}
+				}
+			}
 
 			string liftPath = Path.Combine(arguments.exportDir,
 											arguments.name + ".lift");
@@ -257,7 +280,7 @@ namespace Addin.Transform.OpenOffice
 				xsltArgs.AddParam("title", "", arguments.name);
 				// TODO what is the correct url base path for illustrations?
 				// It seems one level up just gets out of the zip file, so use 2 levels here
-				xsltArgs.AddParam("urlBase", "",  "../../pictures/");
+				xsltArgs.AddParam("urlBase", "",  "../../");
 
 				transform.Transform(liftPath, xsltArgs, contentOutput);
 				contentOutput.Close();
@@ -280,8 +303,6 @@ namespace Addin.Transform.OpenOffice
 				File.Delete(pathToTempFile);
 
 				stylesOutput.Close();
-				if (File.Exists(arguments.odtPath))
-					File.Delete(arguments.odtPath);
 				progressState.StatusLabel = "Creating ODT file";
 				ZipFile zipFile = ZipFile.Create(arguments.odtPath);
 				zipFile.BeginUpdate();
@@ -352,7 +373,7 @@ namespace Addin.Transform.OpenOffice
 		//    }
 		//    if(String.IsNullOrEmpty(pathToHeadWordWritingSystemLdmlFile)){
 		//        string errorMessage = String.Format(
-		//            "No Ldml writing system file could be found in folder {0}. The headword writing system is {1}",
+		//            "No Ldml input system file could be found in folder {0}. The headword input system is {1}",
 		//            pathToLdmlWritingSystemsFolder, GetHeadwordWritingSystemId(arguments.viewTemplate));
 		//        throw new ApplicationException(errorMessage);
 

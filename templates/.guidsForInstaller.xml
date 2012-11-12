@@ -3,4 +3,5 @@
 <InstallerMetadata>
   <File Id="basicDictionary.css" Guid="9aa274d4-2566-4f29-90cc-eef733640794" />
   <File Id="defaultDictionary.css" Guid="dbb95230-0fba-4245-8dc3-819bc0cae285" />
+  <File Id="defaultDictionary.css.orig" Guid="83ae8616-bfa8-4d47-a9bb-782eccfb87d9" />
 </InstallerMetadata>

@@ -23,6 +23,7 @@ using Palaso.IO;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Lift.Validation;
+using Palaso.Progress;
 using Palaso.Progress.LogBox;
 using Palaso.Reporting;
 using Palaso.Text;
@@ -437,9 +438,9 @@ namespace WeSay.Project
 			var builder = new ContainerBuilder();
 
 			builder.Register(new WordListCatalog()).SingletonScoped();
-
+#if !MONO
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
-
+#endif
 			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
 			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
 
@@ -450,21 +451,25 @@ namespace WeSay.Project
 			  {
 				  try
 				  {
+#if !MONO
 					  return c.Resolve<IProgressNotificationProvider>().Go
 						  <LiftDataMapper>(
 							  "Loading Dictionary",
 							  progressState =>
 								  {
+#endif
 									  var mapper =  new WeSayLiftDataMapper(
 										  _pathToLiftFile,
 										  GetSemanticDomainsList(),
 										  GetIdsOfSingleOptionFields(),
-										  progressState
+										  new ProgressState ()
 										  );
 
 									  return mapper;
+#if !MONO
 								  }
 						  );
+#endif
 				  }
 				  catch (LiftFormatException error)
 				  {
@@ -834,7 +839,11 @@ namespace WeSay.Project
 		public ProjectInfo GetProjectInfoForAddin()
 		{
 			return new ProjectInfo(Name,
+#if MONO
+								   ApplicationSharedDirectory,
+#else
 								   ApplicationRootDirectory,
+#endif
 								   ProjectDirectoryPath,
 								   PathToLiftFile,
 								   PathToExportDirectory,
@@ -1312,6 +1321,15 @@ namespace WeSay.Project
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
 
+			//this adds a writing system to any enabled fields that don't have one
+			foreach (var field in ViewTemplates.SelectMany(x=>x.Fields))
+			{
+				if(field.Enabled && field.WritingSystemIds.Count == 0)
+				{
+					field.WritingSystemIds.Add(WritingSystems.AllWritingSystems.First().Id);
+				}
+			}
+
 			var pendingConfigFile = new TempFileForSafeWriting(Project.PathToConfigFile);
 
 			var writer = XmlWriter.Create(pendingConfigFile.TempFilePath, CanonicalXmlSettings.CreateXmlWriterSettings());
@@ -1361,14 +1379,27 @@ namespace WeSay.Project
 					}
 			}
 
-			//Now let's replace writing systems in OptionLists
-
+			//Now let's replace and delete writing systems in OptionLists
 			foreach (var kvp in _changedWritingSystemIds)
 			{
 				foreach (var filePath in Directory.GetFiles(ProjectDirectoryPath))
 				{
-					var helper = new WritingSystemsInOptionsListFileHelper(WritingSystems, filePath);
-					helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
+					try
+					{
+						var helper = new WritingSystemsInOptionsListFileHelper(WritingSystems, filePath);
+						if (String.IsNullOrEmpty(kvp.Value))
+						{
+							helper.DeleteWritingSystemId(kvp.Key);
+						}
+						else
+						{
+							helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
+						}
+					}
+					catch(IOException e)
+					{
+						ErrorReport.NotifyUserOfProblem(e.Message + " " + PathToLiftFile);
+					}
 				}
 			}
 
@@ -1376,7 +1407,14 @@ namespace WeSay.Project
 			pendingConfigFile.WriteWasSuccessful();
 
 			base.Save();
-			CommitWritingSystemIdChangesToLiftFile();
+			try
+			{
+				CommitWritingSystemIdChangesToLiftFile();
+			}
+			catch(IOException e)
+			{
+				ErrorReport.NotifyUserOfProblem(e.Message + " " + PathToLiftFile);
+			}
 
 			SaveUserSpecificConfiguration();
 			BackupNow();
@@ -1543,7 +1581,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
+				ErrorReport.NotifyUserOfProblem("Another program has WeSay's dictionary file open, so we cannot make the input system change.  Make sure WeSay isn't running.");
 				return false;
 			}
 
@@ -1581,17 +1619,20 @@ namespace WeSay.Project
 				 });
 		}
 
-		private void MakeWritingSystemIdChangeInLiftFile(string oldId, string newId)
-		{
-			var helper = new WritingSystemsInLiftFileHelper(WritingSystems, PathToLiftFile);
-			helper.ReplaceWritingSystemId(oldId, newId);
-		}
-
 		private void CommitWritingSystemIdChangesToLiftFile()
 		{
+			var helper = new WritingSystemsInLiftFileHelper(WritingSystems, PathToLiftFile);
 			foreach (var kvp in _changedWritingSystemIds)
 			{
-				MakeWritingSystemIdChangeInLiftFile(kvp.Key, kvp.Value);
+				if (String.IsNullOrEmpty(kvp.Value))
+				{
+					helper.DeleteWritingSystemId(kvp.Key);
+				}
+				else
+				{
+					helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
+				}
+
 			}
 		}
 
@@ -1620,44 +1661,84 @@ namespace WeSay.Project
 				StringPair p = new StringPair();
 				p.from = oldId;
 				p.to = newId;
-				WritingSystemChanged.Invoke(this, p);
+				WritingSystemChanged(this, p);
 			}
 		}
 
 		private void ChangeIdInLoadedOptionListIfNecassary(string oldId, string newId, OptionsList optionlist)
 		{
-			var abbreviationLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
-																	   option => option.Abbreviation.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
 
-			var nameLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
-															   option => option.Name.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+			var abbreviationMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Abbreviation));
+			var nameMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Name));
+			var descriptionMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Description));
 
-			var descriptionForms = new List<LanguageForm>(optionlist.Options.Select(
-															  option => option.Description.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
+			var multiTextsToChange = abbreviationMultiText.Concat(nameMultiText).Concat(descriptionMultiText);
 
-			var formsToChange = abbreviationLanguageForms.Concat(nameLanguageForms).Concat(descriptionForms);
-
-			if(formsToChange.Count() > 0)
+			if (multiTextsToChange.Any())
 			{
 				MarkOptionListAsUpdated(optionlist);
 			}
 
-			foreach (var form in formsToChange)
+			foreach (var multiText in multiTextsToChange.Where(mt=>mt.ContainsAlternative(oldId)))
 			{
-				if (form != null)
+				var existingLanguageFormWithOldId = multiText.Find(oldId);
+				var existingLanguageFormWithNewId = multiText.Find(newId);
+
+				//If a non empty languageForm with the newId already exists, keep it around. Else delete it and change the writing system in the language form with the oldId
+				if(existingLanguageFormWithNewId == null)
 				{
-					form.WritingSystemId = newId;
+					existingLanguageFormWithOldId.WritingSystemId = newId;
+				}
+				else if(String.IsNullOrEmpty(existingLanguageFormWithNewId.Form))
+				{
+					multiText.RemoveLanguageForm(existingLanguageFormWithNewId);
+					existingLanguageFormWithOldId.WritingSystemId = newId;
+				}
+				else
+				{
+					multiText.RemoveLanguageForm(existingLanguageFormWithOldId);
 				}
 			}
 		}
 
 		public void DeleteWritingSystemId(string id)
 		{
+			_changedWritingSystemIds.Add(id, String.Empty); //adding it to the _changedWritingSystemIds makes sure that all the changes are made in the correct order
+
 			DefaultViewTemplate.DeleteWritingSystem(id);
 
 			if (WritingSystemDeleted != null)
 			{
 				WritingSystemDeleted(this, new WritingSystemDeletedEventArgs(id));
+			}
+
+			foreach (var optionsList in _optionLists.Values)
+			{
+				DeleteIdInLoadedOptionListsIfNecassary(id, optionsList);
+			}
+		}
+
+		private void DeleteIdInLoadedOptionListsIfNecassary(string id, OptionsList optionlist)
+		{
+
+			var abbreviationMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Abbreviation));
+			var nameMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Name));
+			var descriptionMultiText = new List<MultiText>(optionlist.Options.Select(option => option.Description));
+
+			var multiTextsToChange = abbreviationMultiText.Concat(nameMultiText).Concat(descriptionMultiText);
+
+			if (multiTextsToChange.Any())
+			{
+				MarkOptionListAsUpdated(optionlist);
+			}
+
+			foreach (var multiText in multiTextsToChange.Where(mt => mt.ContainsAlternative(id)))
+			{
+				var languageFormWithId = multiText.Find(id);
+				if (languageFormWithId != null)
+				{
+					multiText.RemoveLanguageForm(languageFormWithId);
+				}
 			}
 		}
 
