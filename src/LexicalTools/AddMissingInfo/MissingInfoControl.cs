@@ -7,7 +7,7 @@ using Palaso.Data;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
-using Palaso.Misc;
+using Palaso.UI.WindowsForms.Miscellaneous;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel;

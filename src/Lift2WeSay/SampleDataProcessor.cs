@@ -26,7 +26,7 @@ namespace SampleDataProcessor
 
 			Console.WriteLine("SampleDataProcessor is processing " + sourcePath);
 
-			ConsoleProgress progress = new ConsoleProgress();
+			var progress = new ConsoleProgressState();
 			progress.Log += progress_Log;
 
 			new WeSayWordsProject();

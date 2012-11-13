@@ -11,7 +11,7 @@ using Palaso.Data;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
 using Palaso.DictionaryServices.Processors;
-using Palaso.Lift.Merging;
+using Palaso.Progress;
 using Palaso.Text;
 using Palaso.i18n;
 using Palaso.Lift;
@@ -21,7 +21,6 @@ using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
-using NullProgress = Palaso.Progress.LogBox.NullProgress;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains
 {

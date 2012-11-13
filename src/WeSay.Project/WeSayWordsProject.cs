@@ -24,7 +24,7 @@ using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Lift.Validation;
 using Palaso.Progress;
-using Palaso.Progress.LogBox;
+using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.UI.WindowsForms.Progress;

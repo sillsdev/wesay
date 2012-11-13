@@ -10,7 +10,7 @@ using Palaso.Data;
 using Palaso.Code;
 using Palaso.i18n;
 using Palaso.UiBindings;
-using Palaso.Misc;
+using Palaso.UI.WindowsForms.Miscellaneous;
 using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.WritingSystems;
