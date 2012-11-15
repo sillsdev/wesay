@@ -36,7 +36,12 @@
 		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'STABLE'">Stable Release</ReleaseLabel>
 	</PropertyGroup>
 
-
+	<Message Text="Variables:" Importance="high"/>
+	<Message Text="LifeCycleStage: $(LifeCycleStage)" Importance="high"/>
+	<Message Text="ReleaseSuffix: $(ReleaseSuffix)" Importance="high"/>
+	<Message Text="ReleaseLabel: $(ReleaseLabel)" Importance="high"/>
+	<Message Text="RootDir: $(RootDir)" Importance="high"/>
+	<Message Text="Version: $(Version)" Importance="high"/>
 
 	<ItemGroup>
 		<CSharpFiles

@@ -20,6 +20,7 @@
 		</CreateProperty>
 
 		<Message Text="Version: $(Version)" Importance="high"/>
+		<Message Text="LifeCycleStage: $(LifeCycleStage)" Importance="high"/>
 	</Target>
 
 	<ItemGroup>
