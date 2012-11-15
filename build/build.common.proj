@@ -1,8 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<CreateProperty Value="CANDIDATE">
-		<!--  choices are ALPHA, BETA, CANDIDATE, and STABLE-->
-		<Output PropertyName="LifeCycleStage" TaskParameter="Value"/>
-	</CreateProperty>
+	<PropertyGroup>
+		<LifeCycleStage>CANDIDATE</LifeCycleStage>
+	</PropertyGroup>
 
 	<Target Name="VersionNumbers">
 		<Message Text="BUILD_NUMBER: $(BUILD_NUMBER)" Importance="high"/>
