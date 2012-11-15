@@ -19,6 +19,21 @@
 		<Configuration>Release</Configuration>
 	</PropertyGroup>
 
+  <!-- LifeCycleStage is set, along with the version, in build.common.proj -->
+  <PropertyGroup>
+	<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'ALPHA'">-Alpha</ReleaseSuffix>
+	<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'BETA'">-Beta</ReleaseSuffix>
+	<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'CANDIDATE'">-ReleaseCandidate</ReleaseSuffix>
+	<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'STABLE'"></ReleaseSuffix>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<ReleaseLabel Condition="'$(LifeCycleStage)' == 'ALPHA'">Alpha Test</ReleaseLabel>
+	<ReleaseLabel Condition="'$(LifeCycleStage)' == 'BETA'">Beta Test</ReleaseLabel>
+	<ReleaseLabel Condition="'$(LifeCycleStage)' == 'CANDIDATE'">Release Candidate</ReleaseLabel>
+	<ReleaseLabel Condition="'$(LifeCycleStage)' == 'STABLE'">Stable Release</ReleaseLabel>
+  </PropertyGroup>
+
 	<Import Project="$(RootDir)/build/build.common.proj" />
 
 	<ItemGroup>
@@ -155,21 +170,6 @@
 		<CallTarget targets="MakeWixForPoFiles"/>
 		<CallTarget targets="MakeWixForTemplates"/>
 	</Target>
-
-  <!-- LifeCycleStage is set, along with the version, in build.common.proj -->
-	<PropertyGroup>
-	<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'ALPHA'">-Alpha</ReleaseSuffix>
-	<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'BETA'">-Beta</ReleaseSuffix>
-	<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'CANDIDATE'">-ReleaseCandidate</ReleaseSuffix>
-	<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'STABLE'"></ReleaseSuffix>
-	</PropertyGroup>
-
-  <PropertyGroup>
-	<ReleaseLabel Condition="'$(LifeCycleStage)' == 'ALPHA'">Alpha Test</ReleaseLabel>
-	<ReleaseLabel Condition="'$(LifeCycleStage)' == 'BETA'">Beta Test</ReleaseLabel>
-	<ReleaseLabel Condition="'$(LifeCycleStage)' == 'CANDIDATE'">Release Candidate</ReleaseLabel>
-	<ReleaseLabel Condition="'$(LifeCycleStage)' == 'STABLE'">Stable Release</ReleaseLabel>
-  </PropertyGroup>
 
 
 	<Target Name="Installer" DependsOnTargets="CleanInstaller; VersionNumbers; MakeWixForDistFiles; Build ">
