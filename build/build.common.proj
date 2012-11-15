@@ -14,10 +14,10 @@
 			<Output PropertyName="Version" TaskParameter="Value"/>
 		</CreateProperty>
 
-	<CreateProperty Value="CANDIDATE">
-	  <!--  choices are ALPHA, BETA, CANDIDATE, and STABLE-->
-	  <Output PropertyName="LifeCycleStage" TaskParameter="Value"/>
-	</CreateProperty>
+		<CreateProperty Value="CANDIDATE">
+			<!--  choices are ALPHA, BETA, CANDIDATE, and STABLE-->
+			<Output PropertyName="LifeCycleStage" TaskParameter="Value"/>
+		</CreateProperty>
 
 		<Message Text="Version: $(Version)" Importance="high"/>
 	</Target>
