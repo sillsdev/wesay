@@ -15,7 +15,8 @@
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
 	<OldToolsVersion>3.5</OldToolsVersion>
-	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+	<TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -155,6 +156,9 @@
 	  <Project>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</Project>
 	  <Name>WeSay.ConfigTool</Name>
 	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
