@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
+using Autofac;
 using Autofac.Builder;
 using Chorus;
 using Chorus.FileTypeHanders.lift;
@@ -437,9 +438,9 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
-			builder.Register(new WordListCatalog()).SingletonScoped();
+			builder.RegisterInstance(new WordListCatalog()).SingleInstance();
 #if !MONO
-			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
+			builder.RegisterInstance<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 #endif
 			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
 			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
@@ -478,7 +479,7 @@ namespace WeSay.Project
 				  }
 			  });
 
-			builder.Register<LexEntryRepository>();
+			builder.RegisterType<LexEntryRepository>();
 //            builder.Register<LexEntryRepository>(
 //                 c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
 //                         progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
@@ -491,7 +492,7 @@ namespace WeSay.Project
 			var catalog = new TaskTypeCatalog();
 			catalog.RegisterAllTypes(builder);
 
-			builder.Register<TaskTypeCatalog>(catalog).SingletonScoped();
+			builder.RegisterInstance<TaskTypeCatalog>(catalog).SingleInstance();
 
 			//this is a bit weird, did it to get around a strange problem where it was left open,
 			//never found out by whom.  But note, it does affect behavior.  It means that
@@ -501,31 +502,31 @@ namespace WeSay.Project
 
 			string defaultXmlConfigText = File.ReadAllText(PathToDefaultConfig);
 
-			builder.Register<ConfigFileReader>(c => new ConfigFileReader(configFileText, defaultXmlConfigText,  catalog)).SingletonScoped();
+			builder.Register(c => new ConfigFileReader(configFileText, defaultXmlConfigText,  catalog)).SingleInstance();
 
-			builder.Register<TaskCollection>().SingletonScoped();
+			builder.RegisterType<TaskCollection>().SingleInstance();
 
 			var viewTemplates = ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems);
 			foreach (var viewTemplate in viewTemplates)
 			{
 				//todo: this isn't going to work if we start using multiple tempates.
 				//will have to go to a naming system.
-				builder.Register(viewTemplate).SingletonScoped();
+				builder.RegisterInstance(viewTemplate).SingleInstance();
 			}
 
-			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named("PrintingTemplate");
+			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named<ViewTemplate>("PrintingTemplate");
 			builder.Register<IWritingSystemRepository>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
 
 			RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
 
 
-			builder.Register<PublicationFontStyleProvider>(c=> new PublicationFontStyleProvider(c.Resolve<ViewTemplate>("PrintingTemplate")));
+			builder.Register<PublicationFontStyleProvider>(c=> new PublicationFontStyleProvider(c.ResolveNamed<ViewTemplate>("PrintingTemplate")));
 
-			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainDdp4);
+			builder.Register<IOptionListReader>(c => new DdpListReader()).Named<IOptionListReader>(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
 
 
-			builder.Register<PictureControl>(c=> new PictureControl(Path.GetDirectoryName(PathToLiftFile), PathToPictures, GetFileLocator())).FactoryScoped();
+			builder.Register<PictureControl>(c=> new PictureControl(Path.GetDirectoryName(PathToLiftFile), PathToPictures, GetFileLocator())).InstancePerDependency();
 
 		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
 
@@ -533,12 +534,12 @@ namespace WeSay.Project
 			// can't currently get at the instance
 			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
 
-			builder.Register<CheckinDescriptionBuilder>().SingletonScoped();
+			builder.RegisterType<CheckinDescriptionBuilder>().SingleInstance();
 			var configuration = new ProjectFolderConfiguration(Path.GetDirectoryName(PathToConfigFile));
 			LiftFolder.AddLiftFileInfoToFolderConfiguration(configuration);
-			builder.Register<Chorus.sync.ProjectFolderConfiguration>(configuration).SingletonScoped();
-			builder.Register<ChorusBackupMaker>().SingletonScoped();
-			builder.Register<UiConfigurationOptions>().SingletonScoped();
+			builder.RegisterInstance<Chorus.sync.ProjectFolderConfiguration>(configuration).SingleInstance();
+			builder.RegisterType<ChorusBackupMaker>().SingleInstance();
+			builder.RegisterType<UiConfigurationOptions>().SingleInstance();
 
 
 			//it is sad that we initially used a static for logger, and that hasn't been completely undone yet.
@@ -561,7 +562,7 @@ namespace WeSay.Project
 //            builder.Register<AudioPathProvider>(c=>new AudioPathProvider(PathToAudio, )));
 
 			builder.Register(c=>
-				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).ContainerScoped();
+				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).InstancePerLifetimeScope();
 
 
 			_container = builder.Build();
@@ -577,9 +578,9 @@ namespace WeSay.Project
 			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
 			var chorusSystem = new ChorusSystem(Path.GetDirectoryName(PathToConfigFile));
 			chorusSystem.WritingSystems = writingSystemsForChorus;
-			builder.Register(writingSystemsForChorus);
-			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);
-			builder.Register<ChorusSystem>(chorusSystem);
+			builder.RegisterInstance(writingSystemsForChorus);
+			builder.RegisterInstance<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);
+			builder.RegisterInstance<ChorusSystem>(chorusSystem);
 
 			//            builder.Register<ChorusNotesSystem>(c=>
 			//            {
@@ -601,9 +602,9 @@ namespace WeSay.Project
 			var mapping = new NotesToRecordMapping();
 			mapping.FunctionToGetCurrentUrlForNewNotes = (entry, id) => GetUrlFromLexEntry(entry as LexEntry);
 			mapping.FunctionToGoFromObjectToItsId = (entry) => (entry as LexEntry).Guid.ToString();
-			builder.Register<NotesToRecordMapping>(mapping);
+			builder.RegisterInstance<NotesToRecordMapping>(mapping);
 
-			builder.Register<NotesBarView>(c => c.Resolve<ChorusSystem>().WinForms.CreateNotesBar(PathToLiftFile, c.Resolve<NotesToRecordMapping>(), new NullProgress())).FactoryScoped();
+			builder.Register<NotesBarView>(c => c.Resolve<ChorusSystem>().WinForms.CreateNotesBar(PathToLiftFile, c.Resolve<NotesToRecordMapping>(), new NullProgress())).InstancePerDependency();
 
 		}
 
@@ -1526,7 +1527,7 @@ namespace WeSay.Project
 			IOptionListReader reader;
 			object r;
 			//first, try for a reader named after the field
-			if(_container.TryResolve(fieldName, out r))
+			if(_container.TryResolveNamed(fieldName, typeof(IOptionListReader), out r))
 			{
 				reader = r as IOptionListReader;
 			}
@@ -1881,13 +1882,13 @@ namespace WeSay.Project
 			Tasks = ConfigFileTaskBuilder.CreateTasks(_container, configReader.GetTasksConfigurations(_container));
 		}
 
-		public delegate void ContainerAdder(Autofac.Builder.ContainerBuilder b);
+		public delegate void ContainerAdder(ContainerBuilder b);
 
 		public void AddToContainer(ContainerAdder adder)
 		{
-			var containerBuilder = new Autofac.Builder.ContainerBuilder();
+			var containerBuilder = new ContainerBuilder();
 			adder.Invoke(containerBuilder);
-			containerBuilder.Build(_container);
+			containerBuilder.Update(_container);
 		}
 
 		public void SetupUserForChorus()

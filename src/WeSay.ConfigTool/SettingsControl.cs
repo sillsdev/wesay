@@ -12,7 +12,7 @@ namespace WeSay.ConfigTool
 	{
 		private readonly List<ConfigurationControlBase> _areaControls;
 
-		public SettingsControl(IContext context)
+		public SettingsControl(IComponentContext context)
 		{
 			this.Disposed += OnDisposed;
 			_areaControls = new List<ConfigurationControlBase>();
