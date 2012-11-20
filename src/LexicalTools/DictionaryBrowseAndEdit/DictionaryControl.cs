@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.Code;
@@ -459,29 +460,13 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private static string GetIdFromUrl(string url)
 		{
-			Uri uri;
-
-			//WS-34080: this function can't handle domain names (here, the name of the lift file) which have %20's.
-			//note: we are also removing ones which could be elsewhere in the url, but since we're only after the id, it's ok.
-			var urlWithoutSpaces = url.Replace("%20", "");
-
-			if(!Uri.TryCreate(urlWithoutSpaces, UriKind.Absolute, out uri))
+			var regEx = new Regex("id=([{|\\(]?[0-9a-fA-F]{8}[-]?([0-9a-fA-F]{4}[-]?){3}[0-9a-fA-F]{12}[\\)|}]?)");
+			var match = regEx.Match(url);
+			if (match.Value == String.Empty)
 			{
-			  throw new ApplicationException("Could not parse the url " + urlWithoutSpaces);
+				return "";
 			}
-
-			var parse = System.Web.HttpUtility.ParseQueryString(uri.Query);
-
-			var ids = parse.GetValues("id");
-			if (ids != null && ids.Length > 0)
-			{
-				return ids[0];
-			}
-//            if (!parse.HasKeys())
-//            {
-//                return url;  //old-style, just an id
-//            }
-			return string.Empty;
+			return match.Groups[0].Value;
 		}
 
 
