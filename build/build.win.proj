@@ -14,7 +14,7 @@
 	<UsingTask AssemblyFile="C:\Program Files (x86)\MSBuild\MSBuildCommunityTasks\MSBuild.Community.Tasks.dll" TaskName="MsBuild.Community.Tasks.WebDownload" />
 
 	<PropertyGroup>
-		<Solution>WeSay.sln</Solution>
+		<Solution>WeSay VS2010.sln</Solution>
 		<ApplicationName>WeSay</ApplicationName>
 		<Configuration>Release</Configuration>
 	</PropertyGroup>
