@@ -439,28 +439,15 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
-			builder.RegisterInstance(new WordListCatalog()).SingleInstance();
+			builder.RegisterInstance(new WordListCatalog());
 #if !MONO
 			builder.RegisterInstance<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 #endif
 			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
-			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
+			builder.Register<OptionsList>(c => GetSemanticDomainsList()).SingleInstance();//todo: figure out how to limit this with a name... currently, it's for any OptionList
 
 			// I (CP) don't think this is needed
-			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
-
-			builder.Register<LiftDataMapper>(c =>
-												 {
-													 var mapper = new WeSayLiftDataMapper(
-														 _pathToLiftFile,
-														 GetSemanticDomainsList(),
-														 GetIdsOfSingleOptionFields(),
-														 new ProgressState()
-														 );
-
-													 return mapper;
-
-												 }).Named<LiftDataMapper>("NoProgress");
+			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields()).SingleInstance();//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
 
 			builder.Register<LiftDataMapper>(c =>
 												 {
@@ -490,9 +477,9 @@ namespace WeSay.Project
 														 throw;
 													 }
 												 }
-			);
+			).SingleInstance();
 
-			builder.RegisterType<LexEntryRepository>();
+			builder.RegisterType<LexEntryRepository>().SingleInstance();
 //            builder.Register<LexEntryRepository>(
 //                 c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
 //                         progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
@@ -527,16 +514,16 @@ namespace WeSay.Project
 				builder.RegisterInstance<ViewTemplate>(viewTemplate).SingleInstance();
 			}
 
-			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named<ViewTemplate>("PrintingTemplate");
-			builder.Register<IWritingSystemRepository>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
+			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named<ViewTemplate>("PrintingTemplate").SingleInstance();
+			builder.Register<IWritingSystemRepository>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned().SingleInstance();
 
 			RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
 
 
-			builder.Register<PublicationFontStyleProvider>(c=> new PublicationFontStyleProvider(c.ResolveNamed<ViewTemplate>("PrintingTemplate")));
+			builder.Register<PublicationFontStyleProvider>(c => new PublicationFontStyleProvider(c.ResolveNamed<ViewTemplate>("PrintingTemplate"))).SingleInstance();
 
-			builder.Register<IOptionListReader>(c => new DdpListReader()).Named<IOptionListReader>(LexSense.WellKnownProperties.SemanticDomainDdp4);
-			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
+			builder.Register<IOptionListReader>(c => new DdpListReader()).Named<IOptionListReader>(LexSense.WellKnownProperties.SemanticDomainDdp4).SingleInstance();
+			builder.Register<IOptionListReader>(c => new GenericOptionListReader()).SingleInstance();
 
 
 			builder.Register<PictureControl>(c=> new PictureControl(Path.GetDirectoryName(PathToLiftFile), PathToPictures, GetFileLocator())).InstancePerDependency();
@@ -558,7 +545,7 @@ namespace WeSay.Project
 			//it is sad that we initially used a static for logger, and that hasn't been completely undone yet.
 			//but by registering it here, we at least make it possible for components to get access to it this
 			//"proper" way.
-			builder.Register<Logger>(c => Logger.Singleton);
+			builder.Register<Logger>(c => Logger.Singleton).SingleInstance();
 			builder.Register<ILogger>(c =>
 										  {
 											  var m = new MultiLogger();
@@ -566,7 +553,7 @@ namespace WeSay.Project
 											  m.Add(Logger.Singleton);
 											  m.Add(c.Resolve<CheckinDescriptionBuilder>());
 											  return m;
-										  });
+										  }).SingleInstance();
 
 			//            var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
 //                        () => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
@@ -611,7 +598,7 @@ namespace WeSay.Project
 			{
 				var chorus = c.Resolve<ChorusSystem>();
 				return () => chorus.WinForms.CreateNotesBrowser();
-			});
+			}).SingleInstance();
 
 			var mapping = new NotesToRecordMapping();
 			mapping.FunctionToGetCurrentUrlForNewNotes = (entry, id) => GetUrlFromLexEntry(entry as LexEntry);
