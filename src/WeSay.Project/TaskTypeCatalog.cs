@@ -104,9 +104,10 @@ namespace WeSay.Project
 			// _taskNameToClassPath.Add(name, classPath);
 			Type type = GetType(classPath, assembly);
 			TaskNameToTaskType.Add(name, type);
-			builder.RegisterType(type).Named<Type>(name).InstancePerDependency();
+			builder.RegisterType(type).Named(name, type).InstancePerDependency();
 
-			 RegisterConfigurationClass(assembly, name, builder, configClassPath);
+			//register the class that holds the configuration for this task
+			RegisterConfigurationClass(assembly, name, builder, configClassPath);
 		}
 
 		private void RegisterConfigurationClass(string assembly, string name, ContainerBuilder builder, string configClassPath)
@@ -116,7 +117,7 @@ namespace WeSay.Project
 			{
 				type = GetType(configClassPath, assembly);
 				TaskNameToConfigType.Add(name, type);
-				builder.RegisterType(type).Named<Type>(name + "Config").InstancePerDependency();
+				builder.RegisterType(type).Named<ITaskConfiguration>(name + "Config").As<ITaskConfiguration>().InstancePerDependency();
 			}
 		}
 

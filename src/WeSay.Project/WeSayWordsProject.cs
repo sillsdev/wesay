@@ -13,6 +13,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Autofac;
 using Autofac.Builder;
+using Autofac.Core;
 using Chorus;
 using Chorus.FileTypeHanders.lift;
 using Chorus.sync;
@@ -448,36 +449,48 @@ namespace WeSay.Project
 			// I (CP) don't think this is needed
 			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
 
-			builder.Register<LiftDataMapper>( c =>
-			  {
-				  try
-				  {
-#if !MONO
-					  return c.Resolve<IProgressNotificationProvider>().Go
-						  <LiftDataMapper>(
-							  "Loading Dictionary",
-							  progressState =>
-								  {
-#endif
-									  var mapper =  new WeSayLiftDataMapper(
-										  _pathToLiftFile,
-										  GetSemanticDomainsList(),
-										  GetIdsOfSingleOptionFields(),
-										  new ProgressState ()
-										  );
+			builder.Register<LiftDataMapper>(c =>
+												 {
+													 var mapper = new WeSayLiftDataMapper(
+														 _pathToLiftFile,
+														 GetSemanticDomainsList(),
+														 GetIdsOfSingleOptionFields(),
+														 new ProgressState()
+														 );
 
-									  return mapper;
-#if !MONO
-								  }
-						  );
-#endif
-				  }
-				  catch (LiftFormatException error)
-				  {
-					  ErrorReport.NotifyUserOfProblem(error.Message);
-					  throw;
-				  }
-			  });
+													 return mapper;
+
+												 }).Named<LiftDataMapper>("NoProgress");
+
+			builder.Register<LiftDataMapper>(c =>
+												 {
+													 try
+													 {
+														 var semanticDomains = GetSemanticDomainsList();
+														 return c.Resolve<IProgressNotificationProvider>()
+																 .Go<LiftDataMapper>(
+																	 "Loading Dictionary", progressState =>
+																							   {
+																								   var mapper = new WeSayLiftDataMapper
+																									   (
+																									   _pathToLiftFile,
+																									   semanticDomains,
+																									   GetIdsOfSingleOptionFields
+																										   (),
+																									   progressState
+																									   );
+
+																								   return mapper;
+																							   }
+															 );
+													 }
+													 catch (LiftFormatException error)
+													 {
+														 ErrorReport.NotifyUserOfProblem(error.Message);
+														 throw;
+													 }
+												 }
+			);
 
 			builder.RegisterType<LexEntryRepository>();
 //            builder.Register<LexEntryRepository>(
@@ -511,7 +524,7 @@ namespace WeSay.Project
 			{
 				//todo: this isn't going to work if we start using multiple tempates.
 				//will have to go to a naming system.
-				builder.RegisterInstance(viewTemplate).SingleInstance();
+				builder.RegisterInstance<ViewTemplate>(viewTemplate).SingleInstance();
 			}
 
 			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named<ViewTemplate>("PrintingTemplate");
@@ -577,6 +590,7 @@ namespace WeSay.Project
 			//TODO: move all this stuff to ChorusSystem
 			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
 			var chorusSystem = new ChorusSystem(Path.GetDirectoryName(PathToConfigFile));
+			chorusSystem.Init(String.Empty);
 			chorusSystem.WritingSystems = writingSystemsForChorus;
 			builder.RegisterInstance(writingSystemsForChorus);
 			builder.RegisterInstance<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);

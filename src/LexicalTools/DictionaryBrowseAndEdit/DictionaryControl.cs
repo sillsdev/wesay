@@ -466,7 +466,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			{
 				return "";
 			}
-			return match.Groups[0].Value;
+			return match.Groups[1].Value;
 		}
 
 
