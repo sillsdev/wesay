@@ -59,7 +59,7 @@ namespace WeSay.Project
 		private readonly AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
 		private ChorusBackupMaker _backupMaker;
-		private Autofac.IContainer _container;
+		private IContainer _container;
 		readonly Dictionary<string, string> _changedWritingSystemIds = new Dictionary<string, string>();
 
 		//public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
@@ -1305,7 +1305,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public IContainer Container
+		public ILifetimeScope Container
 		{
 			get { return _container; }
 		}

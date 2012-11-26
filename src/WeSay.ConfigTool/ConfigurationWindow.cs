@@ -356,9 +356,6 @@ namespace WeSay.ConfigTool
 									//containerBuilder.Register<ChorusControl>();
 									containerBuilder
 										.RegisterType<OptionListControl>();
-
-									containerBuilder.Register<IComponentContext>(
-										c => c);
 									// make the context itself available for pushing into contructors);
 								});
 			return scope;
