@@ -34,7 +34,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private WritingSystemDefinition _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
 		private ResultSet<LexEntry> _records;
-		private bool _keepRecordCurrent;
 		private readonly ResultSetToListOfStringsAdapter _findTextAdapter;
 		private EntryViewControl _entryViewControl;
 
@@ -81,7 +80,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_searchTextBoxControl.TextBox.AutoCompleteChoiceSelected += OnSearchText_AutoCompleteChoiceSelected;
 			_searchTextBoxControl.FindButton.Click += OnFind_Click;
 
-			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
+			_recordsListBox.ItemSelectionChanged += OnRecordsListBoxItemSelectionChanged;
 
 			_splitter.SetMemory(memory);
 			SetupEntryViewControl(entryViewControlFactory);
@@ -290,24 +289,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void OnEntryChanged(object sender, PropertyChangedEventArgs e)
 		{
-
-
 			_lexEntryRepository.NotifyThatLexEntryHasBeenUpdated((LexEntry)sender);
-
-			Debug.Assert(CurrentIndex != -1);
-			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
-			_keepRecordCurrent = true;
-			LoadRecords();
-			int index = _records.FindFirstIndex(recordToken);
-			//may not have been successful in which case we should
-			//just try to go to the first with the same id
-			if (index < 0)
-			{
-				index = _records.FindFirstIndex(recordToken.Id);
-			}
-			Debug.Assert(index != -1);
-			_recordsListBox.SelectedIndex = index;
-			_keepRecordCurrent = false;
 		}
 
 		private void LoadRecords()
@@ -321,7 +303,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				_records = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(_listWritingSystem);
 			}
 			 _findTextAdapter.Items = _records;
-			_recordsListBox.DataSource = (BindingList<RecordToken<LexEntry>>) _records;
+			_recordsListBox.DataSource = new List<RecordToken<LexEntry>>(_records);
 		}
 
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
@@ -478,43 +460,28 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			);
 		}
 
-		private void OnRecordSelectionChanged(object sender, EventArgs e)
+		private void OnRecordsListBoxItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
-
-			if (_keepRecordCurrent)
+			if (e.IsSelected)
 			{
-				return;
-			}
+				var selectedRecord = CurrentRecord;
+				SetRecordToBeEdited(CurrentRecord);
 
-			SetRecordToBeEdited(CurrentRecord);
+				if (CurrentRecord != null)
+				{
+					Logger.WriteEvent("RecordSelectionChanged to " +
+									  CurrentRecord.LexicalForm.GetFirstAlternative());
+				}
+				else
+				{
+					Logger.WriteEvent("RecordSelectionChanged Skipping because record is null");
+				}
 
-			if (Control_EntryDetailPanel.DataSource == CurrentRecord)
-			{
-				//we were getting 3 calls to this for each click on a new word
-				// update display to catch changes from null to current value
+				LoadRecords();
+				_recordsListBox.SelectedIndex = _records.FindFirstIndex(selectedRecord);
+
 				UpdateDisplay();
-				return;
 			}
-
-			if (CurrentRecord != null)
-			{
-				Logger.WriteEvent("RecordSelectionChanged to " +
-								  CurrentRecord.LexicalForm.GetFirstAlternative());
-			}
-			else
-			{
-				Logger.WriteEvent("RecordSelectionChanged Skipping because record is null");
-			}
-
-			//nb: SelectedIndexChanged,  which calls this, is fired twice
-			//once for the deselection, again with the selection
-			if (CurrentIndex == -1)
-			{
-				return;
-			}
-
-			SelectedIndexChanged.Invoke(this, null);
-			UpdateDisplay();
 		}
 
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -615,7 +582,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 			Debug.Assert(selectIndex != -1);
 			_recordsListBox.SelectedIndex = selectIndex;
-			OnRecordSelectionChanged(_recordsListBox, new EventArgs());
 			//_entryViewControl.Focus();
 			_entryViewControl.SelectOnCorrectControl();
 
@@ -707,8 +673,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				index = _records.Count - 1;
 			}
 			_recordsListBox.SelectedIndex = index;
-			OnRecordSelectionChanged(this, null);
-			//_entryViewControl.Focus();
 			_entryViewControl.SelectOnCorrectControl();
 		}
 
@@ -746,7 +710,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			if (disposing && !IsDisposed)
 			{
-				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
+				_recordsListBox.ItemSelectionChanged -= OnRecordsListBoxItemSelectionChanged;
 
 				SaveAndCleanUpPreviousEntry();
 
