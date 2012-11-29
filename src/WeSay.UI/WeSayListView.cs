@@ -204,6 +204,7 @@ namespace WeSay.UI
 				{
 					VirtualListSize = value.Count;
 				}
+				Invalidate();
 			}
 		}
 
