@@ -254,6 +254,8 @@ namespace WeSay.UI
 
 		protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
 		{
+			if (_mouseIsDown) return;
+
 			if (Environment.OSVersion.Version.Major >= 6 || Environment.OSVersion.Platform == PlatformID.Unix)
 			{
 				Invalidate(); //needed to prevent artifacts of previous selections hanging around
@@ -298,47 +300,39 @@ namespace WeSay.UI
 
 		private void SelectFromClickLocation()
 		{
-			if (SimulateListBox && _clickSelecting)
+			ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
+			if (item != null)
 			{
-				ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
-				if (item != null)
+				_indexSelectedOnDown = item.Index;
+				item.Focused = true;
+			}
+			else
+			{
+				// restore the selection
+				int index = _dataSource.IndexOf(SelectedItem);
+				if (index != -1)
 				{
-					SelectedIndex = item.Index;
-					item.Focused = true;
-				}
-				else
-				{
-					// restore the selection
-					int index = _dataSource.IndexOf(_selectedItem);
-					if (index != -1)
-					{
-						SelectedIndex = index;
-						if (VirtualMode)
-						{
-							GetVirtualItem(index).Focused = true;
-						}
-						else
-						{
-							Items[index].Focused = true;
-						}
-					}
+					_indexSelectedOnDown = index;
+					GetVirtualItem(index).Focused = true;
 				}
 			}
-			_clickSelecting = false;
-		}
-
-		protected override void OnClick(EventArgs e)
-		{
-			SelectFromClickLocation();
-			base.OnClick(e);
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
-			_clickSelecting = true;
+			Console.WriteLine("Down! Selected index: {0}", SelectedIndex);
+			_dirtyIndecesThatNeedRedrawing.Add(SelectedIndex);
 			_currentMouseLocation = e.Location;
+			SelectFromClickLocation();
+			_dirtyIndecesThatNeedRedrawing.Add(_indexSelectedOnDown);
 			base.OnMouseDown(e);
+			_mouseIsDown = true;
+			InvalidateRectsOfDirtyItems();
 		}
+
+		private readonly List<int> _dirtyIndecesThatNeedRedrawing = new List<int>();
+		private bool _mouseIsDown;
+		private int _indexSelectedOnDown;
 
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
@@ -393,11 +387,24 @@ namespace WeSay.UI
 		// the coordinates returned now don't reflect the user's intentions
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			SelectFromClickLocation();
-			_currentMouseLocation = e.Location;
+			SelectedIndex = -1;
+			_mouseIsDown = false;
+			SelectedIndex = _indexSelectedOnDown;
+			Console.WriteLine("Up! Selected index: {0}", SelectedIndex);
 			base.OnMouseUp(e);
+			InvalidateRectsOfDirtyItems();
+			_dirtyIndecesThatNeedRedrawing.Clear();
 		}
 
+		private void InvalidateRectsOfDirtyItems()
+		{
+			foreach (var dirtyIndex in _dirtyIndecesThatNeedRedrawing)
+			{
+				var itemRect = GetItemRect(dirtyIndex);
+				var rectSpanningWholeControl = new Rectangle(itemRect.X, itemRect.Y, ClientRectangle.Width, itemRect.Height);
+				Invalidate(rectSpanningWholeControl);
+			}
+		}
 		#endregion
 
 		protected override void OnDrawItem(DrawListViewItemEventArgs e)
