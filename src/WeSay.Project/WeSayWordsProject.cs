@@ -159,16 +159,7 @@ namespace WeSay.Project
 		public bool LoadFromLiftLexiconPath(string liftPath)
 		{
 			try{
-				PathToLiftFile = liftPath;
-
-				if (!File.Exists(liftPath))
-				{
-					ErrorReport.NotifyUserOfProblem(
-							String.Format(
-									"WeSay tried to find the WeSay configuration file at '{0}', but could not find it.\r\n\r\nTry using the configuration Tool to create one.",
-									PathToConfigFile));
-					return false;
-				}
+				PathToLiftFile = LiftFileLocator.LocateAt(liftPath);
 
 				if (!File.Exists(PathToConfigFile))
 				{

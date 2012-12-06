@@ -64,10 +64,22 @@ namespace WeSay.Project
 				);
 				if (String.IsNullOrEmpty(preferredLiftFile))
 				{
+					var configFiles = Directory.GetFiles(projectDirectoryPath, "*.WeSayConfig");
+					if (configFiles.Count() == 1)
+					{
+						preferredLiftFile = liftPaths.SingleOrDefault(lp =>
+																	  Path.GetFileNameWithoutExtension(lp)
+																		  .Equals(
+																			  Path.GetFileNameWithoutExtension(
+																				  configFiles.First())));
+					}
+				}
+				if (String.IsNullOrEmpty(preferredLiftFile))
+				{
 					if (canNotify)
 					{
 						ErrorReport.NotifyUserOfProblem(
-							"Expected only one LIFT file in {0}, but there were {1}. Remove all but one and try again.",
+							"Expected only one LIFT file in {0}, but there were {1}. Wesay couldn't decide which one to use. Remove all but one and try again.",
 							projectDirectoryPath,
 							liftPaths.Length
 						);
