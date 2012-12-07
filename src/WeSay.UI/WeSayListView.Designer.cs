@@ -19,6 +19,7 @@ namespace WeSay.UI
 			{
 				components.Dispose();
 			}
+			RemoveBindingListNotifiers();
 			base.Dispose(disposing);
 		}
 

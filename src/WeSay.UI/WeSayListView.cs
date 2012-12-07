@@ -205,8 +205,33 @@ namespace WeSay.UI
 					VirtualListSize = value.Count;
 				}
 				Invalidate();
-			}
-		}
+
+				if (value is IBindingList)
+				{
+					((IBindingList) value).ListChanged += OnListChanged;
+				}
+			 }
+		 }
+
+		 private void RemoveBindingListNotifiers()
+		 {
+			 if (_dataSource != null && _dataSource is IBindingList)
+			 {
+				 ((IBindingList) _dataSource).ListChanged -= OnListChanged;
+			 }
+		 }
+
+		 private void OnListChanged(object sender, ListChangedEventArgs e)
+		 {
+			_itemsCache.Clear();
+			// this needs to be at the beginning so we don't make an invalid
+			// reference past the end when an item is deleted
+			// n.b. To cooperate with the virtual mode, when a Selection
+			// is made (i.e., SelectedIndex is assigned) RetrieveVirtualItem
+			// will get called to update the old selection and the new
+			// unless we lower the size.
+			VirtualListSize = _dataSource.Count;
+		 }
 
 		protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
 		{
@@ -255,13 +280,22 @@ namespace WeSay.UI
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
 			Console.WriteLine("Down! Selected index: {0}", SelectedIndex);
-			_dirtyIndecesThatNeedRedrawing.Add(SelectedIndex);
+			MarkIndexAsNeedingToBeRedrawn(SelectedIndex);
 			_currentMouseLocation = e.Location;
 			SelectFromClickLocation();
-			_dirtyIndecesThatNeedRedrawing.Add(_indexSelectedOnDown);
+
+			MarkIndexAsNeedingToBeRedrawn(_indexSelectedOnDown);
 			base.OnMouseDown(e);
 			_mouseIsDown = true;
 			InvalidateRectsOfDirtyItems();
+		}
+
+		private void MarkIndexAsNeedingToBeRedrawn(int index)
+		{
+			if (index != -1)
+			{
+				_dirtyIndecesThatNeedRedrawing.Add(index);
+			}
 		}
 
 		private readonly List<int> _dirtyIndecesThatNeedRedrawing = new List<int>();
