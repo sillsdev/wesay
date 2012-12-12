@@ -55,33 +55,29 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			memory.TrackSplitContainer(splitContainer2, "betweenToDoAndDoneLists");
 			_entryViewControl.SetMemory(memory.CreateNewSection("entryView"));
 
-			_completedRecords = new List<RecordToken<LexEntry>>();
-			_todoRecords = records.ToList<RecordToken<LexEntry>>();
-
 			_viewTemplate = viewTemplate;
 			_isNotComplete = isNotComplete;
 			InitializeDisplaySettings();
+
 			_entryViewControl.KeyDown += OnKeyDown;
 			_entryViewControl.ViewTemplate = _viewTemplate;
-
 			_entryViewControl.LexEntryRepository = lexEntryRepository;
-
-			_todoRecordsListBox.DataSource = _todoRecords;
-			//            _records.ListChanged += OnRecordsListChanged;
-			// this needs to be after so it will get change event after the ListBox
 
 			WritingSystemDefinition listWritingSystem = GetListWritingSystem();
 
+			_todoRecords = records.ToList<RecordToken<LexEntry>>();
+			_todoRecordsListBox.DataSource = _todoRecords;
 			_todoRecordsListBox.BorderStyle = BorderStyle.None;
 			_todoRecordsListBox.ItemSelectionChanged += OnTodoRecordSelectionChanged;
 			_todoRecordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
 			_todoRecordsListBox.WritingSystem = listWritingSystem;
 
+			_completedRecords = new List<RecordToken<LexEntry>>();
 			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.BorderStyle = BorderStyle.None;
 			_completedRecordsListBox.ItemSelectionChanged += OnCompletedRecordSelectionChanged;
-			_completedRecordsListBox.WritingSystem = listWritingSystem;
 			_completedRecordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
+			_completedRecordsListBox.WritingSystem = listWritingSystem;
 
 			labelNextHotKey.BringToFront();
 			_btnNextWord.BringToFront();
@@ -187,9 +183,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 
 			CurrentRecord = recordForWhichSelectionIsChanging;
-
-			//SetCurrentRecordFromRecordList();
-
+			UpdatePreviousAndNextRecords();
 		}
 
 		private void MoveRecordToAppropriateListBox(RecordToken<LexEntry> record)
@@ -246,7 +240,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				_todoRecordsListBox.Focus();
 				// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();
-				UpdatePreviousAndNextRecords();
 			}
 			else
 			{
@@ -272,7 +265,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				_todoRecordsListBox.Focus();
 				// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();
-				UpdatePreviousAndNextRecords();
 			}
 		}
 
@@ -306,7 +298,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				{
 					CurrentRecord = _todoRecords[RecordListCurrentIndex];
 				}
-				UpdatePreviousAndNextRecords();
 			}
 		}
 
@@ -378,22 +369,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		}
 
 		public LexEntry CurrentEntry { get; private set; }
-
-		//private void OnRecordsListChanged(object sender, ListChangedEventArgs e)
-		//{
-		//    switch(e.ListChangedType)
-		//    {
-		//        case ListChangedType.ItemAdded:
-		//            SelectCurrentRecordInTodoRecordList();
-		//            break;
-		//        case ListChangedType.ItemDeleted:
-		//            ClearSelectionForRecordsListBox();
-		//            break;
-		//        case ListChangedType.Reset:
-		//            SelectCurrentRecordInTodoRecordList();
-		//            break;
-		//    }
-		//}
 
 		private void SelectCurrentRecordInTodoRecordList()
 		{
