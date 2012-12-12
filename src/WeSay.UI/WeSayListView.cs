@@ -280,25 +280,13 @@ namespace WeSay.UI
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
 			Console.WriteLine("Down! Selected index: {0}", SelectedIndex);
-			MarkIndexAsNeedingToBeRedrawn(SelectedIndex);
+			InvalidateItemRect(SelectedIndex);
 			_currentMouseLocation = e.Location;
 			SelectFromClickLocation();
-
-			MarkIndexAsNeedingToBeRedrawn(_indexSelectedOnDown);
 			base.OnMouseDown(e);
+			InvalidateItemRect(_indexSelectedOnDown);
 			_mouseIsDown = true;
-			InvalidateRectsOfDirtyItems();
 		}
-
-		private void MarkIndexAsNeedingToBeRedrawn(int index)
-		{
-			if (index != -1)
-			{
-				_dirtyIndecesThatNeedRedrawing.Add(index);
-			}
-		}
-
-		private readonly List<int> _dirtyIndecesThatNeedRedrawing = new List<int>();
 		private bool _mouseIsDown;
 		private int _indexSelectedOnDown;
 
@@ -359,16 +347,15 @@ namespace WeSay.UI
 			SelectedIndex = _indexSelectedOnDown;
 			Console.WriteLine("Up! Selected index: {0}", SelectedIndex);
 			base.OnMouseUp(e);
-			InvalidateRectsOfDirtyItems();
-			_dirtyIndecesThatNeedRedrawing.Clear();
 		}
 
-		private void InvalidateRectsOfDirtyItems()
+		private void InvalidateItemRect(int dirtyIndex)
 		{
-			foreach (var dirtyIndex in _dirtyIndecesThatNeedRedrawing)
+			if (dirtyIndex != -1)
 			{
 				var itemRect = GetItemRect(dirtyIndex);
-				var rectSpanningWholeControl = new Rectangle(itemRect.X, itemRect.Y, ClientRectangle.Width, itemRect.Height);
+				var rectSpanningWholeControl = new Rectangle(itemRect.X, itemRect.Y, ClientRectangle.Width,
+															 itemRect.Height);
 				Invalidate(rectSpanningWholeControl);
 			}
 		}
@@ -469,42 +456,47 @@ namespace WeSay.UI
 				{
 					throw new ArgumentOutOfRangeException();
 				}
-				if (value == -1)
+				if (SelectedIndex != value)
 				{
-					_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
-					SelectedIndices.Clear();
-				}
-				else
-				{
-					if (!SelectedIndices.Contains(value))
+					InvalidateItemRect(SelectedIndex);
+					InvalidateItemRect(value);
+					if (value == -1)
 					{
-						var ret = SelectedIndices.Add(value);
+						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+						SelectedIndices.Clear();
 					}
-
-					// We can't get a selection to stay until the real handle is created
-					// this gets around that
-					if (SelectedIndices.Count == 0)
+					else
 					{
-						if (_selectedIndexForUseBeforeSelectedIndicesAreInitialized != value)
+						if (!SelectedIndices.Contains(value))
 						{
-							_selectedIndexForUseBeforeSelectedIndicesAreInitialized = value;
-							OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(GetVirtualItem(value),
-																							 value, true));
+							SelectedIndices.Add(value);
 						}
 
-					}
-					else
-					{
-						// done with its usefulness
-						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
-					}
-					if (!IsHandleCreated) //this is a mono bug workaround.
-					{
-						_ensureVisibleCalledBeforeWindowHandleCreated = true;
-					}
-					else
-					{
-						EnsureVisible(value);
+						// We can't get a selection to stay until the real handle is created
+						// this gets around that
+						if (SelectedIndices.Count == 0)
+						{
+							if (_selectedIndexForUseBeforeSelectedIndicesAreInitialized != value)
+							{
+								_selectedIndexForUseBeforeSelectedIndicesAreInitialized = value;
+								OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(GetVirtualItem(value),
+																								 value, true));
+							}
+
+						}
+						else
+						{
+							// done with its usefulness
+							_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+						}
+						if (!IsHandleCreated) //this is a mono bug workaround.
+						{
+							_ensureVisibleCalledBeforeWindowHandleCreated = true;
+						}
+						else
+						{
+							EnsureVisible(value);
+						}
 					}
 				}
 			}
