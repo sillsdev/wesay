@@ -287,8 +287,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private void SetCurrentRecordFromRecordList()
 		{
-			ClearSelectionForCompletedRecordsListBox();
-
 			if (_todoRecords.Count == 0)
 			{
 				CurrentRecord = null;
@@ -402,34 +400,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			int index = _todoRecords.IndexOf(CurrentRecord);
 			Debug.Assert(index != -1);
 			_todoRecordsListBox.SelectedIndex = index;
-			ClearSelectionForCompletedRecordsListBox();
 		}
 
 		private void OnCurrentRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			SaveNow();
 			Debug.Assert(sender == CurrentEntry);
-		}
-
-		private void SelectCurrentRecordInCompletedRecordList()
-		{
-			int index = _completedRecords.IndexOf(_currentRecord);
-			_completedRecordsListBox.SelectedIndex = index;
-			ClearSelectionForRecordsListBox();
-		}
-
-		private void ClearSelectionForCompletedRecordsListBox()
-		{
-			_completedRecordsListBox.SelectedIndex = -1;
-			_completedRecordsListBox.HideSelection = true;
-			_todoRecordsListBox.HideSelection = false;
-		}
-
-		private void ClearSelectionForRecordsListBox()
-		{
-			_todoRecordsListBox.SelectedIndex = -1;
-			_todoRecordsListBox.HideSelection = true;
-			_completedRecordsListBox.HideSelection = false;
 		}
 
 		private void OnBtnPreviousWordClick(object sender, EventArgs e)
