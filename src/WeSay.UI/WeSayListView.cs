@@ -478,7 +478,7 @@ namespace WeSay.UI
 				{
 					if (!SelectedIndices.Contains(value))
 					{
-						SelectedIndices.Add(value);
+						var ret = SelectedIndices.Add(value);
 					}
 
 					// We can't get a selection to stay until the real handle is created

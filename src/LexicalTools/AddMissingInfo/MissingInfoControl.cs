@@ -354,12 +354,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		private void OnCompletedRecordSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
 
-			var recordForWhichSelectionIsChanging = _todoRecords[e.ItemIndex];
+			var recordForWhichSelectionIsChanging = _completedRecords[e.ItemIndex];
 			if (CurrentRecord != null)
 			{
 				MoveRecordToAppropriateListBox(CurrentRecord);
 				//reset the index as it may have changed
-				_recordsListBox.SelectedIndex = _todoRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
+				_completedRecordsListBox.SelectedIndex = _completedRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
 			}
 
 			//This is the case if we previously had a record selected in the todoListBox and now are selecting a record in the completedListBox
