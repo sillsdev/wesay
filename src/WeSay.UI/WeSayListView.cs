@@ -485,8 +485,12 @@ namespace WeSay.UI
 					// this gets around that
 					if (SelectedIndices.Count == 0)
 					{
-						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = value;
-						OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(GetVirtualItem(value), value, true));
+						if (_selectedIndexForUseBeforeSelectedIndicesAreInitialized != value)
+						{
+							_selectedIndexForUseBeforeSelectedIndicesAreInitialized = value;
+							OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(GetVirtualItem(value),
+																							 value, true));
+						}
 
 					}
 					else

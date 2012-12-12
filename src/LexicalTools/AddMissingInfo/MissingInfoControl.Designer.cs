@@ -21,12 +21,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				//_records.ListChanged -= OnRecordsListChanged;
 
-				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
+				_recordsListBox.ItemSelectionChanged -= OnRecordSelectionChanged;
 				//_recordsListBox.Enter += _recordsListBox_Enter;
 				//_recordsListBox.Leave += _recordsListBox_Leave;
 				//_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
 
-				_completedRecordsListBox.SelectedIndexChanged -= OnCompletedRecordSelectionChanged;
+				_completedRecordsListBox.ItemSelectionChanged -= OnCompletedRecordSelectionChanged;
 				//_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
 				//_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
 
