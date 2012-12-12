@@ -118,7 +118,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			get
 			{
-				if (_records.Count == 0 || CurrentIndex == -1)
+				if (_records == null || _records.Count == 0 || CurrentIndex == -1)
 				{
 					return null;
 				}
@@ -294,6 +294,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void LoadRecords()
 		{
+			var selectedItem = CurrentRecord;
 			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 			{
 				_records = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(_listWritingSystem);
@@ -304,6 +305,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 			 _findTextAdapter.Items = _records;
 			_recordsListBox.DataSource = new List<RecordToken<LexEntry>>(_records);
+			if (selectedItem != null)
+			{
+				_recordsListBox.SelectedIndex = _records.FindFirstIndex(selectedItem);
+			}
 		}
 
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
