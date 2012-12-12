@@ -19,24 +19,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			if (disposing && !IsDisposed)
 			{
-				//_records.ListChanged -= OnRecordsListChanged;
 
-				_recordsListBox.ItemSelectionChanged -= OnRecordSelectionChanged;
-				//_recordsListBox.Enter += _recordsListBox_Enter;
-				//_recordsListBox.Leave += _recordsListBox_Leave;
-				//_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
-
+				_todoRecordsListBox.ItemSelectionChanged -= OnTodoRecordSelectionChanged;
 				_completedRecordsListBox.ItemSelectionChanged -= OnCompletedRecordSelectionChanged;
-				//_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
-				//_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
-
-			   // Debug.Assert(_recordsListBox.BindingContext.Contains(_records) == false);
-				//if (_recordsListBox.BindingContext != null)
-				//{
-				//    ((CurrencyManager) _recordsListBox.BindingContext[_records]).SuspendBinding();
-				//    _recordsListBox.BindingContext = new BindingContext();
-				//}
-
 
 				if (CurrentEntry != null)
 				{
@@ -63,7 +48,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this._todoBox = new System.Windows.Forms.TableLayoutPanel();
 			this.label1 = new System.Windows.Forms.Label();
-			this._recordsListBox = new WeSay.UI.WeSayListView();
+			this._todoRecordsListBox = new WeSay.UI.WeSayListView();
 			this._completedBox = new System.Windows.Forms.TableLayoutPanel();
 			this._completedRecordsLabel = new System.Windows.Forms.Label();
 			this._completedRecordsListBox = new WeSay.UI.WeSayListView();
@@ -129,7 +114,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this._todoBox.ColumnCount = 1;
 			this._todoBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._todoBox.Controls.Add(this.label1, 0, 0);
-			this._todoBox.Controls.Add(this._recordsListBox, 0, 1);
+			this._todoBox.Controls.Add(this._todoRecordsListBox, 0, 1);
 			this._todoBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._todoBox.Location = new System.Drawing.Point(0, 0);
 			this._todoBox.Name = "_todoBox";
@@ -149,15 +134,15 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this.label1.TabIndex = 11;
 			this.label1.Text = "To Do:";
 			//
-			// _recordsListBox
+			// _todoRecordsListBox
 			//
-			this._recordsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._recordsListBox.Location = new System.Drawing.Point(3, 19);
-			this._recordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
-			this._recordsListBox.Name = "_recordsListBox";
-			this._recordsListBox.Size = new System.Drawing.Size(120, 156);
-			this._recordsListBox.TabIndex = 2;
-			this._recordsListBox.View = System.Windows.Forms.View.SmallIcon;
+			this._todoRecordsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._todoRecordsListBox.Location = new System.Drawing.Point(3, 19);
+			this._todoRecordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
+			this._todoRecordsListBox.Name = "_todoRecordsListBox";
+			this._todoRecordsListBox.Size = new System.Drawing.Size(120, 156);
+			this._todoRecordsListBox.TabIndex = 2;
+			this._todoRecordsListBox.View = System.Windows.Forms.View.SmallIcon;
 			//
 			// _completedBox
 			//
@@ -311,7 +296,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		private SplitContainer splitContainer1;
 		private SplitContainer splitContainer2;
 
-		internal WeSayListView _recordsListBox;
+		internal WeSayListView _todoRecordsListBox;
 		private EntryViewControl _entryViewControl;
 		private CongratulationsControl _congratulationsControl;
 		private Label label1;

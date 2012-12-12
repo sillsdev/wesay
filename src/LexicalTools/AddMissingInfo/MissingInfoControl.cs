@@ -66,26 +66,20 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 			_entryViewControl.LexEntryRepository = lexEntryRepository;
 
-			_recordsListBox.DataSource = _todoRecords;
+			_todoRecordsListBox.DataSource = _todoRecords;
 			//            _records.ListChanged += OnRecordsListChanged;
 			// this needs to be after so it will get change event after the ListBox
 
 			WritingSystemDefinition listWritingSystem = GetListWritingSystem();
 
-			_recordsListBox.BorderStyle = BorderStyle.None;
-			_recordsListBox.ItemSelectionChanged += OnRecordSelectionChanged;
-			_recordsListBox.MouseDown += _recordsListBox_MouseDown;
-			_recordsListBox.Enter += _recordsListBox_Enter;
-			_recordsListBox.Leave += _recordsListBox_Leave;
-			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
-			_recordsListBox.WritingSystem = listWritingSystem;
+			_todoRecordsListBox.BorderStyle = BorderStyle.None;
+			_todoRecordsListBox.ItemSelectionChanged += OnTodoRecordSelectionChanged;
+			_todoRecordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
+			_todoRecordsListBox.WritingSystem = listWritingSystem;
 
 			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.BorderStyle = BorderStyle.None;
 			_completedRecordsListBox.ItemSelectionChanged += OnCompletedRecordSelectionChanged;
-			_completedRecordsListBox.MouseDown += _completedRecordsListBox_MouseDown;
-			_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
-			_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
 			_completedRecordsListBox.WritingSystem = listWritingSystem;
 			_completedRecordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
 
@@ -95,20 +89,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			SetCurrentRecordFromRecordList();
 		}
 
-		private void _completedRecordsListBox_MouseDown(object sender, MouseEventArgs e)
-		{
-			_completedRecordsListBox_Enter(sender, e);
-		}
-
-		private void _recordsListBox_MouseDown(object sender, MouseEventArgs e)
-		{
-			_recordsListBox_Enter(sender, e);
-		}
-
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
 		{
 			RecordToken<LexEntry> recordToken;
-			if (sender == _recordsListBox)
+			if (sender == _todoRecordsListBox)
 			{
 				recordToken = _todoRecords[e.ItemIndex];
 			}
@@ -126,7 +110,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 			displayString =
 					recordToken.RealObject.LexicalForm.GetBestAlternative(
-							_recordsListBox.WritingSystem.Id, string.Empty);
+							_todoRecordsListBox.WritingSystem.Id, string.Empty);
 			e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
 
 			if (string.IsNullOrEmpty(displayString))
@@ -179,29 +163,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				Field.FieldNames.EntryLexicalForm.ToString());
 		}
 
-		private bool _recordsListBoxActive;
-		private bool _completedRecordsListBoxActive;
-
-		private void _recordsListBox_Leave(object sender, EventArgs e)
-		{
-			_recordsListBoxActive = false;
-		}
-
-		private void _recordsListBox_Enter(object sender, EventArgs e)
-		{
-			_recordsListBoxActive = true;
-		}
-
-		private void _completedRecordsListBox_Leave(object sender, EventArgs e)
-		{
-			_completedRecordsListBoxActive = false;
-		}
-
-		private void _completedRecordsListBox_Enter(object sender, EventArgs e)
-		{
-			_completedRecordsListBoxActive = true;
-		}
-
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
@@ -209,14 +170,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//we like it to stand out at design time, but not runtime
 		}
 
-		private void OnRecordSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+		private void OnTodoRecordSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
 			var recordForWhichSelectionIsChanging = _todoRecords[e.ItemIndex];
 			if (CurrentRecord != null)
 			{
 				MoveRecordToAppropriateListBox(CurrentRecord);
 				//reset the index as it may have changed
-				_recordsListBox.SelectedIndex = _todoRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
+				_todoRecordsListBox.SelectedIndex = _todoRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
 			}
 
 			//This is the case if we previously had a record selected in the completedListBox and now are selecting a record in the todoListBox
@@ -255,7 +216,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					_completedRecords.Add(record);
 				}
 			}
-			_recordsListBox.VirtualListSize = _todoRecords.Count;
+			_todoRecordsListBox.VirtualListSize = _todoRecords.Count;
 			_completedRecordsListBox.VirtualListSize = _completedRecords.Count;
 		}
 
@@ -282,7 +243,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				CurrentRecord = _nextRecord ?? _todoRecords[_todoRecords.Count - 1];
 				SelectCurrentRecordInTodoRecordList();
-				_recordsListBox.Focus();
+				_todoRecordsListBox.Focus();
 				// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();
 				UpdatePreviousAndNextRecords();
@@ -308,7 +269,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 				CurrentRecord = _previousRecord ?? _todoRecords[0];
 				SelectCurrentRecordInTodoRecordList();
-				_recordsListBox.Focus();
+				_todoRecordsListBox.Focus();
 				// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();
 				UpdatePreviousAndNextRecords();
@@ -338,9 +299,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				if (RecordListCurrentIndex == -1)
 				{
-					if (_recordsListBox.Items.Count > 0)
+					if (_todoRecordsListBox.Items.Count > 0)
 					{
-						_recordsListBox.SelectedIndex = 0;
+						_todoRecordsListBox.SelectedIndex = 0;
 					}
 				}
 				if (RecordListCurrentIndex != -1)
@@ -363,9 +324,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 
 			//This is the case if we previously had a record selected in the todoListBox and now are selecting a record in the completedListBox
-			if (e.IsSelected && _recordsListBox.SelectedIndex != -1)
+			if (e.IsSelected && _todoRecordsListBox.SelectedIndex != -1)
 			{
-				_recordsListBox.SelectedIndex = -1;
+				_todoRecordsListBox.SelectedIndex = -1;
 			}
 
 			CurrentRecord = recordForWhichSelectionIsChanging;
@@ -373,7 +334,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		protected int RecordListCurrentIndex
 		{
-			get { return _recordsListBox.SelectedIndex; }
+			get { return _todoRecordsListBox.SelectedIndex; }
 		}
 
 		protected int CompletedRecordListCurrentIndex
@@ -440,7 +401,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			int index = _todoRecords.IndexOf(CurrentRecord);
 			Debug.Assert(index != -1);
-			_recordsListBox.SelectedIndex = index;
+			_todoRecordsListBox.SelectedIndex = index;
 			ClearSelectionForCompletedRecordsListBox();
 		}
 
@@ -461,13 +422,13 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			_completedRecordsListBox.SelectedIndex = -1;
 			_completedRecordsListBox.HideSelection = true;
-			_recordsListBox.HideSelection = false;
+			_todoRecordsListBox.HideSelection = false;
 		}
 
 		private void ClearSelectionForRecordsListBox()
 		{
-			_recordsListBox.SelectedIndex = -1;
-			_recordsListBox.HideSelection = true;
+			_todoRecordsListBox.SelectedIndex = -1;
+			_todoRecordsListBox.HideSelection = true;
 			_completedRecordsListBox.HideSelection = false;
 		}
 

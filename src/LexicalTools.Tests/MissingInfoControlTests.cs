@@ -416,7 +416,7 @@ namespace WeSay.LexicalTools.Tests
 									  "a bogus translation of example");
 				Assert.AreEqual(missingInfoControl._completedRecordsListBox.SelectedItem,
 								currentRecord);
-				Assert.IsFalse(missingInfoControl._recordsListBox.DataSource.Contains(currentRecord));
+				Assert.IsFalse(missingInfoControl._todoRecordsListBox.DataSource.Contains(currentRecord));
 #if Visual
 				DebugShowState(missingInfoControl, currentRecord);
 #endif
@@ -468,7 +468,7 @@ namespace WeSay.LexicalTools.Tests
 				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
 				AddTranslationToEntry(missingInfoControl.CurrentEntry, string.Empty);
-				Assert.AreEqual(missingInfoControl._recordsListBox.SelectedItem, currentRecord);
+				Assert.AreEqual(missingInfoControl._todoRecordsListBox.SelectedItem, currentRecord);
 				Assert.IsFalse(
 						missingInfoControl._completedRecordsListBox.DataSource.Contains(
 								currentRecord));
@@ -486,7 +486,7 @@ namespace WeSay.LexicalTools.Tests
 			Console.WriteLine(currentRecord);
 
 			Console.WriteLine("ToDo:");
-			foreach (LexEntry item in missingInfoControl._recordsListBox.Items)
+			foreach (LexEntry item in missingInfoControl._todoRecordsListBox.Items)
 			{
 				Console.WriteLine(item);
 			}

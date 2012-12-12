@@ -556,7 +556,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			if (emptyWordIndex == -1)
 			{
 				LexEntry entry = _lexEntryRepository.CreateItem();
-				//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
+				//bool NoPriorSelection = _todoRecordsListBox.SelectedIndex == -1;
 				//_recordListBoxActive = true; // allow onRecordSelectionChanged
 				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(SearchTextBox.Text) &&
 					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
@@ -714,9 +714,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 				SaveAndCleanUpPreviousEntry();
 
-				//_recordsListBox.Enter -= _recordsListBox_Enter;
-				//_recordsListBox.Leave -= _recordsListBox_Leave;
-				//_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
+				//_todoRecordsListBox.Enter -= _recordsListBox_Enter;
+				//_todoRecordsListBox.Leave -= _recordsListBox_Leave;
+				//_todoRecordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
 
 				SearchTextBox.KeyDown -= OnFindText_KeyDown;
 			}

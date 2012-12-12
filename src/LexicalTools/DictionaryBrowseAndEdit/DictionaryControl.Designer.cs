@@ -58,7 +58,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this._searchAndListBoxTable.Size = new System.Drawing.Size(146, 257);
 			this._searchAndListBoxTable.TabIndex = 7;
 			//
-			// _recordsListBox
+			// _todoRecordsListBox
 			//
 			this._recordsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._recordsListBox.Location = new System.Drawing.Point(3, 42);
