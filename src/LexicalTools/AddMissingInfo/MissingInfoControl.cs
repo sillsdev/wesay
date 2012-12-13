@@ -266,8 +266,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					_btnPreviousWord.Focus();
 				}
 
-				CurrentRecord = _previousRecord ?? _todoRecords[0];
-				SelectCurrentRecordInTodoRecordList();
+				if (_previousRecord != null)
+				{
+					_todoRecordsListBox.SelectedIndex = _todoRecords.FindIndex(r => r == _previousRecord);
+				}
+				else if (!_isNotComplete(CurrentEntry))
+				{
+					_todoRecordsListBox.SelectedIndex = 1;
+				}
 				_todoRecordsListBox.Focus();
 				// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();

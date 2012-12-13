@@ -256,7 +256,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void SetCurrentRecordToPrevious_AfterChangedSoNoLongerMeetsFilter_StaysAtFirst()
+		public void SetCurrentRecordToPrevious_AtFirst_AfterChangedSoNoLongerMeetsFilter_StaysAtFirst()
 		{
 			using (
 					var missingInfoControl =
@@ -268,7 +268,7 @@ namespace WeSay.LexicalTools.Tests
 				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
 				missingInfoControl.SetCurrentRecordToPrevious();
-				Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
+				Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
 			}
 		}
 
@@ -360,7 +360,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void SetCurrentRecordToNext_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLast()
+		public void SetCurrentRecordToNext_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLastWhichWasFormerlyTheSecondToLast()
 		{
 			using (
 					var missingInfoControl =
@@ -401,7 +401,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void ChangedSoNoLongerMeetsFilter_RemovedFromTodoAndAddedToCompleteList()
+		public void SetCurrentRecordToNext_ChangedSoNoLongerMeetsFilter_RemovedFromTodoAndAddedToCompleteList()
 		{
 			using (
 					var missingInfoControl =
@@ -415,6 +415,29 @@ namespace WeSay.LexicalTools.Tests
 				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
 				missingInfoControl.SetCurrentRecordToNext();
+				Assert.IsFalse(missingInfoControl._todoRecordsListBox.DataSource.Contains(recordToMove));
+				Assert.IsTrue(missingInfoControl._completedRecordsListBox.DataSource.Contains(recordToMove));
+#if Visual
+				DebugShowState(missingInfoControl, currentRecord);
+#endif
+			}
+		}
+
+		[Test]
+		public void SetCurrentRecordToPrevious_ChangedSoNoLongerMeetsFilter_RemovedFromTodoAndAddedToCompleteList()
+		{
+			using (
+					var missingInfoControl =
+							new MissingInfoControl(_missingTranslationRecordList,
+												   _viewTemplate,
+												   IsMissingTranslation,
+												   _lexEntryRepository, new TaskMemory()))
+			{
+				missingInfoControl.SetCurrentRecordToNext();
+				RecordToken<LexEntry> recordToMove = missingInfoControl.CurrentRecord;
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
+									  "a bogus translation of example");
+				missingInfoControl.SetCurrentRecordToPrevious();
 				Assert.IsFalse(missingInfoControl._todoRecordsListBox.DataSource.Contains(recordToMove));
 				Assert.IsTrue(missingInfoControl._completedRecordsListBox.DataSource.Contains(recordToMove));
 #if Visual
