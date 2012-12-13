@@ -269,9 +269,9 @@ namespace WeSay.UI
 			{
 				// restore the selection
 				int index = _dataSource.IndexOf(SelectedItem);
+				_indexSelectedOnDown = index;
 				if (index != -1)
 				{
-					_indexSelectedOnDown = index;
 					GetVirtualItem(index).Focused = true;
 				}
 			}
@@ -496,7 +496,7 @@ namespace WeSay.UI
 						}
 						else
 						{
-							EnsureVisible(value);
+							EnsureVisible(SelectedIndex);
 						}
 					}
 				}

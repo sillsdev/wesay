@@ -411,12 +411,12 @@ namespace WeSay.LexicalTools.Tests
 												   _lexEntryRepository, new TaskMemory()))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
-				RecordToken<LexEntry> currentRecord = missingInfoControl.CurrentRecord;
+				RecordToken<LexEntry> recordToMove = missingInfoControl.CurrentRecord;
 				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
-				Assert.AreEqual(missingInfoControl._completedRecordsListBox.SelectedItem,
-								currentRecord);
-				Assert.IsFalse(missingInfoControl._todoRecordsListBox.DataSource.Contains(currentRecord));
+				missingInfoControl.SetCurrentRecordToNext();
+				Assert.IsFalse(missingInfoControl._todoRecordsListBox.DataSource.Contains(recordToMove));
+				Assert.IsTrue(missingInfoControl._completedRecordsListBox.DataSource.Contains(recordToMove));
 #if Visual
 				DebugShowState(missingInfoControl, currentRecord);
 #endif
