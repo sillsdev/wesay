@@ -464,6 +464,7 @@ namespace WeSay.UI
 					{
 						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
 						SelectedIndices.Clear();
+						OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(null,value,true));
 					}
 					else
 					{

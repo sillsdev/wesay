@@ -124,8 +124,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				}
 				try
 				{
-					RepositoryId id = _records[CurrentIndex].Id;
-					return _lexEntryRepository.GetItem(id);
+					return _records[CurrentIndex].RealObject;
 				}
 				catch (Exception e)
 				{
@@ -469,7 +468,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			if (e.IsSelected)
 			{
-				var selectedRecord = CurrentRecord;
 				SetRecordToBeEdited(CurrentRecord);
 
 				if (CurrentRecord != null)
@@ -483,7 +481,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				}
 
 				LoadRecords();
-				_recordsListBox.SelectedIndex = _records.FindFirstIndex(selectedRecord);
 
 				UpdateDisplay();
 			}
@@ -669,15 +666,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 			_logger.WriteConciseHistoricalEvent("Deleted '{0}'",CurrentRecord.GetSimpleFormForLogging());
 			CurrentRecord.IsBeingDeleted = true;
-			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
-			_lexEntryRepository.DeleteItem(recordToken.Id);
-			int index = _recordsListBox.SelectedIndex;
+			var oldIndex = CurrentIndex;
+			_recordsListBox.SelectedIndex = _records.Count == CurrentIndex + 1 ? CurrentIndex - 1 : CurrentIndex + 1;
+			_lexEntryRepository.DeleteItem(_records[oldIndex].Id);
 			LoadRecords();
-			if (index >= _records.Count)
-			{
-				index = _records.Count - 1;
-			}
-			_recordsListBox.SelectedIndex = index;
+
 			_entryViewControl.SelectOnCorrectControl();
 		}
 
