@@ -168,21 +168,33 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private void OnTodoRecordSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
-			var recordForWhichSelectionIsChanging = _todoRecords[e.ItemIndex];
-			if (CurrentRecord != null)
+			if (e.ItemIndex != -1)
 			{
-				MoveRecordToAppropriateListBox(CurrentRecord);
-				//reset the index as it may have changed
-				_todoRecordsListBox.SelectedIndex = _todoRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
+				var recordForWhichSelectionIsChanging = _todoRecords[e.ItemIndex];
+				if (CurrentRecord != null)
+				{
+					MoveRecordToAppropriateListBox(CurrentRecord);
+					//reset the index as it may have changed
+					_todoRecordsListBox.SelectedIndex =
+						_todoRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
+				}
+				CurrentRecord = recordForWhichSelectionIsChanging;
+
+				//This is the case if we previously had a record selected in the completedListBox and now are selecting a record in the todoListBox
+				if (e.IsSelected && _completedRecordsListBox.SelectedIndex != -1)
+				{
+					_completedRecordsListBox.SelectedIndex = -1;
+				}
+			}
+			else
+			{
+				if (CurrentRecord != null)
+				{
+					MoveRecordToAppropriateListBox(CurrentRecord);
+				}
+				CurrentRecord = null;
 			}
 
-			//This is the case if we previously had a record selected in the completedListBox and now are selecting a record in the todoListBox
-			if (e.IsSelected && _completedRecordsListBox.SelectedIndex != -1)
-			{
-				_completedRecordsListBox.SelectedIndex = -1;
-			}
-
-			CurrentRecord = recordForWhichSelectionIsChanging;
 			UpdatePreviousAndNextRecords();
 		}
 
@@ -315,22 +327,33 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private void OnCompletedRecordSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
-
-			var recordForWhichSelectionIsChanging = _completedRecords[e.ItemIndex];
-			if (CurrentRecord != null)
+			if (e.ItemIndex != -1)
 			{
-				MoveRecordToAppropriateListBox(CurrentRecord);
-				//reset the index as it may have changed
-				_completedRecordsListBox.SelectedIndex = _completedRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
-			}
+				var recordForWhichSelectionIsChanging = _completedRecords[e.ItemIndex];
+				if (CurrentRecord != null)
+				{
+					MoveRecordToAppropriateListBox(CurrentRecord);
+					//reset the index as it may have changed
+					_completedRecordsListBox.SelectedIndex =
+						_completedRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
+				}
 
-			//This is the case if we previously had a record selected in the todoListBox and now are selecting a record in the completedListBox
-			if (e.IsSelected && _todoRecordsListBox.SelectedIndex != -1)
+				//This is the case if we previously had a record selected in the todoListBox and now are selecting a record in the completedListBox
+				if (e.IsSelected && _todoRecordsListBox.SelectedIndex != -1)
+				{
+					_todoRecordsListBox.SelectedIndex = -1;
+				}
+
+				CurrentRecord = recordForWhichSelectionIsChanging;
+			}
+			else
 			{
-				_todoRecordsListBox.SelectedIndex = -1;
+				if (CurrentRecord != null)
+				{
+					MoveRecordToAppropriateListBox(CurrentRecord);
+				}
+				CurrentRecord = null;
 			}
-
-			CurrentRecord = recordForWhichSelectionIsChanging;
 		}
 
 		protected int RecordListCurrentIndex
