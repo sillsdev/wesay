@@ -235,8 +235,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 			if (_todoRecords.Count > 0)
 			{
-				CurrentRecord = _nextRecord ?? _todoRecords[_todoRecords.Count - 1];
-				SelectCurrentRecordInTodoRecordList();
+				if (_nextRecord != null)
+				{
+					_todoRecordsListBox.SelectedIndex = _todoRecords.FindIndex(r => r == _nextRecord);
+				}
+				else if(!_isNotComplete(CurrentEntry))
+				{
+					_todoRecordsListBox.SelectedIndex = _todoRecords.Count - 2;
+				}
 				_todoRecordsListBox.Focus();
 				// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();

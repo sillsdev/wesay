@@ -396,7 +396,7 @@ namespace WeSay.LexicalTools.Tests
 				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
 				missingInfoControl.SetCurrentRecordToNext();
-				Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
+				Assert.AreEqual(_missingTranslationRecordList[2], missingInfoControl.CurrentRecord);
 			}
 		}
 
