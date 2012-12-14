@@ -178,13 +178,13 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					_todoRecordsListBox.SelectedIndex =
 						_todoRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
 				}
-				CurrentRecord = recordForWhichSelectionIsChanging;
 
 				//This is the case if we previously had a record selected in the completedListBox and now are selecting a record in the todoListBox
 				if (e.IsSelected && _completedRecordsListBox.SelectedIndex != -1)
 				{
 					_completedRecordsListBox.SelectedIndex = -1;
 				}
+				CurrentRecord = recordForWhichSelectionIsChanging;
 			}
 			else
 			{

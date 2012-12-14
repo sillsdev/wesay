@@ -477,11 +477,10 @@ namespace WeSay.UI
 						// this gets around that
 						if (SelectedIndices.Count == 0)
 						{
-							if (_selectedIndexForUseBeforeSelectedIndicesAreInitialized != value)
+							if (_selectedIndexForUseBeforeSelectedIndicesAreInitialized != SelectedIndex)
 							{
-								_selectedIndexForUseBeforeSelectedIndicesAreInitialized = value;
-								OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(GetVirtualItem(value),
-																								 value, true));
+								_selectedIndexForUseBeforeSelectedIndicesAreInitialized = SelectedIndex;
+								OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(GetVirtualItem(SelectedIndex),SelectedIndex, true));
 							}
 
 						}
@@ -496,7 +495,10 @@ namespace WeSay.UI
 						}
 						else
 						{
-							EnsureVisible(SelectedIndex);
+							if (SelectedIndex != -1)
+							{
+								EnsureVisible(SelectedIndex);
+							}
 						}
 					}
 				}
