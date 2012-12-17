@@ -159,57 +159,8 @@ namespace WeSay.Project
 
 		public bool LoadFromLiftLexiconPath(string liftPath)
 		{
-			try
-			{
-
-				if (!File.Exists(liftPath))
-				{
-					ErrorReport.NotifyUserOfProblem(
-							String.Format(
-									"WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nTry opening the LIFT file by double clicking on it.",
-									liftPath));
-					return false;
-				}
-				try
-				{
-					using (FileStream fs = File.OpenWrite(liftPath))
-					{
-						fs.Close();
-					}
-				}
-				catch (UnauthorizedAccessException)
-				{
-					ErrorReport.NotifyUserOfProblem(
-							String.Format(
-									"WeSay was unable to open the file at '{0}' for writing, because the system won't allow it. Check that 'ReadOnly' is cleared, otherwise investigate your user permissions to write to this file.",
-									liftPath));
-					return false;
-				}
-				catch (IOException)
-				{
-					ErrorReport.NotifyUserOfProblem(
-							String.Format(
-									"WeSay was unable to open the file at '{0}' for writing, probably because it is locked by some other process on your computer. Maybe you need to quit WeSay? If you can't figure out what has it locked, restart your computer.",
-									liftPath));
-					return false;
-				}
-
-				if (!liftPath.Contains(Path.DirectorySeparatorChar.ToString()))
-				{
-					Logger.WriteEvent("Converting filename only liftPath {0} to full path {1}", liftPath, Path.GetFullPath(liftPath));
-					liftPath = Path.GetFullPath(liftPath);
-				}
-
-				PathToLiftFile = liftPath;
-
-				if (!File.Exists(liftPath))
-				{
-					ErrorReport.NotifyUserOfProblem(
-							String.Format(
-									"WeSay tried to find the WeSay configuration file at '{0}', but could not find it.\r\n\r\nTry using the configuration Tool to create one.",
-									PathToConfigFile));
-					return false;
-				}
+			try{
+				PathToLiftFile = LiftFileLocator.LocateAt(liftPath);
 
 				if (!File.Exists(PathToConfigFile))
 				{
@@ -301,7 +252,7 @@ namespace WeSay.Project
 
 			if (!File.Exists(PathToConfigFile))
 			{
-				string preferredLiftFile = GetPathToLiftFileGivenProjectDirectory(projectDirectoryPath);
+				string preferredLiftFile = LiftFileLocator.LocateInDirectory(projectDirectoryPath);
 				if (String.IsNullOrEmpty(preferredLiftFile))
 				{
 					return;
@@ -369,7 +320,7 @@ namespace WeSay.Project
 
 		private static void MigrateProjectFilesAndCheckForOrphanedWritingSystems(string projectDirectory)
 		{
-			string liftFilePath = GetPathToLiftFileGivenProjectDirectoryQuietly(projectDirectory);
+			string liftFilePath = LiftFileLocator.LocateInDirectoryQuietly(projectDirectory);
 			string configFilePath = GetPathToConfigFile(projectDirectory, GetProjectNameFromLiftFilePath(liftFilePath));
 			string userConfigPath = PathToUserSpecificConfigFile(projectDirectory);
 
@@ -1005,7 +956,7 @@ namespace WeSay.Project
 			{
 				if (String.IsNullOrEmpty(_pathToLiftFile))
 				{
-					_pathToLiftFile = GetPathToLiftFileGivenProjectDirectory(ProjectDirectoryPath);
+					_pathToLiftFile = LiftFileLocator.LocateInDirectory(ProjectDirectoryPath);
 				}
 				return _pathToLiftFile;
 			}
@@ -1023,58 +974,6 @@ namespace WeSay.Project
 					// Directory.GetParent(value).Parent.FullName;
 				}
 			}
-		}
-
-		private static string GetPathToLiftFileGivenProjectDirectoryQuietly(string projectDirectoryPath)
-		{
-			return GetPathToLiftFileGivenProjectDirectory(projectDirectoryPath, false);
-		}
-
-		private static string GetPathToLiftFileGivenProjectDirectory(string projectDirectoryPath)
-		{
-			return GetPathToLiftFileGivenProjectDirectory(projectDirectoryPath, true);
-		}
-
-		private static string GetPathToLiftFileGivenProjectDirectory(string projectDirectoryPath, bool canNotify)
-		{
-			string preferredLiftFile;
-			var liftPaths = Directory.GetFiles(projectDirectoryPath, "*.lift");
-			if (liftPaths.Length == 0)
-			{
-				if (canNotify)
-				{
-					ErrorReport.NotifyUserOfProblem("Could not find a LIFT file to us in " + projectDirectoryPath);
-				}
-				return null;
-			}
-			if (liftPaths.Length == 1)
-			{
-				preferredLiftFile = liftPaths[0];
-			}
-			else
-			{
-				string parentDirectoryName = projectDirectoryPath.Split(new[] { Path.DirectorySeparatorChar }).LastOrDefault();
-				preferredLiftFile = liftPaths.FirstOrDefault(
-					fileName => String.Compare(
-						Path.GetFileNameWithoutExtension(fileName),
-						parentDirectoryName,
-						StringComparison.OrdinalIgnoreCase
-					) == 0
-				);
-				if (String.IsNullOrEmpty(preferredLiftFile))
-				{
-					if (canNotify)
-					{
-						ErrorReport.NotifyUserOfProblem(
-							"Expected only one LIFT file in {0}, but there were {1}. Remove all but one and try again.",
-							projectDirectoryPath,
-							liftPaths.Length
-						);
-					}
-					return null;
-				}
-			}
-			return preferredLiftFile;
 		}
 
 		public string PathToLiftBackupDir
