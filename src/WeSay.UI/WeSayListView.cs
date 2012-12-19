@@ -235,7 +235,7 @@ namespace WeSay.UI
 
 		protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
 		{
-			if (_mouseIsDown) return;
+			if (_mouseDownInfo.MouseIsDown) return;
 
 			base.OnItemSelectionChanged(e);
 		}
@@ -262,33 +262,41 @@ namespace WeSay.UI
 			ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
 			if (item != null)
 			{
-				_indexSelectedOnDown = item.Index;
+				_mouseDownInfo.IndexSelected = item.Index;
 				item.Focused = true;
 			}
 			else
 			{
-				// restore the selection
-				int index = _dataSource.IndexOf(SelectedItem);
-				_indexSelectedOnDown = index;
-				if (index != -1)
-				{
-					GetVirtualItem(index).Focused = true;
-				}
+				_mouseDownInfo.IndexSelected = -1;
 			}
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
-			Console.WriteLine("Down! Selected index: {0}", SelectedIndex);
+			_mouseDownInfo.OldIndex = SelectedIndex;
 			InvalidateItemRect(SelectedIndex);
 			_currentMouseLocation = e.Location;
 			SelectFromClickLocation();
 			base.OnMouseDown(e);
-			InvalidateItemRect(_indexSelectedOnDown);
-			_mouseIsDown = true;
+			InvalidateItemRect(_mouseDownInfo.IndexSelected);
+			_mouseDownInfo.MouseIsDown = true;
 		}
-		private bool _mouseIsDown;
-		private int _indexSelectedOnDown;
+
+		private readonly MouseDownInfo _mouseDownInfo = new MouseDownInfo();
+
+		private class MouseDownInfo
+		{
+			//We use this to suppress ItemSelectionChanged events
+			//this is necassary because clicking on the item triggers and ItemSelectionChangedEvent
+			//while clicking on the white space next to an item does not.
+			//We try to trigger these events exclusively via the SelectedIndex property
+			public bool MouseIsDown;
+			//We need to set this on mouse down as that is when the listview usually makes it's selection.
+			//But we don't actually make the change until MouseUp.
+			public int IndexSelected;
+			//We need to log what the old index was so that we get proper ItemSelectionChanged events on MouseUp
+			public int OldIndex;
+		}
 
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
@@ -342,9 +350,9 @@ namespace WeSay.UI
 		// the coordinates returned now don't reflect the user's intentions
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			SelectedIndex = -1;
-			_mouseIsDown = false;
-			SelectedIndex = _indexSelectedOnDown;
+			SelectedIndex = _mouseDownInfo.OldIndex;
+			_mouseDownInfo.MouseIsDown = false;
+			SelectedIndex = _mouseDownInfo.IndexSelected;
 			Console.WriteLine("Up! Selected index: {0}", SelectedIndex);
 			base.OnMouseUp(e);
 		}
