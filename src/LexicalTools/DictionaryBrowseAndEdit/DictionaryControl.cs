@@ -114,7 +114,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public LexEntry CurrentRecord
+		public LexEntry CurrentEntry
 		{
 			get
 			{
@@ -238,7 +238,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			//WHy was this here (I'm (JH) scared to remove it)?
 			// it is costing us an extra second, as we set the record
 			// to the first one, then later set it to the one we actually want.
-			//  SetRecordToBeEdited(CurrentRecord);
+			//  SetRecordToBeEdited(CurrentEntry);
 
 			ConfigureSearchBox();
 		}
@@ -293,7 +293,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void LoadRecords()
 		{
-			var selectedItem = CurrentRecord;
+			var selectedItem = CurrentEntry;
 			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 			{
 				_records = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(_listWritingSystem);
@@ -468,12 +468,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			if (e.IsSelected)
 			{
-				SetRecordToBeEdited(CurrentRecord);
+				SetRecordToBeEdited(CurrentEntry);
 
-				if (CurrentRecord != null)
+				if (CurrentEntry != null)
 				{
 					Logger.WriteEvent("RecordSelectionChanged to " +
-									  CurrentRecord.LexicalForm.GetFirstAlternative());
+									  CurrentEntry.LexicalForm.GetFirstAlternative());
 				}
 				else
 				{
@@ -525,7 +525,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			get
 			{
-				var entry = CurrentRecord;
+				var entry = CurrentEntry;
 				if(entry==null)
 					return string.Empty;
 
@@ -662,10 +662,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				_btnDeleteWord.Focus();
 			}
 			//review: This save isn't necessary, but the possibility of deleting unsave records currently doesn't work.
-			//_lexEntryRepository.SaveItem(CurrentRecord);
+			//_lexEntryRepository.SaveItem(CurrentEntry);
 
-			_logger.WriteConciseHistoricalEvent("Deleted '{0}'",CurrentRecord.GetSimpleFormForLogging());
-			CurrentRecord.IsBeingDeleted = true;
+			_logger.WriteConciseHistoricalEvent("Deleted '{0}'",CurrentEntry.GetSimpleFormForLogging());
+			CurrentEntry.IsBeingDeleted = true;
 			var oldIndex = CurrentIndex;
 			_recordsListBox.SelectedIndex = _records.Count == CurrentIndex + 1 ? CurrentIndex - 1 : CurrentIndex + 1;
 			_lexEntryRepository.DeleteItem(_records[oldIndex].Id);
@@ -684,7 +684,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void UpdateDisplay()
 		{
-			_btnDeleteWord.Enabled = (CurrentRecord != null);
+			_btnDeleteWord.Enabled = (CurrentEntry != null);
 			if (_entryViewControl.ShowNormallyHiddenFields)
 			{
 				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Hide &Uncommon Fields");
