@@ -196,6 +196,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 
 			UpdatePreviousAndNextRecords();
+			if (_todoRecords.Count == 0)
+			{
+			   ShowCompletedMessage();
+			}
 		}
 
 		private void MoveRecordToAppropriateListBox(RecordToken<LexEntry> record)
@@ -261,10 +265,15 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 			else
 			{
-				CurrentRecord = null;
-				_congratulationsControl.Show(
-						StringCatalog.Get("~Congratulations. You have completed this task."));
+				ShowCompletedMessage();
 			}
+		}
+
+		private void ShowCompletedMessage()
+		{
+			CurrentRecord = null;
+			_congratulationsControl.Show(
+				StringCatalog.Get("~Congratulations. You have completed this task."));
 		}
 
 		public void SetCurrentRecordToPrevious()
