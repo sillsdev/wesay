@@ -185,6 +185,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					_completedRecordsListBox.SelectedIndex = -1;
 				}
 				CurrentRecord = recordForWhichSelectionIsChanging;
+				UpdatePreviousAndNextRecords();
 			}
 			else
 			{
@@ -195,7 +196,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				CurrentRecord = null;
 			}
 
-			UpdatePreviousAndNextRecords();
 			if (_todoRecords.Count == 0)
 			{
 			   ShowCompletedMessage();
