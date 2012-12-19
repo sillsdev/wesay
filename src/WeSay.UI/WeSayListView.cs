@@ -24,7 +24,16 @@ namespace WeSay.UI
 			InitializeComponent();
 			_itemsCache = new Dictionary<int, ListViewItem>();
 			_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
-			SimulateListBox = true;
+			SimulateListBox();
+		}
+
+		private void SimulateListBox()
+		{
+			if (!Columns.Contains(header))
+			{
+				Columns.Insert(0, header);
+			}
+			View = View.SmallIcon;
 			AdjustColumnWidth();
 		}
 
@@ -186,7 +195,6 @@ namespace WeSay.UI
 			set
 			{
 				_itemsCache.Clear();
-				RemoveBindingListNotifiers();
 				_dataSource = value;
 				if (value == null)
 				{
@@ -195,31 +203,27 @@ namespace WeSay.UI
 				else
 				{
 					VirtualListSize = value.Count;
-					if (value.Count > 0)
-					{
-						SelectedIndex = 0;
-					}
 				}
+				Invalidate();
+
 				if (value is IBindingList)
 				{
 					((IBindingList) value).ListChanged += OnListChanged;
 				}
-			}
-		}
+			 }
+		 }
 
-		private void RemoveBindingListNotifiers()
-		{
-			if (_dataSource != null && _dataSource is IBindingList)
-			{
-				((IBindingList) _dataSource).ListChanged -= OnListChanged;
-			}
-		}
+		 private void RemoveBindingListNotifiers()
+		 {
+			 if (_dataSource != null && _dataSource is IBindingList)
+			 {
+				 ((IBindingList) _dataSource).ListChanged -= OnListChanged;
+			 }
+		 }
 
-		private void OnListChanged(object sender, ListChangedEventArgs e)
-		{
+		 private void OnListChanged(object sender, ListChangedEventArgs e)
+		 {
 			_itemsCache.Clear();
-			int originalSelectedIndex = SelectedIndex;
-
 			// this needs to be at the beginning so we don't make an invalid
 			// reference past the end when an item is deleted
 			// n.b. To cooperate with the virtual mode, when a Selection
@@ -227,60 +231,17 @@ namespace WeSay.UI
 			// will get called to update the old selection and the new
 			// unless we lower the size.
 			VirtualListSize = _dataSource.Count;
-
-			//restore our selection
-			int index = _dataSource.IndexOf(_selectedItem);
-			if (index != -1)
-			{
-				// the selected item didn't change but it's index did
-				SelectedIndex = index;
-			}
-			else if (originalSelectedIndex >= VirtualListSize)
-			{
-				SelectedIndex = VirtualListSize - 1;
-			}
-			else
-			{
-				// the previously selected item was deleted
-				// the index didn't change but the item did
-				_selectedItem = SelectedItem;
-
-				// even though technically the index didn't change, the effect is that a new item is selected
-				OnSelectedIndexChanged(new EventArgs());
-			}
-		}
-
-		private object _selectedItem;
+		 }
 
 		protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
 		{
-			if (Environment.OSVersion.Version.Major >= 6 || Environment.OSVersion.Platform == PlatformID.Unix)
-			{
-				Invalidate(); //needed to prevent artifacts of previous selections hanging around
-			}
+			if (_mouseDownInfo.MouseIsDown) return;
 
 			base.OnItemSelectionChanged(e);
-			_selectedItem = SelectedItem;
-			OnSelectedIndexChanged(new EventArgs());
-
-			//jh sept 2009 to help with WS-14934 (cambell) Dictionary word list scrolls unnecessarily when editing headword
-			//it'd be better to not scroll, but this occurs to me as a quick way to at least keep it from scrolling to the bottom
-			if (!_clickSelecting && e.Item != null && e.ItemIndex > 0 && Items.Count>0)
-			{
-				const int numberToShowBelowSelectedOne = 10;
-				//though we'd like to not scroll at all, this will
-				//make our selected one be at least 10 up from the bottom, which isn't so bad.
-				int lastOneToShow = Math.Min(Items.Count - 1, e.ItemIndex + numberToShowBelowSelectedOne);
-				Items[lastOneToShow].EnsureVisible();
-				//enhance... figure out where the middle would be, and the arrange for the selected item to be in the middle
-				//this.Height / e.Item.Font.Height
-			}
 		}
 
 		#region extend hot click area to simulate list box behavior
 
-		// see comment on OnMouseUp
-		private bool _clickSelecting;
 		private Point _currentMouseLocation;
 
 		protected override void WndProc(ref Message m)
@@ -298,46 +259,43 @@ namespace WeSay.UI
 
 		private void SelectFromClickLocation()
 		{
-			if (SimulateListBox && _clickSelecting)
+			ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
+			if (item != null)
 			{
-				ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
-				if (item != null)
-				{
-					SelectedIndex = item.Index;
-					item.Focused = true;
-				}
-				else
-				{
-					// restore the selection
-					int index = _dataSource.IndexOf(_selectedItem);
-					if (index != -1)
-					{
-						SelectedIndex = index;
-						if (VirtualMode)
-						{
-							GetVirtualItem(index).Focused = true;
-						}
-						else
-						{
-							Items[index].Focused = true;
-						}
-					}
-				}
+				_mouseDownInfo.IndexSelected = item.Index;
+				item.Focused = true;
 			}
-			_clickSelecting = false;
-		}
-
-		protected override void OnClick(EventArgs e)
-		{
-			SelectFromClickLocation();
-			base.OnClick(e);
+			else
+			{
+				_mouseDownInfo.IndexSelected = -1;
+			}
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
-			_clickSelecting = true;
+			_mouseDownInfo.OldIndex = SelectedIndex;
+			InvalidateItemRect(SelectedIndex);
 			_currentMouseLocation = e.Location;
+			SelectFromClickLocation();
 			base.OnMouseDown(e);
+			InvalidateItemRect(_mouseDownInfo.IndexSelected);
+			_mouseDownInfo.MouseIsDown = true;
+		}
+
+		private readonly MouseDownInfo _mouseDownInfo = new MouseDownInfo();
+
+		private class MouseDownInfo
+		{
+			//We use this to suppress ItemSelectionChanged events
+			//this is necassary because clicking on the item triggers and ItemSelectionChangedEvent
+			//while clicking on the white space next to an item does not.
+			//We try to trigger these events exclusively via the SelectedIndex property
+			public bool MouseIsDown;
+			//We need to set this on mouse down as that is when the listview usually makes it's selection.
+			//But we don't actually make the change until MouseUp.
+			public int IndexSelected;
+			//We need to log what the old index was so that we get proper ItemSelectionChanged events on MouseUp
+			public int OldIndex;
 		}
 
 		protected override void OnMouseMove(MouseEventArgs e)
@@ -348,7 +306,6 @@ namespace WeSay.UI
 			{
 				return;
 			}
-			_clickSelecting = false;
 			_currentMouseLocation = e.Location;
 			if (GetItemAt(e.X, e.Y) == null)
 			{
@@ -393,98 +350,72 @@ namespace WeSay.UI
 		// the coordinates returned now don't reflect the user's intentions
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			SelectFromClickLocation();
-			_currentMouseLocation = e.Location;
+			SelectedIndex = _mouseDownInfo.OldIndex;
+			_mouseDownInfo.MouseIsDown = false;
+			SelectedIndex = _mouseDownInfo.IndexSelected;
+			Console.WriteLine("Up! Selected index: {0}", SelectedIndex);
 			base.OnMouseUp(e);
 		}
 
+		private void InvalidateItemRect(int dirtyIndex)
+		{
+			if (dirtyIndex != -1)
+			{
+				var itemRect = GetItemRect(dirtyIndex);
+				var rectSpanningWholeControl = new Rectangle(itemRect.X, itemRect.Y, ClientRectangle.Width,
+															 itemRect.Height);
+				Invalidate(rectSpanningWholeControl);
+			}
+		}
 		#endregion
 
 		protected override void OnDrawItem(DrawListViewItemEventArgs e)
 		{
-			if (e.ItemIndex == _itemToNotDrawYet)
+			// All this is to make the selection across the whole list box
+			// and not just the extent of the text itself
+			Rectangle bounds = new Rectangle(e.Bounds.X,
+												e.Bounds.Y,
+												ClientRectangle.Width,
+												e.Bounds.Height);
+
+			Brush backgroundBrush;
+			bool backgroundBrushNeedsDisposal = false;
+			Color textColor;
+			if (SelectedIndex == e.ItemIndex && (!HideSelection || Focused))
 			{
-				return;
-			}
-			// As long as we have our special setup to make us look like a list box,
-			// then render us for that special setup otherwise just use the default.
-			if (SimulateListBox)
-			{
-				// All this is to make the selection across the whole list box
-				// and not just the extent of the text itself
-				Rectangle bounds = new Rectangle(e.Bounds.X,
-												 e.Bounds.Y,
-												 ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth,
-												 e.Bounds.Height);
-
-				Brush backgroundBrush;
-				bool backgroundBrushNeedsDisposal = false;
-				Color textColor;
-				if (SelectedIndex == e.ItemIndex && (!HideSelection || Focused))
-				{
-					backgroundBrush = SystemBrushes.Highlight;
-					textColor = SystemColors.HighlightText;
-				}
-				else
-				{
-					backgroundBrush = new SolidBrush(e.Item.BackColor);
-					backgroundBrushNeedsDisposal = true;
-					textColor = e.Item.ForeColor;
-				}
-
-				e.Graphics.FillRectangle(backgroundBrush, bounds);
-				TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
-										TextFormatFlags.EndEllipsis;
-				if (_writingSystem != null && WritingSystem.RightToLeftScript)
-				{
-					flags |= TextFormatFlags.RightToLeft;
-				}
-				if (e.Item.Text.Equals("(No Gloss)") || e.Item.Text.Equals("(Empty)"))
-				{
-					TextRenderer.DrawText(e.Graphics, e.Item.Text, SystemFonts.DefaultFont, bounds, textColor, flags);
-				}
-				else
-				{
-					string textMinusAccelerators = e.Item.Text.Replace("&","&&");
-					TextRenderer.DrawText(e.Graphics, textMinusAccelerators, Font, bounds, textColor, flags);
-				}
-
-				if (backgroundBrushNeedsDisposal)
-				{
-					backgroundBrush.Dispose();
-				}
+				backgroundBrush = SystemBrushes.Highlight;
+				textColor = SystemColors.HighlightText;
 			}
 			else
 			{
-				e.DrawDefault = true;
+				backgroundBrush = new SolidBrush(e.Item.BackColor);
+				backgroundBrushNeedsDisposal = true;
+				textColor = e.Item.ForeColor;
+			}
+
+			e.Graphics.FillRectangle(backgroundBrush, bounds);
+			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
+									TextFormatFlags.EndEllipsis;
+			if (_writingSystem != null && WritingSystem.RightToLeftScript)
+			{
+				flags |= TextFormatFlags.RightToLeft;
+			}
+			if (e.Item.Text.Equals("(No Gloss)") || e.Item.Text.Equals("(Empty)"))
+			{
+				TextRenderer.DrawText(e.Graphics, e.Item.Text, SystemFonts.DefaultFont, bounds, textColor, flags);
+			}
+			else
+			{
+				string textMinusAccelerators = e.Item.Text.Replace("&","&&");
+				TextRenderer.DrawText(e.Graphics, textMinusAccelerators, Font, bounds, textColor, flags);
+			}
+
+			if (backgroundBrushNeedsDisposal)
+			{
+				backgroundBrush.Dispose();
 			}
 
 			base.OnDrawItem(e);
-		}
-
-		private bool _simulateListBoxBehavior;
-
-		[Browsable(true)]
-		[DefaultValue(true)]
-		public bool SimulateListBox
-		{
-			get
-			{
-				return _simulateListBoxBehavior && Columns.Contains(header) &&
-					(View == View.SmallIcon);
-			}
-			set
-			{
-				_simulateListBoxBehavior = value;
-				if (value)
-				{
-					if (!Columns.Contains(header))
-					{
-						Columns.Insert(0, header);
-					}
-					View = View.SmallIcon;
-				}
-			}
 		}
 
 		protected override void OnResize(EventArgs e)
@@ -533,40 +464,50 @@ namespace WeSay.UI
 				{
 					throw new ArgumentOutOfRangeException();
 				}
-				if (value == -1)
+				if (SelectedIndex != value)
 				{
-					_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
-					SelectedIndices.Clear();
-					_selectedItem = null;
-				}
-				else
-				{
-					if (!SelectedIndices.Contains(value))
+					InvalidateItemRect(SelectedIndex);
+					InvalidateItemRect(value);
+					if (value == -1)
 					{
-						SelectedIndices.Add(value);
-					}
-
-					// We can't get a selection to stay until the real handle is created
-					// this gets around that
-					if (SelectedIndices.Count == 0)
-					{
-						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = value;
-						OnSelectedIndexChanged(new EventArgs());
-					}
-					else
-					{
-						// done with its usefulness
 						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
-					}
-
-					_selectedItem = SelectedItem;
-					if (!IsHandleCreated) //this is a mono bug workaround.
-					{
-						_ensureVisibleCalledBeforeWindowHandleCreated = true;
+						SelectedIndices.Clear();
+						OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(null,value,true));
 					}
 					else
 					{
-						EnsureVisible(value);
+						if (!SelectedIndices.Contains(value))
+						{
+							SelectedIndices.Add(value);
+						}
+
+						// We can't get a selection to stay until the real handle is created
+						// this gets around that
+						if (SelectedIndices.Count == 0)
+						{
+							if (_selectedIndexForUseBeforeSelectedIndicesAreInitialized != SelectedIndex)
+							{
+								_selectedIndexForUseBeforeSelectedIndicesAreInitialized = SelectedIndex;
+								OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(GetVirtualItem(SelectedIndex),SelectedIndex, true));
+							}
+
+						}
+						else
+						{
+							// done with its usefulness
+							_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+						}
+						if (!IsHandleCreated) //this is a mono bug workaround.
+						{
+							_ensureVisibleCalledBeforeWindowHandleCreated = true;
+						}
+						else
+						{
+							if (SelectedIndex != -1)
+							{
+								EnsureVisible(SelectedIndex);
+							}
+						}
 					}
 				}
 			}
@@ -580,8 +521,7 @@ namespace WeSay.UI
 				EnsureVisible(SelectedIndex);
 				_ensureVisibleCalledBeforeWindowHandleCreated = false;
 			}
-			SimulateListBox = true;
-			AdjustColumnWidth();
+			SimulateListBox();
 		}
 
 		public object SelectedItem
