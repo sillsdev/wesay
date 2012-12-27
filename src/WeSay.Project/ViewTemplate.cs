@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Chorus;
+using Chorus.UI.Notes;
 using Exortech.NetReflector;
 using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
@@ -721,14 +722,10 @@ namespace WeSay.Project
 			get { return BasilProject.Project.WritingSystems; }
 		}
 
-		public IEnumerable<Chorus.IWritingSystem> CreateListForChorus()
+		public ChorusNotesDisplaySettings CreateChorusDisplaySettings()
 		{
-			var list = new List<Chorus.IWritingSystem>();
-		   //for now, chorus wants the default to be the first one.  So lets just
-			//use the first ws of the notefield for that purpose (could improve user control
-			//over this later).
+		   var list = new List<Chorus.IWritingSystem>();
 
-			// fix for WS-34130
 			WritingSystemDefinition noteWritingSystem;
 			try
 			{
@@ -748,7 +745,13 @@ namespace WeSay.Project
 					list.Add(new ChorusWritingSystemAdaptor(system));
 				}
 			}
-			return list;
+
+			 return new Chorus.UI.Notes.ChorusNotesDisplaySettings()
+									{
+										WritingSystems = list,
+										WritingSystemForNoteContent = new ChorusWritingSystemAdaptor(noteWritingSystem) ,
+										WritingSystemForNoteLabel = new ChorusWritingSystemAdaptor(GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit))
+									};
 		 }
 
 		public void DeleteWritingSystem(string id)
@@ -758,6 +761,7 @@ namespace WeSay.Project
 				field.WritingSystemIds.Remove(id);
 			}
 		}
+
 	}
 
 	/// <summary>
