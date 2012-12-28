@@ -127,7 +127,16 @@ namespace WeSay.UI
 				var entry = _dataSource[e.ItemIndex] as LexEntry;
 				if(entry!=null)
 				{
-					e.Item = new ListViewItem(entry.GetHeadWordForm(_writingSystem.Id));
+					var form = entry.GetHeadWordForm(_writingSystem.Id);
+					if(string.IsNullOrEmpty(form))
+					{
+						//this is only going to come up with something in two very unusual cases:
+						//1) a monolingual dictionary (well, one with meanings in the same WS as the lexical units)
+						//2) the SIL CAWL list, where the translator adds glosses, and fails to add
+						//lexical entries.
+						form = entry.GetSomeMeaningToUseInAbsenseOfHeadWord(_writingSystem.Id);
+					}
+					e.Item = new ListViewItem(form);
 				}
 				else
 				{
