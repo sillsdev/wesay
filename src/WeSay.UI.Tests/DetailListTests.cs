@@ -1,8 +1,8 @@
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
-using WeSay.Foundation;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
@@ -10,7 +10,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class DetailListTests
 	{
-		private readonly WritingSystem _ws = new WritingSystem("test", new Font("Arial", 30));
+		private readonly WritingSystemDefinition _ws = WritingSystemDefinition.Parse("qaa-x-qaa");
 		private DetailList _control;
 		private Control _focussedControl;
 		private Form _window;
@@ -18,6 +18,8 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
+			_ws.DefaultFontName = "Arial";
+			_ws.DefaultFontSize = 30;
 			_control = new DetailList();
 			//Application.Init();
 		}
@@ -59,26 +61,23 @@ namespace WeSay.UI.Tests
 
 #if (DEBUG)
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_RowLessThan0_throws()
 		{
-			_control.MoveInsertionPoint(-1);
+			Assert.Throws<ArgumentOutOfRangeException>(() => _control.MoveInsertionPoint(-1));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_NoRows_throws()
 		{
-			_control.MoveInsertionPoint(0);
+			Assert.Throws<ArgumentOutOfRangeException>(() => _control.MoveInsertionPoint(0));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_PastLastRow_throws()
 		{
 			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
 			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
-			_control.MoveInsertionPoint(2);
+			Assert.Throws<ArgumentOutOfRangeException>(() => _control.MoveInsertionPoint(2));
 		}
 #endif
 

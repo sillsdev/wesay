@@ -5,10 +5,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Palaso.i18n;
+using Palaso.Lift;
+using Palaso.Lift.Options;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI.TextBoxes;
@@ -20,49 +20,30 @@ namespace WeSay.ConfigTool
 		private OptionsList _currentList;
 		private Option _currentOption;
 		private Field _currentField;
+		/// <summary>
+		/// the new ones change their key as their names are editted. Old ones don't.
+		/// </summary>
 		private readonly List<Option> _newlyCreatedOptions = new List<Option>();
 		private bool _currentListWasModified;
 
 		public OptionListControl(ILogger logger)
-			: base("set up choices for option fields", logger)
+			: base("set up choices for option fields", logger,"optionLists")
 		{
 			InitializeComponent();
 			VisibleChanged += OptionListControl_VisibleChanged;
-
 			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
-			_currentListWasModified = false;
 		}
+
+		void OnName_Changed(object sender, EventArgs e)
+		{
+			UpdateKeyLabel();
+		}
+
+
 
 		private void OnEditorSaveNow(object sender, EventArgs e)
 		{
-			SaveCurrentList();
-		}
-
-		private void SaveCurrentList()
-		{
-			if (_currentListWasModified)
-			{
-				SaveEditsToCurrentItem();
-				//notice that we always save to the project directory, even if we started with the
-				//one in the program files directory.
-				string path =
-						Path.Combine(
-								WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
-								_currentField.OptionsListFile);
-
-				try
-				{
-					_currentList.SaveToFile(path);
-					_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Edited list for {0} field", "Checkin Description in WeSay Config Tool used when you edit an option list."), _currentField.Key);
-				}
-				catch (Exception error)
-				{
-					ErrorReport.NotifyUserOfProblem(
-							"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
-							path,
-							error.Message);
-				}
-			}
+			SaveEditsToCurrentItem();
 		}
 
 		private void OptionListControl_VisibleChanged(object sender, EventArgs e)
@@ -119,12 +100,10 @@ namespace WeSay.ConfigTool
 		{
 			try
 			{
-				SaveCurrentList();
 				_currentField = field;
 				_currentList = WeSayWordsProject.Project.GetOptionsList(_currentField, true);
 
 				_listBox.Items.Clear();
-				_currentListWasModified = false;
 				foreach (Option option in _currentList.Options)
 				{
 					_listBox.Items.Add(option.GetDisplayProxy(PreferredWritingSystem));
@@ -182,41 +161,48 @@ namespace WeSay.ConfigTool
 				_currentOption)
 			{
 				SaveEditsToCurrentItem();
-				Option.OptionDisplayProxy proxy = (Option.OptionDisplayProxy) _listBox.SelectedItem;
+				var proxy = (Option.OptionDisplayProxy) _listBox.SelectedItem;
 				splitContainer1.Panel2.Controls.Remove(_nameMultiTextControl);
 
 				_currentOption = proxy.UnderlyingOption;
-				MultiTextControl m = new MultiTextControl(_currentField.WritingSystemIds,
-														  _currentOption.Name,
-														  _currentField.FieldName,
-														  false,
-														  BasilProject.Project.WritingSystems,
-														  CommonEnumerations.VisibilitySetting.
-															  Visible,
-														  _currentField.IsSpellCheckingEnabled, false, null);
+				var m = new MultiTextControl(
+					_currentField.WritingSystemIds,
+					_currentOption.Name,
+					_currentField.FieldName,
+					false,
+					BasilProject.Project.WritingSystems,
+					CommonEnumerations.VisibilitySetting.Visible,
+					_currentField.IsSpellCheckingEnabled, false, null
+				);
 				m.SizeChanged += OnNameControlSizeChanged;
 				m.Bounds = _nameMultiTextControl.Bounds;
 				m.Top = _nameLabel.Top;
 				m.BorderStyle = BorderStyle.FixedSingle;
 				m.Anchor = _nameMultiTextControl.Anchor;
+				m.TextChanged +=new EventHandler(OnName_Changed);
 
 				_nameMultiTextControl = m;
 				splitContainer1.Panel2.Controls.Add(m);
 
+				/* user can't change this anymore. It was confusing to people an probably not needed
 				_keyText.TextChanged -= OnKeyTextChanged;
 				_keyText.Text = proxy.UnderlyingOption.Key;
 				_keyText.TextChanged += OnKeyTextChanged;
+				*/
 
 				var justTextBoxes = from z in m.TextBoxes where z is WeSayTextBox select z;
 				foreach (WeSayTextBox box in justTextBoxes)
 				{
-					TextBinding binding = new TextBinding(_currentOption.Name,
-														  box.WritingSystem.Id,
-														  box);
+					var binding = new TextBinding(
+						_currentOption.Name,
+						box.WritingSystem.Id,
+						box
+					);
 					//hooking on to this is more reliable, sequence-wise, than directly wiring to m.TextChanged
+					//JH (2011): Maybe so, but this doesn't fire until they tab away, and that's too late.
 					binding.DataTarget.PropertyChanged += DataTarget_PropertyChanged;
 				}
-				_keyText.Left = _nameMultiTextControl.Left;
+				AdjustLocations();
 				UpdateDisplay();
 			}
 		}
@@ -228,10 +214,9 @@ namespace WeSay.ConfigTool
 
 		private void AdjustLocations()
 		{
-			_keyText.Left = _nameMultiTextControl.Left;
-			_keyText.Top = _nameMultiTextControl.Bottom + 20;
-			_keyText.Width = _nameMultiTextControl.Width;
-			_keyLabel.Top = _keyText.Top;
+			_keyLabel.Left = _nameMultiTextControl.Left;
+			_keyLabel.Top = _nameMultiTextControl.Bottom + 20;
+			_keyLabel.Width = _nameMultiTextControl.Width;
 		}
 
 		private void SaveEditsToCurrentItem()
@@ -240,12 +225,32 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
-			_currentOption.Key = _keyText.Text;
+			_currentOption.Key = ProposedKey;
+		}
+
+		protected string ProposedKey
+		{
+			get
+			{
+				if (_newlyCreatedOptions.Contains(_currentOption))
+				{
+					//we prefer a major language for the key
+					var key =
+						_nameMultiTextControl.GetMultiText().GetBestAlternativeString(new[]
+																						  {
+																							  "en", "fr", "th", "es", "pt",
+																							  "id"
+																						  });
+					if (!string.IsNullOrEmpty(key))
+						return key;
+				}
+				return _currentOption.Key;
+			}
 		}
 
 		private void DataTarget_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			_keyText.Text = _currentOption.Key;
+			UpdateKeyLabel();
 			//will automatically change as we type, if the key isn't set yet
 
 			//this weirdness is because I couldn't get the list item to update
@@ -254,16 +259,24 @@ namespace WeSay.ConfigTool
 			UserModifiedList();
 		}
 
+		private void UpdateKeyLabel()
+		{
+			_keyLabel.Text = "Id in LIFT file: " + ProposedKey;
+		}
+
 		private void _btnAdd_Click(object sender, EventArgs e)
 		{
 			_listBox.Focus();   //This is a hack to get the TextBinding to update by losing focus :-(
-			Option newOption = new Option();
+			var newOption = new Option();
 			_newlyCreatedOptions.Add(newOption);
 			_currentList.Options.Add(newOption);
 
 			int index = _listBox.Items.Add(newOption.GetDisplayProxy(PreferredWritingSystem));
 			_listBox.SelectedIndex = index;
 			UpdateDisplay();
+			if (_nameMultiTextControl.TextBoxes.Count == 0)
+			{
+			}
 			_nameMultiTextControl.TextBoxes[0].Focus();
 			UserModifiedList();
 		}
@@ -284,31 +297,25 @@ namespace WeSay.ConfigTool
 
 		private void UserModifiedList()
 		{
-			_currentListWasModified = true;
+			WeSayWordsProject.Project.MarkOptionListAsUpdated(_currentList);
 		}
 
 		private void UpdateDisplay()
 		{
-			_btnDelete.Enabled = _listBox.SelectedItem != null;
-			_keyText.Enabled = _newlyCreatedOptions.Contains(_currentOption);
-			_keyText.BackColor = SystemColors.Window;
+			_btnDelete.Enabled = _listBox.SelectedItem != null && _listBox.Items.Count>1;
+			UpdateKeyLabel();
 			_nameMultiTextControl.Visible = _listBox.SelectedItem != null;
-			_keyText.Visible = _nameMultiTextControl.Visible;
-			_btnAdd.Enabled = (null != _currentField);
-		}
-
-		private void OnKeyTextChanged(object sender, EventArgs e)
-		{
-			UserModifiedList();
+			_btnAdd.Enabled = (null != _currentField) ;
 		}
 
 		private void OnFieldChooser_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (_fieldChooser.SelectedItem != null)
 			{
-				Field f = _fieldChooser.SelectedItem as Field;
+				var f = _fieldChooser.SelectedItem as Field;
 				LoadList(f);
 			}
 		}
+
 	}
 }

@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Palaso.DictionaryServices.Model;
+using Palaso.i18n;
+using Palaso.Lift;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -21,7 +22,7 @@ namespace WeSay.LexicalTools
 		{
 		}
 
-		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
+		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
 		{
 			LexSense sense = (LexSense) wsdo;
 			int rowCount = 0;
@@ -39,6 +40,7 @@ namespace WeSay.LexicalTools
 				{
 					Control meaningControl = MakeBoundControl(sense.Definition, field);
 #endif
+					//NB: http://jira.palaso.org/issues/browse/WS-33937 describes how this makes it hard to change this in English (but not other languages)
 					string label = StringCatalog.Get("~Meaning");
 					LexEntry entry = sense.Parent as LexEntry;
 					if (entry != null) // && entry.Senses.Count > 1)
@@ -98,7 +100,7 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		public int AddGhost(WeSayDataObject parent, IList<LexSense> list, bool isHeading)
+		public int AddGhost(PalasoDataObject parent, IList<LexSense> list, bool isHeading)
 		{
 			int insertAtRow = -1;
 			string label = GetLabelForMeaning(list.Count);
@@ -131,7 +133,7 @@ namespace WeSay.LexicalTools
 			DetailList.GetLabelControlFromRow(rowOfGhost).Text = GetLabelForMeaning(itemCount);
 		}
 
-		protected override Control MakePictureWidget(WeSayDataObject target, Field field, DetailList detailList)
+		protected override Control MakePictureWidget(PalasoDataObject target, Field field, DetailList detailList)
 		{
 			PictureRef pictureRef = target.GetOrCreateProperty<PictureRef>(field.FieldName);
 

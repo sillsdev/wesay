@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
-using WeSay.Foundation;
+using Palaso.DictionaryServices.Model;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
-using System.Linq;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
@@ -22,15 +21,15 @@ namespace WeSay.Project
 
 		private Field FindFieldWithFieldName(string name)
 		{
-			return _template.Fields.Find(delegate(Field f) { return f.FieldName == name; });
+			return _template.Fields.Find(f => f.FieldName == name);
 		}
 
-		public string GetAutoFontsCascadingStyleSheetLinesForWritingSystem(WritingSystem ws)
+		public string GetAutoFontsCascadingStyleSheetLinesForWritingSystem(WritingSystemDefinition ws)
 		{
 			var builder = new StringBuilder();
 //            var family = FontFamily.Families.FirstOrDefault(f => f.Name == ws.FontName);
 
-			builder.AppendLine("font-family: '" + ws.FontName + "';");
+			builder.AppendLine("font-family: '" + ws.DefaultFontName + "';");
 
 			var word = FindFieldWithFieldName(LexEntry.WellKnownProperties.LexicalUnit);
 

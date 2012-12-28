@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Palaso.Extensions;
+using Palaso.i18n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using System.Linq;
+using Palaso.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {
-	public class MissingInfoConfiguration : TaskConfigurationBase, ITaskConfiguration
+	public class MissingInfoConfiguration : TaskConfigurationBase, ITaskConfiguration, ICareThatWritingSystemIdChanged
 	{
 		private List<string> _fieldsToShow;
 		private List<string> _writingSystemsWeWantToFillIn;
@@ -25,6 +27,62 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		public override string ToString()
 		{
 			return LongLabel;
+		}
+
+		public event EventHandler WritingSystemIdChanged;
+		public event EventHandler WritingSystemIdDeleted;
+
+		public void OnWritingSystemIdChanged(string from, string to)
+		{
+			int indexToReplace =
+				_writingSystemsWeWantToFillIn.FindIndex(id => id.Equals(from, StringComparison.OrdinalIgnoreCase));
+			if (indexToReplace != -1)
+			{
+				_writingSystemsWeWantToFillIn.RemoveAt(indexToReplace);
+				//check whether the new id is already cinfigured for use. This can happen when writing systems are conflated
+				if (_writingSystemsWeWantToFillIn.FindIndex((id => id.Equals(to, StringComparison.OrdinalIgnoreCase))) == -1)
+				{
+					_writingSystemsWeWantToFillIn.Add(to);
+				}
+			}
+
+			indexToReplace =
+				_writingSystemsWhichAreRequired.FindIndex(id => id.Equals(from, StringComparison.OrdinalIgnoreCase));
+			if (indexToReplace != -1)
+			{
+				_writingSystemsWhichAreRequired.RemoveAt(indexToReplace);
+				//check whether the new id is already cinfigured for use. This can happen when writing systems are conflated
+				if (_writingSystemsWhichAreRequired.FindIndex((id => id.Equals(to, StringComparison.OrdinalIgnoreCase))) == -1)
+				{
+					_writingSystemsWhichAreRequired.Add(to);
+				}
+			}
+			if(WritingSystemIdChanged != null)
+			{
+				WritingSystemIdChanged(this, new EventArgs());
+			}
+		}
+
+		public void OnWritingSystemIdDeleted(string idToDelete)
+		{
+			int indexToReplace =
+				_writingSystemsWeWantToFillIn.FindIndex(id => id.Equals(idToDelete, StringComparison.OrdinalIgnoreCase));
+			if (indexToReplace != -1)
+			{
+				_writingSystemsWeWantToFillIn.RemoveAt(indexToReplace);
+			}
+
+
+			indexToReplace =
+				_writingSystemsWhichAreRequired.FindIndex(id => id.Equals(idToDelete, StringComparison.OrdinalIgnoreCase));
+			if (indexToReplace != -1)
+			{
+				_writingSystemsWhichAreRequired.RemoveAt(indexToReplace);
+			}
+			if (WritingSystemIdDeleted != null)
+			{
+				WritingSystemIdDeleted(this, new EventArgs());
+			}
 		}
 
 		public DashboardGroup Group
@@ -97,17 +155,35 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		public string RemainingCountText
 		{
-			get { return "Entries without this:"; }
+			get { return StringCatalog.Get("~Entries without this:"); }
 		}
 
 		public string ReferenceCountText
 		{
-			get { return "Total Entries:"; }
+			get { return StringCatalog.Get("Total Entries:"); }
 		}
 
 		public bool IsPinned
 		{
 			get { return false; }
+		}
+
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			var task = taskConfiguration as MissingInfoConfiguration;
+			if(task ==null)
+				return false;
+
+			if(task.TaskName != TaskName)
+				return false;
+
+			if(task.MissingInfoFieldName != MissingInfoFieldName)
+				return false;
+
+			if (task.Label != Label)
+				return false;
+
+			return true;
 		}
 
 		public string FieldsToShowReadOnly

@@ -31,7 +31,7 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfirmDelete));
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.localizationHelper1 = new Palaso.UI.WindowsForms.i8n.LocalizationHelper(this.components);
+			this.localizationHelper1 = new Palaso.UI.WindowsForms.i18n.LocalizationHelper(this.components);
 			this.deleteBtn = new System.Windows.Forms.Button();
 			this.cancelBtn = new System.Windows.Forms.Button();
 			this.textBox1 = new System.Windows.Forms.TextBox();
@@ -57,13 +57,13 @@
 			//
 			this.deleteBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
 			this.deleteBtn.Image = global::WeSay.LexicalTools.Properties.Resources.DeleteWord;
-			this.deleteBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.deleteBtn.Location = new System.Drawing.Point(116, 132);
+			this.deleteBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.deleteBtn.Location = new System.Drawing.Point(26, 132);
 			this.deleteBtn.Name = "deleteBtn";
-			this.deleteBtn.Size = new System.Drawing.Size(121, 33);
-			this.deleteBtn.TabIndex = 2;
+			this.deleteBtn.Size = new System.Drawing.Size(120, 36);
+			this.deleteBtn.TabIndex = 1;
 			this.deleteBtn.Text = "&Delete";
-			this.deleteBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.deleteBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.deleteBtn.UseVisualStyleBackColor = true;
 			this.deleteBtn.Click += new System.EventHandler(this.deleteBtn_Click);
 			//
@@ -71,10 +71,10 @@
 			//
 			this.cancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.cancelBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-			this.cancelBtn.Location = new System.Drawing.Point(264, 132);
+			this.cancelBtn.Location = new System.Drawing.Point(219, 132);
 			this.cancelBtn.Name = "cancelBtn";
-			this.cancelBtn.Size = new System.Drawing.Size(75, 33);
-			this.cancelBtn.TabIndex = 3;
+			this.cancelBtn.Size = new System.Drawing.Size(120, 36);
+			this.cancelBtn.TabIndex = 0;
 			this.cancelBtn.Text = "&Cancel";
 			this.cancelBtn.UseVisualStyleBackColor = true;
 			this.cancelBtn.Click += new System.EventHandler(this.cancelBtn_Click);
@@ -97,7 +97,6 @@
 			//
 			// ConfirmDelete
 			//
-			this.AcceptButton = this.deleteBtn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
@@ -123,7 +122,7 @@
 		#endregion
 
 		private System.Windows.Forms.PictureBox pictureBox1;
-		private Palaso.UI.WindowsForms.i8n.LocalizationHelper localizationHelper1;
+		private Palaso.UI.WindowsForms.i18n.LocalizationHelper localizationHelper1;
 		private System.Windows.Forms.Button deleteBtn;
 		private System.Windows.Forms.Button cancelBtn;
 		private System.Windows.Forms.TextBox textBox1;

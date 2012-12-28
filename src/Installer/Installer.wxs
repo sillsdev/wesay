@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
-<!-- will be used later on in this file.                                                                 -->
-<?define Property_ProductVersion = "0.4.-1" ?> <!--this is replaced at build time by the msbuild 'package' target -->
+<!-- will be used later on in this file.  this value should be B U I  LD_SCRIPT_MUST_REPLACE_AT_RUNTIME (in quotes) -->
+<?define Property_ProductVersion = "BUILD_SCRIPT_MUST_REPLACE_AT_RUNTIME" ?> <!--this is replaced at build time by the msbuild 'package' target -->
 <?define Property_ProductCode = "*" ?> <!-- auto-generate a new guid each time -->
 <?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?> <!--Don't even think of EVER changing this -->
 
 <!-- good intro to the component vs. file thing, and why each file here is a separate component:
 http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
 
-	<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
 
 		<Product Id="$(var.Property_ProductCode)" Name="WeSay $(var.Property_ProductVersion)" Language="1033"
 				   Version="$(var.Property_ProductVersion)" Manufacturer="SIL"
 				   UpgradeCode="$(var.Property_UpgradeCode)">
-
 		  <Package  Compressed="yes" InstallerVersion="200" />
+
+		  <MajorUpgrade   Schedule="afterInstallInitialize"
+	  DowngradeErrorMessage="A later version of WeSay is already installed. If you really want to downgrade, first uninstall WeSay, then do this install again."/>
 
 		  <Upgrade Id ="$(var.Property_UpgradeCode)" >
 		  <UpgradeVersion Minimum ="$(var.Property_ProductVersion)" OnlyDetect ="yes" Property ="NEWVERSIONDETECTED" />
@@ -27,17 +29,22 @@ users to install just the shortcut for your app, then demand-install the
 rest of the app the first time the icon is run.  If this is not behavior you
 are trying to support, you're better off using non-advertised shortcuts. "-->
 
-		  <PropertyRef Id="NETFRAMEWORK20_SP_LEVEL"/>
-
-		  <!-- see http://blogs.msdn.com/astebner/archive/2008/11/11/9061169.aspx for description of the following-->
-		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 2.0 SP1, or any later version (e.g. 3.5). A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites">
-			Installed OR NETFRAMEWORK20_SP_LEVEL
+		  <PropertyRef Id="NETFRAMEWORK35" />
+		  <PropertyRef Id="NETFRAMEWORK35_SP_LEVEL"/>
+		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 3.5 SP1.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
+			Installed OR NETFRAMEWORK35
+		  </Condition>
+		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 3.5 SP1.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
+			Installed OR (NETFRAMEWORK35_SP_LEVEL and NOT NETFRAMEWORK35_SP_LEVEL = "#0")
 		  </Condition>
 
-			<!--because of bug, this needs to be 1 -->
+
+
+		  <!--because of bug, this needs to be 1 -->
 			<Property Id ="ALLUSERS">1</Property>
 
 			<Directory Id="TARGETDIR" Name="SourceDir">
+			  <Directory Id="DesktopFolder" Name="Desktop"/>
 			  <Directory Id='ProgramMenuFolder' Name='Programs'>
 				<Directory Id='WeSayShortcutDir' Name='WeSay'>
 				  <Component Id ='removeShortcutDir' Guid ="{6DB2042E-998C-482a-A46A-A1EC83C059E0}">
@@ -53,15 +60,20 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 				<Directory Id="ProgramDir" Name="WeSay">
 
-				<Directory Id="TemplatesDir" Name="Templates">
-					<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
-				</Directory>
+						<Directory Id="TemplatesDir" Name="Templates">
+							<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
+						</Directory>
+
+				  <Merge  Id="ChorusMergeModule" Language="1033" SourceFile="..\..\lib\ChorusMergeModule.msm" DiskId="1" />
 
 				  <Component Id="DocFiles" Guid="{F533B47C-A6F4-4284-A257-59C3C9B54526}">
 					<File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="..\..\doc\Welcome.htm" />
 				  </Component>
 
 
+				  <Component Id="WeSay_Helps.chm" Guid="{8E2B2894-675B-4B8D-85CF-D9938466EC61}">
+					<File Id="WeSay_Helps.chm" Name="WeSay_Helps.chm" KeyPath="yes" Source="..\..\WeSay_Helps.chm" />
+				  </Component>
 
 				  <Component Id="WeSay.App.exe" Guid="{406B533F-C5D5-49AD-9DC9-12375B80949F}">
 					<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.App.exe" KeyPath="yes" />
@@ -93,6 +105,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 					<Shortcut Id="startmenuShortcut"  Directory="WeSayShortcutDir" Name="WeSay"
 						 WorkingDirectory="ProgramDir" Target="[!WeSay.App.exe]"  Icon ="WeSay.App.exe" />
+
+					<Shortcut Id="desktopShortcut"  Directory="DesktopFolder" Name="WeSay"
+						 WorkingDirectory="INSTALLDIR" Target="[!WeSay.App.exe]"  Icon ="WeSay.App.exe" />
 
 				  </Component>
 
@@ -138,20 +153,17 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="Enchant.Net.dll" Guid="{95F22469-1C72-4f90-99D8-D5FDFBA0DDF9}">
 					<File Id="Enchant.Net.dll" Name="Enchant.Net.dll" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll" />
 				  </Component>
+
+				  <Component Id="Vulcan.Uczniowie.HelpProvider.dll" Guid="{F8BCCD28-AB69-4C3D-B024-6B109ADC75B0}">
+					<File Id="Vulcan.Uczniowie.HelpProvider.dll" Name="Vulcan.Uczniowie.HelpProvider.dll" KeyPath="yes" Source="..\..\output\release\Vulcan.Uczniowie.HelpProvider.dll" />
+				  </Component>
 				  <Component Id="autofac.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
 					<File Id="autofac.dll" Name="autofac.dll" KeyPath="yes" Source="..\..\output\release\autofac.dll" />
-				  </Component>
-				  <Component Id="linqbridge.dll" Guid="{D5FE0CB8-19D7-4457-8D6C-43E56E9A6FA0}">
-					<File Id="linqbridge.dll" Name="linqbridge.dll" KeyPath="yes" Source="..\..\output\release\linqbridge.dll" />
 				  </Component>
 
 				  <!-- audio recording/playback engine used by palaso.media -->
 				  <Component Id="irrKlang.NET2.0.dll" Guid="{952F0A0C-F317-459f-A91C-55DE3D046B2C}">
 					<File Id="irrKlang.NET2.0.dll" Name="irrKlang.NET2.0.dll" KeyPath="yes" Source="..\..\output\release\irrKlang.NET2.0.dll" />
-				  </Component>
-
-				  <Component Id="CookComputing.XmlRpcV2.dll" Guid="{C23D78B7-A7F2-4dc2-9B7F-8A004167FF12}">
-					<File Id="CookComputing.XmlRpcV2.dll" Name="CookComputing.XmlRpcV2.dll" KeyPath="yes" Source="..\..\output\release\CookComputing.XmlRpcV2.dll" />
 				  </Component>
 
 				  <Component Id="ICSharpCode.SharpZipLib.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D9D7}">
@@ -182,37 +194,27 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="LexicalTools.pdb" Guid="{DB30AF44-2E65-49AB-84E4-969CB6605CCA}">
 					<File Id="LexicalTools.pdb" Name="LexicalTools.pdb" KeyPath="yes" Source="..\..\output\release\LexicalTools.pdb" />
 				  </Component>
-				  <Component Id="LiftIO.dll" Guid="{EC2E5E3E-19E8-4680-8377-447DBDDE9BDF}">
-					<File Id="LiftIO.dll" Name="LiftIO.dll" KeyPath="yes" Source="..\..\output\release\LiftIO.dll" />
-				  </Component>
 				  <Component Id="Commons.Xml.Relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
 					<File Id="Commons.Xml.Relaxng.dll" Name="Commons.Xml.Relaxng.dll" KeyPath="yes" Source="..\..\output\release\Commons.Xml.Relaxng.dll" />
 				  </Component>
 				  <Component Id="NetReflector.dll" Guid="{AE9F3A6E-390F-46B3-AFCB-CE8A2E8EC769}">
 					<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
 				  </Component>
-				  <!--
-		  <Component Id="NetReflector.pdb" Guid="{92497411-A442-436D-9421-FC99DF5298DA}">
-			<File Id="NetReflector.pdb" Name="NetReflector.pdb" KeyPath="yes" Source="..\..\output\release\NetReflector.pdb" />
-		  </Component>
-		  -->
-
-				  <Component Id="Chorus.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CCCC}">
-					<File Id="Chorus.exe" Name="Chorus.exe" KeyPath="yes" Source="..\..\output\release\Chorus.exe" />
-				  </Component>
-				  <Component Id="ChorusMerge.exe" Guid="{345AD323-F201-4104-AE1C-4F039EDE21F7}">
-					<File Id="ChorusMerge.exe" Name="ChorusMerge.exe" KeyPath="yes" Source="..\..\output\release\ChorusMerge.exe" />
-				  </Component>
-				  <Component Id="LibChorus.dll" Guid="{B23662D0-4176-4307-929C-C61855B7B7DF}">
-					<File Id="LibChorus.dll" Name="LibChorus.dll" KeyPath="yes" Source="..\..\output\release\LibChorus.dll" />
-				  </Component>
 
 				  <Component Id="Palaso.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
 					<File Id="Palaso.dll" Name="Palaso.dll" KeyPath="yes" Source="..\..\output\release\Palaso.dll" />
 				  </Component>
 
-				  <Component Id="Palaso.Services.dll" Guid="{B8D67640-A995-42ec-B13C-0B1EECC65659}">
+<!--                  <Component Id="Palaso.Services.dll" Guid="{B8D67640-A995-42ec-B13C-0B1EECC65659}">
 					<File Id="Palaso.Services.dll" Name="Palaso.Services.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Services.dll" />
+				  </Component>
+-->
+				  <Component Id="Palaso.DictionaryServices.dll" Guid="{3CCA9386-0A99-418D-BF33-E070D6337D2A}">
+					<File Id="Palaso.DictionaryServices.dll" Name="Palaso.DictionaryServices.dll" KeyPath="yes" Source="..\..\output\release\Palaso.DictionaryServices.dll" />
+				  </Component>
+
+				  <Component Id="Palaso.Lift.dll" Guid="{3DDA9386-0A99-418D-BF33-E070D6337DDD}">
+					<File Id="Palaso.Lift.dll" Name="Palaso.Lift.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Lift.dll" />
 				  </Component>
 
 				  <Component Id="Palaso.Media.dll" Guid="{4739D7BD-6D1D-474f-BF01-E012E51361E4}">
@@ -283,9 +285,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="WeSay.AddinLib.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7902222}">
 					<File Id="WeSay.AddinLib.dll" Name="WeSay.AddinLib.dll" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.dll" />
 				  </Component>
-				  <Component Id="Mono.Addins.exe" Guid="{6A969A5B-E42E-4dc7-A486-7828B54D9522}">
-					<File  Id="Mono.Addins.exe" Name="Mono.Addins.exe" KeyPath="yes" Source="..\..\output\release\Mono.Addins.exe" />
-					<RemoveFile Id="Mono.Addins.exe" Name="Mono.Addins.exe" On="install"/>
+				  <Component Id="Mono.Addins.dll" Guid="{6A969A5B-E42E-4dc7-A486-7828B54D9522}">
+					<File  Id="Mono.Addins.dll" Name="Mono.Addins.dll" KeyPath="yes" Source="..\..\output\release\Mono.Addins.dll" />
+					<RemoveFile Id="Mono.Addins.dll" Name="Mono.Addins.dll" On="install"/>
 				  </Component>
 
 				  <Component Id="Icu.Net.dll" Guid="{7EEB48AE-7494-4408-924F-24BCA99A6E22}">
@@ -307,6 +309,10 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 
 
+				  <!-- used by PalasoUIWindowsForms for talking to scanner-->
+				  <Component Id="Interop.WIA.dll" Guid="{47038218-2646-4F83-BE95-4F83A8D41811}">
+					<File Id="Interop.WIA.dll" Name="Interop.WIA.dll" KeyPath="yes" Source="..\..\output\release\Interop.WIA.dll" />
+				  </Component>
 				</Directory>
 			  </Directory>
 			</Directory>
@@ -316,6 +322,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id ="removeShortcutDir"/>
 
 			  <ComponentRef Id="DocFiles"/>
+			  <ComponentRef Id="WeSay_Helps.chm" />
+			  <MergeRef Id="ChorusMergeModule" />
 
 			  <!-- assemblies -->
 			  <ComponentRef Id="WeSayConfigurationTool" />
@@ -325,27 +333,24 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Castle.DynamicProxy.dll" />
 
 			  <ComponentRef Id="Enchant.Net.dll"/>
+			  <ComponentRef Id="Vulcan.Uczniowie.HelpProvider.dll"/>
 
 			  <ComponentRef Id="autofac.dll"/>
-			  <ComponentRef Id="linqbridge.dll"/>
 			  <ComponentRef Id="irrKlang.NET2.0.dll"/>
-
+			  <ComponentRef Id="Interop.WIA.dll" />
 			  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
-			  <ComponentRef Id="CookComputing.XmlRpcV2.dll" />
 			  <ComponentRef Id="KeymanLink.dll" />
 
 			  <ComponentRef Id="LexicalModel.dll" />
 			  <ComponentRef Id="LexicalModel.pdb" />
 			  <ComponentRef Id="LexicalTools.dll" />
 			  <ComponentRef Id="LexicalTools.pdb" />
-			  <ComponentRef Id="LiftIO.dll" />
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
 			  <ComponentRef Id="NetReflector.dll" />
-			  <ComponentRef Id="Chorus.exe"/>
-			  <ComponentRef Id="LibChorus.dll"/>
-			  <ComponentRef Id="ChorusMerge.exe"/>
 			  <ComponentRef Id="Palaso.dll"/>
-			  <ComponentRef Id="Palaso.Services.dll" />
+<!--              <ComponentRef Id="Palaso.Services.dll" />-->
+			  <ComponentRef Id="Palaso.DictionaryServices.dll" />
+			  <ComponentRef Id="Palaso.Lift.dll" />
 			  <ComponentRef Id="Palaso.Media.dll" />
 			  <ComponentRef Id="PalasoUIWindowsForms.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
@@ -368,7 +373,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="log4net.dll"/>
 			  <ComponentRef Id="commons.dll"/>
 			  <ComponentRef Id="WeSay.AddinLib.dll"/>
-			  <ComponentRef Id="Mono.Addins.exe"/>
+			  <ComponentRef Id="Mono.Addins.dll"/>
 
 			  <ComponentRef Id="Icu.Net.dll"/>
 
@@ -380,7 +385,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentGroupRef Id ="defaultFiles"/>
 			  <ComponentGroupRef Id ="ddpStuff"/>
 			  <ComponentGroupRef Id ="biatahSample"/>
-			 <ComponentGroupRef Id ="templates"/>
+			  <ComponentGroupRef Id ="templates"/>
 			  <ComponentGroupRef Id ="PoFiles"/>
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
@@ -397,7 +402,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	<CustomAction Id='LaunchWelcomePage' Property='BROWSER' ExeCommand='www.google.com' Return='asyncNoWait' />
 -->
 			<InstallExecuteSequence>
+			  <!-- the MajorUpgrade declaration above handles this for us
 			  <RemoveExistingProducts After="InstallInitialize" />
+				-->
 
 			  <!--We need the condition here so that we only launch the executable when we make an installation but not when we remove the product-->
 			  <Custom Action='LaunchWelcomePage' After='InstallFinalize'>NOT Installed</Custom>

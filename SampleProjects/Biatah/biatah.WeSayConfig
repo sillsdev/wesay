@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<configuration version="6">
-  <uiOptions uiFont="Microsoft Sans Serif" uiFontSize="8.25">
-  </uiOptions>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration version="8">
   <components>
 	<viewTemplate>
 	  <fields>
@@ -11,9 +9,10 @@
 		  <displayName>Word</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>EntryLexicalForm</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile>
-		  </optionsListFile>
+		  <optionsListFile></optionsListFile>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>bth</id>
@@ -26,6 +25,8 @@
 		  <displayName>Definition</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>definition</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
@@ -38,6 +39,8 @@
 		  <displayName>Gloss</displayName>
 		  <enabled>False</enabled>
 		  <fieldName>gloss</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
@@ -50,6 +53,8 @@
 		  <displayName>POS</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>POS</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <optionsListFile>PartsOfSpeech.xml</optionsListFile>
 		  <visibility>Visible</visibility>
@@ -63,9 +68,10 @@
 		  <displayName>Example Sentence</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>ExampleSentence</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile>
-		  </optionsListFile>
+		  <optionsListFile></optionsListFile>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>bth</id>
@@ -77,6 +83,8 @@
 		  <displayName>Translation</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>ExampleTranslation</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
@@ -89,6 +97,8 @@
 		  <displayName>Sem Dom</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>semantic-domain-ddp4</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <optionsListFile>Ddp4.xml</optionsListFile>
 		  <visibility>NormallyHidden</visibility>
@@ -102,9 +112,10 @@
 		  <displayName>Base Form</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>BaseForm</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile>
-		  </optionsListFile>
+		  <optionsListFile></optionsListFile>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
 			<id>bth</id>
@@ -116,6 +127,8 @@
 		  <displayName>Citation Form</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>citation</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
@@ -123,23 +136,13 @@
 		  </writingSystems>
 		</field>
 		<field>
-		  <className>LexSense</className>
-		  <dataType>MultiText</dataType>
-		  <displayName>Lit Meaning</displayName>
-		  <enabled>False</enabled>
-		  <fieldName>LiteralMeaning</fieldName>
-		  <multiplicity>ZeroOr1</multiplicity>
-		  <visibility>NormallyHidden</visibility>
-		  <writingSystems>
-			<id>en</id>
-		  </writingSystems>
-		</field>
-		<field>
-		  <className>WeSayDataObject</className>
+		  <className>PalasoDataObject</className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Note</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>note</fieldName>
+		  <multiParagraph>True</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
@@ -152,10 +155,40 @@
 		  <displayName>Picture</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>Picture</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
 			<id>en</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>LexEntry</className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Literal Meaning</displayName>
+		  <enabled>False</enabled>
+		  <fieldName>literal-meaning</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>True</spellCheckingEnabled>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>NormallyHidden</visibility>
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>LexEntry</className>
+		  <dataType>RelationToOneEntry</dataType>
+		  <displayName>Cross Reference</displayName>
+		  <enabled>False</enabled>
+		  <fieldName>confer</fieldName>
+		  <multiParagraph>False</multiParagraph>
+		  <spellCheckingEnabled>False</spellCheckingEnabled>
+		  <multiplicity>ZeroOrMore</multiplicity>
+		  <visibility>NormallyHidden</visibility>
+		  <writingSystems>
+			<id>v</id>
 		  </writingSystems>
 		</field>
 	  </fields>
@@ -163,41 +196,53 @@
 	</viewTemplate>
   </components>
   <tasks>
-	<task taskName="Dashboard" visible="true">
-	</task>
-	<task taskName="Dictionary" visible="true">
-	</task>
+	<task taskName="Dashboard" visible="true" />
+	<task taskName="Dictionary" visible="true" />
 	<task taskName="AddMissingInfo" visible="true">
-	  <field>definition</field>
 	  <label>Meanings</label>
+	  <longLabel>Add Meanings</longLabel>
 	  <description>Add meanings to entries where they are missing.</description>
-	  <readOnly>semantic-domain-ddp4</readOnly>
+	  <field>definition</field>
 	  <showFields>definition</showFields>
+	  <readOnly>semantic-domain-ddp4</readOnly>
+	  <writingSystemsToMatch />
+	  <writingSystemsWhichAreRequired />
 	</task>
 	<task taskName="AddMissingInfo" visible="true">
-	  <field>ExampleSentence</field>
 	  <label>Example Sentences</label>
+	  <longLabel>Add Example Sentences</longLabel>
 	  <description>Add example sentences to entries where they are missing.</description>
-	  <readOnly>definition</readOnly>
+	  <field>ExampleSentence</field>
 	  <showFields>ExampleSentence</showFields>
+	  <readOnly>definition</readOnly>
+	  <writingSystemsToMatch />
+	  <writingSystemsWhichAreRequired />
 	</task>
 	<task taskName="GatherWordsBySemanticDomains" visible="true">
 	  <semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName>
+	  <showMeaningField>False</showMeaningField>
 	</task>
 	<task taskName="AddMissingInfo" visible="false">
-	  <field>POS</field>
 	  <label>Parts of Speech</label>
+	  <longLabel>Add Parts of Speech</longLabel>
 	  <description>Add a Part Of Speech to senses where they are missing.</description>
-	  <readOnly>definition, ExampleSentence</readOnly>
+	  <field>POS</field>
 	  <showFields>POS</showFields>
+	  <readOnly>definition, ExampleSentence</readOnly>
+	  <writingSystemsToMatch />
+	  <writingSystemsWhichAreRequired />
 	</task>
 	<task taskName="AddMissingInfo" visible="false">
-	  <field>BaseForm</field>
 	  <label>Base Forms</label>
+	  <longLabel>Add Base Forms</longLabel>
 	  <description>Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries.</description>
+	  <field>BaseForm</field>
 	  <showFields>BaseForm</showFields>
+	  <readOnly />
+	  <writingSystemsToMatch />
+	  <writingSystemsWhichAreRequired />
 	</task>
-	<task taskName="GatherWordList" visible="true">
+	<task taskName="GatherWordList" visible="false">
 	  <wordListFileName>DuerksenWords.txt</wordListFileName>
 	  <wordListWritingSystemId>en</wordListWritingSystemId>
 	</task>
@@ -205,25 +250,28 @@
 	  <wordListFileName>PNGWords.txt</wordListFileName>
 	  <wordListWritingSystemId>en</wordListWritingSystemId>
 	</task>
+	<task taskName="AdvancedHistory" visible="false" />
+	<task taskName="NotesBrowser" visible="false" />
+	<task taskName="GatherWordList" visible="true">
+	  <wordListFileName>SILCAWL</wordListFileName>
+	  <wordListWritingSystemId>en</wordListWritingSystemId>
+	</task>
+	<task taskName="GatherWordList" visible="false">
+	  <wordListFileName>SILCAWL-MozambiqueAddendum</wordListFileName>
+	  <wordListWritingSystemId>en</wordListWritingSystemId>
+	</task>
   </tasks>
   <addins>
-	<addin id="ManualBackupToDevice" showInWeSay="True">
-	</addin>
-	<addin id="Html Exporter" showInWeSay="True">
-	</addin>
-	<addin id="Export To SFM" showInWeSay="False">
-	  <SfmTransformSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-		<SfmTagConversions>
-		</SfmTagConversions>
-		<EnglishLanguageWritingSystemId>en</EnglishLanguageWritingSystemId>
-		<VernacularLanguageWritingSystemId>bth</VernacularLanguageWritingSystemId>
-	  </SfmTransformSettings>
-	</addin>
-	<addin id="SendProjectEmail" showInWeSay="True">
-	  <SendProjectEmailSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-		<RecipientName>Ann</RecipientName>
-		<Email>notARealAddress@somewhere.com</Email>
-	  </SendProjectEmailSettings>
-	</addin>
+	<addin id="Export To SFM" showInWeSay="False"><SfmTransformSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SfmTagConversions></SfmTagConversions>
+  <EnglishLanguageWritingSystemId>en</EnglishLanguageWritingSystemId>
+  <VernacularLanguageWritingSystemId>bth</VernacularLanguageWritingSystemId>
+</SfmTransformSettings></addin>
+	<addin id="SendProjectEmail" showInWeSay="True"><SendProjectEmailSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RecipientName>Ann</RecipientName>
+  <Email>notARealAddress@somewhere.com</Email>
+</SendProjectEmailSettings></addin>
+	<addin id="ManualBackupToDevice" showInWeSay="True" />
+	<addin id="Html Exporter" showInWeSay="True" />
   </addins>
 </configuration>

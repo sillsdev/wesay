@@ -11,7 +11,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>PretendVernacular</id>
+			<id>qaa-x-qaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -22,7 +22,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>PretendAnalysis</id>
+			<id>en</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -45,7 +45,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>PretendVernacular</id>
+			<id>qaa-x-qaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -56,7 +56,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>PretendAnalysis</id>
+			<id>en</id>
 		  </writingSystems>
 		</field>
 		<field>

@@ -1,13 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using Chorus.UI.Review;
+using Palaso.Code;
+using Palaso.i18n;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.Project;
+using WeSay.UI;
+
 using Timer=System.Windows.Forms.Timer;
 
 namespace WeSay.App
@@ -20,16 +26,34 @@ namespace WeSay.App
 		public SynchronizationContext synchronizationContext;
 		//        private ProgressDialogHandler _progressHandler;
 
-		public TabbedForm(StatusBarController statusBarController)
+		[CLSCompliant(false)]
+		public TabbedForm(
+			StatusBarController statusBarController,
+			NavigateToRecordEvent navigateToRecordEventToSubscribeTo)
 		{
 			InitializeComponent();
+			_helpProvider.RegisterPrimaryHelpFileMapping("wesay.helpmap");
+			_helpProvider.RegisterSecondaryHelpMapping("chorus.helpmap");
+
 			tabControl1.TabPages.Clear();
 			tabControl1.Selected += OnTabSelected;
 
 			synchronizationContext = SynchronizationContext.Current;
 			Debug.Assert(synchronizationContext != null);
 
+			_statusStrip.Font = StringCatalog.ModifyFontForLocalization(_statusStrip.Font);
 			statusBarController.StatusStrip = _statusStrip;
+			if (navigateToRecordEventToSubscribeTo != null)
+			{
+				navigateToRecordEventToSubscribeTo.Subscribe(OnNavigateToUrl);
+			}
+		}
+
+		//for tests
+		public TabbedForm(StatusBarController statusBarController)
+			:this(statusBarController, null)
+		{
+
 		}
 
 		public StatusStrip StatusStrip
@@ -60,7 +84,7 @@ namespace WeSay.App
 
 			if (taskList.Count > 0)
 			{
-				ActiveTask = taskList[0];
+				SetActiveTask(taskList[0]);
 			}
 		}
 
@@ -89,18 +113,11 @@ namespace WeSay.App
 			}
 		}
 
-		private void CreateTabPageForTask(ITask t)
+		private void OnNavigateToUrl(string url)
 		{
-			//t.Container = container;
-			TabPage page = new TabPage(t.Label);
-			page.Tag = t;
-
-			//this is trying to get around screwing up spacing when the ui font
-			//is a huge one
-			page.Font = new Font(FontFamily.GenericSansSerif, 9);
-
-			tabControl1.TabPages.Add(page);
+			GoToUrl(url);
 		}
+
 
 		private delegate void TakesStringArg(string arg);
 
@@ -111,19 +128,22 @@ namespace WeSay.App
 				Invoke(new TakesStringArg(GoToUrl), url);
 				return;
 			}
-			//todo: find the task in the url, pick the right task,
-			//handle the case where we don't have that task, etc.
+
+			//NB: notice, we only handly URLs to a single task at this point (DictionaryBrowseAndEdit)
 
 			foreach (TabPage page in tabControl1.TabPages)
 			{
-				//todo: temporary hack
-				if (((ITask) page.Tag).Label.Contains("Dictionary"))
+				if (page.Tag is ITaskForExternalNavigateToEntry)
 				{
-					//this approach is for user clicking, chokes without an event loop: ActiveTask = (ITask) page.Tag;
 					tabControl1.SelectedTab = page;
-					ActivateTab(page, false);
-					ActiveTask.GoToUrl(url);
-					CurrentUrl = url;
+#if MONO    //For some reason .net fires this event if TabPages.Clear has been used. Mono does not.
+					if(!tabControl1.IsHandleCreated)
+					{
+						OnTabSelected(tabControl1, new TabControlEventArgs (tabControl1.SelectedTab, tabControl1.SelectedIndex, TabControlAction.Selected));
+					}
+#endif
+
+					((ITaskForExternalNavigateToEntry)page.Tag).GoToUrl(url);
 					return;
 				}
 			}
@@ -131,6 +151,25 @@ namespace WeSay.App
 					"Sorry, that URL requires a task which is not currently enabled for this user. ({0})",
 					url);
 			throw new NavigationException("Couldn't locate ");
+		}
+
+
+		private void CreateTabPageForTask(ITask t)
+		{
+			//t.Container = container;
+			var page = new TabPage(t.Label);
+			page.Tag = t;
+
+			//this is trying to get around screwing up spacing when the ui font
+			//is a huge one...
+			//JH sep09: doesn't seem to have any effect, at least on windows
+			page.Font = StringCatalog.LabelFont;
+
+			//jh experiment
+			tabControl1.Font = page.Font;
+
+
+			tabControl1.TabPages.Add(page);
 		}
 
 		public void MakeFrontMostWindow()
@@ -147,43 +186,44 @@ namespace WeSay.App
 		public ITask ActiveTask
 		{
 			get { return _activeTask; }
-			set
+		}
+		public void SetActiveTask(ITask task)
+		{
+			if (task == null)
 			{
-				if (value == null)
+				throw new ArgumentNullException();
+			}
+			TabPage tabPageToActivate = null;
+			if (task.IsPinned)
+			{
+				foreach (TabPage page in tabControl1.TabPages)
 				{
-					throw new ArgumentNullException();
-				}
-				TabPage tabPageToActivate = null;
-				if (value.IsPinned)
-				{
-					foreach (TabPage page in tabControl1.TabPages)
+					if (page.Tag == task)
 					{
-						if (page.Tag == value)
-						{
-							tabPageToActivate = page;
-							break;
-						}
-					}
-				}
-				else
-				{
-					SetCurrentWorkTask(value);
-					tabPageToActivate = _currentWorkTab;
-				}
-
-				if (tabPageToActivate != null)
-				{
-					if (tabControl1.SelectedTab != tabPageToActivate)
-					{
-						tabControl1.SelectedTab = tabPageToActivate;
-					}
-					else
-					{
-						ActivateTab(tabPageToActivate, true);
+						tabPageToActivate = page;
+						break;
 					}
 				}
 			}
+			else
+			{
+				SetCurrentWorkTask(task);
+				tabPageToActivate = _currentWorkTab;
+			}
+
+			if (tabPageToActivate != null)
+			{
+				if (tabControl1.SelectedTab != tabPageToActivate)
+				{
+					tabControl1.SelectedTab = tabPageToActivate;
+				}
+				else
+				{
+					ActivateTab(tabPageToActivate, true);
+				}
+			}
 		}
+
 
 		private void SetCurrentWorkTask(ITask value)
 		{
@@ -230,9 +270,17 @@ namespace WeSay.App
 
 		public string CurrentUrl
 		{
-			get { return _currentUrl; }
-			set { _currentUrl = value; }
+			get
+			{
+				if(_activeTask==null)
+					return string.Empty;
+				var t = _activeTask as ITaskForExternalNavigateToEntry;
+				if(t==null)
+					return string.Empty;
+				return t.CurrentUrl;
+			}
 		}
+
 
 		private void OnTabSelected(object sender, TabControlEventArgs e)
 		{
@@ -244,7 +292,7 @@ namespace WeSay.App
 
 		private void ActivateTab(Control page, bool okTouseTimer)
 		{
-			ITask task = (ITask) page.Tag;
+			var task = (ITask) page.Tag;
 			if (ActiveTask == task)
 			{
 				return; //debounce
@@ -253,7 +301,7 @@ namespace WeSay.App
 			if (ActiveTask != null)
 			{
 				ActiveTask.Deactivate();
-				_activeTask = null;
+				_activeTask =null;
 			}
 			if (task != null)
 			{
@@ -267,6 +315,7 @@ namespace WeSay.App
 				{
 					ActivateTask(page, task);
 				}
+				UsageReporter.SendNavigationNotice(task.Label);
 			}
 		}
 
@@ -275,7 +324,7 @@ namespace WeSay.App
 			page.Text += " " +
 						 StringCatalog.Get("~Loading...",
 										   "Appended to the name of a task, in its tab, while the user is waiting for the task to come up.");
-			Timer t = new Timer();
+			var t = new Timer();
 			t.Tick += delegate
 					  {
 						  t.Stop();
@@ -298,18 +347,25 @@ namespace WeSay.App
 			{
 				task.Activate();
 			}
-			catch (ConfigurationException e) //let others go through the normal bug reporting system
+			catch (ConfigurationException e) //let others go through the normal reporting system
 			{
 				ErrorReport.NotifyUserOfProblem(e.Message);
 				Logger.WriteEvent("Failed Activating");
 				return;
 			}
 
-			// RunCommand(new ActivateTaskCommand(page, task));
 			task.Control.Dock = DockStyle.Fill;
-			task.Control.SuspendLayout();
-			page.Controls.Add(task.Control);
-			task.Control.ResumeLayout(false);
+
+			if(task.Control.GetType() == typeof(Chorus.UI.Notes.Browser.NotesBrowserPage))
+			{
+				page.Controls.Add(task.Control);
+			}
+			else //I (JH) don't know what problem this code was intended to solve, but it prevents the notes browser from docking properly
+			{
+				task.Control.SuspendLayout();
+				page.Controls.Add(task.Control);
+				task.Control.ResumeLayout(false);
+			}
 			task.Control.SelectNextControl(task.Control, true, true, true, true);
 			task.Control.PerformLayout();
 			task.Control.Invalidate(true);
@@ -322,7 +378,7 @@ namespace WeSay.App
 
 		public void ContinueLaunchingAfterInitialDisplay()
 		{
-			Timer t = new Timer();
+			var t = new Timer();
 			t.Tick += delegate
 					  {
 						  t.Stop();
@@ -336,5 +392,13 @@ namespace WeSay.App
 			t.Interval = 1;
 			t.Start();
 		}
+
+		private void OnKeyDown(object sender, KeyEventArgs e)
+		{
+			//if (e.KeyCode == Keys.F1) //help is now handled by the HelpProvider
+
+		}
 	}
+
+
 }

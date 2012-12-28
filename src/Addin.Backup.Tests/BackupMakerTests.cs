@@ -4,6 +4,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
 using Palaso.TestUtilities;
 using WeSay.Project;
+using WeSay.TestUtilities;
 
 namespace Addin.Backup.Tests
 {
@@ -18,7 +19,7 @@ namespace Addin.Backup.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			_destinationZip = Path.Combine(Path.GetTempPath(), Path.GetTempFileName() + ".zip");
 			_sourceProjectPath = BasilProject.GetPretendProjectDirectory();
 			_backupMaker = new BackupMaker();
@@ -35,19 +36,19 @@ namespace Addin.Backup.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ApplicationException))]
 		public void ThrowIfCannotCreateDestination()
 		{
+
+			Assert.Throws<ApplicationException>(() =>
 			BackupMaker.BackupToExternal(BasilProject.GetPretendProjectDirectory(),
-										 "Q:\\" + Path.GetRandomFileName(),
-										 _filesToBackup);
+										 "QQ:\\" + Path.GetRandomFileName(),
+										 _filesToBackup));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ApplicationException))]
 		public void ThrowIfSourceDoesntExist()
 		{
-			BackupMaker.BackupToExternal(Path.GetRandomFileName(), _destinationZip, _filesToBackup);
+			Assert.Throws<ApplicationException>(() => BackupMaker.BackupToExternal(Path.GetRandomFileName(), _destinationZip, _filesToBackup));
 		}
 
 		[Test]
@@ -115,19 +116,26 @@ namespace Addin.Backup.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ZipException))]
 		public void BackupToExternal_FileToBackUpIsLocked_Throws()
 		{
-			TemporaryFolder folderForBackup = new TemporaryFolder("Backup Test");
-			string backUpFileName = Path.Combine(folderForBackup.FolderPath, "Backup Test.zip");
+			using (var folderForBackup = new TemporaryFolder("Backup Test"))
+			{
+				string backUpFileName = Path.Combine(folderForBackup.Path, "Backup Test.zip");
 
-			//Create and lock a lift file
-			TempLiftFile fileToBackUp = new TempLiftFile("TempLiftFile.lift", folderForBackup,"", "0.13");
+				//Create and lock a lift file
+				var fileToBackUp = new TempLiftFile("TempLiftFile.lift", folderForBackup, "", "0.13");
 
-			//This is our lock
-			FileStream liftFileStreamForLocking = new FileStream(fileToBackUp.Path, FileMode.Open, FileAccess.Read, FileShare.None);
+				//This is our lock
+				var liftFileStreamForLocking = new FileStream(
+					fileToBackUp.Path, FileMode.Open, FileAccess.Read, FileShare.None
+				);
 
-			BackupMaker.BackupToExternal(Path.GetDirectoryName(fileToBackUp.Path), backUpFileName, new string[]{fileToBackUp.Path});
+				Assert.Throws<ZipException>(
+					() => BackupMaker.BackupToExternal(
+						Path.GetDirectoryName(fileToBackUp.Path), backUpFileName, new[] {fileToBackUp.Path}
+					)
+				);
+			}
 		}
 
 		[Test]

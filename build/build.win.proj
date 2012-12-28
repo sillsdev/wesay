@@ -1,0 +1,210 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<RootDir>$(teamcity_build_checkoutDir)</RootDir>
+	</PropertyGroup>
+
+	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="MakeWixForDirTree" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="MakePot" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="DNZip" AssemblyFile="$(RootDir)/build/MSBuild.ExtensionPack.dll" />
+	<UsingTask TaskName="File" AssemblyFile="$(RootDir)/build/MSBuild.ExtensionPack.dll" />
+	<UsingTask TaskName="NUnitTeamCity" AssemblyFile="$(agent_home_dir)/plugins/dotnetPlugin/bin/JetBrains.BuildServer.MSBuildLoggers.dll" />
+	<UsingTask AssemblyFile="C:\Program Files (x86)\MSBuild\MSBuildCommunityTasks\MSBuild.Community.Tasks.dll" TaskName="MsBuild.Community.Tasks.WebDownload" />
+
+	<PropertyGroup>
+		<Solution>WeSay VS2010.sln</Solution>
+		<ApplicationName>WeSay</ApplicationName>
+		<Configuration>Release</Configuration>
+	</PropertyGroup>
+
+	<Import Project="$(RootDir)/build/build.common.proj" />
+
+	<ItemGroup>
+		<CSharpFiles
+			Include="$(RootDir)\**\*.cs"
+			Exclude="$(RootDir)\**\*Tests\**;$(RootDir)\**\WeSay.ConfigTool\**" />
+		<XmlFiles Include="$(RootDir)\common\**\*.WeSayConfig"/>
+	</ItemGroup>
+
+	<Target Name="DownloadDistFiles">
+		<MakeDir Directories= "$(RootDir)\External"/>
+		<WebDownload FileUri="https://dl.dropbox.com/s/599lb0od6shtqqa/WeSay_Helps.chm?dl=1" FileName="$(RootDir)\External\WeSay_Helps.chm"></WebDownload>
+		<WebDownload FileUri="https://dl.dropbox.com/s/kj91auval00jv90/wesay.helpmap?dl=1" FileName="$(RootDir)\External\wesay.helpmap"></WebDownload>
+	</Target>
+
+	<Target Name="Build">
+		<CallTarget Targets="Clean"/>
+		<CallTarget Targets="DownloadDistFiles" />
+		<CallTarget Targets="CopyHelpFilesIntoSourceTree" />
+		<CallTarget Targets="SetAssemblyVersion"/>
+		<CallTarget Targets="Compile"/>
+		<Message Text="Build Complete"/>
+	</Target>
+
+	<Target Name="CopyHelpFilesIntoSourceTree">
+		<Copy
+			SourceFiles ="$(RootDir)\External\wesay.helpmap"
+			DestinationFolder ="$(RootDir)\src\WeSay.Project\Resources" />
+		<Copy
+			SourceFiles ="$(RootDir)\External\WeSay_Helps.chm"
+			DestinationFolder ="$(RootDir)" />
+	</Target>
+
+	<ItemGroup>
+		<ExistingObjectFiles
+			Include="$(RootDir)/**/obj/**/*;$(RootDir)/output/$(Configuration)/**/*"
+			Exclude="$(RootDir)/.hg/**/*"
+		/>
+	</ItemGroup>
+
+	<Target Name="Clean">
+		<Delete Files="@(ExistingObjectFiles)" />
+		<CallTarget Targets="CleanInstaller" />
+	</Target>
+
+	<ItemGroup>
+		<ExistingInstallerFiles
+			Include="$(RootDir)/output/installer/**/*"
+			Exclude="$(RootDir)/.hg/**/*"
+		/>
+	</ItemGroup>
+
+	<Target Name="CleanInstaller">
+		<Delete Files="@(ExistingInstallerFiles)" />
+	</Target>
+
+	<Target Name="Compile" DependsOnTargets="">
+		<MSBuild
+			Projects="$(RootDir)\src\$(Solution)"
+			Targets="Build"
+			Properties="Configuration=$(Configuration)" />
+	</Target>
+
+	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">
+		<CreateItem
+			Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
+			Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll" >
+			<Output ItemName="TestAssemblies" TaskParameter="Include" />
+		</CreateItem>
+		<NUnitTeamCity
+			Assemblies="@(TestAssemblies)"
+			ExcludeCategory="SkipOnTeamCity;SkipOnBuildServer"
+			NUnitVersion="NUnit-2.5.5" />
+	</Target>
+
+	<Target Name="UnzipMercurial" DependsOnTargets="">
+		<!-- Extract a zip file-->
+		<!-- This output path is different from the old wesay, but the same as chorus.  WeSay used to be output/release/mercurial -->
+		<DNZip TaskAction="Extract" ExtractPath="$(RootDir)" ZipFileName="$(RootDir)/lib/Release/Mercurial.zip"/>
+	</Target>
+
+	<!-- Installer Targets -->
+	<ItemGroup>
+		<SampleFiles
+			Include="$(RootDir)\SampleProjects\src\**\*.*"
+			Exclude="" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<SampleProjects
+			Include="$(RootDir)\SampleProjects\src\*.*"
+			Exclude="" />
+	</ItemGroup>
+
+	<Target Name="CreateSample">
+		<Copy
+			SourceFiles="@(SampleFiles)"
+			DestinationFolder="$(RootDir)\SampleProjects\%(RecursiveDir)" />
+	</Target>
+
+	<Target Name="MakePotFile">
+		<MakePot
+			ProjectId="WeSay"
+			OutputFile="$(RootDir)\common\WeSay.pot"
+			MsdIdBugsTo="issues@wesay.org"
+			XmlFiles="@(XmlFiles)"
+			XPathToStrings="//label | //longLabel | //description[not(@UseInConstructor='false')]"
+			CSharpFiles="@(CSharpFiles)" />
+	</Target>
+
+	<Target Name="MakeWixForPoFiles">
+		<MakeWixForDirTree
+			DirectoryReferenceId="common"
+			ComponentGroupId="PoFiles"
+			RootDirectory="$(RootDir)\common"
+			OutputFilePath="$(RootDir)\src\Installer\GeneratedPOFiles.wxs"
+			MatchRegExPattern="\.po$">
+			<Output TaskParameter="OutputFilePath" ItemName="Compile" />
+		</MakeWixForDirTree>
+	</Target>
+
+	<Target Name="MakeWixForTemplates">
+		<MakeWixForDirTree
+			DirectoryReferenceId="TemplatesDir"
+			ComponentGroupId="templates"
+			RootDirectory="$(RootDir)\templates"
+			OutputFilePath="$(RootDir)\src\Installer\GeneratedTemplateFiles.wxs"
+			MatchRegExPattern=".*" >
+			<Output TaskParameter="OutputFilePath" ItemName="Compile" />
+		</MakeWixForDirTree>
+	</Target>
+
+	<Target Name="MakeWixForDistFiles">
+		<CallTarget targets="MakeWixForPoFiles"/>
+		<CallTarget targets="MakeWixForTemplates"/>
+	</Target>
+
+	<PropertyGroup>
+		<ReleaseString Condition="'$(Release)' == 'ALPHA'">-Alpha</ReleaseString>
+		<ReleaseString Condition="'$(Release)' == 'BETA'">-Beta</ReleaseString>
+	</PropertyGroup>
+	<Target Name="Installer" DependsOnTargets="CleanInstaller; VersionNumbers; MakeWixForDistFiles; Build ">
+		<!-- set the version number in the installer configuration program.  Perhaps there's a way to just send in the variables rather than this brute-force
+		changing of the script, but I haven't figured that out. -->
+
+		<FileUpdate
+			File="$(RootDir)\src\Installer\Installer.wxs"
+			Regex='Property_ProductVersion = ".*"'
+			ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />
+		<Message Text="Making WeSay Installer Version: $(Version)" Importance="high"  />
+
+		<MSBuild Projects="$(RootDir)\src\Installer\Installer.wixproj"/>
+
+		<File
+			TaskAction="Move"
+			Path="$(RootDir)\output\installer\WeSayInstaller.msi"
+			TargetPath="$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi" />
+	</Target>
+
+	<!-- Upload -->
+	<Target Name="MakeDownloadPointers" DependsOnTargets="VersionNumbers" >
+		<!-- copy it so we aren't modifying the original, which then is a pain on dev machines -->
+		<Copy
+			SourceFiles ="$(RootDir)\src\Installer\DownloadPointers.htm"
+			DestinationFolder ="$(RootDir)\output\installer" />
+
+		<!-- replace some parts of the file with the version number & date -->
+		<FileUpdate
+			File="$(RootDir)\output\installer\DownloadPointers.htm"
+			DatePlaceholder='DEV_RELEASE_DATE'
+			Regex='DEV_VERSION_NUMBER'
+			ReplacementText = "$(Version)$(ReleaseString)" />
+
+	</Target>
+
+	<Target Name="Upload" DependsOnTargets="VersionNumbers; Installer; MakeDownloadPointers" >
+		<Message Text="Attempting rsync of WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
+		<Exec
+			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller.$(version)$(ReleaseString).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller.$(version)$(ReleaseString).msi'
+			WorkingDirectory="$(RootDir)" />
+
+		<Message Text="Attempting rsync of DownloadPointers.htm" Importance="high"/>
+		<Exec
+			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\DownloadPointers.htm" bob@wesay.org:/var/www/downloads/DownloadPointers.htm'
+			WorkingDirectory="$(RootDir)" />
+
+	</Target>
+
+</Project>

@@ -3,14 +3,14 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Palaso.IO;
+using Palaso.UI.WindowsForms.ImageToolbox;
+using Palaso.UiBindings;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.ImageGallery;
-using WeSay.Foundation;
-using WeSay.LexicalTools.AddPictures;
 
 namespace WeSay.UI
 {
-	public partial class PictureControl: UserControl, IBindableControl<string>
+	public partial class PictureControl : UserControl, IBindableControl<string>
 	{
 		public event EventHandler ValueChanged;
 		public event EventHandler GoingAway;
@@ -47,11 +47,10 @@ namespace WeSay.UI
 
 			if (string.IsNullOrEmpty(_relativePathToImage))
 			{
-				_searchGalleryLink.Visible = GalleryIsAvailable;
-				_chooseImageLink.Visible = true;
+				_imageToolboxLink.Visible = true;
 				_pictureBox.Visible = false;
 				_problemLabel.Visible = false;
-				Height = _chooseImageLink.Bottom + 5;
+				Height = _imageToolboxLink.Bottom + 5;
 			}
 			else if (!File.Exists(GetPathToImage()))
 			{
@@ -60,24 +59,21 @@ namespace WeSay.UI
 				string s = String.Format("~Cannot find {0}", GetPathToImage());
 				toolTip1.SetToolTip(this, s);
 				toolTip1.SetToolTip(_problemLabel, s);
-				_searchGalleryLink.Visible = GalleryIsAvailable;
-				_chooseImageLink.Visible = true;
+				_imageToolboxLink.Visible = true;
 				Height = _problemLabel.Bottom + 5;
 			}
 			else
 			{
 				_pictureBox.Visible = true;
-				_searchGalleryLink.Visible = false;
-				_chooseImageLink.Visible = false;
-				//_chooseImageLink.Visible = false;
+				_imageToolboxLink.Visible = false;
 				_problemLabel.Visible = false;
 				try
 				{
 					//inset it a bit, with white border
 					_pictureBox.BackColor = Color.White;
 					_pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-					_pictureBox.Image = ImageUtilities.GetThumbNail(GetPathToImage(), _pictureBox.Width-4, _pictureBox.Height-4, Color.White);
-				   // _pictureBox.Load(GetPathToImage());
+					_pictureBox.Image = ImageUtilities.GetThumbNail(GetPathToImage(), _pictureBox.Width - 4, _pictureBox.Height - 4, Color.White);
+					// _pictureBox.Load(GetPathToImage());
 					Height = _pictureBox.Bottom + 5;
 				}
 				catch (Exception error)
@@ -89,59 +85,13 @@ namespace WeSay.UI
 
 			_removeImageLink.Visible = _pictureBox.Visible;
 
-			_searchGalleryLink.LinkColor = _shyLinkColor;
-			_chooseImageLink.LinkColor = _shyLinkColor;
+			_imageToolboxLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
 		}
 
 		private void ImageDisplayWidget_Load(object sender, EventArgs e)
 		{
 			UpdateDisplay();
-		}
-
-		private void _chooseImageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			try
-			{
-				OpenFileDialog dialog = new OpenFileDialog();
-				dialog.Filter = "Images|*.jpg;*.png;*.bmp;*.gif";
-				dialog.Multiselect = false;
-				dialog.Title = "Choose image";
-				dialog.InitialDirectory =
-						Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-				if (dialog.ShowDialog() == DialogResult.OK)
-				{
-					PictureChosen(dialog.FileName);
-				}
-			}
-			catch (Exception error)
-			{
-				ErrorReport.NotifyUserOfProblem("Something went wrong getting the picture. " +
-												  error.Message);
-			}
-		}
-
-		private void PictureChosen(string fromPath)
-		{
-			try
-			{
-				if (File.Exists(GetPathToImage()))
-				{
-					File.Delete(GetPathToImage());
-				}
-				var fullDestPath = Path.Combine(_storageFolderPath, Path.GetFileName(fromPath));
-				_relativePathToImage = fullDestPath.Replace(_pathToReferingFile, "");
-				_relativePathToImage = _relativePathToImage.Trim(Path.DirectorySeparatorChar);
-
-				File.Copy(fromPath, GetPathToImage(),true);
-				UpdateDisplay();
-
-				NotifyChanged();
-			}
-			catch(Exception error)
-			{
-				ErrorReport.NotifyUserOfProblem("WeSay was not able to copy the picture file.\r\n{0}",error.Message);
-			}
 		}
 
 		private void NotifyChanged()
@@ -180,8 +130,10 @@ namespace WeSay.UI
 				//the old style was to just give the file name
 				var alternatePath = Path.Combine(_storageFolderPath, _relativePathToImage);
 				if (File.Exists(alternatePath))
+				{
 					return alternatePath;
-				else if (!_relativePathToImage.Contains(Path.DirectorySeparatorChar.ToString()))
+				}
+				if (!_relativePathToImage.Contains(Path.DirectorySeparatorChar.ToString()))
 				{
 					return alternatePath; // show where we expected it to be
 				}
@@ -222,14 +174,12 @@ namespace WeSay.UI
 
 		private void _chooseImageLink_MouseEnter(object sender, EventArgs e)
 		{
-			_chooseImageLink.LinkColor = Color.Blue;
-			_searchGalleryLink.LinkColor = GalleryIsAvailable ? Color.Blue : _shyLinkColor;
+			_imageToolboxLink.LinkColor = Color.Blue;
 		}
 
 		private void _chooseImageLink_MouseLeave(object sender, EventArgs e)
 		{
-			_chooseImageLink.LinkColor = _shyLinkColor;
-			_searchGalleryLink.LinkColor = _shyLinkColor;
+			_imageToolboxLink.LinkColor = _shyLinkColor;
 		}
 
 		private void _removeImageLink_MouseLeave(object sender, EventArgs e)
@@ -239,70 +189,70 @@ namespace WeSay.UI
 
 		private void ImageDisplayWidget_MouseHover(object sender, EventArgs e)
 		{
-			_chooseImageLink.LinkColor = Color.Blue;
-			_searchGalleryLink.LinkColor = GalleryIsAvailable ? Color.Blue : _shyLinkColor;
+			_imageToolboxLink.LinkColor = Color.Blue;
 			_removeImageLink.LinkColor = Color.Blue;
 		}
 
 		private void ImageDisplayWidget_MouseLeave(object sender, EventArgs e)
 		{
-			_chooseImageLink.LinkColor = _shyLinkColor;
-			_searchGalleryLink.LinkColor = _shyLinkColor;
+			_imageToolboxLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
 		}
-		private static string TryToGetRootImageCatalogPath()
-		{
-			//look for the cd/dvd
-			var path = Palaso.UI.WindowsForms.ImageGallery.ArtOfReadingImageCollection.TryToGetCollectionPath();
-			if(!string.IsNullOrEmpty(path))
-				return path;
 
-			//look for it in a hard-coded location
-			string HardDiskPath = @"c:\art of reading\images";
-			if (Environment.OSVersion.Platform == PlatformID.Unix)
-			{
-				HardDiskPath = @"/usr/share/wesay/ArtOfReading/images";
-				if (!Directory.Exists(HardDiskPath))
-				{
-					HardDiskPath = @"/usr/share/ArtOfReading/images";
-				}
-				if (!Directory.Exists(HardDiskPath))
-				{
-					HardDiskPath = @"/var/share/ArtOfReading/images";
-				}
-			}
 
-			return HardDiskPath;
-		}
-		private bool GalleryIsAvailable
-		{
-			get
-			{
-				return Directory.Exists(TryToGetRootImageCatalogPath());
-			}
-		}
 		private void OnSearchGalleryLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			if(!GalleryIsAvailable)
-			{
-				MessageBox.Show("Could not find the Art Of Reading image collection.");
-				return;
-			}
-			var images = new ArtOfReadingImageCollection();
-			images.LoadIndex(_fileLocator.LocateFile("artofreadingindexv3_en.txt"));
-			images.RootImagePath = TryToGetRootImageCatalogPath();
-			var searchString = SearchTermProvider == null ? string.Empty:SearchTermProvider.SearchString;
-			searchString = images.StripNonMatchingKeywords(searchString);
-			using (var chooser = new PictureChooser(images, searchString))
-			{
-				chooser.ShowInTaskbar = false;
-				chooser.ShowIcon = false;
-				chooser.MinimizeBox = false;
-				chooser.MaximizeBox = false;
+		   var searchString = SearchTermProvider == null ? string.Empty : SearchTermProvider.SearchString;
+			PalasoImage currentImage=null;
 
-				if (DialogResult.OK == chooser.ShowDialog())
+			try
+			{
+				if (!string.IsNullOrEmpty(_relativePathToImage) && File.Exists(GetPathToImage()))
 				{
-					PictureChosen(chooser.ChosenPath);
+					currentImage = PalasoImage.FromFile(GetPathToImage());
+				}
+			}
+			catch(Exception)
+			{
+				//if we couldn't load it (like if it's missing), best to carry on and let them pick a new one
+			}
+
+			using(var dlg = new Palaso.UI.WindowsForms.ImageToolbox.ImageToolboxDialog(currentImage ?? new PalasoImage(), searchString))
+			{
+				if(DialogResult.OK == dlg.ShowDialog(this.ParentForm))
+				{
+					try
+					{
+						if (File.Exists(GetPathToImage()))
+						{
+							File.Delete(GetPathToImage());
+						}
+						string fileName = searchString;
+
+						if(string.IsNullOrEmpty(fileName))
+							fileName = DateTime.UtcNow.ToFileTimeUtc().ToString();
+
+						//NB: we have very possible collision if use a real word "bird".
+						//Less so with a time "3409343839", which this only uses if we don't have a file name (e.g. if it came from a scanner)
+						//so this will add to the name if what we have is not unique.
+						if (File.Exists(Path.Combine(_storageFolderPath, fileName + ".png")))
+						{
+							fileName += "-"+DateTime.UtcNow.ToFileTimeUtc();
+						}
+
+						fileName += ".png";
+						var fullDestPath = Path.Combine(_storageFolderPath, fileName);
+						_relativePathToImage = fullDestPath.Replace(_pathToReferingFile, "");
+						_relativePathToImage = _relativePathToImage.Trim(Path.DirectorySeparatorChar);
+
+						dlg.ImageInfo.Save(GetPathToImage());
+						UpdateDisplay();
+						NotifyChanged();
+					}
+					catch (Exception error)
+					{
+						ErrorReport.NotifyUserOfProblem("WeSay was not able to save the picture file.\r\n{0}", error.Message);
+					}
 				}
 			}
 		}
@@ -312,14 +262,19 @@ namespace WeSay.UI
 		/// </summary>
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
 		{
-		  if (Keys.None != (keyData & Keys.Modifiers) ||
-				 Keys.Tab == (keyData & Keys.Tab) ||
-				 Keys.Up == (keyData & Keys.Up) ||
-				 Keys.Down == (keyData & Keys.Down) )
+			if (Keys.None != (keyData & Keys.Modifiers) ||
+				   Keys.Tab == (keyData & Keys.Tab) ||
+				   Keys.Up == (keyData & Keys.Up) ||
+				   Keys.Down == (keyData & Keys.Down))
 			{
 				return base.ProcessCmdKey(ref msg, keyData);
 			}
 			return true;
+		}
+
+		private void _pictureBox_Click(object sender, EventArgs e)
+		{
+			OnSearchGalleryLink_LinkClicked(sender, null);
 		}
 	}
 

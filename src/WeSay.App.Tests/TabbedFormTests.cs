@@ -6,9 +6,29 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.Project;
+using WeSay.UI;
 
 namespace WeSay.App.Tests
 {
+	public class MockDictionaryTask : MockTask, ITaskForExternalNavigateToEntry
+	{
+		 public MockDictionaryTask(string label, string description, bool isPinned)
+			 :base(label,description,isPinned)
+		 {
+
+		 }
+
+		public void NavigateToEntry(string url)
+		{
+
+		}
+
+		public string CurrentUrl
+		{
+			get { return string.Empty; }
+		}
+	}
+
 	public class MockTask: ITask
 	{
 		private readonly bool _isPinned;
@@ -25,6 +45,11 @@ namespace WeSay.App.Tests
 			_description = description;
 			_isPinned = isPinned;
 			_control = new Control();
+		}
+
+		public bool Available
+		{
+			get { return true; }
 		}
 
 		public Control Control
@@ -101,10 +126,6 @@ namespace WeSay.App.Tests
 			get { return GetRemainingCount(); }
 		}
 
-		public bool MustBeActivatedDuringPreCache
-		{
-			get { return true; }
-		}
 
 		#region IThingOnDashboard Members
 
@@ -150,7 +171,7 @@ namespace WeSay.App.Tests
 		public void TestFixtureSetUp()
 		{
 			_project = new WeSayWordsProject();
-			_project.StringCatalogSelector = "en";
+			_project.UiOptions.Language = "en";
 			_project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory());
 
 			_project.Tasks = new List<ITask>();
@@ -182,12 +203,11 @@ namespace WeSay.App.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void InitializeTasks_NullTaskList_Throws()
 		{
 			using(TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController()))
 			{
-				tabbedForm.InitializeTasks(null);
+				Assert.Throws<ArgumentNullException>(() => tabbedForm.InitializeTasks(null));
 			}
 		}
 
@@ -267,7 +287,7 @@ namespace WeSay.App.Tests
 			using(TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController()))
 			{
 				tabbedForm.InitializeTasks(_project.Tasks);
-				tabbedForm.ActiveTask = _project.Tasks[3];
+				tabbedForm.SetActiveTask(_project.Tasks[3]);
 			}
 			using(var x = new TabbedForm(new NullStatusBarController()))
 			{
@@ -291,14 +311,13 @@ namespace WeSay.App.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void SetActiveTask_Null_Throws()
 		{
 			using(TabbedForm tabbedForm = new TabbedForm(new NullStatusBarController()))
 			{
 				tabbedForm.InitializeTasks(_project.Tasks);
 
-				tabbedForm.ActiveTask = null;
+				Assert.Throws<ArgumentNullException>(() => tabbedForm.SetActiveTask(null));
 			}
 		}
 
@@ -309,7 +328,7 @@ namespace WeSay.App.Tests
 			{
 				tabbedForm.InitializeTasks(_project.Tasks);
 				ITask initialWorkTask = tabbedForm.CurrentWorkTask;
-				tabbedForm.ActiveTask = _project.Tasks[0];
+				tabbedForm.SetActiveTask(_project.Tasks[0]);
 				Assert.AreSame(initialWorkTask, tabbedForm.CurrentWorkTask);
 			}
 		}
@@ -333,7 +352,7 @@ namespace WeSay.App.Tests
 				tabbedForm.InitializeTasks(_project.Tasks);
 				Assert.IsTrue(((MockTask) _project.Tasks[0]).IsActive, "1");
 
-				tabbedForm.ActiveTask = _project.Tasks[1];
+				tabbedForm.SetActiveTask(_project.Tasks[1]);
 				Assert.IsFalse(((MockTask) _project.Tasks[0]).IsActive, "2");
 				Assert.IsTrue(((MockTask) _project.Tasks[1]).IsActive, "3");
 			}
@@ -350,7 +369,7 @@ namespace WeSay.App.Tests
 			tabbedForm.InitializeTasks(_project.Tasks);
 			Assert.IsTrue(((MockTask)_project.Tasks[0]).IsActive, "1");
 
-			tabbedForm.ActiveTask = _project.Tasks[3];
+			tabbedForm.SetActiveTask(_project.Tasks[3]);
 			Assert.IsFalse(((MockTask) _project.Tasks[0]).IsActive, "2");
 			Assert.IsTrue(((MockTask) _project.Tasks[3]).IsActive, "3");
 			Assert.AreEqual(_project.Tasks[3].Label, tabbedForm.TabLabels[2], "4");
@@ -365,8 +384,8 @@ namespace WeSay.App.Tests
 			{
 				tabbedForm.InitializeTasks(_project.Tasks);
 
-				tabbedForm.ActiveTask = _project.Tasks[2];
-				tabbedForm.ActiveTask = _project.Tasks[3];
+				tabbedForm.SetActiveTask(_project.Tasks[2]);
+				tabbedForm.SetActiveTask(_project.Tasks[3]);
 				Assert.IsTrue(((MockTask) _project.Tasks[3]).IsActive);
 				Assert.IsFalse(((MockTask) _project.Tasks[2]).IsActive);
 

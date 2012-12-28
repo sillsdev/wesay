@@ -1,12 +1,17 @@
 using System;
 using System.Windows.Forms;
+using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
-using WeSay.Foundation;
+using Palaso.DictionaryServices.Model;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
+using WeSay.TestUtilities;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
+using Palaso.Lift;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -19,27 +24,25 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
-			var b = new Autofac.Builder.ContainerBuilder();
+			WeSayProjectTestHelper.InitializeForTests();
+			var b = new ContainerBuilder();
 			b.Register(c => new MediaNamingHelper(new string[] {"en"}));
 
-			Context =   new WeSay.Foundation.ServiceLocatorAdapter(b.Build());
+			Context =   new WeSay.Project.ServiceLocatorAdapter(b.Build());
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullBuilder_Throws()
 		{
-			new LexEntryLayouter(null, new ViewTemplate(), null, Context, new LexEntry());
+			Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(null, new ViewTemplate(), null, Context, new LexEntry()));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
 			using (DetailList detailList = new DetailList())
 			{
-				new LexEntryLayouter(detailList, null, null, Context, new LexEntry());
+				Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(detailList, null, null, Context, new LexEntry()));
 			}
 		}
 
@@ -110,9 +113,9 @@ namespace WeSay.LexicalTools.Tests
 		private static LexEntry GetNewEntry()
 		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemVernId] =
+			entry.LexicalForm[WritingSystemsIdsForTests.VernacularIdForTest] =
 					"WordInVernacular";
-			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemAnalId] =
+			entry.LexicalForm[WritingSystemsIdsForTests.AnalysisIdForTest] =
 					"WordInAnalysis";
 			AddSense(entry);
 			AddSense(entry);
@@ -137,13 +140,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			string[] analysisWritingSystemIds = new string[]
 													{
-															BasilProject.Project.WritingSystems.
-																	TestWritingSystemAnalId
+															WritingSystemsIdsForTests.AnalysisIdForTest
 													};
 			string[] vernacularWritingSystemIds = new string[]
 													  {
-															  BasilProject.Project.WritingSystems.
-																	  TestWritingSystemVernId
+															  WritingSystemsIdsForTests.VernacularIdForTest
 													  };
 			ViewTemplate viewTemplate = new ViewTemplate();
 			Field field = new Field(Field.FieldNames.EntryLexicalForm.ToString(),
@@ -190,8 +191,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexExampleSentence example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);
-			example.Sentence[BasilProject.Project.WritingSystems.TestWritingSystemVernId] =
-					"sentence";
+			example.Sentence[WritingSystemsIdsForTests.VernacularIdForTest] = "sentence";
 		}
 	}
 }

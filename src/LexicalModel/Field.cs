@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
-using WeSay.Foundation;
-using System.Linq;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
+using Palaso.WritingSystems;
 
 namespace WeSay.LexicalModel
 {
@@ -14,7 +16,7 @@ namespace WeSay.LexicalModel
 	public class Field
 	{
 		private string _fieldName;
-		private List<string> _writingSystemIds;
+		private BindingList<string> _writingSystemIds;
 		private string _displayName = string.Empty;
 		private string _description = string.Empty;
 		private string _className = string.Empty;
@@ -91,7 +93,8 @@ namespace WeSay.LexicalModel
 		{
 			FieldName = field.FieldName;
 			ClassName = field.ClassName;
-			_writingSystemIds = new List<string>();
+			_writingSystemIds = new BindingList<string>();
+			_writingSystemIds.ListChanged += OnWritingSystemIdsChanged;
 			foreach (string id in field.WritingSystemIds)
 			{
 				WritingSystemIds.Add(id);
@@ -113,11 +116,11 @@ namespace WeSay.LexicalModel
 		public static string MakeFieldNameSafe(string text)
 		{
 			//parentheses mess up our greps, don't really belong in xml names
-			char[] charsToRemove = new char[]
-									   {
-											   ' ', '(', ')', '*', ']', '[', '?', '{', '}', '\\', '<', '>',
-											   '+', '&'
-									   };
+			char[] charsToRemove = new[]
+			{
+			   ' ', '(', ')', '*', ']', '[', '?', '{', '}', '\\', '<', '>',
+			   '+', '&'
+			};
 			foreach (char c in charsToRemove)
 			{
 				text = text.Replace(c.ToString(), "");
@@ -244,7 +247,7 @@ namespace WeSay.LexicalModel
 				{
 					case null:
 						throw new ArgumentNullException();
-					case "WeSayDataObject":
+					case "PalasoDataObject":
 					case "LexEntry":
 					case "LexSense":
 					case "LexExampleSentence":
@@ -253,7 +256,7 @@ namespace WeSay.LexicalModel
 					default:
 						throw new ArgumentOutOfRangeException("value",
 															  value,
-															  "className must be WeSayDataObject, LexEntry, LexSense, or LexExampleSentence");
+															  "className must be PalasoDataObject, LexEntry, LexSense, or LexExampleSentence");
 				}
 			}
 		}
@@ -268,7 +271,7 @@ namespace WeSay.LexicalModel
 					return false;
 				}
 
-				if (WeSayDataObject.WellKnownProperties.Contains(FieldName))
+				if (PalasoDataObject.WellKnownProperties.Contains(FieldName))
 				{
 					return false;
 				}
@@ -287,6 +290,8 @@ namespace WeSay.LexicalModel
 				{
 					return false;
 				}
+				if (FieldName == "SILCAWL")
+					return false;
 
 				return true;
 			}
@@ -308,6 +313,39 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		[Browsable(false)]
+		public bool UserCanModifyWritingSystems
+		{
+			get
+			{
+				if (_fieldName == "SILCAWL" ||
+					_fieldName =="Picture")
+					// || Don't disable this:  it is actually used to change the language used when displaying domains:  _fieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+
+		public bool UserCanModifySpellCheckFeature
+		{
+			get
+			{
+				if (_fieldName == "SILCAWL" ||
+					_fieldName == "Picture" ||
+					_fieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+
 		[TypeConverter(typeof (DataTypeClassConverter))]
 		[Description(
 				"The type of the field. E.g. multilingual text, option, option collection, relation."
@@ -325,7 +363,11 @@ namespace WeSay.LexicalModel
 		[ReflectorProperty("optionsListFile", Required = false)]
 		public string OptionsListFile
 		{
-			get { return _optionsListFile; }
+			get { // this is about trying to get the win version to stop outputing <optionsListfile>(return)</optionsListFile>(whereas mono doesn't)
+				if(_optionsListFile==null)
+					return null;
+				return _optionsListFile.Trim();
+			}
 			set { _optionsListFile = value; }
 		}
 
@@ -378,19 +420,40 @@ namespace WeSay.LexicalModel
 					if (s == null)
 					{
 						throw new ArgumentNullException("value",
-														"Writing System argument" + i + "is null");
+														"Input System argument" + i + "is null");
 					}
 				}
-				_writingSystemIds = new List<string>(value);
+				if(_writingSystemIds != null)
+				{
+					_writingSystemIds.ListChanged -= OnWritingSystemIdsChanged;
+				}
+				_writingSystemIds = new BindingList<string>(value);
+				_writingSystemIds.ListChanged += OnWritingSystemIdsChanged;
+				FireWritingSystemsChangedEvent();
 			}
+		}
+
+		private void FireWritingSystemsChangedEvent()
+		{
+			if(WritingSystemsChanged != null)
+			{
+				WritingSystemsChanged(this, new EventArgs());
+			}
+		}
+
+		public event EventHandler WritingSystemsChanged;
+
+		private void OnWritingSystemIdsChanged(object sender, ListChangedEventArgs e)
+		{
+			FireWritingSystemsChangedEvent();
 		}
 
 		/// <summary>
 		/// omit audio writing systems
 		/// </summary>
-		public IEnumerable<string> GetTextOnlyWritingSystemIds(WritingSystemCollection systems)
+		public IEnumerable<string> GetTextOnlyWritingSystemIds(IWritingSystemRepository writingSystems)
 		{
-			return systems.TrimToActualTextWritingSystemIds(_writingSystemIds);
+			return writingSystems.TextWritingSystems.Where(ws => _writingSystemIds.Contains(ws.Id)).Select(ws => ws.Id);
 		}
 
 		[Browsable(false)]
@@ -439,7 +502,7 @@ namespace WeSay.LexicalModel
 
 		public void ChangeWritingSystemId(string oldId, string newId)
 		{
-			int i = _writingSystemIds.FindIndex(delegate(string id) { return id == oldId; });
+			int i = _writingSystemIds.IndexOf(oldId);
 			if (i > -1)
 			{
 				_writingSystemIds[i] = newId;
@@ -524,10 +587,11 @@ namespace WeSay.LexicalModel
 			set { _isMultiParagraph = value;}
 		}
 
+
 		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)
 		{
-			return _writingSystemIds.Exists(delegate(string s) { return s == writingSystemId; });
+			return _writingSystemIds.Any(id => id == writingSystemId);
 		}
 
 		public static void ModifyMasterFromUser(Field master, Field user)
@@ -582,7 +646,7 @@ namespace WeSay.LexicalModel
 			{
 				Debug.Assert(node.Name == "writingSystems");
 				Debug.Assert(node != null);
-				List<string> l = new List<string>();
+				var l = new List<string>();
 				foreach (XmlNode n in node.SelectNodes("id"))
 				{
 					l.Add(n.InnerText);
@@ -600,7 +664,7 @@ namespace WeSay.LexicalModel
 	{
 		public override string[] ValidStrings
 		{
-			get { return new string[] {"LexEntry", "LexSense", "LexExampleSentence"}; }
+			get { return new[] {"LexEntry", "LexSense", "LexExampleSentence"}; }
 		}
 	}
 
@@ -608,7 +672,7 @@ namespace WeSay.LexicalModel
 	{
 		public override string[] ValidStrings
 		{
-			get { return new string[] {"MultiText", "Option", "OptionCollection", "RelationToOneEntry"}; }
+			get { return new[] {"MultiText", "Option", "OptionCollection", "RelationToOneEntry"}; }
 		}
 	}
 

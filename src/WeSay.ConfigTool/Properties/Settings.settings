@@ -8,5 +8,8 @@
 	<Setting Name="MruConfigFilePaths" GenerateDefaultValueInCode="false" Type="WeSay.ConfigTool.MruProjects" Scope="User">
 	  <Value Profile="(Default)" />
 	</Setting>
+	<Setting Name="Reporting" GenerateDefaultValueInCode="false" Type="WeSay.ConfigTool.ReportingSettings" Scope="User">
+	  <Value Profile="(Default)" />
+	</Setting>
   </Settings>
 </SettingsFile>

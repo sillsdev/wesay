@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.i18n;
 using WeSay.Foundation;
 
 namespace WeSay.Project
@@ -39,17 +39,17 @@ namespace WeSay.Project
 
 		public string Label
 		{
-			get { return String.Format("Failed To Load: {0}", _label); }
+			get { return StringCatalog.GetFormatted("~Failed To Load: {0}", "", _label); }
+		}
+
+		public bool Available
+		{
+			get { return true; }
 		}
 
 		public string Description
 		{
-			get { return String.Format("Error: {0}", _description); }
-		}
-
-		public bool MustBeActivatedDuringPreCache
-		{
-			get { return false; }
+			get { return StringCatalog.GetFormatted("~Error: {0}", "", _description); }
 		}
 
 		public Control Control
@@ -117,7 +117,7 @@ namespace WeSay.Project
 
 		public string LocalizedLabel
 		{
-			get { return StringCatalog.Get(_label); }
+			get { return StringCatalog.Get(Label); }
 		}
 
 		public string LocalizedLongLabel

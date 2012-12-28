@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using Palaso.Lift;
+using Palaso.UiBindings;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI
@@ -13,7 +16,7 @@ namespace WeSay.UI
 	{
 		private readonly IBindingList _chosenItems;
 		private readonly IEnumerable<KV> _sourceChoices;
-		private readonly IList<WritingSystem> _writingSystems;
+		private readonly IList<WritingSystemDefinition> _writingSystems;
 		private readonly CommonEnumerations.VisibilitySetting _visibility;
 		private readonly IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> _choiceSystemAdaptor;
 		private IReportEmptiness _alternateEmptinessHelper;
@@ -46,7 +49,7 @@ namespace WeSay.UI
 		/// <param name="adaptor">does all the conversion between keys, wrappers, actual objects, etc.</param>
 		public ReferenceCollectionEditor(IBindingList chosenItems,
 										 IEnumerable<KV> sourceChoices,
-										 IList<WritingSystem> writingSystems,
+										 IList<WritingSystemDefinition> writingSystems,
 										 CommonEnumerations.VisibilitySetting visibility,
 										 IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> adaptor)
 		{

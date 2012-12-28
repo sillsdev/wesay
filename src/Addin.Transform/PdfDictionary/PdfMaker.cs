@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Mono.Addins;
+using Palaso.i18n;
+using Palaso.Progress;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.UI.WindowsForms.Progress;
+using Palaso.WritingSystems;
 using WeSay.AddinLib;
-using WeSay.Foundation;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace Addin.Transform.PdfDictionary
@@ -18,7 +22,7 @@ namespace Addin.Transform.PdfDictionary
 	{
 		public override string LocalizedName
 		{
-			get { return StringCatalog.Get("~Make Pdf Dictionary"); }
+			get { return StringCatalog.Get("~Make Simple Pdf Dictionary"); }
 		}
 
 		public override string ID
@@ -58,9 +62,46 @@ namespace Addin.Transform.PdfDictionary
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			if(!PrinceXmlWrapper.IsPrinceInstalled)
-				throw new ConfigurationException("WeSay could not find PrinceXml.  Make sure you've installed it (get it from princexml.com).");
-			string htmlPath = CreateFileToOpen(projectInfo, true, false);
+			if (!Available)
+				throw new ConfigurationException(
+					"WeSay could not find PrinceXml.  Make sure you've installed it (get it from princexml.com).");
+
+			using (ProgressDialog dlg = new ProgressDialog())
+			{
+				dlg.BarStyle = ProgressBarStyle.Marquee; //we have no idea how much progress we've made
+
+				dlg.Overview = "Creating PDF Dictionary";
+				BackgroundWorker worker = new BackgroundWorker();
+				worker.DoWork += OnDoWork;
+				dlg.BackgroundWorker = worker;
+				dlg.CanCancel = true;
+				//dlg.CancelRequested += new EventHandler(OnCancelRequested);
+				dlg.ProgressState.Arguments = projectInfo;
+
+				dlg.ShowDialog();
+				if (dlg.ProgressStateResult != null &&
+					dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
+				{
+					ErrorReport.ReportNonFatalException(
+						dlg.ProgressStateResult.ExceptionThatWasEncountered);
+				}
+			}
+		}
+
+		private void OnDoWork(object sender, DoWorkEventArgs e)
+		{
+			ProgressState progressState = (ProgressState) e.Argument;
+
+			ProjectInfo projectInfo = (ProjectInfo) progressState.Arguments;
+
+			progressState.StatusLabel = "Converting dictionary to XHTML...";
+
+			//  not including because historyically we had trouble nailing down precedence, and we add these explicitly to prince.
+			//  Prince has gone through several versions now, so we *could* try turning the links back on and see if the problem is gone.
+			bool includeCSSLinks = false;
+
+			string htmlPath = CreateFileToOpen(projectInfo, includeCSSLinks);
+
 			if (string.IsNullOrEmpty(htmlPath))
 			{
 				return; // get this when the user cancels
@@ -73,22 +114,29 @@ namespace Addin.Transform.PdfDictionary
 				var stylesheetPaths = new List<string>();
 
 				var autoLayout = Path.Combine(projectInfo.PathToExportDirectory, "autoLayout.css");
-				var factoryLayout = projectInfo.LocateFile(Path.Combine("Templates", "defaultDictionary.css"));
+
+				var factoryLayout = projectInfo.LocateFile(Path.Combine("templates", "defaultDictionary.css"));
+				//NB: when running on dev machine, this is actually going to get this out of output, not templates, so you have to restart wesay to see changes.
 				File.Copy(factoryLayout, autoLayout, true);
 
 				var autoFonts = Path.Combine(projectInfo.PathToExportDirectory, "autoFonts.css");
-				CreateAutoFontsStyleSheet(autoFonts, (PublicationFontStyleProvider)projectInfo.ServiceProvider.GetService(typeof(PublicationFontStyleProvider)), projectInfo.WritingSystems);
+				CreateAutoFontsStyleSheet(autoFonts,
+										  (PublicationFontStyleProvider)
+										  projectInfo.ServiceProvider.GetService(
+											  typeof (PublicationFontStyleProvider)), projectInfo.WritingSystems);
 
 				var customLayout = Path.Combine(projectInfo.PathToExportDirectory, "customLayout.css");
 				if (!File.Exists(customLayout))
 				{
-					File.WriteAllText(customLayout, "/* To tweak a layout setting, copy the template you want to change from the autoLayout.css into this file, and make your changes */");
+					File.WriteAllText(customLayout,
+									  "/* To tweak a layout setting, copy the template you want to change from the autoLayout.css into this file, and make your changes */");
 				}
 
 				var customFonts = Path.Combine(projectInfo.PathToExportDirectory, "customFonts.css");
 				if (!File.Exists(customFonts))
 				{
-					File.WriteAllText(customFonts, "/* To tweak a font setting, copy the template you want to change from the autoFonts.css into this file, and make your changes.*/" );
+					File.WriteAllText(customFonts,
+									  "/* To tweak a font setting, copy the template you want to change from the autoFonts.css into this file, and make your changes.*/");
 				}
 
 				//NB: experiments with princexml 6.0 showed that the last guy wins.
@@ -101,24 +149,32 @@ namespace Addin.Transform.PdfDictionary
 				stylesheetPaths.Add(customFonts);
 				stylesheetPaths.Add(customLayout);
 
+				progressState.StatusLabel = "Converting XHTML to PDF...";
+
 				PrinceXmlWrapper.CreatePdf(htmlPath, stylesheetPaths, pdfPath);
-				Process.Start(pdfPath);
+
+				if (_launchAfterTransform)
+				{
+					progressState.StatusLabel = "Opening PDF...";
+					Process.Start(pdfPath);
+				}
 			}
-			catch (Exception e)
+			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
+				ErrorReport.NotifyUserOfProblem(error, "There was a problem creating the PDF.");
 			}
 		}
 
-		private void CreateAutoFontsStyleSheet(string path, PublicationFontStyleProvider styleProvider, WritingSystemCollection writingSystemCollection)
+
+		private void CreateAutoFontsStyleSheet(string path, PublicationFontStyleProvider styleProvider, IWritingSystemRepository writingSystemCollection)
 		{
 
 			using (var f = File.CreateText(path))
 			{
-				foreach (var pair in writingSystemCollection)
+				foreach (var writingSystem in writingSystemCollection.AllWritingSystems)
 				{
-					f.WriteLine(":lang("+pair.Key+") {");
-					f.WriteLine(styleProvider.GetAutoFontsCascadingStyleSheetLinesForWritingSystem(pair.Value));
+					f.WriteLine(":lang("+writingSystem.Id+") {");
+					f.WriteLine(styleProvider.GetAutoFontsCascadingStyleSheetLinesForWritingSystem(writingSystem));
 					f.WriteLine("}");
 					f.WriteLine();
 				}

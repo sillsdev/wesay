@@ -1,10 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using Palaso.DictionaryServices.Model;
+using Palaso.i18n;
+using Palaso.Lift;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -34,7 +34,7 @@ namespace WeSay.LexicalTools
 			return AddWidgets(Entry, -1);
 		}
 
-		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
+		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
 		{
 			return AddWidgets((LexEntry) wsdo, insertAtRow);
 		}
@@ -58,10 +58,12 @@ namespace WeSay.LexicalTools
 			rowCount += AddCustomFields(entry, insertAtRow + rowCount);
 
 			var rowCountBeforeSenses = rowCount;
-			LexSenseLayouter layouter = new LexSenseLayouter(DetailList,
-															  ActiveViewTemplate,
-															  RecordListManager,
-															  _serviceProvider);
+			var layouter = new LexSenseLayouter(
+				DetailList,
+				ActiveViewTemplate,
+				RecordListManager,
+				_serviceProvider
+			);
 			layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 
@@ -82,14 +84,14 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private static IServiceProvider CreateLayoutInfoServiceProvider(IServiceLocator serviceLocator, LexEntry entry)
 		{
-			Palaso.Misc.Guard.AgainstNull(serviceLocator, "serviceLocator");
-			Palaso.Misc.Guard.AgainstNull(entry, "entry");
+			Palaso.Code.Guard.AgainstNull(serviceLocator, "serviceLocator");
+			Palaso.Code.Guard.AgainstNull(entry, "entry");
 
 			var namingHelper = (MediaNamingHelper) serviceLocator.GetService(typeof (MediaNamingHelper));
-			var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
+			var ap = new AudioPathProvider(WeSayWordsProject.Project.PathToAudio,
 						() => entry.LexicalForm.GetBestAlternativeString(namingHelper.LexicalUnitWritingSystemIds));
 
-		   return serviceLocator.CreateNewUsing(c=>c.Register(ap));
+		   return serviceLocator.CreateNewUsing(c=>c.RegisterInstance(ap));
 	   }
 	}
 

@@ -2,18 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Windows.Forms;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
+using Palaso.Lift.Options;
+using Palaso.UiBindings;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
-using System.Linq;
 using WeSay.UI.TextBoxes;
+using Palaso.i18n;
 
 namespace WeSay.LexicalTools
 {
@@ -98,12 +100,12 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// actually add the widgets that are needed to the detailed list
 		/// </summary>
-		public int AddWidgets(WeSayDataObject wsdo)
+		public int AddWidgets(PalasoDataObject wsdo)
 		{
 			return AddWidgets(wsdo, -1);
 		}
 
-		internal abstract int AddWidgets(WeSayDataObject wsdo, int row);
+		internal abstract int AddWidgets(PalasoDataObject wsdo, int row);
 
 		protected Control MakeBoundControl(MultiText multiTextToBindTo, Field field)
 		{
@@ -161,13 +163,13 @@ namespace WeSay.LexicalTools
 		//            return m;
 		//        }
 
-		protected int MakeGhostWidget<T>(WeSayDataObject parent,
+		protected int MakeGhostWidget<T>(PalasoDataObject parent,
 										IList<T> list,
 										 int insertAtRow,
 										 string fieldName,
 										 string label,
 										 string propertyName,
-										 bool isHeading) where T : WeSayDataObject, new()
+										 bool isHeading) where T : PalasoDataObject, new()
 		{
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(fieldName);
@@ -205,11 +207,11 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		protected GhostBinding<T> MakeGhostBinding<T>(WeSayDataObject parent, IList<T> list,
+		protected GhostBinding<T> MakeGhostBinding<T>(PalasoDataObject parent, IList<T> list,
 													  string ghostPropertyName,
-													  WritingSystem writingSystem,
+													  WritingSystemDefinition writingSystem,
 													  WeSayTextBox entry)
-				where T : WeSayDataObject, new()
+				where T : PalasoDataObject, new()
 		{
 			GhostBinding<T> binding = new GhostBinding<T>(parent,
 				list,
@@ -228,7 +230,7 @@ namespace WeSay.LexicalTools
 																	 previouslyGhostedControlToReuse,
 															 bool doGoToNextField,
 															 EventArgs args)
-				where T : WeSayDataObject, new()
+				where T : PalasoDataObject, new()
 		{
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
 			AddWidgetsAfterGhostTrigger(list[index],
@@ -237,7 +239,7 @@ namespace WeSay.LexicalTools
 										doGoToNextField);
 		}
 
-		protected void AddWidgetsAfterGhostTrigger(WeSayDataObject wsdo,
+		protected void AddWidgetsAfterGhostTrigger(PalasoDataObject wsdo,
 												   int countOfRows,
 												   Control refControl,
 												   bool doGoToNextField)
@@ -263,7 +265,7 @@ namespace WeSay.LexicalTools
 												int insertAtRow,
 												int rowCount)
 		{
-			foreach (WeSayDataObject o in list)
+			foreach (PalasoDataObject o in list)
 			{
 				int r;
 				if (insertAtRow < 0)
@@ -279,7 +281,7 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		protected int AddCustomFields(WeSayDataObject target, int insertAtRow)
+		protected int AddCustomFields(PalasoDataObject target, int insertAtRow)
 		{
 			int rowCount = 0;
 			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().Name))
@@ -302,7 +304,7 @@ namespace WeSay.LexicalTools
 					ActiveViewTemplate.GetCustomFields(target.GetType().BaseType.Name))
 			{
 				if (target.GetType() == typeof (LexExampleSentence) &&
-					customField.FieldName == WeSayDataObject.WellKnownProperties.Note)
+					customField.FieldName == PalasoDataObject.WellKnownProperties.Note)
 				{
 					continue; //note actually isn't allowed at the moment
 				}
@@ -314,7 +316,7 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		private int AddOneCustomField(WeSayDataObject target,
+		private int AddOneCustomField(PalasoDataObject target,
 									  Field customField,
 									  int insertAtRow,
 									  int rowCount)
@@ -329,6 +331,8 @@ namespace WeSay.LexicalTools
 			{
 				case "Picture":
 					box = MakePictureWidget(target, customField, _detailList);
+					if (box == null)
+						return rowCount; // other code does the user notification
 					break;
 				case "Flag":
 					box = MakeCheckBoxWidget(target, customField);
@@ -422,7 +426,7 @@ namespace WeSay.LexicalTools
 		//            }
 		//
 		//        }
-		private Control MakeRelationWidget(WeSayDataObject target, LexRelationType type, Field field)
+		private Control MakeRelationWidget(PalasoDataObject target, LexRelationType type, Field field)
 		{
 			return RelationController.CreateWidget(target,
 												   type,
@@ -447,19 +451,11 @@ namespace WeSay.LexicalTools
 		//            }
 		//        }
 
-		protected Control MakeOptionWidget(WeSayDataObject target, Field field)
+		protected Control MakeOptionWidget(PalasoDataObject target, Field field)
 		{
 			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field, false);
-			WritingSystem preferredWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(field.FieldName);
-			if (preferredWritingSystem == _viewTemplate.WritingSystems.UnknownVernacularWritingSystem)
-			{
-				//this is a better choice
-				preferredWritingSystem = _viewTemplate.WritingSystems.UnknownAnalysisWritingSystem;
-
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
-																 "The option box {0} had the topmost writing system set to {1}, but that writing system was not found.", field.DisplayName, field.WritingSystemIds[0]);
-			}
+			WritingSystemDefinition preferredWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(field.FieldName);
 			SingleOptionControl control = new SingleOptionControl(optionRefTarget,
 																  list,
 																  field.FieldName,
@@ -469,14 +465,14 @@ namespace WeSay.LexicalTools
 			return control;
 		}
 
-		private static Control MakeOptionCollectionWidget(WeSayDataObject target, Field field)
+		private static Control MakeOptionCollectionWidget(PalasoDataObject target, Field field)
 		{
 			OptionsList availableOptions = WeSayWordsProject.Project.GetOptionsList(field, false);
 			OptionRefCollection refsOfChoices =
 				target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			//            OptionCollectionControl control =
 			//                   new OptionCollectionControl(refsOfChoices, availableOptions, field.WritingSystemIds[0]);
-			IList<WritingSystem> writingSystems =
+			IList<WritingSystemDefinition> writingSystems =
 				BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
 			IChoiceSystemAdaptor<Option, string, OptionRef> displayAdaptor;
 
@@ -501,7 +497,7 @@ namespace WeSay.LexicalTools
 			return control;
 		}
 
-		protected Control MakeCheckBoxWidget(WeSayDataObject target, Field field)
+		protected Control MakeCheckBoxWidget(PalasoDataObject target, Field field)
 		{
 			FlagState boxState = target.GetOrCreateProperty<FlagState>(field.FieldName);
 
@@ -513,8 +509,9 @@ namespace WeSay.LexicalTools
 			return control;
 		}
 
-		protected virtual Control MakePictureWidget(WeSayDataObject target, Field field, DetailList detailList)
+		protected virtual Control MakePictureWidget(PalasoDataObject target, Field field, DetailList detailList)
 		{
+			ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),"Sorry, pictures are only supported on senses");
 			return null;//only LexSenseLayouter actually has this
 		}
 	}

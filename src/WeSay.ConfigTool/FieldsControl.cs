@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using Palaso.i18n;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.WritingSystems;
 using WeSay.ConfigTool.Properties;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -12,7 +15,7 @@ namespace WeSay.ConfigTool
 	{
 		private bool _loading = false;
 
-		public FieldsControl(ILogger logger): base("set up the fields for the dictionary", logger)
+		public FieldsControl(ILogger logger): base("set up the fields for the dictionary", logger,"fields")
 		{
 			InitializeComponent();
 			_btnAddField.Image = Resources.genericLittleNewButton;
@@ -48,7 +51,7 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			Field f = (Field) _fieldsListBox.SelectedItems[0].Tag;
+			var f = (Field) _fieldsListBox.SelectedItems[0].Tag;
 			_fieldsListBox.SelectedItems[0].Text = f.DisplayName;
 		}
 
@@ -75,7 +78,7 @@ namespace WeSay.ConfigTool
 
 			foreach (Field field in  ViewTemplate)
 			{
-				ListViewItem item = new ListViewItem(field.DisplayName);
+				var item = new ListViewItem(field.DisplayName);
 				item.Tag = field;
 				item.Text = field.DisplayName;
 				item.Checked = field.Enabled;
@@ -110,7 +113,7 @@ namespace WeSay.ConfigTool
 			}
 
 			//nb: this is not necessarily the Current Field!  you can click check boxes without selecting a different item
-			Field touchedField = (Field) _fieldsListBox.Items[e.Index].Tag;
+			var touchedField = (Field) _fieldsListBox.Items[e.Index].Tag;
 			if (e.NewValue == CheckState.Checked)
 			{
 				touchedField.Enabled = true;
@@ -190,9 +193,14 @@ namespace WeSay.ConfigTool
 
 		private void OnAddField_Click(object sender, EventArgs e)
 		{
-			Field f = new Field(MakeUniqueFieldName(),
-								"LexEntry",
-								WeSayWordsProject.Project.WritingSystems.Keys);
+			// TODO inject the IWritingSystemStore in the ctor
+			var writingSystemStore = WeSayWordsProject.Project.WritingSystems;
+			var writingSystemIds = writingSystemStore.AllWritingSystems.Select(ws => ws.Id);
+
+			var f = new Field(
+				MakeUniqueFieldName(),
+				"LexEntry",
+				writingSystemIds);
 			ViewTemplate.Fields.Add(f);
 			LoadInventory();
 			_tabControl.SelectedTab = _setupTab;
@@ -221,7 +229,7 @@ namespace WeSay.ConfigTool
 
 		private static Field FindFieldWithFieldName(string name)
 		{
-			return ViewTemplate.Fields.Find(delegate(Field f) { return f.FieldName == name; });
+			return ViewTemplate.Fields.Find(f => f.FieldName == name);
 		}
 
 		private void MakeFieldTheSelectedOne(Field f)

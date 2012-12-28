@@ -2,8 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
+using Palaso.i18n;
 
 namespace WeSay.LexicalTools.Dashboard
 {

@@ -1,10 +1,13 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.i18n;
+using Palaso.Lift;
+using Palaso.Lift.Options;
+using Palaso.UiBindings;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
 {
@@ -13,7 +16,7 @@ namespace WeSay.UI
 		private readonly OptionsList _list;
 		private readonly ComboBox _control = new ComboBox();
 		private readonly string _nameForLogging;
-		private readonly WritingSystem _preferredWritingSystem;
+		private readonly WritingSystemDefinition _preferredWritingSystem;
 
 		public event EventHandler ValueChanged;
 
@@ -34,7 +37,7 @@ namespace WeSay.UI
 			base.OnHandleDestroyed(e);
 		}
 
-		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, WritingSystem preferredWritingSystem)
+		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, WritingSystemDefinition preferredWritingSystem)
 		{
 			_list = list;
 			_nameForLogging = nameForLogging;
@@ -45,7 +48,8 @@ namespace WeSay.UI
 			_control.AutoCompleteSource = AutoCompleteSource.ListItems;
 			_control.Sorted = false;
 			_control.MaxDropDownItems = 100;
-			_control.Font = _preferredWritingSystem.Font;
+			_control.Font = WritingSystemInfo.CreateFont(_preferredWritingSystem);
+			_control.Height = WritingSystemInfo.CreateFont(_preferredWritingSystem).Height + 10;
 			BuildBoxes(optionRef);
 		}
 
@@ -63,11 +67,8 @@ namespace WeSay.UI
 					//                    }
 					return key;
 				}
-				else
-				{
-					return _control.Text;
-					// situation where the value isn't currently a member of the approved list
-				}
+				return _control.Text;
+				// situation where the value isn't currently a member of the approved list
 			}
 			set
 			{
@@ -128,7 +129,7 @@ namespace WeSay.UI
 
 			Panel p = new Panel();
 			p.Controls.Add(_control);
-			p.Size = new Size(initialPanelWidth, _control.Height + 0);
+			p.Size = new Size(initialPanelWidth, _control.Height + 10);
 
 			//            FlagButton flagButton = MakeFlagButton(p.Size);
 			//            p.Controls.Add(flagButton);
@@ -149,13 +150,13 @@ namespace WeSay.UI
 		{
 
 
-			if (!_list.Options.Exists(delegate(Option o) { return (o.Key == string.Empty); }))
+			if (!_list.Options.Exists(delegate(Option o) { return (o.Key == string.Empty || o.Key == "unknown"); }))
 			{
 				MultiText unspecifiedMultiText = new MultiText();
 				unspecifiedMultiText.SetAlternative(_preferredWritingSystem.Id,
 													StringCatalog.Get("~unknown",
 																	  "This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field."));
-				Option unspecifiedOption = new Option(string.Empty, unspecifiedMultiText);
+				Option unspecifiedOption = new Option("unknown", unspecifiedMultiText);
 				_control.Items.Add(new Option.OptionDisplayProxy(unspecifiedOption,
 																 _preferredWritingSystem.Id));
 			}
@@ -182,7 +183,7 @@ namespace WeSay.UI
 			{
 				return 1;
 			}
-			else if (string.IsNullOrEmpty(b.Key))
+			if (string.IsNullOrEmpty(b.Key))
 			{
 				return -1;
 			}

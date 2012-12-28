@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
 using WeSay.UI;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
@@ -27,7 +27,10 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			InitializeComponent();
 
 			InitializeDisplaySettings();
-			_listViewWords.WritingSystem = _presentationModel.WordWritingSystem;
+			_listViewWords.FormWritingSystem = _presentationModel.FormWritingSystem;
+			_listViewWords.MeaningWritingSystem = _presentationModel.ShowMeaningField ? _presentationModel.MeaningWritingSystem: null;
+			_listViewWords.ItemDrawer = DrawOneAnswerForList;
+
 			RefreshCurrentWords();
 			LoadDomainListCombo();
 			RefreshCurrentDomainAndQuestion();
@@ -53,36 +56,61 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 
 			//they have a border in the design view because otherwise they're hard to find
-			_vernacularBox.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.None;
+			_vernacularBox.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
 			_vernacularBox.BackColor = Color.White;
-			_meaningBox.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.None;
+			_meaningBox.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
 			_meaningBox.BackColor = Color.White;
 
-			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
-															{_presentationModel.WordWritingSystem};
+			_vernacularBox.WritingSystemsForThisField = new[]
+				{
+					_presentationModel.FormWritingSystem
+				};
 
 			if( _vernacularBox.WritingSystemsForThisField.Count ==0 ||  _vernacularBox.TextBoxes.Count == 0)
 			{
-				Palaso.Reporting.ErrorReport.ReportFatalMessageWithStackTrace("Apparent issue WS-1202 reproduction. We would like to have a copy of your .wesayconfig file.");
+				Palaso.Reporting.ErrorReport.ReportFatalMessageWithStackTrace(String.Format("This task cannot be used with the audio/voice input system '{0}'. Please use the config tool to specify a non-audio input system for this task.", _presentationModel.FormWritingSystem.Abbreviation));
 			}
 
-			_meaningBox.WritingSystemsForThisField = new WritingSystem[] {_presentationModel.DefinitionWritingSystem};
-			_meaningBox.Visible = _presentationModel.ShowDefinitionField;
-			_meaningLabel.Visible = _meaningBox.Visible;
+			//bit of a hack here... we make our own meaning box as a less intrusive way to add spell checking to
+			//this box, which wasn't really designed to work well with auto-generated designer code.
+			//so all this is to be able to turn IsSpellCheckingEnabled before the box is built.
 
-			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.WordWritingSystem.Font.GetHeight());
+			var meaning = new MultiTextControl(_presentationModel.ViewTemplate.WritingSystems, null)
+				{
+					IsSpellCheckingEnabled = true,
+					ShowAnnotationWidget = false,
+					WritingSystemsForThisField = new[] {_presentationModel.DefinitionWritingSystem},
+					Visible = _presentationModel.ShowMeaningField,
+					Anchor = _meaningBox.Anchor,
+					BackColor = _meaningBox.BackColor,
+					AutoSize = _meaningBox.AutoSize,
+					AutoSizeMode = _meaningBox.AutoSizeMode,
+					Location = _meaningBox.Location,
+					Size = _meaningBox.Size,
+					TabIndex = _meaningBox.TabIndex
+				};
+			meaning.KeyDown  += _boxVernacularWord_KeyDown;
+			tableLayoutPanel6.Controls.Remove(_meaningBox);
+			tableLayoutPanel6.Controls.Add(meaning, 1, 1);
+			_meaningBox = meaning;
+		   _meaningLabel.Visible = _presentationModel.ShowMeaningField;
 
-			//    _animatedText.Font = _presentationModel.WordWritingSystem.Font;
+
+			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.FormWritingSystem.Font.GetHeight());
+
+			//    _animatedText.Font = _presentationModel.FormWritingSystem.Font;
 
 			_reminder.Text = _presentationModel.Reminder;
 
-		   _movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
+		   _flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 
-			_movingLabel.Finished += _animator_Finished;
+			_flyingLabel.Finished += _animator_Finished;
+
+			_domainListComboBox.Font = _presentationModel.GetFontOfSemanticDomainField();
 
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made
-			List<string> majorRomanWritingSystems = new List<string>(new string[] {"en", "id", "fr"});
+			var majorRomanWritingSystems = new List<string>(new[] {"en", "id", "fr"});
 			if(majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemId))
 			{
 #if MONO
@@ -91,6 +119,24 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				_domainListComboBox.Font = new Font("Lucida Console", _domainListComboBox.Font.Size, FontStyle.Bold);
 #endif
 
+			}
+		}
+
+		/// <summary>
+		/// this is a callback from the list so we can draw the items in a custom way
+		/// </summary>
+		private void DrawOneAnswerForList(object item, DrawItemEventArgs e)
+		{
+			var word = item as GatherBySemanticDomainTask.WordDisplay;
+
+			// Draw the current item text based on the current Font and the custom brush settings.
+			TextRenderer.DrawText(e.Graphics, word.Vernacular.Form.ToString(), e.Font, e.Bounds, Color.Black, TextFormatFlags.Left);
+			if(_presentationModel.ShowMeaningField && word.Meaning!=null && word.Meaning.Form!=null)
+			{
+				int verncularHeight =  e.Font.Height;
+				Rectangle rectangle = new Rectangle(e.Bounds.Left, e.Bounds.Top + verncularHeight, e.Bounds.Width,
+													e.Bounds.Height - verncularHeight);
+				TextRenderer.DrawText(e.Graphics, word.Meaning.Form, _presentationModel.MeaningFont, rectangle, Color.Gray, TextFormatFlags.Left);
 			}
 		}
 
@@ -126,18 +172,24 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private void RefreshCurrentWords()
 		{
 			_listViewWords.Items.Clear();
-			string longestWord = string.Empty;
-			foreach (string word in _presentationModel.CurrentWords)
+			string longestVernacularWord = string.Empty;
+			string longestMeannigWord = string.Empty;
+			foreach (GatherBySemanticDomainTask.WordDisplay word in _presentationModel.CurrentWords)
 			{
-				if (longestWord.Length < word.Length)
+				if (longestVernacularWord.Length < word.Vernacular.Form.Length)
 				{
-					longestWord = word;
+					longestVernacularWord = word.Vernacular.Form;
+				}
+				if (word.Meaning != null && word.Meaning.Form != null && longestMeannigWord.Length < word.Meaning.Form.Length)
+				{
+					longestMeannigWord = word.Meaning.Form;
 				}
 				_listViewWords.Items.Add(word);
 			}
 
-			Size bounds = TextRenderer.MeasureText(longestWord, _listViewWords.Font);
-			_listViewWords.ColumnWidth = bounds.Width + 10;
+			Size wordMax = TextRenderer.MeasureText(longestVernacularWord, _listViewWords.Font);
+			Size meaningMax = _presentationModel.ShowMeaningField && longestMeannigWord == null ? new Size() : TextRenderer.MeasureText(longestMeannigWord, _presentationModel.MeaningFont);
+			_listViewWords.ColumnWidth = Math.Max(wordMax.Width, meaningMax.Width) + 10;
 		}
 
 		private void _btnNext_Click(object sender, EventArgs e)
@@ -220,7 +272,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			if (_listViewWords.SelectedItem != null)
 			{
-				string word = (string) _listViewWords.SelectedItem;
+				GatherBySemanticDomainTask.WordDisplay word = (GatherBySemanticDomainTask.WordDisplay) _listViewWords.SelectedItem;
 				// NB: don't do this before storing what they clicked on.
 
 
@@ -232,21 +284,46 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				}
 
 
-				_presentationModel.DetachFromMatchingEntries(word);
+				_presentationModel.PrepareToMoveWordToEditArea(word);
 
-				_meaningBox.ClearAllText();
-				Point destination = _vernacularBox.Location;
-				destination.Offset(_vernacularBox.TextBoxes[0].Location);
+				Point absolutePosition = GetAbsoluteLocationOfControl(_vernacularBox);
+				Point destination = absolutePosition;
 				Point start = _listViewWords.GetItemRectangle(_listViewWords.SelectedIndex).Location;
-				start.Offset(_listViewWords.Location);
+				start.Offset(GetAbsoluteLocationOfControl(_listViewWords));
 
 				RefreshCurrentWords();
-				_animationIsMovingFromList = false;
-
-				_movingLabel.Go(word, start, destination);
+				_animationIsMovingFromList = true;
+				if (_meaningBox.Visible)
+				{
+					_meaningBox.ClearAllText();
+					_meaningBox.SetMultiText(_presentationModel.GetMeaningForWordRecentlyMovedToEditArea());
+				}
+				_flyingLabel.Go(word.Vernacular.Form, start, destination);
 
 			}
 			_vernacularBox.FocusOnFirstWsAlternative();
+		}
+
+		private void _animator_Finished(object sender, EventArgs e)
+		{
+			if (_animationIsMovingFromList)
+			{
+				_vernacularBox.TextBoxes[0].Text = _flyingLabel.Text;
+			}
+
+			_listViewWords.ItemToNotDrawYet = null;
+		}
+
+		private static Point GetAbsoluteLocationOfControl(Control controlToLocate)
+		{
+			Control currentcontrolInHierarchy = controlToLocate;
+			Point absolutePosition = currentcontrolInHierarchy.Location;
+			while(currentcontrolInHierarchy.Parent != null)
+			{
+				currentcontrolInHierarchy = currentcontrolInHierarchy.Parent;
+				absolutePosition = absolutePosition + (Size) currentcontrolInHierarchy.Location;
+			}
+			return absolutePosition;
 		}
 
 		private void _btnAddWord_Click(object sender, EventArgs e)
@@ -264,18 +341,29 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_listViewWords.ItemToNotDrawYet = word;
 			RefreshCurrentWords();
 
-			int index = _listViewWords.FindStringExact(word);
+			int index = GetIndexOfWordInList(word);
 
-			Point start = _vernacularBox.Location;
-			start.Offset(_vernacularBox.TextBoxes[0].Location);
+			Point start = GetAbsoluteLocationOfControl(_vernacularBox);
 			Point destination = _listViewWords.GetItemRectangle(index).Location;
-			destination.Offset(_listViewWords.Location);
+			destination.Offset(GetAbsoluteLocationOfControl(_listViewWords));
 
-			_movingLabel.Text = word;
-			_animationIsMovingFromList = true;
+			_flyingLabel.Text = word;
+			_animationIsMovingFromList = false;
 
-			_movingLabel.Go(word, start, destination);
+			_flyingLabel.Go(word, start, destination);
 			_vernacularBox.FocusOnFirstWsAlternative();
+		}
+
+		private int GetIndexOfWordInList(string word)
+		{
+			//can't use FindStringExact() because the tostring() of DisplayWord isn't necessarily the vernacular (it returns whichever is longer so that the columns are wide enough)
+			for (int i = 0; i < _listViewWords.Items.Count; i++)
+			{
+				var w = _listViewWords.Items[i] as GatherBySemanticDomainTask.WordDisplay;
+				if (w.Vernacular.Form == word)
+					return i;
+			}
+			return -1;
 		}
 
 		private string WordToAdd
@@ -288,15 +376,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			get { return _meaningBox.TextBoxes[0].Text.Trim(); }
 		}
 
-		private void _animator_Finished(object sender, EventArgs e)
-		{
-			if (!_animationIsMovingFromList)
-			{
-				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
-			}
-
-			_listViewWords.ItemToNotDrawYet = null;
-		}
 
 		private void _domainName_DrawItem(object sender, DrawItemEventArgs e)
 		{
@@ -364,9 +443,5 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_btnAddWord_Click(this, null);
 		}
 
-		private void GatherBySemanticDomainsControl_Load(object sender, EventArgs e)
-		{
-
-		}
 	}
 }

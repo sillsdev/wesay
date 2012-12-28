@@ -2,11 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Chorus;
+using Chorus.UI.Notes;
 using Exortech.NetReflector;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using Palaso.DictionaryServices.Model;
+using Palaso.i18n;
+using Palaso.Lift;
+using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
-using System.Linq;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
@@ -46,12 +51,12 @@ namespace WeSay.Project
 
 		//todo: this is simplistic. Switch to the plural form
 		[Obsolete]
-		public WritingSystem HeadwordWritingSystem
+		public WritingSystemDefinition HeadwordWritingSystem
 		{
 			get { return GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit); }
 		}
 
-		public IList<WritingSystem> HeadwordWritingSystems
+		public IList<WritingSystemDefinition> HeadwordWritingSystems
 		{
 			get
 			{
@@ -241,7 +246,7 @@ namespace WeSay.Project
 			MoveToFirstInClass(GetField(Field.FieldNames.ExampleSentence.ToString()));
 
 			//In Nov 2008 (v 0.5) we made the note field multi-paragraph
-			Field note = GetField(LexSense.WellKnownProperties.Note);
+			Field note = GetField(PalasoDataObject.WellKnownProperties.Note);
 			if (!note.IsMultiParagraph)
 			{
 				note.IsMultiParagraph = true;
@@ -318,13 +323,11 @@ namespace WeSay.Project
 			}
 		}
 
-		public static ViewTemplate MakeMasterTemplate(WritingSystemCollection writingSystems)
+		public static ViewTemplate MakeMasterTemplate(IWritingSystemRepository writingSystems)
 		{
-			List<String> defaultVernacularSet = new List<string>();
-			defaultVernacularSet.Add(WritingSystem.IdForUnknownVernacular);
+			var defaultVernacularSet = new List<string> {WeSayWordsProject.VernacularWritingSystemIdForProjectCreation};
 
-			List<String> defaultAnalysisSet = new List<string>();
-			defaultAnalysisSet.Add(WritingSystem.IdForUnknownAnalysis);
+			var defaultAnalysisSet = new List<string> {WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation};
 
 			ViewTemplate masterTemplate = new ViewTemplate();
 
@@ -379,6 +382,15 @@ namespace WeSay.Project
 			glossField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(glossField);
 
+			Field silCawlField = new Field("SILCAWL",
+										 "LexSense", new string[]{"en"});
+			silCawlField.DisplayName = "SIL CAWL #";
+			silCawlField.Description = "The SIL CAWL wordlist # for this entry, (see the SIL CAWL wordlist task).";
+			silCawlField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			silCawlField.Enabled = false;
+			silCawlField.IsSpellCheckingEnabled = false;
+			masterTemplate.Add(silCawlField);
+
 			Field literalMeaningField = new Field("literal-meaning", "LexEntry", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Literal Meaning",
@@ -390,8 +402,8 @@ namespace WeSay.Project
 			literalMeaningField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(literalMeaningField);
 
-			Field noteField = new Field(WeSayDataObject.WellKnownProperties.Note,
-										"WeSayDataObject",
+			Field noteField = new Field(PalasoDataObject.WellKnownProperties.Note,
+										"PalasoDataObject",
 										defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Note", "The label for the field showing a note.");
@@ -479,7 +491,7 @@ namespace WeSay.Project
 
 			ddp4Field.DisplayName = "Sem Dom";
 			ddp4Field.Description =
-					"The semantic domains of the sense, using Ron Moe's Dictionary Development Process version 4.\r\n. You can enter these directly by typing the number of the domain, its name, or a word used in the description. You can also use the Gather By Semantic Domains Task, which will try to use the writing system chosen by this field.";
+					"The semantic domains of the sense, using Ron Moe's Dictionary Development Process version 4.\r\n. You can enter these directly by typing the number of the domain, its name, or a word used in the description. You can also use the Gather By Semantic Domains Task, which will try to use the input system chosen by this field.";
 			ddp4Field.DataTypeName = "OptionCollection";
 			ddp4Field.OptionsListFile = "Ddp4.xml";
 			ddp4Field.Enabled = true;
@@ -568,11 +580,18 @@ namespace WeSay.Project
 
 		#endregion
 
-		public void ChangeWritingSystemId(string from, string to)
+		public void OnWritingSystemIDChange(string from, string to)
 		{
 			foreach (Field field in Fields)
 			{
-				field.ChangeWritingSystemId(from, to);
+				if (field.WritingSystemIds.Contains(to))
+				{
+					field.WritingSystemIds.Remove(from);
+				}
+				else
+				{
+					field.ChangeWritingSystemId(from, to);
+				}
 			}
 		}
 
@@ -586,24 +605,30 @@ namespace WeSay.Project
 			return false;
 		}
 
-		public WritingSystem GetDefaultWritingSystemForField(string fieldName)
+		public bool IsWritingSystemInUse(string writingSystemId)
 		{
-			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
-			WritingSystem listWritingSystem = null;
-			Field field = GetField(fieldName);
-			//Debug.Assert(field != null, fieldName + "not found.");
-			if (field != null)
+			foreach (var field in Fields)
 			{
-				if (field.WritingSystemIds.Count > 0)
+				if(field.WritingSystemIds.Contains(writingSystemId))
 				{
-					listWritingSystem = writingSystems[field.WritingSystemIds[0]];
+					return true;
 				}
 			}
-			if (listWritingSystem == null)
+			return false;
+		}
+
+		public WritingSystemDefinition GetDefaultWritingSystemForField(string fieldName)
+		{
+			Field field = GetField(fieldName);
+			if (field == null)
 			{
-				listWritingSystem = writingSystems.UnknownVernacularWritingSystem;
+				throw new ConfigurationException(String.Format("The field {0} has not been enabled for your project. Please enable it in the WeSay config tool.", fieldName));
 			}
-			return listWritingSystem;
+			if(field.WritingSystemIds.Count == 0)
+			{
+				throw new ConfigurationException(String.Format("The field {0} has no input system associated with it. Please assign an input system to it in the WeSay config tool.", fieldName));
+			}
+			return BasilProject.Project.WritingSystems.Get(field.WritingSystemIds[0]);
 		}
 
 		public bool IsFieldFirstInClass(Field field)
@@ -676,7 +701,7 @@ namespace WeSay.Project
 			set { _doWantGhosts = value; }
 		}
 
-		public IList<string> GetHeadwordWritingSystemIds()
+		public IEnumerable<string> GetHeadwordWritingSystemIds()
 		{
 			Field fieldControllingHeadwordOutput =
 				GetField(LexEntry.WellKnownProperties.Citation);
@@ -689,17 +714,54 @@ namespace WeSay.Project
 					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
 				}
 			}
-
-			return WritingSystems.TrimToActualTextWritingSystemIds(fieldControllingHeadwordOutput.WritingSystemIds);
+			return WritingSystems.FilterForTextIds(fieldControllingHeadwordOutput.WritingSystemIds);
 		}
 
-
-
-
-		public WritingSystemCollection WritingSystems
+		public IWritingSystemRepository WritingSystems
 		{
 			get { return BasilProject.Project.WritingSystems; }
 		}
+
+		public ChorusNotesDisplaySettings CreateChorusDisplaySettings()
+		{
+		   var list = new List<Chorus.IWritingSystem>();
+
+			WritingSystemDefinition noteWritingSystem;
+			try
+			{
+				noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);
+			}
+			catch (ConfigurationException)
+			{
+				// if no writing system is defined for the Note field, so just use the default AnalysisWritingSystem
+				noteWritingSystem = new WritingSystemDefinition(WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation);
+			}
+
+			list.Insert(0,new ChorusWritingSystemAdaptor(noteWritingSystem));
+			foreach (var system in WritingSystems.TextWritingSystems)
+			{
+				if(system!=noteWritingSystem)
+				{
+					list.Add(new ChorusWritingSystemAdaptor(system));
+				}
+			}
+
+			 return new Chorus.UI.Notes.ChorusNotesDisplaySettings()
+									{
+										WritingSystems = list,
+										WritingSystemForNoteContent = new ChorusWritingSystemAdaptor(noteWritingSystem) ,
+										WritingSystemForNoteLabel = new ChorusWritingSystemAdaptor(GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit))
+									};
+		 }
+
+		public void DeleteWritingSystem(string id)
+		{
+			foreach (Field field in Fields)
+			{
+				field.WritingSystemIds.Remove(id);
+			}
+		}
+
 	}
 
 	/// <summary>

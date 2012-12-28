@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using WeSay.Foundation;
+using Palaso.DictionaryServices.Model;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
 using System.Linq;
@@ -11,7 +13,8 @@ namespace WeSay.ConfigTool.Tasks
 	public partial class MissingInfoTaskConfigControl : DefaultTaskConfigurationControl
 	{
 		private readonly ViewTemplate _viewTemplate;
-		private List<WritingSystem> _relevantWritingSystems;
+		private List<WritingSystemDefinition> _relevantWritingSystems;
+		private Field _field;
 
 		public MissingInfoTaskConfigControl(MissingInfoConfiguration config, ViewTemplate viewTemplate)
 			:base(config, true)
@@ -19,10 +22,10 @@ namespace WeSay.ConfigTool.Tasks
 			_viewTemplate = viewTemplate;
 			InitializeComponent();
 
-			_showExampleFieldBox.Visible = Configuration.IncludesField(LexicalModel.LexExampleSentence.WellKnownProperties.ExampleSentence);
+			_showExampleFieldBox.Visible = Configuration.IncludesField(LexExampleSentence.WellKnownProperties.ExampleSentence);
 			//these are separated to get the long label to show in mono
 			 _showExampleLabel.Visible = _showExampleFieldBox.Visible;
-			_showExampleFieldBox.Checked = Configuration.IncludesField(LexicalModel.LexExampleSentence.WellKnownProperties.Translation);
+			_showExampleFieldBox.Checked = Configuration.IncludesField(LexExampleSentence.WellKnownProperties.Translation);
 		}
 		private MissingInfoConfiguration Configuration
 		{
@@ -34,13 +37,13 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void OnShowExampleField_CheckedChanged(object sender, EventArgs e)
 		{
-			Configuration.SetInclusionOfField(LexicalModel.LexExampleSentence.WellKnownProperties.Translation, _showExampleFieldBox.Checked);
+			Configuration.SetInclusionOfField(LexExampleSentence.WellKnownProperties.Translation, _showExampleFieldBox.Checked);
 		}
 
 		private void MissingInfoTaskConfigControl_Load(object sender, EventArgs e)
 		{
-			var field = _viewTemplate.GetField(Configuration.MissingInfoFieldName);
-			_matchWhenEmpty.Visible = field.DataTypeName == Field.BuiltInDataType.MultiText.ToString();
+			_field = _viewTemplate.GetField(Configuration.MissingInfoFieldName);
+			_matchWhenEmpty.Visible = _field.DataTypeName == Field.BuiltInDataType.MultiText.ToString();
 			_matchWhenEmptyLabel.Visible = _matchWhenEmpty.Visible;
 			_requiredToBeFilledIn.Visible = _matchWhenEmpty.Visible;
 			_requiredToBeFilledInLabel.Visible = _requiredToBeFilledIn.Visible;
@@ -49,28 +52,49 @@ namespace WeSay.ConfigTool.Tasks
 
 			if (_matchWhenEmpty.Visible)
 			{
-				_relevantWritingSystems = new List<WritingSystem>();
-				var relevantWritingSystems = from x in _viewTemplate.WritingSystems
-											 where field.WritingSystemIds.Contains(x.Key)
-											 select x.Value;
-				_relevantWritingSystems.AddRange(relevantWritingSystems);
+				_field.WritingSystemsChanged += OnWritingSystemsChanged;
+				Configuration.WritingSystemIdChanged += OnWritingSystemsChanged;
+				Configuration.WritingSystemIdDeleted += OnWritingSystemsDeleted;
+				UpdateWritingSystemFilterControls();
+			}
+		}
+
+		private void OnWritingSystemsDeleted(object sender, EventArgs e)
+		{
+			UpdateWritingSystemFilterControls();
+		}
+
+		private void UpdateWritingSystemFilterControls()
+		{
+			_relevantWritingSystems = new List<WritingSystemDefinition>();
+			var relevantWritingSystems = from x in _viewTemplate.WritingSystems.AllWritingSystems
+										 where _field.WritingSystemIds.Contains(x.Id)
+										 select x;
+			_relevantWritingSystems.AddRange(relevantWritingSystems);
 
 
-				_matchWhenEmpty.Init(_relevantWritingSystems,
-									 Configuration.WritingSystemsWeWantToFillIn,
-									 "any");
-				// _matchWhenEmpty.Changed += new EventHandler(_matchWhenEmpty_Changed);
-				_requiredToBeFilledIn.Init(_relevantWritingSystems,
-										   Configuration.WritingSystemsWhichAreRequired,
-										   "none");
+			_matchWhenEmpty.Init(_relevantWritingSystems,
+								 Configuration.WritingSystemsWeWantToFillIn,
+								 "any");
+			// _matchWhenEmpty.Changed += new EventHandler(_matchWhenEmpty_Changed);
+			_requiredToBeFilledIn.Init(_relevantWritingSystems,
+									   Configuration.WritingSystemsWhichAreRequired,
+									   "none");
+		}
+
+		private void OnWritingSystemsChanged(object sender, EventArgs e)
+		{
+			if (_matchWhenEmpty.Visible)
+			{
+				UpdateWritingSystemFilterControls();
 			}
 		}
 
 		private void MissingInfoTaskConfigControl_BackColorChanged(object sender, EventArgs e)
 		{
-			_showExampleLabel.BackColor = this.BackColor;
-			_requiredToBeFilledInLabel.BackColor = this.BackColor;
-			_matchWhenEmptyLabel.BackColor = this.BackColor;
+			_showExampleLabel.BackColor = BackColor;
+			_requiredToBeFilledInLabel.BackColor = BackColor;
+			_matchWhenEmptyLabel.BackColor = BackColor;
 		}
 
 	}

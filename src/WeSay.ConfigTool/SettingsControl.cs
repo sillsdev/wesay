@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Autofac;
+using Palaso.Reporting;
+using WeSay.ConfigTool.Tasks;
 
 namespace WeSay.ConfigTool
 {
@@ -10,13 +12,14 @@ namespace WeSay.ConfigTool
 	{
 		private readonly List<ConfigurationControlBase> _areaControls;
 
-		public SettingsControl(IContext context)
+		public SettingsControl(IComponentContext context)
 		{
+			this.Disposed += OnDisposed;
 			_areaControls = new List<ConfigurationControlBase>();
 
 			InitializeComponent();
 
-			Tasks.TaskListPresentationModel m = context.Resolve<Tasks.TaskListPresentationModel>();
+			var m = context.Resolve<Tasks.TaskListPresentationModel>();
 			_tasksButton.Tag = m.View;
 			_areaControls.Add((ConfigurationControlBase) _tasksButton.Tag);
 
@@ -37,12 +40,31 @@ namespace WeSay.ConfigTool
 
 //            _chorusButton.Tag = context.Resolve<ChorusControl>();
 //            _areaControls.Add((ConfigurationControlBase)_chorusButton.Tag);
-//
+
 			_optionsListButton.Tag = context.Resolve<OptionListControl>();
 			_areaControls.Add((ConfigurationControlBase) _optionsListButton.Tag);
 
 			SetStyle(ControlStyles.ResizeRedraw, true); //makes OnPaint work
+
 		}
+
+		private void OnDisposed(object sender, EventArgs e)
+		{
+			DisposeConfigurationControl(_tasksButton.Tag);
+			DisposeConfigurationControl(_writingSystemButton.Tag);
+			DisposeConfigurationControl(_fieldsButton.Tag);
+			DisposeConfigurationControl(_interfaceLanguageButton.Tag);
+			DisposeConfigurationControl(_actionsButton.Tag);
+			DisposeConfigurationControl(_backupButton.Tag);
+			DisposeConfigurationControl(_optionsListButton.Tag);
+		}
+
+		private void DisposeConfigurationControl(object controlToDispose)
+		{
+			ConfigurationControlBase control = controlToDispose as ConfigurationControlBase;
+			control.Dispose();
+		}
+
 
 		///*something left over from this class's predaccesor, which may be useful*/
 		////seems to help with some, not with others
@@ -81,10 +103,12 @@ namespace WeSay.ConfigTool
 				c.SetOtherStuff();
 
 				_areaHeader.Text = "";
-				_areaHeader.Font = new Font("Tahoma", 11F, FontStyle.Bold);
+				_areaHeader.Font = new Font("Tahoma", 10F, FontStyle.Bold);
 				_areaHeader.AppendText(button.Text + ": ");
-				_areaHeader.SelectionFont = new Font("Tahoma", 11F, FontStyle.Regular);
+				_areaHeader.SelectionFont = new Font("Tahoma", 10F, FontStyle.Regular);
 				_areaHeader.AppendText(c.Header);
+
+				UsageReporter.SendNavigationNotice("settings/"+c.NameForUsageReporting);
 			}
 		}
 

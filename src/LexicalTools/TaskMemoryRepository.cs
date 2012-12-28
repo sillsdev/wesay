@@ -4,7 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using Palaso.Misc;
+using Palaso.Code;
+using Palaso.UI.WindowsForms.Miscellaneous;
 
 namespace WeSay.LexicalTools
 {
@@ -17,7 +18,7 @@ namespace WeSay.LexicalTools
 	[Serializable]
 	public class TaskMemoryRepository : IDisposable
 	{
-		public const string FileExtensionWithDot = ".wesayUserMemory";//NB do a search and replace on this if changed
+		public const string FileExtensionWithDot = ".WeSayUserMemory";//NB do a search and replace on this if changed
 		private SerializableDictionary<string, TaskMemory> _memories;
 
 		[System.Xml.Serialization.XmlIgnore]

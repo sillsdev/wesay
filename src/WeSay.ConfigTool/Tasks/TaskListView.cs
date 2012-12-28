@@ -1,19 +1,19 @@
 using System;
 using System.Windows.Forms;
 using Autofac;
+using Palaso.i18n;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tasks
 {
 	public partial class TaskListView: ConfigurationControlBase
 	{
-		private IContext _diContainer;
+		private readonly IComponentContext _diContainer;
 		public TaskListPresentationModel Model { get; set; }
 
-		public TaskListView(ILogger logger, IContext diContainer)
-			: base("set up tasks for the user", logger)
+		public TaskListView(ILogger logger, IComponentContext diContainer)
+			: base("set up tasks for the user", logger, "tasks")
 		{
 			_diContainer = diContainer;
 
@@ -44,8 +44,11 @@ namespace WeSay.ConfigTool.Tasks
 				return;
 			}
 
-			foreach (ITaskConfiguration task in Model.Tasks)
+			foreach (var task in Model.Tasks)
 			{
+				if (!Model.DoShowTask(task))
+					continue;
+
 				bool showCheckMark = task.IsVisible || (!task.IsOptional);
 
 				_taskList.Items.Add(task, showCheckMark);
@@ -59,7 +62,7 @@ namespace WeSay.ConfigTool.Tasks
 		private void _taskList_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			splitContainer1.Panel2.Controls.Clear();
-			ITaskConfiguration configuration = _taskList.SelectedItem as ITaskConfiguration;
+			var configuration = _taskList.SelectedItem as ITaskConfiguration;
 			if (configuration == null)
 			{
 				return;
@@ -88,7 +91,7 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void _taskList_ItemCheck(object sender, ItemCheckEventArgs e)
 		{
-			ITaskConfiguration i = _taskList.SelectedItem as ITaskConfiguration;
+			var i = _taskList.SelectedItem as ITaskConfiguration;
 			if (i == null)
 			{
 				return;
@@ -107,9 +110,5 @@ namespace WeSay.ConfigTool.Tasks
 				_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Disabled {0}", "Checkin Description in WeSay Config Tool used when you disable a task."), _taskList.SelectedItem.ToString());
 			}
 		}
-
-		private void textBox1_TextChanged(object sender, EventArgs e) {}
-
-		private void _description_TextChanged(object sender, EventArgs e) {}
 	}
 }

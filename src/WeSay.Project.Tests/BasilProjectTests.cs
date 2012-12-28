@@ -1,7 +1,11 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
+using Palaso.i18n;
 using Palaso.TestUtilities;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests
 {
@@ -35,7 +39,7 @@ namespace WeSay.Project.Tests
 		{
 			Directory.CreateDirectory(_projectDirectory);
 			Directory.CreateDirectory(GetCommonDirectory());
-			string pathToStringCatalogInProjectDir = Path.Combine(GetCommonDirectory(), "th.po");
+			string pathToStringCatalogInProjectDir = Path.Combine(GetCommonDirectory(), "wesay.th.po");
 			using (StreamWriter writer = File.CreateText(pathToStringCatalogInProjectDir))
 			{
 				writer.Write(TestResources.poStrings);
@@ -82,7 +86,7 @@ namespace WeSay.Project.Tests
 			{
 				BasilProject.Project.Dispose();
 			}
-			TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
+			Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
 		}
 
 		//  not relevant anymore
@@ -105,7 +109,7 @@ namespace WeSay.Project.Tests
 			InitializeSampleProject();
 
 			BasilProject project = new BasilProject();
-			project.StringCatalogSelector = "th";
+			project.UiOptions.Language = "th";
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 			Assert.AreEqual("deng", StringCatalog.Get("red"));
 		}
@@ -115,12 +119,11 @@ namespace WeSay.Project.Tests
 		{
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
-			project.StringCatalogSelector = "en";
+			project.UiOptions.Language = "en";
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 
 			Assert.AreEqual("red", StringCatalog.Get("red"));
 		}
-
 
 	}
 }

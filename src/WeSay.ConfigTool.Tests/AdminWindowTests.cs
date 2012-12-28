@@ -9,6 +9,8 @@ using Palaso.Reporting;
 //using WeSay.Foundation.Tests;
 using Palaso.TestUtilities;
 using WeSay.Project;
+using WeSay.Project.Tests;
+using WeSay.TestUtilities;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -41,27 +43,35 @@ namespace WeSay.ConfigTool.Tests
 				WeSayWordsProject.Project.Dispose();
 			}
 
-			TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
+			Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
 		}
 
 		[Test]
 		public void ProjectFilesTouched()
 		{
 			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
-			string p = BasilProject.Project.PathToWritingSystemPrefs;
+			string p = WeSayWordsProject.Project.PathToConfigFile;
 			DateTime before = File.GetLastWriteTime(p);
 			_mainWindowTester.Close();
 			DateTime after = File.GetLastWriteTime(p);
 			Assert.AreNotEqual(before, after);
 		}
 
+
+
 		//stupid nunitforms will freak 'cause window was closed
 		[Test] //, ExpectedException(typeof(FormsTestAssertionException))]
 		public void AfterCreateProjectAndQuitFilesExist()
 		{
 			List<string> paths = new List<string>();
-			_window.CreateAndOpenProject(_projectFolder);
-			paths.Add(BasilProject.Project.PathToWritingSystemPrefs);
+			_window.CreateAndOpenProject(_projectFolder, "th");
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "th.ldml"));
+			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "en.ldml"));
+			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "es.ldml"));
+			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "fr.ldml"));
+			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "id.ldml"));
+			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "th.ldml"));
+			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "tpi.ldml"));
 			paths.Add(WeSayWordsProject.Project.PathToConfigFile);
 			//paths.Add(WeSayWordsProject.Project.PathToRepository);
 			_mainWindowTester.Close();
@@ -93,17 +103,18 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
 		public void TryingToOpenNonExistantProjectDoesntCrash()
 		{
-			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig", null);
+			Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(
+				() => _window.OnOpenProject(@"C:\notreallythere.WeSayConfig")
+			);
 		}
 
 		[Test]
 		[Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
 		public void WalkTabsAfterCreateNewProject()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 			WalkTopLevelTabs();
 
 		}
@@ -111,7 +122,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void CreateNewProjectThenOpen()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 		}
 
 		[Test]
@@ -133,7 +144,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void NewProjectHasValidStructure()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 			string path = WeSayWordsProject.Project.PathToConfigFile;
 			XPathDocument doc = new XPathDocument(path);
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version]"));
@@ -143,22 +154,12 @@ namespace WeSay.ConfigTool.Tests
 
 		private void CreateProjectAndGoToTaskControl()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
 
 			ClickToolStripButton("_tasksButton");
 			//            GotoProjectTab("_tasksPage");
 		}
 
-		[Test]
-		public void NewProjectShowsMultipleWritingSystems()
-		{
-			_window.CreateAndOpenProject(_projectFolder);
-
-			ClickToolStripButton("_writingSystemButton");
-			//GotoProjectTab("_writingSystemPage");
-			ListBoxTester c = new ListBoxTester("_wsListBox", _window);
-			Assert.Greater(c.Properties.Items.Count, 2);
-		}
 
 		//        private static void GotoProjectTab(string projectTabName)
 		//        {
@@ -202,13 +203,43 @@ namespace WeSay.ConfigTool.Tests
 		public void RunAndExitWithoutOpening()
 		{
 			_mainWindowTester.Close();
-			WeSayWordsProject.InitializeForTests(); // for Teardown
+			WeSayProjectTestHelper.InitializeForTests(); // for Teardown
 		}
 
 		[Test]
 		public void ExistingProjectGetsNewTasks()
 		{
-			_window.CreateAndOpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder, "th");
+		}
+
+		// WS-34217: Regression test to ensure that English can be selected at project creation
+		[Test]
+		public void CreateAndOpenProject_EnglishAsVernacular_DoesNotCrash()
+		{
+			Assert.That(() => _window.CreateAndOpenProject(_projectFolder, "en"), Throws.Nothing);
+		}
+	}
+
+	/* these are more modern, without use of static, "pretend" project, or the big setup/teardown of the old style */
+
+	[TestFixture]
+	public class MoreAdminWindowTests
+	{
+
+		[Test]
+		public void OpenProject_OpenedWithDirNameWhichDoesNotMatchProjectName_Opens()
+		{
+			using (var projectDir = new ProjectDirectorySetupForTesting(""))
+			using(var window = new ConfigurationWindow(new string[] {}))
+			{
+				Assert.AreNotEqual(
+					Path.GetFileNameWithoutExtension(projectDir.PathToLiftFile),
+					Path.GetFileName(projectDir.PathToDirectory));
+
+				window.DisableBackupAndChorusStuffForTests();
+				window.Show();
+			   Assert.IsTrue(window.OpenProject(projectDir.PathToDirectory));
+			}
 		}
 	}
 }

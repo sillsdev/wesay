@@ -39,19 +39,19 @@ namespace WeSay.ConfigTool
 			this._classNameCombo = new System.Windows.Forms.ComboBox();
 			this._dataTypeCombo = new System.Windows.Forms.ComboBox();
 			this._optionsFileName = new System.Windows.Forms.TextBox();
-			this.label6 = new System.Windows.Forms.Label();
-			this._writingSystemsControl = new WeSay.ConfigTool.WritingSystemForFieldControl();
 			this._normallyHidden = new System.Windows.Forms.CheckBox();
-			this._description = new System.Windows.Forms.TextBox();
-			this._descriptionLabel = new System.Windows.Forms.Label();
 			this._normallyHiddenLabel = new System.Windows.Forms.Label();
 			this._enableSpellingLabel = new System.Windows.Forms.Label();
 			this._optionListFileLabel = new System.Windows.Forms.Label();
 			this._enableSpelling = new System.Windows.Forms.CheckBox();
 			this.spellingNotEnabledWarning = new System.Windows.Forms.Label();
-			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.label1 = new System.Windows.Forms.Label();
+			this._description = new System.Windows.Forms.TextBox();
+			this._descriptionLabel = new System.Windows.Forms.Label();
+			this._writingSystemsControlLabel = new System.Windows.Forms.Label();
+			this._multiParagraphLabel = new System.Windows.Forms.Label();
+			this._writingSystemsControl = new WeSay.ConfigTool.WritingSystemForFieldControl();
 			this._multiParagraph = new System.Windows.Forms.CheckBox();
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -77,8 +77,8 @@ namespace WeSay.ConfigTool
 			this.tableLayoutPanel1.Controls.Add(this.spellingNotEnabledWarning, 0, 6);
 			this.tableLayoutPanel1.Controls.Add(this._description, 1, 11);
 			this.tableLayoutPanel1.Controls.Add(this._descriptionLabel, 0, 11);
-			this.tableLayoutPanel1.Controls.Add(this.label6, 0, 10);
-			this.tableLayoutPanel1.Controls.Add(this.label1, 0, 9);
+			this.tableLayoutPanel1.Controls.Add(this._writingSystemsControlLabel, 0, 10);
+			this.tableLayoutPanel1.Controls.Add(this._multiParagraphLabel, 0, 9);
 			this.tableLayoutPanel1.Controls.Add(this._writingSystemsControl, 1, 10);
 			this.tableLayoutPanel1.Controls.Add(this._multiParagraph, 1, 9);
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 17);
@@ -102,13 +102,13 @@ namespace WeSay.ConfigTool
 			// _fieldName
 			//
 			this._fieldName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this._fieldName.Location = new System.Drawing.Point(119, 29);
 			this._fieldName.Name = "_fieldName";
 			this._fieldName.Size = new System.Drawing.Size(178, 20);
 			this._fieldName.TabIndex = 1;
-			this.toolTip1.SetToolTip(this._fieldName, "The name that will be used in the LIFT xml file. Only a small set of punctuation " +
-					"characters are allowed.");
+			this.toolTip1.SetToolTip(this._fieldName, "This corresponds to the FLEx \"Custom Field Name\", and is the name that will be us" +
+		"ed in the LIFT xml file. ");
 			this._fieldName.TextChanged += new System.EventHandler(this._fieldName_TextChanged);
 			//
 			// _displayLabel
@@ -136,7 +136,7 @@ namespace WeSay.ConfigTool
 			// _displayName
 			//
 			this._displayName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this._displayName.Location = new System.Drawing.Point(119, 3);
 			this._displayName.Name = "_displayName";
 			this._displayName.Size = new System.Drawing.Size(178, 20);
@@ -170,7 +170,7 @@ namespace WeSay.ConfigTool
 			// _classNameCombo
 			//
 			this._classNameCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this._classNameCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this._classNameCombo.FormattingEnabled = true;
 			this._classNameCombo.Location = new System.Drawing.Point(119, 55);
@@ -182,7 +182,7 @@ namespace WeSay.ConfigTool
 			// _dataTypeCombo
 			//
 			this._dataTypeCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this._dataTypeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this._dataTypeCombo.FormattingEnabled = true;
 			this._dataTypeCombo.Location = new System.Drawing.Point(119, 82);
@@ -194,33 +194,13 @@ namespace WeSay.ConfigTool
 			// _optionsFileName
 			//
 			this._optionsFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this._optionsFileName.Enabled = false;
 			this._optionsFileName.Location = new System.Drawing.Point(119, 109);
 			this._optionsFileName.Name = "_optionsFileName";
 			this._optionsFileName.Size = new System.Drawing.Size(178, 20);
 			this._optionsFileName.TabIndex = 4;
 			this._optionsFileName.TextChanged += new System.EventHandler(this._optionsFileName_TextChanged);
-			//
-			// label6
-			//
-			this.label6.AutoSize = true;
-			this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label6.Location = new System.Drawing.Point(3, 230);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(104, 16);
-			this.label6.TabIndex = 10;
-			this.label6.Text = "Writing Systems";
-			this.toolTip1.SetToolTip(this.label6, "Mark which writing systems to show for this field.");
-			//
-			// _writingSystemsControl
-			//
-			this._writingSystemsControl.CurrentField = null;
-			this._writingSystemsControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._writingSystemsControl.Location = new System.Drawing.Point(119, 233);
-			this._writingSystemsControl.Name = "_writingSystemsControl";
-			this._writingSystemsControl.Size = new System.Drawing.Size(178, 100);
-			this._writingSystemsControl.TabIndex = 6;
 			//
 			// _normallyHidden
 			//
@@ -233,29 +213,6 @@ namespace WeSay.ConfigTool
 			this.toolTip1.SetToolTip(this._normallyHidden, ".");
 			this._normallyHidden.UseVisualStyleBackColor = true;
 			this._normallyHidden.CheckedChanged += new System.EventHandler(this._normallyHidden_CheckedChanged);
-			//
-			// _description
-			//
-			this._description.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._description.Enabled = false;
-			this._description.Location = new System.Drawing.Point(119, 339);
-			this._description.Multiline = true;
-			this._description.Name = "_description";
-			this._description.Size = new System.Drawing.Size(178, 99);
-			this._description.TabIndex = 5;
-			this._description.TextChanged += new System.EventHandler(this._description_TextChanged);
-			//
-			// _descriptionLabel
-			//
-			this._descriptionLabel.AutoSize = true;
-			this._descriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._descriptionLabel.Location = new System.Drawing.Point(3, 336);
-			this._descriptionLabel.Name = "_descriptionLabel";
-			this._descriptionLabel.Size = new System.Drawing.Size(76, 16);
-			this._descriptionLabel.TabIndex = 9;
-			this._descriptionLabel.Text = "Description";
-			this.toolTip1.SetToolTip(this._descriptionLabel, "Information about the use of this field.");
 			//
 			// _normallyHiddenLabel
 			//
@@ -277,8 +234,8 @@ namespace WeSay.ConfigTool
 			this._enableSpellingLabel.Size = new System.Drawing.Size(57, 16);
 			this._enableSpellingLabel.TabIndex = 11;
 			this._enableSpellingLabel.Text = "Spelling";
-			this.toolTip1.SetToolTip(this._enableSpellingLabel, "Tick this box to enable spell checking for writing systems with installed spell c" +
-					"hecker support");
+			this.toolTip1.SetToolTip(this._enableSpellingLabel, "Tick this box to enable spell checking for input systems with installed spell c" +
+		"hecker support");
 			//
 			// _optionListFileLabel
 			//
@@ -313,17 +270,60 @@ namespace WeSay.ConfigTool
 			this.spellingNotEnabledWarning.Size = new System.Drawing.Size(263, 26);
 			this.spellingNotEnabledWarning.TabIndex = 13;
 			this.spellingNotEnabledWarning.Text = "Spellchecking has not been installed on this machine. Please install Enchant to e" +
-				"nable this feature.";
+	"nable this feature.";
 			//
-			// label1
+			// _description
 			//
-			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(3, 207);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(72, 16);
-			this.label1.TabIndex = 9;
-			this.label1.Text = "Paragraph";
+			this._description.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this._description.Enabled = false;
+			this._description.Location = new System.Drawing.Point(119, 339);
+			this._description.Multiline = true;
+			this._description.Name = "_description";
+			this._description.Size = new System.Drawing.Size(178, 99);
+			this._description.TabIndex = 5;
+			this._description.TextChanged += new System.EventHandler(this._description_TextChanged);
+			//
+			// _descriptionLabel
+			//
+			this._descriptionLabel.AutoSize = true;
+			this._descriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._descriptionLabel.Location = new System.Drawing.Point(3, 336);
+			this._descriptionLabel.Name = "_descriptionLabel";
+			this._descriptionLabel.Size = new System.Drawing.Size(76, 16);
+			this._descriptionLabel.TabIndex = 9;
+			this._descriptionLabel.Text = "Description";
+			this.toolTip1.SetToolTip(this._descriptionLabel, "Information about the use of this field.");
+			//
+			// _writingSystemsControlLabel
+			//
+			this._writingSystemsControlLabel.AutoSize = true;
+			this._writingSystemsControlLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._writingSystemsControlLabel.Location = new System.Drawing.Point(3, 230);
+			this._writingSystemsControlLabel.Name = "_writingSystemsControlLabel";
+			this._writingSystemsControlLabel.Size = new System.Drawing.Size(91, 16);
+			this._writingSystemsControlLabel.TabIndex = 10;
+			this._writingSystemsControlLabel.Text = "Input Systems";
+			this.toolTip1.SetToolTip(this._writingSystemsControlLabel, "Mark which input systems to use for this field.");
+			//
+			// _multiParagraphLabel
+			//
+			this._multiParagraphLabel.AutoSize = true;
+			this._multiParagraphLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._multiParagraphLabel.Location = new System.Drawing.Point(3, 207);
+			this._multiParagraphLabel.Name = "_multiParagraphLabel";
+			this._multiParagraphLabel.Size = new System.Drawing.Size(72, 16);
+			this._multiParagraphLabel.TabIndex = 9;
+			this._multiParagraphLabel.Text = "Paragraph";
+			//
+			// _writingSystemsControl
+			//
+			this._writingSystemsControl.CurrentField = null;
+			this._writingSystemsControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._writingSystemsControl.Location = new System.Drawing.Point(119, 233);
+			this._writingSystemsControl.Name = "_writingSystemsControl";
+			this._writingSystemsControl.Size = new System.Drawing.Size(178, 100);
+			this._writingSystemsControl.TabIndex = 6;
 			//
 			// _multiParagraph
 			//
@@ -364,7 +364,7 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.Label _optionListFileLabel;
 		private System.Windows.Forms.TextBox _optionsFileName;
 		private System.Windows.Forms.Label _descriptionLabel;
-		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.Label _writingSystemsControlLabel;
 		internal System.Windows.Forms.TextBox _description;
 		private WritingSystemForFieldControl _writingSystemsControl;
 		private System.Windows.Forms.Label _normallyHiddenLabel;
@@ -372,7 +372,7 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.Label _enableSpellingLabel;
 		internal System.Windows.Forms.CheckBox _enableSpelling;
 		private System.Windows.Forms.Label spellingNotEnabledWarning;
-		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label _multiParagraphLabel;
 		private System.Windows.Forms.CheckBox _multiParagraph;
 	}
 }

@@ -1,3 +1,4 @@
+using Palaso.UI.WindowsForms.Widgets;
 using Resources=WeSay.ConfigTool.Properties.Resources;
 
 namespace WeSay.ConfigTool.Tasks
@@ -31,7 +32,7 @@ namespace WeSay.ConfigTool.Tasks
 		private void InitializeComponent()
 		{
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-			this._taskList = new System.Windows.Forms.CheckedListBox();
+			this._taskList = new BetterCheckedListBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -95,7 +96,7 @@ namespace WeSay.ConfigTool.Tasks
 		#endregion
 
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.CheckedListBox _taskList;
+		private BetterCheckedListBox _taskList;
 		private System.Windows.Forms.Label label1;
 	}
 }

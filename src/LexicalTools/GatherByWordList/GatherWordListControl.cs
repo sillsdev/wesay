@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Data;
-using WeSay.Data;
-using WeSay.Foundation;
-using WeSay.LexicalModel;
+using Palaso.DictionaryServices.Model;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
@@ -17,6 +17,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		//private System.Windows.Forms.Label _animatedText= new Label();
 		private bool _animationIsMovingFromList;
+		private bool _settingIndexInCode;
 
 		public GatherWordListControl()
 		{
@@ -24,29 +25,46 @@ namespace WeSay.LexicalTools.GatherByWordList
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(GatherWordListTask task, WritingSystem lexicalUnitWritingSystem)
+		public GatherWordListControl(GatherWordListTask task, WritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			_task = task;
 
 			InitializeComponent();
 			InitializeDisplaySettings();
 			_vernacularBox.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-
-			_listViewOfWordsMatchingCurrentItem.Items.Clear();
-
-			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
+			_vernacularBox.WritingSystemsForThisField = new WritingSystemDefinition[]
 															{lexicalUnitWritingSystem};
 			_vernacularBox.TextChanged += _vernacularBox_TextChanged;
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
 			_vernacularBox.MinimumSize = _boxForeignWord.Size;
 
-			_listViewOfWordsMatchingCurrentItem.WritingSystem = _task.WordWritingSystem;
-			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.WordWritingSystem.Font.GetHeight());
+			_listViewOfWordsMatchingCurrentItem.Items.Clear();
+			_listViewOfWordsMatchingCurrentItem.FormWritingSystem = lexicalUnitWritingSystem;
 
+			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.FormWritingSystem.Font.GetHeight());
+
+
+
+			_verticalWordListView.WritingSystem = task.PromptingWritingSystem;
+			_verticalWordListView.DataSource = task.Words;
 			UpdateStuff();
+			_verticalWordListView.SelectedIndexChanged += new EventHandler(OnWordsList_SelectedIndexChanged);
 
-			_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
-			_movingLabel.Finished += OnAnimator_Finished;
+			_flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
+			_flyingLabel.Finished += OnAnimator_Finished;
+		}
+
+		void OnWordsList_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (_settingIndexInCode)
+				return;
+
+			if(_verticalWordListView.SelectedIndex==-1)
+				return;
+
+			AddCurrentWord(); //don't throw away what they were typing
+			_task.NavigateToIndex(_verticalWordListView.SelectedIndex);
+			UpdateSourceWord();
 		}
 
 		private void InitializeDisplaySettings()
@@ -54,11 +72,12 @@ namespace WeSay.LexicalTools.GatherByWordList
 			BackColor = DisplaySettings.Default.BackgroundColor;
 		}
 
+
 		private void OnAnimator_Finished(object sender, EventArgs e)
 		{
 			if (_animationIsMovingFromList)
 			{
-				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
+				_vernacularBox.TextBoxes[0].Text = _flyingLabel.Text;
 			}
 			var box = _vernacularBox.TextBoxes[0];
 			box.Focus();
@@ -90,7 +109,11 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				return;
 			}
-			if (_task.IsTaskComplete)
+			if (!string.IsNullOrEmpty(_task.LoadFailureMessage))
+			{
+				_congratulationsControl.Show(_task.LoadFailureMessage);
+			}
+			else if (_task.IsTaskComplete)
 			{
 				_congratulationsControl.Show("Congratulations. You have completed this task.");
 			}
@@ -99,8 +122,23 @@ namespace WeSay.LexicalTools.GatherByWordList
 				_congratulationsControl.Hide();
 				Debug.Assert(_vernacularBox.TextBoxes.Count == 1,
 							 "other code here (for now), assumes exactly one ws/text box");
-				_boxForeignWord.Text = _task.CurrentWordFromWordlist;
+				_boxForeignWord.Text = _task.CurrentPromptingForm;
+
 				PopulateWordsMatchingCurrentItem();
+
+				try //this is a late-added feature (2012), so we don't want to destabilize things
+				{
+					_settingIndexInCode = true;
+					_verticalWordListView.SelectedIndex = _task.CurrentIndexIntoWordlist;
+					_settingIndexInCode = false;
+				}
+				catch (Exception)
+				{
+#if DEBUG
+					throw;
+#endif
+				}
+
 			}
 			UpdateEnabledStates();
 		}
@@ -122,7 +160,15 @@ namespace WeSay.LexicalTools.GatherByWordList
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 			foreach (RecordToken<LexEntry> recordToken in _task.GetRecordsWithMatchingGloss())
 			{
-				_listViewOfWordsMatchingCurrentItem.Items.Add(new RecordTokenToStringAdapter<LexEntry>("Form", recordToken));
+				var recordTokenToStringAdapter = new RecordTokenToStringAdapter<LexEntry>("Form", recordToken);
+				if(!string.IsNullOrEmpty(recordTokenToStringAdapter.ToString()))
+				{
+					_listViewOfWordsMatchingCurrentItem.Items.Add(recordTokenToStringAdapter);
+				}
+				else
+				{
+					//The matching gloss/def is there, but the lexeme form is empty. So just don't put it in the list
+				}
 			}
 		}
 
@@ -154,7 +200,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				return;
 			}
-			_task.WordCollected(_vernacularBox.MultiText);
+			_task.WordCollected(_vernacularBox.GetMultiText());
 
 			//_listViewOfWordsMatchingCurrentItem.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";
@@ -227,8 +273,13 @@ namespace WeSay.LexicalTools.GatherByWordList
 				// _vernacularBox.TextBoxes[0].Text = word;
 
 				_animationIsMovingFromList = true;
-				_movingLabel.Go(word, start, destination);
+				_flyingLabel.Go(word, start, destination);
 			}
+		}
+
+		public void Cleanup()
+		{
+			AddCurrentWord();
 		}
 	}
 }

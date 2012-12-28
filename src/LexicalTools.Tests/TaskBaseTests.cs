@@ -9,14 +9,12 @@ namespace WeSay.LexicalTools.Tests
 		protected ITask _task;
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void Deactivate_CalledBeforeActivate_Throws()
 		{
-			_task.Deactivate();
+			Assert.Throws<InvalidOperationException>(() => _task.Deactivate());
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void Deactivate_CalledTwice_Throws()
 		{
 			try
@@ -26,7 +24,7 @@ namespace WeSay.LexicalTools.Tests
 			}
 			finally
 			{
-				_task.Deactivate();
+				Assert.Throws<InvalidOperationException>(() => _task.Deactivate());
 			}
 			//    _task = null;
 			//            GC.Collect();
@@ -43,7 +41,7 @@ namespace WeSay.LexicalTools.Tests
 
 // not anymore (see not on task base where it used to throw
 //        [Test]
-//        [ExpectedException(typeof (InvalidOperationException))]
+//        [NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (InvalidOperationException))]
 //        public void Activate_CalledTwice_Throws()
 //        {
 //            _task.Activate();

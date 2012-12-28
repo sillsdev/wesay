@@ -2,9 +2,8 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Xml;
+using Palaso.i18n;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -12,15 +11,14 @@ namespace WeSay.ConfigTool
 	public partial class InterfaceLanguageControl: ConfigurationControlBase
 	{
 		public InterfaceLanguageControl(ILogger logger)
-			: base("settings for the user interface", logger)
+			: base("settings for the user interface", logger,"interfaceLanguage")
 		{
 			InitializeComponent();
 		}
 
 		private void OnLoad(object sender, EventArgs e)
 		{
-			LoadPoFilesIntoCombo(
-					WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject);
+			LoadPoFilesIntoCombo(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject);
 			LoadPoFilesIntoCombo(BasilProject.ApplicationCommonDirectory);
 
 			UpdateFontDisplay();
@@ -31,7 +29,7 @@ namespace WeSay.ConfigTool
 		{
 			if (_languageCombo.SelectedItem != null)
 			{
-				var lang = ((PoProxy) _languageCombo.SelectedItem).fileNameWithoutExtension;
+				var lang = ((PoProxy) _languageCombo.SelectedItem).LanguageCode;
 				if (UILanguage != lang)
 				{
 					UILanguage = lang;
@@ -44,57 +42,74 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		public override void PreLoad()
-		{
-			base.PreLoad();
-			WeSayWordsProject.Project.EditorsSaveNow += Project_EditorsSaveNow;
-		}
-
 		private void LoadPoFilesIntoCombo(string directory)
 		{
 			_languageCombo.Items.Clear();
-			EnglishPoProxy englishPoProxy = new EnglishPoProxy();
+			var englishPoProxy = new EnglishPoProxy();
 			_languageCombo.Items.Add(englishPoProxy);
 			_languageCombo.SelectedItem = englishPoProxy;
 			foreach (string file in Directory.GetFiles(directory, "*.po"))
 			{
-				PoProxy selector = new PoProxy(file);
+				var selector = new PoProxy(file);
 				_languageCombo.Items.Add(selector);
-				if (WeSayWordsProject.Project.StringCatalogSelector ==
-					selector.fileNameWithoutExtension)
+				if (Options.Language ==
+					selector.LanguageCode)
 				{
 					_languageCombo.SelectedItem = selector;
 				}
 			}
 		}
 
-		private class PoProxy
+		internal class PoProxy
 		{
-			public PoProxy() {}
+			public string LanguageCode { get; protected set; }
+			protected string LanguageName { private get; set; }
 
-			public PoProxy(string path)
+			protected PoProxy()
 			{
-				fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
-				_languageName = fileNameWithoutExtension;
+			}
+
+			public PoProxy(string poFilePath)
+			{
+				LanguageCode = PoFilePathToLanguageCode(poFilePath);
+				LanguageName = "";
 				try
 				{
-					string contents = File.ReadAllText(path);
+					string contents = File.ReadAllText(poFilePath);
 					Match m = Regex.Match(contents, @"# (.*) translation");
 					if (m.Success)
 					{
-						_languageName = m.Groups[1].Value.Trim();
+						LanguageName = m.Groups[1].Value.Trim();
+					}
+					else
+					{
+						m = Regex.Match(contents, @"Language-Team: (.+) (\(http|<)");
+						if (m.Success)
+						{
+							LanguageName = m.Groups[1].Value.Trim();
+						}
+						//else
+						//{
+						//    // fallback, in case we cannot find the language name in the Po file
+						//    LanguageName = LanguageCode;
+						//}
 					}
 				}
-				catch (Exception) //couldn't extract a better name
+				// ReSharper disable EmptyGeneralCatchClause
+				catch
 				{}
+				// ReSharper restore EmptyGeneralCatchClause
 			}
 
-			public string fileNameWithoutExtension;
-			protected string _languageName;
+			private static string PoFilePathToLanguageCode(string poFilePath)
+			{
+				var parts = poFilePath.Split(new[] {'.', '-'});
+				return parts[parts.Length - 2];
+			}
 
 			public override string ToString()
 			{
-				return _languageName;
+				return LanguageName;
 			}
 		}
 
@@ -102,33 +117,16 @@ namespace WeSay.ConfigTool
 		{
 			public EnglishPoProxy()
 			{
-				_languageName = "English (Default)";
-				fileNameWithoutExtension = string.Empty;
+				LanguageName = "English (Default)";
+				LanguageCode = string.Empty;
 			}
-		}
-
-		private void Project_EditorsSaveNow(object owriter, EventArgs e)
-		{
-			XmlWriter writer = (XmlWriter) owriter;
-
-			writer.WriteStartElement("uiOptions");
-			if (!String.IsNullOrEmpty(UILanguage))
-			{
-				writer.WriteAttributeString("uiLanguage", UILanguage);
-			}
-			if (!String.IsNullOrEmpty(LabelName))
-			{
-				writer.WriteAttributeString("uiFont", LabelName);
-				writer.WriteAttributeString("uiFontSize", LabelSizeInPoints.ToString());
-			}
-			writer.WriteEndElement();
 		}
 
 		private string UILanguage
 		{
 			get
 			{
-				return WeSayWordsProject.Project.StringCatalogSelector;
+				return Options.Language;
 				//                if (_languageCombo.SelectedItem == null)
 				//                {
 				//                    return String.Empty;
@@ -139,27 +137,26 @@ namespace WeSay.ConfigTool
 			{
 				if (_languageCombo.SelectedItem != null)
 				{
-					WeSayWordsProject.Project.StringCatalogSelector = value;
+					Options.Language = value;
+					Options.Language = value;
 				}
 			}
 		}
 
-		private static string LabelName
-		{
-			get { return StringCatalog.LabelFont.Name; }
-		}
 
-		private static float LabelSizeInPoints
+		private UiConfigurationOptions Options
 		{
-			get { return StringCatalog.LabelFont.SizeInPoints; }
+			get { return WeSayWordsProject.Project.UiOptions; }
 		}
 
 		private void OnChooseFont(object sender, EventArgs e)
 		{
-			FontDialog dialog = new FontDialog();
-			dialog.Font = StringCatalog.LabelFont;
-			dialog.ShowColor = false;
-			dialog.ShowEffects = false;
+			var dialog = new FontDialog
+							 {
+								 Font = Options.GetLabelFont(),
+								 ShowColor = false,
+								 ShowEffects = false
+							 };
 
 			try //strange, but twice we've found situations where ShowDialog crashes on windows
 			{
@@ -174,15 +171,15 @@ namespace WeSay.ConfigTool
 						"There was some problem with choosing that font.  If you just installed it, you might try restarting the program or even your computer.");
 				return;
 			}
-			StringCatalog.LabelFont = dialog.Font;
+			Options.SetLabelFont(dialog.Font);
 			UpdateFontDisplay();
 		}
 
 		private void UpdateFontDisplay()
 		{
 			_fontInfoDisplay.Text = string.Format("{0}, {1} points",
-												  StringCatalog.LabelFont.Name,
-												  (int) StringCatalog.LabelFont.SizeInPoints);
+												  Options.LabelFontName,
+												  Math.Round(Options.LabelFontSizeInPoints));
 		}
 	}
 }

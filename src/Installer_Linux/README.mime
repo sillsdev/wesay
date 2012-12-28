@@ -1,0 +1,14 @@
+useful instructions for installing mime types
+
+http://stackoverflow.com/questions/30931/register-file-extensions-mime-types-in-linux
+
+xdg-icon-resource install --context mimetypes --size 48 icons/hicolor/48x48/apps/sil-wesay.png x-application-lift
+
+xdg-mime install lift-mime.xml
+
+the Debian way is slightly different
+http://wiki.debian.org/MimeTypesSupport
+
+TODO: decide how to do it and try it with 1.1.11
+
+don't know yet if the updated .desktop files and the mime xml together will be enough to get the icon

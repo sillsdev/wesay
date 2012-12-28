@@ -48,18 +48,18 @@ namespace WeSay.ConfigTool.Tests
 						{
 							try
 							{
-								CreateNewAndGotoBackupControl(tempFolder.FolderPath);
+								CreateNewAndGotoBackupControl(tempFolder.Path);
 
 								TextBoxTester t = new TextBoxTester("_pathText", _window);
-								t.Properties.Text = backupHere.FolderPath;
+								t.Properties.Text = backupHere.Path;
 								CloseApp();
 
 								//now reopen
-								OpenExisting(tempFolder.FolderPath);
+								OpenExisting(tempFolder.Path);
 								GoToBackupTab();
 								t = new TextBoxTester("_pathText", _window);
 
-								Assert.AreEqual(backupHere.FolderPath, t.Properties.Text);
+								Assert.AreEqual(backupHere.Path, t.Properties.Text);
 							}
 							finally
 							{
@@ -85,7 +85,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			_window = new ConfigurationWindow(new string[] { });
 			_window.Show();
-			_window.CreateAndOpenProject(directoryPath);
+			_window.CreateAndOpenProject(directoryPath, "th");
 			GoToBackupTab();
 		   // return new ComboBoxTester("_languageCombo", _window);
 		}

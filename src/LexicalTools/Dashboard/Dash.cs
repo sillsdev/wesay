@@ -6,12 +6,12 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
+using Palaso.i18n;
 
 namespace WeSay.LexicalTools.Dashboard
 {
@@ -34,6 +34,7 @@ namespace WeSay.LexicalTools.Dashboard
 		private readonly Padding _buttonRowMargin;
 		private readonly Padding _buttonMargin;
 		private int _buttonsPerRow;
+		private bool _suspendLayout;
 
 		private const TextFormatFlags ToolTipFormatFlags =
 			TextFormatFlags.WordBreak | TextFormatFlags.NoFullWidthCharacterBreak |
@@ -67,7 +68,7 @@ namespace WeSay.LexicalTools.Dashboard
 			Invalidate(true);
 		}
 
-		private static void OnRunConfigureTool(object sender, EventArgs e)
+		public static void OnRunConfigureTool(object sender, EventArgs e)
 		{
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo =
@@ -91,13 +92,14 @@ namespace WeSay.LexicalTools.Dashboard
 		{
 			_addedAllButtons = false;
 			_title = new DictionaryStatusControl(_lexEntryRepository.CountAllItems());
-			_title.Font = new Font("Arial", 14);
+			_title.Font = new Font(SystemFonts.DefaultFont.FontFamily, 14);
 			_title.BackColor = Color.Transparent;
 			_title.ShowLogo = true;
 			_title.Width = _panel.Width - _title.Margin.Left - _title.Margin.Right;
 			_title.TabStop = false;
 			_buttonRows.Clear();
 			_panel.Controls.Add(_title);
+
 
 			foreach (ButtonGroup group in _buttonGroups)
 			{
@@ -173,7 +175,7 @@ namespace WeSay.LexicalTools.Dashboard
 			ITask task = b.ThingToShowOnDashboard as ITask;
 			if (task != null && _currentWorkTaskProvider != null)
 			{
-				_currentWorkTaskProvider.ActiveTask = task;
+				_currentWorkTaskProvider.SetActiveTask(task);
 			}
 			else
 			{
@@ -186,7 +188,9 @@ namespace WeSay.LexicalTools.Dashboard
 					{
 						ProjectInfo projectInfo =
 							WeSayWordsProject.Project.GetProjectInfoForAddin();
+						UsageReporter.SendNavigationNotice(addin.ID);
 						addin.Launch(ParentForm, projectInfo);
+
 					}
 					catch (Exception error)
 					{
@@ -651,7 +655,10 @@ namespace WeSay.LexicalTools.Dashboard
 				ThingsToMakeButtonsFor = new List<IThingOnDashboard>();
 				foreach (ITask task in WeSayWordsProject.Project.Tasks)
 				{
-					ThingsToMakeButtonsFor.Add(task);
+					if (task.Available)
+					{
+						ThingsToMakeButtonsFor.Add(task);
+					}
 				}
 				foreach (IWeSayAddin action in AddinSet.GetAddinsForUser())
 				{
@@ -702,6 +709,9 @@ namespace WeSay.LexicalTools.Dashboard
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Describe,
 											  Color.FromArgb(85, 142, 213),
 											  Color.FromArgb(185, 205, 229)));
+			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Review,
+											  Color.FromArgb(250, 192, 144),
+											  Color.FromArgb(252, 213, 181)));
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Refine,
 											  Color.FromArgb(250, 192, 144),
 											  Color.FromArgb(252, 213, 181)));
@@ -717,11 +727,14 @@ namespace WeSay.LexicalTools.Dashboard
 				throw new InvalidOperationException(
 					"Deactivate should only be called once after Activate.");
 			}
-			SuspendLayout(); //NB: In WS-1234, the user found this to be really slow (!,??), hence the suspend
+			_panel.SuspendLayout(); //NB: In WS-1234, the user found this to be really slow (!,??), hence the suspend
+			_suspendLayout = true;
 			_toolTip.RemoveAll();
 			_panel.Controls.Clear();
 			ResumeLayout();
+			_suspendLayout = false;
 			_isActive = false;
+  //          Debug.Fail("stop");
 		}
 
 		public void GoToUrl(string url) {}
@@ -740,15 +753,17 @@ namespace WeSay.LexicalTools.Dashboard
 			}
 		}
 
+		public bool Available
+		{
+			get { return true; }
+		}
+
 		public string Description
 		{
 			get { return StringCatalog.Get("~Switch tasks and see current status of tasks"); }
 		}
 
-		public bool MustBeActivatedDuringPreCache
-		{
-			get { return false; }
-		}
+
 
 		public Control Control
 		{
@@ -863,7 +878,8 @@ namespace WeSay.LexicalTools.Dashboard
 
 		protected override void OnPaintBackground(PaintEventArgs e)
 		{
-			DisplaySettings.Default.PaintBackground(this, e);
+		   if(!_suspendLayout)
+			   DisplaySettings.Default.PaintBackground(this, e);
 		}
 
 		protected override void OnMouseWheel(MouseEventArgs e)
@@ -926,6 +942,16 @@ namespace WeSay.LexicalTools.Dashboard
 
 		private void _toolTip_Popup(object sender, PopupEventArgs e)
 		{
+		   //todo: This code can take 30 seconds or more to complete! if you make the dash small and then drag the window,
+			//it goes navel-gazing for a long time. (JH noticed Oct 2011).
+
+			//This is also implicated in involvement in WS-34187) "Better feedback for slower computers"
+			//because we're talking about replacing all this with html, I'm just going to make
+			//this not run when it has no business running.
+
+			if (_suspendLayout)
+				return;
+
 			DashboardButton button = e.AssociatedControl as DashboardButton;
 			if (button == null)
 			{

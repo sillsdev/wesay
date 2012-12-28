@@ -2,7 +2,8 @@
 using System.IO;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
 
 namespace WeSay.UI.audio
@@ -11,9 +12,9 @@ namespace WeSay.UI.audio
 	{
 		private AudioPathProvider _audioPathProvider;
 		private readonly ILogger _logger;
-		public WritingSystem WritingSystem { get; set; }
+		public WritingSystemDefinition WritingSystem { get; set; }
 
-		public WeSayAudioFieldBox(WritingSystem writingSystem, AudioPathProvider audioPathProvider,
+		public WeSayAudioFieldBox(WritingSystemDefinition writingSystem, AudioPathProvider audioPathProvider,
 			Palaso.Reporting.ILogger logger)
 		{
 			_audioPathProvider = audioPathProvider;
@@ -41,6 +42,8 @@ namespace WeSay.UI.audio
 					_logger.WriteConciseHistoricalEvent("Deleted Sound");
 				};
 			_shortSoundFieldControl1.BeforeStartingToRecord += new EventHandler(shortSoundFieldControl1_BeforeStartingToRecord);
+
+			this.Height = _shortSoundFieldControl1.Height + 10;
 		}
 
 		void shortSoundFieldControl1_BeforeStartingToRecord(object sender, EventArgs e)

@@ -157,12 +157,12 @@ namespace WeSay.Data.Tests
         }
 
         [Test]
-		[ExpectedException(typeof (ArgumentException))]
         public void PassSameRepositoriesInConstructor_ThrowsArgumentException()
         {
 			using (IDataMapper<PalasoTestItem> dataMapper = new MemoryDataMapper<PalasoTestItem>())
 			{
-				using (new SynchronicRepository<PalasoTestItem>(dataMapper, dataMapper)) {}
+				Assert.Throws<ArgumentException>(
+					() => new SynchronicRepository<PalasoTestItem>(dataMapper, dataMapper));
 			}
         }
 

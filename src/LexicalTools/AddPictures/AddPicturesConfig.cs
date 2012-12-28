@@ -55,5 +55,10 @@ namespace WeSay.LexicalTools.AddPictures
 		{
 			get { return false; }
 		}
+
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			return taskConfiguration is AddPicturesConfig;
+		}
 	}
 }

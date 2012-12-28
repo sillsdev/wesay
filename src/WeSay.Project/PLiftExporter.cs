@@ -1,44 +1,67 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Palaso.Text;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
-using WeSay.LexicalModel;
+using System.IO;
 using System.Linq;
-#if MONO
+using System.Text;
 using Palaso.Linq;
-#endif
+using Palaso.DictionaryServices.Lift;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
+using Palaso.Lift.Options;
+using Palaso.Text;
+using Palaso.UiBindings;
+using Palaso.WritingSystems;
+using Palaso.Extensions;
+using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
-	public class PLiftExporter: WeSayLiftWriter
+	public class PLiftExporter: LiftWriter
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly LexEntryRepository _lexEntryRepository;
-		private readonly IList<string> _headwordWritingSystemIds;
+		private readonly IEnumerable<string> _headwordWritingSystemIds;
+		private string _path;
 
 		public PLiftExporter(StringBuilder builder,
 							 bool produceFragmentOnly,
 							 LexEntryRepository lexEntryRepository,
 							 ViewTemplate viewTemplate): base(builder, produceFragmentOnly)
 		{
-			this._lexEntryRepository = lexEntryRepository;
-			this._viewTemplate = viewTemplate;
+			_lexEntryRepository = lexEntryRepository;
+			_viewTemplate = viewTemplate;
 			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
 		}
 
 		public PLiftExporter(string path,
 							 LexEntryRepository lexEntryRepository,
-							 ViewTemplate viewTemplate): base(path)
+							 ViewTemplate viewTemplate)
+			: base(path, LiftWriter.ByteOrderStyle.BOM)
 		{
-			this._lexEntryRepository = lexEntryRepository;
-			this._viewTemplate = viewTemplate;
-			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
+			_path = path;
+			_disposed = true; // In case we throw in the constructor
+			_lexEntryRepository = lexEntryRepository;
+			_viewTemplate = viewTemplate;
+			_headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());
+			_disposed = false;
 		}
 
-		private Options _options = Options.DereferenceRelations | Options.DereferenceOptions |
+		public override void Dispose()
+		{
+			base.Dispose();
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
+		}
+
+		public const Options DefaultOptions = Options.DereferenceRelations | Options.DereferenceOptions |
 								   Options.DetermineHeadword;
+
+		private Options _options = DefaultOptions;
+
 
 
 		[Flags]
@@ -47,7 +70,8 @@ namespace WeSay.Project
 			NormalLift = 0,
 			DereferenceRelations = 1,
 			DereferenceOptions = 2,
-			DetermineHeadword = 4
+			DetermineHeadword = 4,
+			ExportPartOfSpeechAsGrammaticalInfoElement = 8 //this just means export it as normal lift, rather than making it look like a custom fied.
 		} ;
 
 		/// <summary>
@@ -66,7 +90,7 @@ namespace WeSay.Project
 
 		public override void Add(LexEntry entry)
 		{
-			WritingSystem headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
+			WritingSystemDefinition headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
 			int h = _lexEntryRepository.GetHomographNumber(entry, headWordWritingSystem);
 			Add(entry, h);
 		}
@@ -96,20 +120,18 @@ namespace WeSay.Project
 					Writer.WriteStartElement("field");
 					Writer.WriteAttributeString("type",
 												fieldName == "POS" ? "grammatical-info" : fieldName);
-					Add(labelForms, false);
+					WriteLanguageFormsInWrapper(labelForms, "form", false);
 					Writer.WriteEndElement();
 				}
 			}
 		}
 
-		/// <summary>
-		/// nb: this is used both for the headword of an article, but also for the target of a relation.
-		/// </summary>
+
 		private void WriteHeadWordField(LexEntry entry, string outputFieldName)
 		{
 			//                headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
 
-			MultiText headword = new MultiText();
+			var headword = new MultiText();
 			foreach (string writingSystemId in _headwordWritingSystemIds)
 			{
 				headword.SetAlternative(writingSystemId, entry.GetHeadWordForm(writingSystemId));
@@ -131,9 +153,9 @@ namespace WeSay.Project
 
 				if (!MultiTextBase.IsEmpty(text))
 				{
-					var textWritingSystems = _viewTemplate.WritingSystems.GetActualTextWritingSystems();
+					var textWritingSystems = _viewTemplate.WritingSystems.TextWritingSystems;
 					var ids = from ws in textWritingSystems select ws.Id;
-					Add(text.Forms.Where(f=>ids.Contains(f.WritingSystemId) ), true);
+					WriteLanguageFormsInWrapper(text.Forms.Where(f => ids.Contains(f.WritingSystemId)), "form", true);
 				}
 
 				Writer.WriteEndElement();
@@ -145,7 +167,7 @@ namespace WeSay.Project
 		/// </summary>
 		protected override void WriteFormsThatNeedToBeTheirOwnFields(MultiText text, string name)
 		{
-			foreach(var path in text.GetAudioForms(_viewTemplate.WritingSystems))
+			foreach(var path in GetAudioForms(text, _viewTemplate.WritingSystems))
 			{
 				Writer.WriteStartElement("trait");
 
@@ -154,6 +176,17 @@ namespace WeSay.Project
 				Writer.WriteAttributeString("value", string.Format("..{0}audio{0}" + path.Form, System.IO.Path.DirectorySeparatorChar));
 				Writer.WriteEndElement();
 			}
+		}
+
+		public static IList<LanguageForm> GetAudioForms(MultiText field, IWritingSystemRepository writingSytems)
+		{
+			var x = field.Forms.Where(f => writingSytems.Get(f.WritingSystemId).IsVoice);
+			return new List<LanguageForm>(x);
+		}
+
+		protected override bool EntryDoesExist(string id)
+		{
+			return null!= _lexEntryRepository.GetLexEntryWithMatchingId(id);
 		}
 
 		protected override void WriteRelationTarget(LexRelation relation)
@@ -169,22 +202,40 @@ namespace WeSay.Project
 				return;
 			}
 
-			LexEntry target = this._lexEntryRepository.GetLexEntryWithMatchingId(key);
+			LexEntry target = _lexEntryRepository.GetLexEntryWithMatchingId(key);
 			if (target != null)
 			{
-				WriteHeadWordField(target, "headword-of-target");
+				WriteHeadWordFieldForRelation(target, "headword-of-target");
 			}
 		}
+		private void WriteHeadWordFieldForRelation(LexEntry entry, string outputFieldName)
+		{
+			//                headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
+
+			var headword = new MultiText();
+			foreach (string writingSystemId in _headwordWritingSystemIds)
+			{
+				var headWordForm = entry.GetHeadWordForm(writingSystemId);
+				if(!string.IsNullOrEmpty(headWordForm))
+				{
+					headword.SetAlternative(writingSystemId, headWordForm);
+					break;//we only want the first non-empty one
+				}
+			}
+			WriteMultiTextAsArtificialField(outputFieldName, headword);
+		}
+
 		protected override string GetOutputRelationName(LexRelation relation)
 		{
-			var s= relation.FieldId.Replace("confer", "cf");//hack. Other names are left as-is.
-			s = s.Replace("BaseForm", "see");//hack... not sure what we want here
+			//Enhance: add "printed-dictionary-label" to fielddefns, so that people have control over this from wesay config.
+			var s= relation.FieldId.Replace("confer", "see");
+			s = s.Replace("BaseForm", "from");
 			return s;
 		}
 
 		protected override void WritePosCore(OptionRef pos)
 		{
-			if (0 != (_options & Options.DereferenceOptions))
+			if ((0 == (_options & Options.ExportPartOfSpeechAsGrammaticalInfoElement)) && (0 != (_options & Options.DereferenceOptions)))
 			{
 				WriteDisplayNameFieldForOption(pos, LexSense.WellKnownProperties.PartOfSpeech);
 			}
@@ -202,18 +253,25 @@ namespace WeSay.Project
 //            if(!_viewTemplate.WritingSystems.Any(p=>p.Value.IsAudio))
 //                return;
 //
-			var paths = entry.LexicalForm.GetAudioForms(_viewTemplate.WritingSystems);
+			IList<Palaso.Text.LanguageForm> paths = GetAudioForms(entry.LexicalForm, _viewTemplate.WritingSystems);
 			if (paths.Count == 0)
 				return;
 			Writer.WriteStartElement("pronunciation");
 
-			paths.ForEach((path) =>
+			Palaso.Linq.Enumerable.ForEach(paths, path =>
 							  {
 								  Writer.WriteStartElement("media");
 								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));
 								  Writer.WriteEndElement();
 							  });
-
+			/*
+			paths.ForEach(path =>
+							  {
+								  Writer.WriteStartElement("media");
+								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));
+								  Writer.WriteEndElement();
+							  });
+*/
 			Writer.WriteEndElement();
 		}
 
@@ -250,6 +308,43 @@ namespace WeSay.Project
 			return (f.Enabled);
 		}
 
+		/// <summary>
+		/// This is to help Lexique Pro (or anyone else reading it) get the right urls to pictures, when the lift is down in Export.
+		/// </summary>
+		/// <param name="pictureRef"></param>
+		protected override void WriteIllustrationElement(PictureRef pictureRef)
+		{
+			//base does this:             WriteURLRef("illustration", pictureRef.Value, pictureRef.Caption);
+			//base.WriteIllustrationElement(pictureRef);
+
+			string url = pictureRef.Value;
+			if (url == null) // Fixes WS-34480 PLIFT-exporting actions don't work after going in Browse & Edit if image is missing
+				return;
+			if (_path != null)  //it's null during some tests
+			{
+				var dirWeAreWritingTo = Path.GetDirectoryName(_path);
+
+				string parentDir = Directory.GetParent(dirWeAreWritingTo).FullName;
+				if (!File.Exists(Path.Combine(dirWeAreWritingTo, url))) //something needs fixing
+				{
+					string upOne = Path.Combine(parentDir, url);
+					if (File.Exists(upOne))
+					{
+						url = "..".CombineForPath(url);
+					}
+					else
+					{
+						string addPicturesDir = parentDir.CombineForPath("pictures", url);
+						if (File.Exists(addPicturesDir))
+						{
+							url = "..".CombineForPath("pictures", url);
+						}
+					}
+				}
+			}
+			WriteURLRef("illustration", url, pictureRef.Caption);
+		}
+
 		protected override LanguageForm[] GetOrderedAndFilteredForms(MultiTextBase text,
 																	 string propertyName)
 		{
@@ -258,7 +353,7 @@ namespace WeSay.Project
 			{
 				return text.Forms;
 			}
-			return text.GetOrderedAndFilteredForms(f.GetTextOnlyWritingSystemIds(_viewTemplate.WritingSystems));
+			return text.GetOrderedAndFilteredForms(_viewTemplate.WritingSystems.FilterForTextIds(f.WritingSystemIds));
 		}
 	}
 }

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Autofac;
-using WeSay.Foundation;
+using Palaso.WritingSystems;
+using WeSay.Project;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tasks
@@ -17,6 +19,28 @@ namespace WeSay.ConfigTool.Tasks
 			View.Model = this;
 
 			WeSayWordsProject.Project.WritingSystemChanged += OnProject_WritingSystemChanged;
+			WeSayWordsProject.Project.WritingSystemDeleted += OnProject_WritingSystemDeleted;
+		}
+
+		private void OnProject_WritingSystemDeleted(object sender, WritingSystemDeletedEventArgs e)
+		{
+			foreach (var task in ICareThatWritingSystemIdChangedTasks)
+			{
+				task.OnWritingSystemIdDeleted(e.Id);
+			}
+		}
+
+		private IEnumerable<ICareThatWritingSystemIdChanged> ICareThatWritingSystemIdChangedTasks
+		{
+			get
+			{
+				foreach (object task in Tasks)
+				{
+					if (null == task as ICareThatWritingSystemIdChanged)
+						continue;
+					yield return ((ICareThatWritingSystemIdChanged) task);
+				}
+			}
 		}
 
 		public IEnumerable<ITaskConfiguration> Tasks
@@ -27,12 +51,15 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void OnProject_WritingSystemChanged(object sender, WeSayWordsProject.StringPair pair)
 		{
-			foreach (object task in Tasks)
+			foreach (var task in ICareThatWritingSystemIdChangedTasks)
 			{
-				if (null == task as ICareThatWritingSystemIdChanged)
-					continue;
-				((ICareThatWritingSystemIdChanged)task).WritingSystemIdChanged(pair.from, pair.to);
+				task.OnWritingSystemIdChanged(pair.from, pair.to);
 			}
+		}
+
+		public bool DoShowTask(ITaskConfiguration task)
+		{
+			return task.Label != "Dashboard";
 		}
 	}
 

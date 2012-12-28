@@ -2,22 +2,25 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
 {
 	public partial class WeSayListBox: ListBox
 	{
-		private WritingSystem _writingSystem;
+		private WritingSystemDefinition _formWritingSystem;
+		private WritingSystemDefinition _meaningWritingSystem;
 		private object _itemToNotDrawYet;
 
 		public WeSayListBox()
 		{
 			InitializeComponent();
-			// Set the DrawMode property to draw fixed sized items.
+			//DrawMode = DrawMode.OwnerDrawVariable; //"variable" was suppose to make it actualy fire the MeasureItem, but it never did. You can set the ColumnWidth directly.
 			DrawMode = DrawMode.OwnerDrawFixed;
 
 			DrawItem += WeSayListBox_DrawItem;
+			ItemDrawer = DefaultDrawItem;
 		}
 
 		private void WeSayListBox_DrawItem(object sender, DrawItemEventArgs e)
@@ -34,19 +37,27 @@ namespace WeSay.UI
 			}
 			// Draw the background of the ListBox control for each item.
 			e.DrawBackground();
-			// Define the default color of the brush as black.
-			Brush myBrush = Brushes.Black;
+			ItemDrawer(Items[e.Index],e);
+			// If the ListBox has focus, draw a focus rectangle around the selected item.
+			e.DrawFocusRectangle();
+		}
 
+		/// <summary>
+		/// Change this if you need to draw something special. THe default just draws the string of the item.
+		/// Make sure to make a custom MeasureItem handler too!
+		/// </summary>
+		public Action<object, DrawItemEventArgs> ItemDrawer;
+
+		private void DefaultDrawItem(object item, DrawItemEventArgs e)
+		{
 			// Draw the current item text based on the current Font and the custom brush settings.
-			TextRenderer.DrawText(e.Graphics, Items[e.Index].ToString(), e.Font, e.Bounds, Color.Black, TextFormatFlags.Left);
+			TextRenderer.DrawText(e.Graphics, item.ToString(), e.Font, e.Bounds, Color.Black, TextFormatFlags.Left);
 			//Do not use Graphics.Drawstring as it does not use Uniscribe and thus has problems with complex scripts WS-14881
 			//e.Graphics.DrawString(Items[e.Index].ToString(),
 			//                      e.Font,
 			//                      myBrush,
 			//                      e.Bounds,
 			//                      StringFormat.GenericDefault);
-			// If the ListBox has focus, draw a focus rectangle around the selected item.
-			e.DrawFocusRectangle();
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -56,16 +67,16 @@ namespace WeSay.UI
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystem WritingSystem
+		public WritingSystemDefinition FormWritingSystem
 		{
 			get
 			{
-				if (_writingSystem == null)
+				if (_formWritingSystem == null)
 				{
 					throw new InvalidOperationException(
-							"WritingSystem must be initialized prior to use.");
+							"Form input system must be initialized prior to use.");
 				}
-				return _writingSystem;
+				return _formWritingSystem;
 			}
 			set
 			{
@@ -73,10 +84,9 @@ namespace WeSay.UI
 				{
 					throw new ArgumentNullException();
 				}
-				_writingSystem = value;
-				Font = value.Font;
-				ItemHeight = (int) (Math.Ceiling(value.Font.GetHeight()));
-				if (value.RightToLeft)
+				_formWritingSystem = value;
+				Font = WritingSystemInfo.CreateFont(value);
+				if (value.RightToLeftScript)
 				{
 					RightToLeft = RightToLeft.Yes;
 				}
@@ -84,6 +94,30 @@ namespace WeSay.UI
 				{
 					RightToLeft = RightToLeft.No;
 				}
+				ComputeItemHeight();
+			}
+		}
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public WritingSystemDefinition MeaningWritingSystem
+		{
+			get
+			{
+				return _meaningWritingSystem;
+			}
+			set
+			{
+				_meaningWritingSystem = value;
+				ComputeItemHeight();
+			}
+		}
+		private void ComputeItemHeight()
+		{
+			ItemHeight = (int) (Math.Ceiling(WritingSystemInfo.CreateFont(_formWritingSystem).GetHeight()));
+			if(_meaningWritingSystem !=null)
+			{
+				ItemHeight += (int) (Math.Ceiling(WritingSystemInfo.CreateFont(_meaningWritingSystem).GetHeight()));
+				ItemHeight += 10;//margin
 			}
 		}
 
@@ -91,7 +125,10 @@ namespace WeSay.UI
 		public object ItemToNotDrawYet
 		{
 			get { return _itemToNotDrawYet; }
-			set { _itemToNotDrawYet = value; }
+			set {
+					_itemToNotDrawYet = value;
+					Refresh();
+				}
 		}
 	}
 }

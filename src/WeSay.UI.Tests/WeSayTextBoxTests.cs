@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
-using WeSay.Foundation;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
@@ -24,42 +25,39 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void CreateWithWritingSystem()
 		{
-			WritingSystem ws = new WritingSystem();
+			WritingSystemDefinition ws = new WritingSystemDefinition();
 			WeSayTextBox textBox = new WeSayTextBox(ws, null);
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void SetWritingSystem_Null_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
-			textBox.WritingSystem = null;
+			Assert.Throws<ArgumentNullException>(() => textBox.WritingSystem = null);
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void WritingSystem_Unassigned_Get_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
-			WritingSystem ws = textBox.WritingSystem;
+			WritingSystemDefinition ws;
+			Assert.Throws<InvalidOperationException>(() => ws= textBox.WritingSystem);
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void WritingSystem_Unassigned_Focused_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
-			textBox.AssignKeyboardFromWritingSystem();
+			Assert.Throws<InvalidOperationException>(() => textBox.AssignKeyboardFromWritingSystem());
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void WritingSystem_Unassigned_Unfocused_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
-			textBox.ClearKeyboard();
+			Assert.Throws<InvalidOperationException>(() => textBox.ClearKeyboard());
 		}
 	}
 }

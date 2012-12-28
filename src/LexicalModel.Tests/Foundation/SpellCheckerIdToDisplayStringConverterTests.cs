@@ -1,15 +1,15 @@
 using System;
 using System.Globalization;
 using NUnit.Framework;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using Palaso.i18n;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation
 {
 	[TestFixture]
 	public class SpellCheckerIdToDisplayStringConverterTests
 	{
-		private WritingSystem.SpellCheckerIdToDisplayStringConverter
+		private SpellCheckerIdToDisplayStringConverter
 			_spellCheckerIdToDisplayStringConverter;
 
 		private string _idKnownToWindows;
@@ -21,31 +21,29 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			_idKnownToWindows = "en_US";
 			_idNotKnownToWindows = "xY_Xy";
 			_spellCheckerIdToDisplayStringConverter =
-				new WritingSystem.SpellCheckerIdToDisplayStringConverter();
+				new SpellCheckerIdToDisplayStringConverter();
 			_spellCheckerIdToDisplayStringConverter.GetInstalledSpellCheckingIdsStrategy =
 				delegate { return new string[] {_idKnownToWindows, _idNotKnownToWindows}; };
 		}
 
 		[Test]
-		public void ConvertTo_Empty_None()
+		public void ConvertTo_None_None()
 		{
 			Assert.AreEqual("none",
-							_spellCheckerIdToDisplayStringConverter.ConvertTo(string.Empty,
+							_spellCheckerIdToDisplayStringConverter.ConvertTo("none",
 																			  typeof (string)));
 		}
 
 		[Test]
-		[ExpectedException(typeof (NotSupportedException))]
 		public void ConvertTo_ConvertingToAnythingButString_Throws()
 		{
-			_spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", typeof (bool));
+			Assert.Throws<NotSupportedException>(() => _spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", typeof (bool)));
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConvertTo_ConvertingToNull_Throws()
 		{
-			_spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", null);
+			Assert.Throws<ArgumentNullException>(() =>_spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", null));
 		}
 
 		[Test]
@@ -79,9 +77,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		}
 
 		[Test]
-		public void ConvertFrom_None_ReturnsEmpty()
+		public void ConvertFrom_None_ReturnsNone()
 		{
-			Assert.AreEqual(string.Empty,
+			Assert.AreEqual("none",
 							_spellCheckerIdToDisplayStringConverter.ConvertFrom("none"));
 		}
 

@@ -27,6 +27,13 @@ namespace WeSay.LexicalTools
 			get{ return true;}
 		}
 
+		/// <summary>
+		/// used to head-off failed task loads due to contstructors which can't even be satified by the container
+		/// </summary>
+		public virtual bool IsAvailable
+		{
+			get { return true; }
+		}
 
 
 		protected string GetStringFromConfigNode(string elementName)

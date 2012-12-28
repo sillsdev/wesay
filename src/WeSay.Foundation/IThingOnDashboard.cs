@@ -25,12 +25,22 @@ namespace WeSay.Foundation
 		IconVariableWidth
 	}
 
+
 	public enum DashboardGroup
 	{
 		DontShow,
 		Gather,
 		Describe,
 		Refine,
-		Share
+		Review,
+		Share,
 	}
+
+	/* For the code scanner...
+		StringCatalog.Get("Gather");
+		StringCatalog.Get("Describe");
+		StringCatalog.Get("Refine");
+		StringCatalog.Get("Review");
+		StringCatalog.Get("Share");
+	*/
 }

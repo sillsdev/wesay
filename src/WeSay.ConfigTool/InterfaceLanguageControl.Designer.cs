@@ -35,6 +35,7 @@ namespace WeSay.ConfigTool
 			this._fontInfoDisplay = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
+			this.userSpecificSettingIndicator1 = new WeSay.ConfigTool.UserSpecificSettingIndicator();
 			_chooseFontButton = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			//
@@ -86,11 +87,20 @@ namespace WeSay.ConfigTool
 			this.label3.TabIndex = 7;
 			this.label3.Text = "Interface Language";
 			//
+			// userSpecificSettingIndicator1
+			//
+			this.userSpecificSettingIndicator1.BackColor = System.Drawing.SystemColors.Window;
+			this.userSpecificSettingIndicator1.Location = new System.Drawing.Point(6, 77);
+			this.userSpecificSettingIndicator1.Name = "userSpecificSettingIndicator1";
+			this.userSpecificSettingIndicator1.Size = new System.Drawing.Size(37, 40);
+			this.userSpecificSettingIndicator1.TabIndex = 9;
+			//
 			// InterfaceLanguageControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
+			this.Controls.Add(this.userSpecificSettingIndicator1);
 			this.Controls.Add(_chooseFontButton);
 			this.Controls.Add(this._fontInfoDisplay);
 			this.Controls.Add(this.label4);
@@ -111,5 +121,6 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.ComboBox _languageCombo;
+		private UserSpecificSettingIndicator userSpecificSettingIndicator1;
 	}
 }

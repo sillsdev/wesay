@@ -14,12 +14,19 @@ namespace WeSay.Project
 		string ReferenceCountText { get; }
 		bool IsPinned { get; }
 		bool IsVisible { get; set; }
+		bool IsAvailable{get; }
 		bool IsOptional { get; }
 		void Write(XmlWriter writer);
+
+		/// <summary>
+		/// Tells whether a task found in another file (e.g. factory defaults) is already accounted for by this one
+		/// </summary>
+		bool AreEquivalent(ITaskConfiguration taskConfiguration);
 	}
 
 	public interface ICareThatWritingSystemIdChanged
 	{
-		void WritingSystemIdChanged(string from, string to);
+		void OnWritingSystemIdChanged(string from, string to);
+		void OnWritingSystemIdDeleted(string id);
 	}
 }

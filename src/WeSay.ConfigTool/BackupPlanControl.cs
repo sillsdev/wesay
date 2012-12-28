@@ -1,11 +1,8 @@
 using System;
-
-using System.IO;
 using System.Windows.Forms;
-using Chorus.sync;
 using Chorus.VcsDrivers.Mercurial;
+using Palaso.i18n;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -13,7 +10,7 @@ namespace WeSay.ConfigTool
 	public partial class BackupPlanControl: ConfigurationControlBase
 	{
 		public BackupPlanControl(ILogger logger)
-			: base("prepare for the worst", logger)
+			: base("prepare for the worst", logger,"backupPlan")
 		{
 			InitializeComponent();
 		}
@@ -21,15 +18,6 @@ namespace WeSay.ConfigTool
 		private void BackupPlanControl_Load(object sender, EventArgs e)
 		{
 			string s = HgRepository.GetEnvironmentReadinessMessage("en");
-			if(string.IsNullOrEmpty(s))
-			{
-				_environmentNotReadyLabel.Visible = false;
-			}
-			else
-			{
-				_environmentNotReadyLabel.Visible = true;
-				_environmentNotReadyLabel.Text += s;
-			}
 
 			_pathText.Text = WeSayWordsProject.Project.BackupMaker.PathToParentOfRepositories;
 			WeSayWordsProject.Project.EditorsSaveNow += new EventHandler(OnEditorsSaveNow);
@@ -45,7 +33,7 @@ namespace WeSay.ConfigTool
 		{
 			try
 			{
-				FolderBrowserDialog dialog = new FolderBrowserDialog();
+				var dialog = new FolderBrowserDialog();
 				dialog.Description = "Choose drive or folder for backups";
 				dialog.RootFolder =Environment.SpecialFolder.MyComputer;
 
@@ -60,8 +48,9 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Something went wrong choosing the folder. " +
-																   error.Message);
+				ErrorReport.NotifyUserOfProblem(
+					"Something went wrong choosing the folder. " +
+					error.Message);
 			}
 		}
 	}

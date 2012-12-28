@@ -5,8 +5,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using Palaso.i18n;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 
 namespace WeSay.AddinLib
 {
@@ -142,7 +142,9 @@ namespace WeSay.AddinLib
 					using (XmlTextWriter writer = new FragmentXmlTextWriter(stringWriter))
 					{
 						writer.Formatting = Formatting.Indented;
-						serializer.Serialize(writer, settings);
+						XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+						ns.Add("", ""); //prevent writing namespaces
+						serializer.Serialize(writer, settings, ns);
 						writer.Close();
 					}
 					string settingsXml = builder.ToString();

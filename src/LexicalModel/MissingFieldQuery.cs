@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Palaso.Misc;
+using Palaso.Code;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
+using Palaso.Lift.Options;
 using Palaso.Text;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Foundation.Options;
 
 using Enumerable=Palaso.Linq.Enumerable;
 
@@ -104,12 +104,9 @@ namespace WeSay.LexicalModel
 			{
 				return "--";
 			}
-			else
-			{
-				string wsTag = "";
-				Enumerable.ForEach(ids, id => wsTag += id);
-				return wsTag;
-			}
+			string wsTag = "";
+			Enumerable.ForEach(ids, id => wsTag += id);
+			return wsTag;
 		}
 
 		private bool IsMissingData(object content)
@@ -129,18 +126,15 @@ namespace WeSay.LexicalModel
 					{
 						return false;
 					}
-					else
+					foreach (LexRelation r in collection.Relations)
 					{
-						foreach (LexRelation r in collection.Relations)
+						if (!string.IsNullOrEmpty(r.TargetId))
 						{
-							if (!string.IsNullOrEmpty(r.TargetId))
-							{
-								return false; // has one non-empty relation
-							}
+							return false; // has one non-empty relation
 						}
-						return true;
-						//collection is empty or all its members don't really have targets
 					}
+					return true;
+					//collection is empty or all its members don't really have targets
 				default:
 					Debug.Fail("unknown DataTypeName");
 					return false;
@@ -207,7 +201,7 @@ namespace WeSay.LexicalModel
 			return false;
 		}
 
-		private static bool IsSkipped(WeSayDataObject parent, string fieldName)
+		private static bool IsSkipped(PalasoDataObject parent, string fieldName)
 		{
 			return parent.GetHasFlag("flag-skip-" + fieldName);
 		}
@@ -218,41 +212,32 @@ namespace WeSay.LexicalModel
 			{
 				return IsMissingCustomField(example);
 			}
-			else
+			if (Field.FieldName == Field.FieldNames.ExampleSentence.ToString())
 			{
-				if (Field.FieldName == Field.FieldNames.ExampleSentence.ToString())
-				{
-					return HasAllRequiredButMissingAtLeastOneWeWantToFillIn(example.Sentence);
-				}
-				else if (Field.FieldName == Field.FieldNames.ExampleTranslation.ToString())
-				{
-					return HasAllRequiredButMissingAtLeastOneWeWantToFillIn(example.Translation);
-				}
-				else
-				{
-					Debug.Fail("unknown FieldName");
-					return false;
-				}
+				return HasAllRequiredButMissingAtLeastOneWeWantToFillIn(example.Sentence);
 			}
+			if (Field.FieldName == Field.FieldNames.ExampleTranslation.ToString())
+			{
+				return HasAllRequiredButMissingAtLeastOneWeWantToFillIn(example.Translation);
+			}
+			Debug.Fail("unknown FieldName");
+			return false;
 		}
 
-		private bool IsMissingLexSenseField(WeSayDataObject sense)
+		private bool IsMissingLexSenseField(PalasoDataObject sense)
 		{
 			if (!Field.IsBuiltInViaCode)
 			{
 				return IsMissingCustomField(sense);
 			}
-			else
+			//                if(this._field.FieldName == LexSense.WellKnownProperties.Gloss)
+			//                {
+			//                    return IsMissingWritingSystem(sense.Gloss);
+			//                }
+			//                else
 			{
-				//                if(this._field.FieldName == LexSense.WellKnownProperties.Gloss)
-				//                {
-				//                    return IsMissingWritingSystem(sense.Gloss);
-				//                }
-				//                else
-				{
-					Debug.Fail("unknown FieldName");
-					return false;
-				}
+				Debug.Fail("unknown FieldName");
+				return false;
 			}
 		}
 
@@ -262,33 +247,39 @@ namespace WeSay.LexicalModel
 			{
 				return IsMissingCustomField(entry);
 			}
+			if (Field.FieldName == Field.FieldNames.EntryLexicalForm.ToString())
+			{
+				if (HasAllRequiredButMissingAtLeastOneWeWantToFillIn(entry.LexicalForm))
+				{
+					return true;
+				}
+			}
 			else
 			{
-				if (Field.FieldName == Field.FieldNames.EntryLexicalForm.ToString())
-				{
-					if (HasAllRequiredButMissingAtLeastOneWeWantToFillIn(entry.LexicalForm))
-					{
-						return true;
-					}
-				}
-				else
-				{
-					Debug.Fail("unknown FieldName");
-				}
+				Debug.Fail("unknown FieldName");
 			}
 			return false;
 		}
 
-		private bool IsMissingCustomField(WeSayDataObject weSayData)
+		/// <summary>
+		/// NB here is now a misleading name... what we really mean is "is ready to be filled in".
+		/// </summary>
+		private bool IsMissingCustomField(PalasoDataObject palasoData)
 		{
-			IParentable content = weSayData.GetProperty<IParentable>(Field.FieldName);
+			var content = palasoData.GetProperty<IPalasoDataObjectProperty>(Field.FieldName);
 			if (content == null)
 			{
-				return !IsSkipped(weSayData, Field.FieldName);
+				if (IsSkipped(palasoData, Field.FieldName))
+					return false;
+
+				//	WS-33978 situation: when some writing system is required don't flag it if the entire field is missing
+				if (_writingSystemsWhichAreRequired.Length > 0)
+					return false;
+				return true;
 			}
 			if(Field.FieldName == "POS")
 			{
-				if(IsPosUnknown(weSayData))
+				if(IsPosUnknown(palasoData))
 				{
 					return true;
 				}
@@ -296,14 +287,9 @@ namespace WeSay.LexicalModel
 			return IsMissingData(content);
 		}
 
-		private bool IsPosUnknown(WeSayDataObject sense)
+		private bool IsPosUnknown(PalasoDataObject sense)
 		{
-			foreach(KeyValuePair<string, object> property in sense.Properties)
-			if (property.Key == "POS" && (((OptionRef) property.Value).Key == "unknown"))
-			{
-				return true;
-			}
-			return false;
+			return sense.Properties.Any(property => property.Key == "POS" && (((OptionRef) property.Value).Key == "unknown"));
 		}
 
 

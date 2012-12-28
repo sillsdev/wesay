@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.WritingSystems;
+using WeSay.Project;
+using Palaso.Lift;
+using WeSay.LexicalModel.Foundation;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.UI.AutoCompleteTextBox;
+using Palaso.Lift.Options;
 
 namespace WeSay.UI.Tests
 {
@@ -25,13 +29,15 @@ namespace WeSay.UI.Tests
 		/// </summary>
 		private OptionRef _dataBeingEditted;
 
-		private WritingSystem _ws;
+		private WritingSystemDefinition _ws;
 		private OptionDisplayAdaptor _displayAdaptor;
 
 		[SetUp]
 		public void Setup()
 		{
-			_ws = new WritingSystem("xx", new Font("Arial", (float) 55.9));
+			_ws = WritingSystemDefinition.Parse("qaa-x-qaa");
+			_ws.DefaultFontName = "Arial";
+			_ws.DefaultFontSize = (float) 55.9;
 			//            _createNewClickedFired=false;
 			//            _valueChangedFired = false;
 			_sourceChoices = new OptionsList();
@@ -222,7 +228,7 @@ namespace WeSay.UI.Tests
 			SetKeyAndShow("3");
 			//the +3 fudge here is because the actual height of the
 			//inner text box is something less than the Font's GetHeight
-			Assert.Greater(_control.Height + 3, _ws.Font.GetHeight());
+			Assert.Greater(_control.Height + 3, WritingSystemInfo.CreateFont(_ws).GetHeight());
 		}
 
 		//------------------------------------------------------------

@@ -16,8 +16,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using Palaso.Misc;
-using WeSay.Foundation;
+using Palaso.UI.WindowsForms.Miscellaneous;
 
 namespace WeSay.UI
 {
@@ -50,7 +49,6 @@ namespace WeSay.UI
 	/// A custom collapsible splitter that can resize, hide and show associated form controls
 	/// </summary>
 	[ToolboxBitmap(typeof (CollapsibleSplitter))]
-	[Designer(typeof (CollapsibleSplitterDesigner))]
 	public class CollapsibleSplitter: Splitter
 	{
 		#region Private Properties
@@ -144,9 +142,17 @@ namespace WeSay.UI
 			get { return controlToHide; }
 			set
 			{
-				controlToHide = value;
-				hiddenControlHeight = controlToHide.Height;
-				hiddenControlWidth = controlToHide.Width;
+				if (value == null)
+				{
+					hiddenControlHeight = 0;
+					hiddenControlWidth = 0;
+				}
+				else
+				{
+					controlToHide = value;
+					hiddenControlHeight = controlToHide.Height;
+					hiddenControlWidth = controlToHide.Width;
+				}
 			}
 		}
 
@@ -678,7 +684,7 @@ namespace WeSay.UI
 			b.Dispose();
 
 			// dispose the Graphics object
-			g.Dispose();
+			//Removed by JH Dec 2010 (wasn't causing a problem). SHould not be disposing of this graphic that we didn't create. g.Dispose();
 		}
 
 		private int DetermineYCoordForGripperOnVerticalBar(Rectangle r)
@@ -806,19 +812,5 @@ namespace WeSay.UI
 		#endregion
 
 		#endregion
-	}
-
-	/// <summary>
-	/// A simple designer class for the CollapsibleSplitter control to remove
-	/// unwanted properties at design time.
-	/// </summary>
-	public class CollapsibleSplitterDesigner: ControlDesigner
-	{
-		protected override void PreFilterProperties(IDictionary properties)
-		{
-			properties.Remove("IsCollapsed");
-			properties.Remove("BorderStyle");
-			properties.Remove("Size");
-		}
 	}
 }

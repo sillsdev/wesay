@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.IO;
-using LiftIO.Validation;
 using NUnit.Framework;
-using Palaso.Reporting;
+using Palaso.Lift.Validation;
 using WeSay.AddinLib;
 using WeSay.Project;
+using WeSay.TestUtilities;
 
 namespace Addin.Transform.Tests
 {
@@ -16,7 +16,7 @@ namespace Addin.Transform.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
+			WeSayProjectTestHelper.InitializeForTests();
 			_addin = new SfmTransformer();
 			_addin.LaunchAfterTransform = false;
 		}
@@ -52,7 +52,7 @@ namespace Addin.Transform.Tests
 
 /* NOMORELOCKING
 		[Test]
-		[ExpectedException(typeof (IOException))]
+		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (IOException))]
 		public void ThrowsMeaningfulExceptionIfOutputFileIsLocked()
 		{
 			try
@@ -73,6 +73,14 @@ namespace Addin.Transform.Tests
 			string result = LaunchWithConversionString("");
 			Assert.IsTrue(result.Contains("\\ge"));
 			Assert.IsFalse(result.Contains("g_en"));
+		}
+
+		[Test]
+		public void CanSwapLinesWithinRecord()
+		{
+			string result = LaunchWithConversionString(@"(\\ge.*?\n)(.*\n)*?(\\dt.*?\n) $3$2$1");
+			Assert.IsTrue(result.IndexOf("\\dt") < result.IndexOf("\\sd"));
+			Assert.IsTrue(result.IndexOf("\\sd") < result.IndexOf("\\ge"));
 		}
 
 		/// <summary>
