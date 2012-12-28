@@ -187,6 +187,7 @@
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsMigrator.cs" />
 	<Compile Include="ConfigMigration\WritingSystem\WritingSystem_V1.cs" />
 	<Compile Include="ConfigMigration\XslFromResourceMigrator.cs" />
+	<Compile Include="LiftFileLocator.cs" />
 	<Compile Include="ProjectFromLiftFolderCreator.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
