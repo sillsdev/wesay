@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Autofac;
 using CommandLine;
 using Palaso.Code;
 using Palaso.i18n;
@@ -213,7 +214,7 @@ namespace WeSay.App
 						   controller.ShowConfigLauncher = _commandLineArguments.launchedByConfigTool;
 						   return controller;
 					   }));
-			   _project.AddToContainer(b => b.Register<TabbedForm>());
+			   _project.AddToContainer(b => b.RegisterType<TabbedForm>());
 			   _tabbedForm = _project.Container.Resolve<TabbedForm>();
 			   _tabbedForm.Show(); // so the user sees that we did launch
 			   var versionString = BasilProject.VersionString;
@@ -229,11 +230,11 @@ namespace WeSay.App
 
 			   //todo: this is what we're supposed to use the autofac "modules" for
 			   //couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
-			   _project.AddToContainer(b => b.Register<ICurrentWorkTask>(_tabbedForm));
-			   _project.AddToContainer(b => b.Register<StatusStrip>(_tabbedForm.StatusStrip));
+			   _project.AddToContainer(b => b.RegisterInstance<ICurrentWorkTask>(_tabbedForm));
+			   _project.AddToContainer(b => b.RegisterInstance(_tabbedForm.StatusStrip));
 			   _project.AddToContainer(
 				   b =>
-				   b.Register(
+				   b.RegisterInstance(
 					   TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(
 						   _project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject)));
 

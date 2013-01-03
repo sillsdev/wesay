@@ -797,7 +797,7 @@ namespace WeSay.LexicalTools.Tests
 			get
 			{
 				return
-						((DictionaryControl) _detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.
+						((DictionaryControl) _detailTaskPage.Controls[0]).CurrentEntry.LexicalForm.
 								GetBestAlternative(_vernacularWritingSystem.Id);
 			}
 		}
@@ -1186,10 +1186,10 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddInitialEntries();
 			DictionaryControl control = (DictionaryControl)_task.Control;
-			string idOfInitial = control.CurrentRecord.Id;
+			string idOfInitial = control.CurrentEntry.Id;
 			GoToLexicalEntryUseFind("Secondary"); //go away from that one
 			control.GoToEntryWithId(idOfInitial);
-			Assert.AreEqual(idOfInitial, control.CurrentRecord.Id);
+			Assert.AreEqual(idOfInitial, control.CurrentEntry.Id);
 		}
 
 		[Test]
@@ -1235,10 +1235,10 @@ namespace WeSay.LexicalTools.Tests
 		//            LexEntry e = AddEntry("", "findme!", false);
 		//            e.LexicalForm.
 		//            DictionaryControl control = (DictionaryControl)_task.Control;
-		//            string idOfInitial = control.CurrentRecord.Id;
+		//            string idOfInitial = control.CurrentEntry.Id;
 		//            GoToLexicalEntryUseFind("Secondary"); //go away from that one
 		//            control.GoToEntryWithId(idOfInitial);
-		//            Assert.AreEqual(idOfInitial, control.CurrentRecord.Id);
+		//            Assert.AreEqual(idOfInitial, control.CurrentEntry.Id);
 		//        }
 
 		private DetailList GetDetailList()

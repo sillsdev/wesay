@@ -19,7 +19,7 @@ namespace WeSay.UI
 		private readonly string _pathToReferingFile;
 		private readonly string _storageFolderPath;
 		private readonly IFileLocator _fileLocator;
-		private readonly Color _shyLinkColor = Color.LightGray;
+		private readonly Color _shyLinkColor = Color.Black;
 
 		public PictureControl(string pathToReferingFile, string storageFolderPath, IFileLocator fileLocator)
 		{
@@ -202,6 +202,7 @@ namespace WeSay.UI
 
 		private void OnSearchGalleryLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
+			Cursor = Cursors.WaitCursor;
 		   var searchString = SearchTermProvider == null ? string.Empty : SearchTermProvider.SearchString;
 			PalasoImage currentImage=null;
 

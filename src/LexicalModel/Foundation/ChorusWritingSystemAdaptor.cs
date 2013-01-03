@@ -41,7 +41,7 @@ namespace WeSay.LexicalModel.Foundation
 
 		public int FontSize
 		{
-			get { return (int)_writingSystem.DefaultFontSize; }
+			get { return (int)_writingSystem.GetDefaultFontSizeOrMinimum(); }
 		}
 	}
 }

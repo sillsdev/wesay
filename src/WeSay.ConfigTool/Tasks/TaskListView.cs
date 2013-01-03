@@ -9,10 +9,10 @@ namespace WeSay.ConfigTool.Tasks
 {
 	public partial class TaskListView: ConfigurationControlBase
 	{
-		private readonly IContext _diContainer;
+		private readonly IComponentContext _diContainer;
 		public TaskListPresentationModel Model { get; set; }
 
-		public TaskListView(ILogger logger, IContext diContainer)
+		public TaskListView(ILogger logger, IComponentContext diContainer)
 			: base("set up tasks for the user", logger, "tasks")
 		{
 			_diContainer = diContainer;

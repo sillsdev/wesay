@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Autofac;
 using Autofac.Builder;
 using WeSay.UI;
 
@@ -15,7 +16,7 @@ namespace WeSay.Project
 			TaskNameToTaskType = new Dictionary<string, Type>();
 			TaskNameToConfigType = new Dictionary<string, Type>();
 		}
-		public void RegisterAllTypes(Autofac.Builder.ContainerBuilder builder)
+		public void RegisterAllTypes(ContainerBuilder builder)
 		{
 
 			RegisterTask(builder, "Dashboard",
@@ -69,7 +70,7 @@ namespace WeSay.Project
 
 		}
 //
-//        private void RegisterDictionaryTask(Autofac.Builder.ContainerBuilder builder, string name, string classPath, string configClassPath, string assembly)
+//        private void RegisterDictionaryTask(ContainerBuilder builder, string name, string classPath, string configClassPath, string assembly)
 //        {
 //            // _taskNameToClassPath.Add(name, classPath);
 //            Type type = GetType(classPath, assembly);
@@ -89,21 +90,21 @@ namespace WeSay.Project
 		/// this is a hack fo now (root problem is that this assumbly can't point directly at
 		/// lexicaltools, because of circular dependencies).  Many ways to fix that...
 		/// </summary>
-		private void RegisterControlAndFactory(Autofac.Builder.ContainerBuilder builder,
+		private void RegisterControlAndFactory(ContainerBuilder builder,
 					string classPath, string assembly)
 		{
 			Type type = GetType(classPath, assembly);
-			builder.Register(type).FactoryScoped();
+			builder.RegisterType(type).InstancePerDependency();
 			Type ftype = type.GetNestedType("Factory");
-			builder.RegisterGeneratedFactory(ftype).FactoryScoped();//review
+			builder.RegisterGeneratedFactory(ftype).InstancePerDependency();//review
 		}
 
-		private void RegisterTask(Autofac.Builder.ContainerBuilder builder, string name, string classPath, string configClassPath, string assembly)
+		private void RegisterTask(ContainerBuilder builder, string name, string classPath, string configClassPath, string assembly)
 		{
 			// _taskNameToClassPath.Add(name, classPath);
 			Type type = GetType(classPath, assembly);
 			TaskNameToTaskType.Add(name, type);
-			builder.Register(type).Named(name).FactoryScoped();
+			builder.RegisterType(type).Named<ITask>(name).As<ITask>().InstancePerDependency();
 
 			//register the class that holds the configuration for this task
 			RegisterConfigurationClass(assembly, name, builder, configClassPath);
@@ -116,7 +117,7 @@ namespace WeSay.Project
 			{
 				type = GetType(configClassPath, assembly);
 				TaskNameToConfigType.Add(name, type);
-				builder.Register(type).Named(name + "Config").FactoryScoped();
+				builder.RegisterType(type).Named<ITaskConfiguration>(name + "Config").As<ITaskConfiguration>().InstancePerDependency();
 			}
 		}
 
