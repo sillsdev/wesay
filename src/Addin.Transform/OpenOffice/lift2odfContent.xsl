@@ -49,7 +49,7 @@ exclude-result-prefixes="xsl"
 Preparing the variables before hand allows a simple contains test, which is much
 faster than using preceding-sibling axis which is extremely slow for large docs.
 -->
-<xsl:variable name="entries" select="//entry/lexical-unit/form[position()=1]/text" />
+<xsl:variable name="entries" select="//entry/lexical-unit[not(following-sibling::citation)]/form[position()=1]/text | //entry/citation/form[position()=1]/text" />
 
 <!-- This relies on the sorted lift export addiing the sorted-index annotation.
 This is well worth it, because it makes the stylesheet parsing speed run at
@@ -210,6 +210,7 @@ something like n log n rather than n^2-->
 </xsl:template>
 
 <xsl:template match="text">
+<xsl:if test="not(ancestor::lexical-unit/following-sibling::citation)">
 <!-- take language from the parent form -->
 <xsl:variable name="lang" select="../@lang"/>
 <!-- style is based on the element name above the form -->
@@ -226,6 +227,7 @@ something like n log n rather than n^2-->
 </text:span>
 </xsl:otherwise>
 </xsl:choose>
+</xsl:if>
 </xsl:template>
 
 <xsl:template match="note">
@@ -259,8 +261,11 @@ something like n log n rather than n^2-->
 <xsl:when test="contains(@href, ':')">
 <draw:frame draw:style-name="Illustration" draw:name="{concat('illustration', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="2" style:rel-width="100%" style:rel-height="scale"><draw:image xlink:href="{@href}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
 </xsl:when>
-<xsl:otherwise>
+<xsl:when test="substring(@href, 1,9) = 'pictures/'">
 <draw:frame draw:style-name="Illustration" draw:name="{concat('illustration_', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="2" style:rel-width="100%" style:rel-height="scale"><draw:image xlink:href="{concat($urlBase,@href)}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
+</xsl:when>
+<xsl:otherwise>
+<draw:frame draw:style-name="Illustration" draw:name="{concat('illustration_', ancestor::entry/@id)}" text:anchor-type="paragraph" draw:z-index="2" style:rel-width="100%" style:rel-height="scale"><draw:image xlink:href="{concat($urlBase,'pictures/',@href)}" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;"/></draw:frame>
 </xsl:otherwise>
 </xsl:choose>
 <xsl:value-of select="ancestor::entry/lexical-unit/form/text"/>

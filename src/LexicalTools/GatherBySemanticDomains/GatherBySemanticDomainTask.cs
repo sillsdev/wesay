@@ -10,6 +10,9 @@ using System.Xml;
 using Palaso.Data;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
+using Palaso.DictionaryServices.Processors;
+using Palaso.Progress;
+using Palaso.Text;
 using Palaso.i18n;
 using Palaso.Lift;
 using Palaso.Lift.Options;
@@ -31,7 +34,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private Dictionary<string, List<string>> _domainQuestions;
 		private List<string> _domainKeys;
 		private List<string> _domainNames;
-		private List<string> _words;
+		private List<WordDisplay> _words;
 
 		private WritingSystemDefinition _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
@@ -94,7 +97,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					{
 						throw new ApplicationException(
 							string.Format(
-								"Could not find the semanticDomainQuestions file {0}. Expected to find it at: {1} or {2}. The name of the file is influenced by the first enabled writing system for the Semantic Domain Field.",
+								"Could not find the semanticDomainQuestions file {0}. Expected to find it at: {1} or {2}. The name of the file is influenced by the first enabled input system for the Semantic Domain Field.",
 								_semanticDomainQuestionsFileName,
 								pathInProject,
 								pathInProgramDir));
@@ -106,7 +109,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
 			WritingSystemDefinition writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
-			Guard.AgainstNull(writingSystemForDefinition, "Defintion Writing System");
+			Guard.AgainstNull(writingSystemForDefinition, "Definition input System");
 			DefinitionWritingSystem = writingSystemForDefinition;
 
 			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
@@ -352,7 +355,19 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			return pastEndIndex - beginIndex;
 		}
 
-		public List<string> CurrentWords
+		public class WordDisplay
+		{
+			public LanguageForm Vernacular;
+			public LanguageForm Meaning;
+
+			public override string ToString()
+			{
+				// Review: Since we draw items by hand, not really sure how this is used.
+				return Vernacular.Form;
+			}
+		}
+
+		public List<WordDisplay> CurrentWords
 		{
 			get
 			{
@@ -360,7 +375,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 				if (_words == null)
 				{
-					_words = new List<string>();
+					_words = new List<WordDisplay>();
 					ResultSet<LexEntry> recordTokens = GetAllEntriesSortedBySemanticDomain();
 					int beginIndex;
 					int pastEndIndex;
@@ -371,12 +386,36 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					for (int i = beginIndex;i < pastEndIndex;i++)
 					{
 						LexEntry entry = recordTokens[i].RealObject;
-						_words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
+						//was _words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
+						LanguageForm form = entry.LexicalForm.GetBestAlternative(new string[] {WordWritingSystemId});
+						if (form == null)
+							continue; //happens if there is a word with this domain, but no lexeme form
+
+						var wordDisplay = new WordDisplay()
+											  {
+												  Vernacular = form
+											  };
+						var firstSenseMatchingCurrentDomain =
+							entry.Senses.
+									Where(s=>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4) != null).
+										FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey));
+						if(firstSenseMatchingCurrentDomain != null)
+						{
+							wordDisplay.Meaning = firstSenseMatchingCurrentDomain.Definition.GetBestAlternative(new[] {DefinitionWritingSystem.Id});
+						}
+						_words.Add(wordDisplay);
+
 					}
 				}
-				_words.Sort(WritingSystemUserIsTypingIn.Collator);
+			   // TODO: figure out how to do sorting on complext objects using this collator:    _words.Sort(FormWritingSystem.Collator);
+				_words.Sort(new Comparison<WordDisplay>(CompareForms));
 				return _words;
 			}
+		}
+
+		private int CompareForms(WordDisplay x, WordDisplay y)
+		{
+			return FormWritingSystem.Collator.Compare(x.Vernacular.Form, y.Vernacular.Form);
 		}
 
 		public bool HasNextDomainQuestion
@@ -490,6 +529,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			return AddWord(lexicalForm, string.Empty);
 		}
 
+		/// <summary>
+		/// Adds this word and gloss, potentially adding the current semantic domain to multiple entriew with that word and gloss.
+		/// </summary>
+		/// <param name="lexicalForm"></param>
+		/// <param name="gloss"></param>
+		/// <returns>the entries that were modified </returns>
 		public IList<LexEntry> AddWord(string lexicalForm, string gloss)
 		{
 			VerifyTaskActivated();
@@ -503,7 +548,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			{
 				ResultSet<LexEntry> recordTokens =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
-																		 WritingSystemUserIsTypingIn);
+																		 FormWritingSystem);
 				if (recordTokens.Count == 0)//no entries with a matching form
 				{
 					LexEntry entry = LexEntryRepository.CreateItem();
@@ -538,7 +583,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					}
 				}
 			}
-			_savedSenseDuringMoveToEditArea = null;
+			_savedSensesDuringMoveToEditArea = null;
 			UpdateCurrentWords();
 			return modifiedEntries;
 		}
@@ -550,78 +595,92 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		/// </summary>
 		private bool HasMatchingSense(LexEntry entry, string gloss)
 		{
-			return (null !=entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id))
-						   ||  entry.Senses.Contains(_savedSenseDuringMoveToEditArea));
+			return (entry.Senses.Any(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id))
+						   ||  (_savedSensesDuringMoveToEditArea != null && entry.Senses.Intersect(_savedSensesDuringMoveToEditArea).Any()));
 		}
 
-		public void PrepareToMoveWordToEditArea(string lexicalForm)
+
+		[Obsolete("for retrofitting tests only")]
+		public void PrepareToMoveWordToEditArea(string form)
+		{
+			PrepareToMoveWordToEditArea(new WordDisplay(){Vernacular = new LanguageForm(FormWritingSystem.Id, form, null)});
+		}
+
+		public void PrepareToMoveWordToEditArea(WordDisplay wordDisplay)
 		{
 			VerifyTaskActivated();
-			_savedSenseDuringMoveToEditArea = null;
+			_savedSensesDuringMoveToEditArea = null;
 
-			if (lexicalForm == null)
+			if (wordDisplay == null)
 			{
 				throw new ArgumentNullException();
 			}
-			if (lexicalForm != string.Empty)
+			// this task was coded to have a list of word-forms, not actual entries.
+			//so we have to go searching for possible matches at this point.
+			ResultSet<LexEntry> matchingEntries =
+				LexEntryRepository.GetEntriesWithMatchingLexicalForm(wordDisplay.Vernacular.Form, FormWritingSystem);
+			foreach (RecordToken<LexEntry> recordToken in matchingEntries)
 			{
-				// this task was coded to have a list of word-forms, not actual entries.
-				//so we have to go searching for possible matches at this point.
-				ResultSet<LexEntry> matchingEntries =
-					LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
-																		 WritingSystemUserIsTypingIn);
-				foreach (RecordToken<LexEntry> recordToken in matchingEntries)
+				// have to iterate through these in reverse order since they might get modified
+				LexEntry entry = recordToken.RealObject;
+				_savedSensesDuringMoveToEditArea = new List<LexSense>();
+				//If we aren't showing the meaning field then we are going let any edits effect all matching Senses
+				if (!ShowMeaningField)
 				{
-					DisassociateCurrentSemanticDomainFromEntry(recordToken); // might remove senses
+					for (int i = entry.Senses.Count - 1; i >= 0; i--)
+					{
+						LexSense sense = entry.Senses[i];
+						var semanticDomains = sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
+						if (semanticDomains != null)
+						{
+							if (semanticDomains.Contains(CurrentDomainKey))
+							{
+								RememberMeaningOfDissociatedWord(sense);
+								entry.Senses.Remove(sense);
+								//if we don't do this and it has a meaning, we'll fail to delete the word when the user is trying to correct the spelling. (WS-34245)
+							}
+						}
+					}
+				}
+				//If we are showing the meaning field then we only let edits effect the sense that matches the shown meaning (definition)
+				else
+				{
+					var firstSenseMatchingSemDomAndMeaning =
+						entry.Senses.
+							Where(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4) != null).
+								FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey)
+														&& s.Definition.GetBestAlternative(new[]{DefinitionWritingSystem.Id}) == wordDisplay.Meaning);
+					if (firstSenseMatchingSemDomAndMeaning != null)
+					{
+						RememberMeaningOfDissociatedWord(firstSenseMatchingSemDomAndMeaning);
+						entry.Senses.Remove(firstSenseMatchingSemDomAndMeaning);
+					}
+				}
+				entry.CleanUpAfterEditting();
+				if (entry.IsEmptyExceptForLexemeFormForPurposesOfDeletion)
+				{
+					LexEntryRepository.DeleteItem(entry); // if there are no senses left, get rid of it
+				}
+				else
+				{
+					LexEntryRepository.SaveItem(entry);
 				}
 			}
 
 			UpdateCurrentWords();
 		}
 
-		private LexSense _savedSenseDuringMoveToEditArea;
+		private List<LexSense> _savedSensesDuringMoveToEditArea ;
 
 		//when we pull a word out of the list, we remembered its meaning, so that we can make that available
 		//down in the edit area.
 		public MultiText GetMeaningForWordRecentlyMovedToEditArea()
 		{
-			if(_savedSenseDuringMoveToEditArea !=null)
+			if(_savedSensesDuringMoveToEditArea !=null)
 			{
-				return _savedSenseDuringMoveToEditArea.Definition;
+				return _savedSensesDuringMoveToEditArea[0].Definition;
 			}
 			return new MultiText();
-		}
-
-		private void DisassociateCurrentSemanticDomainFromEntry(RecordToken<LexEntry> recordToken)
-		{
-
-
-			// have to iterate through these in reverse order
-			// since they might get modified
-			LexEntry entry = recordToken.RealObject;
-			for (int i = entry.Senses.Count - 1;i >= 0;i--)
-			{
-				LexSense sense = entry.Senses[i];
-				OptionRefCollection semanticDomains =
-					sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
-				if (semanticDomains != null)
-				{
-					if (semanticDomains.Contains(CurrentDomainKey))
-					{
-						RememberMeaningOfDissociatedWord(sense);
-						semanticDomains.Remove(CurrentDomainKey);
-					}
-				}
-			}
-			entry.CleanUpAfterEditting();
-			if (entry.IsEmptyExceptForLexemeFormForPurposesOfDeletion)
-			{
-				LexEntryRepository.DeleteItem(entry); // if there are no senses left, get rid of it
-			}
-			else
-			{
-				LexEntryRepository.SaveItem(entry);
-			}
 		}
 
 		/// <summary>
@@ -637,29 +696,60 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			//nb: I made it save the whole sense, as this is cleaner code and conceivalbe could be helpful
 			//in the future
 
-			_savedSenseDuringMoveToEditArea = sense;
+			_savedSensesDuringMoveToEditArea.Add(sense);
 		}
 
 		private void AddCurrentSemanticDomainToEntry(LexEntry entry, string meaning)
 		{
 			LexSense sense = null;
-			//is the gloss empty? THen just ggrab the first sense
-			if (string.IsNullOrEmpty(meaning))
+			////This can lead to wrongly assigned semantic domains in the case of multiple senses. Say I gather "shoot"  in the "weapons" domain (no idea if that even exists but bear with me)
+			////then I gather "shoot" in the "plants" domain. Both domains would be assigned to the same sense. That being said I assume this approach was taken because it will USUALLY be
+			////what the user intends as homographs/multiple senses are not as frequent as one sense belonging to multiple domains (i.e. "Rain" could be "Universe/Creation", "Agriculture",
+			////"Times of year" etc etc.) --TA Oct/3/2012
+			//is the meaning empty? Then just grab the first sense
+			if (ShowMeaningField && string.IsNullOrEmpty(meaning))
 			{
 				sense = entry.Senses.FirstOrDefault();
 			}
 			else
 			{
-				if (entry.Senses.Contains(_savedSenseDuringMoveToEditArea))
+				if (_savedSensesDuringMoveToEditArea!=null) //we are editing a word we entered previously
 				{
-					sense = _savedSenseDuringMoveToEditArea;
-					sense.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
+					//in this case, we have this saved sense we want to put back,
+					//which could conceivably have example sentences and other stuff
+					//so update the meaning in case they edited that
+					if (ShowMeaningField)
+					{
+						_savedSensesDuringMoveToEditArea[0].Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
+					}
+
+					//are there senses with a matching glosses?
+					foreach (var lexSense in _savedSensesDuringMoveToEditArea)
+					{
+						sense = entry.Senses.FirstOrDefault(s =>s.Definition.ContainsEqualForm(
+								lexSense.Definition[DefinitionWritingSystem.Id],
+								DefinitionWritingSystem.Id));
+						if (sense != null)
+						{
+							//now, can we merge this sense in?
+							if (!SenseMerger.TryMergeSenseWithSomeExistingSense(sense, lexSense, new string[]{}, new NullProgress()))
+							{
+								//ah well, they'll have to hand-merge at some point
+								//Enhance: add a chorus note
+								entry.Senses.Add(lexSense);
+							}
+						}
+						else //ok, no matching sense to try and merge with, so just add this
+						{
+							entry.Senses.Add(lexSense);
+							sense = lexSense;
+						}
+					}
 				}
 				else
 				{
 					//is there a sense with a matching gloss?
-					sense = entry.Senses.FirstOrDefault(
-						s => s.Definition.ContainsEqualForm(meaning, DefinitionWritingSystem.Id));
+					sense = entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(meaning, DefinitionWritingSystem.Id));
 				}
 			}
 			if(sense==null)
@@ -683,9 +773,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			string domainKey = DomainKeys[domainIndex];
 
-			beginIndex = recordTokens.FindFirstIndex(
-				token => (string) token["SemanticDomain"] == domainKey
-			);
+			beginIndex = recordTokens.FindFirstIndex(token => ((string) token["SemanticDomain"]) == domainKey);
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
@@ -770,7 +858,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					{
 						_alreadyReportedWSLookupFailure = true;
 						ErrorReport.NotifyUserOfProblem(
-							"WeSay was unable to get a writing system to use from the configuration Semantic Domain Field. English will be used.");
+							"WeSay was unable to get an input system to use from the configuration Semantic Domain Field. English will be used.");
 					}
 				}
 				return ws;
@@ -786,10 +874,34 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
-		public bool ShowDefinitionField
+		public bool ShowMeaningField
 		{
 			get { return _config.ShowMeaningField; }
 		}
+
+		public Font MeaningFont
+		{
+			get
+			{
+				float defaultFontSize = MeaningWritingSystem.DefaultFontSize;
+				if (defaultFontSize == 0)//saw this happen with a project coming in from FLEx
+					defaultFontSize = 12;
+
+				try
+				{
+					return new Font(MeaningWritingSystem.DefaultFontName,
+									defaultFontSize);
+				}
+				catch (Exception error)
+				{
+					Palaso.Reporting.ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),  error,
+																	 "There was a problem getting the font for the meaning field, using Typeface {0} and Size {1}.  See if you can fix this using the Input Systems tab of theConfiguration Tool.", MeaningWritingSystem.DefaultFontName,
+									defaultFontSize);
+					return SystemFonts.DefaultFont;
+				}
+			}
+		}
+
 
 		public override void Activate()
 		{

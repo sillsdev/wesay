@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using NUnit.Framework;
 using Palaso.Data;
+using Palaso.DictionaryServices.Lift;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
@@ -163,28 +165,16 @@ namespace WeSay.LexicalTools.Tests
 
 
 		[Test]
-		public void Activate_WritingSystemNotInCurrentList_GivesMessage()
-		{
-			GatherWordListTask g = new GatherWordListTask(
-				GatherWordListConfig.CreateForTests(_simpleWordListFilePath,
-					"z7z", new WordListCatalog()),
-				_lexEntryRepository,
-				_viewTemplate, new TaskMemoryRepository());
-
-			Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() => g.Activate()); //should give a box to user, an exception in this text environment
-		}
-
-		[Test]
 		public void CurrentLexemeFormFromWordList_AtStart_IsCorrect()
 		{
-			Assert.AreEqual("one", Task.CurrentEllicitationForm);
+			Assert.AreEqual("one", Task.CurrentPromptingForm);
 		}
 
 		[Test]
 		public void NavigateNext_HasAnotherWord_DoesMove()
 		{
 			Task.NavigateNext();
-			Assert.AreEqual("two", Task.CurrentEllicitationForm);
+			Assert.AreEqual("two", Task.CurrentPromptingForm);
 		}
 
 		[Test]
@@ -192,7 +182,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.NavigateNext();
 			Task.NavigatePrevious();
-			Assert.AreEqual("one", Task.CurrentEllicitationForm);
+			Assert.AreEqual("one", Task.CurrentPromptingForm);
 		}
 
 		[Test]
@@ -264,7 +254,7 @@ namespace WeSay.LexicalTools.Tests
 			//add a word with the first wordlist-word already in a sense
 			AddEntryAndSense("one");
 			Task.NavigateFirstToShow();
-			Assert.AreEqual("two", Task.CurrentEllicitationForm);
+			Assert.AreEqual("two", Task.CurrentPromptingForm);
 		}
 
 		[Test]
@@ -274,10 +264,10 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("three");
 
 			Task.NavigateFirstToShow();
-			Assert.AreEqual("one", Task.CurrentEllicitationForm);
+			Assert.AreEqual("one", Task.CurrentPromptingForm);
 			Task.NavigateNext();
 			Assert.IsTrue(Task.CanNavigateNext);
-			Assert.AreEqual("two", Task.CurrentEllicitationForm);
+			Assert.AreEqual("two", Task.CurrentPromptingForm);
 			Task.NavigateNext();
 			Assert.IsTrue(Task.IsTaskComplete); //we don't get to see "three"
 		}
@@ -288,9 +278,9 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("two");
 			Task.NavigateFirstToShow();
 
-			Assert.AreEqual("one", Task.CurrentEllicitationForm);
+			Assert.AreEqual("one", Task.CurrentPromptingForm);
 			Task.NavigateNext();
-			Assert.AreEqual("three", Task.CurrentEllicitationForm);
+			Assert.AreEqual("three", Task.CurrentPromptingForm);
 		}
 
 		[Test]
@@ -299,7 +289,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("one");
 			AddEntryAndSense("two");
 			Task.NavigateFirstToShow();
-			Assert.AreEqual("three", Task.CurrentEllicitationForm);
+			Assert.AreEqual("three", Task.CurrentPromptingForm);
 		}
 
 		[Test]
@@ -472,7 +462,7 @@ namespace WeSay.LexicalTools.Tests
 		/// test support for spell fixing (ideally, this would move the sense, but this what we do for now)
 		/// </summary>
 		[Test]
-		public void RemovingAssociationWhereSenseHasExample_DoesNothing()
+		public void TryToRemoveAssociationWithListWordFromEntry_SenseHasExample_DoesNothing()
 		{
 			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
@@ -526,9 +516,9 @@ namespace WeSay.LexicalTools.Tests
 				new List<string>(new[] { WritingSystemsIdsForTests.AnalysisIdForTest }), LiftXml
 			);
 			task.NavigateFirstToShow();
-			Assert.AreEqual("apple", task.CurrentEllicitationForm);
+			Assert.AreEqual("apple", task.CurrentPromptingForm);
 			task.NavigateNext();
-			Assert.AreEqual("cloud", task.CurrentEllicitationForm);
+			Assert.AreEqual("cloud", task.CurrentPromptingForm);
 		 }
 
 		[Test]
@@ -548,7 +538,7 @@ namespace WeSay.LexicalTools.Tests
 
 			var task = CreateAndActivateLiftTask(new List<string>(new string[]{"en"}), entries);
 			task.NavigateFirstToShow();
-			Assert.AreEqual("apple", task.CurrentEllicitationForm);
+			Assert.AreEqual("apple", task.CurrentPromptingForm);
 		}
 
 		[Test]
@@ -610,7 +600,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void CurrentEllicitationForm_FieldSpecifiesSecondWritingSystemInGloss_GivesCorrectWritingSystemAlternative()
+		public void CurrentPromptingForm_FieldSpecifiesSecondWritingSystemInGloss_GivesCorrectWritingSystemAlternative()
 		{
 			const string entries = @"
 				<entry id='one'>
@@ -627,11 +617,11 @@ namespace WeSay.LexicalTools.Tests
 
 			var task = CreateAndActivateLiftTask(new List<string>(new string[]{"fr","en"}), entries);
 			task.NavigateFirstToShow();
-			Assert.AreEqual("corps", task.CurrentEllicitationForm);
+			Assert.AreEqual("corps", task.CurrentPromptingForm);
 		}
 
 		[Test]
-		public void CurrentEllicitationForm_SenseMissing_GivesCorrectWritingSystemAlternative()
+		public void CurrentPromptingForm_SenseMissing_GivesCorrectWritingSystemAlternative()
 		{
 			const string entries = @"
 				<entry id='one'>
@@ -644,7 +634,7 @@ namespace WeSay.LexicalTools.Tests
 
 			var task = CreateAndActivateLiftTask(new List<string>(new string[] { "fr", "en" }), entries);
 			task.NavigateFirstToShow();
-			Assert.AreEqual("body", task.CurrentEllicitationForm);
+			Assert.AreEqual("body", task.CurrentPromptingForm);
 		}
 		[Test]
 		public void NavigateNext_NextDoesntHaveAndMatchingLanguages_SkipsOver()
@@ -675,10 +665,10 @@ namespace WeSay.LexicalTools.Tests
 			var task = CreateAndActivateLiftTask(new List<string>(new string[]{"en"}),
 								entries);
 			task.NavigateFirstToShow();
-			Assert.AreEqual("apple", task.CurrentEllicitationForm);
+			Assert.AreEqual("apple", task.CurrentPromptingForm);
 			task.NavigateNext();//skips "Skip me!"
 			Assert.IsFalse(task.IsTaskComplete);
-			Assert.AreEqual("orange", task.CurrentEllicitationForm);
+			Assert.AreEqual("orange", task.CurrentPromptingForm);
 		}
 		[Test]
 		public void CanNavigateNext_NoFurtherMatchesHaveRequiredLanguages_False()
@@ -711,7 +701,7 @@ namespace WeSay.LexicalTools.Tests
 			var task = CreateAndActivateLiftTask(new List<string>(new string[] { WritingSystemsIdsForTests.AnalysisIdForTest }),
 												 entries);
 			task.NavigateFirstToShow();
-			Assert.AreEqual("apple", task.CurrentEllicitationForm);
+			Assert.AreEqual("apple", task.CurrentPromptingForm);
 			Assert.IsTrue(task.CanNavigateNext); //notice, even though there will be none, thid is defined to say true until we try... it doesn't look ahead
 			task.NavigateNext();
 			Assert.IsTrue(task.IsTaskComplete);
@@ -760,6 +750,42 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsFalse(firstSense.Gloss.ContainsAlternative("es"), "should not have received spanish gloss because it wasn't in the viewtemplate");
 		}
 
+		[Test]
+		public void TryToRemoveAssociationWithListWordFromEntry_SenseInDictIsIdenticalToSenseInWordList_AssociationIsRemoved()
+		{
+			Task.NavigateAbsoluteFirst();
+			Task.WordCollected(GetMultiText("test"));
+			var resultSet = Task.GetRecordsWithMatchingGloss();
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			Task.TryToRemoveAssociationWithListWordFromEntry(resultSet[0]);
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void TryToRemoveAssociationWithListWordFromEntry_SenseInDictHasOneMorePropertyThanSenseInWordList_AssociationIsNotRemoved()
+		{
+			Task.NavigateAbsoluteFirst();
+			Task.WordCollected(GetMultiText("test"));
+			var token = Task.GetRecordsWithMatchingGloss()[0];
+			var senseToModify = token.RealObject.Senses[(int) token["SenseNumber"]];
+			senseToModify.GetOrCreateProperty<MultiText>("ExtraProperty");
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			Task.TryToRemoveAssociationWithListWordFromEntry(token);
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+		}
+
+		[Test]
+		//Here I consider information that was removed to have been intentionally removed so we are NOT removing the association
+		public void TryToRemoveAssociationWithListWordFromEntry_SenseInDictIsHasOneLessPropertyThanSenseInWordList_AssociationIsNotRemoved()
+		{
+			Task.NavigateAbsoluteFirst();
+			Task.WordCollected(GetMultiText("test"));
+			Task.CurrentTemplateSense.GetOrCreateProperty<MultiText>("ExtraProperty");
+			var token = Task.GetRecordsWithMatchingGloss()[0];
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			Task.TryToRemoveAssociationWithListWordFromEntry(token);
+			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+		}
 
 		private LexSense AddWordAndGetFirstSense()
 		{

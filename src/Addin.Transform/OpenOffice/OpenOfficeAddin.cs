@@ -133,6 +133,12 @@ namespace Addin.Transform.OpenOffice
 			}
 		}
 
+		public bool Deprecated
+		{
+			get { return false; }
+		}
+
+
 		/// <summary>
 		///
 		/// </summary>
@@ -199,7 +205,7 @@ namespace Addin.Transform.OpenOffice
 					EmbeddedXmlCollection sortedAnnotation = new EmbeddedXmlCollection();
 					sortedAnnotation.Values.Add("<annotation name='sorted-index' value='" + (++index) +"'/>");
 
-					lexEntry.Properties.Add(new KeyValuePair<string,object>("SortedIndex", sortedAnnotation));
+					lexEntry.Properties.Add(new KeyValuePair<string,IPalasoDataObjectProperty>("SortedIndex", sortedAnnotation));
 
 					exporter.Add(lexEntry, homographNumber);
 				}
@@ -274,7 +280,7 @@ namespace Addin.Transform.OpenOffice
 				xsltArgs.AddParam("title", "", arguments.name);
 				// TODO what is the correct url base path for illustrations?
 				// It seems one level up just gets out of the zip file, so use 2 levels here
-				xsltArgs.AddParam("urlBase", "",  "../../pictures/");
+				xsltArgs.AddParam("urlBase", "",  "../../");
 
 				transform.Transform(liftPath, xsltArgs, contentOutput);
 				contentOutput.Close();
@@ -367,7 +373,7 @@ namespace Addin.Transform.OpenOffice
 		//    }
 		//    if(String.IsNullOrEmpty(pathToHeadWordWritingSystemLdmlFile)){
 		//        string errorMessage = String.Format(
-		//            "No Ldml writing system file could be found in folder {0}. The headword writing system is {1}",
+		//            "No Ldml input system file could be found in folder {0}. The headword input system is {1}",
 		//            pathToLdmlWritingSystemsFolder, GetHeadwordWritingSystemId(arguments.viewTemplate));
 		//        throw new ApplicationException(errorMessage);
 

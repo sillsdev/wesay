@@ -26,8 +26,8 @@ namespace WeSay.ConfigTool
 		{
 			get
 			{
-				List<string> paths = new List<string>(GetNonStalePaths());
-				return paths.ToArray();
+				List<string> nspaths = new List<string>(GetNonStalePaths());
+				return nspaths.ToArray();
 			}
 			set
 			{

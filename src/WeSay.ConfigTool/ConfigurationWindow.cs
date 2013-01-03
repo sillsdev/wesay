@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Autofac;
-
 using Palaso.Reporting;
 using Palaso.WritingSystems;
 using WeSay.ConfigTool.NewProjectCreation;
@@ -19,12 +19,13 @@ namespace WeSay.ConfigTool
 		private WelcomeControl _welcomePage;
 		private SettingsControl _projectSettingsControl;
 		private WeSayWordsProject _project;
-		private bool _disableBackupAndChorusStuffForTests= false;
+		private bool _disableBackupAndChorusStuffForTests;
 
 		/// <summary>
 		/// Used to make a note that after we've closed down nicely, the user has requested that we run WeSay
 		/// </summary>
 		private bool _openWeSayAfterSaving;
+
 		/// <summary>
 		/// Used to temporarily store the path while the project closes down, but we still need to know the path
 		/// so we can ask WeSay to open it
@@ -34,6 +35,10 @@ namespace WeSay.ConfigTool
 		public ConfigurationWindow(string[] args)
 		{
 			InitializeComponent();
+
+			_helpProvider.RegisterPrimaryHelpFileMapping("wesay.helpmap");
+			_helpProvider.RegisterSecondaryHelpMapping("chorus.helpmap");
+
 			Project = null;
 
 			//            if (this.DesignMode)
@@ -44,7 +49,7 @@ namespace WeSay.ConfigTool
 
 			if (args.Length > 0)
 			{
-				OpenProject(args[0].Trim(new char[] {'"'}));
+				OpenProject(args[0].Trim(new[] {'"'}));
 			}
 
 			if (!DesignMode)
@@ -85,7 +90,7 @@ namespace WeSay.ConfigTool
 
 		private void OnChooseProject(object sender, EventArgs e)
 		{
-			OpenFileDialog dlg = new OpenFileDialog();
+			var dlg = new OpenFileDialog();
 			dlg.Title = "Open WeSay Project...";
 			dlg.DefaultExt = ".WeSayConfig";
 			dlg.Filter = "WeSay Configuration File (*.WeSayConfig)|*.WeSayConfig";
@@ -140,7 +145,7 @@ namespace WeSay.ConfigTool
 
 		private void OnCreateProject(object sender, EventArgs e)
 		{
-			NewProjectDialog dlg = new NewProjectDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
+			var dlg = new NewProjectDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
 			if (DialogResult.OK != dlg.ShowDialog())
 			{
 				return;
@@ -167,7 +172,7 @@ namespace WeSay.ConfigTool
 
 		private void OnCreateProjectFromFLEx(object sender, EventArgs e)
 		{
-			NewProjectFromFLExDialog dlg = new NewProjectFromFLExDialog();
+			var dlg = new NewProjectFromFLExDialog();
 			if (DialogResult.OK != dlg.ShowDialog())
 			{
 				return;
@@ -227,7 +232,7 @@ namespace WeSay.ConfigTool
 				 logger.WriteConciseHistoricalEvent("Created New Project");
 
 
-				 if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
+				 if (ErrorReport.IsOkToInteractWithUser)
 				 {
 					 using (var dlg = new NewProjectInformationDialog(directoryPath))
 					 {
@@ -238,7 +243,7 @@ namespace WeSay.ConfigTool
 			 }
 		}
 
-		private void CreateNewProject(string directoryPath)
+		private static void CreateNewProject(string directoryPath)
 		{
 			try
 			{
@@ -311,16 +316,12 @@ namespace WeSay.ConfigTool
 			catch (Exception e)
 			{
 				Project = null;
-				ErrorReport.NotifyUserOfProblem(e, "WeSay was not able to open that project.");
+				ErrorReport.NotifyUserOfProblem(e, "WeSay was not able to open that project." + e.Message);
 				return false;
 			}
 
 			SetupProjectControls(BuildInnerContainerForThisProject());
-
-			if (Project != null)
-			{
-				Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
-			}
+			Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
 			return true;
 		}
 
@@ -443,6 +444,7 @@ namespace WeSay.ConfigTool
 				{
 					Project.Save();
 				}
+
 				Settings.Default.Save();
 				if (_projectSettingsControl != null)
 				{
@@ -471,9 +473,10 @@ namespace WeSay.ConfigTool
 		private void RunWeSay()
 		{
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
-			ProcessStartInfo startInfo = new ProcessStartInfo(Path.Combine(dir, "WeSay.App.exe"),
-															  string.Format(" -launchedByConfigTool \"{0}\"",
-																			_pathToOpenWeSay));
+			var startInfo = new ProcessStartInfo(
+				Path.Combine(dir, "WeSay.App.exe"),
+				string.Format(" -launchedByConfigTool \"{0}\"", _pathToOpenWeSay)
+			);
 
 			Process.Start(startInfo);
 		}
@@ -495,13 +498,12 @@ namespace WeSay.ConfigTool
 
 		private void OnHelpToolStrip_Click(object sender, EventArgs e)
 		{
-			string helpFilePath = Path.Combine(WeSayWordsProject.ApplicationRootDirectory, "WeSay Documentation.chm");
-			if(File.Exists(helpFilePath))
-			{
-				var uri = new Uri(helpFilePath);
-				Help.ShowHelp(this, uri.AbsoluteUri);
-			}
-			Process.Start("http://wesay.org/wiki/Help_And_Contact");
+			Program.ShowHelpTopic("");
+		}
+
+		private void OnKeyDown(object sender, KeyEventArgs e)
+		{
+			//if (e.KeyCode == Keys.F1) This key is now handled by the HelpProvider
 		}
 	}
 }

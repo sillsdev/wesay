@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+ <mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
+   <mime-type type="application/x-wesayconfig">
+	 <sub-class-of type="text/xml"/>
+	 <comment>WeSay Configuration file</comment>
+	 <glob pattern="*.WeSayConfig"/>
+  </mime-type>
+ </mime-info>

@@ -10,7 +10,7 @@ using Palaso.Data;
 using Palaso.Code;
 using Palaso.i18n;
 using Palaso.UiBindings;
-using Palaso.Misc;
+using Palaso.UI.WindowsForms.Miscellaneous;
 using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.WritingSystems;
@@ -177,7 +177,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				else
 				{
 					ErrorReport.NotifyUserOfProblem(
-							"There are no writing systems enabled for the Field '{0}'",
+							"There are no input systems enabled for the Field '{0}'",
 							field.FieldName);
 				}
 			}

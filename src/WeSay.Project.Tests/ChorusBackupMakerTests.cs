@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
-using Palaso.Progress.LogBox;
+using Palaso.Progress;
 using Palaso.TestUtilities;
 using Palaso.Xml;
 

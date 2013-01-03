@@ -1,5 +1,8 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
+using Palaso.IO;
 using Palaso.Reporting;
 using WeSay.ConfigTool.Properties;
 
@@ -31,6 +34,7 @@ namespace WeSay.ConfigTool
 			Settings.Default.Save();
 			Application.Run(new ConfigurationWindow(args));
 		}
+
 		private static void SetUpReporting()
 		{
 			if (Settings.Default.Reporting == null)
@@ -42,11 +46,28 @@ namespace WeSay.ConfigTool
 			UsageReporter.AppNameToUseInDialogs = "WeSay Configuration Tool";
 			UsageReporter.AppNameToUseInReporting = "WeSayConfig";
 		}
+
 		private static void SetupErrorHandling()
 		{
 			ErrorReport.EmailAddress = "issues@wesay.org";
 			ErrorReport.AddStandardProperties();
 			ExceptionHandler.Init();
 		}
+
+		public static void ShowHelpTopic(string topicLink)
+		{
+			string helpFilePath = FileLocator.GetFileDistributedWithApplication("WeSay_Helps.chm");
+			if (File.Exists(helpFilePath))
+			{
+				//var uri = new Uri(helpFilePath);
+				Help.ShowHelp(new Label(), helpFilePath, topicLink);
+			}
+			else
+			{
+				Process.Start("http://wesay.palaso.org/help/");
+			}
+			UsageReporter.SendNavigationNotice("Help: " + topicLink);
+		}
+
 	}
 }

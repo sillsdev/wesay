@@ -266,7 +266,7 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		private bool IsMissingCustomField(PalasoDataObject palasoData)
 		{
-			IParentable content = palasoData.GetProperty<IParentable>(Field.FieldName);
+			var content = palasoData.GetProperty<IPalasoDataObjectProperty>(Field.FieldName);
 			if (content == null)
 			{
 				if (IsSkipped(palasoData, Field.FieldName))
@@ -289,12 +289,7 @@ namespace WeSay.LexicalModel
 
 		private bool IsPosUnknown(PalasoDataObject sense)
 		{
-			foreach(KeyValuePair<string, object> property in sense.Properties)
-			if (property.Key == "POS" && (((OptionRef) property.Value).Key == "unknown"))
-			{
-				return true;
-			}
-			return false;
+			return sense.Properties.Any(property => property.Key == "POS" && (((OptionRef) property.Value).Key == "unknown"));
 		}
 
 

@@ -7,12 +7,14 @@ using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
 using Palaso.Lift;
 
 namespace WeSay.UI.TextBoxes
 {
+	/// <summary>
+	/// This control presents a table of input fields, with one row for each input system. For audio input systems, it presents a control for recording and playback.
+	/// </summary>
 	public partial class MultiTextControl: TableLayoutPanel
 	{
 		private IList<WritingSystemDefinition> _writingSystemsForThisField;
@@ -338,7 +340,7 @@ namespace WeSay.UI.TextBoxes
 			{
 #if MONO
 				return null;
-#endif
+#else
 				if (_serviceProvider == null)
 				{
 					//no, better to just omit it.  throw new ConfigurationException("WeSay cannot handle yet audio in this task.");
@@ -347,6 +349,7 @@ namespace WeSay.UI.TextBoxes
 				var ap =_serviceProvider.GetService(typeof (AudioPathProvider)) as AudioPathProvider;
 				control = new WeSayAudioFieldBox(writingSystem, ap, _serviceProvider.GetService(typeof(Palaso.Reporting.ILogger)) as ILogger);
 				((WeSayAudioFieldBox)control).PlayOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
+#endif
 			}
 			else
 			{
@@ -377,6 +380,7 @@ namespace WeSay.UI.TextBoxes
 			control.MouseWheel += subControl_MouseWheel;
 
 			return control;
+
 		}
 
 		private void subControl_MouseWheel(object sender, MouseEventArgs e)

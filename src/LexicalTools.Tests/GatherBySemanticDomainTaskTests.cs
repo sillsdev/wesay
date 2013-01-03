@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Reporting;
@@ -27,6 +28,7 @@ namespace WeSay.LexicalTools.Tests
 		private string _filePath;
 		private ViewTemplate _viewTemplate;
 		private static string _vernacularWritingSystemId = WritingSystemsIdsForTests.VernacularIdForTest;
+		private GatherBySemanticDomainConfig _config;
 
 		[TestFixtureSetUp]
 		public void FixtureSetup()
@@ -45,8 +47,8 @@ namespace WeSay.LexicalTools.Tests
 
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_viewTemplate = MakeViewTemplate("en");
-			var config = GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath);
-			_task = new GatherBySemanticDomainTask(config,
+			_config = GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath);
+			_task = new GatherBySemanticDomainTask(_config,
 												   _lexEntryRepository,
 												   _viewTemplate,
 												   new TaskMemoryRepository(),
@@ -378,14 +380,14 @@ namespace WeSay.LexicalTools.Tests
 			_lexEntryRepository.SaveItem(e);
 
 			Task.CurrentDomainIndex = 0;
-			List<string> words = Task.CurrentWords;
-			Assert.Contains("peixe", words);
+		   var words = Task.CurrentWords;
+			Assert.IsTrue(Task.CurrentWords.Any(w => w.Vernacular.Form == "peixe"));
 		}
 
 		[Test]
 		public void CurrentWords_ChangeQuestion_SameWordList()
 		{
-			List<string> wordList = Task.CurrentWords;
+		   var wordList = Task.CurrentWords;
 			Task.CurrentQuestionIndex = 2;
 			Assert.AreSame(wordList, Task.CurrentWords);
 		}
@@ -393,7 +395,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CurrentWords_ChangeDomain_NewWordList()
 		{
-			List<string> wordList = Task.CurrentWords;
+		   var wordList = Task.CurrentWords;
 			Task.CurrentDomainIndex = 2;
 			Assert.AreNotSame(wordList, Task.CurrentWords);
 		}
@@ -479,7 +481,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("vernacular", String.Empty);
-			Assert.Contains("vernacular", Task.CurrentWords);
+			Assert.IsTrue(Task.CurrentWords.Any(w=>w.Vernacular.Form=="vernacular"));
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
 
@@ -498,7 +500,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void PrepareToMoveWordToEditArea_null_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => Task.PrepareToMoveWordToEditArea(null));
+			Assert.Throws<ArgumentNullException>(() => Task.PrepareToMoveWordToEditArea((GatherBySemanticDomainTask.WordDisplay) null));
 		}
 
 		[Test]
@@ -529,8 +531,8 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
 			Task.PrepareToMoveWordToEditArea("raposa");
-			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
-			Assert.AreEqual(3, _lexEntryRepository.CountAllItems());
+			Assert.IsFalse(Task.CurrentWords.Any(w=>w.Vernacular.Form=="raposa"));
+			Assert.AreEqual(2, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -565,7 +567,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
 			Task.PrepareToMoveWordToEditArea("raposa");
-			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
+			Assert.IsFalse(Task.CurrentWords.Any(w=>w.Vernacular.Form==("raposa")));
 			Assert.AreEqual(2, Task.CurrentWords.Count);
 		}
 
@@ -702,20 +704,20 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void PrepareToMoveWordToEditArea_HasCustomFieldInExample_DisassociatesWordFromDomain()
+		public void SimluateEditing_NoGloss_HasCustomFieldInExample_DisassociatesWordFromDomain()
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, "peixe");
 			LexSense s = AddNewSenseToEntry(e);
 
-			OptionRefCollection o =
+			var o =
 					s.GetOrCreateProperty<OptionRefCollection>(
 							LexSense.WellKnownProperties.SemanticDomainDdp4);
 			o.Add(Task.DomainKeys[0]);
 
-			LexExampleSentence example = new LexExampleSentence();
+			var example = new LexExampleSentence();
 			s.ExampleSentences.Add(example);
-			OptionRef optionRef = example.GetOrCreateProperty<OptionRef>("custom");
+			var optionRef = example.GetOrCreateProperty<OptionRef>("custom");
 			optionRef.Value = "hello";
 			_lexEntryRepository.SaveItem(e);
 
@@ -724,7 +726,350 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentDomainIndex = 0;
 			Task.PrepareToMoveWordToEditArea("peixe");
 
+			Assert.AreEqual(originalCount-1, _lexEntryRepository.CountAllItems());
+		}
+
+		//Regression (WS-34245) Corrections to words with meanings making new words in Gather by SemDom. The problem is that words with glosses
+		[Test]
+		public void PrepareToMoveWordToEditArea_HasMeaning_RemovesWord()
+		{
+			var originalCount = AddEntry(MakeEntryWithMeaning());
+			Task.CurrentDomainIndex = 0;
+			Task.PrepareToMoveWordToEditArea("peixe");
+
+			Assert.AreEqual(originalCount-1, _lexEntryRepository.CountAllItems());
+		}
+
+		//Regression (WS-34245) Corrections to words with meanings making new words in Gather by SemDom. The problem is that words with glosses
+		[Test]
+		public void SimulateEditingSpelling_Simple_EntryCountUnchanged()
+		{
+			var originalCount = AddEntry(MakeEntryWithMeaning());
+			Task.PrepareToMoveWordToEditArea("peixe");
+			Task.AddWord("peixe2", "the meaning");
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
+		}
+
+		[Test]
+		public void SimulateEditingSpelling_HasExample_ExamplePreserved()
+		{
+			var e = MakeEntryWithMeaning();
+			var lexExampleSentence = new LexExampleSentence();
+			lexExampleSentence.Sentence.SetAlternative(_vernacularWritingSystemId, "an example");
+			e.Senses[0].ExampleSentences.Add(lexExampleSentence);
+			var originalCount = AddEntry(e);
+			Task.PrepareToMoveWordToEditArea("peixe");
+			var modifiedEntries = Task.AddWord("peixe2", "the meaning");
+			Assert.AreEqual("an example", modifiedEntries.First().Senses[0].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
+		}
+
+		[Test]
+		public void SimulateEditingSpelling_HasPartOfSpeech_POSPreserved()
+		{
+			var e = MakeEntryWithMeaning();
+			e.Senses[0].GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech).Key = "noun";
+			AddEntry(e);
+			Task.PrepareToMoveWordToEditArea("peixe");
+			var modifiedEntries = Task.AddWord("peixe2", "the meaning");
+			Assert.AreEqual(1, modifiedEntries.Count());
+			Assert.AreEqual(1, modifiedEntries.First().Senses.Count());
+			Assert.AreEqual("noun", modifiedEntries.First().Senses[0].GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech).Key);
+		}
+
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsEnabled_ChangeCausesMatchWIthAnExistingEntry_EnteredMeaningIsIdenticalToExistingSense_SenseMerged()
+		{
+			_config.ShowMeaningField = true;
+			//ok, so we have this word out there with definition in 2 languages, and an example
+			var preexistingEntry = MakeEntryWithMeaning("peixe2");
+			preexistingEntry.Senses[0].Definition.SetAlternative("FR", "oui");
+			var example1 = new LexExampleSentence();
+			example1.Sentence.SetAlternative(_vernacularWritingSystemId, "example1");
+			preexistingEntry.Senses[0].ExampleSentences.Add(example1);
+
+			var entryWithMistake = MakeEntryWithMeaning("peixe1");
+			var lexExampleSentence = new LexExampleSentence();
+			lexExampleSentence.Sentence.SetAlternative(_vernacularWritingSystemId, "example2");
+			entryWithMistake.Senses[0].ExampleSentences.Add(lexExampleSentence);
+			var originalCount = AddEntry(entryWithMistake);
+
+			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
+												 {
+													 Vernacular = entryWithMistake.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
+													 Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+												 });
+			Assert.AreEqual(originalCount-1, _lexEntryRepository.CountAllItems(),"expected it to be removed from the lexicon");
+			var modifiedEntries = Task.AddWord("peixe2", "the meaning");
+			Assert.AreEqual(1, modifiedEntries.Count);
+			Assert.AreEqual(preexistingEntry, modifiedEntries[0], "expected the pre-existing 'peixe2' to be the recipient of the move, now that the spelling was changed to match it.");
+			Assert.AreEqual(1, preexistingEntry.Senses.Count, "expected the incoming sense to merge with the existing one");
+			Assert.AreEqual("oui", modifiedEntries.First().Senses[0].Definition.GetExactAlternative("FR"));
+			Assert.AreEqual(2, preexistingEntry.Senses[0].ExampleSentences.Count, "expected to end up with 2 example sentences");
+			Assert.AreEqual("example1", modifiedEntries.First().Senses[0].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
+			Assert.AreEqual("example2", modifiedEntries.First().Senses[0].ExampleSentences[1].Sentence[_vernacularWritingSystemId]);
+		}
+
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsEnabled_ChangeCausesMatchWIthAnExistingEntry_EnteredMeaningIsNotIdenticalToExistingSense_SenseIsAdded()
+		{
+			_config.ShowMeaningField = true;
+			//ok, so we have this word out there with definition in 2 languages, and an example
+			var preexistingEntry = MakeEntryWithMeaning("peixe2");
+			preexistingEntry.Senses[0].Definition.SetAlternative("FR", "oui");
+			var example1 = new LexExampleSentence();
+			example1.Sentence.SetAlternative(_vernacularWritingSystemId, "example1");
+			preexistingEntry.Senses[0].ExampleSentences.Add(example1);
+
+			var entryWithMistake = MakeEntryWithMeaning("peixe1");
+			var lexExampleSentence = new LexExampleSentence();
+			lexExampleSentence.Sentence.SetAlternative(_vernacularWritingSystemId, "example2");
+			entryWithMistake.Senses[0].ExampleSentences.Add(lexExampleSentence);
+			var originalCount = AddEntry(entryWithMistake);
+
+			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
+												{
+													Vernacular = entryWithMistake.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
+													Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+												});
+			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems(), "expected it to be removed from the lexicon");
+			var modifiedEntries = Task.AddWord("peixe2", "the meaning2");
+			Assert.AreEqual(1, modifiedEntries.Count);
+			Assert.AreEqual(preexistingEntry, modifiedEntries[0], "expected the pre-existing 'peixe2' to be the recipient of the move, now that the spelling was changed to match it.");
+			Assert.AreEqual(2, preexistingEntry.Senses.Count, "expected the incoming sense to be added to the existing one");
+			Assert.AreEqual("oui", modifiedEntries.First().Senses[0].Definition.GetExactAlternative("FR"));
+			Assert.AreEqual(1, preexistingEntry.Senses[0].ExampleSentences.Count, "expected to end up with 1 example sentences");
+			Assert.AreEqual("example1", modifiedEntries.First().Senses[0].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
+			Assert.AreEqual(1, preexistingEntry.Senses[1].ExampleSentences.Count, "expected to end up with 1 example sentences");
+			Assert.AreEqual("example2", modifiedEntries.First().Senses[1].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
+		}
+
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsNotEnabled_ChangeCausesMatchWIthAnExistingEntry_ExistingMeaningIsIdenticalToExistingSense_SenseMerged()
+		{
+			//ok, so we have this word out there with definition in 2 languages, and an example
+			var preexistingEntry = MakeEntryWithMeaning("peixe2");
+			preexistingEntry.Senses[0].Definition.SetAlternative("FR", "oui");
+			var example1 = new LexExampleSentence();
+			example1.Sentence.SetAlternative(_vernacularWritingSystemId, "example1");
+			preexistingEntry.Senses[0].ExampleSentences.Add(example1);
+
+			var entryWithMistake = MakeEntryWithMeaning("peixe1");
+
+			var lexExampleSentence = new LexExampleSentence();
+			lexExampleSentence.Sentence.SetAlternative(_vernacularWritingSystemId, "example2");
+			entryWithMistake.Senses[0].ExampleSentences.Add(lexExampleSentence);
+			var originalCount = AddEntry(entryWithMistake);
+			Task.PrepareToMoveWordToEditArea("peixe1");
+			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems(), "expected it to be removed from the lexicon");
+			var modifiedEntries = Task.AddWord("peixe2", "");
+			Assert.AreEqual(1, modifiedEntries.Count);
+			Assert.AreEqual(preexistingEntry, modifiedEntries[0], "expected the pre-existing 'peixe2' to be the recipient of the move, now that the spelling was changed to match it.");
+			Assert.AreEqual(1, preexistingEntry.Senses.Count, "expected the incoming sense to merge with the existing one");
+			Assert.AreEqual("oui", modifiedEntries.First().Senses[0].Definition.GetExactAlternative("FR"));
+			Assert.AreEqual(2, preexistingEntry.Senses[0].ExampleSentences.Count, "expected to end up with 2 example sentences");
+			Assert.AreEqual("example1", modifiedEntries.First().Senses[0].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
+			Assert.AreEqual("example2", modifiedEntries.First().Senses[0].ExampleSentences[1].Sentence[_vernacularWritingSystemId]);
+		}
+
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsNotEnabled_ChangeCausesMatchWIthAnExistingEntry_ExistingMeaningIsNotIdenticalToExistingSense_SenseIsAdded()
+		{
+			//ok, so we have this word out there with definition in 2 languages, and an example
+			var preexistingEntry = MakeEntryWithMeaning("peixe2");
+			preexistingEntry.Senses[0].Definition.SetAlternative("FR", "oui");
+			var example1 = new LexExampleSentence();
+			example1.Sentence.SetAlternative(_vernacularWritingSystemId, "example1");
+			preexistingEntry.Senses[0].ExampleSentences.Add(example1);
+
+			var entryWithMistake = MakeEntryWithMeaning("peixe1");
+			//change the "en" definition to anything but "the meaning"
+			entryWithMistake.Senses[0].Definition["en"] = "not \"the meaning\"";
+
+			var lexExampleSentence = new LexExampleSentence();
+			lexExampleSentence.Sentence.SetAlternative(_vernacularWritingSystemId, "example2");
+			entryWithMistake.Senses[0].ExampleSentences.Add(lexExampleSentence);
+			var originalCount = AddEntry(entryWithMistake);
+			Task.PrepareToMoveWordToEditArea("peixe1");
+			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems(), "expected it to be removed from the lexicon");
+			var modifiedEntries = Task.AddWord("peixe2", "");
+			Assert.AreEqual(1, modifiedEntries.Count);
+			Assert.AreEqual(preexistingEntry, modifiedEntries[0], "expected the pre-existing 'peixe2' to be the recipient of the move, now that the spelling was changed to match it.");
+			Assert.AreEqual(2, preexistingEntry.Senses.Count, "expected the incoming sense to be added to the existing one");
+			Assert.AreEqual("oui", modifiedEntries.First().Senses[0].Definition.GetExactAlternative("FR"));
+			Assert.AreEqual(1, preexistingEntry.Senses[0].ExampleSentences.Count, "expected to end up with 1 example sentences");
+			Assert.AreEqual("example1", modifiedEntries.First().Senses[0].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
+			Assert.AreEqual(1, preexistingEntry.Senses[1].ExampleSentences.Count, "expected to end up with 1 example sentences");
+			Assert.AreEqual("example2", modifiedEntries.First().Senses[1].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
+		}
+
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsNotEnabled_EntryHasMultipleSensesSomeMatchingSemDomOthersNot_AllSensesMatchingSemanticDomainAreMovedToNewEntry_SensesNotMatchingStayOnOldEntry()
+		{
+			_config.ShowMeaningField = false;
+			var entry = MakeEntryWithMeaning("peixe2");
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "de_form", Task.DomainKeys[0]));
+			entry.Senses.Add(GetSenseWithDefAndSemDom("fr", "oui", Task.DomainKeys[1]));
+
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
+			Task.PrepareToMoveWordToEditArea("peixe2");
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems(), "should stay in repo because of non matching sem dom");
+
+			Task.AddWord("peixe1", "");
+			Assert.AreEqual(2, _lexEntryRepository.CountAllItems(), "should have created a new entry.");
+			Assert.AreEqual(1, entry.Senses.Count, "expected to end up with 1 sense as the two matching the current domain should have been moved");
+			Assert.That(entry.Senses.All(s => !s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])), Is.True);
+			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1",WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
+			Assert.AreEqual(2, newEntry.Senses.Count, "expected to end up with 2 sense as the two matching the current domain should have been moved");
+			Assert.That(newEntry.LexicalForm[_vernacularWritingSystemId], Is.EqualTo("peixe1"));
+			Assert.That(newEntry.Senses.All(s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])), Is.True);
+		}
+
+		private LexSense GetSenseWithDefAndSemDom(string defWs, string defForm, string semDom)
+		{
+			var newSense = new LexSense();
+			newSense.Definition.SetAlternative(defWs, defForm);
+			var semDoms = newSense.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4);
+			semDoms.Add(semDom.Trim());
+			return newSense;
+		}
+
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsNotEnabled_EntryHasMultipleSensesAllMatchingSemDom_AllSensesMatchingSemanticDomainAreMovedToNewEntry_OldEntryIsDeleted()
+		{
+			_config.ShowMeaningField = false;
+			var entry = MakeEntryWithMeaning("peixe2");
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "de_word", Task.DomainKeys[0]));
+			var sensesToMove =
+				entry.Senses.Where(
+					s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0]));
+
+			Task.PrepareToMoveWordToEditArea("peixe2");
+			Assert.AreEqual(0, _lexEntryRepository.CountAllItems(), "expected it to be removed from the lexicon");
+
+			Task.AddWord("peixe1", "");
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems(), "expected new entry 'peixe1' in lexicon");
+			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1", WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
+			Assert.That(sensesToMove.All(movedSense => newEntry.Senses.Contains(movedSense)));
+			Assert.That(newEntry.Senses.All(s=>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])));
+		}
+
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsEnabled_EntryHasMultipleSensesSomeMatchingSemDomOthersNot_SensesMatchingMovedMeaningIsMovedToNewEntry_SensesNotMatchingStayOnOldEntry()
+		{
+			_config.ShowMeaningField = true;
+			var entry = MakeEntryWithMeaning("peixe2");
+			var firstSense = entry.Senses[0];
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "de_word", Task.DomainKeys[0]));
+			var secondSense = entry.Senses[1];
+
+			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
+												 {
+													 Vernacular = entry.LexicalForm.GetBestAlternative(new []{_vernacularWritingSystemId}),
+													 Meaning = secondSense.Definition.GetBestAlternative(new[]{Task.DefinitionWritingSystem.Id})
+												 });
+			Task.AddWord("peixe1", "de_word");
+
+			Assert.AreEqual(2, _lexEntryRepository.CountAllItems(), "expected new entry 'peixe1' in lexicon");
+			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1", WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
+			Assert.AreEqual(1, entry.Senses.Count, "expected the sense with the non matching meaning to still be around");
+			Assert.That(entry.Senses[0], Is.EqualTo(firstSense));
+			Assert.AreEqual(1, newEntry.Senses.Count, "expected the sense with the matching meaning to be added to the existing one");
+			Assert.That(newEntry.Senses[0], Is.EqualTo(secondSense));
+		}
+
+		[Test]
+		public void SimulateEditingHeadwordSpelling_MeaningFieldIsEnabled_EntryHasOneSenseMatchingSemDom_SenseIsMovedToNewEntry_OldEntryIsDeleted()
+		{
+			_config.ShowMeaningField = true;
+			var entry = MakeEntryWithMeaning("peixe2");
+			var firstSense = entry.Senses[0];
+
+			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
+			{
+				Vernacular = entry.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
+				Meaning = firstSense.Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+			});
+			Task.AddWord("peixe1", "de_word");
+
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems(), "expected new entry 'peixe1' in lexicon");
+			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1", WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
+			Assert.AreEqual(1, newEntry.Senses.Count, "expected the sense with the non matching meaning to still be around");
+			Assert.That(newEntry.Senses[0], Is.EqualTo(firstSense));
+		}
+
+		[Test]
+		public void CurrentWords_MeaningFieldIsEnabled_EntryHasMultipleSenses_NotFirstSenseThatHasMatchingSemanticDomain_DefinitionOfFirstSenseWithmatchingSemanticDomainIsShown()
+		{
+			_config.ShowMeaningField = true;
+			var entry = MakeEntryWithMeaning("peixe2");
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "form", Task.DomainKeys[1]));
+			_lexEntryRepository.SaveItem(entry);
+
+			Task.CurrentDomainIndex = 1;
+			Assert.That(Task.CurrentWords[0].Meaning.Form, Is.EqualTo("form"));
+		}
+
+		[Test]
+		public void CurrentWords_MeaningFieldIsEnabled_EntryHasMultipleSenses_OneSenseMatchesSemDomOtherHasNoSemDomAtAll_DefinitionOfFirstSenseWithMatchingSemanticDomainIsShown()
+		{
+			_config.ShowMeaningField = true;
+			var entry = MakeEntryWithMeaning("peixe2");
+			entry.Senses.Add(new LexSense());   //This sense needs to be before the sense we are looking for. i.e. order is relevant
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "form", Task.DomainKeys[1]));
+			_lexEntryRepository.SaveItem(entry);
+
+			Task.CurrentDomainIndex = 1;
+			Assert.That(Task.CurrentWords[0].Meaning.Form, Is.EqualTo("form"));
+		}
+
+		[Test]
+		public void PrepareToMoveWordToEditArea_MeaningFieldIsEnabled_EntryHasMultipleSenses_OneSenseMatchesSemDomOtherHasNoSemDomAtAll_CorrectSenseIsRemovedForEdit()
+		{
+			_config.ShowMeaningField = true;
+			var entry = MakeEntryWithMeaning("peixe2");
+			entry.Senses.Add(new LexSense());   //This sense needs to be before the sense we are looking for. i.e. order is relevant
+			var senseWeWantToEdit = GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "form", Task.DomainKeys[1]);
+			entry.Senses.Add(senseWeWantToEdit);
+			_lexEntryRepository.SaveItem(entry);
+
+			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
+			{
+				Vernacular = entry.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
+				Meaning = senseWeWantToEdit.Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+			});
+			Assert.That(!entry.Senses.Contains(senseWeWantToEdit), Is.False);
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="e"></param>
+		/// <returns>the count of entries</returns>
+		private int AddEntry(LexEntry e)
+		{
+			_lexEntryRepository.SaveItem(e);
+			Task.CurrentDomainIndex = 0;
+			return _lexEntryRepository.CountAllItems();
+		}
+
+		private LexEntry MakeEntryWithMeaning()
+		{
+			return MakeEntryWithMeaning("peixe");
+		}
+		private LexEntry MakeEntryWithMeaning(string headword)
+		{
+
+		LexEntry e = _lexEntryRepository.CreateItem();
+			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, headword);
+			LexSense s = AddNewSenseToEntry(e);
+
+			OptionRefCollection o =
+				s.GetOrCreateProperty<OptionRefCollection>(
+					LexSense.WellKnownProperties.SemanticDomainDdp4);
+			o.Add(Task.DomainKeys[0]);
+			s.Definition.SetAlternative("en", "the meaning");
+			return e;
 		}
 
 		[Test]
@@ -894,6 +1239,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWordEmptyDef_ExistingWordDefAlreadyExists_SemDomAdded()
 		{
+			_config.ShowMeaningField = true;
 			var entries1 = Task.AddWord("one", "1");
 			Task.CurrentDomainIndex++;
 			var entries2 = Task.AddWord("one", string.Empty);

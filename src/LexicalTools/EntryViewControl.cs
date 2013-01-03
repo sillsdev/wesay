@@ -7,7 +7,7 @@ using Chorus.UI.Notes;
 using Chorus.UI.Notes.Bar;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
-using Palaso.Misc;
+using Palaso.UI.WindowsForms.Miscellaneous;
 using Palaso.Reporting;
 using WeSay.LexicalModel;
 using WeSay.Project;

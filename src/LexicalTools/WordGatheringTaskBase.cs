@@ -1,4 +1,5 @@
 using System;
+using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
 using WeSay.Foundation;
@@ -36,7 +37,7 @@ namespace WeSay.LexicalTools
 			var ids = BasilProject.Project.WritingSystems.FilterForTextIds(field.WritingSystemIds);
 			if(ids.Count()==0)
 			{
-				throw new ConfigurationException(string.Format("The field {0} must have at least one non-audio writing system.", field.DisplayName));
+				throw new ConfigurationException(string.Format("The field {0} must have at least one non-audio input system.", field.DisplayName));
 			}
 			return BasilProject.Project.WritingSystems.Get(ids.First());
 		}
@@ -60,13 +61,22 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public WritingSystemDefinition WritingSystemUserIsTypingIn
+		public WritingSystemDefinition FormWritingSystem
 		{
 			get
 			{
 				VerifyTaskActivated();
 				return _lexicalFormWritingSystem;
 			}
+		}
+		public WritingSystemDefinition MeaningWritingSystem
+		{
+			get
+			{
+				VerifyTaskActivated();
+				return _viewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition);
+			}
+
 		}
 
 		protected ViewTemplate ViewTemplate

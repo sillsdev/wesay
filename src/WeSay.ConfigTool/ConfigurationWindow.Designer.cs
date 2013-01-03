@@ -31,6 +31,7 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,6 +48,7 @@ namespace WeSay.ConfigTool
 			this.toolStripHelpButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this._helpProvider = new Vulcan.Uczniowie.HelpProvider.HelpComponent(this.components);
 			this.toolStrip2.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -189,9 +191,11 @@ namespace WeSay.ConfigTool
 			this.ClientSize = new System.Drawing.Size(781, 522);
 			this.Controls.Add(this.toolStrip2);
 			this.Icon = global::WeSay.ConfigTool.Properties.Resources.WeSaySetupApplicationIcon;
+			this.KeyPreview = true;
 			this.Name = "ConfigurationWindow";
 			this.Text = "WeSay Configuration Tool";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
 			this.toolStrip2.ResumeLayout(false);
 			this.toolStrip2.PerformLayout();
 			this.ResumeLayout(false);
@@ -217,5 +221,6 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.ToolStripDropDownButton toolStripHelpButton;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
+		protected Vulcan.Uczniowie.HelpProvider.HelpComponent _helpProvider;
 	}
 }

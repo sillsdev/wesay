@@ -290,6 +290,8 @@ namespace WeSay.LexicalModel
 				{
 					return false;
 				}
+				if (FieldName == "SILCAWL")
+					return false;
 
 				return true;
 			}
@@ -310,6 +312,39 @@ namespace WeSay.LexicalModel
 				return true;
 			}
 		}
+
+		[Browsable(false)]
+		public bool UserCanModifyWritingSystems
+		{
+			get
+			{
+				if (_fieldName == "SILCAWL" ||
+					_fieldName =="Picture")
+					// || Don't disable this:  it is actually used to change the language used when displaying domains:  _fieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+
+		public bool UserCanModifySpellCheckFeature
+		{
+			get
+			{
+				if (_fieldName == "SILCAWL" ||
+					_fieldName == "Picture" ||
+					_fieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+
 
 		[TypeConverter(typeof (DataTypeClassConverter))]
 		[Description(
@@ -385,7 +420,7 @@ namespace WeSay.LexicalModel
 					if (s == null)
 					{
 						throw new ArgumentNullException("value",
-														"Writing System argument" + i + "is null");
+														"Input System argument" + i + "is null");
 					}
 				}
 				if(_writingSystemIds != null)
@@ -551,6 +586,7 @@ namespace WeSay.LexicalModel
 			get { return _isMultiParagraph; }
 			set { _isMultiParagraph = value;}
 		}
+
 
 		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)

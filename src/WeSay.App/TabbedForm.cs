@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using Chorus.UI.Review;
@@ -29,6 +32,9 @@ namespace WeSay.App
 			NavigateToRecordEvent navigateToRecordEventToSubscribeTo)
 		{
 			InitializeComponent();
+			_helpProvider.RegisterPrimaryHelpFileMapping("wesay.helpmap");
+			_helpProvider.RegisterSecondaryHelpMapping("chorus.helpmap");
+
 			tabControl1.TabPages.Clear();
 			tabControl1.Selected += OnTabSelected;
 
@@ -41,7 +47,6 @@ namespace WeSay.App
 			{
 				navigateToRecordEventToSubscribeTo.Subscribe(OnNavigateToUrl);
 			}
-
 		}
 
 		//for tests
@@ -386,6 +391,12 @@ namespace WeSay.App
 					  };
 			t.Interval = 1;
 			t.Start();
+		}
+
+		private void OnKeyDown(object sender, KeyEventArgs e)
+		{
+			//if (e.KeyCode == Keys.F1) //help is now handled by the HelpProvider
+
 		}
 	}
 
