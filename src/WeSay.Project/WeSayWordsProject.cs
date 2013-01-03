@@ -16,6 +16,7 @@ using Autofac.Builder;
 using Autofac.Core;
 using Chorus;
 using Chorus.FileTypeHanders.lift;
+using Chorus.UI.Notes;
 using Chorus.sync;
 using Chorus.UI.Notes.Bar;
 using Microsoft.Practices.ServiceLocation;
@@ -35,6 +36,7 @@ using Palaso.WritingSystems;
 using Palaso.Xml;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration.UserConfig;
 using WeSay.Project.ConfigMigration.WeSayConfig;
@@ -468,7 +470,7 @@ namespace WeSay.Project
 			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named<ViewTemplate>("PrintingTemplate").SingleInstance();
 			builder.Register<IWritingSystemRepository>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned().SingleInstance();
 
-			RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
+			RegisterChorusStuff(builder, viewTemplates.First().CreateChorusDisplaySettings());
 
 
 			builder.Register<PublicationFontStyleProvider>(c => new PublicationFontStyleProvider(c.ResolveNamed<ViewTemplate>("PrintingTemplate"))).SingleInstance();
@@ -519,7 +521,7 @@ namespace WeSay.Project
 			_container = builder.Build();
 		}
 
-		private void RegisterChorusStuff(ContainerBuilder builder, IEnumerable<IWritingSystem> writingSystemsForChorus)
+		private void RegisterChorusStuff(ContainerBuilder builder, ChorusNotesDisplaySettings displaySettings)
 		{
 			//NB: currently, the ctor for ChorusSystem requires hg, since it gets or creates a repo in the path.
 			if (!string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")))
@@ -528,9 +530,9 @@ namespace WeSay.Project
 			//TODO: move all this stuff to ChorusSystem
 			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
 			var chorusSystem = new ChorusSystem(Path.GetDirectoryName(PathToConfigFile));
+			chorusSystem.DisplaySettings = displaySettings;
 			chorusSystem.Init(String.Empty);
-			chorusSystem.WritingSystems = writingSystemsForChorus;
-			builder.RegisterInstance(writingSystemsForChorus);
+
 			builder.RegisterInstance<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);
 			builder.RegisterInstance<ChorusSystem>(chorusSystem);
 
