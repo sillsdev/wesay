@@ -1,4 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<LifeCycleStage>ALPHA</LifeCycleStage>
+	</PropertyGroup>
 
 	<Target Name="VersionNumbers">
 		<Message Text="BUILD_NUMBER: $(BUILD_NUMBER)" Importance="high"/>
@@ -15,6 +18,7 @@
 		</CreateProperty>
 
 		<Message Text="Version: $(Version)" Importance="high"/>
+		<Message Text="LifeCycleStage: $(LifeCycleStage)" Importance="high"/>
 	</Target>
 
 	<ItemGroup>
