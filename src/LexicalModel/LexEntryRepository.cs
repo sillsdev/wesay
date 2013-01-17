@@ -900,16 +900,16 @@ namespace WeSay.LexicalModel
 		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field, string[] searchWritingSystemIds, WritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			 var query = new MissingFieldQuery(field, searchWritingSystemIds, null);
-			return GetEntriesWithMissingFieldSortedByLexicalUnit(query, field, lexicalUnitWritingSystem);
+			return GetEntriesWithMissingFieldSortedByLexicalUnit(query, lexicalUnitWritingSystem);
 	  }
 
-		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(MissingFieldQuery query, Field field, WritingSystemDefinition lexicalUnitWritingSystem)
+		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(MissingFieldQuery query, WritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			Guard.AgainstNull(lexicalUnitWritingSystem, "lexicalUnitWritingSystem");
-			Guard.AgainstNull(field, "field");
+			Guard.AgainstNull(query.Field, "field");
 			Guard.AgainstNull(query, "query");
 
-			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}_{2}", field, lexicalUnitWritingSystem.Id, query.UniqueCacheId);
+			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}_{2}", query.Field, lexicalUnitWritingSystem.Id, query.UniqueCacheId);
 			//cacheName = MakeSafeForFileName(cacheName);
 			if (_caches[cacheName] == null)
 			{
