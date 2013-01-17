@@ -11,9 +11,12 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
+using Autofac;
 using Autofac.Builder;
+using Autofac.Core;
 using Chorus;
 using Chorus.FileTypeHanders.lift;
+using Chorus.UI.Notes;
 using Chorus.sync;
 using Chorus.UI.Notes.Bar;
 using Microsoft.Practices.ServiceLocation;
@@ -33,6 +36,7 @@ using Palaso.WritingSystems;
 using Palaso.Xml;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration.UserConfig;
 using WeSay.Project.ConfigMigration.WeSayConfig;
@@ -57,7 +61,7 @@ namespace WeSay.Project
 		private readonly AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
 		private ChorusBackupMaker _backupMaker;
-		private Autofac.IContainer _container;
+		private IContainer _container;
 		readonly Dictionary<string, string> _changedWritingSystemIds = new Dictionary<string, string>();
 
 		//public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
@@ -388,48 +392,47 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
-			builder.Register(new WordListCatalog()).SingletonScoped();
+			builder.RegisterInstance(new WordListCatalog());
 #if !MONO
-			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
+			builder.RegisterInstance<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 #endif
 			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
-			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
+			builder.Register<OptionsList>(c => GetSemanticDomainsList()).SingleInstance();//todo: figure out how to limit this with a name... currently, it's for any OptionList
 
 			// I (CP) don't think this is needed
-			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
+			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields()).SingleInstance();//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
 
-			builder.Register<LiftDataMapper>( c =>
-			  {
-				  try
-				  {
-#if !MONO
-					  return c.Resolve<IProgressNotificationProvider>().Go
-						  <LiftDataMapper>(
-							  "Loading Dictionary",
-							  progressState =>
-								  {
-#endif
-									  var mapper =  new WeSayLiftDataMapper(
-										  _pathToLiftFile,
-										  GetSemanticDomainsList(),
-										  GetIdsOfSingleOptionFields(),
-										  new ProgressState ()
-										  );
+			builder.Register<LiftDataMapper>(c =>
+												 {
+													 try
+													 {
+														 var semanticDomains = GetSemanticDomainsList();
+														 return c.Resolve<IProgressNotificationProvider>()
+																 .Go<LiftDataMapper>(
+																	 "Loading Dictionary", progressState =>
+																							   {
+																								   var mapper = new WeSayLiftDataMapper
+																									   (
+																									   _pathToLiftFile,
+																									   semanticDomains,
+																									   GetIdsOfSingleOptionFields
+																										   (),
+																									   progressState
+																									   );
 
-									  return mapper;
-#if !MONO
-								  }
-						  );
-#endif
-				  }
-				  catch (LiftFormatException error)
-				  {
-					  ErrorReport.NotifyUserOfProblem(error.Message);
-					  throw;
-				  }
-			  });
+																								   return mapper;
+																							   }
+															 );
+													 }
+													 catch (LiftFormatException error)
+													 {
+														 ErrorReport.NotifyUserOfProblem(error.Message);
+														 throw;
+													 }
+												 }
+			).SingleInstance();
 
-			builder.Register<LexEntryRepository>();
+			builder.RegisterType<LexEntryRepository>().SingleInstance();
 //            builder.Register<LexEntryRepository>(
 //                 c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
 //                         progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
@@ -442,7 +445,7 @@ namespace WeSay.Project
 			var catalog = new TaskTypeCatalog();
 			catalog.RegisterAllTypes(builder);
 
-			builder.Register<TaskTypeCatalog>(catalog).SingletonScoped();
+			builder.RegisterInstance<TaskTypeCatalog>(catalog).SingleInstance();
 
 			//this is a bit weird, did it to get around a strange problem where it was left open,
 			//never found out by whom.  But note, it does affect behavior.  It means that
@@ -452,31 +455,31 @@ namespace WeSay.Project
 
 			string defaultXmlConfigText = File.ReadAllText(PathToDefaultConfig);
 
-			builder.Register<ConfigFileReader>(c => new ConfigFileReader(configFileText, defaultXmlConfigText,  catalog)).SingletonScoped();
+			builder.Register(c => new ConfigFileReader(configFileText, defaultXmlConfigText,  catalog)).SingleInstance();
 
-			builder.Register<TaskCollection>().SingletonScoped();
+			builder.RegisterType<TaskCollection>().SingleInstance();
 
 			var viewTemplates = ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems);
 			foreach (var viewTemplate in viewTemplates)
 			{
 				//todo: this isn't going to work if we start using multiple tempates.
 				//will have to go to a naming system.
-				builder.Register(viewTemplate).SingletonScoped();
+				builder.RegisterInstance<ViewTemplate>(viewTemplate).SingleInstance();
 			}
 
-			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named("PrintingTemplate");
-			builder.Register<IWritingSystemRepository>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
+			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named<ViewTemplate>("PrintingTemplate").SingleInstance();
+			builder.Register<IWritingSystemRepository>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned().SingleInstance();
 
-			RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
-
-
-			builder.Register<PublicationFontStyleProvider>(c=> new PublicationFontStyleProvider(c.Resolve<ViewTemplate>("PrintingTemplate")));
-
-			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainDdp4);
-			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
+			RegisterChorusStuff(builder, viewTemplates.First().CreateChorusDisplaySettings());
 
 
-			builder.Register<PictureControl>(c=> new PictureControl(Path.GetDirectoryName(PathToLiftFile), PathToPictures, GetFileLocator())).FactoryScoped();
+			builder.Register<PublicationFontStyleProvider>(c => new PublicationFontStyleProvider(c.ResolveNamed<ViewTemplate>("PrintingTemplate"))).SingleInstance();
+
+			builder.Register<IOptionListReader>(c => new DdpListReader()).Named<IOptionListReader>(LexSense.WellKnownProperties.SemanticDomainDdp4).SingleInstance();
+			builder.Register<IOptionListReader>(c => new GenericOptionListReader()).SingleInstance();
+
+
+			builder.Register<PictureControl>(c=> new PictureControl(Path.GetDirectoryName(PathToLiftFile), PathToPictures, GetFileLocator())).InstancePerDependency();
 
 		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
 
@@ -484,18 +487,18 @@ namespace WeSay.Project
 			// can't currently get at the instance
 			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
 
-			builder.Register<CheckinDescriptionBuilder>().SingletonScoped();
+			builder.RegisterType<CheckinDescriptionBuilder>().SingleInstance();
 			var configuration = new ProjectFolderConfiguration(Path.GetDirectoryName(PathToConfigFile));
 			LiftFolder.AddLiftFileInfoToFolderConfiguration(configuration);
-			builder.Register<Chorus.sync.ProjectFolderConfiguration>(configuration).SingletonScoped();
-			builder.Register<ChorusBackupMaker>().SingletonScoped();
-			builder.Register<UiConfigurationOptions>().SingletonScoped();
+			builder.RegisterInstance<Chorus.sync.ProjectFolderConfiguration>(configuration).SingleInstance();
+			builder.RegisterType<ChorusBackupMaker>().SingleInstance();
+			builder.RegisterType<UiConfigurationOptions>().SingleInstance();
 
 
 			//it is sad that we initially used a static for logger, and that hasn't been completely undone yet.
 			//but by registering it here, we at least make it possible for components to get access to it this
 			//"proper" way.
-			builder.Register<Logger>(c => Logger.Singleton);
+			builder.Register<Logger>(c => Logger.Singleton).SingleInstance();
 			builder.Register<ILogger>(c =>
 										  {
 											  var m = new MultiLogger();
@@ -503,7 +506,7 @@ namespace WeSay.Project
 											  m.Add(Logger.Singleton);
 											  m.Add(c.Resolve<CheckinDescriptionBuilder>());
 											  return m;
-										  });
+										  }).SingleInstance();
 
 			//            var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
 //                        () => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
@@ -512,13 +515,13 @@ namespace WeSay.Project
 //            builder.Register<AudioPathProvider>(c=>new AudioPathProvider(PathToAudio, )));
 
 			builder.Register(c=>
-				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).ContainerScoped();
+				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).InstancePerLifetimeScope();
 
 
 			_container = builder.Build();
 		}
 
-		private void RegisterChorusStuff(ContainerBuilder builder, IEnumerable<IWritingSystem> writingSystemsForChorus)
+		private void RegisterChorusStuff(ContainerBuilder builder, ChorusNotesDisplaySettings displaySettings)
 		{
 			//NB: currently, the ctor for ChorusSystem requires hg, since it gets or creates a repo in the path.
 			if (!string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")))
@@ -527,10 +530,11 @@ namespace WeSay.Project
 			//TODO: move all this stuff to ChorusSystem
 			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
 			var chorusSystem = new ChorusSystem(Path.GetDirectoryName(PathToConfigFile));
-			chorusSystem.WritingSystems = writingSystemsForChorus;
-			builder.Register(writingSystemsForChorus);
-			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);
-			builder.Register<ChorusSystem>(chorusSystem);
+			chorusSystem.DisplaySettings = displaySettings;
+			chorusSystem.Init(String.Empty);
+
+			builder.RegisterInstance<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);
+			builder.RegisterInstance<ChorusSystem>(chorusSystem);
 
 			//            builder.Register<ChorusNotesSystem>(c=>
 			//            {
@@ -547,14 +551,14 @@ namespace WeSay.Project
 			{
 				var chorus = c.Resolve<ChorusSystem>();
 				return () => chorus.WinForms.CreateNotesBrowser();
-			});
+			}).SingleInstance();
 
 			var mapping = new NotesToRecordMapping();
 			mapping.FunctionToGetCurrentUrlForNewNotes = (entry, id) => GetUrlFromLexEntry(entry as LexEntry);
 			mapping.FunctionToGoFromObjectToItsId = (entry) => (entry as LexEntry).Guid.ToString();
-			builder.Register<NotesToRecordMapping>(mapping);
+			builder.RegisterInstance<NotesToRecordMapping>(mapping);
 
-			builder.Register<NotesBarView>(c => c.Resolve<ChorusSystem>().WinForms.CreateNotesBar(PathToLiftFile, c.Resolve<NotesToRecordMapping>(), new NullProgress())).FactoryScoped();
+			builder.Register<NotesBarView>(c => c.Resolve<ChorusSystem>().WinForms.CreateNotesBar(PathToLiftFile, c.Resolve<NotesToRecordMapping>(), new NullProgress())).InstancePerDependency();
 
 		}
 
@@ -1202,7 +1206,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public IContainer Container
+		public ILifetimeScope Container
 		{
 			get { return _container; }
 		}
@@ -1425,7 +1429,7 @@ namespace WeSay.Project
 			IOptionListReader reader;
 			object r;
 			//first, try for a reader named after the field
-			if(_container.TryResolve(fieldName, out r))
+			if(_container.TryResolveNamed(fieldName, typeof(IOptionListReader), out r))
 			{
 				reader = r as IOptionListReader;
 			}
@@ -1780,13 +1784,13 @@ namespace WeSay.Project
 			Tasks = ConfigFileTaskBuilder.CreateTasks(_container, configReader.GetTasksConfigurations(_container));
 		}
 
-		public delegate void ContainerAdder(Autofac.Builder.ContainerBuilder b);
+		public delegate void ContainerAdder(ContainerBuilder b);
 
 		public void AddToContainer(ContainerAdder adder)
 		{
-			var containerBuilder = new Autofac.Builder.ContainerBuilder();
+			var containerBuilder = new ContainerBuilder();
 			adder.Invoke(containerBuilder);
-			containerBuilder.Build(_container);
+			containerBuilder.Update(_container);
 		}
 
 		public void SetupUserForChorus()

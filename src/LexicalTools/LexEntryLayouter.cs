@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
@@ -90,7 +91,7 @@ namespace WeSay.LexicalTools
 			var ap = new AudioPathProvider(WeSayWordsProject.Project.PathToAudio,
 						() => entry.LexicalForm.GetBestAlternativeString(namingHelper.LexicalUnitWritingSystemIds));
 
-		   return serviceLocator.CreateNewUsing(c=>c.Register(ap));
+		   return serviceLocator.CreateNewUsing(c=>c.RegisterInstance(ap));
 	   }
 	}
 

@@ -12,14 +12,14 @@ namespace WeSay.ConfigTool
 	{
 		private readonly List<ConfigurationControlBase> _areaControls;
 
-		public SettingsControl(IContext context)
+		public SettingsControl(IComponentContext context)
 		{
 			this.Disposed += OnDisposed;
 			_areaControls = new List<ConfigurationControlBase>();
 
 			InitializeComponent();
 
-			Tasks.TaskListPresentationModel m = context.Resolve<Tasks.TaskListPresentationModel>();
+			var m = context.Resolve<Tasks.TaskListPresentationModel>();
 			_tasksButton.Tag = m.View;
 			_areaControls.Add((ConfigurationControlBase) _tasksButton.Tag);
 

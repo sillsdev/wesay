@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<LifeCycleStage>CANDIDATE</LifeCycleStage>
+		<LifeCycleStage>ALPHA</LifeCycleStage>
 	</PropertyGroup>
 
 	<Target Name="VersionNumbers">
@@ -13,7 +13,7 @@
 		<Message Text="BuildCounter: $(BuildCounter)" Importance="high"/>
 
 		<!-- Note, after some thought, we've decided this is the best place to keep the version number (not on TeamCity, not in the assemblies).     -->
-		<CreateProperty Value="1.3.$(BuildCounter)">
+		<CreateProperty Value="1.4.$(BuildCounter)">
 			<Output PropertyName="Version" TaskParameter="Value"/>
 		</CreateProperty>
 

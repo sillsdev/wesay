@@ -9,7 +9,7 @@ namespace WeSay.Project
 {
 	public class TaskCollection : List<ITaskConfiguration>
 	{
-		public TaskCollection(IContext context, ConfigFileReader configFileReader)
+		public TaskCollection(IComponentContext context, ConfigFileReader configFileReader)
 		{
 
 			try

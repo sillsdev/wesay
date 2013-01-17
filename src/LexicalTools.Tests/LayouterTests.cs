@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
@@ -24,7 +25,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			WeSayProjectTestHelper.InitializeForTests();
-			var b = new Autofac.Builder.ContainerBuilder();
+			var b = new ContainerBuilder();
 			b.Register(c => new MediaNamingHelper(new string[] {"en"}));
 
 			Context =   new WeSay.Project.ServiceLocatorAdapter(b.Build());
