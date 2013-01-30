@@ -162,8 +162,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 
 				  <!-- audio recording/playback engine used by palaso.media -->
-				  <Component Id="irrKlang.NET2.0.dll" Guid="{952F0A0C-F317-459f-A91C-55DE3D046B2C}">
-					<File Id="irrKlang.NET2.0.dll" Name="irrKlang.NET2.0.dll" KeyPath="yes" Source="..\..\output\release\irrKlang.NET2.0.dll" />
+				  <Component Id="irrKlang.NET4.dll" Guid="{952F0A0C-F317-459f-A91C-55DE3D046B2C}">
+					<File Id="irrKlang.NET4.dll" Name="irrKlang.NET4.dll" KeyPath="yes" Source="..\..\output\release\irrKlang.NET4.dll" />
 				  </Component>
 
 				  <Component Id="ICSharpCode.SharpZipLib.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D9D7}">
@@ -269,19 +269,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<File Id="Addin.LiftReports.dll" Name="Addin.LiftReports.dll" KeyPath="yes" Source="..\..\output\release\Addin.LiftReports.dll" />
 		  </Component>
 		  -->
-				  <!-- this is a LiftReports requirement -->
-				  <Component Id="NVelocity.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D444}">
-					<File Id="NVelocity.dll" Name="NVelocity.dll" KeyPath="yes" Source="..\..\output\release\NVelocity.dll" />
-				  </Component>
-				  <!-- this is an nvelocity requirement -->
-				  <Component Id="log4net.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D555}">
-					<File Id="log4net.dll" Name="log4net.dll" KeyPath="yes" Source="..\..\output\release\log4net.dll" />
-				  </Component>
-				  <!-- this is an nvelocity requirement -->
-				  <Component Id="commons.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D666}">
-					<File Id="commons.dll" Name="commons.dll" KeyPath="yes" Source="..\..\output\release\commons.dll" />
-				  </Component>
-
 				  <Component Id="WeSay.AddinLib.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7902222}">
 					<File Id="WeSay.AddinLib.dll" Name="WeSay.AddinLib.dll" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.dll" />
 				  </Component>
@@ -336,7 +323,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Vulcan.Uczniowie.HelpProvider.dll"/>
 
 			  <ComponentRef Id="autofac.dll"/>
-			  <ComponentRef Id="irrKlang.NET2.0.dll"/>
+			  <ComponentRef Id="irrKlang.NET4.dll"/>
 			  <ComponentRef Id="Interop.WIA.dll" />
 			  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
 			  <ComponentRef Id="KeymanLink.dll" />
@@ -369,9 +356,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <!--      <ComponentRef Id="Addin.LiftReports.dll"/> -->
 			  <ComponentRef Id="Addin.Transform.dll"/>
 			  <ComponentRef Id="Prince.dll"/>
-			  <ComponentRef Id="NVelocity.dll"/>
-			  <ComponentRef Id="log4net.dll"/>
-			  <ComponentRef Id="commons.dll"/>
 			  <ComponentRef Id="WeSay.AddinLib.dll"/>
 			  <ComponentRef Id="Mono.Addins.dll"/>
 
