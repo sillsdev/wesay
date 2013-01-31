@@ -31,7 +31,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 		  <PropertyRef Id="NETFRAMEWORK40CLIENT" />
 		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET 4.0 ClientFramework.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
-			Installed OR NETFRAMEWORK40CLIENT
+			Installed OR NETFRAMEWORK40CLIENT OR NETFRAMEWORK40FULL
 		  </Condition>
 
 
