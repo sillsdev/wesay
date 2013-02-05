@@ -232,7 +232,7 @@
 
 		<Message Text="Attempting rsync of DownloadPointers.htm" Importance="high"/>
 		<Exec
-			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\DownloadPointers.htm" bob@wesay.org:/var/www/downloads/DownloadPointers$(ReleaseSuffix).htm'
+			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\DownloadPointers.htm" bob@wesay.org:/var/www/downloads/DownloadPointers$(ReleaseString).htm'
 			WorkingDirectory="$(RootDir)" />
 
 	</Target>
