@@ -49,7 +49,6 @@ namespace WeSay.UI
 	/// A custom collapsible splitter that can resize, hide and show associated form controls
 	/// </summary>
 	[ToolboxBitmap(typeof (CollapsibleSplitter))]
-	[Designer(typeof (CollapsibleSplitterDesigner))]
 	public class CollapsibleSplitter: Splitter
 	{
 		#region Private Properties
@@ -813,19 +812,5 @@ namespace WeSay.UI
 		#endregion
 
 		#endregion
-	}
-
-	/// <summary>
-	/// A simple designer class for the CollapsibleSplitter control to remove
-	/// unwanted properties at design time.
-	/// </summary>
-	public class CollapsibleSplitterDesigner: ControlDesigner
-	{
-		protected override void PreFilterProperties(IDictionary properties)
-		{
-			properties.Remove("IsCollapsed");
-			properties.Remove("BorderStyle");
-			properties.Remove("Size");
-		}
 	}
 }

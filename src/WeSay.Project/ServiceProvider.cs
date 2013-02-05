@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using Autofac;
 using System.Linq;
+using Autofac.Core;
+using Autofac.Core.Registration;
 using Microsoft.Practices.ServiceLocation;
 
 namespace Microsoft.Practices.ServiceLocation
 {
-	public delegate void ContainerAdder(Autofac.Builder.ContainerBuilder b);
+	public delegate void ContainerAdder(ContainerBuilder b);
 
 	public interface IServiceLocator : IServiceProvider
 	{
@@ -36,14 +38,14 @@ namespace WeSay.Project
 	/// </summary>
 	public class ServiceLocatorAdapter : IServiceLocator
 	{
-		readonly IContainer _container;
+		readonly ILifetimeScope _container;
 
-		public ServiceLocatorAdapter(IContainer container)
+		public ServiceLocatorAdapter(ILifetimeScope container)
 		{
 			if (container == null)
 				throw new ArgumentNullException("container");
 
-			this._container = container;
+			_container = container;
 		}
 
 		#region IServiceProvider methods
@@ -67,7 +69,7 @@ namespace WeSay.Project
 			return
 				string.IsNullOrEmpty(key)
 					? GetInstanceWhichWrapsExceptions(() => _container.Resolve(serviceType))
-					: GetInstanceWhichWrapsExceptions(() => _container.Resolve(key));
+					: GetInstanceWhichWrapsExceptions(() => _container.ResolveNamed<Type>(key));    //This is my best guess as to the appropriate method signature. In AutoFac 1 it was .Resolve(key) --TA Nov 20 2012
 		}
 
 		public TService GetInstance<TService>()
@@ -77,25 +79,21 @@ namespace WeSay.Project
 
 		public TService GetInstance<TService>(string key)
 		{
-			return GetInstanceWhichWrapsExceptions(() => _container.Resolve<TService>(key));
+			return GetInstanceWhichWrapsExceptions(() => _container.ResolveNamed<TService>(key));
 		}
 
 		public IEnumerable<object> GetAllInstances(Type serviceType)
 		{
 			// go through all the registrations and find TypedService instances that
 			// equal the serviceType.
-			var servicesToActivate
-				= from reg in _container.ComponentRegistrations
-				  from svc in reg.Descriptor.Services.OfType<TypedService>()
-				  where svc.ServiceType.Equals(serviceType)
-				  select svc;
+			var servicesToActivate = _container.ComponentRegistry.Registrations.Select(reg => reg.Services.OfType<TypedService>().Where(svc=>svc.ServiceType.Equals(serviceType)));
 
 			// where we'll collect them....
 			var result = new List<object>();
 
 			// Then we create each one...
 			foreach (var service in servicesToActivate)
-				result.Add(GetInstanceWhichWrapsExceptions(() => _container.Resolve(service)));
+				result.Add(GetInstanceWhichWrapsExceptions(() => _container.ResolveKeyed<IEnumerable<TypedService>>(service)));//This is my best guess as to the appropriate method signature. In AutoFac 1 it was .Resolve(service) --TA Nov 20 2012
 
 			return result;
 		}
@@ -113,11 +111,8 @@ namespace WeSay.Project
 		 /// <returns></returns>
 		public IServiceLocator CreateNewUsing(ContainerAdder adder)
 		{
-			var containerBuilder = new Autofac.Builder.ContainerBuilder();
-			adder.Invoke(containerBuilder);
-			var innerContainer = _container.CreateInnerContainer();
-			containerBuilder.Build(innerContainer);
-			return new ServiceLocatorAdapter(innerContainer);
+			var scope = _container.BeginLifetimeScope(containerBuilder => adder.Invoke(containerBuilder));
+			return new ServiceLocatorAdapter(scope);
 		}
 
 		#endregion
@@ -131,10 +126,6 @@ namespace WeSay.Project
 				return resolve();
 			}
 			catch (DependencyResolutionException ex)
-			{
-				throw new ActivationException(ex.Message, ex);
-			}
-			catch (ComponentNotRegisteredException ex)
 			{
 				throw new ActivationException(ex.Message, ex);
 			}

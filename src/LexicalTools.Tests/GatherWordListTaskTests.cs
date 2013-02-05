@@ -600,6 +600,42 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void CurrentPromptingForm_HasDefButNotGloss_GivesCorrectWritingSystemAlternative()
+		{
+			const string entries = @"
+<entry
+		id='one'>
+		<lexical-unit>
+			<form
+				lang='en'>
+				<text>skin (of man)</text>
+			</form>
+		</lexical-unit>
+		<sense
+			id='skin'>
+			<gloss
+				lang='en'>
+				<text>skin (of man)</text>
+			</gloss>
+			<definition>
+				<form
+					lang='en'>
+					<text>skin (of man)</text>
+				</form>
+				<form
+					lang='id'>
+					<text>kulit (manusia)</text>
+				</form>
+			</definition>
+			</sense>
+	</entry>";
+
+			var task = CreateAndActivateLiftTask(new List<string>(new string[] { "id", "en" }), entries);
+			task.NavigateFirstToShow();
+			Assert.AreEqual("kulit (manusia)", task.CurrentPromptingForm);
+		}
+
+		[Test]
 		public void CurrentPromptingForm_FieldSpecifiesSecondWritingSystemInGloss_GivesCorrectWritingSystemAlternative()
 		{
 			const string entries = @"

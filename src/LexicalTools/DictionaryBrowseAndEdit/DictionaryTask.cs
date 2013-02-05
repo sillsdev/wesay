@@ -100,7 +100,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		void OnSelectedEntryOfDictionaryControlChanged(object sender, EventArgs e)
 		{
-			LexEntry entry = _dictionaryControl.CurrentRecord;
+			LexEntry entry = _dictionaryControl.CurrentEntry;
 			if(entry !=null)
 			{
 				_taskMemory.Set(LastUrlKey, _dictionaryControl.CurrentUrl);

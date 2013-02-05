@@ -256,14 +256,18 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		public void CreateListForChorus_NotesFieldHasNoWritingSystems_DoesNotThrow()
+		public void CreateChorusDisplaySettings_NotesFieldHasNoWritingSystems_DoesNotThrow()
 		{
 			BasilProjectTestHelper.InitializeForTests();
 			var master = new ViewTemplate();
 			var noteField = new Field();
-			noteField.FieldName = "Note";
+			noteField.FieldName = LexSense.WellKnownProperties.Note;
+			var lexicalFormField = new Field();
+			lexicalFormField.FieldName = LexEntry.WellKnownProperties.LexicalUnit;
+			lexicalFormField.WritingSystemIds.Add(WeSayWordsProject.VernacularWritingSystemIdForProjectCreation);
 			master.Fields.Add(noteField);
-			Assert.DoesNotThrow(() => master.CreateListForChorus());
+			master.Fields.Add(lexicalFormField);
+			Assert.DoesNotThrow(() => master.CreateChorusDisplaySettings());
 		}
 	}
 }
