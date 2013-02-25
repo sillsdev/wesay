@@ -19,6 +19,7 @@ namespace WeSay.UI
 			{
 				components.Dispose();
 			}
+			Application.RemoveMessageFilter(this);
 			base.Dispose(disposing);
 			this._disposed = true;
 		}

@@ -13,7 +13,7 @@ namespace WeSay.UI
 	/// It supports dynamically removing and inserting new rows, to support
 	/// "ghost" fields
 	/// </summary>
-	public partial class DetailList: TableLayoutPanel
+	public partial class DetailList: TableLayoutPanel, IMessageFilter
 	{
 		/// <summary>
 		/// Can be used to track which data item the user is currently editting, to,
@@ -27,6 +27,10 @@ namespace WeSay.UI
 		private bool _disposed;
 		private readonly StackTrace _stackAtConstruction;
 
+		public EventHandler MouseEnteredBounds;
+		public EventHandler MouseLeftBounds;
+		private bool _mouseIsInBounds;
+
 		public DetailList()
 		{
 #if DEBUG
@@ -34,6 +38,8 @@ namespace WeSay.UI
 			_stackAtConstruction = new StackTrace();
 #endif
 			InitializeComponent();
+			Application.AddMessageFilter(this);
+
 			Name = "DetailList"; //for  debugging
 
 			if (_indexOfLabel == 0)
@@ -335,6 +341,47 @@ namespace WeSay.UI
 			{
 				throw new ObjectDisposedException(GetType().FullName);
 			}
+		}
+
+		//This message filter is used to determine wether the mouse in hovering over the DetailList or one
+		//of its children. MouseLeave unfortunately fires when the mouse moves over a child control. This
+		//is not behavior that we want which is why we are adding the MouseEnteredBounds and MouseLeftBounds
+		//events
+		public bool PreFilterMessage(ref Message m)
+		{
+			if (m.Msg != 0x0200) return false;
+			if (_disposed) return false;
+			int x = m.LParam.ToInt32() & 0x0000FFFF;
+			int y = (int)((m.LParam.ToInt32() & 0xFFFF0000) >> 16);
+
+			var controlGettingMessage = Control.FromHandle(m.HWnd);
+			var posRelativeToControl = new Point(x, y);
+			var screenPos = controlGettingMessage.PointToScreen(posRelativeToControl);
+			var posRelativeToThis = PointToClient(screenPos);
+
+			//Console.WriteLine("MouseCoords: {0} {1} BoundsUpperLeft: {2}, {3}, {4}, {5}", posRelativeToThis.X, posRelativeToThis.Y, Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height);
+
+			var mouseInBounds = ClientRectangle.Contains(posRelativeToThis);
+			if (_mouseIsInBounds != mouseInBounds)
+			{
+				if (mouseInBounds)
+				{
+					if (MouseEnteredBounds != null)
+					{
+						MouseEnteredBounds(this, new EventArgs());
+					}
+					_mouseIsInBounds = true;
+				}
+				else
+				{
+					if (MouseLeftBounds != null)
+					{
+						MouseLeftBounds(this, new EventArgs());
+					}
+					_mouseIsInBounds = false;
+				}
+			}
+			return false;
 		}
 	}
 }

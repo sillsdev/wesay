@@ -68,26 +68,35 @@ namespace WeSay.LexicalTools
 				if (value)
 				{
 					DetailList.ColumnCount = 3;
-					DetailList.ColumnStyles.Insert(2, new ColumnStyle(SizeType.AutoSize));
 					_deleteIcon.Image = Properties.Resources.DeleteIcon;
-					if (!DetailList.Controls.Contains(_deleteIcon))
-					{
-						DetailList.Controls.Add(_deleteIcon, 2, 0);
-					}
+					DetailList.ColumnStyles.Insert(2, new ColumnStyle(SizeType.Absolute, _deleteIcon.Image.Width + 5));
+					_deleteIcon.Visible = false;
+					DetailList.Controls.Add(_deleteIcon, 2, 0);
 					_deleteIcon.Click += OnDeleteClicked;
+					DetailList.MouseEnteredBounds += OnMouseEnteredBounds;
+					DetailList.MouseLeftBounds += OnMouseLeftBounds;
 				}
 				else
 				{
 					DetailList.ColumnCount = 2;
 					DetailList.ColumnStyles.RemoveAt(2);
-					if (DetailList.Controls.Contains(_deleteIcon))
-					{
-						DetailList.Controls.Remove(_deleteIcon);
-					}
+					DetailList.Controls.Remove(_deleteIcon);
 					_deleteIcon.Click -= OnDeleteClicked;
+					DetailList.MouseEnteredBounds -= OnMouseEnteredBounds;
+					DetailList.MouseLeftBounds -= OnMouseLeftBounds;
 				}
 				_deletable = value;
 			}
+		}
+
+		private void OnMouseLeftBounds(object sender, EventArgs e)
+		{
+			_deleteIcon.Visible = false;
+		}
+
+		private void OnMouseEnteredBounds(object sender, EventArgs e)
+		{
+			_deleteIcon.Visible = true;
 		}
 
 		private void OnDeleteClicked(object sender, EventArgs e)
