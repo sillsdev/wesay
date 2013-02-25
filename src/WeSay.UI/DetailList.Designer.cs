@@ -21,7 +21,6 @@ namespace WeSay.UI
 			}
 			base.Dispose(disposing);
 			this._disposed = true;
-			--_instanceCountForDebugging;
 		}
 
 		#region Component Designer generated code

@@ -19,12 +19,13 @@ namespace WeSay.LexicalTools
 	{
 		public LexEntry Entry { get; set; }
 
-		public LexEntryLayouter(DetailList builder,
+		public LexEntryLayouter(DetailList parentDetailList,
+								int parentRow,
 								ViewTemplate viewTemplate,
 								LexEntryRepository lexEntryRepository,
 								IServiceLocator serviceLocator,
 								LexEntry entry)
-			: base(builder, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, entry))
+			: base(parentDetailList, parentRow, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, entry), entry)
 		{
 			Entry = entry;
 		}
@@ -58,26 +59,48 @@ namespace WeSay.LexicalTools
 			rowCount += AddCustomFields(entry, insertAtRow + rowCount);
 
 			var rowCountBeforeSenses = rowCount;
-			var layouter = new LexSenseLayouter(
-				DetailList,
-				ActiveViewTemplate,
-				RecordListManager,
-				_serviceProvider
-			);
-			layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
-			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
+			foreach (var lexSense in entry.Senses)
+			{
+				var layouter = new LexSenseLayouter(
+					DetailList,
+					rowCount,
+					ActiveViewTemplate,
+					RecordListManager,
+					_serviceProvider,
+					lexSense
+				);
+				layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
+				AddChildrenWidgets(layouter, lexSense);
+				rowCount++;
+			}
 
 			//see: WS-1120 Add option to limit "add meanings" task to the ones that have a semantic domain
 			//also: WS-639 (jonathan_coombs@sil.org) In Add meanings, don't show extra meaning slots just because a sense was created for the semantic domain
 			var ghostingRule = ActiveViewTemplate.GetGhostingRuleForField(LexEntry.WellKnownProperties.Sense);
 			if (rowCountBeforeSenses == rowCount || ghostingRule.ShowGhost)
 			{
-				rowCount += layouter.AddGhost(null, entry.Senses, true);
+				AddSenseGhost(entry, rowCount);
+				rowCount++;
 			}
 
 			DetailList.ResumeLayout();
 			return rowCount;
 		}
+
+		private void AddSenseGhost(LexEntry entry, int row)
+		{
+			var layouter = new LexSenseLayouter(
+				DetailList,
+				row,
+				ActiveViewTemplate,
+				RecordListManager,
+				_serviceProvider,
+				null
+				);
+			layouter.AddGhost(null, entry.Senses, true);
+			row++;
+		}
+
 
 		/// <summary>
 		/// Here we (somewhat awkwardly) create an inner container which is set up with knowledge of the current entry

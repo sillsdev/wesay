@@ -26,20 +26,9 @@ namespace WeSay.UI
 
 		private bool _disposed;
 		private readonly StackTrace _stackAtConstruction;
-		private static int _instanceCountForDebugging;
 
 		public DetailList()
 		{
-			++_instanceCountForDebugging;
-			if (_instanceCountForDebugging > 1)
-			{
-				//not necessarily bad, just did this while looking into ws-554
-				Logger.WriteEvent("Detail List Count ={0}", _instanceCountForDebugging);
-#if DEBUG
-				Debug.Assert(_instanceCountForDebugging < 5, "ws-554 reproduction?");
-#endif
-			}
-
 #if DEBUG
 
 			_stackAtConstruction = new StackTrace();
@@ -57,13 +46,38 @@ namespace WeSay.UI
 				ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 				ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 			}
+			Dock = DockStyle.Fill;
+			AutoSize = true;
+			AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
 			MouseClick += OnMouseClick;
+
+			CellPaint += OnCellPaint;
+			var rand = new Random();
+			BackColor = Color.FromArgb(255, rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
+		}
+
+		private void OnCellPaint(object sender, TableLayoutCellPaintEventArgs e)
+		{
+			var bounds = new Rectangle(e.CellBounds.Location, new Size(e.CellBounds.Width, e.CellBounds.Height - 10));
+			e.Graphics.DrawRectangle(new Pen(Color.FromArgb(BackColor.ToArgb() ^ 0x808080)), bounds);
 		}
 
 		private void OnMouseClick(object sender, MouseEventArgs e)
 		{
 			Select();
 		}
+		public void AddDetailList(DetailList detailList, int insertAtRow)
+		{
+			if (insertAtRow >= RowCount)
+			{
+				RowCount = insertAtRow + 1;
+			}
+			SetColumnSpan(detailList, 2);
+			RowStyles.Add(new RowStyle(SizeType.AutoSize));
+			Controls.Add(detailList, _indexOfLabel, insertAtRow);
+		}
+
 
 		protected override void OnGotFocus(EventArgs e)
 		{

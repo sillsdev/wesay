@@ -43,6 +43,11 @@ namespace WeSay.LexicalTools
 		{
 			_viewTemplate = null;
 			InitializeComponent();
+			AutoSize = true;
+			AutoSizeMode = AutoSizeMode.GrowAndShrink;
+			_panelEntry.AutoSize = true;
+			_panelEntry.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
 			Controls.Remove(_entryHeaderView);
 		   _entryHeaderView.Dispose();
 			_entryHeaderView = entryHeaderViewFactory();
@@ -345,6 +350,7 @@ namespace WeSay.LexicalTools
 					VerifyHasLexEntryRepository();
 					var layout = new LexEntryLayouter(
 						detailList,
+						0,
 						ViewTemplate,
 						_lexEntryRepository,
 						WeSayWordsProject.Project.ServiceLocator,//clean-up have to send this down the chain

@@ -33,6 +33,8 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private DetailList _detailList;
 
+		private DetailList _parentDetailList;
+
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
@@ -76,25 +78,37 @@ namespace WeSay.LexicalTools
 			set { _showNormallyHiddenFields = value; }
 		}
 
-		protected Layouter(DetailList builder,
+		public DetailList ParentDetailList
+		{
+			get { return _parentDetailList; }
+			set { _parentDetailList = value; }
+		}
+
+		protected PalasoDataObject PdoToLayout { get; set; }
+
+
+		protected Layouter(DetailList parentDetailList,
+						   int rowInParent,
 						   ViewTemplate viewTemplate,
 						   LexEntryRepository lexEntryRepository,
-							IServiceProvider serviceProvider)
+						   IServiceProvider serviceProvider,
+						   PalasoDataObject pdoToLayout)
 		{
-			if (builder == null)
+			if (parentDetailList == null)
 			{
-				throw new ArgumentNullException("builder");
+				throw new ArgumentNullException("parentDetailList");
 			}
 			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
-
-			_detailList = builder;
+			PdoToLayout = pdoToLayout;
+			_parentDetailList = parentDetailList;
+			_detailList = new DetailList();
 			_viewTemplate = viewTemplate;
 			_lexEntryRepository = lexEntryRepository;
 			_serviceProvider = serviceProvider;
-
+			ParentDetailList.AddDetailList(DetailList, rowInParent);
 		}
 
 		/// <summary>
@@ -165,7 +179,6 @@ namespace WeSay.LexicalTools
 
 		protected int MakeGhostWidget<T>(PalasoDataObject parent,
 										IList<T> list,
-										 int insertAtRow,
 										 string fieldName,
 										 string label,
 										 string propertyName,
@@ -187,7 +200,7 @@ namespace WeSay.LexicalTools
 				Control refWidget = DetailList.AddWidgetRow(label,
 															isHeading,
 															m,
-															insertAtRow + rowCount,
+															0,
 															true);
 
 				foreach (IControlThatKnowsWritingSystem box in m.TextBoxes)
@@ -260,25 +273,10 @@ namespace WeSay.LexicalTools
 
 		protected virtual void UpdateGhostLabel(int itemCount, int index) {}
 
-		protected static int AddChildrenWidgets(Layouter layouter,
-												IEnumerable list,
-												int insertAtRow,
-												int rowCount)
+		protected static void AddChildrenWidgets(Layouter layouter,
+												PalasoDataObject po)
 		{
-			foreach (PalasoDataObject o in list)
-			{
-				int r;
-				if (insertAtRow < 0)
-				{
-					r = insertAtRow; // just stick at the end
-				}
-				else
-				{
-					r = insertAtRow + rowCount;
-				}
-				rowCount += layouter.AddWidgets(o, r);
-			}
-			return rowCount;
+			layouter.AddWidgets(po);
 		}
 
 		protected int AddCustomFields(PalasoDataObject target, int insertAtRow)
