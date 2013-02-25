@@ -56,7 +56,7 @@
 			// deleteBtn
 			//
 			this.deleteBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-			this.deleteBtn.Image = global::WeSay.LexicalTools.Properties.Resources.DeleteWord;
+			this.deleteBtn.Image = global::WeSay.LexicalTools.Properties.Resources.DeleteIcon;
 			this.deleteBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.deleteBtn.Location = new System.Drawing.Point(26, 132);
 			this.deleteBtn.Name = "deleteBtn";

@@ -80,5 +80,6 @@ namespace WeSay.LexicalTools
 								   "Sentence",
 								   false);
 		}
+
 	}
 }

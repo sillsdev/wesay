@@ -70,6 +70,8 @@ namespace WeSay.LexicalTools
 					lexSense
 				);
 				layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
+				layouter.Deletable = true;
+				layouter.DeleteClicked += OnSenseDeleteClicked;
 				AddChildrenWidgets(layouter, lexSense);
 				rowCount++;
 			}
@@ -85,6 +87,16 @@ namespace WeSay.LexicalTools
 
 			DetailList.ResumeLayout();
 			return rowCount;
+		}
+
+		private void OnSenseDeleteClicked(object sender, EventArgs e)
+		{
+			var sendingLayouter = (Layouter) sender;
+			var sense = (LexSense) sendingLayouter.PdoToLayout;
+			Entry.Senses.Remove(sense);
+			DetailList.Clear();
+			//for now just relayout the whole thing as the meaning numbers will change etc.
+			AddWidgets();
 		}
 
 		private void AddSenseGhost(LexEntry entry, int row)

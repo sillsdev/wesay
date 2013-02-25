@@ -81,9 +81,9 @@ namespace WeSay.LexicalTools.Properties {
 			}
 		}
 
-		internal static System.Drawing.Bitmap DeleteWord {
+		internal static System.Drawing.Bitmap DeleteIcon {
 			get {
-				object obj = ResourceManager.GetObject("DeleteWord", resourceCulture);
+				object obj = ResourceManager.GetObject("DeleteIcon", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}

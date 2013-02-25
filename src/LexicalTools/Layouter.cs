@@ -35,6 +35,8 @@ namespace WeSay.LexicalTools
 
 		private DetailList _parentDetailList;
 
+		private bool _deletable;
+
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
@@ -52,6 +54,49 @@ namespace WeSay.LexicalTools
 		private MultiTextControl _previouslyGhostedControlToReuse;
 
 		private bool _showNormallyHiddenFields;
+
+		private readonly PictureBox _deleteIcon = new PictureBox();
+
+		public EventHandler DeleteClicked;
+
+		public bool Deletable
+		{
+			get { return _deletable; }
+			set
+			{
+				if (value == _deletable) return;
+				if (value)
+				{
+					DetailList.ColumnCount = 3;
+					DetailList.ColumnStyles.Insert(2, new ColumnStyle(SizeType.AutoSize));
+					_deleteIcon.Image = Properties.Resources.DeleteIcon;
+					if (!DetailList.Controls.Contains(_deleteIcon))
+					{
+						DetailList.Controls.Add(_deleteIcon, 2, 0);
+					}
+					_deleteIcon.Click += OnDeleteClicked;
+				}
+				else
+				{
+					DetailList.ColumnCount = 2;
+					DetailList.ColumnStyles.RemoveAt(2);
+					if (DetailList.Controls.Contains(_deleteIcon))
+					{
+						DetailList.Controls.Remove(_deleteIcon);
+					}
+					_deleteIcon.Click -= OnDeleteClicked;
+				}
+				_deletable = value;
+			}
+		}
+
+		private void OnDeleteClicked(object sender, EventArgs e)
+		{
+			if (DeleteClicked != null)
+			{
+				DeleteClicked(this, e);
+			}
+		}
 
 		protected DetailList DetailList
 		{
@@ -84,7 +129,7 @@ namespace WeSay.LexicalTools
 			set { _parentDetailList = value; }
 		}
 
-		protected PalasoDataObject PdoToLayout { get; set; }
+		public PalasoDataObject PdoToLayout { get; private set; }
 
 		public EventHandler GhostRequestedLayout;
 
