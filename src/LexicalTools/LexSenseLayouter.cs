@@ -86,6 +86,15 @@ namespace WeSay.LexicalTools
 			var exampleLayouter =
 				new LexExampleSentenceLayouter(DetailList, insertAtRow, ActiveViewTemplate, _serviceProvider, null);
 			exampleLayouter.AddGhost(null, sense.ExampleSentences);
+			exampleLayouter.GhostRequestedLayout += OnGhostRequestedlayout;
+		}
+
+		private void OnGhostRequestedlayout(object sender, EventArgs e)
+		{
+			var row = DetailList.GetPositionFromControl((DetailList)sender).Row;
+			//The old ghost takes care of turing itself into a properly layouted example sentence.
+			//We just add a new ghost here
+			AddExampleSentenceGhost((LexSense) PdoToLayout, row + 1);
 		}
 
 

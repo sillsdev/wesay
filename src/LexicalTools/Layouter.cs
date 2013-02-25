@@ -86,6 +86,7 @@ namespace WeSay.LexicalTools
 
 		protected PalasoDataObject PdoToLayout { get; set; }
 
+		public EventHandler GhostRequestedLayout;
 
 		protected Layouter(DetailList parentDetailList,
 						   int rowInParent,
@@ -246,29 +247,25 @@ namespace WeSay.LexicalTools
 				where T : PalasoDataObject, new()
 		{
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
-			AddWidgetsAfterGhostTrigger(list[index],
-										list.Count,
-										sender.ReferenceControl,
-										doGoToNextField);
+			PdoToLayout = list[index];
+			AddWidgetsAfterGhostTrigger(PdoToLayout, sender.ReferenceControl, doGoToNextField);
+			if (GhostRequestedLayout != null)
+			{
+				GhostRequestedLayout(DetailList, new EventArgs());
+			}
+
 		}
 
 		protected void AddWidgetsAfterGhostTrigger(PalasoDataObject wsdo,
-												   int countOfRows,
 												   Control refControl,
 												   bool doGoToNextField)
 		{
-			int ghostRow = _detailList.GetRow(refControl);
-			UpdateGhostLabel(countOfRows, ghostRow);
-			AddWidgets(wsdo, ghostRow);
+			//remove the old ghost widgets and add the ones for the real sense
+			_detailList.Controls.Clear();
+			_detailList.RowCount = 0;
+			_detailList.RowStyles.Clear();
+			AddWidgets(wsdo);
 			Application.DoEvents();
-			if (doGoToNextField)
-			{
-				_detailList.MoveInsertionPoint(ghostRow + 1);
-			}
-			else
-			{
-				_detailList.MoveInsertionPoint(ghostRow);
-			}
 		}
 
 		protected virtual void UpdateGhostLabel(int itemCount, int index) {}

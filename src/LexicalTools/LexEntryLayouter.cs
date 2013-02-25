@@ -98,9 +98,17 @@ namespace WeSay.LexicalTools
 				null
 				);
 			layouter.AddGhost(null, entry.Senses, true);
+			layouter.GhostRequestedLayout += OnGhostRequestedlayout;
 			row++;
 		}
 
+		private void OnGhostRequestedlayout(object sender, EventArgs e)
+		{
+			var row = DetailList.GetPositionFromControl((DetailList)sender).Row;
+			//The old ghost takes care of turing itself into a properly layouted sense.
+			//We just add a new ghost here
+			AddSenseGhost(Entry, row + 1);
+		}
 
 		/// <summary>
 		/// Here we (somewhat awkwardly) create an inner container which is set up with knowledge of the current entry
