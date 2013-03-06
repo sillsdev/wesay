@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.Code;
@@ -19,8 +21,8 @@ namespace WeSay.LexicalTools.AddMissingInfo
 {
 	public partial class MissingInfoControl: UserControl
 	{
-		private readonly BindingList<RecordToken<LexEntry>> _completedRecords;
-		private readonly BindingList<RecordToken<LexEntry>> _todoRecords;
+		private readonly List<RecordToken<LexEntry>> _completedRecords;
+		private readonly List<RecordToken<LexEntry>> _todoRecords;
 		private RecordToken<LexEntry> _currentRecord;
 		private RecordToken<LexEntry> _previousRecord;
 		private RecordToken<LexEntry> _nextRecord;
@@ -53,39 +55,29 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			memory.TrackSplitContainer(splitContainer2, "betweenToDoAndDoneLists");
 			_entryViewControl.SetMemory(memory.CreateNewSection("entryView"));
 
-			_completedRecords = new BindingList<RecordToken<LexEntry>>();
-			_todoRecords = (BindingList<RecordToken<LexEntry>>) records;
-
 			_viewTemplate = viewTemplate;
 			_isNotComplete = isNotComplete;
 			InitializeDisplaySettings();
+
 			_entryViewControl.KeyDown += OnKeyDown;
 			_entryViewControl.ViewTemplate = _viewTemplate;
-
 			_entryViewControl.LexEntryRepository = lexEntryRepository;
-
-			_recordsListBox.DataSource = _todoRecords;
-			//            _records.ListChanged += OnRecordsListChanged;
-			// this needs to be after so it will get change event after the ListBox
 
 			WritingSystemDefinition listWritingSystem = GetListWritingSystem();
 
-			_recordsListBox.BorderStyle = BorderStyle.None;
-			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
-			_recordsListBox.MouseDown += _recordsListBox_MouseDown;
-			_recordsListBox.Enter += _recordsListBox_Enter;
-			_recordsListBox.Leave += _recordsListBox_Leave;
-			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
-			_recordsListBox.WritingSystem = listWritingSystem;
+			_todoRecords = records.ToList<RecordToken<LexEntry>>();
+			_todoRecordsListBox.DataSource = _todoRecords;
+			_todoRecordsListBox.BorderStyle = BorderStyle.None;
+			_todoRecordsListBox.ItemSelectionChanged += OnTodoRecordSelectionChanged;
+			_todoRecordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
+			_todoRecordsListBox.WritingSystem = listWritingSystem;
 
+			_completedRecords = new List<RecordToken<LexEntry>>();
 			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.BorderStyle = BorderStyle.None;
-			_completedRecordsListBox.SelectedIndexChanged += OnCompletedRecordSelectionChanged;
-			_completedRecordsListBox.MouseDown += _completedRecordsListBox_MouseDown;
-			_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
-			_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
-			_completedRecordsListBox.WritingSystem = listWritingSystem;
+			_completedRecordsListBox.ItemSelectionChanged += OnCompletedRecordSelectionChanged;
 			_completedRecordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
+			_completedRecordsListBox.WritingSystem = listWritingSystem;
 
 			labelNextHotKey.BringToFront();
 			_btnNextWord.BringToFront();
@@ -93,20 +85,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			SetCurrentRecordFromRecordList();
 		}
 
-		private void _completedRecordsListBox_MouseDown(object sender, MouseEventArgs e)
-		{
-			_completedRecordsListBox_Enter(sender, e);
-		}
-
-		private void _recordsListBox_MouseDown(object sender, MouseEventArgs e)
-		{
-			_recordsListBox_Enter(sender, e);
-		}
-
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
 		{
 			RecordToken<LexEntry> recordToken;
-			if (sender == _recordsListBox)
+			if (sender == _todoRecordsListBox)
 			{
 				recordToken = _todoRecords[e.ItemIndex];
 			}
@@ -124,7 +106,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 			displayString =
 					recordToken.RealObject.LexicalForm.GetBestAlternative(
-							_recordsListBox.WritingSystem.Id, string.Empty);
+							_todoRecordsListBox.WritingSystem.Id, string.Empty);
 			e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
 
 			if (string.IsNullOrEmpty(displayString))
@@ -177,29 +159,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				Field.FieldNames.EntryLexicalForm.ToString());
 		}
 
-		private bool _recordsListBoxActive;
-		private bool _completedRecordsListBoxActive;
-
-		private void _recordsListBox_Leave(object sender, EventArgs e)
-		{
-			_recordsListBoxActive = false;
-		}
-
-		private void _recordsListBox_Enter(object sender, EventArgs e)
-		{
-			_recordsListBoxActive = true;
-		}
-
-		private void _completedRecordsListBox_Leave(object sender, EventArgs e)
-		{
-			_completedRecordsListBoxActive = false;
-		}
-
-		private void _completedRecordsListBox_Enter(object sender, EventArgs e)
-		{
-			_completedRecordsListBoxActive = true;
-		}
-
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
@@ -207,28 +166,68 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//we like it to stand out at design time, but not runtime
 		}
 
-		private void OnRecordSelectionChanged(object sender, EventArgs e)
+		private void OnTodoRecordSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
-			if (!_recordsListBoxActive)
+			if (e.ItemIndex != -1)
 			{
-				// We don't care about the case where a record moves from the
-				// record list box to the completed records list box automatically
-				// (although the selection will change)
-				//
-				// We only want to know about the case where the user
-				// has selected a record in the list box itself (so has to enter
-				// the list box first)
-				return;
+				var recordForWhichSelectionIsChanging = _todoRecords[e.ItemIndex];
+				if (CurrentRecord != null)
+				{
+					MoveRecordToAppropriateListBox(CurrentRecord);
+					//reset the index as it may have changed
+					_todoRecordsListBox.SelectedIndex =
+						_todoRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
+				}
+
+				//This is the case if we previously had a record selected in the completedListBox and now are selecting a record in the todoListBox
+				if (e.IsSelected && _completedRecordsListBox.SelectedIndex != -1)
+				{
+					_completedRecordsListBox.SelectedIndex = -1;
+				}
+				CurrentRecord = recordForWhichSelectionIsChanging;
+				UpdatePreviousAndNextRecords();
+			}
+			else
+			{
+				if (CurrentRecord != null)
+				{
+					MoveRecordToAppropriateListBox(CurrentRecord);
+				}
+				CurrentRecord = null;
 			}
 
-			// only do something if an item is being selected (not deselected)
-			if (_recordsListBox.SelectedIndex == -1)
+			if (_todoRecords.Count == 0)
 			{
-				return;
+			   ShowCompletedMessage();
 			}
+		}
 
-			SetCurrentRecordFromRecordList();
-
+		private void MoveRecordToAppropriateListBox(RecordToken<LexEntry> record)
+		{
+			if (_isNotComplete(record.RealObject))
+			{
+				if (_completedRecords.Contains(record))
+				{
+					_completedRecords.Remove(record);
+				}
+				if (!_todoRecords.Contains(record))
+				{
+					_todoRecords.Add(record);
+				}
+			}
+			else
+			{
+				if (_todoRecords.Contains(record))
+				{
+					_todoRecords.Remove(record);
+				}
+				if (!_completedRecords.Contains(record))
+				{
+					_completedRecords.Add(record);
+				}
+			}
+			_todoRecordsListBox.VirtualListSize = _todoRecords.Count;
+			_completedRecordsListBox.VirtualListSize = _completedRecords.Count;
 		}
 
 		private void SaveNow()
@@ -252,19 +251,29 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 			if (_todoRecords.Count > 0)
 			{
-				CurrentRecord = _nextRecord ?? _todoRecords[_todoRecords.Count - 1];
-				SelectCurrentRecordInTodoRecordList();
-				_recordsListBox.Focus();
+				if (_nextRecord != null)
+				{
+					_todoRecordsListBox.SelectedIndex = _todoRecords.FindIndex(r => r == _nextRecord);
+				}
+				else if(!_isNotComplete(CurrentEntry))
+				{
+					_todoRecordsListBox.SelectedIndex = _todoRecords.Count - 2;
+				}
+				_todoRecordsListBox.Focus();
 				// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();
-				UpdatePreviousAndNextRecords();
 			}
 			else
 			{
-				CurrentRecord = null;
-				_congratulationsControl.Show(
-						StringCatalog.Get("~Congratulations. You have completed this task."));
+				ShowCompletedMessage();
 			}
+		}
+
+		private void ShowCompletedMessage()
+		{
+			CurrentRecord = null;
+			_congratulationsControl.Show(
+				StringCatalog.Get("~Congratulations. You have completed this task."));
 		}
 
 		public void SetCurrentRecordToPrevious()
@@ -278,12 +287,17 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					_btnPreviousWord.Focus();
 				}
 
-				CurrentRecord = _previousRecord ?? _todoRecords[0];
-				SelectCurrentRecordInTodoRecordList();
-				_recordsListBox.Focus();
+				if (_previousRecord != null)
+				{
+					_todoRecordsListBox.SelectedIndex = _todoRecords.FindIndex(r => r == _previousRecord);
+				}
+				else if (!_isNotComplete(CurrentEntry))
+				{
+					_todoRecordsListBox.SelectedIndex = 1;
+				}
+				_todoRecordsListBox.Focus();
 				// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();
-				UpdatePreviousAndNextRecords();
 			}
 		}
 
@@ -298,8 +312,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private void SetCurrentRecordFromRecordList()
 		{
-			ClearSelectionForCompletedRecordsListBox();
-
 			if (_todoRecords.Count == 0)
 			{
 				CurrentRecord = null;
@@ -310,51 +322,52 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				if (RecordListCurrentIndex == -1)
 				{
-					if (_recordsListBox.Items.Count > 0)
+					if (_todoRecordsListBox.Items.Count > 0)
 					{
-						_recordsListBox.SelectedIndex = 0;
+						_todoRecordsListBox.SelectedIndex = 0;
 					}
 				}
 				if (RecordListCurrentIndex != -1)
 				{
 					CurrentRecord = _todoRecords[RecordListCurrentIndex];
 				}
-				UpdatePreviousAndNextRecords();
 			}
 		}
 
-		private void OnCompletedRecordSelectionChanged(object sender, EventArgs e)
+		private void OnCompletedRecordSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
-			if (!_completedRecordsListBoxActive)
+			if (e.ItemIndex != -1)
 			{
-				// We don't care about the case where a record moves from the
-				// record list box to the completed records list box automatically
-				// (although the selection will change)
-				//
-				// We only want to know about the case where the user
-				// has selected a record in the list box itself (so has to enter
-				// the list box first)
-				return;
+				var recordForWhichSelectionIsChanging = _completedRecords[e.ItemIndex];
+				if (CurrentRecord != null)
+				{
+					MoveRecordToAppropriateListBox(CurrentRecord);
+					//reset the index as it may have changed
+					_completedRecordsListBox.SelectedIndex =
+						_completedRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
+				}
+
+				//This is the case if we previously had a record selected in the todoListBox and now are selecting a record in the completedListBox
+				if (e.IsSelected && _todoRecordsListBox.SelectedIndex != -1)
+				{
+					_todoRecordsListBox.SelectedIndex = -1;
+				}
+
+				CurrentRecord = recordForWhichSelectionIsChanging;
 			}
-
-			// only do something if an item is being selected (not deselected)
-			if (_completedRecordsListBox.SelectedIndex == -1)
+			else
 			{
-				return;
-			}
-
-			ClearSelectionForRecordsListBox();
-			CurrentRecord = _completedRecords.Count == 0 ? null : _completedRecords[CompletedRecordListCurrentIndex];
-
-			if (TimeToSaveRecord != null)
-			{
-				TimeToSaveRecord.Invoke(this, null);
+				if (CurrentRecord != null)
+				{
+					MoveRecordToAppropriateListBox(CurrentRecord);
+				}
+				CurrentRecord = null;
 			}
 		}
 
 		protected int RecordListCurrentIndex
 		{
-			get { return _recordsListBox.SelectedIndex; }
+			get { return _todoRecordsListBox.SelectedIndex; }
 		}
 
 		protected int CompletedRecordListCurrentIndex
@@ -401,80 +414,17 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		public LexEntry CurrentEntry { get; private set; }
 
-		//private void OnRecordsListChanged(object sender, ListChangedEventArgs e)
-		//{
-		//    switch(e.ListChangedType)
-		//    {
-		//        case ListChangedType.ItemAdded:
-		//            SelectCurrentRecordInTodoRecordList();
-		//            break;
-		//        case ListChangedType.ItemDeleted:
-		//            ClearSelectionForRecordsListBox();
-		//            break;
-		//        case ListChangedType.Reset:
-		//            SelectCurrentRecordInTodoRecordList();
-		//            break;
-		//    }
-		//}
-
 		private void SelectCurrentRecordInTodoRecordList()
 		{
 			int index = _todoRecords.IndexOf(CurrentRecord);
 			Debug.Assert(index != -1);
-			_recordsListBox.SelectedIndex = index;
-			ClearSelectionForCompletedRecordsListBox();
+			_todoRecordsListBox.SelectedIndex = index;
 		}
 
 		private void OnCurrentRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			SaveNow();
 			Debug.Assert(sender == CurrentEntry);
-			if (_isNotComplete(CurrentEntry))
-			{
-				if (_completedRecords.Contains(_currentRecord))
-				{
-
-					_completedRecords.Remove(_currentRecord);
-				}
-				if (!_todoRecords.Contains(_currentRecord))
-				{
-					_todoRecords.Add(_currentRecord);
-				}
-				SelectCurrentRecordInTodoRecordList();
-			}
-			else
-			{
-				if (_todoRecords.Contains(_currentRecord))
-				{
-					_todoRecords.Remove(_currentRecord);
-				}
-				if (!_completedRecords.Contains(_currentRecord))
-				{
-					_completedRecords.Add(_currentRecord);
-				}
-				SelectCurrentRecordInCompletedRecordList();
-			}
-		}
-
-		private void SelectCurrentRecordInCompletedRecordList()
-		{
-			int index = _completedRecords.IndexOf(_currentRecord);
-			_completedRecordsListBox.SelectedIndex = index;
-			ClearSelectionForRecordsListBox();
-		}
-
-		private void ClearSelectionForCompletedRecordsListBox()
-		{
-			_completedRecordsListBox.SelectedIndex = -1;
-			_completedRecordsListBox.HideSelection = true;
-			_recordsListBox.HideSelection = false;
-		}
-
-		private void ClearSelectionForRecordsListBox()
-		{
-			_recordsListBox.SelectedIndex = -1;
-			_recordsListBox.HideSelection = true;
-			_completedRecordsListBox.HideSelection = false;
 		}
 
 		private void OnBtnPreviousWordClick(object sender, EventArgs e)

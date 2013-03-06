@@ -14,20 +14,12 @@
 	<UsingTask TaskName="MsBuild.Community.Tasks.WebDownload" AssemblyFile="$(RootDir)/build/MSBuild.Community.Tasks.dll" />
 
 	<PropertyGroup>
-		<Solution>WeSay.sln</Solution>
+		<Solution>WeSay VS2010.sln</Solution>
 		<ApplicationName>WeSay</ApplicationName>
 		<Configuration>Release</Configuration>
 	</PropertyGroup>
 
 	<Import Project="$(RootDir)/build/build.common.proj" />
-
-	<!-- LifeCycleStage is set, along with the version, in build.common.proj -->
-	<PropertyGroup>
-		<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'ALPHA'">-Alpha</ReleaseSuffix>
-		<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'BETA'">-Beta</ReleaseSuffix>
-		<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'CANDIDATE'">-ReleaseCandidate</ReleaseSuffix>
-		<ReleaseSuffix Condition="'$(LifeCycleStage)' == 'STABLE'"></ReleaseSuffix>
-	</PropertyGroup>
 
 	<PropertyGroup>
 		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'ALPHA'">Alpha Test</ReleaseLabel>
@@ -171,6 +163,20 @@
 		<CallTarget targets="MakeWixForTemplates"/>
 	</Target>
 
+	<!-- LifeCycleStage is set, along with the version, in build.common.proj -->
+	<PropertyGroup>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'ALPHA'">-Alpha</ReleaseString>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'BETA'">-Beta</ReleaseString>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'CANDIDATE'">-ReleaseCandidate</ReleaseString>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'STABLE'"></ReleaseString>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'ALPHA'">Alpha Test</ReleaseLabel>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'BETA'">Beta Test</ReleaseLabel>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'CANDIDATE'">Release Candidate</ReleaseLabel>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'STABLE'">Stable Release</ReleaseLabel>
+	</PropertyGroup>
 
 	<Target Name="Installer" DependsOnTargets="CleanInstaller; VersionNumbers; MakeWixForDistFiles; Build ">
 		<!-- set the version number in the installer configuration program.  Perhaps there's a way to just send in the variables rather than this brute-force
@@ -187,7 +193,7 @@
 		<File
 			TaskAction="Move"
 			Path="$(RootDir)\output\installer\WeSayInstaller.msi"
-			TargetPath="$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseSuffix).msi" />
+			TargetPath="$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi" />
 	</Target>
 
 	<!-- Upload -->
@@ -195,7 +201,7 @@
 
 		<Message Text="Variables:" Importance="high"/>
 		<Message Text="LifeCycleStage: $(LifeCycleStage)" Importance="high"/>
-		<Message Text="ReleaseSuffix: $(ReleaseSuffix)" Importance="high"/>
+		<Message Text="ReleaseString: $(ReleaseString)" Importance="high"/>
 		<Message Text="ReleaseLabel: $(ReleaseLabel)" Importance="high"/>
 		<Message Text="RootDir: $(RootDir)" Importance="high"/>
 		<Message Text="Version: $(Version)" Importance="high"/>
@@ -210,7 +216,7 @@
 			File="$(RootDir)\output\installer\DownloadPointers.htm"
 			DatePlaceholder='DEV_RELEASE_DATE'
 			Regex='DEV_VERSION_NUMBER'
-			ReplacementText = "$(Version)$(ReleaseSuffix)" />
+			ReplacementText = "$(Version)$(ReleaseString)" />
 
 		<FileUpdate
 			File="$(RootDir)\output\installer\DownloadPointers.htm"
@@ -219,14 +225,14 @@
 	</Target>
 
 	<Target Name="Upload" DependsOnTargets="VersionNumbers; Installer; MakeDownloadPointers" >
-		<Message Text="Attempting rsync of WeSayInstaller.$(Version)$(ReleaseSuffix).msi" Importance="high"/>
+		<Message Text="Attempting rsync of WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
 		<Exec
-			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller.$(version)$(ReleaseSuffix).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller.$(version)$(ReleaseSuffix).msi'
+			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller.$(version)$(ReleaseString).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller.$(version)$(ReleaseString).msi'
 			WorkingDirectory="$(RootDir)" />
 
 		<Message Text="Attempting rsync of DownloadPointers.htm" Importance="high"/>
 		<Exec
-			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\DownloadPointers.htm" bob@wesay.org:/var/www/downloads/DownloadPointers$(ReleaseSuffix).htm'
+			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\DownloadPointers.htm" bob@wesay.org:/var/www/downloads/DownloadPointers$(ReleaseString).htm'
 			WorkingDirectory="$(RootDir)" />
 
 	</Target>
