@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Lift;
+using Palaso.Extensions;
 using Palaso.Tests.Data;
 using Palaso.TestUtilities;
 using Palaso.DictionaryServices.Model;
@@ -69,7 +70,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			SetState();
 			const string expectedCreationDateTime = "2008-07-01T16:29:23Z";
-			string actualCreationDateTime = Item.CreationTime.ToUniversalTime().ToString(LiftWriter.LiftDateTimeFormat);
+			string actualCreationDateTime = Item.CreationTime.ToUniversalTime().ToLiftDateTimeFormat();
 			Assert.AreEqual(expectedCreationDateTime, actualCreationDateTime);
 		}
 
