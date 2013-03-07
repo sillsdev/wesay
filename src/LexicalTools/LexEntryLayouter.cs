@@ -28,6 +28,7 @@ namespace WeSay.LexicalTools
 			: base(parentDetailList, parentRow, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, entry), entry)
 		{
 			Entry = entry;
+			DetailList.Name = "LexEntryDetailList";
 		}
 
 		public int AddWidgets()

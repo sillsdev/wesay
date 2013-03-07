@@ -20,6 +20,7 @@ namespace WeSay.LexicalTools
 			IServiceProvider serviceProvider, LexExampleSentence exampleToLayout)
 			: base(parentDetailList, parentRow, viewTemplate, null, serviceProvider, exampleToLayout)
 		{
+			DetailList.Name = "LexExampleSentenceDetailList";
 		}
 
 		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)

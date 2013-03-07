@@ -20,6 +20,7 @@ namespace WeSay.LexicalTools
 			IServiceProvider serviceProvider, LexSense senseToLayout)
 			: base(parentDetailList, parentRow, viewTemplate, lexEntryRepository, serviceProvider, senseToLayout)
 		{
+			DetailList.Name = "LexSenseDetailList";
 		}
 
 		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)

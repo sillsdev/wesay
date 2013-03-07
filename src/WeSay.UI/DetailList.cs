@@ -142,6 +142,8 @@ namespace WeSay.UI
 		{
 			//Debug.WriteLine("VBox " + Name + "   Clearing");
 
+			RowCount = 0;
+			RowStyles.Clear();
 			while (Controls.Count > 0)
 			{
 				//  Debug.WriteLine("  VBoxClear() calling dispose on " + base.Controls[0].Name);
@@ -149,8 +151,6 @@ namespace WeSay.UI
 			}
 			Controls.Clear();
 			// Debug.WriteLine("VBox " + Name + "   Clearing DONE");
-			RowCount = 0;
-			RowStyles.Clear();
 		}
 
 		public Control AddWidgetRow(string fieldLabel,
@@ -266,8 +266,7 @@ namespace WeSay.UI
 													  row,
 													  "row must be between 0 and Count-1 inclusive");
 			}
-			//            Panel p = (Panel)ActualControls[RowToControlIndex(row)];
-			//            Control c = GetEditControlFromReferenceControl(p);
+
 			Control c = GetControlFromPosition(1, row);
 
 			Control tb;
