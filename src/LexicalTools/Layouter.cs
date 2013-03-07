@@ -318,6 +318,7 @@ namespace WeSay.LexicalTools
 			_detailList.Controls.Clear();
 			_detailList.RowCount = 0;
 			_detailList.RowStyles.Clear();
+			Deletable = true;
 			AddWidgets(wsdo);
 			Application.DoEvents();
 		}
