@@ -42,16 +42,8 @@ namespace WeSay.UI
 
 			Name = "DetailList"; //for  debugging
 
-			if (_indexOfLabel == 0)
-			{
-				ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-				ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-			}
-			else
-			{
-				ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-				ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-			}
+			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 			Dock = DockStyle.Fill;
 			AutoSize = true;
 			AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -72,6 +64,7 @@ namespace WeSay.UI
 		private void OnMouseClick(object sender, MouseEventArgs e)
 		{
 			Select();
+			_clicked = true;
 		}
 		public void AddDetailList(DetailList detailList, int insertAtRow)
 		{
@@ -79,7 +72,7 @@ namespace WeSay.UI
 			{
 				RowCount = insertAtRow + 1;
 			}
-			SetColumnSpan(detailList, 2);
+			SetColumnSpan(detailList, 3);
 			RowStyles.Add(new RowStyle(SizeType.AutoSize));
 			Controls.Add(detailList, _indexOfLabel, insertAtRow);
 		}
@@ -342,6 +335,8 @@ namespace WeSay.UI
 			}
 		}
 
+		bool _clicked = false;
+
 		//This message filter is used to determine wether the mouse in hovering over the DetailList or one
 		//of its children. MouseLeave unfortunately fires when the mouse moves over a child control. This
 		//is not behavior that we want which is why we are adding the MouseEnteredBounds and MouseLeftBounds
@@ -350,6 +345,7 @@ namespace WeSay.UI
 		{
 			if (m.Msg != 0x0200) return false;
 			if (_disposed) return false;
+			//if (!_clicked) return false;
 			int x = m.LParam.ToInt32() & 0x0000FFFF;
 			int y = (int)((m.LParam.ToInt32() & 0xFFFF0000) >> 16);
 

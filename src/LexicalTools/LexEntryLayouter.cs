@@ -112,6 +112,7 @@ namespace WeSay.LexicalTools
 				);
 			layouter.AddGhost(null, entry.Senses, true);
 			layouter.GhostRequestedLayout += OnGhostRequestedlayout;
+			layouter.DeleteClicked += OnSenseDeleteClicked;
 			row++;
 		}
 

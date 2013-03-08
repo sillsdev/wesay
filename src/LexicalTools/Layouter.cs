@@ -59,35 +59,7 @@ namespace WeSay.LexicalTools
 
 		public EventHandler DeleteClicked;
 
-		public bool Deletable
-		{
-			get { return _deletable; }
-			set
-			{
-				if (value == _deletable) return;
-				if (value)
-				{
-					DetailList.ColumnCount = 3;
-					_deleteIcon.Image = Properties.Resources.DeleteIcon;
-					DetailList.ColumnStyles.Insert(2, new ColumnStyle(SizeType.Absolute, _deleteIcon.Image.Width + 5));
-					_deleteIcon.Visible = false;
-					DetailList.Controls.Add(_deleteIcon, 2, 0);
-					_deleteIcon.Click += OnDeleteClicked;
-					DetailList.MouseEnteredBounds += OnMouseEnteredBounds;
-					DetailList.MouseLeftBounds += OnMouseLeftBounds;
-				}
-				else
-				{
-					DetailList.ColumnCount = 2;
-					DetailList.ColumnStyles.RemoveAt(2);
-					DetailList.Controls.Remove(_deleteIcon);
-					_deleteIcon.Click -= OnDeleteClicked;
-					DetailList.MouseEnteredBounds -= OnMouseEnteredBounds;
-					DetailList.MouseLeftBounds -= OnMouseLeftBounds;
-				}
-				_deletable = value;
-			}
-		}
+		public bool Deletable { get; set; }
 
 		private void OnMouseLeftBounds(object sender, EventArgs e)
 		{
@@ -96,7 +68,10 @@ namespace WeSay.LexicalTools
 
 		private void OnMouseEnteredBounds(object sender, EventArgs e)
 		{
-			_deleteIcon.Visible = true;
+			if (Deletable)
+			{
+				_deleteIcon.Visible = true;
+			}
 		}
 
 		private void OnDeleteClicked(object sender, EventArgs e)
@@ -163,6 +138,16 @@ namespace WeSay.LexicalTools
 			_viewTemplate = viewTemplate;
 			_lexEntryRepository = lexEntryRepository;
 			_serviceProvider = serviceProvider;
+			//Set up the space for the delete icon
+			DetailList.ColumnCount = 3;
+			_deleteIcon.Image = Properties.Resources.DeleteIcon;
+			_deleteIcon.SizeMode = PictureBoxSizeMode.AutoSize;
+			_deleteIcon.Click += OnDeleteClicked;
+			_deleteIcon.Visible = false;
+			DetailList.ColumnStyles.Insert(2, new ColumnStyle(SizeType.Absolute, _deleteIcon.Width + 10));
+			DetailList.Controls.Add(_deleteIcon, 2, 0);
+			DetailList.MouseEnteredBounds += OnMouseEnteredBounds;
+			DetailList.MouseLeftBounds += OnMouseLeftBounds;
 			ParentDetailList.AddDetailList(DetailList, rowInParent);
 		}
 
@@ -302,6 +287,7 @@ namespace WeSay.LexicalTools
 		{
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
 			PdoToLayout = list[index];
+			Deletable = true;
 			AddWidgetsAfterGhostTrigger(PdoToLayout, sender.ReferenceControl, doGoToNextField);
 			if (GhostRequestedLayout != null)
 			{
@@ -318,7 +304,7 @@ namespace WeSay.LexicalTools
 			_detailList.Controls.Clear();
 			_detailList.RowCount = 0;
 			_detailList.RowStyles.Clear();
-			Deletable = true;
+			DetailList.Controls.Add(_deleteIcon, 2, 0);
 			AddWidgets(wsdo);
 			Application.DoEvents();
 		}
