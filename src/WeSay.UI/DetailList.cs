@@ -345,11 +345,11 @@ namespace WeSay.UI
 		{
 			if (m.Msg != 0x0200) return false;
 			if (_disposed) return false;
+			var controlGettingMessage = FromHandle(m.HWnd);
+			if (controlGettingMessage == null) return false;
 			//if (!_clicked) return false;
 			int x = m.LParam.ToInt32() & 0x0000FFFF;
 			int y = (int)((m.LParam.ToInt32() & 0xFFFF0000) >> 16);
-
-			var controlGettingMessage = Control.FromHandle(m.HWnd);
 			var posRelativeToControl = new Point(x, y);
 			var screenPos = controlGettingMessage.PointToScreen(posRelativeToControl);
 			var posRelativeToThis = PointToClient(screenPos);
