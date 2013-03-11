@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -36,7 +37,6 @@ namespace WeSay.UI
 #if DEBUG
 			_stackAtConstruction = new StackTrace();
 #endif
-			Scroll += OnScroll;
 			InitializeComponent();
 			Application.AddMessageFilter(this);
 
@@ -53,11 +53,6 @@ namespace WeSay.UI
 			CellPaint += OnCellPaint;
 			var rand = new Random();
 			BackColor = Color.FromArgb(255, rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
-		}
-
-		private void OnScroll(object sender, ScrollEventArgs e)
-		{
-			return;
 		}
 
 		public float LabelColumnWidth
@@ -310,17 +305,64 @@ namespace WeSay.UI
 		/// <summary>
 		/// for tests
 		/// </summary>
-		public Control GetEditControlFromRow(int row)
+		public Control GetEditControlFromRow(int rowIndex)
 		{
-			return GetControlFromPosition(_indexOfWidget, row);
+			var labels = new List<Control>();
+			AppendControlsFromEachRow(1, labels);
+			return labels[rowIndex];
 		}
 
 		/// <summary>
 		/// for tests
 		/// </summary>
-		public Label GetLabelControlFromRow(int row)
+		public Label GetLabelControlFromRow(int rowIndex)
 		{
-			return (Label) GetControlFromPosition(_indexOfLabel, row);
+			var labels = new List<Control>();
+			AppendControlsFromEachRow(0, labels);
+			return (Label) labels[rowIndex];
+		}
+
+		private void AppendControlsFromEachRow(int columnIndex, List<Control> controls)
+		{
+			for (int row = 0; row < RowCount; row++)
+			{
+				var control = GetFirstControlInRow(row);
+				if (control is DetailList)
+				{
+					((DetailList)control).AppendControlsFromEachRow(columnIndex, controls);
+				}
+				else
+				{
+					controls.Add(GetControlFromPosition(columnIndex, row));
+				}
+			}
+		}
+
+		/// <summary>
+		/// Tests
+		/// </summary>
+		/// <returns></returns>
+		public int GetFieldCount()
+		{
+			int fieldcount = 0;
+			for (int row = 0; row < RowCount; row++)
+			{
+				var control = GetFirstControlInRow(row);
+				if (control is DetailList)
+				{
+					fieldcount += ((DetailList)control).GetFieldCount();
+				}
+				else
+				{
+					fieldcount++;
+				}
+			}
+			return fieldcount;
+		}
+
+		private Control GetFirstControlInRow(int row)
+		{
+			return GetControlFromPosition(0, row);
 		}
 
 		~DetailList()

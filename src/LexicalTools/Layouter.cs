@@ -309,10 +309,10 @@ namespace WeSay.LexicalTools
 
 		protected virtual void UpdateGhostLabel(int itemCount, int index) {}
 
-		protected static void AddChildrenWidgets(Layouter layouter,
+		protected static int AddChildrenWidgets(Layouter layouter,
 												PalasoDataObject po)
 		{
-			layouter.AddWidgets(po);
+			return layouter.AddWidgets(po);
 		}
 
 		protected int AddCustomFields(PalasoDataObject target, int insertAtRow)
