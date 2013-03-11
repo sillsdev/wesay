@@ -139,12 +139,10 @@ namespace WeSay.LexicalTools
 			_lexEntryRepository = lexEntryRepository;
 			_serviceProvider = serviceProvider;
 			//Set up the space for the delete icon
-			DetailList.ColumnCount = 3;
 			_deleteIcon.Image = Properties.Resources.DeleteIcon;
 			_deleteIcon.SizeMode = PictureBoxSizeMode.AutoSize;
 			_deleteIcon.Click += OnDeleteClicked;
 			_deleteIcon.Visible = false;
-			DetailList.ColumnStyles.Insert(2, new ColumnStyle(SizeType.Absolute, _deleteIcon.Width + 10));
 			DetailList.Controls.Add(_deleteIcon, 2, 0);
 			DetailList.MouseEnteredBounds += OnMouseEnteredBounds;
 			DetailList.MouseLeftBounds += OnMouseLeftBounds;

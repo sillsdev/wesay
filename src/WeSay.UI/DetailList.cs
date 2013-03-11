@@ -34,16 +34,15 @@ namespace WeSay.UI
 		public DetailList()
 		{
 #if DEBUG
-
 			_stackAtConstruction = new StackTrace();
 #endif
 			InitializeComponent();
 			Application.AddMessageFilter(this);
 
 			Name = "DetailList"; //for  debugging
-
-			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+			ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 0));
 			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+			ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30));
 			Dock = DockStyle.Fill;
 			AutoSize = true;
 			AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -53,6 +52,12 @@ namespace WeSay.UI
 			CellPaint += OnCellPaint;
 			var rand = new Random();
 			BackColor = Color.FromArgb(255, rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
+		}
+
+		public float LabelColumnWidth
+		{
+			get { return ColumnStyles[0].Width; }
+			set { ColumnStyles[0].Width = value; }
 		}
 
 		private void OnCellPaint(object sender, TableLayoutCellPaintEventArgs e)
@@ -74,9 +79,9 @@ namespace WeSay.UI
 			}
 			SetColumnSpan(detailList, 3);
 			RowStyles.Add(new RowStyle(SizeType.AutoSize));
+			detailList.LabelColumnWidth = LabelColumnWidth;
 			Controls.Add(detailList, _indexOfLabel, insertAtRow);
 		}
-
 
 		protected override void OnGotFocus(EventArgs e)
 		{
