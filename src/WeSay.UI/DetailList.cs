@@ -36,6 +36,7 @@ namespace WeSay.UI
 #if DEBUG
 			_stackAtConstruction = new StackTrace();
 #endif
+			Scroll += OnScroll;
 			InitializeComponent();
 			Application.AddMessageFilter(this);
 
@@ -52,6 +53,11 @@ namespace WeSay.UI
 			CellPaint += OnCellPaint;
 			var rand = new Random();
 			BackColor = Color.FromArgb(255, rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
+		}
+
+		private void OnScroll(object sender, ScrollEventArgs e)
+		{
+			return;
 		}
 
 		public float LabelColumnWidth

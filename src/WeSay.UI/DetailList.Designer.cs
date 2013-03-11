@@ -37,9 +37,8 @@ namespace WeSay.UI
 			//
 			// DetailList
 			//
-			AutoScroll = true; //but we need to make sure children are never wider than we are
+			AutoScroll = false; //but we need to make sure children are never wider than we are
 			this.Name = "DetailList";
-			HScroll = false;
 			ColumnCount = 3;
 			DoubleBuffered = true;
 

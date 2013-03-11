@@ -43,10 +43,6 @@ namespace WeSay.LexicalTools
 		{
 			_viewTemplate = null;
 			InitializeComponent();
-			AutoSize = true;
-			AutoSizeMode = AutoSizeMode.GrowAndShrink;
-			_panelEntry.AutoSize = true;
-			_panelEntry.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
 			Controls.Remove(_entryHeaderView);
 		   _entryHeaderView.Dispose();
@@ -330,21 +326,20 @@ namespace WeSay.LexicalTools
 				{
 					oldDetailList.ChangeOfWhichItemIsInFocus -= OnChangeOfWhichItemIsInFocus;
 					oldDetailList.KeyDown -= _detailListControl_KeyDown;
+					_panelEntry.Controls.Remove(oldDetailList);
+					oldDetailList.Dispose();
 				}
 
-				DetailList detailList = new DetailList();
+				var detailList = new DetailList();
 				_detailListControl = detailList;
-
-				detailList.SuspendLayout();
-				//
-				// _detailListControl
-				//
 				detailList.BackColor = BackColor;
-				detailList.Dock = DockStyle.Fill;
 				detailList.Name = "_detailListControl";
-				detailList.Size = _panelEntry.Size;
 				detailList.TabIndex = 1;
-
+				//The top level detail list should be free to expand downward so we anchor to left, top and right.
+				//Do Not Dock! It causes problems with many senses
+				detailList.Dock = DockStyle.None;
+				detailList.Size = _panelEntry.Size;
+				detailList.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 				if (_record != null)
 				{
 					VerifyHasLexEntryRepository();
@@ -359,21 +354,12 @@ namespace WeSay.LexicalTools
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
-				detailList.Visible = false;
 				_panelEntry.Controls.Add(detailList);
-				detailList.ResumeLayout(true);
-				detailList.Visible = true;
-				_panelEntry.Controls.SetChildIndex(detailList, 0);
-
-				if (oldDetailList != null)
-				{
-					_panelEntry.Controls.Remove(oldDetailList);
-					oldDetailList.Dispose();
-				}
+				_panelEntry.AutoScroll = true;
 
 				detailList.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
 				detailList.KeyDown += _detailListControl_KeyDown;
-				_panelEntry.ResumeLayout(false);
+				_panelEntry.ResumeLayout();
 			}
 			catch (ConfigurationException e)
 			{
