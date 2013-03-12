@@ -105,8 +105,8 @@ namespace WeSay.LexicalTools.Tests
 			using (DetailList dl = new DetailList())
 			{
 				LexEntryLayouter layout = new LexEntryLayouter(dl, 0, new ViewTemplate(), null, Context, entry);
-				_rowCount = layout.AddWidgets();
-				Assert.AreEqual(0, _rowCount);
+				layout.AddWidgets();
+				Assert.AreEqual(0, layout.ParentDetailList.FieldCount);
 			}
 		}
 
@@ -132,7 +132,8 @@ namespace WeSay.LexicalTools.Tests
 			DetailList dl = new DetailList();
 			LexEntryLayouter layout = new LexEntryLayouter(dl, 0, template, null, Context, entry);
 			layout.ShowNormallyHiddenFields = showNormallyHiddenFields;
-			_rowCount = layout.AddWidgets();
+			layout.AddWidgets();
+			_rowCount = dl.FieldCount;
 			return dl;
 		}
 

@@ -179,8 +179,11 @@ namespace WeSay.UI
 						for (int col = 0;col < ColumnCount;col++)
 						{
 							Control c = GetControlFromPosition(col, row - 1);
-							SetCellPosition(c, new TableLayoutPanelCellPosition(col, row));
-							c.TabIndex = row;
+							if (c != null)
+							{
+								SetCellPosition(c, new TableLayoutPanelCellPosition(col, row));
+								c.TabIndex = row;
+							}
 						}
 					}
 				}
@@ -342,22 +345,25 @@ namespace WeSay.UI
 		/// Tests
 		/// </summary>
 		/// <returns></returns>
-		public int GetFieldCount()
+		public int FieldCount
 		{
-			int fieldcount = 0;
-			for (int row = 0; row < RowCount; row++)
+			get
 			{
-				var control = GetFirstControlInRow(row);
-				if (control is DetailList)
+				int fieldcount = 0;
+				for (int row = 0; row < RowCount; row++)
 				{
-					fieldcount += ((DetailList)control).GetFieldCount();
+					var control = GetFirstControlInRow(row);
+					if (control is DetailList)
+					{
+						fieldcount += ((DetailList) control).FieldCount;
+					}
+					else
+					{
+						fieldcount++;
+					}
 				}
-				else
-				{
-					fieldcount++;
-				}
+				return fieldcount;
 			}
-			return fieldcount;
 		}
 
 		private Control GetFirstControlInRow(int row)

@@ -161,7 +161,7 @@ namespace WeSay.LexicalTools.Tests
 				WritingSystemsIdsForTests.AnalysisIdForTest
 			))
 			{
-				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.Count);
+				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.FieldCount);
 			}
 		}
 
@@ -239,7 +239,7 @@ namespace WeSay.LexicalTools.Tests
 		private static MultiTextControl GetEditControl(DetailList detailList, string labelText)
 		{
 			MultiTextControl editControl = null;
-			for (int i = 0;i < detailList.Count;i++)
+			for (int i = 0;i < detailList.FieldCount;i++)
 			{
 				Label label = detailList.GetLabelControlFromRow(i);
 				if (label.Text == labelText)
