@@ -308,21 +308,31 @@ namespace WeSay.UI
 		/// <summary>
 		/// for tests
 		/// </summary>
-		public Control GetEditControlFromRow(int rowIndex)
+		public Control GetEditControlFromRow(int fieldIndex)
 		{
 			var labels = new List<Control>();
 			AppendControlsFromEachRow(1, labels);
-			return labels[rowIndex];
+			return labels[fieldIndex];
 		}
 
 		/// <summary>
 		/// for tests
 		/// </summary>
-		public Label GetLabelControlFromRow(int rowIndex)
+		public Label GetLabelControlFromRow(int fieldIndex)
 		{
 			var labels = new List<Control>();
 			AppendControlsFromEachRow(0, labels);
-			return (Label) labels[rowIndex];
+			return (Label) labels[fieldIndex];
+		}
+
+		/// <summary>
+		/// for tests
+		/// </summary>
+		public Button GetDeleteButton(int fieldIndex)
+		{
+			var deleteButtons = new List<Control>();
+			AppendControlsFromEachRow(2, deleteButtons);
+			return (Button)deleteButtons[fieldIndex];
 		}
 
 		private void AppendControlsFromEachRow(int columnIndex, List<Control> controls)
@@ -332,7 +342,12 @@ namespace WeSay.UI
 				var control = GetFirstControlInRow(row);
 				if (control is DetailList)
 				{
-					((DetailList)control).AppendControlsFromEachRow(columnIndex, controls);
+					var detailList = ((DetailList)control);
+					//We have to simulate the mouse hovering over the detaillist to get the delete button to show
+					//Invisible controls can't be retreived from the tablelayoutpanel.
+					detailList.MouseEnteredBounds(detailList, new EventArgs());
+					detailList.AppendControlsFromEachRow(columnIndex, controls);
+					detailList.MouseLeftBounds(detailList, new EventArgs());
 				}
 				else
 				{

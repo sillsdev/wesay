@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
@@ -251,6 +252,21 @@ namespace WeSay.LexicalTools.Tests
 			return editControl;
 		}
 
+		private static Button GetDeletebutton(DetailList detailList, string labelText)
+		{
+			Button deleteButton = null;
+			for (int i = 0; i < detailList.FieldCount; i++)
+			{
+				Label label = detailList.GetLabelControlFromRow(i);
+				if (label.Text == labelText)
+				{
+					deleteButton = (Button)detailList.GetDeleteButton(i);
+					break;
+				}
+			}
+			return deleteButton;
+		}
+
 		[Test]
 		[Ignore("RTF View is on its way out anyways")]
 		public void FormattedView_FocusInControl_Displayed()
@@ -339,6 +355,32 @@ namespace WeSay.LexicalTools.Tests
 
 				Assert.AreNotEqual(rtfEmptyNothingHighlighted,
 								   entryViewControl.RtfContentsOfPreviewForTests);
+			}
+		}
+
+		[Test]
+		public void SenseExists_SenseDeleteClicked_FieldNumberIsCorrect()
+		{
+			using (EntryViewControl entryViewControl = CreateForm(apple, false))
+			{
+				Assert.AreEqual(6, entryViewControl.ControlEntryDetail.FieldCount);
+				Button deleteButton = GetDeletebutton(entryViewControl.ControlEntryDetail, "Meaning 1");
+				deleteButton.Visible = true;
+				deleteButton.PerformClick();
+				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.FieldCount);
+			}
+		}
+
+		[Test]
+		public void SenseExists_SenseDeleteClicked_SenseIsRemovedFromEntry()
+		{
+			using (EntryViewControl entryViewControl = CreateForm(apple, false))
+			{
+				Assert.AreEqual(1, apple.Senses.Count);
+				Button deleteButton = GetDeletebutton(entryViewControl.ControlEntryDetail, "Meaning 1");
+				deleteButton.Visible = true;
+				deleteButton.PerformClick();
+				Assert.AreEqual(0, apple.Senses.Count);
 			}
 		}
 

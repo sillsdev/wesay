@@ -55,7 +55,7 @@ namespace WeSay.LexicalTools
 
 		private bool _showNormallyHiddenFields;
 
-		private readonly PictureBox _deleteIcon = new PictureBox();
+		private readonly Button _deleteIcon = new Button();
 
 		public EventHandler DeleteClicked;
 
@@ -140,7 +140,7 @@ namespace WeSay.LexicalTools
 			_serviceProvider = serviceProvider;
 			//Set up the space for the delete icon
 			_deleteIcon.Image = Properties.Resources.DeleteIcon;
-			_deleteIcon.SizeMode = PictureBoxSizeMode.AutoSize;
+			_deleteIcon.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 			_deleteIcon.Click += OnDeleteClicked;
 			_deleteIcon.Visible = false;
 			DetailList.Controls.Add(_deleteIcon, 2, 0);
