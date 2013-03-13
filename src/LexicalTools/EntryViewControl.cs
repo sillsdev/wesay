@@ -324,10 +324,12 @@ namespace WeSay.LexicalTools
 				DetailList oldDetailList = _detailListControl;
 				if (oldDetailList != null)
 				{
+					oldDetailList.SuspendLayout();
 					oldDetailList.ChangeOfWhichItemIsInFocus -= OnChangeOfWhichItemIsInFocus;
 					oldDetailList.KeyDown -= _detailListControl_KeyDown;
 					_panelEntry.Controls.Remove(oldDetailList);
 					oldDetailList.Dispose();
+					oldDetailList.ResumeLayout();
 				}
 
 				var detailList = new DetailList();
@@ -354,7 +356,9 @@ namespace WeSay.LexicalTools
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
+				detailList.SuspendLayout();
 				_panelEntry.Controls.Add(detailList);
+				detailList.ResumeLayout();
 				_panelEntry.AutoScroll = true;
 
 				detailList.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
