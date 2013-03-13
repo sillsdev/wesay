@@ -325,6 +325,7 @@ namespace WeSay.LexicalTools
 				if (oldDetailList != null)
 				{
 					oldDetailList.SuspendLayout();
+					oldDetailList.Visible = false;
 					oldDetailList.ChangeOfWhichItemIsInFocus -= OnChangeOfWhichItemIsInFocus;
 					oldDetailList.KeyDown -= _detailListControl_KeyDown;
 					_panelEntry.Controls.Remove(oldDetailList);
