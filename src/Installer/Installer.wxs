@@ -150,9 +150,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="Enchant.Net.dll" Name="Enchant.Net.dll" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll" />
 				  </Component>
 
-				  <Component Id="Vulcan.Uczniowie.HelpProvider.dll" Guid="{F8BCCD28-AB69-4C3D-B024-6B109ADC75B0}">
-					<File Id="Vulcan.Uczniowie.HelpProvider.dll" Name="Vulcan.Uczniowie.HelpProvider.dll" KeyPath="yes" Source="..\..\output\release\Vulcan.Uczniowie.HelpProvider.dll" />
-				  </Component>
 				  <Component Id="autofac.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
 					<File Id="autofac.dll" Name="autofac.dll" KeyPath="yes" Source="..\..\output\release\autofac.dll" />
 				  </Component>
@@ -321,7 +318,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Castle.DynamicProxy.dll" />
 
 			  <ComponentRef Id="Enchant.Net.dll"/>
-			  <ComponentRef Id="Vulcan.Uczniowie.HelpProvider.dll"/>
 
 			  <ComponentRef Id="autofac.dll"/>
 			  <ComponentRef Id="irrKlang.NET4.dll"/>
