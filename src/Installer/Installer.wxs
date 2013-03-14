@@ -162,6 +162,11 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="irrKlang.NET4.dll" Name="irrKlang.NET4.dll" KeyPath="yes" Source="..\..\output\release\irrKlang.NET4.dll" />
 				  </Component>
 
+				  <!-- needed by irrKlang on some machines that don't have it  -->
+				  <Component Id="msvcr100.dll" Guid="{7C89E927-6D7E-4103-B944-3BF8FD015F98}">
+					<File Id="msvcr100.dll" Name="msvcr100.dll" KeyPath="yes" Source="..\..\lib\release\msvcr100.dll" />
+				  </Component>
+
 				  <Component Id="ICSharpCode.SharpZipLib.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D9D7}">
 					<File Id="ICSharpCode.SharpZipLib.dll" Name="ICSharpCode.SharpZipLib.dll" KeyPath="yes" Source="..\..\output\release\ICSharpCode.SharpZipLib.dll" />
 				  </Component>
@@ -367,6 +372,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentGroupRef Id ="biatahSample"/>
 			  <ComponentGroupRef Id ="templates"/>
 			  <ComponentGroupRef Id ="PoFiles"/>
+			  <ComponentRef Id="msvcr100.dll"/> <!-- needed by irrklang -->
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 			<Icon Id="WeSay.App.exe" SourceFile ="..\..\output\release\WeSay.App.exe" />
