@@ -359,6 +359,7 @@ namespace WeSay.LexicalTools
 				}
 				detailList.SuspendLayout();
 				_panelEntry.Controls.Add(detailList);
+
 				detailList.ResumeLayout();
 				_panelEntry.AutoScroll = true;
 

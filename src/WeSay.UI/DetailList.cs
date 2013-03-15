@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using Palaso.UI.WindowsForms.i18n;
 using Palaso.i18n;
 using Palaso.Reporting;
 using WeSay.UI.TextBoxes;
@@ -14,7 +16,7 @@ namespace WeSay.UI
 	/// It supports dynamically removing and inserting new rows, to support
 	/// "ghost" fields
 	/// </summary>
-	public partial class DetailList: TableLayoutPanel, IMessageFilter
+	public partial class DetailList: TableLayoutPanel, IMessageFilter, ILocalizableControl
 	{
 		/// <summary>
 		/// Can be used to track which data item the user is currently editting, to,
@@ -50,15 +52,53 @@ namespace WeSay.UI
 
 			MouseClick += OnMouseClick;
 
-			CellPaint += OnCellPaint;
-			var rand = new Random();
-			BackColor = Color.FromArgb(255, rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
+			//CellPaint += OnCellPaint;
+			//var rand = new Random();
+			//BackColor = Color.FromArgb(255, rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
 		}
 
 		public float LabelColumnWidth
 		{
 			get { return ColumnStyles[0].Width; }
-			set { ColumnStyles[0].Width = value; }
+			set
+			{
+				SuspendLayout();
+				if (value != LabelColumnWidth)
+				{
+					ColumnStyles[0].Width = value;
+				}
+				foreach (var detailList in GetChildDetailLists())
+				{
+					detailList.LabelColumnWidth = value;
+				}
+				ResumeLayout();
+			}
+
+		}
+		private List<DetailList> GetChildDetailLists()
+		{
+			var lists = new List<DetailList>();
+			for (int row = 0; row < RowCount; row++)
+			{
+				var control = GetFirstControlInRow(row);
+				if (control is DetailList)
+				{
+					var detailList = ((DetailList)control);
+					lists.Add(detailList);
+				}
+			}
+			return lists;
+		}
+
+
+		public int WidestLabelWidthWithMargin
+		{
+			get
+			{
+				var labels = new List<Control>();
+				AppendControlsFromEachFieldRow(0, labels);
+				return labels.Select(label => ((Label)label).GetPreferredSize(new Size(1000, 1000)).Width + label.Margin.Left + label.Margin.Right).Concat(new[] { 0 }).Max();
+			}
 		}
 
 		private void OnCellPaint(object sender, TableLayoutCellPaintEventArgs e)
@@ -195,6 +235,7 @@ namespace WeSay.UI
 			{
 				label.Font = new Font(StringCatalog.LabelFont /* label.Font*/, FontStyle.Bold);
 			}
+			label.FontChanged += OnFontChanged;
 			//label.Font =StringCatalog.ModifyFontForLocalization(label.Font);
 			label.Text = fieldLabel;
 			label.AutoSize = true;
@@ -243,6 +284,11 @@ namespace WeSay.UI
 			Controls.Add(editWidget, _indexOfWidget, insertAtRow);
 
 			return editWidget;
+		}
+
+		private void OnFontChanged(object sender, EventArgs e)
+		{
+			return;
 		}
 
 		private void OnEditWidget_MouseWheel(object sender, MouseEventArgs e)
@@ -311,7 +357,7 @@ namespace WeSay.UI
 		public Control GetEditControlFromRow(int fieldIndex)
 		{
 			var labels = new List<Control>();
-			AppendControlsFromEachRow(1, labels);
+			AppendControlsFromEachFieldRow(1, labels);
 			return labels[fieldIndex];
 		}
 
@@ -321,7 +367,7 @@ namespace WeSay.UI
 		public Label GetLabelControlFromRow(int fieldIndex)
 		{
 			var labels = new List<Control>();
-			AppendControlsFromEachRow(0, labels);
+			AppendControlsFromEachFieldRow(0, labels);
 			return (Label) labels[fieldIndex];
 		}
 
@@ -331,11 +377,11 @@ namespace WeSay.UI
 		public Button GetDeleteButton(int fieldIndex)
 		{
 			var deleteButtons = new List<Control>();
-			AppendControlsFromEachRow(2, deleteButtons);
+			AppendControlsFromEachFieldRow(2, deleteButtons);
 			return (Button)deleteButtons[fieldIndex];
 		}
 
-		private void AppendControlsFromEachRow(int columnIndex, List<Control> controls)
+		private void AppendControlsFromEachFieldRow(int columnIndex, List<Control> controls)
 		{
 			for (int row = 0; row < RowCount; row++)
 			{
@@ -346,7 +392,7 @@ namespace WeSay.UI
 					//We have to simulate the mouse hovering over the detaillist to get the delete button to show
 					//Invisible controls can't be retreived from the tablelayoutpanel.
 					detailList.MouseEnteredBounds(detailList, new EventArgs());
-					detailList.AppendControlsFromEachRow(columnIndex, controls);
+					detailList.AppendControlsFromEachFieldRow(columnIndex, controls);
 					detailList.MouseLeftBounds(detailList, new EventArgs());
 				}
 				else
@@ -452,5 +498,23 @@ namespace WeSay.UI
 			}
 			return false;
 		}
+
+		public void BeginWiring()
+		{
+			//do nothing
+		}
+
+		public void EndWiring()
+		{
+			if (!(Parent is DetailList))
+			{
+				//at this point the labels are all localized thanks to the localization helper
+				//which means all of the label sizes have changed. We need to change the size of the first column accordingly
+				//it would be nice if the detaillist updated itself, but this is easier to implement for now
+				LabelColumnWidth = WidestLabelWidthWithMargin;
+			}
+		}
+
+		public bool ShouldModifyFont { get; private set; }
 	}
 }
