@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
@@ -55,7 +56,7 @@ namespace WeSay.LexicalTools
 
 		private bool _showNormallyHiddenFields;
 
-		private readonly Button _deleteIcon = new Button();
+		private readonly Button _deleteButton = new Button();
 
 		public EventHandler DeleteClicked;
 
@@ -63,14 +64,14 @@ namespace WeSay.LexicalTools
 
 		private void OnMouseLeftBounds(object sender, EventArgs e)
 		{
-			_deleteIcon.Visible = false;
+			_deleteButton.Visible = false;
 		}
 
 		private void OnMouseEnteredBounds(object sender, EventArgs e)
 		{
 			if (Deletable)
 			{
-				_deleteIcon.Visible = true;
+				_deleteButton.Visible = true;
 			}
 		}
 
@@ -139,11 +140,14 @@ namespace WeSay.LexicalTools
 			_lexEntryRepository = lexEntryRepository;
 			_serviceProvider = serviceProvider;
 			//Set up the space for the delete icon
-			_deleteIcon.Image = Properties.Resources.DeleteIcon;
-			_deleteIcon.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-			_deleteIcon.Click += OnDeleteClicked;
-			_deleteIcon.Visible = false;
-			DetailList.Controls.Add(_deleteIcon, 2, 0);
+			_deleteButton.Image = Properties.Resources.DeleteIcon;
+			_deleteButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+			_deleteButton.Click += OnDeleteClicked;
+			_deleteButton.Visible = false;
+			_deleteButton.FlatAppearance.BorderSize = 0;
+			_deleteButton.FlatAppearance.MouseOverBackColor = Color.Orange;
+			_deleteButton.FlatStyle = FlatStyle.Flat;
+			DetailList.Controls.Add(_deleteButton, 2, 0);
 			DetailList.MouseEnteredBounds += OnMouseEnteredBounds;
 			DetailList.MouseLeftBounds += OnMouseLeftBounds;
 			ParentDetailList.AddDetailList(DetailList, rowInParent);
@@ -302,7 +306,7 @@ namespace WeSay.LexicalTools
 			_detailList.Controls.Clear();
 			_detailList.RowCount = 0;
 			_detailList.RowStyles.Clear();
-			DetailList.Controls.Add(_deleteIcon, 2, 0);
+			DetailList.Controls.Add(_deleteButton, 2, 0);
 			AddWidgets(wsdo);
 			Application.DoEvents();
 		}

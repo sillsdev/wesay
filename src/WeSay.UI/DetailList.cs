@@ -510,7 +510,6 @@ namespace WeSay.UI
 			{
 				//at this point the labels are all localized thanks to the localization helper
 				//which means all of the label sizes have changed. We need to change the size of the first column accordingly
-				//it would be nice if the detaillist updated itself, but this is easier to implement for now
 				LabelColumnWidth = WidestLabelWidthWithMargin;
 			}
 		}
