@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using Chorus;
 using Chorus.UI.Notes;
@@ -332,6 +333,7 @@ namespace WeSay.LexicalTools
 					oldDetailList.Dispose();
 					oldDetailList.ResumeLayout();
 				}
+				_panelEntry.ResumeLayout();
 
 				var detailList = new DetailList();
 				_detailListControl = detailList;
@@ -357,6 +359,7 @@ namespace WeSay.LexicalTools
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
+				_panelEntry.SuspendLayout();
 				detailList.SuspendLayout();
 				_panelEntry.Controls.Add(detailList);
 
