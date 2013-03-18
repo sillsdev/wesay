@@ -368,6 +368,16 @@ namespace WeSay.UI.Buttons
 			Invalidate();
 		}
 
+		public void BeginWiring()
+		{
+			//do nothing
+		}
+
+		public void EndWiring()
+		{
+			//do nothing
+		}
+
 		/// <summary>
 		///  Palaso.UI.WindowsForms.i8n.ILocalizableControl
 		/// making a big font on these things that don't have text was causing them to grow
