@@ -121,6 +121,7 @@ namespace WeSay.UI
 			SetColumnSpan(detailList, 3);
 			RowStyles.Add(new RowStyle(SizeType.AutoSize));
 			detailList.LabelColumnWidth = LabelColumnWidth;
+			detailList.MouseWheel += OnChildWidget_MouseWheel;
 			Controls.Add(detailList, _indexOfLabel, insertAtRow);
 		}
 
@@ -257,7 +258,7 @@ namespace WeSay.UI
 			editWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
 			editWidget.KeyDown += OnEditWidget_KeyDown;
-			editWidget.MouseWheel += OnEditWidget_MouseWheel;
+			editWidget.MouseWheel += OnChildWidget_MouseWheel;
 
 			Debug.Assert(GetControlFromPosition(_indexOfWidget, insertAtRow) == null);
 
@@ -291,7 +292,7 @@ namespace WeSay.UI
 			return;
 		}
 
-		private void OnEditWidget_MouseWheel(object sender, MouseEventArgs e)
+		private void OnChildWidget_MouseWheel(object sender, MouseEventArgs e)
 		{
 			OnMouseWheel(e);
 		}

@@ -215,6 +215,12 @@
 	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
 	</Compile>
 	<Compile Include="Event.cs" />
+	<Compile Include="ScrollableContainer.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ScrollableContainer.Designer.cs">
+	  <DependentUpon>ScrollableContainer.cs</DependentUpon>
+	</Compile>
 	<Compile Include="TextBoxes\IControlThatKnowsWritingSystem.cs" />
 	<Compile Include="WeSayListView.cs">
 	  <SubType>Component</SubType>
