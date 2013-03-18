@@ -62,6 +62,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_entryViewControl.KeyDown += OnKeyDown;
 			_entryViewControl.ViewTemplate = _viewTemplate;
 			_entryViewControl.LexEntryRepository = lexEntryRepository;
+			_entryViewControl.SenseDeletionEnabled = false;
 
 			WritingSystemDefinition listWritingSystem = GetListWritingSystem();
 

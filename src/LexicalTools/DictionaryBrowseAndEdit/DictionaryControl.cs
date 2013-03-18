@@ -102,6 +102,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			//TODO: remove these, move to ctor
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
 			Control_EntryDetailPanel.LexEntryRepository = _lexEntryRepository;
+			_entryViewControl.SenseDeletionEnabled = true;
 
 		}
 

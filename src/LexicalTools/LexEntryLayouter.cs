@@ -17,6 +17,8 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexEntryLayouter: Layouter
 	{
+		private bool _sensesAreDeletable = false;
+
 		public LexEntry Entry { get; set; }
 
 		public LexEntryLayouter(DetailList parentDetailList,
@@ -24,13 +26,15 @@ namespace WeSay.LexicalTools
 								ViewTemplate viewTemplate,
 								LexEntryRepository lexEntryRepository,
 								IServiceLocator serviceLocator,
-								LexEntry entry)
+								LexEntry entry,
+								bool sensesAreDeletable)
 			: base(parentDetailList, parentRow, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, entry), entry)
 		{
 			var widestlabel = GetWidestLabelWidth(viewTemplate);
 			Entry = entry;
 			DetailList.LabelColumnWidth = widestlabel;
 			DetailList.Name = "LexEntryDetailList";
+			_sensesAreDeletable = sensesAreDeletable;
 		}
 
 		private static int GetWidestLabelWidth(ViewTemplate viewTemplate)
@@ -86,7 +90,7 @@ namespace WeSay.LexicalTools
 					lexSense
 				);
 				layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
-				layouter.Deletable = true;
+				layouter.Deletable = _sensesAreDeletable;
 				layouter.DeleteClicked += OnSenseDeleteClicked;
 				AddChildrenWidgets(layouter, lexSense);
 				rowCount++;
