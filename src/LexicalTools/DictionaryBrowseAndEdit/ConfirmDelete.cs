@@ -35,5 +35,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			textBox1.BackColor = this.BackColor;
 		}
 
+		public string Message
+		{
+			get { return textBox1.Text; }
+			set { textBox1.Text = value; }
+		}
 	}
 }

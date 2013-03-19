@@ -6,6 +6,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
 using Palaso.Lift;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.audio;
@@ -113,6 +114,15 @@ namespace WeSay.LexicalTools
 		{
 			var sendingLayouter = (Layouter) sender;
 			var sense = (LexSense) sendingLayouter.PdoToLayout;
+			using (var d = new ConfirmDelete())
+			{
+				d.Message = String.Format("This will permanently remove the sense with meaning {0}.", sense.Definition.GetBestAlternative(ActiveViewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition).Id));
+				var result = d.ShowDialog();
+				if (result != DialogResult.OK)
+				{
+					return;
+				}
+			}
 			Entry.Senses.Remove(sense);
 			DetailList.Clear();
 			//for now just relayout the whole thing as the meaning numbers will change etc.
