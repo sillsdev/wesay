@@ -137,10 +137,13 @@ namespace WeSay.LexicalTools
 
 		private void OnGhostRequestedlayout(object sender, EventArgs e)
 		{
-			var row = DetailList.GetPositionFromControl((DetailList)sender).Row;
-			//The old ghost takes care of turing itself into a properly layouted sense.
-			//We just add a new ghost here
-			AddSenseGhost(Entry, row + 1);
+			if (ActiveViewTemplate.GetGhostingRuleForField(LexEntry.WellKnownProperties.Sense).ShowGhost)
+			{
+				var row = DetailList.GetPositionFromControl((DetailList) sender).Row;
+				//The old ghost takes care of turing itself into a properly layouted sense.
+				//We just add a new ghost here
+				AddSenseGhost(Entry, row + 1);
+			}
 		}
 
 		/// <summary>
