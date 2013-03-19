@@ -309,6 +309,14 @@ namespace WeSay.LexicalTools
 			DetailList.Controls.Add(_deleteButton, 2, 0);
 			AddWidgets(wsdo);
 			Application.DoEvents();
+			if (doGoToNextField)
+			{
+				_detailList.MoveInsertionPoint(1);
+			}
+			else
+			{
+				_detailList.MoveInsertionPoint(0);
+			}
 		}
 
 		protected virtual void UpdateGhostLabel(int itemCount, int index) {}

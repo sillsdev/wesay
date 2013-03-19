@@ -236,7 +236,6 @@ namespace WeSay.UI
 			{
 				label.Font = new Font(StringCatalog.LabelFont /* label.Font*/, FontStyle.Bold);
 			}
-			label.FontChanged += OnFontChanged;
 			//label.Font =StringCatalog.ModifyFontForLocalization(label.Font);
 			label.Text = fieldLabel;
 			label.AutoSize = true;
@@ -285,11 +284,6 @@ namespace WeSay.UI
 			Controls.Add(editWidget, _indexOfWidget, insertAtRow);
 
 			return editWidget;
-		}
-
-		private void OnFontChanged(object sender, EventArgs e)
-		{
-			return;
 		}
 
 		private void OnChildWidget_MouseWheel(object sender, MouseEventArgs e)
