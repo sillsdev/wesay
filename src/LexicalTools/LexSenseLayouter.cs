@@ -59,6 +59,7 @@ namespace WeSay.LexicalTools
 					var exampleLayouter =
 						new LexExampleSentenceLayouter(DetailList, rowCount, ActiveViewTemplate, _serviceProvider, lexExampleSentence);
 					exampleLayouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
+					exampleLayouter.Deletable = false;
 					AddChildrenWidgets(exampleLayouter, lexExampleSentence);
 					rowCount++;
 				}
