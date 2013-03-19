@@ -31,6 +31,7 @@ namespace WeSay.LexicalTools
 		private LexEntryRepository _lexEntryRepository;
 		private bool _showNormallyHiddenFields;
 		private TaskMemory _memory;
+		private bool _senseDeletionEnabled;
 
 
 		//designer and some tests
@@ -184,6 +185,19 @@ namespace WeSay.LexicalTools
 			{
 				_showNormallyHiddenFields = value;
 				//no... this will lead to extra refreshing. RefreshEntryDetail();
+			}
+		}
+
+		public bool SenseDeletionEnabled
+		{
+			get { return _senseDeletionEnabled; }
+			set
+			{
+				if (_senseDeletionEnabled != value)
+				{
+					_senseDeletionEnabled = value;
+					RefreshEntryDetail();
+				}
 			}
 		}
 
@@ -354,7 +368,8 @@ namespace WeSay.LexicalTools
 						ViewTemplate,
 						_lexEntryRepository,
 						WeSayWordsProject.Project.ServiceLocator,//clean-up have to send this down the chain
-						_record
+						_record,
+						_senseDeletionEnabled
 					);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
