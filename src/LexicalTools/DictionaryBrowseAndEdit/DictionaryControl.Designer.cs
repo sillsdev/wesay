@@ -105,7 +105,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this._btnDeleteWord.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
 			this._btnDeleteWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnDeleteWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-			this._btnDeleteWord.Image = global::WeSay.LexicalTools.Properties.Resources.DeleteWord;
+			this._btnDeleteWord.Image = global::WeSay.LexicalTools.Properties.Resources.DeleteIcon;
 			this._btnDeleteWord.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._btnDeleteWord.Location = new System.Drawing.Point(176, 0);
 			this._btnDeleteWord.Margin = new System.Windows.Forms.Padding(0);

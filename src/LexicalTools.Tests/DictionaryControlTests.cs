@@ -1031,12 +1031,12 @@ namespace WeSay.LexicalTools.Tests
 			ClickAddWord();
 
 			DetailList detailList = GetDetailList();
-			int initialCount = detailList.Count;
+			int initialCount = detailList.FieldCount;
 
 			FillInTheGhostMeaning();
 
 			//ghost really did fire
-			Assert.IsTrue(detailList.Count > initialCount);
+			Assert.IsTrue(detailList.FieldCount > initialCount);
 
 			//now do another one
 			initialCount = detailList.Count;
@@ -1050,7 +1050,7 @@ namespace WeSay.LexicalTools.Tests
 			TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName(), _window);
 			lxt.Properties.Focus();
 			Application.DoEvents();
-			Assert.IsTrue(detailList.Count > initialCount);
+			Assert.IsTrue(detailList.FieldCount > initialCount);
 		}
 
 		private void FillInTheGhostMeaning()
@@ -1261,7 +1261,7 @@ namespace WeSay.LexicalTools.Tests
 			DetailList detailList =
 					((DictionaryControl) _task.Control).Control_EntryDetailPanel.ControlEntryDetail;
 			Control foundControl = null;
-			for (int i = 0;i < detailList.Count;i++)
+			for (int i = 0;i < detailList.FieldCount;i++)
 			{
 				Label label = detailList.GetLabelControlFromRow(i);
 				if (label.Text == labelText)
@@ -1286,7 +1286,7 @@ namespace WeSay.LexicalTools.Tests
 			DetailList detailList =
 					((DictionaryControl) _task.Control).Control_EntryDetailPanel.ControlEntryDetail;
 			int foundSoFar = -1;
-			for (int i = 0;i < detailList.Count;i++)
+			for (int i = 0;i < detailList.FieldCount;i++)
 			{
 				Label label = detailList.GetLabelControlFromRow(i);
 				if (label.Text.Contains("Meaning"))

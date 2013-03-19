@@ -1,8 +1,6 @@
-using System.Windows.Forms;
-
-namespace WeSay.UI
+﻿namespace WeSay.UI
 {
-	partial class DetailList
+	partial class ScrollableContainer
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -19,9 +17,7 @@ namespace WeSay.UI
 			{
 				components.Dispose();
 			}
-			Application.RemoveMessageFilter(this);
 			base.Dispose(disposing);
-			this._disposed = true;
 		}
 
 		#region Component Designer generated code
@@ -32,18 +28,8 @@ namespace WeSay.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this.SuspendLayout();
-			//
-			// DetailList
-			//
-			AutoScroll = false; //but we need to make sure children are never wider than we are
-			this.Name = "DetailList";
-			ColumnCount = 3;
-			DoubleBuffered = true;
-
-			this.ResumeLayout(false);
-
+			components = new System.ComponentModel.Container();
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 		}
 
 		#endregion

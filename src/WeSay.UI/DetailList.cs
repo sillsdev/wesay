@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using Palaso.UI.WindowsForms.i18n;
 using Palaso.i18n;
 using Palaso.Reporting;
 using WeSay.UI.TextBoxes;
@@ -13,7 +16,7 @@ namespace WeSay.UI
 	/// It supports dynamically removing and inserting new rows, to support
 	/// "ghost" fields
 	/// </summary>
-	public partial class DetailList: TableLayoutPanel
+	public partial class DetailList: TableLayoutPanel, IMessageFilter, ILocalizableControl
 	{
 		/// <summary>
 		/// Can be used to track which data item the user is currently editting, to,
@@ -26,43 +29,100 @@ namespace WeSay.UI
 
 		private bool _disposed;
 		private readonly StackTrace _stackAtConstruction;
-		private static int _instanceCountForDebugging;
+
+		public EventHandler MouseEnteredBounds;
+		public EventHandler MouseLeftBounds;
+		private bool _mouseIsInBounds;
 
 		public DetailList()
 		{
-			++_instanceCountForDebugging;
-			if (_instanceCountForDebugging > 1)
-			{
-				//not necessarily bad, just did this while looking into ws-554
-				Logger.WriteEvent("Detail List Count ={0}", _instanceCountForDebugging);
 #if DEBUG
-				Debug.Assert(_instanceCountForDebugging < 5, "ws-554 reproduction?");
-#endif
-			}
-
-#if DEBUG
-
 			_stackAtConstruction = new StackTrace();
 #endif
 			InitializeComponent();
-			Name = "DetailList"; //for  debugging
+			Application.AddMessageFilter(this);
 
-			if (_indexOfLabel == 0)
-			{
-				ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-				ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-			}
-			else
-			{
-				ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-				ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-			}
+			Name = "DetailList"; //for  debugging
+			ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 0));
+			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+			ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30));
+			Dock = DockStyle.Fill;
+			AutoSize = true;
+			AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
 			MouseClick += OnMouseClick;
+
+			//CellPaint += OnCellPaint;
+			//var rand = new Random();
+			//BackColor = Color.FromArgb(255, rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
+		}
+
+		public float LabelColumnWidth
+		{
+			get { return ColumnStyles[0].Width; }
+			set
+			{
+				SuspendLayout();
+				if (value != LabelColumnWidth)
+				{
+					ColumnStyles[0].Width = value;
+				}
+				foreach (var detailList in GetChildDetailLists())
+				{
+					detailList.LabelColumnWidth = value;
+				}
+				ResumeLayout();
+			}
+
+		}
+		private List<DetailList> GetChildDetailLists()
+		{
+			var lists = new List<DetailList>();
+			for (int row = 0; row < RowCount; row++)
+			{
+				var control = GetFirstControlInRow(row);
+				if (control is DetailList)
+				{
+					var detailList = ((DetailList)control);
+					lists.Add(detailList);
+				}
+			}
+			return lists;
+		}
+
+
+		public int WidestLabelWidthWithMargin
+		{
+			get
+			{
+				var labels = new List<Control>();
+				AppendControlsFromEachFieldRow(0, labels);
+				return labels.Select(label => ((Label)label).GetPreferredSize(new Size(1000, 1000)).Width + label.Margin.Left + label.Margin.Right).Concat(new[] { 0 }).Max();
+			}
+		}
+
+		private void OnCellPaint(object sender, TableLayoutCellPaintEventArgs e)
+		{
+			var bounds = new Rectangle(e.CellBounds.Location, new Size(e.CellBounds.Width, e.CellBounds.Height - 10));
+			e.Graphics.DrawRectangle(new Pen(Color.FromArgb(BackColor.ToArgb() ^ 0x808080)), bounds);
 		}
 
 		private void OnMouseClick(object sender, MouseEventArgs e)
 		{
 			Select();
+			_clicked = true;
+		}
+		public void AddDetailList(DetailList detailList, int insertAtRow)
+		{
+			if (insertAtRow >= RowCount)
+			{
+				RowCount = insertAtRow + 1;
+			}
+			SetColumnSpan(detailList, 3);
+			RowStyles.Add(new RowStyle(SizeType.AutoSize));
+			detailList.LabelColumnWidth = LabelColumnWidth;
+			detailList.MouseWheel += OnChildWidget_MouseWheel;
+			Controls.Add(detailList, _indexOfLabel, insertAtRow);
 		}
 
 		protected override void OnGotFocus(EventArgs e)
@@ -122,6 +182,8 @@ namespace WeSay.UI
 		{
 			//Debug.WriteLine("VBox " + Name + "   Clearing");
 
+			RowCount = 0;
+			RowStyles.Clear();
 			while (Controls.Count > 0)
 			{
 				//  Debug.WriteLine("  VBoxClear() calling dispose on " + base.Controls[0].Name);
@@ -129,8 +191,6 @@ namespace WeSay.UI
 			}
 			Controls.Clear();
 			// Debug.WriteLine("VBox " + Name + "   Clearing DONE");
-			RowCount = 0;
-			RowStyles.Clear();
 		}
 
 		public Control AddWidgetRow(string fieldLabel,
@@ -160,8 +220,11 @@ namespace WeSay.UI
 						for (int col = 0;col < ColumnCount;col++)
 						{
 							Control c = GetControlFromPosition(col, row - 1);
-							SetCellPosition(c, new TableLayoutPanelCellPosition(col, row));
-							c.TabIndex = row;
+							if (c != null)
+							{
+								SetCellPosition(c, new TableLayoutPanelCellPosition(col, row));
+								c.TabIndex = row;
+							}
 						}
 					}
 				}
@@ -194,7 +257,7 @@ namespace WeSay.UI
 			editWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
 			editWidget.KeyDown += OnEditWidget_KeyDown;
-			editWidget.MouseWheel += OnEditWidget_MouseWheel;
+			editWidget.MouseWheel += OnChildWidget_MouseWheel;
 
 			Debug.Assert(GetControlFromPosition(_indexOfWidget, insertAtRow) == null);
 
@@ -223,7 +286,7 @@ namespace WeSay.UI
 			return editWidget;
 		}
 
-		private void OnEditWidget_MouseWheel(object sender, MouseEventArgs e)
+		private void OnChildWidget_MouseWheel(object sender, MouseEventArgs e)
 		{
 			OnMouseWheel(e);
 		}
@@ -246,8 +309,7 @@ namespace WeSay.UI
 													  row,
 													  "row must be between 0 and Count-1 inclusive");
 			}
-			//            Panel p = (Panel)ActualControls[RowToControlIndex(row)];
-			//            Control c = GetEditControlFromReferenceControl(p);
+
 			Control c = GetControlFromPosition(1, row);
 
 			Control tb;
@@ -287,17 +349,82 @@ namespace WeSay.UI
 		/// <summary>
 		/// for tests
 		/// </summary>
-		public Control GetEditControlFromRow(int row)
+		public Control GetEditControlFromRow(int fieldIndex)
 		{
-			return GetControlFromPosition(_indexOfWidget, row);
+			var labels = new List<Control>();
+			AppendControlsFromEachFieldRow(1, labels);
+			return labels[fieldIndex];
 		}
 
 		/// <summary>
 		/// for tests
 		/// </summary>
-		public Label GetLabelControlFromRow(int row)
+		public Label GetLabelControlFromRow(int fieldIndex)
 		{
-			return (Label) GetControlFromPosition(_indexOfLabel, row);
+			var labels = new List<Control>();
+			AppendControlsFromEachFieldRow(0, labels);
+			return (Label) labels[fieldIndex];
+		}
+
+		/// <summary>
+		/// for tests
+		/// </summary>
+		public Button GetDeleteButton(int fieldIndex)
+		{
+			var deleteButtons = new List<Control>();
+			AppendControlsFromEachFieldRow(2, deleteButtons);
+			return (Button)deleteButtons[fieldIndex];
+		}
+
+		private void AppendControlsFromEachFieldRow(int columnIndex, List<Control> controls)
+		{
+			for (int row = 0; row < RowCount; row++)
+			{
+				var control = GetFirstControlInRow(row);
+				if (control is DetailList)
+				{
+					var detailList = ((DetailList)control);
+					//We have to simulate the mouse hovering over the detaillist to get the delete button to show
+					//Invisible controls can't be retreived from the tablelayoutpanel.
+					detailList.MouseEnteredBounds(detailList, new EventArgs());
+					detailList.AppendControlsFromEachFieldRow(columnIndex, controls);
+					detailList.MouseLeftBounds(detailList, new EventArgs());
+				}
+				else
+				{
+					controls.Add(GetControlFromPosition(columnIndex, row));
+				}
+			}
+		}
+
+		/// <summary>
+		/// Tests
+		/// </summary>
+		/// <returns></returns>
+		public int FieldCount
+		{
+			get
+			{
+				int fieldcount = 0;
+				for (int row = 0; row < RowCount; row++)
+				{
+					var control = GetFirstControlInRow(row);
+					if (control is DetailList)
+					{
+						fieldcount += ((DetailList) control).FieldCount;
+					}
+					else
+					{
+						fieldcount++;
+					}
+				}
+				return fieldcount;
+			}
+		}
+
+		private Control GetFirstControlInRow(int row)
+		{
+			return GetControlFromPosition(0, row);
 		}
 
 		~DetailList()
@@ -322,5 +449,66 @@ namespace WeSay.UI
 				throw new ObjectDisposedException(GetType().FullName);
 			}
 		}
+
+		bool _clicked = false;
+
+		//This message filter is used to determine wether the mouse in hovering over the DetailList or one
+		//of its children. MouseLeave unfortunately fires when the mouse moves over a child control. This
+		//is not behavior that we want which is why we are adding the MouseEnteredBounds and MouseLeftBounds
+		//events
+		public bool PreFilterMessage(ref Message m)
+		{
+			if (m.Msg != 0x0200) return false;
+			if (_disposed) return false;
+			var controlGettingMessage = FromHandle(m.HWnd);
+			if (controlGettingMessage == null) return false;
+			//if (!_clicked) return false;
+			int x = m.LParam.ToInt32() & 0x0000FFFF;
+			int y = (int)((m.LParam.ToInt32() & 0xFFFF0000) >> 16);
+			var posRelativeToControl = new Point(x, y);
+			var screenPos = controlGettingMessage.PointToScreen(posRelativeToControl);
+			var posRelativeToThis = PointToClient(screenPos);
+
+			//Console.WriteLine("MouseCoords: {0} {1} BoundsUpperLeft: {2}, {3}, {4}, {5}", posRelativeToThis.X, posRelativeToThis.Y, Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height);
+
+			var mouseInBounds = ClientRectangle.Contains(posRelativeToThis);
+			if (_mouseIsInBounds != mouseInBounds)
+			{
+				if (mouseInBounds)
+				{
+					if (MouseEnteredBounds != null)
+					{
+						MouseEnteredBounds(this, new EventArgs());
+					}
+					_mouseIsInBounds = true;
+				}
+				else
+				{
+					if (MouseLeftBounds != null)
+					{
+						MouseLeftBounds(this, new EventArgs());
+					}
+					_mouseIsInBounds = false;
+				}
+			}
+			return false;
+		}
+
+		public void BeginWiring()
+		{
+			//do nothing
+		}
+
+		public void EndWiring()
+		{
+			if (!(Parent is DetailList))
+			{
+				//at this point the labels are all localized thanks to the localization helper
+				//which means all of the label sizes have changed. We need to change the size of the first column accordingly
+				LabelColumnWidth = WidestLabelWidthWithMargin;
+			}
+		}
+
+		public bool ShouldModifyFont { get; private set; }
 	}
 }

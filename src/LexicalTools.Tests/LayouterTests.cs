@@ -34,7 +34,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Create_NullBuilder_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(null, new ViewTemplate(), null, Context, new LexEntry()));
+			Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(null, 0, new ViewTemplate(), null, Context, new LexEntry(), false));
 		}
 
 		[Test]
@@ -42,7 +42,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (DetailList detailList = new DetailList())
 			{
-				Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(detailList, null, null, Context, new LexEntry()));
+				Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(detailList, 0, null, null, Context, new LexEntry(), false));
 			}
 		}
 
@@ -104,9 +104,9 @@ namespace WeSay.LexicalTools.Tests
 
 			using (DetailList dl = new DetailList())
 			{
-				LexEntryLayouter layout = new LexEntryLayouter(dl, new ViewTemplate(), null, Context, entry);
-				_rowCount = layout.AddWidgets();
-				Assert.AreEqual(0, _rowCount);
+				LexEntryLayouter layout = new LexEntryLayouter(dl, 0, new ViewTemplate(), null, Context, entry, false);
+				layout.AddWidgets();
+				Assert.AreEqual(0, layout.ParentDetailList.FieldCount);
 			}
 		}
 
@@ -130,9 +130,10 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = GetNewEntry();
 
 			DetailList dl = new DetailList();
-			LexEntryLayouter layout = new LexEntryLayouter(dl, template, null, Context, entry);
+			LexEntryLayouter layout = new LexEntryLayouter(dl, 0, template, null, Context, entry, false);
 			layout.ShowNormallyHiddenFields = showNormallyHiddenFields;
-			_rowCount = layout.AddWidgets();
+			layout.AddWidgets();
+			_rowCount = dl.FieldCount;
 			return dl;
 		}
 

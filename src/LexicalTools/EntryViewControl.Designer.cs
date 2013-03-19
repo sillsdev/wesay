@@ -51,30 +51,25 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._panelEntry = new System.Windows.Forms.Panel();
-			this._entryHeaderView = new WeSay.LexicalTools.EntryHeaderView();
+			this._scrollableContainer = new ScrollableContainer();
 			this._splitter = new WeSay.UI.CollapsibleSplitter();
+			this._entryHeaderView = new WeSay.LexicalTools.EntryHeaderView();
 			this.SuspendLayout();
 			//
-			// _panelEntry
+			// _scrollableContainer
 			//
-			this._panelEntry.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._panelEntry.Location = new System.Drawing.Point(0, 137);
-			this._panelEntry.Name = "_panelEntry";
-			this._panelEntry.Size = new System.Drawing.Size(474, 233);
-			this._panelEntry.TabIndex = 1;
-			//
-			// _entryHeaderView
-			//
-			this._entryHeaderView.Dock = System.Windows.Forms.DockStyle.Top;
-			this._entryHeaderView.Location = new System.Drawing.Point(0, 0);
-			this._entryHeaderView.Name = "_entryHeaderView";
-			this._entryHeaderView.Size = new System.Drawing.Size(474, 129);
-			this._entryHeaderView.TabIndex = 0;
+			this._scrollableContainer.AutoSize = true;
+			this._scrollableContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this._scrollableContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._scrollableContainer.Location = new System.Drawing.Point(0, 137);
+			this._scrollableContainer.Name = "_scrollableContainer";
+			this._scrollableContainer.Size = new System.Drawing.Size(474, 233);
+			this._scrollableContainer.TabIndex = 1;
 			//
 			// _splitter
 			//
 			this._splitter.BackColorEnd = System.Drawing.Color.Empty;
+			this._splitter.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this._splitter.BorderStyle3D = System.Windows.Forms.Border3DStyle.Adjust;
 			this._splitter.ControlToHide = this._entryHeaderView;
 			this._splitter.Cursor = System.Windows.Forms.Cursors.HSplit;
@@ -84,27 +79,38 @@ namespace WeSay.LexicalTools
 			this._splitter.GripperStyle = WeSay.UI.GripperStyles.DoubleDots;
 			this._splitter.Location = new System.Drawing.Point(0, 129);
 			this._splitter.Name = "_splitter";
+			this._splitter.Size = new System.Drawing.Size(474, 8);
 			this._splitter.TabIndex = 1;
 			this._splitter.TabStop = false;
+			//
+			// _entryHeaderView
+			//
+			this._entryHeaderView.BackColor = System.Drawing.SystemColors.Control;
+			this._entryHeaderView.Dock = System.Windows.Forms.DockStyle.Top;
+			this._entryHeaderView.Location = new System.Drawing.Point(0, 0);
+			this._entryHeaderView.Name = "_entryHeaderView";
+			this._entryHeaderView.Size = new System.Drawing.Size(474, 129);
+			this._entryHeaderView.TabIndex = 0;
 			//
 			// EntryViewControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.Controls.Add(this._panelEntry);
+			this.Controls.Add(this._scrollableContainer);
 			this.Controls.Add(this._splitter);
 			this.Controls.Add(this._entryHeaderView);
 			this.Name = "EntryViewControl";
 			this.Size = new System.Drawing.Size(474, 370);
 			this.BackColorChanged += new System.EventHandler(this.OnBackColorChanged);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
 		#endregion
 
 		private CollapsibleSplitter _splitter;
-		private System.Windows.Forms.Panel _panelEntry;
+		private ScrollableContainer _scrollableContainer;
 		private EntryHeaderView _entryHeaderView;
 
 	}

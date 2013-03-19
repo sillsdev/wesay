@@ -16,10 +16,11 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexSenseLayouter: Layouter
 	{
-		public LexSenseLayouter(DetailList builder, ViewTemplate viewTemplate, LexEntryRepository lexEntryRepository,
-			IServiceProvider serviceProvider)
-				: base(builder, viewTemplate, lexEntryRepository, serviceProvider)
+		public LexSenseLayouter(DetailList parentDetailList, int parentRow, ViewTemplate viewTemplate, LexEntryRepository lexEntryRepository,
+			IServiceProvider serviceProvider, LexSense senseToLayout)
+			: base(parentDetailList, parentRow, viewTemplate, lexEntryRepository, serviceProvider, senseToLayout)
 		{
+			DetailList.Name = "LexSenseDetailList";
 		}
 
 		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
@@ -47,49 +48,31 @@ namespace WeSay.LexicalTools
 					{
 						label += " " + (entry.Senses.IndexOf(sense) + 1);
 					}
-					Control meaningRowControl = DetailList.AddWidgetRow(label,
-																		true,
-																		meaningControl,
-																		insertAtRow,
-																		false);
-					++rowCount;
-					insertAtRow = DetailList.GetRow(meaningRowControl);
+					DetailList.AddWidgetRow(label, true, meaningControl, insertAtRow, false);
+					rowCount++;
 				}
 
-				//#if GlossMeaning
-				//#else
-				//                Field glossfield = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
-				//                if (glossfield != null && glossfield.GetDoShow(sense.Gloss, this.ShowNormallyHiddenFields))
-				//                {
-				//                    Control control = MakeBoundControl(sense.Gloss, glossfield);
-				//                    DetailList.AddWidgetRow(
-				//                        StringCatalog.Get("~Gloss",
-				//                                          "This is the field that normally has just a single word translation, not a full definition. Mostly used with interlinear text displays."),
-				//                        false,
-				//                        control, insertAtRow + rowCount, false);
-				//                    ++rowCount;
-				//                    insertAtRow = DetailList.GetRow(control);
-				//                }
-				//#endif
+				rowCount += AddCustomFields(sense, rowCount);
 
-				rowCount += AddCustomFields(sense, insertAtRow + rowCount);
+				foreach (var lexExampleSentence in sense.ExampleSentences)
+				{
+					var exampleLayouter =
+						new LexExampleSentenceLayouter(DetailList, rowCount, ActiveViewTemplate, _serviceProvider, lexExampleSentence);
+					exampleLayouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
+					exampleLayouter.Deletable = false;
+					AddChildrenWidgets(exampleLayouter, lexExampleSentence);
+					rowCount++;
+				}
 
-				LexExampleSentenceLayouter exampleLayouter =
-						new LexExampleSentenceLayouter(DetailList, ActiveViewTemplate, _serviceProvider);
-				exampleLayouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
-
-				rowCount = AddChildrenWidgets(exampleLayouter,
-											  sense.ExampleSentences,
-											  insertAtRow,
-											  rowCount);
 
 				//add a ghost for another example if we don't have one or we're in the "show all" mode
 				//removed because of its effect on the Add Examples task, where
 				//we'd like to be able to add more than one
 				//if (ShowNormallyHiddenFields || sense.ExampleSentences.Count == 0)
 				{
-					rowCount += exampleLayouter.AddGhost(sense, sense.ExampleSentences,
-														 insertAtRow + rowCount);
+					AddExampleSentenceGhost(sense, rowCount);
+					rowCount++;
+
 				}
 			}
 			catch (ConfigurationException e)
@@ -100,6 +83,23 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
+		private void AddExampleSentenceGhost(LexSense sense, int insertAtRow)
+		{
+			var exampleLayouter =
+				new LexExampleSentenceLayouter(DetailList, insertAtRow, ActiveViewTemplate, _serviceProvider, null);
+			exampleLayouter.AddGhost(null, sense.ExampleSentences);
+			exampleLayouter.GhostRequestedLayout += OnGhostRequestedlayout;
+		}
+
+		private void OnGhostRequestedlayout(object sender, EventArgs e)
+		{
+			var row = DetailList.GetPositionFromControl((DetailList)sender).Row;
+			//The old ghost takes care of turing itself into a properly layouted example sentence.
+			//We just add a new ghost here
+			AddExampleSentenceGhost((LexSense) PdoToLayout, row + 1);
+		}
+
+
 		public int AddGhost(PalasoDataObject parent, IList<LexSense> list, bool isHeading)
 		{
 			int insertAtRow = -1;
@@ -109,7 +109,6 @@ namespace WeSay.LexicalTools
 #else
 			return MakeGhostWidget<LexSense>(parent,
 									list,
-								   insertAtRow,
 								   LexSense.WellKnownProperties.Definition,
 								   label,
 								   "Definition",

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using Chorus;
 using Chorus.UI.Notes;
@@ -30,6 +31,7 @@ namespace WeSay.LexicalTools
 		private LexEntryRepository _lexEntryRepository;
 		private bool _showNormallyHiddenFields;
 		private TaskMemory _memory;
+		private bool _senseDeletionEnabled;
 
 
 		//designer and some tests
@@ -43,13 +45,14 @@ namespace WeSay.LexicalTools
 		{
 			_viewTemplate = null;
 			InitializeComponent();
+
 			Controls.Remove(_entryHeaderView);
 		   _entryHeaderView.Dispose();
 			_entryHeaderView = entryHeaderViewFactory();
 		   _entryHeaderView.Dock = DockStyle.Top;
 		   _entryHeaderView.BackColor = BackColor;
 		   Controls.Add(_entryHeaderView);
-		   Controls.SetChildIndex(_panelEntry, 0);
+		   Controls.SetChildIndex(_scrollableContainer, 0);
 			Controls.SetChildIndex(_splitter, 1);
 		   Controls.SetChildIndex(_entryHeaderView, 2);
 
@@ -182,6 +185,19 @@ namespace WeSay.LexicalTools
 			{
 				_showNormallyHiddenFields = value;
 				//no... this will lead to extra refreshing. RefreshEntryDetail();
+			}
+		}
+
+		public bool SenseDeletionEnabled
+		{
+			get { return _senseDeletionEnabled; }
+			set
+			{
+				if (_senseDeletionEnabled != value)
+				{
+					_senseDeletionEnabled = value;
+					RefreshEntryDetail();
+				}
 			}
 		}
 
@@ -319,60 +335,66 @@ namespace WeSay.LexicalTools
 		{
 			try
 			{
-				_panelEntry.SuspendLayout();
+				_scrollableContainer.SuspendLayout();
 				DetailList oldDetailList = _detailListControl;
 				if (oldDetailList != null)
 				{
+					oldDetailList.SuspendLayout();
+					oldDetailList.Visible = false;
 					oldDetailList.ChangeOfWhichItemIsInFocus -= OnChangeOfWhichItemIsInFocus;
 					oldDetailList.KeyDown -= _detailListControl_KeyDown;
+					_scrollableContainer.Controls.Remove(oldDetailList);
+					oldDetailList.Dispose();
+					oldDetailList.ResumeLayout();
 				}
+				_scrollableContainer.ResumeLayout();
 
-				DetailList detailList = new DetailList();
+				var detailList = new DetailList();
 				_detailListControl = detailList;
-
-				detailList.SuspendLayout();
-				//
-				// _detailListControl
-				//
 				detailList.BackColor = BackColor;
-				detailList.Dock = DockStyle.Fill;
 				detailList.Name = "_detailListControl";
-				detailList.Size = _panelEntry.Size;
 				detailList.TabIndex = 1;
-
+				//The top level detail list should be free to expand downward so we anchor to left, top and right.
+				//Do Not Dock! It causes problems with many senses
+				detailList.Dock = DockStyle.None;
+				detailList.Size = _scrollableContainer.Size;
+				detailList.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 				if (_record != null)
 				{
 					VerifyHasLexEntryRepository();
 					var layout = new LexEntryLayouter(
 						detailList,
+						0,
 						ViewTemplate,
 						_lexEntryRepository,
 						WeSayWordsProject.Project.ServiceLocator,//clean-up have to send this down the chain
-						_record
+						_record,
+						_senseDeletionEnabled
 					);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
-				detailList.Visible = false;
-				_panelEntry.Controls.Add(detailList);
-				detailList.ResumeLayout(true);
-				detailList.Visible = true;
-				_panelEntry.Controls.SetChildIndex(detailList, 0);
+				_scrollableContainer.SuspendLayout();
+				detailList.SuspendLayout();
+				_scrollableContainer.Controls.Add(detailList);
 
-				if (oldDetailList != null)
-				{
-					_panelEntry.Controls.Remove(oldDetailList);
-					oldDetailList.Dispose();
-				}
+				detailList.ResumeLayout();
+				_scrollableContainer.AutoScroll = true;
 
 				detailList.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
 				detailList.KeyDown += _detailListControl_KeyDown;
-				_panelEntry.ResumeLayout(false);
+				detailList.MouseWheel += OnDetailListMouseWheel;
+				_scrollableContainer.ResumeLayout();
 			}
 			catch (ConfigurationException e)
 			{
 				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
+		}
+
+		private void OnDetailListMouseWheel(object sender, MouseEventArgs e)
+		{
+			_scrollableContainer.ScrollAccordingToEventArgs(e);
 		}
 
 		private void OnChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)

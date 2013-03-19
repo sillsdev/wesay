@@ -16,10 +16,11 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexExampleSentenceLayouter: Layouter
 	{
-		public LexExampleSentenceLayouter(DetailList builder, ViewTemplate viewTemplate,
-			IServiceProvider serviceProvider)
-				: base(builder, viewTemplate, null, serviceProvider)
+		public LexExampleSentenceLayouter(DetailList parentDetailList, int parentRow, ViewTemplate viewTemplate,
+			IServiceProvider serviceProvider, LexExampleSentence exampleToLayout)
+			: base(parentDetailList, parentRow, viewTemplate, null, serviceProvider, exampleToLayout)
 		{
+			DetailList.Name = "LexExampleSentenceDetailList";
 		}
 
 		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
@@ -71,15 +72,15 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		public int AddGhost(LexSense sense, IList<LexExampleSentence> list, int insertAtRow)
+		public int AddGhost(LexSense sense, IList<LexExampleSentence> list)
 		{
 			return MakeGhostWidget(sense, list,
-								   insertAtRow,
 								   Field.FieldNames.ExampleSentence.ToString(),
 								   StringCatalog.Get("~Example",
 													 "This is the field containing an example sentence of a sense of a word."),
 								   "Sentence",
 								   false);
 		}
+
 	}
 }
