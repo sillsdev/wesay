@@ -52,7 +52,7 @@ namespace WeSay.LexicalTools
 		   _entryHeaderView.Dock = DockStyle.Top;
 		   _entryHeaderView.BackColor = BackColor;
 		   Controls.Add(_entryHeaderView);
-		   Controls.SetChildIndex(_panelEntry, 0);
+		   Controls.SetChildIndex(_scrollableContainer, 0);
 			Controls.SetChildIndex(_splitter, 1);
 		   Controls.SetChildIndex(_entryHeaderView, 2);
 
@@ -335,7 +335,7 @@ namespace WeSay.LexicalTools
 		{
 			try
 			{
-				_panelEntry.SuspendLayout();
+				_scrollableContainer.SuspendLayout();
 				DetailList oldDetailList = _detailListControl;
 				if (oldDetailList != null)
 				{
@@ -343,11 +343,11 @@ namespace WeSay.LexicalTools
 					oldDetailList.Visible = false;
 					oldDetailList.ChangeOfWhichItemIsInFocus -= OnChangeOfWhichItemIsInFocus;
 					oldDetailList.KeyDown -= _detailListControl_KeyDown;
-					_panelEntry.Controls.Remove(oldDetailList);
+					_scrollableContainer.Controls.Remove(oldDetailList);
 					oldDetailList.Dispose();
 					oldDetailList.ResumeLayout();
 				}
-				_panelEntry.ResumeLayout();
+				_scrollableContainer.ResumeLayout();
 
 				var detailList = new DetailList();
 				_detailListControl = detailList;
@@ -357,7 +357,7 @@ namespace WeSay.LexicalTools
 				//The top level detail list should be free to expand downward so we anchor to left, top and right.
 				//Do Not Dock! It causes problems with many senses
 				detailList.Dock = DockStyle.None;
-				detailList.Size = _panelEntry.Size;
+				detailList.Size = _scrollableContainer.Size;
 				detailList.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 				if (_record != null)
 				{
@@ -374,21 +374,27 @@ namespace WeSay.LexicalTools
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
-				_panelEntry.SuspendLayout();
+				_scrollableContainer.SuspendLayout();
 				detailList.SuspendLayout();
-				_panelEntry.Controls.Add(detailList);
+				_scrollableContainer.Controls.Add(detailList);
 
 				detailList.ResumeLayout();
-				_panelEntry.AutoScroll = true;
+				_scrollableContainer.AutoScroll = true;
 
 				detailList.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
 				detailList.KeyDown += _detailListControl_KeyDown;
-				_panelEntry.ResumeLayout();
+				detailList.MouseWheel += OnDetailListMouseWheel;
+				_scrollableContainer.ResumeLayout();
 			}
 			catch (ConfigurationException e)
 			{
 				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
+		}
+
+		private void OnDetailListMouseWheel(object sender, MouseEventArgs e)
+		{
+			_scrollableContainer.ScrollAccordingToEventArgs(e);
 		}
 
 		private void OnChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)
