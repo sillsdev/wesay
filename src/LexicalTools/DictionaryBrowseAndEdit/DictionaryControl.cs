@@ -465,10 +465,17 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			);
 		}
 
+		private int _recordListBoxIndexBeforeChange;
+
 		private void OnRecordsListBoxItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
 			if (e.IsSelected)
 			{
+				if (e.ItemIndex == -1)
+				{
+					_recordsListBox.SelectedIndex = _recordListBoxIndexBeforeChange;
+					return;
+				}
 				SetRecordToBeEdited(CurrentEntry);
 
 				if (CurrentEntry != null)
@@ -484,6 +491,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				LoadRecords();
 
 				UpdateDisplay();
+				_recordListBoxIndexBeforeChange = CurrentIndex;
 			}
 		}
 

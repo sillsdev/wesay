@@ -362,7 +362,7 @@ namespace WeSay.UI
 			SelectedIndex = _mouseDownInfo.OldIndex;
 			_mouseDownInfo.MouseIsDown = false;
 			SelectedIndex = _mouseDownInfo.IndexSelected;
-			Console.WriteLine("Up! Selected index: {0}", SelectedIndex);
+			//Console.WriteLine("Up! Selected index: {0}", SelectedIndex);
 			base.OnMouseUp(e);
 		}
 

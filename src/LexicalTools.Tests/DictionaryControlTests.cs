@@ -1228,6 +1228,24 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(b.Properties.Enabled);
 		}
 
+
+		[Test]
+		[Category("NUnit Windows Forms")]
+		[Platform(Exclude = "Unix")] // MouseController uses Win32.GetCursorPos so not portable
+		public void ClickOnWhiteSpaceUnderEntries_EntrySelectionDoesNotchange()
+		{
+			AddInitialEntries();
+			var l = new ListViewTester("_recordsListBox", _window);
+			using (var mc = new MouseController(l))
+			{
+				Rectangle r = l.Properties.GetItemRect(2);
+				mc.Click(r.Right + 1, r.Bottom + 1);
+				// move enough to not count as a double-click
+				mc.Click(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Bottom + 1);
+			}
+			Assert.IsTrue(l.Properties.SelectedIndices[0] == 0);
+		}
+
 		//
 		//        [Test]
 		//        public void GotoEntry_LackingFormInCurrentListWritingSystem()
