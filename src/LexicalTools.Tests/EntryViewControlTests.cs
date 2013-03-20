@@ -363,6 +363,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (EntryViewControl entryViewControl = CreateForm(apple, false))
 			{
+				entryViewControl.SenseDeletionEnabled = true;
 				Assert.AreEqual(6, entryViewControl.ControlEntryDetail.FieldCount);
 				Button deleteButton = GetDeletebutton(entryViewControl.ControlEntryDetail, "Meaning 1");
 				deleteButton.Visible = true;
@@ -376,6 +377,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (EntryViewControl entryViewControl = CreateForm(apple, false))
 			{
+				entryViewControl.SenseDeletionEnabled = true;
 				Assert.AreEqual(1, apple.Senses.Count);
 				Button deleteButton = GetDeletebutton(entryViewControl.ControlEntryDetail, "Meaning 1");
 				deleteButton.Visible = true;
@@ -386,7 +388,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private EntryViewControl CreateForm(LexEntry entry, bool requiresVisibleForm)
 		{
-			EntryViewControl entryViewControl = new EntryViewControl();
+			EntryViewControl entryViewControl = new EntryViewControl(()=>new EntryHeaderView(), ()=>new TestConfirmDelete());
 			entryViewControl.LexEntryRepository = _lexEntryRepository;
 			entryViewControl.ViewTemplate = _viewTemplate;
 			entryViewControl.DataSource = entry;

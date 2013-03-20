@@ -1,16 +1,12 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
-using Chorus;
-using Chorus.UI.Notes;
-using Chorus.UI.Notes.Bar;
-using Palaso.Code;
 using Palaso.DictionaryServices.Model;
 using Palaso.UI.WindowsForms.Miscellaneous;
 using Palaso.Reporting;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -32,6 +28,7 @@ namespace WeSay.LexicalTools
 		private bool _showNormallyHiddenFields;
 		private TaskMemory _memory;
 		private bool _senseDeletionEnabled;
+		private CreateIConfirmDelete _createIConfirmDelete;
 
 
 		//designer and some tests
@@ -41,10 +38,11 @@ namespace WeSay.LexicalTools
 			RefreshEntryDetail();
 			//_detailListControl = new DetailList();
 		}
-	   public EntryViewControl(EntryHeaderView.Factory entryHeaderViewFactory)
+		public EntryViewControl(EntryHeaderView.Factory entryHeaderViewFactory, CreateIConfirmDelete createIConfirmDelete)
 		{
 			_viewTemplate = null;
 			InitializeComponent();
+		   _createIConfirmDelete = createIConfirmDelete;
 
 			Controls.Remove(_entryHeaderView);
 		   _entryHeaderView.Dispose();
@@ -369,7 +367,8 @@ namespace WeSay.LexicalTools
 						_lexEntryRepository,
 						WeSayWordsProject.Project.ServiceLocator,//clean-up have to send this down the chain
 						_record,
-						_senseDeletionEnabled
+						_senseDeletionEnabled,
+						_createIConfirmDelete
 					);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);

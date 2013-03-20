@@ -18,7 +18,6 @@ namespace WeSay.Project
 		}
 		public void RegisterAllTypes(ContainerBuilder builder)
 		{
-
 			RegisterTask(builder, "Dashboard",
 						 "WeSay.LexicalTools.Dashboard.Dash",
 						 "WeSay.LexicalTools.Dashboard.DashboardConfiguration",
@@ -63,6 +62,10 @@ namespace WeSay.Project
 				 "WeSay.LexicalTools.Review.NotesBrowser.NotesBrowserTask",
 				 "WeSay.LexicalTools.Review.NotesBrowser.NotesBrowserConfig",
 				 "LexicalTools");
+
+			Type type = GetType("WeSay.LexicalTools.DictionaryBrowseAndEdit.ConfirmDelete", "LexicalTools");
+			Type typeInterface = GetType("WeSay.LexicalTools.IConfirmDelete", "LexicalTools");
+			builder.RegisterType(type).As(typeInterface).InstancePerDependency();
 
 //            Type type = GetType( "WeSay.LexicalTools.Review.AdvancedHistory.AdvancedHistoryControl", assembly);
 //            TaskNameToTaskType.Add(name, type);

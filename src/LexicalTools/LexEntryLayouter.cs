@@ -19,6 +19,7 @@ namespace WeSay.LexicalTools
 	public class LexEntryLayouter: Layouter
 	{
 		private bool _sensesAreDeletable = false;
+		private readonly ConfirmDeleteFactory _confirmDeleteFactory;
 
 		public LexEntry Entry { get; set; }
 
@@ -28,7 +29,8 @@ namespace WeSay.LexicalTools
 								LexEntryRepository lexEntryRepository,
 								IServiceLocator serviceLocator,
 								LexEntry entry,
-								bool sensesAreDeletable)
+								bool sensesAreDeletable,
+								ConfirmDeleteFactory confirmDeleteFactory)
 			: base(parentDetailList, parentRow, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, entry), entry)
 		{
 			var widestlabel = GetWidestLabelWidth(viewTemplate);
@@ -36,6 +38,7 @@ namespace WeSay.LexicalTools
 			DetailList.LabelColumnWidth = widestlabel;
 			DetailList.Name = "LexEntryDetailList";
 			_sensesAreDeletable = sensesAreDeletable;
+			_confirmDeleteFactory = confirmDeleteFactory;
 		}
 
 		private static int GetWidestLabelWidth(ViewTemplate viewTemplate)
@@ -114,14 +117,12 @@ namespace WeSay.LexicalTools
 		{
 			var sendingLayouter = (Layouter) sender;
 			var sense = (LexSense) sendingLayouter.PdoToLayout;
-			using (var d = new ConfirmDelete())
+			IConfirmDelete confirmation = _confirmDeleteFactory();
+			confirmation.Message = String.Format("This will permanently remove the sense with meaning {0}.",
+				sense.Definition.GetBestAlternative(ActiveViewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition).Id));
+			if (!confirmation.DeleteConfirmed)
 			{
-				d.Message = String.Format("This will permanently remove the sense with meaning {0}.", sense.Definition.GetBestAlternative(ActiveViewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition).Id));
-				var result = d.ShowDialog();
-				if (result != DialogResult.OK)
-				{
-					return;
-				}
+				return;
 			}
 			Entry.Senses.Remove(sense);
 			DetailList.Clear();
