@@ -28,7 +28,7 @@ namespace WeSay.LexicalTools
 		private bool _showNormallyHiddenFields;
 		private TaskMemory _memory;
 		private bool _senseDeletionEnabled;
-		private CreateIConfirmDelete _createIConfirmDelete;
+		private ConfirmDeleteFactory _confirmDeleteFactory;
 
 
 		//designer and some tests
@@ -38,11 +38,11 @@ namespace WeSay.LexicalTools
 			RefreshEntryDetail();
 			//_detailListControl = new DetailList();
 		}
-		public EntryViewControl(EntryHeaderView.Factory entryHeaderViewFactory, CreateIConfirmDelete createIConfirmDelete)
+		public EntryViewControl(EntryHeaderView.Factory entryHeaderViewFactory, ConfirmDeleteFactory confirmDeleteFactory)
 		{
 			_viewTemplate = null;
 			InitializeComponent();
-		   _createIConfirmDelete = createIConfirmDelete;
+		   _confirmDeleteFactory = confirmDeleteFactory;
 
 			Controls.Remove(_entryHeaderView);
 		   _entryHeaderView.Dispose();
@@ -368,7 +368,7 @@ namespace WeSay.LexicalTools
 						WeSayWordsProject.Project.ServiceLocator,//clean-up have to send this down the chain
 						_record,
 						_senseDeletionEnabled,
-						_createIConfirmDelete
+						_confirmDeleteFactory
 					);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
