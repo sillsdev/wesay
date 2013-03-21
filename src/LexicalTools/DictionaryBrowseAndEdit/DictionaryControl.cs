@@ -471,7 +471,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			if (e.IsSelected)
 			{
-				if (e.ItemIndex == -1)
+				if (e.ItemIndex == -1 && !_entryViewControl.DataSource.IsBeingDeleted)
 				{
 					_recordsListBox.SelectedIndex = _recordListBoxIndexBeforeChange;
 					return;
