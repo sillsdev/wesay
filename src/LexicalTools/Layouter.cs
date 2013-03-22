@@ -15,6 +15,7 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
+using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
 using Palaso.i18n;
 
@@ -56,22 +57,34 @@ namespace WeSay.LexicalTools
 
 		private bool _showNormallyHiddenFields;
 
-		private readonly Button _deleteButton = new Button();
+		private readonly DeleteButton _deleteButton = new DeleteButton();
 
 		public EventHandler DeleteClicked;
 
-		public bool Deletable { get; set; }
+		public bool Deletable
+		{
+			get { return _deletable; }
+			set
+			{
+				if (value == _deletable)
+				{
+					return;
+				}
+				_deletable = value;
+				_deleteButton.Visible = _deletable;
+			}
+		}
 
 		private void OnMouseLeftBounds(object sender, EventArgs e)
 		{
-			_deleteButton.Visible = false;
+			_deleteButton.Active = false;
 		}
 
 		private void OnMouseEnteredBounds(object sender, EventArgs e)
 		{
 			if (Deletable)
 			{
-				_deleteButton.Visible = true;
+				_deleteButton.Active = true;
 			}
 		}
 
@@ -140,13 +153,9 @@ namespace WeSay.LexicalTools
 			_lexEntryRepository = lexEntryRepository;
 			_serviceProvider = serviceProvider;
 			//Set up the space for the delete icon
-			_deleteButton.Image = Properties.Resources.DeleteIcon;
-			_deleteButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 			_deleteButton.Click += OnDeleteClicked;
+			_deleteButton.Active = false;
 			_deleteButton.Visible = false;
-			_deleteButton.FlatAppearance.BorderSize = 0;
-			_deleteButton.FlatAppearance.MouseOverBackColor = Color.Orange;
-			_deleteButton.FlatStyle = FlatStyle.Flat;
 			DetailList.Controls.Add(_deleteButton, 2, 0);
 			DetailList.MouseEnteredBounds += OnMouseEnteredBounds;
 			DetailList.MouseLeftBounds += OnMouseLeftBounds;

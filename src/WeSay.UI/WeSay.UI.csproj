@@ -214,6 +214,12 @@
 	<Compile Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.Designer.cs">
 	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
 	</Compile>
+	<Compile Include="Buttons\DeleteButton.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Buttons\DeleteButton.Designer.cs">
+	  <DependentUpon>DeleteButton.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Event.cs" />
 	<Compile Include="ScrollableContainer.cs">
 	  <SubType>UserControl</SubType>
@@ -318,6 +324,9 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>CheckBoxControl.cs</DependentUpon>
 	</EmbeddedResource>
+	<EmbeddedResource Include="Buttons\DeleteButton.resx">
+	  <DependentUpon>DeleteButton.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="PictureControl.resx">
 	  <DependentUpon>PictureControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
@@ -351,6 +360,15 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
 	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\delete-word.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\delete-word-bw.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\delete-word-grey.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

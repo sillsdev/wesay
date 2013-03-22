@@ -60,6 +60,20 @@ namespace WeSay.UI.Properties {
 			}
 		}
 
+		internal static System.Drawing.Bitmap DeleteIcon {
+			get {
+				object obj = ResourceManager.GetObject("DeleteIcon", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap DeleteIconBw {
+			get {
+				object obj = ResourceManager.GetObject("DeleteIconBw", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
 		internal static System.Drawing.Bitmap FlagOff {
 			get {
 				object obj = ResourceManager.GetObject("FlagOff", resourceCulture);

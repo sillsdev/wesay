@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i18n;
 using Palaso.i18n;
 using Palaso.Reporting;
+using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI
@@ -369,11 +370,11 @@ namespace WeSay.UI
 		/// <summary>
 		/// for tests
 		/// </summary>
-		public Button GetDeleteButton(int fieldIndex)
+		public DeleteButton GetDeleteButton(int fieldIndex)
 		{
 			var deleteButtons = new List<Control>();
 			AppendControlsFromEachFieldRow(2, deleteButtons);
-			return (Button)deleteButtons[fieldIndex];
+			return (DeleteButton)deleteButtons[fieldIndex];
 		}
 
 		private void AppendControlsFromEachFieldRow(int columnIndex, List<Control> controls)
@@ -384,11 +385,7 @@ namespace WeSay.UI
 				if (control is DetailList)
 				{
 					var detailList = ((DetailList)control);
-					//We have to simulate the mouse hovering over the detaillist to get the delete button to show
-					//Invisible controls can't be retreived from the tablelayoutpanel.
-					detailList.MouseEnteredBounds(detailList, new EventArgs());
 					detailList.AppendControlsFromEachFieldRow(columnIndex, controls);
-					detailList.MouseLeftBounds(detailList, new EventArgs());
 				}
 				else
 				{
