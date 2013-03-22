@@ -72,6 +72,7 @@ namespace WeSay.LexicalTools
 				}
 				_deletable = value;
 				_deleteButton.Visible = _deletable;
+				_deleteButton.Active = DetailList.MouseIsInBounds;
 			}
 		}
 
@@ -298,11 +299,10 @@ namespace WeSay.LexicalTools
 		{
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
 			PdoToLayout = list[index];
-			Deletable = true;
 			AddWidgetsAfterGhostTrigger(PdoToLayout, sender.ReferenceControl, doGoToNextField);
 			if (GhostRequestedLayout != null)
 			{
-				GhostRequestedLayout(DetailList, new EventArgs());
+				GhostRequestedLayout(this, new EventArgs());
 			}
 
 		}

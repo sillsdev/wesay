@@ -93,10 +93,12 @@ namespace WeSay.LexicalTools
 
 		private void OnGhostRequestedlayout(object sender, EventArgs e)
 		{
-			var row = DetailList.GetPositionFromControl((DetailList)sender).Row;
-			//The old ghost takes care of turing itself into a properly layouted example sentence.
-			//We just add a new ghost here
-			AddExampleSentenceGhost((LexSense) PdoToLayout, row + 1);
+			if (ActiveViewTemplate.GetGhostingRuleForField(LexEntry.WellKnownProperties.Sense).ShowGhost)
+			{
+				//The old ghost takes care of turing itself into a properly layouted sense.
+				//We just add a new ghost here
+				AddExampleSentenceGhost((LexSense) PdoToLayout, DetailList.RowCount);
+			}
 		}
 
 

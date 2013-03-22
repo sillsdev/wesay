@@ -470,7 +470,7 @@ namespace WeSay.UI
 			//Console.WriteLine("MouseCoords: {0} {1} BoundsUpperLeft: {2}, {3}, {4}, {5}", posRelativeToThis.X, posRelativeToThis.Y, Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height);
 
 			var mouseInBounds = ClientRectangle.Contains(posRelativeToThis);
-			if (_mouseIsInBounds != mouseInBounds)
+			if (MouseIsInBounds != mouseInBounds)
 			{
 				if (mouseInBounds)
 				{
@@ -508,5 +508,10 @@ namespace WeSay.UI
 		}
 
 		public bool ShouldModifyFont { get; private set; }
+
+		public bool MouseIsInBounds
+		{
+			get { return _mouseIsInBounds; }
+		}
 	}
 }
