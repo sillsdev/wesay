@@ -33,25 +33,17 @@ namespace WeSay.LexicalTools
 								ConfirmDeleteFactory confirmDeleteFactory)
 			: base(parentDetailList, parentRow, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, entry), entry)
 		{
-			var widestlabel = GetWidestLabelWidth(viewTemplate);
 			Entry = entry;
-			DetailList.LabelColumnWidth = widestlabel;
 			DetailList.Name = "LexEntryDetailList";
 			_sensesAreDeletable = sensesAreDeletable;
 			_confirmDeleteFactory = confirmDeleteFactory;
+			DetailList.LabelsChanged += OnLabelsChanged;
 		}
 
-		private static int GetWidestLabelWidth(ViewTemplate viewTemplate)
+		private void OnLabelsChanged(object sender, EventArgs e)
 		{
-			var widestlabel = 0;
-			foreach (var field in viewTemplate)
-			{
-				var label = new Label();
-				label.AutoSize = true;
-				label.Text = field.DisplayName;
-				widestlabel = label.Width;
-			}
-			return widestlabel;
+			var maxWidth = DetailList.WidestLabelWidthWithMargin;
+			DetailList.LabelColumnWidth = maxWidth;
 		}
 
 		public int AddWidgets()

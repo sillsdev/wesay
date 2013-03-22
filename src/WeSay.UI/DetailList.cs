@@ -121,10 +121,11 @@ namespace WeSay.UI
 			}
 			SetColumnSpan(detailList, 3);
 			RowStyles.Add(new RowStyle(SizeType.AutoSize));
-			detailList.LabelColumnWidth = LabelColumnWidth;
 			detailList.MouseWheel += OnChildWidget_MouseWheel;
 			detailList.Margin = new Padding(0, detailList.Margin.Top, 0, detailList.Margin.Bottom);
 			Controls.Add(detailList, _indexOfLabel, insertAtRow);
+			OnLabelsChanged(this, new EventArgs());
+			detailList.LabelsChanged += OnLabelsChanged;
 		}
 
 		protected override void OnGotFocus(EventArgs e)
@@ -195,6 +196,13 @@ namespace WeSay.UI
 			// Debug.WriteLine("VBox " + Name + "   Clearing DONE");
 		}
 
+		public event EventHandler LabelsChanged;
+
+		private void OnLabelSizeChanged(object sender, EventArgs e)
+		{
+			OnLabelsChanged(this, e);
+		}
+
 		public Control AddWidgetRow(string fieldLabel,
 									bool isHeader,
 									Control editWidget,
@@ -255,6 +263,8 @@ namespace WeSay.UI
 			}
 
 			Controls.Add(label, _indexOfLabel, insertAtRow);
+			OnLabelsChanged(this, new EventArgs());
+			label.SizeChanged += OnLabelSizeChanged;
 
 			editWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
@@ -286,6 +296,14 @@ namespace WeSay.UI
 			Controls.Add(editWidget, _indexOfWidget, insertAtRow);
 
 			return editWidget;
+		}
+
+		private void OnLabelsChanged(object sender, EventArgs e)
+		{
+			if (LabelsChanged != null)
+			{
+				LabelsChanged(this, new EventArgs());
+			}
 		}
 
 		private void OnChildWidget_MouseWheel(object sender, MouseEventArgs e)
@@ -499,12 +517,7 @@ namespace WeSay.UI
 
 		public void EndWiring()
 		{
-			if (!(Parent is DetailList))
-			{
-				//at this point the labels are all localized thanks to the localization helper
-				//which means all of the label sizes have changed. We need to change the size of the first column accordingly
-				LabelColumnWidth = WidestLabelWidthWithMargin;
-			}
+			//do nothing
 		}
 
 		public bool ShouldModifyFont { get; private set; }
