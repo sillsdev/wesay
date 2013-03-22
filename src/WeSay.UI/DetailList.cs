@@ -123,6 +123,7 @@ namespace WeSay.UI
 			RowStyles.Add(new RowStyle(SizeType.AutoSize));
 			detailList.LabelColumnWidth = LabelColumnWidth;
 			detailList.MouseWheel += OnChildWidget_MouseWheel;
+			detailList.Margin = new Padding(0, detailList.Margin.Top, 0, detailList.Margin.Bottom);
 			Controls.Add(detailList, _indexOfLabel, insertAtRow);
 		}
 
