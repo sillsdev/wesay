@@ -157,6 +157,7 @@ namespace WeSay.LexicalTools
 			_deleteButton.Click += OnDeleteClicked;
 			_deleteButton.Active = false;
 			_deleteButton.Visible = false;
+			_deleteButton.ToolTip = "Delete Sense";
 			DetailList.Controls.Add(_deleteButton, 2, 0);
 			DetailList.MouseEnteredBounds += OnMouseEnteredBounds;
 			DetailList.MouseLeftBounds += OnMouseLeftBounds;
