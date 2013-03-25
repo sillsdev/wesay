@@ -237,6 +237,7 @@ namespace WeSay.LexicalTools
 										 string propertyName,
 										 bool isHeading) where T : PalasoDataObject, new()
 		{
+			DetailList.SuspendLayout();
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(fieldName);
 			if (field != null && field.Enabled &&
@@ -265,6 +266,7 @@ namespace WeSay.LexicalTools
 						g.ReferenceControl = refWidget;
 					}
 				}
+				DetailList.ResumeLayout();
 				return 1;
 			}
 			else
