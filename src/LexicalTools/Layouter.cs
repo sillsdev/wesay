@@ -300,6 +300,7 @@ namespace WeSay.LexicalTools
 															 EventArgs args)
 				where T : PalasoDataObject, new()
 		{
+			DetailList.SuspendLayout();
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
 			PdoToLayout = list[index];
 			AddWidgetsAfterGhostTrigger(PdoToLayout, sender.ReferenceControl, doGoToNextField);
@@ -307,20 +308,7 @@ namespace WeSay.LexicalTools
 			{
 				GhostRequestedLayout(this, new EventArgs());
 			}
-
-		}
-
-		protected void AddWidgetsAfterGhostTrigger(PalasoDataObject wsdo,
-												   Control refControl,
-												   bool doGoToNextField)
-		{
-			//remove the old ghost widgets and add the ones for the real sense
-			_detailList.Controls.Clear();
-			_detailList.RowCount = 0;
-			_detailList.RowStyles.Clear();
-			DetailList.Controls.Add(_deleteButton, 2, 0);
-			AddWidgets(wsdo);
-			Application.DoEvents();
+			DetailList.ResumeLayout();
 			if (doGoToNextField)
 			{
 				_detailList.MoveInsertionPoint(1);
@@ -329,6 +317,20 @@ namespace WeSay.LexicalTools
 			{
 				_detailList.MoveInsertionPoint(0);
 			}
+		}
+
+		protected void AddWidgetsAfterGhostTrigger(PalasoDataObject wsdo,
+												   Control refControl,
+												   bool doGoToNextField)
+		{
+			_detailList.SuspendLayout();
+			//remove the old ghost widgets and add the ones for the real sense
+			_detailList.Controls.Clear();
+			_detailList.RowCount = 0;
+			_detailList.RowStyles.Clear();
+			DetailList.Controls.Add(_deleteButton, 2, 0);
+			AddWidgets(wsdo);
+			_detailList.ResumeLayout();
 		}
 
 		protected virtual void UpdateGhostLabel(int itemCount, int index) {}

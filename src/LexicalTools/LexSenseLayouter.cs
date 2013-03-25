@@ -85,10 +85,12 @@ namespace WeSay.LexicalTools
 
 		private void AddExampleSentenceGhost(LexSense sense, int insertAtRow)
 		{
+			DetailList.SuspendLayout();
 			var exampleLayouter =
 				new LexExampleSentenceLayouter(DetailList, insertAtRow, ActiveViewTemplate, _serviceProvider, null);
 			exampleLayouter.AddGhost(null, sense.ExampleSentences);
 			exampleLayouter.GhostRequestedLayout += OnGhostRequestedlayout;
+			DetailList.ResumeLayout();
 		}
 
 		private void OnGhostRequestedlayout(object sender, EventArgs e)
