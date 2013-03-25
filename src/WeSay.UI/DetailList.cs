@@ -115,6 +115,7 @@ namespace WeSay.UI
 		}
 		public void AddDetailList(DetailList detailList, int insertAtRow)
 		{
+			SuspendLayout();
 			if (insertAtRow >= RowCount)
 			{
 				RowCount = insertAtRow + 1;
@@ -126,6 +127,7 @@ namespace WeSay.UI
 			Controls.Add(detailList, _indexOfLabel, insertAtRow);
 			OnLabelsChanged(this, new EventArgs());
 			detailList.LabelsChanged += OnLabelsChanged;
+			ResumeLayout();
 		}
 
 		protected override void OnGotFocus(EventArgs e)
