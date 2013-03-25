@@ -26,7 +26,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		private RecordToken<LexEntry> _currentRecord;
 		private RecordToken<LexEntry> _previousRecord;
 		private RecordToken<LexEntry> _nextRecord;
-		private Timer _focusFirstFieldTimer;
 
 		private readonly ViewTemplate _viewTemplate;
 		private readonly Predicate<LexEntry> _isNotComplete;
@@ -85,37 +84,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_btnNextWord.BringToFront();
 			_btnPreviousWord.BringToFront();
 			SetCurrentRecordFromRecordList();
-		}
-
-		protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
-			/*
-			 * cjh 2013-03-22
-			 * Trying various attempts to set the focus on the first text box within the missing info control (this one),
-			 * I could not figure out a point in execution time within this control that the first text box control was in existence such that I could set the focus.
-			 * Winforms Control publishes the Load event, but does not publish other useful events like Shown or Activated, which Winforms Form does.  If we had a Shown event then I believe
-			 * we could avoid the timer hack below.  I could not find such a suitable event.
-			 *
-			 * the Load event would be the natural event to handle for such a thing, but in my tests the text box control was still not focus-able.
-			 * I discovered that it unfortunately must be a timing issue, as I could get the focus code to work if I set a breakpoint on the focus code and then immediately continued (F5).
-			 * Running the code normally without the breakpoint does not yield the desired set focus.
-			 * I reluctantly settled on the timer hack below to ensure that the control is focus-able before setting the focus
-			 */
-			if (_focusFirstFieldTimer == null)
-			{
-				_focusFirstFieldTimer = new Timer();
-				_focusFirstFieldTimer.Tick += OnFocusFirstFieldTimer_Tick;
-				_focusFirstFieldTimer.Interval = 300;
-			}
-			_focusFirstFieldTimer.Stop();//reset it
-			_focusFirstFieldTimer.Start();
-		}
-
-		private void OnFocusFirstFieldTimer_Tick(object sender, EventArgs e)
-		{
-			_focusFirstFieldTimer.Stop();
-			_entryViewControl.FocusFirstField();
 		}
 
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
