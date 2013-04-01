@@ -333,7 +333,6 @@ namespace WeSay.UI
 			}
 
 			Control c = GetControlFromPosition(1, row);
-
 			Control tb;
 
 			if (c is MultiTextControl)
@@ -360,6 +359,45 @@ namespace WeSay.UI
 			{
 			}
 #endif
+		}
+
+		/// <summary>
+		/// Used to set the focus on the first editable field, which may not be at the index of the starting row field.  This method recurses through nested DetailLists to find an editable field on which to set the focus
+		/// </summary>
+		/// <param name="startingRow">The row to start searching for an editable field</param>
+		/// <returns>True if an editable control was found, otherwise false</returns>
+		public bool MoveInsertionPointToEditableControl(int startingRow)
+		{
+			for (int i = startingRow; i < RowCount; i++)
+			{
+				Control c = GetControlFromPosition(1, i);
+				if (c is DetailList)
+				{
+					if (((DetailList) c).MoveInsertionPointToEditableControl(0))
+					{
+						return true;
+					}
+				}
+				if (c is MultiTextControl)
+				{
+					c = ((MultiTextControl) c).TextBoxes[0];
+				}
+
+				if (c is WeSayTextBox)
+				{
+					if (!((WeSayTextBox) c).ReadOnly)
+					{
+						MoveInsertionPoint(i);
+						return true;
+					}
+				}
+				else
+				{
+					MoveInsertionPoint(i);
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public void OnBinding_ChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)

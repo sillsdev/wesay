@@ -260,7 +260,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				{
 					_todoRecordsListBox.SelectedIndex = _todoRecords.Count - 2;
 				}
-				_entryViewControl.FocusFirstField();
+				_entryViewControl.FocusFirstEditableField();
 			}
 			else
 			{
@@ -481,6 +481,11 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				monoOnEnterFix = false;
 			}
+		}
+
+		public void SelectInitialControl()
+		{
+			_entryViewControl.FocusFirstEditableField();
 		}
 	}
 }

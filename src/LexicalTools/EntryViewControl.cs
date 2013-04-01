@@ -432,11 +432,11 @@ namespace WeSay.LexicalTools
 			RefreshLexicalEntryPreview();
 		}
 
-		public void FocusFirstField()
+		public void FocusFirstEditableField()
 		{
 			if (_detailListControl.RowCount > 0)
 			{
-				_detailListControl.MoveInsertionPoint(0);
+				_detailListControl.MoveInsertionPointToEditableControl(0);
 			}
 		}
 	}
