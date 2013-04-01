@@ -130,6 +130,17 @@ namespace WeSay.UI
 			ResumeLayout();
 		}
 
+		public void ForceFullTreeLayout()
+		{
+			SuspendLayout();
+			foreach (var childDetailList in GetChildDetailLists())
+			{
+				childDetailList.ForceFullTreeLayout();
+			}
+			PerformLayout();
+			ResumeLayout();
+		}
+
 		protected override void OnGotFocus(EventArgs e)
 		{
 			base.OnGotFocus(e);

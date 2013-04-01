@@ -373,16 +373,15 @@ namespace WeSay.LexicalTools
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
-				_scrollableContainer.SuspendLayout();
-				detailList.SuspendLayout();
-				_scrollableContainer.Controls.Add(detailList);
-
-				detailList.ResumeLayout();
-				_scrollableContainer.AutoScroll = true;
 
 				detailList.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
 				detailList.KeyDown += _detailListControl_KeyDown;
 				detailList.MouseWheel += OnDetailListMouseWheel;
+
+				_scrollableContainer.SuspendLayout();
+				_scrollableContainer.AutoScroll = true;
+				_scrollableContainer.Controls.Add(detailList);
+				_detailListControl.ForceFullTreeLayout();
 				_scrollableContainer.ResumeLayout();
 			}
 			catch (ConfigurationException e)
