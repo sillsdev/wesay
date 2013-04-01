@@ -780,6 +780,12 @@ namespace WeSay.LexicalTools.Dashboard
 			throw new NotImplementedException();
 		}
 
+		public void FocusDesiredControl()
+		{
+			// This is the place to implement how the task selects it's desired child control
+			return;
+		}
+
 		#region IThingOnDashboard Members
 
 		public DashboardGroup Group

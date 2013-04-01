@@ -627,6 +627,12 @@ namespace WeSay.LexicalTools.GatherByWordList
 			return CountNotRelevant; //Todo
 		}
 
+		public override void FocusDesiredControl()
+		{
+			// This is the place to implement how the task selects it's desired child control
+			return;
+		}
+
 		/// <summary>
 		/// Removes the sense (if otherwise empty) and deletes the entry if it has no reason left to live
 		/// </summary>

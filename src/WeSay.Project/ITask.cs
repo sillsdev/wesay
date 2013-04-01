@@ -35,6 +35,11 @@ namespace WeSay.Project
 
 		string GetRemainingCountText();
 		string GetReferenceCountText();
+
+		/// <summary>
+		/// Select the task's desired initial control
+		/// </summary>
+		void FocusDesiredControl();
 	}
 
 	/// <summary>

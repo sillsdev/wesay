@@ -186,6 +186,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			return CountNotRelevant;
 		}
 
+		public override void FocusDesiredControl()
+		{
+			// This is the place to implement how the task selects it's desired child control
+			return;
+		}
+
 		public override ButtonStyle DashboardButtonStyle
 		{
 			get { return ButtonStyle.IconFixedWidth; }

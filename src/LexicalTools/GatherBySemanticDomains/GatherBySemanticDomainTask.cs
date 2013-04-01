@@ -1029,6 +1029,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			return DomainKeys.Count;
 		}
 
+		public override void FocusDesiredControl()
+		{
+			// This is the place to implement how the task selects it's desired child control
+			return;
+		}
+
 		public void GotoLastDomainWithAnswers()
 		{
 			VerifyTaskActivated();

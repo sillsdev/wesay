@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Autofac;
@@ -105,5 +106,10 @@ namespace WeSay.LexicalTools.Review.NotesBrowser
 			return CountNotRelevant;
 		}
 
+		public override void FocusDesiredControl()
+		{
+			// This is the place to implement how the task selects it's desired child control
+			return;
+		}
 	}
 }

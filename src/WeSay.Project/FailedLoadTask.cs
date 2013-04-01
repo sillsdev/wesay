@@ -108,6 +108,11 @@ namespace WeSay.Project
 			return string.Empty;
 		}
 
+		public void FocusDesiredControl()
+		{
+			return;
+		}
+
 		#region IThingOnDashboard Members
 
 		public DashboardGroup Group

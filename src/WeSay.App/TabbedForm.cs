@@ -377,8 +377,12 @@ namespace WeSay.App
 				task.Control.ResumeLayout(false);
 			}
 			task.Control.SelectNextControl(task.Control, true, true, true, true);
+
+			// The .FocusDesiredControl() gives the task specific control over which child field gets focus when the task is activated.  If every task implemented this method, then the above task.Control.SelectNextControl would be unnecessary
+			task.FocusDesiredControl();
 			task.Control.PerformLayout();
 			task.Control.Invalidate(true);
+
 			page.Cursor = Cursors.Default;
 			_activeTask = task;
 			Logger.WriteEvent("Done Activating");
