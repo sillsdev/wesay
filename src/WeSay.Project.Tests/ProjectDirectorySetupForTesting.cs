@@ -34,6 +34,9 @@ namespace WeSay.Project.Tests
 							xmlOfEntries);
 			File.WriteAllText(PathToLiftFile, liftContents);
 
+			// liftSynchronizerAdjunct requires some lift-ranges file
+			File.WriteAllText(Path.ChangeExtension(PathToLiftFile, "lift-ranges"), @"<?xml version='1.0' encoding='utf-8'?>
+<lift-ranges/>");
 		}
 
 

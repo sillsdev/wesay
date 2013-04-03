@@ -1838,7 +1838,7 @@ namespace WeSay.Project
 			try
 			{
 				if(BackupMaker!=null)//it will for many tests, which don't need to be slowed down by all this
-					BackupMaker.BackupNow(ProjectDirectoryPath, UiOptions.Language);
+					BackupMaker.BackupNow(ProjectDirectoryPath, UiOptions.Language, PathToLiftFile);
 			}
 			catch (Exception error)
 			{

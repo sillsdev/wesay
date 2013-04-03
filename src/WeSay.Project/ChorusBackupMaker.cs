@@ -74,7 +74,7 @@ namespace WeSay.Project
 			serializer.Serialize(writer, this, ns);
 		}
 
-		public void BackupNow(string pathToProjectDirectory, string localizationLanguageId)
+		public void BackupNow(string pathToProjectDirectory, string localizationLanguageId, string pathToLiftFile)
 		{
 			if(pathToProjectDirectory.ToLower().IndexOf(@"sampleprojects\pretend")>=0)
 			{
@@ -123,6 +123,7 @@ namespace WeSay.Project
 					dlg.SyncOptions.RepositorySourcesToTry.Clear();
 					dlg.SyncOptions.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
 					dlg.UseTargetsAsSpecifiedInSyncOptions=true;
+					dlg.SetSynchronizerAdjunct(new LiftSynchronizerAdjunct(pathToLiftFile));
 
 					//in addition to checking in, will we be doing a backup to another media (e.g. sd card)?
 					if (!string.IsNullOrEmpty(PathToParentOfRepositories))
