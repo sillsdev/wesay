@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using Palaso.DictionaryServices.Model;
 using Palaso.UI.WindowsForms.Miscellaneous;
@@ -42,6 +43,7 @@ namespace WeSay.LexicalTools
 		{
 			_viewTemplate = null;
 			InitializeComponent();
+			_scrollableContainer.SizeChanged += OnScrollableContainerOrDetailListSizeChanged;
 		   _confirmDeleteFactory = confirmDeleteFactory;
 
 			Controls.Remove(_entryHeaderView);
@@ -57,6 +59,15 @@ namespace WeSay.LexicalTools
 		   _splitter.ControlToHide = _entryHeaderView;
 			RefreshEntryDetail();
 		}
+
+		private void OnScrollableContainerOrDetailListSizeChanged(object sender, EventArgs e)
+		{
+			if (_detailListControl != null && !_detailListControl.IsDisposed)
+			{
+				_detailListControl.Size = new Size(_scrollableContainer.ClientRectangle.Width, _detailListControl.Height);
+			}
+		}
+
 		protected override void OnHandleDestroyed(EventArgs e)
 		{
 			if (_cleanupTimer != null)
@@ -341,6 +352,7 @@ namespace WeSay.LexicalTools
 					oldDetailList.Visible = false;
 					oldDetailList.ChangeOfWhichItemIsInFocus -= OnChangeOfWhichItemIsInFocus;
 					oldDetailList.KeyDown -= _detailListControl_KeyDown;
+					oldDetailList.SizeChanged -= OnScrollableContainerOrDetailListSizeChanged;
 					_scrollableContainer.Controls.Remove(oldDetailList);
 					oldDetailList.Dispose();
 					oldDetailList.ResumeLayout();
@@ -355,8 +367,10 @@ namespace WeSay.LexicalTools
 				//The top level detail list should be free to expand downward so we anchor to left, top and right.
 				//Do Not Dock! It causes problems with many senses
 				detailList.Dock = DockStyle.None;
-				detailList.Size = _scrollableContainer.Size;
+				detailList.Size = new Size(_scrollableContainer.ClientRectangle.Width, detailList.Height);
 				detailList.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+				detailList.SizeChanged += OnScrollableContainerOrDetailListSizeChanged;
+				detailList.AutoSize = true;
 				if (_record != null)
 				{
 					VerifyHasLexEntryRepository();
