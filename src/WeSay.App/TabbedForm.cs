@@ -338,8 +338,8 @@ namespace WeSay.App
 			t.Tick += delegate
 					  {
 						  t.Stop();
-						  ActivateTask(page, task);
 						  page.Text = task.Label;
+						  ActivateTask(page, task);
 						  t.Dispose();
 					  };
 			t.Interval = 1;
