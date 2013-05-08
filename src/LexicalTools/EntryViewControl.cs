@@ -449,7 +449,7 @@ namespace WeSay.LexicalTools
 		{
 			if (_detailListControl.RowCount > 0)
 			{
-				_detailListControl.MoveInsertionPointToEditableControl(0);
+				_detailListControl.MoveInsertionPoint(0);
 			}
 		}
 	}

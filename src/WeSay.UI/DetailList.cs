@@ -330,6 +330,36 @@ namespace WeSay.UI
 			OnKeyDown(e);
 		}
 
+		private bool SetFocusOnControl(Control c)
+		{
+			bool focusSucceeded;
+			if (c is MultiTextControl)
+			{
+				MultiTextControl multText = (MultiTextControl)c;
+				var tb = multText.TextBoxes[0];
+				focusSucceeded = tb.Focus();
+				if (tb is WeSayTextBox)
+					((WeSayTextBox)tb).Select(1000, 0); //go to end
+			}
+			else if (c is WeSayTextBox)
+			{
+				focusSucceeded = c.Focus();
+				if (c is WeSayTextBox)
+					((WeSayTextBox)c).Select(1000, 0); //go to end
+			}
+			else
+			{
+				focusSucceeded = c.Focus();
+			}
+			return focusSucceeded;
+		}
+
+
+		/// <summary>
+		/// Used to set the focus on the first editable field, which may not be at the index of the starting row field.  This method recurses through nested DetailLists to find an editable field on which to set the focus
+		/// </summary>
+		/// <param name="startingRow">The row to start searching for an editable field</param>
+		/// <returns>True if an editable control was found, otherwise false</returns>
 		public void MoveInsertionPoint(int row)
 		{
 #if (!DEBUG) // not worth crashing over
@@ -342,28 +372,8 @@ namespace WeSay.UI
 													  row,
 													  "row must be between 0 and Count-1 inclusive");
 			}
-
-			Control c = GetControlFromPosition(1, row);
-			Control tb;
-
-			if (c is MultiTextControl)
-			{
-				MultiTextControl multText = (MultiTextControl) c;
-				tb = multText.TextBoxes[0];
-				tb.Focus();
-				if(tb is WeSayTextBox)
-					((WeSayTextBox) tb).Select(1000, 0); //go to end
-			}
-			else if (c is WeSayTextBox)
-			{
-				c.Focus();
-				if(c is WeSayTextBox)
-					((WeSayTextBox) c).Select(1000, 0); //go to end
-			}
-			else
-			{
-				c.Focus();
-			}
+			var c = GetEditControlFromRow(row);
+			SetFocusOnControl(c);
 #if (!DEBUG) // not worth crashing over
 			}
 			catch (Exception)
@@ -372,54 +382,12 @@ namespace WeSay.UI
 #endif
 		}
 
-		/// <summary>
-		/// Used to set the focus on the first editable field, which may not be at the index of the starting row field.  This method recurses through nested DetailLists to find an editable field on which to set the focus
-		/// </summary>
-		/// <param name="startingRow">The row to start searching for an editable field</param>
-		/// <returns>True if an editable control was found, otherwise false</returns>
-		public bool MoveInsertionPointToEditableControl(int startingRow)
-		{
-			for (int i = startingRow; i < RowCount; i++)
-			{
-				Control c = GetControlFromPosition(1, i);
-				if (c is DetailList)
-				{
-					if (((DetailList) c).MoveInsertionPointToEditableControl(0))
-					{
-						return true;
-					}
-				}
-				if (c is MultiTextControl)
-				{
-					c = ((MultiTextControl) c).TextBoxes[0];
-				}
-
-				if (c is WeSayTextBox)
-				{
-					if (!((WeSayTextBox) c).ReadOnly)
-					{
-						MoveInsertionPoint(i);
-						return true;
-					}
-				}
-				else
-				{
-					MoveInsertionPoint(i);
-					return true;
-				}
-			}
-			return false;
-		}
-
 		public void OnBinding_ChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)
 		{
 			VerifyNotDisposed();
 			ChangeOfWhichItemIsInFocus(sender, e);
 		}
 
-		/// <summary>
-		/// for tests
-		/// </summary>
 		public Control GetEditControlFromRow(int fieldIndex)
 		{
 			var labels = new List<Control>();
