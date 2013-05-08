@@ -210,7 +210,7 @@ namespace WeSay.UI.TextBoxes
 				if(box==null)
 					continue;
 
-				Label label = AddWritingSystemLabel(box, ((IControlThatKnowsWritingSystem) box).WritingSystem.Abbreviation);
+				Label label = AddWritingSystemLabel(((IControlThatKnowsWritingSystem) box).WritingSystem.Abbreviation);
 				label.Click += subControl_Click;
 				label.MouseWheel += subControl_MouseWheel;
 
@@ -225,7 +225,7 @@ namespace WeSay.UI.TextBoxes
 															   box.Name + "-annotationWidget");
 					Control annotationControl = aw.MakeControl(new Size()); //p.Size);
 					annotationControl.Click += subControl_Click;
-					annotationControl.Anchor = AnchorStyles.Right | AnchorStyles.Top;
+					annotationControl.Anchor = AnchorStyles.Right;
 					Controls.Add(annotationControl, 2, RowCount);
 				}
 				//else
@@ -298,38 +298,15 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		private static Label AddWritingSystemLabel(Control box, string abbreviation)
+		private static Label AddWritingSystemLabel(string abbreviation)
 		{
-			Label label = new Label();
+			var label = new Label();
 			label.Text = abbreviation;
 			label.ForeColor = DisplaySettings.Default.WritingSystemLabelColor;
-			label.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+			label.Anchor = AnchorStyles.Left;
 			label.Font = _writingSystemLabelFont;
 
 			label.AutoSize = true;
-
-			//            Graphics g = CreateGraphics();
-			//            int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
-			//            int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
-			//
-			//            //todo: this only takes into account the textbox descent, not the label's!
-			//            label.Location = new Point(0, (int) (box.Bottom -
-			//                                                 ( g.MeasureString(label.Text, label.Font).Height + descentPixel )) );
-
-			//todo: switch to TextRenderer.Measure
-			int labelAscentInPixels =
-				(int)
-				(label.Font.Size * label.Font.FontFamily.GetCellAscent(label.Font.Style) /
-				 label.Font.FontFamily.GetEmHeight(box.Font.Style));
-			int contentAscentInPixels =
-				(int)
-				(box.Font.Size * box.Font.FontFamily.GetCellAscent(box.Font.Style) /
-				 label.Font.FontFamily.GetEmHeight(box.Font.Style));
-			int howMuchFartherDownToPlaceLabelThanText = Math.Max(0,
-																  contentAscentInPixels -
-																  labelAscentInPixels);
-
-			label.Margin = new Padding(0, box.Top + howMuchFartherDownToPlaceLabelThanText, 0, 0);
 			return label;
 		}
 
