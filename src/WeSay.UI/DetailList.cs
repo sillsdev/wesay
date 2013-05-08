@@ -269,7 +269,7 @@ namespace WeSay.UI
 									   beforeHeadingPadding,
 									   label.Margin.Right,
 									   label.Margin.Bottom);
-
+			label.Anchor = AnchorStyles.Left | AnchorStyles.Top;
 			if (isGhostField)
 			{
 				label.ForeColor = Color.Gray;
@@ -279,7 +279,7 @@ namespace WeSay.UI
 			OnLabelsChanged(this, new EventArgs());
 			label.SizeChanged += OnLabelSizeChanged;
 
-			editWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
 			editWidget.KeyDown += OnEditWidget_KeyDown;
 			editWidget.MouseWheel += OnChildWidget_MouseWheel;
