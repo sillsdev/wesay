@@ -110,7 +110,8 @@ namespace WeSay.LexicalTools
 			var sendingLayouter = (Layouter) sender;
 			var sense = (LexSense) sendingLayouter.PdoToLayout;
 			IConfirmDelete confirmation = _confirmDeleteFactory();
-			confirmation.Message = String.Format("This will permanently remove the sense with meaning {0}.",
+			var deletionStringToLocalize = StringCatalog.Get("This will permanently remove the meaning");
+			confirmation.Message = String.Format("{0} {1}.", deletionStringToLocalize,
 				sense.Definition.GetBestAlternative(ActiveViewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition).Id));
 			if (!confirmation.DeleteConfirmed)
 			{
