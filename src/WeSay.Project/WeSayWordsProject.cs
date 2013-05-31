@@ -1040,9 +1040,19 @@ namespace WeSay.Project
 			return GetFileLocator().LocateOptionalFile(fileName);
 		}
 
+		public string LocateFileWithThrow(string fileName)
+		{
+			return GetFileLocator().LocateFileWithThrow(fileName);
+		}
+
 		public string LocateDirectory(string directoryName)
 		{
 			return GetFileLocator().LocateDirectory(directoryName);
+		}
+
+		public string LocateDirectoryWithThrow(string directoryName)
+		{
+			return GetFileLocator().LocateDirectoryWithThrow(directoryName);
 		}
 
 		public string LocateDirectory(string directoryName, string descriptionForErrorMessage)
