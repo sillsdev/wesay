@@ -446,6 +446,18 @@
   <ItemGroup>
 	<None Include="Resources\delete-word.png" />
   </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\right-arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\left-arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\AddWord.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.

@@ -44,8 +44,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			InitializeComponent();
 			PreviewKeyDown += OnPreviewKeyDown;
 
-			_btnNextWord.ReallySetSize(50, 50);
-			// _btnPreviousWord.ReallySetSize(30, 30);
+
 			if (DesignMode)
 			{
 				return;
@@ -81,8 +80,8 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_completedRecordsListBox.WritingSystem = listWritingSystem;
 
 			labelNextHotKey.BringToFront();
-			_btnNextWord.BringToFront();
-			_btnPreviousWord.BringToFront();
+			_btnNext.BringToFront();
+			_btnPrevious.BringToFront();
 			SetCurrentRecordFromRecordList();
 		}
 
@@ -243,11 +242,11 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		public void SetCurrentRecordToNext()
 		{
-			if (!_btnNextWord.Focused)
+			if (!_btnNext.Focused)
 			{
 				// we need to make sure that any ghosts have lost their focus and triggered updates before
 				// we do anything else
-				_btnNextWord.Focus();
+				_btnNext.Focus();
 			}
 
 			if (_todoRecords.Count > 0)
@@ -279,11 +278,11 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			if (_todoRecords.Count > 0)
 			{
-				if (!_btnPreviousWord.Focused)
+				if (!_btnPrevious.Focused)
 				{
 					// we need to make sure that any ghosts have lost their focus and triggered updates before
 					// we do anything else
-					_btnPreviousWord.Focus();
+					_btnPrevious.Focus();
 				}
 
 				if (_previousRecord != null)

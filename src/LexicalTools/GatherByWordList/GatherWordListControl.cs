@@ -148,7 +148,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			_btnAddWord.Enabled = !_task.IsTaskComplete &&
 								  _vernacularBox.TextBoxes[0].Text.Trim() != "";
 			_btnNextWord.Enabled = _task.CanNavigateNext;
-			_btnPreviousWord.Enabled = _task.CanNavigatePrevious;
+			//_btnPreviousWord.Enabled = _task.CanNavigatePrevious;
 		}
 
 		/// <summary>
@@ -221,7 +221,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 					}
 					break;
 				case Keys.PageUp:
-					if (_btnPreviousWord.Enabled)
+					if ( _task.CanNavigatePrevious)
 					{
 						_btnPreviousWord_Click(this, null);
 					}
@@ -280,6 +280,11 @@ namespace WeSay.LexicalTools.GatherByWordList
 		public void Cleanup()
 		{
 			AddCurrentWord();
+		}
+
+		public void SelectInitialControl()
+		{
+			_vernacularBox.FocusOnFirstWsAlternative();
 		}
 	}
 }

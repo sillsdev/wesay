@@ -181,19 +181,10 @@
 	<Compile Include="BetterLabel.Designer.cs">
 	  <DependentUpon>BetterLabel.cs</DependentUpon>
 	</Compile>
-	<Compile Include="Buttons\AddButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Buttons\NextButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Buttons\PreviousButton.cs">
+	<Compile Include="Buttons\RectangularImageButton.cs">
 	  <SubType>Component</SubType>
 	</Compile>
 	<Compile Include="Buttons\RegionButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Buttons\RoundButton.cs">
 	  <SubType>Component</SubType>
 	</Compile>
 	<Compile Include="Buttons\TagButton.cs">
@@ -369,6 +360,9 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\delete-word-grey.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\right-arrow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.LexicalTools.Properties;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
@@ -443,8 +444,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_btnAddWord_Click(this, null);
 		}
 
-	}
+		private void GatherBySemanticDomainsControl_Load(object sender, EventArgs e)
+		{
+		}
 		public void SelectInitialControl()
 		{
 			_vernacularBox.FocusOnFirstWsAlternative();
+		}
+	}
 }
