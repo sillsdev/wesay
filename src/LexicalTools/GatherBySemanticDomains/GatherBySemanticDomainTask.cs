@@ -1031,8 +1031,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 		public override void FocusDesiredControl()
 		{
-			// This is the place to implement how the task selects it's desired child control
-			return;
+			_gatherControl.SelectInitialControl();
 		}
 
 		public void GotoLastDomainWithAnswers()

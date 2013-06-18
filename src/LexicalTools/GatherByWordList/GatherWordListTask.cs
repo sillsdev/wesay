@@ -629,8 +629,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		public override void FocusDesiredControl()
 		{
-			// This is the place to implement how the task selects it's desired child control
-			return;
+			_gatherControl.SelectInitialControl();
 		}
 
 		/// <summary>

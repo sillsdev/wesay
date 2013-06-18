@@ -782,7 +782,7 @@ namespace WeSay.LexicalTools.Dashboard
 
 		public void FocusDesiredControl()
 		{
-			// This is the place to implement how the task selects it's desired child control
+			// This is the place to implement how the task selects its desired child control
 			return;
 		}
 

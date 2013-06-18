@@ -444,4 +444,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		}
 
 	}
+		public void SelectInitialControl()
+		{
+			_vernacularBox.FocusOnFirstWsAlternative();
 }

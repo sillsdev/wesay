@@ -73,7 +73,7 @@ namespace WeSay.LexicalTools.AddPictures
 
 		public override void FocusDesiredControl()
 		{
-			// This is the place to implement how the AddPictureTask selects it's desired child control
+			// This is the place to implement how the AddPictureTask selects its desired child control
 			return;
 		}
 	}
