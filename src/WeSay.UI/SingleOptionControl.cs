@@ -177,6 +177,9 @@ namespace WeSay.UI
 
 			_control.SelectedValueChanged += OnSelectedValueChanged;
 			//            _control.Validating += new System.ComponentModel.CancelEventHandler(_control_Validating);
+
+			//don't let the mousewheel do the scrolling, as it's likely an accident (http://jira.palaso.org/issues/browse/WS-34670)
+			_control.MouseWheel += (sender, e) => {((HandledMouseEventArgs)e).Handled = true;};
 		}
 
 		private int CompareItems(Option a, Option b)
