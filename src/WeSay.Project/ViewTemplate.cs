@@ -632,6 +632,29 @@ namespace WeSay.Project
 			return BasilProject.Project.WritingSystems.Get(field.WritingSystemIds[0]);
 		}
 
+		public WritingSystemDefinition GetFirstNonVoiceWritingSystemForFieldOrThrow(string fieldName)
+		{
+			Field field = GetField(fieldName);
+			if (field == null)
+			{
+				throw new ConfigurationException(String.Format("The field {0} has not been enabled for your project. Please enable it in the WeSay config tool.", fieldName));
+			}
+			if (field.WritingSystemIds.Count == 0)
+			{
+				throw new ConfigurationException(
+					String.Format(
+						"The field {0} has no input system associated with it. Please assign an input system to it in the WeSay config tool.",
+						fieldName));
+			}
+			foreach (var writingSystemId in field.WritingSystemIds)
+			{
+				var writingSystem= BasilProject.Project.WritingSystems.Get(writingSystemId);
+				if (!writingSystem.IsVoice)
+					return writingSystem;
+			}
+			throw new ConfigurationException("A non-voice writing system is required for the field {0}", fieldName);
+		}
+
 		public bool IsFieldFirstInClass(Field field)
 		{
 			return GetFieldsOfClass(field.ClassName).IndexOf(field) == 0;

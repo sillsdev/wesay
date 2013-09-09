@@ -61,7 +61,7 @@ namespace WeSay.Project
 				t.Dock = DockStyle.Fill;
 				t.Text =
 						String.Format(
-								"Could not load the task '{0}'. Possibly, the setup in the admin program can be used to fix this.  The error was: [{1}]",
+								"Could not load the task '{0}'. Possibly, the setup in the WeSay Configuration Tool can be used to fix this.  The error was: [{1}]",
 								_label,
 								_description);
 				return t;

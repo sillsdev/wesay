@@ -51,7 +51,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			_usingLiftFile =  ".lift"==Path.GetExtension(config.WordListFileName).ToLower();
 
 			_lexicalUnitWritingSystem =
-				viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
+				viewTemplate.GetFirstNonVoiceWritingSystemForFieldOrThrow(Field.FieldNames.EntryLexicalForm.ToString());
 			_lexemeFormListFileName = config.WordListFileName;
 			_words = null;
 			_preferredPromptingWritingSystemId = config.WordListWritingSystemIdOfOldFlatWordList;
@@ -351,6 +351,12 @@ namespace WeSay.LexicalTools.GatherByWordList
 				ErrorReport.NotifyUserOfProblem(
 						"The input system of the words in the word list will be used to add reversals and definitions.  Therefore, it needs to be in the list of input systems for this project.  Either change the input system that this task uses for the word list (currently '{0}') or add an input system with this id to the project.",
 						_preferredPromptingWritingSystemId);
+			}
+
+			if (WeSayWordsProject.Project.HeadWordWritingSystem.IsVoice)
+			{
+				ErrorReport.NotifyUserOfProblem(
+					"The first input system cannot be voice. Sorry, we know that would be useful, but it is'nt supported at this time. Using the WeSay Configuration Tool, make a non-voice field be the first one.");
 			}
 
 			if (_words == null)
