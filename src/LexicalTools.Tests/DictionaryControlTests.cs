@@ -22,7 +22,7 @@ using Palaso.Lift;
 
 namespace WeSay.LexicalTools.Tests
 {
-	[TestFixture]
+	[TestFixture, RequiresSTA]
 	public class DictionaryControlTests: NUnitFormTest
 	{
 		private TemporaryFolder _tempFolder;

@@ -21,7 +21,7 @@ namespace WeSay.ConfigTool.Tests
 			_window.Show();
 		}
 
-		[Test]
+		[Test, RequiresSTA]
 		public void ProjectIsCreated()
 		{
 			using(TemporaryFolder f = new TemporaryFolder("ProjectIsCreatedTest") )

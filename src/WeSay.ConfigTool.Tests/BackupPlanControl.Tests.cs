@@ -39,7 +39,7 @@ namespace WeSay.ConfigTool.Tests
 
 
 
-		[Test]
+		[Test, RequiresSTA]
 		public void SetValues_Reopen_HasSameValues()
 		{
 					using (TemporaryFolder backupHere = new TemporaryFolder("backupLocationForWeSayBackupPlanTests"))
