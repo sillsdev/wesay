@@ -50,7 +50,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			Assert.IsNotNull(ws);
 			Assert.AreEqual("xx", ws.Abbreviation);
 			Assert.AreEqual("B c d R", ws.CustomSortRules);
-#if MONO
+#if __MonoCS__
 			// Tahoma should not be available on Linux
 			// Checking that what you asked for is in the ws
 			// and what you get is the standard DejaVu Sans font

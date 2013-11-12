@@ -97,6 +97,9 @@ namespace Addin.Transform.Tests
 
 		[Test]
 		[Category("SkipOnTeamCity")]
+#if !__MonoCS__
+		[Ignore("Mono only test")]
+#endif
 		public void TestOpenDocumentPdf()
 		{
 			using (var e = new EnvironmentForTest())
@@ -121,6 +124,9 @@ namespace Addin.Transform.Tests
 
 		[Test]
 		[Category("SkipOnTeamCity")]
+#if !__MonoCS__
+		[Ignore("Mono only test")]
+#endif
 		public void TestOpenDocumentPdfOpen()
 		{
 			using (var e = new EnvironmentForTest())

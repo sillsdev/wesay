@@ -93,7 +93,7 @@ namespace Addin.Transform.PdfDictionary
 				{
 					bool retval = false;
 					ProductMajor = 0;
-#if MONO
+#if __MonoCS__
 					// find which libreoffice
 					// check versionrc file exists ../lib/libreoffice/program/versionrc
 					// open versionrc file for reading
