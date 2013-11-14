@@ -845,7 +845,7 @@ namespace WeSay.LexicalTools.Dashboard
 
 		protected override void OnLayout(LayoutEventArgs e)
 		{
-#if MONO
+#if __MonoCS__
 			FixPanelSize();
 #endif
 			base.OnLayout(e);

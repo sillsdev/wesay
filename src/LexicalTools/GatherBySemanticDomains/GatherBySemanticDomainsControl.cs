@@ -114,7 +114,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			var majorRomanWritingSystems = new List<string>(new[] {"en", "id", "fr"});
 			if(majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemId))
 			{
-#if MONO
+#if __MonoCS__
 				_domainListComboBox.Font = new Font("monospace", _domainListComboBox.Font.Size, FontStyle.Bold);
 #else
 				_domainListComboBox.Font = new Font("Lucida Console", _domainListComboBox.Font.Size, FontStyle.Bold);

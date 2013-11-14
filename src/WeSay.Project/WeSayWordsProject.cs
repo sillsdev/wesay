@@ -393,7 +393,7 @@ namespace WeSay.Project
 			var builder = new ContainerBuilder();
 
 			builder.RegisterInstance(new WordListCatalog());
-#if !MONO
+#if !__MonoCS__
 			builder.RegisterInstance<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 #endif
 			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
@@ -794,7 +794,7 @@ namespace WeSay.Project
 		public ProjectInfo GetProjectInfoForAddin()
 		{
 			return new ProjectInfo(Name,
-#if MONO
+#if __MonoCS__
 								   ApplicationSharedDirectory,
 #else
 								   ApplicationRootDirectory,

@@ -52,7 +52,7 @@ namespace Addin.Transform.PdfDictionary
 
 		private static string GetPrincePath()
 		{
-#if MONO
+#if __MonoCS__
 			return "/usr/bin/prince";
 #else
 			string programFilesPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);

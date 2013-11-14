@@ -33,7 +33,7 @@ namespace WeSay.ConfigTool
 			var projectFolderPath = '"'+_projectFolderConfiguration.FolderPath+'"';
 			try
 			{
-#if MONO
+#if __MonoCS__
 				Process.Start("mono", path + " " + projectFolderPath);
 #else
 				Process.Start(path, projectFolderPath);

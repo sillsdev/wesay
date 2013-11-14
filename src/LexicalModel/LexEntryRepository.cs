@@ -13,7 +13,7 @@ using Palaso.Text;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
-//#if MONO
+//#if __MonoCS__
 using Palaso.Linq;
 //#else
 
