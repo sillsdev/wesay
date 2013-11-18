@@ -252,11 +252,13 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			{
 				List<String> keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
-
-				foreach (KeyboardController.KeyboardDescriptor keyboard in
-					KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All))
+				foreach (IKeyboardDefinition kbd in
+					Keyboard.Controller.AllAvailableKeyboards)
 				{
-					keyboards.Add(keyboard.Id);
+					if (kbd.IsAvailable)
+					{
+						keyboards.Add(kbd.Id);
+					}
 				}
 				return new StandardValuesCollection(keyboards);
 			}

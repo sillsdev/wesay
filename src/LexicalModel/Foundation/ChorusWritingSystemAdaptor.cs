@@ -7,21 +7,15 @@ namespace WeSay.LexicalModel.Foundation
 	{
 		private readonly WritingSystemDefinition _writingSystem;
 
-		public ChorusWritingSystemAdaptor(WritingSystemDefinition writingSystem)
+		public ChorusWritingSystemAdaptor(IWritingSystemDefinition writingSystem)
 		{
-			_writingSystem = writingSystem;
+			/* TODO Get someone to check this out */
+			_writingSystem = (WritingSystemDefinition) writingSystem;
 		}
 
 		public void ActivateKeyboard()
 		{
-			if (string.IsNullOrEmpty(_writingSystem.Keyboard))
-			{
-				KeyboardController.DeactivateKeyboard();
-			}
-			else
-			{
-				KeyboardController.ActivateKeyboard(_writingSystem.Keyboard);
-			}
+			_writingSystem.LocalKeyboard.Activate();
 		}
 
 		public string Name

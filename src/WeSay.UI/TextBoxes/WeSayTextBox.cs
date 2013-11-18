@@ -367,12 +367,7 @@ namespace WeSay.UI.TextBoxes
 					"Input system must be initialized prior to use.");
 			}
 
-			if (_writingSystem.Keyboard == null || _writingSystem.Keyboard == string.Empty)
-			{
-				KeyboardController.DeactivateKeyboard();
-				return;
-			}
-			KeyboardController.ActivateKeyboard(_writingSystem.Keyboard);
+			_writingSystem.LocalKeyboard.Activate();
 		}
 
 		protected override void OnLeave(EventArgs e)
@@ -391,7 +386,7 @@ namespace WeSay.UI.TextBoxes
 					"Input system must be initialized prior to use.");
 			}
 
-			KeyboardController.DeactivateKeyboard();
+			Keyboard.Controller.ActivateDefaultKeyboard();
 		}
 
 		/// <summary>
