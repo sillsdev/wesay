@@ -17,7 +17,7 @@ namespace WeSay.UI.TextBoxes
 	/// </summary>
 	public partial class MultiTextControl: TableLayoutPanel
 	{
-		private IList<WritingSystemDefinition> _writingSystemsForThisField;
+		private IList<IWritingSystemDefinition> _writingSystemsForThisField;
 		private readonly List<Control> _inputBoxes;
 		private bool _showAnnotationWidget;
 		private IServiceProvider _serviceProvider;
@@ -88,7 +88,7 @@ namespace WeSay.UI.TextBoxes
 								bool isMultiParagraph, IServiceProvider serviceProvider): this(allWritingSystems, serviceProvider)
 		{
 			Name = nameForTesting + "-mtc";
-			_writingSystemsForThisField = new List<WritingSystemDefinition>();
+			_writingSystemsForThisField = new List<IWritingSystemDefinition>();
 //            foreach (KeyValuePair<string, WritingSystem> pair in allWritingSystems)
 //            {
 //                if (writingSystemIds.Contains(pair.Key))
@@ -201,7 +201,7 @@ namespace WeSay.UI.TextBoxes
 				RowStyles.Clear();
 			}
 			Debug.Assert(RowCount == 0);
-			foreach (WritingSystemDefinition writingSystem in WritingSystemsForThisField)
+			foreach (IWritingSystemDefinition writingSystem in WritingSystemsForThisField)
 			{
 				RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
@@ -282,7 +282,7 @@ namespace WeSay.UI.TextBoxes
 					//in which case we don't really care about aligning anyhow
 					if (_allWritingSystems != null)
 					{
-						foreach (WritingSystemDefinition ws in _allWritingSystems.AllWritingSystems)
+						foreach (IWritingSystemDefinition ws in _allWritingSystems.AllWritingSystems)
 						{
 							Size size = TextRenderer.MeasureText(ws.Abbreviation,
 																 _writingSystemLabelFont) +fudgeFactor;
@@ -310,12 +310,12 @@ namespace WeSay.UI.TextBoxes
 			return label;
 		}
 
-		private Control AddTextBox(WritingSystemDefinition writingSystem, MultiTextBase multiText)
+		private Control AddTextBox(IWritingSystemDefinition writingSystem, MultiTextBase multiText)
 		{
 			Control control;
 			if (writingSystem.IsVoice)
 			{
-#if MONO
+#if __MonoCS__
 				return null;
 #else
 				if (_serviceProvider == null)
@@ -376,7 +376,7 @@ namespace WeSay.UI.TextBoxes
 		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IList<WritingSystemDefinition> WritingSystemsForThisField
+		public IList<IWritingSystemDefinition> WritingSystemsForThisField
 		{
 			get { return _writingSystemsForThisField; }
 			set

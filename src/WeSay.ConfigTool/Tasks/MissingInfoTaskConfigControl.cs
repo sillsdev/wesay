@@ -13,7 +13,7 @@ namespace WeSay.ConfigTool.Tasks
 	public partial class MissingInfoTaskConfigControl : DefaultTaskConfigurationControl
 	{
 		private readonly ViewTemplate _viewTemplate;
-		private List<WritingSystemDefinition> _relevantWritingSystems;
+		private List<IWritingSystemDefinition> _relevantWritingSystems;
 		private Field _field;
 
 		public MissingInfoTaskConfigControl(MissingInfoConfiguration config, ViewTemplate viewTemplate)
@@ -66,7 +66,7 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void UpdateWritingSystemFilterControls()
 		{
-			_relevantWritingSystems = new List<WritingSystemDefinition>();
+			_relevantWritingSystems = new List<IWritingSystemDefinition>();
 			var relevantWritingSystems = from x in _viewTemplate.WritingSystems.AllWritingSystems
 										 where _field.WritingSystemIds.Contains(x.Id)
 										 select x;

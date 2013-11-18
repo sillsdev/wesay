@@ -7,7 +7,7 @@ namespace WeSay.LexicalModel.Foundation
 {
 	public class WritingSystemInfo
 	{
-		public static Font CreateFont(WritingSystemDefinition writingSystem)
+		public static Font CreateFont(IWritingSystemDefinition writingSystem)
 		{
 			float size = writingSystem.DefaultFontSize > 0 ? writingSystem.DefaultFontSize : 12;
 			try

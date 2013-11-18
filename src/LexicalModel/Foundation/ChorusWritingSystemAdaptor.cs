@@ -5,12 +5,11 @@ namespace WeSay.LexicalModel.Foundation
 {
 	public class ChorusWritingSystemAdaptor : Chorus.IWritingSystem
 	{
-		private readonly WritingSystemDefinition _writingSystem;
+		private readonly IWritingSystemDefinition _writingSystem;
 
 		public ChorusWritingSystemAdaptor(IWritingSystemDefinition writingSystem)
 		{
-			/* TODO Get someone to check this out */
-			_writingSystem = (WritingSystemDefinition) writingSystem;
+			_writingSystem = writingSystem;
 		}
 
 		public void ActivateKeyboard()

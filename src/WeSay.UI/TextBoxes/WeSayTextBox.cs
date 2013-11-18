@@ -14,7 +14,7 @@ namespace WeSay.UI.TextBoxes
 {
 	public partial class WeSayTextBox: TextBox, IControlThatKnowsWritingSystem
 	{
-		private WritingSystemDefinition _writingSystem;
+		private IWritingSystemDefinition _writingSystem;
 
 		private bool _multiParagraph;
 		private readonly string _nameForLogging;
@@ -202,7 +202,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public WeSayTextBox(WritingSystemDefinition ws, string nameForLogging): this()
+		public WeSayTextBox(IWritingSystemDefinition ws, string nameForLogging): this()
 		{
 			_nameForLogging = nameForLogging;
 			WritingSystem = ws;
@@ -217,7 +217,7 @@ namespace WeSay.UI.TextBoxes
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystemDefinition WritingSystem
+		public IWritingSystemDefinition WritingSystem
 		{
 			get
 			{

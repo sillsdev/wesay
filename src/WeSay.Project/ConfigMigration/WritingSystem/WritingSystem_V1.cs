@@ -31,7 +31,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
 		private bool _isUnicode = true;
 		private string _abbreviation;
-		private WritingSystemDefinition _palasoWritingSystemDefinition;
+		private IWritingSystemDefinition _palasoWritingSystemDefinition;
 
 		/// <summary>
 		/// default constructor required for deserialization

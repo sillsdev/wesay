@@ -12,9 +12,9 @@ namespace WeSay.UI.audio
 	{
 		private AudioPathProvider _audioPathProvider;
 		private readonly ILogger _logger;
-		public WritingSystemDefinition WritingSystem { get; set; }
+		public IWritingSystemDefinition WritingSystem { get; set; }
 
-		public WeSayAudioFieldBox(WritingSystemDefinition writingSystem, AudioPathProvider audioPathProvider,
+		public WeSayAudioFieldBox(IWritingSystemDefinition writingSystem, AudioPathProvider audioPathProvider,
 			Palaso.Reporting.ILogger logger)
 		{
 			_audioPathProvider = audioPathProvider;

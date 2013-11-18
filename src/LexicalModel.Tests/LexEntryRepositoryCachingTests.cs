@@ -227,7 +227,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateCaches();
 			entryToUpdate.LexicalForm.SetAlternative("de", "word 1");
 			_repository.NotifyThatLexEntryHasBeenUpdated(entryToUpdate);
-			WritingSystemDefinition writingSystemToMatch = WritingSystemDefinition.Parse("de");
+			IWritingSystemDefinition writingSystemToMatch = WritingSystemDefinition.Parse("de");
 			ResultSet<LexEntry> headWordResults = _repository.GetAllEntriesSortedByHeadword(writingSystemToMatch);
 			ResultSet<LexEntry> lexicalFormResults = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystemToMatch);
 			Assert.AreEqual("word 1", headWordResults[0]["Form"]);
@@ -236,7 +236,7 @@ namespace WeSay.LexicalModel.Tests
 
 		private void CreateCaches()
 		{
-			WritingSystemDefinition writingSystemToMatch = WritingSystemDefinition.Parse("de");
+			IWritingSystemDefinition writingSystemToMatch = WritingSystemDefinition.Parse("de");
 			_repository.GetAllEntriesSortedByHeadword(writingSystemToMatch);
 			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystemToMatch);
 			//_repository.GetAllEntriesSortedByDefinitionOrGloss(writingSystemToMatch);

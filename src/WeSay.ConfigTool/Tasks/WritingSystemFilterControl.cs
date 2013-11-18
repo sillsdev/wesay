@@ -18,7 +18,7 @@ namespace WeSay.ConfigTool.Tasks
 		private IList<string> _selectedItemIds;
 		private string _labelWhenEmpty;
 
-		public void Init(IEnumerable<WritingSystemDefinition> writingSystems, IList<string> selectedItemIds, string labelWhenEmpty)
+		public void Init(IEnumerable<IWritingSystemDefinition> writingSystems, IList<string> selectedItemIds, string labelWhenEmpty)
 		{
 			_selectedItemIds = selectedItemIds;
 			_writingSystemList.DropDownItems.Clear();

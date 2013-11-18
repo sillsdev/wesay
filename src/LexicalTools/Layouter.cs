@@ -277,7 +277,7 @@ namespace WeSay.LexicalTools
 
 		protected GhostBinding<T> MakeGhostBinding<T>(PalasoDataObject parent, IList<T> list,
 													  string ghostPropertyName,
-													  WritingSystemDefinition writingSystem,
+													  IWritingSystemDefinition writingSystem,
 													  WeSayTextBox entry)
 				where T : PalasoDataObject, new()
 		{
@@ -515,7 +515,7 @@ namespace WeSay.LexicalTools
 		{
 			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field, false);
-			WritingSystemDefinition preferredWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(field.FieldName);
+			IWritingSystemDefinition preferredWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(field.FieldName);
 			SingleOptionControl control = new SingleOptionControl(optionRefTarget,
 																  list,
 																  field.FieldName,
@@ -532,8 +532,8 @@ namespace WeSay.LexicalTools
 				target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			//            OptionCollectionControl control =
 			//                   new OptionCollectionControl(refsOfChoices, availableOptions, field.WritingSystemIds[0]);
-			IList<WritingSystemDefinition> writingSystems =
-				BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
+			IList<IWritingSystemDefinition> writingSystems =
+				 BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
 			IChoiceSystemAdaptor<Option, string, OptionRef> displayAdaptor;
 
 			if (field.FieldName== LexSense.WellKnownProperties.SemanticDomainDdp4)

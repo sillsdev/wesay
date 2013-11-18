@@ -190,7 +190,7 @@ namespace Addin.Transform.OpenOffice
 		{
 			using (var exporter = new LiftWriter(outputPath, LiftWriter.ByteOrderStyle.NoBOM))
 			{
-				WritingSystemDefinition firstWs = template.HeadwordWritingSystems[0];
+				IWritingSystemDefinition firstWs = template.HeadwordWritingSystems[0];
 				ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(firstWs);
 				int index = 0;

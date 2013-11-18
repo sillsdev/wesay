@@ -66,7 +66,7 @@ namespace WeSay.Project.Tests
 				WeSayWordsProject project = p.CreateLoadedProject();
 				using (File.OpenWrite(p.PathToLiftFile))
 				{
-					WritingSystemDefinition ws = project.WritingSystems.Get("qaa-x-qaa");
+					IWritingSystemDefinition ws = project.WritingSystems.Get("qaa-x-qaa");
 					ws.Language = "aac";
 					project.MakeWritingSystemIdChange("aac", "qaa-x-qaa");
 					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
@@ -813,7 +813,7 @@ namespace WeSay.Project.Tests
 				string englishLdmlContent =
 					File.ReadAllText(Path.Combine(pathToWritingSystemsInApplicationCommonDirectory, "en.ldml"));
 
-				WritingSystemDefinition ws = project.WritingSystems.Get("en");
+				IWritingSystemDefinition ws = project.WritingSystems.Get("en");
 				if (ws.Abbreviation == "writeme!")
 				{
 					throw new ApplicationException(

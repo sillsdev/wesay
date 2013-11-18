@@ -25,14 +25,14 @@ namespace WeSay.LexicalTools.GatherByWordList
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(GatherWordListTask task, WritingSystemDefinition lexicalUnitWritingSystem)
+		public GatherWordListControl(GatherWordListTask task, IWritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			_task = task;
 
 			InitializeComponent();
 			InitializeDisplaySettings();
 			_vernacularBox.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-			_vernacularBox.WritingSystemsForThisField = new WritingSystemDefinition[]
+			_vernacularBox.WritingSystemsForThisField = new IWritingSystemDefinition[]
 															{lexicalUnitWritingSystem};
 			_vernacularBox.TextChanged += _vernacularBox_TextChanged;
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;

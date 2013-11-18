@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools.Tests
 		private DictionaryTask _task;
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
-		private WritingSystemDefinition _vernacularWritingSystem;
+		private IWritingSystemDefinition _vernacularWritingSystem;
 		private TabControl _tabControl;
 		private Form _window;
 		private TabPage _detailTaskPage;

@@ -16,7 +16,7 @@ namespace WeSay.UI
 		private readonly OptionsList _list;
 		private readonly ComboBox _control = new ComboBox();
 		private readonly string _nameForLogging;
-		private readonly WritingSystemDefinition _preferredWritingSystem;
+		private readonly IWritingSystemDefinition _preferredWritingSystem;
 
 		public event EventHandler ValueChanged;
 
@@ -37,7 +37,7 @@ namespace WeSay.UI
 			base.OnHandleDestroyed(e);
 		}
 
-		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, WritingSystemDefinition preferredWritingSystem)
+		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, IWritingSystemDefinition preferredWritingSystem)
 		{
 			AutoSize = true;
 			AutoSizeMode = AutoSizeMode.GrowAndShrink;

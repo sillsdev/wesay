@@ -51,12 +51,12 @@ namespace WeSay.Project
 
 		//todo: this is simplistic. Switch to the plural form
 		[Obsolete]
-		public WritingSystemDefinition HeadwordWritingSystem
+		public IWritingSystemDefinition HeadwordWritingSystem
 		{
 			get { return GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit); }
 		}
 
-		public IList<WritingSystemDefinition> HeadwordWritingSystems
+		public IList<IWritingSystemDefinition> HeadwordWritingSystems
 		{
 			get
 			{
@@ -618,7 +618,7 @@ namespace WeSay.Project
 			return false;
 		}
 
-		public WritingSystemDefinition GetDefaultWritingSystemForField(string fieldName)
+		public IWritingSystemDefinition GetDefaultWritingSystemForField(string fieldName)
 		{
 			Field field = GetField(fieldName);
 			if (field == null)
@@ -632,7 +632,7 @@ namespace WeSay.Project
 			return BasilProject.Project.WritingSystems.Get(field.WritingSystemIds[0]);
 		}
 
-		public WritingSystemDefinition GetFirstNonVoiceWritingSystemForFieldOrThrow(string fieldName)
+		public IWritingSystemDefinition GetFirstNonVoiceWritingSystemForFieldOrThrow(string fieldName)
 		{
 			Field field = GetField(fieldName);
 			if (field == null)
@@ -750,10 +750,10 @@ namespace WeSay.Project
 		{
 		   var list = new List<Chorus.IWritingSystem>();
 
-			WritingSystemDefinition noteWritingSystem;
+			IWritingSystemDefinition noteWritingSystem;
 			try
 			{
-				noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);
+				noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);;
 			}
 			catch (ConfigurationException)
 			{

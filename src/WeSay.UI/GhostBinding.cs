@@ -24,7 +24,7 @@ namespace WeSay.UI
 		/// </summary>
 		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate { };
 
-		private readonly WritingSystemDefinition _writingSystem;
+		private readonly IWritingSystemDefinition _writingSystem;
 		private readonly string _propertyName;
 		private readonly PalasoDataObject _parent;
 		private IList<T> _listTarget;
@@ -50,7 +50,7 @@ namespace WeSay.UI
 		public GhostBinding(PalasoDataObject parent,
 							IList<T> targetList,
 							string propertyName,
-							WritingSystemDefinition writingSystem,
+							IWritingSystemDefinition writingSystem,
 							WeSayTextBox textBoxTarget)
 		{
 			_parent = parent;
@@ -258,7 +258,7 @@ namespace WeSay.UI
 
 		private static void FillInMultiTextOfNewObject(object o,
 													   string propertyName,
-													   WritingSystemDefinition writingSystem,
+													   IWritingSystemDefinition writingSystem,
 													   string value)
 		{
 			PropertyInfo info = o.GetType().GetProperty(propertyName);

@@ -90,7 +90,7 @@ namespace WeSay.Project
 
 		public override void Add(LexEntry entry)
 		{
-			WritingSystemDefinition headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
+			IWritingSystemDefinition headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
 			int h = _lexEntryRepository.GetHomographNumber(entry, headWordWritingSystem);
 			Add(entry, h);
 		}

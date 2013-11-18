@@ -31,7 +31,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private readonly ViewTemplate _viewTemplate;
 		private readonly ILogger _logger;
-		private WritingSystemDefinition _listWritingSystem;
+		private IWritingSystemDefinition _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
 		private ResultSet<LexEntry> _records;
 		private readonly ResultSetToListOfStringsAdapter _findTextAdapter;
@@ -72,7 +72,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_findTextAdapter = new ResultSetToListOfStringsAdapter("Form", _records);
 			SearchTextBox.Items = _findTextAdapter;
 
-			SetListWritingSystem(
+			  SetListWritingSystem(
 					_viewTemplate.GetDefaultWritingSystemForField(
 							Field.FieldNames.EntryLexicalForm.ToString()));
 
@@ -164,10 +164,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			{
 				if (field.WritingSystemIds.Count > 0)
 				{
-					IList<WritingSystemDefinition> writingSystems =
+					IList<IWritingSystemDefinition> writingSystems =
 							BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
-					foreach (WritingSystemDefinition writingSystem in writingSystems)
+					foreach (IWritingSystemDefinition writingSystem in writingSystems)
 					{
+
 						if (!WritingSystemExistsInPicker(writingSystem))
 						{
 							AddWritingSystemToPicker(writingSystem, field);
@@ -183,7 +184,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 		}
 
-		private void AddWritingSystemToPicker(WritingSystemDefinition writingSystem, Field field)
+		private void AddWritingSystemToPicker(IWritingSystemDefinition writingSystem, Field field)
 		{
 			var item = new MenuItem(
 				writingSystem.Abbreviation + "\t" + StringCatalog.Get(field.DisplayName),
@@ -194,11 +195,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			SearchModeMenu.MenuItems.Add(item);
 		}
 
-		private bool WritingSystemExistsInPicker(WritingSystemDefinition writingSystem)
+		private bool WritingSystemExistsInPicker(IWritingSystemDefinition writingSystem)
 		{
 			foreach (MenuItem item in SearchModeMenu.MenuItems)
 			{
-				if (writingSystem.Id == ((WritingSystemDefinition) item.Tag).Id)
+				if (writingSystem.Id == ((WritingSystemDefinition)item.Tag).Id)
 				{
 					return true;
 				}
@@ -218,7 +219,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 																	ToString());
 		}
 
-		public void SetListWritingSystem(WritingSystemDefinition writingSystem)
+		public void SetListWritingSystem(IWritingSystemDefinition writingSystem)
 		{
 			Guard.AgainstNull(writingSystem,"writingSystem");
 
@@ -357,7 +358,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			var item = (MenuItem) sender;
 			if (_listWritingSystem != item.Tag)
 			{
-				SetListWritingSystem((WritingSystemDefinition) item.Tag);
+				SetListWritingSystem((WritingSystemDefinition)item.Tag);
 			}
 		}
 

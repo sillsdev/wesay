@@ -17,7 +17,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class ReferenceCollectionEditorTests: IReceivePropertyChangeNotifications
 	{
-		private readonly WritingSystemDefinition _ws = WritingSystemDefinition.Parse("qaa-x-qaa");
+		private readonly IWritingSystemDefinition _ws = WritingSystemDefinition.Parse("qaa-x-qaa");
 		private ReferenceCollectionEditor<Option, string, OptionRef> _control;
 		private Form _window;
 		private OptionsList _sourceChoices;
@@ -38,7 +38,7 @@ namespace WeSay.UI.Tests
 
 			_chosenItems = new OptionRefCollection(this);
 
-			List<WritingSystemDefinition> writingSystems = new List<WritingSystemDefinition>();
+			List<IWritingSystemDefinition> writingSystems = new List<IWritingSystemDefinition>();
 			writingSystems.Add(_ws);
 
 			_control = new ReferenceCollectionEditor<Option, string, OptionRef>(

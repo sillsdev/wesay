@@ -6,7 +6,7 @@ namespace WeSay.UI
 	public interface IControlThatKnowsWritingSystem
 	{
 		string Name { get; }
-		WritingSystemDefinition WritingSystem { get; }
+		IWritingSystemDefinition WritingSystem { get; }
 		string Text { get; set; }
 	}
 }

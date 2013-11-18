@@ -28,7 +28,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private List<LexEntry> _words;
 		private int _currentWordIndex;
 		private readonly string _preferredPromptingWritingSystemId;
-		private readonly WritingSystemDefinition _lexicalUnitWritingSystem;
+		private readonly IWritingSystemDefinition _lexicalUnitWritingSystem;
 		private IList<string> _definitionWritingSystemIds;
 		private IList<string> _glossWritingSystemIds;
 		private bool _usingLiftFile;
@@ -70,7 +70,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				_preferredPromptingWritingSystemId = _definitionWritingSystemIds[0];
 		}
 
-		public WritingSystemDefinition PromptingWritingSystem
+		public IWritingSystemDefinition PromptingWritingSystem
 		{
 			get
 			{
@@ -255,7 +255,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 		}
 
-		public WritingSystemDefinition GetWritingSystemOfLanguageForm(LanguageForm languageForm)
+		public IWritingSystemDefinition GetWritingSystemOfLanguageForm(LanguageForm languageForm)
 		{
 			if(!_viewTemplate.WritingSystems.Contains(languageForm.WritingSystemId))
 			{

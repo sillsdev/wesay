@@ -500,7 +500,7 @@ namespace WeSay.LexicalTools.Tests
 			return entries[0];
 		}
 
-		private WritingSystemDefinition VernWs
+		private IWritingSystemDefinition VernWs
 		{
 			get
 			{

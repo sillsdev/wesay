@@ -22,7 +22,7 @@ namespace WeSay.LexicalTools.Tests
 		private string _filePath;
 		private ResultSet<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
-		private WritingSystemDefinition _writingSystem;
+		private IWritingSystemDefinition _writingSystem;
 
 		private static bool IsMissingTranslation(LexEntry entry)
 		{

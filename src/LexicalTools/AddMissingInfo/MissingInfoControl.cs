@@ -63,7 +63,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_entryViewControl.LexEntryRepository = lexEntryRepository;
 			_entryViewControl.SenseDeletionEnabled = false;
 
-			WritingSystemDefinition listWritingSystem = GetListWritingSystem();
+			IWritingSystemDefinition listWritingSystem = GetListWritingSystem();
 
 			_todoRecords = records.ToList<RecordToken<LexEntry>>();
 			_todoRecordsListBox.DataSource = _todoRecords;
@@ -153,7 +153,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 		}
 
-		private static WritingSystemDefinition GetListWritingSystem()
+		private static IWritingSystemDefinition GetListWritingSystem()
 		{
 			return WeSayWordsProject.Project.DefaultViewTemplate.GetDefaultWritingSystemForField(
 				Field.FieldNames.EntryLexicalForm.ToString());

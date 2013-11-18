@@ -9,8 +9,8 @@ namespace WeSay.UI
 {
 	public partial class WeSayListBox: ListBox
 	{
-		private WritingSystemDefinition _formWritingSystem;
-		private WritingSystemDefinition _meaningWritingSystem;
+		private IWritingSystemDefinition _formWritingSystem;
+		private IWritingSystemDefinition _meaningWritingSystem;
 		private object _itemToNotDrawYet;
 
 		public WeSayListBox()
@@ -67,7 +67,7 @@ namespace WeSay.UI
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystemDefinition FormWritingSystem
+		public IWritingSystemDefinition FormWritingSystem
 		{
 			get
 			{
@@ -99,7 +99,7 @@ namespace WeSay.UI
 		}
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystemDefinition MeaningWritingSystem
+		public IWritingSystemDefinition MeaningWritingSystem
 		{
 			get
 			{

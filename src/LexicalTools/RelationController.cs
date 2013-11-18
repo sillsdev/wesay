@@ -77,7 +77,7 @@ namespace WeSay.LexicalTools
 		private void OnCreateNewPairStringLexEntryId(object sender, CreateNewArgs e)
 		{
 			LexEntry newGuy = CreateNewLexEntry(e);
-			WritingSystemDefinition writingSystem = GetWritingSystemFromField();
+			IWritingSystemDefinition writingSystem = GetWritingSystemFromField();
 			_lexEntryRepository.SaveItem(newGuy);
 			_resultSet = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystem);
 			e.NewlyCreatedItem = GetRecordTokenFromLexEntry(newGuy);
@@ -138,7 +138,7 @@ namespace WeSay.LexicalTools
 			//TODO: refactor this (sortHelper, pairStringLexEntryIdList, _keyIdMap, GetKeyIdPairFromLexEntry)
 			//      to use ApproximateFinder. Eventually refactor the automcompletetextbox to just take one
 
-			WritingSystemDefinition writingSystem = GetWritingSystemFromField();
+			IWritingSystemDefinition writingSystem = GetWritingSystemFromField();
 			ResultSet<LexEntry> recordTokenList =
 					_lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystem);
 			_resultSet = recordTokenList;
@@ -162,7 +162,7 @@ namespace WeSay.LexicalTools
 			_control = picker;
 		}
 
-		private WritingSystemDefinition GetWritingSystemFromField()
+		private IWritingSystemDefinition GetWritingSystemFromField()
 		{
 			string firstWsId = _field.WritingSystemIds[0];
 			return BasilProject.Project.WritingSystems.Get(firstWsId);

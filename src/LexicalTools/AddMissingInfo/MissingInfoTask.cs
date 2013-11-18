@@ -43,7 +43,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_viewTemplate = config.CreateViewTemplate(defaultViewTemplate);
 		 }
 
-		private WritingSystemDefinition GetLexicalUnitWritingSystem()
+		private IWritingSystemDefinition GetLexicalUnitWritingSystem()
 		{
 			//NB: don't replace these ugly static uses with the _viewTemplate we were given... that won't have what we're looking for here
 

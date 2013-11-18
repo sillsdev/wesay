@@ -16,16 +16,16 @@ namespace WeSay.ConfigTool
 
 		private class WritingSystemListBoxAdaptor
 		{
-			private readonly WritingSystemDefinition _ws;
+			private readonly IWritingSystemDefinition _ws;
 			private readonly bool _hasSpellCheckerInstalled;
 
-			public WritingSystemListBoxAdaptor(WritingSystemDefinition ws, bool hasSpellCheckerInstalled)
+			public WritingSystemListBoxAdaptor(IWritingSystemDefinition ws, bool hasSpellCheckerInstalled)
 			{
 				_ws = ws;
 				_hasSpellCheckerInstalled = hasSpellCheckerInstalled;
 			}
 
-			public WritingSystemDefinition WritingSystem
+			public IWritingSystemDefinition WritingSystem
 			{
 				get { return _ws; }
 			}
@@ -58,7 +58,7 @@ namespace WeSay.ConfigTool
 			{
 				using (Broker broker = new Broker())
 				{
-					foreach (WritingSystemDefinition ws in BasilProject.Project.WritingSystems.AllWritingSystems)
+					foreach (IWritingSystemDefinition ws in BasilProject.Project.WritingSystems.AllWritingSystems)
 					{
 						try
 						{
@@ -134,7 +134,7 @@ namespace WeSay.ConfigTool
 			{
 				if (_writingSystemListBox.GetItemChecked(i) || i == indexOfItemWhichShouldBeConsideredChecked)
 				{
-					WritingSystemDefinition ws =
+					IWritingSystemDefinition ws =
 							((WritingSystemListBoxAdaptor) _writingSystemListBox.Items[i]).
 									WritingSystem;
 					CurrentField.WritingSystemIds.Add(ws.Id);
@@ -223,18 +223,18 @@ namespace WeSay.ConfigTool
 					GetWritingSystemIdsWithSpellCheckingInstalled();
 
 			_writingSystemListBox.Items.Clear();
-			IList<WritingSystemDefinition> writingSystems =
+			IList<IWritingSystemDefinition> writingSystems =
 					BasilProject.Project.WritingSystemsFromIds(CurrentField.WritingSystemIds);
-			foreach (WritingSystemDefinition ws in writingSystems)
+			foreach (IWritingSystemDefinition ws in writingSystems)
 			{
 				bool hasSpellCheckerInstalled =
 						writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
 				int i =
-						_writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws,
+						_writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor( ws,
 																						hasSpellCheckerInstalled));
 				_writingSystemListBox.SetItemCheckedReally(i, true);
 			}
-			foreach (WritingSystemDefinition ws in BasilProject.Project.WritingSystems.AllWritingSystems)
+			foreach (IWritingSystemDefinition ws in BasilProject.Project.WritingSystems.AllWritingSystems)
 			{
 				if (!CurrentField.WritingSystemIds.Contains(ws.Id))
 				{

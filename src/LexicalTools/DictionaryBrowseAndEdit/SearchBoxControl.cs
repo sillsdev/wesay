@@ -54,7 +54,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystemDefinition ListWritingSystem
+		public IWritingSystemDefinition ListWritingSystem
 		{
 			get
 			{
@@ -68,7 +68,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		}
 
-		public void SetWritingSystem(WritingSystemDefinition writingSystem)
+		public void SetWritingSystem(IWritingSystemDefinition writingSystem)
 		{
 			ListWritingSystem = writingSystem;
 			_selectedWritingSystemLabel.Text = writingSystem.Abbreviation;

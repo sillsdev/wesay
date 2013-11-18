@@ -24,7 +24,7 @@ namespace WeSay.Project
 			return _template.Fields.Find(f => f.FieldName == name);
 		}
 
-		public string GetAutoFontsCascadingStyleSheetLinesForWritingSystem(WritingSystemDefinition ws)
+		public string GetAutoFontsCascadingStyleSheetLinesForWritingSystem(IWritingSystemDefinition ws)
 		{
 			var builder = new StringBuilder();
 //            var family = FontFamily.Families.FirstOrDefault(f => f.Name == ws.FontName);

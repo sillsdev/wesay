@@ -1187,7 +1187,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public WritingSystemDefinition HeadWordWritingSystem
+		public IWritingSystemDefinition HeadWordWritingSystem
 		{
 			get
 			{

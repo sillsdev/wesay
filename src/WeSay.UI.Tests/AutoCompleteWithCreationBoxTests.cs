@@ -29,7 +29,7 @@ namespace WeSay.UI.Tests
 		/// </summary>
 		private OptionRef _dataBeingEditted;
 
-		private WritingSystemDefinition _ws;
+		private IWritingSystemDefinition _ws;
 		private OptionDisplayAdaptor _displayAdaptor;
 
 		[SetUp]

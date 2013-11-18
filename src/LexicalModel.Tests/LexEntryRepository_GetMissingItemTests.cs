@@ -16,7 +16,7 @@ namespace WeSay.LexicalModel.Tests
 	{
 		private TemporaryFolder _temporaryFolder;
 		private LexEntryRepository _lexEntryRepository;
-		private readonly WritingSystemDefinition _lexicalFormWritingSystem =  WritingSystemDefinition.Parse("de");
+		private readonly IWritingSystemDefinition _lexicalFormWritingSystem =  WritingSystemDefinition.Parse("de");
 
 		[SetUp]
 		public void Setup()
@@ -221,7 +221,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			private LexEntryRepository _repository;
 			private TemporaryFolder _temporaryFolder;
-			private readonly WritingSystemDefinition _vernacularWritingSystem = WritingSystemDefinition.Parse("de");
+			private readonly IWritingSystemDefinition _vernacularWritingSystem = WritingSystemDefinition.Parse("de");
 
 			public TestEnvironment()
 			{

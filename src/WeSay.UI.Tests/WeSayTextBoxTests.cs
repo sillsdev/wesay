@@ -25,7 +25,7 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void CreateWithWritingSystem()
 		{
-			WritingSystemDefinition ws = new WritingSystemDefinition();
+			IWritingSystemDefinition ws = new WritingSystemDefinition();
 			WeSayTextBox textBox = new WeSayTextBox(ws, null);
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
@@ -42,7 +42,7 @@ namespace WeSay.UI.Tests
 		public void WritingSystem_Unassigned_Get_Throws()
 		{
 			WeSayTextBox textBox = new WeSayTextBox();
-			WritingSystemDefinition ws;
+			IWritingSystemDefinition ws;
 			Assert.Throws<InvalidOperationException>(() => ws= textBox.WritingSystem);
 		}
 

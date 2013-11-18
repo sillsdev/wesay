@@ -70,7 +70,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void SortUsingCustomICU_WithSortRules_SetsSortRulesAndSortUsing()
 		{
 			const string rules = "&n < ng <<< Ng <<< NG";
-			WritingSystemDefinition writingSystem = WritingSystemDefinition.Parse("th");
+			IWritingSystemDefinition writingSystem = WritingSystemDefinition.Parse("th");
 			writingSystem.SortUsingCustomICU(rules);
 			Assert.AreEqual(rules, writingSystem.SortRules);
 			Assert.AreEqual(WritingSystemDefinition.SortRulesType.CustomICU, writingSystem.SortUsing);

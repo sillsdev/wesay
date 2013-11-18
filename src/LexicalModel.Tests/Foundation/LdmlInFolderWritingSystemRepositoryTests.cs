@@ -33,7 +33,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			public void CreateLdmlWritingSystemDefinitionFile()
 			{
 				IWritingSystemRepository wsCollectionToBeWritten = GetWritingSystemRepository(PathToWritingSystemsFolder);
-				WritingSystemDefinition ws = CreateDetailedWritingSystem("en");
+				IWritingSystemDefinition ws = CreateDetailedWritingSystem("en");
 				wsCollectionToBeWritten.Set(ws);
 				wsCollectionToBeWritten.Save();
 			}
@@ -65,7 +65,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 					Assert.AreEqual(lhsWritingSystem.DefaultFontSize, rhsWritingSystem.DefaultFontSize);
 					Assert.AreEqual(lhsWritingSystem.IsVoice, rhsWritingSystem.IsVoice);
 					Assert.AreEqual(lhsWritingSystem.IsUnicodeEncoded, rhsWritingSystem.IsUnicodeEncoded);
-					Assert.AreEqual(lhsWritingSystem.Keyboard, rhsWritingSystem.Keyboard);
+					Assert.AreEqual(((WritingSystemDefinition)lhsWritingSystem).Keyboard, ((WritingSystemDefinition)rhsWritingSystem).Keyboard);
 					Assert.AreEqual(lhsWritingSystem.RightToLeftScript, rhsWritingSystem.RightToLeftScript);
 					Assert.AreEqual(lhsWritingSystem.SortUsing, rhsWritingSystem.SortUsing);
 					Assert.AreEqual(lhsWritingSystem.SortRules, rhsWritingSystem.SortRules);
@@ -73,7 +73,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				}
 			}
 
-			public static WritingSystemDefinition CreateDetailedWritingSystem(string languageCode)
+			public static IWritingSystemDefinition CreateDetailedWritingSystem(string languageCode)
 			{
 				var ws = new WritingSystemDefinition
 					{
@@ -100,9 +100,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			{
 				IWritingSystemRepository wsCollectionToBeWritten =
 					GetWritingSystemRepository(e.PathToWritingSystemsFolder);
-				WritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("en");
+				IWritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("en");
 				wsCollectionToBeWritten.Set(ws);
-				WritingSystemDefinition ws2 = TestEnvironment.CreateDetailedWritingSystem("de");
+				IWritingSystemDefinition ws2 = TestEnvironment.CreateDetailedWritingSystem("de");
 				wsCollectionToBeWritten.Set(ws2);
 				wsCollectionToBeWritten.Save();
 
@@ -117,10 +117,10 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			using (var e = new TestEnvironment())
 			{
 				var wsCollectionToBeWritten = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
-				WritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("th");
+				IWritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("th");
 				ws.Region = "BR";
 				wsCollectionToBeWritten.Set(ws);
-				WritingSystemDefinition ws2 = TestEnvironment.CreateDetailedWritingSystem("th");
+				IWritingSystemDefinition ws2 = TestEnvironment.CreateDetailedWritingSystem("th");
 				ws2.Region = "AQ";
 				wsCollectionToBeWritten.Set(ws2);
 				wsCollectionToBeWritten.Save();
@@ -137,9 +137,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 				//Write out two writing systems
 				IWritingSystemRepository wsCollectionToBeWritten =
 					GetWritingSystemRepository(e.PathToWritingSystemsFolder);
-				WritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("en");
+				IWritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("en");
 				wsCollectionToBeWritten.Set(ws);
-				WritingSystemDefinition ws2 = TestEnvironment.CreateDetailedWritingSystem("th");
+				IWritingSystemDefinition ws2 = TestEnvironment.CreateDetailedWritingSystem("th");
 				wsCollectionToBeWritten.Set(ws2);
 				wsCollectionToBeWritten.Save();
 
@@ -161,9 +161,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			using (var e = new TestEnvironment())
 			{
 				IWritingSystemRepository wsCollectionToBeWritten = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
-				WritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("th");
+				IWritingSystemDefinition ws = TestEnvironment.CreateDetailedWritingSystem("th");
 				wsCollectionToBeWritten.Set(ws);
-				WritingSystemDefinition ws2 = TestEnvironment.CreateDetailedWritingSystem("en");
+				IWritingSystemDefinition ws2 = TestEnvironment.CreateDetailedWritingSystem("en");
 				wsCollectionToBeWritten.Set(ws2);
 				wsCollectionToBeWritten.Save();
 				IWritingSystemRepository loadedWsCollection = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
@@ -198,7 +198,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			{
 				e.CreateLdmlWritingSystemDefinitionFile();
 				IWritingSystemRepository loadedWsCollection = GetWritingSystemRepository(e.PathToWritingSystemsFolder);
-				loadedWsCollection.Get("en").Keyboard = "changed";
+				((WritingSystemDefinition)loadedWsCollection.Get("en")).Keyboard = "changed";
 				loadedWsCollection.Save();
 				IWritingSystemRepository reloadedWsCollection =
 					GetWritingSystemRepository(e.PathToWritingSystemsFolder);

@@ -230,7 +230,7 @@ namespace WeSay.LexicalModel
 			_caches.UpdateItemInCaches(updatedLexEntry);
 		}
 
-		public int GetHomographNumber(LexEntry entry, WritingSystemDefinition headwordWritingSystem)
+		public int GetHomographNumber(LexEntry entry, IWritingSystemDefinition headwordWritingSystem)
 		{
 			if (entry == null)
 			{
@@ -261,7 +261,7 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		/// <param name="writingSystem"></param>
 		/// <returns></returns>
-		public ResultSet<LexEntry> GetAllEntriesSortedByHeadword(WritingSystemDefinition writingSystem)
+		public ResultSet<LexEntry> GetAllEntriesSortedByHeadword(IWritingSystemDefinition writingSystem)
 		{
 			if (writingSystem == null)
 			{
@@ -349,7 +349,7 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		/// <param name="writingSystem"></param>
 		/// <returns></returns>
-		public ResultSet<LexEntry> GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystemDefinition writingSystem)
+		public ResultSet<LexEntry> GetAllEntriesSortedByLexicalFormOrAlternative(IWritingSystemDefinition writingSystem)
 		{
 			if (writingSystem == null)
 			{
@@ -401,7 +401,7 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		/// <param name="writingSystem"></param>
 		/// <returns></returns>
-		private ResultSet<LexEntry> GetAllEntriesSortedByLexicalForm(WritingSystemDefinition writingSystem)
+		private ResultSet<LexEntry> GetAllEntriesSortedByLexicalForm(IWritingSystemDefinition writingSystem)
 		{
 			if (writingSystem == null)
 			{
@@ -488,7 +488,7 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		/// <param name="writingSystem"></param>
 		/// <returns>Definition and gloss in "Form" field of RecordToken</returns>
-		public ResultSet<LexEntry> GetAllEntriesSortedByDefinitionOrGloss(WritingSystemDefinition writingSystem)
+		public ResultSet<LexEntry> GetAllEntriesSortedByDefinitionOrGloss(IWritingSystemDefinition writingSystem)
 		{
 			if (writingSystem == null)
 			{
@@ -669,7 +669,7 @@ namespace WeSay.LexicalModel
 		}
 
 
-		private ResultSet<LexEntry> GetAllEntriesWithGlossesSortedByLexicalForm(WritingSystemDefinition lexicalUnitWritingSystem)
+		private ResultSet<LexEntry> GetAllEntriesWithGlossesSortedByLexicalForm(IWritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			if (lexicalUnitWritingSystem == null)
 			{
@@ -738,7 +738,7 @@ namespace WeSay.LexicalModel
 		/// <param name="lexicalUnitWritingSystem"></param>
 		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(
-				 LanguageForm glossForm, WritingSystemDefinition lexicalUnitWritingSystem)
+				 LanguageForm glossForm, IWritingSystemDefinition lexicalUnitWritingSystem)
 		{
 
 			if (null==glossForm || string.IsNullOrEmpty(glossForm.Form))
@@ -834,7 +834,7 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithSimilarLexicalForm(string lexicalForm,
-																	WritingSystemDefinition writingSystem,
+																	IWritingSystemDefinition writingSystem,
 																	ApproximateMatcherOptions
 																			matcherOptions)
 		{
@@ -868,7 +868,7 @@ namespace WeSay.LexicalModel
 		/// <param name="writingSystem"></param>
 		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithMatchingLexicalForm(string lexicalForm,
-																	 WritingSystemDefinition writingSystem)
+																	 IWritingSystemDefinition writingSystem)
 		{
 			if (lexicalForm == null)
 			{
@@ -897,13 +897,13 @@ namespace WeSay.LexicalModel
 		/// Use "Form" to access the lexical form in a RecordToken.
 		/// </summary>
 		/// <returns></returns>
-		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field, string[] searchWritingSystemIds, WritingSystemDefinition lexicalUnitWritingSystem)
+		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field, string[] searchWritingSystemIds, IWritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			 var query = new MissingFieldQuery(field, searchWritingSystemIds, null);
 			return GetEntriesWithMissingFieldSortedByLexicalUnit(query, lexicalUnitWritingSystem);
 	  }
 
-		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(MissingFieldQuery query, WritingSystemDefinition lexicalUnitWritingSystem)
+		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(MissingFieldQuery query, IWritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			Guard.AgainstNull(lexicalUnitWritingSystem, "lexicalUnitWritingSystem");
 			Guard.AgainstNull(query.Field, "field");

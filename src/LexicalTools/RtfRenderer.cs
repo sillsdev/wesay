@@ -183,7 +183,7 @@ namespace WeSay.LexicalTools
 			get { return BasilProject.Project.WritingSystems; }
 		}
 
-		private static int GetFontNumber(WritingSystemDefinition writingSystem)
+		private static int GetFontNumber(IWritingSystemDefinition writingSystem)
 		{
 			int i = 0;
 			foreach (var ws in WritingSystems.AllWritingSystems)
@@ -294,7 +294,7 @@ namespace WeSay.LexicalTools
 				return "";
 				//that ws isn't actually part of our configuration, so can't get a special font for it
 			}
-			WritingSystemDefinition writingSystem = WritingSystems.Get(writingSystemId);
+			IWritingSystemDefinition writingSystem = (IWritingSystemDefinition)WritingSystems.Get(writingSystemId);
 			string rtf = @"\f" + GetFontNumber(writingSystem);
 			int fontSize = Convert.ToInt16((sizeBoost + WritingSystemInfo.CreateFont(writingSystem).SizeInPoints)*2);
 			rtf += @"\fs" + fontSize + " ";

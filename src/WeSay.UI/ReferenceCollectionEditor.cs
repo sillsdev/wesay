@@ -16,7 +16,7 @@ namespace WeSay.UI
 	{
 		private readonly IBindingList _chosenItems;
 		private readonly IEnumerable<KV> _sourceChoices;
-		private readonly IList<WritingSystemDefinition> _writingSystems;
+		private readonly IList<IWritingSystemDefinition> _writingSystems;
 		private readonly CommonEnumerations.VisibilitySetting _visibility;
 		private readonly IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> _choiceSystemAdaptor;
 		private IReportEmptiness _alternateEmptinessHelper;
@@ -49,7 +49,7 @@ namespace WeSay.UI
 		/// <param name="adaptor">does all the conversion between keys, wrappers, actual objects, etc.</param>
 		public ReferenceCollectionEditor(IBindingList chosenItems,
 										 IEnumerable<KV> sourceChoices,
-										 IList<WritingSystemDefinition> writingSystems,
+										 IList<IWritingSystemDefinition> writingSystems,
 										 CommonEnumerations.VisibilitySetting visibility,
 										 IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> adaptor)
 		{

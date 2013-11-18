@@ -12,7 +12,7 @@ namespace WeSay.UI
 {
 	public partial class WeSayListView: ListView
 	{
-		private WritingSystemDefinition _writingSystem;
+		private IWritingSystemDefinition _writingSystem;
 		private int _itemToNotDrawYet = -1;
 		private IList _dataSource;
 		private readonly Dictionary<int, ListViewItem> _itemsCache;
@@ -155,7 +155,7 @@ namespace WeSay.UI
 		[Browsable(false)]
 		[DefaultValue(null)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystemDefinition WritingSystem
+		public IWritingSystemDefinition WritingSystem
 		{
 			get
 			{

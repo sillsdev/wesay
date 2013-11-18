@@ -140,7 +140,7 @@ There are problems in:
 			get { return _writingSystems; }
 		}
 
-		public IList<WritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
+		public IList<IWritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
 		{
 			return writingSystemIds.Select(id => WritingSystems.Get(id)).ToList();
 		}

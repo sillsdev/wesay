@@ -36,7 +36,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private List<string> _domainNames;
 		private List<WordDisplay> _words;
 
-		private WritingSystemDefinition _semanticDomainWritingSystem;
+		private IWritingSystemDefinition _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
 		private OptionsList _semanticDomainOptionsList;
 
@@ -46,7 +46,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private readonly TaskMemory _taskMemory;
 		private GatherBySemanticDomainConfig _config;
 		private readonly ILogger _logger;
-		public WritingSystemDefinition DefinitionWritingSystem { get; set; }
+		public IWritingSystemDefinition DefinitionWritingSystem { get; set; }
 
 		public GatherBySemanticDomainTask(
 			GatherBySemanticDomainConfig config,
@@ -108,7 +108,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
-			WritingSystemDefinition writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
+			IWritingSystemDefinition writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
 			Guard.AgainstNull(writingSystemForDefinition, "Definition input System");
 			DefinitionWritingSystem = writingSystemForDefinition;
 
@@ -492,7 +492,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
-		public WritingSystemDefinition SemanticDomainWritingSystem
+		public IWritingSystemDefinition SemanticDomainWritingSystem
 		{
 			get
 			{
