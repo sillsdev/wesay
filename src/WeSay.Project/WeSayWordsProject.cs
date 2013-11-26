@@ -393,9 +393,9 @@ namespace WeSay.Project
 			var builder = new ContainerBuilder();
 
 			builder.RegisterInstance(new WordListCatalog());
-#if !__MonoCS__
+
 			builder.RegisterInstance<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
-#endif
+
 			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
 			builder.Register<OptionsList>(c => GetSemanticDomainsList()).SingleInstance();//todo: figure out how to limit this with a name... currently, it's for any OptionList
 
