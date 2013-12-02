@@ -32,7 +32,7 @@ namespace WeSay.ConfigTool
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.splitContainer1 = new SplitContainer2();
 			this._listBox = new System.Windows.Forms.ListBox();
 			this._nameLabel = new System.Windows.Forms.Label();
 			this._nameMultiTextControl = new WeSay.UI.TextBoxes.MultiTextControl();
@@ -224,7 +224,7 @@ namespace WeSay.ConfigTool
 
 		#endregion
 
-		private System.Windows.Forms.SplitContainer splitContainer1;
+		private SplitContainer2 splitContainer1;
 		private System.Windows.Forms.ListBox _listBox;
 		private MultiTextControl _nameMultiTextControl;
 		private System.Windows.Forms.ToolTip _toolTip;
