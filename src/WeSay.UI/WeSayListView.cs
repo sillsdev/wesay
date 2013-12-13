@@ -370,6 +370,10 @@ namespace WeSay.UI
 		{
 			if (dirtyIndex != -1)
 			{
+				// Needlessly accessing the Handle here causes the Handle to be created if it
+				// is currently null, which appeared to happen after Deactivate/Activate sequence
+				System.IntPtr myHandle = Handle;
+
 				var itemRect = GetItemRect(dirtyIndex);
 				var rectSpanningWholeControl = new Rectangle(itemRect.X, itemRect.Y, ClientRectangle.Width,
 															 itemRect.Height);
