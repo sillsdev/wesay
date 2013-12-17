@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</ProjectGuid>
 	<OutputType>WinExe</OutputType>
@@ -67,7 +67,7 @@
   <ItemGroup>
 	<Reference Include="Autofac, Version=1.3.2.449, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Autofac.dll</HintPath>
+	  <HintPath>..\..\..\wesay\lib\Autofac.dll</HintPath>
 	</Reference>
 	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
@@ -85,10 +85,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
 	</Reference>
-	<Reference Include="LinqBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2b14eb747628076, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\LinqBridge.dll</HintPath>
-	</Reference>
 	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <ExecutableExtension>.exe</ExecutableExtension>
@@ -97,6 +93,10 @@
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso.Reporting, Version=1.0.2774.19364, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
@@ -132,12 +132,6 @@
 	<Compile Include="ChorusControl.Designer.cs">
 	  <DependentUpon>ChorusControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectFromFLEx.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectFromFLEx.Designer.cs">
-	  <DependentUpon>NewProjectFromFLEx.cs</DependentUpon>
-	</Compile>
 	<Compile Include="MruProjects.cs" />
 	<Compile Include="ConfigurationWindow.cs">
 	  <SubType>Form</SubType>
@@ -172,19 +166,12 @@
 	<Compile Include="FontControl.designer.cs">
 	  <DependentUpon>FontControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="NewProjectCreation\NewProject.cs">
+	<Compile Include="NewProject.cs">
 	  <SubType>Form</SubType>
 	</Compile>
-	<Compile Include="NewProjectCreation\NewProject.Designer.cs">
+	<Compile Include="NewProject.Designer.cs">
 	  <DependentUpon>NewProject.cs</DependentUpon>
 	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectInformationDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectInformationDialog.Designer.cs">
-	  <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
-	</Compile>
-	<Compile Include="NewProjectCreation\ProjectFromFLExCreator.cs" />
 	<Compile Include="OptionListControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -219,10 +206,6 @@
 	  <DependentUpon>ChorusControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
-	<EmbeddedResource Include="NewProjectCreation\NewProjectFromFLEx.resx">
-	  <DependentUpon>NewProjectFromFLEx.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
 	<EmbeddedResource Include="FieldsControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>FieldsControl.cs</DependentUpon>
@@ -235,13 +218,9 @@
 	  <DependentUpon>FontControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
-	<EmbeddedResource Include="NewProjectCreation\NewProject.resx">
+	<EmbeddedResource Include="NewProject.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>NewProject.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="NewProjectCreation\NewProjectInformationDialog.resx">
-	  <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
-	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="OptionListControl.resx">
 	  <SubType>Designer</SubType>
@@ -255,18 +234,6 @@
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <SubType>Designer</SubType>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\GatherBySemDomTaskConfigControl.resx">
-	  <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\DefaultTaskConfigurationControl.resx">
-	  <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\MissingInfoTaskConfigControl.resx">
-	  <DependentUpon>MissingInfoTaskConfigControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Tasks\TaskListView.resx">
 	  <SubType>Designer</SubType>
@@ -312,25 +279,6 @@
 	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
 	</Compile>
 	<Compile Include="Properties\Settings.cs" />
-	<Compile Include="Tasks\GatherBySemDomTaskConfigControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\GatherBySemDomTaskConfigControl.Designer.cs">
-	  <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Tasks\DefaultTaskConfigurationControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\DefaultTaskConfigurationControl.Designer.cs">
-	  <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Tasks\ITaskConfigurationControl.cs" />
-	<Compile Include="Tasks\MissingInfoTaskConfigControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\MissingInfoTaskConfigControl.Designer.cs">
-	  <DependentUpon>MissingInfoTaskConfigControl.cs</DependentUpon>
-	</Compile>
 	<Compile Include="Tasks\TaskListView.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -383,10 +331,6 @@
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\LexicalTools\LexicalTools.csproj">
-	  <Project>{87AF0B02-2983-486D-857F-D1859535C234}</Project>
-	  <Name>LexicalTools</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
 	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
@@ -498,9 +442,6 @@
 	  <ProductName>.NET Framework 3.5</ProductName>
 	  <Install>false</Install>
 	</BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\Warning.bmp" />
   </ItemGroup>
   <ItemGroup>
 	<Folder Include="Properties\DataSources\" />

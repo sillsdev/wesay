@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
-using System.Linq;
 
 namespace WeSay.Project
 {
@@ -13,7 +11,6 @@ namespace WeSay.Project
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly LexEntryRepository _lexEntryRepository;
-		private readonly IList<string> _headwordWritingSystemIds;
 
 		public PLiftExporter(StringBuilder builder,
 							 bool produceFragmentOnly,
@@ -22,7 +19,6 @@ namespace WeSay.Project
 		{
 			this._lexEntryRepository = lexEntryRepository;
 			this._viewTemplate = viewTemplate;
-			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
 		}
 
 		public PLiftExporter(string path,
@@ -31,12 +27,10 @@ namespace WeSay.Project
 		{
 			this._lexEntryRepository = lexEntryRepository;
 			this._viewTemplate = viewTemplate;
-			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
 		}
 
 		private Options _options = Options.DereferenceRelations | Options.DereferenceOptions |
 								   Options.DetermineHeadword;
-
 
 		[Flags]
 		public enum Options
@@ -84,8 +78,7 @@ namespace WeSay.Project
 				}
 
 				LanguageForm[] labelForms =
-//                        posOption.Name.GetOrderedAndFilteredForms(
-					   posOption.Abbreviation.GetOrderedAndFilteredForms(
+						posOption.Name.GetOrderedAndFilteredForms(
 								_viewTemplate.GetField(fieldName).WritingSystemIds);
 
 				if (labelForms != null && labelForms.Length > 0)
@@ -104,16 +97,30 @@ namespace WeSay.Project
 		/// </summary>
 		private void WriteHeadWordField(LexEntry entry, string outputFieldName)
 		{
+			if (Template == null)
+			{
+				throw new InvalidOperationException("Expected a non-null Template");
+			}
+			MultiText headword = new MultiText();
+			Field fieldControllingHeadwordOutput =
+					Template.GetField(LexEntry.WellKnownProperties.Citation);
+			if (fieldControllingHeadwordOutput == null || !fieldControllingHeadwordOutput.Enabled)
+			{
+				fieldControllingHeadwordOutput =
+						Template.GetField(LexEntry.WellKnownProperties.LexicalUnit);
+				if (fieldControllingHeadwordOutput == null)
+				{
+					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
+				}
+			}
 			//                headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
 
-			MultiText headword = new MultiText();
-			foreach (string writingSystemId in _headwordWritingSystemIds)
+			foreach (string writingSystemId in fieldControllingHeadwordOutput.WritingSystemIds)
 			{
 				headword.SetAlternative(writingSystemId, entry.GetHeadWordForm(writingSystemId));
 			}
 			WriteMultiTextAsArtificialField(outputFieldName, headword);
 		}
-
 
 		/// <summary>
 		/// use this for multitexts that were somehow constructed during export, with no corresponding single property
@@ -128,27 +135,9 @@ namespace WeSay.Project
 
 				if (!MultiTextBase.IsEmpty(text))
 				{
-					var textWritingSystems = _viewTemplate.WritingSystems.GetActualTextWritingSystems();
-					var ids = from ws in textWritingSystems select ws.Id;
-					Add(text.Forms.Where(f=>ids.Contains(f.WritingSystemId) ), true);
+					Add(text.Forms, true);
 				}
 
-				Writer.WriteEndElement();
-			}
-		}
-
-		/// <summary>
-		/// for plift, we take any audio paths found in the multitext and turn them into traits.
-		/// </summary>
-		protected override void WriteFormsThatNeedToBeTheirOwnFields(MultiText text, string name)
-		{
-			foreach(var path in text.GetAudioForms(_viewTemplate.WritingSystems))
-			{
-				Writer.WriteStartElement("trait");
-
-			   //nb: <media> not allowed by 0.12 schema, so we're just using trait[name='audio' value='...']
-				Writer.WriteAttributeString("name", "audio");
-				Writer.WriteAttributeString("value", string.Format("..{0}audio{0}" + path.Form, System.IO.Path.DirectorySeparatorChar));
 				Writer.WriteEndElement();
 			}
 		}
@@ -172,12 +161,6 @@ namespace WeSay.Project
 				WriteHeadWordField(target, "headword-of-target");
 			}
 		}
-		protected override string GetOutputRelationName(LexRelation relation)
-		{
-			var s= relation.FieldId.Replace("confer", "cf");//hack. Other names are left as-is.
-			s = s.Replace("BaseForm", "see");//hack... not sure what we want here
-			return s;
-		}
 
 		protected override void WritePosCore(OptionRef pos)
 		{
@@ -189,29 +172,6 @@ namespace WeSay.Project
 			{
 				base.WritePosCore(pos);
 			}
-		}
-
-		/// <summary>
-		/// add a pronunciation if we have an audio writing system alternative on the lexical unit
-		/// </summary>
-		 protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
-		{
-//            if(!_viewTemplate.WritingSystems.Any(p=>p.Value.IsAudio))
-//                return;
-//
-			var paths = entry.LexicalForm.GetAudioForms(_viewTemplate.WritingSystems);
-			if (paths.Count == 0)
-				return;
-			Writer.WriteStartElement("pronunciation");
-
-			paths.ForEach((path) =>
-							  {
-								  Writer.WriteStartElement("media");
-								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));
-								  Writer.WriteEndElement();
-							  });
-
-			Writer.WriteEndElement();
 		}
 
 		protected override void WriteHeadword(LexEntry entry)
@@ -255,7 +215,7 @@ namespace WeSay.Project
 			{
 				return text.Forms;
 			}
-			return text.GetOrderedAndFilteredForms(f.GetTextOnlyWritingSystemIds(_viewTemplate.WritingSystems));
+			return text.GetOrderedAndFilteredForms(f.WritingSystemIds);
 		}
 	}
 }

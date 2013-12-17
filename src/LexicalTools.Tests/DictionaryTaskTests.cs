@@ -1,8 +1,7 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using Palaso.Reporting;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
@@ -39,8 +38,7 @@ namespace WeSay.LexicalTools.Tests
 										Field.MultiplicityType.ZeroOr1,
 										"MultiText"));
 			_lexEntryRepository = new LexEntryRepository(_filePath);
-			_task = new DictionaryTask( DictionaryBrowseAndEditConfiguration.CreateForTests(),  _lexEntryRepository,
-				_viewTemplate, new TaskMemoryRepository(), new StringLogger());//, new UserSettingsForTask());
+			_task = new DictionaryTask( DictionaryBrowseAndEditConfiguration.CreateForTests(),  _lexEntryRepository, _viewTemplate);//, new UserSettingsForTask());
 		}
 
 		[TearDown]
@@ -59,31 +57,10 @@ namespace WeSay.LexicalTools.Tests
 
 
 		[Test]
-		public void CreateAndActivate_TaskMemoryIsEmpty_Ok()
+		public void CreateAndActivate_UserSettingsIsEmpty_Ok()
 		{
-			var task = new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository,
-				_viewTemplate, new TaskMemoryRepository(), new StringLogger());
+			var task = new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, _viewTemplate);//, new UserSettingsForTask());
 			task.Activate();
-			task.Deactivate();
-		}
-
-		[Test]
-		public void CreateAndActivate_LastUrlDoesntExistAnymore_DoesNotCrash()
-		{
-			DictionaryBrowseAndEditConfiguration config = DictionaryBrowseAndEditConfiguration.CreateForTests();
-
-			var repository = new TaskMemoryRepository();
-			repository.FindOrCreateSettingsByTaskId(config.TaskName).Set(DictionaryTask.LastUrlKey, "longGone");
-
-			var task = new DictionaryTask(config, _lexEntryRepository, _viewTemplate, repository, new StringLogger());
-#if DEBUG
-	  //the code doesn't show the errror box in release builds, but
-			//the builder publishing configuration does run tests in release builds
-			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
-#endif
-			{
-				task.Activate();
-			}
 			task.Deactivate();
 		}
 
@@ -91,14 +68,14 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullRecordListManager_Throws()
 		{
-			new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), null, _viewTemplate, new TaskMemoryRepository(), new StringLogger());//, new UserSettingsForTask());
+			new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), null, _viewTemplate);//, new UserSettingsForTask());
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
-			new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, null, new TaskMemoryRepository(), new StringLogger());//, new UserSettingsForTask());
+			new DictionaryTask(DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository, null);//, new UserSettingsForTask());
 		}
 	}
 }

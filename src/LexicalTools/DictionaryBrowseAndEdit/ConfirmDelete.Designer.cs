@@ -32,7 +32,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfirmDelete));
 			this.label1 = new System.Windows.Forms.Label();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.localizationHelper1 = new Palaso.UI.WindowsForms.i8n.LocalizationHelper(this.components);
+			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
 			this.deleteBtn = new System.Windows.Forms.Button();
 			this.cancelBtn = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -118,7 +118,7 @@
 
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.PictureBox pictureBox1;
-		private Palaso.UI.WindowsForms.i8n.LocalizationHelper localizationHelper1;
+		private WeSay.UI.LocalizationHelper localizationHelper1;
 		private System.Windows.Forms.Button deleteBtn;
 		private System.Windows.Forms.Button cancelBtn;
 	}

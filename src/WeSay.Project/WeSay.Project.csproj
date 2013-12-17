@@ -58,6 +58,10 @@
 	  <ExecutableExtension>.exe</ExecutableExtension>
 	  <HintPath>..\..\lib\Chorus.exe</HintPath>
 	</Reference>
+	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
+	</Reference>
 	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
@@ -79,6 +83,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
+	<Reference Include="PalasoReporting, Version=1.0.2774.21115, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
+	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
@@ -91,19 +99,16 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="BaseTaskConfig.cs" />
-	<Compile Include="CheckinDescriptionBuilder.cs" />
 	<Compile Include="ChorusBackupMaker.cs" />
 	<Compile Include="BasilProject.cs" />
 	<Compile Include="ConfigFileReader.cs" />
 	<Compile Include="ConfigFileTaskBuilder.cs" />
-	<Compile Include="ConfigMigration\MigrateConfig5To6.cs" />
-	<Compile Include="ConfigMigration\ConfigurationMigrator.cs" />
 	<Compile Include="FailedLoadTask.cs" />
 	<Compile Include="ITaskConfiguration.cs" />
 	<Compile Include="PLiftExporter.cs" />
-	<Compile Include="ServiceProvider.cs" />
 	<Compile Include="TaskCollection.cs" />
 	<Compile Include="TaskTypeCatalog.cs" />
+	<Compile Include="UserSettingsRepository.cs" />
 	<Compile Include="ViewTemplate.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />
 	<Compile Include="IProject.cs" />
@@ -129,29 +134,22 @@
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>
 	</ProjectReference>
-	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
-	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
-	  <Name>WeSay.UI</Name>
-	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig0To1.xsl">
+	<EmbeddedResource Include="MigrateConfig0To1.xsl">
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig1To2.xsl" />
+	<EmbeddedResource Include="MigrateConfig1To2.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig2To3.xsl" />
+	<EmbeddedResource Include="MigrateConfig2To3.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig3To4.xsl" />
+	<EmbeddedResource Include="MigrateConfig3To4.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig5To6.xsl" />
-  </ItemGroup>
-  <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\MigrateConfig4To5.xsl" />
+	<EmbeddedResource Include="MigrateConfig4To5.xsl" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

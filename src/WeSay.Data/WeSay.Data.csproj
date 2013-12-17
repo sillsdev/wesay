@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -49,6 +49,14 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
+	</Reference>
+	<Reference Include="Db4objects.Db4o.Tools, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Db4objects.Db4o.Tools.dll</HintPath>
+	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.dll</HintPath>
@@ -58,9 +66,13 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="Db4oRepository.cs" />
+	<Compile Include="DatabaseModified.cs" />
+	<Compile Include="Db4oRepositoryId.cs" />
 	<Compile Include="DelegateQuery.cs" />
 	<Compile Include="DictionaryEqualityComparer.cs" />
 	<Compile Include="IRepository.cs" />
+	<Compile Include="Db4oDataSource.cs" />
 	<Compile Include="MemoryRepository.cs" />
 	<Compile Include="Permuter.cs" />
 	<Compile Include="PreciseDateTime.cs" />

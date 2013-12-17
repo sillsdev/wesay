@@ -11,8 +11,7 @@ namespace WeSay.ConfigTool
 {
 	public partial class InterfaceLanguageControl: ConfigurationControlBase
 	{
-		public InterfaceLanguageControl(ILogger logger)
-			: base("settings for the user interface", logger)
+		public InterfaceLanguageControl(): base("settings for the user interface")
 		{
 			InitializeComponent();
 		}
@@ -31,16 +30,7 @@ namespace WeSay.ConfigTool
 		{
 			if (_languageCombo.SelectedItem != null)
 			{
-				var lang = ((PoProxy) _languageCombo.SelectedItem).fileNameWithoutExtension;
-				if (UILanguage != lang)
-				{
-					UILanguage = lang;
-					if(lang==string.Empty)
-					{
-						lang = "default";
-					}
-					_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Changed UI Language to {0}", "Checkin Description in WeSay Config Tool used when you change the User Interface language."),lang);
-				}
+				UILanguage = ((PoProxy) _languageCombo.SelectedItem).fileNameWithoutExtension;
 			}
 		}
 
@@ -170,7 +160,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception)
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"There was some problem with choosing that font.  If you just installed it, you might try restarting the program or even your computer.");
 				return;
 			}

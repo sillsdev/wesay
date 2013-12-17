@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace WeSay.UI.Buttons
 {
 	[Description("Region Button Control")]
-	public abstract class RegionButton: Button, Palaso.UI.WindowsForms.i8n.ILocalizableControl
+	public abstract class RegionButton: Button
 	{
 		private Rectangle _textAndImageRectangle;
 
@@ -365,15 +365,6 @@ namespace WeSay.UI.Buttons
 			base.OnMouseLeave(e);
 			_buttonIsHot = false;
 			Invalidate();
-		}
-
-		/// <summary>
-		///  Palaso.UI.WindowsForms.i8n.ILocalizableControl
-		/// making a big font on these things that don't have text was causing them to grow
-		/// </summary>
-		public bool ShouldModifyFont
-		{
-			get { return false; }
 		}
 	}
 }

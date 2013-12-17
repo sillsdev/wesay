@@ -86,7 +86,7 @@ namespace WeSay.LexicalTools
 			//This satisfies Rene's request of WS-419
 			if (_field.FieldName == "BaseForm")
 			{
-				newGuy.SetFlag(LexEntry.WellKnownProperties.FlagSkipBaseform);
+				newGuy.SetFlag("flag_skip_BaseForm");
 			}
 			return newGuy;
 		}
@@ -180,7 +180,7 @@ namespace WeSay.LexicalTools
 
 		private RecordToken<LexEntry> GetRecordTokenFromTargetId(string s)
 		{
-			if (string.IsNullOrEmpty(s))
+			if (s == null)
 			{
 				return null;
 			}

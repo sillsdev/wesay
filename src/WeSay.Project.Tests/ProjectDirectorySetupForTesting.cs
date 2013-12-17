@@ -1,11 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using LiftIO.Validation;
+using NUnit.Framework;
+using WeSay.Foundation.Tests;
 
 namespace WeSay.Project.Tests
 {
 	/// <summary>
 	/// Creates a valid WeSay project directory in temp dir, and removes it when disposed.
+	///
+	/// Also see: Db4oProjectSetupForTesting, which encapsulates this
 	/// </summary>
 	public class ProjectDirectorySetupForTesting: IDisposable
 	{
@@ -97,7 +103,7 @@ namespace WeSay.Project.Tests
 					return path;
 				}
 
-				path = Path.Combine(BasilProject.DirectoryOfTheApplicationExecutable, fileName);
+				path = Path.Combine(BasilProject.DirectoryOfExecutingAssembly, fileName);
 				if (File.Exists(path))
 				{
 					return path;
@@ -151,7 +157,7 @@ namespace WeSay.Project.Tests
 			{
 				if (disposing)
 				{
-					Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
+					Foundation.Tests.TestHelpers.TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
 				}
 
 				// shared (dispose and finalizable) cleanup logic

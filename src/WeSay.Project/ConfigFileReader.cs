@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml.XPath;
 using Autofac;
-using WeSay.Foundation;
 
 
 namespace WeSay.Project
@@ -100,7 +99,7 @@ namespace WeSay.Project
 		}
 		*/
 		// review: this might belong in a nother file...
-		public static IEnumerable<ViewTemplate> CreateViewTemplates(string xmlConfiguration, WritingSystemCollection writingSystems)
+		public static IEnumerable<ViewTemplate> CreateViewTemplates(string xmlConfiguration)
 		{
 			XPathDocument doc = new XPathDocument(new StringReader(xmlConfiguration));
 
@@ -111,16 +110,13 @@ namespace WeSay.Project
 				bool hasviewTemplate = false;
 				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty,
 																		   string.Empty);
-
-				ViewTemplate factoryTemplate = ViewTemplate.MakeMasterTemplate(writingSystems);
-
 				foreach (XPathNavigator component in componentList)
 				{
 					Debug.Assert(component.Name == "viewTemplate");
 					hasviewTemplate = true;
 					ViewTemplate template = new ViewTemplate();
 					template.LoadFromString(component.OuterXml);
-					ViewTemplate.UpdateUserViewTemplate(factoryTemplate, template);
+
 					yield return template;
 				}
 				Debug.Assert(hasviewTemplate,

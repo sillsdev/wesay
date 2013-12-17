@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -54,9 +54,9 @@
 	  <ExecutableExtension>.exe</ExecutableExtension>
 	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
 	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="Palaso.Reporting, Version=1.0.2774.19364, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
@@ -111,10 +111,6 @@
 	<None Include="Resources\construction.png" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
-	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
-	  <Name>LexicalModel</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>

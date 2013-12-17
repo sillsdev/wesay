@@ -14,7 +14,7 @@ namespace WeSay.LexicalTools.Tests
 			Field field = new Field(Field.FieldNames.ExampleTranslation.ToString(),
 									"LexExampleSentence",
 									new string[] {"analysis"});
-			_missingExampleTranslationFilter = new MissingFieldQuery(field, null);
+			_missingExampleTranslationFilter = new MissingFieldQuery(field);
 		}
 
 		private static LexEntry CreateEmptyEntryWithOneExampleSentence()
@@ -26,26 +26,6 @@ namespace WeSay.LexicalTools.Tests
 			sense.ExampleSentences.Add(example);
 			return entry;
 		}
-
-		[Test]
-		public void SenseExampleTranslation_MissingOneUnsearchedWritingSystem_NotReturned()
-		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = new LexSense();
-			entry.Senses.Add(sense);
-			LexExampleSentence example = new LexExampleSentence();
-			sense.ExampleSentences.Add(example);
-
-			example.Translation["one"] = "filler";
-			Field field = new Field(Field.FieldNames.ExampleTranslation.ToString(),
-								   "LexExampleSentence",
-								   new string[] { "one", "two" });
-
-			var filter = new MissingFieldQuery(field, new[]{"one"});//notice, we don't want to search in "two"
-
-			Assert.AreEqual(false, filter.FilteringPredicate(entry));
-		}
-
 
 		[Test]
 		public void SenseExampleTranslationHasAnalysisWritingSystem()

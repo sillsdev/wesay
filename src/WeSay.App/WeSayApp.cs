@@ -126,8 +126,8 @@ namespace WeSay.App
 						//do a last backup before exiting
 						Logger.WriteEvent("App Exiting Normally.");
 					}
-					_project.BackupNow();
-			   }
+				}
+			 _project.BackupNow();
 		   }
 			finally
 			{
@@ -178,7 +178,7 @@ namespace WeSay.App
 			}
 			catch (IOException e)
 			{
-				ErrorReport.ReportNonFatalException(e);
+				ErrorNotificationDialog.ReportException(e, null, false);
 				Thread.CurrentThread.Abort();
 			}
 		}
@@ -307,9 +307,7 @@ namespace WeSay.App
 		{
 			try
 			{
-				_project.AddToContainer(b => b.Register<StatusBarController>());
-				_project.AddToContainer(b => b.Register<TabbedForm>());
-				_tabbedForm = _project.Container.Resolve<TabbedForm>();
+				_tabbedForm = new TabbedForm();
 				_tabbedForm.Show(); // so the user sees that we did launch
 				_tabbedForm.Text =
 						StringCatalog.Get("~WeSay",
@@ -317,12 +315,8 @@ namespace WeSay.App
 						": " + _project.Name + "        " + ErrorReport.UserFriendlyVersionString;
 				Application.DoEvents();
 
-			   //todo: this is what we're supposed to use the autofac "modules" for
-				//couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
+			   //couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
 				_project.AddToContainer(b => b.Register<ICurrentWorkTask>(_tabbedForm));
-				_project.AddToContainer(b => b.Register<StatusStrip>(_tabbedForm.StatusStrip));
-				_project.AddToContainer(b => b.Register(TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(_project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject )));
-
 
 				_project.LoadTasksFromConfigFile();
 
@@ -342,7 +336,7 @@ namespace WeSay.App
 			}
 			catch (IOException e)
 			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 		}
 
@@ -368,7 +362,7 @@ namespace WeSay.App
 			liftPath = DetermineActualLiftPath(liftPath);
 			if (liftPath == null)
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project.");
 				return null;
 			}
@@ -390,7 +384,7 @@ namespace WeSay.App
 			}
 			catch
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"WeSay was unable to migrate the WeSay configuration file for the new version of WeSay. This may cause WeSay to not function properly. Try opening the project in the WeSay Configuration Tool to fix this.");
 			}
 

@@ -22,9 +22,10 @@ namespace Addin.Transform
 		//    return path;
 		//}
 
-		public void  MakePLiftTempFile(string outputPath, LexEntryRepository lexEntryRepository, ViewTemplate template)
+		public string MakePLiftTempFile(LexEntryRepository lexEntryRepository, ViewTemplate template)
 		{
-			PLiftExporter exporter = new PLiftExporter(outputPath, lexEntryRepository, template);
+			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+			PLiftExporter exporter = new PLiftExporter(path, lexEntryRepository, template);
 			ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);
 			foreach (RecordToken<LexEntry> token in recordTokens)
@@ -38,7 +39,41 @@ namespace Addin.Transform
 			}
 
 			exporter.End();
+			return path;
 		}
+
+		//
+		//        public void MakeXHtmlFile(string outputPath, LexEntryRepository lexEntryRepository, WeSayWordsProject project)
+		//        {
+		//            IHomographCalculator homographCalculator = new HomographCalculator(lexEntryRepository, project.DefaultPrintingTemplate.HeadwordWritingSystem);
+		//
+		//            IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(project.DefaultPrintingTemplate.HeadwordWritingSystem);
+		//            Db4oLexEntryFinder finder = new Db4oLexEntryFinder(lexEntryRepository.DataSource);
+		//
+		//            string pliftPath = MakePLiftTempFile(entries, project.DefaultPrintingTemplate, homographCalculator, finder);
+		//            try
+		//            {
+		//                using (Stream xsltStream = GetXsltStream("plift2html.xsl"))
+		//                {
+		//                    TransformWithProgressDialog dlg = new TransformWithProgressDialog(pliftPath,
+		//                                                                                      outputPath,
+		//                                                                                      xsltStream,
+		//                                                                                      "lift/entry");
+		//                    dlg.TaskMessage =
+		//                        StringCatalog.Get("Preparing dictionary for printing...",
+		//                                          "This is shown when WeSay is creating the pdf document for printing.");
+		//                    dlg.AddArgument("writing-system-info-file", project.PathToWritingSystemPrefs);
+		//                    dlg.Transform();
+		//                }
+		//            }
+		//            finally
+		//            {
+		//                if(File.Exists(pliftPath))
+		//                {
+		//                    File.Delete(pliftPath);
+		//                }
+		//            }
+		//        }
 
 		public static Stream GetXsltStream(string xsltName)
 		{
