@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Palaso.Progress;
 
 namespace WeSay.Data
@@ -13,17 +12,8 @@ namespace WeSay.Data
 		protected readonly Dictionary<T, RepositoryId> objectToIdHashtable =
 				new Dictionary<T, RepositoryId>();
 
-		private DateTime lastModified = new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc);
-#if DEBUG
-	   // protected StackTrace _constructionStackTrace;
-#endif
+		private DateTime lastModified = DateTime.MinValue;
 
-		public MemoryRepository()
-		{
-#if DEBUG
-			//_constructionStackTrace = new StackTrace();
-#endif
-		}
 		public DateTime LastModified
 		{
 			get { return lastModified; }

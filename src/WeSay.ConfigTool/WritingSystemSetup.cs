@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.Project;
 
@@ -10,14 +9,10 @@ namespace WeSay.ConfigTool
 {
 	public partial class WritingSystemSetup: ConfigurationControlBase
 	{
-		public WritingSystemSetup(ILogger logger)
-			: base("set up fonts, keyboards, and sorting", logger)
+		public WritingSystemSetup(): base("set up fonts, keyboards, and sorting")
 		{
 			InitializeComponent();
 			Resize += WritingSystemSetup_Resize;
-			_basicControl.Logger = logger;
-			_fontControl.Logger = logger;
-			_sortControl.Logger = logger;
 		}
 
 		private void WritingSystemSetup_Resize(object sender, EventArgs e)
@@ -76,9 +71,6 @@ namespace WeSay.ConfigTool
 			_basicControl.WritingSystem = SelectedWritingSystem;
 			_sortControl.WritingSystem = SelectedWritingSystem;
 			_fontControl.WritingSystem = SelectedWritingSystem;
-
-			_sortingPage.Enabled = !SelectedWritingSystem.IsAudio;
-			_fontsPage.Enabled = !SelectedWritingSystem.IsAudio;
 		}
 
 		private WritingSystem SelectedWritingSystem
@@ -102,12 +94,9 @@ namespace WeSay.ConfigTool
 			if (SelectedWritingSystem != null &&
 				BasilProject.Project.WritingSystems.ContainsKey(SelectedWritingSystem.Id))
 			{
-				var doomedId = SelectedWritingSystem.Id;
 				BasilProject.Project.WritingSystems.Remove(SelectedWritingSystem.Id);
 				LoadWritingSystemListBox();
 				UpdateSelection();
-				_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Removed writing system '{0}'", "Checkin Description in WeSay Config Tool used when you remove a writing system."), doomedId);
-
 			}
 		}
 
@@ -119,23 +108,13 @@ namespace WeSay.ConfigTool
 			{
 				if (!BasilProject.Project.WritingSystems.ContainsKey(s))
 				{
-					Font font;
-					try
-					{
-						font = new Font("Doulos SIL", 12);
-					}
-					catch(Exception )
-					{
-					   font = new Font(System.Drawing.SystemFonts.DefaultFont.SystemFontName, 12);
-					}
-
-					w = new WritingSystem(s, font);
+					w = new WritingSystem(s, new Font("Doulos SIL", 12));
 					break;
 				}
 			}
 			if (w == null)
 			{
-				ErrorReport.NotifyUserOfProblem("Could not produce a unique ID.");
+				ErrorReport.ReportNonFatalMessage("Could not produce a unique ID.");
 			}
 			else
 			{
@@ -144,9 +123,6 @@ namespace WeSay.ConfigTool
 				_wsListBox.Items.Add(item);
 				_wsListBox.SelectedItem = item;
 			}
-
-			_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Added writing system", "Checkin Description in WeSay Config Tool used when you add a writing system."));
-
 		}
 
 		/// <summary>
@@ -154,7 +130,7 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void OnWritingSystemIdChanged(object sender, EventArgs e)
+		private void _basicControl_DisplayPropertiesChanged(object sender, EventArgs e)
 		{
 			WritingSystem ws = sender as WritingSystem;
 			PropertyValueChangedEventArgs args = e as PropertyValueChangedEventArgs;
@@ -165,7 +141,7 @@ namespace WeSay.ConfigTool
 				{
 					ws.Id = oldId; //couldn't make the change
 				}
-				//                Reporting.ErrorReporter.NotifyUserOfProblem(
+				//                Reporting.ErrorReporter.ReportNonFatalMessage(
 				//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
 				//                    ws.Id, oldId);
 			}
@@ -189,11 +165,6 @@ namespace WeSay.ConfigTool
 					}
 				}
 			}
-		}
-
-		private void OnIsAudioChanged(object sender, EventArgs e)
-		{
-			UpdateSelection();
 		}
 	}
 

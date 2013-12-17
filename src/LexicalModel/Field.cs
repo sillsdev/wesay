@@ -6,7 +6,6 @@ using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
 using WeSay.Foundation;
-using System.Linq;
 
 namespace WeSay.LexicalModel
 {
@@ -46,7 +45,6 @@ namespace WeSay.LexicalModel
 				CommonEnumerations.VisibilitySetting.Visible;
 
 		private string _optionsListFile;
-		private bool _isMultiParagraph;
 
 		/// <summary>
 		/// These are just for getting the strings right, using ToString(). In order
@@ -73,7 +71,7 @@ namespace WeSay.LexicalModel
 						) {}
 
 		public Field(string fieldName,
-					 string parentClassName,
+					 string className,
 					 IEnumerable<string> writingSystemIds,
 					 MultiplicityType multiplicity,
 					 string dataTypeName)
@@ -82,7 +80,7 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException();
 			}
-			ClassName = parentClassName;
+			ClassName = className;
 			Enabled = true; //without this lots of tests would need updating
 			Initialize(fieldName, dataTypeName, multiplicity, writingSystemIds);
 		}
@@ -385,14 +383,6 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		/// <summary>
-		/// omit audio writing systems
-		/// </summary>
-		public IEnumerable<string> GetTextOnlyWritingSystemIds(WritingSystemCollection systems)
-		{
-			return systems.TrimToActualTextWritingSystemIds(_writingSystemIds);
-		}
-
 		[Browsable(false)]
 		public string Description
 		{
@@ -517,13 +507,6 @@ namespace WeSay.LexicalModel
 			set { _isSpellCheckingEnabled = value; }
 		}
 
-		[ReflectorProperty("multiParagraph", Required = false)]
-		public bool IsMultiParagraph
-		{
-			get { return _isMultiParagraph; }
-			set { _isMultiParagraph = value;}
-		}
-
 		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)
 		{
@@ -592,8 +575,6 @@ namespace WeSay.LexicalModel
 		}
 
 		#endregion
-
-
 	}
 
 	internal class ParentClassConverter: WeSayStringConverter

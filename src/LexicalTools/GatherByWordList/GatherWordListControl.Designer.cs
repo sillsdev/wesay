@@ -1,7 +1,6 @@
 using System;
 using WeSay.UI;
 using WeSay.UI.Buttons;
-using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools
 {
@@ -44,7 +43,7 @@ namespace WeSay.LexicalTools
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this._movingLabel = new WeSay.UI.MovingLabel();
-			this._vernacularBox = new MultiTextControl();
+			this._vernacularBox = new WeSay.UI.MultiTextControl();
 			this._btnPreviousWord = new WeSay.UI.Buttons.PreviousButton();
 			this._btnNextWord = new WeSay.UI.Buttons.NextButton();
 			this._btnAddWord = new WeSay.UI.Buttons.AddButton();

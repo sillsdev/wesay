@@ -3,16 +3,14 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using Chorus.sync;
-using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
 	public partial class BackupPlanControl: ConfigurationControlBase
 	{
-		public BackupPlanControl(ILogger logger)
-			: base("prepare for the worst", logger)
+		public BackupPlanControl()
+			: base("prepare for the worst")
 		{
 			InitializeComponent();
 		}
@@ -47,19 +45,14 @@ namespace WeSay.ConfigTool
 				FolderBrowserDialog dialog = new FolderBrowserDialog();
 				dialog.Description = "Choose drive or folder for backups";
 				dialog.RootFolder =Environment.SpecialFolder.MyComputer;
-
 				if (dialog.ShowDialog() == DialogResult.OK)
 				{
-					if( _pathText.Text != dialog.SelectedPath)
-					{
-						_logger.WriteConciseHistoricalEvent(StringCatalog.Get("BackupPlan path changed", "Checkin Description in WeSay Config Tool used when you change the backup path"), dialog.SelectedPath);
-					}
 					_pathText.Text = dialog.SelectedPath;
 				}
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Something went wrong choosing the folder. " +
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Something went wrong choosing the folder. " +
 																   error.Message);
 			}
 		}

@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{19310CA3-6653-45E0-9EC8-F824629E2AD8}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -59,21 +59,13 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
 	</Reference>
-	<Reference Include="LinqBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2b14eb747628076, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\LinqBridge.dll</HintPath>
-	</Reference>
 	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="PalasoReporting, Version=1.0.2868.18840, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Palaso.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.TestUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Palaso.TestUtilities.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
@@ -83,7 +75,6 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="FlexCompatibleHtmlWriterTests.cs" />
 	<Compile Include="HtmlTransformerTests.cs" />
 	<Compile Include="PLiftMakerTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />

@@ -6,11 +6,9 @@ using System.Text;
 using System.Xml;
 using LiftIO.Validation;
 using NUnit.Framework;
-using Palaso.TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests
@@ -78,23 +76,21 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.End();
 		}
 
-		private void AssertHasAtLeastOneMatch(string xpath)
+		private void AssertXPathNotNull(string xpath)
 		{
-			AssertThatXmlIn.String(_stringBuilder.ToString()).
-				HasAtLeastOneMatchForXpath(xpath);
-//            XmlDocument doc = new XmlDocument();
-//            doc.LoadXml(_stringBuilder.ToString());
-//            XmlNode node = doc.SelectSingleNode(xpath);
-//            if (node == null)
-//            {
-//                XmlWriterSettings settings = new XmlWriterSettings();
-//                settings.Indent = true;
-//                settings.ConformanceLevel = ConformanceLevel.Fragment;
-//                XmlWriter writer = XmlWriter.Create(Console.Out, settings);
-//                doc.WriteContentTo(writer);
-//                writer.Flush();
-//            }
-//            Assert.IsNotNull(node);
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(_stringBuilder.ToString());
+			XmlNode node = doc.SelectSingleNode(xpath);
+			if (node == null)
+			{
+				XmlWriterSettings settings = new XmlWriterSettings();
+				settings.Indent = true;
+				settings.ConformanceLevel = ConformanceLevel.Fragment;
+				XmlWriter writer = XmlWriter.Create(Console.Out, settings);
+				doc.WriteContentTo(writer);
+				writer.Flush();
+			}
+			Assert.IsNotNull(node);
 		}
 
 		private static string GetSenseElement(LexSense sense)
@@ -160,8 +156,8 @@ namespace WeSay.LexicalModel.Tests
 			o.Value = string.Empty;
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense[not(grammatical-info)]");
-			AssertHasAtLeastOneMatch("sense[not(trait)]");
+			AssertXPathNotNull("sense[not(grammatical-info)]");
+			AssertXPathNotNull("sense[not(trait)]");
 		}
 
 		[Test]
@@ -189,9 +185,9 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("entry/citation/form[@lang='zz']/text[text()='orange']");
-			AssertHasAtLeastOneMatch("entry/citation/form[@lang='zz'][not(trait)]");
-			AssertHasAtLeastOneMatch("entry[not(field)]");
+			AssertXPathNotNull("entry/citation/form[@lang='zz']/text[text()='orange']");
+			AssertXPathNotNull("entry/citation/form[@lang='zz'][not(trait)]");
+			AssertXPathNotNull("entry[not(field)]");
 		}
 
 		[Test]
@@ -207,7 +203,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(e);
 			_exporter.Add(e);
 			_exporter.End();
-			AssertHasAtLeastOneMatch(
+			AssertXPathNotNull(
 					"entry/citation/form[@lang='x']/annotation[@name='flag' and @value='1']");
 		}
 
@@ -221,7 +217,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("entry/field[@type='flubadub']/form[@lang='zz' and text='orange']");
+			AssertXPathNotNull("entry/field[@type='flubadub']/form[@lang='zz' and text='orange']");
 		}
 
 		[Test]
@@ -232,7 +228,7 @@ namespace WeSay.LexicalModel.Tests
 			m["zz"] = "orange";
 			_exporter.Add(example);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("example/field[@type='flubadub']/form[@lang='zz' and text='orange']");
+			AssertXPathNotNull("example/field[@type='flubadub']/form[@lang='zz' and text='orange']");
 		}
 
 		[Test]
@@ -243,7 +239,7 @@ namespace WeSay.LexicalModel.Tests
 			m["zz"] = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense/field[@type='flubadub']/form[@lang='zz' and text='orange']");
+			AssertXPathNotNull("sense/field[@type='flubadub']/form[@lang='zz' and text='orange']");
 		}
 
 		[Test]
@@ -257,9 +253,9 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("entry/trait[@name='flubs' and @value='orange']");
-			AssertHasAtLeastOneMatch("entry/trait[@name='flubs' and @value='blue']");
-			AssertHasAtLeastOneMatch("entry[count(trait) =2]");
+			AssertXPathNotNull("entry/trait[@name='flubs' and @value='orange']");
+			AssertXPathNotNull("entry/trait[@name='flubs' and @value='blue']");
+			AssertXPathNotNull("entry[count(trait) =2]");
 		}
 
 		[Test]
@@ -302,7 +298,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("entry/trait[@name='flub' and @value='orange']");
+			AssertXPathNotNull("entry/trait[@name='flub' and @value='orange']");
 		}
 
 		[Test]
@@ -345,8 +341,8 @@ namespace WeSay.LexicalModel.Tests
 			o.Value = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense/trait[@name='flub' and @value='orange']");
-			AssertHasAtLeastOneMatch("sense[count(trait)=1]");
+			AssertXPathNotNull("sense/trait[@name='flub' and @value='orange']");
+			AssertXPathNotNull("sense[count(trait)=1]");
 		}
 
 		[Test]
@@ -358,8 +354,8 @@ namespace WeSay.LexicalModel.Tests
 			m["zz"] = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense/definition/form[@lang='zz']/text[text()='orange']");
-			AssertHasAtLeastOneMatch("sense[not(field)]");
+			AssertXPathNotNull("sense/definition/form[@lang='zz']/text[text()='orange']");
+			AssertXPathNotNull("sense[not(field)]");
 		}
 
 		[Test]
@@ -379,8 +375,8 @@ namespace WeSay.LexicalModel.Tests
 			//which is what we use for tests.  The file version puts out utf-8
 			//CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift producer=\"WeSay.1Pt0Alpha\"/>");// xmlns:flex=\"http://fieldworks.sil.org\" />");
 			_exporter.End();
-			AssertHasAtLeastOneMatch(string.Format("lift[@version='{0}']", Validator.LiftVersion));
-			AssertHasAtLeastOneMatch(string.Format("lift[@producer='{0}']", LiftExporter.ProducerString));
+			AssertXPathNotNull(string.Format("lift[@version='{0}']", Validator.LiftVersion));
+			AssertXPathNotNull(string.Format("lift[@producer='{0}']", LiftExporter.ProducerString));
 		}
 
 		[Test]
@@ -390,7 +386,7 @@ namespace WeSay.LexicalModel.Tests
 			sense.GetOrCreateProperty<MultiText>("flubadub");
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense[not(field)]");
+			AssertXPathNotNull("sense[not(field)]");
 		}
 
 		[Test]
@@ -400,7 +396,7 @@ namespace WeSay.LexicalModel.Tests
 			sense.GetOrCreateProperty<OptionRef>("flubadub");
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense[not(trait)]");
+			AssertXPathNotNull("sense[not(trait)]");
 		}
 
 		[Test]
@@ -410,7 +406,7 @@ namespace WeSay.LexicalModel.Tests
 			sense.GetOrCreateProperty<OptionRefCollection>("flubadub");
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense[not(trait)]");
+			AssertXPathNotNull("sense[not(trait)]");
 		}
 
 		[Test]
@@ -420,8 +416,8 @@ namespace WeSay.LexicalModel.Tests
 			sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition);
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense[not(definition)]");
-			AssertHasAtLeastOneMatch("sense[not(field)]");
+			AssertXPathNotNull("sense[not(definition)]");
+			AssertXPathNotNull("sense[not(field)]");
 		}
 
 		[Test]
@@ -431,7 +427,7 @@ namespace WeSay.LexicalModel.Tests
 			ex.GetOrCreateProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
 			_exporter.Add(ex);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("example[not(@source)]");
+			AssertXPathNotNull("example[not(@source)]");
 		}
 
 		[Test]
@@ -443,8 +439,8 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("entry[not(note)]");
-			AssertHasAtLeastOneMatch("entry[not(field)]");
+			AssertXPathNotNull("entry[not(note)]");
+			AssertXPathNotNull("entry[not(field)]");
 		}
 
 		[Test]
@@ -494,17 +490,6 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void EmptyRelationNotOutput()
-		{
-
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.AddRelationTarget(LexEntry.WellKnownProperties.BaseForm, string.Empty);
-			_exporter.Add(entry);
-			_exporter.End();
-			Assert.IsFalse(_stringBuilder.ToString().Contains("relation"));
-		}
-
-		[Test]
 		public void EntryHasDateCreated()
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
@@ -546,7 +531,7 @@ namespace WeSay.LexicalModel.Tests
 								  "<gloss lang=\"a\"><text>aaa</text></gloss></sense>" +
 								  GetSenseElement(sense2) +
 								  "<gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
-			AssertHasAtLeastOneMatch("entry[count(sense)=2]");
+			AssertXPathNotNull("entry[count(sense)=2]");
 		}
 
 		[Test]
@@ -582,7 +567,7 @@ namespace WeSay.LexicalModel.Tests
 
 			_exporter.Add(ex);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("example[@source='hearsay']");
+			AssertXPathNotNull("example[@source='hearsay']");
 		}
 
 		[Test]
@@ -595,7 +580,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("entry[not(trait)]");
+			AssertXPathNotNull("entry[not(trait)]");
 		}
 
 		[Test]
@@ -607,7 +592,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("entry/trait[@name='ATestFlag' and @value]");
+			AssertXPathNotNull("entry/trait[@name='ATestFlag' and @value]");
 		}
 
 		/* this is not relevant, as we are currently using form_guid as the id
@@ -776,7 +761,7 @@ namespace WeSay.LexicalModel.Tests
 			sense.Gloss["blue"] = "ocean";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense/gloss[@lang='blue']/text[text()='ocean']");
+			AssertXPathNotNull("sense/gloss[@lang='blue']/text[text()='ocean']");
 		}
 
 		[Test]
@@ -787,11 +772,11 @@ namespace WeSay.LexicalModel.Tests
 			sense.Gloss["x"] = "xx";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense[count(gloss)=4]");
-			AssertHasAtLeastOneMatch("sense/gloss[@lang='a' and text='aaa']");
-			AssertHasAtLeastOneMatch("sense/gloss[@lang='a' and text='bbb']");
-			AssertHasAtLeastOneMatch("sense/gloss[@lang='a' and text='ccc']");
-			AssertHasAtLeastOneMatch("sense/gloss[@lang='x' and text='xx']");
+			AssertXPathNotNull("sense[count(gloss)=4]");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='aaa']");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='bbb']");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='ccc']");
+			AssertXPathNotNull("sense/gloss[@lang='x' and text='xx']");
 		}
 
 		[Test]
@@ -812,7 +797,7 @@ namespace WeSay.LexicalModel.Tests
 			sense.Gloss.SetAnnotationOfAlternativeIsStarred("x", true);
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense/gloss[@lang='x']/annotation[@name='flag' and @value='1']");
+			AssertXPathNotNull("sense/gloss[@lang='x']/annotation[@name='flag' and @value='1']");
 		}
 
 		[Test]
@@ -824,8 +809,8 @@ namespace WeSay.LexicalModel.Tests
 			o.Value = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense/grammatical-info[@value='orange']");
-			AssertHasAtLeastOneMatch("sense[not(trait)]");
+			AssertXPathNotNull("sense/grammatical-info[@value='orange']");
+			AssertXPathNotNull("sense[not(trait)]");
 		}
 
 		[Test]
@@ -838,7 +823,7 @@ namespace WeSay.LexicalModel.Tests
 			o.IsStarred = true;
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch(
+			AssertXPathNotNull(
 					"sense/grammatical-info[@value='orange']/annotation[@name='flag' and @value='1']");
 		}
 
@@ -851,7 +836,7 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.Add(e);
 			_exporter.End();
 
-			AssertHasAtLeastOneMatch("//lexical-unit/form[@lang='xx']");
+			AssertXPathNotNull("//lexical-unit/form[@lang='xx']");
 		}
 
 		[Test]
@@ -872,8 +857,8 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(e);
 			_exporter.Add(e);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("entry/lexical-unit/form[@lang='x']/text[text()='orange']");
-			AssertHasAtLeastOneMatch("entry/lexical-unit/form[@lang='x'][not(trait)]");
+			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/text[text()='orange']");
+			AssertXPathNotNull("entry/lexical-unit/form[@lang='x'][not(trait)]");
 		}
 
 		[Test]
@@ -886,7 +871,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(e);
 			_exporter.Add(e);
 			_exporter.End();
-			AssertHasAtLeastOneMatch(
+			AssertXPathNotNull(
 					"entry/lexical-unit/form[@lang='x']/annotation[@name='flag' and @value='1']");
 		}
 
@@ -921,8 +906,8 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("entry/note/form[@lang='zz' and text='orange']");
-			AssertHasAtLeastOneMatch("entry[not(field)]");
+			AssertXPathNotNull("entry/note/form[@lang='zz' and text='orange']");
+			AssertXPathNotNull("entry[not(field)]");
 		}
 
 		[Test]
@@ -934,8 +919,8 @@ namespace WeSay.LexicalModel.Tests
 			m["zz"] = "orange";
 			_exporter.Add(example);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("example/note/form[@lang='zz' and text='orange']");
-			AssertHasAtLeastOneMatch("example[not(field)]");
+			AssertXPathNotNull("example/note/form[@lang='zz' and text='orange']");
+			AssertXPathNotNull("example[not(field)]");
 		}
 
 		[Test]
@@ -947,8 +932,8 @@ namespace WeSay.LexicalModel.Tests
 			m["zz"] = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertHasAtLeastOneMatch("sense/note/form[@lang='zz' and text='orange']");
-			AssertHasAtLeastOneMatch("sense[not(field)]");
+			AssertXPathNotNull("sense/note/form[@lang='zz' and text='orange']");
+			AssertXPathNotNull("sense[not(field)]");
 		}
 
 		[Test]

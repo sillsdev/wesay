@@ -61,17 +61,17 @@ namespace Addin.Transform.Tests
 			Assert.Greater(result.Trim().Length, 0);
 		}
 
-//        [Test]
-//        public void CanGetXsltFromResource()
-//        {
-//            ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin();
-//            string path = info.LocateFile("plift2html.xsl");
-//            if (!string.IsNullOrEmpty(path))
-//            {
-//                File.Delete(path);
-//            }
-//            Stream stream = LiftTransformer.GetXsltStream(info, "plift2html.xsl");
-//            Assert.IsNotNull(stream);
-//        }
+		[Test]
+		public void CanGetXsltFromResource()
+		{
+			ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin();
+			string path = info.LocateFile("plift2html.xsl");
+			if (!string.IsNullOrEmpty(path))
+			{
+				File.Delete(path);
+			}
+			Stream stream = LiftTransformer.GetXsltStream(info, "plift2html.xsl");
+			Assert.IsNotNull(stream);
+		}
 	}
 }

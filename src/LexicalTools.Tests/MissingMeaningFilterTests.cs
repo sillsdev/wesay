@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools.Tests
@@ -15,7 +14,7 @@ namespace WeSay.LexicalTools.Tests
 			Field field = new Field(LexSense.WellKnownProperties.Definition,
 									"LexSense",
 									new string[] {"analysis"});
-			_missingMeaningFilter = new MissingFieldQuery(field, null);
+			_missingMeaningFilter = new MissingFieldQuery(field);
 		}
 
 		private static LexEntry CreateEmptyEntryWithOneSense()
