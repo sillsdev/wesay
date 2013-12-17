@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.LexicalModel.Foundation;
+using WeSay.Foundation;
 
 namespace WeSay.UI
 {
@@ -38,13 +38,11 @@ namespace WeSay.UI
 			Brush myBrush = Brushes.Black;
 
 			// Draw the current item text based on the current Font and the custom brush settings.
-			TextRenderer.DrawText(e.Graphics, Items[e.Index].ToString(), e.Font, e.Bounds, Color.Black, TextFormatFlags.Left);
-			//Do not use Graphics.Drawstring as it does not use Uniscribe and thus has problems with complex scripts WS-14881
-			//e.Graphics.DrawString(Items[e.Index].ToString(),
-			//                      e.Font,
-			//                      myBrush,
-			//                      e.Bounds,
-			//                      StringFormat.GenericDefault);
+			e.Graphics.DrawString(Items[e.Index].ToString(),
+								  e.Font,
+								  myBrush,
+								  e.Bounds,
+								  StringFormat.GenericDefault);
 			// If the ListBox has focus, draw a focus rectangle around the selected item.
 			e.DrawFocusRectangle();
 		}
@@ -91,10 +89,7 @@ namespace WeSay.UI
 		public object ItemToNotDrawYet
 		{
 			get { return _itemToNotDrawYet; }
-			set {
-					_itemToNotDrawYet = value;
-					Refresh();
-				}
+			set { _itemToNotDrawYet = value; }
 		}
 	}
 }

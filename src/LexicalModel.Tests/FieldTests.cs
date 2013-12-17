@@ -37,27 +37,31 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullFieldName_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => new Field(null, "LexEntry", new string[] {"writingSystem"}));
+			new Field(null, "LexEntry", new string[] {"writingSystem"});
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullClassName_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() =>new Field("fieldName", null, new string[] {"writingSystem"}));
+			new Field("fieldName", null, new string[] {"writingSystem"});
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullWritingSystem_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() =>new Field("fieldName", "LexEntry", null));
+			new Field("fieldName", "LexEntry", null);
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullWritingSystems_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() =>new Field("fieldName", "LexEntry", new string[] {null, null}));
+			new Field("fieldName", "LexEntry", new string[] {null, null});
 		}
 
 		[Test]

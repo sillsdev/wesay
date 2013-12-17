@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 using WeSay.AddinLib;
-using WeSay.LexicalModel.Foundation;
+using WeSay.Foundation;
 
 namespace Addin.Transform
 {

@@ -1,9 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{9D196637-2D50-4604-A310-378083CEA809}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -14,23 +13,7 @@
 	</FileUpgradeFlags>
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
-	<OldToolsVersion>3.5</OldToolsVersion>
-	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-	<PublishUrl>publish\</PublishUrl>
-	<Install>true</Install>
-	<InstallFrom>Disk</InstallFrom>
-	<UpdateEnabled>false</UpdateEnabled>
-	<UpdateMode>Foreground</UpdateMode>
-	<UpdateInterval>7</UpdateInterval>
-	<UpdateIntervalUnits>Days</UpdateIntervalUnits>
-	<UpdatePeriodically>false</UpdatePeriodically>
-	<UpdateRequired>false</UpdateRequired>
-	<MapFileExtensions>true</MapFileExtensions>
-	<ApplicationRevision>0</ApplicationRevision>
-	<ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-	<IsWebBootstrapper>false</IsWebBootstrapper>
-	<UseApplicationTrust>false</UseApplicationTrust>
-	<BootstrapperEnabled>true</BootstrapperEnabled>
+	<OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -40,11 +23,6 @@
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<RootNamespace>Addin.Transform</RootNamespace>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Commandlineparameters>/usr/share/wesay/WeSay.ConfigTool.exe /home/keith/WeSay/krstest/krstest.lift</Commandlineparameters>
-	<Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -53,10 +31,6 @@
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>Addin.Transform</RootNamespace>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -65,11 +39,6 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<RootNamespace>Addin.Transform</RootNamespace>
-	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
 	<OutputPath>..\..\output\Mono Release\</OutputPath>
@@ -78,128 +47,45 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>Addin.Transform</RootNamespace>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
-	<Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\release\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>bin\x86\Mono Debug\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>bin\x86\Mono Release\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Mono.Addins, Version=0.4.0.0, Culture=neutral, PublicKeyToken=null">
+	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
+	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
 	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+	<Reference Include="PalasoReporting, Version=1.0.2826.25008, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
-	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+	<Reference Include="Prince, Version=1.0.2830.36745, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\PalasoUIWindowsForms.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.TestUtilities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.TestUtilities.dll</HintPath>
-	</Reference>
-	<Reference Include="Prince, Version=1.0.2830.36745, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Prince.dll</HintPath>
+	  <HintPath>..\..\lib\Prince.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
-	<Reference Include="System.Core">
-	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-	</Reference>
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
-	<Reference Include="System.Web" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
-	<Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\ICSharpCode.SharpZipLib.dll</HintPath>
-	</Reference>
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="LameProgressDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="LameProgressDialog.Designer.cs">
-	  <DependentUpon>LameProgressDialog.cs</DependentUpon>
-	</Compile>
-	<Compile Include="PdfDictionary\AboutMakePdfDictionary.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="PdfDictionary\AboutMakePdfDictionary.Designer.cs">
-	  <DependentUpon>AboutMakePdfDictionary.cs</DependentUpon>
-	</Compile>
-	<Compile Include="PdfDictionary\FLExCompatibleXhtmlWriter.cs" />
-	<Compile Include="LexiquePro\AboutLexiquePro.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="LexiquePro\AboutLexiquePro.Designer.cs">
-	  <DependentUpon>AboutLexiquePro.cs</DependentUpon>
-	</Compile>
-	<Compile Include="LexiquePro\LexiqueProSender.cs" />
-	<Compile Include="PdfDictionary\PdfMaker.cs" />
+	<Compile Include="PdfMaker.cs" />
 	<Compile Include="HtmlInWord.cs" />
 	<Compile Include="HtmlTransformer.cs" />
 	<Compile Include="PLiftMaker.cs" />
-	<Compile Include="PdfDictionary\PrinceXmlWrapper.cs" />
+	<Compile Include="PrinceXmlWrapper.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Resources.Designer.cs">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  <AutoGen>True</AutoGen>
+	  <DesignTime>True</DesignTime>
+	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
 	<Compile Include="SFMChangesDialog.cs">
 	  <SubType>Form</SubType>
@@ -210,8 +96,6 @@
 	<Compile Include="SfmTransformer.cs" />
 	<Compile Include="LiftTransformer.cs" />
 	<Compile Include="SfmTransformSettings.cs" />
-	<Compile Include="OpenOffice\OpenOfficeAddin.cs" />
-	<Compile Include="Xhtml\XHtml.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
@@ -239,68 +123,39 @@
 	<EmbeddedResource Include="Resources.resx">
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>
-	  <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
+	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
 	<EmbeddedResource Include="SFMChangesDialog.resx">
+	  <SubType>Designer</SubType>
 	  <DependentUpon>SFMChangesDialog.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="lift2sfm.xsl">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</EmbeddedResource>
-	<EmbeddedResource Include="LameProgressDialog.resx">
-	  <DependentUpon>LameProgressDialog.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="LexiquePro\AboutLexiquePro.resx">
-	  <DependentUpon>AboutLexiquePro.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="plift2html.xsl">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</EmbeddedResource>
-	<EmbeddedResource Include="PdfDictionary\AboutMakePdfDictionary.resx">
-	  <DependentUpon>AboutMakePdfDictionary.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="OpenOffice\lift2odfContent.xsl">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
 	<None Include="app.config" />
 	<None Include="Resources\genericAction.png" />
-	<None Include="Resources\printAction.png" />
-	<None Include="Resources\toolbox.png" />
-	<None Include="Resources\wordExport.png" />
-	<None Include="Resources\greenPrinter.png" />
-	<None Include="Resources\pdfdictionary.png" />
-	<None Include="Resources\lexiquePro.bmp" />
-	<None Include="Resources\greenLexiquePro.png" />
-	<None Include="Resources\greenPdf.png" />
-	<None Include="Resources\greenPdfDictionary.png" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="OpenOffice\ldml2odfStyles.xsl">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	<EmbeddedResource Include="lift2sfm.xsl">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</EmbeddedResource>
+	<None Include="Resources\printAction.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\toolbox.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\wordExport.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="plift2html.xsl">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-	  <Visible>False</Visible>
-	  <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-	  <Install>false</Install>
-	</BootstrapperPackage>
-	<BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-	  <Visible>False</Visible>
-	  <ProductName>.NET Framework 3.5 SP1</ProductName>
-	  <Install>true</Install>
-	</BootstrapperPackage>
-	<BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-	  <Visible>False</Visible>
-	  <ProductName>Windows Installer 3.1</ProductName>
-	  <Install>true</Install>
-	</BootstrapperPackage>
+	<None Include="Resources\greenPrinter.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\pdfdictionary.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
@@ -310,8 +165,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-	<PostBuildEvent>mkdir $(OutDir)\templates
-xcopy /y  /e ..\..\templates $(OutDir)\templates</PostBuildEvent>
-  </PropertyGroup>
 </Project>

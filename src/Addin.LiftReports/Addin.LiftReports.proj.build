@@ -1,69 +1,82 @@
 <project name="Addin.LiftReports" default="build" basedir=".">
-	<target name="build">
-		<property name="build.namespace" value="Addin.LiftReports" />
-		<property name="build.namespace.dir" value="${path::combine(project.resource.dir, build.namespace)}" />
+  <target name="build" depends="clean">
 
-		<!-- review: usesourcepath will not work as the path of the source has been changed making it invalid -->
-		<copy todir="${build.namespace.dir}" >
-			<fileset basedir=".">
-				<include name="**/*.resx" />
-			</fileset>
-			<filterchain>
-				<replacestring from="\" to="/" />
-			</filterchain>
-		</copy>
+	<copy todir="nant.resx.bak" >
+		<fileset basedir=".">
+			<include name="**/*.resx" />
+		</fileset>
+		<filterchain>
+			<replacestring from="\" to="/" />
+		</filterchain>
+	</copy>
 
-		<!-- review: copy not reqd if resx in build folder -->
-		<copy todir="${build.namespace.dir}" >
-			<fileset basedir=".">
-				<include name="Resources/*" />
-				<include name="*.png" />
-				<include name="*.htm" />
-			</fileset>
-		</copy>
+	<copy todir="nant.resx.bak" >
+		<fileset basedir=".">
+			<include name="**/*.png" />
+			<include name="**/*.htm" />
+		</fileset>
+	</copy>
 
-		<!-- review: usesourcepath not reqd if resx in build folder -->
-		<resgen todir="${build.namespace.dir}" usesourcepath="true">
-			<resources>
-				<include name="${build.namespace.dir}/*.resx" />
-			</resources>
-		</resgen>
-		<resgen todir="${build.namespace.dir}/Properties" usesourcepath="true">
-			<resources>
-				<include name="${build.namespace.dir}/Properties/*.resx" />
-			</resources>
-		</resgen>
+	<foreach item="File" property="filename">
+		<in>
+			<items>
+				<include name="nant.resx.bak/**/*.resx" />
+			</items>
+		</in>
+		<do>
+			<resgen input="${filename}" usesourcepath="true" unless="${file::get-length(filename)==0}" />
+		</do>
+	</foreach>
 
-		<csc target="library"
-			output="${project.output.dir}/Addin.LiftReports.dll"
-			doc="${project.output.dir}/doc/Addin.LiftReports.xml"
-			debug="${build.debug}"
-			define="${build.defines}">
-			<nowarn>
-				<warning number="618,672,1591"/>
-				<warning number="1699" if="${runtime.version=='2.0'}"/>
-			</nowarn>
-			<sources basedir=".">
-				<include name="**/*.cs" />
-			</sources>
-			<references basedir="${project.output.dir}">
-				<include name="Palaso.dll" />
-				<include name="PalasoReporting.dll" />
-				<include name="PalasoUIWindowsForms.dll" />
-				<include name="Mono.Addins.exe" />
-				<include name="System.Windows.Forms.dll" />
-				<include name="System.Drawing.dll" />
-				<include name="WeSay.AddinLib.dll" />
-				<include name="WeSay.Foundation.dll" />
-				<include name="NVelocity.dll" />
-			</references>
-			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
-				<include name="${build.namespace.dir}/**/*.resources" />
-			</resources>
-		</csc>
-	</target>
+	<copy todir="." >
+		<fileset basedir="nant.resx.bak">
+			<include name="**/*.resources" />
+		</fileset>
+	</copy>
 
-	<target name="clean">
-	</target>
+	<csc target="library"
+		output="${project.output.dir}/Addin.LiftReports.dll"
+		doc="${project.output.dir}/doc/Addin.LiftReports.xml"
+		debug="${build.debug}"
+		define="${build.defines}">
+	  <nowarn>
+		<warning number="618,672,1591"/>
+		<warning number="1699" if="${runtime.version=='2.0'}"/>
+	  </nowarn>
+	  <sources basedir=".">
+		<include name="**/*.cs" />
+	  </sources>
+	  <references basedir="${project.output.dir}">
+		<include name="Palaso.dll" />
+		<include name="PalasoReporting.dll" />
+		<include name="PalasoUIWindowsForms.dll" />
+		<include name="Mono.Addins.exe" />
+		<include name="System.Windows.Forms.dll" />
+		<include name="System.Drawing.dll" />
+		<include name="WeSay.AddinLib.dll" />
+		<include name="WeSay.Foundation.dll" />
+		<include name="NVelocity.dll" />
+	  </references>
+	  <resources dynamicprefix="true" basedir="..">
+		  <include name="**/*.resources" />
+	  </resources>
+	</csc>
+  </target>
+
+  <target name="clean">
+	<delete>
+		<fileset>
+			<include name="**/*.resources" />
+			<include name="nant.resx.bak/**" />
+			<include name="nant.resx.bak" />
+		</fileset>
+	</delete>
+  </target>
+
+  <target name="package">
+	<copy todir="${package.src.dir}/icu.net">
+	  <fileset refid="source-files" />
+	</copy>
+  </target>
 
 </project>
