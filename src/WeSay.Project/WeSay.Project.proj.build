@@ -1,77 +1,79 @@
 <project name="WeSay.Project" default="build" basedir=".">
-	<target name="build">
-		<property name="build.namespace" value="WeSay.Project" />
-		<property name="build.namespace.dir" value="${path::combine(project.resource.dir, build.namespace)}" />
+  <target name="build" depends="clean">
 
-		<!-- review: usesourcepath will not work as the path of the source has been changed making it invalid -->
-		<copy todir="${build.namespace.dir}" >
-			<fileset basedir=".">
-				<include name="**/*.resx" />
-			</fileset>
-			<filterchain>
-				<replacestring from="\" to="/" />
-			</filterchain>
-		</copy>
+	<copy todir="nant.resx.bak" >
+		<fileset basedir=".">
+			<include name="**/*.resx" />
+		</fileset>
+		<filterchain>
+			<replacestring from="\" to="/" />
+		</filterchain>
+	</copy>
 
-		<copy todir="${build.namespace.dir}" >
-			<fileset basedir=".">
-				<include name="**/*.xsl" />
-			</fileset>
-		</copy>
+	<foreach item="File" property="filename">
+		<in>
+			<items>
+				<include name="nant.resx.bak/**/*.resx" />
+			</items>
+		</in>
+		<do>
+			<resgen input="${filename}" usesourcepath="true" unless="${file::get-length(filename)==0}" />
+		</do>
+	</foreach>
 
-		<copy todir="${build.namespace.dir}" >
-			<fileset basedir=".">
-				<include name="Resources/*" />
-			</fileset>
-		</copy>
+	<copy todir="." >
+		<fileset basedir="nant.resx.bak">
+			<include name="**/*.resources" />
+		</fileset>
+	</copy>
 
-		<!-- review: move resx into same folder as .build or Resources -->
-		<!-- could consider using the cd task from nantcontrib -->
-		<resgen todir="${build.namespace.dir}/Properties" usesourcepath="true">
-			<resources>
-				<include name="${build.namespace.dir}/Properties/*.resx" />
-			</resources>
-		</resgen>
+	<csc target="library"
+		output="${project.output.dir}/WeSay.Project.dll"
+		doc="${project.output.dir}/doc/WeSay.Project.xml"
+		debug="${build.debug}"
+		define="${build.defines}">
+	  <nowarn>
+		<warning number="618,672,1591"/>
+		<warning number="1699" if="${runtime.version=='2.0'}"/>
+	  </nowarn>
+	  <sources basedir=".">
+		<include name="**/*.cs" />
+	  </sources>
+	  <references basedir="${project.output.dir}">
+		<include name="Palaso.dll" />
+		<include name="PalasoReporting.dll" />
+		<include name="PalasoUIWindowsForms.dll" />
+		<include name="System.Drawing.dll" />
+		<include name="System.Windows.Forms.dll" />
+		<include name="WeSay.Foundation.dll" />
+		<include name="WeSay.Data.dll" />
+		<include name="WeSay.AddinLib.dll" />
+		<include name="LexicalModel.dll" />
+		<include name="LiftIO.dll" />
+		<include name="NetReflector.dll" />
+		<include name="PicoContainer.dll" />
+	  </references>
+	  <resources dynamicprefix="true" prefix="WeSay" basedir="..">
+		  <include name="**/*.resources" />
+		  <include name="**/*.xsl" />
+	  </resources>
+	</csc>
+  </target>
 
-		<csc target="library"
-			output="${project.output.dir}/WeSay.Project.dll"
-			doc="${project.output.dir}/doc/WeSay.Project.xml"
-			debug="${build.debug}"
-			define="${build.defines}">
-			<nowarn>
-				<warning number="618,672,1591"/>
-				<warning number="1699" if="${runtime.version=='2.0'}"/>
-			</nowarn>
-			<sources basedir=".">
-				<include name="**/*.cs" />
-			</sources>
-			<references basedir="${project.output.dir}">
-				<include name="Mono.Addins.exe" />
-				<include name="Palaso.dll" />
-				<include name="Palaso.Lift.dll" />
-				<include name="Palaso.DictionaryServices.dll" />
-				<include name="PalasoUIWindowsForms.dll" />
-				<include name="System.Drawing.dll" />
-				<include name="System.Windows.Forms.dll" />
-				<include name="WeSay.Foundation.dll" />
-				<include name="WeSay.Data.dll" />
-				<include name="WeSay.AddinLib.dll" />
-				<include name="WeSay.UI.dll" />
-				<include name="LexicalModel.dll" />
-				<include name="LiftIO.dll" />
-				<include name="NetReflector.dll" />
-				<include name="Autofac.dll" />
-				<include name="LibChorus.dll" />
-				<include name="Chorus.exe" />
-			</references>
-			<resources prefix="${build.namespace}" basedir="${build.namespace.dir}" dynamicprefix="true">
-				<include name="${build.namespace.dir}/**/*.resources" />
-				<include name="**/*.xsl" /> <!-- review: Why isn't this included in a resx -->
-			</resources>
-		</csc>
-	</target>
+  <target name="clean">
+	<delete>
+		<fileset>
+			<include name="**/*.resources" />
+			<include name="nant.resx.bak/**" />
+			<include name="nant.resx.bak" />
+		</fileset>
+	</delete>
+  </target>
 
-	<target name="clean">
-	</target>
+  <target name="package">
+	<copy todir="${package.src.dir}/icu.net">
+	  <fileset refid="source-files" />
+	</copy>
+  </target>
 
 </project>

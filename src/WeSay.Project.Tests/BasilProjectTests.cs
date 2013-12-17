@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using Palaso.i18n;
-using Palaso.TestUtilities;
-using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
+using Palaso.UI.WindowsForms.i8n;
+using WeSay.Foundation.Tests;
 
 namespace WeSay.Project.Tests
 {
@@ -39,7 +35,7 @@ namespace WeSay.Project.Tests
 		{
 			Directory.CreateDirectory(_projectDirectory);
 			Directory.CreateDirectory(GetCommonDirectory());
-			string pathToStringCatalogInProjectDir = Path.Combine(GetCommonDirectory(), "wesay.th.po");
+			string pathToStringCatalogInProjectDir = Path.Combine(GetCommonDirectory(), "th.po");
 			using (StreamWriter writer = File.CreateText(pathToStringCatalogInProjectDir))
 			{
 				writer.Write(TestResources.poStrings);
@@ -53,30 +49,7 @@ namespace WeSay.Project.Tests
 			Directory.CreateDirectory(GetCommonDirectory());
 			string pathToWritingSystemPrefs = Path.Combine(GetCommonDirectory(),
 														   "WritingSystemPrefs.xml");
-			CreateSampleWritingSystemFile(pathToWritingSystemPrefs);
-		}
-
-		private void CreateSampleWritingSystemFile(string path)
-		{
-			using (StreamWriter writer = File.CreateText(path))
-			{
-				writer.Write(@"<?xml version='1.0' encoding='utf-8'?>
-					<WritingSystemCollection>
-					  <members>
-						<WritingSystem>
-						  <FontName>Courier New</FontName>
-						  <FontSize>10</FontSize>
-						  <Id>PretendAnalysis</Id>
-						</WritingSystem>
-						<WritingSystem>
-						  <FontName>Courier New</FontName>
-						  <FontSize>20</FontSize>
-						  <Id>PretendVernacular</Id>
-						</WritingSystem>
-					  </members>
-					</WritingSystemCollection>");
-				writer.Close();
-			}
+			WritingSystemTests.WriteSampleWritingSystemFile(pathToWritingSystemPrefs);
 		}
 
 		[TearDown]
@@ -86,7 +59,7 @@ namespace WeSay.Project.Tests
 			{
 				BasilProject.Project.Dispose();
 			}
-			TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
+			Foundation.Tests.TestHelpers.TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
 		}
 
 		//  not relevant anymore
@@ -109,7 +82,7 @@ namespace WeSay.Project.Tests
 			InitializeSampleProject();
 
 			BasilProject project = new BasilProject();
-			project.UiOptions.Language = "th";
+			project.StringCatalogSelector = "th";
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 			Assert.AreEqual("deng", StringCatalog.Get("red"));
 		}
@@ -119,11 +92,12 @@ namespace WeSay.Project.Tests
 		{
 			InitializeSampleProject();
 			BasilProject project = new BasilProject();
-			project.UiOptions.Language = "en";
+			project.StringCatalogSelector = "en";
 			project.LoadFromProjectDirectoryPath(_projectDirectory);
 
 			Assert.AreEqual("red", StringCatalog.Get("red"));
 		}
+
 
 	}
 }

@@ -2,14 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using Chorus;
 using Exortech.NetReflector;
-using Palaso.DictionaryServices.Model;
-using Palaso.i18n;
-using Palaso.Lift;
-using Palaso.WritingSystems;
+using Palaso.UI.WindowsForms.i8n;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
@@ -17,7 +13,6 @@ namespace WeSay.Project
 	public class ViewTemplate: List<Field>
 	{
 		private string _id = "Default View Template";
-		private bool _doWantGhosts=true;
 
 		/// <summary>
 		/// For serialization only
@@ -49,12 +44,12 @@ namespace WeSay.Project
 
 		//todo: this is simplistic. Switch to the plural form
 		[Obsolete]
-		public WritingSystemDefinition HeadwordWritingSystem
+		public WritingSystem HeadwordWritingSystem
 		{
 			get { return GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit); }
 		}
 
-		public IList<WritingSystemDefinition> HeadwordWritingSystems
+		public IList<WritingSystem> HeadwordWritingSystems
 		{
 			get
 			{
@@ -242,25 +237,6 @@ namespace WeSay.Project
 			MoveToFirstInClass(def);
 			MoveToFirstInClass(GetField(Field.FieldNames.EntryLexicalForm.ToString()));
 			MoveToFirstInClass(GetField(Field.FieldNames.ExampleSentence.ToString()));
-
-			//In Nov 2008 (v 0.5) we made the note field multi-paragraph
-			Field note = GetField(PalasoDataObject.WellKnownProperties.Note);
-			if (!note.IsMultiParagraph)
-			{
-				note.IsMultiParagraph = true;
-			}
-
-			//In March 2009 we moved Sense.LiteralMeaning --> Entry.literal-meaning
-			//the default template has the new one, so we just have to remove the old
-			//the parser (builder) does the actual data moving/renaming for existing data
-			Field oldLitMeaning = GetField("LiteralMeaning");
-			if (oldLitMeaning != null)
-			{
-				Field newLitMeaning = GetField(LexEntry.WellKnownProperties.LiteralMeaning);
-				newLitMeaning.Enabled = oldLitMeaning.Enabled;
-				RemoveByFieldName(this, "LiteralMeaning");
-			}
-
 		}
 
 		/// <summary>
@@ -321,13 +297,13 @@ namespace WeSay.Project
 			}
 		}
 
-		public static ViewTemplate MakeMasterTemplate(IWritingSystemRepository writingSystems)
+		public static ViewTemplate MakeMasterTemplate(WritingSystemCollection writingSystems)
 		{
 			List<String> defaultVernacularSet = new List<string>();
-			defaultVernacularSet.Add(WritingSystemInfo.IdForUnknownVernacular);
+			defaultVernacularSet.Add(WritingSystem.IdForUnknownVernacular);
 
 			List<String> defaultAnalysisSet = new List<string>();
-			defaultAnalysisSet.Add(WritingSystemInfo.IdForUnknownAnalysis);
+			defaultAnalysisSet.Add(WritingSystem.IdForUnknownAnalysis);
 
 			ViewTemplate masterTemplate = new ViewTemplate();
 
@@ -382,19 +358,19 @@ namespace WeSay.Project
 			glossField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(glossField);
 
-			Field literalMeaningField = new Field("literal-meaning", "LexEntry", defaultAnalysisSet);
+			Field literalMeaningField = new Field("LiteralMeaning", "LexSense", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Literal Meaning",
 							  "The label for the field showing the literal meaning of idiom or proverb.");
-			literalMeaningField.DisplayName = "Literal Meaning";
+			literalMeaningField.DisplayName = "Lit Meaning";
 			literalMeaningField.Description = "Literal meaning of an idiom.";
 			literalMeaningField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			literalMeaningField.Enabled = false;
 			literalMeaningField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(literalMeaningField);
 
-			Field noteField = new Field(PalasoDataObject.WellKnownProperties.Note,
-										"PalasoDataObject",
+			Field noteField = new Field(WeSayDataObject.WellKnownProperties.Note,
+										"WeSayDataObject",
 										defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Note", "The label for the field showing a note.");
@@ -404,8 +380,6 @@ namespace WeSay.Project
 			noteField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			noteField.Enabled = true;
 			noteField.IsSpellCheckingEnabled = true;
-			noteField.IsMultiParagraph = true;
-
 			masterTemplate.Add(noteField);
 
 			//            Field entryNoteField = new Field(LexEntry.WellKnownProperties.Note, "LexEntry", defaultAnalysisSet);
@@ -431,7 +405,7 @@ namespace WeSay.Project
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Picture", "The label for the field showing a picture.");
 			pictureField.DisplayName = "Picture";
-			pictureField.Description = "An image corresponding to the sense.  This field will automatically search SIL's image library, 'The Art of Reading', if it is in the CD drive or copied to c:\\art of reading.";
+			pictureField.Description = "An image corresponding to the sense.";
 			pictureField.DataTypeName = "Picture";
 			pictureField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			pictureField.Enabled = true;
@@ -475,7 +449,7 @@ namespace WeSay.Project
 			translationField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(translationField);
 
-			Field ddp4Field = new Field(LexSense.WellKnownProperties.SemanticDomainDdp4, "LexSense", defaultAnalysisSet);
+			Field ddp4Field = new Field("SemanticDomainDdp4", "LexSense", defaultAnalysisSet);
 
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Sem Dom", "The label for the field showing Semantic Domains");
@@ -513,7 +487,7 @@ namespace WeSay.Project
 							  @"The label for the field showing a 'confer' relation (\cf in MDF).");
 			crossRefField.DisplayName = "Cross Reference";
 			crossRefField.Description =
-					"Provides a single cross reference at this time (we need to do more work to allow it to hold multiple references... let us know if this is a priority for you.)";
+					"Provides a field for identifying the form from which an entry is derived.  You may use this in place of the MDF subentry.  In a future version WeSay may support directly listing derived forms from the base form.";
 			crossRefField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			crossRefField.Enabled = false;
 			masterTemplate.Add(crossRefField);
@@ -571,7 +545,7 @@ namespace WeSay.Project
 
 		#endregion
 
-		public void OnWritingSystemIDChange(string from, string to)
+		public void ChangeWritingSystemId(string from, string to)
 		{
 			foreach (Field field in Fields)
 			{
@@ -589,22 +563,22 @@ namespace WeSay.Project
 			return false;
 		}
 
-		public WritingSystemDefinition GetDefaultWritingSystemForField(string fieldName)
+		public WritingSystem GetDefaultWritingSystemForField(string fieldName)
 		{
-			IWritingSystemRepository writingSystems = BasilProject.Project.WritingSystems;
-			WritingSystemDefinition listWritingSystem = null;
+			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
+			WritingSystem listWritingSystem = null;
 			Field field = GetField(fieldName);
 			//Debug.Assert(field != null, fieldName + "not found.");
 			if (field != null)
 			{
 				if (field.WritingSystemIds.Count > 0)
 				{
-					listWritingSystem = writingSystems.Get(field.WritingSystemIds[0]);
+					listWritingSystem = writingSystems[field.WritingSystemIds[0]];
 				}
 			}
 			if (listWritingSystem == null)
 			{
-				listWritingSystem = writingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
+				listWritingSystem = writingSystems.UnknownVernacularWritingSystem;
 			}
 			return listWritingSystem;
 		}
@@ -666,68 +640,5 @@ namespace WeSay.Project
 				Fields.Insert(newIndexAmongAllFields, field);
 			}
 		}
-
-		public GhostingRule GetGhostingRuleForField(string fieldName)
-		{
-			return new GhostingRule(DoWantGhosts);
-		}
-
-		public bool DoWantGhosts
-		{
-			get { return _doWantGhosts; }
-
-			set { _doWantGhosts = value; }
-		}
-
-		public IEnumerable<string> GetHeadwordWritingSystemIds()
-		{
-			Field fieldControllingHeadwordOutput =
-				GetField(LexEntry.WellKnownProperties.Citation);
-			if (fieldControllingHeadwordOutput == null || !fieldControllingHeadwordOutput.Enabled)
-			{
-				fieldControllingHeadwordOutput =
-					GetField(LexEntry.WellKnownProperties.LexicalUnit);
-				if (fieldControllingHeadwordOutput == null)
-				{
-					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
-				}
-			}
-			return WritingSystems.FilterForTextIds(fieldControllingHeadwordOutput.WritingSystemIds);
-		}
-
-		public IWritingSystemRepository WritingSystems
-		{
-			get { return BasilProject.Project.WritingSystems; }
-		}
-
-		public IEnumerable<Chorus.IWritingSystem> CreateListForChorus()
-		{
-			var list = new List<Chorus.IWritingSystem>();
-		   //for now, chorus wants the default to be the first one.  So lets just
-			//use the first ws of the notefield for that purpose (could improve user control
-			//over this later).
-			var noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);
-			list.Insert(0,new ChorusWritingSystemAdaptor(noteWritingSystem));
-			foreach (var system in WritingSystems.TextWritingSystems)
-			{
-				if(system!=noteWritingSystem)
-				{
-					list.Add(new ChorusWritingSystemAdaptor(system));
-				}
-			}
-			return list;
-		 }
-	}
-
-	/// <summary>
-	/// this may get more complicated someday
-	/// </summary>
-	public class GhostingRule
-	{
-		public GhostingRule(bool show)
-		{
-			ShowGhost = show;
-		}
-		public bool ShowGhost{ get; set;}
 	}
 }

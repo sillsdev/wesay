@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Autofac;
-using Palaso.Reporting;
 
 namespace WeSay.ConfigTool
 {
@@ -21,25 +20,25 @@ namespace WeSay.ConfigTool
 			_tasksButton.Tag = m.View;
 			_areaControls.Add((ConfigurationControlBase) _tasksButton.Tag);
 
-			_writingSystemButton.Tag = context.Resolve<WritingSystemSetup>();
+			_writingSystemButton.Tag = new WritingSystemSetup();
 			_areaControls.Add((ConfigurationControlBase) _writingSystemButton.Tag);
 
-			_fieldsButton.Tag = context.Resolve<FieldsControl>();
+			_fieldsButton.Tag = new FieldsControl();
 			_areaControls.Add((ConfigurationControlBase) _fieldsButton.Tag);
 
-			_interfaceLanguageButton.Tag = context.Resolve<InterfaceLanguageControl>();
+			_interfaceLanguageButton.Tag = new InterfaceLanguageControl();
 			_areaControls.Add((ConfigurationControlBase) _interfaceLanguageButton.Tag);
 
-			_actionsButton.Tag = context.Resolve <ActionsControl>();
+			_actionsButton.Tag = new ActionsControl();
 			_areaControls.Add((ConfigurationControlBase) _actionsButton.Tag);
 
-			_backupButton.Tag = context.Resolve<BackupPlanControl>();
+			_backupButton.Tag = new BackupPlanControl();
 			_areaControls.Add((ConfigurationControlBase) _backupButton.Tag);
 
-//            _chorusButton.Tag = context.Resolve<ChorusControl>();
-//            _areaControls.Add((ConfigurationControlBase)_chorusButton.Tag);
+			_chorusButton.Tag = new ChorusControl();
+			_areaControls.Add((ConfigurationControlBase)_chorusButton.Tag);
 
-			_optionsListButton.Tag = context.Resolve<OptionListControl>();
+		   _optionsListButton.Tag = new OptionListControl();
 			_areaControls.Add((ConfigurationControlBase) _optionsListButton.Tag);
 
 			SetStyle(ControlStyles.ResizeRedraw, true); //makes OnPaint work
@@ -82,12 +81,10 @@ namespace WeSay.ConfigTool
 				c.SetOtherStuff();
 
 				_areaHeader.Text = "";
-				_areaHeader.Font = new Font("Tahoma", 10F, FontStyle.Bold);
+				_areaHeader.Font = new Font("Tahoma", 11F, FontStyle.Bold);
 				_areaHeader.AppendText(button.Text + ": ");
-				_areaHeader.SelectionFont = new Font("Tahoma", 10F, FontStyle.Regular);
+				_areaHeader.SelectionFont = new Font("Tahoma", 11F, FontStyle.Regular);
 				_areaHeader.AppendText(c.Header);
-
-				UsageReporter.SendNavigationNotice("settings/"+c.NameForUsageReporting);
 			}
 		}
 

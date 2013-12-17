@@ -1,7 +1,6 @@
+using System;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
-using Palaso.IO;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
@@ -34,10 +33,10 @@ namespace WeSay.LexicalTools.Tests
 			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			WeSayProjectTestHelper.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystemId;
 
-			_missingFieldName = LexSense.WellKnownProperties.Definition;
+			this._missingFieldName = LexSense.WellKnownProperties.Definition;
 
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			_lexicalForm = "vernacular";
@@ -69,13 +68,13 @@ namespace WeSay.LexicalTools.Tests
 										_remainingCountText,
 										_referenceCountText,
 										_viewTemplate,
-										_fieldsToShow, string.Empty);
+										_fieldsToShow);
 		}
 
-		private MissingInfoTask CreateMissingInfoTask(LexEntryRepository repository, string missingInfoField, string label, string longLabel, string description, string remainingCountText, string referenceCountText, ViewTemplate template, string fieldsToShow, string writingSystemsToMatchCommaSeparated)
+		private MissingInfoTask CreateMissingInfoTask(LexEntryRepository repository, string missingInfoField, string label, string longLabel, string description, string remainingCountText, string referenceCountText, ViewTemplate template, string fieldsToShow)
 		{
-			MissingInfoConfiguration config = MissingInfoConfiguration.CreateForTests( missingInfoField,  label,  longLabel,  description,  remainingCountText,  referenceCountText,  fieldsToShow, writingSystemsToMatchCommaSeparated);
-			return new MissingInfoTask(config, repository, template, new TaskMemoryRepository());
+			MissingInfoConfiguration config = MissingInfoConfiguration.CreateForTests( missingInfoField,  label,  longLabel,  description,  remainingCountText,  referenceCountText,  fieldsToShow);
+			return new MissingInfoTask(config, repository, template);
 		}
 
 		[TearDown]
@@ -93,8 +92,8 @@ namespace WeSay.LexicalTools.Tests
 
 
 
-		//broke around changeset e9988de5d599, (20Mar2009)when I (JH) added the ability to specify which writing system to filter on
-		[Test, Ignore("broken test which is based on some unwritten assumption...")]
+
+		[Test]
 		public void Activate_Refreshes()
 		{
 			MissingInfoTask task = (MissingInfoTask) _task;
@@ -102,7 +101,8 @@ namespace WeSay.LexicalTools.Tests
 			try
 			{
 				Assert.IsTrue(
-						((MissingInfoControl)task.Control).EntryViewControl.RtfContentsOfPreviewForTests.Contains(_lexicalForm));
+						((MissingInfoControl) task.Control).EntryViewControl.ControlFormattedView.
+								Text.Contains(_lexicalForm));
 
 				Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 			}
@@ -110,8 +110,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				task.Deactivate();
 			}
-			_lexEntryRepository.CreateItem();  //REVIEW: So, connect the dots for me...  Why should creating an
-												// item here make the list switch to that item after the Activate()? (JH)
+			_lexEntryRepository.CreateItem();
 			task.Activate();
 			try
 			{
@@ -143,7 +142,7 @@ namespace WeSay.LexicalTools.Tests
 													   _remainingCountText,
 													   _referenceCountText,
 													   viewTemplate,
-													   "Single", string.Empty);
+													   "Single");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Single"));
 			Assert.AreEqual(false, task.ViewTemplate.Contains("SingleField"));
 			Assert.AreEqual(false, task.ViewTemplate.Contains("Field"));
@@ -166,7 +165,7 @@ namespace WeSay.LexicalTools.Tests
 													   _remainingCountText,
 													   _referenceCountText,
 													   viewTemplate,
-													   "First Second", string.Empty);
+													   "First Second");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("First"));
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Second"));
 			Assert.AreEqual(false, task.ViewTemplate.Contains("FirstSecond"));
@@ -192,7 +191,7 @@ namespace WeSay.LexicalTools.Tests
 													   _remainingCountText,
 													   _referenceCountText,
 													   viewTemplate,
-													   "First Second Third", string.Empty);
+													   "First Second Third");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("First"));
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Second"));
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Third"));
@@ -216,7 +215,7 @@ namespace WeSay.LexicalTools.Tests
 													   _remainingCountText,
 													   _referenceCountText,
 													   viewTemplate,
-													   "PrefixDummy Dummy", string.Empty);
+													   "PrefixDummy Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
 			Assert.AreEqual(true, task.ViewTemplate.Contains("PrefixDummy"));
 		}
@@ -237,7 +236,7 @@ namespace WeSay.LexicalTools.Tests
 													   _remainingCountText,
 													   _referenceCountText,
 													   viewTemplate,
-													   "Dummy", string.Empty);
+													   "Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
 			Assert.AreEqual(false, task.ViewTemplate.Contains("PrefixDummy"));
 		}
@@ -260,7 +259,7 @@ namespace WeSay.LexicalTools.Tests
 													   _remainingCountText,
 													   _referenceCountText,
 													   viewTemplate,
-													   "PrefixDummy Dummy", string.Empty);
+													   "PrefixDummy Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
 		}
 
@@ -283,7 +282,7 @@ namespace WeSay.LexicalTools.Tests
 								_remainingCountText,
 								_referenceCountText,
 								_viewTemplate,
-								_fieldsToShow, string.Empty);
+								_fieldsToShow);
 
 					Assert.AreEqual(0, task.ExactCount);
 					task.Activate();
@@ -291,17 +290,5 @@ namespace WeSay.LexicalTools.Tests
 				}
 			}
 		}
-
-//  in progress      [Test]
-//        public void OneSenseFromGatherBySemDom_ShowsOnlyOneMeaning()
-//        {
-//            LexEntry entry = CreateEmptyEntryWithOneSense();
-//            LexSense sense = entry.Senses[0];
-//            var sds = sense.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
-//            var list = WeSay.Project.WeSayWordsProject.Project.GetOptionsList(LexSense.WellKnownProperties.SemanticDomainsDdp4);
-//            sds.Add(list.Options[0].Key);
-//
-//
-//        }
 	}
 }

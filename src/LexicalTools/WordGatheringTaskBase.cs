@@ -1,25 +1,20 @@
 using System;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
-using System.Linq;
 
 namespace WeSay.LexicalTools
 {
 	public abstract class WordGatheringTaskBase: TaskBase
 	{
-		private readonly WritingSystemDefinition _lexicalFormWritingSystem;
+		private readonly WritingSystem _lexicalFormWritingSystem;
 		private readonly ViewTemplate _viewTemplate;
 
 		protected WordGatheringTaskBase(ITaskConfiguration config,
 										LexEntryRepository lexEntryRepository,
-										ViewTemplate viewTemplate,
-										TaskMemoryRepository taskMemoryRepository)
+										ViewTemplate viewTemplate)
 				: base( config,
-						lexEntryRepository, taskMemoryRepository)
+						lexEntryRepository)
 		{
 			if (viewTemplate == null)
 			{
@@ -29,26 +24,15 @@ namespace WeSay.LexicalTools
 			_viewTemplate = viewTemplate;
 			Field lexicalFormField =
 					viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			IWritingSystemRepository writingSystems = BasilProject.Project.WritingSystems;
+			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
 			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
 			{
-				_lexicalFormWritingSystem = writingSystems.Get(WritingSystemInfo.IdForUnknownVernacular);
+				_lexicalFormWritingSystem = writingSystems.UnknownVernacularWritingSystem;
 			}
 			else
 			{
-
-				_lexicalFormWritingSystem = GetFirstTextWritingSystemOfField(lexicalFormField);
+				_lexicalFormWritingSystem = writingSystems[lexicalFormField.WritingSystemIds[0]];
 			}
-		}
-
-		protected WritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
-		{
-			var ids = BasilProject.Project.WritingSystems.FilterForTextIds(field.WritingSystemIds);
-			if(ids.Count()==0)
-			{
-				throw new ConfigurationException(string.Format("The field {0} must have at least one non-audio writing system.", field.DisplayName));
-			}
-			return BasilProject.Project.WritingSystems.Get(ids.First());
 		}
 
 		public override DashboardGroup Group
@@ -70,7 +54,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public WritingSystemDefinition WritingSystemUserIsTypingIn
+		public WritingSystem WordWritingSystem
 		{
 			get
 			{

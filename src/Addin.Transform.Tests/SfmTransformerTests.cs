@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using LiftIO.Validation;
 using NUnit.Framework;
+using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.Project;
 
@@ -15,7 +16,7 @@ namespace Addin.Transform.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayProjectTestHelper.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 			_addin = new SfmTransformer();
 			_addin.LaunchAfterTransform = false;
 		}
@@ -49,9 +50,8 @@ namespace Addin.Transform.Tests
 			LaunchWithConversionString("");
 		}
 
-/* NOMORELOCKING
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (IOException))]
+		[ExpectedException(typeof (IOException))]
 		public void ThrowsMeaningfulExceptionIfOutputFileIsLocked()
 		{
 			try
@@ -65,20 +65,13 @@ namespace Addin.Transform.Tests
 				File.SetAttributes(_addin.PathToOutput, default(FileAttributes));
 			}
 		}
-*/
+
 		[Test]
 		public void ConvertsGlossMarker()
 		{
 			string result = LaunchWithConversionString("");
 			Assert.IsTrue(result.Contains("\\ge"));
 			Assert.IsFalse(result.Contains("g_en"));
-		}
-
-		[Test]
-		public void CanSwapLinesWithinRecord()
-		{
-			string result = LaunchWithConversionString(@"(\\ge.*?\n)(.*\n)*?(\\dt.*?\n) $3$2$1");
-			Assert.IsTrue(result.Contains("\\dt 11/Feb/2008" + Environment.NewLine + "\\sd 1.1" + Environment.NewLine + "\\ge hello" + Environment.NewLine));
 		}
 
 		/// <summary>
@@ -283,7 +276,7 @@ namespace Addin.Transform.Tests
 					<relation type='BaseForm' ref='two'/>
 				   <sense>
 						<gloss lang='en'><text>hello</text></gloss>
-						<trait name='semantic-domain-ddp4' value='1.1' />
+						<trait name='SemanticDomainDdp4' value='1.1' />
 					 </sense>
 
 				</entry>

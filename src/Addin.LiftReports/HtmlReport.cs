@@ -51,7 +51,7 @@ namespace Addin.LiftReports
 			}
 			catch (Exception e)
 			{
-				ErrorReport.NotifyUserOfProblem("Problem creating report : " + e);
+				ErrorReport.ReportNonFatalMessage("Problem creating report : " + e);
 			}
 			return null;
 		}

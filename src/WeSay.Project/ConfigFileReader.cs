@@ -3,36 +3,25 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml.XPath;
 using Autofac;
-using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
 
 
 namespace WeSay.Project
 {
 	public class ConfigFileReader
 	{
-		private readonly string _currentXmlConfiguration;
-		private readonly string _defaultXmlConfiguration;
+		private readonly string _xmlConfiguration;
 		private readonly TaskTypeCatalog _taskTypes;
 
-		public ConfigFileReader(string currentXmlConfiguration, string defaultXmlConfiguration, TaskTypeCatalog taskTypes)
+		public ConfigFileReader(string xmlConfiguration, TaskTypeCatalog taskTypes)
 		{
-			_currentXmlConfiguration = currentXmlConfiguration;
-			_defaultXmlConfiguration = defaultXmlConfiguration;
+			_xmlConfiguration = xmlConfiguration;
 			_taskTypes = taskTypes;
 		}
 
 		public IEnumerable<ITaskConfiguration> GetTasksConfigurations(IContext context)
 		{
+			XPathDocument doc = new XPathDocument(new StringReader(_xmlConfiguration));
 			var configs = new List<ITaskConfiguration>();
-			GetTasks(_currentXmlConfiguration, context, configs);
-			GetTasks(_defaultXmlConfiguration, context, configs);
-			return configs;
-		}
-
-		private void GetTasks(string xml, IContext context, List<ITaskConfiguration> configs)
-		{
-			XPathDocument doc = new XPathDocument(new StringReader(xml));
 			XPathNavigator navigator = doc.CreateNavigator();
 			XPathNodeIterator taskListNodeIterator = navigator.Select("configuration/tasks/task");
 			foreach (XPathNavigator taskNode in taskListNodeIterator)
@@ -40,12 +29,10 @@ namespace WeSay.Project
 				ITaskConfiguration configuration = CreateTaskConfiguration(context,_taskTypes, taskNode);
 				if (configuration != null)
 				{
-					if(!configs.Exists(t=> t.AreEquivalent(configuration)))
-					{
-						configs.Add(configuration);
-					}
+					configs.Add(configuration);
 				}
 			}
+			return configs;
 		}
 
 
@@ -112,7 +99,7 @@ namespace WeSay.Project
 		}
 		*/
 		// review: this might belong in a nother file...
-		public static IEnumerable<ViewTemplate> CreateViewTemplates(string xmlConfiguration, IWritingSystemRepository writingSystems)
+		public static IEnumerable<ViewTemplate> CreateViewTemplates(string xmlConfiguration)
 		{
 			XPathDocument doc = new XPathDocument(new StringReader(xmlConfiguration));
 
@@ -121,20 +108,15 @@ namespace WeSay.Project
 			if (navigator != null)
 			{
 				bool hasviewTemplate = false;
-
-				// String.Empty fails on mono 2.4. See http://projects.palaso.org/issues/show/276
-				XPathNodeIterator componentList = navigator.SelectChildren(
-					"viewTemplate", string.Empty
-				);
-				ViewTemplate factoryTemplate = ViewTemplate.MakeMasterTemplate(writingSystems);
-
+				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty,
+																		   string.Empty);
 				foreach (XPathNavigator component in componentList)
 				{
 					Debug.Assert(component.Name == "viewTemplate");
 					hasviewTemplate = true;
 					ViewTemplate template = new ViewTemplate();
 					template.LoadFromString(component.OuterXml);
-					ViewTemplate.UpdateUserViewTemplate(factoryTemplate, template);
+
 					yield return template;
 				}
 				Debug.Assert(hasviewTemplate,

@@ -1,12 +1,7 @@
 using System.Drawing;
 using NUnit.Framework;
-using Palaso.WritingSystems;
+using WeSay.Foundation;
 using WeSay.Project;
-using WeSay.Project;
-using Palaso.Lift;
-using WeSay.LexicalModel.Foundation;
-using WeSay.Project;
-using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
 {
@@ -16,7 +11,7 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			BasilProjectTestHelper.InitializeForTests();
+			BasilProject.InitializeForTests();
 		}
 
 		[Test]
@@ -24,7 +19,7 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			WeSayTextBox widget =
-					new WeSayTextBox(WritingSystemDefinition.FromLanguage("qaa"), null);
+					new WeSayTextBox(new WritingSystem("vernacular", new Font("Arial", 12)), null);
 			new TextBinding(text, "vernacular", widget);
 
 			text["vernacular"] = "hello";
@@ -38,7 +33,7 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			WeSayTextBox widget =
-					new WeSayTextBox(WritingSystemDefinition.FromLanguage("qaa"), null);
+					new WeSayTextBox(new WritingSystem("vernacular", new Font("Arial", 12)), null);
 
 			var binding = new TextBinding(text, "vernacular", widget);
 

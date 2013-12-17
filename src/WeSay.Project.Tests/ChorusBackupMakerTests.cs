@@ -1,14 +1,12 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Xml;
 using Chorus.sync;
-using Chorus.Utilities;
-using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
-using Palaso.Progress.LogBox;
-using Palaso.TestUtilities;
-using Palaso.Xml;
+using WeSay.Foundation.Tests.TestHelpers;
+using WeSay.Project;
 
 namespace WeSay.Project.Tests
 {
@@ -24,7 +22,7 @@ namespace WeSay.Project.Tests
 			{
 				_projDir = new ProjectDirectorySetupForTesting("");
 
-				_backupMaker = new ChorusBackupMaker(new CheckinDescriptionBuilder());
+				_backupMaker = new ChorusBackupMaker();
 				_backupDir = new TemporaryFolder(testName);
 
 				_backupMaker.PathToParentOfRepositories = _backupDir.FolderPath;
@@ -76,13 +74,12 @@ namespace WeSay.Project.Tests
 
 			public void AssertFileExistsInRepo(string s)
 			{
-				var  r = new HgRepository(PathToBackupProjectDir, new NullProgress());
-				Assert.IsTrue(r.GetFileExistsInRepo(s));
+				Chorus.sync.RepositoryManager r = new RepositoryManager(PathToBackupProjectDir, new ProjectFolderConfiguration(SourceProjectDir));
+				Assert.IsTrue(r.GetFileExistsInRepo(Path.Combine(PathToBackupProjectDir ,"test.lift")));
 			}
 		}
 
 		[Test]
-		[Category("Known Mono Issue")]
 		public void BackupNow_FirstTime_CreatesValidRepositoryAndWorkingTree()
 		{
 			using (BackupScenario scenario = new BackupScenario("BackupNow_NewFolder_CreatesNewRepository"))
@@ -91,12 +88,10 @@ namespace WeSay.Project.Tests
 				scenario.AssertDirExistsInWorkingDirectory(".hg");
 				scenario.AssertFileExistsInRepo("test.lift");
 				scenario.AssertFileExistsInRepo("test.WeSayConfig");
-				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "qaa.ldml"));
-				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "tpi.ldml"));
+				scenario.AssertFileExistsInRepo("WritingSystemPrefs.xml");
 				scenario.AssertFileExistsInWorkingDirectory("test.lift");
 				scenario.AssertFileExistsInWorkingDirectory("test.WeSayConfig");
-				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "qaa.ldml"));
-				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "tpi.ldml"));
+				scenario.AssertFileExistsInWorkingDirectory("WritingSystemPrefs.xml");
 			}
 		}
 
@@ -107,10 +102,10 @@ namespace WeSay.Project.Tests
 			using (BackupScenario scenario = new BackupScenario("BackupNow_ExistingRepository_AddsNewFileToBackupDir"))
 			{
 				scenario.BackupNow();
-				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
+				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.foo")).Close();
 				scenario.BackupNow();
-				scenario.AssertFileExistsInWorkingDirectory("blah.lift");
-				scenario.AssertFileExistsInRepo("blah.lift");
+				scenario.AssertFileExistsInWorkingDirectory("blah.foo");
+				scenario.AssertFileExistsInRepo("blah.foo");
 			}
 		}
 
@@ -120,30 +115,28 @@ namespace WeSay.Project.Tests
 			// Test causes a crash in WrapShellCall.exe - is there an updated version?
 			using (BackupScenario scenario = new BackupScenario("BackupNow_RemoveFile_RemovedFromBackupDir"))
 			{
-				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
+				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.foo")).Close();
 				scenario.BackupNow();
-				File.Delete(Path.Combine(scenario.SourceProjectDir, "blah.lift"));
+				File.Delete(Path.Combine(scenario.SourceProjectDir, "blah.foo"));
 				scenario.BackupNow();
-				scenario.AssertFileDoesNotExistInWorkingDirectory("blah.lift");
+				scenario.AssertFileDoesNotExistInWorkingDirectory("blah.foo");
 			}
 		}
 
 		[Test]
 		public void CanSerializeAndDeserializeSettings()
 		{
-			var b = new ChorusBackupMaker(new CheckinDescriptionBuilder());
+			ChorusBackupMaker b = new ChorusBackupMaker();
 			b.PathToParentOfRepositories = @"z:\";
-			var builder = new StringBuilder();
-			//var dom = new XmlDocument();
-			//dom.LoadXml("<foobar><blah></blah></foobar>");
-
-			using (var writer = XmlWriter.Create(builder, CanonicalXmlSettings.CreateXmlWriterSettings()))
+			StringBuilder builder = new StringBuilder();
+			using (XmlWriter writer = XmlWriter.Create(builder))
 			{
 				b.Save(writer);
-				var dom = new XmlDocument();
-				dom.Load(new StringReader(builder.ToString()));
-				var loadedGuy = ChorusBackupMaker.CreateFromDom(dom, new CheckinDescriptionBuilder());
-				Assert.AreEqual(@"z:\", loadedGuy.PathToParentOfRepositories);
+				using (XmlReader reader = XmlReader.Create(new StringReader(builder.ToString())))
+				{
+					ChorusBackupMaker loadedGuy = ChorusBackupMaker.LoadFromReader(reader);
+					Assert.AreEqual(@"z:\", loadedGuy.PathToParentOfRepositories);
+				}
 
 			}
 		}

@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Enchant;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -16,16 +14,16 @@ namespace WeSay.ConfigTool
 
 		private class WritingSystemListBoxAdaptor
 		{
-			private readonly WritingSystemDefinition _ws;
+			private readonly WritingSystem _ws;
 			private readonly bool _hasSpellCheckerInstalled;
 
-			public WritingSystemListBoxAdaptor(WritingSystemDefinition ws, bool hasSpellCheckerInstalled)
+			public WritingSystemListBoxAdaptor(WritingSystem ws, bool hasSpellCheckerInstalled)
 			{
 				_ws = ws;
 				_hasSpellCheckerInstalled = hasSpellCheckerInstalled;
 			}
 
-			public WritingSystemDefinition WritingSystem
+			public WritingSystem WritingSystem
 			{
 				get { return _ws; }
 			}
@@ -58,20 +56,11 @@ namespace WeSay.ConfigTool
 			{
 				using (Broker broker = new Broker())
 				{
-					foreach (WritingSystemDefinition ws in BasilProject.Project.WritingSystems.AllWritingSystems)
+					foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
 					{
-						try
+						if (broker.DictionaryExists(ws.Id))
 						{
-							if (broker.DictionaryExists(ws.SpellCheckingId))
-							{
-								writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
-							}
-						}
-						catch (Exception)  //WS-1296 where (sometimes) a bogus looking id killed Enchant
-						{
-							//ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "There was a problem asking the Enchant Spelling system about '{0}'.", ws.Id);
-
-							//These enchant errors are just too common & useless.  Let's not even report on them.
+							writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
 						}
 					}
 				}
@@ -79,11 +68,6 @@ namespace WeSay.ConfigTool
 			catch (DllNotFoundException)
 			{
 				//If Enchant is not installed we expect an exception.
-			}
-			catch (Exception e)//there are other errors we can get from the enchange binding
-			{
-				ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
-												"The Enchant Spelling engine encountered an error: " + e.Message);
 			}
 			return writingSystemIdsWithSpellCheckingInstalled;
 		}
@@ -133,7 +117,7 @@ namespace WeSay.ConfigTool
 			{
 				if (_writingSystemListBox.GetItemChecked(i) || i == aboutToBeCheckedItemIndex)
 				{
-					WritingSystemDefinition ws =
+					WritingSystem ws =
 							((WritingSystemListBoxAdaptor) _writingSystemListBox.Items[i]).
 									WritingSystem;
 					CurrentField.WritingSystemIds.Add(ws.Id);
@@ -222,9 +206,9 @@ namespace WeSay.ConfigTool
 					GetWritingSystemIdsWithSpellCheckingInstalled();
 
 			_writingSystemListBox.Items.Clear();
-			IList<WritingSystemDefinition> writingSystems =
+			IList<WritingSystem> writingSystems =
 					BasilProject.Project.WritingSystemsFromIds(CurrentField.WritingSystemIds);
-			foreach (WritingSystemDefinition ws in writingSystems)
+			foreach (WritingSystem ws in writingSystems)
 			{
 				bool hasSpellCheckerInstalled =
 						writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
@@ -233,7 +217,7 @@ namespace WeSay.ConfigTool
 																						hasSpellCheckerInstalled));
 				_writingSystemListBox.SetItemChecked(i, true);
 			}
-			foreach (WritingSystemDefinition ws in BasilProject.Project.WritingSystems.AllWritingSystems)
+			foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
 			{
 				if (!CurrentField.WritingSystemIds.Contains(ws.Id))
 				{

@@ -1,10 +1,8 @@
 using System;
-using Palaso.UI.WindowsForms.Widgets.Flying;
 using WeSay.UI;
 using WeSay.UI.Buttons;
-using WeSay.UI.TextBoxes;
 
-namespace WeSay.LexicalTools.GatherByWordList
+namespace WeSay.LexicalTools
 {
 	partial class GatherWordListControl
 	{
@@ -44,8 +42,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
-			this._flyingLabel = new FlyingLabel();
-			this._vernacularBox = new WeSay.UI.TextBoxes.MultiTextControl();
+			this._movingLabel = new WeSay.UI.MovingLabel();
+			this._vernacularBox = new WeSay.UI.MultiTextControl();
 			this._btnPreviousWord = new WeSay.UI.Buttons.PreviousButton();
 			this._btnNextWord = new WeSay.UI.Buttons.NextButton();
 			this._btnAddWord = new WeSay.UI.Buttons.AddButton();
@@ -59,7 +57,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this._instructionLabel.ForeColor = System.Drawing.Color.DarkGray;
 			this._instructionLabel.Location = new System.Drawing.Point(8, 8);
 			this._instructionLabel.Name = "_instructionLabel";
-			this._instructionLabel.Size = new System.Drawing.Size(434, 20);
+			this._instructionLabel.Size = new System.Drawing.Size(424, 20);
 			this._instructionLabel.TabIndex = 2;
 			this._instructionLabel.Text = "Try thinking of ways to say these words in your language.";
 			//
@@ -145,13 +143,13 @@ namespace WeSay.LexicalTools.GatherByWordList
 			//
 			// _movingLabel
 			//
-			this._flyingLabel.BackColor = System.Drawing.Color.Transparent;
-			this._flyingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-			this._flyingLabel.Location = new System.Drawing.Point(0, 0);
-			this._flyingLabel.Name = "_flyingLabel";
-			this._flyingLabel.Size = new System.Drawing.Size(100, 23);
-			this._flyingLabel.TabIndex = 10;
-			this._flyingLabel.Visible = false;
+			this._movingLabel.BackColor = System.Drawing.Color.Transparent;
+			this._movingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+			this._movingLabel.Location = new System.Drawing.Point(0, 0);
+			this._movingLabel.Name = "_movingLabel";
+			this._movingLabel.Size = new System.Drawing.Size(100, 23);
+			this._movingLabel.TabIndex = 10;
+			this._movingLabel.Visible = false;
 			//
 			// _vernacularBox
 			//
@@ -161,9 +159,6 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._vernacularBox.BackColor = System.Drawing.Color.White;
 			this._vernacularBox.ColumnCount = 3;
-			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -249,7 +244,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this.Controls.Add(this._btnNextWord);
 			this.Controls.Add(this._btnAddWord);
 			this.Controls.Add(this._congratulationsControl);
-			this.Controls.Add(this._flyingLabel);
+			this.Controls.Add(this._movingLabel);
 			this.Name = "GatherWordListControl";
 			this.Size = new System.Drawing.Size(511, 429);
 			this.Load += new System.EventHandler(this.GatherWordListControl_Load);
@@ -273,7 +268,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private System.Windows.Forms.Label label5;
 		private MultiTextControl _vernacularBox;
 		private CongratulationsControl _congratulationsControl;
-		private FlyingLabel _flyingLabel;
+		private WeSay.UI.MovingLabel _movingLabel;
 
 
 	}

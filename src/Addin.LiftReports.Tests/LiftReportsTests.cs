@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.Project;
@@ -13,7 +13,7 @@ namespace Addin.LiftReports.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayProjectTestHelper.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 			_addin = new ReportMaker();
 			_addin.LaunchAfterTransform = false;
 		}
