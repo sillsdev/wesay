@@ -1,7 +1,6 @@
 using NUnit.Framework;
-using Palaso.Data;
 
-namespace Palaso.Data.Tests
+namespace WeSay.Data.Tests
 {
 	[TestFixture]
 	public class MemoryRepositoryStateUnitializedTests: IRepositoryStateUnitializedTests<TestItem>
@@ -9,13 +8,13 @@ namespace Palaso.Data.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			DataMapperUnderTest = new MemoryDataMapper<TestItem>();
+			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
 		[TearDown]
-		public override void TearDown()
+		public void Teardown()
 		{
-			DataMapperUnderTest.Dispose();
+			RepositoryUnderTest.Dispose();
 		}
 	}
 
@@ -26,16 +25,15 @@ namespace Palaso.Data.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			DataMapperUnderTest = new MemoryDataMapper<TestItem>();
+			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
 		[TearDown]
-		public override void TearDown()
+		public void Teardown()
 		{
-			DataMapperUnderTest.Dispose();
+			RepositoryUnderTest.Dispose();
 		}
 
-		/* todo move to query tests
 		[Test]
 		protected override void  GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
 		{
@@ -43,12 +41,12 @@ namespace Palaso.Data.Tests
 			Item.StoredString = "I was stored!";
 			QueryAdapter<TestItem> query = new QueryAdapter<TestItem>();
 			query.Show("StoredInt").Show("StoredString");
-			ResultSet<TestItem> resultsOfQuery = DataMapperUnderTest.GetItemsMatching(query);
+			ResultSet<TestItem> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual(123, resultsOfQuery[0]["StoredInt"]);
 			Assert.AreEqual("I was stored!", resultsOfQuery[0]["StoredString"]);
 		}
-		*/
+
 		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			//Do nothing.
@@ -62,13 +60,13 @@ namespace Palaso.Data.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			DataMapperUnderTest = new MemoryDataMapper<TestItem>();
+			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
 		[TearDown]
-		public override void TearDown()
+		public void Teardown()
 		{
-			DataMapperUnderTest.Dispose();
+			RepositoryUnderTest.Dispose();
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
@@ -84,13 +82,13 @@ namespace Palaso.Data.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			DataMapperUnderTest = new MemoryDataMapper<TestItem>();
+			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
 		[TearDown]
-		public override void TearDown()
+		public void Teardown()
 		{
-			DataMapperUnderTest.Dispose();
+			RepositoryUnderTest.Dispose();
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
@@ -106,13 +104,13 @@ namespace Palaso.Data.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			DataMapperUnderTest = new MemoryDataMapper<TestItem>();
+			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
 		[TearDown]
-		public override void TearDown()
+		public void Teardown()
 		{
-			DataMapperUnderTest.Dispose();
+			RepositoryUnderTest.Dispose();
 		}
 
 		protected override void RepopulateRepositoryFromPersistedData()

@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Data;
-using Palaso.Misc;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
@@ -13,7 +11,7 @@ using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 
-namespace WeSay.LexicalTools.AddMissingInfo
+namespace WeSay.LexicalTools
 {
 	public partial class MissingInfoControl: UserControl
 	{
@@ -25,16 +23,31 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private readonly ViewTemplate _viewTemplate;
 		private readonly Predicate<LexEntry> _isNotComplete;
-		public event EventHandler TimeToSaveRecord;
+		public event EventHandler SelectedIndexChanged;
 
-		public MissingInfoControl(ResultSet<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete, LexEntryRepository lexEntryRepository, IUserInterfaceMemory memory)
+		public MissingInfoControl(ResultSet<LexEntry> records,
+								  ViewTemplate viewTemplate,
+								  Predicate<LexEntry> isNotComplete,
+								  LexEntryRepository lexEntryRepository)
 		{
 			if (!DesignMode)
 			{
-				Guard.AgainstNull(records, "records");
-				Guard.AgainstNull(viewTemplate, "viewTemplate");
-				Guard.AgainstNull(isNotComplete, "isNotComplete");
-				Guard.AgainstNull(lexEntryRepository, "lexEntryRepository");
+				if (records == null)
+				{
+					throw new ArgumentNullException("records");
+				}
+				if (viewTemplate == null)
+				{
+					throw new ArgumentNullException("viewTemplate");
+				}
+				if (isNotComplete == null)
+				{
+					throw new ArgumentNullException("isNotComplete");
+				}
+				if (lexEntryRepository == null)
+				{
+					throw new ArgumentNullException("lexEntryRepository");
+				}
 			}
 
 			InitializeComponent();
@@ -46,10 +59,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				return;
 			}
-
-			memory.TrackSplitContainer(splitContainer1, "betweenListsAndContents");
-			memory.TrackSplitContainer(splitContainer2, "betweenToDoAndDoneLists");
-			_entryViewControl.SetMemory(memory.CreateNewSection("entryView"));
 
 			_completedRecords = new BindingList<RecordToken<LexEntry>>();
 			_todoRecords = (BindingList<RecordToken<LexEntry>>) records;
@@ -70,16 +79,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 			_recordsListBox.BorderStyle = BorderStyle.None;
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
-			_recordsListBox.MouseDown += _recordsListBox_MouseDown;
 			_recordsListBox.Enter += _recordsListBox_Enter;
 			_recordsListBox.Leave += _recordsListBox_Leave;
 			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
-			_recordsListBox.WritingSystem = listWritingSystem;
 
+			_recordsListBox.WritingSystem = listWritingSystem;
 			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.BorderStyle = BorderStyle.None;
 			_completedRecordsListBox.SelectedIndexChanged += OnCompletedRecordSelectionChanged;
-			_completedRecordsListBox.MouseDown += _completedRecordsListBox_MouseDown;
 			_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
 			_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
 			_completedRecordsListBox.WritingSystem = listWritingSystem;
@@ -89,16 +96,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_btnNextWord.BringToFront();
 			_btnPreviousWord.BringToFront();
 			SetCurrentRecordFromRecordList();
-		}
-
-		private void _completedRecordsListBox_MouseDown(object sender, MouseEventArgs e)
-		{
-			_completedRecordsListBox_Enter(sender, e);
-		}
-
-		private void _recordsListBox_MouseDown(object sender, MouseEventArgs e)
-		{
-			_recordsListBox_Enter(sender, e);
 		}
 
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
@@ -247,17 +244,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 
 			SetCurrentRecordFromRecordList();
-
-		}
-
-		private void SaveNow()
-		{
-
-					if (TimeToSaveRecord != null)
-					{
-						TimeToSaveRecord.Invoke(this, null);
-					}
-
+			if (SelectedIndexChanged != null)
+			{
+				SelectedIndexChanged.Invoke(this, null);
+			}
 		}
 
 		public void SetCurrentRecordToNext()
@@ -372,9 +362,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				CurrentRecord = _completedRecords[CompletedRecordListCurrentIndex];
 			}
 
-			if (TimeToSaveRecord != null)
+			if (SelectedIndexChanged != null)
 			{
-				TimeToSaveRecord.Invoke(this, null);
+				SelectedIndexChanged.Invoke(this, null);
 			}
 		}
 
@@ -457,13 +447,11 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private void OnCurrentRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			SaveNow();
 			Debug.Assert(sender == CurrentEntry);
 			if (_isNotComplete(CurrentEntry))
 			{
 				if (_completedRecords.Contains(_currentRecord))
 				{
-
 					_completedRecords.Remove(_currentRecord);
 				}
 				if (!_todoRecords.Contains(_currentRecord))
@@ -495,14 +483,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private void ClearSelectionForCompletedRecordsListBox()
 		{
-			_completedRecordsListBox.SelectedIndex = -1;
 			_completedRecordsListBox.HideSelection = true;
 			_recordsListBox.HideSelection = false;
 		}
 
 		private void ClearSelectionForRecordsListBox()
 		{
-			_recordsListBox.SelectedIndex = -1;
 			_recordsListBox.HideSelection = true;
 			_completedRecordsListBox.HideSelection = false;
 		}
@@ -544,8 +530,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		// this means the RTF view looks bad. Still haven't figured out how to make
 		// cursor go to right position.
 		private bool monoOnEnterFix;
-
-
 		protected override void OnEnter(EventArgs e)
 		{
 			if (monoOnEnterFix)

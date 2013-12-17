@@ -1,32 +1,31 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Palaso.Data;
 using Palaso.Progress;
 
-namespace Palaso.Data.Tests
+namespace WeSay.Data.Tests
 {
 	[TestFixture]
 	public class RecordTokenTests
 	{
-		private MemoryDataMapper<TestItem> _dataMapper;
+		private MemoryRepository<TestItem> _repository;
 
 		[SetUp]
 		public void Setup()
 		{
-			_dataMapper = new MemoryDataMapper<TestItem>();
+			_repository = new MemoryRepository<TestItem>();
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
-			_dataMapper.Dispose();
+			_repository.Dispose();
 		}
 
 		[Test]
 		public void Construct()
 		{
-			Assert.IsNotNull(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(8)));
+			Assert.IsNotNull(new RecordToken<TestItem>(_repository, new TestRepositoryId(8)));
 		}
 
 		[Test]
@@ -40,13 +39,13 @@ namespace Palaso.Data.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Construct_NullRepositoryId_Throws()
 		{
-			Assert.IsNotNull(new RecordToken<TestItem>(_dataMapper, null));
+			Assert.IsNotNull(new RecordToken<TestItem>(_repository, null));
 		}
 
 		[Test]
 		public void ConstructWithResults()
 		{
-			Assert.IsNotNull(new RecordToken<TestItem>(_dataMapper,
+			Assert.IsNotNull(new RecordToken<TestItem>(_repository,
 													   new Dictionary<string, object>(),
 													   new TestRepositoryId(8)));
 		}
@@ -64,14 +63,14 @@ namespace Palaso.Data.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithResults_NullResults_Throws()
 		{
-			Assert.IsNotNull(new RecordToken<TestItem>(_dataMapper, null, new TestRepositoryId(8)));
+			Assert.IsNotNull(new RecordToken<TestItem>(_repository, null, new TestRepositoryId(8)));
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithResults_NullRepositoryId_Throws()
 		{
-			Assert.IsNotNull(new RecordToken<TestItem>(_dataMapper,
+			Assert.IsNotNull(new RecordToken<TestItem>(_repository,
 													   new Dictionary<string, object>(),
 													   null));
 		}
@@ -147,41 +146,41 @@ namespace Palaso.Data.Tests
 	[TestFixture]
 	public class RecordTokenConstructedWithoutResultsTests: RecordTokenTestsBase
 	{
-		private MemoryDataMapper<TestItem> dataMapper;
+		private MemoryRepository<TestItem> _repository;
 
 		[SetUp]
 		public void Setup()
 		{
-			dataMapper = new MemoryDataMapper<TestItem>();
-			Token = new RecordToken<TestItem>(dataMapper, new TestRepositoryId(8));
+			_repository = new MemoryRepository<TestItem>();
+			Token = new RecordToken<TestItem>(_repository, new TestRepositoryId(8));
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
-			dataMapper.Dispose();
+			_repository.Dispose();
 		}
 	}
 
 	[TestFixture]
 	public class RecordTokenConstructedWithResultsTests: RecordTokenTestsBase
 	{
-		private MemoryDataMapper<TestItem> dataMapper;
+		private MemoryRepository<TestItem> _repository;
 
 		[SetUp]
 		public void Setup()
 		{
-			dataMapper = new MemoryDataMapper<TestItem>();
+			_repository = new MemoryRepository<TestItem>();
 			Dictionary<string, object> results = new Dictionary<string, object>();
 			results["string"] = "result";
 			results["int"] = 12;
-			Token = new RecordToken<TestItem>(dataMapper, results, new TestRepositoryId(8));
+			Token = new RecordToken<TestItem>(_repository, results, new TestRepositoryId(8));
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
-			dataMapper.Dispose();
+			_repository.Dispose();
 		}
 
 		[Test]
@@ -202,7 +201,7 @@ namespace Palaso.Data.Tests
 	[TestFixture]
 	public class RecordTokenUsesRepositoryTests
 	{
-		private class TestRepository: IDataMapper<TestItem>
+		private class TestRepository: IRepository<TestItem>
 		{
 			private readonly TestItem _itemToReturn;
 

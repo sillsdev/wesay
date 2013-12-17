@@ -1,4 +1,4 @@
-namespace Palaso.Data
+namespace WeSay.Data
 {
 	public class RecordTokenToStringAdapter<T> where T:class, new()
 	{

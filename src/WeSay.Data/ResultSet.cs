@@ -3,19 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Palaso.Data
+namespace WeSay.Data
 {
 	public sealed class ResultSet<T>: IEnumerable<RecordToken<T>>, IEnumerable<RepositoryId>
 			where T : class, new()
 	{
 		private readonly List<RecordToken<T>> _results;
-		private readonly IDataMapper<T> _dataMapper;
+		private readonly IRepository<T> _repository;
 
-		public ResultSet(IDataMapper<T> dataMapper, params IEnumerable<RecordToken<T>>[] results)
+		public ResultSet(IRepository<T> repository, params IEnumerable<RecordToken<T>>[] results)
 		{
-			if (dataMapper == null)
+			if (repository == null)
 			{
-				throw new ArgumentNullException("dataMapper");
+				throw new ArgumentNullException("repository");
 			}
 			if (results == null)
 			{
@@ -26,7 +26,7 @@ namespace Palaso.Data
 			{
 				_results.AddRange(result);
 			}
-			_dataMapper = dataMapper;
+			_repository = repository;
 		}
 
 		[Obsolete]
@@ -174,19 +174,19 @@ namespace Palaso.Data
 
 		public int FindFirstIndex(T item)
 		{
-			RepositoryId id = _dataMapper.GetId(item);
+			RepositoryId id = _repository.GetId(item);
 			return FindFirstIndex(id);
 		}
 
 		public int FindFirstIndex(T item, int startIndex)
 		{
-			RepositoryId id = _dataMapper.GetId(item);
+			RepositoryId id = _repository.GetId(item);
 			return FindFirstIndex(id, startIndex);
 		}
 
 		public int FindFirstIndex(T item, int startIndex, int count)
 		{
-			RepositoryId id = _dataMapper.GetId(item);
+			RepositoryId id = _repository.GetId(item);
 			return FindFirstIndex(id, startIndex, count);
 		}
 

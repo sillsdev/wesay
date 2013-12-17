@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.Project;
 
@@ -10,15 +9,10 @@ namespace WeSay.ConfigTool
 {
 	public partial class WritingSystemSetup: ConfigurationControlBase
 	{
-
-		public WritingSystemSetup(ILogger logger)
-			: base("set up fonts, keyboards, and sorting", logger)
+		public WritingSystemSetup(): base("set up fonts, keyboards, and sorting")
 		{
 			InitializeComponent();
 			Resize += WritingSystemSetup_Resize;
-			_basicControl.Logger = logger;
-			_fontControl.Logger = logger;
-			_sortControl.Logger = logger;
 		}
 
 		private void WritingSystemSetup_Resize(object sender, EventArgs e)
@@ -42,15 +36,12 @@ namespace WeSay.ConfigTool
 
 		private void LoadWritingSystemListBox()
 		{
-			_wsListBox.BeginUpdate();
 			_wsListBox.Items.Clear();
-			_wsListBox.Sorted = false; // Required for Mono which keeps on sorting during the Add which slows things down.
 			foreach (WritingSystem w in BasilProject.Project.WritingSystems.Values)
 			{
 				_wsListBox.Items.Add(new WsDisplayProxy(w));
 			}
 			_wsListBox.Sorted = true;
-			_wsListBox.EndUpdate();
 			if (_wsListBox.Items.Count > 0)
 			{
 				_wsListBox.SelectedIndex = 0;
@@ -67,25 +58,19 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		private void UpdateSelection()
 		{
-			WritingSystem selectedWritingSystem = SelectedWritingSystem;
-			_tabControl.Visible = selectedWritingSystem != null;
-			_btnRemove.Enabled = selectedWritingSystem != null;
-			if (selectedWritingSystem == null)
+			_tabControl.Visible = SelectedWritingSystem != null;
+			if (SelectedWritingSystem == null)
 			{
-				Console.WriteLine("WritingSystemSetup.UpdateSelection selected is null");
-				Invalidate();
-				//Refresh();
+				Refresh();
 				return;
 			}
 
+			_btnRemove.Enabled = true;
 			//                (SelectedWritingSystem != BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault)
 			//              && (SelectedWritingSystem != BasilProject.Project.WritingSystems.VernacularWritingSystemDefault);
-			_basicControl.WritingSystem = selectedWritingSystem;
-			_sortControl.WritingSystem = selectedWritingSystem;
-			_fontControl.WritingSystem = selectedWritingSystem;
-
-			_sortingPage.Enabled = !selectedWritingSystem.IsAudio;
-			_fontsPage.Enabled = !selectedWritingSystem.IsAudio;
+			_basicControl.WritingSystem = SelectedWritingSystem;
+			_sortControl.WritingSystem = SelectedWritingSystem;
+			_fontControl.WritingSystem = SelectedWritingSystem;
 		}
 
 		private WritingSystem SelectedWritingSystem
@@ -109,46 +94,27 @@ namespace WeSay.ConfigTool
 			if (SelectedWritingSystem != null &&
 				BasilProject.Project.WritingSystems.ContainsKey(SelectedWritingSystem.Id))
 			{
-				var doomedId = SelectedWritingSystem.Id;
 				BasilProject.Project.WritingSystems.Remove(SelectedWritingSystem.Id);
 				LoadWritingSystemListBox();
 				UpdateSelection();
-				_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Removed writing system '{0}'", "Checkin Description in WeSay Config Tool used when you remove a writing system."), doomedId);
-
 			}
 		}
 
 		private void _btnAddWritingSystem_Click(object sender, EventArgs e)
 		{
-			if(IsDefaultVernacularStillUnidentified)
-			{
-				MessageBox.Show(
-					"Before creating new writing systems, please change the ID of the 'v' writing system to match the Ethnologue/ISO 693 code of this language.");
-				return;
-			}
 			WritingSystem w = null;
 			string[] keys = {"xx", "x1", "x2", "x3"};
 			foreach (string s in keys)
 			{
 				if (!BasilProject.Project.WritingSystems.ContainsKey(s))
 				{
-					Font font;
-					try
-					{
-						font = new Font("Doulos SIL", 12);
-					}
-					catch(Exception )
-					{
-					   font = new Font(System.Drawing.SystemFonts.DefaultFont.SystemFontName, 12);
-					}
-
-					w = new WritingSystem(s, font);
+					w = new WritingSystem(s, new Font("Doulos SIL", 12));
 					break;
 				}
 			}
 			if (w == null)
 			{
-				ErrorReport.NotifyUserOfProblem("Could not produce a unique ID.");
+				ErrorReport.ReportNonFatalMessage("Could not produce a unique ID.");
 			}
 			else
 			{
@@ -157,22 +123,6 @@ namespace WeSay.ConfigTool
 				_wsListBox.Items.Add(item);
 				_wsListBox.SelectedItem = item;
 			}
-
-			_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Added writing system", "Checkin Description in WeSay Config Tool used when you add a writing system."));
-
-		}
-
-		private bool IsDefaultVernacularStillUnidentified
-		{
-			get
-			{
-				foreach (WritingSystem w in BasilProject.Project.WritingSystems.Values)
-				{
-					if(w.Id == WritingSystem.IdForUnknownVernacular)
-						return true;
-				}
-				return false;
-			}
 		}
 
 		/// <summary>
@@ -180,27 +130,48 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void OnWritingSystemIdChanged(object sender, EventArgs e)
+		private void _basicControl_DisplayPropertiesChanged(object sender, EventArgs e)
 		{
-			WsDisplayProxy p = _wsListBox.SelectedItem as WsDisplayProxy;
-			_wsListBox.BeginUpdate();
-			_wsListBox.Sorted = false;
-			_wsListBox.Sorted = true;
-			_wsListBox.SelectedItem = p;
-			_wsListBox.EndUpdate();
-			_wsListBox.Invalidate();
-		}
+			WritingSystem ws = sender as WritingSystem;
+			PropertyValueChangedEventArgs args = e as PropertyValueChangedEventArgs;
+			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
+			{
+				string oldId = args.OldValue.ToString();
+				if(!WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId))
+				{
+					ws.Id = oldId; //couldn't make the change
+				}
+				//                Reporting.ErrorReporter.ReportNonFatalMessage(
+				//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
+				//                    ws.Id, oldId);
+			}
 
-		private void OnIsAudioChanged(object sender, EventArgs e)
-		{
+			//_wsListBox.Refresh(); didn't work
+			//this.Refresh();   didn't work
+			for (int i = 0;i < _wsListBox.Items.Count;i++)
+			{
+				_wsListBox.Items[i] = _wsListBox.Items[i];
+			}
 			UpdateSelection();
+			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
+			{
+				LoadWritingSystemListBox();
+				foreach (WsDisplayProxy o in _wsListBox.Items)
+				{
+					if (o.WritingSystem == ws)
+					{
+						_wsListBox.SelectedItem = o;
+						break;
+					}
+				}
+			}
 		}
 	}
 
 	/// <summary>
 	/// An item to stick in the listview which represents a ws
 	/// </summary>
-	public class WsDisplayProxy : Object
+	public class WsDisplayProxy
 	{
 		private WritingSystem _writingSystem;
 

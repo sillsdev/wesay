@@ -50,7 +50,6 @@ namespace Addin.Transform.Tests
 			LaunchWithConversionString("");
 		}
 
-/* NOMORELOCKING
 		[Test]
 		[ExpectedException(typeof (IOException))]
 		public void ThrowsMeaningfulExceptionIfOutputFileIsLocked()
@@ -66,7 +65,7 @@ namespace Addin.Transform.Tests
 				File.SetAttributes(_addin.PathToOutput, default(FileAttributes));
 			}
 		}
-*/
+
 		[Test]
 		public void ConvertsGlossMarker()
 		{
@@ -277,7 +276,7 @@ namespace Addin.Transform.Tests
 					<relation type='BaseForm' ref='two'/>
 				   <sense>
 						<gloss lang='en'><text>hello</text></gloss>
-						<trait name='semantic-domain-ddp4' value='1.1' />
+						<trait name='SemanticDomainDdp4' value='1.1' />
 					 </sense>
 
 				</entry>

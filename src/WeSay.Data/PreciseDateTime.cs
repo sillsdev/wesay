@@ -1,6 +1,6 @@
 using System;
 
-namespace Palaso.Data
+namespace WeSay.Data
 {
 	/// <summary>
 	/// Pseudo precise in that the ticks value returned does not actually
@@ -10,7 +10,7 @@ namespace Palaso.Data
 	public static class PreciseDateTime
 	{
 		private static DateTime _lastDateTime;
-		private static long _pseudoTicks;
+		private static int _pseudoTicks;
 
 		public static DateTime UtcNow
 		{
@@ -23,12 +23,6 @@ namespace Palaso.Data
 				if (dt.Ticks == _lastDateTime.Ticks)
 				{
 					_pseudoTicks += 1;
-					dt = dt.AddTicks(_pseudoTicks);
-				}
-				else if (dt.Ticks <= _lastDateTime.Ticks + _pseudoTicks)
-				{
-					_pseudoTicks -= dt.Ticks - _lastDateTime.Ticks - 1;
-					_lastDateTime = dt;
 					dt = dt.AddTicks(_pseudoTicks);
 				}
 				else

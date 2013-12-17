@@ -9,7 +9,6 @@ namespace WeSay.ConfigTool
 	public partial class WelcomeControl: UserControl
 	{
 		public event EventHandler NewProjectClicked;
-		public event EventHandler NewProjectFromFlexClicked;
 		public event EventHandler OpenPreviousProjectClicked;
 		public event EventHandler ChooseProjectClicked;
 
@@ -94,14 +93,6 @@ namespace WeSay.ConfigTool
 			else
 			{
 				openDifferentProject.Focus();
-			}
-		}
-
-		private void OnCreateProjectFromFLEx_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			if (NewProjectFromFlexClicked != null)
-			{
-				NewProjectFromFlexClicked.Invoke(this, null);
 			}
 		}
 	}

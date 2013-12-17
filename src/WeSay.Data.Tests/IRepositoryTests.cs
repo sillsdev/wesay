@@ -1,56 +1,43 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Palaso.Data;
-
 using NUnit.Framework;
 
-namespace Palaso.Data.Tests
+namespace WeSay.Data.Tests
 {
-	internal class TestQuery<T> : IQuery<T> where T : class, new()
-	{
-		public IEnumerable<IDictionary<string, object>> GetResults(T item)
-		{
-			var result = new Dictionary<string, object> { { "key1", null } };
-			return new[] { result };
-		}
-	}
-
 	public abstract class IRepositoryStateUnitializedTests<T> where T : class, new()
 	{
-		private IDataMapper<T> dataMapperUnderTest;
+		private IRepository<T> _repositoryUnderTest;
+		private readonly QueryAdapter<T> _query = new QueryAdapter<T>();
 
-		public IDataMapper<T> DataMapperUnderTest
+		public IRepository<T> RepositoryUnderTest
 		{
 			get
 			{
-				if (dataMapperUnderTest == null)
+				if (_repositoryUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"DataMapperUnderTest must be set before the tests are run.");
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
-				return dataMapperUnderTest;
+				return _repositoryUnderTest;
 			}
-			set { dataMapperUnderTest = value; }
+			set { _repositoryUnderTest = value; }
 		}
 
 		[SetUp]
 		public abstract void SetUp();
 
-		[TearDown]
-		public abstract void TearDown();
-
 		[Test]
 		public void CreateItem_NotNull()
 		{
-			Assert.IsNotNull(DataMapperUnderTest.CreateItem());
+			Assert.IsNotNull(RepositoryUnderTest.CreateItem());
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void DeleteItem_Null_Throws()
 		{
-			DataMapperUnderTest.DeleteItem((T) null);
+			RepositoryUnderTest.DeleteItem((T) null);
 		}
 
 		[Test]
@@ -58,14 +45,14 @@ namespace Palaso.Data.Tests
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
 			T item = new T();
-			DataMapperUnderTest.DeleteItem(item);
+			RepositoryUnderTest.DeleteItem(item);
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void DeleteItemById_Null_Throws()
 		{
-			DataMapperUnderTest.DeleteItem((RepositoryId) null);
+			RepositoryUnderTest.DeleteItem((RepositoryId) null);
 		}
 
 		[Test]
@@ -73,26 +60,26 @@ namespace Palaso.Data.Tests
 		public void DeleteItemById_ItemDoesNotExist_Throws()
 		{
 			MyRepositoryId id = new MyRepositoryId();
-			DataMapperUnderTest.DeleteItem(id);
+			RepositoryUnderTest.DeleteItem(id);
 		}
 
 		[Test]
 		public void DeleteAllItems_NothingInRepository_StillNothingInRepository()
 		{
-			DataMapperUnderTest.DeleteAllItems();
-			Assert.AreEqual(0, DataMapperUnderTest.CountAllItems());
+			RepositoryUnderTest.DeleteAllItems();
+			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void CountAllItems_NoItemsInTheRepostory_ReturnsZero()
 		{
-			Assert.AreEqual(0, DataMapperUnderTest.CountAllItems());
+			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsEmptyArray()
 		{
-			Assert.IsEmpty(DataMapperUnderTest.GetAllItems());
+			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
 		}
 
 		[Test]
@@ -100,7 +87,7 @@ namespace Palaso.Data.Tests
 		public void GetId_ItemNotInRepository_Throws()
 		{
 			T item = new T();
-			DataMapperUnderTest.GetId(item);
+			RepositoryUnderTest.GetId(item);
 		}
 
 		[Test]
@@ -108,16 +95,16 @@ namespace Palaso.Data.Tests
 		public void GetItem_IdNotInRepository_Throws()
 		{
 			MyRepositoryId id = new MyRepositoryId();
-			DataMapperUnderTest.GetItem(id);
+			RepositoryUnderTest.GetItem(id);
 		}
 
 		[Test]
 		[ExpectedException(typeof (NotSupportedException))]
 		public void GetItemsMatchingQuery_CanQueryIsFalse_Throws()
 		{
-			if (!DataMapperUnderTest.CanQuery)
+			if (!RepositoryUnderTest.CanQuery)
 			{
-				DataMapperUnderTest.GetItemsMatching(null);
+				RepositoryUnderTest.GetItemsMatching(_query);
 			}
 			else
 			{
@@ -126,11 +113,11 @@ namespace Palaso.Data.Tests
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_CanQueryIsTrue_ReturnsOne()
+		public void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
-			if (DataMapperUnderTest.CanQuery)
+			if (RepositoryUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(_query).Count);
 			}
 			else
 			{
@@ -141,14 +128,14 @@ namespace Palaso.Data.Tests
 		[Test]
 		public void LastModified_ReturnsMinimumPossibleTime()
 		{
-			Assert.AreEqual(new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc), DataMapperUnderTest.LastModified);
+			Assert.AreEqual(RepositoryUnderTest.LastModified, DateTime.MinValue);
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Save_Null_Throws()
 		{
-			DataMapperUnderTest.SaveItem(null);
+			RepositoryUnderTest.SaveItem(null);
 		}
 
 		[Test]
@@ -156,14 +143,14 @@ namespace Palaso.Data.Tests
 		public void Save_ItemDoesNotExist_Throws()
 		{
 			T item = new T();
-			DataMapperUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(item);
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void SaveItems_Null_Throws()
 		{
-			DataMapperUnderTest.SaveItems(null);
+			RepositoryUnderTest.SaveItems(null);
 		}
 
 		[Test]
@@ -173,16 +160,16 @@ namespace Palaso.Data.Tests
 			T item = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(item);
-			DataMapperUnderTest.SaveItems(itemsToSave);
+			RepositoryUnderTest.SaveItems(itemsToSave);
 		}
 
 		[Test]
 		public void SaveItems_ListIsEmpty_DoNotChangeLastModified()
 		{
 			List<T> itemsToSave = new List<T>();
-			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
-			DataMapperUnderTest.SaveItems(itemsToSave);
-			Assert.AreEqual(modifiedTimePreTestedStateSwitch, DataMapperUnderTest.LastModified);
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			RepositoryUnderTest.SaveItems(itemsToSave);
+			Assert.AreEqual(modifiedTimePreTestedStateSwitch, RepositoryUnderTest.LastModified);
 		}
 
 		private class MyRepositoryId: RepositoryId
@@ -201,22 +188,22 @@ namespace Palaso.Data.Tests
 
 	public abstract class IRepositoryCreateItemTransitionTests<T> where T : class, new()
 	{
-		private IDataMapper<T> dataMapperUnderTest;
+		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
 
-		public IDataMapper<T> DataMapperUnderTest
+		public IRepository<T> RepositoryUnderTest
 		{
 			get
 			{
-				if (dataMapperUnderTest == null)
+				if (_repositoryUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"DataMapperUnderTest must be set before the tests are run.");
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
-				return dataMapperUnderTest;
+				return _repositoryUnderTest;
 			}
-			set { dataMapperUnderTest = value; }
+			set { _repositoryUnderTest = value; }
 		}
 
 		protected T Item
@@ -233,8 +220,8 @@ namespace Palaso.Data.Tests
 
 		public void SetState()
 		{
-			Item = DataMapperUnderTest.CreateItem();
-			Id = DataMapperUnderTest.GetId(Item);
+			Item = RepositoryUnderTest.CreateItem();
+			Id = RepositoryUnderTest.GetId(Item);
 		}
 
 		//This method is used to test whether data has been persisted.
@@ -245,28 +232,25 @@ namespace Palaso.Data.Tests
 		[SetUp]
 		public abstract void SetUp();
 
-		[TearDown]
-		public abstract void TearDown();
-
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
 		{
 			SetState();
-			Assert.AreNotEqual(Item, DataMapperUnderTest.CreateItem());
+			Assert.AreNotEqual(Item, RepositoryUnderTest.CreateItem());
 		}
 
 		[Test]
 		public void CreatedItemHasBeenPersisted()
 		{
 			SetState();
-			if (!DataMapperUnderTest.CanPersist) {}
+			if (!RepositoryUnderTest.CanPersist) {}
 			else
 			{
 				CreateNewRepositoryFromPersistedData();
-				RepositoryId[] listOfItems = DataMapperUnderTest.GetAllItems();
+				RepositoryId[] listOfItems = RepositoryUnderTest.GetAllItems();
 				Assert.AreEqual(1, listOfItems.Length);
 				//Would be nice if this worked.. but it doesn't because we have equals for LexEntry is still by reference
-				//T itemFromPersistedData = DataMapperUnderTest.GetItem(listOfItems[0]);
+				//T itemFromPersistedData = RepositoryUnderTest.GetItem(listOfItems[0]);
 				//Assert.AreEqual(item, itemFromPersistedData);
 			}
 		}
@@ -275,81 +259,118 @@ namespace Palaso.Data.Tests
 		public void CountAllItems_ReturnsOne()
 		{
 			SetState();
-			Assert.AreEqual(1, DataMapperUnderTest.CountAllItems());
+			Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsIdItem()
 		{
 			SetState();
-			Assert.AreEqual(DataMapperUnderTest.GetId(Item), DataMapperUnderTest.GetAllItems()[0]);
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetAllItems()[0]);
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsCorrectNumberOfExistingItems()
 		{
 			SetState();
-			Assert.AreEqual(1, DataMapperUnderTest.GetAllItems().Length);
+			Assert.AreEqual(1, RepositoryUnderTest.GetAllItems().Length);
 		}
 
 		[Test]
 		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
 		{
 			SetState();
-			Assert.AreEqual(DataMapperUnderTest.GetId(Item), DataMapperUnderTest.GetId(Item));
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetId_Item_ReturnsIdOfItem()
 		{
 			SetState();
-			Assert.AreEqual(Id, DataMapperUnderTest.GetId(Item));
+			Assert.AreEqual(Id, RepositoryUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetItem_Id_ReturnsItemWithId()
 		{
 			SetState();
-			Assert.AreSame(Item, DataMapperUnderTest.GetItem(Id));
+			Assert.AreSame(Item, RepositoryUnderTest.GetItem(Id));
 		}
 
 		[Test]
 		public void GetItem_CalledTwiceWithSameId_ReturnsSameItem()
 		{
 			SetState();
-			Assert.AreSame(DataMapperUnderTest.GetItem(Id), DataMapperUnderTest.GetItem(Id));
+			Assert.AreSame(RepositoryUnderTest.GetItem(Id), RepositoryUnderTest.GetItem(Id));
+		}
+
+		[Test]
+		public void GetItemsMatchingQuery_QueryWithOutShow_ReturnsNoItems()
+		{
+			QueryAdapter<T> queryWithoutShow = new QueryAdapter<T>();
+			SetState();
+			if (RepositoryUnderTest.CanQuery)
+			{
+				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
+				Assert.AreEqual(0, resultSet.Count);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
+		}
+
+		[Test]
+		public void GetItemsMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		{
+			SetState();
+			GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v();
+		}
+
+		protected virtual void GetItemsMatchingQuery_QueryWithShow_ReturnAllItemsMatchingQuery_v()
+		{
+			if (RepositoryUnderTest.CanQuery)
+			{
+				Assert.Fail(
+					@"This Test is highly dependant on the type of objects that are
+							being managed by the repository and as such should be overridden.");
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
 		}
 
 		[Test]
 		public void SaveItem_LastModifiedIsChangedToLaterTime()
 		{
 			SetState();
-			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
-			DataMapperUnderTest.SaveItem(Item);
-			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			RepositoryUnderTest.SaveItem(Item);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
 		public void SaveItem_LastModifiedIsSetInUTC()
 		{
 			SetState();
-			DataMapperUnderTest.SaveItem(Item);
-			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
+			RepositoryUnderTest.SaveItem(Item);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		[Test]
 		public void SaveItem_ItemHasBeenPersisted()
 		{
 			SetState();
-			if (!DataMapperUnderTest.CanPersist)
+			if (!RepositoryUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted");
 			}
 			else
 			{
-				DataMapperUnderTest.SaveItem(Item);
+				RepositoryUnderTest.SaveItem(Item);
 				CreateNewRepositoryFromPersistedData();
-				Assert.AreEqual(1, DataMapperUnderTest.CountAllItems());
+				Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
 			}
 		}
 
@@ -359,9 +380,9 @@ namespace Palaso.Data.Tests
 			SetState();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(Item);
-			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
-			DataMapperUnderTest.SaveItems(itemsToSave);
-			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			RepositoryUnderTest.SaveItems(itemsToSave);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
@@ -371,46 +392,47 @@ namespace Palaso.Data.Tests
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(Item);
 			Thread.Sleep(50);
-			DataMapperUnderTest.SaveItems(itemsToSave);
-			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
+			RepositoryUnderTest.SaveItems(itemsToSave);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		[Test]
 		public void SaveItems_ItemHasBeenPersisted()
 		{
 			SetState();
-			if (!DataMapperUnderTest.CanPersist)
+			if (!RepositoryUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted");
 			}
 			else
 			{
-				List<T> itemsToBeSaved = new List<T> { Item };
-				DataMapperUnderTest.SaveItems(itemsToBeSaved);
+				List<T> itemsToBeSaved = new List<T>();
+				itemsToBeSaved.Add(Item);
+				RepositoryUnderTest.SaveItems(itemsToBeSaved);
 				CreateNewRepositoryFromPersistedData();
-				Assert.AreEqual(1, DataMapperUnderTest.CountAllItems());
+				Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
 			}
 		}
 	}
 
 	public abstract class IRepositoryPopulateFromPersistedTests<T> where T : class, new()
 	{
-		private IDataMapper<T> dataMapperUnderTest;
+		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
 
-		public IDataMapper<T> DataMapperUnderTest
+		public IRepository<T> RepositoryUnderTest
 		{
 			get
 			{
-				if (dataMapperUnderTest == null)
+				if (_repositoryUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"DataMapperUnderTest must be set before the tests are run.");
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
-				return dataMapperUnderTest;
+				return _repositoryUnderTest;
 			}
-			set { dataMapperUnderTest = value; }
+			set { _repositoryUnderTest = value; }
 		}
 
 		protected T Item
@@ -427,9 +449,9 @@ namespace Palaso.Data.Tests
 
 		public void SetState()
 		{
-			RepositoryId[] idsFrompersistedData = DataMapperUnderTest.GetAllItems();
+			RepositoryId[] idsFrompersistedData = RepositoryUnderTest.GetAllItems();
 			Id = idsFrompersistedData[0];
-			Item = DataMapperUnderTest.GetItem(Id);
+			Item = RepositoryUnderTest.GetItem(Id);
 		}
 
 		//This method is used to test whether data has been persisted.
@@ -440,28 +462,25 @@ namespace Palaso.Data.Tests
 		[SetUp]
 		public abstract void SetUp();
 
-		[TearDown]
-		public abstract void TearDown();
-
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
 		{
 			SetState();
-			Assert.AreNotEqual(Item, DataMapperUnderTest.CreateItem());
+			Assert.AreNotEqual(Item, RepositoryUnderTest.CreateItem());
 		}
 
 		[Test]
 		public void CreatedItemHasBeenPersisted()
 		{
 			SetState();
-			if (!DataMapperUnderTest.CanPersist) {}
+			if (!RepositoryUnderTest.CanPersist) {}
 			else
 			{
 				CreateNewRepositoryFromPersistedData();
-				RepositoryId[] listOfItems = DataMapperUnderTest.GetAllItems();
+				RepositoryId[] listOfItems = RepositoryUnderTest.GetAllItems();
 				Assert.AreEqual(1, listOfItems.Length);
 				//Would be nice if this worked.. but it doesn't because we have equals for LexEntry is still by reference
-				//T itemFromPersistedData = DataMapperUnderTest.GetItem(listOfItems[0]);
+				//T itemFromPersistedData = RepositoryUnderTest.GetItem(listOfItems[0]);
 				//Assert.AreEqual(item, itemFromPersistedData);
 			}
 		}
@@ -470,49 +489,86 @@ namespace Palaso.Data.Tests
 		public void CountAllItems_ReturnsOne()
 		{
 			SetState();
-			Assert.AreEqual(1, DataMapperUnderTest.CountAllItems());
+			Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsIdItem()
 		{
 			SetState();
-			Assert.AreEqual(DataMapperUnderTest.GetId(Item), DataMapperUnderTest.GetAllItems()[0]);
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetAllItems()[0]);
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsCorrectNumberOfExistingItems()
 		{
 			SetState();
-			Assert.AreEqual(1, DataMapperUnderTest.GetAllItems().Length);
+			Assert.AreEqual(1, RepositoryUnderTest.GetAllItems().Length);
 		}
 
 		[Test]
 		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
 		{
 			SetState();
-			Assert.AreEqual(DataMapperUnderTest.GetId(Item), DataMapperUnderTest.GetId(Item));
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetId_Item_ReturnsIdOfItem()
 		{
 			SetState();
-			Assert.AreEqual(Id, DataMapperUnderTest.GetId(Item));
+			Assert.AreEqual(Id, RepositoryUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetItem_Id_ReturnsItemWithId()
 		{
 			SetState();
-			Assert.AreSame(Item, DataMapperUnderTest.GetItem(Id));
+			Assert.AreSame(Item, RepositoryUnderTest.GetItem(Id));
 		}
 
 		[Test]
 		public void GetItem_CalledTwiceWithSameId_ReturnsSameItem()
 		{
 			SetState();
-			Assert.AreSame(DataMapperUnderTest.GetItem(Id), DataMapperUnderTest.GetItem(Id));
+			Assert.AreSame(RepositoryUnderTest.GetItem(Id), RepositoryUnderTest.GetItem(Id));
+		}
+
+		[Test]
+		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsNoItems()
+		{
+			QueryAdapter<T> queryWithoutShow = new QueryAdapter<T>();
+			SetState();
+			if (RepositoryUnderTest.CanQuery)
+			{
+				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
+				Assert.AreEqual(0, resultSet.Count);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
+		}
+
+		[Test]
+		public void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		{
+			SetState();
+			GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v();
+		}
+
+		protected virtual void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery_v()
+		{
+			if (RepositoryUnderTest.CanQuery)
+			{
+				Assert.Fail(
+					@"This Test is highly dependant on the type of objects that are
+							being managed by the repository and as such should be tested elsewhere.");
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
 		}
 
 		[Test]
@@ -525,7 +581,7 @@ namespace Palaso.Data.Tests
 
 		protected virtual void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
 		{
-			if (!DataMapperUnderTest.CanPersist)
+			if (!RepositoryUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted");
 			}
@@ -540,7 +596,7 @@ namespace Palaso.Data.Tests
 		public void LastModified_IsSetInUTC()
 		{
 			SetState();
-			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		//This test is virtual because LexEntryRepository needs a special implementation
@@ -548,9 +604,9 @@ namespace Palaso.Data.Tests
 		public virtual void SaveItem_LastModifiedIsChangedToLaterTime()
 		{
 			SetState();
-			DateTime modifiedTimePreSave = DataMapperUnderTest.LastModified;
-			DataMapperUnderTest.SaveItem(Item);
-			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreSave);
+			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
+			RepositoryUnderTest.SaveItem(Item);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
 		}
 
 		//This test is virtual because LexEntryRepository needs a special implementation
@@ -558,8 +614,8 @@ namespace Palaso.Data.Tests
 		public virtual void SaveItem_LastModifiedIsSetInUTC()
 		{
 			SetState();
-			DataMapperUnderTest.SaveItem(Item);
-			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
+			RepositoryUnderTest.SaveItem(Item);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		//This test is virtual because LexEntryRepository needs a special implementation
@@ -569,9 +625,9 @@ namespace Palaso.Data.Tests
 			SetState();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(Item);
-			DateTime modifiedTimePreSave = DataMapperUnderTest.LastModified;
-			DataMapperUnderTest.SaveItems(itemsToSave);
-			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreSave);
+			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
+			RepositoryUnderTest.SaveItems(itemsToSave);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
 		}
 
 		[Test]
@@ -581,29 +637,30 @@ namespace Palaso.Data.Tests
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(Item);
 			Thread.Sleep(50);
-			DataMapperUnderTest.SaveItems(itemsToSave);
-			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
+			RepositoryUnderTest.SaveItems(itemsToSave);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 	}
 
 	public abstract class IRepositoryDeleteItemTransitionTests<T> where T : class, new()
 	{
-		private IDataMapper<T> dataMapperUnderTest;
+		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
+		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
-		public IDataMapper<T> DataMapperUnderTest
+		public IRepository<T> RepositoryUnderTest
 		{
 			get
 			{
-				if (dataMapperUnderTest == null)
+				if (_repositoryUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"DataMapperUnderTest must be set before the tests are run.");
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
-				return dataMapperUnderTest;
+				return _repositoryUnderTest;
 			}
-			set { dataMapperUnderTest = value; }
+			set { _repositoryUnderTest = value; }
 		}
 
 		public T Item
@@ -619,9 +676,6 @@ namespace Palaso.Data.Tests
 		[SetUp]
 		public abstract void SetUp();
 
-		[TearDown]
-		public abstract void TearDown();
-
 		public void SetState()
 		{
 			CreateInitialItem();
@@ -630,13 +684,13 @@ namespace Palaso.Data.Tests
 
 		private void DeleteItem()
 		{
-			DataMapperUnderTest.DeleteItem(Item);
+			RepositoryUnderTest.DeleteItem(Item);
 		}
 
 		private void CreateInitialItem()
 		{
-			item = DataMapperUnderTest.CreateItem();
-			id = DataMapperUnderTest.GetId(Item);
+			this.item = RepositoryUnderTest.CreateItem();
+			this.id = RepositoryUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -644,7 +698,7 @@ namespace Palaso.Data.Tests
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			DataMapperUnderTest.DeleteItem(Item);
+			RepositoryUnderTest.DeleteItem(Item);
 		}
 
 		[Test]
@@ -652,14 +706,14 @@ namespace Palaso.Data.Tests
 		public void DeleteItem_HasBeenPersisted()
 		{
 			SetState();
-			if (!DataMapperUnderTest.CanPersist)
+			if (!RepositoryUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted.");
 			}
 			else
 			{
 				CreateNewRepositoryFromPersistedData();
-				DataMapperUnderTest.GetItem(id);
+				RepositoryUnderTest.GetItem(id);
 			}
 		}
 
@@ -667,14 +721,14 @@ namespace Palaso.Data.Tests
 		public void CountAllItems_ReturnsZero()
 		{
 			SetState();
-			Assert.AreEqual(0, DataMapperUnderTest.CountAllItems());
+			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsEmptyArray()
 		{
 			SetState();
-			Assert.IsEmpty(DataMapperUnderTest.GetAllItems());
+			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
 		}
 
 		[Test]
@@ -682,7 +736,7 @@ namespace Palaso.Data.Tests
 		public void GetId_DeletedItemWithId_Throws()
 		{
 			SetState();
-			DataMapperUnderTest.GetId(Item);
+			RepositoryUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -690,16 +744,16 @@ namespace Palaso.Data.Tests
 		public void GetItem_DeletedItem_Throws()
 		{
 			SetState();
-			DataMapperUnderTest.GetItem(id);
+			RepositoryUnderTest.GetItem(id);
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_CanQuery_ReturnsZero()
+		public void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
 			SetState();
-			if (DataMapperUnderTest.CanQuery)
+			if (RepositoryUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
 			}
 			else
 			{
@@ -711,16 +765,16 @@ namespace Palaso.Data.Tests
 		public void LastModified_IsChangedToLaterTime()
 		{
 			CreateInitialItem();
-			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			DeleteItem();
-			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
 		public void LastModified_IsSetInUTC()
 		{
 			SetState();
-			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		//This test is virtual because LexEntryRepository needs to override it
@@ -729,7 +783,7 @@ namespace Palaso.Data.Tests
 		public virtual void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			DataMapperUnderTest.SaveItem(Item);
+			RepositoryUnderTest.SaveItem(Item);
 		}
 
 		[Test]
@@ -740,28 +794,29 @@ namespace Palaso.Data.Tests
 			T itemNotInRepository = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(itemNotInRepository);
-			DataMapperUnderTest.SaveItems(itemsToSave);
+			RepositoryUnderTest.SaveItems(itemsToSave);
 		}
 	}
 
 	public abstract class IRepositoryDeleteIdTransitionTests<T> where T : class, new()
 	{
-		private IDataMapper<T> dataMapperUnderTest;
+		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
+		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
-		public IDataMapper<T> DataMapperUnderTest
+		public IRepository<T> RepositoryUnderTest
 		{
 			get
 			{
-				if (dataMapperUnderTest == null)
+				if (_repositoryUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"DataMapperUnderTest must be set before the tests are run.");
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
-				return dataMapperUnderTest;
+				return _repositoryUnderTest;
 			}
-			set { dataMapperUnderTest = value; }
+			set { _repositoryUnderTest = value; }
 		}
 
 		public T Item
@@ -777,9 +832,6 @@ namespace Palaso.Data.Tests
 		[SetUp]
 		public abstract void SetUp();
 
-		[TearDown]
-		public abstract void TearDown();
-
 		public void SetState()
 		{
 			CreateItemToTest();
@@ -788,13 +840,13 @@ namespace Palaso.Data.Tests
 
 		private void DeleteItem()
 		{
-			DataMapperUnderTest.DeleteItem(this.id);
+			RepositoryUnderTest.DeleteItem(this.id);
 		}
 
 		private void CreateItemToTest()
 		{
-			this.item = DataMapperUnderTest.CreateItem();
-			this.id = DataMapperUnderTest.GetId(Item);
+			this.item = RepositoryUnderTest.CreateItem();
+			this.id = RepositoryUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -802,7 +854,7 @@ namespace Palaso.Data.Tests
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			DataMapperUnderTest.DeleteItem(id);
+			RepositoryUnderTest.DeleteItem(id);
 		}
 
 		[Test]
@@ -810,14 +862,14 @@ namespace Palaso.Data.Tests
 		public void DeleteItem_HasBeenPersisted()
 		{
 			SetState();
-			if (!DataMapperUnderTest.CanPersist)
+			if (!RepositoryUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted.");
 			}
 			else
 			{
 				CreateNewRepositoryFromPersistedData();
-				DataMapperUnderTest.GetItem(id);
+				RepositoryUnderTest.GetItem(id);
 			}
 		}
 
@@ -825,14 +877,14 @@ namespace Palaso.Data.Tests
 		public void CountAllItems_ReturnsZero()
 		{
 			SetState();
-			Assert.AreEqual(0, DataMapperUnderTest.CountAllItems());
+			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsEmptyArray()
 		{
 			SetState();
-			Assert.IsEmpty(DataMapperUnderTest.GetAllItems());
+			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
 		}
 
 		[Test]
@@ -840,7 +892,7 @@ namespace Palaso.Data.Tests
 		public void GetId_DeletedItemWithId_Throws()
 		{
 			SetState();
-			DataMapperUnderTest.GetId(Item);
+			RepositoryUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -848,16 +900,16 @@ namespace Palaso.Data.Tests
 		public void GetItem_DeletedItem_Throws()
 		{
 			SetState();
-			DataMapperUnderTest.GetItem(id);
+			RepositoryUnderTest.GetItem(id);
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_CanQuery_ReturnsZero()
+		public void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
 			SetState();
-			if (DataMapperUnderTest.CanQuery)
+			if (RepositoryUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
 			}
 			else
 			{
@@ -869,16 +921,16 @@ namespace Palaso.Data.Tests
 		public void LastModified_ItemIsDeleted_IsChangedToLaterTime()
 		{
 			CreateItemToTest();
-			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			DeleteItem();
-			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
 		public void LastModified_ItemIsDeleted_IsSetInUTC()
 		{
 			SetState();
-			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		//This test is virtual because LexEntryRepository needs to override it
@@ -887,7 +939,7 @@ namespace Palaso.Data.Tests
 		public virtual void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			DataMapperUnderTest.SaveItem(Item);
+			RepositoryUnderTest.SaveItem(Item);
 		}
 
 		[Test]
@@ -898,28 +950,29 @@ namespace Palaso.Data.Tests
 			T itemNotInRepository = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(itemNotInRepository);
-			DataMapperUnderTest.SaveItems(itemsToSave);
+			RepositoryUnderTest.SaveItems(itemsToSave);
 		}
 	}
 
 	public abstract class IRepositoryDeleteAllItemsTransitionTests<T> where T : class, new()
 	{
-		private IDataMapper<T> dataMapperUnderTest;
+		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
+		private readonly QueryAdapter<T> query = new QueryAdapter<T>();
 
-		public IDataMapper<T> DataMapperUnderTest
+		public IRepository<T> RepositoryUnderTest
 		{
 			get
 			{
-				if (dataMapperUnderTest == null)
+				if (_repositoryUnderTest == null)
 				{
 					throw new InvalidOperationException(
-							"DataMapperUnderTest must be set before the tests are run.");
+							"RepositoryUnderTest must be set before the tests are run.");
 				}
-				return dataMapperUnderTest;
+				return _repositoryUnderTest;
 			}
-			set { dataMapperUnderTest = value; }
+			set { _repositoryUnderTest = value; }
 		}
 
 		//This method is used to test whether data has been persisted.
@@ -930,9 +983,6 @@ namespace Palaso.Data.Tests
 		[SetUp]
 		public abstract void SetUp();
 
-		[TearDown]
-		public abstract void TearDown();
-
 		public void SetState()
 		{
 			CreateInitialItem();
@@ -941,34 +991,34 @@ namespace Palaso.Data.Tests
 
 		private void DeleteAllItems()
 		{
-			DataMapperUnderTest.DeleteAllItems();
+			RepositoryUnderTest.DeleteAllItems();
 		}
 
 		private void CreateInitialItem()
 		{
-			this.item = DataMapperUnderTest.CreateItem();
-			this.id = DataMapperUnderTest.GetId(this.item);
+			this.item = RepositoryUnderTest.CreateItem();
+			this.id = RepositoryUnderTest.GetId(this.item);
 		}
 
 		[Test]
 		public void DeleteAllItems_ItemDoesNotExist_DoesNotThrow()
 		{
 			SetState();
-			DataMapperUnderTest.DeleteAllItems();
+			RepositoryUnderTest.DeleteAllItems();
 		}
 
 		[Test]
 		public void DeleteAllItems_HasBeenPersisted()
 		{
 			SetState();
-			if (!DataMapperUnderTest.CanPersist)
+			if (!RepositoryUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted.");
 			}
 			else
 			{
 				RepopulateRepositoryFromPersistedData();
-				Assert.IsEmpty(DataMapperUnderTest.GetAllItems());
+				Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
 			}
 		}
 
@@ -976,14 +1026,14 @@ namespace Palaso.Data.Tests
 		public void CountAllItems_ReturnsZero()
 		{
 			SetState();
-			Assert.AreEqual(0, DataMapperUnderTest.CountAllItems());
+			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
 		}
 
 		[Test]
 		public void GetAllItems_ReturnsEmptyArray()
 		{
 			SetState();
-			Assert.IsEmpty(DataMapperUnderTest.GetAllItems());
+			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
 		}
 
 		[Test]
@@ -991,7 +1041,7 @@ namespace Palaso.Data.Tests
 		public void GetId_DeletedItemWithId_Throws()
 		{
 			SetState();
-			DataMapperUnderTest.GetId(item);
+			RepositoryUnderTest.GetId(item);
 		}
 
 		[Test]
@@ -999,16 +1049,16 @@ namespace Palaso.Data.Tests
 		public void GetItem_DeletedItem_Throws()
 		{
 			SetState();
-			DataMapperUnderTest.GetItem(id);
+			RepositoryUnderTest.GetItem(id);
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_CanQuery_ReturnsZero()
+		public void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
 			SetState();
-			if (DataMapperUnderTest.CanQuery)
+			if (RepositoryUnderTest.CanQuery)
 			{
-				Assert.AreEqual(0, DataMapperUnderTest.GetItemsMatching(new TestQuery<T>()).Count);
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
 			}
 			else
 			{
@@ -1020,16 +1070,16 @@ namespace Palaso.Data.Tests
 		public void LastModified_IsChangedToLaterTime()
 		{
 			CreateInitialItem();
-			DateTime modifiedTimePreTestedStateSwitch = DataMapperUnderTest.LastModified;
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			DeleteAllItems();
-			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
 		public void LastModified_IsSetInUTC()
 		{
 			SetState();
-			Assert.AreEqual(DateTimeKind.Utc, DataMapperUnderTest.LastModified.Kind);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		[Test]
@@ -1037,7 +1087,7 @@ namespace Palaso.Data.Tests
 		public void Save_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			DataMapperUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(item);
 		}
 
 		[Test]
@@ -1047,7 +1097,7 @@ namespace Palaso.Data.Tests
 			T itemNotInRepository = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(itemNotInRepository);
-			DataMapperUnderTest.SaveItems(itemsToSave);
+			RepositoryUnderTest.SaveItems(itemsToSave);
 		}
 	}
 }

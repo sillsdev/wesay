@@ -28,96 +28,80 @@ namespace WeSay.LexicalTools
 			}
 
 			StringBuilder rtf = new StringBuilder();
-			rtf.Append(@"{\rtf1\ansi\uc1\fs28 ");
+			rtf.Append(@"{\rtf1\ansi\uc0\fs28 ");
 			rtf.Append(MakeFontTable());
 			RenderHeadword(entry, rtf, lexEntryRepository);
 
 			int senseNumber = 1;
 			foreach (LexSense sense in entry.Senses)
 			{
-				RenderSense(entry, sense, senseNumber, currentItem, rtf);
+				//rtf.Append(SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id));
+#if GlossMeaning
+				if (entry.Senses.Count > 1 || (currentItem != null && currentItem.PropertyName == "Gloss"))
+#else
+				if (entry.Senses.Count > 1 ||
+					(currentItem != null &&
+					 currentItem.PropertyName == LexSense.WellKnownProperties.Definition))
+#endif
+				{
+					rtf.Append(" " + senseNumber);
+				}
+
+				OptionRef posRef =
+						sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+				if (posRef != null)
+				{
+					OptionsList list =
+							WeSayWordsProject.Project.GetOptionsList(
+									LexSense.WellKnownProperties.PartOfSpeech);
+					if (list != null)
+					{
+						Option posOption = list.GetOptionFromKey(posRef.Value);
+
+						if (posOption != null)
+						{
+							Field posField =
+									WeSayWordsProject.Project.GetFieldFromDefaultViewTemplate(
+											LexSense.WellKnownProperties.PartOfSpeech);
+							if (posField != null)
+							{
+								rtf.Append(@" \i ");
+								rtf.Append(RenderField(posOption.Name, currentItem, 0, posField));
+								rtf.Append(@"\i0 ");
+							}
+						}
+					}
+				}
+#if GlossMeaning
+				rtf.Append(" " + RenderField(sense.Gloss, currentItem));
+#else
+				rtf.Append(" " + RenderField(sense.Definition, currentItem));
+#endif
+				//                rtf.Append(@"\i0 ");
+
+				foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)
+				{
+					rtf.Append(@" \i ");
+					rtf.Append(RenderField(exampleSentence.Sentence, currentItem));
+					rtf.Append(@"\i0 ");
+					rtf.Append(RenderField(exampleSentence.Translation, currentItem));
+				}
+
+				rtf.Append(RenderGhostedField("Sentence", currentItem, null));
+				rtf.Append(RenderGhostedField("Translation", currentItem, null));
 
 				++senseNumber;
 			}
 #if GlossMeaning
 			rtf.Append(RenderGhostedField("Gloss", currentItem, entry.Senses.Count + 1));
 #else
-			rtf.Append(RenderGhostedField(null,
-				LexSense.WellKnownProperties.Definition,
+			rtf.Append(RenderGhostedField(LexSense.WellKnownProperties.Definition,
 										  currentItem,
 										  entry.Senses.Count + 1));
 #endif
 
 			rtf.Append(@"\par}");
 			return Utf16ToRtfAnsi(rtf.ToString());
-		}
-
-		private static void RenderSense(LexEntry entry, LexSense sense, int senseNumber, CurrentItemEventArgs currentItem, StringBuilder rtf)
-		{
-//rtf.Append(SwitchToWritingSystem(WritingSystems.AnalysisWritingSystemDefault.Id));
-#if GlossMeaning
-				if (entry.Senses.Count > 1 || (currentItem != null && currentItem.PropertyName == "Gloss"))
-#else
-			if (entry.Senses.Count > 1 ||
-				(currentItem != null &&
-				 currentItem.PropertyName == LexSense.WellKnownProperties.Definition))
-#endif
-			{
-				rtf.Append(" " + senseNumber);
-			}
-
-			RenderPartOfSpeech(sense, currentItem, rtf);
-#if GlossMeaning
-				rtf.Append(" " + RenderField(sense.Gloss, currentItem));
-#else
-			rtf.Append(" " + RenderField(sense.Definition, currentItem));
-#endif
-			//                rtf.Append(@"\i0 ");
-
-			RenderExampleSentences(currentItem, rtf, sense);
-
-			rtf.Append(RenderGhostedField(sense, "Sentence", currentItem, null));
-			rtf.Append(RenderGhostedField(sense, "Translation", currentItem, null));
-		}
-
-		private static void RenderExampleSentences(CurrentItemEventArgs currentItem, StringBuilder rtf, LexSense sense)
-		{
-			foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)
-			{
-				rtf.Append(@" \i ");
-				rtf.Append(RenderField(exampleSentence.Sentence, currentItem));
-				rtf.Append(@"\i0 ");
-				rtf.Append(RenderField(exampleSentence.Translation, currentItem));
-			}
-		}
-
-		private static void RenderPartOfSpeech(LexSense sense, CurrentItemEventArgs currentItem, StringBuilder rtf)
-		{
-			OptionRef posRef =
-				sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
-			if (posRef != null)
-			{
-				OptionsList list =
-					WeSayWordsProject.Project.GetOptionsList(
-						LexSense.WellKnownProperties.PartOfSpeech);
-				if (list != null)
-				{
-					Option posOption = list.GetOptionFromKey(posRef.Value);
-
-					if (posOption != null)
-					{
-						Field posField =
-							WeSayWordsProject.Project.GetFieldFromDefaultViewTemplate(
-								LexSense.WellKnownProperties.PartOfSpeech);
-						if (posField != null)
-						{
-							rtf.Append(@" \i ");
-							rtf.Append(RenderField(posOption.Name, currentItem, 0, posField));
-							rtf.Append(@"\i0 ");
-						}
-					}
-				}
-			}
 		}
 
 		private static void RenderHeadword(LexEntry entry,
@@ -156,7 +140,7 @@ namespace WeSay.LexicalTools
 		{
 			StringBuilder rtf = new StringBuilder(@"{\fonttbl");
 			int i = 0;
-			foreach (KeyValuePair<string, WritingSystem> ws in WritingSystems)
+			foreach (KeyValuePair<string, WritingSystem> ws in BasilProject.Project.WritingSystems)
 			{
 				rtf.Append(@"\f" + i + @"\fnil\fcharset0" + " " + ws.Value.Font.FontFamily.Name +
 						   ";");
@@ -166,15 +150,10 @@ namespace WeSay.LexicalTools
 			return rtf.ToString();
 		}
 
-		private static WritingSystemCollection WritingSystems
-		{
-			get { return BasilProject.Project.WritingSystems; }
-		}
-
 		private static int GetFontNumber(WritingSystem writingSystem)
 		{
 			int i = 0;
-			foreach (KeyValuePair<string, WritingSystem> ws in WritingSystems)
+			foreach (KeyValuePair<string, WritingSystem> ws in BasilProject.Project.WritingSystems)
 			{
 				if (ws.Value == writingSystem)
 				{
@@ -205,7 +184,7 @@ namespace WeSay.LexicalTools
 
 				if (field == null) // show them all
 				{
-					foreach (LanguageForm l in text.GetActualTextForms(WritingSystems))
+					foreach (LanguageForm l in text)
 					{
 						RenderForm(text, currentItem, rtfBuilder, l, sizeBoost);
 					}
@@ -244,15 +223,14 @@ namespace WeSay.LexicalTools
 			rtfBuilder.Append(" ");
 		}
 
-		private static string RenderGhostedField(WeSayDataObject parent,
-												string property,
+		private static string RenderGhostedField(string property,
 												 CurrentItemEventArgs currentItem,
 												 int? number)
 		{
 			string rtf = string.Empty;
-			if (currentItem != null && property == currentItem.PropertyName && parent==currentItem.Parent)
+			if (currentItem != null && property == currentItem.PropertyName)
 			{
-				//REVIEW: is a ws switch needed for a blank? rtf += SwitchToWritingSystem(WritingSystems.AnalysisWritingSystemDefault.Id);
+				//REVIEW: is a ws switch needed for a blank? rtf += SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id);
 				if (number != null)
 				{
 					rtf += number.ToString();
@@ -270,7 +248,7 @@ namespace WeSay.LexicalTools
 		private static string SwitchToWritingSystem(string writingSystemId, int sizeBoost)
 		{
 			WritingSystem writingSystem;
-			if (!WritingSystems.TryGetValue(writingSystemId, out writingSystem))
+			if (!BasilProject.Project.WritingSystems.TryGetValue(writingSystemId, out writingSystem))
 			{
 				return "";
 				//that ws isn't actually part of our configuration, so can't get a special font for it
@@ -299,8 +277,8 @@ namespace WeSay.LexicalTools
 			{
 				if (c > 128)
 				{
-					outString.Append(String.Format(@"\u{0:D}?", Convert.ToUInt16(c)));
-					//outString.Append(Convert.ToUInt16(c).ToString());
+					outString.Append(@"\u");
+					outString.Append(Convert.ToUInt16(c).ToString());
 				}
 				else
 				{

@@ -37,7 +37,6 @@ namespace WeSay.ConfigTool
 			this.textBoxSortTest = new System.Windows.Forms.TextBox();
 			this.buttonSortTest = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.helpLink = new System.Windows.Forms.LinkLabel();
 			this.SuspendLayout();
 			//
 			// textBoxCustomRules
@@ -50,7 +49,7 @@ namespace WeSay.ConfigTool
 			this.textBoxCustomRules.Multiline = true;
 			this.textBoxCustomRules.Name = "textBoxCustomRules";
 			this.textBoxCustomRules.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textBoxCustomRules.Size = new System.Drawing.Size(299, 187);
+			this.textBoxCustomRules.Size = new System.Drawing.Size(299, 182);
 			this.textBoxCustomRules.TabIndex = 0;
 			//
 			// label1
@@ -82,7 +81,7 @@ namespace WeSay.ConfigTool
 			this.textBoxSortTest.Location = new System.Drawing.Point(320, 33);
 			this.textBoxSortTest.Multiline = true;
 			this.textBoxSortTest.Name = "textBoxSortTest";
-			this.textBoxSortTest.Size = new System.Drawing.Size(100, 187);
+			this.textBoxSortTest.Size = new System.Drawing.Size(100, 182);
 			this.textBoxSortTest.TabIndex = 3;
 			this.textBoxSortTest.Text = "pear\r\napple\r\norange\r\nmango\r\n";
 			//
@@ -104,32 +103,17 @@ namespace WeSay.ConfigTool
 			this.toolTip1.ReshowDelay = 100;
 			this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Error;
 			//
-			// helpLink
-			//
-			this.helpLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.helpLink.AutoSize = true;
-			this.helpLink.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
-			this.helpLink.Location = new System.Drawing.Point(18, 227);
-			this.helpLink.Name = "helpLink";
-			this.helpLink.Size = new System.Drawing.Size(29, 13);
-			this.helpLink.TabIndex = 5;
-			this.helpLink.TabStop = true;
-			this.helpLink.Text = "Help";
-			this.helpLink.VisitedLinkColor = System.Drawing.Color.Blue;
-			this.helpLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.helpLink_LinkClicked);
-			//
-			// WritingSystemSortControl
+			// WritingSystemSort
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.Controls.Add(this.helpLink);
 			this.Controls.Add(this.buttonSortTest);
 			this.Controls.Add(this.textBoxSortTest);
 			this.Controls.Add(this.comboBoxCultures);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.textBoxCustomRules);
-			this.Name = "WritingSystemSortControl";
-			this.Size = new System.Drawing.Size(434, 247);
+			this.Name = "WritingSystemSort";
+			this.Size = new System.Drawing.Size(434, 218);
 			this.Load += new System.EventHandler(this.WritingSystemSort_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -144,6 +128,5 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.TextBox textBoxSortTest;
 		private System.Windows.Forms.Button buttonSortTest;
 		private System.Windows.Forms.ToolTip toolTip1;
-		private System.Windows.Forms.LinkLabel helpLink;
 	}
 }

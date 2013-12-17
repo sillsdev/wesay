@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using Palaso.Data;
+using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -12,7 +12,7 @@ namespace Addin.Transform
 		//private string MakePLiftTempFile(IEnumerable<LexEntry> entries, ViewTemplate template, IFindEntries finder)
 		//{
 		//    string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-		//    WeSayLiftWriter exporter = new WeSayLiftWriter(path);
+		//    LiftExporter exporter = new LiftExporter(path);
 		//    exporter.SetUpForPresentationLiftExport(template, finder);
 		//    foreach (LexEntry entry in entries)
 		//    {
@@ -22,25 +22,58 @@ namespace Addin.Transform
 		//    return path;
 		//}
 
-		public void  MakePLiftTempFile(string outputPath, LexEntryRepository lexEntryRepository, ViewTemplate template)
+		public string MakePLiftTempFile(LexEntryRepository lexEntryRepository, ViewTemplate template)
 		{
-			using (PLiftExporter exporter = new PLiftExporter(outputPath, lexEntryRepository, template))
-			{
-				ResultSet<LexEntry> recordTokens =
+			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+			PLiftExporter exporter = new PLiftExporter(path, lexEntryRepository, template);
+			ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);
-				foreach (RecordToken<LexEntry> token in recordTokens)
+			foreach (RecordToken<LexEntry> token in recordTokens)
+			{
+				int homographNumber = 0;
+				if ((bool) token["HasHomograph"])
 				{
-					int homographNumber = 0;
-					if ((bool) token["HasHomograph"])
-					{
-						homographNumber = (int) token["HomographNumber"];
-					}
-					exporter.Add(token.RealObject, homographNumber);
+					homographNumber = (int) token["HomographNumber"];
 				}
-
-				exporter.End();
+				exporter.Add(token.RealObject, homographNumber);
 			}
+
+			exporter.End();
+			return path;
 		}
+
+		//
+		//        public void MakeXHtmlFile(string outputPath, LexEntryRepository lexEntryRepository, WeSayWordsProject project)
+		//        {
+		//            IHomographCalculator homographCalculator = new HomographCalculator(lexEntryRepository, project.DefaultPrintingTemplate.HeadwordWritingSystem);
+		//
+		//            IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(project.DefaultPrintingTemplate.HeadwordWritingSystem);
+		//            Db4oLexEntryFinder finder = new Db4oLexEntryFinder(lexEntryRepository.DataSource);
+		//
+		//            string pliftPath = MakePLiftTempFile(entries, project.DefaultPrintingTemplate, homographCalculator, finder);
+		//            try
+		//            {
+		//                using (Stream xsltStream = GetXsltStream("plift2html.xsl"))
+		//                {
+		//                    TransformWithProgressDialog dlg = new TransformWithProgressDialog(pliftPath,
+		//                                                                                      outputPath,
+		//                                                                                      xsltStream,
+		//                                                                                      "lift/entry");
+		//                    dlg.TaskMessage =
+		//                        StringCatalog.Get("Preparing dictionary for printing...",
+		//                                          "This is shown when WeSay is creating the pdf document for printing.");
+		//                    dlg.AddArgument("writing-system-info-file", project.PathToWritingSystemPrefs);
+		//                    dlg.Transform();
+		//                }
+		//            }
+		//            finally
+		//            {
+		//                if(File.Exists(pliftPath))
+		//                {
+		//                    File.Delete(pliftPath);
+		//                }
+		//            }
+		//        }
 
 		public static Stream GetXsltStream(string xsltName)
 		{

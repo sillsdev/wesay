@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Xml;
 using Palaso.Reporting;
-using Palaso.Xml;
 
 namespace WeSay.LexicalTools
 {
@@ -15,11 +14,11 @@ namespace WeSay.LexicalTools
 			_xmlDoc = new XmlDocument();
 			_xmlDoc.LoadXml(xml);
 
-			IsVisible =  XmlUtils.GetOptionalBooleanAttributeValue(_xmlDoc.FirstChild, "visible", false);
+			IsVisible =  WeSay.Foundation.XmlUtils.GetOptionalBooleanAttributeValue(_xmlDoc.FirstChild, "visible", false);
 		}
 		public string TaskName
 		{
-			get { return XmlUtils.GetManditoryAttributeValue(_xmlDoc.FirstChild, "taskName"); }
+			get { return WeSay.Foundation.XmlUtils.GetManditoryAttributeValue(_xmlDoc.FirstChild, "taskName"); }
 		}
 
 		public virtual bool IsOptional
@@ -34,6 +33,7 @@ namespace WeSay.LexicalTools
 			var name = _xmlDoc.SelectSingleNode("task/"+elementName);
 			if (name == null || string.IsNullOrEmpty(name.InnerText))
 			{
+
 				throw new ConfigurationException("Missing the element '{0}'", elementName);
 			}
 			return name.InnerText;

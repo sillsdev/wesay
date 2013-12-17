@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Palaso.Data;
+using Db4objects.Db4o;
 
-namespace Palaso.Data.Tests
+namespace WeSay.Data.Tests
 {
 	public class ChildTestItem
 	{
@@ -96,6 +96,10 @@ namespace Palaso.Data.Tests
 			}
 		}
 
+		public void ObjectOnActivate(IObjectContainer container)
+		{
+			_onActivateDepth = Depth;
+		}
 
 		public int Depth
 		{

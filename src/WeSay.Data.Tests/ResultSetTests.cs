@@ -1,35 +1,34 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using Palaso.Data;
 
-namespace Palaso.Data.Tests // review cp move to Palaso
+namespace WeSay.Data.Tests
 {
 	[TestFixture]
 	public class ResultSetTests
 	{
 		private ResultSet<TestItem> _resultSet;
 		List<RecordToken<TestItem>> _results;
-		MemoryDataMapper<TestItem> _dataMapper;
+		MemoryRepository<TestItem> _repository;
 
 
 		[SetUp]
 		public void Setup()
 		{
-			_dataMapper = new MemoryDataMapper<TestItem>();
+			_repository = new MemoryRepository<TestItem>();
 			_results = new List<RecordToken<TestItem>>();
 
-			_results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(8)));
-			_results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(12)));
-			_results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(1)));
-			_results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(3)));
+			_results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(8)));
+			_results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(12)));
+			_results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(1)));
+			_results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(3)));
 
-			_resultSet = new ResultSet<TestItem>(_dataMapper, _results);
+			_resultSet = new ResultSet<TestItem>(_repository, _results);
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
-			_dataMapper.Dispose();
+			_repository.Dispose();
 		}
 
 		[Test]
@@ -44,10 +43,10 @@ namespace Palaso.Data.Tests // review cp move to Palaso
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(_dataMapper, new TestRepositoryId(2)));
+			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(2)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_dataMapper, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
 			Assert.AreEqual(2, resultSet.Count);
 
 			int i = 0;
@@ -61,8 +60,8 @@ namespace Palaso.Data.Tests // review cp move to Palaso
 		[Test]
 		public void Constructor_ResultsModifiedAfter_ResultSetNotModified()
 		{
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_dataMapper, _results);
-			_results.Add(new RecordToken<TestItem>(_dataMapper, _resultSet[2].Id));
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, _results);
+			_results.Add(new RecordToken<TestItem>(_repository, _resultSet[2].Id));
 			Assert.AreNotEqual(_results.Count, resultSet.Count);
 
 		}
@@ -71,7 +70,7 @@ namespace Palaso.Data.Tests // review cp move to Palaso
 	[TestFixture ]
 	public class ResultSetWithQueryTests
 	{
-		MemoryDataMapper<TestItem> dataMapper;
+		MemoryRepository<TestItem> _repository;
 		Dictionary<string, object> _queryResultsEmpty;
 		Dictionary<string, object> _queryResultsB;
 		Dictionary<string, object> _queryResultsA;
@@ -79,7 +78,7 @@ namespace Palaso.Data.Tests // review cp move to Palaso
 		[SetUp]
 		public void Setup()
 		{
-			dataMapper = new MemoryDataMapper<TestItem>();
+			_repository = new MemoryRepository<TestItem>();
 			_queryResultsA = new Dictionary<string, object>();
 			_queryResultsA.Add("string", "A");
 			_queryResultsB = new Dictionary<string, object>();
@@ -91,7 +90,7 @@ namespace Palaso.Data.Tests // review cp move to Palaso
 		[TearDown]
 		public void Teardown()
 		{
-			dataMapper.Dispose();
+			_repository.Dispose();
 		}
 
 		[Test]
@@ -99,12 +98,12 @@ namespace Palaso.Data.Tests // review cp move to Palaso
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(dataMapper, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsEmpty, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsA, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsB, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsEmpty, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsA, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsB, new TestRepositoryId(8)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(dataMapper, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
 			Assert.AreEqual(4, resultSet.Count);
 		}
 
@@ -113,10 +112,10 @@ namespace Palaso.Data.Tests // review cp move to Palaso
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsA, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsB, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsA, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsB, new TestRepositoryId(12)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(dataMapper, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
 			resultSet.Coalesce("string", delegate(object o)
 													{
 														return string.IsNullOrEmpty((string)o);
@@ -129,10 +128,10 @@ namespace Palaso.Data.Tests // review cp move to Palaso
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsEmpty, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(dataMapper, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsEmpty, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(12)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(dataMapper, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
 			resultSet.Coalesce("string", delegate(object o)
 													{
 														return string.IsNullOrEmpty((string)o);
@@ -146,12 +145,12 @@ namespace Palaso.Data.Tests // review cp move to Palaso
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsEmpty, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(dataMapper, new TestRepositoryId(12)));
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsA, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsB, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsEmpty, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsA, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsB, new TestRepositoryId(12)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(dataMapper, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
 			resultSet.Coalesce("string", delegate(object o)
 													{
 														return string.IsNullOrEmpty((string)o);
@@ -166,12 +165,12 @@ namespace Palaso.Data.Tests // review cp move to Palaso
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<TestItem>(dataMapper, new TestRepositoryId(12)));
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsEmpty, new TestRepositoryId(8)));
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsB, new TestRepositoryId(12)));
-			results.Add(new RecordToken<TestItem>(dataMapper, _queryResultsA, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsEmpty, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsB, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(_repository, _queryResultsA, new TestRepositoryId(8)));
 
-			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(dataMapper, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(_repository, results);
 			resultSet.Coalesce("string", delegate(object o)
 													{
 														return string.IsNullOrEmpty((string)o);

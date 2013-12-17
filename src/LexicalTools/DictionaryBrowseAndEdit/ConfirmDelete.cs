@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
+namespace WeSay.LexicalTools
 {
 	public partial class ConfirmDelete : Form
 	{

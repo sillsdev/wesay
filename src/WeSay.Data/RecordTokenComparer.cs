@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Palaso.Data
+namespace WeSay.Data
 {
 	public sealed class RecordTokenComparer<T>: IComparer<RecordToken<T>> where T : class, new()
 	{

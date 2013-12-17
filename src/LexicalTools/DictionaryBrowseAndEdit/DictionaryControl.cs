@@ -5,10 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Data;
-using Palaso.Misc;
 using Palaso.Reporting;
-using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -18,12 +15,11 @@ using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
 
-namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
+namespace WeSay.LexicalTools
 {
 	public partial class DictionaryControl: UserControl
 	{
 		private readonly ViewTemplate _viewTemplate;
-		private readonly ILogger _logger;
 		private readonly ContextMenu _cmWritingSystems;
 		private WritingSystem _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
@@ -37,8 +33,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			InitializeComponent();
 		}
 
-		public DictionaryControl(LexEntryRepository lexEntryRepository,
-			ViewTemplate viewTemplate, IUserInterfaceMemory memory, ILogger logger)
+		public DictionaryControl(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
 		{
 			if (lexEntryRepository == null)
 			{
@@ -49,7 +44,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				throw new ArgumentNullException("viewTemplate");
 			}
 			_viewTemplate = viewTemplate;
-			_logger = logger;
 			_lexEntryRepository = lexEntryRepository;
 			_cmWritingSystems = new ContextMenu();
 
@@ -78,9 +72,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 			_findText.KeyDown += _findText_KeyDown;
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
-
-			_splitter.SetMemory(memory);
-			_entryViewControl.SetMemory(memory.CreateNewSection("entryView"));
 
 			UpdateDisplay();
 		}
@@ -116,8 +107,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			get { return _recordsListBox.SelectedIndex; }
 		}
 
-
-
 		public event EventHandler SelectedIndexChanged = delegate { };
 
 		private void InitializeDisplaySettings()
@@ -151,7 +140,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				}
 				else
 				{
-					ErrorReport.NotifyUserOfProblem(
+					ErrorReport.ReportNonFatalMessage(
 							"There are no writing systems enabled for the Field '{0}'",
 							field.FieldName);
 				}
@@ -161,7 +150,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void AddWritingSystemToPicker(WritingSystem writingSystem, Field field)
 		{
 			MenuItem item =
-					new MenuItem(writingSystem.Abbreviation + "\t" + StringCatalog.Get(field.DisplayName),
+					new MenuItem(writingSystem.Id + "\t" + StringCatalog.Get(field.DisplayName),
 								 OnCmWritingSystemClicked);
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
@@ -202,12 +191,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			LoadRecords();
 			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
 
-			//WHy was this here (I'm (JH) scared to remove it)?
-			// it is costing us an extra second, as we set the record
-			// to the first one, then later set it to the one we actually want.
-			//  SetRecordToBeEdited(CurrentRecord);
-
-
+			SetRecordToBeEdited(CurrentRecord);
 			_recordsListBox.WritingSystem = _listWritingSystem;
 
 			int originalHeight = _findText.Height;
@@ -215,7 +199,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_findText.Items = _findTextAdapter;
 			_findText.WritingSystem = _listWritingSystem;
 
-			_findWritingSystemId.Text = _listWritingSystem.Abbreviation;
+			_findWritingSystemId.Text = _listWritingSystem.Id;
 			int width = _findWritingSystemId.Width;
 			_findWritingSystemId.AutoSize = false;
 			_findWritingSystemId.Size = new Size(Math.Min(width, 25), _findText.Height);
@@ -239,9 +223,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void SetRecordToBeEdited(LexEntry record)
 		{
-			if (record == Control_EntryDetailPanel.DataSource)
-				return;
-
 			SaveAndCleanUpPreviousEntry();
 			Control_EntryDetailPanel.DataSource = record;
 			if (record != null)
@@ -405,13 +386,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_recordsListBox.SelectedIndex = _records.FindFirstIndex(entry);
 		}
 
-		public void GotoFirstEntry()
-		{
-			if(_recordsListBox.Items.Count>0)
-				_recordsListBox.SelectedIndex = 0;
-
-		}
-
 		public void GoToEntry(string entryId)
 		{
 			LexEntry entry = _lexEntryRepository.GetLexEntryWithMatchingId(entryId);
@@ -432,7 +406,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-
 			if (_keepRecordCurrent)
 			{
 				return;
@@ -458,28 +431,15 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 			SetRecordToBeEdited(CurrentRecord);
 
-
-			//nb: SelectedIndexChanged,  which calls this, is fired twice
-			//once for the deselection, again with the selection
-			if (CurrentIndex == -1)
-			{
-				return;
-			}
-
 			SelectedIndexChanged.Invoke(this, null);
 			UpdateDisplay();
 		}
 
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
 		{
-			//Catching ctrl-n here is a problem from the localisation perspective
-			//What if the language does not lend itself to "n" as a representation of the word "new"
-			//We could solve this by using an accelerator
 			if (keyData == (Keys.Control | Keys.N))
 			{
-				bool FocusWasOnFindTextBox = _findText.Focused;
-				_btnNewWord.Focus(); //this is necassary to cause TextBinding to update it's multitext
-				AddNewWord(FocusWasOnFindTextBox);
+				AddNewWord();
 				return true;
 			}
 
@@ -502,12 +462,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void OnNewWord_Click(object sender, EventArgs e)
 		{
-			AddNewWord(false);
+			AddNewWord();
 		}
 
-		internal void AddNewWord(bool FocusWasOnFindTextBox)
+		private void AddNewWord()
 		{
-			Logger.WriteMinorEvent("NewWord_Click");
+			Logger.WriteEvent("NewWord_Click");
 
 			// only create a new word when there is not an empty word already
 			int emptyWordIndex = GetEmptyWordIndex();
@@ -517,7 +477,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				LexEntry entry = this._lexEntryRepository.CreateItem();
 				//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 				//_recordListBoxActive = true; // allow onRecordSelectionChanged
-				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(_findText.Text) &&
+				if (_findText.Focused && !string.IsNullOrEmpty(_findText.Text) &&
 					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 				{
 					entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
@@ -543,9 +503,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_recordsListBox.SelectedIndex = selectIndex;
 			OnRecordSelectionChanged(_recordsListBox, new EventArgs());
 			_entryViewControl.Focus();
-
-			_logger.WriteConciseHistoricalEvent("Added Word");
-
 		}
 
 		private int GetEmptyWordIndex()
@@ -570,20 +527,15 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			Logger.WriteEvent("DeleteWord_Clicked");
 
-			using (var dlg = new ConfirmDelete())
-			{
-				dlg.ShowDialog(this);
-				if (dlg.DialogResult != DialogResult.OK)
-				{
-					Logger.WriteEvent("DeleteWord_Cancelled");
-					return;
-				}
-			}
-			DeleteWord();
-		}
+			var dlg = new ConfirmDelete();
 
-		internal void DeleteWord()
-		{
+			dlg.ShowDialog(this);
+			if(dlg.DialogResult != DialogResult.OK)
+			{
+				Logger.WriteEvent("DeleteWord_Cancelled");
+				return;
+			}
+
 			Debug.Assert(CurrentIndex >= 0);
 			if (CurrentIndex == -1)
 			{
@@ -598,7 +550,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			//review: This save isn't necessary, but the possibility of deleting unsave records currently doesn't work.
 			//_lexEntryRepository.SaveItem(CurrentRecord);
 
-			_logger.WriteConciseHistoricalEvent("Deleted '{0}'",CurrentRecord.GetSimpleFormForLogging());
 			CurrentRecord.IsBeingDeleted = true;
 			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
 			_lexEntryRepository.DeleteItem(recordToken.Id);
@@ -612,8 +563,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			OnRecordSelectionChanged(this, null);
 			_entryViewControl.Focus();
 		}
-
-
 
 		private void OnShowAllFields_Click(object sender, EventArgs e)
 		{
@@ -633,7 +582,5 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Show &Uncommon Fields");
 			}
 		}
-
-
 	}
 }

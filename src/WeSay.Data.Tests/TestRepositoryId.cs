@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Palaso.Data;
 
-namespace Palaso.Data.Tests
+namespace WeSay.Data.Tests
 {
 	internal class TestRepositoryId: RepositoryId
 	{
@@ -14,7 +13,7 @@ namespace Palaso.Data.Tests
 
 		public override int CompareTo(RepositoryId other)
 		{
-			var otherAsMy = other as TestRepositoryId;
+			TestRepositoryId otherAsMy = other as TestRepositoryId;
 			if (otherAsMy == null)
 			{
 				return 1;
@@ -24,7 +23,7 @@ namespace Palaso.Data.Tests
 
 		public override bool Equals(RepositoryId other)
 		{
-			var otherAsMy = other as TestRepositoryId;
+			TestRepositoryId otherAsMy = other as TestRepositoryId;
 			if (otherAsMy == null)
 			{
 				return false;

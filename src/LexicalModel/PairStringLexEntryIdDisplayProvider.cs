@@ -1,4 +1,4 @@
-using Palaso.Data;
+using WeSay.Data;
 using WeSay.Foundation;
 
 namespace WeSay.LexicalModel

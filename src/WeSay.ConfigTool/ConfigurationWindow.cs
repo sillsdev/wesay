@@ -1,14 +1,10 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using Autofac;
-
 using Palaso.Reporting;
-using WeSay.ConfigTool.NewProjectCreation;
 using WeSay.ConfigTool.Properties;
-using WeSay.ConfigTool.Tasks;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -18,12 +14,11 @@ namespace WeSay.ConfigTool
 		private WelcomeControl _welcomePage;
 		private SettingsControl _projectSettingsControl;
 		private WeSayWordsProject _project;
-		private bool _disableBackupAndChorusStuffForTests= false;
 
 		public ConfigurationWindow(string[] args)
 		{
 			InitializeComponent();
-			openProjectInWeSayToolStripMenuItem.LocationChanged += new EventHandler(openProjectInWeSayToolStripMenuItem_LocationChanged);
+
 			Project = null;
 
 			//            if (this.DesignMode)
@@ -41,11 +36,6 @@ namespace WeSay.ConfigTool
 			{
 				UpdateWindowCaption();
 			}
-		}
-
-		void openProjectInWeSayToolStripMenuItem_LocationChanged(object sender, EventArgs e)
-		{
-
 		}
 
 		private WeSayWordsProject Project
@@ -71,10 +61,7 @@ namespace WeSay.ConfigTool
 			}
 			else
 			{
-				toolStrip2.Visible = (_project != null);
-
-//                _saveACopyForFLEx54ToolStripMenuItem.Enabled = (_project != null);
-//                openProjectInWeSayToolStripMenuItem.Enabled = (_project != null);
+				openProjectInWeSayToolStripMenuItem.Enabled = (_project != null);
 			}
 		}
 
@@ -125,7 +112,7 @@ namespace WeSay.ConfigTool
 			string configFilePath = (string) sender;
 			if (!File.Exists(configFilePath))
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"WeSay could not find the file at {0} anymore.  Maybe it was moved or renamed?",
 						configFilePath);
 				return;
@@ -141,56 +128,12 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
-			CreateAndOpenProject(dlg.PathToNewProjectDirectory);
-
-			PointOutOpenWeSayButton();
-		}
-
-		private void PointOutOpenWeSayButton()
-		{
-//            try
-//            {
-//                var effects = new BigMansStuff.LocusEffects.LocusEffectsProvider();
-//                {
-//                    effects.Initialize();
-//                    effects.ShowLocusEffect(this, RectangleToScreen(this.openProjectInWeSayToolStripMenuItem.Bounds), LocusEffectsProvider.DefaultLocusEffectArrow);
-//                }
-//            }
-//            catch (Exception e)
-//            {
-//            }
-		}
-
-		private void OnCreateProjectFromFLEx(object sender, EventArgs e)
-		{
-			NewProjectFromFLExDialog dlg = new NewProjectFromFLExDialog();
-			if (DialogResult.OK != dlg.ShowDialog())
-			{
-				return;
-			}
-			if (ProjectFromFLExCreator.Create(dlg.PathToNewProjectDirectory, dlg.PathToLift))
-			{
-				if (OpenProject(dlg.PathToNewProjectDirectory))
-				{
-					using (var info = new NewProjectInformationDialog(dlg.PathToNewProjectDirectory))
-					{
-						info.ShowDialog();
-					}
-				}
-			}
-			if (_project != null)
-			{
-				var logger = _project.Container.Resolve<ILogger>();
-				logger.WriteConciseHistoricalEvent("Created New Project From FLEx Export");
-
-			}
-
-
+			CreateAndOpenProject(dlg.SelectedPath);
 		}
 
 		public void CreateAndOpenProject(string directoryPath)
 		{
-			//the "wesay" part may not exist yet
+			//the "wesay" part my not exist yet
 			if (!Directory.GetParent(directoryPath).Exists)
 			{
 				Directory.GetParent(directoryPath).Create();
@@ -198,38 +141,36 @@ namespace WeSay.ConfigTool
 
 			CreateNewProject(directoryPath);
 			OpenProject(directoryPath);
-			 if(_project != null)
-			 {
-				 var logger = _project.Container.Resolve<ILogger>();
-				 logger.WriteConciseHistoricalEvent("Created New Project");
-
-
-				 if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
-				 {
-					 using (var dlg = new NewProjectInformationDialog(directoryPath))
-					 {
-						 dlg.ShowDialog();
-					 }
-				 }
-
-			 }
 		}
 
 		private void CreateNewProject(string directoryPath)
 		{
+			WeSayWordsProject p;
+
 			try
 			{
+				//p = new WeSayWordsProject();
 				WeSayWordsProject.CreateEmptyProjectFiles(directoryPath);
 			}
 			catch (Exception e)
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"WeSay was not able to create a project there. \r\n" + e.Message);
 				return;
 			}
+
+//            if (Project != null)
+//            {
+//                Project.Dispose();
+//            }
+//            Project = p;
+			//SetupProjectControls(p.Container);
+
+			//p.Save();
+
 		}
 
-		public bool OpenProject(string path)
+		public void OpenProject(string path)
 		{
 			//System.Configuration.ConfigurationManager.AppSettings["LastConfigFilePath"] = path;
 
@@ -243,10 +184,6 @@ namespace WeSay.ConfigTool
 			try
 			{
 				Project = new WeSayWordsProject();
-				if(_disableBackupAndChorusStuffForTests)
-				{
-					_project.BackupMaker = null;
-				}
 
 				//just open the accompanying lift file.
 				path = path.Replace(".WeSayConfig", ".lift");
@@ -257,7 +194,7 @@ namespace WeSay.ConfigTool
 					if (!Project.LoadFromLiftLexiconPath(path))
 					{
 						Project = null;
-						return false;
+						return;
 					}
 				}
 						//                else if (path.Contains(".WeSayConfig"))
@@ -276,34 +213,15 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception e)
 			{
-				ErrorReport.NotifyUserOfProblem("WeSay was not able to open that project. \r\n" +
+				ErrorReport.ReportNonFatalMessage("WeSay was not able to open that project. \r\n" +
 												  e.Message);
-				return false;
+				return;
 			}
 
 			IContainer container = _project.Container.CreateInnerContainer();
 			var containerBuilder = new Autofac.Builder.ContainerBuilder();
 			containerBuilder.Register(typeof(Tasks.TaskListView));
 			containerBuilder.Register(typeof(Tasks.TaskListPresentationModel));
-
-			containerBuilder.Register<MissingInfoTaskConfigControl>().FactoryScoped();
-
-			//      autofac's generated factory stuff wasn't working with our version of autofac, so
-			//  i abandoned this
-			//containerBuilder.Register<Control>().FactoryScoped();
-		   // containerBuilder.RegisterGeneratedFactory<ConfigTaskControlFactory>(new TypedService(typeof (Control)));
-
-			containerBuilder.Register<FieldsControl>();
-			containerBuilder.Register<WritingSystemSetup>();
-			containerBuilder.Register<FieldsControl>();
-			containerBuilder.Register<InterfaceLanguageControl>();
-			containerBuilder.Register<ActionsControl>();
-			containerBuilder.Register<BackupPlanControl>();
-			containerBuilder.Register<ChorusControl>();
-			containerBuilder.Register<OptionListControl>();
-
-			containerBuilder.Register<IContext>(c => c); // make the context itself available for pushing into contructors
-
 			containerBuilder.Build(container);
 
 			SetupProjectControls(container);
@@ -312,10 +230,7 @@ namespace WeSay.ConfigTool
 			{
 				Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
 			}
-			return true;
 		}
-
-
 
 		private void SetupProjectControls(IContext context)
 		{
@@ -342,12 +257,9 @@ namespace WeSay.ConfigTool
 			_welcomePage.BringToFront();
 			_welcomePage.Dock = DockStyle.Fill;
 			_welcomePage.NewProjectClicked += OnCreateProject;
-			_welcomePage.NewProjectFromFlexClicked += OnCreateProjectFromFLEx;
 			_welcomePage.OpenPreviousProjectClicked += OnOpenProject;
 			_welcomePage.ChooseProjectClicked += OnChooseProject;
 		}
-
-
 
 		private void InstallProjectsControls(IContext context)
 		{
@@ -380,12 +292,6 @@ namespace WeSay.ConfigTool
 			{
 				_projectSettingsControl.Dispose();
 			}
-			Logger.WriteEvent("App Exiting Normally.");
-
-		   if (_project != null)
-			{
-				_project.Dispose();
-			}
 		}
 
 		private void AdminWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -401,7 +307,7 @@ namespace WeSay.ConfigTool
 			catch (Exception error)
 			{
 				//would make it impossible to quit. e.Cancel = true;
-				ErrorReport.NotifyUserOfProblem(error.Message);
+				ErrorReport.ReportNonFatalMessage(error.Message);
 			}
 		}
 
@@ -423,32 +329,6 @@ namespace WeSay.ConfigTool
 		private void OnExit_Click(object sender, EventArgs e)
 		{
 			Close();
-		}
-
-		public void DisableBackupAndChorusStuffForTests()
-		{
-			_disableBackupAndChorusStuffForTests = true;
-		}
-
-
-
-		private void OnSaveACopyForFLEx5Pt4(object sender, EventArgs e)
-		{
-			using (var dlg = new SaveFileDialog())
-			{
-				dlg.FileName = _project.Name + "-flex5pt4.lift";
-				dlg.Title = "Save Copy of Lexicon For FLEx 5.4";
-				dlg.OverwritePrompt = true;
-				dlg.AutoUpgradeEnabled = true;
-				dlg.RestoreDirectory = true;
-				dlg.DefaultExt = ".lift";
-				dlg.Filter = "LIFT Lexicon File (*.lift)|*.lift";
-
-				if (System.Windows.Forms.DialogResult.OK != dlg.ShowDialog())
-					return;
-
-				LiftIO.Migration.Migrator.ReverseMigrateFrom13ToFLEx12(_project.PathToLiftFile, dlg.FileName);
-			}
 		}
 	}
 }

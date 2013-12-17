@@ -34,7 +34,7 @@ namespace Addin.Backup
 			this._cancelButton = new System.Windows.Forms.Button();
 			this._checkForUsbKeyTimer = new System.Windows.Forms.Timer(this.components);
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.localizationHelper1 = new Palaso.UI.WindowsForms.i8n.LocalizationHelper(this.components);
+			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
 			this._outputBox = new System.Windows.Forms.RichTextBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
@@ -130,7 +130,7 @@ namespace Addin.Backup
 		private System.Windows.Forms.Button _cancelButton;
 		private System.Windows.Forms.Timer _checkForUsbKeyTimer;
 		private System.Windows.Forms.PictureBox pictureBox1;
-		private Palaso.UI.WindowsForms.i8n.LocalizationHelper localizationHelper1;
+		private WeSay.UI.LocalizationHelper localizationHelper1;
 		private System.Windows.Forms.RichTextBox _outputBox;
 	}
 }
