@@ -1,30 +1,44 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
-using Palaso.Lift.Validation;
-using Palaso.TestUtilities;
+using System.Xml;
+using LiftIO.Validation;
+using NUnit.Framework;
+using WeSay.Foundation.Tests;
 
 namespace WeSay.Project.Tests
 {
 	/// <summary>
 	/// Creates a valid WeSay project directory in temp dir, and removes it when disposed.
+	///
+	/// Also see: Db4oProjectSetupForTesting, which encapsulates this
 	/// </summary>
-	public class ProjectDirectorySetupForTesting : IDisposable
+	public class ProjectDirectorySetupForTesting: IDisposable
 	{
 		private bool _disposed;
-		private const string ProjectName = "Test"; // Note the capital making a case difference from the folder name.
-		private const string ProjectFolder = "test";
-
-		private readonly TemporaryFolder _testFolder;
-		private readonly TemporaryFolder _projectRootFolder;
+		private readonly string _experimentDir;
+		private readonly string _projectName = "test";
+	  //  private readonly string _pathToTasksBase;
+		private string _projectDirectoryName;
 
 		public ProjectDirectorySetupForTesting(string xmlOfEntries)
 				: this(xmlOfEntries, Validator.LiftVersion) {}
 
 		public ProjectDirectorySetupForTesting(string xmlOfEntries, string liftVersion)
 		{
-			_testFolder = new TemporaryFolder("WeSayProjectTest");
-			_projectRootFolder = new TemporaryFolder(_testFolder, ProjectFolder);
-			WeSayWordsProject.CreateEmptyProjectFiles(_projectRootFolder.Path, ProjectName);
+			_projectDirectoryName = Path.GetRandomFileName();
+			_experimentDir = MakeDir(Path.GetTempPath(), ProjectDirectoryName);
+			WeSayWordsProject.CreateEmptyProjectFiles(_experimentDir, ProjectName);
+//            using (WeSayWordsProject p = new WeSayWordsProject())
+//            {
+//                p.PathToLiftFile = Path.Combine(_experimentDir, ProjectName + ".lift");
+//           //     p.CreateEmptyProjectFiles(_experimentDir);
+//                Assert.IsTrue(File.Exists(p.PathToConfigFile));
+//                _pathToTasksBase = Path.Combine(p.ProjectDirectoryPath, "temptasks.xml");
+//                File.Copy(p.PathToConfigFile, _pathToTasksBase);
+//                p.EditorsSaveNow += p_EditorsSaveNow;
+//                p.Save();
+//            }
 
 			//overwrite the blank lift file
 			string liftContents =
@@ -36,40 +50,73 @@ namespace WeSay.Project.Tests
 
 		}
 
+		private void p_EditorsSaveNow(object sender, EventArgs e)
+		{
+			//ok, the hard part is that now we have a config with tasks, but no view template.
+//            XmlDocument doc = new XmlDocument();
+//            doc.Load(_pathToTasksBase);
+//            XmlWriter writer = (XmlWriter) sender;
+//            IList<ViewTemplate> viewTemplates = WeSayWordsProject.Project.ViewTemplates;
+//            writer.WriteStartElement("components");
+//            foreach (ViewTemplate template in viewTemplates)
+//            {
+//                template.Write(writer);
+//            }
+//            writer.WriteEndElement();
+//
+//            writer.WriteStartElement("tasks");
+//            foreach (XmlNode taskNode in doc.SelectNodes("//task"))
+//            {
+//                taskNode.WriteTo(writer);
+//            }
+//            writer.WriteEndElement();
+		}
 
 		public string PathToDirectory
 		{
-			get { return _projectRootFolder.Path; }
+			get { return _experimentDir; }
 		}
 
 		public string PathToLiftFile
 		{
-			get { return Path.Combine(_projectRootFolder.Path, "Test.lift"); }
+			get { return Path.Combine(_experimentDir, "test.lift"); }
 		}
 
 		public string PathToConfigFile
 		{
-			get { return Path.Combine(_projectRootFolder.Path, "Test.WeSayConfig"); }
+			get { return Path.Combine(_experimentDir, "test.wesayConfig"); }
 		}
 
-		public string PathToUserConfigFile
+		public string PathToWritingSystemFile
+		{
+			get { return Path.Combine(_experimentDir, "WritingSystemPrefs.xml"); }
+		}
+
+		public string PathToFactoryDefaultsPartsOfSpeech
 		{
 			get
 			{
-				var files = Directory.GetFiles(PathToDirectory, "*.WeSayUserConfig");
-				if (files.Length > 1)
+				string fileName = "WritingSystemPrefs.xml";
+				string path = Path.Combine(BasilProject.ApplicationCommonDirectory, fileName);
+				if (File.Exists(path))
 				{
-					throw new IndexOutOfRangeException(String.Format(
-						"Too many WeSayUserConfig files ({0}) in test folder.",
-						files.Length
-					));
+					return path;
 				}
-				if (files.Length == 1)
+
+				path = Path.Combine(BasilProject.DirectoryOfExecutingAssembly, fileName);
+				if (File.Exists(path))
 				{
-					return files[0];
+					return path;
 				}
-				return Path.Combine(PathToDirectory, Environment.UserName + ".WeSayUserConfig");
+				return path;
 			}
+		}
+
+		private static string MakeDir(string existingParent, string newChild)
+		{
+			string dir = Path.Combine(existingParent, newChild);
+			Directory.CreateDirectory(dir);
+			return dir;
 		}
 
 		#region IDisposable Members
@@ -88,14 +135,18 @@ namespace WeSay.Project.Tests
 			get { return _disposed; }
 		}
 
+		public string ProjectName
+		{
+			get { return _projectName; }
+		}
+
 		public string ProjectDirectoryName
 		{
-			get { return _projectRootFolder.Path; }
+			get { return _projectDirectoryName; }
 		}
 
 		public void Dispose()
 		{
-			_testFolder.Dispose();
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
@@ -104,6 +155,11 @@ namespace WeSay.Project.Tests
 		{
 			if (!IsDisposed)
 			{
+				if (disposing)
+				{
+					Foundation.Tests.TestHelpers.TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
+				}
+
 				// shared (dispose and finalizable) cleanup logic
 				_disposed = true;
 			}
@@ -122,8 +178,9 @@ namespace WeSay.Project.Tests
 		public WeSayWordsProject CreateLoadedProject()
 		{
 
-			var p = new WeSayWordsProject();
+			WeSayWordsProject p = new WeSayWordsProject();
 			p.LoadFromLiftLexiconPath(PathToLiftFile);
+
 
 			return p;
 		}

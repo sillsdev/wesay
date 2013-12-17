@@ -129,7 +129,7 @@ namespace WeSay.ConfigTool
 			listViewGroup3.Header = "Example";
 			listViewGroup3.Name = "LexExampleSentence";
 			listViewGroup4.Header = "Everywhere";
-			listViewGroup4.Name = "PalasoDataObject";
+			listViewGroup4.Name = "WeSayDataObject";
 			this._fieldsListBox.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
 			listViewGroup1,
 			listViewGroup2,

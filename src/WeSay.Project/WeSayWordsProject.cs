@@ -1,66 +1,48 @@
 using System;
+using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
-using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
+using System.Xml.Xsl;
+using Autofac;
 using Autofac.Builder;
-using Chorus;
-using Chorus.FileTypeHanders.lift;
-using Chorus.sync;
-using Chorus.UI.Notes.Bar;
-using Microsoft.Practices.ServiceLocation;
-using Palaso.DictionaryServices.Lift;
-using Palaso.DictionaryServices.Model;
-using Palaso.IO;
-using Palaso.Lift;
-using Palaso.Lift.Options;
-using Palaso.Lift.Validation;
-using Palaso.Progress.LogBox;
+using Autofac.Component;
+using LiftIO;
+using LiftIO.Validation;
 using Palaso.Reporting;
-using Palaso.Text;
-using Palaso.UI.WindowsForms.Progress;
-using Palaso.UiBindings;
-using Palaso.WritingSystems;
-using Palaso.Xml;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
+using WeSay.Data;
+using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation.Options;
-using WeSay.Project.ConfigMigration.UserConfig;
-using WeSay.Project.ConfigMigration.WeSayConfig;
-using WeSay.Project.ConfigMigration.WritingSystem;
-using WeSay.Project.Synchronize;
-using WeSay.UI;
-using IContainer=Autofac.IContainer;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project
 {
-	public class WeSayWordsProject : BasilProject, IFileLocator
+	public class WeSayWordsProject : BasilProject
 	{
 		private IList<ITask> _tasks;
 		private ViewTemplate _defaultViewTemplate;
 		private IList<ViewTemplate> _viewTemplates;
 		private readonly Dictionary<string, OptionsList> _optionLists;
-		private readonly List<OptionsList> _modifiedOptionsLists = new List<OptionsList>();
 		private string _pathToLiftFile;
 		private string _cacheLocationOverride;
+		private FileStream _liftFileStreamForLocking;
+		private LiftUpdateService _liftUpdateService;
 
 		private readonly AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
-		readonly Dictionary<string, string> _changedWritingSystemIds = new Dictionary<string, string>();
-
-		//public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
-		public const int CurrentWeSayUserSpecificConfigFileVersion = 2; // This variable must be updated with every new vrsion of the WeSayUserConfig file
 
 		public event EventHandler EditorsSaveNow;
 
@@ -70,17 +52,13 @@ namespace WeSay.Project
 			public string to;
 		}
 
-		public const string VernacularWritingSystemIdForProjectCreation = "qaa-x-qaa";
-		public const string AnalysisWritingSystemIdForProjectCreation = "en";
-
 		public event EventHandler<StringPair> WritingSystemChanged;
-		public event WritingSystemDeleted WritingSystemDeleted;
 
 		public WeSayWordsProject()
 		{
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
-//            BackupMaker = new ChorusBackupMaker();
+			BackupMaker = new ChorusBackupMaker();
 
 		}
 
@@ -101,6 +79,39 @@ namespace WeSay.Project
 				}
 				return (WeSayWordsProject) Singleton;
 			}
+		}
+
+		/// <summary>
+		/// See comment on BasilProject.InitializeForTests()
+		/// </summary>
+		public new static void InitializeForTests()
+		{
+			WeSayWordsProject project = new WeSayWordsProject();
+
+			try
+			{
+				File.Delete(PathToPretendLiftFile);
+			}
+			catch (Exception) {}
+
+			Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
+			Utilities.CreateEmptyLiftFile(PathToPretendLiftFile, "InitializeForTests()", true);
+
+			//setup writing systems
+			WritingSystemCollection wsc = new WritingSystemCollection();
+			wsc.Add(wsc.TestWritingSystemVernId,
+					new WritingSystem(wsc.TestWritingSystemVernId, new Font("Courier", 10)));
+			wsc.Add(wsc.TestWritingSystemAnalId,
+					new WritingSystem(wsc.TestWritingSystemAnalId, new Font("Arial", 15)));
+			if (File.Exists(PathToPretendWritingSystemPrefs))
+			{
+				File.Delete(PathToPretendWritingSystemPrefs);
+			}
+			wsc.Write(XmlWriter.Create(PathToPretendWritingSystemPrefs));
+
+			project.SetupProjectDirForTests(PathToPretendLiftFile);
+
+
 		}
 
 		public static string PathToPretendLiftFile
@@ -128,7 +139,7 @@ namespace WeSay.Project
 			RemoveCache();
 			ErrorReport.IsOkToInteractWithUser = false;
 			LoadFromProjectDirectoryPath(ProjectDirectoryPath);
-			UiOptions.Language = "en";
+			StringCatalogSelector = "en";
 		}
 
 		public void RemoveCache()
@@ -146,74 +157,103 @@ namespace WeSay.Project
 		public void HandleProbableCacheProblem(Exception error)
 		{
 #if DEBUG
-			ErrorReport.NotifyUserOfProblem(
+			ErrorReport.ReportNonFatalMessage(
 					"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.\r\n\r\nIn the release build, the cache would now be invalidated and the user would not see the following crash dialog.");
 			throw error;
 #else
 			//todo: make a way to pass on this error to us
-			Palaso.Reporting.ErrorReport.NotifyUserOfProblem(
+			Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
 				"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.");
 #endif
 		}
 
 		public bool LoadFromLiftLexiconPath(string liftPath)
 		{
-			try{
-				PathToLiftFile = LiftFileLocator.LocateAt(liftPath);
+			try
+			{
 
-				if (!File.Exists(PathToConfigFile))
+				if (!File.Exists(liftPath))
 				{
-					var result = MessageBox.Show(
-						"This project does not have the WeSay-specific configuration files.  A new set of files will be created, and later you can use the WeSayConfiguration Tool to set up things the way you want.",
-						"WeSay",MessageBoxButtons.OKCancel);
-
-					if (result != DialogResult.OK)
-						return false;
+					ErrorReport.ReportNonFatalMessage(
+							String.Format(
+									"WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nTry opening the LIFT file by double clicking on it.",
+									liftPath));
+					return false;
 				}
-				else
+				try
 				{
-					try
+					using (FileStream fs = File.OpenWrite(liftPath))
 					{
-						using (FileStream fs = File.OpenRead(PathToConfigFile))
-						{
-							fs.Close();
-						}
+						fs.Close();
 					}
-					catch (UnauthorizedAccessException)
-					{
-						ErrorReport.NotifyUserOfProblem(
+				}
+				catch (UnauthorizedAccessException)
+				{
+					ErrorReport.ReportNonFatalMessage(
 							String.Format(
-								"WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
-								PathToConfigFile));
-						return false;
-					}
-					catch (IOException e)
-					{
-						ErrorReport.NotifyUserOfProblem(
+									"WeSay was unable to open the file at '{0}' for writing, because the system won't allow it. Check that 'ReadOnly' is cleared, otherwise investigate your user permissions to write to this file.",
+									liftPath));
+					return false;
+				}
+				catch (IOException)
+				{
+					ErrorReport.ReportNonFatalMessage(
 							String.Format(
-								"WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
-								PathToConfigFile,
-								e.Message));
-						return false;
+									"WeSay was unable to open the file at '{0}' for writing, probably because it is locked by some other process on your computer. Maybe you need to quit WeSay? If you can't figure out what has it locked, restart your computer.",
+									liftPath));
+					return false;
+				}
+
+				if (!liftPath.Contains(Path.DirectorySeparatorChar.ToString()))
+				{
+					Logger.WriteEvent("Converting filename only liftPath {0} to full path {1}", liftPath, Path.GetFullPath(liftPath));
+					liftPath = Path.GetFullPath(liftPath);
+				}
+
+				PathToLiftFile = liftPath;
+
+				if (!File.Exists(liftPath))
+				{
+					ErrorReport.ReportNonFatalMessage(
+							String.Format(
+									"WeSay tried to find the WeSay configuration file at '{0}', but could not find it.\r\n\r\nTry using the configuration Tool to create one.",
+									PathToConfigFile));
+					return false;
+				}
+				try
+				{
+					using (FileStream fs = File.OpenRead(PathToConfigFile))
+					{
+						fs.Close();
 					}
+				}
+				catch (UnauthorizedAccessException)
+				{
+					ErrorReport.ReportNonFatalMessage(
+							String.Format(
+									"WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
+									PathToConfigFile));
+					return false;
+				}
+				catch (IOException e)
+				{
+					ErrorReport.ReportNonFatalMessage(
+							String.Format(
+									"WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
+									PathToConfigFile,
+									e.Message));
+					return false;
 				}
 
 				//ProjectDirectoryPath = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
 				ProjectDirectoryPath = Directory.GetParent(liftPath).FullName;
 
-				try
-				{
-					LoadFromProjectDirectoryPath(ProjectDirectoryPath);
-				}
-				catch (LiftFormatException)
-				{
-					return false;//it's already been reported, not a crash, but we can't go on
-				}
+				LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 				return true;
 			}
 			catch (ConfigurationException e)
 			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 				return false;
 			}
 		}
@@ -249,117 +289,39 @@ namespace WeSay.Project
 		{
 			ProjectDirectoryPath = projectDirectoryPath;
 
-			if (!File.Exists(PathToConfigFile))
-			{
-				string preferredLiftFile = LiftFileLocator.LocateInDirectory(projectDirectoryPath);
-				if (String.IsNullOrEmpty(preferredLiftFile))
-				{
-					return;
-				}
-				PathToLiftFile = preferredLiftFile;
-				string projectName = Path.GetFileName(Path.GetFileNameWithoutExtension(preferredLiftFile));
-
-				CreateEmptyProjectFiles(projectDirectoryPath, projectName);
-				LoadFromProjectDirectoryPathInner(projectDirectoryPath);
-
-				//will rarely be needed... only when we're starting with a raw lift folder
-				ProjectFromLiftFolderCreator.PrepareLiftFolderForWeSay(this);
-				Save();
-			}
-			else
-			{
-				LoadFromProjectDirectoryPathInner(projectDirectoryPath);
-			}
-		}
-
-		private void LoadFromProjectDirectoryPathInner(string projectDirectoryPath)
-		{
-			ProjectDirectoryPath = projectDirectoryPath;
-
 			//may have already been done, but maybe not
 			MoveFilesFromOldDirLayout(projectDirectoryPath);
-			if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
-			{
-				var dialog = new ProgressDialog();
-				var worker = new BackgroundWorker();
-				worker.DoWork += OnDoMigration;
-				worker.RunWorkerCompleted += OnWorkerCompleted;
-				dialog.BackgroundWorker = worker;
-				dialog.CanCancel = false;
-				dialog.BarStyle = ProgressBarStyle.Marquee;
-				dialog.Text = "Checking file...";
-				dialog.StatusText = "Checking files...";
-				dialog.ShowDialog();
-			}
-			else
-			{
-				OnDoMigration(null, null);  // this ensures that migration will occur even when the dilog box isn't shown i.e. during tests
-			}
 
+			XPathDocument configDoc = GetConfigurationDoc();
+			if (configDoc != null) // will be null if we're creating a new project
+			{
+				XPathNavigator nav = configDoc.CreateNavigator().SelectSingleNode("//uiOptions");
+				if (nav != null)
+				{
+					string ui = nav.GetAttribute("uiLanguage", "");
+					if (!string.IsNullOrEmpty(ui))
+					{
+						StringCatalogSelector = ui;
+					}
+					UiFontName = nav.GetAttribute("uiFont", "");
+					string s = nav.GetAttribute("uiFontSize", string.Empty);
+					float f;
+					if (!float.TryParse(s, out f) || f == 0)
+					{
+						f = 12;
+					}
+					UiFontSizeInPoints = f;
+				}
+				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
+			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
+
+			//container change InitializeViewTemplatesFromProjectFiles();
+
 			//review: is this the right place for this?
 			PopulateDIContainer();
 
-			LoadUserConfig();
-			InitStringCatalog();
-		}
-
-		private static void OnWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-		{
-			if (e != null && e.Error != null)
-			{
-				throw new ApplicationException("Error during migration.", e.Error);
-			}
-		}
-
-		private void OnDoMigration(object sender, DoWorkEventArgs e)
-		{
-			MigrateProjectFilesAndCheckForOrphanedWritingSystems(ProjectDirectoryPath);
-		}
-
-		private static void MigrateProjectFilesAndCheckForOrphanedWritingSystems(string projectDirectory)
-		{
-			string liftFilePath = LiftFileLocator.LocateInDirectoryQuietly(projectDirectory);
-			string configFilePath = GetPathToConfigFile(projectDirectory, GetProjectNameFromLiftFilePath(liftFilePath));
-			string userConfigPath = PathToUserSpecificConfigFile(projectDirectory);
-
-			//migrate writing systems
-			var writingSystemMigrator = new WritingSystemsMigrator(projectDirectory);
-			writingSystemMigrator.MigrateIfNecessary();
-
-			// Load the writing systems
-			var writingSystemRepository = LdmlInFolderWritingSystemRepository.Initialize(
-				GetPathToLdmlWritingSystemsFolder(projectDirectory),
-				OnWritingSystemMigration,
-				OnWritingSystemLoadProblem,
-				WritingSystemCompatibility.Flex7V0Compatible
-			);
-
-			//migrate the project config file
-			ConfigFile projectConfigFile = null;
-			if (File.Exists(configFilePath)) // will be null if we're creating a new project
-			{
-				projectConfigFile = new ConfigFile(configFilePath);
-				projectConfigFile.MigrateIfNecassary();
-				//check for orphaned writing systems in the config file
-				projectConfigFile.CreateWritingSystemsForIdsInFileWhereNecassary(writingSystemRepository);
-			}
-
-			if (File.Exists(liftFilePath)) // will be null if we're creating a new project
-			{
-				//check for orphaned writing systems in Lift
-				var wsCreator = new WritingSystemsInLiftFileHelper(writingSystemRepository, liftFilePath);
-				wsCreator.CreateNonExistentWritingSystemsFoundInFile();
-			}
-
-			//migrate user config
-			var userConfigMigrator = new WeSayUserConfigMigrator(userConfigPath);
-			userConfigMigrator.MigrateIfNeeded();
-		}
-
-		private static string GetProjectNameFromLiftFilePath(string liftFilePath)
-		{
-			return String.IsNullOrEmpty(liftFilePath) ? "" : Path.GetFileNameWithoutExtension(liftFilePath);
+			LoadBackupPlan();
 		}
 
 		[Serializable]
@@ -369,70 +331,20 @@ namespace WeSay.Project
 		   Type serviceType
 		);
 
-		//TOdo: figure out how to move this to wher it belongs... should be doable if/when we
-		//can do container building from within the lexical assemblies.
-		public static string GetUrlFromLexEntry(LexEntry entry)
-		{
-			var filename = Path.GetFileName(Project.PathToLiftFile);
-			//review: see also: HttpUtility.UrlEncode
-			filename = Uri.EscapeDataString(filename);
-			string url = string.Format("lift://{0}?type=entry&", filename);
-			url += "label=" + entry.GetSimpleFormForLogging() + "&";
-			url += "id=" + entry.Guid;
-			url = url.Trim('&');
-			return url;
-		}
-
 		private void PopulateDIContainer()
 		{
 			var builder = new ContainerBuilder();
 
+			//builder.Register<UserSettingsRepository>(new UserSettingsRepository());
 			builder.Register(new WordListCatalog()).SingletonScoped();
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 
-			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
-			builder.Register<OptionsList>(c => GetSemanticDomainsList());//todo: figure out how to limit this with a name... currently, it's for any OptionList
+			builder.Register<LexEntryRepository>(
+				c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
+						progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
 
-			// I (CP) don't think this is needed
-			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields());//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
-
-			builder.Register<LiftDataMapper>( c =>
-			  {
-				  try
-				  {
-					  return c.Resolve<IProgressNotificationProvider>().Go
-						  <LiftDataMapper>(
-							  "Loading Dictionary",
-							  progressState =>
-								  {
-									  var mapper =  new WeSayLiftDataMapper(
-										  _pathToLiftFile,
-										  GetSemanticDomainsList(),
-										  GetIdsOfSingleOptionFields(),
-										  progressState
-										  );
-
-									  return mapper;
-								  }
-						  );
-				  }
-				  catch (LiftFormatException error)
-				  {
-					  ErrorReport.NotifyUserOfProblem(error.Message);
-					  throw;
-				  }
-			  });
-
-			builder.Register<LexEntryRepository>();
-//            builder.Register<LexEntryRepository>(
-//                 c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
-//                         progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
-
-
-			builder.Register<ICountGiver>(c => c.Resolve<LexEntryRepository>());
-
-
+			//builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
 
 			var catalog = new TaskTypeCatalog();
 			catalog.RegisterAllTypes(builder);
@@ -445,33 +357,16 @@ namespace WeSay.Project
 			//back when we did this assignment.
 			string configFileText = File.ReadAllText(PathToConfigFile);
 
-			string defaultXmlConfigText = File.ReadAllText(PathToDefaultConfig);
-
-			builder.Register<ConfigFileReader>(c => new ConfigFileReader(configFileText, defaultXmlConfigText,  catalog)).SingletonScoped();
+			builder.Register<ConfigFileReader>(c => new ConfigFileReader(configFileText, catalog)).SingletonScoped();
 
 			builder.Register<TaskCollection>().SingletonScoped();
 
-			var viewTemplates = ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems);
-			foreach (var viewTemplate in viewTemplates)
+			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(configFileText))
 			{
 				//todo: this isn't going to work if we start using multiple tempates.
 				//will have to go to a naming system.
 				builder.Register(viewTemplate).SingletonScoped();
 			}
-
-			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named("PrintingTemplate");
-			builder.Register<IWritingSystemRepository>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
-
-			RegisterChorusStuff(builder, viewTemplates.First().CreateListForChorus());
-
-
-			builder.Register<PublicationFontStyleProvider>(c=> new PublicationFontStyleProvider(c.Resolve<ViewTemplate>("PrintingTemplate")));
-
-			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainDdp4);
-			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
-
-
-			builder.Register<PictureControl>(c=> new PictureControl(Path.GetDirectoryName(PathToLiftFile), PathToPictures, GetFileLocator())).FactoryScoped();
 
 		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
 
@@ -479,92 +374,7 @@ namespace WeSay.Project
 			// can't currently get at the instance
 			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
 
-			builder.Register<CheckinDescriptionBuilder>().SingletonScoped();
-			var configuration = new ProjectFolderConfiguration(Path.GetDirectoryName(PathToConfigFile));
-			LiftFolder.AddLiftFileInfoToFolderConfiguration(configuration);
-			builder.Register<Chorus.sync.ProjectFolderConfiguration>(configuration).SingletonScoped();
-			builder.Register<ChorusBackupMaker>().SingletonScoped();
-			builder.Register<UiConfigurationOptions>().SingletonScoped();
-
-
-			//it is sad that we initially used a static for logger, and that hasn't been completely undone yet.
-			//but by registering it here, we at least make it possible for components to get access to it this
-			//"proper" way.
-			builder.Register<Logger>(c => Logger.Singleton);
-			builder.Register<ILogger>(c =>
-										  {
-											  var m = new MultiLogger();
-											  Logger.Init();//it's ok if this was already done
-											  m.Add(Logger.Singleton);
-											  m.Add(c.Resolve<CheckinDescriptionBuilder>());
-											  return m;
-										  });
-
-			//            var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
-//                        () => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
-
-//            var x = _defaultViewTemplate.GetField(
-//            builder.Register<AudioPathProvider>(c=>new AudioPathProvider(PathToAudio, )));
-
-			builder.Register(c=>
-				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).ContainerScoped();
-
-
 			_container = builder.Build();
-		}
-
-		private void RegisterChorusStuff(ContainerBuilder builder, IEnumerable<IWritingSystem> writingSystemsForChorus)
-		{
-			//NB: currently, the ctor for ChorusSystem requires hg, since it gets or creates a repo in the path.
-			if (!string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")))
-				return;
-
-			//TODO: move all this stuff to ChorusSystem
-			ChorusUIComponentsInjector.Inject(builder, Path.GetDirectoryName(PathToConfigFile));
-			var chorusSystem = new ChorusSystem(Path.GetDirectoryName(PathToConfigFile));
-			chorusSystem.WritingSystems = writingSystemsForChorus;
-			builder.Register(writingSystemsForChorus);
-			builder.Register<Chorus.UI.Review.NavigateToRecordEvent>(chorusSystem.NavigateToRecordEvent);
-			builder.Register<ChorusSystem>(chorusSystem);
-
-			//            builder.Register<ChorusNotesSystem>(c=>
-			//            {
-			//                var system =c.Resolve<ChorusSystem>().GetNotesSystem(PathToLiftFile,
-			//                                                         new NullProgress());
-			//                system.IdGenerator = (target) => ((LexEntry) target).Guid.ToString();
-			//              //  system.UrlGenerator = (target, id) => GetUrlFromLexEntry(target as LexEntry);
-			//                return system;
-			//            }).ContainerScoped();//TODO
-
-			//add a factory which takes no parameters, which autofac can give to the NotesBrowserTask to use
-			//to create this only if/when it is activated
-			builder.Register<System.Func<Chorus.UI.Notes.Browser.NotesBrowserPage>>(c =>
-			{
-				var chorus = c.Resolve<ChorusSystem>();
-				return () => chorus.WinForms.CreateNotesBrowser();
-			});
-
-			var mapping = new NotesToRecordMapping();
-			mapping.FunctionToGetCurrentUrlForNewNotes = (entry, id) => GetUrlFromLexEntry(entry as LexEntry);
-			mapping.FunctionToGoFromObjectToItsId = (entry) => (entry as LexEntry).Guid.ToString();
-			builder.Register<NotesToRecordMapping>(mapping);
-
-			builder.Register<NotesBarView>(c => c.Resolve<ChorusSystem>().WinForms.CreateNotesBar(PathToLiftFile, c.Resolve<NotesToRecordMapping>(), new NullProgress())).FactoryScoped();
-
-		}
-
-		public IEnumerable<string> GetIdsOfSingleOptionFields()
-		{
-			foreach (Field field in DefaultViewTemplate.Fields)
-			{
-				if (field.DataTypeName == "Option")
-					yield return field.FieldName;
-			}
-		}
-
-		public OptionsList GetSemanticDomainsList()
-		{
-			return GetOptionsList(LexSense.WellKnownProperties.SemanticDomainDdp4);
 		}
 
 		public LexEntryRepository GetLexEntryRepository()
@@ -579,26 +389,21 @@ namespace WeSay.Project
 //            return _container.Resolve(serviceType);
 //        }
 
-		private void LoadUserConfig()
+		private void LoadBackupPlan()
 		{
-			var dom = new XmlDocument();
-			BackupMaker = null;
-			if (File.Exists(PathToUserSpecificConfigFile(ProjectDirectoryPath)))
+			//what a mess. I hate .net new fangled xml stuff...
+			XPathDocument projectDoc = GetConfigurationDoc();
+			XPathNavigator backupPlanNav = projectDoc.CreateNavigator();
+			backupPlanNav = backupPlanNav.SelectSingleNode("configuration/" + ChorusBackupMaker.ElementName);
+			if (backupPlanNav == null)
 			{
-				dom.Load(PathToUserSpecificConfigFile(ProjectDirectoryPath));
-				BackupMaker = ChorusBackupMaker.CreateFromDom(dom, _container.Resolve<CheckinDescriptionBuilder>());
-				UiOptions = UiConfigurationOptions.CreateFromDom(dom);
+				//make sure we have a fresh copy with any defaults
+				BackupMaker = new ChorusBackupMaker();
+				return;
 			}
 
-			if (BackupMaker == null)
-			{
-				BackupMaker = _container.Resolve<ChorusBackupMaker>();
-			}
-
-			if (UiOptions == null)
-			{
-				UiOptions = _container.Resolve<UiConfigurationOptions>();
-			}
+			XmlReader r = XmlReader.Create(new StringReader(backupPlanNav.OuterXml));
+			BackupMaker = ChorusBackupMaker.LoadFromReader(r);
 		}
 
 		private static void MoveFilesFromOldDirLayout(string projectDir)
@@ -660,7 +465,7 @@ namespace WeSay.Project
 				ApplicationException e =
 						new ApplicationException(
 								"Error while trying to migrate to new file structure. ", err);
-				ErrorReport.ReportFatalException(e);
+				ErrorNotificationDialog.ReportException(e);
 			}
 		}
 
@@ -699,17 +504,100 @@ namespace WeSay.Project
 				ApplicationException e =
 						new ApplicationException(
 								"Error while trying to move export files to new structure. ", err);
-				ErrorReport.ReportFatalException(e);
+				ErrorNotificationDialog.ReportException(e);
 			}
 		}
 
 		public bool MigrateConfigurationXmlIfNeeded()
 		{
-			var m = new ConfigurationMigrator();
-			return m.MigrateConfigurationXmlIfNeeded(PathToConfigFile, PathToConfigFile);
+			return MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile),
+												   PathToConfigFile);
 		}
 
+		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc,
+														   string targetPath)
+		{
+			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
+			bool didMigrate = false;
+
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") == null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig0To1.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			if (
+					configurationDoc.CreateNavigator().SelectSingleNode(
+							"configuration[@version='1']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig1To2.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='2']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig2To3.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='3']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig3To4.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='4']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig4To5.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			return didMigrate;
+		}
+
+		private static void MigrateUsingXSLT(IXPathNavigable configurationDoc,
+											 string xsltName,
+											 string targetPath)
+		{
+			Logger.WriteEvent("Migrating Configuration File {0}", xsltName);
+			using (
+					Stream stream =
+							Assembly.GetExecutingAssembly().GetManifestResourceStream(
+									typeof (WeSayWordsProject), xsltName))
+			{
+				XslCompiledTransform transform = new XslCompiledTransform();
+				using (XmlReader reader = XmlReader.Create(stream))
+				{
+					transform.Load(reader);
+					string tempPath = Path.GetTempFileName();
+					XmlWriterSettings settings = new XmlWriterSettings();
+					settings.Indent = true;
+					using (XmlWriter writer = XmlWriter.Create(tempPath, settings))
+					{
+						transform.Transform(configurationDoc, writer);
+						TempFileCollection tempfiles = transform.TemporaryFiles;
+						if (tempfiles != null)
+								// tempfiles will be null when debugging is not enabled
+						{
+							tempfiles.Delete();
+						}
+						writer.Close();
+					}
+					string s = targetPath + ".tmp";
+					if (File.Exists(s))
+					{
+						File.Delete(s);
+					}
+					if (File.Exists(targetPath)) //review: JDH added this because of a failing test, and from my reading, the target shouldn't need to pre-exist
+					{
+						File.Move(targetPath, s);
+					}
+					File.Move(tempPath, targetPath);
+					File.Delete(s);
+				}
+			}
+		}
 
 		//        public void LoadFromConfigFilePath(string path)
 		//        {
@@ -747,7 +635,7 @@ namespace WeSay.Project
 //                }
 //                catch (Exception error)
 //                {
-//                    ErrorReport.NotifyUserOfProblem(
+//                    ErrorReport.ReportNonFatalMessage(
 //                            "There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
 //                            error.Message);
 //                }
@@ -776,7 +664,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"There was a problem reading the addins-settings xml. {0}", error.Message);
 				return null;
 			}
@@ -792,12 +680,8 @@ namespace WeSay.Project
 								   GetFilesBelongingToProject(ProjectDirectoryPath),
 								   AddinSet.Singleton.LocateFile,
 								   WritingSystems,
-								   ServiceLocator,
+								   new WeSay.Foundation.ServiceLocatorAdapter(_container),
 								   this);
-		}
-		public IServiceLocator ServiceLocator
-		{
-			get { return new ServiceLocatorAdapter(_container); }
 		}
 
 		private XPathDocument GetConfigurationDoc()
@@ -812,14 +696,13 @@ namespace WeSay.Project
 				}
 				catch (Exception e)
 				{
-					ErrorReport.NotifyUserOfProblem("There was a problem reading the wesay config xml: " + e.Message);
+					ErrorReport.ReportNonFatalMessage("There was a problem reading the task xml. " +
+													  e.Message);
 					projectDoc = null;
 				}
 			}
 			return projectDoc;
 		}
-
-
 
 		public static string PathToDefaultConfig
 		{
@@ -832,36 +715,27 @@ namespace WeSay.Project
 			string name = Path.GetFileName(projectDirectoryPath);
 			CreateEmptyProjectFiles(projectDirectoryPath, name);
 		}
-
-		/// <summary>
-		/// note this now works for folders that have lift stuff, just no wesay stuff
-		/// </summary>
-		/// <param name="projectDirectoryPath"></param>
-		/// <param name="projectName"></param>
 		public static void CreateEmptyProjectFiles(string projectDirectoryPath, string projectName)
 		{
-			if(!Directory.Exists(projectDirectoryPath))
-			{
-				Directory.CreateDirectory(projectDirectoryPath);
-			}
 
-			MigrateProjectFilesAndCheckForOrphanedWritingSystems(projectDirectoryPath);
-			if (Directory.GetFiles(GetPathToLdmlWritingSystemsFolder(projectDirectoryPath)).Count() == 0)
-			{
-				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(projectDirectoryPath);
-			}
+			Directory.CreateDirectory(projectDirectoryPath);
+			string pathToWritingSystemPrefs = GetPathToWritingSystemPrefs(projectDirectoryPath);
+			File.Copy(GetPathToWritingSystemPrefs(ApplicationCommonDirectory), pathToWritingSystemPrefs);
+
 
 			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath, projectName);
 			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
 
+			//hack
+			StickDefaultViewTemplateInNewConfigFile(pathToWritingSystemPrefs, pathToConfigFile);
+
+			MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile),pathToConfigFile) ;
+
 			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
 			if (!File.Exists(pathToLiftFile))
 			{
-				Utilities.CreateEmptyLiftFile(pathToLiftFile, LiftWriter.ProducerString, false);
+				Utilities.CreateEmptyLiftFile(pathToLiftFile, LiftExporter.ProducerString, false);
 			}
-
-			//hack
-			StickDefaultViewTemplateInNewConfigFile(projectDirectoryPath, pathToConfigFile);
 		}
 
 		/// <summary>
@@ -869,24 +743,23 @@ namespace WeSay.Project
 		/// code, but everything else from template xml files.  So this opens up the default config
 		/// and sticks a nice new code-computed default view template into it.
 		/// </summary>
-		/// <param name="projectPath"></param>
+		/// <param name="pathToWritingSystemPrefs"></param>
 		/// <param name="pathToConfigFile"></param>
-		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile)
+		private static void StickDefaultViewTemplateInNewConfigFile(string pathToWritingSystemPrefs, string pathToConfigFile)
 		{
-			var writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
-				GetPathToLdmlWritingSystemsFolder(projectPath),
-				OnWritingSystemMigration,
-				OnWritingSystemLoadProblem,
-				WritingSystemCompatibility.Flex7V0Compatible
-			);
-			var template = ViewTemplate.MakeMasterTemplate(writingSystems);
-			var builder = new StringBuilder();
-			using (var writer = XmlWriter.Create(builder, CanonicalXmlSettings.CreateXmlWriterSettings(ConformanceLevel.Fragment)))
+			WritingSystemCollection writingSystemCollection = new WritingSystemCollection();
+			writingSystemCollection.Load(pathToWritingSystemPrefs);
+
+			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
+			StringBuilder builder = new StringBuilder();
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.OmitXmlDeclaration = true;
+			using (var writer = XmlWriter.Create(builder, settings))
 			{
 				template.Write(writer);
 			}
 
-			var doc = new XmlDocument();
+			XmlDocument doc = new XmlDocument();
 			doc.Load(pathToConfigFile);
 			var e = doc.SelectSingleNode("configuration").AppendChild(doc.CreateElement("components"));
 			e.InnerXml = builder.ToString();
@@ -897,21 +770,16 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return GetPathToConfigFile(
-					PathToWeSaySpecificFilesDirectoryInProject,
-					GetProjectNameFromLiftFilePath(PathToLiftFile)
-				);
+				string name = Path.GetFileNameWithoutExtension(PathToLiftFile);
+				string directoryInProject = PathToWeSaySpecificFilesDirectoryInProject;
+				return GetPathToConfigFile(directoryInProject, name);
 			}
-		}
-
-		public static string PathToUserSpecificConfigFile(string projectDirectory)
-		{
-			return Path.Combine(projectDirectory, System.Environment.UserName + ".WeSayUserConfig");
 		}
 
 		private static string GetPathToConfigFile(string directoryInProject, string name)
 		{
-			return String.IsNullOrEmpty(name) ? "" : Path.Combine(directoryInProject, name + ".WeSayConfig");
+			return Path.Combine(directoryInProject,
+								name + ".WeSayConfig");
 		}
 
 		/// <summary>
@@ -930,15 +798,43 @@ namespace WeSay.Project
 		public override void Dispose()
 		{
 			base.Dispose();
+			if (LiftIsLocked)
+			{
+				ReleaseLockOnLift();
+			}
 			if(_container !=null)
 			{
 				_container.Dispose();//this will dispose of objects in the container (at least those with the normal "lifetype" setting)
 			}
 		}
 
+		/// <remark>
+		/// The protection provided by this simple opproach is obviously limitted;
+		/// it will keep the lift file safe normally... but could lead to non-data-loosing crashes
+		/// if some automated process was sitting out there, just waiting to open as soon as we realease
+		/// </summary>
+		private void ReleaseLockOnLift()
+		{
+			//Debug.Assert(_liftFileStreamForLocking != null);
+			//_liftFileStreamForLocking.Close();
+			//_liftFileStreamForLocking.Dispose();
+			//_liftFileStreamForLocking = null;
+		}
+
+		public bool LiftIsLocked
+		{
+			get { return _liftFileStreamForLocking != null; }
+		}
+
+		private void LockLift()
+		{
+			//Debug.Assert(_liftFileStreamForLocking == null);
+			//_liftFileStreamForLocking = File.OpenRead(PathToLiftFile);
+		}
+
 		public override string Name
 		{
-			get { return GetProjectNameFromLiftFilePath(PathToLiftFile); }
+			get { return Path.GetFileNameWithoutExtension(PathToLiftFile); }
 		}
 
 		public string PathToLiftFile
@@ -947,7 +843,8 @@ namespace WeSay.Project
 			{
 				if (String.IsNullOrEmpty(_pathToLiftFile))
 				{
-					_pathToLiftFile = LiftFileLocator.LocateInDirectory(ProjectDirectoryPath);
+					_pathToLiftFile = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+												   Path.GetFileName(ProjectDirectoryPath) + ".lift");
 				}
 				return _pathToLiftFile;
 			}
@@ -991,10 +888,6 @@ namespace WeSay.Project
 		{
 			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "pictures"); }
 		}
-		public string PathToAudio
-		{
-			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "audio"); }
-		}
 
 		private static string GetPathToCacheFromPathToLift(string pathToLift)
 		{
@@ -1004,42 +897,13 @@ namespace WeSay.Project
 		public string PathToRepository
 		{
 			get { return PathToLiftFile; }
+			//get { return GetPathToDb4oLexicalModelDBFromPathToLift(PathToLiftFile); }
 		}
 
-
-		/// <summary>
-		/// at the momement, project is a file locator for old code, but we want to move
-		/// towards removing that responsibility, perhaps by adding a locator to the container
-		/// </summary>
-		/// <param name="fileName"></param>
-		/// <returns></returns>
-		public string LocateFile(string fileName)
+		public string GetPathToDb4oLexicalModelDBFromPathToLift(string pathToLift)
 		{
-			return GetFileLocator().LocateFile(fileName);
-		}
-		public string LocateFile(string fileName, string descriptionForErrorMessage)
-		{
-			return GetFileLocator().LocateFile(fileName, descriptionForErrorMessage);
-		}
-
-		public string LocateOptionalFile(string fileName)
-		{
-			return GetFileLocator().LocateOptionalFile(fileName);
-		}
-
-		public string LocateDirectory(string directoryName)
-		{
-			return GetFileLocator().LocateDirectory(directoryName);
-		}
-
-		public string LocateDirectory(string directoryName, string descriptionForErrorMessage)
-		{
-			return GetFileLocator().LocateDirectory(directoryName, descriptionForErrorMessage);
-		}
-
-		public IFileLocator CloneAndCustomize(IEnumerable<string> addedSearchPaths)
-		{
-			throw new NotImplementedException(); // just wouldn't make sense, since this entire thing has the IFileLocator interface
+			return Path.Combine(GetPathToCacheFromPathToLift(pathToLift),
+								Path.GetFileNameWithoutExtension(pathToLift) + ".words");
 		}
 
 		/// <summary>
@@ -1047,13 +911,40 @@ namespace WeSay.Project
 		/// This allows a user to override an installed file by making thier own.
 		/// </summary>
 		/// <returns></returns>
-		private FileLocator GetFileLocator()
+		public string LocateFile(string fileName)
 		{
-			return new FileLocator(new string[] { PathToWeSaySpecificFilesDirectoryInProject,
-												  ApplicationCommonDirectory, DirectoryOfTheApplicationExecutable, GetTopAppDirectory()});
+			string path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			//            path = Path.Combine(ProjectCommonDirectory, fileName);
+			//            if (File.Exists(path))
+			//            {
+			//                return path;
+			//            }
+
+			path = Path.Combine(ApplicationCommonDirectory, fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			path = Path.Combine(DirectoryOfExecutingAssembly, fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			path = Path.Combine(GetTopAppDirectory(), fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			return null;
 		}
-
-
 
 		public string PathToWeSaySpecificFilesDirectoryInProject
 		{
@@ -1142,7 +1033,11 @@ namespace WeSay.Project
 			set { _cacheLocationOverride = value; }
 		}
 
-
+		public LiftUpdateService LiftUpdateService
+		{
+			get { return _liftUpdateService; }
+			set { _liftUpdateService = value; }
+		}
 
 		public AddinSet Addins
 		{
@@ -1164,11 +1059,16 @@ namespace WeSay.Project
 			}
 		}
 
-		public WritingSystemDefinition HeadWordWritingSystem
+		public WritingSystem HeadWordWritingSystem
 		{
 			get
 			{
-				return DefaultViewTemplate.GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit);
+				Field f = DefaultViewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit);
+				if (f.WritingSystemIds.Count == 0)
+				{
+					return WritingSystems.UnknownVernacularWritingSystem;
+				}
+				return WritingSystems[f.WritingSystemIds[0]];
 			}
 		}
 
@@ -1177,20 +1077,10 @@ namespace WeSay.Project
 			get { return DefaultViewTemplate; }
 		}
 
-		static public bool PreventBackupForTests
-		{
-			get;
-			set;
-		}
-
 		public ChorusBackupMaker BackupMaker
 		{
 			get { return _backupMaker; }
-			set
-			{
-				if(!PreventBackupForTests)
-						_backupMaker = value;
-			}
+			set { _backupMaker = value; }
 		}
 
 		public IContainer Container
@@ -1198,25 +1088,17 @@ namespace WeSay.Project
 			get { return _container; }
 		}
 
-		public static string NewProjectDirectory
-		{
-			get
-			{
-				return Path.Combine(
-				   Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WeSay");
-			}
-		}
-
 		public override void Save()
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
 
-			var pendingConfigFile = new TempFileForSafeWriting(Project.PathToConfigFile);
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.Indent = true;
 
-			var writer = XmlWriter.Create(pendingConfigFile.TempFilePath, CanonicalXmlSettings.CreateXmlWriterSettings());
+			XmlWriter writer = XmlWriter.Create(Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
-			writer.WriteAttributeString("version", ConfigFile.LatestVersion.ToString());
+			writer.WriteAttributeString("version", "5");
 
 			writer.WriteStartElement("components");
 			foreach (ViewTemplate template in ViewTemplates)
@@ -1235,73 +1117,16 @@ namespace WeSay.Project
 				EditorsSaveNow.Invoke(writer, null);
 			}
 
+			BackupMaker.Save(writer);
+
 			_addins.Save(writer);
 
 			writer.WriteEndDocument();
 			writer.Close();
-			foreach (var modifiedOptionsList in _modifiedOptionsLists)
-			{
-				var fileAssociatedWithOptionsList =
-					_optionLists.Where(opt => opt.Value == modifiedOptionsList).Select(opt => opt.Key).First();
-					//notice that we always save to the project directory, even if we started with the
-					//one in the program files directory.
-					string path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, fileAssociatedWithOptionsList);
-
-					try
-					{
-						_optionLists[fileAssociatedWithOptionsList].SaveToFile(path);
-					}
-					catch (Exception error)
-					{
-						ErrorReport.NotifyUserOfProblem(
-							"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
-							path,
-							error.Message);
-					}
-			}
-
-			//Now let's replace writing systems in OptionLists
-
-			foreach (var kvp in _changedWritingSystemIds)
-			{
-				foreach (var filePath in Directory.GetFiles(ProjectDirectoryPath))
-				{
-					var helper = new WritingSystemsInOptionsListFileHelper(WritingSystems, filePath);
-					helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
-				}
-			}
-
-
-			pendingConfigFile.WriteWasSuccessful();
 
 			base.Save();
-			CommitWritingSystemIdChangesToLiftFile();
-
-			SaveUserSpecificConfiguration();
 			BackupNow();
 
-		}
-
-		private void SaveUserSpecificConfiguration()
-		{
-			var pendingConfigFile = new TempFileForSafeWriting(PathToUserSpecificConfigFile(ProjectDirectoryPath));
-
-			var writer = XmlWriter.Create(pendingConfigFile.TempFilePath, CanonicalXmlSettings.CreateXmlWriterSettings());
-			writer.WriteStartDocument();
-			writer.WriteStartElement("configuration");
-			writer.WriteAttributeString("version", CurrentWeSayUserSpecificConfigFileVersion.ToString());
-
-
-			if (BackupMaker != null)
-				BackupMaker.Save(writer);
-
-			if (UiOptions != null)
-				UiOptions.Save(writer);
-
-			writer.WriteEndDocument();
-			writer.Close();
-
-			pendingConfigFile.WriteWasSuccessful();
 		}
 
 		public Field GetFieldFromDefaultViewTemplate(string fieldName)
@@ -1344,7 +1169,7 @@ namespace WeSay.Project
 												field.OptionsListFile);
 			if (File.Exists(pathInProject))
 			{
-				LoadOptionsList(field.FieldName, pathInProject);
+				LoadOptionsList(pathInProject);
 			}
 			else
 			{
@@ -1367,39 +1192,16 @@ namespace WeSay.Project
 								pathInProgramDir);
 					}
 				}
-				LoadOptionsList(field.FieldName, pathInProgramDir);
+				LoadOptionsList(pathInProgramDir);
 			}
 
 			return _optionLists[field.OptionsListFile];
 		}
 
-		public void MarkOptionListAsUpdated(OptionsList list)
-		{
-			if (!_modifiedOptionsLists.Contains(list))
-			{
-				_modifiedOptionsLists.Add(list);
-			}
-		}
-
-		private void LoadOptionsList(string fieldName,string pathToOptionsList)
+		private void LoadOptionsList(string pathToOptionsList)
 		{
 			string name = Path.GetFileName(pathToOptionsList);
-			IOptionListReader reader;
-			object r;
-			//first, try for a reader named after the field
-			if(_container.TryResolve(fieldName, out r))
-			{
-				reader = r as IOptionListReader;
-			}
-			else
-			{
-				reader = _container.Resolve<IOptionListReader>();
-			}
-			OptionsList list = reader.LoadFromFile(pathToOptionsList);
-			foreach (var oldNewId in _changedWritingSystemIds)
-			{
-				ChangeIdInLoadedOptionListIfNecassary(oldNewId.Key, oldNewId.Value, list);
-			}
+			OptionsList list = OptionsList.LoadFromFile(pathToOptionsList);
 			_optionLists.Add(name, list);
 		}
 
@@ -1442,7 +1244,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
+				ErrorReport.ReportNonFatalMessage("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
 				return false;
 			}
 
@@ -1466,98 +1268,44 @@ namespace WeSay.Project
 						 field.DataTypeName ==
 						 Field.BuiltInDataType.OptionCollection.ToString())
 					 {
-						 FileUtils.GrepFile(p,
+						 GrepFile(p,
 								  string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
 								  string.Format("name=\"{0}\"", field.FieldName));
 					 }
 					 else
 					 {
 						 //<field>s
-						 FileUtils.GrepFile(p,
+						 GrepFile(p,
 								  string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
 								  string.Format("type=\"{0}\"", field.FieldName));
 					 }
 				 });
+			return true;
 		}
 
-		private void MakeWritingSystemIdChangeInLiftFile(string oldId, string newId)
+		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)
 		{
-			var helper = new WritingSystemsInLiftFileHelper(WritingSystems, PathToLiftFile);
-			helper.ReplaceWritingSystemId(oldId, newId);
-		}
-
-		private void CommitWritingSystemIdChangesToLiftFile()
-		{
-			foreach (var kvp in _changedWritingSystemIds)
+			if (DoSomethingToLiftFile((p) =>
+					 //todo: expand the regular expression here to account for all reasonable patterns
+					 GrepFile(PathToLiftFile,
+							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
+											Regex.Escape(oldId)),
+							  string.Format("lang=\"{0}\"", ws.Id))))
 			{
-				MakeWritingSystemIdChangeInLiftFile(kvp.Key, kvp.Value);
-			}
-		}
+				WritingSystems.IdOfWritingSystemChanged(ws, oldId);
+				DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
 
-		public void MakeWritingSystemIdChange(string oldId, string newId)
-		{
-			//this is the case the first time someone changes a writing system Id
-			if (!_changedWritingSystemIds.Any(kvp => kvp.Key.Equals(oldId, StringComparison.OrdinalIgnoreCase)))
-			{
-				_changedWritingSystemIds.Add(oldId, newId);
-			}
-			// this is the case if they have changed the writing system id before
-			else if (_changedWritingSystemIds.Any(kvp => kvp.Value.Equals(oldId, StringComparison.OrdinalIgnoreCase)))
-			{
-				var key = _changedWritingSystemIds.First(kvp => kvp.Value.Equals(oldId, StringComparison.OrdinalIgnoreCase)).Key;
-				_changedWritingSystemIds[key] = newId;
-			}
-			DefaultViewTemplate.OnWritingSystemIDChange(oldId, newId);
-
-			foreach (var optionlist in _optionLists.Values)
-			{
-				ChangeIdInLoadedOptionListIfNecassary(oldId, newId, optionlist);
-			}
-
-			if (WritingSystemChanged != null)
-			{
-				StringPair p = new StringPair();
-				p.from = oldId;
-				p.to = newId;
-				WritingSystemChanged.Invoke(this, p);
-			}
-		}
-
-		private void ChangeIdInLoadedOptionListIfNecassary(string oldId, string newId, OptionsList optionlist)
-		{
-			var abbreviationLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
-																	   option => option.Abbreviation.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
-
-			var nameLanguageForms = new List<LanguageForm>(optionlist.Options.Select(
-															   option => option.Name.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
-
-			var descriptionForms = new List<LanguageForm>(optionlist.Options.Select(
-															  option => option.Description.Forms.Select(form => form).Where(form => form.WritingSystemId == oldId).FirstOrDefault()));
-
-			var formsToChange = abbreviationLanguageForms.Concat(nameLanguageForms).Concat(descriptionForms);
-
-			if(formsToChange.Count() > 0)
-			{
-				MarkOptionListAsUpdated(optionlist);
-			}
-
-			foreach (var form in formsToChange)
-			{
-				if (form != null)
+				if (WritingSystemChanged != null)
 				{
-					form.WritingSystemId = newId;
+					StringPair p = new StringPair();
+					p.from = oldId;
+					p.to = ws.Id;
+					WritingSystemChanged.Invoke(this, p);
 				}
+				return true;
 			}
-		}
 
-		public void DeleteWritingSystemId(string id)
-		{
-			DefaultViewTemplate.DeleteWritingSystem(id);
-
-			if (WritingSystemDeleted != null)
-			{
-				WritingSystemDeleted(this, new WritingSystemDeletedEventArgs(id));
-			}
+			return false;
 		}
 
 		/// <summary>
@@ -1565,27 +1313,73 @@ namespace WeSay.Project
 		/// </summary>
 		/// <param name="pathToLift"></param>
 		/// <returns>true if it displayed an error message</returns>
-//        public static bool CheckLiftAndReportErrors(string pathToLift)
-//        {
-//            try
-//            {
-//                string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
-//                if (!String.IsNullOrEmpty(errors))
-//                {
-//                    ErrorReport.NotifyUserOfProblem(
-//                            "The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
-//                            pathToLift,
-//                            errors);
-//                    return true;
-//                }
-//            }
-//            catch (Exception e)
-//            {
-//                ErrorReport.ReportNonFatalException(e);
-//                return true;
-//            }
-//            return false;
-//        }
+		public static bool CheckLiftAndReportErrors(string pathToLift)
+		{
+			try
+			{
+				string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
+				if (!String.IsNullOrEmpty(errors))
+				{
+					ErrorReport.ReportNonFatalMessage(
+							"The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
+							pathToLift,
+							errors);
+					return true;
+				}
+			}
+			catch (Exception e)
+			{
+				ErrorNotificationDialog.ReportException(e);
+				return true;
+			}
+			return false;
+		}
+
+		private static void GrepFile(string inputPath, string pattern, string replaceWith)
+		{
+			Regex regex = new Regex(pattern, RegexOptions.Compiled);
+			string tempPath = inputPath + ".tmp";
+
+			using (StreamReader reader = File.OpenText(inputPath))
+			{
+				using (StreamWriter writer = new StreamWriter(tempPath))
+				{
+					while (!reader.EndOfStream)
+					{
+						writer.WriteLine(regex.Replace(reader.ReadLine(), replaceWith));
+					}
+					writer.Close();
+				}
+				reader.Close();
+			}
+			//string backupPath = GetUniqueFileName(inputPath);
+			string backupPath = inputPath + ".bak";
+
+			ReplaceFileWithUserInteractionIfNeeded(tempPath, inputPath, backupPath);
+		}
+
+		private static void ReplaceFileWithUserInteractionIfNeeded(string tempPath,
+																   string inputPath,
+																   string backupPath)
+		{
+			bool succeeded = false;
+			do
+			{
+				try
+				{
+					File.Replace(tempPath, inputPath, backupPath);
+					succeeded = true;
+				}
+
+				catch (IOException)
+				{
+					//nb: we don't want to provide an option to cancel.  Better to crash than cancel.
+					ErrorReport.ReportNonFatalMessage(Application.ProductName +
+													  " was unable to get at the dictionary file to update it.  Please ensure that WeSay isn't running with it open, then click the 'OK' button below. If you cannot figure out what program has the LIFT file open, the best choice is to kill WeSay Configuration Tool using the Task Manager (ctrl+alt+del), so that the configuration does not fall out of sync with the LIFT file.");
+				}
+			}
+			while (!succeeded);
+		}
 
 		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)
 		{
@@ -1603,16 +1397,6 @@ namespace WeSay.Project
 			return false;
 		}
 
-		public bool IsWritingSystemUsedInLiftFile(string id)
-		{
-			if(!File.Exists(PathToLiftFile))
-			{
-				return false;
-			}
-			string regex = string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(id));
-			return FileUtils.GrepFile(PathToLiftFile, regex);
-		}
-
 		/// <summary>
 		/// Files to process when backing up or checking in
 		/// </summary>
@@ -1624,7 +1408,7 @@ namespace WeSay.Project
 			string[] allFiles = Directory.GetFiles(pathToProjectRoot,
 												   "*",
 												   SearchOption.AllDirectories);
-			string[] antipatterns = { "Cache", "cache", ".bak", ".old", ".liftold", ".WeSayUserMemory" };
+			string[] antipatterns = {"Cache", "cache", ".bak", ".old", ".liftold"};
 
 			foreach (string file in allFiles)
 			{
@@ -1652,12 +1436,11 @@ namespace WeSay.Project
 		{
 			try
 			{
-				if(BackupMaker!=null)//it will for many tests, which don't need to be slowed down by all this
-					BackupMaker.BackupNow(ProjectDirectoryPath, UiOptions.Language);
+				BackupMaker.BackupNow(ProjectDirectoryPath, StringCatalogSelector);
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem(string.Format("WeSay was not able to do a backup.\r\nReason: {0}", error.Message));
+				ErrorReport.ReportNonFatalMessage(string.Format("WeSay was not able to do a backup.\r\nReason: {0}", error.Message));
 			}
 		}
 
@@ -1669,20 +1452,9 @@ namespace WeSay.Project
 		{
 			//nb: we have multiple lengths we could go to eventually, perhaps with different rules:
 			//      commit locally, commit to local backup, commit peers on LAN, commit across internet
-
-			//TODO: follow PT and OurWord to a once a day system, which
-			//will take saving the last backkup time somewhere else
-			//(or querying the repo)
-
-			//this is a temporary hack... we don't want to backup on startup,
-			//it slows the startup time too much
-			if(BackupMaker.TimeOfLastBackupAttempt == default(DateTime))
-			{
-				BackupMaker.ResetTimeOfLastBackup();
-			}
-
 			TimeSpan diff = DateTime.Now - BackupMaker.TimeOfLastBackupAttempt;
-			if(diff.TotalMinutes > 20)
+		   // if(diff.TotalSeconds  > 30)
+			if(diff.TotalMinutes > 5)
 			{
 				BackupNow();
 			}
@@ -1706,28 +1478,6 @@ namespace WeSay.Project
 			var containerBuilder = new Autofac.Builder.ContainerBuilder();
 			adder.Invoke(containerBuilder);
 			containerBuilder.Build(_container);
-		}
-
-		public void SetupUserForChorus()
-		{
-			//at the moment, all we do here is make sure send/receive is active.
-			//Chorus is providing its own user name (as of Jan 2010, by asking the OS)
-			var action = new SendReceiveAction();
-			_addins.SetDoShowInWeSay(action.ID, true);
-		}
-	}
-
-	public class MediaNamingHelper
-	{
-		public MediaNamingHelper(IEnumerable<string> lexicalUnitWritingSystemIds)
-		{
-			LexicalUnitWritingSystemIds = lexicalUnitWritingSystemIds;
-		}
-
-		public IEnumerable<string> LexicalUnitWritingSystemIds
-		{
-			get;
-			set;
 		}
 	}
 }

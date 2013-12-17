@@ -1,46 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
-using Palaso.i18n;
+using System.Xml;
 using Palaso.Reporting;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using Palaso.UI.WindowsForms.i8n;
+using WeSay.Foundation;
 
 namespace WeSay.Project
 {
-	public class BasilProjectTestHelper
-	{
-		/// <summary>
-		/// Many tests throughout the system will not care at all about project related things,
-		/// but they will break if there is no project initialized, since many things
-		/// will reach the project through a static property.
-		/// Those tests can just call this before doing anything else, so
-		/// that other things don't break.
-		/// </summary>
-		public static void InitializeForTests()
-		{
-			ErrorReport.IsOkToInteractWithUser = false;
-			var project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory());
-			project.UiOptions.Language = "en";
-		}
-	}
-
-	public class BasilProject: IDisposable
+	public class BasilProject: IProject, IDisposable
 	{
 		private static BasilProject _singleton;
+		private string _uiFontName;
 
 		protected static BasilProject Singleton
 		{
 			get { return _singleton; }
+			set { _singleton = value; }
 		}
-		public UiConfigurationOptions UiOptions { get; set; }
 
-		private IWritingSystemRepository _writingSystems;
-		private static string _projectDirectoryPath = string.Empty;
+		private readonly WritingSystemCollection _writingSystems;
+		private string _projectDirectoryPath = string.Empty;
+		private string _stringCatalogSelector = string.Empty;
+		private float _uiFontSize;
 
 		public static BasilProject Project
 		{
@@ -71,8 +54,7 @@ namespace WeSay.Project
 		public BasilProject()
 		{
 			Project = this;
-			_writingSystems = null;
-			UiOptions = new UiConfigurationOptions();
+			_writingSystems = new WritingSystemCollection();
 		}
 
 		public virtual void LoadFromProjectDirectoryPath(string projectDirectoryPath)
@@ -96,26 +78,6 @@ namespace WeSay.Project
 			}
 		}
 
-		protected static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
-		{
-			string message = @"There were some problems while loading the writing systems definitions in this project.
-You can continue to work, but do let us know about the problem.
-There are problems in:
-";
-			foreach (var problem in problems)
-			{
-				message += String.Format("  {0}", problem.Exception.Message);
-			}
-
-			Palaso.Reporting.ErrorReport.NotifyUserOfProblem(message);
-
-		}
-
-		protected static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
-		{
-			throw new ApplicationException("WritingSystem migration should have been done by now, but it seems it hasn't.");
-		}
-
 //        public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
   //      {
 //            _projectDirectoryPath = projectDirectoryPath;
@@ -127,7 +89,31 @@ There are problems in:
 
 		public virtual void Save()
 		{
-			_writingSystems.Save();
+			Save(_projectDirectoryPath);
+		}
+
+		public virtual void Save(string projectDirectoryPath)
+		{
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.Indent = true;
+			XmlWriter writer = XmlWriter.Create(PathToWritingSystemPrefs, settings);
+			_writingSystems.Write(writer);
+			writer.Close();
+		}
+
+		/// <summary>
+		/// Many tests throughout the system will not care at all about project related things,
+		/// but they will break if there is no project initialized, since many things
+		/// will reach the project through a static property.
+		/// Those tests can just call this before doing anything else, so
+		/// that other things don't break.
+		/// </summary>
+		public static void InitializeForTests()
+		{
+			ErrorReport.IsOkToInteractWithUser = false;
+			BasilProject project = new BasilProject();
+			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
+			project.StringCatalogSelector = "en";
 		}
 
 		public static string GetPretendProjectDirectory()
@@ -135,14 +121,19 @@ There are problems in:
 			return Path.Combine(GetTopAppDirectory(), Path.Combine("SampleProjects", "PRETEND"));
 		}
 
-		public IWritingSystemRepository WritingSystems
+		public WritingSystemCollection WritingSystems
 		{
 			get { return _writingSystems; }
 		}
 
-		public IList<WritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
+		public IList<WritingSystem> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
 		{
-			return writingSystemIds.Select(id => WritingSystems.Get(id)).ToList();
+			List<WritingSystem> l = new List<WritingSystem>();
+			foreach (string id in writingSystemIds)
+			{
+				l.Add(WritingSystems[id]);
+			}
+			return l;
 		}
 
 		public string ProjectDirectoryPath
@@ -151,14 +142,15 @@ There are problems in:
 			protected set { _projectDirectoryPath = value; }
 		}
 
-		//public static string GetPathToWritingSystemPrefs(string parentDir)
-		//{
-		//        return Path.Combine(parentDir, "WritingSystemPrefs.xml");
-		//}
-
-		public static string GetPathToLdmlWritingSystemsFolder(string parentDir)
+		public string PathToWritingSystemPrefs
 		{
-				return Path.Combine(parentDir, "WritingSystems");
+			get
+			{
+				return
+						GetPathToWritingSystemPrefs(
+								PathToDirectoryContaingWritingSystemFilesInProject
+								/*ProjectCommonDirectory*/);
+			}
 		}
 
 		//        public string PathToOptionsLists
@@ -169,28 +161,43 @@ There are problems in:
 		//            }
 		//        }
 
+		protected static string GetPathToWritingSystemPrefs(string parentDir)
+		{
+			return Path.Combine(parentDir, "WritingSystemPrefs.xml");
+		}
 
-		// <summary>
-		// Locates the StringCatalog file, matching any file ending in <language>.po first in the Project folder,
-		// then in the Application Common folder.
-		// </summary>
+		public string PathToDirectoryContaingWritingSystemFilesInProject
+		{
+			get { return ProjectDirectoryPath; }
+		}
+
 		public string LocateStringCatalog()
 		{
-			string filePattern = "*" + UiOptions.Language + ".po";
-			var matchingFiles = Directory.GetFiles(ProjectDirectoryPath, filePattern);
-			if (matchingFiles.Length > 0)
+			if (File.Exists(PathToStringCatalogInProjectDir))
 			{
-				return matchingFiles[0];
+				return PathToStringCatalogInProjectDir;
 			}
 
 			//fall back to the program's common directory
-			matchingFiles = Directory.GetFiles(ApplicationCommonDirectory, filePattern);
-			if (matchingFiles.Length > 0)
+			string path = Path.Combine(ApplicationCommonDirectory, _stringCatalogSelector + ".po");
+			if (File.Exists(path))
 			{
-				return matchingFiles[0];
+				return path;
 			}
 
-			return null;
+			else
+			{
+				return null;
+			}
+		}
+
+		public string PathToStringCatalogInProjectDir
+		{
+			get
+			{
+				return Path.Combine(ProjectDirectoryPath /*ProjectCommonDirectory*/,
+									_stringCatalogSelector + ".po");
+			}
 		}
 
 		public static string ApplicationCommonDirectory
@@ -200,7 +207,7 @@ There are problems in:
 
 		public static string ApplicationRootDirectory
 		{
-			get { return DirectoryOfTheApplicationExecutable; }
+			get { return DirectoryOfExecutingAssembly; }
 		}
 
 		public string ApplicationTestDirectory
@@ -210,7 +217,9 @@ There are problems in:
 
 		protected static string GetTopAppDirectory()
 		{
-			string path = DirectoryOfTheApplicationExecutable;
+			string path;
+
+			path = DirectoryOfExecutingAssembly;
 			char sep = Path.DirectorySeparatorChar;
 			int i = path.ToLower().LastIndexOf(sep + "output" + sep);
 
@@ -221,7 +230,7 @@ There are problems in:
 			return path;
 		}
 
-		public static string DirectoryOfTheApplicationExecutable
+		public static string DirectoryOfExecutingAssembly
 		{
 			get
 			{
@@ -229,16 +238,12 @@ There are problems in:
 				bool unitTesting = Assembly.GetEntryAssembly() == null;
 				if (unitTesting)
 				{
-				   path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
-				   path = Uri.UnescapeDataString(path);
+					path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
+					path = Uri.UnescapeDataString(path);
 				}
 				else
 				{
-				   //was suspect in WS1156, where it seemed to start looking in the,
-					//outlook express program folder after sending an email from wesay...
-					//so maybe it doesn't always mean *this* executing assembly?
-				  //  path = Assembly.GetExecutingAssembly().Location;
-					path = Application.ExecutablePath;
+					path = Assembly.GetExecutingAssembly().Location;
 				}
 				return Directory.GetParent(path).FullName;
 			}
@@ -262,54 +267,61 @@ There are problems in:
 			}
 		}
 
-		public static void CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(string projectDirectoryPath)
+		protected void InitWritingSystems()
 		{
-			string pathProjectToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectoryPath);
-			string pathCommonToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(ApplicationCommonDirectory);
-			Directory.CreateDirectory(pathProjectToWritingSystemsFolder);
-			foreach (string path in Directory.GetFiles(pathCommonToWritingSystemsFolder, "*.ldml"))
+			if (File.Exists(PathToWritingSystemPrefs))
 			{
-				var destPath = Path.Combine(pathProjectToWritingSystemsFolder, Path.GetFileName(path));
-				if (!File.Exists(destPath))
-				{
-					File.Copy(path, destPath);
-				}
+				_writingSystems.Load(PathToWritingSystemPrefs);
+			}
+			else
+			{
+				//load defaults
+				_writingSystems.Load(GetPathToWritingSystemPrefs(ApplicationCommonDirectory));
 			}
 		}
 
-		protected void InitWritingSystems()
+		//        /// <summary>
+		//        /// Get the options lists, e.g. PartsOfSpeech, from files
+		//        /// </summary>
+		//        private void InitOptionsLists()
+		//        {
+		//            Directory.
+		//        }
+
+		public string StringCatalogSelector
 		{
-			if (!Directory.Exists(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath)))
-			{
-				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
-			}
-			if (_writingSystems == null)
-			{
-				_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
-					GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath),
-					OnWritingSystemMigration,
-					OnWritingSystemLoadProblem,
-					WritingSystemCompatibility.Flex7V0Compatible
-				);
-			}
+			get { return _stringCatalogSelector; }
+			set { _stringCatalogSelector = value; }
+		}
+
+		protected string UiFontName
+		{
+			get { return _uiFontName; }
+			set { _uiFontName = value; }
+		}
+
+		protected float UiFontSizeInPoints
+		{
+			get { return _uiFontSize; }
+			set { _uiFontSize = value; }
 		}
 
 		protected void InitStringCatalog()
 		{
 			try
 			{
-				if (UiOptions.Language == "test")
+				if (_stringCatalogSelector == "test")
 				{
-					new StringCatalog("test", UiOptions.LabelFontName, UiOptions.LabelFontSizeInPoints);
+					new StringCatalog("test", UiFontName, UiFontSizeInPoints);
 				}
 				string p = LocateStringCatalog();
 				if (p == null)
 				{
-					new StringCatalog(UiOptions.LabelFontName, UiOptions.LabelFontSizeInPoints);
+					new StringCatalog(UiFontName, UiFontSizeInPoints);
 				}
 				else
 				{
-					new StringCatalog(p, UiOptions.LabelFontName, UiOptions.LabelFontSizeInPoints);
+					new StringCatalog(p, UiFontName, UiFontSizeInPoints);
 				}
 			}
 			catch (FileNotFoundException)
@@ -318,11 +330,5 @@ There are problems in:
 				new StringCatalog();
 			}
 		}
-
-		public static string VersionString
-		{
-			get { return Application.ProductVersion; }
-		}
-
 	}
 }

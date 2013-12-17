@@ -2,41 +2,39 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Palaso.IO;
-using Palaso.UiBindings;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.ImageGallery;
+using WeSay.Foundation;
 
 namespace WeSay.UI
 {
-	public partial class PictureControl : UserControl, IBindableControl<string>
+	public partial class PictureControl: UserControl, IBindableControl<string>
 	{
+		private readonly string _nameForLogging;
 		public event EventHandler ValueChanged;
 		public event EventHandler GoingAway;
 
-		private string _relativePathToImage;
-		private readonly string _pathToReferingFile;
+		private string _fileName;
 		private readonly string _storageFolderPath;
-		private readonly IFileLocator _fileLocator;
 		private readonly Color _shyLinkColor = Color.LightGray;
 
-		public PictureControl(string pathToReferingFile, string storageFolderPath, IFileLocator fileLocator)
+		public PictureControl(string nameForLogging, string storageFolderPath)
 		{
 			InitializeComponent();
-			_pathToReferingFile = pathToReferingFile;
+			_nameForLogging = nameForLogging;
 			_storageFolderPath = storageFolderPath;
-			_fileLocator = fileLocator;
 			if (!Directory.Exists(storageFolderPath))
 			{
 				Directory.CreateDirectory(storageFolderPath);
 			}
 		}
-		public ISearchTermProvider SearchTermProvider { get; set; }
 
-		public string RelativePathToImage
+		/// <summary>
+		/// The name of the file which must be in the StorageFolder
+		/// </summary>
+		public string FileName
 		{
-			get { return _relativePathToImage; }
-			set { _relativePathToImage = value; }
+			get { return _fileName; }
+			set { _fileName = value; }
 		}
 
 		private void UpdateDisplay()
@@ -44,9 +42,8 @@ namespace WeSay.UI
 			toolTip1.SetToolTip(this, "");
 			toolTip1.SetToolTip(_problemLabel, "");
 
-			if (string.IsNullOrEmpty(_relativePathToImage))
+			if (string.IsNullOrEmpty(_fileName))
 			{
-				_searchGalleryLink.Visible = ArtOfReadingImageCollection.IsAvailable();
 				_chooseImageLink.Visible = true;
 				_pictureBox.Visible = false;
 				_problemLabel.Visible = false;
@@ -55,28 +52,22 @@ namespace WeSay.UI
 			else if (!File.Exists(GetPathToImage()))
 			{
 				_pictureBox.Visible = false;
-				_problemLabel.Text = _relativePathToImage;
+				_problemLabel.Text = _fileName;
 				string s = String.Format("~Cannot find {0}", GetPathToImage());
 				toolTip1.SetToolTip(this, s);
 				toolTip1.SetToolTip(_problemLabel, s);
-				_searchGalleryLink.Visible = ArtOfReadingImageCollection.IsAvailable();
 				_chooseImageLink.Visible = true;
 				Height = _problemLabel.Bottom + 5;
 			}
 			else
 			{
 				_pictureBox.Visible = true;
-				_searchGalleryLink.Visible = false;
 				_chooseImageLink.Visible = false;
 				//_chooseImageLink.Visible = false;
 				_problemLabel.Visible = false;
 				try
 				{
-					//inset it a bit, with white border
-					_pictureBox.BackColor = Color.White;
-					_pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-					_pictureBox.Image = ImageUtilities.GetThumbNail(GetPathToImage(), _pictureBox.Width - 4, _pictureBox.Height - 4, Color.White);
-					// _pictureBox.Load(GetPathToImage());
+					_pictureBox.Load(GetPathToImage());
 					Height = _pictureBox.Bottom + 5;
 				}
 				catch (Exception error)
@@ -88,7 +79,6 @@ namespace WeSay.UI
 
 			_removeImageLink.Visible = _pictureBox.Visible;
 
-			_searchGalleryLink.LinkColor = _shyLinkColor;
 			_chooseImageLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
 		}
@@ -102,52 +92,35 @@ namespace WeSay.UI
 		{
 			try
 			{
-				var dialog = new OpenFileDialog();
-				dialog.Filter = "Images|*.jpg;*.png;*.bmp;*.gif;*.tif";
+				OpenFileDialog dialog = new OpenFileDialog();
+				dialog.Filter = "Images|*.jpg;*.png;*.bmp;*.gif";
 				dialog.Multiselect = false;
 				dialog.Title = "Choose image";
 				dialog.InitialDirectory =
 						Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 				if (dialog.ShowDialog() == DialogResult.OK)
 				{
-					PictureChosen(dialog.FileName);
-					UsageReporter.SendNavigationNotice("PictureControl/AddFromFileSystem");
+					_fileName = Path.GetFileName(dialog.FileName);
+					if (File.Exists(GetPathToImage()))
+					{
+						File.Delete(GetPathToImage());
+					}
+					File.Copy(dialog.FileName, GetPathToImage());
+					UpdateDisplay();
+
+					NotifyChanged();
 				}
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem("Something went wrong getting the picture. " +
+				ErrorReport.ReportNonFatalMessage("Something went wrong getting the picture. " +
 												  error.Message);
-			}
-		}
-
-		private void PictureChosen(string fromPath)
-		{
-			try
-			{
-				if (File.Exists(GetPathToImage()))
-				{
-					File.Delete(GetPathToImage());
-				}
-				var fullDestPath = Path.Combine(_storageFolderPath, Path.GetFileName(fromPath));
-				_relativePathToImage = fullDestPath.Replace(_pathToReferingFile, "");
-				_relativePathToImage = _relativePathToImage.Trim(Path.DirectorySeparatorChar);
-
-				File.Copy(fromPath, GetPathToImage(), true);
-				UpdateDisplay();
-
-				NotifyChanged();
-
-			}
-			catch (Exception error)
-			{
-				ErrorReport.NotifyUserOfProblem("WeSay was not able to copy the picture file.\r\n{0}", error.Message);
 			}
 		}
 
 		private void NotifyChanged()
 		{
-			Logger.WriteMinorEvent("Picture Control Changed");
+			Logger.WriteMinorEvent("Picture Control Changed ({0})", _nameForLogging);
 			if (ValueChanged != null)
 			{
 				ValueChanged.Invoke(this, null);
@@ -166,30 +139,13 @@ namespace WeSay.UI
 
 		public string Value
 		{
-			get { return _relativePathToImage; }
-			set { _relativePathToImage = value; }
+			get { return _fileName; }
+			set { _fileName = value; }
 		}
 
 		private string GetPathToImage()
 		{
-			if (string.IsNullOrEmpty(RelativePathToImage))
-				return string.Empty;
-
-			var p = Path.Combine(_pathToReferingFile, _relativePathToImage);
-			if (!File.Exists(p))
-			{
-				//the old style was to just give the file name
-				var alternatePath = Path.Combine(_storageFolderPath, _relativePathToImage);
-				if (File.Exists(alternatePath))
-				{
-					return alternatePath;
-				}
-				if (!_relativePathToImage.Contains(Path.DirectorySeparatorChar.ToString()))
-				{
-					return alternatePath; // show where we expected it to be
-				}
-			}
-			return p; // show where we expected it to be
+			return Path.Combine(_storageFolderPath, _fileName);
 		}
 
 		private void _removeImageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -201,7 +157,7 @@ namespace WeSay.UI
 			//                if (File.Exists(this.GetPathToImage()))
 			//                {
 			//                    string old = this.GetPathToImage();
-			//                    _relativePathToImage = "Unused_" + _relativePathToImage;
+			//                    _fileName = "Unused_" + _fileName;
 			//                    if(!File.Exists(GetPathToImage()))
 			//                    {
 			//                        File.Move(old, GetPathToImage());
@@ -210,10 +166,10 @@ namespace WeSay.UI
 			//            }
 			//            catch(Exception error)
 			//            {
-			//                Palaso.Reporting.ErrorReport.NotifyUserOfProblem(error.Message);
+			//                Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
 			//            }
 
-			_relativePathToImage = string.Empty;
+			_fileName = string.Empty;
 			NotifyChanged();
 			UpdateDisplay();
 		}
@@ -226,13 +182,11 @@ namespace WeSay.UI
 		private void _chooseImageLink_MouseEnter(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = Color.Blue;
-			_searchGalleryLink.LinkColor = ArtOfReadingImageCollection.IsAvailable() ? Color.Blue : _shyLinkColor;
 		}
 
 		private void _chooseImageLink_MouseLeave(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = _shyLinkColor;
-			_searchGalleryLink.LinkColor = _shyLinkColor;
 		}
 
 		private void _removeImageLink_MouseLeave(object sender, EventArgs e)
@@ -243,68 +197,13 @@ namespace WeSay.UI
 		private void ImageDisplayWidget_MouseHover(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = Color.Blue;
-			_searchGalleryLink.LinkColor = ArtOfReadingImageCollection.IsAvailable() ? Color.Blue : _shyLinkColor;
 			_removeImageLink.LinkColor = Color.Blue;
 		}
 
 		private void ImageDisplayWidget_MouseLeave(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = _shyLinkColor;
-			_searchGalleryLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
 		}
-
-
-		private void OnSearchGalleryLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			if (!ArtOfReadingImageCollection.IsAvailable())
-			{
-				MessageBox.Show("Could not find the Art Of Reading image collection.");
-				return;
-			}
-			var images = new ArtOfReadingImageCollection();
-			string pathToIndexFile = _fileLocator.LocateFile("ArtOfReadingIndexV3_en.txt");
-			if (String.IsNullOrEmpty(pathToIndexFile))
-			{
-				throw new FileNotFoundException("Could not find Art of reading index file.");
-			}
-			images.LoadIndex(pathToIndexFile);
-			images.RootImagePath = ArtOfReadingImageCollection.TryToGetRootImageCatalogPath();
-			var searchString = SearchTermProvider == null ? string.Empty : SearchTermProvider.SearchString;
-			searchString = images.StripNonMatchingKeywords(searchString);
-			using (var chooser = new PictureChooser(images, searchString))
-			{
-				chooser.ShowInTaskbar = false;
-				chooser.ShowIcon = false;
-				chooser.MinimizeBox = false;
-				chooser.MaximizeBox = false;
-
-				if (DialogResult.OK == chooser.ShowDialog())
-				{
-					PictureChosen(chooser.ChosenPath);
-					UsageReporter.SendNavigationNotice("PictureControl/AddFromArtOfReading");
-				}
-			}
-		}
-
-		/// <summary>
-		/// See WS-1214 (hatton) pressing 'n' or 'u' or 'd' with focus on picture control is like alt+n, alt+u, etc.
-		/// </summary>
-		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-		{
-			if (Keys.None != (keyData & Keys.Modifiers) ||
-				   Keys.Tab == (keyData & Keys.Tab) ||
-				   Keys.Up == (keyData & Keys.Up) ||
-				   Keys.Down == (keyData & Keys.Down))
-			{
-				return base.ProcessCmdKey(ref msg, keyData);
-			}
-			return true;
-		}
-	}
-
-	public interface ISearchTermProvider
-	{
-		string SearchString { get; }
 	}
 }

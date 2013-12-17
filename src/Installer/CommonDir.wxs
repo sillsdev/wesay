@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Fragment>
+	<Fragment>
 	<DirectoryRef Id='ProgramDir'>
 	  <Directory Id="common" Name="common">
 
@@ -8,35 +8,24 @@
 		<Component Id="PartsOfSpeech.xml" Guid="{6B734BDE-1702-418D-93BC-40A7F310B14F}">
 		  <File Id="PartsOfSpeech.xml" Name="PartsOfSpeech.xml" KeyPath="yes" Source="..\..\common\PartsOfSpeech.xml" />
 		</Component>
-
-		<Directory Id="wordpacks" Name="wordpacks">
-		  <Directory Id="SILCAWL" Name="SILCAWL">
-			<Component Id="SILCAWL.lift" Guid="{51F4A62A-A216-43bf-820B-3683F64FBA19}">
-			  <File Id="SILCAWL.lift" Name="SILCAWL.lift" KeyPath="yes" Source="..\..\common\wordpacks\SILCAWL\SILCAWL.lift" />
-			</Component>
-		  </Directory>
-		  <Directory Id="SILCAWL_MozambiqueAddendum" Name="SILCAWL_MozambiqueAddendum">
-			<Component Id="SILCAWL_MozambiqueAddendum.lift" Guid="{A6664CDF-8E27-487f-84FE-594675B7F112}">
-			  <File Id="SILCAWL_MozambiqueAddendum.lift" Name="SILCAWL_MozambiqueAddendum.lift" KeyPath="yes" Source="..\..\common\wordpacks\SILCAWL-MozambiqueAddendum\SILCAWL-MozambiqueAddendum.lift" />
-			</Component>
-		  </Directory>
-		</Directory>
-
+		<Component Id="sampleWordList.txt" Guid="{0F09882D-8D30-49B9-90F6-61D20D17E14F}">
+		  <File Id="sampleWordList.txt" Name="sampleWordList.txt" KeyPath="yes" Source="..\..\common\sampleWordList.txt" />
+		</Component>
+		<Component Id="DuerksenWords.txt" Guid="{51F4A62A-A216-43bf-820B-3683F64FBA19}">
+		  <File Id="DuerksenWords.txt" Name="DuerksenWords.txt" KeyPath="yes" Source="..\..\common\DuerksenWords.txt" />
+		</Component>
+		<Component Id="PNGWords.txt" Guid="{EADBA21D-B3ED-4626-A363-301EA5D6A390}">
+		  <File Id="PNGWords.txt" Name="PNGWords.txt" KeyPath="yes" Source="..\..\common\PNGWords.txt" />
+		</Component>
 		<Component Id="SemanticDomains.xml" Guid="{0D314BE5-ABB3-4AB9-A698-F94FFA8B250C}">
 		  <File Id="SemanticDomains.xml" Name="SemanticDomains.xml" KeyPath="yes" Source="..\..\common\SemanticDomains.xml" />
 		</Component>
 		<Component Id="default.WeSayConfig" Guid="{4D0210A0-095D-48DE-9399-4074A97864A4}">
 		  <File Id="default.WeSayConfig" Name="default.WeSayConfig" KeyPath="yes" Source="..\..\common\default.WeSayConfig" />
 		</Component>
-
-		<Directory Id="WritingSystems" Name="WritingSystems">
-		<Component Id="WritingSystems_en.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BDF}">
-		  <File Id="WritingSystems_en.ldml" Name="en.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\en.ldml" />
+		<Component Id="CommonWritingSystemPrefs.xml" Guid="{2D64A565-57BC-4D0C-BAAF-13AB5A686E9B}">
+		  <File Id="CommonwritingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="..\..\common\writingSystemPrefs.xml" />
 		</Component>
-		<Component Id="WritingSystems_qaa_x_qaa.ldml" Guid="{75a4c53d-2aaf-4355-9dec-f2b6c19ee0f9}">
-		  <File Id="WritingSystems_qaa_x_qaa.ldml" Name="qaa-x-qaa.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\qaa-x-qaa.ldml" />
-		</Component>
-		</Directory>
 
 		<Component Id="Ddp4.xml" Guid="{0036EBE1-93B6-463e-A089-8DB1201E61A6}">
 		  <File Id="Ddp4.xml" Name="Ddp4.xml" KeyPath="yes" Source="..\..\common\Ddp4.xml" />
@@ -44,39 +33,11 @@
 		<Component Id="Ddp4Questions_en.xml" Guid="{D89FD082-3189-4ade-8477-A07B60C99790}">
 		  <File Id="Ddp4Questions_en.xml" Name="Ddp4Questions-en.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-en.xml" />
 		</Component>
-		<Component Id="Ddp4Questions_es.xml" Guid="{85389B7C-D544-429d-9010-E2E4A437A769}">
-		  <File Id="Ddp4Questions_es.xml" Name="Ddp4Questions-es.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-es.xml" />
-		</Component>
 		<Component Id="Ddp4Questions_fr.xml" Guid="{48879B52-29CB-4197-B238-5276AFB8CB4B}">
 		  <File Id="Ddp4Questions_fr.xml" Name="Ddp4Questions-fr.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-fr.xml" />
 		</Component>
-		<Component Id="Ddp4Questions_hi.xml" Guid="{E244939B-5E49-4809-8691-95E3D694A9B5}">
-		  <File Id="Ddp4Questions_hi.xml" Name="Ddp4Questions-hi.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-hi.xml" />
-		</Component>
 		<Component Id="Ddp4Questions_id.xml" Guid="{242A15FA-A451-43e5-B91B-B7977BADA5EE}">
 		  <File Id="Ddp4Questions_id.xml" Name="Ddp4Questions-id.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-id.xml" />
-		</Component>
-		<Component Id="Ddp4Questions_km.xml" Guid="{E105135D-206E-4E35-BC20-325B3304228B}">
-		  <File Id="Ddp4Questions_km.xml" Name="Ddp4Questions-km.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-km.xml" />
-		</Component>
-		<Component Id="Ddp4Questions_ne.xml" Guid="{29d9ffa0-64ac-11e0-ae3e-0800200c9a66}">
-		  <File Id="Ddp4Questions_ne.xml" Name="Ddp4Questions-ne.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-ne.xml" />
-		</Component>
-		<Component Id="Ddp4Questions_ru.xml" Guid="{AD338C0B-6289-48bf-8CA2-28DE404571E0}">
-		  <File Id="Ddp4Questions_ru.xml" Name="Ddp4Questions-ru.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-ru.xml" />
-		</Component>
-		<Component Id="Ddp4Questions_th.xml" Guid="{06E02A57-BE56-4113-8D9D-975EB15D1FA5}">
-		  <File Id="Ddp4Questions_th.xml" Name="Ddp4Questions-th.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-th.xml" />
-		</Component>
-		<Component Id="Ddp4Questions_ur.xml" Guid="{18624DA4-80C7-445d-963F-25193E96022E}">
-		  <File Id="Ddp4Questions_ur.xml" Name="Ddp4Questions-ur.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-ur.xml" />
-		</Component>
-		<Component Id="Ddp4Questions_zh_CN.xml" Guid="{D4682CE7-E895-4057-BFD9-D8AEBB3865C7}">
-		  <File Id="Ddp4Questions_zh_CN.xml" Name="Ddp4Questions-zh-CN.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-zh-CN.xml" />
-		</Component>
-
-		<Component Id="ArtOfReadingIndexV3_en.txt" Guid="{34302393-949D-42e8-BEE8-8C52B03F571A}">
-		  <File Id="ArtOfReadingIndexV3_en.txt" Name="ArtOfReadingIndexV3_en.txt" KeyPath="yes" Source="..\..\common\ArtOfReadingIndexV3_en.txt" />
 		</Component>
 
 	  </Directory>
@@ -85,28 +46,19 @@
 
 	<ComponentGroup Id="defaultFiles">
 	  <ComponentRef Id="PartsOfSpeech.xml" />
-	  <ComponentRef Id="SILCAWL.lift" />
-	  <ComponentRef Id="SILCAWL_MozambiqueAddendum.lift" />
+	  <ComponentRef Id="sampleWordList.txt" />
+	  <ComponentRef Id="DuerksenWords.txt" />
+	  <ComponentRef Id="PNGWords.txt" />
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="default.WeSayConfig" />
-	  <ComponentRef Id="ArtOfReadingIndexV3_en.txt"/>
-	  <ComponentRef Id="WritingSystems_en.ldml" />
-	  <ComponentRef Id="WritingSystems_qaa_x_qaa.ldml" />
+	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
 	</ComponentGroup>
 
 	<ComponentGroup Id="ddpStuff">
 	  <ComponentRef Id="Ddp4.xml"/>
 	  <ComponentRef Id="Ddp4Questions_en.xml"/>
-	  <ComponentRef Id="Ddp4Questions_es.xml"/>
 	  <ComponentRef Id="Ddp4Questions_fr.xml"/>
 	  <ComponentRef Id="Ddp4Questions_id.xml"/>
-	  <ComponentRef Id="Ddp4Questions_hi.xml"/>
-	  <ComponentRef Id="Ddp4Questions_km.xml"/>
-	  <ComponentRef Id="Ddp4Questions_ne.xml"/>
-	  <ComponentRef Id="Ddp4Questions_ru.xml"/>
-	  <ComponentRef Id="Ddp4Questions_th.xml"/>
-	  <ComponentRef Id="Ddp4Questions_ur.xml"/>
-	  <ComponentRef Id="Ddp4Questions_zh_CN.xml"/>
 	</ComponentGroup>
 
   </Fragment>

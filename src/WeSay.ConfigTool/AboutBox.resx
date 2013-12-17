@@ -118,6 +118,6 @@
 	<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="label1.Text" xml:space="preserve">
-	<value>WeSay is developed by SIL Papua New Guinea and the  Payap University Linguistics Institute Software Unit. The Linguistics Institute is a partnership between Payap University (Chiang Mai, Thailand) and SIL International with the mandate to serve the language communities of Southeast Asia through linguistic research and language development. The Software Unit designs new software to aid language research and development.</value>
+	<value>WeSay is developed under the Payap University Linguistics Institute Software Unit. The Linguistics Institute is a partnership between Payap University (Chiang Mai, Thailand) and SIL International with the mandate to serve the language communities of Southeast Asia through linguistic research and language development. The Software Unit designs new software to aid language research and development.</value>
   </data>
 </root>

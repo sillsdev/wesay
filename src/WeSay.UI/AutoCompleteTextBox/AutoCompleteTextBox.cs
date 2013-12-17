@@ -7,10 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Code;
-using Palaso.Lift;
-using Palaso.UiBindings;
-using WeSay.UI.TextBoxes;
+using WeSay.Foundation;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
@@ -222,15 +219,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 				if (_selectedItem == value)
 				{
-					//handle WS-1171, where a) a baseform was set b) the target was deleted c) the user deletes the now-displayed red id of the missing item
-					//in this case, the target was null before and after the edit, but we need to notify that the edit happened, else it is lost
-					if (string.IsNullOrEmpty(Text))
-					{
-						if (SelectedItemChanged != null)
-						{
-							SelectedItemChanged.Invoke(this, null);
-						}
-					}
 					return;
 				}
 				_inMidstOfSettingSelectedItem = true;
@@ -290,7 +278,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			//_listBox.SelectedIndexChanged += List_SelectedIndexChanged;
 			_listBox.Click += List_Click;
 			_listBox.MouseMove += List_MouseMove;
-			_listBox.LostFocus += OnListLostFocus;
 			_listBox.ItemHeight = _listBox.Font.Height;
 			_listBox.Visible = false;
 			_listBox.Sorted = false;
@@ -301,11 +288,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			triggers.Add(new ShortCutTrigger(Keys.Tab, TriggerState.Select));
 			triggers.Add(new ShortCutTrigger(Keys.Control | Keys.Space, TriggerState.ShowAndConsume));
 			triggers.Add(new ShortCutTrigger(Keys.Escape, TriggerState.HideAndConsume));
-		}
-
-		private void OnListLostFocus(object sender, EventArgs e)
-		{
-			OnLostFocus(e);
 		}
 
 		private void OnMouseHover(object sender, EventArgs e)
@@ -349,30 +331,18 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		protected override void OnSizeChanged(EventArgs e)
 		{
-			using (var detect = Detect.Reentry(this,"OnSizeChanged"))
+			base.OnSizeChanged(e);
+			if (_listBox != null)
 			{
-				if (detect.DidReenter)
+				//NB: this height can be multiple lines, so we don't just want the Height
+				//this._listBox.ItemHeight = Height;
+				_listBox.ItemHeight = _listBox.Font.Height;
+			}
+			if (_listBox != null && _autoSizePopup)
+			{
+				if (_listBox.Width < Width)
 				{
-					return;
-				}
-
-				var height = this.Height;
-				base.OnSizeChanged(e);
-				if (height > this.Height)   //this is for the search box, where the ws label could be much taller that the list text
-					this.Height = height;
-
-				if (_listBox != null)
-				{
-					//NB: this height can be multiple lines, so we don't just want the Height
-					//this._listBox.ItemHeight = Height;
-					_listBox.ItemHeight = _listBox.Font.Height;
-				}
-				if (_listBox != null && _autoSizePopup)
-				{
-					if (_listBox.Width < Width)
-					{
-						_listBox.Width = Width;
-					}
+					_listBox.Width = Width;
 				}
 			}
 		}
@@ -468,9 +438,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				case Keys.Up:
 				{
-					TriggersEnabled = false;
 					Mode = EntryMode.List;
-					TriggersEnabled = true;
 					if (_listBox.Visible == false)
 					{
 						ShowList();
@@ -483,9 +451,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 				case Keys.Down:
 				{
-					TriggersEnabled = false;
 					Mode = EntryMode.List;
-					TriggersEnabled = true;
 					if (_listBox.Visible == false)
 					{
 						ShowList();
@@ -561,6 +527,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				HideList();
 			}
+
 		}
 
 		protected override void OnGotFocus(EventArgs e)
@@ -679,6 +646,14 @@ namespace WeSay.UI.AutoCompleteTextBox
 			int selectedIndex = _listBox.SelectedIndex;
 			_listBox.BeginUpdate();
 			_listBox.Items.Clear();
+
+			//hatton experimental:
+			if (string.IsNullOrEmpty(Text))
+			{
+				return;
+			}
+			//end hatton experimental
+
 			_listBox.Font = Font;
 			_listBox.ItemHeight = _listBox.Font.Height;
 
@@ -739,7 +714,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private Size MeasureItem(IDeviceContext dc, string s)
 		{
 			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.NoClipping;
-			if (WritingSystem != null && WritingSystem.RightToLeftScript)
+			if (WritingSystem != null && WritingSystem.RightToLeft)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
@@ -783,14 +758,5 @@ namespace WeSay.UI.AutoCompleteTextBox
 				HideList();
 			}
 		}
-
-		public bool ListBoxFocused
-		{
-			get
-			{
-				return _listBox.Focused;
-			}
-		}
-
 	}
 }
