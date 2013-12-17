@@ -16,8 +16,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using Palaso.Code;
-using Palaso.Misc;
 
 namespace WeSay.UI
 {
@@ -71,7 +69,6 @@ namespace WeSay.UI
 
 		private int gripLength;
 		private int minSize;
-		private IUserInterfaceMemory _memory;
 		private const int _marginBetweenGripperAndSide = 5;
 
 		#endregion
@@ -144,17 +141,9 @@ namespace WeSay.UI
 			get { return controlToHide; }
 			set
 			{
-				if (value == null)
-				{
-					hiddenControlHeight = 0;
-					hiddenControlWidth = 0;
-				}
-				else
-				{
-					controlToHide = value;
-					hiddenControlHeight = controlToHide.Height;
-					hiddenControlWidth = controlToHide.Width;
-				}
+				controlToHide = value;
+				hiddenControlHeight = controlToHide.Height;
+				hiddenControlWidth = controlToHide.Width;
 			}
 		}
 
@@ -244,10 +233,6 @@ namespace WeSay.UI
 			else
 			{
 				lastGoodSplitPosition = SplitPosition;
-				if(_memory !=null)
-				{
-					_memory.Set("location", SplitPosition);
-				}
 			}
 		}
 
@@ -686,7 +671,7 @@ namespace WeSay.UI
 			b.Dispose();
 
 			// dispose the Graphics object
-			//Removed by JH Dec 2010 (wasn't causing a problem). SHould not be disposing of this graphic that we didn't create. g.Dispose();
+			g.Dispose();
 		}
 
 		private int DetermineYCoordForGripperOnVerticalBar(Rectangle r)
@@ -800,15 +785,6 @@ namespace WeSay.UI
 		{
 			get { return _backgroundColorEnd; }
 			set { _backgroundColorEnd = value; }
-		}
-
-		public void SetMemory(IUserInterfaceMemory memory)
-		{
-			_memory = memory;
-			if (_memory != null)
-			{
-				SplitPosition = _memory.Get("location", SplitPosition);
-			}
 		}
 
 		#endregion

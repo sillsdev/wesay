@@ -1,5 +1,3 @@
-using Palaso.UI.WindowsForms.Widgets;
-
 namespace WeSay.ConfigTool
 {
 	partial class WritingSystemForFieldControl
@@ -32,7 +30,7 @@ namespace WeSay.ConfigTool
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WritingSystemForFieldControl));
-			this._writingSystemListBox = new BetterCheckedListBox();
+			this._writingSystemListBox = new System.Windows.Forms.CheckedListBox();
 			this.btnMoveDown = new System.Windows.Forms.Button();
 			this.btnMoveUp = new System.Windows.Forms.Button();
 			this._toolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -100,7 +98,7 @@ namespace WeSay.ConfigTool
 
 		private System.Windows.Forms.Button btnMoveDown;
 		private System.Windows.Forms.Button btnMoveUp;
-		private BetterCheckedListBox _writingSystemListBox;
+		private System.Windows.Forms.CheckedListBox _writingSystemListBox;
 		private System.Windows.Forms.ToolTip _toolTip;
 
 	}

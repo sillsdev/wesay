@@ -1,9 +1,9 @@
-﻿using System.IO;
+using System.IO;
+using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
-using WeSay.TestUtilities;
 
 namespace Addin.Transform.Tests
 {
@@ -18,7 +18,7 @@ namespace Addin.Transform.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayProjectTestHelper.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 			_filePath = Path.GetTempFileName();
 			_liftFilePath = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
@@ -48,13 +48,12 @@ namespace Addin.Transform.Tests
 
 		private void LaunchAddin()
 		{
-// cjh: what's the point of this file... it doesn't seem to be used anywhere...
-//            string contents =
-//                    string.Format(
-//                            @"<?xml version='1.0' encoding='utf-8'?>
-//<lift  version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>",
-//                            Validator.LiftVersion);
-//            File.WriteAllText(_liftFilePath, contents);
+			string contents =
+					string.Format(
+							@"<?xml version='1.0' encoding='utf-8'?>
+<lift  version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>",
+							Validator.LiftVersion);
+			File.WriteAllText(_liftFilePath, contents);
 			_addin.Launch(null,
 						  WeSayWordsProject.Project.GetProjectInfoForAddin());
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
@@ -62,18 +61,17 @@ namespace Addin.Transform.Tests
 			Assert.Greater(result.Trim().Length, 0);
 		}
 
-//        [Test]
-//        public void CanGetXsltFromResource()
-//        {
-//
-//            ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin();
-//            string path = info.LocateFile("plift2html.xsl");
-//            if (!string.IsNullOrEmpty(path))
-//            {
-//                File.Delete(path);
-//            }
-//            Stream stream = LiftTransformer.GetXsltStream(info, "plift2html.xsl");
-//            Assert.IsNotNull(stream);
-//        }
+		[Test]
+		public void CanGetXsltFromResource()
+		{
+			ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin();
+			string path = info.LocateFile("plift2html.xsl");
+			if (!string.IsNullOrEmpty(path))
+			{
+				File.Delete(path);
+			}
+			Stream stream = LiftTransformer.GetXsltStream(info, "plift2html.xsl");
+			Assert.IsNotNull(stream);
+		}
 	}
 }
