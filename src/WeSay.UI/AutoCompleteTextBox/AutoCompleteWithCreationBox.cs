@@ -122,7 +122,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
-			if (!ContainsFocus && HasProblems && !Box.ListBoxFocused)
+			if (!ContainsFocus && HasProblems)
 			{
 				int y = e.ClipRectangle.Top;
 				e.Graphics.DrawString("!",
@@ -272,7 +272,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 			}
 			//this behavior may have to become a parameter
-			if (!ContainsFocus && HasProblems && !Box.ListBoxFocused)
+			if (!ContainsFocus && HasProblems)
 			{
 				Box.BackColor = Color.Red;
 			}

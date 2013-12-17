@@ -6,10 +6,9 @@ using System.Xml.XPath;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
-//using WeSay.Foundation.Tests;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Tests;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.Project;
-using WeSay.Project.Tests;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -22,11 +21,9 @@ namespace WeSay.ConfigTool.Tests
 
 		public override void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
 			_window = new ConfigurationWindow(new string[] {});
-			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 			_mainWindowTester = new FormTester(_window.Name, _window);
 
@@ -35,7 +32,6 @@ namespace WeSay.ConfigTool.Tests
 
 		public override void TearDown()
 		{
-			_mainWindowTester.Close();
 			base.TearDown();
 			if (BasilProject.IsInitialized)
 			{
@@ -55,8 +51,6 @@ namespace WeSay.ConfigTool.Tests
 			DateTime after = File.GetLastWriteTime(p);
 			Assert.AreNotEqual(before, after);
 		}
-
-
 
 		//stupid nunitforms will freak 'cause window was closed
 		[Test] //, ExpectedException(typeof(FormsTestAssertionException))]
@@ -96,10 +90,10 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
+		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void TryingToOpenNonExistantProjectDoesntCrash()
 		{
-			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig");
+			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig", null);
 		}
 
 		[Test]
@@ -108,7 +102,6 @@ namespace WeSay.ConfigTool.Tests
 		{
 			_window.CreateAndOpenProject(_projectFolder);
 			WalkTopLevelTabs();
-
 		}
 
 		[Test]
@@ -212,29 +205,6 @@ namespace WeSay.ConfigTool.Tests
 		public void ExistingProjectGetsNewTasks()
 		{
 			_window.CreateAndOpenProject(_projectFolder);
-		}
-	}
-
-	/* these are more modern, without use of static, "pretend" project, or the big setup/teardown of the old style */
-
-	[TestFixture]
-	public class MoreAdminWindowTests
-	{
-
-		[Test]
-		public void OpenProject_OpenedWithDirNameWhichDoesNotMatchProjectName_Opens()
-		{
-			using (var projectDir = new ProjectDirectorySetupForTesting(""))
-			using(var window = new ConfigurationWindow(new string[] {}))
-			{
-				Assert.AreNotEqual(
-					Path.GetFileNameWithoutExtension(projectDir.PathToLiftFile),
-					Path.GetFileName(projectDir.PathToDirectory));
-
-				window.DisableBackupAndChorusStuffForTests();
-				window.Show();
-			   Assert.IsTrue(window.OpenProject(projectDir.PathToDirectory));
-			}
 		}
 	}
 }

@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using Palaso.WritingSystems.Collation;
 using Spart;
 using WeSay.Foundation;
@@ -20,7 +18,6 @@ namespace WeSay.ConfigTool
 		private WritingSystem _writingSystem;
 		private readonly Color validBackgroundColor;
 		private readonly Color invalidBackgroundColor;
-		private bool _loading = false;
 
 		public WritingSystemSortControl()
 		{
@@ -119,7 +116,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (ArgumentException)
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"WeSay could not understand this type of sorting ('{0}'). It will be reset.",
 						_writingSystem.SortUsing);
 				customSortRulesType = default(CustomSortRulesType);
@@ -144,12 +141,6 @@ namespace WeSay.ConfigTool
 		{
 			_writingSystem.CustomSortRules = textBoxCustomRules.Text.Replace(Environment.NewLine,
 																			 "\n");
-
-			if(!_loading)
-			{
-				Logger.WriteConciseHistoricalEvent(StringCatalog.Get("Changed Sort Rules of '{0}'"), _writingSystem.Id);
-			}
-
 		}
 
 		private void comboBoxCultures_SelectedIndexChanged(object sender, EventArgs e)
@@ -157,11 +148,6 @@ namespace WeSay.ConfigTool
 			string oldValue = _writingSystem.SortUsing;
 			_writingSystem.SortUsing = (string) comboBoxCultures.SelectedValue;
 			UpdateCustomRules();
-
-			if (!_loading)
-			{
-				Logger.WriteConciseHistoricalEvent(StringCatalog.Get("Changed Sort Rules of '{0}'"), _writingSystem.Id);
-			}
 		}
 
 		[Browsable(false)]
@@ -172,16 +158,17 @@ namespace WeSay.ConfigTool
 			set
 			{
 				_writingSystem = value;
-				UpdateFontInChildControlsIfNecassary();
+				if (_writingSystem != null)
+				{
+					textBoxSortTest.Font = _writingSystem.Font;
+					textBoxCustomRules.Font = _writingSystem.Font;
+				}
 				Refresh();
 			}
 		}
 
-		public ILogger Logger { get; set; }
-
 		public override void Refresh()
 		{
-			_loading = true;
 			//handle WS-707 : ws loses custom simple contents if unmodified
 			if (_writingSystem.UsesCustomSortRules &&
 				string.IsNullOrEmpty(_writingSystem.CustomSortRules))
@@ -193,7 +180,6 @@ namespace WeSay.ConfigTool
 
 			UpdateCustomRules();
 			base.Refresh();
-			_loading = false;
 		}
 
 		private void UpdateCustomRules()
@@ -309,26 +295,6 @@ Z z";
 		private void WritingSystemSort_Load(object sender, EventArgs e)
 		{
 			Refresh();
-		}
-
-		private void helpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			Process.Start("http://wesay.org/wiki/How_to_sort_using_a_custom_sort_sequence");
-		}
-
-		public void UpdateFontInChildControlsIfNecassary()
-		{
-			if (_writingSystem != null)
-			{
-				bool fontInTextBoxSortTestIsOutOfDate = (textBoxSortTest.Font != _writingSystem.Font);
-				bool fontInTextBoxCustomRulesIsOutOfDate = (textBoxCustomRules.Font != _writingSystem.Font);
-
-				if (fontInTextBoxCustomRulesIsOutOfDate && fontInTextBoxSortTestIsOutOfDate)
-				{
-					textBoxSortTest.Font = _writingSystem.Font;
-					textBoxCustomRules.Font = _writingSystem.Font;
-				}
-			}
 		}
 	}
 }

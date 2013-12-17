@@ -2,9 +2,6 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Chorus.VcsDrivers.Mercurial;
-using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool
@@ -12,169 +9,66 @@ namespace WeSay.ConfigTool
 	public partial class WelcomeControl: UserControl
 	{
 		public event EventHandler NewProjectClicked;
-		public event EventHandler NewProjectFromFlexClicked;
-		public Action<string> OpenSpecifiedProject;
+		public event EventHandler OpenPreviousProjectClicked;
 		public event EventHandler ChooseProjectClicked;
 
 		public WelcomeControl()
 		{
-			Font = SystemFonts.MessageBoxFont;//use the default OS UI font
 			InitializeComponent();
-		  }
 
-		private void LoadButtons()
-		{
-			flowLayoutPanel1.Controls.Clear();
-			var createAndGetGroup = new TableLayoutPanel();
-			createAndGetGroup.AutoSize = true;
-			AddCreateChoices(createAndGetGroup);
-			AddGetChoices(createAndGetGroup);
-
-			var openChoices = new TableLayoutPanel();
-			openChoices.AutoSize = true;
-			AddSection("Open", openChoices);
-			AddOpenProjectChoices(openChoices);
-			flowLayoutPanel1.Controls.AddRange(new Control[] { createAndGetGroup, openChoices });
-		}
-
-		private void AddSection(string sectionName, TableLayoutPanel panel)
-		{
-			 panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-			panel.RowCount++;
-			Label label = new Label();
-			label.Font = new Font(StringCatalog.LabelFont.FontFamily, _templateLabel.Font.Size, _templateLabel.Font.Style);
-			label.ForeColor = _templateLabel.ForeColor;
-			label.Text = sectionName;
-			label.Margin = new Padding(0, 20, 0, 0);
-			panel.Controls.Add(label);
-		}
-
-		private void AddFileChoice(string path, TableLayoutPanel panel)
-		{
-			var button = AddChoice(Path.GetFileNameWithoutExtension(path), path, "wesayProject", true, openRecentProject_LinkClicked, panel);
-			button.Tag = path;
-		}
-
-
-		private Button AddChoice(string localizedLabel, string localizedTooltip, string imageKey, bool enabled,
-   EventHandler clickHandler, TableLayoutPanel panel)
-		{
-			panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-			panel.RowCount++;
-			Button button = new Button();
-			button.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-
-			button.Width = _templateButton.Width;//review
-			button.Font = new Font(StringCatalog.LabelFont.FontFamily, _templateButton.Font.Size, _templateButton.Font.Style);
-			button.ImageKey = imageKey;
-			button.ImageList = _imageList;
-			button.ImageAlign = ContentAlignment.MiddleLeft;
-			button.Click += clickHandler;
-			button.Text = "  "+localizedLabel;
-
-			button.FlatAppearance.BorderSize = this._templateButton.FlatAppearance.BorderSize;
-			button.FlatStyle = this._templateButton.FlatStyle;
-			button.ImageAlign = this._templateButton.ImageAlign;
-			button.TextImageRelation = this._templateButton.TextImageRelation ;
-			button.UseVisualStyleBackColor = this._templateButton.UseVisualStyleBackColor;
-			button.Enabled = enabled;
-
-			toolTip1.SetToolTip(button, localizedTooltip);
-			panel.Controls.Add(button);
-			return button;
-		}
-
-		private void AddCreateChoices(TableLayoutPanel panel)
-		{
-			AddSection("Create", panel);
-			AddChoice("Create new blank project", string.Empty, "newProject", true, this.createNewProject_LinkClicked, panel);
-			AddChoice("Create new project from FLEx LIFT export", string.Empty, "flex", true, this.OnCreateProjectFromFLEx_LinkClicked, panel);
-		}
-
-		private void AddGetChoices(TableLayoutPanel panel)
-		{
-			AddSection("Get", panel);
-			//nb: we want these always enabled, so that we can give a message explaining about hg if needed
-			AddChoice("Get From USB drive", "Get a project from a Chorus repository on a USB flash drive", "getFromUsb", true, OnGetFromUsb, panel);
-			AddChoice("Get from Internet", "Get a project from a Chorus repository which is hosted on the internet (e.g. public.languagedepot.org) and put it on this computer",
-				"getFromInternet", true, OnGetFromInternet, panel);
-		}
-
-		private void OnGetFromInternet(object sender, EventArgs e)
-		{
-			if (!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
+			if (Settings.Default.MruConfigFilePaths.Paths.Length != 0)
 			{
-				using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
-				{
-					dlg.ShowDialog();
-					return;
-				}
+				CreateRecentProjectsList();
 			}
-			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
+			else
 			{
-				//e.g. mydocuments/wesay
-				Directory.CreateDirectory(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
-			}
-			using (var dlg = new Chorus.UI.Clone.GetCloneFromInternetDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
-			{
-				if (DialogResult.Cancel == dlg.ShowDialog())
-					return;
-				OpenSpecifiedProject(dlg.PathToNewProject);
+				firstCellPanel.Visible = false;
+				openDifferentProject.Text = "Open Existing Project";
 			}
 		}
 
-		private void OnGetFromUsb(object sender, EventArgs e)
+		private void CreateRecentProjectsList()
 		{
-			if(!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
-			{
-				using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
-				{
-					dlg.ShowDialog();
-					return;
-				}
-			}
-			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
-			{
-				//e.g. mydocuments/wesay
-				Directory.CreateDirectory(WeSay.Project.WeSayWordsProject.NewProjectDirectory);
-			}
-			using (var dlg = new Chorus.UI.Clone.GetCloneFromUsbDialog(WeSay.Project.WeSayWordsProject.NewProjectDirectory))
-			{
-				dlg.Model.ProjectFilter = dir => GetLooksLikeWeSayProject(dir);
-				if (DialogResult.Cancel == dlg.ShowDialog())
-					return;
-				OpenSpecifiedProject(dlg.PathToNewProject);
-			}
-		}
-
-		private static bool GetLooksLikeWeSayProject(string directoryPath)
-		{
-			return Directory.GetFiles(directoryPath, "*.WeSayConfig").Length > 0;
-		}
-
-		private void AddOpenProjectChoices(TableLayoutPanel panel)
-		{
-			int count = 0;
+			bool haveProcessedTopMostProject = false;
 			foreach (string path in Settings.Default.MruConfigFilePaths.Paths)
 			{
-				AddFileChoice(path, panel);
-				++count;
-				if (count > 2)
-					break;
-
+				LinkLabel recentProjectLabel = new LinkLabel();
+				recentProjectLabel.Text = Path.GetFileNameWithoutExtension(path);
+				recentProjectLabel.AutoSize = true;
+				recentProjectLabel.LinkColor = Color.Black;
+				recentProjectLabel.LinkBehavior = LinkBehavior.HoverUnderline;
+				if (!haveProcessedTopMostProject)
+				{
+					recentProjectLabel.Font = new Font("Microsoft Sans Serif",
+													   12F,
+													   FontStyle.Bold,
+													   GraphicsUnit.Point,
+													   0);
+					haveProcessedTopMostProject = true;
+				}
+				else
+				{
+					recentProjectLabel.Font = new Font("Microsoft Sans Serif",
+													   12F,
+													   FontStyle.Regular,
+													   GraphicsUnit.Point,
+													   0);
+				}
+				recentProjectLabel.Tag = path;
+				recentProjectLabel.LinkClicked += openRecentProject_LinkClicked;
+				flowLayoutPanel2.Controls.Add(recentProjectLabel);
 			}
-			AddChoice("Browse for other projects...", string.Empty, "browse", true, openDifferentProject_LinkClicked, panel);
 		}
 
-		private void openRecentProject_LinkClicked(object sender, EventArgs e)
+		private void openRecentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			if (OpenSpecifiedProject != null)
+			if (OpenPreviousProjectClicked != null)
 			{
-				OpenSpecifiedProject.Invoke(((Button) sender).Tag as string);
+				OpenPreviousProjectClicked.Invoke(((LinkLabel) sender).Tag, null);
 			}
 		}
 
-		private void openDifferentProject_LinkClicked(object sender, EventArgs e)
+		private void openDifferentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			if (ChooseProjectClicked != null)
 			{
@@ -182,7 +76,7 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private void createNewProject_LinkClicked(object sender, EventArgs e)
+		private void createNewProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			if (NewProjectClicked != null)
 			{
@@ -192,16 +86,14 @@ namespace WeSay.ConfigTool
 
 		private void WelcomeControl_Load(object sender, EventArgs e)
 		{
-			LoadButtons();
-		}
-
-		private void OnCreateProjectFromFLEx_LinkClicked(object sender, EventArgs e)
-		{
-			if (NewProjectFromFlexClicked != null)
+			if (flowLayoutPanel2.Controls.Count != 0)
 			{
-				NewProjectFromFlexClicked.Invoke(this, null);
+				flowLayoutPanel2.Controls[0].Focus();
+			}
+			else
+			{
+				openDifferentProject.Focus();
 			}
 		}
-
 	}
 }

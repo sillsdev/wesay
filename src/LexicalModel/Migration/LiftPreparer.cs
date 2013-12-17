@@ -1,14 +1,17 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
+using System.Xml;
+using LiftIO;
 using LiftIO.Migration;
 using LiftIO.Validation;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 
-namespace Palaso.Lift.Migration
+namespace WeSay.LexicalModel.Migration
 {
 	internal class LiftPreparer
 	{
@@ -32,7 +35,7 @@ namespace Palaso.Lift.Migration
 				dlg.ShowDialog();
 				if (dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
 				{
-					ErrorReport.NotifyUserOfProblem(
+					ErrorReport.ReportNonFatalMessage(
 							String.Format(
 									"WeSay encountered an error while preprocessing the file '{0}'.  Error was: {1}",
 									_liftFilePath,
@@ -157,13 +160,13 @@ namespace Palaso.Lift.Migration
 						Exception err = dlg.ProgressStateResult.ExceptionThatWasEncountered;
 						if (err != null)
 						{
-							ErrorReport.ReportFatalException(err);
+							ErrorNotificationDialog.ReportException(err, null, false);
 						}
 						else if (dlg.ProgressStateResult.State ==
 								 ProgressState.StateValue.StoppedWithError)
 						{
-							ErrorReport.ReportNonFatalMessageWithStackTrace(
-									"Failed. " + dlg.ProgressStateResult.LogString);
+							ErrorReport.ReportNonFatalMessage(
+									"Failed." + dlg.ProgressStateResult.LogString, null, false);
 						}
 						return false;
 					}
@@ -245,19 +248,19 @@ namespace Palaso.Lift.Migration
 		//            {
 		//                if (err is LiftFormatException)
 		//                {
-		//                    ErrorReport.NotifyUserOfProblem(
+		//                    ErrorReport.ReportNonFatalMessage(
 		//                            "WeSay had problems with the content of the dictionary file.\r\n\r\n" +
 		//                            err.Message);
 		//                }
 		//                else
 		//                {
-		//                    ErrorReport.ReportException(err, null, false);
+		//                    ErrorNotificationDialog.ReportException(err, null, false);
 		//                }
 		//            }
 		//            else if (dlg.ProgressStateResult.State ==
 		//                     ProgressState.StateValue.StoppedWithError)
 		//            {
-		//                ErrorReport.NotifyUserOfProblem(
+		//                ErrorReport.ReportNonFatalMessage(
 		//                        "Could not build caches. " + dlg.ProgressStateResult.LogString,
 		//                        null,
 		//                        false);

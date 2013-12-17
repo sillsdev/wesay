@@ -6,7 +6,6 @@ using NUnit.Framework;
 using Palaso.Reporting;
 using Palaso.Services;
 using Palaso.Services.Dictionary;
-using WeSay.Project;
 using WeSay.Project.Tests;
 
 namespace WeSay.App.Tests.Services
@@ -27,7 +26,6 @@ namespace WeSay.App.Tests.Services
 		public void Setup()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
-			WeSayWordsProject.PreventBackupForTests = true;
 		}
 
 		[TearDown]
@@ -75,7 +73,6 @@ namespace WeSay.App.Tests.Services
 		/// WS-632 regression
 		/// </summary>
 		[Test]
-		[Category("Palaso Services")]
 		public void LiftFileIsUpdatedWhenServiceQuits()
 		{
 			using (
@@ -104,7 +101,6 @@ namespace WeSay.App.Tests.Services
 		}
 
 		[Test]
-		[Category("Palaso Services")]
 		public void ServiceExitsWhenLastClientDeregisters()
 		{
 			using (
@@ -161,7 +157,6 @@ namespace WeSay.App.Tests.Services
 		private delegate void ServiceTestingMethod(IDictionaryService dictionaryService);
 
 		[Test]
-		[Category("Palaso Services")]
 		public void FindsInUIMode()
 		{
 			string entriesXml =
@@ -177,13 +172,11 @@ namespace WeSay.App.Tests.Services
 																			"foo",
 																			FindMethods.Exact.
 																					ToString());
-						Thread.Sleep(100); // Timing sensitive?
 						Assert.AreEqual(1, r.ids.Length);
 					});
 		}
 
 		[Test]
-		[Category("Palaso Services")]
 		public void FindsInServerMode()
 		{
 			string entriesXml =
@@ -215,7 +208,6 @@ namespace WeSay.App.Tests.Services
 		/// this doesn't look at the details of the html; that job belongs in a different test
 		/// </summary>
 		[Test]
-		[Category("Palaso Services")]
 		public void GivesHtml()
 		{
 			const string entriesXml =
@@ -242,14 +234,12 @@ namespace WeSay.App.Tests.Services
 		}
 
 		[Test]
-		[Category("Palaso Services")]
 		public void CreateNewEntryInUIMode()
 		{
 			CreateNewEntry(kStartInUIMode);
 		}
 
 		[Test]
-		[Category("Palaso Services")]
 		public void CreateNewEntryInServerMode()
 		{
 			CreateNewEntry(kStartInServerMode);
@@ -291,7 +281,6 @@ namespace WeSay.App.Tests.Services
 		//        }
 
 		[Test]
-		[Category("Palaso Services")]
 		public void JumpToEntryMakesAppSwitchToUIMode()
 		{
 			string entriesXml = @"<entry id='foo1'/>";
@@ -300,16 +289,13 @@ namespace WeSay.App.Tests.Services
 					delegate(IDictionaryService dictionaryService)
 					{
 						Assert.IsTrue(dictionaryService.IsInServerMode());
-						dictionaryService.JumpToEntry("lift://whoknows.lift?id=foo1");
-						// This test seems timing sensitive on close, resulting in a
-						// exception that doesn't occur if we slow it down a bit.
-						Thread.Sleep(100);
+						dictionaryService.JumpToEntry("foo1");
+
 						Assert.IsFalse(dictionaryService.IsInServerMode());
 					});
 		}
 
 		[Test]
-		[Category("Palaso Services")]
 		public void JumpToEntryMakesDictionaryTaskShowEnty()
 		{
 			string entriesXml =
@@ -321,16 +307,10 @@ namespace WeSay.App.Tests.Services
 					delegate(IDictionaryService dictionaryService)
 					{
 						Assert.IsTrue(dictionaryService.IsInServerMode());
-						string url = string.Format("lift://whoknows.lift?id=foo2");
-						dictionaryService.JumpToEntry(url);
-						Thread.Sleep(2000);
-
-						var s = dictionaryService.GetCurrentUrl();
-						Assert.IsTrue(s.Contains("foo2"));
-						url = string.Format("lift://whoknows.lift?id=foo3");
-						dictionaryService.JumpToEntry(url);
-						Thread.Sleep(2000);
-						Assert.IsTrue(dictionaryService.GetCurrentUrl().Contains("foo3"));
+						dictionaryService.JumpToEntry("foo2");
+						Assert.AreEqual("foo2", dictionaryService.GetCurrentUrl());
+						dictionaryService.JumpToEntry("foo3");
+						Assert.AreEqual("foo3", dictionaryService.GetCurrentUrl());
 					});
 		}
 
@@ -371,10 +351,6 @@ namespace WeSay.App.Tests.Services
 						else
 						{
 							p.CloseMainWindow();
-							//give the app up to 10 seconds to quit before we go deleting the
-							//project directory
-							for (int i = 0; i < 100 && !p.HasExited; i++ )
-								Thread.Sleep(100);
 						}
 					}
 				}
@@ -389,7 +365,7 @@ namespace WeSay.App.Tests.Services
 			string arguments = '"' + projectDirectorySetup.PathToLiftFile + '"';
 			if (launchInServerMode)
 			{
-				arguments += " -server -launchedByUnitTest";
+				arguments += " -server";
 			}
 			ProcessStartInfo psi = new ProcessStartInfo(@"WeSay.App.exe", arguments);
 			Process p = Process.Start(psi);

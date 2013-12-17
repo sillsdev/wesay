@@ -21,7 +21,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 	public class GatherWordListConfig : TaskConfigurationBase, IGatherWordListConfig, ITaskConfiguration , ICareThatWritingSystemIdChanged
 	{
-		private readonly WordListCatalog _catalog;
+		private readonly IDictionary<string, WordListDescription> _catalog;
 
 		public GatherWordListConfig(string xml, WordListCatalog catalog)
 			:base(xml)
@@ -36,16 +36,6 @@ namespace WeSay.LexicalTools.GatherByWordList
 				yield return new KeyValuePair<string, string>("wordListFileName", WordListFileName);
 				yield return new KeyValuePair<string, string>("wordListWritingSystemId", WordListWritingSystemId);
 			}
-		}
-
-		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
-		{
-			return taskConfiguration is GatherWordListConfig && _catalog == ((GatherWordListConfig)taskConfiguration).Catalog;
-		}
-
-		protected WordListCatalog Catalog
-		{
-			get { return _catalog; }
 		}
 
 		public string WordListFileName
@@ -71,7 +61,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		private WordListDescription WordList
 		{
-			get { return _catalog.GetOrAddWordList(WordListFileName); }
+			get { return _catalog[WordListFileName]; }
 		}
 
 		public string Label
@@ -111,7 +101,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			get { return true; }
 		}
 
-		public static IGatherWordListConfig CreateForTests(string wordListFileName, string wordListWritingSystemId, WordListCatalog catalog)
+		public static IGatherWordListConfig CreateForTests(string wordListFileName, string wordListWritingSystemId)
 		{
 			string xml = String.Format(@"   <task taskName='AddMissingInfo' visible='true'>
 					  <wordListFileName>{0}</wordListFileName>
@@ -119,17 +109,17 @@ namespace WeSay.LexicalTools.GatherByWordList
 					</task>
 				", wordListFileName, wordListWritingSystemId);
 
+			var catalog = new WordListCatalog();
+			catalog.Add(wordListFileName, new WordListDescription(wordListWritingSystemId, "test", "test long", "pretend description"));
 			return new GatherWordListConfig(xml, catalog);
+
 		}
 
 
 
 		public void WritingSystemIdChanged(string from, string to)
 		{
-			  //TODO, (maybe?) when we become writeable
-			// if(WordListWritingSystemId==from)
-			//      WordListWritingSystemId=to;
-			// mark dirty if necessary
+			  //TODO, when we become writeable
 		}
 	}
 }

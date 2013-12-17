@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Palaso.Data;
+using System.Text;
+using WeSay.Data;
 
 namespace WeSay.Data
 {
@@ -8,15 +9,15 @@ namespace WeSay.Data
 	{
 		private SortedDictionary<RecordToken<T>, object> _sortedTokens = null;
 		private List<IQuery<T>> _cachedQueries = new List<IQuery<T>>();
-		private readonly IDataMapper<T> _dataMapperQueried;
+		private readonly IRepository<T> _repositoryQueried = null;
 
-		public ResultSetCache(IDataMapper<T> dataMapperQueried, SortDefinition[] sortDefinitions)
+		public ResultSetCache(IRepository<T> repositoryQueried, SortDefinition[] sortDefinitions)
 		{
-			if (dataMapperQueried == null)
+			if (repositoryQueried == null)
 			{
-				throw new ArgumentNullException("dataMapperQueried");
+				throw new ArgumentNullException("repositoryQueried");
 			}
-			_dataMapperQueried = dataMapperQueried;
+			_repositoryQueried = repositoryQueried;
 
 			if (sortDefinitions == null)
 			{
@@ -29,8 +30,8 @@ namespace WeSay.Data
 			}
 		}
 
-		public ResultSetCache(IDataMapper<T> dataMapperQueried,  SortDefinition[] sortDefinitions, ResultSet<T> resultSetToCache, IQuery<T> queryToCache)
-			: this(dataMapperQueried, sortDefinitions)
+		public ResultSetCache(IRepository<T> repositoryQueried,  SortDefinition[] sortDefinitions, ResultSet<T> resultSetToCache, IQuery<T> queryToCache)
+			: this(repositoryQueried, sortDefinitions)
 		{
 			Add(resultSetToCache, queryToCache);
 		}
@@ -59,7 +60,7 @@ namespace WeSay.Data
 
 		public ResultSet<T> GetResultSet()
 		{
-			ResultSet<T> cachedResults = new ResultSet<T>(_dataMapperQueried, _sortedTokens.Keys);
+			ResultSet<T> cachedResults = new ResultSet<T>(_repositoryQueried, _sortedTokens.Keys);
 			return cachedResults;
 		}
 
@@ -74,7 +75,7 @@ namespace WeSay.Data
 				throw new ArgumentNullException("item");
 			}
 
-			RepositoryId itemId = _dataMapperQueried.GetId(item);
+			RepositoryId itemId = _repositoryQueried.GetId(item);
 
 			RemoveOldTokensWithId(itemId);
 
@@ -96,10 +97,10 @@ namespace WeSay.Data
 			{
 				foreach (Dictionary<string, object> result in query.GetResults(item))
 				{
-					results.Add(new RecordToken<T>(_dataMapperQueried, result, _dataMapperQueried.GetId(item)));
+					results.Add(new RecordToken<T>(_repositoryQueried, result, _repositoryQueried.GetId(item)));
 				}
 			}
-			return new ResultSet<T>(_dataMapperQueried, results);
+			return new ResultSet<T>(_repositoryQueried, results);
 		}
 
 		private void RemoveOldTokensWithId(RepositoryId itemId)
@@ -124,7 +125,7 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("item");
 			}
-			RepositoryId id = _dataMapperQueried.GetId(item);
+			RepositoryId id = _repositoryQueried.GetId(item);
 			DeleteItemFromCache(id);
 		}
 
@@ -145,7 +146,7 @@ namespace WeSay.Data
 
 		private void CheckIfItemIsInRepository(RepositoryId id)
 		{
-			_dataMapperQueried.GetItem(id);
+			_repositoryQueried.GetItem(id);
 		}
 
 	}

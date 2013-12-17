@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
-using Palaso.Misc;
 using Palaso.Reporting;
 using WeSay.Foundation;
-using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI
 {
@@ -24,7 +22,6 @@ namespace WeSay.UI
 
 		private readonly WritingSystem _writingSystem;
 		private readonly string _propertyName;
-		private readonly WeSayDataObject _parent;
 		private IList<T> _listTarget;
 		private WeSayTextBox _textBoxTarget;
 		private Control _referenceControl;
@@ -45,13 +42,11 @@ namespace WeSay.UI
 
 		private bool _inMidstOfTrigger;
 
-		public GhostBinding(WeSayDataObject parent,
-							IList<T> targetList,
+		public GhostBinding(IList<T> targetList,
 							string propertyName,
 							WritingSystem writingSystem,
 							WeSayTextBox textBoxTarget)
 		{
-			_parent = parent;
 			_listTarget = targetList;
 			//           _listTarget.ListChanged +=new ListChangedEventHandler(_listTarget_ListChanged);
 			_propertyName = propertyName;
@@ -109,7 +104,7 @@ namespace WeSay.UI
 
 		private void OnTextBoxEntered(object sender, EventArgs e)
 		{
-			CurrentItemChanged(sender, new CurrentItemEventArgs(_parent, _propertyName, _writingSystem.Id));
+			CurrentItemChanged(sender, new CurrentItemEventArgs(_propertyName, _writingSystem.Id));
 		}
 
 		// /// <summary>
@@ -150,15 +145,9 @@ namespace WeSay.UI
 			//            _listTarget.ListChanged -=new ListChangedEventHandler(_listTarget_ListChanged);
 			_listTarget = null;
 			//            _textBoxTarget.TextChanged -= new EventHandler(_textBoxTarget_TextChanged);
-
-			_textBoxTarget.KeyDown -= _textBoxTarget_KeyDown;
-			_textBoxTarget.LostFocus -= _textBoxTarget_LostFocus;
-			_textBoxTarget.Enter -= OnTextBoxEntered;
 			_textBoxTarget.HandleDestroyed -= _textBoxTarget_HandleDestroyed;
 			_textBoxTarget.Disposed -= _textBoxTarget_Disposed;
 			_textBoxTarget = null;
-
-
 		}
 
 		/// <summary>
@@ -202,8 +191,8 @@ namespace WeSay.UI
 				return; //teardown was already called
 			}
 
-			//WeSayTextBox textBoxTarget = _textBoxTarget;
-			if (_textBoxTarget.Text.Trim().Length == 0)
+			WeSayTextBox textBoxTarget = _textBoxTarget;
+			if (textBoxTarget.Text.Trim().Length == 0)
 			{
 				return;
 			}
@@ -232,13 +221,10 @@ namespace WeSay.UI
 			//}
 
 			//  object newGuy = _listTarget[e.NewIndex];
-			FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
+			FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, textBoxTarget.Text);
 			list.Add(newGuy);
 			if (LayoutNeededAfterMadeReal != null && ReferenceControl != null)
 			{
-				// The Layouter subscribes to this event, and includes an Application.DoEvents
-				// which can cause the _textBoxTarget dispose to be handled before we complete
-				// the remainder of TimeForRealObject.
 				LayoutNeededAfterMadeReal.Invoke(this,
 												 list,
 												 list.IndexOf(newGuy),
@@ -246,10 +232,7 @@ namespace WeSay.UI
 												 doGoToNextField,
 												 null);
 			}
-			if (_textBoxTarget != null)
-			{
-				_textBoxTarget.Text = "";
-			}
+			textBoxTarget.Text = "";
 			_inMidstOfTrigger = false;
 			//_textBoxTarget.PrepareForFadeIn();
 		}

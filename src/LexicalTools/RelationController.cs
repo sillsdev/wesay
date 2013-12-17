@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Data;
 using Palaso.Reporting;
-using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
@@ -88,7 +86,7 @@ namespace WeSay.LexicalTools
 			//This satisfies Rene's request of WS-419
 			if (_field.FieldName == "BaseForm")
 			{
-				newGuy.SetFlag(LexEntry.WellKnownProperties.FlagSkipBaseform);
+				newGuy.SetFlag("flag_skip_BaseForm");
 			}
 			return newGuy;
 		}
@@ -182,7 +180,7 @@ namespace WeSay.LexicalTools
 
 		private RecordToken<LexEntry> GetRecordTokenFromTargetId(string s)
 		{
-			if (string.IsNullOrEmpty(s))
+			if (s == null)
 			{
 				return null;
 			}

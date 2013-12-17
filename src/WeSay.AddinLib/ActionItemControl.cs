@@ -66,9 +66,6 @@ namespace WeSay.AddinLib
 
 			_setupButton.Visible = inAdminMode && _addin is IWeSayAddinHasSettings &&
 								   ((IWeSayAddinHasSettings) _addin).Settings != null;
-
-
-			_moreInfoButton.Visible = inAdminMode && _addin is IWeSayAddinHasMoreInfo;
 		}
 
 		public void Draw(Graphics graphics, Rectangle bounds)
@@ -142,9 +139,7 @@ namespace WeSay.AddinLib
 					using (XmlTextWriter writer = new FragmentXmlTextWriter(stringWriter))
 					{
 						writer.Formatting = Formatting.Indented;
-						XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-						ns.Add("", ""); //prevent writing namespaces
-						serializer.Serialize(writer, settings, ns);
+						serializer.Serialize(writer, settings);
 						writer.Close();
 					}
 					string settingsXml = builder.ToString();
@@ -154,7 +149,7 @@ namespace WeSay.AddinLib
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"Sorry, WeSay had a problem storing those settings. {0}", error.Message);
 			}
 
@@ -169,7 +164,7 @@ namespace WeSay.AddinLib
 
 			if (_inAdminMode && !DoShowInWeSay)
 			{
-				_toggleShowInWeSay.Text = "Make visible in WeSay";
+				_toggleShowInWeSay.Text = "Not In WeSay";
 				_toolTip.SetToolTip(_toggleShowInWeSay,
 									"Click to make this action available within WeSay.");
 				//                e.Graphics.DrawLine(Pens.Red, new Point(0,0), new Point(_toggleShowInWeSay.Width,_toggleShowInWeSay.Height));
@@ -177,7 +172,7 @@ namespace WeSay.AddinLib
 			}
 			else
 			{
-				_toggleShowInWeSay.Text = "Make invisible in WeSay";
+				_toggleShowInWeSay.Text = "Visible In WeSay";
 				_toolTip.SetToolTip(_toggleShowInWeSay,
 									"Click to make this action unavailable within WeSay.");
 			}
@@ -206,11 +201,6 @@ namespace WeSay.AddinLib
 			DoShowInWeSay = !DoShowInWeSay;
 			UpdateVisualThings();
 			//_toggleShowInWeSay.Invalidate();
-		}
-
-		private void OnMoreInfo(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			((IWeSayAddinHasMoreInfo)_addin).ShowMoreInfoDialog(ParentForm);
 		}
 	}
 

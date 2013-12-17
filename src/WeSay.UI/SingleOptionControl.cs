@@ -12,8 +12,8 @@ namespace WeSay.UI
 	{
 		private readonly OptionsList _list;
 		private readonly ComboBox _control = new ComboBox();
+		private readonly string _idOfPreferredWritingSystem;
 		private readonly string _nameForLogging;
-		private readonly WritingSystem _preferredWritingSystem;
 
 		public event EventHandler ValueChanged;
 
@@ -23,6 +23,12 @@ namespace WeSay.UI
 
 		#endregion
 
+		public SingleOptionControl(string nameForLogging)
+		{
+			InitializeComponent();
+			_idOfPreferredWritingSystem = "es";
+			_nameForLogging = nameForLogging;
+		}
 
 		protected override void OnHandleDestroyed(EventArgs e)
 		{
@@ -34,19 +40,20 @@ namespace WeSay.UI
 			base.OnHandleDestroyed(e);
 		}
 
-		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, WritingSystem preferredWritingSystem)
+		public SingleOptionControl(IValueHolder<string> optionRef,
+								   OptionsList list,
+								   string idOfPreferredWritingSystem,
+								   string nameForLogging)
 		{
 			_list = list;
 			_nameForLogging = nameForLogging;
-			_preferredWritingSystem = preferredWritingSystem;
+			_idOfPreferredWritingSystem = idOfPreferredWritingSystem;
 			InitializeComponent();
 			//doesn't allow old, non-valid values to be shown (can't set the text):  ComboBoxStyle.DropDownList;
 			_control.AutoCompleteMode = AutoCompleteMode.Append;
 			_control.AutoCompleteSource = AutoCompleteSource.ListItems;
 			_control.Sorted = false;
 			_control.MaxDropDownItems = 100;
-			_control.Font = _preferredWritingSystem.Font;
-			_control.Height = _preferredWritingSystem.Font.Height + 10;
 			BuildBoxes(optionRef);
 		}
 
@@ -129,7 +136,7 @@ namespace WeSay.UI
 
 			Panel p = new Panel();
 			p.Controls.Add(_control);
-			p.Size = new Size(initialPanelWidth, _control.Height + 10);
+			p.Size = new Size(initialPanelWidth, _control.Height + 0);
 
 			//            FlagButton flagButton = MakeFlagButton(p.Size);
 			//            p.Controls.Add(flagButton);
@@ -148,17 +155,15 @@ namespace WeSay.UI
 
 		private void SetupComboControl(IValueHolder<string> selectedOptionRef)
 		{
-
-
 			if (!_list.Options.Exists(delegate(Option o) { return (o.Key == string.Empty); }))
 			{
 				MultiText unspecifiedMultiText = new MultiText();
-				unspecifiedMultiText.SetAlternative(_preferredWritingSystem.Id,
+				unspecifiedMultiText.SetAlternative(_idOfPreferredWritingSystem,
 													StringCatalog.Get("~unknown",
 																	  "This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field."));
 				Option unspecifiedOption = new Option(string.Empty, unspecifiedMultiText);
 				_control.Items.Add(new Option.OptionDisplayProxy(unspecifiedOption,
-																 _preferredWritingSystem.Id));
+																 _idOfPreferredWritingSystem));
 			}
 			_list.Options.Sort(CompareItems);
 			foreach (Option o in _list.Options)
@@ -168,7 +173,7 @@ namespace WeSay.UI
 					give us a way to choose the ws either.
 					_control.Items.Add(o);
 				*/
-				_control.Items.Add(o.GetDisplayProxy(_preferredWritingSystem.Id));
+				_control.Items.Add(o.GetDisplayProxy(_idOfPreferredWritingSystem));
 			}
 
 			Value = selectedOptionRef.Value;
@@ -187,8 +192,8 @@ namespace WeSay.UI
 			{
 				return -1;
 			}
-			string x = a.Name.GetBestAlternative(_preferredWritingSystem.Id);
-			string y = b.Name.GetBestAlternative(_preferredWritingSystem.Id);
+			string x = a.Name.GetBestAlternative(_idOfPreferredWritingSystem);
+			string y = b.Name.GetBestAlternative(_idOfPreferredWritingSystem);
 
 			return String.Compare(x, y);
 		}

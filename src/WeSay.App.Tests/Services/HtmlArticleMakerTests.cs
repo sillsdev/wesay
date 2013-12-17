@@ -11,7 +11,7 @@ namespace WeSay.App.Tests.Services
 		//   public WeSayWordsProject _project;
 
 		/// <summary>
-		/// time consuming to setup, so we reuse it.
+		/// Db4oProjectSetupForTesting is extremely time consuming to setup, so we reuse it.
 		/// </summary>
 		[TestFixtureSetUp]
 		public void SetupFixture()

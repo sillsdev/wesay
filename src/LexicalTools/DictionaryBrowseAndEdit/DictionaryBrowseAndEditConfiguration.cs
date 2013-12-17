@@ -25,15 +25,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			get
 			{
-				return StringCatalog.Get("Dictionary Browse && Edit",
+				return StringCatalog.Get("Dictionary",
 				   "The label for the task that lets you see all entries, search for entries, and edit various fields.  We don't like the English name very much, so feel free to call this something very different in the language you are translating to.");
 			}
 		}
 
-		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
-		{
-			return taskConfiguration is DictionaryBrowseAndEditConfiguration;
-		}
 
 		public override string ToString()
 		{

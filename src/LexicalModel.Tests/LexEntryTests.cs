@@ -40,29 +40,6 @@ namespace WeSay.LexicalModel.Tests
 			_removed = false;
 		}
 
-		[Test]
-		public void Cleanup_HasBaseform_PropertyIsNotRemoved()
-		{
-			var target = new LexEntry();
-			_entry = new LexEntry();
-			_entry.LexicalForm["v"] = "hello";
-			_entry.AddRelationTarget(LexEntry.WellKnownProperties.BaseForm, target.GetOrCreateId(true));
-			_entry.CleanUpAfterEditting();
-			Assert.IsNotNull(_entry.GetProperty<LexRelationCollection>(LexEntry.WellKnownProperties.BaseForm));
-		}
-
-		[Test]
-		public void Cleanup_HasEmptyBaseform_PropertyIsRemoved()
-		{
-			var target = new LexEntry();
-			_entry = new LexEntry();
-			_entry.LexicalForm["v"] = "hello";
-			_entry.AddRelationTarget(LexEntry.WellKnownProperties.BaseForm, string.Empty);
-			Assert.IsNotNull(_entry.GetProperty<LexRelationCollection>(LexEntry.WellKnownProperties.BaseForm));
-			_entry.CleanUpAfterEditting();
-			Assert.IsNull(_entry.GetProperty<LexRelationCollection>(LexEntry.WellKnownProperties.BaseForm));
-		}
-
 		private void _entry_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			_entry.CleanUpEmptyObjects();

@@ -1,24 +1,31 @@
 <project name="WeSay.ConfigTool.Tests" default="build" basedir=".">
-	<target name="build">
-		<property name="build.namespace" value="WeSay.ConfigTool.Tests" />
-		<property name="build.namespace.dir" value="${path::combine(project.resource.dir, build.namespace)}" />
+  <target name="build" depends="clean">
 
-		<!-- review: usesourcepath will not work as the path of the source has been changed making it invalid -->
-		<copy todir="${build.namespace.dir}" >
-			<fileset basedir=".">
-				<include name="**/*.resx" />
-			</fileset>
-			<filterchain>
-				<replacestring from="\" to="/" />
-			</filterchain>
-		</copy>
+	<copy todir="nant.resx.bak" >
+		<fileset basedir=".">
+			<include name="**/*.resx" />
+		</fileset>
+		<filterchain>
+			<replacestring from="\" to="/" />
+		</filterchain>
+	</copy>
 
-		<resgen todir="${build.namespace.dir}">
-			<resources>
-				<include name="${build.namespace.dir}/**/*.resx" />
-			</resources>
-		</resgen>
+	<foreach item="File" property="filename">
+		<in>
+			<items>
+				<include name="nant.resx.bak/**/*.resx" />
+			</items>
+		</in>
+		<do>
+			<resgen input="${filename}" usesourcepath="true" unless="${file::get-length(filename)==0}" />
+		</do>
+	</foreach>
 
+	<copy todir="." >
+		<fileset basedir="nant.resx.bak">
+			<include name="**/*.resources" />
+		</fileset>
+	</copy>
 
 	<csc target="library"
 		output="${project.output.dir}/WeSay.ConfigTool.Tests.dll"
@@ -34,12 +41,12 @@
 	  </sources>
 	  <references basedir="${project.output.dir}">
 		<include name="Palaso.dll" />
-		<include name="Palaso.TestUtilities.dll" />
+		<include name="PalasoReporting.dll" />
 		<include name="WeSay.Project.dll" />
-		<include name="WeSay.Project.Tests.dll" />
 		<include name="WeSay.ConfigTool.exe" />
 		<include name="LexicalModel.dll" />
 		<include name="WeSay.Foundation.dll" />
+		<include name="WeSay.Foundation.Tests.dll" />
 		<include name="System.Windows.Forms.dll" />
 		<include name="nunit.framework.dll" />
 		<include name="NUnitForms.dll" />

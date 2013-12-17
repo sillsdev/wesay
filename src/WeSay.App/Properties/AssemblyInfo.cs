@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -12,8 +12,8 @@ using System.Security.Permissions;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("WeSay")]
-[assembly: AssemblyProduct("WeSay")]//NB: this name is used eventually in chorus display
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyProduct("WeSay 0.5")]
+[assembly: AssemblyCopyright("Copyright © WeSay 2006")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -35,8 +35,8 @@ using System.Security.Permissions;
 //      Revision
 //
 
-[assembly: AssemblyVersion("0.7.0")]
-[assembly: AssemblyFileVersion("0.7.0")]
+[assembly: AssemblyVersion("1.0.0.1")]
+[assembly: AssemblyFileVersion("1.0.0.1")]
 [assembly: CLSCompliant(true)]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]
 [assembly: InternalsVisibleTo("WeSay.App.Tests")]

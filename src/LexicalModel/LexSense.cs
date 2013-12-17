@@ -15,7 +15,7 @@ namespace WeSay.LexicalModel
 		public new class WellKnownProperties: WeSayDataObject.WellKnownProperties
 		{
 			public static string PartOfSpeech = "POS";
-			public static string SemanticDomainDdp4 = "semantic-domain-ddp4";
+			public static string SemanticDomainsDdp4 = "SemanticDomainDdp4";
 
 			public static string Definition = "definition";
 			//the lower case here is defined by LIFT standard
@@ -28,7 +28,7 @@ namespace WeSay.LexicalModel
 				List<string> list =
 						new List<string>(new string[]
 											 {
-													 PartOfSpeech, Definition, SemanticDomainDdp4, Picture
+													 PartOfSpeech, Definition, SemanticDomainsDdp4, Picture
 													 , Note, Gloss
 											 });
 				return list.Contains(fieldName) || list.Contains(fieldName.ToLower()) ||

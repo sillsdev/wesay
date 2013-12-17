@@ -43,13 +43,5 @@ namespace WeSay.ConfigTool.Properties
 			get { return ((MruProjects) (this["MruConfigFilePaths"])); }
 			set { this["MruConfigFilePaths"] = value; }
 		}
-
-		[UserScopedSetting()]
-		[DebuggerNonUserCode()]
-		public Palaso.Reporting.ReportingSettings Reporting
-		{
-			get { return ((Palaso.Reporting.ReportingSettings) (this["Reporting"])); }
-			set { this["Reporting"] = value; }
-		}
 	}
 }

@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{6366719E-DA80-4680-9E06-D9BC6F340DE3}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -51,31 +51,27 @@
   <ItemGroup>
 	<Reference Include="ICSharpCode.SharpZipLib, Version=0.85.1.271, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\ICSharpCode.SharpZipLib.dll</HintPath>
+	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
 	</Reference>
 	<Reference Include="LiftIO, Version=0.1.0.120, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
+	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
 	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
+	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
 	</Reference>
 	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\nunit.framework.dll</HintPath>
+	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.TestUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.TestUtilities.dll</HintPath>
+	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\PalasoUIWindowsForms.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
@@ -83,6 +79,23 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="ApproximateMatcherTests.cs" />
+	<Compile Include="BackupMakerTests.cs" />
+	<Compile Include="OptionList.Tests.cs" />
+	<Compile Include="OptionRefCollectionTests.cs" />
+	<Compile Include="OptionRefTests.cs" />
+	<Compile Include="SpellCheckerIdToDisplayStringConverterTests.cs" />
+	<Compile Include="TestHelpers\TemporaryFolder.cs" />
+	<Compile Include="TestHelpers\TemporaryFolderTests.cs" />
+	<Compile Include="TestHelpers\TestUtilities.cs" />
+	<Compile Include="TestResources.Designer.cs">
+	  <AutoGen>True</AutoGen>
+	  <DesignTime>True</DesignTime>
+	  <DependentUpon>TestResources.resx</DependentUpon>
+	</Compile>
+	<Compile Include="WeSayDataObjectTests.cs" />
+	<Compile Include="WritingSystemTests.cs" />
+	<Compile Include="MultiTextTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +107,16 @@
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
 	  <Name>WeSay.Project</Name>
 	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="TestResources.resx">
+	  <SubType>Designer</SubType>
+	  <Generator>ResXFileCodeGenerator</Generator>
+	  <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\WritingSystemPrefs.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
