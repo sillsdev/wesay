@@ -1,0 +1,2 @@
+echo hello there
+dir

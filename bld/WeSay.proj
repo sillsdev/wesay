@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="tasks/Microsoft.Sdc.Common.tasks" />
+
   <PropertyGroup>
 	<BaseDirectory>$(MSBuildProjectDirectory)\..</BaseDirectory>
   </PropertyGroup>
@@ -11,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<CSharpFiles Include="$(BaseDirectory)\**\*.cs" Exclude="$(BaseDirectory)\**\*Tests\**;$(BaseDirectory)\**\WeSay.ConfigTool\**" />
+	<CSharpFiles Include="$(BaseDirectory)\**\*.cs"/>
 	<XmlFiles Include="$(BaseDirectory)\common\**\*.WeSayConfig"/>
   </ItemGroup>
 
@@ -29,9 +31,6 @@
   </Target>
 
   <Target Name="Compile">
-
-	<CallTarget targets="UnzipMercurial"/>
-
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Rebuild"
 			 Properties="Configuration=Debug" />
@@ -39,11 +38,6 @@
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Rebuild"
 			 Properties="Configuration=Release" />
-  </Target>
-
-  <Target Name="UnzipMercurial">
-	<Unzip ZipFileName="$(BaseDirectory)\lib\net2.0\Mercurial.zip"
-		   TargetDirectory="$(BaseDirectory)\output\Release"/>
   </Target>
 
   <Target Name="Test">
@@ -127,7 +121,7 @@
 			 OutputFile="$(BaseDirectory)\common\WeSay.pot"
 			 MsdIdBugsTo="hattonjohn@gmail.com"
 			 XmlFiles="@(XmlFiles)"
-			 XPathToStrings="//label | //longLabel | //description[not(@UseInConstructor='false')]"
+			 XPathToStrings="//label | //description[not(@UseInConstructor='false')]"
 			 CSharpFiles="@(CSharpFiles)">
 	</MakePot>
   </Target>
@@ -145,17 +139,6 @@
 	</MakeWixForDirTree>
   </Target>
 
-  <Target Name="MakeWixForMercurial">
-	<MakeWixForDirTree
-				DirectoryReferenceId="mercurial"
-				ComponentGroupId="Mercurial"
-				RootDirectory="$(BaseDirectory)\output\release\mercurial"
-				OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedMercurial.wxs"
-				MatchRegExPattern=".*">
-	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
-	</MakeWixForDirTree>
-  </Target>
-
   <Target Name="MakeWixForTemplates">
 	<MakeWixForDirTree
 				DirectoryReferenceId="TemplatesDir"
@@ -169,7 +152,7 @@
   </Target>
 
   <Target Name="InstallerNoGenerationTest">
-	<Split Input="$(BUILD_NUMBER)" Delimiter="-" OutputSubString="0">
+	<Split Input="$(BUILD_NUMBER)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
 	</Split>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
@@ -178,7 +161,6 @@
 	<Message Text="Version: $(Version)" />
 
 	<CallTarget targets="MakeWixForTemplates"/>
-	<CallTarget targets="MakeWixForMercurial"/>
 
 	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
@@ -191,10 +173,10 @@
 	<MSBuild Projects="$(BaseDirectory)\src\Installer\Installer.wixproj"/>
 
 	<!-- remove an existing one with the same name, if necessary -->
-	<Delete Files="$(BaseDirectory)\output\installer\WeSayInstaller-$(version).msi" TreatErrorsAsWarnings="false" />
+	<Delete Files="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi" TreatErrorsAsWarnings="false" />
 
 	<Move SourceFiles="$(BaseDirectory)\output\installer\WeSayInstaller.msi"
-			DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller-$(version).msi"/>
+			DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi"/>
   </Target>
 
   <!-- for use on a dev machine to test installer script -->
@@ -206,7 +188,7 @@
   </Target>
 
 	<Target Name="Installer">
-	<Split Input="$(BUILD_NUMBER)" Delimiter="-" OutputSubString="0">
+	<Split Input="$(BUILD_NUMBER)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
 	</Split>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
@@ -216,9 +198,8 @@
 
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<CallTarget targets="MakeWixForTemplates"/>
-	<CallTarget targets="MakeWixForMercurial"/>
 
-	  <!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
+	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
 	<FileUpdate Files="$(BaseDirectory)\src\Installer\Installer.wxs" Regex="Property_ProductVersion = \&quot;.*\&quot;"
 				ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />
@@ -229,15 +210,15 @@
 	<MSBuild Projects="$(BaseDirectory)\src\Installer\Installer.wixproj"/>
 
 	<!-- remove an existing one with the same name, if necessary -->
-	<Delete Files="$(BaseDirectory)\output\installer\WeSayInstaller-$(version).msi" TreatErrorsAsWarnings="false" />
+	<Delete Files="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi" TreatErrorsAsWarnings="false" />
 
 	<Move SourceFiles="$(BaseDirectory)\output\installer\WeSayInstaller.msi"
-			DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller-$(version).msi"/>
+			DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi"/>
   </Target>
 
 
   <Target Name="Upload">
-	<Split Input="$(BUILD_NUMBER)" Delimiter="-" OutputSubString="0">
+	<Split Input="$(BUILD_NUMBER)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
 	</Split>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
@@ -245,12 +226,12 @@
 	</CreateProperty>
 	<Message Text="Version: $(Version)" />
 
-	<Exec Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller-$(version).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller-$(version).msi'
+	<Exec Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller.$(Version).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller.$(Version).msi'
 		   WorkingDirectory="$(BaseDirectory)" />
   </Target>
 
   <Target Name="Mail">
-	<Split Input="$(BUILD_NUMBER)" Delimiter="-" OutputSubString="0">
+	<Split Input="$(BUILD_NUMBER)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
 	</Split>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)">

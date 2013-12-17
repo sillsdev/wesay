@@ -2,8 +2,8 @@ using System.IO;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
-//using WeSay.Foundation.Tests;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Tests;
+using WeSay.Foundation.Tests.TestHelpers;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -17,7 +17,6 @@ namespace WeSay.ConfigTool.Tests
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
 			_window = new ConfigurationWindow(new string[] {});
-			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 		}
 
@@ -26,8 +25,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			using(TemporaryFolder f = new TemporaryFolder("ProjectIsCreatedTest") )
 			{
-				_window.CreateAndOpenProject(f.FolderPath, "th");
-				_window.DisableBackupAndChorusStuffForTests();
+				_window.CreateAndOpenProject(f.FolderPath);
 				_window.Close();
 				_window.Dispose();
 			}
@@ -60,7 +58,7 @@ namespace WeSay.ConfigTool.Tests
 									   Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
 			try
 			{
-				_window.CreateAndOpenProject(path, "th");
+				_window.CreateAndOpenProject(path);
 
 				ToolStripMenuItemTester projectToolStripMenuItem =
 						new ToolStripMenuItemTester("projectToolStripMenuItem");

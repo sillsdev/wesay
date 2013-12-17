@@ -36,7 +36,7 @@ namespace WeSay.Project.Tests
 		//        }
 		//
 		//        [Test]
-		//        [NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (IOException))]
+		//        [ExpectedException(typeof (IOException))]
 		//        public void LockLift()
 		//        {
 		//            _p.LockLift();

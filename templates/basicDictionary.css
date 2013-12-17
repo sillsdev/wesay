@@ -1,0 +1,95 @@
+body {
+  column-count: 2; -moz-column-count: 2;
+  column-gap: 1.5em; -moz-column-gap: 1.5em;
+  column-fill: auto;
+  text-align: justify;
+}
+
+@page {
+	@top-left{ content: string(guideword, first)}
+	@top-center{ content: counter(page) }
+	@top-right{ content: string(guideword, last) }
+
+}
+
+span.headword {
+  string-set: guideword content();  /* * used to make the headers */
+}
+
+div.entry { /* this gives us outdented headwords */
+text-indent: -.5em; /* a slight outdent the width of a lower-case n */
+margin-left: .5em;
+line-height: 120%;
+}
+
+/* use sans serif for related words */
+
+span.headword {
+/* Contemporary dictionaries generally tend to use
+lower- or upper and lower-case forms for headwords,
+in a bolder and often sans serif type, at a
+slightly larger size than the entries. */
+
+font-family:sans-serif; /*to do: select the sans-serif variety from writing system*/
+font-weight:bold;
+font-size:108%;
+}
+
+span.homograph-number {
+font-family:sans-serif;
+font-weight:bold;
+font-size:50%;
+vertical-align: sub;
+}
+
+div.note {
+padding-right: 1em;
+padding-left: 1em;
+background-color: #eeeeee; /*light-gray*/
+}
+
+span.sense-number{
+/*If a headword has multiple meanings or senses, the sense numbers
+appear in the bold weight of the entry type, both accented and
+neutralized by extra white space around them. */
+padding-right: .25em;
+font-weight:bold;
+/*            font-size: 70%;*/ /*this should be the x height of the surrounding type*/
+}
+
+/*The parts of speech are abbreviated and expressed in italic type.*/
+span.grammatical-info{
+font-style: italic;
+}
+
+/*Plurals or related words appear in the medium weight of the sans serif
+headword type; etymologies in combinations of small and regular capitals,
+italic and roman. Simple icons indicate new parts of speech or sense,
+and related words.*/
+
+
+/*So quotations and samples from everyday speech are expressed in italic,
+as is structural emphasis (parts of speech; subject areas; translations or
+source words in another language); small capitals are used only to
+indicate the century of a word’s origin, and related words.*/
+span.example {
+font-style:italic;
+}
+
+span.trait {
+font-variant: small-caps;
+}
+
+span.translation {
+
+}
+
+span.pronunciation{
+}
+
+span.subentry span.headword{
+font-family:sans-serif; /*to do: select the sans-serif variety from writing system*/
+font-weight:bold;
+font-size:90%;
+
+}

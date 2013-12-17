@@ -2,8 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Lift;
-using Palaso.UiBindings;
+using WeSay.Foundation;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
@@ -123,7 +122,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
-			if (!ContainsFocus && HasProblems && !Box.ListBoxFocused)
+			if (!ContainsFocus && HasProblems)
 			{
 				int y = e.ClipRectangle.Top;
 				e.Graphics.DrawString("!",
@@ -273,7 +272,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 			}
 			//this behavior may have to become a parameter
-			if (!ContainsFocus && HasProblems && !Box.ListBoxFocused)
+			if (!ContainsFocus && HasProblems)
 			{
 				Box.BackColor = Color.Red;
 			}

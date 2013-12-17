@@ -2,14 +2,13 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
+using WeSay.Foundation;
 
 namespace WeSay.UI
 {
 	public partial class WeSayListBox: ListBox
 	{
-		private WritingSystemDefinition _writingSystem;
+		private WritingSystem _writingSystem;
 		private object _itemToNotDrawYet;
 
 		public WeSayListBox()
@@ -39,13 +38,11 @@ namespace WeSay.UI
 			Brush myBrush = Brushes.Black;
 
 			// Draw the current item text based on the current Font and the custom brush settings.
-			TextRenderer.DrawText(e.Graphics, Items[e.Index].ToString(), e.Font, e.Bounds, Color.Black, TextFormatFlags.Left);
-			//Do not use Graphics.Drawstring as it does not use Uniscribe and thus has problems with complex scripts WS-14881
-			//e.Graphics.DrawString(Items[e.Index].ToString(),
-			//                      e.Font,
-			//                      myBrush,
-			//                      e.Bounds,
-			//                      StringFormat.GenericDefault);
+			e.Graphics.DrawString(Items[e.Index].ToString(),
+								  e.Font,
+								  myBrush,
+								  e.Bounds,
+								  StringFormat.GenericDefault);
 			// If the ListBox has focus, draw a focus rectangle around the selected item.
 			e.DrawFocusRectangle();
 		}
@@ -57,7 +54,7 @@ namespace WeSay.UI
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystemDefinition WritingSystem
+		public WritingSystem WritingSystem
 		{
 			get
 			{
@@ -75,9 +72,9 @@ namespace WeSay.UI
 					throw new ArgumentNullException();
 				}
 				_writingSystem = value;
-				Font = WritingSystemInfo.CreateFont(value);
-				ItemHeight = (int)(Math.Ceiling(WritingSystemInfo.CreateFont(value).GetHeight()));
-				if (value.RightToLeftScript)
+				Font = value.Font;
+				ItemHeight = (int) (Math.Ceiling(value.Font.GetHeight()));
+				if (value.RightToLeft)
 				{
 					RightToLeft = RightToLeft.Yes;
 				}
@@ -92,10 +89,7 @@ namespace WeSay.UI
 		public object ItemToNotDrawYet
 		{
 			get { return _itemToNotDrawYet; }
-			set {
-					_itemToNotDrawYet = value;
-					Refresh();
-				}
+			set { _itemToNotDrawYet = value; }
 		}
 	}
 }

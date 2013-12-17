@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Autofac.Builder;
-using WeSay.UI;
 
 namespace WeSay.Project
 {
@@ -18,84 +16,19 @@ namespace WeSay.Project
 		public void RegisterAllTypes(Autofac.Builder.ContainerBuilder builder)
 		{
 
-			RegisterTask(builder, "Dashboard",
-						 "WeSay.LexicalTools.Dashboard.Dash",
-						 "WeSay.LexicalTools.Dashboard.DashboardConfiguration",
-						 "LexicalTools");
-			RegisterTask(builder, "Dictionary",
-						 "WeSay.LexicalTools.DictionaryBrowseAndEdit.DictionaryTask",
+			RegisterTask(builder, "Dashboard", "WeSay.CommonTools.Dash", "WeSay.CommonTools.DashboardConfiguration", "CommonTools");
+			RegisterTask(builder, "Dictionary", "WeSay.LexicalTools.DictionaryBrowseAndEdit.DictionaryTask",
 						 "WeSay.LexicalTools.DictionaryBrowseAndEdit.DictionaryBrowseAndEditConfiguration",
 						 "LexicalTools");
+			RegisterTask(builder, "GatherWordsBySemanticDomains", "WeSay.LexicalTools.GatherBySemanticDomainTask",
+						 "WeSay.LexicalTools.GatherBySemanticDomainConfig", "LexicalTools");
 
-			RegisterControlAndFactory(builder,
-						"WeSay.LexicalTools.DictionaryBrowseAndEdit.DictionaryControl",
-						 "LexicalTools");
+			RegisterTask(builder, "AddMissingInfo", "WeSay.LexicalTools.AddMissingInfo.MissingInfoTask",
+						 "WeSay.LexicalTools.AddMissingInfo.MissingInfoConfiguration", "LexicalTools");
 
-			RegisterControlAndFactory(builder,
-						"WeSay.LexicalTools.EntryHeaderView",
-						 "LexicalTools");
+			RegisterTask(builder, "GatherWordList", "WeSay.LexicalTools.GatherWordListTask",
+						 "WeSay.LexicalTools.GatherByWordList.GatherWordListConfig", "LexicalTools");
 
-			RegisterControlAndFactory(builder,
-						"WeSay.LexicalTools.EntryViewControl",
-						 "LexicalTools");
-
-			//builder.Register<ITaskForExternalNavigateToEntry>(c => (ITaskForExternalNavigateToEntry) c.Resolve("Dictionary"));
-
-			RegisterTask(builder, "GatherWordsBySemanticDomains",
-						 "WeSay.LexicalTools.GatherBySemanticDomains.GatherBySemanticDomainTask",
-						 "WeSay.LexicalTools.GatherBySemanticDomains.GatherBySemanticDomainConfig",
-						 "LexicalTools");
-			RegisterTask(builder, "AddMissingInfo",
-						 "WeSay.LexicalTools.AddMissingInfo.MissingInfoTask",
-						 "WeSay.LexicalTools.AddMissingInfo.MissingInfoConfiguration",
-						 "LexicalTools");
-			RegisterTask(builder, "GatherWordList",
-						 "WeSay.LexicalTools.GatherByWordList.GatherWordListTask",
-						 "WeSay.LexicalTools.GatherByWordList.GatherWordListConfig",
-						 "LexicalTools");
-			RegisterTask(builder, "AdvancedHistory",
-						 "WeSay.LexicalTools.Review.AdvancedHistory.AdvancedHistoryTask",
-						 "WeSay.LexicalTools.Review.AdvancedHistory.AdvancedHistoryConfig",
-						 "LexicalTools");
-
-			RegisterTask(builder, "NotesBrowser",
-				 "WeSay.LexicalTools.Review.NotesBrowser.NotesBrowserTask",
-				 "WeSay.LexicalTools.Review.NotesBrowser.NotesBrowserConfig",
-				 "LexicalTools");
-
-//            Type type = GetType( "WeSay.LexicalTools.Review.AdvancedHistory.AdvancedHistoryControl", assembly);
-//            TaskNameToTaskType.Add(name, type);
-//            builder.Register(type).Named(name).FactoryScoped();
-
-		}
-//
-//        private void RegisterDictionaryTask(Autofac.Builder.ContainerBuilder builder, string name, string classPath, string configClassPath, string assembly)
-//        {
-//            // _taskNameToClassPath.Add(name, classPath);
-//            Type type = GetType(classPath, assembly);
-//            TaskNameToTaskType.Add(name, type);
-//
-//            //review: there's probably a cleaner way to do this, is it even necessary?
-//
-//            var interfaces = new Type[] {typeof(ITask), typeof(ITaskForExternalNavigateToEntry) };
-//
-//            builder.Register(type).Named(name).As(interfaces).FactoryScoped();
-//
-//            //register the class that holds the configuration for this task
-//            RegisterConfigurationClass(assembly, name, builder, configClassPath);
-//        }
-
-		/// <summary>
-		/// this is a hack fo now (root problem is that this assumbly can't point directly at
-		/// lexicaltools, because of circular dependencies).  Many ways to fix that...
-		/// </summary>
-		private void RegisterControlAndFactory(Autofac.Builder.ContainerBuilder builder,
-					string classPath, string assembly)
-		{
-			Type type = GetType(classPath, assembly);
-			builder.Register(type).FactoryScoped();
-			Type ftype = type.GetNestedType("Factory");
-			builder.RegisterGeneratedFactory(ftype).FactoryScoped();//review
 		}
 
 		private void RegisterTask(Autofac.Builder.ContainerBuilder builder, string name, string classPath, string configClassPath, string assembly)
@@ -106,12 +39,6 @@ namespace WeSay.Project
 			builder.Register(type).Named(name).FactoryScoped();
 
 			//register the class that holds the configuration for this task
-			RegisterConfigurationClass(assembly, name, builder, configClassPath);
-		}
-
-		private void RegisterConfigurationClass(string assembly, string name, ContainerBuilder builder, string configClassPath)
-		{
-			Type type;
 			if (!string.IsNullOrEmpty(configClassPath))
 			{
 				type = GetType(configClassPath, assembly);

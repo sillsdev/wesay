@@ -28,10 +28,4 @@ namespace WeSay.AddinLib
 
 		object Settings { get; set; }
 	}
-
-	public interface IWeSayAddinHasMoreInfo
-	{
-		void ShowMoreInfoDialog(Form parentForm);
-
-	}
 }
