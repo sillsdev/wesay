@@ -1,12 +1,10 @@
 using System;
 using System.ComponentModel;
-using Palaso.Lift;
 
 namespace WeSay.UI
 {
 	public class CurrentItemEventArgs: EventArgs
 	{
-		public PalasoDataObject Parent{ get; set;}
 		private readonly string _propertyName;
 
 		public string PropertyName
@@ -34,9 +32,8 @@ namespace WeSay.UI
 			_writingSystemId = writingSystemId;
 		}
 
-		public CurrentItemEventArgs(PalasoDataObject parent, string propertyName, string writingSystemId)
+		public CurrentItemEventArgs(string propertyName, string writingSystemId)
 		{
-			Parent = parent;
 			_propertyName = propertyName;
 			_writingSystemId = writingSystemId;
 		}

@@ -38,6 +38,7 @@ namespace WeSay.ConfigTool
 			this._actionsButton = new System.Windows.Forms.ToolStripButton();
 			this._interfaceLanguageButton = new System.Windows.Forms.ToolStripButton();
 			this._backupButton = new System.Windows.Forms.ToolStripButton();
+			this._chorusButton = new System.Windows.Forms.ToolStripButton();
 			this._optionsListButton = new System.Windows.Forms.ToolStripButton();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this._areaPanel = new System.Windows.Forms.Panel();
@@ -59,6 +60,7 @@ namespace WeSay.ConfigTool
 			this._actionsButton,
 			this._interfaceLanguageButton,
 			this._backupButton,
+			this._chorusButton,
 			this._optionsListButton});
 			this._areasToolStrip.Location = new System.Drawing.Point(0, 20);
 			this._areasToolStrip.Name = "_areasToolStrip";
@@ -156,6 +158,21 @@ namespace WeSay.ConfigTool
 			this._backupButton.Text = "Backup";
 			this._backupButton.Click += new System.EventHandler(this.OnAreaButton_Click);
 			//
+			// _chorusButton
+			//
+			this._chorusButton.BackColor = System.Drawing.SystemColors.ControlLight;
+			this._chorusButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._chorusButton.ForeColor = System.Drawing.Color.DimGray;
+			this._chorusButton.Image = global::WeSay.ConfigTool.Properties.Resources.chorus;
+			this._chorusButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this._chorusButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this._chorusButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this._chorusButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
+			this._chorusButton.Name = "_chorusButton";
+			this._chorusButton.Size = new System.Drawing.Size(171, 33);
+			this._chorusButton.Text = "Collaboration";
+			this._chorusButton.Click += new System.EventHandler(this.OnAreaButton_Click);
+			//
 			// _optionsListButton
 			//
 			this._optionsListButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold);
@@ -166,7 +183,7 @@ namespace WeSay.ConfigTool
 			this._optionsListButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._optionsListButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
 			this._optionsListButton.Name = "_optionsListButton";
-			this._optionsListButton.Size = new System.Drawing.Size(171, 36);
+			this._optionsListButton.Size = new System.Drawing.Size(116, 36);
 			this._optionsListButton.Text = "Option Lists";
 			this._optionsListButton.Click += new System.EventHandler(this.OnAreaButton_Click);
 			//
@@ -237,6 +254,7 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.ToolStripButton _actionsButton;
 		private System.Windows.Forms.ToolStripButton _interfaceLanguageButton;
 		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.ToolStripButton _chorusButton;
 		private System.Windows.Forms.ToolStripButton _writingSystemButton;
 		private ToolStripButton _optionsListButton;
 		private Panel _areaPanel;

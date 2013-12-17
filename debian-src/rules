@@ -1,10 +1,10 @@
 #!/usr/bin/make -f
 
-NANT=MONO_SHARED_DIR=/tmp nant -buildfile:bld/wesay.mono.build
+NANT=MONO_SHARED_DIR=/tmp nant -buildfile:build/wesay.build
 build: build-stamp
 build-stamp:
 	dh_testdir
-	$(NANT) build-only
+	$(NANT) build.solution
 	touch build-stamp
 
 clean:
@@ -18,13 +18,11 @@ install-stamp:
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-	$(NANT) install -D:INSTALL_DIR=../debian/tmp
+	$(NANT) -D:INSTALL_DIR=debian/tmp
 	dh_installdirs
-	dh_install
+	dh_install --autodest
 	dh_installdocs
 	dh_installchangelogs
-	dh_desktop
-	dh_icons
 	dh_compress
 	dh_fixperms
 	dh_installdeb

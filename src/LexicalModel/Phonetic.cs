@@ -1,12 +1,12 @@
 namespace WeSay.LexicalModel
 {
 	/*
-	public class Phonetic : WeSay.Foundation.PalasoDataObject
+	public class Phonetic : WeSay.Foundation.WeSayDataObject
 	{
 		private MultiText _contents;
 		private MultiText _media;
 
-		public Phonetic(PalasoDataObject parent)
+		public Phonetic(WeSayDataObject parent)
 			: base(parent)
 		{
 			_contents = new MultiText(this);

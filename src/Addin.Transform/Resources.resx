@@ -136,25 +136,4 @@
   <data name="wordExport" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>Resources\wordExport.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="greenLexiquePro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\greenLexiquePro.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="lexiquePro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\lexiquePro.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="greenPdfDictionary" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\greenPdfDictionary.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="xhtml" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\htmlDocument.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="openOffice" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>Resources\oooWriter.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ldml2odfStyles" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>OpenOffice\ldml2odfStyles.xsl;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="lift2odfContent" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>OpenOffice\lift2odfContent.xsl;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
 </root>

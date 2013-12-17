@@ -1,48 +1,36 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Palaso.Linq;
-using Palaso.DictionaryServices.Lift;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.Lift.Options;
 using Palaso.Text;
-using Palaso.UiBindings;
+using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
-	public class PLiftExporter: LiftWriter
+	public class PLiftExporter: LiftExporter
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly LexEntryRepository _lexEntryRepository;
-		private readonly IList<string> _headwordWritingSystemIds;
 
 		public PLiftExporter(StringBuilder builder,
 							 bool produceFragmentOnly,
 							 LexEntryRepository lexEntryRepository,
 							 ViewTemplate viewTemplate): base(builder, produceFragmentOnly)
 		{
-			_lexEntryRepository = lexEntryRepository;
-			_viewTemplate = viewTemplate;
-			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
+			this._lexEntryRepository = lexEntryRepository;
+			this._viewTemplate = viewTemplate;
 		}
 
 		public PLiftExporter(string path,
 							 LexEntryRepository lexEntryRepository,
-							 ViewTemplate viewTemplate)
-			: base(path, LiftWriter.ByteOrderStyle.BOM)
+							 ViewTemplate viewTemplate): base(path)
 		{
-			_lexEntryRepository = lexEntryRepository;
-			_viewTemplate = viewTemplate;
-			_headwordWritingSystemIds = _viewTemplate.GetHeadwordWritingSystemIds();
+			this._lexEntryRepository = lexEntryRepository;
+			this._viewTemplate = viewTemplate;
 		}
 
 		private Options _options = Options.DereferenceRelations | Options.DereferenceOptions |
 								   Options.DetermineHeadword;
-
 
 		[Flags]
 		public enum Options
@@ -74,7 +62,7 @@ namespace WeSay.Project
 			Add(entry, h);
 		}
 
-		private void WriteDisplayNameFieldForOption(IValueHolder<string> optionRef, string fieldName)
+		private void WriteDisplayNameFieldForOption(OptionRef optionRef, string fieldName)
 		{
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(fieldName);
 			if (list != null)
@@ -90,8 +78,7 @@ namespace WeSay.Project
 				}
 
 				LanguageForm[] labelForms =
-//                        posOption.Name.GetOrderedAndFilteredForms(
-					   posOption.Abbreviation.GetOrderedAndFilteredForms(
+						posOption.Name.GetOrderedAndFilteredForms(
 								_viewTemplate.GetField(fieldName).WritingSystemIds);
 
 				if (labelForms != null && labelForms.Length > 0)
@@ -110,16 +97,30 @@ namespace WeSay.Project
 		/// </summary>
 		private void WriteHeadWordField(LexEntry entry, string outputFieldName)
 		{
+			if (Template == null)
+			{
+				throw new InvalidOperationException("Expected a non-null Template");
+			}
+			MultiText headword = new MultiText();
+			Field fieldControllingHeadwordOutput =
+					Template.GetField(LexEntry.WellKnownProperties.Citation);
+			if (fieldControllingHeadwordOutput == null || !fieldControllingHeadwordOutput.Enabled)
+			{
+				fieldControllingHeadwordOutput =
+						Template.GetField(LexEntry.WellKnownProperties.LexicalUnit);
+				if (fieldControllingHeadwordOutput == null)
+				{
+					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
+				}
+			}
 			//                headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
 
-			var headword = new MultiText();
-			foreach (string writingSystemId in _headwordWritingSystemIds)
+			foreach (string writingSystemId in fieldControllingHeadwordOutput.WritingSystemIds)
 			{
 				headword.SetAlternative(writingSystemId, entry.GetHeadWordForm(writingSystemId));
 			}
 			WriteMultiTextAsArtificialField(outputFieldName, headword);
 		}
-
 
 		/// <summary>
 		/// use this for multitexts that were somehow constructed during export, with no corresponding single property
@@ -134,40 +135,11 @@ namespace WeSay.Project
 
 				if (!MultiTextBase.IsEmpty(text))
 				{
-					var textWritingSystems = _viewTemplate.WritingSystems.GetActualTextWritingSystems();
-					var ids = from ws in textWritingSystems select ws.Id;
-					Add(text.Forms.Where(f=>ids.Contains(f.WritingSystemId) ), true);
+					Add(text.Forms, true);
 				}
 
 				Writer.WriteEndElement();
 			}
-		}
-
-		/// <summary>
-		/// for plift, we take any audio paths found in the multitext and turn them into traits.
-		/// </summary>
-		protected override void WriteFormsThatNeedToBeTheirOwnFields(MultiText text, string name)
-		{
-			foreach(var path in GetAudioForms(text, _viewTemplate.WritingSystems))
-			{
-				Writer.WriteStartElement("trait");
-
-			   //nb: <media> not allowed by 0.12 schema, so we're just using trait[name='audio' value='...']
-				Writer.WriteAttributeString("name", "audio");
-				Writer.WriteAttributeString("value", string.Format("..{0}audio{0}" + path.Form, System.IO.Path.DirectorySeparatorChar));
-				Writer.WriteEndElement();
-			}
-		}
-
-		public static IList<LanguageForm> GetAudioForms(MultiText field, WritingSystemCollection writingSytems)
-		{
-			var x = field.Forms.Where(f => writingSytems[f.WritingSystemId].IsAudio);
-			return new List<LanguageForm>(x);
-		}
-
-		protected override bool EntryDoesExist(string id)
-		{
-			return null!= _lexEntryRepository.GetLexEntryWithMatchingId(id);
 		}
 
 		protected override void WriteRelationTarget(LexRelation relation)
@@ -183,17 +155,11 @@ namespace WeSay.Project
 				return;
 			}
 
-			LexEntry target = _lexEntryRepository.GetLexEntryWithMatchingId(key);
+			LexEntry target = this._lexEntryRepository.GetLexEntryWithMatchingId(key);
 			if (target != null)
 			{
 				WriteHeadWordField(target, "headword-of-target");
 			}
-		}
-		protected override string GetOutputRelationName(LexRelation relation)
-		{
-			var s= relation.FieldId.Replace("confer", "cf");//hack. Other names are left as-is.
-			s = s.Replace("BaseForm", "see");//hack... not sure what we want here
-			return s;
 		}
 
 		protected override void WritePosCore(OptionRef pos)
@@ -206,36 +172,6 @@ namespace WeSay.Project
 			{
 				base.WritePosCore(pos);
 			}
-		}
-
-		/// <summary>
-		/// add a pronunciation if we have an audio writing system alternative on the lexical unit
-		/// </summary>
-		 protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
-		{
-//            if(!_viewTemplate.WritingSystems.Any(p=>p.Value.IsAudio))
-//                return;
-//
-			IList<Palaso.Text.LanguageForm> paths = GetAudioForms(entry.LexicalForm, _viewTemplate.WritingSystems);
-			if (paths.Count == 0)
-				return;
-			Writer.WriteStartElement("pronunciation");
-
-			Palaso.Linq.Enumerable.ForEach(paths, path =>
-							  {
-								  Writer.WriteStartElement("media");
-								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));
-								  Writer.WriteEndElement();
-							  });
-			/*
-			paths.ForEach(path =>
-							  {
-								  Writer.WriteStartElement("media");
-								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));
-								  Writer.WriteEndElement();
-							  });
-*/
-			Writer.WriteEndElement();
 		}
 
 		protected override void WriteHeadword(LexEntry entry)
@@ -279,7 +215,7 @@ namespace WeSay.Project
 			{
 				return text.Forms;
 			}
-			return text.GetOrderedAndFilteredForms(f.GetTextOnlyWritingSystemIds(_viewTemplate.WritingSystems));
+			return text.GetOrderedAndFilteredForms(f.WritingSystemIds);
 		}
 	}
 }

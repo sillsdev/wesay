@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.Design;
-using WeSay.LexicalModel.Foundation;
+using WeSay.Foundation;
 
 namespace WeSay.AddinLib
 {
