@@ -1,8 +1,7 @@
-﻿using System.IO;
+using System.IO;
+using LiftIO.Validation;
 using NUnit.Framework;
-using Palaso.Lift.Validation;
 using WeSay.Project;
-using WeSay.TestUtilities;
 
 namespace Addin.LiftReports.Tests
 {
@@ -14,7 +13,7 @@ namespace Addin.LiftReports.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSayProjectTestHelper.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 			_addin = new ReportMaker();
 			_addin.LaunchAfterTransform = false;
 		}

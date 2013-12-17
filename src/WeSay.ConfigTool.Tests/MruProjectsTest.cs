@@ -58,11 +58,10 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void AddNewPath_NullPath_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(
-				() => _mruProjects.AddNewPath(null)
-			);
+			_mruProjects.AddNewPath(null);
 		}
 
 		[Test]

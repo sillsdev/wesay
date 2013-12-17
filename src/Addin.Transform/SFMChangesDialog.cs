@@ -1,8 +1,7 @@
 using System;
 using System.Windows.Forms;
-using Palaso.WritingSystems;
 using WeSay.AddinLib;
-using WeSay.LexicalModel.Foundation;
+using WeSay.Foundation;
 
 namespace Addin.Transform
 {
@@ -31,7 +30,7 @@ namespace Addin.Transform
 			if (_projectInfo != null)
 			{
 				languageCombo.Items.Clear();
-				foreach (WritingSystemDefinition ws in _projectInfo.WritingSystems.AllWritingSystems)
+				foreach (WritingSystem ws in _projectInfo.WritingSystems.Values)
 				{
 					languageCombo.Items.Add(ws.Id);
 				}

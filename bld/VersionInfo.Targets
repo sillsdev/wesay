@@ -8,10 +8,10 @@
   <PropertyGroup>
 	<ApplicationName>WeSay</ApplicationName>
 	<Company>WeSay</Company>
-	<Copyright>Copyright © WeSay 2006-2012</Copyright>
+	<Copyright>Copyright © WeSay 2006-2008</Copyright>
 
-	<Major>1</Major>
-	<Minor>2</Minor>
+	<Major>0</Major>
+	<Minor>4</Minor>
 	<Revision></Revision><!-- filled in by vcs version number below-->
 	<Bug>0</Bug>
 

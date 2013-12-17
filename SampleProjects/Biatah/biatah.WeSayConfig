@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<configuration version="8">
+<configuration version="2">
+  <uiOptions uiFont="Microsoft Sans Serif" uiFontSize="8.25" />
   <components>
 	<viewTemplate>
 	  <fields>
@@ -9,10 +10,8 @@
 		  <displayName>Word</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>EntryLexicalForm</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile></optionsListFile>
+		  <optionsListFile />
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>bth</id>
@@ -25,8 +24,6 @@
 		  <displayName>Definition</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>definition</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
@@ -39,8 +36,6 @@
 		  <displayName>Gloss</displayName>
 		  <enabled>False</enabled>
 		  <fieldName>gloss</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
@@ -53,8 +48,6 @@
 		  <displayName>POS</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>POS</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <optionsListFile>PartsOfSpeech.xml</optionsListFile>
 		  <visibility>Visible</visibility>
@@ -68,10 +61,8 @@
 		  <displayName>Example Sentence</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>ExampleSentence</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile></optionsListFile>
+		  <optionsListFile />
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>bth</id>
@@ -83,8 +74,6 @@
 		  <displayName>Translation</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>ExampleTranslation</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
@@ -96,9 +85,7 @@
 		  <dataType>OptionCollection</dataType>
 		  <displayName>Sem Dom</displayName>
 		  <enabled>True</enabled>
-		  <fieldName>semantic-domain-ddp4</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
+		  <fieldName>SemanticDomainDdp4</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <optionsListFile>Ddp4.xml</optionsListFile>
 		  <visibility>NormallyHidden</visibility>
@@ -112,10 +99,8 @@
 		  <displayName>Base Form</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>BaseForm</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile></optionsListFile>
+		  <optionsListFile />
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
 			<id>bth</id>
@@ -127,8 +112,6 @@
 		  <displayName>Citation Form</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>citation</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
@@ -136,13 +119,23 @@
 		  </writingSystems>
 		</field>
 		<field>
-		  <className>PalasoDataObject</className>
+		  <className>LexSense</className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Lit Meaning</displayName>
+		  <enabled>False</enabled>
+		  <fieldName>LiteralMeaning</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>NormallyHidden</visibility>
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>WeSayDataObject</className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Note</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>note</fieldName>
-		  <multiParagraph>True</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
@@ -155,40 +148,10 @@
 		  <displayName>Picture</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>Picture</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
 			<id>en</id>
-		  </writingSystems>
-		</field>
-		<field>
-		  <className>LexEntry</className>
-		  <dataType>MultiText</dataType>
-		  <displayName>Literal Meaning</displayName>
-		  <enabled>False</enabled>
-		  <fieldName>literal-meaning</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>True</spellCheckingEnabled>
-		  <multiplicity>ZeroOr1</multiplicity>
-		  <visibility>NormallyHidden</visibility>
-		  <writingSystems>
-			<id>en</id>
-		  </writingSystems>
-		</field>
-		<field>
-		  <className>LexEntry</className>
-		  <dataType>RelationToOneEntry</dataType>
-		  <displayName>Cross Reference</displayName>
-		  <enabled>False</enabled>
-		  <fieldName>confer</fieldName>
-		  <multiParagraph>False</multiParagraph>
-		  <spellCheckingEnabled>False</spellCheckingEnabled>
-		  <multiplicity>ZeroOrMore</multiplicity>
-		  <visibility>NormallyHidden</visibility>
-		  <writingSystems>
-			<id>v</id>
 		  </writingSystems>
 		</field>
 	  </fields>
@@ -196,82 +159,110 @@
 	</viewTemplate>
   </components>
   <tasks>
-	<task taskName="Dashboard" visible="true" />
-	<task taskName="Dictionary" visible="true" />
-	<task taskName="AddMissingInfo" visible="true">
-	  <label>Meanings</label>
-	  <longLabel>Add Meanings</longLabel>
+	<task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true" visible="true">
+	  <entries ref="All Entries" />
+	  <currentTaskProvider ref="Current Task Provider" />
+	  <label UseInConstructor="false">Home</label>
+	  <description UseInConstructor="false">This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one.</description>
+	  <optional UseInConstructor="false">false</optional>
+	</task>
+	<task id="Dictionary" class="WeSay.LexicalTools.DictionaryTask" assembly="LexicalTools" default="true" visible="true">
+	  <entries ref="All Entries" />
+	  <viewTemplate ref="Default View Template" />
+	  <label UseInConstructor="false">Dictionary</label>
+	  <description UseInConstructor="false">This task allows advanced users to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay.</description>
+	</task>
+	<task id="AddMeanings" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" default="false" visible="true">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>definition</field>
+	  </filter>
+	  <label>Add Meanings</label>
 	  <description>Add meanings to entries where they are missing.</description>
-	  <field>definition</field>
-	  <showFields>definition</showFields>
-	  <readOnly>semantic-domain-ddp4</readOnly>
-	  <writingSystemsToMatch />
-	  <writingSystemsWhichAreRequired />
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>definition</showfields>
+	  <readOnly>SemanticDomainDdp4</readOnly>
 	</task>
-	<task taskName="AddMissingInfo" visible="true">
-	  <label>Example Sentences</label>
-	  <longLabel>Add Example Sentences</longLabel>
+	<task id="AddExamples" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="true">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>ExampleSentence</field>
+	  </filter>
+	  <label>Add Examples</label>
 	  <description>Add example sentences to entries where they are missing.</description>
-	  <field>ExampleSentence</field>
-	  <showFields>ExampleSentence</showFields>
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>ExampleSentence</showfields>
 	  <readOnly>definition</readOnly>
-	  <writingSystemsToMatch />
-	  <writingSystemsWhichAreRequired />
 	</task>
-	<task taskName="GatherWordsBySemanticDomains" visible="true">
+	<task id="Gather Words By Domain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools" default="true" visible="true">
+	  <entries ref="All Entries" />
+	  <label>Collect Words By Semantic Domain</label>
+	  <description>Collect new words organized by semantic domains and questions about those domains.</description>
 	  <semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName>
-	  <showMeaningField>False</showMeaningField>
+	  <viewTemplate ref="Default View Template" />
+	  <semanticDomainFieldName>SemanticDomainDdp4</semanticDomainFieldName>
 	</task>
-	<task taskName="AddMissingInfo" visible="false">
-	  <label>Parts of Speech</label>
-	  <longLabel>Add Parts of Speech</longLabel>
+	<task id="Actions" class="WeSay.CommonTools.ActionsControl" assembly="CommonTools" default="true" visible="true">
+	  <label UseInConstructor="false">Actions</label>
+	  <description UseInConstructor="false">Perform actions on the project as a whole. For example backup, produce a report, print out a simple dictionary, etc.</description>
+	</task>
+	<task id="AddPartOfSpeech" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>POS</field>
+	  </filter>
+	  <label>Add Parts of Speech</label>
 	  <description>Add a Part Of Speech to senses where they are missing.</description>
-	  <field>POS</field>
-	  <showFields>POS</showFields>
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>POS</showfields>
 	  <readOnly>definition, ExampleSentence</readOnly>
-	  <writingSystemsToMatch />
-	  <writingSystemsWhichAreRequired />
 	</task>
-	<task taskName="AddMissingInfo" visible="false">
-	  <label>Base Forms</label>
-	  <longLabel>Add Base Forms</longLabel>
+	<task id="AddBaseForms" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>BaseForm</field>
+	  </filter>
+	  <label>Add Base Forms</label>
 	  <description>Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries.</description>
-	  <field>BaseForm</field>
-	  <showFields>BaseForm</showFields>
-	  <readOnly />
-	  <writingSystemsToMatch />
-	  <writingSystemsWhichAreRequired />
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>BaseForm</showfields>
 	</task>
-	<task taskName="GatherWordList" visible="false">
+	<task id="Gather Words (D)" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="true">
+	  <entries ref="All Entries" />
+	  <label>Collect Word List (D)</label>
+	  <description>Collect new words by translating from words in another language. This is a list of 1700 words from John Duerksen.</description>
 	  <wordListFileName>DuerksenWords.txt</wordListFileName>
 	  <wordListWritingSystemId>en</wordListWritingSystemId>
+	  <viewTemplate ref="Default View Template" />
 	</task>
-	<task taskName="GatherWordList" visible="false">
+	<task id="Gather Words (PNG)" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="false">
+	  <entries ref="All Entries" />
+	  <label>Collect Word List (PNG)</label>
+	  <description>Collect new words by translating from words in another language. This is a list of around 900 words and phrases from PNG.</description>
 	  <wordListFileName>PNGWords.txt</wordListFileName>
 	  <wordListWritingSystemId>en</wordListWritingSystemId>
-	</task>
-	<task taskName="AdvancedHistory" visible="false" />
-	<task taskName="NotesBrowser" visible="false" />
-	<task taskName="GatherWordList" visible="true">
-	  <wordListFileName>SILCAWL</wordListFileName>
-	  <wordListWritingSystemId>en</wordListWritingSystemId>
-	</task>
-	<task taskName="GatherWordList" visible="false">
-	  <wordListFileName>SILCAWL-MozambiqueAddendum</wordListFileName>
-	  <wordListWritingSystemId>en</wordListWritingSystemId>
+	  <viewTemplate ref="Default View Template" />
 	</task>
   </tasks>
   <addins>
-	<addin id="Export To SFM" showInWeSay="False"><SfmTransformSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SfmTagConversions></SfmTagConversions>
-  <EnglishLanguageWritingSystemId>en</EnglishLanguageWritingSystemId>
-  <VernacularLanguageWritingSystemId>bth</VernacularLanguageWritingSystemId>
-</SfmTransformSettings></addin>
-	<addin id="SendProjectEmail" showInWeSay="True"><SendProjectEmailSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <RecipientName>Ann</RecipientName>
-  <Email>notARealAddress@somewhere.com</Email>
-</SendProjectEmailSettings></addin>
 	<addin id="ManualBackupToDevice" showInWeSay="True" />
 	<addin id="Html Exporter" showInWeSay="True" />
+	<addin id="Export To SFM" showInWeSay="False">
+	  <SfmTransformSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+		<SfmTagConversions/>
+		<EnglishLanguageWritingSystemId>en</EnglishLanguageWritingSystemId>
+		<VernacularLanguageWritingSystemId>bth</VernacularLanguageWritingSystemId>
+	  </SfmTransformSettings>
+	</addin>
+	<addin id="SendProjectEmail" showInWeSay="True">
+	  <SendProjectEmailSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+		<RecipientName>Ann</RecipientName>
+		<Email>notARealAddress@somewhere.com</Email>
+	  </SendProjectEmailSettings>
+	</addin>
   </addins>
 </configuration>
