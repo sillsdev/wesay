@@ -48,7 +48,7 @@ namespace Addin.Transform
 			// _okButton
 			//
 			this._okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._okButton.Location = new System.Drawing.Point(219, 388);
+			this._okButton.Location = new System.Drawing.Point(185, 388);
 			this._okButton.Name = "_okButton";
 			this._okButton.Size = new System.Drawing.Size(75, 23);
 			this._okButton.TabIndex = 0;
@@ -60,7 +60,7 @@ namespace Addin.Transform
 			//
 			this._cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this._cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this._cancelButton.Location = new System.Drawing.Point(305, 388);
+			this._cancelButton.Location = new System.Drawing.Point(271, 388);
 			this._cancelButton.Name = "_cancelButton";
 			this._cancelButton.Size = new System.Drawing.Size(75, 23);
 			this._cancelButton.TabIndex = 1;
@@ -72,7 +72,7 @@ namespace Addin.Transform
 			//
 			this._pairsText.AcceptsReturn = true;
 			this._pairsText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-			| System.Windows.Forms.AnchorStyles.Left)));
+						| System.Windows.Forms.AnchorStyles.Left)));
 			this._pairsText.Location = new System.Drawing.Point(81, 150);
 			this._pairsText.Multiline = true;
 			this._pairsText.Name = "_pairsText";
@@ -92,15 +92,15 @@ namespace Addin.Transform
 			//
 			// textBox1
 			//
-			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-			| System.Windows.Forms.AnchorStyles.Right)));
+			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.textBox1.Enabled = false;
-			this.textBox1.Location = new System.Drawing.Point(229, 150);
+			this.textBox1.Location = new System.Drawing.Point(217, 150);
 			this.textBox1.Multiline = true;
 			this.textBox1.Name = "textBox1";
 			this.textBox1.ReadOnly = true;
-			this.textBox1.Size = new System.Drawing.Size(152, 219);
+			this.textBox1.Size = new System.Drawing.Size(130, 219);
 			this.textBox1.TabIndex = 4;
 			this.textBox1.Text = resources.GetString("textBox1.Text");
 			this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
@@ -193,7 +193,7 @@ namespace Addin.Transform
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.CancelButton = this._cancelButton;
-			this.ClientSize = new System.Drawing.Size(401, 423);
+			this.ClientSize = new System.Drawing.Size(367, 423);
 			this.Controls.Add(this._regionalLanguage);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this._nationalLanguage);

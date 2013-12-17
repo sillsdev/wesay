@@ -19,22 +19,4 @@
   <File Id="wesay_tpi.po" Guid="5805c282-facc-445e-aea8-d130414a6ec6" />
   <File Id="wesay_vi.po" Guid="69af6bd2-ac54-4169-91e9-d7974b573bc7" />
   <File Id="wesay_zh_CN.po" Guid="56c77817-3404-4b26-add7-0ff40ed4a3b5" />
-  <File Id="wesay.da.po" Guid="296a1524-d8b6-4ad8-abe0-557d33004863" />
-  <File Id="wesay.es.po" Guid="9bd4f952-ba55-4c0f-b99c-e39c287096bb" />
-  <File Id="wesay.fr.po" Guid="f018ba9e-b0d9-43f8-b68f-be10011d4eb9" />
-  <File Id="wesay.he.po" Guid="644de46b-b91a-4ac4-ace0-3b72d97f344a" />
-  <File Id="wesay.id.po" Guid="3a18d9fb-6e2b-4513-957e-e3ee7368304d" />
-  <File Id="wesay.is.po" Guid="268fc1eb-daa4-4700-a19c-bc03a5b78f07" />
-  <File Id="wesay.my.po" Guid="273c57f2-2367-4021-ab12-5b439725c9b2" />
-  <File Id="wesay.nl.po" Guid="db1b1d12-2634-4813-8edd-1a9506f3db70" />
-  <File Id="wesay.oc.po" Guid="fc610c3e-4cbe-42ef-8867-2d73f4a90ef1" />
-  <File Id="wesay.pl.po" Guid="68502187-6afb-46ee-8dd3-14c3e2b04af9" />
-  <File Id="wesay.pt.po" Guid="83d2f849-2660-4d1a-b417-c3223dd2bbd9" />
-  <File Id="wesay.ru.po" Guid="14df9dc8-ab37-46ab-a4da-7115e877abfd" />
-  <File Id="wesay.rw.po" Guid="44c58605-f557-46c6-8efe-a1243cec2c29" />
-  <File Id="wesay.sv.po" Guid="944ecdc5-4439-47bc-9761-fd364a44a3aa" />
-  <File Id="wesay.th.po" Guid="0c1c5acc-7785-4467-bfd4-a4097a0bad9e" />
-  <File Id="wesay.tpi.po" Guid="f0d5500e-5bff-43a1-be87-cc785b3efcc8" />
-  <File Id="wesay.vi.po" Guid="f562d3c4-6260-4b44-a489-22cbfdfe1f02" />
-  <File Id="wesay.zh_CN.po" Guid="abe20632-477d-4b2a-b135-ec3fdf0194f1" />
 </InstallerMetadata>

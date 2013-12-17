@@ -3,14 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using NUnit.Framework;
-using Palaso.WritingSystems;
+using WeSay.Foundation;
 using WeSay.Project;
-using WeSay.Project;
-using WeSay.LexicalModel.Foundation;
-using WeSay.Project;
-using WeSay.TestUtilities;
-using WeSay.UI.TextBoxes;
-using Palaso.Lift;
 
 namespace WeSay.UI.Tests
 {
@@ -23,9 +17,10 @@ namespace WeSay.UI.Tests
 		private GhostBinding<Child> _binding;
 		protected bool _didNotify;
 
-		private string _writingSystemId;
+		private readonly string _writingSystemId =
+				BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 
-		public class Child: PalasoDataObject
+		public class Child: WeSayDataObject
 		{
 			private MultiText first = new MultiText();
 			private MultiText middle = new MultiText();
@@ -50,7 +45,7 @@ namespace WeSay.UI.Tests
 			}
 		}
 
-		public class Papa: PalasoDataObject
+		public class Papa: WeSayDataObject
 		{
 			private readonly BindingList<Child> _children = new BindingList<Child>();
 
@@ -92,15 +87,14 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			BasilProjectTestHelper.InitializeForTests();
-			_writingSystemId = WritingSystemsIdsForTests.AnalysisIdForTest;
+			BasilProject.InitializeForTests();
 
-			WritingSystemDefinition writingSystem = WritingSystemDefinition.Parse(_writingSystemId);
+			WritingSystem writingSystem = new WritingSystem(_writingSystemId,
+															new Font(FontFamily.GenericSansSerif, 24));
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);
 			_papaNameWidget.Text = "John";
 			_ghostFirstNameWidget = new WeSayTextBox(writingSystem, null);
-			_binding = new GhostBinding<Child>(null,
-				_papa.Children,
+			_binding = new GhostBinding<Child>(_papa.Children,
 											   "First",
 											   writingSystem,
 											   _ghostFirstNameWidget);

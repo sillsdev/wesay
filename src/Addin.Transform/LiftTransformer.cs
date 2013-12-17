@@ -12,7 +12,6 @@ using System.Xml.Xsl;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
-using Palaso.Xml;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
@@ -21,7 +20,7 @@ namespace Addin.Transform
 	public abstract class LiftTransformer: IWeSayAddin
 	{
 		protected bool _launchAfterTransform = true;
-		protected string _pathToOutput;
+		private string _pathToOutput;
 		private static ProgressState _staticProgressStateForWorker;
 
 		public delegate void FileManipulationMethod(object sender, DoWorkEventArgs e);
@@ -68,10 +67,6 @@ namespace Addin.Transform
 		public virtual bool Available
 		{
 			get { return true; }
-		}
-		public bool Deprecated
-		{
-			get { return false; }
 		}
 
 		//for unit tests
@@ -163,8 +158,8 @@ namespace Addin.Transform
 				if (dlg.ProgressStateResult != null &&
 					dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
 				{
-					ErrorReport.ReportNonFatalException(
-							dlg.ProgressStateResult.ExceptionThatWasEncountered);
+					ErrorNotificationDialog.ReportException(
+							dlg.ProgressStateResult.ExceptionThatWasEncountered, null, false);
 					return false;
 				}
 				return !dlg.ProgressState.Cancel;
@@ -229,10 +224,12 @@ namespace Addin.Transform
 				else
 				{
 					//all this is to stop sticking on the BOM, which trips up princeXML
-					XmlWriterSettings writerSettings = CanonicalXmlSettings.CreateXmlWriterSettings();
+					XmlWriterSettings writerSettings = new XmlWriterSettings();
 					writerSettings.Encoding = new UTF8Encoding(false);
 
-					using (var writer = XmlWriter.Create(workerArguments.outputStream, writerSettings))
+					using (
+							XmlWriter writer = XmlWriter.Create(workerArguments.outputStream,
+																writerSettings))
 					{
 						transform.Transform(workerArguments.inputDocument,
 											workerArguments.xsltArguments,

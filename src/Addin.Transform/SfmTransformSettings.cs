@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using WeSay.AddinLib;
 
@@ -29,17 +28,17 @@ namespace Addin.Transform
 		{
 			if (String.IsNullOrEmpty(VernacularLanguageWritingSystemId))
 			{
-				if (projectInfo.WritingSystems.Contains("v"))
+				if (projectInfo.WritingSystems.ContainsKey("v"))
 				{
 					VernacularLanguageWritingSystemId = "v";
 				}
 				else //guess
 				{
-					foreach (var writingSystem in projectInfo.WritingSystems.AllWritingSystems)
+					foreach (string id in projectInfo.WritingSystems.Keys)
 					{
-						if (!"en fr chn th tpi".Contains(writingSystem.Id))
+						if (!"en fr chn th tpi".Contains(id))
 						{
-							VernacularLanguageWritingSystemId = writingSystem.Id;
+							VernacularLanguageWritingSystemId = id;
 							break;
 						}
 					}
@@ -48,19 +47,19 @@ namespace Addin.Transform
 
 			if (String.IsNullOrEmpty(NationalLanguageWritingSystemId))
 			{
-				if (projectInfo.WritingSystems.Contains("tpi")) //melanesian pidgin
+				if (projectInfo.WritingSystems.ContainsKey("tpi")) //melanesian pidgin
 				{
 					NationalLanguageWritingSystemId = "tpi";
 				}
-				if (projectInfo.WritingSystems.Contains("TPI")) //melanesian pidgin
+				if (projectInfo.WritingSystems.ContainsKey("TPI")) //melanesian pidgin
 				{
 					NationalLanguageWritingSystemId = "TPI";
 				}
-				if (projectInfo.WritingSystems.Contains("th")) //thai
+				if (projectInfo.WritingSystems.ContainsKey("th")) //thai
 				{
 					NationalLanguageWritingSystemId = "th";
 				}
-				if (projectInfo.WritingSystems.Contains("fr")) //french
+				if (projectInfo.WritingSystems.ContainsKey("fr")) //french
 				{
 					NationalLanguageWritingSystemId = "fr";
 				}
@@ -129,12 +128,9 @@ namespace Addin.Transform
 			{
 				List<ChangePair> pairs = new List<ChangePair>();
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("BaseForm", "base"));
-				pairs.Add(ChangePair.CreateFullMarkerReplacement(LexSense.WellKnownProperties.SemanticDomainDdp4, "sd"));
+				pairs.Add(ChangePair.CreateFullMarkerReplacement("SemanticDomainDdp4", "sd"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("citation", "lc"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("definition", "d"));
-
-				//for Comparative African WordList
-				pairs.Add(ChangePair.CreateFullMarkerReplacement("CAWL_en", "nb"));
 
 				if (!String.IsNullOrEmpty(_vernacularLanguageWritingSystemId))
 				{
@@ -226,7 +222,7 @@ namespace Addin.Transform
 								}
 								catch (ArgumentException err)
 								{
-									ErrorReport.NotifyUserOfProblem(
+									ErrorReport.ReportNonFatalMessage(
 											"Sorry, there is a problem in one of the tweaks for SFM export.  They must each be valid 'regular expressions'.  The error was: {0}",
 											err.Message);
 								}

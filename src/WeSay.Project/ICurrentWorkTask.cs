@@ -4,10 +4,7 @@
 	{
 		ITask CurrentWorkTask { get; }
 
-		ITask ActiveTask { get;}
-
-		///this is not part of the property because it is very slow, and property setters are supposed to be trivial
-		void SetActiveTask(ITask task);
+		ITask ActiveTask { get; set; }
 	}
 
 	public class EmptyCurrentWorkTask: ICurrentWorkTask
@@ -22,11 +19,7 @@
 		public ITask ActiveTask
 		{
 			get { return null; }
-		}
-
-		public void SetActiveTask(ITask task)
-		{
-
+			set { }
 		}
 
 		#endregion

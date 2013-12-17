@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Lift;
-using Palaso.UiBindings;
-using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
+using WeSay.Foundation;
 using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI
@@ -16,7 +13,7 @@ namespace WeSay.UI
 	{
 		private readonly IBindingList _chosenItems;
 		private readonly IEnumerable<KV> _sourceChoices;
-		private readonly IList<WritingSystemDefinition> _writingSystems;
+		private readonly IList<WritingSystem> _writingSystems;
 		private readonly CommonEnumerations.VisibilitySetting _visibility;
 		private readonly IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> _choiceSystemAdaptor;
 		private IReportEmptiness _alternateEmptinessHelper;
@@ -49,7 +46,7 @@ namespace WeSay.UI
 		/// <param name="adaptor">does all the conversion between keys, wrappers, actual objects, etc.</param>
 		public ReferenceCollectionEditor(IBindingList chosenItems,
 										 IEnumerable<KV> sourceChoices,
-										 IList<WritingSystemDefinition> writingSystems,
+										 IList<WritingSystem> writingSystems,
 										 CommonEnumerations.VisibilitySetting visibility,
 										 IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> adaptor)
 		{
@@ -119,15 +116,7 @@ namespace WeSay.UI
 
 		private void OnChildLostFocus(object sender, EventArgs e)
 		{
-			// due to the way the popup listbox works, if it has focus,
-			// ContainsFocus will not report it, so we check separately.
-			bool listBoxFocused = false;
-			var box = (WeSayAutoCompleteTextBox) sender;
-			if (box != null)
-			{
-				listBoxFocused = box.ListBoxFocused;
-			}
-			if (!(listBoxFocused || ContainsFocus))
+			if (!ContainsFocus)
 					//doing cleanup while the user is in the area will lead to much grief
 			{
 				IReportEmptiness x = _alternateEmptinessHelper;
@@ -208,7 +197,6 @@ namespace WeSay.UI
 				KEY_CONTAINER newGuy = (KEY_CONTAINER) _chosenItems.AddNew();
 				_choiceSystemAdaptor.UpdateKeyContainerFromKeyValue(kv, newGuy);
 				_ignoreListChanged = false;
-				picker.Box.Tag = newGuy;
 
 				//the binding itself doesn't need to be "owned" by us... it controls its own lifetime
 				new SimpleBinding<ValueT>(newGuy, picker);

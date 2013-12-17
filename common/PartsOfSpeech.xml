@@ -2,7 +2,7 @@
 <optionsList>
 	<options>
 		<option>
-			<key>Verb</key>
+			<key>verb</key>
 			<name>
 				<form ws='en'>verb</form>
 				<form ws='fr'>verbe</form>
@@ -12,7 +12,7 @@
 	  </name>
 		</option>
 		<option>
-			<key>Noun</key>
+			<key>noun</key>
 			<name>
 				<form ws='en'>noun</form>
 				<form ws='fr'>nom</form>
@@ -31,7 +31,7 @@
 		</option>
 		-->
 		<option>
-			<key>Adverb</key>
+			<key>adverb</key>
 			<name>
 				<form ws='en'>adverb</form>
 				<form ws='fr'>adverbe</form>
@@ -40,7 +40,7 @@
 			</name>
 		</option>
 		<option>
-			<key>Adjective</key>
+			<key>adjective</key>
 			<name>
 				<form ws='en'>adjective</form>
 				<form ws='fr'>adjectif</form>
@@ -49,7 +49,7 @@
 			</name>
 		</option>
 		<option>
-			<key>Preposition</key>
+			<key>preposition</key>
 			<name>
 				<form ws='en'>preposition</form>
 				<form ws='fr'>préposition</form>
@@ -58,7 +58,7 @@
 	  </name>
 		</option>
 		<option>
-			<key>Pronoun</key>
+			<key>pronoun</key>
 			<name>
 				<form ws='en'>pronoun</form>
 				<form ws='fr'>pronom</form>

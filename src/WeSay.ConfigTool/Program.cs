@@ -26,22 +26,31 @@ namespace WeSay.ConfigTool
 				Settings.Default.NeedUpgrade = false;
 				Settings.Default.Save();
 			}
-			SetUpReporting();
 
-			Settings.Default.Save();
-			Application.Run(new ConfigurationWindow(args));
-		}
-		private static void SetUpReporting()
-		{
-			if (Settings.Default.Reporting == null)
-			{
-				Settings.Default.Reporting = new ReportingSettings();
-				Settings.Default.Save();
-			}
-			UsageReporter.Init(Settings.Default.Reporting, "wesay.palaso.org", "UA-22170471-6");
 			UsageReporter.AppNameToUseInDialogs = "WeSay Configuration Tool";
 			UsageReporter.AppNameToUseInReporting = "WeSayConfig";
+			UsageReporter.RecordLaunch();
+			UsageReporter.DoTrivialUsageReport("usage@wesay.org",
+											   "Thank you for letting us know you are using WeSay.",
+											   new int[] {1, 5, 20, 40, 60, 80, 100});
+
+			Application.Run(new ConfigurationWindow(args));
+
+#if !DEBUG
+			try
+			{
+#endif
+			Logger.WriteEvent("App Exiting Normally.");
+			Logger.ShutDown();
+#if !DEBUG
+			}
+			catch (Exception err)
+			{
+			 // we don't know what caused ws-596, but it isn't worth crashing over
+			}
+#endif
 		}
+
 		private static void SetupErrorHandling()
 		{
 			ErrorReport.EmailAddress = "issues@wesay.org";
