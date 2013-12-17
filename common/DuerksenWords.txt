@@ -1,5 +1,4 @@
 ﻿abandon
-
 abdomen
 able
 abscess
@@ -468,6 +467,7 @@ egg
 egg plant
 eggshell
 egret,  cattle
+
 eight
 eighteen
 eighty
@@ -583,6 +583,7 @@ floor
 flour
 flow
 flower
+
 flute
 fly insect
 fly v
@@ -1437,6 +1438,7 @@ strength
 stretch
 string
 string (v)
+
 strip off (bark)
 strong (physically)
 stubborn
@@ -1627,6 +1629,7 @@ wash
 water
 water hole
 waterfall
+
 wave (n)
 wave (v)
 weak

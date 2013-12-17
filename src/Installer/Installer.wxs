@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
 <!-- will be used later on in this file.                                                                 -->
-<?define Property_ProductVersion = "0.7.0" ?> <!--this is replaced at build time by the msbuild 'package' target -->
+<?define Property_ProductVersion = "0.4.-1" ?> <!--this is replaced at build time by the msbuild 'package' target -->
 <?define Property_ProductCode = "*" ?> <!-- auto-generate a new guid each time -->
 <?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?> <!--Don't even think of EVER changing this -->
 
 <!-- good intro to the component vs. file thing, and why each file here is a separate component:
 http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
 
-	<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+	<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
 		<Product Id="$(var.Property_ProductCode)" Name="WeSay $(var.Property_ProductVersion)" Language="1033"
 				   Version="$(var.Property_ProductVersion)" Manufacturer="SIL"
@@ -27,10 +27,10 @@ users to install just the shortcut for your app, then demand-install the
 rest of the app the first time the icon is run.  If this is not behavior you
 are trying to support, you're better off using non-advertised shortcuts. "-->
 
-		  <PropertyRef Id="NETFRAMEWORK35" />
-		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 3.5.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
-			Installed OR NETFRAMEWORK35
-		  </Condition>
+		  <PropertyRef Id="NETFRAMEWORK20"/>
+		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 2.0. A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites">
+			  Installed OR NETFRAMEWORK20
+			</Condition>
 
 			<!--because of bug, this needs to be 1 -->
 			<Property Id ="ALLUSERS">1</Property>
@@ -51,13 +51,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 				<Directory Id="ProgramDir" Name="WeSay">
 
-						<Directory Id="TemplatesDir" Name="Templates">
-							<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
-						</Directory>
-
-				  <Directory Id="mercurial" Name="mercurial">
-					<!-- a generated fragment from GeneratedMercurial.wxs will fill this in -->
-				  </Directory>
+				<Directory Id="TemplatesDir" Name="Templates">
+					<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
+				</Directory>
 
 				  <Component Id="DocFiles" Guid="{F533B47C-A6F4-4284-A257-59C3C9B54526}">
 					<File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="..\..\doc\Welcome.htm" />
@@ -136,22 +132,31 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="Castle.DynamicProxy.dll" Guid="{871D566A-F864-4946-AA65-6A7E07D24E1B}">
 					<File Id="Castle.DynamicProxy.dll" Name="Castle.DynamicProxy.dll" KeyPath="yes" Source="..\..\output\release\Castle.DynamicProxy.dll" />
 				  </Component>
-
+				  <Component Id="CommonTools.dll" Guid="{C9296169-583C-4302-8504-ED2DEC99558B}">
+					<File Id="CommonTools.dll" Name="CommonTools.dll" KeyPath="yes" Source="..\..\output\release\CommonTools.dll" />
+				  </Component>
+				  <Component Id="CommonTools.pdb" Guid="{3B8D43F0-7A64-4AC7-82A9-2A334E53F5AC}">
+					<File Id="CommonTools.pdb" Name="CommonTools.pdb" KeyPath="yes" Source="..\..\output\release\CommonTools.pdb" />
+				  </Component>
+ <!--                   <Component Id="Db4objects.Db4o.dll" Guid="{A519B18E-56D3-45FA-A2C9-BA7A524259B2}">
+					<File Id="Db4objects.Db4o.dll" Name="Db4objects.Db4o.dll" KeyPath="yes" Source="..\..\output\release\Db4objects.Db4o.dll" />
+				  </Component>
+				<Component Id="Db4objects.Db4o.Tools.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173B92}">
+					<File Id="Db4objects.Db4o.Tools.dll" Name="Db4objects.Db4o.Tools.dll" KeyPath="yes" Source="..\..\output\release\Db4objects.Db4o.Tools.dll" />
+				  </Component>
+	  -->
 				  <Component Id="Enchant.Net.dll" Guid="{95F22469-1C72-4f90-99D8-D5FDFBA0DDF9}">
 					<File Id="Enchant.Net.dll" Name="Enchant.Net.dll" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll" />
 				  </Component>
 				  <Component Id="autofac.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
 					<File Id="autofac.dll" Name="autofac.dll" KeyPath="yes" Source="..\..\output\release\autofac.dll" />
 				  </Component>
-				  <!--  NB: before removing this, we would need to remove Palaso's need for it, and that would make it not work with 0.6.
-					So the plan is to remove it when we switch to 0.+ & 0.9 -->
 				  <Component Id="linqbridge.dll" Guid="{D5FE0CB8-19D7-4457-8D6C-43E56E9A6FA0}">
 					<File Id="linqbridge.dll" Name="linqbridge.dll" KeyPath="yes" Source="..\..\output\release\linqbridge.dll" />
 				  </Component>
 
-				  <!-- audio recording/playback engine used by palaso.media -->
-				  <Component Id="irrKlang.NET2.0.dll" Guid="{952F0A0C-F317-459f-A91C-55DE3D046B2C}">
-					<File Id="irrKlang.NET2.0.dll" Name="irrKlang.NET2.0.dll" KeyPath="yes" Source="..\..\output\release\irrKlang.NET2.0.dll" />
+				  <Component Id="CookComputing.XmlRpcV2.dll" Guid="{C23D78B7-A7F2-4dc2-9B7F-8A004167FF12}">
+					<File Id="CookComputing.XmlRpcV2.dll" Name="CookComputing.XmlRpcV2.dll" KeyPath="yes" Source="..\..\output\release\CookComputing.XmlRpcV2.dll" />
 				  </Component>
 
 				  <Component Id="ICSharpCode.SharpZipLib.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D9D7}">
@@ -191,38 +196,32 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="NetReflector.dll" Guid="{AE9F3A6E-390F-46B3-AFCB-CE8A2E8EC769}">
 					<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
 				  </Component>
+				  <!--
+		  <Component Id="NetReflector.pdb" Guid="{92497411-A442-436D-9421-FC99DF5298DA}">
+			<File Id="NetReflector.pdb" Name="NetReflector.pdb" KeyPath="yes" Source="..\..\output\release\NetReflector.pdb" />
+		  </Component>
+		  -->
 
 				  <Component Id="Chorus.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CCCC}">
 					<File Id="Chorus.exe" Name="Chorus.exe" KeyPath="yes" Source="..\..\output\release\Chorus.exe" />
 				  </Component>
-				 <Component Id="ChorusMerge.exe" Guid="{345AD323-F201-4104-AE1C-4F039EDE21F7}">
-					<File Id="ChorusMerge.exe" Name="ChorusMerge.exe" KeyPath="yes" Source="..\..\output\release\ChorusMerge.exe" />
-				  </Component>
-				 <Component Id="LibChorus.dll" Guid="{B23662D0-4176-4307-929C-C61855B7B7DF}">
-					<File Id="LibChorus.dll" Name="LibChorus.dll" KeyPath="yes" Source="..\..\output\release\LibChorus.dll" />
+
+				  <Component Id="wrapShellCall.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CDDD}">
+					<File Id="wrapShellCall.exe" Name="wrapShellCall.exe" KeyPath="yes" Source="..\..\output\release\wrapShellCall.exe" />
 				  </Component>
 
 				  <Component Id="Palaso.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
 					<File Id="Palaso.dll" Name="Palaso.dll" KeyPath="yes" Source="..\..\output\release\Palaso.dll" />
 				  </Component>
 
-<!--                  <Component Id="Palaso.Services.dll" Guid="{B8D67640-A995-42ec-B13C-0B1EECC65659}">
+				  <Component Id="Palaso.Services.dll" Guid="{B8D67640-A995-42ec-B13C-0B1EECC65659}">
 					<File Id="Palaso.Services.dll" Name="Palaso.Services.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Services.dll" />
 				  </Component>
--->
-				  <Component Id="Palaso.DictionaryServices.dll" Guid="{3CCA9386-0A99-418D-BF33-E070D6337D2A}">
-					<File Id="Palaso.DictionaryServices.dll" Name="Palaso.DictionaryServices.dll" KeyPath="yes" Source="..\..\output\release\Palaso.DictionaryServices.dll" />
+
+
+				  <Component Id="PalasoReporting.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E800}">
+					<File Id="PalasoReporting.dll" Name="PalasoReporting.dll" KeyPath="yes" Source="..\..\output\release\PalasoReporting.dll" />
 				  </Component>
-
-				  <Component Id="Palaso.Lift.dll" Guid="{3DDA9386-0A99-418D-BF33-E070D6337DDD}">
-					<File Id="Palaso.Lift.dll" Name="Palaso.Lift.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Lift.dll" />
-				  </Component>
-
-				  <Component Id="Palaso.Media.dll" Guid="{4739D7BD-6D1D-474f-BF01-E012E51361E4}">
-					<File Id="Palaso.Media.dll" Name="Palaso.Media.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Media.dll" />
-				  </Component>
-
-
 				  <Component Id="PalasoUIWindowsForms.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E899}">
 					<File Id="PalasoUIWindowsForms.dll" Name="PalasoUIWindowsForms.dll" KeyPath="yes" Source="..\..\output\release\PalasoUIWindowsForms.dll" />
 				  </Component>
@@ -256,12 +255,12 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="WeSay.UI.pdb" Guid="{3A0709F0-361F-49F9-B50E-877BDA266A22}">
 					<File Id="WeSay.UI.pdb" Name="WeSay.UI.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.UI.pdb" />
 				  </Component>
+
 				  <Component Id="Addin.Transform.dll" Guid="{6E1139F5-2998-44bc-A393-018D4DFC00B7}">
 					<File Id="Addin.Transform.dll" Name="Addin.Transform.dll" KeyPath="yes" Source="..\..\output\release\Addin.Transform.dll" />
 				  </Component>
-				  <Component Id="Prince.dll" Guid="{C1B6F33A-D7D0-4039-B1FA-BEC6597C5B3D}">
-					<File Id="Prince.dll" Name="Prince.dll" KeyPath="yes" Source="..\..\output\release\Prince.dll" />
-				  </Component>
+
+
 				  <Component Id="Addin.Backup.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7901122}">
 					<File Id="Addin.Backup.dll" Name="Addin.Backup.dll" KeyPath="yes" Source="..\..\output\release\Addin.Backup.dll" />
 				  </Component>
@@ -326,14 +325,18 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="WeSayConfigurationTool.pdb" />
 
 			  <ComponentRef Id="Castle.DynamicProxy.dll" />
-
+			  <ComponentRef Id="CommonTools.dll" />
+			  <ComponentRef Id="CommonTools.pdb" />
+   <!--           <ComponentRef Id="Db4objects.Db4o.dll" />
+			  <ComponentRef Id="Db4objects.Db4o.Tools.dll" />
+	   -->
 			  <ComponentRef Id="Enchant.Net.dll"/>
 
 			  <ComponentRef Id="autofac.dll"/>
 			  <ComponentRef Id="linqbridge.dll"/>
-			  <ComponentRef Id="irrKlang.NET2.0.dll"/>
 
 			  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
+			  <ComponentRef Id="CookComputing.XmlRpcV2.dll" />
 			  <ComponentRef Id="KeymanLink.dll" />
 
 			  <ComponentRef Id="LexicalModel.dll" />
@@ -342,15 +345,14 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalTools.pdb" />
 			  <ComponentRef Id="LiftIO.dll" />
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
+			  <!--<ComponentRef Id="LiftIO.pdb" />-->
 			  <ComponentRef Id="NetReflector.dll" />
+			  <!--<ComponentRef Id="NetReflector.pdb" />-->
 			  <ComponentRef Id="Chorus.exe"/>
-			  <ComponentRef Id="LibChorus.dll"/>
-			  <ComponentRef Id="ChorusMerge.exe"/>
+			  <ComponentRef Id="wrapShellCall.exe"/>
 			  <ComponentRef Id="Palaso.dll"/>
-<!--              <ComponentRef Id="Palaso.Services.dll" />-->
-			  <ComponentRef Id="Palaso.DictionaryServices.dll" />
-			  <ComponentRef Id="Palaso.Lift.dll" />
-			  <ComponentRef Id="Palaso.Media.dll" />
+			  <ComponentRef Id="PalasoReporting.dll" />
+			  <ComponentRef Id="Palaso.Services.dll" />
 			  <ComponentRef Id="PalasoUIWindowsForms.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
 			  <ComponentRef Id="WeSay.App.exe.config" />
@@ -367,7 +369,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Addin.Backup.dll"/>
 			  <!--      <ComponentRef Id="Addin.LiftReports.dll"/> -->
 			  <ComponentRef Id="Addin.Transform.dll"/>
-			  <ComponentRef Id="Prince.dll"/>
 			  <ComponentRef Id="NVelocity.dll"/>
 			  <ComponentRef Id="log4net.dll"/>
 			  <ComponentRef Id="commons.dll"/>
@@ -386,7 +387,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentGroupRef Id ="biatahSample"/>
 			 <ComponentGroupRef Id ="templates"/>
 			  <ComponentGroupRef Id ="PoFiles"/>
-			  <ComponentGroupRef Id ="Mercurial"/>
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 			<Icon Id="WeSay.App.exe" SourceFile ="..\..\output\release\WeSay.App.exe" />

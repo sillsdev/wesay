@@ -28,5 +28,3 @@ config
 *~
 *.orig
 nant.resx.bak
-glob:lib/*.Tests.dll
-glob:desktop.ini

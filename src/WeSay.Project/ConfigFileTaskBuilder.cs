@@ -15,7 +15,7 @@ namespace WeSay.Project
 			var tasks = new List<ITask>();
 			foreach (ITaskConfiguration config in taskConfigurations)
 			{
-				if (config.IsVisible && config.IsAvailable)
+				if (config.IsVisible)
 				{
 					tasks.Add(CreateTask(context, config));
 				}

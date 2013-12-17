@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Mono.Addins;
-using Palaso.I8N;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
@@ -27,8 +27,8 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return StringCatalog.Get("~Backup To USB Flash Drive",
-										 "Long name for action which makes a zip file on a usb flash-drive");
+				return StringCatalog.Get("~Backup To Device",
+										 "Long name for usb flash-drive backup action");
 			}
 		}
 
@@ -49,10 +49,8 @@ namespace Addin.Backup
 
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			using (var d = new BackupDialog(projectInfo))
-			{
-				d.ShowDialog(parentForm);
-			}
+			BackupDialog d = new BackupDialog(projectInfo);
+			d.ShowDialog(parentForm);
 		}
 
 		#endregion

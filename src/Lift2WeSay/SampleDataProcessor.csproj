@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{4408C857-0371-42BF-A635-E23C8A99A803}</ProjectGuid>
 	<OutputType>Exe</OutputType>
@@ -14,7 +14,6 @@
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
 	<OldToolsVersion>2.0</OldToolsVersion>
-	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -24,11 +23,6 @@
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Exe</OutputType>
-	<AssemblyName>SampleDataProcessor</AssemblyName>
-	<RootNamespace>SampleDataProcessor</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -37,12 +31,6 @@
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Exe</OutputType>
-	<AssemblyName>SampleDataProcessor</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>SampleDataProcessor</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -51,13 +39,6 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Exe</OutputType>
-	<AssemblyName>SampleDataProcessor</AssemblyName>
-	<RootNamespace>SampleDataProcessor</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
 	<OutputPath>..\..\output\Mono Release\</OutputPath>
@@ -66,66 +47,17 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Exe</OutputType>
-	<AssemblyName>SampleDataProcessor</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>SampleDataProcessor</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\release\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>bin\x86\Mono Debug\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>bin\x86\Mono Release\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="LinqBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2b14eb747628076, processorArchitecture=MSIL">
+	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\LinqBridge.dll</HintPath>
+	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
-	<Reference Include="System.Core">
-	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-	</Reference>
 	<Reference Include="System.Data" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
