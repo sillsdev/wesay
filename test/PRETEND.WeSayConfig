@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<configuration version="1">
+<configuration version="5">
   <components>
 	<viewTemplate>
 	  <fields>
@@ -17,8 +17,8 @@
 		<field>
 		  <className>LexSense</className>
 		  <dataType>MultiText</dataType>
-		  <displayName>Gloss</displayName>
-		  <fieldName>SenseGloss</fieldName>
+		  <displayName>Definition</displayName>
+		  <fieldName>definition</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
@@ -87,18 +87,7 @@
 	</viewTemplate>
   </components>
   <tasks>
-	<task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true">
-	  <entries ref="All Entries" />
-	  <currentTaskProvider ref="Current Task Provider" />
-	  <label UseInConstructor="false">Home</label>
-	  <description UseInConstructor="false">This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one.</description>
-	  <optional UseInConstructor="false">false</optional>
-	</task>
-	<task id="Dictionary" class="WeSay.LexicalTools.DictionaryTask" assembly="LexicalTools" default="true">
-	  <entries ref="All Entries" />
-	  <viewTemplate ref="Default View Template" />
-	  <label UseInConstructor="false">Dictionary</label>
-	  <description UseInConstructor="false">This task allows advanced users to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay.</description>
-	</task>
+	<task taskName="Dashboard" visible="true"></task>
+	<task taskName="Dictionary" visible="true"></task>
   </tasks>
 </configuration>

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using TestUtilities;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -36,15 +36,9 @@ namespace WeSay.LexicalTools.Tests
 
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_viewTemplate = MakeViewTemplate("en");
-			_task = new GatherBySemanticDomainTask(_lexEntryRepository,
-												   "label",
-												   "long label",
-												   "description",
-												   "remaining count text",
-												   "reference count text",
-												   _semanticDomainFilePath,
-												   _viewTemplate,
-												   LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			_task = new GatherBySemanticDomainTask(_semanticDomainFilePath,
+												   _lexEntryRepository,
+												   _viewTemplate);
 		}
 
 		private static LexSense AddNewSenseToEntry(LexEntry e)
@@ -119,167 +113,40 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ConstructWithTemplate()
 		{
-			Assert.IsNotNull(new GatherBySemanticDomainTask(_lexEntryRepository,
-															"label",
-															"long label",
-															"description",
-															"remaining count text",
-															"reference count text",
-															_semanticDomainFilePath,
-															_viewTemplate,
-															LexSense.WellKnownProperties.
-																	SemanticDomainsDdp4));
+			Assert.IsNotNull(new GatherBySemanticDomainTask(_semanticDomainFilePath,
+															_lexEntryRepository,
+															_viewTemplate));
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithTemplate_NullRecordListManager_Throws()
 		{
-			new GatherBySemanticDomainTask(null,
-										   "label",
-										   "long label",
-										   "description",
-										   "remaining count text",
-										   "reference count text",
-										   _semanticDomainFilePath,
-										   _viewTemplate,
-										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			new GatherBySemanticDomainTask( _semanticDomainFilePath,
+										   null,
+										   _viewTemplate);
 		}
 
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void ConstructWithTemplate_NullLabel_Throws()
-		{
-			new GatherBySemanticDomainTask(_lexEntryRepository,
-										   null,
-										   "long label",
-										   "description",
-										   "remaining count text",
-										   "reference count text",
-										   _semanticDomainFilePath,
-										   this._viewTemplate,
-										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
 
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void ConstructWithTemplate_NullLongLabel_Throws()
-		{
-			new GatherBySemanticDomainTask(_lexEntryRepository,
-										   "label",
-										   null,
-										   "description",
-										   "remaining count text",
-										   "reference count text",
-										   _semanticDomainFilePath,
-										   _viewTemplate,
-										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void ConstructWithTemplate_NullDescription_Throws()
-		{
-			new GatherBySemanticDomainTask(_lexEntryRepository,
-										   "label",
-										   "long label",
-										   null,
-										   "remaining couont text",
-										   "reference count text",
-										   _semanticDomainFilePath,
-										   this._viewTemplate,
-										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void ConstructWithTemplate_NullRemainingCountText_Throws()
-		{
-			new GatherBySemanticDomainTask(_lexEntryRepository,
-										   "label",
-										   "long label",
-										   "description",
-										   null,
-										   "reference count text",
-										   _semanticDomainFilePath,
-										   this._viewTemplate,
-										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void ConstructWithTemplate_NullReferenceCountText_Throws()
-		{
-			new GatherBySemanticDomainTask(_lexEntryRepository,
-										   "label",
-										   "long label",
-										   "description",
-										   "remaining couont text",
-										   null,
-										   _semanticDomainFilePath,
-										   _viewTemplate,
-										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void ConstructWithTemplate_NullSemanticDomainFilePath_Throws()
-		{
-			new GatherBySemanticDomainTask(_lexEntryRepository,
-										   "label",
-										   "long label",
-										   "description",
-										   "remaining count text",
-										   "reference count text",
-										   null,
-										   _viewTemplate,
-										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
 
 		[Test]
 		[ExpectedException(typeof (ApplicationException))]
 		public void ConstructWithTemplate_NonExistantSemanticDomainFilePath_Throws()
 		{
-			new GatherBySemanticDomainTask(_lexEntryRepository,
-										   "label",
-										   "long label",
-										   "description",
-										   "remaining count text",
-										   "reference count text",
-										   Path.GetRandomFileName(),
-										   _viewTemplate,
-										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			new GatherBySemanticDomainTask(Path.GetRandomFileName(),
+										   _lexEntryRepository,
+										   _viewTemplate);
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithTemplate_NullTemplate_Throws()
 		{
-			new GatherBySemanticDomainTask(_lexEntryRepository,
-										   "label",
-										   "long label",
-										   "description",
-										   "remaining count text",
-										   "reference count text",
-										   _semanticDomainFilePath,
-										   null,
-										   LexSense.WellKnownProperties.SemanticDomainsDdp4);
-		}
-
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void ConstructWithTemplate_NullFieldName_Throws()
-		{
-			new GatherBySemanticDomainTask(_lexEntryRepository,
-										   "label",
-										   "long label",
-										   "description",
-										   "remaining count text",
-										   "reference count text",
-										   _semanticDomainFilePath,
-										   _viewTemplate,
+			new GatherBySemanticDomainTask(_semanticDomainFilePath,
+										   _lexEntryRepository,
 										   null);
 		}
+
 
 		[Test]
 		public void WordWritingSystem()
@@ -1023,18 +890,9 @@ namespace WeSay.LexicalTools.Tests
 				streamWriter.Write("");
 			}
 
-			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(_lexEntryRepository,
-																			 "label",
-																			 "long label",
-																			 "description",
-																			 "remaining count text",
-																			 "reference count text",
-																			 emptySemanticDomainFilePath,
-																			 _viewTemplate,
-																			 LexSense.
-																					 WellKnownProperties
-																					 .
-																					 SemanticDomainsDdp4);
+			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(emptySemanticDomainFilePath,
+																			 _lexEntryRepository,
+																			 _viewTemplate);
 			task.Activate();
 			Assert.AreEqual(1, task.DomainKeys.Count);
 			Assert.AreEqual(string.Empty, task.CurrentDomainKey);
@@ -1066,18 +924,9 @@ namespace WeSay.LexicalTools.Tests
 			}
 
 			ViewTemplate template = MakeViewTemplate("fr");
-			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(_lexEntryRepository,
-																			 "label",
-																			 "long label",
-																			 "description",
-																			 "remaining count text",
-																			 "reference count text",
-																			 frenchSemanticDomainFilePath,
-																			 template,
-																			 LexSense.
-																					 WellKnownProperties
-																					 .
-																					 SemanticDomainsDdp4);
+			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(frenchSemanticDomainFilePath,
+																			 _lexEntryRepository,
+																			 template);
 			task.Activate();
 			Assert.AreEqual("L'univers physique", task.DomainNames[0]);
 			Assert.AreEqual("Ciel", task.DomainNames[1]);

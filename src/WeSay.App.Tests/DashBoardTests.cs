@@ -3,10 +3,11 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
-using TestUtilities;
 using WeSay.CommonTools;
 using WeSay.Foundation;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
+using WeSay.Project;
 
 namespace WeSay.App.Tests
 {
@@ -29,7 +30,7 @@ namespace WeSay.App.Tests
 
 			_lexEntryRepository.CreateItem();
 
-			Dash dash = new Dash(_lexEntryRepository, null);
+			Dash dash = new Dash(_lexEntryRepository, null);//, new UserSettingsForTask());
 			dash.ThingsToMakeButtonsFor = GetButtonItems();
 			dash.Dock = DockStyle.Fill;
 			window.Controls.Add(dash);

@@ -186,10 +186,12 @@ namespace WeSay.LexicalTools
 						_cleanupTimer.Interval = 500;
 					}
 					_cleanupTimer.Tag = entry;
+					_cleanupTimer.Stop();//reset it
 					_cleanupTimer.Start();
 					break;
 			}
-			RefreshLexicalEntryPreview();
+		  // can't afford to do this every keystroke, with large files
+
 		}
 
 		private void OnCleanupTimer_Tick(object sender, EventArgs e)
@@ -199,6 +201,8 @@ namespace WeSay.LexicalTools
 			LexEntry entry = (LexEntry) _cleanupTimer.Tag;
 			_cleanupTimer.Stop();
 			entry.CleanUpEmptyObjects();
+
+			RefreshLexicalEntryPreview();
 		}
 
 		protected void VerifyNotDisposed()

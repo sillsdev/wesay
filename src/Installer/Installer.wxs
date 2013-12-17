@@ -151,7 +151,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="autofac.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
 					<File Id="autofac.dll" Name="autofac.dll" KeyPath="yes" Source="..\..\output\release\autofac.dll" />
 				  </Component>
-				  <Component Id="linqbridge.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
+				  <Component Id="linqbridge.dll" Guid="{D5FE0CB8-19D7-4457-8D6C-43E56E9A6FA0}">
 					<File Id="linqbridge.dll" Name="linqbridge.dll" KeyPath="yes" Source="..\..\output\release\linqbridge.dll" />
 				  </Component>
 
@@ -201,18 +201,12 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<File Id="NetReflector.pdb" Name="NetReflector.pdb" KeyPath="yes" Source="..\..\output\release\NetReflector.pdb" />
 		  </Component>
 		  -->
-				  <Component Id="PicoContainer.dll" Guid="{44CA9A8F-DF0D-4870-95F2-BDB6C56551D7}">
-					<File Id="PicoContainer.dll" Name="PicoContainer.dll" KeyPath="yes" Source="..\..\output\release\PicoContainer.dll" />
-				  </Component>
-				  <Component Id="PicoContainer.pdb" Guid="{4C7A63B8-B4EC-485A-8709-B4F5807181C2}">
-					<File Id="PicoContainer.pdb" Name="PicoContainer.pdb" KeyPath="yes" Source="..\..\output\release\PicoContainer.pdb" />
-				  </Component>
 
-				  <Component Id="Chorus.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CCCC">
+				  <Component Id="Chorus.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CCCC}">
 					<File Id="Chorus.exe" Name="Chorus.exe" KeyPath="yes" Source="..\..\output\release\Chorus.exe" />
 				  </Component>
 
-				  <Component Id="wrapShellCall.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CDDD">
+				  <Component Id="wrapShellCall.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CDDD}">
 					<File Id="wrapShellCall.exe" Name="wrapShellCall.exe" KeyPath="yes" Source="..\..\output\release\wrapShellCall.exe" />
 				  </Component>
 
@@ -301,13 +295,13 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 
 				  <Component Id="IcuData.dll" Guid="{39EFEA93-2A23-42d0-A3EE-CD080A9F8C54}">
-					<File Id="IcuData.dll" Name="icudt38.dll" KeyPath="yes" Source="..\..\output\release\icudt38.dll" />
+					<File Id="IcuData.dll" Name="icudt40.dll" KeyPath="yes" Source="..\..\output\release\icudt40.dll" />
 				  </Component>
 				  <Component Id="IcuI18n.dll" Guid="{E47B3633-2C93-4bdc-AB68-4851EC13878F}">
-					<File Id="IcuI18n.dll" Name="icuin38.dll" KeyPath="yes" Source="..\..\output\release\icuin38.dll" />
+					<File Id="IcuI18n.dll" Name="icuin40.dll" KeyPath="yes" Source="..\..\output\release\icuin40.dll" />
 				  </Component>
 				  <Component Id="IcuCommon.dll" Guid="{15D5ACDF-802A-40b1-83C3-681F12B02D89}">
-					<File Id="IcuCommon.dll" Name="icuuc38.dll" KeyPath="yes" Source="..\..\output\release\icuuc38.dll" />
+					<File Id="IcuCommon.dll" Name="icuuc40.dll" KeyPath="yes" Source="..\..\output\release\icuuc40.dll" />
 				  </Component>
 
 				  <Component Id="Keyman7Interop.dll" Guid="{4F786363-00D6-41ec-9464-9168B2EF3499}">
@@ -354,8 +348,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <!--<ComponentRef Id="LiftIO.pdb" />-->
 			  <ComponentRef Id="NetReflector.dll" />
 			  <!--<ComponentRef Id="NetReflector.pdb" />-->
-			  <ComponentRef Id="PicoContainer.dll" />
-			  <ComponentRef Id="PicoContainer.pdb" />
 			  <ComponentRef Id="Chorus.exe"/>
 			  <ComponentRef Id="wrapShellCall.exe"/>
 			  <ComponentRef Id="Palaso.dll"/>

@@ -78,14 +78,14 @@ namespace WeSay.Project
 			}
 		}
 
-		public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
-		{
-			_projectDirectoryPath = projectDirectoryPath;
-			//  Directory.CreateDirectory(ProjectCommonDirectory);
-			InitStringCatalog();
-			InitWritingSystems();
-			Save();
-		}
+//        public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
+  //      {
+//            _projectDirectoryPath = projectDirectoryPath;
+//            //  Directory.CreateDirectory(ProjectCommonDirectory);
+//            InitStringCatalog();
+//            InitWritingSystems();
+//            Save();
+	//    }
 
 		public virtual void Save()
 		{
@@ -161,7 +161,7 @@ namespace WeSay.Project
 		//            }
 		//        }
 
-		private static string GetPathToWritingSystemPrefs(string parentDir)
+		protected static string GetPathToWritingSystemPrefs(string parentDir)
 		{
 			return Path.Combine(parentDir, "WritingSystemPrefs.xml");
 		}
@@ -220,13 +220,12 @@ namespace WeSay.Project
 			string path;
 
 			path = DirectoryOfExecutingAssembly;
+			char sep = Path.DirectorySeparatorChar;
+			int i = path.ToLower().LastIndexOf(sep + "output" + sep);
 
-			if (path.ToLower().IndexOf("output") > -1)
+			if (i > -1)
 			{
-				//go up to output
-				path = Directory.GetParent(path).FullName;
-				//go up to directory containing output
-				path = Directory.GetParent(path).FullName;
+				path = path.Substring(0, i + 1);
 			}
 			return path;
 		}
@@ -268,7 +267,7 @@ namespace WeSay.Project
 			}
 		}
 
-		private void InitWritingSystems()
+		protected void InitWritingSystems()
 		{
 			if (File.Exists(PathToWritingSystemPrefs))
 			{
@@ -307,7 +306,7 @@ namespace WeSay.Project
 			set { _uiFontSize = value; }
 		}
 
-		private void InitStringCatalog()
+		protected void InitStringCatalog()
 		{
 			try
 			{

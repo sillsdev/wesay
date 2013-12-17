@@ -7,9 +7,9 @@ using System.Xml.XPath;
 using LiftIO;
 using NUnit.Framework;
 using Palaso.Reporting;
-using TestUtilities;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests
@@ -106,7 +106,7 @@ namespace WeSay.Project.Tests
 		public void DefaultConfigFile_DoesntNeedMigrating()
 		{
 			WeSayWordsProject p = new WeSayWordsProject();
-			XPathDocument defaultConfig = new XPathDocument(p.PathToDefaultConfig);
+			XPathDocument defaultConfig = new XPathDocument(WeSayWordsProject.PathToDefaultConfig);
 			using (TempFile f = new TempFile())
 			{
 				bool migrated = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(defaultConfig, f.Path);
@@ -183,12 +183,16 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void GetOptionsListFromFieldName()
 		{
-			WeSayWordsProject p = new WeSayWordsProject();
 
-			OptionsList list = p.GetOptionsList("POS");
-			Assert.IsNotNull(list);
-			Assert.IsNotNull(list.Options);
-			Assert.Greater(list.Options.Count, 2);
+			using (var x = new ProjectDirectorySetupForTesting(""))
+			{
+				WeSayWordsProject p = x.CreateLoadedProject();
+
+				OptionsList list = p.GetOptionsList("POS");
+				Assert.IsNotNull(list);
+				Assert.IsNotNull(list.Options);
+				Assert.Greater(list.Options.Count, 2);
+			}
 		}
 
 		[Test]
@@ -243,6 +247,11 @@ namespace WeSay.Project.Tests
 				newName = Field.MakeFieldNameSafe(newName);
 				Field f = new Field(oldName, "LexEntry", new string[] {"en"});
 				p.ViewTemplates[0].Add(f);
+
+
+				using (File.OpenWrite(dir.PathToConfigFile))
+				{
+				}
 				p.Save();
 				f.FieldName = newName;
 				p.MakeFieldNameChange(f, oldName);
@@ -283,7 +292,7 @@ namespace WeSay.Project.Tests
 				Directory.CreateDirectory(pathToFolder);
 
 			StringBuilder builder = new StringBuilder();
-			int numberOfTestLexEntries =50000;
+			int numberOfTestLexEntries =50;
 			for (int i = 0; i < numberOfTestLexEntries; i++)
 			{
 				builder.AppendFormat(@"
@@ -295,7 +304,7 @@ namespace WeSay.Project.Tests
 					</lexical-unit>
 					<sense>
 						<grammatical-info value='n'/>
-						<gloss lang='en'><text>blah blah {0} blah blah</text></gloss>
+						<definition><form lang='en'><text>blah blah {0} blah blah</text></form></definition>
 						<example lang='v'><text>and example of lah blah {0} blah blah</text></example>
 					</sense>
 				</entry>", i);
@@ -310,6 +319,33 @@ namespace WeSay.Project.Tests
 			File.WriteAllText(Path.Combine(pathToFolder, projectName + ".lift"), liftContents);
 
 
+		}
+
+		/// <summary>
+		/// check issue related to (WS-1035)
+		/// </summary>
+		[Test]
+		public void PathProvidedAsSimpleFileName_GetsConverted()
+		{
+			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>"))
+			{
+				string oldWorkingDir= System.Environment.CurrentDirectory;
+				try
+				{
+					using (WeSayWordsProject project = new WeSayWordsProject())
+					{
+						System.Environment.CurrentDirectory = dir.PathToDirectory;
+						project.LoadFromLiftLexiconPath(Path.GetFileName(dir.PathToLiftFile));
+
+						Assert.AreEqual(dir.PathToLiftFile, project.PathToLiftFile);
+					}
+				}
+				finally
+				{
+					System.Environment.CurrentDirectory = oldWorkingDir;
+				}
+
+			}
 		}
 	}
 }

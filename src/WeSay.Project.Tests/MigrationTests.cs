@@ -38,7 +38,7 @@ namespace WeSay.Project.Tests
 			Assert.IsTrue(didMigrate);
 			XmlDocument outputDoc = new XmlDocument();
 			outputDoc.Load(_outputPath);
-			Assert.IsNotNull(outputDoc.SelectSingleNode("configuration[@version='3']"));
+			Assert.IsNotNull(outputDoc.SelectSingleNode("configuration[@version='5']"));
 		}
 
 		[Test]
@@ -49,7 +49,7 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='3']", _outputPath);
+			AssertXPathNotNull("configuration[@version='5']", _outputPath);
 		}
 
 		[Test]
@@ -60,11 +60,10 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='3']", _outputPath);
+			AssertXPathNotNull("configuration[@version='5']", _outputPath);
 		}
 
 		[Test]
-		[Ignore("Unignore when new dashboard is added.")]
 		public void DoesMigrateV3File()
 		{
 			File.WriteAllText(_pathToInputConfig,
@@ -72,26 +71,25 @@ namespace WeSay.Project.Tests
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
-			AssertXPathNotNull("configuration[@version='3']", _outputPath);
+			AssertXPathNotNull("configuration[@version='5']", _outputPath);
 		}
 
-		//TODO: When updating to new dashboard, remove this test and don't ignore "DoesMigrateV3File" and "DoesNotTouchV4File"
 		[Test]
-		public void DoesNotTouchV3File()
+		public void DoesMigrateV4File()
 		{
 			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><configuration version='3'></configuration>");
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='4'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
-			Assert.IsFalse(didMigrate);
+			Assert.IsTrue(didMigrate);
+			AssertXPathNotNull("configuration[@version='5']", _outputPath);
 		}
 
 		[Test]
-		[Ignore("Unignore when new dashboard is added.")]
-		public void DoesNotTouchV4File()
+		public void DoesNotTouchCurrentFile()
 		{
 			File.WriteAllText(_pathToInputConfig,
-							  "<?xml version='1.0' encoding='utf-8'?><configuration version='4'></configuration>");
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='5'></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsFalse(didMigrate);

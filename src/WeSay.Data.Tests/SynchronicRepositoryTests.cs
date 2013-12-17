@@ -9,7 +9,7 @@ namespace WeSay.Data.Tests
 			IRepositoryStateUnitializedTests<TestItem>
     {
         [SetUp]
-        public void Setup()
+		public override void SetUp()
         {
 			RepositoryUnderTest =
 					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
@@ -28,7 +28,7 @@ namespace WeSay.Data.Tests
 			IRepositoryCreateItemTransitionTests<TestItem>
     {
         [SetUp]
-        protected void Setup()
+		public override void SetUp()
         {
 			RepositoryUnderTest =
 					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
@@ -65,7 +65,7 @@ namespace WeSay.Data.Tests
 			IRepositoryDeleteItemTransitionTests<TestItem>
     {
         [SetUp]
-        public void Setup()
+		public override void SetUp()
         {
 			RepositoryUnderTest =
 					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
@@ -89,7 +89,7 @@ namespace WeSay.Data.Tests
 			IRepositoryDeleteIdTransitionTests<TestItem>
     {
         [SetUp]
-        public void Setup()
+		public override void SetUp()
         {
 			RepositoryUnderTest =
 					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
@@ -113,7 +113,7 @@ namespace WeSay.Data.Tests
 			IRepositoryDeleteAllItemsTransitionTests<TestItem>
 	{
 		[SetUp]
-		public void Setup()
+		public override void SetUp()
 		{
 			RepositoryUnderTest =
 					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),

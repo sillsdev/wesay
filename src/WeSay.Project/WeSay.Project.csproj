@@ -91,10 +91,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
-	<Reference Include="PicoContainer, Version=1.0.2412.18537, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\PicoContainer\PicoContainer.dll</HintPath>
-	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
@@ -102,18 +98,24 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="BaseTaskConfig.cs" />
 	<Compile Include="ChorusBackupMaker.cs" />
 	<Compile Include="BasilProject.cs" />
+	<Compile Include="ConfigFileReader.cs" />
 	<Compile Include="ConfigFileTaskBuilder.cs" />
 	<Compile Include="FailedLoadTask.cs" />
+	<Compile Include="ITaskConfiguration.cs" />
 	<Compile Include="PLiftExporter.cs" />
+	<Compile Include="TaskCollection.cs" />
+	<Compile Include="TaskTypeCatalog.cs" />
+	<Compile Include="UserSettingsRepository.cs" />
 	<Compile Include="ViewTemplate.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />
 	<Compile Include="IProject.cs" />
 	<Compile Include="ITask.cs" />
-	<Compile Include="ITaskBuilder.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="WeSayWordsProject.cs" />
+	<Compile Include="WordListCatalog.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
@@ -145,6 +147,9 @@
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="MigrateConfig3To4.xsl" />
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="MigrateConfig4To5.xsl" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

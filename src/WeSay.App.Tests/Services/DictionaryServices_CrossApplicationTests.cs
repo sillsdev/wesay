@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -15,6 +16,7 @@ namespace WeSay.App.Tests.Services
 	/// over in that library. See Palaso.Tests.Services.
 	/// </summary>
 	[TestFixture]
+	[Category("DictionaryServices")]
 	public class DictionaryServices_CrossApplicationTests
 	{
 		private const bool kStartInServerMode = true;
@@ -245,7 +247,7 @@ namespace WeSay.App.Tests.Services
 
 		private static void CreateNewEntry(bool mode)
 		{
-			string entriesXml = @"<entry id='foo1'/>";
+			string entriesXml = string.Format("<entry id='foo1' guid='{0}'/>", Guid.NewGuid().ToString());
 			RunTest(mode,
 					entriesXml,
 					delegate(IDictionaryService dictionaryService)
@@ -365,7 +367,7 @@ namespace WeSay.App.Tests.Services
 			{
 				arguments += " -server";
 			}
-			ProcessStartInfo psi = new ProcessStartInfo(@"wesay.app.exe", arguments);
+			ProcessStartInfo psi = new ProcessStartInfo(@"WeSay.App.exe", arguments);
 			Process p = Process.Start(psi);
 
 			//this only works because we only launch it once... wouldn't be adequate logic if we

@@ -2,9 +2,9 @@ using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
-using TestUtilities;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI.AutoCompleteTextBox;
@@ -229,7 +229,7 @@ namespace WeSay.LexicalTools.Tests
 			entry.Senses.Add(sense);
 			sense.Gloss[
 					WeSayWordsProject.Project.DefaultViewTemplate.GetField(
-							LexSense.WellKnownProperties.Gloss).WritingSystemIds[0]] = meaning;
+							LexSense.WellKnownProperties.Definition).WritingSystemIds[0]] = meaning;
 			_lexEntryRepository.SaveItem(entry);
 			return entry;
 		}

@@ -59,7 +59,7 @@ namespace WeSay.LexicalModel
 			{
 				preparer.MigrateLiftFile(progressState);
 			}
-			preparer.PopulateDefinitions(progressState);
+			//now done in code as each entry is parsed in: preparer.PopulateDefinitions(progressState);
 			LockLift();
 		}
 
@@ -95,7 +95,7 @@ namespace WeSay.LexicalModel
 		public override void DeleteItem(RepositoryId id)
 		{
 			LexEntry itemToDelete = GetItem(id);
-			UpdateLiftFileWithDeleted(itemToDelete);
+			//review: this was here but it was repeated in the other DeleteItem() call: UpdateLiftFileWithDeleted(itemToDelete);
 			base.DeleteItem(id);
 		}
 
@@ -152,11 +152,11 @@ namespace WeSay.LexicalModel
 			try
 			{
 				UnLockLift();
-				using (LiftMerger merger = new LiftMerger(this))
+				using (LexEntryFromLiftBuilder builder = new LexEntryFromLiftBuilder(this))
 				{
 					LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
 							new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(
-									merger);
+									builder);
 
 					parser.SetTotalNumberSteps += parser_SetTotalNumberSteps;
 					parser.SetStepsCompleted += parser_SetStepsCompleted;

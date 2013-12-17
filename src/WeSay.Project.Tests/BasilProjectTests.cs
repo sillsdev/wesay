@@ -59,7 +59,7 @@ namespace WeSay.Project.Tests
 			{
 				BasilProject.Project.Dispose();
 			}
-			TestUtilities.FileUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
+			Foundation.Tests.TestHelpers.TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
 		}
 
 		//  not relevant anymore
@@ -98,23 +98,6 @@ namespace WeSay.Project.Tests
 			Assert.AreEqual("red", StringCatalog.Get("red"));
 		}
 
-		[Test]
-		public void MakeProjectFiles()
-		{
-			string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-			try
-			{
-				Directory.CreateDirectory(path);
-				BasilProject project = new BasilProject();
-				project.CreateEmptyProjectFiles(path);
-				Assert.IsTrue(Directory.Exists(path));
-				Assert.IsTrue(Directory.Exists(BasilProject.ApplicationCommonDirectory));
-				Assert.IsTrue(File.Exists(project.PathToWritingSystemPrefs));
-			}
-			finally
-			{
-				Directory.Delete(path, true);
-			}
-		}
+
 	}
 }

@@ -34,7 +34,7 @@ namespace WeSay.CommonTools
 				TextFormatFlags.WordBreak | TextFormatFlags.NoFullWidthCharacterBreak |
 				TextFormatFlags.LeftAndRightPadding;
 
-		public Dash(LexEntryRepository RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
+		public Dash(LexEntryRepository RecordListManager, ICurrentWorkTask currentWorkTaskProvider)//, UserSettingsForTask userSettings)
 		{
 			_oldFlowWidth = 0;
 			_lexEntryRepository = RecordListManager;

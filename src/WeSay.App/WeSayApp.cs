@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Autofac;
 using CommandLine;
 using Palaso.Reporting;
 using Palaso.Services;
@@ -13,6 +14,7 @@ using WeSay.App.Properties;
 using WeSay.App.Services;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
+using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -303,7 +305,6 @@ namespace WeSay.App
 
 		private void StartUserInterface()
 		{
-			ITaskBuilder builder = null;
 			try
 			{
 				_tabbedForm = new TabbedForm();
@@ -314,20 +315,11 @@ namespace WeSay.App
 						": " + _project.Name + "        " + ErrorReport.UserFriendlyVersionString;
 				Application.DoEvents();
 
-				//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
-				//                    using (FileStream config = new FileStream(_project.PathTo_projectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-				using (
-						FileStream configFile = new FileStream(_project.PathToConfigFile,
-															   FileMode.Open,
-															   FileAccess.Read,
-															   FileShare.ReadWrite))
-				{
-					builder = new ConfigFileTaskBuilder(configFile,
-														_project,
-														_tabbedForm,
-														GetLexEntryRepository());
-				}
-				_project.Tasks = builder.Tasks;
+			   //couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
+				_project.AddToContainer(b => b.Register<ICurrentWorkTask>(_tabbedForm));
+
+				_project.LoadTasksFromConfigFile();
+
 				Application.DoEvents();
 				_tabbedForm.IntializationComplete += OnTabbedForm_IntializationComplete;
 				_tabbedForm.ContinueLaunchingAfterInitialDisplay();
@@ -346,19 +338,9 @@ namespace WeSay.App
 			{
 				ErrorReport.ReportNonFatalMessage(e.Message);
 			}
-			finally
-			{
-				//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
-				//either I want to change it to something like TaskList rather than ITaskBuilder, or
-				//it needs to create some disposable object other than a IList<>.
-				//The reason we need to be able to dispose of it is because we need some way to
-				//dispose of things that it might create, such as a data source.
-				if (builder is IDisposable)
-				{
-					((IDisposable) builder).Dispose();
-				}
-			}
 		}
+
+
 
 		private void OnTabbedForm_IntializationComplete(object sender, EventArgs e)
 		{
@@ -425,19 +407,25 @@ namespace WeSay.App
 			{
 				return null;
 			}
+			if (!liftPath.Contains(Path.DirectorySeparatorChar.ToString()))
+			{
+				Logger.WriteEvent("Converting filename only liftPath {0} to full path {1}", liftPath, Path.GetFullPath(liftPath));
+				liftPath = Path.GetFullPath(liftPath);
+			}
 			return liftPath;
 		}
 
 		private static void OsCheck()
 		{
 #if DEBUG
+			string runtime = (Type.GetType("Mono.Runtime") == null) ? "Microsoft .Net" : "Mono";
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
 			{
-				Console.WriteLine("running on Unix");
+				Console.WriteLine("running on Unix with " + runtime);
 			}
 			else
 			{
-				Console.WriteLine("running on Windows");
+				Console.WriteLine("running on Windows with " + runtime);
 			}
 #endif
 		}

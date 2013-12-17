@@ -121,12 +121,20 @@ namespace WeSay.Data
 
 		public void DeleteItemFromCache(T item)
 		{
+			if (item == null)
+			{
+				throw new ArgumentNullException("item");
+			}
 			RepositoryId id = _repositoryQueried.GetId(item);
 			DeleteItemFromCache(id);
 		}
 
 		public void DeleteItemFromCache(RepositoryId id)
 		{
+			if (id == null)
+			{
+				throw new ArgumentNullException("id");
+			}
 			CheckIfItemIsInRepository(id);
 			RemoveOldTokensWithId(id);
 		}

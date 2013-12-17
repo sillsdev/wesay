@@ -16,6 +16,7 @@ namespace WeSay.UI
 		private INotifyPropertyChanged _dataTarget;
 		private WeSayTextBox _textBoxTarget;
 		private bool _inMidstOfChange;
+		private string _pendingValueChange=null;
 
 		public TextBinding(INotifyPropertyChanged dataTarget,
 						   string writingSystemId,
@@ -30,6 +31,17 @@ namespace WeSay.UI
 			_textBoxTarget.HandleDestroyed += _textBoxTarget_HandleDestroyed;
 			_textBoxTarget.Disposed += _textBoxTarget_Disposed;
 			_textBoxTarget.Enter += OnTextBoxEntered;
+			_textBoxTarget.Leave += OnTextBoxExit;
+			_textBoxTarget.LostFocus+=OnTextBoxExit;
+		}
+
+		private void OnTextBoxExit(object sender, EventArgs e)
+		{
+			if(null != _pendingValueChange) //nb: string.emtpy is still a value we want to set!
+			{
+				SetTargetValue(_textBoxTarget.Text);
+			}
+
 		}
 
 		private void _textBoxTarget_Disposed(object sender, EventArgs e)
@@ -50,7 +62,9 @@ namespace WeSay.UI
 
 		private void OnTextBoxChanged(object sender, EventArgs e)
 		{
-			SetTargetValue(_textBoxTarget.Text);
+			_pendingValueChange = _textBoxTarget.Text;
+			// can't afford to do this every keystroke when file gets large or computer slow:
+			//          SetTargetValue(_textBoxTarget.Text);
 		}
 
 		/// <summary>
@@ -59,6 +73,10 @@ namespace WeSay.UI
 		/// </summary>
 		private void TearDown()
 		{
+			if (null != _pendingValueChange)//nb: string.emtpy is still a value we want to set!
+			{
+				SetTargetValue(_pendingValueChange);
+			}
 			//Debug.WriteLine(" BindingTearDown boundTo: " + this._textBoxTarget.Name);
 
 			if (_dataTarget == null)
@@ -113,6 +131,8 @@ namespace WeSay.UI
 
 		protected virtual void SetTargetValue(string s)
 		{
+			_pendingValueChange = null;
+
 			Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
 			if (_inMidstOfChange)
 			{
@@ -126,7 +146,7 @@ namespace WeSay.UI
 				if (_dataTarget is MultiText)
 				{
 					MultiText text = (MultiText) _dataTarget;
-					text[_writingSystemId] = s;
+				   text[_writingSystemId] = s;
 				}
 						//else if (_dataTarget as IBindingList != null)
 						//{

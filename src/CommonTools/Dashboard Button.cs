@@ -18,6 +18,7 @@ namespace WeSay.CommonTools
 		private bool _mouseInControl;
 		private bool _keyIsDown;
 		// default format flags for text rendering
+		[CLSCompliantAttribute(false)]
 		protected const TextFormatFlags _defaultTextFormatFlags =
 				TextFormatFlags.WordBreak | TextFormatFlags.NoFullWidthCharacterBreak |
 				TextFormatFlags.LeftAndRightPadding;

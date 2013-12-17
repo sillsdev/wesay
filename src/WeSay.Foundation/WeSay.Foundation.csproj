@@ -56,16 +56,16 @@
 	<None Include="..\..\lib\icu.net.dll.config">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
-	<None Include="..\..\lib\icudt38.dll">
-	  <Link>icudt38.dll</Link>
+	<None Include="..\..\lib\icudt40.dll">
+	  <Link>icudt40.dll</Link>
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
-	<None Include="..\..\lib\icuin38.dll">
-	  <Link>icuin38.dll</Link>
+	<None Include="..\..\lib\icuin40.dll">
+	  <Link>icuin40.dll</Link>
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
-	<None Include="..\..\lib\icuuc38.dll">
-	  <Link>icuuc38.dll</Link>
+	<None Include="..\..\lib\icuuc40.dll">
+	  <Link>icuuc40.dll</Link>
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
   </ItemGroup>

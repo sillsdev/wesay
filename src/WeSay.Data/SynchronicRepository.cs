@@ -156,6 +156,10 @@ namespace WeSay.Data
 
         public void DeleteItem(RepositoryId id)
         {
+			if (id == null)
+			{
+				throw new ArgumentNullException("id");
+			}
             if (!_primarySecondaryMap.ContainsKey(id))
             {
                 throw new ArgumentOutOfRangeException("id", "Item does not exist in repository");
