@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation;
-using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
 {

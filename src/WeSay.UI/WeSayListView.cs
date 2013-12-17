@@ -269,40 +269,9 @@ namespace WeSay.UI
 			base.WndProc(ref m);
 		}
 
-		private void SelectFromClickLocation()
-		{
-			if (SimulateListBox && _clickSelecting)
-			{
-				ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
-				if (item != null)
-				{
-					SelectedIndex = item.Index;
-					item.Focused = true;
-				}
-				else
-				{
-					// restore the selection
-					int index = _dataSource.IndexOf(_selectedItem);
-					if (index != -1)
-					{
-						SelectedIndex = index;
-						if (VirtualMode)
-						{
-							GetVirtualItem(index).Focused = true;
-						}
-						else
-						{
-							Items[index].Focused = true;
-						}
-					}
-				}
-			}
-			_clickSelecting = false;
-		}
-
 		protected override void OnClick(EventArgs e)
 		{
-			SelectFromClickLocation();
+			_clickSelecting = false;
 			base.OnClick(e);
 		}
 
@@ -362,7 +331,33 @@ namespace WeSay.UI
 		// the coordinates returned now don't reflect the user's intentions
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			SelectFromClickLocation();
+			if (SimulateListBox && _clickSelecting)
+			{
+				ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
+				if (item != null)
+				{
+					SelectedIndex = item.Index;
+					item.Focused = true;
+				}
+				else
+				{
+					// restore the selection
+					int index = _dataSource.IndexOf(_selectedItem);
+					if (index != -1)
+					{
+						SelectedIndex = index;
+						if (VirtualMode)
+						{
+							GetVirtualItem(index).Focused = true;
+						}
+						else
+						{
+							Items[index].Focused = true;
+						}
+					}
+				}
+			}
+			_clickSelecting = false;
 			_currentMouseLocation = e.Location;
 			base.OnMouseUp(e);
 		}
@@ -383,7 +378,7 @@ namespace WeSay.UI
 				// and not just the extent of the text itself
 				Rectangle bounds = new Rectangle(e.Bounds.X,
 												 e.Bounds.Y,
-												 ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth,
+												 header.Width,
 												 e.Bounds.Height);
 
 				Brush backgroundBrush;
@@ -429,11 +424,7 @@ namespace WeSay.UI
 		[DefaultValue(true)]
 		public bool SimulateListBox
 		{
-			get
-			{
-				return _simulateListBoxBehavior && Columns.Contains(header) &&
-					(View == View.SmallIcon);
-			}
+			get { return _simulateListBoxBehavior && Columns.Contains(header) && View == View.SmallIcon; }
 			set
 			{
 				_simulateListBoxBehavior = value;
@@ -451,19 +442,11 @@ namespace WeSay.UI
 		protected override void OnResize(EventArgs e)
 		{
 			AdjustColumnWidth();
-			base.OnResize(e);
 		}
 
 		private void AdjustColumnWidth()
 		{
-			int newWidth = ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
-			SuspendLayout();
-			if (Columns.Count > 0)
-			{
-				Columns[0].Width = newWidth;
-			}
-			header.Width = newWidth;
-			ResumeLayout();
+			header.Width = Width - 20; // to account for scrollbar
 		}
 
 		private int _SelectedIndexForUseBeforeSelectedIndicesAreInitialized;
@@ -493,7 +476,6 @@ namespace WeSay.UI
 				}
 				if (value == -1)
 				{
-					_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
 					SelectedIndices.Clear();
 					_selectedItem = null;
 				}

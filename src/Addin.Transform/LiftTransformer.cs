@@ -20,7 +20,7 @@ namespace Addin.Transform
 	public abstract class LiftTransformer: IWeSayAddin
 	{
 		protected bool _launchAfterTransform = true;
-		protected string _pathToOutput;
+		private string _pathToOutput;
 		private static ProgressState _staticProgressStateForWorker;
 
 		public delegate void FileManipulationMethod(object sender, DoWorkEventArgs e);
@@ -158,8 +158,8 @@ namespace Addin.Transform
 				if (dlg.ProgressStateResult != null &&
 					dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
 				{
-					ErrorReport.ReportNonFatalException(
-							dlg.ProgressStateResult.ExceptionThatWasEncountered);
+					ErrorNotificationDialog.ReportException(
+							dlg.ProgressStateResult.ExceptionThatWasEncountered, null, false);
 					return false;
 				}
 				return !dlg.ProgressState.Cancel;

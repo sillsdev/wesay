@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI.AutoCompleteTextBox;

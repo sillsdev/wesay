@@ -1,10 +1,9 @@
-using System;
 using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
@@ -22,7 +21,6 @@ namespace WeSay.LexicalTools.Tests
 		private ViewTemplate _viewTemplate;
 		private string _glossingLanguageWSId;
 		private string _vernacularLanguageWSId;
-		private WordListCatalog _catalog;
 
 		[SetUp]
 		public void Setup()
@@ -30,6 +28,7 @@ namespace WeSay.LexicalTools.Tests
 			_tempFolder = new TemporaryFolder();
 			_wordListFilePath = _tempFolder.GetTemporaryFile();
 			_filePath = _tempFolder.GetTemporaryFile();
+			//Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
 			_lexEntryRepository = new LexEntryRepository(_filePath); // InMemoryRecordListManager();
@@ -46,11 +45,9 @@ namespace WeSay.LexicalTools.Tests
 															TestWritingSystemVernId
 											}));
 
-			_catalog = new WordListCatalog();
-			_catalog.Add(_wordListFilePath, new WordListDescription("en","label","longLabel", "description"));
-			_task = new GatherWordListTask( GatherWordListConfig.CreateForTests( _wordListFilePath,_glossingLanguageWSId, _catalog),
+			_task = new GatherWordListTask( GatherWordListConfig.CreateForTests( _wordListFilePath,_glossingLanguageWSId),
 											_lexEntryRepository,
-										   _viewTemplate, new TaskMemoryRepository());
+										   _viewTemplate);
 		}
 
 		[TearDown]
@@ -61,40 +58,39 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void Ctor_EmptyTemplate_DoesntCrash()
+		public void EmptyTemplate()
 		{
 			GatherWordListTask g = new GatherWordListTask(
 					GatherWordListConfig.CreateForTests(_wordListFilePath,
-							WritingSystem.IdForUnknownAnalysis, _catalog),
+							WritingSystem.IdForUnknownAnalysis),
 					_lexEntryRepository,
-					new ViewTemplate(), new TaskMemoryRepository());
+					new ViewTemplate());
 
 			Assert.IsNotNull(g);
 		}
 
 		[Test]
-		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
-		public void Activate_MissingWordListFile_GivesMessage()
+		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
+		public void MissingWordListFileGivesMessage()
 		{
 			GatherWordListTask g = new GatherWordListTask(
 				   GatherWordListConfig.CreateForTests("NotThere.txt",
-						   WritingSystem.IdForUnknownAnalysis, new WordListCatalog()),
+						   WritingSystem.IdForUnknownAnalysis),
 				   _lexEntryRepository,
-				   new ViewTemplate(), new TaskMemoryRepository());
+				   new ViewTemplate());
 
 			 g.Activate(); //should give a box to user, an exception in this text environment
 		}
 
-
 		[Test]
-		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
-		public void Activate_WritingSystemNotInCurrentList_GivesMessage()
+		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
+		public void WritingSystemNotInCurrentListGivesMessage()
 		{
 			GatherWordListTask g = new GatherWordListTask(
 				GatherWordListConfig.CreateForTests(_wordListFilePath,
-					"z7z", new WordListCatalog()),
+					"z7z"),
 				_lexEntryRepository,
-				_viewTemplate, new TaskMemoryRepository());
+				_viewTemplate);
 
 			g.Activate(); //should give a box to user, an exception in this text environment
 		}

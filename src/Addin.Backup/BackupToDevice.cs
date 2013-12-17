@@ -49,10 +49,8 @@ namespace Addin.Backup
 
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			using (BackupDialog d = new BackupDialog(projectInfo))
-			{
-				d.ShowDialog(parentForm);
-			}
+			BackupDialog d = new BackupDialog(projectInfo);
+			d.ShowDialog(parentForm);
 		}
 
 		#endregion

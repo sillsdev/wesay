@@ -6,9 +6,8 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.UI;
-using WeSay.UI.TextBoxes;
 
-namespace WeSay.LexicalTools.GatherByWordList
+namespace WeSay.LexicalTools
 {
 	public partial class GatherWordListControl: UserControl
 	{
@@ -59,10 +58,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
 			}
-			var box = _vernacularBox.TextBoxes[0];
-			box.Focus();
-			if(box is WeSayTextBox)
-					((WeSayTextBox) box).SelectionStart = 1000; //go to end
+			_vernacularBox.TextBoxes[0].Focus();
+			_vernacularBox.TextBoxes[0].SelectionStart = 1000; //go to end
 		}
 
 		private void UpdateSourceWord()

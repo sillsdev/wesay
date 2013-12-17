@@ -31,7 +31,6 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigurationWindow));
 			this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,8 +46,6 @@ namespace WeSay.ConfigTool
 			this.toolStripButton10 = new System.Windows.Forms.ToolStripButton();
 			this.openProjectInWeSayToolStripMenuItem = new System.Windows.Forms.ToolStripButton();
 			this._versionToolStripLabel = new System.Windows.Forms.ToolStripLabel();
-			this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-			this._saveACopyForFLEx54ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip2.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -113,8 +110,7 @@ namespace WeSay.ConfigTool
 			this.toolStripButton9,
 			this.toolStripButton10,
 			this.openProjectInWeSayToolStripMenuItem,
-			this._versionToolStripLabel,
-			this.toolStripDropDownButton1});
+			this._versionToolStripLabel});
 			this.toolStrip2.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip2.Name = "toolStrip2";
 			this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -125,7 +121,7 @@ namespace WeSay.ConfigTool
 			// toolStripButton8
 			//
 			this.toolStripButton8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton8.Image = global::WeSay.ConfigTool.Properties.Resources.NewProject;
+			this.toolStripButton8.Image = Resources.NewProject;
 			this.toolStripButton8.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.toolStripButton8.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton8.Margin = new System.Windows.Forms.Padding(10, 1, 15, 2);
@@ -137,7 +133,7 @@ namespace WeSay.ConfigTool
 			// toolStripButton9
 			//
 			this.toolStripButton9.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton9.Image = global::WeSay.ConfigTool.Properties.Resources.openProject;
+			this.toolStripButton9.Image = Resources.openProject;
 			this.toolStripButton9.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.toolStripButton9.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton9.Margin = new System.Windows.Forms.Padding(0, 1, 15, 2);
@@ -149,7 +145,7 @@ namespace WeSay.ConfigTool
 			// toolStripButton10
 			//
 			this.toolStripButton10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton10.Image = global::WeSay.ConfigTool.Properties.Resources.about;
+			this.toolStripButton10.Image = Resources.about;
 			this.toolStripButton10.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton10.Margin = new System.Windows.Forms.Padding(0, 1, 15, 2);
 			this.toolStripButton10.Name = "toolStripButton10";
@@ -161,7 +157,7 @@ namespace WeSay.ConfigTool
 			//
 			this.openProjectInWeSayToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this.openProjectInWeSayToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-			this.openProjectInWeSayToolStripMenuItem.Image = global::WeSay.ConfigTool.Properties.Resources.WeSayMenuSized;
+			this.openProjectInWeSayToolStripMenuItem.Image = Resources.WeSayMenuSized;
 			this.openProjectInWeSayToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.openProjectInWeSayToolStripMenuItem.Name = "openProjectInWeSayToolStripMenuItem";
 			this.openProjectInWeSayToolStripMenuItem.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
@@ -178,34 +174,15 @@ namespace WeSay.ConfigTool
 			this._versionToolStripLabel.Size = new System.Drawing.Size(45, 22);
 			this._versionToolStripLabel.Text = "version";
 			//
-			// toolStripDropDownButton1
-			//
-			this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this._saveACopyForFLEx54ToolStripMenuItem});
-			this.toolStripDropDownButton1.ForeColor = System.Drawing.SystemColors.ControlDark;
-			this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
-			this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-			this.toolStripDropDownButton1.Size = new System.Drawing.Size(78, 22);
-			this.toolStripDropDownButton1.Text = "FieldWorks";
-			//
-			// _saveACopyForFLEx54ToolStripMenuItem
-			//
-			this._saveACopyForFLEx54ToolStripMenuItem.Name = "_saveACopyForFLEx54ToolStripMenuItem";
-			this._saveACopyForFLEx54ToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-			this._saveACopyForFLEx54ToolStripMenuItem.Text = "Save a copy for FLEx 5.4...";
-			this._saveACopyForFLEx54ToolStripMenuItem.Click += new System.EventHandler(this.OnSaveACopyForFLEx5Pt4);
-			//
-			// ConfigurationWindow
+			// AdminWindow
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.ClientSize = new System.Drawing.Size(781, 522);
 			this.Controls.Add(this.toolStrip2);
-			this.Icon = global::WeSay.ConfigTool.Properties.Resources.WeSaySetupApplicationIcon;
-			this.Name = "ConfigurationWindow";
+			this.Icon = Resources.WeSaySetupApplicationIcon;
+			this.Name = "AdminWindow";
 			this.Text = "WeSay Configuration Tool";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AdminWindow_FormClosed);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AdminWindow_FormClosing);
@@ -233,7 +210,5 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.ToolStripButton toolStripButton10;
 		private System.Windows.Forms.ToolStripButton openProjectInWeSayToolStripMenuItem;
 		private System.Windows.Forms.ToolStripLabel _versionToolStripLabel;
-		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
-		private System.Windows.Forms.ToolStripMenuItem _saveACopyForFLEx54ToolStripMenuItem;
 	}
 }

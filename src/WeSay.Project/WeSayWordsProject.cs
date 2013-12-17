@@ -1,36 +1,34 @@
 using System;
+using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
+using System.Xml.Xsl;
 using Autofac;
 using Autofac.Builder;
+using Autofac.Component;
 using LiftIO;
 using LiftIO.Validation;
-using Microsoft.Practices.ServiceLocation;
-using Palaso.IO;
-#if MONO
-using Palaso.Linq;
-#endif
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.Progress;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
-using WeSay.Project.ConfigMigration;
-using WeSay.UI;
-using WeSay.UI.audio;
 
 namespace WeSay.Project
 {
-	public class WeSayWordsProject : BasilProject, IFileLocator
+	public class WeSayWordsProject : BasilProject
 	{
 		private IList<ITask> _tasks;
 		private ViewTemplate _defaultViewTemplate;
@@ -46,8 +44,6 @@ namespace WeSay.Project
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
 
-		public const int CurrentWeSayConfigFileVersion = 6; // This variable must be updated with every new vrsion of the WeSay config file
-
 		public event EventHandler EditorsSaveNow;
 
 		public class StringPair: EventArgs
@@ -62,7 +58,7 @@ namespace WeSay.Project
 		{
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
-//            BackupMaker = new ChorusBackupMaker();
+			BackupMaker = new ChorusBackupMaker();
 
 		}
 
@@ -114,7 +110,7 @@ namespace WeSay.Project
 			wsc.Write(XmlWriter.Create(PathToPretendWritingSystemPrefs));
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
-			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
+
 
 		}
 
@@ -161,12 +157,12 @@ namespace WeSay.Project
 		public void HandleProbableCacheProblem(Exception error)
 		{
 #if DEBUG
-			ErrorReport.NotifyUserOfProblem(
+			ErrorReport.ReportNonFatalMessage(
 					"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.\r\n\r\nIn the release build, the cache would now be invalidated and the user would not see the following crash dialog.");
 			throw error;
 #else
 			//todo: make a way to pass on this error to us
-			Palaso.Reporting.ErrorReport.NotifyUserOfProblem(
+			Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
 				"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.");
 #endif
 		}
@@ -178,7 +174,7 @@ namespace WeSay.Project
 
 				if (!File.Exists(liftPath))
 				{
-					ErrorReport.NotifyUserOfProblem(
+					ErrorReport.ReportNonFatalMessage(
 							String.Format(
 									"WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nTry opening the LIFT file by double clicking on it.",
 									liftPath));
@@ -193,7 +189,7 @@ namespace WeSay.Project
 				}
 				catch (UnauthorizedAccessException)
 				{
-					ErrorReport.NotifyUserOfProblem(
+					ErrorReport.ReportNonFatalMessage(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for writing, because the system won't allow it. Check that 'ReadOnly' is cleared, otherwise investigate your user permissions to write to this file.",
 									liftPath));
@@ -201,7 +197,7 @@ namespace WeSay.Project
 				}
 				catch (IOException)
 				{
-					ErrorReport.NotifyUserOfProblem(
+					ErrorReport.ReportNonFatalMessage(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for writing, probably because it is locked by some other process on your computer. Maybe you need to quit WeSay? If you can't figure out what has it locked, restart your computer.",
 									liftPath));
@@ -218,7 +214,7 @@ namespace WeSay.Project
 
 				if (!File.Exists(liftPath))
 				{
-					ErrorReport.NotifyUserOfProblem(
+					ErrorReport.ReportNonFatalMessage(
 							String.Format(
 									"WeSay tried to find the WeSay configuration file at '{0}', but could not find it.\r\n\r\nTry using the configuration Tool to create one.",
 									PathToConfigFile));
@@ -233,7 +229,7 @@ namespace WeSay.Project
 				}
 				catch (UnauthorizedAccessException)
 				{
-					ErrorReport.NotifyUserOfProblem(
+					ErrorReport.ReportNonFatalMessage(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
 									PathToConfigFile));
@@ -241,7 +237,7 @@ namespace WeSay.Project
 				}
 				catch (IOException e)
 				{
-					ErrorReport.NotifyUserOfProblem(
+					ErrorReport.ReportNonFatalMessage(
 							String.Format(
 									"WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
 									PathToConfigFile,
@@ -257,7 +253,7 @@ namespace WeSay.Project
 			}
 			catch (ConfigurationException e)
 			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 				return false;
 			}
 		}
@@ -316,9 +312,7 @@ namespace WeSay.Project
 					}
 					UiFontSizeInPoints = f;
 				}
-				CheckIfConfigFileVersionIsToNew(configDoc);
-				var m = new ConfigurationMigrator();
-				m.MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
+				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
@@ -328,19 +322,6 @@ namespace WeSay.Project
 			PopulateDIContainer();
 
 			LoadBackupPlan();
-		}
-
-		public static void CheckIfConfigFileVersionIsToNew(XPathDocument configurationDoc)
-		{
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") != null)
-			{
-				string versionNumberAsString =
-					configurationDoc.CreateNavigator().SelectSingleNode("configuration").GetAttribute("version", "");
-				if(int.Parse(versionNumberAsString) > CurrentWeSayConfigFileVersion)
-				{
-					throw new ApplicationException("The config file is too new for this version of wesay. Please download a newer version of wesay from www.wesay.org");
-				}
-			}
 		}
 
 		[Serializable]
@@ -354,44 +335,16 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
+			//builder.Register<UserSettingsRepository>(new UserSettingsRepository());
 			builder.Register(new WordListCatalog()).SingletonScoped();
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 
-			builder.Register<LiftRepository>( c =>
-			  {
-				  try
-				  {
-					  return c.Resolve<IProgressNotificationProvider>().Go
-						  <LiftRepository>(
-						  "Loading Dictionary",
-						  progressState =>
-						  new LiftRepository(_pathToLiftFile,
-											 GetSemanticDomainsList(),
-											 progressState));
-				  }
-				  catch (LiftFormatException error)
-				  {
-					  Palaso.Reporting.ErrorReport.NotifyUserOfProblem(error.Message);
-					  throw error;
-				  }
-				  catch(Exception error)
-				  {
-					  throw error;
-				  }
-			  });
+			builder.Register<LexEntryRepository>(
+				c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
+						progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
 
-			builder.Register<LexEntryRepository>();
-//            builder.Register<LexEntryRepository>(
-//                 c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
-//                         progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
-
-
-			//builder.Register<IRepository<LexEntry>>(c => c.Resolve<LexEntryRepository>());
-
-			builder.Register<ICountGiver>(c => c.Resolve<LexEntryRepository>());
-
-
+			//builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
 
 			var catalog = new TaskTypeCatalog();
 			catalog.RegisterAllTypes(builder);
@@ -408,23 +361,12 @@ namespace WeSay.Project
 
 			builder.Register<TaskCollection>().SingletonScoped();
 
-			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems))
+			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(configFileText))
 			{
 				//todo: this isn't going to work if we start using multiple tempates.
 				//will have to go to a naming system.
 				builder.Register(viewTemplate).SingletonScoped();
 			}
-
-			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named("PrintingTemplate");
-			builder.Register<WritingSystemCollection>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned();
-
-			builder.Register<PublicationFontStyleProvider>(c=> new PublicationFontStyleProvider(c.Resolve<ViewTemplate>("PrintingTemplate")));
-
-			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainDdp4);
-			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
-
-
-			builder.Register<PictureControl>(c=> new PictureControl(Path.GetDirectoryName(PathToLiftFile), PathToPictures, GetFileLocator())).FactoryScoped();
 
 		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
 
@@ -432,39 +374,7 @@ namespace WeSay.Project
 			// can't currently get at the instance
 			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
 
-			builder.Register<CheckinDescriptionBuilder>().SingletonScoped();
-			builder.Register<Chorus.sync.ProjectFolderConfiguration>(new WeSayChorusProjectConfiguration(Path.GetDirectoryName(PathToConfigFile))).SingletonScoped();
-			builder.Register<ChorusBackupMaker>().SingletonScoped();
-
-
-			//it is sad that we initially used a static for logger, and that hasn't been completely undone yet.
-			//but by registering it here, we at least make it possible for components to get access to it this
-			//"proper" way.
-			builder.Register<Logger>(c => Logger.Singleton);
-			builder.Register<ILogger>(c =>
-										  {
-											  var m = new MultiLogger();
-											  Logger.Init();//it's ok if this was already done
-											  m.Add(Logger.Singleton);
-											  m.Add(c.Resolve<CheckinDescriptionBuilder>());
-											  return m;
-										  });
-
-			//            var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
-//                        () => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
-
-//            var x = _defaultViewTemplate.GetField(
-//            builder.Register<AudioPathProvider>(c=>new AudioPathProvider(PathToAudio, )));
-
-			builder.Register(c=>
-				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).ContainerScoped();
-
 			_container = builder.Build();
-		}
-
-		private OptionsList GetSemanticDomainsList()
-		{
-			return GetOptionsList(LexSense.WellKnownProperties.SemanticDomainDdp4);
 		}
 
 		public LexEntryRepository GetLexEntryRepository()
@@ -488,12 +398,12 @@ namespace WeSay.Project
 			if (backupPlanNav == null)
 			{
 				//make sure we have a fresh copy with any defaults
-				BackupMaker = _container.Resolve<ChorusBackupMaker>();
+				BackupMaker = new ChorusBackupMaker();
 				return;
 			}
 
 			XmlReader r = XmlReader.Create(new StringReader(backupPlanNav.OuterXml));
-			BackupMaker = ChorusBackupMaker.LoadFromReader(r, _container.Resolve<CheckinDescriptionBuilder>());
+			BackupMaker = ChorusBackupMaker.LoadFromReader(r);
 		}
 
 		private static void MoveFilesFromOldDirLayout(string projectDir)
@@ -555,7 +465,7 @@ namespace WeSay.Project
 				ApplicationException e =
 						new ApplicationException(
 								"Error while trying to migrate to new file structure. ", err);
-				ErrorReport.ReportFatalException(e);
+				ErrorNotificationDialog.ReportException(e);
 			}
 		}
 
@@ -594,18 +504,100 @@ namespace WeSay.Project
 				ApplicationException e =
 						new ApplicationException(
 								"Error while trying to move export files to new structure. ", err);
-				ErrorReport.ReportFatalException(e);
+				ErrorNotificationDialog.ReportException(e);
 			}
 		}
 
 		public bool MigrateConfigurationXmlIfNeeded()
 		{
-			var m = new ConfigurationMigrator();
-			return m.MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile),
+			return MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile),
 												   PathToConfigFile);
 		}
 
+		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc,
+														   string targetPath)
+		{
+			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
+			bool didMigrate = false;
+
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") == null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig0To1.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			if (
+					configurationDoc.CreateNavigator().SelectSingleNode(
+							"configuration[@version='1']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig1To2.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='2']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig2To3.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='3']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig3To4.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='4']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig4To5.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			return didMigrate;
+		}
+
+		private static void MigrateUsingXSLT(IXPathNavigable configurationDoc,
+											 string xsltName,
+											 string targetPath)
+		{
+			Logger.WriteEvent("Migrating Configuration File {0}", xsltName);
+			using (
+					Stream stream =
+							Assembly.GetExecutingAssembly().GetManifestResourceStream(
+									typeof (WeSayWordsProject), xsltName))
+			{
+				XslCompiledTransform transform = new XslCompiledTransform();
+				using (XmlReader reader = XmlReader.Create(stream))
+				{
+					transform.Load(reader);
+					string tempPath = Path.GetTempFileName();
+					XmlWriterSettings settings = new XmlWriterSettings();
+					settings.Indent = true;
+					using (XmlWriter writer = XmlWriter.Create(tempPath, settings))
+					{
+						transform.Transform(configurationDoc, writer);
+						TempFileCollection tempfiles = transform.TemporaryFiles;
+						if (tempfiles != null)
+								// tempfiles will be null when debugging is not enabled
+						{
+							tempfiles.Delete();
+						}
+						writer.Close();
+					}
+					string s = targetPath + ".tmp";
+					if (File.Exists(s))
+					{
+						File.Delete(s);
+					}
+					if (File.Exists(targetPath)) //review: JDH added this because of a failing test, and from my reading, the target shouldn't need to pre-exist
+					{
+						File.Move(targetPath, s);
+					}
+					File.Move(tempPath, targetPath);
+					File.Delete(s);
+				}
+			}
+		}
 
 		//        public void LoadFromConfigFilePath(string path)
 		//        {
@@ -643,7 +635,7 @@ namespace WeSay.Project
 //                }
 //                catch (Exception error)
 //                {
-//                    ErrorReport.NotifyUserOfProblem(
+//                    ErrorReport.ReportNonFatalMessage(
 //                            "There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
 //                            error.Message);
 //                }
@@ -672,7 +664,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"There was a problem reading the addins-settings xml. {0}", error.Message);
 				return null;
 			}
@@ -688,12 +680,8 @@ namespace WeSay.Project
 								   GetFilesBelongingToProject(ProjectDirectoryPath),
 								   AddinSet.Singleton.LocateFile,
 								   WritingSystems,
-								   ServiceLocator,
+								   new WeSay.Foundation.ServiceLocatorAdapter(_container),
 								   this);
-		}
-		public IServiceLocator ServiceLocator
-		{
-			get { return new WeSay.Foundation.ServiceLocatorAdapter(_container); }
 		}
 
 		private XPathDocument GetConfigurationDoc()
@@ -708,7 +696,7 @@ namespace WeSay.Project
 				}
 				catch (Exception e)
 				{
-					ErrorReport.NotifyUserOfProblem("There was a problem reading the task xml. " +
+					ErrorReport.ReportNonFatalMessage("There was a problem reading the task xml. " +
 													  e.Message);
 					projectDoc = null;
 				}
@@ -741,8 +729,7 @@ namespace WeSay.Project
 			//hack
 			StickDefaultViewTemplateInNewConfigFile(pathToWritingSystemPrefs, pathToConfigFile);
 
-			var m = new ConfigurationMigrator();
-			m.MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile), pathToConfigFile);
+			MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile),pathToConfigFile) ;
 
 			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
 			if (!File.Exists(pathToLiftFile))
@@ -901,10 +888,6 @@ namespace WeSay.Project
 		{
 			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "pictures"); }
 		}
-		public string PathToAudio
-		{
-			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "audio"); }
-		}
 
 		private static string GetPathToCacheFromPathToLift(string pathToLift)
 		{
@@ -914,35 +897,54 @@ namespace WeSay.Project
 		public string PathToRepository
 		{
 			get { return PathToLiftFile; }
+			//get { return GetPathToDb4oLexicalModelDBFromPathToLift(PathToLiftFile); }
 		}
 
+		public string GetPathToDb4oLexicalModelDBFromPathToLift(string pathToLift)
+		{
+			return Path.Combine(GetPathToCacheFromPathToLift(pathToLift),
+								Path.GetFileNameWithoutExtension(pathToLift) + ".words");
+		}
 
-		/// <summary>
-		/// at the momement, project is a file locator for old code, but we want to move
-		/// towards removing that responsibility, perhaps by adding a locator to the container
-		/// </summary>
-		/// <param name="fileName"></param>
-		/// <returns></returns>
-		public string LocateFile(string fileName)
-		{
-			return GetFileLocator().LocateFile(fileName);
-		}
-		public string LocateFile(string fileName, string descriptionForErrorMessage)
-		{
-			return GetFileLocator().LocateFile(fileName, descriptionForErrorMessage);
-		}
 		/// <summary>
 		/// Find the file, starting with the project dirs and moving to the app dirs.
 		/// This allows a user to override an installed file by making thier own.
 		/// </summary>
 		/// <returns></returns>
-		private FileLocator GetFileLocator()
+		public string LocateFile(string fileName)
 		{
-			return new FileLocator(new string[] { PathToWeSaySpecificFilesDirectoryInProject,
-												  ApplicationCommonDirectory, DirectoryOfTheApplicationExecutable, GetTopAppDirectory()});
+			string path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			//            path = Path.Combine(ProjectCommonDirectory, fileName);
+			//            if (File.Exists(path))
+			//            {
+			//                return path;
+			//            }
+
+			path = Path.Combine(ApplicationCommonDirectory, fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			path = Path.Combine(DirectoryOfExecutingAssembly, fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			path = Path.Combine(GetTopAppDirectory(), fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			return null;
 		}
-
-
 
 		public string PathToWeSaySpecificFilesDirectoryInProject
 		{
@@ -1086,20 +1088,17 @@ namespace WeSay.Project
 			get { return _container; }
 		}
 
-
-
 		public override void Save()
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
 
-			var pendingConfigFile = new TempFileForSafeWriting(Project.PathToConfigFile);
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 
-			XmlWriter writer = XmlWriter.Create(pendingConfigFile.TempFilePath, settings);
+			XmlWriter writer = XmlWriter.Create(Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
-			writer.WriteAttributeString("version", CurrentWeSayConfigFileVersion.ToString());
+			writer.WriteAttributeString("version", "5");
 
 			writer.WriteStartElement("components");
 			foreach (ViewTemplate template in ViewTemplates)
@@ -1125,10 +1124,7 @@ namespace WeSay.Project
 			writer.WriteEndDocument();
 			writer.Close();
 
-			pendingConfigFile.WriteWasSuccessful();
-
 			base.Save();
-
 			BackupNow();
 
 		}
@@ -1173,7 +1169,7 @@ namespace WeSay.Project
 												field.OptionsListFile);
 			if (File.Exists(pathInProject))
 			{
-				LoadOptionsList(field.FieldName, pathInProject);
+				LoadOptionsList(pathInProject);
 			}
 			else
 			{
@@ -1196,27 +1192,16 @@ namespace WeSay.Project
 								pathInProgramDir);
 					}
 				}
-				LoadOptionsList(field.FieldName, pathInProgramDir);
+				LoadOptionsList(pathInProgramDir);
 			}
 
 			return _optionLists[field.OptionsListFile];
 		}
 
-		private void LoadOptionsList(string fieldName,string pathToOptionsList)
+		private void LoadOptionsList(string pathToOptionsList)
 		{
 			string name = Path.GetFileName(pathToOptionsList);
-			IOptionListReader reader;
-			object r;
-			//first, try for a reader named after the field
-			if(_container.TryResolve(fieldName, out r))
-			{
-				reader = r as IOptionListReader;
-			}
-			else
-			{
-				reader = _container.Resolve<IOptionListReader>();
-			}
-			OptionsList list = reader.LoadFromFile(pathToOptionsList);
+			OptionsList list = OptionsList.LoadFromFile(pathToOptionsList);
 			_optionLists.Add(name, list);
 		}
 
@@ -1259,7 +1244,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
+				ErrorReport.ReportNonFatalMessage("Another program has WeSay's dictionary file open, so we cannot make the writing system change.  Make sure WeSay isn't running.");
 				return false;
 			}
 
@@ -1283,14 +1268,14 @@ namespace WeSay.Project
 						 field.DataTypeName ==
 						 Field.BuiltInDataType.OptionCollection.ToString())
 					 {
-						 FileUtils.GrepFile(p,
+						 GrepFile(p,
 								  string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
 								  string.Format("name=\"{0}\"", field.FieldName));
 					 }
 					 else
 					 {
 						 //<field>s
-						 FileUtils.GrepFile(p,
+						 GrepFile(p,
 								  string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
 								  string.Format("type=\"{0}\"", field.FieldName));
 					 }
@@ -1302,7 +1287,7 @@ namespace WeSay.Project
 		{
 			if (DoSomethingToLiftFile((p) =>
 					 //todo: expand the regular expression here to account for all reasonable patterns
-					 FileUtils.GrepFile(PathToLiftFile,
+					 GrepFile(PathToLiftFile,
 							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
 											Regex.Escape(oldId)),
 							  string.Format("lang=\"{0}\"", ws.Id))))
@@ -1335,7 +1320,7 @@ namespace WeSay.Project
 				string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
 				if (!String.IsNullOrEmpty(errors))
 				{
-					ErrorReport.NotifyUserOfProblem(
+					ErrorReport.ReportNonFatalMessage(
 							"The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
 							pathToLift,
 							errors);
@@ -1344,10 +1329,56 @@ namespace WeSay.Project
 			}
 			catch (Exception e)
 			{
-				ErrorReport.ReportNonFatalException(e);
+				ErrorNotificationDialog.ReportException(e);
 				return true;
 			}
 			return false;
+		}
+
+		private static void GrepFile(string inputPath, string pattern, string replaceWith)
+		{
+			Regex regex = new Regex(pattern, RegexOptions.Compiled);
+			string tempPath = inputPath + ".tmp";
+
+			using (StreamReader reader = File.OpenText(inputPath))
+			{
+				using (StreamWriter writer = new StreamWriter(tempPath))
+				{
+					while (!reader.EndOfStream)
+					{
+						writer.WriteLine(regex.Replace(reader.ReadLine(), replaceWith));
+					}
+					writer.Close();
+				}
+				reader.Close();
+			}
+			//string backupPath = GetUniqueFileName(inputPath);
+			string backupPath = inputPath + ".bak";
+
+			ReplaceFileWithUserInteractionIfNeeded(tempPath, inputPath, backupPath);
+		}
+
+		private static void ReplaceFileWithUserInteractionIfNeeded(string tempPath,
+																   string inputPath,
+																   string backupPath)
+		{
+			bool succeeded = false;
+			do
+			{
+				try
+				{
+					File.Replace(tempPath, inputPath, backupPath);
+					succeeded = true;
+				}
+
+				catch (IOException)
+				{
+					//nb: we don't want to provide an option to cancel.  Better to crash than cancel.
+					ErrorReport.ReportNonFatalMessage(Application.ProductName +
+													  " was unable to get at the dictionary file to update it.  Please ensure that WeSay isn't running with it open, then click the 'OK' button below. If you cannot figure out what program has the LIFT file open, the best choice is to kill WeSay Configuration Tool using the Task Manager (ctrl+alt+del), so that the configuration does not fall out of sync with the LIFT file.");
+				}
+			}
+			while (!succeeded);
 		}
 
 		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)
@@ -1377,7 +1408,7 @@ namespace WeSay.Project
 			string[] allFiles = Directory.GetFiles(pathToProjectRoot,
 												   "*",
 												   SearchOption.AllDirectories);
-			string[] antipatterns = { "Cache", "cache", ".bak", ".old", ".liftold", ".wesayUserMemory" };
+			string[] antipatterns = {"Cache", "cache", ".bak", ".old", ".liftold"};
 
 			foreach (string file in allFiles)
 			{
@@ -1405,12 +1436,11 @@ namespace WeSay.Project
 		{
 			try
 			{
-				if(BackupMaker!=null)//it will for many tests, which don't need to be slowed down by all this
-					BackupMaker.BackupNow(ProjectDirectoryPath, StringCatalogSelector);
+				BackupMaker.BackupNow(ProjectDirectoryPath, StringCatalogSelector);
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem(string.Format("WeSay was not able to do a backup.\r\nReason: {0}", error.Message));
+				ErrorReport.ReportNonFatalMessage(string.Format("WeSay was not able to do a backup.\r\nReason: {0}", error.Message));
 			}
 		}
 
@@ -1422,20 +1452,9 @@ namespace WeSay.Project
 		{
 			//nb: we have multiple lengths we could go to eventually, perhaps with different rules:
 			//      commit locally, commit to local backup, commit peers on LAN, commit across internet
-
-			//TODO: follow PT and OurWord to a once a day system, which
-			//will take saving the last backkup time somewhere else
-			//(or querying the repo)
-
-			//this is a temporary hack... we don't want to backup on startup,
-			//it slows the startup time too much
-			if(BackupMaker.TimeOfLastBackupAttempt == default(DateTime))
-			{
-				BackupMaker.ResetTimeOfLastBackup();
-			}
-
 			TimeSpan diff = DateTime.Now - BackupMaker.TimeOfLastBackupAttempt;
-			if(diff.TotalMinutes > 20)
+		   // if(diff.TotalSeconds  > 30)
+			if(diff.TotalMinutes > 5)
 			{
 				BackupNow();
 			}
@@ -1459,20 +1478,6 @@ namespace WeSay.Project
 			var containerBuilder = new Autofac.Builder.ContainerBuilder();
 			adder.Invoke(containerBuilder);
 			containerBuilder.Build(_container);
-		}
-	}
-
-	public class MediaNamingHelper
-	{
-		public MediaNamingHelper(IEnumerable<string> lexicalUnitWritingSystemIds)
-		{
-			LexicalUnitWritingSystemIds = lexicalUnitWritingSystemIds;
-		}
-
-		public IEnumerable<string> LexicalUnitWritingSystemIds
-		{
-			get;
-			set;
 		}
 	}
 }

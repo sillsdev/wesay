@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using Chorus.sync;
 using Chorus.Utilities;
-using Chorus.VcsDrivers.Mercurial;
-using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.LexicalModel;
 
@@ -18,23 +15,9 @@ namespace WeSay.Project
 	[XmlRoot("backupPlan")]
 	public class ChorusBackupMaker
 	{
-		internal CheckinDescriptionBuilder CheckinDescriptionBuilder { get; set; }
-		public const string ElementName = "backupPlan";
+	  public const string ElementName = "backupPlan";
 
-	  public ChorusBackupMaker(CheckinDescriptionBuilder checkinDescriptionBuilder)
-	  {
-		  CheckinDescriptionBuilder = checkinDescriptionBuilder;
-	  }
-
-
-		/// <summary>
-		/// for deserializer
-		/// </summary>
-	  internal ChorusBackupMaker()
-	  {
-	  }
-
-		[XmlElement("pathToParentOfRepositories")]
+	  [XmlElement("pathToParentOfRepositories")]
 		public string PathToParentOfRepositories;
 
 		private DateTime _timeOfLastBackupAttempt;
@@ -50,12 +33,10 @@ namespace WeSay.Project
 			set { _lexEntryRepository = value; }
 		}
 
-		public static ChorusBackupMaker LoadFromReader(XmlReader reader, CheckinDescriptionBuilder checkinDescriptionBuilder)
+		public static ChorusBackupMaker LoadFromReader(XmlReader reader)
 		{
 			XmlSerializer serializer = new XmlSerializer(typeof(ChorusBackupMaker));
-			var x = (ChorusBackupMaker)serializer.Deserialize(reader);
-			x.CheckinDescriptionBuilder = checkinDescriptionBuilder;
-			return x;
+			return (ChorusBackupMaker)serializer.Deserialize(reader);
 		}
 
 		public void Save(XmlWriter writer)
@@ -66,20 +47,22 @@ namespace WeSay.Project
 
 		public void BackupNow(string pathToProjectDirectory, string localizationLanguageId)
 		{
-			if(pathToProjectDirectory.ToLower().IndexOf(@"sampleprojects\pretend")>=0)
-			{
-				return; //no way... if you want a unit test that includes CHorus, do it without
-						//that no deprecated monstrosity.
-			}
-#if DEBUG
-			Debug.Assert(pathToProjectDirectory.ToLower().IndexOf("wesaydev") < 0, "Whoops, something is trying to do a checkin of the wesay code!");
-#endif
 			_timeOfLastBackupAttempt = DateTime.Now;
 
 			//nb: we're not really using the message yet, at least, not showing it to the user
-			if(!string.IsNullOrEmpty(HgRepository.GetEnvironmentReadinessMessage(localizationLanguageId)))
+			if(!string.IsNullOrEmpty(RepositoryManager.GetEnvironmentReadinessMessage(localizationLanguageId)))
 			{
-				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", HgRepository.GetEnvironmentReadinessMessage("en"));
+				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
+			}
+			if (string.IsNullOrEmpty(PathToParentOfRepositories))
+			{
+				Palaso.Reporting.Logger.WriteMinorEvent("Backup location not specified, skipping backup.");
+				return;
+			}
+			if (!Directory.Exists(PathToParentOfRepositories))
+			{
+				Palaso.Reporting.Logger.WriteEvent("Backup location not found, skipping backup.");
+				return;
 			}
 
 			LiftRepository.RightToAccessLiftExternally rightToAccessLiftExternally = null;
@@ -90,40 +73,34 @@ namespace WeSay.Project
 
 			try
 			{
-				ProjectFolderConfiguration projectFolder = new WeSayChorusProjectConfiguration(pathToProjectDirectory);
-
-				// projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
+				ProjectFolderConfiguration projectFolder = new ProjectFolderConfiguration(pathToProjectDirectory);
+				projectFolder.ExcludePatterns.Add("**/cache");
+				projectFolder.ExcludePatterns.Add("*.old");
+				projectFolder.ExcludePatterns.Add("*.tmp");
+				projectFolder.IncludePatterns.Add("*.*");
+			   // projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 
 				Chorus.sync.SyncOptions options = new SyncOptions();
 				options.DoMergeWithOthers = false;
 				options.DoPullFromOthers = false;
 				options.DoPushToLocalSources = true;
 				options.RepositorySourcesToTry.Clear();
-				if (!string.IsNullOrEmpty(PathToParentOfRepositories))
-				{
-					if (!Directory.Exists(PathToParentOfRepositories))
-					{
-						ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "Could not Access the backup path, {0}", PathToParentOfRepositories);
-					}
-					else
-					{
-						var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create(PathToParentOfRepositories, "backup",
-																				false);
-						options.RepositorySourcesToTry.Add(backupSource);
-					}
-				}
-				options.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
+				RepositorySource backupSource = RepositorySource.Create(PathToParentOfRepositories, "backup", false);
+				options.RepositorySourcesToTry.Add(backupSource);
 
+				RepositoryManager manager = RepositoryManager.FromRootOrChildFolder(projectFolder);
+
+
+				if (!RepositoryManager.CheckEnvironmentAndShowMessageIfAppropriate("en"))//todo localization
+				{
+					Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
+					return;
+				}
+
+
+				//TODO: figure out how/what/when to show progress. THis is basically just throwing it away
 				IProgress progress = new Chorus.Utilities.StringBuilderProgress();
-				var synchronizer = Synchronizer.FromProjectConfiguration(projectFolder, progress);
-				synchronizer.SyncNow(options, progress);
-				if (progress.ToString().Contains("Error"))//TODO: localization issue
-				{
-					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
-													"WeSay background backup failed:\r\n\r\n"+progress.ToString());
-				}
-
-				CheckinDescriptionBuilder.Clear();
+				manager.SyncNow(options, progress);
 			}
 			catch (Exception error)
 			{
@@ -138,13 +115,5 @@ namespace WeSay.Project
 				}
 			}
 		}
-
-
-		public void ResetTimeOfLastBackup()
-		{
-			_timeOfLastBackupAttempt = DateTime.Now;
-		}
 	}
-
-	//todo: move to chorus
 }

@@ -48,14 +48,12 @@ namespace WeSay.LexicalModel
 			public static string LexicalUnit = "EntryLexicalForm";
 			public static string BaseForm = "BaseForm";
 			public static string CrossReference = "confer";
-			public static string Sense = "sense";
-			public static string FlagSkipBaseform = "flag-skip-BaseForm";
-			public static string LiteralMeaning = "literal-meaning";
 
 			public static bool Contains(string fieldName)
 			{
 				List<string> list =
-						new List<string>(new string[] { LexicalUnit, Citation, BaseForm, CrossReference, Sense, LiteralMeaning });
+						new List<string>(new string[]
+											 {LexicalUnit, Citation, BaseForm, CrossReference});
 				return list.Contains(fieldName);
 			}
 		} ;
@@ -107,6 +105,16 @@ namespace WeSay.LexicalModel
 
 		protected override void WireUpEvents()
 		{
+			//workaround db4o 6 bug
+			if (_creationTime.Kind != DateTimeKind.Utc)
+			{
+				CreationTime = new DateTime(_creationTime.Ticks, DateTimeKind.Utc);
+			}
+			if (ModificationTime.Kind != DateTimeKind.Utc)
+			{
+				ModificationTime = new DateTime(ModificationTime.Ticks, DateTimeKind.Utc);
+			}
+
 			Debug.Assert(CreationTime.Kind == DateTimeKind.Utc);
 			Debug.Assert(ModificationTime.Kind == DateTimeKind.Utc);
 			base.WireUpEvents();
@@ -481,22 +489,8 @@ namespace WeSay.LexicalModel
 		public void AddRelationTarget(string relationName, string targetId)
 		{
 			LexRelationCollection relations =
-					GetOrCreateProperty<LexRelationCollection>(relationName);
+					GetOrCreateProperty<LexRelationCollection>(WellKnownProperties.BaseForm);
 			relations.Relations.Add(new LexRelation(relationName, targetId, this));
-		}
-
-		public string GetSimpleFormForLogging()
-		{
-			string formForLogging ;
-			try
-			{
-				formForLogging = LexicalForm.GetFirstAlternative();
-			}
-			catch (Exception)
-			{
-				formForLogging="(unknown)";
-			}
-			return formForLogging;
 		}
 	}
 

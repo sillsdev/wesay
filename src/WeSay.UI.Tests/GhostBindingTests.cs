@@ -5,7 +5,6 @@ using System.Drawing;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.Project;
-using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
 {
@@ -95,8 +94,7 @@ namespace WeSay.UI.Tests
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);
 			_papaNameWidget.Text = "John";
 			_ghostFirstNameWidget = new WeSayTextBox(writingSystem, null);
-			_binding = new GhostBinding<Child>(null,
-				_papa.Children,
+			_binding = new GhostBinding<Child>(_papa.Children,
 											   "First",
 											   writingSystem,
 											   _ghostFirstNameWidget);

@@ -3,11 +3,10 @@ using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation.Options;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
-using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.Tests
 {

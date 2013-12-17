@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
 using System.Xml;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
@@ -208,7 +207,7 @@ namespace WeSay.Project
 
 		public static string ApplicationRootDirectory
 		{
-			get { return DirectoryOfTheApplicationExecutable; }
+			get { return DirectoryOfExecutingAssembly; }
 		}
 
 		public string ApplicationTestDirectory
@@ -220,7 +219,7 @@ namespace WeSay.Project
 		{
 			string path;
 
-			path = DirectoryOfTheApplicationExecutable;
+			path = DirectoryOfExecutingAssembly;
 			char sep = Path.DirectorySeparatorChar;
 			int i = path.ToLower().LastIndexOf(sep + "output" + sep);
 
@@ -231,7 +230,7 @@ namespace WeSay.Project
 			return path;
 		}
 
-		public static string DirectoryOfTheApplicationExecutable
+		public static string DirectoryOfExecutingAssembly
 		{
 			get
 			{
@@ -239,16 +238,12 @@ namespace WeSay.Project
 				bool unitTesting = Assembly.GetEntryAssembly() == null;
 				if (unitTesting)
 				{
-				   path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
-				   path = Uri.UnescapeDataString(path);
+					path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
+					path = Uri.UnescapeDataString(path);
 				}
 				else
 				{
-				   //was suspect in WS1156, where it seemed to start looking in the,
-					//outlook express program folder after sending an email from wesay...
-					//so maybe it doesn't always mean *this* executing assembly?
-				  //  path = Assembly.GetExecutingAssembly().Location;
-					path = Application.ExecutablePath;
+					path = Assembly.GetExecutingAssembly().Location;
 				}
 				return Directory.GetParent(path).FullName;
 			}

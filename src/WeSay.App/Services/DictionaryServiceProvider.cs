@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading;
 using Palaso.Reporting;
 using Palaso.Services.Dictionary;
-using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
