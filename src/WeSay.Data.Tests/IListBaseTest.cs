@@ -25,17 +25,17 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetItemNegativeIndex()
 		{
-			T item;
-			Assert.Throws<ArgumentOutOfRangeException>(() =>  item = (T) _list[-1]);
+			T item = (T) _list[-1];
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetItemPastTheEnd()
 		{
-			T item;
-			Assert.Throws<ArgumentOutOfRangeException>(() =>  item =(T) _list[_list.Count]);
+			T item = (T) _list[_list.Count];
 		}
 
 		[Test]
@@ -238,7 +238,7 @@ namespace WeSay.Data.Tests
 		#endregion
 	}
 
-	public abstract class IListVariableSizeReadWriteBaseTest<T>: IListBaseTest<T>
+	public class IListVariableSizeReadWriteBaseTest<T>: IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()
@@ -259,15 +259,17 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemNegativeIndex()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => base.SetItemNegativeIndex());
+			base.SetItemNegativeIndex();
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemPastTheEnd()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => base.SetItemPastTheEnd());
+			base.SetItemPastTheEnd();
 		}
 
 		[Test]
@@ -289,15 +291,17 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void InsertNegativeIndex()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => base.InsertNegativeIndex());
+			base.InsertNegativeIndex();
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void InsertPastTheEnd()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => base.InsertPastTheEnd());
+			base.InsertPastTheEnd();
 		}
 
 		[Test]
@@ -313,15 +317,17 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void RemoveAtNegativeIndex()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => base.RemoveAtNegativeIndex());
+			base.RemoveAtNegativeIndex();
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void RemoveAtPastTheEnd()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => base.RemoveAtPastTheEnd());
+			base.RemoveAtPastTheEnd();
 		}
 	}
 
@@ -340,42 +346,42 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void SetItem()
 		{
 			base.SetItem();
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Add()
 		{
 			base.Add();
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Clear()
 		{
 			base.Clear();
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Insert()
 		{
 			base.Insert();
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Remove()
 		{
 			base.Remove();
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void RemoveAt()
 		{
 			base.RemoveAt();
@@ -403,45 +409,52 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemNegativeIndex()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>  base.SetItemNegativeIndex());
+			base.SetItemNegativeIndex();
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemPastTheEnd()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>  base.SetItemPastTheEnd());
+			base.SetItemPastTheEnd();
 		}
 
 		[Test]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Add()
 		{
-			Assert.Throws<NotSupportedException>(() =>  base.Add());
+			base.Add();
 		}
 
 		[Test]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Clear()
 		{
-			Assert.Throws<NotSupportedException>(() => base.Clear());
+			base.Clear();
 		}
 
 		[Test]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Insert()
 		{
-			Assert.Throws<NotSupportedException>(() => base.Insert());
+			base.Insert();
 		}
 
 		[Test]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Remove()
 		{
-			Assert.Throws<NotSupportedException>(() => base.Remove());
+			base.Remove();
 		}
 
 		[Test]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void RemoveAt()
 		{
-			Assert.Throws<NotSupportedException>(() => base.RemoveAt());
+			base.RemoveAt();
 		}
 	}
 
@@ -460,39 +473,45 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void SetItem()
 		{
-			Assert.Throws<NotSupportedException>(() => base.SetItem());
+			base.SetItem();
 		}
 
 		[Test]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Add()
 		{
-			Assert.Throws<NotSupportedException>(() => base.Add());
+			base.Add();
 		}
 
 		[Test]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Clear()
 		{
-			Assert.Throws<NotSupportedException>(() => base.Clear());
+			base.Clear();
 		}
 
 		[Test]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Insert()
 		{
-			Assert.Throws<NotSupportedException>(() => base.Insert());
+			base.Insert();
 		}
 
 		[Test]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Remove()
 		{
-			Assert.Throws<NotSupportedException>(() => base.Remove());
+			base.Remove();
 		}
 
 		[Test]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void RemoveAt()
 		{
-			Assert.Throws<NotSupportedException>(() => base.RemoveAt());
+			base.RemoveAt();
 		}
 	}
 

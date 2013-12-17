@@ -2,13 +2,12 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Data;
-using Palaso.DictionaryServices.Model;
-using WeSay.LexicalModel.Foundation;
+using WeSay.Data;
+using WeSay.Foundation;
+using WeSay.LexicalModel;
 using WeSay.UI;
-using WeSay.UI.TextBoxes;
 
-namespace WeSay.LexicalTools.GatherByWordList
+namespace WeSay.LexicalTools
 {
 	public partial class GatherWordListControl: UserControl
 	{
@@ -39,8 +38,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
 			_vernacularBox.MinimumSize = _boxForeignWord.Size;
 
-			_listViewOfWordsMatchingCurrentItem.WritingSystem = _task.WritingSystemUserIsTypingIn;
-			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.WritingSystemUserIsTypingIn.Font.GetHeight());
+			_listViewOfWordsMatchingCurrentItem.WritingSystem = _task.WordWritingSystem;
+			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.WordWritingSystem.Font.GetHeight());
 
 			UpdateStuff();
 
@@ -59,10 +58,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
 			}
-			var box = _vernacularBox.TextBoxes[0];
-			box.Focus();
-			if(box is WeSayTextBox)
-					((WeSayTextBox) box).SelectionStart = 1000; //go to end
+			_vernacularBox.TextBoxes[0].Focus();
+			_vernacularBox.TextBoxes[0].SelectionStart = 1000; //go to end
 		}
 
 		private void UpdateSourceWord()
@@ -98,8 +95,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				_congratulationsControl.Hide();
 				Debug.Assert(_vernacularBox.TextBoxes.Count == 1,
 							 "other code here (for now), assumes exactly one ws/text box");
-				_boxForeignWord.Text = _task.CurrentEllicitationForm;
-
+				_boxForeignWord.Text = _task.CurrentWordFromWordlist;
 				PopulateWordsMatchingCurrentItem();
 			}
 			UpdateEnabledStates();
@@ -154,7 +150,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				return;
 			}
-			_task.WordCollected(_vernacularBox.GetMultiText());
+			_task.WordCollected(_vernacularBox.MultiText);
 
 			//_listViewOfWordsMatchingCurrentItem.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";

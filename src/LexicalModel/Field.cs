@@ -5,9 +5,7 @@ using System.Diagnostics;
 using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using WeSay.LexicalModel.Foundation;
+using WeSay.Foundation;
 
 namespace WeSay.LexicalModel
 {
@@ -47,7 +45,6 @@ namespace WeSay.LexicalModel
 				CommonEnumerations.VisibilitySetting.Visible;
 
 		private string _optionsListFile;
-		private bool _isMultiParagraph;
 
 		/// <summary>
 		/// These are just for getting the strings right, using ToString(). In order
@@ -74,7 +71,7 @@ namespace WeSay.LexicalModel
 						) {}
 
 		public Field(string fieldName,
-					 string parentClassName,
+					 string className,
 					 IEnumerable<string> writingSystemIds,
 					 MultiplicityType multiplicity,
 					 string dataTypeName)
@@ -83,7 +80,7 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException();
 			}
-			ClassName = parentClassName;
+			ClassName = className;
 			Enabled = true; //without this lots of tests would need updating
 			Initialize(fieldName, dataTypeName, multiplicity, writingSystemIds);
 		}
@@ -114,11 +111,11 @@ namespace WeSay.LexicalModel
 		public static string MakeFieldNameSafe(string text)
 		{
 			//parentheses mess up our greps, don't really belong in xml names
-			char[] charsToRemove = new[]
-			{
-			   ' ', '(', ')', '*', ']', '[', '?', '{', '}', '\\', '<', '>',
-			   '+', '&'
-			};
+			char[] charsToRemove = new char[]
+									   {
+											   ' ', '(', ')', '*', ']', '[', '?', '{', '}', '\\', '<', '>',
+											   '+', '&'
+									   };
 			foreach (char c in charsToRemove)
 			{
 				text = text.Replace(c.ToString(), "");
@@ -245,7 +242,7 @@ namespace WeSay.LexicalModel
 				{
 					case null:
 						throw new ArgumentNullException();
-					case "PalasoDataObject":
+					case "WeSayDataObject":
 					case "LexEntry":
 					case "LexSense":
 					case "LexExampleSentence":
@@ -254,7 +251,7 @@ namespace WeSay.LexicalModel
 					default:
 						throw new ArgumentOutOfRangeException("value",
 															  value,
-															  "className must be PalasoDataObject, LexEntry, LexSense, or LexExampleSentence");
+															  "className must be WeSayDataObject, LexEntry, LexSense, or LexExampleSentence");
 				}
 			}
 		}
@@ -269,7 +266,7 @@ namespace WeSay.LexicalModel
 					return false;
 				}
 
-				if (PalasoDataObject.WellKnownProperties.Contains(FieldName))
+				if (WeSayDataObject.WellKnownProperties.Contains(FieldName))
 				{
 					return false;
 				}
@@ -326,11 +323,7 @@ namespace WeSay.LexicalModel
 		[ReflectorProperty("optionsListFile", Required = false)]
 		public string OptionsListFile
 		{
-			get { // this is about trying to get the win version to stop outputing <optionsListfile>(return)</optionsListFile>(whereas mono doesn't)
-				if(_optionsListFile==null)
-					return null;
-				return _optionsListFile.Trim();
-			}
+			get { return _optionsListFile; }
 			set { _optionsListFile = value; }
 		}
 
@@ -388,14 +381,6 @@ namespace WeSay.LexicalModel
 				}
 				_writingSystemIds = new List<string>(value);
 			}
-		}
-
-		/// <summary>
-		/// omit audio writing systems
-		/// </summary>
-		public IEnumerable<string> GetTextOnlyWritingSystemIds(WritingSystemCollection systems)
-		{
-			return systems.TrimToActualTextWritingSystemIds(_writingSystemIds);
 		}
 
 		[Browsable(false)]
@@ -522,13 +507,6 @@ namespace WeSay.LexicalModel
 			set { _isSpellCheckingEnabled = value; }
 		}
 
-		[ReflectorProperty("multiParagraph", Required = false)]
-		public bool IsMultiParagraph
-		{
-			get { return _isMultiParagraph; }
-			set { _isMultiParagraph = value;}
-		}
-
 		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)
 		{
@@ -587,7 +565,7 @@ namespace WeSay.LexicalModel
 			{
 				Debug.Assert(node.Name == "writingSystems");
 				Debug.Assert(node != null);
-				var l = new List<string>();
+				List<string> l = new List<string>();
 				foreach (XmlNode n in node.SelectNodes("id"))
 				{
 					l.Add(n.InnerText);
@@ -597,15 +575,13 @@ namespace WeSay.LexicalModel
 		}
 
 		#endregion
-
-
 	}
 
 	internal class ParentClassConverter: WeSayStringConverter
 	{
 		public override string[] ValidStrings
 		{
-			get { return new[] {"LexEntry", "LexSense", "LexExampleSentence"}; }
+			get { return new string[] {"LexEntry", "LexSense", "LexExampleSentence"}; }
 		}
 	}
 
@@ -613,7 +589,7 @@ namespace WeSay.LexicalModel
 	{
 		public override string[] ValidStrings
 		{
-			get { return new[] {"MultiText", "Option", "OptionCollection", "RelationToOneEntry"}; }
+			get { return new string[] {"MultiText", "Option", "OptionCollection", "RelationToOneEntry"}; }
 		}
 	}
 

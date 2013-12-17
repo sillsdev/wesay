@@ -2,8 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
-using WeSay.LexicalModel.Foundation;
-using WeSay.UI.TextBoxes;
+using WeSay.Foundation;
 
 namespace WeSay.UI.Tests
 {
@@ -59,23 +58,26 @@ namespace WeSay.UI.Tests
 
 #if (DEBUG)
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_RowLessThan0_throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => _control.MoveInsertionPoint(-1));
+			_control.MoveInsertionPoint(-1);
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_NoRows_throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => _control.MoveInsertionPoint(0));
+			_control.MoveInsertionPoint(0);
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_PastLastRow_throws()
 		{
 			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
 			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
-			Assert.Throws<ArgumentOutOfRangeException>(() => _control.MoveInsertionPoint(2));
+			_control.MoveInsertionPoint(2);
 		}
 #endif
 

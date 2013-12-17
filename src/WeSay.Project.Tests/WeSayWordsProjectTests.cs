@@ -1,19 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.AccessControl;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using LiftIO;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift.Options;
 using Palaso.Reporting;
-using Palaso.TestUtilities;
+using WeSay.Foundation;
+using WeSay.Foundation.Options;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
-using WeSay.Project.ConfigMigration;
-using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project.Tests
 {
@@ -25,7 +22,7 @@ namespace WeSay.Project.Tests
 		public void Setup()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
-			WeSayWordsProject.PreventBackupForTests = true;
+
 		}
 
 		[TearDown]
@@ -39,7 +36,7 @@ namespace WeSay.Project.Tests
 		{
 			using (TemporaryFolder f = new TemporaryFolder("OpeningLiftFile_MissingConfigFile_GivesMessage"))
 			{
-				using(TempLiftFile lift = new TempLiftFile(f, "", "0.13"))
+				using(TempLiftFile lift = new TempLiftFile(f, "", "0.12"))
 				{
 					using(WeSayWordsProject p = new WeSayWordsProject())
 					{
@@ -61,7 +58,7 @@ namespace WeSay.Project.Tests
 				using (File.OpenWrite(p.PathToLiftFile))
 				{
 					WritingSystem ws = project.WritingSystems["v"];
-					ws.ISO = "newIdForV";
+					ws.Id = "newIdForV";
 					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
 						Assert.IsFalse(project.MakeWritingSystemIdChange(ws, "v"));
@@ -80,7 +77,7 @@ namespace WeSay.Project.Tests
 				doc.Load(p.PathToLiftFile);
 				Assert.IsNotNull(doc.SelectNodes("//form[lang='v']"));
 				WritingSystem ws = project.WritingSystems["v"];
-				ws.ISO = "newIdForV";
+				ws.Id = "newIdForV";
 				Assert.IsTrue(project.MakeWritingSystemIdChange(ws, "v"));
 				doc.Load(p.PathToLiftFile);
 				Assert.IsNotNull(doc.SelectNodes("//form[lang='newIdForV']"));
@@ -108,30 +105,24 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void DefaultConfigFile_DoesntNeedMigrating()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting(""))
+			WeSayWordsProject p = new WeSayWordsProject();
+			XPathDocument defaultConfig = new XPathDocument(WeSayWordsProject.PathToDefaultConfig);
+			using (TempFile f = new TempFile())
 			{
-				XPathDocument defaultConfig = new XPathDocument(WeSayWordsProject.PathToDefaultConfig);
-				using (TempFile f = new TempFile())
-				{
-					using (var proj = p.CreateLoadedProject())
-					{
-						bool migrated = proj.MigrateConfigurationXmlIfNeeded();
-						Assert.IsFalse(migrated, "The default config file should never need migrating");
-					}
-				}
+				bool migrated = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(defaultConfig, f.Path);
+				Assert.IsFalse(migrated, "The default config file should never need migrating");
 			}
 		}
 
 		[Test]
+		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void WeSayDirNotInValidBasilDir()
 		{
-			using (var dir = new Palaso.TestUtilities.TemporaryFolder("WeSayDirNotInValidBasilDir"))
-			{
-				string weSayDir = dir.FolderPath; // MakeDir(experimentDir, "WeSay");
-				string wordsPath = Path.Combine(weSayDir, "AAA.words");
-				File.Create(wordsPath).Close();
-				Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() => TryLoading(wordsPath, dir.FolderPath));
-			}
+			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
+			string weSayDir = experimentDir; // MakeDir(experimentDir, "WeSay");
+			string wordsPath = Path.Combine(weSayDir, "AAA.words");
+			File.Create(wordsPath).Close();
+			TryLoading(wordsPath, experimentDir);
 		}
 
 		[Test]
@@ -139,13 +130,11 @@ namespace WeSay.Project.Tests
 		{
 			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting(""))
 			{
+			   // WeSayWordsProject p = CreateAndLoad();
 				Field f = new Field();
 				f.OptionsListFile = "PartsOfSpeech.xml";
-				using (var proj = p.CreateLoadedProject())
-				{
-					OptionsList list = proj.GetOptionsList(f, false);
-					Assert.IsTrue(list.Options.Count > 2);
-				}
+				OptionsList list = p.CreateLoadedProject().GetOptionsList(f, false);
+				Assert.IsTrue(list.Options.Count > 2);
 			}
 		}
 
@@ -156,11 +145,9 @@ namespace WeSay.Project.Tests
 			{
 				Field f = new Field();
 				f.OptionsListFile = "PartsOfSpeech.xml";
-				using (WeSayWordsProject project = p.CreateLoadedProject())
-				{
-					Dictionary<string, string> dict = project.GetFieldToOptionListNameDictionary();
-					Assert.AreEqual("PartsOfSpeech", dict[LexSense.WellKnownProperties.PartOfSpeech]);
-				}
+				WeSayWordsProject project = p.CreateLoadedProject();
+				Dictionary<string, string> dict = project.GetFieldToOptionListNameDictionary();
+				Assert.AreEqual("PartsOfSpeech", dict[LexSense.WellKnownProperties.PartOfSpeech]);
 			}
 		}
 //
@@ -229,10 +216,10 @@ namespace WeSay.Project.Tests
 			{
 				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
 				File.WriteAllText(configPath,
-								  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
+								  "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
 				XPathDocument doc = new XPathDocument(configPath);
 				string outputPath = Path.Combine(projectDir.PathToDirectory, Path.GetTempFileName());
-				new ConfigurationMigrator().MigrateConfigurationXmlIfNeeded(doc, outputPath);
+				WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, outputPath);
 				XmlDocument docFile = new XmlDocument();
 				docFile.Load(outputPath);
 				XmlNode node = docFile.SelectSingleNode("configuration");
@@ -268,36 +255,6 @@ namespace WeSay.Project.Tests
 				p.Save();
 				f.FieldName = newName;
 				p.MakeFieldNameChange(f, oldName);
-			}
-		}
-
-		[Test]
-		public void WeSayConfigFileIsToNew_Throws()
-		{
-
-			using (ProjectDirectorySetupForTesting projectDir = new ProjectDirectorySetupForTesting(""))
-			{
-				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
-				const int version = WeSayWordsProject.CurrentWeSayConfigFileVersion + 1;
-				File.WriteAllText(configPath,
-								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
-				XPathDocument doc = new XPathDocument(configPath);
-				Assert.Throws<ApplicationException>(() => WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(doc));
-			}
-		}
-
-		[Test]
-		public void WeSayConfigFileIsToCurrent_DoesNotThrow()
-		{
-
-			using (ProjectDirectorySetupForTesting projectDir = new ProjectDirectorySetupForTesting(""))
-			{
-				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
-				const int version = WeSayWordsProject.CurrentWeSayConfigFileVersion;
-				File.WriteAllText(configPath,
-								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.LexicalTools.Dashboard.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
-				XPathDocument doc = new XPathDocument(configPath);
-				WeSayWordsProject.CheckIfConfigFileVersionIsTooNew(doc);
 			}
 		}
 
@@ -388,67 +345,6 @@ namespace WeSay.Project.Tests
 					System.Environment.CurrentDirectory = oldWorkingDir;
 				}
 
-			}
-		}
-
-		/// <summary>
-		/// regression from WS-1395
-		/// </summary>
-		[Test]
-		public void GetLexEntryRepository_LiftIsBad_NotfiesUser()
-		{
-			//here the lang attribute is missing (as it was from a user's lexique pro output)
-
-			using (var projectDir =
-				new WeSay.Project.Tests.ProjectDirectorySetupForTesting(
-					@"
-				<entry id='x'>
-					<lexical-unit>
-					  <form>
-						<text>test</text>
-					  </form>
-					</lexical-unit>
-				</entry>"))
-			{
-
-				var project = projectDir.CreateLoadedProject();
-				var gotException = false;
-				//we actually get a dialog box *and* and exception (the later, rather than, say, null, because AutoFac doesn't let use return null)
-				using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
-				{
-					try
-					{
-						// This will leak an application exception due to the Dispose not being called.
-						// due to the constructor throw.
-						project.GetLexEntryRepository();
-					}
-					catch(LiftFormatException)
-					{
-						 gotException = true;
-					}
-				}
-				Assert.IsTrue(gotException);
-			}
-		}
-
-		[Test]
-		public void LoadProject_EmptyLanguageInUserConfig_ReadsDefaultEn()
-		{
-			string config = @"<?xml version='1.0' encoding='utf-8'?>
-<configuration version='2'>
-  <backupPlan />
-  <uiOptions>
-	<language></language>
-	<labelFontName>Angsana New</labelFontName>
-	<labelFontSizeInPoints>18</labelFontSizeInPoints>
-  </uiOptions>
-</configuration>".Replace("'", "\"");
-
-			using (var projectDir = new ProjectDirectorySetupForTesting(""))
-			{
-				File.WriteAllText(projectDir.PathToUserConfigFile, config);
-				var project = projectDir.CreateLoadedProject();
-				Assert.That(project.UiOptions.Language, Is.EqualTo("en"));
 			}
 		}
 	}
