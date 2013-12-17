@@ -1,17 +1,14 @@
 using System.Windows.Forms;
-using Palaso.Reporting;
 
 namespace WeSay.ConfigTool
 {
 	public class ConfigurationControlBase: UserControl
 	{
 		private readonly string _header;
-		protected readonly ILogger _logger;
 
-		public ConfigurationControlBase(string header, ILogger logger)
+		public ConfigurationControlBase(string header)
 		{
 			_header = header;
-			_logger = logger;
 			SetStyle(ControlStyles.ResizeRedraw, true);
 		}
 

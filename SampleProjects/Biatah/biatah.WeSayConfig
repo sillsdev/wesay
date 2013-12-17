@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<configuration version="7">
-  <uiOptions uiFont="Microsoft Sans Serif" uiFontSize="8.25">
-  </uiOptions>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration version="2">
+  <uiOptions uiFont="Microsoft Sans Serif" uiFontSize="8.25" />
   <components>
 	<viewTemplate>
 	  <fields>
@@ -12,8 +11,7 @@
 		  <enabled>True</enabled>
 		  <fieldName>EntryLexicalForm</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile>
-		  </optionsListFile>
+		  <optionsListFile />
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>bth</id>
@@ -64,8 +62,7 @@
 		  <enabled>True</enabled>
 		  <fieldName>ExampleSentence</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile>
-		  </optionsListFile>
+		  <optionsListFile />
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>bth</id>
@@ -88,7 +85,7 @@
 		  <dataType>OptionCollection</dataType>
 		  <displayName>Sem Dom</displayName>
 		  <enabled>True</enabled>
-		  <fieldName>semantic-domain-ddp4</fieldName>
+		  <fieldName>SemanticDomainDdp4</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <optionsListFile>Ddp4.xml</optionsListFile>
 		  <visibility>NormallyHidden</visibility>
@@ -103,8 +100,7 @@
 		  <enabled>True</enabled>
 		  <fieldName>BaseForm</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile>
-		  </optionsListFile>
+		  <optionsListFile />
 		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
 			<id>bth</id>
@@ -135,7 +131,7 @@
 		  </writingSystems>
 		</field>
 		<field>
-		  <className>PalasoDataObject</className>
+		  <className>WeSayDataObject</className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Note</displayName>
 		  <enabled>True</enabled>
@@ -163,58 +159,101 @@
 	</viewTemplate>
   </components>
   <tasks>
-	<task taskName="Dashboard" visible="true">
+	<task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true" visible="true">
+	  <entries ref="All Entries" />
+	  <currentTaskProvider ref="Current Task Provider" />
+	  <label UseInConstructor="false">Home</label>
+	  <description UseInConstructor="false">This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one.</description>
+	  <optional UseInConstructor="false">false</optional>
 	</task>
-	<task taskName="Dictionary" visible="true">
+	<task id="Dictionary" class="WeSay.LexicalTools.DictionaryTask" assembly="LexicalTools" default="true" visible="true">
+	  <entries ref="All Entries" />
+	  <viewTemplate ref="Default View Template" />
+	  <label UseInConstructor="false">Dictionary</label>
+	  <description UseInConstructor="false">This task allows advanced users to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay.</description>
 	</task>
-	<task taskName="AddMissingInfo" visible="true">
-	  <field>definition</field>
-	  <label>Meanings</label>
+	<task id="AddMeanings" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" default="false" visible="true">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>definition</field>
+	  </filter>
+	  <label>Add Meanings</label>
 	  <description>Add meanings to entries where they are missing.</description>
-	  <readOnly>semantic-domain-ddp4</readOnly>
-	  <showFields>definition</showFields>
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>definition</showfields>
+	  <readOnly>SemanticDomainDdp4</readOnly>
 	</task>
-	<task taskName="AddMissingInfo" visible="true">
-	  <field>ExampleSentence</field>
-	  <label>Example Sentences</label>
+	<task id="AddExamples" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="true">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>ExampleSentence</field>
+	  </filter>
+	  <label>Add Examples</label>
 	  <description>Add example sentences to entries where they are missing.</description>
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>ExampleSentence</showfields>
 	  <readOnly>definition</readOnly>
-	  <showFields>ExampleSentence</showFields>
 	</task>
-	<task taskName="GatherWordsBySemanticDomains" visible="true">
+	<task id="Gather Words By Domain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools" default="true" visible="true">
+	  <entries ref="All Entries" />
+	  <label>Collect Words By Semantic Domain</label>
+	  <description>Collect new words organized by semantic domains and questions about those domains.</description>
 	  <semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName>
+	  <viewTemplate ref="Default View Template" />
+	  <semanticDomainFieldName>SemanticDomainDdp4</semanticDomainFieldName>
 	</task>
-	<task taskName="AddMissingInfo" visible="false">
-	  <field>POS</field>
-	  <label>Parts of Speech</label>
+	<task id="Actions" class="WeSay.CommonTools.ActionsControl" assembly="CommonTools" default="true" visible="true">
+	  <label UseInConstructor="false">Actions</label>
+	  <description UseInConstructor="false">Perform actions on the project as a whole. For example backup, produce a report, print out a simple dictionary, etc.</description>
+	</task>
+	<task id="AddPartOfSpeech" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>POS</field>
+	  </filter>
+	  <label>Add Parts of Speech</label>
 	  <description>Add a Part Of Speech to senses where they are missing.</description>
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>POS</showfields>
 	  <readOnly>definition, ExampleSentence</readOnly>
-	  <showFields>POS</showFields>
 	</task>
-	<task taskName="AddMissingInfo" visible="false">
-	  <field>BaseForm</field>
-	  <label>Base Forms</label>
+	<task id="AddBaseForms" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>BaseForm</field>
+	  </filter>
+	  <label>Add Base Forms</label>
 	  <description>Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries.</description>
-	  <showFields>BaseForm</showFields>
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>BaseForm</showfields>
 	</task>
-	<task taskName="GatherWordList" visible="true">
+	<task id="Gather Words (D)" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="true">
+	  <entries ref="All Entries" />
+	  <label>Collect Word List (D)</label>
+	  <description>Collect new words by translating from words in another language. This is a list of 1700 words from John Duerksen.</description>
 	  <wordListFileName>DuerksenWords.txt</wordListFileName>
 	  <wordListWritingSystemId>en</wordListWritingSystemId>
+	  <viewTemplate ref="Default View Template" />
 	</task>
-	<task taskName="GatherWordList" visible="false">
+	<task id="Gather Words (PNG)" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="false">
+	  <entries ref="All Entries" />
+	  <label>Collect Word List (PNG)</label>
+	  <description>Collect new words by translating from words in another language. This is a list of around 900 words and phrases from PNG.</description>
 	  <wordListFileName>PNGWords.txt</wordListFileName>
 	  <wordListWritingSystemId>en</wordListWritingSystemId>
+	  <viewTemplate ref="Default View Template" />
 	</task>
   </tasks>
   <addins>
-	<addin id="ManualBackupToDevice" showInWeSay="True">
-	</addin>
-	<addin id="Html Exporter" showInWeSay="True">
-	</addin>
+	<addin id="ManualBackupToDevice" showInWeSay="True" />
+	<addin id="Html Exporter" showInWeSay="True" />
 	<addin id="Export To SFM" showInWeSay="False">
 	  <SfmTransformSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-		<SfmTagConversions>
-		</SfmTagConversions>
+		<SfmTagConversions/>
 		<EnglishLanguageWritingSystemId>en</EnglishLanguageWritingSystemId>
 		<VernacularLanguageWritingSystemId>bth</VernacularLanguageWritingSystemId>
 	  </SfmTransformSettings>

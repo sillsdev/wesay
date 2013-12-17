@@ -15,11 +15,7 @@ namespace WeSay.Project
 			var tasks = new List<ITask>();
 			foreach (ITaskConfiguration config in taskConfigurations)
 			{
-#if MONO
-				if (config.IsVisible && config.IsAvailable && config.TaskName != "NotesBrowser")
-#else
-				if (config.IsVisible && config.IsAvailable)
-#endif
+				if (config.IsVisible)
 				{
 					tasks.Add(CreateTask(context, config));
 				}

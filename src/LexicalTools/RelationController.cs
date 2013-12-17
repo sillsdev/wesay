@@ -2,14 +2,10 @@ using System;
 using System.Collections;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Data;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.UiBindings;
 using Palaso.Reporting;
-using Palaso.Text;
+using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
@@ -22,12 +18,12 @@ namespace WeSay.LexicalTools
 		private readonly Field _field;
 		private readonly EventHandler<CurrentItemEventArgs> _focusDelegate;
 		private readonly LexRelationType _relationType;
-		private readonly PalasoDataObject _relationParent;
+		private readonly WeSayDataObject _relationParent;
 		private SimpleBinding<string> _binding;
 		private Control _control;
 		private ResultSet<LexEntry> _resultSet;
 
-		private RelationController(PalasoDataObject relationParent,
+		private RelationController(WeSayDataObject relationParent,
 								   LexRelationType relationType,
 								   Field field,
 								   LexEntryRepository lexEntryRepository,
@@ -47,7 +43,7 @@ namespace WeSay.LexicalTools
 			get { return _control; }
 		}
 
-		public static Control CreateWidget(PalasoDataObject relationParent,
+		public static Control CreateWidget(WeSayDataObject relationParent,
 										   LexRelationType relationType,
 										   Field field,
 										   LexEntryRepository lexEntryRepository,
@@ -57,7 +53,7 @@ namespace WeSay.LexicalTools
 			{
 				throw new ConfigurationException("The field {0} has no writing systems enabled.", field.FieldName);
 			}
-			var controller = new RelationController(relationParent,
+			RelationController controller = new RelationController(relationParent,
 																   relationType,
 																   field,
 																   lexEntryRepository,
@@ -90,7 +86,7 @@ namespace WeSay.LexicalTools
 			//This satisfies Rene's request of WS-419
 			if (_field.FieldName == "BaseForm")
 			{
-				newGuy.SetFlag(LexEntry.WellKnownProperties.FlagSkipBaseform);
+				newGuy.SetFlag("flag_skip_BaseForm");
 			}
 			return newGuy;
 		}
@@ -99,8 +95,8 @@ namespace WeSay.LexicalTools
 		{
 			//relations come to us in collections, even when they are atomic
 			// this will get a collection if we already have some for this field, or else
-			// it will make one. If unused, it will be cleaned up at the right time by the PalasoDataObject parent.
-			var targetRelationCollection =
+			// it will make one. If unused, it will be cleaned up at the right time by the WeSayDataObject parent.
+			LexRelationCollection targetRelationCollection =
 					_relationParent.GetOrCreateProperty<LexRelationCollection>(_field.FieldName);
 
 			switch (_relationType.Multiplicity)
@@ -114,7 +110,7 @@ namespace WeSay.LexicalTools
 					}
 					else
 					{
-						//we have to make one so we can show the control. It will be cleaned up, if not used, by the PalasoDataObject target
+						//we have to make one so we can show the control. It will be cleaned up, if not used, by the WeSayDataObject target
 						relation = new LexRelation(_field.FieldName, string.Empty, _relationParent);
 						targetRelationCollection.Relations.Add(relation);
 					}
@@ -152,10 +148,7 @@ namespace WeSay.LexicalTools
 			picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
 			picker.Box.Items = recordTokenList;
-			if (!String.IsNullOrEmpty(relation.TargetId))
-			{
-				picker.Box.SelectedItem = GetRecordTokenFromLexEntry(_lexEntryRepository.GetLexEntryWithMatchingId(relation.TargetId));
-			}
+			picker.Box.SelectedItem = GetRecordTokenFromLexEntry(relation.GetTarget(_lexEntryRepository));
 
 			picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
 			_control = picker;
@@ -163,7 +156,7 @@ namespace WeSay.LexicalTools
 
 		private WritingSystem GetWritingSystemFromField()
 		{
-			string firstWsId = _field.WritingSystemIds[0];
+			string firstWsId = this._field.WritingSystemIds[0];
 			return BasilProject.Project.WritingSystems[firstWsId];
 		}
 
@@ -187,7 +180,7 @@ namespace WeSay.LexicalTools
 
 		private RecordToken<LexEntry> GetRecordTokenFromTargetId(string s)
 		{
-			if (string.IsNullOrEmpty(s))
+			if (s == null)
 			{
 				return null;
 			}
@@ -207,9 +200,9 @@ namespace WeSay.LexicalTools
 		private AutoCompleteWithCreationBox<T, string> CreatePicker<T>(LexRelation relation)
 				where T : class
 		{
-			var picker = new AutoCompleteWithCreationBox<T, string> (
-				CommonEnumerations.VisibilitySetting.Visible
-			);
+			AutoCompleteWithCreationBox<T, string> picker =
+					new AutoCompleteWithCreationBox<T, string>(
+							CommonEnumerations.VisibilitySetting.Visible);
 			picker.Box.Tag = relation;
 			//                    switch (type.TargetType)
 			//                    {
@@ -269,7 +262,7 @@ namespace WeSay.LexicalTools
 							delegate(RecordToken<LexEntry> token) { return (string) token["Form"] == form; });
 		}
 
-		//        #region Nested type: PalasoDataObjectLabelAdaptor
+		//        #region Nested type: WeSayDataObjectLabelAdaptor
 		//
 		//        private class PairStringLexEntryIdLabelAdaptor : IDisplayStringAdaptor
 		//        {

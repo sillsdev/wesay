@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
-using Palaso.Data;
 
 namespace WeSay.Data
 {
-
 	public class Query : IQuery<object>
 	{
 		[Obsolete]
@@ -541,5 +539,4 @@ namespace WeSay.Data
 		}
 
 	}
-
 }

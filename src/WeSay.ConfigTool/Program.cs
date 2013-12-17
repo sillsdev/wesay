@@ -27,16 +27,28 @@ namespace WeSay.ConfigTool
 				Settings.Default.Save();
 			}
 
-			UsageReporter.AppReportingSettings = Settings.Default.Reporting;
 			UsageReporter.AppNameToUseInDialogs = "WeSay Configuration Tool";
 			UsageReporter.AppNameToUseInReporting = "WeSayConfig";
 			UsageReporter.RecordLaunch();
-			Settings.Default.Save();
 			UsageReporter.DoTrivialUsageReport("usage@wesay.org",
 											   "Thank you for letting us know you are using WeSay.",
 											   new int[] {1, 5, 20, 40, 60, 80, 100});
 
 			Application.Run(new ConfigurationWindow(args));
+
+#if !DEBUG
+			try
+			{
+#endif
+			Logger.WriteEvent("App Exiting Normally.");
+			Logger.ShutDown();
+#if !DEBUG
+			}
+			catch (Exception err)
+			{
+			 // we don't know what caused ws-596, but it isn't worth crashing over
+			}
+#endif
 		}
 
 		private static void SetupErrorHandling()

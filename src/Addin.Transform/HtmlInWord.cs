@@ -4,12 +4,11 @@ using System.Drawing;
 using System.Windows.Forms;
 using Mono.Addins;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i18n;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 
 namespace Addin.Transform
 {
-#if REMOVED // after several months, we can really remove this file
 	[Extension]
 	public class HtmlInWord: HtmlTransformer
 	{
@@ -58,10 +57,9 @@ namespace Addin.Transform
 				}
 				catch (Exception e)
 				{
-					ErrorReport.NotifyUserOfProblem(e.Message);
+					ErrorReport.ReportNonFatalMessage(e.Message);
 				}
 			}
 		}
 	}
-#endif
 }

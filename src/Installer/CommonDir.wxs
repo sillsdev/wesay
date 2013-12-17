@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Fragment>
+	<Fragment>
 	<DirectoryRef Id='ProgramDir'>
 	  <Directory Id="common" Name="common">
 
@@ -8,50 +8,24 @@
 		<Component Id="PartsOfSpeech.xml" Guid="{6B734BDE-1702-418D-93BC-40A7F310B14F}">
 		  <File Id="PartsOfSpeech.xml" Name="PartsOfSpeech.xml" KeyPath="yes" Source="..\..\common\PartsOfSpeech.xml" />
 		</Component>
-
-		<Directory Id="wordpacks" Name="wordpacks">
-		  <Directory Id="SILCAWL" Name="SILCAWL">
-			<Component Id="SILCAWL.lift" Guid="{51F4A62A-A216-43bf-820B-3683F64FBA19}">
-			  <File Id="SILCAWL.lift" Name="SILCAWL.lift" KeyPath="yes" Source="..\..\common\wordpacks\SILCAWL\SILCAWL.lift" />
-			</Component>
-		  </Directory>
-		  <Directory Id="SILCAWL_MozambiqueAddendum" Name="SILCAWL_MozambiqueAddendum">
-			<Component Id="SILCAWL_MozambiqueAddendum.lift" Guid="{A6664CDF-8E27-487f-84FE-594675B7F112}">
-			  <File Id="SILCAWL_MozambiqueAddendum.lift" Name="SILCAWL_MozambiqueAddendum.lift" KeyPath="yes" Source="..\..\common\wordpacks\SILCAWL-MozambiqueAddendum\SILCAWL-MozambiqueAddendum.lift" />
-			</Component>
-		  </Directory>
-		</Directory>
-
+		<Component Id="sampleWordList.txt" Guid="{0F09882D-8D30-49B9-90F6-61D20D17E14F}">
+		  <File Id="sampleWordList.txt" Name="sampleWordList.txt" KeyPath="yes" Source="..\..\common\sampleWordList.txt" />
+		</Component>
+		<Component Id="DuerksenWords.txt" Guid="{51F4A62A-A216-43bf-820B-3683F64FBA19}">
+		  <File Id="DuerksenWords.txt" Name="DuerksenWords.txt" KeyPath="yes" Source="..\..\common\DuerksenWords.txt" />
+		</Component>
+		<Component Id="PNGWords.txt" Guid="{EADBA21D-B3ED-4626-A363-301EA5D6A390}">
+		  <File Id="PNGWords.txt" Name="PNGWords.txt" KeyPath="yes" Source="..\..\common\PNGWords.txt" />
+		</Component>
 		<Component Id="SemanticDomains.xml" Guid="{0D314BE5-ABB3-4AB9-A698-F94FFA8B250C}">
 		  <File Id="SemanticDomains.xml" Name="SemanticDomains.xml" KeyPath="yes" Source="..\..\common\SemanticDomains.xml" />
 		</Component>
 		<Component Id="default.WeSayConfig" Guid="{4D0210A0-095D-48DE-9399-4074A97864A4}">
 		  <File Id="default.WeSayConfig" Name="default.WeSayConfig" KeyPath="yes" Source="..\..\common\default.WeSayConfig" />
 		</Component>
-
-		<Directory Id="WritingSystems" Name="WritingSystems">
-		<Component Id="WrtingSystems_en.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BDF}">
-		  <File Id="WrtingSystems_en.ldml" Name="WrtingSystems_en.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\en.ldml" />
+		<Component Id="CommonWritingSystemPrefs.xml" Guid="{2D64A565-57BC-4D0C-BAAF-13AB5A686E9B}">
+		  <File Id="CommonwritingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="..\..\common\writingSystemPrefs.xml" />
 		</Component>
-		<Component Id="WrtingSystems_es.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD1}">
-		  <File Id="WrtingSystems_es.ldml" Name="WrtingSystems_es.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\es.ldml" />
-		</Component>
-		<Component Id="WrtingSystems_fr.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD2}">
-		  <File Id="WrtingSystems_fr.ldml" Name="WrtingSystems_fr.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\fr.ldml" />
-		</Component>
-		<Component Id="WrtingSystems_id.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD3}">
-		  <File Id="WrtingSystems_id.ldml" Name="WrtingSystems_id.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\id.ldml" />
-		</Component>
-		<Component Id="WrtingSystems_th.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD4}">
-		  <File Id="WrtingSystems_th.ldml" Name="WrtingSystems_th.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\th.ldml" />
-		</Component>
-		<Component Id="WrtingSystems_tpi.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD5}">
-		  <File Id="WrtingSystems_tpi.ldml" Name="WrtingSystems_tpi.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\tpi.ldml" />
-		</Component>
-		<Component Id="WrtingSystems_v.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BD6}">
-		  <File Id="WrtingSystems_v.ldml" Name="WrtingSystems_v.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\v.ldml" />
-		</Component>
-		</Directory>
 
 		<Component Id="Ddp4.xml" Guid="{0036EBE1-93B6-463e-A089-8DB1201E61A6}">
 		  <File Id="Ddp4.xml" Name="Ddp4.xml" KeyPath="yes" Source="..\..\common\Ddp4.xml" />
@@ -65,13 +39,6 @@
 		<Component Id="Ddp4Questions_id.xml" Guid="{242A15FA-A451-43e5-B91B-B7977BADA5EE}">
 		  <File Id="Ddp4Questions_id.xml" Name="Ddp4Questions-id.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-id.xml" />
 		</Component>
-		<Component Id="Ddp4Questions_th.xml" Guid="{06E02A57-BE56-4113-8D9D-975EB15D1FA5}">
-		  <File Id="Ddp4Questions_th.xml" Name="Ddp4Questions-th.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-th.xml" />
-		</Component>
-
-		<Component Id="ArtOfReadingIndexV3_en.txt" Guid="{34302393-949D-42e8-BEE8-8C52B03F571A}">
-		  <File Id="ArtOfReadingIndexV3_en.txt" Name="ArtOfReadingIndexV3_en.txt" KeyPath="yes" Source="..\..\common\ArtOfReadingIndexV3_en.txt" />
-		</Component>
 
 	  </Directory>
 	</DirectoryRef>
@@ -79,18 +46,12 @@
 
 	<ComponentGroup Id="defaultFiles">
 	  <ComponentRef Id="PartsOfSpeech.xml" />
-	  <ComponentRef Id="SILCAWL.lift" />
-	  <ComponentRef Id="SILCAWL_MozambiqueAddendum.lift" />
+	  <ComponentRef Id="sampleWordList.txt" />
+	  <ComponentRef Id="DuerksenWords.txt" />
+	  <ComponentRef Id="PNGWords.txt" />
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="default.WeSayConfig" />
-	  <ComponentRef Id="ArtOfReadingIndexV3_en.txt"/>
-	  <ComponentRef Id="WrtingSystems_en.ldml" />
-	  <ComponentRef Id="WrtingSystems_es.ldml" />
-	  <ComponentRef Id="WrtingSystems_fr.ldml" />
-	  <ComponentRef Id="WrtingSystems_id.ldml" />
-	  <ComponentRef Id="WrtingSystems_th.ldml" />
-	  <ComponentRef Id="WrtingSystems_tpi.ldml" />
-	  <ComponentRef Id="WrtingSystems_v.ldml" />
+	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
 	</ComponentGroup>
 
 	<ComponentGroup Id="ddpStuff">
@@ -98,7 +59,6 @@
 	  <ComponentRef Id="Ddp4Questions_en.xml"/>
 	  <ComponentRef Id="Ddp4Questions_fr.xml"/>
 	  <ComponentRef Id="Ddp4Questions_id.xml"/>
-	  <ComponentRef Id="Ddp4Questions_th.xml"/>
 	</ComponentGroup>
 
   </Fragment>

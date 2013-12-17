@@ -113,6 +113,7 @@ namespace WeSay.ConfigTool
 			this._wsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
+			this._wsListBox.FormattingEnabled = true;
 			this._wsListBox.Location = new System.Drawing.Point(2, 11);
 			this._wsListBox.Name = "_wsListBox";
 			this._wsListBox.Size = new System.Drawing.Size(210, 394);
@@ -150,8 +151,7 @@ namespace WeSay.ConfigTool
 			this._basicControl.Size = new System.Drawing.Size(541, 403);
 			this._basicControl.TabIndex = 0;
 			this._basicControl.WritingSystemCollection = null;
-			this._basicControl.WritingSystemIdChangedEvent += this.OnWritingSystemIdChanged;
-			this._basicControl.IsAudioChanged += new System.EventHandler(this.OnIsAudioChanged);
+			this._basicControl.WritingSystemIdChanged += new System.EventHandler(this._basicControl_DisplayPropertiesChanged);
 			//
 			// _fontsPage
 			//

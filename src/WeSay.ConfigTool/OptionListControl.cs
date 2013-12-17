@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
-using Palaso.i18n;
-using Palaso.Lift;
-using Palaso.Lift.Options;
 using Palaso.Reporting;
+using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.Project;
-using WeSay.UI.TextBoxes;
+using WeSay.UI;
 
 namespace WeSay.ConfigTool
 {
@@ -23,8 +21,7 @@ namespace WeSay.ConfigTool
 		private readonly List<Option> _newlyCreatedOptions = new List<Option>();
 		private bool _currentListWasModified;
 
-		public OptionListControl(ILogger logger)
-			: base("set up choices for option fields", logger)
+		public OptionListControl(): base("set up choices for option fields")
 		{
 			InitializeComponent();
 			VisibleChanged += OptionListControl_VisibleChanged;
@@ -53,11 +50,10 @@ namespace WeSay.ConfigTool
 				try
 				{
 					_currentList.SaveToFile(path);
-					_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Edited list for {0} field", "Checkin Description in WeSay Config Tool used when you edit an option list."), _currentField.Key);
 				}
 				catch (Exception error)
 				{
-					ErrorReport.NotifyUserOfProblem(
+					ErrorReport.ReportNonFatalMessage(
 							"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
 							path,
 							error.Message);
@@ -138,7 +134,7 @@ namespace WeSay.ConfigTool
 			}
 			catch (ConfigurationException e)
 			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 		}
 
@@ -182,19 +178,18 @@ namespace WeSay.ConfigTool
 				_currentOption)
 			{
 				SaveEditsToCurrentItem();
-				var proxy = (Option.OptionDisplayProxy) _listBox.SelectedItem;
+				Option.OptionDisplayProxy proxy = (Option.OptionDisplayProxy) _listBox.SelectedItem;
 				splitContainer1.Panel2.Controls.Remove(_nameMultiTextControl);
 
 				_currentOption = proxy.UnderlyingOption;
-				var m = new MultiTextControl(
-					_currentField.WritingSystemIds,
-					_currentOption.Name,
-					_currentField.FieldName,
-					false,
-					BasilProject.Project.WritingSystems,
-					CommonEnumerations.VisibilitySetting.Visible,
-					_currentField.IsSpellCheckingEnabled, false, null
-				);
+				MultiTextControl m = new MultiTextControl(_currentField.WritingSystemIds,
+														  _currentOption.Name,
+														  _currentField.FieldName,
+														  false,
+														  BasilProject.Project.WritingSystems,
+														  CommonEnumerations.VisibilitySetting.
+																  Visible,
+														  _currentField.IsSpellCheckingEnabled);
 				m.SizeChanged += OnNameControlSizeChanged;
 				m.Bounds = _nameMultiTextControl.Bounds;
 				m.Top = _nameLabel.Top;
@@ -208,14 +203,11 @@ namespace WeSay.ConfigTool
 				_keyText.Text = proxy.UnderlyingOption.Key;
 				_keyText.TextChanged += OnKeyTextChanged;
 
-				var justTextBoxes = from z in m.TextBoxes where z is WeSayTextBox select z;
-				foreach (WeSayTextBox box in justTextBoxes)
+				foreach (WeSayTextBox box in m.TextBoxes)
 				{
-					var binding = new TextBinding(
-						_currentOption.Name,
-						box.WritingSystem.Id,
-						box
-					);
+					TextBinding binding = new TextBinding(_currentOption.Name,
+														  box.WritingSystem.Id,
+														  box);
 					//hooking on to this is more reliable, sequence-wise, than directly wiring to m.TextChanged
 					binding.DataTarget.PropertyChanged += DataTarget_PropertyChanged;
 				}
@@ -259,24 +251,19 @@ namespace WeSay.ConfigTool
 
 		private void _btnAdd_Click(object sender, EventArgs e)
 		{
-			_listBox.Focus();   //This is a hack to get the TextBinding to update by losing focus :-(
-			var newOption = new Option();
+			Option newOption = new Option();
 			_newlyCreatedOptions.Add(newOption);
 			_currentList.Options.Add(newOption);
 
 			int index = _listBox.Items.Add(newOption.GetDisplayProxy(PreferredWritingSystem));
 			_listBox.SelectedIndex = index;
 			UpdateDisplay();
-			if (_nameMultiTextControl.TextBoxes.Count == 0)
-			{
-			}
 			_nameMultiTextControl.TextBoxes[0].Focus();
 			UserModifiedList();
 		}
 
 		private void _btnDelete_Click(object sender, EventArgs e)
 		{
-			_listBox.Focus();   //This is a hack to get the TextBinding to update by losing focus :-(
 			_currentList.Options.Remove(_currentOption);
 			_listBox.Items.Remove(_listBox.SelectedItem);
 
@@ -295,12 +282,12 @@ namespace WeSay.ConfigTool
 
 		private void UpdateDisplay()
 		{
-			_btnDelete.Enabled = _listBox.SelectedItem != null && _listBox.Items.Count>1;
+			_btnDelete.Enabled = _listBox.SelectedItem != null;
 			_keyText.Enabled = _newlyCreatedOptions.Contains(_currentOption);
 			_keyText.BackColor = SystemColors.Window;
 			_nameMultiTextControl.Visible = _listBox.SelectedItem != null;
 			_keyText.Visible = _nameMultiTextControl.Visible;
-			_btnAdd.Enabled = (null != _currentField) ;
+			_btnAdd.Enabled = (null != _currentField);
 		}
 
 		private void OnKeyTextChanged(object sender, EventArgs e)
@@ -312,7 +299,7 @@ namespace WeSay.ConfigTool
 		{
 			if (_fieldChooser.SelectedItem != null)
 			{
-				var f = _fieldChooser.SelectedItem as Field;
+				Field f = _fieldChooser.SelectedItem as Field;
 				LoadList(f);
 			}
 		}
