@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
@@ -109,6 +110,8 @@ namespace WeSay.Project
 			wsc.Write(XmlWriter.Create(PathToPretendWritingSystemPrefs));
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
+
+
 		}
 
 		public static string PathToPretendLiftFile
@@ -248,7 +251,7 @@ namespace WeSay.Project
 				LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 				return true;
 			}
-			catch (Exception e)
+			catch (ConfigurationException e)
 			{
 				ErrorReport.ReportNonFatalMessage(e.Message);
 				return false;
@@ -313,7 +316,7 @@ namespace WeSay.Project
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
-			InitializeViewTemplatesFromProjectFiles();
+			//container change InitializeViewTemplatesFromProjectFiles();
 
 			//review: is this the right place for this?
 			PopulateDIContainer();
@@ -332,7 +335,8 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
-			builder.Register<UserSettingsRepository>(new UserSettingsRepository());
+			//builder.Register<UserSettingsRepository>(new UserSettingsRepository());
+			builder.Register(new WordListCatalog()).SingletonScoped();
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
 
@@ -340,9 +344,33 @@ namespace WeSay.Project
 				c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
 						progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
 
-			builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
-			builder.Register<ViewTemplate>(DefaultViewTemplate);
+			//builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
 
+			var catalog = new TaskTypeCatalog();
+			catalog.RegisterAllTypes(builder);
+
+			builder.Register<TaskTypeCatalog>(catalog).SingletonScoped();
+
+			//this is a bit weird, did it to get around a strange problem where it was left open,
+			//never found out by whom.  But note, it does affect behavior.  It means that
+			//the first time the reader is asked for, it will be reading the value as it was
+			//back when we did this assignment.
+			string configFileText = File.ReadAllText(PathToConfigFile);
+
+			builder.Register<ConfigFileReader>(c => new ConfigFileReader(configFileText, catalog)).SingletonScoped();
+
+			builder.Register<TaskCollection>().SingletonScoped();
+
+			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(configFileText))
+			{
+				//todo: this isn't going to work if we start using multiple tempates.
+				//will have to go to a naming system.
+				builder.Register(viewTemplate).SingletonScoped();
+			}
+
+		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
+
+		  //  builder.Register(DefaultViewTemplate);
 			// can't currently get at the instance
 			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
 
@@ -519,6 +547,12 @@ namespace WeSay.Project
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='4']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig4To5.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
 			return didMigrate;
 		}
 
@@ -571,47 +605,47 @@ namespace WeSay.Project
 		//
 		//        }
 
-		private void InitializeViewTemplatesFromProjectFiles()
-		{
-			if (_viewTemplates == null)
-			{
-				List<ViewTemplate> viewTemplates = new List<ViewTemplate>();
-				ViewTemplate factoryTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
-
-				try
-				{
-					XPathDocument projectDoc = GetConfigurationDoc();
-					if (projectDoc != null)
-					{
-						XPathNodeIterator nodes =
-								projectDoc.CreateNavigator().Select(
-										"configuration/components/viewTemplate");
-						foreach (XPathNavigator node in nodes)
-						{
-							ViewTemplate userTemplate = new ViewTemplate();
-							userTemplate.LoadFromString(node.OuterXml);
-							ViewTemplate.UpdateUserViewTemplate(factoryTemplate, userTemplate);
-							if (userTemplate.Id == "Default View Template")
-							{
-								_defaultViewTemplate = userTemplate;
-							}
-							viewTemplates.Add(userTemplate);
-						}
-					}
-				}
-				catch (Exception error)
-				{
-					ErrorReport.ReportNonFatalMessage(
-							"There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
-							error.Message);
-				}
-				if (_defaultViewTemplate == null)
-				{
-					_defaultViewTemplate = factoryTemplate;
-				}
-				_viewTemplates = viewTemplates;
-			}
-		}
+//        private void InitializeViewTemplatesFromProjectFiles()
+//        {
+//            if (_viewTemplates == null)
+//            {
+//                List<ViewTemplate> viewTemplates = new List<ViewTemplate>();
+//                ViewTemplate factoryTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
+//
+//                try
+//                {
+//                    XPathDocument projectDoc = GetConfigurationDoc();
+//                    if (projectDoc != null)
+//                    {
+//                        XPathNodeIterator nodes =
+//                                projectDoc.CreateNavigator().Select(
+//                                        "configuration/components/viewTemplate");
+//                        foreach (XPathNavigator node in nodes)
+//                        {
+//                            ViewTemplate userTemplate = new ViewTemplate();
+//                            userTemplate.LoadFromString(node.OuterXml);
+//                            ViewTemplate.UpdateUserViewTemplate(factoryTemplate, userTemplate);
+//                            if (userTemplate.Id == "Default View Template")
+//                            {
+//                                _defaultViewTemplate = userTemplate;
+//                            }
+//                            viewTemplates.Add(userTemplate);
+//                        }
+//                    }
+//                }
+//                catch (Exception error)
+//                {
+//                    ErrorReport.ReportNonFatalMessage(
+//                            "There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
+//                            error.Message);
+//                }
+//                if (_defaultViewTemplate == null)
+//                {
+//                    _defaultViewTemplate = factoryTemplate;
+//                }
+//                _viewTemplates = viewTemplates;
+//            }
+//        }
 
 		public XPathNodeIterator GetAddinNodes()
 		{
@@ -670,36 +704,66 @@ namespace WeSay.Project
 			return projectDoc;
 		}
 
-		public string PathToDefaultConfig
+		public static string PathToDefaultConfig
 		{
 			get { return Path.Combine(ApplicationCommonDirectory, "default.WeSayConfig"); }
 		}
 
-		public override void CreateEmptyProjectFiles(string projectDirectoryPath)
+
+		public static void CreateEmptyProjectFiles(string projectDirectoryPath)
 		{
-			//enhance: some of this would be a lot cleaner if we just copied the silly
-			//  default.WeSayConfig over and used that.
+			string name = Path.GetFileName(projectDirectoryPath);
+			CreateEmptyProjectFiles(projectDirectoryPath, name);
+		}
+		public static void CreateEmptyProjectFiles(string projectDirectoryPath, string projectName)
+		{
 
-			ProjectDirectoryPath = projectDirectoryPath;
-			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectoryInProject);
+			Directory.CreateDirectory(projectDirectoryPath);
+			string pathToWritingSystemPrefs = GetPathToWritingSystemPrefs(projectDirectoryPath);
+			File.Copy(GetPathToWritingSystemPrefs(ApplicationCommonDirectory), pathToWritingSystemPrefs);
 
-			base.CreateEmptyProjectFiles(projectDirectoryPath);
+
+			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath, projectName);
+			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
 
 			//hack
-			File.Copy(PathToDefaultConfig, PathToConfigFile, true);
-			MigrateConfigurationXmlIfNeeded();
+			StickDefaultViewTemplateInNewConfigFile(pathToWritingSystemPrefs, pathToConfigFile);
 
-			_defaultViewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
-			_viewTemplates = new List<ViewTemplate>();
-			_viewTemplates.Add(_defaultViewTemplate);
+			MigrateConfigurationXmlIfNeeded(new XPathDocument(pathToConfigFile),pathToConfigFile) ;
 
-			XPathDocument doc = new XPathDocument(PathToDefaultConfig);
-			_addins.Load(GetAddinNodes(doc));
-
-			if (!File.Exists(PathToLiftFile))
+			var pathToLiftFile = Path.Combine(projectDirectoryPath, projectName + ".lift");
+			if (!File.Exists(pathToLiftFile))
 			{
-				Utilities.CreateEmptyLiftFile(PathToLiftFile, LiftExporter.ProducerString, false);
+				Utilities.CreateEmptyLiftFile(pathToLiftFile, LiftExporter.ProducerString, false);
 			}
+		}
+
+		/// <summary>
+		/// this is something of a hack, because we currently create the default viewtemplate from
+		/// code, but everything else from template xml files.  So this opens up the default config
+		/// and sticks a nice new code-computed default view template into it.
+		/// </summary>
+		/// <param name="pathToWritingSystemPrefs"></param>
+		/// <param name="pathToConfigFile"></param>
+		private static void StickDefaultViewTemplateInNewConfigFile(string pathToWritingSystemPrefs, string pathToConfigFile)
+		{
+			WritingSystemCollection writingSystemCollection = new WritingSystemCollection();
+			writingSystemCollection.Load(pathToWritingSystemPrefs);
+
+			var template = ViewTemplate.MakeMasterTemplate(writingSystemCollection);
+			StringBuilder builder = new StringBuilder();
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.OmitXmlDeclaration = true;
+			using (var writer = XmlWriter.Create(builder, settings))
+			{
+				template.Write(writer);
+			}
+
+			XmlDocument doc = new XmlDocument();
+			doc.Load(pathToConfigFile);
+			var e = doc.SelectSingleNode("configuration").AppendChild(doc.CreateElement("components"));
+			e.InnerXml = builder.ToString();
+			doc.Save(pathToConfigFile);
 		}
 
 		public string PathToConfigFile
@@ -707,9 +771,15 @@ namespace WeSay.Project
 			get
 			{
 				string name = Path.GetFileNameWithoutExtension(PathToLiftFile);
-				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
-									name + ".WeSayConfig");
+				string directoryInProject = PathToWeSaySpecificFilesDirectoryInProject;
+				return GetPathToConfigFile(directoryInProject, name);
 			}
+		}
+
+		private static string GetPathToConfigFile(string directoryInProject, string name)
+		{
+			return Path.Combine(directoryInProject,
+								name + ".WeSayConfig");
 		}
 
 		/// <summary>
@@ -892,7 +962,9 @@ namespace WeSay.Project
 			{
 				if (_defaultViewTemplate == null)
 				{
-					InitializeViewTemplatesFromProjectFiles();
+					//container change
+//                    InitializeViewTemplatesFromProjectFiles();
+					_defaultViewTemplate = _container.Resolve<ViewTemplate>();//enhance won't work when there's multiple
 				}
 				return _defaultViewTemplate;
 			}
@@ -904,7 +976,18 @@ namespace WeSay.Project
 			{
 				if (_viewTemplates == null)
 				{
-					InitializeViewTemplatesFromProjectFiles();
+					// //container change
+					//enhance to handle multiple templates
+					_viewTemplates = new List<ViewTemplate>();
+					//if (_container != null)
+					{
+						ViewTemplate template;
+						if (_container.TryResolve<ViewTemplate>(out template))
+						{
+							_viewTemplates.Add(template);
+						}
+					}
+					//                    InitializeViewTemplatesFromProjectFiles();
 				}
 				return _viewTemplates;
 			}
@@ -1015,7 +1098,19 @@ namespace WeSay.Project
 			XmlWriter writer = XmlWriter.Create(Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
-			writer.WriteAttributeString("version", "4");
+			writer.WriteAttributeString("version", "5");
+
+			writer.WriteStartElement("components");
+			foreach (ViewTemplate template in ViewTemplates)
+			{
+				template.Write(writer);
+			}
+			writer.WriteEndElement();
+
+			TaskCollection tasks;
+			if(_container.TryResolve<TaskCollection>(out tasks))
+				tasks.Write(writer);
+
 
 			if (EditorsSaveNow != null)
 			{
@@ -1167,38 +1262,35 @@ namespace WeSay.Project
 			//NB: we're just using regex, here, not xpaths which in this case
 			//would be nice (e.g., "name" is a pretty generic thing to be changing)
 			return DoSomethingToLiftFile((p) =>
-											 {
-												 //traits
-												 if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
-													 field.DataTypeName ==
-													 Field.BuiltInDataType.OptionCollection.ToString())
-												 {
-													 GrepFile(p,
-															  string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
-															  string.Format("name=\"{0}\"", field.FieldName));
-												 }
-												 else
-												 {
-													 //<field>s
-													 GrepFile(p,
-															  string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
-															  string.Format("type=\"{0}\"", field.FieldName));
-												 }
-											 });
+				 {
+					 //traits
+					 if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
+						 field.DataTypeName ==
+						 Field.BuiltInDataType.OptionCollection.ToString())
+					 {
+						 GrepFile(p,
+								  string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
+								  string.Format("name=\"{0}\"", field.FieldName));
+					 }
+					 else
+					 {
+						 //<field>s
+						 GrepFile(p,
+								  string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
+								  string.Format("type=\"{0}\"", field.FieldName));
+					 }
+				 });
 			return true;
 		}
 
 		public bool MakeWritingSystemIdChange(WritingSystem ws, string oldId)
 		{
 			if (DoSomethingToLiftFile((p) =>
-											 {
-
-												 //todo: expand the regular expression here to account for all reasonable patterns
-												 GrepFile(PathToLiftFile,
-														  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
-																		Regex.Escape(oldId)),
-														  string.Format("lang=\"{0}\"", ws.Id));
-											 }))
+					 //todo: expand the regular expression here to account for all reasonable patterns
+					 GrepFile(PathToLiftFile,
+							  string.Format("lang\\s*=\\s*[\"']{0}[\"']",
+											Regex.Escape(oldId)),
+							  string.Format("lang=\"{0}\"", ws.Id))))
 			{
 				WritingSystems.IdOfWritingSystemChanged(ws, oldId);
 				DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
@@ -1369,5 +1461,23 @@ namespace WeSay.Project
 		}
 
 
+		/// <summary>
+		/// this is a transition sort of thing during refactoring... the problem is the
+		/// many tests that we need to change if/when we change the nature of the Tasks property
+		/// </summary>
+		public void LoadTasksFromConfigFile()
+		{
+			ConfigFileReader configReader = _container.Resolve<ConfigFileReader>();
+			Tasks = ConfigFileTaskBuilder.CreateTasks(_container, configReader.GetTasksConfigurations(_container));
+		}
+
+		public delegate void ContainerAdder(Autofac.Builder.ContainerBuilder b);
+
+		public void AddToContainer(ContainerAdder adder)
+		{
+			var containerBuilder = new Autofac.Builder.ContainerBuilder();
+			adder.Invoke(containerBuilder);
+			containerBuilder.Build(_container);
+		}
 	}
 }

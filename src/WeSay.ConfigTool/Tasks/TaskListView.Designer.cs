@@ -1,8 +1,8 @@
 using Resources=WeSay.ConfigTool.Properties.Resources;
 
-namespace WeSay.ConfigTool
+namespace WeSay.ConfigTool.Tasks
 {
-	partial class TaskListControl
+	partial class TaskListView
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -46,8 +46,8 @@ namespace WeSay.ConfigTool
 			// splitContainer1
 			//
 			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+																				 | System.Windows.Forms.AnchorStyles.Left)
+																				| System.Windows.Forms.AnchorStyles.Right)));
 			this.splitContainer1.Location = new System.Drawing.Point(0, 34);
 			this.splitContainer1.Name = "splitContainer1";
 			//
@@ -66,8 +66,8 @@ namespace WeSay.ConfigTool
 			// _taskList
 			//
 			this._taskList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+																		   | System.Windows.Forms.AnchorStyles.Left)
+																		  | System.Windows.Forms.AnchorStyles.Right)));
 			this._taskList.FormattingEnabled = true;
 			this._taskList.Location = new System.Drawing.Point(0, 3);
 			this._taskList.Name = "_taskList";
@@ -89,8 +89,8 @@ namespace WeSay.ConfigTool
 			// _description
 			//
 			this._description.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+																			  | System.Windows.Forms.AnchorStyles.Left)
+																			 | System.Windows.Forms.AnchorStyles.Right)));
 			this._description.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._description.Location = new System.Drawing.Point(16, 21);
 			this._description.Multiline = true;
@@ -102,7 +102,7 @@ namespace WeSay.ConfigTool
 			// textBox1
 			//
 			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+																		 | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBox1.BackColor = System.Drawing.SystemColors.Window;
 			this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.textBox1.ForeColor = System.Drawing.Color.Gray;
@@ -113,8 +113,8 @@ namespace WeSay.ConfigTool
 			this.textBox1.Size = new System.Drawing.Size(443, 27);
 			this.textBox1.TabIndex = 5;
 			this.textBox1.Text = "Eventually, you\'ll have more control over the details of a task and be able to cr" +
-				"eate new tasks.  For now, you can only do this by editting the WeSayConfig file." +
-				"";
+								 "eate new tasks.  For now, you can only do this by editting the WeSayConfig file." +
+								 "";
 			this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
 			//
 			// pictureBox1
@@ -138,7 +138,7 @@ namespace WeSay.ConfigTool
 			this.label1.TabIndex = 19;
 			this.label1.Text = "Select which tasks to enable. ";
 			//
-			// TaskListControl
+			// TaskListView
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -147,7 +147,7 @@ namespace WeSay.ConfigTool
 			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this.splitContainer1);
-			this.Name = "TaskListControl";
+			this.Name = "TaskListView";
 			this.Size = new System.Drawing.Size(495, 347);
 			this.Load += new System.EventHandler(this.TaskList_Load);
 			this.splitContainer1.Panel1.ResumeLayout(false);
