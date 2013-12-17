@@ -1,9 +1,8 @@
-using System;
 using System.IO;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -42,31 +41,28 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void SetValues_Reopen_HasSameValues()
 		{
-					using (TemporaryFolder backupHere = new TemporaryFolder("backupLocationForWeSayBackupPlanTests"))
-					{
-						using (TemporaryFolder tempFolder = new TemporaryFolder("backupPlanControlTests"))
-						{
-							try
-							{
-								CreateNewAndGotoBackupControl(tempFolder.FolderPath);
+			using (TemporaryFolder tempFolder = new TemporaryFolder("backupPlanControlTests"))
+			{
+				try
+				{
+					CreateNewAndGotoBackupControl(tempFolder.FolderPath);
 
-								TextBoxTester t = new TextBoxTester("_pathText", _window);
-								t.Properties.Text = backupHere.FolderPath;
-								CloseApp();
+					TextBoxTester t = new TextBoxTester("_pathText");
+					t.Properties.Text = @"q:\";
+					CloseApp();
 
-								//now reopen
-								OpenExisting(tempFolder.FolderPath);
-								GoToBackupTab();
-								t = new TextBoxTester("_pathText", _window);
+					//now reopen
+					OpenExisting(tempFolder.FolderPath);
+					GoToBackupTab();
+					t = new TextBoxTester("_pathText");
 
-								Assert.AreEqual(backupHere.FolderPath, t.Properties.Text);
-							}
-							finally
-							{
-								CloseApp();
-							}
-						}
-					}
+					Assert.AreEqual(@"q:\", t.Properties.Text);
+				}
+				finally
+				{
+					CloseApp();
+				}
+			}
 		}
 
 
@@ -85,7 +81,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			_window = new ConfigurationWindow(new string[] { });
 			_window.Show();
-			_window.CreateAndOpenProject(directoryPath, "th");
+			_window.CreateAndOpenProject(directoryPath);
 			GoToBackupTab();
 		   // return new ComboBoxTester("_languageCombo", _window);
 		}

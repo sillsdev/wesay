@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Palaso.DictionaryServices.Model;
-using Palaso.i18n;
 using Palaso.Reporting;
-using Palaso.Lift;
+using Palaso.UI.WindowsForms.i8n;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -16,13 +14,10 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexExampleSentenceLayouter: Layouter
 	{
-		public LexExampleSentenceLayouter(DetailList builder, ViewTemplate viewTemplate,
-			IServiceProvider serviceProvider)
-				: base(builder, viewTemplate, null, serviceProvider)
-		{
-		}
+		public LexExampleSentenceLayouter(DetailList builder, ViewTemplate viewTemplate)
+				: base(builder, viewTemplate, null) {}
 
-		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
+		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
 		{
 			LexExampleSentence example = (LexExampleSentence) wsdo;
 
@@ -64,16 +59,16 @@ namespace WeSay.LexicalTools
 			}
 			catch (ConfigurationException e)
 			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 
 			DetailList.ResumeLayout();
 			return rowCount;
 		}
 
-		public int AddGhost(LexSense sense, IList<LexExampleSentence> list, int insertAtRow)
+		public int AddGhost(IList<LexExampleSentence> list, int insertAtRow)
 		{
-			return MakeGhostWidget(sense, list,
+			return MakeGhostWidget(list,
 								   insertAtRow,
 								   Field.FieldNames.ExampleSentence.ToString(),
 								   StringCatalog.Get("~Example",

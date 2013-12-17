@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using Chorus.UI.Review;
-using Palaso.Code;
-using Palaso.i18n;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.Project;
-using WeSay.UI;
-
 using Timer=System.Windows.Forms.Timer;
 
 namespace WeSay.App
@@ -23,10 +20,7 @@ namespace WeSay.App
 		public SynchronizationContext synchronizationContext;
 		//        private ProgressDialogHandler _progressHandler;
 
-		[CLSCompliant(false)]
-		public TabbedForm(
-			StatusBarController statusBarController,
-			NavigateToRecordEvent navigateToRecordEventToSubscribeTo)
+		public TabbedForm()
 		{
 			InitializeComponent();
 			tabControl1.TabPages.Clear();
@@ -34,28 +28,7 @@ namespace WeSay.App
 
 			synchronizationContext = SynchronizationContext.Current;
 			Debug.Assert(synchronizationContext != null);
-
-			_statusStrip.Font = StringCatalog.ModifyFontForLocalization(_statusStrip.Font);
-			statusBarController.StatusStrip = _statusStrip;
-			if (navigateToRecordEventToSubscribeTo != null)
-			{
-				navigateToRecordEventToSubscribeTo.Subscribe(OnNavigateToUrl);
-			}
-
 		}
-
-		//for tests
-		public TabbedForm(StatusBarController statusBarController)
-			:this(statusBarController, null)
-		{
-
-		}
-
-		public StatusStrip StatusStrip
-		{
-			get { return _statusStrip; }
-		}
-
 
 		public void InitializeTasks(IList<ITask> taskList)
 		{
@@ -79,7 +52,7 @@ namespace WeSay.App
 
 			if (taskList.Count > 0)
 			{
-				SetActiveTask(taskList[0]);
+				ActiveTask = taskList[0];
 			}
 		}
 
@@ -108,11 +81,18 @@ namespace WeSay.App
 			}
 		}
 
-		private void OnNavigateToUrl(string url)
+		private void CreateTabPageForTask(ITask t)
 		{
-			GoToUrl(url);
-		}
+			//t.Container = container;
+			TabPage page = new TabPage(t.Label);
+			page.Tag = t;
 
+			//this is trying to get around screwing up spacing when the ui font
+			//is a huge one
+			page.Font = new Font(FontFamily.GenericSansSerif, 9);
+
+			tabControl1.TabPages.Add(page);
+		}
 
 		private delegate void TakesStringArg(string arg);
 
@@ -123,48 +103,26 @@ namespace WeSay.App
 				Invoke(new TakesStringArg(GoToUrl), url);
 				return;
 			}
-
-			//NB: notice, we only handly URLs to a single task at this point (DictionaryBrowseAndEdit)
+			//todo: find the task in the url, pick the right task,
+			//handle the case where we don't have that task, etc.
 
 			foreach (TabPage page in tabControl1.TabPages)
 			{
-				if (page.Tag is ITaskForExternalNavigateToEntry)
+				//todo: temporary hack
+				if (((ITask) page.Tag).Label.Contains("Dictionary"))
 				{
+					//this approach is for user clicking, chokes without an event loop: ActiveTask = (ITask) page.Tag;
 					tabControl1.SelectedTab = page;
-#if MONO    //For some reason .net fires this event if TabPages.Clear has been used. Mono does not.
-					if(!tabControl1.IsHandleCreated)
-					{
-						OnTabSelected(tabControl1, new TabControlEventArgs (tabControl1.SelectedTab, tabControl1.SelectedIndex, TabControlAction.Selected));
-					}
-#endif
-
-					((ITaskForExternalNavigateToEntry)page.Tag).GoToUrl(url);
+					ActivateTab(page, false);
+					ActiveTask.GoToUrl(url);
+					CurrentUrl = url;
 					return;
 				}
 			}
-			ErrorReport.NotifyUserOfProblem(
+			ErrorReport.ReportNonFatalMessage(
 					"Sorry, that URL requires a task which is not currently enabled for this user. ({0})",
 					url);
 			throw new NavigationException("Couldn't locate ");
-		}
-
-
-		private void CreateTabPageForTask(ITask t)
-		{
-			//t.Container = container;
-			var page = new TabPage(t.Label);
-			page.Tag = t;
-
-			//this is trying to get around screwing up spacing when the ui font
-			//is a huge one...
-			//JH sep09: doesn't seem to have any effect, at least on windows
-			page.Font = StringCatalog.LabelFont;
-
-			//jh experiment
-			tabControl1.Font = page.Font;
-
-
-			tabControl1.TabPages.Add(page);
 		}
 
 		public void MakeFrontMostWindow()
@@ -181,44 +139,43 @@ namespace WeSay.App
 		public ITask ActiveTask
 		{
 			get { return _activeTask; }
-		}
-		public void SetActiveTask(ITask task)
-		{
-			if (task == null)
+			set
 			{
-				throw new ArgumentNullException();
-			}
-			TabPage tabPageToActivate = null;
-			if (task.IsPinned)
-			{
-				foreach (TabPage page in tabControl1.TabPages)
+				if (value == null)
 				{
-					if (page.Tag == task)
-					{
-						tabPageToActivate = page;
-						break;
-					}
+					throw new ArgumentNullException();
 				}
-			}
-			else
-			{
-				SetCurrentWorkTask(task);
-				tabPageToActivate = _currentWorkTab;
-			}
-
-			if (tabPageToActivate != null)
-			{
-				if (tabControl1.SelectedTab != tabPageToActivate)
+				TabPage tabPageToActivate = null;
+				if (value.IsPinned)
 				{
-					tabControl1.SelectedTab = tabPageToActivate;
+					foreach (TabPage page in tabControl1.TabPages)
+					{
+						if (page.Tag == value)
+						{
+							tabPageToActivate = page;
+							break;
+						}
+					}
 				}
 				else
 				{
-					ActivateTab(tabPageToActivate, true);
+					SetCurrentWorkTask(value);
+					tabPageToActivate = _currentWorkTab;
+				}
+
+				if (tabPageToActivate != null)
+				{
+					if (tabControl1.SelectedTab != tabPageToActivate)
+					{
+						tabControl1.SelectedTab = tabPageToActivate;
+					}
+					else
+					{
+						ActivateTab(tabPageToActivate, true);
+					}
 				}
 			}
 		}
-
 
 		private void SetCurrentWorkTask(ITask value)
 		{
@@ -265,17 +222,9 @@ namespace WeSay.App
 
 		public string CurrentUrl
 		{
-			get
-			{
-				if(_activeTask==null)
-					return string.Empty;
-				var t = _activeTask as ITaskForExternalNavigateToEntry;
-				if(t==null)
-					return string.Empty;
-				return t.CurrentUrl;
-			}
+			get { return _currentUrl; }
+			set { _currentUrl = value; }
 		}
-
 
 		private void OnTabSelected(object sender, TabControlEventArgs e)
 		{
@@ -287,7 +236,7 @@ namespace WeSay.App
 
 		private void ActivateTab(Control page, bool okTouseTimer)
 		{
-			var task = (ITask) page.Tag;
+			ITask task = (ITask) page.Tag;
 			if (ActiveTask == task)
 			{
 				return; //debounce
@@ -296,7 +245,7 @@ namespace WeSay.App
 			if (ActiveTask != null)
 			{
 				ActiveTask.Deactivate();
-				_activeTask =null;
+				_activeTask = null;
 			}
 			if (task != null)
 			{
@@ -310,7 +259,6 @@ namespace WeSay.App
 				{
 					ActivateTask(page, task);
 				}
-				UsageReporter.SendNavigationNotice(task.Label);
 			}
 		}
 
@@ -319,7 +267,7 @@ namespace WeSay.App
 			page.Text += " " +
 						 StringCatalog.Get("~Loading...",
 										   "Appended to the name of a task, in its tab, while the user is waiting for the task to come up.");
-			var t = new Timer();
+			Timer t = new Timer();
 			t.Tick += delegate
 					  {
 						  t.Stop();
@@ -342,25 +290,16 @@ namespace WeSay.App
 			{
 				task.Activate();
 			}
-			catch (ConfigurationException e) //let others go through the normal reporting system
+			catch (ConfigurationException e) //let others go through the normal bug reporting system
 			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 				Logger.WriteEvent("Failed Activating");
 				return;
 			}
 
+			// RunCommand(new ActivateTaskCommand(page, task));
 			task.Control.Dock = DockStyle.Fill;
-
-			if(task.Control.GetType() == typeof(Chorus.UI.Notes.Browser.NotesBrowserPage))
-			{
-				page.Controls.Add(task.Control);
-			}
-			else //I (JH) don't know what problem this code was intended to solve, but it prevents the notes browser from docking properly
-			{
-				task.Control.SuspendLayout();
-				page.Controls.Add(task.Control);
-				task.Control.ResumeLayout(false);
-			}
+			page.Controls.Add(task.Control);
 			task.Control.SelectNextControl(task.Control, true, true, true, true);
 			task.Control.PerformLayout();
 			task.Control.Invalidate(true);
@@ -373,7 +312,7 @@ namespace WeSay.App
 
 		public void ContinueLaunchingAfterInitialDisplay()
 		{
-			var t = new Timer();
+			Timer t = new Timer();
 			t.Tick += delegate
 					  {
 						  t.Stop();
@@ -388,6 +327,4 @@ namespace WeSay.App
 			t.Start();
 		}
 	}
-
-
 }

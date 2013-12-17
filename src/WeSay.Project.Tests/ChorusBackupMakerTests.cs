@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Xml;
-using Chorus.VcsDrivers.Mercurial;
+using Chorus.sync;
 using NUnit.Framework;
-using Palaso.Progress.LogBox;
-using Palaso.TestUtilities;
-using Palaso.Xml;
+using WeSay.Foundation.Tests.TestHelpers;
+using WeSay.Project;
 
 namespace WeSay.Project.Tests
 {
@@ -15,28 +15,25 @@ namespace WeSay.Project.Tests
 	{
 		class BackupScenario : IDisposable
 		{
-			private readonly ProjectDirectorySetupForTesting _projDir;
-			private readonly TemporaryFolder _backupDir;
-			private readonly ChorusBackupMaker _backupMaker;
-
+			private ProjectDirectorySetupForTesting _projDir;
+			private TemporaryFolder _backupDir;
+			private ChorusBackupMaker _backupMaker;
 			public BackupScenario(string testName)
 			{
-				Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 				_projDir = new ProjectDirectorySetupForTesting("");
 
-				_backupMaker = new ChorusBackupMaker(new CheckinDescriptionBuilder());
+				_backupMaker = new ChorusBackupMaker();
 				_backupDir = new TemporaryFolder(testName);
 
-				_backupMaker.PathToParentOfRepositories = _backupDir.Path;
+				_backupMaker.PathToParentOfRepositories = _backupDir.FolderPath;
 
 			}
-
-			private string PathToBackupProjectDir
+			public string PathToBackupProjectDir
 			{
-				get { return Path.Combine(_backupDir.Path, _projDir.ProjectDirectoryName);}
+				get { return Path.Combine(_backupDir.FolderPath, _projDir.ProjectDirectoryName);}
 			}
 
-			private ChorusBackupMaker BackupMaker
+			public ChorusBackupMaker BackupMaker
 			{
 				get { return _backupMaker; }
 			}
@@ -77,27 +74,24 @@ namespace WeSay.Project.Tests
 
 			public void AssertFileExistsInRepo(string s)
 			{
-				var  r = new HgRepository(PathToBackupProjectDir, new NullProgress());
-				Assert.IsTrue(r.GetFileExistsInRepo(s));
+				Chorus.sync.RepositoryManager r = new RepositoryManager(PathToBackupProjectDir, new ProjectFolderConfiguration(SourceProjectDir));
+				Assert.IsTrue(r.GetFileExistsInRepo(Path.Combine(PathToBackupProjectDir ,"test.lift")));
 			}
 		}
 
 		[Test]
-		[Category("Known Mono Issue")]
 		public void BackupNow_FirstTime_CreatesValidRepositoryAndWorkingTree()
 		{
-			using (var scenario = new BackupScenario("BackupNow_NewFolder_CreatesNewRepository"))
+			using (BackupScenario scenario = new BackupScenario("BackupNow_NewFolder_CreatesNewRepository"))
 			{
 				scenario.BackupNow();
 				scenario.AssertDirExistsInWorkingDirectory(".hg");
 				scenario.AssertFileExistsInRepo("test.lift");
 				scenario.AssertFileExistsInRepo("test.WeSayConfig");
-				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "qaa-x-qaa.ldml"));
-				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "en.ldml"));
+				scenario.AssertFileExistsInRepo("WritingSystemPrefs.xml");
 				scenario.AssertFileExistsInWorkingDirectory("test.lift");
 				scenario.AssertFileExistsInWorkingDirectory("test.WeSayConfig");
-				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "qaa-x-qaa.ldml"));
-				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "en.ldml"));
+				scenario.AssertFileExistsInWorkingDirectory("WritingSystemPrefs.xml");
 			}
 		}
 
@@ -105,13 +99,13 @@ namespace WeSay.Project.Tests
 		public void BackupNow_ExistingRepository_AddsNewFileToBackupDir()
 		{
 			// Test causes a crash in WrapShellCall.exe - is there an updated version?
-			using (var scenario = new BackupScenario("BackupNow_ExistingRepository_AddsNewFileToBackupDir"))
+			using (BackupScenario scenario = new BackupScenario("BackupNow_ExistingRepository_AddsNewFileToBackupDir"))
 			{
 				scenario.BackupNow();
-				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
+				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.foo")).Close();
 				scenario.BackupNow();
-				scenario.AssertFileExistsInWorkingDirectory("blah.lift");
-				scenario.AssertFileExistsInRepo("blah.lift");
+				scenario.AssertFileExistsInWorkingDirectory("blah.foo");
+				scenario.AssertFileExistsInRepo("blah.foo");
 			}
 		}
 
@@ -119,32 +113,30 @@ namespace WeSay.Project.Tests
 		public void BackupNow_RemoveFile_RemovedFromBackupDir()
 		{
 			// Test causes a crash in WrapShellCall.exe - is there an updated version?
-			using (var scenario = new BackupScenario("BackupNow_RemoveFile_RemovedFromBackupDir"))
+			using (BackupScenario scenario = new BackupScenario("BackupNow_RemoveFile_RemovedFromBackupDir"))
 			{
-				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
+				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.foo")).Close();
 				scenario.BackupNow();
-				File.Delete(Path.Combine(scenario.SourceProjectDir, "blah.lift"));
+				File.Delete(Path.Combine(scenario.SourceProjectDir, "blah.foo"));
 				scenario.BackupNow();
-				scenario.AssertFileDoesNotExistInWorkingDirectory("blah.lift");
+				scenario.AssertFileDoesNotExistInWorkingDirectory("blah.foo");
 			}
 		}
 
 		[Test]
 		public void CanSerializeAndDeserializeSettings()
 		{
-			var b = new ChorusBackupMaker(new CheckinDescriptionBuilder());
+			ChorusBackupMaker b = new ChorusBackupMaker();
 			b.PathToParentOfRepositories = @"z:\";
-			var builder = new StringBuilder();
-			//var dom = new XmlDocument();
-			//dom.LoadXml("<foobar><blah></blah></foobar>");
-
-			using (var writer = XmlWriter.Create(builder, CanonicalXmlSettings.CreateXmlWriterSettings()))
+			StringBuilder builder = new StringBuilder();
+			using (XmlWriter writer = XmlWriter.Create(builder))
 			{
 				b.Save(writer);
-				var dom = new XmlDocument();
-				dom.Load(new StringReader(builder.ToString()));
-				var loadedGuy = ChorusBackupMaker.CreateFromDom(dom, new CheckinDescriptionBuilder());
-				Assert.AreEqual(@"z:\", loadedGuy.PathToParentOfRepositories);
+				using (XmlReader reader = XmlReader.Create(new StringReader(builder.ToString())))
+				{
+					ChorusBackupMaker loadedGuy = ChorusBackupMaker.LoadFromReader(reader);
+					Assert.AreEqual(@"z:\", loadedGuy.PathToParentOfRepositories);
+				}
 
 			}
 		}

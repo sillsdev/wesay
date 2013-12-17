@@ -2,12 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Chorus;
-using Chorus.UI.Notes;
-using Chorus.UI.Notes.Bar;
-using Palaso.Code;
-using Palaso.DictionaryServices.Model;
-using Palaso.Misc;
 using Palaso.Reporting;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -17,45 +11,19 @@ namespace WeSay.LexicalTools
 {
 	public partial class EntryViewControl: UserControl
 	{
-		//autofac generates a factory which comes up with all the other needed parameters from its container
-		public delegate EntryViewControl Factory();
-
 		private ViewTemplate _viewTemplate;
 		private LexEntry _record;
 		private Timer _cleanupTimer;
 		private bool _isDisposed;
 		private DetailList _detailListControl;
 
-		private CurrentItemEventArgs _currentItemInFocus;
-		private LexEntryRepository _lexEntryRepository;
-		private bool _showNormallyHiddenFields;
-		private TaskMemory _memory;
-
-
-		//designer and some tests
 		public EntryViewControl()
-		{
-			InitializeComponent();
-			RefreshEntryDetail();
-			//_detailListControl = new DetailList();
-		}
-	   public EntryViewControl(EntryHeaderView.Factory entryHeaderViewFactory)
 		{
 			_viewTemplate = null;
 			InitializeComponent();
-			Controls.Remove(_entryHeaderView);
-		   _entryHeaderView.Dispose();
-			_entryHeaderView = entryHeaderViewFactory();
-		   _entryHeaderView.Dock = DockStyle.Top;
-		   _entryHeaderView.BackColor = BackColor;
-		   Controls.Add(_entryHeaderView);
-		   Controls.SetChildIndex(_panelEntry, 0);
-			Controls.SetChildIndex(_splitter, 1);
-		   Controls.SetChildIndex(_entryHeaderView, 2);
-
-		   _splitter.ControlToHide = _entryHeaderView;
 			RefreshEntryDetail();
 		}
+
 		protected override void OnHandleDestroyed(EventArgs e)
 		{
 			if (_cleanupTimer != null)
@@ -63,11 +31,6 @@ namespace WeSay.LexicalTools
 				_cleanupTimer.Dispose();
 			}
 			base.OnHandleDestroyed(e);
-		}
-
-		public void SelectOnCorrectControl()
-		{
-			_detailListControl.Select();
 		}
 
 		private void _detailListControl_KeyDown(object sender, KeyEventArgs e)
@@ -97,21 +60,10 @@ namespace WeSay.LexicalTools
 				Refresh();
 			}
 		}
-//
-//        public RichTextBox ControlFormattedView
-//        {
-//            get { return _lexicalEntryPreview; }
-//        }
 
-
-		public string RtfContentsOfPreviewForTests//TODO: those tests shouldn't be testing this control
+		public RichTextBox ControlFormattedView
 		{
-			get { return _entryHeaderView.RtfForTests; }
-		}
-
-		public string TextContentsOfPreviewForTests//TODO: those tests shouldn't be testing this control
-		{
-			get { return _entryHeaderView.TextForTests; }
+			get { return _lexicalEntryPreview; }
 		}
 
 		public DetailList ControlEntryDetail
@@ -124,7 +76,6 @@ namespace WeSay.LexicalTools
 			get { return _record; }
 			set
 			{
-				SuspendLayout();
 				Logger.WriteMinorEvent("In DataSource Set");
 				_showNormallyHiddenFields = false;
 
@@ -136,16 +87,7 @@ namespace WeSay.LexicalTools
 								"Datasource set. Calling _record.CleanUpAfterEditting()");
 						_record.PropertyChanged -= OnRecordPropertyChanged;
 						_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
-
 						_record.CleanUpAfterEditting();
-
-//                        //from WS-1173 (jonathan_coombs@sil.org) Faulty Missing Baseform query?
-//                        //what's wrong here is that since we've disabled the event handers, we don't
-//                        //know if this CleanUp call makes any changes that need to be saved
-//                        if(_record.IsDirty)
-//                        {
-//                            _lexEntryRepository.SaveItem(_record);
-//                        }
 					}
 					_record = value;
 					_currentItemInFocus = null;
@@ -160,12 +102,10 @@ namespace WeSay.LexicalTools
 					ShowNormallyHiddenFields = false;
 					RefreshEntryDetail();
 				}
-				ResumeLayout();
+
 				Logger.WriteMinorEvent("Exit DataSource Set");
 			}
 		}
-
-
 
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
@@ -183,11 +123,6 @@ namespace WeSay.LexicalTools
 				_showNormallyHiddenFields = value;
 				//no... this will lead to extra refreshing. RefreshEntryDetail();
 			}
-		}
-
-		public void SetMemory(IUserInterfaceMemory memory)
-		{
-			_splitter.SetMemory(memory.CreateNewSection("previewSplitter"));
 		}
 
 		public void ToggleShowNormallyHiddenFields()
@@ -255,21 +190,16 @@ namespace WeSay.LexicalTools
 					_cleanupTimer.Start();
 					break;
 			}
-			_lexEntryRepository.NotifyThatLexEntryHasBeenUpdated((LexEntry)sender);
 		  // can't afford to do this every keystroke, with large files
 
 		}
 
-
-
 		private void OnCleanupTimer_Tick(object sender, EventArgs e)
 		{
-			_cleanupTimer.Stop();
-			if (_isDisposed) ////saw this once get disposed while it was running
-				return;
-
+			VerifyNotDisposed();
 			Logger.WriteMinorEvent("OnCleanupTimer_Tick");
 			LexEntry entry = (LexEntry) _cleanupTimer.Tag;
+			_cleanupTimer.Stop();
 			entry.CleanUpEmptyObjects();
 
 			RefreshLexicalEntryPreview();
@@ -282,27 +212,27 @@ namespace WeSay.LexicalTools
 #if DEBUG
 				throw new ObjectDisposedException(GetType().FullName);
 #else
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("WeSay ran into a problem in the EntryViewControl (it was called after it was disposed.) If you can make this happen again, please contact the developers.");
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("WeSay ran into a problem in the EntryViewControl (it was called after it was disposed.) If you can make this happen again, please contact the developers.");
 #endif
 			}
 		}
 
 		private void RefreshLexicalEntryPreview()
 		{
-			if (_isDisposed || _entryHeaderView.IsDisposed) ////saw this once get disposed while it was running
-				return;
-
+			VerifyNotDisposed();
 #if !DEBUG
 			try
 			{
 #endif
 			VerifyHasLexEntryRepository();
-			_entryHeaderView.UpdateContents(_record,_currentItemInFocus,_lexEntryRepository);
+			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record,
+														 _currentItemInFocus,
+														 _lexEntryRepository);
 #if !DEBUG
 			}
 			catch (Exception)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("There was an error refreshing the entry preview. If you were quiting the program, this is a know issue (WS-554) that we are trying to track down.  If you can make this happen again, please contact the developers.");
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("There was an error refreshing the entry preview. If you were quiting the program, this is a know issue (WS-554) that we are trying to track down.  If you can make this happen again, please contact the developers.");
 			}
 #endif
 		}
@@ -343,13 +273,9 @@ namespace WeSay.LexicalTools
 				if (_record != null)
 				{
 					VerifyHasLexEntryRepository();
-					var layout = new LexEntryLayouter(
-						detailList,
-						ViewTemplate,
-						_lexEntryRepository,
-						WeSayWordsProject.Project.ServiceLocator,//clean-up have to send this down the chain
-						_record
-					);
+					LexEntryLayouter layout = new LexEntryLayouter(detailList,
+																   ViewTemplate,
+																   _lexEntryRepository);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
@@ -371,7 +297,7 @@ namespace WeSay.LexicalTools
 			}
 			catch (ConfigurationException e)
 			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 		}
 
@@ -382,13 +308,14 @@ namespace WeSay.LexicalTools
 			RefreshLexicalEntryPreview();
 		}
 
+		private CurrentItemEventArgs _currentItemInFocus;
+		private LexEntryRepository _lexEntryRepository;
+		private bool _showNormallyHiddenFields;
 
-		private void OnBackColorChanged(object sender, EventArgs e)
+		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
 		{
-			if(_detailListControl !=null)
-				_detailListControl.BackColor = BackColor;
-			if(_entryHeaderView!=null)
-				_entryHeaderView.BackColor = BackColor;
+			_detailListControl.BackColor = BackColor;
+			_lexicalEntryPreview.BackColor = BackColor;
 		}
 
 		~EntryViewControl()
@@ -410,6 +337,5 @@ namespace WeSay.LexicalTools
 			base.OnEnter(e);
 			RefreshLexicalEntryPreview();
 		}
-
 	}
 }

@@ -1,9 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{87AF0B02-2983-486D-857F-D1859535C234}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -14,8 +13,7 @@
 	</FileUpgradeFlags>
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
-	<OldToolsVersion>3.5</OldToolsVersion>
-	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -25,12 +23,6 @@
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>LexicalTools</AssemblyName>
-	<RootNamespace>WeSay.LexicalTools</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -39,12 +31,6 @@
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>LexicalTools</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.LexicalTools</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -53,13 +39,6 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>LexicalTools</AssemblyName>
-	<RootNamespace>WeSay.LexicalTools</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
 	<OutputPath>..\..\output\Mono Release\</OutputPath>
@@ -68,173 +47,32 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>LexicalTools</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.LexicalTools</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\release\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>bin\x86\Mono Debug\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>bin\x86\Mono Release\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Autofac, Version=1.3.2.449, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Autofac.dll</HintPath>
-	</Reference>
-	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\net2.0\Chorus.exe</HintPath>
-	</Reference>
-	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\LibChorus.dll</HintPath>
-	</Reference>
 	<Reference Include="Enchant.Net, Version=1.4.2.1, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
-	</Reference>
-	<Reference Include="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
-	  <SpecificVersion>False</SpecificVersion>
-	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
+	  <HintPath>..\..\lib\Enchant.Net.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="Palaso.Reporting, Version=1.0.2774.19364, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\PalasoUIWindowsForms.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
-	<Reference Include="System.Core">
-	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-	</Reference>
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
-	<Reference Include="System.Web" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="AddMissingInfo\MissingInfoConfiguration.cs" />
-	<Compile Include="AddMissingInfo\MissingInfoViewMaker.cs" />
-	<Compile Include="AddPictures\AddPicturesConfig.cs" />
-	<Compile Include="AddPictures\AddPicturesControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="AddPictures\AddPicturesControl.Designer.cs">
-	  <DependentUpon>AddPicturesControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="AddPictures\AddPicturesTask.cs" />
-	<Compile Include="Dashboard\Dash.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Dashboard\Dash.Designer.cs">
-	  <DependentUpon>Dash.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Dashboard\Dashboard Button.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Dashboard\Dashboard Button.designer.cs">
-	  <DependentUpon>Dashboard Button.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Dashboard\DashboardButtonWithIcon.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Dashboard\DashboardConfiguration.cs" />
-	<Compile Include="Dashboard\DictionaryStatusControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Dashboard\DictionaryStatusControl.designer.cs">
-	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Dashboard\GroupHeader.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Dashboard\GroupHeader.designer.cs">
-	  <DependentUpon>GroupHeader.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Dashboard\ItemsToDoIndicator.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Dashboard\ItemsToDoIndicator.designer.cs">
-	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Dashboard\ShapeControl.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Dashboard\TaskIndicator.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Dashboard\TaskIndicator.designer.cs">
-	  <DependentUpon>TaskIndicator.cs</DependentUpon>
-	</Compile>
-	<Compile Include="DictionaryBrowseAndEdit\SearchBoxControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="DictionaryBrowseAndEdit\SearchBoxControl.Designer.cs">
-	  <DependentUpon>SearchBoxControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="EntryHeaderView.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="EntryHeaderView.Designer.cs">
-	  <DependentUpon>EntryHeaderView.cs</DependentUpon>
-	</Compile>
-	<Compile Include="LayoutInfoProvider.cs" />
-	<Compile Include="Review\AdvancedHistory\AdvancedHistoryConfig.cs" />
-	<Compile Include="Review\AdvancedHistory\AdvancedHistoryTask.cs" />
-	<Compile Include="Review\NotesBrowser\NotesBrowserConfig.cs" />
-	<Compile Include="Review\NotesBrowser\NotesBrowserTask.cs" />
 	<Compile Include="TaskConfigurationBase.cs" />
 	<Compile Include="DictionaryBrowseAndEdit\ConfirmDelete.cs">
 	  <SubType>Form</SubType>
@@ -300,17 +138,12 @@
 	<Compile Include="RelationController.cs" />
 	<Compile Include="RtfRenderer.cs" />
 	<Compile Include="TaskBase.cs" />
-	<Compile Include="TaskMemoryRepository.cs" />
 	<Compile Include="WordGatheringTaskBase.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
-	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
-	  <Name>WeSay.AddinLib</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
@@ -330,41 +163,8 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="AddPictures\AddPicturesControl.resx">
-	  <DependentUpon>AddPicturesControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Dashboard\Dash.resx">
-	  <DependentUpon>Dash.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Dashboard\Dashboard Button.resx">
-	  <DependentUpon>Dashboard Button.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Dashboard\DashboardButtonWithIcon.resx">
-	  <DependentUpon>DashboardButtonWithIcon.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Dashboard\DictionaryStatusControl.resx">
-	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Dashboard\GroupHeader.resx">
-	  <DependentUpon>GroupHeader.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Dashboard\ItemsToDoIndicator.resx">
-	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Dashboard\TaskIndicator.resx">
-	  <DependentUpon>TaskIndicator.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
 	<EmbeddedResource Include="DictionaryBrowseAndEdit\ConfirmDelete.resx">
 	  <DependentUpon>ConfirmDelete.cs</DependentUpon>
-	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="CongratulationsControl.resx">
 	  <SubType>Designer</SubType>
@@ -374,13 +174,9 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DictionaryControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="DictionaryBrowseAndEdit\SearchBoxControl.resx">
-	  <DependentUpon>SearchBoxControl.cs</DependentUpon>
+	<EmbeddedResource Include="GatherBySemanticDomains\GatherBySemanticDomainsControl.resx">
 	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="EntryHeaderView.resx">
-	  <DependentUpon>EntryHeaderView.cs</DependentUpon>
-	  <SubType>Designer</SubType>
+	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="GatherByWordList\GatherWordListControl.resx">
 	  <SubType>Designer</SubType>
@@ -399,33 +195,9 @@
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
-	<EmbeddedResource Include="GatherBySemanticDomains\GatherBySemanticDomainsControl.resx">
-	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\blueDictionary.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\WeSay64x64.png" />
-	<None Include="Resources\blueWeSay.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\HistoryOrange.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\calendar.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\Add18x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\notesBrowser.svg" />
-	<None Include="Resources\search18x18.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\noteBrowser32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
