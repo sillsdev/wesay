@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Enchant;
-using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -59,16 +58,9 @@ namespace WeSay.ConfigTool
 				{
 					foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
 					{
-						try
+						if (broker.DictionaryExists(ws.Id))
 						{
-							if (broker.DictionaryExists(ws.Id))
-							{
-								writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
-							}
-						}
-						catch (Exception error)  //WS-1296 where (sometimes) a bogus looking id killed Enchant
-						{
-							ErrorReport.NotifyUserOfProblem("There was a problem asking the Enchant Spelling system about '{0}'.", ws.Id);
+							writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
 						}
 					}
 				}

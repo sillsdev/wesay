@@ -1,10 +1,12 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Xml;
 using Chorus.sync;
 using NUnit.Framework;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
+using WeSay.Project;
 
 namespace WeSay.Project.Tests
 {
@@ -20,7 +22,7 @@ namespace WeSay.Project.Tests
 			{
 				_projDir = new ProjectDirectorySetupForTesting("");
 
-				_backupMaker = new ChorusBackupMaker(new CheckinDescriptionBuilder());
+				_backupMaker = new ChorusBackupMaker();
 				_backupDir = new TemporaryFolder(testName);
 
 				_backupMaker.PathToParentOfRepositories = _backupDir.FolderPath;
@@ -78,7 +80,6 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[Category("Known Mono Issue")]
 		public void BackupNow_FirstTime_CreatesValidRepositoryAndWorkingTree()
 		{
 			using (BackupScenario scenario = new BackupScenario("BackupNow_NewFolder_CreatesNewRepository"))
@@ -125,7 +126,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void CanSerializeAndDeserializeSettings()
 		{
-			ChorusBackupMaker b = new ChorusBackupMaker(new CheckinDescriptionBuilder());
+			ChorusBackupMaker b = new ChorusBackupMaker();
 			b.PathToParentOfRepositories = @"z:\";
 			StringBuilder builder = new StringBuilder();
 			using (XmlWriter writer = XmlWriter.Create(builder))
@@ -133,7 +134,7 @@ namespace WeSay.Project.Tests
 				b.Save(writer);
 				using (XmlReader reader = XmlReader.Create(new StringReader(builder.ToString())))
 				{
-					ChorusBackupMaker loadedGuy = ChorusBackupMaker.LoadFromReader(reader, new CheckinDescriptionBuilder());
+					ChorusBackupMaker loadedGuy = ChorusBackupMaker.LoadFromReader(reader);
 					Assert.AreEqual(@"z:\", loadedGuy.PathToParentOfRepositories);
 				}
 

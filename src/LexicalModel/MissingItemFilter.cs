@@ -1,33 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Palaso.Misc;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using System.Linq;
-using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel
 {
 	public class MissingFieldQuery: IFieldQuery<LexEntry>
 	{
 		private readonly Field _field;
-		private readonly string[] _writingSystemsOfInterest;
 
-		public MissingFieldQuery(Field field, string[] writingSystemsOfInterest)
+		public MissingFieldQuery(Field field)
 		{
-			Guard.AgainstNull(field, "field");
+			if (field == null)
+			{
+				throw new ArgumentNullException();
+			}
 			_field = field;
-
-			if (writingSystemsOfInterest == null || writingSystemsOfInterest.Length == 0)
-			{
-				_writingSystemsOfInterest = field.WritingSystemIds.ToArray();
-			}
-			else
-			{
-				_writingSystemsOfInterest = writingSystemsOfInterest;
-			}
 		}
 
 		#region IFilter<LexEntry> Members
@@ -66,7 +56,7 @@ namespace WeSay.LexicalModel
 			get { return _field; }
 		}
 
-		private bool IsMissingData(object content)
+		private bool IsMissingDataInWritingSystem(object content)
 		{
 			switch (Field.DataTypeName)
 			{
@@ -75,8 +65,7 @@ namespace WeSay.LexicalModel
 				case "OptionCollection":
 					return ((OptionRefCollection) content).IsEmpty;
 				case "MultiText":
-					return IsMissingAnyWritingSystemOfInterest((MultiText) content);
-
+					return IsMissingWritingSystem((MultiText) content);
 				case "RelationToOneEntry":
 					LexRelationCollection collection = (LexRelationCollection) content;
 					if (IsSkipped(collection.Parent, Field.FieldName))
@@ -87,7 +76,7 @@ namespace WeSay.LexicalModel
 					{
 						foreach (LexRelation r in collection.Relations)
 						{
-							if (!string.IsNullOrEmpty(r.TargetId))
+							if (r.TargetId != null)
 							{
 								return false; // has one non-empty relation
 							}
@@ -160,7 +149,7 @@ namespace WeSay.LexicalModel
 
 		private static bool IsSkipped(WeSayDataObject parent, string fieldName)
 		{
-			return parent.GetHasFlag("flag-skip-" + fieldName);
+			return parent.GetHasFlag("flag_skip_" + fieldName);
 		}
 
 		private bool IsMissingLexExampleSentenceField(LexExampleSentence example)
@@ -173,11 +162,11 @@ namespace WeSay.LexicalModel
 			{
 				if (Field.FieldName == Field.FieldNames.ExampleSentence.ToString())
 				{
-					return IsMissingAnyWritingSystemOfInterest(example.Sentence);
+					return IsMissingWritingSystem(example.Sentence);
 				}
 				else if (Field.FieldName == Field.FieldNames.ExampleTranslation.ToString())
 				{
-					return IsMissingAnyWritingSystemOfInterest(example.Translation);
+					return IsMissingWritingSystem(example.Translation);
 				}
 				else
 				{
@@ -217,7 +206,7 @@ namespace WeSay.LexicalModel
 			{
 				if (Field.FieldName == Field.FieldNames.EntryLexicalForm.ToString())
 				{
-					if (IsMissingAnyWritingSystemOfInterest(entry.LexicalForm))
+					if (IsMissingWritingSystem(entry.LexicalForm))
 					{
 						return true;
 					}
@@ -232,44 +221,25 @@ namespace WeSay.LexicalModel
 
 		private bool IsMissingCustomField(WeSayDataObject weSayData)
 		{
-			IParentable content = weSayData.GetProperty<IParentable>(Field.FieldName);
-			if (content == null)
+			IParentable field = weSayData.GetProperty<IParentable>(Field.FieldName);
+			if (field == null)
 			{
 				return !IsSkipped(weSayData, Field.FieldName);
 			}
-			if(Field.FieldName == "POS")
-			{
-				if(IsPosUnknown(weSayData))
-				{
-					return true;
-				}
-			}
-			return IsMissingData(content);
+			return IsMissingDataInWritingSystem(field);
 		}
 
-		private bool IsPosUnknown(WeSayDataObject sense)
+		private bool IsMissingWritingSystem(MultiTextBase field)
 		{
-			foreach(KeyValuePair<string, object> property in sense.Properties)
-			if (property.Key == "POS" && (((OptionRef) property.Value).Key == "unknown"))
+			foreach (string wsId in Field.WritingSystemIds)
 			{
-				return true;
-			}
-			return false;
-		}
-
-
-		private bool IsMissingAnyWritingSystemOfInterest(MultiTextBase text)
-		{
-			foreach (var wsId in _writingSystemsOfInterest )
-			{
-				if (!text.ContainsAlternative(wsId))
+				if (field[wsId].Length == 0)
 				{
 					return true;
 				}
 			}
 			return false;
 		}
-
 
 		#endregion
 	}

@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 
 namespace WeSay.ConfigTool
@@ -13,7 +12,6 @@ namespace WeSay.ConfigTool
 		private WritingSystemCollection _writingSystemCollection;
 
 		public event EventHandler WritingSystemIdChanged;
-		public event EventHandler IsAudioChanged;
 
 		//        public class PropertyChangingEventArgs : PropertyChangedEventArgs
 		//        {
@@ -57,15 +55,13 @@ namespace WeSay.ConfigTool
 			set { _writingSystemCollection = value; }
 		}
 
-		public ILogger Logger { get; set; }
-
 		private static bool TriedToChangeKnownLanguageId(string oldId,
 														 string officialId,
 														 string language)
 		{
 			if (oldId == officialId)
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"Sorry, it's important to keep to international standard code for {0}, which is '{1}'.",
 						language,
 						officialId);
@@ -76,29 +72,12 @@ namespace WeSay.ConfigTool
 
 		private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
-			Logger.WriteConciseHistoricalEvent(StringCatalog.Get("Modified {0} of Writing System {1}", "Checkin Description in WeSay Config Tool used when you edit a writing system."),
-				e.ChangedItem.PropertyDescriptor.Name, _writingSystem.Id);
-
-			if (e.ChangedItem.PropertyDescriptor.Name == "IsAudio")
-			{
-				if(IsAudioChanged !=null)
-					IsAudioChanged.Invoke(this, null);
-				return;
-			}
-
 			if (e.ChangedItem.PropertyDescriptor.Name != "Id")
 			{
 				return;
 			}
 
 			string id = e.ChangedItem.Value as string;
-
-			if (id != null && id.Contains(" "))
-			{
-				ErrorReport.NotifyUserOfProblem("Sorry, the writingsystem Id should conform to ISO 639-3 and may not contain spaces");
-				_writingSystem.Id = e.OldValue.ToString();
-			}
-
 			if (TriedToChangeKnownLanguageId(e.OldValue.ToString(), "en", "English") ||
 				TriedToChangeKnownLanguageId(e.OldValue.ToString(), "fr", "French") ||
 				TriedToChangeKnownLanguageId(e.OldValue.ToString(), "id", "Indonesian") ||
@@ -110,19 +89,19 @@ namespace WeSay.ConfigTool
 			}
 			else if (e.OldValue.ToString() == "fr")
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"Sorry, it's important to keep to international standard code for French, which is 'fr'.");
 				_writingSystem.Id = e.OldValue.ToString();
 			}
 			else if (e.OldValue.ToString() == "id")
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"Sorry, it's important to keep to international standard code for Indonesian, which is 'id'.");
 				_writingSystem.Id = e.OldValue.ToString();
 			}
 			else if (_writingSystemCollection.ContainsKey(id))
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"Sorry, there is already a Writing System with that ID.");
 				_writingSystem.Id = e.OldValue.ToString();
 			}

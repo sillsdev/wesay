@@ -2,35 +2,31 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Palaso.IO;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.ImageGallery;
 using WeSay.Foundation;
-using WeSay.LexicalTools.AddPictures;
 
 namespace WeSay.UI
 {
 	public partial class PictureControl: UserControl, IBindableControl<string>
 	{
+		private readonly string _nameForLogging;
 		public event EventHandler ValueChanged;
 		public event EventHandler GoingAway;
 
 		private string _fileName;
 		private readonly string _storageFolderPath;
-		private readonly IFileLocator _fileLocator;
 		private readonly Color _shyLinkColor = Color.LightGray;
 
-		public PictureControl(string storageFolderPath, IFileLocator fileLocator)
+		public PictureControl(string nameForLogging, string storageFolderPath)
 		{
 			InitializeComponent();
+			_nameForLogging = nameForLogging;
 			_storageFolderPath = storageFolderPath;
-			_fileLocator = fileLocator;
 			if (!Directory.Exists(storageFolderPath))
 			{
 				Directory.CreateDirectory(storageFolderPath);
 			}
 		}
-		public ISearchTermProvider SearchTermProvider { get; set; }
 
 		/// <summary>
 		/// The name of the file which must be in the StorageFolder
@@ -48,7 +44,6 @@ namespace WeSay.UI
 
 			if (string.IsNullOrEmpty(_fileName))
 			{
-				_searchGalleryLink.Visible = GalleryIsAvailable;
 				_chooseImageLink.Visible = true;
 				_pictureBox.Visible = false;
 				_problemLabel.Visible = false;
@@ -61,24 +56,18 @@ namespace WeSay.UI
 				string s = String.Format("~Cannot find {0}", GetPathToImage());
 				toolTip1.SetToolTip(this, s);
 				toolTip1.SetToolTip(_problemLabel, s);
-				_searchGalleryLink.Visible = GalleryIsAvailable;
 				_chooseImageLink.Visible = true;
 				Height = _problemLabel.Bottom + 5;
 			}
 			else
 			{
 				_pictureBox.Visible = true;
-				_searchGalleryLink.Visible = false;
 				_chooseImageLink.Visible = false;
 				//_chooseImageLink.Visible = false;
 				_problemLabel.Visible = false;
 				try
 				{
-					//inset it a bit, with white border
-					_pictureBox.BackColor = Color.White;
-					_pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-					_pictureBox.Image = ImageUtilities.GetThumbNail(GetPathToImage(), _pictureBox.Width-4, _pictureBox.Height-4, Color.White);
-				   // _pictureBox.Load(GetPathToImage());
+					_pictureBox.Load(GetPathToImage());
 					Height = _pictureBox.Bottom + 5;
 				}
 				catch (Exception error)
@@ -90,7 +79,6 @@ namespace WeSay.UI
 
 			_removeImageLink.Visible = _pictureBox.Visible;
 
-			_searchGalleryLink.LinkColor = _shyLinkColor;
 			_chooseImageLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
 		}
@@ -112,40 +100,27 @@ namespace WeSay.UI
 						Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 				if (dialog.ShowDialog() == DialogResult.OK)
 				{
-					PictureChosen(dialog.FileName);
+					_fileName = Path.GetFileName(dialog.FileName);
+					if (File.Exists(GetPathToImage()))
+					{
+						File.Delete(GetPathToImage());
+					}
+					File.Copy(dialog.FileName, GetPathToImage());
+					UpdateDisplay();
+
+					NotifyChanged();
 				}
 			}
 			catch (Exception error)
 			{
-				ErrorReport.NotifyUserOfProblem("Something went wrong getting the picture. " +
+				ErrorReport.ReportNonFatalMessage("Something went wrong getting the picture. " +
 												  error.Message);
-			}
-		}
-
-		private void PictureChosen(string path)
-		{
-			try
-			{
-				_fileName = Path.GetFileName(path);
-
-				if (File.Exists(GetPathToImage()))
-				{
-					File.Delete(GetPathToImage());
-				}
-				File.Copy(path, GetPathToImage());
-				UpdateDisplay();
-
-				NotifyChanged();
-			}
-			catch(Exception error)
-			{
-				ErrorReport.NotifyUserOfProblem("WeSay was not able to copy the picture file.\r\n{0}",error.Message);
 			}
 		}
 
 		private void NotifyChanged()
 		{
-			Logger.WriteMinorEvent("Picture Control Changed");
+			Logger.WriteMinorEvent("Picture Control Changed ({0})", _nameForLogging);
 			if (ValueChanged != null)
 			{
 				ValueChanged.Invoke(this, null);
@@ -191,7 +166,7 @@ namespace WeSay.UI
 			//            }
 			//            catch(Exception error)
 			//            {
-			//                Palaso.Reporting.ErrorReport.NotifyUserOfProblem(error.Message);
+			//                Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
 			//            }
 
 			_fileName = string.Empty;
@@ -207,13 +182,11 @@ namespace WeSay.UI
 		private void _chooseImageLink_MouseEnter(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = Color.Blue;
-			_searchGalleryLink.LinkColor = GalleryIsAvailable ? Color.Blue : _shyLinkColor;
 		}
 
 		private void _chooseImageLink_MouseLeave(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = _shyLinkColor;
-			_searchGalleryLink.LinkColor = _shyLinkColor;
 		}
 
 		private void _removeImageLink_MouseLeave(object sender, EventArgs e)
@@ -224,81 +197,13 @@ namespace WeSay.UI
 		private void ImageDisplayWidget_MouseHover(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = Color.Blue;
-			_searchGalleryLink.LinkColor = GalleryIsAvailable ? Color.Blue : _shyLinkColor;
 			_removeImageLink.LinkColor = Color.Blue;
 		}
 
 		private void ImageDisplayWidget_MouseLeave(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = _shyLinkColor;
-			_searchGalleryLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
 		}
-		private static string TryToGetRootImagePath()
-		{
-			//look for the cd/dvd
-			var path = Palaso.UI.WindowsForms.ImageGallery.ArtOfReadingImageCollection.TryToGetCollectionPath();
-			if(!string.IsNullOrEmpty(path))
-				return path;
-
-			//look for it in a hard-coded location
-			string HardDiskPath = @"c:\art of reading\images";
-			if (Environment.OSVersion.Platform == PlatformID.Unix)
-				HardDiskPath = @"home\art of reading\images"; //TODO: what should this be?
-
-			return HardDiskPath;
-		}
-		private bool GalleryIsAvailable
-		{
-			get
-			{
-				return Directory.Exists(TryToGetRootImagePath());
-			}
-		}
-		private void OnSearchGalleryLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			if(!GalleryIsAvailable)
-			{
-				MessageBox.Show("Could not find the Art Of Reading image collection.");
-				return;
-			}
-			var images = new ArtOfReadingImageCollection();
-			images.LoadIndex(_fileLocator.LocateFile("artofreadingindexv3_en.txt"));
-			images.RootImagePath = TryToGetRootImagePath();
-			var searchString = SearchTermProvider == null ? string.Empty:SearchTermProvider.SearchString;
-			searchString = images.StripNonMatchingKeywords(searchString);
-			using (var chooser = new PictureChooser(images, searchString))
-			{
-				chooser.ShowInTaskbar = false;
-				chooser.ShowIcon = false;
-				chooser.MinimizeBox = false;
-				chooser.MaximizeBox = false;
-
-				if (DialogResult.OK == chooser.ShowDialog())
-				{
-					PictureChosen(chooser.ChosenPath);
-				}
-			}
-		}
-
-		/// <summary>
-		/// See WS-1214 (hatton) pressing 'n' or 'u' or 'd' with focus on picture control is like alt+n, alt+u, etc.
-		/// </summary>
-		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-		{
-		  if (Keys.None != (keyData & Keys.Modifiers) ||
-				 Keys.Tab == (keyData & Keys.Tab) ||
-				 Keys.Up == (keyData & Keys.Up) ||
-				 Keys.Down == (keyData & Keys.Down) )
-			{
-				return base.ProcessCmdKey(ref msg, keyData);
-			}
-			return true;
-		}
-	}
-
-	public interface ISearchTermProvider
-	{
-		string SearchString { get; }
 	}
 }

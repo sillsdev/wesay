@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Db4objects.Db4o;
 
 namespace WeSay.Data.Tests
 {
@@ -95,6 +96,10 @@ namespace WeSay.Data.Tests
 			}
 		}
 
+		public void ObjectOnActivate(IObjectContainer container)
+		{
+			_onActivateDepth = Depth;
+		}
 
 		public int Depth
 		{

@@ -34,17 +34,16 @@ namespace WeSay.ConfigTool
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.openDifferentProject = new System.Windows.Forms.LinkLabel();
 			this.createNewProject = new System.Windows.Forms.LinkLabel();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.recentProjectsLabel = new System.Windows.Forms.Label();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.secondCellPanel = new System.Windows.Forms.Panel();
 			this.firstCellPanel = new System.Windows.Forms.Panel();
-			this.createProjectFromFLEx = new System.Windows.Forms.LinkLabel();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.secondCellPanel.SuspendLayout();
 			this.firstCellPanel.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// blueBar
@@ -98,12 +97,24 @@ namespace WeSay.ConfigTool
 			this.createNewProject.Text = "Create New Project";
 			this.createNewProject.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.createNewProject_LinkClicked);
 			//
+			// pictureBox1
+			//
+			this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+			this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+			this.pictureBox1.Image = global::WeSay.ConfigTool.Properties.Resources.WelcomeImage;
+			this.pictureBox1.InitialImage = null;
+			this.pictureBox1.Location = new System.Drawing.Point(27, 21);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(70, 70);
+			this.pictureBox1.TabIndex = 0;
+			this.pictureBox1.TabStop = false;
+			//
 			// recentProjectsLabel
 			//
 			this.recentProjectsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.recentProjectsLabel.Location = new System.Drawing.Point(3, 0);
 			this.recentProjectsLabel.Name = "recentProjectsLabel";
-			this.recentProjectsLabel.Size = new System.Drawing.Size(174, 20);
+			this.recentProjectsLabel.Size = new System.Drawing.Size(168, 20);
 			this.recentProjectsLabel.TabIndex = 6;
 			this.recentProjectsLabel.Text = "Open Recent Project";
 			//
@@ -132,18 +143,19 @@ namespace WeSay.ConfigTool
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 2;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 71F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(350, 103);
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 63F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(180, 95);
 			this.tableLayoutPanel1.TabIndex = 9;
 			//
 			// secondCellPanel
 			//
-			this.secondCellPanel.Controls.Add(this.createProjectFromFLEx);
 			this.secondCellPanel.Controls.Add(this.createNewProject);
 			this.secondCellPanel.Controls.Add(this.openDifferentProject);
+			this.secondCellPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.secondCellPanel.Location = new System.Drawing.Point(3, 35);
 			this.secondCellPanel.Name = "secondCellPanel";
-			this.secondCellPanel.Size = new System.Drawing.Size(344, 65);
+			this.secondCellPanel.Size = new System.Drawing.Size(174, 57);
 			this.secondCellPanel.TabIndex = 7;
 			//
 			// firstCellPanel
@@ -154,34 +166,8 @@ namespace WeSay.ConfigTool
 			this.firstCellPanel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.firstCellPanel.Location = new System.Drawing.Point(3, 3);
 			this.firstCellPanel.Name = "firstCellPanel";
-			this.firstCellPanel.Size = new System.Drawing.Size(344, 26);
+			this.firstCellPanel.Size = new System.Drawing.Size(174, 26);
 			this.firstCellPanel.TabIndex = 8;
-			//
-			// createProjectFromFLEx
-			//
-			this.createProjectFromFLEx.AutoSize = true;
-			this.createProjectFromFLEx.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.createProjectFromFLEx.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-			this.createProjectFromFLEx.LinkColor = System.Drawing.Color.Black;
-			this.createProjectFromFLEx.Location = new System.Drawing.Point(3, 40);
-			this.createProjectFromFLEx.Name = "createProjectFromFLEx";
-			this.createProjectFromFLEx.Size = new System.Drawing.Size(279, 20);
-			this.createProjectFromFLEx.TabIndex = 3;
-			this.createProjectFromFLEx.TabStop = true;
-			this.createProjectFromFLEx.Text = "Create Project From FLEx LIFT Export";
-			this.createProjectFromFLEx.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnCreateProjectFromFLEx_LinkClicked);
-			//
-			// pictureBox1
-			//
-			this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-			this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.pictureBox1.Image = global::WeSay.ConfigTool.Properties.Resources.WelcomeImage;
-			this.pictureBox1.InitialImage = null;
-			this.pictureBox1.Location = new System.Drawing.Point(27, 21);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(70, 70);
-			this.pictureBox1.TabIndex = 0;
-			this.pictureBox1.TabStop = false;
 			//
 			// WelcomeControl
 			//
@@ -195,13 +181,13 @@ namespace WeSay.ConfigTool
 			this.Name = "WelcomeControl";
 			this.Size = new System.Drawing.Size(530, 338);
 			this.Load += new System.EventHandler(this.WelcomeControl_Load);
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.secondCellPanel.ResumeLayout(false);
 			this.secondCellPanel.PerformLayout();
 			this.firstCellPanel.ResumeLayout(false);
 			this.firstCellPanel.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -219,7 +205,6 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.Panel secondCellPanel;
 		private System.Windows.Forms.Panel firstCellPanel;
-		private System.Windows.Forms.LinkLabel createProjectFromFLEx;
 
 	}
 }

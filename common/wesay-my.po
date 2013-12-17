@@ -123,7 +123,7 @@ msgstr ""
 
 # ; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email My Work to {0}"
-msgstr "အလုပ္‌တာ၀န္‌ကုိ {0} သုိ့ပုိ့ပာ။"
+msgstr "အလုပ္‌တာ၀န္‌ကုိ {၀} သုိ့ပုိ့ပာ။"
 
 # ; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Send a zipped email containing all your WeSay work."
@@ -209,7 +209,7 @@ msgstr ""
 # ; ..\src\LexicalTools\DictionaryTask.cs
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
-msgstr "စကားလုံးမ္ယား {0} {1} ကုိက္ရည္‌့ပာ။"
+msgstr "စကားလုံးမ္ယား {၀} {၁} ကုိက္ရည္‌့ပာ။"
 
 # ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 #. The label for the field showing the Lexeme Form of the entry.

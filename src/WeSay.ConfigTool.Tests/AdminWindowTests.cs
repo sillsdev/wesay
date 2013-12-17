@@ -6,8 +6,8 @@ using System.Xml.XPath;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using Palaso.Reporting;
-//using WeSay.Foundation.Tests;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Tests;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
@@ -21,11 +21,9 @@ namespace WeSay.ConfigTool.Tests
 
 		public override void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
 			_window = new ConfigurationWindow(new string[] {});
-			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 			_mainWindowTester = new FormTester(_window.Name, _window);
 
@@ -34,7 +32,6 @@ namespace WeSay.ConfigTool.Tests
 
 		public override void TearDown()
 		{
-			_mainWindowTester.Close();
 			base.TearDown();
 			if (BasilProject.IsInitialized)
 			{
@@ -93,7 +90,7 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ErrorReport.ProblemNotificationSentToUserException))]
+		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void TryingToOpenNonExistantProjectDoesntCrash()
 		{
 			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig", null);
@@ -105,7 +102,6 @@ namespace WeSay.ConfigTool.Tests
 		{
 			_window.CreateAndOpenProject(_projectFolder);
 			WalkTopLevelTabs();
-
 		}
 
 		[Test]

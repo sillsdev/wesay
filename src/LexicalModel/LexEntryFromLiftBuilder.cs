@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using LiftIO.Parsing;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using System.Linq;
-using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel
 {
@@ -37,20 +34,34 @@ namespace WeSay.LexicalModel
 		private readonly IList<String> _expectedOptionTraits;
 		private readonly IList<string> _expectedOptionCollectionTraits;
 		private readonly LiftRepository _repository;
-		private readonly OptionsList _semanticDomainsList;
 
-		public LexEntryFromLiftBuilder(LiftRepository repository, OptionsList semanticDomainsList)
+		public LexEntryFromLiftBuilder(LiftRepository repository)
 		{
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
 			_repository = repository;
-			_semanticDomainsList = semanticDomainsList;
 		}
 
 		public LexEntry GetOrMakeEntry(Extensible eInfo, int order)
 		{
 			LexEntry entry = null;
+#if merging
+	 This really slows us down to a crawl if the incoming lift has guids, yet
+	 we aren't really merging, so its a waste of time.
 
+			If or when we do need to handle merging, this can probably be sped up by getting
+			the entire list of guids all in one go and then checking
+
+			if (eInfo.Guid != Guid.Empty)
+			{
+				entry = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, eInfo.Guid);
+
+				if (CanSafelyPruneMerge(eInfo, entry))
+				{
+					return null; // no merging needed
+				}
+			}
+#endif
 			if (eInfo.CreationTime == default(DateTime))
 			{
 				eInfo.CreationTime = PreciseDateTime.UtcNow;
@@ -184,19 +195,16 @@ namespace WeSay.LexicalModel
 			bool alreadyHaveAPrimaryTranslation = example.Translation != null &&
 												  !string.IsNullOrEmpty(
 														   example.Translation.GetFirstAlternative());
-		/*    bool typeIsCompatibleWithWeSayPrimaryTranslation = string.IsNullOrEmpty(type) ||
-															   type.ToLower() == "free translation"; //this is the default style in FLEx
-		 * */
-
-			//WeSay's model only allows for one translation just grab the first translation
-			if (!alreadyHaveAPrimaryTranslation /*&& typeIsCompatibleWithWeSayPrimaryTranslation*/)
+			bool typeIsCompatibleWithWeSayPrimaryTranslation = string.IsNullOrEmpty(type) ||
+															   type == "free";
+			if (!alreadyHaveAPrimaryTranslation && typeIsCompatibleWithWeSayPrimaryTranslation)
 			{
 				MergeIn(example.Translation, forms);
 				example.TranslationType = type;
 			}
 			else
 			{
-				example.GetOrCreateProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(LexExampleSentence.WellKnownProperties.Translation)).Values.Add(rawXml);
+				example.GetOrCreateProperty<EmbeddedXmlCollection>("translation").Values.Add(rawXml);
 			}
 		}
 
@@ -231,32 +239,31 @@ namespace WeSay.LexicalModel
 		/// <summary>
 		/// Handle LIFT's "note" entity
 		/// </summary>
-		/// <remarks>The difficult thing here is we don't handle anything but a default note.
-		/// Any other kind, we put in the xml residue for round-tripping.</remarks>
-		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents, string rawXml)
+		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents)
 		{
-			var noteProperty = extensible.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
-			bool alreadyHaveAOne= !MultiText.IsEmpty(noteProperty);
-
-			bool weCanHandleThisType = string.IsNullOrEmpty(type) ||type == "general";
-
-			if (!alreadyHaveAOne && weCanHandleThisType)
+			List<String> writingSystemAlternatives = new List<string>(contents.Count);
+			foreach (KeyValuePair<string, string> pair in contents.AsSimpleStrings)
 			{
-				List<String> writingSystemAlternatives = new List<string>(contents.Count);
+				writingSystemAlternatives.Add(pair.Key);
+			}
+
+			if (!string.IsNullOrEmpty(type))
+			{
+				List<String> keys = new List<string>(contents.Count);
 				foreach (KeyValuePair<string, string> pair in contents.AsSimpleStrings)
 				{
-					writingSystemAlternatives.Add(pair.Key);
+					keys.Add(pair.Key);
 				}
-				noteProperty = extensible.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
-				MergeIn(noteProperty, contents);
+				foreach (string s in keys)
+				{
+					contents.Prepend(s, "(" + type + ") ");
+				}
 			}
-			else //residue
-			{
-				var residue = extensible.GetOrCreateProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(WeSayDataObject.WellKnownProperties.Note));
-				residue.Values.Add(rawXml);
-//                var r = extensible.GetProperty<EmbeddedXmlCollection>(WeSayDataObject.GetEmbeddedXmlNameForProperty(WeSayDataObject.WellKnownProperties.Note));
-//                Debug.Assert(r != null);
-			}
+
+			AddOrAppendMultiTextProperty(extensible,
+										 contents,
+										 WeSayDataObject.WellKnownProperties.Note,
+										 " || ");
 		}
 
 		public WeSayDataObject GetOrMakeParentReversal(WeSayDataObject parent,
@@ -278,7 +285,6 @@ namespace WeSay.LexicalModel
 
 		public WeSayDataObject MergeInEtymology(LexEntry entry,
 												string source,
-												string type,
 												LiftMultiText form,
 												LiftMultiText gloss,
 												string rawXml)
@@ -367,14 +373,6 @@ namespace WeSay.LexicalModel
 			// other field stuff as xml (in order to round-trip it) or model it.
 
 			extensible.Properties.Add(new KeyValuePair<string, object>(typeAttribute, t));
-
-			if (traits != null)
-			{
-				foreach (var trait in traits)
-				{
-					t.EmbeddedXmlElements.Add(string.Format(@"<trait name='{0}' value='{1}'/>", trait.Name, trait.Value));
-				}
-			}
 		}
 
 		/// <summary>
@@ -392,31 +390,18 @@ namespace WeSay.LexicalModel
 			if (ExpectedOptionTraits.Contains(trait.Name))
 			{
 				OptionRef o = extensible.GetOrCreateProperty<OptionRef>(trait.Name);
-				o.Value = trait.Value.Trim();
+				o.Value = trait.Value;
 			}
-			else if (trait.Name.StartsWith("flag-"))
+			else if (trait.Name.StartsWith("flag_"))
 			{
 				extensible.SetFlag(trait.Name);
 			}
 					// if it is unknown assume it is a collection.
 			else //if (ExpectedOptionCollectionTraits.Contains(trait.Name))
 			{
-				var key = trait.Value.Trim();
-				OptionRefCollection refs =
+				OptionRefCollection c =
 						extensible.GetOrCreateProperty<OptionRefCollection>(trait.Name);
-				if(trait.Name == LexSense.WellKnownProperties.SemanticDomainDdp4)
-				{
-					if(_semanticDomainsList.GetOptionFromKey(key) == null)
-					{
-						var match =_semanticDomainsList.Options.FirstOrDefault(option => option.Key.StartsWith(key));
-						if(match !=null)
-						{
-							refs.Add(match.Key);
-							return;
-						}
-					}
-				}
-				refs.Add(key);
+				c.Add(trait.Value);
 			}
 			//else
 			//{
@@ -474,7 +459,7 @@ namespace WeSay.LexicalModel
 
 		public void FinishEntry(LexEntry entry)
 		{
-			PostProcessSenses(entry);
+			CopyOverGlossesIfDefinitionsMissing(entry);
 			//_repository.FinishCreateEntry(entry);
 			entry.GetOrCreateId(false);
 			entry.ModifiedTimeIsLocked = false;
@@ -488,45 +473,18 @@ namespace WeSay.LexicalModel
 		/// to bother with.
 		/// </summary>
 		/// <param name="entry"></param>
-		private void PostProcessSenses(LexEntry entry)
+		private void CopyOverGlossesIfDefinitionsMissing(LexEntry entry)
 		{
 			foreach (LexSense sense in entry.Senses)
 			{
-				CopyOverGlossesIfDefinitionsMissing(sense);
-				FixUpOldLiteralMeaningMistake(entry, sense);
-			}
-		}
-
-		/// <summary>
-		/// we initially, mistakenly put literal meaning on sense. This moves
-		/// it and switches to newer naming style.
-		/// </summary>
-		internal void FixUpOldLiteralMeaningMistake(LexEntry entry, LexSense sense)
-		{
-			KeyValuePair<string, object> prop = sense.Properties.Find(p => p.Key == "LiteralMeaning");
-			if (prop.Key != null)
-			{
-				sense.Properties.Remove(prop);
-				//change the label and move it up to lex entry
-				var newGuy = new KeyValuePair<string, object>("literal-meaning",  prop.Value);
-				entry.Properties.Add(newGuy);
-			}
-		}
-
-		private void CopyOverGlossesIfDefinitionsMissing(LexSense sense)
-		{
-			foreach(LanguageForm form in sense.Gloss.Forms)
-			{
-				if(!sense.Definition.ContainsAlternative(form.WritingSystemId))
+				foreach(LanguageForm form in sense.Gloss.Forms)
 				{
-					sense.Definition.SetAlternative(form.WritingSystemId,form.Form);
+					if(!sense.Definition.ContainsAlternative(form.WritingSystemId))
+					{
+						sense.Definition.SetAlternative(form.WritingSystemId,form.Form);
+					}
 				}
 			}
-		}
-
-		public void MergeInMedia(WeSayDataObject pronunciation, string href, LiftMultiText caption)
-		{
-			// review: Currently ignore media. See WS-1128
 		}
 
 		#endregion

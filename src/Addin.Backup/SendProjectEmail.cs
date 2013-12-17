@@ -7,7 +7,6 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
-using WeSay.LexicalModel;
 
 namespace Addin.Backup
 {
@@ -26,7 +25,7 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return string.Format(StringCatalog.Get("~Email this dictionary to {0}"),
+				return string.Format(StringCatalog.Get("~Email My Work to {0}"),
 									 _settings.RecipientName);
 			}
 		}
@@ -38,7 +37,7 @@ namespace Addin.Backup
 				return
 						string.Format(
 								StringCatalog.Get(
-										"~Email this dictionary as a compressed attachment"));
+										"~Send a zipped email containing all your WeSay work."));
 			}
 		}
 
@@ -64,23 +63,18 @@ namespace Addin.Backup
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 			string dest = Path.Combine(Path.GetTempPath(), projectInfo.Name + "_wesay.zip");
-			LexEntryRepository repo =
-				projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
-			using (repo.GetRightToAccessLiftExternally())
-			{
-				BackupMaker.BackupToExternal(projectInfo.PathToTopLevelDirectory,
-											 dest,
-											 projectInfo.FilesBelongingToProject);
-			}
+			BackupMaker.BackupToExternal(projectInfo.PathToTopLevelDirectory,
+										 dest,
+										 projectInfo.FilesBelongingToProject);
 
-
-		MAPI msg = new MAPI();
+			MAPI msg = new MAPI();
 			msg.AddAttachment(dest);
 			msg.AddRecipientTo(_settings.Email);
 			subject =
-				StringCatalog.GetFormatted("{0} WeSay Project Data",
-										   "The subject line of the email send by the 'Send Email' Action. The {0} will be replaced by the name of the project, as in 'Greek WeSay Project Data'",
-										   projectInfo.Name);
+					String.Format(
+							StringCatalog.Get("{0} WeSay Project Data",
+											  "The subject line of the email send by the 'Send Email' Action. The {0} will be replaced by the name of the project, as in 'Greek WeSay Project Data'"),
+							projectInfo.Name);
 			string body = StringCatalog.Get("The latest WeSay project data is attached.");
 
 			//I tried hard to get this to run in a thread so it wouldn't block wesay,
