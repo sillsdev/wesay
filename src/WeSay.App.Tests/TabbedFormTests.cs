@@ -121,6 +121,11 @@ namespace WeSay.App.Tests
 			return "Reference: " + GetReferenceCount();
 		}
 
+		public void FocusDesiredControl()
+		{
+			return;
+		}
+
 		public int ExactCount
 		{
 			get { return GetRemainingCount(); }

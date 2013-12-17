@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Chorus.UI.Sync;
 using Chorus.VcsDrivers.Mercurial;
@@ -96,6 +98,16 @@ namespace WeSay.Project.Synchronize
 
 				if (dlg.SyncResult != null && dlg.SyncResult.DidGetChangesFromOthers)
 				{
+					// This loop is an attempt to handle a collection-modified-while-iterating exception that is thrown in Application.Restart,
+					// which http://social.msdn.microsoft.com/Forums/windows/en-US/5ad73551-81bd-4525-aa40-fe2772817a99/applicationrestart-throw-exception-collection-was-modified-enumeration-operation-may-not
+					// attributes to closing a window in its OnClosing event. I can't find where we're doing this, but a
+					// plausible workaround seems to be to close all the windows, using a loop which carefully copies the collection
+					// first, and also tries to avoid closing ones that are already closed.
+					foreach (Form form in Application.OpenForms.Cast<object>().Cast<Form>().ToList())
+					{
+						if (form.Visible)
+							form.Close();
+					}
 					Application.Restart();
 				}
 			}

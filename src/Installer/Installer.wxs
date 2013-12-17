@@ -29,13 +29,9 @@ users to install just the shortcut for your app, then demand-install the
 rest of the app the first time the icon is run.  If this is not behavior you
 are trying to support, you're better off using non-advertised shortcuts. "-->
 
-		  <PropertyRef Id="NETFRAMEWORK35" />
-		  <PropertyRef Id="NETFRAMEWORK35_SP_LEVEL"/>
-		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 3.5 SP1.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
-			Installed OR NETFRAMEWORK35
-		  </Condition>
-		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 3.5 SP1.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
-			Installed OR (NETFRAMEWORK35_SP_LEVEL and NOT NETFRAMEWORK35_SP_LEVEL = "#0")
+		  <PropertyRef Id="NETFRAMEWORK40CLIENT" />
+		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET 4.0 ClientFramework.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
+			Installed OR NETFRAMEWORK40CLIENT OR NETFRAMEWORK40FULL
 		  </Condition>
 
 
@@ -154,16 +150,49 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="Enchant.Net.dll" Name="Enchant.Net.dll" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll" />
 				  </Component>
 
-				  <Component Id="Vulcan.Uczniowie.HelpProvider.dll" Guid="{F8BCCD28-AB69-4C3D-B024-6B109ADC75B0}">
-					<File Id="Vulcan.Uczniowie.HelpProvider.dll" Name="Vulcan.Uczniowie.HelpProvider.dll" KeyPath="yes" Source="..\..\output\release\Vulcan.Uczniowie.HelpProvider.dll" />
-				  </Component>
+				  <!--     These are already installed by Chorus Merge Module
+				  Vulcan Help Provider
+
 				  <Component Id="autofac.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
 					<File Id="autofac.dll" Name="autofac.dll" KeyPath="yes" Source="..\..\output\release\autofac.dll" />
 				  </Component>
 
+				  <Component Id="Palaso.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
+					<File Id="Palaso.dll" Name="Palaso.dll" KeyPath="yes" Source="..\..\output\release\Palaso.dll" />
+				  </Component>
+
+				  <Component Id="PalasoUIWindowsForms.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E899}">
+					<File Id="PalasoUIWindowsForms.dll" Name="PalasoUIWindowsForms.dll" KeyPath="yes" Source="..\..\output\release\PalasoUIWindowsForms.dll" />
+				  </Component>
+
+				  <Component Id="Palaso.Lift.dll" Guid="{3DDA9386-0A99-418D-BF33-E070D6337DDD}">
+					<File Id="Palaso.Lift.dll" Name="Palaso.Lift.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Lift.dll" />
+				  </Component>
+
+				  <Component Id="Icu.Net.dll" Guid="{7EEB48AE-7494-4408-924F-24BCA99A6E22}">
+					<File Id="Icu.Net.dll" Name="icu.net.dll" KeyPath="yes" Source="..\..\output\release\icu.net.dll" />
+				  </Component>
+
+				  <Component Id="IcuData.dll" Guid="{39EFEA93-2A23-42d0-A3EE-CD080A9F8C54}">
+					<File Id="IcuData.dll" Name="icudt40.dll" KeyPath="yes" Source="..\..\output\release\icudt40.dll" />
+				  </Component>
+				  <Component Id="IcuI18n.dll" Guid="{E47B3633-2C93-4bdc-AB68-4851EC13878F}">
+					<File Id="IcuI18n.dll" Name="icuin40.dll" KeyPath="yes" Source="..\..\output\release\icuin40.dll" />
+				  </Component>
+				  <Component Id="IcuCommon.dll" Guid="{15D5ACDF-802A-40b1-83C3-681F12B02D89}">
+					<File Id="IcuCommon.dll" Name="icuuc40.dll" KeyPath="yes" Source="..\..\output\release\icuuc40.dll" />
+				  </Component>
+
+				-->
+
 				  <!-- audio recording/playback engine used by palaso.media -->
-				  <Component Id="irrKlang.NET2.0.dll" Guid="{952F0A0C-F317-459f-A91C-55DE3D046B2C}">
-					<File Id="irrKlang.NET2.0.dll" Name="irrKlang.NET2.0.dll" KeyPath="yes" Source="..\..\output\release\irrKlang.NET2.0.dll" />
+				  <Component Id="irrKlang.NET4.dll" Guid="{952F0A0C-F317-459f-A91C-55DE3D046B2C}">
+					<File Id="irrKlang.NET4.dll" Name="irrKlang.NET4.dll" KeyPath="yes" Source="..\..\output\release\irrKlang.NET4.dll" />
+				  </Component>
+
+				  <!-- needed by irrKlang on some machines that don't have it  -->
+				  <Component Id="msvcr100.dll" Guid="{7C89E927-6D7E-4103-B944-3BF8FD015F98}">
+					<File Id="msvcr100.dll" Name="msvcr100.dll" KeyPath="yes" Source="..\..\lib\release\msvcr100.dll" />
 				  </Component>
 
 				  <Component Id="ICSharpCode.SharpZipLib.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D9D7}">
@@ -201,30 +230,17 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
 				  </Component>
 
-				  <Component Id="Palaso.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
-					<File Id="Palaso.dll" Name="Palaso.dll" KeyPath="yes" Source="..\..\output\release\Palaso.dll" />
-				  </Component>
 
-<!--                  <Component Id="Palaso.Services.dll" Guid="{B8D67640-A995-42ec-B13C-0B1EECC65659}">
-					<File Id="Palaso.Services.dll" Name="Palaso.Services.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Services.dll" />
-				  </Component>
--->
 				  <Component Id="Palaso.DictionaryServices.dll" Guid="{3CCA9386-0A99-418D-BF33-E070D6337D2A}">
 					<File Id="Palaso.DictionaryServices.dll" Name="Palaso.DictionaryServices.dll" KeyPath="yes" Source="..\..\output\release\Palaso.DictionaryServices.dll" />
 				  </Component>
 
-				  <Component Id="Palaso.Lift.dll" Guid="{3DDA9386-0A99-418D-BF33-E070D6337DDD}">
-					<File Id="Palaso.Lift.dll" Name="Palaso.Lift.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Lift.dll" />
-				  </Component>
 
 				  <Component Id="Palaso.Media.dll" Guid="{4739D7BD-6D1D-474f-BF01-E012E51361E4}">
 					<File Id="Palaso.Media.dll" Name="Palaso.Media.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Media.dll" />
 				  </Component>
 
 
-				  <Component Id="PalasoUIWindowsForms.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E899}">
-					<File Id="PalasoUIWindowsForms.dll" Name="PalasoUIWindowsForms.dll" KeyPath="yes" Source="..\..\output\release\PalasoUIWindowsForms.dll" />
-				  </Component>
 				  <Component Id="WeSay.App.exe.config" Guid="{ED8319B8-8325-4598-8E4C-004D3356E373}">
 					<File Id="WeSay.App.exe.config" Name="WeSay.App.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay.App.exe.config" />
 				  </Component>
@@ -269,19 +285,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<File Id="Addin.LiftReports.dll" Name="Addin.LiftReports.dll" KeyPath="yes" Source="..\..\output\release\Addin.LiftReports.dll" />
 		  </Component>
 		  -->
-				  <!-- this is a LiftReports requirement -->
-				  <Component Id="NVelocity.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D444}">
-					<File Id="NVelocity.dll" Name="NVelocity.dll" KeyPath="yes" Source="..\..\output\release\NVelocity.dll" />
-				  </Component>
-				  <!-- this is an nvelocity requirement -->
-				  <Component Id="log4net.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D555}">
-					<File Id="log4net.dll" Name="log4net.dll" KeyPath="yes" Source="..\..\output\release\log4net.dll" />
-				  </Component>
-				  <!-- this is an nvelocity requirement -->
-				  <Component Id="commons.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D666}">
-					<File Id="commons.dll" Name="commons.dll" KeyPath="yes" Source="..\..\output\release\commons.dll" />
-				  </Component>
-
 				  <Component Id="WeSay.AddinLib.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7902222}">
 					<File Id="WeSay.AddinLib.dll" Name="WeSay.AddinLib.dll" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.dll" />
 				  </Component>
@@ -290,23 +293,10 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<RemoveFile Id="Mono.Addins.dll" Name="Mono.Addins.dll" On="install"/>
 				  </Component>
 
-				  <Component Id="Icu.Net.dll" Guid="{7EEB48AE-7494-4408-924F-24BCA99A6E22}">
-					<File Id="Icu.Net.dll" Name="icu.net.dll" KeyPath="yes" Source="..\..\output\release\icu.net.dll" />
-				  </Component>
-
-				  <Component Id="IcuData.dll" Guid="{39EFEA93-2A23-42d0-A3EE-CD080A9F8C54}">
-					<File Id="IcuData.dll" Name="icudt40.dll" KeyPath="yes" Source="..\..\output\release\icudt40.dll" />
-				  </Component>
-				  <Component Id="IcuI18n.dll" Guid="{E47B3633-2C93-4bdc-AB68-4851EC13878F}">
-					<File Id="IcuI18n.dll" Name="icuin40.dll" KeyPath="yes" Source="..\..\output\release\icuin40.dll" />
-				  </Component>
-				  <Component Id="IcuCommon.dll" Guid="{15D5ACDF-802A-40b1-83C3-681F12B02D89}">
-					<File Id="IcuCommon.dll" Name="icuuc40.dll" KeyPath="yes" Source="..\..\output\release\icuuc40.dll" />
-				  </Component>
-
 				  <Component Id="Keyman7Interop.dll" Guid="{4F786363-00D6-41ec-9464-9168B2EF3499}">
 					<File Id="Keyman7Interop.dll" Name="Keyman7Interop.dll" KeyPath="yes" Source="..\..\output\release\Keyman7Interop.dll" />
 				  </Component>
+
 
 
 				  <!-- used by PalasoUIWindowsForms for talking to scanner-->
@@ -333,10 +323,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Castle.DynamicProxy.dll" />
 
 			  <ComponentRef Id="Enchant.Net.dll"/>
-			  <ComponentRef Id="Vulcan.Uczniowie.HelpProvider.dll"/>
 
-			  <ComponentRef Id="autofac.dll"/>
-			  <ComponentRef Id="irrKlang.NET2.0.dll"/>
+			  <ComponentRef Id="irrKlang.NET4.dll"/>
 			  <ComponentRef Id="Interop.WIA.dll" />
 			  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
 			  <ComponentRef Id="KeymanLink.dll" />
@@ -347,12 +335,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalTools.pdb" />
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
 			  <ComponentRef Id="NetReflector.dll" />
-			  <ComponentRef Id="Palaso.dll"/>
-<!--              <ComponentRef Id="Palaso.Services.dll" />-->
 			  <ComponentRef Id="Palaso.DictionaryServices.dll" />
-			  <ComponentRef Id="Palaso.Lift.dll" />
 			  <ComponentRef Id="Palaso.Media.dll" />
-			  <ComponentRef Id="PalasoUIWindowsForms.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
 			  <ComponentRef Id="WeSay.App.exe.config" />
 			  <ComponentRef Id="WeSay.App.pdb" />
@@ -369,17 +353,10 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <!--      <ComponentRef Id="Addin.LiftReports.dll"/> -->
 			  <ComponentRef Id="Addin.Transform.dll"/>
 			  <ComponentRef Id="Prince.dll"/>
-			  <ComponentRef Id="NVelocity.dll"/>
-			  <ComponentRef Id="log4net.dll"/>
-			  <ComponentRef Id="commons.dll"/>
 			  <ComponentRef Id="WeSay.AddinLib.dll"/>
 			  <ComponentRef Id="Mono.Addins.dll"/>
 
-			  <ComponentRef Id="Icu.Net.dll"/>
-
-			  <ComponentRef Id="IcuData.dll"/>
-			  <ComponentRef Id="IcuI18n.dll"/>
-			  <ComponentRef Id="IcuCommon.dll"/>
+			  <!--we get this from chorus merge module <ComponentRef Id="Icu.Net.dll"/> -->
 			  <ComponentRef Id="Keyman7Interop.dll"/>
 
 			  <ComponentGroupRef Id ="defaultFiles"/>
@@ -387,6 +364,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentGroupRef Id ="biatahSample"/>
 			  <ComponentGroupRef Id ="templates"/>
 			  <ComponentGroupRef Id ="PoFiles"/>
+			  <ComponentRef Id="msvcr100.dll"/> <!-- needed by irrklang -->
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 			<Icon Id="WeSay.App.exe" SourceFile ="..\..\output\release\WeSay.App.exe" />

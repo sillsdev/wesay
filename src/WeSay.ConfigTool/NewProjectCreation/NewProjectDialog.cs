@@ -126,12 +126,13 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				{
 					return;
 				}
-				_languageInfoLabel.Text = string.Format("{0} ({1})", dlg.ISOCodeAndName.Name, dlg.ISOCode);
-				Iso639Code = dlg.ISOCodeAndName.Code;
-				LanguageName = dlg.ISOCodeAndName.Name;
+				var primaryName = dlg.SelectedLanguage.Names[0];
+				_languageInfoLabel.Text = string.Format("{0} ({1})", primaryName, dlg.SelectedLanguage.Code);
+				Iso639Code = dlg.SelectedLanguage.Code;
+				LanguageName = primaryName;
 				if (_textProjectName.Text.Trim().Length == 0)
 				{
-					_textProjectName.Text = dlg.ISOCodeAndName.Name;
+					_textProjectName.Text = primaryName;
 				}
 				else
 				{

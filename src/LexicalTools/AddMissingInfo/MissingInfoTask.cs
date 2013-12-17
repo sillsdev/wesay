@@ -126,11 +126,16 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			return LexEntryRepository.CountAllItems();
 		}
 
+		public override void FocusDesiredControl()
+		{
+			_missingInfoControl.SelectInitialControl();
+		}
+
 		public ResultSet<LexEntry> GetFilteredData()
 		{
 			ResultSet<LexEntry> data =
 				LexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(
-					GetQuery(), _missingInfoField, GetLexicalUnitWritingSystem());
+					GetQuery(), GetLexicalUnitWritingSystem());
 			_dataHasBeenRetrieved = true;
 			return data;
 		}

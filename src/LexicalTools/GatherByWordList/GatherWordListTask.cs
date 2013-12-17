@@ -51,7 +51,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			_usingLiftFile =  ".lift"==Path.GetExtension(config.WordListFileName).ToLower();
 
 			_lexicalUnitWritingSystem =
-				viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
+				viewTemplate.GetFirstNonVoiceWritingSystemForFieldOrThrow(Field.FieldNames.EntryLexicalForm.ToString());
 			_lexemeFormListFileName = config.WordListFileName;
 			_words = null;
 			_preferredPromptingWritingSystemId = config.WordListWritingSystemIdOfOldFlatWordList;
@@ -353,6 +353,12 @@ namespace WeSay.LexicalTools.GatherByWordList
 						_preferredPromptingWritingSystemId);
 			}
 
+			if (WeSayWordsProject.Project.HeadWordWritingSystem.IsVoice)
+			{
+				ErrorReport.NotifyUserOfProblem(
+					"The first input system cannot be voice. Sorry, we know that would be useful, but it is'nt supported at this time. Using the WeSay Configuration Tool, make a non-voice field be the first one.");
+			}
+
 			if (_words == null)
 			{
 				Cursor.Current = Cursors.WaitCursor;
@@ -625,6 +631,11 @@ namespace WeSay.LexicalTools.GatherByWordList
 		protected override int ComputeReferenceCount()
 		{
 			return CountNotRelevant; //Todo
+		}
+
+		public override void FocusDesiredControl()
+		{
+			_gatherControl.SelectInitialControl();
 		}
 
 		/// <summary>

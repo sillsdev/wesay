@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.Code;
@@ -33,7 +34,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private WritingSystemDefinition _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
 		private ResultSet<LexEntry> _records;
-		private bool _keepRecordCurrent;
 		private readonly ResultSetToListOfStringsAdapter _findTextAdapter;
 		private EntryViewControl _entryViewControl;
 
@@ -80,7 +80,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_searchTextBoxControl.TextBox.AutoCompleteChoiceSelected += OnSearchText_AutoCompleteChoiceSelected;
 			_searchTextBoxControl.FindButton.Click += OnFind_Click;
 
-			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
+			_recordsListBox.ItemSelectionChanged += OnRecordsListBoxItemSelectionChanged;
 
 			_splitter.SetMemory(memory);
 			SetupEntryViewControl(entryViewControlFactory);
@@ -102,6 +102,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			//TODO: remove these, move to ctor
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
 			Control_EntryDetailPanel.LexEntryRepository = _lexEntryRepository;
+			_entryViewControl.SenseDeletionEnabled = true;
 
 		}
 
@@ -114,18 +115,17 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public LexEntry CurrentRecord
+		public LexEntry CurrentEntry
 		{
 			get
 			{
-				if (_records.Count == 0 || CurrentIndex == -1)
+				if (_records == null || _records.Count == 0 || CurrentIndex == -1)
 				{
 					return null;
 				}
 				try
 				{
-					RepositoryId id = _records[CurrentIndex].Id;
-					return _lexEntryRepository.GetItem(id);
+					return _records[CurrentIndex].RealObject;
 				}
 				catch (Exception e)
 				{
@@ -239,7 +239,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			//WHy was this here (I'm (JH) scared to remove it)?
 			// it is costing us an extra second, as we set the record
 			// to the first one, then later set it to the one we actually want.
-			//  SetRecordToBeEdited(CurrentRecord);
+			//  SetRecordToBeEdited(CurrentEntry);
 
 			ConfigureSearchBox();
 		}
@@ -289,28 +289,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void OnEntryChanged(object sender, PropertyChangedEventArgs e)
 		{
-
-
 			_lexEntryRepository.NotifyThatLexEntryHasBeenUpdated((LexEntry)sender);
-
-			Debug.Assert(CurrentIndex != -1);
-			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
-			_keepRecordCurrent = true;
-			LoadRecords();
-			int index = _records.FindFirstIndex(recordToken);
-			//may not have been successful in which case we should
-			//just try to go to the first with the same id
-			if (index < 0)
-			{
-				index = _records.FindFirstIndex(recordToken.Id);
-			}
-			Debug.Assert(index != -1);
-			_recordsListBox.SelectedIndex = index;
-			_keepRecordCurrent = false;
 		}
 
 		private void LoadRecords()
 		{
+			var selectedItem = CurrentEntry;
 			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 			{
 				_records = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(_listWritingSystem);
@@ -320,7 +304,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				_records = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(_listWritingSystem);
 			}
 			 _findTextAdapter.Items = _records;
-			_recordsListBox.DataSource = (BindingList<RecordToken<LexEntry>>) _records;
+			_recordsListBox.DataSource = new List<RecordToken<LexEntry>>(_records);
+			if (selectedItem != null)
+			{
+				_recordsListBox.SelectedIndex = _records.FindFirstIndex(selectedItem);
+			}
 		}
 
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
@@ -459,29 +447,13 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private static string GetIdFromUrl(string url)
 		{
-			Uri uri;
-
-			//WS-34080: this function can't handle domain names (here, the name of the lift file) which have %20's.
-			//note: we are also removing ones which could be elsewhere in the url, but since we're only after the id, it's ok.
-			var urlWithoutSpaces = url.Replace("%20", "");
-
-			if(!Uri.TryCreate(urlWithoutSpaces, UriKind.Absolute, out uri))
+			var regEx = new Regex("id=([{|\\(]?[0-9a-fA-F]{8}[-]?([0-9a-fA-F]{4}[-]?){3}[0-9a-fA-F]{12}[\\)|}]?)");
+			var match = regEx.Match(url);
+			if (match.Value == String.Empty)
 			{
-			  throw new ApplicationException("Could not parse the url " + urlWithoutSpaces);
+				return "";
 			}
-
-			var parse = System.Web.HttpUtility.ParseQueryString(uri.Query);
-
-			var ids = parse.GetValues("id");
-			if (ids != null && ids.Length > 0)
-			{
-				return ids[0];
-			}
-//            if (!parse.HasKeys())
-//            {
-//                return url;  //old-style, just an id
-//            }
-			return string.Empty;
+			return match.Groups[1].Value;
 		}
 
 
@@ -493,43 +465,34 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			);
 		}
 
-		private void OnRecordSelectionChanged(object sender, EventArgs e)
+		private int _recordListBoxIndexBeforeChange;
+
+		private void OnRecordsListBoxItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
-
-			if (_keepRecordCurrent)
+			if (e.IsSelected)
 			{
-				return;
-			}
+				if (e.ItemIndex == -1 && !_entryViewControl.DataSource.IsBeingDeleted)
+				{
+					_recordsListBox.SelectedIndex = _recordListBoxIndexBeforeChange;
+					return;
+				}
+				SetRecordToBeEdited(CurrentEntry);
 
-			SetRecordToBeEdited(CurrentRecord);
+				if (CurrentEntry != null)
+				{
+					Logger.WriteEvent("RecordSelectionChanged to " +
+									  CurrentEntry.LexicalForm.GetFirstAlternative());
+				}
+				else
+				{
+					Logger.WriteEvent("RecordSelectionChanged Skipping because record is null");
+				}
 
-			if (Control_EntryDetailPanel.DataSource == CurrentRecord)
-			{
-				//we were getting 3 calls to this for each click on a new word
-				// update display to catch changes from null to current value
+				LoadRecords();
+
 				UpdateDisplay();
-				return;
+				_recordListBoxIndexBeforeChange = CurrentIndex;
 			}
-
-			if (CurrentRecord != null)
-			{
-				Logger.WriteEvent("RecordSelectionChanged to " +
-								  CurrentRecord.LexicalForm.GetFirstAlternative());
-			}
-			else
-			{
-				Logger.WriteEvent("RecordSelectionChanged Skipping because record is null");
-			}
-
-			//nb: SelectedIndexChanged,  which calls this, is fired twice
-			//once for the deselection, again with the selection
-			if (CurrentIndex == -1)
-			{
-				return;
-			}
-
-			SelectedIndexChanged.Invoke(this, null);
-			UpdateDisplay();
 		}
 
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -571,7 +534,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			get
 			{
-				var entry = CurrentRecord;
+				var entry = CurrentEntry;
 				if(entry==null)
 					return string.Empty;
 
@@ -604,7 +567,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			if (emptyWordIndex == -1)
 			{
 				LexEntry entry = _lexEntryRepository.CreateItem();
-				//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
+				//bool NoPriorSelection = _todoRecordsListBox.SelectedIndex == -1;
 				//_recordListBoxActive = true; // allow onRecordSelectionChanged
 				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(SearchTextBox.Text) &&
 					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
@@ -630,7 +593,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 			Debug.Assert(selectIndex != -1);
 			_recordsListBox.SelectedIndex = selectIndex;
-			OnRecordSelectionChanged(_recordsListBox, new EventArgs());
 			//_entryViewControl.Focus();
 			_entryViewControl.SelectOnCorrectControl();
 
@@ -709,21 +671,15 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				_btnDeleteWord.Focus();
 			}
 			//review: This save isn't necessary, but the possibility of deleting unsave records currently doesn't work.
-			//_lexEntryRepository.SaveItem(CurrentRecord);
+			//_lexEntryRepository.SaveItem(CurrentEntry);
 
-			_logger.WriteConciseHistoricalEvent("Deleted '{0}'",CurrentRecord.GetSimpleFormForLogging());
-			CurrentRecord.IsBeingDeleted = true;
-			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
-			_lexEntryRepository.DeleteItem(recordToken.Id);
-			int index = _recordsListBox.SelectedIndex;
+			_logger.WriteConciseHistoricalEvent("Deleted '{0}'",CurrentEntry.GetSimpleFormForLogging());
+			CurrentEntry.IsBeingDeleted = true;
+			var oldIndex = CurrentIndex;
+			_recordsListBox.SelectedIndex = _records.Count == CurrentIndex + 1 ? CurrentIndex - 1 : CurrentIndex + 1;
+			_lexEntryRepository.DeleteItem(_records[oldIndex].Id);
 			LoadRecords();
-			if (index >= _records.Count)
-			{
-				index = _records.Count - 1;
-			}
-			_recordsListBox.SelectedIndex = index;
-			OnRecordSelectionChanged(this, null);
-			//_entryViewControl.Focus();
+
 			_entryViewControl.SelectOnCorrectControl();
 		}
 
@@ -737,7 +693,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void UpdateDisplay()
 		{
-			_btnDeleteWord.Enabled = (CurrentRecord != null);
+			_btnDeleteWord.Enabled = (CurrentEntry != null);
 			if (_entryViewControl.ShowNormallyHiddenFields)
 			{
 				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Hide &Uncommon Fields");
@@ -761,13 +717,13 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			if (disposing && !IsDisposed)
 			{
-				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
+				_recordsListBox.ItemSelectionChanged -= OnRecordsListBoxItemSelectionChanged;
 
 				SaveAndCleanUpPreviousEntry();
 
-				//_recordsListBox.Enter -= _recordsListBox_Enter;
-				//_recordsListBox.Leave -= _recordsListBox_Leave;
-				//_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
+				//_todoRecordsListBox.Enter -= _recordsListBox_Enter;
+				//_todoRecordsListBox.Leave -= _recordsListBox_Leave;
+				//_todoRecordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
 
 				SearchTextBox.KeyDown -= OnFindText_KeyDown;
 			}

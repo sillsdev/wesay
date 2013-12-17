@@ -39,6 +39,8 @@ namespace WeSay.UI
 
 		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, WritingSystemDefinition preferredWritingSystem)
 		{
+			AutoSize = true;
+			AutoSizeMode = AutoSizeMode.GrowAndShrink;
 			_list = list;
 			_nameForLogging = nameForLogging;
 			_preferredWritingSystem = preferredWritingSystem;
@@ -127,9 +129,9 @@ namespace WeSay.UI
 
 			components.Add(_control); //so it will get disposed of when we are
 
-			Panel p = new Panel();
-			p.Controls.Add(_control);
-			p.Size = new Size(initialPanelWidth, _control.Height + 10);
+			//Panel p = new Panel();
+			//p.Controls.Add(_control);
+			//p.Size = new Size(initialPanelWidth, _control.Height + 10);
 
 			//            FlagButton flagButton = MakeFlagButton(p.Size);
 			//            p.Controls.Add(flagButton);
@@ -141,8 +143,8 @@ namespace WeSay.UI
 			//            p.Controls.Add(annotationControl);
 			//            this.components.Add(annotationControl);//so it will get disposed of when we are
 
-			Controls.Add(p);
-			Height += p.Height;
+			Controls.Add(_control);
+			//Height += p.Height;
 			ResumeLayout(false);
 		}
 
@@ -175,6 +177,9 @@ namespace WeSay.UI
 
 			_control.SelectedValueChanged += OnSelectedValueChanged;
 			//            _control.Validating += new System.ComponentModel.CancelEventHandler(_control_Validating);
+
+			//don't let the mousewheel do the scrolling, as it's likely an accident (http://jira.palaso.org/issues/browse/WS-34670)
+			_control.MouseWheel += (sender, e) => {((HandledMouseEventArgs)e).Handled = true;};
 		}
 
 		private int CompareItems(Option a, Option b)

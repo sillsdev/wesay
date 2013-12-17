@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Xml;
+using Autofac.Core;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
 using Palaso.IO;
@@ -717,7 +718,7 @@ namespace WeSay.Project.Tests
 						// due to the constructor throw.
 						project.GetLexEntryRepository();
 					}
-					catch(LiftFormatException)
+					catch (DependencyResolutionException e)
 					{
 						 gotException = true;
 					}

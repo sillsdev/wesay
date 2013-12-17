@@ -1,15 +1,13 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
-using Chorus;
-using Chorus.UI.Notes;
-using Chorus.UI.Notes.Bar;
-using Palaso.Code;
 using Palaso.DictionaryServices.Model;
 using Palaso.UI.WindowsForms.Miscellaneous;
 using Palaso.Reporting;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -30,6 +28,8 @@ namespace WeSay.LexicalTools
 		private LexEntryRepository _lexEntryRepository;
 		private bool _showNormallyHiddenFields;
 		private TaskMemory _memory;
+		private bool _senseDeletionEnabled;
+		private ConfirmDeleteFactory _confirmDeleteFactory;
 
 
 		//designer and some tests
@@ -39,23 +39,35 @@ namespace WeSay.LexicalTools
 			RefreshEntryDetail();
 			//_detailListControl = new DetailList();
 		}
-	   public EntryViewControl(EntryHeaderView.Factory entryHeaderViewFactory)
+		public EntryViewControl(EntryHeaderView.Factory entryHeaderViewFactory, ConfirmDeleteFactory confirmDeleteFactory)
 		{
 			_viewTemplate = null;
 			InitializeComponent();
+			_scrollableContainer.SizeChanged += OnScrollableContainerOrDetailListSizeChanged;
+		   _confirmDeleteFactory = confirmDeleteFactory;
+
 			Controls.Remove(_entryHeaderView);
 		   _entryHeaderView.Dispose();
 			_entryHeaderView = entryHeaderViewFactory();
 		   _entryHeaderView.Dock = DockStyle.Top;
 		   _entryHeaderView.BackColor = BackColor;
 		   Controls.Add(_entryHeaderView);
-		   Controls.SetChildIndex(_panelEntry, 0);
+		   Controls.SetChildIndex(_scrollableContainer, 0);
 			Controls.SetChildIndex(_splitter, 1);
 		   Controls.SetChildIndex(_entryHeaderView, 2);
 
 		   _splitter.ControlToHide = _entryHeaderView;
 			RefreshEntryDetail();
 		}
+
+		private void OnScrollableContainerOrDetailListSizeChanged(object sender, EventArgs e)
+		{
+			if (_detailListControl != null && !_detailListControl.IsDisposed)
+			{
+				_detailListControl.Size = new Size(_scrollableContainer.ClientRectangle.Width, _detailListControl.Height);
+			}
+		}
+
 		protected override void OnHandleDestroyed(EventArgs e)
 		{
 			if (_cleanupTimer != null)
@@ -182,6 +194,19 @@ namespace WeSay.LexicalTools
 			{
 				_showNormallyHiddenFields = value;
 				//no... this will lead to extra refreshing. RefreshEntryDetail();
+			}
+		}
+
+		public bool SenseDeletionEnabled
+		{
+			get { return _senseDeletionEnabled; }
+			set
+			{
+				if (_senseDeletionEnabled != value)
+				{
+					_senseDeletionEnabled = value;
+					RefreshEntryDetail();
+				}
 			}
 		}
 
@@ -319,60 +344,69 @@ namespace WeSay.LexicalTools
 		{
 			try
 			{
-				_panelEntry.SuspendLayout();
+				_scrollableContainer.SuspendLayout();
 				DetailList oldDetailList = _detailListControl;
 				if (oldDetailList != null)
 				{
+					oldDetailList.SuspendLayout();
+					oldDetailList.Visible = false;
 					oldDetailList.ChangeOfWhichItemIsInFocus -= OnChangeOfWhichItemIsInFocus;
 					oldDetailList.KeyDown -= _detailListControl_KeyDown;
+					oldDetailList.SizeChanged -= OnScrollableContainerOrDetailListSizeChanged;
+					_scrollableContainer.Controls.Remove(oldDetailList);
+					oldDetailList.Dispose();
+					oldDetailList.ResumeLayout();
 				}
+				_scrollableContainer.ResumeLayout();
 
-				DetailList detailList = new DetailList();
+				var detailList = new DetailList();
 				_detailListControl = detailList;
-
-				detailList.SuspendLayout();
-				//
-				// _detailListControl
-				//
 				detailList.BackColor = BackColor;
-				detailList.Dock = DockStyle.Fill;
 				detailList.Name = "_detailListControl";
-				detailList.Size = _panelEntry.Size;
 				detailList.TabIndex = 1;
-
+				//The top level detail list should be free to expand downward so we anchor to left, top and right.
+				//Do Not Dock! It causes problems with many senses
+				detailList.Dock = DockStyle.None;
+				detailList.Size = new Size(_scrollableContainer.ClientRectangle.Width, detailList.Height);
+				detailList.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+				detailList.SizeChanged += OnScrollableContainerOrDetailListSizeChanged;
+				detailList.AutoSize = true;
 				if (_record != null)
 				{
 					VerifyHasLexEntryRepository();
 					var layout = new LexEntryLayouter(
 						detailList,
+						0,
 						ViewTemplate,
 						_lexEntryRepository,
 						WeSayWordsProject.Project.ServiceLocator,//clean-up have to send this down the chain
-						_record
+						_record,
+						_senseDeletionEnabled,
+						_confirmDeleteFactory
 					);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
-				detailList.Visible = false;
-				_panelEntry.Controls.Add(detailList);
-				detailList.ResumeLayout(true);
-				detailList.Visible = true;
-				_panelEntry.Controls.SetChildIndex(detailList, 0);
-
-				if (oldDetailList != null)
-				{
-					_panelEntry.Controls.Remove(oldDetailList);
-					oldDetailList.Dispose();
-				}
 
 				detailList.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
 				detailList.KeyDown += _detailListControl_KeyDown;
-				_panelEntry.ResumeLayout(false);
+				detailList.MouseWheel += OnDetailListMouseWheel;
+
+				_scrollableContainer.SuspendLayout();
+				_scrollableContainer.AutoScroll = true;
+				_scrollableContainer.Controls.Add(detailList);
+				_detailListControl.ForceFullTreeLayout();
+				_scrollableContainer.ResumeLayout();
 			}
 			catch (ConfigurationException e)
 			{
 				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
+		}
+
+		private void OnDetailListMouseWheel(object sender, MouseEventArgs e)
+		{
+			_scrollableContainer.ScrollAccordingToEventArgs(e);
 		}
 
 		private void OnChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)
@@ -411,5 +445,12 @@ namespace WeSay.LexicalTools
 			RefreshLexicalEntryPreview();
 		}
 
+		public void FocusFirstEditableField()
+		{
+			if (_detailListControl.RowCount > 0)
+			{
+				_detailListControl.MoveInsertionPoint(0);
+			}
+		}
 	}
 }

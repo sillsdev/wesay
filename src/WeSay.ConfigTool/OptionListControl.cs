@@ -24,7 +24,6 @@ namespace WeSay.ConfigTool
 		/// the new ones change their key as their names are editted. Old ones don't.
 		/// </summary>
 		private readonly List<Option> _newlyCreatedOptions = new List<Option>();
-		private bool _currentListWasModified;
 
 		public OptionListControl(ILogger logger)
 			: base("set up choices for option fields", logger,"optionLists")
@@ -34,7 +33,7 @@ namespace WeSay.ConfigTool
 			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
 		}
 
-		void OnName_Changed(object sender, EventArgs e)
+		void OnNameChanged(object sender, EventArgs e)
 		{
 			UpdateKeyLabel();
 		}
@@ -179,7 +178,7 @@ namespace WeSay.ConfigTool
 				m.Top = _nameLabel.Top;
 				m.BorderStyle = BorderStyle.FixedSingle;
 				m.Anchor = _nameMultiTextControl.Anchor;
-				m.TextChanged +=new EventHandler(OnName_Changed);
+				m.TextChanged += OnNameChanged;
 
 				_nameMultiTextControl = m;
 				splitContainer1.Panel2.Controls.Add(m);

@@ -290,6 +290,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			//_listBox.SelectedIndexChanged += List_SelectedIndexChanged;
 			_listBox.Click += List_Click;
 			_listBox.MouseMove += List_MouseMove;
+			_listBox.LostFocus += OnListLostFocus;
 			_listBox.ItemHeight = _listBox.Font.Height;
 			_listBox.Visible = false;
 			_listBox.Sorted = false;
@@ -300,6 +301,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 			triggers.Add(new ShortCutTrigger(Keys.Tab, TriggerState.Select));
 			triggers.Add(new ShortCutTrigger(Keys.Control | Keys.Space, TriggerState.ShowAndConsume));
 			triggers.Add(new ShortCutTrigger(Keys.Escape, TriggerState.HideAndConsume));
+		}
+
+		private void OnListLostFocus(object sender, EventArgs e)
+		{
+			OnLostFocus(e);
 		}
 
 		private void OnMouseHover(object sender, EventArgs e)

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
@@ -10,6 +11,7 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using WeSay.UI;
+using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.Tests
@@ -161,7 +163,7 @@ namespace WeSay.LexicalTools.Tests
 				WritingSystemsIdsForTests.AnalysisIdForTest
 			))
 			{
-				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.Count);
+				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.FieldCount);
 			}
 		}
 
@@ -239,7 +241,7 @@ namespace WeSay.LexicalTools.Tests
 		private static MultiTextControl GetEditControl(DetailList detailList, string labelText)
 		{
 			MultiTextControl editControl = null;
-			for (int i = 0;i < detailList.Count;i++)
+			for (int i = 0;i < detailList.FieldCount;i++)
 			{
 				Label label = detailList.GetLabelControlFromRow(i);
 				if (label.Text == labelText)
@@ -249,6 +251,21 @@ namespace WeSay.LexicalTools.Tests
 				}
 			}
 			return editControl;
+		}
+
+		private static DeleteButton GetDeletebutton(DetailList detailList, string labelText)
+		{
+			DeleteButton deleteButton = null;
+			for (int i = 0; i < detailList.FieldCount; i++)
+			{
+				Label label = detailList.GetLabelControlFromRow(i);
+				if (label.Text == labelText)
+				{
+					deleteButton = detailList.GetDeleteButton(i);
+					break;
+				}
+			}
+			return deleteButton;
 		}
 
 		[Test]
@@ -342,9 +359,63 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 
+		[Test]
+		public void SenseExistsAndButtonIsActive_SenseDeleteClicked_FieldNumberIsCorrect()
+		{
+			using (EntryViewControl entryViewControl = CreateForm(apple, false))
+			{
+				entryViewControl.SenseDeletionEnabled = true;
+				Assert.AreEqual(6, entryViewControl.ControlEntryDetail.FieldCount);
+				DeleteButton deleteButton = GetDeletebutton(entryViewControl.ControlEntryDetail, "Meaning 1");
+				deleteButton.Active = true;
+				deleteButton.PerformClick();
+				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.FieldCount);
+			}
+		}
+
+		[Test]
+		public void SenseExistsAndButtonIsActive_SenseDeleteClicked_SenseIsRemovedFromEntry()
+		{
+			using (EntryViewControl entryViewControl = CreateForm(apple, false))
+			{
+				entryViewControl.SenseDeletionEnabled = true;
+				Assert.AreEqual(1, apple.Senses.Count);
+				DeleteButton deleteButton = GetDeletebutton(entryViewControl.ControlEntryDetail, "Meaning 1");
+				deleteButton.Active = true;
+				deleteButton.PerformClick();
+				Assert.AreEqual(0, apple.Senses.Count);
+			}
+		}
+
+		[Test]
+		public void SenseExistsAndButtonIsInActive_SenseDeleteClicked_FieldNumberIsSame()
+		{
+			using (EntryViewControl entryViewControl = CreateForm(apple, false))
+			{
+				entryViewControl.SenseDeletionEnabled = true;
+				Assert.AreEqual(6, entryViewControl.ControlEntryDetail.FieldCount);
+				DeleteButton deleteButton = GetDeletebutton(entryViewControl.ControlEntryDetail, "Meaning 1");
+				deleteButton.PerformClick();
+				Assert.AreEqual(6, entryViewControl.ControlEntryDetail.FieldCount);
+			}
+		}
+
+		[Test]
+		public void SenseExistsAndButtonIsInActive_SenseDeleteClicked_SenseIsNotRemovedFromEntry()
+		{
+			using (EntryViewControl entryViewControl = CreateForm(apple, false))
+			{
+				entryViewControl.SenseDeletionEnabled = true;
+				Assert.AreEqual(1, apple.Senses.Count);
+				DeleteButton deleteButton = GetDeletebutton(entryViewControl.ControlEntryDetail, "Meaning 1");
+				deleteButton.PerformClick();
+				Assert.AreEqual(1, apple.Senses.Count);
+			}
+		}
+
 		private EntryViewControl CreateForm(LexEntry entry, bool requiresVisibleForm)
 		{
-			EntryViewControl entryViewControl = new EntryViewControl();
+			EntryViewControl entryViewControl = new EntryViewControl(()=>new EntryHeaderView(), ()=>new TestConfirmDelete());
 			entryViewControl.LexEntryRepository = _lexEntryRepository;
 			entryViewControl.ViewTemplate = _viewTemplate;
 			entryViewControl.DataSource = entry;

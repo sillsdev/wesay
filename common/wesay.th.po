@@ -17,6 +17,9 @@ msgstr ""
 # Report-Msgid-Bugs-To: hattonjohn@gmail.com
 # POT-Creation-Date: 2011-04-28T04:35:01
 # Content-Type: text/plain; charset=UTF-8
+msgid "Delete Sense"
+msgstr "Thai: delete sense มายข"
+
 msgid "Meanings"
 msgstr "ความหมาย"
 

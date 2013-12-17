@@ -74,7 +74,7 @@ namespace WeSay.UI
 			_flagButton = new CheckBox();
 			_flagButton.Appearance = Appearance.Button;
 			_flagButton.AutoCheck = true;
-			_flagButton.Size = new Size(22, 22);
+			_flagButton.AutoSize = true;
 			_flagButton.ThreeState = false;
 			_flagButton.Text = string.Empty;
 			_flagButton.FlatStyle = FlatStyle.Flat;

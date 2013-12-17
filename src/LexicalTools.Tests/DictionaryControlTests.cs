@@ -22,7 +22,7 @@ using Palaso.Lift;
 
 namespace WeSay.LexicalTools.Tests
 {
-	[TestFixture]
+	[TestFixture, RequiresSTA]
 	public class DictionaryControlTests: NUnitFormTest
 	{
 		private TemporaryFolder _tempFolder;
@@ -797,7 +797,7 @@ namespace WeSay.LexicalTools.Tests
 			get
 			{
 				return
-						((DictionaryControl) _detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.
+						((DictionaryControl) _detailTaskPage.Controls[0]).CurrentEntry.LexicalForm.
 								GetBestAlternative(_vernacularWritingSystem.Id);
 			}
 		}
@@ -1031,12 +1031,12 @@ namespace WeSay.LexicalTools.Tests
 			ClickAddWord();
 
 			DetailList detailList = GetDetailList();
-			int initialCount = detailList.Count;
+			int initialCount = detailList.FieldCount;
 
 			FillInTheGhostMeaning();
 
 			//ghost really did fire
-			Assert.IsTrue(detailList.Count > initialCount);
+			Assert.IsTrue(detailList.FieldCount > initialCount);
 
 			//now do another one
 			initialCount = detailList.Count;
@@ -1050,7 +1050,7 @@ namespace WeSay.LexicalTools.Tests
 			TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName(), _window);
 			lxt.Properties.Focus();
 			Application.DoEvents();
-			Assert.IsTrue(detailList.Count > initialCount);
+			Assert.IsTrue(detailList.FieldCount > initialCount);
 		}
 
 		private void FillInTheGhostMeaning()
@@ -1186,10 +1186,10 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddInitialEntries();
 			DictionaryControl control = (DictionaryControl)_task.Control;
-			string idOfInitial = control.CurrentRecord.Id;
+			string idOfInitial = control.CurrentEntry.Id;
 			GoToLexicalEntryUseFind("Secondary"); //go away from that one
 			control.GoToEntryWithId(idOfInitial);
-			Assert.AreEqual(idOfInitial, control.CurrentRecord.Id);
+			Assert.AreEqual(idOfInitial, control.CurrentEntry.Id);
 		}
 
 		[Test]
@@ -1228,6 +1228,24 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(b.Properties.Enabled);
 		}
 
+
+		[Test]
+		[Category("NUnit Windows Forms")]
+		[Platform(Exclude = "Unix")] // MouseController uses Win32.GetCursorPos so not portable
+		public void ClickOnWhiteSpaceUnderEntries_EntrySelectionDoesNotchange()
+		{
+			AddInitialEntries();
+			var l = new ListViewTester("_recordsListBox", _window);
+			using (var mc = new MouseController(l))
+			{
+				Rectangle r = l.Properties.GetItemRect(2);
+				mc.Click(r.Right + 1, r.Bottom + 1);
+				// move enough to not count as a double-click
+				mc.Click(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Bottom + 1);
+			}
+			Assert.IsTrue(l.Properties.SelectedIndices[0] == 0);
+		}
+
 		//
 		//        [Test]
 		//        public void GotoEntry_LackingFormInCurrentListWritingSystem()
@@ -1235,10 +1253,10 @@ namespace WeSay.LexicalTools.Tests
 		//            LexEntry e = AddEntry("", "findme!", false);
 		//            e.LexicalForm.
 		//            DictionaryControl control = (DictionaryControl)_task.Control;
-		//            string idOfInitial = control.CurrentRecord.Id;
+		//            string idOfInitial = control.CurrentEntry.Id;
 		//            GoToLexicalEntryUseFind("Secondary"); //go away from that one
 		//            control.GoToEntryWithId(idOfInitial);
-		//            Assert.AreEqual(idOfInitial, control.CurrentRecord.Id);
+		//            Assert.AreEqual(idOfInitial, control.CurrentEntry.Id);
 		//        }
 
 		private DetailList GetDetailList()
@@ -1261,7 +1279,7 @@ namespace WeSay.LexicalTools.Tests
 			DetailList detailList =
 					((DictionaryControl) _task.Control).Control_EntryDetailPanel.ControlEntryDetail;
 			Control foundControl = null;
-			for (int i = 0;i < detailList.Count;i++)
+			for (int i = 0;i < detailList.FieldCount;i++)
 			{
 				Label label = detailList.GetLabelControlFromRow(i);
 				if (label.Text == labelText)
@@ -1286,7 +1304,7 @@ namespace WeSay.LexicalTools.Tests
 			DetailList detailList =
 					((DictionaryControl) _task.Control).Control_EntryDetailPanel.ControlEntryDetail;
 			int foundSoFar = -1;
-			for (int i = 0;i < detailList.Count;i++)
+			for (int i = 0;i < detailList.FieldCount;i++)
 			{
 				Label label = detailList.GetLabelControlFromRow(i);
 				if (label.Text.Contains("Meaning"))

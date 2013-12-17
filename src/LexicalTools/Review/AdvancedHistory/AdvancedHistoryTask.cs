@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Autofac;
@@ -12,13 +13,13 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 	public class AdvancedHistoryTask: TaskBase
 	{
 		private readonly IAdvancedHistoryConfig _config;
-		private readonly IContainer _diContainer;
+		private readonly IComponentContext _diContainer;
 		private Control _control;
 
 		public AdvancedHistoryTask(IAdvancedHistoryConfig config,
 									LexEntryRepository lexEntryRepository,
-								  TaskMemoryRepository taskMemoryRepository,
-			Autofac.IContainer diContainer)
+									TaskMemoryRepository taskMemoryRepository,
+									IComponentContext diContainer)
 
 			: base(config, lexEntryRepository, taskMemoryRepository)
 		{
@@ -104,5 +105,10 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 			return CountNotRelevant; //Todo
 		}
 
+		public override void FocusDesiredControl()
+		{
+			// This is the place to implement how the task selects its desired child control
+			return;
+		}
 	}
 }

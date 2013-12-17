@@ -56,6 +56,16 @@ namespace WeSay.App
 
 		}
 
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams cp = base.CreateParams;
+				cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+				return cp;
+			}
+		}
+
 		public StatusStrip StatusStrip
 		{
 			get { return _statusStrip; }
@@ -328,8 +338,8 @@ namespace WeSay.App
 			t.Tick += delegate
 					  {
 						  t.Stop();
-						  ActivateTask(page, task);
 						  page.Text = task.Label;
+						  ActivateTask(page, task);
 						  t.Dispose();
 					  };
 			t.Interval = 1;
@@ -367,8 +377,12 @@ namespace WeSay.App
 				task.Control.ResumeLayout(false);
 			}
 			task.Control.SelectNextControl(task.Control, true, true, true, true);
+
+			// The .FocusDesiredControl() gives the task specific control over which child field gets focus when the task is activated.  If every task implemented this method, then the above task.Control.SelectNextControl would be unnecessary
+			task.FocusDesiredControl();
 			task.Control.PerformLayout();
 			task.Control.Invalidate(true);
+
 			page.Cursor = Cursors.Default;
 			_activeTask = task;
 			Logger.WriteEvent("Done Activating");

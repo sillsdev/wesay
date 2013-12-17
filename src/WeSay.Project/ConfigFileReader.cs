@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml.XPath;
 using Autofac;
+using Autofac.Core;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
@@ -22,7 +23,7 @@ namespace WeSay.Project
 			_taskTypes = taskTypes;
 		}
 
-		public IEnumerable<ITaskConfiguration> GetTasksConfigurations(IContext context)
+		public IEnumerable<ITaskConfiguration> GetTasksConfigurations(IComponentContext context)
 		{
 			var configs = new List<ITaskConfiguration>();
 			GetTasks(_currentXmlConfiguration, context, configs);
@@ -30,7 +31,7 @@ namespace WeSay.Project
 			return configs;
 		}
 
-		private void GetTasks(string xml, IContext context, List<ITaskConfiguration> configs)
+		private void GetTasks(string xml, IComponentContext context, List<ITaskConfiguration> configs)
 		{
 			XPathDocument doc = new XPathDocument(new StringReader(xml));
 			XPathNavigator navigator = doc.CreateNavigator();
@@ -49,14 +50,14 @@ namespace WeSay.Project
 		}
 
 
-		private ITaskConfiguration CreateTaskConfiguration(IContext context, TaskTypeCatalog taskTypes, XPathNavigator taskNode)
+		private ITaskConfiguration CreateTaskConfiguration(IComponentContext context, TaskTypeCatalog taskTypes, XPathNavigator taskNode)
 		{
 			string taskName = taskNode.GetAttribute("taskName", string.Empty);
 
 			if (taskTypes.TaskNameToConfigType.ContainsKey(taskName)) //has a config class
 			{
 				//make the task configuration class, using the xml we're looking at
-				return context.Resolve<ITaskConfiguration>(taskName + "Config",// using this service name
+				return context.ResolveNamed<ITaskConfiguration>(taskName + "Config",// using this service name
 												   new Parameter[] { new TypedParameter(typeof(string), taskNode.OuterXml) });
 			}
 			return null;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Chorus;
+using Chorus.UI.Notes;
 using Exortech.NetReflector;
 using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
@@ -450,6 +451,7 @@ namespace WeSay.Project
 									   defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~POS", "The label for the field showing Part Of Speech");
+			StringCatalog.Get("~PartOfSpeech", "The label for the field showing Part Of Speech");
 			posField.DisplayName = "PartOfSpeech";
 			posField.Description = "The grammatical category of the entry (Noun, Verb, etc.).";
 			posField.DataTypeName = "Option";
@@ -630,6 +632,29 @@ namespace WeSay.Project
 			return BasilProject.Project.WritingSystems.Get(field.WritingSystemIds[0]);
 		}
 
+		public WritingSystemDefinition GetFirstNonVoiceWritingSystemForFieldOrThrow(string fieldName)
+		{
+			Field field = GetField(fieldName);
+			if (field == null)
+			{
+				throw new ConfigurationException(String.Format("The field {0} has not been enabled for your project. Please enable it in the WeSay config tool.", fieldName));
+			}
+			if (field.WritingSystemIds.Count == 0)
+			{
+				throw new ConfigurationException(
+					String.Format(
+						"The field {0} has no input system associated with it. Please assign an input system to it in the WeSay config tool.",
+						fieldName));
+			}
+			foreach (var writingSystemId in field.WritingSystemIds)
+			{
+				var writingSystem= BasilProject.Project.WritingSystems.Get(writingSystemId);
+				if (!writingSystem.IsVoice)
+					return writingSystem;
+			}
+			throw new ConfigurationException("A non-voice writing system is required for the field {0}", fieldName);
+		}
+
 		public bool IsFieldFirstInClass(Field field)
 		{
 			return GetFieldsOfClass(field.ClassName).IndexOf(field) == 0;
@@ -721,14 +746,10 @@ namespace WeSay.Project
 			get { return BasilProject.Project.WritingSystems; }
 		}
 
-		public IEnumerable<Chorus.IWritingSystem> CreateListForChorus()
+		public ChorusNotesDisplaySettings CreateChorusDisplaySettings()
 		{
-			var list = new List<Chorus.IWritingSystem>();
-		   //for now, chorus wants the default to be the first one.  So lets just
-			//use the first ws of the notefield for that purpose (could improve user control
-			//over this later).
+		   var list = new List<Chorus.IWritingSystem>();
 
-			// fix for WS-34130
 			WritingSystemDefinition noteWritingSystem;
 			try
 			{
@@ -748,7 +769,13 @@ namespace WeSay.Project
 					list.Add(new ChorusWritingSystemAdaptor(system));
 				}
 			}
-			return list;
+
+			 return new Chorus.UI.Notes.ChorusNotesDisplaySettings()
+									{
+										WritingSystems = list,
+										WritingSystemForNoteContent = new ChorusWritingSystemAdaptor(noteWritingSystem) ,
+										WritingSystemForNoteLabel = new ChorusWritingSystemAdaptor(GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit))
+									};
 		 }
 
 		public void DeleteWritingSystem(string id)
@@ -758,6 +785,7 @@ namespace WeSay.Project
 				field.WritingSystemIds.Remove(id);
 			}
 		}
+
 	}
 
 	/// <summary>

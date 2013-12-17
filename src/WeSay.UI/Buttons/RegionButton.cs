@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i18n;
 
@@ -19,6 +20,7 @@ namespace WeSay.UI.Buttons
 			Path.AddRectangle(ClientRectangle);
 			_textAndImageRectangle = ClientRectangle;
 			FlatStyle = FlatStyle.Flat;
+			base.SetStyle(ControlStyles.UserPaint, true);
 		}
 
 		protected abstract void MakeRegion();
@@ -121,46 +123,41 @@ namespace WeSay.UI.Buttons
 				}
 			}
 
-			using (
-					LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle,
-																		startColor,
-																		endColor,
-																		LinearGradientMode.Vertical)
-					)
-			{
-				Blend blend = new Blend();
-				blend.Positions = new float[] {0, .1f, .35f, .7f, .9f, 1};
-				blend.Factors = new float[] {0, 0, .5f, .5f, 1, 1};
-				brush.Blend = blend;
-				g.FillPath(brush, buttonPath); // 3d effect
-			}
+//            using (
+//                    LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle,
+//                                                                        startColor,
+//                                                                        endColor,
+//                                                                        LinearGradientMode.Vertical)
+//                    )
+//            {
+//                Blend blend = new Blend();
+//                blend.Positions = new float[] {0, .1f, .35f, .7f, .9f, 1};
+//                blend.Factors = new float[] {0, 0, .5f, .5f, 1, 1};
+//                brush.Blend = blend;
+//                g.FillPath(brush, buttonPath); // 3d effect
+//            }
 
-			using (Pen pen = new Pen(ControlPaint.DarkDark(BackColor), 1))
-			{
-				g.DrawPath(pen, buttonPath); //outline
-			}
 
-			ShrinkAndOffsetGraphicsPathByDepth(buttonPath, 6);
-
-			////hot bounds
-			if (Focused)
+			if (FlatAppearance.BorderSize != 0)
 			{
-				using (Pen pen = new Pen(ControlPaint.Dark(BackColor), 1))
+				using (Pen pen = new Pen(FlatAppearance.BorderColor, FlatAppearance.BorderSize))
 				{
-					pen.DashStyle = DashStyle.Dash;
-					pen.DashPattern = new float[] {3f, 1.5f};
 					g.DrawPath(pen, buttonPath); //outline
 				}
 			}
 
-			using (
-					Brush brush =
-							new SolidBrush((IsDown)
-												   ? ControlPaint.Dark(BackColor, .01f)
-												   : ControlPaint.Light(BackColor, .01f)))
-			{
-				g.FillPath(brush, buttonPath); // top surface of button
-			}
+			ShrinkAndOffsetGraphicsPathByDepth(buttonPath, 6);
+
+
+
+//            using (
+//                    Brush brush =
+//                            new SolidBrush((IsDown)
+//                                                   ? ControlPaint.Dark(BackColor, .01f)
+//                                                   : ControlPaint.Light(BackColor, .01f)))
+//            {
+//                g.FillPath(brush, buttonPath); // top surface of button
+//            }
 
 			Rectangle buttonRect = TextAndImageRectangle;
 			if (_buttonIsDown)
@@ -171,6 +168,17 @@ namespace WeSay.UI.Buttons
 			DrawText(g, buttonRect);
 
 			DrawImage(g, buttonRect);
+
+			////hot bounds
+//			if (Focused)
+//			{
+//				using (Pen pen = new Pen(ControlPaint.Dark(BackColor), 1))
+//				{
+//					pen.DashStyle = DashStyle.Dash;
+//					pen.DashPattern = new float[] { 3f, 1.5f };
+//					g.DrawPath(pen, buttonPath); //outline
+//				}
+//			}
 		}
 
 		private static void ShrinkAndOffsetGraphicsPathByDepth(GraphicsPath buttonPath, float depth)
@@ -204,7 +212,7 @@ namespace WeSay.UI.Buttons
 				switch (ImageAlign)
 				{
 					case ContentAlignment.BottomCenter:
-						x += (buttonRect.Width - Image.Width) / 2;
+						x += (buttonRect.Width - Image.Width)/2;
 						y += buttonRect.Height - Image.Height;
 						break;
 					case ContentAlignment.BottomLeft:
@@ -216,19 +224,19 @@ namespace WeSay.UI.Buttons
 						y += buttonRect.Height - Image.Height;
 						break;
 					case ContentAlignment.MiddleCenter:
-						x += (buttonRect.Width - Image.Width) / 2;
-						y += (buttonRect.Height - Image.Height) / 2;
+						x += (buttonRect.Width - Image.Width)/2;
+						y += (buttonRect.Height - Image.Height)/2;
 						break;
 					case ContentAlignment.MiddleLeft:
 						x += 0;
-						y += (buttonRect.Height - Image.Height) / 2;
+						y += (buttonRect.Height - Image.Height)/2;
 						break;
 					case ContentAlignment.MiddleRight:
 						x += buttonRect.Width - Image.Width;
-						y += (buttonRect.Height - Image.Height) / 2;
+						y += (buttonRect.Height - Image.Height)/2;
 						break;
 					case ContentAlignment.TopCenter:
-						x += (buttonRect.Width - Image.Width) / 2;
+						x += (buttonRect.Width - Image.Width)/2;
 						y += 0;
 						break;
 					case ContentAlignment.TopLeft:
@@ -242,11 +250,26 @@ namespace WeSay.UI.Buttons
 					default:
 						break;
 				}
-				g.DrawImage(Image, x, y, Image.Width, Image.Height);
+
+				var opacity=0.7f; //we're counting on black buttons, which will take on the color of the underlying background when made a little transparent
 				if (!Enabled)
 				{
-					ControlPaint.DrawImageDisabled(g, Image, x, y, Color.Transparent);
+					opacity = 0.3f; //we're using transparency rather than grey, becuase on a non-white background, grew looks jarring but more transparent looks soothing
 				}
+
+				float[] r1 = new float[] { 1.0F, 0, 0, 0, 0 };
+				float[] r2 = new float[] { 0, 1.0F, 0, 0, 0 };
+				float[] r3 = new float[] { 0, 0, 1.0F, 0, 0 };
+				float[] r4 = new float[] { 0, 0, 0, opacity, 0 };
+				float[] r5 = new float[] { 0, 0, 0, 0, 1.0F };
+
+				System.Drawing.Imaging.ColorMatrix transparencyMatrix = new System.Drawing.Imaging.ColorMatrix(new float[][] { r1, r2, r3, r4, r5 });
+
+				System.Drawing.Imaging.ImageAttributes attributes = new System.Drawing.Imaging.ImageAttributes();
+				attributes.SetColorMatrix(transparencyMatrix);
+				var r = new Rectangle(x, y,Image.Width+x,Image.Height+y);
+				g.DrawImage(Image,r, 0f,0f,Image.Width,Image.Height, GraphicsUnit.Pixel, attributes);
+				//ControlPaint.DrawImageDisabled(g, Image, x, y, Color.Transparent);
 			}
 		}
 
@@ -366,6 +389,16 @@ namespace WeSay.UI.Buttons
 			base.OnMouseLeave(e);
 			_buttonIsHot = false;
 			Invalidate();
+		}
+
+		public void BeginWiring()
+		{
+			//do nothing
+		}
+
+		public void EndWiring()
+		{
+			//do nothing
 		}
 
 		/// <summary>

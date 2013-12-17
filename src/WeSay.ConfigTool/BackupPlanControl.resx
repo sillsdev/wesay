@@ -112,24 +112,15 @@
 	<value>2.0</value>
   </resheader>
   <resheader name="reader">
-	<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-	<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 	<value>17, -47</value>
   </metadata>
   <data name="betterLabel2.Text" xml:space="preserve">
-	<value>Second, you need to have regular backups that are stored away from the computer.  This is to guard against loss of data by theft, fire, or natural catastrophe.  First, enable the Send/Recieve action button, which will automatically create full historical backups on a usb key.  Get several of them and train the WeSay user to rotate them on some regular basis, clicking the Send/Receive button to make the backup.</value>
-  </data>
-  <data name="betterLabel1.Text" xml:space="preserve">
-	<value>We recommend a two-part backup strategy:
-
-First, get a media card which you can insert into the computer and leave permanently installed.  This can be an SD card or a Compact flash card, if the computer has a slot for that, or something based on a PC-Card for older laptops.  For a desktop without any such slots, an alternative is a second hard drive or permantenty plugged-in usb key.This will protect you data from hard drive failure.
-
-Enter the location of the backup media here:
-
-</value>
+	<value>Keep a copy of your data off-site by using the Internet Send/Receive feature.  Enable the Send/Receive button under the Actions tab, giving the user the ability to sync their data with the Internet server whenever they would like.  Off-site backups protect against data loss due to theft, loss or destruction of your computer.  If Internet access is not an option, instruct the WeSay user to Send/Receive to a USB key that they periodically rotate and store at an off-site location.</value>
   </data>
 </root>

@@ -10,7 +10,7 @@ using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
 {
-	[TestFixture]
+	[TestFixture, RequiresSTA]
 	public class InterfaceLanguageControl
 	{
 		private ConfigurationWindow _window;

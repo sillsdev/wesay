@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -15,7 +15,8 @@
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
 	<OldToolsVersion>3.5</OldToolsVersion>
-	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+	<TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -152,7 +153,6 @@
 	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
 	</Reference>
 	<Reference Include="System.Data" />
-	<Reference Include="System.Design" />
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
@@ -181,19 +181,10 @@
 	<Compile Include="BetterLabel.Designer.cs">
 	  <DependentUpon>BetterLabel.cs</DependentUpon>
 	</Compile>
-	<Compile Include="Buttons\AddButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Buttons\NextButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Buttons\PreviousButton.cs">
+	<Compile Include="Buttons\RectangularImageButton.cs">
 	  <SubType>Component</SubType>
 	</Compile>
 	<Compile Include="Buttons\RegionButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Buttons\RoundButton.cs">
 	  <SubType>Component</SubType>
 	</Compile>
 	<Compile Include="Buttons\TagButton.cs">
@@ -214,7 +205,19 @@
 	<Compile Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.Designer.cs">
 	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
 	</Compile>
+	<Compile Include="Buttons\DeleteButton.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Buttons\DeleteButton.Designer.cs">
+	  <DependentUpon>DeleteButton.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Event.cs" />
+	<Compile Include="ScrollableContainer.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ScrollableContainer.Designer.cs">
+	  <DependentUpon>ScrollableContainer.cs</DependentUpon>
+	</Compile>
 	<Compile Include="TextBoxes\IControlThatKnowsWritingSystem.cs" />
 	<Compile Include="WeSayListView.cs">
 	  <SubType>Component</SubType>
@@ -312,6 +315,9 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>CheckBoxControl.cs</DependentUpon>
 	</EmbeddedResource>
+	<EmbeddedResource Include="Buttons\DeleteButton.resx">
+	  <DependentUpon>DeleteButton.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="PictureControl.resx">
 	  <DependentUpon>PictureControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
@@ -345,6 +351,18 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
 	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\delete-word.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\delete-word-bw.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\delete-word-grey.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\right-arrow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

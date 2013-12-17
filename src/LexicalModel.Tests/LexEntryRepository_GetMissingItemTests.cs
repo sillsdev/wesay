@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using NUnit.Framework;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
@@ -45,19 +47,24 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(lexEntryWithMissingCitation);
 		}
 
-		private LexEntry CreateEntryWithDefinition(params string[] definitionWritingSystems)
+		private LexEntry CreateEntryWithDefinition(IEnumerable<string> populatedWritingSystems, IEnumerable<string> emptyWritingSystems)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm.SetAlternative(_lexicalFormWritingSystem.Id, "theForm");
 
 			entry.Senses.Add(new LexSense());
-			foreach (var id in definitionWritingSystems)
+			foreach (var id in populatedWritingSystems)
 			{
-				entry.Senses[0].Definition.SetAlternative(id, "the definition for "+id);
+				entry.Senses[0].Definition.SetAlternative(id, "the definition for "+ id);
+			}
+			foreach (var id in emptyWritingSystems)
+			{
+				entry.Senses[0].Definition.SetAlternative(id, "");
 			}
 
 			return entry;
 		}
+
 		[Test]
 		public void Get_FieldNull_Throws()
 		{
@@ -139,9 +146,9 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(null, sortedResults[1]["Form"]);
 		}
 
-		private void TestWritingSystemSearch(int expectedCount, string[] fieldWritingSystems, string[] fillInWritingSystems, string[] searchInWritingSystems)
+		private void TestWritingSystemSearch(int expectedCount, string[] fieldWritingSystems, string[] populatedWritingSystems, string[] searchInWritingSystems)
 		{
-			CreateEntryWithDefinition(fillInWritingSystems);
+			CreateEntryWithDefinition(populatedWritingSystems, new string[]{});
 			Field fieldToFill = new Field(LexSense.WellKnownProperties.Definition, "LexSense", fieldWritingSystems);
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, searchInWritingSystems, _lexicalFormWritingSystem);
@@ -209,5 +216,218 @@ namespace WeSay.LexicalModel.Tests
 								   new[] { "en" },           //fill these in
 								   new[] { "de", "en" });          // search on these
 		}
+
+		private class TestEnvironment:IDisposable
+		{
+			private LexEntryRepository _repository;
+			private TemporaryFolder _temporaryFolder;
+			private readonly WritingSystemDefinition _vernacularWritingSystem = WritingSystemDefinition.Parse("de");
+
+			public TestEnvironment()
+			{
+				_temporaryFolder = new TemporaryFolder();
+				string filePath = _temporaryFolder.GetTemporaryFile();
+				_repository = new LexEntryRepository(filePath);
+			}
+
+			public void TestFilter(int result, IEnumerable<string> emptyWsInField, IEnumerable<string> populatedWsInField,
+							  IEnumerable<string> wsThatMustBeEmpty, IEnumerable<string> wsThatMustBePopulated)
+			{
+				var allFieldWs = emptyWsInField.Concat(populatedWsInField).Concat(wsThatMustBeEmpty).Concat(wsThatMustBePopulated);
+				CreateEntryWithDefinitionAndWs(populatedWsInField, emptyWsInField);
+				Field fieldToFill = new Field(LexSense.WellKnownProperties.Definition, "LexSense", allFieldWs);
+				var missingFieldFilter = new MissingFieldQuery(fieldToFill, wsThatMustBeEmpty.ToArray(), wsThatMustBePopulated.ToArray());
+				ResultSet<LexEntry> sortedResults =
+					_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(missingFieldFilter, _vernacularWritingSystem);
+				Assert.AreEqual(result, sortedResults.Count);
+			}
+
+
+			private LexEntry CreateEntryWithDefinitionAndWs(IEnumerable<string> populatedWritingSystems, IEnumerable<string> emptyWritingSystems)
+			{
+				LexEntry entry = _repository.CreateItem();
+				entry.LexicalForm.SetAlternative(_vernacularWritingSystem.Id, "theForm");
+
+				entry.Senses.Add(new LexSense());
+				foreach (var id in populatedWritingSystems)
+				{
+					entry.Senses[0].Definition.SetAlternative(id, "the definition for " + id);
+				}
+				foreach (var id in emptyWritingSystems)
+				{
+					entry.Senses[0].Definition.SetAlternative(id, "");
+				}
+
+				return entry;
+			}
+
+			public void Dispose()
+			{
+				_repository.Dispose();
+				_temporaryFolder.Delete();
+			}
+		}
+
+		//At the times that these tests were written (1/17/13) the UI did not allow filtering on writing systems not specified in the Field, so we are not going to test those cases at this time
+		#region 00
+		[Test]
+		public void Get_Require0EmptyAnd0PopulatedWs_2Empty_Returns1()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(1, new string[] {"en", "de"}, new string[] {}, new string[] {}, new string[] {});
+			}
+		}
+
+		[Test]
+		public void Get_Require0EmptyAnd0PopulatedWs_1Empty1Populated_Returns1()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(1, new string[] { "en" }, new string[] { "de" }, new string[] { }, new string[] { });
+			}
+		}
+
+		[Test]
+		public void Get_Require0EmptyAnd0PopulatedWs_2Populated_Returns0()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(0, new string[] { }, new string[] {"en", "de" }, new string[] { }, new string[] { });
+			}
+		}
+		#endregion
+		#region 10
+		[Test]
+		public void Get_Require1EmptyAnd0PopulatedWs_2Empty_Returns1()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(1, new string[] { "en", "de" }, new string[] { }, new [] { "en" }, new string[] { });
+			}
+		}
+
+		[Test]
+		public void Get_Require1EmptyAnd0PopulatedWs_1Empty1PopulatedEmptyIsNotTheOneWeWant_Returns1()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(0, new string[] { "de" }, new string[] { "en" }, new [] { "en" }, new string[] { });
+			}
+		}
+
+		[Test]
+		public void Get_Require1EmptyAnd0PopulatedWs_1Empty1PopulatedEmptyIsTheOneWeWant_Returns1()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(1, new string[] { "en" }, new string[] { "de" }, new [] { "en" }, new string[] { });
+			}
+		}
+
+		[Test]
+		public void Get_Require1EmptyAnd0PopulatedWs_2Populated_Returns0()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(0, new string[] { }, new string[] { "en", "de" }, new [] { "en" }, new string[] { });
+			}
+		}
+		#endregion
+
+		#region 01
+		[Test]
+		public void Get_Require0EmptyAnd1PopulatedWs_2Empty_Returns0()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(0, new string[] { "en", "de" }, new string[] { }, new string[] { }, new [] { "de" });
+			}
+		}
+
+		[Test]
+		public void Get_Require0EmptyAnd1PopulatedWs_1Empty1PopulatedPopulatedIsNotTheOneWeWant_Returns0()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(0, new string[] { "de" }, new string[] { "en" }, new string[] { }, new[] { "de" });
+			}
+		}
+
+		[Test]
+		public void Get_Require0EmptyAnd1PopulatedWs_1Empty1PopulatedpopulatedIsTheOneWeWant_Returns1()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(1, new string[] { "en" }, new string[] { "de" }, new string[] { }, new[] { "de" });
+			}
+		}
+
+		[Test]
+		public void Get_Require0EmptyAnd1PopulatedWs_2Populated_Returns0()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(0, new string[] { }, new string[] { "en", "de" }, new string[] { }, new[] { "de" });
+			}
+		}
+
+		[Test]
+		public void Get_Require0EmptyAnd1PopulatedWs_2PopulatedOtherEmpty_Returns1()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(1, new string[] { "it" }, new string[] { "en", "de" }, new string[] { }, new[] { "de" });
+			}
+		}
+		#endregion
+
+
+		#region 11
+		[Test]
+		public void Get_Require1EmptyAnd1PopulatedWs_2Empty_Returns0()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(0, new string[] { "en", "de" }, new string[] { }, new [] { "en" }, new [] { "de" });
+			}
+		}
+
+		[Test]
+		public void Get_Require1EmptyAnd1PopulatedWs_2Empty1PopulatedPopulatedIsNotTheOneWeWant_Returns0()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(0, new string[] { "de", "en" }, new string[] { "it" }, new[] { "en" }, new[] { "de" });
+			}
+		}
+
+		[Test]
+		public void Get_Require1EmptyAnd1PopulatedWs_1Empty2PopulatedEmptyIsNotTheOneWeWant_Returns0()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(0, new string[] { "it" }, new string[] { "de", "en" }, new[] { "en" }, new[] { "de" });
+			}
+		}
+
+		[Test]
+		public void Get_Require1EmptyAnd1PopulatedWs_1Empty1PopulatedAreTheOnesWeWant_Returns1()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(1, new string[] {"en" }, new string[] { "de" }, new[] { "en" }, new[] { "de" });
+			}
+		}
+
+		[Test]
+		public void Get_Require1EmptyAnd1PopulatedWs_2Populated_Returns0()
+		{
+			using (var e = new TestEnvironment())
+			{
+				e.TestFilter(0, new string[] { }, new string[] { }, new[] { "en" }, new[] { "de" });
+			}
+		}
+		#endregion
 	}
 }

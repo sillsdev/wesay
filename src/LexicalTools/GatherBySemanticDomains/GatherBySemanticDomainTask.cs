@@ -1029,6 +1029,11 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			return DomainKeys.Count;
 		}
 
+		public override void FocusDesiredControl()
+		{
+			_gatherControl.SelectInitialControl();
+		}
+
 		public void GotoLastDomainWithAnswers()
 		{
 			VerifyTaskActivated();

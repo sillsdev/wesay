@@ -1,10 +1,12 @@
 using System;
 using System.Windows.Forms;
+using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
 using Palaso.Lift;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.audio;
@@ -16,16 +18,32 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexEntryLayouter: Layouter
 	{
+		private bool _sensesAreDeletable = false;
+		private readonly ConfirmDeleteFactory _confirmDeleteFactory;
+
 		public LexEntry Entry { get; set; }
 
-		public LexEntryLayouter(DetailList builder,
+		public LexEntryLayouter(DetailList parentDetailList,
+								int parentRow,
 								ViewTemplate viewTemplate,
 								LexEntryRepository lexEntryRepository,
 								IServiceLocator serviceLocator,
-								LexEntry entry)
-			: base(builder, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, entry))
+								LexEntry entry,
+								bool sensesAreDeletable,
+								ConfirmDeleteFactory confirmDeleteFactory)
+			: base(parentDetailList, parentRow, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, entry), entry)
 		{
 			Entry = entry;
+			DetailList.Name = "LexEntryDetailList";
+			_sensesAreDeletable = sensesAreDeletable;
+			_confirmDeleteFactory = confirmDeleteFactory;
+			DetailList.LabelsChanged += OnLabelsChanged;
+		}
+
+		private void OnLabelsChanged(object sender, EventArgs e)
+		{
+			var maxWidth = DetailList.WidestLabelWidthWithMargin;
+			DetailList.LabelColumnWidth = maxWidth;
 		}
 
 		public int AddWidgets()
@@ -57,25 +75,80 @@ namespace WeSay.LexicalTools
 			rowCount += AddCustomFields(entry, insertAtRow + rowCount);
 
 			var rowCountBeforeSenses = rowCount;
-			var layouter = new LexSenseLayouter(
-				DetailList,
-				ActiveViewTemplate,
-				RecordListManager,
-				_serviceProvider
-			);
-			layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
-			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
+			foreach (var lexSense in entry.Senses)
+			{
+				var layouter = new LexSenseLayouter(
+					DetailList,
+					rowCount,
+					ActiveViewTemplate,
+					RecordListManager,
+					_serviceProvider,
+					lexSense
+				);
+				layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
+				layouter.Deletable = _sensesAreDeletable;
+				layouter.DeleteClicked += OnSenseDeleteClicked;
+				AddChildrenWidgets(layouter, lexSense);
+				rowCount++;
+			}
 
 			//see: WS-1120 Add option to limit "add meanings" task to the ones that have a semantic domain
 			//also: WS-639 (jonathan_coombs@sil.org) In Add meanings, don't show extra meaning slots just because a sense was created for the semantic domain
 			var ghostingRule = ActiveViewTemplate.GetGhostingRuleForField(LexEntry.WellKnownProperties.Sense);
 			if (rowCountBeforeSenses == rowCount || ghostingRule.ShowGhost)
 			{
-				rowCount += layouter.AddGhost(null, entry.Senses, true);
+				AddSenseGhost(entry, rowCount);
+				rowCount++;
 			}
 
 			DetailList.ResumeLayout();
 			return rowCount;
+		}
+
+		private void OnSenseDeleteClicked(object sender, EventArgs e)
+		{
+			var sendingLayouter = (Layouter) sender;
+			var sense = (LexSense) sendingLayouter.PdoToLayout;
+			IConfirmDelete confirmation = _confirmDeleteFactory();
+			var deletionStringToLocalize = StringCatalog.Get("This will permanently remove the meaning");
+			confirmation.Message = String.Format("{0} {1}.", deletionStringToLocalize,
+				sense.Definition.GetBestAlternative(ActiveViewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition).Id));
+			if (!confirmation.DeleteConfirmed)
+			{
+				return;
+			}
+			Entry.Senses.Remove(sense);
+			DetailList.Clear();
+			//for now just relayout the whole thing as the meaning numbers will change etc.
+			AddWidgets();
+		}
+
+		private void AddSenseGhost(LexEntry entry, int row)
+		{
+			var layouter = new LexSenseLayouter(
+				DetailList,
+				row,
+				ActiveViewTemplate,
+				RecordListManager,
+				_serviceProvider,
+				null
+				);
+			layouter.AddGhost(null, entry.Senses, true);
+			layouter.Deletable = false;
+			layouter.GhostRequestedLayout += OnGhostRequestedlayout;
+			layouter.DeleteClicked += OnSenseDeleteClicked;
+			row++;
+		}
+
+		private void OnGhostRequestedlayout(object sender, EventArgs e)
+		{
+			if (ActiveViewTemplate.GetGhostingRuleForField(LexEntry.WellKnownProperties.Sense).ShowGhost)
+			{
+				((Layouter) sender).Deletable = true;
+				//The old ghost takes care of turing itself into a properly layouted sense.
+				//We just add a new ghost here
+				AddSenseGhost(Entry, DetailList.RowCount);
+			}
 		}
 
 		/// <summary>
@@ -90,7 +163,7 @@ namespace WeSay.LexicalTools
 			var ap = new AudioPathProvider(WeSayWordsProject.Project.PathToAudio,
 						() => entry.LexicalForm.GetBestAlternativeString(namingHelper.LexicalUnitWritingSystemIds));
 
-		   return serviceLocator.CreateNewUsing(c=>c.Register(ap));
+		   return serviceLocator.CreateNewUsing(c=>c.RegisterInstance(ap));
 	   }
 	}
 

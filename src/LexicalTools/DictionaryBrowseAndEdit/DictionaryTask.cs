@@ -100,7 +100,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		void OnSelectedEntryOfDictionaryControlChanged(object sender, EventArgs e)
 		{
-			LexEntry entry = _dictionaryControl.CurrentRecord;
+			LexEntry entry = _dictionaryControl.CurrentEntry;
 			if(entry !=null)
 			{
 				_taskMemory.Set(LastUrlKey, _dictionaryControl.CurrentUrl);
@@ -184,6 +184,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		protected override int ComputeReferenceCount()
 		{
 			return CountNotRelevant;
+		}
+
+		public override void FocusDesiredControl()
+		{
+			// This is the place to implement how the task selects its desired child control
+			return;
 		}
 
 		public override ButtonStyle DashboardButtonStyle

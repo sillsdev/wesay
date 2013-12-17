@@ -35,7 +35,19 @@ namespace WeSay.UI.TextBoxes
 			_textBoxTarget.Disposed += _textBoxTarget_Disposed;
 			_textBoxTarget.Enter += OnTextBoxEntered;
 			_textBoxTarget.Leave += OnTextBoxExit;
-			_textBoxTarget.LostFocus+=OnTextBoxExit;
+			_textBoxTarget.LostFocus += OnTextBoxExit;
+			_textBoxTarget.KeyDown += OnTextBoxKeyDown;
+		}
+
+		private void OnTextBoxKeyDown(object sender, KeyEventArgs e)
+		{
+			if (Keys.Enter == e.KeyCode)
+			{
+				if (null != _pendingValueChange) //nb: string.emtpy is still a value we want to set!
+				{
+					SetTargetValue(_textBoxTarget.Text);
+				}
+			}
 		}
 
 		private void OnTextBoxExit(object sender, EventArgs e)

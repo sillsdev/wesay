@@ -127,7 +127,7 @@ namespace WeSay.ConfigTool
 			{
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
-				OpenSpecifiedProject(dlg.PathToNewProject);
+				OpenSpecifiedProject(dlg.PathToNewlyClonedFolder);
 				Project.WeSayWordsProject.Project.SetupUserForChorus();
 			}
 		}
@@ -152,7 +152,7 @@ namespace WeSay.ConfigTool
 				dlg.Model.ProjectFilter = dir => GetLooksLikeLiftChorusFolder(dir);
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
-				OpenSpecifiedProject(dlg.PathToNewProject);
+				OpenSpecifiedProject(dlg.PathToNewlyClonedFolder);
 			}
 		}
 

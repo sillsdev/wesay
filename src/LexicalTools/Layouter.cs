@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
@@ -14,6 +15,7 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
+using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
 using Palaso.i18n;
 
@@ -33,6 +35,10 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private DetailList _detailList;
 
+		private DetailList _parentDetailList;
+
+		private bool _deletable;
+
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
@@ -50,6 +56,46 @@ namespace WeSay.LexicalTools
 		private MultiTextControl _previouslyGhostedControlToReuse;
 
 		private bool _showNormallyHiddenFields;
+
+		private readonly DeleteButton _deleteButton = new DeleteButton();
+
+		public EventHandler DeleteClicked;
+
+		public bool Deletable
+		{
+			get { return _deletable; }
+			set
+			{
+				if (value == _deletable)
+				{
+					return;
+				}
+				_deletable = value;
+				_deleteButton.Visible = _deletable;
+				_deleteButton.Active = DetailList.MouseIsInBounds;
+			}
+		}
+
+		private void OnMouseLeftBounds(object sender, EventArgs e)
+		{
+			_deleteButton.Active = false;
+		}
+
+		private void OnMouseEnteredBounds(object sender, EventArgs e)
+		{
+			if (Deletable)
+			{
+				_deleteButton.Active = true;
+			}
+		}
+
+		private void OnDeleteClicked(object sender, EventArgs e)
+		{
+			if (DeleteClicked != null)
+			{
+				DeleteClicked(this, e);
+			}
+		}
 
 		protected DetailList DetailList
 		{
@@ -76,25 +122,46 @@ namespace WeSay.LexicalTools
 			set { _showNormallyHiddenFields = value; }
 		}
 
-		protected Layouter(DetailList builder,
+		public DetailList ParentDetailList
+		{
+			get { return _parentDetailList; }
+			set { _parentDetailList = value; }
+		}
+
+		public PalasoDataObject PdoToLayout { get; private set; }
+
+		public EventHandler GhostRequestedLayout;
+
+		protected Layouter(DetailList parentDetailList,
+						   int rowInParent,
 						   ViewTemplate viewTemplate,
 						   LexEntryRepository lexEntryRepository,
-							IServiceProvider serviceProvider)
+						   IServiceProvider serviceProvider,
+						   PalasoDataObject pdoToLayout)
 		{
-			if (builder == null)
+			if (parentDetailList == null)
 			{
-				throw new ArgumentNullException("builder");
+				throw new ArgumentNullException("parentDetailList");
 			}
 			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
-
-			_detailList = builder;
+			PdoToLayout = pdoToLayout;
+			_parentDetailList = parentDetailList;
+			_detailList = new DetailList();
 			_viewTemplate = viewTemplate;
 			_lexEntryRepository = lexEntryRepository;
 			_serviceProvider = serviceProvider;
-
+			//Set up the space for the delete icon
+			_deleteButton.Click += OnDeleteClicked;
+			_deleteButton.Active = false;
+			_deleteButton.Visible = false;
+			_deleteButton.ToolTip = StringCatalog.Get("Delete Meaning");
+			DetailList.Controls.Add(_deleteButton, 2, 0);
+			DetailList.MouseEnteredBounds += OnMouseEnteredBounds;
+			DetailList.MouseLeftBounds += OnMouseLeftBounds;
+			ParentDetailList.AddDetailList(DetailList, rowInParent);
 		}
 
 		/// <summary>
@@ -165,12 +232,12 @@ namespace WeSay.LexicalTools
 
 		protected int MakeGhostWidget<T>(PalasoDataObject parent,
 										IList<T> list,
-										 int insertAtRow,
 										 string fieldName,
 										 string label,
 										 string propertyName,
 										 bool isHeading) where T : PalasoDataObject, new()
 		{
+			DetailList.SuspendLayout();
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(fieldName);
 			if (field != null && field.Enabled &&
@@ -187,7 +254,7 @@ namespace WeSay.LexicalTools
 				Control refWidget = DetailList.AddWidgetRow(label,
 															isHeading,
 															m,
-															insertAtRow + rowCount,
+															0,
 															true);
 
 				foreach (IControlThatKnowsWritingSystem box in m.TextBoxes)
@@ -199,6 +266,7 @@ namespace WeSay.LexicalTools
 						g.ReferenceControl = refWidget;
 					}
 				}
+				DetailList.ResumeLayout();
 				return 1;
 			}
 			else
@@ -232,53 +300,45 @@ namespace WeSay.LexicalTools
 															 EventArgs args)
 				where T : PalasoDataObject, new()
 		{
+			DetailList.SuspendLayout();
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
-			AddWidgetsAfterGhostTrigger(list[index],
-										list.Count,
-										sender.ReferenceControl,
-										doGoToNextField);
-		}
-
-		protected void AddWidgetsAfterGhostTrigger(PalasoDataObject wsdo,
-												   int countOfRows,
-												   Control refControl,
-												   bool doGoToNextField)
-		{
-			int ghostRow = _detailList.GetRow(refControl);
-			UpdateGhostLabel(countOfRows, ghostRow);
-			AddWidgets(wsdo, ghostRow);
-			Application.DoEvents();
+			PdoToLayout = list[index];
+			AddWidgetsAfterGhostTrigger(PdoToLayout, sender.ReferenceControl, doGoToNextField);
+			if (GhostRequestedLayout != null)
+			{
+				GhostRequestedLayout(this, new EventArgs());
+			}
+			DetailList.ResumeLayout();
 			if (doGoToNextField)
 			{
-				_detailList.MoveInsertionPoint(ghostRow + 1);
+				_detailList.MoveInsertionPoint(1);
 			}
 			else
 			{
-				_detailList.MoveInsertionPoint(ghostRow);
+				_detailList.MoveInsertionPoint(0);
 			}
+		}
+
+		protected void AddWidgetsAfterGhostTrigger(PalasoDataObject wsdo,
+												   Control refControl,
+												   bool doGoToNextField)
+		{
+			_detailList.SuspendLayout();
+			//remove the old ghost widgets and add the ones for the real sense
+			_detailList.Controls.Clear();
+			_detailList.RowCount = 0;
+			_detailList.RowStyles.Clear();
+			DetailList.Controls.Add(_deleteButton, 2, 0);
+			AddWidgets(wsdo);
+			_detailList.ResumeLayout();
 		}
 
 		protected virtual void UpdateGhostLabel(int itemCount, int index) {}
 
 		protected static int AddChildrenWidgets(Layouter layouter,
-												IEnumerable list,
-												int insertAtRow,
-												int rowCount)
+												PalasoDataObject po)
 		{
-			foreach (PalasoDataObject o in list)
-			{
-				int r;
-				if (insertAtRow < 0)
-				{
-					r = insertAtRow; // just stick at the end
-				}
-				else
-				{
-					r = insertAtRow + rowCount;
-				}
-				rowCount += layouter.AddWidgets(o, r);
-			}
-			return rowCount;
+			return layouter.AddWidgets(po);
 		}
 
 		protected int AddCustomFields(PalasoDataObject target, int insertAtRow)

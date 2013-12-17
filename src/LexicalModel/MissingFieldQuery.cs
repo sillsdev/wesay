@@ -158,8 +158,7 @@ namespace WeSay.LexicalModel
 					{
 						if (Field.ClassName == "LexSense")
 						{
-							if (IsMissingLexSenseField(sense) &&
-								_writingSystemsWhichAreRequired.Length == 0)
+							if (IsMissingLexSenseField(sense))
 							{
 								return true;
 							}

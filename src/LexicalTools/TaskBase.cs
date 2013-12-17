@@ -303,6 +303,8 @@ namespace WeSay.LexicalTools
 			return result;
 		}
 
+		public abstract void FocusDesiredControl();
+
 		public bool AreCountsRelevant()
 		{
 			return GetReferenceCount() != CountNotRelevant &&

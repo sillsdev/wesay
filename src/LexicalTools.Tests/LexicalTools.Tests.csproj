@@ -15,7 +15,8 @@
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
 	<OldToolsVersion>3.5</OldToolsVersion>
-	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+	<TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -164,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="AddPicturesTasksTests.cs" />
+	<Compile Include="TestConfirmDelete.cs" />
 	<Compile Include="DashBoardTests.cs" />
 	<Compile Include="DashTests.cs" />
 	<Compile Include="GatherBySemanticDomainTaskTests.cs" />
