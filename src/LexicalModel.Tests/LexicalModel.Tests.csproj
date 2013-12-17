@@ -1,9 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{123D695C-0D5D-46E5-893F-39EC4E0B01B8}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -14,180 +13,86 @@
 	</FileUpgradeFlags>
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
-	<OldToolsVersion>3.5</OldToolsVersion>
-	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Debug\</OutputPath>
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>LexicalModel.Tests</AssemblyName>
-	<RootNamespace>WeSay.LexicalModel.Tests</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
 	<Optimize>true</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Release\</OutputPath>
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>LexicalModel.Tests</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.LexicalModel.Tests</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Mono Debug\</OutputPath>
 	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>LexicalModel.Tests</AssemblyName>
-	<RootNamespace>WeSay.LexicalModel.Tests</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|AnyCPU' ">
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
+	<OutputPath>..\..\output\Mono Release\</OutputPath>
 	<DefineConstants>TRACE;MONO</DefineConstants>
 	<Optimize>true</Optimize>
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>LexicalModel.Tests</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.LexicalModel.Tests</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
+	</Reference>
+	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
+	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
+	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
 	</Reference>
-	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\nunit.framework.dll</HintPath>
+	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="PalasoReporting, Version=1.0.2932.26853, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Tests, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.Tests.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.TestUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.TestUtilities.dll</HintPath>
-	</Reference>
-	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
-	</Reference>
-	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
-	</Reference>
-	<None Include="..\..\lib\common\Enchant.Net.dll.config">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
 	<Reference Include="System" />
-	<Reference Include="System.Core">
-	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-	</Reference>
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="ConstructorThrowTests.cs" />
-	<Compile Include="Foundation\Options\OptionList.Tests.cs" />
-	<Compile Include="Foundation\SpellCheckerIdToDisplayStringConverterTests.cs" />
-	<Compile Include="Foundation\TestResources.Designer.cs">
-	  <DependentUpon>TestResources.resx</DependentUpon>
-	  <AutoGen>True</AutoGen>
-	  <DesignTime>True</DesignTime>
-	</Compile>
-	<Compile Include="Foundation\LdmlInFolderWritingSystemRepositoryTests.cs" />
-	<Compile Include="Foundation\WritingSystemInfoTests.cs" />
-	<Compile Include="Foundation\WritingSystemTests.cs" />
-	<Compile Include="LexEntryRepositoryCachingTests.cs" />
-	<Compile Include="LexEntryRepositoryCreatedFromPersistedData.cs" />
-	<Compile Include="LexEntryRepositoryCreateItemTransitionTests.cs" />
-	<Compile Include="LexEntryRepositoryDeleteAllItemsTransitionTests.cs" />
-	<Compile Include="LexEntryRepositoryDeleteIdTransitionTests.cs" />
-	<Compile Include="LexEntryRepositoryDeleteItemTransitionTests.cs" />
-	<Compile Include="LexEntryRepositoryEventTests.cs" />
-	<Compile Include="LexEntryRepositoryStateUnitializedTests.cs" />
-	<Compile Include="LexEntryRepository_GetMissingItemTests.cs" />
+	<Compile Include="Binding.cs" />
+	<Compile Include="Db4oSpecific\Db4oProjectSetupForTesting.cs" />
 	<Compile Include="FieldTests.cs" />
+	<Compile Include="LexEntryTests.cs" />
 	<Compile Include="LexEntryRepositoryTests.cs" />
+	<Compile Include="LexRelationTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
+	<Compile Include="Db4oSpecific\PersistenceTests.cs" />
+	<Compile Include="LiftExportTests.cs" />
+	<Compile Include="LexEntryFromLiftBuilderTests.cs" />
+	<Compile Include="LiftPreparer.Tests.cs" />
+	<Compile Include="LiftRepositoryTests.cs" />
+	<Compile Include="LiftRoundTripTests.cs" />
 	<Compile Include="MissingItemFilterTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -204,6 +109,14 @@
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
 	  <Name>WeSay.Data</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Foundation.Tests\WeSay.Foundation.Tests.csproj">
+	  <Project>{6366719E-DA80-4680-9E06-D9BC6F340DE3}</Project>
+	  <Name>WeSay.Foundation.Tests</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Project.Tests\WeSay.Project.Tests.csproj">
 	  <Project>{F644C902-A952-4797-9E2D-19D6051DD032}</Project>
 	  <Name>WeSay.Project.Tests</Name>
@@ -212,13 +125,6 @@
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
 	  <Name>WeSay.Project</Name>
 	</ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-	<EmbeddedResource Include="Foundation\TestResources.resx">
-	  <Generator>ResXFileCodeGenerator</Generator>
-	  <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

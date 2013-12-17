@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project DefaultTargets="UpdateCsProjs" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- From http://msbuildtasks.tigris.org/ -->
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+  <ItemGroup>
+	<CsProjFiles Include="$(MSBuildProjectDirectory)\..\**\*.csproj"
+				   Exclude="$(MSBuildProjectDirectory)\..\**\lib\src\**"/>
+  </ItemGroup>
+
+  <Target Name="UpdateCsProjs" Inputs="@CsProjFiles" Outputs="@CsProjFiles">
+	<Xslt Inputs="%(CsProjFiles.FullPath)"
+		  Xsl="$(MSBuildProjectDirectory)\AddVersionImportToCsProj.xslt"
+		  Output="%(CsProjFiles.FullPath)"
+		  RootTag="mergedroot"
+		  RootAttributes="projectDirectory=$(MSBuildProjectDirectory)\.."/>
+  </Target>
+
+</Project>

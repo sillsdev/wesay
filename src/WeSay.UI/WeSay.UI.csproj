@@ -1,9 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -14,139 +13,59 @@
 	</FileUpgradeFlags>
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
-	<OldToolsVersion>3.5</OldToolsVersion>
-	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Debug\</OutputPath>
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.UI</AssemblyName>
-	<RootNamespace>WeSay.UI</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
 	<Optimize>true</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\release\</OutputPath>
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.UI</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.UI</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Mono Debug\</OutputPath>
 	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.UI</AssemblyName>
-	<RootNamespace>WeSay.UI</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|AnyCPU' ">
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
+	<OutputPath>..\..\output\Mono Release\</OutputPath>
 	<DefineConstants>TRACE;MONO</DefineConstants>
 	<Optimize>true</Optimize>
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.UI</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.UI</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
+	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="PalasoReporting, Version=1.0.2774.21115, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
-	</Reference>
-	<Reference Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="Palaso.Media, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.Media.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
-	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
-	</Reference>
-	<None Include="..\..\lib\common\Enchant.Net.dll.config">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
 	<Reference Include="System" />
-	<Reference Include="System.Core">
-	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-	</Reference>
 	<Reference Include="System.Data" />
 	<Reference Include="System.Design" />
 	<Reference Include="System.Drawing" />
@@ -154,9 +73,9 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="Animator.cs" />
 	<Compile Include="AnnotationWidget.cs">
 	</Compile>
-	<Compile Include="audio\AudioPathProvider.cs" />
 	<Compile Include="AutoCompleteTextBox\AutoCompleteTextBox.cs">
 	  <SubType>Component</SubType>
 	</Compile>
@@ -171,12 +90,6 @@
 	<Compile Include="AutoCompleteTextBox\ShortCutTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\TextLengthTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\TriggerState.cs" />
-	<Compile Include="BetterLabel.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="BetterLabel.Designer.cs">
-	  <DependentUpon>BetterLabel.cs</DependentUpon>
-	</Compile>
 	<Compile Include="Buttons\AddButton.cs">
 	  <SubType>Component</SubType>
 	</Compile>
@@ -204,25 +117,26 @@
 	<Compile Include="CollapsibleSplitter.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.Designer.cs">
-	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Event.cs" />
-	<Compile Include="TextBoxes\IControlThatKnowsWritingSystem.cs" />
 	<Compile Include="WeSayListView.cs">
 	  <SubType>Component</SubType>
 	</Compile>
 	<Compile Include="WeSayListView.Designer.cs">
 	  <DependentUpon>WeSayListView.cs</DependentUpon>
 	</Compile>
+	<Compile Include="MovingLabel.cs">
+	  <SubType>Component</SubType>
+	</Compile>
 	<Compile Include="PictureControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
 	<Compile Include="PictureControl.Designer.cs">
 	  <DependentUpon>PictureControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="LocalizationHelper.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="LocalizationHelper.Designer.cs">
+	  <DependentUpon>LocalizationHelper.cs</DependentUpon>
 	</Compile>
 	<Compile Include="ReferenceCollectionEditor.cs">
 	  <SubType>Component</SubType>
@@ -248,7 +162,7 @@
 	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
 	<Compile Include="SimpleBinding.cs" />
-	<Compile Include="TextBoxes\TextBinding.cs" />
+	<Compile Include="TextBinding.cs" />
 	<Compile Include="CurrentItemEventArgs.cs" />
 	<Compile Include="DetailList.cs">
 	  <SubType>Component</SubType>
@@ -266,10 +180,10 @@
 	<Compile Include="SingleOptionControl.Designer.cs">
 	  <DependentUpon>SingleOptionControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="TextBoxes\MultiTextControl.cs">
+	<Compile Include="MultiTextControl.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Include="TextBoxes\MultiTextControl.designer.cs">
+	<Compile Include="MultiTextControl.designer.cs">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="WeSayListBox.cs">
@@ -278,18 +192,14 @@
 	<Compile Include="WeSayListBox.Designer.cs">
 	  <DependentUpon>WeSayListBox.cs</DependentUpon>
 	</Compile>
-	<Compile Include="TextBoxes\WeSayTextBox.cs">
+	<Compile Include="WeSayTextBox.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Include="TextBoxes\WeSayTextBox.Designer.cs">
+	<Compile Include="WeSayTextBox.Designer.cs">
 	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
 	</Compile>
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
-	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
-	  <Name>LexicalModel</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>
@@ -298,10 +208,6 @@
   <ItemGroup>
 	<EmbeddedResource Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.resx">
 	  <DependentUpon>AutoCompleteWithCreationBox.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="BetterLabel.resx">
-	  <DependentUpon>BetterLabel.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="CheckBoxControl.resx">
@@ -320,7 +226,7 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DetailList.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="TextBoxes\MultiTextControl.resx">
+	<EmbeddedResource Include="MultiTextControl.resx">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
@@ -333,11 +239,7 @@
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
-	<EmbeddedResource Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.resx">
-	  <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="TextBoxes\WeSayTextBox.resx">
+	<EmbeddedResource Include="WeSayTextBox.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
 	</EmbeddedResource>

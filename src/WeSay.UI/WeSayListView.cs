@@ -4,27 +4,24 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
+using WeSay.Foundation;
 
 namespace WeSay.UI
 {
 	public partial class WeSayListView: ListView
 	{
-		private WritingSystemDefinition _writingSystem;
+		private WritingSystem _writingSystem;
 		private int _itemToNotDrawYet = -1;
 		private IList _dataSource;
 		private readonly Dictionary<int, ListViewItem> _itemsCache;
 
-		private bool _ensureVisibleCalledBeforeWindowHandleCreated = false;
-
 		public WeSayListView()
 		{
 			InitializeComponent();
-			_itemsCache = new Dictionary<int, ListViewItem>();
-			_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
-			SimulateListBox = true;
 			AdjustColumnWidth();
+			SimulateListBox = true;
+			_itemsCache = new Dictionary<int, ListViewItem>();
+			_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
 		}
 
 		[DefaultValue(false)]
@@ -128,7 +125,7 @@ namespace WeSay.UI
 		[Browsable(false)]
 		[DefaultValue(null)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystemDefinition WritingSystem
+		public WritingSystem WritingSystem
 		{
 			get
 			{
@@ -146,8 +143,8 @@ namespace WeSay.UI
 					throw new ArgumentNullException();
 				}
 				_writingSystem = value;
-				Font = WritingSystemInfo.CreateFont(value);
-				if (value.RightToLeftScript)
+				Font = value.Font;
+				if (value.RightToLeft)
 				{
 					RightToLeft = RightToLeft.Yes;
 				}
@@ -251,19 +248,6 @@ namespace WeSay.UI
 			base.OnItemSelectionChanged(e);
 			_selectedItem = SelectedItem;
 			OnSelectedIndexChanged(new EventArgs());
-
-			//jh sept 2009 to help with WS-14934 (cambell) Dictionary word list scrolls unnecessarily when editing headword
-			//it'd be better to not scroll, but this occurs to me as a quick way to at least keep it from scrolling to the bottom
-			if (!_clickSelecting && e.Item != null && e.ItemIndex > 0 && Items.Count>0)
-			{
-				const int numberToShowBelowSelectedOne = 10;
-				//though we'd like to not scroll at all, this will
-				//make our selected one be at least 10 up from the bottom, which isn't so bad.
-				int lastOneToShow = Math.Min(Items.Count - 1, e.ItemIndex + numberToShowBelowSelectedOne);
-				Items[lastOneToShow].EnsureVisible();
-				//enhance... figure out where the middle would be, and the arrange for the selected item to be in the middle
-				//this.Height / e.Item.Font.Height
-			}
 		}
 
 		#region extend hot click area to simulate list box behavior
@@ -285,40 +269,9 @@ namespace WeSay.UI
 			base.WndProc(ref m);
 		}
 
-		private void SelectFromClickLocation()
-		{
-			if (SimulateListBox && _clickSelecting)
-			{
-				ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
-				if (item != null)
-				{
-					SelectedIndex = item.Index;
-					item.Focused = true;
-				}
-				else
-				{
-					// restore the selection
-					int index = _dataSource.IndexOf(_selectedItem);
-					if (index != -1)
-					{
-						SelectedIndex = index;
-						if (VirtualMode)
-						{
-							GetVirtualItem(index).Focused = true;
-						}
-						else
-						{
-							Items[index].Focused = true;
-						}
-					}
-				}
-			}
-			_clickSelecting = false;
-		}
-
 		protected override void OnClick(EventArgs e)
 		{
-			SelectFromClickLocation();
+			_clickSelecting = false;
 			base.OnClick(e);
 		}
 
@@ -357,13 +310,9 @@ namespace WeSay.UI
 		{
 			if (string.IsNullOrEmpty(e.Item.ToolTipText))
 			{
-				string textMinusAccelerators = e.Item.Text.Replace("&", "&&");
-				int textWidth = MeasureItemText(textMinusAccelerators).Width;
-				//This is identical to the width used in OnDrawItem
-				int rectanglesize = ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
-				if (textWidth > rectanglesize)
+				if (MeasureItemText(e.Item.Text).Width > Width)
 				{
-					tooltip.Show(textMinusAccelerators, this, _currentMouseLocation, int.MaxValue);
+					tooltip.Show(e.Item.Text, this, e.Item.Position, int.MaxValue);
 				}
 			}
 			else
@@ -382,7 +331,33 @@ namespace WeSay.UI
 		// the coordinates returned now don't reflect the user's intentions
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			SelectFromClickLocation();
+			if (SimulateListBox && _clickSelecting)
+			{
+				ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
+				if (item != null)
+				{
+					SelectedIndex = item.Index;
+					item.Focused = true;
+				}
+				else
+				{
+					// restore the selection
+					int index = _dataSource.IndexOf(_selectedItem);
+					if (index != -1)
+					{
+						SelectedIndex = index;
+						if (VirtualMode)
+						{
+							GetVirtualItem(index).Focused = true;
+						}
+						else
+						{
+							Items[index].Focused = true;
+						}
+					}
+				}
+			}
+			_clickSelecting = false;
 			_currentMouseLocation = e.Location;
 			base.OnMouseUp(e);
 		}
@@ -403,7 +378,7 @@ namespace WeSay.UI
 				// and not just the extent of the text itself
 				Rectangle bounds = new Rectangle(e.Bounds.X,
 												 e.Bounds.Y,
-												 ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth,
+												 header.Width,
 												 e.Bounds.Height);
 
 				Brush backgroundBrush;
@@ -424,19 +399,11 @@ namespace WeSay.UI
 				e.Graphics.FillRectangle(backgroundBrush, bounds);
 				TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
 										TextFormatFlags.EndEllipsis;
-				if (_writingSystem != null && WritingSystem.RightToLeftScript)
+				if (_writingSystem != null && WritingSystem.RightToLeft)
 				{
 					flags |= TextFormatFlags.RightToLeft;
 				}
-				if (e.Item.Text.Equals("(No Gloss)") || e.Item.Text.Equals("(Empty)"))
-				{
-					TextRenderer.DrawText(e.Graphics, e.Item.Text, SystemFonts.DefaultFont, bounds, textColor, flags);
-				}
-				else
-				{
-					string textMinusAccelerators = e.Item.Text.Replace("&","&&");
-					TextRenderer.DrawText(e.Graphics, textMinusAccelerators, Font, bounds, textColor, flags);
-				}
+				TextRenderer.DrawText(e.Graphics, e.Item.Text, e.Item.Font, bounds, textColor, flags);
 
 				if (backgroundBrushNeedsDisposal)
 				{
@@ -457,11 +424,7 @@ namespace WeSay.UI
 		[DefaultValue(true)]
 		public bool SimulateListBox
 		{
-			get
-			{
-				return _simulateListBoxBehavior && Columns.Contains(header) &&
-					(View == View.SmallIcon);
-			}
+			get { return _simulateListBoxBehavior && Columns.Contains(header) && View == View.SmallIcon; }
 			set
 			{
 				_simulateListBoxBehavior = value;
@@ -478,26 +441,15 @@ namespace WeSay.UI
 
 		protected override void OnResize(EventArgs e)
 		{
-			base.OnResize(e);
 			AdjustColumnWidth();
 		}
 
 		private void AdjustColumnWidth()
 		{
-			int newWidth = ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
-			// Column width seems to have some maximum, after which it allows multiple columns.
-			// So we constrain it to a 'reasonable' but large enough value.
-			newWidth = Math.Max(newWidth, 300);
-			SuspendLayout();
-			if (Columns.Count > 0)
-			{
-				Columns[0].Width = newWidth;
-			}
-			header.Width = newWidth;
-			ResumeLayout();
+			header.Width = Width - 20; // to account for scrollbar
 		}
 
-		private int _selectedIndexForUseBeforeSelectedIndicesAreInitialized;
+		private int _SelectedIndexForUseBeforeSelectedIndicesAreInitialized;
 
 		[DefaultValue(-1)]
 		[Browsable(true)]
@@ -509,7 +461,7 @@ namespace WeSay.UI
 				{
 					return SelectedIndices[0];
 				}
-				return _selectedIndexForUseBeforeSelectedIndicesAreInitialized;
+				return _SelectedIndexForUseBeforeSelectedIndicesAreInitialized;
 			}
 			set
 			{
@@ -524,7 +476,6 @@ namespace WeSay.UI
 				}
 				if (value == -1)
 				{
-					_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
 					SelectedIndices.Clear();
 					_selectedItem = null;
 				}
@@ -539,38 +490,19 @@ namespace WeSay.UI
 					// this gets around that
 					if (SelectedIndices.Count == 0)
 					{
-						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = value;
+						_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = value;
 						OnSelectedIndexChanged(new EventArgs());
 					}
 					else
 					{
-						// done with its usefulness
-						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+						// done with it's usefulness
+						_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
 					}
 
 					_selectedItem = SelectedItem;
-					if (!IsHandleCreated) //this is a mono bug workaround.
-					{
-						_ensureVisibleCalledBeforeWindowHandleCreated = true;
-					}
-					else
-					{
-						EnsureVisible(value);
-					}
+					EnsureVisible(value);
 				}
 			}
-		}
-
-		protected override void OnHandleCreated(EventArgs e)
-		{
-			base.OnHandleCreated(e);
-			if (_ensureVisibleCalledBeforeWindowHandleCreated)
-			{
-				EnsureVisible(SelectedIndex);
-				_ensureVisibleCalledBeforeWindowHandleCreated = false;
-			}
-			SimulateListBox = true;
-			AdjustColumnWidth();
 		}
 
 		public object SelectedItem
@@ -591,13 +523,13 @@ namespace WeSay.UI
 			e.DrawBorder();
 			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
 									TextFormatFlags.VerticalCenter;
-			if (_writingSystem != null && WritingSystem.RightToLeftScript)
+			if (_writingSystem != null && WritingSystem.RightToLeft)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
 			TextRenderer.DrawText(e.Graphics,
 								  e.ToolTipText,
-								  WritingSystemInfo.CreateFont(_writingSystem),
+								  _writingSystem.Font,
 								  e.Bounds,
 								  tooltip.ForeColor,
 								  flags);
@@ -611,7 +543,7 @@ namespace WeSay.UI
 		private Size MeasureItemText(string text)
 		{
 			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left;
-			if (_writingSystem != null && WritingSystem.RightToLeftScript)
+			if (_writingSystem != null && WritingSystem.RightToLeft)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
@@ -620,7 +552,7 @@ namespace WeSay.UI
 			{
 				return TextRenderer.MeasureText(g,
 												text,
-											   WritingSystemInfo.CreateFont(_writingSystem),
+												_writingSystem.Font,
 												new Size(maxWidth, int.MaxValue),
 												flags);
 			}

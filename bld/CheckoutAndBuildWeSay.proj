@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- From http://msbuildtasks.tigris.org/ -->
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+  <PropertyGroup>
+	 <ApplicationName>WeSay</ApplicationName>
+	 <ApplicationDirectory>$(MSBuildProjectDirectory)\$(ApplicationName)</ApplicationDirectory>
+	 <RepositoryPath>http://code.wesay.org/WeSay/trunk</RepositoryPath>
+  </PropertyGroup>
+
+  <Target Name="Checkout">
+	<RemoveDir Directories="$(ApplicationDirectory)" />
+	<!-- You must install the subversion package (not tortoise or another fancy gui version)
+	http://subversion.tigris.org/project_packages.html -->
+	<!-- we can't just export since later we will use SvnVersion to pick up the revision number-->
+	<SvnCheckout RepositoryPath="$(RepositoryPath)"
+				 LocalPath="$(ApplicationDirectory)">
+	  <Output TaskParameter="Revision" PropertyName="Revision" />
+	</SvnCheckout>
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="Checkout">
+	<MSBuild Projects="$(ApplicationDirectory)\bld\WeSay.proj"
+			 Properties="user=$(user);password=$(password)" />
+  </Target>
+
+</Project>

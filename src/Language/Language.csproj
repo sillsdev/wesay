@@ -14,7 +14,7 @@
 	<DebugSymbols>true</DebugSymbols>
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Debug\</OutputPath>
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
@@ -22,7 +22,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
 	<Optimize>true</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>bin\Release\</OutputPath>
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
@@ -30,7 +30,7 @@
   <ItemGroup>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
+	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />

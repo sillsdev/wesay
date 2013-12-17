@@ -14,7 +14,7 @@
 	<DebugSymbols>true</DebugSymbols>
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Debug\</OutputPath>
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
@@ -22,7 +22,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
 	<Optimize>true</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Release\</OutputPath>
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
@@ -30,7 +30,7 @@
   <ItemGroup>
 	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
+	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />

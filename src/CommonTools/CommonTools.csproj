@@ -19,7 +19,7 @@
 	<DebugSymbols>true</DebugSymbols>
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Debug\</OutputPath>
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
@@ -27,21 +27,21 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
 	<Optimize>true</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\release\</OutputPath>
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Mono Debug\</OutputPath>
 	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|AnyCPU' ">
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
+	<OutputPath>..\..\output\Mono Release\</OutputPath>
 	<DefineConstants>TRACE;MONO</DefineConstants>
 	<Optimize>true</Optimize>
 	<DebugType>pdbonly</DebugType>
@@ -52,15 +52,15 @@
 	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
+	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
 	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="Palaso.Reporting, Version=1.0.2774.19364, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
@@ -69,11 +69,72 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="ActionsControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ActionsControl.Designer.cs">
+	  <DependentUpon>ActionsControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Dashboard Button.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Dashboard Button.Designer.cs">
+	  <DependentUpon>Dashboard Button.cs</DependentUpon>
+	</Compile>
+	<Compile Include="CurrentTaskIndicatorControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="CurrentTaskIndicatorControl.Designer.cs">
+	  <DependentUpon>CurrentTaskIndicatorControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Dash.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Dash.Designer.cs">
+	  <DependentUpon>Dash.cs</DependentUpon>
+	</Compile>
+	<Compile Include="DashboardButtonWithIcon.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="DashboardConfiguration.cs" />
+	<Compile Include="DashboardControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="DashboardControl.Designer.cs">
+	  <DependentUpon>DashboardControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="DictionaryStatusControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="DictionaryStatusControl.Designer.cs">
+	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="GroupHeader.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="GroupHeader.Designer.cs">
+	  <DependentUpon>GroupHeader.cs</DependentUpon>
+	</Compile>
+	<Compile Include="ItemsToDoIndicator.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ItemsToDoIndicator.designer.cs">
+	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>Resources.resx</DependentUpon>
+	</Compile>
+	<Compile Include="ShapeControl.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="TaskIndicator.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="TaskIndicator.Designer.cs">
+	  <DependentUpon>TaskIndicator.cs</DependentUpon>
 	</Compile>
   </ItemGroup>
   <ItemGroup>
@@ -103,10 +164,50 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="ActionsControl.resx">
+	  <DependentUpon>ActionsControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Dashboard Button.resx">
+	  <DependentUpon>Dashboard Button.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="CurrentTaskIndicatorControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>CurrentTaskIndicatorControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Dash.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>Dash.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="DashboardButtonWithIcon.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>DashboardButtonWithIcon.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="DashboardControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>DashboardControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="DictionaryStatusControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="GroupHeader.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>GroupHeader.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="ItemsToDoIndicator.resx">
+	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
+	<EmbeddedResource Include="TaskIndicator.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>TaskIndicator.cs</DependentUpon>
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

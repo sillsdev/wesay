@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using Chorus.FileTypeHanders.lift;
 using Chorus.sync;
-using Chorus.UI.Sync;
-using Chorus.VcsDrivers.Mercurial;
-using Palaso.Reporting;
+using Chorus.Utilities;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project
@@ -18,23 +15,9 @@ namespace WeSay.Project
 	[XmlRoot("backupPlan")]
 	public class ChorusBackupMaker
 	{
-		internal CheckinDescriptionBuilder CheckinDescriptionBuilder { get; set; }
-		public const string ElementName = "backupPlan";
+	  public const string ElementName = "backupPlan";
 
-	  public ChorusBackupMaker(CheckinDescriptionBuilder checkinDescriptionBuilder)
-	  {
-		  CheckinDescriptionBuilder = checkinDescriptionBuilder;
-	  }
-
-
-		/// <summary>
-		/// for deserializer
-		/// </summary>
-	  internal ChorusBackupMaker()
-	  {
-	  }
-
-		[XmlElement("pathToParentOfRepositories")]
+	  [XmlElement("pathToParentOfRepositories")]
 		public string PathToParentOfRepositories;
 
 		private DateTime _timeOfLastBackupAttempt;
@@ -50,118 +33,87 @@ namespace WeSay.Project
 			set { _lexEntryRepository = value; }
 		}
 
-
-		/// <returns>null if not found in the dom</returns>
-		public static ChorusBackupMaker CreateFromDom(XmlDocument dom, CheckinDescriptionBuilder checkinDescriptionBuilder)
+		public static ChorusBackupMaker LoadFromReader(XmlReader reader)
 		{
-			var node = dom.SelectSingleNode("//backupPlan");
-			if(node==null)
-				return null;
-			using (var reader = new StringReader(node.OuterXml))
-			{
-				XmlSerializer serializer = new XmlSerializer(typeof (ChorusBackupMaker));
-				var backupMaker = (ChorusBackupMaker) serializer.Deserialize(reader);
-				backupMaker.CheckinDescriptionBuilder = checkinDescriptionBuilder;
-				return backupMaker;
-			}
+			XmlSerializer serializer = new XmlSerializer(typeof(ChorusBackupMaker));
+			return (ChorusBackupMaker)serializer.Deserialize(reader);
 		}
 
 		public void Save(XmlWriter writer)
 		{
-			XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-			ns.Add("", "");//don't add the silly namespace on the element
 			XmlSerializer serializer = new XmlSerializer(typeof(ChorusBackupMaker));
-			serializer.Serialize(writer, this, ns);
+			serializer.Serialize(writer, this);
 		}
 
 		public void BackupNow(string pathToProjectDirectory, string localizationLanguageId)
 		{
-			if(pathToProjectDirectory.ToLower().IndexOf(@"sampleprojects\pretend")>=0)
-			{
-				return; //no way... if you want a unit test that includes CHorus, do it without
-						//that now deprecated monstrosity.
-			}
-#if DEBUG
-			Debug.Assert(pathToProjectDirectory.ToLower().IndexOf("wesaydev") < 0, "Whoops, something is trying to do a checkin of the wesay code!");
-#endif
 			_timeOfLastBackupAttempt = DateTime.Now;
 
 			//nb: we're not really using the message yet, at least, not showing it to the user
-			if(!string.IsNullOrEmpty(HgRepository.GetEnvironmentReadinessMessage(localizationLanguageId)))
+			if(!string.IsNullOrEmpty(RepositoryManager.GetEnvironmentReadinessMessage(localizationLanguageId)))
 			{
-				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", HgRepository.GetEnvironmentReadinessMessage("en"));
+				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
+			}
+			if (string.IsNullOrEmpty(PathToParentOfRepositories))
+			{
+				Palaso.Reporting.Logger.WriteMinorEvent("Backup location not specified, skipping backup.");
+				return;
+			}
+			if (!Directory.Exists(PathToParentOfRepositories))
+			{
+				Palaso.Reporting.Logger.WriteEvent("Backup location not found, skipping backup.");
+				return;
+			}
+
+			LiftRepository.RightToAccessLiftExternally rightToAccessLiftExternally = null;
+			if (_lexEntryRepository != null)
+			{
+				rightToAccessLiftExternally = _lexEntryRepository.GetRightToAccessLiftExternally();
 			}
 
 			try
 			{
-				var configuration = new ProjectFolderConfiguration(pathToProjectDirectory);
-				LiftFolder.AddLiftFileInfoToFolderConfiguration(configuration);
+				ProjectFolderConfiguration projectFolder = new ProjectFolderConfiguration(pathToProjectDirectory);
+				projectFolder.ExcludePatterns.Add("**/cache");
+				projectFolder.ExcludePatterns.Add("*.old");
+				projectFolder.ExcludePatterns.Add("*.tmp");
+				projectFolder.IncludePatterns.Add("*.*");
+			   // projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
 
-				// projectFolder.IncludePatterns.Add(project.ProjectDirectoryPath);
+				Chorus.sync.SyncOptions options = new SyncOptions();
+				options.DoMergeWithOthers = false;
+				options.DoPullFromOthers = false;
+				options.DoPushToLocalSources = true;
+				options.RepositorySourcesToTry.Clear();
+				RepositorySource backupSource = RepositorySource.Create(PathToParentOfRepositories, "backup", false);
+				options.RepositorySourcesToTry.Add(backupSource);
 
-//                  if (!string.IsNullOrEmpty(PathToParentOfRepositories))
-//                {
-//                    if (!Directory.Exists(PathToParentOfRepositories))
-//                    {
-//                        ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "There was a problem during auto backup: Could not Access the backup path, {0}", PathToParentOfRepositories);
-//                        //no, we still want to check in... return;
-//                    }
-//                    else
-//                    {
-//                        var projectName = Path.GetFileName(pathToProjectDirectory);
-//                        var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create("backup", Path.Combine(PathToParentOfRepositories, projectName),
-//                                                                                false);
-//                        options.RepositorySourcesToTry.Add(backupSource);
-//                    }
-//                }
+				RepositoryManager manager = RepositoryManager.FromRootOrChildFolder(projectFolder);
 
-				using (var dlg = new SyncDialog(configuration,
-					   SyncUIDialogBehaviors.StartImmediatelyAndCloseWhenFinished,
-					   SyncUIFeatures.Minimal))
+
+				if (!RepositoryManager.CheckEnvironmentAndShowMessageIfAppropriate("en"))//todo localization
 				{
-					dlg.Text = "Wesay Automatic Backup";
-					dlg.SyncOptions.DoMergeWithOthers = false;
-					dlg.SyncOptions.DoPullFromOthers = false;
-					dlg.SyncOptions.DoSendToOthers = true;
-					dlg.SyncOptions.RepositorySourcesToTry.Clear();
-					dlg.SyncOptions.CheckinDescription = CheckinDescriptionBuilder.GetDescription();
-					dlg.UseTargetsAsSpecifiedInSyncOptions=true;
-
-					//in addition to checking in, will we be doing a backup to another media (e.g. sd card)?
-					if (!string.IsNullOrEmpty(PathToParentOfRepositories))
-					{
-							var projectName = Path.GetFileName(pathToProjectDirectory);
-							var backupSource = Chorus.VcsDrivers.RepositoryAddress.Create("test-backup-media", Path.Combine(PathToParentOfRepositories, projectName),
-																					false);
-							dlg.SyncOptions.RepositorySourcesToTry.Add(backupSource);
-					}
-
-					dlg.ShowDialog();
-
-					if (dlg.FinalStatus.WarningEncountered ||  //not finding the backup media only counts as a warning
-						dlg.FinalStatus.ErrorEncountered)
-					{
-						ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
-														"There was a problem during auto backup. Chorus said:\r\n\r\n" +
-														dlg.FinalStatus.LastWarning +"\r\n"+
-														dlg.FinalStatus.LastError);
-					}
+					Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", RepositoryManager.GetEnvironmentReadinessMessage("en"));
+					return;
 				}
-				CheckinDescriptionBuilder.Clear();
+
+
+				//TODO: figure out how/what/when to show progress. THis is basically just throwing it away
+				IProgress progress = new Chorus.Utilities.StringBuilderProgress();
+				manager.SyncNow(options, progress);
 			}
 			catch (Exception error)
 			{
 				Palaso.Reporting.Logger.WriteEvent("Error during Backup: {0}", error.Message);
 				//TODO we need some passive way indicating the health of the backup system
 			}
-		}
-
-
-		public void ResetTimeOfLastBackup()
-		{
-			_timeOfLastBackupAttempt = DateTime.Now;
+			finally
+			{
+				if(rightToAccessLiftExternally !=null)
+				{
+					rightToAccessLiftExternally.Dispose();
+				}
+			}
 		}
 	}
-
-	//todo: move to chorus
 }

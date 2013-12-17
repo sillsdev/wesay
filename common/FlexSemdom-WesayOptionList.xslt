@@ -30,9 +30,6 @@
 	  <description>
 		<xsl:apply-templates select="Description7/AStr"/>
 	  </description>
-	  <searchKeys>
-		<xsl:apply-templates select="Questions66/CmDomainQ/ExampleWords67/AUni"/>
-	  </searchKeys>
 	</option>
   </xsl:template>
 

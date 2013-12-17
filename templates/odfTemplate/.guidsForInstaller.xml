@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--This file is generated and then updated by an MSBuild task.  It preserves the automatically-generated guids assigned files that will be installed on user machines. So it should be held in source control.-->
-<InstallerMetadata>
-  <File Id="meta.xml" Guid="7df25c27-062b-4a31-b0e1-7bc152d4456b" />
-  <File Id="mimetype" Guid="eb8c38b5-21cd-452e-824b-e6d7c55dccfa" />
-  <File Id="settings.xml" Guid="4d12a284-018f-4c14-bed6-34e5101b6a83" />
-</InstallerMetadata>

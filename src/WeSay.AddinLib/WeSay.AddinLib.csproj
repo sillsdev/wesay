@@ -1,9 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -14,131 +13,56 @@
 	</FileUpgradeFlags>
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
-	<OldToolsVersion>3.5</OldToolsVersion>
-	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Debug\</OutputPath>
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.AddinLib</AssemblyName>
-	<RootNamespace>WeSay.AddinLib</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
 	<Optimize>true</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\release\</OutputPath>
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.AddinLib</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.AddinLib</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+	<OutputPath>..\..\output\Mono Debug\</OutputPath>
 	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.AddinLib</AssemblyName>
-	<RootNamespace>WeSay.AddinLib</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|AnyCPU' ">
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
+	<OutputPath>..\..\output\Mono Release\</OutputPath>
 	<DefineConstants>TRACE;MONO</DefineConstants>
 	<Optimize>true</Optimize>
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.AddinLib</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.AddinLib</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Mono.Addins, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
+	  <ExecutableExtension>.exe</ExecutableExtension>
+	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
 	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="Palaso.Reporting, Version=1.0.2774.19364, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
-	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
-	</Reference>
-	<None Include="..\..\lib\common\Enchant.Net.dll.config">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
 	<Reference Include="System" />
-	<Reference Include="System.Core">
-	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-	</Reference>
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
@@ -187,10 +111,6 @@
 	<None Include="Resources\construction.png" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
-	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
-	  <Name>LexicalModel</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>

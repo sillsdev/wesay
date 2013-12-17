@@ -2,32 +2,12 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
 		<DirectoryRef Id="TemplatesDir">
-			<Component Id="defaultDictionary.css" Guid="DBB95230-0FBA-4245-8DC3-819BC0CAE285">
-				<File Id="defaultDictionary.css" Name="defaultDictionary.css" KeyPath="yes" Source="..\..\templates\defaultDictionary.css" />
+			<Component Id="basicDictionary.css" Guid="9AA274D4-2566-4F29-90CC-EEF733640794">
+				<File Id="basicDictionary.css" Name="basicDictionary.css" KeyPath="yes" Source="..\..\templates\basicDictionary.css" />
 			</Component>
-			<Directory Id="TemplatesDir.odfTemplate" Name="odfTemplate">
-				<Component Id="meta.xml" Guid="7DF25C27-062B-4A31-B0E1-7BC152D4456B">
-					<File Id="meta.xml" Name="meta.xml" KeyPath="yes" Source="..\..\templates\odfTemplate\meta.xml" />
-				</Component>
-				<Component Id="mimetype" Guid="EB8C38B5-21CD-452E-824B-E6D7C55DCCFA">
-					<File Id="mimetype" Name="mimetype" Source="..\..\templates\odfTemplate\mimetype" />
-				</Component>
-				<Component Id="settings.xml" Guid="4D12A284-018F-4C14-BED6-34E5101B6A83">
-					<File Id="settings.xml" Name="settings.xml" Source="..\..\templates\odfTemplate\settings.xml" />
-				</Component>
-				<Directory Id="TemplatesDir.odfTemplate.META_INF" Name="META-INF">
-					<Component Id="manifest.xml" Guid="A0987AE7-752E-4EFC-9CE7-B1896F7E6874">
-						<File Id="manifest.xml" Name="manifest.xml" KeyPath="yes" Source="..\..\templates\odfTemplate\META-INF\manifest.xml" />
-					</Component>
-				</Directory>
-			</Directory>
 		</DirectoryRef>
 		<ComponentGroup Id="templates">
-			<ComponentRef Id="defaultDictionary.css" />
-			<ComponentRef Id="meta.xml" />
-			<ComponentRef Id="mimetype" />
-			<ComponentRef Id="settings.xml" />
-			<ComponentRef Id="manifest.xml" />
+			<ComponentRef Id="basicDictionary.css" />
 		</ComponentGroup>
 	</Fragment>
 </Wix>
