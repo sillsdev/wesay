@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
-using Palaso.Data;
-using Palaso.DictionaryServices.Model;
-using Palaso.I8N;
 using Palaso.Reporting;
 using Palaso.Services.Dictionary;
-using Palaso.Text;
+using Palaso.UI.WindowsForms.i8n;
+using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.App.Services
@@ -23,6 +21,7 @@ namespace WeSay.App.Services
 		private const int _maxNumberOfEntriesToReturn = 20;
 		public event EventHandler LastClientDeregistered;
 		private readonly HtmlArticleMaker _articleMaker;
+		private SynchronizationContext _uiSynchronizationContext;
 		private readonly LexEntryRepository _lexEntryRepository;
 
 		public DictionaryServiceProvider(LexEntryRepository lexEntryRepository,
@@ -37,7 +36,11 @@ namespace WeSay.App.Services
 												 _project.LocateFile("PartsOfSpeech.xml"));
 		}
 
-		public SynchronizationContext UiSynchronizationContext { get; set; }
+		public SynchronizationContext UiSynchronizationContext
+		{
+			get { return _uiSynchronizationContext; }
+			set { _uiSynchronizationContext = value; }
+		}
 
 		#region IDictionaryService Members
 
@@ -55,7 +58,7 @@ namespace WeSay.App.Services
 			}
 
 			//in case something goes wrong
-			var r = new FindResult();
+			FindResult r = new FindResult();
 			try
 			{
 				Logger.WriteMinorEvent("GetIdsOfMatchingEntries({0},{1},{2})",
@@ -116,7 +119,10 @@ namespace WeSay.App.Services
 						delegate { result = GetHtmlForEntriesCore(entryIds); }, null);
 				return result;
 			}
-			return GetHtmlForEntriesCore(entryIds);
+			else
+			{
+				return GetHtmlForEntriesCore(entryIds);
+			}
 		}
 
 		private string GetHtmlForEntriesCore(IEnumerable<string> entryIds)
@@ -124,25 +130,25 @@ namespace WeSay.App.Services
 			try
 			{
 				Logger.WriteMinorEvent("GetHtmlForEntries()");
-				var builder = new StringBuilder();
-				using (var exporter = new PLiftExporter(
-					builder, true, _lexEntryRepository, _project.DefaultPrintingTemplate
-				))
+				StringBuilder builder = new StringBuilder();
+				PLiftExporter exporter = new PLiftExporter(builder,
+														   true,
+														   _lexEntryRepository,
+														   _project.DefaultPrintingTemplate);
+
+				foreach (string entryId in entryIds)
 				{
-					foreach (string entryId in entryIds)
+					LexEntry entry = _lexEntryRepository.GetLexEntryWithMatchingId(entryId);
+					if (entry == null)
 					{
-						LexEntry entry = _lexEntryRepository.GetLexEntryWithMatchingId(entryId);
-						if (entry == null)
-						{
-							builder.AppendFormat("Error: entry '{0}' not found.", entryId);
-						}
-						else
-						{
-							exporter.Add(entry);
-						}
+						builder.AppendFormat("Error: entry '{0}' not found.", entryId);
 					}
-					exporter.End();
+					else
+					{
+						exporter.Add(entry);
+					}
 				}
+				exporter.End();
 				return _articleMaker.GetHtmlFragment(builder.ToString());
 			}
 			catch (Exception e)
@@ -249,12 +255,15 @@ namespace WeSay.App.Services
 						null);
 				return result;
 			}
-			return AddEntryCore(lexemeFormWritingSystemId,
-								lexemeForm,
-								definitionWritingSystemId,
-								definition,
-								exampleWritingSystemId,
-								example);
+			else
+			{
+				return AddEntryCore(lexemeFormWritingSystemId,
+									lexemeForm,
+									definitionWritingSystemId,
+									definition,
+									exampleWritingSystemId,
+									example);
+			}
 		}
 
 		public string AddEntryCore(string lexemeFormWritingSystemId,
@@ -301,7 +310,7 @@ namespace WeSay.App.Services
 					sense = new LexSense();
 					e.Senses.Add(sense);
 				}
-				var ex = new LexExampleSentence();
+				LexExampleSentence ex = new LexExampleSentence();
 				sense.ExampleSentences.Add(ex);
 				ex.Sentence.SetAlternative(exampleWritingSystemId, example);
 			}

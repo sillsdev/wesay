@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using NUnit.Framework;
+using WeSay.Foundation;
 using WeSay.Project;
-using WeSay.Project;
-using WeSay.LexicalModel.Foundation;
-using WeSay.Project;
-using WeSay.UI.TextBoxes;
-using Palaso.Lift;
 
 namespace WeSay.UI.Tests
 {
@@ -24,7 +20,7 @@ namespace WeSay.UI.Tests
 		private readonly string _writingSystemId =
 				BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 
-		public class Child: PalasoDataObject
+		public class Child: WeSayDataObject
 		{
 			private MultiText first = new MultiText();
 			private MultiText middle = new MultiText();
@@ -49,7 +45,7 @@ namespace WeSay.UI.Tests
 			}
 		}
 
-		public class Papa: PalasoDataObject
+		public class Papa: WeSayDataObject
 		{
 			private readonly BindingList<Child> _children = new BindingList<Child>();
 
@@ -98,8 +94,7 @@ namespace WeSay.UI.Tests
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);
 			_papaNameWidget.Text = "John";
 			_ghostFirstNameWidget = new WeSayTextBox(writingSystem, null);
-			_binding = new GhostBinding<Child>(null,
-				_papa.Children,
+			_binding = new GhostBinding<Child>(_papa.Children,
 											   "First",
 											   writingSystem,
 											   _ghostFirstNameWidget);

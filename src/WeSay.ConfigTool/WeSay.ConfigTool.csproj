@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
+	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</ProjectGuid>
 	<OutputType>WinExe</OutputType>
@@ -30,7 +30,6 @@
 	<IsWebBootstrapper>false</IsWebBootstrapper>
 	<UseApplicationTrust>false</UseApplicationTrust>
 	<BootstrapperEnabled>true</BootstrapperEnabled>
-	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -40,12 +39,6 @@
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>WinExe</OutputType>
-	<AssemblyName>WeSay Configuration Tool</AssemblyName>
-	<RootNamespace>WeSay.ConfigTool</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -54,100 +47,71 @@
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>WinExe</OutputType>
-	<AssemblyName>WeSay Configuration Tool</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.ConfigTool</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\linux\mono\2.0\Debug\</OutputPath>
+	<OutputPath>..\..\output\Mono Debug\</OutputPath>
 	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>WinExe</OutputType>
-	<AssemblyName>WeSay Configuration Tool</AssemblyName>
-	<RootNamespace>WeSay.ConfigTool</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
-	<OutputPath>..\..\output\linux\mono\2.0\Release\</OutputPath>
+	<OutputPath>..\..\output\Mono Release\</OutputPath>
 	<DefineConstants>TRACE;MONO</DefineConstants>
 	<Optimize>true</Optimize>
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>WinExe</OutputType>
-	<AssemblyName>WeSay Configuration Tool</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.ConfigTool</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Autofac, Version=1.3.2.449, Culture=neutral, PublicKeyToken=17863af14b0044da">
+	<Reference Include="Autofac, Version=1.3.2.449, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Autofac.dll</HintPath>
+	  <HintPath>..\..\..\wesay\lib\Autofac.dll</HintPath>
 	</Reference>
-	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Chorus.exe</HintPath>
+	  <HintPath>..\..\lib\Chorus.exe</HintPath>
 	</Reference>
-	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
+	<Reference Include="Enchant.Net, Version=1.3.1.1, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
+	  <HintPath>..\..\lib\Enchant.Net.dll</HintPath>
 	</Reference>
-	<Reference Include="Keyman7Interop, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null">
+	<Reference Include="Keyman7Interop, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Keyman7Interop.dll</HintPath>
+	  <HintPath>..\..\lib\Keyman7Interop.dll</HintPath>
 	</Reference>
-	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\LibChorus.dll</HintPath>
+	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
 	</Reference>
-	<Reference Include="LiftIO, Version=1.1.32.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\LiftIO.dll</HintPath>
-	</Reference>
-	<Reference Include="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
+	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
 	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="Palaso.Reporting, Version=1.0.2774.19364, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
-	</Reference>
-	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\PalasoUIWindowsForms.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
-	<Reference Include="System.Core">
-	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-	</Reference>
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
+	<Reference Include="WrapShellCall, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <ExecutableExtension>.exe</ExecutableExtension>
+	  <HintPath>..\..\lib\WrapShellCall.exe</HintPath>
+	</Reference>
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="AboutBox.cs">
@@ -167,12 +131,6 @@
 	</Compile>
 	<Compile Include="ChorusControl.Designer.cs">
 	  <DependentUpon>ChorusControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectFromFLExDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectFromFLExDialog.Designer.cs">
-	  <DependentUpon>NewProjectFromFLExDialog.cs</DependentUpon>
 	</Compile>
 	<Compile Include="MruProjects.cs" />
 	<Compile Include="ConfigurationWindow.cs">
@@ -208,19 +166,12 @@
 	<Compile Include="FontControl.designer.cs">
 	  <DependentUpon>FontControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="NewProjectCreation\NewProject.cs">
+	<Compile Include="NewProject.cs">
 	  <SubType>Form</SubType>
 	</Compile>
-	<Compile Include="NewProjectCreation\NewProject.Designer.cs">
+	<Compile Include="NewProject.Designer.cs">
 	  <DependentUpon>NewProject.cs</DependentUpon>
 	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectInformationDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectInformationDialog.Designer.cs">
-	  <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
-	</Compile>
-	<Compile Include="NewProjectCreation\ProjectFromFLExCreator.cs" />
 	<Compile Include="OptionListControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -255,10 +206,6 @@
 	  <DependentUpon>ChorusControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
-	<EmbeddedResource Include="NewProjectCreation\NewProjectFromFLExDialog.resx">
-	  <DependentUpon>NewProjectFromFLExDialog.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
 	<EmbeddedResource Include="FieldsControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>FieldsControl.cs</DependentUpon>
@@ -271,13 +218,9 @@
 	  <DependentUpon>FontControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
-	<EmbeddedResource Include="NewProjectCreation\NewProject.resx">
+	<EmbeddedResource Include="NewProject.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>NewProject.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="NewProjectCreation\NewProjectInformationDialog.resx">
-	  <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
-	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="OptionListControl.resx">
 	  <SubType>Designer</SubType>
@@ -292,29 +235,9 @@
 	  <SubType>Designer</SubType>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\GatherBySemDomTaskConfigControl.resx">
-	  <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\DefaultTaskConfigurationControl.resx">
-	  <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\MissingInfoTaskConfigControl.resx">
-	  <DependentUpon>MissingInfoTaskConfigControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
 	<EmbeddedResource Include="Tasks\TaskListView.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>TaskListView.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\WritingSystemFilterControl.resx">
-	  <DependentUpon>WritingSystemFilterControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="UserSpecificSettingIndicator.resx">
-	  <DependentUpon>UserSpecificSettingIndicator.cs</DependentUpon>
-	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="WelcomeControl.resx">
 	  <SubType>Designer</SubType>
@@ -356,25 +279,6 @@
 	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
 	</Compile>
 	<Compile Include="Properties\Settings.cs" />
-	<Compile Include="Tasks\GatherBySemDomTaskConfigControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\GatherBySemDomTaskConfigControl.Designer.cs">
-	  <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Tasks\DefaultTaskConfigurationControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\DefaultTaskConfigurationControl.Designer.cs">
-	  <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Tasks\ConfigTaskControlFactory.cs" />
-	<Compile Include="Tasks\MissingInfoTaskConfigControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\MissingInfoTaskConfigControl.Designer.cs">
-	  <DependentUpon>MissingInfoTaskConfigControl.cs</DependentUpon>
-	</Compile>
 	<Compile Include="Tasks\TaskListView.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -382,18 +286,6 @@
 	  <DependentUpon>TaskListView.cs</DependentUpon>
 	</Compile>
 	<Compile Include="Tasks\TaskListPresentationModel.cs" />
-	<Compile Include="Tasks\WritingSystemFilterControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\WritingSystemFilterControl.Designer.cs">
-	  <DependentUpon>WritingSystemFilterControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="UserSpecificSettingIndicator.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="UserSpecificSettingIndicator.Designer.cs">
-	  <DependentUpon>UserSpecificSettingIndicator.cs</DependentUpon>
-	</Compile>
 	<Compile Include="WelcomeControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -409,7 +301,7 @@
 	<Compile Include="WritingSystemBasic.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="WritingSystemBasic.Designer.cs">
+	<Compile Include="WritingSystemBasic.designer.cs">
 	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
 	</Compile>
 	<Compile Include="WritingSystemForFieldControl.cs">
@@ -440,10 +332,6 @@
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
 	</ProjectReference>
-	<ProjectReference Include="..\LexicalTools\LexicalTools.csproj">
-	  <Project>{87AF0B02-2983-486D-857F-D1859535C234}</Project>
-	  <Name>LexicalTools</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
 	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
 	  <Name>WeSay.AddinLib</Name>
@@ -470,7 +358,7 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\RoundedBorder.png" />
+	<None Include="Resources\RoundedBorder.PNG" />
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\construction.png" />
@@ -554,12 +442,6 @@
 	  <ProductName>.NET Framework 3.5</ProductName>
 	  <Install>false</Install>
 	</BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\Warning.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\userSpecific32x31.png" />
   </ItemGroup>
   <ItemGroup>
 	<Folder Include="Properties\DataSources\" />

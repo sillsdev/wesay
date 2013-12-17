@@ -1,7 +1,6 @@
 using System;
 using NUnit.Framework;
-using WeSay.LexicalModel.Foundation;
-using WeSay.UI.TextBoxes;
+using WeSay.Foundation;
 
 namespace WeSay.UI.Tests
 {

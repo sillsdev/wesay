@@ -152,7 +152,7 @@
   </Target>
 
   <Target Name="InstallerNoGenerationTest">
-	<Split Input="$(BUILD_NUMBER)" Delimiter="-" OutputSubString="0">
+	<Split Input="$(BUILD_NUMBER)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
 	</Split>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
@@ -188,7 +188,7 @@
   </Target>
 
 	<Target Name="Installer">
-	<Split Input="$(BUILD_NUMBER)" Delimiter="-" OutputSubString="0">
+	<Split Input="$(BUILD_NUMBER)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
 	</Split>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
@@ -218,7 +218,7 @@
 
 
   <Target Name="Upload">
-	<Split Input="$(BUILD_NUMBER)" Delimiter="-" OutputSubString="0">
+	<Split Input="$(BUILD_NUMBER)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
 	</Split>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
@@ -231,7 +231,7 @@
   </Target>
 
   <Target Name="Mail">
-	<Split Input="$(BUILD_NUMBER)" Delimiter="-" OutputSubString="0">
+	<Split Input="$(BUILD_NUMBER)" Delimiter=":" OutputSubString="0">
 	  <Output TaskParameter="ReturnValue" PropertyName="Revision" />
 	</Split>
 	<CreateProperty Value="$(Major).$(Minor).$(Revision)">

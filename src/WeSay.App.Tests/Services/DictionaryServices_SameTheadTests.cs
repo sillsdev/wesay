@@ -1,9 +1,10 @@
+using System.IO;
 using NUnit.Framework;
 using Palaso.Services.Dictionary;
 using WeSay.App.Services;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
-using WeSay.Project;
-using WeSay.Project.Tests;
+using WeSay.LexicalModel.Tests.Db4oSpecific;
 
 namespace WeSay.App.Tests.Services
 {
@@ -18,33 +19,50 @@ namespace WeSay.App.Tests.Services
 	public class DictionaryService_SameTheadTests
 	{
 		private LexEntryRepository _lexEntryRepository;
+		private TemporaryFolder _tempFolder;
+		private string _filePath;
+
+		private Db4oProjectSetupForTesting _projectSetupSharedByAllTests;
 		private DictionaryServiceProvider _dictionaryServiceProvider;
-		private ProjectDirectorySetupForTesting _projectDirectorySetup;
-		private WeSayWordsProject _project;
+
+		/// <summary>
+		/// Db4oProjectSetupForTesting is extremely time consuming to setup, so we reuse it.
+		/// </summary>
+		[TestFixtureSetUp]
+		public void SetupFixture()
+		{
+			_tempFolder = new TemporaryFolder();
+			_projectSetupSharedByAllTests = new Db4oProjectSetupForTesting(string.Empty);
+		}
 
 		[SetUp]
 		public void Setup()
 		{
-			_projectDirectorySetup = new ProjectDirectorySetupForTesting(string.Empty);
-
-			_project = _projectDirectorySetup.CreateLoadedProject();
-			_lexEntryRepository = _project.Container.Resolve<LexEntryRepository>();
+			_filePath = _tempFolder.GetTemporaryFile();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_dictionaryServiceProvider = new DictionaryServiceProvider(_lexEntryRepository,
 																	   null,
-																	   _project);
+																	   _projectSetupSharedByAllTests
+																			   ._project);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_project.Dispose();
-			_projectDirectorySetup.Dispose();
+			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
 		}
 
+		[TestFixtureTearDown]
+		public void FixtureTearDown()
+		{
+			_projectSetupSharedByAllTests.Dispose();
+			_tempFolder.Delete();
+		}
 
 		private void MakeTestLexEntry(string writingSystemId, string lexicalForm)
 		{
-			var entry = _lexEntryRepository.CreateItem();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm.SetAlternative(writingSystemId, lexicalForm);
 			_lexEntryRepository.SaveItem(entry);
 		}
@@ -139,7 +157,7 @@ namespace WeSay.App.Tests.Services
 																		 "voom",
 																		 FindMethods.Exact.ToString());
 			Assert.AreEqual(id, r.ids[0]);
-			string html = _dictionaryServiceProvider.GetHtmlForEntries(new[] {id});
+			string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] {id});
 			Assert.IsTrue(html.Contains("vlah voom!"));
 			Assert.IsTrue(html.Contains("def of voom"));
 		}

@@ -1,13 +1,12 @@
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift.Options;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Options;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
-using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.Tests
 {

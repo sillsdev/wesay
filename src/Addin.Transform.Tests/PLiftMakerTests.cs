@@ -1,7 +1,9 @@
+using System;
 using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
-using Palaso.TestUtilities;
+using WeSay.LexicalModel;
+using WeSay.Project;
 
 namespace Addin.Transform.Tests
 {
@@ -17,24 +19,35 @@ namespace Addin.Transform.Tests
 			ErrorReport.IsOkToInteractWithUser = false;
 		}
 
+		//        [Test]
+		//        public void EntryMakeItToXHtml()
+		//        {
+		//            string xmlForEntries = @"<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>";
+		//
+		//            using (Db4oProjectSetupForTesting projectSetup = new Db4oProjectSetupForTesting(xmlForEntries))
+		//            {
+		//                PLiftMaker maker = new PLiftMaker();
+		//                string outputPath = Path.Combine(projectSetup._project.PathToExportDirectory, projectSetup._project.Name + ".xhtml");
+		//                maker.MakeXHtmlFile(outputPath, projectSetup._lexEntryRepository, projectSetup._project);
+		//                Assert.IsTrue(File.ReadAllText(outputPath).Contains("<span class=\"v\">fooOne"));
+		//            }
+		//        }
+
 		[Test]
-		public void EntryMakeItToPLift()
+		[Ignore("not a real test")]
+		public void MakePLiftForBiatah2()
 		{
-			var xmlOfEntries = @" <entry id='foo1'>
-										<lexical-unit><form lang='v'><text>hello</text></form></lexical-unit>
-								 </entry>";
-			using (var p = new WeSay.Project.Tests.ProjectDirectorySetupForTesting(xmlOfEntries))
+			using (WeSayWordsProject p = new WeSayWordsProject())
 			{
-				PLiftMaker maker = new PLiftMaker();
-				using (var project = p.CreateLoadedProject())
+				p.LoadFromProjectDirectoryPath(@"E:\Users\John\Documents\WeSay\biatah");
+
+				using (
+						LexEntryRepository lexEntryRepository =
+								new LexEntryRepository(p.PathToRepository))
 				{
-					using (var repository = project.GetLexEntryRepository())
-					{
-						string outputPath = Path.Combine(project.PathToExportDirectory, project.Name + ".xhtml");
-						maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate);
-						AssertThatXmlIn.File(outputPath).
-							HasAtLeastOneMatchForXpath("//field[@type='headword']/form[@lang='v']/text[text()='hello']");
-					}
+					PLiftMaker maker = new PLiftMaker();
+					string path = maker.MakePLiftTempFile(lexEntryRepository, p.DefaultPrintingTemplate);
+					Console.WriteLine(path);
 				}
 			}
 		}

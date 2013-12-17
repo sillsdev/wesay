@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.30729</ProductVersion>
+	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{9D196637-2D50-4604-A310-378083CEA809}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -14,7 +14,6 @@
 	<UpgradeBackupLocation>
 	</UpgradeBackupLocation>
 	<OldToolsVersion>2.0</OldToolsVersion>
-	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -24,11 +23,6 @@
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>Addin.Transform</AssemblyName>
-	<RootNamespace>Addin.Transform</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
@@ -37,12 +31,6 @@
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>Addin.Transform</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>Addin.Transform</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -51,13 +39,6 @@
 	<DebugType>full</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>Addin.Transform</AssemblyName>
-	<RootNamespace>Addin.Transform</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
 	<OutputPath>..\..\output\Mono Release\</OutputPath>
@@ -66,79 +47,40 @@
 	<DebugType>pdbonly</DebugType>
 	<PlatformTarget>AnyCPU</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>Addin.Transform</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>Addin.Transform</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
 	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Mono.Addins.exe</HintPath>
+	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
 	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.dll</HintPath>
+	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
-	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="PalasoReporting, Version=1.0.2826.25008, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.DictionaryServices.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.Lift.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
 	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\PalasoUIWindowsForms.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.TestUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\net2.0\Palaso.TestUtilities.dll</HintPath>
+	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
 	<Reference Include="Prince, Version=1.0.2830.36745, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Prince.dll</HintPath>
+	  <HintPath>..\..\lib\Prince.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
-	<Reference Include="System.Core">
-	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-	</Reference>
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
-	<Reference Include="System.Web" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="LameProgressDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="LameProgressDialog.Designer.cs">
-	  <DependentUpon>LameProgressDialog.cs</DependentUpon>
-	</Compile>
-	<Compile Include="PdfDictionary\AboutMakePdfDictionary.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="PdfDictionary\AboutMakePdfDictionary.Designer.cs">
-	  <DependentUpon>AboutMakePdfDictionary.cs</DependentUpon>
-	</Compile>
-	<Compile Include="PdfDictionary\FLExCompatibleXhtmlWriter.cs" />
-	<Compile Include="LexiquePro\AboutLexiquePro.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="LexiquePro\AboutLexiquePro.Designer.cs">
-	  <DependentUpon>AboutLexiquePro.cs</DependentUpon>
-	</Compile>
-	<Compile Include="LexiquePro\LexiqueProSender.cs" />
-	<Compile Include="PdfDictionary\PdfMaker.cs" />
+	<Compile Include="PdfMaker.cs" />
 	<Compile Include="HtmlInWord.cs" />
 	<Compile Include="HtmlTransformer.cs" />
 	<Compile Include="PLiftMaker.cs" />
-	<Compile Include="PdfDictionary\PrinceXmlWrapper.cs" />
+	<Compile Include="PrinceXmlWrapper.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
@@ -205,20 +147,8 @@
 	<None Include="Resources\wordExport.png" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="LameProgressDialog.resx">
-	  <DependentUpon>LameProgressDialog.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="LexiquePro\AboutLexiquePro.resx">
-	  <DependentUpon>AboutLexiquePro.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
 	<EmbeddedResource Include="plift2html.xsl">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</EmbeddedResource>
-	<EmbeddedResource Include="PdfDictionary\AboutMakePdfDictionary.resx">
-	  <DependentUpon>AboutMakePdfDictionary.cs</DependentUpon>
-	  <SubType>Designer</SubType>
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -226,18 +156,6 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\pdfdictionary.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\lexiquePro.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\greenLexiquePro.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\greenPdf.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\greenPdfDictionary.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

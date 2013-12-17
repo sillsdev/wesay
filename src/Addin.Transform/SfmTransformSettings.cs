@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using WeSay.AddinLib;
 
@@ -129,7 +128,7 @@ namespace Addin.Transform
 			{
 				List<ChangePair> pairs = new List<ChangePair>();
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("BaseForm", "base"));
-				pairs.Add(ChangePair.CreateFullMarkerReplacement(LexSense.WellKnownProperties.SemanticDomainDdp4, "sd"));
+				pairs.Add(ChangePair.CreateFullMarkerReplacement("SemanticDomainDdp4", "sd"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("citation", "lc"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("definition", "d"));
 
@@ -223,7 +222,7 @@ namespace Addin.Transform
 								}
 								catch (ArgumentException err)
 								{
-									ErrorReport.NotifyUserOfProblem(
+									ErrorReport.ReportNonFatalMessage(
 											"Sorry, there is a problem in one of the tweaks for SFM export.  They must each be valid 'regular expressions'.  The error was: {0}",
 											err.Message);
 								}

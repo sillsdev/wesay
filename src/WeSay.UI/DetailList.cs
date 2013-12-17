@@ -2,9 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.I8N;
 using Palaso.Reporting;
-using WeSay.UI.TextBoxes;
+using Palaso.UI.WindowsForms.i8n;
 
 namespace WeSay.UI
 {
@@ -21,8 +20,8 @@ namespace WeSay.UI
 		/// </summary>
 		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate { };
 
-		private readonly int _indexOfLabel; // todo to const?
-		private readonly int _indexOfWidget = 1; // todo to const?
+		private readonly int _indexOfLabel;
+		private readonly int _indexOfWidget = 1;
 
 		private bool _disposed;
 		private readonly StackTrace _stackAtConstruction;
@@ -62,7 +61,7 @@ namespace WeSay.UI
 
 		private void OnMouseClick(object sender, MouseEventArgs e)
 		{
-			Select();
+			this.Select();
 		}
 
 		/// <summary>
@@ -243,21 +242,20 @@ namespace WeSay.UI
 			//            Control c = GetEditControlFromReferenceControl(p);
 			Control c = GetControlFromPosition(1, row);
 
-			Control tb;
+			WeSayTextBox tb;
 
 			if (c is MultiTextControl)
 			{
 				MultiTextControl multText = (MultiTextControl) c;
 				tb = multText.TextBoxes[0];
 				tb.Focus();
-				if(tb is WeSayTextBox)
-					((WeSayTextBox) tb).Select(1000, 0); //go to end
+				tb.Select(1000, 0); //go to end
 			}
 			else if (c is WeSayTextBox)
 			{
-				c.Focus();
-				if(c is WeSayTextBox)
-					((WeSayTextBox) c).Select(1000, 0); //go to end
+				tb = (WeSayTextBox) c;
+				tb.Focus();
+				tb.Select(1000, 0); //go to end
 			}
 			else
 			{

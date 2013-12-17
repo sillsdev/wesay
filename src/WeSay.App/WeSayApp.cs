@@ -3,17 +3,18 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Autofac;
 using CommandLine;
-using LiftIO;
-using Palaso.I8N;
 using Palaso.Reporting;
 using Palaso.Services;
 using Palaso.Services.Dictionary;
 using Palaso.Services.ForServers;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.App.Services;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
+using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -32,7 +33,7 @@ namespace WeSay.App
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			var app = new WeSayApp(args);
+			WeSayApp app = new WeSayApp(args);
 			app.Run();
 		}
 
@@ -45,7 +46,7 @@ namespace WeSay.App
 			{
 				Application.SetCompatibleTextRenderingDefault(false);
 			}
-			catch (Exception)
+			catch (Exception) //swallow
 			{
 				//this fails in some test scenarios; perhaps the unit testing framework is leaving us in
 				//the same appdomain, and that remembers that we called this once before?
@@ -67,10 +68,6 @@ namespace WeSay.App
 			if (!Parser.ParseArguments(args, _commandLineArguments, ShowCommandLineError))
 			{
 				Application.Exit();
-			}
-			if (_commandLineArguments.launchedByUnitTest)
-			{
-				WeSayWordsProject.PreventBackupForTests = true;  //hopefully will help the cross-process dictionary services tests to be more reliable
 			}
 		}
 
@@ -107,19 +104,13 @@ namespace WeSay.App
 					}
 
 
-					LexEntryRepository repository;
-					try
-					{
-						repository = GetLexEntryRepository();
-					}
-					catch (LiftFormatException)
-					{
-						return;//couldn't load, and we've already told the user
-					}
-
 					using (_dictionary =
-						   new DictionaryServiceProvider(repository, this, _project))
+						   new DictionaryServiceProvider(GetLexEntryRepository(), this, _project))
 					{
+						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
+						{
+							RecoverUnsavedDataIfNeeded();
+						}
 
 						StartDictionaryServices();
 						_dictionary.LastClientDeregistered +=
@@ -135,8 +126,8 @@ namespace WeSay.App
 						//do a last backup before exiting
 						Logger.WriteEvent("App Exiting Normally.");
 					}
-					_project.BackupNow();
-			   }
+				}
+			 _project.BackupNow();
 		   }
 			finally
 			{
@@ -160,9 +151,6 @@ namespace WeSay.App
 
 		private void WireUpChorusEvents()
 		{
-			if(WeSayWordsProject.PreventBackupForTests)
-				return;
-
 			//this is something of a hack... it seems weird to me that the app has the repository, but the project doesn't.
 			//maybe only the project should posses it.
 			_project.BackupMaker.Repository = GetLexEntryRepository();//needed so it can unlock the lift file as needed
@@ -176,7 +164,24 @@ namespace WeSay.App
 			_project.ConsiderSynchingOrBackingUp("checkpoint");
 		}
 
+		//!!! Move this into LexEntryRepository and maybe lower.
+		private void RecoverUnsavedDataIfNeeded()
+		{
+			if (!File.Exists(_project.PathToRepository))
+			{
+				return;
+			}
 
+			try
+			{
+				GetLexEntryRepository().BackendRecoverUnsavedChangesOutOfCacheIfNeeded();
+			}
+			catch (IOException e)
+			{
+				ErrorNotificationDialog.ReportException(e, null, false);
+				Thread.CurrentThread.Abort();
+			}
+		}
 
 		private void OnBringToFrontRequest(object sender, EventArgs e)
 		{
@@ -302,9 +307,7 @@ namespace WeSay.App
 		{
 			try
 			{
-				_project.AddToContainer(b => b.Register<StatusBarController>());
-				_project.AddToContainer(b => b.Register<TabbedForm>());
-				_tabbedForm = _project.Container.Resolve<TabbedForm>();
+				_tabbedForm = new TabbedForm();
 				_tabbedForm.Show(); // so the user sees that we did launch
 				_tabbedForm.Text =
 						StringCatalog.Get("~WeSay",
@@ -312,12 +315,8 @@ namespace WeSay.App
 						": " + _project.Name + "        " + ErrorReport.UserFriendlyVersionString;
 				Application.DoEvents();
 
-			   //todo: this is what we're supposed to use the autofac "modules" for
-				//couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
+			   //couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
 				_project.AddToContainer(b => b.Register<ICurrentWorkTask>(_tabbedForm));
-				_project.AddToContainer(b => b.Register<StatusStrip>(_tabbedForm.StatusStrip));
-				_project.AddToContainer(b => b.Register(TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(_project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject )));
-
 
 				_project.LoadTasksFromConfigFile();
 
@@ -337,7 +336,7 @@ namespace WeSay.App
 			}
 			catch (IOException e)
 			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 		}
 
@@ -359,12 +358,12 @@ namespace WeSay.App
 
 		private static WeSayWordsProject InitializeProject(string liftPath)
 		{
-			var project = new WeSayWordsProject();
+			WeSayWordsProject project = new WeSayWordsProject();
 			liftPath = DetermineActualLiftPath(liftPath);
 			if (liftPath == null)
 			{
-				ErrorReport.NotifyUserOfProblem(
-						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project, then click the 'Open in WeSay' button from that application's toolbar.");
+				ErrorReport.ReportNonFatalMessage(
+						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project.");
 				return null;
 			}
 
@@ -385,7 +384,7 @@ namespace WeSay.App
 			}
 			catch
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"WeSay was unable to migrate the WeSay configuration file for the new version of WeSay. This may cause WeSay to not function properly. Try opening the project in the WeSay Configuration Tool to fix this.");
 			}
 
@@ -462,17 +461,11 @@ namespace WeSay.App
 							"Start without a user interface (will have no effect if WeSay is already running with a UI."
 					, LongName = "server", DefaultValue = false, ShortName = "")]
 			public bool startInServerMode;
-
-			[Argument(ArgumentTypes.AtMostOnce,
-			HelpText =
-					"Some things, like backup, just gum up automated tests.  This is used to turn them off."
-			, LongName = "launchedByUnitTest", DefaultValue = false, ShortName = "")]
-			public bool launchedByUnitTest;
 		}
 
 		private static void ShowCommandLineError(string e)
 		{
-			var p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
+			Parser p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
 			e = e.Replace("Duplicate 'liftPath' argument",
 						  "Please enclose project path in quotes if it contains spaces.");
 			e += "\r\n\r\n" + p.GetUsageString(200);
