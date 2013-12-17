@@ -49,10 +49,6 @@ namespace WeSay.Project.Tests
 										"LexEntry",
 										_writingSystemIds));
 
-			_viewTemplate.Add(new Field("brother",
-							"LexEntry",
-							_writingSystemIds));
-
 			Field visibleCustom = new Field("VisibleCustom",
 											"LexEntry",
 											_writingSystemIds,

@@ -490,17 +490,6 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void EmptyRelationNotOutput()
-		{
-
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.AddRelationTarget(LexEntry.WellKnownProperties.BaseForm, string.Empty);
-			_exporter.Add(entry);
-			_exporter.End();
-			Assert.IsFalse(_stringBuilder.ToString().Contains("relation"));
-		}
-
-		[Test]
 		public void EntryHasDateCreated()
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();

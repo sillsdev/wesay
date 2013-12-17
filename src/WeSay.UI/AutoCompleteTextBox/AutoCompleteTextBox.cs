@@ -219,15 +219,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 				if (_selectedItem == value)
 				{
-					//handle WS-1171, where a) a baseform was set b) the target was deleted c) the user deletes the now-displayed red id of the missing item
-					//in this case, the target was null before and after the edit, but we need to notify that the edit happened, else it is lost
-					if (string.IsNullOrEmpty(Text))
-					{
-						if (SelectedItemChanged != null)
-						{
-							SelectedItemChanged.Invoke(this, null);
-						}
-					}
 					return;
 				}
 				_inMidstOfSettingSelectedItem = true;
@@ -536,6 +527,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				HideList();
 			}
+
 		}
 
 		protected override void OnGotFocus(EventArgs e)
@@ -658,7 +650,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			//hatton experimental:
 			if (string.IsNullOrEmpty(Text))
 			{
-				_listBox.EndUpdate();
 				return;
 			}
 			//end hatton experimental
@@ -765,14 +756,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			if (!(Focused || _listBox.Focused))
 			{
 				HideList();
-			}
-		}
-
-		public bool ListBoxFocused
-		{
-			get
-			{
-				return _listBox.Focused;
 			}
 		}
 	}

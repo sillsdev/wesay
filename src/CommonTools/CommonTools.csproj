@@ -69,6 +69,12 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="ActionsControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ActionsControl.Designer.cs">
+	  <DependentUpon>ActionsControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Dashboard Button.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -89,6 +95,13 @@
 	</Compile>
 	<Compile Include="DashboardButtonWithIcon.cs">
 	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="DashboardConfiguration.cs" />
+	<Compile Include="DashboardControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="DashboardControl.Designer.cs">
+	  <DependentUpon>DashboardControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="DictionaryStatusControl.cs">
 	  <SubType>UserControl</SubType>
@@ -151,6 +164,10 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="ActionsControl.resx">
+	  <DependentUpon>ActionsControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
 	<EmbeddedResource Include="Dashboard Button.resx">
 	  <DependentUpon>Dashboard Button.cs</DependentUpon>
 	  <SubType>Designer</SubType>
@@ -166,6 +183,10 @@
 	<EmbeddedResource Include="DashboardButtonWithIcon.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DashboardButtonWithIcon.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="DashboardControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>DashboardControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="DictionaryStatusControl.resx">
 	  <SubType>Designer</SubType>

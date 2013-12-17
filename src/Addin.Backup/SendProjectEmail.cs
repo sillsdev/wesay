@@ -7,7 +7,6 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
-using WeSay.LexicalModel;
 
 namespace Addin.Backup
 {
@@ -64,17 +63,11 @@ namespace Addin.Backup
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 			string dest = Path.Combine(Path.GetTempPath(), projectInfo.Name + "_wesay.zip");
-			LexEntryRepository repo =
-				projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
-			using (repo.GetRightToAccessLiftExternally())
-			{
-				BackupMaker.BackupToExternal(projectInfo.PathToTopLevelDirectory,
-											 dest,
-											 projectInfo.FilesBelongingToProject);
-			}
+			BackupMaker.BackupToExternal(projectInfo.PathToTopLevelDirectory,
+										 dest,
+										 projectInfo.FilesBelongingToProject);
 
-
-		MAPI msg = new MAPI();
+			MAPI msg = new MAPI();
 			msg.AddAttachment(dest);
 			msg.AddRecipientTo(_settings.Email);
 			subject =

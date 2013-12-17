@@ -299,9 +299,7 @@ namespace WeSay.App
 
 			// RunCommand(new ActivateTaskCommand(page, task));
 			task.Control.Dock = DockStyle.Fill;
-			task.Control.SuspendLayout();
 			page.Controls.Add(task.Control);
-			task.Control.ResumeLayout(false);
 			task.Control.SelectNextControl(task.Control, true, true, true, true);
 			task.Control.PerformLayout();
 			task.Control.Invalidate(true);

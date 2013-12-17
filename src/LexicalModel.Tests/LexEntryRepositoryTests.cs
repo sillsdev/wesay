@@ -306,212 +306,13 @@ namespace WeSay.LexicalModel.Tests
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1");
 			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1");
-			lexEntryWithBothDefinitionAndAGloss.Senses[1].Definition.SetAlternative("de", "de Word1");
+			lexEntryWithBothDefinitionAndAGloss.Senses[1].Gloss.SetAlternative("de", "de Word1");
 			lexEntryWithBothDefinitionAndAGloss.Senses[1].Gloss.SetAlternative("de", "de Word1");
 			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
 			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
 			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
 			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[1]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_DefinitionContainsOnlySemiColon_ReturnsListWithNullRecord()
-		{
-			LexEntry lexEntryWithDefinition = _lexEntryRepository.CreateItem();
-			lexEntryWithDefinition.Senses.Add(new LexSense());
-			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("de", ";");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual(null, listOfLexEntriesSortedByDefinition[0]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_GlossContainsOnlySemiColon_ReturnsListWithNullRecord()
-		{
-			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("de", ";");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual(null, listOfLexEntriesSortedByDefinition[0]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossAreIdenticalContainsOnlySemiColon_ReturnsListWithOneNullRecord()
-		{
-			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Definition.SetAlternative("de", ";");
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("de", ";");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual(null, listOfLexEntriesSortedByDefinition[0]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossAreIdenticalAndHaveTwoIdenticalWordsSeperatedBySemiColon_ReturnsListWithOneNullRecord()
-		{
-			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Definition.SetAlternative("de", "de Word1;de Word2");
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("de", "de Word1;de Word2");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_DefinitionHasTwoIdenticalWordsSeperatedBySemiColon_ReturnsListWithOnlyOneRecord()
-		{
-			LexEntry lexEntryWithDefinition = _lexEntryRepository.CreateItem();
-			lexEntryWithDefinition.Senses.Add(new LexSense());
-			lexEntryWithDefinition.Senses[0].Definition.SetAlternative("de", "de Word1;de Word1");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_GlossHasTwoIdenticalWordsSeperatedBySemiColon_ReturnsListWithOnlyOneRecord()
-		{
-			LexEntry lexEntryWithGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithGloss.Senses.Add(new LexSense());
-			lexEntryWithGloss.Senses[0].Gloss.SetAlternative("de", "de Word1;de Word1");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_DefinitionContainsSemiColon_DefinitionIsSplitAtSemiColonAndEachPartReturned()
-		{
-			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word2;de Word1");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_GlossContainsSemiColon_GlossIsSplitAtSemiColonAndEachPartReturned()
-		{
-			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word2;de Word1");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_DefinitionContainsSemiColon_DefinitionIsSplitAtSemiColonAndExtraWhiteSpaceStrippedAndEachPartReturned()
-		{
-			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word2; de Word1");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_GlossContainsSemiColon_GlossIsSplitAtSemiColonAndExtraWhiteSpaceStrippedAndEachPartReturned()
-		{
-			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1; de Word2");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossAreIdenticalAndContainSemiColon_DefinitionIsSplitAtSemiColonAndExtraWhiteSpaceStrippedAndEachPartReturned()
-		{
-			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1; de Word2");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1; de Word2");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossAreIdenticalAndContainSemiColon_DefinitionIsSplitAtSemiColonAndEachPartReturned()
-		{
-			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1; de Word2");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1; de Word2");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_DefinitionContainSemiColonAndOneElementIsIdenticalToGloss_IdenticalElementIsReturnedOnlyOnce()
-		{
-			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1; de Word2");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_GlossContainSemiColonAndOneElementIsIdenticalToDefinition_IdenticalElementIsReturnedOnlyOnce()
-		{
-			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1; de Word2");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossContainSemiColonAndSomeElementsAreIdentical_IdenticalElementsAreReturnedOnlyOnce()
-		{
-			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
-			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1;de Word2; de Word3");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1; de Word3; de Word4");
-			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(german);
-			Assert.AreEqual(4, listOfLexEntriesSortedByDefinition.Count);
-			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
-			Assert.AreEqual("de Word3", listOfLexEntriesSortedByDefinition[2]["Form"]);
-			Assert.AreEqual("de Word4", listOfLexEntriesSortedByDefinition[3]["Form"]);
 		}
 
 		[Test]
@@ -575,16 +376,6 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetEntriesWithSemanticDomainSortedBySemanticDomain_OneEntryWithTwoSensesThatHaveIdenticalSemanticDomains_OnlyOneTokenIsReturned()
-		{
-			LexEntry entryWithTwoIdenticalSenses = CreateLexEntryWithSemanticDomain("SemanticDomain1");
-			AddSenseWithSemanticDomainToLexEntry(entryWithTwoIdenticalSenses, "SemanticDomain1");
-			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainsDdp4);
-			Assert.AreEqual(1, sortedResults.Count);
-			Assert.AreEqual("SemanticDomain1", sortedResults[0]["SemanticDomain"]);
-		}
-
-		[Test]
 		public void GetEntriesWithSemanticDomainSortedBySemanticDomain_EntryWithoutSemanticDomain_ReturnEmpty()
 		{
 			LexEntry lexEntryWithoutSemanticDomain = _lexEntryRepository.CreateItem();
@@ -592,7 +383,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(0, sortedResults.Count);
 		}
 
-		private LexEntry CreateLexEntryWithSemanticDomain(string semanticDomain)
+		private void CreateLexEntryWithSemanticDomain(string semanticDomain)
 		{
 			LexEntry lexEntryWithSemanticDomain = _lexEntryRepository.CreateItem();
 			lexEntryWithSemanticDomain.Senses.Add(new LexSense());
@@ -601,17 +392,6 @@ namespace WeSay.LexicalModel.Tests
 					LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(semanticDomain);
 			_lexEntryRepository.SaveItem(lexEntryWithSemanticDomain);
-			return lexEntryWithSemanticDomain;
-		}
-
-		private void AddSenseWithSemanticDomainToLexEntry(LexEntry entry,string semanticDomain)
-		{
-			entry.Senses.Add(new LexSense());
-			OptionRefCollection o =
-				entry.Senses[1].GetOrCreateProperty<OptionRefCollection>(
-					LexSense.WellKnownProperties.SemanticDomainsDdp4);
-			o.Add(semanticDomain);
-			_lexEntryRepository.SaveItem(entry);
 		}
 
 		[Test]
@@ -1201,14 +981,13 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public override void TearDown()
+		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();
 		}
 
- /* NOMORELOCKING
-   [Test]
+		[Test]
 		[ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsWriteableAfterRepositoryIsCreated_Throws()
 		{
@@ -1216,7 +995,7 @@ namespace WeSay.LexicalModel.Tests
 			{
 			}
 		}
-*/
+
 		[Test]
 		[ExpectedException(typeof(IOException))]
 		public void Constructor_FileIsNotWriteableWhenRepositoryIsCreated_Throws()
@@ -1244,7 +1023,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public override void TearDown()
+		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();
@@ -1324,7 +1103,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public override void TearDown()
+		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();
@@ -1389,7 +1168,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public override void TearDown()
+		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();
@@ -1427,7 +1206,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public override void TearDown()
+		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();
@@ -1465,7 +1244,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public override void TearDown()
+		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
 			_tempFolder.Delete();

@@ -1,97 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<configuration version="4">
+<?xml version="1.0" encoding="utf-8"?><configuration version="5">
   <tasks>
-	<task id="Dashboard" class="WeSay.CommonTools.Dash" assembly="CommonTools" visible="true">
-	  <entries ref="All Entries" />
-	  <currentTaskProvider ref="Current Task Provider" />
-	  <label UseInConstructor="false">Home</label>
-	  <description UseInConstructor="false">This task is the first thing the user sees when WeSay comes up.  It gives the user some status of the project and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one.</description>
-	  <optional UseInConstructor="false">false</optional>
-	</task>
-	<task id="Dictionary" class="WeSay.LexicalTools.DictionaryTask" assembly="LexicalTools" visible="true">
-	  <entries ref="All Entries" />
-	  <viewTemplate ref="Default View Template" />
-	  <label UseInConstructor="false">Dictionary</label>
-	  <longLabel UseInConstructor="false">Dictionary Browse &amp; Edit</longLabel>
-	  <description UseInConstructor="false">This task allow and advanced user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay.</description>
-	</task>
-	<task id="AddMeanings" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
-	  <entries ref="All Entries" />
-	  <field>definition</field>
-	  <label>Meanings</label>
-	  <longLabel>Add Meanings</longLabel>
-	  <description>Add meanings to entries where they are missing.</description>
-	  <remainingCountText>Entries without meanings:</remainingCountText>
-	  <referenceCountText>Total entries:</referenceCountText>
-	  <viewTemplate ref="Default View Template" />
-	  <showfields>definition</showfields>
-	  <readOnly>SemanticDomainDdp4</readOnly>
-	</task>
-	<task id="AddPartOfSpeech" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
-	  <entries ref="All Entries" />
-	  <field>POS</field>
-	  <label>Parts of Speech</label>
-	  <longLabel>Add Parts of Speech</longLabel>
-	  <description>Add a Part Of Speech to senses where they are missing.</description>
-	  <remainingCountText>Entries without parts of speech:</remainingCountText>
-	  <referenceCountText>Total entries:</referenceCountText>
-	  <viewTemplate ref="Default View Template" />
-	  <showfields>POS</showfields>
-	  <readOnly>definition, ExampleSentence</readOnly>
-	</task>
-	<task id="AddExamples" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
-	  <entries ref="All Entries" />
-	  <field>ExampleSentence</field>
-	  <label>Example Sentences</label>
-	  <longLabel>Add Example Sentences</longLabel>
-	  <description>Add example sentences to senses where they are missing.</description>
-	  <remainingCountText>Entries without examples:</remainingCountText>
-	  <referenceCountText>Total entries:</referenceCountText>
-	  <viewTemplate ref="Default View Template" />
-	  <showfields>ExampleSentence</showfields>
-	  <readOnly>definition</readOnly>
-	</task>
-	<task id="AddBaseForms" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
-	  <entries ref="All Entries" />
-	  <field>BaseForm</field>
-	  <label>Base Forms</label>
-	  <longLabel>Add Base Forms</longLabel>
-	  <description>Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries.</description>
-	  <remainingCountText>Entries without base forms:</remainingCountText>
-	  <referenceCountText>Total entries:</referenceCountText>
-	  <viewTemplate ref="Default View Template" />
-	  <showfields>BaseForm</showfields>
-	</task>
+	<task taskName="Dashboard" visible="true" />
+	<task taskName="Dictionary" visible="true" />
+	<task taskName="AddMissingInfo" visible="false"><field>definition</field><label>Meanings</label><longLabel>Add Meanings</longLabel><description>Add meanings to entries where they are missing.</description><showFields>definition</showFields><readOnly>SemanticDomainDdp4</readOnly></task>
+	<task taskName="AddMissingInfo" visible="false"><field>POS</field><label>Parts of Speech</label><longLabel>Add Parts of Speech</longLabel><description>Add a Part Of Speech to senses where they are missing.</description><showFields>POS</showFields><readOnly>definition, ExampleSentence</readOnly></task>
+	<task taskName="AddMissingInfo" visible="false"><field>ExampleSentence</field><label>Example Sentences</label><longLabel>Add Example Sentences</longLabel><description>Add example sentences to senses where they are missing.</description><showFields>ExampleSentence</showFields><readOnly>definition</readOnly></task>
+	<task taskName="AddMissingInfo" visible="false"><field>BaseForm</field><label>Base Forms</label><longLabel>Add Base Forms</longLabel><description>Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries.</description><showFields>BaseForm</showFields></task>
 
-	<task id="Gather Words (D)" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="false">
-	  <entries ref="All Entries" />
-	  <label>Duerksen Word List</label>
-	  <longLabel>Gather Words Using Duerksen's List</longLabel>
-	  <description>Collect new words by translating from words in another language. This is a list of 1700 words from John Duerksen.</description>
-	  <wordListFileName>DuerksenWords.txt</wordListFileName>
-	  <wordListWritingSystemId>en</wordListWritingSystemId>
-	  <viewTemplate ref="Default View Template" />
-	</task>
-	<task id="Gather Words (PNG)" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="false">
-	  <entries ref="All Entries" />
-	  <label>PNG Word List</label>
-	  <longLabel>Gather Words Using PNG List</longLabel>
-	  <description>Collect new words by translating from words in another language. This is a list of around 900 words and phrases from PNG.</description>
-	  <wordListFileName>PNGWords.txt</wordListFileName>
-	  <wordListWritingSystemId>en</wordListWritingSystemId>
-	  <viewTemplate ref="Default View Template" />
-	</task>
-	<task id="Gather Words By Domain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools" visible="true">
-	  <entries ref="All Entries" />
-	  <label>Semantic Domains</label>
-	  <longLabel>Gather Words By Semantic Domain</longLabel>
-	  <description>Collect new words organized by semantic domains and questions about those domains.</description>
-	  <remainingCountText>Domains without words:</remainingCountText>
-	  <referenceCountText>Total domains:</referenceCountText>
-	  <semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName>
-	  <viewTemplate ref="Default View Template" />
-	  <semanticDomainFieldName>SemanticDomainDdp4</semanticDomainFieldName>
-	</task>
+	<task taskName="GatherWordList" visible="false"><wordListFileName>DuerksenWords.txt</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
+	<task taskName="GatherWordList" visible="false"><wordListFileName>PNGWords.txt</wordListFileName><wordListWritingSystemId>en</wordListWritingSystemId></task>
+	<task taskName="GatherWordsBySemanticDomains" visible="true"><semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName></task>
   </tasks>
   <addins>
 	<addin id="ManualBackupToDevice" showInWeSay="True" />

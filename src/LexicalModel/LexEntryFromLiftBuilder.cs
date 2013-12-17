@@ -236,20 +236,11 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		//hack for changed liftio api (which we actually fixed in 0.5)
-		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents)
-		{
-			MergeInNote(extensible,type,contents,string.Empty);
-		}
-
-
 		/// <summary>
 		/// Handle LIFT's "note" entity
 		/// </summary>
-		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents, string rawXml)
+		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents)
 		{
-//note, WeSay 0.4 doesn't implement the not round-tripping (0.5 does)
-
 			List<String> writingSystemAlternatives = new List<string>(contents.Count);
 			foreach (KeyValuePair<string, string> pair in contents.AsSimpleStrings)
 			{
@@ -294,7 +285,6 @@ namespace WeSay.LexicalModel
 
 		public WeSayDataObject MergeInEtymology(LexEntry entry,
 												string source,
-												string type,
 												LiftMultiText form,
 												LiftMultiText gloss,
 												string rawXml)
@@ -400,7 +390,7 @@ namespace WeSay.LexicalModel
 			if (ExpectedOptionTraits.Contains(trait.Name))
 			{
 				OptionRef o = extensible.GetOrCreateProperty<OptionRef>(trait.Name);
-				o.Value = trait.Value.Trim();
+				o.Value = trait.Value;
 			}
 			else if (trait.Name.StartsWith("flag_"))
 			{
@@ -411,7 +401,7 @@ namespace WeSay.LexicalModel
 			{
 				OptionRefCollection c =
 						extensible.GetOrCreateProperty<OptionRefCollection>(trait.Name);
-				c.Add(trait.Value.Trim());
+				c.Add(trait.Value);
 			}
 			//else
 			//{
@@ -495,11 +485,6 @@ namespace WeSay.LexicalModel
 					}
 				}
 			}
-		}
-
-		public void MergeInMedia(WeSayDataObject pronunciation, string href, LiftMultiText caption)
-		{
-			// review: Currently ignore media. See WS-1128
 		}
 
 		#endregion

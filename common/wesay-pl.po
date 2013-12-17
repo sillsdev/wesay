@@ -7,17 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-25 03:27+0000\n"
-"PO-Revision-Date: 2008-09-28 22:23+0000\n"
-"Last-Translator: Bartosz Kaszubowski <gosimek@gmail.com>\n"
+"POT-Creation-Date: 2007-11-23 05:56+0000\n"
+"PO-Revision-Date: 2008-04-01 03:49+0000\n"
+"Last-Translator: pp/bs <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-03-02 08:40+0000\n"
+"X-Launchpad-Export-Date: 2008-06-02 09:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
 msgstr "Start"
@@ -40,8 +39,8 @@ msgstr "Dodaj części mowy do tych znaczeń, gdzie ich brakuje."
 msgid "Add Examples"
 msgstr "Dodaj przykłady"
 
-msgid "Add example sentences to senses where they are missing."
-msgstr ""
+msgid "Add example sentences to entries where they are missing."
+msgstr "Dodaj przykłady do haseł, przy których ich brakuje."
 
 msgid "Add Base Forms"
 msgstr "Dodaj formy podstawowe"
@@ -107,7 +106,7 @@ msgstr "Włóż klucz USB, na którym ma być wykonana kopia zapasowa."
 msgid "&Cancel"
 msgstr "&Anuluj"
 
-#. Long name for usb flash-drive backup action
+#. Label for usb flash-drive backup action
 msgid "Backup To Device"
 msgstr "Utwórz kopię zapasową na urządzeniu"
 
@@ -116,51 +115,17 @@ msgid "Saves a backup on an external device, like a USB key."
 msgstr ""
 "Zapisuje kopię zapasową na urządzeniu zewnętrznym, takim jak klucz USB."
 
-#. Short buton label for usb flash-drive backup action
-msgid "Backup"
-msgstr "Kopia zapasowa"
-
 msgid "Email My Work to {0}"
 msgstr "Wyślij moją pracę e-mailem do {0}"
 
 msgid "Send a zipped email containing all your WeSay work."
 msgstr "Wysyła e-mailem plik ZIP zawierający całą twoją pracę w WeSay."
 
-msgid "Email"
-msgstr "Email"
-
-#. Label for synchronize action. Here, 'synchronizing' means putting your changes in the repository, and getting changes that others have put in the repository.
-msgid "Synchronize"
-msgstr "Synchronizuj"
-
-#. description of syncrhonize action
-msgid "Updates the repository with our work, and gets the work of others."
-msgstr ""
-
-#. Long label for synchronize action.
-msgid "Synchronize With Repository"
-msgstr ""
-
-msgid "Synchronizing..."
-msgstr "Synchronizacja..."
-
-msgid "WeSay Had Problems Synchronizing"
-msgstr ""
-
-msgid "Finished"
-msgstr "Zakończono"
-
-msgid "OK"
-msgstr "OK"
-
 msgid "View Report"
 msgstr "Pokaż raport"
 
 msgid "Shows some information about the lexicon."
 msgstr "Pokazuje informacje na temat leksykonu."
-
-msgid "Report"
-msgstr ""
 
 msgid "Export to Word"
 msgstr "Wyeksportuj do Worda"
@@ -176,9 +141,6 @@ msgid "Creates a simple Html version of the dictionary, ready for printing."
 msgstr ""
 "Tworzy słownik w postaci prostego pliku HTML, gotowego do wydrukowania."
 
-msgid "Make Pdf Dictionary"
-msgstr ""
-
 msgid "Export To SFM"
 msgstr "Wyeksportuj do SFM"
 
@@ -189,23 +151,20 @@ msgstr "Zapisuje leksykon w formacie standardowym"
 msgid "Backup, print, etc."
 msgstr "Wykonywanie kopii zapasowej, drukowanie itp."
 
-msgid "Switch tasks and see current status of tasks"
-msgstr "Przełączanie zadań i sprawdzanie ich bieżącego stanu"
+msgid "Current task:"
+msgstr "Bieżące zadanie:"
 
 msgid "Tasks"
 msgstr "Zadania"
 
-msgid "{1} dictionary has {0} words"
-msgstr ""
+msgid "Switch tasks and see current status of tasks"
+msgstr "Przełączanie zadań i sprawdzanie ich bieżącego stanu"
+
+msgid "Your dictionary has {0} words"
+msgstr "Twój słownik zawiera {0} słów"
 
 msgid "Cannot find {0}"
 msgstr "Nie można odnaleźć {0}"
-
-#. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
-#. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
-#. This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.
-msgid "Empty"
-msgstr "Puste"
 
 msgid "No Senses"
 msgstr "Brak znaczeń"
@@ -214,24 +173,46 @@ msgstr "Brak znaczeń"
 msgid "No Gloss"
 msgstr "Brak objaśnienia"
 
-msgid "Hide &Uncommon Fields"
-msgstr ""
+msgid "Hide Uncommon Fields"
+msgstr "Ukryj pola rzadko używane"
 
-msgid "Show &Uncommon Fields"
-msgstr ""
+msgid "Show Uncommon Fields"
+msgstr "Pokaż pola rzadko używane"
 
-msgid "Dictionary"
-msgstr "Słownik"
+msgid "&Delete This Word"
+msgstr "&Usuń to słowo"
 
-msgid "Dictionary Browse && Edit"
-msgstr ""
+msgid "&New Word"
+msgstr "&Nowe słowo"
+
+msgid "&Show All Fields"
+msgstr "&Pokaż wszystkie pola"
 
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
 msgstr "Pokaż wszystkie {0} słów projektu {1}."
 
+#. The label for the field showing the Lexeme Form of the entry.
+msgid "Word"
+msgstr "Słowo"
+
+msgid "(Page Down Key)"
+msgstr "(Klawisz Page Down)"
+
+msgid "(Enter Key)"
+msgstr "(Klawisz Enter)"
+
+msgid "Try thinking of words you use to talk about these things."
+msgstr "Pomyśl o słowach, których używasz, by mówić o tych sprawach."
+
+msgid "Try thinking of ways to say these words in your language."
+msgstr "Pomyśl o okolicznościach wypowiadania tych słów w twoim języku."
+
+msgid "Word:"
+msgstr "Słowo:"
+
 #. This is the field containing an example sentence of a sense of a word.
-#. This is the field containing an example sentence of a sense of a word.
+#. This is the field containing an example sentence of a sense of a word."), "Sentence
 msgid "Example"
 msgstr "Przykład"
 
@@ -239,13 +220,9 @@ msgstr "Przykład"
 msgid "Translation"
 msgstr "Tłumaczenie"
 
-#. This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.
+#. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well.
 msgid "Meaning"
 msgstr "Znaczenie"
-
-#. The label for the field showing a single word translation, as used in interlinear text glossing.
-msgid "Gloss"
-msgstr ""
 
 msgid "Congratulations. You have completed this task."
 msgstr "Gratulacje. Zadanie wykonane."
@@ -253,41 +230,27 @@ msgstr "Gratulacje. Zadanie wykonane."
 msgid "There is no work left to be done on this task."
 msgstr "Nie ma już żadnych słów w tym zadaniu."
 
+msgid "To Do:"
+msgstr "Do zrobienia:"
+
+msgid "Completed:"
+msgstr "Ukończono:"
+
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "This word has no Base Form"
 msgstr "To słowo nie ma formy podstawowej"
-
-#. Generic desciption of how many items in a task are left to do.
-msgid "Remaining:"
-msgstr "Pozostało:"
-
-#. Generic description of how many total items there are in a task.
-msgid "Total:"
-msgstr ""
-
-#. This is what we call it when something goes wrong but it's the computer's fault, not the user's.
-msgid "Program Error"
-msgstr ""
 
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
 msgid "Loading..."
 msgstr "Ładowanie..."
 
-#. This is shown in rare circumstances where WeSay finds it needs to prepare some indices so it can run faster.  The main point to get across is that the user should settle in for a long wait, not think something is broken or try to run WeSay again.
-msgid "Please wait while WeSay prepares your data"
-msgstr ""
-
-#. It's up to you whether to bother translating this or not.
+#. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
 msgid "WeSay"
 msgstr "WeSay"
 
-#. The label for the field showing the Lexeme Form of the entry.
-msgid "Word"
-msgstr "Słowo"
-
-#. The label for the field holding the citation form, which is how the word will be displayed in the dictionary.  This is used in languages where the lexeme form may be different from what the Headword should be.
-msgid "Citation Form"
-msgstr ""
+#. The label for the field holding the citation form.
+msgid "CitationForm"
+msgstr "Formularz cytowania"
 
 #. The label for the field showing the definition of the word.
 msgid "Definition"
@@ -302,13 +265,13 @@ msgstr "Dosłowne znaczenie"
 msgid "Note"
 msgstr "Notatka"
 
-#. The label for the field showing a picture.
-msgid "Picture"
-msgstr "Obraz"
-
 #. The label for the field showing Part Of Speech
 msgid "POS"
 msgstr "Część mowy"
+
+#. The label for the field showing a picture.
+msgid "Picture"
+msgstr "Obraz"
 
 #. The label for the field showing an example use of the word.
 msgid "Example Sentence"
@@ -325,9 +288,6 @@ msgstr "Zakres znacz."
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
 msgstr "Forma podstawowa"
-
-msgid "Cross Reference"
-msgstr ""
 
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"

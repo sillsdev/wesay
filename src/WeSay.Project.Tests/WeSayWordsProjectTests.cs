@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
@@ -107,7 +106,7 @@ namespace WeSay.Project.Tests
 		public void DefaultConfigFile_DoesntNeedMigrating()
 		{
 			WeSayWordsProject p = new WeSayWordsProject();
-			XPathDocument defaultConfig = new XPathDocument(p.PathToDefaultConfig);
+			XPathDocument defaultConfig = new XPathDocument(WeSayWordsProject.PathToDefaultConfig);
 			using (TempFile f = new TempFile())
 			{
 				bool migrated = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(defaultConfig, f.Path);
@@ -184,12 +183,16 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void GetOptionsListFromFieldName()
 		{
-			WeSayWordsProject p = new WeSayWordsProject();
 
-			OptionsList list = p.GetOptionsList("POS");
-			Assert.IsNotNull(list);
-			Assert.IsNotNull(list.Options);
-			Assert.Greater(list.Options.Count, 2);
+			using (var x = new ProjectDirectorySetupForTesting(""))
+			{
+				WeSayWordsProject p = x.CreateLoadedProject();
+
+				OptionsList list = p.GetOptionsList("POS");
+				Assert.IsNotNull(list);
+				Assert.IsNotNull(list.Options);
+				Assert.Greater(list.Options.Count, 2);
+			}
 		}
 
 		[Test]
@@ -244,40 +247,14 @@ namespace WeSay.Project.Tests
 				newName = Field.MakeFieldNameSafe(newName);
 				Field f = new Field(oldName, "LexEntry", new string[] {"en"});
 				p.ViewTemplates[0].Add(f);
+
+
+				using (File.OpenWrite(dir.PathToConfigFile))
+				{
+				}
 				p.Save();
 				f.FieldName = newName;
 				p.MakeFieldNameChange(f, oldName);
-			}
-		}
-
-		[Test]
-		[ExpectedException(typeof(ApplicationException))]
-		public void WeSayConfigFileIsToNew_Throws()
-		{
-
-			using (ProjectDirectorySetupForTesting projectDir = new ProjectDirectorySetupForTesting(""))
-			{
-				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
-				const int version = WeSayWordsProject.CurrentWeSayConfigFileVersion + 1;
-				File.WriteAllText(configPath,
-								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
-				XPathDocument doc = new XPathDocument(configPath);
-				WeSayWordsProject.CheckIfConfigFileVersionIsToNew(doc);
-			}
-		}
-
-		[Test]
-		public void WeSayConfigFileIsToCurrent_DoesNotThrow()
-		{
-
-			using (ProjectDirectorySetupForTesting projectDir = new ProjectDirectorySetupForTesting(""))
-			{
-				string configPath = Path.Combine(projectDir.PathToDirectory, "TestProj.WeSayConfig");
-				const int version = WeSayWordsProject.CurrentWeSayConfigFileVersion;
-				File.WriteAllText(configPath,
-								  String.Format("<?xml version='1.0' encoding='utf-8'?><configuration version=\"{0}\"><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>", version));
-				XPathDocument doc = new XPathDocument(configPath);
-				WeSayWordsProject.CheckIfConfigFileVersionIsToNew(doc);
 			}
 		}
 

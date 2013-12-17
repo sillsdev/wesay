@@ -65,7 +65,7 @@ namespace WeSay.LexicalModel
 				case "OptionCollection":
 					return ((OptionRefCollection) content).IsEmpty;
 				case "MultiText":
-					return IsMissingAnyWritingSystemThatIsPartOfField((MultiText) content);
+					return IsMissingWritingSystem((MultiText) content);
 				case "RelationToOneEntry":
 					LexRelationCollection collection = (LexRelationCollection) content;
 					if (IsSkipped(collection.Parent, Field.FieldName))
@@ -76,7 +76,7 @@ namespace WeSay.LexicalModel
 					{
 						foreach (LexRelation r in collection.Relations)
 						{
-							if (!string.IsNullOrEmpty(r.TargetId))
+							if (r.TargetId != null)
 							{
 								return false; // has one non-empty relation
 							}
@@ -162,11 +162,11 @@ namespace WeSay.LexicalModel
 			{
 				if (Field.FieldName == Field.FieldNames.ExampleSentence.ToString())
 				{
-					return IsMissingAnyWritingSystemThatIsPartOfField(example.Sentence);
+					return IsMissingWritingSystem(example.Sentence);
 				}
 				else if (Field.FieldName == Field.FieldNames.ExampleTranslation.ToString())
 				{
-					return IsMissingAnyWritingSystemThatIsPartOfField(example.Translation);
+					return IsMissingWritingSystem(example.Translation);
 				}
 				else
 				{
@@ -206,7 +206,7 @@ namespace WeSay.LexicalModel
 			{
 				if (Field.FieldName == Field.FieldNames.EntryLexicalForm.ToString())
 				{
-					if (IsMissingAnyWritingSystemThatIsPartOfField(entry.LexicalForm))
+					if (IsMissingWritingSystem(entry.LexicalForm))
 					{
 						return true;
 					}
@@ -226,27 +226,10 @@ namespace WeSay.LexicalModel
 			{
 				return !IsSkipped(weSayData, Field.FieldName);
 			}
-			if(Field.FieldName == "POS")
-			{
-				if(IsPosUnknown(weSayData))
-				{
-					return true;
-				}
-			}
 			return IsMissingDataInWritingSystem(field);
 		}
 
-		private bool IsPosUnknown(WeSayDataObject sense)
-		{
-			foreach(KeyValuePair<string, object> property in sense.Properties)
-			if (property.Key == "POS" && (((OptionRef) property.Value).Key == "unknown"))
-			{
-				return true;
-			}
-			return false;
-		}
-
-		private bool IsMissingAnyWritingSystemThatIsPartOfField(MultiTextBase field)
+		private bool IsMissingWritingSystem(MultiTextBase field)
 		{
 			foreach (string wsId in Field.WritingSystemIds)
 			{

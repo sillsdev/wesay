@@ -1,8 +1,8 @@
-<project name="WeSay Build" default="build">
-	<!-- This is a test line!-->
-	<!-- ***************************************************************** -->
-	<!-- ********* 			Set a few properties			   *********** -->
-	<!-- ***************************************************************** -->
+<project name="Palaso Build" default="build">
+
+<!-- ***************************************************************** -->
+<!-- ********* 			Set a few properties			   *********** -->
+<!-- ***************************************************************** -->
 	<!-- Project build dir is the dir where the build script is located -->
 	<property name="project.bld.dir"  value="${project::get-base-directory()}"/>
 
@@ -62,20 +62,6 @@
 		<include name="WeSay.UI.Tests\WeSay.UI.Tests.proj.build" />
 	</fileset>
 
-	<!-- List of src files for distribution-->
-	<fileset id="project.srcfiles" basedir="${project.base.dir}">
-		<include name="src/**/*.cs" />
-		<include name="src/**/*.resx" />
-		<include name="src/**/*.build" />
-		<include name="src/Installer_Linux/**" />
-		<include name="lib/mono/**" />
-		<include name="bld/*" />
-		<include name="common/**" />
-		<include name="SampleProjects/**" />
-		<include name="templates/**" />
-		<exclude name=".hg/**" />
-	</fileset>
-
 	<target name="clean" description="Delete all previously compiled binaries.">
 		<delete>
 			<fileset>
@@ -87,20 +73,17 @@
 				<exclude name="../lib/**" />
 			</fileset>
 		</delete>
-	</target>
 
-	<target name="revision_teamcityhg">
-		<property name="teamcity" value="${environment::get-variable('BUILD_NUMBER')}" />
-		<regex pattern="^(?'revision'[^:]*)" input="${teamcity}" />
-		<property name="revision" value="${string::trim(revision)}" />
-		<echo message="Revision: ${revision}" />
+		<nant target="clean">
+			<buildfiles refid="project.buildfiles.src" />
+		</nant>
 	</target>
 
 	<target name="revision">
-		<property name="revision" value="${environment::get-variable(BUILD_NUMBER)}"/>
+		<property name="revision" value="${environment::get-variable(BUILD_VERSION)}"/>
 	</target>
 
-	<target name="version" depends="revision_teamcityhg">
+	<target name="version" depends="revision">
 		<loadfile property="version" file="version.txt">
 			<filterchain>
 				<expandproperties />
@@ -149,14 +132,14 @@
 	</target>
 
 	<target name="build" description="Build all targets." depends="clean">
-		<call target="build-only"/>
+		<call target="build.solution"/>
 	</target>
 
 	<target name="rebuild">
-		<call target="build-only"/>
+		<call target="build.solution"/>
 	</target>
 
-	<target name="build-only" depends="make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
+	<target name="build.solution" depends="make-output-dir, set-build-config, set-runtime-config, copy-lib-files">
 		<nant target="build">
 			<properties>
 				<property name="build.defines" value="${build.defines}" />
@@ -172,11 +155,7 @@
 		<fail unless="${file::exists(expected.output)}">Output file doesn't exist in ${expected.output}</fail>
 	</target>
 
-	<target name="test" description="Build all targets." depends="build-only">
-		<call target="test-only"/>
-	</target>
-
-	 <target name="test-only">
+	 <target name="test" depends="build">
 <!-- Run tests the first time without stopping the build under on failing tests because we want to be able to see ALL failing tests in the log.
 		The downside to this is that TeamCity will show a passing build even with failing tests-->
 
@@ -229,59 +208,12 @@
 		</nunit2>
 	</target>
 
-	<target name="dist" depends="assemblyinfo make-output-dir, set-build-config, set-runtime-config">
-		<tar destfile="${project.output.dir}/wesay-src-${version}.tar.gz" compression="GZip">
-			<fileset basedir="${project.base.dir}">
-				<include name="src/**/*.build" />
-				<include name="src/**/*.cs" />
-				<include name="src/**/*.resx" />
-				<include name="src/**/Resources/*" />
-				<include name="src/**/*.png" />
-				<include name="src/**/*.xsl" />
-				<include name="src/**/*.htm" />
-				<include name="src/Installer_Linux/**" />
-				<include name="lib/mono/**" />
-				<include name="artwork/**" />
-				<include name="bld/*" />
-				<include name="common/**" />
-				<include name="SampleProjects/**" />
-				<include name="templates/**" />
-				<exclude name=".hg/**" />
-				<exclude name="src/**/nant.resx.bak/" />
-			</fileset>
-		</tar>
-	</target>
-
-	<target name="package_clean">
-		<echo message="Deleting exising files from publish folder. Note: this folder is above the project.base.dir" />
-		<delete>
-			<fileset>
-				<include name="${project.base.dir}/../wesay_*" />
-			</fileset>
-		</delete>
-		<echo message="Reverting package changelog debian-src/changelog" />
-		<exec program="hg" workingdir="${project.base.dir}">
-			<arg line="revert debian-src/changelog" />
-		</exec>
-	</target>
-
-	<target name="package" depends="dist package_clean">
-		<exec program="build" basedir="${project.base.dir}/debian-src" workingdir="${project.base.dir}">
-		</exec>
-	</target>
-
 	<target name="install" depends="set-build-config, set-runtime-config, set-output-dir">
-		<property name="INSTALL_DIR" value="/" overwrite="false" />
-		<property name="USR_BIN" value="${path::combine(INSTALL_DIR, 'usr/bin')}"/>
+		<property name="INSTALL_DIR" value="/" />
 		<property name="USR_SHARE" value="${path::combine(INSTALL_DIR, 'usr/share/wesay')}"/>
-		<property name="USR_ICONS" value="${path::combine(INSTALL_DIR, 'usr/share/icons')}"/>
-		<property name="USR_MENU" value="${path::combine(INSTALL_DIR, 'usr/share/applications')}"/>
 		<copy todir="${USR_SHARE}">
 			<fileset basedir="${project.output.dir}">
 				<include name="*" />
-				<exclude name="*Tests.dll" />
-				<exclude name="*Test.dll" />
-				<exclude name="*.mdb" />
 			 </fileset>
 		</copy>
 		<copy todir="${path::combine(USR_SHARE, 'common')}">
@@ -294,15 +226,64 @@
 				<include name="*" />
 			 </fileset>
 		</copy>
-		<copy todir="${USR_ICONS}">
-			<fileset basedir="${path::combine(project.base.dir, 'src/Installer_Linux/icons')}">
-				<include name="**" />
-			 </fileset>
-		</copy>
-		<copy file="${path::combine(project.base.dir, 'src/Installer_Linux/sil-wesay.desktop')}" tofile="${path::combine(USR_MENU, 'sil-wesay.desktop')}" />
-		<copy file="${path::combine(project.base.dir, 'src/Installer_Linux/sil-wesay-config.desktop')}" tofile="${path::combine(USR_MENU, 'sil-wesay-config.desktop')}" />
-		<copy file="wesay.mono.runner" tofile="${USR_BIN}/wesay" />
-		<copy file="wesay.configtool.mono.runner" tofile="${USR_BIN}/wesay-config" />
+		<copy file="wesay.mono.runner" tofile="/usr/bin/wesay" />
+		<copy file="wesay.configtool.mono.runner" tofile="/usr/bin/wesay-config" />
+	</target>
+
+	<target name="installerpre" depends="version">
+		<fail />
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="../release/*.iss" />
+				</items>
+			</in>
+			<do>
+				<property name="backupname" value="${string::replace(filename, 'iss', 'iss.bak')}" />
+				<copy file="${filename}" tofile="${backupname}" overwrite="true" />
+				<copy file="${backupname}" tofile="${filename}" overwrite="true">
+					<filterchain>
+						<expandproperties />
+					</filterchain>
+				</copy>
+			</do>
+		</foreach>
+	</target>
+
+	<target name="installerpost">
+		<fail />
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="../release/*.iss" />
+				</items>
+			</in>
+			<do>
+				<property name="backupname" value="${string::replace(filename, 'iss', 'iss.bak')}" />
+				<copy file="${backupname}" tofile="${filename}" overwrite="true" />
+				<delete file="${backupname}" />
+			</do>
+		</foreach>
+	</target>
+
+	<target name="installer.win">
+		<exec program="C:\Program Files\Inno Setup 5\ISCC.exe" append="true">
+			<arg file="../release/solid.iss" />
+		</exec>
+	</target>
+
+	<target name="installer" depends="test">
+		<fail />
+		<call target="installerpre" />
+		<call target="installer.win" />
+		<call target="installerpost" />
+	</target>
+
+	<target name="publish" depends="installer">
+		<fail />
+		<exec program="ftp.exe">
+			<arg line="-n -s:ftp.txt" />
+		</exec>
 	</target>
 
 
@@ -448,73 +429,74 @@
 	<property name="build.win32" value="false"/>
 	<property name="build.gui" value="true"/>
 	<property name="build.x86" value="true"/>
-	<property name="nant.settings.currentframework" value="mono-2.0"/>
+	<property name="nant.settings.currentframework"
+	  value="mono-2.0"/>
 	<property name="zip.runtime.suffix" value="-mono-2.0"/>
 	<property name="msi.runtime.suffix" value="-mono-2.0"/>
 	<property name="supported.test.platforms" value="mono-2.0,net-2.0"/>
   </target>
 
-	<!-- ***************************************************************** -->
-	<!-- ***    Targets for setting the output directory               *** -->
-	<!-- ***************************************************************** -->
-	<target name="set-output-dir" depends="set-build-config,set-runtime-config">
-		<property name="base.output.dir"
-			value="${path::combine(project.base.dir,'output')}"/>
-		<property name="os.platform.dir"
-			value="${path::combine(base.output.dir,os.platform)}"/>
-		<property name="runtime.platform.dir"
-			value="${path::combine(os.platform.dir,runtime.platform)}"/>
-		<property name="runtime.version.dir"
-			value="${path::combine(runtime.platform.dir,runtime.version)}"/>
-		<property name="project.output.dir"
-			value="${path::combine(runtime.version.dir,build.config)}"/>
-		<property name="project.documentation.dir"
-			value="${path::combine(project.output.dir,'doc')}"/>
-		<property name="project.resource.dir"
-			value="${path::combine(project.output.dir,'resources')}"/>
-	</target>
+<!-- ***************************************************************** -->
+<!-- ***    Targets for setting the output directory               *** -->
+<!-- ***************************************************************** -->
+  <target name="set-output-dir" depends="set-build-config,set-runtime-config">
+	<property name="base.output.dir"
+	  value="${path::combine(project.base.dir,'output')}"/>
+	<property name="os.platform.dir"
+	  value="${path::combine(base.output.dir,os.platform)}"/>
+	<property name="runtime.platform.dir"
+	  value="${path::combine(os.platform.dir,runtime.platform)}"/>
+	<property name="runtime.version.dir"
+	  value="${path::combine(runtime.platform.dir,runtime.version)}"/>
+	<property name="project.output.dir"
+	  value="${path::combine(runtime.version.dir,build.config)}"/>
+	<property name="project.documentation.dir"
+	  value="${path::combine(project.output.dir,'doc')}"/>
+  </target>
 
-	<target name="make-output-dir" depends="set-output-dir">
-		<mkdir dir="${project.output.dir}" unless="${directory::exists(project.output.dir)}"/>
-		<mkdir dir="${project.documentation.dir}" unless="${directory::exists(project.documentation.dir)}"/>
-	</target>
+  <target name="make-output-dir" depends="set-output-dir">
+	<mkdir dir="${project.output.dir}"
+	  unless="${directory::exists(project.output.dir)}"/>
+	<mkdir dir="${project.documentation.dir}"
+	  unless="${directory::exists(project.documentation.dir)}"/>
+  </target>
 
-	<!-- ***************************************************************** -->
-	<!-- ***    Targets for copying lib files to output directory      *** -->
-	<!-- ***************************************************************** -->
+<!-- ***************************************************************** -->
+<!-- ***    Targets for copying lib files to output directory      *** -->
+<!-- ***************************************************************** -->
 
-	<target name="copy-lib-files" depends="make-output-dir, set-runtime-config">
-		<call target="copy-${runtime.platform}-lib-files"/>
-	</target>
+<target name="copy-lib-files" depends="make-output-dir, set-runtime-config">
+	<call target="copy-${runtime.platform}-lib-files"/>
+</target>
 
-	<target name="copy-mono-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-		<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
-		<echo message="${project.lib.dir}" />
-		<copy todir="${project.output.dir}">
-			<fileset basedir="${project.lib.dir}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
-	</target>
+<target name="copy-mono-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
+	<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
+	<echo message="${project.lib.dir}" />
+	<copy todir="${project.output.dir}">
+		<fileset basedir="${project.lib.dir}">
+			<include name="*.*" />
+		</fileset>
+	</copy>
+</target>
 
-	<target name="copy-net-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-		<!-- review: This needs work, it's copying from the wrong folder. We should restructure the lib folder to support multiple platforms better and keep the win / mono libs separate CJP -->
-		<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
-		<echo message="${project.lib.dir}" />
-		<copy todir="${project.output.dir}">
-			<fileset basedir="${project.lib.dir}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
-	</target>
+<target name="copy-net-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
+	<!-- review: This needs work, it's copying from the wrong folder. We should restructure the lib folder to support multiple platforms better and keep the win / mono libs separate CJP -->
+	<property name="project.lib.dir" value="${path::combine(project.lib.base.dir,runtime.platform)}"/>
+	<echo message="${project.lib.dir}" />
+	<copy todir="${project.output.dir}">
+		<fileset basedir="${project.lib.dir}">
+			<include name="*.*" />
+		</fileset>
+	</copy>
+</target>
 
-	<target name="copy-windows-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
-		<property name="project.lib.dir" value="$project.lib.base.dir"/>
-		<copy todir="${project.output.dir}">
-			<fileset basedir="${project.lib.dir}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
-	</target>
+<target name="copy-windows-lib-files" depends="make-output-dir, set-build-config, set-runtime-config">
+	<property name="project.lib.dir" value="$project.lib.base.dir"/>
+	<copy todir="${project.output.dir}">
+		<fileset basedir="${project.lib.dir}">
+			<include name="*.*" />
+		</fileset>
+	</copy>
+</target>
 
 </project>
