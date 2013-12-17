@@ -12,7 +12,6 @@ using Palaso.Services.ForServers;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.App.Services;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
 using WeSay.LexicalTools.GatherByWordList;
@@ -308,9 +307,7 @@ namespace WeSay.App
 		{
 			try
 			{
-				_project.AddToContainer(b => b.Register<StatusBarController>());
-				_project.AddToContainer(b => b.Register<TabbedForm>());
-				_tabbedForm = _project.Container.Resolve<TabbedForm>();
+				_tabbedForm = new TabbedForm();
 				_tabbedForm.Show(); // so the user sees that we did launch
 				_tabbedForm.Text =
 						StringCatalog.Get("~WeSay",
@@ -318,12 +315,8 @@ namespace WeSay.App
 						": " + _project.Name + "        " + ErrorReport.UserFriendlyVersionString;
 				Application.DoEvents();
 
-			   //todo: this is what we're supposed to use the autofac "modules" for
-				//couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
+			   //couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
 				_project.AddToContainer(b => b.Register<ICurrentWorkTask>(_tabbedForm));
-				_project.AddToContainer(b => b.Register<StatusStrip>(_tabbedForm.StatusStrip));
-				_project.AddToContainer(b => b.Register(TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(_project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject )));
-
 
 				_project.LoadTasksFromConfigFile();
 

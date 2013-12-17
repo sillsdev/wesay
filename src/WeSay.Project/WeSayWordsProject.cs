@@ -44,8 +44,6 @@ namespace WeSay.Project
 		private ChorusBackupMaker _backupMaker;
 		private Autofac.IContainer _container;
 
-		public const int CurrentWeSayConfigFileVersion = 5; // This variable must be updated with every new vrsion of the WeSay config file
-
 		public event EventHandler EditorsSaveNow;
 
 		public class StringPair: EventArgs
@@ -314,7 +312,6 @@ namespace WeSay.Project
 					}
 					UiFontSizeInPoints = f;
 				}
-				CheckIfConfigFileVersionIsToNew(configDoc);
 				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
@@ -325,19 +322,6 @@ namespace WeSay.Project
 			PopulateDIContainer();
 
 			LoadBackupPlan();
-		}
-
-		public static void CheckIfConfigFileVersionIsToNew(XPathDocument configurationDoc)
-		{
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") != null)
-			{
-				string versionNumberAsString =
-					configurationDoc.CreateNavigator().SelectSingleNode("configuration").GetAttribute("version", "");
-				if(int.Parse(versionNumberAsString) > CurrentWeSayConfigFileVersion)
-				{
-					throw new ApplicationException("The config file is too new for this version of wesay. Please download a newer version of wesay from www.wesay.org");
-				}
-			}
 		}
 
 		[Serializable]
@@ -351,6 +335,7 @@ namespace WeSay.Project
 		{
 			var builder = new ContainerBuilder();
 
+			//builder.Register<UserSettingsRepository>(new UserSettingsRepository());
 			builder.Register(new WordListCatalog()).SingletonScoped();
 
 			builder.Register<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
@@ -358,10 +343,6 @@ namespace WeSay.Project
 			builder.Register<LexEntryRepository>(
 				c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
 						progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
-
-			//builder.Register<IRepository<LexEntry>>(c => c.Resolve<LexEntryRepository>());
-
-			builder.Register<ICountGiver>(c => c.Resolve<LexEntryRepository>());
 
 			//builder.Register<ViewTemplate>(DefaultPrintingTemplate).Named("PrintingTemplate");
 
@@ -380,16 +361,12 @@ namespace WeSay.Project
 
 			builder.Register<TaskCollection>().SingletonScoped();
 
-			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems))
+			foreach (var viewTemplate in ConfigFileReader.CreateViewTemplates(configFileText))
 			{
 				//todo: this isn't going to work if we start using multiple tempates.
 				//will have to go to a naming system.
 				builder.Register(viewTemplate).SingletonScoped();
 			}
-
-
-			builder.Register<IOptionListReader>(c => new DdpListReader()).Named(LexSense.WellKnownProperties.SemanticDomainsDdp4);
-			builder.Register<IOptionListReader>(c => new GenericOptionListReader());
 
 		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
 
@@ -911,10 +888,6 @@ namespace WeSay.Project
 		{
 			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "pictures"); }
 		}
-		public string PathToAudio
-		{
-			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "audio"); }
-		}
 
 		private static string GetPathToCacheFromPathToLift(string pathToLift)
 		{
@@ -958,7 +931,7 @@ namespace WeSay.Project
 				return path;
 			}
 
-			path = Path.Combine(DirectoryOfTheApplicationExecutable, fileName);
+			path = Path.Combine(DirectoryOfExecutingAssembly, fileName);
 			if (File.Exists(path))
 			{
 				return path;
@@ -1115,20 +1088,17 @@ namespace WeSay.Project
 			get { return _container; }
 		}
 
-
-
 		public override void Save()
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
 
-			var pendingConfigFile = new TempFileForSafeWriting(Project.PathToConfigFile);
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 
-			XmlWriter writer = XmlWriter.Create(pendingConfigFile.TempFilePath, settings);
+			XmlWriter writer = XmlWriter.Create(Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
-			writer.WriteAttributeString("version", CurrentWeSayConfigFileVersion.ToString());
+			writer.WriteAttributeString("version", "5");
 
 			writer.WriteStartElement("components");
 			foreach (ViewTemplate template in ViewTemplates)
@@ -1154,10 +1124,7 @@ namespace WeSay.Project
 			writer.WriteEndDocument();
 			writer.Close();
 
-			pendingConfigFile.WriteWasSuccessful();
-
 			base.Save();
-
 			BackupNow();
 
 		}
@@ -1202,7 +1169,7 @@ namespace WeSay.Project
 												field.OptionsListFile);
 			if (File.Exists(pathInProject))
 			{
-				LoadOptionsList(field.FieldName, pathInProject);
+				LoadOptionsList(pathInProject);
 			}
 			else
 			{
@@ -1225,27 +1192,16 @@ namespace WeSay.Project
 								pathInProgramDir);
 					}
 				}
-				LoadOptionsList(field.FieldName, pathInProgramDir);
+				LoadOptionsList(pathInProgramDir);
 			}
 
 			return _optionLists[field.OptionsListFile];
 		}
 
-		private void LoadOptionsList(string fieldName,string pathToOptionsList)
+		private void LoadOptionsList(string pathToOptionsList)
 		{
 			string name = Path.GetFileName(pathToOptionsList);
-			IOptionListReader reader;
-			object r;
-			//first, try for a reader named after the field
-			if(_container.TryResolve(fieldName, out r))
-			{
-				reader = r as IOptionListReader;
-			}
-			else
-			{
-				reader = _container.Resolve<IOptionListReader>();
-			}
-			OptionsList list = reader.LoadFromFile(pathToOptionsList);
+			OptionsList list = OptionsList.LoadFromFile(pathToOptionsList);
 			_optionLists.Add(name, list);
 		}
 
@@ -1452,7 +1408,7 @@ namespace WeSay.Project
 			string[] allFiles = Directory.GetFiles(pathToProjectRoot,
 												   "*",
 												   SearchOption.AllDirectories);
-			string[] antipatterns = { "Cache", "cache", ".bak", ".old", ".liftold", TaskMemoryRepository.FileExtensionWithDot};
+			string[] antipatterns = {"Cache", "cache", ".bak", ".old", ".liftold"};
 
 			foreach (string file in allFiles)
 			{

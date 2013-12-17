@@ -33,7 +33,7 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public DictionaryControl(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate, ITaskMemory memory)
+		public DictionaryControl(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
 		{
 			if (lexEntryRepository == null)
 			{
@@ -73,9 +73,6 @@ namespace WeSay.LexicalTools
 			_findText.KeyDown += _findText_KeyDown;
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
 
-			_splitter.SetMemory(memory);
-			_entryViewControl.SetMemory(memory.CreateNewSection("entryView"));
-
 			UpdateDisplay();
 		}
 
@@ -109,8 +106,6 @@ namespace WeSay.LexicalTools
 		{
 			get { return _recordsListBox.SelectedIndex; }
 		}
-
-
 
 		public event EventHandler SelectedIndexChanged = delegate { };
 
@@ -155,7 +150,7 @@ namespace WeSay.LexicalTools
 		private void AddWritingSystemToPicker(WritingSystem writingSystem, Field field)
 		{
 			MenuItem item =
-					new MenuItem(writingSystem.Abbreviation + "\t" + StringCatalog.Get(field.DisplayName),
+					new MenuItem(writingSystem.Id + "\t" + StringCatalog.Get(field.DisplayName),
 								 OnCmWritingSystemClicked);
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
@@ -204,7 +199,7 @@ namespace WeSay.LexicalTools
 			_findText.Items = _findTextAdapter;
 			_findText.WritingSystem = _listWritingSystem;
 
-			_findWritingSystemId.Text = _listWritingSystem.Abbreviation;
+			_findWritingSystemId.Text = _listWritingSystem.Id;
 			int width = _findWritingSystemId.Width;
 			_findWritingSystemId.AutoSize = false;
 			_findWritingSystemId.Size = new Size(Math.Min(width, 25), _findText.Height);
@@ -442,14 +437,9 @@ namespace WeSay.LexicalTools
 
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
 		{
-			//Catching ctrl-n here is a problem from the localisation perspective
-			//What if the language does not lend itself to "n" as a representation of the word "new"
-			//We could solve this by using an accelerator
 			if (keyData == (Keys.Control | Keys.N))
 			{
-				bool FocusWasOnFindTextBox = _findText.Focused;
-				_btnNewWord.Focus(); //this is necassary to cause TextBinding to update it's multitext
-				AddNewWord(FocusWasOnFindTextBox);
+				AddNewWord();
 				return true;
 			}
 
@@ -472,10 +462,10 @@ namespace WeSay.LexicalTools
 
 		private void OnNewWord_Click(object sender, EventArgs e)
 		{
-			AddNewWord(false);
+			AddNewWord();
 		}
 
-		internal void AddNewWord(bool FocusWasOnFindTextBox)
+		private void AddNewWord()
 		{
 			Logger.WriteEvent("NewWord_Click");
 
@@ -487,7 +477,7 @@ namespace WeSay.LexicalTools
 				LexEntry entry = this._lexEntryRepository.CreateItem();
 				//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 				//_recordListBoxActive = true; // allow onRecordSelectionChanged
-				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(_findText.Text) &&
+				if (_findText.Focused && !string.IsNullOrEmpty(_findText.Text) &&
 					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 				{
 					entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
@@ -545,11 +535,7 @@ namespace WeSay.LexicalTools
 				Logger.WriteEvent("DeleteWord_Cancelled");
 				return;
 			}
-			DeleteWord();
-		}
 
-		internal void DeleteWord()
-		{
 			Debug.Assert(CurrentIndex >= 0);
 			if (CurrentIndex == -1)
 			{

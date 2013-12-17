@@ -48,13 +48,12 @@ namespace WeSay.LexicalModel
 			public static string LexicalUnit = "EntryLexicalForm";
 			public static string BaseForm = "BaseForm";
 			public static string CrossReference = "confer";
-			public static string Sense = "sense";
 
 			public static bool Contains(string fieldName)
 			{
 				List<string> list =
 						new List<string>(new string[]
-											 {LexicalUnit, Citation, BaseForm, CrossReference, Sense});
+											 {LexicalUnit, Citation, BaseForm, CrossReference});
 				return list.Contains(fieldName);
 			}
 		} ;
@@ -490,7 +489,7 @@ namespace WeSay.LexicalModel
 		public void AddRelationTarget(string relationName, string targetId)
 		{
 			LexRelationCollection relations =
-					GetOrCreateProperty<LexRelationCollection>(relationName);
+					GetOrCreateProperty<LexRelationCollection>(WellKnownProperties.BaseForm);
 			relations.Relations.Add(new LexRelation(relationName, targetId, this));
 		}
 	}

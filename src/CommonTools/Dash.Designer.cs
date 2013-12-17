@@ -30,7 +30,7 @@ namespace WeSay.CommonTools
 		{
 			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.Label DeveloperNote;
-			this._panel = new System.Windows.Forms.Panel();
+			this._flow = new System.Windows.Forms.FlowLayoutPanel();
 			this._toolTip = new System.Windows.Forms.ToolTip(this.components);
 			DeveloperNote = new System.Windows.Forms.Label();
 			this.SuspendLayout();
@@ -48,14 +48,18 @@ namespace WeSay.CommonTools
 				"itial layout is correct.";
 			DeveloperNote.Visible = false;
 			//
-			// _panel
+			// _flow
 			//
-			this._panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this._panel.BackColor = System.Drawing.Color.Transparent;
-			this._panel.Location = new System.Drawing.Point(20, 11);
-			this._panel.Name = "_panel";
-			this._panel.Size = new System.Drawing.Size(603, 397);
-			this._panel.TabIndex = 0;
+			this._flow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._flow.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this._flow.BackColor = System.Drawing.Color.Transparent;
+			this._flow.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this._flow.Location = new System.Drawing.Point(20, 11);
+			this._flow.Name = "_flow";
+			this._flow.Size = new System.Drawing.Size(603, 397);
+			this._flow.TabIndex = 0;
+			this._flow.WrapContents = false;
 			//
 			// _toolTip
 			//
@@ -74,7 +78,7 @@ namespace WeSay.CommonTools
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(230)))), ((int)(((byte)(242)))));
 			this.Controls.Add(DeveloperNote);
-			this.Controls.Add(this._panel);
+			this.Controls.Add(this._flow);
 			this.Name = "Dash";
 			this.Size = new System.Drawing.Size(623, 408);
 			this.ResumeLayout(false);
@@ -84,7 +88,7 @@ namespace WeSay.CommonTools
 
 		#endregion
 
-		private System.Windows.Forms.Panel _panel;
+		private System.Windows.Forms.FlowLayoutPanel _flow;
 		private System.Windows.Forms.ToolTip _toolTip;
 	}
 }

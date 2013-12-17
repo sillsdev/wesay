@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.Project;
-using WeSay.UI.TextBoxes;
+using WeSay.UI;
 
 namespace WeSay.ConfigTool
 {
@@ -189,8 +188,8 @@ namespace WeSay.ConfigTool
 														  false,
 														  BasilProject.Project.WritingSystems,
 														  CommonEnumerations.VisibilitySetting.
-															  Visible,
-														  _currentField.IsSpellCheckingEnabled, false, null);
+																  Visible,
+														  _currentField.IsSpellCheckingEnabled);
 				m.SizeChanged += OnNameControlSizeChanged;
 				m.Bounds = _nameMultiTextControl.Bounds;
 				m.Top = _nameLabel.Top;
@@ -204,8 +203,7 @@ namespace WeSay.ConfigTool
 				_keyText.Text = proxy.UnderlyingOption.Key;
 				_keyText.TextChanged += OnKeyTextChanged;
 
-				var justTextBoxes = from z in m.TextBoxes where z is WeSayTextBox select z;
-				foreach (WeSayTextBox box in justTextBoxes)
+				foreach (WeSayTextBox box in m.TextBoxes)
 				{
 					TextBinding binding = new TextBinding(_currentOption.Name,
 														  box.WritingSystem.Id,
@@ -253,7 +251,6 @@ namespace WeSay.ConfigTool
 
 		private void _btnAdd_Click(object sender, EventArgs e)
 		{
-			_listBox.Focus();   //This is a hack to get the TextBinding to update by losing focus :-(
 			Option newOption = new Option();
 			_newlyCreatedOptions.Add(newOption);
 			_currentList.Options.Add(newOption);
@@ -267,7 +264,6 @@ namespace WeSay.ConfigTool
 
 		private void _btnDelete_Click(object sender, EventArgs e)
 		{
-			_listBox.Focus();   //This is a hack to get the TextBinding to update by losing focus :-(
 			_currentList.Options.Remove(_currentOption);
 			_listBox.Items.Remove(_listBox.SelectedItem);
 

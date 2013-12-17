@@ -138,7 +138,13 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="CommonTools.pdb" Guid="{3B8D43F0-7A64-4AC7-82A9-2A334E53F5AC}">
 					<File Id="CommonTools.pdb" Name="CommonTools.pdb" KeyPath="yes" Source="..\..\output\release\CommonTools.pdb" />
 				  </Component>
-
+ <!--                   <Component Id="Db4objects.Db4o.dll" Guid="{A519B18E-56D3-45FA-A2C9-BA7A524259B2}">
+					<File Id="Db4objects.Db4o.dll" Name="Db4objects.Db4o.dll" KeyPath="yes" Source="..\..\output\release\Db4objects.Db4o.dll" />
+				  </Component>
+				<Component Id="Db4objects.Db4o.Tools.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173B92}">
+					<File Id="Db4objects.Db4o.Tools.dll" Name="Db4objects.Db4o.Tools.dll" KeyPath="yes" Source="..\..\output\release\Db4objects.Db4o.Tools.dll" />
+				  </Component>
+	  -->
 				  <Component Id="Enchant.Net.dll" Guid="{95F22469-1C72-4f90-99D8-D5FDFBA0DDF9}">
 					<File Id="Enchant.Net.dll" Name="Enchant.Net.dll" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll" />
 				  </Component>
@@ -147,11 +153,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 				  <Component Id="linqbridge.dll" Guid="{D5FE0CB8-19D7-4457-8D6C-43E56E9A6FA0}">
 					<File Id="linqbridge.dll" Name="linqbridge.dll" KeyPath="yes" Source="..\..\output\release\linqbridge.dll" />
-				  </Component>
-
-				  <!-- audio recording/playback engine used by palaso.media -->
-				  <Component Id="irrKlang.NET2.0.dll" Guid="{952F0A0C-F317-459f-A91C-55DE3D046B2C}">
-					<File Id="irrKlang.NET2.0.dll" Name="irrKlang.NET2.0.dll" KeyPath="yes" Source="..\..\output\release\irrKlang.NET2.0.dll" />
 				  </Component>
 
 				  <Component Id="CookComputing.XmlRpcV2.dll" Guid="{C23D78B7-A7F2-4dc2-9B7F-8A004167FF12}">
@@ -217,13 +218,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="Palaso.Services.dll" Name="Palaso.Services.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Services.dll" />
 				  </Component>
 
-				  <Component Id="Palaso.Media.dll" Guid="{4739D7BD-6D1D-474f-BF01-E012E51361E4}">
-					<File Id="Palaso.Media.dll" Name="Palaso.Media.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Media.dll" />
-				  </Component>
-
-				  <Component Id="Palaso.Backup.dll" Guid="{C4BE5420-B5F0-4494-B91E-930209E2D7AB}">
-					<File Id="Palaso.Backup.dll" Name="Palaso.Backup.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Backup.dll" />
-				  </Component>
 
 				  <Component Id="PalasoReporting.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E800}">
 					<File Id="PalasoReporting.dll" Name="PalasoReporting.dll" KeyPath="yes" Source="..\..\output\release\PalasoReporting.dll" />
@@ -261,12 +255,12 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="WeSay.UI.pdb" Guid="{3A0709F0-361F-49F9-B50E-877BDA266A22}">
 					<File Id="WeSay.UI.pdb" Name="WeSay.UI.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.UI.pdb" />
 				  </Component>
+
 				  <Component Id="Addin.Transform.dll" Guid="{6E1139F5-2998-44bc-A393-018D4DFC00B7}">
 					<File Id="Addin.Transform.dll" Name="Addin.Transform.dll" KeyPath="yes" Source="..\..\output\release\Addin.Transform.dll" />
 				  </Component>
-				  <Component Id="Prince.dll" Guid="{C1B6F33A-D7D0-4039-B1FA-BEC6597C5B3D}">
-					<File Id="Prince.dll" Name="Prince.dll" KeyPath="yes" Source="..\..\output\release\Prince.dll" />
-				  </Component>
+
+
 				  <Component Id="Addin.Backup.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7901122}">
 					<File Id="Addin.Backup.dll" Name="Addin.Backup.dll" KeyPath="yes" Source="..\..\output\release\Addin.Backup.dll" />
 				  </Component>
@@ -333,12 +327,13 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Castle.DynamicProxy.dll" />
 			  <ComponentRef Id="CommonTools.dll" />
 			  <ComponentRef Id="CommonTools.pdb" />
-
+   <!--           <ComponentRef Id="Db4objects.Db4o.dll" />
+			  <ComponentRef Id="Db4objects.Db4o.Tools.dll" />
+	   -->
 			  <ComponentRef Id="Enchant.Net.dll"/>
 
 			  <ComponentRef Id="autofac.dll"/>
 			  <ComponentRef Id="linqbridge.dll"/>
-			  <ComponentRef Id="irrKlang.NET2.0.dll"/>
 
 			  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
 			  <ComponentRef Id="CookComputing.XmlRpcV2.dll" />
@@ -350,14 +345,14 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalTools.pdb" />
 			  <ComponentRef Id="LiftIO.dll" />
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
+			  <!--<ComponentRef Id="LiftIO.pdb" />-->
 			  <ComponentRef Id="NetReflector.dll" />
+			  <!--<ComponentRef Id="NetReflector.pdb" />-->
 			  <ComponentRef Id="Chorus.exe"/>
 			  <ComponentRef Id="wrapShellCall.exe"/>
 			  <ComponentRef Id="Palaso.dll"/>
 			  <ComponentRef Id="PalasoReporting.dll" />
 			  <ComponentRef Id="Palaso.Services.dll" />
-			  <ComponentRef Id="Palaso.Media.dll" />
-			  <ComponentRef Id="Palaso.Backup.dll" />
 			  <ComponentRef Id="PalasoUIWindowsForms.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
 			  <ComponentRef Id="WeSay.App.exe.config" />
@@ -374,7 +369,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Addin.Backup.dll"/>
 			  <!--      <ComponentRef Id="Addin.LiftReports.dll"/> -->
 			  <ComponentRef Id="Addin.Transform.dll"/>
-			  <ComponentRef Id="Prince.dll"/>
 			  <ComponentRef Id="NVelocity.dll"/>
 			  <ComponentRef Id="log4net.dll"/>
 			  <ComponentRef Id="commons.dll"/>

@@ -1,11 +1,9 @@
-using System;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
-using WeSay.UI.audio;
 
 namespace WeSay.LexicalTools
 {
@@ -14,20 +12,14 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexEntryLayouter: Layouter
 	{
-		public LexEntry Entry { get; set; }
-
 		public LexEntryLayouter(DetailList builder,
 								ViewTemplate viewTemplate,
-								LexEntryRepository lexEntryRepository,
-								LexEntry entry)
-				: base(builder, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(viewTemplate, entry))
-		{
-			Entry = entry;
-		}
+								LexEntryRepository lexEntryRepository)
+				: base(builder, viewTemplate, lexEntryRepository) {}
 
-		public int AddWidgets()
+		public int AddWidgets(LexEntry entry)
 		{
-			return AddWidgets(Entry, -1);
+			return AddWidgets(entry, -1);
 		}
 
 		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
@@ -53,37 +45,16 @@ namespace WeSay.LexicalTools
 			}
 			rowCount += AddCustomFields(entry, insertAtRow + rowCount);
 
-			var rowCountBeforeSenses = rowCount;
 			LexSenseLayouter layouter = new LexSenseLayouter(DetailList,
-															  ActiveViewTemplate,
-															  RecordListManager,
-															  _serviceProvider);
+															 ActiveViewTemplate,
+															 RecordListManager);
 			layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
-
-			//see: WS-1120 Add option to limit "add meanings" task to the ones that have a semantic domain
-			//also: WS-639 (jonathan_coombs@sil.org) In Add meanings, don't show extra meaning slots just because a sense was created for the semantic domain
-			var ghostingRule = ActiveViewTemplate.GetGhostingRuleForField(LexEntry.WellKnownProperties.Sense);
-			if (rowCountBeforeSenses == rowCount || ghostingRule.ShowGhost)
-			{
-				rowCount += layouter.AddGhost(null, entry.Senses, true);
-			}
+			//add a ghost
+			rowCount += layouter.AddGhost(entry.Senses, true);
 
 			DetailList.ResumeLayout();
 			return rowCount;
-		}
-
-		private static IServiceProvider CreateLayoutInfoServiceProvider(ViewTemplate viewTemplate, LexEntry entry)
-		{
-			if (viewTemplate == null)
-				return null;//some unrelated unit tests don't give us this parameter
-			Field lexicalUnitField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if(lexicalUnitField == null)
-				return null;//some unrelated unit tests lack this field
-
-			var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
-						() => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
-			return new LayoutInfoProvider(ap);
 		}
 	}
 }

@@ -1,7 +1,5 @@
 using System;
 using NUnit.Framework;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
 using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddMissingInfo;
@@ -76,7 +74,7 @@ namespace WeSay.LexicalTools.Tests
 		private MissingInfoTask CreateMissingInfoTask(LexEntryRepository repository, string missingInfoField, string label, string longLabel, string description, string remainingCountText, string referenceCountText, ViewTemplate template, string fieldsToShow)
 		{
 			MissingInfoConfiguration config = MissingInfoConfiguration.CreateForTests( missingInfoField,  label,  longLabel,  description,  remainingCountText,  referenceCountText,  fieldsToShow);
-			return new MissingInfoTask(config, repository, template, new TaskMemoryRepository());
+			return new MissingInfoTask(config, repository, template);
 		}
 
 		[TearDown]
@@ -292,17 +290,5 @@ namespace WeSay.LexicalTools.Tests
 				}
 			}
 		}
-
-//  in progress      [Test]
-//        public void OneSenseFromGatherBySemDom_ShowsOnlyOneMeaning()
-//        {
-//            LexEntry entry = CreateEmptyEntryWithOneSense();
-//            LexSense sense = entry.Senses[0];
-//            var sds = sense.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
-//            var list = WeSay.Project.WeSayWordsProject.Project.GetOptionsList(LexSense.WellKnownProperties.SemanticDomainsDdp4);
-//            sds.Add(list.Options[0].Key);
-//
-//
-//        }
 	}
 }

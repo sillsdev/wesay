@@ -12,7 +12,6 @@ namespace WeSay.ConfigTool
 		private WritingSystemCollection _writingSystemCollection;
 
 		public event EventHandler WritingSystemIdChanged;
-		public event EventHandler IsAudioChanged;
 
 		//        public class PropertyChangingEventArgs : PropertyChangedEventArgs
 		//        {
@@ -73,26 +72,12 @@ namespace WeSay.ConfigTool
 
 		private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
-			if (e.ChangedItem.PropertyDescriptor.Name == "IsAudio")
-			{
-				if(IsAudioChanged !=null)
-					IsAudioChanged.Invoke(this, null);
-				return;
-			}
-
 			if (e.ChangedItem.PropertyDescriptor.Name != "Id")
 			{
 				return;
 			}
 
 			string id = e.ChangedItem.Value as string;
-
-			if (id != null && id.Contains(" "))
-			{
-				ErrorReport.ReportNonFatalMessage("Sorry, the writingsystem Id should conform to ISO 639-3 and may not contain spaces");
-				_writingSystem.Id = e.OldValue.ToString();
-			}
-
 			if (TriedToChangeKnownLanguageId(e.OldValue.ToString(), "en", "English") ||
 				TriedToChangeKnownLanguageId(e.OldValue.ToString(), "fr", "French") ||
 				TriedToChangeKnownLanguageId(e.OldValue.ToString(), "id", "Indonesian") ||

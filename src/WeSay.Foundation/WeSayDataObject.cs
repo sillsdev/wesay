@@ -315,9 +315,7 @@ namespace WeSay.Foundation
 							delegate(KeyValuePair<string, object> p) { return p.Key == fieldName; });
 			if (found.Key == fieldName)
 			{
-				Debug.Assert(found.Value is  TContents, "Currently we assume that there is only a single type of object for a given name.");
-
-				//temp hack until mt's use parents for notification);on
+				//temp hack until mt's use parents for notification
 				if (found.Value is MultiText)
 				{
 					WireUpChild((INotifyPropertyChanged) found.Value);
@@ -386,11 +384,6 @@ namespace WeSay.Foundation
 		} ;
 
 		#endregion
-
-		public static string GetEmbeddedXmlNameForProperty(string name)
-		{
-			return name + "-xml";
-		}
 	}
 
 	public interface IReportEmptiness

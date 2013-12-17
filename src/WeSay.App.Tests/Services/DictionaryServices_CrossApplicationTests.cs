@@ -73,7 +73,6 @@ namespace WeSay.App.Tests.Services
 		/// WS-632 regression
 		/// </summary>
 		[Test]
-		[Category("Palaso Services")]
 		public void LiftFileIsUpdatedWhenServiceQuits()
 		{
 			using (
@@ -102,7 +101,6 @@ namespace WeSay.App.Tests.Services
 		}
 
 		[Test]
-		[Category("Palaso Services")]
 		public void ServiceExitsWhenLastClientDeregisters()
 		{
 			using (
@@ -159,7 +157,6 @@ namespace WeSay.App.Tests.Services
 		private delegate void ServiceTestingMethod(IDictionaryService dictionaryService);
 
 		[Test]
-		[Category("Palaso Services")]
 		public void FindsInUIMode()
 		{
 			string entriesXml =
@@ -180,7 +177,6 @@ namespace WeSay.App.Tests.Services
 		}
 
 		[Test]
-		[Category("Palaso Services")]
 		public void FindsInServerMode()
 		{
 			string entriesXml =
@@ -212,7 +208,6 @@ namespace WeSay.App.Tests.Services
 		/// this doesn't look at the details of the html; that job belongs in a different test
 		/// </summary>
 		[Test]
-		[Category("Palaso Services")]
 		public void GivesHtml()
 		{
 			const string entriesXml =
@@ -239,14 +234,12 @@ namespace WeSay.App.Tests.Services
 		}
 
 		[Test]
-		[Category("Palaso Services")]
 		public void CreateNewEntryInUIMode()
 		{
 			CreateNewEntry(kStartInUIMode);
 		}
 
 		[Test]
-		[Category("Palaso Services")]
 		public void CreateNewEntryInServerMode()
 		{
 			CreateNewEntry(kStartInServerMode);
@@ -288,7 +281,6 @@ namespace WeSay.App.Tests.Services
 		//        }
 
 		[Test]
-		[Category("Palaso Services")]
 		public void JumpToEntryMakesAppSwitchToUIMode()
 		{
 			string entriesXml = @"<entry id='foo1'/>";
@@ -304,7 +296,6 @@ namespace WeSay.App.Tests.Services
 		}
 
 		[Test]
-		[Category("Palaso Services")]
 		public void JumpToEntryMakesDictionaryTaskShowEnty()
 		{
 			string entriesXml =
@@ -360,10 +351,6 @@ namespace WeSay.App.Tests.Services
 						else
 						{
 							p.CloseMainWindow();
-							//give the app up to 10 seconds to quit before we go deleting the
-							//project directory
-							for (int i = 0; i < 100 && !p.HasExited; i++ )
-								Thread.Sleep(100);
 						}
 					}
 				}

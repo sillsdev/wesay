@@ -25,14 +25,29 @@ namespace WeSay.LexicalTools
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
 
-		public MissingInfoControl(ResultSet<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete, LexEntryRepository lexEntryRepository, ITaskMemory memory)
+		public MissingInfoControl(ResultSet<LexEntry> records,
+								  ViewTemplate viewTemplate,
+								  Predicate<LexEntry> isNotComplete,
+								  LexEntryRepository lexEntryRepository)
 		{
 			if (!DesignMode)
 			{
-				Guard.AgainstNull(records, "records");
-				Guard.AgainstNull(viewTemplate, "viewTemplate");
-				Guard.AgainstNull(isNotComplete, "isNotComplete");
-				Guard.AgainstNull(lexEntryRepository, "lexEntryRepository");
+				if (records == null)
+				{
+					throw new ArgumentNullException("records");
+				}
+				if (viewTemplate == null)
+				{
+					throw new ArgumentNullException("viewTemplate");
+				}
+				if (isNotComplete == null)
+				{
+					throw new ArgumentNullException("isNotComplete");
+				}
+				if (lexEntryRepository == null)
+				{
+					throw new ArgumentNullException("lexEntryRepository");
+				}
 			}
 
 			InitializeComponent();
@@ -44,10 +59,6 @@ namespace WeSay.LexicalTools
 			{
 				return;
 			}
-
-			memory.TrackSplitContainer(splitContainer1, "betweenListsAndContents");
-			memory.TrackSplitContainer(splitContainer2, "betweenToDoAndDoneLists");
-			_entryViewControl.SetMemory(memory.CreateNewSection("entryView"));
 
 			_completedRecords = new BindingList<RecordToken<LexEntry>>();
 			_todoRecords = (BindingList<RecordToken<LexEntry>>) records;
@@ -68,16 +79,14 @@ namespace WeSay.LexicalTools
 
 			_recordsListBox.BorderStyle = BorderStyle.None;
 			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
-			_recordsListBox.MouseDown += _recordsListBox_MouseDown;
 			_recordsListBox.Enter += _recordsListBox_Enter;
 			_recordsListBox.Leave += _recordsListBox_Leave;
 			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
-			_recordsListBox.WritingSystem = listWritingSystem;
 
+			_recordsListBox.WritingSystem = listWritingSystem;
 			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.BorderStyle = BorderStyle.None;
 			_completedRecordsListBox.SelectedIndexChanged += OnCompletedRecordSelectionChanged;
-			_completedRecordsListBox.MouseDown += _completedRecordsListBox_MouseDown;
 			_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
 			_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
 			_completedRecordsListBox.WritingSystem = listWritingSystem;
@@ -87,16 +96,6 @@ namespace WeSay.LexicalTools
 			_btnNextWord.BringToFront();
 			_btnPreviousWord.BringToFront();
 			SetCurrentRecordFromRecordList();
-		}
-
-		private void _completedRecordsListBox_MouseDown(object sender, MouseEventArgs e)
-		{
-			_completedRecordsListBox_Enter(sender, e);
-		}
-
-		private void _recordsListBox_MouseDown(object sender, MouseEventArgs e)
-		{
-			_recordsListBox_Enter(sender, e);
 		}
 
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
@@ -453,7 +452,6 @@ namespace WeSay.LexicalTools
 			{
 				if (_completedRecords.Contains(_currentRecord))
 				{
-
 					_completedRecords.Remove(_currentRecord);
 				}
 				if (!_todoRecords.Contains(_currentRecord))
@@ -485,14 +483,12 @@ namespace WeSay.LexicalTools
 
 		private void ClearSelectionForCompletedRecordsListBox()
 		{
-			_completedRecordsListBox.SelectedIndex = -1;
 			_completedRecordsListBox.HideSelection = true;
 			_recordsListBox.HideSelection = false;
 		}
 
 		private void ClearSelectionForRecordsListBox()
 		{
-			_recordsListBox.SelectedIndex = -1;
 			_recordsListBox.HideSelection = true;
 			_completedRecordsListBox.HideSelection = false;
 		}

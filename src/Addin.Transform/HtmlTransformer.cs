@@ -1,10 +1,7 @@
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using System.Xml.Xsl;
-using Addin.Transform.PdfDictionary;
 using Mono.Addins;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
@@ -14,8 +11,8 @@ using WeSay.Project;
 
 namespace Addin.Transform
 {
-  //don't show this anymore  [Extension]
-	public class HtmlTransformer : LiftTransformer//todo remove this dependency
+	[Extension]
+	public class HtmlTransformer: LiftTransformer
 	{
 		public override string LocalizedName
 		{
@@ -38,7 +35,7 @@ namespace Addin.Transform
 			{
 				return
 						StringCatalog.Get(
-								"~Creates a simple Html version of the dictionary.  Not a very good way to go.");
+								"~Creates a simple Html version of the dictionary, ready for printing.");
 			}
 		}
 
@@ -59,22 +56,14 @@ namespace Addin.Transform
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			string pathToHtml = CreateFileToOpen(projectInfo, true, true);
-			_pathToOutput = pathToHtml;
-
-			string layoutCssPath = projectInfo.LocateFile(Path.Combine("Templates", "defaultDictionary.css"));
-
-			string destination =Path.Combine(Path.GetDirectoryName(pathToHtml), "defaultDictionary.css");
-
-			File.Copy(layoutCssPath, destination, true);
-
-			if (string.IsNullOrEmpty(pathToHtml))
+			string output = CreateFileToOpen(projectInfo, true, true);
+			if (string.IsNullOrEmpty(output))
 			{
 				return; // get this when the user cancels
 			}
 			if (_launchAfterTransform)
 			{
-				Process.Start(pathToHtml);
+				Process.Start(output);
 			}
 		}
 
@@ -89,33 +78,34 @@ namespace Addin.Transform
 			//so it isn't locked when the user says "open wesay"
 
 			LexEntryRepository lexEntryRepository = projectInfo.ServiceProvider.GetService(typeof(LexEntryRepository)) as LexEntryRepository;
-			var pliftPath = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + ".plift");
-			using (LameProgressDialog dlg = new LameProgressDialog("Exporting to PLift..."))
+		  //  using(lexEntryRepository.GetRightToAccessLiftExternally())
 			{
-				dlg.Show();
-				PLiftMaker maker = new PLiftMaker();
-				maker.MakePLiftTempFile(pliftPath, lexEntryRepository,
-										projectInfo.ServiceProvider.GetService(typeof(ViewTemplate)) as
-										ViewTemplate);
-			}
-
-			var pathToOutput = Path.Combine(projectInfo.PathToExportDirectory,
-											projectInfo.Name + ".xhtml");
-			if (File.Exists(pathToOutput))
-			{
-				File.Delete(pathToOutput);
-			}
-
-			var htmWriter = new FLExCompatibleXhtmlWriter();
-			using (var reader = new StreamReader(pliftPath))
-			{
-				using (var file = new StreamWriter(pathToOutput, false, new UTF8Encoding(false)))
+				string pliftPath;
+				using (LameProgressDialog dlg = new LameProgressDialog("Exporting to PLift..."))
 				{
-					htmWriter.Write(reader, file);
+					dlg.Show();
+					PLiftMaker maker = new PLiftMaker();
+					pliftPath = maker.MakePLiftTempFile(lexEntryRepository, projectInfo.ServiceProvider.GetService(typeof(ViewTemplate)) as ViewTemplate);
 				}
-			}
-			return pathToOutput;
 
+				projectInfo.PathToLIFT = pliftPath;
+
+				XsltArgumentList arguments = new XsltArgumentList();
+				arguments.AddParam("writing-system-info-file",
+								   string.Empty,
+								   projectInfo.LocateFile("WritingSystemPrefs.xml"));
+				arguments.AddParam("grammatical-info-optionslist-file",
+								   string.Empty,
+								   projectInfo.LocateFile("PartsOfSpeech.xml"));
+				arguments.AddParam("link-to-usercss", string.Empty, linkToUserCss + "()");
+
+				return TransformLift(projectInfo,
+									 "plift2html.xsl",
+									 ".htm",
+									 arguments,
+									 //word doesn't notice that is is html if the <xml> directive is in there
+									 includeXmlDirective);
+			}
 		}
 	}
 }

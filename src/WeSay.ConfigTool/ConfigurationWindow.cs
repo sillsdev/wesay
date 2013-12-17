@@ -1,15 +1,10 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Component;
-using Autofac.Registrars;
 using Palaso.Reporting;
 using WeSay.ConfigTool.Properties;
-using WeSay.ConfigTool.Tasks;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -227,12 +222,6 @@ namespace WeSay.ConfigTool
 			var containerBuilder = new Autofac.Builder.ContainerBuilder();
 			containerBuilder.Register(typeof(Tasks.TaskListView));
 			containerBuilder.Register(typeof(Tasks.TaskListPresentationModel));
-
-			//      autofac's generated factory stuff wasn't working with our version of autofac, so
-			//  i abandoned this
-			//containerBuilder.Register<Control>().FactoryScoped();
-		   // containerBuilder.RegisterGeneratedFactory<ConfigTaskControlFactory>(new TypedService(typeof (Control)));
-
 			containerBuilder.Build(container);
 
 			SetupProjectControls(container);
@@ -242,8 +231,6 @@ namespace WeSay.ConfigTool
 				Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
 			}
 		}
-
-
 
 		private void SetupProjectControls(IContext context)
 		{
@@ -305,10 +292,6 @@ namespace WeSay.ConfigTool
 			{
 				_projectSettingsControl.Dispose();
 			}
-			   if (_project != null)
-				{
-					_project.Dispose();
-				}
 		}
 
 		private void AdminWindow_FormClosing(object sender, FormClosingEventArgs e)

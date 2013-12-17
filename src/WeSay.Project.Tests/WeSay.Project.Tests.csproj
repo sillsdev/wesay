@@ -97,7 +97,7 @@
 	<Compile Include="ChorusBackupMakerTests.cs" />
 	<Compile Include="LiftUpdateTests.cs" />
 	<Compile Include="MigrationTests.cs" />
-	<Compile Include="PLiftExporterTests.cs" />
+	<Compile Include="LiftExporterPLiftTests.cs" />
 	<Compile Include="ProjectDirectorySetupForTesting.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>

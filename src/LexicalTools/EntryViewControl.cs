@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -88,16 +87,7 @@ namespace WeSay.LexicalTools
 								"Datasource set. Calling _record.CleanUpAfterEditting()");
 						_record.PropertyChanged -= OnRecordPropertyChanged;
 						_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
-
 						_record.CleanUpAfterEditting();
-
-//                        //from WS-1173 (jonathan_coombs@sil.org) Faulty Missing Baseform query?
-//                        //what's wrong here is that since we've disabled the event handers, we don't
-//                        //know if this CleanUp call makes any changes that need to be saved
-//                        if(_record.IsDirty)
-//                        {
-//                            _lexEntryRepository.SaveItem(_record);
-//                        }
 					}
 					_record = value;
 					_currentItemInFocus = null;
@@ -117,8 +107,6 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-
-
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
@@ -135,11 +123,6 @@ namespace WeSay.LexicalTools
 				_showNormallyHiddenFields = value;
 				//no... this will lead to extra refreshing. RefreshEntryDetail();
 			}
-		}
-
-		public void SetMemory(ITaskMemory memory)
-		{
-			_splitter.SetMemory(memory.CreateNewSection("previewSplitter"));
 		}
 
 		public void ToggleShowNormallyHiddenFields()
@@ -207,12 +190,9 @@ namespace WeSay.LexicalTools
 					_cleanupTimer.Start();
 					break;
 			}
-			_lexEntryRepository.NotifyThatLexEntryHasBeenUpdated((LexEntry)sender);
 		  // can't afford to do this every keystroke, with large files
 
 		}
-
-
 
 		private void OnCleanupTimer_Tick(object sender, EventArgs e)
 		{
@@ -295,8 +275,7 @@ namespace WeSay.LexicalTools
 					VerifyHasLexEntryRepository();
 					LexEntryLayouter layout = new LexEntryLayouter(detailList,
 																   ViewTemplate,
-																   _lexEntryRepository,
-																   _record);
+																   _lexEntryRepository);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
@@ -332,7 +311,6 @@ namespace WeSay.LexicalTools
 		private CurrentItemEventArgs _currentItemInFocus;
 		private LexEntryRepository _lexEntryRepository;
 		private bool _showNormallyHiddenFields;
-		private TaskMemory _memory;
 
 		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
 		{
@@ -359,6 +337,5 @@ namespace WeSay.LexicalTools
 			base.OnEnter(e);
 			RefreshLexicalEntryPreview();
 		}
-
 	}
 }

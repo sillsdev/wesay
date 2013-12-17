@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -8,7 +7,6 @@ using System.Xml.Serialization;
 using LiftIO;
 using Palaso.Text;
 using LiftIO.Parsing;
-using System.Linq;
 
 //using Exortech.NetReflector;
 //using Exortech.NetReflector.Util;
@@ -24,8 +22,6 @@ namespace WeSay.Foundation
 	public class MultiText: MultiTextBase, IParentable, IReportEmptiness, IXmlSerializable
 	{
 		private WeSayDataObject _parent;
-		public List<string> EmbeddedXmlElements = new List<string>();
-
 		//Adapter pattern: LiftMultitext has some features we would like to use
 		private static LiftMultiText _liftMultitext;
 
@@ -84,7 +80,7 @@ namespace WeSay.Foundation
 		/// required by IXmlSerializable.
 		/// This is wierd and sad, but this is tuned to the format we want in OptionLists.
 		///</summary>
-		public virtual void ReadXml(XmlReader reader)
+		public void ReadXml(XmlReader reader)
 		{
 			//enhance: this is a maximally inefficient way to read it, but ok if we're just using it for option lists
 			XmlDocument d = new XmlDocument();
@@ -135,21 +131,6 @@ namespace WeSay.Foundation
 		public bool ShouldBeRemovedFromParentDueToEmptiness
 		{
 			get { return Empty; }
-		}
-
-		/// <summary>
-		/// skip those forms which are in audio writing systems
-		/// </summary>
-		public IList<LanguageForm> GetActualTextForms(WritingSystemCollection writingSytems)
-		{
-			var x= Forms.Where((f) => !writingSytems[f.WritingSystemId].IsAudio);
-			return new List<LanguageForm>(x);
-		}
-
-		public IList<LanguageForm> GetAudioForms(WritingSystemCollection writingSytems)
-		{
-			var x = Forms.Where((f) => writingSytems[f.WritingSystemId].IsAudio);
-			return new List<LanguageForm>(x);
 		}
 
 		public void RemoveEmptyStuff()
@@ -301,11 +282,6 @@ namespace WeSay.Foundation
 		public string GetFormWithoutSpans(string languageId)
 		{
 			return _liftMultitext[languageId].Text;
-		}
-
-		public bool ContainsEqualForm(string form, string writingSystemId)
-		{
-			return null != this.Forms.FirstOrDefault(f=> f.WritingSystemId ==writingSystemId && f.Form == form);
 		}
 	}
 }

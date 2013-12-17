@@ -1,42 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using WeSay.Foundation;
-using WeSay.LexicalModel;
 using WeSay.Project;
-using System.Linq;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {
 	public class MissingInfoConfiguration : TaskConfigurationBase, ITaskConfiguration
 	{
-		private List<string> _fieldsToShow;
-
 		public MissingInfoConfiguration(string  xml)
 			: base(xml)
 		{
-			_fieldsToShow = GetStringFromConfigNode("showFields").SplitTrimmed(',');
 		}
+
+
 
 		public override string ToString()
 		{
 			return LongLabel;
-		}
-
-		public DashboardGroup Group
-		{
-			get
-			{
-				if (IsBaseFormFillingTask)
-				{
-					return DashboardGroup.Refine;
-				}
-				return DashboardGroup.Describe;
-			}
-		}
-
-		private bool IsBaseFormFillingTask
-		{
-			get { return FieldsToShowCommaSeparated.Contains(LexEntry.WellKnownProperties.BaseForm); }
 		}
 
 		protected override IEnumerable<KeyValuePair<string, string>> ValuesToSave
@@ -47,7 +26,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				yield return new KeyValuePair<string, string>("longLabel", LongLabel);
 				yield return new KeyValuePair<string, string>("description", Description);
 				yield return new KeyValuePair<string, string>("field", MissingInfoField);
-				yield return new KeyValuePair<string, string>("showFields", FieldsToShowCommaSeparated);
+				yield return new KeyValuePair<string, string>("showFields", FieldsToShow);
 				yield return new KeyValuePair<string, string>("readOnly", FieldsToShowReadOnly);
 			}
 		}
@@ -88,28 +67,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			get { return GetStringFromConfigNode("readOnly", string.Empty); ; }
 		}
 
-		public string FieldsToShowCommaSeparated //<showFields>
+		public string FieldsToShow //<showFields>
 		{
-			get
-			{
-				string s = string.Empty;
-				_fieldsToShow.ForEach(f=>s+=", "+f);
-				return s.TrimStart(new char[] {' ', ','});
-			}
-		}
-
-		public void SetInclusionOfField(string fieldName, bool doInclude)
-		{
-			if (doInclude)
-			{
-				if (!_fieldsToShow.Contains(fieldName))
-					_fieldsToShow.Add(fieldName);
-			}
-			else
-			{
-				if (_fieldsToShow.Contains(fieldName))
-					_fieldsToShow.Remove(fieldName);
-			}
+			get { return GetStringFromConfigNode("showFields"); ; }
 		}
 
 		public string MissingInfoField //<field>
@@ -129,17 +89,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				", missingInfoField,label,description, fieldsToShow,fieldsToShow);
 
 			 return new MissingInfoConfiguration(x);
-		}
-
-
-		public ViewTemplate CreateViewTemplate(ViewTemplate template)
-		{
-			return MissingInfoViewMaker.CreateViewTemplate(this, template);
-		}
-
-		public bool IncludesField(string fieldName)
-		{
-			return _fieldsToShow.Contains(fieldName);
 		}
 	}
 }

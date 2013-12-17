@@ -198,7 +198,7 @@ namespace WeSay.LexicalTools
 			this._btnDeleteWord.Name = "_btnDeleteWord";
 			this._btnDeleteWord.Size = new System.Drawing.Size(138, 25);
 			this._btnDeleteWord.TabIndex = 1;
-			this._btnDeleteWord.Text = "~&Delete This Word";
+			this._btnDeleteWord.Text = "&Delete This Word";
 			this._btnDeleteWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnDeleteWord.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
 			this._btnDeleteWord.Click += new System.EventHandler(this.OnDeleteWord_Click);
@@ -217,7 +217,7 @@ namespace WeSay.LexicalTools
 			this._btnNewWord.Name = "_btnNewWord";
 			this._btnNewWord.Size = new System.Drawing.Size(125, 25);
 			this._btnNewWord.TabIndex = 0;
-			this._btnNewWord.Text = "~&New Word";
+			this._btnNewWord.Text = "&New Word";
 			this._btnNewWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnNewWord.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
 			this.toolTip1.SetToolTip(this._btnNewWord, "Ctrl+N");

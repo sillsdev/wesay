@@ -71,9 +71,6 @@ namespace WeSay.ConfigTool
 			_basicControl.WritingSystem = SelectedWritingSystem;
 			_sortControl.WritingSystem = SelectedWritingSystem;
 			_fontControl.WritingSystem = SelectedWritingSystem;
-
-			_sortingPage.Enabled = !SelectedWritingSystem.IsAudio;
-			_fontsPage.Enabled = !SelectedWritingSystem.IsAudio;
 		}
 
 		private WritingSystem SelectedWritingSystem
@@ -133,7 +130,7 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void OnWritingSystemIdChanged(object sender, EventArgs e)
+		private void _basicControl_DisplayPropertiesChanged(object sender, EventArgs e)
 		{
 			WritingSystem ws = sender as WritingSystem;
 			PropertyValueChangedEventArgs args = e as PropertyValueChangedEventArgs;
@@ -168,11 +165,6 @@ namespace WeSay.ConfigTool
 					}
 				}
 			}
-		}
-
-		private void OnIsAudioChanged(object sender, EventArgs e)
-		{
-			UpdateSelection();
 		}
 	}
 

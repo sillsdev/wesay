@@ -49,7 +49,7 @@ namespace WeSay.Project.Tests
 			Directory.CreateDirectory(GetCommonDirectory());
 			string pathToWritingSystemPrefs = Path.Combine(GetCommonDirectory(),
 														   "WritingSystemPrefs.xml");
-			WritingCollectionSystemTests.CreateSampleWritingSystemFile(pathToWritingSystemPrefs);
+			WritingSystemTests.WriteSampleWritingSystemFile(pathToWritingSystemPrefs);
 		}
 
 		[TearDown]

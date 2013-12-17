@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
@@ -10,8 +9,6 @@ using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
-using System.Linq;
-using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools
 {
@@ -35,8 +32,6 @@ namespace WeSay.LexicalTools
 		private readonly LexEntryRepository _lexEntryRepository;
 
 		private readonly ViewTemplate _viewTemplate;
-
-		protected IServiceProvider _serviceProvider;
 
 		/// This field is for temporarily storing a ghost field about to become "real".
 		/// This is critical, though messy, because
@@ -74,8 +69,7 @@ namespace WeSay.LexicalTools
 
 		protected Layouter(DetailList builder,
 						   ViewTemplate viewTemplate,
-						   LexEntryRepository lexEntryRepository,
-							IServiceProvider serviceProvider)
+						   LexEntryRepository lexEntryRepository)
 		{
 			if (builder == null)
 			{
@@ -89,8 +83,6 @@ namespace WeSay.LexicalTools
 			_detailList = builder;
 			_viewTemplate = viewTemplate;
 			_lexEntryRepository = lexEntryRepository;
-			_serviceProvider = serviceProvider;
-
 		}
 
 		/// <summary>
@@ -116,9 +108,7 @@ namespace WeSay.LexicalTools
 										 //show annotation
 										 BasilProject.Project.WritingSystems,
 										 field.Visibility,
-										 field.IsSpellCheckingEnabled,
-										 field.IsMultiParagraph,
-										 _serviceProvider);
+										 field.IsSpellCheckingEnabled);
 			}
 			else
 			{
@@ -133,12 +123,11 @@ namespace WeSay.LexicalTools
 		private void BindMultiTextControlToField(MultiTextControl control,
 												 INotifyPropertyChanged multiTextToBindTo)
 		{
-			foreach (Control c in control.TextBoxes)
+			foreach (WeSayTextBox box in control.TextBoxes)
 			{
-					TextBinding binding = new TextBinding(multiTextToBindTo, ((IControlThatKnowsWritingSystem) c).WritingSystem.Id, c);
-					binding.ChangeOfWhichItemIsInFocus +=
+				TextBinding binding = new TextBinding(multiTextToBindTo, box.WritingSystem.Id, box);
+				binding.ChangeOfWhichItemIsInFocus +=
 						_detailList.OnBinding_ChangeOfWhichItemIsInFocus;
-
 			}
 		}
 
@@ -159,8 +148,7 @@ namespace WeSay.LexicalTools
 		//            return m;
 		//        }
 
-		protected int MakeGhostWidget<T>(WeSayDataObject parent,
-										IList<T> list,
+		protected int MakeGhostWidget<T>(IList<T> list,
 										 int insertAtRow,
 										 string fieldName,
 										 string label,
@@ -178,7 +166,7 @@ namespace WeSay.LexicalTools
 														  false,
 														  BasilProject.Project.WritingSystems,
 														  field.Visibility,
-														  field.IsSpellCheckingEnabled, false, null);
+														  field.IsSpellCheckingEnabled);
 
 				Control refWidget = DetailList.AddWidgetRow(label,
 															isHeading,
@@ -186,14 +174,10 @@ namespace WeSay.LexicalTools
 															insertAtRow + rowCount,
 															true);
 
-				foreach (IControlThatKnowsWritingSystem box in m.TextBoxes)
+				foreach (WeSayTextBox box in m.TextBoxes)
 				{
-					WeSayTextBox tb = box as WeSayTextBox;
-					if (tb != null)
-					{
-						GhostBinding<T> g = MakeGhostBinding(parent, list, propertyName, box.WritingSystem, tb);
-						g.ReferenceControl = refWidget;
-					}
+					GhostBinding<T> g = MakeGhostBinding(list, propertyName, box.WritingSystem, box);
+					g.ReferenceControl = refWidget;
 				}
 				return 1;
 			}
@@ -203,14 +187,13 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		protected GhostBinding<T> MakeGhostBinding<T>(WeSayDataObject parent, IList<T> list,
+		protected GhostBinding<T> MakeGhostBinding<T>(IList<T> list,
 													  string ghostPropertyName,
 													  WritingSystem writingSystem,
 													  WeSayTextBox entry)
 				where T : WeSayDataObject, new()
 		{
-			GhostBinding<T> binding = new GhostBinding<T>(parent,
-				list,
+			GhostBinding<T> binding = new GhostBinding<T>(list,
 														  ghostPropertyName,
 														  writingSystem,
 														  entry);
@@ -463,30 +446,22 @@ namespace WeSay.LexicalTools
 		{
 			OptionsList availableOptions = WeSayWordsProject.Project.GetOptionsList(field, false);
 			OptionRefCollection refsOfChoices =
-				target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
+					target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			//            OptionCollectionControl control =
 			//                   new OptionCollectionControl(refsOfChoices, availableOptions, field.WritingSystemIds[0]);
 			IList<WritingSystem> writingSystems =
-				BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
-			IChoiceSystemAdaptor<Option, string, OptionRef> displayAdaptor;
-
-			if (field.FieldName== LexSense.WellKnownProperties.SemanticDomainsDdp4)
-			{
-				displayAdaptor = new DdpOptionDisplayAdaptor(availableOptions, field.WritingSystemIds[0]);
-			}
-			else
-			{
-				displayAdaptor = new OptionDisplayAdaptor(availableOptions, field.WritingSystemIds[0]);
-			}
-
-
-		ReferenceCollectionEditor<Option, string, OptionRef> control =
+					BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
+			ReferenceCollectionEditor<Option, string, OptionRef> control =
 					new ReferenceCollectionEditor<Option, string, OptionRef>(refsOfChoices.Members,
 																			 availableOptions.
 																					 Options,
 																			 writingSystems,
 																			 field.Visibility,
-																			 displayAdaptor);
+																			 new OptionDisplayAdaptor
+																					 (availableOptions,
+																					  field.
+																							  WritingSystemIds
+																							  [0]));
 			control.AlternateEmptinessHelper = refsOfChoices;
 			return control;
 		}

@@ -28,14 +28,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 	{
 		private DictionaryControl _dictionaryControl;
 		private readonly ViewTemplate _viewTemplate;
-		private TaskMemory _taskMemory;
-
-		public const string LastUrlKey = "lastUrl";
+		private UserSettingsForTask _userSettings;
 
 		public DictionaryTask(DictionaryBrowseAndEditConfiguration config,
-								LexEntryRepository lexEntryRepository,
-								ViewTemplate viewTemplate,
-								TaskMemoryRepository taskMemoryRepository)
+								LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
 			: base(config, lexEntryRepository)
 		{
 			if (viewTemplate == null)
@@ -43,7 +39,16 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				throw new ArgumentNullException("viewTemplate");
 			}
 			_viewTemplate = viewTemplate;
-			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
+			//  _userSettings = userSettings;
+		}
+
+		//this wants to be in the constructor, but it's waiting until we get rid of this bizarre picocontainer usage that makes it impossible to add arbitrary stuff without modifying everyone's config file
+		public UserSettingsForTask UserSettings
+		{
+			set
+			{
+				_userSettings = value;
+			}
 		}
 
 		public override void Activate()
@@ -51,40 +56,16 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			try
 			{
 				base.Activate();
-				_dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate, _taskMemory.CreateNewSection("view"));
-
-				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnSelectedEntryOfDictionaryControlChanged);
+				_dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate);
 //   Debug.Assert(_userSettings.Get("one", "0") == "1");
 
-				if (_taskMemory != null && _taskMemory.Get(LastUrlKey, null) != null)
-				{
-					try
-					{
-						  _dictionaryControl.GoToEntry(_taskMemory.Get(LastUrlKey, null));
-					}
-					catch (Exception error)
-					{
-						//there's no scenario where it is worth crashing or even notifying
-						Logger.WriteEvent("Error: " + error.Message);
-#if DEBUG
-						ErrorReport.ReportNonFatalMessage("Only seeing this because youre in debug mode:\r\n"+error.Message);
-#endif
-					}
-				}
+				if(_userSettings !=null && _userSettings.Get("lastUrl", null)!=null)
+					_dictionaryControl.GoToEntry(_userSettings.Get("lastUrl", null));
 			}
 			catch (ConfigurationException)
 			{
 				IsActive = false;
 				throw;
-			}
-		}
-
-		void OnSelectedEntryOfDictionaryControlChanged(object sender, EventArgs e)
-		{
-			LexEntry entry = _dictionaryControl.CurrentRecord;
-			if(entry !=null)
-			{
-				_taskMemory.Set(LastUrlKey, GetUrlFromEntry(_dictionaryControl.CurrentRecord));
 			}
 		}
 
@@ -105,16 +86,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			return url;
 		}
 
-		private static string GetUrlFromEntry(LexEntry entry)
-		{
-			var id = entry.GetOrCreateId(false);
-			if(string.IsNullOrEmpty(id))//review... should we then use a guid?
-			{
-				return null;
-			}
-			return id;
-		}
-
 		/// <summary>
 		/// The entry detail control associated with this task
 		/// </summary>
@@ -129,11 +100,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			get
 			{
 				return
-
-						StringCatalog.GetFormatted("~See all {0} {1} words.",
-										  "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.",
-							ComputeCount(true),
-							BasilProject.Project.Name);
+					String.Format(
+						StringCatalog.Get("~See all {0} {1} words.",
+										  "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."),
+						ComputeCount(true),
+						BasilProject.Project.Name);
 			}
 		}
 

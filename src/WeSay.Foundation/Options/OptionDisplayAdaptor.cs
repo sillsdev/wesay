@@ -2,14 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Linq;
 
 namespace WeSay.Foundation.Options
 {
 	public class OptionDisplayAdaptor: IChoiceSystemAdaptor<Option, string, OptionRef>
 	{
-		protected readonly OptionsList _allOptions;
-		protected readonly string _preferredWritingSystemId;
+		private readonly OptionsList _allOptions;
+		private readonly string _preferredWritingSystemId;
 		private readonly IDisplayStringAdaptor _toolTipAdaptor;
 
 		public OptionDisplayAdaptor(OptionsList allOptions, string preferredWritingSystemId)
@@ -21,7 +20,7 @@ namespace WeSay.Foundation.Options
 
 		#region IDisplayStringAdaptor Members
 
-		public virtual string GetDisplayLabel(object item)
+		public string GetDisplayLabel(object item)
 		{
 			if (item == null)
 			{
@@ -113,7 +112,7 @@ namespace WeSay.Foundation.Options
 			return GetOptionFromKey(t);
 		}
 
-		public virtual Option GetValueFromForm(string form)
+		public Option GetValueFromForm(string form)
 		{
 			foreach (Option item in _allOptions.Options)
 			{
@@ -157,7 +156,9 @@ namespace WeSay.Foundation.Options
 			foreach (Option option in _allOptions.Options)
 			{
 				//todo: make this prefferd script(s) savvy
-				if (option.Abbreviation.GetFirstAlternative().StartsWith(text,StringComparison.CurrentCultureIgnoreCase))
+				if (option.Abbreviation.GetFirstAlternative().StartsWith(text,
+																		 StringComparison.
+																				 CurrentCultureIgnoreCase))
 				{
 					if (!show.Contains(option))
 					{
@@ -165,19 +166,6 @@ namespace WeSay.Foundation.Options
 					}
 				}
 			}
-
-			//this grabs up the DDP examples
-			foreach (Option option in _allOptions.Options)
-			{
-				if (option.GetSearchKeys(_preferredWritingSystemId).Contains(text.ToLower()))
-				{
-					if (!show.Contains(option))
-					{
-						show.Add(option);
-					}
-				}
-			}
-
 			//  if(show.Count == 0)
 			{
 				foreach (Option option in _allOptions.Options)

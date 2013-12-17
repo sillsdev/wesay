@@ -6,7 +6,6 @@ namespace WeSay.ConfigTool.Tasks
 {
 	public partial class TaskListView: ConfigurationControlBase
 	{
-		private Autofac.IContext _context;
 		public TaskListPresentationModel Model { get; set; }
 
 		public TaskListView(): base("set up tasks for the user")
@@ -52,30 +51,12 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void _taskList_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			splitContainer1.Panel2.Controls.Clear();
-			ITaskConfiguration configuration = _taskList.SelectedItem as ITaskConfiguration;
-			if (configuration == null)
+			ITaskConfiguration i = _taskList.SelectedItem as ITaskConfiguration;
+			if (i == null)
 			{
 				return;
 			}
-
-//      autofac's generated factory stuff wasn't working with our version of autofac, so
-//  i abandoned this
-//            Control c = null;
-//            try
-//            {
-//                //look for a factory that makes controls for this kind of task configuration
-//                  _context.Resolve(configuration.TaskName);
-//            }
-//            catch (Exception)
-//            {
-//            }
-//            if(c!=null)
-//            {
-//                splitContainer1.Panel2.Controls.Add(c);
-//            }
-			splitContainer1.Panel2.Controls.Add(ConfigTaskControlFactory.Create(configuration));
-
+			_description.Text = i.Description;
 		}
 
 		private void _taskList_ItemCheck(object sender, ItemCheckEventArgs e)

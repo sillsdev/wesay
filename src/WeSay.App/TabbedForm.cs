@@ -20,7 +20,7 @@ namespace WeSay.App
 		public SynchronizationContext synchronizationContext;
 		//        private ProgressDialogHandler _progressHandler;
 
-		public TabbedForm(StatusBarController statusBarController)
+		public TabbedForm()
 		{
 			InitializeComponent();
 			tabControl1.TabPages.Clear();
@@ -28,15 +28,7 @@ namespace WeSay.App
 
 			synchronizationContext = SynchronizationContext.Current;
 			Debug.Assert(synchronizationContext != null);
-
-			statusBarController.StatusStrip = _statusStrip;
 		}
-
-		public StatusStrip StatusStrip
-		{
-			get { return _statusStrip; }
-		}
-
 
 		public void InitializeTasks(IList<ITask> taskList)
 		{
@@ -307,9 +299,7 @@ namespace WeSay.App
 
 			// RunCommand(new ActivateTaskCommand(page, task));
 			task.Control.Dock = DockStyle.Fill;
-			task.Control.SuspendLayout();
 			page.Controls.Add(task.Control);
-			task.Control.ResumeLayout(false);
 			task.Control.SelectNextControl(task.Control, true, true, true, true);
 			task.Control.PerformLayout();
 			task.Control.Invalidate(true);

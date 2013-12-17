@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Palaso.Reporting;
@@ -15,11 +14,10 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexSenseLayouter: Layouter
 	{
-		public LexSenseLayouter(DetailList builder, ViewTemplate viewTemplate, LexEntryRepository lexEntryRepository,
-			IServiceProvider serviceProvider)
-				: base(builder, viewTemplate, lexEntryRepository, serviceProvider)
-		{
-		}
+		public LexSenseLayouter(DetailList builder,
+								ViewTemplate viewTemplate,
+								LexEntryRepository lexEntryRepository)
+				: base(builder, viewTemplate, lexEntryRepository) {}
 
 		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
 		{
@@ -73,7 +71,7 @@ namespace WeSay.LexicalTools
 				rowCount += AddCustomFields(sense, insertAtRow + rowCount);
 
 				LexExampleSentenceLayouter exampleLayouter =
-						new LexExampleSentenceLayouter(DetailList, ActiveViewTemplate, _serviceProvider);
+						new LexExampleSentenceLayouter(DetailList, ActiveViewTemplate);
 				exampleLayouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 
 				rowCount = AddChildrenWidgets(exampleLayouter,
@@ -86,7 +84,7 @@ namespace WeSay.LexicalTools
 				//we'd like to be able to add more than one
 				//if (ShowNormallyHiddenFields || sense.ExampleSentences.Count == 0)
 				{
-					rowCount += exampleLayouter.AddGhost(sense, sense.ExampleSentences,
+					rowCount += exampleLayouter.AddGhost(sense.ExampleSentences,
 														 insertAtRow + rowCount);
 				}
 			}
@@ -98,15 +96,14 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		public int AddGhost(WeSayDataObject parent, IList<LexSense> list, bool isHeading)
+		public int AddGhost(IList<LexSense> list, bool isHeading)
 		{
 			int insertAtRow = -1;
 			string label = GetLabelForMeaning(list.Count);
 #if GlossMeaning
 			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), label, "Gloss", isHeading);
 #else
-			return MakeGhostWidget<LexSense>(parent,
-									list,
+			return MakeGhostWidget(list,
 								   insertAtRow,
 								   LexSense.WellKnownProperties.Definition,
 								   label,

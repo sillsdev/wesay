@@ -28,7 +28,7 @@ namespace WeSay.App.Tests
 
 			_project = new WeSayWordsProject();
 			_project.LoadFromLiftLexiconPath(_projectDirectory.PathToLiftFile);
-			_tabbedForm = new TabbedForm(new NullStatusBarController());
+			_tabbedForm = new TabbedForm();
 			_project.Tasks = new List<ITask>();
 			_dashboardTask = new MockTask("Dashboard", "The control center.", true);
 			_project.Tasks.Add(_dashboardTask);
