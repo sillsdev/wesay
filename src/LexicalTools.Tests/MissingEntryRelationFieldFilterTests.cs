@@ -1,7 +1,6 @@
 using System.IO;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
-using Palaso.TestUtilities;
+using WeSay.Foundation.Tests.TestHelpers;
 using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools.Tests
@@ -30,7 +29,7 @@ namespace WeSay.LexicalTools.Tests
 											new string[] {"vernacular"},
 											Field.MultiplicityType.ZeroOr1,
 											"RelationToOneEntry");
-			_missingRelationFieldFilter = new MissingFieldQuery(relationField, null, null);
+			_missingRelationFieldFilter = new MissingFieldQuery(relationField);
 		}
 
 		[TearDown]
@@ -51,6 +50,7 @@ namespace WeSay.LexicalTools.Tests
 			LexRelationCollection synonyms =
 					_source.GetOrCreateProperty<LexRelationCollection>("synonyms");
 			LexRelation r = new LexRelation("synonyms", _target.GetOrCreateId(true), _source);
+			r.SetTarget(_target);
 			synonyms.Relations.Add(r);
 		}
 
@@ -77,7 +77,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void LexEntryRelationCollectionMissingButSkipFlagged()
 		{
-			_source.SetFlag("flag-skip-synonyms");
+			_source.SetFlag("flag_skip_synonyms");
 			Assert.IsFalse(_missingRelationFieldFilter.FilteringPredicate(_source));
 		}
 	}

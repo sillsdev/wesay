@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-11-23 05:56+0000\n"
-"PO-Revision-Date: 2009-07-11 17:01+0630\n"
-"Last-Translator: Khaing Zar Win <kyawkhaingzarwin@gmail.com>\n"
+"PO-Revision-Date: 2007-09-03 11:37+0000\n"
+"Last-Translator: WeSay Developers <Unknown>\n"
 "Language-Team: Burmese <my@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,181 +20,196 @@ msgstr ""
 # ; ..\src\CommonTools\DashboardControl.cs
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
-msgstr "မျက်နှာဖုံး"
+msgstr "မ္ယက္‌န္ဟာဖုံး"
 
 msgid "Dictionary Browse & Edit"
-msgstr "အဘိဓာန်လျှောက်ကြည့်နိုင်မှုနှင့်တည်းဖြတ်မှု"
+msgstr ""
 
 msgid "Add Meanings"
-msgstr "အဓိပ္ပါယ်များထပ်ထည့်ပါ။"
+msgstr "အဓိပ္ပာယ္‌မ္ယားထပ္‌ထည္‌့ပာ။"
 
 msgid "Add meanings to entries where they are missing."
-msgstr "အဓိပ္ပါယ်များကို လိုအပ်‌သောနေရာတွင် ဖြည့်ပါ။"
+msgstr "အဓိပ္ပာယ္‌မ္ယားကုိ လုိအပ္‌ေသာေနရာတ္ဝင္‌ ဖ္ရည္‌့ပာ။"
 
 msgid "Add Parts of Speech"
-msgstr "ဝါစင်္ကထည့်ပါ"
+msgstr ""
 
 msgid "Add a Part Of Speech to senses where they are missing."
-msgstr "ဝါစင်္ကမရှိသောအဓိပ္ပါယ်များတွင်ဝါစင်္ကထည့်ပါ။"
+msgstr ""
 
 msgid "Add Examples"
-msgstr "ဥပမာများထပ်ထည့်ပါ။"
+msgstr "ဉပမာမ္ယားထပ္‌ထည္‌့ပာ။"
 
 msgid "Add example sentences to entries where they are missing."
-msgstr "ဥပမာဝါကျများကို လိုအပ်သောနေရာတွင် ဖြည့်ပါ။"
+msgstr "ဉပမာဝာက္ယမ္ယားကုိ လုိအပ္‌ေသာေနရာတ္ဝင္‌ ဖ္ရည္‌့ပာ။"
 
 msgid "Add Base Forms"
-msgstr "အရင်းခံရာများပေါင်းထည့်ပါ"
+msgstr ""
 
-msgid "Identify the \"base form\" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries."
-msgstr "ထိုစကားလုံးပွားထွက်လာသောအရင်းခံစကားလုံးကိုခွဲခြားသတ်မှတ်ပါ။ ဤပရင့်ထုတ်ထားသောအဘိဓာန်တွင် ပွားထွက်လာသောစကားလုံးများကိုရွေးနိုင်ရန်ပြထားသည်။"
+msgid ""
+"Identify the \"base form\" word that this word is built from. In the printed "
+"dictionary, these can optionally be shown as subentries."
+msgstr ""
 
 msgid "Collect Word List (D)"
-msgstr "(D) စကားလုံးစာရင်းစုဆောင်းပါ"
+msgstr ""
 
-msgid "Collect new words by translating from words in another language. This is a list of 1700 words from John Duerksen."
-msgstr "အခြားဘာသာစကားရှိစကားလုံးများမှ စကားလုံးအသစ်များကိုဘာသာပြန်ခြင်းဖြင့်စုဆောင်းပါ။ ဤအရာသည် John Duerksen မှ စကားလုံးပေါင်း ၁၇၀၀ ရှိသောစာရင်းတစ်ခုဖြစ်သည်။"
+msgid ""
+"Collect new words by translating from words in another language. This is a "
+"list of 1700 words from John Duerksen."
+msgstr ""
 
 msgid "Collect Word List (PNG)"
-msgstr "(PNG) စကားလုံးစာရင်းစုဆောင်းပါ"
+msgstr ""
 
-msgid "Collect new words by translating from words in another language. This is a list of around 900 words and phrases from PNG."
-msgstr "အခြားဘာသာစကားရှိစကားလုံးများမှ စကားလုံးအသစ်များကိုဘာသာပြန်ခြင်းဖြင့်စုဆောင်းပါ။ ဤအရာသည် PNG မှ စကားလုံးနှင့်စကားစုပေါင်း ၉၀၀ ဝန်းကျင်ရှိသောစာရင်းတစ်ခုဖြစ်သည်။"
+msgid ""
+"Collect new words by translating from words in another language. This is a "
+"list of around 900 words and phrases from PNG."
+msgstr ""
 
 msgid "Collect Words By Semantic Domain"
-msgstr "သက်ဆိုင်ေသာ စကားလုံး‌စုထဲမှ စကားလုံးများကို စုဆောင်းပါ။"
+msgstr "သက္‌ဆုိင္‌ေသာ စကားလုံး‌စုထဲမ္ဟ စကားလုံးမ္ယားကုိ ရေ္ဝးခ္ယယ္‌ပာ။"
 
-msgid "Collect new words organized by semantic domains and questions about those domains."
-msgstr "သက်ဆိုင်ေသာ စကားလုံး‌စုကိုသုံး၍ စကားလုံးအသစ်စုဆောင်းရန်နှင့် ဤစကားလုံး‌စုနှင့်ပတ်သက်ေသာမေးခွန်းများ။"
+msgid ""
+"Collect new words organized by semantic domains and questions about those "
+"domains."
+msgstr ""
+"သက္‌ဆုိင္‌ေသာ စကားလုံး‌စုကုိသုံး၍ စကားလုံးအသစ္‌စုဆောင္‌းရန္‌န္ဟင္‌့ "
+"ဤစကားလုံး‌စုန္ဟင္‌့ပတ္‌သက္‌ေသာ ေမးခ္ဝန္‌းမ္ယား။"
 
 # ; ..\src\CommonTools\ActionsControl.cs
 msgid "Actions"
-msgstr "လုပ်ေဆာင်မှု။"
+msgstr "လုပ္‌ေဆာင္‌မ္ဟု။"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Looking for USB Keys..."
-msgstr "USB Keys ကို ရှာနေပါသည်..."
+msgstr "USB Keys ကုိ ရ္ဟာေနပာသည္‌........"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Backing Up..."
-msgstr "သိုလှောင်နေပါသည်။"
+msgstr "သုိေလ္ဟာင္‌ေနပာသည္‌။"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Backup Complete"
-msgstr "သိုလှောင်ခြင်း ပြီးပါပြီ။"
+msgstr "သုိေလ္ဟာင္‌ခ္ရင္‌း ပ္ရီးပာပ္ရီ။"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Files backed up to {0}"
-msgstr "စာရွက်စာတမ်းများကို {0} သို့ သိုလှောင်ခဲ့ပါသည်။"
+msgstr "စာရ္ဝက္‌စာတမ္‌းမ္ယားကုိ {0} သုိ့ သုိလေ္ဟာင္‌ခဲ့ပာသည္‌။"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Files were not backed up."
-msgstr "မသိုလှောင်ရသေးသော စာရွက်စာတမ်းများ။"
+msgstr "မသုိေလ္ဟာင္‌ရသေးသော စာရ္ဝက္‌စာတမ္‌းမ္ယား။"
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Please insert the USB Key to backup to."
-msgstr "သိုလှောင်ရန်အတွက် USB key ကိုထည့်သွင်းပါ။"
+msgstr "သုိေလ္ဟာင္‌ရန္‌အတ္ဝက္‌ USB key ကုိထည္‌့သ္ဝင္‌းပာ။"
 
 # ; ..\src\Addin.Backup\BackupDialog.Designer.cs
 msgid "&Cancel"
-msgstr "ပယ်ဖျက်ပါ။"
+msgstr "ပယ္‌ဖ္ယက္‌ပာ။"
 
 # ; ..\src\Addin.Backup\BackupToDevice.cs
 #. Label for usb flash-drive backup action
 msgid "Backup To Device"
-msgstr "သိုလှောင်ပါ။"
+msgstr "သုိေလ္ဟာင္‌ပာ။"
 
 # ; ..\src\Addin.Backup\BackupToDevice.cs
 #. description of usb backup action
 msgid "Saves a backup on an external device, like a USB key."
-msgstr "သိုလှောင်ပြီးသော စာရွက်စာတမ်းများကို USB Keys ကဲ့သို့သော external device တွင် သိမ်းဆည်းပါ။"
+msgstr ""
+"သုိေလ္ဟာင္‌ပ္ရီးေသာ စာရ္ဝက္‌စာတမ္‌းမ္ယားကုိ USB Keys ကဲ့သုိ့ေသာ external "
+"device တ္ဝင္‌ သိမ္‌းဆည္‌းပာ။"
 
 # ; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email My Work to {0}"
-msgstr "အလုပ်တာ၀န်ကို {0} သို့ပို့ပါ။"
+msgstr "အလုပ္‌တာ၀န္‌ကုိ {၀} သုိ့ပုိ့ပာ။"
 
 # ; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Send a zipped email containing all your WeSay work."
-msgstr "သင်၏ဝီဆေးလုပ်ငန်းဆောင်တာများကိုပေါင်းချုပ်၍ email ဖြင့် ပို့ပါ။"
+msgstr ""
+"သင္‌၏လုပ္‌ငန္‌းေဆာင္‌တာမ္ယားကုိ ေပာင္‌းခ္ယုပ္‌၍ email ဖ္ရင္‌့ ပုိ့ပာ။"
 
 # ; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "View Report"
-msgstr "အစီရင်ခံစာကို ကြည့်ရှုပါ။"
+msgstr "အစီရင္‌ခံစာကုိ က္ရည္‌့ရ္ဟုပာ။"
 
 # ; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "Shows some information about the lexicon."
-msgstr "ဝေါဟာရစာရင်းနှင့်သက်ဆိုင်ေသာ အကြောင်းအရာအချို့ကို ဖော်‌ပြပါ"
+msgstr "စကားလုံးန္ဟင္‌့သက္‌ဆုိင္‌ေသာ အကေ္ရာင္‌းအရာအခ္ယို့ကုိ ေဖာ္‌‌ပ္ရပာ"
 
 msgid "Export to Word"
-msgstr "Word သို့တင်ပို့ပါ"
+msgstr ""
 
 msgid "Creates a very basic dictionary publication in Microsoft Word."
-msgstr "မိုင်ခရိုဆော့ဝေါ့တွင် အလွန်အ​ခြေခံကျသောအဘိဓာန်ဖြန့်ချီခြင်းတစ်ခုဖန်တီးသည်"
+msgstr ""
 
 msgid "Export to HTML"
-msgstr "HTML သို့တင်ပို့ပါ"
+msgstr ""
 
 msgid "Creates a simple Html version of the dictionary, ready for printing."
-msgstr "အဘိဓာန်၏ရိုးစင်းသော Html တင်ဆင်မှုပုံစံတစ်ခုဖန်တီးသည်၊ ပရင့်ထုတ်ြခင်းအဆင်သင့်ဖြစ်ပြီ"
+msgstr ""
 
 msgid "Export To SFM"
-msgstr "SFM သို့တင်ပို့ပါ"
+msgstr ""
 
 # ; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "Saves the lexicon in a form of standard format."
-msgstr "ဝေါဟာရစာရင်းကို Standard Format ပုံစံအဖြစ်သိမ်းဆည်းပါ။"
+msgstr "စာလုံးကုိ Standard Format ပုံစံအဖ္ရစ္‌သိမ္‌းဆည္‌းပာ။"
 
 #. The description of the Actions task.
 msgid "Backup, print, etc."
-msgstr "သိုလှောင်ြခင်း၊ ပရင့်ထုတ်ခြင်း စသည်ြဖင့်"
+msgstr ""
 
 # ; ..\src\CommonTools\CurrentTaskIndicatorControl.Designer.cs
 msgid "Current task:"
-msgstr "လက်ရှိအလုပ်တာဝန်"
+msgstr "လက္‌ရ္ဟိအလုပ္‌"
 
 # ; ..\src\CommonTools\DashboardControl.cs
 msgid "Tasks"
-msgstr "အလုပ်တာ၀န်များ"
+msgstr "အလုပ္‌တာ၀န္‌မ္ယား"
 
 # ; ..\src\CommonTools\DashboardControl.cs
 msgid "Switch tasks and see current status of tasks"
-msgstr "အလုပ်တာ၀န်များကို ဖလှယ်၍ အလုပ်တာ၀န်များ၏ လက်ရှိအခြေအနေကို ကြည့်ရှု့ပါ။"
+msgstr ""
+"အလုပ္‌တာ၀န္‌မ္ယားကုိ ဖလ္ဟယ္‌၍ အလုပ္‌တာ၀န္‌မ္ယား၏ လက္‌ရ္ဟိအခေ္ရအနေကုိ "
+"က္ရည္‌့ရ္ဟု့ပာ။"
 
 # ; ..\src\CommonTools\DictionaryStatusControl.Designer.cs
 msgid "Your dictionary has {0} words"
-msgstr "သင်၏အဘိဓာန်တွင် {0} စကားလုံးမရှိပါ။"
+msgstr "သင္‌၏အဘိဓာန္‌တ္ဝင္‌ စကားလုံးမရ္ဟိပာ။"
 
 msgid "Cannot find {0}"
-msgstr "{0} ကိုမရှာနိုင်ပါ"
+msgstr ""
 
 msgid "No Senses"
-msgstr "အဓိပ္ပါယ်များမပါပါ"
+msgstr ""
 
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
-msgstr "ခက်ဆစ်အဘိဓာန်မရှိပါ"
+msgstr ""
 
 msgid "Hide Uncommon Fields"
-msgstr "သာမန်မဟုတ်သောနယ်ပယ်များဝှက်ပါ"
+msgstr ""
 
 msgid "Show Uncommon Fields"
-msgstr "သာမန်မဟုတ်သောနယ်ပယ်များပြပါ"
+msgstr ""
 
 # ; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&Delete This Word"
-msgstr "ဤစကားလုံးကိုဖျက်ပါ။"
+msgstr "ဤစကားလုံးကုိဖ္ယက္‌ပာ။"
 
 # ; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&New Word"
-msgstr "စကားလုံးအသစ်"
+msgstr "စကားလုံးအသစ္‌"
 
 msgid "&Show All Fields"
-msgstr "နယ်ပယ်များအားလုံးပြပါ"
+msgstr ""
 
 # ; ..\src\LexicalTools\DictionaryTask.cs
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
-msgstr "စကားလုံးများ {0} {1} ကိုကြည့်ပါ။"
+msgstr "စကားလုံးမ္ယား {၀} {၁} ကုိက္ရည္‌့ပာ။"
 
 # ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 #. The label for the field showing the Lexeme Form of the entry.
@@ -205,20 +220,24 @@ msgstr "စကားလုံး"
 # ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 # ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
 msgid "(Page Down Key)"
-msgstr "[အောက်စာတစ်မျက်နှာခလုပ်]"
+msgstr "[ေအာက္‌စာတမ္ယက္‌န္ဟာခလုပ္‌]"
 
 # ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 # ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "(Enter Key)"
-msgstr "[ဝင်ရန် ခလုပ်]"
+msgstr "[ေရ္ဝးခ္ယယ္‌ရန္‌ ခလုပ္‌]"
 
 # ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 msgid "Try thinking of words you use to talk about these things."
-msgstr "အောက်ပါအကြောင်းများပြောရာတွင် အသုံးပြုသော စကားလုံးများကို စဉ်းစားပါ။"
+msgstr ""
+"ေအာက္‌ပာအကေ္ရာင္‌းမ္ယားေပ္ရာရာတ္ဝင္‌ အသုံးပ္ရုေသာ စကားလုံးမ္ယားကုိ "
+"စဉ္‌းစားပာ။"
 
 # ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Try thinking of ways to say these words in your language."
-msgstr "ဤစကားလုံးများကို သင်၏ဘာသာစကားတွင် မည်ကဲ့သို့သောနည်းများဖြင့်ပြောနိုင်သည်ကို စဉ်းစားပါ။"
+msgstr ""
+"ဤစကားလုံးမ္ယားကုိ သင္‌၏ဘာသာစကားတ္ဝင္‌ မည္‌ကဲ့သုိ့ေသာနည္‌းမ္ယားဖ္ရင္‌့ "
+"ေပ္ရာနုိင္‌သည္‌ကုိ စဉ္‌းစားပာ။"
 
 # ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Word:"
@@ -234,87 +253,91 @@ msgstr "ဥပမာ"
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field for putting in a translation of an example sentence.
 msgid "Translation"
-msgstr "ဘာသာပြန်"
+msgstr "ဘာသာပ္ရန္‌"
 
 # ; ..\src\LexicalTools\LexSenseLayouter.cs
 # ; ..\src\LexicalTools\LexSenseLayouter.cs
 #. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well.
 msgid "Meaning"
-msgstr "အဓိပ္ပါယ်"
+msgstr "အဓိပ္ပာယ္‌"
 
 # ; ..\src\LexicalTools\MissingInfoControl.cs
 msgid "Congratulations. You have completed this task."
-msgstr "အလုပ်တာ၀န် ပြီးဆုံးပါပြီ။"
+msgstr "အလုပ္‌တာ၀န္‌ ပ္ရီးဆုံးပာပ္ရီ။"
 
 # ; ..\src\LexicalTools\MissingInfoControl.cs
 msgid "There is no work left to be done on this task."
-msgstr "လုပ်စရာမရှိတော့ပါ။"
+msgstr "လုပ္‌စရာမရ္ဟိေတာ့ပာ။"
 
 msgid "To Do:"
-msgstr "လုပ်ရန်"
+msgstr ""
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
+#, fuzzy
 msgid "Completed:"
-msgstr "သိုလှောင်ခြင်း ပြီးပါပြီ။"
+msgstr "သုိေလ္ဟာင္‌ခ္ရင္‌း ပ္ရီးပာပ္ရီ။"
 
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "This word has no Base Form"
-msgstr "ဒီစာလုံးအရင်းခံရာမရှိပါ"
+msgstr ""
 
 # ; ..\src\Addin.Backup\BackupDialog.cs
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
+#, fuzzy
 msgid "Loading..."
-msgstr "သိုလှောင်နေပါသည်။"
+msgstr "သုိေလ္ဟာင္‌ေနပာသည္‌။"
 
 #. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
 msgid "WeSay"
-msgstr "ဝီဆေး"
+msgstr ""
 
 #. The label for the field holding the citation form.
 msgid "CitationForm"
-msgstr "ကိုးကားခြင်းပုံစံ"
+msgstr ""
 
 #. The label for the field showing the definition of the word.
 msgid "Definition"
-msgstr "အဓိပ္ပါယ်"
+msgstr ""
 
 #. The label for the field showing the literal meaning of idiom or proverb.
 msgid "Literal Meaning"
-msgstr "အရှိအတိုင်းအဓိပ္ပါယ်"
+msgstr ""
 
 #. The label for the field showing a note.
 #. The label for the field showing a note.
 msgid "Note"
-msgstr "မှတ်ချက်"
+msgstr ""
 
 #. The label for the field showing Part Of Speech
 msgid "POS"
-msgstr "ဝါစင်္ဂ"
+msgstr "ဝာစင္ဂ"
 
 #. The label for the field showing a picture.
 msgid "Picture"
-msgstr "ပုံ"
+msgstr ""
 
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. The label for the field showing an example use of the word.
+#, fuzzy
 msgid "Example Sentence"
-msgstr "ဥပမာဝါကျ"
+msgstr "ဥပမာ"
 
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. The label for the field showing the example sentence translated into other languages.
+#, fuzzy
 msgid "Example Translation"
-msgstr "ဥပမာဘာသာပြန်ခြင်း"
+msgstr "ဘာသာပ္ရန္‌"
 
 #. The label for the field showing Semantic Domains
 msgid "Sem Dom"
-msgstr "ဝေါဟာရနယ်ပယ်"
+msgstr ""
 
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
-msgstr "အရင်းခံရာ"
+msgstr ""
 
 # ; ..\src\WeSay.UI\SingleOptionControl.cs
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
-msgstr "မသိပါ။"
+msgstr "မသိပာ။"

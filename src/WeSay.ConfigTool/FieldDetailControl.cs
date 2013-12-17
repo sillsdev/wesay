@@ -2,9 +2,8 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using Enchant;
-using Palaso.Lift;
 using Palaso.Reporting;
-using WeSay.Project;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -73,7 +72,6 @@ namespace WeSay.ConfigTool
 				_enableSpelling.Checked = _field.IsSpellCheckingEnabled;
 				_normallyHidden.Checked = _field.Visibility ==
 										  CommonEnumerations.VisibilitySetting.NormallyHidden;
-				_multiParagraph.Checked = _field.IsMultiParagraph;
 
 				FillClassNameCombo();
 				FillDataTypeCombo();
@@ -200,7 +198,7 @@ namespace WeSay.ConfigTool
 		{
 			_field.DisplayName = _displayName.Text.Trim();
 
-			if (DisplayNameOfFieldChanged != null && !_loading)
+			if (DisplayNameOfFieldChanged != null)
 			{
 				DisplayNameOfFieldChanged.Invoke(this, null);
 			}
@@ -229,12 +227,8 @@ namespace WeSay.ConfigTool
 
 		private void _description_TextChanged(object sender, EventArgs e)
 		{
-			if (!_loading)
-			{
-
-				_field.Description = _description.Text.Trim();
-				DescriptionOfFieldChanged.Invoke(this, e);
-			}
+			_field.Description = _description.Text.Trim();
+			DescriptionOfFieldChanged.Invoke(this, e);
 		}
 
 		private void _normallyHidden_CheckedChanged(object sender, EventArgs e)
@@ -248,8 +242,6 @@ namespace WeSay.ConfigTool
 				_field.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			}
 		}
-
-
 
 		private void _enableSpelling_CheckedChanged(object sender, EventArgs e)
 		{
@@ -294,7 +286,7 @@ namespace WeSay.ConfigTool
 			}
 			_field.ClassName = proxy.UnderlyingValue.ToString();
 			UpdateDisplay();
-			if (ClassOfFieldChanged != null && !_loading)
+			if (ClassOfFieldChanged != null)
 			{
 				ClassOfFieldChanged.Invoke(this, null);
 			}
@@ -375,25 +367,12 @@ namespace WeSay.ConfigTool
 
 			if (conflictFound)
 			{
-				ErrorReport.NotifyUserOfProblem(
+				ErrorReport.ReportNonFatalMessage(
 						"Sorry, WeSay cannot change the type of this field to '{0}', because there is existing data in the LIFT file of the old type, '{1}'",
 						newDataTypeName,
 						oldDataTypeName);
 			}
 			return !conflictFound;
-		}
-
-
-		private void _multiParagraph_CheckedChanged(object sender, EventArgs e)
-		{
-			if (_multiParagraph.Checked)
-			{
-				_field.IsMultiParagraph = true;
-			}
-			else
-			{
-				_field.IsMultiParagraph = false;
-			}
 		}
 	}
 }

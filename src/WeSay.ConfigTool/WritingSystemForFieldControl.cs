@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Enchant;
-using Palaso.Reporting;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -59,18 +58,9 @@ namespace WeSay.ConfigTool
 				{
 					foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
 					{
-						try
+						if (broker.DictionaryExists(ws.Id))
 						{
-							if (broker.DictionaryExists(ws.SpellCheckingId))
-							{
-								writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
-							}
-						}
-						catch (Exception)  //WS-1296 where (sometimes) a bogus looking id killed Enchant
-						{
-							//ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "There was a problem asking the Enchant Spelling system about '{0}'.", ws.Id);
-
-							//These enchant errors are just too common & useless.  Let's not even report on them.
+							writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
 						}
 					}
 				}
@@ -78,11 +68,6 @@ namespace WeSay.ConfigTool
 			catch (DllNotFoundException)
 			{
 				//If Enchant is not installed we expect an exception.
-			}
-			catch (Exception e)//there are other errors we can get from the enchange binding
-			{
-				ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
-												"The Enchant Spelling engine encountered an error: " + e.Message);
 			}
 			return writingSystemIdsWithSpellCheckingInstalled;
 		}

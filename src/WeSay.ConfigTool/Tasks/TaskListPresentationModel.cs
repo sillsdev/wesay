@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using Autofac;
-using WeSay.Project;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tasks
@@ -27,11 +25,9 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void OnProject_WritingSystemChanged(object sender, WeSayWordsProject.StringPair pair)
 		{
-			foreach (object task in Tasks)
+			foreach (ICareThatWritingSystemIdChanged task in Tasks)
 			{
-				if (null == task as ICareThatWritingSystemIdChanged)
-					continue;
-				((ICareThatWritingSystemIdChanged)task).WritingSystemIdChanged(pair.from, pair.to);
+				task.WritingSystemIdChanged(pair.from, pair.to);
 			}
 		}
 	}

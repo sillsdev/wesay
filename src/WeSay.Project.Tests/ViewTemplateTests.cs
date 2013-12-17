@@ -1,10 +1,9 @@
 using System;
 using System.Drawing;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
 using WeSay.Data.Tests;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests
 {
@@ -50,11 +49,11 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void Index_DoesNotHaveFieldDefinition_Throws()
 		{
 			ViewTemplate viewTemplate = PopulateViewTemplate();
-			Field field;
-			Assert.Throws<ArgumentOutOfRangeException>(() => field= viewTemplate["none"]);
+			Field field = viewTemplate["none"];
 		}
 
 		[Test]
@@ -76,11 +75,12 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void TryGetField_NullKey_Throws()
 		{
 			ViewTemplate viewTemplate = PopulateViewTemplate();
 			Field field;
-			Assert.Throws<ArgumentNullException>(() => viewTemplate.TryGetField(null, out field));
+			viewTemplate.TryGetField(null, out field);
 		}
 
 		private static ViewTemplate PopulateViewTemplate()
@@ -93,15 +93,17 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void SynchronizeInventories_nullMasterTemplate_throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => ViewTemplate.UpdateUserViewTemplate(null, new ViewTemplate()));
+			ViewTemplate.UpdateUserViewTemplate(null, new ViewTemplate());
 		}
 
 		[Test]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void SynchronizeInventories_nullUserTemplate_throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => ViewTemplate.UpdateUserViewTemplate(new ViewTemplate(), null));
+			ViewTemplate.UpdateUserViewTemplate(new ViewTemplate(), null);
 		}
 
 		[Test]

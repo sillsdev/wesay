@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Project;
@@ -29,11 +28,11 @@ namespace WeSay.App.Tests
 
 			_project = new WeSayWordsProject();
 			_project.LoadFromLiftLexiconPath(_projectDirectory.PathToLiftFile);
-			_tabbedForm = new TabbedForm(new NullStatusBarController());
+			_tabbedForm = new TabbedForm();
 			_project.Tasks = new List<ITask>();
 			_dashboardTask = new MockTask("Dashboard", "The control center.", true);
 			_project.Tasks.Add(_dashboardTask);
-			_dictionaryTask = new MockDictionaryTask("Dictionary blah blah", "The whole lexicon.", true);
+			_dictionaryTask = new MockTask("Dictionary blah blah", "The whole lexicon.", true);
 			_project.Tasks.Add(_dictionaryTask);
 
 			_tabbedForm.InitializeTasks(_project.Tasks);
@@ -42,7 +41,6 @@ namespace WeSay.App.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			_tabbedForm.Dispose();
 			_projectDirectory.Dispose();
 		}
 
@@ -52,13 +50,12 @@ namespace WeSay.App.Tests
 			_tabbedForm.IntializationComplete += OnTabbedForm_IntializationComplete;
 			_tabbedForm.ContinueLaunchingAfterInitialDisplay();
 			Application.DoEvents();
-			for (int i = 0;i < 50;i++)
+			for (int i = 0;i < 1000;i++)
 			{
 				if (_didRaiseInitializedEvent)
 				{
 					break;
 				}
-				Thread.Sleep(100);
 				Application.DoEvents();
 			}
 			Assert.IsTrue(_didRaiseInitializedEvent);
@@ -72,7 +69,7 @@ namespace WeSay.App.Tests
 		[Test]
 		public void ShouldSwitchToDictionaryTaskWhenURLCallsForItAndIsNew()
 		{
-			_tabbedForm.GoToUrl("lift://somefile.lift?id=foo2");
+			_tabbedForm.GoToUrl("foo2");
 			Assert.AreEqual(_dictionaryTask, _tabbedForm.ActiveTask);
 		}
 
@@ -81,7 +78,7 @@ namespace WeSay.App.Tests
 		{
 			_tabbedForm.ActiveTask = _dictionaryTask;
 			_tabbedForm.ActiveTask = _dashboardTask;
-			_tabbedForm.GoToUrl("lift://somefile.lift?id=foo2");
+			_tabbedForm.GoToUrl("foo2");
 			Assert.AreEqual(_dictionaryTask, _tabbedForm.ActiveTask);
 		}
 
@@ -89,17 +86,22 @@ namespace WeSay.App.Tests
 		public void ShouldStayInDictionaryTaskWhenURLCallsForIt()
 		{
 			_tabbedForm.ActiveTask = _dictionaryTask;
-			_tabbedForm.GoToUrl("lift://somefile.lift?id=foo2");
+			_tabbedForm.GoToUrl("foo2");
 			Assert.AreEqual(_dictionaryTask, _tabbedForm.ActiveTask);
 		}
 
+		[Test]
+		public void ShouldSetCurrentUrlToRequestedUrl()
+		{
+			_tabbedForm.GoToUrl("foo2");
+			Assert.AreEqual("foo2", _tabbedForm.CurrentUrl);
+		}
 
 		[Test]
 		public void ShouldAskTaskToGoToRequestedUrl()
 		{
-			var url = "lift://somefile.lift?id=foo2";
-			_tabbedForm.GoToUrl(url);
-			Assert.AreEqual(url, _dictionaryTask._urlThatItWasToldToGoTo);
+			_tabbedForm.GoToUrl("foo2");
+			Assert.AreEqual("foo2", _dictionaryTask._urlThatItWasToldToGoTo);
 		}
 
 		/*

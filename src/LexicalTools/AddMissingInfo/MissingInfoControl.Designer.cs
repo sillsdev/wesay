@@ -2,7 +2,7 @@ using System.Windows.Forms;
 using WeSay.UI;
 using WeSay.UI.Buttons;
 
-namespace WeSay.LexicalTools.AddMissingInfo
+namespace WeSay.LexicalTools
 {
 	partial class MissingInfoControl
 	{
@@ -61,27 +61,23 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MissingInfoControl));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.label1 = new System.Windows.Forms.Label();
 			this._recordsListBox = new WeSay.UI.WeSayListView();
-			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this._completedRecordsLabel = new System.Windows.Forms.Label();
 			this._completedRecordsListBox = new WeSay.UI.WeSayListView();
+			this._buttonPanel = new System.Windows.Forms.Panel();
 			this.labelNextHotKey = new System.Windows.Forms.Label();
 			this._btnNextWord = new WeSay.UI.Buttons.NextButton();
 			this._btnPreviousWord = new WeSay.UI.Buttons.PreviousButton();
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._congratulationsControl = new WeSay.LexicalTools.CongratulationsControl();
-			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
-			this.tableLayoutPanel1.SuspendLayout();
-			this.tableLayoutPanel2.SuspendLayout();
-			this.flowLayoutPanel1.SuspendLayout();
+			this._buttonPanel.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// splitContainer1
@@ -96,7 +92,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//
 			// splitContainer1.Panel2
 			//
-			this.splitContainer1.Panel2.Controls.Add(this.flowLayoutPanel1);
+			this.splitContainer1.Panel2.Controls.Add(this._buttonPanel);
 			this.splitContainer1.Panel2.Controls.Add(this._entryViewControl);
 			this.splitContainer1.Panel2.Controls.Add(this._congratulationsControl);
 			this.splitContainer1.Size = new System.Drawing.Size(641, 407);
@@ -113,36 +109,23 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//
 			// splitContainer2.Panel1
 			//
-			this.splitContainer2.Panel1.Controls.Add(this.tableLayoutPanel1);
+			this.splitContainer2.Panel1.Controls.Add(this.label1);
+			this.splitContainer2.Panel1.Controls.Add(this._recordsListBox);
 			//
 			// splitContainer2.Panel2
 			//
-			this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel2);
+			this.splitContainer2.Panel2.Controls.Add(this._completedRecordsLabel);
+			this.splitContainer2.Panel2.Controls.Add(this._completedRecordsListBox);
 			this.splitContainer2.Size = new System.Drawing.Size(126, 407);
 			this.splitContainer2.SplitterDistance = 178;
 			this.splitContainer2.TabIndex = 10;
 			this.splitContainer2.TabStop = false;
 			//
-			// tableLayoutPanel1
-			//
-			this.tableLayoutPanel1.ColumnCount = 1;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-			this.tableLayoutPanel1.Controls.Add(this._recordsListBox, 0, 1);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(126, 178);
-			this.tableLayoutPanel1.TabIndex = 12;
-			//
 			// label1
 			//
 			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-			this.label1.Location = new System.Drawing.Point(3, 0);
+			this.label1.Location = new System.Drawing.Point(3, 3);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(49, 16);
 			this.label1.TabIndex = 11;
@@ -150,28 +133,15 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//
 			// _recordsListBox
 			//
-			this._recordsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._recordsListBox.Location = new System.Drawing.Point(3, 19);
+			this._recordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._recordsListBox.Location = new System.Drawing.Point(0, 21);
 			this._recordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
 			this._recordsListBox.Name = "_recordsListBox";
-			this._recordsListBox.Size = new System.Drawing.Size(120, 156);
+			this._recordsListBox.Size = new System.Drawing.Size(129, 155);
 			this._recordsListBox.TabIndex = 2;
 			this._recordsListBox.View = System.Windows.Forms.View.SmallIcon;
-			//
-			// tableLayoutPanel2
-			//
-			this.tableLayoutPanel2.ColumnCount = 1;
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel2.Controls.Add(this._completedRecordsLabel, 0, 0);
-			this.tableLayoutPanel2.Controls.Add(this._completedRecordsListBox, 0, 1);
-			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-			this.tableLayoutPanel2.RowCount = 2;
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(126, 225);
-			this.tableLayoutPanel2.TabIndex = 4;
 			//
 			// _completedRecordsLabel
 			//
@@ -179,9 +149,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._completedRecordsLabel.AutoSize = true;
 			this._completedRecordsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-			this._completedRecordsLabel.Location = new System.Drawing.Point(3, 0);
+			this._completedRecordsLabel.Location = new System.Drawing.Point(3, 3);
 			this._completedRecordsLabel.Name = "_completedRecordsLabel";
-			this._completedRecordsLabel.Size = new System.Drawing.Size(120, 16);
+			this._completedRecordsLabel.Size = new System.Drawing.Size(77, 16);
 			this._completedRecordsLabel.TabIndex = 0;
 			this._completedRecordsLabel.Text = "Completed:";
 			//
@@ -190,20 +160,31 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this._completedRecordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._completedRecordsListBox.Location = new System.Drawing.Point(3, 19);
+			this._completedRecordsListBox.Location = new System.Drawing.Point(0, 21);
 			this._completedRecordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
 			this._completedRecordsListBox.Name = "_completedRecordsListBox";
-			this._completedRecordsListBox.Size = new System.Drawing.Size(120, 203);
+			this._completedRecordsListBox.Size = new System.Drawing.Size(129, 181);
 			this._completedRecordsListBox.TabIndex = 3;
 			this._completedRecordsListBox.View = System.Windows.Forms.View.SmallIcon;
 			//
+			// _buttonPanel
+			//
+			this._buttonPanel.Controls.Add(this.labelNextHotKey);
+			this._buttonPanel.Controls.Add(this._btnNextWord);
+			this._buttonPanel.Controls.Add(this._btnPreviousWord);
+			this._buttonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this._buttonPanel.Location = new System.Drawing.Point(0, 355);
+			this._buttonPanel.Name = "_buttonPanel";
+			this._buttonPanel.Size = new System.Drawing.Size(511, 52);
+			this._buttonPanel.TabIndex = 1;
+			//
 			// labelNextHotKey
 			//
-			this.labelNextHotKey.Anchor = System.Windows.Forms.AnchorStyles.None;
+			this.labelNextHotKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelNextHotKey.AutoSize = true;
 			this.labelNextHotKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
 			this.labelNextHotKey.ForeColor = System.Drawing.Color.DarkGray;
-			this.labelNextHotKey.Location = new System.Drawing.Point(95, 20);
+			this.labelNextHotKey.Location = new System.Drawing.Point(379, 14);
 			this.labelNextHotKey.Name = "labelNextHotKey";
 			this.labelNextHotKey.Size = new System.Drawing.Size(112, 16);
 			this.labelNextHotKey.TabIndex = 2;
@@ -211,10 +192,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//
 			// _btnNextWord
 			//
-			this._btnNextWord.Anchor = System.Windows.Forms.AnchorStyles.None;
+			this._btnNextWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._btnNextWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnNextWord.Image = ((System.Drawing.Image)(resources.GetObject("_btnNextWord.Image")));
-			this._btnNextWord.Location = new System.Drawing.Point(39, 3);
+			this._btnNextWord.Location = new System.Drawing.Point(325, 0);
 			this._btnNextWord.Name = "_btnNextWord";
 			this._btnNextWord.Size = new System.Drawing.Size(50, 50);
 			this._btnNextWord.TabIndex = 1;
@@ -223,10 +204,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//
 			// _btnPreviousWord
 			//
-			this._btnPreviousWord.Anchor = System.Windows.Forms.AnchorStyles.None;
+			this._btnPreviousWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._btnPreviousWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnPreviousWord.Image = ((System.Drawing.Image)(resources.GetObject("_btnPreviousWord.Image")));
-			this._btnPreviousWord.Location = new System.Drawing.Point(3, 13);
+			this._btnPreviousWord.Location = new System.Drawing.Point(289, 10);
 			this._btnPreviousWord.Name = "_btnPreviousWord";
 			this._btnPreviousWord.Size = new System.Drawing.Size(30, 30);
 			this._btnPreviousWord.TabIndex = 0;
@@ -235,13 +216,16 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			//
 			// _entryViewControl
 			//
+			this._entryViewControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._entryViewControl.AutoScroll = true;
+			this._entryViewControl.BackColor = System.Drawing.SystemColors.ActiveCaption;
 			this._entryViewControl.DataSource = null;
-			this._entryViewControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._entryViewControl.Location = new System.Drawing.Point(0, 0);
-			this._entryViewControl.Margin = new System.Windows.Forms.Padding(0);
 			this._entryViewControl.Name = "_entryViewControl";
 			this._entryViewControl.ShowNormallyHiddenFields = false;
-			this._entryViewControl.Size = new System.Drawing.Size(511, 407);
+			this._entryViewControl.Size = new System.Drawing.Size(511, 355);
 			this._entryViewControl.TabIndex = 0;
 			//
 			// _congratulationsControl
@@ -252,19 +236,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this._congratulationsControl.Size = new System.Drawing.Size(511, 407);
 			this._congratulationsControl.TabIndex = 9;
 			//
-			// flowLayoutPanel1
-			//
-			this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.flowLayoutPanel1.AutoSize = true;
-			this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.flowLayoutPanel1.Controls.Add(this._btnPreviousWord);
-			this.flowLayoutPanel1.Controls.Add(this._btnNextWord);
-			this.flowLayoutPanel1.Controls.Add(this.labelNextHotKey);
-			this.flowLayoutPanel1.Location = new System.Drawing.Point(301, 348);
-			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(210, 56);
-			this.flowLayoutPanel1.TabIndex = 10;
-			//
 			// MissingInfoControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -274,17 +245,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this.Size = new System.Drawing.Size(641, 407);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
-			this.splitContainer1.Panel2.PerformLayout();
 			this.splitContainer1.ResumeLayout(false);
 			this.splitContainer2.Panel1.ResumeLayout(false);
+			this.splitContainer2.Panel1.PerformLayout();
 			this.splitContainer2.Panel2.ResumeLayout(false);
+			this.splitContainer2.Panel2.PerformLayout();
 			this.splitContainer2.ResumeLayout(false);
-			this.tableLayoutPanel1.ResumeLayout(false);
-			this.tableLayoutPanel1.PerformLayout();
-			this.tableLayoutPanel2.ResumeLayout(false);
-			this.tableLayoutPanel2.PerformLayout();
-			this.flowLayoutPanel1.ResumeLayout(false);
-			this.flowLayoutPanel1.PerformLayout();
+			this._buttonPanel.ResumeLayout(false);
+			this._buttonPanel.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -303,9 +271,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		private NextButton _btnNextWord;
 		private Label labelNextHotKey;
 		private PreviousButton _btnPreviousWord;
-		private TableLayoutPanel tableLayoutPanel1;
-		private TableLayoutPanel tableLayoutPanel2;
-		private FlowLayoutPanel flowLayoutPanel1;
+		private Panel _buttonPanel;
 
 	}
 }
