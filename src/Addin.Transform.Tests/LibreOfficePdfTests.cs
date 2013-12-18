@@ -155,10 +155,19 @@ namespace Addin.Transform.Tests
 			using (var e = new EnvironmentForTest())
 			{
 				var addin = new LibreOfficePdf();
-				Assert.IsFalse(addin.Available);
-				Assert.Throws<ConfigurationException>(
-					() => { addin.Launch(null,  e.ProjectInfo); }
-				);
+				if (addin.Available)
+				{
+					Assert.DoesNotThrow
+						(
+						() => { addin.Launch(null,  e.ProjectInfo); }
+					);
+				}
+				else {
+
+					Assert.Throws<ConfigurationException>(
+						() => { addin.Launch(null,  e.ProjectInfo); }
+					);
+				}
 			}
 		}
 
