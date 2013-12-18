@@ -170,22 +170,32 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			if (e.ItemIndex != -1)
 			{
-				var recordForWhichSelectionIsChanging = _todoRecords[e.ItemIndex];
-				if (CurrentRecord != null)
+				// Added for Mono which called this when calling the go to next record routine.
+				// When the selected index is changed to the next record, this gets
+				// called with the current record deselected
+				if (e.IsSelected)
 				{
-					MoveRecordToAppropriateListBox(CurrentRecord);
-					//reset the index as it may have changed
-					_todoRecordsListBox.SelectedIndex =
-						_todoRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
-				}
+					var recordForWhichSelectionIsChanging = _todoRecords[e.ItemIndex];
+					if (CurrentRecord != null)
+					{
+						MoveRecordToAppropriateListBox(CurrentRecord);
+						//reset the index as it may have changed
+						_todoRecordsListBox.SelectedIndex =
+							_todoRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
+					}
 
-				//This is the case if we previously had a record selected in the completedListBox and now are selecting a record in the todoListBox
-				if (e.IsSelected && _completedRecordsListBox.SelectedIndex != -1)
-				{
-					_completedRecordsListBox.SelectedIndex = -1;
+					//This is the case if we previously had a record selected in the completedListBox and now are selecting a record in the todoListBox
+					if (_completedRecordsListBox.SelectedIndex != -1)
+					{
+						_completedRecordsListBox.SelectedIndex = -1;
+					}
+					CurrentRecord = recordForWhichSelectionIsChanging;
+					UpdatePreviousAndNextRecords();
+					if (_todoRecords.Count == 0)
+					{
+					   ShowCompletedMessage();
+					}
 				}
-				CurrentRecord = recordForWhichSelectionIsChanging;
-				UpdatePreviousAndNextRecords();
 			}
 			else
 			{
@@ -194,12 +204,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					MoveRecordToAppropriateListBox(CurrentRecord);
 				}
 				CurrentRecord = null;
+				if (_todoRecords.Count == 0)
+				{
+				   ShowCompletedMessage();
+				}
 			}
 
-			if (_todoRecords.Count == 0)
-			{
-			   ShowCompletedMessage();
-			}
 		}
 
 		private void MoveRecordToAppropriateListBox(RecordToken<LexEntry> record)
@@ -336,22 +346,28 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			if (e.ItemIndex != -1)
 			{
-				var recordForWhichSelectionIsChanging = _completedRecords[e.ItemIndex];
-				if (CurrentRecord != null)
+				// Added for Mono which called this when calling the go to next record routine.
+				// When the selected index is changed to the next record, this gets
+				// called with the current record deselected
+				if (e.IsSelected)
 				{
-					MoveRecordToAppropriateListBox(CurrentRecord);
-					//reset the index as it may have changed
-					_completedRecordsListBox.SelectedIndex =
-						_completedRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
-				}
+					var recordForWhichSelectionIsChanging = _completedRecords[e.ItemIndex];
+					if (CurrentRecord != null)
+					{
+						MoveRecordToAppropriateListBox(CurrentRecord);
+						//reset the index as it may have changed
+						_completedRecordsListBox.SelectedIndex =
+							_completedRecords.FindIndex(x => x == recordForWhichSelectionIsChanging);
+					}
 
-				//This is the case if we previously had a record selected in the todoListBox and now are selecting a record in the completedListBox
-				if (e.IsSelected && _todoRecordsListBox.SelectedIndex != -1)
-				{
-					_todoRecordsListBox.SelectedIndex = -1;
-				}
+					//This is the case if we previously had a record selected in the todoListBox and now are selecting a record in the completedListBox
+					if ( _todoRecordsListBox.SelectedIndex != -1)
+					{
+						_todoRecordsListBox.SelectedIndex = -1;
+					}
 
-				CurrentRecord = recordForWhichSelectionIsChanging;
+					CurrentRecord = recordForWhichSelectionIsChanging;
+				}
 			}
 			else
 			{
