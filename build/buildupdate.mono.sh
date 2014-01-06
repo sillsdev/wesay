@@ -2,6 +2,7 @@
 # server=build.palaso.org
 # project=WeSay1.4-Linux
 # build=WeSay1.4-Precise64 Continuous
+# root_dir=..
 
 #### Results ####
 # build: WeSay1.4-Precise64 Continuous (bt314)
@@ -46,24 +47,24 @@
 #     paths: {"Palaso.BuildTasks.dll"=>"lib/Release", "Palaso.dll"=>"lib/Release", "Palaso.TestUtilities.dll"=>"lib/Release", "Palaso.Tests.dll"=>"lib/Release", "Palaso.DictionaryServices.dll"=>"lib/Release", "Palaso.Media.dll"=>"lib/Release", "PalasoUIWindowsForms.dll"=>"lib/Release", "Palaso.Lift.dll"=>"lib/Release"}
 
 # make sure output directories exist
-mkdir -p ./lib/common
-mkdir -p ./lib/Release
+mkdir -p ../lib/common
+mkdir -p ../lib/Release
 
 # download artifact dependencies
-curl -L -o ./lib/common/Autofac.dll http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/Autofac.dll
-curl -L -o ./lib/Release/Chorus.exe http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/Chorus.exe
-curl -L -o ./lib/Release/LibChorus.dll http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/LibChorus.dll
-curl -L -o ./lib/Release/ChorusMerge.exe http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/ChorusMerge.exe
-curl -L -o ./lib/Release/LibChorus.TestUtilities.dll http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/LibChorus.TestUtilities.dll
-curl -L -o ./lib/Release/Mercurial-i686.zip http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/Mercurial-i686.zip
-curl -L -o ./lib/common/L10NSharp.dll http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll
-curl -L -o ./lib/Release/icu.net.dll http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll
-curl -L -o ./lib/Release/icu.net.dll.config http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.config
-curl -L -o ./lib/Release/Palaso.BuildTasks.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.BuildTasks.dll
-curl -L -o ./lib/Release/Palaso.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.dll
-curl -L -o ./lib/Release/Palaso.TestUtilities.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.TestUtilities.dll
-curl -L -o ./lib/Release/Palaso.Tests.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.Tests.dll
-curl -L -o ./lib/Release/Palaso.DictionaryServices.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.DictionaryServices.dll
-curl -L -o ./lib/Release/Palaso.Media.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.Media.dll
-curl -L -o ./lib/Release/PalasoUIWindowsForms.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/PalasoUIWindowsForms.dll
-curl -L -o ./lib/Release/Palaso.Lift.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.Lift.dll
+curl -L -o ../lib/common/Autofac.dll http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/Autofac.dll
+curl -L -o ../lib/Release/Chorus.exe http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/Chorus.exe
+curl -L -o ../lib/Release/LibChorus.dll http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/LibChorus.dll
+curl -L -o ../lib/Release/ChorusMerge.exe http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/ChorusMerge.exe
+curl -L -o ../lib/Release/LibChorus.TestUtilities.dll http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/LibChorus.TestUtilities.dll
+curl -L -o ../lib/Release/Mercurial-i686.zip http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/Mercurial-i686.zip
+curl -L -o ../lib/common/L10NSharp.dll http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll
+curl -L -o ../lib/Release/icu.net.dll http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll
+curl -L -o ../lib/Release/icu.net.dll.config http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.config
+curl -L -o ../lib/Release/Palaso.BuildTasks.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.BuildTasks.dll
+curl -L -o ../lib/Release/Palaso.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.dll
+curl -L -o ../lib/Release/Palaso.TestUtilities.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.TestUtilities.dll
+curl -L -o ../lib/Release/Palaso.Tests.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.Tests.dll
+curl -L -o ../lib/Release/Palaso.DictionaryServices.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.DictionaryServices.dll
+curl -L -o ../lib/Release/Palaso.Media.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.Media.dll
+curl -L -o ../lib/Release/PalasoUIWindowsForms.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/PalasoUIWindowsForms.dll
+curl -L -o ../lib/Release/Palaso.Lift.dll http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/Palaso.Lift.dll
