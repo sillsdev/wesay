@@ -999,6 +999,7 @@ namespace WeSay.LexicalTools.Tests
 			PutCursorInMeaningFieldOfSecondEntry();
 			TextBoxTester tb = new TextBoxTester(GetMeaningControlName(), _window);
 			Clipboard.SetText("samo");
+            Application.DoEvents();
 			tb.Properties.Paste();
 			TextBoxTester tb2 = new TextBoxTester(GetMeaningControlName(), _window);
 			Assert.AreEqual("samo", tb2.Properties.Text);
