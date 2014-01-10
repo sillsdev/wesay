@@ -37,7 +37,7 @@
 #     VCS:  []
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"Palaso.BuildTasks.dll"=>"lib/Release", "Palaso.dll"=>"lib/Release", "Palaso.pdb"=>"lib/Release", "Palaso.TestUtilities.dll"=>"lib/Release", "Palaso.TestUtilities.pdb"=>"lib/Release", "PalasoUIWindowsForms.dll"=>"lib/Release", "PalasoUIWindowsForms.pdb"=>"lib/Release", "Palaso.Lift.dll"=>"lib/Release", "Palaso.Lift.pdb"=>"lib/Release", "Palaso.DictionaryServices.dll"=>"lib/Release", "Palaso.DictionaryServices.pdb"=>"lib/Release", "Palaso.Media.dll"=>"lib/Release", "Palaso.Media.pdb"=>"lib/Release"}
+#     paths: {"Palaso.BuildTasks.dll"=>"lib/Release", "Palaso.dll"=>"lib/Release", "Palaso.pdb"=>"lib/Release", "Palaso.TestUtilities.dll"=>"lib/Release", "Palaso.TestUtilities.pdb"=>"lib/Release", "PalasoUIWindowsForms.dll"=>"lib/Release", "PalasoUIWindowsForms.pdb"=>"lib/Release", "Palaso.Lift.dll"=>"lib/Release", "Palaso.Lift.pdb"=>"lib/Release", "Palaso.DictionaryServices.dll"=>"lib/Release", "Palaso.DictionaryServices.pdb"=>"lib/Release", "Palaso.Media.dll"=>"lib/Release", "Palaso.Media.pdb"=>"lib/Release", "Palaso.Tests.dll"=>"lib/Release", "Palaso.Tests.pdb"=>"lib/Release"}
 # [4] build: icucil-win32-default Continuous (bt14)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt14
@@ -96,6 +96,8 @@ curl -L -o ../lib/Release/Palaso.DictionaryServices.dll http://build.palaso.org/
 curl -L -o ../lib/Release/Palaso.DictionaryServices.pdb http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/Palaso.DictionaryServices.pdb
 curl -L -o ../lib/Release/Palaso.Media.dll http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/Palaso.Media.dll
 curl -L -o ../lib/Release/Palaso.Media.pdb http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/Palaso.Media.pdb
+curl -L -o ../lib/Release/Palaso.Tests.dll http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/Palaso.Tests.dll
+curl -L -o ../lib/Release/Palaso.Tests.pdb http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/Palaso.Tests.pdb
 curl -L -o ../lib/Release/icu.net.dll http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icu.net.dll
 curl -L -o ../lib/Release/icudt40.dll http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icudt40.dll
 curl -L -o ../lib/Release/icuin40.dll http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icuin40.dll
