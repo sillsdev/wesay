@@ -81,9 +81,6 @@ namespace WeSay.Project
 				return; //no way... if you want a unit test that includes CHorus, do it without
 						//that now deprecated monstrosity.
 			}
-#if DEBUG
-			Debug.Assert(pathToProjectDirectory.ToLower().IndexOf("wesaydev") < 0, "Whoops, something is trying to do a checkin of the wesay code!");
-#endif
 			_timeOfLastBackupAttempt = DateTime.Now;
 
 			//nb: we're not really using the message yet, at least, not showing it to the user
