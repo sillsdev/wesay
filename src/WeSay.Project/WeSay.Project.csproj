@@ -1,278 +1,228 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
-	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
-	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</ProjectGuid>
-	<OutputType>Library</OutputType>
-	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.Project</RootNamespace>
-	<AssemblyName>WeSay.Project</AssemblyName>
-	<FileUpgradeFlags>
-	</FileUpgradeFlags>
-	<UpgradeBackupLocation>
-	</UpgradeBackupLocation>
-	<OldToolsVersion>3.5</OldToolsVersion>
-	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-	<TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WeSay.Project</RootNamespace>
+    <AssemblyName>WeSay.Project</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-	<DebugSymbols>true</DebugSymbols>
-	<DebugType>full</DebugType>
-	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Project</AssemblyName>
-	<RootNamespace>WeSay.Project</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <AssemblyName>WeSay.Project</AssemblyName>
+    <RootNamespace>WeSay.Project</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-	<DebugType>pdbonly</DebugType>
-	<Optimize>true</Optimize>
-	<OutputPath>..\..\output\Release\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Project</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.Project</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\DebugMono\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<DebugType>full</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Project</AssemblyName>
-	<RootNamespace>WeSay.Project</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|AnyCPU' ">
-	<OutputPath>..\..\output\ReleaseMono\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>WeSay.Project</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.Project</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\output\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <AssemblyName>WeSay.Project</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <RootNamespace>WeSay.Project</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\Debug\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;$(Release)</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;$(Release)</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\Release\</OutputPath>
-	<DefineConstants>TRACE;$(Release)</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\DebugMono\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\ReleaseMono\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\Release\</OutputPath>
+    <DefineConstants>TRACE;$(Release)</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Autofac, Version=1.4.4.561, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Autofac.dll</HintPath>
-	</Reference>
-	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\$(Configuration)\Chorus.exe</HintPath>
-	</Reference>
-	<Reference Include="Commons.Xml.Relaxng, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Commons.Xml.Relaxng.dll</HintPath>
-	</Reference>
-	<Reference Include="L10NSharp, Version=1.1.10.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\L10NSharp.dll</HintPath>
-	</Reference>
-	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\LibChorus.dll</HintPath>
-	</Reference>
-	<Reference Include="Mono.Addins, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
-	</Reference>
-	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
-	</Reference>
-	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
-	</Reference>
-	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
-	</Reference>
-	<None Include="..\..\lib\common\Enchant.Net.dll.config">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
-	<Reference Include="System" />
-	<Reference Include="System.Core">
-	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-	</Reference>
-	<Reference Include="System.Data" />
-	<Reference Include="System.Drawing" />
-	<Reference Include="System.Windows.Forms" />
-	<Reference Include="System.Xml" />
+    <Reference Include="Autofac, Version=1.4.4.561, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <ExecutableExtension>.exe</ExecutableExtension>
+      <HintPath>..\..\lib\$(Configuration)\Chorus.exe</HintPath>
+    </Reference>
+    <Reference Include="Commons.Xml.Relaxng, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\common\Commons.Xml.Relaxng.dll</HintPath>
+    </Reference>
+    <Reference Include="L10NSharp, Version=1.1.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\L10NSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\LibChorus.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
+    </Reference>
+    <Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
+    </Reference>
+    <None Include="..\..\lib\common\Enchant.Net.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="BaseTaskConfig.cs" />
-	<Compile Include="CheckinDescriptionBuilder.cs" />
-	<Compile Include="ChorusBackupMaker.cs" />
-	<Compile Include="BasilProject.cs" />
-	<Compile Include="ConfigFile.cs" />
-	<Compile Include="ConfigMigration\UserConfig\WeSayUserConfigMigrator.cs" />
-	<Compile Include="ConfigMigration\WritingSystem\WritingSystemMigrator.cs" />
-	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsToLdmlMigrationStrategy.cs" />
-	<Compile Include="ConfigMigration\WritingSystem\WritingSystemCollection_V1.cs" />
-	<Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsMigrator.cs" />
-	<Compile Include="ConfigMigration\WritingSystem\WritingSystem_V1.cs" />
-	<Compile Include="ConfigMigration\XslFromResourceMigrator.cs" />
-	<Compile Include="LiftFileLocator.cs" />
-	<Compile Include="ProjectFromLiftFolderCreator.cs" />
-	<Compile Include="Properties\Resources.Designer.cs">
-	  <AutoGen>True</AutoGen>
-	  <DesignTime>True</DesignTime>
-	  <DependentUpon>Resources.resx</DependentUpon>
-	</Compile>
-	<Compile Include="Synchronize\SendReceiveAction.cs" />
-	<Compile Include="UiConfigurationOptions.cs" />
-	<Compile Include="ConfigFileReader.cs" />
-	<Compile Include="ConfigFileTaskBuilder.cs" />
-	<Compile Include="ConfigMigration\WeSayConfig\MigrateConfig5To6.cs" />
-	<Compile Include="ConfigMigration\WeSayConfig\ConfigurationMigrator.cs" />
-	<Compile Include="FailedLoadTask.cs" />
-	<Compile Include="ITaskConfiguration.cs" />
-	<Compile Include="PLiftExporter.cs" />
-	<Compile Include="PublicationFontStyleProvider.cs" />
-	<Compile Include="ServiceProvider.cs" />
-	<Compile Include="TaskCollection.cs" />
-	<Compile Include="TaskTypeCatalog.cs" />
-	<Compile Include="ViewTemplate.cs" />
-	<Compile Include="ICurrentWorkTask.cs" />
-	<Compile Include="ITask.cs" />
-	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="WeSayWordsProject.cs" />
-	<Compile Include="WordListCatalog.cs" />
+    <Compile Include="BaseTaskConfig.cs" />
+    <Compile Include="CheckinDescriptionBuilder.cs" />
+    <Compile Include="ChorusBackupMaker.cs" />
+    <Compile Include="BasilProject.cs" />
+    <Compile Include="ConfigFile.cs" />
+    <Compile Include="ConfigMigration\UserConfig\WeSayUserConfigMigrator.cs" />
+    <Compile Include="ConfigMigration\WritingSystem\WritingSystemMigrator.cs" />
+    <Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsToLdmlMigrationStrategy.cs" />
+    <Compile Include="ConfigMigration\WritingSystem\WritingSystemCollection_V1.cs" />
+    <Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsMigrator.cs" />
+    <Compile Include="ConfigMigration\WritingSystem\WritingSystem_V1.cs" />
+    <Compile Include="ConfigMigration\XslFromResourceMigrator.cs" />
+    <Compile Include="LiftFileLocator.cs" />
+    <Compile Include="ProjectFromLiftFolderCreator.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Synchronize\SendReceiveAction.cs" />
+    <Compile Include="UiConfigurationOptions.cs" />
+    <Compile Include="ConfigFileReader.cs" />
+    <Compile Include="ConfigFileTaskBuilder.cs" />
+    <Compile Include="ConfigMigration\WeSayConfig\MigrateConfig5To6.cs" />
+    <Compile Include="ConfigMigration\WeSayConfig\ConfigurationMigrator.cs" />
+    <Compile Include="FailedLoadTask.cs" />
+    <Compile Include="ITaskConfiguration.cs" />
+    <Compile Include="PLiftExporter.cs" />
+    <Compile Include="PublicationFontStyleProvider.cs" />
+    <Compile Include="ServiceProvider.cs" />
+    <Compile Include="TaskCollection.cs" />
+    <Compile Include="TaskTypeCatalog.cs" />
+    <Compile Include="ViewTemplate.cs" />
+    <Compile Include="ICurrentWorkTask.cs" />
+    <Compile Include="ITask.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WeSayWordsProject.cs" />
+    <Compile Include="WordListCatalog.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
-	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
-	  <Name>LexicalModel</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
-	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
-	  <Name>WeSay.AddinLib</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
-	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
-	  <Name>WeSay.Data</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
-	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
-	  <Name>WeSay.Foundation</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
-	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
-	  <Name>WeSay.UI</Name>
-	</ProjectReference>
+    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+      <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+      <Name>LexicalModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
+      <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
+      <Name>WeSay.AddinLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
+      <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
+      <Name>WeSay.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+      <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+      <Name>WeSay.Foundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
+      <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
+      <Name>WeSay.UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig0To1.xsl">
-	</EmbeddedResource>
+    <EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig0To1.xsl">
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig1To2.xsl" />
+    <EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig1To2.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig2To3.xsl" />
+    <EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig2To3.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig3To4.xsl" />
+    <EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig3To4.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig5To6.xsl" />
+    <EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig5To6.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig4To5.xsl" />
+    <EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig4To5.xsl" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig6To7.xsl" />
-	<EmbeddedResource Include="Properties\Resources.resx">
-	  <Generator>ResXFileCodeGenerator</Generator>
-	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
+    <EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig6To7.xsl" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="Resources\wesay.helpmap" />
-	<None Include="Resources\sendReceive32x32.png" />
+    <EmbeddedResource Include="Resources\wesay.helpmap" />
+    <None Include="Resources\sendReceive32x32.png" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ConfigMigration\UserConfig\Migrate1To2.xsl" />
+    <EmbeddedResource Include="ConfigMigration\UserConfig\Migrate1To2.xsl" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

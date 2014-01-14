@@ -1,234 +1,184 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
-	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
-	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{42FB4CC3-F2D1-4509-87DD-6BBD430CD4AB}</ProjectGuid>
-	<OutputType>Library</OutputType>
-	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>Addin.Backup</RootNamespace>
-	<AssemblyName>Addin.Backup</AssemblyName>
-	<FileUpgradeFlags>
-	</FileUpgradeFlags>
-	<UpgradeBackupLocation>
-	</UpgradeBackupLocation>
-	<OldToolsVersion>3.5</OldToolsVersion>
-	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-	<TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{42FB4CC3-F2D1-4509-87DD-6BBD430CD4AB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Addin.Backup</RootNamespace>
+    <AssemblyName>Addin.Backup</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-	<DebugSymbols>true</DebugSymbols>
-	<DebugType>full</DebugType>
-	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>Addin.Backup</AssemblyName>
-	<RootNamespace>Addin.Backup</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Addin.Backup</AssemblyName>
+    <RootNamespace>Addin.Backup</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-	<DebugType>pdbonly</DebugType>
-	<Optimize>true</Optimize>
-	<OutputPath>..\..\output\Release\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
-	<OutputType>Library</OutputType>
-	<AssemblyName>Addin.Backup</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>Addin.Backup</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\DebugMono\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<DebugType>full</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>Addin.Backup</AssemblyName>
-	<RootNamespace>Addin.Backup</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|AnyCPU' ">
-	<OutputPath>..\..\output\ReleaseMono\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<OutputType>Library</OutputType>
-	<AssemblyName>Addin.Backup</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>Addin.Backup</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\output\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Addin.Backup</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <RootNamespace>Addin.Backup</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\Release\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\DebugMono\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\ReleaseMono\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\ICSharpCode.SharpZipLib.dll</HintPath>
-	</Reference>
-	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\LibChorus.dll</HintPath>
-	</Reference>
-	<Reference Include="Mono.Addins, Version=0.4.0.0, Culture=neutral, processorArchitecture=x86">
-	  <SpecificVersion>False</SpecificVersion>
-	  <ExecutableExtension>.exe</ExecutableExtension>
-	  <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
-	</Reference>
-	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
-	</Reference>
-	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
-	</Reference>
-	<None Include="..\..\lib\common\Enchant.Net.dll.config">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
-	<Reference Include="System" />
-	<Reference Include="System.Core">
-	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-	</Reference>
-	<Reference Include="System.Data" />
-	<Reference Include="System.Drawing" />
-	<Reference Include="System.Management" />
-	<Reference Include="System.Windows.Forms" />
-	<Reference Include="System.Xml" />
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\common\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\LibChorus.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=0.4.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <ExecutableExtension>.exe</ExecutableExtension>
+      <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
+    </Reference>
+    <Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
+    </Reference>
+    <None Include="..\..\lib\common\Enchant.Net.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="BackupMaker.cs" />
-	<Compile Include="BackupToDevice.cs" />
-	<Compile Include="BackupDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="BackupDialog.Designer.cs">
-	  <DependentUpon>BackupDialog.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="Resources.Designer.cs">
-	  <AutoGen>True</AutoGen>
-	  <DesignTime>True</DesignTime>
-	  <DependentUpon>Resources.resx</DependentUpon>
-	</Compile>
-	<Compile Include="SendProjectEmail.cs" />
-	<Compile Include="SendProjectEmailSettingsDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="SendProjectEmailSettingsDialog.Designer.cs">
-	  <DependentUpon>SendProjectEmailSettingsDialog.cs</DependentUpon>
-	</Compile>
+    <Compile Include="BackupMaker.cs" />
+    <Compile Include="BackupToDevice.cs" />
+    <Compile Include="BackupDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BackupDialog.Designer.cs">
+      <DependentUpon>BackupDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SendProjectEmail.cs" />
+    <Compile Include="SendProjectEmailSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SendProjectEmailSettingsDialog.Designer.cs">
+      <DependentUpon>SendProjectEmailSettingsDialog.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
-	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
-	  <Name>LexicalModel</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
-	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
-	  <Name>WeSay.AddinLib</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
-	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
-	  <Name>WeSay.Data</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
-	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
-	  <Name>WeSay.Foundation</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
-	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
-	  <Name>WeSay.Project</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
-	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
-	  <Name>WeSay.UI</Name>
-	</ProjectReference>
+    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+      <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+      <Name>LexicalModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
+      <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
+      <Name>WeSay.AddinLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
+      <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
+      <Name>WeSay.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+      <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+      <Name>WeSay.Foundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
+      <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
+      <Name>WeSay.Project</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
+      <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
+      <Name>WeSay.UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="BackupDialog.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>BackupDialog.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Resources.resx">
-	  <SubType>Designer</SubType>
-	  <Generator>ResXFileCodeGenerator</Generator>
-	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	</EmbeddedResource>
-	<EmbeddedResource Include="SendProjectEmailSettingsDialog.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>SendProjectEmailSettingsDialog.cs</DependentUpon>
-	</EmbeddedResource>
+    <EmbeddedResource Include="BackupDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>BackupDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SendProjectEmailSettingsDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SendProjectEmailSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\buttonImage.png" />
-	<None Include="Resources\emailAction.png" />
-	<None Include="Resources\greenSynchronize.png" />
-	<None Include="Resources\greenEmail.png" />
-	<None Include="Resources\greenUsbKey.png" />
+    <None Include="Resources\buttonImage.png" />
+    <None Include="Resources\emailAction.png" />
+    <None Include="Resources\greenSynchronize.png" />
+    <None Include="Resources\greenEmail.png" />
+    <None Include="Resources\greenUsbKey.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

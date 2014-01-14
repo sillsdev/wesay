@@ -1,590 +1,540 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
-	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>9.0.21022</ProductVersion>
-	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</ProjectGuid>
-	<OutputType>WinExe</OutputType>
-	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.ConfigTool</RootNamespace>
-	<AssemblyName>WeSay Configuration Tool</AssemblyName>
-	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
-	<FileUpgradeFlags>
-	</FileUpgradeFlags>
-	<UpgradeBackupLocation>
-	</UpgradeBackupLocation>
-	<OldToolsVersion>3.5</OldToolsVersion>
-	<IsWebBootstrapper>false</IsWebBootstrapper>
-	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-	<TargetZone>LocalIntranet</TargetZone>
-	<GenerateManifests>false</GenerateManifests>
-	<PublishUrl>publish\</PublishUrl>
-	<Install>true</Install>
-	<InstallFrom>Disk</InstallFrom>
-	<UpdateEnabled>false</UpdateEnabled>
-	<UpdateMode>Foreground</UpdateMode>
-	<UpdateInterval>7</UpdateInterval>
-	<UpdateIntervalUnits>Days</UpdateIntervalUnits>
-	<UpdatePeriodically>false</UpdatePeriodically>
-	<UpdateRequired>false</UpdateRequired>
-	<MapFileExtensions>true</MapFileExtensions>
-	<ApplicationRevision>0</ApplicationRevision>
-	<ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-	<UseApplicationTrust>false</UseApplicationTrust>
-	<BootstrapperEnabled>true</BootstrapperEnabled>
-	<TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WeSay.ConfigTool</RootNamespace>
+    <AssemblyName>WeSay Configuration Tool</AssemblyName>
+    <ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetZone>LocalIntranet</TargetZone>
+    <GenerateManifests>false</GenerateManifests>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-	<DebugSymbols>true</DebugSymbols>
-	<DebugType>full</DebugType>
-	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
-	<OutputType>WinExe</OutputType>
-	<AssemblyName>WeSay Configuration Tool</AssemblyName>
-	<RootNamespace>WeSay.ConfigTool</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
-	<PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>WeSay Configuration Tool</AssemblyName>
+    <RootNamespace>WeSay.ConfigTool</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-	<DebugType>pdbonly</DebugType>
-	<Optimize>true</Optimize>
-	<OutputPath>..\..\output\$(Configuration)\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
-	<OutputType>WinExe</OutputType>
-	<AssemblyName>WeSay Configuration Tool</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.ConfigTool</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\DebugMono\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<DebugType>full</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<OutputType>WinExe</OutputType>
-	<AssemblyName>WeSay Configuration Tool</AssemblyName>
-	<RootNamespace>WeSay.ConfigTool</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<Optimize>true</Optimize>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|AnyCPU' ">
-	<OutputPath>..\..\output\ReleaseMono\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-	<OutputType>WinExe</OutputType>
-	<AssemblyName>WeSay Configuration Tool</AssemblyName>
-	<DebugSymbols>true</DebugSymbols>
-	<RootNamespace>WeSay.ConfigTool</RootNamespace>
-	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<WarningLevel>4</WarningLevel>
-	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\output\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>WeSay Configuration Tool</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <RootNamespace>WeSay.ConfigTool</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\Release\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\DebugMono\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>full</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|x86' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\ReleaseMono\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>x86</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Autofac, Version=1.3.2.449, Culture=neutral, PublicKeyToken=17863af14b0044da">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Autofac.dll</HintPath>
-	</Reference>
-	<Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Chorus.exe</HintPath>
-	</Reference>
-	<Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
-	</Reference>
-	<Reference Include="Keyman7Interop, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Keyman7Interop.dll</HintPath>
-	</Reference>
-	<Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\LibChorus.dll</HintPath>
-	</Reference>
-	<Reference Include="Mono.Addins, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
-	</Reference>
-	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
-	</Reference>
-	<Reference Include="System" />
-	<Reference Include="System.Core">
-	  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-	</Reference>
-	<Reference Include="System.Data" />
-	<Reference Include="System.Drawing" />
-	<Reference Include="System.Windows.Forms" />
-	<Reference Include="System.Xml" />
-	<Reference Include="Vulcan.Uczniowie.HelpProvider, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\common\Vulcan.Uczniowie.HelpProvider.dll</HintPath>
-	</Reference>
+    <Reference Include="Autofac, Version=1.3.2.449, Culture=neutral, PublicKeyToken=17863af14b0044da">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Chorus.exe</HintPath>
+    </Reference>
+    <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Keyman7Interop, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Keyman7Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\LibChorus.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
+    </Reference>
+    <Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Vulcan.Uczniowie.HelpProvider, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\common\Vulcan.Uczniowie.HelpProvider.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="AboutBox.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="AboutBox.Designer.cs">
-	  <DependentUpon>AboutBox.cs</DependentUpon>
-	</Compile>
-	<Compile Include="SplitContainer2.cs" />
-	<Compile Include="ActionsControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="ActionsControl.Designer.cs">
-	  <DependentUpon>ActionsControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="ChorusControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="ChorusControl.Designer.cs">
-	  <DependentUpon>ChorusControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectDialog.Designer.cs">
-	  <DependentUpon>NewProjectDialog.cs</DependentUpon>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectFromFLExDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectFromFLExDialog.Designer.cs">
-	  <DependentUpon>NewProjectFromFLExDialog.cs</DependentUpon>
-	</Compile>
-	<Compile Include="MruProjects.cs" />
-	<Compile Include="ConfigurationWindow.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="ConfigurationWindow.Designer.cs">
-	  <DependentUpon>ConfigurationWindow.cs</DependentUpon>
-	</Compile>
-	<Compile Include="ConfigurationControlBase.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="BackupPlanControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="BackupPlanControl.Designer.cs">
-	  <DependentUpon>BackupPlanControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="FieldsControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="FieldsControl.Designer.cs">
-	  <DependentUpon>FieldsControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="FieldDetailControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="FieldDetailControl.Designer.cs">
-	  <DependentUpon>FieldDetailControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectInformationDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="NewProjectCreation\NewProjectInformationDialog.Designer.cs">
-	  <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
-	</Compile>
-	<Compile Include="NewProjectCreation\ProjectFromRawFLExLiftFilesCreator.cs" />
-	<Compile Include="OptionListControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="OptionListControl.Designer.cs">
-	  <DependentUpon>OptionListControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="InterfaceLanguageControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="InterfaceLanguageControl.Designer.cs">
-	  <DependentUpon>InterfaceLanguageControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Program.cs" />
-	<Compile Include="Properties\AssemblyInfo.cs" />
-	<EmbeddedResource Include="AboutBox.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>AboutBox.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="ActionsControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>ActionsControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="ConfigurationWindow.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>ConfigurationWindow.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="BackupPlanControl.resx">
-	  <DependentUpon>BackupPlanControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="ChorusControl.resx">
-	  <DependentUpon>ChorusControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="NewProjectCreation\NewProjectDialog.resx">
-	  <DependentUpon>NewProjectDialog.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="NewProjectCreation\NewProjectFromFLExDialog.resx">
-	  <DependentUpon>NewProjectFromFLExDialog.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="FieldsControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>FieldsControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="FieldDetailControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>FieldDetailControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="NewProjectCreation\NewProjectInformationDialog.resx">
-	  <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="OptionListControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>OptionListControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="InterfaceLanguageControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>InterfaceLanguageControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Properties\Resources.resx">
-	  <Generator>ResXFileCodeGenerator</Generator>
-	  <SubType>Designer</SubType>
-	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\GatherBySemDomTaskConfigControl.resx">
-	  <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\DefaultTaskConfigurationControl.resx">
-	  <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\MissingInfoTaskConfigControl.resx">
-	  <DependentUpon>MissingInfoTaskConfigControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\TaskListView.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>TaskListView.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Tasks\WritingSystemFilterControl.resx">
-	  <DependentUpon>WritingSystemFilterControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="UserSpecificSettingIndicator.resx">
-	  <DependentUpon>UserSpecificSettingIndicator.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="WelcomeControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>WelcomeControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="SettingsControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>SettingsControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="WritingSystemForFieldControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>WritingSystemForFieldControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="WritingSystemSetup.resx">
-	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<None Include="App.config" />
-	<None Include="Properties\Settings.settings">
-	  <Generator>SettingsSingleFileGenerator</Generator>
-	  <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-	</None>
-	<Compile Include="Properties\Resources.Designer.cs">
-	  <AutoGen>True</AutoGen>
-	  <DesignTime>True</DesignTime>
-	  <DependentUpon>Resources.resx</DependentUpon>
-	</Compile>
-	<Compile Include="Properties\Settings.Designer.cs">
-	  <AutoGen>True</AutoGen>
-	  <DependentUpon>Settings.settings</DependentUpon>
-	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
-	</Compile>
-	<Compile Include="Properties\Settings.cs" />
-	<Compile Include="Tasks\GatherBySemDomTaskConfigControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\GatherBySemDomTaskConfigControl.Designer.cs">
-	  <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Tasks\DefaultTaskConfigurationControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\DefaultTaskConfigurationControl.Designer.cs">
-	  <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Tasks\ConfigTaskControlFactory.cs" />
-	<Compile Include="Tasks\MissingInfoTaskConfigControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\MissingInfoTaskConfigControl.Designer.cs">
-	  <DependentUpon>MissingInfoTaskConfigControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Tasks\TaskListView.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\TaskListView.Designer.cs">
-	  <DependentUpon>TaskListView.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Tasks\TaskListPresentationModel.cs" />
-	<Compile Include="Tasks\WritingSystemFilterControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="Tasks\WritingSystemFilterControl.Designer.cs">
-	  <DependentUpon>WritingSystemFilterControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="UserSpecificSettingIndicator.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="UserSpecificSettingIndicator.Designer.cs">
-	  <DependentUpon>UserSpecificSettingIndicator.cs</DependentUpon>
-	</Compile>
-	<Compile Include="WelcomeControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="WelcomeControl.Designer.cs">
-	  <DependentUpon>WelcomeControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="SettingsControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="SettingsControl.Designer.cs">
-	  <DependentUpon>SettingsControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="WritingSystemForFieldControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="WritingSystemForFieldControl.Designer.cs">
-	  <DependentUpon>WritingSystemForFieldControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="WritingSystemSetup.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
+    <Compile Include="AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SplitContainer2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ActionsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ActionsControl.Designer.cs">
+      <DependentUpon>ActionsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChorusControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ChorusControl.Designer.cs">
+      <DependentUpon>ChorusControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewProjectCreation\NewProjectDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewProjectCreation\NewProjectDialog.Designer.cs">
+      <DependentUpon>NewProjectDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewProjectCreation\NewProjectFromFLExDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewProjectCreation\NewProjectFromFLExDialog.Designer.cs">
+      <DependentUpon>NewProjectFromFLExDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MruProjects.cs" />
+    <Compile Include="ConfigurationWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigurationWindow.Designer.cs">
+      <DependentUpon>ConfigurationWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControlBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BackupPlanControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BackupPlanControl.Designer.cs">
+      <DependentUpon>BackupPlanControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FieldsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FieldsControl.Designer.cs">
+      <DependentUpon>FieldsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FieldDetailControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FieldDetailControl.Designer.cs">
+      <DependentUpon>FieldDetailControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewProjectCreation\NewProjectInformationDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewProjectCreation\NewProjectInformationDialog.Designer.cs">
+      <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewProjectCreation\ProjectFromRawFLExLiftFilesCreator.cs" />
+    <Compile Include="OptionListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OptionListControl.Designer.cs">
+      <DependentUpon>OptionListControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InterfaceLanguageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="InterfaceLanguageControl.Designer.cs">
+      <DependentUpon>InterfaceLanguageControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AboutBox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ActionsControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ActionsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigurationWindow.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ConfigurationWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BackupPlanControl.resx">
+      <DependentUpon>BackupPlanControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChorusControl.resx">
+      <DependentUpon>ChorusControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewProjectCreation\NewProjectDialog.resx">
+      <DependentUpon>NewProjectDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewProjectCreation\NewProjectFromFLExDialog.resx">
+      <DependentUpon>NewProjectFromFLExDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FieldsControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FieldsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FieldDetailControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FieldDetailControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewProjectCreation\NewProjectInformationDialog.resx">
+      <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OptionListControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>OptionListControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InterfaceLanguageControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>InterfaceLanguageControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tasks\GatherBySemDomTaskConfigControl.resx">
+      <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tasks\DefaultTaskConfigurationControl.resx">
+      <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tasks\MissingInfoTaskConfigControl.resx">
+      <DependentUpon>MissingInfoTaskConfigControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tasks\TaskListView.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TaskListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tasks\WritingSystemFilterControl.resx">
+      <DependentUpon>WritingSystemFilterControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserSpecificSettingIndicator.resx">
+      <DependentUpon>UserSpecificSettingIndicator.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WelcomeControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WelcomeControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WritingSystemForFieldControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WritingSystemForFieldControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WritingSystemSetup.resx">
+      <DependentUpon>WritingSystemSetup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="App.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Properties\Settings.cs" />
+    <Compile Include="Tasks\GatherBySemDomTaskConfigControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tasks\GatherBySemDomTaskConfigControl.Designer.cs">
+      <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\DefaultTaskConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tasks\DefaultTaskConfigurationControl.Designer.cs">
+      <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\ConfigTaskControlFactory.cs" />
+    <Compile Include="Tasks\MissingInfoTaskConfigControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tasks\MissingInfoTaskConfigControl.Designer.cs">
+      <DependentUpon>MissingInfoTaskConfigControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\TaskListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tasks\TaskListView.Designer.cs">
+      <DependentUpon>TaskListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\TaskListPresentationModel.cs" />
+    <Compile Include="Tasks\WritingSystemFilterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tasks\WritingSystemFilterControl.Designer.cs">
+      <DependentUpon>WritingSystemFilterControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserSpecificSettingIndicator.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserSpecificSettingIndicator.Designer.cs">
+      <DependentUpon>UserSpecificSettingIndicator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WelcomeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WelcomeControl.Designer.cs">
+      <DependentUpon>WelcomeControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsControl.Designer.cs">
+      <DependentUpon>SettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WritingSystemForFieldControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WritingSystemForFieldControl.Designer.cs">
+      <DependentUpon>WritingSystemForFieldControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WritingSystemSetup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\Addin.Backup\Addin.Backup.csproj">
-	  <Project>{42FB4CC3-F2D1-4509-87DD-6BBD430CD4AB}</Project>
-	  <Name>Addin.Backup</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
-	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
-	  <Name>LexicalModel</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\LexicalTools\LexicalTools.csproj">
-	  <Project>{87AF0B02-2983-486D-857F-D1859535C234}</Project>
-	  <Name>LexicalTools</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
-	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
-	  <Name>WeSay.AddinLib</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.App\WeSay.App.csproj">
-	  <Project>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</Project>
-	  <Name>WeSay.App</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
-	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
-	  <Name>WeSay.Data</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
-	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
-	  <Name>WeSay.Foundation</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
-	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
-	  <Name>WeSay.Project</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
-	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
-	  <Name>WeSay.UI</Name>
-	</ProjectReference>
+    <ProjectReference Include="..\Addin.Backup\Addin.Backup.csproj">
+      <Project>{42FB4CC3-F2D1-4509-87DD-6BBD430CD4AB}</Project>
+      <Name>Addin.Backup</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+      <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+      <Name>LexicalModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LexicalTools\LexicalTools.csproj">
+      <Project>{87AF0B02-2983-486D-857F-D1859535C234}</Project>
+      <Name>LexicalTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
+      <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
+      <Name>WeSay.AddinLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.App\WeSay.App.csproj">
+      <Project>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</Project>
+      <Name>WeSay.App</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
+      <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
+      <Name>WeSay.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+      <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+      <Name>WeSay.Foundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
+      <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
+      <Name>WeSay.Project</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
+      <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
+      <Name>WeSay.UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\RoundedBorder.png" />
+    <None Include="Resources\RoundedBorder.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\construction.png" />
+    <None Include="Resources\construction.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\WelcomeImage.png" />
+    <None Include="Resources\WelcomeImage.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\WeSayMenuSized.png" />
+    <None Include="Resources\WeSayMenuSized.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\WeSayConfigMenuSized.png" />
+    <None Include="Resources\WeSayConfigMenuSized.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\GenericLittleDeletionButton.bmp" />
+    <None Include="Resources\GenericLittleDeletionButton.bmp" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\genericLittleNewButton.png" />
+    <None Include="Resources\genericLittleNewButton.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\NewOptionListItem.png" />
+    <None Include="Resources\NewOptionListItem.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\deleteOptionListItem.png" />
+    <None Include="Resources\deleteOptionListItem.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\NewOptionsList.png" />
+    <None Include="Resources\NewOptionsList.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\OpenOptionsList.png" />
+    <None Include="Resources\OpenOptionsList.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\ConfigTasks.png" />
+    <None Include="Resources\ConfigTasks.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\ConfigWritingSystems.png" />
+    <None Include="Resources\ConfigWritingSystems.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\buttonImage.png" />
+    <None Include="Resources\buttonImage.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\ConfigBackup.png" />
+    <None Include="Resources\ConfigBackup.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\genericAction.png" />
+    <None Include="Resources\genericAction.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\ConfigFields.png" />
+    <None Include="Resources\ConfigFields.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\ConfigInterfaceLanguage.png" />
+    <None Include="Resources\ConfigInterfaceLanguage.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\ConfigActions.png" />
+    <None Include="Resources\ConfigActions.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\about.png" />
+    <None Include="Resources\about.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\openProject.png" />
+    <None Include="Resources\openProject.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\NewProject.png" />
+    <None Include="Resources\NewProject.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\ConfigOptionLists.png" />
+    <None Include="Resources\ConfigOptionLists.png" />
   </ItemGroup>
   <ItemGroup>
-	<BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-	  <Visible>False</Visible>
-	  <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-	  <Install>false</Install>
-	</BootstrapperPackage>
-	<BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-	  <Visible>False</Visible>
-	  <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-	  <Install>true</Install>
-	</BootstrapperPackage>
-	<BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-	  <Visible>False</Visible>
-	  <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-	  <Install>false</Install>
-	</BootstrapperPackage>
-	<BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-	  <Visible>False</Visible>
-	  <ProductName>.NET Framework 3.5</ProductName>
-	  <Install>false</Install>
-	</BootstrapperPackage>
-	<BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-	  <Visible>False</Visible>
-	  <ProductName>.NET Framework 3.5 SP1</ProductName>
-	  <Install>false</Install>
-	</BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\Warning.bmp" />
+    <None Include="Resources\Warning.bmp" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Properties\app.manifest" />
-	<None Include="Resources\userSpecific32x31.png" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Resources\userSpecific32x31.png" />
   </ItemGroup>
   <ItemGroup>
-	<Folder Include="Properties\DataSources\" />
+    <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
