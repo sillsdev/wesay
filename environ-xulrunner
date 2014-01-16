@@ -1,0 +1,8 @@
+# search for xulrunner-14*, select the latest, and add its location to LD_LIBRARY_PATH
+# also define LD_PRELOAD to get geckofix.so to work properly
+# (the search order must be the same as in Geckfx-Core/XULRunnerLocator.cs)
+XULRUNNER=/usr/lib/xulrunner-geckofx
+if [ ! -d ${XULRUNNER} ]; then XULRUNNER=/usr/lib/xulrunner-14.0.1; fi
+LD_LIBRARY_PATH="${XULRUNNER}:${LD_LIBRARY_PATH}"
+GECKOFX="$(pkg-config --variable assemblies_dir geckofx-core-14)"
+LD_PRELOAD=${GECKOFX}/geckofix.so
