@@ -14,7 +14,7 @@
 		<Solution>WeSay VS2010.sln</Solution>
 		<ApplicationName>WeSay</ApplicationName>
 		<ApplicationNameLC>wesay</ApplicationNameLC>
-		<Configuration>DebugMono</Configuration>
+		<Configuration>Debug</Configuration>
 	</PropertyGroup>
 
 	<Import Project="$(RootDir)/build/build.common.proj" />
@@ -72,8 +72,8 @@
 	</Target>
 	<ItemGroup>
 		<Source Include="$(RootDir)/src/**/*" Exclude="$(RootDir)/src/**/obj/**/*;$(RootDir)/src/**/bin/**/*" />
-		<Source Include="$(RootDir)/lib/DebugMono/**" Exclude="$(RootDir)/lib/DebugMono/*Palaso*;$(RootDir)/lib/DebugMono/*Chorus*" />
-		<Source Include="$(RootDir)/lib/ReleaseMono/**" Exclude="$(RootDir)/lib/ReleaseMono/*Palaso*;$(RootDir)/lib/ReleaseMono/*Chorus*" />
+		<Source Include="$(RootDir)/lib/Debug/**" Exclude="$(RootDir)/lib/Debug/*Palaso*;$(RootDir)/lib/Debug/*Chorus*" />
+		<Source Include="$(RootDir)/lib/Release/**" Exclude="$(RootDir)/lib/Release/*Palaso*;$(RootDir)/lib/Release/*Chorus*" />
 		<Source Include="$(RootDir)/lib/common/**" />
 		<Source Include="$(RootDir)/artwork/**" />
 		<Source Include="$(RootDir)/build/*.proj" />
