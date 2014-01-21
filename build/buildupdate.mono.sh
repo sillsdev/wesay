@@ -65,30 +65,37 @@ copy_wget() {
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt337
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"release/**"=>"lib/Release", "debug/**"=>"lib/Debug", "Autofac.dll"=>"lib/common", "Mercurial-i686.zip"=>"lib/common", "Mercurial-x86_64.zip"=>"lib/common"}
+#     paths: {"release/**"=>"lib/Release", "debug/**"=>"lib/Debug", "Mercurial-i686.zip"=>"lib/common", "Mercurial-x86_64.zip"=>"lib/common"}
 #     VCS: https://github.com/sillsdev/chorus.git [develop]
 # [1] build: L10NSharp Mono continuous (bt271)
 #     project: L10NSharp
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt271
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"L10NSharp.dll"=>"lib/common", "L10NSharp.dll.mdb"=>"lib/common"}
+#     paths: {"L10NSharp.dll"=>"lib/Release", "L10NSharp.dll.mdb"=>"lib/Release"}
 #     VCS: https://bitbucket.org/hatton/l10nsharp [default]
-# [2] build: palaso-precise64-develop-continuous (bt334)
+# [2] build: L10NSharp Mono continuous (bt271)
+#     project: L10NSharp
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt271
+#     clean: false
+#     revision: latest.lastSuccessful
+#     paths: {"L10NSharp.dll"=>"lib/Debug", "L10NSharp.dll.mdb"=>"lib/Debug"}
+#     VCS: https://bitbucket.org/hatton/l10nsharp [default]
+# [3] build: palaso-precise64-develop-continuous (bt334)
 #     project: libpalaso
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt334
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"release/**"=>"lib/Release", "debug/**"=>"lib/Debug"}
 #     VCS: https://github.com/sillsdev/libpalaso.git [develop]
-# [3] build: icucil-precise64-Continuous (bt281)
+# [4] build: icucil-precise64-Continuous (bt281)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"icu*.dll"=>"lib/Release", "icu*.config"=>"lib/Release"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [4] build: icucil-precise64-Continuous (bt281)
+# [5] build: icucil-precise64-Continuous (bt281)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
 #     clean: false
@@ -102,9 +109,13 @@ mkdir -p ../lib/Debug
 mkdir -p ../lib/common
 
 # download artifact dependencies
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/Autofac.dll ../lib/Release/Autofac.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/Chorus.exe ../lib/Release/Chorus.exe
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/Chorus.exe.config ../lib/Release/Chorus.exe.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/Chorus.exe.mdb ../lib/Release/Chorus.exe.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/ChorusHub.exe ../lib/Release/ChorusHub.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/ChorusHub.exe.config ../lib/Release/ChorusHub.exe.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/ChorusHub.exe.mdb ../lib/Release/ChorusHub.exe.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/ChorusMerge.exe ../lib/Release/ChorusMerge.exe
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/ChorusMerge.exe.config ../lib/Release/ChorusMerge.exe.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/ChorusMerge.exe.mdb ../lib/Release/ChorusMerge.exe.mdb
@@ -118,9 +129,13 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/geckofix.so ../lib/Release/geckofix.so
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/geckofx-core-14.dll ../lib/Release/geckofx-core-14.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/release/geckofx-core-14.dll.config ../lib/Release/geckofx-core-14.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/Autofac.dll ../lib/Debug/Autofac.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/Chorus.exe ../lib/Debug/Chorus.exe
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/Chorus.exe.config ../lib/Debug/Chorus.exe.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/Chorus.exe.mdb ../lib/Debug/Chorus.exe.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/ChorusHub.exe ../lib/Debug/ChorusHub.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/ChorusHub.exe.config ../lib/Debug/ChorusHub.exe.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/ChorusHub.exe.mdb ../lib/Debug/ChorusHub.exe.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/ChorusMerge.exe ../lib/Debug/ChorusMerge.exe
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/ChorusMerge.exe.config ../lib/Debug/ChorusMerge.exe.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/ChorusMerge.exe.mdb ../lib/Debug/ChorusMerge.exe.mdb
@@ -134,11 +149,12 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/geckofix.so ../lib/Debug/geckofix.so
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/geckofx-core-14.dll ../lib/Debug/geckofx-core-14.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/debug/geckofx-core-14.dll.config ../lib/Debug/geckofx-core-14.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/Autofac.dll ../lib/common/Autofac.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/Mercurial-i686.zip ../lib/common/Mercurial-i686.zip
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt337/latest.lastSuccessful/Mercurial-x86_64.zip ../lib/common/Mercurial-x86_64.zip
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll ../lib/common/L10NSharp.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll.mdb ../lib/common/L10NSharp.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll ../lib/Release/L10NSharp.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll.mdb ../lib/Release/L10NSharp.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll ../lib/Debug/L10NSharp.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll.mdb ../lib/Debug/L10NSharp.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/release/Palaso.BuildTasks.dll ../lib/Release/Palaso.BuildTasks.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/release/Palaso.DictionaryServices.dll ../lib/Release/Palaso.DictionaryServices.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/release/Palaso.Lift.dll ../lib/Release/Palaso.Lift.dll
@@ -159,6 +175,7 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/release/SIL.Archiving.dll ../lib/Release/SIL.Archiving.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/release/SIL.Archiving.dll.config ../lib/Release/SIL.Archiving.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/release/SIL.Archiving.dll.mdb ../lib/Release/SIL.Archiving.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/release/ibusdotnet.dll ../lib/Release/ibusdotnet.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/debug/Palaso.BuildTasks.dll ../lib/Debug/Palaso.BuildTasks.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/debug/Palaso.DictionaryServices.dll ../lib/Debug/Palaso.DictionaryServices.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/debug/Palaso.Lift.dll ../lib/Debug/Palaso.Lift.dll
@@ -178,6 +195,7 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/debug/SIL.Archiving.dll ../lib/Debug/SIL.Archiving.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/debug/SIL.Archiving.dll.config ../lib/Debug/SIL.Archiving.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/debug/SIL.Archiving.dll.mdb ../lib/Debug/SIL.Archiving.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/debug/ibusdotnet.dll ../lib/Debug/ibusdotnet.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll ../lib/Release/icu.net.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.config ../lib/Release/icu.net.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll ../lib/Debug/icu.net.dll
