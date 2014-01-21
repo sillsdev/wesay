@@ -1,10 +1,25 @@
 #!/bin/bash
 # server=build.palaso.org
 # project=WeSay1.4-Linux
-# build=WeSay1.4-win32 Continuous
+# build=wesay1.4-win32-continuous
 # root_dir=..
+# $Id: da666a7e5eb1d63b434514279cd14cacd26c730f $
 
 # *** Functions ***
+force=
+
+while getopts f opt; do
+	case $opt in
+	f)
+		force=1
+		;;
+
+	esac
+done
+
+shift $((OPTIND - 1))
+
+
 copy_auto() {
 	where_curl=$(type -P curl)
 	where_wget=$(type -P wget)
@@ -22,7 +37,7 @@ copy_auto() {
 
 copy_curl() {
 	echo "curl: $2 <= $1"
-	if [ -e "$2" ]
+	if [ -e "$2" ] && [ "$force" != "1" ]
 	then
 		curl -# -L -z $2 -o $2 $1
 	else
@@ -40,7 +55,7 @@ copy_wget() {
 }
 
 # *** Results ***
-# build: WeSay1.4-win32 Continuous (bt312)
+# build: wesay1.4-win32-continuous (bt312)
 # project: WeSay1.4-Linux
 # URL: http://build.palaso.org/viewType.html?buildTypeId=bt312
 # VCS: https://github.com/sillsdev/wesay [develop]
