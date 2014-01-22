@@ -80,7 +80,7 @@
     <Compile Include="IThingOnDashboard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' ">
+  <ItemGroup Condition=" '$(OS)' == 'Windows_NT' ">
     <Content Include="..\..\lib\Debug\icudt40.dll">
       <Link>icudt40.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
