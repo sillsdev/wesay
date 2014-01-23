@@ -82,7 +82,7 @@
 		<Delete Files="@(ExistingInstallerFiles)" />
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="">
+	<Target Name="Compile" DependsOnTargets="UnzipMercurial">
 		<MSBuild
 			Projects="$(RootDir)\src\$(Solution)"
 			Targets="Build"
