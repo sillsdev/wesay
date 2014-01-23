@@ -43,8 +43,8 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.splitContainer1 = new SplitContainer2();
-			this.splitContainer2 = new SplitContainer2();
+			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 
 			this._todoBox = new System.Windows.Forms.TableLayoutPanel();
 			this.label1 = new System.Windows.Forms.Label();
@@ -304,8 +304,8 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		#endregion
 
-		private SplitContainer2 splitContainer1;
-		private SplitContainer2 splitContainer2;
+		private SplitContainer splitContainer1;
+		private SplitContainer splitContainer2;
 
 		internal WeSayListView _todoRecordsListBox;
 		private EntryViewControl _entryViewControl;

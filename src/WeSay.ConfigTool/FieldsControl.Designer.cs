@@ -42,7 +42,7 @@ namespace WeSay.ConfigTool
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Definition");
 			System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Sentence");
 			System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Note");
-			this.splitContainer1 = new SplitContainer2();
+			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.btnMoveDown = new System.Windows.Forms.Button();
 			this.btnMoveUp = new System.Windows.Forms.Button();
 			this._fieldsListBox = new System.Windows.Forms.ListView();
@@ -268,7 +268,7 @@ namespace WeSay.ConfigTool
 
 		#endregion
 
-		private SplitContainer2 splitContainer1;
+		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.ToolTip toolTip1;
 		private System.Windows.Forms.ToolStrip toolStrip1;
 		private System.Windows.Forms.Label label1;

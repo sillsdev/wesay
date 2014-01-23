@@ -147,9 +147,6 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="SplitContainer2.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="ActionsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

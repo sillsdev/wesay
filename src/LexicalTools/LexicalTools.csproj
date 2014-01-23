@@ -262,9 +262,6 @@
     <Compile Include="TaskBase.cs" />
     <Compile Include="TaskMemoryRepository.cs" />
     <Compile Include="WordGatheringTaskBase.cs" />
-    <Compile Include="AddMissingInfo\SplitContainer2.cs">
-      <SubType>Component</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LexicalModel\LexicalModel.csproj">

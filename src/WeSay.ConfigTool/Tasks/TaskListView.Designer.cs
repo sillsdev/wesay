@@ -31,7 +31,7 @@ namespace WeSay.ConfigTool.Tasks
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.splitContainer1 = new SplitContainer2();
+			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._taskList = new BetterCheckedListBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -95,7 +95,7 @@ namespace WeSay.ConfigTool.Tasks
 
 		#endregion
 
-		private SplitContainer2 splitContainer1;
+		private System.Windows.Forms.SplitContainer splitContainer1;
 		private BetterCheckedListBox _taskList;
 		private System.Windows.Forms.Label label1;
 	}
