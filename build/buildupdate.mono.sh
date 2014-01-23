@@ -93,14 +93,14 @@ copy_wget() {
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"icu*.dll"=>"lib/Release", "icu*.config"=>"lib/Release"}
+#     paths: {"icu.net.*"=>"lib/Release"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
 # [5] build: icucil-precise64-Continuous (bt281)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"icu*.dll"=>"lib/Debug", "icu*.config"=>"lib/Debug"}
+#     paths: {"icu.net.*"=>"lib/Debug"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
 
 # make sure output directories exist
@@ -198,6 +198,8 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt334/latest.lastSuccessful/debug/ibusdotnet.dll ../lib/Debug/ibusdotnet.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll ../lib/Release/icu.net.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.config ../lib/Release/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.mdb ../lib/Release/icu.net.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll ../lib/Debug/icu.net.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.config ../lib/Debug/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.mdb ../lib/Debug/icu.net.dll.mdb
 # End of script
