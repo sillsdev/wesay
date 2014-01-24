@@ -34,3 +34,16 @@ Mercurial
 build/old
 lib/$(Configuration)
 test-results
+Autofac.dll
+Chorus*.exe*
+Geckofx-Winforms-14.dll
+L10NSharp.dll
+LibChorus*.dll*
+NDesk.DBus.dll*
+Palaso*.dll*
+SIL.Archiving.dll*
+geckofix.so
+geckofx-core-14.dll*
+ibusdotnet.dll
+icu*.dll*
+Mercurial*.zip
