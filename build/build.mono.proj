@@ -15,6 +15,7 @@
 		<ApplicationName>WeSay</ApplicationName>
 		<ApplicationNameLC>wesay</ApplicationNameLC>
 		<Configuration>Debug</Configuration>
+		<MONO_PREFIX Condition="'$(MONO_PREFIX)'==''">/usr</MONO_PREFIX>
 	</PropertyGroup>
 
 	<Import Project="$(RootDir)/build/build.common.proj" />
@@ -29,6 +30,13 @@
 		<CallTarget Targets="SetAssemblyVersion"/>
 		<CallTarget Targets="Compile"/>
 		<Message Text="Build Complete"/>
+	</Target>
+
+	<Target Name="LocalTest">
+		<Exec
+			Command="$(MONO_PREFIX)/bin/mono --debug $(MONO_PREFIX)/lib/mono/4.0/nunit-console.exe -noshadow [!P]*.Tests.dll -xml=WeSay.nunit-output.xml -exclude=&quot;SkipOnTeamCity&quot;"
+			WorkingDirectory="$(RootDir)/output/$(Configuration)"
+			Timeout="4500000"/>
 	</Target>
 
 	<ItemGroup>
@@ -46,6 +54,10 @@
 			Projects="$(RootDir)\src\$(Solution)"
 			Targets="Build"
 			Properties="Configuration=$(Configuration)" />
+		<Exec Condition="'$(action)' == 'test'"
+			Command="$(MONO_PREFIX)/bin/mono --debug $(MONO_PREFIX)/lib/mono/4.0/nunit-console.exe -noshadow -exclude=SkipOnTeamCity [!P]*.Tests.dll -xml=WeSay.nunit-output.xml"
+			WorkingDirectory="$(RootDir)/output/$(Configuration)"
+			Timeout="4500000"/>
 	</Target>
 
 	<Target Name="UnzipMercurial">
