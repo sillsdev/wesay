@@ -61,16 +61,7 @@
 	</Target>
 
 	<Target Name="UnzipMercurial">
-		<!-- Remember, Unix/Linux commands return 0 for success ("true") -->
-		<Exec Command="/usr/bin/test `arch` = x86_64" ContinueOnError="true" IgnoreExitCode="true">
-			<Output TaskParameter="ExitCode" PropertyName="ZeroIf64BitCpu"/>
-		</Exec>
-		<Exec Command="/usr/bin/test `arch` = i686" ContinueOnError="true" IgnoreExitCode="true">
-			<Output TaskParameter="ExitCode" PropertyName="ZeroIf32BitCpu"/>
-		</Exec>
-		<!-- Extract the appropriate zip file. -->
-		<Exec Condition="'$(ZeroIf64BitCpu)'=='0'" Command="/usr/bin/unzip -uq $(RootDir)/lib/common/Mercurial-x86_64.zip -d $(RootDir)" />
-		<Exec Condition="'$(ZeroIf32BitCpu)'=='0'" Command="/usr/bin/unzip -uq $(RootDir)/lib/common/Mercurial-i686.zip -d $(RootDir)" />
+		<Exec Command="unzip -uq $(RootDir)/lib/common/Mercurial-$(uname -m).zip -d $(RootDir)" ContinueOnError="true" />
 		<!-- Zip doesn't seem to retain the permission bits we need. -->
 		<Exec Command="/bin/chmod +x $(RootDir)/Mercurial/hg*" ContinueOnError="true"/>
 	</Target>
