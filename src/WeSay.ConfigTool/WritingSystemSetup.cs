@@ -23,7 +23,6 @@ namespace WeSay.ConfigTool
 			//nb: I (JH) wanted to hide IPA, but then in one week 2 people locally asked for it...
 			writingSystemSetupModel.WritingSystemSuggestor.SuggestIpa = true;
 			writingSystemSetupModel.WritingSystemSuggestor.SuggestDialects = false; // pretty unlikely in WeSay
-			KeyboardController.Initialize(); // TODO: Should be moved to Palaso
 
 			_view = new WritingSystemSetupView(writingSystemSetupModel)
 						{
