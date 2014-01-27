@@ -13,6 +13,11 @@
 	)
 )
 :build
+if "%~1" == "" (
+	SET BUILD=Release
+) else (
+	SET BUILD=%~1
+)
 @echo on
 
-msbuild "/target:Clean;Compile" /p:Configuration=Release /p:Platform=x86 /p:RootDir=..  /p:BUILD_NUMBER="0.0.1.abcd" build.win.proj
+msbuild "/target:Clean;Compile" /p:Configuration="%BUILD%" /p:Platform=x86 /p:RootDir=..  /p:BUILD_NUMBER="0.0.1.abcd" build.win.proj
