@@ -1,13 +1,14 @@
 # Environment settings for running programs with the SIL version of mono
 # Set MONO_ENVIRON to this file's pathname, then run, for example,
-#    /opt/mono-sil/bin/mono WeSay.exe
+#    /opt/mono-sil/bin/mono --debug WeSay.App.exe
 # These setting assume that the packaged SIL Mono is installed in /usr/lib/fieldworks.
 # This may well change to /opt, simplifying the script to not need to distinguish as much
 # between RUNMODE values.  (The first if below may still be needed, but not the second?)
 # Note that this file is intended to be "sourced", not "executed".
 
+# the sourcing script should cd/pushd to the directory containing this script
 BASE="$(pwd)"
-[ -z "$BUILD" ] && BUILD=DebugMono
+[ -z "$BUILD" ] && BUILD=Debug
 [ -z "$MONO_PREFIX" ] && MONO_PREFIX=/opt/mono-sil
 
 # Dependency locations
