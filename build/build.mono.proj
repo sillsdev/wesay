@@ -49,7 +49,7 @@
 		<Delete Files="@(ExistingObjectFiles)" />
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="UnzipMercurial">
+	<Target Name="Compile" DependsOnTargets="UnzipMercurial;CopyFiles">
 		<MSBuild
 			Projects="$(RootDir)\src\$(Solution)"
 			Targets="Build"
@@ -76,6 +76,15 @@
 			Assemblies="@(TestAssemblies)"
 			ExcludeCategory="SkipOnBuildServer;SkipOnTeamCity;KnownMonoIssue;NUnit Windows Forms"
 			NUnitVersion="NUnit-2.5.5" />
+	</Target>
+
+	<ItemGroup>
+		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.config" />
+		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.mdb" />
+		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/geckofix.so" />
+	</ItemGroup>
+	<Target Name="CopyFiles">
+		<Copy SourceFiles="@(ExistingLibraryFiles)" DestinationFolder="$(OutputDir)" />
 	</Target>
 
 	<!-- Source Package -->
