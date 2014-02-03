@@ -16,6 +16,9 @@ using WeSay.LexicalModel;
 using WeSay.LexicalTools;
 using WeSay.Project;
 using WeSay.UI;
+#if __MonoCS__
+using Gecko;
+#endif
 
 namespace WeSay.App
 {
@@ -37,6 +40,7 @@ namespace WeSay.App
 			}
 			finally
 			{
+				ShutDownXulRunner();
 				ReleaseMutexForThisProject();
 			}
 		}
@@ -58,7 +62,7 @@ namespace WeSay.App
 			Logger.Init();
 			SetupErrorHandling();
 
-
+			SetUpXulRunner();
 			//problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
 
 			//bring in settings from any previous version
@@ -80,6 +84,46 @@ namespace WeSay.App
 			}
 		}
 
+		private static void SetUpXulRunner()
+		{
+#if __MonoCS__
+			try
+			{
+				// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
+				string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
+				if (String.IsNullOrEmpty(xulRunnerLocation))
+					throw new ApplicationException("The XULRunner library is missing or has the wrong version");
+				string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
+				if (!librarySearchPath.Contains(xulRunnerLocation))
+					throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
+				Xpcom.Initialize(xulRunnerLocation);
+//				GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+			}
+			catch (ApplicationException e)
+			{
+				ErrorReport.NotifyUserOfProblem(e.Message);
+			}
+			catch (Exception e)
+			{
+				ErrorReport.NotifyUserOfProblem(e.Message);
+			}
+#endif
+
+		}
+		private static void ShutDownXulRunner()
+		{
+#if __MonoCS__
+			if (Xpcom.IsInitialized)
+			{
+				// The following line appears to be necessary to keep Xpcom.Shutdown()
+				// from triggering a scary looking "double free or corruption" message most
+				// of the time.  But the Xpcom.Shutdown() appears to be needed to keep the
+				// program from hanging around sometimes after it supposedly exits.
+				var foo = new GeckoWebBrowser();
+				Xpcom.Shutdown();
+			}
+#endif
+		}
 		private static void SetUpReporting()
 		{
 			if (Settings.Default.Reporting == null)

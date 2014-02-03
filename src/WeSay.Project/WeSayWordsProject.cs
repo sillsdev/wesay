@@ -558,8 +558,14 @@ namespace WeSay.Project
 			mapping.FunctionToGoFromObjectToItsId = (entry) => (entry as LexEntry).Guid.ToString();
 			builder.RegisterInstance<NotesToRecordMapping>(mapping);
 
-			builder.Register<NotesBarView>(c => c.Resolve<ChorusSystem>().WinForms.CreateNotesBar(PathToLiftFile, c.Resolve<NotesToRecordMapping>(), new NullProgress())).InstancePerDependency();
-
+			builder.Register<NotesBarView>(c =>
+			{
+				var system = c.Resolve<ChorusSystem>();
+				var bar = system.WinForms.CreateNotesBar(PathToLiftFile, c.Resolve<NotesToRecordMapping>(), new NullProgress());
+				bar.LabelWritingSystem = system.DisplaySettings.WritingSystemForNoteLabel;
+				bar.MessageWritingSystem = system.DisplaySettings.WritingSystemForNoteContent;
+				return bar;
+			}).InstancePerDependency();
 		}
 
 		public IEnumerable<string> GetIdsOfSingleOptionFields()

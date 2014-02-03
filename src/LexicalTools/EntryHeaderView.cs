@@ -41,12 +41,10 @@ namespace WeSay.LexicalTools
 			_notesBar.TabStop = false;
 			//_notesBar.Visible = false;//wait until we have a record to show
 			_notesBar.Height = kNotesBarHeight;
-#if __MonoCS__
-			//do nothing. We don't want people to make notes because it causes mono to crash
-#else
+
 			this.Controls.Add(_notesBar);
 			Controls.SetChildIndex(_notesBar, 0);
-#endif
+
 			_notesBar.SizeChanged += new EventHandler(_notesBar_SizeChanged);
 			_notesBar.AutoScaleMode = AutoScaleMode.None;
 			DoLayout();
