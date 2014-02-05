@@ -97,7 +97,7 @@ namespace WeSay.App
 				if (!librarySearchPath.Contains(xulRunnerLocation))
 					throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
 				Xpcom.Initialize(xulRunnerLocation);
-//				GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+				GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
 			}
 			catch (ApplicationException e)
 			{
