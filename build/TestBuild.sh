@@ -1,5 +1,6 @@
 #!/bin/bash
-cd "$(dirname "$0")"/..
+cd "$(dirname "$0")/.."
+root=$PWD
 . environ
 cd  build
-xbuild "/target:Clean;Compile" /p:Configuration="${1:-Release}" /p:RootDir=..  /p:BUILD_NUMBER="0.0.1.abcd" build.mono.proj
+xbuild "/target:Clean;Compile" /p:Configuration="${1:-Release}" /p:RootDir=$root  /p:BUILD_NUMBER="0.0.1.abcd" build.mono.proj
