@@ -3,7 +3,9 @@
 # project=WeSay1.4-Linux
 # build=wesay1.4-precise64-continuous
 # root_dir=..
-# $Id: da666a7e5eb1d63b434514279cd14cacd26c730f $
+# $Id: 729ee8446b8c332adf45f7a1f11f184ebd86d235 $
+
+cd "$(dirname "$0")"
 
 # *** Functions ***
 force=
@@ -53,6 +55,7 @@ copy_wget() {
 	wget -q -L -N $1
 	cd -
 }
+
 
 # *** Results ***
 # build: wesay1.4-precise64-continuous (bt314)
