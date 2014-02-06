@@ -315,9 +315,6 @@ namespace WeSay.UI.TextBoxes
 			Control control;
 			if (writingSystem.IsVoice)
 			{
-#if __MonoCS__
-				return null;
-#else
 				if (_serviceProvider == null)
 				{
 					//no, better to just omit it.  throw new ConfigurationException("WeSay cannot handle yet audio in this task.");
@@ -326,7 +323,6 @@ namespace WeSay.UI.TextBoxes
 				var ap =_serviceProvider.GetService(typeof (AudioPathProvider)) as AudioPathProvider;
 				control = new WeSayAudioFieldBox(writingSystem, ap, _serviceProvider.GetService(typeof(Palaso.Reporting.ILogger)) as ILogger);
 				((WeSayAudioFieldBox)control).PlayOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
-#endif
 			}
 			else
 			{
