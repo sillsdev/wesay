@@ -35,11 +35,14 @@ namespace WeSay.App
 		{
 			try
 			{
+				// initialize Palaso keyboarding
+				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
 				var app = new WeSayApp(args);
 				app.Run();
 			}
 			finally
 			{
+				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
 				ShutDownXulRunner();
 				ReleaseMutexForThisProject();
 			}
@@ -291,6 +294,10 @@ namespace WeSay.App
 
 			   RtfRenderer.HeadWordWritingSystemId =
 				   _project.DefaultViewTemplate.HeadwordWritingSystem.Id;
+
+#if __MonoCS__
+				UglyHackForXkbIndicator();
+#endif
 
 			   //run the ui
 			   Application.Run(_tabbedForm);
@@ -559,6 +566,30 @@ namespace WeSay.App
 			UsageReporter.SendNavigationNotice("Help: " + topicLink);
 		}
 
+		#if __MonoCS__
+		/// <summary>
+		/// For some reason, setting an Xkb keyboard for the first time doesn't work well inside
+		/// FieldWorks (or WeSay as it turns out).  Setting several Xkb keyboards at this point
+		/// seems to fix the problem for when the first one is set different than the default
+		/// keyboard.  This hack is not guaranteed to work, but it does seem to help in most
+		/// scenarios.
+		/// </summary>
+		/// <remarks>
+		/// If you can think of a better solution, by all means replace this ugly hack!  It took
+		/// me a day of work to come up with even this much.  I (SMc) tried setting the multiple keyboards
+		/// in succession inside Palaso.UI.WindowsForms.Keyboarding.Linux.XkbKeyboardAdaptor.ReinitLocales()
+		/// but it didn't work doing it there for some reason.
+		/// </remarks>
+		private void UglyHackForXkbIndicator()
+		{
+			foreach (var ws in _project.DefaultViewTemplate.WritingSystems.TextWritingSystems)
+			{
+				if (ws.LocalKeyboard != null)
+					ws.LocalKeyboard.Activate();
+			}
+			Palaso.WritingSystems.Keyboard.Controller.ActivateDefaultKeyboard();
+		}
+		#endif
 	}
 
 	internal class ThreadExceptionHandler
