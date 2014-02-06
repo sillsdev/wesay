@@ -32,7 +32,16 @@ namespace WeSay.ConfigTool
 			SetUpReporting();
 
 			Settings.Default.Save();
-			Application.Run(new ConfigurationWindow(args));
+			try
+			{
+				// initialize Palaso keyboarding
+				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+				Application.Run(new ConfigurationWindow(args));
+			}
+			finally
+			{
+				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+			}
 		}
 
 		private static void SetUpReporting()
