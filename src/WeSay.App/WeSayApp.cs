@@ -46,14 +46,6 @@ namespace WeSay.App
 				ShutDownXulRunner();
 				ReleaseMutexForThisProject();
 			}
-#if __MonoCS__
-			// Because of the way WeSayApp is written, the Application.ApplicationExit event
-			// fires before we call _project.BackupNow().  Thus, the problem with the hanging
-			// thread described in UsbDriveLocator is not handled automatically.  Without the
-			// following call, the program hangs around invisibly in the background after the
-			// window has closed and the data has been saved.
-			Chorus.UI.UsbDriveLocator.AppExit();
-#endif
 		}
 
 		public WeSayApp(string[] args)
