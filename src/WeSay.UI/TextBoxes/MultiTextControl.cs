@@ -334,6 +334,8 @@ namespace WeSay.UI.TextBoxes
 				box.MultiParagraph = _isMultiParagraph;
 				box.IsSpellCheckingEnabled = IsSpellCheckingEnabled;
 				//box.Enabled = !box.ReadOnly;
+				if (!box.ReadOnly)
+					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Register(box);
 			}
 
 			_inputBoxes.Add(control);
