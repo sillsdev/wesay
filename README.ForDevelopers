@@ -22,8 +22,8 @@ The following commands will add the repositories to your apt setup and then
 download and install the packages.  (You need to add the second repository only
 if the first repository doesn't work.)
 
-	sudo add-apt-repository deb http://packages.sil.org/ubuntu precise main
-	sudo add-apt-repository deb http://packages.sil.org/ubuntu precise-experimental main
+	sudo add-apt-repository 'deb http://packages.sil.org/ubuntu precise main'
+	sudo add-apt-repository 'deb http://packages.sil.org/ubuntu precise-experimental main'
 	wget -O - http://packages.sil.org/sil.gpg | sudo apt-key add -
 	sudo apt-get update
 	sudo apt-get install geckofx xulrunner-geckofx
