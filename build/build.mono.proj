@@ -167,14 +167,13 @@
 			Command='dch -v $(Version)-1palaso1 "Auto Build"'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
-		<Message Text="pbuilder update" />
 		<Exec
-			Command='sudo pbuilder --update --configfile /home/bob/pbuilder/pbuilderrc-$(Dist)-i386-lingnet'
+			Command='dch -r ""'
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
-		<Message Text="Starting pdebuild -- $(Dist) i386" />
+		<Message Text="debuild -S -nc -sa" />
 		<Exec
-			Command='pdebuild --architecture i386 --configfile /home/bob/pbuilder/pbuilderrc-$(Dist)-i386-lingnet --debbuildopts "" --debbuildopts "-sa" --debsign-k "mono teamcity" --auto-debsign'
+			Command="debuild -S -nc -sa"
 			WorkingDirectory="$(InstallerBaseDir)"
 		/>
 	</Target>
