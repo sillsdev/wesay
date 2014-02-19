@@ -145,6 +145,13 @@
     <None Include="\usr\lib\cli\geckofx-14.0.1\geckofx-core-14.dll.config" Condition="'$(OS)'!='Windows_NT'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\NDesk.DBus.dll</HintPath>
+    </Reference>
+    <None Condition="'$(OS)'!='Windows_NT'" Include="..\..\lib\$(Configuration)\NDesk.DBus.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandLineParser.cs" />
