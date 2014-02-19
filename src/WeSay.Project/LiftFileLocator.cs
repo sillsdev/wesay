@@ -44,7 +44,7 @@ namespace WeSay.Project
 			{
 				if (canNotify)
 				{
-					ErrorReport.NotifyUserOfProblem("Could not find a LIFT file to us in " + projectDirectoryPath);
+					ErrorReport.NotifyUserOfProblem("Could not find a LIFT file to use in " + projectDirectoryPath);
 				}
 				return null;
 			}
