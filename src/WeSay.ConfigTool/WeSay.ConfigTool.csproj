@@ -111,6 +111,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
     </Reference>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\NDesk.DBus.dll</HintPath>
+    </Reference>
+    <None Condition="'$(OS)'!='Windows_NT'" Include="..\..\lib\$(Configuration)\NDesk.DBus.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
