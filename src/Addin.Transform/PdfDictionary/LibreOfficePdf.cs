@@ -270,8 +270,8 @@ namespace Addin.Transform.PdfDictionary
 
 				Process loffice = new Process();
 				loffice.StartInfo.WorkingDirectory = projectInfo.PathToExportDirectory;
-				loffice.StartInfo.Arguments = "--headless -env:UserInstallation=file://" +
-					UserCliConfigDir + " --convert-to pdf " + OdtFile;
+				loffice.StartInfo.Arguments = "--invisible -env:UserInstallation=file://" +
+					UserCliConfigDir + " --convert-to pdf \"" + OdtFile + "\"";
 				loffice.StartInfo.UseShellExecute = true;
 				loffice.StartInfo.FileName = "libreoffice";
 				loffice.Start();
