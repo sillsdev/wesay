@@ -24,6 +24,7 @@ namespace WeSay.ConfigTool
 			writingSystemSetupModel.WritingSystemSuggestor.SuggestIpa = true;
 			writingSystemSetupModel.WritingSystemSuggestor.SuggestDialects = false; // pretty unlikely in WeSay
 
+			this.SuspendLayout();
 			_view = new WritingSystemSetupView(writingSystemSetupModel)
 						{
 							LeftColumnWidth = 350,
@@ -35,6 +36,7 @@ namespace WeSay.ConfigTool
 			store.WritingSystemDeleted += OnWritingSystemDeleted;
 			store.WritingSystemConflated += OnWritingSystemConflated;
 			Controls.Add(_view);
+			this.ResumeLayout(false);
 			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
 		}
 
