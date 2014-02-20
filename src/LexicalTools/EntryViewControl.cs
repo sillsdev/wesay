@@ -43,6 +43,7 @@ namespace WeSay.LexicalTools
 		{
 			_viewTemplate = null;
 			InitializeComponent();
+			this.SuspendLayout();
 			_scrollableContainer.SizeChanged += OnScrollableContainerOrDetailListSizeChanged;
 		   _confirmDeleteFactory = confirmDeleteFactory;
 
@@ -57,6 +58,7 @@ namespace WeSay.LexicalTools
 		   Controls.SetChildIndex(_entryHeaderView, 2);
 
 		   _splitter.ControlToHide = _entryHeaderView;
+			this.ResumeLayout();
 			RefreshEntryDetail();
 		}
 
@@ -64,7 +66,7 @@ namespace WeSay.LexicalTools
 		{
 			if (_detailListControl != null && !_detailListControl.IsDisposed)
 			{
-				_detailListControl.Size = new Size(_scrollableContainer.ClientRectangle.Width, _detailListControl.Height);
+				_detailListControl.Size = new Size(_scrollableContainer.ClientRectangle.Width - 20, _detailListControl.Height);
 			}
 		}
 
@@ -367,7 +369,7 @@ namespace WeSay.LexicalTools
 				//The top level detail list should be free to expand downward so we anchor to left, top and right.
 				//Do Not Dock! It causes problems with many senses
 				detailList.Dock = DockStyle.None;
-				detailList.Size = new Size(_scrollableContainer.ClientRectangle.Width, detailList.Height);
+				detailList.Size = new Size(_scrollableContainer.ClientRectangle.Width - 20, detailList.Height);
 				detailList.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 				detailList.SizeChanged += OnScrollableContainerOrDetailListSizeChanged;
 				detailList.AutoSize = true;
