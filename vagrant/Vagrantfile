@@ -1,0 +1,35 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# http://stackoverflow.com/a/17729961/35577
+# pref_interface = ['eth0', 'eth1', 'eth2', 'en0' ]
+# vm_interfaces = %x( VBoxManage list bridgedifs | grep ^Name).gsub(/Name:\s+/,'')
+# pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
+# $network_interface=pref_interface[0]
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  def bootstrap_wesay(config, name, gui)
+    config.vm.provision :shell, :path => 'bootstrap.sh'
+    config.vm.synced_folder '..', '/wesay'
+    config.vm.provider :virtualbox do |vb|
+      vb.gui=gui
+      vb.name=name
+      vb.customize ["modifyvm", :id, "--memory", "1024"]
+    end
+  end
+
+  config.vm.define :wasta do |wasta|
+    wasta.vm.box='wasta-2014-01-23'
+    wasta.vm.box_url='http://goo.gl/kifxgv'
+    bootstrap_wesay wasta, 'vagrant-wasta', true
+  end
+
+  config.vm.define :precise64 do |precise64|
+    precise64.vm.box='precise64-unity'
+    precise64.vm.box_url='http://goo.gl/kifxgv'
+    bootstrap_wesay precise64, 'vagrant-precise64', true
+  end
+end
