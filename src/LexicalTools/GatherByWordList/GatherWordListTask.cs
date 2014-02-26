@@ -363,6 +363,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				Cursor.Current = Cursors.WaitCursor;
 				LoadWordList();
+				Cursor.Current = Cursors.Default;
 			}
 			base.Activate();
 		}
