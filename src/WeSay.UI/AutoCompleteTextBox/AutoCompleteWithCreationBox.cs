@@ -220,7 +220,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private void UpdateElementWidth()
 		{
-			SuspendLayout();
 			if (_textBox.Text.Length == 0)
 			{
 				_textBox.Width = _textBox.MinimumSize.Width;
@@ -228,7 +227,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 
 			//NB:... doing CreateGraphics makes a bunch of events fire
-
+			SuspendLayout();
 			using (Graphics g = _textBox.CreateGraphics())
 			{
 				TextFormatFlags flags = TextFormatFlags.TextBoxControl | TextFormatFlags.Default |

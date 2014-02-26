@@ -291,6 +291,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 			_listBox.Click += List_Click;
 			_listBox.MouseMove += List_MouseMove;
 			_listBox.LostFocus += OnListLostFocus;
+#if __MonoCS__
+			_listBox.Enter += List_Enter;
+			_listBox.Leave += List_Leave;
+#endif
 			_listBox.ItemHeight = _listBox.Font.Height;
 			_listBox.Visible = false;
 			_listBox.Sorted = false;
@@ -556,8 +560,15 @@ namespace WeSay.UI.AutoCompleteTextBox
 		protected override void OnLostFocus(EventArgs e)
 		{
 			base.OnLostFocus(e);
-
+#if __MonoCS__
+			// The order of WM_SETFOCUS and WM_KILLFOCUS is different between Windows and Mono.
+			// So this.Focused is set false before _listBox.Focused is set true in Mono.  But
+			// WM_ENTER is sent before WM_KILLFOCUS in Mono, so our internal flag may be true
+			// even when neither Focused flag is true.
+			if (!(_listBoxEntered || Focused || _listBox.Focused))
+#else
 			if (!(Focused || _listBox.Focused))
+#endif
 			{
 				HideList();
 			}
@@ -685,7 +696,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 			int maxWidth = Width;
 			using (Graphics g = (_autoSizePopup) ? CreateGraphics() : null)
 			{
-				foreach (object item in ItemFilterer.Invoke(Text, Items, ItemDisplayStringAdaptor))
+				// Text.Trim() allows "1 " to trigger updating the list and matching "1 Universe", where
+				// the match involves "1" and "Universe" separately.  (Note that "1 " does not match either
+				// "1" or "Universe".)
+				foreach (object item in ItemFilterer.Invoke(Text.Trim(), Items, ItemDisplayStringAdaptor))
 				{
 					string label = ItemDisplayStringAdaptor.GetDisplayLabel(item);
 					_listBox.Items.Add(new ItemWrapper(item, label));
@@ -792,5 +806,21 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
+#if __MonoCS__
+		private bool _listBoxEntered;
+		/// <summary>
+		/// Record when the child ListBox has been entered, but not yet left.  In Mono, this
+		/// starts before _listBox obtains focus, and also before "this" loses focus.
+		/// </summary>
+		private void List_Enter(object sender, System.EventArgs e)
+		{
+			_listBoxEntered = true;
+		}
+
+		private void List_Leave(object sender, System.EventArgs e)
+		{
+			_listBoxEntered = false;
+		}
+#endif
 	}
 }
