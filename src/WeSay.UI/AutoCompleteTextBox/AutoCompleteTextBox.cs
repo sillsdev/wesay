@@ -291,10 +291,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 			_listBox.Click += List_Click;
 			_listBox.MouseMove += List_MouseMove;
 			_listBox.LostFocus += OnListLostFocus;
-#if __MonoCS__
 			_listBox.Enter += List_Enter;
 			_listBox.Leave += List_Leave;
-#endif
 			_listBox.ItemHeight = _listBox.Font.Height;
 			_listBox.Visible = false;
 			_listBox.Sorted = false;
@@ -560,15 +558,12 @@ namespace WeSay.UI.AutoCompleteTextBox
 		protected override void OnLostFocus(EventArgs e)
 		{
 			base.OnLostFocus(e);
-#if __MonoCS__
 			// The order of WM_SETFOCUS and WM_KILLFOCUS is different between Windows and Mono.
 			// So this.Focused is set false before _listBox.Focused is set true in Mono.  But
 			// WM_ENTER is sent before WM_KILLFOCUS in Mono, so our internal flag may be true
-			// even when neither Focused flag is true.
+			// even when neither Focused flag is true.  This internal flag isn't needed for
+			// Windows, but it also doesn't hurt.
 			if (!(_listBoxEntered || Focused || _listBox.Focused))
-#else
-			if (!(Focused || _listBox.Focused))
-#endif
 			{
 				HideList();
 			}
@@ -806,11 +801,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-#if __MonoCS__
 		private bool _listBoxEntered;
 		/// <summary>
 		/// Record when the child ListBox has been entered, but not yet left.  In Mono, this
-		/// starts before _listBox obtains focus, and also before "this" loses focus.
+		/// starts before _listBox obtains focus, and also before "this" loses focus.  (In
+		/// Windows, this isn't needed but it doesn't hurt either.)
 		/// </summary>
 		private void List_Enter(object sender, System.EventArgs e)
 		{
@@ -821,6 +816,5 @@ namespace WeSay.UI.AutoCompleteTextBox
 		{
 			_listBoxEntered = false;
 		}
-#endif
 	}
 }
