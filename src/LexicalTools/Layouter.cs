@@ -309,7 +309,9 @@ namespace WeSay.LexicalTools
 				GhostRequestedLayout(this, new EventArgs());
 			}
 			DetailList.ResumeLayout();
-			if (doGoToNextField)
+			// REVIEW: should we try to instantiate a new ghost field (row) so that we can move to it?
+			// Why isn't that already happening?
+			if (doGoToNextField && _detailList.RowCount > 1)
 			{
 				_detailList.MoveInsertionPoint(1);
 			}

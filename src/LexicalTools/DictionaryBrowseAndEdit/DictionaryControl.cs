@@ -671,14 +671,15 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				// but we assume it has the focus when we do our selection change event
 				_btnDeleteWord.Focus();
 			}
-			//review: This save isn't necessary, but the possibility of deleting unsave records currently doesn't work.
-			//_lexEntryRepository.SaveItem(CurrentEntry);
 
 			_logger.WriteConciseHistoricalEvent("Deleted '{0}'",CurrentEntry.GetSimpleFormForLogging());
 			CurrentEntry.IsBeingDeleted = true;
-			var oldIndex = CurrentIndex;
+			// If the record hasn't been saved (newly created), then setting _recordsListBox.SelectedIndex
+			// can have a side-effect of reordering _records.  So we need to record the current id, not just
+			// the current index.
+			var idToDelete = _records[CurrentIndex].Id;
 			_recordsListBox.SelectedIndex = _records.Count == CurrentIndex + 1 ? CurrentIndex - 1 : CurrentIndex + 1;
-			_lexEntryRepository.DeleteItem(_records[oldIndex].Id);
+			_lexEntryRepository.DeleteItem(idToDelete);
 			LoadRecords();
 
 			_entryViewControl.SelectOnCorrectControl();
