@@ -64,7 +64,8 @@ install-stamp:
 	dh_compress
 	dh_fixperms
 	dh_clifixperms
-	dh_clideps -d -i
+	dh_makeclilibs -V
+	dh_clideps -d
 	dh_installdeb
 	dh_gencontrol
 	dh_md5sums
