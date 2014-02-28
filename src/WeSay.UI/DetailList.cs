@@ -279,7 +279,8 @@ namespace WeSay.UI
 			OnLabelsChanged(this, new EventArgs());
 			label.SizeChanged += OnLabelSizeChanged;
 
-			editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			// AnchorStyle overrides DockStyle and on Linux must anchor to Top.
+			editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 
 			editWidget.KeyDown += OnEditWidget_KeyDown;
 			editWidget.MouseWheel += OnChildWidget_MouseWheel;
