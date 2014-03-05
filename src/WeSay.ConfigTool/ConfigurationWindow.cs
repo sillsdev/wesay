@@ -296,6 +296,14 @@ namespace WeSay.ConfigTool
 				else if (Directory.Exists(path))
 				{
 					Project.LoadFromProjectDirectoryPath(path);
+					if (_project.Container == null)
+					{
+						// There must not have been a .lift file in the given path.
+						// This has already been reported with an error dialog box.
+						_project.Dispose();
+						Project = null;
+						return false;
+					}
 				}
 				else
 				{

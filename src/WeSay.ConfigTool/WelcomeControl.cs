@@ -128,7 +128,8 @@ namespace WeSay.ConfigTool
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
 				OpenSpecifiedProject(dlg.PathToNewlyClonedFolder);
-				Project.WeSayWordsProject.Project.SetupUserForChorus();
+				if (Project.WeSayWordsProject.ProjectExists)
+					Project.WeSayWordsProject.Project.SetupUserForChorus();
 			}
 		}
 

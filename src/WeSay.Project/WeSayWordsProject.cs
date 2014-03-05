@@ -95,6 +95,11 @@ namespace WeSay.Project
 			set { _tasks = value; }
 		}
 
+		public static bool ProjectExists
+		{
+			get { return Singleton != null; }
+		}
+
 		public new static WeSayWordsProject Project
 		{
 			get
@@ -254,13 +259,18 @@ namespace WeSay.Project
 		{
 			ProjectDirectoryPath = projectDirectoryPath;
 
-			if (!File.Exists(PathToConfigFile))
+			// Avoid the possibility of getting two identical error messages by getting the
+			// path to the lift file first, then using that result to get the path to the
+			// config file.
+			string preferredLiftFile = LiftFileLocator.LocateInDirectory(projectDirectoryPath);
+			if (String.IsNullOrEmpty(preferredLiftFile))
 			{
-				string preferredLiftFile = LiftFileLocator.LocateInDirectory(projectDirectoryPath);
-				if (String.IsNullOrEmpty(preferredLiftFile))
-				{
-					return;
-				}
+				return;
+			}
+			var configFile = GetPathToConfigFile(PathToWeSaySpecificFilesDirectoryInProject,
+				GetProjectNameFromLiftFilePath(preferredLiftFile));
+			if (!File.Exists(configFile))
+			{
 				PathToLiftFile = preferredLiftFile;
 				string projectName = Path.GetFileName(Path.GetFileNameWithoutExtension(preferredLiftFile));
 
