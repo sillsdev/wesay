@@ -29,7 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define :precise64 do |precise64|
     precise64.vm.box='precise64-unity'
-    precise64.vm.box_url='http://goo.gl/kifxgv'
+    precise64.vm.box_url='http://goo.gl/B0e64k'
     bootstrap_wesay precise64, 'vagrant-precise64', true
   end
 end
