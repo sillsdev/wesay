@@ -54,6 +54,7 @@ install-stamp:
 	dh_testdir
 	dh_testroot
 	dh_prep
+	rm -f output/Release/[Gg]ecko*
 	$(XBUILD) /target:Install /p:Configuration=$(CONFIGURATION) /p:InstallDir=../debian/wesay/usr
 	dh_installdirs
 	dh_install
