@@ -1,7 +1,7 @@
 # Environment settings for running programs with the SIL version of mono
 # Set MONO_ENVIRON to this file's pathname, then run, for example,
 #    /opt/mono-sil/bin/mono --debug WeSay.App.exe
-# These setting assume that the packaged SIL Mono is installed in /usr/lib/fieldworks.
+# These setting assume that the packaged SIL Mono is installed in /opt/mono-sil.
 # This may well change to /opt, simplifying the script to not need to distinguish as much
 # between RUNMODE values.  (The first if below may still be needed, but not the second?)
 # Note that this file is intended to be "sourced", not "executed".
@@ -39,10 +39,10 @@ fi
 if [ "$RUNMODE" = "PACKAGE" -o "$RUNMODE" = "INSTALLED" ]
 then
 	# Add packaged mono items to paths
-	PATH="/usr/lib/fieldworks/mono/bin:${PATH}"
-	LD_LIBRARY_PATH="/usr/lib/fieldworks/mono/lib:${LD_LIBRARY_PATH}"
-	PKG_CONFIG_PATH="/usr/lib/fieldworks/mono/lib/pkgconfig:${PKG_CONFIG_PATH}"
-	MONO_GAC_PREFIX="/usr/lib/fieldworks/mono:/usr"
+	PATH="/opt/mono-sil/bin:${PATH}"
+	LD_LIBRARY_PATH="/opt/mono-sil/lib:${LD_LIBRARY_PATH}"
+	PKG_CONFIG_PATH="/opt/mono-sil/lib/pkgconfig:${PKG_CONFIG_PATH}"
+	MONO_GAC_PREFIX="/opt/mono-sil:/usr"
 else
 	# Add locally-built mono items to paths
 	PATH="${MONO_PREFIX}/bin:${PATH}"

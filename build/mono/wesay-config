@@ -1,2 +1,8 @@
 #!/bin/sh
+
+cd /usr/lib/wesay
+RUNMODE=INSTALLED
+. environ
+cd $OLDPWD
+
 MONO_ENABLE_SHM=1 exec mono "/usr/lib/wesay/WeSay Configuration Tool.exe" "$@"

@@ -111,6 +111,7 @@
 		<Source Include="$(RootDir)/test/*" />
 		<Source Include="$(RootDir)/templates/**/*" />
 		<Source Include="$(RootDir)/externals/*" />
+		<Source Include="$(RootDir)/environ*" />
 	</ItemGroup>
 	<Target Name="SourcePackage" DependsOnTargets="PackageClean;SetAssemblyVersion">
 		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)-$(Version).tar.gz">
@@ -189,7 +190,7 @@
 	<!-- Install -->
 	<!-- The Install Target must be called from an MSBuild task so as to include the output from the previous MSBuild in the ItemGroup below -->
 	<ItemGroup>
-		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/build/mono/chorusmerge" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*.mdb;$(OutputDir)/Addin.LiftReports.dll;$(OutputDir)/NVelocity.dll" />
+		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/build/mono/chorusmerge;$(RootDir)/environ*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*.mdb;$(OutputDir)/Addin.LiftReports.dll;$(OutputDir)/NVelocity.dll" />
 		<CommonFiles Include="$(RootDir)/common/**/*" />
 		<TemplateFiles Include="$(RootDir)/templates/**/*" />
 		<IconFiles Include="$(RootDir)/src/Installer_Linux/icons/**/*" />
