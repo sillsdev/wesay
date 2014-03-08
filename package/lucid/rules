@@ -1,33 +1,44 @@
 #!/usr/bin/make -f
 
+CONFIGURATION=Release
+PALASO_CONFIGURATION=DebugMono
+CHORUS_CONFIGURATION=DebugMono
+
 CHORUSVER=$(shell ls -1 externals/chorus-* | sed -e 's/externals\/chorus\-\(.*\).tar.gz/\1/')
 PALASOVER=$(shell tar tfz externals/chorus-$(CHORUSVER).tar.gz | grep libpalaso | sed -e 's/.*externals\/libpalaso\-\(.*\).tar.gz/\1/')
 
-XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild build/build.mono.proj /p:RootDir=$(CURDIR)
-PALASO_XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild libpalaso-$(PALASOVER)/build/build.mono.proj /p:RootDir=$(CURDIR)/libpalaso-$(PALASOVER)
-CHORUS_XBUILD=MONO_SHARED_DIR=/tmp /usr/bin/xbuild chorus-$(CHORUSVER)/build/build.mono.proj /p:RootDir=$(CURDIR)/chorus-$(CHORUSVER)
+XBUILD=xbuild build/build.mono.proj /p:RootDir=$(CURDIR)
+PALASO_XBUILD=xbuild libpalaso-$(PALASOVER)/build/build.mono.proj /p:RootDir=$(CURDIR)/libpalaso-$(PALASOVER)
+CHORUS_XBUILD=xbuild chorus-$(CHORUSVER)/build/build.mono.proj /p:RootDir=$(CURDIR)/chorus-$(CHORUSVER)
+
+export MONO_SHARED_DIR=/tmp
+
 build: build-stamp
 build-stamp:
 	dh_testdir
 	tar xfz externals/chorus-$(CHORUSVER).tar.gz
 	tar xfz chorus-$(CHORUSVER)/externals/libpalaso-$(PALASOVER).tar.gz
-	$(PALASO_XBUILD) /target:Compile /p:Configuration=DebugMono
-	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.dll* chorus-$(CHORUSVER)/lib/DebugMono
-	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.TestUtilities.dll* chorus-$(CHORUSVER)/lib/DebugMono
-	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.BuildTasks.dll chorus-$(CHORUSVER)/build
-	$(CHORUS_XBUILD) /target:Compile /p:Configuration=DebugMono
-	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.dll* lib/DebugMono
-	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.TestUtilities.dll* lib/DebugMono
-	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.DictionaryServices.dll* lib/DebugMono
-	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.Lift.dll* lib/DebugMono
-	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.Tests.dll* lib/DebugMono
-	cp libpalaso-$(PALASOVER)/output/DebugMono/PalasoUIWindowsForms.dll* lib/DebugMono
-	#cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.Media.dll* lib/DebugMono
-	cp libpalaso-$(PALASOVER)/output/DebugMono/Palaso.BuildTasks.dll build
-	cp chorus-$(CHORUSVER)/output/DebugMono/Chorus.exe* lib/DebugMono
-	cp chorus-$(CHORUSVER)/output/DebugMono/ChorusMerge.exe* lib/DebugMono
-	cp chorus-$(CHORUSVER)/output/DebugMono/LibChorus.dll* lib/DebugMono
-	$(XBUILD) /target:Compile /p:Configuration=DebugMono
+	$(PALASO_XBUILD) /target:Compile /p:Configuration=$(PALASO_CONFIGURATION)
+	mkdir -p chorus-$(CHORUSVER)/lib/$(CHORUS_CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.dll* chorus-$(CHORUSVER)/lib/$(CHORUS_CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.TestUtilities.dll* chorus-$(CHORUSVER)/lib/$(CHORUS_CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.Lift.dll* chorus-$(CHORUSVER)/lib/$(CHORUS_CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/PalasoUIWindowsForms.dll* chorus-$(CHORUSVER)/lib/$(CHORUS_CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.BuildTasks.dll chorus-$(CHORUSVER)/build
+	$(CHORUS_XBUILD) /target:Compile /p:Configuration=$(CHORUS_CONFIGURATION)
+	mkdir -p lib/$(CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.dll* lib/$(CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.TestUtilities.dll* lib/$(CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.DictionaryServices.dll* lib/$(CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.Lift.dll* lib/$(CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.Media.dll* lib/$(CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.Tests.dll* lib/$(CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/PalasoUIWindowsForms.dll* lib/$(CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.BuildTasks.dll build
+	cp chorus-$(CHORUSVER)/output/$(CHORUS_CONFIGURATION)/Chorus.exe* lib/$(CONFIGURATION)
+	cp chorus-$(CHORUSVER)/output/$(CHORUS_CONFIGURATION)/ChorusMerge.exe* lib/$(CONFIGURATION)
+	cp chorus-$(CHORUSVER)/output/$(CHORUS_CONFIGURATION)/LibChorus.dll* lib/$(CONFIGURATION)
+	$(XBUILD) /target:Compile /p:Configuration=$(CONFIGURATION)
 	touch build-stamp
 
 clean:
@@ -43,7 +54,7 @@ install-stamp:
 	dh_testdir
 	dh_testroot
 	dh_prep
-	$(XBUILD) /target:Install /p:InstallDir=../debian/wesay/usr
+	$(XBUILD) /target:Install /p:Configuration=$(CONFIGURATION) /p:InstallDir=../debian/wesay/usr
 	dh_installdirs
 	dh_install
 	dh_installdocs
