@@ -19,6 +19,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.name=name
       vb.customize ["modifyvm", :id, "--memory", "1024"]
     end
+
+    if Vagrant.has_plugin?("vagrant-cachier")
+      config.cache.scope = :box
+    end
   end
 
   config.vm.define :wasta do |wasta|
