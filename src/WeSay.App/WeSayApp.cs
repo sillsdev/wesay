@@ -427,7 +427,7 @@ namespace WeSay.App
 		private static void RunConfigTool()
 		{
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
-			ProcessStartInfo startInfo = new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"));
+			ProcessStartInfo startInfo = new ProcessStartInfo(Path.Combine(dir, "WeSay.ConfigTool.exe"));
 			Process.Start(startInfo);
 		}
 

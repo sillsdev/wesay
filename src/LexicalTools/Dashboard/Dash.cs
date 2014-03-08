@@ -72,7 +72,7 @@ namespace WeSay.LexicalTools.Dashboard
 		{
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo =
-				new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"),
+				new ProcessStartInfo(Path.Combine(dir, "WeSay.ConfigTool.exe"),
 									 string.Format("\"{0}\"",
 												   WeSayWordsProject.Project.PathToConfigFile));
 			try
