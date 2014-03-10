@@ -7,6 +7,14 @@
 # pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
 # $network_interface=pref_interface[0]
 
+required_plugins = ["vagrant-vbguest", "vagrant-cachier"]
+unless (missing_plugins = required_plugins.select { |p| !Vagrant.has_plugin?(p) }).empty?
+  raise "\nBefore you can 'vagrant up' this box, please install these plugins\n  " +
+        missing_plugins.join("\n  ") +
+        "\nTypically this is done by running\n" +
+        "  'vagrant plugin install <plugin>'\nfor each plugin"
+end
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -20,10 +28,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.customize ["modifyvm", :id, "--memory", "1024"]
     end
 
-    if Vagrant.has_plugin?("vagrant-cachier")
-      config.cache.scope = :box
-    end
-  end
+    # vagrant-cachier setting
+    config.cache.scope = :box
+end
 
   config.vm.define :wasta do |wasta|
     wasta.vm.box='wasta-2014-01-23'
