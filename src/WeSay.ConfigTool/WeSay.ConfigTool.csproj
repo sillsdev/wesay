@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WeSay.ConfigTool</RootNamespace>
-    <AssemblyName>WeSay Configuration Tool</AssemblyName>
+    <AssemblyName>WeSay.ConfigTool</AssemblyName>
     <ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -45,7 +45,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <OutputType>WinExe</OutputType>
-    <AssemblyName>WeSay Configuration Tool</AssemblyName>
+    <AssemblyName>WeSay.ConfigTool</AssemblyName>
     <RootNamespace>WeSay.ConfigTool</RootNamespace>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
@@ -60,7 +60,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <OutputType>WinExe</OutputType>
-    <AssemblyName>WeSay Configuration Tool</AssemblyName>
+    <AssemblyName>WeSay.ConfigTool</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
     <RootNamespace>WeSay.ConfigTool</RootNamespace>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
