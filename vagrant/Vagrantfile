@@ -34,13 +34,13 @@ end
 
   config.vm.define :wasta do |wasta|
     wasta.vm.box='wasta-2014-01-23'
-    wasta.vm.box_url='http://goo.gl/kifxgv'
+    wasta.vm.box_url='https://googledrive.com/host/0ByDMfZ-FJZsQYjM2SUhZbU1fbTQ/wasta-2014-01-23.box'
     bootstrap_wesay wasta, 'vagrant-wasta', true
   end
 
   config.vm.define :precise64 do |precise64|
     precise64.vm.box='precise64-unity'
-    precise64.vm.box_url='http://goo.gl/B0e64k'
+    precise64.vm.box_url='https://googledrive.com/host/0ByDMfZ-FJZsQYjM2SUhZbU1fbTQ/precise64-unity.box'
     bootstrap_wesay precise64, 'vagrant-precise64', true
   end
 end

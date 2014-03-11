@@ -18,6 +18,4 @@
 *.patch -whitespace
 *.svg -whitespace
 *.xml -whitespace
-*.sh -whitespace
 changelog -whitespace
-Vagrantfile -whitespace

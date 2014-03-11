@@ -2,6 +2,8 @@ This file contains information that may be useful to anyone wanting to work on
 WeSay development.  Much of this information is Linux specific, but some of it
 applies to both Linux and Windows development.
 
+In this document, $wesay refers to the directory of the wesay repository (e.g.
+~/src/wesay).
 
 1. OBTAINING WESAY SOURCES
 
@@ -236,3 +238,79 @@ package system.)  Here are the packages that we are aware of (in command line
 format):
 
 	sudo apt-get install libimage-exiftool-perl
+
+9. TESTING IN VAGRANT VIRTUAL MACHINE
+
+Vagrant is a tool to "Create and configure lightweight, reproducible, and portable
+development environments."  There are pre-packaged base images for Precise64 and Wasta64
+distributions using VirtualBox.  These work on Linux, Windows, and Mac.  To install on
+Linux from the command-line:
+
+	sudo apt-get install vagrant
+
+To install on Windows or Mac, download the installer from www.vagrantup.com/downloads.html.
+After installation, install the required plugins from the command-line on all platforms:
+
+	vagrant plugin install vagrant-cachier
+	vagrant plugin install vagrant-vbguest
+
+The pre-packaged base images do not have dependencies installed.  The provisioning script
+(bootstrap.sh) is executed once when the VM is started and will install all the dependencies
+needed to run a local build of WeSay executables.  The first time the VM is started, it
+will have to download the required packages and then they are cached for subsequent runs.
+Run these commands from the command-line in the host (use the appropriate directory separator):
+
+	cd $wesay/vagrant
+	vagrant up precise64 (or wasta)
+
+The status output of the provisioning (bootstrap.sh) will display in the terminal console that
+executed the vagrant up command. When it is completed, it will have mounted $wesay to /wesay
+inside the VM.  If the host and VM with have the same line endings (e.g. Ubuntu Saucy host
+and Ubuntu Precise VM), the /wesay directory can be used directly within the VM.
+Run these commands from the command-line in the VM:
+
+	cd /wesay
+	. environ
+	mono output/Release/WeSay.App.exe
+
+When testing is complete, clean up the virtual machine by running these commands from the
+command-line of the host machine:
+
+	cd $wesay/vagrant
+	vagrant destroy precise64 (or wasta)
+
+Run 'vagrant -h' from the command-line for other commands to halt, suspend, resume, etc or
+refer to the documentation at http://vagrantup.com
+
+9.1 WINDOWS HOST WITH LINUX VAGRANT VM
+
+If the host and VM have different line endings (e.g. Windows host and Ubuntu Precise VM),
+then the mapped drive within the VM will have files with non-native line endings.  To work
+around this, setup a development directory inside the VM.  There is a script in the $wesay/vagrant
+directory to setup a clone in the ~/src/wesay directory referencing the git repo in the host.
+Run these commands from the command-line inside the VM:
+
+	cd /wesay/vagrant
+	./setup-vm-wesay-dev.sh
+	cd ~/src/wesay
+	build/buildupdate.mono.sh
+	build/TestBuild.sh
+	. environ
+	mono output/Release/WeSay.App.exe
+
+9.2 TESTING TEAMCITY CONFIGURATIONS
+
+To test changes in TeamCity configuration and build/buildupdate.*.sh, it is best to use a clean
+environment.  There is a script in the $wesay/vagrant directory to install buildupdate to enable
+updating the buildupdate scripts.  A clean development directory should be setup first.
+Run these commands from the command-line inside the VM:
+
+	cd /wesay/vagrant
+	./setup-vm-wesay-dev.sh
+	sudo ./setup-buildupdate.sh
+	cd ~/src/wesay
+	../Buildupdate/buildupdate.rb -f build/buildupdate.mono.sh
+	build/buildupdate.mono.sh
+	build/TestBuild.sh
+	. environ
+	mono output/Release/WeSay.App.exe
