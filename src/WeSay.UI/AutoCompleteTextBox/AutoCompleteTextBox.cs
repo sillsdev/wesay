@@ -558,12 +558,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		protected override void OnLostFocus(EventArgs e)
 		{
 			base.OnLostFocus(e);
-			// The order of WM_SETFOCUS and WM_KILLFOCUS is different between Windows and Mono.
-			// So this.Focused is set false before _listBox.Focused is set true in Mono.  But
-			// WM_ENTER is sent before WM_KILLFOCUS in Mono, so our internal flag may be true
-			// even when neither Focused flag is true.  This internal flag isn't needed for
-			// Windows, but it also doesn't hurt.
-			if (!(_listBoxEntered || Focused || _listBox.Focused))
+			if (!(Focused || ListBoxFocused))
 			{
 				HideList();
 			}
@@ -787,7 +782,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private void Popup_Deactivate(object sender, EventArgs e)
 		{
-			if (!(Focused || _listBox.Focused))
+			if (!(Focused || ListBoxFocused))
 			{
 				HideList();
 			}
@@ -795,9 +790,14 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		public bool ListBoxFocused
 		{
+			// The order of WM_SETFOCUS and WM_KILLFOCUS is different between Windows and Mono.
+			// So this.Focused is set false before _listBox.Focused is set true in Mono.  But
+			// WM_ENTER is sent before WM_KILLFOCUS in Mono, so our internal flag may be true
+			// even when neither Focused flag is true.  This internal flag isn't needed for
+			// Windows, but it also doesn't hurt.
 			get
 			{
-				return _listBox.Focused;
+				return _listBox.Focused || _listBoxEntered;
 			}
 		}
 
