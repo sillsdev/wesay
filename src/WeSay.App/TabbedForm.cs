@@ -372,9 +372,12 @@ namespace WeSay.App
 			}
 			else //I (JH) don't know what problem this code was intended to solve, but it prevents the notes browser from docking properly
 			{
-				task.Control.SuspendLayout();
+				// Prevent partial scrollbars and the like from displaying before the page's Control actually lays itself out below.
+				// Suspending layout of the topmost Control works fine on Windows, but not for Linux/Mono.  But suspending/resuming
+				// all the way down should be okay on Windows even if it's overkill.
+				PreventLayout(task.Control);
 				page.Controls.Add(task.Control);
-				task.Control.ResumeLayout(false);
+				AllowLayout(task.Control);
 			}
 			task.Control.SelectNextControl(task.Control, true, true, true, true);
 
@@ -386,6 +389,26 @@ namespace WeSay.App
 			page.Cursor = Cursors.Default;
 			_activeTask = task;
 			Logger.WriteEvent("Done Activating");
+		}
+
+		/// <summary>
+		/// Suspend layout for the given control, plus its children, plus their children, plus ...
+		/// </summary>
+		private void PreventLayout(Control control)
+		{
+			foreach (Control c in control.Controls)
+				PreventLayout(c);
+			control.SuspendLayout();
+		}
+
+		/// <summary>
+		/// Resume layout (but don't force it) for the given control, plus its children, plus their children, plus ...
+		/// </summary>
+		private void AllowLayout(Control control)
+		{
+			foreach (Control c in control.Controls)
+				AllowLayout(c);
+			control.ResumeLayout(false);
 		}
 
 		public event EventHandler IntializationComplete;
