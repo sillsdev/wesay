@@ -27,6 +27,11 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_presentationModel = presentationModel;
 			InitializeComponent();
 
+#if __MonoCS__
+			// The label "(Enter Key)" does not display properly on Linux/Mono.  Part of the string is cut off.
+			// This simple setting fixes that problem.  (Don't ask me why!)
+			tableLayoutPanel8.AutoSize = false;
+#endif
 			InitializeDisplaySettings();
 			_listViewWords.FormWritingSystem = _presentationModel.FormWritingSystem;
 			_listViewWords.MeaningWritingSystem = _presentationModel.ShowMeaningField ? _presentationModel.MeaningWritingSystem: null;
