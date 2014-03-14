@@ -51,6 +51,11 @@ namespace Addin.Transform
 			get { return Resources.SfmTransformerButtonImage; }
 		}
 
+		public override Image DashboardButtonImage
+		{
+			get { return Resources.SfmTransformerButtonImage; }
+		}
+
 		/// <summary>
 		/// this runs in a worker thread
 		/// </summary>
