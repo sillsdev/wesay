@@ -33,6 +33,7 @@ namespace WeSay.ConfigTool
 			writingSystemSetupModel.AskIfOkToConflateWritingSystems += OnAskIfOkToConflateWritingSystems;
 			writingSystemSetupModel.AskIfOkToDeleteWritingSystems += OnAskIfOkToDeleteWritingSystems;
 			_view.UserWantsHelpWithDeletingWritingSystems += OnUserWantsHelpWithDeletingWritingSystems;
+			_view.UserWantsHelpWithCustomSorting += OnUserWantsHelpWithCustomSorting;
 			store.WritingSystemDeleted += OnWritingSystemDeleted;
 			store.WritingSystemConflated += OnWritingSystemConflated;
 			Controls.Add(_view);
@@ -43,6 +44,11 @@ namespace WeSay.ConfigTool
 		private void OnUserWantsHelpWithDeletingWritingSystems(object sender, EventArgs e)
 		{
 			Program.ShowHelpTopic("/WeSay_Configuration_Tool/Input_Systems/Delete_or_merge_an_input_system.htm");
+		}
+
+		private void OnUserWantsHelpWithCustomSorting(object sender, EventArgs e)
+		{
+			Program.ShowHelpTopic("/WeSay_Configuration_Tool/Input_Systems/Sorting_tab.htm");
 		}
 
 		private void OnAskIfOkToDeleteWritingSystems(object sender, AskIfOkToDeleteEventArgs args)
