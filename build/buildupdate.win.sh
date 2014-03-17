@@ -3,7 +3,7 @@
 # project=WeSay1.4-Linux
 # build=wesay1.4-win32-continuous
 # root_dir=..
-# $Id: 729ee8446b8c332adf45f7a1f11f184ebd86d235 $
+# $Id: 5c57bb709d99a3f7fdebc821d8c88f682a1cfb0a $
 
 cd "$(dirname "$0")"
 
@@ -109,12 +109,20 @@ cd -
 #     revision: latest.lastSuccessful
 #     paths: {"icu*.dll"=>"lib/Debug"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
+# [6] build: wesay-doc-default (bt184)
+#     project: WeSay Windows
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt184
+#     clean: false
+#     revision: latest.lastSuccessful
+#     paths: {"WeSay_Helps.chm"=>"common"}
+#     VCS: http://hg.palaso.org/wesay-doc []
 
 # make sure output directories exist
 mkdir -p ../lib/Release
 mkdir -p ../lib/Debug
 mkdir -p ../MercurialExtensions
 mkdir -p ../MercurialExtensions/fixutf8
+mkdir -p ../common
 
 # download artifact dependencies
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastFinished/Chorus.exe ../lib/Release/Chorus.exe
@@ -211,4 +219,5 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.last
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icudt40.dll ../lib/Debug/icudt40.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icuin40.dll ../lib/Debug/icuin40.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icuuc40.dll ../lib/Debug/icuuc40.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/WeSay_Helps.chm ../common/WeSay_Helps.chm
 # End of script
