@@ -79,7 +79,7 @@ namespace WeSay.LexicalTools
 			{
 				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
-			DetailList.ResumeLayout();
+			DetailList.ResumeLayout(false);
 			return rowCount;
 		}
 
@@ -90,7 +90,7 @@ namespace WeSay.LexicalTools
 				new LexExampleSentenceLayouter(DetailList, insertAtRow, ActiveViewTemplate, _serviceProvider, null);
 			exampleLayouter.AddGhost(null, sense.ExampleSentences);
 			exampleLayouter.GhostRequestedLayout += OnGhostRequestedlayout;
-			DetailList.ResumeLayout();
+			DetailList.ResumeLayout(false);
 		}
 
 		private void OnGhostRequestedlayout(object sender, EventArgs e)

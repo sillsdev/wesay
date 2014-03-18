@@ -68,7 +68,7 @@ namespace WeSay.LexicalTools
 				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
 
-			DetailList.ResumeLayout();
+			DetailList.ResumeLayout(false);
 			return rowCount;
 		}
 

@@ -19,6 +19,7 @@ namespace WeSay.UI.TextBoxes
 				components.Dispose();
 				OnSpellCheckingDisabled();
 			}
+			_oldFont = null;
 			base.Dispose(disposing);
 		}
 

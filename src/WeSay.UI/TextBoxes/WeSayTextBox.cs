@@ -177,8 +177,14 @@ namespace WeSay.UI.TextBoxes
 			return size;
 		}
 
+		private int _oldWidth = -1;
+		private string _oldText;
+		private Font _oldFont;
+		private int _oldHeight = -1;
 		private int GetPreferredHeight(int width)
 		{
+			if (width == _oldWidth && Text == _oldText && Font == _oldFont && _oldHeight > 0)
+				return _oldHeight;
 			using (Graphics g = CreateGraphics())
 			{
 				TextFormatFlags flags = TextFormatFlags.TextBoxControl | TextFormatFlags.Default |
@@ -198,7 +204,11 @@ namespace WeSay.UI.TextBoxes
 												   Font,
 												   new Size(width, int.MaxValue),
 												   flags);
-				return sz.Height + 2; // add enough space for spell checking squiggle underneath
+				_oldHeight = sz.Height + 2; // add enough space for spell checking squiggle underneath
+				_oldWidth = width;
+				_oldText = Text;
+				_oldFont = Font;
+				return _oldHeight;
 			}
 		}
 

@@ -101,7 +101,7 @@ namespace WeSay.LexicalTools
 				rowCount++;
 			}
 
-			DetailList.ResumeLayout();
+			DetailList.ResumeLayout(false);
 			return rowCount;
 		}
 
