@@ -21,6 +21,18 @@ namespace WeSay.LexicalTools.Tests
 		private int _rowCount;
 		private IServiceLocator Context{ get; set;}
 
+		[TestFixtureSetUp]
+		public void FixtureSetup()
+		{
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+		}
+
+		[TestFixtureTearDown]
+		public void FixtureTeardown()
+		{
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+		}
+
 		[SetUp]
 		public void Setup()
 		{

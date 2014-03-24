@@ -31,6 +31,18 @@ namespace WeSay.LexicalTools.Tests
 		private ViewTemplate _viewTemplate;
 		private string _primaryMeaningFieldName;
 
+		[TestFixtureSetUp]
+		public void FixtureSetUp()
+		{
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+		}
+
+		[TestFixtureTearDown]
+		public void FixtureTearDown()
+		{
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+		}
+
 		[SetUp]
 		public void SetUp()
 		{

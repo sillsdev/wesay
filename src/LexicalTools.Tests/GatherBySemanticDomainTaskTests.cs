@@ -33,7 +33,14 @@ namespace WeSay.LexicalTools.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
 			WeSayProjectTestHelper.InitializeForTests();
+		}
+
+		[TestFixtureTearDown]
+		public void FixtureTearDown()
+		{
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
 		}
 
 		[SetUp]

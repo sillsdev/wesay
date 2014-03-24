@@ -47,6 +47,18 @@ namespace WeSay.LexicalTools.Tests
 			return !(hasSense && hasExample);
 		}
 
+		[TestFixtureSetUp]
+		public void FixtureSetUp()
+		{
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+		}
+
+		[TestFixtureTearDown]
+		public void FixtureTearDown()
+		{
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+		}
+
 		[SetUp]
 		public void SetUp()
 		{
