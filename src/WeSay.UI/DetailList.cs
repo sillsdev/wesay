@@ -130,17 +130,6 @@ namespace WeSay.UI
 			ResumeLayout(false);
 		}
 
-		public void ForceFullTreeLayout()
-		{
-			SuspendLayout();
-			foreach (var childDetailList in GetChildDetailLists())
-			{
-				childDetailList.ForceFullTreeLayout();
-			}
-			ResumeLayout(false);
-			PerformLayout();
-		}
-
 		protected override void OnGotFocus(EventArgs e)
 		{
 			base.OnGotFocus(e);
@@ -166,11 +155,6 @@ namespace WeSay.UI
 		public Control AddWidgetRow(string label, bool isHeader, Control control)
 		{
 			return AddWidgetRow(label, isHeader, control, RowCount, false);
-		}
-
-		public int Count
-		{
-			get { return RowCount; }
 		}
 
 		public Control FocussedImmediateChild
@@ -222,7 +206,6 @@ namespace WeSay.UI
 									int insertAtRow,
 									bool isGhostField)
 		{
-			//Debug.WriteLine(String.Format("AddWidgetRow({0}, header={1}, , row={2}", fieldLabel, isHeader, insertAtRow));
 			RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
 			if (insertAtRow >= RowCount)
@@ -305,7 +288,7 @@ namespace WeSay.UI
 			// Forms OnLayout from being called. It will not prevent messages about size
 			// changes from being sent and processed."
 			//
-			// we eventually get around this by making control invisible while it laysout
+			// we eventually get around this by making control invisible while it lays out
 			// and then making it visible again. (See EntryViewControl.cs:RefreshEntryDetail)
 			Controls.Add(editWidget, _indexOfWidget, insertAtRow);
 
@@ -336,8 +319,7 @@ namespace WeSay.UI
 			bool focusSucceeded;
 			if (c is MultiTextControl)
 			{
-				MultiTextControl multText = (MultiTextControl)c;
-				var tb = multText.TextBoxes[0];
+				var tb = ((MultiTextControl)c).TextBoxes[0];
 				focusSucceeded = tb.Focus();
 				if (tb is WeSayTextBox)
 					((WeSayTextBox)tb).Select(1000, 0); //go to end
@@ -345,8 +327,7 @@ namespace WeSay.UI
 			else if (c is WeSayTextBox)
 			{
 				focusSucceeded = c.Focus();
-				if (c is WeSayTextBox)
-					((WeSayTextBox)c).Select(1000, 0); //go to end
+				((WeSayTextBox)c).Select(1000, 0); //go to end
 			}
 			else
 			{
@@ -359,7 +340,6 @@ namespace WeSay.UI
 		/// <summary>
 		/// Used to set the focus on the first editable field, which may not be at the index of the starting row field.  This method recurses through nested DetailLists to find an editable field on which to set the focus
 		/// </summary>
-		/// <param name="startingRow">The row to start searching for an editable field</param>
 		/// <returns>True if an editable control was found, otherwise false</returns>
 		public void MoveInsertionPoint(int row)
 		{
@@ -391,9 +371,7 @@ namespace WeSay.UI
 
 		public Control GetEditControlFromRow(int fieldIndex)
 		{
-			var labels = new List<Control>();
-			AppendControlsFromEachFieldRow(1, labels);
-			return labels[fieldIndex];
+			return GetControlFromPosition(1, fieldIndex);
 		}
 
 		/// <summary>
@@ -401,9 +379,7 @@ namespace WeSay.UI
 		/// </summary>
 		public Label GetLabelControlFromRow(int fieldIndex)
 		{
-			var labels = new List<Control>();
-			AppendControlsFromEachFieldRow(0, labels);
-			return (Label) labels[fieldIndex];
+			return GetControlFromPosition(0, fieldIndex) as Label;
 		}
 
 		/// <summary>
@@ -411,50 +387,16 @@ namespace WeSay.UI
 		/// </summary>
 		public DeleteButton GetDeleteButton(int fieldIndex)
 		{
-			var deleteButtons = new List<Control>();
-			AppendControlsFromEachFieldRow(2, deleteButtons);
-			return (DeleteButton)deleteButtons[fieldIndex];
+			return GetControlFromPosition(2, fieldIndex) as DeleteButton;
 		}
 
 		private void AppendControlsFromEachFieldRow(int columnIndex, List<Control> controls)
 		{
 			for (int row = 0; row < RowCount; row++)
 			{
-				var control = GetFirstControlInRow(row);
-				if (control is DetailList)
-				{
-					var detailList = ((DetailList)control);
-					detailList.AppendControlsFromEachFieldRow(columnIndex, controls);
-				}
-				else
-				{
-					controls.Add(GetControlFromPosition(columnIndex, row));
-				}
-			}
-		}
-
-		/// <summary>
-		/// Tests
-		/// </summary>
-		/// <returns></returns>
-		public int FieldCount
-		{
-			get
-			{
-				int fieldcount = 0;
-				for (int row = 0; row < RowCount; row++)
-				{
-					var control = GetFirstControlInRow(row);
-					if (control is DetailList)
-					{
-						fieldcount += ((DetailList) control).FieldCount;
-					}
-					else
-					{
-						fieldcount++;
-					}
-				}
-				return fieldcount;
+				var c = GetControlFromPosition(columnIndex, row);
+				if (c != null)
+					controls.Add(c);
 			}
 		}
 
@@ -487,6 +429,7 @@ namespace WeSay.UI
 		}
 
 		bool _clicked = false;
+		private int _mouseOverRow = -1;
 
 		//This message filter is used to determine wether the mouse in hovering over the DetailList or one
 		//of its children. MouseLeave unfortunately fires when the mouse moves over a child control. This
@@ -508,7 +451,22 @@ namespace WeSay.UI
 			//Console.WriteLine("MouseCoords: {0} {1} BoundsUpperLeft: {2}, {3}, {4}, {5}", posRelativeToThis.X, posRelativeToThis.Y, Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height);
 
 			var mouseInBounds = ClientRectangle.Contains(posRelativeToThis);
-			if (MouseIsInBounds != mouseInBounds)
+			var oldMouseRow = _mouseOverRow;
+			if (_mouseIsInBounds)
+			{
+				var child = GetChildAtPoint(posRelativeToThis);
+				// ignore the space between rows that returns a null control.
+				if (child != null)
+				{
+					var cellPosition = GetCellPosition(child);
+					_mouseOverRow = cellPosition.Row;
+				}
+			}
+			else
+			{
+				_mouseOverRow = -1;
+			}
+			if (MouseIsInBounds != mouseInBounds || oldMouseRow != _mouseOverRow)
 			{
 				if (mouseInBounds)
 				{
@@ -545,6 +503,11 @@ namespace WeSay.UI
 		public bool MouseIsInBounds
 		{
 			get { return _mouseIsInBounds; }
+		}
+
+		public int MouseOverRow
+		{
+			get { return _mouseOverRow; }
 		}
 	}
 }

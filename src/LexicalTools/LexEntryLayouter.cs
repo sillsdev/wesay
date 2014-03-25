@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
@@ -6,7 +7,6 @@ using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
 using Palaso.Lift;
 using WeSay.LexicalModel;
-using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.audio;
@@ -34,11 +34,12 @@ namespace WeSay.LexicalTools
 			: base(parentDetailList, parentRow, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, entry), entry)
 		{
 			Entry = entry;
-			DetailList.Name = "LexEntryDetailList";
 			_sensesAreDeletable = sensesAreDeletable;
 			_confirmDeleteFactory = confirmDeleteFactory;
 			DetailList.LabelsChanged += OnLabelsChanged;
 		}
+
+		internal bool SensesAreDeletable { get { return _sensesAreDeletable; } }
 
 		private void OnLabelsChanged(object sender, EventArgs e)
 		{
@@ -56,9 +57,22 @@ namespace WeSay.LexicalTools
 			return AddWidgets((LexEntry) wsdo, insertAtRow);
 		}
 
+		/// <summary>
+		/// We don't have ghosts for LexEntry objects, so this implementation should never
+		/// be called!
+		/// </summary>
+		protected override Layouter CreateAndInsertNewLayouter(int row, PalasoDataObject wsdo)
+		{
+			return null;	// no parent layouter, so we can't insert.
+		}
+
 		internal int AddWidgets(LexEntry entry, int insertAtRow)
 		{
 			DetailList.SuspendLayout();
+			Debug.Assert(DetailList.RowCount == 0);
+			Debug.Assert(DetailList.ColumnCount == 3);
+			Debug.Assert(DetailList.RowStyles.Count == 0);
+			FirstRow = 0;
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (field != null && field.GetDoShow(entry.LexicalForm, ShowNormallyHiddenFields))
@@ -75,6 +89,7 @@ namespace WeSay.LexicalTools
 			rowCount += AddCustomFields(entry, insertAtRow + rowCount);
 
 			var rowCountBeforeSenses = rowCount;
+			LastRow = insertAtRow + rowCount;
 			foreach (var lexSense in entry.Senses)
 			{
 				var layouter = new LexSenseLayouter(
@@ -84,12 +99,15 @@ namespace WeSay.LexicalTools
 					RecordListManager,
 					_serviceProvider,
 					lexSense
-				);
-				layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
-				layouter.Deletable = _sensesAreDeletable;
+				)
+				{
+					ShowNormallyHiddenFields = ShowNormallyHiddenFields,
+					Deletable = _sensesAreDeletable,
+					ParentLayouter = this
+				};
 				layouter.DeleteClicked += OnSenseDeleteClicked;
-				AddChildrenWidgets(layouter, lexSense);
-				rowCount++;
+				rowCount += AddChildrenWidgets(layouter, lexSense, rowCount);
+				ChildLayouts.Add(layouter);
 			}
 
 			//see: WS-1120 Add option to limit "add meanings" task to the ones that have a semantic domain
@@ -105,7 +123,7 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		private void OnSenseDeleteClicked(object sender, EventArgs e)
+		internal void OnSenseDeleteClicked(object sender, EventArgs e)
 		{
 			var sendingLayouter = (Layouter) sender;
 			var sense = (LexSense) sendingLayouter.PdoToLayout;
@@ -118,9 +136,11 @@ namespace WeSay.LexicalTools
 				return;
 			}
 			Entry.Senses.Remove(sense);
+			DetailList.SuspendLayout();
 			DetailList.Clear();
 			//for now just relayout the whole thing as the meaning numbers will change etc.
 			AddWidgets();
+			DetailList.ResumeLayout();
 		}
 
 		private void AddSenseGhost(LexEntry entry, int row)
@@ -132,23 +152,14 @@ namespace WeSay.LexicalTools
 				RecordListManager,
 				_serviceProvider,
 				null
-				);
-			layouter.AddGhost(null, entry.Senses, true);
-			layouter.Deletable = false;
-			layouter.GhostRequestedLayout += OnGhostRequestedlayout;
-			layouter.DeleteClicked += OnSenseDeleteClicked;
-			row++;
-		}
-
-		private void OnGhostRequestedlayout(object sender, EventArgs e)
-		{
-			if (ActiveViewTemplate.GetGhostingRuleForField(LexEntry.WellKnownProperties.Sense).ShowGhost)
+				)
 			{
-				((Layouter) sender).Deletable = true;
-				//The old ghost takes care of turing itself into a properly layouted sense.
-				//We just add a new ghost here
-				AddSenseGhost(Entry, DetailList.RowCount);
-			}
+				ParentLayouter = this
+			};
+			layouter.AddGhost(null, entry.Senses, true, row);
+			layouter.Deletable = false;
+			layouter.DeleteClicked += OnSenseDeleteClicked;
+			ChildLayouts.Add(layouter);
 		}
 
 		/// <summary>

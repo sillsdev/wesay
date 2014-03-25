@@ -1,8 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
@@ -11,7 +10,6 @@ using Palaso.UiBindings;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
@@ -35,8 +33,6 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private DetailList _detailList;
 
-		private DetailList _parentDetailList;
-
 		private bool _deletable;
 
 		/// <summary>
@@ -57,7 +53,7 @@ namespace WeSay.LexicalTools
 
 		private bool _showNormallyHiddenFields;
 
-		private readonly DeleteButton _deleteButton = new DeleteButton();
+		protected readonly DeleteButton _deleteButton = new DeleteButton();
 
 		public EventHandler DeleteClicked;
 
@@ -72,7 +68,8 @@ namespace WeSay.LexicalTools
 				}
 				_deletable = value;
 				_deleteButton.Visible = _deletable;
-				_deleteButton.Active = DetailList.MouseIsInBounds;
+				_deleteButton.Active = value &&
+					DetailList.MouseOverRow >= FirstRow && DetailList.MouseOverRow <= LastRow;
 			}
 		}
 
@@ -83,10 +80,10 @@ namespace WeSay.LexicalTools
 
 		private void OnMouseEnteredBounds(object sender, EventArgs e)
 		{
-			if (Deletable)
-			{
+			if (Deletable && DetailList.MouseOverRow >= FirstRow && DetailList.MouseOverRow <= LastRow)
 				_deleteButton.Active = true;
-			}
+			else
+				_deleteButton.Active = false;
 		}
 
 		private void OnDeleteClicked(object sender, EventArgs e)
@@ -122,34 +119,36 @@ namespace WeSay.LexicalTools
 			set { _showNormallyHiddenFields = value; }
 		}
 
-		public DetailList ParentDetailList
-		{
-			get { return _parentDetailList; }
-			set { _parentDetailList = value; }
-		}
+		public Layouter ParentLayouter { get; internal set; }
+
+		public List<Layouter> ChildLayouts { get; protected set; }
+
+		public int FirstRow { get; set; }
+
+		public int LastRow { get; set; }
 
 		public PalasoDataObject PdoToLayout { get; private set; }
 
 		public EventHandler GhostRequestedLayout;
 
-		protected Layouter(DetailList parentDetailList,
-						   int rowInParent,
+		protected Layouter(DetailList table,
+						   int beginningRow,
 						   ViewTemplate viewTemplate,
 						   LexEntryRepository lexEntryRepository,
 						   IServiceProvider serviceProvider,
 						   PalasoDataObject pdoToLayout)
 		{
-			if (parentDetailList == null)
+			if (table == null)
 			{
-				throw new ArgumentNullException("parentDetailList");
+				throw new ArgumentNullException("table");
 			}
 			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
 			PdoToLayout = pdoToLayout;
-			_parentDetailList = parentDetailList;
-			_detailList = new DetailList();
+			FirstRow = beginningRow;
+			_detailList = table;
 			_viewTemplate = viewTemplate;
 			_lexEntryRepository = lexEntryRepository;
 			_serviceProvider = serviceProvider;
@@ -158,18 +157,10 @@ namespace WeSay.LexicalTools
 			_deleteButton.Active = false;
 			_deleteButton.Visible = false;
 			_deleteButton.ToolTip = StringCatalog.Get("Delete Meaning");
-			DetailList.Controls.Add(_deleteButton, 2, 0);
+			DetailList.Controls.Add(_deleteButton, 2, beginningRow);
 			DetailList.MouseEnteredBounds += OnMouseEnteredBounds;
 			DetailList.MouseLeftBounds += OnMouseLeftBounds;
-			ParentDetailList.AddDetailList(DetailList, rowInParent);
-		}
-
-		/// <summary>
-		/// actually add the widgets that are needed to the detailed list
-		/// </summary>
-		public int AddWidgets(PalasoDataObject wsdo)
-		{
-			return AddWidgets(wsdo, -1);
+			ChildLayouts = new List<Layouter>();
 		}
 
 		internal abstract int AddWidgets(PalasoDataObject wsdo, int row);
@@ -206,38 +197,19 @@ namespace WeSay.LexicalTools
 		{
 			foreach (Control c in control.TextBoxes)
 			{
-					TextBinding binding = new TextBinding(multiTextToBindTo, ((IControlThatKnowsWritingSystem) c).WritingSystem.Id, c);
-					binding.ChangeOfWhichItemIsInFocus +=
-						_detailList.OnBinding_ChangeOfWhichItemIsInFocus;
-
+				TextBinding binding = new TextBinding(multiTextToBindTo, ((IControlThatKnowsWritingSystem) c).WritingSystem.Id, c);
+				binding.ChangeOfWhichItemIsInFocus += _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			}
 		}
 
-		//        protected Control MakeGhostEntry(IBindingList list, string ghostPropertyName, IList<String> writingSystemIds)
-		//        {
-		//            WeSayMultiText m = new WeSayMultiText(writingSystemIds, new MultiText());
-		////
-		////            foreach (WeSayTextBox box in m.TextBoxes)
-		////            {
-		////                MakeGhostBinding(list, ghostPropertyName, box.WritingSystem, box);
-		////            }
-		////            GhostBinding g = MakeGhostBinding(list, "Sentence", writingSystem, entry);
-		////            //!!!!!!!!!!!!!!!!! g.ReferenceControl =
-		////                DetailList.AddWidgetRow(StringCatalog.GetListOfType("New Example"), false, entry, insertAtRow+rowCount);
-		////
-		//////            WeSayTextBox entry = new WeSayTextBox(writingSystem);
-		////            MakeGhostBinding(list, ghostPropertyName, writingSystem, entry);
-		//            return m;
-		//        }
-
 		protected int MakeGhostWidget<T>(PalasoDataObject parent,
 										IList<T> list,
-										 string fieldName,
-										 string label,
-										 string propertyName,
-										 bool isHeading) where T : PalasoDataObject, new()
+										string fieldName,
+										string label,
+										string propertyName,
+										bool isHeading,
+										int row) where T : PalasoDataObject, new()
 		{
-			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(fieldName);
 			if (field != null && field.Enabled &&
 				field.Visibility == CommonEnumerations.VisibilitySetting.Visible)
@@ -254,7 +226,7 @@ namespace WeSay.LexicalTools
 				Control refWidget = DetailList.AddWidgetRow(label,
 															isHeading,
 															m,
-															0,
+															row,
 															true);
 
 				foreach (IControlThatKnowsWritingSystem box in m.TextBoxes)
@@ -282,22 +254,21 @@ namespace WeSay.LexicalTools
 				where T : PalasoDataObject, new()
 		{
 			GhostBinding<T> binding = new GhostBinding<T>(parent,
-				list,
-														  ghostPropertyName,
-														  writingSystem,
-														  entry);
+															list,
+															ghostPropertyName,
+															writingSystem,
+															entry);
 			binding.LayoutNeededAfterMadeReal += OnGhostBindingLayoutNeeded;
 			binding.CurrentItemChanged += _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			return binding;
 		}
 
 		protected virtual void OnGhostBindingLayoutNeeded<T>(GhostBinding<T> sender,
-															 IList<T> list,
-															 int index,
-															 MultiTextControl
-																	 previouslyGhostedControlToReuse,
-															 bool doGoToNextField,
-															 EventArgs args)
+															IList<T> list,
+															int index,
+															MultiTextControl previouslyGhostedControlToReuse,
+															bool doGoToNextField,
+															EventArgs args)
 				where T : PalasoDataObject, new()
 		{
 			DetailList.SuspendLayout();
@@ -319,28 +290,61 @@ namespace WeSay.LexicalTools
 			{
 				_detailList.MoveInsertionPoint(0);
 			}
+			_detailList.Refresh();
 		}
 
-		protected void AddWidgetsAfterGhostTrigger(PalasoDataObject wsdo,
+		protected virtual void AddWidgetsAfterGhostTrigger(PalasoDataObject wsdo,
 												   Control refControl,
 												   bool doGoToNextField)
 		{
+			Debug.Assert(!(this is LexEntryLayouter));
 			_detailList.SuspendLayout();
-			//remove the old ghost widgets and add the ones for the real sense
-			_detailList.Controls.Clear();
-			_detailList.RowCount = 0;
-			_detailList.RowStyles.Clear();
-			DetailList.Controls.Add(_deleteButton, 2, 0);
-			AddWidgets(wsdo);
+			var position = _detailList.GetCellPosition(refControl);
+			Debug.Assert(position.Row >= 0);
+			var newLayouter = CreateAndInsertNewLayouter(position.Row, wsdo);
+			Debug.Assert(newLayouter != null);
+			// Add the widgets for the real object.	 Retain the existing ghost widget, which
+			// gets shifted down to follow the row(s) for the real object.
+			int rowCount = newLayouter.AddWidgets(wsdo, position.Row);
+			var newPosition = _detailList.GetCellPosition(refControl);
+			Debug.Assert(position.Row + rowCount == newPosition.Row);
+			FirstRow = LastRow = newPosition.Row;	// adjust settings for ghost's layouter (ie, "this")
+			AdjustLayoutRowsAfterGhostTrigger(rowCount);
+			//DumpLayoutRowsForDebugging();
 			_detailList.ResumeLayout();
+		}
+
+		private void DumpLayoutRowsForDebugging()
+		{
+			var parentEntryLayouter = this;
+			while (parentEntryLayouter.ParentLayouter != null)
+				parentEntryLayouter = parentEntryLayouter.ParentLayouter;
+			WriteLayouterRows(parentEntryLayouter, "");
+		}
+
+		private static void WriteLayouterRows(Layouter layouter, string indent)
+		{
+			Debug.WriteLine("{0}Layout: this={1}, FirstRow={2}, LastRow={3}", indent, layouter, layouter.FirstRow, layouter.LastRow);
+			foreach (var child in layouter.ChildLayouts)
+				WriteLayouterRows(child, indent+"    ");
+		}
+
+		/// <summary>
+		/// Create an appropriate Layouter for a new object created from a ghost, and insert
+		/// it at the right place in the Layouter tree.
+		/// </summary>
+		protected abstract Layouter CreateAndInsertNewLayouter(int row, PalasoDataObject wsdo);
+
+		protected virtual void AdjustLayoutRowsAfterGhostTrigger(int rowCount)
+		{
+			// Nothing needs to be done for LexEntryLayouter or LexSenseLayouter.
 		}
 
 		protected virtual void UpdateGhostLabel(int itemCount, int index) {}
 
-		protected static int AddChildrenWidgets(Layouter layouter,
-												PalasoDataObject po)
+		protected static int AddChildrenWidgets(Layouter layouter, PalasoDataObject po, int row)
 		{
-			return layouter.AddWidgets(po);
+			return layouter.AddWidgets(po, row);
 		}
 
 		protected int AddCustomFields(PalasoDataObject target, int insertAtRow)
@@ -365,7 +369,7 @@ namespace WeSay.LexicalTools
 			foreach (Field customField in
 					ActiveViewTemplate.GetCustomFields(target.GetType().BaseType.Name))
 			{
-				if (target.GetType() == typeof (LexExampleSentence) &&
+				if (target is LexExampleSentence &&
 					customField.FieldName == PalasoDataObject.WellKnownProperties.Note)
 				{
 					continue; //note actually isn't allowed at the moment
@@ -457,37 +461,6 @@ namespace WeSay.LexicalTools
 			return null;
 		}
 
-		/// <summary>
-		/// This is used to convert from the IEnuerable<string> that the cache give us
-		/// to the IEnumerable<object> that AutoComplete needs.
-		/// </summary>
-		//        public class LexEntryEnumerableToObjectEnumerableWrapper : IEnumerable<object>
-		//        {
-		//            private readonly IEnumerable<LexEntry> _collection;
-		//
-		//            public LexEntryEnumerableToObjectEnumerableWrapper(IEnumerable<LexEntry> collection)
-		//            {
-		//                if (collection == null)
-		//                {
-		//                    throw new ArgumentNullException("collection");
-		//                }
-		//                _collection = collection;
-		//            }
-		//
-		//            IEnumerator<object> IEnumerable<object>.GetEnumerator()
-		//            {
-		//                foreach (object s in _collection)
-		//                {
-		//                    yield return s;
-		//                }
-		//            }
-		//
-		//            public IEnumerator GetEnumerator()
-		//            {
-		//                return ((IEnumerable<object>)this).GetEnumerator();
-		//            }
-		//
-		//        }
 		private Control MakeRelationWidget(PalasoDataObject target, LexRelationType type, Field field)
 		{
 			return RelationController.CreateWidget(target,
@@ -496,22 +469,6 @@ namespace WeSay.LexicalTools
 												   _lexEntryRepository,
 												   _detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 		}
-
-		//        void OnSelectedItemChanged(object sender, EventArgs e)
-		//        {
-		//            WeSayAutoCompleteTextBox box = sender as WeSayAutoCompleteTextBox;
-		//            LexRelation relation = (LexRelation)box.Tag;
-		//            Palaso.Reporting.Logger.WriteMinorEvent("Changing value of LexRelation Control ({0})", relation.TypeId);
-		//
-		//            if (box.SelectedItem == null)
-		//            {
-		//                relation.Key = string.Empty;
-		//            }
-		//            else
-		//            {
-		//                relation.Target = box.SelectedItem;
-		//            }
-		//        }
 
 		protected Control MakeOptionWidget(PalasoDataObject target, Field field)
 		{
@@ -532,8 +489,6 @@ namespace WeSay.LexicalTools
 			OptionsList availableOptions = WeSayWordsProject.Project.GetOptionsList(field, false);
 			OptionRefCollection refsOfChoices =
 				target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
-			//            OptionCollectionControl control =
-			//                   new OptionCollectionControl(refsOfChoices, availableOptions, field.WritingSystemIds[0]);
 			IList<IWritingSystemDefinition> writingSystems =
 				 BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
 			IChoiceSystemAdaptor<Option, string, OptionRef> displayAdaptor;
@@ -577,5 +532,4 @@ namespace WeSay.LexicalTools
 			return null;//only LexSenseLayouter actually has this
 		}
 	}
-
 }

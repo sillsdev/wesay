@@ -32,6 +32,9 @@ namespace WeSay.LexicalTools
 					_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
 				}
 				_detailListControl.ChangeOfWhichItemIsInFocus -= OnChangeOfWhichItemIsInFocus;
+				_detailListControl.KeyDown -= _detailListControl_KeyDown;
+				_detailListControl.SizeChanged -= OnScrollableContainerOrDetailListSizeChanged;
+				_detailListControl.Dispose();
 			}
 			if (disposing && (components != null))
 			{

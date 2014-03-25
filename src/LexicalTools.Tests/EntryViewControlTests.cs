@@ -161,7 +161,7 @@ namespace WeSay.LexicalTools.Tests
 				WritingSystemsIdsForTests.AnalysisIdForTest
 			))
 			{
-				Assert.AreEqual(1, entryViewControl.ControlEntryDetail.Count);
+				Assert.AreEqual(1, entryViewControl.ControlEntryDetail.RowCount);
 			}
 		}
 
@@ -175,7 +175,7 @@ namespace WeSay.LexicalTools.Tests
 				WritingSystemsIdsForTests.AnalysisIdForTest
 			))
 			{
-				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.FieldCount);
+				Assert.AreEqual(3, entryViewControl.ControlEntryDetail.RowCount);
 			}
 		}
 
@@ -202,7 +202,7 @@ namespace WeSay.LexicalTools.Tests
 						(MultiTextControl) entryDetailControl.GetEditControlFromRow(0);
 				editControl.TextBoxes[0].Focus();
 				editControl.TextBoxes[0].Text = "test";
-				entryDetailControl.GetEditControlFromRow(1).Focus();
+				entryDetailControl.GetEditControlFromRow(2).Focus();
 				Assert.IsTrue(editControl.TextBoxes[0].Text.Contains(GetMeaning(entry)));
 			}
 		}
@@ -253,10 +253,10 @@ namespace WeSay.LexicalTools.Tests
 		private static MultiTextControl GetEditControl(DetailList detailList, string labelText)
 		{
 			MultiTextControl editControl = null;
-			for (int i = 0;i < detailList.FieldCount;i++)
+			for (int i = 0;i < detailList.RowCount;i++)
 			{
 				Label label = detailList.GetLabelControlFromRow(i);
-				if (label.Text == labelText)
+				if (label != null && label.Text == labelText)
 				{
 					editControl = (MultiTextControl) detailList.GetEditControlFromRow(i);
 					break;
@@ -268,10 +268,10 @@ namespace WeSay.LexicalTools.Tests
 		private static DeleteButton GetDeletebutton(DetailList detailList, string labelText)
 		{
 			DeleteButton deleteButton = null;
-			for (int i = 0; i < detailList.FieldCount; i++)
+			for (int i = 0; i < detailList.RowCount; i++)
 			{
 				Label label = detailList.GetLabelControlFromRow(i);
-				if (label.Text == labelText)
+				if (label != null && label.Text == labelText)
 				{
 					deleteButton = detailList.GetDeleteButton(i);
 					break;
@@ -377,11 +377,11 @@ namespace WeSay.LexicalTools.Tests
 			using (EntryViewControl entryViewControl = CreateForm(apple, false))
 			{
 				entryViewControl.SenseDeletionEnabled = true;
-				Assert.AreEqual(6, entryViewControl.ControlEntryDetail.FieldCount);
+				Assert.AreEqual(6, entryViewControl.ControlEntryDetail.RowCount);
 				DeleteButton deleteButton = GetDeletebutton(entryViewControl.ControlEntryDetail, "Meaning 1");
 				deleteButton.Active = true;
 				deleteButton.PerformClick();
-				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.FieldCount);
+				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.RowCount);
 			}
 		}
 
@@ -405,10 +405,10 @@ namespace WeSay.LexicalTools.Tests
 			using (EntryViewControl entryViewControl = CreateForm(apple, false))
 			{
 				entryViewControl.SenseDeletionEnabled = true;
-				Assert.AreEqual(6, entryViewControl.ControlEntryDetail.FieldCount);
+				Assert.AreEqual(6, entryViewControl.ControlEntryDetail.RowCount);
 				DeleteButton deleteButton = GetDeletebutton(entryViewControl.ControlEntryDetail, "Meaning 1");
 				deleteButton.PerformClick();
-				Assert.AreEqual(6, entryViewControl.ControlEntryDetail.FieldCount);
+				Assert.AreEqual(6, entryViewControl.ControlEntryDetail.RowCount);
 			}
 		}
 

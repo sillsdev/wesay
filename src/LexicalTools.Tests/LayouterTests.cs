@@ -4,9 +4,7 @@ using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
-using Palaso.WritingSystems;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using WeSay.UI;
@@ -118,7 +116,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				LexEntryLayouter layout = new LexEntryLayouter(dl, 0, new ViewTemplate(), null, Context, entry, false, () => new TestConfirmDelete());
 				layout.AddWidgets();
-				Assert.AreEqual(0, layout.ParentDetailList.FieldCount);
+				Assert.AreEqual(0, dl.RowCount);
 			}
 		}
 
@@ -145,7 +143,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntryLayouter layout = new LexEntryLayouter(dl, 0, template, null, Context, entry, false, () => new TestConfirmDelete());
 			layout.ShowNormallyHiddenFields = showNormallyHiddenFields;
 			layout.AddWidgets();
-			_rowCount = dl.FieldCount;
+			_rowCount = dl.RowCount;
 			return dl;
 		}
 

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
@@ -20,12 +22,12 @@ namespace WeSay.LexicalTools
 			IServiceProvider serviceProvider, LexSense senseToLayout)
 			: base(parentDetailList, parentRow, viewTemplate, lexEntryRepository, serviceProvider, senseToLayout)
 		{
-			DetailList.Name = "LexSenseDetailList";
 		}
 
 		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
 		{
 			LexSense sense = (LexSense) wsdo;
+			FirstRow = insertAtRow;
 			int rowCount = 0;
 			DetailList.SuspendLayout();
 			try
@@ -52,16 +54,19 @@ namespace WeSay.LexicalTools
 					rowCount++;
 				}
 
-				rowCount += AddCustomFields(sense, rowCount);
+				rowCount += AddCustomFields(sense, insertAtRow + rowCount);
 
 				foreach (var lexExampleSentence in sense.ExampleSentences)
 				{
 					var exampleLayouter =
-						new LexExampleSentenceLayouter(DetailList, rowCount, ActiveViewTemplate, _serviceProvider, lexExampleSentence);
-					exampleLayouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
-					exampleLayouter.Deletable = false;
-					AddChildrenWidgets(exampleLayouter, lexExampleSentence);
-					rowCount++;
+						new LexExampleSentenceLayouter(DetailList, rowCount, ActiveViewTemplate, _serviceProvider, lexExampleSentence)
+						{
+							ShowNormallyHiddenFields = ShowNormallyHiddenFields,
+							Deletable = false,
+							ParentLayouter = this
+						};
+					rowCount += AddChildrenWidgets(exampleLayouter, lexExampleSentence, insertAtRow + rowCount);
+					ChildLayouts.Add(exampleLayouter);
 				}
 
 
@@ -70,10 +75,11 @@ namespace WeSay.LexicalTools
 				//we'd like to be able to add more than one
 				//if (ShowNormallyHiddenFields || sense.ExampleSentences.Count == 0)
 				{
-					AddExampleSentenceGhost(sense, rowCount);
+					AddExampleSentenceGhost(sense, insertAtRow + rowCount);
 					rowCount++;
-
 				}
+				LastRow = insertAtRow + rowCount - 1;	// want index of last row owned, not a limit
+				FixDeleteButtonPosition();
 			}
 			catch (ConfigurationException e)
 			{
@@ -83,40 +89,39 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
+		private void FixDeleteButtonPosition()
+		{
+			var position = DetailList.GetCellPosition(_deleteButton);
+			if (position.Row != FirstRow)
+				DetailList.SetCellPosition(_deleteButton, new TableLayoutPanelCellPosition(2, FirstRow));
+		}
+
 		private void AddExampleSentenceGhost(LexSense sense, int insertAtRow)
 		{
 			DetailList.SuspendLayout();
 			var exampleLayouter =
-				new LexExampleSentenceLayouter(DetailList, insertAtRow, ActiveViewTemplate, _serviceProvider, null);
-			exampleLayouter.AddGhost(null, sense.ExampleSentences);
-			exampleLayouter.GhostRequestedLayout += OnGhostRequestedlayout;
+				new LexExampleSentenceLayouter(DetailList, insertAtRow, ActiveViewTemplate, _serviceProvider, null)
+				{
+					ParentLayouter = this
+				};
+			exampleLayouter.AddGhost(null, sense.ExampleSentences, insertAtRow);
+			ChildLayouts.Add(exampleLayouter);
 			DetailList.ResumeLayout(false);
 		}
 
-		private void OnGhostRequestedlayout(object sender, EventArgs e)
+		public int AddGhost(PalasoDataObject parent, IList<LexSense> list, bool isHeading, int insertAtRow)
 		{
-			if (ActiveViewTemplate.GetGhostingRuleForField(LexEntry.WellKnownProperties.Sense).ShowGhost)
-			{
-				//The old ghost takes care of turing itself into a properly layouted sense.
-				//We just add a new ghost here
-				AddExampleSentenceGhost((LexSense) PdoToLayout, DetailList.RowCount);
-			}
-		}
-
-
-		public int AddGhost(PalasoDataObject parent, IList<LexSense> list, bool isHeading)
-		{
-			int insertAtRow = -1;
 			string label = GetLabelForMeaning(list.Count);
 #if GlossMeaning
-			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), label, "Gloss", isHeading);
+			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), label, "Gloss", isHeading, insertAtRow);
 #else
 			return MakeGhostWidget<LexSense>(parent,
-									list,
-								   LexSense.WellKnownProperties.Definition,
-								   label,
-								   "Definition",
-								   isHeading);
+											list,
+											LexSense.WellKnownProperties.Definition,
+											label,
+											"Definition",
+											isHeading,
+											insertAtRow);
 #endif
 		}
 
@@ -149,6 +154,49 @@ namespace WeSay.LexicalTools
 			SimpleBinding<string> binding = new SimpleBinding<string>(pictureRef, control);
 			binding.CurrentItemChanged += detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			return control;
+		}
+
+		protected override void AddWidgetsAfterGhostTrigger(PalasoDataObject wsdo, Control refControl, bool doGoToNextField)
+		{
+			DetailList.SuspendLayout();
+			base.AddWidgetsAfterGhostTrigger(wsdo, refControl, doGoToNextField);
+			// We need to update the label on the ghost slice, either adding a number to the end
+			// or incrementing the number at the end.
+			var position = DetailList.GetCellPosition(refControl);
+			var label = DetailList.GetLabelControlFromRow(position.Row);
+			Debug.Assert(label != null);
+			Match match = Regex.Match(label.Text, @"(^.*) ([0-9]+)$");
+			int n;
+			// Note that Regex Groups have 1-based indexing.
+			if (match.Success && Int32.TryParse(match.Groups[2].Value, out n))
+				label.Text = String.Format("{0} {1}", match.Groups[1].Value, n + 1);
+			else
+				label.Text = label.Text + @" 2";
+			DetailList.ResumeLayout();
+		}
+
+		/// <summary>
+		/// Create an appropriate LexSenseLayouter for a new LexSense created from a ghost,
+		/// and insert it at the right place in the Layouter tree.
+		/// </summary>
+		protected override Layouter CreateAndInsertNewLayouter(int row, PalasoDataObject wsdo)
+		{
+			Debug.Assert(ParentLayouter is LexEntryLayouter);
+			var lexEntryLayouter = ParentLayouter as LexEntryLayouter;
+			var newLayouter = new LexSenseLayouter(DetailList, row, ActiveViewTemplate, RecordListManager,
+				_serviceProvider, wsdo as LexSense)
+			{
+				ShowNormallyHiddenFields = ShowNormallyHiddenFields,
+				Deletable = lexEntryLayouter.SensesAreDeletable,
+				ParentLayouter = ParentLayouter
+			};
+			newLayouter.DeleteClicked += lexEntryLayouter.OnSenseDeleteClicked;
+			var idx = ParentLayouter.ChildLayouts.IndexOf(this);
+			if (idx >= 0)
+				ParentLayouter.ChildLayouts.Insert(idx, newLayouter);
+			else
+				ParentLayouter.ChildLayouts.Add(newLayouter);
+			return newLayouter;
 		}
 	}
 
