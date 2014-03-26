@@ -61,7 +61,7 @@
 	</Target>
 
 	<Target Name="UnzipMercurial">
-		<Exec Command="unzip -uq $(RootDir)/lib/common/Mercurial-$(uname -m).zip -d $(RootDir)" ContinueOnError="true" />
+		<Exec Command="unzip -uqo $(RootDir)/lib/common/Mercurial-$(uname -m).zip -d $(RootDir)" ContinueOnError="true" />
 		<!-- Zip doesn't seem to retain the permission bits we need. -->
 		<Exec Command="/bin/chmod +x $(RootDir)/Mercurial/hg*" ContinueOnError="true"/>
 	</Target>
