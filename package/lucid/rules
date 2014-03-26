@@ -13,6 +13,9 @@ CHORUS_XBUILD=xbuild chorus-$(CHORUSVER)/build/build.mono.proj /p:RootDir=$(CURD
 
 export MONO_SHARED_DIR=/tmp
 
+EXCLUDE_DCONF := $(shell pkg-config --atleast-version=0.14 dconf || echo yes)
+CLIDEPS_EXCLUDE += $(if $(EXCLUDE_DCONF),--exclude-moduleref=libdconf.dll)
+
 build: build-stamp
 build-stamp:
 	dh_testdir
@@ -66,7 +69,7 @@ install-stamp:
 	dh_fixperms
 	dh_clifixperms
 	dh_makeclilibs -V
-	dh_clideps -d
+	dh_clideps -d $(CLIDEPS_EXCLUDE)
 	dh_installdeb
 	dh_gencontrol
 	dh_md5sums

@@ -5,7 +5,7 @@ Maintainer: Cambell Prince <cambell_prince@sil.org>
 Build-Depends: debhelper (>=7),
   mono-devel (>=2.10), cli-common-dev (>= 0.8~),
   unzip,
-  libicu-dev, libenchant-dev, libsndfile-dev, libxklavier-dev,
+  libicu-dev, libenchant-dev, libsndfile-dev, libxklavier-dev, libdconf-dev,
   geckofx
 Standards-Version: 3.9.4
 
