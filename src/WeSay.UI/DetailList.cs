@@ -41,6 +41,7 @@ namespace WeSay.UI
 			_stackAtConstruction = new StackTrace();
 #endif
 			InitializeComponent();
+			this.SuspendLayout();
 			Application.AddMessageFilter(this);
 
 			Name = "DetailList"; //for  debugging
@@ -52,7 +53,7 @@ namespace WeSay.UI
 			AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
 			MouseClick += OnMouseClick;
-
+			this.ResumeLayout(false);
 			//CellPaint += OnCellPaint;
 			//var rand = new Random();
 			//BackColor = Color.FromArgb(255, rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
@@ -68,29 +69,10 @@ namespace WeSay.UI
 				{
 					ColumnStyles[0].Width = value;
 				}
-				foreach (var detailList in GetChildDetailLists())
-				{
-					detailList.LabelColumnWidth = value;
-				}
 				ResumeLayout();
 			}
 
 		}
-		private List<DetailList> GetChildDetailLists()
-		{
-			var lists = new List<DetailList>();
-			for (int row = 0; row < RowCount; row++)
-			{
-				var control = GetFirstControlInRow(row);
-				if (control is DetailList)
-				{
-					var detailList = ((DetailList)control);
-					lists.Add(detailList);
-				}
-			}
-			return lists;
-		}
-
 
 		public int WidestLabelWidthWithMargin
 		{

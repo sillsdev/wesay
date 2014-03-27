@@ -41,8 +41,8 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 			this.SuspendLayout();
 			InitializeDetailList();
-			this.ResumeLayout();
 			RefreshEntryDetail();
+			this.ResumeLayout();
 		}
 
 		private void InitializeDetailList()
@@ -86,8 +86,8 @@ namespace WeSay.LexicalTools
 
 			_splitter.ControlToHide = _entryHeaderView;
 			InitializeDetailList();
-			this.ResumeLayout();
 			RefreshEntryDetail();
+			this.ResumeLayout();
 		}
 
 		private void OnScrollableContainerOrDetailListSizeChanged(object sender, EventArgs e)
@@ -404,7 +404,15 @@ namespace WeSay.LexicalTools
 						Debug.WriteLine("DEBUG EntryViewControl.RefreshEntryDetail(): _detailListControl[{0},{1}] = {2} (Visible={3})", row, col, c, c != null && c.Visible);
 					}
 				}
-				Debug.WriteLine("DEBUG EntryViewControl.RefreshEntryDetail(): _detailListControl.Size={0}", _detailListControl.Size);
+				var widths = _detailListControl.GetColumnWidths();
+				int total = 0;
+				for (int i = 0; i < widths.Length; ++i)
+				{
+					Debug.WriteLine("DEBUG EntryViewControl.RefreshEntryDetail(): widths[{0}] = {1}", i, widths[i]);
+					total += widths[i];
+				}
+				Debug.WriteLine("DEBUG EntryViewControl.RefreshEntryDetail(): total width = {0} (not counting buffer spacing)", total);
+				Debug.WriteLine("DEBUG EntryViewControl.RefreshEntryDetail(): _detailListControl.Size={0}, _scrollableContainer.Size={1}", _detailListControl.Size, _scrollableContainer.Size);
 #endif
 			}
 			catch (ConfigurationException e)
