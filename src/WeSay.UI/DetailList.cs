@@ -65,6 +65,10 @@ namespace WeSay.UI
 			set
 			{
 				SuspendLayout();
+#if __MonoCS__
+				if (value > LabelColumnWidth)
+					ShrinkEditControlWidths((int)(value - LabelColumnWidth));
+#endif
 				if (value != LabelColumnWidth)
 				{
 					ColumnStyles[0].Width = value;
@@ -73,6 +77,43 @@ namespace WeSay.UI
 			}
 
 		}
+
+#if __MonoCS__
+		/// <summary>
+		/// Shrink the edit control widths to make up for the increased width of the labels.
+		/// </summary>
+		/// <remarks>
+		/// Microsoft .Net TableLayoutPanel code handles nested tables better than Mono -- this
+		/// adjustment isn't needed there.  This is needed primarily when converting ghost
+		/// entries to real entries in the Dictionary Browse & Edit tool.
+		/// </remarks>
+		void ShrinkEditControlWidths(int shrinkage)
+		{
+			for (int row = 0; row < RowCount; row++)
+			{
+				var c = GetEditControlFromRow(row);
+				if (c is MultiTextControl)
+				{
+					if (c.Width > shrinkage)
+					{
+						c.Width = c.Width - shrinkage;
+						// When the control resizes, its internal boxes resize automatically,
+						// so we need to shrink each of them as well.
+						foreach (var box in (c as MultiTextControl).TextBoxes)
+						{
+							if (box.Width > shrinkage)
+								box.Width = box.Width - shrinkage;
+						}
+					}
+				}
+				else if (c is TextBox)
+				{
+					if (c.Width > shrinkage)
+						c.Width = c.Width - shrinkage;
+				}
+			}
+		}
+#endif
 
 		public int WidestLabelWidthWithMargin
 		{
