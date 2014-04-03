@@ -3,7 +3,7 @@
 # project=WeSay1.4-Linux
 # build=wesay1.4-precise64-continuous
 # root_dir=..
-# $Id: 8fa3d81233f94c653ca4357ed5e300790d8bc404 $
+# $Id: 4634ff740f8de8637c6b5cc04f4a1b2ee0954b5d $
 
 cd "$(dirname "$0")"
 
@@ -118,10 +118,10 @@ cd -
 #     VCS: http://hg.palaso.org/wesay-doc []
 
 # make sure output directories exist
-mkdir -p ../lib/Release
-mkdir -p ../lib/Debug
-mkdir -p ../lib/common
 mkdir -p ../common
+mkdir -p ../lib/Debug
+mkdir -p ../lib/Release
+mkdir -p ../lib/common
 
 # download artifact dependencies
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/Chorus.exe ../lib/Release/Chorus.exe
