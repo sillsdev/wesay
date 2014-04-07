@@ -10,7 +10,7 @@ Build-Depends: debhelper (>=7),
 Standards-Version: 3.9.4
 
 Package: wesay
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}, ${cli:Depends},
  mono-sil, mono-basic-sil, gtk-sharp2-sil, libgdiplus-sil,
  geckofx,

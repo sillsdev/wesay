@@ -76,8 +76,8 @@ install-stamp:
 	dh_builddeb
 	touch install-stamp
 
-binary-indep: install
+binary-indep:
 
-binary-arch:
+binary-arch: install
 
-binary: binary-indep
+binary: binary-arch

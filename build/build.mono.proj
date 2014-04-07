@@ -191,6 +191,7 @@
 	<!-- The Install Target must be called from an MSBuild task so as to include the output from the previous MSBuild in the ItemGroup below -->
 	<ItemGroup>
 		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/build/mono/chorusmerge;$(RootDir)/environ*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*.mdb;$(OutputDir)/Addin.LiftReports.dll;$(OutputDir)/NVelocity.dll" />
+		<Mercurial Include="$(RootDir)/Mercurial/**/*" Exclude="$(RootDir)/Mercurial/**/*.pyc" />
 		<CommonFiles Include="$(RootDir)/common/**/*" />
 		<TemplateFiles Include="$(RootDir)/templates/**/*" />
 		<IconFiles Include="$(RootDir)/src/Installer_Linux/icons/**/*" />
@@ -200,6 +201,7 @@
 	<PropertyGroup>
 		<InstallUsrBin>$(InstallDir)/bin</InstallUsrBin>
 		<InstallApp>$(InstallDir)/lib/$(ApplicationNameLC)</InstallApp>
+		<InstallMercurial>$(InstallDir)/lib/$(ApplicationNameLC)/Mercurial</InstallMercurial>
 		<InstallData>$(InstallDir)/share/$(ApplicationNameLC)</InstallData>
 		<InstallIcon>$(InstallDir)/share/icons</InstallIcon>
 		<InstallMenu>$(InstallDir)/share/applications</InstallMenu>
@@ -208,6 +210,10 @@
 		<Copy
 			DestinationFolder="$(InstallApp)"
 			SourceFiles="@(ExecutableFiles)"
+		/>
+		<Copy
+			DestinationFolder="$(InstallMercurial)"
+			SourceFiles="@(Mercurial)"
 		/>
 		<Copy
 			SourceFiles="@(CommonFiles)"
