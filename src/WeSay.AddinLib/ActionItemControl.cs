@@ -161,6 +161,27 @@ namespace WeSay.AddinLib
 			UpdateVisualThings();
 		}
 
+		private void _description_TextChanged(object sender, EventArgs e)
+		{
+			Size size = new Size(_description.ClientSize.Width, int.MaxValue);
+			TextFormatFlags flags = TextFormatFlags.WordBreak;
+			size = TextRenderer.MeasureText(_description.Text, _description.Font, size, flags);
+			// TextRenderer.MeasureText does not make room for initial line, so we add font height. We also need enough
+			// room for border and padding on both top and bottom, instead we add another font height as a hack.
+			_description.Height = size.Height + (2 * _description.Font.Height);
+			flowLayoutPanel1.Height = _description.Top + _description.Height;
+			this.OnResize(e);
+		}
+
+		protected override void OnResize(EventArgs e)
+		{
+			if(flowLayoutPanel1.Height > flowLayoutPanel1.ClientSize.Height)
+				flowLayoutPanel1.Size = new Size(flowLayoutPanel1.ClientSize.Width, flowLayoutPanel1.Height);
+			if(flowLayoutPanel1.Height > this.ClientSize.Height)
+				this.Size = new Size(this.ClientSize.Width, flowLayoutPanel1.Height);
+			base.OnResize (e);
+		}
+
 		protected void UpdateVisualThings()
 		{
 			UpdateEnabledStates();

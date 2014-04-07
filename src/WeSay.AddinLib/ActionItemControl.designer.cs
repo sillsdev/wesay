@@ -54,6 +54,7 @@ namespace WeSay.AddinLib
 			this._description.TabIndex = 1;
 			this._description.TabStop = false;
 			this._description.Text = "blah blah blah";
+			this._description.TextChanged += new System.EventHandler(this._description_TextChanged);
 			//
 			// _actionName
 			//
@@ -96,7 +97,7 @@ namespace WeSay.AddinLib
 			this._toggleShowInWeSay.LinkColor = System.Drawing.Color.Navy;
 			this._toggleShowInWeSay.Location = new System.Drawing.Point(385, 50);
 			this._toggleShowInWeSay.Name = "_toggleShowInWeSay";
-			this._toggleShowInWeSay.Size = new System.Drawing.Size(87, 13);
+			this._toggleShowInWeSay.Size = new System.Drawing.Size(90, 13);
 			this._toggleShowInWeSay.TabIndex = 4;
 			this._toggleShowInWeSay.TabStop = true;
 			this._toggleShowInWeSay.Text = "Visible In WeSay";
@@ -109,7 +110,7 @@ namespace WeSay.AddinLib
 			this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(84, 4);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(300, 65);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(260, 65);
 			this.flowLayoutPanel1.TabIndex = 5;
 			this.flowLayoutPanel1.WrapContents = false;
 			//
@@ -137,7 +138,7 @@ namespace WeSay.AddinLib
 			this.Controls.Add(this._setupButton);
 			this.Controls.Add(this._launchButton);
 			this.Name = "ActionItemControl";
-			this.Size = new System.Drawing.Size(507, 77);
+			this.Size = new System.Drawing.Size(527, 77);
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.flowLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
