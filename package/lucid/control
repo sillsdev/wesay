@@ -14,7 +14,8 @@ Architecture: all
 Depends: ${misc:Depends}, ${cli:Depends},
  mono-sil, mono-basic-sil, gtk-sharp2-sil, libgdiplus-sil,
  geckofx,
- libimage-exiftool-perl
+ libimage-exiftool-perl,
+ chmsee
 Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer, art-of-reading
 Conflicts: wesay-stable
 Description: A dictionary creation tool
