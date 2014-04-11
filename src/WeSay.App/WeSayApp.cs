@@ -18,7 +18,6 @@ using WeSay.Project;
 using WeSay.UI;
 #if __MonoCS__
 using Gecko;
-using NDesk.DBus;
 #endif
 
 namespace WeSay.App
@@ -34,24 +33,21 @@ namespace WeSay.App
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			try
+			using (new Palaso.PalasoSetup())
 			{
-				// initialize Palaso keyboarding
-				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
-				var app = new WeSayApp(args);
-				app.Run();
-			}
-			finally
-			{
-#if __MonoCS__
-				// Chorus backup results in NDesk spinning up a thread that
-				// continues until NDesk Bus is closed.  Failure to close the
-				// thread results in a hang when closing.
-				Bus.System.Close();
-#endif
-				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
-				ShutDownXulRunner();
-				ReleaseMutexForThisProject();
+				try
+				{
+					// initialize Palaso keyboarding
+					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+					var app = new WeSayApp(args);
+					app.Run();
+				}
+				finally
+				{
+					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+					ShutDownXulRunner();
+					ReleaseMutexForThisProject();
+				}
 			}
 		}
 

@@ -5,9 +5,6 @@ using System.Windows.Forms;
 using Palaso.IO;
 using Palaso.Reporting;
 using WeSay.ConfigTool.Properties;
-#if __MonoCS__
-using NDesk.DBus;
-#endif
 
 namespace WeSay.ConfigTool
 {
@@ -35,21 +32,19 @@ namespace WeSay.ConfigTool
 			SetUpReporting();
 
 			Settings.Default.Save();
-			try
+
+			using (new Palaso.PalasoSetup())
 			{
-				// initialize Palaso keyboarding
-				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
-				Application.Run(new ConfigurationWindow(args));
-			}
-			finally
-			{
-#if __MonoCS__
-				// Chorus backup results in NDesk spinning up a thread that
-				// continues until NDesk Bus is closed.  Failure to close the
-				// thread results in a hang when closing.
-				Bus.System.Close();
-#endif
-				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+				try
+				{
+					// initialize Palaso keyboarding
+					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+					Application.Run(new ConfigurationWindow(args));
+				}
+				finally
+				{
+					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+				}
 			}
 		}
 
