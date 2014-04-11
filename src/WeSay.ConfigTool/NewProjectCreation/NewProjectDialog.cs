@@ -126,7 +126,12 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				{
 					return;
 				}
-				var primaryName = dlg.SelectedLanguage.Names[0];
+				// Use the language name entered by the user.  If nothing there, use the
+				// top standard name for the language.  (This allows unlisted languages
+				// to be given their proper name instead of "Unlisted Language".)
+				var primaryName = dlg.DesiredLanguageName;
+				if (String.IsNullOrEmpty(primaryName))
+					primaryName = dlg.SelectedLanguage.Names[0];
 				_languageInfoLabel.Text = string.Format("{0} ({1})", primaryName, dlg.SelectedLanguage.Code);
 				Iso639Code = dlg.SelectedLanguage.Code;
 				LanguageName = primaryName;

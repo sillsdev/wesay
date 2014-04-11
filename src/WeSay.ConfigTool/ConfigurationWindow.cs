@@ -150,6 +150,7 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
+			//TODO: we should pass dlg.LanguageName to this method as well.
 			CreateAndOpenProject(dlg.PathToNewProjectDirectory, dlg.Iso639Code);
 
 			PointOutOpenWeSayButton();
@@ -202,6 +203,7 @@ namespace WeSay.ConfigTool
 
 		public void CreateAndOpenProject(string directoryPath, string languageTag)
 		{
+			//TODO: This method should have another argument for the language name.
 			//the "wesay" part may not exist yet
 			if (!Directory.GetParent(directoryPath).Exists)
 			{
@@ -218,9 +220,15 @@ namespace WeSay.ConfigTool
 				genericWritingSystemShippedWithWs.Variant = ""; //remove x-qaa
 				//this is to accomodate Flex which expects to have a custom language tag
 				//as the first private use subtag when the language subtag is qaa
+				//We also assume that the project name embedded in the directory path
+				//is the same as the language name.  (This is not necessarily so, but
+				//is the way the code has been working.)
 				if (genericWritingSystemShippedWithWs.Language == WellKnownSubTags.Unlisted.Language)
 				{
-					genericWritingSystemShippedWithWs.Variant = "x-" + "Unlisted";
+					var langName = Path.GetFileName(directoryPath);
+					genericWritingSystemShippedWithWs.LanguageName = langName;
+					var langTag = TrimLanguageNameForTag(langName);
+					genericWritingSystemShippedWithWs.Variant = "x-" + langTag;
 				}
 				Project.WritingSystems.Set(genericWritingSystemShippedWithWs);
 				Project.WritingSystems.Save();
@@ -241,6 +249,16 @@ namespace WeSay.ConfigTool
 				 }
 
 			 }
+		}
+
+		/// <summary>
+		/// Trim the language name to three lowercase English letters for the fake language tag.
+		/// (Append 'x' as needed to ensure three English letters.)
+		/// </summary>
+		private static string TrimLanguageNameForTag(string languageName)
+		{
+			var languageTag = System.Text.RegularExpressions.Regex.Replace(languageName, @"[^a-zA-Z]", "") + @"xxx";
+			return languageTag.Substring(0, 3).ToLowerInvariant();
 		}
 
 		private static void CreateNewProject(string directoryPath)
