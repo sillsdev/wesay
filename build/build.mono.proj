@@ -42,7 +42,7 @@
 	<ItemGroup>
 		<ExistingObjectFiles
 			Include="$(RootDir)/**/obj/**/*;$(RootDir)/output/$(Configuration)/**/*"
-			Exclude="$(RootDir)/.hg/**/*"
+			Exclude="$(RootDir)/.hg/**/*;$(RootDir)/.git/**/*"
 		/>
 	</ItemGroup>
 	<Target Name="Clean">
