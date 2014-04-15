@@ -26,7 +26,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			using(TemporaryFolder f = new TemporaryFolder("ProjectIsCreatedTest") )
 			{
-				_window.CreateAndOpenProject(f.FolderPath, "th");
+				_window.CreateAndOpenProject(f.FolderPath, "th", "Thai");
 				_window.DisableBackupAndChorusStuffForTests();
 				_window.Close();
 				_window.Dispose();
@@ -60,7 +60,7 @@ namespace WeSay.ConfigTool.Tests
 									   Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
 			try
 			{
-				_window.CreateAndOpenProject(path, "th");
+				_window.CreateAndOpenProject(path, "th", "Thai");
 
 				ToolStripMenuItemTester projectToolStripMenuItem =
 						new ToolStripMenuItemTester("projectToolStripMenuItem");

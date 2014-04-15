@@ -64,7 +64,7 @@ namespace WeSay.ConfigTool.Tests
 		public void AfterCreateProjectAndQuitFilesExist()
 		{
 			List<string> paths = new List<string>();
-			_window.CreateAndOpenProject(_projectFolder, "th");
+			_window.CreateAndOpenProject(_projectFolder, "th", "Thai");
 			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "th.ldml"));
 			paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "en.ldml"));
 			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "es.ldml"));
@@ -114,7 +114,7 @@ namespace WeSay.ConfigTool.Tests
 		[Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
 		public void WalkTabsAfterCreateNewProject()
 		{
-			_window.CreateAndOpenProject(_projectFolder, "th");
+			_window.CreateAndOpenProject(_projectFolder, "th", "Thai");
 			WalkTopLevelTabs();
 
 		}
@@ -122,7 +122,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void CreateNewProjectThenOpen()
 		{
-			_window.CreateAndOpenProject(_projectFolder, "th");
+			_window.CreateAndOpenProject(_projectFolder, "th", "Thai");
 		}
 
 		[Test]
@@ -144,7 +144,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void NewProjectHasValidStructure()
 		{
-			_window.CreateAndOpenProject(_projectFolder, "th");
+			_window.CreateAndOpenProject(_projectFolder, "th", "Thai");
 			string path = WeSayWordsProject.Project.PathToConfigFile;
 			XPathDocument doc = new XPathDocument(path);
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version]"));
@@ -154,7 +154,7 @@ namespace WeSay.ConfigTool.Tests
 
 		private void CreateProjectAndGoToTaskControl()
 		{
-			_window.CreateAndOpenProject(_projectFolder, "th");
+			_window.CreateAndOpenProject(_projectFolder, "th", "Thai");
 
 			ClickToolStripButton("_tasksButton");
 			//            GotoProjectTab("_tasksPage");
@@ -209,14 +209,14 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void ExistingProjectGetsNewTasks()
 		{
-			_window.CreateAndOpenProject(_projectFolder, "th");
+			_window.CreateAndOpenProject(_projectFolder, "th", "Thai");
 		}
 
 		// WS-34217: Regression test to ensure that English can be selected at project creation
 		[Test]
 		public void CreateAndOpenProject_EnglishAsVernacular_DoesNotCrash()
 		{
-			Assert.That(() => _window.CreateAndOpenProject(_projectFolder, "en"), Throws.Nothing);
+			Assert.That(() => _window.CreateAndOpenProject(_projectFolder, "en", "English"), Throws.Nothing);
 		}
 	}
 

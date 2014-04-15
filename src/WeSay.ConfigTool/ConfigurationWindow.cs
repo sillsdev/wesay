@@ -150,8 +150,7 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
-			//TODO: we should pass dlg.LanguageName to this method as well.
-			CreateAndOpenProject(dlg.PathToNewProjectDirectory, dlg.Iso639Code);
+			CreateAndOpenProject(dlg.PathToNewProjectDirectory, dlg.Iso639Code, dlg.LanguageName);
 
 			PointOutOpenWeSayButton();
 		}
@@ -201,7 +200,7 @@ namespace WeSay.ConfigTool
 
 		}
 
-		public void CreateAndOpenProject(string directoryPath, string languageTag)
+		public void CreateAndOpenProject(string directoryPath, string languageTag, string langName)
 		{
 			//TODO: This method should have another argument for the language name.
 			//the "wesay" part may not exist yet
@@ -220,12 +219,8 @@ namespace WeSay.ConfigTool
 				genericWritingSystemShippedWithWs.Variant = ""; //remove x-qaa
 				//this is to accomodate Flex which expects to have a custom language tag
 				//as the first private use subtag when the language subtag is qaa
-				//We also assume that the project name embedded in the directory path
-				//is the same as the language name.  (This is not necessarily so, but
-				//is the way the code has been working.)
 				if (genericWritingSystemShippedWithWs.Language == WellKnownSubTags.Unlisted.Language)
 				{
-					var langName = Path.GetFileName(directoryPath);
 					genericWritingSystemShippedWithWs.LanguageName = langName;
 					var langTag = TrimLanguageNameForTag(langName);
 					genericWritingSystemShippedWithWs.Variant = "x-" + langTag;
