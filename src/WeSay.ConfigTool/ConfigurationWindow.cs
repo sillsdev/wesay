@@ -216,14 +216,17 @@ namespace WeSay.ConfigTool
 			{
 				var genericWritingSystemShippedWithWs = Project.WritingSystems.Get("qaa-x-qaa");
 				genericWritingSystemShippedWithWs.Language = languageTag;
-				genericWritingSystemShippedWithWs.Variant = ""; //remove x-qaa
-				//this is to accomodate Flex which expects to have a custom language tag
-				//as the first private use subtag when the language subtag is qaa
+				genericWritingSystemShippedWithWs.LanguageName = langName;
 				if (genericWritingSystemShippedWithWs.Language == WellKnownSubTags.Unlisted.Language)
 				{
-					genericWritingSystemShippedWithWs.LanguageName = langName;
+					//this is to accomodate Flex which expects to have a custom language tag
+					//as the first private use subtag when the language subtag is qaa
 					var langTag = TrimLanguageNameForTag(langName);
-					genericWritingSystemShippedWithWs.Variant = "x-" + langTag;
+					genericWritingSystemShippedWithWs.Variant = "x-" + langTag;	// replace x-qaa
+				}
+				else
+				{
+					genericWritingSystemShippedWithWs.Variant = ""; //remove x-qaa
 				}
 				Project.WritingSystems.Set(genericWritingSystemShippedWithWs);
 				Project.WritingSystems.Save();
