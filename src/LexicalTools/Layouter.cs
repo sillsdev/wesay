@@ -272,6 +272,8 @@ namespace WeSay.LexicalTools
 				where T : PalasoDataObject, new()
 		{
 			DetailList.SuspendLayout();
+			var position = _detailList.GetCellPosition(sender.ReferenceControl);
+			var rowIndex = position.Row;
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
 			PdoToLayout = list[index];
 			AddWidgetsAfterGhostTrigger(PdoToLayout, sender.ReferenceControl, doGoToNextField);
@@ -280,16 +282,25 @@ namespace WeSay.LexicalTools
 				GhostRequestedLayout(this, new EventArgs());
 			}
 			DetailList.ResumeLayout();
-			// REVIEW: should we try to instantiate a new ghost field (row) so that we can move to it?
-			// Why isn't that already happening?
-			if (doGoToNextField && _detailList.RowCount > 1)
+			if (doGoToNextField)
 			{
-				_detailList.MoveInsertionPoint(1);
+				_detailList.MoveInsertionPoint(rowIndex + 1);
 			}
 			else
 			{
-				_detailList.MoveInsertionPoint(0);
+				_detailList.MoveInsertionPoint(rowIndex);
 			}
+			// For Linux/Mono, merely resuming layout and refreshing doesn't work.
+			ForceLayoutAndRefresh();
+		}
+
+		/// <summary>
+		/// Layout the DetailList again and then refresh it.  Both steps are needed for some
+		/// reason for Linux/Mono, and they won't hurt for Windows/.Net.
+		/// </summary>
+		protected void ForceLayoutAndRefresh()
+		{
+			_detailList.PerformLayout();
 			_detailList.Refresh();
 		}
 

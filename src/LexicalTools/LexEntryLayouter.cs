@@ -135,12 +135,14 @@ namespace WeSay.LexicalTools
 			{
 				return;
 			}
-			Entry.Senses.Remove(sense);
 			DetailList.SuspendLayout();
+			Entry.Senses.Remove(sense);
 			DetailList.Clear();
 			//for now just relayout the whole thing as the meaning numbers will change etc.
 			AddWidgets();
 			DetailList.ResumeLayout();
+			// For Linux/Mono, merely resuming layout doesn't work -- the display doesn't redraw properly.
+			ForceLayoutAndRefresh();
 		}
 
 		private void AddSenseGhost(LexEntry entry, int row)
