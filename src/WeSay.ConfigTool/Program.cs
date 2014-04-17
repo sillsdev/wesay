@@ -69,7 +69,12 @@ namespace WeSay.ConfigTool
 
 		public static void ShowHelpTopic(string topicLink)
 		{
-			string helpFilePath = FileLocator.GetFileDistributedWithApplication("WeSay_Helps.chm");
+			string helpFilePath = FileLocator.GetFileDistributedWithApplication(true, "WeSay_Helps.chm");
+			if (String.IsNullOrEmpty(helpFilePath))
+			{
+				string commonDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+				helpFilePath = Path.Combine(commonDataFolder, Path.Combine("wesay", "WeSay_Helps.chm"));
+			}
 			if (File.Exists(helpFilePath))
 			{
 				//var uri = new Uri(helpFilePath);
