@@ -32,6 +32,10 @@ namespace WeSay.LexicalTools
 		/// The DetailList we are filling.
 		/// </summary>
 		private DetailList _detailList;
+		/// <summary>
+		/// The column width is used to initialize the width of the MultiTextControl objects.
+		/// </summary>
+		protected int[] _columnWidths;
 
 		private bool _deletable;
 
@@ -181,6 +185,8 @@ namespace WeSay.LexicalTools
 										 field.IsSpellCheckingEnabled,
 										 field.IsMultiParagraph,
 										 _serviceProvider);
+				if (_columnWidths != null && _columnWidths.Length == 3)
+					m.Width = _columnWidths[1];
 			}
 			else
 			{
@@ -222,6 +228,8 @@ namespace WeSay.LexicalTools
 														  BasilProject.Project.WritingSystems,
 														  field.Visibility,
 														  field.IsSpellCheckingEnabled, false, null);
+				if (_columnWidths != null && _columnWidths.Length == 3)
+					m.Width = _columnWidths[1];
 
 				Control refWidget = DetailList.AddWidgetRow(label,
 															isHeading,

@@ -532,5 +532,33 @@ namespace WeSay.UI
 		{
 			get { return _mouseOverRow; }
 		}
+
+#if DEBUG
+		public void WriteDetailListDetails(string prefix)
+		{
+			var widths = this.GetColumnWidths();
+			int total = 0;
+			Debug.Write(String.Format("DEBUG {0}: DetailList widths[] =", prefix));
+			for (int i = 0; i < widths.Length; ++i)
+			{
+				Debug.Write(String.Format(" {0}", widths[i]));
+				total += widths[i];
+			}
+			Debug.Write(String.Format(" -- total width = {0}", total));
+			Debug.WriteLine("; DetailList.Size={0}, Parent.Size={1}", Size, Parent.Size);
+			for (int row = 0; row < this.RowCount; ++row)
+			{
+				for (int col = 0; col < this.ColumnCount; ++col)
+				{
+					Control c = this.GetControlFromPosition(col, row);
+					if (c == null)
+						Debug.WriteLine("DEBUG {0}: DetailList[{1},{2}] - null", prefix, row, col);
+					else
+						Debug.WriteLine("DEBUG {0}: DetailList[{1},{2}] - Location={3}, Size={4}, Visible={5} ({6})",
+							prefix, row, col, c.Location, c.Size, c.Visible, c);
+				}
+			}
+		}
+#endif
 	}
 }

@@ -37,6 +37,7 @@ namespace WeSay.LexicalTools
 			_sensesAreDeletable = sensesAreDeletable;
 			_confirmDeleteFactory = confirmDeleteFactory;
 			DetailList.LabelsChanged += OnLabelsChanged;
+			_columnWidths = parentDetailList.GetColumnWidths();
 		}
 
 		internal bool SensesAreDeletable { get { return _sensesAreDeletable; } }

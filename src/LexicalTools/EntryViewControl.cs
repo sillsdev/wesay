@@ -369,7 +369,19 @@ namespace WeSay.LexicalTools
 			try
 			{
 				_scrollableContainer.SuspendLayout();
-				_detailListControl.SuspendLayout();
+				// We can't suspend layout for _detailListControl here because
+				// that causes occasional display layout failures.  Unfortunately, not
+				// suspending layout allows a good deal of flicker on Linux/Mono.  But
+				// making _detailListControl invisible gets rid of the flicker at the
+				// cost of a noticeable pause before the display changes on Linux/Mono.
+				// A possible hack for Linux/Mono would be to #ifdef __MonoCS__ do the
+				// following:
+				// 1) add _detailListControl.SuspendLayout()/ResumeLayout() here.
+				// 2) at the end of this function, put in a timer that asynchonously
+				//    invokes _detailListControl.PerformLayout() after a short pause.
+				// There would still be a bit of flicker possibly, but not as much as
+				// seen without the visibility hack, and probably less overall computing
+				// and thus less overall delay.
 				_detailListControl.Visible = false;
 				if (_detailListControl.RowCount > 0)
 				{
@@ -393,27 +405,7 @@ namespace WeSay.LexicalTools
 					_layout.AddWidgets(_record, 0);
 				}
 				_detailListControl.Visible = true;
-				_detailListControl.ResumeLayout(false);
 				_scrollableContainer.ResumeLayout();
-#if VERBOSE_DEBUG
-				for (int row = 0; row < _detailListControl.RowCount; ++row)
-				{
-					for (int col = 0; col < _detailListControl.ColumnCount; ++col)
-					{
-						Control c = _detailListControl.GetControlFromPosition(col, row);
-						Debug.WriteLine("DEBUG EntryViewControl.RefreshEntryDetail(): _detailListControl[{0},{1}] = {2} (Visible={3})", row, col, c, c != null && c.Visible);
-					}
-				}
-				var widths = _detailListControl.GetColumnWidths();
-				int total = 0;
-				for (int i = 0; i < widths.Length; ++i)
-				{
-					Debug.WriteLine("DEBUG EntryViewControl.RefreshEntryDetail(): widths[{0}] = {1}", i, widths[i]);
-					total += widths[i];
-				}
-				Debug.WriteLine("DEBUG EntryViewControl.RefreshEntryDetail(): total width = {0} (not counting buffer spacing)", total);
-				Debug.WriteLine("DEBUG EntryViewControl.RefreshEntryDetail(): _detailListControl.Size={0}, _scrollableContainer.Size={1}", _detailListControl.Size, _scrollableContainer.Size);
-#endif
 			}
 			catch (ConfigurationException e)
 			{
