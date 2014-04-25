@@ -213,7 +213,7 @@
 		/>
 		<Copy
 			SourceFiles="@(Mercurial)"
-			DestinationFolder="$(InstallMercurial)/%(RecursiveDir)%(Filename)%(Extension)"
+			DestinationFolder="$(InstallMercurial)/%(RecursiveDir)"
 		/>
 		<Copy
 			SourceFiles="@(CommonFiles)"
