@@ -21,7 +21,13 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   def bootstrap_wesay(config, name, gui)
     config.vm.provision :shell, :path => 'bootstrap.sh'
-    config.vm.synced_folder '..', '/wesay'
+
+    { '..' => '/wesay',
+      "#{Dir.home}/pbuilder" => '/pbuilder'
+    }
+    .select { |host_dir,_| File.directory?(host_dir) }
+    .each { |host_dir, vm_dir| config.vm.synced_folder host_dir, vm_dir }
+
     config.vm.provider :virtualbox do |vb|
       vb.gui=gui
       vb.name=name
