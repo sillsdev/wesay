@@ -53,6 +53,7 @@ namespace WeSay.UI
 			AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
 			MouseClick += OnMouseClick;
+
 			this.ResumeLayout(false);
 			//CellPaint += OnCellPaint;
 			//var rand = new Random();
@@ -209,7 +210,12 @@ namespace WeSay.UI
 			RowStyles.Clear();
 			while (Controls.Count > 0)
 			{
-				//  Debug.WriteLine("  VBoxClear() calling dispose on " + base.Controls[0].Name);
+				DetailList list = Controls[0] as DetailList;
+				if (list != null)
+				{
+					list.LabelsChanged -= OnLabelsChanged;
+					list.Clear();
+				}
 				Controls[0].Dispose();
 			}
 			Controls.Clear();
@@ -314,7 +320,11 @@ namespace WeSay.UI
 			// we eventually get around this by making control invisible while it lays out
 			// and then making it visible again. (See EntryViewControl.cs:RefreshEntryDetail)
 			Controls.Add(editWidget, _indexOfWidget, insertAtRow);
-
+			int tabIndex = 0;
+			foreach (Control control in Controls)
+			{
+				control.TabIndex = tabIndex++;
+			}
 			return editWidget;
 		}
 

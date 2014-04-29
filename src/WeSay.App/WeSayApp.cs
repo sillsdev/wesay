@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using Autofac;
@@ -16,9 +17,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalTools;
 using WeSay.Project;
 using WeSay.UI;
-#if __MonoCS__
 using Gecko;
-#endif
 
 namespace WeSay.App
 {
@@ -29,6 +28,10 @@ namespace WeSay.App
 
 		private readonly CommandLineArguments _commandLineArguments = new CommandLineArguments();
 		private TabbedForm _tabbedForm;
+
+		[DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		static extern bool SetDllDirectory(string lpPathName);
 
 		[STAThread]
 		private static void Main(string[] args)
@@ -90,11 +93,13 @@ namespace WeSay.App
 			}
 		}
 
-		private static void SetUpXulRunner()
+		public static void SetUpXulRunner()
 		{
-#if __MonoCS__
 			try
 			{
+				string geckoBrowserOption = Environment.GetEnvironmentVariable("WESAY_USE_GECKO") ?? String.Empty;
+				WeSayWordsProject.GeckoOption = !(geckoBrowserOption == String.Empty  || geckoBrowserOption.Equals("0", StringComparison.OrdinalIgnoreCase));
+#if __MonoCS__
 				// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
 				string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
 				if (String.IsNullOrEmpty(xulRunnerLocation))
@@ -102,8 +107,26 @@ namespace WeSay.App
 				string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
 				if (!librarySearchPath.Contains(xulRunnerLocation))
 					throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
+
 				Xpcom.Initialize(xulRunnerLocation);
 				GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+#else
+				// For windows, only initialize xulrunner if we are using the gecko browser control option
+				if (WeSayWordsProject.GeckoOption)
+				{
+					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfApplicationOrSolution, "xulrunner");
+					if (!Directory.Exists(xulRunnerLocation))
+					{
+						throw new ApplicationException("XULRunner needs to be installed to " + xulRunnerLocation);
+					}
+					if (!SetDllDirectory(xulRunnerLocation))
+					{
+						throw new ApplicationException("SetDllDirectory failed for " + xulRunnerLocation);
+					}
+					Xpcom.Initialize(xulRunnerLocation);
+					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+				}
+#endif
 			}
 			catch (ApplicationException e)
 			{
@@ -113,12 +136,9 @@ namespace WeSay.App
 			{
 				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
-#endif
-
 		}
 		private static void ShutDownXulRunner()
 		{
-#if __MonoCS__
 			if (Xpcom.IsInitialized)
 			{
 				// The following line appears to be necessary to keep Xpcom.Shutdown()
@@ -128,7 +148,6 @@ namespace WeSay.App
 				var foo = new GeckoWebBrowser();
 				Xpcom.Shutdown();
 			}
-#endif
 		}
 		private static void SetUpReporting()
 		{
@@ -297,6 +316,7 @@ namespace WeSay.App
 
 			   RtfRenderer.HeadWordWritingSystemId =
 				   _project.DefaultViewTemplate.HeadwordWritingSystem.Id;
+			   HtmlRenderer.HeadWordWritingSystemId = _project.DefaultViewTemplate.HeadwordWritingSystem.Id;
 
 #if __MonoCS__
 				UglyHackForXkbIndicator();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.LexicalTools.Properties;
+using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
@@ -36,6 +37,19 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_listViewWords.FormWritingSystem = _presentationModel.FormWritingSystem;
 			_listViewWords.MeaningWritingSystem = _presentationModel.ShowMeaningField ? _presentationModel.MeaningWritingSystem: null;
 			_listViewWords.ItemDrawer = DrawOneAnswerForList;
+
+			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
+			//this is going to override the normal font choice they've made
+			var majorRomanWritingSystems = new List<string>(new[] { "en", "id", "fr" });
+			if (majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemId))
+			{
+#if __MonoCS__
+				_domainListComboBox.Font = new Font("monospace", _domainListComboBox.Font.Size, FontStyle.Bold);
+#else
+				_domainListComboBox.Font = new Font("Lucida Console", _domainListComboBox.Font.Size, FontStyle.Bold);
+#endif
+
+			}
 
 			RefreshCurrentWords();
 			LoadDomainListCombo();
@@ -81,7 +95,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			//this box, which wasn't really designed to work well with auto-generated designer code.
 			//so all this is to be able to turn IsSpellCheckingEnabled before the box is built.
 
-			var meaning = new MultiTextControl(_presentationModel.ViewTemplate.WritingSystems, null)
+			var meaning = new MultiTextControl(_presentationModel.ViewTemplate.WritingSystems, WeSayWordsProject.Project.ServiceLocator)
 				{
 					IsSpellCheckingEnabled = true,
 					ShowAnnotationWidget = false,
@@ -113,19 +127,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_flyingLabel.Finished += _animator_Finished;
 
 			_domainListComboBox.Font = _presentationModel.GetFontOfSemanticDomainField();
-
-			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
-			//this is going to override the normal font choice they've made
-			var majorRomanWritingSystems = new List<string>(new[] {"en", "id", "fr"});
-			if(majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemId))
-			{
-#if __MonoCS__
-				_domainListComboBox.Font = new Font("monospace", _domainListComboBox.Font.Size, FontStyle.Bold);
-#else
-				_domainListComboBox.Font = new Font("Lucida Console", _domainListComboBox.Font.Size, FontStyle.Bold);
-#endif
-
-			}
 		}
 
 		/// <summary>
@@ -148,11 +149,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 		private void LoadDomainListCombo()
 		{
-			_domainListComboBox.Items.Clear();
+			_domainListComboBox.Clear();
 			foreach (string domainName in _presentationModel.DomainNames)
 			{
-				_domainListComboBox.Items.Add(domainName);
+				_domainListComboBox.AddItem(domainName);
 			}
+			_domainListComboBox.ListCompleted();
 		}
 
 		private void InitializeDisplaySettings()

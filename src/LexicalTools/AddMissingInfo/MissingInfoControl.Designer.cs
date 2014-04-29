@@ -1,6 +1,8 @@
 using System.Windows.Forms;
+using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.Buttons;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {
@@ -48,10 +50,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 			this._todoBox = new System.Windows.Forms.TableLayoutPanel();
 			this.label1 = new System.Windows.Forms.Label();
-			this._todoRecordsListBox = new WeSay.UI.WeSayListView();
+			this._todoRecordsListBox = WeSayWordsProject.Project.ServiceLocator.GetService(typeof(IWeSayListView)) as IWeSayListView;
 			this._completedBox = new System.Windows.Forms.TableLayoutPanel();
 			this._completedRecordsLabel = new System.Windows.Forms.Label();
-			this._completedRecordsListBox = new WeSay.UI.WeSayListView();
+			this._completedRecordsListBox = WeSayWordsProject.Project.ServiceLocator.GetService(typeof(IWeSayListView)) as IWeSayListView;
 			this._entryViewAndButtons = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.labelNextHotKey = new System.Windows.Forms.Label();
@@ -116,7 +118,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this._todoBox.ColumnCount = 1;
 			this._todoBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._todoBox.Controls.Add(this.label1, 0, 0);
-			this._todoBox.Controls.Add(this._todoRecordsListBox, 0, 1);
+			this._todoBox.Controls.Add((Control)this._todoRecordsListBox, 0, 1);
 			this._todoBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._todoBox.Location = new System.Drawing.Point(0, 0);
 			this._todoBox.Name = "_todoBox";
@@ -151,7 +153,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			this._completedBox.ColumnCount = 1;
 			this._completedBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._completedBox.Controls.Add(this._completedRecordsLabel, 0, 0);
-			this._completedBox.Controls.Add(this._completedRecordsListBox, 0, 1);
+			this._completedBox.Controls.Add((Control)this._completedRecordsListBox, 0, 1);
 			this._completedBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._completedBox.Location = new System.Drawing.Point(0, 0);
 			this._completedBox.Name = "_completedBox";
@@ -307,12 +309,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		private SplitContainer splitContainer1;
 		private SplitContainer splitContainer2;
 
-		internal WeSayListView _todoRecordsListBox;
+		internal IWeSayListView _todoRecordsListBox;
 		private EntryViewControl _entryViewControl;
 		private CongratulationsControl _congratulationsControl;
 		private Label label1;
 		private Label _completedRecordsLabel;
-		internal WeSayListView _completedRecordsListBox;
+		internal IWeSayListView _completedRecordsListBox;
 		private Label labelNextHotKey;
 		private TableLayoutPanel _todoBox;
 		private TableLayoutPanel _completedBox;

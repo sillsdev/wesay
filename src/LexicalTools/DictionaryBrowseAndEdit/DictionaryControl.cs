@@ -21,6 +21,7 @@ using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
 using Palaso.DictionaryServices.Model;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
@@ -81,6 +82,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_searchTextBoxControl.FindButton.Click += OnFind_Click;
 
 			_recordsListBox.ItemSelectionChanged += OnRecordsListBoxItemSelectionChanged;
+			_recordsListBox.MinLength = 10;
+			_recordsListBox.MaxLength = 20;
 
 			_splitter.SetMemory(memory);
 			SetupEntryViewControl(entryViewControlFactory);
@@ -305,6 +308,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				_records = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(_listWritingSystem);
 			}
 			 _findTextAdapter.Items = _records;
+
 			_recordsListBox.DataSource = new List<RecordToken<LexEntry>>(_records);
 			if (selectedItem != null)
 			{
@@ -398,7 +402,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		public void GotoFirstEntry()
 		{
-			if(_recordsListBox.Items.Count>0)
+			if(_recordsListBox.Length>0)
 				_recordsListBox.SelectedIndex = 0;
 
 		}
@@ -594,11 +598,24 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 			Debug.Assert(selectIndex != -1);
 			_recordsListBox.SelectedIndex = selectIndex;
+
+			UpdateListViewIfGecko();
 			//_entryViewControl.Focus();
 			_entryViewControl.SelectOnCorrectControl();
 
 			_logger.WriteConciseHistoricalEvent("Added Word");
 
+		}
+
+		private void UpdateListViewIfGecko()
+		{
+			if (_recordsListBox is GeckoListView)
+			{
+				SetRecordToBeEdited(CurrentEntry);
+
+				UpdateDisplay();
+				_recordListBoxIndexBeforeChange = CurrentIndex;
+			}
 		}
 
 		/// <summary>
@@ -681,6 +698,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_recordsListBox.SelectedIndex = _records.Count == CurrentIndex + 1 ? CurrentIndex - 1 : CurrentIndex + 1;
 			_lexEntryRepository.DeleteItem(idToDelete);
 			LoadRecords();
+			UpdateListViewIfGecko();
 
 			_entryViewControl.SelectOnCorrectControl();
 		}

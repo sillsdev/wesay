@@ -6,6 +6,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -27,7 +28,6 @@ using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Lift.Validation;
 using Palaso.Progress;
-using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.UI.WindowsForms.Progress;
@@ -43,6 +43,7 @@ using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
+using WeSay.UI.TextBoxes;
 using IContainer=Autofac.IContainer;
 using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
@@ -62,6 +63,7 @@ namespace WeSay.Project
 		private IList<LexRelationType> _relationTypes;
 		private ChorusBackupMaker _backupMaker;
 		private IContainer _container;
+		private static bool _geckoOption;
 		readonly Dictionary<string, string> _changedWritingSystemIds = new Dictionary<string, string>();
 
 		//public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
@@ -98,6 +100,18 @@ namespace WeSay.Project
 		public static bool ProjectExists
 		{
 			get { return Singleton != null; }
+		}
+
+		public static bool GeckoOption
+		{
+			get
+			{
+				return _geckoOption;
+			}
+			set
+			{
+				_geckoOption = value;
+			}
 		}
 
 		public new static WeSayWordsProject Project
@@ -527,10 +541,50 @@ namespace WeSay.Project
 			builder.Register(c=>
 				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).InstancePerLifetimeScope();
 
+			RegisterGeckoStuff(builder);
 
 			_container = builder.Build();
 		}
 
+		private void RegisterGeckoStuff(ContainerBuilder builder)
+		{
+			if (GeckoOption)
+			{
+				builder.Register<IWeSayTextBox>(c =>
+				{
+					var m = new GeckoBox();
+					return m;
+				});
+				builder.Register<IWeSayComboBox>(c =>
+				{
+					var m = new GeckoComboBox();
+					return m;
+				});
+				builder.Register<IWeSayListView>(c =>
+				{
+					var m = new GeckoListView();
+					return m;
+				});
+			}
+			else
+			{
+				builder.Register<IWeSayTextBox>(c =>
+				{
+					var m = new WeSayTextBox();
+					return m;
+				});
+				builder.Register<IWeSayComboBox>(c =>
+				{
+					var m = new WeSayComboBox();
+					return m;
+				});
+				builder.Register<IWeSayListView>(c =>
+				{
+					var m = new WeSayListView();
+					return m;
+				});
+			}
+		}
 		private void RegisterChorusStuff(ContainerBuilder builder, ChorusNotesDisplaySettings displaySettings)
 		{
 			//NB: currently, the ctor for ChorusSystem requires hg, since it gets or creates a repo in the path.

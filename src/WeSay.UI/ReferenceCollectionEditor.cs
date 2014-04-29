@@ -20,7 +20,7 @@ namespace WeSay.UI
 		private readonly CommonEnumerations.VisibilitySetting _visibility;
 		private readonly IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> _choiceSystemAdaptor;
 		private IReportEmptiness _alternateEmptinessHelper;
-
+		private AutoCompleteWithCreationBox<KV, ValueT> _emptyPicker;
 		private int _popupWidth = -1;
 		private bool _ignoreListChanged;
 
@@ -191,9 +191,9 @@ namespace WeSay.UI
 
 		private void AddEmptyPicker()
 		{
-			AutoCompleteWithCreationBox<KV, ValueT> emptyPicker = MakePicker();
-			emptyPicker.ValueChanged += emptyPicker_ValueChanged;
-			Controls.Add(emptyPicker);
+			_emptyPicker = MakePicker();
+			_emptyPicker.ValueChanged += emptyPicker_ValueChanged;
+			Controls.Add(_emptyPicker);
 		}
 
 		private void emptyPicker_ValueChanged(object sender, EventArgs e)
@@ -204,6 +204,7 @@ namespace WeSay.UI
 			if (kv != null)
 			{
 				picker.ValueChanged -= emptyPicker_ValueChanged;
+				_emptyPicker = null;
 				_ignoreListChanged = true;
 				KEY_CONTAINER newGuy = (KEY_CONTAINER) _chosenItems.AddNew();
 				_choiceSystemAdaptor.UpdateKeyContainerFromKeyValue(kv, newGuy);

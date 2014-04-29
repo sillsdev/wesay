@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools
 	/// and each of these layout erstwhile call a different layouter for each
 	/// child object (e.g. LexEntryLayouter would employ a SenseLayouter to display senses).
 	/// </summary>
-	public abstract class Layouter
+	public abstract class Layouter : IDisposable
 	{
 		/// <summary>
 		/// The DetailList we are filling.
@@ -166,6 +166,23 @@ namespace WeSay.LexicalTools
 			DetailList.MouseLeftBounds += OnMouseLeftBounds;
 			ChildLayouts = new List<Layouter>();
 		}
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				// Found that the delete button and the event handlers
+				// were causing memory leaks by not allowing the objects to
+				// be released.
+				_deleteButton.Dispose();
+				DetailList.MouseEnteredBounds -= OnMouseEnteredBounds;
+				DetailList.MouseLeftBounds -= OnMouseLeftBounds;
+			}
+		}
 
 		internal abstract int AddWidgets(PalasoDataObject wsdo, int row);
 
@@ -193,7 +210,6 @@ namespace WeSay.LexicalTools
 				m = _previouslyGhostedControlToReuse;
 				_previouslyGhostedControlToReuse = null;
 			}
-
 			BindMultiTextControlToField(m, multiTextToBindTo);
 			return m;
 		}
@@ -207,6 +223,7 @@ namespace WeSay.LexicalTools
 				binding.ChangeOfWhichItemIsInFocus += _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			}
 		}
+
 
 		protected int MakeGhostWidget<T>(PalasoDataObject parent,
 										IList<T> list,
@@ -227,7 +244,7 @@ namespace WeSay.LexicalTools
 														  false,
 														  BasilProject.Project.WritingSystems,
 														  field.Visibility,
-														  field.IsSpellCheckingEnabled, false, null);
+														  field.IsSpellCheckingEnabled, false, _serviceProvider);
 				if (_columnWidths != null && _columnWidths.Length == 3)
 					m.Width = _columnWidths[1];
 
@@ -239,7 +256,7 @@ namespace WeSay.LexicalTools
 
 				foreach (IControlThatKnowsWritingSystem box in m.TextBoxes)
 				{
-					WeSayTextBox tb = box as WeSayTextBox;
+					var tb = box as IWeSayTextBox;
 					if (tb != null)
 					{
 						GhostBinding<T> g = MakeGhostBinding(parent, list, propertyName, box.WritingSystem, tb);
@@ -258,7 +275,7 @@ namespace WeSay.LexicalTools
 		protected GhostBinding<T> MakeGhostBinding<T>(PalasoDataObject parent, IList<T> list,
 													  string ghostPropertyName,
 													  IWritingSystemDefinition writingSystem,
-													  WeSayTextBox entry)
+													  IWeSayTextBox entry)
 				where T : PalasoDataObject, new()
 		{
 			GhostBinding<T> binding = new GhostBinding<T>(parent,
@@ -497,7 +514,8 @@ namespace WeSay.LexicalTools
 			SingleOptionControl control = new SingleOptionControl(optionRefTarget,
 																  list,
 																  field.FieldName,
-																  preferredWritingSystem);
+																  preferredWritingSystem,
+																  WeSayWordsProject.Project.ServiceLocator);
 			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
 			binding.CurrentItemChanged += _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			return control;

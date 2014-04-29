@@ -1,3 +1,4 @@
+using WeSay.Project;
 using WeSay.UI.TextBoxes;
 using Resources=WeSay.ConfigTool.Properties.Resources;
 
@@ -35,7 +36,7 @@ namespace WeSay.ConfigTool
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._listBox = new System.Windows.Forms.ListBox();
 			this._nameLabel = new System.Windows.Forms.Label();
-			this._nameMultiTextControl = new WeSay.UI.TextBoxes.MultiTextControl();
+			this._nameMultiTextControl = new WeSay.UI.TextBoxes.MultiTextControl(null, WeSayWordsProject.Project.ServiceLocator);
 			this._toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this._btnAdd = new System.Windows.Forms.ToolStripButton();

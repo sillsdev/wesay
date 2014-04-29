@@ -98,6 +98,24 @@
     <None Include="..\..\lib\common\Enchant.Net.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="geckofx-core-14">
+      <HintPath>\usr\lib\cli\geckofx-14.0.1\geckofx-core-14.dll</HintPath>
+    </Reference>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms-14">
+      <HintPath>\usr\lib\cli\geckofx-14.0.1\Geckofx-Winforms-14.dll</HintPath>
+    </Reference>
+    <None Include="\usr\lib\cli\geckofx-14.0.1\geckofx-core-14.dll.config" Condition="'$(OS)'!='Windows_NT'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="geckofx-core-14">
+      <HintPath>..\..\lib\$(Configuration)\geckofx-core-14.dll</HintPath>
+    </Reference>
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Winforms-14">
+      <HintPath>..\..\lib\$(Configuration)\Geckofx-Winforms-14.dll</HintPath>
+    </Reference>
+    <None Include="..\..\lib\$(Configuration)\geckofx-core-14.dll.config" Condition="'$(OS)'=='Windows_NT'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -168,7 +186,34 @@
     <Compile Include="ScrollableContainer.Designer.cs">
       <DependentUpon>ScrollableContainer.cs</DependentUpon>
     </Compile>
+    <Compile Include="TextBoxes\GeckoBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoBox.Designer.cs">
+      <DependentUpon>GeckoBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoComboBox.Designer.cs">
+      <DependentUpon>GeckoComboBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoListBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoListBox.Designer.cs">
+      <DependentUpon>GeckoListBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoListView.Designer.cs">
+      <DependentUpon>GeckoListView.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextBoxes\IControlThatKnowsWritingSystem.cs" />
+    <Compile Include="TextBoxes\WeSayComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WeSayListView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -280,6 +325,15 @@
       <SubType>Designer</SubType>
       <DependentUpon>DetailList.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxes\GeckoComboBox.resx">
+      <DependentUpon>GeckoComboBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxes\GeckoListBox.resx">
+      <DependentUpon>GeckoListBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxes\GeckoListView.resx">
+      <DependentUpon>GeckoListView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TextBoxes\MultiTextControl.resx">
       <DependentUpon>MultiTextControl.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -300,6 +354,9 @@
     <EmbeddedResource Include="TextBoxes\WeSayTextBox.resx">
       <SubType>Designer</SubType>
       <DependentUpon>WeSayTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxes\GeckoBox.resx">
+      <DependentUpon>GeckoBox.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

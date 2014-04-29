@@ -46,15 +46,17 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 
 			_verticalWordListView.WritingSystem = task.PromptingWritingSystem;
+			_verticalWordListView.MaxLength = 18;
+			_verticalWordListView.MinLength = 10;  // Space fill to this length
 			_verticalWordListView.DataSource = task.Words;
 			UpdateStuff();
-			_verticalWordListView.SelectedIndexChanged += new EventHandler(OnWordsList_SelectedIndexChanged);
+			_verticalWordListView.ItemSelectionChanged += OnWordsList_SelectedIndexChanged;
 
 			_flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 			_flyingLabel.Finished += OnAnimator_Finished;
 		}
 
-		void OnWordsList_SelectedIndexChanged(object sender, EventArgs e)
+		private void OnWordsList_SelectedIndexChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
 			if (_settingIndexInCode)
 				return;
@@ -81,8 +83,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 			var box = _vernacularBox.TextBoxes[0];
 			box.Focus();
-			if(box is WeSayTextBox)
-					((WeSayTextBox) box).SelectionStart = 1000; //go to end
+			if(box is IWeSayTextBox)
+					((IWeSayTextBox) box).SelectionStart = 1000; //go to end
 		}
 
 		private void UpdateSourceWord()

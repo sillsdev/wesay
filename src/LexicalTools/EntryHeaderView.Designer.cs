@@ -1,4 +1,8 @@
-﻿namespace WeSay.LexicalTools
+﻿using System.Windows.Forms;
+using WeSay.Project;
+using WeSay.UI.TextBoxes;
+
+namespace WeSay.LexicalTools
 {
 	partial class EntryHeaderView
 	{
@@ -28,17 +32,14 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._entryPreview = new System.Windows.Forms.RichTextBox();
 			this.SuspendLayout();
 			//
 			// _entryPreview
 			//
 			this._entryPreview.BackColor = System.Drawing.Color.LightSeaGreen;
-			this._entryPreview.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._entryPreview.Dock = System.Windows.Forms.DockStyle.Top;
 			this._entryPreview.Location = new System.Drawing.Point(0, 0);
 			this._entryPreview.Name = "_entryPreview";
-			this._entryPreview.ReadOnly = true;
 			this._entryPreview.Size = new System.Drawing.Size(527, 85);
 			this._entryPreview.TabIndex = 1;
 			this._entryPreview.TabStop = false;
@@ -55,11 +56,10 @@
 			this.BackColorChanged += new System.EventHandler(this.EntryHeaderView_BackColorChanged);
 			this.SizeChanged += new System.EventHandler(this.EntryHeaderView_SizeChanged);
 			this.ResumeLayout(false);
-			this._entryPreview.FontChanged += OnEntryView_FontChanged;
 		}
 
 		#endregion
 
-		private System.Windows.Forms.RichTextBox _entryPreview;
+		private Control _entryPreview;
 	}
 }

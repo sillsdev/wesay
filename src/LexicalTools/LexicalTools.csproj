@@ -189,6 +189,7 @@
     <Compile Include="EntryHeaderView.Designer.cs">
       <DependentUpon>EntryHeaderView.cs</DependentUpon>
     </Compile>
+    <Compile Include="HtmlRenderer.cs" />
     <Compile Include="IConfirmDelete.cs" />
     <Compile Include="LayoutInfoProvider.cs" />
     <Compile Include="Review\AdvancedHistory\AdvancedHistoryConfig.cs" />

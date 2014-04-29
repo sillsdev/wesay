@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Collections.Generic;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Model;
@@ -40,6 +41,16 @@ namespace WeSay.LexicalTools
 			_columnWidths = parentDetailList.GetColumnWidths();
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				// This event handler was reported by the memory leak tool
+				// as holding the detail list from being released.
+				DetailList.LabelsChanged-= OnLabelsChanged;
+			}
+			base.Dispose(disposing);
+		}
 		internal bool SensesAreDeletable { get { return _sensesAreDeletable; } }
 
 		private void OnLabelsChanged(object sender, EventArgs e)

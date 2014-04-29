@@ -97,11 +97,31 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="geckofx-core-14">
+      <HintPath>\usr\lib\cli\geckofx-14.0.1\geckofx-core-14.dll</HintPath>
+    </Reference>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms-14">
+      <HintPath>\usr\lib\cli\geckofx-14.0.1\Geckofx-Winforms-14.dll</HintPath>
+    </Reference>
+    <None Include="\usr\lib\cli\geckofx-14.0.1\geckofx-core-14.dll.config" Condition="'$(OS)'!='Windows_NT'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="geckofx-core-14">
+      <HintPath>..\..\lib\$(Configuration)\geckofx-core-14.dll</HintPath>
+    </Reference>
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Winforms-14">
+      <HintPath>..\..\lib\$(Configuration)\Geckofx-Winforms-14.dll</HintPath>
+    </Reference>
+    <None Include="..\..\lib\$(Configuration)\geckofx-core-14.dll.config" Condition="'$(OS)'=='Windows_NT'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoCompleteWithCreationBoxTests.cs" />
     <Compile Include="BindingTests.cs" />
     <Compile Include="DetailListTests.cs" />
+    <Compile Include="GeckoBoxTests.cs" />
+    <Compile Include="GeckoComboBoxTests.cs" />
     <Compile Include="GhostBindingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceCollectionEditorTests.cs">

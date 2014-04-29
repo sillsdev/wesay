@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Windows.Forms;
 using NUnit.Framework;
 using Palaso.WritingSystems;
 using WeSay.Project;
@@ -23,9 +24,9 @@ namespace WeSay.UI.Tests
 		public void TargetToWidget()
 		{
 			MultiText text = new MultiText();
-			WeSayTextBox widget =
+			IWeSayTextBox widget =
 					new WeSayTextBox(WritingSystemDefinition.Parse("qaa-x-qaa"), null);
-			new TextBinding(text, "vernacular", widget);
+			new TextBinding(text, "vernacular", (Control)widget);
 
 			text["vernacular"] = "hello";
 			Assert.AreEqual("hello", widget.Text);

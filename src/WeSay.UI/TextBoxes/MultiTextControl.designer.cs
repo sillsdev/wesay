@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Forms;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -16,9 +17,22 @@ namespace WeSay.UI.TextBoxes
 		protected override void Dispose(bool disposing)
 		{
 			//Debug.WriteLine("Disposing " + Name + "   Disposing=" + disposing);
-			if (disposing && (components != null))
+			if (disposing)
 			{
-				components.Dispose();
+				foreach (Control box in TextBoxes)
+				{
+					// Added due to memory leak where the MultiText box never released
+					if (box is WeSayTextBox)
+					{
+						Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Unregister(box);
+					}
+					box.Dispose();
+				}
+				_inputBoxes.Clear();
+				if (components != null)
+				{
+					components.Dispose();
+				}
 			}
 			base.Dispose(disposing);
 		}

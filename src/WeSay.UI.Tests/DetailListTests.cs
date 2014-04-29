@@ -81,9 +81,9 @@ namespace WeSay.UI.Tests
 		}
 #endif
 
-		private WeSayTextBox MakeWiredUpTextBox()
+		private Control MakeWiredUpTextBox()
 		{
-			WeSayTextBox box = new WeSayTextBox(_ws, null);
+			Control box = new WeSayTextBox(_ws, null);
 			box.GotFocus += box_GotFocus;
 			return box;
 		}

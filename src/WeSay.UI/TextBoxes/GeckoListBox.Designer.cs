@@ -1,13 +1,6 @@
-using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
-using Palaso.WritingSystems;
-
-namespace WeSay.UI.TextBoxes
+﻿namespace WeSay.UI.TextBoxes
 {
-
-	partial class WeSayTextBox
+	partial class GeckoListBox
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -20,13 +13,11 @@ namespace WeSay.UI.TextBoxes
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
-			// Debug.WriteLine(" TextBox " + Name + "-textBox   Disposing=" + disposing);
-			if (disposing && (components != null))
+            Closing();
+            if (disposing && (components != null))
 			{
 				components.Dispose();
-				OnSpellCheckingDisabled();
 			}
-			_oldFont = null;
 			base.Dispose(disposing);
 		}
 
@@ -39,20 +30,20 @@ namespace WeSay.UI.TextBoxes
 		private void InitializeComponent()
 		{
 			this.SuspendLayout();
-			//
-			// WeSayTextBox
-			//
-			BackColor = System.Drawing.Color.White;
-			//BackColor = System.Drawing.Color.AliceBlue;
-			Multiline = true;
-			WordWrap = true;
-			BorderStyle = System.Windows.Forms.BorderStyle.None;
-			DoubleBuffered = true;
-
+			// 
+			// GeckoListBox
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.Color.LightGoldenrodYellow;
+			this.Margin = new System.Windows.Forms.Padding(0);
+			this.Name = "GeckoListBox";
+			this.Size = new System.Drawing.Size(238, 10);
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
+
 	}
 }

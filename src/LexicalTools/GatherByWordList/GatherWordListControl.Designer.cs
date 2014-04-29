@@ -1,5 +1,7 @@
 using System;
+using System.Windows.Forms;
 using Palaso.UI.WindowsForms.Widgets.Flying;
+using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
@@ -43,8 +45,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this._flyingLabel = new Palaso.UI.WindowsForms.Widgets.Flying.FlyingLabel();
-			this._verticalWordListView = new WeSay.UI.WeSayListView();
-			this._vernacularBox = new WeSay.UI.TextBoxes.MultiTextControl();
+			this._verticalWordListView = WeSayWordsProject.Project.ServiceLocator.GetService(typeof(IWeSayListView)) as IWeSayListView;
+			this._vernacularBox = new WeSay.UI.TextBoxes.MultiTextControl(null, WeSayWordsProject.Project.ServiceLocator);
 			this._listViewOfWordsMatchingCurrentItem = new WeSay.UI.WeSayListBox();
 			this._congratulationsControl = new WeSay.LexicalTools.CongratulationsControl();
 			this._btnAddWord = new WeSay.UI.Buttons.RectangularImageButton();
@@ -262,7 +264,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
 			this.Controls.Add(this._btnAddWord);
 			this.Controls.Add(this._btnNextWord);
-			this.Controls.Add(this._verticalWordListView);
+			this.Controls.Add((Control)this._verticalWordListView);
 			this.Controls.Add(this._vernacularBox);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this._boxForeignWord);
@@ -294,7 +296,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private MultiTextControl _vernacularBox;
 		private CongratulationsControl _congratulationsControl;
 		private FlyingLabel _flyingLabel;
-		private WeSayListView _verticalWordListView;
+		private IWeSayListView _verticalWordListView;
 		private RectangularImageButton _btnNextWord;
 		private RectangularImageButton _btnAddWord;
 

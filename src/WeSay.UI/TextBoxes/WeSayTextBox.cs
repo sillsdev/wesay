@@ -12,12 +12,49 @@ using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {
-	public partial class WeSayTextBox: TextBox, IControlThatKnowsWritingSystem
+	public interface IWeSayTextBox
+	{
+		Size GetPreferredSize(Size proposedSize);
+
+		[Browsable(false)]
+		string Text { set; get; }
+
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		IWritingSystemDefinition WritingSystem { get; set; }
+
+		bool MultiParagraph { get; set; }
+		bool IsSpellCheckingEnabled { get; set; }
+		int SelectionStart { get; set; }
+		void AssignKeyboardFromWritingSystem();
+		void ClearKeyboard();
+		void Init(IWritingSystemDefinition writingSystem, String name);
+
+		bool Multiline { get; set; }
+		bool WordWrap { get; set; }
+		bool ReadOnly { get; set; }
+		bool Focus();
+		void Show();
+
+		/// <summary>
+		/// for automated tests
+		/// </summary>
+		void PretendLostFocus();
+
+		/// <summary>
+		/// for automated tests
+		/// </summary>
+		void PretendSetFocus();
+
+	}
+
+
+	public partial class WeSayTextBox: TextBox, IControlThatKnowsWritingSystem, IWeSayTextBox
 	{
 		private IWritingSystemDefinition _writingSystem;
 
 		private bool _multiParagraph;
-		private readonly string _nameForLogging;
+		private string _nameForLogging;
 		private bool _haveAlreadyLoggedTextChanged;
 		private bool _isSpellCheckingEnabled;
 
@@ -35,8 +72,8 @@ namespace WeSay.UI.TextBoxes
 			}
 			GotFocus += OnGotFocus;
 			LostFocus += OnLostFocus;
-			KeyPress += WeSayTextBox_KeyPress;
-			TextChanged += WeSayTextBox_TextChanged;
+			KeyPress += OnKeyPress;
+			TextChanged += OnTextChanged;
 
 			KeyDown += OnKeyDown;
 
@@ -44,8 +81,19 @@ namespace WeSay.UI.TextBoxes
 			{
 				_nameForLogging = "??";
 			}
+			Name = _nameForLogging;
 		}
 
+		public void Init(IWritingSystemDefinition writingSystem, String name)
+		{
+			WritingSystem = writingSystem;
+			_nameForLogging = name;
+			if (_nameForLogging == null)
+			{
+				_nameForLogging = "??";
+			}
+			Name = name;
+		}
 		private void OnKeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.F4)
@@ -104,7 +152,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		private void WeSayTextBox_TextChanged(object sender, EventArgs e)
+		private void OnTextChanged(object sender, EventArgs e)
 		{
 			//only first change per focus session will be logged
 			if (!_haveAlreadyLoggedTextChanged && Focused
@@ -117,7 +165,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		private void WeSayTextBox_KeyPress(object sender, KeyPressEventArgs e)
+		private void OnKeyPress(object sender, KeyPressEventArgs e)
 		{
 			//only first change per focus session will be logged
 			if (!_haveAlreadyLoggedTextChanged)
@@ -215,6 +263,11 @@ namespace WeSay.UI.TextBoxes
 		public WeSayTextBox(IWritingSystemDefinition ws, string nameForLogging): this()
 		{
 			_nameForLogging = nameForLogging;
+			if (_nameForLogging == null)
+			{
+				_nameForLogging = "??";
+			}
+			Name = _nameForLogging;
 			WritingSystem = ws;
 		}
 
@@ -405,6 +458,14 @@ namespace WeSay.UI.TextBoxes
 		public void PretendLostFocus()
 		{
 			OnLostFocus(new EventArgs());
+		}
+
+		/// <summary>
+		/// for automated tests
+		/// </summary>
+		public void PretendSetFocus()
+		{
+			Focus();
 		}
 	}
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Windows.Forms;
 using NUnit.Framework;
 using Palaso.WritingSystems;
 using WeSay.Project;
@@ -18,8 +19,8 @@ namespace WeSay.UI.Tests
 	public class GhostBindingTests
 	{
 		private readonly Papa _papa = new Papa();
-		private WeSayTextBox _ghostFirstNameWidget;
-		private WeSayTextBox _papaNameWidget;
+		private IWeSayTextBox _ghostFirstNameWidget;
+		private IWeSayTextBox _papaNameWidget;
 		private GhostBinding<Child> _binding;
 		protected bool _didNotify;
 
@@ -141,7 +142,7 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void NewItemTriggersEvent()
 		{
-			_binding.ReferenceControl = _papaNameWidget;
+			_binding.ReferenceControl = (Control)_papaNameWidget;
 			//just has to be *something*, else the trigger won't call us back
 
 			_binding.LayoutNeededAfterMadeReal += _binding_LayoutNeededAfterMadeReal;

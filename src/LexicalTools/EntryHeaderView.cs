@@ -4,7 +4,9 @@ using System.Windows.Forms;
 using Chorus.UI.Notes.Bar;
 using Palaso.DictionaryServices.Model;
 using WeSay.LexicalModel;
+using WeSay.Project;
 using WeSay.UI;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools
 {
@@ -16,18 +18,21 @@ namespace WeSay.LexicalTools
 
 		private NotesBarView _notesBar;
 		private LexEntry _currentRecord=null;
-		private string _rtfFormattedTextOfEntry;
+		private string _formattedTextOfEntry;
+		private bool _geckoOption;
 
 		/// <summary>
 		/// designer only
 		/// </summary>
 		public EntryHeaderView()
 		{
+			SetupEntryPreview();
 			InitializeComponent();
 		}
 
 		public EntryHeaderView(NotesBarView notesBarView)
 		{
+			SetupEntryPreview();
 			InitializeComponent();
 
 			_notesBar = notesBarView;// notesSystem.CreateNotesBarView(id => WeSayWordsProject.GetUrlFromLexEntry(_currentRecord));
@@ -50,6 +55,27 @@ namespace WeSay.LexicalTools
 			DoLayout();
 		}
 
+		private void SetupEntryPreview()
+		{
+			_geckoOption = WeSayWordsProject.GeckoOption;
+
+			if (_geckoOption)
+			{
+				_entryPreview = new GeckoBox(WeSayWordsProject.Project.DefaultViewTemplate.HeadwordWritingSystem, null);
+				((GeckoBox)_entryPreview).ReadOnly = true;
+				((GeckoBox)_entryPreview).BorderStyle = System.Windows.Forms.BorderStyle.None;
+
+
+			}
+			else
+			{
+				_entryPreview = new System.Windows.Forms.RichTextBox();
+				((RichTextBox)_entryPreview).BorderStyle = System.Windows.Forms.BorderStyle.None;
+				((RichTextBox)_entryPreview).ReadOnly = true;
+				_entryPreview.FontChanged += OnEntryView_FontChanged;
+			}
+		}
+
 		void _notesBar_SizeChanged(object sender, EventArgs e)
 		{
 			_notesBar.Height = kNotesBarHeight;
@@ -57,7 +83,17 @@ namespace WeSay.LexicalTools
 
 		public string RtfForTests
 		{
-			get { return this._entryPreview.Rtf; }
+			get
+			{
+				if (_geckoOption)
+				{
+					return TextForTests;
+				}
+				else
+				{
+					return ((RichTextBox)_entryPreview).Rtf;
+				}
+			}
 		}
 
 		public string TextForTests
@@ -72,16 +108,32 @@ namespace WeSay.LexicalTools
 
 		public void UpdateContents(LexEntry record, CurrentItemEventArgs currentItemInFocus, LexEntryRepository lexEntryRepository)
 		{
-			if (record == null)
+			if (_geckoOption)
 			{
-				_entryPreview.Rtf = string.Empty;
+				if (record != null)
+				{
+					_formattedTextOfEntry = HtmlRenderer.ToHtml(record,
+															currentItemInFocus,
+															lexEntryRepository, _entryPreview.BackColor);
+					((GeckoBox)_entryPreview).SetHtml(_formattedTextOfEntry);
+
+				}
 			}
 			else
 			{
-				_rtfFormattedTextOfEntry = RtfRenderer.ToRtf(record,
-													  currentItemInFocus,
-													  lexEntryRepository);
-				_entryPreview.Rtf = _rtfFormattedTextOfEntry;
+				if (record == null)
+				{
+					((RichTextBox)_entryPreview).Rtf = string.Empty;
+				}
+				else
+				{
+					_formattedTextOfEntry = RtfRenderer.ToRtf(record,
+															currentItemInFocus,
+															lexEntryRepository);
+					((RichTextBox)_entryPreview).Rtf = _formattedTextOfEntry;
+
+				}
+
 			}
 
 			if (record != _currentRecord)
@@ -129,11 +181,11 @@ namespace WeSay.LexicalTools
 
 		private void OnEntryView_FontChanged(object sender, EventArgs e)
 		{
-			if (String.IsNullOrEmpty(_rtfFormattedTextOfEntry)) // This check needed by mono 2.6.x CP 2010-12
+			if (String.IsNullOrEmpty(_formattedTextOfEntry) || _geckoOption) // This check needed by mono 2.6.x CP 2010-12
 			{
 				return;
 			}
-			_entryPreview.Rtf = _rtfFormattedTextOfEntry;
+			((RichTextBox)_entryPreview).Rtf = _formattedTextOfEntry;
 		}
 	}
 }

@@ -118,6 +118,10 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
+		public void Closing()
+		{
+		}
+
 		///<remarks>This can't be done during construction... we have to wait until
 		///we actually have a parent to do this.</remarks>
 		private void OnParentChanged(object sender, EventArgs e)
@@ -335,8 +339,19 @@ namespace WeSay.UI.TextBoxes
 			}
 			else
 			{
-				var box = new WeSayTextBox(writingSystem, Name);
-				control = box;
+				IWeSayTextBox box = null;
+				if (_serviceProvider != null)
+				{
+					box = _serviceProvider.GetService(typeof (IWeSayTextBox)) as IWeSayTextBox;
+				}
+				else
+				{
+					// Shouldn't get to this but just in case.
+					box = new WeSayTextBox();
+				}
+				box.Init(writingSystem, Name);
+
+				control = (Control) box;
 				control.SuspendLayout();
 				box.ReadOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
 				box.Multiline = true;
@@ -344,8 +359,8 @@ namespace WeSay.UI.TextBoxes
 				box.MultiParagraph = _isMultiParagraph;
 				box.IsSpellCheckingEnabled = IsSpellCheckingEnabled;
 				//box.Enabled = !box.ReadOnly;
-				if (!box.ReadOnly)
-					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Register(box);
+				if (!box.ReadOnly && box is WeSayTextBox)
+					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Register((Control)box);
 			}
 
 			_inputBoxes.Add(control);

@@ -37,7 +37,21 @@ namespace WeSay.LexicalTools.Tests
 			WeSayProjectTestHelper.InitializeForTests();
 			var b = new ContainerBuilder();
 			b.Register(c => new MediaNamingHelper(new string[] {"en"}));
-
+			b.Register<IWeSayTextBox>(c =>
+			{
+				var m = new WeSayTextBox();
+				return m;
+			});
+			b.Register<IWeSayComboBox>(c =>
+			{
+				var m = new WeSayComboBox();
+				return m;
+			});
+			b.Register<IWeSayListView>(c =>
+			{
+				var m = new WeSayListView();
+				return m;
+			});
 			Context =   new WeSay.Project.ServiceLocatorAdapter(b.Build());
 		}
 

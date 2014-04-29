@@ -10,7 +10,41 @@ using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
 {
-	public partial class WeSayListView: ListView
+	public interface IWeSayListView
+	{
+		[Browsable(false)]
+		string Text { set; get; }
+
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		IWritingSystemDefinition WritingSystem { get; set; }
+
+		int MinLength { get; set; }
+		int MaxLength { get; set; }
+		int SelectedIndex { get; set; }
+		Rectangle Bounds { get; set; }
+		IList DataSource { get; set; }
+		int Length { get; }
+		DockStyle Dock { get; set; }
+		Point Location { get; set; }
+		string Name { get; set; }
+		Size Size { get; set; }
+		int TabIndex { get; set; }
+		View View { get; set; }
+		BorderStyle BorderStyle { get; set; }
+		Object SelectedItem { get; }
+		AnchorStyles Anchor { get; set; }
+		int VirtualListSize { get; set; }
+
+		void SetBounds(int x, int y, int width, int height);
+		bool Focus();
+		Size MinimumSize { get; set; }
+
+		event ListViewItemSelectionChangedEventHandler ItemSelectionChanged;
+		event RetrieveVirtualItemEventHandler RetrieveVirtualItem;
+	}
+
+	public partial class WeSayListView: ListView, IWeSayListView
 	{
 		private IWritingSystemDefinition _writingSystem;
 		private int _itemToNotDrawYet = -1;
@@ -18,6 +52,8 @@ namespace WeSay.UI
 		private readonly Dictionary<int, ListViewItem> _itemsCache;
 
 		private bool _ensureVisibleCalledBeforeWindowHandleCreated = false;
+		public new event EventHandler<ListViewItemSelectionChangedEventArgs> ItemSelectionChanged;
+		public new event EventHandler<RetrieveVirtualItemEventArgs> RetrieveVirtualItem;
 
 		public WeSayListView()
 		{
@@ -589,5 +625,16 @@ namespace WeSay.UI
 												flags);
 			}
 		}
+
+		public int Length
+		{
+			get
+			{
+				return Items.Count;
+			}
+		}
+
+		public int MinLength { get; set; }
+		public int MaxLength { get; set; }
 	}
 }
