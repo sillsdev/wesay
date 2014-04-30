@@ -14,6 +14,7 @@ using Palaso.Data;
 using Palaso.i18n;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -259,8 +260,8 @@ namespace WeSay.UI.TextBoxes
 				justification = "right";
 			}
 			return String.Format("min-height:15px; width=30em; font-family:{0}; font-size:{1}pt; text-align:{2}; font-weight:{3}; background:{4}; width:{5}",
-				WritingSystem.DefaultFontName,
-				WritingSystem.DefaultFontSize,
+				Font.Name,
+				Font.Size,
 				justification,
 				Font.Bold ? "bold" : "normal",
 				System.Drawing.ColorTranslator.ToHtml(BackColor),
@@ -477,6 +478,7 @@ namespace WeSay.UI.TextBoxes
 				{
 					throw new ArgumentNullException();
 				}
+				Font = WritingSystemInfo.CreateFont(value);
 				_writingSystem = value;
 			}
 		}

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
 using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -285,7 +286,7 @@ namespace WeSay.UI.TextBoxes
 			var html =
 				string.Format(
 					"<html><header><meta charset=\"UTF-8\"></head><body style='background:#FFFFFF' id='mainbody'><div style='min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{3}' id='main' name='textArea' contentEditable='{4}'>{2}</div></body></html>",
-					WritingSystem.DefaultFontName, WritingSystem.DefaultFontSize.ToString(), s, justification, editable);
+					Font.Name, Font.Size.ToString(), s, justification, editable);
 			if (!_browserIsReadyToNavigate)
 			{
 				_pendingHtmlLoad = html;
@@ -337,6 +338,7 @@ namespace WeSay.UI.TextBoxes
 				{
 					throw new ArgumentNullException();
 				}
+				Font = WritingSystemInfo.CreateFont(value);
 				_writingSystem = value;
 			}
 		}

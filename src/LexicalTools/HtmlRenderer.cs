@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using Palaso.DictionaryServices.Model;
@@ -181,10 +182,11 @@ namespace WeSay.LexicalTools
 				//that ws isn't actually part of our configuration, so can't get a special font for it
 			}
 			IWritingSystemDefinition ws = (IWritingSystemDefinition)WritingSystems.Get(writingSystemId);
-			float fontSize = ws.DefaultFontSize + fontSizeBoost;
+			Font font = WritingSystemInfo.CreateFont(ws);
+			float fontSize = font.Size + fontSizeBoost;
 			var formattedSpan = string.Format(
 				"<span style='font-family:{0}; font-size:{1}pt;font-weight:{2};font-style:{3};text-decoration:{4}'>",
-				ws.DefaultFontName,
+				font.Name,
 				fontSize.ToString(),
 				boldText ? "bold": "normal",
 				italicsOn ? "italic" : "normal",

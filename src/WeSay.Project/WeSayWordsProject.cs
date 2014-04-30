@@ -541,12 +541,12 @@ namespace WeSay.Project
 			builder.Register(c=>
 				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).InstancePerLifetimeScope();
 
-			RegisterGeckoStuff(builder);
+			RegisterTextObjects(builder);
 
 			_container = builder.Build();
 		}
 
-		private void RegisterGeckoStuff(ContainerBuilder builder)
+		private void RegisterTextObjects(ContainerBuilder builder)
 		{
 			if (GeckoOption)
 			{

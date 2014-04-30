@@ -10,6 +10,7 @@ using Gecko;
 using Gecko.DOM;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -425,6 +426,7 @@ namespace WeSay.UI.TextBoxes
 				{
 					throw new ArgumentNullException();
 				}
+				Font = WritingSystemInfo.CreateFont(value);
 				_writingSystem = value;
 			}
 		}
