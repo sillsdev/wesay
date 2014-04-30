@@ -12,6 +12,9 @@ namespace WeSay.LexicalTools
 
 		public void Show(string message)
 		{
+			char[] checkmark_Char = new char[1];
+			checkmark_Char[0] = '\u2714';
+			checkmarkLabel.Text = new string(checkmark_Char);
 			_messageText.Text = message;
 			BringToFront();
 			Visible = true;
