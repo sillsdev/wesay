@@ -283,10 +283,13 @@ namespace WeSay.UI.TextBoxes
 			{
 				editable = "false";
 			}
+
+			Font font = WritingSystemInfo.CreateFont(_writingSystem);
+
 			var html =
 				string.Format(
 					"<html><header><meta charset=\"UTF-8\"></head><body style='background:#FFFFFF' id='mainbody'><div style='min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{3}' id='main' name='textArea' contentEditable='{4}'>{2}</div></body></html>",
-					Font.Name, Font.Size.ToString(), s, justification, editable);
+					font.Name, font.Size.ToString(), s, justification, editable);
 			if (!_browserIsReadyToNavigate)
 			{
 				_pendingHtmlLoad = html;

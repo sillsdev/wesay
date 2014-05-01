@@ -259,11 +259,12 @@ namespace WeSay.UI.TextBoxes
 			{
 				justification = "right";
 			}
+			Font font = WritingSystemInfo.CreateFont(_writingSystem);
 			return String.Format("min-height:15px; width=30em; font-family:{0}; font-size:{1}pt; text-align:{2}; font-weight:{3}; background:{4}; width:{5}",
-				Font.Name,
-				Font.Size,
+				font.Name,
+				font.Size,
 				justification,
-				Font.Bold ? "bold" : "normal",
+				Bold ? "bold" : "normal",
 				System.Drawing.ColorTranslator.ToHtml(BackColor),
 				this.Width);
 		}
@@ -362,7 +363,7 @@ namespace WeSay.UI.TextBoxes
 			var selectElement = (GeckoSelectElement) _browser.Document.GetElementById("itemList");
 			if (selectElement != null)
 			{
-				int numberOfEntries = (Height/_optionHeight) - 1;
+				int numberOfEntries = (Height/(_optionHeight + 1)) - 1;
 				if (numberOfEntries <= 0)
 				{
 					numberOfEntries = 10;
@@ -478,7 +479,6 @@ namespace WeSay.UI.TextBoxes
 				{
 					throw new ArgumentNullException();
 				}
-				Font = WritingSystemInfo.CreateFont(value);
 				_writingSystem = value;
 			}
 		}
@@ -543,6 +543,8 @@ namespace WeSay.UI.TextBoxes
 				}
 			}
 		}
+		// Set this to true to get bold print for the list box
+		public bool Bold { get; set; }
 
 		public bool MultiParagraph { get; set; }
 

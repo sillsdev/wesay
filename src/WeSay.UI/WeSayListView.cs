@@ -39,6 +39,7 @@ namespace WeSay.UI
 		void SetBounds(int x, int y, int width, int height);
 		bool Focus();
 		Size MinimumSize { get; set; }
+		bool Bold { get; set; }
 
 		event ListViewItemSelectionChangedEventHandler ItemSelectionChanged;
 		event RetrieveVirtualItemEventHandler RetrieveVirtualItem;
@@ -636,5 +637,6 @@ namespace WeSay.UI
 
 		public int MinLength { get; set; }
 		public int MaxLength { get; set; }
+		public bool Bold { get; set; }
 	}
 }
