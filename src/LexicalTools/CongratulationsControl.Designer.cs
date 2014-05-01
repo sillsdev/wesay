@@ -72,7 +72,6 @@ namespace WeSay.LexicalTools
             this.BackColorChanged += new System.EventHandler(this.CongratulationsControl_BackColorChanged);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
