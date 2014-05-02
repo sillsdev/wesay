@@ -49,12 +49,14 @@ namespace WeSay.UI
 			{
 				_imageToolboxLink.Visible = true;
 				_pictureBox.Visible = false;
+				_removeImageLink.Visible = false;
 				_problemLabel.Visible = false;
 				Height = _imageToolboxLink.Bottom + 5;
 			}
 			else if (!File.Exists(GetPathToImage()))
 			{
 				_pictureBox.Visible = false;
+				_removeImageLink.Visible = false;
 				_problemLabel.Text = _relativePathToImage;
 				string s = String.Format("~Cannot find {0}", GetPathToImage());
 				toolTip1.SetToolTip(this, s);
@@ -65,6 +67,7 @@ namespace WeSay.UI
 			else
 			{
 				_pictureBox.Visible = true;
+				_removeImageLink.Visible = true;	// need explicit setting for Mono
 				_imageToolboxLink.Visible = false;
 				_problemLabel.Visible = false;
 				try
@@ -73,7 +76,6 @@ namespace WeSay.UI
 					_pictureBox.BackColor = Color.White;
 					_pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
 					_pictureBox.Image = ImageUtilities.GetThumbNail(GetPathToImage(), _pictureBox.Width - 4, _pictureBox.Height - 4, Color.White);
-					// _pictureBox.Load(GetPathToImage());
 					Height = _pictureBox.Bottom + 5;
 				}
 				catch (Exception error)
@@ -82,8 +84,6 @@ namespace WeSay.UI
 					_problemLabel.Text = error.Message;
 				}
 			}
-
-			_removeImageLink.Visible = _pictureBox.Visible;
 
 			_imageToolboxLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
