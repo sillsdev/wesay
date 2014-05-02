@@ -12,16 +12,23 @@ if "%INCLUDE%" == "" (
 		goto build
 	)
 )
+
 :build
-if "%~1" == "" (
-	SET BUILD=Release
-) else (
-	SET BUILD=%~1
-)
+SET TARGET=Clean;Compile
+SET BUILD=Release
+
+if not "%~1" == "" (
+	if "%~1" == "Installer" (
+		SET TARGET=%~1
+	) else (
+		SET BUILD=%~1
+	)
+)	
+
 @echo on
 
 @pushd "%~dp0"
 
-msbuild "/target:Clean;Compile" /p:Configuration="%BUILD%" /p:Platform=x86 /p:RootDir=..  /p:BUILD_NUMBER="0.0.1.abcd" build.win.proj
+msbuild "/target:%TARGET%" /p:Configuration="%BUILD%" /p:Platform=x86 /p:RootDir=..  /p:BUILD_NUMBER="0.0.1.abcd" build.win.proj
 
 @popd

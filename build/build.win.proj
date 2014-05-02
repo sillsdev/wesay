@@ -22,6 +22,10 @@
 	</PropertyGroup>
 
 	<Import Project="$(RootDir)/build/build.common.proj" />
+	
+	<PropertyGroup>
+		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
+	</PropertyGroup>
 
 	<PropertyGroup>
 		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'ALPHA'">Alpha Test</ReleaseLabel>
@@ -36,7 +40,7 @@
 			Exclude="$(RootDir)\**\*Tests\**;$(RootDir)\**\WeSay.ConfigTool\**" />
 		<XmlFiles Include="$(RootDir)\common\**\*.WeSayConfig"/>
 	</ItemGroup>
-
+	
 	<Target Name="DownloadDistFiles">
 		<MakeDir Directories= "$(RootDir)\External"/>
 		<WebDownload FileUri="https://dl.dropboxusercontent.com/s/599lb0od6shtqqa/WeSay_Helps.chm?dl=1" FileName="$(RootDir)\External\WeSay_Helps.chm"></WebDownload>
@@ -183,10 +187,22 @@
 			<Output TaskParameter="OutputFilePath" ItemName="Compile" />
 		</MakeWixForDirTree>
 	</Target>
+	
+	<Target Name="MakeWixForXulrunner">
+		<MakeWixForDirTree
+			DirectoryReferenceId="XulrunnerFiles"
+			ComponentGroupId="xulrunner"
+			RootDirectory="$(RootDir)\xulrunner"
+			OutputFilePath="$(RootDir)\src\Installer\GeneratedXulrunnerFiles.wxs"
+			MatchRegExPattern=".*" >
+			<Output TaskParameter="OutputFilePath" ItemName="Compile" />
+		</MakeWixForDirTree>
+	</Target>
 
 	<Target Name="MakeWixForDistFiles">
 		<CallTarget targets="MakeWixForPoFiles"/>
 		<CallTarget targets="MakeWixForTemplates"/>
+		<CallTarget targets="MakeWixForXulrunner"/>
 	</Target>
 
 	<!-- LifeCycleStage is set, along with the version, in build.common.proj -->

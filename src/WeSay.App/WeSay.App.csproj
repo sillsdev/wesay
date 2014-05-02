@@ -121,6 +121,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
     </Reference>
+	
+	<Reference Include="Interop.WIA.dll, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Interop.WIA.dll</HintPath>
+    </Reference>
+	<Reference Include="IrrKlang.NET4.dll, Version=, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\irrKlang.NET4.dll</HintPath>
+    </Reference>
+	
+	
     <None Include="..\..\lib\common\Enchant.Net.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -133,6 +144,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+	
     <Reference Include="Vulcan.Uczniowie.HelpProvider">
       <HintPath>..\..\lib\common\Vulcan.Uczniowie.HelpProvider.dll</HintPath>
     </Reference>
