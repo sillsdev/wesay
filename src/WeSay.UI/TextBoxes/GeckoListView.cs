@@ -18,27 +18,14 @@ using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {
-	public partial class GeckoListView : UserControl, IControlThatKnowsWritingSystem, IWeSayListView
+	public partial class GeckoListView : GeckoBase, IControlThatKnowsWritingSystem, IWeSayListView
 	{
-		private GeckoWebBrowser _browser;
-		private bool _browserIsReadyToNavigate;
-		private bool _browserDocumentLoaded;
 		private bool _initialSelectLoad;
 		private int _pendingInitialIndex;
 		private string _pendingHtmlLoad;
-		private IWritingSystemDefinition _writingSystem;
-		private bool _keyPressed;
 		private GeckoSelectElement _selectElement;
 		private GeckoOptionElement _optionElement;
 		private int _optionHeight;
-		private EventHandler _loadHandler;
-		private EventHandler<GeckoDomKeyEventArgs> _domKeyDownHandler;
-		private EventHandler<GeckoDomEventArgs> _domFocusHandler;
-		private EventHandler<GeckoDomEventArgs> _domBlurHandler;
-		private EventHandler _domDocumentChangedHandler;
-		private EventHandler _backColorChangedHandler;
-		private readonly string _nameForLogging;
-		private bool _inFocus;
 		private List<Object> _items;
 		private readonly StringBuilder _itemHtml;
 		public event ListViewItemSelectionChangedEventHandler ItemSelectionChanged;
@@ -49,14 +36,6 @@ namespace WeSay.UI.TextBoxes
 		{
 			InitializeComponent();
 
-			if (_nameForLogging == null)
-			{
-				_nameForLogging = "??";
-			}
-			Name = _nameForLogging;
-			_keyPressed = false;
-			ReadOnly = false;
-			_inFocus = false;
 			_initialSelectLoad = false;
 			_pendingInitialIndex = -1;
 			_items = new List<object>();
@@ -69,23 +48,6 @@ namespace WeSay.UI.TextBoxes
 				return;
 
 			Debug.WriteLine("New GeckoListView");
-			_browser = new GeckoWebBrowser();
-			_browser.Dock = DockStyle.Fill;
-			_browser.Parent = this;
-			_loadHandler = new EventHandler(GeckoBox_Load);
-			this.Load += _loadHandler;
-			Controls.Add(_browser);
-
-			_domKeyDownHandler = new EventHandler<GeckoDomKeyEventArgs>(OnDomKeyDown);
-			_browser.DomKeyDown += _domKeyDownHandler;
-			_domFocusHandler = new EventHandler<GeckoDomEventArgs>(_browser_DomFocus);
-			_browser.DomFocus += _domFocusHandler;
-			_domBlurHandler = new EventHandler<GeckoDomEventArgs>(_browser_DomBlur);
-			_browser.DomBlur += _domBlurHandler;
-			_domDocumentChangedHandler = new EventHandler(_browser_DomDocumentChanged);
-			_browser.DocumentCompleted += _domDocumentChangedHandler;
-			_backColorChangedHandler = new EventHandler(OnBackColorChanged);
-			this.BackColorChanged += _backColorChangedHandler;
 		}
 
 		public GeckoListView(IWritingSystemDefinition ws, string nameForLogging)
@@ -109,26 +71,11 @@ namespace WeSay.UI.TextBoxes
 			_itemHtml.Clear();
 		}
 
-		public void Closing()
+		protected override void Closing()
 		{
 			Clear();
-			this.Load -= _loadHandler;
-			if (_browser != null)
-			{
-				_browser.DomKeyDown -= _domKeyDownHandler;
-				_browser.DomFocus -= _domFocusHandler;
-				_browser.DomBlur -= _domBlurHandler;
-				_browser.DocumentCompleted -= _domDocumentChangedHandler;
-				_browser.Dispose();
-				_browser = null;
-			}
-			this.BackColorChanged -= _backColorChangedHandler;
 			_items = null;
-			_loadHandler = null;
-			_domKeyDownHandler = null;
-			_domFocusHandler = null;
-			_domDocumentChangedHandler = null;
-			_backColorChangedHandler = null;
+			base.Closing();
 		}
 
 		public void AddItem(Object item)
@@ -306,7 +253,7 @@ namespace WeSay.UI.TextBoxes
 				ItemSelectionChanged.Invoke(this, new ListViewItemSelectionChangedEventArgs(null, SelectedIndex, true));
 			}
 		}
-		private void OnBackColorChanged(object sender, EventArgs e)
+		protected override void OnBackColorChanged(object sender, EventArgs e)
 		{
 			// if it's already loaded, change it
 			if (_initialSelectLoad)
@@ -318,10 +265,9 @@ namespace WeSay.UI.TextBoxes
 				}
 			}
 		}
-		private void _browser_DomDocumentChanged(object sender, EventArgs e)
+		protected override void OnDomDocumentCompleted(object sender, EventArgs e)
 		{
-			_browserDocumentLoaded = true;  // Document loaded once
-			AdjustHeight();
+			base.OnDomDocumentCompleted(sender, e);
 			if (!_initialSelectLoad)
 			{
 				_initialSelectLoad = true;
@@ -339,7 +285,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		void AdjustHeight()
+		protected override void AdjustHeight()
 		{
 			if ((_browser == null) ||(_browser.Document == null))
 			{
@@ -373,7 +319,7 @@ namespace WeSay.UI.TextBoxes
 		}
 
 		private delegate void ChangeFocusDelegate(GeckoSelectElement ctl);
-		private void _browser_DomFocus(object sender, GeckoDomEventArgs e)
+		protected override void OnDomFocus(object sender, GeckoDomEventArgs e)
 		{
 			var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
 			if (content != null)
@@ -389,7 +335,7 @@ namespace WeSay.UI.TextBoxes
 				}
 			}
 		}
-		private void _browser_DomBlur(object sender, GeckoDomEventArgs e)
+		protected override void OnDomBlur(object sender, GeckoDomEventArgs e)
 		{
 			_inFocus = false;
 		}
@@ -400,7 +346,7 @@ namespace WeSay.UI.TextBoxes
 		}
 
 
-		private void OnDomKeyDown(object sender, GeckoDomKeyEventArgs e)
+		protected override void OnDomKeyDown(object sender, GeckoDomKeyEventArgs e)
 		{
 			if (_inFocus)
 			{
@@ -434,7 +380,7 @@ namespace WeSay.UI.TextBoxes
 		}
 
 
-		private void GeckoBox_Load(object sender, EventArgs e)
+		protected override void OnGeckoBox_Load(object sender, EventArgs e)
 		{
 			_browserIsReadyToNavigate = true;
 			_browser.AddMessageEventListener("selectChanged", ((string s) => this.OnSelectedValueChanged(s)));
@@ -461,28 +407,6 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public IWritingSystemDefinition WritingSystem
-		{
-			get
-			{
-				if (_writingSystem == null)
-				{
-					throw new InvalidOperationException(
-						"Input system must be initialized prior to use.");
-				}
-				return _writingSystem;
-			}
-
-			set
-			{
-				if (value == null)
-				{
-					throw new ArgumentNullException();
-				}
-				_writingSystem = value;
-			}
-		}
-
 		[DefaultValue(null)]
 		public IList DataSource
 		{
@@ -501,11 +425,6 @@ namespace WeSay.UI.TextBoxes
 					else if (recordEntry is RecordToken<LexEntry>)
 					{
 						entry = ((RecordToken<LexEntry>) recordEntry).RealObject;
-					}
-					if (entry == null)
-					{
-						// Usually comes in as that.  For GatherWordListTask, it comes in
-						// as just the LexEntry
 					}
 					if (entry != null)
 					{
@@ -546,46 +465,18 @@ namespace WeSay.UI.TextBoxes
 		// Set this to true to get bold print for the list box
 		public bool Bold { get; set; }
 
-		public bool MultiParagraph { get; set; }
-
 		public bool IsSpellCheckingEnabled { get; set; }
-
+		public int VirtualListSize { get; set; }
 
 		public int SelectionStart
 		{
 			get
 			{
-				//TODO
 				return 0;
 			}
 			set
 			{
-				//TODO
 			}
 		}
-
-
-		public bool ReadOnly { get; set; }
-		public View View { get; set; }
-		public int VirtualListSize { get; set; }
-
-
-		/// <summary>
-		/// for automated tests
-		/// </summary>
-		public void PretendLostFocus()
-		{
-			OnLostFocus(new EventArgs());
-		}
-
-		/// <summary>
-		/// for automated tests
-		/// </summary>
-		public void PretendSetFocus()
-		{
-			Debug.Assert(_browser != null, "_browser != null");
-			_browser.Focus();
-		}
-
 	}
 }

@@ -186,6 +186,9 @@
     <Compile Include="ScrollableContainer.Designer.cs">
       <DependentUpon>ScrollableContainer.cs</DependentUpon>
     </Compile>
+    <Compile Include="TextBoxes\GeckoBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="TextBoxes\GeckoBox.cs">
       <SubType>UserControl</SubType>
     </Compile>

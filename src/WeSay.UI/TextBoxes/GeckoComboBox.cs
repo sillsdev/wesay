@@ -10,31 +10,18 @@ using Gecko;
 using Gecko.DOM;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {
-	public partial class GeckoComboBox : UserControl, IControlThatKnowsWritingSystem, IWeSayComboBox
+	public partial class GeckoComboBox : GeckoBase, IControlThatKnowsWritingSystem, IWeSayComboBox
 	{
-		private GeckoWebBrowser _browser;
-		private bool _browserIsReadyToNavigate;
-		private bool _browserDocumentLoaded;
 		private bool _initialSelectLoad;
 		private int _pendingInitialIndex;
 		private string _pendingHtmlLoad;
-		private IWritingSystemDefinition _writingSystem;
 		private bool _keyPressed;
 		private GeckoSelectElement _selectElement;
 		private GeckoBodyElement _bodyElement;
-		private EventHandler _loadHandler;
-		private EventHandler<GeckoDomKeyEventArgs> _domKeyDownHandler;
-		private EventHandler<GeckoDomEventArgs> _domFocusHandler;
-		private EventHandler<GeckoDomEventArgs> _domBlurHandler;
-		private EventHandler _domDocumentChangedHandler;
-		private EventHandler<GeckoDomEventArgs> _domClickHandler;
-		private EventHandler _backColorChangedHandler;
-		private readonly string _nameForLogging;
-		private bool _inFocus;
+
 		private List<Object> _items;
 		private readonly StringBuilder _itemHtml;
 		public event EventHandler SelectedValueChanged;
@@ -45,13 +32,7 @@ namespace WeSay.UI.TextBoxes
 		{
 			InitializeComponent();
 
-			if (_nameForLogging == null)
-			{
-				_nameForLogging = "??";
-			}
-			Name = _nameForLogging;
 			_keyPressed = false;
-			_inFocus = false;
 			_initialSelectLoad = false;
 			_pendingInitialIndex = -1;
 			_items = new List<object>();
@@ -62,27 +43,6 @@ namespace WeSay.UI.TextBoxes
 				return;
 
 			Debug.WriteLine("New GeckoComboBox");
-			_browser = new GeckoWebBrowser();
-			_browser.Dock = DockStyle.Fill;
-			_browser.Parent = this;
-			_loadHandler = new EventHandler(GeckoBox_Load);
-			this.Load += _loadHandler;
-			Controls.Add(_browser);
-
-			_domKeyDownHandler = new EventHandler<GeckoDomKeyEventArgs>(OnDomKeyDown);
-			_browser.DomKeyDown += _domKeyDownHandler;
-			_domFocusHandler = new EventHandler<GeckoDomEventArgs>(_browser_DomFocus);
-			_browser.DomFocus += _domFocusHandler;
-			_domBlurHandler = new EventHandler<GeckoDomEventArgs>(_browser_DomBlur);
-			_browser.DomBlur += _domBlurHandler;
-			_domDocumentChangedHandler = new EventHandler(_browser_DomDocumentChanged);
-			_browser.DocumentCompleted += _domDocumentChangedHandler;
-#if __MonoCS__
-			_domClickHandler = new EventHandler<GeckoDomEventArgs>(_browser_DomClick);
-			_browser.DomClick += _domClickHandler;
-#endif
-			_backColorChangedHandler = new EventHandler(OnBackColorChanged);
-			this.BackColorChanged += _backColorChangedHandler;
 
 		}
 
@@ -107,32 +67,12 @@ namespace WeSay.UI.TextBoxes
 			_itemHtml.Clear();
 		}
 
-		private void Closing()
+		protected override void Closing()
 		{
 			Clear();
-			this.Load -= _loadHandler;
-			if (_browser != null)
-			{
-				_browser.DomKeyDown -= _domKeyDownHandler;
-				_browser.DomFocus -= _domFocusHandler;
-				_browser.DomBlur -= _domBlurHandler;
-				_browser.DocumentCompleted -= _domDocumentChangedHandler;
-#if __MonoCS__
-				_browser.DomClick -= _domClickHandler;
-#endif
-				_browser.Dispose();
-				_browser = null;
-			}
-			this.BackColorChanged -= _backColorChangedHandler;
+
 			_items = null;
-#if __MonoCS__
-			_domClickHandler = null;
-#endif
-			_loadHandler = null;
-			_domKeyDownHandler = null;
-			_domFocusHandler = null;
-			_domDocumentChangedHandler = null;
-			_backColorChangedHandler = null;
+			base.Closing();
 		}
 
 		public void AddItem(Object item)
@@ -269,14 +209,14 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		private void _browser_DomClick(object sender, GeckoDomEventArgs e)
+		protected override void OnDomClick(object sender, GeckoDomEventArgs e)
 		{
 			_browser.Focus ();
 		}
 
-		private void _browser_DomDocumentChanged(object sender, EventArgs e)
+		protected override void OnDomDocumentCompleted(object sender, EventArgs e)
 		{
-			_browserDocumentLoaded = true;  // Document loaded once
+			base.OnDomDocumentCompleted(sender, e);
 			if (!_initialSelectLoad)
 			{
 				_initialSelectLoad = true;
@@ -290,7 +230,7 @@ namespace WeSay.UI.TextBoxes
 			}
 			AdjustHeight();
 		}
-		private void OnBackColorChanged(object sender, EventArgs e)
+		protected override void OnBackColorChanged(object sender, EventArgs e)
 		{
 			// if it's already loaded, change it
 			if (_initialSelectLoad)
@@ -303,25 +243,9 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		void AdjustHeight()
-		{
-			if (_browser.Document == null)
-			{
-				return;
-			}
-			var content = _browser.Document.GetElementById("mainbody");
-			if (content != null)
-			{
-				if (content is GeckoBodyElement)
-				{
-					_bodyElement = (GeckoBodyElement)content;
-					Height = _bodyElement.Parent.ScrollHeight;
-				}
-			}
-		}
 
 		private delegate void ChangeFocusDelegate(GeckoSelectElement ctl);
-		private void _browser_DomFocus(object sender, GeckoDomEventArgs e)
+		protected override void OnDomFocus(object sender, GeckoDomEventArgs e)
 		{
 //			Console.WriteLine("Got Focus: " );
 			var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
@@ -338,10 +262,6 @@ namespace WeSay.UI.TextBoxes
 				}
 			}
 		}
-		private void _browser_DomBlur(object sender, GeckoDomEventArgs e)
-		{
-			_inFocus = false;
-		}
 
 		private void changeFocus(GeckoSelectElement ctl)
 		{
@@ -349,40 +269,7 @@ namespace WeSay.UI.TextBoxes
 		}
 
 
-		private void OnDomKeyDown(object sender, GeckoDomKeyEventArgs e)
-		{
-			if (_inFocus)
-			{
-				if ((e.KeyCode == 9) && !e.CtrlKey && !e.AltKey)
-				{
-					int a = ParentForm.Controls.Count;
-					if (e.ShiftKey)
-					{
-						if (!ParentForm.SelectNextControl(this, false, true, true, true))
-						{
-#if DEBUG
-							Debug.WriteLine("Failed to advance");
-#endif
-						}
-					}
-					else
-					{
-						if (!ParentForm.SelectNextControl(this, true, true, true, true))
-						{
-#if DEBUG
-							Debug.WriteLine("Failed to advance");
-#endif
-						}
-					}
-				}
-				else
-				{
-					this.RaiseKeyEvent(Keys.A, new KeyEventArgs(Keys.A));
-				}
-			}
-		}
-
-		private void GeckoBox_Load(object sender, EventArgs e)
+		protected override void OnGeckoBox_Load(object sender, EventArgs e)
 		{
 			_browserIsReadyToNavigate = true;
 			_browser.AddMessageEventListener("selectChanged", ((string s) => this.OnSelectedValueChanged(s)));
@@ -408,36 +295,11 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public IWritingSystemDefinition WritingSystem
-		{
-			get
-			{
-				if (_writingSystem == null)
-				{
-					throw new InvalidOperationException(
-						"Input system must be initialized prior to use.");
-				}
-				return _writingSystem;
-			}
-
-			set
-			{
-				if (value == null)
-				{
-					throw new ArgumentNullException();
-				}
-				Font = WritingSystemInfo.CreateFont(value);
-				_writingSystem = value;
-			}
-		}
-
 		public bool Sorted { get; set; }
 		public AutoCompleteSource AutoCompleteSource { get; set; }
 		public AutoCompleteMode AutoCompleteMode { get; set; }
 		public ComboBoxStyle DropDownStyle { get; set; }
 		public int MaxDropDownItems { get; set; }
-		public DrawMode DrawMode { get; set; }
-		public FlatStyle FlatStyle { get; set; }
 
 
 	}
