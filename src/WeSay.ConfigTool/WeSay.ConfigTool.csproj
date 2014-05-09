@@ -103,7 +103,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\Keyman7Interop.dll</HintPath>
     </Reference>
-	<Reference Include="KeymanLink, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+	<Reference Condition="'$(OS)'=='Windows_NT'" Include="KeymanLink, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\KeymanLink.dll</HintPath>
     </Reference>

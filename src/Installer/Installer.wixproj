@@ -6,7 +6,6 @@
 	<SchemaVersion>2.0</SchemaVersion>
 	<OutputName>WeSayInstaller</OutputName>
 	<OutputType>Package</OutputType>
-	<WixToolPath>C:\Program Files\Windows Installer XML v3.5\bin\</WixToolPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 	<OutputPath>..\..\output\installer\</OutputPath>
