@@ -314,3 +314,44 @@ Run these commands from the command-line inside the VM:
 	build/TestBuild.sh
 	. environ
 	mono output/Release/WeSay.App.exe
+
+10.0 BUILDING FOR WINDOWS INSTALLER
+
+To set up a windows box for developing WeSay you need to install the following tools:
+
+	VS 2010, (Express works OK)
+	WIX 3.5  (Works fine)
+	Git-1.9.x (See a helpful configuration below for as you install it)
+		=> you can grab this from: http://msygit.github.io
+		- Select Components Dialog =>
+			Additional Icons (if you want them)
+			Windows Explorer integration (simple, check all)
+			Otherwise stick with the defaults
+		- Adjusting your PATH environment Dialog =>
+			Radio button recommendation:
+				Run Git and included Unix tools from the Windows Command Prompt
+				(If you don't want that option, then select: "Run Git from the Windows Command Prompt")
+		- Configuring the line ending conversions Dialog =>
+			Radio button recommendation:
+				Checkout as-is, commit Unix-style line endings
+
+Configure the following environment variables:
+
+	http_proxy	(if you need one)
+	path		make sure that you include these:
+				C:\Program Files\Windows Installer XML v3.5\bin
+					(If 64bit, use: C:\Program Files (x86)\...)
+				C:\Windows\Microsoft.NET\Framework\v4.0.30319
+
+For a nice graphical git tool, try Sourcetree. not available for Linux yet :(
+
+Some other helpful developer tools:
+
+	Notepad++			(for source code editing)
+	JetBrains dotPeek   (for troubleshooting)
+	Process Explorer	(" ")
+	depends				(" ")
+
+To build for installer, just type in the windows command prompt:
+	buildupdate.win.sh -f		(to update the libraries needed to build WeSay)
+	TestBuild.bat Installer		(to build a Release version for installing)
