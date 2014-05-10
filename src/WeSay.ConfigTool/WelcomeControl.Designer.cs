@@ -88,6 +88,7 @@ namespace WeSay.ConfigTool
 			this._imageList.Images.SetKeyName(4, "newProject");
 			this._imageList.Images.SetKeyName(5, "flex");
 			this._imageList.Images.SetKeyName(6, "solid");
+			this._imageList.Images.SetKeyName(7, "getFromChorusHub");
 			//
 			// toolTip1
 			//

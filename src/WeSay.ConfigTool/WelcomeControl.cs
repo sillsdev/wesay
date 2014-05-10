@@ -1,12 +1,14 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Chorus.UI.Clone;
 using Palaso.Extensions;
 using Palaso.i18n;
 using Palaso.IO;
 using WeSay.ConfigTool.Properties;
+using System.Collections.Generic;
 
 namespace WeSay.ConfigTool
 {
@@ -101,10 +103,12 @@ namespace WeSay.ConfigTool
 			var usbButton = AddChoice("Get from USB drive", "Get a project from a Chorus repository on a USB flash drive, created by either WeSay or FLEx (using LiftBridge)", "getFromUsb", true, OnGetFromUsb, panel);
 			var internetButton = AddChoice("Get from Internet", "Get a project from a Chorus repository which is hosted on the internet (e.g. public.languagedepot.org) and put it on this computer",
 				"getFromInternet", true, OnGetFromInternet, panel);
+			var hubButton = AddChoice("Get from ChorusHub", "Get a project from a Chorus repository managed by a ChorusHub server on the local network.", "getFromChorusHub", true, OnGetFromChorusHub, panel);
 			if (!string.IsNullOrEmpty(Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en")))
 			{
 				usbButton.ForeColor = Color.Gray;
 				internetButton.ForeColor = Color.Gray;
+				hubButton.ForeColor = Color.Gray;
 			}
 		}
 
@@ -154,6 +158,39 @@ namespace WeSay.ConfigTool
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
 				OpenSpecifiedProject(dlg.PathToNewlyClonedFolder);
+			}
+		}
+
+		private void OnGetFromChorusHub(object sender, EventArgs e)
+		{
+			if (!Directory.Exists(Project.WeSayWordsProject.NewProjectDirectory))
+			{
+				//e.g. mydocuments/wesay
+				Directory.CreateDirectory(Project.WeSayWordsProject.NewProjectDirectory);
+			}
+			var existingProjectNames = new HashSet<string>(from dir in Directory.GetDirectories(Project.WeSayWordsProject.NewProjectDirectory) select Path.GetFileName(dir));
+			Dictionary<string,string> existingRepositories;
+			try
+			{
+				existingRepositories = GetSharedProjectModel.ExtantRepoIdentifiers(Project.WeSayWordsProject.NewProjectDirectory, "");
+			}
+			catch
+			{
+				existingRepositories = new Dictionary<string, string>();
+			}
+			var getCloneFromChorusHubModel = new GetCloneFromChorusHubModel(Project.WeSayWordsProject.NewProjectDirectory)
+			{
+				ProjectFilter = "*.lift",
+				ExistingProjects = existingProjectNames,
+				ExistingRepositoryIdentifiers = existingRepositories
+			};
+			using (var dlg = new Chorus.UI.Clone.GetCloneFromChorusHubDialog(getCloneFromChorusHubModel))
+			{
+				if (DialogResult.Cancel == dlg.ShowDialog())
+					return;
+				OpenSpecifiedProject(dlg.PathToNewlyClonedFolder);
+				if (Project.WeSayWordsProject.ProjectExists)
+					Project.WeSayWordsProject.Project.SetupUserForChorus();
 			}
 		}
 
