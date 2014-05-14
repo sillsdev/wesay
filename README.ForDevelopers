@@ -338,20 +338,27 @@ To set up a windows box for developing WeSay you need to install the following t
 Configure the following environment variables:
 
 	http_proxy	(if you need one)
-	path		make sure that you include these:
+	path		make sure that you include these (ymmv):
 				C:\Program Files\Windows Installer XML v3.5\bin
 					(If 64bit, use: C:\Program Files (x86)\...)
 				C:\Windows\Microsoft.NET\Framework\v4.0.30319
 
-For a nice graphical git tool, try Sourcetree. not available for Linux yet :(
+For a nice alternative graphical git tool,
+	Sourcetree at: www.sourcetreeap.com, unfortunately not available for Linux yet :(
+	giteye at: www.collab.net/giteyeapp
+	Smartgit at: www.syntevo.com/smartgithg/
 
-Some other helpful developer tools:
+Some other helpful developer editing, or troubleshooting tools:
 
-	Notepad++			(for source code editing)
-	JetBrains dotPeek   (for troubleshooting)
-	Process Explorer	(" ")
-	depends				(" ")
+	Notepad++			(for source code editing, see: notepad-plus-plus.org)
+	JetBrains dotPeek   (for decompiling .NET assemblies, see: www.jetbrains.com/decompiler)
+	Process Explorer	(for looking at which dlls are loaded, and for looking at which files are opened or loaded,
+						see: technet.microsoft.com/en-ca/sysinternals/bb896653.aspx, or just DuckDuckGo for it.)
+	depends				(for troubleshooting system errors in loading and executing modules, see: dependencywalker.com)
 
 To build for installer, just type in the windows command prompt:
-	buildupdate.win.sh -f		(to update the libraries needed to build WeSay)
-	TestBuild.bat Installer		(to build a Release version for installing)
+	buildupdate.win.sh -f				(to do a "full" update the libraries needed to build WeSay)
+										- If you have set up your bash commands not to work within
+										the windows command prompt as above, you will need to
+										execute this command in a bash window.)
+	TestBulild.bat Release Installer	(to build an Release version of Installer)

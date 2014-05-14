@@ -133,15 +133,15 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					  Type='string' Value='[!WeSayConfigIconFile], 0' />
 
 
-					<Shortcut Id="startmenuSplatt2"  Target ="[!WeSayConfigurationTool]" Directory="WeSayShortcutDir" Name="WeSay Configuration Tool"
+					<Shortcut Id="startmenuSplatt2"  Target ="[!WeSayConfigurationTool]" Directory="WeSayShortcutDir" Name="WeSay.ConfigTool"
 			 WorkingDirectory="ProgramDir" Icon ="IconSetup.exe" />
 
 				  </Component>
 				  <Component Id="WeSayConfigurationTool.exe.config" Guid="{3FD496AE-6B71-4213-B3FD-39CF62698642}">
-					<File Id="WeSayConfigurationTool.exe.config" Name="WeSay Configuration Tool.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.exe.config" />
+					<File Id="WeSayConfigurationTool.exe.config" Name="WeSay.ConfigTool.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.exe.config" />
 				  </Component>
 				  <Component Id="WeSayConfigurationTool.pdb" Guid="{FA331270-82EF-4BB8-878C-724442249466}">
-					<File Id="WeSayConfigurationTool.pdb" Name="WeSay Configuration Tool.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.pdb" />
+					<File Id="WeSayConfigurationTool.pdb" Name="WeSay.ConfigTool.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.pdb" />
 				  </Component>
 				  <Component Id="Castle.DynamicProxy.dll" Guid="{871D566A-F864-4946-AA65-6A7E07D24E1B}">
 					<File Id="Castle.DynamicProxy.dll" Name="Castle.DynamicProxy.dll" KeyPath="yes" Source="..\..\output\release\Castle.DynamicProxy.dll" />
@@ -434,21 +434,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
             	<Component Id="WeSay.App.Tests.pdb" Guid="{3D89FC12-BC99-48AC-8EE9-2275F1994211}">
             	    <File Id="WeSay.App.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.App.Tests.pdb" />
             	</Component>
-            	<Component Id="WeSay.ConfigTool.exe.config" Guid="{EEAD25E3-FBE9-4D1D-8960-1FC3291BAA81}">
-            	    <File Id="WeSay.ConfigTool.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.exe.config" />
-            	</Component>
-            	<Component Id="WeSay.ConfigTool.pdb" Guid="{C69C3FBF-3335-4878-AE9F-289F5A9919D1}">
-            	    <File Id="WeSay.ConfigTool.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.pdb" />
-            	</Component>
-            	<Component Id="WeSay.ConfigTool.Tests.dll" Guid="{769DCDF8-EBAF-4317-99FB-48263961ADA8}">
-            	    <File Id="WeSay.ConfigTool.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.Tests.dll" />
-            	</Component>
-            	<Component Id="WeSay.ConfigTool.Tests.dll.config" Guid="{B323F380-6C75-40F0-8658-CF7955CDBF8B}">
-            	    <File Id="WeSay.ConfigTool.Tests.dll.config" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.Tests.dll.config" />
-            	</Component>
-            	<Component Id="WeSay.ConfigTool.Tests.pdb" Guid="{0588E2C2-BDFB-46D1-920A-A8D053ADDE7D}">
-            	    <File Id="WeSay.ConfigTool.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.Tests.pdb" />
-            	</Component>
             	<Component Id="WeSay.Data.Tests.dll" Guid="{F83FB33F-B1D8-40B7-BF96-6C62FBA85230}">
             	    <File Id="WeSay.Data.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.Data.Tests.dll" />
             	</Component>
@@ -577,11 +562,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
             	<ComponentRef Id="WeSay.AddinLib.Tests.pdb"/>
             	<ComponentRef Id="WeSay.App.Tests.dll"/>
             	<ComponentRef Id="WeSay.App.Tests.pdb"/>
-            	<ComponentRef Id="WeSay.ConfigTool.exe.config"/>
-            	<ComponentRef Id="WeSay.ConfigTool.pdb"/>
-            	<ComponentRef Id="WeSay.ConfigTool.Tests.dll"/>
-            	<ComponentRef Id="WeSay.ConfigTool.Tests.dll.config"/>
-            	<ComponentRef Id="WeSay.ConfigTool.Tests.pdb"/>
             	<ComponentRef Id="WeSay.Data.Tests.dll"/>
             	<ComponentRef Id="WeSay.Data.Tests.pdb"/>
             	<ComponentRef Id="WeSay.Project.Tests.dll"/>
