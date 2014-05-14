@@ -1,0 +1,8 @@
+Verified+1: Jenkins CI <jenkins@sil.org>
+Verified-Linux+1: Jenkins CI <jenkins@sil.org>
+Code-Review+2: Stephen McConnel <stephen_mcconnel@sil.org>
+Submitted-by: David Moore <david_moore1@sil.org>
+Submitted-at: Wed, 14 May 2014 13:02:05 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/1999
+Project: wesay
+Branch: refs/heads/develop
