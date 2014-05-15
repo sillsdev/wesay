@@ -190,7 +190,7 @@
 	<!-- Install -->
 	<!-- The Install Target must be called from an MSBuild task so as to include the output from the previous MSBuild in the ItemGroup below -->
 	<ItemGroup>
-		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/build/mono/chorusmerge;$(RootDir)/environ*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*.mdb;$(OutputDir)/Addin.LiftReports.dll;$(OutputDir)/NVelocity.dll" />
+		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/build/mono/chorusmerge;$(RootDir)/environ*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*Test.dll.*;$(OutputDir)/*Tests.dll.*;$(OutputDir)/Addin.LiftReports.dll;$(OutputDir)/NVelocity.dll;$(OutputDir)/SIL.Archiving*;$(OutputDir)/LibChorus.TestUtilities.*" />
 		<Mercurial Include="$(RootDir)/Mercurial/**/*" Exclude="$(RootDir)/Mercurial/**/*.pyc" />
 		<CommonFiles Include="$(RootDir)/common/**/*" />
 		<TemplateFiles Include="$(RootDir)/templates/**/*" />
