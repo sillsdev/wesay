@@ -21,18 +21,13 @@ if "%~1" == "" (
 )
 if "%~2" == "" (
 	SET TARGET=Clean;Compile
-	echo "No Target specified"
 ) else (
 	SET TARGET=%~2
-	echo "Target is: " %TARGET%
 )
 
 @echo on
 
 @pushd "%~dp0"
-echo %BUILD%
-echo %TARGET%
-pause
 
 msbuild "/target:%TARGET%" /p:Configuration="%BUILD%" /p:Platform=x86 /p:RootDir=..  /p:BUILD_NUMBER="0.0.1.abcd" build.win.proj
 
