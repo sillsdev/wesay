@@ -1,3 +1,27 @@
+wesay (1.5.4) experimental; urgency=low
+  * Updated to include features introduced up to wesay 1.4 for Windows
+   - export to PDF and LibreOffice
+   - audio recording/playback
+   - chorus notes
+   - art of reading image collection
+  * support xkb and ibus keyboards
+  * enable automatic keyboard switching
+  * initialize project from ChorusHub
+  * fix UI components that work in Windows but not in Linux
+  * fix display issues in Dictionary Browse & Edit
+  * fix selection of Semantic Domain items to work reliably
+  * fix a number of minor display issues (missing icons, clipped labels, etc)
+  * simplify language/project creation, enforcing better consistency
+  * experimental support for non-roman script languages
+   - enabled by WESAY_USE_GECKO=1 environment variable when starting wesay
+   - uses Gecko (which uses Graphite) for text rendering
+   - issue: automatic keyboard switching doesn't work (it will remember if set
+     manually)
+   - issue: tabbing between fields doesn't work (it may work sometimes, but
+     has difficulty)
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 16 May 2014 13:57:23 -0400
+
 wesay (1.1.11-1) UNRELEASED; urgency=low
 
   * WS-34262 mime types to allow lift and wesayconfig files to open from gui
