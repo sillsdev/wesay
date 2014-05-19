@@ -621,9 +621,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				LexEntryRepository.GetEntriesWithMatchingLexicalForm(wordDisplay.Vernacular.Form, FormWritingSystem);
 			foreach (RecordToken<LexEntry> recordToken in matchingEntries)
 			{
+				if (_savedSensesDuringMoveToEditArea == null)
+				{
+					_savedSensesDuringMoveToEditArea = new List<LexSense>();
+				}
 				// have to iterate through these in reverse order since they might get modified
 				LexEntry entry = recordToken.RealObject;
-				_savedSensesDuringMoveToEditArea = new List<LexSense>();
 				//If we aren't showing the meaning field then we are going let any edits effect all matching Senses
 				if (!ShowMeaningField)
 				{
@@ -676,7 +679,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		//down in the edit area.
 		public MultiText GetMeaningForWordRecentlyMovedToEditArea()
 		{
-			if(_savedSensesDuringMoveToEditArea !=null)
+			if ((_savedSensesDuringMoveToEditArea != null) && (_savedSensesDuringMoveToEditArea.Count > 0))
 			{
 				return _savedSensesDuringMoveToEditArea[0].Definition;
 			}
@@ -713,7 +716,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 			else
 			{
-				if (_savedSensesDuringMoveToEditArea!=null) //we are editing a word we entered previously
+				if ((_savedSensesDuringMoveToEditArea!=null) && (_savedSensesDuringMoveToEditArea.Count > 0))  //we are editing a word we entered previously
 				{
 					//in this case, we have this saved sense we want to put back,
 					//which could conceivably have example sentences and other stuff
