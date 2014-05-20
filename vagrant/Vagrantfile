@@ -7,7 +7,9 @@ vm_interfaces = %x( VBoxManage list bridgedifs | grep ^Name).gsub(/Name:\s+/,'')
 pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
 $network_interface=pref_interface[0]
 
-required_plugins = ["vagrant-vbguest", "vagrant-cachier"]
+# On Windows, vagrant-cachier is not handling the apt_lists caching correctly.
+# So do not make it required for now.
+required_plugins = ["vagrant-vbguest"]
 unless (missing_plugins = required_plugins.select { |p| !Vagrant.has_plugin?(p) }).empty?
   raise "\nBefore you can 'vagrant up' this box, please install these plugins\n  " +
         missing_plugins.join("\n  ") +
@@ -38,8 +40,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # add public network adapter
     config.vm.network :public_network, :bridge=> $network_interface if options[:bridge]
 
-    # vagrant-cachier setting
-    config.cache.scope = :box
+    if Vagrant.has_plugin?("vagrant-cachier")
+      # vagrant-cachier setting
+      config.cache.scope = :box
+    end
   end
 
   # Vagrant doesn't recogize Wasta (based on Linux Mint) so bridge network doesn't work.
