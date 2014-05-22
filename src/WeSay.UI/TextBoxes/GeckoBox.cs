@@ -150,7 +150,7 @@ namespace WeSay.UI.TextBoxes
 			Font font = WritingSystemInfo.CreateFont(_writingSystem);
 			var html =
 				string.Format(
-					"<html><header><meta charset=\"UTF-8\"></head><body style='background:#FFFFFF' id='mainbody'><div style='min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{3}' id='main' name='textArea' contentEditable='{4}'>{2}</div></body></html>",
+					"<html><head><meta charset=\"UTF-8\"></head><body style='background:#FFFFFF' id='mainbody'><div style='min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{3}' id='main' name='textArea' contentEditable='{4}'>{2}</div></body></html>",
 					font.Name, font.Size.ToString(), s, justification, editable);
 			if (!_browserIsReadyToNavigate)
 			{

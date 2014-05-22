@@ -38,7 +38,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
 			_vernacularBox.MinimumSize = _boxForeignWord.Size;
 
-			_listViewOfWordsMatchingCurrentItem.Items.Clear();
+			_listViewOfWordsMatchingCurrentItem.UserClick += new System.EventHandler(this.OnListViewOfWordsMatchingCurrentItem_Click);
+			_listViewOfWordsMatchingCurrentItem.Clear();
 			_listViewOfWordsMatchingCurrentItem.FormWritingSystem = lexicalUnitWritingSystem;
 
 			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.FormWritingSystem.Font.GetHeight());
@@ -159,19 +160,28 @@ namespace WeSay.LexicalTools.GatherByWordList
 		/// </summary>
 		private void PopulateWordsMatchingCurrentItem()
 		{
-			_listViewOfWordsMatchingCurrentItem.Items.Clear();
+			_listViewOfWordsMatchingCurrentItem.Clear();
+			string longestWord = string.Empty;
 			foreach (RecordToken<LexEntry> recordToken in _task.GetRecordsWithMatchingGloss())
 			{
 				var recordTokenToStringAdapter = new RecordTokenToStringAdapter<LexEntry>("Form", recordToken);
-				if(!string.IsNullOrEmpty(recordTokenToStringAdapter.ToString()))
+				string word = recordTokenToStringAdapter.ToString();
+				if(!string.IsNullOrEmpty(word))
 				{
-					_listViewOfWordsMatchingCurrentItem.Items.Add(recordTokenToStringAdapter);
+					if (longestWord.Length < word.Length)
+					{
+						longestWord = word;
+					}
+					_listViewOfWordsMatchingCurrentItem.AddItem(recordTokenToStringAdapter);
 				}
 				else
 				{
 					//The matching gloss/def is there, but the lexeme form is empty. So just don't put it in the list
 				}
 			}
+			Size wordMax = TextRenderer.MeasureText(longestWord, _listViewOfWordsMatchingCurrentItem.Font);
+			_listViewOfWordsMatchingCurrentItem.ColumnWidth = wordMax.Width + 10;
+			_listViewOfWordsMatchingCurrentItem.ListCompleted();
 		}
 
 		private void _btnNextWord_Click(object sender, EventArgs e)
@@ -250,9 +260,9 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		private void OnListViewOfWordsMatchingCurrentItem_Click(object sender, EventArgs e)
 		{
-			if (_listViewOfWordsMatchingCurrentItem.SelectedItems.Count > 0)
+			if (_listViewOfWordsMatchingCurrentItem.SelectedItem != null)
 			{
-				int selectedListIndex = _listViewOfWordsMatchingCurrentItem.SelectedIndices[0];
+				int selectedListIndex = _listViewOfWordsMatchingCurrentItem.SelectedIndex;
 				string word = _listViewOfWordsMatchingCurrentItem.SelectedItem.ToString();
 
 				RecordToken<LexEntry> recordToken =

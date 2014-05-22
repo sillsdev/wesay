@@ -179,7 +179,7 @@ namespace WeSay.UI.TextBoxes
 
 			var html = new StringBuilder();
 			html.Append("<!DOCTYPE html>");
-			html.Append("<html><header><meta charset=\"UTF-8\">");
+			html.Append("<html><head><meta charset=\"UTF-8\">");
 			html.Append("<script type='text/javascript'>");
 			html.Append(" function fireEvent(name, data)");
 			html.Append(" {");

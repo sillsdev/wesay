@@ -47,7 +47,6 @@ namespace WeSay.UI.TextBoxes
 			Multiline = true;
 			WordWrap = true;
 			BorderStyle = System.Windows.Forms.BorderStyle.None;
-			DoubleBuffered = true;
 
 			this.ResumeLayout(false);
 

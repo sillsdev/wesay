@@ -61,7 +61,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
 			this._btnAddWord = new WeSay.UI.Buttons.RectangularImageButton();
 			this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
-			this._listViewWords = new WeSay.UI.WeSayListBox();
+			this._listViewWords = WeSayWordsProject.Project.ServiceLocator.GetService(typeof(IWeSayListBox)) as IWeSayListBox;
 			this._flyingLabel = new Palaso.UI.WindowsForms.Widgets.Flying.FlyingLabel();
 			this.multiTextControl2 = new WeSay.UI.TextBoxes.MultiTextControl(null, WeSayWordsProject.Project.ServiceLocator);
 			this.multiTextControl1 = new WeSay.UI.TextBoxes.MultiTextControl(null, WeSayWordsProject.Project.ServiceLocator);
@@ -661,7 +661,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			this.tableLayoutPanel7.Controls.Add(this._description, 0, 2);
 			this.tableLayoutPanel7.Controls.Add(this._question, 0, 3);
 			this.tableLayoutPanel7.Controls.Add(this._reminder, 0, 4);
-			this.tableLayoutPanel7.Controls.Add(this._listViewWords, 0, 5);
+			this.tableLayoutPanel7.Controls.Add(this._listViewWords.Control, 0, 5);
 			this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel7.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel7.MaximumSize = new System.Drawing.Size(2048, 600);
@@ -684,7 +684,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			this._listViewWords.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 			this._listViewWords.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._listViewWords.ItemHeight = 20;
-			this._listViewWords.Items.AddRange(new object[] {
+			this._listViewWords.AddRange(new object[] {
 			listViewItem61,
 			listViewItem62});
 			this._listViewWords.ItemToNotDrawYet = null;
@@ -693,7 +693,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			this._listViewWords.Name = "_listViewWords";
 			this._listViewWords.Size = new System.Drawing.Size(648, 159);
 			this._listViewWords.TabIndex = 17;
-			this._listViewWords.Click += new System.EventHandler(this.OnListViewWords_Click);
 			this._listViewWords.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this._listViewWords_KeyPress);
 			//
 			// _flyingLabel
@@ -1208,7 +1207,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private MultiTextControl _vernacularBox;
 		private IWeSayComboBox _domainListComboBox;
 		private System.Windows.Forms.Label label3;
-		private WeSayListBox _listViewWords;
+		private IWeSayListBox _listViewWords;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label _instructionLabel;
 		private RectangularImageButton _btnAddWord;

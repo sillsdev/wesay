@@ -70,6 +70,7 @@ namespace WeSay.UI.TextBoxes
 			{
 				return;
 			}
+			DoubleBuffered = true;
 			GotFocus += OnGotFocus;
 			LostFocus += OnLostFocus;
 			KeyPress += OnKeyPress;

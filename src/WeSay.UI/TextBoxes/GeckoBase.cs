@@ -26,6 +26,7 @@ namespace WeSay.UI.TextBoxes
 		protected EventHandler _backColorChangedHandler;
 		protected bool _inFocus;
 		protected string _nameForLogging;
+		protected bool _handleEnter;
 
 		public GeckoBase()
 		{
@@ -37,6 +38,7 @@ namespace WeSay.UI.TextBoxes
 			ReadOnly = false;
 
 			_inFocus = false;
+			_handleEnter = true;
 			_browser = new GeckoWebBrowser();
 			_browser.Dock = DockStyle.Fill;
 			_browser.Parent = this;
@@ -177,7 +179,7 @@ namespace WeSay.UI.TextBoxes
 		{
 			if (_inFocus)
 			{
-				if (!MultiParagraph && e.KeyCode == (uint)Keys.Enter) // carriage return
+				if (_handleEnter && !MultiParagraph && e.KeyCode == (uint)Keys.Enter) // carriage return
 				{
 					e.Handled = true;
 				}

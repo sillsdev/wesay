@@ -42,6 +42,7 @@ namespace WeSay.UI.TextBoxes
 			_itemHtml = new StringBuilder();
 			MaxLength = 50;  // Default value
 			_optionHeight = 10; // Default value
+			_handleEnter = false;
 
 			var designMode = (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
 			if (designMode)
@@ -221,7 +222,7 @@ namespace WeSay.UI.TextBoxes
 
 			var html = new StringBuilder();
 			html.Append("<!DOCTYPE html>");
-			html.Append("<html><header><meta charset=\"UTF-8\">");
+			html.Append("<html><head><meta charset=\"UTF-8\">");
 			html.Append("<script type='text/javascript'>");
 			html.Append(" function fireEvent(name, data)");
 			html.Append(" {");
@@ -335,50 +336,11 @@ namespace WeSay.UI.TextBoxes
 				}
 			}
 		}
-		protected override void OnDomBlur(object sender, GeckoDomEventArgs e)
-		{
-			_inFocus = false;
-		}
 
 		private void changeFocus(GeckoSelectElement ctl)
 		{
 			ctl.Focus();
 		}
-
-
-		protected override void OnDomKeyDown(object sender, GeckoDomKeyEventArgs e)
-		{
-			if (_inFocus)
-			{
-				if ((e.KeyCode == 9) && !e.CtrlKey && !e.AltKey)
-				{
-					int a = ParentForm.Controls.Count;
-					if (e.ShiftKey)
-					{
-						if (!ParentForm.SelectNextControl(this, false, true, true, true))
-						{
-#if DEBUG
-							Debug.WriteLine("Failed to advance");
-#endif
-						}
-					}
-					else
-					{
-						if (!ParentForm.SelectNextControl(this, true, true, true, true))
-						{
-#if DEBUG
-							Debug.WriteLine("Failed to advance");
-#endif
-						}
-					}
-				}
-				else
-				{
-					OnKeyDown(new KeyEventArgs((Keys)e.KeyCode));
-				}
-			}
-		}
-
 
 		protected override void OnGeckoBox_Load(object sender, EventArgs e)
 		{

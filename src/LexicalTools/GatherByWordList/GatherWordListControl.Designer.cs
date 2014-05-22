@@ -47,7 +47,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this._flyingLabel = new Palaso.UI.WindowsForms.Widgets.Flying.FlyingLabel();
 			this._verticalWordListView = WeSayWordsProject.Project.ServiceLocator.GetService(typeof(IWeSayListView)) as IWeSayListView;
 			this._vernacularBox = new WeSay.UI.TextBoxes.MultiTextControl(null, WeSayWordsProject.Project.ServiceLocator);
-			this._listViewOfWordsMatchingCurrentItem = new WeSay.UI.WeSayListBox();
+			this._listViewOfWordsMatchingCurrentItem = WeSayWordsProject.Project.ServiceLocator.GetService(typeof(IWeSayListBox)) as IWeSayListBox;
 			this._congratulationsControl = new WeSay.LexicalTools.CongratulationsControl();
 			this._btnAddWord = new WeSay.UI.Buttons.RectangularImageButton();
 			this._btnNextWord = new WeSay.UI.Buttons.RectangularImageButton();
@@ -202,7 +202,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this._listViewOfWordsMatchingCurrentItem.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 			this._listViewOfWordsMatchingCurrentItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._listViewOfWordsMatchingCurrentItem.ItemHeight = 20;
-			this._listViewOfWordsMatchingCurrentItem.Items.AddRange(new object[] {
+			this._listViewOfWordsMatchingCurrentItem.AddRange(new object[] {
 			listViewItem1,
 			listViewItem2});
 			this._listViewOfWordsMatchingCurrentItem.ItemToNotDrawYet = null;
@@ -213,7 +213,6 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this._listViewOfWordsMatchingCurrentItem.Size = new System.Drawing.Size(315, 102);
 			this._listViewOfWordsMatchingCurrentItem.TabIndex = 4;
 			this._listViewOfWordsMatchingCurrentItem.TabStop = false;
-			this._listViewOfWordsMatchingCurrentItem.Click += new System.EventHandler(this.OnListViewOfWordsMatchingCurrentItem_Click);
 			//
 			// _congratulationsControl
 			//
@@ -269,7 +268,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this._boxForeignWord);
 			this.Controls.Add(this.label3);
-			this.Controls.Add(this._listViewOfWordsMatchingCurrentItem);
+			this.Controls.Add(this._listViewOfWordsMatchingCurrentItem.Control);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this._instructionLabel);
@@ -287,7 +286,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		#endregion
 
 		private System.Windows.Forms.Label _instructionLabel;
-		private WeSayListBox _listViewOfWordsMatchingCurrentItem;
+		private IWeSayListBox _listViewOfWordsMatchingCurrentItem;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox _boxForeignWord;
 		private System.Windows.Forms.Panel panel1;

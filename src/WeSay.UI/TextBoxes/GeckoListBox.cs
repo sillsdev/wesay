@@ -10,72 +10,38 @@ using Gecko;
 using Gecko.DOM;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {
-	public partial class GeckoListBox : UserControl, IControlThatKnowsWritingSystem
+	public partial class GeckoListBox : GeckoBase, IControlThatKnowsWritingSystem, IWeSayListBox
 	{
-		private GeckoWebBrowser _browser;
-		private bool _browserIsReadyToNavigate;
-		private bool _browserDocumentLoaded;
 		private bool _initialSelectLoad;
 		private int _pendingInitialIndex;
 		private string _pendingHtmlLoad;
-		private IWritingSystemDefinition _writingSystem;
-		private bool _keyPressed;
 		private GeckoSelectElement _selectElement;
-		private GeckoBodyElement _bodyElement;
-		private EventHandler _loadHandler;
-		private EventHandler<GeckoDomKeyEventArgs> _domKeyDownHandler;
-		private EventHandler<GeckoDomEventArgs> _domFocusHandler;
-		private EventHandler<GeckoDomEventArgs> _domBlurHandler;
-		private EventHandler _domDocumentChangedHandler;
-		private EventHandler _backColorChangedHandler;
-		private readonly string _nameForLogging;
-		private bool _inFocus;
 		private List<Object> _items;
 		private readonly StringBuilder _itemHtml;
-		public event EventHandler SelectedValueChanged;
+		public event EventHandler UserClick;
+		private int _numberOfItemsInColumn;
+		private object _itemToNotDrawYet;
+		protected IWritingSystemDefinition _meaningWritingSystem;
 
 		public GeckoListBox()
 		{
 			InitializeComponent();
 
-			if (_nameForLogging == null)
-			{
-				_nameForLogging = "??";
-			}
-			Name = _nameForLogging;
-			_keyPressed = false;
-			ReadOnly = false;
-			_inFocus = false;
+			_handleEnter = false;
 			_initialSelectLoad = false;
 			_pendingInitialIndex = -1;
 			_items = new List<object>();
 			_itemHtml = new StringBuilder();
+			_numberOfItemsInColumn = 3;
+			ItemDrawer = DefaultDrawItem;
 
 			var designMode = (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
 			if (designMode)
 				return;
-
-			Debug.WriteLine("New GeckoListBox");
-			_browser = new GeckoWebBrowser();
-			_browser.Dock = DockStyle.Fill;
-			_browser.Parent = this;
-			_loadHandler = new EventHandler(GeckoBox_Load);
-			this.Load += _loadHandler;
-			Controls.Add(_browser);
-
-			_domKeyDownHandler = new EventHandler<GeckoDomKeyEventArgs>(OnDomKeyDown);
-			_browser.DomKeyDown += _domKeyDownHandler;
-			_domFocusHandler = new EventHandler<GeckoDomEventArgs>(_browser_DomFocus);
-			_browser.DomFocus += _domFocusHandler;
-			_domBlurHandler = new EventHandler<GeckoDomEventArgs>(_browser_DomBlur);
-			_browser.DomBlur += _domBlurHandler;
-			_domDocumentChangedHandler = new EventHandler(_browser_DomDocumentChanged);
-			_browser.DocumentCompleted += _domDocumentChangedHandler;
-			_backColorChangedHandler = new EventHandler(OnBackColorChanged);
-			this.BackColorChanged += _backColorChangedHandler;
 
 		}
 
@@ -93,87 +59,79 @@ namespace WeSay.UI.TextBoxes
 
 		public void Clear()
 		{
-			_items.Clear();
+			if (_items != null)
+			{
+				_items.Clear();
+			}
 			_itemHtml.Clear();
+			SelectedIndex = -1;
 		}
 
-		public void Closing()
+		protected override void Closing()
 		{
 			Clear();
-			this.Load -= _loadHandler;
-			_browser.DomKeyDown -= _domKeyDownHandler;
-			_browser.DomFocus -= _domFocusHandler;
-			_browser.DomBlur -= _domBlurHandler;
-			_browser.DocumentCompleted -= _domDocumentChangedHandler;
-			this.BackColorChanged -= _backColorChangedHandler;
 			_items = null;
-			_loadHandler = null;
-			_domKeyDownHandler = null;
-			_domFocusHandler = null;
-			_domDocumentChangedHandler = null;
-			_backColorChangedHandler = null;
-			_browser.Stop();
-			_browser.Dispose();
-			_browser = null;
+			base.Closing();
 		}
 
 		public void AddItem(Object item)
 		{
 			_items.Add(item);
-			var paddedItem = Regex.Replace(item.ToString(), @"(?<=^\s*)\s", "&nbsp;");
-			_itemHtml.AppendFormat("<option value=\"{0}\">{1}</option>", item.ToString().Trim(), paddedItem);
+		}
+		public void AddRange(Object[] items)
+		{
+			this.Items.AddRange(items);
+		}
+		public object GetItem(int index)
+		{
+			return Items[index];
 		}
 
+		// The WeSayListBox doesn't use writing system but does use FormWritingSystem
+		// and in some cases MeaningWritingSystem.  For this, FormWritingSystem will
+		// become another alias for WritingSystem
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public IWritingSystemDefinition FormWritingSystem
+		{
+			get
+			{
+				return WritingSystem;
+			}
+			set
+			{
+				Font = WritingSystemInfo.CreateFont(value); // This makes column width calculation work
+				WritingSystem = value;
+			}
+		}
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public IWritingSystemDefinition MeaningWritingSystem
+		{
+			get
+			{
+				return _meaningWritingSystem;
+			}
+			set
+			{
+				_meaningWritingSystem = value;
+			}
+		}
 		public Object SelectedItem
 		{
 			get
 			{
-				if (_browser.Document == null)
+				if ((_items != null) && (SelectedIndex > -1) && (SelectedIndex < _items.Count))
 				{
-					return null;
-				}
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
-				if (content != null)
-				{
-					return (_items[content.SelectedIndex]);
+					return (_items[SelectedIndex]);
 				}
 				return null;
 			}
 
 		}
 
-		public int SelectedIndex
-		{
-			get
-			{
-				if (_browser.Document == null)
-				{
-					return -1;
-				}
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
-				if (content != null)
-				{
-					return (content.SelectedIndex);
-				}
-				return -1;
-			}
-			set
-			{
-				if (!_browserDocumentLoaded)
-				{
-					_pendingInitialIndex = value;
-				}
-				if (_browser.Document == null)
-				{
-					return;
-				}
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
-				if (content != null)
-				{
-					content.SelectedIndex = value;
-				}
-			}
-		}
+		public int SelectedIndex { get; set; }
+
 		public int Length
 		{
 			get
@@ -190,41 +148,96 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public String SelectedText
+		public Rectangle GetItemRectangle(int index)
 		{
-			get
+			Rectangle itemRectangle = this.ClientRectangle; // Default
+			if (!((_browser == null) || (_browser.Document == null)))
 			{
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+				string id = index.ToString() + "-1";
+				var content = (GeckoLIElement)_browser.Document.GetElementById(id);
 				if (content != null)
 				{
-					return (content.Value);
+					itemRectangle = content.BoundingClientRect;
 				}
-				return null;
 			}
+			return itemRectangle;
 		}
 
-		private String SelectStyle()
+		// Called from the ItemDrawer routine from the data source to add the item to the
+		// html being built by CreateHtmlFromItems
+		public void ItemToHtml(string word, int index, bool useFormWS, Color textColor)
 		{
-			String justification = "left";
-			if (_writingSystem != null && WritingSystem.RightToLeftScript)
-			{
-				justification = "right";
-			}
-
-			return String.Format("min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{2}; font-weight:{3}; background:{4}; width:{5}",
-				Font.Name,
-				Font.Size, justification,
-				Font.Bold ? "bold" : "normal",
-				System.Drawing.ColorTranslator.ToHtml(BackColor),
-				this.Width);
+			Font font = WritingSystemInfo.CreateFont(useFormWS ? FormWritingSystem : MeaningWritingSystem );
+			String entry = String.IsNullOrEmpty(word) ? "&nbsp;" : word;
+			String subId = useFormWS ? "-1" : "-2";
+			String id = index.ToString() + subId;
+			_itemHtml.AppendFormat("<li id='{2}' style='font-family:{3}; font-size:{4}pt; color:{5}' onclick=\"fireEvent('selectChanged','{0}');\">{1}</li>",
+				index.ToString(), entry, id, font.Name, font.Size,System.Drawing.ColorTranslator.ToHtml(textColor));
 		}
+		/// <summary>
+		/// Change this if you need to draw something special. THe default just draws the string of the item.
+		/// Make sure to make a custom MeasureItem handler too!
+		///
+		/// <param name="item"> The first object is the object to be added to the list and will be interpreted by the caller
+		/// in the drawing routine and when accessed.  If the default drawer is used, it is assumed that it can be represented
+		/// in the list by ToString.</param>
+		/// <param name="a" > The second parameter when calling the GeckoListBox will be the index of the item, which is used
+		/// to identify which record has been selected.  Since multiple items in the list can reference the same index (i.e.
+		/// the word and its meaning) this parameter allows the code to know which item in the items array this entry is
+		/// associated with.</param>
+		/// </summary>
+		public Action<object, object> ItemDrawer { get; set; }
+		private void DefaultDrawItem(object item, object a)
+		{
+			int itemIndex = (int)a;
+			ItemToHtml(item.ToString(), itemIndex, true, Color.Black);
+		}
+
+		private String CreateHtmlFromItems()
+		{
+			int itemsAdded = 0;
+			if (DisplayMeaning)
+			{
+				_numberOfItemsInColumn = Height / 65;
+			}
+			else
+			{
+				_numberOfItemsInColumn = Height / 35;
+			}
+			if (_numberOfItemsInColumn == 0)
+			{
+				_numberOfItemsInColumn = 1;
+			}
+			_itemHtml.Clear();
+			_itemHtml.Append("<ul><li><ul>"); // Initial Column
+			for (int index = 0; index < _items.Count; index++)
+			{
+				if (_items[index] != _itemToNotDrawYet)
+				{
+					if (MultiColumn && ((itemsAdded % _numberOfItemsInColumn) == 0))
+					{
+						if (itemsAdded != 0)
+						{
+							// Time to start a new column
+							_itemHtml.Append("</ul></li><li><ul>");
+						}
+					}
+					ItemDrawer(_items[index], index);
+					itemsAdded++;
+				}
+			}
+			// Finish the last column and the block
+			_itemHtml.Append("</ul></li></ul>");
+			return _itemHtml.ToString();
+		}
+
 		public void ListCompleted()
 		{
 			_initialSelectLoad = false;
 
 			var html = new StringBuilder();
 			html.Append("<!DOCTYPE html>");
-			html.Append("<html><header><meta charset=\"UTF-8\">");
+			html.Append("<html><head><meta charset=\"UTF-8\">");
 			html.Append("<script type='text/javascript'>");
 			html.Append(" function fireEvent(name, data)");
 			html.Append(" {");
@@ -233,45 +246,48 @@ namespace WeSay.UI.TextBoxes
 			html.Append("   document.dispatchEvent(event);");
 			html.Append(" }");
 			html.Append("</script>");
+			html.Append("<style>");
+			html.Append("ul { border: 0px solid black; display: inline-block; margin:0px; padding:0px; } ");
+			html.Append("ul li { display: inline-block; list-style: none; vertical-align: top: } ");
+			html.Append("ul li ul { border: 0px; padding: 0px; } ");
+			html.AppendFormat("ul li ul li {{ cursor: pointer; display: list-item; white-space: nowrap; height:30px; list-style: none; text-align:left; width: {0}px; }} ", ColumnWidth.ToString());
+			html.Append("ul li ul li.selected { background-color:8fD8D8; } ");
+			html.Append("ul li ul li.hover { background-color: #CCCCCC; } ");
+			html.Append("</style>");
 			html.Append("</head>");
 			html.AppendFormat("<body style='background:{0}; width:{1}; overflow-x:hidden' id='mainbody'>",
-				System.Drawing.ColorTranslator.ToHtml(Color.FromArgb(255,203,255,185)),
+				System.Drawing.ColorTranslator.ToHtml(BackColor),
 				this.Width);
-			html.Append("<select size='10' id='itemList' style='" + SelectStyle() + "' onchange=\"fireEvent('selectChanged','changed');\">");
+
 			// The following line is removed at this point and done later as a change to the inner
 			// html because otherwise the browser blows up because of the length of the
 			// navigation line.  Leaving this and this comment in as a warning to anyone who
 			// may be tempted to try the same thing.
-			// html.Append(_itemHtml);
-			html.Append("</select></body></html>");
+			html.Append("</body></html>");
 			SetHtml(html.ToString());
 		}
 		private void OnSelectedValueChanged(String s)
 		{
-			if (SelectedValueChanged != null)
+			try
 			{
-				SelectedValueChanged.Invoke(this, null);
+				SelectedIndex = int.Parse(s);
+			}
+			catch (Exception e)
+			{
+				SelectedIndex = 0;  // Shouldn't happen, but set to first item if it does
+			}
+			if (UserClick != null)
+			{
+				UserClick.Invoke(this, null);
 			}
 		}
-		private void OnBackColorChanged(object sender, EventArgs e)
+		protected override void OnDomDocumentCompleted(object sender, EventArgs e)
 		{
-			// if it's already loaded, change it
-			if (_initialSelectLoad)
-			{
-				var content = (GeckoSelectElement) _browser.Document.GetElementById("itemList");
-				if (content != null)
-				{
-					content.SetAttribute("style", SelectStyle());
-				}
-			}
-		}
-		private void _browser_DomDocumentChanged(object sender, EventArgs e)
-		{
-			_browserDocumentLoaded = true;  // Document loaded once
+			base.OnDomDocumentCompleted(sender, e);
 			if (!_initialSelectLoad)
 			{
 				_initialSelectLoad = true;
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+				var content = (GeckoBodyElement)_browser.Document.GetElementById("mainbody");
 				content.InnerHtml = _itemHtml.ToString();
 			}
 			if (_pendingInitialIndex > -1)
@@ -279,32 +295,31 @@ namespace WeSay.UI.TextBoxes
 				SelectedIndex = _pendingInitialIndex;
 				_pendingInitialIndex = -1;
 			}
-			AdjustHeight();
 		}
 
-		void AdjustHeight()
+		protected override void OnResize(EventArgs e)
 		{
-			if (_browser.Document == null)
+			AdjustHeight();
+			base.OnResize(e);
+		}
+
+		protected override void AdjustHeight()
+		{
+			if ((_browser == null) || (_browser.Document == null))
 			{
 				return;
 			}
-			var content = _browser.Document.GetElementById("mainbody");
+
+			var content = (GeckoBodyElement)_browser.Document.GetElementById("mainbody");
 			if (content != null)
 			{
-				if (content is GeckoBodyElement)
-				{
-					_bodyElement = (GeckoBodyElement)content;
-					Height = _bodyElement.Parent.ScrollHeight;
-				}
+				content.InnerHtml = CreateHtmlFromItems();
 			}
 		}
 
 		private delegate void ChangeFocusDelegate(GeckoSelectElement ctl);
-		private void _browser_DomFocus(object sender, GeckoDomEventArgs e)
+		protected override void OnDomFocus(object sender, GeckoDomEventArgs e)
 		{
-#if DEBUG
-			Debug.WriteLine("Got Focus: " + Text);
-#endif
 			var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
 			if (content != null)
 			{
@@ -314,68 +329,19 @@ namespace WeSay.UI.TextBoxes
 				if (!_inFocus)
 				{
 					_inFocus = true;
-#if DEBUG
-					Debug.WriteLine("Got Focus2: " + Text);
-#endif
 					_selectElement = (GeckoSelectElement)content;
 					this.BeginInvoke(new ChangeFocusDelegate(changeFocus), _selectElement);
 				}
 			}
 		}
-		private void _browser_DomBlur(object sender, GeckoDomEventArgs e)
-		{
-			_inFocus = false;
-#if DEBUG
-			Debug.WriteLine("Got Blur: " + Text);
-#endif
-		}
 
 		private void changeFocus(GeckoSelectElement ctl)
 		{
-#if DEBUG
-			Debug.WriteLine("Change Focus: " + Text);
-#endif
 			ctl.Focus();
 		}
 
 
-		private void OnDomKeyDown(object sender, GeckoDomKeyEventArgs e)
-		{
-			if (_inFocus)
-			{
-				if ((e.KeyCode == 9) && !e.CtrlKey && !e.AltKey)
-				{
-					int a = ParentForm.Controls.Count;
-#if DEBUG
-					Debug.WriteLine ("Got a Tab Key " );
-#endif
-					if (e.ShiftKey)
-					{
-						if (!ParentForm.SelectNextControl(this, false, true, true, true))
-						{
-#if DEBUG
-							Debug.WriteLine("Failed to advance");
-#endif
-						}
-					}
-					else
-					{
-						if (!ParentForm.SelectNextControl(this, true, true, true, true))
-						{
-#if DEBUG
-							Debug.WriteLine("Failed to advance");
-#endif
-						}
-					}
-				}
-				else
-				{
-					this.RaiseKeyEvent(Keys.A, new KeyEventArgs(Keys.A));
-				}
-			}
-		}
-
-		private void GeckoBox_Load(object sender, EventArgs e)
+		protected override void OnGeckoBox_Load(object sender, EventArgs e)
 		{
 			_browserIsReadyToNavigate = true;
 			_browser.AddMessageEventListener("selectChanged", ((string s) => this.OnSelectedValueChanged(s)));
@@ -389,7 +355,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public void SetHtml(string html)
+		private void SetHtml(string html)
 		{
 			if (!_browserIsReadyToNavigate)
 			{
@@ -402,72 +368,36 @@ namespace WeSay.UI.TextBoxes
 				var bytes = System.Text.Encoding.UTF8.GetBytes(html);
 				_browser.Navigate(string.Format("data:{0};base64,{1}", type, Convert.ToBase64String(bytes)),
 					GeckoLoadFlags.BypassHistory);
-
-//				_browser.LoadHtml(html);
 			}
 		}
 
-		public IWritingSystemDefinition WritingSystem
+		//used when animating additions to the list
+		public object ItemToNotDrawYet
+		{
+			get { return _itemToNotDrawYet; }
+			set
+			{
+				_itemToNotDrawYet = value;
+				if (_initialSelectLoad)
+				{
+					var content = (GeckoBodyElement)_browser.Document.GetElementById("mainbody");
+					content.InnerHtml = CreateHtmlFromItems();
+				}
+			}
+		}
+
+		public Control Control
 		{
 			get
 			{
-				if (_writingSystem == null)
-				{
-					throw new InvalidOperationException(
-						"Input system must be initialized prior to use.");
-				}
-				return _writingSystem;
-			}
-
-			set
-			{
-				if (value == null)
-				{
-					throw new ArgumentNullException();
-				}
-				_writingSystem = value;
+				return this;
 			}
 		}
-
-		public bool MultiParagraph { get; set; }
 
 		public bool IsSpellCheckingEnabled { get; set; }
-
-
-		public int SelectionStart
-		{
-			get
-			{
-				//TODO
-				return 0;
-			}
-			set
-			{
-				//TODO
-			}
-		}
-
-
-		public bool ReadOnly { get; set; }
-
-
-
-		/// <summary>
-		/// for automated tests
-		/// </summary>
-		public void PretendLostFocus()
-		{
-			OnLostFocus(new EventArgs());
-		}
-
-		/// <summary>
-		/// for automated tests
-		/// </summary>
-		public void PretendSetFocus()
-		{
-			Debug.Assert(_browser != null, "_browser != null");
-			_browser.Focus();
-		}
-
+		public bool MultiColumn { get; set; }
+		public bool DisplayMeaning { get; set; }
+		public int ItemHeight { get; set; }
+		public int ColumnWidth { get; set; }
 	}
 }

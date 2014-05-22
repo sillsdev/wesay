@@ -565,6 +565,11 @@ namespace WeSay.Project
 					var m = new GeckoListView();
 					return m;
 				});
+				builder.Register<IWeSayListBox>(c =>
+				{
+					var m = new GeckoListBox();
+					return m;
+				});
 			}
 			else
 			{
@@ -581,6 +586,11 @@ namespace WeSay.Project
 				builder.Register<IWeSayListView>(c =>
 				{
 					var m = new WeSayListView();
+					return m;
+				});
+				builder.Register<IWeSayListBox>(c =>
+				{
+					var m = new WeSayListBox();
 					return m;
 				});
 			}

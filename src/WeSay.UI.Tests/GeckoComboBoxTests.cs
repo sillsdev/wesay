@@ -1,19 +1,14 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using Palaso.WritingSystems;
 using Palaso.IO;
-using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 using Gecko;
-using Gecko.DOM;
 
 namespace WeSay.UI.Tests
 {
@@ -25,7 +20,20 @@ namespace WeSay.UI.Tests
 		[return: MarshalAs(UnmanagedType.Bool)]
 		static extern bool SetDllDirectory(string lpPathName);
 		private Form _window;
-		private int Height;
+
+		[TestFixtureTearDown]
+		public void FixtureCleanup()
+		{
+			// Shutting down xul runner prevents subsequent tests from running successfully
+			//			ShutDownXulRunner();
+		}
+
+		[TestFixtureSetUp]
+		public void FixtureSetup()
+		{
+			SetUpXulRunner();
+		}
+
 
 		[SetUp]
 		public override void Setup()
@@ -33,7 +41,6 @@ namespace WeSay.UI.Tests
 			base.Setup();
 			_window = new Form();
 			_window.Size = new Size(500, 500);
-			SetUpXulRunner();
 		}
 
 		[TearDown]

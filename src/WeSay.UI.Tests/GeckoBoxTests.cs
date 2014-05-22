@@ -23,13 +23,25 @@ namespace WeSay.UI.Tests
 		static extern bool SetDllDirectory(string lpPathName);
 		private Form _window;
 
+		[TestFixtureTearDown]
+		public void FixtureCleanup()
+		{
+			// Shutting down xul runner prevents subsequent tests from running successfully
+			//			ShutDownXulRunner();
+		}
+
+		[TestFixtureSetUp]
+		public void FixtureSetup()
+		{
+			SetUpXulRunner();
+		}
+
 		[SetUp]
 		public override void Setup()
 		{
 			base.Setup();
 			_window = new Form();
 			_window.Size = new Size(500, 500);
-			SetUpXulRunner();
 		}
 
 		[TearDown]

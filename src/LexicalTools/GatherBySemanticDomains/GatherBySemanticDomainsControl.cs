@@ -27,6 +27,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			_presentationModel = presentationModel;
 			InitializeComponent();
+			this._listViewWords.UserClick += new System.EventHandler(this.OnListViewWords_Click);
 
 #if __MonoCS__
 			// The label "(Enter Key)" does not display properly on Linux/Mono.  Part of the string is cut off.
@@ -37,6 +38,8 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_listViewWords.FormWritingSystem = _presentationModel.FormWritingSystem;
 			_listViewWords.MeaningWritingSystem = _presentationModel.ShowMeaningField ? _presentationModel.MeaningWritingSystem: null;
 			_listViewWords.ItemDrawer = DrawOneAnswerForList;
+			_listViewWords.BackColor = Color.White;
+			_listViewWords.DisplayMeaning = _presentationModel.ShowMeaningField;
 
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made
@@ -132,18 +135,36 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		/// <summary>
 		/// this is a callback from the list so we can draw the items in a custom way
 		/// </summary>
-		private void DrawOneAnswerForList(object item, DrawItemEventArgs e)
+		private void DrawOneAnswerForList(object item, object a)
 		{
 			var word = item as GatherBySemanticDomainTask.WordDisplay;
 
-			// Draw the current item text based on the current Font and the custom brush settings.
-			TextRenderer.DrawText(e.Graphics, word.Vernacular.Form.ToString(), e.Font, e.Bounds, Color.Black, TextFormatFlags.Left);
-			if(_presentationModel.ShowMeaningField && word.Meaning!=null && word.Meaning.Form!=null)
+			if (_listViewWords is WeSayListBox)
 			{
-				int verncularHeight =  e.Font.Height;
-				Rectangle rectangle = new Rectangle(e.Bounds.Left, e.Bounds.Top + verncularHeight, e.Bounds.Width,
-													e.Bounds.Height - verncularHeight);
-				TextRenderer.DrawText(e.Graphics, word.Meaning.Form, _presentationModel.MeaningFont, rectangle, Color.Gray, TextFormatFlags.Left);
+				DrawItemEventArgs e = (DrawItemEventArgs)a;
+				// Draw the current item text based on the current Font and the custom brush settings.
+				TextRenderer.DrawText(e.Graphics, word.Vernacular.Form.ToString(), e.Font, e.Bounds, Color.Black, TextFormatFlags.Left);
+				if (_presentationModel.ShowMeaningField && word.Meaning != null && word.Meaning.Form != null)
+				{
+					int verncularHeight = e.Font.Height;
+					Rectangle rectangle = new Rectangle(e.Bounds.Left, e.Bounds.Top + verncularHeight, e.Bounds.Width,
+														e.Bounds.Height - verncularHeight);
+					TextRenderer.DrawText(e.Graphics, word.Meaning.Form, _presentationModel.MeaningFont, rectangle, Color.Gray, TextFormatFlags.Left);
+				}
+			}
+			else
+			{
+				int itemIndex = (int)a;
+				_listViewWords.ItemToHtml(word.Vernacular.Form.ToString(), itemIndex, true, Color.Black);
+				if (_presentationModel.ShowMeaningField)
+				{
+					string text = "";
+					if (word.Meaning != null && word.Meaning.Form != null)
+					{
+						text = word.Meaning.Form;
+					}
+					_listViewWords.ItemToHtml(text, itemIndex, false, Color.Gray);
+				}
 			}
 		}
 
@@ -179,7 +200,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 		private void RefreshCurrentWords()
 		{
-			_listViewWords.Items.Clear();
+			_listViewWords.Clear();
 			string longestVernacularWord = string.Empty;
 			string longestMeannigWord = string.Empty;
 			foreach (GatherBySemanticDomainTask.WordDisplay word in _presentationModel.CurrentWords)
@@ -192,12 +213,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				{
 					longestMeannigWord = word.Meaning.Form;
 				}
-				_listViewWords.Items.Add(word);
+				_listViewWords.AddItem(word);
 			}
 
 			Size wordMax = TextRenderer.MeasureText(longestVernacularWord, _listViewWords.Font);
 			Size meaningMax = _presentationModel.ShowMeaningField && longestMeannigWord == null ? new Size() : TextRenderer.MeasureText(longestMeannigWord, _presentationModel.MeaningFont);
 			_listViewWords.ColumnWidth = Math.Max(wordMax.Width, meaningMax.Width) + 10;
+			_listViewWords.ListCompleted();
 		}
 
 		private void _btnNext_Click(object sender, EventArgs e)
@@ -297,7 +319,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				Point absolutePosition = GetAbsoluteLocationOfControl(_vernacularBox);
 				Point destination = absolutePosition;
 				Point start = _listViewWords.GetItemRectangle(_listViewWords.SelectedIndex).Location;
-				start.Offset(GetAbsoluteLocationOfControl(_listViewWords));
+				start.Offset(GetAbsoluteLocationOfControl(_listViewWords.Control));
 
 				RefreshCurrentWords();
 				_animationIsMovingFromList = true;
@@ -353,7 +375,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			Point start = GetAbsoluteLocationOfControl(_vernacularBox);
 			Point destination = _listViewWords.GetItemRectangle(index).Location;
-			destination.Offset(GetAbsoluteLocationOfControl(_listViewWords));
+			destination.Offset(GetAbsoluteLocationOfControl(_listViewWords.Control));
 
 			_flyingLabel.Text = word;
 			_animationIsMovingFromList = false;
@@ -365,9 +387,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private int GetIndexOfWordInList(string word)
 		{
 			//can't use FindStringExact() because the tostring() of DisplayWord isn't necessarily the vernacular (it returns whichever is longer so that the columns are wide enough)
-			for (int i = 0; i < _listViewWords.Items.Count; i++)
+			for (int i = 0; i < _listViewWords.Length; i++)
 			{
-				var w = _listViewWords.Items[i] as GatherBySemanticDomainTask.WordDisplay;
+				var w = _listViewWords.GetItem(i) as GatherBySemanticDomainTask.WordDisplay;
 				if (w.Vernacular.Form == word)
 					return i;
 			}
