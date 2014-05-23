@@ -15,9 +15,9 @@
 			  <File Id="SILCAWL.lift" Name="SILCAWL.lift" KeyPath="yes" Source="..\..\common\wordpacks\SILCAWL\SILCAWL.lift" />
 			</Component>
 		  </Directory>
-		  <Directory Id="SILCAWL_MozambiqueAddendum" Name="SILCAWL_MozambiqueAddendum">
+		  <Directory Id="SILCAWL_MozambiqueAddendum" Name="SILCAWL-MozambiqueAddendum">
 			<Component Id="SILCAWL_MozambiqueAddendum.lift" Guid="{A6664CDF-8E27-487f-84FE-594675B7F112}">
-			  <File Id="SILCAWL_MozambiqueAddendum.lift" Name="SILCAWL_MozambiqueAddendum.lift" KeyPath="yes" Source="..\..\common\wordpacks\SILCAWL-MozambiqueAddendum\SILCAWL-MozambiqueAddendum.lift" />
+			  <File Id="SILCAWL_MozambiqueAddendum.lift" Name="SILCAWL-MozambiqueAddendum.lift" KeyPath="yes" Source="..\..\common\wordpacks\SILCAWL-MozambiqueAddendum\SILCAWL-MozambiqueAddendum.lift" />
 			</Component>
 		  </Directory>
 		</Directory>
