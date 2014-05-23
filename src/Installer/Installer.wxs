@@ -133,7 +133,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					  Type='string' Value='[!WeSayConfigIconFile], 0' />
 
 
-					<Shortcut Id="startmenuSplatt2"  Target ="[!WeSayConfigurationTool]" Directory="WeSayShortcutDir" Name="WeSay.ConfigTool"
+					<Shortcut Id="startmenuSplatt2"  Target ="[!WeSayConfigurationTool]" Directory="WeSayShortcutDir" Name="WeSay Configuration Tool"
 			 WorkingDirectory="ProgramDir" Icon ="IconSetup.exe" />
 
 				  </Component>
