@@ -967,10 +967,13 @@ namespace WeSay.LexicalTools.Dashboard
 			Graphics g = Graphics.FromHwnd(e.AssociatedWindow.Handle);
 			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
 			Font boldFont = new Font(localizedFont, FontStyle.Bold);
+			string textUsedOnlyForMeasurement = GetToolTipDescription(button.ThingToShowOnDashboard);
+#if __MonoCS__
+			// "\n ." is added on because Mono frequently miscalculates the height by one line.
+			textUsedOnlyForMeasurement += (System.Environment.NewLine + " .");
+#endif
 			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g,
-																			GetToolTipDescription(
-																				button.
-																					ThingToShowOnDashboard),
+																			textUsedOnlyForMeasurement,
 																			localizedFont,
 																			ToolTipFormatFlags);
 			Size bestSize = GetBestSizeBasedOnRatio(possibleSizes, GoldRatio);
