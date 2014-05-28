@@ -3,7 +3,7 @@
 # project=WeSay1.4-Linux
 # build=wesay1.4-win32-continuous
 # root_dir=..
-# $Id: 8fa3d81233f94c653ca4357ed5e300790d8bc404 $
+# $Id: 0b75ca980cea444bf053cfdd852cb3e370225ffe $
 
 cd "$(dirname "$0")"
 
@@ -72,7 +72,7 @@ cd -
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt2
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"Chorus.exe"=>"lib/Release", "Chorus.pdb"=>"lib/Release", "ChorusHub.exe"=>"lib/Release", "ChorusHub.pdb"=>"lib/Release", "ChorusMerge.exe"=>"lib/Release", "ChorusMerge.pdb"=>"lib/Release", "LibChorus.dll"=>"lib/Release", "LibChorus.pdb"=>"lib/Release", "LibChorus.TestUtilities.dll"=>"lib/Release", "LibChorus.TestUtilities.pdb"=>"lib/Release", "Autofac.dll"=>"lib/Release", "Mercurial.zip"=>"lib/Release", "debug/**"=>"lib/Debug", "MercurialExtensions/**"=>"MercurialExtensions", "ChorusMergeModule.msm"=>"lib"}
+#     paths: {"Chorus.exe"=>"lib/Release", "Chorus.pdb"=>"lib/Release", "ChorusMerge.exe"=>"lib/Release", "ChorusMerge.pdb"=>"lib/Release", "LibChorus.dll"=>"lib/Release", "LibChorus.pdb"=>"lib/Release", "LibChorus.TestUtilities.dll"=>"lib/Release", "LibChorus.TestUtilities.pdb"=>"lib/Release", "Autofac.dll"=>"lib/Release", "Mercurial.zip"=>"lib/Release", "debug/**"=>"lib/Debug", "MercurialExtensions/**"=>"MercurialExtensions", "ChorusMergeModule.msm"=>"lib"}
 #     VCS: https://github.com/sillsdev/chorus.git [master]
 # [1] build: geckofx14-win32-continuous (bt358)
 #     project: GeckoFx
@@ -100,14 +100,14 @@ cd -
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"L10NSharp.dll"=>"lib/Debug", "L10NSharp.pdb"=>"lib/Debug"}
-#     VCS: https://bitbucket.org/hatton/l10nsharp []
+#     VCS: https://bitbucket.org/sillsdev/l10nsharp []
 # [5] build: L10NSharp continuous (bt196)
 #     project: L10NSharp
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt196
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"L10NSharp.dll"=>"lib/Release", "L10NSharp.pdb"=>"lib/Release"}
-#     VCS: https://bitbucket.org/hatton/l10nsharp []
+#     VCS: https://bitbucket.org/sillsdev/l10nsharp []
 # [6] build: palaso-win32-master Continuous (bt223)
 #     project: libpalaso
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt223
@@ -134,11 +134,13 @@ cd -
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt184
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"WeSay_Helps.chm"=>"common"}
+#     paths: {"WeSay_Helps.chm"=>"External", "wesay.helpmap"=>"External"}
 #     VCS: http://hg.palaso.org/wesay-doc []
 
 # make sure output directories exist
 mkdir -p ../
+mkdir -p ../Downloads
+mkdir -p ../External
 mkdir -p ../MercurialExtensions
 mkdir -p ../MercurialExtensions/fixutf8
 mkdir -p ../common
@@ -149,8 +151,6 @@ mkdir -p ../lib/Release
 # download artifact dependencies
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastSuccessful/Chorus.exe ../lib/Release/Chorus.exe
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastSuccessful/Chorus.pdb ../lib/Release/Chorus.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastSuccessful/ChorusHub.exe ../lib/Release/ChorusHub.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastSuccessful/ChorusHub.pdb ../lib/Release/ChorusHub.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastSuccessful/ChorusMerge.exe ../lib/Release/ChorusMerge.exe
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastSuccessful/ChorusMerge.pdb ../lib/Release/ChorusMerge.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastSuccessful/LibChorus.dll ../lib/Release/LibChorus.dll
@@ -197,7 +197,7 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt358/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt358/latest.lastSuccessful/geckofx-core-14.dll.config ../lib/Release/geckofx-core-14.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt358/latest.lastSuccessful/Geckofx-Winforms-14.dll ../lib/Release/Geckofx-Winforms-14.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt358/latest.lastSuccessful/Geckofx-Winforms-14.pdb ../lib/Release/Geckofx-Winforms-14.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt375/latest.lastSuccessful/xulrunner-14.0.1.en-US.win32.zip ../xulrunner-14.0.1.en-US.win32.zip
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt375/latest.lastSuccessful/xulrunner-14.0.1.en-US.win32.zip ../Downloads/xulrunner-14.0.1.en-US.win32.zip
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.lastSuccessful/L10NSharp.dll ../lib/Debug/L10NSharp.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.lastSuccessful/L10NSharp.pdb ../lib/Debug/L10NSharp.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.lastSuccessful/L10NSharp.dll ../lib/Release/L10NSharp.dll
@@ -235,6 +235,8 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt223/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/debug/Palaso.Tests.pdb ../lib/Debug/Palaso.Tests.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/debug/Palaso.dll ../lib/Debug/Palaso.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/debug/Palaso.pdb ../lib/Debug/Palaso.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/debug/PalasoUIWindowsForms.GeckoBrowserAdapter.dll ../lib/Debug/PalasoUIWindowsForms.GeckoBrowserAdapter.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/debug/PalasoUIWindowsForms.GeckoBrowserAdapter.pdb ../lib/Debug/PalasoUIWindowsForms.GeckoBrowserAdapter.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/debug/PalasoUIWindowsForms.dll ../lib/Debug/PalasoUIWindowsForms.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/debug/PalasoUIWindowsForms.pdb ../lib/Debug/PalasoUIWindowsForms.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt223/latest.lastSuccessful/debug/SIL.Archiving.dll ../lib/Debug/SIL.Archiving.dll
@@ -253,7 +255,8 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.last
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icudt40.dll ../lib/Debug/icudt40.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icuin40.dll ../lib/Debug/icuin40.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icuuc40.dll ../lib/Debug/icuuc40.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/WeSay_Helps.chm ../common/WeSay_Helps.chm
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/WeSay_Helps.chm ../External/WeSay_Helps.chm
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/wesay.helpmap ../External/wesay.helpmap
 # extract downloaded zip files
-unzip -uqo ../xulrunner-14.0.1.en-US.win32.zip -d ..
+unzip -uqo ../Downloads/xulrunner-14.0.1.en-US.win32.zip -d ../
 # End of script

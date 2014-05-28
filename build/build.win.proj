@@ -49,7 +49,8 @@
 
 	<Target Name="Build">
 		<CallTarget Targets="Clean"/>
-		<CallTarget Targets="DownloadDistFiles" />
+		<!-- We are pulling help files from team city now -->
+		<!-- <CallTarget Targets="DownloadDistFiles" /> -->
 		<CallTarget Targets="CopyHelpFilesIntoSourceTree" />
 		<CallTarget Targets="SetAssemblyVersion"/>
 		<CallTarget Targets="Compile"/>
