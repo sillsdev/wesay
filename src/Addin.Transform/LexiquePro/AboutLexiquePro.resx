@@ -118,6 +118,6 @@
 	<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="textBox1.Text" xml:space="preserve">
-	<value>Lexique Pro is a free program for creating web and print dictionaries. It is available for Microsoft Windows.  WeSay needs at least version 3, which (in December 2008) was available from the "test.htm" link below.</value>
+	<value>Lexique Pro is a free program for creating web and print dictionaries. It is available for Microsoft Windows; it is not available for Linux.  WeSay needs at least version 3, which is available from the "download.htm" link below.</value>
   </data>
 </root>

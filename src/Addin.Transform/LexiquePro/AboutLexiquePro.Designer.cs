@@ -56,7 +56,7 @@
 			this.linkLabel2.Size = new System.Drawing.Size(193, 17);
 			this.linkLabel2.TabIndex = 0;
 			this.linkLabel2.TabStop = true;
-			this.linkLabel2.Text = "http://lexiquepro.com/test.htm";
+			this.linkLabel2.Text = "http://lexiquepro.com/download.htm";
 			this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnLinkClicked);
 			//
 			// button1
