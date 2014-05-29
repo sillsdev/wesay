@@ -116,7 +116,7 @@ namespace WeSay.Project
 					   SyncUIDialogBehaviors.StartImmediatelyAndCloseWhenFinished,
 					   SyncUIFeatures.Minimal))
 				{
-					dlg.Text = "Wesay Automatic Backup";
+					dlg.Text = "WeSay Automatic Backup";
 					dlg.SyncOptions.DoMergeWithOthers = false;
 					dlg.SyncOptions.DoPullFromOthers = false;
 					dlg.SyncOptions.DoSendToOthers = true;

@@ -79,7 +79,7 @@ namespace WeSay.Project
 					if (canNotify)
 					{
 						ErrorReport.NotifyUserOfProblem(
-							"Expected only one LIFT file in {0}, but there were {1}. Wesay couldn't decide which one to use. Remove all but one and try again.",
+							"Expected only one LIFT file in {0}, but there were {1}. WeSay couldn't decide which one to use. Remove all but one and try again.",
 							projectDirectoryPath,
 							liftPaths.Length
 						);
