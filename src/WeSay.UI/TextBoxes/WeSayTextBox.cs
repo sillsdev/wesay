@@ -195,6 +195,10 @@ namespace WeSay.UI.TextBoxes
 			}
 			base.OnTextChanged(e);
 			Height = GetPreferredHeight(Width);
+#if __MonoCS__
+			// For some fonts that don't render properly in MONO
+			Refresh ();
+#endif
 		}
 
 		// we do this in OnLayout instead of OnResize see
