@@ -1,3 +1,13 @@
+wesay (1.5.6) experimental; urgency=low
+
+  * Fix crash in GatherSemanticDomain
+  * Implement WeSayListBox for Gecko
+  * Fix Broken link in About Lexique Pro
+  * Fix Tool Tips truncated in Linux
+  * Fix crash if no ibus keyboards installed
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 29 May 2014 08:27:14 -0400
+
 wesay (1.5.4) experimental; urgency=low
   * Updated to include features introduced up to wesay 1.4 for Windows
    - export to PDF and LibreOffice
