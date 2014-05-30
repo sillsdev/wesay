@@ -1,9 +1,8 @@
 # Environment settings for running programs with the SIL version of mono
 # Set MONO_ENVIRON to this file's pathname, then run, for example,
 #    /opt/mono-sil/bin/mono --debug WeSay.App.exe
-# These setting assume that the packaged SIL Mono is installed in /opt/mono-sil.
-# This may well change to /opt, simplifying the script to not need to distinguish as much
-# between RUNMODE values.  (The first if below may still be needed, but not the second?)
+# These setting assume that the packaged SIL Mono is installed in /opt/mono-sil, and that
+# locally built versions are installed to that location as well.
 # Note that this file is intended to be "sourced", not "executed".
 
 # the sourcing script should cd/pushd to the directory containing this script
@@ -19,6 +18,13 @@ GDK_SHARP=/usr/lib/cli/gdk-sharp-2.0
 
 MONO_RUNTIME=v4.0.30319
 MONO_PATH="${GDK_SHARP}:${GECKOFX}"
+
+# Ensure that we will search the standard pkgconfig directories after
+# updating the environment variable below.
+if [ "$PKG_CONFIG_PATH" = "" ]
+then
+	PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/share/pkgconfig
+fi
 
 ################################################################################################
 
@@ -36,20 +42,11 @@ fi
 
 ################################################################################################
 
-if [ "$RUNMODE" = "PACKAGE" -o "$RUNMODE" = "INSTALLED" ]
-then
-	# Add packaged mono items to paths
-	PATH="/opt/mono-sil/bin:${PATH}"
-	LD_LIBRARY_PATH="/opt/mono-sil/lib:${LD_LIBRARY_PATH}"
-	PKG_CONFIG_PATH="/opt/mono-sil/lib/pkgconfig:${PKG_CONFIG_PATH}"
-	MONO_GAC_PREFIX="/opt/mono-sil:/usr"
-else
-	# Add locally-built mono items to paths
-	PATH="${MONO_PREFIX}/bin:${PATH}"
-	LD_LIBRARY_PATH="${MONO_PREFIX}/lib:${LD_LIBRARY_PATH}"
-	PKG_CONFIG_PATH="${MONO_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}"
-	MONO_GAC_PREFIX="${MONO_PREFIX}:/usr"
-fi
+# Add locally-built (or packaged!) mono items to paths
+PATH="${MONO_PREFIX}/bin:${PATH}"
+LD_LIBRARY_PATH="${MONO_PREFIX}/lib:${LD_LIBRARY_PATH}"
+PKG_CONFIG_PATH="${MONO_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+MONO_GAC_PREFIX="${MONO_PREFIX}:/usr"
 
 ################################################################################################
 
