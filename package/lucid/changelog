@@ -1,3 +1,11 @@
+wesay (1.5.7) experimental; urgency=low
+
+  * WS-62 Fix text entry area does not render properly
+  * WS-63 Fix CAWL-MOZ entries do not display in list box
+  * set PKG_CONFIG_PATH properly to include /usr/lib/pkgconfig
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 30 May 2014 10:28:29 -0400
+
 wesay (1.5.6) experimental; urgency=low
 
   * Fix crash in GatherSemanticDomain
