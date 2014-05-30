@@ -55,7 +55,18 @@ namespace WeSay.ConfigTool
 				Settings.Default.Reporting = new ReportingSettings();
 				Settings.Default.Save();
 			}
-			UsageReporter.Init(Settings.Default.Reporting, "wesay.palaso.org", "UA-22170471-6");
+			// If this is a release build, then allow the environment variable to be set to true
+			// so that testers are not generating user stats
+			string developerSetting = System.Environment.GetEnvironmentVariable("WESAY_TRACK_AS_DEVELOPER");
+			bool developerTracking = !string.IsNullOrEmpty(developerSetting) && (developerSetting.ToLower() == "yes" || developerSetting.ToLower() == "true" || developerSetting == "1");
+			bool reportAsDeveloper =
+#if DEBUG
+ true
+#else
+ developerTracking
+#endif
+;
+			UsageReporter.Init(Settings.Default.Reporting, "wesay.palaso.org", "UA-22170471-6", reportAsDeveloper);
 			UsageReporter.AppNameToUseInDialogs = "WeSay Configuration Tool";
 			UsageReporter.AppNameToUseInReporting = "WeSayConfig";
 		}
