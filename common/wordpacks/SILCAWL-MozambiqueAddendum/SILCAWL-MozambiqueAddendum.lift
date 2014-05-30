@@ -47,10 +47,16 @@
 	  <form lang="en">
 		<text>wink (eye) (n)</text>
 	  </form>
+	  <form lang="pt">
+		<text>piscadela</text>
+	  </form>
 	</lexical-unit>
 	<sense id="75b05b6a-e2bd-41fd-80ca-907579201d70">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>wink (eye) (n)</text>
+		</form>
 		<form lang="pt">
 		  <text>piscadela</text>
 		</form>
@@ -62,10 +68,16 @@
 	  <form lang="en">
 		<text>drink (non-alcoholic)</text>
 	  </form>
+	  <form lang="pt">
+		<text>bebida (não alcoólica)</text>
+	  </form>
 	</lexical-unit>
 	<sense id="552f88e9-c67a-41be-8320-7b6cb76b869e">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>drink (non-alcoholic)</text>
+		</form>
 		<form lang="pt">
 		  <text>bebida (não alcoólica)</text>
 		</form>
@@ -77,10 +89,16 @@
 	  <form lang="en">
 		<text>defend (v)</text>
 	  </form>
+	  <form lang="pt">
+		<text>defender (v)</text>
+	  </form>
 	</lexical-unit>
 	<sense id="40a872b5-3f5f-40bd-a7e3-fd15abfac2fb">
 	  <grammatical-info value="verb"/>
 	  <definition>
+		<form lang="en">
+		  <text>defend (v)</text>
+		</form>
 		<form lang="pt">
 		  <text>defender (v)</text>
 		</form>
@@ -93,10 +111,16 @@
 	  <form lang="en">
 		<text>help in an emergency</text>
 	  </form>
+	  <form lang="pt">
+		<text>socorrer</text>
+	  </form>
 	</lexical-unit>
 	<sense id="ead6970a-323c-4b02-a990-ab3e953d2cfe">
 	  <grammatical-info value="verb"/>
 	  <definition>
+		<form lang="en">
+		  <text>help in an emergency</text>
+		</form>
 		<form lang="pt">
 		  <text>socorrer</text>
 		</form>
@@ -109,10 +133,16 @@
 	  <form lang="en">
 		<text>ferocious</text>
 	  </form>
+	  <form lang="pt">
+		<text>ferroz</text>
+	  </form>
 	</lexical-unit>
 	<sense id="30c71ab2-1766-4464-a9a2-7c4e73e5ed2b">
 	  <grammatical-info value="adjective"/>
 	  <definition>
+		<form lang="en">
+		  <text>ferocious</text>
+		</form>
 		<form lang="pt">
 		  <text>ferroz</text>
 		</form>
@@ -125,10 +155,16 @@
 	  <form lang="en">
 		<text>torch</text>
 	  </form>
+	  <form lang="pt">
+		<text>lanterna</text>
+	  </form>
 	</lexical-unit>
 	<sense id="d711f8c1-14de-4464-8240-e525fcc3b95a">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>torch</text>
+		</form>
 		<form lang="pt">
 		  <text>lanterna</text>
 		</form>
@@ -141,10 +177,16 @@
 	  <form lang="en">
 		<text>yard</text>
 	  </form>
+	  <form lang="pt">
+		<text>quintal</text>
+	  </form>
 	</lexical-unit>
 	<sense id="78871102-ab58-4f3d-a31d-0fefaa5c8e16">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>yard</text>
+		</form>
 		<form lang="pt">
 		  <text>quintal</text>
 		</form>
@@ -157,10 +199,16 @@
 	  <form lang="en">
 		<text>custom</text>
 	  </form>
+	  <form lang="pt">
+		<text>costume</text>
+	  </form>
 	</lexical-unit>
 	<sense id="148c9a94-f0d6-4dd1-8b46-e3d0bea94dd7">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>custom</text>
+		</form>
 		<form lang="pt">
 		  <text>costume</text>
 		</form>
@@ -173,10 +221,16 @@
 	  <form lang="en">
 		<text>clarity</text>
 	  </form>
+	  <form lang="pt">
+		<text>clareza</text>
+	  </form>
 	</lexical-unit>
 	<sense id="9703c213-f324-4faa-8104-fd2cb63cc339">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>clarity</text>
+		</form>
 		<form lang="pt">
 		  <text>clareza</text>
 		</form>
@@ -189,10 +243,16 @@
 	  <form lang="en">
 		<text>brandy</text>
 	  </form>
+	  <form lang="pt">
+		<text>aguardente</text>
+	  </form>
 	</lexical-unit>
 	<sense id="c4fa7176-55df-418d-884e-abc55c758ca2">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>brandy</text>
+		</form>
 		<form lang="pt">
 		  <text>aguardente</text>
 		</form>
@@ -205,10 +265,16 @@
 	  <form lang="en">
 		<text>wild</text>
 	  </form>
+	  <form lang="pt">
+		<text>bravo (ser)</text>
+	  </form>
 	</lexical-unit>
 	<sense id="ce73fad0-f196-4b07-8115-9189127c28aa">
 	  <grammatical-info value="verb"/>
 	  <definition>
+		<form lang="en">
+		  <text>wild</text>
+		</form>
 		<form lang="pt">
 		  <text>bravo (ser)</text>
 		</form>
@@ -220,9 +286,15 @@
 	  <form lang="en">
 		<text>broth</text>
 	  </form>
+	  <form lang="pt">
+		<text>caldo</text>
+	  </form>
 	</lexical-unit>
 	<sense id="a70bbead-b31f-4c99-ba63-6a6e5fbf23f9">
 	  <definition>
+		<form lang="en">
+		  <text>broth</text>
+		</form>
 		<form lang="pt">
 		  <text>caldo</text>
 		</form>
@@ -234,9 +306,15 @@
 	  <form lang="en">
 		<text>sauce, curry</text>
 	  </form>
+	  <form lang="pt">
+		<text>caril</text>
+	  </form>
 	</lexical-unit>
 	<sense id="72dde4c9-2255-4a22-a1c6-ef285faf791a">
 	  <definition>
+		<form lang="en">
+		  <text>sauce, curry</text>
+		</form>
 		<form lang="pt">
 		  <text>caril</text>
 		</form>
@@ -248,9 +326,15 @@
 	  <form lang="en">
 		<text>cooking fat</text>
 	  </form>
+	  <form lang="pt">
+		<text>gordura</text>
+	  </form>
 	</lexical-unit>
 	<sense id="436b2a76-b7bd-4cba-9734-6dd7e55a1795">
 	  <definition>
+		<form lang="en">
+		  <text>cooking fat</text>
+		</form>
 		<form lang="pt">
 		  <text>gordura</text>
 		</form>
@@ -262,10 +346,16 @@
 	  <form lang="en">
 		<text>tangerine</text>
 	  </form>
+	  <form lang="pt">
+		<text>tangerina</text>
+	  </form>
 	</lexical-unit>
 	<sense id="597e79e4-ee71-47aa-b168-7cd1c9b01485">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>tangerine</text>
+		</form>
 		<form lang="pt">
 		  <text>tangerina</text>
 		</form>
@@ -278,10 +368,16 @@
 	  <form lang="en">
 		<text>argument (proof)</text>
 	  </form>
+	  <form lang="pt">
+		<text>argumento</text>
+	  </form>
 	</lexical-unit>
 	<sense id="c055d467-e1bf-4a34-ac78-ba9070cb9898">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>argument (proof)</text>
+		</form>
 		<form lang="pt">
 		  <text>argumento</text>
 		</form>
@@ -293,10 +389,16 @@
 	  <form lang="en">
 		<text>punishment</text>
 	  </form>
+	  <form lang="pt">
+		<text>castigo</text>
+	  </form>
 	</lexical-unit>
 	<sense id="5059a471-4473-4602-bcbd-2afe91e01ddf">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>punishment</text>
+		</form>
 		<form lang="pt">
 		  <text>castigo</text>
 		</form>
@@ -308,10 +410,16 @@
 	  <form lang="en">
 		<text>reconcile</text>
 	  </form>
+	  <form lang="pt">
+		<text>reconciliar</text>
+	  </form>
 	</lexical-unit>
 	<sense id="7cd4c3ec-b54e-4823-a253-3e170a2cb739">
 	  <grammatical-info value="verb"/>
 	  <definition>
+		<form lang="en">
+		  <text>reconcile</text>
+		</form>
 		<form lang="pt">
 		  <text>reconciliar</text>
 		</form>
@@ -323,10 +431,16 @@
 	  <form lang="en">
 		<text>perturb</text>
 	  </form>
+	  <form lang="pt">
+		<text>perturbar</text>
+	  </form>
 	</lexical-unit>
 	<sense id="bd62368f-d1bc-434a-b7cf-31b238c70b30">
 	  <grammatical-info value="verb"/>
 	  <definition>
+		<form lang="en">
+		  <text>perturb</text>
+		</form>
 		<form lang="pt">
 		  <text>perturbar</text>
 		</form>
@@ -338,10 +452,16 @@
 	  <form lang="en">
 		<text>mute</text>
 	  </form>
+	  <form lang="pt">
+		<text>mudo (ser)</text>
+	  </form>
 	</lexical-unit>
 	<sense id="0173886e-e0dd-4f7b-afbb-f836d15d1042">
 	  <grammatical-info value="adjective"/>
 	  <definition>
+		<form lang="en">
+		  <text>mute</text>
+		</form>
 		<form lang="pt">
 		  <text>mudo (ser)</text>
 		</form>
@@ -353,10 +473,16 @@
 	  <form lang="en">
 		<text>grandmother</text>
 	  </form>
+	  <form lang="pt">
+		<text>avó</text>
+	  </form>
 	</lexical-unit>
 	<sense id="5eaf9632-d1b7-4cc3-919f-71a6f43d5a14">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>grandmother</text>
+		</form>
 		<form lang="pt">
 		  <text>avó</text>
 		</form>
@@ -368,10 +494,16 @@
 	  <form lang="en">
 		<text>cashew fruit</text>
 	  </form>
+	  <form lang="pt">
+		<text>cajú</text>
+	  </form>
 	</lexical-unit>
 	<sense id="fc270f27-4722-478d-a8f9-17309b5d2a22">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>cashew fruit</text>
+		</form>
 		<form lang="pt">
 		  <text>cajú</text>
 		</form>
@@ -383,10 +515,16 @@
 	  <form lang="en">
 		<text>coconut</text>
 	  </form>
+	  <form lang="pt">
+		<text>côco</text>
+	  </form>
 	</lexical-unit>
 	<sense id="7086ded5-df9a-47f8-ba2c-dddfad2a4875">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>coconut</text>
+		</form>
 		<form lang="pt">
 		  <text>côco</text>
 		</form>
@@ -399,10 +537,16 @@
 	  <form lang="en">
 		<text>mango</text>
 	  </form>
+	  <form lang="pt">
+		<text>mango</text>
+	  </form>
 	</lexical-unit>
 	<sense id="d23e7f82-0a03-4bf0-9ea9-98ca58aa159b">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>mango</text>
+		</form>
 		<form lang="pt">
 		  <text>mango</text>
 		</form>
@@ -415,10 +559,16 @@
 	  <form lang="en">
 		<text>worm</text>
 	  </form>
+	  <form lang="pt">
+		<text>verme</text>
+	  </form>
 	</lexical-unit>
 	<sense id="c9c88d41-7617-4e97-a63d-5c016bffee27">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>worm</text>
+		</form>
 		<form lang="pt">
 		  <text>verme</text>
 		</form>
@@ -430,10 +580,16 @@
 	  <form lang="en">
 		<text>in, at</text>
 	  </form>
+	  <form lang="pt">
+		<text>em</text>
+	  </form>
 	</lexical-unit>
 	<sense id="b1938d1a-6779-484d-99ea-3b1343409413">
 	  <grammatical-info value="preposition"/>
 	  <definition>
+		<form lang="en">
+		  <text>in, at</text>
+		</form>
 		<form lang="pt">
 		  <text>em</text>
 		</form>
@@ -445,10 +601,16 @@
 	  <form lang="en">
 		<text>over there</text>
 	  </form>
+	  <form lang="pt">
+		<text>lá</text>
+	  </form>
 	</lexical-unit>
 	<sense id="f1fdf57c-7dce-44e3-98bb-5abb7156d3d9">
 	  <grammatical-info value="adverb"/>
 	  <definition>
+		<form lang="en">
+		  <text>over there</text>
+		</form>
 		<form lang="pt">
 		  <text>lá</text>
 		</form>
@@ -460,10 +622,16 @@
 	  <form lang="en">
 		<text>sound</text>
 	  </form>
+	  <form lang="pt">
+		<text>som</text>
+	  </form>
 	</lexical-unit>
 	<sense id="6295d4d0-bfe6-468f-850b-35dc9736c339">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>sound</text>
+		</form>
 		<form lang="pt">
 		  <text>som</text>
 		</form>
@@ -475,11 +643,17 @@
 	  <form lang="en">
 		<text>banana tree</text>
 	  </form>
+	  <form lang="pt">
+		<text>bananeira</text>
+	  </form>
 	</lexical-unit>
 	<sense id="713d2f69-bc5d-4898-9e46-a5cdb57bf3c0">
 	  <definition>
 		<form lang="pt">
 		  <text>bananeira</text>
+		</form>
+		<form lang="en">
+		  <text>banana tree</text>
 		</form>
 	  </definition>
 	</sense>
@@ -489,9 +663,15 @@
 	  <form lang="en">
 		<text>orange tree</text>
 	  </form>
+	  <form lang="pt">
+		<text>laranjeira</text>
+	  </form>
 	</lexical-unit>
 	<sense id="0e069a79-9601-44ee-adcd-61057b27b200">
 	  <definition>
+		<form lang="en">
+		  <text>orange tree</text>
+		</form>
 		<form lang="pt">
 		  <text>laranjeira</text>
 		</form>
@@ -503,10 +683,16 @@
 	  <form lang="en">
 		<text>tangerine tree</text>
 	  </form>
+	  <form lang="pt">
+		<text>tangerineira</text>
+	  </form>
 	</lexical-unit>
 	<sense id="0b8d9bdd-a1e8-42b4-bc2f-d0854e7bc101">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>tangerine tree</text>
+		</form>
 		<form lang="pt">
 		  <text>tangerineira</text>
 		</form>
@@ -518,10 +704,16 @@
 	  <form lang="en">
 		<text>grapefruit tree</text>
 	  </form>
+	  <form lang="pt">
+		<text>toranjeira</text>
+	  </form>
 	</lexical-unit>
 	<sense id="a9f552d1-8336-444a-9d19-93cbc37ee2f8">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>grapefruit tree</text>
+		</form>
 		<form lang="pt">
 		  <text>toranjeira</text>
 		</form>
@@ -533,10 +725,16 @@
 	  <form lang="en">
 		<text>alert</text>
 	  </form>
+	  <form lang="pt">
+		<text>atento (estar)</text>
+	  </form>
 	</lexical-unit>
 	<sense id="7d9cc522-69bb-43ed-b562-dd7eb35da8a9">
 	  <grammatical-info value="verb"/>
 	  <definition>
+		<form lang="en">
+		  <text>alert</text>
+		</form>
 		<form lang="pt">
 		  <text>atento (estar)</text>
 		</form>
@@ -548,10 +746,16 @@
 	  <form lang="en">
 		<text>lover</text>
 	  </form>
+	  <form lang="pt">
+		<text>amante</text>
+	  </form>
 	</lexical-unit>
 	<sense id="d763ff81-fdf8-4d8d-9585-6f09607f0593">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>lover</text>
+		</form>
 		<form lang="pt">
 		  <text>amante</text>
 		</form>
@@ -563,10 +767,16 @@
 	  <form lang="en">
 		<text>enchantment</text>
 	  </form>
+	  <form lang="pt">
+		<text>encantamento</text>
+	  </form>
 	</lexical-unit>
 	<sense id="57fbfadb-038c-44e2-9080-983decbfec0a">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>enchantment</text>
+		</form>
 		<form lang="pt">
 		  <text>encantamento</text>
 		</form>
@@ -578,9 +788,15 @@
 	  <form lang="en">
 		<text>fetish, tailisman</text>
 	  </form>
+	  <form lang="pt">
+		<text>feitiço</text>
+	  </form>
 	</lexical-unit>
 	<sense id="542cf9f8-539e-4832-95ed-ce1e34ebe675">
 	  <definition>
+		<form lang="en">
+		  <text>fetish, tailisman</text>
+		</form>
 		<form lang="pt">
 		  <text>feitiço</text>
 		</form>
@@ -592,10 +808,16 @@
 	  <form lang="en">
 		<text>praise (v)</text>
 	  </form>
+	  <form lang="pt">
+		<text>louvar (v)</text>
+	  </form>
 	</lexical-unit>
 	<sense id="ca7159c5-2630-4042-bb77-a338c252c9da">
 	  <grammatical-info value="verb"/>
 	  <definition>
+		<form lang="en">
+		  <text>praise (v)</text>
+		</form>
 		<form lang="pt">
 		  <text>louvar (v)</text>
 		</form>
@@ -607,9 +829,15 @@
 	  <form lang="en">
 		<text>prophetize, prophesi</text>
 	  </form>
+	  <form lang="pt">
+		<text>profetizar</text>
+	  </form>
 	</lexical-unit>
 	<sense id="003693bd-efa7-44a9-8267-ab58d03dbfb6">
 	  <definition>
+		<form lang="en">
+		  <text>prophetize, prophesi</text>
+		</form>
 		<form lang="pt">
 		  <text>profetizar</text>
 		</form>
@@ -621,10 +849,16 @@
 	  <form lang="en">
 		<text>veneration</text>
 	  </form>
+	  <form lang="pt">
+		<text>veneração</text>
+	  </form>
 	</lexical-unit>
 	<sense id="d0aa7731-84f4-44a0-a8b3-1effc73a0b91">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>veneration</text>
+		</form>
 		<form lang="pt">
 		  <text>veneração</text>
 		</form>
@@ -636,10 +870,16 @@
 	  <form lang="en">
 		<text>suffocate</text>
 	  </form>
+	  <form lang="pt">
+		<text>sufocar</text>
+	  </form>
 	</lexical-unit>
 	<sense id="668ecdd8-60e0-48b9-a6ee-505b19e53719">
 	  <grammatical-info value="noun"/>
 	  <definition>
+		<form lang="en">
+		  <text>suffocate</text>
+		</form>
 		<form lang="pt">
 		  <text>sufocar</text>
 		</form>
