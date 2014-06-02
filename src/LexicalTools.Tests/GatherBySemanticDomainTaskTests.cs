@@ -34,7 +34,6 @@ namespace WeSay.LexicalTools.Tests
 		public void FixtureSetup()
 		{
 			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
-			WeSayProjectTestHelper.InitializeForTests();
 		}
 
 		[TestFixtureTearDown]
@@ -46,6 +45,8 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
+			WeSayProjectTestHelper.InitializeForTests();
+
 			WeSayWordsProject.Project.RemoveCache();
 			_tempFolder = new TemporaryFolder();
 			_filePath = _tempFolder.GetTemporaryFile();
@@ -103,7 +104,7 @@ namespace WeSay.LexicalTools.Tests
 				_task.Deactivate(); //needed for disposal of controls
 			}
 			_lexEntryRepository.Dispose();
-			_tempFolder.Dispose();
+			_tempFolder.Delete();
 		}
 
 		private GatherBySemanticDomainTask Task
@@ -147,7 +148,7 @@ namespace WeSay.LexicalTools.Tests
 		public void TaskMemory_ValueOK_ReturnsToSameSpot()
 		{
 			var memory = new TaskMemoryRepository();
-		   var task = new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
+			var task = new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
 															_lexEntryRepository,
 															_viewTemplate,
 															memory,
@@ -158,7 +159,7 @@ namespace WeSay.LexicalTools.Tests
 			task.CurrentQuestionIndex = 2;
 			task.Deactivate();
 
-		   var task2 = new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
+			var task2 = new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
 															_lexEntryRepository,
 															_viewTemplate,
 															memory,
@@ -166,6 +167,7 @@ namespace WeSay.LexicalTools.Tests
 			task2.Activate();
 			Assert.AreEqual(5,task2.CurrentDomainIndex);
 			Assert.AreEqual(2, task2.CurrentQuestionIndex);
+			task2.Deactivate();
 		}
 
 		[Test]
@@ -185,6 +187,7 @@ namespace WeSay.LexicalTools.Tests
 			task.Activate();
 			Assert.AreEqual(0, task.CurrentDomainIndex);
 			Assert.AreEqual(0, task.CurrentQuestionIndex);
+			task.Deactivate();
 		}
 
 		[Test]
@@ -205,6 +208,7 @@ namespace WeSay.LexicalTools.Tests
 			task.Activate();
 			Assert.AreEqual(1, task.CurrentDomainIndex);
 			Assert.AreEqual(0, task.CurrentQuestionIndex);
+			task.Deactivate();
 		}
 
 		[Test]
@@ -244,12 +248,14 @@ namespace WeSay.LexicalTools.Tests
 		public void WordWritingSystem()
 		{
 			Assert.AreEqual(_vernacularWritingSystemId, Task.WordWritingSystemId);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void SemanticDomainWritingSystem()
 		{
 			Assert.AreEqual("en", Task.SemanticDomainWritingSystemId);
+			Task.Deactivate();
 		}
 
 		#region Current
@@ -258,15 +264,16 @@ namespace WeSay.LexicalTools.Tests
 		public void CurrentDomainIndex_Initial_0()
 		{
 			Assert.AreEqual(0, Task.CurrentDomainIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentDomainIndex_Leave_ReturnToPreviousPosition()
 		{
 			Task.CurrentDomainIndex = 2;
-			Task.Deactivate();
 			//task gets automatically activated in Task accessor
 			Assert.AreEqual(2, Task.CurrentDomainIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -274,63 +281,72 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.CurrentDomainIndex = 2;
 			Assert.AreEqual(2, Task.CurrentDomainIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentDomainIndex_SetNegative_Throws()
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() => Task.CurrentDomainIndex = -1);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentDomainIndex_SetGreaterThanCountOfDomains_Throws()
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() => Task.CurrentDomainIndex = Task.DomainKeys.Count);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void Domains()
 		{
 			Assert.AreEqual(8, Task.DomainKeys.Count);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentQuestionIndex_Initial_0()
 		{
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentQuestionIndex_SetNegative_Throws()
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() => Task.CurrentQuestionIndex = -1);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentQuestionIndex_SetGreaterThanCountOfQuestions_Throws()
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() => Task.CurrentQuestionIndex = Task.Questions.Count);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentDomain()
 		{
 			Assert.IsNotNull(Task.CurrentDomainKey);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentQuestion()
 		{
 			Assert.IsNotNull(Task.CurrentQuestion);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentQuestionIndex_Leave_ReturnToPreviousPosition()
 		{
 			Task.CurrentQuestionIndex = 2;
-			Task.Deactivate();
 			//task gets automatically activated in Task accessor
 			Assert.AreEqual(2, Task.CurrentQuestionIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -339,6 +355,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentQuestionIndex = 2;
 			Task.CurrentDomainIndex = 2;
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -347,6 +364,7 @@ namespace WeSay.LexicalTools.Tests
 			List<string> questions = Task.Questions;
 			Task.CurrentDomainIndex = 2;
 			Assert.AreNotEqual(questions, Task.Questions);
+			Task.Deactivate();
 		}
 
 		#endregion
@@ -357,12 +375,14 @@ namespace WeSay.LexicalTools.Tests
 		public void CurrentWords()
 		{
 			Assert.IsNotNull(Task.CurrentWords);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentWords_NoWords_Empty()
 		{
 			Assert.IsEmpty(Task.CurrentWords);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -370,6 +390,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.AddWord("peixe");
 			Assert.IsNotEmpty(Task.CurrentWords);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -387,24 +408,27 @@ namespace WeSay.LexicalTools.Tests
 			_lexEntryRepository.SaveItem(e);
 
 			Task.CurrentDomainIndex = 0;
-		   var words = Task.CurrentWords;
+			var words = Task.CurrentWords;
 			Assert.IsTrue(Task.CurrentWords.Any(w => w.Vernacular.Form == "peixe"));
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentWords_ChangeQuestion_SameWordList()
 		{
-		   var wordList = Task.CurrentWords;
+			var wordList = Task.CurrentWords;
 			Task.CurrentQuestionIndex = 2;
 			Assert.AreSame(wordList, Task.CurrentWords);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CurrentWords_ChangeDomain_NewWordList()
 		{
-		   var wordList = Task.CurrentWords;
+			var wordList = Task.CurrentWords;
 			Task.CurrentDomainIndex = 2;
 			Assert.AreNotSame(wordList, Task.CurrentWords);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -417,6 +441,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 			Task.CurrentDomainIndex = 0;
 			Assert.AreEqual(3, Task.CurrentWords.Count);
+			Task.Deactivate();
 		}
 
 		#endregion
@@ -425,6 +450,7 @@ namespace WeSay.LexicalTools.Tests
 		public void AddWord_null_Throws()
 		{
 			Assert.Throws<ArgumentNullException>(() => Task.AddWord(null));
+			Task.Deactivate();
 		}
 
 
@@ -434,6 +460,7 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("vernacular", String.Empty);
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		/// <summary>
@@ -442,14 +469,17 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWord_WordConsistsOfOnlySegmentSeparatorCharacter_AddedToDatabase()
 		{
-			int originalCount = _lexEntryRepository.CountAllItems();Task.AddWord('\u001F'.ToString(), String.Empty);
+			int originalCount = _lexEntryRepository.CountAllItems();
+			Task.AddWord('\u001F'.ToString(), String.Empty);
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
-	   [Test]
+		[Test]
 		public void RemainingCount_Initially_RemainingCountEqualsReferenceCount()
 		{
 			Assert.AreEqual(Task.GetReferenceCount(), Task.GetRemainingCount());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -471,6 +501,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentDomainIndex = 3;
 			Task.AddWord("vernacular", String.Empty);
 			Assert.AreEqual(originalCount - 1, Task.GetRemainingCount());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -481,6 +512,7 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = Task.GetRemainingCount();
 			Task.PrepareToMoveWordToEditArea("boo");
 			Assert.AreEqual(originalCount + 1, Task.GetRemainingCount());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -490,6 +522,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.AddWord("vernacular", String.Empty);
 			Assert.IsTrue(Task.CurrentWords.Any(w=>w.Vernacular.Form=="vernacular"));
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -502,12 +535,14 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("raposa");
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void PrepareToMoveWordToEditArea_null_Throws()
 		{
 			Assert.Throws<ArgumentNullException>(() => Task.PrepareToMoveWordToEditArea((GatherBySemanticDomainTask.WordDisplay) null));
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -528,6 +563,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -540,6 +576,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("raposa");
 			Assert.IsFalse(Task.CurrentWords.Any(w=>w.Vernacular.Form=="raposa"));
 			Assert.AreEqual(2, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -551,6 +588,7 @@ namespace WeSay.LexicalTools.Tests
 			var meaning = Task.GetMeaningForWordRecentlyMovedToEditArea();
 
 			Assert.AreEqual("fish", meaning["en"]);
+			Task.Deactivate();
 		}
 
 
@@ -563,6 +601,7 @@ namespace WeSay.LexicalTools.Tests
 			var meaning = Task.GetMeaningForWordRecentlyMovedToEditArea();
 
 			Assert.IsFalse(meaning.ContainsAlternative("en"));
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -576,6 +615,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("raposa");
 			Assert.IsFalse(Task.CurrentWords.Any(w=>w.Vernacular.Form==("raposa")));
 			Assert.AreEqual(2, Task.CurrentWords.Count);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -598,6 +638,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -621,6 +662,7 @@ namespace WeSay.LexicalTools.Tests
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 			Assert.AreEqual(1, e.Senses.Count);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -642,6 +684,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -665,6 +708,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -689,6 +733,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -708,6 +753,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -734,6 +780,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount-1, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		//Regression (WS-34245) Corrections to words with meanings making new words in Gather by SemDom. The problem is that words with glosses
@@ -745,6 +792,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("peixe");
 
 			Assert.AreEqual(originalCount-1, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		//Regression (WS-34245) Corrections to words with meanings making new words in Gather by SemDom. The problem is that words with glosses
@@ -755,6 +803,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("peixe");
 			Task.AddWord("peixe2", "the meaning");
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -769,6 +818,7 @@ namespace WeSay.LexicalTools.Tests
 			var modifiedEntries = Task.AddWord("peixe2", "the meaning");
 			Assert.AreEqual("an example", modifiedEntries.First().Senses[0].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -782,6 +832,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(1, modifiedEntries.Count());
 			Assert.AreEqual(1, modifiedEntries.First().Senses.Count());
 			Assert.AreEqual("noun", modifiedEntries.First().Senses[0].GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech).Key);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -815,6 +866,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(2, preexistingEntry.Senses[0].ExampleSentences.Count, "expected to end up with 2 example sentences");
 			Assert.AreEqual("example1", modifiedEntries.First().Senses[0].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
 			Assert.AreEqual("example2", modifiedEntries.First().Senses[0].ExampleSentences[1].Sentence[_vernacularWritingSystemId]);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -849,6 +901,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("example1", modifiedEntries.First().Senses[0].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
 			Assert.AreEqual(1, preexistingEntry.Senses[1].ExampleSentences.Count, "expected to end up with 1 example sentences");
 			Assert.AreEqual("example2", modifiedEntries.First().Senses[1].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -877,6 +930,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(2, preexistingEntry.Senses[0].ExampleSentences.Count, "expected to end up with 2 example sentences");
 			Assert.AreEqual("example1", modifiedEntries.First().Senses[0].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
 			Assert.AreEqual("example2", modifiedEntries.First().Senses[0].ExampleSentences[1].Sentence[_vernacularWritingSystemId]);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -908,6 +962,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("example1", modifiedEntries.First().Senses[0].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
 			Assert.AreEqual(1, preexistingEntry.Senses[1].ExampleSentences.Count, "expected to end up with 1 example sentences");
 			Assert.AreEqual("example2", modifiedEntries.First().Senses[1].ExampleSentences[0].Sentence[_vernacularWritingSystemId]);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -930,6 +985,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(2, newEntry.Senses.Count, "expected to end up with 2 sense as the two matching the current domain should have been moved");
 			Assert.That(newEntry.LexicalForm[_vernacularWritingSystemId], Is.EqualTo("peixe1"));
 			Assert.That(newEntry.Senses.All(s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])), Is.True);
+			Task.Deactivate();
 		}
 
 		private LexSense GetSenseWithDefAndSemDom(string defWs, string defForm, string semDom)
@@ -959,6 +1015,7 @@ namespace WeSay.LexicalTools.Tests
 			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1", WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
 			Assert.That(sensesToMove.All(movedSense => newEntry.Senses.Contains(movedSense)));
 			Assert.That(newEntry.Senses.All(s=>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])));
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -983,6 +1040,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.That(entry.Senses[0], Is.EqualTo(firstSense));
 			Assert.AreEqual(1, newEntry.Senses.Count, "expected the sense with the matching meaning to be added to the existing one");
 			Assert.That(newEntry.Senses[0], Is.EqualTo(secondSense));
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1003,6 +1061,7 @@ namespace WeSay.LexicalTools.Tests
 			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1", WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
 			Assert.AreEqual(1, newEntry.Senses.Count, "expected the sense with the non matching meaning to still be around");
 			Assert.That(newEntry.Senses[0], Is.EqualTo(firstSense));
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1015,6 +1074,7 @@ namespace WeSay.LexicalTools.Tests
 
 			Task.CurrentDomainIndex = 1;
 			Assert.That(Task.CurrentWords[0].Meaning.Form, Is.EqualTo("form"));
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1028,6 +1088,7 @@ namespace WeSay.LexicalTools.Tests
 
 			Task.CurrentDomainIndex = 1;
 			Assert.That(Task.CurrentWords[0].Meaning.Form, Is.EqualTo("form"));
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1046,6 +1107,7 @@ namespace WeSay.LexicalTools.Tests
 				Meaning = senseWeWantToEdit.Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
 			});
 			Assert.That(!entry.Senses.Contains(senseWeWantToEdit), Is.False);
+			Task.Deactivate();
 		}
 
 		/// <summary>
@@ -1064,10 +1126,10 @@ namespace WeSay.LexicalTools.Tests
 		{
 			return MakeEntryWithMeaning("peixe");
 		}
+
 		private LexEntry MakeEntryWithMeaning(string headword)
 		{
-
-		LexEntry e = _lexEntryRepository.CreateItem();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative(_vernacularWritingSystemId, headword);
 			LexSense s = AddNewSenseToEntry(e);
 
@@ -1097,6 +1159,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea("peshi");
 
 			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		#region Navigation
@@ -1113,6 +1176,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.GotoNextDomainLackingAnswers();
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
 			Assert.AreEqual(Task.DomainKeys.Count-1, Task.CurrentDomainIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1124,7 +1188,9 @@ namespace WeSay.LexicalTools.Tests
 			Task.GotoNextDomainLackingAnswers();
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
 			Assert.AreEqual(3, Task.CurrentDomainIndex);
+			Task.Deactivate();
 		}
+
 		[Test]
 		public void GotoNextDomainLackingAnswers_HasToWrapToFindEmpty_Wraps()
 		{
@@ -1139,6 +1205,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.GotoNextDomainLackingAnswers();
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
 			Assert.AreEqual(2, Task.CurrentDomainIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1154,6 +1221,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.GotoNextDomainLackingAnswers();
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
 			Assert.AreEqual(2, Task.CurrentDomainIndex);
+			Task.Deactivate();
 		}
 
 		#region GotoLastDomainWithAnswers
@@ -1164,6 +1232,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.GotoLastDomainWithAnswers();
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
 			Assert.AreEqual(0, Task.CurrentDomainIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1178,6 +1247,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.GotoLastDomainWithAnswers();
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
 			Assert.AreEqual(1, Task.CurrentDomainIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1187,6 +1257,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.GotoLastDomainWithAnswers();
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
 			Assert.AreEqual(Task.DomainKeys.Count - 1, Task.CurrentDomainIndex);
+			Task.Deactivate();
 		}
 
 		private void FillAllDomainsWithWords()
@@ -1196,6 +1267,7 @@ namespace WeSay.LexicalTools.Tests
 				Task.CurrentDomainIndex = i;
 				Task.AddWord(i.ToString());
 			}
+			Task.Deactivate();
 		}
 
 		#endregion
@@ -1208,6 +1280,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentDomainIndex = 0;
 			Task.GotoNextDomainQuestion();
 			Assert.AreEqual(1, Task.CurrentQuestionIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1218,6 +1291,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.GotoNextDomainQuestion();
 			Assert.AreEqual(1, Task.CurrentDomainIndex);
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Task.Deactivate();
 		}
 
  /* I JH think we don't want this behavior anymore
@@ -1240,6 +1314,7 @@ namespace WeSay.LexicalTools.Tests
 			var entries =Task.AddWord("one", "2");
 			Assert.AreEqual(1, entries.Count);
 			Assert.AreEqual(2, entries[0].Senses.Count, "Should create new senses");
+			Task.Deactivate();
 		}
 
 
@@ -1253,6 +1328,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(entries1[0], entries2[0], "Should not create new word");
 			Assert.AreEqual(1, entries1[0].Senses.Count, "Should not create new senses");
 			AssertNumberOfDomainsInSense(2, entries1[0].Senses[0]);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1264,6 +1340,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(entries1[0], entries2[0], "Should not create new word");
 			Assert.AreEqual(1, entries1[0].Senses.Count, "Should not create new senses");
 			AssertNumberOfDomainsInSense(2, entries1[0].Senses[0]);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1278,6 +1355,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(2, entries[0].Senses.Count, "Should add sense");
 			Assert.AreEqual(1, entries.Count, "Should only touch one entry");
 			AssertNumberOfDomainsInSense(0, e2.Senses[0]);
+			Task.Deactivate();
 		}
 
 		private void AssertNumberOfDomainsInSense(int expectedDomains, LexSense sense)
@@ -1289,13 +1367,14 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWordWithDef_ExistingWordHasDifferentDef_NewSenseCreated()
 		{
-		   var entries1 =Task.AddWord("one", "1");
+			var entries1 = Task.AddWord("one", "1");
 			Task.CurrentDomainIndex++;
 			var entries2 = Task.AddWord("one", "2");
 			Assert.AreEqual(entries1[0], entries2[0], "Should not create new word");
 			Assert.AreEqual(2, entries1[0].Senses.Count, "Should  create new sense");
 			AssertNumberOfDomainsInSense(1, entries1[0].Senses[1]);
 			AssertNumberOfDomainsInSense(1, entries1[0].Senses[0]);
+			Task.Deactivate();
 		}
 
 
@@ -1315,6 +1394,7 @@ namespace WeSay.LexicalTools.Tests
 			AssertNumberOfDomainsInSense(1, entries1[0].Senses[0]);
 			Assert.AreEqual("1", entries2[0].LexicalForm[_vernacularWritingSystemId], "Should have just one sense");
 			Assert.AreEqual("1", entries2[0].Senses[0].Definition["en"], "Should have just one sense");
+			Task.Deactivate();
 		}
 
 		/// <summary>
@@ -1333,6 +1413,7 @@ namespace WeSay.LexicalTools.Tests
 			AssertNumberOfDomainsInSense(1, entries1[0].Senses[0]);
 			Assert.AreEqual("1", entries2[0].LexicalForm[_vernacularWritingSystemId], "Should have just one sense");
 			Assert.AreEqual("1", entries2[0].Senses[0].Definition["en"], "Should have just one sense");
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1340,6 +1421,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.CurrentDomainIndex = 0;
 			Assert.IsTrue(Task.HasNextDomainQuestion);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1347,6 +1429,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.CurrentDomainIndex = Task.DomainKeys.Count - 1;
 			Assert.IsTrue(Task.HasNextDomainQuestion);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1355,6 +1438,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentDomainIndex = Task.DomainKeys.Count - 1;
 			Task.CurrentQuestionIndex = Task.Questions.Count - 1;
 			Assert.IsFalse(Task.HasNextDomainQuestion);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1362,6 +1446,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.CurrentDomainIndex = 3;
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1369,6 +1454,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.CurrentDomainIndex = 3;
 			Assert.AreEqual(1, Task.Questions.Count);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1377,6 +1463,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentDomainIndex = 3;
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
 			Assert.AreEqual(1, Task.Questions.Count);
+			Task.Deactivate();
 		}
 
 		#endregion
@@ -1389,6 +1476,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentQuestionIndex = 1;
 			Task.GotoPreviousDomainQuestion();
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1399,6 +1487,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.GotoPreviousDomainQuestion();
 			Assert.AreEqual(Task.Questions.Count - 1, Task.CurrentQuestionIndex);
 			Assert.AreEqual(0, Task.CurrentDomainIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1407,6 +1496,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.GotoPreviousDomainQuestion();
 			Assert.AreEqual(0, Task.CurrentDomainIndex);
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1414,6 +1504,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.CurrentDomainIndex = 1;
 			Assert.IsTrue(Task.HasNextDomainQuestion);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1422,6 +1513,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentDomainIndex = 0;
 			Task.CurrentQuestionIndex = 1;
 			Assert.IsTrue(Task.HasPreviousDomainQuestion);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1429,6 +1521,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.CurrentDomainIndex = 0;
 			Assert.IsFalse(Task.HasPreviousDomainQuestion);
+			Task.Deactivate();
 		}
 
 		#endregion
@@ -1437,18 +1530,21 @@ namespace WeSay.LexicalTools.Tests
 		public void WordsInDomain_NegativeIndex_Throws()
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() => Task.WordsInDomain(-1));
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void WordsInDomain_IndexBeyondDomainCount_Throws()
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() => Task.WordsInDomain(Task.DomainKeys.Count));
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void WordsInDomain_NoWords_Zero()
 		{
 			Assert.AreEqual(0, Task.WordsInDomain(0));
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1459,6 +1555,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
 			Assert.AreEqual(3, Task.WordsInDomain(0));
+			Task.Deactivate();
 		}
 
 		#endregion
@@ -1491,6 +1588,7 @@ namespace WeSay.LexicalTools.Tests
 							Task.Questions[5]);
 			Assert.AreEqual("(7) What tools and machines are used to create or use the wind?",
 							Task.Questions[6]);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -1512,6 +1610,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(string.Empty, task.CurrentDomainKey);
 			Assert.AreEqual(1, task.Questions.Count);
 			Assert.AreEqual(string.Empty, task.CurrentQuestion);
+			task.Deactivate();
 
 			File.Delete(emptySemanticDomainFilePath);
 		}
@@ -1548,6 +1647,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("1 L’univers, la création", task.DomainNames[0]);
 			Assert.AreEqual(" 1.1 Ciel", task.DomainNames[1]);
 			Assert.AreEqual("fr", task.SemanticDomainWritingSystemId);
+			task.Deactivate();
 
 			File.Delete(frenchSemanticDomainFilePath);
 		}

@@ -147,8 +147,9 @@ namespace WeSay.LexicalTools.Tests
 							WritingSystemsIdsForTests.AnalysisIdForTest, _catalog),
 					_lexEntryRepository,
 					_viewTemplate, new TaskMemoryRepository());
-
+			g.Activate();
 			Assert.IsNotNull(g);
+			g.Deactivate();
 		}
 
 		[Test]
@@ -160,7 +161,13 @@ namespace WeSay.LexicalTools.Tests
 				   _lexEntryRepository,
 					_viewTemplate, new TaskMemoryRepository());
 
-			 Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() => g.Activate()); //should give a box to user, an exception in this text environment
+			// the code doesn't show the errror box in release builds, but
+			// the builder publishing configuration does run tests in release builds
+			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+			{
+				g.Activate();
+			}
+			g.Deactivate();
 		}
 
 
@@ -168,6 +175,7 @@ namespace WeSay.LexicalTools.Tests
 		public void CurrentLexemeFormFromWordList_AtStart_IsCorrect()
 		{
 			Assert.AreEqual("one", Task.CurrentPromptingForm);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -175,6 +183,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.NavigateNext();
 			Assert.AreEqual("two", Task.CurrentPromptingForm);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -183,18 +192,21 @@ namespace WeSay.LexicalTools.Tests
 			Task.NavigateNext();
 			Task.NavigatePrevious();
 			Assert.AreEqual("one", Task.CurrentPromptingForm);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CanNavigateNext_OnFirst_True()
 		{
 			Assert.IsTrue(Task.CanNavigateNext);
+			Task.Deactivate();
 		}
 
 		[Test]
 		public void CanNavigatePrevious_OnFirst_False()
 		{
 			Assert.IsFalse(Task.CanNavigatePrevious);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -203,6 +215,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(Task.CanNavigateNext);
 			NextToEnd();
 			Assert.IsFalse(Task.CanNavigateNext);
+			Task.Deactivate();
 		}
 
 		private void NextToEnd()
@@ -225,6 +238,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(Task.IsTaskComplete);
 			Task.NavigatePrevious();
 			Assert.IsFalse(Task.IsTaskComplete);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -235,6 +249,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.NavigatePrevious();
 			Assert.IsFalse(Task.IsTaskComplete);
 			Assert.IsTrue(Task.CanNavigateNext);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -246,6 +261,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("three");
 			Task.NavigateFirstToShow();
 			Assert.IsTrue(Task.IsTaskComplete);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -255,6 +271,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("one");
 			Task.NavigateFirstToShow();
 			Assert.AreEqual("two", Task.CurrentPromptingForm);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -270,6 +287,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("two", Task.CurrentPromptingForm);
 			Task.NavigateNext();
 			Assert.IsTrue(Task.IsTaskComplete); //we don't get to see "three"
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -281,6 +299,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("one", Task.CurrentPromptingForm);
 			Task.NavigateNext();
 			Assert.AreEqual("three", Task.CurrentPromptingForm);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -290,6 +309,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("two");
 			Task.NavigateFirstToShow();
 			Assert.AreEqual("three", Task.CurrentPromptingForm);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -306,6 +326,7 @@ namespace WeSay.LexicalTools.Tests
 			//app itself, but which I haven't got to fail under tests.  I believe I've
 			//fixed the bug, but alas this never really demonstrated it.
 			Assert.AreEqual(1, Task.GetRecordsWithMatchingGloss().Count);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -326,6 +347,7 @@ namespace WeSay.LexicalTools.Tests
 
 			ResultSet<LexEntry> matchingLexicalForms = Task.GetRecordsWithMatchingGloss();
 			Assert.AreEqual(1, matchingLexicalForms.Count);
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -343,6 +365,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.WordCollected(word);
 			Assert.AreEqual(1, e.Senses.Count);
 			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -363,6 +386,7 @@ namespace WeSay.LexicalTools.Tests
 
 			Assert.AreEqual(2, e.Senses.Count);
 			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -412,6 +436,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(0,
 							_lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).
 									Count);
+			Task.Deactivate();
 		}
 
 		/// <summary>
@@ -434,6 +459,7 @@ namespace WeSay.LexicalTools.Tests
 							_lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).
 									Count);
 			Assert.AreEqual(1, entry.Senses.Count);
+			Task.Deactivate();
 		}
 
 		/// <summary>
@@ -456,6 +482,7 @@ namespace WeSay.LexicalTools.Tests
 							_lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).
 									Count);
 			Assert.AreEqual(1, entry.Senses.Count);
+			Task.Deactivate();
 		}
 
 		/// <summary>
@@ -481,6 +508,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("one",
 							sense.Gloss.GetExactAlternative(_glossingLanguageWSId),
 							"should not remove the gloss");
+			Task.Deactivate();
 		}
 
 		private RecordToken<LexEntry> PrepareEntryWithOneGloss()
@@ -496,7 +524,7 @@ namespace WeSay.LexicalTools.Tests
 
 			ResultSet<LexEntry> entries =
 					_lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs);
-
+			Task.Deactivate();
 			return entries[0];
 		}
 
@@ -519,7 +547,8 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("apple", task.CurrentPromptingForm);
 			task.NavigateNext();
 			Assert.AreEqual("cloud", task.CurrentPromptingForm);
-		 }
+			task.Deactivate();
+		}
 
 		[Test]
 		public void CurrentLexemeForm_FieldSpecifiesFirstWritingSystem_GivesCorrectWritingSystemAlternative()
@@ -539,6 +568,7 @@ namespace WeSay.LexicalTools.Tests
 			var task = CreateAndActivateLiftTask(new List<string>(new string[]{"en"}), entries);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("apple", task.CurrentPromptingForm);
+			task.Deactivate();
 		}
 
 		[Test]
@@ -560,6 +590,7 @@ namespace WeSay.LexicalTools.Tests
 				CreateAndActivateLiftTask(new List<string>(new string[] { "th" }), entries);
 			}
 		}
+
 		[Test]
 		public void Activate_NoWordsWithFirstWSButHaveOthers_NoMessage()
 		{
@@ -575,8 +606,9 @@ namespace WeSay.LexicalTools.Tests
 					</lexical-unit>
 				</entry>";
 
-			var task =CreateAndActivateLiftTask(new List<string>(new string[] { "th", "fr" }), entries);
+			var task = CreateAndActivateLiftTask(new List<string>(new string[] { "th", "fr" }), entries);
 			task.NavigateFirstToShow();
+			task.Deactivate();
 		}
 
 		[Test]
@@ -597,6 +629,7 @@ namespace WeSay.LexicalTools.Tests
 
 			var task = CreateAndActivateLiftTask(new List<string>(new string[] { "th", "fr" }), entries);
 			task.NavigateFirstToShow();
+			task.Deactivate();
 		}
 
 		[Test]
@@ -633,6 +666,7 @@ namespace WeSay.LexicalTools.Tests
 			var task = CreateAndActivateLiftTask(new List<string>(new string[] { "id", "en" }), entries);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("kulit (manusia)", task.CurrentPromptingForm);
+			task.Deactivate();
 		}
 
 		[Test]
@@ -654,6 +688,7 @@ namespace WeSay.LexicalTools.Tests
 			var task = CreateAndActivateLiftTask(new List<string>(new string[]{"fr","en"}), entries);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("corps", task.CurrentPromptingForm);
+			task.Deactivate();
 		}
 
 		[Test]
@@ -671,7 +706,9 @@ namespace WeSay.LexicalTools.Tests
 			var task = CreateAndActivateLiftTask(new List<string>(new string[] { "fr", "en" }), entries);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("body", task.CurrentPromptingForm);
+			task.Deactivate();
 		}
+
 		[Test]
 		public void NavigateNext_NextDoesntHaveAndMatchingLanguages_SkipsOver()
 		{
@@ -705,7 +742,9 @@ namespace WeSay.LexicalTools.Tests
 			task.NavigateNext();//skips "Skip me!"
 			Assert.IsFalse(task.IsTaskComplete);
 			Assert.AreEqual("orange", task.CurrentPromptingForm);
+			task.Deactivate();
 		}
+
 		[Test]
 		public void CanNavigateNext_NoFurtherMatchesHaveRequiredLanguages_False()
 		{
@@ -742,6 +781,7 @@ namespace WeSay.LexicalTools.Tests
 			task.NavigateNext();
 			Assert.IsTrue(task.IsTaskComplete);
 			Assert.IsFalse(task.CanNavigateNext);
+			task.Deactivate();
 		}
 
 
@@ -795,6 +835,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
 			Task.TryToRemoveAssociationWithListWordFromEntry(resultSet[0]);
 			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(0));
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -808,6 +849,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
 			Task.TryToRemoveAssociationWithListWordFromEntry(token);
 			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			Task.Deactivate();
 		}
 
 		[Test]
@@ -821,6 +863,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
 			Task.TryToRemoveAssociationWithListWordFromEntry(token);
 			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			Task.Deactivate();
 		}
 
 		private LexSense AddWordAndGetFirstSense()

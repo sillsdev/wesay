@@ -46,7 +46,7 @@
 		/>
 	</ItemGroup>
 	<Target Name="Clean">
-		<Exec Command="find . -name obj -type d -print0 | xargs -0 rm -rf" WorkingDirectory="$(RootDir)" />
+		<Exec Command="find $(RootDir)/. -name obj -type d -print0 | xargs -0 rm -rf" WorkingDirectory="$(RootDir)" />
 		<Delete Files="@(ExistingObjectFiles)" />
 	</Target>
 
