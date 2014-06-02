@@ -404,7 +404,6 @@ namespace WeSay.Project
 		{
 			var filename = Path.GetFileName(Project.PathToLiftFile);
 			//review: see also: HttpUtility.UrlEncode
-			filename = Uri.EscapeDataString(filename);
 			string url = string.Format("lift://{0}?type=entry&", filename);
 			url += "label=" + entry.GetSimpleFormForLogging() + "&";
 			url += "id=" + entry.Guid;
