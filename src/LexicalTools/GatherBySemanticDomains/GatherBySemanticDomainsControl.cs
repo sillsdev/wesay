@@ -41,6 +41,8 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_listViewWords.BackColor = Color.White;
 			_listViewWords.DisplayMeaning = _presentationModel.ShowMeaningField;
 
+			_domainListComboBox.Font = _presentationModel.GetFontOfSemanticDomainField();
+
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made
 			var majorRomanWritingSystems = new List<string>(new[] { "en", "id", "fr" });
@@ -52,6 +54,11 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				_domainListComboBox.Font = new Font("Lucida Console", _domainListComboBox.Font.Size, FontStyle.Bold);
 #endif
 
+			}
+
+			if (WeSayWordsProject.GeckoOption)
+			{
+				_domainListComboBox.Height = _domainListComboBox.Font.Height + 30;
 			}
 
 			RefreshCurrentWords();
@@ -125,11 +132,9 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			_reminder.Text = _presentationModel.Reminder;
 
-		   _flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
+			_flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 
 			_flyingLabel.Finished += _animator_Finished;
-
-			_domainListComboBox.Font = _presentationModel.GetFontOfSemanticDomainField();
 		}
 
 		/// <summary>
@@ -202,22 +207,22 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			_listViewWords.Clear();
 			string longestVernacularWord = string.Empty;
-			string longestMeannigWord = string.Empty;
+			string longestMeaningWord = string.Empty;
 			foreach (GatherBySemanticDomainTask.WordDisplay word in _presentationModel.CurrentWords)
 			{
 				if (longestVernacularWord.Length < word.Vernacular.Form.Length)
 				{
 					longestVernacularWord = word.Vernacular.Form;
 				}
-				if (word.Meaning != null && word.Meaning.Form != null && longestMeannigWord.Length < word.Meaning.Form.Length)
+				if (word.Meaning != null && word.Meaning.Form != null && longestMeaningWord.Length < word.Meaning.Form.Length)
 				{
-					longestMeannigWord = word.Meaning.Form;
+					longestMeaningWord = word.Meaning.Form;
 				}
 				_listViewWords.AddItem(word);
 			}
 
 			Size wordMax = TextRenderer.MeasureText(longestVernacularWord, _listViewWords.Font);
-			Size meaningMax = _presentationModel.ShowMeaningField && longestMeannigWord == null ? new Size() : TextRenderer.MeasureText(longestMeannigWord, _presentationModel.MeaningFont);
+			Size meaningMax = _presentationModel.ShowMeaningField && longestMeaningWord == null ? new Size() : TextRenderer.MeasureText(longestMeaningWord, _presentationModel.MeaningFont);
 			_listViewWords.ColumnWidth = Math.Max(wordMax.Width, meaningMax.Width) + 10;
 			_listViewWords.ListCompleted();
 		}

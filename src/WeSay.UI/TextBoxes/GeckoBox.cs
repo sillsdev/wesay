@@ -106,10 +106,11 @@ namespace WeSay.UI.TextBoxes
 		protected override void OnDomKeyUp(object sender, GeckoDomKeyEventArgs e)
 		{
 			var content = _browser.Document.GetElementById("main");
-			_keyPressed = true;
-
-			//			Debug.WriteLine(content.TextContent);
-			Text = content.TextContent;
+			if (!(e.KeyCode == (uint)Keys.Enter)) // carriage return
+			{
+				_keyPressed = true;
+				Text = content.TextContent;
+			}
 		}
 
 

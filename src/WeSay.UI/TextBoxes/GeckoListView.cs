@@ -208,7 +208,7 @@ namespace WeSay.UI.TextBoxes
 				justification = "right";
 			}
 			Font font = WritingSystemInfo.CreateFont(_writingSystem);
-			return String.Format("min-height:15px; width=30em; font-family:{0}; font-size:{1}pt; text-align:{2}; font-weight:{3}; background:{4}; width:{5}",
+			return String.Format("min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{2}; font-weight:{3}; background:{4}; width:{5}",
 				font.Name,
 				font.Size,
 				justification,
