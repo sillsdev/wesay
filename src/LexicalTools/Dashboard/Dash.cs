@@ -833,21 +833,8 @@ namespace WeSay.LexicalTools.Dashboard
 
 		#endregion
 
-		private void FixPanelSize()
-		{
-			// fixing mono bugginess
-			SuspendLayout();
-			_panel.Anchor = AnchorStyles.None;
-			_panel.Bounds = new Rectangle(20, 11, ClientRectangle.Width - 20, ClientRectangle.Height - 11);
-			_panel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-			ResumeLayout(false);
-		}
-
 		protected override void OnLayout(LayoutEventArgs e)
 		{
-#if __MonoCS__
-			FixPanelSize();
-#endif
 			base.OnLayout(e);
 			Invalidate(false); // force redraw of background
 			bool needReposition = false;
