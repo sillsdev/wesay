@@ -166,8 +166,7 @@ namespace WeSay.UI.TextBoxes
 			{
 				justification = "right";
 			}
-
-			return String.Format("min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{2}; font-weight:{3}; background:{4}; width:{5}",
+			return String.Format("min-height:15px; height:inherit; font-family:{0}; font-size:{1}pt; text-align:{2}; font-weight:{3}; background:{4}; width:{5}",
 				Font.Name,
 				Font.Size, justification,
 				Font.Bold ? "bold" : "normal",
@@ -184,8 +183,7 @@ namespace WeSay.UI.TextBoxes
 			html.Append("<script type='text/javascript'>");
 			html.Append(" function fireEvent(name, data)");
 			html.Append(" {");
-			html.Append("   event = document.createEvent('MessageEvent');");
-			html.Append("   event.initMessageEvent(name, false, false, data, null, null, null, null);");
+			html.Append("   var event = new MessageEvent(name, {'data' : data});");
 			html.Append("   document.dispatchEvent(event);");
 			html.Append(" }");
 			html.Append("</script>");
@@ -231,6 +229,7 @@ namespace WeSay.UI.TextBoxes
 			}
 			AdjustHeight();
 		}
+
 		protected override void OnBackColorChanged(object sender, EventArgs e)
 		{
 			// if it's already loaded, change it
@@ -243,7 +242,6 @@ namespace WeSay.UI.TextBoxes
 				}
 			}
 		}
-
 
 		private delegate void ChangeFocusDelegate(GeckoSelectElement ctl);
 		protected override void OnDomFocus(object sender, DomEventArgs e)

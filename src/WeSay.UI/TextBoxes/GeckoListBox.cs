@@ -154,12 +154,13 @@ namespace WeSay.UI.TextBoxes
 			Rectangle itemRectangle = this.ClientRectangle; // Default
 			if (!((_browser == null) || (_browser.Document == null)))
 			{
-//FIXME!!
+
 				string id = index.ToString() + "-1";
 				var content = (GeckoLIElement)_browser.Document.GetElementById(id);
 				if (content != null)
 				{
-//					itemRectangle = content.BoundingClientRect;
+					nsIDOMClientRect domRect = content.DOMHtmlElement.GetBoundingClientRect();
+					itemRectangle = new Rectangle((int)domRect.GetLeftAttribute(), (int)domRect.GetTopAttribute(), (int)domRect.GetWidthAttribute(), (int)domRect.GetHeightAttribute());
 				}
 			}
 			return itemRectangle;
@@ -243,8 +244,7 @@ namespace WeSay.UI.TextBoxes
 			html.Append("<script type='text/javascript'>");
 			html.Append(" function fireEvent(name, data)");
 			html.Append(" {");
-			html.Append("   event = document.createEvent('MessageEvent');");
-			html.Append("   event.initMessageEvent(name, false, false, data, null, null, null, null);");
+			html.Append("   var event = new MessageEvent(name, {'data' : data});");
 			html.Append("   document.dispatchEvent(event);");
 			html.Append(" }");
 			html.Append("</script>");

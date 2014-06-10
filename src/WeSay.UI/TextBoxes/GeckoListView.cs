@@ -209,7 +209,7 @@ namespace WeSay.UI.TextBoxes
 				justification = "right";
 			}
 			Font font = WritingSystemInfo.CreateFont(_writingSystem);
-			return String.Format("min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{2}; font-weight:{3}; background:{4}; width:{5}",
+			return String.Format("min-height:15px; width=30em; font-family:{0}; font-size:{1}pt; text-align:{2}; font-weight:{3}; background:{4}; width:{5}",
 				font.Name,
 				font.Size,
 				justification,
@@ -227,8 +227,7 @@ namespace WeSay.UI.TextBoxes
 			html.Append("<script type='text/javascript'>");
 			html.Append(" function fireEvent(name, data)");
 			html.Append(" {");
-			html.Append("   event = document.createEvent('MessageEvent');");
-			html.Append("   event.initMessageEvent(name, false, false, data, null, null, null, null);");
+			html.Append("   var event = new MessageEvent(name, {'data' : data});");
 			html.Append("   document.dispatchEvent(event);");
 			html.Append(" }");
 			html.Append("</script>");
