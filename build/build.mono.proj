@@ -82,7 +82,6 @@
 	<ItemGroup>
 		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.config" />
 		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.mdb" />
-		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/geckofix.so" />
 	</ItemGroup>
 	<Target Name="CopyFiles">
 		<Copy SourceFiles="@(ExistingLibraryFiles)" DestinationFolder="$(OutputDir)" />

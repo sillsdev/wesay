@@ -79,14 +79,14 @@ cd -
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt399
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"Geckofx-Core.dll"=>"lib/Debug", "Geckofx-Core.dll.config"=>"lib/Debug", "Geckofx-Winforms.dll"=>"lib/Debug", "Geckofx-Winforms.pdb"=>"lib/Debug"}
+#     paths: {"Geckofx-Core.dll"=>"lib/Release", "Geckofx-Core.dll.config"=>"lib/Release", "Geckofx-Winforms.dll"=>"lib/Release", "Geckofx-Winforms.pdb"=>"lib/Release"}
 #     VCS: https://bitbucket.org/geckofx/geckofx-29.0 [default]
 # [2] build: geckofx29-win32-continuous (bt399)
 #     project: GeckoFx
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt399
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"Geckofx-Core.dll"=>"lib/Release", "Geckofx-Core.dll.config"=>"lib/Release", "Geckofx-Winforms.dll"=>"lib/Release", "Geckofx-Winforms.pdb"=>"lib/Release"}
+#     paths: {"Geckofx-Core.dll"=>"lib/Debug", "Geckofx-Core.dll.config"=>"lib/Debug", "Geckofx-Winforms.dll"=>"lib/Debug", "Geckofx-Winforms.pdb"=>"lib/Debug"}
 #     VCS: https://bitbucket.org/geckofx/geckofx-29.0 [default]
 # [3] build: XulRunner29-win32 (bt400)
 #     project: GeckoFx
@@ -189,14 +189,14 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastS
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastSuccessful/MercurialExtensions/fixutf8/win32helper.pyc ../MercurialExtensions/fixutf8/win32helper.pyc
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastSuccessful/MercurialExtensions/fixutf8/win32helper.pyo ../MercurialExtensions/fixutf8/win32helper.pyo
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt2/latest.lastSuccessful/ChorusMergeModule.msm ../lib/ChorusMergeModule.msm
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Core.dll ../lib/Debug/Geckofx-Core.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Core.dll.config ../lib/Debug/Geckofx-Core.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Winforms.dll ../lib/Debug/Geckofx-Winforms.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Winforms.pdb ../lib/Debug/Geckofx-Winforms.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Core.dll ../lib/Release/Geckofx-Core.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Core.dll.config ../lib/Release/Geckofx-Core.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Winforms.dll ../lib/Release/Geckofx-Winforms.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Winforms.pdb ../lib/Release/Geckofx-Winforms.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Core.dll ../lib/Debug/Geckofx-Core.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Core.dll.config ../lib/Debug/Geckofx-Core.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Winforms.dll ../lib/Debug/Geckofx-Winforms.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Winforms.pdb ../lib/Debug/Geckofx-Winforms.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt400/latest.lastSuccessful/xulrunner-29.0.en-US.win32.zip ../Downloads/xulrunner-29.0.en-US.win32.zip
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.lastSuccessful/L10NSharp.dll ../lib/Debug/L10NSharp.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.lastSuccessful/L10NSharp.pdb ../lib/Debug/L10NSharp.pdb

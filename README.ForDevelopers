@@ -17,8 +17,8 @@ The basic WeSay repository is at github, and can be cloned as follows:
 SIL has Linux (Ubuntu/Debian) package repositories that are used to distribute
 software that are either original with us or specialized for our use.  There
 are two basic repositories, often referred to as PSO or PSO-experimental.  Two
-packages need to be installed from these repositories: geckofx and
-xulrunner-geckofx.
+packages need to be installed from these repositories: geckofx29 and
+xulrunner-geckofx29 (which is a dependency of geckofx29).
 
 The following commands will add the repositories to your apt setup and then
 download and install the packages.  (You need to add the second repository only
@@ -28,7 +28,7 @@ if the first repository doesn't work.)
 	sudo add-apt-repository 'deb http://packages.sil.org/ubuntu precise-experimental main'
 	wget -O - http://packages.sil.org/sil.gpg | sudo apt-key add -
 	sudo apt-get update
-	sudo apt-get install geckofx xulrunner-geckofx
+	sudo apt-get install geckofx29
 
 If you are not running precise on your machine, change precise and
 precise-experimental to match your actual distribution.  If you are running
