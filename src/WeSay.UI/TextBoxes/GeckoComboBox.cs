@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
+using Gecko.Events;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
 
@@ -209,12 +210,12 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		protected override void OnDomClick(object sender, GeckoDomEventArgs e)
+		protected override void OnDomClick(object sender, DomMouseEventArgs e)
 		{
 			_browser.Focus ();
 		}
 
-		protected override void OnDomDocumentCompleted(object sender, EventArgs e)
+		protected override void OnDomDocumentCompleted(object sender, GeckoDocumentCompletedEventArgs e)
 		{
 			base.OnDomDocumentCompleted(sender, e);
 			if (!_initialSelectLoad)
@@ -245,7 +246,7 @@ namespace WeSay.UI.TextBoxes
 
 
 		private delegate void ChangeFocusDelegate(GeckoSelectElement ctl);
-		protected override void OnDomFocus(object sender, GeckoDomEventArgs e)
+		protected override void OnDomFocus(object sender, DomEventArgs e)
 		{
 //			Console.WriteLine("Got Focus: " );
 			var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");

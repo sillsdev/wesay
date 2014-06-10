@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
+using Gecko.Events;
 using Palaso.WritingSystems;
 
 namespace WeSay.UI.TextBoxes
@@ -17,12 +18,12 @@ namespace WeSay.UI.TextBoxes
 		protected bool _browserIsReadyToNavigate;
 		protected bool _browserDocumentLoaded;
 		protected EventHandler _loadHandler;
-		protected EventHandler<GeckoDomKeyEventArgs> _domKeyUpHandler;
-		protected EventHandler<GeckoDomEventArgs> _domClickHandler;
-		protected EventHandler<GeckoDomKeyEventArgs> _domKeyDownHandler;
-		protected EventHandler<GeckoDomEventArgs> _domFocusHandler;
-		protected EventHandler<GeckoDomEventArgs> _domBlurHandler;
-		protected EventHandler _domDocumentCompletedHandler;
+		protected EventHandler<DomKeyEventArgs> _domKeyUpHandler;
+		protected EventHandler<DomMouseEventArgs> _domClickHandler;
+		protected EventHandler<DomKeyEventArgs> _domKeyDownHandler;
+		protected EventHandler<DomEventArgs> _domFocusHandler;
+		protected EventHandler<DomEventArgs> _domBlurHandler;
+		protected EventHandler<GeckoDocumentCompletedEventArgs> _domDocumentCompletedHandler;
 		protected EventHandler _backColorChangedHandler;
 		protected bool _inFocus;
 		protected string _nameForLogging;
@@ -49,20 +50,20 @@ namespace WeSay.UI.TextBoxes
 			this.Load += _loadHandler;
 			Controls.Add(_browser);
 
-			_domDocumentCompletedHandler = new EventHandler(OnDomDocumentCompleted);
+			_domDocumentCompletedHandler = new EventHandler<GeckoDocumentCompletedEventArgs>(OnDomDocumentCompleted);
 			_browser.DocumentCompleted += _domDocumentCompletedHandler;
-			_domFocusHandler = new EventHandler<GeckoDomEventArgs>(OnDomFocus);
+			_domFocusHandler = new EventHandler<DomEventArgs>(OnDomFocus);
 			_browser.DomFocus += _domFocusHandler;
-			_domKeyUpHandler = new EventHandler<GeckoDomKeyEventArgs>(OnDomKeyUp);
+			_domKeyUpHandler = new EventHandler<DomKeyEventArgs>(OnDomKeyUp);
 			_browser.DomKeyUp += _domKeyUpHandler;
-			_domKeyDownHandler = new EventHandler<GeckoDomKeyEventArgs>(OnDomKeyDown);
+			_domKeyDownHandler = new EventHandler<DomKeyEventArgs>(OnDomKeyDown);
 			_browser.DomKeyDown += _domKeyDownHandler;
-			_domBlurHandler = new EventHandler<GeckoDomEventArgs>(OnDomBlur);
+			_domBlurHandler = new EventHandler<DomEventArgs>(OnDomBlur);
 			_browser.DomBlur += _domBlurHandler;
 			_backColorChangedHandler = new EventHandler(OnBackColorChanged);
 			this.BackColorChanged += _backColorChangedHandler;
 #if __MonoCS__
-			_domClickHandler = new EventHandler<GeckoDomEventArgs>(OnDomClick);
+			_domClickHandler = new EventHandler<DomMouseEventArgs>(OnDomClick);
 			_browser.DomClick += _domClickHandler;
 #endif
 		}
@@ -175,7 +176,7 @@ namespace WeSay.UI.TextBoxes
 			_browser.Focus();
 		}
 
-		protected virtual void OnDomKeyDown(object sender, GeckoDomKeyEventArgs e)
+		protected virtual void OnDomKeyDown(object sender, DomKeyEventArgs e)
 		{
 			if (_inFocus)
 			{
@@ -222,11 +223,11 @@ namespace WeSay.UI.TextBoxes
 		public virtual DrawMode DrawMode { get; set; }
 		public virtual FlatStyle FlatStyle { get; set; }
 
-		protected virtual void OnDomBlur(object sender, GeckoDomEventArgs e)
+		protected virtual void OnDomBlur(object sender, DomEventArgs e)
 		{
 			_inFocus = false;
 		}
-		protected virtual void OnDomDocumentCompleted(object sender, EventArgs e)
+		protected virtual void OnDomDocumentCompleted(object sender, GeckoDocumentCompletedEventArgs e)
 		{
 			_browserDocumentLoaded = true;  // Document loaded once
 			AdjustHeight();
@@ -234,13 +235,13 @@ namespace WeSay.UI.TextBoxes
 
 		// Making these empty handlers rather than abstract so the class only
 		// needs to implement the ones they need.
-		protected virtual void OnDomFocus(object sender, GeckoDomEventArgs e)
+		protected virtual void OnDomFocus(object sender, DomEventArgs e)
 		{
 		}
-		protected virtual void OnDomKeyUp(object sender, GeckoDomKeyEventArgs e)
+		protected virtual void OnDomKeyUp(object sender, DomKeyEventArgs e)
 		{
 		}
-		protected virtual void OnDomClick(object sender, GeckoDomEventArgs e)
+		protected virtual void OnDomClick(object sender, DomMouseEventArgs e)
 		{
 		}
 		protected virtual void OnGeckoBox_Load(object sender, EventArgs e)

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -97,22 +97,18 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="geckofx-core-14">
-      <HintPath>\usr\lib\cli\geckofx-14.0.1\geckofx-core-14.dll</HintPath>
-    </Reference>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms-14">
-      <HintPath>\usr\lib\cli\geckofx-14.0.1\Geckofx-Winforms-14.dll</HintPath>
-    </Reference>
-    <None Include="\usr\lib\cli\geckofx-14.0.1\geckofx-core-14.dll.config" Condition="'$(OS)'!='Windows_NT'">
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core"/>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms"/>
+    <None Include="\usr\lib\cli\geckofx-29\Geckofx-Core.dll.config" Condition="'$(OS)'!='Windows_NT'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Reference Condition="'$(OS)'=='Windows_NT'" Include="geckofx-core-14">
-      <HintPath>..\..\lib\$(Configuration)\geckofx-core-14.dll</HintPath>
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Core">
+      <HintPath>..\..\lib\$(Configuration)\Geckofx-Core.dll</HintPath>
     </Reference>
-    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Winforms-14">
-      <HintPath>..\..\lib\$(Configuration)\Geckofx-Winforms-14.dll</HintPath>
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Winforms">
+      <HintPath>..\..\lib\$(Configuration)\Geckofx-Winforms.dll</HintPath>
     </Reference>
-    <None Include="..\..\lib\$(Configuration)\geckofx-core-14.dll.config" Condition="'$(OS)'=='Windows_NT'">
+    <None Include="..\..\lib\$(Configuration)\Geckofx-Core.dll.config" Condition="'$(OS)'=='Windows_NT'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

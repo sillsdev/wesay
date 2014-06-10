@@ -1,5 +1,5 @@
 # MonoDevelop seems to set PKG_CONFIG_LIBDIR to the empty string, which is bad
-# for us because that eliminates most packages, including geckofx-core-14.
+# for us because that eliminates most packages, including Geckofx-Core.
 # If PKG_CONFIG_LIBDIR is not set at all, then the default paths are searched.
 # To be safe, we'll preserve the old value (if it is set) and restore it.
 if [ "${PKG_CONFIG_LIBDIR+set}" = set ]; then
@@ -9,10 +9,10 @@ fi
 # search for xulrunner-14*, select the latest, and add its location to LD_LIBRARY_PATH
 # also define LD_PRELOAD to get geckofix.so to work properly
 # (the search order must be the same as in Geckfx-Core/XULRunnerLocator.cs)
-XULRUNNER=/usr/lib/xulrunner-geckofx
-if [ ! -d ${XULRUNNER} ]; then XULRUNNER=/usr/lib/xulrunner-14.0.1; fi
+XULRUNNER=/usr/lib/xulrunner-geckofx-29
+if [ ! -d ${XULRUNNER} ]; then XULRUNNER=/usr/lib/xulrunner-29; fi
 LD_LIBRARY_PATH="${XULRUNNER}:${LD_LIBRARY_PATH}"
-GECKOFX="$(pkg-config --variable assemblies_dir geckofx-core-14)"
+GECKOFX="$(pkg-config --variable assemblies_dir Geckofx-Core)"
 LD_PRELOAD=${GECKOFX}/geckofix.so
 
 if [ "${OLD_PKG_CONFIG_LIBDIR+set}" = set ]; then

@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
+using Gecko.Events;
 using Palaso.DictionaryServices.Model;
 using Palaso.Data;
 using Palaso.i18n;
@@ -266,7 +267,7 @@ namespace WeSay.UI.TextBoxes
 				}
 			}
 		}
-		protected override void OnDomDocumentCompleted(object sender, EventArgs e)
+		protected override void OnDomDocumentCompleted(object sender, GeckoDocumentCompletedEventArgs e)
 		{
 			base.OnDomDocumentCompleted(sender, e);
 			if (!_initialSelectLoad)
@@ -315,12 +316,12 @@ namespace WeSay.UI.TextBoxes
 				{
 					numberOfEntries = 10;
 				}
-				selectElement.Size = numberOfEntries;
+				selectElement.Size = (uint)numberOfEntries;
 			}
 		}
 
 		private delegate void ChangeFocusDelegate(GeckoSelectElement ctl);
-		protected override void OnDomFocus(object sender, GeckoDomEventArgs e)
+		protected override void OnDomFocus(object sender, DomEventArgs e)
 		{
 			var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
 			if (content != null)

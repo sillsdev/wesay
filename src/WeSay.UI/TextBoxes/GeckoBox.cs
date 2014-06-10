@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
+using Gecko.Events;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
@@ -67,7 +68,7 @@ namespace WeSay.UI.TextBoxes
 		}
 
 		private delegate void ChangeFocusDelegate(GeckoDivElement ctl);
-		protected override void OnDomFocus(object sender, GeckoDomEventArgs e)
+		protected override void OnDomFocus(object sender, DomEventArgs e)
 		{
 			var content = _browser.Document.GetElementById("main");
 			if (content != null)
@@ -94,7 +95,7 @@ namespace WeSay.UI.TextBoxes
 			ctl.Focus();
 		}
 
-		protected override void OnDomClick(object sender, GeckoDomEventArgs e)
+		protected override void OnDomClick(object sender, DomMouseEventArgs e)
 		{
 #if DEBUG
 			Debug.WriteLine ("Got Dom Mouse Click " + Text);
@@ -103,7 +104,7 @@ namespace WeSay.UI.TextBoxes
 		}
 
 
-		protected override void OnDomKeyUp(object sender, GeckoDomKeyEventArgs e)
+		protected override void OnDomKeyUp(object sender, DomKeyEventArgs e)
 		{
 			var content = _browser.Document.GetElementById("main");
 			if (!(e.KeyCode == (uint)Keys.Enter)) // carriage return

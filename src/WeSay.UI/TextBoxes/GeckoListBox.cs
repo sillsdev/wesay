@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
+using Gecko.Events;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
 using WeSay.LexicalModel.Foundation;
@@ -153,11 +154,12 @@ namespace WeSay.UI.TextBoxes
 			Rectangle itemRectangle = this.ClientRectangle; // Default
 			if (!((_browser == null) || (_browser.Document == null)))
 			{
+//FIXME!!
 				string id = index.ToString() + "-1";
 				var content = (GeckoLIElement)_browser.Document.GetElementById(id);
 				if (content != null)
 				{
-					itemRectangle = content.BoundingClientRect;
+//					itemRectangle = content.BoundingClientRect;
 				}
 			}
 			return itemRectangle;
@@ -281,7 +283,7 @@ namespace WeSay.UI.TextBoxes
 				UserClick.Invoke(this, null);
 			}
 		}
-		protected override void OnDomDocumentCompleted(object sender, EventArgs e)
+		protected override void OnDomDocumentCompleted(object sender, GeckoDocumentCompletedEventArgs e)
 		{
 			base.OnDomDocumentCompleted(sender, e);
 			if (!_initialSelectLoad)
@@ -318,7 +320,7 @@ namespace WeSay.UI.TextBoxes
 		}
 
 		private delegate void ChangeFocusDelegate(GeckoSelectElement ctl);
-		protected override void OnDomFocus(object sender, GeckoDomEventArgs e)
+		protected override void OnDomFocus(object sender, DomEventArgs e)
 		{
 			var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
 			if (content != null)
