@@ -6,14 +6,14 @@ Build-Depends: debhelper (>=7),
   mono-devel (>=2.10), cli-common-dev (>= 0.8~),
   unzip,
   libicu-dev, libenchant-dev, libsndfile-dev, libxklavier-dev, libdconf-dev,
-  geckofx
+  geckofx29
 Standards-Version: 3.9.4
 
 Package: wesay
 Architecture: any
 Depends: ${misc:Depends}, ${cli:Depends},
  mono-sil, mono-basic-sil, gtk-sharp2-sil, libgdiplus-sil,
- geckofx,
+ geckofx29,
  libimage-exiftool-perl,
  chmsee
 Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer, art-of-reading

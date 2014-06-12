@@ -1,3 +1,22 @@
+wesay (1.5.9) experimental; urgency=low
+
+  * WS-66 Adding note to a word in DBE fails
+  * WS-61 Fix scrolling on Home tab
+  * WS-67 Fix button alignment
+  * WS-55 Fix line ending issue in Writing System Font Test dialog
+  * WS-52, WS-46 Fix text clipping
+  * Switch from geckofx14 to geckofx29
+  * Fix some issues running on Mono 3 (libpalaso)
+  * Fix Art of Reading searches
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 12 Jun 2014 10:33:16 -0400
+
+wesay (1.5.8) experimental; urgency=low
+
+  * More attempts to fix crash if no ibus keyboard installed (FWNX-1382)
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 01 Jun 2014 10:00:00 -0400
+
 wesay (1.5.7) experimental; urgency=low
 
   * WS-62 Fix text entry area does not render properly
