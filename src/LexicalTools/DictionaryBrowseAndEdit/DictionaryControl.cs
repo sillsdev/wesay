@@ -73,17 +73,18 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_findTextAdapter = new ResultSetToListOfStringsAdapter("Form", _records);
 			SearchTextBox.Items = _findTextAdapter;
 
-			  SetListWritingSystem(
+			_recordsListBox.ItemSelectionChanged += OnRecordsListBoxItemSelectionChanged;
+			_recordsListBox.MinLength = 10;
+			_recordsListBox.MaxLength = 20;
+			_recordsListBox.BackColor = Color.White;
+
+			SetListWritingSystem(
 					_viewTemplate.GetDefaultWritingSystemForField(
 							Field.FieldNames.EntryLexicalForm.ToString()));
 
 			_searchTextBoxControl.TextBox.KeyDown += OnFindText_KeyDown;
 			_searchTextBoxControl.TextBox.AutoCompleteChoiceSelected += OnSearchText_AutoCompleteChoiceSelected;
 			_searchTextBoxControl.FindButton.Click += OnFind_Click;
-
-			_recordsListBox.ItemSelectionChanged += OnRecordsListBoxItemSelectionChanged;
-			_recordsListBox.MinLength = 10;
-			_recordsListBox.MaxLength = 20;
 
 			_splitter.SetMemory(memory);
 			SetupEntryViewControl(entryViewControlFactory);
@@ -722,8 +723,19 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			{
 				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Show &Uncommon Fields");
 			}
+			AdjustSplitter();
 		}
 
+		private void AdjustSplitter()
+		{
+			if (WeSayWordsProject.GeckoOption)
+			{
+				if (_recordsListBox.ListWidth > _splitter.SplitPosition )
+				{
+					_splitter.SplitPosition = _recordsListBox.ListWidth;
+				}
+			}
+		}
 		private void DictionaryControl_Leave(object sender, EventArgs e)
 		{
 			SaveAndCleanUpPreviousEntry();

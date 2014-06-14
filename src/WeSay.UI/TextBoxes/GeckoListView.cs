@@ -113,7 +113,14 @@ namespace WeSay.UI.TextBoxes
 			// the &nbsp markers.
 			paddedItem = Regex.Replace(paddedItem, @"(?<=^\s*)\s", "&nbsp;");
 			paddedItem = Regex.Replace(paddedItem, @"\s(?=\s*$)", "&nbsp;");
-			_itemHtml.AppendFormat("<option value=\"{0}\">{1}</option>", item.ToString().Trim(), paddedItem);
+			if (Length == 1)
+			{
+				_itemHtml.AppendFormat("<option id='optionElement' value=\"{0}\">{1}</option>", item.ToString().Trim(), paddedItem);
+			}
+			else
+			{
+				_itemHtml.AppendFormat("<option value=\"{0}\">{1}</option>", item.ToString().Trim(), paddedItem);
+			}
 		}
 
 		public Object SelectedItem
@@ -249,6 +256,7 @@ namespace WeSay.UI.TextBoxes
 		}
 		private void OnSelectedValueChanged(String s)
 		{
+			AdjustHeight();
 			if (ItemSelectionChanged != null)
 			{
 				ItemSelectionChanged.Invoke(this, new ListViewItemSelectionChangedEventArgs(null, SelectedIndex, true));
@@ -293,20 +301,14 @@ namespace WeSay.UI.TextBoxes
 				return;
 			}
 
-			if (_optionElement == null)
+			var content = (GeckoOptionElement) _browser.Document.GetElementById("optionElement");
+			if (content != null)
 			{
-				var content = (GeckoOptionElement) _browser.Document.GetElementById("optionElement");
-				if (content != null)
-				{
-					_optionElement = (GeckoOptionElement) content;
-					_optionHeight = _optionElement.ClientHeight;
-					_selectElement = (GeckoSelectElement) _optionElement.Parent;
-				}
-				else
-				{
-					return;
-				}
+				_optionElement = (GeckoOptionElement) content;
+				_optionHeight = _optionElement.ClientHeight;
+				_selectElement = (GeckoSelectElement) _optionElement.Parent;
 			}
+
 			var selectElement = (GeckoSelectElement) _browser.Document.GetElementById("itemList");
 			if (selectElement != null)
 			{
@@ -440,5 +442,18 @@ namespace WeSay.UI.TextBoxes
 			{
 			}
 		}
+
+		public int ListWidth
+		{
+			get
+			{
+				if (_selectElement != null)
+				{
+					return _selectElement.ClientWidth + 30;
+				}
+				return 100;
+			}
+		 }
+
 	}
 }

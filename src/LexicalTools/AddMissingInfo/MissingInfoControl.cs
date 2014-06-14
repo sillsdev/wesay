@@ -70,19 +70,21 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_todoRecords = records.ToList<RecordToken<LexEntry>>();
 			_todoRecordsListBox.MinLength = 15;
 			_todoRecordsListBox.MaxLength = 20;
-			_todoRecordsListBox.DataSource = _todoRecords;
 			_todoRecordsListBox.BorderStyle = BorderStyle.None;
 			_todoRecordsListBox.ItemSelectionChanged += OnTodoRecordSelectionChanged;
 			_todoRecordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
+			_todoRecordsListBox.BackColor = Color.White;
+			_todoRecordsListBox.DataSource = _todoRecords;
 
 			_completedRecordsListBox.MinLength = 15;
 			_completedRecordsListBox.MaxLength = 20;
 			_completedRecordsListBox.WritingSystem = listWritingSystem;
 			_completedRecords = new List<RecordToken<LexEntry>>();
-			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.BorderStyle = BorderStyle.None;
 			_completedRecordsListBox.ItemSelectionChanged += OnCompletedRecordSelectionChanged;
 			_completedRecordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
+			_completedRecordsListBox.BackColor = Color.White;
+			_completedRecordsListBox.DataSource = _completedRecords;
 
 			labelNextHotKey.BringToFront();
 			_btnNext.BringToFront();
@@ -200,6 +202,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				   ShowCompletedMessage();
 				}
 			}
+			AdjustSplitter ();
 
 		}
 
@@ -546,6 +549,22 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		public void SelectInitialControl()
 		{
 			_entryViewControl.FocusFirstEditableField();
+		}
+
+		private void AdjustSplitter()
+		{
+			if (WeSayWordsProject.GeckoOption)
+			{
+				IWeSayListView widerListBox = _completedRecordsListBox;
+				if (_todoRecordsListBox.ListWidth > _completedRecordsListBox.ListWidth)
+				{
+					widerListBox = _todoRecordsListBox;
+				}
+				if (splitContainer1.SplitterDistance < widerListBox.ListWidth)
+				{
+					splitContainer1.SplitterDistance = widerListBox.ListWidth;
+				}
+			}
 		}
 	}
 }

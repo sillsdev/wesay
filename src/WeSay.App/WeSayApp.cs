@@ -319,6 +319,15 @@ namespace WeSay.App
 			   _tabbedForm.ContinueLaunchingAfterInitialDisplay();
 			   _tabbedForm.Activate();
 			   _tabbedForm.BringToFront(); //needed if we were previously in server mode
+#if (!__MonoCS__)
+				if (WeSayWordsProject.GeckoOption)
+				{
+					// Currently with Gecko 29 on Windows systems, the browser objects do
+					// not size properly without this process at startup
+					_tabbedForm.WindowState = FormWindowState.Minimized;
+					_tabbedForm.WindowState = FormWindowState.Maximized;
+				}
+#endif
 
 			   RtfRenderer.HeadWordWritingSystemId =
 				   _project.DefaultViewTemplate.HeadwordWritingSystem.Id;

@@ -35,6 +35,8 @@ namespace WeSay.UI
 		Object SelectedItem { get; }
 		AnchorStyles Anchor { get; set; }
 		int VirtualListSize { get; set; }
+		Color BackColor { get; set; }
+		int ListWidth { get; }
 
 		void SetBounds(int x, int y, int width, int height);
 		bool Focus();
@@ -634,6 +636,14 @@ namespace WeSay.UI
 				return Items.Count;
 			}
 		}
+
+		public int ListWidth
+		{
+			get
+			{
+				return Width;
+			}
+		 }
 
 		public int MinLength { get; set; }
 		public int MaxLength { get; set; }
