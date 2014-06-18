@@ -1,3 +1,20 @@
+wesay (1.5.11) experimental; urgency=low
+
+  * Skipped 1.5.10 to sync version number with Windows build
+  * Fix custom xkb keyboards to be displayed
+  * WS-51 Fix text clipping
+  * WS-58 Fix GatherWords layout (crashed when resized)
+  * Improve Gecko mode
+   - Change list box and combo box background color from default to white
+   - In DB&E, in Gecko mode, changed the splitter window so that it can't
+     stay smaller than width of list box.
+   - GeckoFx 29 in Windows doesn't display properly.  Implemented a workaround
+     which minimizes and maximizes the window as the last part of setup.
+   - Improve list view functionality when the word field is empty and an
+     alternate form is used instead.
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 18 Jun 2014 08:52:32 -0400
+
 wesay (1.5.9) experimental; urgency=low
 
   * WS-66 Adding note to a word in DBE fails
