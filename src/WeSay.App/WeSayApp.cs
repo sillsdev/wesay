@@ -100,16 +100,22 @@ namespace WeSay.App
 				string geckoBrowserOption = Environment.GetEnvironmentVariable("WESAY_USE_GECKO") ?? String.Empty;
 				WeSayWordsProject.GeckoOption = !(geckoBrowserOption == String.Empty  || geckoBrowserOption.Equals("0", StringComparison.OrdinalIgnoreCase));
 #if __MonoCS__
-				// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
-				string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
-				if (String.IsNullOrEmpty(xulRunnerLocation))
-					throw new ApplicationException("The XULRunner library is missing or has the wrong version");
-				string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
-				if (!librarySearchPath.Contains(xulRunnerLocation))
-					throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
+				// WARNING: When GeckoOption is OFF you will NOT have full functionality.
+				// In particular BROWSE NOTES will NOT work.
+				// REMOVE after geckofx29 is upgraded
+				if (WeSayWordsProject.GeckoOption)
+				{
+					// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
+					string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
+					if (String.IsNullOrEmpty(xulRunnerLocation))
+						throw new ApplicationException("The XULRunner library is missing or has the wrong version");
+					string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
+					if (!librarySearchPath.Contains(xulRunnerLocation))
+						throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
 
-				Xpcom.Initialize(xulRunnerLocation);
-				GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+					Xpcom.Initialize(xulRunnerLocation);
+					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+				}
 #else
 				// For windows, only initialize xulrunner if we are using the gecko browser control option
 				if (WeSayWordsProject.GeckoOption)
@@ -139,14 +145,17 @@ namespace WeSay.App
 		}
 		private static void ShutDownXulRunner()
 		{
-			if (Xpcom.IsInitialized)
+			if (WeSayWordsProject.GeckoOption)
 			{
-				// The following line appears to be necessary to keep Xpcom.Shutdown()
-				// from triggering a scary looking "double free or corruption" message most
-				// of the time.  But the Xpcom.Shutdown() appears to be needed to keep the
-				// program from hanging around sometimes after it supposedly exits.
-				var foo = new GeckoWebBrowser();
-				Xpcom.Shutdown();
+				if (Xpcom.IsInitialized)
+				{
+					// The following line appears to be necessary to keep Xpcom.Shutdown()
+					// from triggering a scary looking "double free or corruption" message most
+					// of the time.  But the Xpcom.Shutdown() appears to be needed to keep the
+					// program from hanging around sometimes after it supposedly exits.
+					var foo = new GeckoWebBrowser();
+					Xpcom.Shutdown();
+				}
 			}
 		}
 		private static void SetUpReporting()
