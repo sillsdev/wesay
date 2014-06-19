@@ -1,3 +1,10 @@
+wesay (1.5.12) experimental; urgency=low
+
+  * Work-around an exception in chorus syncing which interacts
+    with an exception in GeckoFx29 that eventually causes a crash
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 19 Jun 2014 08:29:09 -0400
+
 wesay (1.5.11) experimental; urgency=low
 
   * Skipped 1.5.10 to sync version number with Windows build
