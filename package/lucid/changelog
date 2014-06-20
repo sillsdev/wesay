@@ -1,3 +1,11 @@
+wesay (1.5.13) experimental; urgency=low
+
+  * Only initialize XulRunner if using WESAY_USE_GECKO=1 (temporary
+    work-around for crashes due to GeckoFx29).  This may affect
+    the functionaility of Chorus Notes.
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 20 Jun 2014 08:17:06 -0400
+
 wesay (1.5.12) experimental; urgency=low
 
   * Work-around an exception in chorus syncing which interacts
