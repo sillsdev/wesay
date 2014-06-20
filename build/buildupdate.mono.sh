@@ -1,7 +1,7 @@
 #!/bin/bash
 # server=build.palaso.org
-# project=WeSay1.4-Linux
-# build=wesay1.4-precise64-continuous
+# project=WeSay1.5-Linux
+# build=wesay1.5-precise64-continuous
 # root_dir=..
 # $Id: 0b75ca980cea444bf053cfdd852cb3e370225ffe $
 
@@ -62,8 +62,8 @@ cd -
 
 
 # *** Results ***
-# build: wesay1.4-precise64-continuous (bt314)
-# project: WeSay1.4-Linux
+# build: wesay1.5-precise64-continuous (bt314)
+# project: WeSay1.5-Linux
 # URL: http://build.palaso.org/viewType.html?buildTypeId=bt314
 # VCS: https://github.com/sillsdev/wesay.git [develop]
 # dependencies:
@@ -93,7 +93,7 @@ cd -
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt322
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"Enchant.Net.dll"=>"lib/Release", "Enchant.Net.dll.config"=>"lib/Release", "ibusdotnet.dll"=>"lib/Release", "Palaso.dll"=>"lib/Release", "Palaso.dll.mdb"=>"lib/Release", "Palaso.dll.config"=>"lib/Release", "Palaso.DictionaryServices.dll"=>"lib/Release", "Palaso.DictionaryServices.dll.mdb"=>"lib/Release", "Palaso.Lift.dll"=>"lib/Release", "Palaso.Lift.dll.mdb"=>"lib/Release", "Palaso.Media.dll"=>"lib/Release", "Palaso.Media.dll.mdb"=>"lib/Release", "Palaso.Media.dll.config"=>"lib/Release", "Palaso.Tests.dll"=>"lib/Release", "Palaso.Tests.dll.mdb"=>"lib/Release", "Palaso.TestUtilities.dll"=>"lib/Release", "Palaso.TestUtilities.dll.mdb"=>"lib/Release", "PalasoUIWindowsForms.dll"=>"lib/Release", "PalasoUIWindowsForms.dll.mdb"=>"lib/Release", "PalasoUIWindowsForms.dll.config"=>"lib/Release", "SIL.Archiving.dll"=>"lib/Release", "SIL.Archiving.dll.config"=>"lib/Release", "SIL.Archiving.dll.mdb"=>"lib/Release", "debug/**"=>"lib/Debug", "Ionic.Zip.dll"=>"lib/Release"}
+#     paths: {"Enchant.Net.dll"=>"lib/Release", "Enchant.Net.dll.config"=>"lib/Release", "ibusdotnet.dll"=>"lib/Release", "Palaso.dll"=>"lib/Release", "Palaso.dll.mdb"=>"lib/Release", "Palaso.dll.config"=>"lib/Release", "Palaso.DictionaryServices.dll"=>"lib/Release", "Palaso.DictionaryServices.dll.mdb"=>"lib/Release", "Palaso.Lift.dll"=>"lib/Release", "Palaso.Lift.dll.mdb"=>"lib/Release", "Palaso.Media.dll"=>"lib/Release", "Palaso.Media.dll.mdb"=>"lib/Release", "Palaso.Media.dll.config"=>"lib/Release", "Palaso.Tests.dll"=>"lib/Release", "Palaso.Tests.dll.mdb"=>"lib/Release", "Palaso.TestUtilities.dll"=>"lib/Release", "Palaso.TestUtilities.dll.mdb"=>"lib/Release", "PalasoUIWindowsForms.dll"=>"lib/Release", "PalasoUIWindowsForms.dll.mdb"=>"lib/Release", "PalasoUIWindowsForms.dll.config"=>"lib/Release", "PalasoUIWindowsForms.GeckoBrowserAdapter.dll"=>"lib/Release", "PalasoUIWindowsForms.GeckoBrowserAdapter.dll.mdb"=>"lib/Release", "debug/**"=>"lib/Debug", "Ionic.Zip.dll"=>"lib/Release"}
 #     VCS: https://github.com/sillsdev/libpalaso.git [master]
 # [4] build: icucil-precise64-Continuous (bt281)
 #     project: Libraries
@@ -176,9 +176,8 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/PalasoUIWindowsForms.dll ../lib/Release/PalasoUIWindowsForms.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/PalasoUIWindowsForms.dll.mdb ../lib/Release/PalasoUIWindowsForms.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/PalasoUIWindowsForms.dll.config ../lib/Release/PalasoUIWindowsForms.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/SIL.Archiving.dll ../lib/Release/SIL.Archiving.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/SIL.Archiving.dll.config ../lib/Release/SIL.Archiving.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/SIL.Archiving.dll.mdb ../lib/Release/SIL.Archiving.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/PalasoUIWindowsForms.GeckoBrowserAdapter.dll ../lib/Release/PalasoUIWindowsForms.GeckoBrowserAdapter.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/PalasoUIWindowsForms.GeckoBrowserAdapter.dll.mdb ../lib/Release/PalasoUIWindowsForms.GeckoBrowserAdapter.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/Enchant.Net.dll ../lib/Debug/Enchant.Net.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/Enchant.Net.dll.config ../lib/Debug/Enchant.Net.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/Ionic.Zip.dll ../lib/Debug/Ionic.Zip.dll
