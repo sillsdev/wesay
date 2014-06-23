@@ -37,6 +37,7 @@ build-stamp:
 	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.Media.dll* lib/$(CONFIGURATION)
 	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.Tests.dll* lib/$(CONFIGURATION)
 	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/PalasoUIWindowsForms.dll* lib/$(CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/PalasoUIWindowsForms.GeckoBrowserAdapter.dll* lib/$(CONFIGURATION)
 	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.BuildTasks.dll build
 	cp chorus-$(CHORUSVER)/output/$(CHORUS_CONFIGURATION)/Chorus.exe* lib/$(CONFIGURATION)
 	cp chorus-$(CHORUSVER)/output/$(CHORUS_CONFIGURATION)/ChorusMerge.exe* lib/$(CONFIGURATION)
