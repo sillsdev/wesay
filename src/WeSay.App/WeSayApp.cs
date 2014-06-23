@@ -99,22 +99,16 @@ namespace WeSay.App
 				string geckoBrowserOption = Environment.GetEnvironmentVariable("WESAY_USE_GECKO") ?? String.Empty;
 				WeSayWordsProject.GeckoOption = !(geckoBrowserOption == String.Empty  || geckoBrowserOption.Equals("0", StringComparison.OrdinalIgnoreCase));
 #if __MonoCS__
-				// WARNING: When GeckoOption is OFF you will NOT have full functionality.
-				// In particular BROWSE NOTES will NOT work.
-				// REMOVE after geckofx29 is upgraded
-				if (WeSayWordsProject.GeckoOption)
-				{
-					// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
-					string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
-					if (String.IsNullOrEmpty(xulRunnerLocation))
-						throw new ApplicationException("The XULRunner library is missing or has the wrong version");
-					string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
-					if (!librarySearchPath.Contains(xulRunnerLocation))
-						throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
+				// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
+				string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
+				if (String.IsNullOrEmpty(xulRunnerLocation))
+					throw new ApplicationException("The XULRunner library is missing or has the wrong version");
+				string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
+				if (!librarySearchPath.Contains(xulRunnerLocation))
+					throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
 
-					Xpcom.Initialize(xulRunnerLocation);
-					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
-				}
+				Xpcom.Initialize(xulRunnerLocation);
+				GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
 #else
 				// For windows, only initialize xulrunner if we are using the gecko browser control option
 				if (WeSayWordsProject.GeckoOption)
