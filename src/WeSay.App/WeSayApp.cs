@@ -48,7 +48,6 @@ namespace WeSay.App
 				finally
 				{
 					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
-					ShutDownXulRunner();
 					ReleaseMutexForThisProject();
 				}
 			}
@@ -143,21 +142,7 @@ namespace WeSay.App
 				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
 		}
-		private static void ShutDownXulRunner()
-		{
-			if (WeSayWordsProject.GeckoOption)
-			{
-				if (Xpcom.IsInitialized)
-				{
-					// The following line appears to be necessary to keep Xpcom.Shutdown()
-					// from triggering a scary looking "double free or corruption" message most
-					// of the time.  But the Xpcom.Shutdown() appears to be needed to keep the
-					// program from hanging around sometimes after it supposedly exits.
-					var foo = new GeckoWebBrowser();
-					Xpcom.Shutdown();
-				}
-			}
-		}
+
 		private static void SetUpReporting()
 		{
 			if (Settings.Default.Reporting == null)
