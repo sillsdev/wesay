@@ -1,3 +1,14 @@
+wesay (1.5.14) experimental; urgency=low
+
+  * Fix packaging to actually include 
+    PalasoUIWindowsForms.GeckoBrowserAdapter.dll
+  * WS-84 Fix for crash on exit when using Geckofx-29
+   - Code introduced in WeSay with Geckofx-14 which fixed an issue in
+     FLEx (FWNX-1216) was causing the crash with Geckofx-29.
+   - Re-enable initializing XulRunner on startup (revert change in 1.5.13)
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Mon, 23 Jun 2014 17:32:08 -0400
+
 wesay (1.5.13) experimental; urgency=low
 
   * Only initialize XulRunner if using WESAY_USE_GECKO=1 (temporary
