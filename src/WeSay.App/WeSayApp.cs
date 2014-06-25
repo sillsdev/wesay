@@ -99,16 +99,22 @@ namespace WeSay.App
 				string geckoBrowserOption = Environment.GetEnvironmentVariable("WESAY_USE_GECKO") ?? String.Empty;
 				WeSayWordsProject.GeckoOption = !(geckoBrowserOption == String.Empty  || geckoBrowserOption.Equals("0", StringComparison.OrdinalIgnoreCase));
 #if __MonoCS__
-				// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
-				string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
-				if (String.IsNullOrEmpty(xulRunnerLocation))
-					throw new ApplicationException("The XULRunner library is missing or has the wrong version");
-				string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
-				if (!librarySearchPath.Contains(xulRunnerLocation))
-					throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
+				string initXulRunnerOption = Environment.GetEnvironmentVariable("WESAY_INIT_XULRUNNER") ?? String.Empty;
+				bool initXulRunner = (initXulRunnerOption == String.Empty  || !initXulRunnerOption.Equals("0", StringComparison.OrdinalIgnoreCase));
+				if (initXulRunner || WeSayWordsProject.GeckoOption)
+				{
+					// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
+					string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
+					if (String.IsNullOrEmpty(xulRunnerLocation))
+						throw new ApplicationException("The XULRunner library is missing or has the wrong version");
+					string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
+					if (!librarySearchPath.Contains(xulRunnerLocation))
+						throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
 
-				Xpcom.Initialize(xulRunnerLocation);
-				GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+					Xpcom.Initialize(xulRunnerLocation);
+					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+					Console.WriteLine("XulRunner Initialized");
+				}
 #else
 				// For windows, only initialize xulrunner if we are using the gecko browser control option
 				if (WeSayWordsProject.GeckoOption)
@@ -124,6 +130,7 @@ namespace WeSay.App
 					}
 					Xpcom.Initialize(xulRunnerLocation);
 					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+					Console.WriteLine("XulRunner Initialized");
 				}
 #endif
 			}
