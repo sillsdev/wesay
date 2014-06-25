@@ -1,6 +1,17 @@
+wesay (1.5.15) experimental; urgency=low
+
+  * There are still crashes caused by initialization of XulRunner.
+    Added a new environment variable for Linux (WESAY_INIT_XULRUNNER)
+    which controls whether XulRunner is initialized on startup.  By
+    default, it is initialized.  Turn off XulRunner initialization by
+    setting the environment variable to 0.  If WESAY_USE_GECKO=1, then
+    XulRunner is still initialized.
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 25 Jun 2014 15:17:00 -0400
+
 wesay (1.5.14) experimental; urgency=low
 
-  * Fix packaging to actually include 
+  * Fix packaging to actually include
     PalasoUIWindowsForms.GeckoBrowserAdapter.dll
   * WS-84 Fix for crash on exit when using Geckofx-29
    - Code introduced in WeSay with Geckofx-14 which fixed an issue in
