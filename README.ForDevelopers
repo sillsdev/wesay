@@ -62,7 +62,7 @@ version of Mono.  These should all be installed side-by-side.
 The first four repositories contain the actual source code cloned from the Mono
 project.  The fifth repository contains the build scripts and packaging
 information developed by SIL, largely by the Linux team based in Calgary.  After
-cloning these repositories, then the patched mono can be built and installed in
+cloning these repositories, then the patched mono can be built and installed to
 /opt/mono-sil by the following command (assuming these five repositories are all
 cloned with their default names and the current directory is still the common
 parent):
@@ -145,8 +145,15 @@ review items all sharing the same "topic".
 5. BUILDING WESAY
 
 Before you can build wesay, a number of dependencies must be downloaded from
-the internet.  For Windows, execute the build/buildupdate.win.sh script (in a
-git bash window).  For Linux, execute the build/buildupdate.mono.sh script.
+the internet.
+
+For Windows, execute (in a git bash window) the script:
+
+	build/buildupdate.win.sh
+
+For Linux, execute the script:
+
+	build/buildupdate.mono.sh
 
 After all the dependencies have been downloaded, the simplest way to compile
 wesay is to use a batch file that calls msbuild.exe (on Windows) or a shell
