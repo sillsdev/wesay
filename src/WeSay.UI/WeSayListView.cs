@@ -49,6 +49,7 @@ namespace WeSay.UI
 
 	public partial class WeSayListView: ListView, IWeSayListView
 	{
+		private const int WM_HSCROLL = 0x114;
 		private IWritingSystemDefinition _writingSystem;
 		private int _itemToNotDrawYet = -1;
 		private IList _dataSource;
@@ -303,7 +304,19 @@ namespace WeSay.UI
 				return;
 			}
 			base.WndProc(ref m);
+#if __MonoCS__
+			if (m.Msg == WM_HSCROLL)
+			{
+				this.OnScroll();
+			}
+#endif
 		}
+#if __MonoCS__
+		protected void OnScroll()
+		{
+			Invalidate();
+		}
+#endif
 
 		private void SelectFromClickLocation()
 		{
@@ -628,7 +641,6 @@ namespace WeSay.UI
 												flags);
 			}
 		}
-
 		public int Length
 		{
 			get
