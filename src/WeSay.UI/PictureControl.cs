@@ -116,7 +116,16 @@ namespace WeSay.UI
 		public string Value
 		{
 			get { return _relativePathToImage; }
-			set { _relativePathToImage = value; }
+			set
+			{
+				// Normalize the relative path for the local platform.  Ie, convert \ characters
+				// from Windows to / characters for the benefit of Linux and Mac.  (Windows can
+				// read / characters as well, so keep the code simple and always do this.)
+				// This block fixes https://jira.sil.org/browse/WS-87.
+				if (!String.IsNullOrEmpty(value))
+					value = FileUtils.NormalizePath(value);
+				_relativePathToImage = value;
+			}
 		}
 
 		private string GetPathToImage()
