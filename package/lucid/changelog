@@ -1,3 +1,13 @@
+wesay (1.5.16) experimental; urgency=low
+
+  * WS-59 Fix Word list not repainting correctly
+  * WS-87 Handle pictures imported from Windows on Linux
+  * WS-84 Work-around crash caused by loading XulRunner 29 (again)
+   - setting MONO_DEBUG=explicit-null-checks keeps mono from crashing
+   - this is a temporary work-around until we find the root cause
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 27 Jun 2014 15:44:10 -0400
+
 wesay (1.5.15) experimental; urgency=low
 
   * There are still crashes caused by initialization of XulRunner.
