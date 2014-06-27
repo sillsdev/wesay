@@ -43,6 +43,7 @@ using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
+using WeSay.UI.AutoCompleteTextBox;
 using WeSay.UI.TextBoxes;
 using IContainer=Autofac.IContainer;
 using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
@@ -569,6 +570,11 @@ namespace WeSay.Project
 					var m = new GeckoListBox();
 					return m;
 				});
+				builder.Register<IWeSayAutoCompleteTextBox>(c =>
+				{
+					var m = new GeckoAutoCompleteTextBox();
+					return m;
+				});
 			}
 			else
 			{
@@ -590,6 +596,11 @@ namespace WeSay.Project
 				builder.Register<IWeSayListBox>(c =>
 				{
 					var m = new WeSayListBox();
+					return m;
+				});
+				builder.Register<IWeSayAutoCompleteTextBox>(c =>
+				{
+					var m = new WeSayAutoCompleteTextBox();
 					return m;
 				});
 			}

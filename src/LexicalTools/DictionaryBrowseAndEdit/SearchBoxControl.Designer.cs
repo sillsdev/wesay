@@ -1,4 +1,8 @@
-﻿namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
+﻿using System.Windows.Forms;
+using WeSay.Project;
+using WeSay.UI.AutoCompleteTextBox;
+
+namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
 	partial class SearchBoxControl
 	{
@@ -30,7 +34,7 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchBoxControl));
-			this._textToSearchForBox = new WeSay.UI.AutoCompleteTextBox.WeSayAutoCompleteTextBox();
+			this._textToSearchForBox = WeSayWordsProject.Project.ServiceLocator.GetService(typeof(IWeSayAutoCompleteTextBox)) as IWeSayAutoCompleteTextBox;
 			this._writingSystemChooser = new System.Windows.Forms.Button();
 			this._selectedWritingSystemLabel = new System.Windows.Forms.Label();
 			this._desperationDisplayTimer = new System.Windows.Forms.Timer(this.components);
@@ -107,7 +111,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.Controls.Add(this._findButton);
-			this.Controls.Add(this._textToSearchForBox);
+			this.Controls.Add((Control)this._textToSearchForBox);
 			this.Controls.Add(this._writingSystemChooser);
 			this.Controls.Add(this._selectedWritingSystemLabel);
 			this.Name = "SearchBoxControl";
@@ -122,7 +126,7 @@
 		#endregion
 
 		private System.Windows.Forms.Button _findButton;
-		private WeSay.UI.AutoCompleteTextBox.WeSayAutoCompleteTextBox _textToSearchForBox;
+		private WeSay.UI.AutoCompleteTextBox.IWeSayAutoCompleteTextBox _textToSearchForBox;
 		private System.Windows.Forms.Button _writingSystemChooser;
 		private System.Windows.Forms.Label _selectedWritingSystemLabel;
 		private System.Windows.Forms.Timer _desperationDisplayTimer;

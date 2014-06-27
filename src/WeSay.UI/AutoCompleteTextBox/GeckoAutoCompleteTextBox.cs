@@ -7,53 +7,20 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Gecko;
 using Palaso.Code;
 using Palaso.Lift;
 using Palaso.UiBindings;
+using Palaso.WritingSystems;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
-	public delegate IEnumerable ItemFilterDelegate(
-			string text, IEnumerable items, IDisplayStringAdaptor adaptor);
-
-	public enum EntryMode
-	{
-		Text,
-		List
-	}
-
-	public interface IWeSayAutoCompleteTextBox : IWeSayTextBox
-	{
-		event KeyEventHandler KeyDown;
-		event EventHandler AutoCompleteChoiceSelected;
-		IEnumerable Items { get; set; }
-		EntryMode Mode { get; set; }
-		ItemFilterDelegate ItemFilterer { get; set; }
-		bool Focused { get; }
-		Font Font { get; set; }
-		string Name { get; set; }
-		BorderStyle PopupBorderStyle { get; set; }
-		BorderStyle BorderStyle { get; set; }
-		Point Location { get; set; }
-		Point PopupOffset { get; set; }
-		Color BackColor { get; set; }
-		Color PopupSelectionBackColor { get; set; }
-		Color PopupSelectionForeColor { get; set; }
-		object SelectedItem { get; set; }
-		Size Size { get; set; }
-		int PopupWidth { get; set; }
-		int TabIndex { get; set; }
-		int Width { get; set; }
-		int Left { get; set; }
-		int Height { get; set; }
-	}
-
 	/// <summary>
 	/// Summary description for AutoCompleteTextBox.
 	/// </summary>
 	[Serializable]
-	public class WeSayAutoCompleteTextBox : WeSayTextBox, IWeSayAutoCompleteTextBox
+	public class GeckoAutoCompleteTextBox : GeckoBox, IWeSayAutoCompleteTextBox
 	{
 		public delegate object FormToObjectFinderDelegate(string form);
 
@@ -65,7 +32,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		#region Members
 
 		private IDisplayStringAdaptor _itemDisplayAdaptor = new ToStringAutoCompleteAdaptor();
-		private readonly ListBox _listBox;
+		private readonly GeckoListBox _listBox;
 		private Control _popupParent;
 
 		#endregion
@@ -217,9 +184,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 			get { return base.Text; }
 			set
 			{
-				TriggersEnabled = false;
+//				TriggersEnabled = false;
 				base.Text = value;
-				TriggersEnabled = true;
+//				TriggersEnabled = true;
 			}
 		}
 
@@ -282,14 +249,14 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-		internal ListBox FilteredChoicesListBox
+		internal GeckoListBox FilteredChoicesListBox
 		{
 			get { return _listBox; }
 		}
 
 		#endregion
 
-		public WeSayAutoCompleteTextBox()
+		public GeckoAutoCompleteTextBox()
 		{
 			if (DesignMode)
 			{
@@ -305,19 +272,20 @@ namespace WeSay.UI.AutoCompleteTextBox
 			MouseHover += OnMouseHover;
 
 			// Create the list box that will hold matching items
-			_listBox = new ListBox();
+			_listBox = new GeckoListBox();
 			_listBox.MaximumSize = new Size(800, 100);
 			_listBox.Cursor = Cursors.Hand;
 			_listBox.BorderStyle = BorderStyle.FixedSingle;
+			_listBox.MultiColumn = false;
 			//_listBox.SelectedIndexChanged += List_SelectedIndexChanged;
-			_listBox.Click += List_Click;
-			_listBox.MouseMove += List_MouseMove;
-			_listBox.LostFocus += OnListLostFocus;
+			_listBox.UserClick += List_Click;
+			_listBox.ListLostFocus += OnListLostFocus;
 			_listBox.Enter += List_Enter;
 			_listBox.Leave += List_Leave;
 			_listBox.ItemHeight = _listBox.Font.Height;
 			_listBox.Visible = false;
 			_listBox.Sorted = false;
+			_listBox.HighlightSelect = true;
 
 			// Add default triggers.
 			triggers.Add(new TextLengthTrigger(2));
@@ -342,33 +310,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			string tip = _itemDisplayAdaptor.GetToolTip(SelectedItem);
 			_toolTip.SetToolTip(this, tip);
 			_toolTip.ToolTipTitle = _itemDisplayAdaptor.GetToolTipTitle(SelectedItem);
-		}
-
-		private void List_MouseMove(object sender, MouseEventArgs e)
-		{
-			if (_itemDisplayAdaptor == null)
-			{
-				return;
-			}
-
-			string tip = "";
-			string tipTitle = "";
-
-			//Get the item
-			int nIdx = _listBox.IndexFromPoint(e.Location);
-			if ((nIdx >= 0) && (nIdx < _listBox.Items.Count))
-			{
-				ItemWrapper wrapper = (ItemWrapper) _listBox.Items[nIdx];
-				if (wrapper.Item == _previousToolTipTarget) //prevent flicker and unnecessary work
-				{
-					return;
-				}
-				_previousToolTipTarget = wrapper.Item;
-				tip = _itemDisplayAdaptor.GetToolTip(wrapper.Item);
-				tipTitle = _itemDisplayAdaptor.GetToolTipTitle(wrapper.Item);
-			}
-			_toolTip.SetToolTip(_listBox, tip);
-			_toolTip.ToolTipTitle = tipTitle;
 		}
 
 		protected override void OnSizeChanged(EventArgs e)
@@ -399,6 +340,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 					}
 				}
 			}
+		}
+
+		public override bool Focused
+		{
+			get { return (base.Focused || InFocus || _listBox.InFocus); }
 		}
 
 		protected override void OnParentChanged(EventArgs e)
@@ -482,12 +428,18 @@ namespace WeSay.UI.AutoCompleteTextBox
 						break;
 				}
 			}
-
+#if __MonoCS__
+			if (keyData == Keys.Enter)
+			{
+				OnKeyDown(new KeyEventArgs(keyData));
+			}
+#endif
 			return val;
 		}
 
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
 		{
+			uint keyValue = (uint) keyData;
 			switch (keyData)
 			{
 				case Keys.Up:
@@ -527,9 +479,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-		protected override void OnTextChanged(EventArgs e)
+		protected override void OnTextChanged(object sender, EventArgs e)
 		{
-			base.OnTextChanged(e);
+			base.OnTextChanged(sender, e);
 			_listBox.SelectedIndex = -1;
 			DisplayListIfTextTriggers();
 		}
@@ -575,6 +527,21 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 			}
 			return null;
+		}
+
+		protected override void OnDomFocus(object sender, DomEventArgs e)
+		{
+			if (!InFocus)
+			{
+				base.OnDomFocus(sender, e);
+				OnGotFocus(null);
+			}
+		}
+
+		protected override void OnDomBlur(object sender, DomEventArgs e)
+		{
+			base.OnDomBlur(sender, e);
+			OnLostFocus(null);
 		}
 
 		protected override void OnLostFocus(EventArgs e)
@@ -700,8 +667,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		protected virtual void UpdateList()
 		{
 			int selectedIndex = _listBox.SelectedIndex;
-			_listBox.BeginUpdate();
-			_listBox.Items.Clear();
+			_listBox.Clear();
 			_listBox.Font = Font;
 			_listBox.ItemHeight = _listBox.Font.Height;
 
@@ -714,14 +680,14 @@ namespace WeSay.UI.AutoCompleteTextBox
 				foreach (object item in ItemFilterer.Invoke(Text.Trim(), Items, ItemDisplayStringAdaptor))
 				{
 					string label = ItemDisplayStringAdaptor.GetDisplayLabel(item);
-					_listBox.Items.Add(new ItemWrapper(item, label));
+					_listBox.AddItem(new ItemWrapper(item, label));
 					if (_autoSizePopup)
 					{
 						maxWidth = Math.Max(maxWidth, MeasureItem(g, label).Width);
 					}
 				}
 			}
-			_listBox.EndUpdate();
+			_listBox.ListCompleted();
 			_listBox.SelectedIndex = selectedIndex;
 
 			if (_listBox.Items.Count == 0)
@@ -837,6 +803,19 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private void List_Leave(object sender, System.EventArgs e)
 		{
 			_listBoxEntered = false;
+		}
+
+		public override IWritingSystemDefinition WritingSystem
+		{
+			set
+			{
+				if (value == null)
+				{
+					throw new ArgumentNullException();
+				}
+				_writingSystem = value;
+				_listBox.FormWritingSystem = value;
+			}
 		}
 	}
 }

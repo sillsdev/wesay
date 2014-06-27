@@ -32,6 +32,7 @@ namespace WeSay.UI.TextBoxes
 		public event ListViewItemSelectionChangedEventHandler ItemSelectionChanged;
 		public event RetrieveVirtualItemEventHandler RetrieveVirtualItem;
 		private IList _dataSource;
+		private int _currentIndex;
 
 		public GeckoListView()
 		{
@@ -39,6 +40,7 @@ namespace WeSay.UI.TextBoxes
 
 			_initialSelectLoad = false;
 			_pendingInitialIndex = -1;
+			_currentIndex = -1;
 			_items = new List<object>();
 			_itemHtml = new StringBuilder();
 			MaxLength = 50;  // Default value
@@ -163,10 +165,21 @@ namespace WeSay.UI.TextBoxes
 					_pendingInitialIndex = value;
 					return;
 				}
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
-				if (content != null)
+				int oldIndex = _currentIndex;
+				_currentIndex = value;
+				SetIndexAndNotify(oldIndex != _currentIndex);
+			}
+		}
+
+		private void SetIndexAndNotify(bool notify)
+		{
+			var content = (GeckoSelectElement) _browser.Document.GetElementById("itemList");
+			if (content != null)
+			{
+				content.SelectedIndex = _currentIndex;
+				if (notify && ItemSelectionChanged != null)
 				{
-					content.SelectedIndex = value;
+					ItemSelectionChanged.Invoke(this, new ListViewItemSelectionChangedEventArgs(null, _currentIndex, true));
 				}
 			}
 		}
@@ -257,9 +270,14 @@ namespace WeSay.UI.TextBoxes
 		private void OnSelectedValueChanged(String s)
 		{
 			AdjustHeight();
-			if (ItemSelectionChanged != null)
+			var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+			if (content != null)
 			{
-				ItemSelectionChanged.Invoke(this, new ListViewItemSelectionChangedEventArgs(null, SelectedIndex, true));
+				if ((ItemSelectionChanged != null) && (content.SelectedIndex != _currentIndex))
+				{
+					_currentIndex = content.SelectedIndex;
+					ItemSelectionChanged.Invoke(this, new ListViewItemSelectionChangedEventArgs(null, SelectedIndex, true));
+				}
 			}
 		}
 		protected override void OnBackColorChanged(object sender, EventArgs e)
@@ -285,11 +303,10 @@ namespace WeSay.UI.TextBoxes
 			}
 			if (_pendingInitialIndex > -1)
 			{
-				SelectedIndex = _pendingInitialIndex;
-				if (ItemSelectionChanged != null)
-				{
-					ItemSelectionChanged.Invoke(this, new ListViewItemSelectionChangedEventArgs(null, _pendingInitialIndex, true));
-				}
+				int oldIndex = _currentIndex;
+				_currentIndex = _pendingInitialIndex;
+
+				SetIndexAndNotify(oldIndex != _pendingInitialIndex);
 				_pendingInitialIndex = -1;
 			}
 		}

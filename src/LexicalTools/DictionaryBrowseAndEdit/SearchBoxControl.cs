@@ -33,7 +33,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WeSayAutoCompleteTextBox TextBox
+		public IWeSayAutoCompleteTextBox TextBox
 		{
 			get { return _textToSearchForBox; }
 		}

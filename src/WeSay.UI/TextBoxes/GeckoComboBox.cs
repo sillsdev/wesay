@@ -21,7 +21,6 @@ namespace WeSay.UI.TextBoxes
 		private string _pendingHtmlLoad;
 		private bool _keyPressed;
 		private GeckoSelectElement _selectElement;
-		private GeckoBodyElement _bodyElement;
 
 		private List<Object> _items;
 		private readonly StringBuilder _itemHtml;

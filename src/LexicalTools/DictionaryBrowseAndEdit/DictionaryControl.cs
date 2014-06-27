@@ -519,7 +519,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				if (!SearchTextBox.Focused)
 				{
 					SearchTextBox.Focus();
-					SearchTextBox.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
+					SearchTextBox.Mode = EntryMode.List;
 				}
 				else
 				{
@@ -531,7 +531,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			return base.ProcessCmdKey(ref msg, keyData);
 		}
 
-		protected WeSayAutoCompleteTextBox SearchTextBox
+		protected IWeSayAutoCompleteTextBox SearchTextBox
 		{
 			get { return _searchTextBoxControl.TextBox; }
 		}

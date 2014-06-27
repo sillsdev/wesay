@@ -117,7 +117,7 @@ namespace WeSay.UI.TextBoxes
 				Height = content.Parent.ScrollHeight;
 			}
 		}
-		public IWritingSystemDefinition WritingSystem
+		public virtual IWritingSystemDefinition WritingSystem
 		{
 			get
 			{
@@ -180,11 +180,15 @@ namespace WeSay.UI.TextBoxes
 		{
 			if (_inFocus)
 			{
+
 				if (_handleEnter && !MultiParagraph && e.KeyCode == (uint)Keys.Enter) // carriage return
 				{
 					e.Handled = true;
 				}
-				else if ((e.KeyCode == (uint)Keys.Tab) && !e.CtrlKey && !e.AltKey)
+#if __MonoCS__
+				SendKey(e);
+#else
+				if ((e.KeyCode == (uint)Keys.Tab) && !e.CtrlKey && !e.AltKey)
 				{
 					e.Handled = true;
 					if (e.ShiftKey)
@@ -208,13 +212,82 @@ namespace WeSay.UI.TextBoxes
 					e.Handled = true;
 					return;
 				}
+
+#endif
 				OnKeyDown(new KeyEventArgs((Keys)e.KeyCode));
 			}
+		}
+
+		protected virtual void SendKey(DomKeyEventArgs e)
+		{
+			var builder = new StringBuilder();
+			switch (e.KeyCode)
+			{
+				case (uint)Keys.Tab:
+					if (e.CtrlKey)
+					{
+						builder.Append("^");
+					}
+					if (e.AltKey)
+					{
+						builder.Append("%");
+					}
+					if (e.ShiftKey)
+					{
+						builder.Append("+");
+					}
+					builder.Append("{TAB}");
+					break;
+				case (uint)Keys.Up:
+					builder.Append("{UP}");
+					break;
+				case (uint)Keys.Down:
+					builder.Append("{DOWN}");
+					break;
+				case (uint)Keys.Left:
+					builder.Append("{LEFT}");
+					break;
+				case (uint)Keys.Right:
+					builder.Append("{RIGHT}");
+					break;
+				case (uint)Keys.Escape:
+					builder.Append("{ESC}");
+					break;
+				case (uint)Keys.N:
+					if (e.CtrlKey)
+					{
+						builder.Append("^n");
+					}
+					break;
+				case (uint)Keys.F:
+					if (e.CtrlKey)
+					{
+						builder.Append("^f");
+					}
+					break;
+				case (uint)Keys.Delete:
+					builder.Append("{DEL}");
+					break;
+				case (uint)Keys.Enter:
+					builder.Append("{ENTER}");
+					break;
+			}
+			string result = builder.ToString();
+			if (! String.IsNullOrEmpty(result))
+			{
+				SendKeys.Send(result);
+			}
+		}
+		public virtual bool InFocus
+		{
+			get { return _inFocus; }
+			set { _inFocus = value; }
 		}
 
 		public virtual bool Bold { get; set; }
 
 		public virtual int SelectionStart { get; set; }
+		public int SelectionLength { get; set; }
 		public virtual bool Multiline { get; set; }
 		public virtual bool MultiParagraph { get; set; }
 		public virtual bool ReadOnly { get; set; }

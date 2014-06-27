@@ -47,6 +47,7 @@ namespace WeSay.UI
 		int ColumnWidth { get; set; }
 		Rectangle GetItemRectangle(int index);
 		Control Control { get; }
+		bool Sorted { get; set; }
 
 		bool DisplayMeaning { get; set; }
 		void ItemToHtml(string word, int index, bool useFormWS, Color textColor);

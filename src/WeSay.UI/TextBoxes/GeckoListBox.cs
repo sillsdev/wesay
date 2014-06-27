@@ -20,13 +20,15 @@ namespace WeSay.UI.TextBoxes
 		private bool _initialSelectLoad;
 		private int _pendingInitialIndex;
 		private string _pendingHtmlLoad;
-		private GeckoSelectElement _selectElement;
+		private GeckoUListElement _selectElement;
 		private List<Object> _items;
 		private readonly StringBuilder _itemHtml;
 		public event EventHandler UserClick;
 		private int _numberOfItemsInColumn;
 		private object _itemToNotDrawYet;
 		protected IWritingSystemDefinition _meaningWritingSystem;
+		protected int _selectedIndex;
+		public event EventHandler ListLostFocus;
 
 		public GeckoListBox()
 		{
@@ -39,6 +41,7 @@ namespace WeSay.UI.TextBoxes
 			_itemHtml = new StringBuilder();
 			_numberOfItemsInColumn = 3;
 			ItemDrawer = DefaultDrawItem;
+			HighlightSelect = false;
 
 			var designMode = (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
 			if (designMode)
@@ -131,7 +134,46 @@ namespace WeSay.UI.TextBoxes
 
 		}
 
-		public int SelectedIndex { get; set; }
+		public int SelectedIndex
+		{
+			get
+			{
+				return _selectedIndex;
+			}
+			set
+			{
+				int oldIndex = _selectedIndex;
+				_selectedIndex = value;
+				if (_selectedIndex > -1)
+				{
+					if (HighlightSelect)
+					{
+						string id = _selectedIndex + "-1";
+						var content = (GeckoLIElement) _browser.Document.GetElementById(id);
+						if (content != null)
+						{
+							content.SetAttribute("class", "selected");
+						}
+					}
+				}
+				else
+				{
+					// -1 is the only valid negative value
+					_selectedIndex = -1;
+				}
+				if ((oldIndex > -1) && HighlightSelect)
+				{
+					string id = oldIndex + "-1";
+					var content = (GeckoLIElement)_browser.Document.GetElementById(id);
+					if (content != null)
+					{
+						content.RemoveAttribute("class");
+					}
+				}
+			}
+		}
+
+		public bool HighlightSelect { get; set; }
 
 		public int Length
 		{
@@ -174,8 +216,8 @@ namespace WeSay.UI.TextBoxes
 			String entry = String.IsNullOrEmpty(word) ? "&nbsp;" : word;
 			String subId = useFormWS ? "-1" : "-2";
 			String id = index.ToString() + subId;
-			_itemHtml.AppendFormat("<li id='{2}' style='font-family:{3}; font-size:{4}pt; color:{5}' onclick=\"fireEvent('selectChanged','{0}');\">{1}</li>",
-				index.ToString(), entry, id, font.Name, font.Size,System.Drawing.ColorTranslator.ToHtml(textColor));
+			_itemHtml.AppendFormat("<li id='{2}' style='font-family:{3}; font-size:{4}pt;' onclick=\"fireEvent('selectChanged','{0}');\">{1}</li>",
+				index.ToString(), entry, id, font.Name, font.Size);
 		}
 		/// <summary>
 		/// Change this if you need to draw something special. THe default just draws the string of the item.
@@ -212,7 +254,7 @@ namespace WeSay.UI.TextBoxes
 				_numberOfItemsInColumn = 1;
 			}
 			_itemHtml.Clear();
-			_itemHtml.Append("<ul><li><ul>"); // Initial Column
+			_itemHtml.Append("<ul id='itemList'><li><ul>"); // Initial Column
 			for (int index = 0; index < _items.Count; index++)
 			{
 				if (_items[index] != _itemToNotDrawYet)
@@ -237,6 +279,7 @@ namespace WeSay.UI.TextBoxes
 		public void ListCompleted()
 		{
 			_initialSelectLoad = false;
+			CreateHtmlFromItems();
 
 			var html = new StringBuilder();
 			html.Append("<!DOCTYPE html>");
@@ -252,8 +295,8 @@ namespace WeSay.UI.TextBoxes
 			html.Append("ul { border: 0px solid black; display: inline-block; margin:0px; padding:0px; } ");
 			html.Append("ul li { display: inline-block; list-style: none; vertical-align: top: } ");
 			html.Append("ul li ul { border: 0px; padding: 0px; } ");
-			html.AppendFormat("ul li ul li {{ cursor: pointer; display: list-item; white-space: nowrap; height:30px; list-style: none; text-align:left; width: {0}px; }} ", ColumnWidth.ToString());
-			html.Append("ul li ul li.selected { background-color:8fD8D8; } ");
+			html.AppendFormat("ul li ul li {{ cursor: pointer; display: list-item; white-space: nowrap; height:30px; list-style: none; text-align:left; width: {0}px; color:black; background-color:green; }} ", ColumnWidth.ToString());
+			html.Append("ul li ul li.selected { color:blue; } ");
 			html.Append("ul li ul li.hover { background-color: #CCCCCC; } ");
 			html.Append("</style>");
 			html.Append("</head>");
@@ -319,10 +362,10 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		private delegate void ChangeFocusDelegate(GeckoSelectElement ctl);
+		private delegate void ChangeFocusDelegate(GeckoUListElement ctl);
 		protected override void OnDomFocus(object sender, DomEventArgs e)
 		{
-			var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+			var content = (GeckoUListElement)_browser.Document.GetElementById("itemList");
 			if (content != null)
 			{
 				// The following is required because we get two in focus events every time this
@@ -331,15 +374,27 @@ namespace WeSay.UI.TextBoxes
 				if (!_inFocus)
 				{
 					_inFocus = true;
-					_selectElement = (GeckoSelectElement)content;
+					_selectElement = (GeckoUListElement)content;
 					this.BeginInvoke(new ChangeFocusDelegate(changeFocus), _selectElement);
 				}
 			}
 		}
 
-		private void changeFocus(GeckoSelectElement ctl)
+		private void changeFocus(GeckoUListElement ctl)
 		{
 			ctl.Focus();
+		}
+
+		protected override void OnDomBlur(object sender, DomEventArgs e)
+		{
+			if (_inFocus)
+			{
+				_inFocus = false;
+				if (ListLostFocus != null)
+				{
+					ListLostFocus.Invoke(this, null);
+				}
+			}
 		}
 
 
@@ -401,5 +456,6 @@ namespace WeSay.UI.TextBoxes
 		public bool DisplayMeaning { get; set; }
 		public int ItemHeight { get; set; }
 		public int ColumnWidth { get; set; }
+		public bool Sorted { get; set; }
 	}
 }

@@ -61,7 +61,7 @@ namespace WeSay.UI.TextBoxes
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void OnTextChanged(object sender, EventArgs e)
+		protected virtual void OnTextChanged(object sender, EventArgs e)
 		{
 			SetText(Text);
 			AdjustHeight();

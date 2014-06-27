@@ -222,12 +222,12 @@ namespace WeSay.UI
 		{
 			AutoCompleteWithCreationBox<KV, ValueT> picker =
 					new AutoCompleteWithCreationBox<KV, ValueT>(_visibility);
-			picker.Box.FormToObectFinder = _choiceSystemAdaptor.GetValueFromFormNonGeneric;
+			picker.Box.FormToObjectFinder = _choiceSystemAdaptor.GetValueFromFormNonGeneric;
 
 			picker.GetKeyValueFromValue = _choiceSystemAdaptor.GetKeyValueFromValue;
 			picker.GetValueFromKeyValue = _choiceSystemAdaptor.GetValueFromKeyValue;
 			picker.Box.ItemDisplayStringAdaptor = _choiceSystemAdaptor;
-			picker.Box.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
+			picker.Box.Mode = EntryMode.List;
 			picker.Box.Items = _sourceChoices;
 			picker.Box.WritingSystem = _writingSystems[0];
 			picker.Box.MinimumSize = new Size(30, 10);
