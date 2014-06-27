@@ -1,0 +1,8 @@
+Verified+1: Jenkins CI <jenkins@sil.org>
+Verified-Linux+1: Jenkins CI <jenkins@sil.org>
+Code-Review+2: Stephen McConnel <stephen_mcconnel@sil.org>
+Submitted-by: Jessica Griffin <groovygreengecko@gmail.com>
+Submitted-at: Fri, 27 Jun 2014 20:19:55 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/2177
+Project: wesay
+Branch: refs/heads/develop
