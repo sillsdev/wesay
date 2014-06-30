@@ -42,6 +42,7 @@ namespace WeSay.UI
 		bool Focus();
 		Size MinimumSize { get; set; }
 		bool Bold { get; set; }
+		void SetFocusIndex(int index);
 
 		event ListViewItemSelectionChangedEventHandler ItemSelectionChanged;
 		event RetrieveVirtualItemEventHandler RetrieveVirtualItem;
@@ -578,6 +579,21 @@ namespace WeSay.UI
 			}
 		}
 
+		public void SetFocusIndex(int index)
+		{
+			if (index == -1)
+			{
+				FocusedItem = null;
+			}
+			else
+			{
+				FocusedItem = Items[index];
+			}
+		}
+		public void RemoveItem(int index)
+		{
+			Items.RemoveAt(index);
+		}
 		protected override void OnHandleCreated(EventArgs e)
 		{
 			base.OnHandleCreated(e);

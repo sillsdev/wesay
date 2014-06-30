@@ -212,6 +212,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				if (_completedRecords.Contains(record))
 				{
+#if __MonoCS__
+					// WE-94 FocusIndex can be out of range after the record is removed if the
+					// last record in the list is selected as the new record.  Mono nonGecko only.
+					if (_completedRecords.Count == _completedRecordsListBox.SelectedIndex + 1)
+					{
+						_completedRecordsListBox.SetFocusIndex(_completedRecords.Count - 2);
+					}
+#endif
 					_completedRecords.Remove(record);
 				}
 				if (!_todoRecords.Contains(record))
@@ -223,6 +231,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				if (_todoRecords.Contains(record))
 				{
+#if __MonoCS__
+					// WE-94 FocusIndex can be out of range after the record is removed if the
+					// last record in the list is selected as the new record.  Mono nonGecko only.
+					if (_todoRecords.Count == _todoRecordsListBox.SelectedIndex + 1)
+					{
+						_todoRecordsListBox.SetFocusIndex(_todoRecords.Count - 2);
+					}
+#endif
 					_todoRecords.Remove(record);
 				}
 				if (!_completedRecords.Contains(record))
@@ -400,7 +416,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 		}
 
-		private bool MoveIndex(List<RecordToken<LexEntry>> recordList, IWeSayListView listBox, IWeSayListView oppositeListBox)
+		private bool MoveIndex(List<RecordToken<LexEntry>> recordList,
+								IWeSayListView listBox,
+								IWeSayListView oppositeListBox)
 		{
 			if (listBox.SelectedIndex != -1)
 			{
@@ -408,9 +426,13 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				if (CurrentRecord != null)
 				{
 					MoveRecordToAppropriateListBox(CurrentRecord);
-					//reset the index as it may have changed
-					listBox.SelectedIndex =
-						recordList.FindIndex(x => x == recordForWhichSelectionIsChanging);
+					//reset the index as it may have changed, avoid recursive call unless required
+					int newIndex = recordList.FindIndex(x => x == recordForWhichSelectionIsChanging);
+					if (listBox.SelectedIndex != newIndex)
+					{
+						listBox.SelectedIndex =
+							recordList.FindIndex(x => x == recordForWhichSelectionIsChanging);
+					}
 				}
 
 				//This is the case if we previously had a record selected in the completedListBox and now are selecting a record in the todoListBox

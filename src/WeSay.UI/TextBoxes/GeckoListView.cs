@@ -443,6 +443,12 @@ namespace WeSay.UI.TextBoxes
 				}
 			}
 		}
+
+		public void SetFocusIndex(int index)
+		{
+			//WS-94 Not required for Gecko
+		}
+
 		// Set this to true to get bold print for the list box
 		public bool Bold { get; set; }
 
