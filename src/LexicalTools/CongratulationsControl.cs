@@ -8,6 +8,11 @@ namespace WeSay.LexicalTools
 		public CongratulationsControl()
 		{
 			InitializeComponent();
+			// We don't want the user to edit/modify what we display!
+			// This prevents https://jira.sil.org/browse/WS-92.
+			_messageText.ReadOnly = true;
+			_messageText.HideSelection = true;
+			_messageText.TabStop = false;
 		}
 
 		public void Show(string message)
