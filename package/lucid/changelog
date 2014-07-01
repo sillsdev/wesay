@@ -1,3 +1,13 @@
+wesay (1.5.17) experimental; urgency=low
+
+  * Implement AutoCompleteTextBox for search feature when using GeckoFx
+  * WS-92 Prevent message area from being edited by user
+  * WS-94 Fix crash on "Part of Speech" tab
+  * Include MONO_DEBUG=explicit-null-checks in wesay-config startup script
+    since wesay can be launched from wesay-config
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Tue, 01 Jul 2014 11:51:15 -0400
+
 wesay (1.5.16) experimental; urgency=low
 
   * WS-59 Fix Word list not repainting correctly
