@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Palaso.Data;
 using Palaso.DictionaryServices.Model;
@@ -86,7 +87,17 @@ namespace WeSay.LexicalTools
 		private LexEntry CreateNewLexEntry(CreateNewArgs e)
 		{
 			LexEntry newGuy = _lexEntryRepository.CreateItem();
-			newGuy.LexicalForm.SetAlternative(_field.WritingSystemIds[0], e.LabelOfNewItem);
+			// If we're creating from a previously deleted word, omit the guid part of the stored label.
+			// See https://jira.sil.org/browse/WS-96 for a picture of what could happen otherwise.
+			// Also restore the guid in case this form was referred to more than once.
+			string word = e.LabelOfNewItem;
+			Match m = Regex.Match(e.LabelOfNewItem, "_[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}");
+			if (m.Success)
+			{
+				word = e.LabelOfNewItem.Substring(0, m.Index);
+				newGuy.Guid = new Guid(m.Value.Substring(1));
+			}
+			newGuy.LexicalForm.SetAlternative(_field.WritingSystemIds[0], word);
 			//hack: if something is a baseform itself, it isn't likely to have its own baseform
 			//This satisfies Rene's request of WS-419
 			if (_field.FieldName == "BaseForm")
