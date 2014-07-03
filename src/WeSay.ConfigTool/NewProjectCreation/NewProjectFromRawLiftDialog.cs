@@ -6,18 +6,18 @@ using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool.NewProjectCreation
 {
-	public partial class NewProjectFromFLExDialog:Form
+	public partial class NewProjectFromRawLiftDialog : Form
 	{
-		public NewProjectFromFLExDialog()
+		public NewProjectFromRawLiftDialog()
 		{
 			InitializeComponent();
 			_btnOk.Enabled = false;
-			_liftPathTextBox.TextChanged += OnLiftPathTextBox_TextChanged;
-			_browseForLiftPathButton.Click += OnBrowseForLiftPathButton_Click;
-			_projectNameTextBox.TextChanged += OnProjectNameTextBox_TextChanged;
-			_btnOk.Click += OnBtnOK_Click;
-			_btnCancel.Click += OnBtnCancel_Click;
-			_linkLabel.Click += OnLinkLabel_Clicked;
+			_liftPathTextBox.TextChanged += OnLiftPathTextBoxTextChanged;
+			_browseForLiftPathButton.Click += OnBrowseForLiftPathButtonClick;
+			_projectNameTextBox.TextChanged += OnProjectNameTextBoxTextChanged;
+			_btnOk.Click += OnBtnOKClick;
+			_btnCancel.Click += OnBtnCancelClick;
+			_linkLabel.Click += OnLinkLabelClicked;
 			_pathtoProjectLabel.Text = String.Empty;
 			Icon = Resources.WeSaySetupApplicationIcon;
 		}
@@ -59,14 +59,14 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			get { return Path.Combine(Project.WeSayWordsProject.NewProjectDirectory, _projectNameTextBox.Text); }
 		}
 
-		private static void OnLinkLabel_Clicked(object sender, EventArgs e1)
+		private static void OnLinkLabelClicked(object sender, EventArgs e1)
 		{
 			Process.Start("http://wesay.org/index.php?title=ShareWithFLEx");
 		}
 
-		private void OnBrowseForLiftPathButton_Click(object sender, EventArgs e)
+		private void OnBrowseForLiftPathButtonClick(object sender, EventArgs e)
 		{
-			using(var dlg = new OpenFileDialog())
+			using (var dlg = new OpenFileDialog())
 			{
 				dlg.Title = "Locate LIFT file";
 				dlg.AutoUpgradeEnabled = true;
@@ -81,7 +81,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			}
 		}
 
-		private void OnLiftPathTextBox_TextChanged(object sender, EventArgs e)
+		private void OnLiftPathTextBoxTextChanged(object sender, EventArgs e)
 		{
 			if (_projectNameTextBox.Text == String.Empty && _liftPathTextBox.Text.Contains(".lift"))
 			{
@@ -96,7 +96,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			_btnOk.Enabled = EnableOk;
 		}
 
-		protected void OnProjectNameTextBox_TextChanged(object sender, EventArgs e)
+		protected void OnProjectNameTextBoxTextChanged(object sender, EventArgs e)
 		{
 			_btnOk.Enabled = EnableOk;
 			if (_btnOk.Enabled)
@@ -118,13 +118,13 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			}
 		}
 
-		private void OnBtnOK_Click(object sender, EventArgs e)
+		private void OnBtnOKClick(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.OK;
 			Close();
 		}
 
-		private void OnBtnCancel_Click(object sender, EventArgs e)
+		private void OnBtnCancelClick(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Cancel;
 			Close();

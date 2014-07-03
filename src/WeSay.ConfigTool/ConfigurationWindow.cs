@@ -174,7 +174,7 @@ namespace WeSay.ConfigTool
 
 		private void OnCreateProjectFromFLEx(object sender, EventArgs e)
 		{
-			var dlg = new NewProjectFromFLExDialog();
+			var dlg = new NewProjectFromRawLiftDialog();
 			if (DialogResult.OK != dlg.ShowDialog())
 			{
 				return;
