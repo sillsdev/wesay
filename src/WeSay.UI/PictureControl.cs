@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Palaso.IO;
 using Palaso.UI.WindowsForms.ImageToolbox;
@@ -242,15 +243,25 @@ namespace WeSay.UI
 						if(string.IsNullOrEmpty(fileName))
 							fileName = DateTime.UtcNow.ToFileTimeUtc().ToString();
 
+						string fileExt;
+						if ((!String.IsNullOrEmpty(dlg.ImageInfo.FileName)) && (!String.IsNullOrEmpty(dlg.ImageInfo.FileName.Split('.').Last())))
+						{
+							fileExt = "." + dlg.ImageInfo.FileName.Split('.').Last();
+						}
+						else
+						{
+							// If no file name or extension, default to png
+							fileExt = ".png";
+						}
 						//NB: we have very possible collision if use a real word "bird".
 						//Less so with a time "3409343839", which this only uses if we don't have a file name (e.g. if it came from a scanner)
 						//so this will add to the name if what we have is not unique.
-						if (File.Exists(Path.Combine(_storageFolderPath, fileName + ".png")))
+						if (File.Exists(Path.Combine(_storageFolderPath, fileName + fileExt)))
 						{
 							fileName += "-"+DateTime.UtcNow.ToFileTimeUtc();
 						}
 
-						fileName += ".png";
+						fileName += fileExt;
 						var fullDestPath = Path.Combine(_storageFolderPath, fileName);
 						_relativePathToImage = fullDestPath.Replace(_pathToReferingFile, "");
 						_relativePathToImage = _relativePathToImage.Trim(Path.DirectorySeparatorChar);
