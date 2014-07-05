@@ -1,0 +1,8 @@
+Verified+1: Jenkins CI <jenkins@sil.org>
+Verified-Linux+1: Jenkins CI <jenkins@sil.org>
+Code-Review+2: Davey Tenn <davy.lsdev@gmail.com>
+Submitted-by: David Moore <david_moore1@sil.org>
+Submitted-at: Sat, 05 Jul 2014 16:53:28 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/2200
+Project: wesay
+Branch: refs/heads/develop
