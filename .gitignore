@@ -48,3 +48,4 @@ externals
 common/WeSay_Helps.chm
 Enchant.Net.dll*
 Ionic.Zip.dll
+taglib-sharp.dll

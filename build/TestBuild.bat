@@ -15,7 +15,7 @@ if "%INCLUDE%" == "" (
 
 :build
 if "%~1" == "" (
-	SET BUILD=Release
+	SET BUILD=Debug
 ) else (
 	SET BUILD=%~1
 )
