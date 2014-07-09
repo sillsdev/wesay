@@ -241,6 +241,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="Palaso.Media.dll" Name="Palaso.Media.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Media.dll" />
 				  </Component>
 
+				  <Component Id="taglib_sharp.dll" Guid="{9E7A818B-9D51-4DFF-8CEE-93AA374DC25F}">
+					<File Id="taglib_sharp.dll" KeyPath="yes" Source="..\..\output\release\taglib-sharp.dll" />
+				  </Component>
 
 				  <Component Id="WeSay.App.exe.config" Guid="{ED8319B8-8325-4598-8E4C-004D3356E373}">
 					<File Id="WeSay.App.exe.config" Name="WeSay.App.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay.App.exe.config" />
@@ -496,6 +499,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="NetReflector.dll" />
 			  <ComponentRef Id="Palaso.DictionaryServices.dll" />
 			  <ComponentRef Id="Palaso.Media.dll" />
+			  <ComponentRef Id="taglib_sharp.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
 			  <ComponentRef Id="WeSay.App.exe.config" />
 			  <ComponentRef Id="WeSay.App.pdb" />
