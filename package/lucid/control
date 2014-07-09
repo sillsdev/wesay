@@ -14,7 +14,6 @@ Architecture: any
 Depends: ${misc:Depends}, ${cli:Depends},
  mono-sil, mono-basic-sil, gtk-sharp2-sil, libgdiplus-sil,
  geckofx29,
- libimage-exiftool-perl,
  chmsee
 Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer, art-of-reading
 Conflicts: wesay-stable

@@ -244,7 +244,7 @@ manually.  (These should be installed automatically for users by the Linux
 package system.)  Here are the packages that we are aware of (in command line
 format):
 
-	sudo apt-get install libimage-exiftool-perl
+	sudo apt-get install chmsee
 
 9. TESTING IN VAGRANT VIRTUAL MACHINE
 
