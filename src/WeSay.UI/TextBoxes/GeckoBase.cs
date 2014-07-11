@@ -28,6 +28,8 @@ namespace WeSay.UI.TextBoxes
 		protected bool _inFocus;
 		protected string _nameForLogging;
 		protected bool _handleEnter;
+		private Timer _timer;
+		protected GeckoHtmlElement _focusElement;
 
 		public GeckoBase()
 		{
@@ -77,6 +79,12 @@ namespace WeSay.UI.TextBoxes
 		{
 			this.Load -= _loadHandler;
 			this.BackColorChanged -= _backColorChangedHandler;
+			_focusElement = null;
+			if (_timer != null)
+			{
+				_timer.Stop();
+				_timer = null;
+			}
 			if (_browser != null)
 			{
 				_browser.DomKeyDown -= _domKeyDownHandler;
@@ -306,6 +314,29 @@ namespace WeSay.UI.TextBoxes
 			AdjustHeight();
 		}
 
+		protected void Delay(int ms, EventHandler action)
+		{
+			if (_timer == null)
+			{
+				_timer = new Timer {Interval = ms};
+				_timer.Tick += action;
+				_timer.Start();
+			}
+		}
+
+		protected void ChangeFocus(object sender, EventArgs e)
+		{
+			// Kill the timer if set and release the timer and HTML Element
+			if (_timer != null)
+			{
+				_timer.Stop();
+				_timer = null;
+			}
+			if (_focusElement != null)
+			{
+				_focusElement.Focus ();
+			}
+		}
 		// Making these empty handlers rather than abstract so the class only
 		// needs to implement the ones they need.
 		protected virtual void OnDomFocus(object sender, DomEventArgs e)

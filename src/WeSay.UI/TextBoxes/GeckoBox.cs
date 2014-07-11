@@ -16,7 +16,6 @@ namespace WeSay.UI.TextBoxes
 	{
 		private string _pendingHtmlLoad;
 		private bool _keyPressed;
-		private GeckoDivElement _divElement;
 		private EventHandler _textChangedHandler;
 
 		public GeckoBox()
@@ -47,12 +46,10 @@ namespace WeSay.UI.TextBoxes
 			WritingSystem = ws;
 		}
 
-
 		protected override void Closing()
 		{
 			this.TextChanged -= _textChangedHandler;
 			_textChangedHandler = null;
-			_divElement = null;
 			base.Closing();
 		}
 
@@ -67,7 +64,11 @@ namespace WeSay.UI.TextBoxes
 			AdjustHeight();
 		}
 
-		private delegate void ChangeFocusDelegate(GeckoDivElement ctl);
+		public void Select(int start, int length)
+		{
+			base.Select();
+		}
+
 		protected override void OnDomFocus(object sender, DomEventArgs e)
 		{
 			var content = _browser.Document.GetElementById("main");
@@ -82,17 +83,10 @@ namespace WeSay.UI.TextBoxes
 #if DEBUG
 					Debug.WriteLine("Got Focus2: " + Text);
 #endif
-					_divElement = (GeckoDivElement)content;
-					this.BeginInvoke(new ChangeFocusDelegate(changeFocus), _divElement);
+					_focusElement = (GeckoHtmlElement)content;
+					Delay (100, (o,a) => ChangeFocus(o,a));
 				}
 			}
-		}
-		private void changeFocus(GeckoDivElement ctl)
-		{
-#if DEBUG
-			Debug.WriteLine("Change Focus: " + Text);
-#endif
-			ctl.Focus();
 		}
 
 		protected override void OnDomClick(object sender, DomMouseEventArgs e)
@@ -100,7 +94,8 @@ namespace WeSay.UI.TextBoxes
 #if DEBUG
 			Debug.WriteLine ("Got Dom Mouse Click " + Text);
 #endif
-			_browser.Focus();
+			this.Focus();
+			SetText(Text);
 		}
 
 
@@ -194,15 +189,25 @@ namespace WeSay.UI.TextBoxes
 		protected override void OnLeave(EventArgs e)
 		{
 			base.OnLeave(e);
-
+			Console.WriteLine("onExit");
+			if (_browser != null)
+			{
+				_browser.RemoveInputFocus();
+			}
 			// this.BackColor = System.Drawing.Color.White;
 			ClearKeyboard();
 		}
 		protected override void OnEnter(EventArgs e)
 		{
 			base.OnEnter(e);
+			Console.WriteLine("onEnter");
+			if (_browser != null)
+			{
+				_browser.SetInputFocus();
+			}
 			AssignKeyboardFromWritingSystem();
 		}
 
 	}
+
 }

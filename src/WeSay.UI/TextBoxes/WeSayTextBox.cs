@@ -27,6 +27,7 @@ namespace WeSay.UI.TextBoxes
 		bool IsSpellCheckingEnabled { get; set; }
 		int SelectionStart { get; set; }
 		int SelectionLength { get; set; }
+		void Select(int start, int length);
 		void AssignKeyboardFromWritingSystem();
 		void ClearKeyboard();
 		void Init(IWritingSystemDefinition writingSystem, String name);

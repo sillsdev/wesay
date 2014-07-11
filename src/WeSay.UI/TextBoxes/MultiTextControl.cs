@@ -272,7 +272,7 @@ namespace WeSay.UI.TextBoxes
 		private static void FocusWithInsertionPointAtEnd(Control c)
 		{
 			c.Focus();
-			TextBox tb = c as TextBox;
+			IWeSayTextBox tb = c as IWeSayTextBox;
 			if (tb != null)
 			{
 				tb.Select(1000, 0); //go to end}

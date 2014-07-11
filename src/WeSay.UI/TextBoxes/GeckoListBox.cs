@@ -20,7 +20,6 @@ namespace WeSay.UI.TextBoxes
 		private bool _initialSelectLoad;
 		private int _pendingInitialIndex;
 		private string _pendingHtmlLoad;
-		private GeckoUListElement _selectElement;
 		private List<Object> _items;
 		private readonly StringBuilder _itemHtml;
 		public event EventHandler UserClick;
@@ -153,6 +152,7 @@ namespace WeSay.UI.TextBoxes
 						if (content != null)
 						{
 							content.SetAttribute("class", "selected");
+							content.ScrollIntoView(false);
 						}
 					}
 				}
@@ -295,7 +295,7 @@ namespace WeSay.UI.TextBoxes
 			html.Append("ul { border: 0px solid black; display: inline-block; margin:0px; padding:0px; } ");
 			html.Append("ul li { display: inline-block; list-style: none; vertical-align: top: } ");
 			html.Append("ul li ul { border: 0px; padding: 0px; } ");
-			html.AppendFormat("ul li ul li {{ cursor: pointer; display: list-item; white-space: nowrap; height:30px; list-style: none; text-align:left; width: {0}px; color:black; background-color:green; }} ", ColumnWidth.ToString());
+			html.AppendFormat("ul li ul li {{ cursor: pointer; display: list-item; white-space: nowrap; height:30px; list-style: none; text-align:left; width: {0}px; color:black; }} ", ColumnWidth.ToString());
 			html.Append("ul li ul li.selected { color:blue; } ");
 			html.Append("ul li ul li.hover { background-color: #CCCCCC; } ");
 			html.Append("</style>");
@@ -362,7 +362,6 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		private delegate void ChangeFocusDelegate(GeckoUListElement ctl);
 		protected override void OnDomFocus(object sender, DomEventArgs e)
 		{
 			var content = (GeckoUListElement)_browser.Document.GetElementById("itemList");
@@ -374,15 +373,10 @@ namespace WeSay.UI.TextBoxes
 				if (!_inFocus)
 				{
 					_inFocus = true;
-					_selectElement = (GeckoUListElement)content;
-					this.BeginInvoke(new ChangeFocusDelegate(changeFocus), _selectElement);
+					_focusElement = (GeckoHtmlElement)content;
+					Delay (100, (o,a) => ChangeFocus(o,a));
 				}
 			}
-		}
-
-		private void changeFocus(GeckoUListElement ctl)
-		{
-			ctl.Focus();
 		}
 
 		protected override void OnDomBlur(object sender, DomEventArgs e)

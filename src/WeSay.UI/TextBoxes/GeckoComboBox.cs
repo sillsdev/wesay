@@ -20,7 +20,6 @@ namespace WeSay.UI.TextBoxes
 		private int _pendingInitialIndex;
 		private string _pendingHtmlLoad;
 		private bool _keyPressed;
-		private GeckoSelectElement _selectElement;
 
 		private List<Object> _items;
 		private readonly StringBuilder _itemHtml;
@@ -242,7 +241,6 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		private delegate void ChangeFocusDelegate(GeckoSelectElement ctl);
 		protected override void OnDomFocus(object sender, DomEventArgs e)
 		{
 //			Console.WriteLine("Got Focus: " );
@@ -255,17 +253,11 @@ namespace WeSay.UI.TextBoxes
 				if (!_inFocus)
 				{
 					_inFocus = true;
-					_selectElement = (GeckoSelectElement)content;
-					this.BeginInvoke(new ChangeFocusDelegate(changeFocus), _selectElement);
+					_focusElement = (GeckoHtmlElement)content;
+					Delay (100, (o,a) => ChangeFocus(o,a));
 				}
 			}
 		}
-
-		private void changeFocus(GeckoSelectElement ctl)
-		{
-			ctl.Focus();
-		}
-
 
 		protected override void OnGeckoBox_Load(object sender, EventArgs e)
 		{

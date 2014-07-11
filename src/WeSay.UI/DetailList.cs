@@ -354,13 +354,13 @@ namespace WeSay.UI
 			{
 				var tb = ((MultiTextControl)c).TextBoxes[0];
 				focusSucceeded = tb.Focus();
-				if (tb is WeSayTextBox)
-					((WeSayTextBox)tb).Select(1000, 0); //go to end
+				if (tb is IWeSayTextBox)
+					((IWeSayTextBox)tb).Select(1000, 0); //go to end
 			}
-			else if (c is WeSayTextBox)
+			else if (c is IWeSayTextBox)
 			{
 				focusSucceeded = c.Focus();
-				((WeSayTextBox)c).Select(1000, 0); //go to end
+				((IWeSayTextBox)c).Select(1000, 0); //go to end
 			}
 			else
 			{
