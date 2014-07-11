@@ -3,7 +3,7 @@
 # project=WeSay1.5-Linux
 # build=wesay1.5-precise64-continuous
 # root_dir=..
-# $Id: 0b75ca980cea444bf053cfdd852cb3e370225ffe $
+# $Id: d32984f53cd52f171a9cba46cd3879538ad23431 $
 
 cd "$(dirname "$0")"
 
@@ -100,16 +100,30 @@ cd -
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"icu.net.*"=>"lib/Release"}
+#     paths: {"icu.net.*"=>"lib/Debug/icu48"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
 # [5] build: icucil-precise64-Continuous (bt281)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"icu.net.*"=>"lib/Debug"}
+#     paths: {"icu.net.*"=>"lib/Release/icu48"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [6] build: wesay-doc-default (bt184)
+# [6] build: icucil-precise64-icu52 Continuous (bt413)
+#     project: Libraries
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt413
+#     clean: false
+#     revision: latest.lastSuccessful
+#     paths: {"icu.net.*"=>"lib/Debug/icu52"}
+#     VCS: https://github.com/sillsdev/icu-dotnet [master]
+# [7] build: icucil-precise64-icu52 Continuous (bt413)
+#     project: Libraries
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt413
+#     clean: false
+#     revision: latest.lastSuccessful
+#     paths: {"icu.net.*"=>"lib/Release/icu52"}
+#     VCS: https://github.com/sillsdev/icu-dotnet [master]
+# [8] build: wesay-doc-default (bt184)
 #     project: WeSay Windows
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt184
 #     clean: false
@@ -120,7 +134,11 @@ cd -
 # make sure output directories exist
 mkdir -p ../common
 mkdir -p ../lib/Debug
+mkdir -p ../lib/Debug/icu48
+mkdir -p ../lib/Debug/icu52
 mkdir -p ../lib/Release
+mkdir -p ../lib/Release/icu48
+mkdir -p ../lib/Release/icu52
 mkdir -p ../lib/common
 
 # download artifact dependencies
@@ -206,18 +224,19 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/PalasoUIWindowsForms.dll ../lib/Debug/PalasoUIWindowsForms.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/PalasoUIWindowsForms.dll.config ../lib/Debug/PalasoUIWindowsForms.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/PalasoUIWindowsForms.dll.mdb ../lib/Debug/PalasoUIWindowsForms.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/SIL.Archiving.dll ../lib/Debug/SIL.Archiving.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/SIL.Archiving.dll.config ../lib/Debug/SIL.Archiving.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/SIL.Archiving.dll.mdb ../lib/Debug/SIL.Archiving.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/ibusdotnet.dll ../lib/Debug/ibusdotnet.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/icu.net.dll ../lib/Debug/icu.net.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/icu.net.dll.config ../lib/Debug/icu.net.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/latest.lastSuccessful/debug/taglib-sharp.dll ../lib/Debug/taglib-sharp.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll ../lib/Release/icu.net.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.config ../lib/Release/icu.net.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.mdb ../lib/Release/icu.net.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll ../lib/Debug/icu.net.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.config ../lib/Debug/icu.net.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.mdb ../lib/Debug/icu.net.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll ../lib/Debug/icu48/icu.net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.config ../lib/Debug/icu48/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.mdb ../lib/Debug/icu48/icu.net.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll ../lib/Release/icu48/icu.net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.config ../lib/Release/icu48/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.mdb ../lib/Release/icu48/icu.net.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/latest.lastSuccessful/icu.net.dll ../lib/Debug/icu52/icu.net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/latest.lastSuccessful/icu.net.dll.config ../lib/Debug/icu52/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/latest.lastSuccessful/icu.net.dll.mdb ../lib/Debug/icu52/icu.net.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/latest.lastSuccessful/icu.net.dll ../lib/Release/icu52/icu.net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/latest.lastSuccessful/icu.net.dll.config ../lib/Release/icu52/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/latest.lastSuccessful/icu.net.dll.mdb ../lib/Release/icu52/icu.net.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/WeSay_Helps.chm ../common/WeSay_Helps.chm
 # End of script

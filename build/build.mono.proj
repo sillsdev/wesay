@@ -50,7 +50,7 @@
 		<Delete Files="@(ExistingObjectFiles)" />
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="UnzipMercurial;CopyFiles">
+	<Target Name="Compile" DependsOnTargets="UnzipMercurial;CopyFiles;CopyIcuLibs">
 		<MSBuild
 			Projects="$(RootDir)\src\$(Solution)"
 			Targets="Build"
@@ -77,6 +77,12 @@
 			Assemblies="@(TestAssemblies)"
 			ExcludeCategory="SkipOnBuildServer;SkipOnTeamCity;KnownMonoIssue;NUnit Windows Forms"
 			NUnitVersion="NUnit-2.5.5" />
+	</Target>
+
+	<Target Name="CopyIcuLibs">
+		<!-- $(icu-config ...) is passed to shell to exec. -->
+		<!-- Escape the $ (%24) to ensure it is sent to the shell. -->
+		<Exec Command="cp -p $(RootDir)/lib/$(Configuration)/icu%24(icu-config --version|tr -d .|cut -c -2)/icu.net.dll* $(RootDir)/lib/$(Configuration)" />
 	</Target>
 
 	<ItemGroup>

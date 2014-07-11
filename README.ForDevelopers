@@ -5,6 +5,14 @@ applies to both Linux and Windows development.
 In this document, $wesay refers to the directory of the wesay repository (e.g.
 ~/src/wesay).
 
+
+0. UBUNTU DISTRIBUTION PACKAGES NEEDED
+
+You will need a few system packages installed.
+
+	sudo apt-get install libicu-dev curl
+
+
 1. OBTAINING WESAY SOURCES
 
 The basic WeSay repository is at github, and can be cloned as follows:
