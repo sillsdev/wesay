@@ -105,8 +105,10 @@
 	</Target>
 	<ItemGroup>
 		<Source Include="$(RootDir)/src/**/*" Exclude="$(RootDir)/src/**/obj/**/*;$(RootDir)/src/**/bin/**/*" />
-		<Source Include="$(RootDir)/lib/Debug/**" Exclude="$(RootDir)/lib/Debug/*Palaso*;$(RootDir)/lib/Debug/*Chorus*;$(RootDir)/lib/Debug/SIL.*" />
-		<Source Include="$(RootDir)/lib/Release/**" Exclude="$(RootDir)/lib/Release/*Palaso*;$(RootDir)/lib/Release/*Chorus*;$(RootDir)/lib/Release/SIL.*" />
+		<Source Include="$(RootDir)/lib/Debug/**" Exclude="$(RootDir)/lib/Debug/*Palaso*;$(RootDir)/lib/Debug/*Chorus*;$(RootDir)/lib/Debug/SIL.*;$(RootDir)/lib/Debug/icu.net.*" />
+		<Source Include="$(RootDir)/lib/Release/**" Exclude="$(RootDir)/lib/Release/*Palaso*;$(RootDir)/lib/Release/*Chorus*;$(RootDir)/lib/Release/SIL.*;$(RootDir)/lib/Release/icu.net.*" />
+		<Source Include="$(RootDir)/lib/**/icu48/*" />
+		<Source Include="$(RootDir)/lib/**/icu52/*" />
 		<Source Include="$(RootDir)/lib/common/**" />
 		<Source Include="$(RootDir)/artwork/**" />
 		<Source Include="$(RootDir)/build/*.proj" />
@@ -223,15 +225,15 @@
 		/>
 		<Copy
 			SourceFiles="@(CommonFiles)"
-			DestinationFiles="$(InstallData)/%(RecursiveDir)%(Filename)%(Extension)"
+			DestinationFolder="$(InstallData)/%(RecursiveDir)%(Filename)%(Extension)"
 		/>
 		<Copy
 			SourceFiles="@(TemplateFiles)"
-			DestinationFiles="$(InstallData)/templates/%(RecursiveDir)%(Filename)%(Extension)"
+			DestinationFolder="$(InstallData)/templates/%(RecursiveDir)%(Filename)%(Extension)"
 		/>
 		<Copy
 			SourceFiles="@(IconFiles)"
-			DestinationFiles="$(InstallIcon)/%(RecursiveDir)%(Filename)%(Extension)"
+			DestinationFolder="$(InstallIcon)/%(RecursiveDir)%(Filename)%(Extension)"
 		/>
 		<Copy
 			DestinationFolder="$(InstallMenu)"
