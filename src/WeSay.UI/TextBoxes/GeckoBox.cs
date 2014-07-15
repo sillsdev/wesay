@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,6 +9,7 @@ using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
 using Palaso.WritingSystems;
+using Palaso.Text;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
@@ -17,6 +19,7 @@ namespace WeSay.UI.TextBoxes
 		private string _pendingHtmlLoad;
 		private bool _keyPressed;
 		private EventHandler _textChangedHandler;
+		private string _previousText;
 
 		public GeckoBox()
 		{
@@ -62,6 +65,8 @@ namespace WeSay.UI.TextBoxes
 		{
 			SetText(Text);
 			AdjustHeight();
+			LanguageForm.AdjustSpansForTextChange(_previousText, Text, Spans);
+			_previousText = Text;
 		}
 
 		public void Select(int start, int length)
@@ -208,6 +213,17 @@ namespace WeSay.UI.TextBoxes
 			AssignKeyboardFromWritingSystem();
 		}
 
+		public List<LanguageForm.FormatSpan> Spans { get; set; }
+
+		public override string Text
+		{
+			set
+			{
+				_previousText = value;
+				base.Text = value;
+			}
+			get { return base.Text; }
+		}
 	}
 
 }

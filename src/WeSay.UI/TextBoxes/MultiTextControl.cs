@@ -375,6 +375,12 @@ namespace WeSay.UI.TextBoxes
 			//for automated tests to find this particular guy
 			control.Text = text;
 
+			if (control is IWeSayTextBox)
+			{
+				var spans = multiText.GetExactAlternativeSpans(writingSystem.Id);
+				(control as IWeSayTextBox).Spans = spans;
+			}
+
 			control.TextChanged += OnTextOfSomeBoxChanged;
 			control.KeyDown += OnKeyDownInSomeBox;
 			control.MouseWheel += subControl_MouseWheel;

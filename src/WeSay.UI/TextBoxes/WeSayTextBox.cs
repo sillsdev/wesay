@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,6 +9,7 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.UI.WindowsForms.Spelling;
 using Palaso.WritingSystems;
+using Palaso.Text;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
@@ -48,12 +50,17 @@ namespace WeSay.UI.TextBoxes
 		/// </summary>
 		void PretendSetFocus();
 
+		/// <summary>
+		/// Formatting information that we need to preserve.
+		/// </summary>
+		List<LanguageForm.FormatSpan> Spans { get; set; }
 	}
 
 
 	public partial class WeSayTextBox: TextBox, IControlThatKnowsWritingSystem, IWeSayTextBox
 	{
 		private IWritingSystemDefinition _writingSystem;
+		private string _previousText;
 
 		private bool _multiParagraph;
 		private string _nameForLogging;
@@ -166,6 +173,8 @@ namespace WeSay.UI.TextBoxes
 									   _nameForLogging,
 									   _writingSystem.Id);
 			}
+			LanguageForm.AdjustSpansForTextChange(_previousText, Text, Spans);
+			_previousText = Text;
 		}
 
 		private void OnKeyPress(object sender, KeyPressEventArgs e)
@@ -281,7 +290,11 @@ namespace WeSay.UI.TextBoxes
 		[Browsable(false)]
 		public override string Text
 		{
-			set { base.Text = value;  }
+			set
+			{
+				_previousText = value;
+				base.Text = value;
+			}
 			get { return base.Text; }
 		}
 
@@ -474,5 +487,7 @@ namespace WeSay.UI.TextBoxes
 		{
 			Focus();
 		}
+
+		public List<LanguageForm.FormatSpan> Spans { get; set; }
 	}
 }
