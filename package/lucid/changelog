@@ -1,3 +1,15 @@
+wesay (1.5.19) stable; urgency=low
+
+  * Use taglib-sharp instead exiftool to read exif data from images
+  * Change package builds to use the correct version of ICU.net.dll
+   - Precise/Saucy will use version for ICU48
+   - Trusty will use version for ICU52
+  * Make packaging work on Trusty
+  * Improve event processing in Gecko mode
+  * WS-34799: Improve handling of <span> elements in LIFT when editing
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Tue, 15 Jul 2014 12:47:47 -0400
+
 wesay (1.5.18) stable; urgency=low
 
   * WS-96 Restore proper form and guid when recreating deleted word
