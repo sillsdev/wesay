@@ -225,15 +225,15 @@
 		/>
 		<Copy
 			SourceFiles="@(CommonFiles)"
-			DestinationFolder="$(InstallData)/%(RecursiveDir)%(Filename)%(Extension)"
+			DestinationFolder="$(InstallData)/%(RecursiveDir)"
 		/>
 		<Copy
 			SourceFiles="@(TemplateFiles)"
-			DestinationFolder="$(InstallData)/templates/%(RecursiveDir)%(Filename)%(Extension)"
+			DestinationFolder="$(InstallData)/templates/%(RecursiveDir)"
 		/>
 		<Copy
 			SourceFiles="@(IconFiles)"
-			DestinationFolder="$(InstallIcon)/%(RecursiveDir)%(Filename)%(Extension)"
+			DestinationFolder="$(InstallIcon)/%(RecursiveDir)"
 		/>
 		<Copy
 			DestinationFolder="$(InstallMenu)"
