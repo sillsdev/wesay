@@ -1,4 +1,4 @@
-wesay (1.5.19) stable; urgency=low
+wesay (1.5.19~alpha1) stable; urgency=low
 
   * Use taglib-sharp instead exiftool to read exif data from images
   * Change package builds to use the correct version of ICU.net.dll
