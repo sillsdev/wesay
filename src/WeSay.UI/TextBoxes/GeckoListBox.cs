@@ -161,7 +161,7 @@ namespace WeSay.UI.TextBoxes
 					// -1 is the only valid negative value
 					_selectedIndex = -1;
 				}
-				if ((oldIndex > -1) && HighlightSelect)
+				if ((oldIndex > -1) && HighlightSelect && (_browser != null))
 				{
 					string id = oldIndex + "-1";
 					var content = (GeckoLIElement)_browser.Document.GetElementById(id);

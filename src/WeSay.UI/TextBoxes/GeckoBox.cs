@@ -103,7 +103,6 @@ namespace WeSay.UI.TextBoxes
 			SetText(Text);
 		}
 
-
 		protected override void OnDomKeyUp(object sender, DomKeyEventArgs e)
 		{
 			var content = _browser.Document.GetElementById("main");
@@ -194,7 +193,6 @@ namespace WeSay.UI.TextBoxes
 		protected override void OnLeave(EventArgs e)
 		{
 			base.OnLeave(e);
-			Console.WriteLine("onExit");
 			if (_browser != null)
 			{
 				_browser.RemoveInputFocus();
@@ -205,7 +203,6 @@ namespace WeSay.UI.TextBoxes
 		protected override void OnEnter(EventArgs e)
 		{
 			base.OnEnter(e);
-			Console.WriteLine("onEnter");
 			if (_browser != null)
 			{
 				_browser.SetInputFocus();

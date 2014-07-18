@@ -332,9 +332,25 @@ namespace WeSay.UI.TextBoxes
 				_timer.Stop();
 				_timer = null;
 			}
-			if (_focusElement != null)
+			nsIDOMElement focusedElement = _browser.WebBrowserFocus.GetFocusedElementAttribute();
+			if (focusedElement==_focusElement.DOMElement)
 			{
-				_focusElement.Focus ();
+				return;
+			}
+			nsIDOMElement start = focusedElement;
+			while (start != null && start != _focusElement.DomObject)
+			{
+				nsIDOMNode parentNode = start.GetParentNodeAttribute();
+				if (!(parentNode is nsIDOMElement))
+				{
+					start = null;
+					break;
+				}
+				start = (nsIDOMElement)parentNode;
+			}
+			if ((start == null) && (_focusElement != null))
+			{
+				_browser.WebBrowserFocus.SetFocusedElementAttribute((nsIDOMElement)_focusElement.DomObject);
 			}
 		}
 		// Making these empty handlers rather than abstract so the class only

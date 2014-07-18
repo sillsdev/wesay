@@ -60,6 +60,7 @@ namespace WeSay.LexicalTools
 			_detailListControl.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
 			_detailListControl.KeyDown += _detailListControl_KeyDown;
 			_detailListControl.MouseWheel += OnDetailListMouseWheel;
+			_detailListControl.GeckoOption = WeSayWordsProject.GeckoOption;
 			_scrollableContainer.AutoScroll = true;
 			_scrollableContainer.Controls.Add(_detailListControl);
 			_detailListControl.ResumeLayout(false);

@@ -51,6 +51,7 @@ namespace WeSay.UI
 			Dock = DockStyle.Fill;
 			AutoSize = true;
 			AutoSizeMode = AutoSizeMode.GrowAndShrink;
+			GeckoOption = false;
 
 			MouseClick += OnMouseClick;
 
@@ -158,7 +159,7 @@ namespace WeSay.UI
 		{
 			base.OnGotFocus(e);
 			//we don't want to have focus, ourselves
-			if (RowCount >0)
+			if (RowCount >0 && !GeckoOption)
 				MoveInsertionPoint(0);
 		}
 		/// <summary>
@@ -542,6 +543,7 @@ namespace WeSay.UI
 		{
 			get { return _mouseOverRow; }
 		}
+		public bool GeckoOption { get; set; }
 
 #if DEBUG
 		public void WriteDetailListDetails(string prefix)
