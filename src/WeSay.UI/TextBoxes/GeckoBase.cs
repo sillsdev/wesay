@@ -45,6 +45,7 @@ namespace WeSay.UI.TextBoxes
 			_browser = new GeckoWebBrowser();
 			_browser.Dock = DockStyle.Fill;
 			_browser.Parent = this;
+			_browser.NoDefaultContextMenu = true;
 
 			SelectionStart = 0;  // Initialize value;
 
