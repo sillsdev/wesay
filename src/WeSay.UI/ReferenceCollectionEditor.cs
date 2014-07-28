@@ -19,11 +19,11 @@ namespace WeSay.UI
 		private readonly IList<IWritingSystemDefinition> _writingSystems;
 		private readonly CommonEnumerations.VisibilitySetting _visibility;
 		private readonly IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> _choiceSystemAdaptor;
+		private readonly IServiceProvider _serviceProvider;
 		private IReportEmptiness _alternateEmptinessHelper;
 		private AutoCompleteWithCreationBox<KV, ValueT> _emptyPicker;
 		private int _popupWidth = -1;
 		private bool _ignoreListChanged;
-
 		public event EventHandler<CreateNewArgs> CreateNewTargetItem;
 
 		public ReferenceCollectionEditor()
@@ -47,11 +47,13 @@ namespace WeSay.UI
 		/// <param name="writingSystems">a list of writing systems ordered by preference</param>
 		/// <param name="visibility"></param>
 		/// <param name="adaptor">does all the conversion between keys, wrappers, actual objects, etc.</param>
+		/// <param name="serviceProvider">passed to the AutoCompleteWithCreation so it can get the appropriate type of AutoComplete control</param>
 		public ReferenceCollectionEditor(IBindingList chosenItems,
 										 IEnumerable<KV> sourceChoices,
 										 IList<IWritingSystemDefinition> writingSystems,
 										 CommonEnumerations.VisibilitySetting visibility,
-										 IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> adaptor)
+										 IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> adaptor,
+										IServiceProvider serviceProvider)
 		{
 			if (chosenItems == null)
 			{
@@ -78,6 +80,7 @@ namespace WeSay.UI
 			_choiceSystemAdaptor = adaptor;
 			chosenItems.ListChanged += chosenItems_ListChanged;
 			BackColorChanged += OnBackColorChanged;
+			_serviceProvider = serviceProvider;
 		}
 
 		private void OnBackColorChanged(object sender, EventArgs e)
@@ -122,7 +125,7 @@ namespace WeSay.UI
 			// due to the way the popup listbox works, if it has focus,
 			// ContainsFocus will not report it, so we check separately.
 			bool listBoxFocused = false;
-			var box = (WeSayAutoCompleteTextBox) sender;
+			var box = (IWeSayAutoCompleteTextBox) sender;
 			if (box != null)
 			{
 				listBoxFocused = box.ListBoxFocused;
@@ -221,20 +224,20 @@ namespace WeSay.UI
 		private AutoCompleteWithCreationBox<KV, ValueT> MakePicker()
 		{
 			AutoCompleteWithCreationBox<KV, ValueT> picker =
-					new AutoCompleteWithCreationBox<KV, ValueT>(_visibility);
+					new AutoCompleteWithCreationBox<KV, ValueT>(_visibility, _serviceProvider);
 			picker.Box.FormToObjectFinder = _choiceSystemAdaptor.GetValueFromFormNonGeneric;
 
+			picker.Box.WritingSystem = _writingSystems[0];
 			picker.GetKeyValueFromValue = _choiceSystemAdaptor.GetKeyValueFromValue;
 			picker.GetValueFromKeyValue = _choiceSystemAdaptor.GetValueFromKeyValue;
 			picker.Box.ItemDisplayStringAdaptor = _choiceSystemAdaptor;
 			picker.Box.Mode = EntryMode.List;
 			picker.Box.Items = _sourceChoices;
-			picker.Box.WritingSystem = _writingSystems[0];
 			picker.Box.MinimumSize = new Size(30, 10);
 			picker.Box.ItemFilterer = _choiceSystemAdaptor.GetItemsToOffer;
 			picker.Box.PopupWidth = _popupWidth;
 
-			picker.Box.LostFocus += OnChildLostFocus;
+			picker.Box.UserLostFocus += OnChildLostFocus;
 
 			if (CreateNewTargetItem != null)
 			{

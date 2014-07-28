@@ -46,7 +46,8 @@ namespace WeSay.UI.Tests
 					_sourceChoices.Options,
 					writingSystems,
 					CommonEnumerations.VisibilitySetting.Visible,
-					new OptionDisplayAdaptor(_sourceChoices, _ws.Id));
+					new OptionDisplayAdaptor(_sourceChoices, _ws.Id),
+					null);
 
 			_control.Name = "refcontrol";
 			_control.AlternateEmptinessHelper = _chosenItems;
@@ -209,7 +210,7 @@ namespace WeSay.UI.Tests
 
 		private void SimulateTypingOver(int boxNumber, string s)
 		{
-			WeSayAutoCompleteTextBox box = Boxes[boxNumber].Box;
+			WeSayAutoCompleteTextBox box = (WeSayAutoCompleteTextBox) Boxes[boxNumber].Box;
 			box.Focus();
 			box.SelectionStart = 0;
 			box.SelectionLength = box.TextLength;
@@ -225,7 +226,7 @@ namespace WeSay.UI.Tests
 			ActuallyShowOnScreen();
 			Assert.AreEqual(4, Boxes.Count);
 			SimulateTypingOver(1, "hello");
-			Boxes[1].Box.Paste("hello");
+			((WeSayAutoCompleteTextBox)(Boxes[1].Box)).Paste("hello");
 			Assert.AreEqual(4, Boxes.Count);
 		}
 

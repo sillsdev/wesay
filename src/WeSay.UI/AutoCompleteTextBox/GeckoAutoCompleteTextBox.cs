@@ -9,9 +9,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using Gecko;
 using Palaso.Code;
-using Palaso.Lift;
 using Palaso.UiBindings;
 using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.AutoCompleteTextBox
@@ -22,8 +22,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 	[Serializable]
 	public class GeckoAutoCompleteTextBox : GeckoBox, IWeSayAutoCompleteTextBox
 	{
-		public delegate object FormToObjectFinderDelegate(string form);
-
 		private FormToObjectFinderDelegate _formToObjectFinderDelegate;
 
 		public event EventHandler SelectedItemChanged;
@@ -249,7 +247,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-		internal GeckoListBox FilteredChoicesListBox
+		public IWeSayListBox FilteredChoicesListBox
 		{
 			get { return _listBox; }
 		}
@@ -584,6 +582,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				return;
 			}
 
+			_keyPressed = false;
 			SelectedItem = ((ItemWrapper)_listBox.SelectedItem).Item;
 			Text = ItemDisplayStringAdaptor.GetDisplayLabel(SelectedItem);// SelectedItem.ToString();
 			if (Text.Length > 0)
@@ -607,26 +606,29 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				UpdateList();
 				Form form = FindForm();
-				Point parentPointOnScreen = Parent.PointToClient(form.Location);
-				Point formPointOnScreen = form.PointToClient(form.Location);
-				Point offset = new Point(formPointOnScreen.X - parentPointOnScreen.X,
-										 formPointOnScreen.Y - parentPointOnScreen.Y);
-				Point p = Location;
-				p.X += offset.X;
-				p.Y += offset.Y;
-				p.X += PopupOffset.X;
-				p.Y += Height + PopupOffset.Y;
-				_listBox.Location = p;
-				if (_listBox.Items.Count > 0)
+				if (form != null)
 				{
-					if (!form.Controls.Contains(_listBox))
-					{
-						form.Controls.Add(_listBox);
-					}
-
-					_listBox.BringToFront();
-					_listBox.Visible = true;
+					Point parentPointOnScreen = Parent.PointToClient(form.Location);
+					Point formPointOnScreen = form.PointToClient(form.Location);
+					Point offset = new Point(formPointOnScreen.X - parentPointOnScreen.X,
+						formPointOnScreen.Y - parentPointOnScreen.Y);
+					Point p = Location;
+					p.X += offset.X;
+					p.Y += offset.Y;
+					p.X += PopupOffset.X;
+					p.Y += Height + PopupOffset.Y;
 					_listBox.Location = p;
+					if (_listBox.Items.Count > 0)
+					{
+						if (!form.Controls.Contains(_listBox))
+						{
+							form.Controls.Add(_listBox);
+						}
+
+						_listBox.BringToFront();
+						_listBox.Visible = true;
+						_listBox.Location = p;
+					}
 				}
 			}
 			else
@@ -815,7 +817,16 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 				_writingSystem = value;
 				_listBox.FormWritingSystem = value;
+				Font = WritingSystemInfo.CreateFont(_writingSystem);
 			}
+		}
+		protected override void OnBackColorChanged(object sender, EventArgs e)
+		{
+			RefreshDisplay();
+		}
+		protected override void OnForeColorChanged(object sender, EventArgs e)
+		{
+			RefreshDisplay();
 		}
 	}
 }

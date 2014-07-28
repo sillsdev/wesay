@@ -220,7 +220,8 @@ namespace WeSay.LexicalTools
 				where T : class
 		{
 			var picker = new AutoCompleteWithCreationBox<T, string> (
-				CommonEnumerations.VisibilitySetting.Visible
+				CommonEnumerations.VisibilitySetting.Visible,
+				 WeSayWordsProject.Project.ServiceLocator
 			);
 			picker.Box.Tag = relation;
 			//                    switch (type.TargetType)

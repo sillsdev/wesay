@@ -19,27 +19,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this._textBox = new WeSay.UI.AutoCompleteTextBox.WeSayAutoCompleteTextBox();
 			this._addNewButton = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.SuspendLayout();
-			//
-			// _textBox
-			//
-			this._textBox.BackColor = System.Drawing.Color.White;
-			this._textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this._textBox.Location = new System.Drawing.Point(1, 1);
-			this._textBox.Multiline = true;
-			this._textBox.MultiParagraph = false;
-			this._textBox.Name = "_textBox";
-			this._textBox.PopupBorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this._textBox.PopupOffset = new System.Drawing.Point(0, 0);
-			this._textBox.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
-			this._textBox.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			this._textBox.SelectedItem = null;
-			this._textBox.Size = new System.Drawing.Size(110, 20);
-			this._textBox.TabIndex = 0;
-			this._textBox.TextChanged += new System.EventHandler(this.box_TextChanged);
 			//
 			// _addNewButton
 			//
@@ -59,7 +41,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.Controls.Add(this._addNewButton);
-			this.Controls.Add(this._textBox);
 			this.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
 			this.Name = "AutoCompleteWithCreationBox";
 			this.Size = new System.Drawing.Size(150, 25);
@@ -70,7 +51,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		#endregion
 
-		private WeSayAutoCompleteTextBox _textBox;
 		private System.Windows.Forms.Button _addNewButton;
 		private System.Windows.Forms.ToolTip toolTip1;
 	}

@@ -17,7 +17,7 @@ namespace WeSay.UI.TextBoxes
 	public partial class GeckoBox : GeckoBase, IWeSayTextBox, IControlThatKnowsWritingSystem
 	{
 		private string _pendingHtmlLoad;
-		private bool _keyPressed;
+		protected bool _keyPressed;
 		private EventHandler _textChangedHandler;
 		private string _previousText;
 
@@ -134,9 +134,20 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
+		protected void RefreshDisplay()
+		{
+			if (_writingSystem != null)
+			{
+				_keyPressed = false;
+				SetText(Text);
+			}
+		}
+
 		private void SetText(string s)
 		{
 			String justification = "left";
+			String multiLineStyle = "";
+
 			if (_writingSystem != null && WritingSystem.RightToLeftScript)
 			{
 				justification = "right";
@@ -148,11 +159,15 @@ namespace WeSay.UI.TextBoxes
 				editable = "false";
 			}
 
+			if (!Multiline)
+			{
+				multiLineStyle = "white-space:nowrap; ";
+			}
 			Font font = WritingSystemInfo.CreateFont(_writingSystem);
 			var html =
 				string.Format(
-					"<html><head><meta charset=\"UTF-8\"></head><body style='background:#FFFFFF' id='mainbody'><div style='min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{3}' id='main' name='textArea' contentEditable='{4}'>{2}</div></body></html>",
-					font.Name, font.Size.ToString(), s, justification, editable);
+					"<html><head><meta charset=\"UTF-8\"></head><body style='background:#FFFFFF' id='mainbody'><div style='min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{3} background:{5}; color:{6}; {7}' id='main' name='textArea' contentEditable='{4}'>{2}</div></body></html>",
+					font.Name, font.Size.ToString(), s, justification, editable, System.Drawing.ColorTranslator.ToHtml(BackColor), System.Drawing.ColorTranslator.ToHtml(ForeColor), multiLineStyle);
 			if (!_browserIsReadyToNavigate)
 			{
 				_pendingHtmlLoad = html;

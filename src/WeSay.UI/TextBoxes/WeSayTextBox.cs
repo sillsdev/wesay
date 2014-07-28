@@ -33,12 +33,18 @@ namespace WeSay.UI.TextBoxes
 		void AssignKeyboardFromWritingSystem();
 		void ClearKeyboard();
 		void Init(IWritingSystemDefinition writingSystem, String name);
+		Font Font { get; set; }
 
+		Object Tag { get; set; }
 		bool Multiline { get; set; }
 		bool WordWrap { get; set; }
 		bool ReadOnly { get; set; }
 		bool Focus();
 		void Show();
+		Color ForeColor { get; set; }
+		bool TabStop { get; set; }
+		event EventHandler UserLostFocus;
+		event EventHandler UserGotFocus;
 
 		/// <summary>
 		/// for automated tests
@@ -71,6 +77,8 @@ namespace WeSay.UI.TextBoxes
 		/// Don't use this directly, use the Singleton Property TextBoxSpellChecker
 		/// </summary>
 		private static TextBoxSpellChecker _textBoxSpellChecker;
+		public event EventHandler UserLostFocus;
+		public event EventHandler UserGotFocus;
 
 		public WeSayTextBox()
 		{
@@ -190,12 +198,20 @@ namespace WeSay.UI.TextBoxes
 		private void OnLostFocus(object sender, EventArgs e)
 		{
 			Logger.WriteMinorEvent("LostFocus {0}:{1}", _nameForLogging, _writingSystem.Id);
+			if (UserLostFocus != null)
+			{
+				UserLostFocus.Invoke(sender, e);
+			}
 		}
 
 		private void OnGotFocus(object sender, EventArgs e)
 		{
 			Logger.WriteMinorEvent("Focus {0}:{1}", _nameForLogging, _writingSystem.Id);
 			_haveAlreadyLoggedTextChanged = false;
+			if (UserGotFocus != null)
+			{
+				UserGotFocus.Invoke(sender, e);
+			}
 		}
 
 		protected override void OnTextChanged(EventArgs e)

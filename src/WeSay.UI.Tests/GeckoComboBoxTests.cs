@@ -62,7 +62,6 @@ namespace WeSay.UI.Tests
 		public void TestAddItem()
 		{
 			int j = 0;
-			int index = 0;
 			String value = "";
 			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
 			var comboBox = new GeckoComboBox();

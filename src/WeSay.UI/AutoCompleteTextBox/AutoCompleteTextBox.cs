@@ -14,6 +14,7 @@ using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
+	public delegate object FormToObjectFinderDelegate(string form);
 	public delegate IEnumerable ItemFilterDelegate(
 			string text, IEnumerable items, IDisplayStringAdaptor adaptor);
 
@@ -27,11 +28,13 @@ namespace WeSay.UI.AutoCompleteTextBox
 	{
 		event KeyEventHandler KeyDown;
 		event EventHandler AutoCompleteChoiceSelected;
+		event EventHandler SelectedItemChanged;
+		event EventHandler SizeChanged;
+		event EventHandler TextChanged;
 		IEnumerable Items { get; set; }
 		EntryMode Mode { get; set; }
 		ItemFilterDelegate ItemFilterer { get; set; }
 		bool Focused { get; }
-		Font Font { get; set; }
 		string Name { get; set; }
 		BorderStyle PopupBorderStyle { get; set; }
 		BorderStyle BorderStyle { get; set; }
@@ -47,6 +50,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 		int Width { get; set; }
 		int Left { get; set; }
 		int Height { get; set; }
+		IDisplayStringAdaptor ItemDisplayStringAdaptor { get; set; }
+		FormToObjectFinderDelegate FormToObjectFinder { get; set; }
+		bool ListBoxFocused { get; }
+		Size MinimumSize { get; set; }
+		IWeSayListBox FilteredChoicesListBox { get; }
 	}
 
 	/// <summary>
@@ -55,7 +63,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 	[Serializable]
 	public class WeSayAutoCompleteTextBox : WeSayTextBox, IWeSayAutoCompleteTextBox
 	{
-		public delegate object FormToObjectFinderDelegate(string form);
 
 		private FormToObjectFinderDelegate _formToObjectFinderDelegate;
 
@@ -65,7 +72,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		#region Members
 
 		private IDisplayStringAdaptor _itemDisplayAdaptor = new ToStringAutoCompleteAdaptor();
-		private readonly ListBox _listBox;
+		private readonly WeSayListBox _listBox;
 		private Control _popupParent;
 
 		#endregion
@@ -282,7 +289,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-		internal ListBox FilteredChoicesListBox
+		public IWeSayListBox FilteredChoicesListBox
 		{
 			get { return _listBox; }
 		}
@@ -305,7 +312,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			MouseHover += OnMouseHover;
 
 			// Create the list box that will hold matching items
-			_listBox = new ListBox();
+			_listBox = new WeSayListBox();
 			_listBox.MaximumSize = new Size(800, 100);
 			_listBox.Cursor = Cursors.Hand;
 			_listBox.BorderStyle = BorderStyle.FixedSingle;

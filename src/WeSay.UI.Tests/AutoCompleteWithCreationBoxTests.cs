@@ -52,7 +52,7 @@ namespace WeSay.UI.Tests
 			_displayAdaptor = new OptionDisplayAdaptor(_sourceChoices, _ws.Id);
 			_control =
 					new AutoCompleteWithCreationBox<Option, string>(
-							CommonEnumerations.VisibilitySetting.Visible);
+							CommonEnumerations.VisibilitySetting.Visible, null);
 			_control.Name = "autobox";
 			_control.Box.Items = _sourceChoices.Options;
 			_control.Box.ItemFilterer = _displayAdaptor.GetItemsToOffer;
@@ -139,7 +139,7 @@ namespace WeSay.UI.Tests
 			Application.DoEvents();
 			_control.Box.Focus();
 			Application.DoEvents();
-			_control.Box.Paste("two");
+			((WeSayAutoCompleteTextBox)(_control.Box)).Paste("two");
 			//            while (true)
 			//            {
 			//                Application.DoEvents();
@@ -156,22 +156,22 @@ namespace WeSay.UI.Tests
 			Assert.AreEqual("", _control.Box.Text);
 			_control.Box.Focus();
 			SetBoxText("thr");
-			Assert.AreEqual(1, _control.Box.FilteredChoicesListBox.Items.Count);
-			Assert.AreEqual("three", _control.Box.FilteredChoicesListBox.Items[0].ToString());
+			Assert.AreEqual(1, _control.Box.FilteredChoicesListBox.Length);
+			Assert.AreEqual("three", _control.Box.FilteredChoicesListBox.GetItem(0).ToString());
 			SetBoxText("twxxx");
-			Assert.AreEqual(0, _control.Box.FilteredChoicesListBox.Items.Count);
+			Assert.AreEqual(0, _control.Box.FilteredChoicesListBox.Length);
 		}
 
 		[Test]
 		public void DropDownMatchesDescription()
 		{
 			SetKeyAndShow(String.Empty);
-			Assert.AreEqual(0, _control.Box.FilteredChoicesListBox.Items.Count);
+			Assert.AreEqual(0, _control.Box.FilteredChoicesListBox.Length);
 			SetBoxText("duo");
-			Assert.AreEqual(1, _control.Box.FilteredChoicesListBox.Items.Count);
-			Assert.AreEqual("two", _control.Box.FilteredChoicesListBox.Items[0].ToString());
+			Assert.AreEqual(1, _control.Box.FilteredChoicesListBox.Length);
+			Assert.AreEqual("two", _control.Box.FilteredChoicesListBox.GetItem(0).ToString());
 			SetBoxText("includes");
-			Assert.AreEqual(2, _control.Box.FilteredChoicesListBox.Items.Count);
+			Assert.AreEqual(2, _control.Box.FilteredChoicesListBox.Length);
 		}
 
 		[Test]
@@ -180,7 +180,7 @@ namespace WeSay.UI.Tests
 			SetKeyAndShow(String.Empty);
 			SetBoxText("tw");
 			//the item 'one' has the word 'two' in the description
-			Assert.AreEqual("two", _control.Box.FilteredChoicesListBox.Items[0].ToString());
+			Assert.AreEqual("two", _control.Box.FilteredChoicesListBox.GetItem(0).ToString());
 		}
 
 		[Test]
@@ -191,7 +191,7 @@ namespace WeSay.UI.Tests
 			//everything has the word 'two' and the item 'two' also has a matching name
 			//the item 'one' has the word 'two' in the description
 			Assert.AreEqual(_sourceChoices.Options.Count,
-							_control.Box.FilteredChoicesListBox.Items.Count);
+							_control.Box.FilteredChoicesListBox.Length);
 		}
 
 		private void SetBoxText(string text)
@@ -200,7 +200,7 @@ namespace WeSay.UI.Tests
 			//just pasting only appends
 			_control.Box.SelectionStart = 0;
 			_control.Box.SelectionLength = 1000;
-			_control.Box.Paste(text);
+			((WeSayAutoCompleteTextBox)(_control.Box)).Paste(text);
 		}
 
 		[Test]

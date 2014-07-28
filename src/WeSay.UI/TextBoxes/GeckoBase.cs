@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -8,6 +9,7 @@ using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
 using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -25,6 +27,9 @@ namespace WeSay.UI.TextBoxes
 		protected EventHandler<DomEventArgs> _domBlurHandler;
 		protected EventHandler<GeckoDocumentCompletedEventArgs> _domDocumentCompletedHandler;
 		protected EventHandler _backColorChangedHandler;
+		protected EventHandler _foreColorChangedHandler;
+		public event EventHandler UserLostFocus;
+		public event EventHandler UserGotFocus;
 		protected bool _inFocus;
 		protected string _nameForLogging;
 		protected bool _handleEnter;
@@ -65,6 +70,8 @@ namespace WeSay.UI.TextBoxes
 			_browser.DomBlur += _domBlurHandler;
 			_backColorChangedHandler = new EventHandler(OnBackColorChanged);
 			this.BackColorChanged += _backColorChangedHandler;
+			_foreColorChangedHandler = new EventHandler(OnForeColorChanged);
+			this.ForeColorChanged += _foreColorChangedHandler;
 #if __MonoCS__
 			_domClickHandler = new EventHandler<DomMouseEventArgs>(OnDomClick);
 			_browser.DomClick += _domClickHandler;
@@ -72,7 +79,7 @@ namespace WeSay.UI.TextBoxes
 		}
 		public void Init(IWritingSystemDefinition writingSystem, String name)
 		{
-			_writingSystem = writingSystem;
+			WritingSystem = writingSystem;
 			_nameForLogging = name;
 			Name = name;
 		}
@@ -80,6 +87,7 @@ namespace WeSay.UI.TextBoxes
 		{
 			this.Load -= _loadHandler;
 			this.BackColorChanged -= _backColorChangedHandler;
+			this.ForeColorChanged -= _foreColorChangedHandler;
 			_focusElement = null;
 			if (_timer != null)
 			{
@@ -145,6 +153,7 @@ namespace WeSay.UI.TextBoxes
 					throw new ArgumentNullException();
 				}
 				_writingSystem = value;
+				Font = WritingSystemInfo.CreateFont(_writingSystem);
 			}
 		}
 		public void AssignKeyboardFromWritingSystem()
@@ -307,7 +316,14 @@ namespace WeSay.UI.TextBoxes
 
 		protected virtual void OnDomBlur(object sender, DomEventArgs e)
 		{
-			_inFocus = false;
+			if (_inFocus)
+			{
+				_inFocus = false;
+				if (UserLostFocus != null)
+				{
+					UserLostFocus.Invoke(this, null);
+				}
+			}
 		}
 		protected virtual void OnDomDocumentCompleted(object sender, GeckoDocumentCompletedEventArgs e)
 		{
@@ -352,6 +368,10 @@ namespace WeSay.UI.TextBoxes
 			if ((start == null) && (_focusElement != null))
 			{
 				_browser.WebBrowserFocus.SetFocusedElementAttribute((nsIDOMElement)_focusElement.DomObject);
+				if (UserGotFocus != null)
+				{
+					UserGotFocus.Invoke(this, null);
+				}
 			}
 		}
 		// Making these empty handlers rather than abstract so the class only
@@ -369,6 +389,9 @@ namespace WeSay.UI.TextBoxes
 		{
 		}
 		protected virtual void OnBackColorChanged(object sender, EventArgs e)
+		{
+		}
+		protected virtual void OnForeColorChanged(object sender, EventArgs e)
 		{
 		}
 	}

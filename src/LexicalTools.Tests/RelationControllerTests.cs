@@ -218,7 +218,7 @@ namespace WeSay.LexicalTools.Tests
 			form.Controls.Add(c);
 			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker =
 					(AutoCompleteWithCreationBox<RecordToken<LexEntry>, string>) c;
-			picker.Box.Paste("text");
+			((WeSayAutoCompleteTextBox)(picker.Box)).Paste("text");
 		}
 
 		private LexEntry CreateEntry(string lexemeForm, string meaning)

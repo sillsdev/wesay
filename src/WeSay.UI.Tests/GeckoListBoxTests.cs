@@ -100,7 +100,6 @@ namespace WeSay.UI.Tests
 		{
 			_countOfItemsDrawn = 0;
 			_itemToNotDrawYetDrawn  = false;
-			String value = "";
 			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
 			IWritingSystemDefinition ws2 = WritingSystemDefinition.Parse("en");
 			_listBox = new GeckoListBox();
@@ -137,7 +136,6 @@ namespace WeSay.UI.Tests
 		{
 			_countOfItemsDrawn = 0;
 			_itemToNotDrawYetDrawn = false;
-			String value = "";
 			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
 			IWritingSystemDefinition ws2 = WritingSystemDefinition.Parse("en");
 			_listBox = new GeckoListBox();

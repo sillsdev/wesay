@@ -15,7 +15,7 @@ namespace WeSay.UI.Tests
 		private Form _window;
 
 		[SetUp]
-		public void Setup()
+		public override void Setup()
 		{
 			base.Setup();
 			_window = new Form();
@@ -24,7 +24,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[TearDown]
-		public void TearDown()
+		public override void TearDown()
 		{
 			_window.Dispose();
 			base.TearDown();

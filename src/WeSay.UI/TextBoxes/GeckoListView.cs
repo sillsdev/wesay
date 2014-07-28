@@ -444,13 +444,10 @@ namespace WeSay.UI.TextBoxes
 			//WS-94 Not required for Gecko
 		}
 
-		// Set this to true to get bold print for the list box
-		public bool Bold { get; set; }
-
 		public bool IsSpellCheckingEnabled { get; set; }
 		public int VirtualListSize { get; set; }
 
-		public int SelectionStart
+		public override int SelectionStart
 		{
 			get
 			{

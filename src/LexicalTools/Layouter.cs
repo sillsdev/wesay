@@ -540,13 +540,14 @@ namespace WeSay.LexicalTools
 			}
 
 
-		ReferenceCollectionEditor<Option, string, OptionRef> control =
+			ReferenceCollectionEditor<Option, string, OptionRef> control =
 					new ReferenceCollectionEditor<Option, string, OptionRef>(refsOfChoices.Members,
 																			 availableOptions.
 																					 Options,
 																			 writingSystems,
 																			 field.Visibility,
-																			 displayAdaptor);
+																			 displayAdaptor,
+																			 WeSayWordsProject.Project.ServiceLocator);
 			control.AlternateEmptinessHelper = refsOfChoices;
 			return control;
 		}
