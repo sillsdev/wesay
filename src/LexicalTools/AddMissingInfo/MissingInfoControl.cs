@@ -577,14 +577,14 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			if (WeSayWordsProject.GeckoOption)
 			{
-				IWeSayListView widerListBox = _completedRecordsListBox;
+				int widerListBoxWidth = _completedRecordsListBox.ListWidth;
 				if (_todoRecordsListBox.ListWidth > _completedRecordsListBox.ListWidth)
 				{
-					widerListBox = _todoRecordsListBox;
+					widerListBoxWidth = _todoRecordsListBox.ListWidth;
 				}
-				if (splitContainer1.SplitterDistance < widerListBox.ListWidth)
+				if (splitContainer1.SplitterDistance < widerListBoxWidth)
 				{
-					splitContainer1.SplitterDistance = widerListBox.ListWidth;
+					splitContainer1.SplitterDistance = widerListBoxWidth;
 				}
 			}
 		}

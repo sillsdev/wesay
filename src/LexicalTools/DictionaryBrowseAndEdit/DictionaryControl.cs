@@ -37,6 +37,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private ResultSet<LexEntry> _records;
 		private readonly ResultSetToListOfStringsAdapter _findTextAdapter;
 		private EntryViewControl _entryViewControl;
+		private Timer _timer;
+		private int _retryCount = 0;
 
 		public DictionaryControl()
 		{
@@ -736,6 +738,35 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				}
 			}
 		}
+		private void Delay(int ms, EventHandler action)
+		{
+			if (_timer == null)
+			{
+				_timer = new Timer {Interval = ms};
+				_timer.Tick += action;
+				_timer.Start();
+			}
+		}
+
+		protected void RetryUpdate(object sender, EventArgs e)
+		{
+			// Retry the update once
+			if (_timer != null)
+			{
+				_timer.Stop();
+				_timer = null;
+			}
+			if (_retryCount == 0)
+			{
+				_retryCount++;
+				AdjustSplitter();
+			}
+			else
+			{
+				_retryCount = 0;
+			}
+		}
+
 		private void DictionaryControl_Leave(object sender, EventArgs e)
 		{
 			SaveAndCleanUpPreviousEntry();

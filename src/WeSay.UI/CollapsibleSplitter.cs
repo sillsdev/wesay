@@ -235,16 +235,20 @@ namespace WeSay.UI
 		protected override void OnSplitterMoved(SplitterEventArgs sevent)
 		{
 			base.OnSplitterMoved(sevent);
-			if (SplitPosition < MinSize)
+			// If the split position is not currently valid, don't use it
+			if (SplitPosition != -1)
 			{
-				ToggleSplitter();
-			}
-			else
-			{
-				lastGoodSplitPosition = SplitPosition;
-				if(_memory !=null)
+				if (SplitPosition < MinSize)
 				{
-					_memory.Set("location", SplitPosition);
+					ToggleSplitter();
+				}
+				else
+				{
+					lastGoodSplitPosition = SplitPosition;
+					if (_memory != null)
+					{
+						_memory.Set("location", SplitPosition);
+					}
 				}
 			}
 		}
