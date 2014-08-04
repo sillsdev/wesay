@@ -46,6 +46,7 @@ Mercurial*.zip
 vagrant/.vagrant
 externals
 common/WeSay_Helps.chm
+common/Chorus_Help.chm
 Enchant.Net.dll*
 Ionic.Zip.dll
 taglib-sharp.dll

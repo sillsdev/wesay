@@ -3,7 +3,7 @@
 # project=WeSay1.5-Linux
 # build=wesay1.5-precise64-continuous
 # root_dir=..
-# $Id: d32984f53cd52f171a9cba46cd3879538ad23431 $
+# $Id: 0b75ca980cea444bf053cfdd852cb3e370225ffe $
 
 cd "$(dirname "$0")"
 
@@ -67,63 +67,70 @@ cd -
 # URL: http://build.palaso.org/viewType.html?buildTypeId=bt314
 # VCS: https://github.com/sillsdev/wesay.git [develop]
 # dependencies:
-# [0] build: chorus-precise64-master Continuous (bt323)
+# [0] build: Chorus-Documentation (bt216)
+#     project: Chorus
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt216
+#     clean: false
+#     revision: latest.lastSuccessful
+#     paths: {"Chorus_Help.chm"=>"common"}
+#     VCS: https://github.com/sillsdev/chorushelp.git [master]
+# [1] build: chorus-precise64-master Continuous (bt323)
 #     project: Chorus
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt323
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"Chorus.exe"=>"lib/Release", "Chorus.exe.mdb"=>"lib/Release", "ChorusHub.exe"=>"lib/Release", "ChorusHub.exe.mdb"=>"lib/Release", "ChorusMerge.exe"=>"lib/Release", "ChorusMerge.exe.mdb"=>"lib/Release", "LibChorus.dll"=>"lib/Release", "LibChorus.dll.mdb"=>"lib/Release", "LibChorus.TestUtilities.dll"=>"lib/Release", "LibChorus.TestUtilities.dll.mdb"=>"lib/Release", "Autofac.dll"=>"lib/Release", "NDesk.DBus.dll"=>"lib/Release", "NDesk.DBus.dll.config"=>"lib/Release", "debug/**"=>"lib/Debug", "Mercurial-i686.zip"=>"lib/common", "Mercurial-x86_64.zip"=>"lib/common"}
 #     VCS: https://github.com/sillsdev/chorus.git [master]
-# [1] build: L10NSharp Mono continuous (bt271)
+# [2] build: L10NSharp Mono continuous (bt271)
 #     project: L10NSharp
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt271
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"L10NSharp.dll"=>"lib/Release", "L10NSharp.dll.mdb"=>"lib/Release"}
 #     VCS: https://bitbucket.org/sillsdev/l10nsharp []
-# [2] build: L10NSharp Mono continuous (bt271)
+# [3] build: L10NSharp Mono continuous (bt271)
 #     project: L10NSharp
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt271
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"L10NSharp.dll"=>"lib/Debug", "L10NSharp.dll.mdb"=>"lib/Debug"}
 #     VCS: https://bitbucket.org/sillsdev/l10nsharp []
-# [3] build: palaso-precise64-master Continuous (bt322)
+# [4] build: palaso-precise64-master Continuous (bt322)
 #     project: libpalaso
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt322
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"Enchant.Net.dll"=>"lib/Release", "Enchant.Net.dll.config"=>"lib/Release", "ibusdotnet.dll"=>"lib/Release", "Palaso.dll"=>"lib/Release", "Palaso.dll.mdb"=>"lib/Release", "Palaso.dll.config"=>"lib/Release", "Palaso.DictionaryServices.dll"=>"lib/Release", "Palaso.DictionaryServices.dll.mdb"=>"lib/Release", "Palaso.Lift.dll"=>"lib/Release", "Palaso.Lift.dll.mdb"=>"lib/Release", "Palaso.Media.dll"=>"lib/Release", "Palaso.Media.dll.mdb"=>"lib/Release", "Palaso.Media.dll.config"=>"lib/Release", "Palaso.Tests.dll"=>"lib/Release", "Palaso.Tests.dll.mdb"=>"lib/Release", "Palaso.TestUtilities.dll"=>"lib/Release", "Palaso.TestUtilities.dll.mdb"=>"lib/Release", "PalasoUIWindowsForms.dll"=>"lib/Release", "PalasoUIWindowsForms.dll.mdb"=>"lib/Release", "PalasoUIWindowsForms.dll.config"=>"lib/Release", "PalasoUIWindowsForms.GeckoBrowserAdapter.dll"=>"lib/Release", "PalasoUIWindowsForms.GeckoBrowserAdapter.dll.mdb"=>"lib/Release", "Ionic.Zip.dll"=>"lib/Release", "taglib-sharp.dll"=>"lib/Release", "debug/**"=>"lib/Debug"}
 #     VCS: https://github.com/sillsdev/libpalaso.git [master]
-# [4] build: icucil-precise64-Continuous (bt281)
+# [5] build: icucil-precise64-Continuous (bt281)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"icu.net.*"=>"lib/Debug/icu48"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [5] build: icucil-precise64-Continuous (bt281)
+# [6] build: icucil-precise64-Continuous (bt281)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"icu.net.*"=>"lib/Release/icu48"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [6] build: icucil-precise64-icu52 Continuous (bt413)
+# [7] build: icucil-precise64-icu52 Continuous (bt413)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt413
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"icu.net.*"=>"lib/Debug/icu52"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [7] build: icucil-precise64-icu52 Continuous (bt413)
+# [8] build: icucil-precise64-icu52 Continuous (bt413)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt413
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"icu.net.*"=>"lib/Release/icu52"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [8] build: wesay-doc-default (bt184)
+# [9] build: wesay-doc-default (bt184)
 #     project: WeSay Windows
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt184
 #     clean: false
@@ -142,6 +149,7 @@ mkdir -p ../lib/Release/icu52
 mkdir -p ../lib/common
 
 # download artifact dependencies
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt216/latest.lastSuccessful/Chorus_Help.chm ../common/Chorus_Help.chm
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/Chorus.exe ../lib/Release/Chorus.exe
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/Chorus.exe.mdb ../lib/Release/Chorus.exe.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt323/latest.lastSuccessful/ChorusHub.exe ../lib/Release/ChorusHub.exe

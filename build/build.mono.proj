@@ -200,7 +200,9 @@
 	<ItemGroup>
 		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/build/mono/chorusmerge;$(RootDir)/environ*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*Test.dll.*;$(OutputDir)/*Tests.dll.*;$(OutputDir)/Addin.LiftReports.dll;$(OutputDir)/NVelocity.dll;$(OutputDir)/SIL.Archiving*;$(OutputDir)/LibChorus.TestUtilities.*" />
 		<Mercurial Include="$(RootDir)/Mercurial/**/*" Exclude="$(RootDir)/Mercurial/**/*.pyc" />
-		<CommonFiles Include="$(RootDir)/common/**/*" />
+		<CommonFiles Include="$(RootDir)/common/**/*" Exclude="$(RootDir)/common/Chorus_Help.chm" />
+		<!-- HACK: Chorus looks for its help file in the InstallApp directory instead of InstallData directory.  JasonNaylor told me not to change that. Sigh... Chris Hubbard-->
+		<ChorusHelpFiles Include="$(RootDir)/common/Chorus_Help.chm" />
 		<TemplateFiles Include="$(RootDir)/templates/**/*" />
 		<IconFiles Include="$(RootDir)/src/Installer_Linux/icons/**/*" />
 		<MenuFiles Include="$(RootDir)/src/Installer_Linux/*.desktop" />
@@ -218,6 +220,10 @@
 		<Copy
 			DestinationFolder="$(InstallApp)"
 			SourceFiles="@(ExecutableFiles)"
+		/>
+		<Copy
+			DestinationFolder="$(InstallApp)"
+			SourceFiles="@(ChorusHelpFiles)"
 		/>
 		<Copy
 			SourceFiles="@(Mercurial)"
