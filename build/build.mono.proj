@@ -171,7 +171,7 @@
 			WorkingDirectory="$(OutputDir)/Package"
 		/>
 		<MakeDir Directories="$(InstallerBaseDir)/debian" />
-		<Copy SourceFiles="@(DebianControlFiles)" DestinationFiles="$(InstallerBaseDir)/debian/%(RecursiveDir)%(Filename)%(Extension)" />
+		<Copy SourceFiles="@(DebianControlFiles)" DestinationFolder="$(InstallerBaseDir)/debian/%(RecursiveDir)" />
 		<Exec
 			Command='dch -v $(Version)-1palaso1 "Auto Build"'
 			WorkingDirectory="$(InstallerBaseDir)"
