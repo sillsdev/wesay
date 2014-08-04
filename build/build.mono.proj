@@ -46,7 +46,7 @@
 		/>
 	</ItemGroup>
 	<Target Name="Clean">
-		<Exec Command="find $(RootDir)/. -name obj -type d -print0 | xargs -0 rm -rf" WorkingDirectory="$(RootDir)" />
+		<Exec Command="find $(RootDir)/src %5c( -name obj -o -name bin %5c) -type d -print0 | xargs -0 rm -rf" WorkingDirectory="$(RootDir)" />
 		<Delete Files="@(ExistingObjectFiles)" />
 	</Target>
 
@@ -104,7 +104,7 @@
 		<Delete Files="@(ExistingPackageBuildFiles)" />
 	</Target>
 	<ItemGroup>
-		<Source Include="$(RootDir)/src/**/*" Exclude="$(RootDir)/src/**/obj/**/*;$(RootDir)/src/**/bin/**/*" />
+		<Source Include="$(RootDir)/src/**/*" />
 		<Source Include="$(RootDir)/lib/Debug/**" Exclude="$(RootDir)/lib/Debug/*Palaso*;$(RootDir)/lib/Debug/*Chorus*;$(RootDir)/lib/Debug/SIL.*;$(RootDir)/lib/Debug/icu.net.*" />
 		<Source Include="$(RootDir)/lib/Release/**" Exclude="$(RootDir)/lib/Release/*Palaso*;$(RootDir)/lib/Release/*Chorus*;$(RootDir)/lib/Release/SIL.*;$(RootDir)/lib/Release/icu.net.*" />
 		<Source Include="$(RootDir)/lib/**/icu48/*" />
@@ -121,7 +121,7 @@
 		<Source Include="$(RootDir)/externals/*" />
 		<Source Include="$(RootDir)/environ*" />
 	</ItemGroup>
-	<Target Name="SourcePackage" DependsOnTargets="PackageClean;SetAssemblyVersion">
+	<Target Name="SourcePackage" DependsOnTargets="Clean;PackageClean;SetAssemblyVersion">
 		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)-$(Version).tar.gz">
 			<Output TaskParameter="Value" PropertyName="SourcePackageFileName" />
 		</CreateProperty>
