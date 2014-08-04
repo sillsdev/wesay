@@ -1,3 +1,16 @@
+wesay (1.5.20) stable; urgency=medium
+
+  * WS-116: (Chorus) Fix crash on History tab when clicking on "Review project changes"
+  * WS-34799: Track any hidden span boundaries while editing
+   - This completes the work planned for fixing this issue
+  * Gecko Mode: fix for new word entry
+  * Gecko Mode: Disable context menu for Gecko boxes
+  * Gecko Mode: Implement AutoCompleteWithCreation feature
+  * Correct collapsible splitter error
+  * Include Chorus_Help.chm
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Mon, 04 Aug 2014 09:34:30 -0400
+
 wesay (1.5.19~alpha1) stable; urgency=low
 
   * Use taglib-sharp instead exiftool to read exif data from images
