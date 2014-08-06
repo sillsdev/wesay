@@ -252,7 +252,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			// _congratulationsControl
 			//
 			this._congratulationsControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-			this._congratulationsControl.Location = new System.Drawing.Point(12, 43);
+			this._congratulationsControl.Location = new System.Drawing.Point(1, 43);
 			this._congratulationsControl.Name = "_congratulationsControl";
 			this._congratulationsControl.Size = new System.Drawing.Size(791, 370);
 			this._congratulationsControl.TabIndex = 9;
