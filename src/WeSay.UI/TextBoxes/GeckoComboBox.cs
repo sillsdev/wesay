@@ -89,7 +89,7 @@ namespace WeSay.UI.TextBoxes
 				{
 					return null;
 				}
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+				var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 				if (content != null)
 				{
 					return (_items[content.SelectedIndex]);
@@ -107,7 +107,7 @@ namespace WeSay.UI.TextBoxes
 				{
 					return -1;
 				}
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+				var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 				if (content != null)
 				{
 					return (content.SelectedIndex);
@@ -124,7 +124,7 @@ namespace WeSay.UI.TextBoxes
 				{
 					return;
 				}
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+				var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 				if (content != null)
 				{
 					content.SelectedIndex = value;
@@ -148,7 +148,7 @@ namespace WeSay.UI.TextBoxes
 		{
 			get
 			{
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+				var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 				if (content != null)
 				{
 					return (content.Value);
@@ -189,7 +189,7 @@ namespace WeSay.UI.TextBoxes
 			html.AppendFormat("<body style='background:{0}; width:{1}; overflow-x:hidden' id='mainbody'>",
 				System.Drawing.ColorTranslator.ToHtml(Color.FromArgb(255,203,255,185)),
 				this.Width);
-			html.Append("<select id='itemList' style='" + SelectStyle() + "' onchange=\"fireEvent('selectChanged','changed');\">");
+			html.Append("<select id='main' style='" + SelectStyle() + "' onchange=\"fireEvent('selectChanged','changed');\">");
 			// The following line is removed at this point and done later as a change to the inner
 			// html because otherwise the browser blows up because of the length of the
 			// navigation line.  Leaving this and this comment in as a warning to anyone who
@@ -217,7 +217,7 @@ namespace WeSay.UI.TextBoxes
 			if (!_initialSelectLoad)
 			{
 				_initialSelectLoad = true;
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+				var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 				content.InnerHtml = _itemHtml.ToString();
 			}
 			if (_pendingInitialIndex > -1)
@@ -233,28 +233,10 @@ namespace WeSay.UI.TextBoxes
 			// if it's already loaded, change it
 			if (_initialSelectLoad)
 			{
-				var content = (GeckoSelectElement) _browser.Document.GetElementById("itemList");
+				var content = (GeckoSelectElement) _browser.Document.GetElementById("main");
 				if (content != null)
 				{
 					content.SetAttribute("style", SelectStyle());
-				}
-			}
-		}
-
-		protected override void OnDomFocus(object sender, DomEventArgs e)
-		{
-//			Console.WriteLine("Got Focus: " );
-			var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
-			if (content != null)
-			{
-				// The following is required because we get two in focus events every time this
-				// is entered.  This is normal for Gecko.  But I don't want to be constantly
-				// refocussing.
-				if (!_inFocus)
-				{
-					_inFocus = true;
-					_focusElement = (GeckoHtmlElement)content;
-					Delay (100, (o,a) => ChangeFocus(o,a));
 				}
 			}
 		}

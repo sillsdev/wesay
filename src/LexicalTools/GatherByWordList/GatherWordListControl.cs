@@ -37,6 +37,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			_vernacularBox.TextChanged += _vernacularBox_TextChanged;
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
 			_vernacularBox.MinimumSize = new Size(_boxForeignWord.Size.Width - 25, _boxForeignWord.Size.Height);
+			_vernacularBox.ForeColor = System.Drawing.Color.Black;
 
 			_listViewOfWordsMatchingCurrentItem.UserClick += new System.EventHandler(this.OnListViewOfWordsMatchingCurrentItem_Click);
 			_listViewOfWordsMatchingCurrentItem.Clear();

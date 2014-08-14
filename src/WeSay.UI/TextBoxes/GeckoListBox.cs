@@ -254,7 +254,7 @@ namespace WeSay.UI.TextBoxes
 				_numberOfItemsInColumn = 1;
 			}
 			_itemHtml.Clear();
-			_itemHtml.Append("<ul id='itemList'><li><ul>"); // Initial Column
+			_itemHtml.Append("<ul id='main'><li><ul>"); // Initial Column
 			for (int index = 0; index < _items.Count; index++)
 			{
 				if (_items[index] != _itemToNotDrawYet)
@@ -300,7 +300,7 @@ namespace WeSay.UI.TextBoxes
 			html.Append("ul li ul li.hover { background-color: #CCCCCC; } ");
 			html.Append("</style>");
 			html.Append("</head>");
-			html.AppendFormat("<body style='background:{0}; width:{1}; overflow-x:hidden' id='mainbody'>",
+			html.AppendFormat("<body style='background:{0}; width:{1}; overflow-x:hidden' id='mainbody'><ul id='main'></ul>",
 				System.Drawing.ColorTranslator.ToHtml(BackColor),
 				this.Width);
 
@@ -364,7 +364,7 @@ namespace WeSay.UI.TextBoxes
 
 		protected override void OnDomFocus(object sender, DomEventArgs e)
 		{
-			var content = (GeckoUListElement)_browser.Document.GetElementById("itemList");
+			var content = (GeckoUListElement)_browser.Document.GetElementById("main");
 			if (content != null)
 			{
 				// The following is required because we get two in focus events every time this
@@ -372,9 +372,8 @@ namespace WeSay.UI.TextBoxes
 				// refocussing.
 				if (!_inFocus)
 				{
-					_inFocus = true;
 					_focusElement = (GeckoHtmlElement)content;
-					Delay (100, (o,a) => ChangeFocus(o,a));
+					base.OnDomFocus(sender, e);
 				}
 			}
 		}

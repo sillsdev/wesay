@@ -133,7 +133,7 @@ namespace WeSay.UI.TextBoxes
 				{
 					return null;
 				}
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+				var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 				if (content != null)
 				{
 					return (_items[content.SelectedIndex]);
@@ -151,7 +151,7 @@ namespace WeSay.UI.TextBoxes
 				{
 					return -1;
 				}
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+				var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 				if (content != null)
 				{
 					return (content.SelectedIndex);
@@ -173,7 +173,7 @@ namespace WeSay.UI.TextBoxes
 
 		private void SetIndexAndNotify(bool notify)
 		{
-			var content = (GeckoSelectElement) _browser.Document.GetElementById("itemList");
+			var content = (GeckoSelectElement) _browser.Document.GetElementById("main");
 			if (content != null)
 			{
 				content.SelectedIndex = _currentIndex;
@@ -208,7 +208,7 @@ namespace WeSay.UI.TextBoxes
 		{
 			get
 			{
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+				var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 				if (content != null)
 				{
 					return (content.Value);
@@ -255,7 +255,7 @@ namespace WeSay.UI.TextBoxes
 			html.AppendFormat("<body style='background:{0}; width:{1}' id='mainbody'>",
 				System.Drawing.ColorTranslator.ToHtml(Color.White),
 				this.Width);
-			html.Append("<select size='10' id='itemList' style='" + SelectStyle() + "' onchange=\"fireEvent('selectChanged','changed');\">");
+			html.Append("<select size='10' id='main' style='" + SelectStyle() + "' onchange=\"fireEvent('selectChanged','changed');\">");
 			// The following line is removed at this point and done later as a change to the inner
 			// html because otherwise the browser blows up because of the length of the
 			// navigation line.  Leaving this and this comment in as a warning to anyone who
@@ -270,7 +270,7 @@ namespace WeSay.UI.TextBoxes
 		private void OnSelectedValueChanged(String s)
 		{
 			AdjustHeight();
-			var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+			var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 			if (content != null)
 			{
 				if ((ItemSelectionChanged != null) && (content.SelectedIndex != _currentIndex))
@@ -285,7 +285,7 @@ namespace WeSay.UI.TextBoxes
 			// if it's already loaded, change it
 			if (_initialSelectLoad)
 			{
-				var content = (GeckoSelectElement) _browser.Document.GetElementById("itemList");
+				var content = (GeckoSelectElement) _browser.Document.GetElementById("main");
 				if (content != null)
 				{
 					content.SetAttribute("style", SelectStyle());
@@ -298,7 +298,7 @@ namespace WeSay.UI.TextBoxes
 			if (!_initialSelectLoad)
 			{
 				_initialSelectLoad = true;
-				var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+				var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 				content.InnerHtml = _itemHtml.ToString();
 			}
 			if (_pendingInitialIndex > -1)
@@ -326,7 +326,7 @@ namespace WeSay.UI.TextBoxes
 				_selectElement = (GeckoSelectElement) _optionElement.Parent;
 			}
 
-			var selectElement = (GeckoSelectElement) _browser.Document.GetElementById("itemList");
+			var selectElement = (GeckoSelectElement) _browser.Document.GetElementById("main");
 			if (selectElement != null)
 			{
 				int numberOfEntries = (Height/(_optionHeight + 1)) - 1;
@@ -340,7 +340,7 @@ namespace WeSay.UI.TextBoxes
 
 		protected override void OnDomFocus(object sender, DomEventArgs e)
 		{
-			var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+			var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 			if (content != null)
 			{
 				// The following is required because we get two in focus events every time this
@@ -348,10 +348,9 @@ namespace WeSay.UI.TextBoxes
 				// refocussing.
 				if (!_inFocus)
 				{
-					_inFocus = true;
 					_selectElement = (GeckoSelectElement)content;
 					_focusElement = (GeckoHtmlElement)content;
-					Delay (100, (o,a) => ChangeFocus(o,a));
+					base.OnDomFocus(sender, e);
 				}
 			}
 		}
@@ -433,7 +432,7 @@ namespace WeSay.UI.TextBoxes
 				}
 				else
 				{
-					var content = (GeckoSelectElement)_browser.Document.GetElementById("itemList");
+					var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 					content.InnerHtml = _itemHtml.ToString();
 				}
 			}

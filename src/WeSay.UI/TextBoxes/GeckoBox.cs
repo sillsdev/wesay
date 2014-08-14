@@ -35,6 +35,23 @@ namespace WeSay.UI.TextBoxes
 
 			_textChangedHandler = new EventHandler(OnTextChanged);
 			this.TextChanged += _textChangedHandler;
+
+			_browser.DomMouseDown += (object sender, DomMouseEventArgs e) =>
+			{
+				if (!_browserDocumentLoaded)
+				{
+					return;
+				}
+
+				EnsureFocusedGeckoControlHasInputFocus();
+
+				if (ContainsFocus)
+				{
+					return;
+				}
+
+				bool result = _browser.Focus();
+			};
 		}
 
 		public GeckoBox(IWritingSystemDefinition ws, string nameForLogging)
@@ -74,35 +91,6 @@ namespace WeSay.UI.TextBoxes
 			base.Select();
 		}
 
-		protected override void OnDomFocus(object sender, DomEventArgs e)
-		{
-			var content = _browser.Document.GetElementById("main");
-			if (content != null)
-			{
-				if ((content is GeckoDivElement) && (!_inFocus))
-				{
-					// The following is required because we get two in focus events every time this
-					// is entered.  This is normal for Gecko.  But I don't want to be constantly
-					// refocussing.
-					_inFocus = true;
-#if DEBUG
-					Debug.WriteLine("Got Focus2: " + Text);
-#endif
-					_focusElement = (GeckoHtmlElement)content;
-					Delay (100, (o,a) => ChangeFocus(o,a));
-				}
-			}
-		}
-
-		protected override void OnDomClick(object sender, DomMouseEventArgs e)
-		{
-#if DEBUG
-			Debug.WriteLine ("Got Dom Mouse Click " + Text);
-#endif
-			this.Focus();
-			SetText(Text);
-		}
-
 		protected override void OnDomKeyUp(object sender, DomKeyEventArgs e)
 		{
 			var content = _browser.Document.GetElementById("main");
@@ -113,14 +101,13 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-
 		protected override void OnGeckoBox_Load(object sender, EventArgs e)
 		{
 			_browserIsReadyToNavigate = true;
 			if (_pendingHtmlLoad != null)
 			{
 #if DEBUG
-				Debug.WriteLine("Load: " + _pendingHtmlLoad);
+				//Debug.WriteLine("Load: " + _pendingHtmlLoad);
 #endif
 				_browser.LoadHtml(_pendingHtmlLoad);
 				_pendingHtmlLoad = null;
@@ -128,8 +115,9 @@ namespace WeSay.UI.TextBoxes
 			else
 			{
 #if DEBUG
-				Debug.WriteLine ("Load: Empty Line");
+				//Debug.WriteLine ("Load: Empty Line");
 #endif
+
 				SetText(""); //make an empty, editable box
 			}
 		}
@@ -177,7 +165,7 @@ namespace WeSay.UI.TextBoxes
 				if (!_keyPressed)
 				{
 #if DEBUG
-					Debug.WriteLine ("SetText: " + html);
+					//Debug.WriteLine ("SetText: " + html);
 #endif
 					_browser.LoadHtml(html);
 				}
@@ -194,7 +182,7 @@ namespace WeSay.UI.TextBoxes
 			else
 			{
 #if DEBUG
-				Debug.WriteLine("SetHTML: " + html);
+				//Debug.WriteLine("SetHTML: " + html);
 #endif
 				_browser.LoadHtml(html);
 			}
@@ -208,20 +196,13 @@ namespace WeSay.UI.TextBoxes
 		protected override void OnLeave(EventArgs e)
 		{
 			base.OnLeave(e);
-			if (_browser != null)
-			{
-				_browser.RemoveInputFocus();
-			}
-			// this.BackColor = System.Drawing.Color.White;
+
 			ClearKeyboard();
 		}
 		protected override void OnEnter(EventArgs e)
 		{
 			base.OnEnter(e);
-			if (_browser != null)
-			{
-				_browser.SetInputFocus();
-			}
+
 			AssignKeyboardFromWritingSystem();
 		}
 
