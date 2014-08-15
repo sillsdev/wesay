@@ -1,0 +1,9 @@
+Verified+1: Jenkins CI <jenkins@sil.org>
+Verified-Linux+1: Jenkins CI <jenkins@sil.org>
+Code-Review+2: Brent McCarthy <brent_mccarthy@sil.org>
+Code-Review+2: Chris Hubbard <chris_hubbard@sil.org>
+Submitted-by: David Moore <david_moore1@sil.org>
+Submitted-at: Fri, 15 Aug 2014 02:27:20 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/2344
+Project: wesay
+Branch: refs/heads/develop
