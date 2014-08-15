@@ -1,3 +1,17 @@
+wesay (1.5.21) stable; urgency=low
+
+  * WS-105 PageDown in CAWL-MOZ display issue
+  * WS-120 Add dependency on udisks package
+  * Gecko Mode: input focus
+   - Fix: Inputting while mouse hovered over a Gecko control without focus
+     accepted input
+   - Fix: Issues with not being able to input into a GeckoBox that had focus
+     unless the mouse was hovered over it (in some instances)
+   - Fix: Problems with clicking in the middle of a GeckoBox with text
+     already in it always focused to the last character in the string.
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 14 Aug 2014 22:59:37 -0400
+
 wesay (1.5.20) stable; urgency=medium
 
   * WS-116: (Chorus) Fix crash on History tab when clicking on "Review project changes"
