@@ -93,7 +93,7 @@ cd -
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt400
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"xulrunner-29.0.en-US.win32.zip!**"=>""}
+#     paths: {"xulrunner-29.0.1.en-US.win32.zip!**"=>""}
 # [4] build: L10NSharp continuous (bt196)
 #     project: L10NSharp
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt196
@@ -196,7 +196,7 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Core.dll.config ../lib/Debug/Geckofx-Core.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Winforms.dll ../lib/Debug/Geckofx-Winforms.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Winforms.pdb ../lib/Debug/Geckofx-Winforms.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt400/latest.lastSuccessful/xulrunner-29.0.en-US.win32.zip ../Downloads/xulrunner-29.0.en-US.win32.zip
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt400/latest.lastSuccessful/xulrunner-29.0.1.en-US.win32.zip ../Downloads/xulrunner-29.0.1.en-US.win32.zip
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.lastSuccessful/L10NSharp.dll ../lib/Debug/L10NSharp.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.lastSuccessful/L10NSharp.pdb ../lib/Debug/L10NSharp.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.lastSuccessful/L10NSharp.dll ../lib/Release/L10NSharp.dll
@@ -260,5 +260,5 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.last
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/WeSay_Helps.chm ../External/WeSay_Helps.chm
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/wesay.helpmap ../External/wesay.helpmap
 # extract downloaded zip files
-unzip -uqo ../Downloads/xulrunner-29.0.en-US.win32.zip -d ../
+unzip -uqo ../Downloads/xulrunner-29.0.1.en-US.win32.zip -d ../
 # End of script
