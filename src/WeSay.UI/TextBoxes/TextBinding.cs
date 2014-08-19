@@ -37,6 +37,11 @@ namespace WeSay.UI.TextBoxes
 			_textBoxTarget.Leave += OnTextBoxExit;
 			_textBoxTarget.LostFocus += OnTextBoxExit;
 			_textBoxTarget.KeyDown += OnTextBoxKeyDown;
+			if (_textBoxTarget is IWeSayTextBox)
+			{
+				((IWeSayTextBox) _textBoxTarget).UserLostFocus += OnTextBoxExit;
+				((IWeSayTextBox)_textBoxTarget).UserGotFocus += OnTextBoxEntered;
+			}
 		}
 
 		private void OnTextBoxKeyDown(object sender, KeyEventArgs e)
@@ -102,6 +107,11 @@ namespace WeSay.UI.TextBoxes
 			_dataTarget.PropertyChanged -= OnDataPropertyChanged;
 			_dataTarget = null;
 			_textBoxTarget.TextChanged -= OnTextBoxChanged;
+			if (_textBoxTarget is IWeSayTextBox)
+			{
+				((IWeSayTextBox)_textBoxTarget).UserLostFocus -= OnTextBoxExit;
+				((IWeSayTextBox)_textBoxTarget).UserGotFocus -= OnTextBoxEntered;
+			}
 			_textBoxTarget.HandleDestroyed -= _textBoxTarget_HandleDestroyed;
 			_textBoxTarget.Disposed -= _textBoxTarget_Disposed;
 			_textBoxTarget = null;
