@@ -129,6 +129,14 @@ namespace WeSay.UI
 			}
 		}
 
+		private static string CheckFileName(string filename)
+		{
+			foreach (char badChar in PathUtilities.GetInvalidOSIndependentFileNameChars())
+			{
+				filename = filename.Replace(badChar, '_');
+			}
+			return filename;
+		}
 		private string GetPathToImage()
 		{
 			if (string.IsNullOrEmpty(RelativePathToImage))
@@ -238,8 +246,7 @@ namespace WeSay.UI
 						{
 							File.Delete(GetPathToImage());
 						}
-						string fileName = searchString;
-
+						string fileName = CheckFileName(searchString);
 						if(string.IsNullOrEmpty(fileName))
 							fileName = DateTime.UtcNow.ToFileTimeUtc().ToString();
 
