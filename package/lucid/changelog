@@ -1,3 +1,12 @@
+wesay (1.5.22) stable; urgency=low
+
+  * WS-152 Error box when adding pictures with invalid characters
+  * WS-156 Errors when using Gecko mode
+  * Gecko Mode: Tabbing out of fields on Windows not updating the entry properly
+  * Re-enable localizations
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 20 Aug 2014 18:39:09 -0400
+
 wesay (1.5.21) stable; urgency=low
 
   * WS-105 PageDown in CAWL-MOZ display issue
