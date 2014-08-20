@@ -50,3 +50,4 @@ common/Chorus_Help.chm
 Enchant.Net.dll*
 Ionic.Zip.dll
 taglib-sharp.dll
+common/*.po
