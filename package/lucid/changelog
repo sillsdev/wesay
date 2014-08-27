@@ -1,3 +1,13 @@
+wesay (1.5.23) stable; urgency=medium
+
+  * WS-161: Gecko Mode: SE Asian scripts are not correct
+   - add font-face style to Gecko controls for Windows
+  * WS-157: Error when attaching tiff files
+  * WS-112: Crash in WeSay Configuration Tool when importing .ldml
+    file in "Input System" tab 
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 27 Aug 2014 14:00:55 -0400
+
 wesay (1.5.22) stable; urgency=low
 
   * WS-152 Error box when adding pictures with invalid characters
