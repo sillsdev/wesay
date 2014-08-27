@@ -260,6 +260,8 @@ namespace WeSay.UI
 							// If no file name or extension, default to png
 							fileExt = ".png";
 						}
+						fileExt = PalasoImage.FileExtForWebFormat(fileExt);
+
 						//NB: we have very possible collision if use a real word "bird".
 						//Less so with a time "3409343839", which this only uses if we don't have a file name (e.g. if it came from a scanner)
 						//so this will add to the name if what we have is not unique.
