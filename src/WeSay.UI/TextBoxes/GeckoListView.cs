@@ -240,10 +240,17 @@ namespace WeSay.UI.TextBoxes
 		public void ListCompleted()
 		{
 			_initialSelectLoad = false;
+			Font font = WritingSystemInfo.CreateFont(_writingSystem);
 
 			var html = new StringBuilder();
 			html.Append("<!DOCTYPE html>");
 			html.Append("<html><head><meta charset=\"UTF-8\">");
+			html.Append("<style>");
+			html.Append("@font-face {");
+			html.AppendFormat("    font-family: \"{0}\";\n", font.Name);
+			html.AppendFormat("    src: local(\"{0}\");\n", font.Name);
+			html.Append("}");
+			html.Append("</style>");
 			html.Append("<script type='text/javascript'>");
 			html.Append(" function fireEvent(name, data)");
 			html.Append(" {");

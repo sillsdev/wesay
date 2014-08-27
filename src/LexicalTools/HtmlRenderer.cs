@@ -21,12 +21,16 @@ namespace WeSay.LexicalTools
 		public static string Color;
 		public static string HeadWordWritingSystemId;
 		private static bool italicsOn;
+		private static List<string> _fontFamilies;
+		private static StringBuilder _fontFamiliesStyle;
 
 		public static string ToHtml(LexEntry entry,
 								   CurrentItemEventArgs currentItem,
 								   LexEntryRepository lexEntryRepository,
 									System.Drawing.Color backColor)
 		{
+			_fontFamilies = new List<string>();
+			_fontFamiliesStyle = new StringBuilder();
 			italicsOn = false;
 			if (lexEntryRepository == null)
 			{
@@ -39,7 +43,8 @@ namespace WeSay.LexicalTools
 
 			var html = new StringBuilder();
 			// The {0} is filled in by the setHtml method that consumes the html generated here
-			html.Append("<html><header><meta charset=\"UTF-8\"></head><body style='background:{0}' id='mainbody'><div style='min-height:20px' id='main' name='textArea' contentEditable='false'>");
+			// The {1} is filled in by the font-face sections created by AddFontFamily which are required by some fonts on Windows
+			html.Append("<html><header><meta charset=\"UTF-8\"><style>{1}</style></head><body style='background:{0}' id='mainbody'><div style='min-height:20px' id='main' name='textArea' contentEditable='false'>");
 			RenderHeadword(entry, html, lexEntryRepository);
 
 			int senseNumber = 1;
@@ -61,7 +66,7 @@ namespace WeSay.LexicalTools
 
 			html.Append("</div></body></html>");
 			String strHtmlColor = System.Drawing.ColorTranslator.ToHtml(backColor);
-			var finalHtml = string.Format(html.ToString(), strHtmlColor);
+			var finalHtml = string.Format(html.ToString(), strHtmlColor, _fontFamiliesStyle);
 			return finalHtml.ToString();
 		}
 
@@ -192,6 +197,7 @@ namespace WeSay.LexicalTools
 				italicsOn ? "italic" : "normal",
 				underline ? "underline" : "none");
 			html.Append(formattedSpan);
+			AddFontFamily(font.Name);
 			return true;
 		}
 
@@ -294,6 +300,19 @@ namespace WeSay.LexicalTools
 					currentItem.WritingSystemId == l.WritingSystemId);
 		}
 
+		private static void AddFontFamily(string fontFamily)
+		{
+			var match = _fontFamilies.FirstOrDefault(stringToCheck => stringToCheck.Equals(fontFamily));
+
+			if (match == null)
+			{
+				_fontFamilies.Add(fontFamily);
+				_fontFamiliesStyle.AppendLine("@font-face {");
+				_fontFamiliesStyle.AppendFormat("    font-family: \"{0}\";\n", fontFamily);
+				_fontFamiliesStyle.AppendFormat("    src: local(\"{0}\");\n", fontFamily);
+				_fontFamiliesStyle.AppendLine("}");
+			}
+		}
 
 	}
 }

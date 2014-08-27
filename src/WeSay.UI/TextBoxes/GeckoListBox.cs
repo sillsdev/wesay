@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Text;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Gecko;
@@ -28,6 +29,8 @@ namespace WeSay.UI.TextBoxes
 		protected IWritingSystemDefinition _meaningWritingSystem;
 		protected int _selectedIndex;
 		public event EventHandler ListLostFocus;
+		private static List<string> _fontFamilies;
+		private static StringBuilder _fontFamiliesStyle;
 
 		public GeckoListBox()
 		{
@@ -41,6 +44,8 @@ namespace WeSay.UI.TextBoxes
 			_numberOfItemsInColumn = 3;
 			ItemDrawer = DefaultDrawItem;
 			HighlightSelect = false;
+			_fontFamilies = new List<string>();
+			_fontFamiliesStyle = new StringBuilder();
 
 			var designMode = (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
 			if (designMode)
@@ -105,6 +110,7 @@ namespace WeSay.UI.TextBoxes
 			{
 				Font = WritingSystemInfo.CreateFont(value); // This makes column width calculation work
 				WritingSystem = value;
+				AddFontFamily(value);
 			}
 		}
 		[Browsable(false)]
@@ -118,6 +124,7 @@ namespace WeSay.UI.TextBoxes
 			set
 			{
 				_meaningWritingSystem = value;
+				AddFontFamily(value);
 			}
 		}
 		public Object SelectedItem
@@ -284,6 +291,9 @@ namespace WeSay.UI.TextBoxes
 			var html = new StringBuilder();
 			html.Append("<!DOCTYPE html>");
 			html.Append("<html><head><meta charset=\"UTF-8\">");
+			html.Append("<style>");
+			html.Append(_fontFamiliesStyle);
+			html.Append("</style>");
 			html.Append("<script type='text/javascript'>");
 			html.Append(" function fireEvent(name, data)");
 			html.Append(" {");
@@ -420,6 +430,25 @@ namespace WeSay.UI.TextBoxes
 					GeckoLoadFlags.BypassHistory);
 			}
 		}
+		private void AddFontFamily(IWritingSystemDefinition ws)
+		{
+			if (ws != null)
+			{
+				Font font = WritingSystemInfo.CreateFont(ws);
+				string fontFamily = font.Name;
+				var match = _fontFamilies.FirstOrDefault(stringToCheck => stringToCheck.Equals(fontFamily));
+
+				if (match == null)
+				{
+					_fontFamilies.Add(fontFamily);
+					_fontFamiliesStyle.AppendLine("@font-face {");
+					_fontFamiliesStyle.AppendFormat("    font-family: \"{0}\";\n", fontFamily);
+					_fontFamiliesStyle.AppendFormat("    src: local(\"{0}\");\n", fontFamily);
+					_fontFamiliesStyle.AppendLine("}");
+				}
+			}
+		}
+
 
 		//used when animating additions to the list
 		public object ItemToNotDrawYet

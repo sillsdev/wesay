@@ -42,7 +42,6 @@ namespace WeSay.UI.TextBoxes
 				return;
 
 			Debug.WriteLine("New GeckoComboBox");
-
 		}
 
 		public GeckoComboBox(IWritingSystemDefinition ws, string nameForLogging)
@@ -178,6 +177,12 @@ namespace WeSay.UI.TextBoxes
 			var html = new StringBuilder();
 			html.Append("<!DOCTYPE html>");
 			html.Append("<html><head><meta charset=\"UTF-8\">");
+			html.Append("<style>");
+			html.AppendLine("@font-face {");
+			html.AppendFormat("    font-family: \"{0}\";\n", Font.Name);
+			html.AppendFormat("    src: local(\"{0}\");\n", Font.Name);
+			html.AppendLine("}");
+			html.Append("</style>");
 			html.Append("<script type='text/javascript'>");
 			html.Append(" function fireEvent(name, data)");
 			html.Append(" {");
@@ -266,7 +271,6 @@ namespace WeSay.UI.TextBoxes
 					GeckoLoadFlags.BypassHistory);
 			}
 		}
-
 		public bool Sorted { get; set; }
 		public AutoCompleteSource AutoCompleteSource { get; set; }
 		public AutoCompleteMode AutoCompleteMode { get; set; }

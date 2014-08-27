@@ -152,13 +152,24 @@ namespace WeSay.UI.TextBoxes
 				multiLineStyle = "white-space:nowrap; ";
 			}
 			Font font = WritingSystemInfo.CreateFont(_writingSystem);
-			var html =
-				string.Format(
-					"<html><head><meta charset=\"UTF-8\"></head><body style='background:#FFFFFF' id='mainbody'><div style='min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{3} background:{5}; color:{6}; {7}' id='main' name='textArea' contentEditable='{4}'>{2}</div></body></html>",
+			var html = new StringBuilder("<html>");
+			html.AppendLine("<head>");
+			html.AppendLine("<meta charset=\"UTF-8\">");
+			html.AppendLine("<style>");
+			html.AppendLine("@font-face {");
+			html.AppendFormat("    font-family: \"{0}\";\n", font.Name);
+			html.AppendFormat("    src: local(\"{0}\");\n", font.Name);
+			html.AppendLine("}");
+			html.AppendLine("</style>");
+			html.AppendLine("</head>");
+			html.AppendLine("<body style='background:#FFFFFF' id='mainbody'>");
+			html.AppendFormat("<div style='min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{3} background:{5}; color:{6}; {7}' id='main' name='textArea' contentEditable='{4}'>{2}</div>",
 					font.Name, font.Size.ToString(), s, justification, editable, System.Drawing.ColorTranslator.ToHtml(BackColor), System.Drawing.ColorTranslator.ToHtml(ForeColor), multiLineStyle);
+			html.AppendLine("</body>");
+			html.AppendLine("</html>");
 			if (!_browserIsReadyToNavigate)
 			{
-				_pendingHtmlLoad = html;
+				_pendingHtmlLoad = html.ToString();
 			}
 			else
 			{
@@ -167,7 +178,7 @@ namespace WeSay.UI.TextBoxes
 #if DEBUG
 					//Debug.WriteLine ("SetText: " + html);
 #endif
-					_browser.LoadHtml(html);
+					_browser.LoadHtml(html.ToString());
 				}
 				_keyPressed = false;
 			}
