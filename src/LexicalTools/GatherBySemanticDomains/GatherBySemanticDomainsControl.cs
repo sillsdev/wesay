@@ -42,6 +42,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_listViewWords.DisplayMeaning = _presentationModel.ShowMeaningField;
 
 			_domainListComboBox.Font = _presentationModel.GetFontOfSemanticDomainField();
+			_domainListComboBox.WritingSystem = _presentationModel.GetSemanticDomainWritingSystem();
 
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made

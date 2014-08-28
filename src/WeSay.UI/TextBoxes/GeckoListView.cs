@@ -241,6 +241,12 @@ namespace WeSay.UI.TextBoxes
 		{
 			_initialSelectLoad = false;
 			Font font = WritingSystemInfo.CreateFont(_writingSystem);
+			String langName = "";
+			// Add in the ISO language code in case font supports multiple regions
+			if (_writingSystem != null)
+			{
+				langName = "lang='" + _writingSystem.Bcp47Tag + "' ";
+			}
 
 			var html = new StringBuilder();
 			html.Append("<!DOCTYPE html>");
@@ -259,9 +265,10 @@ namespace WeSay.UI.TextBoxes
 			html.Append(" }");
 			html.Append("</script>");
 			html.Append("</head>");
-			html.AppendFormat("<body style='background:{0}; width:{1}' id='mainbody'>",
+			html.AppendFormat("<body {2} style='background:{0}; width:{1}' id='mainbody'>",
 				System.Drawing.ColorTranslator.ToHtml(Color.White),
-				this.Width);
+				this.Width,
+				langName);
 			html.Append("<select size='10' id='main' style='" + SelectStyle() + "' onchange=\"fireEvent('selectChanged','changed');\">");
 			// The following line is removed at this point and done later as a change to the inner
 			// html because otherwise the browser blows up because of the length of the

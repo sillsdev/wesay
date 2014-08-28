@@ -219,12 +219,19 @@ namespace WeSay.UI.TextBoxes
 		// html being built by CreateHtmlFromItems
 		public void ItemToHtml(string word, int index, bool useFormWS, Color textColor)
 		{
-			Font font = WritingSystemInfo.CreateFont(useFormWS ? FormWritingSystem : MeaningWritingSystem );
+			IWritingSystemDefinition ws = useFormWS ? FormWritingSystem : MeaningWritingSystem;
+			String langName = "";
+			// Add in the ISO language code in case font supports multiple regions
+			if (ws != null)
+			{
+				langName = "lang='" + ws.Bcp47Tag + "' ";
+			}
+			Font font = WritingSystemInfo.CreateFont(ws );
 			String entry = String.IsNullOrEmpty(word) ? "&nbsp;" : word;
 			String subId = useFormWS ? "-1" : "-2";
 			String id = index.ToString() + subId;
-			_itemHtml.AppendFormat("<li id='{2}' style='font-family:{3}; font-size:{4}pt;' onclick=\"fireEvent('selectChanged','{0}');\">{1}</li>",
-				index.ToString(), entry, id, font.Name, font.Size);
+			_itemHtml.AppendFormat("<li id='{2}' {5} style='font-family:{3}; font-size:{4}pt;' onclick=\"fireEvent('selectChanged','{0}');\">{1}</li>",
+				index.ToString(), entry, id, font.Name, font.Size, langName);
 		}
 		/// <summary>
 		/// Change this if you need to draw something special. THe default just draws the string of the item.

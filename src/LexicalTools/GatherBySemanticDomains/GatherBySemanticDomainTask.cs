@@ -1095,6 +1095,15 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			return (pastEndIndex == beginIndex);
 		}
 
+		public IWritingSystemDefinition GetSemanticDomainWritingSystem()
+		{
+			if (_semanticDomainWritingSystem == null) // just in case there is no WS for the semDom field (not likely)
+			{
+				_semanticDomainWritingSystem = new WritingSystemDefinition("qaa");
+				_semanticDomainWritingSystem.DefaultFontName = "Microsoft Sans Serif";
+			}
+			return _semanticDomainWritingSystem;
+		}
 
 		public Font GetFontOfSemanticDomainField()
 		{

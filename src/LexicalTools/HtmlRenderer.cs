@@ -190,12 +190,13 @@ namespace WeSay.LexicalTools
 			Font font = WritingSystemInfo.CreateFont(ws);
 			float fontSize = font.Size + fontSizeBoost;
 			var formattedSpan = string.Format(
-				"<span style='font-family:{0}; font-size:{1}pt;font-weight:{2};font-style:{3};text-decoration:{4}'>",
+				"<span lang='{5}' style='font-family:{0}; font-size:{1}pt;font-weight:{2};font-style:{3};text-decoration:{4}'>",
 				font.Name,
 				fontSize.ToString(),
 				boldText ? "bold": "normal",
 				italicsOn ? "italic" : "normal",
-				underline ? "underline" : "none");
+				underline ? "underline" : "none",
+				ws.Bcp47Tag);
 			html.Append(formattedSpan);
 			AddFontFamily(font.Name);
 			return true;
