@@ -487,6 +487,18 @@ namespace WeSay.UI.TextBoxes
 			setInputFocus();
 		}
 
+		public string GetLanguageHtml(IWritingSystemDefinition ws)
+		{
+			String langName = "";
+			// Add in the ISO language code in case font supports multiple regions
+			if (ws != null)
+			{
+				String lang = ws.Bcp47Tag.IndexOf('-') == -1 ? ws.Bcp47Tag : ws.Bcp47Tag.Substring(0, ws.Bcp47Tag.IndexOf('-'));
+				langName = "lang='" + lang + "' ";
+			}
+			return langName;
+		}
+
 		/// <summary>
 		/// Set InputFocus to a WinForm controls using Mono winforms connection to the X11 server.
 		/// GeckoWebBrowser.RemoveInputFocus uses the Gecko/Gtk connection to the X11 server.

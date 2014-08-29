@@ -189,6 +189,7 @@ namespace WeSay.LexicalTools
 			IWritingSystemDefinition ws = (IWritingSystemDefinition)WritingSystems.Get(writingSystemId);
 			Font font = WritingSystemInfo.CreateFont(ws);
 			float fontSize = font.Size + fontSizeBoost;
+			String lang = ws.Bcp47Tag.IndexOf('-') == -1 ? ws.Bcp47Tag : ws.Bcp47Tag.Substring(0, ws.Bcp47Tag.IndexOf('-'));
 			var formattedSpan = string.Format(
 				"<span lang='{5}' style='font-family:{0}; font-size:{1}pt;font-weight:{2};font-style:{3};text-decoration:{4}'>",
 				font.Name,
@@ -196,7 +197,7 @@ namespace WeSay.LexicalTools
 				boldText ? "bold": "normal",
 				italicsOn ? "italic" : "normal",
 				underline ? "underline" : "none",
-				ws.Bcp47Tag);
+				lang);
 			html.Append(formattedSpan);
 			AddFontFamily(font.Name);
 			return true;

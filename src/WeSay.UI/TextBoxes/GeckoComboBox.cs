@@ -173,12 +173,6 @@ namespace WeSay.UI.TextBoxes
 		public void ListCompleted()
 		{
 			_initialSelectLoad = false;
-			String langName = "";
-			// Add in the ISO language code in case font supports multiple regions
-			if (_writingSystem != null)
-			{
-				langName = "lang='" + _writingSystem.Bcp47Tag + "' ";
-			}
 
 			var html = new StringBuilder();
 			html.Append("<!DOCTYPE html>");
@@ -200,7 +194,7 @@ namespace WeSay.UI.TextBoxes
 			html.AppendFormat("<body {2} style='background:{0}; width:{1}; overflow-x:hidden' id='mainbody'>",
 				System.Drawing.ColorTranslator.ToHtml(Color.FromArgb(255,203,255,185)),
 				this.Width,
-				langName);
+				GetLanguageHtml(_writingSystem));
 			html.Append("<select id='main' style='" + SelectStyle() + "' onchange=\"fireEvent('selectChanged','changed');\">");
 			// The following line is removed at this point and done later as a change to the inner
 			// html because otherwise the browser blows up because of the length of the
