@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Chorus.FileTypeHanders.lift;
 using Chorus.UI.Sync;
 using Chorus.VcsDrivers.Mercurial;
 using Mono.Addins;
@@ -89,6 +90,7 @@ namespace WeSay.Project.Synchronize
 				dlg.SyncOptions.DoMergeWithOthers = true;
 				dlg.SyncOptions.DoPullFromOthers = true;
 				dlg.SyncOptions.DoSendToOthers = true;
+				dlg.SetSynchronizerAdjunct(new LiftSynchronizerAdjunct(projectInfo.PathToLIFT));
 
 
 				// leave it with the default, for now... dlg.SyncOptions.RepositorySourcesToTry.Clear();
