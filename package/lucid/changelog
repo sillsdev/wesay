@@ -1,10 +1,28 @@
+wesay (1.5.24) stable; urgency=medium
+
+  * When saving Lift files, save in sorted canonical order to
+    limit amount of changes to files (helps with support)
+  * Update Art of Reading URL to correct location
+  * WS-148: Configuration does not list XKB keyboards
+   - Now correctly displays XKB and iBus keyboards on Precise,
+     Saucy, and Trusty.  Need to research if changes needed for Wasta.
+  * WS-158: viewing history would open separate firefox browser
+    instead of display in built-in browser
+  * WS-130: typo in label
+  * WS-139: Note text is not displayed
+  * WS-161: Gecko Mode: SE Asian scripts are not correct
+  * Add dependency on gnome-control-center (for set up keyboards)
+  * Move MONO_DEBUG=explicit-debug-checks to environ file
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 04 Sep 2014 14:44:00 -0400
+
 wesay (1.5.23) stable; urgency=medium
 
   * WS-161: Gecko Mode: SE Asian scripts are not correct
    - add font-face style to Gecko controls for Windows
   * WS-157: Error when attaching tiff files
   * WS-112: Crash in WeSay Configuration Tool when importing .ldml
-    file in "Input System" tab 
+    file in "Input System" tab
 
  -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 27 Aug 2014 14:00:55 -0400
 
@@ -63,7 +81,7 @@ wesay (1.5.18) stable; urgency=low
    - 'Create new project from a set of plain LIFT files' dialog
   * When adding a picture, don't change extension of non-png files to png
   * Force a new writing system id when duplicating
-   - Duplicating an existing writing system in the UI, then deleting the 
+   - Duplicating an existing writing system in the UI, then deleting the
      duplicate would result in deleting the original writing system
      since the duplicate has the same id.
 
