@@ -687,6 +687,7 @@ namespace WeSay.Project
 				dom.Load(PathToUserSpecificConfigFile(ProjectDirectoryPath));
 				BackupMaker = ChorusBackupMaker.CreateFromDom(dom, _container.Resolve<CheckinDescriptionBuilder>());
 				UiOptions = UiConfigurationOptions.CreateFromDom(dom);
+				WritingSystems.LocalKeyboardSettings = GetKeyboardsFromDom(dom);
 			}
 
 			if (BackupMaker == null)
@@ -698,6 +699,14 @@ namespace WeSay.Project
 			{
 				UiOptions = _container.Resolve<UiConfigurationOptions>();
 			}
+		}
+
+		private string GetKeyboardsFromDom(XmlDocument dom)
+		{
+			var kbnode = dom.SelectSingleNode("/configuration/keyboards");
+			if (kbnode != null && !String.IsNullOrEmpty(kbnode.OuterXml))
+				return kbnode.OuterXml.Trim();
+			return WritingSystems.LocalKeyboardSettings;	// return original value
 		}
 
 		private static void MoveFilesFromOldDirLayout(string projectDir)
@@ -1440,10 +1449,23 @@ namespace WeSay.Project
 			if (UiOptions != null)
 				UiOptions.Save(writer);
 
+			if (WritingSystems != null && !String.IsNullOrEmpty(WritingSystems.LocalKeyboardSettings))
+				SaveKeyboardSettings(writer);
+
 			writer.WriteEndDocument();
 			writer.Close();
 
 			pendingConfigFile.WriteWasSuccessful();
+		}
+
+		private void SaveKeyboardSettings(XmlWriter writer)
+		{
+			// The data is already XML.  Ensure it's formatted properly on output.
+			var str = new StringReader(WritingSystems.LocalKeyboardSettings);
+			var settings = new XmlReaderSettings();
+			settings.IgnoreWhitespace = true;
+			var reader = XmlReader.Create(str, settings);
+			writer.WriteNode(reader, false);
 		}
 
 		public Field GetFieldFromDefaultViewTemplate(string fieldName)
