@@ -351,6 +351,11 @@ namespace WeSay.ConfigTool
 			}
 		}*/
 
+		protected override void OnEnter(EventArgs e)
+		{
+			_fieldSetupControl.CurrentField = CurrentField;
+			base.OnEnter(e);
+		}
 		private void OnSelectedFieldChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
 			btnMoveUp.Enabled = false;

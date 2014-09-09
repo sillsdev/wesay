@@ -107,6 +107,7 @@ namespace WeSay.ConfigTool
 				_areaHeader.AppendText(button.Text + ": ");
 				_areaHeader.SelectionFont = new Font("Tahoma", 10F, FontStyle.Regular);
 				_areaHeader.AppendText(c.Header);
+				c.Focus();
 
 				UsageReporter.SendNavigationNotice("settings/"+c.NameForUsageReporting);
 			}

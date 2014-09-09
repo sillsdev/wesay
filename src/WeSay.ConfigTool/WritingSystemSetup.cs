@@ -32,6 +32,7 @@ namespace WeSay.ConfigTool
 						};
 			writingSystemSetupModel.AskIfOkToConflateWritingSystems += OnAskIfOkToConflateWritingSystems;
 			writingSystemSetupModel.AskIfOkToDeleteWritingSystems += OnAskIfOkToDeleteWritingSystems;
+			writingSystemSetupModel.ItemAddedOrDeleted += OnWritingSystemAddOrDelete;
 			_view.UserWantsHelpWithDeletingWritingSystems += OnUserWantsHelpWithDeletingWritingSystems;
 			_view.UserWantsHelpWithCustomSorting += OnUserWantsHelpWithCustomSorting;
 			store.WritingSystemDeleted += OnWritingSystemDeleted;
@@ -56,6 +57,10 @@ namespace WeSay.ConfigTool
 			args.CanDelete = true;  //WeSay always lets people delete.
 		}
 
+		private void OnWritingSystemAddOrDelete(object sender, EventArgs e)
+		{
+			SetWritingSystemsInRepo();
+		}
 		private void OnWritingSystemConflated(object sender, WritingSystemConflatedEventArgs e)
 		{
 			WeSayWordsProject.Project.MakeWritingSystemIdChange(e.OldId, e.NewId);

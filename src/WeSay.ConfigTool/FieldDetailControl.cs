@@ -61,6 +61,8 @@ namespace WeSay.ConfigTool
 			{
 				if (value == _field)
 				{
+					// refresh these since they might have changed on another tab
+					_writingSystemsControl.CurrentField = value;
 					return;
 				}
 
