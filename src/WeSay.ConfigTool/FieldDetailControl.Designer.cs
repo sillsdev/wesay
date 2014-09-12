@@ -58,8 +58,8 @@ namespace WeSay.ConfigTool
 			// tableLayoutPanel1
 			//
 			this.tableLayoutPanel1.ColumnCount = 2;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.66667F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.33333F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
 			this.tableLayoutPanel1.Controls.Add(this._fieldName, 1, 1);
 			this.tableLayoutPanel1.Controls.Add(this._displayLabel, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this._fieldNameLabel, 0, 1);
