@@ -1,2 +1,2 @@
 #!/bin/sh
-exec mono /usr/lib/wesay/ChorusMerge.exe "$@"
+exec mono $(dirname $0)/ChorusMerge.exe "$@"

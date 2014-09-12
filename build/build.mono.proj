@@ -88,9 +88,11 @@
 	<ItemGroup>
 		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.config" />
 		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.mdb" />
+		<ExistingLibraryFiles Include="$(RootDir)/build/mono/chorusmerge" />
 	</ItemGroup>
 	<Target Name="CopyFiles">
 		<Copy SourceFiles="@(ExistingLibraryFiles)" DestinationFolder="$(OutputDir)" />
+		<Exec Command="chmod 755 $(OutputDir)/chorusmerge" />
 	</Target>
 
 	<!-- Source Package -->
