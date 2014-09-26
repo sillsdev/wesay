@@ -12,7 +12,7 @@ Standards-Version: 3.9.4
 Package: wesay
 Architecture: any
 Depends: ${misc:Depends}, ${cli:Depends},
- mono-sil, mono-basic-sil, gtk-sharp2-sil, libgdiplus-sil,
+ mono-sil (>=3.4), mono-basic-sil, gtk-sharp2-sil, libgdiplus-sil,
  geckofx29,
  chmsee, udisks, gnome-control-center
 Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer, art-of-reading
