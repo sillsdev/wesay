@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Palaso.IO;
 using Palaso.Reporting;
 using WeSay.ConfigTool.Properties;
+using Gecko;
 
 namespace WeSay.ConfigTool
 {
@@ -21,6 +22,8 @@ namespace WeSay.ConfigTool
 
 			SetupErrorHandling();
 			Logger.Init();
+
+			SetUpXulRunner();
 
 			//bring in settings from any previous version
 			if (Settings.Default.NeedUpgrade)
@@ -45,6 +48,34 @@ namespace WeSay.ConfigTool
 				{
 					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
 				}
+			}
+		}
+
+		public static void SetUpXulRunner()
+		{
+			try
+			{
+#if __MonoCS__
+				string initXulRunnerOption = Environment.GetEnvironmentVariable("WESAY_INIT_XULRUNNER") ?? String.Empty;
+				// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
+				string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
+				if (String.IsNullOrEmpty(xulRunnerLocation))
+					throw new ApplicationException("The XULRunner library is missing or has the wrong version");
+				string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
+				if (!librarySearchPath.Contains(xulRunnerLocation))
+					throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
+
+				Xpcom.Initialize(xulRunnerLocation);
+				GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+#endif
+			}
+			catch (ApplicationException e)
+			{
+				ErrorReport.NotifyUserOfProblem(e.Message);
+			}
+			catch (Exception e)
+			{
+				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
 		}
 

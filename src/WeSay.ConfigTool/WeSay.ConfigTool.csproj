@@ -115,6 +115,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
     </Reference>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core"/>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms"/>
+    <None Include="\usr\lib\cli\geckofx-29\Geckofx-Core.dll.config" Condition="'$(OS)'!='Windows_NT'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Core">
+      <HintPath>..\..\lib\$(Configuration)\Geckofx-Core.dll</HintPath>
+    </Reference>
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Winforms">
+      <HintPath>..\..\lib\$(Configuration)\Geckofx-Winforms.dll</HintPath>
+    </Reference>
+    <None Include="..\..\lib\$(Configuration)\Geckofx-Core.dll.config" Condition="'$(OS)'=='Windows_NT'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Reference Condition="'$(OS)'!='Windows_NT'" Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\NDesk.DBus.dll</HintPath>
@@ -152,12 +166,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AboutBox.Designer.cs">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </Compile>
     <Compile Include="ActionsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -231,10 +239,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AboutBox.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ActionsControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ActionsControl.cs</DependentUpon>

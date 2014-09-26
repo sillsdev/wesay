@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Autofac;
+using Palaso.IO;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
 using WeSay.ConfigTool.NewProjectCreation;
@@ -526,7 +527,11 @@ namespace WeSay.ConfigTool
 
 		private void OnAboutToolStrip_Click(object sender, EventArgs e)
 		{
-			new AboutBox().ShowDialog();
+			string aboutPath = Path.Combine(WeSayWordsProject.ApplicationCommonDirectory, "aboutBox.htm");
+			using (var dlg = new Palaso.UI.WindowsForms.SIL.SILAboutBox(aboutPath))
+			{
+				dlg.ShowDialog();
+			}
 		}
 
 		private void OnHelpToolStrip_Click(object sender, EventArgs e)
