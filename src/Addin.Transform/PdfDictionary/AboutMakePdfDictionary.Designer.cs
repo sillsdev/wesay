@@ -58,7 +58,7 @@
 			this.linkLabel2.Size = new System.Drawing.Size(256, 17);
 			this.linkLabel2.TabIndex = 0;
 			this.linkLabel2.TabStop = true;
-			this.linkLabel2.Text = "http://wesay.org/wiki/MakePdfDictionary";
+			this.linkLabel2.Text = "http://wesay.palaso.org/printing-dictionaries-with-wesay/";
 			this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnLinkClicked);
 			//
 			// button1
@@ -105,7 +105,7 @@
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-			this.Text = "About Make Pdf Dictionary";
+			this.Text = "About Make Simple Pdf Dictionary";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

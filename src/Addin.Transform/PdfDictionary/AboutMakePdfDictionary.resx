@@ -122,8 +122,7 @@
 
 While PrinceXml itself is flexible and powerful, WeSay currently uses it for printouts using just the most common fields.  It is not our intention to re-invent the various existing (and forethcoming) publishing solutions... this feature is not likely to satisfy you when it comes to final publication.  Instead, it is intended as a quick way to get a draft printout at various stages of development.
 
-If you need something more extensive, please contact us.  We may be able to add something to WeSay, or we may suggest you consider making the printout using SIL's Lexique Pro or SIL's FieldWorks Language Explorer (both free, both for Windows only).
-
+If you need something more extensive, please consider one of the other output formats (for example Lexique Pro on Windows), or importing your data to FieldWorks Language Explorer and publishing from there.  If neither of these options work for you, please contact us.  We may be able to add something to WeSay, or help you with an existing publishing path.
 </value>
   </data>
 </root>
