@@ -337,7 +337,7 @@ To set up a windows box for developing WeSay you need to install the following t
 	VS 2010, (Express works OK)
 	WIX 3.5  (Works fine)
 	Git-1.9.x (See a helpful configuration below for as you install it)
-		=> you can grab this from: http://msygit.github.io
+		=> you can grab this from: http://msysgit.github.io
 		- Select Components Dialog =>
 			Additional Icons (if you want them)
 			Windows Explorer integration (simple, check all)
