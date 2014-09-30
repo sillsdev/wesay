@@ -14,6 +14,17 @@ using WeSay.UI.Progress;
 
 namespace WeSay.UI.TextBoxes
 {
+	public class MyGeckoWebBrowser : GeckoWebBrowser
+	{
+		/// <summary>
+		/// Don't reply on GeckoWebBrowser's default focus behaviour.
+		/// </summary>
+		protected override void OnEnter(EventArgs e)
+		{
+			// DO NOT CALL base.OnEnter(e)!!
+		}
+	}
+
 	public class GeckoBase : UserControl
 	{
 		protected GeckoWebBrowser _browser;
@@ -52,7 +63,7 @@ namespace WeSay.UI.TextBoxes
 
 			_inFocus = false;
 			_handleEnter = true;
-			_browser = new GeckoWebBrowser();
+			_browser = new MyGeckoWebBrowser();
 			_browser.Dock = DockStyle.Fill;
 			_browser.Parent = this;
 			_browser.NoDefaultContextMenu = true;
@@ -335,6 +346,14 @@ namespace WeSay.UI.TextBoxes
 		}
 		protected virtual void OnDomFocus(object sender, DomEventArgs e)
 		{
+			if (!_browserDocumentLoaded)
+				return;
+
+			// Only handle DomFocus that occurs on a Element.
+			// This is Important or it will mess with IME keyboard focus.
+			if (e == null || e.Target == null || e.Target.CastToGeckoElement() == null)
+				return;
+
 			var content = _browser.Document.GetElementById("main");
 			if (content != null)
 			{
