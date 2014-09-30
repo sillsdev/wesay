@@ -1,3 +1,17 @@
+wesay (1.5.25) stable; urgency=medium
+
+  * WS-65 Adding an Input System entry does not show up in Fields
+  * Save keyboard settings properly
+  * Copy chorusmerge to output directory
+  * Fix WS-74, field label is not truncated in Linux
+  * Revert "Add ENV variable to control XulRunner Init"
+  * WS-188 WS-189 Synchronize Semantic Domain questions with FW
+  * Require Mono-sil 3.4 or greater
+  * Fix link location for Git for windows d/l
+  * Fix broken hyperlink in dialog (WS-71)
+
+ -- Neil Mayhew <neil_mayhew@sil.org>  Tue, 30 Sep 2014 14:42:23 -0600
+
 wesay (1.5.24) stable; urgency=medium
 
   * When saving Lift files, save in sorted canonical order to
