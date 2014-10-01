@@ -296,17 +296,45 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			ComboItemProxy proxy = _classNameCombo.SelectedItem as ComboItemProxy;
-			if (proxy == null)
+			if (CheckClassNameChange())
 			{
-				return;
+				ComboItemProxy proxy = _classNameCombo.SelectedItem as ComboItemProxy;
+				if (proxy == null)
+				{
+					return;
+				}
+				_field.ClassName = proxy.UnderlyingValue.ToString();
+				UpdateDisplay();
+				if (ClassOfFieldChanged != null && !_loading)
+				{
+					ClassOfFieldChanged.Invoke(this, null);
+				}
 			}
-			_field.ClassName = proxy.UnderlyingValue.ToString();
-			UpdateDisplay();
-			if (ClassOfFieldChanged != null && !_loading)
+			else //revert
 			{
-				ClassOfFieldChanged.Invoke(this, null);
+				_loading = true; //don't check this
+				SelectComboItem(_classNameCombo, _field.ClassName);
+				_loading = false;
 			}
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		/// <returns>false if the change was rejected</returns>
+		private bool CheckClassNameChange()
+		{
+			bool validChange = true;
+			string newClassName =
+				((ComboItemProxy) _classNameCombo.SelectedItem).UnderlyingValue.ToString();
+			if (_field.DataTypeName == Field.BuiltInDataType.Picture.ToString()
+				&& (newClassName != "LexSense"))
+				{
+					ErrorReport.NotifyUserOfProblem("Sorry, WeSay cannot set the type of this field to '{0}'. Pictures are only supported on Sense",
+						newClassName);
+					validChange = false;
+				}
+			return validChange;
 		}
 
 		private void OnDataTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
@@ -380,6 +408,13 @@ namespace WeSay.ConfigTool
 				conflictFound = WeSayWordsProject.Project.LiftHasMatchingElement("field",
 																				 "type",
 																				 _field.FieldName);
+			}
+			else if (newDataTypeName == Field.BuiltInDataType.Picture.ToString()
+				&& (_field.ClassName != "LexSense"))
+			{
+				ErrorReport.NotifyUserOfProblem("Sorry, WeSay cannot set the type of this field to '{0}'. Pictures are only supported on Sense",
+					newDataTypeName);
+				return false;
 			}
 
 			if (conflictFound)
