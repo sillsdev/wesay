@@ -259,14 +259,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_searchTextBoxControl.SetWritingSystem(_listWritingSystem);
 			SearchTextBox.ItemFilterer = FindClosestAndNextClosestAndPrefixedForms;
 			SearchTextBox.Items = _findTextAdapter;
-
-			var top = _searchTextBoxControl.Bounds.Bottom + 10;
-			_recordsListBox.SetBounds(
-				_recordsListBox.Bounds.X,
-				top,
-				_recordsListBox.Bounds.Width,
-				(Bottom - _bottomButtonTable.Height) - top - 10
-			);
 		}
 
 		private void SetRecordToBeEdited(LexEntry record)
@@ -725,6 +717,15 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			{
 				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Show &Uncommon Fields");
 			}
+
+			var top = _searchTextBoxControl.Bounds.Bottom + 10;
+			_recordsListBox.SetBounds(
+				_recordsListBox.Bounds.X,
+				top,
+				_recordsListBox.Bounds.Width,
+				(Bottom - _bottomButtonTable.Height) - top - 10
+			);
+
 			AdjustSplitter();
 		}
 

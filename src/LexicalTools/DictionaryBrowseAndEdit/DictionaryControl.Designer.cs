@@ -35,14 +35,14 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this._bottomButtonsAndRestTable = new System.Windows.Forms.TableLayoutPanel();
 			this._bottomButtonTable = new System.Windows.Forms.TableLayoutPanel();
 			this._listBoxAndSplitterAndDictionaryViewTable = new System.Windows.Forms.Panel();
-			this.panel1 = new System.Windows.Forms.Panel();
 			this.panelDetail = new System.Windows.Forms.Panel();
 			this._splitter = new WeSay.UI.CollapsibleSplitter();
 			this._searchAndListBoxTable.SuspendLayout();
 			this._bottomButtonsAndRestTable.SuspendLayout();
 			this._bottomButtonTable.SuspendLayout();
 			this._listBoxAndSplitterAndDictionaryViewTable.SuspendLayout();
-			this.panel1.SuspendLayout();
+			this._splitter.SuspendLayout();
+			this.panelDetail.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// _searchAndListBoxTable
@@ -175,23 +175,15 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			//
 			// _listBoxAndSplitterAndDictionaryViewTable
 			//
-			this._listBoxAndSplitterAndDictionaryViewTable.Controls.Add(this.panel1);
+			this._listBoxAndSplitterAndDictionaryViewTable.AutoSize = true;
+			this._listBoxAndSplitterAndDictionaryViewTable.Controls.Add(this.panelDetail);
+			this._listBoxAndSplitterAndDictionaryViewTable.Controls.Add(this._splitter);
+			this._listBoxAndSplitterAndDictionaryViewTable.Controls.Add(this._searchAndListBoxTable);
 			this._listBoxAndSplitterAndDictionaryViewTable.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._listBoxAndSplitterAndDictionaryViewTable.Location = new System.Drawing.Point(3, 3);
 			this._listBoxAndSplitterAndDictionaryViewTable.Name = "_listBoxAndSplitterAndDictionaryViewTable";
 			this._listBoxAndSplitterAndDictionaryViewTable.Size = new System.Drawing.Size(487, 257);
-			this._listBoxAndSplitterAndDictionaryViewTable.TabIndex = 6;
-			//
-			// panel1
-			//
-			this.panel1.Controls.Add(this.panelDetail);
-			this.panel1.Controls.Add(this._splitter);
-			this.panel1.Controls.Add(this._searchAndListBoxTable);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(0, 0);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(487, 257);
-			this.panel1.TabIndex = 1;
+			this._listBoxAndSplitterAndDictionaryViewTable.TabIndex = 1;
 			//
 			// panelDetail
 			//
@@ -223,13 +215,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this.Size = new System.Drawing.Size(493, 294);
 			this.Leave += new System.EventHandler(this.DictionaryControl_Leave);
 			this._searchAndListBoxTable.ResumeLayout(false);
-			this._searchAndListBoxTable.PerformLayout();
 			this._bottomButtonsAndRestTable.ResumeLayout(false);
-			this._bottomButtonsAndRestTable.PerformLayout();
 			this._bottomButtonTable.ResumeLayout(false);
-			this._bottomButtonTable.PerformLayout();
 			this._listBoxAndSplitterAndDictionaryViewTable.ResumeLayout(false);
-			this.panel1.ResumeLayout(false);
+			this._splitter.ResumeLayout(false);
+			this.panelDetail.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -246,7 +236,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private Panel _listBoxAndSplitterAndDictionaryViewTable;
 		private TableLayoutPanel _searchAndListBoxTable;
 		private TableLayoutPanel _bottomButtonTable;
-		private Panel panel1;
 		private CollapsibleSplitter _splitter;
 		private Panel panelDetail;
 
