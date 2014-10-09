@@ -1,3 +1,16 @@
+wesay (1.5.26) stable; urgency=medium
+
+  * Gecko Mode: Fix ibus keyboard switching on Trusty
+  * WS-194: Fix error on custom type of picture
+   - WeSay only supports pictures within a sense field.  Now this
+     is enforced in config tool.
+  * WS-117: Fix intermittent resizing of Dictionary Browse & Edit
+  * Conform to new SIL Rules for AboutBox
+  * Fix refresh timer in hostory control to stop excessive calls to
+    Mercurial
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 09 Oct 2014 09:32:22 -0400
+
 wesay (1.5.25) stable; urgency=medium
 
   * WS-65 Adding an Input System entry does not show up in Fields
