@@ -120,7 +120,7 @@
   <data name="textBox1.Text" xml:space="preserve">
 	<value>This feature allows users to get a nice looking document, ready for printing, with just a single mouse click.  To enable this feature, you need to install the engine WeSay uses, something called PrinceXml.  If you use this feature for commerical purposes, you will need to get a license from the authors of PrinceXml.
 
-While PrinceXml itself is flexible and powerful, WeSay currently uses it for printouts using just the most common fields.  It is not our intention to re-invent the various existing (and forethcoming) publishing solutions... this feature is not likely to satisfy you when it comes to final publication.  Instead, it is intended as a quick way to get a draft printout at various stages of development.
+While PrinceXml itself is flexible and powerful, WeSay currently uses it for printouts using just the most common fields.  It is not our intention to re-invent the various existing (and forthcoming) publishing solutions... this feature is not likely to satisfy you when it comes to final publication.  Instead, it is intended as a quick way to get a draft printout at various stages of development.
 
 If you need something more extensive, please consider one of the other output formats (for example Lexique Pro on Windows), or importing your data to FieldWorks Language Explorer and publishing from there.  If neither of these options work for you, please contact us.  We may be able to add something to WeSay, or help you with an existing publishing path.
 </value>
