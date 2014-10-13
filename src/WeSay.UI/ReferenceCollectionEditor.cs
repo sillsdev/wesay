@@ -31,13 +31,91 @@ namespace WeSay.UI
 			InitializeComponent();
 		}
 
+#if __MonoCS__
+		public override Size GetPreferredSize (Size proposedSize) {
+			Size retsize = GetPreferredSizeCore (proposedSize);
+			Size maximum_size = MaximumSize;
+			Size minimum_size = MinimumSize;
+			// If we're bigger than the MaximumSize, fix that
+			if (maximum_size.Width != 0 && retsize.Width > maximum_size.Width)
+				retsize.Width = maximum_size.Width;
+			if (maximum_size.Height != 0 && retsize.Height > maximum_size.Height)
+				retsize.Height = maximum_size.Height;
+
+			// If we're smaller than the MinimumSize, fix that
+			if (minimum_size.Width != 0 && retsize.Width < minimum_size.Width)
+				retsize.Width = minimum_size.Width;
+			if (minimum_size.Height != 0 && retsize.Height < minimum_size.Height)
+				retsize.Height = minimum_size.Height;
+
+			retsize.Height = Math.Max(20, retsize.Height); // get around Mono problem of collapsing
+			return retsize;
+		}
+		private Size GetPreferredSizeCore(Size proposedSize) {
+			int width = 0;
+			int height = 0;
+			int row_width = 0;
+			int row_height = 0;
+			int max_width = 10;
+			if (proposedSize.Width > 0)
+			{
+				max_width = proposedSize.Width;
+			}
+			else if (Parent != null)
+			{
+				// This is the normal case for sem dom, which is what this is used for in WeSay
+				// Adjust for the size of the other controls in this row for the parent.
+				// Looked but did not find a good way to reliably do that
+				max_width = Parent.DisplayRectangle.Width - 200;
+				if (max_width < 0)
+				{
+					max_width = 10;
+				}
+			}
+			if (MaximumSize.Width > 0)
+			{
+				max_width = Math.Min(MaximumSize.Width, max_width);
+			}
+			bool horizontal = FlowDirection == FlowDirection.LeftToRight || FlowDirection == FlowDirection.RightToLeft;
+			foreach (Control control in Controls)
+			{
+				Size control_preferred_size;
+				if (control.AutoSize)
+					control_preferred_size = control.PreferredSize;
+				else
+					control_preferred_size = control.Size;
+				Padding control_margin = control.Margin;
+				if (horizontal)
+				{
+					int control_width_increase =  control_preferred_size.Width + control_margin.Horizontal;
+					if (row_width + control_width_increase > max_width)
+					{
+						// Start a new row
+						row_width = 0;
+						height += row_height;
+					}
+					row_width += control_preferred_size.Width + control_margin.Horizontal;
+					row_height = Math.Max(row_height, control_preferred_size.Height + control_margin.Vertical);
+					width = Math.Max(width, row_width);
+				}
+				else
+				{
+					// Use standard logic for vertical aligned control
+					height += control_preferred_size.Height + control_margin.Vertical;
+					width = Math.Max(width, control_preferred_size.Width + control_margin.Horizontal);
+				}
+			}
+			height += row_height;
+			return new Size (width, height);
+		}
+#else
 		public override Size GetPreferredSize(Size proposedSize)
 		{
 			Size size = base.GetPreferredSize(proposedSize);
 			size.Height = Math.Max(20, size.Height); // get around Mono problem of collapsing
 			return size;
 		}
-
+#endif
 		/// <summary>
 		/// ctor
 		/// </summary>
