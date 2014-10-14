@@ -15,6 +15,7 @@ using WeSay.Project;
 using Palaso.Lift.Options;
 
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
@@ -466,7 +467,11 @@ namespace WeSay.LexicalTools.Tests
 		/// <summary>
 		/// regression test of WS-15019
 		/// </summary>
+		/// <remarks>
+		/// Using the sorter causes XElement.Parse() to be called, which chokes on '\u001F'.
+		/// </remarks>
 		[Test]
+		[ExpectedException("Palaso.Reporting.ErrorReport+ProblemNotificationSentToUserException", ExpectedMessage="character", MatchType=MessageMatch.Contains)]
 		public void AddWord_WordConsistsOfOnlySegmentSeparatorCharacter_AddedToDatabase()
 		{
 			int originalCount = _lexEntryRepository.CountAllItems();
