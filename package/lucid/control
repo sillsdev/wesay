@@ -14,7 +14,7 @@ Architecture: any
 Depends: ${misc:Depends}, ${cli:Depends},
  mono-sil (>=3.4), mono-basic-sil, gtk-sharp2-sil, libgdiplus-sil,
  geckofx29,
- chmsee, udisks, gnome-control-center
+ chmsee, udisks
 Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer, art-of-reading
 Conflicts: wesay-stable
 Description: A dictionary creation tool
