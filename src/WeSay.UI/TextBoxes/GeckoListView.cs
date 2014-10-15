@@ -111,6 +111,7 @@ namespace WeSay.UI.TextBoxes
 					paddedItem = String.Format("{0}...", paddedItem.Remove(MaxLength - 4));
 				}
 			}
+			paddedItem = System.Security.SecurityElement.Escape(paddedItem);
 			// replace leading and trailing spaces that may have been added with
 			// the &nbsp markers.
 			paddedItem = Regex.Replace(paddedItem, @"(?<=^\s*)\s", "&nbsp;");

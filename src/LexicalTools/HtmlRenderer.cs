@@ -147,6 +147,12 @@ namespace WeSay.LexicalTools
 			italicsOn = false;
 		}
 
+		private static string MakeSafeForHtmlAndFormat(string form)
+		{
+			var htmlSafe = System.Security.SecurityElement.Escape(form);
+			return htmlSafe.Replace("{", "{{").Replace("}", "}}");
+		}
+
 		private static void RenderHeadword(LexEntry entry,
 										   StringBuilder html,
 										   LexEntryRepository lexEntryRepository)
@@ -156,7 +162,8 @@ namespace WeSay.LexicalTools
 				LanguageForm headword = entry.GetHeadWord(HeadWordWritingSystemId);
 				if (null != headword)
 				{
-					html.Append(headword.Form);
+					var str = MakeSafeForHtmlAndFormat(headword.Form);
+					html.Append(str);
 
 					int homographNumber = lexEntryRepository.GetHomographNumber(
 						entry,
@@ -256,7 +263,8 @@ namespace WeSay.LexicalTools
 			bool underLineOn = IsCurrentField(text, form, currentItem);
 			if (StartNewSpan(htmlBuilder, form.WritingSystemId, false, underLineOn, sizeBoost))
 			{
-				htmlBuilder.Append(form.Form);
+				var str = MakeSafeForHtmlAndFormat(form.Form);
+				htmlBuilder.Append(str);
 				htmlBuilder.Append(" </span>");
 			}
 		}

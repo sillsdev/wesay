@@ -133,6 +133,7 @@ namespace WeSay.UI.TextBoxes
 
 		private void SetText(string s)
 		{
+			s = System.Security.SecurityElement.Escape(s);
 			String justification = "left";
 			String multiLineStyle = "";
 

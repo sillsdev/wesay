@@ -221,7 +221,7 @@ namespace WeSay.UI.TextBoxes
 		{
 			IWritingSystemDefinition ws = useFormWS ? FormWritingSystem : MeaningWritingSystem;
 			Font font = WritingSystemInfo.CreateFont(ws );
-			String entry = String.IsNullOrEmpty(word) ? "&nbsp;" : word;
+			String entry = String.IsNullOrEmpty(word) ? "&nbsp;" : System.Security.SecurityElement.Escape(word);
 			String subId = useFormWS ? "-1" : "-2";
 			String id = index.ToString() + subId;
 			_itemHtml.AppendFormat("<li id='{2}' {5} style='font-family:{3}; font-size:{4}pt;' onclick=\"fireEvent('selectChanged','{0}');\">{1}</li>",

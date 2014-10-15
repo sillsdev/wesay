@@ -76,7 +76,8 @@ namespace WeSay.UI.TextBoxes
 		public void AddItem(Object item)
 		{
 			_items.Add(item);
-			var paddedItem = Regex.Replace(item.ToString(), @"(?<=^\s*)\s", "&nbsp;");
+			var paddedItem = System.Security.SecurityElement.Escape(item.ToString());
+			paddedItem = Regex.Replace(paddedItem, @"(?<=^\s*)\s", "&nbsp;");
 			_itemHtml.AppendFormat("<option value=\"{0}\">{1}</option>", item.ToString().Trim(), paddedItem);
 		}
 
