@@ -79,6 +79,12 @@
 		  <File Id="ArtOfReadingIndexV3_en.txt" Name="ArtOfReadingIndexV3_en.txt" KeyPath="yes" Source="..\..\common\ArtOfReadingIndexV3_en.txt" />
 		</Component>
 
+		<Component Id="aboutBox.css" Guid="{8454cea2-b443-4941-8674-9f426d19edaa}">
+		  <File Id="aboutBox.css" Name="aboutBox.css" KeyPath="yes" Source="..\..\common\aboutBox.css" />
+		</Component>
+		<Component Id="aboutBox.htm" Guid="{0ea13a2d-6afa-452f-91a7-d5c278cb5a22}">
+		  <File Id="aboutBox.htm" Name="aboutBox.htm" KeyPath="yes" Source="..\..\common\aboutBox.htm" />
+		</Component>
 	  </Directory>
 	</DirectoryRef>
 
@@ -92,6 +98,8 @@
 	  <ComponentRef Id="ArtOfReadingIndexV3_en.txt"/>
 	  <ComponentRef Id="WritingSystems_en.ldml" />
 	  <ComponentRef Id="WritingSystems_qaa_x_qaa.ldml" />
+	  <ComponentRef Id="aboutBox.css" />
+	  <ComponentRef Id="aboutBox.htm" />
 	</ComponentGroup>
 
 	<ComponentGroup Id="ddpStuff">
