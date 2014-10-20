@@ -24,6 +24,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 																			 6,
 																			 ReturnFalse,
 																			 IntPtr.Zero);
+			if (_textToSearchForBox is WeSay.UI.TextBoxes.WeSayTextBox && !_textToSearchForBox.ReadOnly)
+				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Register((Control)_textToSearchForBox);
 		}
 
 		private static bool ReturnFalse()
