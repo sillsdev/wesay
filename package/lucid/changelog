@@ -1,3 +1,20 @@
+wesay (1.5.27~beta1) stable; urgency=medium
+
+  * WS-69: Typo in About Make PDF Dictionary screen
+  * WS-100: Semantic domains are hidden if more than 5 (Linux)
+  * Gecko Mode: Fix crash in displaying HTML form of entries
+  * Remove dependency on gnome-control-center (for set up keyboards)
+  * WS-172: Change set up keyboards to detect gnome-control-center,
+    unity-control-center, or ibus-setup (depending on Ubuntu version)
+  * WS-221: Show pictures in OpenOffice Documents
+  * WS-204: Fix text clipping
+  * Fix LIFT parser to handle empty ranges in external file
+  * Make USB drive access more rebust
+  * WS-211: Creating a Note was crashing
+  * WS-201: Fix behavior is removing whitespace from Chorus server settings (Linux)
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Mon, 20 Oct 2014 13:08:01 -0400
+
 wesay (1.5.26) stable; urgency=medium
 
   * Gecko Mode: Fix ibus keyboard switching on Trusty
