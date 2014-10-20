@@ -43,6 +43,7 @@ namespace WeSay.UI.TextBoxes
 		void Show();
 		Color ForeColor { get; set; }
 		bool TabStop { get; set; }
+		bool IsDisposed { get; }
 		event EventHandler UserLostFocus;
 		event EventHandler UserGotFocus;
 

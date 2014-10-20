@@ -55,6 +55,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		bool ListBoxFocused { get; }
 		Size MinimumSize { get; set; }
 		IWeSayListBox FilteredChoicesListBox { get; }
+		void HideList();
 	}
 
 	/// <summary>
@@ -248,7 +249,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 				{
 					return;
 				}
-
 				if (_selectedItem == value)
 				{
 					//handle WS-1171, where a) a baseform was set b) the target was deleted c) the user deletes the now-displayed red id of the missing item
@@ -675,7 +675,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-		protected virtual void HideList()
+		public virtual void HideList()
 		{
 			Mode = EntryMode.Text;
 			_listBox.Visible = false;

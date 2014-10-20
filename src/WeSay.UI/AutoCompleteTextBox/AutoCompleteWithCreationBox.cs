@@ -255,6 +255,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private void UpdateElementWidth()
 		{
+			if (_textBox.IsDisposed)
+			{
+				return;
+			}
 			if (_textBox.Text.Length == 0)
 			{
 				_textBox.Width = _textBox.MinimumSize.Width;
@@ -329,6 +333,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private void OnAddNewButton_Click(object sender, EventArgs e)
 		{
 			CreateNewObjectFromText();
+			_textBox.HideList();
 		}
 	}
 

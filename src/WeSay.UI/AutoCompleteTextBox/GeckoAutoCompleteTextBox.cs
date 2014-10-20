@@ -637,7 +637,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-		protected virtual void HideList()
+		public virtual void HideList()
 		{
 			Mode = EntryMode.Text;
 			_listBox.Visible = false;
