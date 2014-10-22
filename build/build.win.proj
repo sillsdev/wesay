@@ -237,6 +237,7 @@
 			TaskAction="Move"
 			Path="$(RootDir)\output\installer\WeSayInstaller.msi"
 			TargetPath="$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi" />
+		<Exec Command='sign "$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
 	</Target>
 
 	<!-- Upload -->
