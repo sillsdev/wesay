@@ -145,6 +145,23 @@ There are problems in:
 			return writingSystemIds.Select(id => WritingSystems.Get(id)).ToList();
 		}
 
+		/// <summary>
+		/// When the user is playing around with writing system setup, he may delete a
+		/// writing system that has been assigned to fields.  In that case, to avoid
+		/// crashing (see https://jira.sil.org/browse/WS-233) we need to weed out any
+		/// writing systems that no longer exist.
+		/// </summary>
+		public IList<string> FilterOutBadWritingSystems(IList<string> writingSystemIds)
+		{
+			List<string> validIds = new List<string>();
+			foreach (var id in writingSystemIds)
+			{
+				if (WritingSystems.Contains(id))
+					validIds.Add(id);
+			}
+			return validIds.ToList();
+		}
+
 		public string ProjectDirectoryPath
 		{
 			get { return _projectDirectoryPath; }

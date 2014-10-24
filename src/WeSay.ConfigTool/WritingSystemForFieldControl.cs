@@ -219,6 +219,9 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
+			// Weed out any writing systems that have been deleted from under us.
+			CurrentField.WritingSystemIds =
+				BasilProject.Project.FilterOutBadWritingSystems(CurrentField.WritingSystemIds);
 			List<string> writingSystemIdsWithSpellCheckingInstalled =
 					GetWritingSystemIdsWithSpellCheckingInstalled();
 

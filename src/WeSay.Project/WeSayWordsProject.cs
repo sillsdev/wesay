@@ -1728,7 +1728,11 @@ namespace WeSay.Project
 
 		public void DeleteWritingSystemId(string id)
 		{
-			_changedWritingSystemIds.Add(id, String.Empty); //adding it to the _changedWritingSystemIds makes sure that all the changes are made in the correct order
+			// Check whether the user has been playing around, unable to make up his (or her) mind.
+			if (_changedWritingSystemIds.ContainsKey(id))
+				_changedWritingSystemIds[id] = String.Empty;
+			else
+				_changedWritingSystemIds.Add(id, String.Empty); //adding it to the _changedWritingSystemIds makes sure that all the changes are made in the correct order
 
 			DefaultViewTemplate.DeleteWritingSystem(id);
 
