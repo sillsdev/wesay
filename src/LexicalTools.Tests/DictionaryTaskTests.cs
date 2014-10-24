@@ -23,6 +23,18 @@ namespace WeSay.LexicalTools.Tests
 		private DictionaryControl.Factory _dictControlFactory;
 		private TaskMemoryRepository _taskMemoryRepository;
 
+		[TestFixtureSetUp]
+		public void FixtureSetup()
+		{
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+		}
+
+		[TestFixtureTearDown]
+		public void FixtureTeardown()
+		{
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+		}
+
 		[SetUp]
 		public void Setup()
 		{
