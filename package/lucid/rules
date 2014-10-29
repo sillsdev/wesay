@@ -1,8 +1,8 @@
 #!/usr/bin/make -f
 
 CONFIGURATION=Release
-PALASO_CONFIGURATION=DebugMono
-CHORUS_CONFIGURATION=DebugMono
+PALASO_CONFIGURATION=ReleaseMono
+CHORUS_CONFIGURATION=ReleaseMono
 
 CHORUSVER=$(shell ls -1 externals/chorus-* | sed -e 's/externals\/chorus\-\(.*\).tar.gz/\1/')
 PALASOVER=$(shell tar tfz externals/chorus-$(CHORUSVER).tar.gz | grep libpalaso | sed -e 's/.*externals\/libpalaso\-\(.*\).tar.gz/\1/')
