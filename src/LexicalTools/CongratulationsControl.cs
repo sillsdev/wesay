@@ -13,13 +13,12 @@ namespace WeSay.LexicalTools
 			_messageText.ReadOnly = true;
 			_messageText.HideSelection = true;
 			_messageText.TabStop = false;
+			_messageText.Font = new System.Drawing.Font(Palaso.i18n.StringCatalog.LabelFont.FontFamily, 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 		}
 
 		public void Show(string message)
 		{
-			char[] checkmark_Char = new char[1];
-			checkmark_Char[0] = '\u2714';
-			checkmarkLabel.Text = new string(checkmark_Char);
+			checkmarkLabel.Text = "\u2714 ";	// The trailing space seems critical at times for proper display. (?)
 			_messageText.Text = message;
 			BringToFront();
 			Visible = true;

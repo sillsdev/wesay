@@ -270,9 +270,12 @@ namespace WeSay.UI
 			Label label = new Label();
 			if (isHeader)
 			{
-				label.Font = new Font(StringCatalog.LabelFont /* label.Font*/, FontStyle.Bold);
+				label.Font = new Font(StringCatalog.LabelFont, FontStyle.Bold);
 			}
-			//label.Font =StringCatalog.ModifyFontForLocalization(label.Font);
+			else
+			{
+				label.Font = (Font)StringCatalog.LabelFont.Clone();
+			}
 			label.Text = fieldLabel;
 			label.AutoSize = true;
 

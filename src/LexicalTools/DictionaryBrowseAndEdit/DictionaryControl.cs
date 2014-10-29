@@ -153,7 +153,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
-
+			_btnNewWord.Font = (Font)StringCatalog.LabelFont.Clone();
+			_showAllFieldsToggleButton.Font = (Font)StringCatalog.LabelFont.Clone();
+			_btnDeleteWord.Font = (Font)StringCatalog.LabelFont.Clone();
 		}
 
 		private void SetupPickerControlWritingSystems()

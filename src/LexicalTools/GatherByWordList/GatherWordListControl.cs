@@ -75,6 +75,10 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
+			_instructionLabel.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			label3.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			label4.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			label5.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
 		}
 
 

@@ -122,6 +122,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 								StringCatalog.Get("~Empty",
 												  "This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.") +
 								")";
+				e.Item.Font = new Font(StringCatalog.LabelFont, FontStyle.Italic);
 			}
 			e.Item.Text = displayString;
 		}
@@ -171,6 +172,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			BackColor = DisplaySettings.Default.BackgroundColor;
 			_entryViewControl.BackColor = DisplaySettings.Default.BackgroundColor;
 			//we like it to stand out at design time, but not runtime
+
+			label1.Font = (Font)StringCatalog.LabelFont.Clone();
+			_completedRecordsLabel.Font = (Font)StringCatalog.LabelFont.Clone();
+			labelNextHotKey.Font = (Font)StringCatalog.LabelFont.Clone();
 		}
 
 		private void OnTodoRecordSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)

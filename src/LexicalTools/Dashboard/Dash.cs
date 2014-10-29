@@ -92,7 +92,7 @@ namespace WeSay.LexicalTools.Dashboard
 		{
 			_addedAllButtons = false;
 			_title = new DictionaryStatusControl(_lexEntryRepository.CountAllItems());
-			_title.Font = new Font(SystemFonts.DefaultFont.FontFamily, 14);
+			_title.Font = new Font(StringCatalog.LabelFont.FontFamily, 14);
 			_title.BackColor = Color.Transparent;
 			_title.ShowLogo = true;
 			_title.Width = _panel.Width - _title.Margin.Left - _title.Margin.Right;
@@ -130,7 +130,7 @@ namespace WeSay.LexicalTools.Dashboard
 				Label header = new Label();
 				header.AutoSize = true;
 				header.Text = StringCatalog.Get(buttonGroup.Group.ToString());
-				header.Font = new Font("Arial", 12);
+				header.Font = new Font(StringCatalog.LabelFont.FontFamily, 12);
 				_panel.Controls.Add(header);
 				buttonRow.ForEach(b => _panel.Controls.Add(b));
 				_buttonRows.Add(buttonRow);
@@ -141,7 +141,7 @@ namespace WeSay.LexicalTools.Dashboard
 		{
 			DashboardButton button = MakeButton(item);
 			button.BackColor = Color.Transparent;
-			button.Font = Font;
+			button.Font = (Font)StringCatalog.LabelFont.Clone();
 			button.AutoSize = false;
 			button.BorderColor = group.BorderColor;
 			button.DoneColor = group.DoneColor;
@@ -901,7 +901,7 @@ namespace WeSay.LexicalTools.Dashboard
 			DisplaySettings.Default.PaintBackground(e.Graphics, e.Bounds, this);
 			e.DrawBorder();
 			string title = button.ThingToShowOnDashboard.LocalizedLongLabel;
-			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
+			Font localizedFont = (Font)StringCatalog.LabelFont.Clone();
 			Font boldFont = new Font(localizedFont, FontStyle.Bold);
 			int titleHeight =
 				TextRenderer.MeasureText(e.Graphics,
@@ -952,7 +952,7 @@ namespace WeSay.LexicalTools.Dashboard
 			}
 			string title = button.ThingToShowOnDashboard.LocalizedLongLabel;
 			Graphics g = Graphics.FromHwnd(e.AssociatedWindow.Handle);
-			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
+			Font localizedFont = (Font)StringCatalog.LabelFont.Clone();
 			Font boldFont = new Font(localizedFont, FontStyle.Bold);
 			string textUsedOnlyForMeasurement = GetToolTipDescription(button.ThingToShowOnDashboard);
 #if __MonoCS__

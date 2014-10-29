@@ -163,7 +163,7 @@ namespace WeSay.UI
 		private void SetupComboControl(IValueHolder<string> selectedOptionRef)
 		{
 
-
+			_control.Font = (Font)StringCatalog.LabelFont.Clone();
 			if (!_list.Options.Exists(delegate(Option o) { return (o.Key == string.Empty || o.Key == "unknown"); }))
 			{
 				MultiText unspecifiedMultiText = new MultiText();

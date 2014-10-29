@@ -44,6 +44,7 @@ namespace WeSay.ConfigTool.Tasks
 				return;
 			}
 
+			_taskList.Font = (System.Drawing.Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
 			foreach (var task in Model.Tasks)
 			{
 				if (!Model.DoShowTask(task))

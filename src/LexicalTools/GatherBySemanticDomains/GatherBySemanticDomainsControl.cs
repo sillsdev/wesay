@@ -132,6 +132,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			//    _animatedText.Font = _presentationModel.FormWritingSystem.Font;
 
 			_reminder.Text = _presentationModel.Reminder;
+			_reminder.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
 
 			_flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 
@@ -187,6 +188,10 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
+			_instructionLabel.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			label3.Font = new Font(Palaso.i18n.StringCatalog.LabelFont, FontStyle.Bold);
+			label4.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			label5.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
 		}
 
 		private void RefreshCurrentDomainAndQuestion()

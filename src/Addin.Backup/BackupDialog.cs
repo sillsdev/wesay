@@ -21,7 +21,7 @@ namespace Addin.Backup
 			_topLabel.Text = "~Looking for USB Flash Drives...";
 			pictureBox1.Image = Resources.backupToDeviceImage;
 			_cancelButton.Text = StringCatalog.Get(_cancelButton.Text);
-			_cancelButton.Font = StringCatalog.ModifyFontForLocalization(_cancelButton.Font);
+			_cancelButton.Font = (Font)StringCatalog.LabelFont.Clone();
 		}
 
 		private void DoBackup(IUsbDriveInfo info)

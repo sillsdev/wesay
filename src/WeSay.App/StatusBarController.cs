@@ -30,6 +30,7 @@ namespace WeSay.App
 			_launchConfigToolLink.Image = Resources.WeSayConfigMenuSized;
 			_launchConfigToolLink.Click += Dash.OnRunConfigureTool;
 			_wordCountLabel = new ToolStripStatusLabel();
+			_wordCountLabel.Font = (Font)StringCatalog.LabelFont.Clone();
 
 			_timer = new Timer();
 			_timer.Interval = 1000;

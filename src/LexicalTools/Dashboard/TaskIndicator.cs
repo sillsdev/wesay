@@ -33,11 +33,10 @@ namespace WeSay.LexicalTools.Dashboard
 			_intray.Count = task.GetRemainingCount();
 			_intray.ReferenceCount = task.GetReferenceCount();
 
-			//_btnName.Font = StringCatalog.LabelFont;
+			_btnName.Font = (Font)StringCatalog.LabelFont.Clone();
 			_btnName.Text = task.Label; //these have already gone through the StringCatalog
 			_textShortDescription.Text = task.Description;
-			_textShortDescription.Font =
-					StringCatalog.ModifyFontForLocalization(_textShortDescription.Font);
+			_textShortDescription.Font = (Font)StringCatalog.LabelFont.Clone();
 		}
 
 		public ITask Task

@@ -281,11 +281,12 @@ namespace WeSay.App
 			   _tabbedForm = _project.Container.Resolve<TabbedForm>();
 			   _tabbedForm.Show(); // so the user sees that we did launch
 			   var versionString = BasilProject.VersionString;
+			   var title = StringCatalog.Get("~WeSay", "It's up to you whether to bother translating this or not.");
+			   if (title != "WeSay")
+					_tabbedForm.Font = (System.Drawing.Font)StringCatalog.LabelFont.Clone();
 			   _tabbedForm.Text = String.Format(
 				   "{0} {1}: {2}",
-				   StringCatalog.Get(
-					   "~WeSay",
-					   "It's up to you whether to bother translating this or not."),
+				   title,
 				   versionString,
 				   _project.Name
 				   );

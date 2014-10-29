@@ -41,7 +41,7 @@ namespace WeSay.App
 			synchronizationContext = SynchronizationContext.Current;
 			Debug.Assert(synchronizationContext != null);
 
-			_statusStrip.Font = StringCatalog.ModifyFontForLocalization(_statusStrip.Font);
+			_statusStrip.Font = (System.Drawing.Font)StringCatalog.LabelFont.Clone();
 			statusBarController.StatusStrip = _statusStrip;
 			if (navigateToRecordEventToSubscribeTo != null)
 			{
