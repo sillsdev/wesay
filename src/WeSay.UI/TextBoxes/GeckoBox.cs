@@ -148,7 +148,11 @@ namespace WeSay.UI.TextBoxes
 				editable = "false";
 			}
 
-			if (!Multiline)
+			if (Multiline)
+			{
+				multiLineStyle = "word-wrap:break-word; ";
+			}
+			else
 			{
 				multiLineStyle = "white-space:nowrap; ";
 			}
