@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Palaso.DictionaryServices.Model;
 using Palaso.i18n;
 using Palaso.Lift;
 using Palaso.Lift.Options;
@@ -69,10 +70,14 @@ namespace WeSay.ConfigTool
 			_fieldChooser.Items.Clear();
 			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
 			{
-				if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
-					field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
+				// Exclude semantic domain from the list.
+				if (field.FieldName != LexSense.WellKnownProperties.SemanticDomainDdp4)
 				{
-					_fieldChooser.Items.Add(field);
+					if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
+						field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
+					{
+						_fieldChooser.Items.Add(field);
+					}
 				}
 			}
 			if (_currentField != null)

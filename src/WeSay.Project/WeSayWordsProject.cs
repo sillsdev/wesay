@@ -29,24 +29,22 @@ using Palaso.Lift.Options;
 using Palaso.Lift.Validation;
 using Palaso.Progress;
 using Palaso.Reporting;
-using Palaso.Text;
 using Palaso.UI.WindowsForms.Progress;
 using Palaso.UiBindings;
 using Palaso.WritingSystems;
 using Palaso.Xml;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project.ConfigMigration.UserConfig;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.ConfigMigration.WritingSystem;
+using WeSay.Project.LocalizedList;
 using WeSay.Project.Synchronize;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
 using WeSay.UI.TextBoxes;
 using IContainer=Autofac.IContainer;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project
 {
@@ -66,6 +64,7 @@ namespace WeSay.Project
 		private IContainer _container;
 		private static bool _geckoOption;
 		readonly Dictionary<string, string> _changedWritingSystemIds = new Dictionary<string, string>();
+		private bool _alreadyReportedWsLookupFailure;
 
 		//public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
 		public const int CurrentWeSayUserSpecificConfigFileVersion = 2; // This variable must be updated with every new vrsion of the WeSayUserConfig file
@@ -501,6 +500,12 @@ namespace WeSay.Project
 
 			builder.Register<IOptionListReader>(c => new DdpListReader()).Named<IOptionListReader>(LexSense.WellKnownProperties.SemanticDomainDdp4).SingleInstance();
 			builder.Register<IOptionListReader>(c => new GenericOptionListReader()).SingleInstance();
+			builder.Register<LocalizedListParser>(c => new LocalizedListParser()
+			{
+				SemanticDomainWs = WritingSystemIdForNamesAndQuestions,
+				ApplicationCommonDirectory = BasilProject.ApplicationCommonDirectory,
+				PathToWeSaySpecificFilesDirectoryInProject = Project.PathToWeSaySpecificFilesDirectoryInProject
+			});
 
 
 			builder.Register<PictureControl>(c=> new PictureControl(Path.GetDirectoryName(PathToLiftFile), PathToPictures, GetFileLocator())).InstancePerDependency();
@@ -1193,8 +1198,6 @@ namespace WeSay.Project
 			{
 				if (_defaultViewTemplate == null)
 				{
-					//container change
-//                    InitializeViewTemplatesFromProjectFiles();
 					_defaultViewTemplate = _container.Resolve<ViewTemplate>();//enhance won't work when there's multiple
 				}
 				return _defaultViewTemplate;
@@ -1506,7 +1509,8 @@ namespace WeSay.Project
 
 			string pathInProject = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
 												field.OptionsListFile);
-			if (File.Exists(pathInProject))
+			// Semantic domain field does its own checking for the location and existence of the file
+			if ((field.FieldName == LexSense.WellKnownProperties.SemanticDomainDdp4) || (File.Exists(pathInProject)))
 			{
 				LoadOptionsList(field.FieldName, pathInProject);
 			}
@@ -1547,19 +1551,29 @@ namespace WeSay.Project
 
 		private void LoadOptionsList(string fieldName,string pathToOptionsList)
 		{
+			OptionsList list;
 			string name = Path.GetFileName(pathToOptionsList);
-			IOptionListReader reader;
-			object r;
-			//first, try for a reader named after the field
-			if(_container.TryResolveNamed(fieldName, typeof(IOptionListReader), out r))
+			if (fieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
 			{
-				reader = r as IOptionListReader;
+				var parser = _container.Resolve<LocalizedListParser>();
+				parser.ReadListFile();
+				list = parser.OptionsList;
 			}
 			else
 			{
-				reader = _container.Resolve<IOptionListReader>();
+				IOptionListReader reader;
+				object r;
+				//first, try for a reader named after the field
+				if (_container.TryResolveNamed(fieldName, typeof (IOptionListReader), out r))
+				{
+					reader = r as IOptionListReader;
+				}
+				else
+				{
+					reader = _container.Resolve<IOptionListReader>();
+				}
+				list = reader.LoadFromFile(pathToOptionsList);
 			}
-			OptionsList list = reader.LoadFromFile(pathToOptionsList);
 			foreach (var oldNewId in _changedWritingSystemIds)
 			{
 				ChangeIdInLoadedOptionListIfNecassary(oldNewId.Key, oldNewId.Value, list);
@@ -1925,6 +1939,28 @@ namespace WeSay.Project
 			//Chorus is providing its own user name (as of Jan 2010, by asking the OS)
 			var action = new SendReceiveAction();
 			_addins.SetDoShowInWeSay(action.ID, true);
+		}
+		public string WritingSystemIdForNamesAndQuestions
+		{
+			get
+			{
+				string ws = "en";
+				try
+				{
+					ws = Project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4).
+							WritingSystemIds[0];
+				}
+				catch (Exception)
+				{
+					if (!_alreadyReportedWsLookupFailure)
+					{
+						_alreadyReportedWsLookupFailure = true;
+						ErrorReport.NotifyUserOfProblem(
+							"WeSay was unable to get an input system to use from the configuration Semantic Domain Field. English will be used.");
+					}
+				}
+				return ws;
+			}
 		}
 	}
 

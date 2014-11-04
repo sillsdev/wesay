@@ -494,7 +494,7 @@ namespace WeSay.Project
 			ddp4Field.Description =
 					"The semantic domains of the sense, using Ron Moe's Dictionary Development Process version 4.\r\n. You can enter these directly by typing the number of the domain, its name, or a word used in the description. You can also use the Gather By Semantic Domains Task, which will try to use the input system chosen by this field.";
 			ddp4Field.DataTypeName = "OptionCollection";
-			ddp4Field.OptionsListFile = "Ddp4.xml";
+			ddp4Field.OptionsListFile = "SemDom.xml";
 			ddp4Field.Enabled = true;
 			ddp4Field.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			masterTemplate.Add(ddp4Field);

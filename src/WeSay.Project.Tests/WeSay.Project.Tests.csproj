@@ -138,6 +138,7 @@
     <Compile Include="ConfigMigration\WritingSystem\WritingSystem_V1Tests.cs" />
     <Compile Include="LiftUpdateTests.cs" />
     <Compile Include="ConfigMigration\WeSayConfig\WeSayConfigMigrationTests.cs" />
+    <Compile Include="LocalizedListParserTests.cs" />
     <Compile Include="PLiftExporterTests.cs" />
     <Compile Include="ProjectDirectorySetupForTesting.cs" />
     <Compile Include="ProjectFromLiftFolderCreatorTests.cs" />

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using Autofac;
 using Palaso.Data;
 using Palaso.Code;
 using Palaso.DictionaryServices.Model;
@@ -18,9 +19,11 @@ using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Reporting;
 using Palaso.WritingSystems;
+using Spart.Parsers;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
+using WeSay.Project.LocalizedList;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
@@ -66,10 +69,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			Guard.AgainstNull(viewTemplate, "viewTemplate");
 			_config = config;
 			_logger = logger;
-			if (string.IsNullOrEmpty(config.semanticDomainsQuestionFileName))
-			{
-				throw new ArgumentNullException("config.semanticDomainsQuestionFileName");
-			}
 
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 
@@ -77,34 +76,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_currentDomainIndex = -1;
 			_currentQuestionIndex = 0;
 			_words = null;
-			_semanticDomainQuestionsFileName =
-				DetermineActualQuestionsFileName(config.semanticDomainsQuestionFileName);
-			if (!File.Exists(_semanticDomainQuestionsFileName))
-			{
-				string pathInProject =
-					Path.Combine(
-						WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
-						_semanticDomainQuestionsFileName);
-				if (File.Exists(pathInProject))
-				{
-					_semanticDomainQuestionsFileName = pathInProject;
-				}
-				else
-				{
-					string pathInProgramDir = Path.Combine(BasilProject.ApplicationCommonDirectory,
-														   _semanticDomainQuestionsFileName);
-					if (!File.Exists(pathInProgramDir))
-					{
-						throw new ApplicationException(
-							string.Format(
-								"Could not find the semanticDomainQuestions file {0}. Expected to find it at: {1} or {2}. The name of the file is influenced by the first enabled input system for the Semantic Domain Field.",
-								_semanticDomainQuestionsFileName,
-								pathInProject,
-								pathInProgramDir));
-					}
-					_semanticDomainQuestionsFileName = pathInProgramDir;
-				}
-			}
 
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
@@ -112,47 +83,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			Guard.AgainstNull(writingSystemForDefinition, "Definition input System");
 			DefinitionWritingSystem = writingSystemForDefinition;
 
-			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
-		}
-
-
-//        /// <summary>
-//        /// for old unit tests
-//        /// </summary>
-//        /// <param name="semanticDomainsQuestionFileName"></param>
-//        /// <param name="lexEntryRepository"></param>
-//        /// <param name="viewTemplate"></param>
-//        public GatherBySemanticDomainTask(string semanticDomainsQuestionFileName, LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
-//            : this(GatherBySemanticDomainConfig.CreateForTests(semanticDomainsQuestionFileName),
-//                    lexEntryRepository,
-//                    viewTemplate, null, new StringLogger())
-//        {
-//
-//        }
-
-		private void EnsureQuestionsFileExists()
-		{
-			if (!File.Exists(_semanticDomainQuestionsFileName))
-			{
-				throw new ApplicationException(
-					string.Format(
-						"Could not find the semanticDomainQuestions file {0}.",
-						_semanticDomainQuestionsFileName));
-			}
-		}
-
-		private string DetermineActualQuestionsFileName(string nameFromTaskConfiguration)
-		{
-			int extension = nameFromTaskConfiguration.LastIndexOf('-');
-			if (extension == -1)
-			{
-				return nameFromTaskConfiguration;
-			}
-
-			string name = nameFromTaskConfiguration.Substring(0, extension + 1) +
-						  WritingSystemIdForNamesAndQuestions +
-						  Path.GetExtension(nameFromTaskConfiguration);
-			return name;
 		}
 
 		/// <summary>
@@ -790,60 +720,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
-		private void ParseSemanticDomainFile()
-		{
-			XmlTextReader reader = null;
-			try
-			{
-				reader = new XmlTextReader(_semanticDomainQuestionsFileName);
-				reader.MoveToContent();
-				if (!reader.IsStartElement("semantic-domain-questions"))
-				{
-					//what are we going to do when the file is bad?
-					Debug.Fail("Bad file format, expected semantic-domain-questions element");
-				}
-				//string ws = reader.GetAttribute("lang"); got it from the configuration file
-
-				// should verify that this writing system is in optionslist
-				_semanticDomainWritingSystem =
-					BasilProject.Project.WritingSystems.Get(WritingSystemIdForNamesAndQuestions);
-				string semanticDomainType = reader.GetAttribute("semantic-domain-type");
-				// todo should verify that domain type matches type of optionList in semantic domain field
-
-				reader.ReadToDescendant("semantic-domain");
-				while (reader.IsStartElement("semantic-domain"))
-				{
-					string domainKey = reader.GetAttribute("id").Trim();
-					var questions = new List<string>();
-					XmlReader questionReader = reader.ReadSubtree();
-					questionReader.MoveToContent();
-					questionReader.ReadToFollowing("question");
-					while (questionReader.IsStartElement("question"))
-					{
-						questions.Add(questionReader.ReadElementString("question").Trim());
-					}
-					_domainKeys.Add(domainKey);
-					if (questions.Count == 0)
-					{
-						questions.Add(string.Empty);
-					}
-					_domainQuestions.Add(domainKey, questions);
-					reader.ReadToFollowing("semantic-domain");
-				}
-			}
-			catch (XmlException)
-			{
-				// log this;
-			}
-			finally
-			{
-				if (reader != null)
-				{
-					reader.Close();
-				}
-			}
-		}
-
 		private string WritingSystemIdForNamesAndQuestions
 		{
 			get
@@ -911,14 +787,17 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 #if DEBUG
 			//Thread.Sleep(5000);
 #endif
-			EnsureQuestionsFileExists();//we've added this paranoid code because of ws-1156
 
 			base.Activate();
+			var parser = WeSayWordsProject.Project.Container.Resolve<LocalizedListParser>();
+
+			parser.ReadListFile();
+			_semanticDomainWritingSystem =
+				BasilProject.Project.WritingSystems.Get(WritingSystemIdForNamesAndQuestions);
 			if (DomainKeys == null)
 			{
-				_domainKeys = new List<string>();
-				_domainQuestions = new Dictionary<string, List<string>>();
-				ParseSemanticDomainFile();
+				_domainKeys = parser.Keys;
+				_domainQuestions = parser.QuestionDictionary;
 
 				// always have at least one domain and one question
 				// so default indexes of 0 are valid.
@@ -935,8 +814,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 			if (_semanticDomainOptionsList == null)
 			{
-				_semanticDomainOptionsList =
-					WeSayWordsProject.Project.GetOptionsList(_semanticDomainField, false);
+				_semanticDomainOptionsList = parser.OptionsList;
 			}
 			ReadTaskMemory();
 
@@ -947,7 +825,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 			_gatherControl = new GatherBySemanticDomainsControl(this);
 		}
-
 
 		private void RecordLocationInTaskMemory()
 		{

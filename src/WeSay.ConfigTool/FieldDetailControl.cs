@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using Enchant;
+using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Reporting;
 using WeSay.Project;
@@ -171,7 +172,14 @@ namespace WeSay.ConfigTool
 
 		private void UpdateDisplay()
 		{
-			_optionListFileLabel.Visible = _optionsFileName.Visible = _field.ShowOptionListStuff;
+			if (_field.FieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
+			{
+				_optionListFileLabel.Visible = false;
+			}
+			else
+			{
+				_optionListFileLabel.Visible = _optionsFileName.Visible = _field.ShowOptionListStuff;
+			}
 			bool isFieldMultiText = _field.DataTypeName ==
 									Field.BuiltInDataType.MultiText.ToString();
 			_enableSpellingLabel.Visible = _enableSpelling.Visible = isFieldMultiText;

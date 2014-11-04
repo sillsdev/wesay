@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using Autofac;
+using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Reporting;
@@ -12,6 +14,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherBySemanticDomains;
 using WeSay.Project;
+using WeSay.Project.LocalizedList;
 using Palaso.Lift.Options;
 
 using NUnit.Framework;
@@ -52,7 +55,6 @@ namespace WeSay.LexicalTools.Tests
 			_tempFolder = new TemporaryFolder();
 			_filePath = _tempFolder.GetTemporaryFile();
 			_semanticDomainFilePath = _tempFolder.GetTemporaryFile();
-			CreateSemanticDomainFile();
 
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_viewTemplate = MakeViewTemplate("en");
@@ -62,6 +64,16 @@ namespace WeSay.LexicalTools.Tests
 												   _viewTemplate,
 												   new TaskMemoryRepository(),
 												   new StringLogger());
+			if (!File.Exists(Path.Combine(BasilProject.GetPretendProjectDirectory(), "SemDom.xml")))
+			{
+				File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "SemDom.xml"),
+					Path.Combine(BasilProject.GetPretendProjectDirectory(), "SemDom.xml"));
+			}
+			if (!File.Exists(Path.Combine(BasilProject.GetPretendProjectDirectory(), "LocalizedLists-fr.xml")))
+			{
+				File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "LocalizedLists-fr.xml"),
+					Path.Combine(BasilProject.GetPretendProjectDirectory(), "LocalizedLists-fr.xml"));
+			}
 		}
 
 		private static LexSense AddNewSenseToEntry(LexEntry e)
@@ -76,7 +88,7 @@ namespace WeSay.LexicalTools.Tests
 			Field semanticDomainField = new Field(LexSense.WellKnownProperties.SemanticDomainDdp4,
 												  "LexSense",
 												  new string[] {nameAndQuestionWritingSystem});
-			semanticDomainField.OptionsListFile = "Ddp4.xml";
+			semanticDomainField.OptionsListFile = "SemDom.xml";
 			semanticDomainField.DataTypeName = "OptionRefCollection";
 
 			ViewTemplate v = new ViewTemplate();
@@ -222,19 +234,6 @@ namespace WeSay.LexicalTools.Tests
 															new StringLogger()));
 		}
 
-
-
-		[Test]
-		public void ConstructWithTemplate_NonExistantSemanticDomainFilePath_Throws()
-		{
-			Assert.Throws<ApplicationException>(() =>
-				new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(Path.GetRandomFileName()),
-												_lexEntryRepository,
-												_viewTemplate,
-												new TaskMemoryRepository(),
-												new StringLogger()));
-		}
-
 		[Test]
 		public void ConstructWithTemplate_NullTemplate_Throws()
 		{
@@ -302,7 +301,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Domains()
 		{
-			Assert.AreEqual(8, Task.DomainKeys.Count);
+			Assert.AreEqual(106, Task.DomainKeys.Count);
 			Task.Deactivate();
 		}
 
@@ -1282,7 +1281,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void GotoNextDomainQuestion_HasNextQuestion_GoesToNextQuestion()
 		{
-			Task.CurrentDomainIndex = 0;
+			Task.CurrentDomainIndex = 1;
 			Task.GotoNextDomainQuestion();
 			Assert.AreEqual(1, Task.CurrentQuestionIndex);
 			Task.Deactivate();
@@ -1579,167 +1578,43 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("1.1.2.1 Blow air", Task.DomainKeys[7]);
 
 			Task.CurrentDomainIndex = 7;
-			Assert.AreEqual("(1) What words refer to causing air to move?", Task.Questions[0]);
-			Assert.AreEqual("(2) What words refer to letting air blow through something?",
+			Assert.AreEqual("(1) What words refer to causing air to move? (blow, fan, exhaust, expel, explode)", Task.Questions[0]);
+			Assert.AreEqual("(2) What words refer to letting air blow through something? (air out, ventilate)",
 							Task.Questions[1]);
 			Assert.AreEqual(
-					"(3) What words refer to putting air into something (such as a tire or balloon)?",
+					"(3) What words refer to putting air into something (such as a tire or balloon)? (blow up, inflate, pump up, pneumatic)",
 					Task.Questions[2]);
-			Assert.AreEqual("(4) What words refer to keeping air out of something?",
+			Assert.AreEqual("(4) What words refer to keeping air out of something? (seal, airtight)",
 							Task.Questions[3]);
-			Assert.AreEqual("(5) What words refer to how much air is in something?",
+			Assert.AreEqual("(5) What words refer to how much air is in something? (air pressure, vacuum)",
 							Task.Questions[4]);
-			Assert.AreEqual("(6) What words refer to using the wind to winnow grain?",
+			Assert.AreEqual("(6) What words refer to using the wind to winnow grain? (winnow)",
 							Task.Questions[5]);
-			Assert.AreEqual("(7) What tools and machines are used to create or use the wind?",
+			Assert.AreEqual("(7) What tools and machines are used to create or use the wind? (fan, air pump, bellows, ventilator, wind tunnel, propeller, air pipe, airshaft, vent, chimney, exhaust, funnel, windmill, sail, valve)",
 							Task.Questions[6]);
 			Task.Deactivate();
-		}
-
-		[Test]
-		public void ParseEmptySemanticDomainFile()
-		{
-			string emptySemanticDomainFilePath = Path.GetTempFileName();
-			using (StreamWriter streamWriter = File.CreateText(emptySemanticDomainFilePath))
-			{
-				streamWriter.Write("");
-			}
-
-			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(  GatherBySemanticDomainConfig.CreateForTests(emptySemanticDomainFilePath),
-																			 _lexEntryRepository,
-																			 _viewTemplate,
-																			 new TaskMemoryRepository(),
-																			 new StringLogger());
-			task.Activate();
-			Assert.AreEqual(1, task.DomainKeys.Count);
-			Assert.AreEqual(string.Empty, task.CurrentDomainKey);
-			Assert.AreEqual(1, task.Questions.Count);
-			Assert.AreEqual(string.Empty, task.CurrentQuestion);
-			task.Deactivate();
-
-			File.Delete(emptySemanticDomainFilePath);
 		}
 
 		[Test]
 		public void ParseFrenchSemanticDomainFile_Localized()
 		{
 			WeSayWordsProject.Project.WritingSystems.Set(WritingSystemDefinition.Parse("fr"));
+			WeSayWordsProject.Project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4).
+										WritingSystemIds[0] ="fr";
 			string frenchSemanticDomainFilePath = Path.GetTempFileName();
-			using (StreamWriter streamWriter = File.CreateText(frenchSemanticDomainFilePath))
-			{
-				streamWriter.Write(
-						@"<?xml version='1.0' encoding='utf-8'?>
-<semantic-domain-questions semantic-domain-type='DDP4' lang='fr'>
-<semantic-domain guid='I63403699-07C1-43F3-A47C-069D6E4316E5' id='1 Universe, creation'>
-<question>Quels sont les mots qui font r�f�rence � tout ce qu'on peut voir?</question>
-</semantic-domain>
-<semantic-domain guid='I999581C4-1611-4ACB-AE1B-5E6C1DFE6F0C' id='1.1 Sky'>
-<question>Quels sont les mots qui signifient le ciel?</question>
-<question>Quels sont les mots qui signifient l'endroit ou le pays au-del� du ciel?</question>
-<question>Quels sont les mots qui d�crivent l'aspect du ciel?</question>
-<question>Quels sont les mots qui d�crivent l'endroit o� le ciel touche la terre?</question>
-<question>Quel terme g�n�ral fait r�f�rence aux objets dans le ciel?</question>
-</semantic-domain></semantic-domain-type>");
-			}
-
 			ViewTemplate template = MakeViewTemplate("fr");
 			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask( GatherBySemanticDomainConfig.CreateForTests(frenchSemanticDomainFilePath),
 																			 _lexEntryRepository,
 																			 template,
 																			 new TaskMemoryRepository(),
 																			 new StringLogger());
+
 			task.Activate();
 			Assert.AreEqual("1 L’univers, la création", task.DomainNames[0]);
 			Assert.AreEqual(" 1.1 Ciel", task.DomainNames[1]);
 			Assert.AreEqual("fr", task.SemanticDomainWritingSystemId);
 			task.Deactivate();
 
-			File.Delete(frenchSemanticDomainFilePath);
-		}
-
-		private void CreateSemanticDomainFile()
-		{
-			using (StreamWriter streamWriter = File.CreateText(_semanticDomainFilePath))
-			{
-				streamWriter.Write(
-						@"<?xml version='1.0' encoding='utf-8'?>
-<semantic-domain-questions semantic-domain-type='DDP4' lang='en'>
-<semantic-domain guid='I63403699-07C1-43F3-A47C-069D6E4316E5' id='1 Universe, creation'>
-<question>(1) What words refer to the whole of everything we can see?</question>
-<question>(2) What words refer to everything there is?</question>
-<question>(3) What words refer to everything that we know to exist?</question>
-</semantic-domain>
-<semantic-domain guid='I999581C4-1611-4ACB-AE1B-5E6C1DFE6F0C' id='1.1 Sky'>
-<question>(1) What words are used to refer to the sky?</question>
-<question>(2) What words refer to the air around the earth?</question>
-<question>(3) What words are used to refer to the place or area beyond the sky?</question>
-<question>(4) What words describe something in the sky or something that happens in the sky?</question>
-<question>(5) What words describe the appearance of the sky?</question>
-<question>(6) What words refer to the edge of the sky where it meets the ground?</question>
-<question>(7) What words refer to something in the sky?</question>
-<question>(8) What words refer to the lights that appear in the northern (or southern) sky?</question>
-<question>(9) What words refer to something being in the sky?</question>
-</semantic-domain>
-<semantic-domain guid='IDC1A2C6F-1B32-4631-8823-36DACC8CB7BB' id='1.1.1 Sun'>
-<question>(1) What words refer to the sun?</question>
-<question>(2) What words refer to how the sun moves?</question>
-<question>(3) What words refer to the time when the sun rises?</question>
-<question>(4) What words refer to the time when the sun is at its highest point?</question>
-<question>(5) What words refer to the time when the sun sets?</question>
-<question>(6) What words refer to when the sun is shining?</question>
-<question>(7) What words refer to the sun shining through the clouds?</question>
-<question>(8) What words describe where the sun is shining?</question>
-<question>(9) What words describe when or where the sun doesn't shine?</question>
-<question>(10) What words refer to the light of the sun?</question>
-<question>(11) What words describe the brightness of the sun?</question>
-<question>(12) What refer to the sun heating things?</question>
-<question>(13) What else does the sun do?</question>
-<question>(14) What words describe the damage done by sunlight?</question>
-<question>(15) What do people use to protect themselves from the sun?</question>
-<question>(16) What words are used of telling time by the sun?</question>
-<question>(17) What words refer to using the power of the sun?</question>
-</semantic-domain>
-<semantic-domain guid='I1BD42665-0610-4442-8D8D-7C666FEE3A6D' id='1.1.1.1 Moon'>
-</semantic-domain>
-<semantic-domain guid='IB044E890-CE30-455C-AEDE-7E9D5569396E' id='1.1.1.2 Star'>
-<question>(1) What words are used to refer to the stars?</question>
-<question>(2) What words describe the sky when the stars are shining?</question>
-<question>(3) What words are used for where the stars are shining?</question>
-<question>(4) What words are used for when or where the stars don't shine?</question>
-<question>(5) What words refer to the light of the stars?</question>
-<question>(6) What words describe the brightness of the stars?</question>
-<question>(7) What words describe the appearance of the stars?</question>
-<question>(8) What words refer to the study of the stars?</question>
-<question>(9) What is a group of stars called?</question>
-</semantic-domain>
-<semantic-domain guid='IA0D073DF-D413-4DFD-9BA1-C3C68F126D90' id='1.1.1.3 Planet'>
-<question>(1) What words refer to a planet?</question>
-<question>(2) What are the names of the planets?</question>
-<question>(3) What words refer to how the planets move?</question>
-<question>(4) What words refer to the sun and planets?</question>
-<question>(5) What words refer to comets?</question>
-<question>(6) What do comets do?</question>
-<question>(7) What words refer to meteors?</question>
-<question>(8) What do meteors do?</question>
-<question>(9) What words are used for when a meteor hits the earth?</question>
-<question>(10) What is a small planet called?</question>
-</semantic-domain>
-<semantic-domain guid='IE836B01B-6C1A-4D41-B90A-EA5F349F88D4' id='1.1.2 Air'>
-<question>(1) What words refer to the air we breathe?</question>
-<question>(2) What words refer to how much water is in the air?</question>
-<question>(3) What words describe good air (such as when the air in a room is clean or doesn't smell bad)?</question>
-<question>(4) What words describe bad air (such as when the air in a room is dirty, hot, smells bad, or too many people are breathing)?</question>
-</semantic-domain>
-<semantic-domain guid='I18595DF7-1C69-40DB-A7C1-74D490115C0C' id='1.1.2.1 Blow air'>
-<question>(1) What words refer to causing air to move?</question>
-<question>(2) What words refer to letting air blow through something?</question>
-<question>(3) What words refer to putting air into something (such as a tire or balloon)?</question>
-<question>(4) What words refer to keeping air out of something?</question>
-<question>(5) What words refer to how much air is in something?</question>
-<question>(6) What words refer to using the wind to winnow grain?</question>
-<question>(7) What tools and machines are used to create or use the wind?</question>
-</semantic-domain></semantic-domain-questions>");
-			}
 		}
 	}
 }
