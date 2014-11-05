@@ -237,7 +237,6 @@
 			TaskAction="Move"
 			Path="$(RootDir)\output\installer\WeSayInstaller.msi"
 			TargetPath="$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi" />
-		<Exec Command='sign "$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
 	</Target>
 
 	<!-- Upload -->
@@ -268,7 +267,12 @@
 			ReplacementText = "$(ReleaseLabel)" />
 	</Target>
 
-	<Target Name="Upload" DependsOnTargets="VersionNumbers; Installer; MakeDownloadPointers" >
+	<Target Name="Sign" DependsOnTargets="Installer" >
+		<Message Text="Attempting to sign WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
+		<Exec Command='sign "$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
+	</Target>
+
+	<Target Name="Upload" DependsOnTargets="VersionNumbers; Sign; MakeDownloadPointers" >
 		<Message Text="Attempting rsync of WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
 		<Exec
 			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller.$(version)$(ReleaseString).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller.$(version)$(ReleaseString).msi'
