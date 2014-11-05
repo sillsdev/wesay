@@ -1,3 +1,16 @@
+wesay (1.5.29~beta2) stable; urgency=medium
+
+  * WS-180: Change semantic domain to directly use FLEx LocalizeList files
+  * WS-208: Fix search textbox in Dictionary Browse & Edit to work with keyboards
+  * WS-213: Listbox from Base Forms tab did not disappear when switching tabs
+  * WS-233: Prevent crashes due to deleting writing system in configuration
+  * WS-230: Fix localization
+  * WS-239: Gecko Mode: scrolls bars appearing when they shouldn't
+  * WS-226: Ignore DBus generated exceptions in USB scanning
+  * Use ReleaseMono for libpalaso and chorus
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 05 Nov 2014 10:57:06 -0500
+
 wesay (1.5.27~beta1) stable; urgency=medium
 
   * WS-69: Typo in About Make PDF Dictionary screen
