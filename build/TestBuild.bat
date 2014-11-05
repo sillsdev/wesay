@@ -24,11 +24,16 @@ if "%~2" == "" (
 ) else (
 	SET TARGET=%~2
 )
+if "%~3" == "" (
+	SET BUILD_STEP=1
+) else (
+	SET BUILD_STEP=%~3
+)
 
 @echo on
 
 @pushd "%~dp0"
 
-msbuild "/target:%TARGET%" /p:Configuration="%BUILD%" /p:Platform=x86 /p:RootDir=..  /p:BUILD_NUMBER="0.0.1.abcd" build.win.proj
+msbuild "/target:%TARGET%" /p:Configuration="%BUILD%" /p:Platform=x86 /p:RootDir=..  /p:BUILD_NUMBER="0.0.%BUILD_STEP%.abcd" build.win.proj
 
 @popd
