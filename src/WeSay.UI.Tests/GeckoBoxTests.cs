@@ -71,12 +71,11 @@ namespace WeSay.UI.Tests
 			KeyboardController keyboardController = new KeyboardController(t);
 			Application.DoEvents();
 			keyboardController.Press("T");
-			Application.DoEvents();
 			keyboardController.Press("e");
 			keyboardController.Press("s");
 			keyboardController.Press("t");
 			Application.DoEvents();
-			Assert.IsTrue(textBox.Text.Equals("Test"));
+			Assert.AreEqual("Test", textBox.Text);
 			keyboardController.Dispose();
 		}
 
@@ -91,17 +90,16 @@ namespace WeSay.UI.Tests
 			_window.Show();
 			ControlTester t = new ControlTester("ControlUnderTest", _window);
 			textBox.Text = "Value";
-			Application.DoEvents();
 			KeyboardController keyboardController = new KeyboardController(t);
 			Application.DoEvents();
+			keyboardController.Press(Key.END);
 			keyboardController.Press(" ");
-			Application.DoEvents();
 			keyboardController.Press("T");
 			keyboardController.Press("e");
 			keyboardController.Press("s");
 			keyboardController.Press("t");
 			Application.DoEvents();
-			Assert.IsTrue(textBox.Text.Equals("Value Test"));
+			Assert.AreEqual("Value Test", textBox.Text);
 			keyboardController.Dispose();
 		}
 
@@ -117,17 +115,16 @@ namespace WeSay.UI.Tests
 			_window.Show();
 			ControlTester t = new ControlTester("ControlUnderTest", _window);
 			textBox.Text = "Value";
-			Application.DoEvents();
 			KeyboardController keyboardController = new KeyboardController(t);
 			Application.DoEvents();
+			keyboardController.Press(Key.END);
 			keyboardController.Press(" ");
-			Application.DoEvents();
 			keyboardController.Press("T");
 			keyboardController.Press("e");
 			keyboardController.Press("s");
 			keyboardController.Press("t");
 			Application.DoEvents();
-			Assert.IsTrue(textBox.Text.Equals("Value"));
+			Assert.AreEqual("Value", textBox.Text);
 			keyboardController.Dispose();
 		}
 

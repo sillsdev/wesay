@@ -127,7 +127,9 @@ namespace WeSay.UI.Tests
 
 			Application.DoEvents();
 
-			Assert.IsTrue(_countOfItemsDrawn == 2);
+			// Count is double the number of items because the HTML is created
+			// once for the complete and once for the height adjustment
+			Assert.AreEqual(4, _countOfItemsDrawn);
 			Assert.IsTrue(_itemToNotDrawYetDrawn == false);
 		}
 
