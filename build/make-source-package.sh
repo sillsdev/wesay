@@ -1,9 +1,18 @@
 #!/bin/bash -ex
 
+cd "$(dirname "$0")/.."
+
 XBUILD=${MONO_PREFIX:-/usr}/bin/xbuild
 VERSION_SUFFIX=${1:-1234}
 BUILD_COUNTER=(${VERSION_SUFFIX//[~+-]/ })
-BUILD_CONFIGURATION=ReleaseMono
+
+# Currently, the WeSay Package won't build if using
+# Debug configuration.  For now, continue to just
+# do Release
+BUILD_CONFIGURATION=Release
+DEPENDENCY_CONFIGURATION=${2:-Release}
+PALASO_CONFIGURATION=${DEPENDENCY_CONFIGURATION}Mono
+CHORUS_CONFIGURATION=${DEPENDENCY_CONFIGURATION}Mono
 
 up()
 {
@@ -21,22 +30,26 @@ bld()
 
 cd ../libpalaso
 up
-bld SourcePackage ${BUILD_CONFIGURATION} ${BUILD_COUNTER}
+bld SourcePackage ${PALASO_CONFIGURATION} ${BUILD_COUNTER}
 cd $OLDPWD
 
 cd ../chorus
 mkdir -p externals
-cp -p ../libpalaso/output/${BUILD_CONFIGURATION}/libpalaso-2.5.${BUILD_COUNTER}.0.tar.gz externals/
+cp -p ../libpalaso/output/${PALASO_CONFIGURATION}/libpalaso-2.5.${BUILD_COUNTER}.0.tar.gz externals/
 up
-bld SourcePackage ${BUILD_CONFIGURATION} ${BUILD_COUNTER}
+bld SourcePackage ${CHORUS_CONFIGURATION} ${BUILD_COUNTER}
 
 cd $OLDPWD
 mkdir -p externals
-cp -p ../chorus/output/${BUILD_CONFIGURATION}/chorus-2.4.${BUILD_COUNTER}.0.tar.gz externals/
+cp -p ../chorus/output/${CHORUS_CONFIGURATION}/chorus-2.4.${BUILD_COUNTER}.0.tar.gz externals/
 up
-bld SourcePackage Release ${VERSION_SUFFIX}
+bld SourcePackage ${BUILD_CONFIGURATION} ${VERSION_SUFFIX}
 
 rm -rf lib/Debug
 rm -rf lib/Release/[Gg]ecko*
 
-bld Installer Release ${VERSION_SUFFIX}
+sed "s/@BUILD_CONFIGURATION@/${BUILD_CONFIGURATION}/g;
+	 s/@PALASO_CONFIGURATION@/${PALASO_CONFIGURATION}/g;
+	 s/@CHORUS_CONFIGURATION@/${CHORUS_CONFIGURATION}/g" \
+	package/lucid/rules.in > package/lucid/rules
+bld Installer ${BUILD_CONFIGURATION} ${VERSION_SUFFIX}
