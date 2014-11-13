@@ -81,7 +81,6 @@ namespace WeSay.UI.Tests
 
 			Application.DoEvents();
 
-
 			_window.Controls.Add((GeckoComboBox)comboBox);
 			_window.Show();
 			ControlTester t = new ControlTester("ControlUnderTest", _window);
@@ -90,19 +89,22 @@ namespace WeSay.UI.Tests
 
 			j = comboBox.Length;
 			keyboardController.Press("{DOWN}");
+			Application.DoEvents();
 			keyboardController.Release("{DOWN}");
 			Application.DoEvents();
 			value = (String) comboBox.SelectedItem;
-			Assert.IsTrue(j == 3);
-			Assert.IsTrue(value.Equals("Saab"));
+			Assert.AreEqual(3, j);
+			Assert.AreEqual("Saab", value);
 			keyboardController.Press("{DOWN}");
+			Application.DoEvents();
 			keyboardController.Release("{DOWN}");
 			Application.DoEvents();
 			value = (String)comboBox.SelectedItem;
 			Application.DoEvents();
+			Application.DoEvents();
 
-			Assert.IsTrue(j == 3);
-			Assert.IsTrue(value.Equals("Toyota"));
+			Assert.AreEqual(3, j);
+			Assert.AreEqual("Toyota", value);
 		}
 
 		[Test]
