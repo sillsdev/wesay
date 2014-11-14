@@ -43,7 +43,10 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			_domainListComboBox.Font = _presentationModel.GetFontOfSemanticDomainField();
 			_domainListComboBox.WritingSystem = _presentationModel.GetSemanticDomainWritingSystem();
-
+			_question.Font =  _presentationModel.GetFontOfSemanticDomainField();
+			((IWeSayTextBox)_question).WritingSystem = _presentationModel.GetSemanticDomainWritingSystem();
+			((IWeSayTextBox)_question).Multiline = true;
+			_question.Width = Width - _question.Location.X - 10;
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made
 			var majorRomanWritingSystems = new List<string>(new[] { "en", "id", "fr" });
@@ -173,6 +176,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					_listViewWords.ItemToHtml(text, itemIndex, false, Color.Gray);
 				}
 			}
+		}
+
+		protected override void OnResize(EventArgs e)
+		{
+			_question.Width = Width - _question.Location.X - 10;
+			base.OnResize(e);
 		}
 
 		private void LoadDomainListCombo()

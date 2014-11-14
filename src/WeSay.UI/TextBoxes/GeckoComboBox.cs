@@ -160,10 +160,6 @@ namespace WeSay.UI.TextBoxes
 		private String SelectStyle()
 		{
 			String justification = "left";
-			if (_writingSystem != null && WritingSystem.RightToLeftScript)
-			{
-				justification = "right";
-			}
 			return String.Format("min-height:15px; height:inherit; font-family:{0}; font-size:{1}pt; text-align:{2}; font-weight:{3}; background:{4}; width:{5}",
 				Font.Name,
 				Font.Size, justification,
@@ -192,7 +188,7 @@ namespace WeSay.UI.TextBoxes
 			html.Append(" }");
 			html.Append("</script>");
 			html.Append("</head>");
-			html.AppendFormat("<body {2} style='background:{0}; width:{1}; overflow-x:hidden' id='mainbody'>",
+			html.AppendFormat("<body {2} style='background:{0}; width:{1}; overflow-x:hidden; overflow-y:hidden' id='mainbody'>",
 				System.Drawing.ColorTranslator.ToHtml(Color.FromArgb(255,203,255,185)),
 				this.Width,
 				GetLanguageHtml(_writingSystem));

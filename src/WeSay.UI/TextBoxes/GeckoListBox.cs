@@ -409,7 +409,7 @@ namespace WeSay.UI.TextBoxes
 			if (_pendingHtmlLoad != null)
 			{
 #if DEBUG
-				Debug.WriteLine("Load: " + _pendingHtmlLoad);
+				//Debug.WriteLine("Load: " + _pendingHtmlLoad);
 #endif
 				SetHtml(_pendingHtmlLoad);
 				_pendingHtmlLoad = null;
@@ -424,7 +424,7 @@ namespace WeSay.UI.TextBoxes
 			}
 			else
 			{
-				Debug.WriteLine("SetHTML: " + html);
+				//Debug.WriteLine("SetHTML: " + html);
 				const string type = "text/html";
 				var bytes = System.Text.Encoding.UTF8.GetBytes(html);
 				_browser.Navigate(string.Format("data:{0};base64,{1}", type, Convert.ToBase64String(bytes)),

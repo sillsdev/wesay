@@ -279,12 +279,29 @@ namespace WeSay.UI.TextBoxes
 					flags |= TextFormatFlags.RightToLeft;
 				}
 				Size sz = TextRenderer.MeasureText(g,
-												   Text == String.Empty ? " " : Text + "\n",
+													Text == String.Empty ? " " : Text + Environment.NewLine,
 												   // replace empty string with space, because mono returns zero height for empty string (windows returns one line height)
 												   // need extra new line to handle case where ends in new line (since last newline is ignored)
 												   Font,
 												   new Size(width, int.MaxValue),
 												   flags);
+#if __MonoCS__
+				// For Mono, need to make an additional adjustment if more than one line is displayed
+				Size sz2 = TextRenderer.MeasureText(g,
+						" ",
+						Font,
+						new Size(width, int.MaxValue),
+						flags);
+				int numberOfLines = sz.Height/ sz2.Height;
+				if (sz.Height % sz2.Height != 0)
+				{
+					numberOfLines++;
+				}
+				if (numberOfLines > 1)
+				{
+					sz.Height += numberOfLines * 4;
+				}
+#endif
 				_oldHeight = sz.Height + 2; // add enough space for spell checking squiggle underneath
 				_oldWidth = width;
 				_oldText = Text;

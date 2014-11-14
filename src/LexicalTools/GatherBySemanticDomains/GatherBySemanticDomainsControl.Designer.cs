@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Forms;
 using Palaso.UI.WindowsForms.Widgets.Flying;
 using WeSay.Project;
 using WeSay.UI;
@@ -42,7 +43,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this._instructionLabel = new System.Windows.Forms.Label();
-			this._question = new System.Windows.Forms.Label();
+			this._question = (Control)(WeSayWordsProject.Project.ServiceLocator.GetService(typeof(IWeSayTextBox)) as IWeSayTextBox);
 			this._description = new System.Windows.Forms.Label();
 			this._reminder = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
@@ -130,15 +131,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			// _question
 			//
 			this._question.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this._question.AutoEllipsis = true;
-			this._question.AutoSize = true;
-			this._question.BackColor = System.Drawing.Color.MistyRose;
+			this._question.BackColor = System.Drawing.Color.LightSeaGreen;
 			this._question.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.75F, System.Drawing.FontStyle.Bold);
 			this._question.Location = new System.Drawing.Point(3, 140);
 			this._question.Name = "_question";
-			this._question.Size = new System.Drawing.Size(161, 18);
+			this._question.Size = new System.Drawing.Size(400, 40);
 			this._question.TabIndex = 23;
-			this._question.Text = "Question goes here.";
+			((IWeSayTextBox)this._question).ReadOnly = true;
 			//
 			// _description
 			//
@@ -1211,7 +1210,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label _instructionLabel;
 		private RectangularImageButton _btnAddWord;
-		private System.Windows.Forms.Label _question;
+		private Control _question;
 		private System.Windows.Forms.Label _description;
 		private WeSay.UI.CirclesProgressIndicator _questionIndicator;
 		private FlyingLabel _flyingLabel;

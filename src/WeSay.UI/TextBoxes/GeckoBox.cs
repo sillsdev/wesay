@@ -122,6 +122,12 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
+		protected override void OnResize(EventArgs e)
+		{
+			_browser.Width = Width;
+			base.OnResize(e);
+		}
+
 		protected void RefreshDisplay()
 		{
 			if (_writingSystem != null)
@@ -136,6 +142,7 @@ namespace WeSay.UI.TextBoxes
 			s = System.Security.SecurityElement.Escape(s);
 			String justification = "left";
 			String multiLineStyle = "";
+			String background = "#FFFFFF";
 
 			if (_writingSystem != null && WritingSystem.RightToLeftScript)
 			{
@@ -146,6 +153,7 @@ namespace WeSay.UI.TextBoxes
 			if (ReadOnly)
 			{
 				editable = "false";
+				background = System.Drawing.ColorTranslator.ToHtml(BackColor);
 			}
 
 			if (Multiline)
@@ -167,7 +175,7 @@ namespace WeSay.UI.TextBoxes
 			html.AppendLine("}");
 			html.AppendLine("</style>");
 			html.AppendLine("</head>");
-			html.AppendFormat("<body style='background:#FFFFFF' id='mainbody' {0}>", GetLanguageHtml(_writingSystem));
+			html.AppendFormat("<body style='background:{1}' id='mainbody' {0}>", GetLanguageHtml(_writingSystem), background);
 			html.AppendFormat("<div style='min-height:15px; font-family:{0}; font-size:{1}pt; text-align:{3} background:{5}; color:{6}; {7}' id='main' name='textArea' contentEditable='{4}'>{2}</div>",
 					font.Name, font.Size.ToString(), s, justification, editable, System.Drawing.ColorTranslator.ToHtml(BackColor), System.Drawing.ColorTranslator.ToHtml(ForeColor), multiLineStyle);
 			html.AppendLine("</body>");
