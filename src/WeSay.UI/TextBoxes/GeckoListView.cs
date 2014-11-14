@@ -447,11 +447,6 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public void SetFocusIndex(int index)
-		{
-			//WS-94 Not required for Gecko
-		}
-
 		public bool IsSpellCheckingEnabled { get; set; }
 		public int VirtualListSize { get; set; }
 

@@ -42,7 +42,6 @@ namespace WeSay.UI
 		bool Focus();
 		Size MinimumSize { get; set; }
 		bool Bold { get; set; }
-		void SetFocusIndex(int index);
 
 		event ListViewItemSelectionChangedEventHandler ItemSelectionChanged;
 		event RetrieveVirtualItemEventHandler RetrieveVirtualItem;
@@ -569,6 +568,7 @@ namespace WeSay.UI
 						}
 						else
 						{
+							SetFocusIndex(SelectedIndex);
 							if (SelectedIndex != -1)
 							{
 								EnsureVisible(SelectedIndex);
@@ -579,7 +579,7 @@ namespace WeSay.UI
 			}
 		}
 
-		public void SetFocusIndex(int index)
+		private void SetFocusIndex(int index)
 		{
 			if (index == -1)
 			{

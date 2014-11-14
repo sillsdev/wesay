@@ -217,14 +217,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				if (_completedRecords.Contains(record))
 				{
-#if __MonoCS__
-					// WE-94 FocusIndex can be out of range after the record is removed if the
-					// last record in the list is selected as the new record.  Mono nonGecko only.
-					if (_completedRecords.Count == _completedRecordsListBox.SelectedIndex + 1)
-					{
-						_completedRecordsListBox.SetFocusIndex(_completedRecords.Count - 2);
-					}
-#endif
 					_completedRecords.Remove(record);
 				}
 				if (!_todoRecords.Contains(record))
@@ -236,14 +228,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			{
 				if (_todoRecords.Contains(record))
 				{
-#if __MonoCS__
-					// WE-94 FocusIndex can be out of range after the record is removed if the
-					// last record in the list is selected as the new record.  Mono nonGecko only.
-					if (_todoRecords.Count == _todoRecordsListBox.SelectedIndex + 1)
-					{
-						_todoRecordsListBox.SetFocusIndex(_todoRecords.Count - 2);
-					}
-#endif
 					_todoRecords.Remove(record);
 				}
 				if (!_completedRecords.Contains(record))
