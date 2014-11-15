@@ -1,3 +1,11 @@
+wesay (1.5.30~beta3) stable; urgency=medium
+
+  * WS-244: Fix crash after deleting last word
+  * WS-250: Display multiple lines for question in Semantic Domains
+  * WS-248: Fix Semantic Domains localization
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 14 Nov 2014 19:35:00 -0500
+
 wesay (1.5.29~beta2) stable; urgency=medium
 
   * WS-180: Change semantic domain to directly use FLEx LocalizeList files
