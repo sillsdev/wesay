@@ -171,7 +171,7 @@ namespace WeSay.LexicalTools
 						);
 					if (homographNumber > 0)
 					{
-						html.Append("<sup>" + homographNumber.ToString() + "</sup>");
+						html.Append("<sub>" + homographNumber.ToString() + "</sub>");
 					}
 				}
 				else

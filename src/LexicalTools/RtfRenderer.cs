@@ -154,7 +154,7 @@ namespace WeSay.LexicalTools
 				);
 				if (homographNumber > 0)
 				{
-					rtf.Append(@"{\super " + homographNumber + "}");
+					rtf.Append(@"{\sub " + homographNumber + "}");
 				}
 			}
 			else
