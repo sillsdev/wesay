@@ -245,6 +245,8 @@ namespace WeSay.App
 			_currentWorkTab.Tag = value;
 			_currentWorkTab.Text = value.Label;
 			LastCurrentWorkTaskLabel = value.Label;
+
+			tabControl1.Refresh();
 		}
 
 		public ITask CurrentWorkTask
