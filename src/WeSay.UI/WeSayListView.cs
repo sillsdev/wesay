@@ -568,7 +568,6 @@ namespace WeSay.UI
 						}
 						else
 						{
-							SetFocusIndex(SelectedIndex);
 							if (SelectedIndex != -1)
 							{
 								EnsureVisible(SelectedIndex);
