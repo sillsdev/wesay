@@ -45,6 +45,7 @@ namespace WeSay.UI
 
 		event ListViewItemSelectionChangedEventHandler ItemSelectionChanged;
 		event RetrieveVirtualItemEventHandler RetrieveVirtualItem;
+		event KeyEventHandler KeyDown;
 	}
 
 	public partial class WeSayListView: ListView, IWeSayListView

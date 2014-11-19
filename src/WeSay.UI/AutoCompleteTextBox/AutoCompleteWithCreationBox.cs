@@ -62,6 +62,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			this._textBox.Size = new System.Drawing.Size(110, 20);
 			this._textBox.TabIndex = 0;
 			this._textBox.TextChanged += new System.EventHandler(this.box_TextChanged);
+			this._textBox.KeyDown += TextBox_OnKeyDown;
 			this.Controls.Add((Control)this._textBox);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -334,6 +335,38 @@ namespace WeSay.UI.AutoCompleteTextBox
 		{
 			CreateNewObjectFromText();
 			_textBox.HideList();
+		}
+
+		protected override bool IsInputKey(Keys keyData)
+		{
+			switch (keyData)
+			{
+				case Keys.PageUp:
+				case Keys.PageDown:
+				case Keys.Enter:
+					return false;
+			}
+			return base.IsInputKey(keyData);
+		}
+
+		private void TextBox_OnKeyDown(object sender, KeyEventArgs e)
+		{
+			e.Handled = true;
+			e.SuppressKeyPress = true;
+			switch (e.KeyCode)
+			{
+				case Keys.PageUp:
+					break;
+				case Keys.Enter:
+				case Keys.PageDown:
+					break;
+
+				default:
+					e.Handled = false;
+					e.SuppressKeyPress = false;
+					break;
+			}
+			base.OnKeyDown(e);
 		}
 	}
 

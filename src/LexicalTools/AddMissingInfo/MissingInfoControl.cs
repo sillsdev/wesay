@@ -45,7 +45,6 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			InitializeComponent();
 			PreviewKeyDown += OnPreviewKeyDown;
 
-
 			if (DesignMode)
 			{
 				return;
@@ -75,6 +74,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_todoRecordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
 			_todoRecordsListBox.BackColor = Color.White;
 			_todoRecordsListBox.DataSource = _todoRecords;
+			_todoRecordsListBox.KeyDown += TodoRecordsListBox_OnKeyDown;
 
 			_completedRecordsListBox.MinLength = 15;
 			_completedRecordsListBox.MaxLength = 20;
@@ -529,6 +529,29 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					e.SuppressKeyPress = false;
 					break;
 			}
+			base.OnKeyDown(e);
+		}
+
+		private void TodoRecordsListBox_OnKeyDown(object sender, KeyEventArgs e)
+		{
+			e.Handled = true;
+			e.SuppressKeyPress = true;
+			switch (e.KeyCode)
+			{
+				case Keys.PageUp:
+					SetCurrentRecordToPrevious();
+					break;
+				case Keys.Enter:
+				case Keys.PageDown:
+					SetCurrentRecordToNext();
+					break;
+
+				default:
+					e.Handled = false;
+					e.SuppressKeyPress = false;
+					break;
+			}
+			base.OnKeyDown(e);
 		}
 
 		// hack to get around the fact that SplitContainer takes over the
