@@ -81,7 +81,7 @@ namespace WeSay.LexicalTools.Tests
 		public void HomographEntryTest()
 		{
 			String html = HtmlRenderer.ToHtml(anotherApple, _currentItem, _lexEntryRepository, System.Drawing.Color.LightSeaGreen);
-			Assert.IsTrue(html.Contains("<sup>2</sup>"));
+			Assert.IsTrue(html.Contains("<sub>2</sub>"));
 		}
 
 		private void SetupTestData()
