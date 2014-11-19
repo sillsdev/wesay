@@ -1,3 +1,11 @@
+wesay (1.5.31~beta3) stable; urgency=medium
+
+  * WS-244: Remove fix; fixed in mono-sil 3.4.0-7
+  * WS-56: Fix redraw of task tabs on Windows
+  * WS-108: Homograph numbers changed to subscript (to match FLEx)
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 19 Nov 2014 00:04:06 -0500
+
 wesay (1.5.30~beta3) stable; urgency=medium
 
   * WS-244: Fix crash after deleting last word
