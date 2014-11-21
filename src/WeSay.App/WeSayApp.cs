@@ -47,6 +47,7 @@ namespace WeSay.App
 				}
 				finally
 				{
+					Palaso.WritingSystems.Keyboard.Controller.ActivateDefaultKeyboard();
 					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
 					ReleaseMutexForThisProject();
 				}
