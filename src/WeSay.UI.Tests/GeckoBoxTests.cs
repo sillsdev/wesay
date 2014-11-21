@@ -93,6 +93,7 @@ namespace WeSay.UI.Tests
 			KeyboardController keyboardController = new KeyboardController(t);
 			Application.DoEvents();
 			keyboardController.Press(Key.END);
+			Application.DoEvents();
 			keyboardController.Press(" ");
 			keyboardController.Press("T");
 			keyboardController.Press("e");
@@ -118,6 +119,7 @@ namespace WeSay.UI.Tests
 			KeyboardController keyboardController = new KeyboardController(t);
 			Application.DoEvents();
 			keyboardController.Press(Key.END);
+			Application.DoEvents();
 			keyboardController.Press(" ");
 			keyboardController.Press("T");
 			keyboardController.Press("e");

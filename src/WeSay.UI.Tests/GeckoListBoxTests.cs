@@ -162,17 +162,17 @@ namespace WeSay.UI.Tests
 
 			Application.DoEvents();
 
-			_window.Controls.Add((GeckoListBox)_listBox);
+			_window.Controls.Add(_listBox);
 			_window.Show();
 			ControlTester t = new ControlTester("ControlUnderTest", _window);
 
 			Application.DoEvents();
+			Rectangle r = _listBox.GetItemRectangle(1);
 			Application.DoEvents();
 
 			using (MouseController mc = new MouseController(t))
 			{
-				Rectangle r = _listBox.GetItemRectangle(1);
-				mc.Click(r.Right + 1, r.Top + 1);
+				mc.Click(r.Right + 5, r.Top + 5);
 			}
 
 			Application.DoEvents();
