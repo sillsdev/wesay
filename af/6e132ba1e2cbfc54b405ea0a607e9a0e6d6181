@@ -1,0 +1,8 @@
+Verified+1: Jenkins CI <jenkins@sil.org>
+Verified-Linux+1: Jenkins CI <jenkins@sil.org>
+Code-Review+2: Neil Mayhew <neil_mayhew@sil.org>
+Submitted-by: Brent McCarthy <brent_mccarthy@sil.org>
+Submitted-at: Thu, 27 Nov 2014 23:03:35 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/2684
+Project: wesay
+Branch: refs/heads/develop
