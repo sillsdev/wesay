@@ -137,6 +137,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
+		[Category("SkipOnTeamCity")]
 		public void TestGetRectangle()
 		{
 			_countOfItemsDrawn = 0;
