@@ -1,0 +1,8 @@
+Verified+1: Jenkins CI <jenkins@sil.org>
+Verified-Linux+1: Jenkins CI <jenkins@sil.org>
+Code-Review+2: Stephen McConnel <stephen_mcconnel@sil.org>
+Submitted-by: Chris Hubbard <chris_hubbard@sil.org>
+Submitted-at: Fri, 05 Dec 2014 19:11:27 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/2711
+Project: wesay
+Branch: refs/heads/develop
