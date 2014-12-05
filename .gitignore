@@ -51,3 +51,4 @@ Enchant.Net.dll*
 Ionic.Zip.dll
 taglib-sharp.dll
 common/*.po
+package/lucid/rules
