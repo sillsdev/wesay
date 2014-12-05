@@ -1,3 +1,15 @@
+wesay (1.5.32~beta4) stable; urgency=medium
+
+  * WS-229: Support automatic keyboard switching in Wasta-Linux (Cinnamon)
+  * WS-253: Reset the keyboard to the system default on program exit
+  * WS-126: Fix PageDown/PageUp key for many of the ListControls
+  * WS-245: History detail view is not updating
+  * WS-281: Fix Config Tool when deleting writing systems
+  * Add SVG icons to linux package
+  * Include Gecko-based ThumbnailViewer
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 04 Dec 2014 9:07:40 -0500
+
 wesay (1.5.31~beta3) stable; urgency=medium
 
   * WS-244: Remove fix; fixed in mono-sil 3.4.0-7
