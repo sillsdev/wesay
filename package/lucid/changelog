@@ -1,3 +1,9 @@
+wesay (1.5.33~beta4) stable; urgency=medium
+
+  * SW-284: Fix crash when changing keyboards in Wasta-Linux
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Sun, 07 Dec 2014 15:26:52 -0500
+
 wesay (1.5.32~beta4) stable; urgency=medium
 
   * WS-229: Support automatic keyboard switching in Wasta-Linux (Cinnamon)
