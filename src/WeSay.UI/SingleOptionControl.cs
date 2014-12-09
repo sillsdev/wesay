@@ -187,7 +187,13 @@ namespace WeSay.UI
 			_control.SelectedValueChanged += OnSelectedValueChanged;
 
 			//don't let the mousewheel do the scrolling, as it's likely an accident (http://jira.palaso.org/issues/browse/WS-34670)
-			((Control)_control).MouseWheel += (sender, e) => {((HandledMouseEventArgs)e).Handled = true;};
+			((Control)_control).MouseWheel += (sender, e) => {
+				HandledMouseEventArgs he = e as HandledMouseEventArgs;
+				if (he != null)
+				{
+					he.Handled = true;
+				}
+			};
 		}
 
 		private int CompareItems(Option a, Option b)
