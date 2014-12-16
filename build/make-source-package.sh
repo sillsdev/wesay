@@ -35,7 +35,7 @@ cd $OLDPWD
 
 cd ../chorus
 mkdir -p externals
-cp -p ../libpalaso/output/${PALASO_CONFIGURATION}/libpalaso-2.5.${BUILD_COUNTER}.0.tar.gz externals/
+cp -p ../libpalaso/output/${PALASO_CONFIGURATION}/libpalaso-2.6.tar.gz externals/
 up
 bld SourcePackage ${CHORUS_CONFIGURATION} ${BUILD_COUNTER}
 
