@@ -1,3 +1,16 @@
+wesay (1.5.36~beta6) stable; urgency=medium
+
+  * WS-269: Fix USB Enumeration only finding one drive
+    - If you want to exlude a drive, you can put a .chorus-hidden file
+      in the root of the drive.
+  * WS-259: Fix crash in Database Browse and Edit when switching languages for
+    search.  The actual fix is in libgdiplus-sil_2.10.8-7.
+  * WS-275: Fix Help link not visible in wesay-config
+  * WS-279: Fix Control + PageUp/PageDown for Tab Navigation
+    - The actual fix is in mono-sil_3.4.0-8.
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Mon, 15 Dec 2014 14:06:37 -0500
+
 wesay (1.5.34~beta5) stable; urgency=medium
 
   * WS-285: Fix crash when switching keyboards in Wasta-Linux
