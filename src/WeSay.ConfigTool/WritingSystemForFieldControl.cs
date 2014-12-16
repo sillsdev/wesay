@@ -62,7 +62,9 @@ namespace WeSay.ConfigTool
 					{
 						try
 						{
-							if (broker.DictionaryExists(ws.SpellCheckingId))
+							// Not all writing systems even pretend to have spell checking.
+							// (Consider the ersatz "voice" writing systems for example.)
+							if (ws.SpellCheckingId != null && broker.DictionaryExists(ws.SpellCheckingId))
 							{
 								writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
 							}
