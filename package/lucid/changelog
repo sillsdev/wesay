@@ -1,3 +1,9 @@
+wesay (1.5.37~rc1) stable; urgency=medium
+
+  * WS-296: Fix crash when using voice writing system with parts of speech and option lists
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 17 Dec 2014 10:20:40 -0500
+
 wesay (1.5.36~beta6) stable; urgency=medium
 
   * WS-269: Fix USB Enumeration only finding one drive
