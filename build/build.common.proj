@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<LifeCycleStage>CANDIDATE</LifeCycleStage>
+		<LifeCycleStage>STABLE</LifeCycleStage>
 	</PropertyGroup>
 
 	<Target Name="VersionNumbers">

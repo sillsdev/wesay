@@ -1,3 +1,9 @@
+wesay (1.5.38) stable; urgency=medium
+
+  * Release build
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 23 Jan 2015 09:54:02 -0500
+
 wesay (1.5.37~rc1) stable; urgency=medium
 
   * WS-296: Fix crash when using voice writing system with parts of speech and option lists
