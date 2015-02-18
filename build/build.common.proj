@@ -1,6 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<LifeCycleStage>BETA</LifeCycleStage>
+		<!-- choices are ALPHA, BETA, CANDIDATE, and STABLE -->
+		<LifeCycleStage>ALPHA</LifeCycleStage>
 	</PropertyGroup>
 
 	<Target Name="VersionNumbers">
@@ -18,7 +19,7 @@
 		<Message Text="VersionSuffix: $(VersionSuffix)" Importance="high"/>
 
 		<!-- Note, after some thought, we've decided this is the best place to keep the version number (not on TeamCity, not in the assemblies).     -->
-		<CreateProperty Value="1.5">
+		<CreateProperty Value="1.6">
 			<Output PropertyName="VersionBase" TaskParameter="Value"/>
 		</CreateProperty>
 		<CreateProperty Value="$(VersionBase).$(VersionSuffix)">
