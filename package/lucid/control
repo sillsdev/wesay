@@ -3,8 +3,9 @@ Section: editors
 Priority: optional
 Maintainer: Cambell Prince <cambell_prince@sil.org>
 Build-Depends: debhelper (>=7),
-  mono-devel (>=2.10), cli-common-dev (>= 0.8~),
-  unzip,
+  mono-sil (>=3.4), mono-basic-sil, gtk-sharp2-sil, libgdiplus-sil,
+  cli-common-dev (>= 0.8~),
+  unzip, wget,
   libicu-dev, libenchant-dev, libsndfile-dev, libxklavier-dev, libdconf-dev,
   geckofx29
 Standards-Version: 3.9.4
