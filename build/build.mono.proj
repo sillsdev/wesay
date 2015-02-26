@@ -12,6 +12,7 @@
 
 	<PropertyGroup>
 		<Solution>WeSay VS2010.sln</Solution>
+		<SolutionPath>$(RootDir)/src/$(Solution)</SolutionPath>
 		<ApplicationName>WeSay</ApplicationName>
 		<ApplicationNameLC>wesay</ApplicationNameLC>
 		<Configuration>Debug</Configuration>
@@ -19,6 +20,7 @@
 	</PropertyGroup>
 
 	<Import Project="$(RootDir)/build/build.common.proj" />
+	<Import Project="$(RootDir)/build/NuGet.targets"/>
 
 	<PropertyGroup>
 		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
@@ -50,7 +52,7 @@
 		<Delete Files="@(ExistingObjectFiles)" />
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="UnzipMercurial;CopyFiles;CopyIcuLibs">
+	<Target Name="Compile" DependsOnTargets="RestorePackages;UnzipMercurial;CopyFiles;CopyIcuLibs">
 		<MSBuild
 			Projects="$(RootDir)\src\$(Solution)"
 			Targets="Build"
@@ -114,6 +116,7 @@
 		<Source Include="$(RootDir)/lib/common/**" />
 		<Source Include="$(RootDir)/artwork/**" />
 		<Source Include="$(RootDir)/build/*.proj" />
+		<Source Include="$(RootDir)/build/NuGet.targets" />
 		<Source Include="$(RootDir)/build/mono/*" />
 		<Source Include="$(RootDir)/common/**/*" />
 		<Source Include="$(RootDir)/doc/**/*" />
