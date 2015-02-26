@@ -16,12 +16,14 @@
 
 	<PropertyGroup>
 		<Solution>WeSay VS2010.sln</Solution>
+		<SolutionPath>$(RootDir)/src/$(Solution)</SolutionPath>
 		<ApplicationName>WeSay</ApplicationName>
 		<Configuration>Release</Configuration>
 		<RootDir>$(MSBuildProjectDirectory)\..</RootDir>
 	</PropertyGroup>
 
 	<Import Project="$(RootDir)/build/build.common.proj" />
+	<Import Project="$(RootDir)/build/NuGet.targets"/>
 	
 	<PropertyGroup>
 		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
@@ -89,7 +91,7 @@
 		<Delete Files="@(ExistingInstallerFiles)" />
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="UnzipMercurial">
+	<Target Name="Compile" DependsOnTargets="RestorePackages;UnzipMercurial">
 		<MSBuild
 			Projects="$(RootDir)\src\$(Solution)"
 			Targets="Build"
