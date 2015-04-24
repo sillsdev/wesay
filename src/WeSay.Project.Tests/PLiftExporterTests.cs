@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
-using Palaso.Data;
+using SIL.Data;
 using Palaso.DictionaryServices.Model;
-using Palaso.IO;
+using SIL.IO;
 using Palaso.TestUtilities;
-using Palaso.WritingSystems;
-using Palaso.Xml;
+using SIL.WritingSystems;
+using SIL.Xml;
 using WeSay.LexicalModel;
 using Palaso.Lift;
 
@@ -37,11 +37,11 @@ namespace WeSay.Project.Tests
 				_outputFile = new TempFile();
 				Repo = new LexEntryRepository(_projectDir.PathToLiftFile);
 				WritingSystemIds = new List<string>(new[] { Red, Green, Blue, Voice });
-				HeadwordWritingSystem = WritingSystemDefinition.Parse(Red);
+				HeadwordWritingSystem = new WritingSystemDefinition(Red);
 				project.WritingSystems.Set(HeadwordWritingSystem);
-				project.WritingSystems.Set(WritingSystemDefinition.Parse(Green));
-				project.WritingSystems.Set(WritingSystemDefinition.Parse(Blue));
-				project.WritingSystems.Set(WritingSystemDefinition.Parse(Voice));
+				project.WritingSystems.Set(new WritingSystemDefinition(Green));
+				project.WritingSystems.Set(new WritingSystemDefinition(Blue));
+				project.WritingSystems.Set(new WritingSystemDefinition(Voice));
 
 				Template = new ViewTemplate
 			{

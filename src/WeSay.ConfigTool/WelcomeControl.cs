@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Chorus.UI.Clone;
-using Palaso.Extensions;
-using Palaso.i18n;
-using Palaso.IO;
+using SIL.Extensions;
+using SIL.i18n;
+using SIL.IO;
 using WeSay.ConfigTool.Properties;
 using System.Collections.Generic;
 

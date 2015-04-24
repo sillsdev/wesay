@@ -1,7 +1,5 @@
 using System;
-using System.ComponentModel.Design;
-using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
+using SIL.WritingSystems;
 
 namespace WeSay.AddinLib
 {

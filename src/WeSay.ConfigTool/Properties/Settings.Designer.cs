@@ -48,9 +48,9 @@ namespace WeSay.ConfigTool.Properties {
 
 		[global::System.Configuration.UserScopedSettingAttribute()]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		public Palaso.Reporting.ReportingSettings Reporting {
+		public SIL.Reporting.ReportingSettings Reporting {
 			get {
-				return ((Palaso.Reporting.ReportingSettings)(this["Reporting"]));
+				return ((SIL.Reporting.ReportingSettings)(this["Reporting"]));
 			}
 			set {
 				this["Reporting"] = value;

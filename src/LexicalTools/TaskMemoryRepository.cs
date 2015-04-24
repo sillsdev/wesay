@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using Palaso.Code;
-using Palaso.UI.WindowsForms.Miscellaneous;
+using SIL.Code;
+using SIL.Windows.Forms.Miscellaneous;
 
 namespace WeSay.LexicalTools
 {
@@ -52,7 +52,7 @@ namespace WeSay.LexicalTools
 				}
 				catch(Exception error)
 				{
-					Palaso.Reporting.Logger.WriteEvent("Error trying to read task memory: "+error.Message);
+					SIL.Reporting.Logger.WriteEvent("Error trying to read task memory: "+error.Message);
 					//now just make a new one, this is the kind of data we can through away
 				}
 			}

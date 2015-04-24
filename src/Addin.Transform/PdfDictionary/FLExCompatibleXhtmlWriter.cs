@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using System.Linq;
-using Palaso.Xml;
+using SIL.Xml;
 using WeSay.Project;
 
 namespace Addin.Transform.PdfDictionary

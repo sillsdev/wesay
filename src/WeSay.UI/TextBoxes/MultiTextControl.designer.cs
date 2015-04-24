@@ -24,7 +24,7 @@ namespace WeSay.UI.TextBoxes
 					// Added due to memory leak where the MultiText box never released
 					if (box is WeSayTextBox)
 					{
-						Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Unregister(box);
+						SIL.Windows.Forms.Keyboarding.KeyboardController.UnregisterControl(box);
 					}
 					box.Dispose();
 				}

@@ -235,7 +235,7 @@ namespace Addin.Transform.Tests
 		[Test]
 		public void BogusExpressionDoesntCrash()
 		{
-			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+			using (new SIL.Reporting.ErrorReport.NonFatalErrorReportExpected())
 			{
 
 				LaunchWithConversionString("{foo " //missing "to"

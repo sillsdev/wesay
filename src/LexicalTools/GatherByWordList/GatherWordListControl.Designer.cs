@@ -1,6 +1,6 @@
 using System;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.Widgets.Flying;
+using SIL.Windows.Forms.Widgets.Flying;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.Buttons;
@@ -48,7 +48,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			this._tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
-			this._flyingLabel = new Palaso.UI.WindowsForms.Widgets.Flying.FlyingLabel();
+			this._flyingLabel = new SIL.Windows.Forms.Widgets.Flying.FlyingLabel();
 			this._verticalWordListView = WeSayWordsProject.Project.ServiceLocator.GetService(typeof(IWeSayListView)) as IWeSayListView;
 			this._vernacularBox = new WeSay.UI.TextBoxes.MultiTextControl(null, WeSayWordsProject.Project.ServiceLocator);
 			this._listViewOfWordsMatchingCurrentItem = WeSayWordsProject.Project.ServiceLocator.GetService(typeof(IWeSayListBox)) as IWeSayListBox;

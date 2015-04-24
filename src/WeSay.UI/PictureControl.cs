@@ -3,11 +3,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Palaso.IO;
-using Palaso.UI.WindowsForms.ImageToolbox;
-using Palaso.UiBindings;
-using Palaso.Reporting;
-using Palaso.UI.WindowsForms.ImageGallery;
+using SIL.IO;
+using SIL.Windows.Forms.ImageToolbox;
+using SIL.UiBindings;
+using SIL.Reporting;
+using SIL.Windows.Forms.ImageGallery;
 
 namespace WeSay.UI
 {
@@ -177,7 +177,7 @@ namespace WeSay.UI
 			//            }
 			//            catch(Exception error)
 			//            {
-			//                Palaso.Reporting.ErrorReport.NotifyUserOfProblem(error.Message);
+			//                SIL.Reporting.ErrorReport.NotifyUserOfProblem(error.Message);
 			//            }
 
 			_relativePathToImage = string.Empty;
@@ -236,7 +236,7 @@ namespace WeSay.UI
 				//if we couldn't load it (like if it's missing), best to carry on and let them pick a new one
 			}
 
-			using(var dlg = new Palaso.UI.WindowsForms.ImageToolbox.ImageToolboxDialog(currentImage ?? new PalasoImage(), searchString))
+			using(var dlg = new SIL.Windows.Forms.ImageToolbox.ImageToolboxDialog(currentImage ?? new PalasoImage(), searchString))
 			{
 				if(DialogResult.OK == dlg.ShowDialog(this.ParentForm))
 				{

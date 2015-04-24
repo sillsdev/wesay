@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using Palaso.i18n;
+using SIL.i18n;
 using Palaso.TestUtilities;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests

@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Palaso.Code;
+using SIL.Code;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
 using Palaso.Lift.Options;
-using Palaso.Text;
+using SIL.Text;
 
-using Enumerable=Palaso.Linq.Enumerable;
+using Enumerable=SIL.Linq.Enumerable;
 
 namespace WeSay.LexicalModel
 {

@@ -1,7 +1,7 @@
 using System.IO;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Lift;
-using Palaso.Reporting;
+using SIL.Reporting;
 using Palaso.TestUtilities;
 using WeSay.Project;
 

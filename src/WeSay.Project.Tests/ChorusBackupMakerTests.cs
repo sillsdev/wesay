@@ -4,9 +4,9 @@ using System.Text;
 using System.Xml;
 using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
-using Palaso.Progress;
 using Palaso.TestUtilities;
-using Palaso.Xml;
+using SIL.Progress;
+using SIL.Xml;
 
 namespace WeSay.Project.Tests
 {
@@ -21,7 +21,7 @@ namespace WeSay.Project.Tests
 
 			public BackupScenario(string testName)
 			{
-				Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+				SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 				_projDir = new ProjectDirectorySetupForTesting("");
 
 				_backupMaker = new ChorusBackupMaker(new CheckinDescriptionBuilder());

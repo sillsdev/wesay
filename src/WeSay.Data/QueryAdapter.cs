@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Palaso.Data;
+using SIL.Data;
 
 namespace WeSay.Data
 {

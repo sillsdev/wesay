@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using Enchant;
-using Palaso.i18n;
+using SIL.i18n;
 
 namespace WeSay.LexicalModel.Foundation
 {

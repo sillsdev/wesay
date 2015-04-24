@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Xml.XPath;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
-using Palaso.Reporting;
+using SIL.Reporting;
 //using WeSay.Foundation.Tests;
 using Palaso.TestUtilities;
 using WeSay.Project;
@@ -23,7 +23,7 @@ namespace WeSay.ConfigTool.Tests
 
 		public override void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+			SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
 			_window = new ConfigurationWindow(new string[] {});

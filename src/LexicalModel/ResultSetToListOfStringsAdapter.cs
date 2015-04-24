@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Palaso.Data;
+using SIL.Data;
 using Palaso.DictionaryServices.Model;
 
 namespace WeSay.LexicalModel

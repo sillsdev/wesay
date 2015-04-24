@@ -1,4 +1,4 @@
-using Palaso.UI.WindowsForms.Widgets;
+using SIL.Windows.Forms.Widgets;
 
 namespace WeSay.ConfigTool
 {

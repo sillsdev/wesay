@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using Palaso.Migration;
+using SIL.Migration;
 
 namespace WeSay.Project.ConfigMigration.UserConfig
 {

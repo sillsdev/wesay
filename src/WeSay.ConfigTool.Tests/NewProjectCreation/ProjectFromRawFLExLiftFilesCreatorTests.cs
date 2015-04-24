@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using NUnit.Framework;
-using Palaso.IO;
-using Palaso.Reporting;
+using SIL.IO;
+using SIL.Reporting;
 using Palaso.TestUtilities;
 using WeSay.ConfigTool.NewProjectCreation;
 

@@ -1,8 +1,8 @@
 using System;
 using System.Windows.Forms;
 using Chorus.VcsDrivers.Mercurial;
-using Palaso.i18n;
-using Palaso.Reporting;
+using SIL.i18n;
+using SIL.Reporting;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool

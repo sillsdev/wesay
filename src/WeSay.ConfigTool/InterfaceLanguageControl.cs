@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Palaso.i18n;
-using Palaso.Reporting;
+using SIL.i18n;
+using SIL.Reporting;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool

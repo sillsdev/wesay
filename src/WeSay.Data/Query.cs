@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
-using Palaso.Data;
+using SIL.Data;
 
 namespace WeSay.Data
 {

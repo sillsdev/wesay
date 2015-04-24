@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Palaso.i18n;
+using SIL.i18n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;

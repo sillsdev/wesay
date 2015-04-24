@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using Mono.Addins;
 using Palaso.DictionaryServices.Lift;
-using Palaso.i18n;
+using SIL.i18n;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -78,7 +78,7 @@ namespace Addin.Transform.LexiquePro
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, could not open dictionary in Lexique Pro.\r\n" + error.Message);
+				SIL.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, could not open dictionary in Lexique Pro.\r\n" + error.Message);
 			}
 		}
 
@@ -103,7 +103,7 @@ namespace Addin.Transform.LexiquePro
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("WeSay encountered a problem while looking for Lexique Pro.\r\n" + error.Message);
+				SIL.Reporting.ErrorReport.NotifyUserOfProblem("WeSay encountered a problem while looking for Lexique Pro.\r\n" + error.Message);
 			}
 			return null;
 		}

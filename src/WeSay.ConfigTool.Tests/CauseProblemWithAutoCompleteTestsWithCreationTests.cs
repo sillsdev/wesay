@@ -1,7 +1,7 @@
 using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
-using Palaso.Reporting;
+using SIL.Reporting;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests

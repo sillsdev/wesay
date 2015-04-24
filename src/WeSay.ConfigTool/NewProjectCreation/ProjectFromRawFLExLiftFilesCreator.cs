@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using Palaso.Code;
-using Palaso.Reporting;
+using SIL.Code;
+using SIL.Reporting;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.NewProjectCreation
@@ -42,7 +42,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			}
 			catch(Exception e)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem(e, "WeSay was unable to finish importing that LIFT file.  If you cannot fix the problem yourself, please zip and send the exported folder to issues (at) wesay (dot) org");
+				SIL.Reporting.ErrorReport.NotifyUserOfProblem(e, "WeSay was unable to finish importing that LIFT file.  If you cannot fix the problem yourself, please zip and send the exported folder to issues (at) wesay (dot) org");
 				try
 				{
 					Logger.WriteEvent(@"Removing would-be target directory");

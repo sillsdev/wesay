@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
 
 namespace WeSay.Project.Tests
 {
@@ -32,7 +32,7 @@ namespace WeSay.Project.Tests
 				var ldmlVersionGetter = new WritingSystemLdmlVersionGetter();
 				foreach (var filePath in Directory.GetFiles(e.WritingSystemLdmlFolderPath))
 				{
-					Assert.AreEqual(WritingSystemDefinition.LatestWritingSystemDefinitionVersion, ldmlVersionGetter.GetFileVersion(filePath), String.Format("The file {0} did not have the correct version.", filePath));
+					Assert.AreEqual(LdmlDataMapper.CurrentLdmlVersion, ldmlVersionGetter.GetFileVersion(filePath), String.Format("The file {0} did not have the correct version.", filePath));
 				}
 			}
 

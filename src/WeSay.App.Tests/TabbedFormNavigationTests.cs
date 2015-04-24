@@ -107,10 +107,10 @@ namespace WeSay.App.Tests
 		[Test]
 		public void ShouldGiveMessageIfNeededTaskIsNotFound()
 		{
-			Palaso.Reporting.ErrorReport.JustRecordNonFatalMessagesForTesting = true;
-			Assert.IsNull(Palaso.Reporting.ErrorReport.PreviousNonFatalMessage);
+			SIL.Reporting.ErrorReport.JustRecordNonFatalMessagesForTesting = true;
+			Assert.IsNull(SIL.Reporting.ErrorReport.PreviousNonFatalMessage);
 			_tabbedForm.GoToUrl("foo2");
-			Assert.IsNotNull(Palaso.Reporting.ErrorReport.PreviousNonFatalMessage);
+			Assert.IsNotNull(SIL.Reporting.ErrorReport.PreviousNonFatalMessage);
 		}
  */
 	}

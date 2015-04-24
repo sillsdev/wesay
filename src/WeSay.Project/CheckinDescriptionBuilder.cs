@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace WeSay.Project
 {
-   public class CheckinDescriptionBuilder: Palaso.Reporting.ILogger
+   public class CheckinDescriptionBuilder: SIL.Reporting.ILogger
 	{
 		private Dictionary<string, int> _actions;
 

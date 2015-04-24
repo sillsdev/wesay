@@ -7,7 +7,7 @@ using Chorus.FileTypeHanders.lift;
 using Chorus.sync;
 using Chorus.UI.Sync;
 using Chorus.VcsDrivers.Mercurial;
-using Palaso.Reporting;
+using SIL.Reporting;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project
@@ -86,7 +86,7 @@ namespace WeSay.Project
 			//nb: we're not really using the message yet, at least, not showing it to the user
 			if(!string.IsNullOrEmpty(HgRepository.GetEnvironmentReadinessMessage(localizationLanguageId)))
 			{
-				Palaso.Reporting.Logger.WriteEvent("Backup not possible: {0}", HgRepository.GetEnvironmentReadinessMessage("en"));
+				SIL.Reporting.Logger.WriteEvent("Backup not possible: {0}", HgRepository.GetEnvironmentReadinessMessage("en"));
 			}
 
 			try
@@ -149,7 +149,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.Logger.WriteEvent("Error during Backup: {0}", error.Message);
+				SIL.Reporting.Logger.WriteEvent("Error during Backup: {0}", error.Message);
 				//TODO we need some passive way indicating the health of the backup system
 			}
 		}

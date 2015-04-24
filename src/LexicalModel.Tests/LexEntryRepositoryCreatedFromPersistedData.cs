@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Lift;
-using Palaso.Extensions;
-using Palaso.Tests.Data;
+using SIL.Extensions;
+using SIL.Tests.Data;
 using Palaso.TestUtilities;
 using Palaso.DictionaryServices.Model;
 

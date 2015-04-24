@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using Enchant;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
-using Palaso.Reporting;
+using SIL.Reporting;
 using WeSay.Project;
 using WeSay.LexicalModel;
 using WeSay.Project;

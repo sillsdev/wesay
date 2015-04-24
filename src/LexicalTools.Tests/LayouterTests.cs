@@ -22,13 +22,13 @@ namespace WeSay.LexicalTools.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
 		[TestFixtureTearDown]
 		public void FixtureTeardown()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 		}
 
 		[SetUp]

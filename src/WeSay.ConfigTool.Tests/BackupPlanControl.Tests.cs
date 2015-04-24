@@ -15,7 +15,7 @@ namespace WeSay.ConfigTool.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+			SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 		}
 
 		private void GoToBackupTab()

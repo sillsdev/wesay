@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Options;
 using Palaso.TestUtilities;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -34,13 +34,13 @@ namespace WeSay.LexicalTools.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 		}
 
 		[SetUp]

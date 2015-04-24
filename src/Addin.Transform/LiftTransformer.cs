@@ -9,10 +9,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
-using Palaso.Progress;
-using Palaso.Reporting;
-using Palaso.UI.WindowsForms.Progress;
-using Palaso.Xml;
+using SIL.Progress;
+using SIL.Reporting;
+using SIL.Windows.Forms.Progress;
+using SIL.Xml;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 

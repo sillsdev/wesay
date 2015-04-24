@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Palaso.Data;
-using Palaso.Tests.Data;
+using SIL.Data;
+using SIL.Tests.Data;
 using WeSay.Data;
 using NUnit.Framework;
 

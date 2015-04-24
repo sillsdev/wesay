@@ -2,7 +2,7 @@
 using System.IO;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
-using Palaso.Reporting;
+using SIL.Reporting;
 using Palaso.TestUtilities;
 using WeSay.Project.LocalizedList;
 

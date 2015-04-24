@@ -1,10 +1,8 @@
 using System;
 using System.Windows.Forms;
-using Palaso.Reporting;
-using Palaso.UI.WindowsForms.Keyboarding;
-using Palaso.UI.WindowsForms.WritingSystems;
-using Palaso.UI.WindowsForms.WritingSystems.WSTree;
-using Palaso.WritingSystems;
+using SIL.Reporting;
+using SIL.Windows.Forms.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool

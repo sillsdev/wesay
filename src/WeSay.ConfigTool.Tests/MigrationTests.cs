@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
-using Palaso.Reporting;
+using SIL.Reporting;
 using Palaso.TestUtilities;
 using WeSay.Project;
 

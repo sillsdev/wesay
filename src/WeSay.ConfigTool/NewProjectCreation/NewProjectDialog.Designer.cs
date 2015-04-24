@@ -35,7 +35,7 @@
 			this._pathLabel = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this._chooseLanguageButton = new System.Windows.Forms.Button();
-			this._languageInfoLabel = new Palaso.UI.WindowsForms.Widgets.BetterLabel();
+			this._languageInfoLabel = new SIL.Windows.Forms.Widgets.BetterLabel();
 			this.SuspendLayout();
 			//
 			// label1
@@ -157,6 +157,6 @@
 		protected System.Windows.Forms.Label _pathLabel;
 		protected System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Button _chooseLanguageButton;
-		private Palaso.UI.WindowsForms.Widgets.BetterLabel _languageInfoLabel;
+		private SIL.Windows.Forms.Widgets.BetterLabel _languageInfoLabel;
 	}
 }

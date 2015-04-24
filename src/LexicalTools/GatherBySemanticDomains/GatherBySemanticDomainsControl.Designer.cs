@@ -1,6 +1,6 @@
 using System;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.Widgets.Flying;
+using SIL.Windows.Forms.Widgets.Flying;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.Buttons;
@@ -63,7 +63,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			this._btnAddWord = new WeSay.UI.Buttons.RectangularImageButton();
 			this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
 			this._listViewWords = WeSayWordsProject.Project.ServiceLocator.GetService(typeof(IWeSayListBox)) as IWeSayListBox;
-			this._flyingLabel = new Palaso.UI.WindowsForms.Widgets.Flying.FlyingLabel();
+			this._flyingLabel = new SIL.Windows.Forms.Widgets.Flying.FlyingLabel();
 			this.multiTextControl2 = new WeSay.UI.TextBoxes.MultiTextControl(null, WeSayWordsProject.Project.ServiceLocator);
 			this.multiTextControl1 = new WeSay.UI.TextBoxes.MultiTextControl(null, WeSayWordsProject.Project.ServiceLocator);
 			this.multiTextControl3 = new WeSay.UI.TextBoxes.MultiTextControl(null, WeSayWordsProject.Project.ServiceLocator);

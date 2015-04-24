@@ -5,13 +5,13 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using Palaso.Reporting;
+using SIL.Reporting;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
-using Palaso.i18n;
+using SIL.i18n;
 
 namespace WeSay.LexicalTools.Dashboard
 {

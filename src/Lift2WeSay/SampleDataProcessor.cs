@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
-using Palaso.Progress;
+using SIL.Progress;
 using WeSay.Project;
 
 namespace SampleDataProcessor

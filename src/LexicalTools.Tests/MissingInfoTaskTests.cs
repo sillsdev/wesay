@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
-using Palaso.IO;
+using SIL.IO;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddMissingInfo;

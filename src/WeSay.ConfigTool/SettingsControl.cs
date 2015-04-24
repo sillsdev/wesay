@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Autofac;
-using Palaso.Reporting;
+using SIL.Reporting;
 using WeSay.ConfigTool.Tasks;
 
 namespace WeSay.ConfigTool
