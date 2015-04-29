@@ -8,18 +8,17 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using Autofac;
-using Palaso.Data;
-using Palaso.Code;
+using SIL.Data;
+using SIL.Code;
 using Palaso.DictionaryServices.Model;
 using Palaso.DictionaryServices.Processors;
-using Palaso.Progress;
-using Palaso.Text;
-using Palaso.i18n;
+using SIL.Progress;
+using SIL.Text;
+using SIL.i18n;
 using Palaso.Lift;
 using Palaso.Lift.Options;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
-using Spart.Parsers;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -39,7 +38,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private List<string> _domainNames;
 		private List<WordDisplay> _words;
 
-		private IWritingSystemDefinition _semanticDomainWritingSystem;
+		private WritingSystemDefinition _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
 		private OptionsList _semanticDomainOptionsList;
 
@@ -49,7 +48,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private readonly TaskMemory _taskMemory;
 		private GatherBySemanticDomainConfig _config;
 		private readonly ILogger _logger;
-		public IWritingSystemDefinition DefinitionWritingSystem { get; set; }
+		public WritingSystemDefinition DefinitionWritingSystem { get; set; }
 
 		public GatherBySemanticDomainTask(
 			GatherBySemanticDomainConfig config,
@@ -79,7 +78,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
 			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
-			IWritingSystemDefinition writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
+			WritingSystemDefinition writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
 			Guard.AgainstNull(writingSystemForDefinition, "Definition input System");
 			DefinitionWritingSystem = writingSystemForDefinition;
 
@@ -337,7 +336,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 					}
 				}
-			   // TODO: figure out how to do sorting on complext objects using this collator:    _words.Sort(FormWritingSystem.Collator);
+			   // TODO: figure out how to do sorting on complex objects using this collator:    _words.Sort(FormWritingSystem.Collator);
 				_words.Sort(new Comparison<WordDisplay>(CompareForms));
 				return _words;
 			}
@@ -345,7 +344,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 		private int CompareForms(WordDisplay x, WordDisplay y)
 		{
-			return FormWritingSystem.Collator.Compare(x.Vernacular.Form, y.Vernacular.Form);
+			return FormWritingSystem.DefaultCollation.Collator.Compare(x.Vernacular.Form, y.Vernacular.Form);
 		}
 
 		public bool HasNextDomainQuestion
@@ -422,7 +421,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
-		public IWritingSystemDefinition SemanticDomainWritingSystem
+		public WritingSystemDefinition SemanticDomainWritingSystem
 		{
 			get
 			{
@@ -768,13 +767,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 				try
 				{
-					return new Font(MeaningWritingSystem.DefaultFontName,
+					return new Font(MeaningWritingSystem.DefaultFont.Name,
 									defaultFontSize);
 				}
 				catch (Exception error)
 				{
-					Palaso.Reporting.ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),  error,
-																	 "There was a problem getting the font for the meaning field, using Typeface {0} and Size {1}.  See if you can fix this using the Input Systems tab of theConfiguration Tool.", MeaningWritingSystem.DefaultFontName,
+					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),  error,
+																	 "There was a problem getting the font for the meaning field, using Typeface {0} and Size {1}.  See if you can fix this using the Input Systems tab of theConfiguration Tool.", MeaningWritingSystem.DefaultFont.Name,
 									defaultFontSize);
 					return SystemFonts.DefaultFont;
 				}
@@ -972,12 +971,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			return (pastEndIndex == beginIndex);
 		}
 
-		public IWritingSystemDefinition GetSemanticDomainWritingSystem()
+		public WritingSystemDefinition GetSemanticDomainWritingSystem()
 		{
 			if (_semanticDomainWritingSystem == null) // just in case there is no WS for the semDom field (not likely)
 			{
 				_semanticDomainWritingSystem = new WritingSystemDefinition("qaa");
-				_semanticDomainWritingSystem.DefaultFontName = "Microsoft Sans Serif";
+				_semanticDomainWritingSystem.DefaultFont = new FontDefinition("Microsoft Sans Serif");
 			}
 			return _semanticDomainWritingSystem;
 		}
@@ -987,7 +986,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			if (_semanticDomainWritingSystem == null) // just in case there is no WS for the semDom field (not likely)
 			{
 				_semanticDomainWritingSystem = new WritingSystemDefinition("qaa");
-				_semanticDomainWritingSystem.DefaultFontName = "Microsoft Sans Serif";
+				_semanticDomainWritingSystem.DefaultFont = new FontDefinition("Microsoft Sans Serif");
 			}
 			return WritingSystemInfo.CreateFont(_semanticDomainWritingSystem);
 		}

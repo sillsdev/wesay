@@ -2,9 +2,9 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Data;
+using SIL.Data;
 using Palaso.DictionaryServices.Model;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
@@ -25,14 +25,14 @@ namespace WeSay.LexicalTools.GatherByWordList
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(GatherWordListTask task, IWritingSystemDefinition lexicalUnitWritingSystem)
+		public GatherWordListControl(GatherWordListTask task, WritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			_task = task;
 
 			InitializeComponent();
 			InitializeDisplaySettings();
 			_vernacularBox.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-			_vernacularBox.WritingSystemsForThisField = new IWritingSystemDefinition[]
+			_vernacularBox.WritingSystemsForThisField = new WritingSystemDefinition[]
 															{lexicalUnitWritingSystem};
 			_vernacularBox.TextChanged += _vernacularBox_TextChanged;
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
@@ -75,10 +75,10 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
-			_instructionLabel.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
-			label3.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
-			label4.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
-			label5.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			_instructionLabel.Font = (Font)SIL.i18n.StringCatalog.LabelFont.Clone();
+			label3.Font = (Font)SIL.i18n.StringCatalog.LabelFont.Clone();
+			label4.Font = (Font)SIL.i18n.StringCatalog.LabelFont.Clone();
+			label5.Font = (Font)SIL.i18n.StringCatalog.LabelFont.Clone();
 		}
 
 

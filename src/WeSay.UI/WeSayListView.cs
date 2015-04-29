@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.DictionaryServices.Model;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
@@ -17,7 +17,7 @@ namespace WeSay.UI
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		IWritingSystemDefinition WritingSystem { get; set; }
+		WritingSystemDefinition WritingSystem { get; set; }
 
 		int MinLength { get; set; }
 		int MaxLength { get; set; }
@@ -51,7 +51,7 @@ namespace WeSay.UI
 	public partial class WeSayListView: ListView, IWeSayListView
 	{
 		private const int WM_HSCROLL = 0x114;
-		private IWritingSystemDefinition _writingSystem;
+		private WritingSystemDefinition _writingSystem;
 		private int _itemToNotDrawYet = -1;
 		private IList _dataSource;
 		private readonly Dictionary<int, ListViewItem> _itemsCache;
@@ -196,7 +196,7 @@ namespace WeSay.UI
 		[Browsable(false)]
 		[DefaultValue(null)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IWritingSystemDefinition WritingSystem
+		public WritingSystemDefinition WritingSystem
 		{
 			get
 			{

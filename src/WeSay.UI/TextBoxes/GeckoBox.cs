@@ -8,8 +8,8 @@ using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
-using Palaso.WritingSystems;
-using Palaso.Text;
+using SIL.WritingSystems;
+using SIL.Text;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
@@ -54,7 +54,7 @@ namespace WeSay.UI.TextBoxes
 			};
 		}
 
-		public GeckoBox(IWritingSystemDefinition ws, string nameForLogging)
+		public GeckoBox(WritingSystemDefinition ws, string nameForLogging)
 			: this()
 		{
 			_nameForLogging = nameForLogging;

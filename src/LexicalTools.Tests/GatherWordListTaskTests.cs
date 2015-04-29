@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using NUnit.Framework;
-using Palaso.Data;
+using SIL.Data;
 using Palaso.DictionaryServices.Lift;
 using Palaso.Lift;
 using Palaso.Lift.Options;
-using Palaso.Reporting;
+using SIL.Reporting;
 using Palaso.TestUtilities;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherByWordList;
@@ -39,7 +39,7 @@ namespace WeSay.LexicalTools.Tests
 			WeSayProjectTestHelper.InitializeForTests();
 			_glossingLanguageWSId = WritingSystemsIdsForTests.AnalysisIdForTest;
 			_vernacularLanguageWSId = WritingSystemsIdsForTests.VernacularIdForTest;
-			BasilProject.Project.WritingSystems.Set(WritingSystemDefinition.Parse("fr"));
+			BasilProject.Project.WritingSystems.Set(new WritingSystemDefinition("fr"));
 
 			_tempFolder = new TemporaryFolder();
 			_simpleWordListFilePath = _tempFolder.GetTemporaryFile();
@@ -163,7 +163,7 @@ namespace WeSay.LexicalTools.Tests
 
 			// the code doesn't show the errror box in release builds, but
 			// the builder publishing configuration does run tests in release builds
-			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+			using (new SIL.Reporting.ErrorReport.NonFatalErrorReportExpected())
 			{
 				g.Activate();
 			}
@@ -528,7 +528,7 @@ namespace WeSay.LexicalTools.Tests
 			return entries[0];
 		}
 
-		private IWritingSystemDefinition VernWs
+		private WritingSystemDefinition VernWs
 		{
 			get
 			{
@@ -585,7 +585,7 @@ namespace WeSay.LexicalTools.Tests
 					  </form>
 					</lexical-unit>
 				</entry>";
-			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+			using (new ErrorReport.NonFatalErrorReportExpected())
 			{
 				CreateAndActivateLiftTask(new List<string>(new string[] { "th" }), entries);
 			}

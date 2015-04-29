@@ -1,11 +1,11 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Palaso.Data;
-using Palaso.Code;
+using SIL.Data;
+using SIL.Code;
 using Palaso.DictionaryServices.Model;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
@@ -43,7 +43,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_viewTemplate = config.CreateViewTemplate(defaultViewTemplate);
 		 }
 
-		private IWritingSystemDefinition GetLexicalUnitWritingSystem()
+		private WritingSystemDefinition GetLexicalUnitWritingSystem()
 		{
 			//NB: don't replace these ugly static uses with the _viewTemplate we were given... that won't have what we're looking for here
 

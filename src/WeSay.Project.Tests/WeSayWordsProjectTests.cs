@@ -8,13 +8,14 @@ using System.Xml;
 using Autofac.Core;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
-using Palaso.IO;
+using SIL.IO;
 using Palaso.Lift;
 using Palaso.Lift.Options;
-using Palaso.Reporting;
+using SIL.Reporting;
 using Palaso.TestUtilities;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
+using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.LexicalModel;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.ConfigMigration.WritingSystem;
@@ -66,10 +67,10 @@ namespace WeSay.Project.Tests
 				WeSayWordsProject project = p.CreateLoadedProject();
 				using (File.OpenWrite(p.PathToLiftFile))
 				{
-					IWritingSystemDefinition ws = project.WritingSystems.Get("qaa-x-qaa");
+					WritingSystemDefinition ws = project.WritingSystems.Get("qaa-x-qaa");
 					ws.Language = "aac";
 					project.MakeWritingSystemIdChange("aac", "qaa-x-qaa");
-					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+					using (new SIL.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
 						project.Save();
 					}
@@ -609,7 +610,7 @@ namespace WeSay.Project.Tests
 				WeSayWordsProject project = p.CreateLoadedProject();
 				using (File.OpenWrite(p.PathToLiftFile))
 				{
-					using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+					using (new SIL.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
 						Field f = new Field("old", "LexEntry", new string[] {"en"});
 						project.ViewTemplates[0].Add(f);
@@ -694,7 +695,7 @@ namespace WeSay.Project.Tests
 		public void GetLexEntryRepository_LiftIsBad_NotfiesUser()
 		{
 			//here the lang attribute is missing (as it was from a user's lexique pro output)
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = true;
+			SIL.Reporting.ErrorReport.IsOkToInteractWithUser = true;
 			using (var projectDir =
 				new WeSay.Project.Tests.ProjectDirectorySetupForTesting(
 					@"
@@ -710,7 +711,7 @@ namespace WeSay.Project.Tests
 				var project = projectDir.CreateLoadedProject();
 				var gotException = false;
 				//we actually get a dialog box *and* and exception (the later, rather than, say, null, because AutoFac doesn't let use return null)
-				using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+				using (new SIL.Reporting.ErrorReport.NonFatalErrorReportExpected())
 				{
 					try
 					{
@@ -768,13 +769,12 @@ namespace WeSay.Project.Tests
 		{
 			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
 			{
-				var namespaceManager = new XmlNamespaceManager(new NameTable());
-				namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
 				var wsFolderPath = WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(project.ProjectDirectoryPath);
 				var pathToEnglish = Path.Combine(wsFolderPath, "en.ldml");
-				AssertThatXmlIn.File(pathToEnglish).HasAtLeastOneMatchForXpath(String.Format("/ldml/special/palaso:version[@value = {0}]", WritingSystemDefinition.LatestWritingSystemDefinitionVersion), namespaceManager);
+				var versionReader = new SIL.WritingSystems.Migration.WritingSystemLdmlVersionGetter();
+				Assert.That(LdmlDataMapper.CurrentLdmlVersion, Is.EqualTo(versionReader.GetFileVersion(pathToEnglish)));
 				var pathToQaa = Path.Combine(wsFolderPath, "qaa-x-qaa.ldml");
-				AssertThatXmlIn.File(pathToQaa).HasAtLeastOneMatchForXpath(String.Format("/ldml/special/palaso:version[@value = {0}]", WritingSystemDefinition.LatestWritingSystemDefinitionVersion), namespaceManager);
+				Assert.That(LdmlDataMapper.CurrentLdmlVersion, Is.EqualTo(versionReader.GetFileVersion(pathToQaa)));
 			}
 		}
 
@@ -813,7 +813,7 @@ namespace WeSay.Project.Tests
 				string englishLdmlContent =
 					File.ReadAllText(Path.Combine(pathToWritingSystemsInApplicationCommonDirectory, "en.ldml"));
 
-				IWritingSystemDefinition ws = project.WritingSystems.Get("en");
+				WritingSystemDefinition ws = project.WritingSystems.Get("en");
 				if (ws.Abbreviation == "writeme!")
 				{
 					throw new ApplicationException(
@@ -927,17 +927,21 @@ namespace WeSay.Project.Tests
 				//Now populate the input system repo with an "en" input system and a "qaa-x-changedWs" input system as well as
 				//a changelog that  indicates that "x-changedWs" got changed to "qaa-x-changedWs"
 				var wsRepo = LdmlInFolderWritingSystemRepository.Initialize(
+					writingSystemFolderPath);
+#if WS_FIX
+				var wsRepo = LdmlInFolderWritingSystemRepository.Initialize(
 					writingSystemFolderPath,
 					OnWritingSystemMigrationHandler,
 					OnWritingSystemLoadProblem,
 					WritingSystemCompatibility.Flex7V0Compatible
 				);
+#endif
 				var ws = new WritingSystemDefinition("en");
 				var ws1 = new WritingSystemDefinition("x-changeme");
 				wsRepo.Set(ws);
 				wsRepo.Set(ws1);
 				wsRepo.Save();
-				ws1.SetAllComponents("fr", "Latn", "US", "x-CHANGED");
+				ws1.IetfLanguageTag = IetfLanguageTagHelper.CreateIetfLanguageTag("fr", "Latn", "US", "x-CHANGED");
 				wsRepo.Set(ws1);
 				wsRepo.Save();
 
@@ -971,7 +975,7 @@ namespace WeSay.Project.Tests
 			throw new NotImplementedException();
 		}
 
-		private void OnWritingSystemMigrationHandler(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+		private void OnWritingSystemMigrationHandler(IEnumerable<LdmlMigrationInfo> migrationinfo)
 		{
 			throw new NotImplementedException();
 		}
@@ -979,15 +983,13 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void NewProject_WritingsystemFilesAreLatestVersion()
 		{
-			var namespaceManager = new XmlNamespaceManager(new NameTable());
-			namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
 			using (var projectFolder = new TemporaryFolder("MigrationTest"))
 			{
+				var versionReader = new SIL.WritingSystems.Migration.WritingSystemLdmlVersionGetter();
 				WeSayWordsProject.CreateEmptyProjectFiles(projectFolder.Path);
 				foreach (var ldmlFilePath in Directory.GetFiles(WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(projectFolder.Path)))
 				{
-					AssertThatXmlIn.File(ldmlFilePath).HasAtLeastOneMatchForXpath(String.Format("/ldml/special/palaso:version[@value='{0}']/@value", WritingSystemDefinition.LatestWritingSystemDefinitionVersion),
-																	   namespaceManager);
+					Assert.That(LdmlDataMapper.CurrentLdmlVersion, Is.EqualTo(versionReader.GetFileVersion(ldmlFilePath)));
 				}
 			}
 		}

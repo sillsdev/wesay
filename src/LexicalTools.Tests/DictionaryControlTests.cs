@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using Palaso.Data;
+using SIL.Data;
 using Palaso.DictionaryServices.Model;
-using Palaso.Reporting;
+using SIL.Reporting;
 using Palaso.TestUtilities;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools.Tests
 		private DictionaryTask _task;
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
-		private IWritingSystemDefinition _vernacularWritingSystem;
+		private WritingSystemDefinition _vernacularWritingSystem;
 		private TabControl _tabControl;
 		private Form _window;
 		private TabPage _detailTaskPage;
@@ -42,21 +42,21 @@ namespace WeSay.LexicalTools.Tests
 		[TestFixtureSetUp]
 		public void SetupFixture()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 			WeSayProjectTestHelper.InitializeForTests();
 		}
 
 		[TestFixtureTearDown]
 		public void TearDownFixture()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 		}
 
 		public override void Setup()
 		{
 			base.Setup();
 			_tempFolder = new TemporaryFolder();
-			_vernacularWritingSystem = WritingSystemDefinition.Parse(WritingSystemsIdsForTests.VernacularIdForTest);
+			_vernacularWritingSystem = new WritingSystemDefinition(WritingSystemsIdsForTests.VernacularIdForTest);
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
 
 			_filePath = _tempFolder.GetTemporaryFile();

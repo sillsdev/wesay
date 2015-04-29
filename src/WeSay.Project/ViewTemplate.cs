@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using Chorus;
 using Chorus.UI.Notes;
 using Exortech.NetReflector;
 using Palaso.DictionaryServices.Model;
-using Palaso.i18n;
+using SIL.i18n;
 using Palaso.Lift;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
@@ -51,12 +52,12 @@ namespace WeSay.Project
 
 		//todo: this is simplistic. Switch to the plural form
 		[Obsolete]
-		public IWritingSystemDefinition HeadwordWritingSystem
+		public WritingSystemDefinition HeadwordWritingSystem
 		{
 			get { return GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit); }
 		}
 
-		public IList<IWritingSystemDefinition> HeadwordWritingSystems
+		public IList<WritingSystemDefinition> HeadwordWritingSystems
 		{
 			get
 			{
@@ -618,7 +619,7 @@ namespace WeSay.Project
 			return false;
 		}
 
-		public IWritingSystemDefinition GetDefaultWritingSystemForField(string fieldName)
+		public WritingSystemDefinition GetDefaultWritingSystemForField(string fieldName)
 		{
 			Field field = GetField(fieldName);
 			if (field == null)
@@ -632,7 +633,7 @@ namespace WeSay.Project
 			return BasilProject.Project.WritingSystems.Get(field.WritingSystemIds[0]);
 		}
 
-		public IWritingSystemDefinition GetFirstNonVoiceWritingSystemForFieldOrThrow(string fieldName)
+		public WritingSystemDefinition GetFirstNonVoiceWritingSystemForFieldOrThrow(string fieldName)
 		{
 			Field field = GetField(fieldName);
 			if (field == null)
@@ -738,7 +739,7 @@ namespace WeSay.Project
 					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
 				}
 			}
-			return WritingSystems.FilterForTextIds(fieldControllingHeadwordOutput.WritingSystemIds);
+			return WritingSystems.FilterForTextIetfLanguageTags(fieldControllingHeadwordOutput.WritingSystemIds);
 		}
 
 		public IWritingSystemRepository WritingSystems
@@ -750,7 +751,7 @@ namespace WeSay.Project
 		{
 		   var list = new List<Chorus.IWritingSystem>();
 
-			IWritingSystemDefinition noteWritingSystem;
+			WritingSystemDefinition noteWritingSystem;
 			try
 			{
 				noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);;
@@ -762,7 +763,7 @@ namespace WeSay.Project
 			}
 
 			list.Insert(0,new ChorusWritingSystemAdaptor(noteWritingSystem));
-			foreach (var system in WritingSystems.TextWritingSystems)
+			foreach (var system in WritingSystems.TextWritingSystems())
 			{
 				if(system!=noteWritingSystem)
 				{

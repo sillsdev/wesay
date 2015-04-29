@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.Project;
 using WeSay.LexicalModel.Foundation;
@@ -96,7 +96,7 @@ namespace WeSay.UI.Tests
 			BasilProjectTestHelper.InitializeForTests();
 			_writingSystemId = WritingSystemsIdsForTests.AnalysisIdForTest;
 
-			IWritingSystemDefinition writingSystem = WritingSystemDefinition.Parse(_writingSystemId);
+			WritingSystemDefinition writingSystem = new WritingSystemDefinition(_writingSystemId);
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);
 			_papaNameWidget.Text = "John";
 			_ghostFirstNameWidget = new WeSayTextBox(writingSystem, null);

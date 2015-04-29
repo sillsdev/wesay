@@ -4,10 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using Palaso.i18n;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.i18n;
+using SIL.LexiconUtils;
+using SIL.Reporting;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
+using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project
 {
@@ -110,12 +112,10 @@ There are problems in:
 			ErrorReport.NotifyUserOfProblem(message);
 
 		}
-
-		protected static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+		protected static void OnWritingSystemMigration(int toVersion, IEnumerable<LdmlMigrationInfo> migrationinfo)
 		{
 			throw new ApplicationException("Input system migration should have been done by now, but it seems it hasn't.");
 		}
-
 //        public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
   //      {
 //            _projectDirectoryPath = projectDirectoryPath;
@@ -140,7 +140,7 @@ There are problems in:
 			get { return _writingSystems; }
 		}
 
-		public IList<IWritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
+		public IList<WritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
 		{
 			return writingSystemIds.Select(id => WritingSystems.Get(id)).ToList();
 		}
@@ -175,7 +175,12 @@ There are problems in:
 
 		public static string GetPathToLdmlWritingSystemsFolder(string parentDir)
 		{
-				return Path.Combine(parentDir, "WritingSystems");
+			return Path.Combine(parentDir, "WritingSystems");
+		}
+
+		public static string GetPathToSharedSettingsFolder(string parentDir)
+		{
+			return Path.Combine(parentDir, "SharedSettings");
 		}
 
 		//        public string PathToOptionsLists
@@ -186,6 +191,15 @@ There are problems in:
 		//            }
 		//        }
 
+		public static string PathToUserSpecificSettingsFile(string parentDir)
+		{
+			return Path.Combine(GetPathToSharedSettingsFolder(parentDir), System.Environment.UserName + ".lusx");
+		}
+
+		private static string PathToProjectSettingsFile(string parentDir)
+		{
+			return Path.Combine(GetPathToSharedSettingsFolder(parentDir), "LexiconProjectSettings.lpsx");
+		}
 
 		// <summary>
 		// Locates the StringCatalog file, matching any file ending in <language>.po first in the Project folder,
@@ -309,7 +323,9 @@ There are problems in:
 		{
 			string pathProjectToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectoryPath);
 			string pathCommonToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(ApplicationCommonDirectory);
+			string pathProjectToSharedSettingsFolder = GetPathToSharedSettingsFolder(projectDirectoryPath);
 			Directory.CreateDirectory(pathProjectToWritingSystemsFolder);
+			Directory.CreateDirectory(pathProjectToSharedSettingsFolder);
 			foreach (string path in Directory.GetFiles(pathCommonToWritingSystemsFolder, "*.ldml"))
 			{
 				var destPath = Path.Combine(pathProjectToWritingSystemsFolder, Path.GetFileName(path));
@@ -328,12 +344,22 @@ There are problems in:
 			}
 			if (_writingSystems == null)
 			{
+				var userSettingsDataMapper =
+					new LexiconUserSettingsWritingSystemDataMapper(new FileSettingsStore(PathToUserSpecificSettingsFile(ProjectDirectoryPath)));
+				var projectSettingsDataMapper =
+					new LexiconProjectSettingsWritingSystemDataMapper(new FileSettingsStore(PathToProjectSettingsFile(ProjectDirectoryPath)));
+				ICustomDataMapper<WritingSystemDefinition>[] customDataMapper =
+				{
+					userSettingsDataMapper,
+					projectSettingsDataMapper
+				};
+
 				_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
 					GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath),
+					customDataMapper,
+					null,
 					OnWritingSystemMigration,
-					OnWritingSystemLoadProblem,
-					WritingSystemCompatibility.Flex7V0Compatible
-				);
+					OnWritingSystemLoadProblem);
 			}
 		}
 

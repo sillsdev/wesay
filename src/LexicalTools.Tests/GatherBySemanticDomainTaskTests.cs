@@ -7,9 +7,9 @@ using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
-using Palaso.Reporting;
+using SIL.Reporting;
 using Palaso.TestUtilities;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherBySemanticDomains;
@@ -37,13 +37,13 @@ namespace WeSay.LexicalTools.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 		}
 
 		[SetUp]
@@ -104,7 +104,7 @@ namespace WeSay.LexicalTools.Tests
 
 			if(!v.WritingSystems.Contains("en"))
 			{
-				v.WritingSystems.Set(WritingSystemDefinition.Parse("en"));
+				v.WritingSystems.Set(new WritingSystemDefinition("en"));
 			}
 			return v;
 		}
@@ -470,7 +470,7 @@ namespace WeSay.LexicalTools.Tests
 		/// Using the sorter causes XElement.Parse() to be called, which chokes on '\u001F'.
 		/// </remarks>
 		[Test]
-		[ExpectedException("Palaso.Reporting.ErrorReport+ProblemNotificationSentToUserException", ExpectedMessage="character", MatchType=MessageMatch.Contains)]
+		[ExpectedException("SIL.Reporting.ErrorReport+ProblemNotificationSentToUserException", ExpectedMessage="character", MatchType=MessageMatch.Contains)]
 		public void AddWord_WordConsistsOfOnlySegmentSeparatorCharacter_AddedToDatabase()
 		{
 			int originalCount = _lexEntryRepository.CountAllItems();
@@ -1598,7 +1598,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ParseFrenchSemanticDomainFile_Localized()
 		{
-			WeSayWordsProject.Project.WritingSystems.Set(WritingSystemDefinition.Parse("fr"));
+			WeSayWordsProject.Project.WritingSystems.Set(new WritingSystemDefinition("fr"));
 			WeSayWordsProject.Project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4).
 										WritingSystemIds[0] ="fr";
 			string frenchSemanticDomainFilePath = Path.GetTempFileName();

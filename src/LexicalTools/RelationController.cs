@@ -3,13 +3,13 @@ using System.Collections;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Palaso.Data;
+using SIL.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift;
-using Palaso.UiBindings;
-using Palaso.Reporting;
-using Palaso.Text;
-using Palaso.WritingSystems;
+using SIL.UiBindings;
+using SIL.Reporting;
+using SIL.Text;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -78,7 +78,7 @@ namespace WeSay.LexicalTools
 		private void OnCreateNewPairStringLexEntryId(object sender, CreateNewArgs e)
 		{
 			LexEntry newGuy = CreateNewLexEntry(e);
-			IWritingSystemDefinition writingSystem = GetWritingSystemFromField();
+			WritingSystemDefinition writingSystem = GetWritingSystemFromField();
 			_lexEntryRepository.SaveItem(newGuy);
 			_resultSet = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystem);
 			e.NewlyCreatedItem = GetRecordTokenFromLexEntry(newGuy);
@@ -149,7 +149,7 @@ namespace WeSay.LexicalTools
 			//TODO: refactor this (sortHelper, pairStringLexEntryIdList, _keyIdMap, GetKeyIdPairFromLexEntry)
 			//      to use ApproximateFinder. Eventually refactor the automcompletetextbox to just take one
 
-			IWritingSystemDefinition writingSystem = GetWritingSystemFromField();
+			WritingSystemDefinition writingSystem = GetWritingSystemFromField();
 			ResultSet<LexEntry> recordTokenList =
 					_lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystem);
 			_resultSet = recordTokenList;
@@ -173,7 +173,7 @@ namespace WeSay.LexicalTools
 			_control = picker;
 		}
 
-		private IWritingSystemDefinition GetWritingSystemFromField()
+		private WritingSystemDefinition GetWritingSystemFromField()
 		{
 			string firstWsId = _field.WritingSystemIds[0];
 			return BasilProject.Project.WritingSystems.Get(firstWsId);

@@ -1,7 +1,7 @@
 using System;
 using Palaso.DictionaryServices.Model;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
@@ -12,7 +12,7 @@ namespace WeSay.LexicalTools
 {
 	public abstract class WordGatheringTaskBase: TaskBase
 	{
-		private readonly IWritingSystemDefinition _lexicalFormWritingSystem;
+		private readonly WritingSystemDefinition _lexicalFormWritingSystem;
 		private readonly ViewTemplate _viewTemplate;
 
 		protected WordGatheringTaskBase(ITaskConfiguration config,
@@ -32,9 +32,9 @@ namespace WeSay.LexicalTools
 				 viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
 		}
 
-		protected IWritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
+		protected WritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
 		{
-			var ids = BasilProject.Project.WritingSystems.FilterForTextIds(field.WritingSystemIds);
+			var ids = BasilProject.Project.WritingSystems.FilterForTextIetfLanguageTags(field.WritingSystemIds);
 			if(ids.Count()==0)
 			{
 				throw new ConfigurationException(string.Format("The field {0} must have at least one non-audio input system.", field.DisplayName));
@@ -61,7 +61,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public IWritingSystemDefinition FormWritingSystem
+		public WritingSystemDefinition FormWritingSystem
 		{
 			get
 			{
@@ -69,7 +69,7 @@ namespace WeSay.LexicalTools
 				return _lexicalFormWritingSystem;
 			}
 		}
-		public IWritingSystemDefinition MeaningWritingSystem
+		public WritingSystemDefinition MeaningWritingSystem
 		{
 			get
 			{

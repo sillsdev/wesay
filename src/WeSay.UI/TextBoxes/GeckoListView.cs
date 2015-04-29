@@ -11,10 +11,10 @@ using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
 using Palaso.DictionaryServices.Model;
-using Palaso.Data;
-using Palaso.i18n;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.Data;
+using SIL.i18n;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
@@ -54,7 +54,7 @@ namespace WeSay.UI.TextBoxes
 			Debug.WriteLine("New GeckoListView");
 		}
 
-		public GeckoListView(IWritingSystemDefinition ws, string nameForLogging)
+		public GeckoListView(WritingSystemDefinition ws, string nameForLogging)
 			: this()
 		{
 			_nameForLogging = nameForLogging;

@@ -5,11 +5,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
-using Palaso.Reporting;
-using Palaso.UI.WindowsForms.Keyboarding;
-using Palaso.UI.WindowsForms.Spelling;
-using Palaso.WritingSystems;
-using Palaso.Text;
+using SIL.Keyboarding;
+using SIL.Reporting;
+using SIL.Windows.Forms.Spelling;
+using SIL.WritingSystems;
+using SIL.Text;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
@@ -23,7 +23,7 @@ namespace WeSay.UI.TextBoxes
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		IWritingSystemDefinition WritingSystem { get; set; }
+		WritingSystemDefinition WritingSystem { get; set; }
 
 		bool MultiParagraph { get; set; }
 		bool IsSpellCheckingEnabled { get; set; }
@@ -32,7 +32,7 @@ namespace WeSay.UI.TextBoxes
 		void Select(int start, int length);
 		void AssignKeyboardFromWritingSystem();
 		void ClearKeyboard();
-		void Init(IWritingSystemDefinition writingSystem, String name);
+		void Init(WritingSystemDefinition writingSystem, String name);
 		Font Font { get; set; }
 
 		Object Tag { get; set; }
@@ -66,7 +66,7 @@ namespace WeSay.UI.TextBoxes
 
 	public partial class WeSayTextBox: TextBox, IControlThatKnowsWritingSystem, IWeSayTextBox
 	{
-		private IWritingSystemDefinition _writingSystem;
+		private WritingSystemDefinition _writingSystem;
 		private string _previousText;
 
 		private bool _multiParagraph;
@@ -103,7 +103,7 @@ namespace WeSay.UI.TextBoxes
 			Name = _nameForLogging;
 		}
 
-		public void Init(IWritingSystemDefinition writingSystem, String name)
+		public void Init(WritingSystemDefinition writingSystem, String name)
 		{
 			WritingSystem = writingSystem;
 			_nameForLogging = name;
@@ -310,7 +310,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public WeSayTextBox(IWritingSystemDefinition ws, string nameForLogging): this()
+		public WeSayTextBox(WritingSystemDefinition ws, string nameForLogging): this()
 		{
 			_nameForLogging = nameForLogging;
 			if (_nameForLogging == null)
@@ -334,7 +334,7 @@ namespace WeSay.UI.TextBoxes
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IWritingSystemDefinition WritingSystem
+		public WritingSystemDefinition WritingSystem
 		{
 			get
 			{

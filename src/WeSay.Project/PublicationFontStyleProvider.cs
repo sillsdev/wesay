@@ -1,6 +1,6 @@
 using System.Text;
 using Palaso.DictionaryServices.Model;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
@@ -24,12 +24,12 @@ namespace WeSay.Project
 			return _template.Fields.Find(f => f.FieldName == name);
 		}
 
-		public string GetAutoFontsCascadingStyleSheetLinesForWritingSystem(IWritingSystemDefinition ws)
+		public string GetAutoFontsCascadingStyleSheetLinesForWritingSystem(WritingSystemDefinition ws)
 		{
 			var builder = new StringBuilder();
 //            var family = FontFamily.Families.FirstOrDefault(f => f.Name == ws.FontName);
 
-			builder.AppendLine("font-family: '" + ws.DefaultFontName + "';");
+			builder.AppendLine("font-family: '" + ws.DefaultFont.Name + "';");
 
 			var word = FindFieldWithFieldName(LexEntry.WellKnownProperties.LexicalUnit);
 

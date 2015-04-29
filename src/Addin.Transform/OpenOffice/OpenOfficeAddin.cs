@@ -6,28 +6,25 @@ using System.IO.Compression;
 using System.IO;
 using System.Diagnostics;
 using System.Drawing;
-using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
-using Palaso.Data;
+using SIL.Data;
 using Palaso.Lift;
-using Palaso.DictionaryServices;
 using Palaso.DictionaryServices.Model;
 using Palaso.DictionaryServices.Lift;
 using Mono.Addins;
 
 using ICSharpCode.SharpZipLib.Zip;
 
-using Palaso.i18n;
-using Palaso.Reporting;
-using Palaso.Progress;
-using Palaso.UI.WindowsForms.Progress;
-using Palaso.WritingSystems;
+using SIL.i18n;
+using SIL.Reporting;
+using SIL.Progress;
+using SIL.Windows.Forms.Progress;
+using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Foundation;
 
 namespace Addin.Transform.OpenOffice
@@ -190,7 +187,7 @@ namespace Addin.Transform.OpenOffice
 		{
 			using (var exporter = new LiftWriter(outputPath, LiftWriter.ByteOrderStyle.NoBOM))
 			{
-				IWritingSystemDefinition firstWs = template.HeadwordWritingSystems[0];
+				WritingSystemDefinition firstWs = template.HeadwordWritingSystems[0];
 				ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(firstWs);
 				int index = 0;

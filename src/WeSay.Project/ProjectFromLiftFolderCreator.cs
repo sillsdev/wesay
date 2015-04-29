@@ -2,8 +2,8 @@
 using System.Text;
 using System.Xml;
 using Palaso.DictionaryServices.Model;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.Reporting;
+using SIL.WritingSystems;
 
 namespace WeSay.Project
 {
@@ -66,11 +66,11 @@ namespace WeSay.Project
 			{
 				if (node.Value == "x-spec" && !_writingSystems.Contains("x-spec"))
 				{
-					_writingSystems.Set(WritingSystemDefinition.Parse("x-spec"));
+					_writingSystems.Set(new WritingSystemDefinition("x-spec"));
 				}
 				if (!_writingSystems.Contains(node.Value))
 				{
-					_writingSystems.Set(WritingSystemDefinition.Parse(node.Value));
+					_writingSystems.Set(new WritingSystemDefinition(node.Value));
 					missingWritingSystems.AppendFormat("{0},", node.Value);
 				}
 			}

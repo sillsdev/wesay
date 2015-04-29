@@ -9,8 +9,8 @@ using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.Reporting;
+using SIL.WritingSystems;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -44,7 +44,7 @@ namespace WeSay.UI.TextBoxes
 			Debug.WriteLine("New GeckoComboBox");
 		}
 
-		public GeckoComboBox(IWritingSystemDefinition ws, string nameForLogging)
+		public GeckoComboBox(WritingSystemDefinition ws, string nameForLogging)
 			: this()
 		{
 			_nameForLogging = nameForLogging;

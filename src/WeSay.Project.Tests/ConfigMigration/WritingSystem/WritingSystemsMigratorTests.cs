@@ -2,9 +2,10 @@
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
-using Palaso.IO;
+using SIL.IO;
 using Palaso.TestUtilities;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Tests;
 using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.TestUtilities;
 
@@ -167,7 +168,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				migrator.MigrateIfNecessary();
 
 				AssertThatXmlIn.File(e.WritingSystemFilePath("qaa-x-test")).HasAtLeastOneMatchForXpath(
-					String.Format("/ldml/special/palaso:version[@value='{0}']", WritingSystemDefinition.LatestWritingSystemDefinitionVersion),
+					String.Format("/ldml/special/palaso:version[@value='{0}']", LdmlDataMapper.CurrentLdmlVersion),
 					e.NamespaceManager);
 			}
 		}
@@ -326,7 +327,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				string ldmlFilePath = Path.Combine(writingSystemsPath, "en.ldml");
 				string idChangeLogFilePath = Path.Combine(writingSystemsPath, "idchangelog.xml");
 				Directory.CreateDirectory(writingSystemsPath);
-				File.WriteAllText(ldmlFilePath, LdmlContentForTests.Version0English());
+				File.WriteAllText(ldmlFilePath, LdmlContentForTests.Version0("en", "", "", ""));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
 				migrator.MigrateIfNecessary();
 				// The change log does not exist because no id needed migrating

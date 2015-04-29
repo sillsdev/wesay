@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
-using Enumerable=Palaso.Linq.Enumerable;
+using Enumerable=SIL.Linq.Enumerable;
 
 namespace WeSay.ConfigTool.Tasks
 {
@@ -18,7 +18,7 @@ namespace WeSay.ConfigTool.Tasks
 		private IList<string> _selectedItemIds;
 		private string _labelWhenEmpty;
 
-		public void Init(IEnumerable<IWritingSystemDefinition> writingSystems, IList<string> selectedItemIds, string labelWhenEmpty)
+		public void Init(IEnumerable<WritingSystemDefinition> writingSystems, IList<string> selectedItemIds, string labelWhenEmpty)
 		{
 			_selectedItemIds = selectedItemIds;
 			_writingSystemList.DropDownItems.Clear();

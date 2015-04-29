@@ -1,12 +1,12 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.i18n;
+using SIL.i18n;
 using Palaso.Lift;
 using Palaso.Lift.Options;
-using Palaso.UiBindings;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.UiBindings;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
@@ -17,7 +17,7 @@ namespace WeSay.UI
 		private readonly OptionsList _list;
 		private readonly IWeSayComboBox _control = null;
 		private readonly string _nameForLogging;
-		private readonly IWritingSystemDefinition _preferredWritingSystem;
+		private readonly WritingSystemDefinition _preferredWritingSystem;
 
 		public event EventHandler ValueChanged;
 
@@ -39,13 +39,13 @@ namespace WeSay.UI
 		}
 
 		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging,
-			IWritingSystemDefinition preferredWritingSystem)
+			WritingSystemDefinition preferredWritingSystem)
 			: this(optionRef, list, nameForLogging, preferredWritingSystem, null)
 		{
 
 		}
 
-		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, IWritingSystemDefinition preferredWritingSystem, IServiceProvider serviceProvider )
+		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, WritingSystemDefinition preferredWritingSystem, IServiceProvider serviceProvider )
 		{
 			AutoSize = true;
 			AutoSizeMode = AutoSizeMode.GrowAndShrink;

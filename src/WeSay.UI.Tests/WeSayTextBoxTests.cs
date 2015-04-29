@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 using System.Windows.Forms;
@@ -40,7 +40,7 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void CreateWithWritingSystem()
 		{
-			IWritingSystemDefinition ws = new WritingSystemDefinition();
+			WritingSystemDefinition ws = new WritingSystemDefinition();
 			IWeSayTextBox textBox = new WeSayTextBox(ws, null);
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
@@ -57,7 +57,7 @@ namespace WeSay.UI.Tests
 		public void WritingSystem_Unassigned_Get_Throws()
 		{
 			IWeSayTextBox textBox = new WeSayTextBox();
-			IWritingSystemDefinition ws;
+			WritingSystemDefinition ws;
 			Assert.Throws<InvalidOperationException>(() => ws = textBox.WritingSystem);
 		}
 
@@ -79,7 +79,7 @@ namespace WeSay.UI.Tests
 		[Platform(Exclude="Unix")]
 		public void TextReflectsKeystrokes()
 		{
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
 			IWeSayTextBox textBox = new WeSayTextBox(ws, "_textToSearchForBox");
 			_window.Controls.Add((Control)textBox);
 			_window.Show();
