@@ -59,7 +59,7 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void CreateWithWritingSystem()
 		{
-			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") {DefaultFont = new FontDefinition("Arial")};
 			var listBox = new GeckoListBox(ws, null);
 			Assert.IsNotNull(listBox);
 			Assert.AreSame(ws, listBox.WritingSystem);
@@ -69,8 +69,8 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void TestAddItem()
 		{
-			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
-			WritingSystemDefinition ws2 = new WritingSystemDefinition("en");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") { DefaultFont = new FontDefinition("Arial") };
+			WritingSystemDefinition ws2 = new WritingSystemDefinition("en") { DefaultFont = new FontDefinition("Arial") };
 			var listBox = new GeckoListBox();
 			listBox.FormWritingSystem = ws;
 			listBox.MeaningWritingSystem = ws2;
@@ -100,8 +100,8 @@ namespace WeSay.UI.Tests
 		{
 			_countOfItemsDrawn = 0;
 			_itemToNotDrawYetDrawn  = false;
-			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
-			WritingSystemDefinition ws2 = new WritingSystemDefinition("en");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") { DefaultFont = new FontDefinition("Arial")};
+			WritingSystemDefinition ws2 = new WritingSystemDefinition("en") {DefaultFont = new FontDefinition("Arial")};
 			_listBox = new GeckoListBox();
 			_listBox.FormWritingSystem = ws;
 			_listBox.MeaningWritingSystem = ws2;
@@ -142,8 +142,8 @@ namespace WeSay.UI.Tests
 		{
 			_countOfItemsDrawn = 0;
 			_itemToNotDrawYetDrawn = false;
-			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
-			WritingSystemDefinition ws2 = new WritingSystemDefinition("en");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") { DefaultFont = new FontDefinition("Arial") };
+			WritingSystemDefinition ws2 = new WritingSystemDefinition("en") { DefaultFont = new FontDefinition("Arial") };
 			_listBox = new GeckoListBox();
 			_listBox.FormWritingSystem = ws;
 			_listBox.MeaningWritingSystem = ws2;

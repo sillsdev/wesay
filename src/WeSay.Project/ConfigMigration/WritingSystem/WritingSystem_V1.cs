@@ -5,8 +5,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using Exortech.NetReflector;
-using Palaso.UI.WindowsForms.Keyboarding;
-using Palaso.WritingSystems;
+using SIL.Windows.Forms.Keyboarding;
+using SIL.Keyboarding;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
@@ -31,7 +32,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
 		private bool _isUnicode = true;
 		private string _abbreviation;
-		private IWritingSystemDefinition _palasoWritingSystemDefinition;
+		private WritingSystemDefinition _palasoWritingSystemDefinition;
 
 		/// <summary>
 		/// default constructor required for deserialization
@@ -150,7 +151,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		///<param name="x">The first object to compare.</param>
 		public int Compare(string x, string y)
 		{
-			return _palasoWritingSystemDefinition.Collator.Compare(x, y);
+			return _palasoWritingSystemDefinition.DefaultCollation.Collator.Compare(x, y);
 			//return _sortComparer(x, y);
 		}
 
@@ -168,7 +169,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		public SortKey GetSortKey(string source)
 		{
-			return _palasoWritingSystemDefinition.Collator.GetSortKey(source);
+			return _palasoWritingSystemDefinition.DefaultCollation.Collator.GetSortKey(source);
 		}
 
 		// Same if behavior is same (not appearance)
@@ -253,7 +254,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				List<String> keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
 				foreach (IKeyboardDefinition kbd in
-					Keyboard.Controller.AllAvailableKeyboards)
+					Keyboard.Controller.AvailableKeyboards)
 				{
 					if (kbd.IsAvailable)
 					{

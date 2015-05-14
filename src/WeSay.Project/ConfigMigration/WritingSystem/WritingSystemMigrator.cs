@@ -1,15 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Palaso.IO;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.IO;
+using SIL.Reporting;
+using SIL.WritingSystems.Migration;
+using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
 {
@@ -38,14 +37,14 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		{
 			var oldMigrator = new WritingSystemPrefsMigrator(WritingSystemsOldPrefsFilePath, OnWritingSystemTagChange);
 			oldMigrator.MigrateIfNecassary();
-			var ldmlMigrator = new LdmlInFolderWritingSystemRepositoryMigrator(WritingSystemsPath, OnWritingSystemTagChange, WritingSystemCompatibility.Flex7V0Compatible);
+			var ldmlMigrator = new LdmlInFolderWritingSystemRepositoryMigrator(WritingSystemsPath, OnWritingSystemTagChange);
 			ldmlMigrator.Migrate();
 		}
 
-		public void OnWritingSystemTagChange(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> newToOldTagMap)
+		public void OnWritingSystemTagChange(int version, IEnumerable<LdmlMigrationInfo> newToOldTagMap)
 		{
 			//Only change rfcTags in files where they have actually changed
-			foreach (var oldAndNewRfcTag in newToOldTagMap.Where(m => !m.RfcTagBeforeMigration.Equals(m.RfcTagAfterMigration)))
+			foreach (var oldAndNewRfcTag in newToOldTagMap.Where(m => !m.LanguageTagBeforeMigration.Equals(m.LanguageTagAfterMigration)))
 			{
 				//The replacement strategy in this section should be specially tailored to the latest version of the '.lift' file. I.e. the lift file should always be migrated before the writing systems. If we up the lift file version this section may need to be updated.
 				foreach (var liftFilePath in Directory.GetFiles(ProjectPath, "*.lift"))
@@ -75,11 +74,10 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 																						string.Format(
 																							@"lang\s*=\s*[""']{0}[""']",
 																							Regex.Escape(
-																								oldAndNewRfcTag.
-																									RfcTagBeforeMigration)),
+																								oldAndNewRfcTag.LanguageTagBeforeMigration)),
 																						string.Format(
 																							@"lang=""{0}""",
-																							oldAndNewRfcTag.RfcTagAfterMigration)
+																							oldAndNewRfcTag.LanguageTagAfterMigration)
 																						)
 					);
 					SafelyMoveTempFileTofinalDestination(tempFile, liftFilePath);
@@ -94,7 +92,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 					var configFile = new ConfigFile(tempFile);
 					foreach (var oldAndNewId in newToOldTagMap)
 					{
-						configFile.ReplaceWritingSystemId(oldAndNewId.RfcTagBeforeMigration, oldAndNewId.RfcTagAfterMigration);
+						configFile.ReplaceWritingSystemId(oldAndNewId.LanguageTagBeforeMigration, oldAndNewId.LanguageTagAfterMigration);
 					}
 					SafelyMoveTempFileTofinalDestination(tempFile, configFilepath);
 				}
@@ -110,9 +108,9 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 						{
 							foreach (XmlNode node in xmlDoc.SelectNodes("//form"))
 							{
-								if (node.Attributes["lang"].Value == oldAndNewRfcTag.RfcTagBeforeMigration)
+								if (node.Attributes["lang"].Value == oldAndNewRfcTag.LanguageTagBeforeMigration)
 								{
-									node.Attributes["lang"].Value = oldAndNewRfcTag.RfcTagAfterMigration;
+									node.Attributes["lang"].Value = oldAndNewRfcTag.LanguageTagAfterMigration;
 								}
 							}
 						}

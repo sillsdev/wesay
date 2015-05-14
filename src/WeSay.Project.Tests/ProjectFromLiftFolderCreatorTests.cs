@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
-using Palaso.Reporting;
 using Palaso.TestUtilities;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.TestUtilities;
 
 namespace WeSay.Project.Tests
@@ -31,22 +29,8 @@ namespace WeSay.Project.Tests
 				get
 				{
 					return _writingSystems ?? (_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
-						WritingSystemsPath,
-						OnWritingSystemMigration,
-						OnWritingSystemLoadProblem,
-						WritingSystemCompatibility.Flex7V0Compatible
-					));
+						WritingSystemsPath));
 				}
-			}
-
-			private static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
-			{
-				throw new ApplicationException("Unexpected input system load problem during test.");
-			}
-
-			private static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
-			{
-				throw new ApplicationException("Unexpected input system migration during test.");
 			}
 
 			private string WritingSystemsPath
@@ -93,11 +77,10 @@ namespace WeSay.Project.Tests
 					  "0.12"
 				);
 				var collection = e.WritingSystems;
-				collection.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.OtherIdForTest));
-				collection.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.AnalysisIdForTest));
+				collection.Set(new WritingSystemDefinition(WritingSystemsIdsForTests.OtherIdForTest));
+				collection.Set(new WritingSystemDefinition(WritingSystemsIdsForTests.AnalysisIdForTest));
 				var vt = ViewTemplate.MakeMasterTemplate(collection);
 				//put one guy in there already
-				int originalCount = collection.Count;// collection.Count;
 
 				Assert.IsFalse(collection.Contains("qaa-x-blah"));
 				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, collection);
@@ -125,11 +108,10 @@ namespace WeSay.Project.Tests
 					"0.12"
 				);
 				var writingSystems = e.WritingSystems;
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.OtherIdForTest));
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.AnalysisIdForTest));
+				writingSystems.Set(new WritingSystemDefinition(WritingSystemsIdsForTests.OtherIdForTest));
+				writingSystems.Set(new WritingSystemDefinition(WritingSystemsIdsForTests.AnalysisIdForTest));
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 				//put one guy in there already
-				int originalCount = writingSystems.Count;// collection.Count;
 
 				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, writingSystems);
 				creator.SetWritingSystemsForFields();
@@ -140,6 +122,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void SetWritingSystemsForFields_Normal_FixesUpWritingSystemsForFields()
 		{
+			// Private use subtags can be 2-8 characters in length
 			using (var e = new TestEnvironment())
 			{
 				e.CreateLiftFile(
@@ -148,7 +131,7 @@ namespace WeSay.Project.Tests
 							<form lang='qaa-x-fromLU'><text></text></form>
 						</lexical-unit>
 						<sense	id='***_a86d6759-f9ea-4710-a818-2b4be9b81c98'>
-							<gloss lang='qaa-x-fromGloss'>
+							<gloss lang='qaa-x-fromGl'>
 								<text>meaning</text>
 							</gloss>
 							<definition>
@@ -157,11 +140,11 @@ namespace WeSay.Project.Tests
 								</form>
 							</definition>
 							<example>
-								<form lang='qaa-x-fromExample'>
+								<form lang='qaa-x-fromEx'>
 									<text>example</text>
 								</form>
 								<translation>
-									<form lang='qaa-x-fromTrans'>
+									<form lang='qaa-x-fromTrns'>
 										<text>translation</text>
 									</form>
 								</translation>
@@ -171,12 +154,12 @@ namespace WeSay.Project.Tests
 					"0.12"
 				);
 				var writingSystems = e.WritingSystems;
-				writingSystems.Set(WritingSystemDefinition.Parse("en"));
-				writingSystems.Set(WritingSystemDefinition.Parse("qaa-x-fromLU"));
-				writingSystems.Set(WritingSystemDefinition.Parse("qaa-x-fromGloss"));
-				writingSystems.Set(WritingSystemDefinition.Parse("qaa-x-fromDef"));
-				writingSystems.Set(WritingSystemDefinition.Parse("qaa-x-fromExample"));
-				writingSystems.Set(WritingSystemDefinition.Parse("qaa-x-fromTrans"));
+				writingSystems.Set(new WritingSystemDefinition("en"));
+				writingSystems.Set(new WritingSystemDefinition("qaa-x-fromLU"));
+				writingSystems.Set(new WritingSystemDefinition("qaa-x-fromGl"));
+				writingSystems.Set(new WritingSystemDefinition("qaa-x-fromDef"));
+				writingSystems.Set(new WritingSystemDefinition("qaa-x-fromEx"));
+				writingSystems.Set(new WritingSystemDefinition("qaa-x-fromTrns"));
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 
 				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, writingSystems);
@@ -190,11 +173,11 @@ namespace WeSay.Project.Tests
 				AssertFieldFirstWritingSystem(vt, LexEntry.WellKnownProperties.BaseForm, "qaa-x-fromLU");
 
 				AssertFieldHasWritingSystem(vt, LexEntry.WellKnownProperties.LexicalUnit, "qaa-x-fromLU");
-				AssertFieldHasWritingSystem(vt, LexSense.WellKnownProperties.Gloss, "qaa-x-fromGloss");
+				AssertFieldHasWritingSystem(vt, LexSense.WellKnownProperties.Gloss, "qaa-x-fromGl");
 				AssertFieldHasWritingSystem(vt, LexSense.WellKnownProperties.Definition, "qaa-x-fromDef");
 				AssertFieldLacksWritingSystem(vt, LexExampleSentence.WellKnownProperties.ExampleSentence, "v");
-				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.ExampleSentence, "qaa-x-fromExample");
-				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.Translation, "qaa-x-fromTrans");
+				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.ExampleSentence, "qaa-x-fromEx");
+				AssertFieldHasWritingSystem(vt, LexExampleSentence.WellKnownProperties.Translation, "qaa-x-fromTrns");
 
 				Assert.IsTrue(writingSystems.Contains("en"));
 
@@ -208,8 +191,8 @@ namespace WeSay.Project.Tests
 			{
 				e.CreateLiftFile("", "0.12");
 				var writingSystems = e.WritingSystems;
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.OtherIdForTest));
-				writingSystems.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.AnalysisIdForTest));
+				writingSystems.Set(new WritingSystemDefinition(WritingSystemsIdsForTests.OtherIdForTest));
+				writingSystems.Set(new WritingSystemDefinition(WritingSystemsIdsForTests.AnalysisIdForTest));
 				var vt = ViewTemplate.MakeMasterTemplate(writingSystems);
 
 				var creator = new ProjectFromLiftFolderCreator(e.LiftFilePath, vt, writingSystems);

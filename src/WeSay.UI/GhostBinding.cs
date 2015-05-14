@@ -275,7 +275,7 @@ namespace WeSay.UI
 		{
 			PropertyInfo info = o.GetType().GetProperty(propertyName);
 			MultiText text = (MultiText) info.GetValue(o, null);
-			text.SetAlternative(writingSystem.Id, value);
+			text.SetAlternative(writingSystem.LanguageTag, value);
 		}
 	}
 }

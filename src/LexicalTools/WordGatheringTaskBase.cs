@@ -34,7 +34,7 @@ namespace WeSay.LexicalTools
 
 		protected WritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
 		{
-			var ids = BasilProject.Project.WritingSystems.FilterForTextIetfLanguageTags(field.WritingSystemIds);
+			var ids = BasilProject.Project.WritingSystems.FilterForTextLanguageTags(field.WritingSystemIds);
 			if(ids.Count()==0)
 			{
 				throw new ConfigurationException(string.Format("The field {0} must have at least one non-audio input system.", field.DisplayName));

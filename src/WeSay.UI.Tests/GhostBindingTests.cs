@@ -96,7 +96,7 @@ namespace WeSay.UI.Tests
 			BasilProjectTestHelper.InitializeForTests();
 			_writingSystemId = WritingSystemsIdsForTests.AnalysisIdForTest;
 
-			WritingSystemDefinition writingSystem = new WritingSystemDefinition(_writingSystemId);
+			WritingSystemDefinition writingSystem = new WritingSystemDefinition(_writingSystemId) {DefaultFont = new FontDefinition("Arial")};
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);
 			_papaNameWidget.Text = "John";
 			_ghostFirstNameWidget = new WeSayTextBox(writingSystem, null);

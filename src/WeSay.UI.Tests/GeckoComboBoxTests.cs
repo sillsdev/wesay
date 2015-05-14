@@ -53,6 +53,8 @@ namespace WeSay.UI.Tests
 		public void CreateWithWritingSystem()
 		{
 			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			var comboBox = new GeckoComboBox(ws, null);
 			Assert.IsNotNull(comboBox);
 			Assert.AreSame(ws, comboBox.WritingSystem);
@@ -129,6 +131,8 @@ namespace WeSay.UI.Tests
 		{
 			var textBox = new GeckoComboBox();
 			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			Assert.DoesNotThrow(() => textBox.WritingSystem = ws);
 		}
 

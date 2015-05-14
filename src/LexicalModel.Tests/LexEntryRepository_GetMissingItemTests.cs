@@ -16,7 +16,10 @@ namespace WeSay.LexicalModel.Tests
 	{
 		private TemporaryFolder _temporaryFolder;
 		private LexEntryRepository _lexEntryRepository;
-		private readonly WritingSystemDefinition _lexicalFormWritingSystem =  new WritingSystemDefinition("de");
+		private readonly WritingSystemDefinition _lexicalFormWritingSystem =  new WritingSystemDefinition("de")
+		{
+			DefaultCollation = new IcuRulesCollationDefinition("standard")
+		};
 
 		[SetUp]
 		public void Setup()
@@ -50,7 +53,7 @@ namespace WeSay.LexicalModel.Tests
 		private LexEntry CreateEntryWithDefinition(IEnumerable<string> populatedWritingSystems, IEnumerable<string> emptyWritingSystems)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm.SetAlternative(_lexicalFormWritingSystem.Id, "theForm");
+			entry.LexicalForm.SetAlternative(_lexicalFormWritingSystem.LanguageTag, "theForm");
 
 			entry.Senses.Add(new LexSense());
 			foreach (var id in populatedWritingSystems)
@@ -79,6 +82,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Field fieldToFill = new Field("I do not exist!", "LexEntry", new string[] { "fr" });
 			WritingSystemDefinition lexicalFormWritingSystem = new WritingSystemDefinition("de");
+			lexicalFormWritingSystem.DefaultCollation = new IcuRulesCollationDefinition("standard");
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
 			Assert.AreEqual(0, sortedResults.Count);
@@ -100,6 +104,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateLexentryWithLexicalFormButWithoutCitation("de Word1", "de");
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "de" });
 			WritingSystemDefinition lexicalFormWritingSystem = new WritingSystemDefinition("de");
+			lexicalFormWritingSystem.DefaultCollation = new IcuRulesCollationDefinition("standard");
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
 			Assert.AreEqual(2, sortedResults.Count);
@@ -115,6 +120,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(lexEntryWithMissingCitation);
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "de" });
 			WritingSystemDefinition lexicalFormWritingSystem = new WritingSystemDefinition("fr");
+			lexicalFormWritingSystem.DefaultCollation = new IcuRulesCollationDefinition("standard");
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
 			Assert.AreEqual(1, sortedResults.Count);
@@ -127,6 +133,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateLexentryWithLexicalFormButWithoutCitation("de Word1", "de");
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.LexicalUnit, "LexEntry", new string[] { "de" });
 			WritingSystemDefinition lexicalFormWritingSystem = new WritingSystemDefinition("de");
+			lexicalFormWritingSystem.DefaultCollation = new IcuRulesCollationDefinition("standard");
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
 			Assert.AreEqual(0, sortedResults.Count);
@@ -139,6 +146,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateLexentryWithOnlyCitationForm("de Word1", "de");
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "fr" });
 			WritingSystemDefinition lexicalFormWritingSystem = new WritingSystemDefinition("de");
+			lexicalFormWritingSystem.DefaultCollation = new IcuRulesCollationDefinition("standard");
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, lexicalFormWritingSystem);
 			Assert.AreEqual(2, sortedResults.Count);
@@ -221,7 +229,10 @@ namespace WeSay.LexicalModel.Tests
 		{
 			private LexEntryRepository _repository;
 			private TemporaryFolder _temporaryFolder;
-			private readonly WritingSystemDefinition _vernacularWritingSystem = new WritingSystemDefinition("de");
+			private readonly WritingSystemDefinition _vernacularWritingSystem = new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			};
 
 			public TestEnvironment()
 			{
@@ -246,7 +257,7 @@ namespace WeSay.LexicalModel.Tests
 			private LexEntry CreateEntryWithDefinitionAndWs(IEnumerable<string> populatedWritingSystems, IEnumerable<string> emptyWritingSystems)
 			{
 				LexEntry entry = _repository.CreateItem();
-				entry.LexicalForm.SetAlternative(_vernacularWritingSystem.Id, "theForm");
+				entry.LexicalForm.SetAlternative(_vernacularWritingSystem.LanguageTag, "theForm");
 
 				entry.Senses.Add(new LexSense());
 				foreach (var id in populatedWritingSystems)

@@ -3,14 +3,13 @@ using System.IO;
 using System.Text;
 using Addin.Transform.PdfDictionary;
 using NUnit.Framework;
-using Palaso.Data;
 using Palaso.DictionaryServices.Model;
 using Palaso.Lift.Options;
-using Palaso.Linq;
 using Palaso.TestUtilities;
-using Palaso.WritingSystems;
+using SIL.Data;
+using SIL.Linq;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.Project.Tests;
 using Palaso.Lift; // review: really?
@@ -30,10 +29,20 @@ namespace Addin.Transform.Tests
         {
             _projectDir = new ProjectDirectorySetupForTesting("");
             _project = _projectDir.CreateLoadedProject();
-			_project.WritingSystems.Set(WritingSystemDefinition.Parse("fr"));
+	        var ws = _project.WritingSystems.Get("en");
+			ws.DefaultCollation = new IcuRulesCollationDefinition("standard");
+			_project.WritingSystems.Set(ws);
+			ws = _project.WritingSystems.Get("qaa");
+			ws.DefaultCollation = new IcuRulesCollationDefinition("standard");
+			_project.WritingSystems.Set(ws);
+
+            _project.WritingSystems.Set(new WritingSystemDefinition("fr")
+            {
+	            DefaultCollation = new IcuRulesCollationDefinition("standard")
+            });
             _repo = _project.GetLexEntryRepository();
             _entry = _repo.CreateItem();
-			_entry.LexicalForm.SetAlternative("qaa-x-qaa", "apple");
+            _entry.LexicalForm.SetAlternative("qaa", "apple");
 
           
             _project.DefaultPrintingTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.Add("fr");
@@ -130,8 +139,8 @@ namespace Addin.Transform.Tests
             var pathToSense = "div/div/div[@class='entry']/span[@class='senses']/span[@class='sense']";
             var pathToExamples = pathToSense+"/span[@class='examples']";
             AssertBodyHas(pathToExamples);
-			AssertBodyHas(pathToExamples + "/span[@class='example' and @lang='qaa-x-qaa' and text()='first example']");
-			AssertBodyHas(pathToExamples + "/span[@class='example' and @lang='qaa-x-qaa' and text()='second example']");
+			AssertBodyHas(pathToExamples + "/span[@class='example' and @lang='qaa' and text()='first example']");
+			AssertBodyHas(pathToExamples + "/span[@class='example' and @lang='qaa' and text()='second example']");
             //notice, they aren't nested in example
             var pathToTranslations = pathToExamples+"/span[@class='translations']";
             AssertBodyHas(pathToTranslations);
@@ -155,13 +164,13 @@ namespace Addin.Transform.Tests
             _entry.Senses.Add(sense);
             var e = new LexExampleSentence(sense);
             sense.ExampleSentences.Add(e);
-			e.Sentence.SetAlternative("qaa-x-qaa", "first example");
+			e.Sentence.SetAlternative("qaa", "first example");
             e.Translation.SetAlternative("en", "english translation");
             e.Translation.SetAlternative("fr", "un exemple");
 
             e = new LexExampleSentence(sense);
             sense.ExampleSentences.Add(e);
-			e.Sentence.SetAlternative("qaa-x-qaa", "second example");
+			e.Sentence.SetAlternative("qaa", "second example");
             e.Translation.SetAlternative("en", "english translation");
             e.Translation.SetAlternative("fr", "un autre exemple");
         }
@@ -182,17 +191,24 @@ namespace Addin.Transform.Tests
             // The windows SystemCollator using CultureInvariant sorts hyphens with the text, rather than default unicode
             // order.
             // To make this test pass we provide a custom ICU sort rule to do the same.
-			_project.WritingSystems.Get("qaa-x-qaa").SortUsingCustomICU("&[last primary ignorable] <<< '-' <<< ' '");
+	        var ws = _project.WritingSystems.Get("qaa");
+            const string icuRules = "&[last primary ignorable] <<< '-' <<< ' '";
+            var cd = new IcuRulesCollationDefinition("standard")
+            {
+                IcuRules = icuRules,
+            };
+            ws.DefaultCollation = cd;
+            _project.WritingSystems.Set(ws);
             var entries = new List<LexEntry>();
             entries.Add(_entry);
 
             var pineapple = _repo.CreateItem();
             entries.Add(pineapple);
-			pineapple.LexicalForm.SetAlternative("qaa-x-qaa", "-pineapple");//should skip hyphen
+			pineapple.LexicalForm.SetAlternative("qaa", "-pineapple");//should skip hyphen
 
             var pear = _repo.CreateItem();
             entries.Add(pear);
-			pear.LexicalForm.SetAlternative("qaa-x-qaa", "pear");
+			pear.LexicalForm.SetAlternative("qaa", "pear");
             
             var contents = GetXhtmlContents(entries);
 
@@ -219,7 +235,7 @@ namespace Addin.Transform.Tests
  
             var word = _repo.CreateItem();
             entries.Add(word);
-			word.LexicalForm.SetAlternative("qaa-x-qaa", "ee");
+			word.LexicalForm.SetAlternative("qaa", "ee");
 
             var contents = GetXhtmlContents(entries);
 
@@ -230,9 +246,9 @@ namespace Addin.Transform.Tests
         public void TwoEntryCrossRefferences()
         {
             var targetOne = _repo.CreateItem();
-			targetOne.LexicalForm.SetAlternative("qaa-x-qaa", "targetOne");
+			targetOne.LexicalForm.SetAlternative("qaa", "targetOne");
             var targetTwo = _repo.CreateItem();
-			targetTwo.LexicalForm.SetAlternative("qaa-x-qaa", "targetTwo");
+			targetTwo.LexicalForm.SetAlternative("qaa", "targetTwo");
 
             var crossRefs =_entry.GetOrCreateProperty<LexRelationCollection>(LexEntry.WellKnownProperties.CrossReference);
             crossRefs.Relations.Add(new LexRelation(LexEntry.WellKnownProperties.CrossReference, targetOne.Id, _entry));
@@ -253,7 +269,7 @@ namespace Addin.Transform.Tests
 		public void RelationToADeletedEntryIgnored()
 		{
 			var targetOne = _repo.CreateItem();
-			targetOne.LexicalForm.SetAlternative("qaa-x-qaa", "targetOne");
+			targetOne.LexicalForm.SetAlternative("qaa", "targetOne");
 
 			var crossRefs = _entry.GetOrCreateProperty<LexRelationCollection>(LexEntry.WellKnownProperties.CrossReference);
 			crossRefs.Relations.Add(new LexRelation(LexEntry.WellKnownProperties.CrossReference, "longGone", _entry));
@@ -271,7 +287,7 @@ namespace Addin.Transform.Tests
 
             var secondOne = _repo.CreateItem();
             entries.Add(secondOne);
-			secondOne.LexicalForm.SetAlternative("qaa-x-qaa", _entry.GetHeadWordForm("qaa-x-qaa"));
+			secondOne.LexicalForm.SetAlternative("qaa", _entry.GetHeadWordForm("qaa"));
 
             var contents = GetXhtmlContents(entries);
 
@@ -288,7 +304,7 @@ namespace Addin.Transform.Tests
 
             var secondOne = _repo.CreateItem();
             entries.Add(secondOne);
-			secondOne.LexicalForm.SetAlternative("qaa-x-qaa", "banana");
+			secondOne.LexicalForm.SetAlternative("qaa", "banana");
 
             var contents = GetXhtmlContents(entries);
 

@@ -92,11 +92,11 @@ namespace WeSay.Project.Tests
 				scenario.AssertDirExistsInWorkingDirectory(".hg");
 				scenario.AssertFileExistsInRepo("Test.lift");
 				scenario.AssertFileExistsInRepo("Test.WeSayConfig");
-				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "qaa-x-qaa.ldml"));
+				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "qaa.ldml"));
 				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "en.ldml"));
 				scenario.AssertFileExistsInWorkingDirectory("Test.lift");
 				scenario.AssertFileExistsInWorkingDirectory("Test.WeSayConfig");
-				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "qaa-x-qaa.ldml"));
+				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "qaa.ldml"));
 				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "en.ldml"));
 			}
 		}

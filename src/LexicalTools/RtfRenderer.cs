@@ -217,7 +217,7 @@ namespace WeSay.LexicalTools
 
 				if (field == null) // show them all
 				{
-					foreach (string id in WritingSystems.FilterForTextIetfLanguageTags(text.Forms.Select(f=>f.WritingSystemId)))
+					foreach (string id in WritingSystems.FilterForTextLanguageTags(text.Forms.Select(f=>f.WritingSystemId)))
 					{
 
 						var form = text.Forms.First(f => f.WritingSystemId == id);

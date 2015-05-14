@@ -353,7 +353,7 @@ namespace WeSay.Project
 			{
 				return text.Forms;
 			}
-			return text.GetOrderedAndFilteredForms(_viewTemplate.WritingSystems.FilterForTextIetfLanguageTags(f.WritingSystemIds));
+			return text.GetOrderedAndFilteredForms(_viewTemplate.WritingSystems.FilterForTextLanguageTags(f.WritingSystemIds));
 		}
 	}
 }

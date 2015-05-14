@@ -40,7 +40,7 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void CreateWithWritingSystem()
 		{
-			WritingSystemDefinition ws = new WritingSystemDefinition();
+			WritingSystemDefinition ws = new WritingSystemDefinition() {DefaultFont = new FontDefinition("Arial")};
 			IWeSayTextBox textBox = new WeSayTextBox(ws, null);
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
@@ -79,7 +79,7 @@ namespace WeSay.UI.Tests
 		[Platform(Exclude="Unix")]
 		public void TextReflectsKeystrokes()
 		{
-			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") {DefaultFont = new FontDefinition("Arial")};
 			IWeSayTextBox textBox = new WeSayTextBox(ws, "_textToSearchForBox");
 			_window.Controls.Add((Control)textBox);
 			_window.Show();

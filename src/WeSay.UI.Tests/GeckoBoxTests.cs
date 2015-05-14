@@ -54,6 +54,8 @@ namespace WeSay.UI.Tests
 		public void CreateWithWritingSystem()
 		{
 			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			IWeSayTextBox textBox = new GeckoBox(ws, null);
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
@@ -62,6 +64,8 @@ namespace WeSay.UI.Tests
 		public void KeyboardInputTest()
 		{
 			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			IWeSayTextBox textBox = new GeckoBox(ws, "ControlUnderTest");
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
@@ -83,6 +87,8 @@ namespace WeSay.UI.Tests
 		public void KeyboardInputAfterInitialValueTest()
 		{
 			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			IWeSayTextBox textBox = new GeckoBox(ws, "ControlUnderTest");
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
@@ -109,6 +115,8 @@ namespace WeSay.UI.Tests
 		public void KeyboardInputWhenReadOnlyTest()
 		{
 			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			IWeSayTextBox textBox = new GeckoBox(ws, "ControlUnderTest");
 			textBox.ReadOnly = true;
 			Assert.IsNotNull(textBox);

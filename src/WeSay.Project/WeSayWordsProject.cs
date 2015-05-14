@@ -23,16 +23,17 @@ using Chorus.UI.Notes.Bar;
 using Microsoft.Practices.ServiceLocation;
 using Palaso.DictionaryServices.Lift;
 using Palaso.DictionaryServices.Model;
-using Palaso.IO;
+using SIL.IO;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Lift.Validation;
-using Palaso.Progress;
-using Palaso.Reporting;
-using Palaso.UI.WindowsForms.Progress;
-using Palaso.UiBindings;
-using Palaso.WritingSystems;
-using Palaso.Xml;
+using SIL.LexiconUtils;
+using SIL.Progress;
+using SIL.Reporting;
+using SIL.Windows.Forms.Progress;
+using SIL.UiBindings;
+using SIL.WritingSystems;
+using SIL.Xml;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation.Options;
@@ -66,8 +67,8 @@ namespace WeSay.Project
 		readonly Dictionary<string, string> _changedWritingSystemIds = new Dictionary<string, string>();
 		private bool _alreadyReportedWsLookupFailure;
 
-		//public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new vrsion of the WeSayConfig file
-		public const int CurrentWeSayUserSpecificConfigFileVersion = 2; // This variable must be updated with every new vrsion of the WeSayUserConfig file
+		//public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new version of the WeSayConfig file
+		public const int CurrentWeSayUserSpecificConfigFileVersion = 2; // This variable must be updated with every new version of the WeSayUserConfig file
 
 		public event EventHandler EditorsSaveNow;
 
@@ -77,11 +78,11 @@ namespace WeSay.Project
 			public string to;
 		}
 
-		public const string VernacularWritingSystemIdForProjectCreation = "qaa-x-qaa";
+		public const string VernacularWritingSystemIdForProjectCreation = WellKnownSubtags.UnlistedLanguage;
 		public const string AnalysisWritingSystemIdForProjectCreation = "en";
 
 		public event EventHandler<StringPair> WritingSystemChanged;
-		public event WritingSystemDeleted WritingSystemDeleted;
+		public event EventHandler<WritingSystemDeletedEventArgs> WritingSystemDeleted;
 
 		public WeSayWordsProject()
 		{
@@ -175,7 +176,7 @@ namespace WeSay.Project
 			throw error;
 #else
 			//todo: make a way to pass on this error to us
-			Palaso.Reporting.ErrorReport.NotifyUserOfProblem(
+			SIL.Reporting.ErrorReport.NotifyUserOfProblem(
 				"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.");
 #endif
 		}
@@ -288,7 +289,7 @@ namespace WeSay.Project
 				PathToLiftFile = preferredLiftFile;
 				string projectName = Path.GetFileName(Path.GetFileNameWithoutExtension(preferredLiftFile));
 
-				CreateEmptyProjectFiles(projectDirectoryPath, projectName);
+				CreateEmptyProjectFiles(projectDirectoryPath, projectName, WellKnownSubtags.UnlistedLanguage);
 				LoadFromProjectDirectoryPathInner(projectDirectoryPath);
 
 				//will rarely be needed... only when we're starting with a raw lift folder
@@ -307,7 +308,7 @@ namespace WeSay.Project
 
 			//may have already been done, but maybe not
 			MoveFilesFromOldDirLayout(projectDirectoryPath);
-			if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
+			if (SIL.Reporting.ErrorReport.IsOkToInteractWithUser)
 			{
 				var dialog = new ProgressDialog();
 				var worker = new BackgroundWorker();
@@ -349,26 +350,43 @@ namespace WeSay.Project
 		private static void MigrateProjectFilesAndCheckForOrphanedWritingSystems(string projectDirectory)
 		{
 			string liftFilePath = LiftFileLocator.LocateInDirectoryQuietly(projectDirectory);
-			string configFilePath = GetPathToConfigFile(projectDirectory, GetProjectNameFromLiftFilePath(liftFilePath));
+			string projectName = GetProjectNameFromLiftFilePath(liftFilePath);
+			string configFilePath = GetPathToConfigFile(projectDirectory, projectName);
 			string userConfigPath = PathToUserSpecificConfigFile(projectDirectory);
 
 			//migrate writing systems
 			var writingSystemMigrator = new WritingSystemsMigrator(projectDirectory);
 			writingSystemMigrator.MigrateIfNecessary();
 
+			if (!Directory.Exists(Path.Combine(projectDirectory, "SharedSettings")))
+				Directory.CreateDirectory(Path.Combine(projectDirectory, "SharedSettings"));
+			var userSettingsStore = new FileSettingsStore(PathToUserSpecificSettingsFile(projectDirectory));
+			var userSettingsDataMapper = new UserLexiconSettingsWritingSystemDataMapper(userSettingsStore);
+			var projectSettingsStore = new FileSettingsStore(PathToProjectSettingsFile(projectDirectory));
+			var projectSettingsDataMapper = new ProjectLexiconSettingsWritingSystemDataMapper(projectSettingsStore);
+
+			ICustomDataMapper<WritingSystemDefinition>[] customDataMapper =
+			{
+				userSettingsDataMapper,
+				projectSettingsDataMapper
+			};
+
 			// Load the writing systems
 			var writingSystemRepository = LdmlInFolderWritingSystemRepository.Initialize(
 				GetPathToLdmlWritingSystemsFolder(projectDirectory),
+				customDataMapper,
+				null,
 				OnWritingSystemMigration,
-				OnWritingSystemLoadProblem,
-				WritingSystemCompatibility.Flex7V0Compatible
-			);
+				OnWritingSystemLoadProblem);
+
+			// WS_FIX: Try to set WritingSystemFactory.TemplateFolder
+			var wf = (LdmlInFolderWritingSystemFactory) writingSystemRepository.WritingSystemFactory;
+			wf.TemplateFolder = GetPathToLdmlWritingSystemsFolder(ApplicationCommonDirectory);
 
 			//migrate the project config file
-			ConfigFile projectConfigFile = null;
 			if (File.Exists(configFilePath)) // will be null if we're creating a new project
 			{
-				projectConfigFile = new ConfigFile(configFilePath);
+				var projectConfigFile = new ConfigFile(configFilePath);
 				projectConfigFile.MigrateIfNecassary();
 				//check for orphaned writing systems in the config file
 				projectConfigFile.CreateWritingSystemsForIdsInFileWhereNecassary(writingSystemRepository);
@@ -382,7 +400,7 @@ namespace WeSay.Project
 			}
 
 			//migrate user config
-			var userConfigMigrator = new WeSayUserConfigMigrator(userConfigPath);
+			var userConfigMigrator = new WeSayUserConfigMigrator(userConfigPath, writingSystemRepository);
 			userConfigMigrator.MigrateIfNeeded();
 		}
 
@@ -398,7 +416,7 @@ namespace WeSay.Project
 		   Type serviceType
 		);
 
-		//TOdo: figure out how to move this to wher it belongs... should be doable if/when we
+		//TODO: figure out how to move this to where it belongs... should be doable if/when we
 		//can do container building from within the lexical assemblies.
 		public static string GetUrlFromLexEntry(LexEntry entry)
 		{
@@ -692,7 +710,6 @@ namespace WeSay.Project
 				dom.Load(PathToUserSpecificConfigFile(ProjectDirectoryPath));
 				BackupMaker = ChorusBackupMaker.CreateFromDom(dom, _container.Resolve<CheckinDescriptionBuilder>());
 				UiOptions = UiConfigurationOptions.CreateFromDom(dom);
-				WritingSystems.LocalKeyboardSettings = GetKeyboardsFromDom(dom);
 			}
 
 			if (BackupMaker == null)
@@ -704,14 +721,6 @@ namespace WeSay.Project
 			{
 				UiOptions = _container.Resolve<UiConfigurationOptions>();
 			}
-		}
-
-		private string GetKeyboardsFromDom(XmlDocument dom)
-		{
-			var kbnode = dom.SelectSingleNode("/configuration/keyboards");
-			if (kbnode != null && !String.IsNullOrEmpty(kbnode.OuterXml))
-				return kbnode.OuterXml.Trim();
-			return WritingSystems.LocalKeyboardSettings;	// return original value
 		}
 
 		private static void MoveFilesFromOldDirLayout(string projectDir)
@@ -944,10 +953,10 @@ namespace WeSay.Project
 		}
 
 
-		public static void CreateEmptyProjectFiles(string projectDirectoryPath)
+		public static void CreateEmptyProjectFiles(string projectDirectoryPath, string languageTag)
 		{
 			string name = Path.GetFileName(projectDirectoryPath);
-			CreateEmptyProjectFiles(projectDirectoryPath, name);
+			CreateEmptyProjectFiles(projectDirectoryPath, name, languageTag);
 		}
 
 		/// <summary>
@@ -955,7 +964,7 @@ namespace WeSay.Project
 		/// </summary>
 		/// <param name="projectDirectoryPath"></param>
 		/// <param name="projectName"></param>
-		public static void CreateEmptyProjectFiles(string projectDirectoryPath, string projectName)
+		public static void CreateEmptyProjectFiles(string projectDirectoryPath, string projectName, string languageTag)
 		{
 			if(!Directory.Exists(projectDirectoryPath))
 			{
@@ -978,7 +987,7 @@ namespace WeSay.Project
 			}
 
 			//hack
-			StickDefaultViewTemplateInNewConfigFile(projectDirectoryPath, pathToConfigFile);
+			StickDefaultViewTemplateInNewConfigFile(projectDirectoryPath, pathToConfigFile, languageTag);
 		}
 
 		/// <summary>
@@ -988,15 +997,26 @@ namespace WeSay.Project
 		/// </summary>
 		/// <param name="projectPath"></param>
 		/// <param name="pathToConfigFile"></param>
-		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile)
+		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile, string languageTag)
 		{
+			var userSettingsDataMapper =
+				new UserLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(PathToUserSpecificSettingsFile(projectPath)));
+			var projectSettingsDataMapper =
+				new ProjectLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(PathToProjectSettingsFile(projectPath)));
+			ICustomDataMapper<WritingSystemDefinition>[] customDataMapper =
+			{
+				userSettingsDataMapper,
+				projectSettingsDataMapper
+			};
+
 			var writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
 				GetPathToLdmlWritingSystemsFolder(projectPath),
+				customDataMapper,
+				null,
 				OnWritingSystemMigration,
-				OnWritingSystemLoadProblem,
-				WritingSystemCompatibility.Flex7V0Compatible
-			);
-			var template = ViewTemplate.MakeMasterTemplate(writingSystems);
+				OnWritingSystemLoadProblem);
+
+			var template = ViewTemplate.MakeMasterTemplate(writingSystems, languageTag);
 			var builder = new StringBuilder();
 			using (var writer = XmlWriter.Create(builder, CanonicalXmlSettings.CreateXmlWriterSettings(ConformanceLevel.Fragment)))
 			{
@@ -1029,6 +1049,16 @@ namespace WeSay.Project
 		private static string GetPathToConfigFile(string directoryInProject, string name)
 		{
 			return String.IsNullOrEmpty(name) ? "" : Path.Combine(directoryInProject, name + ".WeSayConfig");
+		}
+
+		public static string PathToUserSpecificSettingsFile(string projectDirectory)
+		{
+			return Path.Combine(Path.Combine(projectDirectory, "SharedSettings"), System.Environment.UserName + ".lusx");
+		}
+
+		private static string PathToProjectSettingsFile(string projectDirectory)
+		{
+			return Path.Combine(Path.Combine(projectDirectory, "SharedSettings"), "LexiconProjectSettings.lpsx");
 		}
 
 		/// <summary>
@@ -1289,7 +1319,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public IWritingSystemDefinition HeadWordWritingSystem
+		public WritingSystemDefinition HeadWordWritingSystem
 		{
 			get
 			{
@@ -1452,23 +1482,10 @@ namespace WeSay.Project
 			if (UiOptions != null)
 				UiOptions.Save(writer);
 
-			if (WritingSystems != null && !String.IsNullOrEmpty(WritingSystems.LocalKeyboardSettings))
-				SaveKeyboardSettings(writer);
-
 			writer.WriteEndDocument();
 			writer.Close();
 
 			pendingConfigFile.WriteWasSuccessful();
-		}
-
-		private void SaveKeyboardSettings(XmlWriter writer)
-		{
-			// The data is already XML.  Ensure it's formatted properly on output.
-			var str = new StringReader(WritingSystems.LocalKeyboardSettings);
-			var settings = new XmlReaderSettings();
-			settings.IgnoreWhitespace = true;
-			var reader = XmlReader.Create(str, settings);
-			writer.WriteNode(reader, false);
 		}
 
 		public Field GetFieldFromDefaultViewTemplate(string fieldName)

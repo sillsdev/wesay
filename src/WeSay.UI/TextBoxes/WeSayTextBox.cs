@@ -180,7 +180,7 @@ namespace WeSay.UI.TextBoxes
 				_haveAlreadyLoggedTextChanged = true;
 				Logger.WriteMinorEvent("First_TextChange (could be paste via mouse) {0}:{1}",
 									   _nameForLogging,
-									   _writingSystem.Id);
+									   _writingSystem.LanguageTag);
 			}
 			LanguageForm.AdjustSpansForTextChange(_previousText, Text, Spans);
 			_previousText = Text;
@@ -192,13 +192,13 @@ namespace WeSay.UI.TextBoxes
 			if (!_haveAlreadyLoggedTextChanged)
 			{
 				_haveAlreadyLoggedTextChanged = true;
-				Logger.WriteMinorEvent("First_KeyPress {0}:{1}", _nameForLogging, _writingSystem.Id);
+				Logger.WriteMinorEvent("First_KeyPress {0}:{1}", _nameForLogging, _writingSystem.LanguageTag);
 			}
 		}
 
 		private void OnLostFocus(object sender, EventArgs e)
 		{
-			Logger.WriteMinorEvent("LostFocus {0}:{1}", _nameForLogging, _writingSystem.Id);
+			Logger.WriteMinorEvent("LostFocus {0}:{1}", _nameForLogging, _writingSystem.LanguageTag);
 			if (UserLostFocus != null)
 			{
 				UserLostFocus.Invoke(sender, e);
@@ -207,7 +207,7 @@ namespace WeSay.UI.TextBoxes
 
 		private void OnGotFocus(object sender, EventArgs e)
 		{
-			Logger.WriteMinorEvent("Focus {0}:{1}", _nameForLogging, _writingSystem.Id);
+			Logger.WriteMinorEvent("Focus {0}:{1}", _nameForLogging, _writingSystem.LanguageTag);
 			_haveAlreadyLoggedTextChanged = false;
 			if (UserGotFocus != null)
 			{

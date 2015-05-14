@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
+﻿using System.IO;
 using NUnit.Framework;
 using SIL.Reporting;
+using SIL.WritingSystems;
 using Palaso.TestUtilities;
 using WeSay.Project;
 
@@ -26,7 +22,7 @@ namespace WeSay.ConfigTool.Tests
 			public void CreateDefaultProject()
 			{
 				new WeSayWordsProject();
-				WeSayWordsProject.CreateEmptyProjectFiles(Path);
+				WeSayWordsProject.CreateEmptyProjectFiles(Path, WellKnownSubtags.UnlistedLanguage);
 				WeSayWordsProject.Project.LoadFromProjectDirectoryPath(Path);
 				WeSayWordsProject.Project.Save();
 			}

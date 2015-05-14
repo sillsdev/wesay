@@ -35,11 +35,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1");
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			LexEntry entryAfterFirstQuery = _repository.CreateItem();
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual(null, results[0]["Form"]);
 			Assert.AreEqual("word 1", results[1]["Form"]);
@@ -58,12 +64,18 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			entryBeforeFirstQuery.LexicalForm.SetAlternative("de", "word 1");
 			_repository.SaveItem(entryBeforeFirstQuery);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 			Assert.AreEqual(1, results.Count);
 			Assert.AreEqual("word 1", results[0]["Form"]);
 		}
@@ -75,13 +87,19 @@ namespace WeSay.LexicalModel.Tests
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0"));
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1"));
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			entriesToModify[0].LexicalForm["de"] = "word 3";
 			entriesToModify[1].LexicalForm["de"] = "word 2";
 			_repository.SaveItems(entriesToModify);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual("word 2", results[0]["Form"]);
 			Assert.AreEqual("word 3", results[1]["Form"]);
@@ -93,11 +111,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteItem(entrytoBeDeleted);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -106,11 +130,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteItem(_repository.GetId(entrytoBeDeleted));
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -119,11 +149,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteAllItems();
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByHeadword(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -132,11 +168,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1");
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			LexEntry entryAfterFirstQuery = _repository.CreateItem();
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual(null, results[0]["Form"]);
 			Assert.AreEqual("word 1", results[1]["Form"]);
@@ -147,12 +189,18 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			entryBeforeFirstQuery.LexicalForm.SetAlternative("de", "word 1");
 			_repository.SaveItem(entryBeforeFirstQuery);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 			Assert.AreEqual(1, results.Count);
 			Assert.AreEqual("word 1", results[0]["Form"]);
 		}
@@ -164,13 +212,19 @@ namespace WeSay.LexicalModel.Tests
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0"));
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1"));
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			entriesToModify[0].LexicalForm["de"] = "word 3";
 			entriesToModify[1].LexicalForm["de"] = "word 2";
 			_repository.SaveItems(entriesToModify);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual("word 2", results[0]["Form"]);
 			Assert.AreEqual("word 3", results[1]["Form"]);
@@ -182,7 +236,10 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteItem(entrytoBeDeleted);
 
@@ -195,7 +252,10 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteItem(_repository.GetId(entrytoBeDeleted));
 
@@ -208,7 +268,10 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteAllItems();
 
@@ -227,7 +290,11 @@ namespace WeSay.LexicalModel.Tests
 			CreateCaches();
 			entryToUpdate.LexicalForm.SetAlternative("de", "word 1");
 			_repository.NotifyThatLexEntryHasBeenUpdated(entryToUpdate);
-			WritingSystemDefinition writingSystemToMatch = new WritingSystemDefinition("de");
+			WritingSystemDefinition writingSystemToMatch = new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			};
+
 			ResultSet<LexEntry> headWordResults = _repository.GetAllEntriesSortedByHeadword(writingSystemToMatch);
 			ResultSet<LexEntry> lexicalFormResults = _repository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystemToMatch);
 			Assert.AreEqual("word 1", headWordResults[0]["Form"]);
@@ -236,7 +303,11 @@ namespace WeSay.LexicalModel.Tests
 
 		private void CreateCaches()
 		{
-			WritingSystemDefinition writingSystemToMatch = new WritingSystemDefinition("de");
+			WritingSystemDefinition writingSystemToMatch = new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			};
+
 			_repository.GetAllEntriesSortedByHeadword(writingSystemToMatch);
 			_repository.GetAllEntriesSortedByLexicalFormOrAlternative(writingSystemToMatch);
 			//_repository.GetAllEntriesSortedByDefinitionOrGloss(writingSystemToMatch);
@@ -262,7 +333,10 @@ namespace WeSay.LexicalModel.Tests
 			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "de" });
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1");
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			LexEntry entryAfterFirstQuery = _repository.CreateItem();
 
@@ -279,7 +353,10 @@ namespace WeSay.LexicalModel.Tests
 
 			LexEntry entryBeforeFirstQuery = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			entryBeforeFirstQuery.LexicalForm.SetAlternative("de", "word 1");
 			_repository.SaveItem(entryBeforeFirstQuery);
@@ -298,7 +375,10 @@ namespace WeSay.LexicalModel.Tests
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0"));
 			entriesToModify.Add(CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 1"));
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			entriesToModify[0].LexicalForm["de"] = "word 3";
 			entriesToModify[1].LexicalForm["de"] = "word 2";
@@ -317,7 +397,10 @@ namespace WeSay.LexicalModel.Tests
 
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteItem(entrytoBeDeleted);
 
@@ -332,7 +415,10 @@ namespace WeSay.LexicalModel.Tests
 
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteItem(_repository.GetId(entrytoBeDeleted));
 
@@ -347,11 +433,18 @@ namespace WeSay.LexicalModel.Tests
 
 			LexEntry entrytoBeDeleted = CreateEntryWithLexicalFormBeforeFirstQuery("de", "word 0");
 
-			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de"));
+			_repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteAllItems();
 
-			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, null, new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
+
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -369,11 +462,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 1");
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			LexEntry entryAfterFirstQuery = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 2");
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual("word 1", results[0]["Form"]);
 			Assert.AreEqual("word 2", results[1]["Form"]);
@@ -384,12 +483,19 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entryBeforeFirstQuery = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			entryBeforeFirstQuery.Senses[0].Definition.SetAlternative("de", "word 1");
 			_repository.SaveItem(entryBeforeFirstQuery);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
+
 			Assert.AreEqual(1, results.Count);
 			Assert.AreEqual("word 1", results[0]["Form"]);
 		}
@@ -401,13 +507,20 @@ namespace WeSay.LexicalModel.Tests
 			entriesToModify.Add(CreateEntryWithDefinitionBeforeFirstQuery("de", "word 0"));
 			entriesToModify.Add(CreateEntryWithDefinitionBeforeFirstQuery("de", "word 1"));
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			entriesToModify[0].Senses[0].Definition["de"] = "word 3";
 			entriesToModify[1].Senses[0].Definition["de"] = "word 2";
 			_repository.SaveItems(entriesToModify);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
+
 			Assert.AreEqual(2, results.Count);
 			Assert.AreEqual("word 2", results[0]["Form"]);
 			Assert.AreEqual("word 3", results[1]["Form"]);
@@ -418,11 +531,18 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteItem(entrytoBeDeleted);
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
+
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -431,11 +551,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteItem(_repository.GetId(entrytoBeDeleted));
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 			Assert.AreEqual(0, results.Count);
 		}
 
@@ -444,11 +570,18 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entrytoBeDeleted = CreateEntryWithDefinitionBeforeFirstQuery("de", "word 0");
 
-			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			_repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
 
 			_repository.DeleteAllItems();
 
-			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de"));
+			ResultSet<LexEntry> results = _repository.GetAllEntriesSortedByDefinitionOrGloss(new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			});
+
 			Assert.AreEqual(0, results.Count);
 		}
 

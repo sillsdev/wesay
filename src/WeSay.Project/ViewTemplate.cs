@@ -324,9 +324,9 @@ namespace WeSay.Project
 			}
 		}
 
-		public static ViewTemplate MakeMasterTemplate(IWritingSystemRepository writingSystems)
+		public static ViewTemplate MakeMasterTemplate(IWritingSystemRepository writingSystems, string languageTag = WeSayWordsProject.VernacularWritingSystemIdForProjectCreation)
 		{
-			var defaultVernacularSet = new List<string> {WeSayWordsProject.VernacularWritingSystemIdForProjectCreation};
+			var defaultVernacularSet = new List<string> {languageTag};
 
 			var defaultAnalysisSet = new List<string> {WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation};
 
@@ -739,7 +739,7 @@ namespace WeSay.Project
 					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
 				}
 			}
-			return WritingSystems.FilterForTextIetfLanguageTags(fieldControllingHeadwordOutput.WritingSystemIds);
+			return WritingSystems.FilterForTextLanguageTags(fieldControllingHeadwordOutput.WritingSystemIds);
 		}
 
 		public IWritingSystemRepository WritingSystems

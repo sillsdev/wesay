@@ -515,7 +515,7 @@ namespace WeSay.UI.TextBoxes
 			{
 				// WS_FIX
 				String language, script, region, variant;
-				IetfLanguageTagHelper.TryGetParts(ws.IetfLanguageTag, out language, out script, out region, out variant);
+				IetfLanguageTag.TryGetParts(ws.LanguageTag, out language, out script, out region, out variant);
 				langName = "lang='" + language + "' ";
 			}
 			return langName;

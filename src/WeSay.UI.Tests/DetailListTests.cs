@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 using NUnit.Framework;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
@@ -10,7 +10,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class DetailListTests
 	{
-		private readonly IWritingSystemDefinition _ws = WritingSystemDefinition.Parse("qaa-x-qaa");
+		private readonly WritingSystemDefinition _ws = new WritingSystemDefinition("qaa");
 		private DetailList _control;
 		private Control _focussedControl;
 		private Form _window;
@@ -18,7 +18,7 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_ws.DefaultFontName = "Arial";
+			_ws.DefaultFont = new FontDefinition("Arial");
 			_ws.DefaultFontSize = 30;
 			_control = new DetailList();
 			//Application.Init();

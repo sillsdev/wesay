@@ -19,6 +19,7 @@ lib/
 L10NSharp.*
 vagrant/.vagrant
 external/
+SampleProjects
 common/*.po
 Downloads/
 MercurialExtensions/

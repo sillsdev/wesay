@@ -24,8 +24,12 @@ namespace WeSay.UI.Tests
 		public void TargetToWidget()
 		{
 			MultiText text = new MultiText();
+			var ws = new WritingSystemDefinition("qaa");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
+
 			IWeSayTextBox widget =
-					new WeSayTextBox(new WritingSystemDefinition("qaa-x-qaa"), null);
+					new WeSayTextBox(ws, null);
 			new TextBinding(text, "vernacular", (Control)widget);
 
 			text["vernacular"] = "hello";
@@ -38,8 +42,11 @@ namespace WeSay.UI.Tests
 		public void WidgetToTarget()
 		{
 			MultiText text = new MultiText();
+			var ws = new WritingSystemDefinition("qaa");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			WeSayTextBox widget =
-					new WeSayTextBox(new WritingSystemDefinition("qaa-x-qaa"), null);
+					new WeSayTextBox(ws, null);
 
 			var binding = new TextBinding(text, "vernacular", widget);
 

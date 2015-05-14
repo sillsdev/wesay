@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
-using Palaso.IO;
+using SIL.IO;
 using Palaso.TestUtilities;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
 using WeSay.TestUtilities;
 
 namespace WeSay.Project.Tests
@@ -363,11 +363,11 @@ namespace WeSay.Project.Tests
 				get
 				{
 					return _writingSystems ?? (_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
-						WritingSystemsPath,
+						ConfigFilePath,
+						null,
+						null,
 						OnWritingSystemMigration,
-						OnWritingSystemLoadProblem,
-						WritingSystemCompatibility.Flex7V0Compatible
-					));
+						OnWritingSystemLoadProblem));
 				}
 			}
 
@@ -376,7 +376,7 @@ namespace WeSay.Project.Tests
 				throw new ApplicationException("Unexpected input system load problem during test.");
 			}
 
-			private static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+			private static void OnWritingSystemMigration(int version, IEnumerable<LdmlMigrationInfo> migrationinfo)
 			{
 				throw new ApplicationException("Unexpected input system migration during test.");
 			}
@@ -635,7 +635,7 @@ namespace WeSay.Project.Tests
 			{
 				var wsRepo = environment.WritingSystems;
 
-				var enWs = WritingSystemDefinition.Parse("en");
+				var enWs = new WritingSystemDefinition("en");
 				enWs.Abbreviation = "Dont change me!";
 				wsRepo.Set(enWs);
 				wsRepo.Save();

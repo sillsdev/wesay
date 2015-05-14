@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Palaso.Migration;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.Migration;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
+using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
 {
@@ -107,18 +108,21 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		}
 
-		private readonly LdmlVersion0MigrationStrategy.MigrationHandler _onMigrationCallback;
+		private readonly Action<int, IEnumerable<LdmlMigrationInfo>> _migrationHandler;
 		private IAuditTrail _changeLog;
 
-		public WritingSystemPrefsToLdmlMigrationStrategy(LdmlVersion0MigrationStrategy.MigrationHandler migrationCb, IAuditTrail changeLog)
+		public WritingSystemPrefsToLdmlMigrationStrategy(Action<int, IEnumerable<LdmlMigrationInfo>> migrationHandler, IAuditTrail changeLog)
 		{
-			_onMigrationCallback = migrationCb;
+			_migrationHandler = migrationHandler;
 			_changeLog = changeLog;
 		}
 
 		public void Migrate(string sourceFilePath, string destinationFilePath)
 		{
-			var migrationInfo = new List<LdmlVersion0MigrationStrategy.MigrationInfo>();
+			// Migrate this to v3?
+			string sourceFileName = Path.GetFileName(sourceFilePath);
+
+			var migrationInfo = new List<LdmlMigrationInfo>();
 			if(!Directory.Exists(destinationFilePath))
 			{
 				Directory.CreateDirectory(destinationFilePath);
@@ -128,7 +132,10 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 			foreach (var writingSystem in wesayWsCollection.Values)
 			{
-				var currentMigrationInfo = new LdmlVersion0MigrationStrategy.MigrationInfo {RfcTagBeforeMigration = writingSystem.ISO};
+				var currentMigrationInfo = new SIL.WritingSystems.Migration.LdmlMigrationInfo(sourceFileName)
+				{
+					LanguageTagBeforeMigration = writingSystem.ISO
+				};
 				var wsDef = new WritingSystemDefinitionV0();
 				if(writingSystem.IsAudio)
 				{
@@ -176,14 +183,15 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				string pathForNewLdmlFile = Path.Combine(destinationFilePath, wsDef.Rfc5646 + ".ldml");
 				new LdmlAdaptorV0().Write(pathForNewLdmlFile, wsDef, null);
 
-				currentMigrationInfo.RfcTagAfterMigration = wsDef.Rfc5646;
-				if (currentMigrationInfo.RfcTagBeforeMigration != currentMigrationInfo.RfcTagAfterMigration)
+				currentMigrationInfo.LanguageTagAfterMigration = wsDef.Rfc5646;
+				if (currentMigrationInfo.LanguageTagBeforeMigration != currentMigrationInfo.LanguageTagAfterMigration)
 				{
-					_changeLog.LogChange(currentMigrationInfo.RfcTagBeforeMigration, currentMigrationInfo.RfcTagAfterMigration);
+					_changeLog.LogChange(currentMigrationInfo.LanguageTagBeforeMigration, currentMigrationInfo.LanguageTagAfterMigration);
 				}
 				migrationInfo.Add(currentMigrationInfo);
 			}
-			_onMigrationCallback(migrationInfo);
+			// WS_FIX: Should this be version 0?
+			_migrationHandler(0, migrationInfo);
 		}
 
 		public void PreMigrate()

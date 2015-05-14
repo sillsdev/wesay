@@ -62,14 +62,14 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void Save_LiftFileLocked_NotifiesUser()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 				using (File.OpenWrite(p.PathToLiftFile))
 				{
-					WritingSystemDefinition ws = project.WritingSystems.Get("qaa-x-qaa");
+					WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
 					ws.Language = "aac";
-					project.MakeWritingSystemIdChange("aac", "qaa-x-qaa");
+					project.MakeWritingSystemIdChange("aac", "qaa");
 					using (new SIL.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
 						project.Save();
@@ -109,13 +109,13 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void Save_MakeWritingSystemIdChangeOnWritingSystemFoundInLiftWasPreviosulyCalled_Changed()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
-				AssertThatXmlIn.File(p.PathToLiftFile).HasAtLeastOneMatchForXpath("//form[@lang='qaa-x-qaa']");
-				project.MakeWritingSystemIdChange("qaa-x-qaa", "aac");
+				AssertThatXmlIn.File(p.PathToLiftFile).HasAtLeastOneMatchForXpath("//form[@lang='qaa']");
+				project.MakeWritingSystemIdChange("qaa", "aac");
 				project.Save();
-				AssertThatXmlIn.File(p.PathToLiftFile).HasNoMatchForXpath("//form[@lang='qaa-x-qaa']");
+				AssertThatXmlIn.File(p.PathToLiftFile).HasNoMatchForXpath("//form[@lang='qaa']");
 				AssertThatXmlIn.File(p.PathToLiftFile).HasAtLeastOneMatchForXpath("//form[@lang='aac']");
 			}
 		}
@@ -123,26 +123,26 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void Save_DeleteWritingSystemIdFoundInLiftWasPreviosulyCalled_Deleted()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
-				AssertThatXmlIn.File(p.PathToLiftFile).HasAtLeastOneMatchForXpath("//form[@lang='qaa-x-qaa']");
-				project.DeleteWritingSystemId("qaa-x-qaa");
+				AssertThatXmlIn.File(p.PathToLiftFile).HasAtLeastOneMatchForXpath("//form[@lang='qaa']");
+				project.DeleteWritingSystemId("qaa");
 				project.Save();
-				AssertThatXmlIn.File(p.PathToLiftFile).HasNoMatchForXpath("//form[@lang='qaa-x-qaa']");
+				AssertThatXmlIn.File(p.PathToLiftFile).HasNoMatchForXpath("//form[@lang='qaa']");
 			}
 		}
 
 		[Test]
 		public void Save_MakeWritingSystemIdChangeOnWritingSystemFoundInLiftWasPreviosulyCalledMultipleTimes_ChangedCorrectly()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 				XmlDocument doc = new XmlDocument();
 				doc.Load(p.PathToLiftFile);
-				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='qaa-x-qaa']").Count);
-				project.MakeWritingSystemIdChange("qaa-x-qaa", "en");
+				Assert.AreNotEqual(0, doc.SelectNodes("//form[@lang='qaa']").Count);
+				project.MakeWritingSystemIdChange("qaa", "en");
 				project.MakeWritingSystemIdChange("en", "de");
 				project.Save();
 				doc.Load(p.PathToLiftFile);
@@ -171,12 +171,12 @@ namespace WeSay.Project.Tests
 				optionList.Options.Add(new Option("entry", multitextToAdd));
 				project.MarkOptionListAsUpdated(optionList);
 				//Simulate a writing system change made by the UI
-				var wsToChange = project.WritingSystems.Get("qaa-x-qaa");
+				var wsToChange = project.WritingSystems.Get("qaa");
 				wsToChange.Language = "de";
 				project.WritingSystems.Set(wsToChange);
 				project.MakeWritingSystemIdChange(WritingSystemsIdsForTests.OtherIdForTest, "de");
 				project.Save();
-				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/name/form[@lang='qaa-x-qaa']");
+				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/name/form[@lang='qaa']");
 				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='de'][text()='one']");
 				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/abbreviation/form[@lang='de'][text()='one']");
 				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='de'][text()='yodel']");
@@ -225,12 +225,12 @@ namespace WeSay.Project.Tests
 				//create the project
 				WeSayWordsProject project = p.CreateLoadedProject();
 				//Simulate a writing system change made by the UI
-				var wsToChange = project.WritingSystems.Get("qaa-x-qaa");
+				var wsToChange = project.WritingSystems.Get("qaa");
 				wsToChange.Language = "de";
 				project.WritingSystems.Set(wsToChange);
-				project.MakeWritingSystemIdChange("qaa-x-qaa", "de");
+				project.MakeWritingSystemIdChange("qaa", "de");
 				project.Save();
-				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/name/form[@lang='qaa-x-qaa']");
+				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/name/form[@lang='qaa']");
 				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='de'][text()='one']");
 				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/abbreviation/form[@lang='de'][text()='one']");
 			}
@@ -260,7 +260,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void MakeWritingSystemIdChange_OptionListIsAlreadyLoaded_OptionListIsChanged()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 				var optionList = project.GetOptionsList("POS");
@@ -277,7 +277,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void MakeWritingSystemIdChange_ChangingWritingSystemIdToWritingSystemIdThatAlreadyExistsInOptionListIsAlreadyLoaded_OptionListIsChanged()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 				var optionList = project.GetOptionsList("POS");
@@ -294,7 +294,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void MakeWritingSystemIdChange_LoadList_OptionListIsChanged()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 				project.MakeWritingSystemIdChange("en", "de");
@@ -308,7 +308,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void MakeWritingSystemIdChange_ChangingWritingSystemIdToWritingSystemIdThatAlreadyExistsLoadList_OptionListIsChangedAndDuplicatesAreConflated()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 				project.MakeWritingSystemIdChange("es", "fr");  //fr is already contained in the default PoS optionlist, thus this would cause a duplicate
@@ -345,13 +345,13 @@ namespace WeSay.Project.Tests
 				optionList.Options.Add(new Option("entry", multitextToAdd));
 				project.MarkOptionListAsUpdated(optionList);
 				//Simulate a writing system change made by the UI
-				var wsToChange = project.WritingSystems.Get("qaa-x-qaa");
+				var wsToChange = project.WritingSystems.Get("qaa");
 				wsToChange.Language = "de";
 				project.WritingSystems.Set(wsToChange);
-				project.MakeWritingSystemIdChange("qaa-x-qaa", "de");
+				project.MakeWritingSystemIdChange("qaa", "de");
 				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/name/form[@lang='de']");
-				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='qaa-x-qaa'][text()='one']");
-				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/abbreviation/form[@lang='qaa-x-qaa'][text()='one']");
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/name/form[@lang='qaa'][text()='one']");
+				AssertThatXmlIn.File(optionListPath).HasAtLeastOneMatchForXpath("/optionsList/option/abbreviation/form[@lang='qaa'][text()='one']");
 				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/name/form[@lang='de'][text()='yodel']");
 				AssertThatXmlIn.File(optionListPath).HasNoMatchForXpath("/optionsList/option/abbreviation/form[@lang='de'][text()='yodel']");
 
@@ -364,15 +364,15 @@ namespace WeSay.Project.Tests
 			using (var p = new ProjectDirectorySetupForTesting(""))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
-				var fieldsUsingQaa = new List<Field>(project.ViewTemplates.SelectMany(template => template.Fields).Where(field => field.WritingSystemIds.Contains("qaa-x-qaa")));
+				var fieldsUsingQaa = new List<Field>(project.ViewTemplates.SelectMany(template => template.Fields).Where(field => field.WritingSystemIds.Contains("qaa")));
 				//Simulate a writing system change made by the UI
-				var wsToChange = project.WritingSystems.Get("qaa-x-qaa");
+				var wsToChange = project.WritingSystems.Get("qaa");
 				wsToChange.Language = "de";
 				project.WritingSystems.Set(wsToChange);
-				project.MakeWritingSystemIdChange("qaa-x-qaa", "de");
+				project.MakeWritingSystemIdChange("qaa", "de");
 				foreach (var field in fieldsUsingQaa)
 				{
-					Assert.That(!field.WritingSystemIds.Contains("qaa-x-qaa"));
+					Assert.That(!field.WritingSystemIds.Contains("qaa"));
 					Assert.That(field.WritingSystemIds.Contains("de"));
 				}
 			}
@@ -384,14 +384,14 @@ namespace WeSay.Project.Tests
 			using (var p = new ProjectDirectorySetupForTesting(""))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
-				var fieldsUsingQaa = new List<Field>(project.ViewTemplates.SelectMany(template => template.Fields).Where(field => field.WritingSystemIds.Contains("qaa-x-qaa")));
-				//add the "de" writingsystem to every field that is using qaa-x-qaa so that we cause duplication when we change "qaa-x-qaa" to de
+				var fieldsUsingQaa = new List<Field>(project.ViewTemplates.SelectMany(template => template.Fields).Where(field => field.WritingSystemIds.Contains("qaa")));
+				//add the "de" writingsystem to every field that is using qaa so that we cause duplication when we change "qaa" to de
 				foreach (var field in fieldsUsingQaa)
 				{
 					field.WritingSystemIds.Add("de");
 				}
 				//Simulate a writing system conflation made by the UI
-				project.MakeWritingSystemIdChange("qaa-x-qaa", "de");
+				project.MakeWritingSystemIdChange("qaa", "de");
 
 				foreach (var field in fieldsUsingQaa)
 				{
@@ -605,7 +605,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void MakeFieldNameChange_FileLocked_NotifiesUser()
 		{
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 				using (File.OpenWrite(p.PathToLiftFile))
@@ -638,14 +638,14 @@ namespace WeSay.Project.Tests
 				builder.AppendFormat(@"
 				<entry id='{0}'>
 					<lexical-unit>
-					  <form lang='qaa-x-qaa'>
+					  <form lang='qaa'>
 						<text>{0}</text>
 					  </form>
 					</lexical-unit>
 					<sense>
 						<grammatical-info value='n'/>
 						<definition><form lang='en'><text>blah blah {0} blah blah</text></form></definition>
-						<example lang='qaa-x-qaa'><text>and example of lah blah {0} blah blah</text></example>
+						<example lang='qaa'><text>and example of lah blah {0} blah blah</text></example>
 					</sense>
 				</entry>", i);
 			}
@@ -667,7 +667,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void PathProvidedAsSimpleFileName_GetsConverted()
 		{
-			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				string oldWorkingDir= System.Environment.CurrentDirectory;
 				try
@@ -773,7 +773,7 @@ namespace WeSay.Project.Tests
 				var pathToEnglish = Path.Combine(wsFolderPath, "en.ldml");
 				var versionReader = new SIL.WritingSystems.Migration.WritingSystemLdmlVersionGetter();
 				Assert.That(LdmlDataMapper.CurrentLdmlVersion, Is.EqualTo(versionReader.GetFileVersion(pathToEnglish)));
-				var pathToQaa = Path.Combine(wsFolderPath, "qaa-x-qaa.ldml");
+				var pathToQaa = Path.Combine(wsFolderPath, "qaa.ldml");
 				Assert.That(LdmlDataMapper.CurrentLdmlVersion, Is.EqualTo(versionReader.GetFileVersion(pathToQaa)));
 			}
 		}
@@ -928,20 +928,12 @@ namespace WeSay.Project.Tests
 				//a changelog that  indicates that "x-changedWs" got changed to "qaa-x-changedWs"
 				var wsRepo = LdmlInFolderWritingSystemRepository.Initialize(
 					writingSystemFolderPath);
-#if WS_FIX
-				var wsRepo = LdmlInFolderWritingSystemRepository.Initialize(
-					writingSystemFolderPath,
-					OnWritingSystemMigrationHandler,
-					OnWritingSystemLoadProblem,
-					WritingSystemCompatibility.Flex7V0Compatible
-				);
-#endif
 				var ws = new WritingSystemDefinition("en");
 				var ws1 = new WritingSystemDefinition("x-changeme");
 				wsRepo.Set(ws);
 				wsRepo.Set(ws1);
 				wsRepo.Save();
-				ws1.IetfLanguageTag = IetfLanguageTagHelper.CreateIetfLanguageTag("fr", "Latn", "US", "x-CHANGED");
+				ws1.LanguageTag = IetfLanguageTag.Create("fr", "Latn", "US", "x-CHANGED");
 				wsRepo.Set(ws1);
 				wsRepo.Save();
 
@@ -953,17 +945,18 @@ namespace WeSay.Project.Tests
 				Assert.That(project.WritingSystems.Contains("qaa-x-config"));
 				Assert.That(project.WritingSystems.Contains("de"));
 				Assert.That(project.WritingSystems.Contains("qaa-x-option"));
-				Assert.That(project.WritingSystems.Contains("fr-Latn-US-x-CHANGED"));
+				// Latn is suppressed script
+				Assert.That(project.WritingSystems.Contains("fr-US-x-CHANGED"));
 
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "en.ldml")));
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "qaa-x-config.ldml")));
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "de.ldml")));
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "qaa-x-option.ldml")));
-				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "fr-Latn-US-x-CHANGED.ldml")));
+				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "fr-US-x-CHANGED.ldml")));
 
 				var configFile = new ConfigFile(configFilePath);
 				Assert.That(configFile.WritingSystemsInUse.Count(), Is.EqualTo(3));
-				Assert.That(configFile.WritingSystemsInUse.All(wsId => wsId.Equals("en") || wsId.Equals("qaa-x-config") || wsId.Equals("de")));
+				Assert.That(configFile.WritingSystemsInUse.All(wsId => wsId.Equals("en") || wsId.Equals("qaa-x-config") || wsId.Equals("de-DE")));
 				var liftFileHelper = new WritingSystemsInLiftFileHelper(wsRepo, liftFilePath);
 				Assert.That(liftFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
 				Assert.That(liftFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("de")));
@@ -986,7 +979,7 @@ namespace WeSay.Project.Tests
 			using (var projectFolder = new TemporaryFolder("MigrationTest"))
 			{
 				var versionReader = new SIL.WritingSystems.Migration.WritingSystemLdmlVersionGetter();
-				WeSayWordsProject.CreateEmptyProjectFiles(projectFolder.Path);
+				WeSayWordsProject.CreateEmptyProjectFiles(projectFolder.Path, WellKnownSubtags.UnlistedLanguage);
 				foreach (var ldmlFilePath in Directory.GetFiles(WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(projectFolder.Path)))
 				{
 					Assert.That(LdmlDataMapper.CurrentLdmlVersion, Is.EqualTo(versionReader.GetFileVersion(ldmlFilePath)));
@@ -1001,11 +994,11 @@ namespace WeSay.Project.Tests
 			namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
 			using (var projectFolder = new TemporaryFolder("MigrationTest"))
 			{
-				WeSayWordsProject.CreateEmptyProjectFiles(projectFolder.Path);
+				WeSayWordsProject.CreateEmptyProjectFiles(projectFolder.Path, WellKnownSubtags.UnlistedLanguage);
 				string pathToLdmlWritingSystemsFolder =
 					WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(projectFolder.Path);
 				Assert.IsTrue(File.Exists(Path.Combine(pathToLdmlWritingSystemsFolder, "en.ldml")));
-				Assert.IsTrue(File.Exists(Path.Combine(pathToLdmlWritingSystemsFolder, "qaa-x-qaa.ldml")));
+				Assert.IsTrue(File.Exists(Path.Combine(pathToLdmlWritingSystemsFolder, "qaa.ldml")));
 				Assert.AreEqual(2, Directory.GetFiles(pathToLdmlWritingSystemsFolder).Length);
 			}
 		}

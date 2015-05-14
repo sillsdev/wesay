@@ -345,9 +345,9 @@ There are problems in:
 			if (_writingSystems == null)
 			{
 				var userSettingsDataMapper =
-					new LexiconUserSettingsWritingSystemDataMapper(new FileSettingsStore(PathToUserSpecificSettingsFile(ProjectDirectoryPath)));
+					new UserLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(PathToUserSpecificSettingsFile(ProjectDirectoryPath)));
 				var projectSettingsDataMapper =
-					new LexiconProjectSettingsWritingSystemDataMapper(new FileSettingsStore(PathToProjectSettingsFile(ProjectDirectoryPath)));
+					new ProjectLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(PathToProjectSettingsFile(ProjectDirectoryPath)));
 				ICustomDataMapper<WritingSystemDefinition>[] customDataMapper =
 				{
 					userSettingsDataMapper,
@@ -360,6 +360,20 @@ There are problems in:
 					null,
 					OnWritingSystemMigration,
 					OnWritingSystemLoadProblem);
+
+				// WS_FIX: Set default configurations
+				foreach (string id in _writingSystems.AllWritingSystems.Select(ws => ws.LanguageTag).ToArray())
+				{
+					var ws = _writingSystems.Get(id);
+					if (ws.DefaultCollation == null)
+						ws.DefaultCollation = new IcuRulesCollationDefinition("standard");
+					if (ws.DefaultFont == null)
+						ws.DefaultFont = new FontDefinition("Arial");
+					if (ws.DefaultFontSize == 0)
+						ws.DefaultFontSize = 12;
+					_writingSystems.Set(ws);
+				}
+				_writingSystems.Save();
 			}
 		}
 

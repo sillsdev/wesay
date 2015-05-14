@@ -64,6 +64,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
     </Reference>
+    <Reference Include="SIL.LexiconUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\SIL.LexiconUtils.dll</HintPath>
+    </Reference>
     <Reference Include="SIL.WritingSystems, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\SIL.WritingSystems.dll</HintPath>
