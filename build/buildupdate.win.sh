@@ -62,10 +62,10 @@ cd -
 
 
 # *** Results ***
-# build: wesay1.5-win32-SILWritingSystems Continuous (bt455)
+# build: wesay1.6-win32-SILWritingSystems Continuous (bt455)
 # project: WeSay1.5
 # URL: http://build.palaso.org/viewType.html?buildTypeId=bt455
-# VCS: https://github.com/sillsdev/wesay.git [develop]
+# VCS: https://github.com/sillsdev/wesay.git [feature/SILWritingSystems]
 # dependencies:
 # [0] build: chorus-win32-SILWritingSystems Continuous (bt453)
 #     project: Chorus
@@ -132,7 +132,7 @@ cd -
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt14
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"icu.dll"=>"lib/Debug", "icu.dll.config"=>"lib/Debug"}
+#     paths: {"icu.net.dll"=>"lib/Debug", "icu.net.dll.config"=>"lib/Debug"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
 # [10] build: wesay-doc-default (bt184)
 #     project: WeSay1.4
@@ -168,7 +168,6 @@ mkdir -p ../
 mkdir -p ../Downloads
 mkdir -p ../External
 mkdir -p ../MercurialExtensions
-mkdir -p ../MercurialExtensions/allownumberbranch
 mkdir -p ../MercurialExtensions/fixutf8
 mkdir -p ../common
 mkdir -p ../lib
@@ -199,9 +198,6 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt453/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt453/latest.lastSuccessful/debug/LibChorus.pdb ../lib/Debug/LibChorus.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt453/latest.lastSuccessful/MercurialExtensions/.guidsForInstaller.xml ../MercurialExtensions/.guidsForInstaller.xml
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt453/latest.lastSuccessful/MercurialExtensions/Dummy.txt ../MercurialExtensions/Dummy.txt
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt453/latest.lastSuccessful/MercurialExtensions/allownumberbranch/.guidsForInstaller.xml ../MercurialExtensions/allownumberbranch/.guidsForInstaller.xml
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt453/latest.lastSuccessful/MercurialExtensions/allownumberbranch/allownumberbranch.py ../MercurialExtensions/allownumberbranch/allownumberbranch.py
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt453/latest.lastSuccessful/MercurialExtensions/allownumberbranch/allownumberbranch.pyc ../MercurialExtensions/allownumberbranch/allownumberbranch.pyc
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt453/latest.lastSuccessful/MercurialExtensions/fixutf8/.gitignore ../MercurialExtensions/fixutf8/.gitignore
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt453/latest.lastSuccessful/MercurialExtensions/fixutf8/.guidsForInstaller.xml ../MercurialExtensions/fixutf8/.guidsForInstaller.xml
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt453/latest.lastSuccessful/MercurialExtensions/fixutf8/.hg_archival.txt ../MercurialExtensions/fixutf8/.hg_archival.txt
@@ -240,8 +236,8 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt471/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt471/latest.lastSuccessful/icuuc54.dll ../lib/Release/icuuc54.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icu.net.dll ../lib/Release/icu.net.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icu.net.dll.config ../lib/Release/icu.net.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icu.dll ../lib/Debug/icu.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icu.dll.config ../lib/Debug/icu.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icu.net.dll ../lib/Debug/icu.net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icu.net.dll.config ../lib/Debug/icu.net.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/WeSay_Helps.chm ../External/WeSay_Helps.chm
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/wesay.helpmap ../External/wesay.helpmap
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.az.po ../common/wesay.az.po
