@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -51,7 +51,7 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <ApplicationIcon>..\..\artwork\WeSay.ico</ApplicationIcon>
     <UseVSHostingProcess>true</UseVSHostingProcess>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -129,11 +129,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
     </Reference>
-	<Reference Condition="'$(OS)'=='Windows_NT'" Include="Interop.WIA.dll, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Interop.WIA.dll, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\Interop.WIA.dll</HintPath>
     </Reference>
-	<Reference Condition="'$(OS)'=='Windows_NT'" Include="IrrKlang.NET4.dll, Culture=neutral, PublicKeyToken=null">
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="IrrKlang.NET4.dll, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\irrKlang.NET4.dll</HintPath>
     </Reference>
@@ -149,12 +149,11 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-	
     <Reference Include="Vulcan.Uczniowie.HelpProvider">
       <HintPath>..\..\lib\common\Vulcan.Uczniowie.HelpProvider.dll</HintPath>
     </Reference>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core"/>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms"/>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core" />
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms" />
     <None Include="\usr\lib\cli\geckofx-29\Geckofx-Core.dll.config" Condition="'$(OS)'!='Windows_NT'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
