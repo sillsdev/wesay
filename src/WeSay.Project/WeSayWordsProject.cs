@@ -27,7 +27,7 @@ using SIL.IO;
 using Palaso.Lift;
 using Palaso.Lift.Options;
 using Palaso.Lift.Validation;
-using SIL.LexiconUtils;
+using SIL.Lexicon;
 using SIL.Progress;
 using SIL.Reporting;
 using SIL.Windows.Forms.Progress;

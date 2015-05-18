@@ -6,7 +6,7 @@ using System.Xml;
 using System.Xml.Linq;
 using NUnit.Framework;
 using Palaso.TestUtilities;
-using SIL.LexiconUtils;
+using SIL.Lexicon;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
 using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using SIL.i18n;
-using SIL.LexiconUtils;
+using SIL.Lexicon;
 using SIL.Reporting;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
