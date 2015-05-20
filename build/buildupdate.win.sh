@@ -65,7 +65,7 @@ cd -
 # build: wesay1.6-win32-SILWritingSystems Continuous (bt455)
 # project: WeSay1.5
 # URL: http://build.palaso.org/viewType.html?buildTypeId=bt455
-# VCS: https://github.com/sillsdev/wesay.git [feature/SILWritingSystems]
+# VCS: https://github.com/sillsdev/wesay.git [SILWritingSystems]
 # dependencies:
 # [0] build: chorus-win32-SILWritingSystems Continuous (bt453)
 #     project: Chorus
@@ -108,59 +108,47 @@ cd -
 #     revision: latest.lastSuccessful
 #     paths: {"L10NSharp.dll"=>"lib/Release", "L10NSharp.pdb"=>"lib/Release"}
 #     VCS: https://bitbucket.org/sillsdev/l10nsharp []
-# [6] build: icu4c-win32-minimal (bt471)
-#     project: Libraries
-#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt471
-#     clean: false
-#     revision: latest.lastSuccessful
-#     paths: {"*.dll"=>"lib/Debug"}
-# [7] build: icu4c-win32-minimal (bt471)
-#     project: Libraries
-#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt471
-#     clean: false
-#     revision: latest.lastSuccessful
-#     paths: {"*.dll"=>"lib/Release"}
-# [8] build: icucil-win32-default Continuous (bt14)
+# [6] build: icucil-win32-default Continuous (bt14)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt14
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"icu.net.dll"=>"lib/Release", "icu.net.dll.config"=>"lib/Release"}
+#     paths: {"*"=>"lib/Release"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [9] build: icucil-win32-default Continuous (bt14)
+# [7] build: icucil-win32-default Continuous (bt14)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt14
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"icu.net.dll"=>"lib/Debug", "icu.net.dll.config"=>"lib/Debug"}
+#     paths: {"*"=>"lib/Debug"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [10] build: wesay-doc-default (bt184)
+# [8] build: wesay-doc-default (bt184)
 #     project: WeSay1.4
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt184
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"WeSay_Helps.chm"=>"External", "wesay.helpmap"=>"External"}
 #     VCS: http://hg.palaso.org/wesay-doc []
-# [11] build: wesay-localize-dev Update Pot and Po (bt52)
+# [9] build: wesay-localize-dev Update Pot and Po (bt52)
 #     project: WeSay1.4
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt52
 #     clean: false
 #     revision: latest.lastFinished
 #     paths: {"*.po"=>"common"}
 #     VCS: http://hg.palaso.org/wesay-tx []
-# [12] build: palaso-win32-SILWritingSystems Continuous (bt440)
+# [10] build: palaso-win32-SILWritingSystems Continuous (bt440)
 #     project: libpalaso
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt440
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"Palaso.DictionaryServices.dll"=>"lib/Release", "Palaso.DictionaryServices.pdb"=>"lib/Release", "Palaso.Lift.dll"=>"lib/Release", "Palaso.Lift.pdb"=>"lib/Release", "Palaso.Media.dll"=>"lib/Release", "Palaso.Media.pdb"=>"lib/Release", "Palaso.TestUtilities.dll"=>"lib/Release", "Palaso.TestUtilities.pdb"=>"lib/Release", "SIL.Archiving.dll"=>"lib/Release", "SIL.Archiving.pdb"=>"lib/Release", "SIL.Core.dll"=>"lib/Release", "SIL.Core.pdb"=>"lib/Release", "SIL.Core.Tests.dll"=>"lib/Release", "SIL.Core.Tests.pdb"=>"lib/Release", "SIL.Lexicon.dll"=>"lib/Release", "SIL.Lexicon.pdb"=>"lib/Release", "SIL.ScriptureControls.dll"=>"lib/Release", "SIL.ScriptureControls.pdb"=>"lib/Release", "SIL.ScriptureUtils.dll"=>"lib/Release", "SIL.ScriptureUtils.pdb"=>"lib/Release", "SIL.Windows.Forms.dll"=>"lib/Release", "SIL.Windows.Forms.pdb"=>"lib/Release", "SIL.Windows.Forms.GeckoBrowserAdapter.dll"=>"lib/Release", "SIL.Windows.Forms.GeckoBrowserAdapter.pdb"=>"lib/Release", "SIL.Windows.Forms.Keyboarding.dll"=>"lib/Release", "SIL.Windows.Forms.Keyboarding.pdb"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.dll"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.pdb"=>"lib/Release", "SIL.WritingSystems.dll"=>"lib/Release", "SIL.WritingSystems.pdb"=>"lib/Release", "SIL.WritingSystems.Tests.dll"=>"lib/Release", "SIL.WritingSystems.Tests.pdb"=>"lib/Release", "Interop.WIA.dll"=>"lib/Release", "taglib-sharp.dll"=>"lib/Release"}
+#     paths: {"Palaso.DictionaryServices.dll"=>"lib/Release", "Palaso.DictionaryServices.pdb"=>"lib/Release", "Palaso.Lift.dll"=>"lib/Release", "Palaso.Lift.pdb"=>"lib/Release", "Palaso.Media.dll"=>"lib/Release", "Palaso.Media.pdb"=>"lib/Release", "Palaso.TestUtilities.dll"=>"lib/Release", "Palaso.TestUtilities.pdb"=>"lib/Release", "SIL.Archiving.dll"=>"lib/Release", "SIL.Archiving.pdb"=>"lib/Release", "SIL.Core.dll"=>"lib/Release", "SIL.Core.pdb"=>"lib/Release", "SIL.Core.Tests.dll"=>"lib/Release", "SIL.Core.Tests.pdb"=>"lib/Release", "SIL.Lexicon.dll"=>"lib/Release", "SIL.Lexicon.pdb"=>"lib/Release", "SIL.ScriptureControls.dll"=>"lib/Release", "SIL.ScriptureControls.pdb"=>"lib/Release", "SIL.ScriptureUtils.dll"=>"lib/Release", "SIL.ScriptureUtils.pdb"=>"lib/Release", "SIL.Windows.Forms.dll"=>"lib/Release", "SIL.Windows.Forms.pdb"=>"lib/Release", "SIL.Windows.Forms.GeckoBrowserAdapter.dll"=>"lib/Release", "SIL.Windows.Forms.GeckoBrowserAdapter.pdb"=>"lib/Release", "SIL.Windows.Forms.Keyboarding.dll"=>"lib/Release", "SIL.Windows.Forms.Keyboarding.pdb"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.dll"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.pdb"=>"lib/Release", "SIL.WritingSystems.dll"=>"lib/Release", "SIL.WritingSystems.pdb"=>"lib/Release", "SIL.WritingSystems.Tests.dll"=>"lib/Release", "SIL.WritingSystems.Tests.pdb"=>"lib/Release", "Interop.WIA.dll"=>"lib/Release", "Spart.dll"=>"lib/Release", "taglib-sharp.dll"=>"lib/Release"}
 #     VCS: https://github.com/sillsdev/libpalaso.git [SILWritingSystems]
-# [13] build: palaso-win32-SILWritingSystems Continuous (bt440)
+# [11] build: palaso-win32-SILWritingSystems Continuous (bt440)
 #     project: libpalaso
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt440
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"debug/Palaso.DictionaryServices.dll"=>"lib/Debug", "debug/Palaso.DictionaryServices.pdb"=>"lib/Debug", "debug/Palaso.Lift.dll"=>"lib/Debug", "debug/Palaso.Lift.pdb"=>"lib/Debug", "debug/Palaso.Media.dll"=>"lib/Debug", "debug/Palaso.Media.pdb"=>"lib/Debug", "debug/Palaso.TestUtilities.dll"=>"lib/Debug", "debug/Palaso.TestUtilities.pdb"=>"lib/Debug", "debug/SIL.Archiving.dll"=>"lib/Debug", "debug/SIL.Archiving.pdb"=>"lib/Debug", "debug/SIL.Core.dll"=>"lib/Debug", "debug/SIL.Core.pdb"=>"lib/Debug", "debug/SIL.Core.Tests.dll"=>"lib/Debug", "debug/SIL.Core.Tests.pdb"=>"lib/Debug", "debug/SIL.Lexicon.dll"=>"lib/Debug", "debug/SIL.Lexicon.pdb"=>"lib/Debug", "debug/SIL.ScriptureControls.dll"=>"lib/Debug", "debug/SIL.ScriptureControls.pdb"=>"lib/Debug", "debug/SIL.ScriptureUtils.dll"=>"lib/Debug", "debug/SIL.ScriptureUtils.pdb"=>"lib/Debug", "debug/SIL.Windows.Forms.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.pdb"=>"lib/Debug", "debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.GeckoBrowserAdapter.pdb"=>"lib/Debug", "debug/SIL.Windows.Forms.Keyboarding.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.Keyboarding.pdb"=>"lib/Debug", "debug/SIL.Windows.Forms.WritingSystems.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.WritingSystems.pdb"=>"lib/Debug", "debug/SIL.WritingSystems.dll"=>"lib/Debug", "debug/SIL.WritingSystems.pdb"=>"lib/Debug", "debug/SIL.WritingSystems.Tests.dll"=>"lib/Debug", "debug/SIL.WritingSystems.Tests.pdb"=>"lib/Debug", "debug/Interop.WIA.dll"=>"lib/Debug", "debug/taglib-sharp.dll"=>"lib/Debug"}
+#     paths: {"debug/Palaso.DictionaryServices.dll"=>"lib/Debug", "debug/Palaso.DictionaryServices.pdb"=>"lib/Debug", "debug/Palaso.Lift.dll"=>"lib/Debug", "debug/Palaso.Lift.pdb"=>"lib/Debug", "debug/Palaso.Media.dll"=>"lib/Debug", "debug/Palaso.Media.pdb"=>"lib/Debug", "debug/Palaso.TestUtilities.dll"=>"lib/Debug", "debug/Palaso.TestUtilities.pdb"=>"lib/Debug", "debug/SIL.Archiving.dll"=>"lib/Debug", "debug/SIL.Archiving.pdb"=>"lib/Debug", "debug/SIL.Core.dll"=>"lib/Debug", "debug/SIL.Core.pdb"=>"lib/Debug", "debug/SIL.Core.Tests.dll"=>"lib/Debug", "debug/SIL.Core.Tests.pdb"=>"lib/Debug", "debug/SIL.Lexicon.dll"=>"lib/Debug", "debug/SIL.Lexicon.pdb"=>"lib/Debug", "debug/SIL.ScriptureControls.dll"=>"lib/Debug", "debug/SIL.ScriptureControls.pdb"=>"lib/Debug", "debug/SIL.ScriptureUtils.dll"=>"lib/Debug", "debug/SIL.ScriptureUtils.pdb"=>"lib/Debug", "debug/SIL.Windows.Forms.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.pdb"=>"lib/Debug", "debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.GeckoBrowserAdapter.pdb"=>"lib/Debug", "debug/SIL.Windows.Forms.Keyboarding.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.Keyboarding.pdb"=>"lib/Debug", "debug/SIL.Windows.Forms.WritingSystems.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.WritingSystems.pdb"=>"lib/Debug", "debug/SIL.WritingSystems.dll"=>"lib/Debug", "debug/SIL.WritingSystems.pdb"=>"lib/Debug", "debug/SIL.WritingSystems.Tests.dll"=>"lib/Debug", "debug/SIL.WritingSystems.Tests.pdb"=>"lib/Debug", "debug/Interop.WIA.dll"=>"lib/Debug", "debug/Spart.dll"=>"lib/Debug", "debug/taglib-sharp.dll"=>"lib/Debug"}
 #     VCS: https://github.com/sillsdev/libpalaso.git [SILWritingSystems]
 
 # make sure output directories exist
@@ -228,16 +216,16 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.lastSuccessful/L10NSharp.pdb ../lib/Debug/L10NSharp.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.lastSuccessful/L10NSharp.dll ../lib/Release/L10NSharp.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/latest.lastSuccessful/L10NSharp.pdb ../lib/Release/L10NSharp.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt471/latest.lastSuccessful/icudt54.dll ../lib/Debug/icudt54.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt471/latest.lastSuccessful/icuin54.dll ../lib/Debug/icuin54.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt471/latest.lastSuccessful/icuuc54.dll ../lib/Debug/icuuc54.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt471/latest.lastSuccessful/icudt54.dll ../lib/Release/icudt54.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt471/latest.lastSuccessful/icuin54.dll ../lib/Release/icuin54.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt471/latest.lastSuccessful/icuuc54.dll ../lib/Release/icuuc54.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icu.net.dll ../lib/Release/icu.net.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icu.net.dll.config ../lib/Release/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icudt54.dll ../lib/Release/icudt54.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icuin54.dll ../lib/Release/icuin54.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icuuc54.dll ../lib/Release/icuuc54.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icu.net.dll ../lib/Debug/icu.net.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icu.net.dll.config ../lib/Debug/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icudt54.dll ../lib/Debug/icudt54.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icuin54.dll ../lib/Debug/icuin54.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt14/latest.lastSuccessful/icuuc54.dll ../lib/Debug/icuuc54.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/WeSay_Helps.chm ../External/WeSay_Helps.chm
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/wesay.helpmap ../External/wesay.helpmap
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.az.po ../common/wesay.az.po
@@ -296,6 +284,7 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/SIL.WritingSystems.Tests.dll ../lib/Release/SIL.WritingSystems.Tests.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/SIL.WritingSystems.Tests.pdb ../lib/Release/SIL.WritingSystems.Tests.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/Interop.WIA.dll ../lib/Release/Interop.WIA.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/Spart.dll ../lib/Release/Spart.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/taglib-sharp.dll ../lib/Release/taglib-sharp.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/debug/Palaso.DictionaryServices.dll ../lib/Debug/Palaso.DictionaryServices.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/debug/Palaso.DictionaryServices.pdb ../lib/Debug/Palaso.DictionaryServices.pdb
@@ -330,6 +319,7 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/debug/SIL.WritingSystems.Tests.dll ../lib/Debug/SIL.WritingSystems.Tests.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/debug/SIL.WritingSystems.Tests.pdb ../lib/Debug/SIL.WritingSystems.Tests.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/debug/Interop.WIA.dll ../lib/Debug/Interop.WIA.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/debug/Spart.dll ../lib/Debug/Spart.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt440/latest.lastSuccessful/debug/taglib-sharp.dll ../lib/Debug/taglib-sharp.dll
 # extract downloaded zip files
 unzip -uqo ../Downloads/xulrunner-29.0.1.en-US.win32.zip -d ../
