@@ -120,7 +120,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 		private void _chooseLanguageButton_Click(object sender, EventArgs e)
 		{
-			using (var dlg = new LookupLanguageDialog())
+			using (var dlg = new LanguageLookupDialog())
 			{
 				if (DialogResult.OK != dlg.ShowDialog())
 				{
