@@ -131,7 +131,7 @@
 		<NUnitTeamCity
 			Assemblies="@(TestAssemblies)"
 			ExcludeCategory="SkipOnTeamCity;SkipOnBuildServer"
-			NUnitVersion="NUnit-2.6.4" />
+			NUnitVersion="NUnit-2.5.5" />
 	</Target>
 
 	<Target Name="UnzipMercurial" DependsOnTargets="">
