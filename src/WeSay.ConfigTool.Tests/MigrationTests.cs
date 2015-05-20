@@ -60,7 +60,7 @@ namespace WeSay.ConfigTool.Tests
 				e.WriteUserConfig(v1);
 				new WeSayWordsProject();
 				WeSayWordsProject.Project.LoadFromProjectDirectoryPath(e.Path);
-				AssertThatXmlIn.File(e.GetUserConfigFilePath()).HasAtLeastOneMatchForXpath("configuration[@version='2']");
+				AssertThatXmlIn.File(e.GetUserConfigFilePath()).HasAtLeastOneMatchForXpath("configuration[@version='3']");
 
 			}
 		}

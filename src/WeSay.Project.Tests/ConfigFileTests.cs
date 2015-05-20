@@ -5,6 +5,7 @@ using System.Xml;
 using NUnit.Framework;
 using SIL.IO;
 using Palaso.TestUtilities;
+using SIL.Lexicon;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
 using WeSay.TestUtilities;
@@ -330,6 +331,8 @@ namespace WeSay.Project.Tests
 			private readonly TemporaryFolder _folder;
 			private readonly TempFile _configFile;
 			private IWritingSystemRepository _writingSystems;
+			private readonly TemporaryFolder _writingSystemsFolder;
+			private readonly TemporaryFolder _sharedSettingsFolder;
 
 			public TestEnvironment(string configFileContent)
 			{
@@ -339,13 +342,15 @@ namespace WeSay.Project.Tests
 				_configFile.MoveTo(configFilePath);
 				NamespaceManager = new XmlNamespaceManager(new NameTable());
 				NamespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
-				Directory.CreateDirectory(Path.Combine(ProjectPath, "WritingSystems"));
+				_sharedSettingsFolder = new TemporaryFolder(Path.Combine(ProjectPath, "SharedSettings"));
+				_writingSystemsFolder = new TemporaryFolder(Path.Combine(ProjectPath, "WritingSystems"));
 				Creator = new ConfigFile(_configFile.Path);
+				Sldr.OfflineMode = true;
 			}
 
 			public XmlNamespaceManager NamespaceManager { get; private set; }
 
-			private string ProjectPath
+			public string ProjectPath
 			{
 				get { return _folder.Path; }
 			}
@@ -355,6 +360,8 @@ namespace WeSay.Project.Tests
 			public void Dispose()
 			{
 				_configFile.Dispose();
+				_sharedSettingsFolder.Dispose();
+				_writingSystemsFolder.Dispose();
 				_folder.Dispose();
 			}
 
@@ -362,12 +369,27 @@ namespace WeSay.Project.Tests
 			{
 				get
 				{
-					return _writingSystems ?? (_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
-						ConfigFilePath,
-						null,
-						null,
-						OnWritingSystemMigration,
-						OnWritingSystemLoadProblem));
+					if (_writingSystems == null)
+					{
+						var userSettingsDataMapper =
+							new UserLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(LexiconSettingsFileHelper.GetUserLexiconSettingsPath(ProjectPath)));
+						var projectSettingsDataMapper =
+							new ProjectLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(LexiconSettingsFileHelper.GetProjectLexiconSettingsPath(ProjectPath)));
+						ICustomDataMapper<WritingSystemDefinition>[] customDataMapper =
+						{
+							userSettingsDataMapper,
+							projectSettingsDataMapper
+						};
+
+						_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
+							WritingSystemsPath,
+							customDataMapper,
+							null,
+							OnWritingSystemMigration,
+							OnWritingSystemLoadProblem);
+
+					}
+					return _writingSystems;
 				}
 			}
 
@@ -384,6 +406,11 @@ namespace WeSay.Project.Tests
 			public string WritingSystemsPath
 			{
 				get { return Path.Combine(ProjectPath, "WritingSystems"); }
+			}
+
+			public string SharedSettingsPath
+			{
+				get { return Path.Combine(ProjectPath, "SharedSettings"); }
 			}
 
 			public string ConfigFilePath
@@ -434,7 +461,7 @@ namespace WeSay.Project.Tests
 
 				writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "de" + ".ldml");
 				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='de']");
-				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/script[@type='Latn']");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/variant");
 
@@ -450,9 +477,9 @@ namespace WeSay.Project.Tests
 		public void CreateNonExistentWritingSystemsFoundInConfig_AddinsXmlContainsNonConformantRfcTag_CreatesConformingWritingSystem()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentForTests.WrapContentInConfigurationTags(ConfigFileContentForTests.GetConfigFileContainingSfmExporterAddinWithWritingSystems("de", "bogusws1", "audio", "Zxxx"))))
+			using (var sldrTempFolder = new TemporaryFolder("SldrCache"))
 			{
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystems);
-
 
 				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "qaa-x-bogusws1" + ".ldml");
 				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='qaa']");
@@ -468,7 +495,7 @@ namespace WeSay.Project.Tests
 
 				writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "de" + ".ldml");
 				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='de']");
-				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/script");
+				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/script[@type='Latn']");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");
 				AssertThatXmlIn.File(writingSystemFilePath).HasNoMatchForXpath("/ldml/identity/variant");
 
@@ -648,11 +675,12 @@ namespace WeSay.Project.Tests
 
 				var pathToLdml = Path.Combine(environment.WritingSystemsPath, "en.ldml");
 				AssertThatXmlIn.File(pathToLdml).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='en']");
-				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/script");
+				AssertThatXmlIn.File(pathToLdml).HasAtLeastOneMatchForXpath("/ldml/identity/script[@type='Latn']");
 				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/territory");
 				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/variant");
-				AssertThatXmlIn.File(pathToLdml).
-					HasAtLeastOneMatchForXpath("/ldml/special/palaso:abbreviation[@value='Dont change me!']", environment.NamespaceManager);
+				var pathToLexiconSettings = LexiconSettingsFileHelper.GetProjectLexiconSettingsPath(environment.ProjectPath);
+				AssertThatXmlIn.File(pathToLexiconSettings).
+					HasAtLeastOneMatchForXpath("/ProjectLexiconSettings/WritingSystems/WritingSystem[@id='en']/Abbreviation[text()='Dont change me!']", environment.NamespaceManager);
 			}
 		}
 	}

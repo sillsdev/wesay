@@ -89,16 +89,16 @@ namespace WeSay.Project.Tests.ConfigMigration.UserConfig
 				// Keyboard info is migrated to user config shared settings file
 				//AssertThatXmlIn.File(userConfigSettingsFilename).HasAtLeastOneMatchForXpath("LexiconUserSettings/WritingSystems/WritingSystem[@id='ja']/LocalKeyboard[value()='th-TH_Thai Kedmanee']");
 				Assert.That(settingsStore.SettingsElement, Is.EqualTo(XElement.Parse(
-@"<LexiconUserSettings>
+@"<UserLexiconSettings>
 <WritingSystems>
 	<WritingSystem id=""ja"">
 	<LocalKeyboard>th-TH_Thai Kedmanee</LocalKeyboard>
 	<KnownKeyboards>
-	<KnownKeyboard id=""th-TH_Thai Kedmanee"" />
+	<KnownKeyboard>th-TH_Thai Kedmanee</KnownKeyboard>
 	</KnownKeyboards>
 	</WritingSystem>
 	</WritingSystems>
-</LexiconUserSettings>")).Using((IEqualityComparer<XNode>)new XNodeEqualityComparer()));
+</UserLexiconSettings>")).Using((IEqualityComparer<XNode>)new XNodeEqualityComparer()));
 			}
 		}
 	}

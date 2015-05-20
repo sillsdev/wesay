@@ -37,11 +37,11 @@ namespace WeSay.Project.Tests
 				_outputFile = new TempFile();
 				Repo = new LexEntryRepository(_projectDir.PathToLiftFile);
 				WritingSystemIds = new List<string>(new[] { Red, Green, Blue, Voice });
-				HeadwordWritingSystem = new WritingSystemDefinition(Red);
+				HeadwordWritingSystem = new WritingSystemDefinition(Red) {DefaultCollation = new IcuRulesCollationDefinition("standard")};
 				project.WritingSystems.Set(HeadwordWritingSystem);
-				project.WritingSystems.Set(new WritingSystemDefinition(Green));
-				project.WritingSystems.Set(new WritingSystemDefinition(Blue));
-				project.WritingSystems.Set(new WritingSystemDefinition(Voice));
+				project.WritingSystems.Set(new WritingSystemDefinition(Green) { DefaultCollation = new IcuRulesCollationDefinition("standard") });
+				project.WritingSystems.Set(new WritingSystemDefinition(Blue) { DefaultCollation = new IcuRulesCollationDefinition("standard") });
+				project.WritingSystems.Set(new WritingSystemDefinition(Voice) { DefaultCollation = new IcuRulesCollationDefinition("standard") });
 
 				Template = new ViewTemplate
 			{

@@ -29,7 +29,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 			public TestEnvironment()
 			{
-				_testFolder = new TemporaryFolder("WritingSystemMigratorTests");
+				_testFolder = new TemporaryFolder("WritingSystemsMigratorTests");
 				_wsPrefsFilePath = Path.Combine(_testFolder.Path, "WritingSystemPrefs.xml");
 				_writingSystemsPath = Path.Combine(_testFolder.Path, "WritingSystems");
 				Directory.CreateDirectory(WritingSystemsPath);

@@ -8,14 +8,15 @@ using System.Xml;
 using Autofac.Core;
 using NUnit.Framework;
 using Palaso.DictionaryServices.Model;
-using SIL.IO;
 using Palaso.Lift;
 using Palaso.Lift.Options;
-using SIL.Reporting;
 using Palaso.TestUtilities;
+using SIL.IO;
+using SIL.Reporting;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
 using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.WritingSystems.Tests;
 using WeSay.LexicalModel;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.ConfigMigration.WritingSystem;
@@ -912,7 +913,9 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void LoadFromLiftLexiconPath_LiftConfigFileAndOptionListContainVariousNonConformantAndOrOrphanedWritingSystems_WritingSystemsAreMigrated()
 		{
+			// Set test directory and clear SLDR cache
 			using (var projectDirectory = new TemporaryFolder("OrphanWritingSystemsTest"))
+			using (var folderContainingSldrCache = new TemporaryFolder("SldrCache"))
 			{
 				//Create Config, Lift and OptionList files as well as a writing system folder.
 				//These files contain various orphans
@@ -924,6 +927,10 @@ namespace WeSay.Project.Tests
 					));
 				string writingSystemFolderPath = Path.Combine(projectDirectory.Path, "WritingSystems");
 				Directory.CreateDirectory(writingSystemFolderPath);
+
+				// Set SLDR to offline
+				Sldr.OfflineMode = true;
+
 				//Now populate the input system repo with an "en" input system and a "qaa-x-changedWs" input system as well as
 				//a changelog that  indicates that "x-changedWs" got changed to "qaa-x-changedWs"
 				var wsRepo = LdmlInFolderWritingSystemRepository.Initialize(
@@ -956,7 +963,7 @@ namespace WeSay.Project.Tests
 
 				var configFile = new ConfigFile(configFilePath);
 				Assert.That(configFile.WritingSystemsInUse.Count(), Is.EqualTo(3));
-				Assert.That(configFile.WritingSystemsInUse.All(wsId => wsId.Equals("en") || wsId.Equals("qaa-x-config") || wsId.Equals("de-DE")));
+				Assert.That(configFile.WritingSystemsInUse.All(wsId => wsId.Equals("en") || wsId.Equals("qaa-x-config") || wsId.Equals("de")));
 				var liftFileHelper = new WritingSystemsInLiftFileHelper(wsRepo, liftFilePath);
 				Assert.That(liftFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
 				Assert.That(liftFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("de")));
@@ -988,7 +995,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		public void NewProject_ContainsOnlyEnglishAndUnknownWritingSystems()
+		public void NewProject_ContainsOnlyEnglish()
 		{
 			var namespaceManager = new XmlNamespaceManager(new NameTable());
 			namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
@@ -998,8 +1005,7 @@ namespace WeSay.Project.Tests
 				string pathToLdmlWritingSystemsFolder =
 					WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(projectFolder.Path);
 				Assert.IsTrue(File.Exists(Path.Combine(pathToLdmlWritingSystemsFolder, "en.ldml")));
-				Assert.IsTrue(File.Exists(Path.Combine(pathToLdmlWritingSystemsFolder, "qaa.ldml")));
-				Assert.AreEqual(2, Directory.GetFiles(pathToLdmlWritingSystemsFolder).Length);
+				Assert.AreEqual(1, Directory.GetFiles(pathToLdmlWritingSystemsFolder).Length);
 			}
 		}
 

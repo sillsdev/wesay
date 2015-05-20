@@ -159,21 +159,6 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		}
 
 		[Test]
-		public void MigrateIfNeeded_HasPrefsFile_LdmlLastestVersion()
-		{
-			using (var e = new TestEnvironment())
-			{
-				e.WriteToPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystemForLanguage("qaa-x-test"));
-				var migrator = new WritingSystemsMigrator(e.ProjectPath);
-				migrator.MigrateIfNecessary();
-
-				AssertThatXmlIn.File(e.WritingSystemFilePath("qaa-x-test")).HasAtLeastOneMatchForXpath(
-					String.Format("/ldml/special/palaso:version[@value='{0}']", LdmlDataMapper.CurrentLdmlVersion),
-					e.NamespaceManager);
-			}
-		}
-
-		[Test]
 		public void MigrateIfNeeded_ConfigFileContainsWritingSystemIdThatIsMigrated_WritingSystemIdIsChanged()
 		{
 			using (var e = new TestEnvironment())
