@@ -110,7 +110,7 @@
 	<Target Name="RunTests"><!-- dependencies implied by calling targets -->
 		<CreateItem
 			Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-			Exclude="$(RootDir)/output/$(Configuration)/SIl.Core.Tests.dll" >
+			Exclude="$(RootDir)/output/$(Configuration)/SIL.Core.Tests.dll" >
 			<Output ItemName="TestAssemblies" TaskParameter="Include" />
 		</CreateItem>
 		<NUnit
