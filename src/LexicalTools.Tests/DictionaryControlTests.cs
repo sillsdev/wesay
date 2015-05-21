@@ -66,7 +66,7 @@ namespace WeSay.LexicalTools.Tests
 													{
 															WritingSystemsIdsForTests.AnalysisIdForTest
 													};
-			string[] vernacularWritingSystemIds = new string[] {_vernacularWritingSystem.Id};
+			string[] vernacularWritingSystemIds = new string[] {_vernacularWritingSystem.LanguageTag};
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
 									   "LexEntry",
@@ -301,7 +301,7 @@ namespace WeSay.LexicalTools.Tests
 					((DictionaryControl) _task.Control).Control_EntryDetailPanel;
 			LexEntry entry = parentControl.DataSource;
 			const string form = "xx";
-			entry.LexicalForm.SetAlternative(_vernacularWritingSystem.Id, form);
+			entry.LexicalForm.SetAlternative(_vernacularWritingSystem.LanguageTag, form);
 			GoToLexicalEntryUseFind("Initial"); //go away
 			GoToLexicalEntryUseFind(form); //come back
 
