@@ -207,7 +207,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			foreach (MenuItem item in SearchModeMenu.MenuItems)
 			{
-				if (writingSystem.Id == ((WritingSystemDefinition)item.Tag).Id)
+				if (writingSystem.LanguageTag == ((WritingSystemDefinition)item.Tag).LanguageTag)
 				{
 					return true;
 				}
@@ -296,7 +296,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void LoadRecords()
 		{
 			var selectedItem = CurrentEntry;
-			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
+			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.LanguageTag))
 			{
 				_records = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(_listWritingSystem);
 			}
@@ -319,7 +319,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			var displayString = (string) recordToken["Form"];
 			e.Item = new ListViewItem(displayString);
 
-			if ((string) recordToken["WritingSystem"] != _listWritingSystem.Id)
+			if ((string) recordToken["WritingSystem"] != _listWritingSystem.LanguageTag)
 			{
 				displayString = (string) recordToken["Form"];
 				e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
@@ -329,7 +329,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			if (string.IsNullOrEmpty(displayString))
 			{
 				displayString = "(";
-				if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
+				if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.LanguageTag))
 				{
 					displayString += StringCatalog.Get("~Empty",
 													   "This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.");
@@ -572,9 +572,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				//bool NoPriorSelection = _todoRecordsListBox.SelectedIndex == -1;
 				//_recordListBoxActive = true; // allow onRecordSelectionChanged
 				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(SearchTextBox.Text) &&
-					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
+					IsWritingSystemUsedInLexicalForm(_listWritingSystem.LanguageTag))
 				{
-					entry.LexicalForm[_listWritingSystem.Id] = SearchTextBox.Text.Trim();
+					entry.LexicalForm[_listWritingSystem.LanguageTag] = SearchTextBox.Text.Trim();
 					_lexEntryRepository.SaveItem(entry);
 				}
 				//review: Revert (remove) below for WS-950

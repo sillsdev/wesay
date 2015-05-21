@@ -26,9 +26,9 @@ namespace WeSay.ConfigTool.Tasks
 
 			foreach (var writingSystem in writingSystems)
 			{
-				ToolStripMenuItem item = new ToolStripMenuItem(writingSystem.Id);
+				ToolStripMenuItem item = new ToolStripMenuItem(writingSystem.LanguageTag);
 				item.CheckOnClick = true;
-				item.Checked = selectedItemIds.Contains(writingSystem.Id);
+				item.Checked = selectedItemIds.Contains(writingSystem.LanguageTag);
 				item.Tag = writingSystem;
 				_writingSystemList.DropDownItems.Add(item);
 				item.CheckedChanged += new EventHandler(OnItem_CheckedChanged);

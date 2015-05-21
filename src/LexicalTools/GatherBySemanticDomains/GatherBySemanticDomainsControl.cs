@@ -50,7 +50,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made
 			var majorRomanWritingSystems = new List<string>(new[] { "en", "id", "fr" });
-			if (majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemId))
+			if (majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemLanguageTag))
 			{
 #if __MonoCS__
 				_domainListComboBox.Font = new Font("monospace", _domainListComboBox.Font.Size, FontStyle.Bold);

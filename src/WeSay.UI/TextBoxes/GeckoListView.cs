@@ -412,7 +412,7 @@ namespace WeSay.UI.TextBoxes
 					}
 					if (entry != null)
 					{
-						var form = entry.GetHeadWordForm(_writingSystem.Id);
+						var form = entry.GetHeadWordForm(_writingSystem.LanguageTag);
 						if (string.IsNullOrEmpty(form))
 						{
 							form = entry.ToString();
@@ -425,7 +425,7 @@ namespace WeSay.UI.TextBoxes
 								//1) a monolingual dictionary (well, one with meanings in the same WS as the lexical units)
 								//2) the SIL CAWL list, where the translator adds glosses, and fails to add
 								//lexical entries.
-								//form = entry.GetSomeMeaningToUseInAbsenseOfHeadWord(_writingSystem.Id);
+								//form = entry.GetSomeMeaningToUseInAbsenseOfHeadWord(_writingSystem.LanguageTag);
 							}
 						}
 						AddItem(form);

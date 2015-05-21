@@ -200,7 +200,7 @@ namespace WeSay.ConfigTool
 				{
 					var binding = new TextBinding(
 						_currentOption.Name,
-						box.WritingSystem.Id,
+						box.WritingSystem.LanguageTag,
 						(Control)box
 					);
 					//hooking on to this is more reliable, sequence-wise, than directly wiring to m.TextChanged

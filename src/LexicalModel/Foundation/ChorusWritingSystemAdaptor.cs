@@ -25,7 +25,7 @@ namespace WeSay.LexicalModel.Foundation
 
 		public string Code
 		{
-			get { return _writingSystem.Id; }
+			get { return _writingSystem.LanguageTag; }
 		}
 
 		public string FontName

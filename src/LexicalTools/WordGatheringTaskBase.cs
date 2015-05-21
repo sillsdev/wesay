@@ -52,12 +52,12 @@ namespace WeSay.LexicalTools
 			get { return ButtonStyle.FixedAmount; }
 		}
 
-		public string WordWritingSystemId
+		public string WordWritingSystemLanguageTag
 		{
 			get
 			{
 				VerifyTaskActivated();
-				return _lexicalFormWritingSystem.Id;
+				return _lexicalFormWritingSystem.LanguageTag;
 			}
 		}
 

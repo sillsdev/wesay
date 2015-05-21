@@ -56,8 +56,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			base.Setup();
 			_tempFolder = new TemporaryFolder();
-			_vernacularWritingSystem = new WritingSystemDefinition(WritingSystemsIdsForTests.VernacularIdForTest);
-			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
+			_vernacularWritingSystem = new WritingSystemDefinition(WritingSystemsIdsForTests.VernacularIdForTest) {DefaultCollation = new IcuRulesCollationDefinition("standard")};
+			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.LanguageTag;
 
 			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
@@ -698,7 +698,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = list[0].RealObject;
 			Assert.IsTrue(
 					entry.LexicalForm.GetAnnotationOfAlternativeIsStarred(
-							_vernacularWritingSystem.Id));
+							_vernacularWritingSystem.LanguageTag));
 		}
 
 		[Test]
@@ -715,7 +715,7 @@ namespace WeSay.LexicalTools.Tests
 
 			Assert.IsTrue(
 					entry.LexicalForm.GetAnnotationOfAlternativeIsStarred(
-							_vernacularWritingSystem.Id));
+							_vernacularWritingSystem.LanguageTag));
 		}
 
 		private void ClickStarOfLexemeForm()
@@ -805,7 +805,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				return
 						((DictionaryControl) _detailTaskPage.Controls[0]).CurrentEntry.LexicalForm.
-								GetBestAlternative(_vernacularWritingSystem.Id);
+								GetBestAlternative(_vernacularWritingSystem.LanguageTag);
 			}
 		}
 

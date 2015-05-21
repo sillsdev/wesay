@@ -474,7 +474,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			//review: the desired semantics of this find are unclear, if we have more than one ws
 			ResultSet<LexEntry> entriesWithSameForm =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(
-							lexemeForm[_lexicalUnitWritingSystem.Id], _lexicalUnitWritingSystem);
+							lexemeForm[_lexicalUnitWritingSystem.LanguageTag], _lexicalUnitWritingSystem);
 			LanguageForm firstGloss = new LanguageForm("en", "-none-",null);
 			if(sense.Gloss.Forms.Length>0)
 				firstGloss = sense.Gloss.Forms[0];

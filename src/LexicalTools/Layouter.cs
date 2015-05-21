@@ -219,7 +219,7 @@ namespace WeSay.LexicalTools
 		{
 			foreach (Control c in control.TextBoxes)
 			{
-				TextBinding binding = new TextBinding(multiTextToBindTo, ((IControlThatKnowsWritingSystem) c).WritingSystem.Id, c);
+				TextBinding binding = new TextBinding(multiTextToBindTo, ((IControlThatKnowsWritingSystem)c).WritingSystem.LanguageTag, c);
 				binding.ChangeOfWhichItemIsInFocus += _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			}
 		}

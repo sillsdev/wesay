@@ -247,14 +247,14 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void WordWritingSystem()
 		{
-			Assert.AreEqual(_vernacularWritingSystemId, Task.WordWritingSystemId);
+			Assert.AreEqual(_vernacularWritingSystemId, Task.WordWritingSystemLanguageTag);
 			Task.Deactivate();
 		}
 
 		[Test]
 		public void SemanticDomainWritingSystem()
 		{
-			Assert.AreEqual("en", Task.SemanticDomainWritingSystemId);
+			Assert.AreEqual("en", Task.SemanticDomainWritingSystemLanguageTag);
 			Task.Deactivate();
 		}
 
@@ -859,7 +859,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
 												 {
 													 Vernacular = entryWithMistake.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
-													 Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+													 Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.LanguageTag })
 												 });
 			Assert.AreEqual(originalCount-1, _lexEntryRepository.CountAllItems(),"expected it to be removed from the lexicon");
 			var modifiedEntries = Task.AddWord("peixe2", "the meaning");
@@ -893,7 +893,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
 												{
 													Vernacular = entryWithMistake.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
-													Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+													Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.LanguageTag })
 												});
 			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems(), "expected it to be removed from the lexicon");
 			var modifiedEntries = Task.AddWord("peixe2", "the meaning2");
@@ -974,7 +974,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_config.ShowMeaningField = false;
 			var entry = MakeEntryWithMeaning("peixe2");
-			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "de_form", Task.DomainKeys[0]));
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.LanguageTag, "de_form", Task.DomainKeys[0]));
 			entry.Senses.Add(GetSenseWithDefAndSemDom("fr", "oui", Task.DomainKeys[1]));
 
 			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
@@ -1006,7 +1006,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_config.ShowMeaningField = false;
 			var entry = MakeEntryWithMeaning("peixe2");
-			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "de_word", Task.DomainKeys[0]));
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.LanguageTag, "de_word", Task.DomainKeys[0]));
 			var sensesToMove =
 				entry.Senses.Where(
 					s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0]));
@@ -1028,13 +1028,13 @@ namespace WeSay.LexicalTools.Tests
 			_config.ShowMeaningField = true;
 			var entry = MakeEntryWithMeaning("peixe2");
 			var firstSense = entry.Senses[0];
-			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "de_word", Task.DomainKeys[0]));
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.LanguageTag, "de_word", Task.DomainKeys[0]));
 			var secondSense = entry.Senses[1];
 
 			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
 												 {
 													 Vernacular = entry.LexicalForm.GetBestAlternative(new []{_vernacularWritingSystemId}),
-													 Meaning = secondSense.Definition.GetBestAlternative(new[]{Task.DefinitionWritingSystem.Id})
+													 Meaning = secondSense.Definition.GetBestAlternative(new[]{Task.DefinitionWritingSystem.LanguageTag})
 												 });
 			Task.AddWord("peixe1", "de_word");
 
@@ -1057,7 +1057,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
 			{
 				Vernacular = entry.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
-				Meaning = firstSense.Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+				Meaning = firstSense.Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.LanguageTag })
 			});
 			Task.AddWord("peixe1", "de_word");
 
@@ -1073,7 +1073,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_config.ShowMeaningField = true;
 			var entry = MakeEntryWithMeaning("peixe2");
-			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "form", Task.DomainKeys[1]));
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.LanguageTag, "form", Task.DomainKeys[1]));
 			_lexEntryRepository.SaveItem(entry);
 
 			Task.CurrentDomainIndex = 1;
@@ -1087,7 +1087,7 @@ namespace WeSay.LexicalTools.Tests
 			_config.ShowMeaningField = true;
 			var entry = MakeEntryWithMeaning("peixe2");
 			entry.Senses.Add(new LexSense());   //This sense needs to be before the sense we are looking for. i.e. order is relevant
-			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "form", Task.DomainKeys[1]));
+			entry.Senses.Add(GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.LanguageTag, "form", Task.DomainKeys[1]));
 			_lexEntryRepository.SaveItem(entry);
 
 			Task.CurrentDomainIndex = 1;
@@ -1101,14 +1101,14 @@ namespace WeSay.LexicalTools.Tests
 			_config.ShowMeaningField = true;
 			var entry = MakeEntryWithMeaning("peixe2");
 			entry.Senses.Add(new LexSense());   //This sense needs to be before the sense we are looking for. i.e. order is relevant
-			var senseWeWantToEdit = GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.Id, "form", Task.DomainKeys[1]);
+			var senseWeWantToEdit = GetSenseWithDefAndSemDom(Task.DefinitionWritingSystem.LanguageTag, "form", Task.DomainKeys[1]);
 			entry.Senses.Add(senseWeWantToEdit);
 			_lexEntryRepository.SaveItem(entry);
 
 			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
 			{
 				Vernacular = entry.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
-				Meaning = senseWeWantToEdit.Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.Id })
+				Meaning = senseWeWantToEdit.Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.LanguageTag })
 			});
 			Assert.That(!entry.Senses.Contains(senseWeWantToEdit), Is.False);
 			Task.Deactivate();
@@ -1598,7 +1598,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ParseFrenchSemanticDomainFile_Localized()
 		{
-			WeSayWordsProject.Project.WritingSystems.Set(new WritingSystemDefinition("fr"));
+			WeSayWordsProject.Project.WritingSystems.Set(new WritingSystemDefinition("fr") {DefaultFont = new FontDefinition("Arial")});
 			WeSayWordsProject.Project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4).
 										WritingSystemIds[0] ="fr";
 			string frenchSemanticDomainFilePath = Path.GetTempFileName();
@@ -1612,7 +1612,7 @@ namespace WeSay.LexicalTools.Tests
 			task.Activate();
 			Assert.AreEqual("1 L’univers, la création", task.DomainNames[0]);
 			Assert.AreEqual(" 1.1 Ciel", task.DomainNames[1]);
-			Assert.AreEqual("fr", task.SemanticDomainWritingSystemId);
+			Assert.AreEqual("fr", task.SemanticDomainWritingSystemLanguageTag);
 			task.Deactivate();
 
 		}

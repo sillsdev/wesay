@@ -184,7 +184,7 @@ namespace WeSay.UI.TextBoxes
 				MultiText mt = new MultiText();
 				foreach (IControlThatKnowsWritingSystem box in TextBoxes)
 				{
-					mt.SetAlternative(box.WritingSystem.Id, box.Text);
+					mt.SetAlternative(box.WritingSystem.LanguageTag, box.Text);
 				}
 				return mt;
 		}
@@ -197,7 +197,7 @@ namespace WeSay.UI.TextBoxes
 		{
 			foreach (IControlThatKnowsWritingSystem box in TextBoxes)
 			{
-				var s =  text.GetExactAlternative(box.WritingSystem.Id);
+				var s =  text.GetExactAlternative(box.WritingSystem.LanguageTag);
 				box.Text = s ?? string.Empty;
 			}
 		}
@@ -234,7 +234,7 @@ namespace WeSay.UI.TextBoxes
 				{
 					//TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
 					AnnotationWidget aw = new AnnotationWidget(multiText,
-															   writingSystem.Id,
+															   writingSystem.LanguageTag,
 															   box.Name + "-annotationWidget");
 					Control annotationControl = aw.MakeControl(new Size()); //p.Size);
 					annotationControl.Click += subControl_Click;
@@ -366,19 +366,19 @@ namespace WeSay.UI.TextBoxes
 
 			_inputBoxes.Add(control);
 
-			string text = multiText.GetExactAlternative(writingSystem.Id);
+			string text = multiText.GetExactAlternative(writingSystem.LanguageTag);
 			if(_isMultiParagraph) //review... stuff was coming in with just \n, and the text box then didn't show the paragarph marks
 			{
 				text = text.Replace("\r\n", "\n");
 				text = text.Replace("\n", "\r\n");
 			}
-			control.Name = Name.Replace("-mtc", "") + "_" + writingSystem.Id;
+			control.Name = Name.Replace("-mtc", "") + "_" + writingSystem.LanguageTag;
 			//for automated tests to find this particular guy
 			control.Text = text;
 
 			if (control is IWeSayTextBox)
 			{
-				var spans = multiText.GetExactAlternativeSpans(writingSystem.Id);
+				var spans = multiText.GetExactAlternativeSpans(writingSystem.LanguageTag);
 				(control as IWeSayTextBox).Spans = spans;
 			}
 

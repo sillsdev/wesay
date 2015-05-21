@@ -117,7 +117,7 @@ namespace WeSay.UI
 
 		private void OnTextBoxEntered(object sender, EventArgs e)
 		{
-			CurrentItemChanged(sender, new CurrentItemEventArgs(_parent, _propertyName, _writingSystem.Id));
+			CurrentItemChanged(sender, new CurrentItemEventArgs(_parent, _propertyName, _writingSystem.LanguageTag));
 		}
 
 		// /// <summary>

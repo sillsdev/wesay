@@ -68,7 +68,7 @@ namespace WeSay.LexicalTools.Tests
 			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			_writingSystem = new WritingSystemDefinition(WritingSystemsIdsForTests.OtherIdForTest);
+			_writingSystem = new WritingSystemDefinition(WritingSystemsIdsForTests.OtherIdForTest) {DefaultCollation = new IcuRulesCollationDefinition("standard")};
 
 			CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
 			CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
@@ -78,7 +78,7 @@ namespace WeSay.LexicalTools.Tests
 			CreateTestEntry("dog", "animal with four legs; man's best friend", "He walked his dog.");
 
 			string[] analysisWritingSystemIds = new[] { WritingSystemsIdsForTests.AnalysisIdForTest };
-			string[] vernacularWritingSystemIds = new[] {_writingSystem.Id};
+			string[] vernacularWritingSystemIds = new[] {_writingSystem.LanguageTag};
 			RtfRenderer.HeadWordWritingSystemId = vernacularWritingSystemIds[0];
 
 			_viewTemplate = new ViewTemplate
@@ -109,13 +109,13 @@ namespace WeSay.LexicalTools.Tests
 		private void CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)
 		{
 			var entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm[_writingSystem.Id] = lexicalForm;
+			entry.LexicalForm[_writingSystem.LanguageTag] = lexicalForm;
 			var sense = new LexSense();
 			entry.Senses.Add(sense);
 			sense.Definition[WritingSystemsIdsForTests.AnalysisIdForTest] = Definition;
 			var example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);
-			example.Sentence[_writingSystem.Id] = exampleSentence;
+			example.Sentence[_writingSystem.LanguageTag] = exampleSentence;
 			_lexEntryRepository.SaveItem(entry);
 			return;
 		}

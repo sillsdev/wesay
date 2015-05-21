@@ -113,7 +113,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 			displayString =
 					recordToken.RealObject.LexicalForm.GetBestAlternative(
-							_todoRecordsListBox.WritingSystem.Id, string.Empty);
+							_todoRecordsListBox.WritingSystem.LanguageTag, string.Empty);
 			e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
 
 			if (string.IsNullOrEmpty(displayString))
