@@ -30,12 +30,9 @@
 		</Component>
 
 		<Directory Id="WritingSystems" Name="WritingSystems">
-		<Component Id="WritingSystems_en.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BDF}">
-		  <File Id="WritingSystems_en.ldml" Name="en.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\en.ldml" />
-		</Component>
-		<Component Id="WritingSystems_qaa_x_qaa.ldml" Guid="{75a4c53d-2aaf-4355-9dec-f2b6c19ee0f9}">
-		  <File Id="WritingSystems_qaa_x_qaa.ldml" Name="qaa-x-qaa.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\qaa-x-qaa.ldml" />
-		</Component>
+			<Component Id="WritingSystems_en.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BDF}">
+			  <File Id="WritingSystems_en.ldml" Name="en.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\en.ldml" />
+			</Component>
 		</Directory>
 
 		<Component Id="SemDom.xml" Guid="{86fe7e64-93bc-4cfc-963d-51af04a4286c}">
@@ -109,7 +106,6 @@
 	  <ComponentRef Id="default.WeSayConfig" />
 	  <ComponentRef Id="ArtOfReadingIndexV3_en.txt"/>
 	  <ComponentRef Id="WritingSystems_en.ldml" />
-	  <ComponentRef Id="WritingSystems_qaa_x_qaa.ldml" />
 	  <ComponentRef Id="aboutBox.css" />
 	  <ComponentRef Id="aboutBox.htm" />
 	</ComponentGroup>

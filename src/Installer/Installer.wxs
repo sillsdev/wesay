@@ -69,7 +69,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 
 				  <Component Id="WeSay_Helps.chm" Guid="{8E2B2894-675B-4B8D-85CF-D9938466EC61}">
-					<File Id="WeSay_Helps.chm" Name="WeSay_Helps.chm" KeyPath="yes" Source="..\..\WeSay_Helps.chm" />
+					<File Id="WeSay_Helps.chm" Name="WeSay_Helps.chm" KeyPath="yes" Source="..\..\External\WeSay_Helps.chm" />
 				  </Component>
 
 				  <Component Id="WeSay.App.exe" Guid="{406B533F-C5D5-49AD-9DC9-12375B80949F}">
@@ -299,7 +299,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 
 
-<!-- Comment: used by PalasoUIWindowsForms for talking to scanner -->
+<!-- Comment: used by SIL.WindowsForms for talking to scanner -->
 				  <Component Id="Interop.WIA.dll" Guid="{47038218-2646-4F83-BE95-4F83A8D41811}">
 					<File Id="Interop.WIA.dll" Name="Interop.WIA.dll" KeyPath="yes" Source="..\..\output\release\Interop.WIA.dll" />
 				  </Component>
@@ -395,23 +395,38 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<Component Id="Palaso.Media.pdb" Guid="{5F493C7F-CA10-4D07-91F9-A028AF7C17DB}">
 					<File Id="Palaso.Media.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.Media.pdb" />
 				</Component>
-				<Component Id="Palaso.pdb" Guid="{DC1A18EB-6BFE-45FF-833E-C4D71B767B48}">
-					<File Id="Palaso.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.pdb" />
-				</Component>
-				<Component Id="Palaso.Tests.dll" Guid="{255A718A-9FF5-4139-8987-CA4C8E28B2A3}">
-					<File Id="Palaso.Tests.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Tests.dll" />
-				</Component>
-				<Component Id="Palaso.Tests.pdb" Guid="{AF1E1AA2-948F-4AEF-9D1A-BFC99F8A2274}">
-					<File Id="Palaso.Tests.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.Tests.pdb" />
-				</Component>
 				<Component Id="Palaso.TestUtilities.dll" Guid="{27843475-345D-4FD6-9838-38C4D90A5C52}">
 					<File Id="Palaso.TestUtilities.dll" KeyPath="yes" Source="..\..\output\release\Palaso.TestUtilities.dll" />
 				</Component>
 				<Component Id="Palaso.TestUtilities.pdb" Guid="{60C94294-28ED-4DB0-9884-19EDE026B3E7}">
 					<File Id="Palaso.TestUtilities.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.TestUtilities.pdb" />
 				</Component>
-				<Component Id="PalasoUIWindowsForms.pdb" Guid="{7D0E0215-F76D-452D-81D3-63108E652540}">
-					<File Id="PalasoUIWindowsForms.pdb" KeyPath="yes" Source="..\..\output\release\PalasoUIWindowsForms.pdb" />
+				<Component Id="SIL.Core.pdb" Guid="{DC1A18EB-6BFE-45FF-833E-C4D71B767B48}">
+					<File Id="SIL.Core.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Core.pdb" />
+				</Component>
+				<Component Id="SIL.Core.Tests.dll" Guid="{255A718A-9FF5-4139-8987-CA4C8E28B2A3}">
+					<File Id="SIL.Core.Tests.dll" KeyPath="yes" Source="..\..\output\release\SIL.Core.Tests.dll" />
+				</Component>
+				<Component Id="SIL.Core.Tests.pdb" Guid="{AF1E1AA2-948F-4AEF-9D1A-BFC99F8A2274}">
+					<File Id="SIL.Core.Tests.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Core.Tests.pdb" />
+				</Component>
+				<Component Id="SIL.Lexicon.pdb" Guid="{E7497018-31FF-4195-A290-C7B1A2851B32}">
+					<File Id="SIL.Lexicon.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Lexicon.pdb" />
+				</Component>
+				<Component Id="SIL.Windows.Forms.GeckoBrowserAdapter.pdb" Guid="{F73CAFD3-297C-444C-A6D4-4C782708DE3B}">
+					<File Id="SIL.Windows.Forms.GeckoBrowserAdapter.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.GeckoBrowserAdapter.pdb" />
+				</Component>
+				<Component Id="SIL.Windows.Forms.Keyboarding.pdb" Guid="{1EAF082D-0E43-45CF-8BF1-B5562F590610}">
+					<File Id="SIL.Windows.Forms.Keyboarding.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.Keyboarding.pdb" />
+				</Component>
+				<Component Id="SIL.Windows.Forms.WritingSystems.pdb" Guid="{979F659D-AB6B-4F49-89A7-9317EDD5A91D}">
+					<File Id="SIL.Windows.Forms.WritingSystems.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.WritingSystems.pdb" />
+				</Component>
+				<Component Id="SIL.Windows.Forms.pdb" Guid="{044C8A00-E72C-4049-A401-B3C60EC1A3FC}">
+					<File Id="SIL.Windows.Forms.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.pdb" />
+				</Component>
+				<Component Id="SIL.WritingSystems.pdb" Guid="{218EC407-D7A9-43A4-A1DF-D418C6A57464}">
+					<File Id="SIL.WritingSystems.pdb" KeyPath="yes" Source="..\..\output\release\SIL.WritingSystems.pdb" />
 				</Component>
 				<Component Id="plift2html.xsl" Guid="{2D29595E-8F1F-42A5-BC92-5D83979685E0}">
 					<File Id="plift2html.xsl" KeyPath="yes" Source="..\..\output\release\plift2html.xsl" />
@@ -552,12 +567,17 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<ComponentRef Id="Palaso.DictionaryServices.pdb"/>
 				<ComponentRef Id="Palaso.Lift.pdb"/>
 				<ComponentRef Id="Palaso.Media.pdb"/>
-				<ComponentRef Id="Palaso.pdb"/>
-				<ComponentRef Id="Palaso.Tests.dll"/>
-				<ComponentRef Id="Palaso.Tests.pdb"/>
 				<ComponentRef Id="Palaso.TestUtilities.dll"/>
 				<ComponentRef Id="Palaso.TestUtilities.pdb"/>
-				<ComponentRef Id="PalasoUIWindowsForms.pdb"/>
+				<ComponentRef Id="SIL.Core.pdb"/>
+				<ComponentRef Id="SIL.Core.Tests.dll"/>
+				<ComponentRef Id="SIL.Core.Tests.pdb"/>
+				<ComponentRef Id="SIL.Lexicon.pdb"/>
+				<ComponentRef Id="SIL.Windows.Forms.pdb"/>
+				<ComponentRef Id="SIL.Windows.Forms.GeckoBrowserAdapter.pdb"/>
+				<ComponentRef Id="SIL.Windows.Forms.Keyboarding.pdb"/>
+				<ComponentRef Id="SIL.Windows.Forms.WritingSystems.pdb"/>
+				<ComponentRef Id="SIL.WritingSystems.pdb"/>
 				<ComponentRef Id="plift2html.xsl"/>
 				<ComponentRef Id="SampleDataProcessor.exe"/>
 				<ComponentRef Id="SampleDataProcessor.pdb"/>
@@ -575,13 +595,13 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<ComponentRef Id="WeSay.UI.Tests.dll"/>
 				<ComponentRef Id="WeSay.UI.Tests.pdb"/>
 
-			  <ComponentGroupRef Id ="defaultFiles"/>
-			  <ComponentGroupRef Id ="ddpStuff"/>
-			  <ComponentGroupRef Id ="biatahSample"/>
-			  <ComponentGroupRef Id ="templates"/>
-			  <ComponentGroupRef Id ="xulrunner"/>
-			  <ComponentGroupRef Id ="PoFiles"/>
-			  <ComponentRef Id="msvcr100.dll"/> <!-- needed by irrklang -->
+				<ComponentGroupRef Id ="defaultFiles"/>
+				<ComponentGroupRef Id ="ddpStuff"/>
+				<ComponentGroupRef Id ="biatahSample"/>
+				<ComponentGroupRef Id ="templates"/>
+				<ComponentGroupRef Id ="xulrunner"/>
+				<ComponentGroupRef Id ="PoFiles"/>
+				<ComponentRef Id="msvcr100.dll"/> <!-- needed by irrklang -->
 			  
 			  
 			  

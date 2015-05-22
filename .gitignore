@@ -22,6 +22,7 @@ external/
 SampleProjects
 common/*.po
 Downloads/
+Mercurial/
 MercurialExtensions/
 xulrunner/
 package/

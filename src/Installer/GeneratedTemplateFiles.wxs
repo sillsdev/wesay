@@ -1,37 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
-		<DirectoryRef Id="TemplatesDir">
-			<Component Id="defaultDictionary.css" Guid="DBB95230-0FBA-4245-8DC3-819BC0CAE285">
-				<File Id="defaultDictionary.css" Name="defaultDictionary.css" KeyPath="yes" Source="..\..\templates\defaultDictionary.css" />
-			</Component>
-			<Component Id="defaultDictionary.css.orig" Guid="83AE8616-BFA8-4D47-A9BB-782ECCFB87D9">
-				<File Id="defaultDictionary.css.orig" Name="defaultDictionary.css.orig" Source="..\..\templates\defaultDictionary.css.orig" />
-			</Component>
-			<Directory Id="TemplatesDir.odfTemplate" Name="odfTemplate">
-				<Component Id="meta.xml" Guid="7DF25C27-062B-4A31-B0E1-7BC152D4456B">
-					<File Id="meta.xml" Name="meta.xml" KeyPath="yes" Source="..\..\templates\odfTemplate\meta.xml" />
-				</Component>
-				<Component Id="mimetype" Guid="EB8C38B5-21CD-452E-824B-E6D7C55DCCFA">
-					<File Id="mimetype" Name="mimetype" Source="..\..\templates\odfTemplate\mimetype" />
-				</Component>
-				<Component Id="settings.xml" Guid="4D12A284-018F-4C14-BED6-34E5101B6A83">
-					<File Id="settings.xml" Name="settings.xml" Source="..\..\templates\odfTemplate\settings.xml" />
-				</Component>
-				<Directory Id="TemplatesDir.odfTemplate.META_INF" Name="META-INF">
-					<Component Id="manifest.xml" Guid="A0987AE7-752E-4EFC-9CE7-B1896F7E6874">
-						<File Id="manifest.xml" Name="manifest.xml" KeyPath="yes" Source="..\..\templates\odfTemplate\META-INF\manifest.xml" />
-					</Component>
-				</Directory>
-			</Directory>
-		</DirectoryRef>
-		<ComponentGroup Id="templates">
-			<ComponentRef Id="defaultDictionary.css" />
-			<ComponentRef Id="defaultDictionary.css.orig" />
-			<ComponentRef Id="meta.xml" />
-			<ComponentRef Id="mimetype" />
-			<ComponentRef Id="settings.xml" />
-			<ComponentRef Id="manifest.xml" />
-		</ComponentGroup>
-	</Fragment>
+    <Fragment>
+        <DirectoryRef Id="TemplatesDir">
+            <Component Id="TemplatesDir.defaultDictionary.css" Guid="4393E0DF-E8C0-4510-A05A-1EFA78F4C2BA">
+                <File Id="TemplatesDir.defaultDictionary.css" Name="defaultDictionary.css" KeyPath="yes" Source="..\..\templates\defaultDictionary.css" />
+                <RemoveFile Id="_8831e35c4f8b42d884b191a46f9b7629" On="both" Name="*.*" />
+            </Component>
+            <Directory Id="TemplatesDir.odfTemplate" Name="odfTemplate">
+                <Component Id="TemplatesDir.odfTemplate.meta.xml" Guid="4000D4D2-E92A-49DE-A5E5-0E97A2E138CB">
+                    <File Id="TemplatesDir.odfTemplate.meta.xml" Name="meta.xml" KeyPath="yes" Source="..\..\templates\odfTemplate\meta.xml" />
+                    <RemoveFile Id="_1f8522966d364eaa8c679068acc19f00" On="both" Name="*.*" />
+                </Component>
+                <Component Id="TemplatesDir.odfTemplate.mimetype" Guid="D900EB47-6856-4A5B-8A2F-4D355FAE25D5">
+                    <File Id="TemplatesDir.odfTemplate.mimetype" Name="mimetype" Source="..\..\templates\odfTemplate\mimetype" />
+                    <RemoveFile Id="_0d9d922a040c46ce8a4973820c9eade1" On="both" Name="*.*" />
+                </Component>
+                <Component Id="TemplatesDir.odfTemplate.settings.xml" Guid="BCF6FCD0-292C-4215-8B81-3D5E09513696">
+                    <File Id="TemplatesDir.odfTemplate.settings.xml" Name="settings.xml" Source="..\..\templates\odfTemplate\settings.xml" />
+                    <RemoveFile Id="_264fa8b392de43d48f97a64f827e8024" On="both" Name="*.*" />
+                </Component>
+                <Directory Id="TemplatesDir.odfTemplate.META_INF" Name="META-INF">
+                    <Component Id="TemplatesDir.odfTemplate.META_INF.manifest.xml" Guid="2C5123D0-EEFD-4E6C-966B-9D961AE09E53">
+                        <File Id="TemplatesDir.odfTemplate.META_INF.manifest.xml" Name="manifest.xml" KeyPath="yes" Source="..\..\templates\odfTemplate\META-INF\manifest.xml" />
+                        <RemoveFile Id="_9302d63a4e1b490180824ed892dea758" On="both" Name="*.*" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </DirectoryRef>
+        <ComponentGroup Id="templates">
+            <ComponentRef Id="TemplatesDir.defaultDictionary.css" />
+            <ComponentRef Id="TemplatesDir.odfTemplate.meta.xml" />
+            <ComponentRef Id="TemplatesDir.odfTemplate.mimetype" />
+            <ComponentRef Id="TemplatesDir.odfTemplate.settings.xml" />
+            <ComponentRef Id="TemplatesDir.odfTemplate.META_INF.manifest.xml" />
+        </ComponentGroup>
+    </Fragment>
 </Wix>
