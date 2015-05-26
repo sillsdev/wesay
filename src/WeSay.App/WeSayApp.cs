@@ -617,7 +617,7 @@ namespace WeSay.App
 				if (ws.LocalKeyboard != null)
 					ws.LocalKeyboard.Activate();
 			}
-			SIL.Keyboard.Controller.ActivateDefaultKeyboard();
+			Keyboard.Controller.ActivateDefaultKeyboard();
 		}
 		#endif
 	}
