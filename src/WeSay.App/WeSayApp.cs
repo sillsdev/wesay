@@ -10,8 +10,10 @@ using Palaso.Lift;
 using SIL.Code;
 using SIL.i18n;
 using SIL.IO;
+using SIL.Keyboarding;
 using SIL.Reporting;
 using SIL.UiBindings;
+using SIL.WritingSystems;
 using WeSay.App.Properties;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
@@ -610,12 +612,12 @@ namespace WeSay.App
 		/// </remarks>
 		private void UglyHackForXkbIndicator()
 		{
-			foreach (var ws in _project.DefaultViewTemplate.WritingSystems.TextWritingSystems)
+			foreach (var ws in _project.DefaultViewTemplate.WritingSystems.TextWritingSystems())
 			{
 				if (ws.LocalKeyboard != null)
 					ws.LocalKeyboard.Activate();
 			}
-			Palaso.WritingSystems.Keyboard.Controller.ActivateDefaultKeyboard();
+			SIL.Keyboard.Controller.ActivateDefaultKeyboard();
 		}
 		#endif
 	}

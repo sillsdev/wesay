@@ -7,7 +7,6 @@ using System.Xml.Linq;
 using Palaso.TestUtilities;
 using SIL.Lexicon;
 using SIL.WritingSystems;
-using SIL.WritingSystems.Tests;
 using WeSay.Project.ConfigMigration.UserConfig;
 using NUnit.Framework;
 
