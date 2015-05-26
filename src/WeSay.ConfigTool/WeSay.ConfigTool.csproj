@@ -136,7 +136,7 @@
     <None Condition="'$(OS)'!='Windows_NT'" Include="..\..\lib\$(Configuration)\NDesk.DBus.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Reference Include="SIL.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SIL.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\SIL.Core.dll</HintPath>
     </Reference>

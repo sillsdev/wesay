@@ -241,6 +241,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="Palaso.Media.dll" Name="Palaso.Media.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Media.dll" />
 				  </Component>
 
+  				  <Component Id="Spart.dll" Guid="{3EB5DFD2-0B28-48B9-AD0F-E678C28E0DDC}">
+					<File Id="Spart.dll" KeyPath="yes" Source="..\..\output\release\Spart.dll" />
+				  </Component>
 				  <Component Id="taglib_sharp.dll" Guid="{9E7A818B-9D51-4DFF-8CEE-93AA374DC25F}">
 					<File Id="taglib_sharp.dll" KeyPath="yes" Source="..\..\output\release\taglib-sharp.dll" />
 				  </Component>
@@ -410,14 +413,26 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<Component Id="SIL.Core.Tests.pdb" Guid="{AF1E1AA2-948F-4AEF-9D1A-BFC99F8A2274}">
 					<File Id="SIL.Core.Tests.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Core.Tests.pdb" />
 				</Component>
+				<Component Id="SIL.Lexicon.dll" Guid="{E412BCD0-E014-4D2D-85F6-0D7A7B4A2B53}">
+					<File Id="SIL.Lexicon.dll" KeyPath="yes" Source="..\..\output\release\SIL.Lexicon.dll" />
+				</Component>
 				<Component Id="SIL.Lexicon.pdb" Guid="{E7497018-31FF-4195-A290-C7B1A2851B32}">
 					<File Id="SIL.Lexicon.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Lexicon.pdb" />
+				</Component>
+				<Component Id="SIL.Windows.Forms.GeckoBrowserAdapter.dll" Guid="{E41DAB23-604C-4745-90C7-0E9CEF6BC8F8}">
+					<File Id="SIL.Windows.Forms.GeckoBrowserAdapter.dll" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.GeckoBrowserAdapter.dll" />
 				</Component>
 				<Component Id="SIL.Windows.Forms.GeckoBrowserAdapter.pdb" Guid="{F73CAFD3-297C-444C-A6D4-4C782708DE3B}">
 					<File Id="SIL.Windows.Forms.GeckoBrowserAdapter.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.GeckoBrowserAdapter.pdb" />
 				</Component>
+				<Component Id="SIL.Windows.Forms.Keyboarding.dll" Guid="{3EB19835-FC60-41A3-B9EF-416B22830770}">
+					<File Id="SIL.Windows.Forms.Keyboarding.dll" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.Keyboarding.dll" />
+				</Component>
 				<Component Id="SIL.Windows.Forms.Keyboarding.pdb" Guid="{1EAF082D-0E43-45CF-8BF1-B5562F590610}">
 					<File Id="SIL.Windows.Forms.Keyboarding.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.Keyboarding.pdb" />
+				</Component>
+				<Component Id="SIL.Windows.Forms.WritingSystems.dll" Guid="{7E4DE7B9-9D90-402B-8CF0-75A5F96E9971}">
+					<File Id="SIL.Windows.Forms.WritingSystems.dll" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.WritingSystems.dll" />
 				</Component>
 				<Component Id="SIL.Windows.Forms.WritingSystems.pdb" Guid="{979F659D-AB6B-4F49-89A7-9317EDD5A91D}">
 					<File Id="SIL.Windows.Forms.WritingSystems.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.WritingSystems.pdb" />
@@ -425,8 +440,17 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<Component Id="SIL.Windows.Forms.pdb" Guid="{044C8A00-E72C-4049-A401-B3C60EC1A3FC}">
 					<File Id="SIL.Windows.Forms.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.pdb" />
 				</Component>
+				<Component Id="SIL.WritingSystems.dll" Guid="{49DE8083-E19C-4DC6-8868-B773E232C44F}">
+					<File Id="SIL.WritingSystems.dll" KeyPath="yes" Source="..\..\output\release\SIL.WritingSystems.dll" />
+				</Component>
 				<Component Id="SIL.WritingSystems.pdb" Guid="{218EC407-D7A9-43A4-A1DF-D418C6A57464}">
 					<File Id="SIL.WritingSystems.pdb" KeyPath="yes" Source="..\..\output\release\SIL.WritingSystems.pdb" />
+				</Component>
+				<Component Id="SIL.WritingSystems.Tests.dll" Guid="{D8D8E918-740A-44B7-A74D-88AAD6A8092B}">
+					<File Id="SIL.WritingSystems.Tests.dll" KeyPath="yes" Source="..\..\output\release\SIL.WritingSystems.Tests.dll" />
+				</Component>
+				<Component Id="SIL.WritingSystems.Tests.pdb" Guid="{799A35B1-D52B-4710-91AB-D351D438778F}">
+					<File Id="SIL.WritingSystems.Tests.pdb" KeyPath="yes" Source="..\..\output\release\SIL.WritingSystems.Tests.pdb" />
 				</Component>
 				<Component Id="plift2html.xsl" Guid="{2D29595E-8F1F-42A5-BC92-5D83979685E0}">
 					<File Id="plift2html.xsl" KeyPath="yes" Source="..\..\output\release\plift2html.xsl" />
@@ -514,6 +538,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="NetReflector.dll" />
 			  <ComponentRef Id="Palaso.DictionaryServices.dll" />
 			  <ComponentRef Id="Palaso.Media.dll" />
+			  <ComponentRef Id="Spart.dll" />
 			  <ComponentRef Id="taglib_sharp.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
 			  <ComponentRef Id="WeSay.App.exe.config" />
@@ -572,12 +597,19 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<ComponentRef Id="SIL.Core.pdb"/>
 				<ComponentRef Id="SIL.Core.Tests.dll"/>
 				<ComponentRef Id="SIL.Core.Tests.pdb"/>
+				<ComponentRef Id="SIL.Lexicon.dll"/>
 				<ComponentRef Id="SIL.Lexicon.pdb"/>
 				<ComponentRef Id="SIL.Windows.Forms.pdb"/>
+				<ComponentRef Id="SIL.Windows.Forms.GeckoBrowserAdapter.dll"/>
 				<ComponentRef Id="SIL.Windows.Forms.GeckoBrowserAdapter.pdb"/>
+				<ComponentRef Id="SIL.Windows.Forms.Keyboarding.dll"/>
 				<ComponentRef Id="SIL.Windows.Forms.Keyboarding.pdb"/>
+				<ComponentRef Id="SIL.Windows.Forms.WritingSystems.dll"/>
 				<ComponentRef Id="SIL.Windows.Forms.WritingSystems.pdb"/>
+				<ComponentRef Id="SIL.WritingSystems.dll"/>
 				<ComponentRef Id="SIL.WritingSystems.pdb"/>
+				<ComponentRef Id="SIL.WritingSystems.Tests.dll"/>
+				<ComponentRef Id="SIL.WritingSystems.Tests.pdb"/>
 				<ComponentRef Id="plift2html.xsl"/>
 				<ComponentRef Id="SampleDataProcessor.exe"/>
 				<ComponentRef Id="SampleDataProcessor.pdb"/>
