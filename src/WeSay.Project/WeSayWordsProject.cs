@@ -360,9 +360,9 @@ namespace WeSay.Project
 
 			if (!Directory.Exists(Path.Combine(projectDirectory, "SharedSettings")))
 				Directory.CreateDirectory(Path.Combine(projectDirectory, "SharedSettings"));
-			var userSettingsStore = new FileSettingsStore(PathToUserSpecificSettingsFile(projectDirectory));
+			var userSettingsStore = new FileSettingsStore(LexiconSettingsFileHelper.GetUserLexiconSettingsPath(projectDirectory));
 			var userSettingsDataMapper = new UserLexiconSettingsWritingSystemDataMapper(userSettingsStore);
-			var projectSettingsStore = new FileSettingsStore(PathToProjectSettingsFile(projectDirectory));
+			var projectSettingsStore = new FileSettingsStore(LexiconSettingsFileHelper.GetProjectLexiconSettingsPath(projectDirectory));
 			var projectSettingsDataMapper = new ProjectLexiconSettingsWritingSystemDataMapper(projectSettingsStore);
 
 			ICustomDataMapper<WritingSystemDefinition>[] customDataMapper =
@@ -1000,9 +1000,11 @@ namespace WeSay.Project
 		private static void StickDefaultViewTemplateInNewConfigFile(string projectPath, string pathToConfigFile, string languageTag)
 		{
 			var userSettingsDataMapper =
-				new UserLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(PathToUserSpecificSettingsFile(projectPath)));
+				new UserLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(
+					LexiconSettingsFileHelper.GetUserLexiconSettingsPath(projectPath)));
 			var projectSettingsDataMapper =
-				new ProjectLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(PathToProjectSettingsFile(projectPath)));
+				new ProjectLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(
+					LexiconSettingsFileHelper.GetProjectLexiconSettingsPath(projectPath)));
 			ICustomDataMapper<WritingSystemDefinition>[] customDataMapper =
 			{
 				userSettingsDataMapper,
@@ -1049,16 +1051,6 @@ namespace WeSay.Project
 		private static string GetPathToConfigFile(string directoryInProject, string name)
 		{
 			return String.IsNullOrEmpty(name) ? "" : Path.Combine(directoryInProject, name + ".WeSayConfig");
-		}
-
-		public static string PathToUserSpecificSettingsFile(string projectDirectory)
-		{
-			return Path.Combine(Path.Combine(projectDirectory, "SharedSettings"), System.Environment.UserName + ".lusx");
-		}
-
-		private static string PathToProjectSettingsFile(string projectDirectory)
-		{
-			return Path.Combine(Path.Combine(projectDirectory, "SharedSettings"), "LexiconProjectSettings.lpsx");
 		}
 
 		/// <summary>

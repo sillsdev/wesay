@@ -9,7 +9,6 @@ using SIL.Lexicon;
 using SIL.Reporting;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
-using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project
 {
@@ -183,24 +182,6 @@ There are problems in:
 			return Path.Combine(parentDir, "SharedSettings");
 		}
 
-		//        public string PathToOptionsLists
-		//        {
-		//            get
-		//            {
-		//                return GetPathToWritingSystemPrefs(CommonDirectory);
-		//            }
-		//        }
-
-		public static string PathToUserSpecificSettingsFile(string parentDir)
-		{
-			return Path.Combine(GetPathToSharedSettingsFolder(parentDir), System.Environment.UserName + ".lusx");
-		}
-
-		private static string PathToProjectSettingsFile(string parentDir)
-		{
-			return Path.Combine(GetPathToSharedSettingsFolder(parentDir), "LexiconProjectSettings.lpsx");
-		}
-
 		// <summary>
 		// Locates the StringCatalog file, matching any file ending in <language>.po first in the Project folder,
 		// then in the Application Common folder.
@@ -345,9 +326,11 @@ There are problems in:
 			if (_writingSystems == null)
 			{
 				var userSettingsDataMapper =
-					new UserLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(PathToUserSpecificSettingsFile(ProjectDirectoryPath)));
+					new UserLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(
+						LexiconSettingsFileHelper.GetUserLexiconSettingsPath(ProjectDirectoryPath)));
 				var projectSettingsDataMapper =
-					new ProjectLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(PathToProjectSettingsFile(ProjectDirectoryPath)));
+					new ProjectLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(
+						LexiconSettingsFileHelper.GetProjectLexiconSettingsPath(ProjectDirectoryPath)));
 				ICustomDataMapper<WritingSystemDefinition>[] customDataMapper =
 				{
 					userSettingsDataMapper,
@@ -361,7 +344,7 @@ There are problems in:
 					OnWritingSystemMigration,
 					OnWritingSystemLoadProblem);
 
-				// WS_FIX: Set default configurations
+				// Set default configurations
 				foreach (string id in _writingSystems.AllWritingSystems.Select(ws => ws.LanguageTag).ToArray())
 				{
 					var ws = _writingSystems.Get(id);

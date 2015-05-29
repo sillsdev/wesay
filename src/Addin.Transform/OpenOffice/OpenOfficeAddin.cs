@@ -18,6 +18,7 @@ using Mono.Addins;
 using ICSharpCode.SharpZipLib.Zip;
 
 using SIL.i18n;
+using SIL.Lexicon;
 using SIL.Reporting;
 using SIL.Progress;
 using SIL.Windows.Forms.Progress;
@@ -286,7 +287,7 @@ namespace Addin.Transform.OpenOffice
 
 				transform = new XslCompiledTransform();
 
-				StringReader srStyles = new StringReader(Resources.ldml2odfStyles);
+				StringReader srStyles = new StringReader(Resources.ulsx2odfStyles);
 				XmlReader xsltReaderStyles = XmlReader.Create(srStyles, readerSettings);
 				XsltSettings stylesSettings = new XsltSettings(true, true);
 				transform.Load(xsltReaderStyles, stylesSettings, new XmlUrlResolver());
@@ -295,9 +296,7 @@ namespace Addin.Transform.OpenOffice
 				xsltArgs = new XsltArgumentList();
 				xsltArgs.AddParam("primaryLangCode", "", GetHeadwordWritingSystemId(arguments.viewTemplate));
 
-				string pathToTempFile = CreateSingleWritingsystemsFileForEasyXslProcessing();
-				transform.Transform(pathToTempFile, xsltArgs, stylesOutput);
-				File.Delete(pathToTempFile);
+				transform.Transform(LexiconSettingsFileHelper.GetUserLexiconSettingsPath(BasilProject.Project.ProjectDirectoryPath), xsltArgs, stylesOutput);
 
 				stylesOutput.Close();
 				progressState.StatusLabel = "Creating ODT file";
@@ -322,37 +321,6 @@ namespace Addin.Transform.OpenOffice
 				progressState.ExceptionThatWasEncountered = e;
 				progressState.WriteToLog(e.Message);
 			}
-		}
-
-		private static string CreateSingleWritingsystemsFileForEasyXslProcessing()
-		{
-			string pathToTempFile = Path.GetTempFileName();
-
-			StreamWriter tempFileWriter = new StreamWriter(pathToTempFile);
-			string xmlHeader = @"<?xml version=""1.0"" encoding=""utf-8""?>";
-			tempFileWriter.WriteLine(xmlHeader);
-			tempFileWriter.WriteLine("<root>");
-
-			string pathToLdmlWritingSystemsFolder =
-				BasilProject.GetPathToLdmlWritingSystemsFolder(BasilProject.Project.ProjectDirectoryPath);
-
-			foreach (string fileName in Directory.GetFiles(pathToLdmlWritingSystemsFolder, "*.ldml"))
-			{
-				StreamReader ldmlFileStream = new StreamReader(fileName);
-				string line;
-				while ((line = ldmlFileStream.ReadLine()) != null)
-				{
-					if(line.Contains("<?xml"))
-					{
-						continue;
-					}
-					tempFileWriter.WriteLine(line);
-				}
-				ldmlFileStream.Close();
-			}
-			tempFileWriter.WriteLine("</root>");
-			tempFileWriter.Close();
-			return pathToTempFile;
 		}
 
 		//private static string GetPathToPrimaryWritingSystemsLdmlFile(TransformWorkerArguments arguments)

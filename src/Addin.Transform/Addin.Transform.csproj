@@ -99,6 +99,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
     </Reference>
+    <Reference Include="SIL.Lexicon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\SIL.Lexicon.dll</HintPath>
+    </Reference>
     <Reference Include="SIL.Windows.Forms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\SIL.Windows.Forms.dll</HintPath>
@@ -244,7 +248,7 @@
     <None Include="Resources\greenPdfDictionary.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="OpenOffice\ldml2odfStyles.xsl">
+    <EmbeddedResource Include="OpenOffice\ulsx2odfStyles.xsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

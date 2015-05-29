@@ -513,10 +513,7 @@ namespace WeSay.UI.TextBoxes
 			// Add in the ISO language code in case font supports multiple regions
 			if (ws != null)
 			{
-				// WS_FIX
-				String language, script, region, variant;
-				IetfLanguageTag.TryGetParts(ws.LanguageTag, out language, out script, out region, out variant);
-				langName = "lang='" + language + "' ";
+				langName = "lang='" + IetfLanguageTag.GetLanguagePart(ws.LanguageTag) + "' ";
 			}
 			return langName;
 		}

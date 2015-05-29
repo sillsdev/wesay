@@ -144,10 +144,10 @@ namespace Addin.Transform {
 				return obj;
 			}
 		}
-		internal static String ldml2odfStyles
+		internal static String ulsx2odfStyles
 		{
 			get {
-				String obj = ResourceManager.GetString("ldml2odfStyles", resourceCulture);
+				String obj = ResourceManager.GetString("ulsx2odfStyles", resourceCulture);
 				return obj;
 			}
 		}
