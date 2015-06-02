@@ -67,8 +67,8 @@ namespace WeSay.Project
 		readonly Dictionary<string, string> _changedWritingSystemIds = new Dictionary<string, string>();
 		private bool _alreadyReportedWsLookupFailure;
 
-		//public const int CurrentWeSayConfigFileVersion = 8; // This variable must be updated with every new version of the WeSayConfig file
-		public const int CurrentWeSayUserSpecificConfigFileVersion = 2; // This variable must be updated with every new version of the WeSayUserConfig file
+		//public const int CurrentWeSayConfigFileVersion = 9; // This variable must be updated with every new version of the WeSayConfig file
+		public const int CurrentWeSayUserSpecificConfigFileVersion = 3; // This variable must be updated with every new version of the WeSayUserConfig file
 
 		public event EventHandler EditorsSaveNow;
 
@@ -379,7 +379,6 @@ namespace WeSay.Project
 				OnWritingSystemMigration,
 				OnWritingSystemLoadProblem);
 
-			// WS_FIX: Try to set WritingSystemFactory.TemplateFolder
 			var wf = (LdmlInFolderWritingSystemFactory) writingSystemRepository.WritingSystemFactory;
 			wf.TemplateFolder = GetPathToLdmlWritingSystemsFolder(ApplicationCommonDirectory);
 

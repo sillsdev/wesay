@@ -196,8 +196,7 @@ namespace WeSay.LexicalTools
 			var ws = WritingSystems.Get(writingSystemId);
 			Font font = WritingSystemInfo.CreateFont(ws);
 			float fontSize = font.Size + fontSizeBoost;
-			String lang, region, script, variant;
-			IetfLanguageTag.TryGetParts(ws.LanguageTag, out lang, out script, out region, out variant);
+			String lang = IetfLanguageTag.GetLanguagePart(ws.LanguageTag);
 			var formattedSpan = string.Format(
 				"<span lang='{5}' style='font-family:{0}; font-size:{1}pt;font-weight:{2};font-style:{3};text-decoration:{4}'>",
 				font.Name,

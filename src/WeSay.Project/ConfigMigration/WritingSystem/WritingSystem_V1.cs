@@ -32,21 +32,21 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
 		private bool _isUnicode = true;
 		private string _abbreviation;
-		private WritingSystemDefinition _palasoWritingSystemDefinition;
+		private WritingSystemDefinition _silWritingSystemDefinition;
 
 		/// <summary>
 		/// default constructor required for deserialization
 		/// </summary>
 		public WritingSystem_V1()
 		{
-			_palasoWritingSystemDefinition = new WritingSystemDefinition();
+			_silWritingSystemDefinition = new WritingSystemDefinition();
 		}
 
 		public WritingSystem_V1(string id, Font font)
 		{
 			ISO = id;
 			Font = font;
-			_palasoWritingSystemDefinition = new WritingSystemDefinition();
+			_silWritingSystemDefinition = new WritingSystemDefinition();
 		}
 
 		[ReflectorProperty("Id", Required = true)]
@@ -151,7 +151,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		///<param name="x">The first object to compare.</param>
 		public int Compare(string x, string y)
 		{
-			return _palasoWritingSystemDefinition.DefaultCollation.Collator.Compare(x, y);
+			return _silWritingSystemDefinition.DefaultCollation.Collator.Compare(x, y);
 			//return _sortComparer(x, y);
 		}
 
@@ -164,18 +164,18 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		public override string ToString()
 		{
-			return _palasoWritingSystemDefinition.Id;
+			return _silWritingSystemDefinition.Id;
 		}
 
 		public SortKey GetSortKey(string source)
 		{
-			return _palasoWritingSystemDefinition.DefaultCollation.Collator.GetSortKey(source);
+			return _silWritingSystemDefinition.DefaultCollation.Collator.GetSortKey(source);
 		}
 
 		// Same if behavior is same (not appearance)
 		public override int GetHashCode()
 		{
-			int hashCode = HashCombine(_palasoWritingSystemDefinition.Language.GetHashCode(), SortUsing.GetHashCode());
+			int hashCode = HashCombine(_silWritingSystemDefinition.Language.GetHashCode(), SortUsing.GetHashCode());
 			if (UsesCustomSortRules)
 			{
 				hashCode = HashCombine(hashCode, CustomSortRules.GetHashCode());

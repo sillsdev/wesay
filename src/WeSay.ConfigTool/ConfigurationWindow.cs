@@ -217,8 +217,6 @@ namespace WeSay.ConfigTool
 			CreateNewProject(directoryPath, languageTag);
 			OpenProject(directoryPath);
 
-			// WS_FIX: do we set default configurations here?  vs when Templates are copied
-			// var ws = Project.WritingSystems.Get(WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation);
 			foreach (string id in Project.WritingSystems.AllWritingSystems.Select(ws => ws.LanguageTag).ToArray())
 			{
 				var ws = Project.WritingSystems.Get(id);

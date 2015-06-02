@@ -119,7 +119,6 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		public void Migrate(string sourceFilePath, string destinationFilePath)
 		{
-			// Migrate this to v3?
 			string sourceFileName = Path.GetFileName(sourceFilePath);
 
 			var migrationInfo = new List<LdmlMigrationInfo>();
@@ -190,7 +189,6 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				}
 				migrationInfo.Add(currentMigrationInfo);
 			}
-			// WS_FIX: Should this be version 0?
 			_migrationHandler(0, migrationInfo);
 		}
 
