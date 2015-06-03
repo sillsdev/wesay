@@ -304,9 +304,7 @@ There are problems in:
 		{
 			string pathProjectToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectoryPath);
 			string pathCommonToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(ApplicationCommonDirectory);
-			string pathProjectToSharedSettingsFolder = GetPathToSharedSettingsFolder(projectDirectoryPath);
 			Directory.CreateDirectory(pathProjectToWritingSystemsFolder);
-			Directory.CreateDirectory(pathProjectToSharedSettingsFolder);
 			foreach (string path in Directory.GetFiles(pathCommonToWritingSystemsFolder, "*.ldml"))
 			{
 				var destPath = Path.Combine(pathProjectToWritingSystemsFolder, Path.GetFileName(path));
@@ -322,6 +320,10 @@ There are problems in:
 			if (!Directory.Exists(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath)))
 			{
 				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
+			}
+			if (!Directory.Exists(GetPathToSharedSettingsFolder(ProjectDirectoryPath)))
+			{
+				Directory.CreateDirectory(GetPathToSharedSettingsFolder(ProjectDirectoryPath));
 			}
 			if (_writingSystems == null)
 			{

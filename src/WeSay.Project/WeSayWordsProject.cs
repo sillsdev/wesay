@@ -975,6 +975,10 @@ namespace WeSay.Project
 			{
 				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(projectDirectoryPath);
 			}
+			if (!Directory.Exists(GetPathToSharedSettingsFolder(projectDirectoryPath)))
+			{
+				Directory.CreateDirectory(GetPathToSharedSettingsFolder(projectDirectoryPath));
+			}
 
 			string pathToConfigFile = GetPathToConfigFile(projectDirectoryPath, projectName);
 			File.Copy(PathToDefaultConfig, pathToConfigFile, true);
