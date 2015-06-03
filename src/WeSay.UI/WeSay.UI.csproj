@@ -83,9 +83,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\SIL.Lift.dll</HintPath>
     </Reference>
-    <Reference Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="Palaso.Media, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="SIL.Media, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\Palaso.Media.dll</HintPath>
+      <HintPath>..\..\lib\$(Configuration)\SIL.Media.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
