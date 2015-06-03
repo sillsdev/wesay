@@ -1,7 +1,7 @@
 using System.IO;
 using NUnit.Framework;
 using SIL.IO;
-using Palaso.Lift.Options;
+using SIL.Lift.Options;
 using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel.Tests.Foundation.Options

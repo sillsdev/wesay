@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Lift;
+using SIL.Lift;
 using SIL.UiBindings;
 using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;

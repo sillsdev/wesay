@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using SIL.Data;
 using SIL.i18n;
 using SIL.Reporting;

@@ -1,8 +1,8 @@
 using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.Data;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
 using SIL.Reporting;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;

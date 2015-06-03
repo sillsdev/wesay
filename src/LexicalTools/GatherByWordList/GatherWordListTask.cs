@@ -7,9 +7,9 @@ using System.Linq;
 using System.Windows.Forms;
 using SIL.Code;
 using SIL.Data;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.Lift.Options;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Lift.Options;
 using SIL.Progress;
 using SIL.Reporting;
 using SIL.Text;
@@ -153,7 +153,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		{
 			//Performance wise, the following is not expecting a huge, 10k word list.
 
-			using (var reader = new Palaso.DictionaryServices.Lift.LiftReader(new NullProgressState(),
+			using (var reader = new SIL.DictionaryServices.Lift.LiftReader(new NullProgressState(),
 				WeSayWordsProject.Project.GetSemanticDomainsList(),
 				WeSayWordsProject.Project.GetIdsOfSingleOptionFields()))
 			using(var m = new MemoryDataMapper<LexEntry>())

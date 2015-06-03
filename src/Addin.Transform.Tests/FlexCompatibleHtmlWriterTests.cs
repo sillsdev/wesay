@@ -3,8 +3,8 @@ using System.IO;
 using System.Text;
 using Addin.Transform.PdfDictionary;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift.Options;
+using SIL.DictionaryServices.Model;
+using SIL.Lift.Options;
 using Palaso.TestUtilities;
 using SIL.Data;
 using SIL.Linq;
@@ -12,7 +12,7 @@ using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.Project.Tests;
-using Palaso.Lift; // review: really?
+using SIL.Lift; // review: really?
 
 namespace Addin.Transform.Tests
 {

@@ -9,7 +9,7 @@ using SIL.Text;
 using SIL.WritingSystems;
 using SIL.Windows.Forms.Keyboarding;
 using WeSay.UI.audio;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.UI.TextBoxes
 {

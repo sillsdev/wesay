@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.Lift.Options;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Lift.Options;
 using SIL.Reporting;
 using WeSay.LexicalModel;
 

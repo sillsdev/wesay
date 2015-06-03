@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 using SIL.Data;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using Palaso.TestUtilities;
 using SIL.WritingSystems;
 using WeSay.LexicalModel;

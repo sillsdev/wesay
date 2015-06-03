@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Lift;
+using SIL.Lift;
 using SIL.Reporting;
 using WeSay.UI.Properties;
 

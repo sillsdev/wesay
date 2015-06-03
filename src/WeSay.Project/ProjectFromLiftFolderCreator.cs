@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Xml;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using SIL.Reporting;
 using SIL.WritingSystems;
 

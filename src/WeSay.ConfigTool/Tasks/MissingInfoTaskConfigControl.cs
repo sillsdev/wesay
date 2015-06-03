@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;

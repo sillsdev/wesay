@@ -1,5 +1,5 @@
 using SIL.Data;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using SIL.UiBindings;
 
 namespace WeSay.LexicalModel

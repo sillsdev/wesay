@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Addin.Transform.PdfDictionary;
-using Palaso.DictionaryServices.Lift;
+using SIL.DictionaryServices.Lift;
 using SIL.Reporting;
 using SIL.i18n;
 using WeSay.AddinLib;

@@ -11,7 +11,7 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using WeSay.UI.TextBoxes;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.UI.Tests
 {

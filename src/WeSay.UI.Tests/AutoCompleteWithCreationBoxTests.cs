@@ -5,11 +5,11 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.WritingSystems;
 using WeSay.Project;
-using Palaso.Lift;
+using SIL.Lift;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.UI.AutoCompleteTextBox;
-using Palaso.Lift.Options;
+using SIL.Lift.Options;
 
 namespace WeSay.UI.Tests
 {

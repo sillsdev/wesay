@@ -4,9 +4,9 @@ using System.IO;
 using System.Text;
 using NUnit.Framework;
 using SIL.Data;
-using Palaso.DictionaryServices.Lift;
-using Palaso.Lift;
-using Palaso.Lift.Options;
+using SIL.DictionaryServices.Lift;
+using SIL.Lift;
+using SIL.Lift.Options;
 using SIL.Reporting;
 using Palaso.TestUtilities;
 using SIL.WritingSystems;
@@ -14,7 +14,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
@@ -890,7 +890,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private GatherWordListTask CreateAndActivateLiftTask(IEnumerable<string> definitionWritingSystems, string entriesXml)
 		{
-			var file = new TempLiftFile("wordlist.lift", _tempFolder, entriesXml, Palaso.Lift.Validation.Validator.LiftVersion);
+			var file = new TempLiftFile("wordlist.lift", _tempFolder, entriesXml, SIL.Lift.Validation.Validator.LiftVersion);
 
 			var vt = new ViewTemplate();
 

@@ -1,5 +1,5 @@
 using System;
-using Palaso.Lift.Options;
+using SIL.Lift.Options;
 using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel.Foundation.Options

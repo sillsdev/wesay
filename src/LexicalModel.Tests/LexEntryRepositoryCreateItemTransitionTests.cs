@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using Palaso.TestUtilities;
 using SIL.Tests.Data;
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using SIL.Data;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using Palaso.TestUtilities;
 using NUnit.Framework;
 using SIL.WritingSystems;

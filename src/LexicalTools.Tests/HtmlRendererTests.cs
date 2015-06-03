@@ -10,7 +10,7 @@ using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.LexicalModel;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using Palaso.TestUtilities;
 using WeSay.TestUtilities;
 
@@ -170,7 +170,7 @@ namespace WeSay.LexicalTools.Tests
 				Directory.Delete(pathToLdmlWsFolder, true);
 			}
 
-			Palaso.Lift.Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
+			SIL.Lift.Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
 
 			//setup writing systems
 			Directory.CreateDirectory(pathToLdmlWsFolder);

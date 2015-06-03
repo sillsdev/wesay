@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using Palaso.Lift.Validation;
+using SIL.Lift.Validation;
 using Palaso.TestUtilities;
 using SIL.WritingSystems;
 

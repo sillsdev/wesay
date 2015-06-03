@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
-using Palaso.Lift;
+using SIL.Lift;
 using SIL.Reporting;
 using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;

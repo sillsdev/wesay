@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using SIL.Data;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI;

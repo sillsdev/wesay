@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using SIL.i18n;
 using SIL.Reporting;
 using WeSay.Foundation;

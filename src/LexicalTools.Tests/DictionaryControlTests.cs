@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using SIL.Data;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using SIL.Reporting;
 using Palaso.TestUtilities;
 using SIL.WritingSystems;
@@ -18,7 +18,7 @@ using WeSay.UI.TextBoxes;
 
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.LexicalTools.Tests
 {

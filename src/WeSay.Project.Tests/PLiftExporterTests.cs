@@ -4,13 +4,13 @@ using System.IO;
 using System.Xml;
 using NUnit.Framework;
 using SIL.Data;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using SIL.IO;
 using Palaso.TestUtilities;
 using SIL.WritingSystems;
 using SIL.Xml;
 using WeSay.LexicalModel;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.Project.Tests
 {

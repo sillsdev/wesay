@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using NUnit.Framework;
 using SIL.Data;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using Palaso.TestUtilities;
 using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;

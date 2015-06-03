@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using SIL.Code;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.Lift.Options;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Lift.Options;
 using SIL.Text;
 
 using Enumerable=SIL.Linq.Enumerable;

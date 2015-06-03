@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.UI
 {

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using SIL.Data;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 
 namespace WeSay.LexicalModel
 {

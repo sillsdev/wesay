@@ -1,5 +1,5 @@
 using System.Text;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using Palaso.TestUtilities;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;

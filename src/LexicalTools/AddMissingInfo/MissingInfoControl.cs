@@ -7,7 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using SIL.Data;
 using SIL.Code;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using SIL.i18n;
 using SIL.Windows.Forms.Miscellaneous;
 using SIL.Reporting;

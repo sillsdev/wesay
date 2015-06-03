@@ -1,6 +1,6 @@
 using System.IO;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Lift;
+using SIL.DictionaryServices.Lift;
 using SIL.Reporting;
 using Palaso.TestUtilities;
 using WeSay.Project;

@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Lift;
+using SIL.Lift;
 using SIL.UiBindings;
 using WeSay.UI.TextBoxes;
 

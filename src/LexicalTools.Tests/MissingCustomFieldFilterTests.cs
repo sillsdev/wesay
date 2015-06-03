@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift.Options;
+using SIL.DictionaryServices.Model;
+using SIL.Lift.Options;
 using WeSay.LexicalModel;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.LexicalTools.Tests
 {

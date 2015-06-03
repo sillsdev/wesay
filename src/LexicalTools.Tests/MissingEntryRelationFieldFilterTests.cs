@@ -1,6 +1,6 @@
 using System.IO;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;
 

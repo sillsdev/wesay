@@ -20,7 +20,7 @@ using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit

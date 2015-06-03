@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using SIL.IO;
 using Palaso.TestUtilities;
 using WeSay.LexicalModel;

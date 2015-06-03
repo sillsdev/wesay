@@ -10,9 +10,9 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
 using SIL.Data;
-using Palaso.Lift;
-using Palaso.DictionaryServices.Model;
-using Palaso.DictionaryServices.Lift;
+using SIL.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.DictionaryServices.Lift;
 using Mono.Addins;
 
 using ICSharpCode.SharpZipLib.Zip;

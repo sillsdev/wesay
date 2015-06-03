@@ -3,13 +3,13 @@ using System.Windows.Forms;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.LexicalTools.Tests
 {

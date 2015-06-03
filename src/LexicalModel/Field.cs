@@ -6,8 +6,8 @@ using System.Linq;
 using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
 using SIL.WritingSystems;
 
 namespace WeSay.LexicalModel

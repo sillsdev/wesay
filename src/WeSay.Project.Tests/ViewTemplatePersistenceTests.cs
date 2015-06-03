@@ -4,8 +4,8 @@ using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
 using SIL.Xml;
 using WeSay.LexicalModel;
 

@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using SIL.Code;
-using Palaso.Lift;
+using SIL.Lift;
 using SIL.UiBindings;
 using WeSay.UI.TextBoxes;
 

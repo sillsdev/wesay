@@ -4,7 +4,7 @@ using NUnit.Framework;
 using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.Project;
-using Palaso.Lift;
+using SIL.Lift;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI.TextBoxes;

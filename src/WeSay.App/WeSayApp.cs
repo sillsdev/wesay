@@ -6,7 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Autofac;
 using CommandLine;
-using Palaso.Lift;
+using SIL.Lift;
 using SIL.Code;
 using SIL.i18n;
 using SIL.IO;

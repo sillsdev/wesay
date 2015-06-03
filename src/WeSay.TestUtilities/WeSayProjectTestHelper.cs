@@ -36,7 +36,7 @@ namespace WeSay.TestUtilities
 				Directory.Delete(pathToLdmlWsFolder, true);
 			}
 
-			Palaso.Lift.Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
+			SIL.Lift.Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
 
 			//setup writing systems
 			Directory.CreateDirectory(pathToLdmlWsFolder);
