@@ -350,6 +350,8 @@ There are problems in:
 				foreach (string id in _writingSystems.AllWritingSystems.Select(ws => ws.LanguageTag).ToArray())
 				{
 					var ws = _writingSystems.Get(id);
+					if (id == "en")
+						ws.Abbreviation = "eng";
 					if (ws.DefaultCollation == null)
 						ws.DefaultCollation = new IcuRulesCollationDefinition("standard");
 					if (ws.DefaultFont == null)

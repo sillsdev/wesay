@@ -217,19 +217,6 @@ namespace WeSay.ConfigTool
 			CreateNewProject(directoryPath, languageTag);
 			OpenProject(directoryPath);
 
-			foreach (string id in Project.WritingSystems.AllWritingSystems.Select(ws => ws.LanguageTag).ToArray())
-			{
-				var ws = Project.WritingSystems.Get(id);
-				if (ws.DefaultFontSize == 0.0)
-					ws.DefaultFontSize = 12;
-				if (ws.DefaultFont == null)
-					ws.DefaultFont = new FontDefinition("Arial");
-				if (ws.DefaultCollation == null)
-					ws.DefaultCollation = new IcuRulesCollationDefinition("standard");
-				Project.WritingSystems.Set(ws);
-			}
-			Project.WritingSystems.Save();
-
 			if(_project != null)
 			 {
 				 var logger = _project.Container.Resolve<ILogger>();
