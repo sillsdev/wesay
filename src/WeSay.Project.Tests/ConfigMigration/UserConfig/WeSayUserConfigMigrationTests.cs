@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms.Layout;
 using System.Xml.Linq;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.Lexicon;
 using SIL.WritingSystems;
 using WeSay.Project.ConfigMigration.UserConfig;

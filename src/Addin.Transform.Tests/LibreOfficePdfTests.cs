@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using SIL.Reporting;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using Addin.Transform.PdfDictionary;
 using WeSay.Project;
 using WeSay.Project.Tests;

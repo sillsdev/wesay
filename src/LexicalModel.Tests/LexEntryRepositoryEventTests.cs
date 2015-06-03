@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 
 
 namespace WeSay.LexicalModel.Tests

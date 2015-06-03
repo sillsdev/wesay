@@ -5,7 +5,7 @@ using SIL.Data;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
 using SIL.Lift.Options;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.Text;
 using SIL.WritingSystems;
 

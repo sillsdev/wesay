@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.IO;
 using SIL.Tests.Data;
 

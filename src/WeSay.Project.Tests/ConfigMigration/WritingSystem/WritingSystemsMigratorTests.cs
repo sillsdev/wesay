@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml;
 using NUnit.Framework;
 using SIL.IO;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Tests;
 using WeSay.Project.ConfigMigration.WritingSystem;

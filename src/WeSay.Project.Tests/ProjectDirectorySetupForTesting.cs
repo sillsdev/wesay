@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using SIL.Lift.Validation;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.WritingSystems;
 
 namespace WeSay.Project.Tests

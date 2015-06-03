@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using SIL.IO;
 using SIL.Reporting;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using WeSay.ConfigTool.NewProjectCreation;
 
 namespace WeSay.ConfigTool.Tests.NewProjectCreation

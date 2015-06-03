@@ -118,9 +118,9 @@
     <None Include="..\..\lib\common\Enchant.Net.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Reference Include="Palaso.TestUtilities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SIL.TestUtilities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\Palaso.TestUtilities.dll</HintPath>
+      <HintPath>..\..\lib\$(Configuration)\SIL.TestUtilities.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

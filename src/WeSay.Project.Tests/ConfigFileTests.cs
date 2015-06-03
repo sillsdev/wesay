@@ -4,7 +4,7 @@ using System.IO;
 using System.Xml;
 using NUnit.Framework;
 using SIL.IO;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.Lexicon;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;

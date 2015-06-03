@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Dashboard;

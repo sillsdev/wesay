@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.XPath;
 using NUnit.Framework;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig

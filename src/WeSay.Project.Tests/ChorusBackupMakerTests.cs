@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.Progress;
 using SIL.Xml;
 

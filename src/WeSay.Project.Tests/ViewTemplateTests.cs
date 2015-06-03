@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
 using WeSay.Data.Tests;

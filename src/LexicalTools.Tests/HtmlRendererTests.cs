@@ -11,7 +11,7 @@ using WeSay.Project;
 using WeSay.UI;
 using WeSay.LexicalModel;
 using SIL.DictionaryServices.Model;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests

@@ -3,7 +3,7 @@ using System.IO;
 using Chorus.UI.Review;
 using NUnit.Framework;
 using SIL.Reporting;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;

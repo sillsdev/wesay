@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Xml;
 using SIL.Reporting;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using Addin.Transform.OpenOffice;
 using SIL.WritingSystems;
 using WeSay.Project;

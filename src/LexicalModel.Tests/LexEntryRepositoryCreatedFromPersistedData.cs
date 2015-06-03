@@ -5,7 +5,7 @@ using NUnit.Framework;
 using SIL.DictionaryServices.Lift;
 using SIL.Extensions;
 using SIL.Tests.Data;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.DictionaryServices.Model;
 
 namespace WeSay.LexicalModel.Tests

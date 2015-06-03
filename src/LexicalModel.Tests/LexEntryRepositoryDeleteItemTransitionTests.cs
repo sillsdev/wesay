@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.IO;
 using SIL.Tests.Data;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 
 namespace WeSay.LexicalModel.Tests
 {

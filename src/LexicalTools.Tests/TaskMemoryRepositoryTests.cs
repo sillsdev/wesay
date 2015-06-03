@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using NUnit.Framework;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 
 
 namespace WeSay.LexicalTools.Tests

@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using SIL.Reporting;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using WeSay.Project.LocalizedList;
 
 namespace WeSay.Project.Tests

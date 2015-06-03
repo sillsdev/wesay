@@ -7,7 +7,7 @@ using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using SIL.Reporting;
 //using WeSay.Foundation.Tests;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using WeSay.Project;
 using WeSay.Project.Tests;
 using WeSay.TestUtilities;
@@ -43,7 +43,7 @@ namespace WeSay.ConfigTool.Tests
 				WeSayWordsProject.Project.Dispose();
 			}
 
-			Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
+			SIL.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
 		}
 
 		[Test]

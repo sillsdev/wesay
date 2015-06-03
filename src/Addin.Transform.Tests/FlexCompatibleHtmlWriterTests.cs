@@ -5,7 +5,7 @@ using Addin.Transform.PdfDictionary;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.Lift.Options;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.Data;
 using SIL.Linq;
 using SIL.WritingSystems;

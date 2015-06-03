@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.IO;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;

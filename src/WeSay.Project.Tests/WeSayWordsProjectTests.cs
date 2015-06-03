@@ -9,7 +9,7 @@ using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
 using SIL.Lift.Options;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.IO;
 using SIL.Reporting;
 using SIL.WritingSystems;

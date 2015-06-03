@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using SIL.IO;
 using SIL.Reporting;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddPictures;
 

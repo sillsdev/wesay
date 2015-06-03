@@ -8,7 +8,7 @@ using SIL.DictionaryServices.Lift;
 using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Reporting;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;

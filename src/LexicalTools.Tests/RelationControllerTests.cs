@@ -4,7 +4,7 @@ using SIL.Data;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
 using SIL.Reporting;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
