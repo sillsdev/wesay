@@ -158,16 +158,16 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="autofac.dll" Name="autofac.dll" KeyPath="yes" Source="..\..\output\release\autofac.dll" />
 				  </Component>
 
-				  <Component Id="Palaso.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
-					<File Id="Palaso.dll" Name="Palaso.dll" KeyPath="yes" Source="..\..\output\release\Palaso.dll" />
+				  <Component Id="SIL.Core.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
+					<File Id="SIL.Core.dll" Name="SIL.Core.dll" KeyPath="yes" Source="..\..\output\release\SIL.Core.dll" />
 				  </Component>
 
-				  <Component Id="PalasoUIWindowsForms.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E899}">
-					<File Id="PalasoUIWindowsForms.dll" Name="PalasoUIWindowsForms.dll" KeyPath="yes" Source="..\..\output\release\PalasoUIWindowsForms.dll" />
+				  <Component Id="SIL.Windows.Forms.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E899}">
+					<File Id="SIL.Windows.Forms.dll" Name="SIL.Windows.Forms.dll" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.dll" />
 				  </Component>
 
-				  <Component Id="Palaso.Lift.dll" Guid="{3DDA9386-0A99-418D-BF33-E070D6337DDD}">
-					<File Id="Palaso.Lift.dll" Name="Palaso.Lift.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Lift.dll" />
+				  <Component Id="SIL.Lift.dll" Guid="{3DDA9386-0A99-418D-BF33-E070D6337DDD}">
+					<File Id="SIL.Lift.dll" Name="SIL.Lift.dll" KeyPath="yes" Source="..\..\output\release\SIL.Lift.dll" />
 				  </Component>
 
 				  <Component Id="Icu.Net.dll" Guid="{7EEB48AE-7494-4408-924F-24BCA99A6E22}">
@@ -175,18 +175,18 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 
 				  <Component Id="IcuData.dll" Guid="{39EFEA93-2A23-42d0-A3EE-CD080A9F8C54}">
-					<File Id="IcuData.dll" Name="icudt40.dll" KeyPath="yes" Source="..\..\output\release\icudt40.dll" />
+					<File Id="IcuData.dll" Name="icudt52.dll" KeyPath="yes" Source="..\..\output\release\icudt52.dll" />
 				  </Component>
 				  <Component Id="IcuI18n.dll" Guid="{E47B3633-2C93-4bdc-AB68-4851EC13878F}">
-					<File Id="IcuI18n.dll" Name="icuin40.dll" KeyPath="yes" Source="..\..\output\release\icuin40.dll" />
+					<File Id="IcuI18n.dll" Name="icuin52.dll" KeyPath="yes" Source="..\..\output\release\icuin52.dll" />
 				  </Component>
 				  <Component Id="IcuCommon.dll" Guid="{15D5ACDF-802A-40b1-83C3-681F12B02D89}">
-					<File Id="IcuCommon.dll" Name="icuuc40.dll" KeyPath="yes" Source="..\..\output\release\icuuc40.dll" />
+					<File Id="IcuCommon.dll" Name="icuuc52.dll" KeyPath="yes" Source="..\..\output\release\icuuc52.dll" />
 				  </Component>
 
 				-->
 
-				  <!-- audio recording/playback engine used by palaso.media -->
+				  <!-- audio recording/playback engine used by SIL.media -->
 				  <Component Id="irrKlang.NET4.dll" Guid="{952F0A0C-F317-459f-A91C-55DE3D046B2C}">
 					<File Id="irrKlang.NET4.dll" Name="irrKlang.NET4.dll" KeyPath="yes" Source="..\..\output\release\irrKlang.NET4.dll" />
 				  </Component>
@@ -232,13 +232,13 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 
 
-				  <Component Id="Palaso.DictionaryServices.dll" Guid="{3CCA9386-0A99-418D-BF33-E070D6337D2A}">
-					<File Id="Palaso.DictionaryServices.dll" Name="Palaso.DictionaryServices.dll" KeyPath="yes" Source="..\..\output\release\Palaso.DictionaryServices.dll" />
+				  <Component Id="SIL.DictionaryServices.dll" Guid="{3CCA9386-0A99-418D-BF33-E070D6337D2A}">
+					<File Id="SIL.DictionaryServices.dll" Name="SIL.DictionaryServices.dll" KeyPath="yes" Source="..\..\output\release\SIL.DictionaryServices.dll" />
 				  </Component>
 
 
-				  <Component Id="Palaso.Media.dll" Guid="{4739D7BD-6D1D-474f-BF01-E012E51361E4}">
-					<File Id="Palaso.Media.dll" Name="Palaso.Media.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Media.dll" />
+				  <Component Id="SIL.Media.dll" Guid="{4739D7BD-6D1D-474f-BF01-E012E51361E4}">
+					<File Id="SIL.Media.dll" Name="SIL.Media.dll" KeyPath="yes" Source="..\..\output\release\SIL.Media.dll" />
 				  </Component>
 
   				  <Component Id="Spart.dll" Guid="{3EB5DFD2-0B28-48B9-AD0F-E678C28E0DDC}">
@@ -389,20 +389,20 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<Component Id="NUnitForms.xml" Guid="{E682B6C1-6CBF-40B0-9E6F-B61DC8E267E7}">
 					<File Id="NUnitForms.xml" KeyPath="yes" Source="..\..\output\release\NUnitForms.xml" />
 				</Component>
-				<Component Id="Palaso.DictionaryServices.pdb" Guid="{8469CFC4-D014-4D7E-ACEB-509D3EDDA890}">
-					<File Id="Palaso.DictionaryServices.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.DictionaryServices.pdb" />
+				<Component Id="SIL.DictionaryServices.pdb" Guid="{8469CFC4-D014-4D7E-ACEB-509D3EDDA890}">
+					<File Id="SIL.DictionaryServices.pdb" KeyPath="yes" Source="..\..\output\release\SIL.DictionaryServices.pdb" />
 				</Component>
-				<Component Id="Palaso.Lift.pdb" Guid="{FB13AD6A-4E3B-45E4-8EAE-477121C78551}">
-					<File Id="Palaso.Lift.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.Lift.pdb" />
+				<Component Id="SIL.Lift.pdb" Guid="{FB13AD6A-4E3B-45E4-8EAE-477121C78551}">
+					<File Id="SIL.Lift.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Lift.pdb" />
 				</Component>
-				<Component Id="Palaso.Media.pdb" Guid="{5F493C7F-CA10-4D07-91F9-A028AF7C17DB}">
-					<File Id="Palaso.Media.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.Media.pdb" />
+				<Component Id="SIL.Media.pdb" Guid="{5F493C7F-CA10-4D07-91F9-A028AF7C17DB}">
+					<File Id="SIL.Media.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Media.pdb" />
 				</Component>
-				<Component Id="Palaso.TestUtilities.dll" Guid="{27843475-345D-4FD6-9838-38C4D90A5C52}">
-					<File Id="Palaso.TestUtilities.dll" KeyPath="yes" Source="..\..\output\release\Palaso.TestUtilities.dll" />
+				<Component Id="SIL.TestUtilities.dll" Guid="{27843475-345D-4FD6-9838-38C4D90A5C52}">
+					<File Id="SIL.TestUtilities.dll" KeyPath="yes" Source="..\..\output\release\SIL.TestUtilities.dll" />
 				</Component>
-				<Component Id="Palaso.TestUtilities.pdb" Guid="{60C94294-28ED-4DB0-9884-19EDE026B3E7}">
-					<File Id="Palaso.TestUtilities.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.TestUtilities.pdb" />
+				<Component Id="SIL.TestUtilities.pdb" Guid="{60C94294-28ED-4DB0-9884-19EDE026B3E7}">
+					<File Id="SIL.TestUtilities.pdb" KeyPath="yes" Source="..\..\output\release\SIL.TestUtilities.pdb" />
 				</Component>
 				<Component Id="SIL.Core.pdb" Guid="{DC1A18EB-6BFE-45FF-833E-C4D71B767B48}">
 					<File Id="SIL.Core.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Core.pdb" />
@@ -536,8 +536,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalTools.pdb" />
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
 			  <ComponentRef Id="NetReflector.dll" />
-			  <ComponentRef Id="Palaso.DictionaryServices.dll" />
-			  <ComponentRef Id="Palaso.Media.dll" />
+			  <ComponentRef Id="SIL.DictionaryServices.dll" />
+			  <ComponentRef Id="SIL.Media.dll" />
 			  <ComponentRef Id="Spart.dll" />
 			  <ComponentRef Id="taglib_sharp.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
@@ -589,11 +589,11 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<ComponentRef Id="nunit.framework.xml"/>
 				<ComponentRef Id="NUnitForms.dll"/>
 				<ComponentRef Id="NUnitForms.xml"/>
-				<ComponentRef Id="Palaso.DictionaryServices.pdb"/>
-				<ComponentRef Id="Palaso.Lift.pdb"/>
-				<ComponentRef Id="Palaso.Media.pdb"/>
-				<ComponentRef Id="Palaso.TestUtilities.dll"/>
-				<ComponentRef Id="Palaso.TestUtilities.pdb"/>
+				<ComponentRef Id="SIL.DictionaryServices.pdb"/>
+				<ComponentRef Id="SIL.Lift.pdb"/>
+				<ComponentRef Id="SIL.Media.pdb"/>
+				<ComponentRef Id="SIL.TestUtilities.dll"/>
+				<ComponentRef Id="SIL.TestUtilities.pdb"/>
 				<ComponentRef Id="SIL.Core.pdb"/>
 				<ComponentRef Id="SIL.Core.Tests.dll"/>
 				<ComponentRef Id="SIL.Core.Tests.pdb"/>
