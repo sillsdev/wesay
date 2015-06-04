@@ -345,7 +345,6 @@ namespace WeSay.Project.Tests
 				_sharedSettingsFolder = new TemporaryFolder(Path.Combine(ProjectPath, "SharedSettings"));
 				_writingSystemsFolder = new TemporaryFolder(Path.Combine(ProjectPath, "WritingSystems"));
 				Creator = new ConfigFile(_configFile.Path);
-				Sldr.OfflineMode = true;
 			}
 
 			public XmlNamespaceManager NamespaceManager { get; private set; }

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Project;
 using WeSay.Project.Tests;
+using SIL.WritingSystems;
 
 namespace WeSay.App.Tests
 {
@@ -26,7 +27,7 @@ namespace WeSay.App.Tests
 								<entry id='foo2'><lexical-unit><form lang='qaa'><text>fooTwo</text></form></lexical-unit></entry>
 								<entry id='foo3'><lexical-unit><form lang='qaa'><text>fooThree</text></form></lexical-unit></entry>";
 			_projectDirectory = new ProjectDirectorySetupForTesting(entriesXml);
-
+			Sldr.OfflineMode = true;
 			_project = new WeSayWordsProject();
 			_project.LoadFromLiftLexiconPath(_projectDirectory.PathToLiftFile);
 			_tabbedForm = new TabbedForm(new NullStatusBarController());

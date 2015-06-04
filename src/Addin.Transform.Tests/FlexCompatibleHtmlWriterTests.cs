@@ -27,9 +27,10 @@ namespace Addin.Transform.Tests
         [SetUp]
         public void Setup()
         {
-            _projectDir = new ProjectDirectorySetupForTesting("");
-            _project = _projectDir.CreateLoadedProject();
-	        var ws = _project.WritingSystems.Get("en");
+			Sldr.OfflineMode = true;
+			_projectDir = new ProjectDirectorySetupForTesting("");
+			_project = _projectDir.CreateLoadedProject();
+			var ws = _project.WritingSystems.Get("en");
 			ws.DefaultCollation = new IcuRulesCollationDefinition("standard");
 			_project.WritingSystems.Set(ws);
 			ws = _project.WritingSystems.Get("qaa");
@@ -49,7 +50,6 @@ namespace Addin.Transform.Tests
             _project.DefaultPrintingTemplate.GetField(LexExampleSentence.WellKnownProperties.Translation).WritingSystemIds.Add("fr");
 
             _project.DefaultPrintingTemplate.GetField(LexEntry.WellKnownProperties.CrossReference).Enabled = true;
-	        Sldr.OfflineMode = true;
         }
 
         [TearDown]
