@@ -6,8 +6,7 @@ using System.Xml.XPath;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using SIL.Reporting;
-//using WeSay.Foundation.Tests;
-using SIL.TestUtilities;
+using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.Project.Tests;
 using WeSay.TestUtilities;
@@ -30,6 +29,7 @@ namespace WeSay.ConfigTool.Tests
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 			_mainWindowTester = new FormTester(_window.Name, _window);
+			Sldr.OfflineMode = true;
 
 			_projectFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 		}

@@ -4,6 +4,7 @@ using System.Text;
 using Addin.Transform.PdfDictionary;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
+using SIL.Lift; // review: really?
 using SIL.Lift.Options;
 using SIL.TestUtilities;
 using SIL.Data;
@@ -12,7 +13,6 @@ using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.Project.Tests;
-using SIL.Lift; // review: really?
 
 namespace Addin.Transform.Tests
 {
@@ -49,6 +49,7 @@ namespace Addin.Transform.Tests
             _project.DefaultPrintingTemplate.GetField(LexExampleSentence.WellKnownProperties.Translation).WritingSystemIds.Add("fr");
 
             _project.DefaultPrintingTemplate.GetField(LexEntry.WellKnownProperties.CrossReference).Enabled = true;
+	        Sldr.OfflineMode = true;
         }
 
         [TearDown]
