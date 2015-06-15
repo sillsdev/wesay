@@ -376,4 +376,75 @@ To build for installer, just type in the windows command prompt:
 										- If you have set up your bash commands not to work within
 										the windows command prompt as above, you will need to
 										execute this command in a bash window.)
-	`TestBuild.bat Release Installer`	(to build an Release version of Installer)
+	TestBulild.bat Release Installer	(to build an Release version of Installer)
+
+11. LINUX PACKAGING
+
+11.1 SETUP ENVIRONMENT FOR PACKAGING
+
+TODO: Neil, please update this section for what environment setting need to be
+set for packaging.
+Define DEBEMAIL, DEBFULLNAME, others?
+Request permission to PSO, LLSO?
+
+11.2 PREPARE PACKAGING METADATA
+
+[NOTE: For debian package, the changelog should be updated for changes included
+in the package. Historically, it looks like an older version of WeSay (1.2?)
+had to be packaged differently for karmic and lucid+.  We (Neil Mayhew and
+Chris Hubbard) changed the files in the wesay/package/lucid directory to work
+for WeSay 1.5.  The wesay/package/lucid directory probably should have been
+changed to debian (and removed karmic) directory.  In order to use dch program
+to add an entry to the changelog, it expects there to be a debian/changelog
+file.  So I (Chris) created a symlink (ln -s lucid debian) in
+the wesay/package directory.]
+
+When releasing a new package, the changelog should include a list of the major
+features.
+
+	cd $wesay/package
+	ln -s lucid debian
+	dch -iU ""
+	gedit lucid/changelog
+
+Edit the generated version number to be what you want (it tried to guess at
+what it should be). Change "UNRELEASED" to stable.  Add bullets for changes
+that are included.  Commit the changelog file and push for review.
+
+11.3 CREATE SOURCE PACKAGE FOR LINUX
+
+When WeSay for Linux is packaged, the source for libpalaso and chorus is
+included in the source package and they are built as part of the build process.
+The script for making the source package (build/make-source-package.sh)
+requires that libpalaso, chorus, and wesay share the same parent directory and
+the source in those repos are in the state desired for building the package.
+make-source-package.sh will execute the build/buildupdate.mono.sh scripts in
+each of the directories (libpalaso, chorus, and wesay) in order to get all the
+dependencies needed during the build. [TODO: in wesay/lib/{Release,Debug}, it
+include built versions of libpalaso and chorus binaries that are pull from
+TeamCity using the buildupdate.mono.sh script which are not used by the
+packaging process.  These should be deleted before creating the source package.]
+
+To create the source package execute:
+
+	cd $wesay
+	build/reset-for-packaging.sh
+	build/make-source-package.sh <build_number>
+
+Where <build_number> is the third number in the version string.  The major and
+minor version in the version string are defined in build/build.common.proj.
+The output source package is in output/Release/Package.
+
+The output files will be:
+wesay-1.x.yyyy
+wesay_1.x.yyyy-1palaso1.debian.tar.gz
+wesay_1.x.yyyy-1palaso1.dsc
+wesay_1.x.yyyy-1palaso1_source.build
+wesay_1.x.yyyy-1palaso1_source.changes
+wesay_1.x.yyyy.orig.tar.gz
+
+11.4 CREATE BINARY PACKAGE FOR LINUX
+
+TODO: Neil, can you update this for the correct way to do binary packaging?
+This has changed since WeSay 1.5 was released (Eberhard has changed the
+packaging scripts based on his work on Bloom?).
