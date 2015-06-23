@@ -28,13 +28,14 @@
 				xmlns:rdfa="http://docs.oasis-open.org/opendocument/meta/rdfa#"
 				xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0"
 				xmlns:palaso="urn://palaso.org/ldmlExtensions/v1"
+				xmlns:sil="urn://www.sil.org/ldml/0.1"
 				version="1.0"
 				office:version="1.2"
 				exclude-result-prefixes="xsl">
 	<xsl:param name="primaryLangCode" select="'th'"/>
 
 	<xsl:variable name="primaryFont"
-				  select="/UserLexiconSettings/WritingSystems[WritingSystem/@id=$primaryLangCode]/DefaultFontName/@value"/>
+				  select="/UserLexiconSettings/WritingSystems/WritingSystem[@id=$primaryLangCode]/DefaultFontName[text()]"/>
 	<xsl:strip-space elements="text:p text:span"/>
 	<!-- indent is nice for debugging, but it introduces stray spaces
 The xsl:text elements below are used to introduce line breaks
