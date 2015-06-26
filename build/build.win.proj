@@ -271,8 +271,7 @@
 
 	<Target Name="Sign" DependsOnTargets="Installer" >
 		<Message Text="Attempting to sign WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
-		<DescriptionString>WeSay Installer</DescriptionString>
-		<Exec Command='sign "/d $(DescriptionString) $(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
+		<Exec Command='sign "/d &quot;WeSay Installer&quot; $(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
 	</Target>
 
 	<Target Name="Upload" DependsOnTargets="VersionNumbers; Sign; MakeDownloadPointers" >
