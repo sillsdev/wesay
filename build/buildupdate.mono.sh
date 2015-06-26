@@ -95,56 +95,42 @@ cd -
 #     revision: latest.lastSuccessful
 #     paths: {"L10NSharp.dll"=>"lib/Debug", "L10NSharp.dll.mdb"=>"lib/Debug"}
 #     VCS: https://bitbucket.org/sillsdev/l10nsharp []
-# [4] build: icucil-precise64-Continuous (bt281)
-#     project: Libraries
-#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
-#     clean: false
-#     revision: latest.lastSuccessful
-#     paths: {"icu.net.*"=>"lib/Debug/icu48"}
-#     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [5] build: icucil-precise64-Continuous (bt281)
-#     project: Libraries
-#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
-#     clean: false
-#     revision: latest.lastSuccessful
-#     paths: {"icu.net.*"=>"lib/Release/icu48"}
-#     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [6] build: icucil-precise64-icu52 Continuous (bt413)
+# [4] build: icucil-precise64-icu52 Continuous (bt413)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt413
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"icu.net.*"=>"lib/Debug/icu52"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [7] build: icucil-precise64-icu52 Continuous (bt413)
+# [5] build: icucil-precise64-icu52 Continuous (bt413)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt413
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"icu.net.*"=>"lib/Release/icu52"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [8] build: wesay-doc-default (bt184)
+# [6] build: wesay-doc-default (bt184)
 #     project: WeSay1.4
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt184
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"WeSay_Helps.chm"=>"common"}
 #     VCS: http://hg.palaso.org/wesay-doc []
-# [9] build: wesay-localize-dev Update Pot and Po (bt52)
+# [7] build: wesay-localize-dev Update Pot and Po (bt52)
 #     project: WeSay1.4
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt52
 #     clean: false
 #     revision: latest.lastFinished
 #     paths: {"*.po"=>"common"}
 #     VCS: http://hg.palaso.org/wesay-tx []
-# [10] build: palaso-precise64-SILWritingSystems Continuous (bt441)
+# [8] build: palaso-precise64-SILWritingSystems Continuous (bt441)
 #     project: libpalaso
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt441
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"Enchant.Net.dll"=>"lib/Release", "Enchant.Net.dll.config"=>"lib/Release", "ibusdotnet.dll"=>"lib/Release", "SIL.Archiving.dll"=>"lib/Release", "SIL.Archiving.dll.mdb"=>"lib/Release", "SIL.Core.dll"=>"lib/Release", "SIL.Core.dll.mdb"=>"lib/Release", "SIL.Core.dll.config"=>"lib/Release", "SIL.Core.Tests.dll"=>"lib/Release", "SIL.Core.Tests.dll.mdb"=>"lib/Release", "SIL.DictionaryServices.dll"=>"lib/Release", "SIL.DictionaryServices.dll.mdb"=>"lib/Release", "SIL.Lexicon.dll"=>"lib/Release", "SIL.Lexicon.mdb"=>"lib/Release", "SIL.LexiconUtils.config"=>"lib/Release", "SIL.Lift.dll"=>"lib/Release", "SIL.Lift.dll.mdb"=>"lib/Release", "SIL.Media.dll"=>"lib/Release", "SIL.Media.dll.mdb"=>"lib/Release", "SIL.Media.dll.config"=>"lib/Release", "SIL.Scripture.dll"=>"lib/Release", "SIL.Scripture.mdb"=>"lib/Release", "SIL.Scripture.config"=>"lib/Release", "SIL.TestUtilities.dll"=>"lib/Release", "SIL.TestUtilities.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.dll"=>"lib/Release", "SIL.Windows.Forms.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.dll.config"=>"lib/Release", "SIL.Windows.Forms.GeckoBrowserAdapter.dll"=>"lib/Release", "SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.Keyboarding.dll"=>"lib/Release", "SIL.Windows.Forms.Keyboarding.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.Scripture.dll"=>"lib/Release", "SIL.Windows.Forms.Scripture.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.Scripture.dll.config"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.dll"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.dll.config"=>"lib/Release", "SIL.WritingSystems.dll"=>"lib/Release", "SIL.WritingSystems.dll.mdb"=>"lib/Release", "SIL.WritingSystems.dll.config"=>"lib/Release", "SIL.WritingSystems.Tests.dll"=>"lib/Release", "SIL.WritingSystems.Tests.dll.mdb"=>"lib/Release", "SIL.WritingSystems.Tests.dll.config"=>"lib/Release", "Ionic.Zip.dll"=>"lib/Release", "Spart.dll"=>"lib/Release", "taglib-sharp.dll"=>"lib/Release"}
 #     VCS: https://github.com/sillsdev/libpalaso.git [SILWritingSystems]
-# [11] build: palaso-precise64-SILWritingSystems Continuous (bt441)
+# [9] build: palaso-precise64-SILWritingSystems Continuous (bt441)
 #     project: libpalaso
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt441
 #     clean: false
@@ -155,10 +141,8 @@ cd -
 # make sure output directories exist
 mkdir -p ../common
 mkdir -p ../lib/Debug
-mkdir -p ../lib/Debug/icu48
 mkdir -p ../lib/Debug/icu52
 mkdir -p ../lib/Release
-mkdir -p ../lib/Release/icu48
 mkdir -p ../lib/Release/icu52
 mkdir -p ../lib/common
 
@@ -198,12 +182,6 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.las
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll.mdb ../lib/Release/L10NSharp.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll ../lib/Debug/L10NSharp.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll.mdb ../lib/Debug/L10NSharp.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll ../lib/Debug/icu48/icu.net.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.config ../lib/Debug/icu48/icu.net.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.mdb ../lib/Debug/icu48/icu.net.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll ../lib/Release/icu48/icu.net.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.config ../lib/Release/icu48/icu.net.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/latest.lastSuccessful/icu.net.dll.mdb ../lib/Release/icu48/icu.net.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/latest.lastSuccessful/icu.net.dll ../lib/Debug/icu52/icu.net.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/latest.lastSuccessful/icu.net.dll.config ../lib/Debug/icu52/icu.net.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/latest.lastSuccessful/icu.net.dll.mdb ../lib/Debug/icu52/icu.net.dll.mdb
