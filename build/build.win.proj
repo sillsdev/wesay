@@ -269,15 +269,9 @@
 			ReplacementText = "$(ReleaseLabel)" />
 	</Target>
 
-	<PropertyGroup>
-		<ExecArgs1>/d</ExecArgs1>
-		<DescriptionString>&quot;WeSay Installer&quot;</DescriptionString>
-		<MsiName>&quot;$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi&quot;</MsiName>
-	</PropertyGroup>
-	
 	<Target Name="Sign" DependsOnTargets="Installer" >
 		<Message Text="Attempting to sign WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
-		<Exec Command="sign $(ExecArgs1) $(DescriptionString) $(MsiName)" />
+		<Exec Command='sign "$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi" /d "WeSay Installer"' />
 	</Target>
 
 	<Target Name="Upload" DependsOnTargets="VersionNumbers; Sign; MakeDownloadPointers" >
