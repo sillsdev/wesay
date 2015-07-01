@@ -328,9 +328,6 @@ namespace WeSay.UI.TextBoxes
 			Control control;
 			if (writingSystem.IsVoice)
 			{
-				return null;
-				// How did this ever work?  GatherBySemanticDomain is incompatible with audio writing systems.
-				// service provider throws exception in WS 1.4.55 and 1.5.38
 				if (_serviceProvider == null)
 				{
 					//no, better to just omit it.  throw new ConfigurationException("WeSay cannot handle yet audio in this task.");

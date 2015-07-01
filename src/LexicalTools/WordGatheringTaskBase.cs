@@ -4,7 +4,6 @@ using SIL.Reporting;
 using SIL.WritingSystems;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using System.Linq;
 
@@ -12,8 +11,8 @@ namespace WeSay.LexicalTools
 {
 	public abstract class WordGatheringTaskBase: TaskBase
 	{
-		private readonly WritingSystemDefinition _lexicalFormWritingSystem;
-		private readonly ViewTemplate _viewTemplate;
+		protected WritingSystemDefinition _lexicalFormWritingSystem;
+		protected readonly ViewTemplate _viewTemplate;
 
 		protected WordGatheringTaskBase(ITaskConfiguration config,
 										LexEntryRepository lexEntryRepository,
@@ -28,8 +27,7 @@ namespace WeSay.LexicalTools
 			}
 
 			_viewTemplate = viewTemplate;
-			_lexicalFormWritingSystem =
-				 viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
+			_lexicalFormWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
 		}
 
 		protected WritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)

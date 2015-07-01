@@ -77,10 +77,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_words = null;
 
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
-			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
-			WritingSystemDefinition writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
+			var writingSystemForDefinition =
+				_viewTemplate.GetFirstNonVoiceWritingSystemForFieldOrThrow(LexSense.WellKnownProperties.Definition);
 			Guard.AgainstNull(writingSystemForDefinition, "Definition input System");
 			DefinitionWritingSystem = writingSystemForDefinition;
+
+			_lexicalFormWritingSystem =
+				_viewTemplate.GetFirstNonVoiceWritingSystemForFieldOrThrow(Field.FieldNames.EntryLexicalForm.ToString());
 
 		}
 

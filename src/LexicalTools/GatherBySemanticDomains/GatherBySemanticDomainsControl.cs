@@ -100,11 +100,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					_presentationModel.FormWritingSystem
 				};
 
-			if( _vernacularBox.WritingSystemsForThisField.Count ==0 ||  _vernacularBox.TextBoxes.Count == 0)
-			{
-				SIL.Reporting.ErrorReport.ReportFatalMessageWithStackTrace(String.Format("This task cannot be used with the audio/voice input system '{0}'. Please use the config tool to specify a non-audio input system for this task.", _presentationModel.FormWritingSystem.Abbreviation));
-			}
-
 			//bit of a hack here... we make our own meaning box as a less intrusive way to add spell checking to
 			//this box, which wasn't really designed to work well with auto-generated designer code.
 			//so all this is to be able to turn IsSpellCheckingEnabled before the box is built.
