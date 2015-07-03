@@ -8,7 +8,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 {
 	/// <summary>
 	/// This class should be on its way to being un-needed, with the advent of "Send/Receive".  Its use was primarily pre-chorus,
-	/// pre-lift bridge, when we wanted to copy lift-related files around.  In the new, better system, we are givena a chorus
+	/// pre-lift bridge, when we wanted to copy lift-related files around.  In the new, better system, we are given a chorus
 	/// repository with all the lift files, just lacking the wesay specific ones. Then, ProjectFromLiftFolderCreator is
 	/// used to just add the files we need for WeSay.
 	/// This class uses that, too, but it also has to create a folder & copy files around.
@@ -29,6 +29,8 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				Directory.CreateDirectory(pathToNewDirectory);
 
 				CopyOverLiftFile(pathToSourceLift, pathToNewDirectory);
+
+				CopyOverPictures(Path.GetDirectoryName(pathToSourceLift), BasilProject.GetPathToPictures(pathToNewDirectory));
 
 				CopyOverRangeFileIfExists(pathToSourceLift, pathToNewDirectory);
 
@@ -76,6 +78,22 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			var pathToTargetLift = Path.Combine(pathToNewDirectory, projectName+".lift");
 			Logger.WriteMinorEvent(@"Copying Lift file " + pathToSourceLift);
 			File.Copy(pathToSourceLift, pathToTargetLift, true);
+		}
+
+		private static void CopyOverPictures(string pathToSourceLift, string pathToNewDirectory)
+		{
+			if (!Directory.Exists(pathToNewDirectory))
+			{
+				Directory.CreateDirectory(pathToNewDirectory);
+			}
+
+			var pathToSourcePictures = Path.Combine(pathToSourceLift, "pictures");
+			foreach (string pathToPicture in Directory.GetFiles(pathToSourcePictures))
+			{
+				string fileName = Path.GetFileName(pathToPicture);
+				Logger.WriteMinorEvent(@"Copying picture " + fileName);
+				File.Copy(pathToPicture, Path.Combine(pathToNewDirectory, fileName), true);
+			}
 		}
 
 		private static void CopyOverRangeFileIfExists(string pathToSourceLift, string pathToNewDirectory)

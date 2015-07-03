@@ -182,6 +182,11 @@ There are problems in:
 			return Path.Combine(parentDir, "SharedSettings");
 		}
 
+		public static string GetPathToPictures(string parentDir)
+		{
+			return Path.Combine(parentDir, "pictures");
+		}
+
 		// <summary>
 		// Locates the StringCatalog file, matching any file ending in <language>.po first in the Project folder,
 		// then in the Application Common folder.
