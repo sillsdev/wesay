@@ -82,17 +82,19 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 		private static void CopyOverPictures(string pathToSourceLift, string pathToNewDirectory)
 		{
-			if (!Directory.Exists(pathToNewDirectory))
-			{
-				Directory.CreateDirectory(pathToNewDirectory);
-			}
-
 			var pathToSourcePictures = Path.Combine(pathToSourceLift, "pictures");
-			foreach (string pathToPicture in Directory.GetFiles(pathToSourcePictures))
+			if (Directory.Exists(pathToSourcePictures))
 			{
-				string fileName = Path.GetFileName(pathToPicture);
-				Logger.WriteMinorEvent(@"Copying picture " + fileName);
-				File.Copy(pathToPicture, Path.Combine(pathToNewDirectory, fileName), true);
+				if (!Directory.Exists(pathToNewDirectory))
+				{
+					Directory.CreateDirectory(pathToNewDirectory);
+				}
+				foreach (string pathToPicture in Directory.GetFiles(pathToSourcePictures))
+				{
+					string fileName = Path.GetFileName(pathToPicture);
+					Logger.WriteMinorEvent(@"Copying picture " + fileName);
+					File.Copy(pathToPicture, Path.Combine(pathToNewDirectory, fileName), true);
+				}
 			}
 		}
 
