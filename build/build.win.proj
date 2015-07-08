@@ -270,7 +270,7 @@
 	</Target>
 
 	<PropertyGroup>
-		<SignToolPath>C:\Program Files (x86)\Windows Kits\8.1\bin\x86\signtool.exe</SignToolPath>
+		<SignToolPath>&quot;C:\Program Files (x86)\Windows Kits\8.1\bin\x86\signtool.exe&quot;</SignToolPath>
 	</PropertyGroup>
 	
 	<Target Name="Sign" DependsOnTargets="Installer" >
