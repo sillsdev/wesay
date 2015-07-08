@@ -269,9 +269,13 @@
 			ReplacementText = "$(ReleaseLabel)" />
 	</Target>
 
+	<PropertyGroup>
+		<SignToolPath>C:\Program Files (x86)\Windows Kits\8.1\bin\x86\signtool.exe</SignToolPath>
+	</PropertyGroup>
+	
 	<Target Name="Sign" DependsOnTargets="Installer" >
 		<Message Text="Attempting to sign WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
-		<Exec Command="sign /d &quot;WeSay Installer&quot; /du &quot;http://wesay.palaso.org/downloads/&quot; /t http://timestamp.verisign.com/scripts/timstamp.dll &quot;$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi&quot;" />
+		<Exec Command="$(SignToolPath) sign /d &quot;WeSay Installer&quot; /du &quot;http://wesay.palaso.org/downloads/&quot; /t http://timestamp.verisign.com/scripts/timstamp.dll &quot;$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi&quot;" />
 	</Target>
 
 	<Target Name="Upload" DependsOnTargets="VersionNumbers; Sign; MakeDownloadPointers" >
