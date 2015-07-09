@@ -67,6 +67,13 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='7']") != null)
 			{
 				MigrateInCode(configurationDoc, targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='8']") != null)
+			{
+				var m = new MigrateConfig8To9();
+				m.Migrate(configurationDoc, targetPath);
 				//configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
