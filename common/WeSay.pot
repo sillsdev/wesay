@@ -3,9 +3,6 @@
 # POT-Creation-Date: 2010-10-04T05:59:47
 # Content-Type: text/plain; charset=UTF-8
 
-
-
-
 msgid "Meanings"
 msgstr ""
 
@@ -746,7 +743,7 @@ msgstr ""
 
 #: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Part Of Speech
-msgid "POS"
+msgid "PartOfSpeech"
 msgstr ""
 
 #: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\WeSay.Project\ViewTemplate.cs

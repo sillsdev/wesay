@@ -227,27 +227,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 					</fields>
 				</configuration>");
 			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
-			AssertHasAtLeastOneMatch("//configuration[@version='9']", _outputPath);
-		}
-
-		[Test]
-		public void V8File_PartOfSpeech_ConvertedToParts_of_Speech()
-		{
-			File.WriteAllText(_pathToInputConfig,
-				@"<?xml version='1.0' encoding='utf-8'?>
-				<configuration version='8'>
-					<components>
-						<viewTemplate>
-							<fields>
-								<className>LexSense</className>
-								<dataType>Option</dataType>
-								<displayName>PartOfSpeech</displayName>
-							</fields>
-						</viewTemplate>
-					</components>
-				</configuration>");
-			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
-			AssertHasAtLeastOneMatch("//displayName[text()='Parts of Speech']", _outputPath);
+			AssertHasAtLeastOneMatch("//configuration[@version='8']", _outputPath);
 		}
 
 		[Test]
@@ -255,7 +235,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 		{
 			File.WriteAllText(
 				_pathToInputConfig,
-				"<?xml version='1.0' encoding='utf-8'?><configuration version='9'></configuration>"
+				"<?xml version='1.0' encoding='utf-8'?><configuration version='8'></configuration>"
 			);
 			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			Assert.IsFalse(didMigrate);

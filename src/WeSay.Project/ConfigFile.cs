@@ -20,7 +20,7 @@ namespace WeSay.Project
 
 	public class ConfigFile
 	{
-		public const int LatestVersion = 9;
+		public const int LatestVersion = 8;
 		private readonly XmlDocument _xmlDocument = new XmlDocument();
 
 		private string _configFilePath;

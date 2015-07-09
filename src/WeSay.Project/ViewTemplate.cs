@@ -451,9 +451,10 @@ namespace WeSay.Project
 									   "LexSense",
 									   defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
-			StringCatalog.Get("~POS", "The label for the field showing Part Of Speech");
+			//at some point, POS was renamed to PartOfSpeech
 			StringCatalog.Get("~Parts of Speech", "The label for the field showing Part Of Speech");
-			posField.DisplayName = "Parts of Speech";
+			StringCatalog.Get("~PartOfSpeech", "The label for the field showing Part Of Speech");
+			posField.DisplayName = "PartOfSpeech";
 			posField.Description = "The grammatical category of the entry (Noun, Verb, etc.).";
 			posField.DataTypeName = "Option";
 			posField.OptionsListFile = "PartsOfSpeech.xml";

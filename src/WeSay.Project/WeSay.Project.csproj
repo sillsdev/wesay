@@ -153,7 +153,6 @@
     <Compile Include="ConfigFile.cs" />
     <Compile Include="ConfigMigration\UserConfig\WeSayUserConfigMigrator.cs" />
     <Compile Include="ConfigMigration\UserConfig\WeSayUserConfigV2MigrationStrategy.cs" />
-    <Compile Include="ConfigMigration\WeSayConfig\MigrateConfig8To9.cs" />
     <Compile Include="ConfigMigration\WritingSystem\WritingSystemMigrator.cs" />
     <Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsToLdmlMigrationStrategy.cs" />
     <Compile Include="ConfigMigration\WritingSystem\WritingSystemCollection_V1.cs" />
@@ -235,9 +234,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig8To9.xsl" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\wesay.helpmap" />
