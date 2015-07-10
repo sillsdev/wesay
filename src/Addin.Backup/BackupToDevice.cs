@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Mono.Addins;
-using Palaso.i18n;
+using SIL.i18n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 

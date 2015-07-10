@@ -1,8 +1,8 @@
 using System;
 using System.Windows.Forms;
 using Autofac;
-using Palaso.i18n;
-using Palaso.Reporting;
+using SIL.i18n;
+using SIL.Reporting;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tasks
@@ -44,7 +44,7 @@ namespace WeSay.ConfigTool.Tasks
 				return;
 			}
 
-			_taskList.Font = (System.Drawing.Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			_taskList.Font = (System.Drawing.Font)SIL.i18n.StringCatalog.LabelFont.Clone();
 			foreach (var task in Model.Tasks)
 			{
 				if (!Model.DoShowTask(task))

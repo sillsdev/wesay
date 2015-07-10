@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
-using Palaso.Code;
-using Palaso.Lift;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.Lift;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
@@ -24,7 +23,7 @@ namespace WeSay.UI
 		/// </summary>
 		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate { };
 
-		private readonly IWritingSystemDefinition _writingSystem;
+		private readonly WritingSystemDefinition _writingSystem;
 		private readonly string _propertyName;
 		private readonly PalasoDataObject _parent;
 		private IList<T> _listTarget;
@@ -50,7 +49,7 @@ namespace WeSay.UI
 		public GhostBinding(PalasoDataObject parent,
 							IList<T> targetList,
 							string propertyName,
-							IWritingSystemDefinition writingSystem,
+							WritingSystemDefinition writingSystem,
 							IWeSayTextBox textBoxTarget)
 		{
 			_parent = parent;
@@ -118,7 +117,7 @@ namespace WeSay.UI
 
 		private void OnTextBoxEntered(object sender, EventArgs e)
 		{
-			CurrentItemChanged(sender, new CurrentItemEventArgs(_parent, _propertyName, _writingSystem.Id));
+			CurrentItemChanged(sender, new CurrentItemEventArgs(_parent, _propertyName, _writingSystem.LanguageTag));
 		}
 
 		// /// <summary>
@@ -271,12 +270,12 @@ namespace WeSay.UI
 
 		private static void FillInMultiTextOfNewObject(object o,
 													   string propertyName,
-													   IWritingSystemDefinition writingSystem,
+													   WritingSystemDefinition writingSystem,
 													   string value)
 		{
 			PropertyInfo info = o.GetType().GetProperty(propertyName);
 			MultiText text = (MultiText) info.GetValue(o, null);
-			text.SetAlternative(writingSystem.Id, value);
+			text.SetAlternative(writingSystem.LanguageTag, value);
 		}
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Palaso.DictionaryServices.Model;
-using Palaso.WritingSystems;
+using SIL.DictionaryServices.Model;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.AddMissingInfo;
@@ -13,7 +13,7 @@ namespace WeSay.ConfigTool.Tasks
 	public partial class MissingInfoTaskConfigControl : DefaultTaskConfigurationControl
 	{
 		private readonly ViewTemplate _viewTemplate;
-		private List<IWritingSystemDefinition> _relevantWritingSystems;
+		private List<WritingSystemDefinition> _relevantWritingSystems;
 		private Field _field;
 
 		public MissingInfoTaskConfigControl(MissingInfoConfiguration config, ViewTemplate viewTemplate)
@@ -66,7 +66,7 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void UpdateWritingSystemFilterControls()
 		{
-			_relevantWritingSystems = new List<IWritingSystemDefinition>();
+			_relevantWritingSystems = new List<WritingSystemDefinition>();
 			var relevantWritingSystems = from x in _viewTemplate.WritingSystems.AllWritingSystems
 										 where _field.WritingSystemIds.Contains(x.Id)
 										 select x;

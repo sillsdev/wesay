@@ -1,6 +1,6 @@
-using Palaso.Data;
-using Palaso.DictionaryServices.Model;
-using Palaso.UiBindings;
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.UiBindings;
 
 namespace WeSay.LexicalModel
 {

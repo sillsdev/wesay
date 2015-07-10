@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Palaso.Extensions;
-using Palaso.i18n;
+using SIL.Extensions;
+using SIL.i18n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using System.Linq;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {

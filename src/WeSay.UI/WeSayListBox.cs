@@ -3,7 +3,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
@@ -15,10 +15,10 @@ namespace WeSay.UI
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		IWritingSystemDefinition FormWritingSystem { get; set; }
+		WritingSystemDefinition FormWritingSystem { get; set; }
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		IWritingSystemDefinition MeaningWritingSystem { get; set; }
+		WritingSystemDefinition MeaningWritingSystem { get; set; }
 
 		void Clear();
 		void AddItem(Object item);
@@ -63,8 +63,8 @@ namespace WeSay.UI
 
 	public partial class WeSayListBox : ListBox, IWeSayListBox
 	{
-		private IWritingSystemDefinition _formWritingSystem;
-		private IWritingSystemDefinition _meaningWritingSystem;
+		private WritingSystemDefinition _formWritingSystem;
+		private WritingSystemDefinition _meaningWritingSystem;
 		private object _itemToNotDrawYet;
 		public event EventHandler UserClick;
 
@@ -135,7 +135,7 @@ namespace WeSay.UI
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IWritingSystemDefinition FormWritingSystem
+		public WritingSystemDefinition FormWritingSystem
 		{
 			get
 			{
@@ -168,7 +168,7 @@ namespace WeSay.UI
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IWritingSystemDefinition MeaningWritingSystem
+		public WritingSystemDefinition MeaningWritingSystem
 		{
 			get
 			{

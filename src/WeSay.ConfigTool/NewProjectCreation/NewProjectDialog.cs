@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.WritingSystems;
+using SIL.Windows.Forms.WritingSystems;
 using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool.NewProjectCreation
@@ -120,7 +120,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 		private void _chooseLanguageButton_Click(object sender, EventArgs e)
 		{
-			using (var dlg = new LookupISOCodeDialog())
+			using (var dlg = new LanguageLookupDialog())
 			{
 				if (DialogResult.OK != dlg.ShowDialog())
 				{
@@ -132,8 +132,8 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				var primaryName = dlg.DesiredLanguageName;
 				if (String.IsNullOrEmpty(primaryName))
 					primaryName = dlg.SelectedLanguage.Names[0];
-				_languageInfoLabel.Text = string.Format("{0} ({1})", primaryName, dlg.SelectedLanguage.Code);
-				Iso639Code = dlg.SelectedLanguage.Code;
+				_languageInfoLabel.Text = string.Format("{0} ({1})", primaryName, dlg.SelectedLanguage.LanguageTag);
+				Iso639Code = dlg.SelectedLanguage.LanguageTag;
 				LanguageName = primaryName;
 				if (_textProjectName.Text.Trim().Length == 0)
 				{

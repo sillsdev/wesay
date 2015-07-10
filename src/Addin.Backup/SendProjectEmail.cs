@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Mono.Addins;
-using Palaso.i18n;
+using SIL.i18n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
@@ -65,7 +65,7 @@ namespace Addin.Backup
 										 wesayZipFilePath,
 										 projectInfo.FilesBelongingToProject);
 
-			var emailProvider = Palaso.Email.EmailProviderFactory.PreferredEmailProvider();
+			var emailProvider = SIL.Email.EmailProviderFactory.PreferredEmailProvider();
 			var msg = emailProvider.CreateMessage();
 			msg.AttachmentFilePath.Add(wesayZipFilePath);
 			msg.To.Add(_settings.Email);

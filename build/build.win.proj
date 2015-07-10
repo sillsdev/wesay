@@ -15,7 +15,7 @@
 	<UsingTask TaskName="NUnit" AssemblyFile="$(RootDir)/build/MSBuild.Community.Tasks.dll" />
 
 	<PropertyGroup>
-		<Solution>WeSay VS2010.sln</Solution>
+		<Solution>WeSay.sln</Solution>
 		<SolutionPath>$(RootDir)/src/$(Solution)</SolutionPath>
 		<ApplicationName>WeSay</ApplicationName>
 		<Configuration>Release</Configuration>
@@ -104,13 +104,13 @@
 	</Target>
 
 	<PropertyGroup>
-		<NUNIT_LOCATION Condition="'$(NUNIT_LOCATION)'==''">C:\Program Files (x86)\NUnit 2.6.2\bin</NUNIT_LOCATION>
+		<NUNIT_LOCATION Condition="'$(NUNIT_LOCATION)'==''">C:\Program Files (x86)\NUnit 2.6.4\bin</NUNIT_LOCATION>
 	</PropertyGroup>
 
 	<Target Name="RunTests"><!-- dependencies implied by calling targets -->
 		<CreateItem
 			Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-			Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll" >
+			Exclude="$(RootDir)/output/$(Configuration)/SIL.*.Tests.dll" >
 			<Output ItemName="TestAssemblies" TaskParameter="Include" />
 		</CreateItem>
 		<NUnit
@@ -125,7 +125,7 @@
 	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">
 		<CreateItem
 			Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-			Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll" >
+			Exclude="$(RootDir)/output/$(Configuration)/SIL.*.Tests.dll" >
 			<Output ItemName="TestAssemblies" TaskParameter="Include" />
 		</CreateItem>
 		<NUnitTeamCity
@@ -271,7 +271,7 @@
 
 	<Target Name="Sign" DependsOnTargets="Installer" >
 		<Message Text="Attempting to sign WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
-		<Exec Command='sign "$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
+		<Exec Command='sign /d "WeSay Installer" /du "http://wesay.palaso.org/downloads/"  "$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
 	</Target>
 
 	<Target Name="Upload" DependsOnTargets="VersionNumbers; Sign; MakeDownloadPointers" >

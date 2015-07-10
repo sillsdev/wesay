@@ -2,8 +2,8 @@
 using System.IO;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
-using Palaso.Reporting;
-using Palaso.TestUtilities;
+using SIL.Reporting;
+using SIL.TestUtilities;
 using WeSay.Project.LocalizedList;
 
 namespace WeSay.Project.Tests

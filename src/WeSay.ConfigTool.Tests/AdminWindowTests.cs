@@ -5,9 +5,8 @@ using System.Windows.Forms;
 using System.Xml.XPath;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
-using Palaso.Reporting;
-//using WeSay.Foundation.Tests;
-using Palaso.TestUtilities;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.Project.Tests;
 using WeSay.TestUtilities;
@@ -23,13 +22,14 @@ namespace WeSay.ConfigTool.Tests
 
 		public override void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+			SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
 			_window = new ConfigurationWindow(new string[] {});
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 			_mainWindowTester = new FormTester(_window.Name, _window);
+			Sldr.OfflineMode = true;
 
 			_projectFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 		}
@@ -43,7 +43,7 @@ namespace WeSay.ConfigTool.Tests
 				WeSayWordsProject.Project.Dispose();
 			}
 
-			Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
+			SIL.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
 		}
 
 		[Test]

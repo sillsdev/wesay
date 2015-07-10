@@ -3,9 +3,9 @@ using System.IO;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
-using Palaso.IO;
-using Palaso.Reporting;
-using Palaso.TestUtilities;
+using SIL.IO;
+using SIL.Reporting;
+using SIL.TestUtilities;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
@@ -52,7 +52,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
+				SIL.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -76,7 +76,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
+				SIL.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
+				SIL.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -133,7 +133,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
+				SIL.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 

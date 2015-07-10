@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using Palaso.Lift.Validation;
+using SIL.Lift.Validation;
 using WeSay.AddinLib;
 using WeSay.Project;
 using WeSay.TestUtilities;
@@ -235,7 +235,7 @@ namespace Addin.Transform.Tests
 		[Test]
 		public void BogusExpressionDoesntCrash()
 		{
-			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+			using (new SIL.Reporting.ErrorReport.NonFatalErrorReportExpected())
 			{
 
 				LaunchWithConversionString("{foo " //missing "to"

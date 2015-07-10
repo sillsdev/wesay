@@ -5,15 +5,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Palaso.Code;
-using Palaso.Data;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.Lift.Options;
-using Palaso.Progress;
-using Palaso.Reporting;
-using Palaso.Text;
-using Palaso.WritingSystems;
+using SIL.Code;
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Progress;
+using SIL.Reporting;
+using SIL.Text;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -28,7 +28,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private List<LexEntry> _words;
 		private int _currentWordIndex;
 		private readonly string _preferredPromptingWritingSystemId;
-		private readonly IWritingSystemDefinition _lexicalUnitWritingSystem;
+		private readonly WritingSystemDefinition _lexicalUnitWritingSystem;
 		private IList<string> _definitionWritingSystemIds;
 		private IList<string> _glossWritingSystemIds;
 		private bool _usingLiftFile;
@@ -70,7 +70,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				_preferredPromptingWritingSystemId = _definitionWritingSystemIds[0];
 		}
 
-		public IWritingSystemDefinition PromptingWritingSystem
+		public WritingSystemDefinition PromptingWritingSystem
 		{
 			get
 			{
@@ -153,7 +153,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		{
 			//Performance wise, the following is not expecting a huge, 10k word list.
 
-			using (var reader = new Palaso.DictionaryServices.Lift.LiftReader(new NullProgressState(),
+			using (var reader = new SIL.DictionaryServices.Lift.LiftReader(new NullProgressState(),
 				WeSayWordsProject.Project.GetSemanticDomainsList(),
 				WeSayWordsProject.Project.GetIdsOfSingleOptionFields()))
 			using(var m = new MemoryDataMapper<LexEntry>())
@@ -255,7 +255,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 		}
 
-		public IWritingSystemDefinition GetWritingSystemOfLanguageForm(LanguageForm languageForm)
+		public WritingSystemDefinition GetWritingSystemOfLanguageForm(LanguageForm languageForm)
 		{
 			if(!_viewTemplate.WritingSystems.Contains(languageForm.WritingSystemId))
 			{
@@ -474,7 +474,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			//review: the desired semantics of this find are unclear, if we have more than one ws
 			ResultSet<LexEntry> entriesWithSameForm =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(
-							lexemeForm[_lexicalUnitWritingSystem.Id], _lexicalUnitWritingSystem);
+							lexemeForm[_lexicalUnitWritingSystem.LanguageTag], _lexicalUnitWritingSystem);
 			LanguageForm firstGloss = new LanguageForm("en", "-none-",null);
 			if(sense.Gloss.Forms.Length>0)
 				firstGloss = sense.Gloss.Forms[0];
@@ -573,7 +573,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				if (_words == null)//WS-33662, which we could not reproduce
 				{
 					LoadFailureMessage = "Sorry, there was a problem loading this word pack.";
-					Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, there was a problem loading this word pack. (to WeSay developers: may be reproduction of WS-33662)");
+					SIL.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, there was a problem loading this word pack. (to WeSay developers: may be reproduction of WS-33662)");
 				}
 				else
 				{
@@ -583,7 +583,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 					{
 						var name = form.WritingSystemId;
 						if (_viewTemplate.WritingSystems.Contains(form.WritingSystemId))
-							name = _viewTemplate.WritingSystems.Get(form.WritingSystemId).LanguageName;
+							name = _viewTemplate.WritingSystems.Get(form.WritingSystemId).Language.Name;
 						else
 						{	//if these langs aren't in the project, we might not be able to look them up, so do them by hand
 							if (form.WritingSystemId == "en")///SIL CAWL comes with French and English
@@ -596,7 +596,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 					s = s.Trim(new char[] {' ', ','});
 					LoadFailureMessage = string.Format(
 						"To use this word pack, set your first definition field to one of ({0}).", s);
-					Palaso.Reporting.ErrorReport.NotifyUserOfProblem(LoadFailureMessage);
+					SIL.Reporting.ErrorReport.NotifyUserOfProblem(LoadFailureMessage);
 				}
 			}
 		}

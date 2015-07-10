@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.UI.TextBoxes
 {

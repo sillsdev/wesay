@@ -5,11 +5,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Palaso.DictionaryServices.Model;
-using Palaso.i18n;
-using Palaso.Lift;
-using Palaso.Lift.Options;
-using Palaso.Reporting;
+using SIL.DictionaryServices.Model;
+using SIL.i18n;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Reporting;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI.TextBoxes;
@@ -200,7 +200,7 @@ namespace WeSay.ConfigTool
 				{
 					var binding = new TextBinding(
 						_currentOption.Name,
-						box.WritingSystem.Id,
+						box.WritingSystem.LanguageTag,
 						(Control)box
 					);
 					//hooking on to this is more reliable, sequence-wise, than directly wiring to m.TextChanged

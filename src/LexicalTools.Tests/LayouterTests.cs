@@ -3,13 +3,13 @@ using System.Windows.Forms;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -22,13 +22,13 @@ namespace WeSay.LexicalTools.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
 		[TestFixtureTearDown]
 		public void FixtureTeardown()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 		}
 
 		[SetUp]

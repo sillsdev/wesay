@@ -67,8 +67,8 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				{
 					if (this.ContainsKey(w.ISO))
 					{
-						Palaso.Reporting.ErrorReport.NotifyUserOfProblem(
-							new Palaso.Reporting.ShowOncePerSessionBasedOnExactMessagePolicy(),
+						SIL.Reporting.ErrorReport.NotifyUserOfProblem(
+							new SIL.Reporting.ShowOncePerSessionBasedOnExactMessagePolicy(),
 							"Your writing systems file (WritingSystemPrefs.xml) contains multiple entries for {0}. Please report this problem by sending an email to issues@wesay.org.",
 							w.ISO);
 					}

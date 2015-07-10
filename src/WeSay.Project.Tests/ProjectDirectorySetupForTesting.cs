@@ -1,7 +1,8 @@
 using System;
 using System.IO;
-using Palaso.Lift.Validation;
-using Palaso.TestUtilities;
+using SIL.Lift.Validation;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
 
 namespace WeSay.Project.Tests
 {
@@ -24,7 +25,7 @@ namespace WeSay.Project.Tests
 		{
 			_testFolder = new TemporaryFolder("WeSayProjectTest");
 			_projectRootFolder = new TemporaryFolder(_testFolder, ProjectFolder);
-			WeSayWordsProject.CreateEmptyProjectFiles(_projectRootFolder.Path, ProjectName);
+			WeSayWordsProject.CreateEmptyProjectFiles(_projectRootFolder.Path, ProjectName, WellKnownSubtags.UnlistedLanguage);
 
 			//overwrite the blank lift file
 			string liftContents =

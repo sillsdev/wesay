@@ -5,8 +5,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using Exortech.NetReflector;
-using Palaso.UI.WindowsForms.Keyboarding;
-using Palaso.WritingSystems;
+using SIL.Windows.Forms.Keyboarding;
+using SIL.Keyboarding;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
@@ -31,21 +32,21 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		private readonly Font _fallBackFont = new Font(FontFamily.GenericSansSerif, 12);
 		private bool _isUnicode = true;
 		private string _abbreviation;
-		private IWritingSystemDefinition _palasoWritingSystemDefinition;
+		private WritingSystemDefinition _silWritingSystemDefinition;
 
 		/// <summary>
 		/// default constructor required for deserialization
 		/// </summary>
 		public WritingSystem_V1()
 		{
-			_palasoWritingSystemDefinition = new WritingSystemDefinition();
+			_silWritingSystemDefinition = new WritingSystemDefinition();
 		}
 
 		public WritingSystem_V1(string id, Font font)
 		{
 			ISO = id;
 			Font = font;
-			_palasoWritingSystemDefinition = new WritingSystemDefinition();
+			_silWritingSystemDefinition = new WritingSystemDefinition();
 		}
 
 		[ReflectorProperty("Id", Required = true)]
@@ -150,7 +151,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		///<param name="x">The first object to compare.</param>
 		public int Compare(string x, string y)
 		{
-			return _palasoWritingSystemDefinition.Collator.Compare(x, y);
+			return _silWritingSystemDefinition.DefaultCollation.Collator.Compare(x, y);
 			//return _sortComparer(x, y);
 		}
 
@@ -163,18 +164,18 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		public override string ToString()
 		{
-			return _palasoWritingSystemDefinition.Id;
+			return _silWritingSystemDefinition.Id;
 		}
 
 		public SortKey GetSortKey(string source)
 		{
-			return _palasoWritingSystemDefinition.Collator.GetSortKey(source);
+			return _silWritingSystemDefinition.DefaultCollation.Collator.GetSortKey(source);
 		}
 
 		// Same if behavior is same (not appearance)
 		public override int GetHashCode()
 		{
-			int hashCode = HashCombine(_palasoWritingSystemDefinition.Language.GetHashCode(), SortUsing.GetHashCode());
+			int hashCode = HashCombine(_silWritingSystemDefinition.Language.GetHashCode(), SortUsing.GetHashCode());
 			if (UsesCustomSortRules)
 			{
 				hashCode = HashCombine(hashCode, CustomSortRules.GetHashCode());
@@ -253,7 +254,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				List<String> keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
 				foreach (IKeyboardDefinition kbd in
-					Keyboard.Controller.AllAvailableKeyboards)
+					Keyboard.Controller.AvailableKeyboards)
 				{
 					if (kbd.IsAvailable)
 					{

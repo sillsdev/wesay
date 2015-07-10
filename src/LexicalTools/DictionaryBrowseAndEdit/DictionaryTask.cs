@@ -2,9 +2,9 @@ using System;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using Palaso.DictionaryServices.Model;
-using Palaso.i18n;
-using Palaso.Reporting;
+using SIL.DictionaryServices.Model;
+using SIL.i18n;
+using SIL.Reporting;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
@@ -144,7 +144,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Could not navigate to {0}. {1}", url, error.Message);
+				SIL.Reporting.ErrorReport.NotifyUserOfProblem("Could not navigate to {0}. {1}", url, error.Message);
 			}
 		}
 

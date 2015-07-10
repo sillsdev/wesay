@@ -31,7 +31,7 @@ namespace WeSay.App
 			this.components = new System.ComponentModel.Container();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this._localizationHelper = new Palaso.UI.WindowsForms.i18n.LocalizationHelper(this.components);
+			this._localizationHelper = new SIL.Windows.Forms.i18n.LocalizationHelper(this.components);
 			this._statusStrip = new System.Windows.Forms.StatusStrip();
 			this._helpProvider = new Vulcan.Uczniowie.HelpProvider.HelpComponent(this.components);
 			this.tabControl1.SuspendLayout();
@@ -94,7 +94,7 @@ namespace WeSay.App
 
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage2;
-		private Palaso.UI.WindowsForms.i18n.LocalizationHelper _localizationHelper;
+		private SIL.Windows.Forms.i18n.LocalizationHelper _localizationHelper;
 		private System.Windows.Forms.StatusStrip _statusStrip;
 		private Vulcan.Uczniowie.HelpProvider.HelpComponent _helpProvider;
 	}

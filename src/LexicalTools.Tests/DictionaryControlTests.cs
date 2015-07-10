@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using Palaso.Data;
-using Palaso.DictionaryServices.Model;
-using Palaso.Reporting;
-using Palaso.TestUtilities;
-using Palaso.WritingSystems;
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.Reporting;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
@@ -18,7 +18,7 @@ using WeSay.UI.TextBoxes;
 
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools.Tests
 		private DictionaryTask _task;
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
-		private IWritingSystemDefinition _vernacularWritingSystem;
+		private WritingSystemDefinition _vernacularWritingSystem;
 		private TabControl _tabControl;
 		private Form _window;
 		private TabPage _detailTaskPage;
@@ -42,22 +42,22 @@ namespace WeSay.LexicalTools.Tests
 		[TestFixtureSetUp]
 		public void SetupFixture()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 			WeSayProjectTestHelper.InitializeForTests();
 		}
 
 		[TestFixtureTearDown]
 		public void TearDownFixture()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 		}
 
 		public override void Setup()
 		{
 			base.Setup();
 			_tempFolder = new TemporaryFolder();
-			_vernacularWritingSystem = WritingSystemDefinition.Parse(WritingSystemsIdsForTests.VernacularIdForTest);
-			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
+			_vernacularWritingSystem = new WritingSystemDefinition(WritingSystemsIdsForTests.VernacularIdForTest) {DefaultCollation = new IcuRulesCollationDefinition("standard")};
+			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.LanguageTag;
 
 			_filePath = _tempFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
@@ -66,7 +66,7 @@ namespace WeSay.LexicalTools.Tests
 													{
 															WritingSystemsIdsForTests.AnalysisIdForTest
 													};
-			string[] vernacularWritingSystemIds = new string[] {_vernacularWritingSystem.Id};
+			string[] vernacularWritingSystemIds = new string[] {_vernacularWritingSystem.LanguageTag};
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
 									   "LexEntry",
@@ -301,7 +301,7 @@ namespace WeSay.LexicalTools.Tests
 					((DictionaryControl) _task.Control).Control_EntryDetailPanel;
 			LexEntry entry = parentControl.DataSource;
 			const string form = "xx";
-			entry.LexicalForm.SetAlternative(_vernacularWritingSystem.Id, form);
+			entry.LexicalForm.SetAlternative(_vernacularWritingSystem.LanguageTag, form);
 			GoToLexicalEntryUseFind("Initial"); //go away
 			GoToLexicalEntryUseFind(form); //come back
 
@@ -698,7 +698,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = list[0].RealObject;
 			Assert.IsTrue(
 					entry.LexicalForm.GetAnnotationOfAlternativeIsStarred(
-							_vernacularWritingSystem.Id));
+							_vernacularWritingSystem.LanguageTag));
 		}
 
 		[Test]
@@ -715,7 +715,7 @@ namespace WeSay.LexicalTools.Tests
 
 			Assert.IsTrue(
 					entry.LexicalForm.GetAnnotationOfAlternativeIsStarred(
-							_vernacularWritingSystem.Id));
+							_vernacularWritingSystem.LanguageTag));
 		}
 
 		private void ClickStarOfLexemeForm()
@@ -805,7 +805,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				return
 						((DictionaryControl) _detailTaskPage.Controls[0]).CurrentEntry.LexicalForm.
-								GetBestAlternative(_vernacularWritingSystem.Id);
+								GetBestAlternative(_vernacularWritingSystem.LanguageTag);
 			}
 		}
 

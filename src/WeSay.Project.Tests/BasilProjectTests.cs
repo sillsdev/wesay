@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using Palaso.i18n;
-using Palaso.TestUtilities;
-using Palaso.WritingSystems;
+using SIL.i18n;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.Tests
@@ -86,7 +86,7 @@ namespace WeSay.Project.Tests
 			{
 				BasilProject.Project.Dispose();
 			}
-			Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
+			SIL.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
 		}
 
 		//  not relevant anymore

@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.i18n;
+using SIL.i18n;
 using WeSay.Foundation;
 
 namespace WeSay.Project

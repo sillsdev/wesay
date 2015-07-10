@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using SIL.Reporting;
 
 namespace WeSay.Project
 {
@@ -55,7 +56,16 @@ namespace WeSay.Project
 
 		public Font GetLabelFont()
 		{
-			return new Font(LabelFontName, LabelFontSizeInPoints);
+			try
+			{
+				return new Font(LabelFontName, LabelFontSizeInPoints);
+			}
+			catch (Exception)
+			{
+				ErrorReport.NotifyUserOfProblem(
+						"There was some problem with choosing that font.  Reverting to system default font.");
+				return new Font(SystemFonts.DefaultFont.Name, SystemFonts.DefaultFont.Size);
+			}
 		}
 
 		public void SetLabelFont(Font font)

@@ -1,13 +1,14 @@
-using Palaso.UI.WindowsForms.Keyboarding;
-using Palaso.WritingSystems;
+using SIL.Windows.Forms.Keyboarding;
+using SIL.Windows.Forms.WritingSystems;
+using SIL.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
 	public class ChorusWritingSystemAdaptor : Chorus.IWritingSystem
 	{
-		private readonly IWritingSystemDefinition _writingSystem;
+		private readonly WritingSystemDefinition _writingSystem;
 
-		public ChorusWritingSystemAdaptor(IWritingSystemDefinition writingSystem)
+		public ChorusWritingSystemAdaptor(WritingSystemDefinition writingSystem)
 		{
 			_writingSystem = writingSystem;
 		}
@@ -24,12 +25,12 @@ namespace WeSay.LexicalModel.Foundation
 
 		public string Code
 		{
-			get { return _writingSystem.Id; }
+			get { return _writingSystem.LanguageTag; }
 		}
 
 		public string FontName
 		{
-			get { return _writingSystem.DefaultFontName; }
+			get { return _writingSystem.DefaultFont.Name; }
 		}
 
 		public int FontSize

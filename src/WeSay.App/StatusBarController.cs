@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.i18n;
-using Palaso.UiBindings;
+using SIL.i18n;
+using SIL.UiBindings;
 using WeSay.App.Properties;
 using WeSay.LexicalTools.Dashboard;
 

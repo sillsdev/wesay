@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -19,7 +16,7 @@ namespace WeSay.UI.TextBoxes
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		IWritingSystemDefinition WritingSystem { get; set; }
+		WritingSystemDefinition WritingSystem { get; set; }
 
 		bool Sorted { get; set; }
 		AutoCompleteMode AutoCompleteMode { get; set; }
@@ -53,10 +50,10 @@ namespace WeSay.UI.TextBoxes
 
 	public class WeSayComboBox : ComboBox, IWeSayComboBox
 	{
-		private IWritingSystemDefinition _writingSystem;
+		private WritingSystemDefinition _writingSystem;
 		public new event EventHandler<DrawItemEventArgs> DrawItem;
 
-		public IWritingSystemDefinition WritingSystem
+		public WritingSystemDefinition WritingSystem
 		{
 			get
 			{

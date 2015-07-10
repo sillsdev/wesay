@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 
 namespace WeSay.LexicalModel.Tests
 {

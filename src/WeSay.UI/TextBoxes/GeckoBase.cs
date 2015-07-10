@@ -8,7 +8,8 @@ using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
+using SIL.Keyboarding;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.Progress;
 
@@ -28,7 +29,7 @@ namespace WeSay.UI.TextBoxes
 	public class GeckoBase : UserControl
 	{
 		protected GeckoWebBrowser _browser;
-		protected IWritingSystemDefinition _writingSystem;
+		protected WritingSystemDefinition _writingSystem;
 		protected bool _browserIsReadyToNavigate;
 		protected bool _browserDocumentLoaded;
 		protected EventHandler _loadHandler;
@@ -93,7 +94,7 @@ namespace WeSay.UI.TextBoxes
 			_browser.DomClick += _domClickHandler;
 #endif
 		}
-		public void Init(IWritingSystemDefinition writingSystem, String name)
+		public void Init(WritingSystemDefinition writingSystem, String name)
 		{
 			WritingSystem = writingSystem;
 			_nameForLogging = name;
@@ -150,7 +151,7 @@ namespace WeSay.UI.TextBoxes
 				Height = content.Parent.ScrollHeight;
 			}
 		}
-		public virtual IWritingSystemDefinition WritingSystem
+		public virtual WritingSystemDefinition WritingSystem
 		{
 			get
 			{
@@ -506,14 +507,13 @@ namespace WeSay.UI.TextBoxes
 			setInputFocus();
 		}
 
-		public string GetLanguageHtml(IWritingSystemDefinition ws)
+		public string GetLanguageHtml(WritingSystemDefinition ws)
 		{
 			String langName = "";
 			// Add in the ISO language code in case font supports multiple regions
 			if (ws != null)
 			{
-				String lang = ws.Bcp47Tag.IndexOf('-') == -1 ? ws.Bcp47Tag : ws.Bcp47Tag.Substring(0, ws.Bcp47Tag.IndexOf('-'));
-				langName = "lang='" + lang + "' ";
+				langName = "lang='" + IetfLanguageTag.GetLanguagePart(ws.LanguageTag) + "' ";
 			}
 			return langName;
 		}

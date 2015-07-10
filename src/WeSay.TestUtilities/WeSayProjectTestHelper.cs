@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.Lexicon;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
+using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.Project;
 
 namespace WeSay.TestUtilities
@@ -14,6 +16,7 @@ namespace WeSay.TestUtilities
 		/// </summary>
 		public static WeSayWordsProject InitializeForTests()
 		{
+			Sldr.OfflineMode = true;
 			WeSayWordsProject project = new WeSayWordsProject();
 
 			try
@@ -34,20 +37,33 @@ namespace WeSay.TestUtilities
 				Directory.Delete(pathToLdmlWsFolder, true);
 			}
 
-			Palaso.Lift.Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
+			SIL.Lift.Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
 
 			//setup writing systems
 			Directory.CreateDirectory(pathToLdmlWsFolder);
+
+			var userMemorySettingsStore = new MemorySettingsStore();
+			var projectMemorySettingsStore = new MemorySettingsStore();
+
+			var userSettingsDataMapper = new UserLexiconSettingsWritingSystemDataMapper(userMemorySettingsStore);
+			var projectSettingsDataMapper = new ProjectLexiconSettingsWritingSystemDataMapper(projectMemorySettingsStore);
+			var customDataMapper = new ICustomDataMapper<WritingSystemDefinition>[]
+			{
+				userSettingsDataMapper,
+				projectSettingsDataMapper
+			};
+
 			IWritingSystemRepository wsc = LdmlInFolderWritingSystemRepository.Initialize(
 				pathToLdmlWsFolder,
+				customDataMapper,
+				null,
 				OnMigrationHandler,
-				OnWritingSystemLoadProblem,
-				WritingSystemCompatibility.Flex7V0Compatible
+				OnWritingSystemLoadProblem
 			);
-			wsc.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.VernacularIdForTest));
-			wsc.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.AnalysisIdForTest));
-			wsc.Set(WritingSystemDefinition.Parse(WritingSystemsIdsForTests.OtherIdForTest));
 
+			wsc.Set(new WritingSystemDefinition(WritingSystemsIdsForTests.VernacularIdForTest));
+			wsc.Set(new WritingSystemDefinition(WritingSystemsIdsForTests.AnalysisIdForTest));
+			wsc.Set(new WritingSystemDefinition(WritingSystemsIdsForTests.OtherIdForTest));
 
 			wsc.Save();
 
@@ -61,7 +77,7 @@ namespace WeSay.TestUtilities
 			throw new ApplicationException("Unexpected WritingSystem load problem in test.");
 		}
 
-		private static void OnMigrationHandler(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+		private static void OnMigrationHandler(int version, IEnumerable<LdmlMigrationInfo> migrationinfo)
 		{
 			throw new ApplicationException("Unexpected WritingSystem migration in test.");
 		}

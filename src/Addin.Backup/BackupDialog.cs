@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Palaso.i18n;
-using Palaso.Reporting;
-using Palaso.UsbDrive;
+using SIL.i18n;
+using SIL.Reporting;
+using SIL.UsbDrive;
 using WeSay.AddinLib;
 
 namespace Addin.Backup

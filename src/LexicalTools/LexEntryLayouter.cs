@@ -4,9 +4,9 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
-using Palaso.DictionaryServices.Model;
-using Palaso.i18n;
-using Palaso.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.i18n;
+using SIL.Lift;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -181,8 +181,8 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private static IServiceProvider CreateLayoutInfoServiceProvider(IServiceLocator serviceLocator, LexEntry entry)
 		{
-			Palaso.Code.Guard.AgainstNull(serviceLocator, "serviceLocator");
-			Palaso.Code.Guard.AgainstNull(entry, "entry");
+			SIL.Code.Guard.AgainstNull(serviceLocator, "serviceLocator");
+			SIL.Code.Guard.AgainstNull(entry, "entry");
 
 			var namingHelper = (MediaNamingHelper) serviceLocator.GetService(typeof (MediaNamingHelper));
 			var ap = new AudioPathProvider(WeSayWordsProject.Project.PathToAudio,

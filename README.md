@@ -2,8 +2,8 @@ This file contains information that may be useful to anyone wanting to work on
 WeSay development.  Much of this information is Linux specific, but some of it
 applies to both Linux and Windows development.
 
-In this document, $wesay refers to the directory of the wesay repository (e.g.
-~/src/wesay).
+In this document, `$wesay` refers to the directory of the wesay repository 
+(e.g. `~/src/wesay`).
 
 
 0. UBUNTU DISTRIBUTION PACKAGES NEEDED
@@ -372,8 +372,8 @@ Some other helpful developer editing, or troubleshooting tools:
 	depends				(for troubleshooting system errors in loading and executing modules, see: dependencywalker.com)
 
 To build for installer, just type in the windows command prompt:
-	buildupdate.win.sh -f				(to do a "full" update the libraries needed to build WeSay)
+	`buildupdate.win.sh -f`				(to do a "full" update the libraries needed to build WeSay)
 										- If you have set up your bash commands not to work within
 										the windows command prompt as above, you will need to
 										execute this command in a bash window.)
-	TestBulild.bat Release Installer	(to build an Release version of Installer)
+	`TestBuild.bat Release Installer`	(to build an Release version of Installer)

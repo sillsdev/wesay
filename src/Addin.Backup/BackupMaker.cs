@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
-using Palaso.Reporting;
+using SIL.Reporting;
 
 namespace Addin.Backup
 {

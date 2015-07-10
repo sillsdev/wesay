@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.Lift.Options;
-using Palaso.Text;
-using Palaso.WritingSystems;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Text;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -183,7 +183,7 @@ namespace WeSay.LexicalTools
 			get { return BasilProject.Project.WritingSystems; }
 		}
 
-		private static int GetFontNumber(IWritingSystemDefinition writingSystem)
+		private static int GetFontNumber(WritingSystemDefinition writingSystem)
 		{
 			int i = 0;
 			foreach (var ws in WritingSystems.AllWritingSystems)
@@ -217,7 +217,7 @@ namespace WeSay.LexicalTools
 
 				if (field == null) // show them all
 				{
-					foreach (string id in WritingSystems.FilterForTextIds(text.Forms.Select(f=>f.WritingSystemId)))
+					foreach (string id in WritingSystems.FilterForTextLanguageTags(text.Forms.Select(f=>f.WritingSystemId)))
 					{
 
 						var form = text.Forms.First(f => f.WritingSystemId == id);
@@ -294,7 +294,7 @@ namespace WeSay.LexicalTools
 				return "";
 				//that ws isn't actually part of our configuration, so can't get a special font for it
 			}
-			IWritingSystemDefinition writingSystem = (IWritingSystemDefinition)WritingSystems.Get(writingSystemId);
+			WritingSystemDefinition writingSystem = (WritingSystemDefinition)WritingSystems.Get(writingSystemId);
 			string rtf = @"\f" + GetFontNumber(writingSystem);
 			int fontSize = Convert.ToInt16((sizeBoost + WritingSystemInfo.CreateFont(writingSystem).SizeInPoints)*2);
 			rtf += @"\fs" + fontSize + " ";

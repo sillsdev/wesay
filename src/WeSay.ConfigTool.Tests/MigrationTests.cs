@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
+﻿using System.IO;
 using NUnit.Framework;
-using Palaso.Reporting;
-using Palaso.TestUtilities;
+using SIL.Reporting;
+using SIL.WritingSystems;
+using SIL.TestUtilities;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
@@ -26,7 +22,7 @@ namespace WeSay.ConfigTool.Tests
 			public void CreateDefaultProject()
 			{
 				new WeSayWordsProject();
-				WeSayWordsProject.CreateEmptyProjectFiles(Path);
+				WeSayWordsProject.CreateEmptyProjectFiles(Path, WellKnownSubtags.UnlistedLanguage);
 				WeSayWordsProject.Project.LoadFromProjectDirectoryPath(Path);
 				WeSayWordsProject.Project.Save();
 			}
@@ -64,7 +60,7 @@ namespace WeSay.ConfigTool.Tests
 				e.WriteUserConfig(v1);
 				new WeSayWordsProject();
 				WeSayWordsProject.Project.LoadFromProjectDirectoryPath(e.Path);
-				AssertThatXmlIn.File(e.GetUserConfigFilePath()).HasAtLeastOneMatchForXpath("configuration[@version='2']");
+				AssertThatXmlIn.File(e.GetUserConfigFilePath()).HasAtLeastOneMatchForXpath("configuration[@version='3']");
 
 			}
 		}

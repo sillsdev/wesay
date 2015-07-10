@@ -1,4 +1,4 @@
-﻿using Palaso.UI.WindowsForms.ImageGallery;
+﻿using SIL.Windows.Forms.ImageGallery;
 
 namespace WeSay.LexicalTools.AddPictures
 {

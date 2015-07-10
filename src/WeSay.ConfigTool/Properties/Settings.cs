@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
-using Palaso.Reporting;
+using SIL.Reporting;
 
 namespace WeSay.ConfigTool.Properties
 {

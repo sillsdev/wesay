@@ -7,20 +7,20 @@ using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Palaso.Data;
-using Palaso.Code;
-using Palaso.i18n;
-using Palaso.UiBindings;
-using Palaso.UI.WindowsForms.Miscellaneous;
-using Palaso.Reporting;
-using Palaso.Text;
-using Palaso.WritingSystems;
+using SIL.Data;
+using SIL.Code;
+using SIL.i18n;
+using SIL.UiBindings;
+using SIL.Windows.Forms.Miscellaneous;
+using SIL.Reporting;
+using SIL.Text;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private readonly ViewTemplate _viewTemplate;
 		private readonly ILogger _logger;
-		private IWritingSystemDefinition _listWritingSystem;
+		private WritingSystemDefinition _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
 		private ResultSet<LexEntry> _records;
 		private readonly ResultSetToListOfStringsAdapter _findTextAdapter;
@@ -172,9 +172,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			{
 				if (field.WritingSystemIds.Count > 0)
 				{
-					IList<IWritingSystemDefinition> writingSystems =
+					IList<WritingSystemDefinition> writingSystems =
 							BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
-					foreach (IWritingSystemDefinition writingSystem in writingSystems)
+					foreach (WritingSystemDefinition writingSystem in writingSystems)
 					{
 
 						if (!WritingSystemExistsInPicker(writingSystem))
@@ -192,7 +192,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 		}
 
-		private void AddWritingSystemToPicker(IWritingSystemDefinition writingSystem, Field field)
+		private void AddWritingSystemToPicker(WritingSystemDefinition writingSystem, Field field)
 		{
 			var item = new MenuItem(
 				writingSystem.Abbreviation + "\t" + StringCatalog.Get(field.DisplayName),
@@ -203,11 +203,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			SearchModeMenu.MenuItems.Add(item);
 		}
 
-		private bool WritingSystemExistsInPicker(IWritingSystemDefinition writingSystem)
+		private bool WritingSystemExistsInPicker(WritingSystemDefinition writingSystem)
 		{
 			foreach (MenuItem item in SearchModeMenu.MenuItems)
 			{
-				if (writingSystem.Id == ((WritingSystemDefinition)item.Tag).Id)
+				if (writingSystem.LanguageTag == ((WritingSystemDefinition)item.Tag).LanguageTag)
 				{
 					return true;
 				}
@@ -227,7 +227,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 																	ToString());
 		}
 
-		public void SetListWritingSystem(IWritingSystemDefinition writingSystem)
+		public void SetListWritingSystem(WritingSystemDefinition writingSystem)
 		{
 			Guard.AgainstNull(writingSystem,"writingSystem");
 
@@ -296,7 +296,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void LoadRecords()
 		{
 			var selectedItem = CurrentEntry;
-			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
+			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.LanguageTag))
 			{
 				_records = _lexEntryRepository.GetAllEntriesSortedByLexicalFormOrAlternative(_listWritingSystem);
 			}
@@ -319,7 +319,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			var displayString = (string) recordToken["Form"];
 			e.Item = new ListViewItem(displayString);
 
-			if ((string) recordToken["WritingSystem"] != _listWritingSystem.Id)
+			if ((string) recordToken["WritingSystem"] != _listWritingSystem.LanguageTag)
 			{
 				displayString = (string) recordToken["Form"];
 				e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
@@ -329,7 +329,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			if (string.IsNullOrEmpty(displayString))
 			{
 				displayString = "(";
-				if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
+				if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.LanguageTag))
 				{
 					displayString += StringCatalog.Get("~Empty",
 													   "This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.");
@@ -572,9 +572,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				//bool NoPriorSelection = _todoRecordsListBox.SelectedIndex == -1;
 				//_recordListBoxActive = true; // allow onRecordSelectionChanged
 				if (FocusWasOnFindTextBox && !string.IsNullOrEmpty(SearchTextBox.Text) &&
-					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
+					IsWritingSystemUsedInLexicalForm(_listWritingSystem.LanguageTag))
 				{
-					entry.LexicalForm[_listWritingSystem.Id] = SearchTextBox.Text.Trim();
+					entry.LexicalForm[_listWritingSystem.LanguageTag] = SearchTextBox.Text.Trim();
 					_lexEntryRepository.SaveItem(entry);
 				}
 				//review: Revert (remove) below for WS-950

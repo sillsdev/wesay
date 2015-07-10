@@ -1,14 +1,14 @@
 ﻿using System;
 using System.IO;
-using Palaso.Code;
-using Palaso.Reporting;
+using SIL.Code;
+using SIL.Reporting;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.NewProjectCreation
 {
 	/// <summary>
 	/// This class should be on its way to being un-needed, with the advent of "Send/Receive".  Its use was primarily pre-chorus,
-	/// pre-lift bridge, when we wanted to copy lift-related files around.  In the new, better system, we are givena a chorus
+	/// pre-lift bridge, when we wanted to copy lift-related files around.  In the new, better system, we are given a chorus
 	/// repository with all the lift files, just lacking the wesay specific ones. Then, ProjectFromLiftFolderCreator is
 	/// used to just add the files we need for WeSay.
 	/// This class uses that, too, but it also has to create a folder & copy files around.
@@ -30,6 +30,8 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 				CopyOverLiftFile(pathToSourceLift, pathToNewDirectory);
 
+				CopyOverPictures(Path.GetDirectoryName(pathToSourceLift), BasilProject.GetPathToPictures(pathToNewDirectory));
+
 				CopyOverRangeFileIfExists(pathToSourceLift, pathToNewDirectory);
 
 				CopyOverLdmlFiles(pathToSourceLift, BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory));
@@ -42,7 +44,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			}
 			catch(Exception e)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem(e, "WeSay was unable to finish importing that LIFT file.  If you cannot fix the problem yourself, please zip and send the exported folder to issues (at) wesay (dot) org");
+				SIL.Reporting.ErrorReport.NotifyUserOfProblem(e, "WeSay was unable to finish importing that LIFT file.  If you cannot fix the problem yourself, please zip and send the exported folder to issues (at) wesay (dot) org");
 				try
 				{
 					Logger.WriteEvent(@"Removing would-be target directory");
@@ -76,6 +78,24 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			var pathToTargetLift = Path.Combine(pathToNewDirectory, projectName+".lift");
 			Logger.WriteMinorEvent(@"Copying Lift file " + pathToSourceLift);
 			File.Copy(pathToSourceLift, pathToTargetLift, true);
+		}
+
+		private static void CopyOverPictures(string pathToSourceLift, string pathToNewDirectory)
+		{
+			var pathToSourcePictures = Path.Combine(pathToSourceLift, "pictures");
+			if (Directory.Exists(pathToSourcePictures))
+			{
+				if (!Directory.Exists(pathToNewDirectory))
+				{
+					Directory.CreateDirectory(pathToNewDirectory);
+				}
+				foreach (string pathToPicture in Directory.GetFiles(pathToSourcePictures))
+				{
+					string fileName = Path.GetFileName(pathToPicture);
+					Logger.WriteMinorEvent(@"Copying picture " + fileName);
+					File.Copy(pathToPicture, Path.Combine(pathToNewDirectory, fileName), true);
+				}
+			}
 		}
 
 		private static void CopyOverRangeFileIfExists(string pathToSourceLift, string pathToNewDirectory)

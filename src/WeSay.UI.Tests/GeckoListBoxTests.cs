@@ -8,8 +8,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
-using Palaso.WritingSystems;
-using Palaso.IO;
+using SIL.WritingSystems;
+using SIL.IO;
 using WeSay.UI.TextBoxes;
 using Gecko;
 
@@ -59,7 +59,7 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void CreateWithWritingSystem()
 		{
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") {DefaultFont = new FontDefinition("Arial")};
 			var listBox = new GeckoListBox(ws, null);
 			Assert.IsNotNull(listBox);
 			Assert.AreSame(ws, listBox.WritingSystem);
@@ -69,8 +69,8 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void TestAddItem()
 		{
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
-			IWritingSystemDefinition ws2 = WritingSystemDefinition.Parse("en");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") { DefaultFont = new FontDefinition("Arial") };
+			WritingSystemDefinition ws2 = new WritingSystemDefinition("en") { DefaultFont = new FontDefinition("Arial") };
 			var listBox = new GeckoListBox();
 			listBox.FormWritingSystem = ws;
 			listBox.MeaningWritingSystem = ws2;
@@ -100,8 +100,8 @@ namespace WeSay.UI.Tests
 		{
 			_countOfItemsDrawn = 0;
 			_itemToNotDrawYetDrawn  = false;
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
-			IWritingSystemDefinition ws2 = WritingSystemDefinition.Parse("en");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") { DefaultFont = new FontDefinition("Arial")};
+			WritingSystemDefinition ws2 = new WritingSystemDefinition("en") {DefaultFont = new FontDefinition("Arial")};
 			_listBox = new GeckoListBox();
 			_listBox.FormWritingSystem = ws;
 			_listBox.MeaningWritingSystem = ws2;
@@ -142,8 +142,8 @@ namespace WeSay.UI.Tests
 		{
 			_countOfItemsDrawn = 0;
 			_itemToNotDrawYetDrawn = false;
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
-			IWritingSystemDefinition ws2 = WritingSystemDefinition.Parse("en");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") { DefaultFont = new FontDefinition("Arial") };
+			WritingSystemDefinition ws2 = new WritingSystemDefinition("en") { DefaultFont = new FontDefinition("Arial") };
 			_listBox = new GeckoListBox();
 			_listBox.FormWritingSystem = ws;
 			_listBox.MeaningWritingSystem = ws2;

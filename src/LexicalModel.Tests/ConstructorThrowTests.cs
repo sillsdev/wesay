@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 
 using NUnit.Framework;
 

@@ -3,17 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Runtime.Remoting.Contexts;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using Autofac;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.LexicalModel;
-using Palaso.DictionaryServices.Model;
-using Palaso.TestUtilities;
+using SIL.DictionaryServices.Model;
+using SIL.TestUtilities;
 using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
@@ -102,8 +100,8 @@ namespace WeSay.LexicalTools.Tests
 
 			List<String> headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());
 			string wsA = headwordWritingSystemIds[0] ;
-			string wsB = _viewTemplate.GetDefaultWritingSystemForField(definition).Id;
-			HtmlRenderer.HeadWordWritingSystemId = _viewTemplate.HeadwordWritingSystem.Id;
+			string wsB = _viewTemplate.GetDefaultWritingSystemForField(definition).LanguageTag;
+			HtmlRenderer.HeadWordWritingSystemId = _viewTemplate.HeadwordWritingSystem.LanguageTag;
 
 			_entry = _lexEntryRepository.CreateItem();
 			_entry.LexicalForm[wsA] = lexicalForm;
@@ -172,28 +170,28 @@ namespace WeSay.LexicalTools.Tests
 				Directory.Delete(pathToLdmlWsFolder, true);
 			}
 
-			Palaso.Lift.Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
+			SIL.Lift.Utilities.CreateEmptyLiftFile(WeSayWordsProject.PathToPretendLiftFile, "InitializeForTests()", true);
 
 			//setup writing systems
 			Directory.CreateDirectory(pathToLdmlWsFolder);
-			IWritingSystemRepository wsc = LdmlInFolderWritingSystemRepository.Initialize(
-				pathToLdmlWsFolder,
-				OnMigrationHandler,
-				OnWritingSystemLoadProblem,
-				WritingSystemCompatibility.Flex7V0Compatible
-			);
 
-			IWritingSystemDefinition _ws1 = WritingSystemDefinition.Parse(WritingSystemsIdsForTests.VernacularIdForTest);
-			_ws1.DefaultFontName = "Arial";
+			IWritingSystemRepository wsc = LdmlInFolderWritingSystemRepository.Initialize(
+				pathToLdmlWsFolder);
+
+			WritingSystemDefinition _ws1 = new WritingSystemDefinition(WritingSystemsIdsForTests.VernacularIdForTest);
+			_ws1.DefaultFont = new FontDefinition("Arial");
 			_ws1.DefaultFontSize = 30;
+			_ws1.DefaultCollation = new IcuRulesCollationDefinition("standard");
 			wsc.Set(_ws1);
-			IWritingSystemDefinition _ws2 = WritingSystemDefinition.Parse(WritingSystemsIdsForTests.AnalysisIdForTest);
-			_ws2.DefaultFontName = new Font(FontFamily.GenericSansSerif, 12).Name;
+			WritingSystemDefinition _ws2 = new WritingSystemDefinition(WritingSystemsIdsForTests.AnalysisIdForTest);
+			_ws2.DefaultFont = new FontDefinition(FontFamily.GenericSansSerif.Name);
 			_ws2.DefaultFontSize = new Font(FontFamily.GenericSansSerif, 12).Size;
+			_ws2.DefaultCollation = new IcuRulesCollationDefinition("standard");
 			wsc.Set(_ws2);
-			IWritingSystemDefinition _ws3 = WritingSystemDefinition.Parse(WritingSystemsIdsForTests.OtherIdForTest);
-			_ws3.DefaultFontName = "Arial";
+			WritingSystemDefinition _ws3 = new WritingSystemDefinition(WritingSystemsIdsForTests.OtherIdForTest);
+			_ws3.DefaultFont = new FontDefinition("Arial");
 			_ws3.DefaultFontSize = 15;
+			_ws3.DefaultCollation = new IcuRulesCollationDefinition("standard");
 			wsc.Set(_ws3);
 
 
@@ -202,16 +200,6 @@ namespace WeSay.LexicalTools.Tests
 			project.SetupProjectDirForTests(WeSayWordsProject.PathToPretendLiftFile);
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
 			return project;
-		}
-
-		private static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
-		{
-			throw new ApplicationException("Unexpected WritingSystem load problem in test.");
-		}
-
-		private static void OnMigrationHandler(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
-		{
-			throw new ApplicationException("Unexpected WritingSystem migration in test.");
 		}
 	}
 }

@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.XPath;
 using NUnit.Framework;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
@@ -214,7 +214,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 		}
 
 		[Test]
-		public void V7File_ConfigFileIsVersion7_ConvertedToVersion8()
+		public void V7File_ConfigFileIsVersion7_ConvertedToVersion9()
 		{
 			File.WriteAllText(_pathToInputConfig,
 				@"<?xml version='1.0' encoding='utf-8'?>

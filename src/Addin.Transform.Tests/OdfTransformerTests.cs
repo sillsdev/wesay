@@ -1,9 +1,10 @@
 using System;
 using System.IO;
 using System.Xml;
-using Palaso.Reporting;
-using Palaso.TestUtilities;
+using SIL.Reporting;
+using SIL.TestUtilities;
 using Addin.Transform.OpenOffice;
+using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.Project.Tests;
 using WeSay.AddinLib;
@@ -26,10 +27,20 @@ namespace Addin.Transform.Tests
 			{
 				ErrorReport.IsOkToInteractWithUser = false;
 				const string xmlOfEntries = @" <entry id='foo1'>
-						<lexical-unit><form lang='qaa-x-qaa'><text>hello</text></form></lexical-unit>
+						<lexical-unit><form lang='qaa'><text>hello</text></form></lexical-unit>
 					</entry>";
 				_testProject = new ProjectDirectorySetupForTesting(xmlOfEntries);
 				_project = _testProject.CreateLoadedProject();
+				var ws = _project.WritingSystems.Get("en");
+				ws.DefaultFont = new FontDefinition("Arial");
+				ws.DefaultFontSize = 12;
+				ws.DefaultCollation = new IcuRulesCollationDefinition("standard");
+				_project.WritingSystems.Set(ws);
+				ws = _project.WritingSystems.Get("qaa");
+				ws.DefaultFont = new FontDefinition("Arial");
+				ws.DefaultFontSize = 12;
+				ws.DefaultCollation = new IcuRulesCollationDefinition("standard");
+				_project.WritingSystems.Set(ws);
 				_projectInfo = _project.GetProjectInfoForAddin();
 
 				string sourceTemplateDir = Path.Combine(_projectInfo.PathToApplicationRootDirectory, String.Format("..{0}..{0}templates", Path.DirectorySeparatorChar));
@@ -95,8 +106,7 @@ namespace Addin.Transform.Tests
 		{
 			using (var e = new EnvironmentForTest())
 			{
-				var addin = new OpenOfficeAddin();
-				addin.LaunchAfterExport= false;
+				var addin = new OpenOfficeAddin {LaunchAfterExport = false};
 
 				addin.Launch(null,  e.ProjectInfo);
 				Assert.IsTrue(File.Exists(e.OdtFile));

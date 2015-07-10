@@ -1,7 +1,7 @@
 using System.Xml;
 using System.Xml.Serialization;
-using Palaso.Lift;
-using Palaso.Lift.Options;
+using SIL.Lift;
+using SIL.Lift.Options;
 using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel.Foundation.Options

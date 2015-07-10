@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using NUnit.Framework;
-using Palaso.TestUtilities;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.TestUtilities;
+using SIL.Lexicon;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
+using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.Project.ConfigMigration.WritingSystem;
 
 namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
@@ -16,7 +19,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 	{
 		private class TestEnvironment : IDisposable
 		{
-			private IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> _tagMigrationInfo = new List<LdmlVersion0MigrationStrategy.MigrationInfo>();
+			private IEnumerable<LdmlMigrationInfo> _tagMigrationInfo = new List<LdmlMigrationInfo>();
 
 			private readonly string _wsPrefsFilePath;
 			private readonly string _writingSystemsPath = "";
@@ -26,7 +29,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 			public TestEnvironment()
 			{
-				_testFolder = new TemporaryFolder("WritingSystemMigratorTests");
+				_testFolder = new TemporaryFolder("WritingSystemsMigratorTests");
 				_wsPrefsFilePath = Path.Combine(_testFolder.Path, "WritingSystemPrefs.xml");
 				_writingSystemsPath = Path.Combine(_testFolder.Path, "WritingSystems");
 				Directory.CreateDirectory(WritingSystemsPath);
@@ -49,11 +52,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				get
 				{
 					return _writingSystems ?? (_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
-						WritingSystemsPath,
-						OnWritingSystemMigration,
-						OnWritingSystemLoadProblem,
-						WritingSystemCompatibility.Flex7V0Compatible
-					));
+						WritingSystemsPath));
 				}
 			}
 
@@ -62,7 +61,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				throw new ApplicationException("Unexpected input system load problem during test.");
 			}
 
-			private static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+			private static void OnWritingSystemMigration(int version, IEnumerable<LdmlMigrationInfo> migrationinfo)
 			{
 				throw new ApplicationException("Unexpected input system migration during test.");
 			}
@@ -75,10 +74,10 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			public string GetFileForOriginalRfcTag(string oldRfcTag)
 			{
 				var migrationinfoForOldRfcTag =
-					_tagMigrationInfo.FirstOrDefault(info => info.RfcTagBeforeMigration == oldRfcTag);
+					_tagMigrationInfo.FirstOrDefault(info => info.LanguageTagBeforeMigration == oldRfcTag);
 				if( migrationinfoForOldRfcTag != null)
 				{
-					return Path.Combine(WritingSystemsPath, migrationinfoForOldRfcTag.RfcTagAfterMigration + ".ldml");
+					return Path.Combine(WritingSystemsPath, migrationinfoForOldRfcTag.LanguageTagAfterMigration + ".ldml");
 				}
 				return Path.Combine(WritingSystemsPath, oldRfcTag + ".ldml");
 			}
@@ -88,7 +87,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				File.WriteAllText(_wsPrefsFilePath, content);
 			}
 
-			public void ChangeRfcTags(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationInfo)
+			public void ChangeRfcTags(int version, IEnumerable<LdmlMigrationInfo> migrationInfo)
 			{
 				_tagMigrationInfo = migrationInfo;
 			}
@@ -425,11 +424,10 @@ O o";
 				bool delegateCalledCorrectly = false;
 				var migrator = new WritingSystemPrefsMigrator(
 					environment.WsPrefsFilePath,
-					delegate(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> oldToNewRfcTagsMap)
+					(version, oldToNewRfcTagsMap) =>
 						{
-							if(oldToNewRfcTagsMap.
-								First(info => info.RfcTagBeforeMigration == "en").
-								RfcTagAfterMigration =="en-Zxxx-x-audio")
+							if(oldToNewRfcTagsMap.First(info => info.LanguageTagBeforeMigration == "en").
+								LanguageTagAfterMigration =="en-Zxxx-x-audio")
 							{
 								delegateCalledCorrectly = true;
 							}
@@ -589,10 +587,13 @@ O o";
 		{
 			using (var environment = new TestEnvironment())
 			{
+				// RightToLeft defaults to false
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.SingleWritingSystemForLanguage("en"));
 
-				var ws = WritingSystemDefinition.Parse("en");
-				ws.Abbreviation = "untouched";
+				var ws = new WritingSystemDefinition("en")
+				{
+					RightToLeftScript = true
+				};
 				var wsRepo = environment.WritingSystems;
 				wsRepo.Set(ws);
 				wsRepo.Save();
@@ -603,7 +604,7 @@ O o";
 				migrator.MigrateIfNecassary();
 
 				AssertThatXmlIn.File(environment.GetFileForOriginalRfcTag("en")).HasAtLeastOneMatchForXpath(
-					"/ldml/special/palaso:abbreviation[@value='untouched']",
+					"/ldml/layout/orientation/characterOrder['right-to-left']",
 					environment.NamespaceManager);
 			}
 		}
@@ -615,7 +616,7 @@ O o";
 			{
 				environment.WriteContentToWsPrefsFile(WritingSystemPrefsFileContent.TwoWritingSystems("en", "de")
 					);
-				var ws = WritingSystemDefinition.Parse("en");
+				var ws = new WritingSystemDefinition("en");
 				ws.Abbreviation = "untouched";
 				var wsRepo = environment.WritingSystems;
 				wsRepo.Set(ws);

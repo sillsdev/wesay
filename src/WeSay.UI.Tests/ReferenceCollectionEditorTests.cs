@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.Project;
-using Palaso.Lift;
-using Palaso.Lift.Options;
+using SIL.Lift;
+using SIL.Lift.Options;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.UI.AutoCompleteTextBox;
@@ -17,7 +17,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class ReferenceCollectionEditorTests: IReceivePropertyChangeNotifications
 	{
-		private readonly IWritingSystemDefinition _ws = WritingSystemDefinition.Parse("qaa-x-qaa");
+		private readonly WritingSystemDefinition _ws = new WritingSystemDefinition("qaa");
 		private ReferenceCollectionEditor<Option, string, OptionRef> _control;
 		private Form _window;
 		private OptionsList _sourceChoices;
@@ -27,7 +27,7 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_ws.DefaultFontName = "Arial";
+			_ws.DefaultFont = new FontDefinition("Arial");
 			_ws.DefaultFontSize = 30;
 			_sourceChoices = new OptionsList();
 			AddSourceChoice("one", "1");
@@ -38,7 +38,7 @@ namespace WeSay.UI.Tests
 
 			_chosenItems = new OptionRefCollection(this);
 
-			List<IWritingSystemDefinition> writingSystems = new List<IWritingSystemDefinition>();
+			List<WritingSystemDefinition> writingSystems = new List<WritingSystemDefinition>();
 			writingSystems.Add(_ws);
 
 			_control = new ReferenceCollectionEditor<Option, string, OptionRef>(
@@ -46,7 +46,7 @@ namespace WeSay.UI.Tests
 					_sourceChoices.Options,
 					writingSystems,
 					CommonEnumerations.VisibilitySetting.Visible,
-					new OptionDisplayAdaptor(_sourceChoices, _ws.Id),
+					new OptionDisplayAdaptor(_sourceChoices, _ws.LanguageTag),
 					null);
 
 			_control.Name = "refcontrol";
@@ -307,7 +307,7 @@ namespace WeSay.UI.Tests
 		private void AddSourceChoice(string label, string key)
 		{
 			MultiText name = new MultiText();
-			name[_ws.Id] = label;
+			name[_ws.LanguageTag] = label;
 			_sourceChoices.Options.Add(new Option(key, name));
 		}
 

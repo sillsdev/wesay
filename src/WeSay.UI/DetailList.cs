@@ -4,9 +4,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.i18n;
-using Palaso.i18n;
-using Palaso.Reporting;
+using SIL.Windows.Forms.i18n;
+using SIL.i18n;
 using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
 

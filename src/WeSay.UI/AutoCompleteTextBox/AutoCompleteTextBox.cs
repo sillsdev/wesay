@@ -7,9 +7,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Code;
-using Palaso.Lift;
-using Palaso.UiBindings;
+using SIL.Code;
+using SIL.Lift;
+using SIL.UiBindings;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.AutoCompleteTextBox

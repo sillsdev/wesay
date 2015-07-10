@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Diagnostics;
-using Palaso.Reporting;
-using Palaso.TestUtilities;
+using SIL.Reporting;
+using SIL.TestUtilities;
 using Addin.Transform.PdfDictionary;
 using WeSay.Project;
 using WeSay.Project.Tests;
@@ -26,7 +26,7 @@ namespace Addin.Transform.Tests
 			{
 				ErrorReport.IsOkToInteractWithUser = false;
 				const string xmlOfEntries = @" <entry id='foo1'>
-						<lexical-unit><form lang='qaa-x-qaa'><text>hello</text></form></lexical-unit>
+						<lexical-unit><form lang='qaa'><text>hello</text></form></lexical-unit>
 					</entry>";
 				_testProject = new ProjectDirectorySetupForTesting(xmlOfEntries);
 				_project = _testProject.CreateLoadedProject();

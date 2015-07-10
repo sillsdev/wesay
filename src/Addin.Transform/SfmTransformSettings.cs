@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using Palaso.DictionaryServices.Model;
-using Palaso.Reporting;
+using SIL.DictionaryServices.Model;
+using SIL.Reporting;
 using WeSay.AddinLib;
 
 namespace Addin.Transform

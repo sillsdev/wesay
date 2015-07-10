@@ -1,12 +1,12 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.i18n;
-using Palaso.Lift;
-using Palaso.Lift.Options;
-using Palaso.UiBindings;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.i18n;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.UiBindings;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
@@ -17,7 +17,7 @@ namespace WeSay.UI
 		private readonly OptionsList _list;
 		private readonly IWeSayComboBox _control = null;
 		private readonly string _nameForLogging;
-		private readonly IWritingSystemDefinition _preferredWritingSystem;
+		private readonly WritingSystemDefinition _preferredWritingSystem;
 
 		public event EventHandler ValueChanged;
 
@@ -39,13 +39,13 @@ namespace WeSay.UI
 		}
 
 		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging,
-			IWritingSystemDefinition preferredWritingSystem)
+			WritingSystemDefinition preferredWritingSystem)
 			: this(optionRef, list, nameForLogging, preferredWritingSystem, null)
 		{
 
 		}
 
-		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, IWritingSystemDefinition preferredWritingSystem, IServiceProvider serviceProvider )
+		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, WritingSystemDefinition preferredWritingSystem, IServiceProvider serviceProvider )
 		{
 			AutoSize = true;
 			AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -167,17 +167,17 @@ namespace WeSay.UI
 			if (!_list.Options.Exists(delegate(Option o) { return (o.Key == string.Empty || o.Key == "unknown"); }))
 			{
 				MultiText unspecifiedMultiText = new MultiText();
-				unspecifiedMultiText.SetAlternative(_preferredWritingSystem.Id,
+				unspecifiedMultiText.SetAlternative(_preferredWritingSystem.LanguageTag,
 													StringCatalog.Get("~unknown",
 																	  "This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field."));
 				Option unspecifiedOption = new Option("unknown", unspecifiedMultiText);
 				_control.AddItem(new Option.OptionDisplayProxy(unspecifiedOption,
-																 _preferredWritingSystem.Id));
+																 _preferredWritingSystem.LanguageTag));
 			}
 			_list.Options.Sort(CompareItems);
 			foreach (Option o in _list.Options)
 			{
-				_control.AddItem(o.GetDisplayProxy(_preferredWritingSystem.Id));
+				_control.AddItem(o.GetDisplayProxy(_preferredWritingSystem.LanguageTag));
 			}
 			_control.BackColor = Color.White;
 
@@ -206,8 +206,8 @@ namespace WeSay.UI
 			{
 				return -1;
 			}
-			string x = a.Name.GetBestAlternative(_preferredWritingSystem.Id);
-			string y = b.Name.GetBestAlternative(_preferredWritingSystem.Id);
+			string x = a.Name.GetBestAlternative(_preferredWritingSystem.LanguageTag);
+			string y = b.Name.GetBestAlternative(_preferredWritingSystem.LanguageTag);
 
 			return String.Compare(x, y);
 		}

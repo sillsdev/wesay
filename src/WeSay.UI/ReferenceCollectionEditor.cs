@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Lift;
-using Palaso.UiBindings;
-using Palaso.WritingSystems;
+using SIL.Lift;
+using SIL.UiBindings;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.AutoCompleteTextBox;
 
@@ -16,7 +16,7 @@ namespace WeSay.UI
 	{
 		private readonly IBindingList _chosenItems;
 		private readonly IEnumerable<KV> _sourceChoices;
-		private readonly IList<IWritingSystemDefinition> _writingSystems;
+		private readonly IList<WritingSystemDefinition> _writingSystems;
 		private readonly CommonEnumerations.VisibilitySetting _visibility;
 		private readonly IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> _choiceSystemAdaptor;
 		private readonly IServiceProvider _serviceProvider;
@@ -128,7 +128,7 @@ namespace WeSay.UI
 		/// <param name="serviceProvider">passed to the AutoCompleteWithCreation so it can get the appropriate type of AutoComplete control</param>
 		public ReferenceCollectionEditor(IBindingList chosenItems,
 										 IEnumerable<KV> sourceChoices,
-										 IList<IWritingSystemDefinition> writingSystems,
+										 IList<WritingSystemDefinition> writingSystems,
 										 CommonEnumerations.VisibilitySetting visibility,
 										 IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> adaptor,
 										IServiceProvider serviceProvider)

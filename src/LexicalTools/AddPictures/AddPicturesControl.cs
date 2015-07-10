@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.ImageGallery;
+using SIL.Windows.Forms.ImageGallery;
 
 namespace WeSay.LexicalTools.AddPictures
 {

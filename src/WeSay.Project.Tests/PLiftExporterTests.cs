@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
-using Palaso.Data;
-using Palaso.DictionaryServices.Model;
-using Palaso.IO;
-using Palaso.TestUtilities;
-using Palaso.WritingSystems;
-using Palaso.Xml;
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.IO;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
+using SIL.Xml;
 using WeSay.LexicalModel;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.Project.Tests
 {
@@ -37,11 +37,11 @@ namespace WeSay.Project.Tests
 				_outputFile = new TempFile();
 				Repo = new LexEntryRepository(_projectDir.PathToLiftFile);
 				WritingSystemIds = new List<string>(new[] { Red, Green, Blue, Voice });
-				HeadwordWritingSystem = WritingSystemDefinition.Parse(Red);
+				HeadwordWritingSystem = new WritingSystemDefinition(Red) {DefaultCollation = new IcuRulesCollationDefinition("standard")};
 				project.WritingSystems.Set(HeadwordWritingSystem);
-				project.WritingSystems.Set(WritingSystemDefinition.Parse(Green));
-				project.WritingSystems.Set(WritingSystemDefinition.Parse(Blue));
-				project.WritingSystems.Set(WritingSystemDefinition.Parse(Voice));
+				project.WritingSystems.Set(new WritingSystemDefinition(Green) { DefaultCollation = new IcuRulesCollationDefinition("standard") });
+				project.WritingSystems.Set(new WritingSystemDefinition(Blue) { DefaultCollation = new IcuRulesCollationDefinition("standard") });
+				project.WritingSystems.Set(new WritingSystemDefinition(Voice) { DefaultCollation = new IcuRulesCollationDefinition("standard") });
 
 				Template = new ViewTemplate
 			{
@@ -87,7 +87,7 @@ namespace WeSay.Project.Tests
 			public LexEntry MakeTestLexEntryInHeadwordWritingSystem(string lexicalForm)
 			{
 				var entry = Repo.CreateItem();
-				entry.LexicalForm[HeadwordWritingSystem.Id] = lexicalForm;
+				entry.LexicalForm[HeadwordWritingSystem.LanguageTag] = lexicalForm;
 				Repo.SaveItem(entry);
 				return entry;
 			}
@@ -143,15 +143,15 @@ namespace WeSay.Project.Tests
 			{
 				AssertHasAtLeastOneMatchWithArgs("lift/entry/relation/field[@type='headword-of-target']/form[@lang='{1}']/text[text() = '{2}']",
 										   relationName,
-										   HeadwordWritingSystem.Id,
-										   targetEntry.GetHeadWordForm(HeadwordWritingSystem.Id));
+										   HeadwordWritingSystem.LanguageTag,
+										   targetEntry.GetHeadWordForm(HeadwordWritingSystem.LanguageTag));
 			}
 
 			public void CheckRelationNotOutput(string relationName)
 			{
 				AssertNoMatchForXPathWithArgs("lift/entry/field[@type='{0}-relation-headword']",
 											  relationName,
-											  HeadwordWritingSystem.Id);
+											  HeadwordWritingSystem.LanguageTag);
 			}
 
 			public void MakeEntry()
@@ -437,7 +437,7 @@ namespace WeSay.Project.Tests
 				environment.DoExport();
 				environment.AssertHasAtLeastOneMatchWithArgs(
 					"lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-					environment.HeadwordWritingSystem.Id,
+					environment.HeadwordWritingSystem.LanguageTag,
 					"redLexemeForm"
 				);
 
@@ -463,7 +463,7 @@ namespace WeSay.Project.Tests
 			using (var environment = new EnvironmentForTest())
 			{
 				LexEntry entry = environment.Repo.CreateItem();
-				entry.LexicalForm.SetAlternative(environment.HeadwordWritingSystem.Id, "Gary");
+				entry.LexicalForm.SetAlternative(environment.HeadwordWritingSystem.LanguageTag, "Gary");
 				entry.AddRelationTarget("brother", string.Empty);
 				environment.Repo.SaveItem(entry);
 
@@ -478,7 +478,7 @@ namespace WeSay.Project.Tests
 			using (var environment = new EnvironmentForTest())
 			{
 				LexEntry entry = environment.Repo.CreateItem();
-				entry.LexicalForm.SetAlternative(environment.HeadwordWritingSystem.Id, "Gary");
+				entry.LexicalForm.SetAlternative(environment.HeadwordWritingSystem.LanguageTag, "Gary");
 				entry.AddRelationTarget("brother", "notGonnaFindIt");
 				environment.Repo.SaveItem(entry);
 
@@ -494,12 +494,12 @@ namespace WeSay.Project.Tests
 			{
 				LexEntry targetEntry = environment.Repo.CreateItem();
 
-				targetEntry.LexicalForm.SetAlternative(environment.HeadwordWritingSystem.Id, "RickLexeme");
-				targetEntry.CitationForm.SetAlternative(environment.HeadwordWritingSystem.Id, "Rick");
+				targetEntry.LexicalForm.SetAlternative(environment.HeadwordWritingSystem.LanguageTag, "RickLexeme");
+				targetEntry.CitationForm.SetAlternative(environment.HeadwordWritingSystem.LanguageTag, "Rick");
 				environment.Repo.SaveItem(targetEntry);
 
 				LexEntry entry = environment.Repo.CreateItem();
-				entry.LexicalForm.SetAlternative(environment.HeadwordWritingSystem.Id, "Gary");
+				entry.LexicalForm.SetAlternative(environment.HeadwordWritingSystem.LanguageTag, "Gary");
 				environment.Repo.SaveItem(entry);
 
 				entry.AddRelationTarget("brother", targetEntry.Id);

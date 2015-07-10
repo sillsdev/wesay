@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.Lift.Options;
-using Palaso.UiBindings;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.UiBindings;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
-using Palaso.i18n;
+using SIL.i18n;
 
 namespace WeSay.LexicalTools
 {
@@ -219,7 +219,7 @@ namespace WeSay.LexicalTools
 		{
 			foreach (Control c in control.TextBoxes)
 			{
-				TextBinding binding = new TextBinding(multiTextToBindTo, ((IControlThatKnowsWritingSystem) c).WritingSystem.Id, c);
+				TextBinding binding = new TextBinding(multiTextToBindTo, ((IControlThatKnowsWritingSystem)c).WritingSystem.LanguageTag, c);
 				binding.ChangeOfWhichItemIsInFocus += _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			}
 		}
@@ -274,7 +274,7 @@ namespace WeSay.LexicalTools
 
 		protected GhostBinding<T> MakeGhostBinding<T>(PalasoDataObject parent, IList<T> list,
 													  string ghostPropertyName,
-													  IWritingSystemDefinition writingSystem,
+													  WritingSystemDefinition writingSystem,
 													  IWeSayTextBox entry)
 				where T : PalasoDataObject, new()
 		{
@@ -510,7 +510,7 @@ namespace WeSay.LexicalTools
 		{
 			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field, false);
-			IWritingSystemDefinition preferredWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(field.FieldName);
+			WritingSystemDefinition preferredWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(field.FieldName);
 			SingleOptionControl control = new SingleOptionControl(optionRefTarget,
 																  list,
 																  field.FieldName,
@@ -526,7 +526,7 @@ namespace WeSay.LexicalTools
 			OptionsList availableOptions = WeSayWordsProject.Project.GetOptionsList(field, false);
 			OptionRefCollection refsOfChoices =
 				target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
-			IList<IWritingSystemDefinition> writingSystems =
+			IList<WritingSystemDefinition> writingSystems =
 				 BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
 			IChoiceSystemAdaptor<Option, string, OptionRef> displayAdaptor;
 

@@ -5,8 +5,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
-using Palaso.WritingSystems;
-using Palaso.IO;
+using SIL.WritingSystems;
+using SIL.IO;
 using WeSay.UI.TextBoxes;
 using Gecko;
 
@@ -52,7 +52,9 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void CreateWithWritingSystem()
 		{
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			var comboBox = new GeckoComboBox(ws, null);
 			Assert.IsNotNull(comboBox);
 			Assert.AreSame(ws, comboBox.WritingSystem);
@@ -66,7 +68,7 @@ namespace WeSay.UI.Tests
 
 			int j = 0;
 			String value = "";
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
 			var comboBox = new GeckoComboBox();
 			comboBox.WritingSystem = ws;
 			comboBox.Name = "ControlUnderTest";
@@ -128,7 +130,9 @@ namespace WeSay.UI.Tests
 		public void SetWritingSystem_DoesntThrow()
 		{
 			var textBox = new GeckoComboBox();
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			Assert.DoesNotThrow(() => textBox.WritingSystem = ws);
 		}
 
@@ -136,7 +140,7 @@ namespace WeSay.UI.Tests
 		public void WritingSystem_Unassigned_Get_Throws()
 		{
 			var textBox = new GeckoComboBox();
-			IWritingSystemDefinition ws;
+			WritingSystemDefinition ws;
 			Assert.Throws<InvalidOperationException>(() => ws = textBox.WritingSystem);
 		}
 

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Chorus.sync;
 using Chorus.VcsDrivers.Mercurial;
-using Palaso.Reporting;
+using SIL.Reporting;
 
 
 namespace WeSay.ConfigTool

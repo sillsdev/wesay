@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 using NUnit.Framework;
-using Palaso.i18n;
+using SIL.i18n;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation

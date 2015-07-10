@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Palaso.IO;
+using SIL.IO;
 
 namespace Addin.Transform.PdfDictionary
 {

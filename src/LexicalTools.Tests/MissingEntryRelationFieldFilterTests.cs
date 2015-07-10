@@ -1,7 +1,7 @@
 using System.IO;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
-using Palaso.TestUtilities;
+using SIL.DictionaryServices.Model;
+using SIL.TestUtilities;
 using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools.Tests

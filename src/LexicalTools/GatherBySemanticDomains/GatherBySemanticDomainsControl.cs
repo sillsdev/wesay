@@ -50,7 +50,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			//we'd like to have monospace, but I don't know for sure which languages these fonts will work
 			//this is going to override the normal font choice they've made
 			var majorRomanWritingSystems = new List<string>(new[] { "en", "id", "fr" });
-			if (majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemId))
+			if (majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemLanguageTag))
 			{
 #if __MonoCS__
 				_domainListComboBox.Font = new Font("monospace", _domainListComboBox.Font.Size, FontStyle.Bold);
@@ -100,11 +100,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					_presentationModel.FormWritingSystem
 				};
 
-			if( _vernacularBox.WritingSystemsForThisField.Count ==0 ||  _vernacularBox.TextBoxes.Count == 0)
-			{
-				Palaso.Reporting.ErrorReport.ReportFatalMessageWithStackTrace(String.Format("This task cannot be used with the audio/voice input system '{0}'. Please use the config tool to specify a non-audio input system for this task.", _presentationModel.FormWritingSystem.Abbreviation));
-			}
-
 			//bit of a hack here... we make our own meaning box as a less intrusive way to add spell checking to
 			//this box, which wasn't really designed to work well with auto-generated designer code.
 			//so all this is to be able to turn IsSpellCheckingEnabled before the box is built.
@@ -135,7 +130,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			//    _animatedText.Font = _presentationModel.FormWritingSystem.Font;
 
 			_reminder.Text = _presentationModel.Reminder;
-			_reminder.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			_reminder.Font = (Font)SIL.i18n.StringCatalog.LabelFont.Clone();
 
 			_flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 
@@ -197,10 +192,10 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
-			_instructionLabel.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
-			label3.Font = new Font(Palaso.i18n.StringCatalog.LabelFont, FontStyle.Bold);
-			label4.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
-			label5.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			_instructionLabel.Font = (Font)SIL.i18n.StringCatalog.LabelFont.Clone();
+			label3.Font = new Font(SIL.i18n.StringCatalog.LabelFont, FontStyle.Bold);
+			label4.Font = (Font)SIL.i18n.StringCatalog.LabelFont.Clone();
+			label5.Font = (Font)SIL.i18n.StringCatalog.LabelFont.Clone();
 		}
 
 		private void RefreshCurrentDomainAndQuestion()

@@ -2,9 +2,8 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.i18n;
+using SIL.Windows.Forms.i18n;
 
 namespace WeSay.UI.Buttons
 {
@@ -402,7 +401,7 @@ namespace WeSay.UI.Buttons
 		}
 
 		/// <summary>
-		///  Palaso.UI.WindowsForms.i8n.ILocalizableControl
+		///  SIL.Windows.Forms.i8n.ILocalizableControl
 		/// making a big font on these things that don't have text was causing them to grow
 		/// </summary>
 		public bool ShouldModifyFont

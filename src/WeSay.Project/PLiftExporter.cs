@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Palaso.Linq;
-using Palaso.DictionaryServices.Lift;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.Lift.Options;
-using Palaso.Text;
-using Palaso.UiBindings;
-using Palaso.WritingSystems;
-using Palaso.Extensions;
+using SIL.Linq;
+using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Text;
+using SIL.UiBindings;
+using SIL.WritingSystems;
+using SIL.Extensions;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
@@ -90,7 +90,7 @@ namespace WeSay.Project
 
 		public override void Add(LexEntry entry)
 		{
-			IWritingSystemDefinition headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
+			WritingSystemDefinition headWordWritingSystem = _viewTemplate.HeadwordWritingSystems[0];
 			int h = _lexEntryRepository.GetHomographNumber(entry, headWordWritingSystem);
 			Add(entry, h);
 		}
@@ -153,7 +153,7 @@ namespace WeSay.Project
 
 				if (!MultiTextBase.IsEmpty(text))
 				{
-					var textWritingSystems = _viewTemplate.WritingSystems.TextWritingSystems;
+					var textWritingSystems = _viewTemplate.WritingSystems.TextWritingSystems();
 					var ids = from ws in textWritingSystems select ws.Id;
 					WriteLanguageFormsInWrapper(text.Forms.Where(f => ids.Contains(f.WritingSystemId)), "form", true);
 				}
@@ -253,12 +253,12 @@ namespace WeSay.Project
 //            if(!_viewTemplate.WritingSystems.Any(p=>p.Value.IsAudio))
 //                return;
 //
-			IList<Palaso.Text.LanguageForm> paths = GetAudioForms(entry.LexicalForm, _viewTemplate.WritingSystems);
+			IList<LanguageForm> paths = GetAudioForms(entry.LexicalForm, _viewTemplate.WritingSystems);
 			if (paths.Count == 0)
 				return;
 			Writer.WriteStartElement("pronunciation");
 
-			Palaso.Linq.Enumerable.ForEach(paths, path =>
+			SIL.Linq.Enumerable.ForEach(paths, path =>
 							  {
 								  Writer.WriteStartElement("media");
 								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));
@@ -353,7 +353,7 @@ namespace WeSay.Project
 			{
 				return text.Forms;
 			}
-			return text.GetOrderedAndFilteredForms(_viewTemplate.WritingSystems.FilterForTextIds(f.WritingSystemIds));
+			return text.GetOrderedAndFilteredForms(_viewTemplate.WritingSystems.FilterForTextLanguageTags(f.WritingSystemIds));
 		}
 	}
 }

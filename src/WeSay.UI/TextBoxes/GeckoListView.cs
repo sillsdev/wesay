@@ -10,11 +10,11 @@ using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
-using Palaso.DictionaryServices.Model;
-using Palaso.Data;
-using Palaso.i18n;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.DictionaryServices.Model;
+using SIL.Data;
+using SIL.i18n;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
@@ -54,7 +54,7 @@ namespace WeSay.UI.TextBoxes
 			Debug.WriteLine("New GeckoListView");
 		}
 
-		public GeckoListView(IWritingSystemDefinition ws, string nameForLogging)
+		public GeckoListView(WritingSystemDefinition ws, string nameForLogging)
 			: this()
 		{
 			_nameForLogging = nameForLogging;
@@ -412,7 +412,7 @@ namespace WeSay.UI.TextBoxes
 					}
 					if (entry != null)
 					{
-						var form = entry.GetHeadWordForm(_writingSystem.Id);
+						var form = entry.GetHeadWordForm(_writingSystem.LanguageTag);
 						if (string.IsNullOrEmpty(form))
 						{
 							form = entry.ToString();
@@ -425,7 +425,7 @@ namespace WeSay.UI.TextBoxes
 								//1) a monolingual dictionary (well, one with meanings in the same WS as the lexical units)
 								//2) the SIL CAWL list, where the translator adds glosses, and fails to add
 								//lexical entries.
-								//form = entry.GetSomeMeaningToUseInAbsenseOfHeadWord(_writingSystem.Id);
+								//form = entry.GetSomeMeaningToUseInAbsenseOfHeadWord(_writingSystem.LanguageTag);
 							}
 						}
 						AddItem(form);

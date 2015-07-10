@@ -2,8 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.WritingSystems;
-using WeSay.LexicalModel.Foundation;
+using SIL.WritingSystems;
 using WeSay.LexicalTools.Properties;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
@@ -25,7 +24,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 																			 ReturnFalse,
 																			 IntPtr.Zero);
 			if (_textToSearchForBox is WeSay.UI.TextBoxes.WeSayTextBox && !_textToSearchForBox.ReadOnly)
-				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Register((Control)_textToSearchForBox);
+				SIL.Windows.Forms.Keyboarding.KeyboardController.RegisterControl((Control)_textToSearchForBox);
 		}
 
 		private static bool ReturnFalse()
@@ -56,7 +55,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IWritingSystemDefinition ListWritingSystem
+		public WritingSystemDefinition ListWritingSystem
 		{
 			get
 			{
@@ -70,7 +69,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		}
 
-		public void SetWritingSystem(IWritingSystemDefinition writingSystem)
+		public void SetWritingSystem(WritingSystemDefinition writingSystem)
 		{
 			ListWritingSystem = writingSystem;
 			_selectedWritingSystemLabel.Text = writingSystem.Abbreviation;

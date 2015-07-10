@@ -4,9 +4,9 @@ using System.Text;
 using System.Xml;
 using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
-using Palaso.Progress;
-using Palaso.TestUtilities;
-using Palaso.Xml;
+using SIL.TestUtilities;
+using SIL.Progress;
+using SIL.Xml;
 
 namespace WeSay.Project.Tests
 {
@@ -21,7 +21,7 @@ namespace WeSay.Project.Tests
 
 			public BackupScenario(string testName)
 			{
-				Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+				SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 				_projDir = new ProjectDirectorySetupForTesting("");
 
 				_backupMaker = new ChorusBackupMaker(new CheckinDescriptionBuilder());
@@ -92,11 +92,9 @@ namespace WeSay.Project.Tests
 				scenario.AssertDirExistsInWorkingDirectory(".hg");
 				scenario.AssertFileExistsInRepo("Test.lift");
 				scenario.AssertFileExistsInRepo("Test.WeSayConfig");
-				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "qaa-x-qaa.ldml"));
 				scenario.AssertFileExistsInRepo(Path.Combine("WritingSystems", "en.ldml"));
 				scenario.AssertFileExistsInWorkingDirectory("Test.lift");
 				scenario.AssertFileExistsInWorkingDirectory("Test.WeSayConfig");
-				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "qaa-x-qaa.ldml"));
 				scenario.AssertFileExistsInWorkingDirectory(Path.Combine("WritingSystems", "en.ldml"));
 			}
 		}

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Palaso.DictionaryServices.Model;
-using Palaso.TestUtilities;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.DictionaryServices.Model;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
 using WeSay.Data.Tests;
 using WeSay.LexicalModel;
 
@@ -132,13 +132,9 @@ namespace WeSay.Project.Tests
 			using (var tempFolder = new TemporaryFolder("ProjectFromViewTemplateTests"))
 			{
 				IWritingSystemRepository w = LdmlInFolderWritingSystemRepository.Initialize(
-					tempFolder.Path,
-					OnWritingSystemMigration,
-					OnWritingSystemLoadProblem,
-					WritingSystemCompatibility.Flex7V0Compatible
-				);
-				w.Set(WritingSystemDefinition.Parse("aaa"));
-				w.Set(WritingSystemDefinition.Parse("aab"));
+					tempFolder.Path);
+				w.Set(new WritingSystemDefinition("aaa"));
+				w.Set(new WritingSystemDefinition("aab"));
 				return ViewTemplate.MakeMasterTemplate(w);
 			}
 		}
@@ -148,7 +144,7 @@ namespace WeSay.Project.Tests
 			throw new ApplicationException("Unexpected input system load problem during test.");
 		}
 
-		private static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+		private static void OnWritingSystemMigration(IEnumerable<LdmlMigrationInfo> migrationinfo)
 		{
 			throw new ApplicationException("Unexpected input system migration during test.");
 		}

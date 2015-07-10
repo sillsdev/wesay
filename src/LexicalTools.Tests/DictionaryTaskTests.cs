@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using Chorus.UI.Review;
 using NUnit.Framework;
-using Palaso.Reporting;
-using Palaso.TestUtilities;
-using Palaso.WritingSystems;
+using SIL.Reporting;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
@@ -26,13 +26,13 @@ namespace WeSay.LexicalTools.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
 		[TestFixtureTearDown]
 		public void FixtureTeardown()
 		{
-			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 		}
 
 		[SetUp]
@@ -112,7 +112,7 @@ namespace WeSay.LexicalTools.Tests
 #if DEBUG
 	  //the code doesn't show the errror box in release builds, but
 			//the builder publishing configuration does run tests in release builds
-			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+			using (new SIL.Reporting.ErrorReport.NonFatalErrorReportExpected())
 #endif
 			{
 				_task.Activate();

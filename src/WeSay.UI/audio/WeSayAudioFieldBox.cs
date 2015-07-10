@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.audio;
 
@@ -12,10 +12,10 @@ namespace WeSay.UI.audio
 	{
 		private AudioPathProvider _audioPathProvider;
 		private readonly ILogger _logger;
-		public IWritingSystemDefinition WritingSystem { get; set; }
+		public WritingSystemDefinition WritingSystem { get; set; }
 
-		public WeSayAudioFieldBox(IWritingSystemDefinition writingSystem, AudioPathProvider audioPathProvider,
-			Palaso.Reporting.ILogger logger)
+		public WeSayAudioFieldBox(WritingSystemDefinition writingSystem, AudioPathProvider audioPathProvider,
+			SIL.Reporting.ILogger logger)
 		{
 			_audioPathProvider = audioPathProvider;
 			_logger = logger;

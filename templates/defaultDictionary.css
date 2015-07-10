@@ -51,7 +51,6 @@
 	padding-bottom: 1cm;
 */
 font-size: 2cm;
-	font-family: sans-serif;
 }
 .letData {
 
@@ -328,8 +327,6 @@ font-style: italic;
 .pictureLabel {
 	/* lang = 'pt' */
 	font-size: 80%;
-	font-family: Sans-Serif;
-
 }
 .pictureRight img
 {

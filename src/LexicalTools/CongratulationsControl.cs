@@ -13,7 +13,7 @@ namespace WeSay.LexicalTools
 			_messageText.ReadOnly = true;
 			_messageText.HideSelection = true;
 			_messageText.TabStop = false;
-			_messageText.Font = new System.Drawing.Font(Palaso.i18n.StringCatalog.LabelFont.FontFamily, 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			_messageText.Font = new System.Drawing.Font(SIL.i18n.StringCatalog.LabelFont.FontFamily, 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 		}
 
 		public void Show(string message)

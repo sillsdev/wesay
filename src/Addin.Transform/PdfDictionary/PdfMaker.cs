@@ -6,13 +6,12 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Mono.Addins;
-using Palaso.i18n;
-using Palaso.Progress;
-using Palaso.Reporting;
-using Palaso.UI.WindowsForms.Progress;
-using Palaso.WritingSystems;
+using SIL.i18n;
+using SIL.Progress;
+using SIL.Reporting;
+using SIL.Windows.Forms.Progress;
+using SIL.WritingSystems;
 using WeSay.AddinLib;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace Addin.Transform.PdfDictionary

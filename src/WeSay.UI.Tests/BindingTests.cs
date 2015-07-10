@@ -1,10 +1,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.Project;
-using WeSay.Project;
-using Palaso.Lift;
+using SIL.Lift;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI.TextBoxes;
@@ -24,8 +23,12 @@ namespace WeSay.UI.Tests
 		public void TargetToWidget()
 		{
 			MultiText text = new MultiText();
+			var ws = new WritingSystemDefinition("qaa");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
+
 			IWeSayTextBox widget =
-					new WeSayTextBox(WritingSystemDefinition.Parse("qaa-x-qaa"), null);
+					new WeSayTextBox(ws, null);
 			new TextBinding(text, "vernacular", (Control)widget);
 
 			text["vernacular"] = "hello";
@@ -38,8 +41,11 @@ namespace WeSay.UI.Tests
 		public void WidgetToTarget()
 		{
 			MultiText text = new MultiText();
+			var ws = new WritingSystemDefinition("qaa");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			WeSayTextBox widget =
-					new WeSayTextBox(WritingSystemDefinition.Parse("qaa-x-qaa"), null);
+					new WeSayTextBox(ws, null);
 
 			var binding = new TextBinding(text, "vernacular", widget);
 

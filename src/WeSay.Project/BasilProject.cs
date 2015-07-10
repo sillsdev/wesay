@@ -4,10 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using Palaso.i18n;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.i18n;
+using SIL.Lexicon;
+using SIL.Reporting;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
 
 namespace WeSay.Project
 {
@@ -110,12 +111,10 @@ There are problems in:
 			ErrorReport.NotifyUserOfProblem(message);
 
 		}
-
-		protected static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+		protected static void OnWritingSystemMigration(int toVersion, IEnumerable<LdmlMigrationInfo> migrationinfo)
 		{
 			throw new ApplicationException("Input system migration should have been done by now, but it seems it hasn't.");
 		}
-
 //        public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
   //      {
 //            _projectDirectoryPath = projectDirectoryPath;
@@ -140,7 +139,7 @@ There are problems in:
 			get { return _writingSystems; }
 		}
 
-		public IList<IWritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
+		public IList<WritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
 		{
 			return writingSystemIds.Select(id => WritingSystems.Get(id)).ToList();
 		}
@@ -175,17 +174,18 @@ There are problems in:
 
 		public static string GetPathToLdmlWritingSystemsFolder(string parentDir)
 		{
-				return Path.Combine(parentDir, "WritingSystems");
+			return Path.Combine(parentDir, "WritingSystems");
 		}
 
-		//        public string PathToOptionsLists
-		//        {
-		//            get
-		//            {
-		//                return GetPathToWritingSystemPrefs(CommonDirectory);
-		//            }
-		//        }
+		public static string GetPathToSharedSettingsFolder(string parentDir)
+		{
+			return Path.Combine(parentDir, "SharedSettings");
+		}
 
+		public static string GetPathToPictures(string parentDir)
+		{
+			return Path.Combine(parentDir, "pictures");
+		}
 
 		// <summary>
 		// Locates the StringCatalog file, matching any file ending in <language>.po first in the Project folder,
@@ -326,14 +326,46 @@ There are problems in:
 			{
 				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
 			}
+			if (!Directory.Exists(GetPathToSharedSettingsFolder(ProjectDirectoryPath)))
+			{
+				Directory.CreateDirectory(GetPathToSharedSettingsFolder(ProjectDirectoryPath));
+			}
 			if (_writingSystems == null)
 			{
+				var userSettingsDataMapper =
+					new UserLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(
+						LexiconSettingsFileHelper.GetUserLexiconSettingsPath(ProjectDirectoryPath)));
+				var projectSettingsDataMapper =
+					new ProjectLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(
+						LexiconSettingsFileHelper.GetProjectLexiconSettingsPath(ProjectDirectoryPath)));
+				ICustomDataMapper<WritingSystemDefinition>[] customDataMapper =
+				{
+					userSettingsDataMapper,
+					projectSettingsDataMapper
+				};
+
 				_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
 					GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath),
+					customDataMapper,
+					null,
 					OnWritingSystemMigration,
-					OnWritingSystemLoadProblem,
-					WritingSystemCompatibility.Flex7V0Compatible
-				);
+					OnWritingSystemLoadProblem);
+
+				// Set default configurations
+				foreach (string id in _writingSystems.AllWritingSystems.Select(ws => ws.LanguageTag).ToArray())
+				{
+					var ws = _writingSystems.Get(id);
+					if (id == "en")
+						ws.Abbreviation = "eng";
+					if (ws.DefaultCollation == null)
+						ws.DefaultCollation = new IcuRulesCollationDefinition("standard");
+					if (ws.DefaultFont == null)
+						ws.DefaultFont = new FontDefinition("Arial");
+					if (ws.DefaultFontSize == 0)
+						ws.DefaultFontSize = 12;
+					_writingSystems.Set(ws);
+				}
+				_writingSystems.Save();
 			}
 		}
 

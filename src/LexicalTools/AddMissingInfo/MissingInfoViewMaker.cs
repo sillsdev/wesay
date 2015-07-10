@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Palaso.i18n;
-using Palaso.Lift;
+using SIL.i18n;
+using SIL.Lift;
 using WeSay.LexicalModel;
 using WeSay.Project;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {

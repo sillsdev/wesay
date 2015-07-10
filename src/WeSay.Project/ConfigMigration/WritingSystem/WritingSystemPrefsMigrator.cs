@@ -1,25 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
 {
 	public class WritingSystemPrefsMigrator
 	{
 		private readonly string _sourceFilePath;
-		private readonly LdmlVersion0MigrationStrategy.MigrationHandler _onWritingSystemTagChange;
+		private readonly Action<int, IEnumerable<LdmlMigrationInfo>> _migrationHandler;
 
-		public WritingSystemPrefsMigrator(string sourceFilePath, LdmlVersion0MigrationStrategy.MigrationHandler onWritingSystemTagChange)
+		public WritingSystemPrefsMigrator(string sourceFilePath, Action<int, IEnumerable<LdmlMigrationInfo>> migrationHandler = null)
 		{
-			_onWritingSystemTagChange = onWritingSystemTagChange;
+			_migrationHandler = migrationHandler;
 			_sourceFilePath = sourceFilePath;
 		}
 
 		public string WritingSystemsFolder(string basePath)
 		{
 			return Path.Combine(basePath, "WritingSystems");
+		}
+
+		public string SharedSettingsFolder(string basePath)
+		{
+			return Path.Combine(basePath, "SharedSettings");
 		}
 
 		public void MigrateIfNecassary()
@@ -39,11 +44,12 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			filesToDelete.Add(backupFilePath);
 
 			string writingSystemFolderPath = WritingSystemsFolder(Path.GetDirectoryName(_sourceFilePath));
+			string sharedSettingsFolderPath = SharedSettingsFolder(Path.GetDirectoryName(_sourceFilePath));
 
 			var changeLog =
 				new WritingSystemChangeLog(
 					new WritingSystemChangeLogDataMapper(Path.Combine(writingSystemFolderPath, "idchangelog.xml")));
-			var strategy = new WritingSystemPrefsToLdmlMigrationStrategy(_onWritingSystemTagChange, changeLog);
+			var strategy = new WritingSystemPrefsToLdmlMigrationStrategy(_migrationHandler, changeLog);
 			string sourceFilePath = _sourceFilePath;
 			string tempFolderPath = String.Format("{0}.Migrate_{1}_{2}", _sourceFilePath, strategy.FromVersion,
 													   strategy.ToVersion);
@@ -55,6 +61,10 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 				if(!Directory.Exists(writingSystemFolderPath))
 				{
 					Directory.CreateDirectory(writingSystemFolderPath);
+				}
+				if(!Directory.Exists(sharedSettingsFolderPath))
+				{
+					Directory.CreateDirectory(sharedSettingsFolderPath);
 				}
 			}
 

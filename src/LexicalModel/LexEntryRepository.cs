@@ -1,20 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Palaso.Data;
-using Palaso.Code;
-using Palaso.DictionaryServices.Lift;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.Lift.Options;
-using Palaso.UiBindings;
-using Palaso.Progress;
-using Palaso.Text;
-using Palaso.WritingSystems;
+using SIL.Data;
+using SIL.Code;
+using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.UiBindings;
+using SIL.Progress;
+using SIL.Text;
+using SIL.Windows.Forms.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 //#if __MonoCS__
-using Palaso.Linq;
+using SIL.Linq;
 //#else
 
 //#endif
@@ -230,7 +231,7 @@ namespace WeSay.LexicalModel
 			_caches.UpdateItemInCaches(updatedLexEntry);
 		}
 
-		public int GetHomographNumber(LexEntry entry, IWritingSystemDefinition headwordWritingSystem)
+		public int GetHomographNumber(LexEntry entry, WritingSystemDefinition headwordWritingSystem)
 		{
 			if (entry == null)
 			{
@@ -261,21 +262,21 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		/// <param name="writingSystem"></param>
 		/// <returns></returns>
-		public ResultSet<LexEntry> GetAllEntriesSortedByHeadword(IWritingSystemDefinition writingSystem)
+		public ResultSet<LexEntry> GetAllEntriesSortedByHeadword(WritingSystemDefinition writingSystem)
 		{
 			if (writingSystem == null)
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
 
-			string cacheName = String.Format("sortedByHeadWord_{0}", writingSystem.Id);
+			string cacheName = String.Format("sortedByHeadWord_{0}", writingSystem.LanguageTag);
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> headWordQuery = new DelegateQuery<LexEntry>(
 					delegate(LexEntry entryToQuery)
 						 {
 							 IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-							 string headWord = entryToQuery.VirtualHeadWord[writingSystem.Id];
+							 string headWord = entryToQuery.VirtualHeadWord[writingSystem.LanguageTag];
 							 if (String.IsNullOrEmpty(headWord))
 							 {
 									 headWord = null;
@@ -286,7 +287,7 @@ namespace WeSay.LexicalModel
 
 				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(headWordQuery);
 				var sortOrder = new SortDefinition[4];
-				sortOrder[0] = new SortDefinition("Form", writingSystem.Collator);
+				sortOrder[0] = new SortDefinition("Form", writingSystem.DefaultCollation.Collator);
 				sortOrder[1] = new SortDefinition("OrderForRoundTripping", Comparer<int>.Default);
 				sortOrder[2] = new SortDefinition("OrderInFile", Comparer<int>.Default);
 				sortOrder[3] = new SortDefinition("CreationTime", Comparer<DateTime>.Default);
@@ -349,24 +350,24 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		/// <param name="writingSystem"></param>
 		/// <returns></returns>
-		public ResultSet<LexEntry> GetAllEntriesSortedByLexicalFormOrAlternative(IWritingSystemDefinition writingSystem)
+		public ResultSet<LexEntry> GetAllEntriesSortedByLexicalFormOrAlternative(WritingSystemDefinition writingSystem)
 		{
 			if (writingSystem == null)
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
-			string cacheName = String.Format("sortedByLexicalFormOrAlternative_{0}", writingSystem.Id);
+			string cacheName = String.Format("sortedByLexicalFormOrAlternative_{0}", writingSystem.LanguageTag);
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> lexicalFormWithAlternativeQuery = new DelegateQuery<LexEntry>(
 					delegate(LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-						string lexicalform = entryToQuery.LexicalForm[writingSystem.Id];
-						string writingSystemOfForm = writingSystem.Id;
+						string lexicalform = entryToQuery.LexicalForm[writingSystem.LanguageTag];
+						string writingSystemOfForm = writingSystem.LanguageTag;
 						if (lexicalform == "")
 						{
-							lexicalform = entryToQuery.LexicalForm.GetBestAlternative(writingSystem.Id);
+							lexicalform = entryToQuery.LexicalForm.GetBestAlternative(writingSystem.LanguageTag);
 							foreach (LanguageForm form in entryToQuery.LexicalForm.Forms)
 							{
 								if(form.Form == lexicalform)
@@ -386,7 +387,7 @@ namespace WeSay.LexicalModel
 				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(lexicalFormWithAlternativeQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[1];
-				sortOrder[0] = new SortDefinition("Form", writingSystem.Collator);
+				sortOrder[0] = new SortDefinition("Form", writingSystem.DefaultCollation.Collator);
 
 				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormWithAlternativeQuery));
 			}
@@ -401,20 +402,20 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		/// <param name="writingSystem"></param>
 		/// <returns></returns>
-		private ResultSet<LexEntry> GetAllEntriesSortedByLexicalForm(IWritingSystemDefinition writingSystem)
+		private ResultSet<LexEntry> GetAllEntriesSortedByLexicalForm(WritingSystemDefinition writingSystem)
 		{
 			if (writingSystem == null)
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
-			string cacheName = String.Format("sortedByLexicalForm_{0}", writingSystem.Id);
+			string cacheName = String.Format("sortedByLexicalForm_{0}", writingSystem.LanguageTag);
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> lexicalFormQuery = new DelegateQuery<LexEntry>(
 					delegate(LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-						string headWord = entryToQuery.LexicalForm[writingSystem.Id];
+						string headWord = entryToQuery.LexicalForm[writingSystem.LanguageTag];
 						if (String.IsNullOrEmpty(headWord)){
 								headWord = null;
 						}
@@ -424,7 +425,7 @@ namespace WeSay.LexicalModel
 				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(lexicalFormQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[1];
-				sortOrder[0] = new SortDefinition("Form", writingSystem.Collator);
+				sortOrder[0] = new SortDefinition("Form", writingSystem.DefaultCollation.Collator);
 
 				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormQuery));
 			}
@@ -488,14 +489,14 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		/// <param name="writingSystem"></param>
 		/// <returns>Definition and gloss in "Form" field of RecordToken</returns>
-		public ResultSet<LexEntry> GetAllEntriesSortedByDefinitionOrGloss(IWritingSystemDefinition writingSystem)
+		public ResultSet<LexEntry> GetAllEntriesSortedByDefinitionOrGloss(WritingSystemDefinition writingSystem)
 		{
 			if (writingSystem == null)
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
 
-			string cacheName = String.Format("SortByDefinition_{0}", writingSystem.Id);
+			string cacheName = String.Format("SortByDefinition_{0}", writingSystem.LanguageTag);
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> definitionQuery = new DelegateQuery<LexEntry>(
@@ -509,19 +510,12 @@ namespace WeSay.LexicalModel
 							List<string> definitions = new List<string>();
 							List<string> glosses = new List<string>();
 
-							string rawDefinition = sense.Definition[writingSystem.Id];
-							string rawGloss = sense.Gloss[writingSystem.Id];
+							string rawDefinition = sense.Definition[writingSystem.LanguageTag];
+							string rawGloss = sense.Gloss[writingSystem.LanguageTag];
 
-							if(writingSystem.IsUnicodeEncoded)
-							{
-								definitions = GetTrimmedElementsSeperatedBySemiColon(rawDefinition);
-								glosses = GetTrimmedElementsSeperatedBySemiColon(rawGloss);
-							}
-							else
-							{
-								definitions.Add(rawDefinition);
-								glosses.Add(rawGloss);
-							}
+							// Assume every writing system definition is Unicode encoded and can split elements by semicolon
+							definitions = GetTrimmedElementsSeperatedBySemiColon(rawDefinition);
+							glosses = GetTrimmedElementsSeperatedBySemiColon(rawGloss);
 
 							List<string> definitionAndGlosses = new List<string>();
 							definitionAndGlosses = MergeListsWhileExcludingDoublesAndEmptyStrings(definitions, glosses);
@@ -551,7 +545,7 @@ namespace WeSay.LexicalModel
 				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(definitionQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[2];
-				sortOrder[0] = new SortDefinition("Form", writingSystem.Collator);
+				sortOrder[0] = new SortDefinition("Form", writingSystem.DefaultCollation.Collator);
 				sortOrder[1] = new SortDefinition("Sense", Comparer<int>.Default);
 				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, definitionQuery));
 			}
@@ -669,7 +663,7 @@ namespace WeSay.LexicalModel
 		}
 
 
-		private ResultSet<LexEntry> GetAllEntriesWithGlossesSortedByLexicalForm(IWritingSystemDefinition lexicalUnitWritingSystem)
+		private ResultSet<LexEntry> GetAllEntriesWithGlossesSortedByLexicalForm(WritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			if (lexicalUnitWritingSystem == null)
 			{
@@ -688,7 +682,7 @@ namespace WeSay.LexicalModel
 							foreach (LanguageForm form in sense.Gloss.Forms)
 							{
 								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-								string lexicalForm = entry.LexicalForm[lexicalUnitWritingSystem.Id];
+								string lexicalForm = entry.LexicalForm[lexicalUnitWritingSystem.LanguageTag];
 								if (String.IsNullOrEmpty(lexicalForm))
 								{
 									lexicalForm = null;
@@ -718,7 +712,7 @@ namespace WeSay.LexicalModel
 					);
 				ResultSet<LexEntry> itemsMatchingQuery = GetItemsMatching(MatchingGlossQuery);
 				SortDefinition[] sortDefinition = new SortDefinition[4];
-				sortDefinition[0] = new SortDefinition("Form", lexicalUnitWritingSystem.Collator);
+				sortDefinition[0] = new SortDefinition("Form", lexicalUnitWritingSystem.DefaultCollation.Collator);
 				sortDefinition[1] = new SortDefinition("Gloss", StringComparer.InvariantCulture);
 				sortDefinition[2] = new SortDefinition("GlossWritingSystem", StringComparer.InvariantCulture);
 				sortDefinition[3] = new SortDefinition("SenseNumber", Comparer<int>.Default);
@@ -738,7 +732,7 @@ namespace WeSay.LexicalModel
 		/// <param name="lexicalUnitWritingSystem"></param>
 		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(
-				 LanguageForm glossForm, IWritingSystemDefinition lexicalUnitWritingSystem)
+				 LanguageForm glossForm, WritingSystemDefinition lexicalUnitWritingSystem)
 		{
 
 			if (null==glossForm || string.IsNullOrEmpty(glossForm.Form))
@@ -834,7 +828,7 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithSimilarLexicalForm(string lexicalForm,
-																	IWritingSystemDefinition writingSystem,
+																	WritingSystemDefinition writingSystem,
 																	ApproximateMatcherOptions
 																			matcherOptions)
 		{
@@ -868,7 +862,7 @@ namespace WeSay.LexicalModel
 		/// <param name="writingSystem"></param>
 		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithMatchingLexicalForm(string lexicalForm,
-																	 IWritingSystemDefinition writingSystem)
+																	 WritingSystemDefinition writingSystem)
 		{
 			if (lexicalForm == null)
 			{
@@ -897,19 +891,19 @@ namespace WeSay.LexicalModel
 		/// Use "Form" to access the lexical form in a RecordToken.
 		/// </summary>
 		/// <returns></returns>
-		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field, string[] searchWritingSystemIds, IWritingSystemDefinition lexicalUnitWritingSystem)
+		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field, string[] searchWritingSystemIds, WritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			 var query = new MissingFieldQuery(field, searchWritingSystemIds, null);
 			return GetEntriesWithMissingFieldSortedByLexicalUnit(query, lexicalUnitWritingSystem);
 	  }
 
-		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(MissingFieldQuery query, IWritingSystemDefinition lexicalUnitWritingSystem)
+		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(MissingFieldQuery query, WritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			Guard.AgainstNull(lexicalUnitWritingSystem, "lexicalUnitWritingSystem");
 			Guard.AgainstNull(query.Field, "field");
 			Guard.AgainstNull(query, "query");
 
-			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}_{2}", query.Field, lexicalUnitWritingSystem.Id, query.UniqueCacheId);
+			string cacheName = String.Format("missingFieldsSortedByLexicalForm_{0}_{1}_{2}", query.Field, lexicalUnitWritingSystem.LanguageTag, query.UniqueCacheId);
 			//cacheName = MakeSafeForFileName(cacheName);
 			if (_caches[cacheName] == null)
 			{
@@ -920,9 +914,9 @@ namespace WeSay.LexicalModel
 						if(query.FilteringPredicate(entryToQuery))
 						{
 							string lexicalForm = null;
-							if (!String.IsNullOrEmpty(entryToQuery.LexicalForm[lexicalUnitWritingSystem.Id]))
+							if (!String.IsNullOrEmpty(entryToQuery.LexicalForm[lexicalUnitWritingSystem.LanguageTag]))
 							{
-								lexicalForm = entryToQuery.LexicalForm[lexicalUnitWritingSystem.Id];
+								lexicalForm = entryToQuery.LexicalForm[lexicalUnitWritingSystem.LanguageTag];
 							}
 							tokenFieldsAndValues.Add("Form", lexicalForm);
 							return new IDictionary<string, object>[] { tokenFieldsAndValues };
@@ -932,7 +926,7 @@ namespace WeSay.LexicalModel
 				ResultSet<LexEntry> itemsMatching = _decoratedDataMapper.GetItemsMatching(lexicalFormQuery);
 
 				SortDefinition[] sortOrder = new SortDefinition[1];
-				sortOrder[0] = new SortDefinition("Form", lexicalUnitWritingSystem.Collator);
+				sortOrder[0] = new SortDefinition("Form", lexicalUnitWritingSystem.DefaultCollation.Collator);
 
 				_caches.Add(cacheName, new ResultSetCache<LexEntry>(this, sortOrder, itemsMatching, lexicalFormQuery));
 			}

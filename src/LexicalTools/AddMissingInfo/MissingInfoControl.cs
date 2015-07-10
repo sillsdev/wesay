@@ -5,13 +5,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Palaso.Data;
-using Palaso.Code;
-using Palaso.DictionaryServices.Model;
-using Palaso.i18n;
-using Palaso.UI.WindowsForms.Miscellaneous;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.Data;
+using SIL.Code;
+using SIL.DictionaryServices.Model;
+using SIL.i18n;
+using SIL.Windows.Forms.Miscellaneous;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -63,7 +63,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_entryViewControl.LexEntryRepository = lexEntryRepository;
 			_entryViewControl.SenseDeletionEnabled = false;
 
-			IWritingSystemDefinition listWritingSystem = GetListWritingSystem();
+			WritingSystemDefinition listWritingSystem = GetListWritingSystem();
 			_todoRecordsListBox.WritingSystem = listWritingSystem;
 
 			_todoRecords = records.ToList<RecordToken<LexEntry>>();
@@ -113,7 +113,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 			displayString =
 					recordToken.RealObject.LexicalForm.GetBestAlternative(
-							_todoRecordsListBox.WritingSystem.Id, string.Empty);
+							_todoRecordsListBox.WritingSystem.LanguageTag, string.Empty);
 			e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
 
 			if (string.IsNullOrEmpty(displayString))
@@ -161,7 +161,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 		}
 
-		private static IWritingSystemDefinition GetListWritingSystem()
+		private static WritingSystemDefinition GetListWritingSystem()
 		{
 			return WeSayWordsProject.Project.DefaultViewTemplate.GetDefaultWritingSystemForField(
 				Field.FieldNames.EntryLexicalForm.ToString());

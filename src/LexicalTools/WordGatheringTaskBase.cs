@@ -1,10 +1,9 @@
 using System;
-using Palaso.DictionaryServices.Model;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.DictionaryServices.Model;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using System.Linq;
 
@@ -12,8 +11,8 @@ namespace WeSay.LexicalTools
 {
 	public abstract class WordGatheringTaskBase: TaskBase
 	{
-		private readonly IWritingSystemDefinition _lexicalFormWritingSystem;
-		private readonly ViewTemplate _viewTemplate;
+		protected WritingSystemDefinition _lexicalFormWritingSystem;
+		protected readonly ViewTemplate _viewTemplate;
 
 		protected WordGatheringTaskBase(ITaskConfiguration config,
 										LexEntryRepository lexEntryRepository,
@@ -28,13 +27,12 @@ namespace WeSay.LexicalTools
 			}
 
 			_viewTemplate = viewTemplate;
-			_lexicalFormWritingSystem =
-				 viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
+			_lexicalFormWritingSystem = _viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
 		}
 
-		protected IWritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
+		protected WritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
 		{
-			var ids = BasilProject.Project.WritingSystems.FilterForTextIds(field.WritingSystemIds);
+			var ids = BasilProject.Project.WritingSystems.FilterForTextLanguageTags(field.WritingSystemIds);
 			if(ids.Count()==0)
 			{
 				throw new ConfigurationException(string.Format("The field {0} must have at least one non-audio input system.", field.DisplayName));
@@ -52,16 +50,16 @@ namespace WeSay.LexicalTools
 			get { return ButtonStyle.FixedAmount; }
 		}
 
-		public string WordWritingSystemId
+		public string WordWritingSystemLanguageTag
 		{
 			get
 			{
 				VerifyTaskActivated();
-				return _lexicalFormWritingSystem.Id;
+				return _lexicalFormWritingSystem.LanguageTag;
 			}
 		}
 
-		public IWritingSystemDefinition FormWritingSystem
+		public WritingSystemDefinition FormWritingSystem
 		{
 			get
 			{
@@ -69,7 +67,7 @@ namespace WeSay.LexicalTools
 				return _lexicalFormWritingSystem;
 			}
 		}
-		public IWritingSystemDefinition MeaningWritingSystem
+		public WritingSystemDefinition MeaningWritingSystem
 		{
 			get
 			{

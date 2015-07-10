@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this._fileName = new System.Windows.Forms.TextBox();
-			this._shortSoundFieldControl1 = new Palaso.Media.ShortSoundFieldControl();
+			this._shortSoundFieldControl1 = new SIL.Media.ShortSoundFieldControl();
 			this.SuspendLayout();
 			//
 			// _fileName
@@ -70,7 +70,7 @@
 		#endregion
 
 		private System.Windows.Forms.TextBox _fileName;
-		private Palaso.Media.ShortSoundFieldControl _shortSoundFieldControl1;
+		private SIL.Media.ShortSoundFieldControl _shortSoundFieldControl1;
 
 	}
 }

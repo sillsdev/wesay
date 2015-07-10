@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Palaso.Tests.Data;
+using SIL.Tests.Data;
 
 namespace WeSay.Data.Tests
 {

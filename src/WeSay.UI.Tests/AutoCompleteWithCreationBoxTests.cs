@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.Project;
-using Palaso.Lift;
+using SIL.Lift;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.UI.AutoCompleteTextBox;
-using Palaso.Lift.Options;
+using SIL.Lift.Options;
 
 namespace WeSay.UI.Tests
 {
@@ -29,14 +29,14 @@ namespace WeSay.UI.Tests
 		/// </summary>
 		private OptionRef _dataBeingEditted;
 
-		private IWritingSystemDefinition _ws;
+		private WritingSystemDefinition _ws;
 		private OptionDisplayAdaptor _displayAdaptor;
 
 		[SetUp]
 		public void Setup()
 		{
-			_ws = WritingSystemDefinition.Parse("qaa-x-qaa");
-			_ws.DefaultFontName = "Arial";
+			_ws = new WritingSystemDefinition("qaa");
+			_ws.DefaultFont = new FontDefinition("Arial");
 			_ws.DefaultFontSize = (float) 55.9;
 			//            _createNewClickedFired=false;
 			//            _valueChangedFired = false;
@@ -49,7 +49,7 @@ namespace WeSay.UI.Tests
 							"3",
 							"A description of this which includes the word trio and is not two.");
 
-			_displayAdaptor = new OptionDisplayAdaptor(_sourceChoices, _ws.Id);
+			_displayAdaptor = new OptionDisplayAdaptor(_sourceChoices, _ws.LanguageTag);
 			_control =
 					new AutoCompleteWithCreationBox<Option, string>(
 							CommonEnumerations.VisibilitySetting.Visible, null);
@@ -235,9 +235,9 @@ namespace WeSay.UI.Tests
 		private void AddSourceChoice(string label, string key, string description)
 		{
 			MultiText name = new MultiText();
-			name[_ws.Id] = label;
+			name[_ws.LanguageTag] = label;
 			Option item = new Option(key, name);
-			item.Description.SetAlternative(_ws.Id, description);
+			item.Description.SetAlternative(_ws.LanguageTag, description);
 			_sourceChoices.Options.Add(item);
 			_choiceKeys.Add(key);
 		}

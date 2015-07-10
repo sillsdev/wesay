@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project

@@ -31,7 +31,7 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfirmDelete));
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.localizationHelper1 = new Palaso.UI.WindowsForms.i18n.LocalizationHelper(this.components);
+			this.localizationHelper1 = new SIL.Windows.Forms.i18n.LocalizationHelper(this.components);
 			this.deleteBtn = new System.Windows.Forms.Button();
 			this.cancelBtn = new System.Windows.Forms.Button();
 			this.textBox1 = new System.Windows.Forms.TextBox();
@@ -122,7 +122,7 @@
 		#endregion
 
 		private System.Windows.Forms.PictureBox pictureBox1;
-		private Palaso.UI.WindowsForms.i18n.LocalizationHelper localizationHelper1;
+		private SIL.Windows.Forms.i18n.LocalizationHelper localizationHelper1;
 		private System.Windows.Forms.Button deleteBtn;
 		private System.Windows.Forms.Button cancelBtn;
 		private System.Windows.Forms.TextBox textBox1;

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 using WeSay.Project;
 using WeSay.TestUtilities;
 

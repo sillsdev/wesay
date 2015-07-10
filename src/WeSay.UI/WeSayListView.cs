@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.DictionaryServices.Model;
-using Palaso.WritingSystems;
+using SIL.DictionaryServices.Model;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
@@ -17,7 +17,7 @@ namespace WeSay.UI
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		IWritingSystemDefinition WritingSystem { get; set; }
+		WritingSystemDefinition WritingSystem { get; set; }
 
 		int MinLength { get; set; }
 		int MaxLength { get; set; }
@@ -51,7 +51,7 @@ namespace WeSay.UI
 	public partial class WeSayListView: ListView, IWeSayListView
 	{
 		private const int WM_HSCROLL = 0x114;
-		private IWritingSystemDefinition _writingSystem;
+		private WritingSystemDefinition _writingSystem;
 		private int _itemToNotDrawYet = -1;
 		private IList _dataSource;
 		private readonly Dictionary<int, ListViewItem> _itemsCache;
@@ -168,14 +168,14 @@ namespace WeSay.UI
 				var entry = _dataSource[e.ItemIndex] as LexEntry;
 				if(entry!=null)
 				{
-					var form = entry.GetHeadWordForm(_writingSystem.Id);
+					var form = entry.GetHeadWordForm(_writingSystem.LanguageTag);
 					if(string.IsNullOrEmpty(form))
 					{
 						//this is only going to come up with something in two very unusual cases:
 						//1) a monolingual dictionary (well, one with meanings in the same WS as the lexical units)
 						//2) the SIL CAWL list, where the translator adds glosses, and fails to add
 						//lexical entries.
-						form = entry.GetSomeMeaningToUseInAbsenseOfHeadWord(_writingSystem.Id);
+						form = entry.GetSomeMeaningToUseInAbsenseOfHeadWord(_writingSystem.LanguageTag);
 					}
 					e.Item = new ListViewItem(form);
 				}
@@ -196,7 +196,7 @@ namespace WeSay.UI
 		[Browsable(false)]
 		[DefaultValue(null)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IWritingSystemDefinition WritingSystem
+		public WritingSystemDefinition WritingSystem
 		{
 			get
 			{

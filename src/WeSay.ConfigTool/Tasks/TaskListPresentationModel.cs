@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
-using Palaso.WritingSystems;
-using WeSay.Project;
+using SIL.WritingSystems;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tasks

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using NUnit.Framework;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation
@@ -9,17 +9,12 @@ namespace WeSay.LexicalModel.Tests.Foundation
 	public class WritingSystemInfoTests
 	{
 		[Test]
-
-		public void CreateFont_Default_GetReturnsGenericSansSerif()
-		{
-			var ws = new WritingSystemDefinition();
-			Assert.AreEqual(FontFamily.GenericSansSerif, WritingSystemInfo.CreateFont(ws).FontFamily);
-		}
-
-		[Test]
 		public void CreateFont_Default_GetFontSizeIs12()
 		{
-			var ws = new WritingSystemDefinition();
+			var ws = new WritingSystemDefinition()
+			{
+				DefaultFont = new FontDefinition("Arial")
+			};
 			Assert.AreEqual(12, WritingSystemInfo.CreateFont(ws).Size);
 		}
 
@@ -28,12 +23,12 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			var ws = new WritingSystemDefinition
 						 {
-							 DefaultFontName = FontFamily.GenericSerif.Name
+							 DefaultFont = new FontDefinition((FontFamily.GenericSerif.Name))
 						 };
 			// Assert the precondition
-			Assert.AreNotEqual(FontFamily.GenericSansSerif.Name, ws.DefaultFontName);
+			Assert.AreNotEqual(FontFamily.GenericSansSerif.Name, ws.DefaultFont.Name);
 			// Assert the test
-			Assert.AreEqual(WritingSystemInfo.CreateFont(ws).Name, ws.DefaultFontName);
+			Assert.AreEqual(WritingSystemInfo.CreateFont(ws).Name, ws.DefaultFont.Name);
 		}
 	}
 }

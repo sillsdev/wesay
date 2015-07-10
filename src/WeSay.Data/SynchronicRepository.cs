@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Palaso.Data;
-using Palaso.Progress;
+using SIL.Data;
+using SIL.Progress;
 
 namespace WeSay.Data
 {

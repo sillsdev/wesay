@@ -5,8 +5,8 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using Mono.Addins;
-using Palaso.Reporting;
-using Palaso.Xml;
+using SIL.Reporting;
+using SIL.Xml;
 
 namespace WeSay.AddinLib
 {

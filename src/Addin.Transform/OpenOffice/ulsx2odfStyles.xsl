@@ -28,13 +28,14 @@
 				xmlns:rdfa="http://docs.oasis-open.org/opendocument/meta/rdfa#"
 				xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0"
 				xmlns:palaso="urn://palaso.org/ldmlExtensions/v1"
+				xmlns:sil="urn://www.sil.org/ldml/0.1"
 				version="1.0"
 				office:version="1.2"
 				exclude-result-prefixes="xsl">
 	<xsl:param name="primaryLangCode" select="'th'"/>
 
 	<xsl:variable name="primaryFont"
-				  select="/root/ldml[identity/language/@type=$primaryLangCode]/special/palaso:defaultFontFamily/@value"/>
+				  select="/UserLexiconSettings/WritingSystems/WritingSystem[@id=$primaryLangCode]/DefaultFontName[text()]"/>
 	<xsl:strip-space elements="text:p text:span"/>
 	<!-- indent is nice for debugging, but it introduces stray spaces
 The xsl:text elements below are used to introduce line breaks
@@ -67,17 +68,17 @@ etymology
 		<office:document-styles>
 			<office:font-face-decls>
 				<!-- Include each font only once -->
-				<xsl:for-each select="//palaso:defaultFontFamily">
+				<xsl:for-each select="//DefaultFontName">
 					<xsl:variable name="font"
-								  select="@value"/>
-					<xsl:variable name="check" select="//palaso:defaultFontFamily[@value = $font]"/>
+								  select="text()"/>
+					<xsl:variable name="check" select="//DefaultFontName[text() = $font]"/>
 					<xsl:variable name="pos">
-						<xsl:number count="palaso:defaultFontFamily[@value = $font]"
+						<xsl:number count="DefaultFontName[text() = $font]"
 									level="any"/>
 					</xsl:variable>
 					<xsl:if test="$pos = 1">
-						<style:font-face style:name="{@value}"
-										 svg:font-family="{@value}"/>
+						<style:font-face style:name="{text()}"
+										 svg:font-family="{text()}"/>
 					</xsl:if>
 				</xsl:for-each>
 			</office:font-face-decls>
@@ -583,11 +584,11 @@ etymology
 	</xsl:template>
 	<xsl:template name="text-style">
 		<xsl:param name="lift-element">Standard</xsl:param>
-		<xsl:for-each select="/root/ldml">
+		<xsl:for-each select="/UserLexiconSettings/WritingSystems/WritingSystem">
 			<xsl:variable name="id"
-						  select="identity/language/@type"/>
+						  select="@id"/>
 			<xsl:variable name="font"
-						  select="special/palaso:defaultFontFamily/@value"/>
+						  select="DefaultFontName[text()]"/>
 			<style:style style:name="{concat($lift-element,'_',$id)}"
 						 style:display-name="{concat($lift-element,' ',$id)}"
 						 style:family="text"

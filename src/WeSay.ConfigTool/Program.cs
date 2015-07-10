@@ -2,8 +2,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using Palaso.IO;
-using Palaso.Reporting;
+using SIL.IO;
+using SIL.Reporting;
 using WeSay.ConfigTool.Properties;
 using Gecko;
 
@@ -36,17 +36,17 @@ namespace WeSay.ConfigTool
 
 			Settings.Default.Save();
 
-			using (new Palaso.PalasoSetup())
+			using (new SIL.CoreSetup())
 			{
 				try
 				{
 					// initialize Palaso keyboarding
-					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+					SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 					Application.Run(new ConfigurationWindow(args));
 				}
 				finally
 				{
-					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+					SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 				}
 			}
 		}

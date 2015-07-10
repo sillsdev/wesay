@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using System.Linq;
-using Palaso.Xml;
+using SIL.Xml;
 using WeSay.Project;
 
 namespace Addin.Transform.PdfDictionary
@@ -70,7 +70,8 @@ namespace Addin.Transform.PdfDictionary
 					XPathNavigator headwordFieldNode = entryNav.SelectSingleNode("field[@type='headword']");
 					if(headwordFieldNode==null || string.IsNullOrEmpty(headwordFieldNode.Value))
 						continue;
-					AddLetterSectionIfNeeded(headwordFieldNode.Value);
+					var lang = headwordFieldNode.SelectSingleNode("form").GetAttribute("lang", "");
+					AddLetterSectionIfNeeded(headwordFieldNode.Value, lang);
 					StartDiv("entry");
 					OutputNonSenseFieldsOfEnry(entryNav);
 					DoSenses(entryNav.Select("sense"), headwordFieldNode);
@@ -366,7 +367,7 @@ namespace Addin.Transform.PdfDictionary
 			return form.GetAttribute("lang", string.Empty);
 		}
 
-		private void AddLetterSectionIfNeeded(string headword)
+		private void AddLetterSectionIfNeeded(string headword, string lang)
 		{
 			if(string.IsNullOrEmpty(headword))
 				return;
@@ -381,16 +382,17 @@ namespace Addin.Transform.PdfDictionary
 				}
 				_currentLetterGroup = group;
 				StartDiv("letHead");
-				StartDiv("letter");
+
+				string value;
 				if(group.ToLowerInvariant() == group.ToUpperInvariant())
 				{
-					_writer.WriteValue(group.ToString());
+					value = group.ToString();
 				}
 				else
 				{
-					_writer.WriteValue(CapitalizeFirstOnly(group) + " " + group.ToLowerInvariant());
+					value = (CapitalizeFirstOnly(group) + " " + group.ToLowerInvariant());
 				}
-				EndDiv();
+				WriteDiv("letter", lang, value);
 				StartDiv("letData");
 			}
 		}
@@ -488,6 +490,15 @@ namespace Addin.Transform.PdfDictionary
 				WriteSpan("headword-secondary", GetLang(forms.Current), forms.Current.Value);
 				//notice, we're not bothering with homograph #s on these
 			}
+		}
+
+		private void WriteDiv(string className, string lang, string text)
+		{
+			_writer.WriteStartElement("div");
+			_writer.WriteAttributeString("class", className);
+			_writer.WriteAttributeString("lang", lang);
+			_writer.WriteValue(text);
+			_writer.WriteEndElement();
 		}
 
 		private void StartSpan(string className)

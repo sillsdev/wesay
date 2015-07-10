@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
-using Palaso.TestUtilities;
+using SIL.TestUtilities;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -15,7 +15,7 @@ namespace WeSay.ConfigTool.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+			SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 		}
 
 		private void GoToBackupTab()

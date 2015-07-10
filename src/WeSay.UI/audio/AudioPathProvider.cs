@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Palaso;
 
 namespace WeSay.UI.audio
 {

@@ -5,13 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Autofac;
-using Palaso.IO;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.IO;
+using SIL.Reporting;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
 using WeSay.ConfigTool.NewProjectCreation;
 using WeSay.ConfigTool.Properties;
 using WeSay.ConfigTool.Tasks;
 using WeSay.Project;
+using WeSay.Project.ConfigMigration.WritingSystem;
 
 namespace WeSay.ConfigTool
 {
@@ -212,30 +214,10 @@ namespace WeSay.ConfigTool
 				Directory.GetParent(directoryPath).Create();
 			}
 
-			CreateNewProject(directoryPath);
+			CreateNewProject(directoryPath, languageTag);
 			OpenProject(directoryPath);
 
-			if (!Project.WritingSystems.Contains(languageTag))
-			{
-				var genericWritingSystemShippedWithWs = Project.WritingSystems.Get("qaa-x-qaa");
-				genericWritingSystemShippedWithWs.Language = languageTag;
-				genericWritingSystemShippedWithWs.LanguageName = langName;
-				if (genericWritingSystemShippedWithWs.Language == WellKnownSubTags.Unlisted.Language)
-				{
-					//this is to accomodate Flex which expects to have a custom language tag
-					//as the first private use subtag when the language subtag is qaa
-					var langTag = TrimLanguageNameForTag(langName);
-					genericWritingSystemShippedWithWs.Variant = "x-" + langTag;	// replace x-qaa
-				}
-				else
-				{
-					genericWritingSystemShippedWithWs.Variant = ""; //remove x-qaa
-				}
-				Project.WritingSystems.Set(genericWritingSystemShippedWithWs);
-				Project.WritingSystems.Save();
-			}
-
-			 if(_project != null)
+			if(_project != null)
 			 {
 				 var logger = _project.Container.Resolve<ILogger>();
 				 logger.WriteConciseHistoricalEvent("Created New Project");
@@ -252,21 +234,11 @@ namespace WeSay.ConfigTool
 			 }
 		}
 
-		/// <summary>
-		/// Trim the language name to three lowercase English letters for the fake language tag.
-		/// (Append 'x' as needed to ensure three English letters.)
-		/// </summary>
-		private static string TrimLanguageNameForTag(string languageName)
-		{
-			var languageTag = System.Text.RegularExpressions.Regex.Replace(languageName, @"[^a-zA-Z]", "") + @"xxx";
-			return languageTag.Substring(0, 3).ToLowerInvariant();
-		}
-
-		private static void CreateNewProject(string directoryPath)
+		private static void CreateNewProject(string directoryPath, string languageTag)
 		{
 			try
 			{
-				WeSayWordsProject.CreateEmptyProjectFiles(directoryPath);
+				WeSayWordsProject.CreateEmptyProjectFiles(directoryPath, Path.GetFileName(directoryPath), languageTag);
 			}
 			catch (Exception e)
 			{
@@ -279,7 +251,7 @@ namespace WeSay.ConfigTool
 		/// <summary>
 		///
 		/// </summary>
-		/// <returns>true if the project was sucessfully opend</returns>
+		/// <returns>true if the project was sucessfully opened</returns>
 		public bool OpenProject(string path)
 		{
 			Logger.WriteEvent("OpenProject("+path+")");
@@ -528,7 +500,7 @@ namespace WeSay.ConfigTool
 		private void OnAboutToolStrip_Click(object sender, EventArgs e)
 		{
 			string aboutPath = Path.Combine(WeSayWordsProject.ApplicationCommonDirectory, "aboutBox.htm");
-			using (var dlg = new Palaso.UI.WindowsForms.SIL.SILAboutBox(aboutPath))
+			using (var dlg = new SIL.Windows.Forms.Miscellaneous.SILAboutBox(aboutPath))
 			{
 				dlg.ShowDialog();
 			}

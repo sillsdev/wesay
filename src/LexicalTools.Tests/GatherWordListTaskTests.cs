@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using NUnit.Framework;
-using Palaso.Data;
-using Palaso.DictionaryServices.Lift;
-using Palaso.Lift;
-using Palaso.Lift.Options;
-using Palaso.Reporting;
-using Palaso.TestUtilities;
-using Palaso.WritingSystems;
+using SIL.Data;
+using SIL.DictionaryServices.Lift;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Reporting;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
-using Palaso.DictionaryServices.Model;
+using SIL.DictionaryServices.Model;
 using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
@@ -39,7 +39,7 @@ namespace WeSay.LexicalTools.Tests
 			WeSayProjectTestHelper.InitializeForTests();
 			_glossingLanguageWSId = WritingSystemsIdsForTests.AnalysisIdForTest;
 			_vernacularLanguageWSId = WritingSystemsIdsForTests.VernacularIdForTest;
-			BasilProject.Project.WritingSystems.Set(WritingSystemDefinition.Parse("fr"));
+			BasilProject.Project.WritingSystems.Set(new WritingSystemDefinition("fr"));
 
 			_tempFolder = new TemporaryFolder();
 			_simpleWordListFilePath = _tempFolder.GetTemporaryFile();
@@ -163,7 +163,7 @@ namespace WeSay.LexicalTools.Tests
 
 			// the code doesn't show the errror box in release builds, but
 			// the builder publishing configuration does run tests in release builds
-			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+			using (new SIL.Reporting.ErrorReport.NonFatalErrorReportExpected())
 			{
 				g.Activate();
 			}
@@ -528,7 +528,7 @@ namespace WeSay.LexicalTools.Tests
 			return entries[0];
 		}
 
-		private IWritingSystemDefinition VernWs
+		private WritingSystemDefinition VernWs
 		{
 			get
 			{
@@ -585,7 +585,7 @@ namespace WeSay.LexicalTools.Tests
 					  </form>
 					</lexical-unit>
 				</entry>";
-			using (new Palaso.Reporting.ErrorReport.NonFatalErrorReportExpected())
+			using (new ErrorReport.NonFatalErrorReportExpected())
 			{
 				CreateAndActivateLiftTask(new List<string>(new string[] { "th" }), entries);
 			}
@@ -890,7 +890,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private GatherWordListTask CreateAndActivateLiftTask(IEnumerable<string> definitionWritingSystems, string entriesXml)
 		{
-			var file = new TempLiftFile("wordlist.lift", _tempFolder, entriesXml, Palaso.Lift.Validation.Validator.LiftVersion);
+			var file = new TempLiftFile("wordlist.lift", _tempFolder, entriesXml, SIL.Lift.Validation.Validator.LiftVersion);
 
 			var vt = new ViewTemplate();
 

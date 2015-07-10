@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.DictionaryServices.Model;
-using Palaso.UI.WindowsForms.Miscellaneous;
-using Palaso.Reporting;
+using SIL.DictionaryServices.Model;
+using SIL.Windows.Forms.Miscellaneous;
+using SIL.Reporting;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
@@ -332,7 +332,7 @@ namespace WeSay.LexicalTools
 #if DEBUG
 				throw new ObjectDisposedException(GetType().FullName);
 #else
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("WeSay ran into a problem in the EntryViewControl (it was called after it was disposed.) If you can make this happen again, please contact the developers.");
+				SIL.Reporting.ErrorReport.NotifyUserOfProblem("WeSay ran into a problem in the EntryViewControl (it was called after it was disposed.) If you can make this happen again, please contact the developers.");
 #endif
 			}
 		}
@@ -352,7 +352,7 @@ namespace WeSay.LexicalTools
 			}
 			catch (Exception)
 			{
-				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("There was an error refreshing the entry preview. If you were quiting the program, this is a know issue (WS-554) that we are trying to track down.  If you can make this happen again, please contact the developers.");
+				SIL.Reporting.ErrorReport.NotifyUserOfProblem("There was an error refreshing the entry preview. If you were quiting the program, this is a know issue (WS-554) that we are trying to track down.  If you can make this happen again, please contact the developers.");
 			}
 #endif
 		}

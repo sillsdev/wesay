@@ -6,28 +6,26 @@ using System.IO.Compression;
 using System.IO;
 using System.Diagnostics;
 using System.Drawing;
-using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
-using Palaso.Data;
-using Palaso.Lift;
-using Palaso.DictionaryServices;
-using Palaso.DictionaryServices.Model;
-using Palaso.DictionaryServices.Lift;
+using SIL.Data;
+using SIL.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.DictionaryServices.Lift;
 using Mono.Addins;
 
 using ICSharpCode.SharpZipLib.Zip;
 
-using Palaso.i18n;
-using Palaso.Reporting;
-using Palaso.Progress;
-using Palaso.UI.WindowsForms.Progress;
-using Palaso.WritingSystems;
+using SIL.i18n;
+using SIL.Lexicon;
+using SIL.Reporting;
+using SIL.Progress;
+using SIL.Windows.Forms.Progress;
+using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Foundation;
 
 namespace Addin.Transform.OpenOffice
@@ -190,7 +188,7 @@ namespace Addin.Transform.OpenOffice
 		{
 			using (var exporter = new LiftWriter(outputPath, LiftWriter.ByteOrderStyle.NoBOM))
 			{
-				IWritingSystemDefinition firstWs = template.HeadwordWritingSystems[0];
+				WritingSystemDefinition firstWs = template.HeadwordWritingSystems[0];
 				ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(firstWs);
 				int index = 0;
@@ -289,7 +287,7 @@ namespace Addin.Transform.OpenOffice
 
 				transform = new XslCompiledTransform();
 
-				StringReader srStyles = new StringReader(Resources.ldml2odfStyles);
+				StringReader srStyles = new StringReader(Resources.ulsx2odfStyles);
 				XmlReader xsltReaderStyles = XmlReader.Create(srStyles, readerSettings);
 				XsltSettings stylesSettings = new XsltSettings(true, true);
 				transform.Load(xsltReaderStyles, stylesSettings, new XmlUrlResolver());
@@ -298,9 +296,7 @@ namespace Addin.Transform.OpenOffice
 				xsltArgs = new XsltArgumentList();
 				xsltArgs.AddParam("primaryLangCode", "", GetHeadwordWritingSystemId(arguments.viewTemplate));
 
-				string pathToTempFile = CreateSingleWritingsystemsFileForEasyXslProcessing();
-				transform.Transform(pathToTempFile, xsltArgs, stylesOutput);
-				File.Delete(pathToTempFile);
+				transform.Transform(LexiconSettingsFileHelper.GetUserLexiconSettingsPath(BasilProject.Project.ProjectDirectoryPath), xsltArgs, stylesOutput);
 
 				stylesOutput.Close();
 				progressState.StatusLabel = "Creating ODT file";
@@ -325,37 +321,6 @@ namespace Addin.Transform.OpenOffice
 				progressState.ExceptionThatWasEncountered = e;
 				progressState.WriteToLog(e.Message);
 			}
-		}
-
-		private static string CreateSingleWritingsystemsFileForEasyXslProcessing()
-		{
-			string pathToTempFile = Path.GetTempFileName();
-
-			StreamWriter tempFileWriter = new StreamWriter(pathToTempFile);
-			string xmlHeader = @"<?xml version=""1.0"" encoding=""utf-8""?>";
-			tempFileWriter.WriteLine(xmlHeader);
-			tempFileWriter.WriteLine("<root>");
-
-			string pathToLdmlWritingSystemsFolder =
-				BasilProject.GetPathToLdmlWritingSystemsFolder(BasilProject.Project.ProjectDirectoryPath);
-
-			foreach (string fileName in Directory.GetFiles(pathToLdmlWritingSystemsFolder, "*.ldml"))
-			{
-				StreamReader ldmlFileStream = new StreamReader(fileName);
-				string line;
-				while ((line = ldmlFileStream.ReadLine()) != null)
-				{
-					if(line.Contains("<?xml"))
-					{
-						continue;
-					}
-					tempFileWriter.WriteLine(line);
-				}
-				ldmlFileStream.Close();
-			}
-			tempFileWriter.WriteLine("</root>");
-			tempFileWriter.Close();
-			return pathToTempFile;
 		}
 
 		//private static string GetPathToPrimaryWritingSystemsLdmlFile(TransformWorkerArguments arguments)

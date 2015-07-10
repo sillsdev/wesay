@@ -8,18 +8,17 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using Autofac;
-using Palaso.Data;
-using Palaso.Code;
-using Palaso.DictionaryServices.Model;
-using Palaso.DictionaryServices.Processors;
-using Palaso.Progress;
-using Palaso.Text;
-using Palaso.i18n;
-using Palaso.Lift;
-using Palaso.Lift.Options;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
-using Spart.Parsers;
+using SIL.Data;
+using SIL.Code;
+using SIL.DictionaryServices.Model;
+using SIL.DictionaryServices.Processors;
+using SIL.Progress;
+using SIL.Text;
+using SIL.i18n;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -39,7 +38,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private List<string> _domainNames;
 		private List<WordDisplay> _words;
 
-		private IWritingSystemDefinition _semanticDomainWritingSystem;
+		private WritingSystemDefinition _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
 		private OptionsList _semanticDomainOptionsList;
 
@@ -49,7 +48,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		private readonly TaskMemory _taskMemory;
 		private GatherBySemanticDomainConfig _config;
 		private readonly ILogger _logger;
-		public IWritingSystemDefinition DefinitionWritingSystem { get; set; }
+		public WritingSystemDefinition DefinitionWritingSystem { get; set; }
 
 		public GatherBySemanticDomainTask(
 			GatherBySemanticDomainConfig config,
@@ -78,10 +77,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_words = null;
 
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
-			var definitionWsId= viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.First();
-			IWritingSystemDefinition writingSystemForDefinition = viewTemplate.WritingSystems.Get(definitionWsId);
+			var writingSystemForDefinition =
+				_viewTemplate.GetFirstNonVoiceWritingSystemForFieldOrThrow(LexSense.WellKnownProperties.Definition);
 			Guard.AgainstNull(writingSystemForDefinition, "Definition input System");
 			DefinitionWritingSystem = writingSystemForDefinition;
+
+			_lexicalFormWritingSystem =
+				_viewTemplate.GetFirstNonVoiceWritingSystemForFieldOrThrow(Field.FieldNames.EntryLexicalForm.ToString());
 
 		}
 
@@ -156,7 +158,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				return key;
 			}
 			string prefix = "";
-			string number = option.Abbreviation.GetBestAlternativeString(new[]{SemanticDomainWritingSystemId, "en"});
+			string number = option.Abbreviation.GetBestAlternativeString(new[]{SemanticDomainWritingSystemLanguageTag, "en"});
 			var indentLevel = 0;
 			if (!string.IsNullOrEmpty(number))
 			{
@@ -168,7 +170,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				prefix = "      ".Substring(0, indentLevel) + number + " ";
 			}
 			return prefix //this puts the number back in
-				+ option.Name.GetBestAlternativeString(new[] { SemanticDomainWritingSystemId, "en" });
+				+ option.Name.GetBestAlternativeString(new[] { SemanticDomainWritingSystemLanguageTag, "en" });
 		}
 
 		private Option GetOptionFromKey(string key)
@@ -189,7 +191,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				{
 					return string.Empty;
 				}
-				return option.Description.GetExactAlternative(SemanticDomainWritingSystemId);
+				return option.Description.GetExactAlternative(SemanticDomainWritingSystemLanguageTag);
 			}
 		}
 
@@ -317,7 +319,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					{
 						LexEntry entry = recordTokens[i].RealObject;
 						//was _words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
-						LanguageForm form = entry.LexicalForm.GetBestAlternative(new string[] {WordWritingSystemId});
+						LanguageForm form = entry.LexicalForm.GetBestAlternative(new string[] {WordWritingSystemLanguageTag});
 						if (form == null)
 							continue; //happens if there is a word with this domain, but no lexeme form
 
@@ -331,13 +333,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 										FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey));
 						if(firstSenseMatchingCurrentDomain != null)
 						{
-							wordDisplay.Meaning = firstSenseMatchingCurrentDomain.Definition.GetBestAlternative(new[] {DefinitionWritingSystem.Id});
+							wordDisplay.Meaning = firstSenseMatchingCurrentDomain.Definition.GetBestAlternative(new[] {DefinitionWritingSystem.LanguageTag});
 						}
 						_words.Add(wordDisplay);
 
 					}
 				}
-			   // TODO: figure out how to do sorting on complext objects using this collator:    _words.Sort(FormWritingSystem.Collator);
+			   // TODO: figure out how to do sorting on complex objects using this collator:    _words.Sort(FormWritingSystem.Collator);
 				_words.Sort(new Comparison<WordDisplay>(CompareForms));
 				return _words;
 			}
@@ -345,7 +347,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 		private int CompareForms(WordDisplay x, WordDisplay y)
 		{
-			return FormWritingSystem.Collator.Compare(x.Vernacular.Form, y.Vernacular.Form);
+			return FormWritingSystem.DefaultCollation.Collator.Compare(x.Vernacular.Form, y.Vernacular.Form);
 		}
 
 		public bool HasNextDomainQuestion
@@ -411,18 +413,18 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 		}
 
-		public string SemanticDomainWritingSystemId
+		public string SemanticDomainWritingSystemLanguageTag
 		{
 			get
 			{
 				VerifyTaskActivated();
 				if (_semanticDomainWritingSystem == null)
 					return string.Empty;//happens during some unrelated tests
-				return _semanticDomainWritingSystem.Id;
+				return _semanticDomainWritingSystem.LanguageTag;
 			}
 		}
 
-		public IWritingSystemDefinition SemanticDomainWritingSystem
+		public WritingSystemDefinition SemanticDomainWritingSystem
 		{
 			get
 			{
@@ -482,7 +484,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				if (recordTokens.Count == 0)//no entries with a matching form
 				{
 					LexEntry entry = LexEntryRepository.CreateItem();
-					entry.LexicalForm.SetAlternative(WordWritingSystemId, lexicalForm);
+					entry.LexicalForm.SetAlternative(WordWritingSystemLanguageTag, lexicalForm);
 					AddCurrentSemanticDomainToEntry(entry,gloss);
 					LexEntryRepository.SaveItem(entry);
 					modifiedEntries.Add(entry);
@@ -525,7 +527,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		/// </summary>
 		private bool HasMatchingSense(LexEntry entry, string gloss)
 		{
-			return (entry.Senses.Any(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id))
+			return (entry.Senses.Any(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.LanguageTag))
 						   ||  (_savedSensesDuringMoveToEditArea != null && entry.Senses.Intersect(_savedSensesDuringMoveToEditArea).Any()));
 		}
 
@@ -533,7 +535,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		[Obsolete("for retrofitting tests only")]
 		public void PrepareToMoveWordToEditArea(string form)
 		{
-			PrepareToMoveWordToEditArea(new WordDisplay(){Vernacular = new LanguageForm(FormWritingSystem.Id, form, null)});
+			PrepareToMoveWordToEditArea(new WordDisplay(){Vernacular = new LanguageForm(FormWritingSystem.LanguageTag, form, null)});
 		}
 
 		public void PrepareToMoveWordToEditArea(WordDisplay wordDisplay)
@@ -582,7 +584,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 						entry.Senses.
 							Where(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4) != null).
 								FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey)
-														&& s.Definition.GetBestAlternative(new[]{DefinitionWritingSystem.Id}) == wordDisplay.Meaning);
+														&& s.Definition.GetBestAlternative(new[] { DefinitionWritingSystem.LanguageTag }) == wordDisplay.Meaning);
 					if (firstSenseMatchingSemDomAndMeaning != null)
 					{
 						RememberMeaningOfDissociatedWord(firstSenseMatchingSemDomAndMeaning);
@@ -653,15 +655,15 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					//so update the meaning in case they edited that
 					if (ShowMeaningField)
 					{
-						_savedSensesDuringMoveToEditArea[0].Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
+						_savedSensesDuringMoveToEditArea[0].Definition.SetAlternative(DefinitionWritingSystem.LanguageTag, meaning);
 					}
 
 					//are there senses with a matching glosses?
 					foreach (var lexSense in _savedSensesDuringMoveToEditArea)
 					{
 						sense = entry.Senses.FirstOrDefault(s =>s.Definition.ContainsEqualForm(
-								lexSense.Definition[DefinitionWritingSystem.Id],
-								DefinitionWritingSystem.Id));
+								lexSense.Definition[DefinitionWritingSystem.LanguageTag],
+								DefinitionWritingSystem.LanguageTag));
 						if (sense != null)
 						{
 							//now, can we merge this sense in?
@@ -682,13 +684,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				else
 				{
 					//is there a sense with a matching gloss?
-					sense = entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(meaning, DefinitionWritingSystem.Id));
+					sense = entry.Senses.FirstOrDefault(s => s.Definition.ContainsEqualForm(meaning, DefinitionWritingSystem.LanguageTag));
 				}
 			}
 			if(sense==null)
 			{
 				sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
-				sense.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
+				sense.Definition.SetAlternative(DefinitionWritingSystem.LanguageTag, meaning);
 			}
 			OptionRefCollection semanticDomains =
 				sense.GetOrCreateProperty<OptionRefCollection>(_semanticDomainField.FieldName);
@@ -768,13 +770,13 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 				try
 				{
-					return new Font(MeaningWritingSystem.DefaultFontName,
+					return new Font(MeaningWritingSystem.DefaultFont.Name,
 									defaultFontSize);
 				}
 				catch (Exception error)
 				{
-					Palaso.Reporting.ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),  error,
-																	 "There was a problem getting the font for the meaning field, using Typeface {0} and Size {1}.  See if you can fix this using the Input Systems tab of theConfiguration Tool.", MeaningWritingSystem.DefaultFontName,
+					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),  error,
+																	 "There was a problem getting the font for the meaning field, using Typeface {0} and Size {1}.  See if you can fix this using the Input Systems tab of theConfiguration Tool.", MeaningWritingSystem.DefaultFont.Name,
 									defaultFontSize);
 					return SystemFonts.DefaultFont;
 				}
@@ -972,12 +974,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			return (pastEndIndex == beginIndex);
 		}
 
-		public IWritingSystemDefinition GetSemanticDomainWritingSystem()
+		public WritingSystemDefinition GetSemanticDomainWritingSystem()
 		{
 			if (_semanticDomainWritingSystem == null) // just in case there is no WS for the semDom field (not likely)
 			{
 				_semanticDomainWritingSystem = new WritingSystemDefinition("qaa");
-				_semanticDomainWritingSystem.DefaultFontName = "Microsoft Sans Serif";
+				_semanticDomainWritingSystem.DefaultFont = new FontDefinition("Microsoft Sans Serif");
 			}
 			return _semanticDomainWritingSystem;
 		}
@@ -987,7 +989,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			if (_semanticDomainWritingSystem == null) // just in case there is no WS for the semDom field (not likely)
 			{
 				_semanticDomainWritingSystem = new WritingSystemDefinition("qaa");
-				_semanticDomainWritingSystem.DefaultFontName = "Microsoft Sans Serif";
+				_semanticDomainWritingSystem.DefaultFont = new FontDefinition("Microsoft Sans Serif");
 			}
 			return WritingSystemInfo.CreateFont(_semanticDomainWritingSystem);
 		}

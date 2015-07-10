@@ -10,8 +10,8 @@ using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
-using Palaso.Reporting;
-using Palaso.WritingSystems;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
@@ -26,7 +26,7 @@ namespace WeSay.UI.TextBoxes
 		public event EventHandler UserClick;
 		private int _numberOfItemsInColumn;
 		private object _itemToNotDrawYet;
-		protected IWritingSystemDefinition _meaningWritingSystem;
+		protected WritingSystemDefinition _meaningWritingSystem;
 		protected int _selectedIndex;
 		public event EventHandler ListLostFocus;
 		private static List<string> _fontFamilies;
@@ -53,7 +53,7 @@ namespace WeSay.UI.TextBoxes
 
 		}
 
-		public GeckoListBox(IWritingSystemDefinition ws, string nameForLogging)
+		public GeckoListBox(WritingSystemDefinition ws, string nameForLogging)
 			: this()
 		{
 			_nameForLogging = nameForLogging;
@@ -100,7 +100,7 @@ namespace WeSay.UI.TextBoxes
 		// become another alias for WritingSystem
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IWritingSystemDefinition FormWritingSystem
+		public WritingSystemDefinition FormWritingSystem
 		{
 			get
 			{
@@ -115,7 +115,7 @@ namespace WeSay.UI.TextBoxes
 		}
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IWritingSystemDefinition MeaningWritingSystem
+		public WritingSystemDefinition MeaningWritingSystem
 		{
 			get
 			{
@@ -219,7 +219,7 @@ namespace WeSay.UI.TextBoxes
 		// html being built by CreateHtmlFromItems
 		public void ItemToHtml(string word, int index, bool useFormWS, Color textColor)
 		{
-			IWritingSystemDefinition ws = useFormWS ? FormWritingSystem : MeaningWritingSystem;
+			WritingSystemDefinition ws = useFormWS ? FormWritingSystem : MeaningWritingSystem;
 			Font font = WritingSystemInfo.CreateFont(ws );
 			String entry = String.IsNullOrEmpty(word) ? "&nbsp;" : System.Security.SecurityElement.Escape(word);
 			String subId = useFormWS ? "-1" : "-2";
@@ -431,7 +431,7 @@ namespace WeSay.UI.TextBoxes
 					GeckoLoadFlags.BypassHistory);
 			}
 		}
-		private void AddFontFamily(IWritingSystemDefinition ws)
+		private void AddFontFamily(WritingSystemDefinition ws)
 		{
 			if (ws != null)
 			{

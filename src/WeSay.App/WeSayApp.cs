@@ -6,12 +6,14 @@ using System.Threading;
 using System.Windows.Forms;
 using Autofac;
 using CommandLine;
-using Palaso.Code;
-using Palaso.i18n;
-using Palaso.IO;
-using Palaso.Lift;
-using Palaso.Reporting;
-using Palaso.UiBindings;
+using SIL.Lift;
+using SIL.Code;
+using SIL.i18n;
+using SIL.IO;
+using SIL.Keyboarding;
+using SIL.Reporting;
+using SIL.UiBindings;
+using SIL.WritingSystems;
 using WeSay.App.Properties;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
@@ -36,19 +38,19 @@ namespace WeSay.App
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			using (new Palaso.PalasoSetup())
+			using (new SIL.CoreSetup())
 			{
 				try
 				{
 					// initialize Palaso keyboarding
-					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+					SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 					var app = new WeSayApp(args);
 					app.Run();
 				}
 				finally
 				{
-					Palaso.WritingSystems.Keyboard.Controller.ActivateDefaultKeyboard();
-					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+					SIL.Keyboarding.Keyboard.Controller.ActivateDefaultKeyboard();
+					SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 					ReleaseMutexForThisProject();
 				}
 			}
@@ -320,8 +322,8 @@ namespace WeSay.App
 #endif
 
 			   RtfRenderer.HeadWordWritingSystemId =
-				   _project.DefaultViewTemplate.HeadwordWritingSystem.Id;
-			   HtmlRenderer.HeadWordWritingSystemId = _project.DefaultViewTemplate.HeadwordWritingSystem.Id;
+				   _project.DefaultViewTemplate.HeadwordWritingSystem.LanguageTag;
+			   HtmlRenderer.HeadWordWritingSystemId = _project.DefaultViewTemplate.HeadwordWritingSystem.LanguageTag;
 
 #if __MonoCS__
 				UglyHackForXkbIndicator();
@@ -605,17 +607,17 @@ namespace WeSay.App
 		/// <remarks>
 		/// If you can think of a better solution, by all means replace this ugly hack!  It took
 		/// me a day of work to come up with even this much.  I (SMc) tried setting the multiple keyboards
-		/// in succession inside Palaso.UI.WindowsForms.Keyboarding.Linux.XkbKeyboardAdaptor.ReinitLocales()
+		/// in succession inside SIL.Windows.Forms.Keyboarding.Linux.XkbKeyboardAdaptor.ReinitLocales()
 		/// but it didn't work doing it there for some reason.
 		/// </remarks>
 		private void UglyHackForXkbIndicator()
 		{
-			foreach (var ws in _project.DefaultViewTemplate.WritingSystems.TextWritingSystems)
+			foreach (var ws in _project.DefaultViewTemplate.WritingSystems.TextWritingSystems())
 			{
 				if (ws.LocalKeyboard != null)
 					ws.LocalKeyboard.Activate();
 			}
-			Palaso.WritingSystems.Keyboard.Controller.ActivateDefaultKeyboard();
+			Keyboard.Controller.ActivateDefaultKeyboard();
 		}
 		#endif
 	}

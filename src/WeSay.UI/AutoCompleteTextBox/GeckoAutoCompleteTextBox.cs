@@ -8,9 +8,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Gecko;
-using Palaso.Code;
-using Palaso.UiBindings;
-using Palaso.WritingSystems;
+using SIL.Code;
+using SIL.UiBindings;
+using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
@@ -807,7 +807,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			_listBoxEntered = false;
 		}
 
-		public override IWritingSystemDefinition WritingSystem
+		public override WritingSystemDefinition WritingSystem
 		{
 			set
 			{

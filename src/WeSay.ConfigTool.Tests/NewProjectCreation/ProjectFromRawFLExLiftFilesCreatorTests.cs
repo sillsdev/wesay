@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using NUnit.Framework;
-using Palaso.IO;
-using Palaso.Reporting;
-using Palaso.TestUtilities;
+using SIL.IO;
+using SIL.Reporting;
+using SIL.TestUtilities;
 using WeSay.ConfigTool.NewProjectCreation;
 
 namespace WeSay.ConfigTool.Tests.NewProjectCreation

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Mono.Addins;
-using Palaso.Reporting;
+using SIL.Reporting;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -40,7 +40,7 @@ namespace WeSay.ConfigTool
 				}
 				catch
 				{
-					Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, something went wrong collecting up the available addins.  Please go to this folder:\r\n"+ Application.UserAppDataPath +"\r\nand delete any folders which begin with \"addin-db\", then quit this program and try again.");
+					SIL.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, something went wrong collecting up the available addins.  Please go to this folder:\r\n"+ Application.UserAppDataPath +"\r\nand delete any folders which begin with \"addin-db\", then quit this program and try again.");
 					return;
 				}
 

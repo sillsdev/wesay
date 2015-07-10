@@ -1,11 +1,11 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using Palaso.Data;
-using Palaso.DictionaryServices;
-using Palaso.DictionaryServices.Lift;
-using Palaso.DictionaryServices.Model;
-using Palaso.WritingSystems;
+using SIL.Data;
+using SIL.DictionaryServices;
+using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

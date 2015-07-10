@@ -1,7 +1,14 @@
 @echo off
-if "%INCLUDE%" == "" (
+if "%INCLUDE%%LIB%" == "" (
+
+	if not "%VS120COMNTOOLS%" == "" (
+		echo "Setting up Visual Studio Pro 2013 Tools..."
+		@call "%VS120COMNTOOLS%vsvars32.bat"
+		goto build
+	)
+
 	if not "%VS100COMNTOOLS%" == "" (
-		echo "Setting up VisualStudio 2010 Tools..."
+		echo "Setting up Visual Studio 2010 Pro Tools..."
 		@call "%VS100COMNTOOLS%vsvars32.bat"
 		goto build
 	)

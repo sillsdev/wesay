@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Palaso.Lift.Options;
-using Palaso.UiBindings;
+using SIL.Lift.Options;
+using SIL.UiBindings;
 
 namespace WeSay.LexicalModel.Foundation.Options
 {

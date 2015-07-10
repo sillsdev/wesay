@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.Lift.Options;
-using Palaso.Text;
-using Palaso.WritingSystems;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Text;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -193,10 +193,10 @@ namespace WeSay.LexicalTools
 				return false;
 				//that ws isn't actually part of our configuration, so can't get a special font for it
 			}
-			IWritingSystemDefinition ws = (IWritingSystemDefinition)WritingSystems.Get(writingSystemId);
+			var ws = WritingSystems.Get(writingSystemId);
 			Font font = WritingSystemInfo.CreateFont(ws);
 			float fontSize = font.Size + fontSizeBoost;
-			String lang = ws.Bcp47Tag.IndexOf('-') == -1 ? ws.Bcp47Tag : ws.Bcp47Tag.Substring(0, ws.Bcp47Tag.IndexOf('-'));
+			String lang = IetfLanguageTag.GetLanguagePart(ws.LanguageTag);
 			var formattedSpan = string.Format(
 				"<span lang='{5}' style='font-family:{0}; font-size:{1}pt;font-weight:{2};font-style:{3};text-decoration:{4}'>",
 				font.Name,
@@ -235,7 +235,7 @@ namespace WeSay.LexicalTools
 
 				if (field == null) // show them all
 				{
-					foreach (string id in WritingSystems.FilterForTextIds(text.Forms.Select(f=>f.WritingSystemId)))
+					foreach (string id in WritingSystems.FilterForTextLanguageTags(text.Forms.Select(f=>f.WritingSystemId)))
 					{
 
 						var form = text.Forms.First(f => f.WritingSystemId == id);

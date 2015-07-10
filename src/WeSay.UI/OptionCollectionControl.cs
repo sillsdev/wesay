@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 using System.Windows.Forms;
-using Palaso.Lift.Options;
+using SIL.Lift.Options;
 using WeSay.LexicalModel.Foundation.Options;
 
 

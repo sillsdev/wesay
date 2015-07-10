@@ -1,10 +1,10 @@
 using System.Windows.Forms;
 using NUnit.Framework;
-using Palaso.Data;
-using Palaso.DictionaryServices.Model;
-using Palaso.Lift;
-using Palaso.Reporting;
-using Palaso.TestUtilities;
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Reporting;
+using SIL.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;

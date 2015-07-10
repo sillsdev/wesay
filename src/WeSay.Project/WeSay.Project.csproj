@@ -80,7 +80,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\common\Commons.Xml.Relaxng.dll</HintPath>
     </Reference>
-    <Reference Include="L10NSharp, Version=1.1.10.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="L10NSharp, Version=2.0.32.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\L10NSharp.dll</HintPath>
     </Reference>
@@ -96,25 +96,37 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
     </Reference>
-    <Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SIL.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
+      <HintPath>..\..\lib\$(Configuration)\SIL.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SIL.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
+      <HintPath>..\..\lib\$(Configuration)\SIL.DictionaryServices.dll</HintPath>
     </Reference>
-    <Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SIL.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
+      <HintPath>..\..\lib\$(Configuration)\SIL.Lift.dll</HintPath>
     </Reference>
-    <Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SIL.Lexicon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
+      <HintPath>..\..\lib\$(Configuration)\SIL.Lexicon.dll</HintPath>
     </Reference>
-    <Reference Include="PalasoUIWindowsForms.GeckoBrowserAdapter.dll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SIL.Windows.Forms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.GeckoBrowserAdapter.dll</HintPath>
+      <HintPath>..\..\lib\$(Configuration)\SIL.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.Windows.Forms.GeckoBrowserAdapter.dll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\SIL.Windows.Forms.GeckoBrowserAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.Windows.Forms.Keyboarding.dll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\SIL.Windows.Forms.Keyboarding.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.WritingSystems, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
@@ -131,6 +143,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseTaskConfig.cs" />
@@ -139,6 +152,7 @@
     <Compile Include="BasilProject.cs" />
     <Compile Include="ConfigFile.cs" />
     <Compile Include="ConfigMigration\UserConfig\WeSayUserConfigMigrator.cs" />
+    <Compile Include="ConfigMigration\UserConfig\WeSayUserConfigV2MigrationStrategy.cs" />
     <Compile Include="ConfigMigration\WritingSystem\WritingSystemMigrator.cs" />
     <Compile Include="ConfigMigration\WritingSystem\WritingSystemPrefsToLdmlMigrationStrategy.cs" />
     <Compile Include="ConfigMigration\WritingSystem\WritingSystemCollection_V1.cs" />
@@ -196,8 +210,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig0To1.xsl">
-    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig0To1.xsl" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ConfigMigration\WeSayConfig\MigrateConfig1To2.xsl" />

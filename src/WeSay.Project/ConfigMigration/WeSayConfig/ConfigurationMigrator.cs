@@ -4,8 +4,8 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using Palaso.Reporting;
-using Palaso.Xml;
+using SIL.Reporting;
+using SIL.Xml;
 
 namespace WeSay.Project.ConfigMigration.WeSayConfig
 {

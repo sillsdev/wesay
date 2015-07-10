@@ -4,14 +4,14 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
-using Palaso.WritingSystems;
+using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.Project;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using WeSay.UI.TextBoxes;
-using Palaso.Lift;
+using SIL.Lift;
 
 namespace WeSay.UI.Tests
 {
@@ -96,7 +96,7 @@ namespace WeSay.UI.Tests
 			BasilProjectTestHelper.InitializeForTests();
 			_writingSystemId = WritingSystemsIdsForTests.AnalysisIdForTest;
 
-			IWritingSystemDefinition writingSystem = WritingSystemDefinition.Parse(_writingSystemId);
+			WritingSystemDefinition writingSystem = new WritingSystemDefinition(_writingSystemId) {DefaultFont = new FontDefinition("Arial")};
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);
 			_papaNameWidget.Text = "John";
 			_ghostFirstNameWidget = new WeSayTextBox(writingSystem, null);

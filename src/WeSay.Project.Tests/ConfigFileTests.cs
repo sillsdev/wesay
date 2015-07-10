@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
-using Palaso.IO;
-using Palaso.TestUtilities;
-using Palaso.WritingSystems;
-using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using SIL.IO;
+using SIL.TestUtilities;
+using SIL.Lexicon;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
 using WeSay.TestUtilities;
 
 namespace WeSay.Project.Tests
@@ -50,7 +51,7 @@ namespace WeSay.Project.Tests
 								  GetV7ConfigFileContent());
 			var configFile = new ConfigFile(pathToConfigFile);
 			configFile.MigrateIfNecassary();
-			Assert.That(configFile.Version, Is.EqualTo(8));
+			Assert.That(configFile.Version, Is.EqualTo(ConfigFile.LatestVersion));
 		}
 
 		[Test]
@@ -330,6 +331,8 @@ namespace WeSay.Project.Tests
 			private readonly TemporaryFolder _folder;
 			private readonly TempFile _configFile;
 			private IWritingSystemRepository _writingSystems;
+			private readonly TemporaryFolder _writingSystemsFolder;
+			private readonly TemporaryFolder _sharedSettingsFolder;
 
 			public TestEnvironment(string configFileContent)
 			{
@@ -339,13 +342,14 @@ namespace WeSay.Project.Tests
 				_configFile.MoveTo(configFilePath);
 				NamespaceManager = new XmlNamespaceManager(new NameTable());
 				NamespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
-				Directory.CreateDirectory(Path.Combine(ProjectPath, "WritingSystems"));
+				_sharedSettingsFolder = new TemporaryFolder(Path.Combine(ProjectPath, "SharedSettings"));
+				_writingSystemsFolder = new TemporaryFolder(Path.Combine(ProjectPath, "WritingSystems"));
 				Creator = new ConfigFile(_configFile.Path);
 			}
 
 			public XmlNamespaceManager NamespaceManager { get; private set; }
 
-			private string ProjectPath
+			public string ProjectPath
 			{
 				get { return _folder.Path; }
 			}
@@ -355,6 +359,8 @@ namespace WeSay.Project.Tests
 			public void Dispose()
 			{
 				_configFile.Dispose();
+				_sharedSettingsFolder.Dispose();
+				_writingSystemsFolder.Dispose();
 				_folder.Dispose();
 			}
 
@@ -362,12 +368,27 @@ namespace WeSay.Project.Tests
 			{
 				get
 				{
-					return _writingSystems ?? (_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
-						WritingSystemsPath,
-						OnWritingSystemMigration,
-						OnWritingSystemLoadProblem,
-						WritingSystemCompatibility.Flex7V0Compatible
-					));
+					if (_writingSystems == null)
+					{
+						var userSettingsDataMapper =
+							new UserLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(LexiconSettingsFileHelper.GetUserLexiconSettingsPath(ProjectPath)));
+						var projectSettingsDataMapper =
+							new ProjectLexiconSettingsWritingSystemDataMapper(new FileSettingsStore(LexiconSettingsFileHelper.GetProjectLexiconSettingsPath(ProjectPath)));
+						ICustomDataMapper<WritingSystemDefinition>[] customDataMapper =
+						{
+							userSettingsDataMapper,
+							projectSettingsDataMapper
+						};
+
+						_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
+							WritingSystemsPath,
+							customDataMapper,
+							null,
+							OnWritingSystemMigration,
+							OnWritingSystemLoadProblem);
+
+					}
+					return _writingSystems;
 				}
 			}
 
@@ -376,7 +397,7 @@ namespace WeSay.Project.Tests
 				throw new ApplicationException("Unexpected input system load problem during test.");
 			}
 
-			private static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+			private static void OnWritingSystemMigration(int version, IEnumerable<LdmlMigrationInfo> migrationinfo)
 			{
 				throw new ApplicationException("Unexpected input system migration during test.");
 			}
@@ -384,6 +405,11 @@ namespace WeSay.Project.Tests
 			public string WritingSystemsPath
 			{
 				get { return Path.Combine(ProjectPath, "WritingSystems"); }
+			}
+
+			public string SharedSettingsPath
+			{
+				get { return Path.Combine(ProjectPath, "SharedSettings"); }
 			}
 
 			public string ConfigFilePath
@@ -450,9 +476,9 @@ namespace WeSay.Project.Tests
 		public void CreateNonExistentWritingSystemsFoundInConfig_AddinsXmlContainsNonConformantRfcTag_CreatesConformingWritingSystem()
 		{
 			using (var environment = new TestEnvironment(ConfigFileContentForTests.WrapContentInConfigurationTags(ConfigFileContentForTests.GetConfigFileContainingSfmExporterAddinWithWritingSystems("de", "bogusws1", "audio", "Zxxx"))))
+			using (var sldrTempFolder = new TemporaryFolder("SldrCache"))
 			{
 				environment.Creator.CreateWritingSystemsForIdsInFileWhereNecassary(environment.WritingSystems);
-
 
 				string writingSystemFilePath = Path.Combine(environment.WritingSystemsPath, "qaa-x-bogusws1" + ".ldml");
 				AssertThatXmlIn.File(writingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='qaa']");
@@ -635,7 +661,7 @@ namespace WeSay.Project.Tests
 			{
 				var wsRepo = environment.WritingSystems;
 
-				var enWs = WritingSystemDefinition.Parse("en");
+				var enWs = new WritingSystemDefinition("en");
 				enWs.Abbreviation = "Dont change me!";
 				wsRepo.Set(enWs);
 				wsRepo.Save();
@@ -651,8 +677,9 @@ namespace WeSay.Project.Tests
 				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/script");
 				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/territory");
 				AssertThatXmlIn.File(pathToLdml).HasNoMatchForXpath("/ldml/identity/variant");
-				AssertThatXmlIn.File(pathToLdml).
-					HasAtLeastOneMatchForXpath("/ldml/special/palaso:abbreviation[@value='Dont change me!']", environment.NamespaceManager);
+				var pathToLexiconSettings = LexiconSettingsFileHelper.GetProjectLexiconSettingsPath(environment.ProjectPath);
+				AssertThatXmlIn.File(pathToLexiconSettings).
+					HasAtLeastOneMatchForXpath("/ProjectLexiconSettings/WritingSystems/WritingSystem[@id='en']/Abbreviation[text()='Dont change me!']", environment.NamespaceManager);
 			}
 		}
 	}
