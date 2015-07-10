@@ -62,10 +62,10 @@ cd -
 
 
 # *** Results ***
-# build: wesay1.6-win32-SILWritingSystems Continuous (bt455)
+# build: wesay1.6-win32-continuous (bt455)
 # project: WeSay1.5
 # URL: http://build.palaso.org/viewType.html?buildTypeId=bt455
-# VCS: https://github.com/sillsdev/wesay.git [SILWritingSystems]
+# VCS: https://github.com/sillsdev/wesay.git [develop]
 # dependencies:
 # [0] build: chorus-win32-SILWritingSystems Continuous (bt453)
 #     project: Chorus

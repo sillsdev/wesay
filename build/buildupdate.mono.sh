@@ -62,7 +62,7 @@ cd -
 
 
 # *** Results ***
-# build: wesay1.6-precise64-SILWritingSystems-continuous (bt456)
+# build: wesay1.6-precise64-continuous (bt456)
 # project: WeSay1.5
 # URL: http://build.palaso.org/viewType.html?buildTypeId=bt456
 # VCS: https://github.com/sillsdev/wesay.git [SILWritingSystems]
