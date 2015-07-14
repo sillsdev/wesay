@@ -1,5 +1,8 @@
 #!/usr/bin/make -f
 
+# Uncomment this to turn on verbose mode.
+# export DH_VERBOSE=1
+
 CONFIGURATION=@BUILD_CONFIGURATION@
 PALASO_CONFIGURATION=@PALASO_CONFIGURATION@
 CHORUS_CONFIGURATION=@CHORUS_CONFIGURATION@
@@ -25,21 +28,11 @@ build-stamp:
 	tar xfz chorus-$(CHORUSVER)/externals/libpalaso-$(PALASOVER).tar.gz
 	$(PALASO_XBUILD) /target:Compile /p:Configuration=$(PALASO_CONFIGURATION)
 	mkdir -p chorus-$(CHORUSVER)/lib/$(CHORUS_CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.dll* chorus-$(CHORUSVER)/lib/$(CHORUS_CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.TestUtilities.dll* chorus-$(CHORUSVER)/lib/$(CHORUS_CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.Lift.dll* chorus-$(CHORUSVER)/lib/$(CHORUS_CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/PalasoUIWindowsForms.dll* chorus-$(CHORUSVER)/lib/$(CHORUS_CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/SIL.*.dll* chorus-$(CHORUSVER)/lib/$(CHORUS_CONFIGURATION)
 	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.BuildTasks.dll chorus-$(CHORUSVER)/build
 	$(CHORUS_XBUILD) /target:Compile /p:Configuration=$(CHORUS_CONFIGURATION)
 	mkdir -p lib/$(CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.dll* lib/$(CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.TestUtilities.dll* lib/$(CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.DictionaryServices.dll* lib/$(CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.Lift.dll* lib/$(CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.Media.dll* lib/$(CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.Tests.dll* lib/$(CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/PalasoUIWindowsForms.dll* lib/$(CONFIGURATION)
-	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/PalasoUIWindowsForms.GeckoBrowserAdapter.dll* lib/$(CONFIGURATION)
+	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/SIL.*.dll* lib/$(CONFIGURATION)
 	cp libpalaso-$(PALASOVER)/output/$(PALASO_CONFIGURATION)/Palaso.BuildTasks.dll build
 	cp chorus-$(CHORUSVER)/output/$(CHORUS_CONFIGURATION)/Chorus.exe* lib/$(CONFIGURATION)
 	cp chorus-$(CHORUSVER)/output/$(CHORUS_CONFIGURATION)/ChorusMerge.exe* lib/$(CONFIGURATION)
