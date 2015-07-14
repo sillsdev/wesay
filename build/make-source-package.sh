@@ -38,13 +38,13 @@ cd $OLDPWD
 
 cd ../chorus
 mkdir -p externals
-cp -p ../libpalaso/output/${PALASO_CONFIGURATION}/libpalaso-2.6.tar.gz externals/
+cp -p ../libpalaso/output/${PALASO_CONFIGURATION}/libpalaso-3.0.tar.gz externals/
 up
 bld SourcePackage ${CHORUS_CONFIGURATION} ${BUILD_COUNTER} ${CHORUS_PROJECT}
 
 cd $OLDPWD
 mkdir -p externals
-cp -p ../chorus/output/${CHORUS_CONFIGURATION}/chorus-2.4.${BUILD_COUNTER}.0.tar.gz externals/
+cp -p ../chorus/output/${CHORUS_CONFIGURATION}/chorus-2.9.${BUILD_COUNTER}.0.tar.gz externals/
 up
 bld SourcePackage ${BUILD_CONFIGURATION} ${VERSION_SUFFIX} ${BUILD_PROJECT}
 
